@@ -1,0 +1,189 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1170" measuredH="746" mockupW="990" mockupH="721">
+  <controls>
+    <control controlID="107" controlTypeID="__group__" x="180" y="25" w="990" h="721" measuredW="990" measuredH="721" zOrder="0" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="__group__" x="0" y="0" w="990" h="721" measuredW="990" measuredH="721" zOrder="0" locked="false" isInGroup="107">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="__group__" x="0" y="0" w="990" h="637" measuredW="990" measuredH="637" zOrder="0" locked="false" isInGroup="0">
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="com.balsamiq.mockups::TitleWindow" x="0" y="0" w="990" h="637" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="0">
+                  <controlProperties>
+                    <bottomheight>24</bottomheight>
+                    <close>true</close>
+                    <dragger>true</dragger>
+                    <maximizeRestore>true</maximizeRestore>
+                    <minimize>true</minimize>
+                    <text>%20%20%20%20%20eCALMon</text>
+                    <topheight>26</topheight>
+                    <verticalScrollbar>false</verticalScrollbar>
+                  </controlProperties>
+                </control>
+                <control controlID="1" controlTypeID="com.balsamiq.mockups::Image" x="4" y="3" w="19" h="18" measuredW="16" measuredH="16" zOrder="1" locked="false" isInGroup="0">
+                  <controlProperties>
+                    <src>./assets/eCALMonIcon.png</src>
+                    <text/>
+                  </controlProperties>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+            <control controlID="1" controlTypeID="__group__" x="0" y="25" w="990" h="696" measuredW="990" measuredH="696" zOrder="1" locked="false" isInGroup="0">
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="com.balsamiq.mockups::MenuBar" x="0" y="0" w="990" h="23" measuredW="147" measuredH="29" zOrder="0" locked="false" isInGroup="1">
+                  <controlProperties>
+                    <text>File%2C%20View%2C%20Help</text>
+                  </controlProperties>
+                </control>
+                <control controlID="1" controlTypeID="__group__" x="0" y="23" w="990" h="673" measuredW="990" measuredH="673" zOrder="1" locked="false" isInGroup="1">
+                  <groupChildrenDescriptors>
+                    <control controlID="0" controlTypeID="__group__" x="3" y="337" w="982" h="336" measuredW="982" measuredH="336" zOrder="0" locked="false" isInGroup="1">
+                      <groupChildrenDescriptors>
+                        <control controlID="0" controlTypeID="com.balsamiq.mockups::List" x="0" y="0" w="982" h="174" measuredW="100" measuredH="126" zOrder="0" locked="false" isInGroup="0">
+                          <controlProperties>
+                            <text>%25Time%25%20%7C%20%25HostName%25%20%7C%20%25Process%25%20%7C%20%25Topic%25</text>
+                            <verticalScrollbar>true</verticalScrollbar>
+                          </controlProperties>
+                        </control>
+                        <control controlID="1" controlTypeID="__group__" x="7" y="178" w="609" h="158" measuredW="609" measuredH="158" zOrder="1" locked="false" isInGroup="0">
+                          <groupChildrenDescriptors>
+                            <control controlID="0" controlTypeID="com.balsamiq.mockups::Button" x="0" y="1" w="128" h="27" measuredW="58" measuredH="27" zOrder="0" locked="false" isInGroup="1">
+                              <controlProperties>
+                                <text>Pause</text>
+                              </controlProperties>
+                            </control>
+                            <control controlID="1" controlTypeID="com.balsamiq.mockups::ComboBox" x="160" y="1" w="128" h="-1" measuredW="37" measuredH="62" zOrder="1" locked="false" isInGroup="1">
+                              <controlProperties>
+                                <text>*%0A%25HostName1%25%0A%25HostName2%25</text>
+                              </controlProperties>
+                            </control>
+                            <control controlID="2" controlTypeID="com.balsamiq.mockups::ComboBox" x="321" y="0" w="128" h="-1" measuredW="37" measuredH="62" zOrder="2" locked="false" isInGroup="1">
+                              <controlProperties>
+                                <text>*%0A%25Process1%25%0A%25Process2%25</text>
+                              </controlProperties>
+                            </control>
+                            <control controlID="3" controlTypeID="com.balsamiq.mockups::ComboBox" x="481" y="2" w="128" h="-1" measuredW="37" measuredH="156" zOrder="3" locked="false" isInGroup="1">
+                              <controlProperties>
+                                <text>*%0Ainfo%0Awarning%0Aerror%0Afatal%0Adebug1%0Adebug2%0Adebug3%0Adebug4</text>
+                              </controlProperties>
+                            </control>
+                          </groupChildrenDescriptors>
+                        </control>
+                      </groupChildrenDescriptors>
+                    </control>
+                    <control controlID="1" controlTypeID="__group__" x="2" y="0" w="984" h="327" measuredW="984" measuredH="327" zOrder="1" locked="false" isInGroup="1">
+                      <groupChildrenDescriptors>
+                        <control controlID="0" controlTypeID="__group__" x="0" y="0" w="489" h="326" measuredW="489" measuredH="326" zOrder="0" locked="false" isInGroup="1">
+                          <groupChildrenDescriptors>
+                            <control controlID="0" controlTypeID="com.balsamiq.mockups::TabBar" x="0" y="0" w="487" h="326" measuredW="337" measuredH="100" zOrder="0" locked="false" isInGroup="0">
+                              <controlProperties>
+                                <borderStyle>square</borderStyle>
+                                <selectedIndex>0</selectedIndex>
+                                <tabHPosition>left</tabHPosition>
+                                <tabVPosition>top</tabVPosition>
+                                <text>Topics%20View%201%2C%20Topics%20View%202%2C%20Process%20View</text>
+                                <verticalScrollbar>false</verticalScrollbar>
+                              </controlProperties>
+                            </control>
+                            <control controlID="1" controlTypeID="com.balsamiq.mockups::DataGrid" x="2" y="27" w="487" h="247" measuredW="502" measuredH="21" zOrder="1" locked="false" isInGroup="0">
+                              <controlProperties>
+                                <alternateRowColor>16777215</alternateRowColor>
+                                <hasHeader>true</hasHeader>
+                                <hLines>false</hLines>
+                                <text>Host%20/%20Process%2C%20Topic%20Name%2C%20Topic%20Type%2C%20Direction%2C%20Connections%2C%20Topic%20Size</text>
+                                <verticalScrollbar>true</verticalScrollbar>
+                                <vLines>true</vLines>
+                              </controlProperties>
+                            </control>
+                            <control controlID="2" controlTypeID="com.balsamiq.mockups::Tree" x="4" y="45" w="469" h="229" measuredW="300" measuredH="264" zOrder="2" locked="false" isInGroup="0">
+                              <controlProperties>
+                                <text>%5B-%5D%20eCAL%0A%20%5B-%5D%20%25HostName1%25%0A%20%20%5B-%5D%20%25Process1%25%0A%20%20Topic%201%0A%20%20Topic%202%0A%20%20Topic%203%0A%20%20Topic%204%0A%20%5B-%5D%20%25HostName2%25%0A%20%20%5B-%5D%20%25Process1%25%0A%20%20Topic%201%0A%20%20Topic%202%0A%20%20Topic%203</text>
+                              </controlProperties>
+                            </control>
+                            <control controlID="3" controlTypeID="com.balsamiq.mockups::HorizontalScrollBar" x="2" y="272" w="469" h="-1" measuredW="100" measuredH="16" zOrder="3" locked="false" isInGroup="0"/>
+                            <control controlID="4" controlTypeID="__group__" x="7" y="292" w="422" h="27" measuredW="422" measuredH="27" zOrder="4" locked="false" isInGroup="0">
+                              <groupChildrenDescriptors>
+                                <control controlID="0" controlTypeID="com.balsamiq.mockups::Button" x="0" y="0" w="121" h="27" measuredW="85" measuredH="27" zOrder="0" locked="false" isInGroup="4">
+                                  <controlProperties>
+                                    <text>Expand%20All</text>
+                                  </controlProperties>
+                                </control>
+                                <control controlID="1" controlTypeID="com.balsamiq.mockups::Button" x="153" y="0" w="121" h="27" measuredW="128" measuredH="27" zOrder="1" locked="false" isInGroup="4">
+                                  <controlProperties>
+                                    <text>Autosize%20Columns</text>
+                                  </controlProperties>
+                                </control>
+                                <control controlID="2" controlTypeID="com.balsamiq.mockups::Button" x="301" y="0" w="121" h="27" measuredW="72" measuredH="27" zOrder="2" locked="false" isInGroup="4">
+                                  <controlProperties>
+                                    <text>Show%20All</text>
+                                  </controlProperties>
+                                </control>
+                              </groupChildrenDescriptors>
+                            </control>
+                          </groupChildrenDescriptors>
+                        </control>
+                        <control controlID="1" controlTypeID="__group__" x="489" y="1" w="495" h="326" measuredW="495" measuredH="326" zOrder="1" locked="false" isInGroup="1">
+                          <groupChildrenDescriptors>
+                            <control controlID="0" controlTypeID="com.balsamiq.mockups::TabBar" x="0" y="0" w="493" h="326" measuredW="318" measuredH="100" zOrder="0" locked="false" isInGroup="1">
+                              <controlProperties>
+                                <borderStyle>square</borderStyle>
+                                <selectedIndex>0</selectedIndex>
+                                <tabHPosition>left</tabHPosition>
+                                <tabVPosition>top</tabVPosition>
+                                <text>Condition%20View%2C%20Service%20View%2C%20Host%20View</text>
+                                <verticalScrollbar>false</verticalScrollbar>
+                              </controlProperties>
+                            </control>
+                            <control controlID="1" controlTypeID="com.balsamiq.mockups::DataGrid" x="2" y="27" w="493" h="247" measuredW="334" measuredH="21" zOrder="1" locked="false" isInGroup="1">
+                              <controlProperties>
+                                <alternateRowColor>16777215</alternateRowColor>
+                                <hasHeader>true</hasHeader>
+                                <hLines>false</hLines>
+                                <text>Host%20/%20Process%2C%20Name%2C%20Heartbeat%2C%20Severity%2C%20Info</text>
+                                <verticalScrollbar>true</verticalScrollbar>
+                                <vLines>true</vLines>
+                              </controlProperties>
+                            </control>
+                            <control controlID="2" controlTypeID="com.balsamiq.mockups::Tree" x="2" y="45" w="475" h="229" measuredW="300" measuredH="264" zOrder="2" locked="false" isInGroup="1">
+                              <controlProperties>
+                                <text>%5B-%5D%20eCAL%0A%20%5B-%5D%20%25HostName1%25%0A%20%20%5B-%5D%20%25Process1%25%0A%20%20Topic%201%0A%20%20Topic%202%0A%20%20Topic%203%0A%20%20Topic%204%0A%20%5B-%5D%20%25HostName2%25%0A%20%20%5B-%5D%20%25Process1%25%0A%20%20Topic%201%0A%20%20Topic%202%0A%20%20Topic%203</text>
+                              </controlProperties>
+                            </control>
+                            <control controlID="3" controlTypeID="com.balsamiq.mockups::HorizontalScrollBar" x="2" y="273" w="475" h="-1" measuredW="100" measuredH="16" zOrder="3" locked="false" isInGroup="1"/>
+                            <control controlID="4" controlTypeID="__group__" x="7" y="291" w="421" h="27" measuredW="421" measuredH="27" zOrder="4" locked="false" isInGroup="1">
+                              <groupChildrenDescriptors>
+                                <control controlID="0" controlTypeID="com.balsamiq.mockups::Button" x="0" y="0" w="119" h="27" measuredW="85" measuredH="27" zOrder="0" locked="false" isInGroup="4">
+                                  <controlProperties>
+                                    <text>Expand%20All</text>
+                                  </controlProperties>
+                                </control>
+                                <control controlID="1" controlTypeID="com.balsamiq.mockups::Button" x="153" y="0" w="119" h="27" measuredW="128" measuredH="27" zOrder="1" locked="false" isInGroup="4">
+                                  <controlProperties>
+                                    <text>Autosize%20Columns</text>
+                                  </controlProperties>
+                                </control>
+                                <control controlID="2" controlTypeID="com.balsamiq.mockups::Button" x="302" y="0" w="119" h="27" measuredW="72" measuredH="27" zOrder="2" locked="false" isInGroup="4">
+                                  <controlProperties>
+                                    <text>Show%20All</text>
+                                  </controlProperties>
+                                </control>
+                              </groupChildrenDescriptors>
+                            </control>
+                          </groupChildrenDescriptors>
+                        </control>
+                      </groupChildrenDescriptors>
+                    </control>
+                    <control controlID="2" controlTypeID="com.balsamiq.mockups::HRule" x="0" y="326" w="990" h="-1" measuredW="100" measuredH="10" zOrder="2" locked="false" isInGroup="1"/>
+                  </groupChildrenDescriptors>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Label" x="6" y="615" w="-1" h="-1" measuredW="126" measuredH="21" zOrder="1" locked="false" isInGroup="107">
+          <controlProperties>
+            <text>eCAL%20Time%3A%20%25Time%25</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+  </controls>
+</mockup>

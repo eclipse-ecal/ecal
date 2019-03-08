@@ -1,0 +1,12 @@
+[submodule "thirdparty/protobuf"]
+	path = thirdparty/protobuf
+	url = https://github.com/protocolbuffers/protobuf.git
+[submodule "thirdparty/asio"]
+	path = thirdparty/asio
+	url = https://github.com/chriskohlhoff/asio.git
+[submodule "thirdparty/tclap"]
+	path = thirdparty/tclap
+	url = https://github.com/xguerin/tclap.git
+[submodule "thirdparty/simpleini"]
+	path = thirdparty/simpleini
+	url = https://github.com/brofield/simpleini.git

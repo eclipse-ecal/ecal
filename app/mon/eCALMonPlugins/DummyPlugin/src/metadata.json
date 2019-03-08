@@ -1,0 +1,16 @@
+{
+  "Version": "v0.1.0",
+  "Author": "Author",
+  "Name": "Dummy Plugin",
+  
+  "Priority": 3,
+  
+  "SupportedTopics": 
+    [
+      {
+      }
+      
+    ],
+  
+  "OptionalTopics": []
+}

@@ -1,0 +1,39 @@
+<RCC>
+    <qresource prefix="/ecalicons">
+        <file alias="RESTART_SELECTED">flaticon/combinations/restart_selected.svg</file>
+        <file alias="START_SELECTED">flaticon/combinations/start_selected.svg</file>
+        <file alias="STOP_SELECTED">flaticon/combinations/stop_selected.svg</file>
+        <file alias="IMPORT_FROM_CLOUD">flaticon/DinosoftLabs/import_from_cloud.svg</file>
+        <file alias="UPDATE_FROM_CLOUD">flaticon/DinosoftLabs/update_from_cloud.svg</file>
+        <file alias="ADD">flaticon/Freepik/add.svg</file>
+        <file alias="COLLAPSE">flaticon/Freepik/collapse.svg</file>
+        <file alias="COMMAND_WINDOW">flaticon/Freepik/command_window.svg</file>
+        <file alias="DUPLICATE">flaticon/Freepik/duplicate.svg</file>
+        <file alias="EXPAND">flaticon/Freepik/expand.svg</file>
+        <file alias="EYE">flaticon/Freepik/eye.svg</file>
+        <file alias="NEW_FILE">flaticon/Freepik/new_file.svg</file>
+        <file alias="REMOVE">flaticon/Freepik/remove.svg</file>
+        <file alias="SAVE">flaticon/Freepik/save.svg</file>
+        <file alias="SAVE_AS">flaticon/Freepik/save_as.svg</file>
+        <file alias="WARNING">flaticon/Freepik/warning.svg</file>
+        <file alias="OPEN">flaticon/Smashicons/open.svg</file>
+        <file alias="START">flaticon/Smashicons/start.svg</file>
+        <file alias="STOP">flaticon/Smashicons/stop.svg</file>
+        <file alias="RESTART">flaticon/Stephen-Hutchings/restart.svg</file>
+        <file alias="EDIT">flaticon/Vectors-Market/pencil.svg</file>
+        <file alias="FILTER_CANCEL">flaticon/Freepik/filter_cancel.svg</file>
+        <file alias="PAUSE">flaticon/Freepik/pause.svg</file>
+        <file alias="FLATICON_LICENSE">flaticon/license.htm</file>
+        <file alias="FIND">flaticon/Freepik/loupe.svg</file>
+        <file alias="PLAY_NEXT">flaticon/Google/play_next.svg</file>
+        <file alias="PLAY_PREVIOUS">flaticon/Google/play_previous.svg</file>
+        <file alias="REPEAT">flaticon/Smashicons/repeat.svg</file>
+        <file alias="CHECKMARK">flaticon/Freepik/checkmark.svg</file>
+        <file alias="CROSS">flaticon/Freepik/cross.svg</file>
+        <file alias="FAST_FORWARD">flaticon/Google/fast_forward.svg</file>
+        <file alias="FORWARD_TO">flaticon/Google/forward_to.svg</file>
+        <file alias="REWIND">flaticon/Google/rewind.svg</file>
+        <file alias="SETTINGS">flaticon/Smashicons/gears.svg</file>
+        <file alias="INFO">flaticon/Freepik/info.svg</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,102 @@
+{
+  "configurations": [
+    {
+      "name": "x64-Debug",
+      "generator": "Visual Studio 15 2017 Win64",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "buildRoot": "${projectDir}\\_vs_cmake\\build\\${name}",
+      "installRoot": "${projectDir}\\_vs_cmake\\install\\${name}",
+      "variables": [
+        {
+          "name": "HAS_QT5",
+          "value": "ON"
+        },
+        {
+          "name": "BUILD_DOCS",
+          "value": "ON"
+        },
+        {
+          "name": "BUILD_APPS",
+          "value": "ON"
+        },
+        {
+          "name": "BUILD_SAMPLES",
+          "value": "ON"
+        },
+        {
+          "name": "BUILD_TIME",
+          "value": "ON"
+        },
+        {
+          "name": "ECAL_LAYER_FASTRTPS",
+          "value": "OFF"
+        },
+        {
+          "name": "ECAL_INSTALL_RUNTIME",
+          "value": "ON"
+        },
+        {
+          "name": "ECAL_INSTALL_SAMPLE_SOURCES",
+          "value": "ON"
+        },
+        {
+          "name": "ECAL_INSTALL_SDK",
+          "value": "ON"
+        },
+      ],
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": ""
+    },
+    {
+      "name": "x64-Release",
+      "generator": "Visual Studio 15 2017 Win64",
+      "configurationType": "Release",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "buildRoot": "${projectDir}\\_vs_cmake\\build\\${name}",
+      "installRoot": "${projectDir}\\_vs_cmake\\install\\${name}",
+      "variables": [
+        {
+          "name": "HAS_QT5",
+          "value": "ON"
+        },
+        {
+          "name": "BUILD_DOCS",
+          "value": "ON"
+        },
+        {
+          "name": "BUILD_APPS",
+          "value": "ON"
+        },
+        {
+          "name": "BUILD_SAMPLES",
+          "value": "ON"
+        },
+        {
+          "name": "BUILD_TIME",
+          "value": "ON"
+        },
+        {
+          "name": "ECAL_LAYER_FASTRTPS",
+          "value": "OFF"
+        },
+        {
+          "name": "ECAL_INSTALL_RUNTIME",
+          "value": "ON"
+        },
+        {
+          "name": "ECAL_INSTALL_SAMPLE_SOURCES",
+          "value": "ON"
+        },
+        {
+          "name": "ECAL_INSTALL_SDK",
+          "value": "ON"
+        },
+      ],
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": ""
+    }
+  ]
+}

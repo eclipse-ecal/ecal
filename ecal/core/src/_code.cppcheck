@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="1">
+    <includedir>
+        <dir name="/"/>
+        <dir name="time/"/>
+        <dir name="win32/"/>
+    </includedir>
+    <exclude>
+        <path name="lz4/"/>
+        <path name="pbrpc/"/>
+        <path name="protobuf/"/>
+        <path name="snappy/"/>
+    </exclude>
+</project>

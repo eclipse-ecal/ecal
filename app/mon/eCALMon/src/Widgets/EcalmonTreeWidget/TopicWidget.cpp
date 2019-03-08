@@ -1,0 +1,389 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2019 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+#include "TopicWidget.h"
+
+#include "Widgets/Models/ItemDataRoles.h"
+#include "Widgets/Models/TreeItemType.h"
+
+#include "Widgets/VisualisationWidget/VisualisationWindow.h"
+
+#include <ecal/ecal_util.h>
+#include <ecal_def_ini.h>
+#include <simpleini.h>
+
+#include <QSettings>
+#include <QMenu>
+#include <QApplication>
+#include <QDesktopWidget>
+
+TopicWidget::TopicWidget(QWidget *parent)
+  : EcalmonTreeWidget(parent)
+  , parse_time_(true)
+{
+  // Main Model
+  topic_tree_model_ = new TopicTreeModel(this);
+  setModel(topic_tree_model_);
+
+  // Show-all-Proxy-Model
+  loadRegExpLists();
+  topic_sort_filter_proxy_model_ = new TopicSortFilterProxyModel(this);
+  topic_sort_filter_proxy_model_->setFilterRole(ItemDataRoles::FilterRole);
+  topic_sort_filter_proxy_model_->setSortRole(ItemDataRoles::SortRole);
+  topic_sort_filter_proxy_model_->setFilterKeyColumn((int)TopicTreeModel::Columns::TOPIC_NAME);
+  topic_sort_filter_proxy_model_->setRecursiveFilteringEnabled(true);
+  topic_sort_filter_proxy_model_->setRegExpLists(topic_exclude_regexp_list_, topic_include_regexp_list_);
+  topic_sort_filter_proxy_model_->setSortCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
+  setAdditionalProxyModel(topic_sort_filter_proxy_model_);
+
+  connect(ui_.show_all_checkbox, &QCheckBox::stateChanged,
+    [this](int state)
+  {
+    if (state == Qt::CheckState::Checked)
+    {
+      topic_sort_filter_proxy_model_->setRegExpLists(QList<QRegExp>{}, QList<QRegExp>{});
+    }
+    else
+    {
+      topic_sort_filter_proxy_model_->setRegExpLists(topic_exclude_regexp_list_, topic_include_regexp_list_);
+    }
+  });
+
+  // Un-hide the show-all checkbox
+  ui_.show_all_checkbox->setHidden(false);
+
+  // Set default forced column
+  setDefaultForcedColumn((int)TopicTreeModel::Columns::TOPIC_NAME);
+
+  // Set the filter columns
+  QVector<int> filter_columns
+  {
+    (int)TopicTreeModel::Columns::TOPIC_NAME,
+    (int)TopicTreeModel::Columns::HOST_NAME,
+    (int)TopicTreeModel::Columns::PROCESS_NAME,
+    (int)TopicTreeModel::Columns::UNIT_NAME,
+    (int)TopicTreeModel::Columns::MESSAGE_TYPE,
+    (int)TopicTreeModel::Columns::QOS,
+    (int)TopicTreeModel::Columns::TRANSPORT_LAYER,
+  };
+  setFilterColumns(filter_columns);
+
+  // Set the default group-by-settings
+  QList<int> group_by_enabled_columns
+  {
+    (int)TopicTreeModel::Columns::TOPIC_NAME,
+    (int)TopicTreeModel::Columns::DIRECTION,
+    (int)TopicTreeModel::Columns::UNIT_NAME,
+    (int)TopicTreeModel::Columns::HOST_NAME,
+    (int)TopicTreeModel::Columns::PROCESS_NAME,
+    (int)TopicTreeModel::Columns::MESSAGE_TYPE,
+    (int)TopicTreeModel::Columns::QOS,
+    (int)TopicTreeModel::Columns::TRANSPORT_LAYER,
+  };
+
+  QList<EcalmonTreeWidget::GroupSetting> preconfigured_group_by_settings;
+
+  EcalmonTreeWidget::GroupSetting nothing;
+  nothing.group_by_columns = {};
+  nothing.auto_expand = -1;
+  nothing.name = "Nothing (Plain list)";
+  preconfigured_group_by_settings.push_back(nothing);
+
+  EcalmonTreeWidget::GroupSetting process;
+  process.group_by_columns = { (int)TopicTreeModel::Columns::HOST_NAME, (int)TopicTreeModel::Columns::UNIT_NAME };
+  process.auto_expand = 0;
+  process.name = "Process";
+  preconfigured_group_by_settings.push_back(process);
+
+  EcalmonTreeWidget::GroupSetting topic;
+  topic.group_by_columns = { (int)TopicTreeModel::Columns::TOPIC_NAME };
+  topic.auto_expand = -1;
+  topic.name = "Topic";
+  preconfigured_group_by_settings.push_back(topic);
+
+  EcalmonTreeWidget::GroupSetting type;
+  type.group_by_columns = { (int)TopicTreeModel::Columns::MESSAGE_TYPE, (int)TopicTreeModel::Columns::TOPIC_NAME };
+  type.auto_expand = -1;
+  type.name = "Type";
+  preconfigured_group_by_settings.push_back(type);
+
+  setGroupSettings(preconfigured_group_by_settings, group_by_enabled_columns);
+
+  // Connect the double-click-reflection-window
+  connect(ui_.tree_view, &QTreeView::doubleClicked, this, &TopicWidget::openReflectionWindowForSelection);
+  connect(ui_.tree_view, &QAdvancedTreeView::keyEnterPressed, this, &TopicWidget::openReflectionWindowForSelection);
+
+  // Initial layout
+  autoSizeColumns();
+
+  // Set the default visible columns
+  QVector<int> default_visible_columns
+  {
+    (int)TopicTreeModel::Columns::TOPIC_NAME,
+    (int)TopicTreeModel::Columns::DIRECTION,
+    (int)TopicTreeModel::Columns::UNIT_NAME,
+    (int)TopicTreeModel::Columns::HOST_NAME,
+    (int)TopicTreeModel::Columns::PID,
+    (int)TopicTreeModel::Columns::MESSAGE_TYPE,
+    (int)TopicTreeModel::Columns::TOPIC_SIZE,
+    (int)TopicTreeModel::Columns::MESSAGE_DROPS,
+    (int)TopicTreeModel::Columns::DATA_CLOCK,
+    (int)TopicTreeModel::Columns::DATA_FREQUENCY,
+  };
+  setVisibleColumns(default_visible_columns);
+
+  // Set the initial Tree Group
+  ui_.group_by_combobox->setCurrentIndex(1);
+
+  // Save the initial state for the resetLayout function
+  saveInitialState();
+
+  // Load the settings from the last start
+  loadGuiSettings("topic_widget");
+}
+
+TopicWidget::~TopicWidget()
+{
+  saveGuiSettings("topic_widget");
+
+  // Close all currently open reflection windows
+  for (VisualisationWindow* window : visualisation_windows_.values())
+  {
+    window->close();
+  }
+}
+
+void TopicWidget::loadRegExpLists()
+{
+
+  QString exclude_string;
+  QString include_string;
+
+  // We are manually loading the ecal.ini here and thus bypass the "actual"
+  // eCAL core API. Using the eCAL Core API would lead to an unresponsive GUI,
+  // as we then had to use the eCAL Mon API from the eCAL Core that filters
+  // the topics and takes a LOT of time to do that. By manually loading the
+  // filter we can manually filter the topic list and thereby instantaneously
+  // update the GUI.
+  std::string default_ini_path = eCAL::Util::GeteCALDefaultIniFile();
+
+  CSimpleIniA ini;
+  SI_Error rc = ini.LoadFile(default_ini_path.c_str());
+  if (rc < 0)
+  {
+    // When we cannot load the ecal.ini, we use a fallback regexp.
+    exclude_string = "__.*";
+    std::cerr << "Error loading ecal.ini from \"" << default_ini_path << "\"" << std::endl;
+  }
+  else
+  {
+    exclude_string = ini.GetValue(MON_SECTION_S, MON_FILTER_EXCL_S);
+    include_string = ini.GetValue(MON_SECTION_S, MON_FILTER_INCL_S);
+  }
+
+
+  // The ecal.ini defines a very strange regex format: A filter consists of
+  // several regular expressions divided by "," or ";". Thus we have to
+  // split the string into 'actual' regular expressions. This will break every
+  // regular expression that properly uses a ",". We cannot do anything about
+  // that without changing the ecal.ini specification.
+  QList<QString> exclude_string_list = exclude_string.split(QRegExp("[\\,,;]"), QString::SplitBehavior::SkipEmptyParts);
+  QList<QString> include_string_list = include_string.split(QRegExp("[\\,,;]"), QString::SplitBehavior::SkipEmptyParts);
+
+  for (auto& s : exclude_string_list)
+  {
+    topic_exclude_regexp_list_.push_back(QRegExp(s));
+  }
+
+  for (auto& s : include_string_list)
+  {
+    topic_include_regexp_list_.push_back(QRegExp(s));
+  }
+}
+
+void TopicWidget::autoSizeColumns()
+{
+  eCAL::pb::Topic example_topic_pb;
+
+  example_topic_pb.set_rclock(999999);
+  example_topic_pb.set_hname("CARPC00____");
+  example_topic_pb.set_pid(999999);
+  example_topic_pb.set_pname("");
+  example_topic_pb.set_uname("CameraSensorMapFusionCAF___");
+  example_topic_pb.set_tid("");
+  example_topic_pb.set_tname("CameraSensorMapFusionCAF___");
+  example_topic_pb.set_direction("subscriber__");
+  example_topic_pb.set_ttype("proto:pb.People.Person____");
+  //example_topic_pb.set_tdesc();
+  example_topic_pb.mutable_tqos()->set_reliability(eCAL::pb::QOS::eQOSPolicy_Reliability::QOS_eQOSPolicy_Reliability_best_effort_reliability_qos);
+
+  example_topic_pb.mutable_tlayer()->Add()->set_type(eCAL::pb::eTLayerType::tl_ecal_shm);
+  example_topic_pb.mutable_tlayer()->Add()->set_type(eCAL::pb::eTLayerType::tl_ecal_udp_mc);
+  example_topic_pb.set_tsize(999999);
+  example_topic_pb.set_connections_loc(999999);
+  example_topic_pb.set_connections_ext(999999);
+  example_topic_pb.set_message_drops(999999);
+  example_topic_pb.set_dclock(99999999999);
+  example_topic_pb.set_dfreq(999999);
+  example_topic_pb.set_dfreq_min(999999);
+  example_topic_pb.set_dfreq_max(999999);
+  example_topic_pb.set_dfreq_min_err(999999);
+  example_topic_pb.set_dfreq_max_err(999999);
+
+
+  TopicTreeItem* example_topic_item = new TopicTreeItem(example_topic_pb);
+  GroupTreeItem* example_group_item = new GroupTreeItem("CameraSensorMapFusionCAF___", "", "", QVariant::Invalid, "");
+
+  topic_tree_model_->insertItem(example_group_item);
+  auto group_index = topic_tree_model_->index(example_group_item);
+  topic_tree_model_->insertItem(example_topic_item, group_index);
+  ui_.tree_view->expandAll();
+
+  bool show_all = ui_.show_all_checkbox->isChecked();
+  ui_.show_all_checkbox->setChecked(true);
+
+  QList<int> columns_to_resize
+  {
+    (int)TopicTreeModel::Columns::GROUP,
+    (int)TopicTreeModel::Columns::TOPIC_NAME,
+    (int)TopicTreeModel::Columns::DIRECTION,
+    (int)TopicTreeModel::Columns::UNIT_NAME,
+    (int)TopicTreeModel::Columns::HOST_NAME,
+    (int)TopicTreeModel::Columns::PID,
+    (int)TopicTreeModel::Columns::MESSAGE_TYPE,
+    (int)TopicTreeModel::Columns::HEARTBEAT,
+    (int)TopicTreeModel::Columns::QOS,
+    (int)TopicTreeModel::Columns::TRANSPORT_LAYER,
+    (int)TopicTreeModel::Columns::TOPIC_SIZE,
+    (int)TopicTreeModel::Columns::CONNECTIONS_LOCAL,
+    (int)TopicTreeModel::Columns::CONNECTIONS_EXTERNAL,
+    (int)TopicTreeModel::Columns::MESSAGE_DROPS,
+    (int)TopicTreeModel::Columns::DATA_CLOCK,
+    (int)TopicTreeModel::Columns::DATA_FREQUENCY,
+    (int)TopicTreeModel::Columns::DATA_FREQUENCY_MIN,
+    (int)TopicTreeModel::Columns::DATA_FREQUENCY_MAX,
+    (int)TopicTreeModel::Columns::DATA_FREQUENCY_MIN_ERR,
+    (int)TopicTreeModel::Columns::DATA_FREQUENCY_MAX_ERR,
+  };
+
+  for (int column : columns_to_resize)
+  {
+    ui_.tree_view->resizeColumnToContents(column);
+  }
+
+
+  topic_tree_model_->removeItem(example_topic_item);
+  topic_tree_model_->removeItem(example_group_item);
+
+  ui_.show_all_checkbox->setChecked(show_all);
+}
+
+void TopicWidget::openReflectionWindowForSelection()
+{
+  auto selected_proxy_indices = ui_.tree_view->selectionModel()->selectedRows();
+
+  if (selected_proxy_indices.size() > 0)
+  {
+    QModelIndex index = mapToSource(selected_proxy_indices.at(0));
+
+    QAbstractTreeItem* item = topic_tree_model_->item(index);
+    if (item && (item->type() == (int)TreeItemType::Topic))
+    {
+      TopicTreeItem* topic_item = (TopicTreeItem*)item;
+
+      QString topic_name = topic_item->data(TopicTreeItem::Columns::TNAME, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
+
+      if (visualisation_windows_.contains(topic_name))
+      {
+        // Bring an existing Reflection Window to the front
+        VisualisationWindow* visualisation_window = visualisation_windows_[topic_name];
+        visualisation_window->setWindowState((visualisation_window->windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+        visualisation_window->raise();  // for MacOS
+        visualisation_window->activateWindow(); // for Windows
+      }
+      else
+      {
+        QString topic_type = topic_item->data(TopicTreeItem::Columns::TTYPE, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
+                                                                                                                                       
+        // Create a new Reflection Window
+        VisualisationWindow* visualisation_window = new VisualisationWindow(topic_name, topic_type);
+        visualisation_window->setAttribute(Qt::WA_DeleteOnClose, true);
+        visualisation_window->setParseTimeEnabled(parse_time_);
+        visualisation_windows_[topic_name] = visualisation_window;
+
+        connect(visualisation_window, &VisualisationWindow::destroyed, this, [this, topic_name]() {visualisation_windows_.remove(topic_name); });
+
+        visualisation_window->show();
+      }
+    }
+  }
+}
+
+void TopicWidget::fillContextMenu(QMenu& menu, const QList<QAbstractTreeItem*>& selected_items)
+{
+  EcalmonTreeWidget::fillContextMenu(menu, selected_items);
+
+  QAbstractTreeItem* item = nullptr;
+  for (QAbstractTreeItem* selected_item : selected_items)
+  {
+    // get the first non-group item
+    if (selected_item->type() == (int)TreeItemType::Topic)
+    {
+      item = selected_item;
+      break;
+    }
+  }
+
+  if (item)
+  {
+    QString topic_name = item->data((int)TopicTreeItem::Columns::TNAME).toString();
+
+    QAction* reflection_action = new QAction(tr("Inspect topic \"") + topic_name + "\"", &menu);
+    connect(reflection_action, &QAction::triggered, this, &TopicWidget::openReflectionWindowForSelection);
+
+    menu.addSeparator();
+    menu.addAction(reflection_action);
+  }
+}
+
+void TopicWidget::resetLayout()
+{
+  EcalmonTreeWidget::resetLayout();
+
+  // Reset layout of all reflection windows
+
+  QSettings settings;
+  settings.beginGroup("reflection_widget");
+  settings.setValue("tree_state", QByteArray());  // Reset the settings, so new windows will open resetted
+  settings.endGroup();
+
+  int screen_number = QApplication::desktop()->screenNumber(this);
+  for (auto reflection_window : visualisation_windows_.values())
+  {
+    reflection_window->resetLayout(screen_number);
+  }
+}
+void TopicWidget::setParseTimeEnabled(bool enabled)
+{
+  parse_time_ = enabled;
+  for (VisualisationWindow* visualisation_window : visualisation_windows_.values())
+  {
+    visualisation_window->setParseTimeEnabled(parse_time_);
+  }
+}

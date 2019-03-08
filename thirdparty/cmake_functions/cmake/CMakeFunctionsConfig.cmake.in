@@ -1,0 +1,4 @@
+@PACKAGE_INIT@
+
+# make all runtask helper functions available
+include("@PACKAGE_cmake_functions_install_cmake_dir@/cmake_functions.cmake")

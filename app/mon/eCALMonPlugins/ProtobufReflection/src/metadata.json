@@ -1,0 +1,16 @@
+{
+  "Version": "v0.1.0",
+  "Author": "Florian Reimold",
+  "Name": "Protobuf Reflection",
+  
+  "Priority": 1,
+  
+  "SupportedTopics": 
+    [
+      {
+		    "Format": "proto"
+      }
+    ],
+  
+  "OptionalTopics": []
+}
