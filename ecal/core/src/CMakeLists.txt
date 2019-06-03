@@ -323,7 +323,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_readwrite_rtps_msg_header_src}
     ${ecal_readwrite_rtps_header_src}
     ${ecal_service_header_src}
-	
+
     ${ecal_header_base}
     ${ecal_header_cimpl}
     ${ecal_header_msg}
@@ -364,7 +364,7 @@ if(ECAL_NPCAP_SUPPORT)
   add_definitions(-DECAL_NPCAP_SUPPORT)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE
-	  udpcap
+      udpcap
   )
  endif(ECAL_NPCAP_SUPPORT)
 
@@ -397,8 +397,8 @@ target_link_libraries(${PROJECT_NAME}
     EcalUtils
 )
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ecal)
-set_property(TARGET ${PROJECT_NAME_c} PROPERTY FOLDER ecal)
+set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)
+set_property(TARGET ${PROJECT_NAME}_c PROPERTY FOLDER ecal/core)
 
 ecal_install_ecal_shared_library(${PROJECT_NAME}_c)
 ecal_install_ecal_shared_library(${PROJECT_NAME})

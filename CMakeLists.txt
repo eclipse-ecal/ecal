@@ -247,6 +247,7 @@ set(eCAL_config                    ${eCAL_config_dir}/eCALConfig.cmake)
 set(eCAL_config_version            ${eCAL_config_dir}/eCALConfigVersion.cmake)
 if(WIN32)
   #set(eCAL_install_config_dir      $ENV{PROGRAMDATA}/eCAL)
+  
   set(eCAL_install_samples_dir     samples/bin/)
   set(eCAL_install_samples_src_dir samples/src/)
   set(eCAL_install_tests_dir       tests)

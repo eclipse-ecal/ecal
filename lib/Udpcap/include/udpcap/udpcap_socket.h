@@ -34,6 +34,7 @@ namespace Udpcap
 {
   class UdpcapSocketPrivate;
 
+
   /**
    * @brief The UdpcapSocket is a (receive-only) UDP Socket implementation using Npcap.
    *

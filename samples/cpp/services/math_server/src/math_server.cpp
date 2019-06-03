@@ -23,7 +23,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-#include <math.h>
+#include <cmath>
 #include <cfloat>
 
 #include "math.pb.h"

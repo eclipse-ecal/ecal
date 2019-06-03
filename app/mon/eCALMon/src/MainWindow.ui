@@ -27,7 +27,7 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_file">
@@ -79,6 +79,8 @@
     <addaction name="separator"/>
     <addaction name="action_alternating_row_colors"/>
     <addaction name="action_show_parsed_times"/>
+    <addaction name="separator"/>
+    <addaction name="action_npcap_status"/>
    </widget>
    <widget class="QMenu" name="menu_help">
     <property name="title">
@@ -532,6 +534,11 @@
   <action name="action_plugin_settings">
    <property name="text">
     <string>Plugin settings...</string>
+   </property>
+  </action>
+  <action name="action_npcap_status">
+   <property name="text">
+    <string>Npcap status...</string>
    </property>
   </action>
  </widget>

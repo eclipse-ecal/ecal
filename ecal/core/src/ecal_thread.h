@@ -57,8 +57,8 @@ namespace eCAL
       int                     period;
       EventHandleT            event;
       std::atomic<bool>       is_running;
-	    std::atomic<bool>       is_started;
-	    std::atomic<bool>       do_stop;
+      std::atomic<bool>       is_started;
+      std::atomic<bool>       do_stop;
       std::function<int()>    ext_caller;
     };
     struct ThreadData m_tdata;
