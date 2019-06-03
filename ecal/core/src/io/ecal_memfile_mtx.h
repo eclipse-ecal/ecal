@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <thread>
 
 #ifdef ECAL_OS_WINDOWS
 
@@ -130,7 +131,7 @@ namespace eCAL
   }
 
   inline bool LockMtx(MutexT* mutex_handle_, const int timeout_)
-  {
+  {    
     // check mutex handle
     if(mutex_handle_ == nullptr) return(false);
 
@@ -140,17 +141,48 @@ namespace eCAL
     }
     else
     {
-      struct timespec abstime;
-      struct timeval  tv;
-      gettimeofday(&tv, NULL);
-      abstime.tv_sec  = tv.tv_sec + timeout_ / 1000;
-      abstime.tv_nsec = tv.tv_usec*1000 + (timeout_ % 1000)*1000000;
-      if (abstime.tv_nsec >= 1000000000)
+      auto wait_until = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeout_);
+      
+      do
       {
-        abstime.tv_nsec -= 1000000000;
-        abstime.tv_sec++;
-      }
-      return(sem_timedwait(*mutex_handle_, &abstime) == 0);
+        if (sem_trywait(*mutex_handle_) == 0)
+        {
+          // The semaphore could be locked!
+          return true;
+        }
+        else if (errno == EAGAIN)
+        {
+          // The semaphore could not be locked. Let's wait some time and try again.
+          std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+      } while (std::chrono::steady_clock::now() < wait_until);
+      
+      // When reaching this code, we were never able to lock the semaphore
+      return false;
+      
+      /*
+       * Why the code below is commented out:
+       * The timeout in the code below is used to compute an absolute time,
+       * until the process should wait to lock the semaphore. The time basis
+       * used is the CLOCK_REALTIME (gettimeofday), as sem_timedwait() needs
+       * an absolute CLOCK_REALTIME time-point.
+       * This however causes the whole system to hang, when the system time
+       * is set to a time-point in the past, as it may happen when the NPT
+       * deamon obtains a new time, or the system time is synchronized with 
+       * using PTP.
+       */
+      
+//      struct timespec abstime;
+//      struct timeval  tv;
+//      gettimeofday(&tv, NULL);
+//      abstime.tv_sec  = tv.tv_sec + timeout_ / 1000;
+//      abstime.tv_nsec = tv.tv_usec*1000 + (timeout_ % 1000)*1000000;
+//      if (abstime.tv_nsec >= 1000000000)
+//      {
+//        abstime.tv_nsec -= 1000000000;
+//        abstime.tv_sec++;
+//      }
+//      return(sem_timedwait(*mutex_handle_, &abstime) == 0);
     }
   }
 

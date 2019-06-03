@@ -1,0 +1,6 @@
+<CPackWiXPatch>
+  <CPackWiXFragment Id="CM_SHORTCUT_app">
+		<Environment  Id="SystemEnvironment" Action="set" System="yes" Part="all" Name="ECAL_HOME"   Value="[INSTALL_ROOT]"/>
+		<Environment Id="PATH" Name="PATH" Value="[INSTALL_ROOT]bin" Permanent="yes" Part="last"  Action="set" System="yes" />
+  </CPackWiXFragment>
+</CPackWiXPatch>

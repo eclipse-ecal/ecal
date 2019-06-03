@@ -24,6 +24,7 @@
 #include <tchar.h>
 #include <iostream>
 #include <algorithm>
+#include <sstream>
 
 #include <locale>
 #include <codecvt>
@@ -31,6 +32,8 @@
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+
+#include <pcap/pcap.h>
 
 namespace Udpcap
 {
@@ -42,17 +45,21 @@ namespace Udpcap
     static std::string loopback_device_uuid_string;
     static bool loopback_device_name_initialized(false);
 
+    static std::string human_readible_error_("Npcap has not been initialized, yet");
+
     bool LoadNpcapDlls()
     {
       _TCHAR npcap_dir[512];
       UINT len;
       len = GetSystemDirectory(npcap_dir, 480);
       if (!len) {
+        human_readible_error_ = "Error in GetSystemDirectory";
         fprintf(stderr, "Error in GetSystemDirectory: %x", GetLastError());
         return false;
       }
       _tcscat_s(npcap_dir, 512, _T("\\Npcap"));
       if (SetDllDirectory(npcap_dir) == 0) {
+        human_readible_error_ = "Error in SetDllDirectory";
         fprintf(stderr, "Error in SetDllDirectory: %x", GetLastError());
         return false;
       }
@@ -111,7 +118,8 @@ namespace Udpcap
       LONG error_code = RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Services\\npcap\\Parameters", 0, KEY_READ, &hkey);
       if (error_code)
       {
-        std::cerr << "Udpcap ERROR: NPCAP doesn't seem to be installed. Please download and install Npcap from https://nmap.org/npcap/#download" << std::endl;
+        human_readible_error_ = "NPCAP doesn't seem to be installed. Please download and install Npcap from https://nmap.org/npcap/#download";
+        std::cerr << "Udpcap ERROR: " << human_readible_error_ << std::endl;
         return false;
       }
 
@@ -120,7 +128,8 @@ namespace Udpcap
 
       if (!loopback_supported)
       {
-        std::cerr << "Udpcap ERROR: NPCAP was installed without loopback support. Please re-install NPCAP" << std::endl;
+        human_readible_error_ = "NPCAP was installed without loopback support. Please re-install NPCAP";
+        std::cerr << "Udpcap ERROR: " << human_readible_error_ << std::endl;
         RegCloseKey(hkey);
         return false;
       }
@@ -130,11 +139,18 @@ namespace Udpcap
 
       if (loopback_device_name_w.empty())
       {
-        std::cerr << "Udpcap ERROR: unable to retrieve NPCAP Loopback adapter name. Please reinstall Npcap:" << std::endl;
-        std::cerr << "    1) Uninstall Npcap" << std::endl;
-        std::cerr << "    2) Uninstall all \"Npcap Loopback Adapters\" from the device manager" << std::endl;
-        std::cerr << "    3) Uninstall all \"Microsoft KM_TEST Loopback Adapters\" from the device manager" << std::endl;
-        std::cerr << "    4) Install Npcap again" << std::endl;
+        std::stringstream error_ss;
+
+        error_ss << "Unable to retrieve NPCAP Loopback adapter name. Please reinstall Npcap:" << std::endl;
+        error_ss << "    1) Uninstall Npcap" << std::endl;
+        error_ss << "    2) Uninstall all \"Npcap Loopback Adapters\" from the device manager" << std::endl;
+        error_ss << "    3) Uninstall all \"Microsoft KM_TEST Loopback Adapters\" from the device manager" << std::endl;
+        error_ss << "    4) Install Npcap again";
+
+        human_readible_error_ = error_ss.str();
+
+        std::cerr << "Udpcap ERROR: " << human_readible_error_ << std::endl;
+
         RegCloseKey(hkey);
         return false;
       }
@@ -152,6 +168,97 @@ namespace Udpcap
 
       return true;
     }
+
+    bool IsLoopbackDevice_NoLock(const std::string& device_name_or_uuid_string)
+    {
+      if (!loopback_device_name_initialized)
+      {
+        loopback_device_name_initialized = LoadLoopbackDeviceNameFromRegistry();
+      }
+
+      if (!loopback_device_name_initialized)
+      {
+        return false;
+      }
+      else
+      {
+        // Extract the UUID from the input, as it might be an entire device path
+        size_t open_bracket_pos = device_name_or_uuid_string.find('{');
+        size_t closing_bracket_pos = device_name_or_uuid_string.find('}');
+
+        std::string given_uuid;
+
+        if ((open_bracket_pos == std::string::npos) || (closing_bracket_pos == std::string::npos))
+        {
+          given_uuid = device_name_or_uuid_string;
+        }
+        else
+        {
+          given_uuid = device_name_or_uuid_string.substr(open_bracket_pos + 1, closing_bracket_pos - open_bracket_pos - 1);
+        }
+
+        // Lower-case everything
+        //std::transform(given_uuid.begin(), given_uuid.end(), given_uuid.begin(), ::tolower); // cause warning C4244 with VS2017
+        std::transform(given_uuid.begin(), given_uuid.end(), given_uuid.begin(),
+          [](char c) {return static_cast<char>(::tolower(c)); });
+        std::string loopback_uuid_lower = loopback_device_uuid_string;
+        //std::transform(loopback_uuid_lower.begin(), loopback_uuid_lower.end(), loopback_uuid_lower.begin(), ::tolower); // cause warning C4244 with VS2017
+        std::transform(loopback_uuid_lower.begin(), loopback_uuid_lower.end(), loopback_uuid_lower.begin(),
+          [](char c) {return static_cast<char>(::tolower(c)); });
+
+        // String compare
+        return (loopback_uuid_lower == given_uuid);
+      }
+    }
+
+    bool TestLoopbackDevice()
+    {
+      typedef std::unique_ptr<pcap_if_t*, void(*)(pcap_if_t**)> pcap_if_t_uniqueptr;
+
+      char errbuf[PCAP_ERRBUF_SIZE];
+      pcap_if_t* alldevs_rawptr;
+      pcap_if_t_uniqueptr alldevs(&alldevs_rawptr, [](pcap_if_t** p) { pcap_freealldevs(*p); });
+
+      bool loopback_device_found = false;
+
+      if (pcap_findalldevs(alldevs.get(), errbuf) == -1)
+      {
+        human_readible_error_ = "Error in pcap_findalldevs: " + std::string(errbuf);
+        fprintf(stderr, "Error in pcap_findalldevs: %s\n", errbuf);
+        return false;
+      }
+
+      // Check if the loopback device is accessible
+      for (pcap_if_t* pcap_dev = *alldevs.get(); pcap_dev; pcap_dev = pcap_dev->next)
+      {
+        if (IsLoopbackDevice_NoLock(pcap_dev->name))
+        {
+          loopback_device_found = true;
+        }
+      }
+
+      // if we didn't find the loopback device, the test has failed
+      if (!loopback_device_found)
+      {
+        std::stringstream error_ss;
+
+        error_ss << "Udpcap ERROR: Loopback adapter is inaccessible. On some systems the Npcap driver fails to start properly. Please open a command prompt with administrative privileges and run the following commands:" << std::endl;
+        error_ss << "    When npcap was installed in normal mode:" << std::endl;
+        error_ss << "       > sc stop npcap" << std::endl;
+        error_ss << "       > sc start npcap" << std::endl;
+        error_ss << "    When npcap was installed in WinPcap compatible mode:" << std::endl;
+        error_ss << "       > sc stop npf" << std::endl;
+        error_ss << "       > sc start npf";
+
+        human_readible_error_ = error_ss.str();
+
+        std::cerr << "Udpcap ERROR: " << human_readible_error_ << std::endl;
+
+        return false;
+      }
+
+      return true;
+    }
   }
 
   bool Initialize()
@@ -159,6 +266,8 @@ namespace Udpcap
     std::lock_guard<std::mutex> npcap_lock(npcap_mutex);
 
     if (is_initialized) return true;
+
+    human_readible_error_ = "Unknown error";
 
     std::cout << "Udpcap: Initializing Npcap..." << std::endl;
 
@@ -175,7 +284,13 @@ namespace Udpcap
       return false;
     }
 
-    std::cout << "Udpcap: Npcap is ready" << std::endl;
+    if (!TestLoopbackDevice())
+    {
+      return false;
+    }
+
+    human_readible_error_ = "Npcap is ready";
+    std::cout << "Udpcap: " << human_readible_error_ << std::endl;
 
     is_initialized = true;
     return true;
@@ -213,44 +328,12 @@ namespace Udpcap
   bool IsLoopbackDevice(const std::string& device_name_or_uuid_string)
   {
     std::lock_guard<std::mutex> npcap_lock(npcap_mutex);
+    return IsLoopbackDevice_NoLock(device_name_or_uuid_string);
+  }
 
-    if (!loopback_device_name_initialized)
-    {
-      loopback_device_name_initialized = LoadLoopbackDeviceNameFromRegistry();
-    }
-
-    if (!loopback_device_name_initialized)
-    {
-      return false;
-    }
-    else
-    {
-      // Extract the UUID from the input, as it might be an entire device path
-      size_t open_bracket_pos = device_name_or_uuid_string.find('{');
-      size_t closing_bracket_pos = device_name_or_uuid_string.find('}');
-
-      std::string given_uuid;
-
-      if ((open_bracket_pos == std::string::npos) || (closing_bracket_pos == std::string::npos))
-      {
-        given_uuid = device_name_or_uuid_string;
-      }
-      else
-      {
-        given_uuid = device_name_or_uuid_string.substr(open_bracket_pos + 1, closing_bracket_pos - open_bracket_pos - 1);
-      }
-
-      // Lower-case everything	  
-	  //std::transform(given_uuid.begin(), given_uuid.end(), given_uuid.begin(), ::tolower); // cause warning C4244 with VS2017
-	  std::transform(given_uuid.begin(), given_uuid.end(), given_uuid.begin(),
-		  [](char c) {return static_cast<char>(::tolower(c)); });
-      std::string loopback_uuid_lower = loopback_device_uuid_string;
-	  //std::transform(loopback_uuid_lower.begin(), loopback_uuid_lower.end(), loopback_uuid_lower.begin(), ::tolower); // cause warning C4244 with VS2017
-	  std::transform(loopback_uuid_lower.begin(), loopback_uuid_lower.end(), loopback_uuid_lower.begin(),
-		  [](char c) {return static_cast<char>(::tolower(c)); });
-
-      // String compare
-      return (loopback_uuid_lower == given_uuid);
-    }
+  std::string GetHumanReadibleErrorText()
+  {
+    std::lock_guard<std::mutex> npcap_lock(npcap_mutex);
+    return human_readible_error_;
   }
 }

@@ -33,16 +33,6 @@
 
 #include <asio.hpp>
 
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable: 4200 )
-#endif // _MSC_VER
-#include <IPv4Layer.h>     // Pcap++ IPv4
-#include <UdpLayer.h>      // Pcap++ UDP
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif // _MSC_VER
-
 namespace Udpcap
 {
   //////////////////////////////////////////
@@ -290,31 +280,57 @@ namespace Udpcap
       num_handles = MAXIMUM_WAIT_OBJECTS;
     }
 
-    DWORD wait_result = WaitForMultipleObjects(num_handles, &pcap_win32_handles_[0], false, timeout_ms);
+    bool wait_forever = (timeout_ms == INFINITE);
+    auto wait_until = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeout_ms);
 
-    if ((wait_result >= WAIT_OBJECT_0) && wait_result <= (WAIT_OBJECT_0 + num_handles - 1))
-    {
-      int dev_index = (wait_result - WAIT_OBJECT_0);
+    std::vector<char> datagram;
+    CallbackArgsVector callback_args(&datagram, source_address, source_port, bound_port_, pcpp::LinkLayerType::LINKTYPE_NULL, &ip_reassembly_);
 
-      std::vector<char> datagram;
-      CallbackArgsVector callback_args(&datagram, source_address, source_port, static_cast<pcpp::LinkLayerType>(pcap_datalink(pcap_devices_[dev_index].pcap_handle_)));
+    do
+    {
+      unsigned long remaining_time_to_wait_ms = 0;
+      if (wait_forever)
+      {
+        remaining_time_to_wait_ms = INFINITE;
+      }
+      else
+      {
+        auto now = std::chrono::steady_clock::now();
+        if (now < wait_until)
+        {
+          remaining_time_to_wait_ms = static_cast<unsigned long>(std::chrono::duration_cast<std::chrono::milliseconds>(wait_until - now).count());
+        }
+      }
 
-      pcap_dispatch(pcap_devices_[dev_index].pcap_handle_, 1, UdpcapSocketPrivate::PacketHandlerVector, reinterpret_cast<u_char*>(&callback_args));
+      DWORD wait_result = WaitForMultipleObjects(num_handles, &pcap_win32_handles_[0], false, remaining_time_to_wait_ms);
 
-      return datagram;
-    }
-    else if ((wait_result >= WAIT_ABANDONED_0) && wait_result <= (WAIT_ABANDONED_0 + num_handles - 1))
-    {
-      LOG_DEBUG("Receive error: WAIT_ABANDONED");
-    }
-    else if (wait_result == WAIT_TIMEOUT)
-    {
-      // LOG_DEBUG("Receive error: WAIT_TIMEOUT");
-    }
-    else if (wait_result == WAIT_FAILED)
-    {
-      LOG_DEBUG("Receive error: WAIT_FAILED: " + std::to_string(GetLastError()));
-    }
+      if ((wait_result >= WAIT_OBJECT_0) && wait_result <= (WAIT_OBJECT_0 + num_handles - 1))
+      {
+        int dev_index = (wait_result - WAIT_OBJECT_0);
+        
+        callback_args.link_type_ = static_cast<pcpp::LinkLayerType>(pcap_datalink(pcap_devices_[dev_index].pcap_handle_));
+
+        pcap_dispatch(pcap_devices_[dev_index].pcap_handle_, 1, UdpcapSocketPrivate::PacketHandlerVector, reinterpret_cast<u_char*>(&callback_args));
+
+        if (callback_args.success_)
+        {
+          // Only return datagram if we successfully received a packet. Otherwise, we will continue receiving data, if there is time left.
+          return datagram;
+        }
+      }
+      else if ((wait_result >= WAIT_ABANDONED_0) && wait_result <= (WAIT_ABANDONED_0 + num_handles - 1))
+      {
+        LOG_DEBUG("Receive error: WAIT_ABANDONED");
+      }
+      else if (wait_result == WAIT_TIMEOUT)
+      {
+        // LOG_DEBUG("Receive error: WAIT_TIMEOUT");
+      }
+      else if (wait_result == WAIT_FAILED)
+      {
+        LOG_DEBUG("Receive error: WAIT_FAILED: " + std::to_string(GetLastError()));
+      }
+    } while (wait_forever || (std::chrono::steady_clock::now() < wait_until));
 
     return{};
   }
@@ -354,32 +370,58 @@ namespace Udpcap
       num_handles = MAXIMUM_WAIT_OBJECTS;
     }
 
-    DWORD wait_result = WaitForMultipleObjects(num_handles, &pcap_win32_handles_[0], false, timeout_ms);
+    bool wait_forever = (timeout_ms == INFINITE);
+    auto wait_until = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeout_ms);
 
-    if ((wait_result >= WAIT_OBJECT_0) && wait_result <= (WAIT_OBJECT_0 + num_handles - 1))
+    CallbackArgsRawPtr callback_args(data, max_len, source_address, source_port, bound_port_, pcpp::LinkLayerType::LINKTYPE_NULL, &ip_reassembly_);
+
+    do
     {
-      int dev_index = (wait_result - WAIT_OBJECT_0);
+      unsigned long remaining_time_to_wait_ms = 0;
+      if (wait_forever)
+      {
+        remaining_time_to_wait_ms = INFINITE;
+      }
+      else
+      {
+        auto now = std::chrono::steady_clock::now();
+        if (now < wait_until)
+        {
+          remaining_time_to_wait_ms = static_cast<unsigned long>(std::chrono::duration_cast<std::chrono::milliseconds>(wait_until - now).count());
+        }
+      }
 
-      CallbackArgsRawPtr callback_args(data, max_len, source_address, source_port, static_cast<pcpp::LinkLayerType>(pcap_datalink(pcap_devices_[dev_index].pcap_handle_)));
+      DWORD wait_result = WaitForMultipleObjects(num_handles, &pcap_win32_handles_[0], false, remaining_time_to_wait_ms);
 
-      pcap_dispatch(pcap_devices_[dev_index].pcap_handle_, 1, UdpcapSocketPrivate::PacketHandlerRawPtr, reinterpret_cast<u_char*>(&callback_args));
+      if ((wait_result >= WAIT_OBJECT_0) && wait_result <= (WAIT_OBJECT_0 + num_handles - 1))
+      {
+        int dev_index = (wait_result - WAIT_OBJECT_0);
 
-      return callback_args.bytes_copied_;
-    }
-    else if ((wait_result >= WAIT_ABANDONED_0) && wait_result <= (WAIT_ABANDONED_0 + num_handles - 1))
-    {
-      LOG_DEBUG("Receive error: WAIT_ABANDONED");
-    }
-    else if (wait_result == WAIT_TIMEOUT)
-    {
-      // LOG_DEBUG("Receive error: WAIT_TIMEOUT");
-    }
-    else if (wait_result == WAIT_FAILED)
-    {
-      LOG_DEBUG("Receive error: WAIT_FAILED: " + std::to_string(GetLastError()));
-    }
+        callback_args.link_type_ = static_cast<pcpp::LinkLayerType>(pcap_datalink(pcap_devices_[dev_index].pcap_handle_));
 
-    return{};
+        pcap_dispatch(pcap_devices_[dev_index].pcap_handle_, 1, UdpcapSocketPrivate::PacketHandlerRawPtr, reinterpret_cast<u_char*>(&callback_args));
+
+        if (callback_args.success_)
+        {
+          // Only return datagram if we successfully received a packet. Otherwise, we will continue receiving data, if there is time left.
+          return callback_args.bytes_copied_;
+        }
+      }
+      else if ((wait_result >= WAIT_ABANDONED_0) && wait_result <= (WAIT_ABANDONED_0 + num_handles - 1))
+      {
+        LOG_DEBUG("Receive error: WAIT_ABANDONED");
+      }
+      else if (wait_result == WAIT_TIMEOUT)
+      {
+        // LOG_DEBUG("Receive error: WAIT_TIMEOUT");
+      }
+      else if (wait_result == WAIT_FAILED)
+      {
+        LOG_DEBUG("Receive error: WAIT_FAILED: " + std::to_string(GetLastError()));
+      }
+    } while (wait_forever || (std::chrono::steady_clock::now() < wait_until));
+
+    return 0;
   }
 
 
@@ -683,8 +725,8 @@ namespace Udpcap
     // IP traffic having UDP payload
     ss << "ip and udp";
 
-    // Port
-    ss << " and port " << bound_port_;
+    // UDP Port or IPv4 fragmented traffic (in IP fragments we cannot see the UDP port, yet)
+    ss << " and (udp port " << bound_port_ << " or (ip[6:2] & 0x3fff != 0))";
 
     // IP
     // Unicast traffic
@@ -804,23 +846,57 @@ namespace Udpcap
     pcpp::RawPacket rawPacket(pkt_data, header->caplen, header->ts, false, callback_args->link_type_);
     pcpp::Packet    packet(&rawPacket, pcpp::ProtocolType::UDP);
 
-    if (callback_args->source_address_)
+    pcpp::IPv4Layer* ip_layer  = packet.getLayerOfType<pcpp::IPv4Layer>();
+    pcpp::UdpLayer*  udp_layer = packet.getLayerOfType<pcpp::UdpLayer>();
+
+    if (ip_layer)
     {
-      pcpp::IPv4Layer* ip_layer = packet.getLayerOfType<pcpp::IPv4Layer>();
-      if (ip_layer)
+      if (ip_layer->isFragment())
       {
-        *callback_args->source_address_ = HostAddress(ip_layer->getSrcIpAddress().toInt());
+        // Handle fragmented IP traffic
+        pcpp::IPReassembly::ReassemblyStatus status;
+
+        // Try to reasseble packet
+        pcpp::Packet* reassembled_packet = callback_args->ip_reassembly_->processPacket(&rawPacket, status);
+
+        // If we are done reassembling the packet, we return it to the user
+        if (reassembled_packet)
+        {
+          pcpp::Packet re_parsed_packet(reassembled_packet->getRawPacket(), pcpp::ProtocolType::UDP);
+
+          pcpp::IPv4Layer* reassembled_ip_layer  = re_parsed_packet.getLayerOfType<pcpp::IPv4Layer>();
+          pcpp::UdpLayer*  reassembled_udp_layer = re_parsed_packet.getLayerOfType<pcpp::UdpLayer>();
+
+          if (reassembled_ip_layer && reassembled_udp_layer)
+            FillCallbackArgsVector(callback_args, reassembled_ip_layer, reassembled_udp_layer);
+
+          free(reassembled_packet); // We need to manually free the packet pointer
+        }
+      }
+      else if (udp_layer)
+      {
+        // Handle normal IP traffic (un-fragmented)
+        FillCallbackArgsVector(callback_args, ip_layer, udp_layer);
       }
     }
+  }
 
-    if (callback_args->source_port_)
+  void UdpcapSocketPrivate::FillCallbackArgsVector(CallbackArgsVector* callback_args, pcpp::IPv4Layer* ip_layer, pcpp::UdpLayer* udp_layer)
+  {
+    auto dst_port = ntohs(udp_layer->getUdpHeader()->portDst);
+
+    if (dst_port == callback_args->bound_port_)
     {
-      *callback_args->source_port_ = static_cast<pcpp::UdpLayer*>(packet.getLastLayer())->getUdpHeader()->portSrc;
-    }
+      if (callback_args->source_address_)
+        *callback_args->source_address_ = HostAddress(ip_layer->getSrcIpAddress().toInt());
 
-    auto packet_lastlayer = packet.getLastLayer();
-    callback_args->destination_vector_->reserve(packet_lastlayer->getLayerPayloadSize());
-    callback_args->destination_vector_->assign(packet_lastlayer->getLayerPayload(), packet_lastlayer->getLayerPayload() + packet_lastlayer->getLayerPayloadSize());
+      if (callback_args->source_port_)
+        *callback_args->source_port_ = ntohs(udp_layer->getUdpHeader()->portSrc);
+
+      callback_args->destination_vector_->reserve(udp_layer->getLayerPayloadSize());
+      callback_args->destination_vector_->assign(udp_layer->getLayerPayload(), udp_layer->getLayerPayload() + udp_layer->getLayerPayloadSize());
+      callback_args->success_ = true;
+    }
   }
 
   void UdpcapSocketPrivate::PacketHandlerRawPtr(unsigned char* param, const struct pcap_pkthdr* header, const unsigned char* pkt_data)
@@ -830,23 +906,62 @@ namespace Udpcap
     pcpp::RawPacket rawPacket(pkt_data, header->caplen, header->ts, false, callback_args->link_type_);
     pcpp::Packet    packet(&rawPacket, pcpp::ProtocolType::UDP);
 
-    if (callback_args->source_address_)
+    pcpp::IPv4Layer* ip_layer = packet.getLayerOfType<pcpp::IPv4Layer>();
+    pcpp::UdpLayer*  udp_layer = packet.getLayerOfType<pcpp::UdpLayer>();
+
+    if (ip_layer)
     {
-      pcpp::IPv4Layer* ip_layer = packet.getLayerOfType<pcpp::IPv4Layer>();
-      if (ip_layer)
+      if (ip_layer->isFragment())
       {
-        *callback_args->source_address_ = HostAddress(ip_layer->getSrcIpAddress().toInt());
+        // Handle fragmented IP traffic
+        pcpp::IPReassembly::ReassemblyStatus status;
+
+        // Try to reasseble packet
+        pcpp::Packet* reassembled_packet = callback_args->ip_reassembly_->processPacket(&rawPacket, status);
+
+        // If we are done reassembling the packet, we return it to the user
+        if (reassembled_packet)
+        {
+          pcpp::Packet re_parsed_packet(reassembled_packet->getRawPacket(), pcpp::ProtocolType::UDP);
+
+          pcpp::IPv4Layer* reassembled_ip_layer = re_parsed_packet.getLayerOfType<pcpp::IPv4Layer>();
+          pcpp::UdpLayer*  reassembled_udp_layer = re_parsed_packet.getLayerOfType<pcpp::UdpLayer>();
+
+          if (reassembled_ip_layer && reassembled_udp_layer)
+            FillCallbackArgsRawPtr(callback_args, reassembled_ip_layer, reassembled_udp_layer);
+
+          free(reassembled_packet); // We need to manually free the packet pointer
+        }
+      }
+      else if (udp_layer)
+      {
+        // Handle normal IP traffic (un-fragmented)
+        FillCallbackArgsRawPtr(callback_args, ip_layer, udp_layer);
       }
     }
 
-    if (callback_args->source_port_)
+  }
+
+  void UdpcapSocketPrivate::FillCallbackArgsRawPtr(CallbackArgsRawPtr* callback_args, pcpp::IPv4Layer* ip_layer, pcpp::UdpLayer* udp_layer)
+  {
+    auto dst_port = ntohs(udp_layer->getUdpHeader()->portDst);
+
+    if (dst_port == callback_args->bound_port_)
     {
-      *callback_args->source_port_ = static_cast<pcpp::UdpLayer*>(packet.getLastLayer())->getUdpHeader()->portSrc;
+      if (callback_args->source_address_)
+        *callback_args->source_address_ = HostAddress(ip_layer->getSrcIpAddress().toInt());
+
+      if (callback_args->source_port_)
+        *callback_args->source_port_ = ntohs(udp_layer->getUdpHeader()->portSrc);
+
+
+      size_t bytes_to_copy = std::min(callback_args->destination_buffer_size_, udp_layer->getLayerPayloadSize());
+
+      memcpy_s(callback_args->destination_buffer_, callback_args->destination_buffer_size_, udp_layer->getLayerPayload(), bytes_to_copy);
+      callback_args->bytes_copied_ = bytes_to_copy;
+
+      callback_args->success_ = true;
     }
 
-    size_t bytes_to_copy = std::min(callback_args->destination_buffer_size_, packet.getLastLayer()->getLayerPayloadSize());
-
-    memcpy_s(callback_args->destination_buffer_, callback_args->destination_buffer_size_, packet.getLastLayer()->getLayerPayload(), bytes_to_copy);
-    callback_args->bytes_copied_ = bytes_to_copy;
   }
 }

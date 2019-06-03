@@ -499,6 +499,11 @@ namespace EcalUtils
             output += input[++n];
             break;
           }
+          else
+          {
+            output += input[n];
+          }
+          break;
 
         default:
           output += input[n];
