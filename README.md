@@ -102,11 +102,14 @@ You need
 
 #### Qt 5
 
-Install Qt5 by starting the installer and selecting `msvc2015 32-bit` and `msvc2015 64-bit` from the latest Qt5 version. Create an environment variable `QT5_ROOT_DIRECTORY` that points to the directory containing the architecture-specific folders. It should look like this:
+Install Qt5 by starting the installer and selecting `msvc2015 32-bit` and `msvc2015 64-bit` (VS2015) or `msvc2017 32-bit` and `msvc2017 64-bit` (VS2017) from the latest Qt5 version. Create an environment variable `QT5_ROOT_DIRECTORY` that points to the directory containing the architecture-specific folders. It should look like this:
 
     %QT5_ROOT_DIRECTORY%
       ├ msvc2015
-      └ msvc2015_64
+      ├ msvc2015_64
+      ├ msvc2017
+      └ msvc2017_64
+      
 
 #### Build eCAL
 
@@ -292,7 +295,7 @@ void OnReceive(const char* topic_name_, const std::string& message_)
 }
 
 // create subscriber
-eCAL::eCAL::string::Subscriber<std::string> sub("foo");
+eCAL::string::CSubscriber<std::string> sub("foo");
 
 // register subscriber callback function
 auto callback = std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2);
