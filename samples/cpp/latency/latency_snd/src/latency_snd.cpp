@@ -20,6 +20,7 @@
 #include <ecal/ecal.h>
 
 #include <iostream>
+#include <string.h>
 
 void do_run(const int runs, int snd_size /*kB*/)
 {
