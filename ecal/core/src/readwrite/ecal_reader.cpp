@@ -159,7 +159,7 @@ namespace eCAL
     Logging::Log(log_level_debug1, m_topic_name + "::CDataReader::Destroy");
 #endif
 
-    // stop transport layers	
+    // stop transport layers
     StopDataLayers();
 
     // reset receive callback
@@ -479,7 +479,10 @@ namespace eCAL
 #endif
       // copy content to target string
       std::lock_guard<std::mutex> lock(m_read_buf_sync);
+      buf_.clear();
+      buf_.assign(m_read_buf.data(), m_read_buf.size());
       buf_ = std::string(m_read_buf.data(), m_read_buf.size());
+
       // apply time
       if(time_) *time_ = m_read_time;
       // return success
@@ -575,7 +578,7 @@ namespace eCAL
       // push sample into read buffer
       std::lock_guard<std::mutex> lock1(m_read_buf_sync);
       m_read_buf.clear();
-      std::copy(payload_, payload_ + size_, std::back_inserter(m_read_buf));
+      m_read_buf.assign(payload_, payload_ + size_);
       m_read_time = time_;
 
       // inform receive
