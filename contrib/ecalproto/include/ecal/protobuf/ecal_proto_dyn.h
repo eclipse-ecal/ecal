@@ -29,6 +29,10 @@
 #pragma warning(push)
 #pragma warning(disable: 4100 4146 4800)
 #endif
+#if defined(__linux__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif
 #include <google/protobuf/message.h>
 #include <google/protobuf/descriptor.pb.h>
 #include <google/protobuf/dynamic_message.h>
@@ -37,6 +41,9 @@
 #include <google/protobuf/compiler/parser.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
+#endif
+#if defined(__linux__)
+#pragma GCC diagnostic pop
 #endif
 
 #include <ecal/protobuf/ecal_proto_hlp.h>

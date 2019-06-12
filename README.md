@@ -86,7 +86,7 @@ setup the correct ip address - here for adapter eth0, ip address 192.168.0.1
 sudo ifconfig eth0 192.168.0.1 netmask 255.255.255.0
 ```
 
-Restart the ethernet interface or the whole to apply changes, check if you can ping to each other.
+Restart the ethernet interface or the whole machine to apply changes, check if you can ping to each other.
 
 After the ipc configuration setup the multicast route for udp multicasting
 

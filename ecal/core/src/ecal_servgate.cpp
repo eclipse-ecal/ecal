@@ -25,6 +25,7 @@
 
 #include "ecal_def.h"
 #include "ecal_servgate.h"
+#include "ecal_config_hlp.h"
 
 #include <iterator>
 #include <atomic>
@@ -97,10 +98,11 @@ namespace eCAL
     auto service_reg_it = m_service_register_map.begin();
     while (service_reg_it != m_service_register_map.end())
     {
-      if (now - service_reg_it->second.second > std::chrono::seconds(5)) //TODO: This should be configurable in the ecal.ini
+      if (now - service_reg_it->second.second > std::chrono::milliseconds(eCALPAR(CMN, REGISTRATION_TO)))
       {
 #ifndef NDEBUG
-        printf("[CServGate] Removing service due to timeout: %s\n", service_reg_it->first.c_str());
+        // log it
+        Logging::Log(log_level_debug1, "CServGate::GetServiceInfo - Removing service due to timeout");
 #endif // !NDEBUG
         m_service_register_map.erase(service_reg_it++);
       }
@@ -143,7 +145,8 @@ namespace eCAL
     {
       // Create new entry
 #ifndef NDEBUG
-      printf("[CServGate] Received new service registration: %s\n", key.c_str());
+      // log it
+      Logging::Log(log_level_debug1, "CServGate::GetServiceInfo - Received new service registration");
 #endif // !NDEBUG
 
       m_service_register_map.emplace(key, std::make_pair(service, registration_time));

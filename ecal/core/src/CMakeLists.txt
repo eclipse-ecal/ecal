@@ -18,9 +18,10 @@
 
 project(core VERSION ${eCAL_VERSION_STRING})
 
-find_package(Threads REQUIRED)
-find_package(asio    REQUIRED)
-find_package(tclap   REQUIRED)
+find_package(Threads   REQUIRED)
+find_package(asio      REQUIRED)
+find_package(tclap     REQUIRED)
+find_package(simpleini REQUIRED)
 
 if (ECAL_JOIN_MULTICAST_TWICE)
   message(STATUS "eCAL ${PROJECT_NAME}: Enabling Specific Multicast Network Bug Workaround")
@@ -122,7 +123,6 @@ set(ecal_cmn_cpp_src
     ecal_timer.cpp
     ecal_util.cpp
     ecalc.cpp
-    simpleini_template.cpp
     sys_usage.cpp
 )
 
@@ -212,8 +212,6 @@ set(ecal_cmn_header_src
     ecal_win_main.h
     ecal_win_socket.h
     getenvvar.h
-    simpleini.h
-    simpleini_template.h
     sys_usage.h
     topic2mcast.h
 )
@@ -323,7 +321,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_readwrite_rtps_msg_header_src}
     ${ecal_readwrite_rtps_header_src}
     ${ecal_service_header_src}
-	
+
     ${ecal_header_base}
     ${ecal_header_cimpl}
     ${ecal_header_msg}
@@ -364,7 +362,7 @@ if(ECAL_NPCAP_SUPPORT)
   add_definitions(-DECAL_NPCAP_SUPPORT)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE
-	  udpcap
+      udpcap
   )
  endif(ECAL_NPCAP_SUPPORT)
 
@@ -391,14 +389,15 @@ target_link_libraries(${PROJECT_NAME}
     $<$<BOOL:${WIN32}>:wsock32>
     asio::asio
     tclap::tclap
+    simpleini::simpleini
     eCAL::pb
     Threads::Threads
     eCAL::apps
     EcalUtils
 )
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ecal)
-set_property(TARGET ${PROJECT_NAME_c} PROPERTY FOLDER ecal)
+set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)
+set_property(TARGET ${PROJECT_NAME}_c PROPERTY FOLDER ecal/core)
 
 ecal_install_ecal_shared_library(${PROJECT_NAME}_c)
 ecal_install_ecal_shared_library(${PROJECT_NAME})

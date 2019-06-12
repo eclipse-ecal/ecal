@@ -127,6 +127,7 @@ set(source_files
     src/Widgets/TreeItemViewWidget/TreeItemViewWidget.cpp
     src/Widgets/TreeItemViewWidget/TreeItemViewWidget.h
 )
+
 set(qt_resource_files
     ../../iconset/ecalicons.qrc
     resources/resources.qrc
@@ -150,6 +151,18 @@ set(ui_files
     src/Widgets/TreeItemViewWidget/TreeItemViewWidget.ui
     src/Widgets/VisualisationWidget/VisualisationWidget.ui
 )
+
+if(ECAL_NPCAP_SUPPORT)
+    set(source_files
+        ${source_files}
+        src/Widgets/NpcapStatusDialog/NpcapStatusDialog.cpp
+        src/Widgets/NpcapStatusDialog/NpcapStatusDialog.h
+    )
+    set(ui_files
+        ${ui_files}
+        src/Widgets/NpcapStatusDialog/NpcapStatusDialog.ui
+    )
+endif(ECAL_NPCAP_SUPPORT)
 
 # compile qt resource files and ui files
 qt5_add_resources(autogen_resources ${qt_resource_files})
@@ -176,6 +189,14 @@ target_link_libraries (${PROJECT_NAME}
     Qt5::Widgets
     CustomQt
 )
+
+if(ECAL_NPCAP_SUPPORT)
+  add_definitions(-DECAL_NPCAP_SUPPORT)
+  target_link_libraries(${PROJECT_NAME}
+    udpcap
+  )
+endif(ECAL_NPCAP_SUPPORT)
+
 if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:CONSOLE")

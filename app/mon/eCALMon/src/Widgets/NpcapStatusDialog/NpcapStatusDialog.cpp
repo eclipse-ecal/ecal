@@ -17,17 +17,19 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <simpleini.h>
-#include <string>
-#include <utility>
-#include <cstdint>
+#include "NpcapStatusDialog.h"
 
-/*
-* This file provides two methods to access the Simple Inifile Setter/Getters on a template basis.
-*/
+#include <QPushButton>
+#include <udpcap/npcap_helpers.h>
 
-template<typename T>
-T GetValue(const CSimpleIni& ini_, const std::string& section_, const std::string& key_, const T& default_);
-template<typename T>
-SI_Error SetValue(CSimpleIni& ini_, const std::string& section_, const std::string& key_, const T& value_, const std::string& comment_, bool force_overwrite_);
+NpcapStatusDialog::NpcapStatusDialog(QWidget *parent)
+  : QDialog(parent)
+{
+  ui_.setupUi(this);
+  Udpcap::Initialize();
+  ui_.status_textedit->setPlainText(QString::fromStdString(Udpcap::GetHumanReadibleErrorText()));
+  connect(ui_.button_box->button(QDialogButtonBox::StandardButton::Close), SIGNAL(clicked()), this, SLOT(close()));
+}
 
+NpcapStatusDialog::~NpcapStatusDialog()
+{}

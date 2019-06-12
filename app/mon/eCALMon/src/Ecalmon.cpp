@@ -25,6 +25,10 @@
 #include "Widgets/LicenseDialog/LicenseDialog.h"
 #include "Widgets/PluginSettingsDialog/PluginSettingsDialog.h"
 
+#ifdef ECAL_NPCAP_SUPPORT
+#include "Widgets/NpcapStatusDialog/NpcapStatusDialog.h"
+#endif //ECAL_NPCAP_SUPPORT
+
 #include "EcalmonGlobals.h"
 #include "PluginLoader.h"
 
@@ -156,6 +160,17 @@ Ecalmon::Ecalmon(QWidget *parent)
 
   // Parse Time
   connect(ui_.action_show_parsed_times, &QAction::toggled, this, &Ecalmon::setParseTimeEnabled);
+
+#ifdef ECAL_NPCAP_SUPPORT
+  connect(ui_.action_npcap_status, &QAction::triggered, this,
+      [this]()
+      {
+        NpcapStatusDialog npcap_status_dialog(this);
+        npcap_status_dialog.exec();
+      });
+#else
+  ui_.action_npcap_status->setVisible(false);
+#endif // ECAL_NPCAP_SUPPORT
 
   // Reset layout
   connect(ui_.action_reset_layout, &QAction::triggered, this, &Ecalmon::resetLayout);

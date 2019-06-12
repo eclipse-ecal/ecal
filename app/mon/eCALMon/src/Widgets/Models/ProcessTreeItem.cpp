@@ -22,7 +22,7 @@
 #include <QColor>
 #include <QFont>
 
-#include <math.h>
+#include <cmath>
 #include <cfloat>
 
 #include "ItemDataRoles.h"

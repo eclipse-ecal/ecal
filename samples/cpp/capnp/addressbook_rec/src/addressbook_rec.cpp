@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2018 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,6 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/ecal.h>
-#include <ecal/msg/capnproto/subscriber.h>
-
-#include <iostream>
-#include <chrono>
-#include <thread>
-
 // capnp includes
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -34,10 +27,17 @@
 #pragma warning(pop)
 #endif
 
-void printAddressBook(capnp::MallocMessageBuilder& msg_)
-{
-  AddressBook::Reader addressBook = msg_.getRoot<AddressBook>();
+#include <ecal/ecal.h>
+#include <ecal/msg/capnproto/subscriber.h>
 
+#include <iostream>
+#include <chrono>
+#include <thread>
+
+
+
+void printAddressBook(const AddressBook::Reader& addressBook)
+{
   for (Person::Reader person : addressBook.getPeople())
   {
     std::cout << person.getName().cStr() << ": " << person.getEmail().cStr() << std::endl;
@@ -70,19 +70,11 @@ void printAddressBook(capnp::MallocMessageBuilder& msg_)
       std::cout << "  self-employed" << std::endl;
       break;
     }
+
+    std::cout << std::endl;
   }
 }
 
-void OnAddressbook(const char* topic_name_, const capnp::MallocMessageBuilder& msg_, const long long time_)
-{
-  // print content
-  std::cout << "topic name : " << topic_name_ << std::endl;
-  std::cout << "time       : " << time_       << std::endl;
-  std::cout << std::endl;
-  printAddressBook(const_cast<capnp::MallocMessageBuilder&>(msg_));
-  std::cout << std::endl;
-}
-  
 int main(int argc, char **argv)
 {
   // initialize eCAL API
@@ -92,17 +84,17 @@ int main(int argc, char **argv)
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
   // create a subscriber (topic name "addressbook")
-  eCAL::CCapnpSubscriber<capnp::MallocMessageBuilder> sub("addressbook");
-
-  // add receive callback function (_1 = topic_name, _2 = msg, _3 = time)
-  auto callback = std::bind(OnAddressbook, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-  sub.AddReceiveCallback(callback);
-
+  eCAL::CCapnpSubscriber<AddressBook> sub("addressbook");
   // enter main loop
   while (eCAL::Ok())
   {
-    // sleep 500 ms
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    // receive content
+    if (sub.Receive(nullptr, 0))
+    {
+      AddressBook::Reader reader{ sub.getReader() };
+      printAddressBook(reader);
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
   // finalize eCAL API

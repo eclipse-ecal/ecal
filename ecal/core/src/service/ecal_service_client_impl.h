@@ -27,6 +27,7 @@
 #include "service/ecal_tcpclient.h"
 
 #include <map>
+#include <mutex>
 
 namespace eCAL
 {
@@ -67,6 +68,7 @@ namespace eCAL
 
     typedef std::map<std::string, std::shared_ptr<CTcpClient>> ClientMapT;
     ClientMapT         m_client_map;
+    std::mutex         m_req_mtx;
 
     enum { max_length = 64 * 1024 };
     char m_reply[max_length];

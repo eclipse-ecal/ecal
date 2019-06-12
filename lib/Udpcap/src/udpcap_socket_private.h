@@ -24,6 +24,7 @@
 #include <set>
 #include <memory>
 #include <chrono>
+#include <deque>
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
@@ -31,9 +32,12 @@
 
 #ifdef _MSC_VER
 #pragma warning( push )
-#pragma warning( disable: 4800 )
+#pragma warning( disable: 4800 4200)
 #endif // _MSC_VER
 #include <Packet.h>         // Pcap++
+#include <IPv4Layer.h>      // Pcap++ IPv4
+#include <UdpLayer.h>       // Pcap++ UDP
+#include <IPReassembly.h>   // Pcap++ de-fragmentation of IP packets
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif // _MSC_VER
@@ -58,34 +62,48 @@ namespace Udpcap
 
     struct CallbackArgsVector
     {
-      CallbackArgsVector(std::vector<char>* destination_vector, HostAddress* source_address, uint16_t* source_port, pcpp::LinkLayerType link_type)
+      CallbackArgsVector(std::vector<char>* destination_vector, HostAddress* source_address, uint16_t* source_port, uint16_t bound_port, pcpp::LinkLayerType link_type, pcpp::IPReassembly* ip_reassembly)
         : destination_vector_(destination_vector)
         , source_address_    (source_address)
         , source_port_       (source_port)
+        , success_           (false)
         , link_type_         (link_type)
+        , bound_port_        (bound_port)
+        , ip_reassembly_     (ip_reassembly)
       {}
       std::vector<char>* const  destination_vector_;
       HostAddress* const        source_address_;
       uint16_t* const           source_port_;
-      const pcpp::LinkLayerType link_type_;
+      bool                      success_;
+
+      pcpp::LinkLayerType       link_type_;
+      const uint16_t            bound_port_;
+      pcpp::IPReassembly* const ip_reassembly_;
     };
 
     struct CallbackArgsRawPtr
     {
-      CallbackArgsRawPtr(char* destination_buffer, size_t destination_buffer_size, HostAddress* source_address, uint16_t* source_port, pcpp::LinkLayerType link_type)
+      CallbackArgsRawPtr(char* destination_buffer, size_t destination_buffer_size, HostAddress* source_address, uint16_t* source_port, uint16_t bound_port, pcpp::LinkLayerType link_type, pcpp::IPReassembly* ip_reassembly)
         : destination_buffer_     (destination_buffer)
         , destination_buffer_size_(destination_buffer_size)
         , bytes_copied_           (0)
         , source_address_         (source_address)
         , source_port_            (source_port)
+        , success_                (false)
         , link_type_              (link_type)
+        , bound_port_             (bound_port)
+        , ip_reassembly_          (ip_reassembly)
       {}
       char* const               destination_buffer_;
       const size_t              destination_buffer_size_;
       size_t                    bytes_copied_;
       HostAddress* const        source_address_;
       uint16_t* const           source_port_;
-      const pcpp::LinkLayerType link_type_;
+      bool                      success_;
+
+      pcpp::LinkLayerType link_type_;
+      const uint16_t            bound_port_;
+      pcpp::IPReassembly* const ip_reassembly_;
     };
 
   //////////////////////////////////////////
@@ -148,7 +166,10 @@ namespace Udpcap
 
     // Callbacks
     static void PacketHandlerVector(unsigned char* param, const struct pcap_pkthdr* header, const unsigned char* pkt_data);
+    static void FillCallbackArgsVector(CallbackArgsVector* callback_args, pcpp::IPv4Layer* ip_layer, pcpp::UdpLayer* udp_layer);
+
     static void PacketHandlerRawPtr(unsigned char* param, const struct pcap_pkthdr* header, const unsigned char* pkt_data);
+    static void FillCallbackArgsRawPtr(CallbackArgsRawPtr* callback_args, pcpp::IPv4Layer* ip_layer, pcpp::UdpLayer* udp_layer);
 
   private:
     bool        is_valid_;                                                      /**< If the socket is valid and ready to use (e.g. npcap was initialized successfully) */
@@ -162,6 +183,8 @@ namespace Udpcap
 
     std::vector<PcapDev> pcap_devices_;
     std::vector<HANDLE>  pcap_win32_handles_;
+
+    pcpp::IPReassembly   ip_reassembly_;
 
     int                  receive_buffer_;
   };

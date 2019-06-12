@@ -48,6 +48,9 @@ struct Person {
     selfEmployed @7 :Void;
     # We assume that a person is only one of these.
   }
+  
+  weight @8 :Float32;
+  data @9 :Data;  
 }
 
 struct AddressBook {
