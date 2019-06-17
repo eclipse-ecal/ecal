@@ -12,7 +12,8 @@ install:
   - choco install cmake
   - refreshenv
   
-build_script:
+build_script
+  - set PATH="C:\Program Files\CMake\bin";%PATH%
   - build_win\win_make_cmake.bat v140
   - build_win\win_make_build.bat
   
