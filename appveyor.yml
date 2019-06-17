@@ -10,10 +10,9 @@ clone_script:
 install:
   - choco install doxygen.install
   - choco install cmake
+  - choco install wixtoolset
   - refreshenv
   
 build_script:
   - set PATH="C:\Program Files\CMake\bin";%PATH%
-  - build_win\win_make_cmake.bat v140
-  - build_win\win_make_build.bat
-  
+  - build_win\win_make_all.bat
