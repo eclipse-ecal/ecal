@@ -9,6 +9,7 @@ clone_script:
 
 install:
   - choco install doxygen.install
+  - choco install cmake
   
 build_script:
   - build_win\win_make_cmake.bat v140
