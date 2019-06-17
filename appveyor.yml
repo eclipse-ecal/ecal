@@ -1,7 +1,6 @@
 image: Visual Studio 2015
 
 environment:
-  GENERATOR: Visual Studio 14 2015 Win64
   QT5_ROOT_DIRECTORY: C:\Qt\5.11.3
   
 clone_script:
@@ -9,10 +8,9 @@ clone_script:
   - cmd: git checkout -qf %APPVEYOR_REPO_COMMIT%
 
 install:
-  - choco install doxygen.portable
+  - choco install doxygen.install
   
 build_script:
-  - echo %GENERATOR%
-  - echo %QT5_ROOT_DIRECTORY%
-  - dir
+  - build_win\win_make_cmake.bat v140
+  - build_win\win_make_build.bat
   
