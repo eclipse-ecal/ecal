@@ -9,7 +9,7 @@ clone_script:
   - cmd: git checkout -qf %APPVEYOR_REPO_COMMIT%
 
 install:
-  - choco install doxygen
+  - choco install doxygen.portable
   
 build_script:
   - echo %GENERATOR%
