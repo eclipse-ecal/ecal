@@ -1,0 +1,17 @@
+version: "{build}"
+
+image: Visual Studio 2015
+
+environment:
+  QT5_ROOT_DIRECTORY: C:\Qt\5.11.3
+
+install:
+  - git submodule update --init --recursive
+  - choco install doxygen.install
+  - choco install cmake
+  - choco install wixtoolset
+  - refreshenv
+  
+build_script:
+  - set PATH="C:\Program Files\CMake\bin";%PATH%
+  - build_win\win_make_all.bat

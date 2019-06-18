@@ -1,0 +1,19 @@
+dist: xenial
+
+language: cpp
+compiler: gcc
+
+addons:
+  apt:
+    packages:
+      - doxygen
+      - graphviz
+      - zlib1g-dev
+      - qt5-default
+    
+script:
+  - mkdir _build
+  - cd _build
+  - cmake .. -DCMAKE_BUILD_TYPE=Release
+  - make
+  - cpack -G DEB
