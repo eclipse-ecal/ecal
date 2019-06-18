@@ -4,12 +4,9 @@ image: Visual Studio 2015
 
 environment:
   QT5_ROOT_DIRECTORY: C:\Qt\5.11.3
-  
-clone_script:
-  - git clone -q --recursive --branch=%APPVEYOR_REPO_BRANCH% https://github.com/%APPVEYOR_REPO_NAME%.git %APPVEYOR_BUILD_FOLDER%
-  - git checkout -qf %APPVEYOR_REPO_COMMIT%
 
 install:
+  - git submodule update --init --recursive
   - choco install doxygen.install
   - choco install cmake
   - choco install wixtoolset
