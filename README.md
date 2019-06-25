@@ -4,7 +4,7 @@
 Copyright (c) 2019, Continental Corporation.
 
 
-[![Build Status](https://travis-ci.org/continental/ecal.svg?branch=master)](https://travis-ci.org/continental/ecal) [![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE)
+[![Build Status](https://travis-ci.org/continental/ecal.svg?branch=master)](https://travis-ci.org/continental/ecal) [![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE.txt)
 
 ## Preface
 
