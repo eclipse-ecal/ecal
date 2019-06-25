@@ -3,6 +3,9 @@
 
 Copyright (c) 2019, Continental Corporation.
 
+
+[![Build Status](https://travis-ci.org/continental/ecal.svg?branch=master)](https://travis-ci.org/continental/ecal) [![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE)
+
 ## Preface
 
 The enhanced communication abstraction layer (eCAL) is a middleware that enables scalable, high performance interprocess communication on a single computer node or between different nodes in a computer network. The design is inspired by known Data Distribution Service for Real-Time Systems (see Data distribution service on wikipedia). The current eCAL implementation realizes a subset of such a DDS system, there is only a basic support for Quality of Service (QoS) driven data transport (best effort and reliable). 
