@@ -27,6 +27,22 @@ additional informations like a unique name, a type and a description. A topic ca
 
 eCAL is simplifying the data transport as much as possible, It uses different mechanism to transport a topic from a publisher to a connected subscriber. On the same computer node the data are exchanged by using memory mapped files. Between different computing nodes UDP multicast can be used for high performance data throughput, rtps can be used for reliable data transport.
 
+## Checkout the repository
+
+Because eCAL is using some thirdparty libraries as git submodules you need to clone the repository recursively
+
+```bash
+git clone --recursive git://github.com/continental/ecal.git
+```
+
+For older git versions or if the repo is already cloned you can also use
+```bash
+git clone git://github.com/continental/ecal.git
+cd ecal
+git submodule init
+git submodule update
+```
+
 ## Setup on Linux Systems
 
 Update gcc to 5.3.x or newer and install cmake.
