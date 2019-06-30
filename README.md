@@ -3,6 +3,9 @@
 
 Copyright (c) 2019, Continental Corporation.
 
+
+[![Build Status](https://travis-ci.org/continental/ecal.svg?branch=master)](https://travis-ci.org/continental/ecal) [![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE.txt)
+
 ## Preface
 
 The enhanced communication abstraction layer (eCAL) is a middleware that enables scalable, high performance interprocess communication on a single computer node or between different nodes in a computer network. The design is inspired by known Data Distribution Service for Real-Time Systems (see Data distribution service on wikipedia). The current eCAL implementation realizes a subset of such a DDS system, there is only a basic support for Quality of Service (QoS) driven data transport (best effort and reliable). 
@@ -23,6 +26,22 @@ additional informations like a unique name, a type and a description. A topic ca
   • Callback: A Callback can be used to react on time events, on incoming messages, on service requests or service responses. 
 
 eCAL is simplifying the data transport as much as possible, It uses different mechanism to transport a topic from a publisher to a connected subscriber. On the same computer node the data are exchanged by using memory mapped files. Between different computing nodes UDP multicast can be used for high performance data throughput, rtps can be used for reliable data transport.
+
+## Checkout the repository
+
+Because eCAL is using some thirdparty libraries as git submodules you need to clone the repository recursively
+
+```bash
+git clone --recursive git://github.com/continental/ecal.git
+```
+
+For older git versions or if the repo is already cloned you can also use
+```bash
+git clone git://github.com/continental/ecal.git
+cd ecal
+git submodule init
+git submodule update
+```
 
 ## Setup on Linux Systems
 
