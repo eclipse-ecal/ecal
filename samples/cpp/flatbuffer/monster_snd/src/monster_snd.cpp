@@ -40,7 +40,7 @@ int main(int argc, char **argv)
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
   // create a publisher (topic name "monster")
-  eCAL::CFlatPublisher<flatbuffers::FlatBufferBuilder> pub("monster");
+  eCAL::flatbuffers::CPublisher<flatbuffers::FlatBufferBuilder> pub("monster");
 
   // the generic builder instance
   flatbuffers::FlatBufferBuilder builder;

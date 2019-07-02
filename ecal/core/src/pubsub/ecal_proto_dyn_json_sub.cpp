@@ -21,6 +21,7 @@
  * dynamic protobuf message decoder
 **/
 
+#include <ecal/ecal_os.h>
 #include <ecal/msg/protobuf/dynamic_json_subscriber.h>
 
 #include <stdio.h>
@@ -28,15 +29,22 @@
 #include <sstream>
 #include <fstream>
 
-#ifdef _MSC_VER
+#ifdef ECAL_OS_WINDOWS
 #pragma warning(push)
 #pragma warning(disable: 4100 4146 4800)
+#endif
+#ifdef ECAL_OS_LINUX
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
 #include <google/protobuf/util/json_util.h>
 #include <google/protobuf/util/type_resolver_util.h>
 #include <google/protobuf/util/type_resolver.h>
-#ifdef _MSC_VER
+#ifdef ECAL_OS_WINDOWS
 #pragma warning(pop)
+#endif
+#ifdef ECAL_OS_LINUX
+#pragma GCC diagnostic pop
 #endif
 
 namespace eCAL

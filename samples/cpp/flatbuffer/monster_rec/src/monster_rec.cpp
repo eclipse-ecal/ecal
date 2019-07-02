@@ -82,7 +82,7 @@ int main(int argc, char **argv)
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
   // create a subscriber (topic name "monster")
-  eCAL::CFlatSubscriber<flatbuffers::FlatBufferBuilder> sub("monster");
+  eCAL::flatbuffers::CSubscriber<flatbuffers::FlatBufferBuilder> sub("monster");
 
   // add receive callback function (_1 = topic_name, _2 = msg, _3 = time)
   auto callback = std::bind(OnMonster, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);

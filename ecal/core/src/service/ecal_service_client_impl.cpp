@@ -136,6 +136,8 @@ namespace eCAL
       )
       return false;
 
+    std::lock_guard<std::mutex> req_lock(m_req_mtx);
+
     // check for new server
     RefreshClientMap();
 

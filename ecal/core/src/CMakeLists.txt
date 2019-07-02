@@ -18,9 +18,10 @@
 
 project(core VERSION ${eCAL_VERSION_STRING})
 
-find_package(Threads REQUIRED)
-find_package(asio    REQUIRED)
-find_package(tclap   REQUIRED)
+find_package(Threads   REQUIRED)
+find_package(asio      REQUIRED)
+find_package(tclap     REQUIRED)
+find_package(simpleini REQUIRED)
 
 if (ECAL_JOIN_MULTICAST_TWICE)
   message(STATUS "eCAL ${PROJECT_NAME}: Enabling Specific Multicast Network Bug Workaround")
@@ -122,7 +123,6 @@ set(ecal_cmn_cpp_src
     ecal_timer.cpp
     ecal_util.cpp
     ecalc.cpp
-    simpleini_template.cpp
     sys_usage.cpp
 )
 
@@ -212,8 +212,6 @@ set(ecal_cmn_header_src
     ecal_win_main.h
     ecal_win_socket.h
     getenvvar.h
-    simpleini.h
-    simpleini_template.h
     sys_usage.h
     topic2mcast.h
 )
@@ -391,6 +389,7 @@ target_link_libraries(${PROJECT_NAME}
     $<$<BOOL:${WIN32}>:wsock32>
     asio::asio
     tclap::tclap
+    simpleini::simpleini
     eCAL::pb
     Threads::Threads
     eCAL::apps

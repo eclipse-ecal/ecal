@@ -19,6 +19,7 @@
 project(latency_snd)
 
 find_package(eCAL REQUIRED)
+find_package(tclap REQUIRED)
 
 set(latency_snd_src
   latency_snd.cpp
@@ -29,6 +30,9 @@ ecal_add_sample(${PROJECT_NAME} ${latency_snd_src})
 target_include_directories(${PROJECT_NAME} PRIVATE .)
 
 target_link_libraries(${PROJECT_NAME} eCAL::core)
+target_link_libraries(${PROJECT_NAME}
+  eCAL::core
+  tclap::tclap)
 
 ecal_install_sample(${PROJECT_NAME})
 

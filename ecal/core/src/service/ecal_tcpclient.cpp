@@ -23,6 +23,8 @@
 
 #include "ecal_tcpclient.h"
 
+#include <iostream>
+
 namespace eCAL
 {
   //////////////////////////////////////////////////////////////////
@@ -86,12 +88,14 @@ namespace eCAL
       // send payload to server
       while (written != request_.size())
       {
-        written += m_socket->write_some(asio::buffer(request_.c_str() + written, request_.size() - written));
+        const size_t bytes_wrote = m_socket->write_some(asio::buffer(request_.c_str() + written, request_.size() - written));
+        //std::cout << "CTcpClient::ExecuteRequest wrote request bytes " << bytes_wrote << std::endl;
+        written += bytes_wrote;
       }
     }
-    catch (std::exception& /*e*/)
+    catch (std::exception& e)
     {
-      //std::cerr << "CTcpClient::ExecuteRequest: Failed to send request: " << e.what() << "\n";
+      std::cerr << "CTcpClient::ExecuteRequest: Failed to send request: " << e.what() << "\n";
       m_connected = false;
       return 0;
     }
@@ -104,16 +108,15 @@ namespace eCAL
         const size_t buffer_size(1024);
         char buffer[buffer_size];
         const size_t bytes_read = m_socket->read_some(asio::buffer(buffer, buffer_size));
-
+        //std::cout << "CTcpClient::ExecuteRequest read response bytes " << bytes_read << " to " << response_.size() << std::endl;
         response_ += std::string(buffer, bytes_read);
-
       } while (m_socket->available());
 
       return response_.size();
     }
-    catch (std::exception& /*e*/)
+    catch (std::exception& e)
     {
-      //std::cerr << "CTcpClient::ExecuteRequest: Failed to recieve response: " << e.what() << "\n";
+      std::cerr << "CTcpClient::ExecuteRequest: Failed to recieve response: " << e.what() << std::endl;
       m_connected = false;
       return 0;
     }

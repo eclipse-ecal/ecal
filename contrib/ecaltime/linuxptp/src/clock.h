@@ -23,8 +23,8 @@
 #include <unistd.h>
 
 #define CLOCKFD 3
-#define FD_TO_CLOCKID(fd)    ((~(clockid_t) (fd) << 3) | CLOCKFD)
-#define CLOCKID_TO_FD(clk)    ((unsigned int) ~((clk) >> 3))
+#define FD_TO_CLOCKID(fd)   ((~(clockid_t) (fd) << 3) | CLOCKFD)
+#define CLOCKID_TO_FD(clk)  ((unsigned int) ~((clk) >> 3))
 
 namespace linuxptp{
 /**

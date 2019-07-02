@@ -50,7 +50,7 @@ int main(int argc, char **argv)
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
   // create a publisher (topic name "address")
-  eCAL::CMsgPackPublisher<CAddress> pub("address");
+  eCAL::messagepack::CPublisher<CAddress> pub("address");
 
   // create the message
   CAddress address;

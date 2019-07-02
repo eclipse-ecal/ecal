@@ -20,9 +20,15 @@
 #include <ecal/ecal.h>
 
 #include <iostream>
+#include <string>
+#include <vector>
 
-void do_run(int runs)
+void do_run()
 {
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "latency_reply");
+
+  // create publisher and subscriber
   eCAL::CSubscriber sub_pkg("pkg_send");
   eCAL::CPublisher  pub_pkg("pkg_reply");
 
@@ -30,47 +36,61 @@ void do_run(int runs)
   std::cout << " LATENCY / THROUGHPUT TEST"      << std::endl;
   std::cout << "-------------------------------" << std::endl;
 
+  // prepare timestamp array and
   std::vector<long long> diff_array;
-  diff_array.resize(runs);
+  // reserve for 5000 elements
+  diff_array.reserve(5000);
 
+  // prepare receive buffer
   std::string rec_buf;
-  rec_buf.reserve(4 * 1024 * 1024);
+  int rec_timeout(-1);
+  int rec_pkgs(0);
 
-  for (int reply = 0; reply < runs; reply++)
+  for(;;)
   {
-    if (sub_pkg.Receive(rec_buf, nullptr, -1))
+    long long snd_time(0);
+    if (sub_pkg.Receive(rec_buf, &snd_time, rec_timeout))
     {
-      diff_array[reply] = eCAL::Time::GetMicroSeconds() - *((long long*)rec_buf.c_str());
+      // store time stamp
+      diff_array.push_back(eCAL::Time::GetMicroSeconds() - snd_time);
+      rec_pkgs++;
+      // reply
       pub_pkg.Send(rec_buf);
+      // we reduce timeout to 1000 ms to detect lost packages
+      rec_timeout = 1000;
+    }
+    else
+    {
+      // timeout, let's stop and summarize
+      break;
     }
   }
 
-  long long diff_time = 0;
-  for (int reply = 0; reply < runs; reply++)
+  // calculate receive time over all received messages
+  long long sum_time(0);
+  for (int pgk = 0; pgk < rec_pkgs; pgk++)
   {
-    diff_time += diff_array[reply];
+    sum_time += diff_array[pgk];
   }
-  long long avg_time = diff_time/runs;
-  std::cout << "Rec buffer size               :   " << rec_buf.size()/1024 << " kB" << std::endl;
+  long long avg_time = sum_time/rec_pkgs;
+  std::cout << "Received buffer size          :   " << rec_buf.size()/1024 << " kB" << std::endl;
+  std::cout << "Received packages             :   " << rec_pkgs << std::endl;
   std::cout << "Message average receive time  :   " << avg_time << " us" << std::endl;
-  std::cout << "Throughput                    :   " << static_cast<int>(((rec_buf.size()*runs)/1024.0)/(diff_time/1000.0/1000.0))        << " kB/s"  << std::endl;
-  std::cout << "                              :   " << static_cast<int>(((rec_buf.size()*runs)/1024.0/1024.0)/(diff_time/1000.0/1000.0)) << " MB/s"  << std::endl;
-  std::cout << "                              :   " << static_cast<int>(runs/(diff_time/1000.0/1000.0))                                  << " Msg/s" << std::endl << std::endl;
-}
-
-int main(int argc, char **argv)
-{
-  // initialize eCAL API
-  eCAL::Initialize(argc, argv, "latency_reply");
-
-  // run tests
-  while (eCAL::Ok())
-  {
-    do_run(1000);
-  }
+  std::cout << "Throughput                    :   " << static_cast<int>(((rec_buf.size()*rec_pkgs)/1024.0)/(sum_time /1000.0/1000.0))        << " kB/s"  << std::endl;
+  std::cout << "                              :   " << static_cast<int>(((rec_buf.size()*rec_pkgs)/1024.0/1024.0)/(sum_time /1000.0/1000.0)) << " MB/s"  << std::endl;
+  std::cout << "                              :   " << static_cast<int>(rec_pkgs /(sum_time /1000.0/1000.0))                                  << " Msg/s" << std::endl << std::endl;
 
   // finalize eCAL API
   eCAL::Finalize();
+}
+
+int main(int /*argc*/, char** /*argv*/)
+{
+  // run tests
+  while (eCAL::Ok())
+  {
+    do_run();
+  }
 
   return(0);
 }

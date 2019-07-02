@@ -19,27 +19,32 @@
 
 #include <ecal/ecal.h>
 
+#include <tclap/CmdLine.h>
+
 #include <iostream>
-#include <string.h>
+#include <string>
+#include <vector>
 
 void do_run(const int runs, int snd_size /*kB*/)
 {
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "latency_snd");
+
+  // create publisher and subscriber
   eCAL::CPublisher  pub_pkg("pkg_send");
   eCAL::CSubscriber sub_pkg("pkg_reply");
 
   // let them match
-  eCAL::Process::SleepMS(1000);
+  eCAL::Process::SleepMS(2000);
 
-  std::vector<long long> diff_array;
-  diff_array.resize(runs);
-  std::vector<char> snd_array;
-  snd_array.resize(snd_size * 1024);
+  // prepare timestamp array
+  std::vector<long long> diff_array(runs);
+  std::vector<char> snd_array(snd_size * 1024);
+  int snd_pkgs(0);
 
+  // prepare receive buffer
   std::string rec_buf;
-  rec_buf.reserve(snd_size * 1024);
-
-  std::cout << "Press Enter to start .." << std::endl;
-  getchar();
+  int rec_timeout(1000);
 
   std::cout << "-------------------------------" << std::endl;
   std::cout << " LATENCY / THROUGHPUT TEST"      << std::endl;
@@ -47,42 +52,61 @@ void do_run(const int runs, int snd_size /*kB*/)
   std::cout << " SIZE  : " << snd_size <<  " kB" << std::endl;
   std::cout << "-------------------------------" << std::endl;
 
-  for (int reply = 0; reply < runs; reply++)
+  for (int reply = 0; reply < runs; ++reply)
   {
-    long long start_time_loop = eCAL::Time::GetMicroSeconds();
-    memcpy(snd_array.data(), &start_time_loop, sizeof(long long));
-    pub_pkg.Send(snd_array.data(), snd_array.size());
-    if (sub_pkg.Receive(rec_buf, nullptr, 100))
+    // get time and send message
+    long long snd_time = eCAL::Time::GetMicroSeconds();
+    pub_pkg.Send(snd_array.data(), snd_array.size(), snd_time);
+    // store sent packages
+    snd_pkgs++;
+
+    // receive reply with timeout
+    if (sub_pkg.Receive(rec_buf, nullptr, rec_timeout))
     {
-      diff_array[reply] = eCAL::Time::GetMicroSeconds() - start_time_loop;
+      // store time stamp
+      diff_array[reply] = eCAL::Time::GetMicroSeconds() - snd_time;
+    }
+    else
+    {
+      // we lost a package -> stop
+      std::cout << "Packages lost after message " << snd_pkgs << " -> stop." << std::endl << std::endl;
+      break;
     }
   }
 
-  long long diff_time = 0;
-  for (int reply = 0; reply < runs; reply++)
+  // calculate roundtrip time over all received messages
+  long long sum_time(0);
+  for (int reply = 0; reply < snd_pkgs; reply++)
   {
-    diff_time += diff_array[reply];
+    sum_time += diff_array[reply];
   }
-  long long avg_time = diff_time / runs;
+  long long avg_time = sum_time/ snd_pkgs;
   std::cout << "Message average roundtrip time " << avg_time << " us" << std::endl << std::endl;
+
+  // finalize eCAL API
+  eCAL::Finalize();
 }
 
 int main(int argc, char **argv)
 {
-  // initialize eCAL API
-  eCAL::Initialize(argc, argv, "latency_snd");
-
-  // run tests
-  for (int size = 1; size <= 4096; size *= 2)
+  try
   {
-    do_run(1000, size);
+    // parse command line
+    TCLAP::CmdLine cmd("latency_snd");
+    TCLAP::ValueArg<int> runs("r", "runs", "Number of messages to send.", false, 1000, "int");
+    TCLAP::ValueArg<int> size("s", "size", "Messages size in kB.",        false, 64,   "int");
+    cmd.add(runs);
+    cmd.add(size);
+    cmd.parse(argc, argv);
+
+    // run test
+    do_run(runs.getValue(), size.getValue());
   }
-
-  // finalize eCAL API
-  eCAL::Finalize();
-
-  printf("Press Enter to close ..\n");
-  getchar();
+  catch (TCLAP::ArgException &e)  // catch any exceptions
+  {
+    std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
+    return EXIT_FAILURE;
+  }
 
   return(0);
 }

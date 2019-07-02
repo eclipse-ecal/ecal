@@ -481,7 +481,6 @@ namespace eCAL
       std::lock_guard<std::mutex> lock(m_read_buf_sync);
       buf_.clear();
       buf_.assign(m_read_buf.data(), m_read_buf.size());
-      buf_ = std::string(m_read_buf.data(), m_read_buf.size());
 
       // apply time
       if(time_) *time_ = m_read_time;
