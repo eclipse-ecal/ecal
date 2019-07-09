@@ -33,8 +33,7 @@ enum eUDPMessageType
   msg_type_header_with_content = 3
 };
 
-#pragma pack(push, 4)
-struct SUDPMessageHead
+struct alignas(4) SUDPMessageHead
 {
   SUDPMessageHead()
   {
@@ -56,7 +55,6 @@ struct SUDPMessageHead
   int32_t  num;       // header: number of all parts,      data: current number of that part
   int32_t  len;       // header: complete size of message, data: current size of that part
 };
-#pragma pack(pop)
 
 #define MSG_BUFFER_SIZE   (64*1024 - 20 /* IP header */ - 8 /* UDP header */ - 1 /* don't ask */)
 #define MSG_PAYLOAD_SIZE  (MSG_BUFFER_SIZE-sizeof(struct SUDPMessageHead))

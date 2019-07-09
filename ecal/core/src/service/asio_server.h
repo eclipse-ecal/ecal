@@ -84,8 +84,10 @@ private:
           //std::cout << "CAsioSession::handle_read server callback executed - reponse size " << response_.size() << std::endl;
 
           // write response back
+          packed_response_.clear();
+          packed_response_ = pack_write(response_);
           asio::async_write(socket_,
-            asio::buffer(response_.data(), response_.length()),
+            asio::buffer(packed_response_.data(), packed_response_.size()),
             bind(&CAsioSession::handle_write, this,
               std::placeholders::_1,
               std::placeholders::_2));
@@ -96,6 +98,18 @@ private:
     {
       delete this;
     }
+  }
+
+  std::vector<char> pack_write(const std::string& response)
+  {
+    // create header
+    const uint32_t rsize   = static_cast<uint32_t>(response.size());
+    const uint32_t n_rsize = htonl(rsize);
+    // repack
+    std::vector<char> packed_response(sizeof(n_rsize) + rsize);
+    memcpy(packed_response.data(), &n_rsize, sizeof(n_rsize));
+    memcpy(packed_response.data() + sizeof(n_rsize), response.data(), rsize);
+    return packed_response;
   }
 
   void handle_write(const asio::error_code& ec, std::size_t /*bytes_transferred*/)
@@ -119,6 +133,7 @@ private:
   RequestCallbackT       request_callback_;
   std::string            request_;
   std::string            response_;
+  std::vector<char>      packed_response_;
 
   enum { max_length = 64 * 1024 };
   char data_[max_length];

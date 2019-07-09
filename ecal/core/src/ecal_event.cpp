@@ -108,28 +108,33 @@ namespace eCAL
 
 namespace
 {
-  struct named_event
+  struct alignas(8) named_event
   {
     pthread_mutex_t mtx;
     pthread_cond_t  cvar;
+    uint8_t         set;
   };
   typedef struct named_event named_event_t;
 
   named_event_t* named_event_create(const char* event_name_)
   {
+    // create shared memory file
     int fd = ::shm_open(event_name_, O_RDWR | O_CREAT | O_EXCL, 0666);
     if (fd < 0) return nullptr;
 
+    // set size to size of named mutex struct 
     if(ftruncate(fd, sizeof(named_event_t)) == -1)
     {
       ::close(fd);
       return nullptr;
     }
 
+    // create mutex
     pthread_mutexattr_t shmtx;
     pthread_mutexattr_init(&shmtx);
     pthread_mutexattr_setpshared(&shmtx, PTHREAD_PROCESS_SHARED);
 
+    // create condition variable
     pthread_condattr_t  shattr;
     pthread_condattr_init(&shattr);
     pthread_condattr_setpshared(&shattr, PTHREAD_PROCESS_SHARED);
@@ -137,49 +142,112 @@ namespace
     named_event_t* evt = static_cast<named_event_t*>(mmap(nullptr, sizeof(named_event_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
     ::close(fd);
 
+    // map them into shared memory
     pthread_mutex_init(&evt->mtx, &shmtx);
     pthread_cond_init(&evt->cvar, &shattr);
+
+    // start with unset state
+    evt->set = 0;
 
     return evt;
   }
 
+  int named_event_destroy(const char* event_name_)
+  {
+    // destroy (unlink) shared memory file
+    return(::shm_unlink(event_name_));
+  }
+
   named_event_t* named_event_open(const char* event_name_)
   {
+    // try to open existing shared memory file
     int fd = ::shm_open(event_name_, O_RDWR, 0666);
     if (fd < 0) return nullptr;
 
+    // map file content to mutex
     named_event_t* evt = static_cast<named_event_t*>(mmap(nullptr, sizeof(named_event_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
     ::close(fd);
 
     return evt;
   }
 
-  void named_event_set(named_event_t* evt_)
-  {
-    pthread_mutex_lock(&evt_->mtx);
-    pthread_cond_signal(&evt_->cvar);
-    pthread_mutex_unlock(&evt_->mtx);
-  }
-
-  int named_event_wait(named_event_t *evt_)
-  {
-    pthread_mutex_lock(&evt_->mtx);
-    int ret = pthread_cond_wait(&evt_->cvar, &evt_->mtx);
-    pthread_mutex_unlock(&evt_->mtx);
-    return ret;
-  }
-
-  int named_event_wait(named_event_t* evt_, struct timespec* ts_)
-  {
-    pthread_mutex_lock(&evt_->mtx);
-    int ret = pthread_cond_timedwait(&evt_->cvar, &evt_->mtx, ts_);
-    pthread_mutex_unlock(&evt_->mtx);
-    return ret;
-  }
-
   void named_event_close(named_event_t* evt_)
   {
+    // unmap condition mutex from shared memory file
     munmap(static_cast<void*>(evt_), sizeof(named_event_t));
+  }
+
+  void named_event_set(named_event_t* evt_)
+  {
+    // lock condition mutex
+    pthread_mutex_lock(&evt_->mtx);
+    // set state
+    evt_->set = 1;
+    // signal change
+    pthread_cond_signal(&evt_->cvar);
+    // unlock condition mutex
+    pthread_mutex_unlock(&evt_->mtx);
+  }
+
+  bool named_event_wait(named_event_t* evt_, struct timespec* ts_)
+  {
+    // lock condition mutex
+    pthread_mutex_lock(&evt_->mtx);
+    // state is set ?, fine !
+    if (evt_->set)
+    {
+      // reset state
+      evt_->set = 0;
+      // unlock condition mutex
+      pthread_mutex_unlock(&evt_->mtx);
+      // return success
+      return true;
+    }
+    // state is not set
+    else
+    {
+      // while condition wait did not return failure (or timeout) and
+      // state is still locked by another one
+      int ret(0);
+      while ((ret == 0) && (evt_->set == 0))
+      {
+        // wait with timeout for unlock signal
+        if (ts_)
+        {
+          ret = pthread_cond_timedwait(&evt_->cvar, &evt_->mtx, ts_);
+        }
+        // blocking wait for unlock signal
+        else
+        {
+          ret = pthread_cond_wait(&evt_->cvar, &evt_->mtx);
+        }
+      }
+      // if wait (with timeout) returned successfully
+      // reset event state
+      if (ret == 0) evt_->set = 0;
+      // unlock condition mutex
+      pthread_mutex_unlock(&evt_->mtx);
+      // sucess == wait returned 0
+      return (ret == 0);
+    }
+  }
+
+  bool named_event_trywait(named_event_t* evt_)
+  {
+    bool set(false);
+    // lock condition mutex
+    pthread_mutex_lock(&evt_->mtx);
+    // check state
+    if (evt_->set)
+    {
+      // reset event state
+      evt_->set = 0;
+      set = true;
+    }
+    // unlock condition mutex
+    pthread_mutex_unlock(&evt_->mtx);
+    // return success
+    return set;
   }
 }
 
@@ -227,7 +295,7 @@ namespace eCAL
   {
   public:
     explicit CNamedEvent(const std::string& name_) :
-      m_name(name_),
+      m_name(name_ + "_evt"),
       m_event(nullptr)
     {
       m_event = named_event_open(m_name.c_str());
@@ -235,12 +303,13 @@ namespace eCAL
       {
         m_event = named_event_create(m_name.c_str());
       }
-    };
+    }
 
     ~CNamedEvent()
     {
       if(m_event == nullptr) return;
       named_event_close(m_event);
+      named_event_destroy(m_name.c_str());
     }
 
     void set()
@@ -252,24 +321,39 @@ namespace eCAL
     bool wait()
     {
       if(m_event == nullptr) return false;
-      return(named_event_wait(m_event) == 0);
+      return(named_event_wait(m_event, nullptr));
     }
 
     bool wait(long timeout_)
     {
-      if(m_event == nullptr) return false;
+      // check event handle
+      if (m_event == nullptr) return false;
 
-      struct timespec abstime;
-      clock_gettime(CLOCK_MONOTONIC, &abstime);
-
-      abstime.tv_sec  = abstime.tv_sec  + timeout_ / 1000;
-      abstime.tv_nsec = abstime.tv_nsec + (timeout_ % 1000)*1000000;
-      while (abstime.tv_nsec >= 1000000000)
+      // timeout_ < 0 -> wait infinite
+      if (timeout_ < 0)
       {
-        abstime.tv_nsec -= 1000000000;
-        abstime.tv_sec++;
+        return(named_event_wait(m_event, nullptr));
       }
-      return(named_event_wait(m_event, &abstime) == 0);
+      // timeout_ == 0 -> check state only
+      else if (timeout_ == 0)
+      {
+        return(named_event_trywait(m_event));
+      }
+      // timeout_ > 0 -> wait timeout_ ms
+      else
+      {
+        struct timespec abstime;
+        clock_gettime(CLOCK_MONOTONIC, &abstime);
+
+        abstime.tv_sec = abstime.tv_sec + timeout_ / 1000;
+        abstime.tv_nsec = abstime.tv_nsec + (timeout_ % 1000) * 1000000;
+        while (abstime.tv_nsec >= 1000000000)
+        {
+          abstime.tv_nsec -= 1000000000;
+          abstime.tv_sec++;
+        }
+        return(named_event_wait(m_event, &abstime));
+      }
     }
 
   private:

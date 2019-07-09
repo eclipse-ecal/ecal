@@ -28,6 +28,7 @@ additional informations like a unique name, a type and a description. A topic ca
 
 eCAL is simplifying the data transport as much as possible, It uses different mechanism to transport a topic from a publisher to a connected subscriber. On the same computer node the data are exchanged by using memory mapped files. Between different computing nodes UDP multicast can be used for high performance data throughput, rtps can be used for reliable data transport.
 
+
 ## Checkout the repository
 
 Because eCAL is using some thirdparty libraries as git submodules you need to clone the repository recursively
@@ -184,6 +185,17 @@ For local communication use 0 for ttl.
 You can find the ecal.ini configuration file under %APPDATA%\eCAL.
 
 Don't forget to disable any windows firewall.
+
+## Initial Test
+
+To initially check the functionality of a fresh installed eCAL system, just follow these steps.
+
+* start the two installed sample applications "ecal_sample_person_snd" and "ecal_sample_person_rec"
+* start the eCAL monitor application (for windows via Start Menu / eCAL / Start eCAL Monitor", for linux via command line "ecal_mon")
+
+Now you should see the two running application "person publisher" and "person subscriber". Expand their content and double click on the topic "person". A new reflection windows should open and you can check the content of the person topic on the fly.
+
+![eCAL monitor showing topic 'person'](gfx/app/monitor_person.png?raw=true "eCAL monitor showing topic 'person'")
 
 ## Usage
 

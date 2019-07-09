@@ -37,6 +37,7 @@ enum eCallState
 #ifdef __cplusplus
 
 #include <functional>
+#include <string>
 
 namespace eCAL
 {

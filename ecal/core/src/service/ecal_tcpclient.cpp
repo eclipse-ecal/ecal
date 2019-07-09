@@ -56,6 +56,9 @@ namespace eCAL
     try
     {
       asio::connect(*m_socket, resolver.resolve({ host_name_, std::to_string(port_) }));
+      // set TCP no delay, so Nagle's algorithm will not stuff multiple messages in one TCP segment
+      asio::ip::tcp::no_delay no_delay_option(true);
+      m_socket->set_option(no_delay_option);
       m_connected = true;
     }
     catch (std::exception& /*e*/)
@@ -102,15 +105,26 @@ namespace eCAL
 
     try
     {
+      // clear response buffer
       response_.clear();
+
+      // read stream header
+      uint32_t n_rsize(0);
+      size_t bytes_read = m_socket->read_some(asio::buffer(&n_rsize, sizeof(n_rsize)));
+      if (bytes_read != 4) return 0;
+
+      // extract data size
+      const uint32_t rsize = ntohl(n_rsize);
+
+      // read stream data
       do
       {
         const size_t buffer_size(1024);
         char buffer[buffer_size];
-        const size_t bytes_read = m_socket->read_some(asio::buffer(buffer, buffer_size));
+        bytes_read = m_socket->read_some(asio::buffer(buffer, buffer_size));
         //std::cout << "CTcpClient::ExecuteRequest read response bytes " << bytes_read << " to " << response_.size() << std::endl;
         response_ += std::string(buffer, bytes_read);
-      } while (m_socket->available());
+      } while (response_.size() < rsize);
 
       return response_.size();
     }

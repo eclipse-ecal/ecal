@@ -409,10 +409,10 @@ namespace eCAL
     ecal_reg_sample_mutable_topic->set_uname(Process::GetUnitName());
     ecal_reg_sample_mutable_topic->set_dclock(m_clock);
     ecal_reg_sample_mutable_topic->set_dfreq(m_freq);
-    ecal_reg_sample_mutable_topic->set_dfreq_min(m_freq_min);
-    ecal_reg_sample_mutable_topic->set_dfreq_max(m_freq_max);
-    ecal_reg_sample_mutable_topic->set_dfreq_min_err(m_freq_min_err);
-    ecal_reg_sample_mutable_topic->set_dfreq_max_err(m_freq_max_err);
+    ecal_reg_sample_mutable_topic->set_dfreq_min(google::protobuf::int32(m_freq_min));
+    ecal_reg_sample_mutable_topic->set_dfreq_max(google::protobuf::int32(m_freq_max));
+    ecal_reg_sample_mutable_topic->set_dfreq_min_err(google::protobuf::int32(m_freq_min_err));
+    ecal_reg_sample_mutable_topic->set_dfreq_max_err(google::protobuf::int32(m_freq_max_err));
     ecal_reg_sample_mutable_topic->set_message_drops(google::protobuf::int32(m_message_drops));
 
     size_t loc_connections(0);
@@ -434,8 +434,6 @@ namespace eCAL
     case QOS::keep_all_history_qos:
       ecal_reg_sample_mutable_topic->mutable_tqos()->set_history(eCAL::pb::QOS::keep_all_history_qos);
       break;
-    default:
-      break;
   }
     ecal_reg_sample_mutable_topic->mutable_tqos()->set_history_depth(m_qos.history_kind_depth);
     // qos Reliability
@@ -446,8 +444,6 @@ namespace eCAL
       break;
     case QOS::reliable_reliability_qos:
       ecal_reg_sample_mutable_topic->mutable_tqos()->set_reliability(eCAL::pb::QOS::reliable_reliability_qos);
-      break;
-    default:
       break;
     }
 
@@ -561,7 +557,7 @@ namespace eCAL
         // prepare data struct
         SReceiveCallbackData cb_data;
         cb_data.buf   = const_cast<char*>(payload_);
-        cb_data.size  = (long)size_;
+        cb_data.size  = long(size_);
         cb_data.id    = id_;
         cb_data.time  = time_;
         cb_data.clock = clock_;
@@ -714,32 +710,39 @@ namespace eCAL
     case eCAL::pb::tl_ecal_udp_mc:
     {
       CMulticastLayer::Get()->ApplyLayerParameter(par);
+      break;
     }
     case eCAL::pb::tl_ecal_udp_uc:
     {
       CUnicastLayer::Get()->ApplyLayerParameter(par);
+      break;
     }
     case eCAL::pb::tl_ecal_udp_metal:
     {
       CMetalLayer::Get()->ApplyLayerParameter(par);
+      break;
     }
     case eCAL::pb::tl_ecal_shm:
     {
       CSHMLayer::Get()->ApplyLayerParameter(par);
+      break;
     }
     case eCAL::pb::tl_lcm:
     {
       CLcmLayer::Get()->ApplyLayerParameter(par);
+      break;
     }
 #ifdef ECAL_LAYER_FASTRTPS
     case eCAL::pb::tl_rtps:
     {
       CRtpsLayer::Get()->ApplyLayerParameter(par);
+      break;
     }
 #endif /* ECAL_LAYER_FASTRTPS */
     case eCAL::pb::tl_inproc:
     {
       CInProcLayer::Get()->ApplyLayerParameter(par);
+      break;
     }
     default:
       break;

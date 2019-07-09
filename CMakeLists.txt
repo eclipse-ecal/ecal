@@ -33,27 +33,23 @@ cmake_policy(SET CMP0054 NEW)
 # command line build options
 # use it that way cmake .. -DBUILD_APPS=ON -DBUILD_SAMPLES=ON
 # --------------------------------------------------------
-option(HAS_QT5                     "Platform supports Qt 5 library"                                   ON)
+option(HAS_QT5                                 "Platform supports Qt 5 library"                                   ON)
 
-option(BUILD_DOCS                  "Build the eCAL documentation"                                     ON)
-option(BUILD_APPS                  "Build the eCAL applications"                                      ON)
-option(BUILD_SAMPLES               "Build the eCAL samples"                                           ON)
-option(BUILD_TIME                  "Build the eCAL time interfaces"                                   ON)
-option(ECAL_LAYER_FASTRTPS         "Provide fast rtps as communication layer"                         OFF)
+option(BUILD_DOCS                              "Build the eCAL documentation"                                     ON)
+option(BUILD_APPS                              "Build the eCAL applications"                                      ON)
+option(BUILD_SAMPLES                           "Build the eCAL samples"                                           ON)
+option(BUILD_TIME                              "Build the eCAL time interfaces"                                   ON)
+option(ECAL_LAYER_FASTRTPS                     "Provide fast rtps as communication layer"                         OFF)
 
-option(ECAL_INSTALL_RUNTIME        "Install the eCAL runtime components"                              ON)
-option(ECAL_INSTALL_SAMPLE_SOURCES "Install the sources of eCAL samples"                              ON)
-option(ECAL_INSTALL_SDK            "Install the eCAL SDK"                                             ON)
+option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samples"                              ON)
 
-option(INSTALL_KEEP_CONFIG         "Replace the config, even if it already exists"                    ON)
-
-option(ECAL_JOIN_MULTICAST_TWICE   "Specific Multicast Network Bug Workaround"                        OFF)
-option(ECAL_NPCAP_SUPPORT          "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
+option(ECAL_JOIN_MULTICAST_TWICE               "Specific Multicast Network Bug Workaround"                        OFF)
+option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
 
 
 # Set option regarding third party library builds
-option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS "Build CMakeFunctions with eCAL"                         ON)
-option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build Protobuf with eCAL"                               ON)
+option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS   "Build CMakeFunctions with eCAL"                                   ON)
+option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build Protobuf with eCAL"                                         ON)
 
 
 # there is a CMake issue with testing threading availibility via TEST_RUN

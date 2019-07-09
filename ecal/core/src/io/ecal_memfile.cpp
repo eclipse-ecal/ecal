@@ -175,6 +175,9 @@ namespace eCAL
     // unlock mutex
     ret_state &= DestroyMtx(&m_memfile_info->mutex);
 
+    // unlock mutex
+    ret_state &= CleanupMtx(m_memfile_info->name);
+
     // reset states
     m_created                   = false;
     m_opened                    = false;
@@ -182,10 +185,10 @@ namespace eCAL
     m_header.max_data_size      = 0;
     m_header.cur_data_size      = 0;
 
-    m_memfile_info->mutex       = 0;
+    m_memfile_info->mutex       = nullptr;
     m_memfile_info->memfile     = 0;
     m_memfile_info->map_region  = 0;
-    m_memfile_info->mem_address = 0;
+    m_memfile_info->mem_address = nullptr;
 
     return(ret_state);
   }

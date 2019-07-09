@@ -342,6 +342,9 @@ namespace eCAL
 
     // replace all '/' to '_'
     std::replace(m_memfile_name.begin(), m_memfile_name.end(), '/', '_');
+
+    // append "_mem" for debugging puposes
+    m_memfile_name += "_shm";
   }
 
   bool CDataWriterSHM::CreateMemFile(size_t size_)

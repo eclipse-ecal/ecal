@@ -34,6 +34,14 @@
         <file alias="FORWARD_TO">flaticon/Google/forward_to.svg</file>
         <file alias="REWIND">flaticon/Google/rewind.svg</file>
         <file alias="SETTINGS">flaticon/Smashicons/gears.svg</file>
+        <file alias="EXIT">FlorianReimold/Exit.svg</file>
+        <file alias="TABLE_WIDTH">FlorianReimold/table_width.svg</file>
+        <file alias="TASKBAR_FORWARD_TO">FlorianReimold/circle_forward_to.svg</file>
+        <file alias="TASKBAR_PAUSE">FlorianReimold/circle_pause.svg</file>
+        <file alias="TASKBAR_PLAY">FlorianReimold/circle_play.svg</file>
+        <file alias="TASKBAR_PLAY_NEXT">FlorianReimold/circle_play_next.svg</file>
+        <file alias="TASKBAR_STOP">FlorianReimold/circle_stop.svg</file>
+        <file alias="TASKBAR_RECORD">FlorianReimold/circle_record.svg</file>
         <file alias="INFO">flaticon/Freepik/info.svg</file>
     </qresource>
 </RCC>
