@@ -3,8 +3,9 @@
 
 Copyright (c) 2019, Continental Corporation.
 
-
-[![Build Status](https://travis-ci.org/continental/ecal.svg?branch=master)](https://travis-ci.org/continental/ecal) [![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE.txt)
+[![Build Status](https://travis-ci.org/continental/ecal.svg?branch=master)](https://travis-ci.org/continental/ecal)
+[![Build status](https://ci.appveyor.com/api/projects/status/2hnl7p9cedimrkox/branch/master?svg=true)](https://ci.appveyor.com/project/rex-schilasky/ecal/branch/master)
+[![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE.txt)
 
 ## Preface
 
