@@ -197,6 +197,65 @@ Now you should see the two running application "person publisher" and "person su
 
 ![eCAL monitor showing topic 'person'](gfx/app/monitor_person.png?raw=true "eCAL monitor showing topic 'person'")
 
+## Performance
+
+The following table shows the latency in µs between a single publisher / subscriber connection for different payload sizes (two different processes running on the same host). You can simply measure the latency on your own machine by running the ecal_latency_snd and ecal_latency_rec sample applications.
+
+First start ecal_sample_latency_rec. This application will receive the published payloads, send them back to the sender and print out the average receive time, the message frequency and the data throughput over all received messages. The sending application ecal_latency_snd can be configured that way ..
+  
+     ecal_latency_snd  -s <payload_size [kB]> -r <send loops>
+  
+The table shows the results for a Windows and a Linux platform (20000 samples, zero drops).
+
+```
+-------------------------------
+ Platform Windows 10 (AMD64)
+-------------------------------
+OS Name:                            Microsoft Windows 10 Enterprise
+OS Version:                         10.0.16299
+OS Manufacturer:                    Microsoft Corporation
+OS Build Type:                      Multiprocessor Free
+System Manufacturer:                HP
+System Model:                       HP ZBook 15 G5
+System Type:                        x64-based PC
+Processor(s):                       1 Prozessor(s) Installed.
+                                    [01]: Intel64 Family 6 Model 158 Stepping 10 GenuineIntel ~2592 MHz
+Total Physical Memory:              32.579 MB
+
+-------------------------------
+ Platform Ubuntu 16 (AMD64)
+-------------------------------
+H/W path      Device    Class       Description
+===============================================
+                        system      HP ZBook 15 G3 (M9R63AV)
+/0                      bus         80D5
+/0/0                    memory      128KiB L1 Cache
+/0/1                    memory      128KiB L1 Cache
+/0/2                    memory      1MiB L2 Cache
+/0/3                    memory      8MiB L3 Cache
+/0/4                    processor   Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz
+/0/5                    memory      16GiB System Memory
+/0/5/0                  memory      8GiB SODIMM Synchron 2133 MHz (0,5 ns)
+/0/5/1                  memory      8GiB SODIMM Synchron 2133 MHz (0,5 ns)
+
+```
+
+|Payload Size (kB)|Win10 AMD64|Ubuntu16 AMD64|
+|----------------:|----------:|-------------:|
+|              1  |       25  |          14  |
+|              2  |       25  |          14  |
+|              4  |       26  |          15  |
+|              8  |       28  |          16  |
+|             16  |       33  |          18  |
+|             32  |       37  |          22  |
+|             64  |       47  |          26  |
+|            128  |       68  |          40  |
+|            256  |      107  |          66  |
+|            512  |      190  |         134  |
+|           1024  |      401  |         720  |
+|           2048  |      937  |        1500  |
+|           4096  |     1868  |        3600  |
+
 ## Usage
 
 ### The Publish-Subscribe Pattern
