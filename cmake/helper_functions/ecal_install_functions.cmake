@@ -100,7 +100,6 @@ function(ecal_install_app TARGET_NAME)
   install(TARGETS ${TARGET_NAME}
     RUNTIME DESTINATION  "${eCAL_install_app_dir}" COMPONENT app
   )
-  set_property(INSTALL "${eCAL_install_app_dir}/$<TARGET_FILE_NAME:${TARGET_NAME}>" PROPERTY CPACK_START_MENU_SHORTCUTS "${TARGET_NAME}")
 
 endfunction()
 

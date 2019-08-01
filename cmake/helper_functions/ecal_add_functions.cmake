@@ -51,6 +51,7 @@ function(ecal_add_app_gui TARGET_NAME)
     VERSION ${eCAL_VERSION_STRING}
     SOVERSION ${eCAL_VERSION_MAYOR}
     OUTPUT_NAME ecal_${TARGET_NAME})
+    set_property(INSTALL "${eCAL_install_app_dir}/$<TARGET_FILE_NAME:${TARGET_NAME}>" PROPERTY CPACK_START_MENU_SHORTCUTS "${TARGET_NAME}")
 endfunction()
 
 function(ecal_add_app_qt TARGET_NAME)
@@ -61,6 +62,7 @@ function(ecal_add_app_qt TARGET_NAME)
     OUTPUT_NAME ecal_${TARGET_NAME})
   if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+    set_property(INSTALL "${eCAL_install_app_dir}/$<TARGET_FILE_NAME:${TARGET_NAME}>" PROPERTY CPACK_START_MENU_SHORTCUTS "${TARGET_NAME}")
   endif()
 endfunction()
 

@@ -59,6 +59,8 @@ sudo apt-get install doxygen
 sudo apt-get install graphviz
 ```
 
+*Note:* building cmake including documentation requires using a fairly new version of CMake, so the version installed with your system (e.g. 3.5.1 for Ubuntu 16.04) might not be sufficient. You can install newer versions of CMake by adding a ppa as described [here]( https://blog.kitware.com/ubuntu-cmake-repository-now-available/) or downloading it from the [CMake website](https://cmake.org/download/)
+
 #### Install third party dependencies:
   
 ```bash
@@ -79,7 +81,6 @@ make -j
 cpack -G DEB
 sudo dpkg -i eCAL*
 ```
-
 ### UDP network configuration
 
 setup the correct ip address - here for adapter eth0, ip address 192.168.0.1
@@ -138,7 +139,7 @@ Run the following batch files to create the Visual Studio 2015 (2017) solutions 
 
 ```bat
 build_win\win_make_cmake.bat v140 (v141)
-build_win\win_make_ build.bat
+build_win\win_make_build.bat
 ```
 
 #### Create Setup
@@ -185,6 +186,33 @@ For local communication use 0 for ttl.
 You can find the ecal.ini configuration file under %APPDATA%\eCAL.
 
 Don't forget to disable any windows firewall.
+
+## CMake build options
+
+When configuring with CMake, you can turn on / off specific features of eCAL.
+
+- `HAS_QT5`, default: `ON`  
+  Platform supports Qt 5 library, necessary to build monitoring tool
+- `BUILD_DOCS`, default `ON`
+  Build the eCAL documentation, requires the installation of doxygen and a recent CMake version (>= 3.14 preferred, but some lower versions might work)
+- `BUILD_APPS`, default `ON`,  
+  Build the eCAL applications, such as the Monitor
+- `BUILD_SAMPLES`, default `OFF`
+  Build the eCAL sample applications
+- `BUILD_TIME`, default `ON`
+  Build the eCAL time interfaces, necessary if you want to use ecal in time synchronized mode
+- `ECAL_LAYER_FASTRTPS`, default `OFF`
+  Provide fast rtps as communication layer, requires fast-rtps and fast-cdr installations
+- `ECAL_INSTALL_SAMPLE_SOURCES`, default: `ON`
+  Install the sources of eCAL samples
+- `ECAL_JOIN_MULTICAST_TWICE`, default: `OFF`
+  Specific Multicast Network Bug Workaround
+- `ECAL_NPCAP_SUPPORT`, default `OFF`
+  Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)
+- `ECAL_THIRDPARTY_BUILD_PROTOBUF`, default `ON`
+  Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.5.1 or newer (tested with 3.5.1).
+
+All options can be passed on the command line `cmake -D<option>=<value>` or in the CMake GUI application.
 
 ## Initial Test
 

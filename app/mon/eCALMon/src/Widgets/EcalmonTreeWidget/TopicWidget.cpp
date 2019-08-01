@@ -28,6 +28,8 @@
 #include <ecal_def_ini.h>
 #include <SimpleIni.h>
 
+#include <iostream>
+
 #include <QSettings>
 #include <QMenu>
 #include <QApplication>

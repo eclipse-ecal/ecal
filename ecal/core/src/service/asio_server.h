@@ -25,6 +25,8 @@
 
 #include <asio.hpp>
 
+#include "ecal_tcpheader.h"
+
 typedef std::function<int(const std::string& request, std::string& response)> RequestCallbackT;
 
 class CAsioSession
@@ -103,12 +105,14 @@ private:
   std::vector<char> pack_write(const std::string& response)
   {
     // create header
-    const uint32_t rsize   = static_cast<uint32_t>(response.size());
-    const uint32_t n_rsize = htonl(rsize);
+    eCAL::STcpHeader tcp_header;
+    // set up package size
+    const size_t psize = response.size();
+    tcp_header.psize_n = htonl(static_cast<uint32_t>(psize));
     // repack
-    std::vector<char> packed_response(sizeof(n_rsize) + rsize);
-    memcpy(packed_response.data(), &n_rsize, sizeof(n_rsize));
-    memcpy(packed_response.data() + sizeof(n_rsize), response.data(), rsize);
+    std::vector<char> packed_response(sizeof(tcp_header) + psize);
+    memcpy(packed_response.data(), &tcp_header, sizeof(tcp_header));
+    memcpy(packed_response.data() + sizeof(tcp_header), response.data(), psize);
     return packed_response;
   }
 

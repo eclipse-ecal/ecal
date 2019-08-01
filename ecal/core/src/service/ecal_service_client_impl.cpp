@@ -198,7 +198,7 @@ namespace eCAL
             client.second->Destroy();
           }
           // collect return state
-          ret_state |= ret;
+          ret_state = true;
         }
       }
     }

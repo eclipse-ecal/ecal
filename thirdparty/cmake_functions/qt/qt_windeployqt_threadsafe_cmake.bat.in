@@ -4,15 +4,15 @@ set need_to_wait=0
 set "PATH=${qt5_install_prefix}/bin/;%PATH%"
 
 :LockFile
-(	
-	if %need_to_wait%==1 (
-		timeout /NOBREAK /t 1
-	)
-	set need_to_wait=1
-	
-	9>%TMP%\.windeployqt-lock (
-		windeployqt.exe %* || exit /b %errorlevel%
-	)
+(
+    if %need_to_wait%==1 (
+        timeout /NOBREAK /t 1
+    )
+    set need_to_wait=1
+    
+    9>%TMP%\.windeployqt-lock (
+        windeployqt.exe %* || exit /b %errorlevel%
+    )
 ) ||goto :LockFile
 
 endlocal

@@ -16,29 +16,22 @@
 #
 # ========================= eCAL LICENSE =================================
 
+project(config)
 
-# Macro that determines the subfolder in a Qt installation to append the 
-# CMAKE_PREFIX_PATH variable
-macro(qt_msvc_path out)
-if (MSVC_VERSION GREATER_EQUAL 1930)
-  message(WARNING "unknown MSVC_VERSION")
-elseif (MSVC_VERSION GREATER_EQUAL 1920)
-  set(${out} "msvc2019" ) 
-elseif (MSVC_VERSION GREATER_EQUAL 1910)
-  set(${out} "msvc2017" ) 
-elseif (MSVC_VERSION EQUAL 1900)
-  set(${out} "msvc2015" )  
-elseif (MSVC_VERSION EQUAL 1800)
-  set(${out} "msvc2013" )
-elseif (MSVC_VERSION EQUAL 1700)
-  set(${out} "msvc2012" )
-elseif (MSVC_VERSION EQUAL 1600)
-  set(${out} "msvc2010" )  
-else ()
-  message(FATAL_ERROR "Older Visual Studio Versions are not supported")
-endif()
+set(ecalconfig_src
+  eCALConfig.cpp
+)
 
-if (CMAKE_CL_64)
-  set(${out} "${${out}}_64")
-endif ()
-endmacro()
+ecal_add_app_console(${PROJECT_NAME} ${ecalconfig_src})
+
+target_include_directories(${PROJECT_NAME}
+  PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+
+target_compile_definitions(${PROJECT_NAME}
+  PRIVATE $<$<BOOL:${MSVC}>:PCRE_STATIC;_UNICODE>)
+
+target_link_libraries(${PROJECT_NAME} eCAL::core)
+
+ecal_install_app(${PROJECT_NAME})
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/util)

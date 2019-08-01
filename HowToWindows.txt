@@ -1,9 +1,0 @@
-How to run eCAL under windows OS after installation.
-
-The CPack / WIX setup generation is currently not working properly for windows OS. To run eCAL after installation on a windows system you need to do the following steps:
-
-1. Add qt 5 installation path to system PATH (e.g. C:\Qt\5.12.0\msvc2017_64\bin).
-2. Add eCAL bin path to system or user PATH variable (e.g. d:\ecal\bin).
-3. Copy etc\ecal ini files to %APPDATA%\eCAL.
-
-We will hopefully fix that issue soon.

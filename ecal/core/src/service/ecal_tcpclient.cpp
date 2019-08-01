@@ -22,6 +22,7 @@
 **/
 
 #include "ecal_tcpclient.h"
+#include "ecal_tcpheader.h"
 
 #include <iostream>
 
@@ -105,23 +106,26 @@ namespace eCAL
 
     try
     {
-      // clear response buffer
-      response_.clear();
-
       // read stream header
-      uint32_t n_rsize(0);
-      size_t bytes_read = m_socket->read_some(asio::buffer(&n_rsize, sizeof(n_rsize)));
-      if (bytes_read != 4) return 0;
+      STcpHeader tcp_header;
+      size_t bytes_read = m_socket->read_some(asio::buffer(&tcp_header, sizeof(tcp_header)));
+      if (bytes_read != sizeof(tcp_header)) return 0;
 
       // extract data size
-      const uint32_t rsize = ntohl(n_rsize);
+      const size_t rsize = static_cast<size_t>(ntohl(tcp_header.psize_n));
+
+      // prepare response buffer
+      response_.clear();
+      response_.reserve(rsize);
 
       // read stream data
       do
       {
         const size_t buffer_size(1024);
         char buffer[buffer_size];
-        bytes_read = m_socket->read_some(asio::buffer(buffer, buffer_size));
+        size_t bytes_left = rsize - response_.size();
+        size_t bytes_to_read = std::min(buffer_size, bytes_left);
+        bytes_read = m_socket->read_some(asio::buffer(buffer, bytes_to_read));
         //std::cout << "CTcpClient::ExecuteRequest read response bytes " << bytes_read << " to " << response_.size() << std::endl;
         response_ += std::string(buffer, bytes_read);
       } while (response_.size() < rsize);

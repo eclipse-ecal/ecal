@@ -212,7 +212,7 @@ namespace eCAL
     auto sample_topic = sample_.topic();
     int          process_id      = sample_topic.pid();
     std::string  topic_name      = sample_topic.tname();
-    size_t       topic_size      = sample_topic.tsize();
+    size_t       topic_size      = static_cast<size_t>(sample_topic.tsize());
     bool         topic_tlayer_ecal_udp_mc(false);
     bool         topic_tlayer_ecal_udp_uc(false);
     bool         topic_tlayer_ecal_udp_metal(false);
@@ -230,8 +230,8 @@ namespace eCAL
       topic_tlayer_rtps           |= (layer.type() == eCAL::pb::tl_rtps)           && layer.confirmed();
       topic_tlayer_inproc         |= (layer.type() == eCAL::pb::tl_inproc)         && layer.confirmed();
     }
-    size_t       connections_loc = sample_topic.connections_loc();
-    size_t       connections_ext = sample_topic.connections_ext();
+    size_t       connections_loc = static_cast<size_t>(sample_topic.connections_loc());
+    size_t       connections_ext = static_cast<size_t>(sample_topic.connections_ext());
     long long    did             = sample_topic.did();
     long long    dclock          = sample_topic.dclock();
     long long    ddropped        = sample_topic.message_drops();

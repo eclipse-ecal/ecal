@@ -106,7 +106,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedInt32(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedInt32(msg_, field, fnum), static_cast<size_t>(fnum));
           }
         }
         else
@@ -120,7 +120,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedInt64(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedInt64(msg_, field, fnum), static_cast<size_t>(fnum));
           }
         }
         else
@@ -134,7 +134,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedUInt32(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedUInt32(msg_, field, fnum), static_cast<size_t>(fnum));
           }
         }
         else
@@ -148,7 +148,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedUInt64(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedUInt64(msg_, field, fnum), static_cast<size_t>(fnum));
           }
         }
         else
@@ -162,7 +162,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedDouble(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedDouble(msg_, field, fnum), static_cast<size_t>(fnum));
           }
         }
         else
@@ -176,7 +176,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedFloat(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedFloat(msg_, field, fnum), static_cast<size_t>(fnum));
           }
         }
         else
@@ -190,7 +190,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedBool(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedBool(msg_, field, fnum), static_cast<size_t>(fnum));
           }
         }
         else
@@ -204,7 +204,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedEnum(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedEnum(msg_, field, fnum), static_cast<size_t>(fnum));
           }
         }
         else

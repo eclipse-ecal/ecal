@@ -293,9 +293,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
       switch (process_.tsync_mode())
       {
       case 0:
-        return QVariant();
       case 1:
-        return QVariant();
       case 2:
         return QVariant();
       default:
