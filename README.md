@@ -1,5 +1,5 @@
 ﻿
-# eCAL - enhanced Communication Abstraction Layer
+# eCAL - enhanced Communication Abstraction Layer - teat
 
 Copyright (c) 2019, Continental Corporation.
 
