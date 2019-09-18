@@ -28,9 +28,8 @@
 
 // capnp includes
 #ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4239)
-#endif
+#pragma warning(push, 0)
+#endif /*_MSC_VER*/
 #include "addressbook.capnp.h" 
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -51,7 +50,7 @@ int main(int argc, char **argv)
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
   // create a publisher (topic name "addressbook")
-  eCAL::CCapnpPublisher<AddressBook> pub("addressbook");
+  eCAL::capnproto::CPublisher<AddressBook> pub("addressbook");
 
   auto addressBook = pub.GetBuilder();
   auto people = addressBook.initPeople(2);
@@ -65,7 +64,7 @@ int main(int argc, char **argv)
   alicePhones[0].setNumber("555-1212");
   alicePhones[0].setType(Person::PhoneNumber::Type::MOBILE);
   alice.getEmployment().setSchool("MIT");
-  alice.setWeight(60.4);
+  alice.setWeight(60.4f);
   
   kj::byte* data = new kj::byte[6];
   data[0] = 0x1F;
@@ -88,7 +87,7 @@ int main(int argc, char **argv)
   bobPhones[1].setNumber("555-7654");
   bobPhones[1].setType(Person::PhoneNumber::Type::WORK);
   bob.getEmployment().setUnemployed();
-  bob.setWeight(80.8);
+  bob.setWeight(80.8f);
 
   // enter main loop
   while (eCAL::Ok())

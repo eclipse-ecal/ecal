@@ -122,30 +122,40 @@ extern "C"
   ECALC_API unsigned long eCAL_Process_GetProcessMemory();
 
   /**
-   * @brief  Get the send clock of the current process. 
-   *
-   * @return  The message send count per second. 
+  * @deprecated  Use the function eCAL_Process_GetWClock() instead
   **/
   ECALC_API long long eCAL_Process_GetSClock();
 
   /**
-   * @brief  Get the send bytes of the current process. 
-   *
-   * @return  The message send bytes per second. 
+  * @deprecated  Use the function eCAL_Process_GetWBytes() instead
   **/
   ECALC_API long long eCAL_Process_GetSBytes();
 
   /**
-   * @brief  Get the receive clock of the current process. 
+   * @brief  Get the write clock of the current process. 
    *
-   * @return  The message receive count per second. 
+   * @return  The message write count per second. 
+  **/
+  ECALC_API long long eCAL_Process_GetWClock();
+
+  /**
+   * @brief  Get the write bytes of the current process. 
+   *
+   * @return  The message write bytes per second. 
+  **/
+  ECALC_API long long eCAL_Process_GetWBytes();
+
+  /**
+   * @brief  Get the read clock of the current process. 
+   *
+   * @return  The message read count per second. 
   **/
   ECALC_API long long eCAL_Process_GetRClock();
 
   /**
-   * @brief  Get the receive bytes of the current process. 
+   * @brief  Get the read bytes of the current process. 
    *
-   * @return  The message receive bytes per second. 
+   * @return  The message read bytes per second. 
   **/
   ECALC_API long long eCAL_Process_GetRBytes();
 

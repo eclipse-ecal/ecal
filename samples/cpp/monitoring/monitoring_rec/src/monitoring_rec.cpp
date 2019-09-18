@@ -111,8 +111,8 @@ int main(int argc, char **argv)
         std::cout << "pmemory         : " << process.pmemory()           << std::endl;   // process memory
         std::cout << "pcpu            : " << process.pcpu()              << std::endl;   // process cpu usage
         std::cout << "usrptime        : " << process.usrptime()          << std::endl;   // process user time
-        std::cout << "udpsbytes       : " << process.udpsbytes()         << std::endl;   // udp send bytes per sec
-        std::cout << "udprbytes       : " << process.udprbytes()         << std::endl;   // udp receive bytes per sec
+        std::cout << "datawrite       : " << process.datawrite()         << std::endl;   // data write bytes per sec
+        std::cout << "dataread        : " << process.dataread()          << std::endl;   // date read bytes per sec
         std::cout << "severity        : " << process.state().severity()  << std::endl;   // process state severity
         std::cout << "info            : " << process.state().info()      << std::endl;   // process state info
         std::cout << std::endl;

@@ -145,9 +145,9 @@ namespace eCAL
         for (size_t i = 0; i < static_cast<size_t>(argc_); ++i) if (argv_[i]) g_task_parameter.push_back(argv_[i]);
       }
 
-      g_process_sclock = 0;
-      g_process_sbytes = 0;
-      g_process_sbytes_sum = 0;
+      g_process_wclock = 0;
+      g_process_wbytes = 0;
+      g_process_wbytes_sum = 0;
 
       g_process_rclock = 0;
       g_process_rbytes = 0;

@@ -395,7 +395,7 @@ namespace eCAL
     size_t snd_hash = hf(SSndHash(m_topic_id, m_clock));
 
     // increase overall sum send
-    g_process_sbytes_sum += len_;
+    g_process_wbytes_sum += len_;
 
     // store size for monitoring
     m_topic_size = len_;
@@ -929,7 +929,7 @@ namespace eCAL
     m_clock++;
 
     // statistics
-    g_process_sclock++;
+    g_process_wclock++;
   }
 
   std::string CDataWriter::Dump(const std::string& indent_ /* = "" */)

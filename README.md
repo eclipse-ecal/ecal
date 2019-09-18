@@ -45,6 +45,39 @@ git submodule init
 git submodule update
 ```
 
+## CMake build options
+
+eCAL is using CMake as build system. When configuring with CMake, you can turn on / off the following features.
+
+- `HAS_QT5`, default: `ON`
+  Platform supports Qt 5 library, necessary to build eCAL monitoring tool
+- `HAS_CAPNPROTO`, default: `OFF`
+  Platform supports Cap'n Proto library, necessary to use capnp serialization as message system and to enable eCAL monitoring capnp message reflection
+  eCAL does not add Cap'n Proto as a submodule. If you set this option to `ON`, please make sure that the library is installed on your system and CMake can find it (consider setting CMAKE_PREFIX_PATH to point to the library).
+  Currently Version 0.6.1 is supported and has been tested, to use 0.7.0 some adaptations in CMakeLists.txt files needs to be made to make the samples compile.
+- `BUILD_DOCS`, default `ON`
+  Build the eCAL documentation, requires the installation of doxygen and a recent CMake version (>= 3.14 preferred, but some lower versions might work)
+- `BUILD_APPS`, default `ON`,
+  Build the eCAL applications, such as the monitoring tool
+- `BUILD_SAMPLES`, default `OFF`
+  Build the eCAL sample applications
+- `BUILD_TIME`, default `ON`
+  Build the eCAL time interfaces, necessary if you want to use ecal in time synchronized mode (based on ptp for example)
+- `ECAL_LAYER_FASTRTPS`, default `OFF`
+  Provide fast rtps as communication layer, requires fast-rtps and fast-cdr installations
+- `ECAL_INSTALL_SAMPLE_SOURCES`, default: `ON`
+  Install the sources of eCAL samples
+- `ECAL_JOIN_MULTICAST_TWICE`, default: `OFF`
+  Specific multicast network bug workaround
+- `ECAL_NPCAP_SUPPORT`, default `OFF`
+  Enable the eCAL to use Npcap for udp socket communication (i.e. the Win10 performance fix)
+- `ECAL_THIRDPARTY_BUILD_PROTOBUF`, default `ON`
+  Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.5.1 or newer (tested with 3.5.1).
+- `ECAL_THIRDPARTY_BUILD_PROTOBUF`, default `ON`
+  Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.5.1 or newer (tested with 3.5.1).
+
+All options can be passed on the command line `cmake -D<option>=<value>` or in the CMake GUI application.
+
 ## Setup on Linux Systems
 
 Update gcc to 5.3.x or newer and install cmake.
@@ -187,33 +220,6 @@ You can find the ecal.ini configuration file under %APPDATA%\eCAL.
 
 Don't forget to disable any windows firewall.
 
-## CMake build options
-
-When configuring with CMake, you can turn on / off specific features of eCAL.
-
-- `HAS_QT5`, default: `ON`  
-  Platform supports Qt 5 library, necessary to build monitoring tool
-- `BUILD_DOCS`, default `ON`
-  Build the eCAL documentation, requires the installation of doxygen and a recent CMake version (>= 3.14 preferred, but some lower versions might work)
-- `BUILD_APPS`, default `ON`,  
-  Build the eCAL applications, such as the Monitor
-- `BUILD_SAMPLES`, default `OFF`
-  Build the eCAL sample applications
-- `BUILD_TIME`, default `ON`
-  Build the eCAL time interfaces, necessary if you want to use ecal in time synchronized mode
-- `ECAL_LAYER_FASTRTPS`, default `OFF`
-  Provide fast rtps as communication layer, requires fast-rtps and fast-cdr installations
-- `ECAL_INSTALL_SAMPLE_SOURCES`, default: `ON`
-  Install the sources of eCAL samples
-- `ECAL_JOIN_MULTICAST_TWICE`, default: `OFF`
-  Specific Multicast Network Bug Workaround
-- `ECAL_NPCAP_SUPPORT`, default `OFF`
-  Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)
-- `ECAL_THIRDPARTY_BUILD_PROTOBUF`, default `ON`
-  Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.5.1 or newer (tested with 3.5.1).
-
-All options can be passed on the command line `cmake -D<option>=<value>` or in the CMake GUI application.
-
 ## Initial Test
 
 To initially check the functionality of a fresh installed eCAL system, just follow these steps.
@@ -270,19 +276,19 @@ H/W path      Device    Class       Description
 
 |Payload Size (kB)|Win10 AMD64|Ubuntu16 AMD64|
 |----------------:|----------:|-------------:|
-|              1  |       25  |          14  |
-|              2  |       25  |          14  |
-|              4  |       26  |          15  |
-|              8  |       28  |          16  |
-|             16  |       33  |          18  |
-|             32  |       37  |          22  |
-|             64  |       47  |          26  |
-|            128  |       68  |          40  |
-|            256  |      107  |          66  |
-|            512  |      190  |         134  |
-|           1024  |      401  |         720  |
-|           2048  |      937  |        1500  |
-|           4096  |     1868  |        3600  |
+|              1  |       13  |          14  |
+|              2  |       13  |          14  |
+|              4  |       15  |          15  |
+|              8  |       16  |          16  |
+|             16  |       19  |          18  |
+|             32  |       20  |          22  |
+|             64  |       27  |          26  |
+|            128  |       40  |          40  |
+|            256  |       63  |          66  |
+|            512  |      108  |         134  |
+|           1024  |      288  |         720  |
+|           2048  |      768  |        1500  |
+|           4096  |     1548  |        3600  |
 
 ## Usage
 

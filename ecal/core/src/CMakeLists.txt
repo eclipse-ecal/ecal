@@ -277,6 +277,8 @@ set(ecal_header_cimpl
 )
 
 set(ecal_header_msg
+    ../include/ecal/msg/capnproto/dynamic.h
+    ../include/ecal/msg/capnproto/helper.h
     ../include/ecal/msg/capnproto/publisher.h
     ../include/ecal/msg/capnproto/subscriber.h
     ../include/ecal/msg/flatbuffers/publisher.h
@@ -291,6 +293,7 @@ set(ecal_header_msg
     ../include/ecal/msg/protobuf/subscriber.h
     ../include/ecal/msg/string/publisher.h
     ../include/ecal/msg/string/subscriber.h
+    ../include/ecal/msg/dynamic.h
     ../include/ecal/msg/publisher.h
     ../include/ecal/msg/subscriber.h
 )

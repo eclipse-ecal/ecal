@@ -82,8 +82,8 @@ ProcessWidget::ProcessWidget(QWidget *parent)
     (int)ProcessTreeModel::Columns::HEARTBEAT,
     (int)ProcessTreeModel::Columns::MEMORY,
     (int)ProcessTreeModel::Columns::CPU_PERCENTAGE,
-    (int)ProcessTreeModel::Columns::UDP_SENT,
-    (int)ProcessTreeModel::Columns::UDP_RECEIVED,
+    (int)ProcessTreeModel::Columns::DATAWRITE,
+    (int)ProcessTreeModel::Columns::DATAREAD,
   };
   setVisibleColumns(default_visible_columns);
 
@@ -114,8 +114,8 @@ void ProcessWidget::autoSizeColumns()
   example_process_pb.set_pmemory(99999999999);
   example_process_pb.set_pcpu(1000);
   example_process_pb.set_usrptime(999999.9999f);
-  example_process_pb.set_udpsbytes(999999);
-  example_process_pb.set_udprbytes(999999);
+  example_process_pb.set_datawrite(99999999999);
+  example_process_pb.set_dataread(99999999999);
 
   example_process_pb.mutable_state()->set_severity(eCAL::pb::eProcessSeverity::proc_sev_warning);
   example_process_pb.mutable_state()->set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level5);
@@ -139,8 +139,8 @@ void ProcessWidget::autoSizeColumns()
     (int)ProcessTreeModel::Columns::MEMORY,
     (int)ProcessTreeModel::Columns::CPU_PERCENTAGE,
     (int)ProcessTreeModel::Columns::USER_TIME,
-    (int)ProcessTreeModel::Columns::UDP_SENT,
-    (int)ProcessTreeModel::Columns::UDP_RECEIVED,
+    (int)ProcessTreeModel::Columns::DATAWRITE,
+    (int)ProcessTreeModel::Columns::DATAREAD,
     (int)ProcessTreeModel::Columns::TIMESYNC_MODE,
   };
 

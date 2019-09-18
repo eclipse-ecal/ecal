@@ -19,9 +19,8 @@
 
 // capnp includes
 #ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4239)
-#endif
+#pragma warning(push, 0)
+#endif /*_MSC_VER*/
 #include "addressbook.capnp.h" 
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -84,7 +83,7 @@ int main(int argc, char **argv)
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
   // create a subscriber (topic name "addressbook")
-  eCAL::CCapnpSubscriber<AddressBook> sub("addressbook");
+  eCAL::capnproto::CSubscriber<AddressBook> sub("addressbook");
   // enter main loop
   while (eCAL::Ok())
   {

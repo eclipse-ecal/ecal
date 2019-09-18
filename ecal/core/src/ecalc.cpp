@@ -244,12 +244,22 @@ extern "C"
 
   ECALC_API long long eCAL_Process_GetSClock()
   {
-    return(eCAL::Process::GetSClock());
+    return(eCAL_Process_GetWClock());
   }
 
   ECALC_API long long eCAL_Process_GetSBytes()
   {
-    return(eCAL::Process::GetSBytes());
+    return(eCAL_Process_GetWBytes());
+  }
+
+  ECALC_API long long eCAL_Process_GetWClock()
+  {
+    return(eCAL::Process::GetWClock());
+  }
+
+  ECALC_API long long eCAL_Process_GetWBytes()
+  {
+    return(eCAL::Process::GetWBytes());
   }
 
   ECALC_API long long eCAL_Process_GetRClock()

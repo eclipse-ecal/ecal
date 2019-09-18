@@ -16,9 +16,9 @@
 #
 # ========================= eCAL LICENSE =================================
 
-find_package(simpleini REQUIRED)
-
 project(ecaltime-linuxptp)
+
+find_package(simpleini REQUIRED)
 
 set(ecal_time_linuxptp_src
   ecal_time_linuxptp.cpp

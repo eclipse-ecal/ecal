@@ -95,8 +95,8 @@ void HostWidget::autoSizeColumns()
   example_process_pb->set_pmemory(99999999999);
   example_process_pb->set_pcpu(1000);
   example_process_pb->set_usrptime(999999.9999f);
-  example_process_pb->set_udpsbytes(999999);
-  example_process_pb->set_udprbytes(999999);
+  example_process_pb->set_datawrite(99999999999);
+  example_process_pb->set_dataread(99999999999);
 
   HostTreeItem* example_host_item = new HostTreeItem("CARPC00____");
   example_host_item->update(example_monitoring_pb);

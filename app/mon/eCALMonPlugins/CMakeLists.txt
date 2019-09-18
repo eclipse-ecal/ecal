@@ -15,8 +15,12 @@
 # limitations under the License.
 #
 # ========================= eCAL LICENSE =================================
+
 #add_subdirectory(DummyPlugin)
 add_subdirectory(MonitorTreeView)
 add_subdirectory(ProtobufReflection)
+if (HAS_CAPNPROTO)
+add_subdirectory(CapnprotoReflection)
+endif (HAS_CAPNPROTO)
 add_subdirectory(RawDataReflection)
 add_subdirectory(StringReflection)

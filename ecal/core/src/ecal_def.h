@@ -149,8 +149,7 @@
 #define PUB_MEMFILE_OPEN_TO                           50
 
 /* timeout for memory read acknowledge signal from data reader in ms */
-#define PUB_MEMFILE_ACK_TO_QOS_BE                     10   /* qos: best effort */
-#define PUB_MEMFILE_ACK_TO_QOS_RE                    100   /* qos: reliable    */
+#define PUB_MEMFILE_ACK_TO                            0   /* ms */
 
 /**********************************************************************************************/
 /*                                     time settings                                          */
@@ -179,4 +178,4 @@
 /*                                     events                                                 */
 /**********************************************************************************************/
 /* common stop event prefix to shut down a local user process */
-#define EVENT_SHUTDOWN_PROC             "eCAL_ShutdownProcsEvent"
+#define EVENT_SHUTDOWN_PROC             "ecal_shutdown_process"

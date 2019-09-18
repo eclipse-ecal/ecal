@@ -89,13 +89,13 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return process_.usrptime();
     }
-    else if (column == Columns::UDPSBYTES)
+    else if (column == Columns::DATAWRITE)
     {
-      return process_.udpsbytes();
+      return (long long)process_.datawrite();
     }
-    else if (column == Columns::UDPRBYTES)
+    else if (column == Columns::DATAREAD)
     {
-      return process_.udprbytes();
+      return (long long)process_.dataread();
     }
     else if (column == Columns::SEVERITY)
     {
@@ -212,8 +212,8 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
       || (column == Columns::PMEMORY)
       || (column == Columns::PCPU)
       || (column == Columns::USRPTIME)
-      || (column == Columns::UDPSBYTES)
-      || (column == Columns::UDPRBYTES)
+      || (column == Columns::DATAWRITE)
+      || (column == Columns::DATAREAD)
       )
     {
       return Qt::AlignmentFlag::AlignRight;

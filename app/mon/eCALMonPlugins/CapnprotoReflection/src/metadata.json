@@ -1,0 +1,16 @@
+{
+  "Version": "v0.1.0",
+  "Author": "Kerstin Keller",
+  "Name": "CapnProto Reflection",
+  
+  "Priority": 1,
+  
+  "SupportedTopics": 
+    [
+      {
+		    "Format": "capnp"
+      }
+    ],
+  
+  "OptionalTopics": []
+}

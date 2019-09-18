@@ -15,7 +15,8 @@
 # limitations under the License.
 #
 # ========================= eCAL LICENSE =================================
-cmake_minimum_required(VERSION 3.5)
+
+cmake_minimum_required(VERSION 3.13)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/find_scripts)
@@ -34,6 +35,7 @@ cmake_policy(SET CMP0054 NEW)
 # use it that way cmake .. -DBUILD_APPS=ON -DBUILD_SAMPLES=ON
 # --------------------------------------------------------
 option(HAS_QT5                                 "Platform supports Qt 5 library"                                   ON)
+option(HAS_CAPNPROTO                           "Platform supports Cap'n Proto library"                           OFF)
 
 option(BUILD_DOCS                              "Build the eCAL documentation"                                     ON)
 option(BUILD_APPS                              "Build the eCAL applications"                                      ON)
@@ -120,10 +122,10 @@ endif()
 find_package(CMakeFunctions REQUIRED)
 
 git_revision_information()
-set(eCAL_VERSION_MAYOR  ${GIT_REVISION_MAYOR})
+set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAYOR})
 set(eCAL_VERSION_MINOR  ${GIT_REVISION_MINOR})
 set(eCAL_VERSION_PATCH  ${GIT_REVISION_PATCH})
-set(eCAL_VERSION_STRING ${eCAL_VERSION_MAYOR}.${eCAL_VERSION_MINOR}.${eCAL_VERSION_PATCH})
+set(eCAL_VERSION_STRING ${eCAL_VERSION_MAJOR}.${eCAL_VERSION_MINOR}.${eCAL_VERSION_PATCH})
 set(eCAL_VERSION        ${eCAL_VERSION_STRING}) 
 
 include(helper_functions/ecal_add_functions)

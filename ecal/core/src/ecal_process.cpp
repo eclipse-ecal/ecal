@@ -258,12 +258,22 @@ namespace eCAL
 
     long long GetSClock()
     {
-      return(g_process_sclock);
+      return(GetWClock());
     };
 
     long long GetSBytes()
     {
-      return(g_process_sbytes);
+      return(GetWBytes());
+    };
+
+    long long GetWClock()
+    {
+      return(g_process_wclock);
+    };
+
+    long long GetWBytes()
+    {
+      return(g_process_wbytes);
     };
 
     long long GetRClock()

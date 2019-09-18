@@ -180,7 +180,9 @@ static CpuUsage g_cpu_usage;
 float GetCPULoad()
 {
   static float usage = 0.0f;
-  usage = 0.98f * usage + 0.02f * static_cast<float>(g_cpu_usage.GetUsage());
+  short cpu_usage = g_cpu_usage.GetUsage();
+  // -1 means could not be evaluated yet, do not use that value ..
+  if (cpu_usage != -1) usage = 0.98f * usage + 0.02f * static_cast<float>(cpu_usage);
   return(usage * 0.01f);
 }
 
