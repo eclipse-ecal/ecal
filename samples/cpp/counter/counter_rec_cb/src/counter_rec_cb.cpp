@@ -20,8 +20,6 @@
 #include <ecal/ecal.h>
 
 #include <iostream>
-#include <chrono>
-#include <thread>
 
 // globals
 long long  g_clock(0);
@@ -56,13 +54,6 @@ int main(int argc, char **argv)
   // create subscriber for topic "Counter"
   eCAL::CSubscriber sub("Counter", "long long");
 
-  // dump instance state if creation failed
-  if(!sub.IsCreated())
-  {
-    std::cout << "Could not create subscriber !" << std::endl;
-    return(-1);
-  }
-
   // setup receive callback function
   sub.AddReceiveCallback(OnReceive);
 
@@ -70,7 +61,7 @@ int main(int argc, char **argv)
   while(eCAL::Ok())
   {
     // sleep 100 ms
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    eCAL::Process::SleepMS(100);
   }
 
   // destroy subscriber

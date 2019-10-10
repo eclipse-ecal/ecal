@@ -29,9 +29,9 @@ int main(int argc, char **argv)
   eCAL::CSubscriber sub_pulse("pulse_send",  "long long");
   eCAL::CPublisher  pub_pulse("pulse_reply", "long long");
 
-  printf("-------------------------------\n");
-  printf(" PING PONG TEST \n");
-  printf("-------------------------------\n");
+  std::cout << "-------------------------------" << std::endl;
+  std::cout << " PING PONG TEST                " << std::endl;
+  std::cout << "-------------------------------" << std::endl;
   const int pings = 10000;
   long long diff_array[pings] = {0};
   std::string rec_buf;
@@ -51,13 +51,12 @@ int main(int argc, char **argv)
   }
   diff_time /= pings;
   std::cout << std::endl << "Pulse average receive time " << diff_time << " us" << std::endl;
-
-  printf("\n");
+  std::cout << std::endl;
 
   // finalize eCAL API
   eCAL::Finalize();
 
-  printf("Press Enter to close ..\n");
+  std::cout << "Press Enter to close .." << std::endl;
   getchar();
 
   return(0);

@@ -25,7 +25,7 @@
 #ifndef ecal_timer_cimpl_h_included
 #define ecal_timer_cimpl_h_included
 
-#include <ecal/ecal_callback.h>
+#include <ecal/cimpl/ecal_callback_cimpl.h>
 
 #ifdef __cplusplus
 extern "C"

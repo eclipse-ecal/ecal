@@ -182,6 +182,11 @@ extern "C"
     return(0);
   }
 
+  ECALC_API int eCAL_Process_GetHostID()
+  {
+    return(eCAL::Process::GetHostID());
+  }
+
   ECALC_API int eCAL_Process_GetUnitName(void* name_, int name_len_)
   {
     std::string name = eCAL::Process::GetUnitName();

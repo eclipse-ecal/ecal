@@ -51,7 +51,8 @@ namespace Udpcap
 
   UdpcapSocketPrivate::~UdpcapSocketPrivate()
   {
-    close();
+    // @todo: reinvestigate why it crashes on close.
+    //close();
   }
 
   bool UdpcapSocketPrivate::isValid() const

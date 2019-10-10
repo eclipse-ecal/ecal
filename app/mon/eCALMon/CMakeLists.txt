@@ -234,7 +234,7 @@ endif()
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/mon)
 
-ecal_install_app(${PROJECT_NAME})
+ecal_install_app(${PROJECT_NAME} START_MENU_NAME "eCAL Monitor")
 get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
 get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
 find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")

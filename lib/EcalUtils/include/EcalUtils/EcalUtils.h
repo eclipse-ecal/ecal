@@ -28,11 +28,14 @@
 #include <regex>
 #include <list>
 #include <vector>
+#include <sstream>
 
 #ifdef _WIN32
 #if defined(_MSC_VER) && defined(__clang__) && !defined(CINTERFACE)
 #define CINTERFACE
 #endif
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 #include <windows.h>
 #include <direct.h>
 #endif  // _WIN32
@@ -45,130 +48,10 @@
 #include <unistd.h>
 #endif  // __linux__
 
+#include "String.h"
+
 namespace EcalUtils
 {
-  namespace String
-  {
-    template <class S>
-    S replace(const S& str, const S& from, const S& to, typename S::size_type start = 0)
-      /// Replace all occurrences of from (which must not be the empty string)
-      /// in str with to, starting at position start.
-    {
-      S result;
-      typename S::size_type pos = 0;
-      result.append(str, 0, start);
-      do
-      {
-        pos = str.find(from, start);
-        if (pos != S::npos)
-        {
-          result.append(str, start, pos - start);
-          result.append(to);
-          start = pos + from.length();
-        }
-        else result.append(str, start, str.size() - start);
-      } while (pos != S::npos);
-
-      return result;
-    }
-
-    inline bool icharcompare(char a, char b)
-    {
-      return(toupper(a) == toupper(b));
-    }
-
-    inline bool icompare(const std::string& s1, const std::string& s2)
-    {
-      return((s1.size() == s2.size()) &&
-        equal(s1.begin(), s1.end(), s2.begin(), icharcompare));
-    }
-
-    inline void split(const std::string& str, const std::string& delim, std::vector<std::string>& parts)
-    {
-      size_t end = 0;
-      while (end < str.size())
-      {
-        size_t start = end;
-        while (start < str.size() && (delim.find(str[start]) != std::string::npos))
-        {
-          start++;
-        }
-        end = start;
-        while (end < str.size() && (delim.find(str[end]) == std::string::npos))
-        {
-          end++;
-        }
-        if (end - start != 0)
-        {
-          parts.push_back(std::string(str, start, end - start));
-        }
-      }
-    }
-
-    inline std::string trim(const std::string &s)
-    {
-      std::string sCopy(s);
-      sCopy.erase(sCopy.begin(), std::find_if_not(sCopy.begin(), sCopy.end(), [](char c) { return std::isspace(c); }));
-      sCopy.erase(std::find_if_not(sCopy.rbegin(), sCopy.rend(), [](char c) { return std::isspace(c); }).base(), sCopy.end());
-      return sCopy;
-    }
-
-    template<typename Container>
-    inline std::string join(const std::string &delim, Container& parts)
-    {
-      std::stringstream ss;
-      for (auto i = parts.begin(); i != parts.end; i++)
-      {
-        if (i != parts.begin())
-        {
-          ss << delim;
-        }
-        ss << *i;
-      }
-      return ss.str();
-    }
-
-    inline bool CenterString(std::string& str, char padding_char, size_t max_size)
-    {
-      if (str.length() >= max_size) return false;
-
-      size_t empty_space = max_size - str.length();
-      size_t left_padding = empty_space / 2;
-
-      str.insert(0, left_padding, padding_char);
-      str.insert(str.length(), empty_space - left_padding, padding_char);
-
-      return true;
-    }
-  }  // namespace String
-  
-  namespace Directory
-  {
-    /**
-    * @brief  Checks if directory exists
-    *
-    * @param  path   directory path
-    *
-    * @return true if exists, false if it does not
-    **/
-    inline bool Exists(const std::string& path)
-    {
-#ifdef _WIN32
-      DWORD attribs = ::GetFileAttributesA(path.c_str());
-      if (attribs == INVALID_FILE_ATTRIBUTES)
-        return false;
-
-      return (attribs & FILE_ATTRIBUTE_DIRECTORY) != 0;
-#elif __linux__
-      struct stat st;
-      if (stat(path.c_str(), &st) == 0)
-        if ((st.st_mode & S_IFDIR) != 0)
-          return true;
-      return false;
-#endif  //  __linux__
-    }
-  }  // namespace Directory
-
   namespace File
   {
     /**
@@ -346,8 +229,8 @@ namespace EcalUtils
     inline std::string GetRelativePath(const std::string& path, const std::string& base)
     {
       std::vector<std::string> path_vector, base_vector;
-      String::split(path, separator, path_vector);
-      String::split(base, separator, base_vector);
+      String::Split(path, separator, path_vector);
+      String::Split(base, separator, base_vector);
 
       size_t size = (path_vector.size() < base_vector.size()) ? path_vector.size() : base_vector.size();
       unsigned int same_size(0);
@@ -511,6 +394,7 @@ namespace EcalUtils
       }
       return output;
     }
+
   }  // namespace Path
 
   namespace CommandLine
@@ -696,7 +580,7 @@ namespace EcalUtils
       return argument_list;
     }
 
-    std::vector<std::string> ToArgv(const std::string& command_line)
+    inline std::vector<std::string> ToArgv(const std::string& command_line)
     {
       std::vector<std::string> argv;
 

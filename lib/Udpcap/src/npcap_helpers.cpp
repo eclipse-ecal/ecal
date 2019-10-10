@@ -197,7 +197,7 @@ namespace Udpcap
           given_uuid = device_name_or_uuid_string.substr(open_bracket_pos + 1, closing_bracket_pos - open_bracket_pos - 1);
         }
 
-        // Lower-case everything
+        // Lower-case everything	  
         //std::transform(given_uuid.begin(), given_uuid.end(), given_uuid.begin(), ::tolower); // cause warning C4244 with VS2017
         std::transform(given_uuid.begin(), given_uuid.end(), given_uuid.begin(),
           [](char c) {return static_cast<char>(::tolower(c)); });

@@ -67,7 +67,6 @@ void MultipleSendVector(int argc, char **argv)
  
   while (eCAL::Ok())
   {
-    // sleep 100 ms
     for (auto& pub : moved_vector_of_publishers)
     {
       pub.Send(s);

@@ -1,40 +1,38 @@
 <RCC>
     <qresource prefix="/ecalicons">
-        <file alias="RESTART_SELECTED">flaticon/combinations/restart_selected.svg</file>
-        <file alias="START_SELECTED">flaticon/combinations/start_selected.svg</file>
-        <file alias="STOP_SELECTED">flaticon/combinations/stop_selected.svg</file>
-        <file alias="IMPORT_FROM_CLOUD">flaticon/DinosoftLabs/import_from_cloud.svg</file>
-        <file alias="UPDATE_FROM_CLOUD">flaticon/DinosoftLabs/update_from_cloud.svg</file>
-        <file alias="ADD">flaticon/Freepik/add.svg</file>
-        <file alias="COLLAPSE">flaticon/Freepik/collapse.svg</file>
-        <file alias="COMMAND_WINDOW">flaticon/Freepik/command_window.svg</file>
-        <file alias="DUPLICATE">flaticon/Freepik/duplicate.svg</file>
-        <file alias="EXPAND">flaticon/Freepik/expand.svg</file>
-        <file alias="EYE">flaticon/Freepik/eye.svg</file>
+        <file alias="FLATICON_LICENSE">flaticon/license.htm</file>
         <file alias="NEW_FILE">flaticon/Freepik/new_file.svg</file>
-        <file alias="REMOVE">flaticon/Freepik/remove.svg</file>
+        <file alias="DUPLICATE">flaticon/Freepik/duplicate.svg</file>
+        <file alias="OPEN">flaticon/Smashicons/open.svg</file>
         <file alias="SAVE">flaticon/Freepik/save.svg</file>
         <file alias="SAVE_AS">flaticon/Freepik/save_as.svg</file>
+        <file alias="EXIT">FlorianReimold/Exit.svg</file>
+        <file alias="INFO">flaticon/Freepik/info.svg</file>
         <file alias="WARNING">flaticon/Freepik/warning.svg</file>
-        <file alias="OPEN">flaticon/Smashicons/open.svg</file>
-        <file alias="START">flaticon/Smashicons/start.svg</file>
-        <file alias="STOP">flaticon/Smashicons/stop.svg</file>
-        <file alias="RESTART">flaticon/Stephen-Hutchings/restart.svg</file>
+        <file alias="ERROR">flaticon/Freepik/error.svg</file>
+        <file>flaticon/combinations/start_selected.svg</file>
+        <file>flaticon/combinations/stop_selected.svg</file>
+        <file>flaticon/combinations/restart_selected.svg</file>
         <file alias="EDIT">flaticon/Vectors-Market/pencil.svg</file>
+        <file alias="IMPORT_FROM_CLOUD">flaticon/Freepik/import_from_cloud.svg</file>
+        <file alias="UPDATE_FROM_CLOUD">flaticon/Freepik/update_from_cloud.svg</file>
+        <file alias="DELETE">flaticon/Freepik/remove.svg</file>
+        <file alias="CLEAR">flaticon/Freepik/broom.svg</file>
+        <file alias="EXPAND">flaticon/Freepik/expand.svg</file>
+        <file alias="COLLAPSE">flaticon/Freepik/collapse.svg</file>
+        <file alias="COMMAND_WINDOW">flaticon/Freepik/command_window.svg</file>
+        <file alias="EYE">flaticon/Freepik/eye.svg</file>
         <file alias="FILTER_CANCEL">flaticon/Freepik/filter_cancel.svg</file>
-        <file alias="PAUSE">flaticon/Freepik/pause.svg</file>
-        <file alias="FLATICON_LICENSE">flaticon/license.htm</file>
         <file alias="FIND">flaticon/Freepik/loupe.svg</file>
+        <file alias="CHECKMARK">flaticon/Freepik/checkmark.svg</file>
+        <file alias="CROSS">flaticon/Freepik/cross.svg</file>
         <file alias="PLAY_NEXT">flaticon/Google/play_next.svg</file>
         <file alias="PLAY_PREVIOUS">flaticon/Google/play_previous.svg</file>
         <file alias="REPEAT">flaticon/Smashicons/repeat.svg</file>
-        <file alias="CHECKMARK">flaticon/Freepik/checkmark.svg</file>
-        <file alias="CROSS">flaticon/Freepik/cross.svg</file>
         <file alias="FAST_FORWARD">flaticon/Google/fast_forward.svg</file>
         <file alias="FORWARD_TO">flaticon/Google/forward_to.svg</file>
         <file alias="REWIND">flaticon/Google/rewind.svg</file>
         <file alias="SETTINGS">flaticon/Smashicons/gears.svg</file>
-        <file alias="EXIT">FlorianReimold/Exit.svg</file>
         <file alias="TABLE_WIDTH">FlorianReimold/table_width.svg</file>
         <file alias="TASKBAR_FORWARD_TO">FlorianReimold/circle_forward_to.svg</file>
         <file alias="TASKBAR_PAUSE">FlorianReimold/circle_pause.svg</file>
@@ -42,6 +40,26 @@
         <file alias="TASKBAR_PLAY_NEXT">FlorianReimold/circle_play_next.svg</file>
         <file alias="TASKBAR_STOP">FlorianReimold/circle_stop.svg</file>
         <file alias="TASKBAR_RECORD">FlorianReimold/circle_record.svg</file>
-        <file alias="INFO">flaticon/Freepik/info.svg</file>
+        <file alias="TEXT_ENTRY">flaticon/Freepik/text-entry-box.svg</file>
+        <file alias="PAUSE">FlorianReimold/pause.svg</file>
+        <file alias="START">FlorianReimold/play.svg</file>
+        <file alias="RECORD">FlorianReimold/record.svg</file>
+        <file alias="RESTART">FlorianReimold/restart.svg</file>
+        <file alias="STOP">FlorianReimold/stop.svg</file>
+        <file alias="REMOVE">FlorianReimold/minus.svg</file>
+        <file alias="ADD">FlorianReimold/plus.svg</file>
+        <file alias="RESTART_SELECTED">FlorianReimold/restart_selected.svg</file>
+        <file alias="START_SELECTED">FlorianReimold/start_selected.svg</file>
+        <file alias="STOP_SELECTED">FlorianReimold/stop_selected.svg</file>
+        <file alias="RECORD_TEXT">FlorianReimold/record_text.svg</file>
+        <file alias="STOP_TEXT">FlorianReimold/stop_text.svg</file>
+        <file alias="BUFFER">FlorianReimold/buffer.svg</file>
+        <file alias="WAIT">flaticon/Freepik/hourglass.svg</file>
+        <file alias="SAVE_TO_DISK">FlorianReimold/save_to_disk.svg</file>
+        <file alias="POWER_OFF">FlorianReimold/power_off.svg</file>
+        <file alias="POWER_ON">FlorianReimold/power_on.svg</file>
+        <file alias="LOCAL">FlorianReimold/local.svg</file>
+        <file alias="CONNECTED">FlorianReimold/connected.svg</file>
+        <file alias="DISCONNECTED">FlorianReimold/disconnected.svg</file>
     </qresource>
 </RCC>

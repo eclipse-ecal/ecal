@@ -21,8 +21,6 @@
 #include <ecal/msg/protobuf/subscriber.h>
 
 #include <iostream>
-#include <chrono>
-#include <thread>
 
 #include "person.pb.h"
 
@@ -54,7 +52,7 @@ void OnEvent(const char* topic_name_, const struct eCAL::SSubEventCallbackData* 
   std::cout << std::endl;
 }
 
-void OnPerson(const char* topic_name_, const pb::People::Person& person_, const long long time_, const long long clock_, const long long id_)
+void OnPerson(const char* topic_name_, const pb::People::Person& person_, const long long time_, const long long clock_)
 {
   std::cout << "------------------------------------------" << std::endl;
   std::cout << " HEAD "                                     << std::endl;
@@ -62,7 +60,6 @@ void OnPerson(const char* topic_name_, const pb::People::Person& person_, const 
   std::cout << "topic name   : " << topic_name_             << std::endl;
   std::cout << "topic time   : " << time_                   << std::endl;
   std::cout << "topic clock  : " << clock_                  << std::endl;
-  std::cout << "topic id     : " << id_                     << std::endl;
   std::cout << "------------------------------------------" << std::endl;
   std::cout << " CONTENT "                                  << std::endl;
   std::cout << "------------------------------------------" << std::endl;
@@ -84,17 +81,14 @@ int main(int argc, char **argv)
   // set process state
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
-  // sleep one second to fill eCAL internal description map
-  std::this_thread::sleep_for(std::chrono::seconds(1));
-
   // create a subscriber (topic name "person")
   eCAL::protobuf::CSubscriber<pb::People::Person> sub("person");
 
   // set receive timeout in ms
   sub.SetTimeout(1000);
 
-  // add receive callback function (_1 = topic_name, _2 = msg, _3 = time, , _4 = clock, _5 = id)
-  auto rec_callback = std::bind(OnPerson, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5);
+  // add receive callback function (_1 = topic_name, _2 = msg, _3 = time, , _4 = clock)
+  auto rec_callback = std::bind(OnPerson, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
   sub.AddReceiveCallback(rec_callback);
 
   // add event callback function (_1 = topic_name, _2 = event data struct)
@@ -108,7 +102,7 @@ int main(int argc, char **argv)
   while(eCAL::Ok())
   {
     // sleep 100 ms
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    eCAL::Process::SleepMS(100);
   }
 
   // finalize eCAL API

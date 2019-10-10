@@ -34,6 +34,7 @@ cmake_policy(SET CMP0054 NEW)
 # command line build options
 # use it that way cmake .. -DBUILD_APPS=ON -DBUILD_SAMPLES=ON
 # --------------------------------------------------------
+option(HAS_HDF5                                "Platform supports HDF5 library"                                   ON)
 option(HAS_QT5                                 "Platform supports Qt 5 library"                                   ON)
 option(HAS_CAPNPROTO                           "Platform supports Cap'n Proto library"                           OFF)
 
@@ -52,6 +53,7 @@ option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (
 # Set option regarding third party library builds
 option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS   "Build CMakeFunctions with eCAL"                                   ON)
 option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build Protobuf with eCAL"                                         ON)
+option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                           ON)
 
 
 # there is a CMake issue with testing threading availibility via TEST_RUN
@@ -62,19 +64,6 @@ endif()
 
 # find_project(eCAL calls shall be ignored, eCAL is build as part of the project)
 set(as_subproject eCAL)
-if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
-list(APPEND as_subproject CMakeFunctions) 
-endif ()
-if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
-list(APPEND as_subproject Protobuf) 
-endif ()
-
-
-macro(find_package)
-  if(NOT "${ARGV0}" IN_LIST as_subproject)
-    _find_package(${ARGV})
-  endif()
-endmacro()
 
 # Normalize backslashes from Windows paths
 file(TO_CMAKE_PATH "${CMAKE_MODULE_PATH}" CMAKE_MODULE_PATH)
@@ -86,11 +75,8 @@ message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 # --------------------------------------------------------
 # third party dependencies as requested
 # --------------------------------------------------------
-if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
-  add_subdirectory(thirdparty/cmake_functions)
-endif ()
-
 if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
+  list(APPEND as_subproject Protobuf)    
   if(MSVC)
     # supress google protobuf warnings for windows platform
     set(CMAKE_CXX_FLAGS_OLD "${CMAKE_CXX_FLAGS}")
@@ -118,6 +104,30 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
   endif()
 endif()
+
+if (ECAL_THIRDPARTY_BUILD_SPDLOG)
+  list(APPEND as_subproject spdlog)  
+  add_subdirectory(thirdparty/spdlog)
+  add_library(spdlog::spdlog ALIAS spdlog)
+endif ()
+
+
+
+if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
+  list(APPEND as_subproject CMakeFunctions) 
+endif()
+
+macro(find_package)
+  if(NOT "${ARGV0}" IN_LIST as_subproject)
+    _find_package(${ARGV})
+  endif()
+endmacro()
+
+if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
+  add_subdirectory(thirdparty/cmake_functions)
+endif ()
+
+
 
 find_package(CMakeFunctions REQUIRED)
 
@@ -276,6 +286,7 @@ add_subdirectory(ecal/core/src)
 # --------------------------------------------------------
 # custom libs
 # --------------------------------------------------------
+add_subdirectory(lib/ThreadingUtils)
 add_subdirectory(lib/EcalUtils)
 if(HAS_QT5)
   add_subdirectory(lib/CustomQt)
@@ -283,6 +294,10 @@ endif()
 if(ECAL_NPCAP_SUPPORT)
   add_subdirectory(lib/Udpcap)
 endif()
+add_subdirectory(lib/EcalParser)
+if(HAS_QT5)
+  add_subdirectory(lib/QEcalParser)
+endif(HAS_QT5)
 
 # --------------------------------------------------------
 # ecal mon plugin sdk
@@ -300,6 +315,14 @@ if(BUILD_TIME)
 endif()
 
 # --------------------------------------------------------
+# ecal hdf5 support
+# --------------------------------------------------------
+if(HAS_HDF5)
+  add_subdirectory(contrib/ecalhdf5/src)
+  add_subdirectory(contrib/message)
+endif()
+
+# --------------------------------------------------------
 # console applications
 # --------------------------------------------------------
 add_subdirectory(app/apps)
@@ -307,6 +330,18 @@ if(BUILD_APPS)
   add_subdirectory(app/mon/eCALTopic/src)
   add_subdirectory(app/util/eCALConfig/src)
   add_subdirectory(app/util/eCALStop/src)
+endif()
+
+# --------------------------------------------------------
+# applications using hdf5
+# --------------------------------------------------------
+if(BUILD_APPS AND HAS_HDF5)
+  add_subdirectory(app/play/eCALPlayCore)
+  add_subdirectory(app/play/eCALPlay)
+
+  add_subdirectory(app/rec/rec_cli)
+  add_subdirectory(app/rec/rec_core)
+  add_subdirectory(app/rec/rec_server_core)
 endif()
 
 # --------------------------------------------------------
@@ -320,6 +355,13 @@ if(BUILD_APPS AND HAS_QT5)
     set(ECAL_MON_PLUGIN_DIR ecal/plugins/mon)
   endif()
   add_subdirectory(app/mon/eCALMonPlugins)
+# --------------------------------------------------------
+# Qt5 Apps using HDF5
+# --------------------------------------------------------
+if(BUILD_APPS AND HAS_QT5 AND HAS_HDF5)
+  add_subdirectory(app/play/eCALPlayGUI)
+  add_subdirectory(app/rec/rec_gui)
+endif()
 endif()
 
 # --------------------------------------------------------

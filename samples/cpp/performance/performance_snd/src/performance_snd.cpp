@@ -36,27 +36,12 @@ int main(int argc, char **argv)
   eCAL::Initialize(argc, argv, "performance_snd");
 
   // new publisher
-  std::shared_ptr<eCAL::CPublisher> pub = std::make_shared<eCAL::CPublisher>();
-
-  // set qos
-  eCAL::QOS::SWriterQOS qos;
-  qos.reliability = eCAL::QOS::reliable_reliability_qos;
-  pub->SetQOS(qos);
-
-  // create publisher for topic "Performance"
-  pub->Create("Performance");
+  eCAL::CPublisher pub("Performance");
 
   int                 clock(0);
   int                 msgs (0);
   unsigned long long  bytes(0);
   size_t              slen (0);
-
-  // dump instance state if creation failed
-  if(!pub->IsCreated())
-  {
-    std::cout << "Could not create publisher !" << std::endl;
-    return(0); //-V1020
-  }
 
   // default send string
   std::string send_s = "Hello World ";
@@ -78,7 +63,7 @@ int main(int argc, char **argv)
     eCAL::Logging::StartCoreTimer();
 
     // send content
-    size_t snd_len = pub->Send(send_s);
+    size_t snd_len = pub.Send(send_s);
     if((snd_len > 0) && (snd_len != slen))
     {
       std::cerr <<  std::endl << "Send failed !" << " sent : " << slen << " returned : " << snd_len <<  std::endl;
@@ -113,7 +98,7 @@ int main(int argc, char **argv)
   }
 
   // destroy publisher
-  pub->Destroy();
+  pub.Destroy();
 
   // finalize eCAL API
   eCAL::Finalize();

@@ -119,7 +119,9 @@ namespace
   named_event_t* named_event_create(const char* event_name_)
   {
     // create shared memory file
-    int fd = ::shm_open(event_name_, O_RDWR | O_CREAT | O_EXCL, 0666);
+    int previous_umask = umask(000);  // set umask to nothing, so we can create files with all possible permission bits
+    int fd = ::shm_open(event_name_, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+    umask(previous_umask);            // reset umask to previous permissions
     if (fd < 0) return nullptr;
 
     // set size to size of named mutex struct 
@@ -161,7 +163,7 @@ namespace
   named_event_t* named_event_open(const char* event_name_)
   {
     // try to open existing shared memory file
-    int fd = ::shm_open(event_name_, O_RDWR, 0666);
+    int fd = ::shm_open(event_name_, O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     if (fd < 0) return nullptr;
 
     // map file content to mutex

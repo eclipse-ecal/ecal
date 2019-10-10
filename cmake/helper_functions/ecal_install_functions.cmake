@@ -97,10 +97,14 @@ endfunction()
 # e.g. the eCAL Monitor, eCAL Player, eCAL recorder
 #
 function(ecal_install_app TARGET_NAME)
+  set(oneValueArgs START_MENU_NAME)
+  cmake_parse_arguments(ECAL_INSTALL_APP "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
   install(TARGETS ${TARGET_NAME}
     RUNTIME DESTINATION  "${eCAL_install_app_dir}" COMPONENT app
   )
-
+  set_property(INSTALL "${eCAL_install_app_dir}/$<TARGET_FILE_NAME:${TARGET_NAME}>"
+    PROPERTY CPACK_START_MENU_SHORTCUTS "${ECAL_INSTALL_APP_START_MENU_NAME}"
+  )
 endfunction()
 
 function(ecal_install_gtest TARGET_NAME)
