@@ -3,11 +3,15 @@
 
 Copyright (c) 2019, Continental Corporation.
 
+[![Build Status](https://travis-ci.org/continental/ecal.svg?branch=master)](https://travis-ci.org/continental/ecal)
+[![Build status](https://ci.appveyor.com/api/projects/status/2hnl7p9cedimrkox/branch/master?svg=true)](https://ci.appveyor.com/project/rex-schilasky/ecal/branch/master)
+[![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE.txt)
+
 ## Preface
 
 The enhanced communication abstraction layer (eCAL) is a middleware that enables scalable, high performance interprocess communication on a single computer node or between different nodes in a computer network. The design is inspired by known Data Distribution Service for Real-Time Systems (see Data distribution service on wikipedia). The current eCAL implementation realizes a subset of such a DDS system, there is only a basic support for Quality of Service (QoS) driven data transport (best effort and reliable). 
 
-eCAL is designed for typical cloud computing scenarios where different processes exchange there I/O's using a publisher/subscriber pattern. The data exchange is based on so called topics. A topic wraps the payload that should be exchanged with 
+eCAL is designed for typical cloud computing scenarios where different processes exchange their I/O's using a publisher/subscriber pattern. The data exchange is based on so called topics. A topic wraps the payload that should be exchanged with 
 additional informations like a unique name, a type and a description. A topic can be connected to more than one publisher and/or subscriber. These are the basic elements of the eCAL API. 
 
   • Topic: The most basic description of the data to be published and subscribed.
@@ -24,41 +28,108 @@ additional informations like a unique name, a type and a description. A topic ca
 
 eCAL is simplifying the data transport as much as possible, It uses different mechanism to transport a topic from a publisher to a connected subscriber. On the same computer node the data are exchanged by using memory mapped files. Between different computing nodes UDP multicast can be used for high performance data throughput, rtps can be used for reliable data transport.
 
+
+## Checkout the repository
+
+Because eCAL is using some thirdparty libraries as git submodules you need to clone the repository recursively
+
+```bash
+git clone --recursive git://github.com/continental/ecal.git
+```
+
+For older git versions or if the repo is already cloned you can also use
+```bash
+git clone git://github.com/continental/ecal.git
+cd ecal
+git submodule init
+git submodule update
+```
+
+## CMake build options
+
+eCAL is using CMake as build system. When configuring with CMake, you can turn on / off the following features.
+
+- `HAS_QT5`, default: `ON`
+  Platform supports Qt 5 library, necessary to build eCAL monitoring tool
+- `HAS_CAPNPROTO`, default: `OFF`
+  Platform supports Cap'n Proto library, necessary to use capnp serialization as message system and to enable eCAL monitoring capnp message reflection
+  eCAL does not add Cap'n Proto as a submodule. If you set this option to `ON`, please make sure that the library is installed on your system and CMake can find it (consider setting CMAKE_PREFIX_PATH to point to the library).
+  Currently Version 0.6.1 is supported and has been tested, to use 0.7.0 some adaptations in CMakeLists.txt files needs to be made to make the samples compile.
+- `BUILD_DOCS`, default `ON`
+  Build the eCAL documentation, requires the installation of doxygen and a recent CMake version (>= 3.14 preferred, but some lower versions might work)
+- `BUILD_APPS`, default `ON`,
+  Build the eCAL applications, such as the monitoring tool
+- `BUILD_SAMPLES`, default `OFF`
+  Build the eCAL sample applications
+- `BUILD_TIME`, default `ON`
+  Build the eCAL time interfaces, necessary if you want to use ecal in time synchronized mode (based on ptp for example)
+- `ECAL_LAYER_FASTRTPS`, default `OFF`
+  Provide fast rtps as communication layer, requires fast-rtps and fast-cdr installations
+- `ECAL_INSTALL_SAMPLE_SOURCES`, default: `ON`
+  Install the sources of eCAL samples
+- `ECAL_JOIN_MULTICAST_TWICE`, default: `OFF`
+  Specific multicast network bug workaround
+- `ECAL_NPCAP_SUPPORT`, default `OFF`
+  Enable the eCAL to use Npcap for udp socket communication (i.e. the Win10 performance fix)
+- `ECAL_THIRDPARTY_BUILD_PROTOBUF`, default `ON`
+  Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.5.1 or newer (tested with 3.5.1).
+- `ECAL_THIRDPARTY_BUILD_PROTOBUF`, default `ON`
+  Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.5.1 or newer (tested with 3.5.1).
+
+All options can be passed on the command line `cmake -D<option>=<value>` or in the CMake GUI application.
+
 ## Setup on Linux Systems
 
-Update gcc to 5.3.x or newer and install cmake.
-
-### Installation
-
-#### Install toolchain
-
-```bash
-sudo apt-get install cmake
-sudo apt-get install doxygen
-sudo apt-get install graphviz
-```
-
-#### Install third party dependencies:
-  
-```bash
-sudo apt-get install build-essential
-sudo apt-get install zlib1g-dev
-sudo apt-get install qt5-default
-```
-
-#### Build and install eCAL
-
-Build eCAL, let CMake create a debian package and install that one
-
-```bash
-mkdir _build
-cd _build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j
-cpack -G DEB
-sudo dpkg -i eCAL*
-```
-
+### Dependencies on Ubuntu 16.04
+1. Add the [official cmake repository](https://apt.kitware.com/), as eCAL needs cmake >= 3.13:
+	```bash
+	wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | sudo apt-key add -
+	sudo apt-add-repository -y 'deb https://apt.kitware.com/ubuntu/ xenial main'
+	sudo apt-get -y update
+	sudo apt-get -y install kitware-archive-keyring
+	sudo apt-key --keyring /etc/apt/trusted.gpg del C1F34CDD40CD72DA
+	```
+	
+2. Add a ppa for protobuf >= 3.1. The following (unofficial) ppa will be sufficient:
+	```bash
+	sudo add-apt-repository -y ppa:maarten-fonville/protobuf
+	sudo apt-get -y update
+	```
+	
+3. Install the dependencies from the ordinary Ubuntu 16.04 repositories and the ppa we just added:
+	```bash
+	sudo apt-get -y install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler
+	```
+	
+### Dependencies on Ubuntu 18.04
+1. Add the [official cmake repository](https://apt.kitware.com/), as eCAL needs cmake >= 3.13:
+	```bash
+	wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | sudo apt-key add -
+	sudo apt-add-repository -y 'deb https://apt.kitware.com/ubuntu/ bionic main'
+	sudo apt-get -y update
+	sudo apt-get -y install kitware-archive-keyring
+	sudo apt-key --keyring /etc/apt/trusted.gpg del C1F34CDD40CD72DA
+	```
+	
+2. Install all dependencies:
+	```bash
+	sudo apt-get -y install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler
+	```
+	
+### Compile eCAL
+1. Check out the repository as described [here](#checkout-the-repository).
+2. Compile eCAL:
+	```bash
+	mkdir _build
+	cd _build
+	cmake .. -DCMAKE_BUILD_TYPE=Release -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF
+	make -j4
+	```
+3. Create a debian package and install it, if desired:
+	```bash
+	cpack -G DEB
+	sudo dpkg -i eCAL-*
+	```
 ### UDP network configuration
 
 setup the correct ip address - here for adapter eth0, ip address 192.168.0.1
@@ -67,7 +138,7 @@ setup the correct ip address - here for adapter eth0, ip address 192.168.0.1
 sudo ifconfig eth0 192.168.0.1 netmask 255.255.255.0
 ```
 
-Restart the ethernet interface or the whole to apply changes, check if you can ping to each other.
+Restart the ethernet interface or the whole machine to apply changes, check if you can ping to each other.
 
 After the ipc configuration setup the multicast route for udp multicasting
 
@@ -86,30 +157,37 @@ sudo gedit /etc/network/interfaces
 
 ## Setup on Windows Systems
 
-### Preparation
+### Install dependencies
 
-You need
+1. Download dependencies. For creating the Visual Studio eCAL solution, build it and create a setup, you need:
+	- CMake (https://cmake.org)
+	- Doxygen (http://www.doxygen.nl)
+	- Qt5 (>= 5.5) (https://www.qt.io/download)
+	- HDF5, (https://www.hdfgroup.org/downloads/hdf5/)
+	- WIX (http://wixtoolset.org/)
 
-  • CMake (https://cmake.org)
+	**HDF5 Compatibility notes**: We recommend using [HDF5 1.8.21](https://portal.hdfgroup.org/display/support/HDF5+1.8.21#files) or a later 1.8 Version. You can use 1.10 as well, but when recording a measurement with eCAL Rec using HDF5 1.10, your eCAL Player must also use HDF5 1.10. So if you want to exchange measurements between systems, make sure you use the same HDF5 versions on all of them.
+	- Ubuntu 16.04 uses HDF5 1.8 by default.
+	- Ubuntu 18.04 uses HDF5 1.10 by default.
 
-  • Doxygen (http://www.doxygen.nl)
+2. Install Qt5 by starting the installer and selecting `msvc2015 32-bit` or `msvc2015 64-bit` (VS2015) or `msvc2017 32-bit` and `msvc2017 64-bit` (VS2017) from the latest Qt5 version. Create an environment variable `QT5_ROOT_DIRECTORY` that points to the directory containing the architecture-specific folders. It should look like this:
+	```
+	 %QT5_ROOT_DIRECTORY%
+	   ├ msvc2015
+	   ├ msvc2015_64
+	   ├ msvc2017
+	   └ msvc2017_64
+	```
+	e.g.:
+	```
+	QT5_ROOT_DIRECTORY = C:\Qt\5.11.1
+	```
+3. Install HDF5. Create an environment variable `HDF5_DIR` pointing to the cmake folder of your HDF5 installation, e.g.:
+	```
+	HDF5_DIR = C:\Program Files\HDF_Group\HDF5\1.8.21\cmake
+	```
 
-  • Qt5 (https://www1.qt.io/download-open-source/#section-2)
- 
-  • WIX (http://wixtoolset.org/)
-
-  to create the Visual Studio eCAL solution, to build it and to create a windows setup file.
-
-#### Qt 5
-
-Install Qt5 by starting the installer and selecting `msvc2015 32-bit` and `msvc2015 64-bit` (VS2015) or `msvc2017 32-bit` and `msvc2017 64-bit` (VS2017) from the latest Qt5 version. Create an environment variable `QT5_ROOT_DIRECTORY` that points to the directory containing the architecture-specific folders. It should look like this:
-
-    %QT5_ROOT_DIRECTORY%
-      ├ msvc2015
-      ├ msvc2015_64
-      ├ msvc2017
-      └ msvc2017_64
-      
+4. Checkout the eCAL repository as described [here](#checkout-the-repository). Note that it has **submodules**, so use [Git for Windows](https://git-scm.com/download/win) to check out the repo.
 
 #### Build eCAL
 
@@ -117,7 +195,7 @@ Run the following batch files to create the Visual Studio 2015 (2017) solutions 
 
 ```bat
 build_win\win_make_cmake.bat v140 (v141)
-build_win\win_make_ build.bat
+build_win\win_make_build.bat
 ```
 
 #### Create Setup
@@ -164,6 +242,105 @@ For local communication use 0 for ttl.
 You can find the ecal.ini configuration file under %APPDATA%\eCAL.
 
 Don't forget to disable any windows firewall.
+
+## Applications
+
+Besides the communication core eCAL comes with some high-level applications for monitoring, recording and replaying messages. The monitoring application is used to provide an overview of all existing entities (publisher, subscriber, services) that are using the eCAL API to communicate. Recorder and player are designed to record messages in a distributed system efficiently and to replay them for post processing, analysis or simulation.
+ 
+### Monitor
+
+To start the monitor please open the application from the windows start menu or type
+```ecal_mon``` on a linux system.
+
+The monitor provides different kinds of sorted views for all eCAL publications, subscriptions or service instances. The content of messages is visualized with plugins. Currently the monitor is shipped with ready to use plugins for two serialization formats ([google protobuf](https://developers.google.com/protocol-buffers) and [capnproto](https://capnproto.org/).), as well as simple string data.
+
+The image shows an eCAL monitor showing two running application "person publisher" and "person subscriber". The content of the protobuf person message is shown in the protobuf reflection plugin (just double click on the topic name to open the reflection window).
+
+![eCAL monitor showing topic 'person'](gfx/app/monitor_person.png?raw=true "eCAL monitor showing topic 'person'")
+
+The plugin concept also allows anybody to develop 2D or 3D visualization plugins for specific data types and messages. The plugins are developed with Qt5 and the eCAL Monitor Plugin SDK. On start the eCAL Monitor will scan the plugin folder for new plugins and load them. The following image shows a plugin visualizing a camera image.
+
+![eCAL monitor showing image](gfx/app/monitor_imagevisu.png?raw=true "eCAL monitor showing image")
+
+### Recorder
+
+Recording eCAL messages is essential for many use cases. A Recording can be used as simulated input for other applications, for debugging and analysis. If required, the recorded data can be post-processed in C++ (python and matlab wrappers will be released with a future release).
+
+The recorded data is stored in the standardized [HDF5](https://www.hdfgroup.org/) data format, a portable, cross platform, hierarchical container format, well designed for large data sets. To minimize network usage in a distributed system, each machine can record only its own data, so the measurement can be merged later (by just copying all files in one directory). Distributed recordings can be started from the eCAL Rec GUI application (a CLI version will come with a future release). When clicking the REC button, it will connect to the eCAL Rec instances running on all selected machines and start the recording.
+
+This image shows the eCAL Rec GUI recording 3 topic on the same host.
+ 
+![eCAL recorder recording 3 topics](gfx/app/recorder.png?raw=true "eCAL recorder recording 3 topics")
+
+### Player
+
+The eCAL Player can replay the recordings from the eCAL Recorder. It comes as GUI, as CLI and as C++ library for custom applications. The player can speed up or slow down the recording and step through a recording on a frame or channel base.
+ 
+The following image shows a running replay, publishing 2 messages in realtime.
+
+![eCAL player](gfx/app/player.png?raw=true "eCAL player")
+
+
+## Performance
+
+The following table shows the latency in µs between a single publisher / subscriber connection for different payload sizes (two different processes running on the same host). You can simply measure the latency on your own machine by running the ecal_latency_snd and ecal_latency_rec_cb sample applications.
+
+First start ecal_sample_latency_rec_cb. This application will receive the published payloads, send them back to the sender and print out the average receive time, the message frequency and the data throughput over all received messages. The sending application ecal_latency_snd can be configured that way ..
+  
+     ecal_latency_snd  -s <payload_size [kB]> -r <send loops>
+  
+The table shows the results for a Windows and a Linux platform (10000 samples, zero drops).
+
+```
+-------------------------------
+ Platform Windows 10 (AMD64)
+-------------------------------
+OS Name:                            Microsoft Windows 10 Enterprise
+OS Version:                         10.0.16299
+OS Manufacturer:                    Microsoft Corporation
+OS Build Type:                      Multiprocessor Free
+System Manufacturer:                HP
+System Model:                       HP ZBook 15 G5
+System Type:                        x64-based PC
+Processor(s):                       1 Prozessor(s) Installed.
+                                    [01]: Intel64 Family 6 Model 158 Stepping 10 GenuineIntel ~2592 MHz
+Total Physical Memory:              32.579 MB
+
+-------------------------------
+ Platform Ubuntu 16 (AMD64)
+-------------------------------
+H/W path      Device    Class       Description
+===============================================
+                        system      HP ZBook 15 G3 (M9R63AV)
+/0                      bus         80D5
+/0/0                    memory      128KiB L1 Cache
+/0/1                    memory      128KiB L1 Cache
+/0/2                    memory      1MiB L2 Cache
+/0/3                    memory      8MiB L3 Cache
+/0/4                    processor   Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz
+/0/5                    memory      16GiB System Memory
+/0/5/0                  memory      8GiB SODIMM Synchron 2133 MHz (0,5 ns)
+/0/5/1                  memory      8GiB SODIMM Synchron 2133 MHz (0,5 ns)
+
+```
+
+|Payload Size (kB)|Win10 AMD64 (µs)|Ubuntu16 AMD64 (µs)|
+|----------------:|---------------:|------------------:|
+|              1  |            10  |               18  |
+|              2  |            11  |               18  |
+|              4  |            16  |               20  |
+|              8  |            16  |               20  |
+|             16  |            17  |               21  |
+|             32  |            18  |               22  |
+|             64  |            21  |               24  |
+|            128  |            26  |               33  |
+|            256  |            38  |               46  |
+|            512  |            62  |               76  |
+|           1024  |           123  |              196  |
+|           2048  |           378  |              578  |
+|           4096  |           848  |              824  |
+|           8192  |          1762  |             1645  |
+|          16384  |          3681  |             3258  |
 
 ## Usage
 
