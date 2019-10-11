@@ -5,9 +5,9 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,10 +18,11 @@
 
 cmake_minimum_required(VERSION 3.13)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/find_scripts)
+list(APPEND CMAKE_MODULE_PATH
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
 
-project(eCAL) 
+project(eCAL)
 
 # Set CMake policy behavior (alias targets)
 cmake_policy(SET CMP0028 NEW)
@@ -63,10 +64,10 @@ endif()
 # find_project(eCAL calls shall be ignored, eCAL is build as part of the project)
 set(as_subproject eCAL)
 if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
-list(APPEND as_subproject CMakeFunctions) 
+list(APPEND as_subproject CMakeFunctions)
 endif ()
 if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
-list(APPEND as_subproject Protobuf) 
+list(APPEND as_subproject Protobuf)
 endif ()
 
 
@@ -105,14 +106,6 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
   if(UNIX)
     set(protobuf_BUILD_SHARED_LIBS ON CACHE BOOL "My option" FORCE)
   endif()
-  add_subdirectory(thirdparty/protobuf/cmake)
-  if (NOT TARGET protobuf::libprotobuf)
-    add_library(protobuf::libprotobuf ALIAS libprotobuf)
-  endif()
-  if (NOT TARGET protobuf::protoc)
-    add_executable(protobuf::protoc ALIAS protoc)
-    set(Protobuf_PROTOC_EXECUTABLE protoc)
-  endif()
   if(MSVC)
     # reset CMAKE_CXX_FLAGS variable
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
@@ -126,7 +119,7 @@ set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAYOR})
 set(eCAL_VERSION_MINOR  ${GIT_REVISION_MINOR})
 set(eCAL_VERSION_PATCH  ${GIT_REVISION_PATCH})
 set(eCAL_VERSION_STRING ${eCAL_VERSION_MAJOR}.${eCAL_VERSION_MINOR}.${eCAL_VERSION_PATCH})
-set(eCAL_VERSION        ${eCAL_VERSION_STRING}) 
+set(eCAL_VERSION        ${eCAL_VERSION_STRING})
 
 include(helper_functions/ecal_add_functions)
 include(helper_functions/ecal_helper_functions)
@@ -142,7 +135,7 @@ endif()
 # --------------------------------------------------------
 if(WIN32 AND HAS_QT5)
   if (NOT DEFINED ENV{QT5_ROOT_DIRECTORY} AND NOT DEFINED ENV{QT5_ROOT})
-    # If the QT5_ROOT_DIRECTORY Variable is not set, there is still a chance that 
+    # If the QT5_ROOT_DIRECTORY Variable is not set, there is still a chance that
     # the user set the CMAKE_PREFIX_PATH himself. Thus we try to find
     # Qt5 Core just to see if that works. If we can find Qt, we assume
     # that the user knows what he is doing.
@@ -163,8 +156,8 @@ if(WIN32 AND HAS_QT5)
     endif ()
     if (DEFINED ENV{QT5_ROOT_DIRECTORY})
       set(qt_directory $ENV{QT5_ROOT_DIRECTORY})
-    endif ()   
-    
+    endif ()
+
     qt_msvc_path(qt_subfolder)
     list(APPEND CMAKE_PREFIX_PATH ${qt_directory}/${qt_subfolder}/)
     message(STATUS "Searching for QT in ${qt_directory}/${qt_subfolder}/")
@@ -256,13 +249,13 @@ if(WIN32)
   set(CMAKE_DEBUG_POSTFIX            d)
   set(CMAKE_MINSIZEREL_POSTFIX       minsize)
   set(CMAKE_RELWITHDEBINFO_POSTFIX   reldbg)
-endif()  
+endif()
 
 # --------------------------------------------------------
 # protobuf utilities
-# -------------------------------------------------------- 
-add_subdirectory(contrib/ecalproto/src)  
-  
+# --------------------------------------------------------
+add_subdirectory(contrib/ecalproto/src)
+
 # --------------------------------------------------------
 # ecal core internal protobuf
 # --------------------------------------------------------
@@ -349,26 +342,26 @@ write_basic_package_version_file(
 configure_package_config_file(
     cmake/${PROJECT_NAME}Config.cmake.in
     ${eCAL_config}
-    INSTALL_DESTINATION ${${PROJECT_NAME}_install_cmake_dir} 
+    INSTALL_DESTINATION ${${PROJECT_NAME}_install_cmake_dir}
     PATH_VARS ${PROJECT_NAME}_install_include_dir ${PROJECT_NAME}_install_cmake_dir
-)  
+)
 
 install(FILES ${eCAL_config} ${eCAL_config_version}
   DESTINATION ${eCAL_install_cmake_dir}
   COMPONENT sdk
 )
-  
-install(FILES 
+
+install(FILES
   cmake/helper_functions/ecal_add_functions.cmake
   cmake/helper_functions/ecal_helper_functions.cmake
   cmake/helper_functions/ecal_install_functions.cmake
   DESTINATION ${${PROJECT_NAME}_install_cmake_dir}/helper_functions
   COMPONENT sdk
-)  
-  
-install(EXPORT eCALCoreTargets 
+)
+
+install(EXPORT eCALCoreTargets
   FILE ${PROJECT_NAME}Targets.cmake
-  DESTINATION ${eCAL_install_cmake_dir} 
+  DESTINATION ${eCAL_install_cmake_dir}
   NAMESPACE eCAL::
   COMPONENT sdk
 )
