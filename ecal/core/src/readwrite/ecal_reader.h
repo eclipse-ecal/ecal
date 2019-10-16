@@ -101,6 +101,7 @@ namespace eCAL
     void CheckCounter(const std::string& tid_, long long counter_);
 
     std::string                               m_host_name;
+    int                                       m_host_id;
     int                                       m_pid;
     std::string                               m_pname;
     std::string                               m_topic_name;
@@ -121,7 +122,7 @@ namespace eCAL
     EventHandleT                              m_receive_event;
 
     std::mutex                                m_read_buf_sync;
-    std::vector<char>                         m_read_buf;
+    std::string                               m_read_buf;
     long long                                 m_read_time;
 
     std::mutex                                m_receive_callback_sync;

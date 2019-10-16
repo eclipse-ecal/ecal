@@ -25,7 +25,7 @@
 #ifndef ecal_service_cimpl_h_included
 #define ecal_service_cimpl_h_included
 
-#include <ecal/ecal_service_info.h>
+#include <ecal/cimpl/ecal_service_info_cimpl.h>
 
 #ifdef __cplusplus
 extern "C"

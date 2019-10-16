@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TopicListDialog</class>
+ <widget class="QDialog" name="TopicListDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>640</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="header_label">
+     <property name="minimumSize">
+      <size>
+       <width>20</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>*list</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFilterLineEdit" name="topic_filter_lineedit">
+     <property name="placeholderText">
+      <string>Filter</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="opaqueResize">
+      <bool>true</bool>
+     </property>
+     <property name="childrenCollapsible">
+      <bool>false</bool>
+     </property>
+     <widget class="QAdvancedTreeView" name="topics_treeview">
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::ExtendedSelection</enum>
+      </property>
+      <property name="verticalScrollMode">
+       <enum>QAbstractItemView::ScrollPerPixel</enum>
+      </property>
+      <property name="rootIsDecorated">
+       <bool>false</bool>
+      </property>
+      <property name="uniformRowHeights">
+       <bool>true</bool>
+      </property>
+      <property name="itemsExpandable">
+       <bool>false</bool>
+      </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
+      <property name="allColumnsShowFocus">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QWidget" name="button_widget" native="true">
+      <layout class="QHBoxLayout" name="button_widget_layout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>9</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="new_button">
+         <property name="minimumSize">
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Add new topic</string>
+         </property>
+         <property name="text">
+          <string>New Topic</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../../../iconset/ecalicons.qrc">
+           <normaloff>:/ecalicons/ADD</normaloff>:/ecalicons/ADD</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="add_list_button">
+         <property name="minimumSize">
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Add multiple topics...</string>
+         </property>
+         <property name="text">
+          <string>Add list...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../../../iconset/ecalicons.qrc">
+           <normaloff>:/ecalicons/TEXT_ENTRY</normaloff>:/ecalicons/TEXT_ENTRY</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Maximum</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>10</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="remove_button">
+         <property name="minimumSize">
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Remove selected topics</string>
+         </property>
+         <property name="text">
+          <string>Remove</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../../../iconset/ecalicons.qrc">
+           <normaloff>:/ecalicons/REMOVE</normaloff>:/ecalicons/REMOVE</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Minimum</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>10</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <spacer name="button_spacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="clear_button">
+         <property name="minimumSize">
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Clear entire list</string>
+         </property>
+         <property name="text">
+          <string>Clear</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../../../iconset/ecalicons.qrc">
+           <normaloff>:/ecalicons/CLEAR</normaloff>:/ecalicons/CLEAR</iconset>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QPushButton" name="show_hide_visible_topics_button">
+      <property name="minimumSize">
+       <size>
+        <width>20</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>▲ Visible topics ▲</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="visible_topics_widget" native="true">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QFilterLineEdit" name="visible_topics_filter_lineedit">
+         <property name="placeholderText">
+          <string>Filter</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QAdvancedTreeView" name="visible_topics_treeview">
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::ExtendedSelection</enum>
+         </property>
+         <property name="verticalScrollMode">
+          <enum>QAbstractItemView::ScrollPerPixel</enum>
+         </property>
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <property name="uniformRowHeights">
+          <bool>true</bool>
+         </property>
+         <property name="itemsExpandable">
+          <bool>false</bool>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <property name="allColumnsShowFocus">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QPushButton" name="add_selected_visible_topics_button">
+           <property name="minimumSize">
+            <size>
+             <width>20</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Add selected topic to list</string>
+           </property>
+           <property name="text">
+            <string>*list topic</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../../../../../iconset/ecalicons.qrc">
+             <normaloff>:/ecalicons/ADD</normaloff>:/ecalicons/ADD</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="button_box">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QAdvancedTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">CustomQt/QAdvancedTreeView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QFilterLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">CustomQt/QFilterLineEdit.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>topic_filter_lineedit</tabstop>
+  <tabstop>topics_treeview</tabstop>
+  <tabstop>new_button</tabstop>
+  <tabstop>add_list_button</tabstop>
+  <tabstop>remove_button</tabstop>
+  <tabstop>clear_button</tabstop>
+  <tabstop>show_hide_visible_topics_button</tabstop>
+  <tabstop>visible_topics_filter_lineedit</tabstop>
+  <tabstop>visible_topics_treeview</tabstop>
+  <tabstop>add_selected_visible_topics_button</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../../../../iconset/ecalicons.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>button_box</sender>
+   <signal>accepted()</signal>
+   <receiver>TopicListDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_box</sender>
+   <signal>rejected()</signal>
+   <receiver>TopicListDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

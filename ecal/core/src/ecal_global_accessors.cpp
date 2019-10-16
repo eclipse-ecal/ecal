@@ -33,6 +33,7 @@ namespace eCAL
   std::string                   g_default_ini_file(ECAL_DEFAULT_CFG);
 
   std::string                   g_host_name;
+  int                           g_host_id(0);
   std::string                   g_unit_name;
   std::vector<std::string>      g_task_parameter;
 

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/ecalplay">
+        <file alias="APP_ICON">ecalplay.ico</file>
+    </qresource>
+</RCC>

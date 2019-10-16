@@ -49,6 +49,13 @@ extern "C"
   ECALC_API int eCAL_Process_GetHostName(void* name_, int name_len_);
 
   /**
+   * @brief  Get unique host id.
+   *
+   * @return  The host id.
+  **/
+  ECALC_API int eCAL_Process_GetHostID();
+
+  /**
    * @brief  Get process unit name (defined with eCAL_Initialize). 
    *
    * @param [out] name_      Pointer to store the unit name. 

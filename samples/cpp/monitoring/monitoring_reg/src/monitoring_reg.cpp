@@ -20,8 +20,6 @@
 #include <ecal/ecal.h>
 
 #include <iostream>
-#include <chrono>
-#include <thread>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -111,7 +109,7 @@ int main(int argc, char **argv)
   while(eCAL::Ok())
   {
     // sleep 100 ms
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    eCAL::Process::SleepMS(100);
   }
 
   // finalize eCAL API

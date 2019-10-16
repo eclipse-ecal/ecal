@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EcalParserEditor</class>
+ <widget class="QWidget" name="EcalParserEditor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>988</width>
+    <height>703</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Widget</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QSplitter" name="main_splitter">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="childrenCollapsible">
+      <bool>false</bool>
+     </property>
+     <widget class="QWidget" name="text_widget" native="true">
+      <layout class="QVBoxLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QSplitter" name="text_splitter">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="childrenCollapsible">
+          <bool>false</bool>
+         </property>
+         <widget class="QTextEdit" name="entry_textedit">
+          <property name="acceptRichText">
+           <bool>false</bool>
+          </property>
+          <property name="placeholderText">
+           <string>Enter Text</string>
+          </property>
+         </widget>
+         <widget class="QGroupBox" name="preview_groupbox">
+          <property name="title">
+           <string>Preview</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <layout class="QHBoxLayout" name="preview_type_layout">
+             <item>
+              <widget class="QRadioButton" name="preview_host_radiobutton">
+               <property name="text">
+                <string>Host only preview</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="preview_complete_radiobutton">
+               <property name="text">
+                <string>Complete preview</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="preview_type_spacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QTextEdit" name="preview_textedit">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Preview</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="function_widget" native="true">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QSplitter" name="function_splitter">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="childrenCollapsible">
+          <bool>false</bool>
+         </property>
+         <widget class="QWidget" name="function_list_widget" native="true">
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QFilterLineEdit" name="function_filter_lineedit">
+             <property name="placeholderText">
+              <string>Filter</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QAdvancedTreeView" name="function_list">
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="rootIsDecorated">
+              <bool>false</bool>
+             </property>
+             <property name="uniformRowHeights">
+              <bool>true</bool>
+             </property>
+             <property name="sortingEnabled">
+              <bool>true</bool>
+             </property>
+             <property name="allColumnsShowFocus">
+              <bool>true</bool>
+             </property>
+             <property name="expandsOnDoubleClick">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="function_help_widget" native="true">
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QTextEdit" name="function_help_textedit">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Select a function to view its documentation</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QFilterLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">CustomQt/QFilterLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QAdvancedTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">CustomQt/QAdvancedTreeView.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

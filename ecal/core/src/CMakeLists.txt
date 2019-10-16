@@ -46,6 +46,18 @@ set(ecal_io_cpp_src
     io/udp_sender.cpp
 )
 
+if(UNIX)
+set(ecal_io_cpp_linux_src
+    io/linux/ecal_memfile_linux.cpp
+)
+endif()
+
+if(WIN32)
+set(ecal_io_cpp_win_src
+    io/win32/ecal_memfile_win32.cpp
+)
+endif()
+
 set(ecal_mon_cpp_src
     mon/ecal_monitoring_def.cpp
     mon/ecal_monitoring_impl.cpp
@@ -141,6 +153,18 @@ set(ecal_io_header_src
     io/udp_receiver.h
     io/udp_sender.h
 )
+
+if(WIN32)
+set(ecal_io_header_win_src
+    io/win32/ecal_memfile_mtx.h
+)
+endif()
+
+if(UNIX)
+set(ecal_io_header_linux_src
+    io/linux/ecal_memfile_mtx.h
+)
+endif()
 
 set(ecal_mon_header_src
     mon/ecal_monitoring_def.h
@@ -259,6 +283,7 @@ set(ecal_header_cmn
 )
 
 set(ecal_header_cimpl
+    ../include/ecal/cimpl/ecal_callback_cimpl.h
     ../include/ecal/cimpl/ecal_core_cimpl.h
     ../include/ecal/cimpl/ecal_event_cimpl.h
     ../include/ecal/cimpl/ecal_init_cimpl.h
@@ -269,6 +294,7 @@ set(ecal_header_cimpl
     ../include/ecal/cimpl/ecal_publisher_cimpl.h
     ../include/ecal/cimpl/ecal_qos_cimpl.h
     ../include/ecal/cimpl/ecal_service_cimpl.h
+    ../include/ecal/cimpl/ecal_service_info_cimpl.h
     ../include/ecal/cimpl/ecal_subscriber_cimpl.h
     ../include/ecal/cimpl/ecal_time_cimpl.h
     ../include/ecal/cimpl/ecal_timer_cimpl.h
@@ -306,6 +332,8 @@ set(ecal_header_base
 
 ecal_add_ecal_shared_library(${PROJECT_NAME} 
     ${ecal_io_cpp_src} 
+    ${ecal_io_cpp_win_src} 
+    ${ecal_io_cpp_linux_src} 
     ${ecal_mon_cpp_src} 
     ${ecal_pubsub_cpp_src} 
     ${ecal_readwrite_lcm_cpp_src} 
@@ -317,6 +345,8 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
 
     ${ecal_cmn_header_src}
     ${ecal_io_header_src}
+    ${ecal_io_header_win_src}
+    ${ecal_io_header_linux_src}
     ${ecal_mon_header_src}
     ${ecal_pubsub_header_src}
     ${ecal_readwrite_lcm_header_src}
@@ -418,6 +448,8 @@ install(DIRECTORY
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Source Files" FILES 
     ${ecal_io_cpp_src}
+    ${ecal_io_cpp_linux_src}
+    ${ecal_io_cpp_win32_src}
     ${ecal_mon_cpp_src}
     ${ecal_pubsub_cpp_src}
     ${ecal_readwrite_rtps_msg_cpp_src}
@@ -430,6 +462,8 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Header Files\\internal" FILES 
     ${ecal_cmn_header_src}
     ${ecal_io_header_src}
+    ${ecal_io_header_linux_src}
+    ${ecal_io_header_win_src}
     ${ecal_mon_header_src}
     ${ecal_pubsub_header_src}
     ${ecal_readwrite_rtps_msg_header_src}

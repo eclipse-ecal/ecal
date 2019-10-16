@@ -68,6 +68,7 @@ namespace eCAL
   extern std::string                   g_default_ini_file;
 
   extern std::string                   g_host_name;
+  extern int                           g_host_id;
   extern std::string                   g_unit_name;
   extern std::vector<std::string>      g_task_parameter;
 
