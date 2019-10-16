@@ -53,7 +53,7 @@ option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (
 # Set option regarding third party library builds
 option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS   "Build CMakeFunctions with eCAL"                                   ON)
 option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build Protobuf with eCAL"                                        OFF)
-option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                           ON)
+option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                          OFF)
 
 
 # there is a CMake issue with testing threading availibility via TEST_RUN
@@ -70,12 +70,6 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
 list(APPEND as_subproject Protobuf)
 endif ()
 
-
-macro(find_package)
-  if(NOT "${ARGV0}" IN_LIST as_subproject)
-    _find_package(${ARGV})
-  endif()
-endmacro()
 
 # Normalize backslashes from Windows paths
 file(TO_CMAKE_PATH "${CMAKE_MODULE_PATH}" CMAKE_MODULE_PATH)
