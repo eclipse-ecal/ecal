@@ -19,7 +19,7 @@
 project(proto_dyn)
 
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
+find_package(protobuf REQUIRED)
 
 set(proto_dyn_src
     proto_dyn.cpp
@@ -31,7 +31,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE .)
 
 target_link_libraries(${PROJECT_NAME} eCAL::core)
 
-create_targets_protobuf()
 target_link_libraries(${PROJECT_NAME} protobuf::libprotobuf)
 
 ecal_install_sample(${PROJECT_NAME})

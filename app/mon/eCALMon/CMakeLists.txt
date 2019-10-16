@@ -23,7 +23,7 @@ find_package(Qt5 COMPONENTS
     Widgets
 REQUIRED)
 
-find_package(Protobuf REQUIRED)
+find_package(protobuf REQUIRED)
 find_package(simpleini REQUIRED)
 
 if(POLICY CMP0071)
@@ -179,7 +179,6 @@ ecal_add_app_qt(${PROJECT_NAME}
     ${autogen_ui}
 )
 
-create_targets_protobuf()
 target_link_libraries (${PROJECT_NAME}
     protobuf::libprotobuf
     simpleini::simpleini

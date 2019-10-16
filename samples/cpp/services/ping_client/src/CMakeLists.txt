@@ -19,9 +19,7 @@
 project(ping_client)
 
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
-
-create_targets_protobuf()
+find_package(protobuf REQUIRED)
 
 set(ping_client_src
   ping_client.cpp

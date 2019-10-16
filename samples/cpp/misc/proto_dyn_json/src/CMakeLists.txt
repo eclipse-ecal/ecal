@@ -30,8 +30,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE .)
 
 target_link_libraries(${PROJECT_NAME} eCAL::core)
 
-find_package(Protobuf REQUIRED)
-create_targets_protobuf()
+find_package(protobuf REQUIRED)
 target_link_libraries(${PROJECT_NAME} protobuf::libprotobuf)
 
 ecal_install_sample(${PROJECT_NAME})

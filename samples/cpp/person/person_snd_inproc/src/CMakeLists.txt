@@ -19,9 +19,7 @@
 project(person_snd_inproc)
 
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
-
-create_targets_protobuf()
+find_package(protobuf REQUIRED)
 
 set(person_snd_inproc_src
   person_snd_inproc.cpp

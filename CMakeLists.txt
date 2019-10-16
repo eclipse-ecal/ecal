@@ -52,7 +52,7 @@ option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (
 
 # Set option regarding third party library builds
 option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS   "Build CMakeFunctions with eCAL"                                   ON)
-option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build Protobuf with eCAL"                                         ON)
+option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build Protobuf with eCAL"                                        OFF)
 
 
 # there is a CMake issue with testing threading availibility via TEST_RUN

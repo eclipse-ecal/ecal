@@ -18,7 +18,7 @@
 
 project(topic)
 
-find_package(Protobuf REQUIRED)
+find_package(protobuf REQUIRED)
 find_package(tclap REQUIRED)
 
 set(ecaltopic_src
@@ -38,8 +38,6 @@ target_include_directories(${PROJECT_NAME}
 
 target_compile_definitions(${PROJECT_NAME}
   PRIVATE $<$<BOOL:${MSVC}>:PCRE_STATIC;_UNICODE>)
-
-create_targets_protobuf()
 
 target_link_libraries(${PROJECT_NAME}
   protobuf::libprotobuf

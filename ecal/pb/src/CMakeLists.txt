@@ -18,8 +18,7 @@
 
 project(pb)
 
-find_package(Protobuf REQUIRED)
-create_targets_protobuf()
+find_package(protobuf REQUIRED)
 
 set(ProtoFiles
   ${CMAKE_CURRENT_SOURCE_DIR}/ecal/pb/ecal.proto

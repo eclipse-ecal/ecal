@@ -19,9 +19,7 @@
 project(math_server)
 
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
-
-create_targets_protobuf()
+find_package(protobuf REQUIRED)
 
 set(math_server_src
   math_server.cpp

@@ -23,7 +23,7 @@ find_package(Qt5 COMPONENTS
     Widgets
 REQUIRED)
 
-find_package(Protobuf REQUIRED)
+find_package(protobuf REQUIRED)
 
 if(POLICY CMP0071)
   cmake_policy(SET CMP0071 OLD)
@@ -54,7 +54,6 @@ qt5_wrap_ui(autogen_ui ${${PROJECT_NAME}_ui})
 
 ecal_add_mon_plugin(${PROJECT_NAME} SHARED ${${PROJECT_NAME}_src} ${${PROJECT_NAME}_header} ${${PROJECT_NAME}_ui} ${autogen_ui})
 
-create_targets_protobuf()
 target_link_libraries (${PROJECT_NAME} Qt5::Widgets eCAL::core eCAL::pb protobuf::libprotobuf MonitorTreeView eCAL::mon_plugin_lib)
 
 if(MSVC)

@@ -45,6 +45,5 @@ endif()
 
 find_package(CMakeFunctions REQUIRED)
 
-find_package(Protobuf REQUIRED)
-create_targets_protobuf()
+find_package(protobuf REQUIRED)
 find_package(Threads REQUIRED)

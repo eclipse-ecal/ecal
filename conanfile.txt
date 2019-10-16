@@ -1,5 +1,6 @@
 [requires]
 Qt/5.11.2@bincrafters/stable
+protobuf/3.9.1@bincrafters/stable
 tclap/1.2.2@kwc_bintray/stable
 simpleini/4.17@kwc_bintray/stable
 asio/1.14.0@kwc_bintray/stable
