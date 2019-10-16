@@ -2,7 +2,7 @@ dist: xenial
 
 language: cpp
 compiler: gcc
- 
+
 addons:
   apt:
     sources:
@@ -15,10 +15,17 @@ addons:
       - qt5-default
       - cmake
       - cmake-data
-    
+
+install:
+  # Install conan
+  - pip install conan
+  # Automatic detection of your arch, compiler, etc.
+  - conan user
+
 script:
   - mkdir _build
   - cd _build
-  - /usr/bin/cmake .. -DCMAKE_BUILD_TYPE=Release
+  - conan install ..
+  - /usr/bin/cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=conan_paths.cmake
   - make
   - /usr/bin/cpack -G DEB

@@ -6,12 +6,22 @@ environment:
   QT5_ROOT_DIRECTORY: C:\Qt\5.11.3
 
 install:
+  # Initialize thirdparty dependencies (remove with Conan integration)
   - git submodule update --init --recursive
+
+  # Install prerequisites
+  - cmmd: echo "Downloading conan..."
+  - cmmd: set PATH=%PATH%;%PYTHON%/Scripts/
+  - cmmd: pip.exe install conan
+  - cmmd: conan user
+  - cmmd: conan --version
+
+  # Install build requirements
   - choco install doxygen.install
   - choco install cmake
   - choco install wixtoolset
   - refreshenv
-  
+
 build_script:
   - set PATH="C:\Program Files\CMake\bin";%PATH%
   - build_win\win_make_all.bat

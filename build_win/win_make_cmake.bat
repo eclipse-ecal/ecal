@@ -22,7 +22,8 @@ set COMPILE_WIN64=%VISUAL_STUDIO_GENERATOR% Win64
 
 if not exist "%BUILD_DIR%" mkdir %BUILD_DIR%
 cd /d %BUILD_DIR%
-cmake .. -G "%COMPILE_WIN64%" -DCMAKE_INSTALL_PREFIX=_install
+conan install ..
+cmake .. -G "%COMPILE_WIN64%" -DCMAKE_INSTALL_PREFIX=_install -DCMAKE_TOOLCHAIN_FILE=conan_paths.cmake
 
 
 popd
