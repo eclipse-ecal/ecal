@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EcalplayGuiServiceMainWindow</class>
+ <widget class="QMainWindow" name="EcalplayGuiServiceMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>688</width>
+    <height>799</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>:/ecalplay/APP_ICON</normaloff>:/ecalplay/APP_ICON</iconset>
+  </property>
+  <property name="dockNestingEnabled">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="childrenCollapsible">
+       <bool>false</bool>
+      </property>
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="get_config_request_tab">
+        <attribute name="title">
+         <string>GetConfigRequest</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>No settings</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="get_config_request_button">
+           <property name="text">
+            <string>Send request</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="set_config_request_tab">
+        <attribute name="title">
+         <string>SetConfigRequest</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <layout class="QFormLayout" name="formLayout">
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="set_config_measurement_path_checkbox">
+             <property name="text">
+              <string>measurement_path</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="set_config_measurement_path_lineedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QCheckBox" name="set_config_limit_play_speed_checkbox">
+             <property name="text">
+              <string>limit_play_speed</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="set_config_limit_play_speed_lineedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QCheckBox" name="set_config_play_speed_checkbox">
+             <property name="text">
+              <string>play_speed</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="set_config_play_speed_lineedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QCheckBox" name="set_config_frame_dropping_allowed_checkbox">
+             <property name="text">
+              <string>frame_dropping_allowed</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="set_config_frame_dropping_allowed_lineedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QCheckBox" name="set_config_enforce_delay_accuracy_checkbox">
+             <property name="text">
+              <string>enforce_delay_accuracy</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="set_config_enforce_delay_accuracy_lineedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QCheckBox" name="set_config_limit_interval_start_rel_secs_checkbox">
+             <property name="text">
+              <string>limit_interval_start_rel_secs</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLineEdit" name="set_config_limit_interval_start_rel_secs_lineedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QCheckBox" name="set_config_limit_interval_end_rel_secs_checkbox">
+             <property name="text">
+              <string>limit_interval_end_rel_secs</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QLineEdit" name="set_config_limit_interval_end_rel_secs_lineedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QCheckBox" name="set_config_repeat_checkbox">
+             <property name="text">
+              <string>repeat</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLineEdit" name="set_config_repeat_lineedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QPushButton" name="set_config_request_button">
+           <property name="text">
+            <string>Send request</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="command_request_tab">
+        <attribute name="title">
+         <string>CommandRequest</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0">
+            <widget class="QLabel" name="command_request_command_label">
+             <property name="text">
+              <string>command</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="command_request_command_combobox">
+             <item>
+              <property name="text">
+               <string>none</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>initialize</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>de_initialize</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>jump_to</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>play</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>pause</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>step</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>step_channel</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>exit</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QCheckBox" name="command_request_channel_mapping_checkbox">
+             <property name="text">
+              <string>channel_mapping</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QTextEdit" name="command_request_channel_mapping_textedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Channel mapping in form &quot;source = target&quot; with one mapping per line</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QCheckBox" name="command_request_step_reference_channel_checkbox">
+             <property name="text">
+              <string>step_reference_channel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="command_request_step_reference_channel_lineedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QCheckBox" name="command_request_rel_time_secs_checkbox">
+             <property name="text">
+              <string>rel_time_secs</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QDoubleSpinBox" name="command_request_rel_time_secs_spinbox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="keyboardTracking">
+              <bool>false</bool>
+             </property>
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="minimum">
+              <double>-10000.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>10000.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QPushButton" name="command_request_button">
+           <property name="text">
+            <string>Send request</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="title">
+        <string>Response</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QTextEdit" name="response_texteedit">
+          <property name="font">
+           <font>
+            <family>Courier New</family>
+           </font>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="response_clear_button">
+          <property name="text">
+           <string>Clear</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>set_config_measurement_path_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>set_config_measurement_path_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>93</x>
+     <y>44</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>49</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>set_config_limit_play_speed_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>set_config_limit_play_speed_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>94</x>
+     <y>76</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>269</x>
+     <y>73</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>set_config_play_speed_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>set_config_play_speed_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>77</x>
+     <y>105</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>208</x>
+     <y>107</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>set_config_frame_dropping_allowed_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>set_config_frame_dropping_allowed_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>137</x>
+     <y>128</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>214</x>
+     <y>130</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>set_config_enforce_delay_accuracy_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>set_config_enforce_delay_accuracy_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>123</x>
+     <y>156</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>253</x>
+     <y>156</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>set_config_limit_interval_start_rel_secs_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>set_config_limit_interval_start_rel_secs_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>149</x>
+     <y>213</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>440</x>
+     <y>216</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>set_config_limit_interval_end_rel_secs_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>set_config_limit_interval_end_rel_secs_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>150</x>
+     <y>239</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>400</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_channel_mapping_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_channel_mapping_textedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>114</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>119</x>
+     <y>69</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_step_reference_channel_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_step_reference_channel_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>119</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>119</x>
+     <y>69</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_rel_time_secs_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_rel_time_secs_spinbox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>117</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>119</x>
+     <y>69</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>set_config_repeat_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>set_config_repeat_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>58</x>
+     <y>180</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>251</x>
+     <y>179</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

@@ -4,6 +4,7 @@ image: Visual Studio 2015
 
 environment:
   QT5_ROOT_DIRECTORY: C:\Qt\5.11.3
+  HDF5_DIR: C:\Program Files\HDF_Group\HDF5\1.8.21\cmake
 
 install:
   # Initialize thirdparty dependencies (remove with Conan integration)
@@ -17,6 +18,9 @@ install:
   - cmmd: conan --version
 
   # Install build requirements
+  - curl -fsS -O https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8/hdf5-1.8.21/bin/hdf5-1.8.21-Std-win7_64-vs14.zip
+  - 7z x -bb0 hdf5-1.8.21-Std-win7_64-vs14.zip
+  - msiexec /package hdf\HDF5-1.8.21-win64.msi /quiet
   - choco install doxygen.install
   - choco install cmake
   - choco install wixtoolset

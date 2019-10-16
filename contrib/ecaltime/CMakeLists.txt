@@ -21,3 +21,4 @@ if(UNIX)
 endif()
 
 add_subdirectory(localtime/src)
+add_subdirectory(simtime/src)

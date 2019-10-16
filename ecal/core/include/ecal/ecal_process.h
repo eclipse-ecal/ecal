@@ -55,6 +55,13 @@ namespace eCAL
     ECAL_API std::string GetHostName();
 
     /**
+     * @brief  Get unique host id.
+     *
+     * @return  Host id or zero if failed.
+    **/
+    ECAL_API int GetHostID();
+
+    /**
      * @brief  Get current unit name (defined via eCAL::Initialize). 
      *
      * @return  Unit name or empty string if failed. 
@@ -250,6 +257,11 @@ namespace eCAL
         eCAL_FreeMem(buf);
       }
       return(name);
+    }
+
+    inline int GetHostID()
+    {
+      return(eCAL_Process_GetHostID());
     }
 
     inline std::string GetUnitName()

@@ -21,8 +21,6 @@
 #include <ecal/msg/protobuf/publisher.h>
 
 #include <iostream>
-#include <chrono>
-#include <thread>
 
 #include "person.pb.h"
 
@@ -36,9 +34,6 @@ int main(int argc, char **argv)
 
   // create a publisher (topic name "person")
   eCAL::protobuf::CPublisher<pb::People::Person> pub("person");
-
-  // set frequency control
-  pub.SetRefFrequency(1.0, 3.0);
 
   // generate a class instance of Person
   pb::People::Person person;
@@ -56,7 +51,6 @@ int main(int argc, char **argv)
     person.mutable_house()->set_rooms(4);
 
     // send the person object
-    pub.SetID(cnt%42);
     pub.Send(person);
 
     // print content
@@ -69,7 +63,7 @@ int main(int argc, char **argv)
     std::cout                                                << std::endl;
 
     // sleep 500 ms
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    eCAL::Process::SleepMS(500);
   }
 
   // finalize eCAL API

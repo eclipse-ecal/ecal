@@ -22,6 +22,7 @@
 #include <tclap/CmdLine.h>
 
 #include <iostream>
+#include <numeric>
 #include <string>
 #include <vector>
 
@@ -75,11 +76,7 @@ void do_run(const int runs, int snd_size /*kB*/)
   }
 
   // calculate roundtrip time over all received messages
-  long long sum_time(0);
-  for (int reply = 0; reply < snd_pkgs; reply++)
-  {
-    sum_time += diff_array[reply];
-  }
+  long long sum_time = std::accumulate(diff_array.begin(), diff_array.end(), 0LL);
   long long avg_time = sum_time/ snd_pkgs;
   std::cout << "Message average roundtrip time " << avg_time << " us" << std::endl << std::endl;
 

@@ -52,6 +52,7 @@ namespace eCAL
   ////////////////////////////////////////
   CDataReader::CDataReader() :
                  m_host_name(Process::GetHostName()),
+                 m_host_id(Process::GetHostID()),
                  m_pid(Process::GetProcessID()),
                  m_pname(Process::GetProcessName()),
                  m_topic_name(""),
@@ -351,6 +352,7 @@ namespace eCAL
     ecal_reg_sample.set_cmd_type(eCAL::pb::bct_reg_subscriber);
     auto ecal_reg_sample_mutable_topic = ecal_reg_sample.mutable_topic();
     ecal_reg_sample_mutable_topic->set_hname(m_host_name);
+    ecal_reg_sample_mutable_topic->set_hid(m_host_id);
     ecal_reg_sample_mutable_topic->set_tname(m_topic_name);
     ecal_reg_sample_mutable_topic->set_tid(m_topic_id);
     if (m_use_ttype) ecal_reg_sample_mutable_topic->set_ttype(m_topic_type);
@@ -476,12 +478,12 @@ namespace eCAL
       // copy content to target string
       std::lock_guard<std::mutex> lock(m_read_buf_sync);
       buf_.clear();
-      buf_.assign(m_read_buf.data(), m_read_buf.size());
+      buf_.swap(m_read_buf);
 
       // apply time
       if(time_) *time_ = m_read_time;
       // return success
-      return(m_read_buf.size());
+      return(buf_.size());
     }
     return(0);
   }
@@ -927,6 +929,7 @@ namespace eCAL
     out << indent_ << " class CDataReader "                                << std::endl;
     out << indent_ << "--------------------------------"                   << std::endl;
     out << indent_ << "m_host_name:            " << m_host_name            << std::endl;
+    out << indent_ << "m_host_id:              " << m_host_id              << std::endl;
     out << indent_ << "m_topic_name:           " << m_topic_name           << std::endl;
     out << indent_ << "m_topic_id:             " << m_topic_id             << std::endl;
     out << indent_ << "m_topic_type:           " << m_topic_type           << std::endl;

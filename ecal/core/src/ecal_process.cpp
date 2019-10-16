@@ -45,6 +45,7 @@
 
 #ifdef ECAL_OS_WINDOWS
 #include "ecal_win_main.h"
+#include <iphlpapi.h>
 #endif /* ECAL_OS_WINDOWS */
 
 #ifdef ECAL_OS_LINUX
@@ -58,6 +59,7 @@
 #include <sys/file.h>
 #include <sys/select.h>
 #include <limits.h>
+#include <netinet/in.h>
 
 #include "ecal_process_stub.h"
 #include "EcalUtils/EcalUtils.h"
@@ -109,6 +111,95 @@ namespace
     }
     return "???";
   }
+#ifdef ECAL_OS_WINDOWS
+  std::pair<bool, int> get_host_id()
+  {
+    // retrieve needed buffer size for GetAdaptersInfo
+    ULONG alloc_adapters_size(0);
+    {
+      IP_ADAPTER_INFO AdapterInfo;
+      GetAdaptersInfo(&AdapterInfo, &alloc_adapters_size);
+    }
+    // get number of active adapters
+    int num_adapters = alloc_adapters_size / sizeof(IP_ADAPTER_INFO);
+    if (num_adapters == 0) return std::make_pair(false, 0);
+
+    // allocate adapter memory
+    std::vector<IP_ADAPTER_INFO> adapter_vec;
+    adapter_vec.resize(num_adapters);
+
+    // get all adapter infos
+    DWORD dwStatus = GetAdaptersInfo(adapter_vec.data(), &alloc_adapters_size);
+    if (dwStatus != ERROR_SUCCESS) return std::make_pair(false, 0);
+
+    // iterate adapters and create hash
+    int hash(0);
+    for(auto adapter : adapter_vec)
+    {
+      for (UINT i = 0; i < adapter.AddressLength; ++i)
+      {
+        hash += (adapter.Address[i] << ((i & 1) * 8));
+      }
+    }
+
+    // return success
+    return std::make_pair(true, hash);
+  }
+#endif /* ECAL_OS_WINDOWS */
+
+#ifdef ECAL_OS_LINUX
+  std::pair<bool, int> get_host_id()
+  {
+    int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
+    if (sock == -1) { /* handle error*/ };
+
+    struct ifconf ifc;
+    char          buf[1024];
+    ifc.ifc_len = sizeof(buf);
+    ifc.ifc_buf = buf;
+    if (ioctl(sock, SIOCGIFCONF, &ifc) == -1) { /* handle error */ }
+
+    struct ifreq* it = ifc.ifc_req;
+    const struct ifreq* const end = it + (ifc.ifc_len / sizeof(struct ifreq));
+
+    int success(0);
+    struct ifreq ifr;
+    for (; it != end; ++it)
+    {
+      strcpy(ifr.ifr_name, it->ifr_name); // get name
+      if (ioctl(sock, SIOCGIFFLAGS, &ifr) == 0)
+      {
+        if (!(ifr.ifr_flags & IFF_LOOPBACK)) // skip loopback
+        { 
+          if (ioctl(sock, SIOCGIFHWADDR, &ifr) == 0) // get hw address
+          {
+            success = 1;
+            break;
+          }
+        }
+      }
+      else { /* handle error */ }
+    }
+
+    // close socket
+    close(sock);
+
+    // create hash
+    if (success)
+    {
+      int hash(0);
+      for (auto i = 0; i < 6; ++i)
+      {
+        hash += (ifr.ifr_hwaddr.sa_data[i] << ((i & 1) * 8));
+      }
+      // return success
+      return std::make_pair(true, hash);
+    }
+
+    // return failure
+    return std::make_pair(false, 0);
+  }
+#endif /* ECAL_OS_LINUX */
 }
 
 namespace eCAL
@@ -144,6 +235,8 @@ namespace eCAL
       sstream << std::endl;
 
       sstream << "------------------------- NETWORK --------------------------------" << std::endl;
+      sstream << "Host name                : " << Process::GetHostName() << std::endl;
+      sstream << "Host id                  : " << Process::GetHostID() << std::endl;
       if (eCALPAR(NET, ENABLED))
       {
         sstream << "Network mode             : cloud" << std::endl;
@@ -226,8 +319,34 @@ namespace eCAL
         {
           g_host_name = hname;
         }
+        else
+        {
+          std::cerr << "Unable to get host name" << std::endl;
+        }
       }
       return(g_host_name);
+    }
+
+    int GetHostID()
+    {
+      if (g_host_id == 0)
+      {
+        // try to get unique host id
+        bool success(false);
+        int  id(0);
+        std::tie(success, id) = get_host_id();
+        if (success)
+        {
+          g_host_id = id;
+        }
+        // never try again to not waste time
+        else
+        {
+          g_host_id = -1;
+          std::cerr << "Unable to get host id" << std::endl;
+        }
+      }
+      return(g_host_id);
     }
 
     std::string GetUnitName()
@@ -664,7 +783,7 @@ namespace
       {
           process_stub_output += buffer.data();
       }
-      process_stub_output = EcalUtils::String::trim(process_stub_output);
+      process_stub_output = EcalUtils::String::Trim(process_stub_output);
 
       STD_COUT_DEBUG("[PID " << getpid() << "]: " << process_stub_output << std::endl);
 
@@ -888,7 +1007,7 @@ namespace eCAL
 
       STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Creating FIFO \"" << fifo_name << "\"" << std::endl);
 
-      if(mkfifo(fifo_name.c_str(), 0666) == -1)
+      if(mkfifo(fifo_name.c_str(), S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) == -1)
       {
         std::cerr << "[PID " << getpid() << "]: " << "Error creating FIFO \"" << fifo_name << ": " << strerror(errno) << std::endl;
       }

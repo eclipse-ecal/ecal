@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RemoteMeasurementDebugWidget</class>
+ <widget class="QWidget" name="RemoteMeasurementDebugWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>579</width>
+    <height>378</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Widget</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLineEdit" name="hostname_lineedit">
+       <property name="text">
+        <string>florian-ubuntu</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="add_button">
+       <property name="text">
+        <string>Add</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/ADD</normaloff>:/ecalicons/ADD</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTextEdit" name="instances_textedit">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="activate_connections_button">
+     <property name="text">
+      <string>Activate connections</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../../../../iconset/ecalicons.qrc">
+       <normaloff>:/ecalicons/CONNECTED</normaloff>:/ecalicons/CONNECTED</iconset>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="deactivate_connections_button">
+     <property name="text">
+      <string>Deactivate connections</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../../../../iconset/ecalicons.qrc">
+       <normaloff>:/ecalicons/DISCONNECTED</normaloff>:/ecalicons/DISCONNECTED</iconset>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="initiate_connection_shutdown_button">
+     <property name="text">
+      <string>Initiate connection shutdown</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../../../../iconset/ecalicons.qrc">
+       <normaloff>:/ecalicons/POWER_OFF</normaloff>:/ecalicons/POWER_OFF</iconset>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="connect_to_ecal_button">
+     <property name="text">
+      <string>Connect to eCAL</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../../../../iconset/ecalicons.qrc">
+       <normaloff>:/ecalicons/CHECKMARK</normaloff>:/ecalicons/CHECKMARK</iconset>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="disconnect_from_ecal_button">
+     <property name="text">
+      <string>Disconnect from eCAL</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../../../../iconset/ecalicons.qrc">
+       <normaloff>:/ecalicons/CROSS</normaloff>:/ecalicons/CROSS</iconset>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="save_current_buffer_button">
+     <property name="text">
+      <string>Save current buffer</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../../../../iconset/ecalicons.qrc">
+       <normaloff>:/ecalicons/SAVE</normaloff>:/ecalicons/SAVE</iconset>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="start_recording_button">
+     <property name="text">
+      <string>Start Recording</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../../../../iconset/ecalicons.qrc">
+       <normaloff>:/ecalicons/RECORD</normaloff>:/ecalicons/RECORD</iconset>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="stop_recording_button">
+     <property name="text">
+      <string>Stop Recording</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../../../../iconset/ecalicons.qrc">
+       <normaloff>:/ecalicons/STOP</normaloff>:/ecalicons/STOP</iconset>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="wait_for_recorder_operations_dialog_button">
+     <property name="text">
+      <string>Show wait for local_recorder_dialog</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="../../../../../iconset/ecalicons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

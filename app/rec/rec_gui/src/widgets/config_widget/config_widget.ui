@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ConfigWidget</class>
+ <widget class="QWidget" name="ConfigWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>515</width>
+    <height>305</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Widget</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item row="3" column="1">
+    <widget class="QSpinBox" name="max_file_size_spinbox">
+     <property name="toolTip">
+      <string>Maximum HDF-5 file size (will cause the recorder to split the measurement into multiple files)</string>
+     </property>
+     <property name="keyboardTracking">
+      <bool>false</bool>
+     </property>
+     <property name="suffix">
+      <string> MiB</string>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>2147483647</number>
+     </property>
+     <property name="singleStep">
+      <number>10</number>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="measurement_directory_label">
+     <property name="text">
+      <string>Meas dir:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="measurement_name_label">
+     <property name="text">
+      <string>Meas name:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="max_file_size_label">
+     <property name="text">
+      <string>Max file size:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QEcalParserLineEdit" name="measurement_name_lineedit">
+     <property name="toolTip">
+      <string>Measurement name (will create a directory inside the measurement root directory)</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QEcalParserLineEdit" name="measurement_directory_lineedit">
+     <property name="toolTip">
+      <string>Measurement root directory</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>1</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="path_preview_label">
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="textInteractionFlags">
+        <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="refresh_path_preview_button">
+       <property name="toolTip">
+        <string>Refresh Preview</string>
+       </property>
+       <property name="text">
+        <string>Refresh Preview</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/RESTART</normaloff>:/ecalicons/RESTART</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>12</width>
+         <height>12</height>
+        </size>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="4" column="0" colspan="2">
+    <widget class="QLabel" name="description_label">
+     <property name="text">
+      <string>Description:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="2">
+    <widget class="QEcalParserTextEdit" name="description_textedit">
+     <property name="toolTip">
+      <string>Description saved to the doc/description.txt file</string>
+     </property>
+     <property name="acceptRichText">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QEcalParserLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">QEcalParser/ecal_parser_lineedit/ecal_parser_lineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QEcalParserTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header location="global">QEcalParser/ecal_parser_textedit/ecal_parser_textedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>measurement_directory_lineedit</tabstop>
+  <tabstop>measurement_name_lineedit</tabstop>
+  <tabstop>max_file_size_spinbox</tabstop>
+  <tabstop>description_textedit</tabstop>
+  <tabstop>refresh_path_preview_button</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../../../../iconset/ecalicons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

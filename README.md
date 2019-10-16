@@ -1,4 +1,4 @@
-﻿
+
 # eCAL - enhanced Communication Abstraction Layer
 
 Copyright (c) 2019, Continental Corporation.
@@ -80,40 +80,56 @@ All options can be passed on the command line `cmake -D<option>=<value>` or in t
 
 ## Setup on Linux Systems
 
-Update gcc to 5.3.x or newer and install cmake.
-
-### Installation
-
-#### Install toolchain
-
-```bash
-sudo apt-get install cmake
-sudo apt-get install doxygen
-sudo apt-get install graphviz
-```
-
-*Note:* building cmake including documentation requires using a fairly new version of CMake, so the version installed with your system (e.g. 3.5.1 for Ubuntu 16.04) might not be sufficient. You can install newer versions of CMake by adding a ppa as described [here]( https://blog.kitware.com/ubuntu-cmake-repository-now-available/) or downloading it from the [CMake website](https://cmake.org/download/)
-
-#### Install third party dependencies:
-  
-```bash
-sudo apt-get install build-essential
-sudo apt-get install zlib1g-dev
-sudo apt-get install qt5-default
-```
-
-#### Build and install eCAL
-
-Build eCAL, let CMake create a debian package and install that one
-
-```bash
-mkdir _build
-cd _build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j
-cpack -G DEB
-sudo dpkg -i eCAL*
-```
+### Dependencies on Ubuntu 16.04
+1. Add the [official cmake repository](https://apt.kitware.com/), as eCAL needs cmake >= 3.13:
+	```bash
+	wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | sudo apt-key add -
+	sudo apt-add-repository -y 'deb https://apt.kitware.com/ubuntu/ xenial main'
+	sudo apt-get -y update
+	sudo apt-get -y install kitware-archive-keyring
+	sudo apt-key --keyring /etc/apt/trusted.gpg del C1F34CDD40CD72DA
+	```
+	
+2. Add a ppa for protobuf >= 3.1. The following (unofficial) ppa will be sufficient:
+	```bash
+	sudo add-apt-repository -y ppa:maarten-fonville/protobuf
+	sudo apt-get -y update
+	```
+	
+3. Install the dependencies from the ordinary Ubuntu 16.04 repositories and the ppa we just added:
+	```bash
+	sudo apt-get -y install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler
+	```
+	
+### Dependencies on Ubuntu 18.04
+1. Add the [official cmake repository](https://apt.kitware.com/), as eCAL needs cmake >= 3.13:
+	```bash
+	wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | sudo apt-key add -
+	sudo apt-add-repository -y 'deb https://apt.kitware.com/ubuntu/ bionic main'
+	sudo apt-get -y update
+	sudo apt-get -y install kitware-archive-keyring
+	sudo apt-key --keyring /etc/apt/trusted.gpg del C1F34CDD40CD72DA
+	```
+	
+2. Install all dependencies:
+	```bash
+	sudo apt-get -y install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler
+	```
+	
+### Compile eCAL
+1. Check out the repository as described [here](#checkout-the-repository).
+2. Compile eCAL:
+	```bash
+	mkdir _build
+	cd _build
+	cmake .. -DCMAKE_BUILD_TYPE=Release -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF
+	make -j4
+	```
+3. Create a debian package and install it, if desired:
+	```bash
+	cpack -G DEB
+	sudo dpkg -i eCAL-*
+	```
 ### UDP network configuration
 
 setup the correct ip address - here for adapter eth0, ip address 192.168.0.1
@@ -141,30 +157,37 @@ sudo gedit /etc/network/interfaces
 
 ## Setup on Windows Systems
 
-### Preparation
+### Install dependencies
 
-You need
+1. Download dependencies. For creating the Visual Studio eCAL solution, build it and create a setup, you need:
+	- CMake (https://cmake.org)
+	- Doxygen (http://www.doxygen.nl)
+	- Qt5 (>= 5.5) (https://www.qt.io/download)
+	- HDF5, (https://www.hdfgroup.org/downloads/hdf5/)
+	- WIX (http://wixtoolset.org/)
 
-  • CMake (https://cmake.org)
+	**HDF5 Compatibility notes**: We recommend using [HDF5 1.8.21](https://portal.hdfgroup.org/display/support/HDF5+1.8.21#files) or a later 1.8 Version. You can use 1.10 as well, but when recording a measurement with eCAL Rec using HDF5 1.10, your eCAL Player must also use HDF5 1.10. So if you want to exchange measurements between systems, make sure you use the same HDF5 versions on all of them.
+	- Ubuntu 16.04 uses HDF5 1.8 by default.
+	- Ubuntu 18.04 uses HDF5 1.10 by default.
 
-  • Doxygen (http://www.doxygen.nl)
+2. Install Qt5 by starting the installer and selecting `msvc2015 32-bit` or `msvc2015 64-bit` (VS2015) or `msvc2017 32-bit` and `msvc2017 64-bit` (VS2017) from the latest Qt5 version. Create an environment variable `QT5_ROOT_DIRECTORY` that points to the directory containing the architecture-specific folders. It should look like this:
+	```
+	 %QT5_ROOT_DIRECTORY%
+	   ├ msvc2015
+	   ├ msvc2015_64
+	   ├ msvc2017
+	   └ msvc2017_64
+	```
+	e.g.:
+	```
+	QT5_ROOT_DIRECTORY = C:\Qt\5.11.1
+	```
+3. Install HDF5. Create an environment variable `HDF5_DIR` pointing to the cmake folder of your HDF5 installation, e.g.:
+	```
+	HDF5_DIR = C:\Program Files\HDF_Group\HDF5\1.8.21\cmake
+	```
 
-  • Qt5 (https://www1.qt.io/download-open-source/#section-2)
- 
-  • WIX (http://wixtoolset.org/)
-
-  to create the Visual Studio eCAL solution, to build it and to create a windows setup file.
-
-#### Qt 5
-
-Install Qt5 by starting the installer and selecting `msvc2015 32-bit` and `msvc2015 64-bit` (VS2015) or `msvc2017 32-bit` and `msvc2017 64-bit` (VS2017) from the latest Qt5 version. Create an environment variable `QT5_ROOT_DIRECTORY` that points to the directory containing the architecture-specific folders. It should look like this:
-
-    %QT5_ROOT_DIRECTORY%
-      ├ msvc2015
-      ├ msvc2015_64
-      ├ msvc2017
-      └ msvc2017_64
-      
+4. Checkout the eCAL repository as described [here](#checkout-the-repository). Note that it has **submodules**, so use [Git for Windows](https://git-scm.com/download/win) to check out the repo.
 
 #### Build eCAL
 
@@ -220,26 +243,53 @@ You can find the ecal.ini configuration file under %APPDATA%\eCAL.
 
 Don't forget to disable any windows firewall.
 
-## Initial Test
+## Applications
 
-To initially check the functionality of a fresh installed eCAL system, just follow these steps.
+Besides the communication core eCAL comes with some high-level applications for monitoring, recording and replaying messages. The monitoring application is used to provide an overview of all existing entities (publisher, subscriber, services) that are using the eCAL API to communicate. Recorder and player are designed to record messages in a distributed system efficiently and to replay them for post processing, analysis or simulation.
+ 
+### Monitor
 
-* start the two installed sample applications "ecal_sample_person_snd" and "ecal_sample_person_rec"
-* start the eCAL monitor application (for windows via Start Menu / eCAL / Start eCAL Monitor", for linux via command line "ecal_mon")
+To start the monitor please open the application from the windows start menu or type
+```ecal_mon``` on a linux system.
 
-Now you should see the two running application "person publisher" and "person subscriber". Expand their content and double click on the topic "person". A new reflection windows should open and you can check the content of the person topic on the fly.
+The monitor provides different kinds of sorted views for all eCAL publications, subscriptions or service instances. The content of messages is visualized with plugins. Currently the monitor is shipped with ready to use plugins for two serialization formats ([google protobuf](https://developers.google.com/protocol-buffers) and [capnproto](https://capnproto.org/).), as well as simple string data.
+
+The image shows an eCAL monitor showing two running application "person publisher" and "person subscriber". The content of the protobuf person message is shown in the protobuf reflection plugin (just double click on the topic name to open the reflection window).
 
 ![eCAL monitor showing topic 'person'](gfx/app/monitor_person.png?raw=true "eCAL monitor showing topic 'person'")
 
+The plugin concept also allows anybody to develop 2D or 3D visualization plugins for specific data types and messages. The plugins are developed with Qt5 and the eCAL Monitor Plugin SDK. On start the eCAL Monitor will scan the plugin folder for new plugins and load them. The following image shows a plugin visualizing a camera image.
+
+![eCAL monitor showing image](gfx/app/monitor_imagevisu.png?raw=true "eCAL monitor showing image")
+
+### Recorder
+
+Recording eCAL messages is essential for many use cases. A Recording can be used as simulated input for other applications, for debugging and analysis. If required, the recorded data can be post-processed in C++ (python and matlab wrappers will be released with a future release).
+
+The recorded data is stored in the standardized [HDF5](https://www.hdfgroup.org/) data format, a portable, cross platform, hierarchical container format, well designed for large data sets. To minimize network usage in a distributed system, each machine can record only its own data, so the measurement can be merged later (by just copying all files in one directory). Distributed recordings can be started from the eCAL Rec GUI application (a CLI version will come with a future release). When clicking the REC button, it will connect to the eCAL Rec instances running on all selected machines and start the recording.
+
+This image shows the eCAL Rec GUI recording 3 topic on the same host.
+ 
+![eCAL recorder recording 3 topics](gfx/app/recorder.png?raw=true "eCAL recorder recording 3 topics")
+
+### Player
+
+The eCAL Player can replay the recordings from the eCAL Recorder. It comes as GUI, as CLI and as C++ library for custom applications. The player can speed up or slow down the recording and step through a recording on a frame or channel base.
+ 
+The following image shows a running replay, publishing 2 messages in realtime.
+
+![eCAL player](gfx/app/player.png?raw=true "eCAL player")
+
+
 ## Performance
 
-The following table shows the latency in µs between a single publisher / subscriber connection for different payload sizes (two different processes running on the same host). You can simply measure the latency on your own machine by running the ecal_latency_snd and ecal_latency_rec sample applications.
+The following table shows the latency in µs between a single publisher / subscriber connection for different payload sizes (two different processes running on the same host). You can simply measure the latency on your own machine by running the ecal_latency_snd and ecal_latency_rec_cb sample applications.
 
-First start ecal_sample_latency_rec. This application will receive the published payloads, send them back to the sender and print out the average receive time, the message frequency and the data throughput over all received messages. The sending application ecal_latency_snd can be configured that way ..
+First start ecal_sample_latency_rec_cb. This application will receive the published payloads, send them back to the sender and print out the average receive time, the message frequency and the data throughput over all received messages. The sending application ecal_latency_snd can be configured that way ..
   
      ecal_latency_snd  -s <payload_size [kB]> -r <send loops>
   
-The table shows the results for a Windows and a Linux platform (20000 samples, zero drops).
+The table shows the results for a Windows and a Linux platform (10000 samples, zero drops).
 
 ```
 -------------------------------
@@ -274,21 +324,23 @@ H/W path      Device    Class       Description
 
 ```
 
-|Payload Size (kB)|Win10 AMD64|Ubuntu16 AMD64|
-|----------------:|----------:|-------------:|
-|              1  |       13  |          14  |
-|              2  |       13  |          14  |
-|              4  |       15  |          15  |
-|              8  |       16  |          16  |
-|             16  |       19  |          18  |
-|             32  |       20  |          22  |
-|             64  |       27  |          26  |
-|            128  |       40  |          40  |
-|            256  |       63  |          66  |
-|            512  |      108  |         134  |
-|           1024  |      288  |         720  |
-|           2048  |      768  |        1500  |
-|           4096  |     1548  |        3600  |
+|Payload Size (kB)|Win10 AMD64 (µs)|Ubuntu16 AMD64 (µs)|
+|----------------:|---------------:|------------------:|
+|              1  |            10  |               18  |
+|              2  |            11  |               18  |
+|              4  |            16  |               20  |
+|              8  |            16  |               20  |
+|             16  |            17  |               21  |
+|             32  |            18  |               22  |
+|             64  |            21  |               24  |
+|            128  |            26  |               33  |
+|            256  |            38  |               46  |
+|            512  |            62  |               76  |
+|           1024  |           123  |              196  |
+|           2048  |           378  |              578  |
+|           4096  |           848  |              824  |
+|           8192  |          1762  |             1645  |
+|          16384  |          3681  |             3258  |
 
 ## Usage
 

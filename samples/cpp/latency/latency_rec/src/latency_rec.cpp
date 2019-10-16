@@ -20,21 +20,18 @@
 #include <ecal/ecal.h>
 
 #include <iostream>
+#include <numeric>
 #include <string>
 #include <vector>
 
 void do_run()
 {
   // initialize eCAL API
-  eCAL::Initialize(0, nullptr, "latency_reply");
+  eCAL::Initialize(0, nullptr, "latency_rec");
 
   // create publisher and subscriber
   eCAL::CSubscriber sub_pkg("pkg_send");
   eCAL::CPublisher  pub_pkg("pkg_reply");
-
-  std::cout << "-------------------------------" << std::endl;
-  std::cout << " LATENCY / THROUGHPUT TEST"      << std::endl;
-  std::cout << "-------------------------------" << std::endl;
 
   // prepare timestamp array and
   std::vector<long long> diff_array;
@@ -67,18 +64,17 @@ void do_run()
   }
 
   // calculate receive time over all received messages
-  long long sum_time(0);
-  for (int pgk = 0; pgk < rec_pkgs; pgk++)
-  {
-    sum_time += diff_array[pgk];
-  }
+  long long sum_time = std::accumulate(diff_array.begin(), diff_array.end(), 0LL);
   long long avg_time = sum_time/rec_pkgs;
+  std::cout << "-------------------------------"    << std::endl;
+  std::cout << " LATENCY / THROUGHPUT TEST     "    << std::endl;
+  std::cout << "-------------------------------"    << std::endl;
   std::cout << "Received buffer size          :   " << rec_buf.size()/1024 << " kB" << std::endl;
   std::cout << "Received packages             :   " << rec_pkgs << std::endl;
   std::cout << "Message average receive time  :   " << avg_time << " us" << std::endl;
   std::cout << "Throughput                    :   " << static_cast<int>(((rec_buf.size()*rec_pkgs)/1024.0)/(sum_time /1000.0/1000.0))        << " kB/s"  << std::endl;
   std::cout << "                              :   " << static_cast<int>(((rec_buf.size()*rec_pkgs)/1024.0/1024.0)/(sum_time /1000.0/1000.0)) << " MB/s"  << std::endl;
-  std::cout << "                              :   " << static_cast<int>(rec_pkgs /(sum_time /1000.0/1000.0))                                  << " Msg/s" << std::endl << std::endl;
+  std::cout << "                              :   " << static_cast<int>(rec_pkgs /(sum_time /1000.0/1000.0))                                 << " Msg/s" << std::endl << std::endl;
 
   // finalize eCAL API
   eCAL::Finalize();

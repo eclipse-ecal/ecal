@@ -21,8 +21,6 @@
 #include <ecal/msg/protobuf/publisher.h>
 
 #include <iostream>
-#include <chrono>
-#include <thread>
 
 #include "person.pb.h"
 
@@ -68,7 +66,7 @@ int main(int argc, char **argv)
   pb::People::Person person;
 
   // enter main loop
-  auto cnt = 0;
+  auto cnt(0);
   while (eCAL::Ok())
   {
     // set person object content
@@ -92,7 +90,7 @@ int main(int argc, char **argv)
     std::cout                                                << std::endl;
 
     // sleep 500 ms
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    eCAL::Process::SleepMS(500);
   }
 
   // finalize eCAL API
