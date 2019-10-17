@@ -25,8 +25,14 @@ set(ProtoFiles
   ${CMAKE_CURRENT_SOURCE_DIR}/ecal/pb/ecal.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/ecal/pb/host.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/ecal/pb/monitoring.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/ecal/pb/play/service.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/ecal/pb/play/state.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/ecal/pb/process.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/ecal/pb/rec/control.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/ecal/pb/rec/service.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/ecal/pb/rec/state.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/ecal/pb/service.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/ecal/pb/sim_time.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/ecal/pb/topic.proto
 )
 
@@ -37,7 +43,7 @@ protobuf_target_cpp(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR} INSTALL_FOLDER i
 
 target_compile_options(${PROJECT_NAME}
   PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/W0>
+    #$<$<CXX_COMPILER_ID:MSVC>:/W0>
     $<$<CXX_COMPILER_ID:GNU>:-Wno-unused-parameter>)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)

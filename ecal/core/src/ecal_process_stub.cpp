@@ -32,7 +32,7 @@ int main(int argc, char** argv)
     // We have to do this BEFORE writing the FIFO, because after we have
     // written the PID to the FIFO, the main process will also attempt
     // to lock the lockfile.
-    int lockfile_fd = open(lockfile_name, O_RDWR | O_CREAT | O_CLOEXEC, 0666);
+    int lockfile_fd = open(lockfile_name, O_RDWR | O_CREAT | O_CLOEXEC, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     if (lockfile_fd)
     {
       if (flock(lockfile_fd, LOCK_EX) == -1)

@@ -22,7 +22,7 @@ function(ecal_add_app_console TARGET_NAME)
   ecal_set_subsystem_console(${TARGET_NAME})
   set_target_properties(${TARGET_NAME} PROPERTIES
     VERSION ${eCAL_VERSION_STRING}
-    SOVERSION ${eCAL_VERSION_MAYOR}
+    SOVERSION ${eCAL_VERSION_MAJOR}
     OUTPUT_NAME ecal_${TARGET_NAME})
 endfunction()
 
@@ -40,7 +40,7 @@ function(ecal_add_gtest TARGET_NAME)
   #ecal_set_subsystem_windows(${TARGET_NAME})
   set_target_properties(${TARGET_NAME} PROPERTIES
     VERSION ${eCAL_VERSION_STRING}
-    SOVERSION ${eCAL_VERSION_MAYOR}
+    SOVERSION ${eCAL_VERSION_MAJOR}
     OUTPUT_NAME ecal_${TARGET_NAME})
 endfunction()
 
@@ -49,18 +49,20 @@ function(ecal_add_app_gui TARGET_NAME)
   ecal_set_subsystem_windows(${TARGET_NAME})
   set_target_properties(${TARGET_NAME} PROPERTIES
     VERSION ${eCAL_VERSION_STRING}
-    SOVERSION ${eCAL_VERSION_MAYOR}
+    SOVERSION ${eCAL_VERSION_MAJOR}
     OUTPUT_NAME ecal_${TARGET_NAME})
+    #set_property(INSTALL "${eCAL_install_app_dir}/$<TARGET_FILE_NAME:${TARGET_NAME}>" PROPERTY CPACK_START_MENU_SHORTCUTS "${TARGET_NAME}")
 endfunction()
 
 function(ecal_add_app_qt TARGET_NAME)
   add_executable(${TARGET_NAME} ${ARGN})
   set_target_properties(${TARGET_NAME} PROPERTIES
     VERSION ${eCAL_VERSION_STRING}
-    SOVERSION ${eCAL_VERSION_MAYOR}
+    SOVERSION ${eCAL_VERSION_MAJOR}
     OUTPUT_NAME ecal_${TARGET_NAME})
   if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+    #set_property(INSTALL "${eCAL_install_app_dir}/$<TARGET_FILE_NAME:${TARGET_NAME}>" PROPERTY CPACK_START_MENU_SHORTCUTS "${TARGET_NAME}")
   endif()
 endfunction()
 
@@ -81,7 +83,7 @@ function(ecal_add_ecal_shared_library TARGET_NAME)
   add_library(${TARGET_NAME} SHARED ${ARGN})
   set_target_properties(${TARGET_NAME} PROPERTIES
     VERSION ${eCAL_VERSION_STRING}
-    SOVERSION ${eCAL_VERSION_MAYOR}
+    SOVERSION ${eCAL_VERSION_MAJOR}
     OUTPUT_NAME ecal_${TARGET_NAME})
 endfunction()
 
@@ -90,7 +92,7 @@ function(ecal_add_ecal_static_library TARGET_NAME)
   add_library(${TARGET_NAME} STATIC ${ARGN})
   set_target_properties(${TARGET_NAME} PROPERTIES
     VERSION ${eCAL_VERSION_STRING}
-    SOVERSION ${eCAL_VERSION_MAYOR}
+    SOVERSION ${eCAL_VERSION_MAJOR}
     OUTPUT_NAME ecal_${TARGET_NAME}
     POSITION_INDEPENDENT_CODE ON)
 endfunction()
@@ -108,7 +110,7 @@ function(ecal_add_shared_library TARGET_NAME)
   add_library(${TARGET_NAME} SHARED ${ARGN})
   set_target_properties(${TARGET_NAME} PROPERTIES
     VERSION ${eCAL_VERSION_STRING}
-    SOVERSION ${eCAL_VERSION_MAYOR}
+    SOVERSION ${eCAL_VERSION_MAJOR}
     OUTPUT_NAME ecal_${TARGET_NAME})
 endfunction()
 
@@ -117,7 +119,7 @@ function(ecal_add_static_library TARGET_NAME)
   set_property(TARGET ${TARGET_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
   set_target_properties(${TARGET_NAME} PROPERTIES 
     VERSION ${eCAL_VERSION_STRING}
-    SOVERSION ${eCAL_VERSION_MAYOR}
+    SOVERSION ${eCAL_VERSION_MAJOR}
     OUTPUT_NAME ecal_${TARGET_NAME})
 endfunction()
 
@@ -137,7 +139,7 @@ function(ecal_add_sample TARGET_NAME)
   add_executable(${TARGET_NAME} ${ARGN})
   set_target_properties(${TARGET_NAME} PROPERTIES
     VERSION ${eCAL_VERSION_STRING}
-    SOVERSION ${eCAL_VERSION_MAYOR}
+    SOVERSION ${eCAL_VERSION_MAJOR}
     OUTPUT_NAME ecal_sample_${TARGET_NAME})
 endfunction()
 

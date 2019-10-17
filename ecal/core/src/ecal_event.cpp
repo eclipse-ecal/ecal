@@ -29,6 +29,7 @@
 #include <sstream>
 #include <memory>
 #include <chrono>
+#include <thread>
 
 #ifdef ECAL_OS_WINDOWS
 
@@ -95,78 +96,274 @@ namespace eCAL
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/time.h>
+#include <sys/types.h>
+#include <sys/mman.h>
+#include <fcntl.h>
 #include <semaphore.h>
+#include <pthread.h>
+#include <unistd.h>
 #include <time.h>
+#include <mutex>
+#include <condition_variable>
+
+namespace
+{
+  struct alignas(8) named_event
+  {
+    pthread_mutex_t mtx;
+    pthread_cond_t  cvar;
+    uint8_t         set;
+  };
+  typedef struct named_event named_event_t;
+
+  named_event_t* named_event_create(const char* event_name_)
+  {
+    // create shared memory file
+    int previous_umask = umask(000);  // set umask to nothing, so we can create files with all possible permission bits
+    int fd = ::shm_open(event_name_, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+    umask(previous_umask);            // reset umask to previous permissions
+    if (fd < 0) return nullptr;
+
+    // set size to size of named mutex struct 
+    if(ftruncate(fd, sizeof(named_event_t)) == -1)
+    {
+      ::close(fd);
+      return nullptr;
+    }
+
+    // create mutex
+    pthread_mutexattr_t shmtx;
+    pthread_mutexattr_init(&shmtx);
+    pthread_mutexattr_setpshared(&shmtx, PTHREAD_PROCESS_SHARED);
+
+    // create condition variable
+    pthread_condattr_t  shattr;
+    pthread_condattr_init(&shattr);
+    pthread_condattr_setpshared(&shattr, PTHREAD_PROCESS_SHARED);
+    pthread_condattr_setclock(&shattr, CLOCK_MONOTONIC);
+    named_event_t* evt = static_cast<named_event_t*>(mmap(nullptr, sizeof(named_event_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
+    ::close(fd);
+
+    // map them into shared memory
+    pthread_mutex_init(&evt->mtx, &shmtx);
+    pthread_cond_init(&evt->cvar, &shattr);
+
+    // start with unset state
+    evt->set = 0;
+
+    return evt;
+  }
+
+  int named_event_destroy(const char* event_name_)
+  {
+    // destroy (unlink) shared memory file
+    return(::shm_unlink(event_name_));
+  }
+
+  named_event_t* named_event_open(const char* event_name_)
+  {
+    // try to open existing shared memory file
+    int fd = ::shm_open(event_name_, O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+    if (fd < 0) return nullptr;
+
+    // map file content to mutex
+    named_event_t* evt = static_cast<named_event_t*>(mmap(nullptr, sizeof(named_event_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
+    ::close(fd);
+
+    return evt;
+  }
+
+  void named_event_close(named_event_t* evt_)
+  {
+    // unmap condition mutex from shared memory file
+    munmap(static_cast<void*>(evt_), sizeof(named_event_t));
+  }
+
+  void named_event_set(named_event_t* evt_)
+  {
+    // lock condition mutex
+    pthread_mutex_lock(&evt_->mtx);
+    // set state
+    evt_->set = 1;
+    // signal change
+    pthread_cond_signal(&evt_->cvar);
+    // unlock condition mutex
+    pthread_mutex_unlock(&evt_->mtx);
+  }
+
+  bool named_event_wait(named_event_t* evt_, struct timespec* ts_)
+  {
+    // lock condition mutex
+    pthread_mutex_lock(&evt_->mtx);
+    // state is set ?, fine !
+    if (evt_->set)
+    {
+      // reset state
+      evt_->set = 0;
+      // unlock condition mutex
+      pthread_mutex_unlock(&evt_->mtx);
+      // return success
+      return true;
+    }
+    // state is not set
+    else
+    {
+      // while condition wait did not return failure (or timeout) and
+      // state is still locked by another one
+      int ret(0);
+      while ((ret == 0) && (evt_->set == 0))
+      {
+        // wait with timeout for unlock signal
+        if (ts_)
+        {
+          ret = pthread_cond_timedwait(&evt_->cvar, &evt_->mtx, ts_);
+        }
+        // blocking wait for unlock signal
+        else
+        {
+          ret = pthread_cond_wait(&evt_->cvar, &evt_->mtx);
+        }
+      }
+      // if wait (with timeout) returned successfully
+      // reset event state
+      if (ret == 0) evt_->set = 0;
+      // unlock condition mutex
+      pthread_mutex_unlock(&evt_->mtx);
+      // sucess == wait returned 0
+      return (ret == 0);
+    }
+  }
+
+  bool named_event_trywait(named_event_t* evt_)
+  {
+    bool set(false);
+    // lock condition mutex
+    pthread_mutex_lock(&evt_->mtx);
+    // check state
+    if (evt_->set)
+    {
+      // reset event state
+      evt_->set = 0;
+      set = true;
+    }
+    // unlock condition mutex
+    pthread_mutex_unlock(&evt_->mtx);
+    // return success
+    return set;
+  }
+}
 
 namespace eCAL
 {
+  class CEvent
+  {
+  public:
+    CEvent() : m_sigcount(0) { }
+
+    void set()
+    {
+      std::unique_lock< std::mutex > lock(m_mutex);
+      ++m_sigcount;
+      m_condition.notify_one();
+    }
+
+    bool wait()
+    {
+      std::unique_lock< std::mutex > lock(m_mutex);
+      m_condition.wait(lock,[&]()->bool{ return m_sigcount>0; });
+      --m_sigcount;
+      return true;
+    }
+
+    template< typename R,typename P >
+    bool wait(const std::chrono::duration<R,P>& timeout_)
+    {
+      std::unique_lock< std::mutex > lock(m_mutex);
+      if (!m_condition.wait_for(lock, timeout_, [&]()->bool{ return m_sigcount>0; }))
+      {
+        return false;
+      }
+      --m_sigcount;
+      return true;
+    }
+
+  private:
+    unsigned int             m_sigcount;
+    std::mutex               m_mutex;
+    std::condition_variable  m_condition;
+  };
+
   class CNamedEvent
   {
   public:
     explicit CNamedEvent(const std::string& name_) :
-      m_sema(nullptr)
+      m_name(name_ + "_evt"),
+      m_event(nullptr)
     {
-      if(name_[0] != '/')
+      m_event = named_event_open(m_name.c_str());
+      if(m_event == nullptr)
       {
-        m_name = "/";
+        m_event = named_event_create(m_name.c_str());
       }
-      m_name += name_;
-
-      int previous_umask = umask(000);  // Set umask to nothing, so we can create files with all possible permission bits
-      m_sema = sem_open(m_name.c_str(), O_CREAT | O_EXCL, (S_IRUSR | S_IWUSR) | (S_IRGRP | S_IWGRP) | (S_IROTH | S_IWOTH), 0);
-      umask(previous_umask);            // Reset umask to previous permissions
-
-      if(m_sema == SEM_FAILED)
-      {
-        m_sema = sem_open(m_name.c_str(), 0);
-        if(m_sema == SEM_FAILED)
-        {
-          m_sema = nullptr;
-        }
-      }
-    };
+    }
 
     ~CNamedEvent()
     {
-      if(m_sema == nullptr) return;
-      sem_close(m_sema);
+      if(m_event == nullptr) return;
+      named_event_close(m_event);
+      named_event_destroy(m_name.c_str());
     }
 
-    void signal()
+    void set()
     {
-      if(m_sema == nullptr) return;
-      sem_post(m_sema);
+      if(m_event == nullptr) return;
+      named_event_set(m_event);
     }
 
-    bool wait(const long timeout_)
+    bool wait()
     {
-      if(m_sema == nullptr) return(false);
-      if(timeout_ < 0)
+      if(m_event == nullptr) return false;
+      return(named_event_wait(m_event, nullptr));
+    }
+
+    bool wait(long timeout_)
+    {
+      // check event handle
+      if (m_event == nullptr) return false;
+
+      // timeout_ < 0 -> wait infinite
+      if (timeout_ < 0)
       {
-        return(sem_wait(m_sema) == 0);
+        return(named_event_wait(m_event, nullptr));
       }
+      // timeout_ == 0 -> check state only
+      else if (timeout_ == 0)
+      {
+        return(named_event_trywait(m_event));
+      }
+      // timeout_ > 0 -> wait timeout_ ms
       else
       {
         struct timespec abstime;
-        struct timeval  tv;
-        gettimeofday(&tv, NULL);
-        abstime.tv_sec  = tv.tv_sec + timeout_ / 1000;
-        abstime.tv_nsec = tv.tv_usec*1000 + (timeout_ % 1000)*1000000;
-        if (abstime.tv_nsec >= 1000000000)
+        clock_gettime(CLOCK_MONOTONIC, &abstime);
+
+        abstime.tv_sec = abstime.tv_sec + timeout_ / 1000;
+        abstime.tv_nsec = abstime.tv_nsec + (timeout_ % 1000) * 1000000;
+        while (abstime.tv_nsec >= 1000000000)
         {
           abstime.tv_nsec -= 1000000000;
           abstime.tv_sec++;
         }
-        return(sem_timedwait(m_sema, &abstime) == 0);
+        return(named_event_wait(m_event, &abstime));
       }
     }
 
   private:
-    CNamedEvent(const CNamedEvent&);                               // prevent copy-construction
-    CNamedEvent& operator=(const CNamedEvent&);                    // prevent assignment
+    CNamedEvent(const CNamedEvent&);             // prevent copy-construction
+    CNamedEvent& operator=(const CNamedEvent&);  // prevent assignment
 
-    std::string  m_name;
-    sem_t*       m_sema;
+    std::string     m_name;
+    named_event_t*  m_event;
   };
 
   bool gOpenEvent(EventHandleT* event_, const std::string& event_name_)
@@ -174,52 +371,86 @@ namespace eCAL
     if(event_ == nullptr) return(false);
 
     EventHandleT event;
-    if(event_name_.size() == 0)
+    event.name = event_name_;
+
+    if(event.name.empty())
     {
-      std::stringstream counter;
-      static int cnt = 0;
-      counter << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count() + cnt++;;
-      event.name = "ecal_semaphore_" + counter.str();
+      event.handle = new CEvent();
     }
     else
     {
-      event.name = event_name_;
+      event.handle = new CNamedEvent(event.name);
     }
-    event.handle = new CNamedEvent(event.name);
+
     if(event.handle != nullptr)
     {
       *event_ = event;
-      return(true);
+      return true;
     }
-    return(false);
+    return false;
   }
 
   bool gCloseEvent(const EventHandleT& event_)
   {
-    if(!event_.handle) return(false);
-    delete static_cast<CNamedEvent*>(event_.handle);
-    return(true);
+    if(!event_.handle) return false;
+    if(event_.name.empty())
+    {
+      delete static_cast<CEvent*>(event_.handle);
+    }
+    else
+    {
+      delete static_cast<CNamedEvent*>(event_.handle);
+    }
+    return true;
   }
 
   bool gSetEvent(const EventHandleT& event_)
   {
-    if(!event_.handle) return(false);
-    static_cast<CNamedEvent*>(event_.handle)->signal();
-    return(true);
+    if(!event_.handle) return false;
+    if(event_.name.empty())
+    {
+      static_cast<CEvent*>(event_.handle)->set();
+    }
+    else
+    {
+      static_cast<CNamedEvent*>(event_.handle)->set();
+    }
+    return true;
   }
 
   bool gWaitForEvent(const EventHandleT& event_, const long timeout_)
   {
-    if(!event_.handle) return(false);
-    return(static_cast<CNamedEvent*>(event_.handle)->wait(timeout_));
+    if(!event_.handle) return false;
+    if(event_.name.empty())
+    {
+      if(timeout_ < 0)
+      {
+        return(static_cast<CEvent*>(event_.handle)->wait());
+      }
+      else
+      {
+        return(static_cast<CEvent*>(event_.handle)->wait(std::chrono::milliseconds(timeout_)));
+      }
+    }
+    else
+    {
+      if(timeout_ < 0)
+      {
+        return(static_cast<CNamedEvent*>(event_.handle)->wait());
+      }
+      else
+      {
+        return(static_cast<CNamedEvent*>(event_.handle)->wait(timeout_));
+      }
+    }
   }
 
   bool gInvalidateEvent(EventHandleT* event_)
   {
-    if(!event_->handle) return(false);
-    if(event_->handle == nullptr) return(false);
+    if(!event_->handle) return false;
+    if(event_->handle == nullptr) return false;
     event_->handle = nullptr;
-    return(true);
+    return true;
   }
 
   bool gEventIsValid(const EventHandleT& event_)

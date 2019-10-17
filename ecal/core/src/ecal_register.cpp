@@ -50,10 +50,10 @@ namespace eCAL
   extern eCAL_Process_eSeverity  g_process_severity;
   extern std::string             g_process_info;
 
-  extern std::atomic<int>        g_process_sbytes;
-  extern std::atomic<long long>  g_process_sbytes_sum;
+  extern std::atomic<long long>  g_process_wbytes;
+  extern std::atomic<long long>  g_process_wbytes_sum;
 
-  extern std::atomic<int>        g_process_rbytes;
+  extern std::atomic<long long>  g_process_rbytes;
   extern std::atomic<long long>  g_process_rbytes_sum;
 
   std::atomic<bool> CEntityRegister::m_created;
@@ -187,8 +187,8 @@ namespace eCAL
     process_sample_mutable_process->set_pmemory(Process::GetProcessMemory());
     process_sample_mutable_process->set_pcpu(Process::GetProcessCpuUsage());
     process_sample_mutable_process->set_usrptime(static_cast<float>(Logging::GetCoreTime()));
-    process_sample_mutable_process->set_udpsbytes(google::protobuf::int32(Process::GetSBytes()));
-    process_sample_mutable_process->set_udprbytes(google::protobuf::int32(Process::GetRBytes()));
+    process_sample_mutable_process->set_datawrite(google::protobuf::int64(Process::GetWBytes()));
+    process_sample_mutable_process->set_dataread(google::protobuf::int64(Process::GetRBytes()));
     process_sample_mutable_process->mutable_state()->set_severity(eCAL::pb::eProcessSeverity(g_process_severity));
     process_sample_mutable_process->mutable_state()->set_info(g_process_info);
     if (!g_timegate())
@@ -289,12 +289,12 @@ namespace eCAL
     if(!m_created) return(0);
 
     // calculate average receive bytes
-    g_process_rbytes = static_cast<int>(((double)g_process_rbytes_sum / m_reg_refresh)*1000.0);
+    g_process_rbytes = static_cast<long long>(((double)g_process_rbytes_sum / m_reg_refresh)*1000.0);
     g_process_rbytes_sum = 0;
 
-    // calculate average send bytes
-    g_process_sbytes = static_cast<int>(((double)g_process_sbytes_sum / m_reg_refresh)*1000.0);
-    g_process_sbytes_sum = 0;
+    // calculate average write bytes
+    g_process_wbytes = static_cast<long long>(((double)g_process_wbytes_sum / m_reg_refresh)*1000.0);
+    g_process_wbytes_sum = 0;
 
     // refresh subscriber registration
     if (g_subgate()) g_subgate()->RefreshRegistrations();

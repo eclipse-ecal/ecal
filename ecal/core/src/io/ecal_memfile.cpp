@@ -31,21 +31,10 @@
 #include <iostream>
 #include <assert.h>
 
-#ifdef ECAL_OS_LINUX
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/mman.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <errno.h>
-
-#endif /* ECAL_OS_LINUX */
-
 namespace eCAL
 {
   /////////////////////////////////////////////////////////////////////////////////
-  // Memory file handling local help functions
+  // Memory file handling util functions
   /////////////////////////////////////////////////////////////////////////////////
 
   bool CreateMemFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_);
@@ -175,6 +164,9 @@ namespace eCAL
     // unlock mutex
     ret_state &= DestroyMtx(&m_memfile_info->mutex);
 
+    // cleanup mutex
+    ret_state &= CleanupMtx(m_memfile_info->name);
+
     // reset states
     m_created                   = false;
     m_opened                    = false;
@@ -182,10 +174,10 @@ namespace eCAL
     m_header.max_data_size      = 0;
     m_header.cur_data_size      = 0;
 
-    m_memfile_info->mutex       = 0;
+    m_memfile_info->mutex       = nullptr;
     m_memfile_info->memfile     = 0;
     m_memfile_info->map_region  = 0;
-    m_memfile_info->mem_address = 0;
+    m_memfile_info->mem_address = nullptr;
 
     return(ret_state);
   }
@@ -433,241 +425,4 @@ namespace eCAL
 
     return(false);
   }
-
-#ifdef ECAL_OS_WINDOWS
-
-  bool AllocMemFile(const std::string& name_, const bool /*create_*/, SMemFileInfo& mem_file_info_)
-  {
-    mem_file_info_.name = name_;
-    mem_file_info_.size = 0;
-    return(true);
-  }
-
-  bool DeAllocMemFile(SMemFileInfo& mem_file_info_)
-  {
-    mem_file_info_.name.clear();
-    mem_file_info_.size = 0;
-    return(true);
-  }
-
-  bool CheckMemFile(const size_t len_, const bool create_, SMemFileInfo& mem_file_info_)
-  {
-    if(len_ > mem_file_info_.size)
-    {
-      // set new file size
-      mem_file_info_.size = len_;
-
-      // unmap memory file
-      UnMapMemFile(mem_file_info_);
-    }
-
-    if(mem_file_info_.mem_address == nullptr)
-    {
-      // map memory file
-      MapMemFile(create_, mem_file_info_);
-
-      // reset content
-      if(create_ && mem_file_info_.mem_address)
-      {
-        memset(mem_file_info_.mem_address, 0, len_);
-      }
-    }
-
-    return(mem_file_info_.mem_address != nullptr);
-  }
-
-  bool MapMemFile(const bool create_, SMemFileInfo& mem_file_info_)
-  {
-    if(mem_file_info_.map_region == nullptr)
-    {
-      DWORD flProtect = 0;
-      if(create_)
-      {
-        flProtect = PAGE_READWRITE;
-      }
-      else
-      {
-        flProtect = PAGE_READONLY;
-      }
-      mem_file_info_.map_region = CreateFileMapping(INVALID_HANDLE_VALUE, nullptr, flProtect, 0 ,(DWORD)mem_file_info_.size, mem_file_info_.name.c_str());
-      if(mem_file_info_.map_region == NULL) return(false);
-    }
-
-    if(mem_file_info_.mem_address == nullptr)
-    {
-      DWORD dwDesiredAccess = 0;
-      if(create_)
-      {
-        dwDesiredAccess = FILE_MAP_ALL_ACCESS;
-      }
-      else
-      {
-        dwDesiredAccess = FILE_MAP_READ;
-      }
-      mem_file_info_.mem_address = (LPTSTR) MapViewOfFile(mem_file_info_.map_region,   // handle to map object
-        dwDesiredAccess,                                                               // read/write permission
-        0,
-        0,
-        mem_file_info_.size);
-    }
-
-    return(mem_file_info_.mem_address != nullptr);
-  }
-
-  bool UnMapMemFile(SMemFileInfo& mem_file_info_)
-  {
-    if(mem_file_info_.mem_address)
-    {
-      UnmapViewOfFile(mem_file_info_.mem_address);
-      mem_file_info_.mem_address = nullptr;
-    }
-
-    if(mem_file_info_.map_region)
-    {
-      CloseHandle(mem_file_info_.map_region);
-      mem_file_info_.map_region = nullptr;
-    }
-
-    return(true);
-  }
-
-  bool RemoveMemFile(const SMemFileInfo& /*mem_file_info_*/)
-  {
-    return(true);
-  }
-
-#endif /* ECAL_OS_WINDOWS */
-
-#ifdef ECAL_OS_LINUX
-
-  bool AllocMemFile(const std::string& name_, const bool create_, SMemFileInfo& mem_file_info_)
-  {
-    int oflag = 0;
-    if(create_)
-    {
-      oflag = O_CREAT | O_RDWR;
-    }
-    else
-    {
-      oflag = O_RDONLY;
-    }
-    mem_file_info_.memfile = ::shm_open(name_.c_str(), oflag, 0666);
-    if(mem_file_info_.memfile == -1)
-    {
-      mem_file_info_.memfile = 0;
-      std::cout << "shm_open failed : " << name_ << " errno: " << strerror(errno) << std::endl;
-      return(false);
-    }
-
-    mem_file_info_.name = name_;
-    mem_file_info_.size = 0;
-
-    return(true);
-  }
-
-  bool DeAllocMemFile(SMemFileInfo& mem_file_info_)
-  {
-    if(mem_file_info_.memfile)
-    {
-      ::close(mem_file_info_.memfile);
-      mem_file_info_.memfile = 0;
-    }
-
-    mem_file_info_.name = "";
-    mem_file_info_.size = 0;
-
-    return(true);
-  }
-
-  bool CheckMemFile(const size_t len_, const bool create_, SMemFileInfo& mem_file_info_)
-  {
-    if(mem_file_info_.memfile == 0) return(false);
-
-    size_t len = len_;
-    if(len < (size_t) sysconf(_SC_PAGE_SIZE))
-    {
-      len = sysconf(_SC_PAGE_SIZE);
-    }
-
-    if(mem_file_info_.mem_address == nullptr)
-    {
-      // set file size
-      mem_file_info_.size = len;
-
-      // map memory file
-      MapMemFile(create_, mem_file_info_);
-    }
-    else
-    {
-      // length changed ..
-      if(len > mem_file_info_.size)
-      {
-        // unmap memory file
-        UnMapMemFile(mem_file_info_);
-
-        // set new file size
-        mem_file_info_.size = len;
-
-        // and map memory file again
-        MapMemFile(create_, mem_file_info_);
-
-        // reset content
-        if(create_ && mem_file_info_.mem_address)
-        {
-          memset(mem_file_info_.mem_address, 0, len);
-        }
-      }
-    }
-
-    return(true);
-  }
-
-  bool MapMemFile(const bool create_, SMemFileInfo& mem_file_info_)
-  {
-    if(mem_file_info_.mem_address == nullptr)
-    {
-      if(create_)
-      {
-        // truncate file
-        if(::ftruncate(mem_file_info_.memfile, mem_file_info_.size) != 0)
-        {
-          std::cout << "ftruncate failed : " << mem_file_info_.name  << " errno: " << strerror(errno) << std::endl;
-        }
-      }
-
-      // get address
-      int         prot  = PROT_READ;
-      if(create_) prot |= PROT_WRITE;
-
-      mem_file_info_.mem_address = ::mmap(nullptr, mem_file_info_.size, prot, MAP_SHARED, mem_file_info_.memfile, 0);
-      if(mem_file_info_.mem_address == MAP_FAILED)
-      {
-        mem_file_info_.mem_address = nullptr;
-        std::cout << "mmap failed : " << mem_file_info_.name  << " errno: " << strerror(errno) << std::endl;
-        return(false);
-      }
-    }
-
-    return(true);
-  }
-
-  bool UnMapMemFile(SMemFileInfo& mem_file_info_)
-  {
-    if(mem_file_info_.mem_address)
-    {
-      ::munmap(mem_file_info_.mem_address, mem_file_info_.size);
-      mem_file_info_.mem_address = nullptr;
-      return(true);
-    }
-
-    return(false);
-  }
-
-  bool RemoveMemFile(const SMemFileInfo& mem_file_info_)
-  {
-    ::shm_unlink(mem_file_info_.name.c_str());
-    return(true);
-  }
-
-#endif /* ECAL_OS_LINUX */
 }

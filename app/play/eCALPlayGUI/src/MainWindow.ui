@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EcalplayMainWindow</class>
+ <widget class="QMainWindow" name="EcalplayMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1024</width>
+    <height>768</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../resources/resources.qrc">
+    <normaloff>:/ecalplay/APP_ICON</normaloff>:/ecalplay/APP_ICON</iconset>
+  </property>
+  <property name="dockNestingEnabled">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout"/>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1024</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_file">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <widget class="QToolTipMenu" name="menu_recent_measurement">
+     <property name="title">
+      <string>&amp;Recent mesurements</string>
+     </property>
+     <addaction name="actiondummy"/>
+    </widget>
+    <widget class="QMenu" name="menuChannel_Mapping">
+     <property name="title">
+      <string>Channel Mapping</string>
+     </property>
+     <addaction name="action_save_channel_mapping"/>
+     <addaction name="action_load_channel_mapping"/>
+     <addaction name="separator"/>
+     <addaction name="action_default_mapping_file_ask"/>
+     <addaction name="action_default_mapping_file_load"/>
+     <addaction name="action_default_mapping_file_ignore"/>
+    </widget>
+    <addaction name="action_load_measurement"/>
+    <addaction name="menu_recent_measurement"/>
+    <addaction name="action_close_measurement"/>
+    <addaction name="separator"/>
+    <addaction name="menuChannel_Mapping"/>
+    <addaction name="separator"/>
+    <addaction name="action_exit"/>
+   </widget>
+   <widget class="QMenu" name="menu_playback">
+    <property name="title">
+     <string>&amp;Playback</string>
+    </property>
+    <addaction name="action_connect_to_ecal"/>
+    <addaction name="separator"/>
+    <addaction name="action_play"/>
+    <addaction name="action_stop"/>
+    <addaction name="action_step_forward"/>
+    <addaction name="action_step_channel"/>
+    <addaction name="action_repeat"/>
+    <addaction name="separator"/>
+    <addaction name="action_limit_playback_speed"/>
+    <addaction name="action_allow_framedrops"/>
+    <addaction name="action_enforce_delay_accuracy"/>
+   </widget>
+   <widget class="QMenu" name="menu_view">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="action_settings"/>
+    <addaction name="action_debug_console"/>
+    <addaction name="separator"/>
+    <addaction name="action_reset_layout"/>
+   </widget>
+   <widget class="QMenu" name="menu_windows">
+    <property name="title">
+     <string>&amp;Windows</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="action_about"/>
+    <addaction name="separator"/>
+    <addaction name="action_licenses"/>
+   </widget>
+   <addaction name="menu_file"/>
+   <addaction name="menu_playback"/>
+   <addaction name="menu_view"/>
+   <addaction name="menu_windows"/>
+   <addaction name="menu_help"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QDockWidget" name="channel_dockwidget">
+   <property name="windowTitle">
+    <string>Channels</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="channel_dockwidget_content">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="channel_dockwidget_content_frame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <layout class="QVBoxLayout" name="channel_dockwidget_content_frame_layout"/>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="scenario_dockwidget">
+   <property name="windowTitle">
+    <string>Scenarios</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="screnario_dockwidget_content">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="screnario_dockwidget_content_frame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <layout class="QVBoxLayout" name="scenario_dockwidget_content_frame_layout"/>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="description_dockwidget">
+   <property name="windowTitle">
+    <string>Description</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="description_dockwidget_content">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="description_dockwidget_content_frame">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <layout class="QVBoxLayout" name="description_dockwidget_content_frame_layout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="action_load_measurement">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/OPEN</normaloff>:/ecalicons/OPEN</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open measurement...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="action_find_measurement">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/FIND</normaloff>:/ecalicons/FIND</iconset>
+   </property>
+   <property name="text">
+    <string>Find measurement...</string>
+   </property>
+  </action>
+  <action name="actiondummy">
+   <property name="text">
+    <string>dummy</string>
+   </property>
+  </action>
+  <action name="action_exit">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/EXIT</normaloff>:/ecalicons/EXIT</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="action_close_measurement">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/CROSS</normaloff>:/ecalicons/CROSS</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Close measurement</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="action_play">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/START</normaloff>:/ecalicons/START</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Play</string>
+   </property>
+   <property name="shortcut">
+    <string>Space</string>
+   </property>
+  </action>
+  <action name="action_stop">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/STOP</normaloff>:/ecalicons/STOP</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Stop</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Space</string>
+   </property>
+  </action>
+  <action name="action_step_forward">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/PLAY_NEXT</normaloff>:/ecalicons/PLAY_NEXT</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Step forward</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Right</string>
+   </property>
+  </action>
+  <action name="action_step_backward">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/PLAY_PREVIOUS</normaloff>:/ecalicons/PLAY_PREVIOUS</iconset>
+   </property>
+   <property name="text">
+    <string>Step backward</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Left</string>
+   </property>
+  </action>
+  <action name="action_repeat">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/REPEAT</normaloff>:/ecalicons/REPEAT</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Repeat</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="action_allow_framedrops">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Allow &amp;framedrops</string>
+   </property>
+  </action>
+  <action name="action_enforce_delay_accuracy">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Enforce &amp;delay accuracy</string>
+   </property>
+  </action>
+  <action name="action_limit_playback_speed">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Limit playback speed</string>
+   </property>
+  </action>
+  <action name="action_check_for_discontinuities">
+   <property name="text">
+    <string>Check for Discontinuities</string>
+   </property>
+  </action>
+  <action name="action_connect_to_ecal">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/CHECKMARK</normaloff>:/ecalicons/CHECKMARK</iconset>
+   </property>
+   <property name="text">
+    <string>Connect to &amp;eCAL</string>
+   </property>
+  </action>
+  <action name="action_about">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/INFO</normaloff>:/ecalicons/INFO</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;About...</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
+  </action>
+  <action name="action_licenses">
+   <property name="text">
+    <string>&amp;Licenses...</string>
+   </property>
+  </action>
+  <action name="action_reset_layout">
+   <property name="text">
+    <string>&amp;Reset layout</string>
+   </property>
+  </action>
+  <action name="action_settings">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/SETTINGS</normaloff>:/ecalicons/SETTINGS</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Settings</string>
+   </property>
+  </action>
+  <action name="action_step_channel">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/FORWARD_TO</normaloff>:/ecalicons/FORWARD_TO</iconset>
+   </property>
+   <property name="text">
+    <string>Step &amp;channel</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+Right</string>
+   </property>
+  </action>
+  <action name="action_debug_console">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/COMMAND_WINDOW</normaloff>:/ecalicons/COMMAND_WINDOW</iconset>
+   </property>
+   <property name="text">
+    <string>Debug console...</string>
+   </property>
+  </action>
+  <action name="action_save_channel_mapping">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/SAVE_AS</normaloff>:/ecalicons/SAVE_AS</iconset>
+   </property>
+   <property name="text">
+    <string>Save Channel Mapping as...</string>
+   </property>
+  </action>
+  <action name="action_load_channel_mapping">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/OPEN</normaloff>:/ecalicons/OPEN</iconset>
+   </property>
+   <property name="text">
+    <string>Load Channel Mapping...</string>
+   </property>
+  </action>
+  <action name="action_default_mapping_file_load">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Load mapping file</string>
+   </property>
+  </action>
+  <action name="actionAlways_ask">
+   <property name="text">
+    <string>Always ask</string>
+   </property>
+  </action>
+  <action name="action_default_mapping_file_ignore">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Ignore mapping file</string>
+   </property>
+  </action>
+  <action name="action_default_mapping_file_ask">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Ask whether to load mapping file</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QToolTipMenu</class>
+   <extends>QMenu</extends>
+   <header>CustomQt/QToolTipMenu.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../../iconset/ecalicons.qrc"/>
+  <include location="../resources/resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

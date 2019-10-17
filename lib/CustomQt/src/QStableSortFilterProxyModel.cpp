@@ -107,9 +107,9 @@ void QStableSortFilterProxyModel::setSourceModel(QAbstractItemModel *source_mode
   QAbstractItemModel* old_source = sourceModel();
   if (old_source)
   {
-    disconnect(source_model, &QAbstractItemModel::rowsInserted, this, &QStableSortFilterProxyModel::invalidateFilterIfRecursiveFilteringEnabled);
-    disconnect(source_model, &QAbstractItemModel::rowsRemoved, this,  &QStableSortFilterProxyModel::invalidateFilterIfRecursiveFilteringEnabled);
-    disconnect(source_model, &QAbstractItemModel::dataChanged, this,  &QStableSortFilterProxyModel::invalidateFilterIfRecursiveFilteringEnabled);
+    disconnect(old_source, &QAbstractItemModel::rowsInserted, this, &QStableSortFilterProxyModel::invalidateFilterIfRecursiveFilteringEnabled);
+    disconnect(old_source, &QAbstractItemModel::rowsRemoved, this,  &QStableSortFilterProxyModel::invalidateFilterIfRecursiveFilteringEnabled);
+    disconnect(old_source, &QAbstractItemModel::dataChanged, this,  &QStableSortFilterProxyModel::invalidateFilterIfRecursiveFilteringEnabled);
   }
 
   QSortFilterProxyModel::setSourceModel(source_model);

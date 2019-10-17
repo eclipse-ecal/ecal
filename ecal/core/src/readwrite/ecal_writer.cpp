@@ -81,6 +81,7 @@ namespace eCAL
 
   CDataWriter::CDataWriter() :
     m_host_name(Process::GetHostName()),
+    m_host_id(Process::GetHostID()),
     m_pid(Process::GetProcessID()),
     m_pname(Process::GetProcessName()),
     m_topic_size(0),
@@ -395,7 +396,7 @@ namespace eCAL
     size_t snd_hash = hf(SSndHash(m_topic_id, m_clock));
 
     // increase overall sum send
-    g_process_sbytes_sum += len_;
+    g_process_wbytes_sum += len_;
 
     // store size for monitoring
     m_topic_size = len_;
@@ -929,7 +930,7 @@ namespace eCAL
     m_clock++;
 
     // statistics
-    g_process_sclock++;
+    g_process_wclock++;
   }
 
   std::string CDataWriter::Dump(const std::string& indent_ /* = "" */)
@@ -937,16 +938,18 @@ namespace eCAL
     std::stringstream out;
 
     out << std::endl;
-    out << indent_ << "--------------------------------" << std::endl;
-    out << indent_ << " class CDataWriter  " << std::endl;
-    out << indent_ << "--------------------------------" << std::endl;
-    out << indent_ << "m_topic_name:         " << m_topic_name << std::endl;
-    out << indent_ << "m_topic_id:           " << m_topic_id << std::endl;
-    out << indent_ << "m_topic_type:         " << m_topic_type << std::endl;
-    out << indent_ << "m_topic_desc:         " << m_topic_desc << std::endl;
-    out << indent_ << "m_id:                 " << m_id << std::endl;
-    out << indent_ << "m_clock:              " << m_clock << std::endl;
-    out << indent_ << "m_created:            " << m_created << std::endl;
+    out << indent_ << "--------------------------------"           << std::endl;
+    out << indent_ << " class CDataWriter  "                       << std::endl;
+    out << indent_ << "--------------------------------"           << std::endl;
+    out << indent_ << "m_host_name:          " << m_host_name      << std::endl;
+    out << indent_ << "m_host_id:            " << m_host_id        << std::endl;
+    out << indent_ << "m_topic_name:         " << m_topic_name     << std::endl;
+    out << indent_ << "m_topic_id:           " << m_topic_id       << std::endl;
+    out << indent_ << "m_topic_type:         " << m_topic_type     << std::endl;
+    out << indent_ << "m_topic_desc:         " << m_topic_desc     << std::endl;
+    out << indent_ << "m_id:                 " << m_id             << std::endl;
+    out << indent_ << "m_clock:              " << m_clock          << std::endl;
+    out << indent_ << "m_created:            " << m_created        << std::endl;
     out << indent_ << "m_loc_subscribed:     " << m_loc_subscribed << std::endl;
     out << indent_ << "m_ext_subscribed:     " << m_ext_subscribed << std::endl;
     out << std::endl;
@@ -975,6 +978,7 @@ namespace eCAL
     ecal_reg_sample.set_cmd_type(eCAL::pb::bct_reg_publisher);
     auto ecal_reg_sample_mutable_topic = ecal_reg_sample.mutable_topic();
     ecal_reg_sample_mutable_topic->set_hname(m_host_name);
+    ecal_reg_sample_mutable_topic->set_hid(m_host_id);
     ecal_reg_sample_mutable_topic->set_tname(m_topic_name);
     ecal_reg_sample_mutable_topic->set_tid(m_topic_id);
     if (share_ttype) ecal_reg_sample_mutable_topic->set_ttype(m_topic_type);

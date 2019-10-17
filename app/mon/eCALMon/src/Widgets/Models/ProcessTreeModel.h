@@ -57,8 +57,8 @@ public:
     MEMORY,
     CPU_PERCENTAGE,
     USER_TIME,
-    UDP_SENT,
-    UDP_RECEIVED,
+    DATAWRITE,
+    DATAREAD,
     TIMESYNC_MODE,
 
     COLUMN_COUNT
@@ -94,8 +94,8 @@ private:
     { Columns::MEMORY,        "RAM [KiB]" },
     { Columns::CPU_PERCENTAGE,"CPU %" },
     { Columns::USER_TIME,     "User Time" },
-    { Columns::UDP_SENT,      "UDP Sent [Byte/s]" },
-    { Columns::UDP_RECEIVED,  "UDP Rec [Byte/s]" },
+    { Columns::DATAWRITE,     "Data Write [Byte/s]" },
+    { Columns::DATAREAD,      "Data Read [Byte/s]" },
     { Columns::TIMESYNC_MODE, "Timesync Mode" },
   };
 
@@ -113,8 +113,8 @@ private:
     { Columns::CPU_PERCENTAGE, (int)ProcessTreeItem::Columns::PCPU },
     { Columns::MEMORY,         (int)ProcessTreeItem::Columns::PMEMORY },
     { Columns::USER_TIME,      (int)ProcessTreeItem::Columns::USRPTIME },
-    { Columns::UDP_SENT,       (int)ProcessTreeItem::Columns::UDPSBYTES },
-    { Columns::UDP_RECEIVED,   (int)ProcessTreeItem::Columns::UDPRBYTES },
+    { Columns::DATAWRITE,      (int)ProcessTreeItem::Columns::DATAWRITE },
+    { Columns::DATAREAD,       (int)ProcessTreeItem::Columns::DATAREAD },
     { Columns::TIMESYNC_MODE,  (int)ProcessTreeItem::Columns::TSYNC_MODE },
 
   };

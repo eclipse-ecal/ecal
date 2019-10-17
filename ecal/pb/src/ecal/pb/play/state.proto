@@ -1,0 +1,58 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2019 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+syntax = "proto3";
+
+package eCAL.pb.play;
+
+message State
+{
+  message Settings
+  {
+    double play_speed                        = 1;   // The configured (relative) speed at which the measurement is supposed to be played
+    bool limit_play_speed                    = 2;   // Whether the player shall respect the configured speed or publish all frames as fast as possible
+    bool repeat_enabled                      = 3;   // Whether the player shall repeat from the beginning, when 
+    bool framedropping_allowed               = 4;   // Whether the player may omit frames in order to maintain temporal accuracy
+    bool enforce_delay_accuracy_enabled      = 5;   // Whether the player will try to stay accurate with relative delays between frames(true) or with the absolute time (false)
+    sint64 limit_interval_lower_index        = 6;   // The lower limit of the set playback interval
+    sint64 limit_interval_upper_index        = 7;   // The upper limit of the set playback interval
+  }
+  
+  message MeasurementInfo
+  {
+    string path                              = 1;   // The path of the measurement
+    sint64 frame_count                       = 2;   // Number of frames contained in the measurement
+    sint64 first_timestamp_nsecs             = 3;   // Timestamp of the very first frame
+    sint64 last_timestamp_nsecs              = 4;   // Timestamp of the very last frame
+  }
+  
+  reserved 1 to 10; // Old eCAL Play field
+  
+  string host_name                           = 11;	// Host eCAL Play is running on
+  sint32 process_id                          = 12;  // Process ID of eCAL Play
+  
+  bool playing                               = 13;	// Whether the player is currently playing
+  bool measurement_loaded                    = 14;	// Whether a measurement is loaded
+  MeasurementInfo measurement_info           = 15;	// Information about the loaded measurement
+  Settings settings                          = 16;	// Current Settings of the eCAL Play instance
+  
+  double actual_speed                        = 17;	// The actual current playback speed (relative value, 1.0 indicates normal speed)
+  sint64 current_measurement_index           = 18;	// The current position in the measurement as index
+  sint64 current_measurement_timestamp_nsecs = 19;  // The current timestamp in the measurement as absolute value
+}

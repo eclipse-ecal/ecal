@@ -26,7 +26,9 @@
 
 #include <ecal/ecal_util.h>
 #include <ecal_def_ini.h>
-#include <simpleini.h>
+#include <SimpleIni.h>
+
+#include <iostream>
 
 #include <QSettings>
 #include <QMenu>

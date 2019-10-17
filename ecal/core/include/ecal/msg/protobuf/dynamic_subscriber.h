@@ -28,6 +28,7 @@
 #include <sstream>
 #include <ecal/ecal.h>
 #include <ecal/protobuf/ecal_proto_dyn.h>
+#include <ecal/msg/dynamic.h>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -42,18 +43,6 @@ namespace eCAL
 {
   namespace protobuf
   {
-
-    /* @cond */
-    class DynamicReflectionException : public std::exception
-    {
-    public:
-      DynamicReflectionException(const std::string& message) : message_(message) {}
-      virtual const char* what() const throw() { return message_.c_str(); }
-    private:
-      std::string message_;
-    };
-    /* @endcond */
-
     /**
      * @brief eCAL dynamic protobuf subscriber.
     **/
@@ -285,27 +274,6 @@ namespace eCAL
       err_callback = nullptr;
       return(true);
     }
-
-    /* @cond */
-    inline bool StrEmptyOrNull(const std::string& str)
-    {
-      if (str.empty())
-      {
-        return true;
-      }
-      else
-      {
-        for (auto c : str)
-        {
-          if (c != '\0')
-          {
-            return false;
-          }
-        }
-        return true;
-      }
-    }
-    /* @endcond */
 
     inline void CDynamicSubscriber::OnReceive(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_)
     {

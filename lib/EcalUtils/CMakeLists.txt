@@ -15,31 +15,36 @@
 # limitations under the License.
 #
 # ========================= eCAL LICENSE =================================
-
 project(EcalUtils)
 
 find_package(Threads REQUIRED)
 
-set(ecal_utils_includes
+set (ecal_utils_includes
+  include/EcalUtils/Path.h
   include/EcalUtils/EcalUtils.h
+  include/EcalUtils/String.h
 )
 
 set(ecal_utils_src
-  src/dummy.cpp # Workaround to make this project generate an output. Header only librarys do not work well with Visual Studio
+    src/Path.cpp
 )
 
-add_library (${PROJECT_NAME} 
-  ${ecal_utils_includes}
-  ${ecal_utils_src}
+ecal_add_library (${PROJECT_NAME}
+    ${ecal_utils_includes}
+    ${ecal_utils_src}
 )
 
-target_include_directories(${PROJECT_NAME}
-  PUBLIC include/
-  PRIVATE src/)
+target_include_directories(${PROJECT_NAME} PRIVATE src/)
+target_include_directories(${PROJECT_NAME} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
 
 if(MSVC)
   # Create a source tree that mirrors the filesystem
   msvc_source_tree(${ecal_utils_includes} ${ecal_utils_src})
 endif()
+
+ecal_install_library(${PROJECT_NAME})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lib/EcalUtils)

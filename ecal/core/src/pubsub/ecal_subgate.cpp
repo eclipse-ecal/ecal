@@ -41,7 +41,7 @@ namespace eCAL
   ECAL_API const EventHandleT& ShutdownProcEvent()
   {
     static EventHandleT evt;
-    static std::string event_name(EVENT_SHUTDOWN_PROC + std::to_string(Process::GetProcessID()));
+    static std::string event_name(EVENT_SHUTDOWN_PROC + std::string("_") + std::to_string(Process::GetProcessID()));
     if (!gEventIsValid(evt))
     {
       gOpenEvent(&evt, event_name);

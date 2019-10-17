@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TopicWidget</class>
+ <widget class="QWidget" name="TopicWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>546</width>
+    <height>539</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Widget</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QGroupBox" name="record_mode_groupbox">
+     <property name="title">
+      <string>Record Mode</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="record_mode_all_topics_radiobutton">
+        <property name="minimumSize">
+         <size>
+          <width>20</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Subscribe to all topics</string>
+        </property>
+        <property name="text">
+         <string>All Topics</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="1">
+       <widget class="QToolButton" name="whitelist_button">
+        <property name="minimumSize">
+         <size>
+          <width>20</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Manage whitelist...</string>
+        </property>
+        <property name="text">
+         <string>0 Topics</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../../../../iconset/ecalicons.qrc">
+          <normaloff>:/ecalicons/SETTINGS</normaloff>:/ecalicons/SETTINGS</iconset>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextBesideIcon</enum>
+        </property>
+        <property name="autoRaise">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="record_mode_blacklist_radiobutton">
+        <property name="minimumSize">
+         <size>
+          <width>20</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Subscribe to all topics except the ones from the blacklist</string>
+        </property>
+        <property name="text">
+         <string>All except blacklist</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QRadioButton" name="record_mode_whitelist_radiobutton">
+        <property name="minimumSize">
+         <size>
+          <width>20</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Only subscribe to explicitely whitelisted topics</string>
+        </property>
+        <property name="text">
+         <string>Whitelisted topics</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QToolButton" name="blacklist_button">
+        <property name="minimumSize">
+         <size>
+          <width>20</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Manage blacklist...</string>
+        </property>
+        <property name="text">
+         <string>0 Topics</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../../../../iconset/ecalicons.qrc">
+          <normaloff>:/ecalicons/SETTINGS</normaloff>:/ecalicons/SETTINGS</iconset>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextBesideIcon</enum>
+        </property>
+        <property name="autoRaise">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QCheckBox" name="hide_disabled_checkbox">
+        <property name="minimumSize">
+         <size>
+          <width>20</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Hide topics that will not be recorded</string>
+        </property>
+        <property name="text">
+         <string>Hide disabled topics</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFilterLineEdit" name="filter_lineedit">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="placeholderText">
+      <string>Filter</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QAdvancedTreeView" name="topic_treeview">
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::ExtendedSelection</enum>
+     </property>
+     <property name="verticalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="rootIsDecorated">
+      <bool>false</bool>
+     </property>
+     <property name="uniformRowHeights">
+      <bool>true</bool>
+     </property>
+     <property name="itemsExpandable">
+      <bool>false</bool>
+     </property>
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="allColumnsShowFocus">
+      <bool>true</bool>
+     </property>
+     <attribute name="headerShowSortIndicator" stdset="0">
+      <bool>true</bool>
+     </attribute>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="bottom_layout">
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="status_label">
+       <property name="minimumSize">
+        <size>
+         <width>20</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Recording 0 / 0</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QAdvancedTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">CustomQt/QAdvancedTreeView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QFilterLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">CustomQt/QFilterLineEdit.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>record_mode_all_topics_radiobutton</tabstop>
+  <tabstop>record_mode_blacklist_radiobutton</tabstop>
+  <tabstop>blacklist_button</tabstop>
+  <tabstop>record_mode_whitelist_radiobutton</tabstop>
+  <tabstop>whitelist_button</tabstop>
+  <tabstop>hide_disabled_checkbox</tabstop>
+  <tabstop>filter_lineedit</tabstop>
+  <tabstop>topic_treeview</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../../../../iconset/ecalicons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

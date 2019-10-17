@@ -40,8 +40,7 @@
 namespace eCAL
 {
   CDataWriterSHM::CDataWriterSHM() : 
-    m_timeout_qos_be(PUB_MEMFILE_ACK_TO_QOS_BE),
-    m_timeout_qos_re(PUB_MEMFILE_ACK_TO_QOS_RE)
+    m_timeout_ack(PUB_MEMFILE_ACK_TO)
   {
   }
   
@@ -70,8 +69,7 @@ namespace eCAL
 
     m_topic_name = topic_name_;
 
-    m_timeout_qos_be = eCALPAR(PUB, MEMFILE_ACK_TO_QOS_BE);
-    m_timeout_qos_re = eCALPAR(PUB, MEMFILE_ACK_TO_QOS_RE);
+    m_timeout_ack = eCALPAR(PUB, MEMFILE_ACK_TO);
 
     CreateMemFile(static_cast<size_t>(eCALPAR(PUB, MEMFILE_MINSIZE)));
 
@@ -194,7 +192,7 @@ namespace eCAL
     m_memfile.Close();
 
     // and fire the publish event for local subscriber
-    if (written) SignalMemFileWritten(m_qos.reliability == QOS::reliable_reliability_qos);
+    if (written) SignalMemFileWritten();
 
 #ifndef NDEBUG
     // log it
@@ -235,18 +233,24 @@ namespace eCAL
       SEventHandlePair event_pair;
       std::string event_snd_name = m_memfile_name + "_" + process_id_;
       gOpenEvent(&event_pair.event_snd, event_snd_name);
-      gOpenEvent(&event_pair.event_ack, event_ack_name);
+      if (m_timeout_ack != 0)
+      {
+        gOpenEvent(&event_pair.event_ack, event_ack_name);
+      }
       m_event_handle_map.insert(std::pair<std::string, SEventHandlePair>(process_id_, event_pair));
       return true;
     }
     else
     {
-      // okay we have registered process events for that process id
-      // we have to check the acknowledge event because it's possible that this
-      // event was deactivated by a sync timeout in SignalMemFileWritten
-      if (!gEventIsValid(iter->second.event_ack))
+      if (m_timeout_ack != 0)
       {
-        gOpenEvent(&iter->second.event_ack, event_ack_name);
+        // okay we have registered process events for that process id
+        // we have to check the acknowledge event because it's possible that this
+        // event was deactivated by a sync timeout in SignalMemFileWritten
+        if (!gEventIsValid(iter->second.event_ack))
+        {
+          gOpenEvent(&iter->second.event_ack, event_ack_name);
+        }
       }
       return true;
     }
@@ -266,7 +270,10 @@ namespace eCAL
     {
       SEventHandlePair event_pair = iter->second;
       gCloseEvent(event_pair.event_snd);
-      gCloseEvent(event_pair.event_ack);
+      if (m_timeout_ack != 0)
+      {
+        gCloseEvent(event_pair.event_ack);
+      }
       m_event_handle_map.erase(iter);
       return true;
     }
@@ -284,15 +291,12 @@ namespace eCAL
   // fire the publisher events
   // connected subscribers will read the content from the memory file
   /////////////////////////////////////////////////////////////////
-  void CDataWriterSHM::SignalMemFileWritten(bool reliable_)
+  void CDataWriterSHM::SignalMemFileWritten()
   {
     std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
 
-    long           timeout = m_timeout_qos_be;
-    if (reliable_) timeout = m_timeout_qos_re;
-
     // "eat" old acknowledge events :)
-    if (timeout != 0)
+    if (m_timeout_ack != 0)
     {
       for (auto iter : m_event_handle_map)
       {
@@ -307,9 +311,9 @@ namespace eCAL
       gSetEvent(iter->second.event_snd);
 
       // sync on acknowledge event
-      if (timeout != 0)
+      if (m_timeout_ack != 0)
       {
-        if (!gWaitForEvent(iter->second.event_ack, timeout))
+        if (!gWaitForEvent(iter->second.event_ack, m_timeout_ack))
         {
           // we close the event immediately to not waste time in the next
           // write call, the event will be reopened later
@@ -342,6 +346,9 @@ namespace eCAL
 
     // replace all '/' to '_'
     std::replace(m_memfile_name.begin(), m_memfile_name.end(), '/', '_');
+
+    // append "_mem" for debugging puposes
+    m_memfile_name += "_shm";
   }
 
   bool CDataWriterSHM::CreateMemFile(size_t size_)
@@ -393,11 +400,14 @@ namespace eCAL
 
   bool CDataWriterSHM::DestroyMemFile()
   {
-    // fire acknowledge events, to unlock blocking send function
-    std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-    for (auto iter : m_event_handle_map)
+    if (m_timeout_ack != 0)
     {
-      gSetEvent(iter.second.event_ack);
+      // fire acknowledge events, to unlock blocking send function
+      std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
+      for (auto iter : m_event_handle_map)
+      {
+        gSetEvent(iter.second.event_ack);
+      }
     }
 
     // close all events and invalidate them
@@ -407,9 +417,12 @@ namespace eCAL
     for (auto iter = m_event_handle_map.begin(); iter != m_event_handle_map.end(); ++iter)
     {
       gCloseEvent(iter->second.event_snd);
-      gCloseEvent(iter->second.event_ack);
       gInvalidateEvent(&iter->second.event_snd);
-      gInvalidateEvent(&iter->second.event_ack);
+      if (m_timeout_ack != 0)
+      {
+        gCloseEvent(iter->second.event_ack);
+        gInvalidateEvent(&iter->second.event_ack);
+      }
     }
 
     // destroy the file

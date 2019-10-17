@@ -66,6 +66,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,
 
 ecal_install_mon_plugin(${PROJECT_NAME})
 
+if (TARGET mon)
+add_dependencies(mon ${PROJECT_NAME})
+endif()
+
 set_target_properties(${PROJECT_NAME} PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>/${ECAL_MON_PLUGIN_DIR}
-  FOLDER app/mon/plugins)
+  FOLDER app/mon/plugins
+)

@@ -108,7 +108,7 @@ namespace eCAL
     **/
     void ShutdownProcess(const int process_id_)
     {
-      std::string event_name = EVENT_SHUTDOWN_PROC + std::to_string(process_id_);
+      std::string event_name = EVENT_SHUTDOWN_PROC + std::string("_") + std::to_string(process_id_);
       EventHandleT event;
       if (gOpenEvent(&event, event_name))
       {

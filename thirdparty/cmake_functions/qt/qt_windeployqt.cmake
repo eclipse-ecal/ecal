@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2018 Continental Corporation
+# Copyright (C) 2016 - 2019 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -46,13 +46,13 @@ function(qt_add_windeployqt_postbuild arguments)
     endif()
 
     if(TARGET Qt5::windeployqt)
-		configure_file(${qt_windeployqt_cmake_path}/qt_windeployqt_threadsafe_cmake.bat.in qt_windeployqt_threadsafe_cmake.bat
-			NEWLINE_STYLE DOS
-		)
-		
-		add_custom_command(TARGET ${PROJECT_NAME}
+        configure_file(${qt_windeployqt_cmake_path}/qt_windeployqt_threadsafe_cmake.bat.in qt_windeployqt_threadsafe_cmake.bat
+            NEWLINE_STYLE DOS
+        )
+        
+        add_custom_command(TARGET ${PROJECT_NAME}
             POST_BUILD
-			COMMAND call ${CMAKE_CURRENT_BINARY_DIR}/qt_windeployqt_threadsafe_cmake.bat ${ARGV}
-		)
+            COMMAND call ${CMAKE_CURRENT_BINARY_DIR}/qt_windeployqt_threadsafe_cmake.bat ${ARGV}
+        )
     endif()
 endfunction(qt_add_windeployqt_postbuild)

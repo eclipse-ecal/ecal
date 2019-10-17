@@ -72,4 +72,15 @@ namespace Udpcap
    * @return True, if the device matches the NPCAP loopback device.
    */
   bool IsLoopbackDevice(const std::string& device_name_or_uuid_string);
+
+  /**
+   * @brief Returns a human readible status message.
+   *
+   * This message is intended to be displayed in a graphical user interface.
+   * For terminal based applications it is not needed, as the messages are also
+   * printed to stderr.
+   *
+   * @return The Udpcap status as human-readible text (may be multi-line)
+   */
+  std::string GetHumanReadibleErrorText();
 }

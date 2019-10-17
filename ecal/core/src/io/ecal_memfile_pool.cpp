@@ -24,6 +24,7 @@
 #include <ecal/ecal.h>
 
 #include "ecal_def.h"
+#include "ecal_config_hlp.h"
 #include "ecal_message.h"
 #include "pubsub/ecal_subgate.h"
 
@@ -39,8 +40,10 @@ namespace eCAL
   CMemFileObserver::CMemFileObserver() :
     m_do_stop(false),
     m_is_stopped(false),
-    m_timeout(0)
+    m_timeout_read(0),
+    m_timeout_ack(PUB_MEMFILE_ACK_TO)
   {
+    m_timeout_ack = eCALPAR(PUB, MEMFILE_ACK_TO);
   }
 
   CMemFileObserver::~CMemFileObserver()
@@ -49,7 +52,7 @@ namespace eCAL
 
   void CMemFileObserver::ResetTimeout()
   {
-    m_timeout = 0;
+    m_timeout_read = 0;
   }
 
   void CMemFileObserver::Stop()
@@ -71,14 +74,17 @@ namespace eCAL
 #endif
     // open memory file event
     gOpenEvent(&m_event_snd, memfile_event_);
-    gOpenEvent(&m_event_ack, memfile_event_ + "_ack");
+    if (m_timeout_ack != 0)
+    {
+      gOpenEvent(&m_event_ack, memfile_event_ + "_ack");
+    }
 
     // create memory file
     CMemoryFile memfile;
     memfile.Create(memfile_name_.c_str(), false);
 
     uint64_t sample_clock = 0;
-    while((m_timeout < timeout_max_) && !m_do_stop)
+    while((m_timeout_read < timeout_max_) && !m_do_stop)
     {
       // central memory file event sync with 5 ms
       const int evt_timeout = 5;
@@ -114,7 +120,10 @@ namespace eCAL
           memfile.Close();
 
           // send ack event
-          gSetEvent(m_event_ack);
+          if (m_timeout_ack != 0)
+          {
+            gSetEvent(m_event_ack);
+          }
 
           // process content
           if((m_ecal_buffer.size() > 0) && (ecal_message.clock > sample_clock))
@@ -131,12 +140,12 @@ namespace eCAL
         }
 
         // reset timeout
-        m_timeout = 0;
+        m_timeout_read = 0;
       }
       else
       {
         // increase timeout
-        m_timeout += evt_timeout;
+        m_timeout_read += evt_timeout;
       }
     }
 
@@ -145,7 +154,10 @@ namespace eCAL
 
     // close memory file events
     gCloseEvent(m_event_snd);
-    gCloseEvent(m_event_ack);
+    if (m_timeout_ack != 0)
+    {
+      gCloseEvent(m_event_ack);
+    }
 
 #ifndef NDEBUG
     // log it

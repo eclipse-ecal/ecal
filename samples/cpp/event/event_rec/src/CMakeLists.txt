@@ -18,7 +18,6 @@
 
 project(event_rec)
 
-
 find_package(eCAL REQUIRED)
 
 set(event_rec_src

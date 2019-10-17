@@ -52,6 +52,7 @@ namespace eCAL
   ////////////////////////////////////////
   CDataReader::CDataReader() :
                  m_host_name(Process::GetHostName()),
+                 m_host_id(Process::GetHostID()),
                  m_pid(Process::GetProcessID()),
                  m_pname(Process::GetProcessName()),
                  m_topic_name(""),
@@ -159,7 +160,7 @@ namespace eCAL
     Logging::Log(log_level_debug1, m_topic_name + "::CDataReader::Destroy");
 #endif
 
-    // stop transport layers	
+    // stop transport layers
     StopDataLayers();
 
     // reset receive callback
@@ -351,6 +352,7 @@ namespace eCAL
     ecal_reg_sample.set_cmd_type(eCAL::pb::bct_reg_subscriber);
     auto ecal_reg_sample_mutable_topic = ecal_reg_sample.mutable_topic();
     ecal_reg_sample_mutable_topic->set_hname(m_host_name);
+    ecal_reg_sample_mutable_topic->set_hid(m_host_id);
     ecal_reg_sample_mutable_topic->set_tname(m_topic_name);
     ecal_reg_sample_mutable_topic->set_tid(m_topic_id);
     if (m_use_ttype) ecal_reg_sample_mutable_topic->set_ttype(m_topic_type);
@@ -409,10 +411,10 @@ namespace eCAL
     ecal_reg_sample_mutable_topic->set_uname(Process::GetUnitName());
     ecal_reg_sample_mutable_topic->set_dclock(m_clock);
     ecal_reg_sample_mutable_topic->set_dfreq(m_freq);
-    ecal_reg_sample_mutable_topic->set_dfreq_min(m_freq_min);
-    ecal_reg_sample_mutable_topic->set_dfreq_max(m_freq_max);
-    ecal_reg_sample_mutable_topic->set_dfreq_min_err(m_freq_min_err);
-    ecal_reg_sample_mutable_topic->set_dfreq_max_err(m_freq_max_err);
+    ecal_reg_sample_mutable_topic->set_dfreq_min(google::protobuf::int32(m_freq_min));
+    ecal_reg_sample_mutable_topic->set_dfreq_max(google::protobuf::int32(m_freq_max));
+    ecal_reg_sample_mutable_topic->set_dfreq_min_err(google::protobuf::int32(m_freq_min_err));
+    ecal_reg_sample_mutable_topic->set_dfreq_max_err(google::protobuf::int32(m_freq_max_err));
     ecal_reg_sample_mutable_topic->set_message_drops(google::protobuf::int32(m_message_drops));
 
     size_t loc_connections(0);
@@ -434,8 +436,6 @@ namespace eCAL
     case QOS::keep_all_history_qos:
       ecal_reg_sample_mutable_topic->mutable_tqos()->set_history(eCAL::pb::QOS::keep_all_history_qos);
       break;
-    default:
-      break;
   }
     ecal_reg_sample_mutable_topic->mutable_tqos()->set_history_depth(m_qos.history_kind_depth);
     // qos Reliability
@@ -446,8 +446,6 @@ namespace eCAL
       break;
     case QOS::reliable_reliability_qos:
       ecal_reg_sample_mutable_topic->mutable_tqos()->set_reliability(eCAL::pb::QOS::reliable_reliability_qos);
-      break;
-    default:
       break;
     }
 
@@ -479,11 +477,13 @@ namespace eCAL
 #endif
       // copy content to target string
       std::lock_guard<std::mutex> lock(m_read_buf_sync);
-      buf_ = std::string(m_read_buf.data(), m_read_buf.size());
+      buf_.clear();
+      buf_.swap(m_read_buf);
+
       // apply time
       if(time_) *time_ = m_read_time;
       // return success
-      return(m_read_buf.size());
+      return(buf_.size());
     }
     return(0);
   }
@@ -559,7 +559,7 @@ namespace eCAL
         // prepare data struct
         SReceiveCallbackData cb_data;
         cb_data.buf   = const_cast<char*>(payload_);
-        cb_data.size  = (long)size_;
+        cb_data.size  = long(size_);
         cb_data.id    = id_;
         cb_data.time  = time_;
         cb_data.clock = clock_;
@@ -575,7 +575,7 @@ namespace eCAL
       // push sample into read buffer
       std::lock_guard<std::mutex> lock1(m_read_buf_sync);
       m_read_buf.clear();
-      std::copy(payload_, payload_ + size_, std::back_inserter(m_read_buf));
+      m_read_buf.assign(payload_, payload_ + size_);
       m_read_time = time_;
 
       // inform receive
@@ -712,32 +712,39 @@ namespace eCAL
     case eCAL::pb::tl_ecal_udp_mc:
     {
       CMulticastLayer::Get()->ApplyLayerParameter(par);
+      break;
     }
     case eCAL::pb::tl_ecal_udp_uc:
     {
       CUnicastLayer::Get()->ApplyLayerParameter(par);
+      break;
     }
     case eCAL::pb::tl_ecal_udp_metal:
     {
       CMetalLayer::Get()->ApplyLayerParameter(par);
+      break;
     }
     case eCAL::pb::tl_ecal_shm:
     {
       CSHMLayer::Get()->ApplyLayerParameter(par);
+      break;
     }
     case eCAL::pb::tl_lcm:
     {
       CLcmLayer::Get()->ApplyLayerParameter(par);
+      break;
     }
 #ifdef ECAL_LAYER_FASTRTPS
     case eCAL::pb::tl_rtps:
     {
       CRtpsLayer::Get()->ApplyLayerParameter(par);
+      break;
     }
 #endif /* ECAL_LAYER_FASTRTPS */
     case eCAL::pb::tl_inproc:
     {
       CInProcLayer::Get()->ApplyLayerParameter(par);
+      break;
     }
     default:
       break;
@@ -922,6 +929,7 @@ namespace eCAL
     out << indent_ << " class CDataReader "                                << std::endl;
     out << indent_ << "--------------------------------"                   << std::endl;
     out << indent_ << "m_host_name:            " << m_host_name            << std::endl;
+    out << indent_ << "m_host_id:              " << m_host_id              << std::endl;
     out << indent_ << "m_topic_name:           " << m_topic_name           << std::endl;
     out << indent_ << "m_topic_id:             " << m_topic_id             << std::endl;
     out << indent_ << "m_topic_type:           " << m_topic_type           << std::endl;

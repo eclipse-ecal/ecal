@@ -147,8 +147,8 @@ namespace eCAL
         pmemory = 0;
         pcpu = 0.0f;
         usrptime = 0.0f;
-        udpsbytes = 0;
-        udprbytes = 0;
+        datawrite = 0;
+        dataread = 0;
         state_severity = 0;
         state_severity_level = 0;
         tsync_mode = 0;
@@ -163,8 +163,8 @@ namespace eCAL
       long long      pmemory;
       float          pcpu;
       float          usrptime;
-      int            udpsbytes;
-      int            udprbytes;
+      long long      datawrite;
+      long long      dataread;
       int            state_severity;
       int            state_severity_level;
       std::string    state_info;

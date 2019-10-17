@@ -70,7 +70,6 @@ void MultipleRecVector(int argc, char **argv)
   {
     // sleep 100 ms
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
   }
 
   // finalize eCAL API

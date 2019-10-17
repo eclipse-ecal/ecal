@@ -15,7 +15,8 @@
 # limitations under the License.
 #
 # ========================= eCAL LICENSE =================================
-cmake_minimum_required(VERSION 3.5)
+
+cmake_minimum_required(VERSION 3.13)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/find_scripts)
@@ -33,27 +34,26 @@ cmake_policy(SET CMP0054 NEW)
 # command line build options
 # use it that way cmake .. -DBUILD_APPS=ON -DBUILD_SAMPLES=ON
 # --------------------------------------------------------
-option(HAS_QT5                     "Platform supports Qt 5 library"                                   ON)
+option(HAS_HDF5                                "Platform supports HDF5 library"                                   ON)
+option(HAS_QT5                                 "Platform supports Qt 5 library"                                   ON)
+option(HAS_CAPNPROTO                           "Platform supports Cap'n Proto library"                           OFF)
 
-option(BUILD_DOCS                  "Build the eCAL documentation"                                     ON)
-option(BUILD_APPS                  "Build the eCAL applications"                                      ON)
-option(BUILD_SAMPLES               "Build the eCAL samples"                                           ON)
-option(BUILD_TIME                  "Build the eCAL time interfaces"                                   ON)
-option(ECAL_LAYER_FASTRTPS         "Provide fast rtps as communication layer"                         OFF)
+option(BUILD_DOCS                              "Build the eCAL documentation"                                     ON)
+option(BUILD_APPS                              "Build the eCAL applications"                                      ON)
+option(BUILD_SAMPLES                           "Build the eCAL samples"                                           ON)
+option(BUILD_TIME                              "Build the eCAL time interfaces"                                   ON)
+option(ECAL_LAYER_FASTRTPS                     "Provide fast rtps as communication layer"                         OFF)
 
-option(ECAL_INSTALL_RUNTIME        "Install the eCAL runtime components"                              ON)
-option(ECAL_INSTALL_SAMPLE_SOURCES "Install the sources of eCAL samples"                              ON)
-option(ECAL_INSTALL_SDK            "Install the eCAL SDK"                                             ON)
+option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samples"                              ON)
 
-option(INSTALL_KEEP_CONFIG         "Replace the config, even if it already exists"                    ON)
-
-option(ECAL_JOIN_MULTICAST_TWICE   "Specific Multicast Network Bug Workaround"                        OFF)
-option(ECAL_NPCAP_SUPPORT          "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
+option(ECAL_JOIN_MULTICAST_TWICE               "Specific Multicast Network Bug Workaround"                        OFF)
+option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
 
 
 # Set option regarding third party library builds
-option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS "Build CMakeFunctions with eCAL"                         ON)
-option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build Protobuf with eCAL"                               ON)
+option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS   "Build CMakeFunctions with eCAL"                                   ON)
+option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build Protobuf with eCAL"                                         ON)
+option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                           ON)
 
 
 # there is a CMake issue with testing threading availibility via TEST_RUN
@@ -64,19 +64,6 @@ endif()
 
 # find_project(eCAL calls shall be ignored, eCAL is build as part of the project)
 set(as_subproject eCAL)
-if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
-list(APPEND as_subproject CMakeFunctions) 
-endif ()
-if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
-list(APPEND as_subproject Protobuf) 
-endif ()
-
-
-macro(find_package)
-  if(NOT "${ARGV0}" IN_LIST as_subproject)
-    _find_package(${ARGV})
-  endif()
-endmacro()
 
 # Normalize backslashes from Windows paths
 file(TO_CMAKE_PATH "${CMAKE_MODULE_PATH}" CMAKE_MODULE_PATH)
@@ -88,11 +75,8 @@ message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 # --------------------------------------------------------
 # third party dependencies as requested
 # --------------------------------------------------------
-if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
-  add_subdirectory(thirdparty/cmake_functions)
-endif ()
-
 if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
+  list(APPEND as_subproject Protobuf)    
   if(MSVC)
     # supress google protobuf warnings for windows platform
     set(CMAKE_CXX_FLAGS_OLD "${CMAKE_CXX_FLAGS}")
@@ -121,13 +105,37 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
   endif()
 endif()
 
+if (ECAL_THIRDPARTY_BUILD_SPDLOG)
+  list(APPEND as_subproject spdlog)  
+  add_subdirectory(thirdparty/spdlog)
+  add_library(spdlog::spdlog ALIAS spdlog)
+endif ()
+
+
+
+if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
+  list(APPEND as_subproject CMakeFunctions) 
+endif()
+
+macro(find_package)
+  if(NOT "${ARGV0}" IN_LIST as_subproject)
+    _find_package(${ARGV})
+  endif()
+endmacro()
+
+if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
+  add_subdirectory(thirdparty/cmake_functions)
+endif ()
+
+
+
 find_package(CMakeFunctions REQUIRED)
 
 git_revision_information()
-set(eCAL_VERSION_MAYOR  ${GIT_REVISION_MAYOR})
+set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAYOR})
 set(eCAL_VERSION_MINOR  ${GIT_REVISION_MINOR})
 set(eCAL_VERSION_PATCH  ${GIT_REVISION_PATCH})
-set(eCAL_VERSION_STRING ${eCAL_VERSION_MAYOR}.${eCAL_VERSION_MINOR}.${eCAL_VERSION_PATCH})
+set(eCAL_VERSION_STRING ${eCAL_VERSION_MAJOR}.${eCAL_VERSION_MINOR}.${eCAL_VERSION_PATCH})
 set(eCAL_VERSION        ${eCAL_VERSION_STRING}) 
 
 include(helper_functions/ecal_add_functions)
@@ -246,10 +254,10 @@ set(eCAL_config_dir                ${eCAL_BINARY_DIR}/cmake/)
 set(eCAL_config                    ${eCAL_config_dir}/eCALConfig.cmake)
 set(eCAL_config_version            ${eCAL_config_dir}/eCALConfigVersion.cmake)
 if(WIN32)
-  #set(eCAL_install_config_dir      $ENV{PROGRAMDATA}/eCAL)
-  set(eCAL_install_samples_dir     samples/bin/)
-  set(eCAL_install_samples_src_dir samples/src/)
-  set(eCAL_install_tests_dir       tests)
+  set(eCAL_install_config_dir            cfg)
+  set(eCAL_install_samples_dir           samples/bin/)
+  set(eCAL_install_samples_src_dir       samples/src/)
+  set(eCAL_install_tests_dir             tests)
 endif()
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -278,6 +286,7 @@ add_subdirectory(ecal/core/src)
 # --------------------------------------------------------
 # custom libs
 # --------------------------------------------------------
+add_subdirectory(lib/ThreadingUtils)
 add_subdirectory(lib/EcalUtils)
 if(HAS_QT5)
   add_subdirectory(lib/CustomQt)
@@ -285,6 +294,10 @@ endif()
 if(ECAL_NPCAP_SUPPORT)
   add_subdirectory(lib/Udpcap)
 endif()
+add_subdirectory(lib/EcalParser)
+if(HAS_QT5)
+  add_subdirectory(lib/QEcalParser)
+endif(HAS_QT5)
 
 # --------------------------------------------------------
 # ecal mon plugin sdk
@@ -302,11 +315,33 @@ if(BUILD_TIME)
 endif()
 
 # --------------------------------------------------------
+# ecal hdf5 support
+# --------------------------------------------------------
+if(HAS_HDF5)
+  add_subdirectory(contrib/ecalhdf5/src)
+  add_subdirectory(contrib/message)
+endif()
+
+# --------------------------------------------------------
 # console applications
 # --------------------------------------------------------
 add_subdirectory(app/apps)
 if(BUILD_APPS)
   add_subdirectory(app/mon/eCALTopic/src)
+  add_subdirectory(app/util/eCALConfig/src)
+  add_subdirectory(app/util/eCALStop/src)
+endif()
+
+# --------------------------------------------------------
+# applications using hdf5
+# --------------------------------------------------------
+if(BUILD_APPS AND HAS_HDF5)
+  add_subdirectory(app/play/eCALPlayCore)
+  add_subdirectory(app/play/eCALPlay)
+
+  add_subdirectory(app/rec/rec_cli)
+  add_subdirectory(app/rec/rec_core)
+  add_subdirectory(app/rec/rec_server_core)
 endif()
 
 # --------------------------------------------------------
@@ -320,6 +355,13 @@ if(BUILD_APPS AND HAS_QT5)
     set(ECAL_MON_PLUGIN_DIR ecal/plugins/mon)
   endif()
   add_subdirectory(app/mon/eCALMonPlugins)
+# --------------------------------------------------------
+# Qt5 Apps using HDF5
+# --------------------------------------------------------
+if(BUILD_APPS AND HAS_QT5 AND HAS_HDF5)
+  add_subdirectory(app/play/eCALPlayGUI)
+  add_subdirectory(app/rec/rec_gui)
+endif()
 endif()
 
 # --------------------------------------------------------

@@ -21,9 +21,7 @@
 #include <ecal/msg/protobuf/dynamic_json_subscriber.h>
 
 #include <iostream>
-#include <chrono>
 #include <string>
-#include <thread>
 
 const std::string MESSAGE_NAME("person");
 
@@ -39,9 +37,6 @@ int main(int argc, char **argv)
   // initialize eCAL API
   eCAL::Initialize(argc, argv, "proto_dyn");
 
-  // sleep main thread for 1 second
-  std::this_thread::sleep_for(std::chrono::seconds(1));
-
   // create dynamic subscribers for receiving and decoding messages
   eCAL::protobuf::CDynamicJSONSubscriber sub(MESSAGE_NAME);
   sub.AddReceiveCallback(ProtoMsgCallback);
@@ -50,7 +45,7 @@ int main(int argc, char **argv)
   while(eCAL::Ok())
   {
     // sleep main thread for 1 second
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    eCAL::Process::SleepMS(1000);
   }
 
   // finalize eCAL API

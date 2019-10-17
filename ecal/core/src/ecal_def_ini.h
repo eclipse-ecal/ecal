@@ -116,8 +116,7 @@
 
 #define  PUB_MEMFILE_MINSIZE_S            "memfile_minsize"
 #define  PUB_MEMFILE_RESERVE_S            "memfile_reserve"
-#define  PUB_MEMFILE_ACK_TO_QOS_BE_S      "memfile_ack_timeout_qos_1"
-#define  PUB_MEMFILE_ACK_TO_QOS_RE_S      "memfile_ack_timeout_qos_2"
+#define  PUB_MEMFILE_ACK_TO_S             "memfile_ack_timeout"
 
 #define  PUB_SHARE_TTYPE_S                "share_ttype"
 #define  PUB_SHARE_TDESC_S                "share_tdesc"

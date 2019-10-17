@@ -440,13 +440,13 @@ namespace eCAL
     bool ShareType(bool state_ = true)
     {
       if (!m_publisher) return(false);
-      return(eCAL_Pub_ShareType(m_publisher, static_cast<int>(state_)));
+      return(eCAL_Pub_ShareType(m_publisher, static_cast<int>(state_)) != 0);
     }
 
     bool ShareDescription(bool state_ = true)
     {
       if (!m_publisher) return(false);
-      return(eCAL_Pub_ShareDescription(m_publisher, static_cast<int>(state_)));
+      return(eCAL_Pub_ShareDescription(m_publisher, static_cast<int>(state_)) != 0);
     }
 
     bool SetQOS(const QOS::SWriterQOS& qos_)

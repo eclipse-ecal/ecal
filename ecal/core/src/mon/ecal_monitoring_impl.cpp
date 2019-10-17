@@ -212,7 +212,7 @@ namespace eCAL
     auto sample_topic = sample_.topic();
     int          process_id      = sample_topic.pid();
     std::string  topic_name      = sample_topic.tname();
-    size_t       topic_size      = sample_topic.tsize();
+    size_t       topic_size      = static_cast<size_t>(sample_topic.tsize());
     bool         topic_tlayer_ecal_udp_mc(false);
     bool         topic_tlayer_ecal_udp_uc(false);
     bool         topic_tlayer_ecal_udp_metal(false);
@@ -230,8 +230,8 @@ namespace eCAL
       topic_tlayer_rtps           |= (layer.type() == eCAL::pb::tl_rtps)           && layer.confirmed();
       topic_tlayer_inproc         |= (layer.type() == eCAL::pb::tl_inproc)         && layer.confirmed();
     }
-    size_t       connections_loc = sample_topic.connections_loc();
-    size_t       connections_ext = sample_topic.connections_ext();
+    size_t       connections_loc = static_cast<size_t>(sample_topic.connections_loc());
+    size_t       connections_ext = static_cast<size_t>(sample_topic.connections_ext());
     long long    did             = sample_topic.did();
     long long    dclock          = sample_topic.dclock();
     long long    ddropped        = sample_topic.message_drops();
@@ -335,9 +335,9 @@ namespace eCAL
     long long       process_memory               = sample_process.pmemory();
     float           process_cpu                  = sample_process.pcpu();
     float           process_usrptime             = sample_process.usrptime();
-    int             process_udpsbytes            = sample_process.udpsbytes();
-    int             process_udprbytes            = sample_process.udprbytes();
-    auto sample_process_state = sample_process.state();
+    long long       process_datawrite            = sample_process.datawrite();
+    long long       process_dataread             = sample_process.dataread();
+    auto            sample_process_state         = sample_process.state();
     int             process_state_severity       = sample_process_state.severity();
     int             process_state_severity_level = sample_process_state.severity_level();
     std::string     process_state_info           = sample_process_state.info();
@@ -365,8 +365,8 @@ namespace eCAL
     ProcessInfo.pmemory              = process_memory;
     ProcessInfo.pcpu                 = process_cpu;
     ProcessInfo.usrptime             = process_usrptime;
-    ProcessInfo.udpsbytes            = process_udpsbytes;
-    ProcessInfo.udprbytes            = process_udprbytes;
+    ProcessInfo.datawrite            = process_datawrite;
+    ProcessInfo.dataread             = process_dataread;
     ProcessInfo.state_severity       = process_state_severity;
     ProcessInfo.state_severity_level = process_state_severity_level;
     ProcessInfo.state_info           = std::move(process_state_info);
@@ -530,11 +530,11 @@ namespace eCAL
       // process user core time
       pMonProcs->set_usrptime(process.second.usrptime);
 
-      // process udp send bytes
-      pMonProcs->set_udpsbytes(process.second.udpsbytes);
+      // process data write bytes
+      pMonProcs->set_datawrite(process.second.datawrite);
 
-      // process udp receive bytes
-      pMonProcs->set_udprbytes(process.second.udprbytes);
+      // process data read bytes
+      pMonProcs->set_dataread(process.second.dataread);
 
       // state
       auto state = pMonProcs->mutable_state();

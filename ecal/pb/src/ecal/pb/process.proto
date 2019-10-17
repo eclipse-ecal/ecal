@@ -65,8 +65,8 @@ message Process                                           // process
   int64                     pmemory              =  7;    // process memory
   float                     pcpu                 =  8;    // process cpu usage
   float                     usrptime             =  9;    // process user time
-  int32                     udpsbytes            = 10;    // udp send bytes per sec
-  int32                     udprbytes            = 11;    // udp receive bytes per sec
+  int64                     datawrite            = 10;    // data write bytes per sec
+  int64                     dataread             = 11;    // data read bytes per sec
   ProcessState              state                = 12;    // process state info
   eTSyncState               tsync_mode           = 13;    // time sychronisation mode
 }

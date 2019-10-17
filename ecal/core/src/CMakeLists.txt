@@ -18,9 +18,10 @@
 
 project(core VERSION ${eCAL_VERSION_STRING})
 
-find_package(Threads REQUIRED)
-find_package(asio    REQUIRED)
-find_package(tclap   REQUIRED)
+find_package(Threads   REQUIRED)
+find_package(asio      REQUIRED)
+find_package(tclap     REQUIRED)
+find_package(simpleini REQUIRED)
 
 if (ECAL_JOIN_MULTICAST_TWICE)
   message(STATUS "eCAL ${PROJECT_NAME}: Enabling Specific Multicast Network Bug Workaround")
@@ -44,6 +45,18 @@ set(ecal_io_cpp_src
     io/udp_receiver.cpp
     io/udp_sender.cpp
 )
+
+if(UNIX)
+set(ecal_io_cpp_linux_src
+    io/linux/ecal_memfile_linux.cpp
+)
+endif()
+
+if(WIN32)
+set(ecal_io_cpp_win_src
+    io/win32/ecal_memfile_win32.cpp
+)
+endif()
 
 set(ecal_mon_cpp_src
     mon/ecal_monitoring_def.cpp
@@ -122,7 +135,6 @@ set(ecal_cmn_cpp_src
     ecal_timer.cpp
     ecal_util.cpp
     ecalc.cpp
-    simpleini_template.cpp
     sys_usage.cpp
 )
 
@@ -141,6 +153,18 @@ set(ecal_io_header_src
     io/udp_receiver.h
     io/udp_sender.h
 )
+
+if(WIN32)
+set(ecal_io_header_win_src
+    io/win32/ecal_memfile_mtx.h
+)
+endif()
+
+if(UNIX)
+set(ecal_io_header_linux_src
+    io/linux/ecal_memfile_mtx.h
+)
+endif()
 
 set(ecal_mon_header_src
     mon/ecal_monitoring_def.h
@@ -212,8 +236,6 @@ set(ecal_cmn_header_src
     ecal_win_main.h
     ecal_win_socket.h
     getenvvar.h
-    simpleini.h
-    simpleini_template.h
     sys_usage.h
     topic2mcast.h
 )
@@ -261,6 +283,7 @@ set(ecal_header_cmn
 )
 
 set(ecal_header_cimpl
+    ../include/ecal/cimpl/ecal_callback_cimpl.h
     ../include/ecal/cimpl/ecal_core_cimpl.h
     ../include/ecal/cimpl/ecal_event_cimpl.h
     ../include/ecal/cimpl/ecal_init_cimpl.h
@@ -271,6 +294,7 @@ set(ecal_header_cimpl
     ../include/ecal/cimpl/ecal_publisher_cimpl.h
     ../include/ecal/cimpl/ecal_qos_cimpl.h
     ../include/ecal/cimpl/ecal_service_cimpl.h
+    ../include/ecal/cimpl/ecal_service_info_cimpl.h
     ../include/ecal/cimpl/ecal_subscriber_cimpl.h
     ../include/ecal/cimpl/ecal_time_cimpl.h
     ../include/ecal/cimpl/ecal_timer_cimpl.h
@@ -279,6 +303,8 @@ set(ecal_header_cimpl
 )
 
 set(ecal_header_msg
+    ../include/ecal/msg/capnproto/dynamic.h
+    ../include/ecal/msg/capnproto/helper.h
     ../include/ecal/msg/capnproto/publisher.h
     ../include/ecal/msg/capnproto/subscriber.h
     ../include/ecal/msg/flatbuffers/publisher.h
@@ -293,6 +319,7 @@ set(ecal_header_msg
     ../include/ecal/msg/protobuf/subscriber.h
     ../include/ecal/msg/string/publisher.h
     ../include/ecal/msg/string/subscriber.h
+    ../include/ecal/msg/dynamic.h
     ../include/ecal/msg/publisher.h
     ../include/ecal/msg/subscriber.h
 )
@@ -305,6 +332,8 @@ set(ecal_header_base
 
 ecal_add_ecal_shared_library(${PROJECT_NAME} 
     ${ecal_io_cpp_src} 
+    ${ecal_io_cpp_win_src} 
+    ${ecal_io_cpp_linux_src} 
     ${ecal_mon_cpp_src} 
     ${ecal_pubsub_cpp_src} 
     ${ecal_readwrite_lcm_cpp_src} 
@@ -316,6 +345,8 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
 
     ${ecal_cmn_header_src}
     ${ecal_io_header_src}
+    ${ecal_io_header_win_src}
+    ${ecal_io_header_linux_src}
     ${ecal_mon_header_src}
     ${ecal_pubsub_header_src}
     ${ecal_readwrite_lcm_header_src}
@@ -323,7 +354,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_readwrite_rtps_msg_header_src}
     ${ecal_readwrite_rtps_header_src}
     ${ecal_service_header_src}
-	
+
     ${ecal_header_base}
     ${ecal_header_cimpl}
     ${ecal_header_msg}
@@ -364,7 +395,7 @@ if(ECAL_NPCAP_SUPPORT)
   add_definitions(-DECAL_NPCAP_SUPPORT)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE
-	  udpcap
+      udpcap
   )
  endif(ECAL_NPCAP_SUPPORT)
 
@@ -391,14 +422,15 @@ target_link_libraries(${PROJECT_NAME}
     $<$<BOOL:${WIN32}>:wsock32>
     asio::asio
     tclap::tclap
+    simpleini::simpleini
     eCAL::pb
     Threads::Threads
     eCAL::apps
     EcalUtils
 )
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ecal)
-set_property(TARGET ${PROJECT_NAME_c} PROPERTY FOLDER ecal)
+set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)
+set_property(TARGET ${PROJECT_NAME}_c PROPERTY FOLDER ecal/core)
 
 ecal_install_ecal_shared_library(${PROJECT_NAME}_c)
 ecal_install_ecal_shared_library(${PROJECT_NAME})
@@ -416,6 +448,8 @@ install(DIRECTORY
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Source Files" FILES 
     ${ecal_io_cpp_src}
+    ${ecal_io_cpp_linux_src}
+    ${ecal_io_cpp_win32_src}
     ${ecal_mon_cpp_src}
     ${ecal_pubsub_cpp_src}
     ${ecal_readwrite_rtps_msg_cpp_src}
@@ -428,6 +462,8 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Header Files\\internal" FILES 
     ${ecal_cmn_header_src}
     ${ecal_io_header_src}
+    ${ecal_io_header_linux_src}
+    ${ecal_io_header_win_src}
     ${ecal_mon_header_src}
     ${ecal_pubsub_header_src}
     ${ecal_readwrite_rtps_msg_header_src}

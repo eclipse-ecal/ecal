@@ -42,7 +42,7 @@
 #include <pwd.h>
 #endif
 
-#include "simpleini.h"
+#include <SimpleIni.h>
 
 namespace
 {

@@ -55,6 +55,13 @@ namespace eCAL
     ECAL_API std::string GetHostName();
 
     /**
+     * @brief  Get unique host id.
+     *
+     * @return  Host id or zero if failed.
+    **/
+    ECAL_API int GetHostID();
+
+    /**
      * @brief  Get current unit name (defined via eCAL::Initialize). 
      *
      * @return  Unit name or empty string if failed. 
@@ -120,30 +127,43 @@ namespace eCAL
     ECAL_API unsigned long GetProcessMemory();
 
     /**
-     * @brief  Get the send clock of the current process. 
-     *
-     * @return  The message send count per second. 
+     * @deprecated  Use the function GetWClock() instead
     **/
+    [[deprecated("use GetWClock() instead")]]
     ECAL_API long long GetSClock();
 
     /**
-     * @brief  Get the send bytes of the current process. 
-     *
-     * @return  The message send bytes per second. 
+     * @deprecated  Use the function GetWBytes() instead
     **/
+
+    [[deprecated("use GetWBytes() instead")]]
     ECAL_API long long GetSBytes();
 
     /**
-     * @brief  Get the receive clock of the current process. 
+     * @brief  Get the write clock of the current process. 
      *
-     * @return  The message receive count per second. 
+     * @return  The message write count per second. 
+    **/
+    ECAL_API long long GetWClock();
+
+    /**
+     * @brief  Get the write bytes of the current process. 
+     *
+     * @return  The message write bytes per second. 
+    **/
+    ECAL_API long long GetWBytes();
+
+    /**
+     * @brief  Get the read clock of the current process. 
+     *
+     * @return  The message read count per second. 
     **/
     ECAL_API long long GetRClock();
 
     /**
-     * @brief  Get the receive bytes of the current process. 
+     * @brief  Get the read bytes of the current process. 
      *
-     * @return  The message receive bytes per second. 
+     * @return  The message read bytes per second. 
     **/
     ECAL_API long long GetRBytes();
 
@@ -239,6 +259,11 @@ namespace eCAL
       return(name);
     }
 
+    inline int GetHostID()
+    {
+      return(eCAL_Process_GetHostID());
+    }
+
     inline std::string GetUnitName()
     {
       void* buf = nullptr;
@@ -310,15 +335,27 @@ namespace eCAL
     {
       return(eCAL_Process_GetProcessMemory());
     }
-
+    
+    [[deprecated("use GetWClock() instead")]]
     inline long long GetSClock()
     {
-      return(eCAL_Process_GetSClock());
+      return(eCAL_Process_GetWClock());
     }
 
+    [[deprecated("use GetWBytes() instead")]]
     inline long long GetSBytes()
     {
-      return(eCAL_Process_GetSBytes());
+      return(eCAL_Process_GetWBytes());
+    }
+
+    inline long long GetWClock()
+    {
+      return(eCAL_Process_GetWClock());
+    }
+
+    inline long long GetWBytes()
+    {
+      return(eCAL_Process_GetWBytes());
     }
 
     inline long long GetRClock()

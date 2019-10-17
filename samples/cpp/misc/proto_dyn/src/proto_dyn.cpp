@@ -20,8 +20,6 @@
 #include <ecal/msg/protobuf/dynamic_subscriber.h>
 
 #include <iostream>
-#include <chrono>
-#include <thread>
 
 const std::string MESSAGE_NAME("person");
 
@@ -106,7 +104,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedInt32(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedInt32(msg_, field, fnum), static_cast<size_t>(fnum));
           }
         }
         else
@@ -120,7 +118,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedInt64(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedInt64(msg_, field, fnum), static_cast<size_t>(fnum));
           }
         }
         else
@@ -134,7 +132,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedUInt32(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedUInt32(msg_, field, fnum), static_cast<size_t>(fnum));
           }
         }
         else
@@ -148,7 +146,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedUInt64(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedUInt64(msg_, field, fnum), static_cast<size_t>(fnum));
           }
         }
         else
@@ -162,7 +160,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedDouble(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedDouble(msg_, field, fnum), static_cast<size_t>(fnum));
           }
         }
         else
@@ -176,7 +174,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedFloat(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedFloat(msg_, field, fnum), static_cast<size_t>(fnum));
           }
         }
         else
@@ -190,7 +188,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedBool(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedBool(msg_, field, fnum), static_cast<size_t>(fnum));
           }
         }
         else
@@ -204,7 +202,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedEnum(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedEnum(msg_, field, fnum), static_cast<size_t>(fnum));
           }
         }
         else
@@ -269,9 +267,6 @@ int main(int argc, char **argv)
   // initialize eCAL API
   eCAL::Initialize(argc, argv, "proto_dyn");
 
-  // sleep main thread for 1 second
-  std::this_thread::sleep_for(std::chrono::seconds(1));
-
   // create dynamic subscribers for receiving and decoding messages
   eCAL::protobuf::CDynamicSubscriber sub(MESSAGE_NAME);
   sub.AddReceiveCallback(std::bind(ProtoMsgCallback, std::placeholders::_1, std::placeholders::_2));
@@ -280,7 +275,7 @@ int main(int argc, char **argv)
   while(eCAL::Ok())
   {
     // sleep main thread for 1 second
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    eCAL::Process::SleepMS(1000);
   }
 
   // finalize eCAL API

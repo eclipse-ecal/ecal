@@ -55,7 +55,8 @@ namespace eCAL
     std::mutex         m_thread_sync;
     std::atomic<bool>  m_do_stop;
     std::atomic<bool>  m_is_stopped;
-    std::atomic<int>   m_timeout;
+    std::atomic<int>   m_timeout_read;
+    std::atomic<int>   m_timeout_ack;
     EventHandleT       m_event_snd;
     EventHandleT       m_event_ack;
     CMemoryFile        m_memfile;

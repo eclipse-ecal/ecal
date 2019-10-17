@@ -59,7 +59,7 @@ namespace eCAL
     std::string GetConectionPar();
 
   protected:
-    void SignalMemFileWritten(bool reliable_);
+    void SignalMemFileWritten();
 
     void BuildMemFileName();
     bool CreateMemFile(size_t size_);
@@ -77,7 +77,6 @@ namespace eCAL
     std::mutex       m_event_handle_map_sync;
     EventHandleMapT  m_event_handle_map;
 
-    int              m_timeout_qos_be;
-    int              m_timeout_qos_re;
+    int              m_timeout_ack;
   };
 }

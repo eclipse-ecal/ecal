@@ -136,6 +136,8 @@ namespace eCAL
       )
       return false;
 
+    std::lock_guard<std::mutex> req_lock(m_req_mtx);
+
     // check for new server
     RefreshClientMap();
 
@@ -179,6 +181,11 @@ namespace eCAL
           SServiceInfo service_info;
           std::string  response;
           bool ret = SendRequest(client.second, method_name_, request_, service_info, response);
+          if (ret == false)
+          {
+            std::cerr << "CServiceClientImpl::SendRequests failed." << std::endl;
+            return false;
+          }
           // call response callback
           if (service_info.call_state != call_state_none)
           {
@@ -191,7 +198,7 @@ namespace eCAL
             client.second->Destroy();
           }
           // collect return state
-          ret_state |= ret;
+          ret_state = true;
         }
       }
     }
@@ -213,7 +220,11 @@ namespace eCAL
 
     // parse response protocol buffer
     eCAL::pb::Response response_pb;
-    response_pb.ParseFromString(response_s);
+    if (!response_pb.ParseFromString(response_s))
+    {
+      std::cerr << "CServiceClientImpl::SendRequest Could not parse server response !" << std::endl;
+      return false;
+    }
 
     auto response_pb_header = response_pb.header();
     service_info_.host_name = response_pb_header.hname();

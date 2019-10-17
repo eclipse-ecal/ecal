@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EcalRecMainWindow</class>
+ <widget class="QMainWindow" name="EcalRecMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1024</width>
+    <height>768</height>
+   </rect>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../resources/resources.qrc">
+    <normaloff>:/ecalrec/APP_ICON</normaloff>:/ecalrec/APP_ICON</iconset>
+  </property>
+  <property name="dockNestingEnabled">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1024</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_file">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <widget class="QMenu" name="menu_recent_files">
+     <property name="title">
+      <string>&amp;Recent files</string>
+     </property>
+    </widget>
+    <addaction name="action_new"/>
+    <addaction name="action_open_config"/>
+    <addaction name="menu_recent_files"/>
+    <addaction name="separator"/>
+    <addaction name="action_save_config"/>
+    <addaction name="action_save_config_as"/>
+    <addaction name="separator"/>
+    <addaction name="action_exit"/>
+   </widget>
+   <widget class="QMenu" name="menu_view">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="action_debug_console"/>
+    <addaction name="action_reset_layout"/>
+   </widget>
+   <widget class="QMenu" name="menu_help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="action_about"/>
+    <addaction name="action_licenses"/>
+   </widget>
+   <widget class="QMenu" name="menu_recording">
+    <property name="title">
+     <string>&amp;Recording</string>
+    </property>
+    <widget class="QMenu" name="menu_advances">
+     <property name="title">
+      <string>A&amp;dvanced</string>
+     </property>
+     <addaction name="action_enable_client_connections"/>
+     <addaction name="action_connect_to_ecal"/>
+    </widget>
+    <addaction name="action_activate"/>
+    <addaction name="menu_advances"/>
+    <addaction name="separator"/>
+    <addaction name="action_start_recording"/>
+    <addaction name="action_save_pre_buffer"/>
+    <addaction name="separator"/>
+    <addaction name="action_pre_buffer_data"/>
+   </widget>
+   <widget class="QMenu" name="menu_windows">
+    <property name="title">
+     <string>&amp;Windows</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_options">
+    <property name="title">
+     <string>Options</string>
+    </property>
+    <widget class="QMenu" name="menu_recorder_state_upate_speed">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>&amp;Recorder-State upate speed</string>
+     </property>
+     <addaction name="action_rec_state_update_speed_0_1"/>
+     <addaction name="action_rec_state_update_speed_0_2"/>
+     <addaction name="action_rec_state_update_speed_0_5"/>
+     <addaction name="action_rec_state_update_speed_1"/>
+     <addaction name="action_rec_state_update_speed_2"/>
+     <addaction name="action_rec_state_update_speed_5"/>
+    </widget>
+    <addaction name="action_use_built_in_local_recorder"/>
+    <addaction name="menu_recorder_state_upate_speed"/>
+   </widget>
+   <addaction name="menu_file"/>
+   <addaction name="menu_recording"/>
+   <addaction name="menu_options"/>
+   <addaction name="menu_view"/>
+   <addaction name="menu_windows"/>
+   <addaction name="menu_help"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QDockWidget" name="topics_dockwidget">
+   <property name="windowTitle">
+    <string>Topics</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="topics_dockwidget_content">
+    <layout class="QVBoxLayout" name="verticalLayout_5">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="topics_dockwidget_content_frame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <layout class="QVBoxLayout" name="topics_dockwidget_content_frame_layout"/>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="config_dockwidget">
+   <property name="windowTitle">
+    <string>Configuration</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="config_dockwidget_content">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="config_dockwidget_content_frame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <layout class="QVBoxLayout" name="config_dockwidget_content_frame_layout"/>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="recorder_manager_dockwidget">
+   <property name="windowTitle">
+    <string>Recorders</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="recorder_manager_dockwidget_content">
+    <layout class="QVBoxLayout" name="recorder_manager_dockwidgetcontent_layout">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="recorder_manager_dockwidget_content_frame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <layout class="QVBoxLayout" name="recorder_manager_dockwidget_content_frame_layout"/>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="remote_measurement_debug_dockwidget">
+   <property name="windowTitle">
+    <string>Recorder Control [DEBUG]</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="remote_measurement_debug_dockwidget_content">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="remote_measurement_debug_dockwidget_content_frame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <layout class="QVBoxLayout" name="remote_measurement_debug_dockwidget_content_frame_layout"/>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="recording_history_dockwidget">
+   <property name="windowTitle">
+    <string>Recording Histroy (Not implemented, yet)</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="recording_history_dockwidget_content">
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="recording_history_dockwidget_content_frame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QVBoxLayout" name="recording_history_dockwidget_content_frame_layout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="action_save_config">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/SAVE</normaloff>:/ecalicons/SAVE</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Save config</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_save_config_as">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/SAVE_AS</normaloff>:/ecalicons/SAVE_AS</iconset>
+   </property>
+   <property name="text">
+    <string>Save config &amp;as...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+S</string>
+   </property>
+  </action>
+  <action name="action_open_config">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/OPEN</normaloff>:/ecalicons/OPEN</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open config</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="action_new">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/NEW_FILE</normaloff>:/ecalicons/NEW_FILE</iconset>
+   </property>
+   <property name="text">
+    <string>New config</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionDummy">
+   <property name="text">
+    <string>Dummy</string>
+   </property>
+  </action>
+  <action name="action_exit">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/EXIT</normaloff>:/ecalicons/EXIT</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
+   </property>
+  </action>
+  <action name="action_about">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/INFO</normaloff>:/ecalicons/INFO</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;About...</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
+   </property>
+  </action>
+  <action name="action_licenses">
+   <property name="text">
+    <string>&amp;Licenses...</string>
+   </property>
+  </action>
+  <action name="action_start_recording">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/RECORD</normaloff>:/ecalicons/RECORD</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Record</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="action_save_pre_buffer">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/SAVE_TO_DISK</normaloff>:/ecalicons/SAVE_TO_DISK</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Save pre-buffer</string>
+   </property>
+   <property name="shortcut">
+    <string>F6</string>
+   </property>
+  </action>
+  <action name="actionStart_recorder_instances">
+   <property name="text">
+    <string>Start recorder instances</string>
+   </property>
+  </action>
+  <action name="action_enable_client_connections">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/CONNECTED</normaloff>:/ecalicons/CONNECTED</iconset>
+   </property>
+   <property name="text">
+    <string>Connect to &amp;clients</string>
+   </property>
+  </action>
+  <action name="action_connect_to_ecal">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/CHECKMARK</normaloff>:/ecalicons/CHECKMARK</iconset>
+   </property>
+   <property name="text">
+    <string>Connect to &amp;eCAL</string>
+   </property>
+  </action>
+  <action name="action_activate">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/POWER_ON</normaloff>:/ecalicons/POWER_ON</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Activate clients</string>
+   </property>
+   <property name="toolTip">
+    <string>Start recorder clients and connect to eCAL</string>
+   </property>
+   <property name="shortcut">
+    <string>F4</string>
+   </property>
+  </action>
+  <action name="actionwqer">
+   <property name="text">
+    <string>wqer</string>
+   </property>
+  </action>
+  <action name="action_pre_buffer_data">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Buffering enabled</string>
+   </property>
+  </action>
+  <action name="action_reset_layout">
+   <property name="text">
+    <string>&amp;Reset layout</string>
+   </property>
+  </action>
+  <action name="action_debug_console">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/COMMAND_WINDOW</normaloff>:/ecalicons/COMMAND_WINDOW</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Debug console...</string>
+   </property>
+  </action>
+  <action name="action_use_built_in_local_recorder">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Use built-in local recorder</string>
+   </property>
+  </action>
+  <action name="action_rec_state_update_speed_0_1">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>0.1s</string>
+   </property>
+  </action>
+  <action name="action_rec_state_update_speed_0_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>0.2s</string>
+   </property>
+  </action>
+  <action name="action_rec_state_update_speed_0_5">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>0.5s</string>
+   </property>
+  </action>
+  <action name="action_rec_state_update_speed_1">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>1s</string>
+   </property>
+  </action>
+  <action name="action_rec_state_update_speed_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>2s</string>
+   </property>
+  </action>
+  <action name="action_rec_state_update_speed_5">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>5s</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../resources/resources.qrc"/>
+  <include location="../../../iconset/ecalicons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

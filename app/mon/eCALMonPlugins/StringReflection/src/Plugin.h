@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  * ========================= eCAL LICENSE =================================
- */
+*/
 
 #pragma once
 

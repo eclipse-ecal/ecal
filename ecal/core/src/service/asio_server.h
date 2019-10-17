@@ -21,8 +21,11 @@
 
 #include <functional>
 #include <string>
+#include <iostream>
 
 #include <asio.hpp>
+
+#include "ecal_tcpheader.h"
 
 typedef std::function<int(const std::string& request, std::string& response)> RequestCallbackT;
 
@@ -58,25 +61,40 @@ private:
   {
     if (!ec)
     {
-      std::string response;
       if (request_callback_)
       {
-        std::string request(data_, bytes_transferred);
-        int ret = request_callback_(request, response);
-        // -1 means incomplete package
-        // read some more ...
-        if (ret < 0)
+        // collect request
+        //std::cout << "CAsioSession::handle_read read bytes " << bytes_transferred << std::endl;
+        request_ += std::string(data_, bytes_transferred);
+        // are there some more data on the socket ?
+        if (socket_.available())
         {
+          // read some more bytes
           socket_.async_read_some(asio::buffer(data_, max_length),
             std::bind(&CAsioSession::handle_read, this,
               std::placeholders::_1,
               std::placeholders::_2));
         }
+        // no more data
+        else
+        {
+          // execute service callback
+          //std::cout << "CAsioSession::handle_read final request size " << request_.size() << std::endl;
+          response_.clear();
+          request_callback_(request_, response_);
+          request_.clear();
+          //std::cout << "CAsioSession::handle_read server callback executed - reponse size " << response_.size() << std::endl;
+
+          // write response back
+          packed_response_.clear();
+          packed_response_ = pack_write(response_);
+          asio::async_write(socket_,
+            asio::buffer(packed_response_.data(), packed_response_.size()),
+            bind(&CAsioSession::handle_write, this,
+              std::placeholders::_1,
+              std::placeholders::_2));
+        }
       }
-      asio::async_write(socket_,
-        asio::buffer(response.data(), response.length()),
-        bind(&CAsioSession::handle_write, this,
-          std::placeholders::_1));
     }
     else
     {
@@ -84,10 +102,25 @@ private:
     }
   }
 
-  void handle_write(const asio::error_code& ec)
+  std::vector<char> pack_write(const std::string& response)
+  {
+    // create header
+    eCAL::STcpHeader tcp_header;
+    // set up package size
+    const size_t psize = response.size();
+    tcp_header.psize_n = htonl(static_cast<uint32_t>(psize));
+    // repack
+    std::vector<char> packed_response(sizeof(tcp_header) + psize);
+    memcpy(packed_response.data(), &tcp_header, sizeof(tcp_header));
+    memcpy(packed_response.data() + sizeof(tcp_header), response.data(), psize);
+    return packed_response;
+  }
+
+  void handle_write(const asio::error_code& ec, std::size_t /*bytes_transferred*/)
   {
     if (!ec)
     {
+      //std::cout << "CAsioSession::handle_write bytes sent " << bytes_transferred << std::endl;
       socket_.async_read_some(asio::buffer(data_, max_length),
         std::bind(&CAsioSession::handle_read, this,
           std::placeholders::_1,
@@ -95,12 +128,16 @@ private:
     }
     else
     {
+      std::cerr << "CAsioSession::handle_write: Failed write : " << ec.message() << std::endl;
       delete this;
     }
   }
 
   asio::ip::tcp::socket  socket_;
   RequestCallbackT       request_callback_;
+  std::string            request_;
+  std::string            response_;
+  std::vector<char>      packed_response_;
 
   enum { max_length = 64 * 1024 };
   char data_[max_length];

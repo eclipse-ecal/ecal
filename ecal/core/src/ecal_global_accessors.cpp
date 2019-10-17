@@ -33,6 +33,7 @@ namespace eCAL
   std::string                   g_default_ini_file(ECAL_DEFAULT_CFG);
 
   std::string                   g_host_name;
+  int                           g_host_id(0);
   std::string                   g_unit_name;
   std::vector<std::string>      g_task_parameter;
 
@@ -45,12 +46,12 @@ namespace eCAL
   eCAL_Process_eSeverity        g_process_severity(proc_sev_unknown);
   eCAL_Process_eSeverity_Level  g_process_severity_level(proc_sev_level1);
 
-  std::atomic<long long>        g_process_sclock;
-  std::atomic<int>              g_process_sbytes;
-  std::atomic<long long>        g_process_sbytes_sum;
+  std::atomic<long long>        g_process_wclock;
+  std::atomic<long long>        g_process_wbytes;
+  std::atomic<long long>        g_process_wbytes_sum;
 
   std::atomic<long long>        g_process_rclock;
-  std::atomic<int>              g_process_rbytes;
+  std::atomic<long long>        g_process_rbytes;
   std::atomic<long long>        g_process_rbytes_sum;
 
 

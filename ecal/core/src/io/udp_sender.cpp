@@ -55,17 +55,30 @@ namespace eCAL
     {
       // set unicast packet TTL
       asio::ip::unicast::hops ttl(attr_.ttl);
-      m_socket.set_option(ttl);
+      asio::error_code ec;
+      m_socket.set_option(ttl, ec);
+      if (ec)
+        std::cerr << "CUDPSender: Setting TTL failed: " << ec.message() << std::endl;
     }
     else
     {
       // set multicast packet TTL
-      asio::ip::multicast::hops ttl(attr_.ttl);
-      m_socket.set_option(ttl);
+      {
+        asio::ip::multicast::hops ttl(attr_.ttl);
+        asio::error_code ec;
+        m_socket.set_option(ttl, ec);
+        if (ec)
+          std::cerr << "CUDPSender: Setting TTL failed: " << ec.message() << std::endl;
+      }
 
       // set loopback option
-      asio::ip::multicast::enable_loopback loopback(attr_.loopback);
-      m_socket.set_option(loopback);
+      {
+        asio::ip::multicast::enable_loopback loopback(attr_.loopback);
+        asio::error_code ec;      
+        m_socket.set_option(loopback);
+        if (ec)
+          std::cerr << "CUDPSender: Error setting loopback option: " << ec.message() << std::endl;
+      }
     }
     m_iocontext.run();
   }

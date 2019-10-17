@@ -22,7 +22,6 @@
 #include <iostream>
 #include <sstream>
 #include <chrono>
-#include <thread>
 #include <vector>
 
 int main(int argc, char **argv)
@@ -44,13 +43,6 @@ int main(int argc, char **argv)
   unsigned long long                    bytes (0);
   size_t                                slen  (0);
 
-  // dump instance state if creation failed
-  if(!pub.IsCreated())
-  {
-    std::cout << "Could not create publisher !" << std::endl;
-    return(-1);
-  }
-
   // default send string
   std::vector<char> send_a(payload_size);
 
@@ -61,14 +53,8 @@ int main(int argc, char **argv)
   start_time = std::chrono::steady_clock::now();
   while(eCAL::Ok())
   {
-    eCAL::Logging::StartCoreTimer();
-
     // send content
-    size_t snd_len = pub.Send(send_a.data(), payload_size);
-    if((snd_len > 0) && (snd_len != slen))
-    {
-      std::cerr <<  std::endl << "Send failed !" << " sent : " << slen << " returned : " << snd_len <<  std::endl;
-    }
+    pub.Send(send_a.data(), payload_size);
 
     // collect data
     clock++;
@@ -98,8 +84,6 @@ int main(int argc, char **argv)
         eCAL::Logging::Log(out.str());
       }
     }
-
-    eCAL::Logging::StopCoreTimer();
   }
 
   // destroy publisher

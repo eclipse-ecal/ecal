@@ -63,7 +63,7 @@ int main(int argc, char **argv)
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
   // create a subscriber (topic name "address")
-  eCAL::CMsgPackSubscriber<CAddress> sub("address");
+  eCAL::messagepack::CSubscriber<CAddress> sub("address");
 
   // add receive callback function (_1 = topic_name, _2 = msg, _3 = time)
   auto callback = std::bind(OnAddress, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
