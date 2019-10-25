@@ -19,6 +19,7 @@ install:
   - cmmd: set PATH=%PATH%;%PYTHON%/Scripts/
   - cmmd: pip.exe install --user conan
   - cmmd: conan user
+  - cmmd: conan remote add -f kwc_bintray https://api.bintray.com/conan/kwc/conan
   - cmmd: conan --version
 
   # Install build requirements

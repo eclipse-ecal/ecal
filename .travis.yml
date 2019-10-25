@@ -24,6 +24,7 @@ addons:
 install:
   # Install conan
   - pip install --user conan
+  - conan remote add -f kwc_bintray https://api.bintray.com/conan/kwc/conan
   # Automatic detection of your arch, compiler, etc.
   - conan user
 
