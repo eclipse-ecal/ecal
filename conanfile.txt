@@ -1,5 +1,5 @@
 [requires]
-Qt/5.11.2@bincrafters/stable
+qt/5.13.1@bincrafters/stable
 protobuf/3.9.1@bincrafters/stable
 spdlog/0.16.3@bincrafters/stable
 

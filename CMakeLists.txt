@@ -70,7 +70,6 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
 list(APPEND as_subproject Protobuf)
 endif ()
 
-
 # Normalize backslashes from Windows paths
 file(TO_CMAKE_PATH "${CMAKE_MODULE_PATH}" CMAKE_MODULE_PATH)
 file(TO_CMAKE_PATH "${CMAKE_PREFIX_PATH}" CMAKE_PREFIX_PATH)
@@ -82,7 +81,7 @@ message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 # third party dependencies as requested
 # --------------------------------------------------------
 if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
-  list(APPEND as_subproject Protobuf)    
+  list(APPEND as_subproject Protobuf)
   if(MSVC)
     # supress google protobuf warnings for windows platform
     set(CMAKE_CXX_FLAGS_OLD "${CMAKE_CXX_FLAGS}")
@@ -104,7 +103,7 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
 endif()
 
 if (ECAL_THIRDPARTY_BUILD_SPDLOG)
-  list(APPEND as_subproject spdlog)  
+  list(APPEND as_subproject spdlog)
   add_subdirectory(thirdparty/spdlog)
   add_library(spdlog::spdlog ALIAS spdlog)
 endif ()
@@ -112,7 +111,7 @@ endif ()
 
 
 if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
-  list(APPEND as_subproject CMakeFunctions) 
+  list(APPEND as_subproject CMakeFunctions)
 endif()
 
 macro(find_package)
