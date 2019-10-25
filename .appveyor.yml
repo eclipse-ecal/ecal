@@ -2,6 +2,10 @@ version: "{build}"
 
 image: Visual Studio 2015
 
+branches:
+  only:
+    - feature/add_conan_integration
+
 environment:
   QT5_ROOT_DIRECTORY: C:\Qt\5.11.3
   HDF5_DIR: C:\Program Files\HDF_Group\HDF5\1.8.21\cmake

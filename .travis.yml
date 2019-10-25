@@ -3,6 +3,10 @@ dist: xenial
 language: cpp
 compiler: gcc
 
+branches:
+  only:
+    - feature/add_conan_integration
+
 addons:
   apt:
     sources:
