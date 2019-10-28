@@ -379,8 +379,14 @@ namespace EcalUtils
     if (compare_for == OsStyle::Windows)
     {
       // Windows is case-insensitive
-      std::transform(path1_root.begin(), path1_root.end(), path1_root.begin(), ::tolower);
-      std::transform(path2_root.begin(), path2_root.end(), path2_root.begin(), ::tolower);
+      // cause warning C4244 with VS2017, VS2019
+      //std::transform(path1_root.begin(), path1_root.end(), path1_root.begin(), ::tolower);
+      std::transform(path1_root.begin(), path1_root.end(), path1_root.begin(),
+        [](char c) {return static_cast<char>(::tolower(c)); });
+      // cause warning C4244 with VS2017, VS2019
+      //std::transform(path2_root.begin(), path2_root.end(), path2_root.begin(), ::tolower);
+      std::transform(path2_root.begin(), path2_root.end(), path2_root.begin(),
+        [](char c) {return static_cast<char>(::tolower(c)); });
     }
 
     if (path1_root != path2_root)
@@ -405,8 +411,14 @@ namespace EcalUtils
       if (compare_for == OsStyle::Windows)
       {
         // Windows is case-insensitive
-        std::transform(path1_component_it->begin(), path1_component_it->end(), path1_component_it->begin(), ::tolower);
-        std::transform(path2_component_it->begin(), path2_component_it->end(), path2_component_it->begin(), ::tolower);
+        // cause warning C4244 with VS2017, VS2019
+        //std::transform(path1_component_it->begin(), path1_component_it->end(), path1_component_it->begin(), ::tolower);
+        std::transform(path1_component_it->begin(), path1_component_it->end(), path1_component_it->begin(),
+          [](char c) {return static_cast<char>(::tolower(c)); });
+        // cause warning C4244 with VS2017, VS2019
+        //std::transform(path2_component_it->begin(), path2_component_it->end(), path2_component_it->begin(), ::tolower);
+        std::transform(path2_component_it->begin(), path2_component_it->end(), path2_component_it->begin(),
+          [](char c) {return static_cast<char>(::tolower(c)); });
       }
 
       if (*path1_component_it != *path2_component_it)

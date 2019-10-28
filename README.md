@@ -191,10 +191,10 @@ sudo gedit /etc/network/interfaces
 
 #### Build eCAL
 
-Run the following batch files to create the Visual Studio 2015 (2017) solutions for 32 and 64 bit and to build both.
+Run the following batch files to create the Visual Studio 2015 (2017 | 2019) solutions for 32 and 64 bit and to build both.
 
 ```bat
-build_win\win_make_cmake.bat v140 (v141)
+build_win\win_make_cmake.bat v140 (v141 | v142)
 build_win\win_make_build.bat
 ```
 
