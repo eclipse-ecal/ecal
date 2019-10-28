@@ -22,6 +22,7 @@
 #include <chrono>
 #include <list>
 #include <set>
+#include <string>
 
 namespace eCAL
 {
