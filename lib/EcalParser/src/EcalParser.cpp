@@ -279,7 +279,10 @@ namespace EcalParser
     bool IsTargetKeyword(const std::string& word)
     {
       std::string lower_word = word;
-      std::transform(lower_word.begin(), lower_word.end(), lower_word.begin(), ::tolower);
+      // cause warning C4244 with VS2017, VS2019
+      //std::transform(lower_word.begin(), lower_word.end(), lower_word.begin(), ::tolower);
+      std::transform(lower_word.begin(), lower_word.end(), lower_word.begin(),
+        [](char c) {return static_cast<char>(::tolower(c)); });
       return (lower_word == "target")
         || (lower_word == "_");
     }
