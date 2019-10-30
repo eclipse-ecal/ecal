@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ApplicationSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Filters />
+  <FileMasks>
+    <string>*.capnp.h</string>
+    <string>*.cs</string>
+    <string>*.pb.cc</string>
+    <string>*.pb.h</string>
+    <string>convert_utf.cpp</string>
+  </FileMasks>
+  <FalseAlarmComment>
+    <string />
+  </FalseAlarmComment>
+  <FalseAlarmsEnabled>false</FalseAlarmsEnabled>
+  <PathMasks>
+    <string>\qt\</string>
+    <string>\_build\</string>
+    <string>\ecal\core\src\readwrite\fastrtps\string_message_PubSubTypes.cxx</string>
+    <string>\ecal\core\src\readwrite\fastrtps\string_message_.cxx</string>
+    <string>\ecal\core\src\readwrite\lcm\lcmlite.cpp</string>
+    <string>\thirdparty\</string>
+  </PathMasks>
+  <UncheckedButtons>toolstrip_L3Warnings toolStripButton_OP toolStripButton_64</UncheckedButtons>
+  <DisableDetectableErrors>V001 V122 V126 V201 V202 V203 V2001 V2002 V2003 V2004 V2005 V2006 V2007 V2008 V2009 V2010 V2011 V2012 V2013 V2501 V2502 V2503 V2504 V2505 V2506 V2507 V2508 V2509 V2510 V2511 V2512 V2513 V2514 V2515 V2516 V2517 V2518 V2519 V2520 V2521 V2522 V2523 V2524 V2525 </DisableDetectableErrors>
+  <Version>7.1</Version>
+  <StatisticsFilter />
+  <EnableSuppressedMessagesInStatistics>false</EnableSuppressedMessagesInStatistics>
+  <RemoveIntermediateFiles>true</RemoveIntermediateFiles>
+  <IncrementalAnalysis>true</IncrementalAnalysis>
+  <UseSolutionFolderAsInitial>true</UseSolutionFolderAsInitial>
+  <Disable64BitAnalysis>false</Disable64BitAnalysis>
+  <DisableGAAnalysis>false</DisableGAAnalysis>
+  <DisableOPAnalysis>false</DisableOPAnalysis>
+  <DisableCSAnalysis>true</DisableCSAnalysis>
+  <DisableMISRAAnalysis>true</DisableMISRAAnalysis>
+  <DisableGAAnalysisCs>false</DisableGAAnalysisCs>
+  <PerformPreBuildStep>false</PerformPreBuildStep>
+  <PerformTFVCCheckout>false</PerformTFVCCheckout>
+  <AutoSettingsImport>false</AutoSettingsImport>
+  <NoNoise>false</NoNoise>
+  <ThreadCount>12</ThreadCount>
+  <CheckForNewVersions>true</CheckForNewVersions>
+  <Preprocessor>VisualCPP</Preprocessor>
+  <TypesForNonLargeArrays />
+  <SourceTreeRoot />
+  <UseSolutionDirAsSourceTreeRoot>false</UseSolutionDirAsSourceTreeRoot>
+  <SaveModifiedLog>Ask_Always</SaveModifiedLog>
+  <ColumnStates>
+    <Order>60</Order>
+    <ErrorCode>65</ErrorCode>
+    <CWE>75</CWE>
+    <MISRA>125</MISRA>
+    <Message>300</Message>
+    <Project>200</Project>
+    <ShortFile>200</ShortFile>
+    <Line>110</Line>
+    <Project_IsVisible>false</Project_IsVisible>
+    <Order_IsVisible>false</Order_IsVisible>
+  </ColumnStates>
+  <ShowPVSTrayIcon>true</ShowPVSTrayIcon>
+  <DisplayCWE>false</DisplayCWE>
+  <SaveProjectGroupStatistics>false</SaveProjectGroupStatistics>
+  <TraceModePVS>Off</TraceModePVS>
+  <IncrementalDepthLevel>Show_Level1_and_Level2</IncrementalDepthLevel>
+  <HelpLanguage>English</HelpLanguage>
+  <SafeTypes />
+  <SaveAfterEachMarkAsFalseAlarm>true</SaveAfterEachMarkAsFalseAlarm>
+  <AnalysisTimeout>After_10_minutes</AnalysisTimeout>
+  <IncrementalAnalysisTimeout>After_2_minutes</IncrementalAnalysisTimeout>
+  <DontCloseAfterAnalysis>false</DontCloseAfterAnalysis>
+</ApplicationSettings>
