@@ -41,16 +41,30 @@ namespace eCAL
       ret_state  = 0;
       call_state = call_state_none;
     };
-    std::string  host_name;
-    std::string  service_name;
-    std::string  method_name;
-    std::string  error_msg;
-    int          ret_state;
-    eCallState   call_state;
+    std::string  host_name;      //!< service host name
+    std::string  service_name;   //!< name of the service
+    std::string  method_name;    //!< name of the service method
+    std::string  error_msg;      //!< human readable error message
+    int          ret_state;      //!< return state of the called service method
+    eCallState   call_state;     //!< call state (see eCallState)
   };
 
+  /**
+   * @brief Service method callback function type (low level server interface).
+   *
+   * @param method_     The method name.
+   * @param req_type_   The type of the method request.
+   * @param resp_type_  The type of the method response.
+   * @param request_    The request.
+   * @param response_   The response returned from the method call.
+  **/
   typedef std::function<int(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_)> MethodCallbackT;
+
+  /**
+   * @brief Service response callback function type (low level client interface).
+   *
+   * @param service_info_  The service info containing the server side response result.
+   * @param response_      The response returned from the server.
+  **/
   typedef std::function<void(const struct SServiceInfo& service_info_, const std::string& response_)> ResponseCallbackT;
 };
-
-

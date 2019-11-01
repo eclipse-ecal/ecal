@@ -43,17 +43,37 @@ namespace eCAL
       time  = 0;
       clock = 0;
     };
-    void*     buf;
-    long      size;
-    long long id;
-    long long time;
-    long long clock;
+    void*     buf;    //!< payload buffer
+    long      size;   //!< payload buffer size
+    long long id;     //!< publisher id (SetId())
+    long long time;   //!< publisher send time in µs
+    long long clock;  //!< publisher send clock
   };
 
+  /**
+   * @brief Raw data receive callback function type.
+   *
+   * @param topic_name_  The topic name of the received message.
+   * @param data_        Data atruct containing payload, timestamp and publication clock.
+  **/
   typedef std::function<void(const char* topic_name_, const struct SReceiveCallbackData* data_)> ReceiveCallbackT;
+
+  /**
+   * @brief Timer callback function type.
+  **/
   typedef std::function<void(void)> TimerCallbackT;
+
+  /**
+   * @brief Registration callback type.
+   *
+   * @param sample_       The sample protocol buffer regsitration payload buffer.
+   * @param sample_size_  The payload buffer size.
+  **/
   typedef std::function<void(const char* sample_, int sample_size_)> RegistrationCallbackT;
 
+  /**
+   * @brief eCAL publisher event callback struct.
+  **/
   struct SPubEventCallbackData
   {
     SPubEventCallbackData()
@@ -62,11 +82,14 @@ namespace eCAL
       time = 0;
       clock = 0;
     };
-    eCAL_Publisher_Event type;
-    long long            time;
-    long long            clock;
+    eCAL_Publisher_Event type;    //!< publisher event type
+    long long            time;    //!< publisher event time in µs
+    long long            clock;   //!< publisher event clock
   };
 
+  /**
+   * @brief eCAL subscriber event callback struct.
+  **/
   struct SSubEventCallbackData
   {
     SSubEventCallbackData()
@@ -75,11 +98,24 @@ namespace eCAL
       time  = 0;
       clock = 0;
     };
-    eCAL_Subscriber_Event type;
-    long long             time;
-    long long             clock;
+    eCAL_Subscriber_Event type;   //!< subscriber event type
+    long long             time;   //!< subscriber event time in µs
+    long long             clock;  //!< subscriber event clock
   };
 
+  /**
+   * @brief Publisher event callback function type.
+   *
+   * @param topic_name_  The topic name of the publisher that triggered the event.
+   * @param data_        Event callback data structure with the event specific informations.
+  **/
   typedef std::function<void(const char* topic_name_, const struct SPubEventCallbackData* data_)> PubEventCallbackT;
+
+  /**
+   * @brief Subscriber event callback function type.
+   *
+   * @param topic_name_  The topic name of the subscriber that triggered the event.
+   * @param data_        Event callback data structure with the event specific informations.
+  **/
   typedef std::function<void(const char* topic_name_, const struct SSubEventCallbackData* data_)> SubEventCallbackT;
 };

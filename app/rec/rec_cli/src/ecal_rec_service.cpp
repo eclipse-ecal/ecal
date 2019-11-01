@@ -60,7 +60,7 @@ void EcalRecService::GetConfig(::google::protobuf::RpcController*        /*contr
     record_mode_string = "blacklist";
     break;
   case eCAL::rec::RecordMode::Whitelist:
-    record_mode_string = "blacklist";
+    record_mode_string = "whitelist";
     break;
   default:
     record_mode_string = "all";
