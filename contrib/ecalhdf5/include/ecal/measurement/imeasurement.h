@@ -82,7 +82,7 @@ namespace eCAL
         }; //prefix increment
         iterator& operator--()
         {
-          ++m_entry_iterator;
+          --m_entry_iterator;
           return *this;
         }; //prefix decrement
            //reference operator*() const

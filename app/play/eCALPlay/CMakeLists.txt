@@ -64,4 +64,8 @@ endif()
 
 ecal_install_app(${PROJECT_NAME})
 
+if(MSVC)
+    set_property(TARGET ${PROJECT_NAME} PROPERTY LINK_FLAGS "/ignore:4098,4099")
+endif(MSVC)
+
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/play)
