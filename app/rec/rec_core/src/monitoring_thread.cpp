@@ -23,8 +23,15 @@
 
 #include <EcalUtils/EcalUtils.h>
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4146 4800)
+#endif
 #include <ecal/pb/monitoring.pb.h>
 #include <ecal/pb/process.pb.h>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #include "rec_core/ecal_rec_logger.h"
 #include "recorder.h"

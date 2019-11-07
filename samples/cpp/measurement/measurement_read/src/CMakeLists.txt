@@ -43,4 +43,8 @@ target_link_libraries(${PROJECT_NAME} protobuf::libprotobuf)
 
 ecal_install_sample(${PROJECT_NAME})
 
+if(MSVC)
+    set_property(TARGET ${PROJECT_NAME} PROPERTY LINK_FLAGS "/ignore:4098,4099")
+endif(MSVC)
+
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/ecalhdf5)

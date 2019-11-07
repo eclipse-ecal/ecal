@@ -21,7 +21,7 @@
 
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable : 4100 4505 4800)
+#pragma warning(disable : 4100 4146 4505 4800)
 #endif
 #include <ecal/pb/rec/service.pb.h>
 #ifdef _MSC_VER
