@@ -21,8 +21,6 @@ project(person_snd_events)
 find_package(eCAL REQUIRED)
 find_package(Protobuf REQUIRED)
 
-create_targets_protobuf()
-
 set(person_snd_events_src
   person_snd_events.cpp
 )

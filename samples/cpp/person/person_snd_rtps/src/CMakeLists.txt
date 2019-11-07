@@ -21,8 +21,6 @@ project(person_snd_rtps)
 find_package(eCAL REQUIRED)
 find_package(Protobuf REQUIRED)
 
-create_targets_protobuf()
-
 set(person_snd_rtps_src
   person_snd_rtps.cpp
 )

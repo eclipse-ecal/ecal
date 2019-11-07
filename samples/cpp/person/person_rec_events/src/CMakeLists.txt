@@ -1,4 +1,4 @@
-# ========================= eCAL LICENSE =================================
+# =====n=================== eCAL LICENSE =================================
 #
 # Copyright (C) 2016 - 2019 Continental Corporation
 #
@@ -20,8 +20,6 @@ project(person_rec_events)
 
 find_package(eCAL REQUIRED)
 find_package(Protobuf REQUIRED)
-
-create_targets_protobuf()
 
 set(person_rec_events_src
     person_rec_events.cpp

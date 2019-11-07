@@ -179,7 +179,6 @@ ecal_add_app_qt(${PROJECT_NAME}
     ${autogen_ui}
 )
 
-create_targets_protobuf()
 target_link_libraries (${PROJECT_NAME}
     protobuf::libprotobuf
     simpleini::simpleini

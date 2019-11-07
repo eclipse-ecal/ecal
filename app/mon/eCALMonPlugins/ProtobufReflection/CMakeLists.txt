@@ -54,7 +54,6 @@ qt5_wrap_ui(autogen_ui ${${PROJECT_NAME}_ui})
 
 ecal_add_mon_plugin(${PROJECT_NAME} SHARED ${${PROJECT_NAME}_src} ${${PROJECT_NAME}_header} ${${PROJECT_NAME}_ui} ${autogen_ui})
 
-create_targets_protobuf()
 target_link_libraries (${PROJECT_NAME} Qt5::Widgets eCAL::core eCAL::pb protobuf::libprotobuf MonitorTreeView eCAL::mon_plugin_lib)
 
 if(MSVC)

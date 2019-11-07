@@ -17,7 +17,6 @@
 # ========================= eCAL LICENSE =================================
 
 find_package(Protobuf REQUIRED)
-create_targets_protobuf()
 
 project(proto)
 
@@ -45,7 +44,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-create_targets_protobuf()
 target_link_libraries(${PROJECT_NAME} PUBLIC protobuf::libprotobuf)
 
 ecal_install_library(${PROJECT_NAME})

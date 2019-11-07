@@ -21,8 +21,6 @@ project(person_snd_lcm)
 find_package(eCAL REQUIRED)
 find_package(Protobuf REQUIRED)
 
-create_targets_protobuf()
-
 set(person_snd_lcm_src
   person_snd_lcm.cpp
 )

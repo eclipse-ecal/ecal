@@ -39,8 +39,6 @@ target_include_directories(${PROJECT_NAME}
 target_compile_definitions(${PROJECT_NAME}
   PRIVATE $<$<BOOL:${MSVC}>:PCRE_STATIC;_UNICODE>)
 
-create_targets_protobuf()
-
 target_link_libraries(${PROJECT_NAME}
   protobuf::libprotobuf
   tclap::tclap

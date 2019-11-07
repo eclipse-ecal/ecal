@@ -21,8 +21,6 @@ project(multiple_rec_cb)
 find_package(eCAL REQUIRED)
 find_package(Protobuf REQUIRED)
 
-create_targets_protobuf()
-
 set(multiple_rec_cb_src
   multiple_rec_cb.cpp
   multiple_rec_cb_person.cpp

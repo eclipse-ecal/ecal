@@ -21,8 +21,6 @@ project(multiple_snd)
 find_package(eCAL REQUIRED)
 find_package(Protobuf REQUIRED)
 
-create_targets_protobuf()
-
 set(multiple_snd_src
   multiple_snd.cpp
   multiple_snd_person.cpp

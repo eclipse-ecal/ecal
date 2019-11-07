@@ -18,11 +18,7 @@
 
 project(hdf5)
 
-if (WIN32)
-  find_package(HDF5 COMPONENTS C NO_MODULE REQUIRED static)
-else()
-  find_package(HDF5 COMPONENTS C REQUIRED)
-endif()
+find_package(HDF5 COMPONENTS C REQUIRED)
 
 set(ecalhdf5_src
   eh5_meas.cpp

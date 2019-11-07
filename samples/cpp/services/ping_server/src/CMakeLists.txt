@@ -21,8 +21,6 @@ project(ping_server)
 find_package(eCAL REQUIRED)
 find_package(Protobuf REQUIRED)
 
-create_targets_protobuf()
-
 set(ping_server_src
   ping_server.cpp
 )
