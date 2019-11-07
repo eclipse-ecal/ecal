@@ -2,25 +2,14 @@ version: "{build}"
 
 image: Visual Studio 2015
 
-branches:
-  only:
-    - feature/add_conan_integration
-
 environment:
   QT5_ROOT_DIRECTORY: C:\Qt\5.11.3
   HDF5_DIR: C:\Program Files\HDF_Group\HDF5\1.8.21\cmake
+  PYTHON_HOME: C:\Python37
 
 install:
   # Initialize thirdparty dependencies (remove with Conan integration)
   - git submodule update --init --recursive
-
-  # Install prerequisites
-  - cmmd: echo "Downloading conan..."
-  - cmmd: set PATH=%PATH%;%PYTHON%/Scripts/
-  - cmmd: pip.exe install --user conan
-  - cmmd: conan user
-  - cmmd: conan remote add -f kwc_bintray https://api.bintray.com/conan/kwc/conan
-  - cmmd: conan --version
 
   # Install build requirements
   - curl -fsS -O https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8/hdf5-1.8.21/bin/hdf5-1.8.21-Std-win7_64-vs14.zip

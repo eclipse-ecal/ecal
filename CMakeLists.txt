@@ -50,10 +50,11 @@ option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samp
 option(ECAL_JOIN_MULTICAST_TWICE               "Specific Multicast Network Bug Workaround"                        OFF)
 option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
 
+
 # Set option regarding third party library builds
 option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS   "Build CMakeFunctions with eCAL"                                   ON)
-option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build Protobuf with eCAL"                                        OFF)
-option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                          OFF)
+option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build Protobuf with eCAL"                                         ON)
+option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                           ON)
 
 
 # there is a CMake issue with testing threading availibility via TEST_RUN
@@ -61,14 +62,9 @@ if(${CMAKE_CROSSCOMPILING})
   set(THREADS_PTHREAD_ARG "2" CACHE STRING "Forcibly set by CMakeLists.txt." FORCE)
 endif()
 
+
 # find_project(eCAL calls shall be ignored, eCAL is build as part of the project)
 set(as_subproject eCAL)
-if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
-list(APPEND as_subproject CMakeFunctions)
-endif ()
-if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
-list(APPEND as_subproject Protobuf)
-endif ()
 
 # Normalize backslashes from Windows paths
 file(TO_CMAKE_PATH "${CMAKE_MODULE_PATH}" CMAKE_MODULE_PATH)
@@ -95,6 +91,14 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
   set(protobuf_MSVC_STATIC_RUNTIME OFF CACHE BOOL "My option" FORCE)
   if(UNIX)
     set(protobuf_BUILD_SHARED_LIBS ON CACHE BOOL "My option" FORCE)
+  endif()
+  add_subdirectory(thirdparty/protobuf/cmake)
+  if (NOT TARGET protobuf::libprotobuf)
+    add_library(protobuf::libprotobuf ALIAS libprotobuf)
+  endif()
+  if (NOT TARGET protobuf::protoc)
+    add_executable(protobuf::protoc ALIAS protoc)
+    set(Protobuf_PROTOC_EXECUTABLE protoc)
   endif()
   if(MSVC)
     # reset CMAKE_CXX_FLAGS variable

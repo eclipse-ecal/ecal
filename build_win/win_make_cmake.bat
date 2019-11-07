@@ -25,8 +25,6 @@ if %VERSION% == v142 goto build
 :build
 if not exist "%BUILD_DIR%" mkdir %BUILD_DIR%
 cd /d %BUILD_DIR%
-conan install ..
-cmake .. -G "%COMPILE_WIN64%" -DCMAKE_INSTALL_PREFIX=_install -DCMAKE_TOOLCHAIN_FILE=conan_paths.cmake
 
 if %ARCH% == "" goto build_no_arch
 set COMPILE_WIN64=%VISUAL_STUDIO_GENERATOR%

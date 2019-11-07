@@ -1,6 +1,10 @@
 find_path(tclap_INCLUDE_DIR
   NAMES tclap/Arg.h
-  HINTS include ${CONAN_TCLAP_ROOT}/include)
+  HINTS
+    include
+    ${CONAN_TCLAP_ROOT}/include
+    ${CMAKE_SOURCE_DIR}/thirdparty/tclap/include
+  )
 
 if(tclap_INCLUDE_DIR-NOTFOUND)
   message(FATAL_ERROR "Could not find tclap library")
