@@ -19,7 +19,7 @@
 project(multiple_rec_cb)
 
 find_package(eCAL REQUIRED)
-find_package(protobuf REQUIRED)
+find_package(Protobuf REQUIRED)
 
 set(multiple_rec_cb_src
   multiple_rec_cb.cpp

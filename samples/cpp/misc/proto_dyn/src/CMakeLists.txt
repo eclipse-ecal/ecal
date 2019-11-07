@@ -19,7 +19,7 @@
 project(proto_dyn)
 
 find_package(eCAL REQUIRED)
-find_package(protobuf REQUIRED)
+find_package(Protobuf REQUIRED)
 
 set(proto_dyn_src
     proto_dyn.cpp

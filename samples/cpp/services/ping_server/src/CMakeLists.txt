@@ -19,7 +19,7 @@
 project(ping_server)
 
 find_package(eCAL REQUIRED)
-find_package(protobuf REQUIRED)
+find_package(Protobuf REQUIRED)
 
 set(ping_server_src
   ping_server.cpp

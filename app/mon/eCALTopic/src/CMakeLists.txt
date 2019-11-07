@@ -18,7 +18,7 @@
 
 project(topic)
 
-find_package(protobuf REQUIRED)
+find_package(Protobuf REQUIRED)
 find_package(tclap REQUIRED)
 
 set(ecaltopic_src

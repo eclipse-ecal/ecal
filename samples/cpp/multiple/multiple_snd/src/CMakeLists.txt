@@ -19,7 +19,7 @@
 project(multiple_snd)
 
 find_package(eCAL REQUIRED)
-find_package(protobuf REQUIRED)
+find_package(Protobuf REQUIRED)
 
 set(multiple_snd_src
   multiple_snd.cpp

@@ -19,7 +19,7 @@
 project(person_snd_unicast)
 
 find_package(eCAL REQUIRED)
-find_package(protobuf REQUIRED)
+find_package(Protobuf REQUIRED)
 
 set(person_snd_unicast_src
   person_snd_unicast.cpp

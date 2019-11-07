@@ -19,7 +19,7 @@
 project(person_snd)
 
 find_package(eCAL REQUIRED)
-find_package(protobuf REQUIRED)
+find_package(Protobuf REQUIRED)
 
 set(person_snd_src
   person_snd.cpp

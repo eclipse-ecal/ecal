@@ -19,7 +19,7 @@
 project(math_server)
 
 find_package(eCAL REQUIRED)
-find_package(protobuf REQUIRED)
+find_package(Protobuf REQUIRED)
 
 set(math_server_src
   math_server.cpp

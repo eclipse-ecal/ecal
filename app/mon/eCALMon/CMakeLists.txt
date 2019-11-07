@@ -23,7 +23,7 @@ find_package(Qt5 COMPONENTS
     Widgets
 REQUIRED)
 
-find_package(protobuf REQUIRED)
+find_package(Protobuf REQUIRED)
 find_package(simpleini REQUIRED)
 
 if(POLICY CMP0071)
