@@ -30,6 +30,7 @@ enum eTLayerType                                // transport layer
   tl_ecal_shm        =   4;                     // ecal shared memory
   tl_lcm             =   5;                     // google lcm
   tl_rtps            =   6;                     // fast rtps
+  tl_iceoryx         =   7;                     // iceoryx
   tl_inproc          =  42;                     // inproc (inner process)
   tl_all             = 255;                     // all layer
 }

@@ -36,6 +36,9 @@
 #ifdef ECAL_LAYER_FASTRTPS
 #include "readwrite/ecal_reader_rtps.h"
 #endif /* ECAL_LAYER_FASTRTPS */
+#ifdef ECAL_LAYER_ICEORYX
+#include "readwrite/ecal_reader_iceoryx.h"
+#endif /* ECAL_LAYER_ICEORYX */
 #include "readwrite/ecal_reader_inproc.h"
 
 #include "io/ecal_memfile_pool.h"
@@ -83,6 +86,7 @@ namespace eCAL
                  m_use_shm_confirmed(false),
                  m_use_lcm_confirmed(false),
                  m_use_rtps_confirmed(false),
+                 m_use_iceoryx_confirmed(false),
                  m_use_inproc_confirmed(false),
                  m_created(false)
   {
@@ -196,6 +200,7 @@ namespace eCAL
     m_use_shm_confirmed       = false;
     m_use_lcm_confirmed       = false;
     m_use_rtps_confirmed      = false;
+    m_use_iceoryx_confirmed   = false;
     m_use_inproc_confirmed    = false;
 
     return(true);
@@ -240,6 +245,14 @@ namespace eCAL
       CRtpsLayer::Get()->InitializeLayer();
     }
 #endif /*ECAL_LAYER_FASTRTPS*/
+
+#ifdef ECAL_LAYER_ICEORYX
+    // start iceoryx layer
+    if (eCALPAR(NET, ICEORYX_REC_ENABLED))
+    {
+      CIceoryxLayer::Get()->InitializeLayer();
+    }
+#endif /*ECAL_LAYER_ICEORYX*/
 
     // start inproc layer
     if (eCALPAR(NET, INPROC_REC_ENABLED))
@@ -288,6 +301,14 @@ namespace eCAL
     }
 #endif /*ECAL_LAYER_FASTRTPS*/
 
+#ifdef ECAL_LAYER_ICEORYX
+    // start iceoryx layer
+    if (eCALPAR(NET, ICEORYX_REC_ENABLED))
+    {
+      CIceoryxLayer::Get()->StartLayer(m_topic_name, m_qos);
+    }
+#endif /*ECAL_LAYER_ICEORYX*/
+
     // start inproc layer
     if (eCALPAR(NET, INPROC_REC_ENABLED))
     {
@@ -334,6 +355,14 @@ namespace eCAL
       CRtpsLayer::Get()->StopLayer(m_topic_name);
     }
 #endif /*ECAL_LAYER_FASTRTPS*/
+
+#ifdef ECAL_LAYER_ICEORYX
+    // start iceoryx layer
+    if (eCALPAR(NET, ICEORYX_REC_ENABLED))
+    {
+      CIceoryxLayer::Get()->StopLayer(m_topic_name);
+    }
+#endif /*ECAL_LAYER_ICEORYX*/
 
     // stop inproc layer
     if (eCALPAR(NET, INPROC_REC_ENABLED))
@@ -396,6 +425,14 @@ namespace eCAL
       tlayer->set_type(eCAL::pb::tl_rtps);
       tlayer->set_version(1);
       tlayer->set_confirmed(m_use_rtps_confirmed);
+      tlayer->set_par("");
+    }
+    // iceoryx layer
+    {
+      auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
+      tlayer->set_type(eCAL::pb::tl_iceoryx);
+      tlayer->set_version(1);
+      tlayer->set_confirmed(m_use_iceoryx_confirmed);
       tlayer->set_par("");
     }
     // inproc layer
@@ -501,6 +538,7 @@ namespace eCAL
     m_use_shm_confirmed       |= layer_ == eCAL::pb::tl_ecal_shm;
     m_use_lcm_confirmed       |= layer_ == eCAL::pb::tl_lcm;
     m_use_rtps_confirmed      |= layer_ == eCAL::pb::tl_rtps;
+    m_use_iceoryx_confirmed   |= layer_ == eCAL::pb::tl_iceoryx;
     m_use_inproc_confirmed    |= layer_ == eCAL::pb::tl_inproc;
 
     // use hash to discard multiple receives of the same payload
@@ -741,6 +779,13 @@ namespace eCAL
       break;
     }
 #endif /* ECAL_LAYER_FASTRTPS */
+#ifdef ECAL_LAYER_ICEORYX
+    case eCAL::pb::tl_iceoryx:
+    {
+      CIceoryxLayer::Get()->ApplyLayerParameter(par);
+      break;
+    }
+#endif /* ECAL_LAYER_ICEORYX */
     case eCAL::pb::tl_inproc:
     {
       CInProcLayer::Get()->ApplyLayerParameter(par);

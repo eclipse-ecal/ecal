@@ -40,6 +40,7 @@ namespace eCAL
       tlayer_shm        = 4,
       tlayer_lcm        = 5,
       tlayer_rtps       = 6,
+      tlayer_iceoryx    = 7,
       tlayer_inproc     = 42,
       tlayer_all        = 255
     };

@@ -18,10 +18,10 @@
 
 project(core VERSION ${eCAL_VERSION_STRING})
 
-find_package(Threads   REQUIRED)
-find_package(asio      REQUIRED)
-find_package(tclap     REQUIRED)
-find_package(simpleini REQUIRED)
+find_package(Threads      REQUIRED)
+find_package(asio         REQUIRED)
+find_package(tclap        REQUIRED)
+find_package(simpleini    REQUIRED)
 
 if (ECAL_JOIN_MULTICAST_TWICE)
   message(STATUS "eCAL ${PROJECT_NAME}: Enabling Specific Multicast Network Bug Workaround")
@@ -85,6 +85,13 @@ if(ECAL_LAYER_FASTRTPS)
   set(ecal_readwrite_rtps_cpp_src
     readwrite/ecal_reader_rtps.cpp
     readwrite/ecal_writer_rtps.cpp
+  )
+endif()
+
+if(ECAL_LAYER_ICEORYX)
+  set(ecal_readwrite_iceoryx_cpp_src
+    readwrite/ecal_reader_iceoryx.cpp
+    readwrite/ecal_writer_iceoryx.cpp
   )
 endif()
 
@@ -187,7 +194,15 @@ if(ECAL_LAYER_FASTRTPS)
       readwrite/fastrtps/string_message_PubSubTypes.h
 )
 set(ecal_readwrite_rtps_header_src
+    readwrite/ecal_reader_rtps.h
     readwrite/ecal_writer_rtps.h
+)
+endif()
+
+if(ECAL_LAYER_ICEORYX)
+set(ecal_readwrite_iceoryx_header_src
+    readwrite/ecal_reader_iceoryx.h
+    readwrite/ecal_writer_iceoryx.h
 )
 endif()
 
@@ -336,6 +351,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_io_cpp_linux_src} 
     ${ecal_mon_cpp_src} 
     ${ecal_pubsub_cpp_src} 
+    ${ecal_readwrite_iceoryx_cpp_src}
     ${ecal_readwrite_lcm_cpp_src} 
     ${ecal_readwrite_cpp_src} 
     ${ecal_readwrite_rtps_msg_cpp_src}
@@ -349,6 +365,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_io_header_linux_src}
     ${ecal_mon_header_src}
     ${ecal_pubsub_header_src}
+    ${ecal_readwrite_iceoryx_header_src}
     ${ecal_readwrite_lcm_header_src}
     ${ecal_readwrite_header_src}
     ${ecal_readwrite_rtps_msg_header_src}
@@ -389,6 +406,14 @@ if(ECAL_LAYER_FASTRTPS)
     target_link_libraries(${PROJECT_NAME} PRIVATE fastcdr fastrtps)
   endif()
     target_compile_definitions(${PROJECT_NAME} PUBLIC ECAL_LAYER_FASTRTPS)
+endif()
+
+if(ECAL_LAYER_ICEORYX)
+  if(UNIX)
+    find_package(iceoryx_posh REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PRIVATE iceoryx_posh::iceoryx_posh)
+  endif()
+    target_compile_definitions(${PROJECT_NAME} PUBLIC ECAL_LAYER_ICEORYX)
 endif()
 
 if(ECAL_NPCAP_SUPPORT)

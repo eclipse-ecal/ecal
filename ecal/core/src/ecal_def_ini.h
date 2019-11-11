@@ -60,6 +60,7 @@
 #define  NET_METAL_REC_ENABLED_S          "metal_rec_enabled"
 #define  NET_LCM_REC_ENABLED_S            "lcm_rec_enabled"
 #define  NET_RTPS_REC_ENABLED_S           "rtps_rec_enabled"
+#define  NET_ICEORYX_REC_ENABLED_S        "iceoryx_rec_enabled"
 #define  NET_INPROC_REC_ENABLED_S         "inproc_rec_enabled"
 
 #define  NET_NPCAP_ENABLED_S              "npcap_enabled"
@@ -112,6 +113,7 @@
 #define  PUB_USE_SHM_S                    "use_shm"
 #define  PUB_USE_LCM_S                    "use_lcm"
 #define  PUB_USE_RTPS_S                   "use_rtps"
+#define  PUB_USE_ICEORYX_S                "use_iceoryx"
 #define  PUB_USE_INPROC_S                 "use_inproc"
 
 #define  PUB_MEMFILE_MINSIZE_S            "memfile_minsize"
