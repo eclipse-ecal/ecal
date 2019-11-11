@@ -349,7 +349,7 @@ namespace eCAL
     }
 
 #ifdef ECAL_LAYER_FASTRTPS
-    // start rtps layer
+    // stop rtps layer
     if (eCALPAR(NET, RTPS_REC_ENABLED))
     {
       CRtpsLayer::Get()->StopLayer(m_topic_name);
@@ -357,7 +357,7 @@ namespace eCAL
 #endif /*ECAL_LAYER_FASTRTPS*/
 
 #ifdef ECAL_LAYER_ICEORYX
-    // start iceoryx layer
+    // stop iceoryx layer
     if (eCALPAR(NET, ICEORYX_REC_ENABLED))
     {
       CIceoryxLayer::Get()->StopLayer(m_topic_name);
