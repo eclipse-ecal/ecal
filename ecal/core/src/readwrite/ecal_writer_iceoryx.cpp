@@ -80,16 +80,18 @@ namespace eCAL
     if (!m_publisher) return 0;
 
     // allocate and fill chunk payload
-    auto ci = m_publisher->allocateChunk(data_.len, true);
+    auto ci = m_publisher->allocateChunkWithInfo(data_.len, true);
     if(!ci)
     {
-      // no more memory from iceory :-(
+      // no more memory from iceoryx :-(
       return 0;
     }
-    std::memcpy(ci, data_.buf, data_.len);
+
+    ci->m_payloadSize = data_.len; // seems to be an issue of iceoryx, should be updated by allocateChunkWithInfo
+    std::memcpy(ci->m_payload, data_.buf, data_.len);
 
     // send the chunk
-    m_publisher->sendChunk(ci);
+    m_publisher->sendChunkWithInfo(ci);
 
     return data_.len;
   }
