@@ -101,7 +101,14 @@
 // rtps
 /////////////////////////////////////
 #define  RTPS_SECTION_S                   "rtps"
-#define  RTPS_DEFAULT_DOMAIN_S            "domain"
+#define  RTPS_DOMAIN_S                    "domain"
+
+/////////////////////////////////////
+// iceoryx
+/////////////////////////////////////
+#define  ICEORYX_SECTION_S                "iceoryx"
+#define  ICEORYX_SERVICE_S                "service"
+#define  ICEORYX_INSTANCE_S               "instance"
 
 /////////////////////////////////////
 // publisher

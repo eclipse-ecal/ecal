@@ -21,6 +21,8 @@
  * @brief  eCAL iceoryx reader
 **/
 
+#include "ecal_def.h"
+#include "ecal_config_hlp.h"
 #include "ecal_global_accessors.h"
 #include "pubsub/ecal_subgate.h"
 
@@ -48,7 +50,7 @@ namespace eCAL
     iox::runtime::PoshRuntime::getInstance(std::string("/") + eCAL::Process::GetUnitName());
 
     // create subscriber
-    m_subscriber = std::shared_ptr<iox::popo::Subscriber>(new iox::popo::Subscriber({"eCAL", "", topic_name_}));
+    m_subscriber = std::shared_ptr<iox::popo::Subscriber>(new iox::popo::Subscriber({eCALPAR(ICEORYX, SERVICE), eCALPAR(ICEORYX, INSTANCE), topic_name_}));
     m_subscriber->setReceiveHandler(std::bind(&CDataReaderIceoryx::receiveHandler, this));
     m_subscriber->subscribe();
 
@@ -74,7 +76,7 @@ namespace eCAL
     while (m_subscriber->getChunkWithInfo(&ci))
     {
       // apply data to subscriber gate
-      if (g_subgate()) g_subgate()->ApplySample(m_topic_name, "", static_cast<const char*>(ci->m_payload), ci->m_payloadSize, /* msg_id = */ 0, ci->m_sequenceNumber, /*ci->m_txTimestamp*/ 0, /* msg_hash = */ 0, eCAL::pb::eTLayerType::tl_iceoryx);
+      if (g_subgate()) g_subgate()->ApplySample(m_topic_name, /*topic_id_*/ "", static_cast<const char*>(ci->m_payload), ci->m_payloadSize, /*id_*/ 0, /*clock_*/ 0, /*time_*/ 0, /*hash_*/ 0, eCAL::pb::eTLayerType::tl_iceoryx);
 
       // release the chunk
       m_subscriber->releaseChunkWithInfo(ci);

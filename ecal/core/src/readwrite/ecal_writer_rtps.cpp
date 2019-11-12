@@ -35,7 +35,7 @@
 eprosima::fastrtps::Participant* GetRTPSParticipant()
 {
   static eprosima::fastrtps::Participant* pparticipant(nullptr);
-  static string_message_PubSubType          stype;
+  static string_message_PubSubType        stype;
   if (pparticipant == nullptr)
   {
     eprosima::fastrtps::ParticipantAttributes PParam;
@@ -47,7 +47,7 @@ eprosima::fastrtps::Participant* GetRTPSParticipant()
     PParam.rtps.builtin.m_simpleEDP.use_PublicationWriterANDSubscriptionReader = true;
     PParam.rtps.builtin.domainId                                               = 0;
     PParam.rtps.builtin.leaseDuration                                          = eprosima::fastrtps::rtps::c_TimeInfinite;
-    PParam.rtps.setName(eCALPAR(RTPS, DEFAULT_DOMAIN).c_str());
+    PParam.rtps.setName(eCALPAR(RTPS, DOMAIN).c_str());
     pparticipant = eprosima::fastrtps::Domain::createParticipant(PParam);
     eprosima::fastrtps::Domain::registerType(pparticipant, &stype);
   }

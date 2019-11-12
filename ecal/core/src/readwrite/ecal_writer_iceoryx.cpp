@@ -21,6 +21,8 @@
  * @brief  iceoryx data writer
 **/
 
+#include "ecal_def.h"
+#include "ecal_config_hlp.h"
 #include "ecal/ecal_process.h"
 #include "readwrite/ecal_writer_iceoryx.h"
 
@@ -57,7 +59,7 @@ namespace eCAL
     iox::runtime::PoshRuntime::getInstance(std::string("/") + eCAL::Process::GetUnitName());
 
     // create publisher
-    m_publisher = std::shared_ptr<iox::popo::Publisher>(new iox::popo::Publisher({"eCAL", "", topic_name_}));
+    m_publisher = std::shared_ptr<iox::popo::Publisher>(new iox::popo::Publisher({eCALPAR(ICEORYX, SERVICE), eCALPAR(ICEORYX, INSTANCE), topic_name_}));
     m_publisher->offer();
 
     return true;
@@ -78,7 +80,7 @@ namespace eCAL
     if (!m_publisher) return 0;
 
     // allocate and fill chunk payload
-    auto ci = m_publisher->allocateChunk(data_.len);
+    auto ci = m_publisher->allocateChunk(data_.len, true);
     if(!ci)
     {
       // no more memory from iceory :-(
