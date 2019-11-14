@@ -27,6 +27,7 @@
 #include "pubsub/ecal_subgate.h"
 
 #include "ecal/ecal_process.h"
+#include "readwrite/ecal_writer_base.h"
 #include "readwrite/ecal_reader_iceoryx.h"
 
 #include <iceoryx_posh/runtime/posh_runtime.hpp>
@@ -75,9 +76,15 @@ namespace eCAL
     // get all the chunks the FiFo holds. Maybe there are several ones if the publisher produces faster than the subscriber can process
     while (m_subscriber->getChunkWithInfo(&ci))
     {
-      // apply data to subscriber gate
-      if (g_subgate()) g_subgate()->ApplySample(m_topic_name, /*topic_id_*/ "", static_cast<const char*>(ci->m_payload), ci->m_payloadSize, /*id_*/ 0, /*clock_*/ 0, /*time_*/ 0, /*hash_*/ 0, eCAL::pb::eTLayerType::tl_iceoryx);
-
+      // extract data header
+      const size_t header_size = sizeof(CDataWriterBase::SWriterData);
+      const CDataWriterBase::SWriterData* data_header  = static_cast<CDataWriterBase::SWriterData*>(ci->m_payload);
+      const char*                         data_payload = static_cast<char*>(ci->m_payload) + header_size;
+      if(ci->m_payloadSize == header_size + data_header->len)
+      {
+        // apply data to subscriber gate
+        if (g_subgate()) g_subgate()->ApplySample(m_topic_name, /*topic_id_*/ "", data_payload, data_header->len, data_header->id, data_header->clock, data_header->time, data_header->hash, eCAL::pb::eTLayerType::tl_iceoryx);
+      }
       // release the chunk
       m_subscriber->releaseChunkWithInfo(ci);
     }
