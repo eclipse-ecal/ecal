@@ -599,6 +599,7 @@ enum eTransportLayer
   tlayer_shm        = 4,  // shared memory (eCAL)
   tlayer_lcm        = 5,  // lcm           (Google)
   tlayer_rtps       = 6,  // rtps          (eProsima - a standard DDS transport layer)
+  tlayer_iceoryx    = 7,  // iceoryx       (Bosch zero copy shared memory layer)
   tlayer_inproc     = 42, // inner process (eCAL - deterministic inner process communication)
 };
 ```
