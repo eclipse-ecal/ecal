@@ -219,6 +219,7 @@ namespace eCAL
     bool         topic_tlayer_ecal_shm(false);
     bool         topic_tlayer_lcm(false);
     bool         topic_tlayer_rtps(false);
+    bool         topic_tlayer_iceoryx(false);
     bool         topic_tlayer_inproc(false);
     for (auto layer : sample_topic.tlayer())
     {
@@ -228,6 +229,7 @@ namespace eCAL
       topic_tlayer_ecal_shm       |= (layer.type() == eCAL::pb::tl_ecal_shm)       && layer.confirmed();
       topic_tlayer_lcm            |= (layer.type() == eCAL::pb::tl_lcm)            && layer.confirmed();
       topic_tlayer_rtps           |= (layer.type() == eCAL::pb::tl_rtps)           && layer.confirmed();
+      topic_tlayer_iceoryx        |= (layer.type() == eCAL::pb::tl_iceoryx)        && layer.confirmed();
       topic_tlayer_inproc         |= (layer.type() == eCAL::pb::tl_inproc)         && layer.confirmed();
     }
     size_t       connections_loc = static_cast<size_t>(sample_topic.connections_loc());
@@ -307,6 +309,7 @@ namespace eCAL
       TopicInfo.tlayer_ecal_shm       = topic_tlayer_ecal_shm;
       TopicInfo.tlayer_lcm            = topic_tlayer_lcm;
       TopicInfo.tlayer_rtps           = topic_tlayer_rtps;
+      TopicInfo.tlayer_iceoryx        = topic_tlayer_iceoryx;
       TopicInfo.tlayer_inproc         = topic_tlayer_inproc;
       TopicInfo.tsize                 = static_cast<int>(topic_size);
       TopicInfo.connections_loc       = static_cast<int>(connections_loc);
@@ -672,6 +675,12 @@ namespace eCAL
       {
         auto tlayer = pMonTopic->add_tlayer();
         tlayer->set_type(eCAL::pb::tl_rtps);
+        tlayer->set_confirmed(true);
+      }
+      if (topic.second.tlayer_iceoryx)
+      {
+        auto tlayer = pMonTopic->add_tlayer();
+        tlayer->set_type(eCAL::pb::tl_iceoryx);
         tlayer->set_confirmed(true);
       }
       if (topic.second.tlayer_inproc)

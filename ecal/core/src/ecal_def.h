@@ -106,13 +106,20 @@
 #define NET_METAL_REC_ENABLED                       false
 #define NET_LCM_REC_ENABLED                         false
 #define NET_RTPS_REC_ENABLED                        false
+#define NET_ICEORYX_REC_ENABLED                     false
 
 #define NET_NPCAP_ENABLED                           false
 
 /**********************************************************************************************/
 /*                                     rtps settings                                          */
 /**********************************************************************************************/
-#define RTPS_DEFAULT_DOMAIN                        "eCAL"
+#define RTPS_DOMAIN                                "eCAL"
+
+/**********************************************************************************************/
+/*                                     iceoryx settings                                       */
+/**********************************************************************************************/
+#define ICEORYX_SERVICE                            "eCAL"
+#define ICEORYX_INSTANCE                           ""
 
 /**********************************************************************************************/
 /*                                     publisher settings                                     */
@@ -133,6 +140,8 @@
 #define PUB_USE_LCM                                    0
 /* use rtps transport layer          [          on = 1, off = 0] */
 #define PUB_USE_RTPS                                   0
+/* use iceoryx transport layer       [          on = 1, off = 0] */
+#define PUB_USE_ICEORYX                                0
 
 /* share topic type                  [          on = 1, off = 0] */
 #define PUB_SHARE_TTYPE                                1

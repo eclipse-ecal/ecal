@@ -233,6 +233,9 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         case eCAL::pb::eTLayerType::tl_rtps:
           this_layer_string = "rtps";
           break;
+        case eCAL::pb::eTLayerType::tl_iceoryx:
+          this_layer_string = "iceoryx";
+          break;
         case eCAL::pb::eTLayerType::tl_inproc:
           this_layer_string = "inproc";
           break;

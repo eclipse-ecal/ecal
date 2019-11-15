@@ -36,6 +36,9 @@
 #ifdef ECAL_LAYER_FASTRTPS
 #include "ecal_writer_rtps.h"
 #endif /* ECAL_LAYER_FASTRTPS */
+#ifdef ECAL_LAYER_ICEORYX
+#include "ecal_writer_iceoryx.h"
+#endif /* ECAL_LAYER_ICEORYX */
 #include "ecal_writer_inproc.h"
 
 #include <mutex>
@@ -105,6 +108,9 @@ namespace eCAL
 #ifdef ECAL_LAYER_FASTRTPS
     bool SetUseRtps(TLayer::eSendMode mode_);
 #endif /* ECAL_LAYER_FASTRTPS */
+#ifdef ECAL_LAYER_ICEORYX
+    bool SetUseIceoryx(TLayer::eSendMode mode_);
+#endif /* ECAL_LAYER_ICEORYX */
     bool SetUseInProc(TLayer::eSendMode mode_);
 
     bool IsInternalSubscribedOnly();
@@ -169,6 +175,12 @@ namespace eCAL
     CDataWriterRTPS    m_writer_rtps;
     bool               m_use_rtps_confirmed;
 #endif /*ECAL_LAYER_FASTRTPS*/
+
+#ifdef ECAL_LAYER_ICEORYX
+    TLayer::eSendMode  m_use_iceoryx;
+    CDataWriterIceoryx m_writer_iceoryx;
+    bool               m_use_iceoryx_confirmed;
+#endif /*ECAL_LAYER_ICEORYX*/
 
     TLayer::eSendMode  m_use_inproc;
     CDataWriterInProc  m_writer_inproc;

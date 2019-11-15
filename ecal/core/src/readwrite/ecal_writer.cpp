@@ -110,6 +110,10 @@ namespace eCAL
     m_use_rtps(TLayer::eSendMode(eCALPAR(PUB, USE_RTPS))),
     m_use_rtps_confirmed(false),
 #endif /* ECAL_LAYER_FASTRTPS */
+#ifdef ECAL_LAYER_ICEORYX
+    m_use_iceoryx(TLayer::eSendMode(eCALPAR(PUB, USE_ICEORYX))),
+    m_use_iceoryx_confirmed(false),
+#endif /* ECAL_LAYER_ICEORYX */
     m_use_inproc(TLayer::eSendMode(eCALPAR(PUB, USE_INPROC))),
     m_use_inproc_confirmed(false),
     m_use_ttype(true),
@@ -186,6 +190,11 @@ namespace eCAL
     SetUseRtps(m_use_rtps);
 #endif /* ECAL_LAYER_FASTRTPS */
 
+#ifdef ECAL_LAYER_ICEORYX
+    // create iceoryx layer
+    SetUseIceoryx(m_use_iceoryx);
+#endif /* ECAL_LAYER_ICEORYX */
+
     // create inproc layer
     SetUseInProc(m_use_inproc);
 
@@ -222,6 +231,11 @@ namespace eCAL
     // destroy rtps writer
     m_writer_rtps.Destroy();
 #endif /*  ECAL_LAYER_FASTRTPS */
+
+#ifdef ECAL_LAYER_ICEORYX
+    // destroy iceoryx writer
+    m_writer_iceoryx.Destroy();
+#endif /*  ECAL_LAYER_ICEORYX */
 
     // destroy inproc writer
     m_writer_inproc.Destroy();
@@ -314,18 +328,26 @@ namespace eCAL
       SetUseRtps(mode_);
       break;
 #endif /* ECAL_LAYER_FASTRTPS */
+#ifdef ECAL_LAYER_ICEORYX
+    case TLayer::tlayer_iceoryx:
+      SetUseIceoryx(mode_);
+      break;
+#endif /* ECAL_LAYER_ICEORYX */
     case TLayer::tlayer_inproc:
       SetUseInProc(mode_);
       break;
     case TLayer::tlayer_all:
-      SetUseUdpMC (mode_);
-      SetUseUdpUC (mode_);
-      SetUseShm   (mode_);
-      SetUseLcm   (mode_);
+      SetUseUdpMC   (mode_);
+      SetUseUdpUC   (mode_);
+      SetUseShm     (mode_);
+      SetUseLcm     (mode_);
 #ifdef ECAL_LAYER_FASTRTPS
-      SetUseRtps  (mode_);
+      SetUseRtps    (mode_);
 #endif /* ECAL_LAYER_FASTRTPS */
-      SetUseInProc(mode_);
+#ifdef ECAL_LAYER_ICEORYX
+      SetUseIceoryx (mode_);
+#endif /* ECAL_LAYER_ICEORYX */
+      SetUseInProc  (mode_);
       break;
     default:
       break;
@@ -412,15 +434,21 @@ namespace eCAL
 #ifdef ECAL_LAYER_FASTRTPS
     TLayer::eSendMode use_rtps(m_use_rtps);
 #endif /* ECAL_LAYER_FASTRTPS */
+#ifdef ECAL_LAYER_ICEORYX
+    TLayer::eSendMode use_iceoryx(m_use_iceoryx);
+#endif /* ECAL_LAYER_ICEORYX */
     TLayer::eSendMode use_inproc(m_use_inproc);
-    if ( (use_udp_mc == TLayer::smode_off)
-      && (use_udp_uc == TLayer::smode_off)
-      && (use_shm    == TLayer::smode_off)
-      && (use_lcm    == TLayer::smode_off)
+    if ( (use_udp_mc  == TLayer::smode_off)
+      && (use_udp_uc  == TLayer::smode_off)
+      && (use_shm     == TLayer::smode_off)
+      && (use_lcm     == TLayer::smode_off)
 #ifdef ECAL_LAYER_FASTRTPS
-      && (use_rtps   == TLayer::smode_off)
+      && (use_rtps    == TLayer::smode_off)
 #endif /* ECAL_LAYER_FASTRTPS */
-      && (use_inproc == TLayer::smode_off)
+#ifdef ECAL_LAYER_ICEORYX
+      && (use_iceoryx == TLayer::smode_off)
+#endif /* ECAL_LAYER_ICEORYX */
+      && (use_inproc  == TLayer::smode_off)
       )
     {
       // failsafe default mode if
@@ -775,6 +803,55 @@ namespace eCAL
     }
 #endif /* ECAL_LAYER_FASTRTPS */
 
+#ifdef ECAL_LAYER_ICEORYX
+    ////////////////////////////////////////////////////////////////////////////
+    // LAYER 7 : ICEORYX
+    ////////////////////////////////////////////////////////////////////////////
+    if (use_iceoryx == TLayer::smode_on)
+    {
+#ifndef NDEBUG
+      // log it
+      Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::ICEORYX");
+#endif
+
+      // prepare send
+      if (m_writer_iceoryx.PrepareSend(len_))
+      {
+        // register new to update listening subscribers
+        DoRegister(true);
+        // let's rematch writer / reader
+        Process::SleepMS(5);
+      }
+
+      // send it
+      size_t iceoryx_sent(0);
+      {
+        struct CDataWriterBase::SWriterData wdata;
+        wdata.buf    = buf_;
+        wdata.len    = len_;
+        wdata.id     = m_id;
+        wdata.clock  = m_clock;
+        wdata.hash   = snd_hash;
+        wdata.time   = time_;
+        iceoryx_sent = m_writer_iceoryx.Send(wdata) > 0;
+        m_use_iceoryx_confirmed = true;
+      }
+      written |= iceoryx_sent > 0;
+
+#ifndef NDEBUG
+      // log it
+      if (iceoryx_sent > 0)
+      {
+        Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::ICEORYX - SUCCESS");
+      }
+      else
+      {
+        Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send::ICEORYX - FAILED");
+      }
+#endif
+    }
+#endif /* ECAL_LAYER_ICEORYX */
+
     // return length if we succeeded
     if (!written) return(0);
     else          return(len_);
@@ -790,13 +867,16 @@ namespace eCAL
     m_loc_subscribed = true;
 
     // add a new local subscription
-    m_writer_udp_mc.AddLocConnection (process_id_, reader_par_);
-    m_writer_udp_uc.AddLocConnection (process_id_, reader_par_);
-    m_writer_shm.AddLocConnection    (process_id_, reader_par_);
-    m_writer_lcm.AddLocConnection    (process_id_, reader_par_);
+    m_writer_udp_mc.AddLocConnection  (process_id_, reader_par_);
+    m_writer_udp_uc.AddLocConnection  (process_id_, reader_par_);
+    m_writer_shm.AddLocConnection     (process_id_, reader_par_);
+    m_writer_lcm.AddLocConnection     (process_id_, reader_par_);
 #ifdef ECAL_LAYER_FASTRTPS
-    m_writer_rtps.AddLocConnection   (process_id_, reader_par_);
+    m_writer_rtps.AddLocConnection    (process_id_, reader_par_);
 #endif /* ECAL_LAYER_FASTRTPS */
+#ifdef ECAL_LAYER_ICEORYX
+    m_writer_iceoryx.AddLocConnection (process_id_, reader_par_);
+#endif /* ECAL_LAYER_ICEORYX */
 
 #ifndef NDEBUG
     // log it
@@ -807,13 +887,16 @@ namespace eCAL
   void CDataWriter::RemoveLocSubscription(const std::string& process_id_)
   {
     // remove a local subscription
-    m_writer_udp_mc.RemLocConnection (process_id_);
-    m_writer_udp_uc.RemLocConnection (process_id_);
-    m_writer_shm.RemLocConnection    (process_id_);
-    m_writer_lcm.RemLocConnection    (process_id_);
+    m_writer_udp_mc.RemLocConnection  (process_id_);
+    m_writer_udp_uc.RemLocConnection  (process_id_);
+    m_writer_shm.RemLocConnection     (process_id_);
+    m_writer_lcm.RemLocConnection     (process_id_);
 #ifdef ECAL_LAYER_FASTRTPS
-    m_writer_rtps.RemLocConnection   (process_id_);
+    m_writer_rtps.RemLocConnection    (process_id_);
 #endif /* ECAL_LAYER_FASTRTPS */
+#ifdef ECAL_LAYER_ICEORYX
+    m_writer_iceoryx.RemLocConnection (process_id_);
+#endif /* ECAL_LAYER_ICEORYX */
 
 #ifndef NDEBUG
     // log it
@@ -831,13 +914,16 @@ namespace eCAL
     m_ext_subscribed = true;
 
     // add a new external subscription
-    m_writer_udp_mc.AddExtConnection (host_name_, process_id_, reader_par_);
-    m_writer_udp_uc.AddExtConnection (host_name_, process_id_, reader_par_);
-    m_writer_shm.AddExtConnection    (host_name_, process_id_, reader_par_);
-    m_writer_lcm.AddExtConnection    (host_name_, process_id_, reader_par_);
+    m_writer_udp_mc.AddExtConnection  (host_name_, process_id_, reader_par_);
+    m_writer_udp_uc.AddExtConnection  (host_name_, process_id_, reader_par_);
+    m_writer_shm.AddExtConnection     (host_name_, process_id_, reader_par_);
+    m_writer_lcm.AddExtConnection     (host_name_, process_id_, reader_par_);
 #ifdef ECAL_LAYER_FASTRTPS
-    m_writer_rtps.AddExtConnection   (host_name_, process_id_, reader_par_);
+    m_writer_rtps.AddExtConnection    (host_name_, process_id_, reader_par_);
 #endif /* ECAL_LAYER_FASTRTPS */
+#ifdef ECAL_LAYER_ICEORYX
+    m_writer_iceoryx.AddExtConnection (host_name_, process_id_, reader_par_);
+#endif /* ECAL_LAYER_ICEORYX */
 
 #ifndef NDEBUG
     // log it
@@ -848,13 +934,16 @@ namespace eCAL
   void CDataWriter::RemoveExtSubscription(const std::string& host_name_, const std::string& process_id_)
   {
     // remove external subscription
-    m_writer_udp_mc.RemExtConnection (host_name_, process_id_);
-    m_writer_udp_uc.RemExtConnection (host_name_, process_id_);
-    m_writer_shm.RemExtConnection    (host_name_, process_id_);
-    m_writer_lcm.RemExtConnection    (host_name_, process_id_);
+    m_writer_udp_mc.RemExtConnection  (host_name_, process_id_);
+    m_writer_udp_uc.RemExtConnection  (host_name_, process_id_);
+    m_writer_shm.RemExtConnection     (host_name_, process_id_);
+    m_writer_lcm.RemExtConnection     (host_name_, process_id_);
 #ifdef ECAL_LAYER_FASTRTPS
-    m_writer_rtps.RemExtConnection   (host_name_, process_id_);
+    m_writer_rtps.RemExtConnection    (host_name_, process_id_);
 #endif /* ECAL_LAYER_FASTRTPS */
+#ifdef ECAL_LAYER_ICEORYX
+    m_writer_iceoryx.RemExtConnection (host_name_, process_id_);
+#endif /* ECAL_LAYER_ICEORYX */
   }
 
   void CDataWriter::RefreshRegistration()
@@ -1026,6 +1115,16 @@ namespace eCAL
       tlayer->set_par("");
     }
 #endif /* ECAL_LAYER_FASTRTPS */
+#ifdef ECAL_LAYER_ICEORYX
+    // iceoryx layer
+    {
+      auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
+      tlayer->set_type(eCAL::pb::tl_iceoryx);
+      tlayer->set_version(1);
+      tlayer->set_confirmed(m_use_iceoryx_confirmed);
+      tlayer->set_par("");
+    }
+#endif /* ECAL_LAYER_ICEORYX */
     // inproc layer
     {
       auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
@@ -1248,6 +1347,32 @@ namespace eCAL
     return(true);
   }
 #endif /* ECAL_LAYER_FASTRTPS */
+
+#ifdef ECAL_LAYER_ICEORYX
+  bool CDataWriter::SetUseIceoryx(TLayer::eSendMode mode_)
+  {
+    m_use_iceoryx = mode_;
+    if (!m_created) return true;
+
+    // log send mode
+    LogSendMode(m_use_iceoryx, m_topic_name + "::CDataWriter::Create::ICEORYX_SENDMODE::");
+
+    switch (m_use_iceoryx)
+    {
+    case TLayer::eSendMode::smode_on:
+      m_writer_iceoryx.Create(m_host_name, m_topic_name, m_topic_id);
+#ifndef NDEBUG
+      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::ICEORYX_WRITER");
+#endif
+      break;
+    default:
+      m_writer_iceoryx.Destroy();
+      break;
+    }
+
+    return(true);
+  }
+#endif /* ECAL_LAYER_ICEORYX */
 
   bool CDataWriter::SetUseInProc(TLayer::eSendMode mode_)
   {

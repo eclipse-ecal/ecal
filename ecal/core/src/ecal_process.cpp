@@ -280,23 +280,25 @@ namespace eCAL
       sstream << "Status (Code)            : \"" << status_msg << "\" (" << status_state << ")" << std::endl;
       sstream << std::endl;
 
-      sstream << "------------------------- PUBLISHER LAYER DEFAULTS ---------------"     << std::endl;
-      sstream << "Layer Mode INPROC (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_INPROC)) << std::endl;
-      sstream << "Layer Mode SHM    (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_SHM))    << std::endl;
-      sstream << "Layer Mode UDP MC (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_UDP_MC)) << std::endl;
-      sstream << "Layer Mode UDP UC (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_UDP_UC)) << std::endl;
-      sstream << "Layer Mode LCM    (GOOGLE)   : " << LayerMode(eCALPAR(PUB, USE_LCM))    << std::endl;
-      sstream << "Layer Mode RTPS   (eProsima) : " << LayerMode(eCALPAR(PUB, USE_RTPS))   << std::endl;
+      sstream << "------------------------- PUBLISHER LAYER DEFAULTS ---------------"       << std::endl;
+      sstream << "Layer Mode INPROC  (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_INPROC))  << std::endl;
+      sstream << "Layer Mode SHM     (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_SHM))     << std::endl;
+      sstream << "Layer Mode UDP MC  (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_UDP_MC))  << std::endl;
+      sstream << "Layer Mode UDP UC  (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_UDP_UC))  << std::endl;
+      sstream << "Layer Mode LCM     (GOOGLE)   : " << LayerMode(eCALPAR(PUB, USE_LCM))     << std::endl;
+      sstream << "Layer Mode RTPS    (eProsima) : " << LayerMode(eCALPAR(PUB, USE_RTPS))    << std::endl;
+      sstream << "Layer Mode ICEORYX (Bosch)    : " << LayerMode(eCALPAR(PUB, USE_ICEORYX)) << std::endl;
       sstream << std::endl;
 
-      sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------"             << std::endl;
-      sstream << "Layer Mode INPROC (eCAL)     : " << LayerMode(eCALPAR(NET, INPROC_REC_ENABLED)) << std::endl;
-      sstream << "Layer Mode SHM    (eCAL)     : " << LayerMode(eCALPAR(NET, SHM_REC_ENABLED))    << std::endl;
-      sstream << "Layer Mode UDP MC (eCAL)     : " << LayerMode(eCALPAR(NET, UDP_MC_REC_ENABLED)) << std::endl;
-      sstream << "Layer Mode UDP UC (eCAL)     : " << LayerMode(eCALPAR(NET, UDP_UC_REC_ENABLED)) << std::endl;
-      sstream << "Layer Mode LCM    (GOOGLE)   : " << LayerMode(eCALPAR(NET, LCM_REC_ENABLED))    << std::endl;
-      sstream << "Layer Mode RTPS   (eProsima) : " << LayerMode(eCALPAR(NET, RTPS_REC_ENABLED))   << std::endl;
-      sstream << "Npcap UDP Reciever           : " << LayerMode(eCALPAR(NET, NPCAP_ENABLED));
+      sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------"               << std::endl;
+      sstream << "Layer Mode INPROC  (eCAL)     : " << LayerMode(eCALPAR(NET, INPROC_REC_ENABLED))  << std::endl;
+      sstream << "Layer Mode SHM     (eCAL)     : " << LayerMode(eCALPAR(NET, SHM_REC_ENABLED))     << std::endl;
+      sstream << "Layer Mode UDP MC  (eCAL)     : " << LayerMode(eCALPAR(NET, UDP_MC_REC_ENABLED))  << std::endl;
+      sstream << "Layer Mode UDP UC  (eCAL)     : " << LayerMode(eCALPAR(NET, UDP_UC_REC_ENABLED))  << std::endl;
+      sstream << "Layer Mode LCM     (GOOGLE)   : " << LayerMode(eCALPAR(NET, LCM_REC_ENABLED))     << std::endl;
+      sstream << "Layer Mode RTPS    (eProsima) : " << LayerMode(eCALPAR(NET, RTPS_REC_ENABLED))    << std::endl;
+      sstream << "Layer Mode ICEORYX (Bosch)    : " << LayerMode(eCALPAR(NET, ICEORYX_REC_ENABLED)) << std::endl;
+      sstream << "Npcap UDP Reciever            : " << LayerMode(eCALPAR(NET, NPCAP_ENABLED));
 #ifdef ECAL_NPCAP_SUPPORT
       if(eCALPAR(NET, NPCAP_ENABLED) && !Udpcap::Initialize())
       {

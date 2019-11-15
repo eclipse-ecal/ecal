@@ -83,6 +83,7 @@ namespace eCAL
         tlayer_ecal_shm       = false;
         tlayer_lcm            = false;
         tlayer_rtps           = false;
+        tlayer_iceoryx        = false;
         tlayer_inproc         = false;
         tsize                 = 0;
         connections_loc       = 0;
@@ -113,6 +114,7 @@ namespace eCAL
       bool         tlayer_ecal_shm;
       bool         tlayer_lcm;
       bool         tlayer_rtps;
+      bool         tlayer_iceoryx;
       bool         tlayer_inproc;
       int          tsize;
       int          connections_loc;
