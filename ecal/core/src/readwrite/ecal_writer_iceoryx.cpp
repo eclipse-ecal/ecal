@@ -56,7 +56,7 @@ namespace eCAL
   bool CDataWriterIceoryx::Create(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
   {
     // create the runtime for registering with the RouDi daemon
-    iox::runtime::PoshRuntime::getInstance(std::string("/") + eCAL::Process::GetUnitName());
+    iox::runtime::PoshRuntime::getInstance(std::string("/") + eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID()));
 
     // create publisher
     m_publisher = std::shared_ptr<iox::popo::Publisher>(new iox::popo::Publisher({eCALPAR(ICEORYX, SERVICE), eCALPAR(ICEORYX, INSTANCE), topic_name_}));

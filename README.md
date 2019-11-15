@@ -285,13 +285,13 @@ The following image shows a running replay, publishing 2 messages in realtime.
 
 ## Performance
 
-The following table shows the latency in µs between a single publisher / subscriber connection for different payload sizes (two different processes running on the same host). You can simply measure the latency on your own machine by running the ecal_latency_snd and ecal_latency_rec_cb sample applications.
+The following table shows the latency in µs between a single publisher / subscriber connection for different payload sizes (two different processes running on the same host). You can simply measure the latency on your own machine by running the ecal_latency_snd and ecal_latency_rec_cb sample applications. The first two columns are showing the performance for the eCAL builtin shared memory layer and the last column for the iceoryx shared memory layer (configured by adating the ecal configuration file only).
 
 First start ecal_sample_latency_rec_cb. This application will receive the published payloads, send them back to the sender and print out the average receive time, the message frequency and the data throughput over all received messages. The sending application ecal_latency_snd can be configured that way ..
   
      ecal_latency_snd  -s <payload_size [kB]> -r <send loops>
   
-The table shows the results for a Windows and a Linux platform (10000 samples, zero drops).
+The table shows the results for a Windows and a Linux platform (200000 samples 1kB - 512kB / 10000 samples > 512 kB, zero drops).
 
 ```
 -------------------------------
@@ -326,23 +326,25 @@ H/W path      Device    Class       Description
 
 ```
 
-|Payload Size (kB)|Win10 AMD64 (µs)|Ubuntu16 AMD64 (µs)|
-|----------------:|---------------:|------------------:|
-|              1  |            10  |               18  |
-|              2  |            11  |               18  |
-|              4  |            16  |               20  |
-|              8  |            16  |               20  |
-|             16  |            17  |               21  |
-|             32  |            18  |               22  |
-|             64  |            21  |               24  |
-|            128  |            26  |               33  |
-|            256  |            38  |               46  |
-|            512  |            62  |               76  |
-|           1024  |           123  |              196  |
-|           2048  |           378  |              578  |
-|           4096  |           848  |              824  |
-|           8192  |          1762  |             1645  |
-|          16384  |          3681  |             3258  |
+|Payload Size (kB)|Win10 AMD64 (µs)|Ubuntu16 AMD64 (µs)|Ubuntu16 AMD64 (µs)|
+|-----------------|----------------|-------------------|-------------------|
+|Layer            |eCAL SHM        |eCAL SHM           |Iceoryx SHM        |
+|----------------:|---------------:|------------------:|------------------:|
+|              1  |            10  |                5  |                5  |
+|              2  |            11  |                5  |                5  |
+|              4  |            16  |                6  |                6  |
+|              8  |            16  |                6  |                6  |
+|             16  |            17  |                7  |                6  |
+|             32  |            18  |                8  |                7  |
+|             64  |            21  |               11  |                8  |
+|            128  |            26  |               17  |               12  |
+|            256  |            38  |               34  |               19  |
+|            512  |            62  |               83  |               32  |
+|           1024  |           123  |              289  |              253  |
+|           2048  |           378  |              565  |              425  |
+|           4096  |           848  |              939  |              431  |
+|           8192  |          1762  |             1840  |              767  |
+|          16384  |          3681  |             3531  |             1565  |
 
 ## Usage
 

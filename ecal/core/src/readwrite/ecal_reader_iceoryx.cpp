@@ -48,7 +48,7 @@ namespace eCAL
     m_topic_name = topic_name_;
 
     // create the runtime for registering with the RouDi daemon
-    iox::runtime::PoshRuntime::getInstance(std::string("/") + eCAL::Process::GetUnitName());
+    iox::runtime::PoshRuntime::getInstance(std::string("/") + eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID()));
 
     // create subscriber
     m_subscriber = std::shared_ptr<iox::popo::Subscriber>(new iox::popo::Subscriber({eCALPAR(ICEORYX, SERVICE), eCALPAR(ICEORYX, INSTANCE), topic_name_}));
