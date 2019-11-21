@@ -327,9 +327,8 @@ H/W path      Device    Class       Description
 ```
 
 |Payload Size (kB)|Win10 AMD64 (µs)|Ubuntu16 AMD64 (µs)|Ubuntu16 AMD64 (µs)|
-|-----------------|----------------|-------------------|-------------------|
-|Layer            |eCAL SHM        |eCAL SHM           |Iceoryx SHM        |
 |----------------:|---------------:|------------------:|------------------:|
+|                 |      eCAL SHM  |         eCAL SHM  |      Iceoryx SHM  |
 |              1  |            10  |                5  |                5  |
 |              2  |            11  |                5  |                5  |
 |              4  |            16  |                6  |                6  |
