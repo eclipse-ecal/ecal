@@ -63,6 +63,8 @@ eCAL is using CMake as build system. When configuring with CMake, you can turn o
   Build the eCAL sample applications
 - `BUILD_TIME`, default `ON`
   Build the eCAL time interfaces, necessary if you want to use ecal in time synchronized mode (based on ptp for example)
+- `BUILD_PY_BINDING`, default `OFF`
+  Build the eCAL python language binding
 - `ECAL_LAYER_FASTRTPS`, default `OFF`
   Provide fast rtps as communication layer, requires fast-rtps and fast-cdr installations
 - `ECAL_LAYER_ICEORYX`, default `OFF`
@@ -118,6 +120,13 @@ All options can be passed on the command line `cmake -D<option>=<value>` or in t
 	sudo apt-get -y install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler
 	```
 	
+3. If you plan to create the eCAL python language extension (here as an example for the pythonm 3.6 version):
+	```bash
+	sudo apt-get install python3.6-dev
+	sudo apt-get install python3-pip
+	python3 -m pip install setuptools
+	```
+
 ### Compile eCAL
 1. Check out the repository as described [here](#checkout-the-repository).
 2. Compile eCAL:
@@ -132,6 +141,12 @@ All options can be passed on the command line `cmake -D<option>=<value>` or in t
 	cpack -G DEB
 	sudo dpkg -i eCAL-*
 	```
+3. Create and install the eCAL python egg:
+	```bash
+	cmake --build . --target create_python_egg --config Release
+	sudo python3 -m easy_install ecal-*
+	```
+
 ### UDP network configuration
 
 setup the correct ip address - here for adapter eth0, ip address 192.168.0.1
@@ -189,14 +204,16 @@ sudo gedit /etc/network/interfaces
 	HDF5_DIR = C:\Program Files\HDF_Group\HDF5\1.8.21\cmake
 	```
 
-4. Checkout the eCAL repository as described [here](#checkout-the-repository). Note that it has **submodules**, so use [Git for Windows](https://git-scm.com/download/win) to check out the repo.
+4. Install [Python for Windows](https://www.python.org/downloads/) (64 Bit, Version 3.x) if you plan to build the eCAl python language extension.
+
+5. Checkout the eCAL repository as described [here](#checkout-the-repository). Note that it has **submodules**, so use [Git for Windows](https://git-scm.com/download/win) to check out the repo.
 
 #### Build eCAL
 
-Run the following batch files to create the Visual Studio 2015 (2017 | 2019) solutions for 32 and 64 bit and to build both.
+Run the following batch files to create the Visual Studio 2015 (2017, 2019) solutions for 32 and 64 bit and to build both.
 
 ```bat
-build_win\win_make_cmake.bat v140 (v141 | v142)
+build_win\win_make_cmake.bat v140 (v141, v142)
 build_win\win_make_build.bat
 ```
 
@@ -214,7 +231,21 @@ If you installed all mentioned tools and dependencies correctly you can also sim
 win_make_all.bat
 ```
 
-to cmake eCAL build all configurations and create an installer. You will find the installer in the _setup subfolder finally.
+to cmake eCAL build all configurations and create an installer. You will find the installer in the _deploy subfolder inside your build folder finally.
+
+#### Create eCAL python extension
+
+If you configured cmake to build the python extension by setting `BUILD_PY_BINDING` to `ON` you can create the ecal python egg by calling
+
+```bat
+build_win\win_make_python_egg.bat
+```
+
+Afterwards you will find the python eCAL egg in the _deploy subfolder inside your build folder. Install the extesnion by
+
+```bat
+python -m easy_install ecal-X.Y.Z-pyX.Y.egg
+```
 
 ### UDP network configuration
 
@@ -966,6 +997,97 @@ int main(int argc, char **argv)
 
   return(0);
 }
+```
+
+### Python
+
+#### The Publish-Subscribe Pattern
+
+The eCAL API is fully wrapped into python script language. The usage is quite simple ('help ecal' in your python shell ;-)). You can find samples for all common use cases in the eCAL installation. Let's demonstrate the famous publish-subscribe "hello world".
+
+##### Listing 17
+
+```python
+import sys
+import time
+
+# import ecal core and string publishing
+import ecal.core.core as ecal_core
+from ecal.core.publisher import StringPublisher
+
+# initialize eCAL API
+ecal_core.initialize(sys.argv, "minimal python publisher")
+
+# create publisher
+pub = StringPublisher("foo")
+msg = "HELLO WORLD FROM PYTHON"
+
+# sending hello's
+while ecal_core.ok():
+  pub.send(current_message)
+  time.sleep(0.01)
+
+# finalize eCAL API
+ecal_core.finalize()
+```
+
+eCAL is wrapped into python in different packages. ecal.core contains all basic functionalities, ecal.core.publisher and ecal.core.subscriber the publish/subscribe interface. In listing 17 we use a simple string publisher. After initializing the core in line 9 we instanciate a publisher with the topic name "foo" and start pubishing a hello message every 10 ms. This sample is fully communication compatible to the c++ hello world subscribers in the Listings 1-4.
+
+##### Listing 18
+
+```python
+import sys
+
+# import ecal core and string subscribing
+import ecal.core.core as ecal_core
+from ecal.core.subscriber import StringSubscriber
+
+# initialize eCAL API
+ecal_core.initialize(sys.argv, "minimal python subscriber")
+
+# create subscriber
+sub = StringSubscriber("foo")
+
+# receive messages
+while ecal_core.ok():
+  ret, msg, time = sub.receive(500)
+  if ret > 0: print("Received:  {} ms   {}".format(time, msg))
+  else:       print("Subscriber timeout ..")
+  
+# finalize eCAL API
+ecal_core.finalize()
+
+```
+
+Listing 18 shows the python variant of the hello world subscriber. It uses a 500 ms blocking receive call to get the payload in the python msg variable and print it out. Finally Listing 19 shows the python hello world subscriber realized with a receive callback function.
+
+##### Listing 19
+
+```python
+import sys
+import time
+
+# import ecal core and string subscribing
+import ecal.core.core as ecal_core
+from ecal.core.subscriber import StringSubscriber
+
+# eCAL receive callback
+def onreceive(topic_name, msg, time):
+  print("Received:  {} ms   {}".format(time, msg))
+  
+# initialize eCAL API
+ecal_core.initialize(sys.argv, "minimal python subscriber (callback)")
+  
+# create subscriber and connect callback
+sub = StringSubscriber("foo")
+sub.set_callback(onreceive)
+  
+# idle main thread
+while ecal_core.ok():
+  time.sleep(0.1)
+  
+# finalize eCAL API
+ecal_core.finalize()
 ```
 
 ## Command Line Interface

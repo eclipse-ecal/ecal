@@ -43,6 +43,7 @@ option(BUILD_DOCS                              "Build the eCAL documentation"   
 option(BUILD_APPS                              "Build the eCAL applications"                                       ON)
 option(BUILD_SAMPLES                           "Build the eCAL samples"                                            ON)
 option(BUILD_TIME                              "Build the eCAL time interfaces"                                    ON)
+option(BUILD_PY_BINDING                        "Build eCAL python binding"                                        OFF)
 option(ECAL_LAYER_FASTRTPS                     "Provide fast rtps as communication layer"                         OFF)
 option(ECAL_LAYER_ICEORYX                      "Provide iceoryx as communication layer"                           OFF)
 
@@ -51,12 +52,12 @@ option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samp
 option(ECAL_JOIN_MULTICAST_TWICE               "Specific Multicast Network Bug Workaround"                        OFF)
 option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
 
-
 # Set option regarding third party library builds
 option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS   "Build CMakeFunctions with eCAL"                                    ON)
 option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build Protobuf with eCAL"                                          ON)
 option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                            ON)
 
+set(ECAL_INSTALL_PYTHON_DIR "bin" CACHE PATH "Location to install the Python extension modules. Might be set by setupdtools install.")
 
 # there is a CMake issue with testing threading availibility via TEST_RUN
 if(${CMAKE_CROSSCOMPILING})
@@ -105,6 +106,7 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
     # reset CMAKE_CXX_FLAGS variable
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
   endif()
+  set(Protobuf_VERSION 3.5.1)
 endif()
 
 if (ECAL_THIRDPARTY_BUILD_SPDLOG)
@@ -143,6 +145,7 @@ set(eCAL_VERSION        ${eCAL_VERSION_STRING})
 include(helper_functions/ecal_add_functions)
 include(helper_functions/ecal_helper_functions)
 include(helper_functions/ecal_install_functions)
+include(helper_functions/ecal_python_functions)
 include(build_location)
 
 if(MSVC)
@@ -261,6 +264,7 @@ if(WIN32)
   set(eCAL_install_samples_src_dir       samples/src/)
   set(eCAL_install_tests_dir             tests)
 endif()
+set(BUILD_DEPLOY_DIRECTORY ${CMAKE_BINARY_DIR}/_deploy)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
@@ -322,6 +326,13 @@ endif()
 if(HAS_HDF5)
   add_subdirectory(contrib/ecalhdf5/src)
   add_subdirectory(contrib/message)
+endif()
+
+# --------------------------------------------------------
+# ecal core python binding
+# --------------------------------------------------------
+if(BUILD_PY_BINDING)
+  add_subdirectory(lang/python)
 endif()
 
 # --------------------------------------------------------

@@ -23,8 +23,8 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-#include <cmath>
 #include <cfloat>
+#include <cmath>
 
 #include "math.pb.h"
 
@@ -55,8 +55,8 @@ public:
     // print request and
     std::cout << "Received request MathService / Divide   : " << request_->inp1() << " and " << request_->inp2() << std::endl << std::endl;
     // create response
-    if(fabs(request_->inp2()) > DBL_EPSILON) response_->set_out(request_->inp1() / request_->inp2());
-    else                                     response_->set_out(0.0);
+    if(std::fabs(request_->inp2()) > DBL_EPSILON) response_->set_out(request_->inp1() / request_->inp2());
+    else                                          response_->set_out(0.0);
   }
 };
 
