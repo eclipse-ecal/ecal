@@ -22,4 +22,9 @@ install:
 
 build_script:
   - set PATH="C:\Program Files\CMake\bin";%PATH%
-  - build_win\win_make_all.bat
+  - mkdir _build
+  - cd _build
+  - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_PY_BINDING=ON -DBUILD_SAMPLES=ON
+  - cmake --build .
+  - cpack -C Release
+  - cmake --build . --target create_python_egg --config Release
