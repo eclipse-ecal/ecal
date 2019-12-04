@@ -49,6 +49,8 @@ git submodule update
 
 eCAL is using CMake as build system. When configuring with CMake, you can turn on / off the following features.
 
+- `HAS_HDF5`, default: `ON`
+  Platform supports HDF5 library, necessary to build eCAL recording / replay tools
 - `HAS_QT5`, default: `ON`
   Platform supports Qt 5 library, necessary to build eCAL monitoring tool
 - `HAS_CAPNPROTO`, default: `OFF`
@@ -77,8 +79,8 @@ eCAL is using CMake as build system. When configuring with CMake, you can turn o
   Enable the eCAL to use Npcap for udp socket communication (i.e. the Win10 performance fix)
 - `ECAL_THIRDPARTY_BUILD_PROTOBUF`, default `ON`
   Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.5.1 or newer (tested with 3.5.1).
-- `ECAL_THIRDPARTY_BUILD_PROTOBUF`, default `ON`
-  Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.5.1 or newer (tested with 3.5.1).
+- `ECAL_THIRDPARTY_BUILD_SPDLOG`, default `ON`
+  Build Spdlog with eCAL, included as a submodule in the thirdparty folder. You can always use your custom spdlog installation, this is only for convenience.
 
 All options can be passed on the command line `cmake -D<option>=<value>` or in the CMake GUI application.
 

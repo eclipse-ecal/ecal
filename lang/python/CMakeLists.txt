@@ -19,6 +19,7 @@
 project(_ecal_py)
 
 find_package(Python COMPONENTS Development Interpreter)
+find_package(Protobuf REQUIRED)
 
 set(SETUP_PY_IN "${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in")
 set(SETUP_PY    "${PYTHON_BINARY_DIR}/setup.py")
