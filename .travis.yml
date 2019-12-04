@@ -19,7 +19,7 @@ addons:
       - libprotobuf-dev
       - libprotoc-dev
       - protobuf-compiler
-      - python3.6-dev
+      - python3.5-dev
 
 script:
   - mkdir _build
