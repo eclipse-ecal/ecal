@@ -24,7 +24,7 @@ build_script:
   - set PATH="C:\Program Files\CMake\bin";%PATH%
   - mkdir _build
   - cd _build
-  - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_PY_BINDING=ON -DBUILD_SAMPLES=ON
+  - cmake .. -G "Visual Studio 14 2015 Win64" -DBUILD_PY_BINDING=ON -DBUILD_SAMPLES=ON -DCMAKE_INSTALL_PREFIX=_install
   - cmake --build .
   - cpack -C Release
   - cmake --build . --target create_python_egg --config Release
