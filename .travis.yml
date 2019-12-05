@@ -16,10 +16,14 @@ addons:
       - libhdf5-dev
       - cmake
       - cmake-data
+      - python3.5-dev
+      - python3-pip
+      - python3-setuptools
 
 script:
   - mkdir _build
   - cd _build
-  - /usr/bin/cmake .. -DCMAKE_BUILD_TYPE=Release
+  - /usr/bin/cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_PY_BINDING=ON -DBUILD_SAMPLES=ON
   - make
   - /usr/bin/cpack -G DEB
+  - cmake --build . --target create_python_egg --config Release
