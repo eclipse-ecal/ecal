@@ -22,5 +22,11 @@ find_package(eCAL REQUIRED)
 
 set(PROJECT_GROUP monitoring)
 
-include_external_msproject(${PROJECT_NAME}_py ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pyproj)
-set_property(TARGET ${PROJECT_NAME}_py PROPERTY FOLDER samples/python/${PROJECT_GROUP})
+if(ECAL_INCLUDE_PY_SAMPLES)
+  if(WIN32)
+
+    include_external_msproject(${PROJECT_NAME}_py ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pyproj)
+    set_property(TARGET ${PROJECT_NAME}_py PROPERTY FOLDER samples/python/${PROJECT_GROUP})
+
+  endif()
+endif()

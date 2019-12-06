@@ -47,6 +47,7 @@ option(BUILD_PY_BINDING                        "Build eCAL python binding"      
 option(ECAL_LAYER_FASTRTPS                     "Provide fast rtps as communication layer"                         OFF)
 option(ECAL_LAYER_ICEORYX                      "Provide iceoryx as communication layer"                           OFF)
 
+option(ECAL_INCLUDE_PY_SAMPLES                 "Include python language sample projects into CMake"               OFF)
 option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samples"                               ON)
 
 option(ECAL_JOIN_MULTICAST_TWICE               "Specific Multicast Network Bug Workaround"                        OFF)

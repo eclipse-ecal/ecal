@@ -32,11 +32,13 @@ target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::pb)
 
 find_package(Protobuf REQUIRED)
 
-if(WIN32)
-
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lang/python/core)
 
-include_external_msproject(ecal_core_py ${CMAKE_CURRENT_SOURCE_DIR}/ecal_core_py.pyproj)
-set_property(TARGET ecal_core_py PROPERTY FOLDER lang/python/core)
+if(ECAL_INCLUDE_PY_SAMPLES)
+  if(WIN32)
 
+    include_external_msproject(ecal_core_py ${CMAKE_CURRENT_SOURCE_DIR}/ecal_core_py.pyproj)
+    set_property(TARGET ecal_core_py PROPERTY FOLDER lang/python/core)
+
+  endif()
 endif()

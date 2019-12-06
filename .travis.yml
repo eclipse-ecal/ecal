@@ -1,4 +1,4 @@
-dist: xenial
+dist: bionic
 
 language: cpp
 compiler: gcc
@@ -6,7 +6,7 @@ compiler: gcc
 addons:
   apt:
     sources:
-      - sourceline: 'deb https://apt.kitware.com/ubuntu/ xenial main'
+      - sourceline: 'deb https://apt.kitware.com/ubuntu/ bionic main'
         key_url: 'https://apt.kitware.com/keys/kitware-archive-latest.asc'
     packages:
       - doxygen
@@ -16,7 +16,7 @@ addons:
       - libhdf5-dev
       - cmake
       - cmake-data
-      - python3.5-dev
+      - python3.6-dev
       - python3-pip
       - python3-setuptools
 
