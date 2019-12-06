@@ -29,11 +29,13 @@ ecal_add_python_module(${PROJECT_NAME} SOURCES ${ecal_lang_py_src} PYTHON_CODE $
 target_link_libraries(${PROJECT_NAME} PRIVATE Python::Python)
 target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::hdf5)
 
-if(WIN32)
-
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lang/python/hdf5)
 
-include_external_msproject(ecal_hdf5_py ${CMAKE_CURRENT_SOURCE_DIR}/ecal_hdf5_py.pyproj)
-set_property(TARGET ecal_hdf5_py PROPERTY FOLDER lang/python/hdf5)
+if(ECAL_INCLUDE_PY_SAMPLES)
+  if(WIN32)
 
+    include_external_msproject(ecal_hdf5_py ${CMAKE_CURRENT_SOURCE_DIR}/ecal_hdf5_py.pyproj)
+    set_property(TARGET ecal_hdf5_py PROPERTY FOLDER lang/python/hdf5)
+
+  endif()
 endif()

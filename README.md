@@ -71,6 +71,8 @@ eCAL is using CMake as build system. When configuring with CMake, you can turn o
   Provide fast rtps as communication layer, requires fast-rtps and fast-cdr installations
 - `ECAL_LAYER_ICEORYX`, default `OFF`
   Provide iceoryx as communication layer, requires [eclipse/iceoryx](https://github.com/eclipse/iceoryx) installation
+- `ECAL_INCLUDE_PY_SAMPLES`, default: `OFF`
+  Include python language sample projects into CMake
 - `ECAL_INSTALL_SAMPLE_SOURCES`, default: `ON`
   Install the sources of eCAL samples
 - `ECAL_JOIN_MULTICAST_TWICE`, default: `OFF`
