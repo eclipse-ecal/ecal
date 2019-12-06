@@ -185,9 +185,9 @@ private:
 
   struct ColumnState
   {
-    bool     visible;
-    uint32_t size;
-    uint32_t position;
+    bool     visible  = false;
+    uint32_t size     = 0;
+    uint32_t position = 0;
 
     friend QDataStream& operator<< (QDataStream &stream, const QAdvancedTreeView::ColumnState& state)
     {
