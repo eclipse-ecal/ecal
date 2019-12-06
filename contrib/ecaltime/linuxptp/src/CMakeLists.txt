@@ -32,6 +32,10 @@ set(ecal_time_linuxptp_header
   config/config.h
 )
 
+if(UNIX)
+  set_source_files_properties(convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
+endif()
+
 ecal_add_time_plugin(${PROJECT_NAME} SHARED ${ecal_time_linuxptp_src} ${ecal_time_linuxptp_header})
 
 target_link_libraries(${PROJECT_NAME} eCAL::core simpleini::simpleini)

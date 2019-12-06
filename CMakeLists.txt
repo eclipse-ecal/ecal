@@ -79,10 +79,9 @@ message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 # --------------------------------------------------------
 # third party dependencies as requested
 # --------------------------------------------------------
-if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
-  list(APPEND as_subproject Protobuf)
+if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR ECAL_THIRDPARTY_BUILD_SPDLOG)
   if(MSVC)
-    # supress google protobuf warnings for windows platform
+    # supress thirdparty warnings for windows platform
     set(CMAKE_CXX_FLAGS_OLD "${CMAKE_CXX_FLAGS}")
     if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
       string(REGEX REPLACE "/W[0-4]" "/W0" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -90,6 +89,10 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W0")
     endif()
   endif()
+endif()
+
+if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
+  list(APPEND as_subproject Protobuf)
   set(protobuf_BUILD_TESTS OFF CACHE BOOL "My option" FORCE)
   set(protobuf_MSVC_STATIC_RUNTIME OFF CACHE BOOL "My option" FORCE)
   if(UNIX)
@@ -103,10 +106,6 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
     add_executable(protobuf::protoc ALIAS protoc)
     set(Protobuf_PROTOC_EXECUTABLE protoc)
   endif()
-  if(MSVC)
-    # reset CMAKE_CXX_FLAGS variable
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
-  endif()
   set(Protobuf_VERSION 3.5.1)
 endif()
 
@@ -116,7 +115,12 @@ if (ECAL_THIRDPARTY_BUILD_SPDLOG)
   add_library(spdlog::spdlog ALIAS spdlog)
 endif ()
 
-
+if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR ECAL_THIRDPARTY_BUILD_SPDLOG)
+  if(MSVC)
+    # reset thirdparty warnings for windows platform
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
+  endif()
+endif()
 
 if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
   list(APPEND as_subproject CMakeFunctions)

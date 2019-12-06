@@ -379,6 +379,10 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/ecal_defs.h
 )
 
+if(UNIX)
+  set_source_files_properties(convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
+endif()
+
 ecal_add_ecal_shared_library(${PROJECT_NAME}_c ${ecal_c_src} ${ecal_c_win_src})
 
 add_library(eCAL::${PROJECT_NAME}   ALIAS ${PROJECT_NAME})

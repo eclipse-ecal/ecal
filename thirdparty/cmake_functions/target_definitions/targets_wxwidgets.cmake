@@ -1,8 +1,0 @@
-macro(create_targets_wxwidgets)
-  if (NOT TARGET wxWidgets::wxWidgets)
-    add_library(wxWidgets::wxWidgets INTERFACE IMPORTED)
-    set_property(TARGET wxWidgets::wxWidgets PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${wxWidgets_INCLUDE_DIRS})
-    set_property(TARGET wxWidgets::wxWidgets PROPERTY INTERFACE_LINK_LIBRARIES ${wxWidgets_LIBRARIES})
-    set_property(TARGET wxWidgets::wxWidgets PROPERTY INTERFACE_COMPILE_DEFINITIONS ${wxWidgets_DEFINITIONS} ${wxWidgets_CXX_FLAGS})
-  endif()
-endmacro()
