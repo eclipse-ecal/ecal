@@ -36,6 +36,10 @@ if(WIN32)
   )
 endif()
 
+if(UNIX)
+  set_source_files_properties(src/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
+endif()
+
 ecal_add_app_console(${PROJECT_NAME}
   ${source_files}
   ${win32_resource_files}

@@ -164,6 +164,10 @@ if(ECAL_NPCAP_SUPPORT)
     )
 endif(ECAL_NPCAP_SUPPORT)
 
+if(UNIX)
+  set_source_files_properties(src/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
+endif()
+
 # compile qt resource files and ui files
 qt5_add_resources(autogen_resources ${qt_resource_files})
 qt5_wrap_ui      (autogen_ui        ${ui_files})

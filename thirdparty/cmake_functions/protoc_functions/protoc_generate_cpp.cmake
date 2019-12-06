@@ -1,3 +1,21 @@
+# ========================= eCAL LICENSE =================================
+#
+# Copyright (C) 2016 - 2019 Continental Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# ========================= eCAL LICENSE =================================
+
 function(PROTOBUF_GENERATE_CPP_EXT SRCS_RET HDRS_RET PROTO_OUT_DIR_RET PROTO_ROOT)
   if(NOT ARGN)
     message(SEND_ERROR "Error: PROTOBUF_GENERATE_CPP_EXT() called without any proto files")
@@ -57,7 +75,7 @@ cmake_parse_arguments(INPUT ""
   "${multiValueArgs}" ${ARGN} )
 
   if (MSVC)
-    set_source_files_properties(${INPUT_CPP_FILES} PROPERTIES COMPILE_FLAGS "/wd4100 /wd4146 /wd4512 /wd4127 /wd4125 /wd4244 /wd4267 /wd4300 /wd4309 /wd4800")
+    set_source_files_properties(${INPUT_CPP_FILES} PROPERTIES COMPILE_FLAGS "/wd4100 /wd4146 /wd4512 /wd4127 /wd4125 /wd4244 /wd4267 /wd4300 /wd4309 /wd4456 /wd4800")
   endif(MSVC)
 
 

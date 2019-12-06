@@ -5,7 +5,7 @@ pushd %~dp0\..
 call build_win\win_set_vars.bat
 
 if ["%~1"]==[""] (
-  set VERSION=v140
+  set VERSION=v142
   ) else (
   set VERSION=%1
   )
