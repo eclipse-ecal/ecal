@@ -71,22 +71,22 @@ namespace eCAL
 
   void CDataReaderIceoryx::receiveHandler()
   {
-    const iox::mepoo::ChunkInfo* ci(nullptr);
+    const iox::mepoo::ChunkHeader* ch(nullptr);
 
     // get all the chunks the FiFo holds. Maybe there are several ones if the publisher produces faster than the subscriber can process
-    while (m_subscriber->getChunkWithInfo(&ci))
+    while (m_subscriber->getChunk(&ch))
     {
       // extract data header
       const size_t header_size = sizeof(CDataWriterBase::SWriterData);
-      const CDataWriterBase::SWriterData* data_header  = static_cast<CDataWriterBase::SWriterData*>(ci->m_payload);
-      const char*                         data_payload = static_cast<char*>(ci->m_payload) + header_size;
-      if(ci->m_payloadSize == header_size + data_header->len)
+      const CDataWriterBase::SWriterData* data_header  = static_cast<CDataWriterBase::SWriterData*>(ch->payload());
+      const char*                         data_payload = static_cast<char*>(ch->payload()) + header_size;
+      if(ch->m_info.m_payloadSize == header_size + data_header->len)
       {
         // apply data to subscriber gate
         if (g_subgate()) g_subgate()->ApplySample(m_topic_name, /*topic_id_*/ "", data_payload, data_header->len, data_header->id, data_header->clock, data_header->time, data_header->hash, eCAL::pb::eTLayerType::tl_iceoryx);
       }
       // release the chunk
-      m_subscriber->releaseChunkWithInfo(ci);
+      m_subscriber->releaseChunk(ch);
     }
   }
 }
