@@ -844,7 +844,6 @@ static int c_server_method_callback(const std::string& method_name_, const std::
     PyEval_InitThreads();
   }
 
-  PyThreadState*   tstate = PyEval_SaveThread();
   PyGILState_STATE gstate = PyGILState_Ensure();
 
   PyObject* method_name = Py_BuildValue("s", method_name_.c_str());
@@ -886,8 +885,7 @@ static int c_server_method_callback(const std::string& method_name_, const std::
 
   Py_DECREF(args);
 
-  PyGILState_Release  (gstate);
-  PyEval_RestoreThread(tstate);
+  PyGILState_Release(gstate);
 
   return ret_state;
 }
@@ -1053,7 +1051,9 @@ PyObject* client_call_method(PyObject* /*self*/, PyObject* args)   // (client_ha
   PyArg_ParseTuple(args, "nsy#", &client_handle, &method_name, &request, &request_len);
 
   bool called_method{ false };
-  called_method = client_call_method(client_handle, method_name, request, request_len);
+  Py_BEGIN_ALLOW_THREADS
+    called_method = client_call_method(client_handle, method_name, request, request_len);
+  Py_END_ALLOW_THREADS
 
   return(Py_BuildValue("i", called_method));
 }
@@ -1069,7 +1069,6 @@ static void c_client_callback(const struct eCAL::SServiceInfo& service_info_, co
     PyEval_InitThreads();
   }
 
-  PyThreadState*   tstate = PyEval_SaveThread();
   PyGILState_STATE gstate = PyGILState_Ensure();
 
   PyObject* args = PyTuple_New(2);
@@ -1119,7 +1118,6 @@ static void c_client_callback(const struct eCAL::SServiceInfo& service_info_, co
   Py_DECREF(args);
 
   PyGILState_Release(gstate);
-  PyEval_RestoreThread(tstate);
 }
 
 PyObject* client_add_response_callback(PyObject* /*self*/, PyObject* args)   // (client_handle, callback)
