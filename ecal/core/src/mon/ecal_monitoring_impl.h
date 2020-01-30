@@ -78,11 +78,7 @@ namespace eCAL
         rclock                = 0;
         pid                   = 0;
         tlayer_ecal_udp_mc    = false;
-        tlayer_ecal_udp_uc    = false;
-        tlayer_ecal_udp_metal = false;
         tlayer_ecal_shm       = false;
-        tlayer_lcm            = false;
-        tlayer_rtps           = false;
         tlayer_iceoryx        = false;
         tlayer_inproc         = false;
         tsize                 = 0;
@@ -109,11 +105,7 @@ namespace eCAL
       std::string  ttype;
       std::string  tdesc;
       bool         tlayer_ecal_udp_mc;
-      bool         tlayer_ecal_udp_uc;
-      bool         tlayer_ecal_udp_metal;
       bool         tlayer_ecal_shm;
-      bool         tlayer_lcm;
-      bool         tlayer_rtps;
       bool         tlayer_iceoryx;
       bool         tlayer_inproc;
       int          tsize;
@@ -153,7 +145,8 @@ namespace eCAL
         dataread = 0;
         state_severity = 0;
         state_severity_level = 0;
-        tsync_mode = 0;
+        tsync_state = 0;
+        component_init_state = 0;
       };
 
       int            rclock;
@@ -170,7 +163,10 @@ namespace eCAL
       int            state_severity;
       int            state_severity_level;
       std::string    state_info;
-      int            tsync_mode;
+      int            tsync_state;
+      std::string    tsync_mod_name;
+      int            component_init_state;
+      std::string    component_init_info;
     };
     typedef eCAL::Util::CExpMap<std::string, SProcessMon> ProcessMonMapT;
 

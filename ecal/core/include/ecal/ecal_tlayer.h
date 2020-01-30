@@ -35,11 +35,7 @@ namespace eCAL
     {
       tlayer_none       = 0,
       tlayer_udp_mc     = 1,
-      tlayer_udp_uc     = 2,
-      tlayer_udp_metal  = 3,
       tlayer_shm        = 4,
-      tlayer_lcm        = 5,
-      tlayer_rtps       = 6,
       tlayer_iceoryx    = 7,
       tlayer_inproc     = 42,
       tlayer_all        = 255
@@ -63,18 +59,14 @@ namespace eCAL
     {
       STLayer()
       {
-        sm_udp_mc = smode_none;
-        sm_udp_uc = smode_none;
-        sm_shm    = smode_none;
-        sm_lcm    = smode_none;
-        sm_rtps   = smode_none;
-        sm_inproc = smode_none;
+        sm_udp_mc  = smode_none;
+        sm_shm     = smode_none;
+        sm_iceoryx = smode_none;
+        sm_inproc  = smode_none;
       }
       eSendMode sm_udp_mc;  //!< udp multicast
-      eSendMode sm_udp_uc;  //!< udp unicast
       eSendMode sm_shm;     //!< shared memory
-      eSendMode sm_lcm;     //!< lcm (google)
-      eSendMode sm_rtps;    //!< rtps (eProsima)
+      eSendMode sm_iceoryx; //!< shared memory (iceoryx)
       eSendMode sm_inproc;  //!< inner process (inner process memory forwarding only)
     };
   }

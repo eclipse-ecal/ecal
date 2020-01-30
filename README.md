@@ -26,7 +26,7 @@ additional informations like a unique name, a type and a description. A topic ca
   
   • Callback: A Callback can be used to react on time events, on incoming messages, on service requests or service responses. 
 
-eCAL is simplifying the data transport as much as possible, It uses different mechanism to transport a topic from a publisher to a connected subscriber. On the same computer node the data are exchanged by using memory mapped files. Between different computing nodes UDP multicast can be used for high performance data throughput, rtps can be used for reliable data transport.
+eCAL is simplifying the data transport as much as possible, It uses different mechanism to transport a topic from a publisher to a connected subscriber. On the same computer node the data are exchanged by using memory mapped files. Between different computing nodes UDP multicast can be used for high performance data throughput.
 
 
 ## Checkout the repository
@@ -67,8 +67,8 @@ eCAL is using CMake as build system. When configuring with CMake, you can turn o
   Build the eCAL time interfaces, necessary if you want to use ecal in time synchronized mode (based on ptp for example)
 - `BUILD_PY_BINDING`, default `OFF`
   Build the eCAL python language binding
-- `ECAL_LAYER_FASTRTPS`, default `OFF`
-  Provide fast rtps as communication layer, requires fast-rtps and fast-cdr installations
+- `BUILD_TESTS', default `OFF`
+  Build the eCAL google tests
 - `ECAL_LAYER_ICEORYX`, default `OFF`
   Provide iceoryx as communication layer, requires [eclipse/iceoryx](https://github.com/eclipse/iceoryx) installation
 - `ECAL_INCLUDE_PY_SAMPLES`, default: `OFF`
@@ -83,6 +83,8 @@ eCAL is using CMake as build system. When configuring with CMake, you can turn o
   Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.5.1 or newer (tested with 3.5.1).
 - `ECAL_THIRDPARTY_BUILD_SPDLOG`, default `ON`
   Build Spdlog with eCAL, included as a submodule in the thirdparty folder. You can always use your custom spdlog installation, this is only for convenience.
+- `ECAL_THIRDPARTY_BUILD_GTEST`, default `OFF`
+  Build GoogleTest with eCAL, included as a submodule in the thirdparty folder. You can always use your custom gtest installation, this is only for convenience.
 
 All options can be passed on the command line `cmake -D<option>=<value>` or in the CMake GUI application.
 
@@ -143,12 +145,12 @@ All options can be passed on the command line `cmake -D<option>=<value>` or in t
 3. Create a debian package and install it, if desired:
 	```bash
 	cpack -G DEB
-	sudo dpkg -i eCAL-*
+	sudo dpkg -i _deploy/eCAL-*
 	```
 3. Create and install the eCAL python egg:
 	```bash
 	cmake --build . --target create_python_egg --config Release
-	sudo python3 -m easy_install ecal-*
+	sudo python3 -m easy_install _deploy/ecal-*
 	```
 
 ### UDP network configuration
@@ -280,6 +282,33 @@ You can find the ecal.ini configuration file under %APPDATA%\eCAL.
 
 Don't forget to disable any windows firewall.
 
+
+## Transport Layer Concept
+
+eCAL is able to communicate on different so called transport layers, but first of all you have to decide if you want to communicate in a network or in a local host only mode. To configure this you need to set the ecal.ini [network/network_enabled] parameter to true (network communication mode) or false (local host only communication mode).
+
+After this you can fine tune the way of message transport for inner-process, interprocess and the interhost connections.
+There are different ways to configure these layers. They can be set up for a whole machine using the central configuration file (ecal.ini) or for a single eCAL process passed by command line arguments or finally for a single publish-subscribe connection using the C++ or python publisher API (see "Setup the transport layer"). Every single builtin transport layer has it's specific communication properties.
+
+| Layer           | Ini parameter            | Physical Layer     | Comment                                                                                   |
+|-----------------|--------------------------|--------------------|-------------------------------------------------------------------------------------------|
+| inproc          | [publisher/use_inproc]   | inner process      | inner process, zeroy copy communication (pointer forwarding)                              |
+| shm             | [publisher/use_shm]      | shared memory      | interprocess, shared memory communication, supports N:M connections, 2 memory copies      |
+| iceoryx         | [publisher/use_iceoryx]  | shared memory      | interprocess, shared memory communication, supports 1:1 connections, 1 memory copy        |
+| udp_mc          | [publisher/use_udp_mc]   | udp multicast      | interhost, topic name based dynamic multicast grouping to optimize pub/sub socket payload |
+
+Every layer can set up in 3 different activation modes. Every mode can be configured as default in the ecal.ini file and can be overwritten by the C++/Python publisher API. This is the activation logic
+
+  • off: layer will not be used for any communication
+  
+  • on: layer will be used independently if there is any local or host outside subscription
+  
+  • auto: layer will be used on demand (shm = 2 and udp_mc = 2 means shm layer will be used if there is any local subscription, udp_multicast will be used if there is a subscription outside the current host)
+  
+The "auto" mode is currently working for inproc, shm and udp_mc only (planned for iceoryx with the next release). In this mode a publisher send call will return without wasting any CPU time if there is no innerprocess, local host or network subscription.
+
+Independent from this publisher setting you can switch on/off the receiving logic for every layer. This can be done in the ecal.ini file [network] section. By default inproc (inproc_rec_enabled), shm (shm_rec_enabled) and udp_mc (udp_mc_rec_enabled) is switched on. If you want to experiment with iceoryx please set iceoryx_rec_enabled to true. For example switching off the udp multicast layer for a machine or a single process can avoid that the process will process incoming socket traffic even it is not interested in publications outside it's host.
+
 ## Applications
 
 Besides the communication core eCAL comes with some high-level applications for monitoring, recording and replaying messages. The monitoring application is used to provide an overview of all existing entities (publisher, subscriber, services) that are using the eCAL API to communicate. Recorder and player are designed to record messages in a distributed system efficiently and to replay them for post processing, analysis or simulation.
@@ -330,10 +359,10 @@ The table shows the results for a Windows and a Linux platform (200000 samples 1
 
 ```
 -------------------------------
- Platform Windows 10 (AMD64)
+ Platform
 -------------------------------
-OS Name:                            Microsoft Windows 10 Enterprise
-OS Version:                         10.0.16299
+OS Name:                            Microsoft Windows 10 Pro
+OS Version:                         10.0.18363
 OS Manufacturer:                    Microsoft Corporation
 OS Build Type:                      Multiprocessor Free
 System Manufacturer:                HP
@@ -341,44 +370,28 @@ System Model:                       HP ZBook 15 G5
 System Type:                        x64-based PC
 Processor(s):                       1 Prozessor(s) Installed.
                                     [01]: Intel64 Family 6 Model 158 Stepping 10 GenuineIntel ~2592 MHz
-Total Physical Memory:              32.579 MB
-
--------------------------------
- Platform Ubuntu 16 (AMD64)
--------------------------------
-H/W path      Device    Class       Description
-===============================================
-                        system      HP ZBook 15 G3 (M9R63AV)
-/0                      bus         80D5
-/0/0                    memory      128KiB L1 Cache
-/0/1                    memory      128KiB L1 Cache
-/0/2                    memory      1MiB L2 Cache
-/0/3                    memory      8MiB L3 Cache
-/0/4                    processor   Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz
-/0/5                    memory      16GiB System Memory
-/0/5/0                  memory      8GiB SODIMM Synchron 2133 MHz (0,5 ns)
-/0/5/1                  memory      8GiB SODIMM Synchron 2133 MHz (0,5 ns)
+Total Physical Memory:              32.614 MB
 
 ```
 
-|Payload Size (kB)|Win10 AMD64 (µs)|Ubuntu16 AMD64 (µs)|Ubuntu16 AMD64 (µs)|
+|Payload Size (kB)|Win10 AMD64 (µs)|Ubuntu18 AMD64 (µs)|Ubuntu18 AMD64 (µs)|
 |----------------:|---------------:|------------------:|------------------:|
 |                 |      eCAL SHM  |         eCAL SHM  |      Iceoryx SHM  |
-|              1  |            10  |                5  |                5  |
-|              2  |            11  |                5  |                5  |
-|              4  |            16  |                6  |                6  |
-|              8  |            16  |                6  |                6  |
-|             16  |            17  |                7  |                6  |
-|             32  |            18  |                8  |                7  |
-|             64  |            21  |               11  |                8  |
-|            128  |            26  |               17  |               12  |
-|            256  |            38  |               34  |               19  |
-|            512  |            62  |               83  |               32  |
-|           1024  |           123  |              289  |              253  |
-|           2048  |           378  |              565  |              425  |
-|           4096  |           848  |              939  |              431  |
-|           8192  |          1762  |             1840  |              767  |
-|          16384  |          3681  |             3531  |             1565  |
+|              1  |            10  |                4  |                6  |
+|              2  |            10  |                4  |                6  |
+|              4  |            10  |                5  |                6  |
+|              8  |            11  |                5  |                6  |
+|             16  |            12  |                6  |                6  |
+|             32  |            13  |                7  |                8  |
+|             64  |            16  |               10  |               10  |
+|            128  |            21  |               15  |               13  |
+|            256  |            32  |               33  |               19  |
+|            512  |            56  |               50  |               28  |
+|           1024  |           103  |              154  |               82  |
+|           2048  |           363  |              392  |              177  |
+|           4096  |           867  |              877  |              420  |
+|           8192  |          1814  |             1119  |              534  |
+|          16384  |          3956  |             2252  |             1060  |
 
 ## Usage
 
@@ -629,10 +642,7 @@ The currently supported layers are
 enum eTransportLayer
 {
   tlayer_udp_mc     = 1,  // udp multicast (eCAL - using multiple multicast groups for high efficient data transport)
-  tlayer_udp_uc     = 2,  // udp unicast   (eCAL)
   tlayer_shm        = 4,  // shared memory (eCAL)
-  tlayer_lcm        = 5,  // lcm           (Google)
-  tlayer_rtps       = 6,  // rtps          (eProsima - a standard DDS transport layer)
   tlayer_iceoryx    = 7,  // iceoryx       (Bosch zero copy shared memory layer)
   tlayer_inproc     = 42, // inner process (eCAL - deterministic inner process communication)
 };

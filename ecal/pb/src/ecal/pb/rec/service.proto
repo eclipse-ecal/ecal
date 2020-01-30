@@ -44,17 +44,17 @@ message Configuration
                                           // max_pre_buffer_length_secs  [float]                   The maximum amount of time to keep in the pre-buffer
                                           // pre_buffering_enabled       [bool]                    Whether pre-buffering is enabled
                                           // host_filter                 [string-list]             List of hosts (\n separated). The recorder will only record channels published by these hosts. If empty, all hosts are allowed.
-										  // record_mode                 [all/blacklist/whitelist] Whether to record all topics or use a blacklist / whitelist to only record some topics. Changing the mode will clear the listed_topics, so it is advisable to also provide a new listed_topics list.
+                                          // record_mode                 [all/blacklist/whitelist] Whether to record all topics or use a blacklist / whitelist to only record some topics. Changing the mode will clear the listed_topics, so it is advisable to also provide a new listed_topics list.
                                           // listed_topics               [string-list]             Whitelist / blacklist, when topic_mode is set accordingly (\n separated). If topic_mode is "all", this setting will be ignored.
-										  
-										  // ==== Job (Start Recording / Save pre buffer) ====
+
+                                          // ==== Job (Start Recording / Save pre buffer) ====
                                           // meas_root_dir               [string]                  The root directory to save the measurement to (un-evaluated format)
                                           // meas_name                   [string]                  The name of the measurement (un-evaluated format)
                                           // description                 [string]                  The description that will be saved to the measurement's doc folder (un-evaluated format)
                                           // max_file_size_mib           [int]                     The maximum HDF5 file size (When exceeding the file size, the measurement will be splitted into multiple files).
-										  
-										  // ==== Add Scenario config ====
-										  // scenario_name               [string]                  The name of the new time point
+
+                                          // ==== Add Scenario config ====
+                                          // scenario_name               [string]                  The name of the new time point
 }
 
 message GetConfigRequest {}
@@ -84,11 +84,11 @@ message CommandRequest                    // request recorder state
     // 
     // In eCALRec 1, the following fields were the "prepare" and "unprepare"
     // state, which meant something like "start pre-buffering" and
-	// "stop pre-buffering". These commands do not exist any more, as the
-	// "pre_buffering_enabled" option is now a configuration item. We can reuse
-	// the prepare and unprepare number, the initialization behaves like the old
-	// prepare commands, as long as the "pre_buffering_enabled" config element
-	// is set.
+    // "stop pre-buffering". These commands do not exist any more, as the
+    // "pre_buffering_enabled" option is now a configuration item. We can reuse
+    // the prepare and unprepare number, the initialization behaves like the old
+    // prepare commands, as long as the "pre_buffering_enabled" config element
+    // is set.
     
     initialize      = 1;                  // Connect to eCAL (create subscribers)                
     de_initialize   = 2;                  // Disconnect from eCAL (remove all subscribers)

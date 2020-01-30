@@ -159,11 +159,7 @@ namespace eCAL
     bool                                      m_use_tdesc;
 
     bool                                      m_use_udp_mc_confirmed;
-    bool                                      m_use_udp_uc_confirmed;
-    bool                                      m_use_udp_metal_confirmed;
     bool                                      m_use_shm_confirmed;
-    bool                                      m_use_lcm_confirmed;
-    bool                                      m_use_rtps_confirmed;
     bool                                      m_use_iceoryx_confirmed;
     bool                                      m_use_inproc_confirmed;
 

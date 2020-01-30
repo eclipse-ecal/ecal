@@ -68,8 +68,6 @@
 #define NET_UDP_MULTICAST_GROUP                    "239.0.0.1"
 #define NET_UDP_MULTICAST_MASK                     "0.0.0.15"
 #define NET_UDP_MULTICAST_PORT                     14000
-#define NET_UDP_MULTICAST_GROUP_METAL              "239.0.0.1"
-#define NET_UDP_MULTICAST_PORT_METAL               14100
 #ifdef CFG_FORCE_DEFAULT_LOCAL
 #define NET_UDP_MULTICAST_TTL                          0
 #else /* CFG_FORCE_DEFAULT_LOCAL */
@@ -81,14 +79,8 @@
 #define NET_UDP_MULTICAST_SNDBUF            (5*1024*1024)  /* 5 MByte */
 #define NET_UDP_MULTICAST_RCVBUF            (5*1024*1024)  /* 5 MByte */
 
-#define NET_UDP_UNICAST_IPADDR                     "127.0.0.1"
-#define NET_UDP_UNICAST_PORT                       15000
-
 #define NET_UDP_RECBUFFER_TIMEOUT                   1000   /* ms */
 #define NET_UDP_RECBUFFER_CLEANUP                     10   /* ms */
-
-#define NET_UDP_MULTICAST_GROUP_LCM                "239.255.76.67"
-#define NET_UDP_MULTICAST_PORT_LCM                  7667
 
 /* overall udp multicast bandwidth limitation in bytes/s, -1 == no limitation*/
 #define NET_BANDWIDTH_MAX_UDP                         -1
@@ -102,18 +94,9 @@
 #define NET_UDP_MC_REC_ENABLED                      true
 #endif /* CFG_FORCE_DEFAULT_LOCAL */
 
-#define NET_UDP_UC_REC_ENABLED                      false
-#define NET_METAL_REC_ENABLED                       false
-#define NET_LCM_REC_ENABLED                         false
-#define NET_RTPS_REC_ENABLED                        false
 #define NET_ICEORYX_REC_ENABLED                     false
 
 #define NET_NPCAP_ENABLED                           false
-
-/**********************************************************************************************/
-/*                                     rtps settings                                          */
-/**********************************************************************************************/
-#define RTPS_DOMAIN                                "eCAL"
 
 /**********************************************************************************************/
 /*                                     iceoryx settings                                       */
@@ -134,12 +117,6 @@
 #else /* CFG_FORCE_DEFAULT_LOCAL */
 #define PUB_USE_UDP_MC                                 2
 #endif /* CFG_FORCE_DEFAULT_LOCAL */
-/* use udp unicast transport layer   [          on = 1, off = 0] */
-#define PUB_USE_UDP_UC                                 0
-/* use lcm transport layer           [          on = 1, off = 0] */
-#define PUB_USE_LCM                                    0
-/* use rtps transport layer          [          on = 1, off = 0] */
-#define PUB_USE_RTPS                                   0
 /* use iceoryx transport layer       [          on = 1, off = 0] */
 #define PUB_USE_ICEORYX                                0
 

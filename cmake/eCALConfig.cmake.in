@@ -19,7 +19,6 @@
 @PACKAGE_INIT@
 
 # Set some build relevant variables to build samples appropriately
-set(ECAL_LAYER_FASTRTPS      "@ECAL_LAYER_FASTRTPS@")
 set(eCAL_install_samples_dir "@eCAL_install_samples_dir@")
 
 set(eCAL_VERSION_MAJOR  @eCAL_VERSION_MAJOR@)

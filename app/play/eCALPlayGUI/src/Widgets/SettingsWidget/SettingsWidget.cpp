@@ -26,6 +26,8 @@
 
 #include <chrono>
 #include <cfloat>
+#include <math.h>
+#include <cmath>
 
 SettingsWidget::SettingsWidget(QWidget *parent)
   : QWidget(parent)
@@ -128,14 +130,14 @@ void SettingsWidget::measurementClosed()
 
 void SettingsWidget::playSpeedChanged(double play_speed)
 {
-  if (fabs(ui_.play_speed_spinbox->value() - play_speed) > DBL_EPSILON)
+  if (std::fabs(ui_.play_speed_spinbox->value() - play_speed) > DBL_EPSILON)
   {
     ui_.play_speed_spinbox->blockSignals(true);
     ui_.play_speed_spinbox->setValue(play_speed);
     ui_.play_speed_spinbox->blockSignals(false);
   }
 
-  ui_.play_speed_warning_label->setVisible(fabs(play_speed) < DBL_EPSILON);
+  ui_.play_speed_warning_label->setVisible(std::fabs(play_speed) < DBL_EPSILON);
 }
 
 void SettingsWidget::limitPlaySpeedEnabledChanged(bool enabled)

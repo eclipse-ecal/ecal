@@ -120,26 +120,26 @@ namespace
       IP_ADAPTER_INFO AdapterInfo;
       GetAdaptersInfo(&AdapterInfo, &alloc_adapters_size);
     }
-    // get number of active adapters
-    int num_adapters = alloc_adapters_size / sizeof(IP_ADAPTER_INFO);
-    if (num_adapters == 0) return std::make_pair(false, 0);
+    if(alloc_adapters_size == 0) return std::make_pair(false, 0);
 
     // allocate adapter memory
-    std::vector<IP_ADAPTER_INFO> adapter_vec;
-    adapter_vec.resize(num_adapters);
+    auto adapter_mem = std::make_unique<char[]>(alloc_adapters_size);
 
     // get all adapter infos
-    DWORD dwStatus = GetAdaptersInfo(adapter_vec.data(), &alloc_adapters_size);
+    PIP_ADAPTER_INFO pAdapter(nullptr);
+    pAdapter = reinterpret_cast<PIP_ADAPTER_INFO>(adapter_mem.get());
+    DWORD dwStatus = GetAdaptersInfo(pAdapter, &alloc_adapters_size);
     if (dwStatus != ERROR_SUCCESS) return std::make_pair(false, 0);
 
     // iterate adapters and create hash
     int hash(0);
-    for(auto adapter : adapter_vec)
+    while(pAdapter)
     {
-      for (UINT i = 0; i < adapter.AddressLength; ++i)
+      for (UINT i = 0; i < pAdapter->AddressLength; ++i)
       {
-        hash += (adapter.Address[i] << ((i & 1) * 8));
+        hash += (pAdapter->Address[i] << ((i & 1) * 8));
       }
+      pAdapter = pAdapter->Next;
     }
 
     // return success
@@ -252,8 +252,6 @@ namespace eCAL
       sstream << "Multicast mask           : " << eCALPAR(NET, UDP_MULTICAST_MASK) << std::endl;
       int port = eCALPAR(NET, UDP_MULTICAST_PORT);
       sstream << "Multicast ports          : " << port << " - " << port + 10 << std::endl;
-      sstream << "Multicast group (metal)  : " << eCALPAR(NET, UDP_MULTICAST_GROUP_METAL) << std::endl;
-      sstream << "Multicast port  (metal)  : " << eCALPAR(NET, UDP_MULTICAST_PORT_METAL) << std::endl;
       auto bandwidth = eCALPAR(NET, BANDWIDTH_MAX_UDP);
       if (bandwidth < 0)
       {
@@ -284,9 +282,6 @@ namespace eCAL
       sstream << "Layer Mode INPROC  (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_INPROC))  << std::endl;
       sstream << "Layer Mode SHM     (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_SHM))     << std::endl;
       sstream << "Layer Mode UDP MC  (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_UDP_MC))  << std::endl;
-      sstream << "Layer Mode UDP UC  (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_UDP_UC))  << std::endl;
-      sstream << "Layer Mode LCM     (GOOGLE)   : " << LayerMode(eCALPAR(PUB, USE_LCM))     << std::endl;
-      sstream << "Layer Mode RTPS    (eProsima) : " << LayerMode(eCALPAR(PUB, USE_RTPS))    << std::endl;
       sstream << "Layer Mode ICEORYX (Bosch)    : " << LayerMode(eCALPAR(PUB, USE_ICEORYX)) << std::endl;
       sstream << std::endl;
 
@@ -294,9 +289,6 @@ namespace eCAL
       sstream << "Layer Mode INPROC  (eCAL)     : " << LayerMode(eCALPAR(NET, INPROC_REC_ENABLED))  << std::endl;
       sstream << "Layer Mode SHM     (eCAL)     : " << LayerMode(eCALPAR(NET, SHM_REC_ENABLED))     << std::endl;
       sstream << "Layer Mode UDP MC  (eCAL)     : " << LayerMode(eCALPAR(NET, UDP_MC_REC_ENABLED))  << std::endl;
-      sstream << "Layer Mode UDP UC  (eCAL)     : " << LayerMode(eCALPAR(NET, UDP_UC_REC_ENABLED))  << std::endl;
-      sstream << "Layer Mode LCM     (GOOGLE)   : " << LayerMode(eCALPAR(NET, LCM_REC_ENABLED))     << std::endl;
-      sstream << "Layer Mode RTPS    (eProsima) : " << LayerMode(eCALPAR(NET, RTPS_REC_ENABLED))    << std::endl;
       sstream << "Layer Mode ICEORYX (Bosch)    : " << LayerMode(eCALPAR(NET, ICEORYX_REC_ENABLED)) << std::endl;
       sstream << "Npcap UDP Reciever            : " << LayerMode(eCALPAR(NET, NPCAP_ENABLED));
 #ifdef ECAL_NPCAP_SUPPORT

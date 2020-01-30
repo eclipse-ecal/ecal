@@ -29,13 +29,7 @@
 #include "ecal_reader.h"
 
 #include "readwrite/ecal_reader_udp_mc.h"
-#include "readwrite/ecal_reader_udp_uc.h"
 #include "readwrite/ecal_reader_shm.h"
-#include "readwrite/ecal_reader_metal.h"
-#include "readwrite/ecal_reader_lcm.h"
-#ifdef ECAL_LAYER_FASTRTPS
-#include "readwrite/ecal_reader_rtps.h"
-#endif /* ECAL_LAYER_FASTRTPS */
 #ifdef ECAL_LAYER_ICEORYX
 #include "readwrite/ecal_reader_iceoryx.h"
 #endif /* ECAL_LAYER_ICEORYX */
@@ -81,11 +75,7 @@ namespace eCAL
                  m_use_ttype(true),
                  m_use_tdesc(true),
                  m_use_udp_mc_confirmed(false),
-                 m_use_udp_uc_confirmed(false),
-                 m_use_udp_metal_confirmed(false),
                  m_use_shm_confirmed(false),
-                 m_use_lcm_confirmed(false),
-                 m_use_rtps_confirmed(false),
                  m_use_iceoryx_confirmed(false),
                  m_use_inproc_confirmed(false),
                  m_created(false)
@@ -195,11 +185,7 @@ namespace eCAL
     m_rec_time                = std::chrono::steady_clock::time_point();
 
     m_use_udp_mc_confirmed    = false;
-    m_use_udp_uc_confirmed    = false;
-    m_use_udp_metal_confirmed = false;
     m_use_shm_confirmed       = false;
-    m_use_lcm_confirmed       = false;
-    m_use_rtps_confirmed      = false;
     m_use_iceoryx_confirmed   = false;
     m_use_inproc_confirmed    = false;
 
@@ -214,37 +200,11 @@ namespace eCAL
       CMulticastLayer::Get()->InitializeLayer();
     }
 
-    // start ecal udp unicast layer
-    if (eCALPAR(NET, UDP_UC_REC_ENABLED))
-    {
-      CUnicastLayer::Get()->InitializeLayer();
-    }
-
     // start ecal shared memory layer
     if (eCALPAR(NET, SHM_REC_ENABLED))
     {
       CSHMLayer::Get()->InitializeLayer();
     }
-
-    // start ecal udp metal layer
-    if (eCALPAR(NET, METAL_REC_ENABLED))
-    {
-      CMetalLayer::Get()->InitializeLayer();
-    }
-
-    // start udp lcm layer
-    if (eCALPAR(NET, LCM_REC_ENABLED))
-    {
-      CLcmLayer::Get()->InitializeLayer();
-    }
-
-#ifdef ECAL_LAYER_FASTRTPS
-    // start rtps layer
-    if (eCALPAR(NET, RTPS_REC_ENABLED))
-    {
-      CRtpsLayer::Get()->InitializeLayer();
-    }
-#endif /*ECAL_LAYER_FASTRTPS*/
 
 #ifdef ECAL_LAYER_ICEORYX
     // start iceoryx layer
@@ -269,37 +229,11 @@ namespace eCAL
       CMulticastLayer::Get()->StartLayer(m_topic_name, m_qos);
     }
 
-    // start ecal udp unicast layer
-    if (eCALPAR(NET, UDP_UC_REC_ENABLED))
-    {
-      CUnicastLayer::Get()->StartLayer(m_topic_name, m_qos);
-    }
-
     // start ecal shared memory layer
     if (eCALPAR(NET, SHM_REC_ENABLED))
     {
       CSHMLayer::Get()->StartLayer(m_topic_name, m_qos);
     }
-
-    // start ecal udp metal layer
-    if (eCALPAR(NET, METAL_REC_ENABLED))
-    {
-      CMetalLayer::Get()->StartLayer(m_topic_name, m_qos);
-    }
-
-    // start udp lcm layer
-    if (eCALPAR(NET, LCM_REC_ENABLED))
-    {
-      CLcmLayer::Get()->StartLayer(m_topic_name, m_qos);
-    }
-
-#ifdef ECAL_LAYER_FASTRTPS
-    // start rtps layer
-    if (eCALPAR(NET, RTPS_REC_ENABLED))
-    {
-      CRtpsLayer::Get()->StartLayer(m_topic_name, m_qos);
-    }
-#endif /*ECAL_LAYER_FASTRTPS*/
 
 #ifdef ECAL_LAYER_ICEORYX
     // start iceoryx layer
@@ -324,37 +258,11 @@ namespace eCAL
       CMulticastLayer::Get()->StopLayer(m_topic_name);
     }
 
-    // stop ecal udp unicast layer
-    if (eCALPAR(NET, UDP_UC_REC_ENABLED))
-    {
-      CUnicastLayer::Get()->StopLayer(m_topic_name);
-    }
-
     // stop ecal shared memory layer
     if (eCALPAR(NET, SHM_REC_ENABLED))
     {
       CSHMLayer::Get()->StopLayer(m_topic_name);
     }
-
-    // stop ecal udp metal layer
-    if (eCALPAR(NET, METAL_REC_ENABLED))
-    {
-      CMetalLayer::Get()->StopLayer(m_topic_name);
-    }
-
-    // stop udp lcm layer
-    if (eCALPAR(NET, LCM_REC_ENABLED))
-    {
-      CLcmLayer::Get()->StopLayer(m_topic_name);
-    }
-
-#ifdef ECAL_LAYER_FASTRTPS
-    // stop rtps layer
-    if (eCALPAR(NET, RTPS_REC_ENABLED))
-    {
-      CRtpsLayer::Get()->StopLayer(m_topic_name);
-    }
-#endif /*ECAL_LAYER_FASTRTPS*/
 
 #ifdef ECAL_LAYER_ICEORYX
     // stop iceoryx layer
@@ -395,36 +303,12 @@ namespace eCAL
       tlayer->set_confirmed(m_use_udp_mc_confirmed);
       tlayer->set_par("");
     }
-    // udp unicast layer
-    {
-      auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
-      tlayer->set_type(eCAL::pb::tl_ecal_udp_uc);
-      tlayer->set_version(1);
-      tlayer->set_confirmed(m_use_udp_uc_confirmed);
-      tlayer->set_par("");
-    }
     // shm layer
     {
       auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
       tlayer->set_type(eCAL::pb::tl_ecal_shm);
       tlayer->set_version(1);
       tlayer->set_confirmed(m_use_shm_confirmed);
-      tlayer->set_par("");
-    }
-    // lcm layer
-    {
-      auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
-      tlayer->set_type(eCAL::pb::tl_lcm);
-      tlayer->set_version(1);
-      tlayer->set_confirmed(m_use_lcm_confirmed);
-      tlayer->set_par("");
-    }
-    // rtps layer
-    {
-      auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
-      tlayer->set_type(eCAL::pb::tl_rtps);
-      tlayer->set_version(1);
-      tlayer->set_confirmed(m_use_rtps_confirmed);
       tlayer->set_par("");
     }
     // iceoryx layer
@@ -533,11 +417,7 @@ namespace eCAL
 
     // store receive layer
     m_use_udp_mc_confirmed    |= layer_ == eCAL::pb::tl_ecal_udp_mc;
-    m_use_udp_uc_confirmed    |= layer_ == eCAL::pb::tl_ecal_udp_uc;
-    m_use_udp_metal_confirmed |= layer_ == eCAL::pb::tl_ecal_udp_metal;
     m_use_shm_confirmed       |= layer_ == eCAL::pb::tl_ecal_shm;
-    m_use_lcm_confirmed       |= layer_ == eCAL::pb::tl_lcm;
-    m_use_rtps_confirmed      |= layer_ == eCAL::pb::tl_rtps;
     m_use_iceoryx_confirmed   |= layer_ == eCAL::pb::tl_iceoryx;
     m_use_inproc_confirmed    |= layer_ == eCAL::pb::tl_inproc;
 
@@ -752,33 +632,11 @@ namespace eCAL
       CMulticastLayer::Get()->ApplyLayerParameter(par);
       break;
     }
-    case eCAL::pb::tl_ecal_udp_uc:
-    {
-      CUnicastLayer::Get()->ApplyLayerParameter(par);
-      break;
-    }
-    case eCAL::pb::tl_ecal_udp_metal:
-    {
-      CMetalLayer::Get()->ApplyLayerParameter(par);
-      break;
-    }
     case eCAL::pb::tl_ecal_shm:
     {
       CSHMLayer::Get()->ApplyLayerParameter(par);
       break;
     }
-    case eCAL::pb::tl_lcm:
-    {
-      CLcmLayer::Get()->ApplyLayerParameter(par);
-      break;
-    }
-#ifdef ECAL_LAYER_FASTRTPS
-    case eCAL::pb::tl_rtps:
-    {
-      CRtpsLayer::Get()->ApplyLayerParameter(par);
-      break;
-    }
-#endif /* ECAL_LAYER_FASTRTPS */
 #ifdef ECAL_LAYER_ICEORYX
     case eCAL::pb::tl_iceoryx:
     {

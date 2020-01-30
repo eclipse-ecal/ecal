@@ -218,20 +218,8 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         case eCAL::pb::eTLayerType::tl_ecal_udp_mc:
           this_layer_string = "udp_mc";
           break;
-        case eCAL::pb::eTLayerType::tl_ecal_udp_uc:
-          this_layer_string = "udp_uc";
-          break;
-        case eCAL::pb::eTLayerType::tl_ecal_udp_metal:
-          this_layer_string = "udp_metal";
-          break;
         case eCAL::pb::eTLayerType::tl_ecal_shm:
           this_layer_string = "shm";
-          break;
-        case eCAL::pb::eTLayerType::tl_lcm:
-          this_layer_string = "lcm";
-          break;
-        case eCAL::pb::eTLayerType::tl_rtps:
-          this_layer_string = "rtps";
           break;
         case eCAL::pb::eTLayerType::tl_iceoryx:
           this_layer_string = "iceoryx";

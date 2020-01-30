@@ -55,15 +55,15 @@ VisualisationWidget::VisualisationWidget(const QString& topic_name, const QStrin
   }
   ui_.topic_name_label->setText(header);
 
-  supported_plugins_ = PluginLoader::getInstance()->getSupportedPlugins(topic_name, topic_type); 
+  auto supported_plugins_ = PluginManager::getInstance()->CreatePlugins(topic_name, topic_type, this);
 
   // add suitable plugin widgets to the tab view
-  for (auto& plugin : supported_plugins_)
+  for (const auto& plugin : supported_plugins_)
   {
-    auto plugin_widget = plugin.create(topic_name, topic_type, this);
-
+    auto plugin_info = plugin.first;
+    auto plugin_widget = plugin.second;
     plugin_widgets_.push_back(plugin_widget);
-    ui_.tab_widget->addTab(plugin_widget->getWidget(), plugin.getMetaData().name);
+    ui_.tab_widget->addTab(plugin_widget->getWidget(), plugin_info.meta_data.name);
 
     connect(ui_.pause_button, &QPushButton::toggled, [plugin_widget](bool checked) { if (checked) plugin_widget->onPause(); else plugin_widget->onResume(); });
     connect(&update_timer_, &QTimer::timeout, [this]() {if (!isPaused()) plugin_widgets_.at(ui_.tab_widget->currentIndex())->onUpdate(); });

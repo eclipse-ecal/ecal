@@ -48,6 +48,8 @@ namespace eCAL
     int Initialize    ( unsigned int components_, std::vector<std::string>* config_keys_ = nullptr);
     int IsInitialized ( unsigned int component_  );
 
+    unsigned int GetComponents() { return(components); };
+
     int Finalize(unsigned int components_);
 
     const std::unique_ptr<CConfig>&                                       config()           { return config_instance; };
@@ -65,6 +67,7 @@ namespace eCAL
 
   private:
     bool                                                                  initialized;
+    unsigned int                                                          components;
     std::unique_ptr<CConfig>                                              config_instance;
     std::unique_ptr<CLog>                                                 log_instance;
     std::unique_ptr<CMonitoring>                                          monitoring_instance;

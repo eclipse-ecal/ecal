@@ -10,6 +10,7 @@
     <OutputPath>.</OutputPath>
     <Name>measurement_read</Name>
     <RootNamespace>measurement_read</RootNamespace>
+    <ProjectGuid>{2b37f456-c807-3a24-9ba7-d4757cf4ca23}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

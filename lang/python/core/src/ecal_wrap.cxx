@@ -1051,9 +1051,7 @@ PyObject* client_call_method(PyObject* /*self*/, PyObject* args)   // (client_ha
   PyArg_ParseTuple(args, "nsy#", &client_handle, &method_name, &request, &request_len);
 
   bool called_method{ false };
-  Py_BEGIN_ALLOW_THREADS
-    called_method = client_call_method(client_handle, method_name, request, request_len);
-  Py_END_ALLOW_THREADS
+  called_method = client_call_method(client_handle, method_name, request, request_len);
 
   return(Py_BuildValue("i", called_method));
 }
@@ -1335,8 +1333,17 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
       val = Py_BuildValue("s", process.state().info().c_str());
       PyDict_SetItemString(processDict, "state_info", val); Py_DECREF(val);
 
-      val = Py_BuildValue("i", process.tsync_mode());
-      PyDict_SetItemString(processDict, "tsync_mode", val); Py_DECREF(val);
+      val = Py_BuildValue("i", process.tsync_state());
+      PyDict_SetItemString(processDict, "tsync_state", val); Py_DECREF(val);
+
+      val = Py_BuildValue("s", process.tsync_mod_name().c_str());
+      PyDict_SetItemString(processDict, "tsync_mod_name", val); Py_DECREF(val);
+
+      val = Py_BuildValue("i", process.component_init_state());
+      PyDict_SetItemString(processDict, "component_init_state", val); Py_DECREF(val);
+
+      val = Py_BuildValue("s", process.component_init_info().c_str());
+      PyDict_SetItemString(processDict, "component_init_info", val); Py_DECREF(val);
     }
 
     // collect service infos

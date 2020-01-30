@@ -10,6 +10,7 @@
     <OutputPath>.</OutputPath>
     <Name>minimal_service</Name>
     <RootNamespace>minimal_service</RootNamespace>
+    <ProjectGuid>{97a07ce9-60dd-3a70-a2b0-1ccf564743a7}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

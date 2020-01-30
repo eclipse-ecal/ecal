@@ -25,6 +25,7 @@
 
 #include "ecal_def.h"
 #include "ecal_config_hlp.h"
+#include "ecal_globals.h"
 #include "ecal_register.h"
 #include "ecal_servgate.h"
 #include "ecal_timegate.h"
@@ -193,30 +194,44 @@ namespace eCAL
     process_sample_mutable_process->mutable_state()->set_info(g_process_info);
     if (!g_timegate())
     {
-      process_sample_mutable_process->set_tsync_mode(eCAL::pb::eTSyncState::tsync_none);
+      process_sample_mutable_process->set_tsync_state(eCAL::pb::eTSyncState::tsync_none);
     }
     else
     {
       if (!g_timegate()->IsSynchronized())
       {
-        process_sample_mutable_process->set_tsync_mode(eCAL::pb::eTSyncState::tsync_none);
+        process_sample_mutable_process->set_tsync_state(eCAL::pb::eTSyncState::tsync_none);
       }
       else
       {
         switch (g_timegate()->GetSyncMode())
         {
         case CTimeGate::eTimeSyncMode::realtime:
-          process_sample_mutable_process->set_tsync_mode(eCAL::pb::eTSyncState::tsync_realtime);
+          process_sample_mutable_process->set_tsync_state(eCAL::pb::eTSyncState::tsync_realtime);
           break;
         case CTimeGate::eTimeSyncMode::replay:
-          process_sample_mutable_process->set_tsync_mode(eCAL::pb::eTSyncState::tsync_replay);
+          process_sample_mutable_process->set_tsync_state(eCAL::pb::eTSyncState::tsync_replay);
           break;
         default:
-          process_sample_mutable_process->set_tsync_mode(eCAL::pb::eTSyncState::tsync_none);
+          process_sample_mutable_process->set_tsync_state(eCAL::pb::eTSyncState::tsync_none);
           break;
         }
       }
+      process_sample_mutable_process->set_tsync_mod_name(g_timegate()->GetName());
     }
+
+    // eCAL initialization state
+    unsigned int comp_state(g_globals()->GetComponents());
+    process_sample_mutable_process->set_component_init_state(google::protobuf::int32(comp_state));
+    std::string component_info;
+    if (comp_state & Init::Publisher)   component_info += "|pub";
+    if (comp_state & Init::Subscriber)  component_info += "|sub";
+    if (comp_state & Init::Service)     component_info += "|srv";
+    if (comp_state & Init::Monitoring)  component_info += "|mon";
+    if (comp_state & Init::Logging)     component_info += "|log";
+    if (comp_state & Init::TimeSync)    component_info += "|time";
+    if (!component_info.empty()) component_info = component_info.substr(1);
+    process_sample_mutable_process->set_component_init_info(component_info);
 
     // register sample
     size_t sent_sum = RegisterSample(Process::GetHostName(), process_sample);

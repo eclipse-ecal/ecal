@@ -50,7 +50,9 @@ public:
     DATAREAD,
     SEVERITY,
     INFO,
-    TSYNC_MODE,
+    TSYNC_STATE,
+    TSYNC_MOD_NAME,
+    COMPONENT_INIT_INFO
   };
 
   ProcessTreeItem();

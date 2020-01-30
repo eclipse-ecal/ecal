@@ -10,6 +10,7 @@
     <OutputPath>.</OutputPath>
     <Name>ecalhdf5_rw</Name>
     <RootNamespace>ecalhdf5_rw</RootNamespace>
+    <ProjectGuid>{ff2de1ed-4c2e-39b0-9370-e52b97bce0b5}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

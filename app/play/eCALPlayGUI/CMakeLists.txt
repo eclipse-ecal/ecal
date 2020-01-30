@@ -46,6 +46,8 @@ set(source_files
     src/EcalPlayGui.h
     src/EcalPlayService.cpp
     src/EcalPlayService.h
+    src/HelpWindow.cpp
+    src/HelpWindow.h
     src/main.cpp
     src/QEcalPlay.cpp
     src/QEcalPlay.h
@@ -91,6 +93,7 @@ if(WIN32)
 ENDIF(WIN32)
 
 set(ui_files
+    src/HelpWindow.ui
     src/MainWindow.ui
     src/Widgets/AboutDialog/AboutDialog.ui
     src/Widgets/ChannelWidget/ChannelWidget.ui
@@ -121,6 +124,7 @@ create_targets_protobuf()
 target_link_libraries (${PROJECT_NAME}
     simpleini::simpleini
     tclap::tclap
+    CustomTclap
     eCAL::play_core
     Qt5::Widgets
     CustomQt

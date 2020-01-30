@@ -102,7 +102,18 @@ void PlayThread::Run()
               // condition variable predicate function.
               // When pausing while waiting for the next frame, the outer
               // do-while loop causes the 
+#ifdef WIN32
               pause_cv_.wait_until(command_lock, wait_until_timepoint);
+#else // WIN32
+              if (wait_until_timepoint == std::chrono::steady_clock::time_point::max())
+              {
+                pause_cv_.wait(command_lock);
+              }
+              else
+              {
+                pause_cv_.wait_until(command_lock, wait_until_timepoint);
+              }
+#endif // WIN32
               wait_until_timepoint = GetSystemTime_Private(command_.next_frame_timestamp_);
             } 
 
@@ -1102,7 +1113,7 @@ EcalPlayState PlayThread::GetCurrentPlayState()
   std::lock_guard<std::mutex> command_lock_(command_mutex_);
   state.playing_                      = command_.playing_;
   state.actual_play_rate_             = GetCurrentPlaySpeed_Private();
-  state.curren_frame_index            = command_.current_frame_index_;
+  state.current_frame_index           = command_.current_frame_index_;
   state.current_frame_timestamp       = command_.current_frame_timestamp_;
   if (!command_.limit_play_speed_)
   {

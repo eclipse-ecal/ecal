@@ -44,7 +44,8 @@ option(BUILD_APPS                              "Build the eCAL applications"    
 option(BUILD_SAMPLES                           "Build the eCAL samples"                                            ON)
 option(BUILD_TIME                              "Build the eCAL time interfaces"                                    ON)
 option(BUILD_PY_BINDING                        "Build eCAL python binding"                                        OFF)
-option(ECAL_LAYER_FASTRTPS                     "Provide fast rtps as communication layer"                         OFF)
+option(BUILD_TESTS                             "Build the eCAL google tests"                                      OFF)
+
 option(ECAL_LAYER_ICEORYX                      "Provide iceoryx as communication layer"                           OFF)
 
 option(ECAL_INCLUDE_PY_SAMPLES                 "Include python language sample projects into CMake"               OFF)
@@ -55,8 +56,9 @@ option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (
 
 # Set option regarding third party library builds
 option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS   "Build CMakeFunctions with eCAL"                                    ON)
-option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build Protobuf with eCAL"                                          ON)
+option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build protobuf with eCAL"                                          ON)
 option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                            ON)
+option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"                                            OFF)
 
 set(ECAL_INSTALL_PYTHON_DIR "bin" CACHE PATH "Location to install the Python extension modules. Might be set by setupdtools install.")
 
@@ -79,7 +81,7 @@ message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 # --------------------------------------------------------
 # third party dependencies as requested
 # --------------------------------------------------------
-if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR ECAL_THIRDPARTY_BUILD_SPDLOG)
+if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR ECAL_THIRDPARTY_BUILD_SPDLOG OR ECAL_THIRDPARTY_BUILD_GTEST)
   if(MSVC)
     # supress thirdparty warnings for windows platform
     set(CMAKE_CXX_FLAGS_OLD "${CMAKE_CXX_FLAGS}")
@@ -115,7 +117,24 @@ if (ECAL_THIRDPARTY_BUILD_SPDLOG)
   add_library(spdlog::spdlog ALIAS spdlog)
 endif ()
 
-if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR ECAL_THIRDPARTY_BUILD_SPDLOG)
+if (ECAL_THIRDPARTY_BUILD_GTEST)
+  list(APPEND as_subproject GTest)
+  # Googletest automatically forces MT instead of MD if we do not set this option.
+  if(MSVC)
+    set(gtest_force_shared_crt ON CACHE BOOL "My option" FORCE)
+    set(BUILD_GMOCK OFF CACHE BOOL "My option" FORCE)
+    set(INSTALL_GTEST OFF CACHE BOOL "My option" FORCE)
+  endif()
+  add_subdirectory(thirdparty/googletest)
+  if(NOT TARGET GTest::GTest)
+    add_library(GTest::GTest ALIAS gtest)
+  endif()
+  if(NOT TARGET GTest::Main)
+    add_library(GTest::Main ALIAS gtest_main)
+  endif()
+endif()
+
+if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR ECAL_THIRDPARTY_BUILD_SPDLOG OR ECAL_THIRDPARTY_BUILD_GTEST)
   if(MSVC)
     # reset thirdparty warnings for windows platform
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
@@ -298,6 +317,7 @@ add_subdirectory(ecal/core/src)
 # custom libs
 # --------------------------------------------------------
 add_subdirectory(lib/ThreadingUtils)
+add_subdirectory(lib/CustomTclap)
 add_subdirectory(lib/EcalUtils)
 if(HAS_QT5)
   add_subdirectory(lib/CustomQt)
@@ -374,7 +394,7 @@ if(BUILD_APPS AND HAS_QT5)
   endif()
   add_subdirectory(app/mon/eCALMonPlugins)
 # --------------------------------------------------------
-# Qt5 Apps using HDF5
+# qt applications using hdf5
 # --------------------------------------------------------
 if(BUILD_APPS AND HAS_QT5 AND HAS_HDF5)
   add_subdirectory(app/play/eCALPlayGUI)
@@ -383,10 +403,38 @@ endif()
 endif()
 
 # --------------------------------------------------------
-# Samples
+# samples
 # --------------------------------------------------------
 if(BUILD_SAMPLES)
   add_subdirectory(samples)
+endif()
+
+# --------------------------------------------------------
+# unit tests
+# --------------------------------------------------------
+if(BUILD_TESTS)
+  enable_testing()
+
+  # ------------------------------------------------------
+  # test contrib
+  # ------------------------------------------------------
+  if(HAS_HDF5)
+    add_subdirectory(testing/contrib/ecalhdf5/hdf5_test/src)
+  endif()
+  add_subdirectory(testing/contrib/ecalproto/dynproto_test/src)
+  add_subdirectory(testing/contrib/ecalproto/ecal_proto_test/src)
+
+  # ------------------------------------------------------
+  # test ecal
+  # ------------------------------------------------------
+  add_subdirectory(testing/ecal/clientserver_test/src)
+  add_subdirectory(testing/ecal/core_test/src)
+  add_subdirectory(testing/ecal/event_test/src)
+  add_subdirectory(testing/ecal/expmap_test/src)
+  add_subdirectory(testing/ecal/io_memfile_test/src)
+  add_subdirectory(testing/ecal/pubsub_inproc_test/src)
+  add_subdirectory(testing/ecal/pubsub_proto_test/src)
+  add_subdirectory(testing/ecal/pubsub_test/src)
 endif()
 
 # --------------------------------------------------------

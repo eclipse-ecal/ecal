@@ -217,7 +217,7 @@ def pub_set_layer_mode(topic_handle, layer, mode):
   """ set send mode for specific transport layer
 
   :param topic_handle: the topic handle
-  :param layer: 0 = udp, 1 = shm, 2 = lcm, 3 = not supported, 4 = rtps
+  :param layer: 0 = udp, 1 = shm, 42 = inproc
   :type layer: int
   :param mode: 0 = off, 1 = on,  2 = auto
   :type mode: int
@@ -627,7 +627,7 @@ class publisher(object):
   def set_layer_mode(self, layer, mode):
     """ set send mode for specific transport layer
 
-    :param layer: 0 = udp, 1 = shm, 2 = lcm, 3 = not supported, 4 = rtps
+    :param layer: 0 = udp, 1 = shm, 42 = inproc
     :type layer:  int
     :param mode:  0 = off, 1 = on,  2 = auto
     :type layer:  int

@@ -71,7 +71,7 @@ void StatePublisherThread::PublishState()
   state_pb.set_playing(state.playing_);
   state_pb.set_measurement_loaded(play_thread_.IsMeasurementLoaded());
   state_pb.set_actual_speed(state.actual_play_rate_);
-  state_pb.set_current_measurement_index(state.curren_frame_index);
+  state_pb.set_current_measurement_index(state.current_frame_index);
   state_pb.set_current_measurement_timestamp_nsecs(std::chrono::duration_cast<std::chrono::nanoseconds>(state.current_frame_timestamp.time_since_epoch()).count());
 
   if (state_pb.measurement_loaded())

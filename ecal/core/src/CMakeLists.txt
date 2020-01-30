@@ -72,22 +72,6 @@ set(ecal_pubsub_cpp_src
     pubsub/ecal_subscriber.cpp
 )
 
-set(ecal_readwrite_lcm_cpp_src
-    readwrite/lcm/lcmlite.cpp
-)
-
-if(ECAL_LAYER_FASTRTPS)
-  set(ecal_readwrite_rtps_msg_cpp_src
-      readwrite/fastrtps/string_message_.cxx
-      readwrite/fastrtps/string_message_PubSubTypes.cxx
-  )
-
-  set(ecal_readwrite_rtps_cpp_src
-    readwrite/ecal_reader_rtps.cpp
-    readwrite/ecal_writer_rtps.cpp
-  )
-endif()
-
 if(ECAL_LAYER_ICEORYX)
   set(ecal_readwrite_iceoryx_cpp_src
     readwrite/ecal_reader_iceoryx.cpp
@@ -98,18 +82,13 @@ endif()
 set(ecal_readwrite_cpp_src
     readwrite/ecal_reader.cpp
     readwrite/ecal_reader_inproc.cpp
-    readwrite/ecal_reader_lcm.cpp
-    readwrite/ecal_reader_metal.cpp
     readwrite/ecal_reader_shm.cpp
     readwrite/ecal_reader_udp.cpp
     readwrite/ecal_reader_udp_mc.cpp
-    readwrite/ecal_reader_udp_uc.cpp
     readwrite/ecal_writer.cpp
     readwrite/ecal_writer_inproc.cpp
-    readwrite/ecal_writer_lcm.cpp
     readwrite/ecal_writer_shm.cpp
     readwrite/ecal_writer_udp_mc.cpp
-    readwrite/ecal_writer_udp_uc.cpp
 )
 
 set(ecal_service_cpp_src
@@ -184,21 +163,6 @@ set(ecal_pubsub_header_src
     pubsub/ecal_subgate.h
 )
 
-set(ecal_readwrite_lcm_header_src
-    readwrite/lcm/lcmlite.h
-)
-
-if(ECAL_LAYER_FASTRTPS)
-  set(ecal_readwrite_rtps_msg_header_src
-      readwrite/fastrtps/string_message_.h
-      readwrite/fastrtps/string_message_PubSubTypes.h
-)
-set(ecal_readwrite_rtps_header_src
-    readwrite/ecal_reader_rtps.h
-    readwrite/ecal_writer_rtps.h
-)
-endif()
-
 if(ECAL_LAYER_ICEORYX)
 set(ecal_readwrite_iceoryx_header_src
     readwrite/ecal_reader_iceoryx.h
@@ -209,19 +173,14 @@ endif()
 set(ecal_readwrite_header_src
     readwrite/ecal_reader.h
     readwrite/ecal_reader_inproc.h
-    readwrite/ecal_reader_lcm.h
-    readwrite/ecal_reader_metal.h
     readwrite/ecal_reader_shm.h
     readwrite/ecal_reader_udp.h
     readwrite/ecal_reader_udp_mc.h
-    readwrite/ecal_reader_udp_uc.h
     readwrite/ecal_writer.h
     readwrite/ecal_writer_base.h
     readwrite/ecal_writer_inproc.h
-    readwrite/ecal_writer_lcm.h
     readwrite/ecal_writer_shm.h
     readwrite/ecal_writer_udp_mc.h
-    readwrite/ecal_writer_udp_uc.h
 )
 
 set(ecal_service_header_src
@@ -352,10 +311,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_mon_cpp_src} 
     ${ecal_pubsub_cpp_src} 
     ${ecal_readwrite_iceoryx_cpp_src}
-    ${ecal_readwrite_lcm_cpp_src} 
     ${ecal_readwrite_cpp_src} 
-    ${ecal_readwrite_rtps_msg_cpp_src}
-    ${ecal_readwrite_rtps_cpp_src}
     ${ecal_service_cpp_src}
     ${ecal_cmn_cpp_src}
 
@@ -366,10 +322,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_mon_header_src}
     ${ecal_pubsub_header_src}
     ${ecal_readwrite_iceoryx_header_src}
-    ${ecal_readwrite_lcm_header_src}
     ${ecal_readwrite_header_src}
-    ${ecal_readwrite_rtps_msg_header_src}
-    ${ecal_readwrite_rtps_header_src}
     ${ecal_service_header_src}
 
     ${ecal_header_base}
@@ -398,19 +351,6 @@ target_compile_definitions(${PROJECT_NAME}_c
 target_compile_definitions(${PROJECT_NAME}
   PUBLIC ASIO_STANDALONE
   PRIVATE eCAL_EXPORTS)
-
-if(ECAL_LAYER_FASTRTPS)
-  if(WIN32)
-    find_package(fastrtps REQUIRED)
-    target_include_directories(${PROJECT_NAME} PRIVATE ${FASTRTPS_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${FASTRTPS_LIBRARIES})
-  endif()
-
-  if(UNIX)
-    target_link_libraries(${PROJECT_NAME} PRIVATE fastcdr fastrtps)
-  endif()
-    target_compile_definitions(${PROJECT_NAME} PUBLIC ECAL_LAYER_FASTRTPS)
-endif()
 
 if(ECAL_LAYER_ICEORYX)
   if(UNIX)
@@ -481,10 +421,7 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_io_cpp_win32_src}
     ${ecal_mon_cpp_src}
     ${ecal_pubsub_cpp_src}
-    ${ecal_readwrite_rtps_msg_cpp_src}
-    ${ecal_readwrite_lcm_cpp_src}
     ${ecal_readwrite_cpp_src}
-    ${ecal_readwrite_rtps_cpp_src}
     ${ecal_service_cpp_src}
   )
   
@@ -495,10 +432,7 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_io_header_win_src}
     ${ecal_mon_header_src}
     ${ecal_pubsub_header_src}
-    ${ecal_readwrite_rtps_msg_header_src}
-    ${ecal_readwrite_lcm_header_src}
     ${ecal_readwrite_header_src}
-    ${ecal_readwrite_rtps_header_src}
     ${ecal_service_header_src}
   )
   

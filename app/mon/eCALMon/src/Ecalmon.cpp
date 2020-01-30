@@ -30,7 +30,7 @@
 #endif //ECAL_NPCAP_SUPPORT
 
 #include "EcalmonGlobals.h"
-#include "PluginLoader.h"
+#include "Plugin/PluginManager.h"
 
 #include <QSettings>
 #include <QDesktopWidget>
@@ -212,15 +212,16 @@ Ecalmon::Ecalmon(QWidget *parent)
 
   ui_.action_monitor_refresh_speed_1s->trigger();
 
-  PluginLoader::getInstance()->discover();
+  PluginManager::getInstance()->discover();
 
   // Restore plugin states
   QSettings settings;
   settings.beginGroup("plugins");
-  for (const auto& iid : PluginLoader::getInstance()->getAvailableIIDs())
+  for (const auto& iid : PluginManager::getInstance()->getAvailableIIDs())
   {
-    if (settings.value(iid, true).toBool())
-      PluginLoader::getInstance()->getPluginByIID(iid).load();
+    // Maybe we should deactivate plugins with a false setting?
+    bool isActive{ settings.value(iid, true).toBool() };
+    PluginManager::getInstance()->setActive(iid, isActive);
   }
   settings.endGroup();
 }
@@ -473,8 +474,8 @@ void Ecalmon::closeEvent(QCloseEvent* event)
 
   // save plugin state by iid
   settings.beginGroup("plugins");
-  for (const auto& iid : PluginLoader::getInstance()->getAvailableIIDs())
-    settings.setValue(iid, PluginLoader::getInstance()->getPluginByIID(iid).isLoaded());
+  for (const auto& iid : PluginManager::getInstance()->getAvailableIIDs())
+    settings.setValue(iid, PluginManager::getInstance()->isActive(iid));
   settings.endGroup();
 
   event->accept();

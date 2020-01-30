@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PluginLoader.h"
+#include "Plugin/PluginManager.h"
 #include <QAbstractItemModel>
 
 class PluginTableModel : public QAbstractItemModel

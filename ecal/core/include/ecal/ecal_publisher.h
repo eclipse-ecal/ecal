@@ -395,10 +395,7 @@ namespace eCAL
 
       // set layer mode if changed class method function
       if (m_tlayer.sm_udp_mc != TLayer::smode_none) eCAL_Pub_SetLayerMode(m_publisher, static_cast<eTransportLayerC>(TLayer::tlayer_udp_mc), static_cast<eSendModeC>(m_tlayer.sm_udp_mc));
-      if (m_tlayer.sm_udp_uc != TLayer::smode_none) eCAL_Pub_SetLayerMode(m_publisher, static_cast<eTransportLayerC>(TLayer::tlayer_udp_uc), static_cast<eSendModeC>(m_tlayer.sm_udp_uc));
       if (m_tlayer.sm_shm    != TLayer::smode_none) eCAL_Pub_SetLayerMode(m_publisher, static_cast<eTransportLayerC>(TLayer::tlayer_shm),    static_cast<eSendModeC>(m_tlayer.sm_shm));
-      if (m_tlayer.sm_lcm    != TLayer::smode_none) eCAL_Pub_SetLayerMode(m_publisher, static_cast<eTransportLayerC>(TLayer::tlayer_lcm),    static_cast<eSendModeC>(m_tlayer.sm_lcm));
-      if (m_tlayer.sm_rtps   != TLayer::smode_none) eCAL_Pub_SetLayerMode(m_publisher, static_cast<eTransportLayerC>(TLayer::tlayer_rtps),   static_cast<eSendModeC>(m_tlayer.sm_rtps));
 
       // set qos
       struct SWriterQOSC qos;
@@ -471,24 +468,20 @@ namespace eCAL
         case TLayer::tlayer_udp_mc:
           m_tlayer.sm_udp_mc = mode_;
           break;
-        case TLayer::tlayer_udp_uc:
-          m_tlayer.sm_udp_uc = mode_;
-          break;
         case TLayer::tlayer_shm:
           m_tlayer.sm_shm = mode_;
           break;
-        case TLayer::tlayer_lcm:
-          m_tlayer.sm_lcm = mode_;
+        case TLayer::tlayer_iceoryx:
+          m_tlayer.sm_iceoryx = mode_;
           break;
-        case TLayer::tlayer_rtps:
-          m_tlayer.sm_rtps = mode_;
+        case TLayer::tlayer_inproc:
+          m_tlayer.sm_inproc = mode_;
           break;
         case TLayer::tlayer_all:
-          m_tlayer.sm_udp_mc = mode_;
-          m_tlayer.sm_udp_uc = mode_;
-          m_tlayer.sm_shm    = mode_;
-          m_tlayer.sm_lcm    = mode_;
-          m_tlayer.sm_rtps   = mode_;
+          m_tlayer.sm_udp_mc  = mode_;
+          m_tlayer.sm_shm     = mode_;
+          m_tlayer.sm_iceoryx = mode_;
+          m_tlayer.sm_inproc  = mode_;
           break;
         default:
           break;
@@ -575,11 +568,10 @@ namespace eCAL
 
     void InitializeTLayer()
     {
-      m_tlayer.sm_udp_mc = TLayer::smode_none;
-      m_tlayer.sm_udp_uc = TLayer::smode_none;
-      m_tlayer.sm_shm    = TLayer::smode_none;
-      m_tlayer.sm_lcm    = TLayer::smode_none;
-      m_tlayer.sm_rtps   = TLayer::smode_none;
+      m_tlayer.sm_udp_mc  = TLayer::smode_none;
+      m_tlayer.sm_shm     = TLayer::smode_none;
+      m_tlayer.sm_iceoryx = TLayer::smode_none;
+      m_tlayer.sm_inproc  = TLayer::smode_none;
     }
 
     std::string Dump() const

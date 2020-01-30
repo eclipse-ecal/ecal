@@ -27,7 +27,7 @@
 
 namespace eCAL
 {
-  CGlobals::CGlobals() : initialized(false)
+  CGlobals::CGlobals() : initialized(false), components(0)
   {}
 
   CGlobals::~CGlobals()
@@ -189,7 +189,8 @@ namespace eCAL
     if (timegate_instance && (components_ & Init::TimeSync))      timegate_instance->Create(CTimeGate::eTimeSyncMode::realtime);
     if (monitoring_instance && (components_ & Init::Monitoring))  monitoring_instance->Create();
 
-    initialized = true;
+    initialized =  true;
+    components  |= components_;
 
     if (new_initialization) return 0;
     else                    return 1;

@@ -9,6 +9,7 @@
     <OutputPath>.</OutputPath>
     <Name>ecal_hdf5_py</Name>
     <RootNamespace>ecal_hdf5_py</RootNamespace>
+    <ProjectGuid>{29601a25-64ad-3697-8cf8-39ba154e66ee}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

@@ -339,7 +339,7 @@
   <action name="action_clear_log">
    <property name="icon">
     <iconset resource="../../../iconset/ecalicons.qrc">
-     <normaloff>:/ecalicons/REMOVE</normaloff>:/ecalicons/REMOVE</iconset>
+     <normaloff>:/ecalicons/CLEAR</normaloff>:/ecalicons/CLEAR</iconset>
    </property>
    <property name="text">
     <string>&amp;Clear Log</string>

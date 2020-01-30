@@ -184,7 +184,8 @@ EcalplayGui::EcalplayGui(QWidget *parent)
   //// Windows Taskbar                                                      ////
   //////////////////////////////////////////////////////////////////////////////
   taskbar_button_ = new QWinTaskbarButton(this);
-  connect(QEcalPlay::instance(), &QEcalPlay::playStateChangedSignal, this, &EcalplayGui::updateTaskbarProgress);
+  connect(QEcalPlay::instance(), &QEcalPlay::playStateChangedSignal,           this, &EcalplayGui::updateTaskbarProgress);
+  connect(QEcalPlay::instance(), &QEcalPlay::publishersInitStateChangedSignal, this, [this]() { EcalplayGui::updateTaskbarProgress(QEcalPlay::instance()->currentPlayState()); });
 
   thumbnail_toolbar_             = new QWinThumbnailToolBar(this);
   thumbnail_play_pause_button_   = new QWinThumbnailToolButton(thumbnail_toolbar_);
@@ -244,6 +245,10 @@ EcalplayGui::EcalplayGui(QWidget *parent)
   {
     measurementClosed();
   }
+
+  frameDroppingAllowedChanged       (QEcalPlay::instance()->isFrameDroppingAllowed());
+  enforceDelayAccuracyEnabledChanged(QEcalPlay::instance()->isEnforceDelayAccuracyEnabled());
+  limitPlaySpeedEnabledChanged      (QEcalPlay::instance()->isLimitPlaySpeedEnabled());
 
   saveInitialLayout();
   restoreLayout();
@@ -348,7 +353,7 @@ void EcalplayGui::playStateChanged(const EcalPlayState& current_state)
     setPlayPauseActionToPlay();
   }
 
-  current_frame_label_->setText(tr(" Frame: ") + QString::number(current_state.curren_frame_index + 1) + " / " + QString::number(measurement_frame_count_) + " ");
+  current_frame_label_->setText(tr(" Frame: ") + QString::number(current_state.current_frame_index + 1) + " / " + QString::number(measurement_frame_count_) + " ");
   current_speed_label_->setText(tr(" Current Speed: ") + QString::number(current_state.actual_play_rate_, 'f', 2) + " ");
 }
 
@@ -689,7 +694,7 @@ void EcalplayGui::updateTaskbarProgress(const EcalPlayState& current_state)
   progress->setPaused(!current_state.playing_);
   progress->setValue(std::chrono::duration_cast<std::chrono::milliseconds>(current_state.current_frame_timestamp - measurement_boundaries_.first).count());
 
-  if (measurement_loaded_)
+  if (measurement_loaded_ && QEcalPlay::instance()->isInitialized())
   {
     if (current_state.playing_)
     {

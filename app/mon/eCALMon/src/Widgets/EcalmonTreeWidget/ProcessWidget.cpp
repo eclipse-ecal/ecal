@@ -47,7 +47,7 @@ ProcessWidget::ProcessWidget(QWidget *parent)
     (int)ProcessTreeModel::Columns::HOST_NAME,
     (int)ProcessTreeModel::Columns::PROCESS_NAME,
     //(int)ProcessTreeModel::Columns::STATE, //TODO: Enable dynamic re-grouping
-    (int)ProcessTreeModel::Columns::TIMESYNC_MODE,
+    (int)ProcessTreeModel::Columns::TIMESYNC_STATE,
   };
 
   QList<EcalmonTreeWidget::GroupSetting> preconfigured_group_by_settings;
@@ -106,10 +106,10 @@ void ProcessWidget::autoSizeColumns()
 {
   eCAL::pb::Process example_process_pb;
   example_process_pb.set_rclock(999999);
-  example_process_pb.set_hname("CARPC00____");
+  example_process_pb.set_hname("HNAME00____");
   example_process_pb.set_pid(999999);
   example_process_pb.set_pname("");
-  example_process_pb.set_uname("CameraSensorMapFusionCAF___");
+  example_process_pb.set_uname("eCALProcessUnitNameABCDE___");
   example_process_pb.set_pparam("");
   example_process_pb.set_pmemory(99999999999);
   example_process_pb.set_pcpu(1000);
@@ -122,7 +122,7 @@ void ProcessWidget::autoSizeColumns()
   //example_process_pb.set_tsync_mode();
 
   ProcessTreeItem* example_process_item = new ProcessTreeItem(example_process_pb);
-  GroupTreeItem* example_group_item = new GroupTreeItem("CARPC00____", "", "", QVariant::Invalid, "");
+  GroupTreeItem* example_group_item = new GroupTreeItem("HNAME00____", "", "", QVariant::Invalid, "");
 
   process_tree_model_->insertItem(example_process_item);
   process_tree_model_->insertItem(example_group_item);
@@ -141,7 +141,9 @@ void ProcessWidget::autoSizeColumns()
     (int)ProcessTreeModel::Columns::USER_TIME,
     (int)ProcessTreeModel::Columns::DATAWRITE,
     (int)ProcessTreeModel::Columns::DATAREAD,
-    (int)ProcessTreeModel::Columns::TIMESYNC_MODE,
+    (int)ProcessTreeModel::Columns::TIMESYNC_STATE,
+    (int)ProcessTreeModel::Columns::TIMESYNC_MOD_NAME,
+    (int)ProcessTreeModel::Columns::COMPONENT_INIT_INFO,
   };
 
   for (int column : columns_to_resize)

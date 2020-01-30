@@ -131,15 +131,6 @@ install(TARGETS ${TARGET_NAME}
   )
 endfunction()
 
-# Use this function to install converter plugins
-# We need to provide a similar function for installing custom build plugins.
-function(ecal_install_conv_plugin TARGET_NAME)
-install(TARGETS ${TARGET_NAME}
-    RUNTIME DESTINATION  "${eCAL_install_bin_dir}/${ECAL_CONV_PLUGIN_DIR}" COMPONENT app
-    LIBRARY DESTINATION  "${eCAL_install_lib_dir}/${ECAL_CONV_PLUGIN_DIR}" COMPONENT app
-  )
-endfunction()
-
 # Use this function to install monitor plugins
 # We need to provide a similar function for installing custom build plugins.
 function(ecal_install_mon_plugin TARGET_NAME)

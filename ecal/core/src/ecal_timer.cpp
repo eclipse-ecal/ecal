@@ -67,29 +67,65 @@ namespace eCAL
       if (delay_ > 0) eCAL::Time::sleep_for(std::chrono::milliseconds(delay_));
 
       std::chrono::nanoseconds loop_duration((long long)timeout_ * 1000LL * 1000LL);
+      m_last_error = std::chrono::nanoseconds(0);
 
       while (!m_stop)
       {
+        // Execute callback and measure it's execution time
         auto start = eCAL::Time::ecal_clock::now();
         (callback_)();
         auto end = eCAL::Time::ecal_clock::now();
 
-        if (end < start) {
-          // If the time jumped backwards, we do not know how long the function took to complete. Thus, we will assume it was "fast" and wait for the maximum time.
+        // If the time jumped backwards, we do not know how long the function took to complete. 
+        // Thus, we will assume it was "fast" and wait for the maximum time.
+        if (end < start)
+        {
           eCAL::Time::sleep_for(loop_duration);
         }
-        else {
-          // Sleep for the remaining time
-          auto sleep_duration = loop_duration - (end - start);
-          eCAL::Time::sleep_for(sleep_duration);
+        else
+        {
+          // Correct loop duration by last duration error
+          auto loop_duration_corr = loop_duration - m_last_error;
+          auto sleep_remaining    = loop_duration_corr - (end - start);
+#if _WIN32
+          // Sleep for the remaining time in multiple loops of smaller sleeps
+
+          // Minimum sleep resolution
+          // Lower values will increase the precision but also the CPU usage !
+          const auto sleep_resolution_min = std::chrono::microseconds(1);
+
+          // Sleep threshold for switching to minimal sleep intervalls
+          const auto sleep_precision_thr  = std::chrono::milliseconds(5);
+
+          while (sleep_remaining.count() > 0)
+          {
+            // We start with half of the remaining time
+            sleep_remaining = sleep_remaining / 2;
+            
+            // If we reach the system clock sleep precision
+            // we reduce the sleep time to the minimum resolution
+            if (sleep_remaining < sleep_precision_thr) sleep_remaining = sleep_resolution_min;
+
+            // Sleep and recalculate the remaining time
+            eCAL::Time::sleep_for(sleep_remaining);
+            sleep_remaining = loop_duration_corr - (eCAL::Time::ecal_clock::now() - start);
+          }
+#else // _WIN32
+          // Sleep for the remaining time in one sleep
+          eCAL::Time::sleep_for(sleep_remaining);
+#endif //_WIN32
+
+          // Store loop error to correct the next timer run
+          m_last_error = (eCAL::Time::ecal_clock::now() - start) - loop_duration_corr;
         }
       }
       m_stop = false;
     }
 
-    std::atomic<bool> m_stop;
-    std::atomic<bool> m_running;
-    std::thread       m_thread;
+    std::atomic<bool>        m_stop;
+    std::atomic<bool>        m_running;
+    std::thread              m_thread;
+    std::chrono::nanoseconds m_last_error;
   };
 
 

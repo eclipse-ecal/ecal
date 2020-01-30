@@ -678,11 +678,15 @@ private:
   /**
    * @brief Calculates the system time that maps to the given simulation time considering the current play speed
    *
+   * If the current play speed is 0.0, the given simulation time will never be
+   * reached. In that case, std::chrono::steady_clock::time_point::max() is
+   * returned.
+   * 
    * This function does not lock any mutex. It reads the command_, so the
    * command_mutex_ has to be locked when calling this function.
    *
    * @param sim_time    The simulation time to calculate the system time for
-   * @return
+   * @return            The calculated system time or std::chrono::steady_clock::time_point::max()
    */
   std::chrono::steady_clock::time_point GetSystemTime_Private(eCAL::Time::ecal_clock::time_point sim_time) const;
 

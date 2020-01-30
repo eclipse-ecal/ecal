@@ -30,12 +30,7 @@
 #include "ecal_expmap.h"
 
 #include "ecal_writer_udp_mc.h"
-#include "ecal_writer_udp_uc.h"
 #include "ecal_writer_shm.h"
-#include "ecal_writer_lcm.h"
-#ifdef ECAL_LAYER_FASTRTPS
-#include "ecal_writer_rtps.h"
-#endif /* ECAL_LAYER_FASTRTPS */
 #ifdef ECAL_LAYER_ICEORYX
 #include "ecal_writer_iceoryx.h"
 #endif /* ECAL_LAYER_ICEORYX */
@@ -102,12 +97,7 @@ namespace eCAL
     void SetConnected(bool state_);
 
     bool SetUseUdpMC(TLayer::eSendMode mode_);
-    bool SetUseUdpUC(TLayer::eSendMode mode_);
     bool SetUseShm(TLayer::eSendMode mode_);
-    bool SetUseLcm(TLayer::eSendMode mode_);
-#ifdef ECAL_LAYER_FASTRTPS
-    bool SetUseRtps(TLayer::eSendMode mode_);
-#endif /* ECAL_LAYER_FASTRTPS */
 #ifdef ECAL_LAYER_ICEORYX
     bool SetUseIceoryx(TLayer::eSendMode mode_);
 #endif /* ECAL_LAYER_ICEORYX */
@@ -158,23 +148,9 @@ namespace eCAL
     CDataWriterUdpMC   m_writer_udp_mc;
     bool               m_use_udp_mc_confirmed;
 
-    TLayer::eSendMode  m_use_udp_uc;
-    CDataWriterUdpUC   m_writer_udp_uc;
-    bool               m_use_udp_uc_confirmed;
-
     TLayer::eSendMode  m_use_shm;
     CDataWriterSHM     m_writer_shm;
     bool               m_use_shm_confirmed;
-
-    TLayer::eSendMode  m_use_lcm;
-    CDataWriterLCM     m_writer_lcm;
-    bool               m_use_lcm_confirmed;
-
-#ifdef ECAL_LAYER_FASTRTPS
-    TLayer::eSendMode  m_use_rtps;
-    CDataWriterRTPS    m_writer_rtps;
-    bool               m_use_rtps_confirmed;
-#endif /*ECAL_LAYER_FASTRTPS*/
 
 #ifdef ECAL_LAYER_ICEORYX
     TLayer::eSendMode  m_use_iceoryx;

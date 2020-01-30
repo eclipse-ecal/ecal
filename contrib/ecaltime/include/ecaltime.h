@@ -101,9 +101,9 @@ extern "C"
    * set of error codes. Everything non-zero is considered to indicate a
    * problem. Adapters may provide aditional information with a status message.
    *
-   * @param error [out] the current error code. 0 indicates that everything is OK
+   * @param error_ [out] the current error code. 0 indicates that everything is OK
    * @param status_message_ [in, out] a pre-allocated char array. The status message will be written to this memory. May be null, if the caller is not interested in the message.
-   * @param maxlen [in] length of the allocated memory
+   * @param max_len_ [in] length of the allocated memory
    */
   ECALTIME_API void etime_get_status(int* error_, char* status_message_, int max_len_);
 

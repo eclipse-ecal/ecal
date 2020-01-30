@@ -43,10 +43,12 @@ set(source_files
     src/EcalmonGlobals.h
     src/main.cpp
     src/Util.h
-    
-    src/PluginLoader.cpp
-    src/PluginLoader.h
-    
+
+    src/Plugin/PluginManager.cpp
+    src/Plugin/PluginManager.h
+    src/Plugin/PluginWrapper.cpp
+    src/Plugin/PluginWrapper.h
+
     src/Widgets/AboutDialog/AboutDialog.cpp
     src/Widgets/AboutDialog/AboutDialog.h
 
@@ -112,7 +114,7 @@ set(source_files
     src/Widgets/Models/TopicTreeModel.cpp
     src/Widgets/Models/TopicTreeModel.h
     src/Widgets/Models/TreeItemType.h
-    
+
     src/Widgets/PluginSettingsDialog/PluginSettingsDialog.cpp
     src/Widgets/PluginSettingsDialog/PluginSettingsDialog.h
 
@@ -120,7 +122,7 @@ set(source_files
     src/Widgets/VisualisationWidget/VisualisationWidget.h
     src/Widgets/VisualisationWidget/VisualisationWindow.cpp
     src/Widgets/VisualisationWidget/VisualisationWindow.h
-    
+
     src/Widgets/SystemInformationWidget/SystemInformationWidget.cpp
     src/Widgets/SystemInformationWidget/SystemInformationWidget.h
 

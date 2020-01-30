@@ -22,7 +22,7 @@
 #include <QWidget>
 #include "ui_VisualisationWidget.h"
 
-#include "PluginLoader.h"
+#include "Plugin/PluginManager.h"
 
 #include <memory>
 #include <mutex>
@@ -66,8 +66,6 @@ private:
   QDateTime last_update_time_;
   
   QTabWidget tab_widget_;
-
-  QList<PluginWrapper> supported_plugins_;
 
   QVector<eCAL::mon::PluginWidgetInterface*> plugin_widgets_;
 };

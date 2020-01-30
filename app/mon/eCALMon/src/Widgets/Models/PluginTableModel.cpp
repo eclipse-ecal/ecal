@@ -14,7 +14,7 @@ int PluginTableModel::rowCount(const QModelIndex &parent) const// override
     return 0;
   }
 
-  return PluginLoader::getInstance()->getAvailableIIDs().count();
+  return PluginManager::getInstance()->getAvailableIIDs().count();
 }
 
 int PluginTableModel::columnCount(const QModelIndex &parent) const// override
@@ -26,7 +26,7 @@ int PluginTableModel::columnCount(const QModelIndex &parent) const// override
   return static_cast<int>(Columns::COLUMN_COUNT);
 }
 
-static QString GetTopicDisplayString(const PluginWrapper::MetaData::Topic& topic)
+static QString GetTopicDisplayString(const PluginWrapper::PluginData::MetaData::Topic& topic)
 {
   auto name = (!topic.name.isEmpty()) ? topic.name : QString("*");
   auto type = (!topic.type.isEmpty()) ? topic.type : QString("*");
@@ -39,8 +39,8 @@ QVariant PluginTableModel::data(const QModelIndex &index, int role) const// over
 {
   if (index.isValid())
   {
-    auto iid = PluginLoader::getInstance()->getAvailableIIDs().at(index.row());
-    PluginWrapper& plugin = PluginLoader::getInstance()->getPluginByIID(iid);
+    auto iid = PluginManager::getInstance()->getAvailableIIDs().at(index.row());
+    PluginWrapper::PluginData plugin_data = PluginManager::getInstance()->getPluginData(iid);
 
     Columns column = static_cast<Columns>(index.column());
 
@@ -49,21 +49,21 @@ QVariant PluginTableModel::data(const QModelIndex &index, int role) const// over
       switch (column)
       {
       case Columns::NAME:
-        return plugin.getMetaData().name;
+        return plugin_data.meta_data.name;
       case Columns::VERSION:
-        return plugin.getMetaData().version;
+        return plugin_data.meta_data.version;
       case Columns::AUTHOR:
-        return plugin.getMetaData().author;
+        return plugin_data.meta_data.author;
       case Columns::IID:
-        return plugin.getIID();
+        return plugin_data.iid;
       case Columns::PRIORITY:
-        return plugin.getMetaData().priority;
+        return plugin_data.meta_data.priority;
       case Columns::PATH:
-        return plugin.getPath();
+        return plugin_data.path;
       case Columns::TOPICS:
       {
         QString topics_str;
-        for (const auto& topic : plugin.getMetaData().topics)
+        for (const auto& topic : plugin_data.meta_data.topics)
           topics_str += "\"" + GetTopicDisplayString(topic) + "\"  ";
         return topics_str;
       }
@@ -74,7 +74,7 @@ QVariant PluginTableModel::data(const QModelIndex &index, int role) const// over
     if (role == Qt::ItemDataRole::CheckStateRole)
     {
       if (column == Columns::NAME)
-        return plugin.isLoaded() ? Qt::Checked : Qt::Unchecked;
+        return PluginManager::getInstance()->isActive(iid) ? Qt::Checked : Qt::Unchecked;
     }
   }
 
@@ -85,8 +85,7 @@ bool PluginTableModel::setData(const QModelIndex &index, const QVariant &value, 
 {
   if (index.isValid())
   {
-    auto iid = PluginLoader::getInstance()->getAvailableIIDs().at(index.row());
-    PluginWrapper& plugin = PluginLoader::getInstance()->getPluginByIID(iid);
+    auto iid = PluginManager::getInstance()->getAvailableIIDs().at(index.row());
 
     Columns column = static_cast<Columns>(index.column());
 
@@ -96,13 +95,11 @@ bool PluginTableModel::setData(const QModelIndex &index, const QVariant &value, 
       {
         if (value == Qt::Checked)
         {
-          if (!plugin.load())
-            QMessageBox::warning(nullptr, tr("eCAL Monitor"), tr("Unable to activate plugin. For more information see log output."), QMessageBox::Ok, QMessageBox::Ok);
+          PluginManager::getInstance()->setActive(iid, true);
         }
         else
         {
-          if (!plugin.unload())
-            QMessageBox::information(nullptr, tr("eCAL Monitor"), tr("The plugin cannot be deactivated because it is still in use. Please close all associated visualistion windows and try again."), QMessageBox::Ok, QMessageBox::Ok);
+          PluginManager::getInstance()->setActive(iid, false);
         }
         return true;
       }
@@ -142,6 +139,6 @@ QModelIndex PluginTableModel::parent(const QModelIndex & /*index*/) const
 void PluginTableModel::rediscover()
 {
   beginResetModel();
-  PluginLoader::getInstance()->discover();
+  PluginManager::getInstance()->discover();
   endResetModel();
 }

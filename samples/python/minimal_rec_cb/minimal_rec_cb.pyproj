@@ -10,6 +10,7 @@
     <OutputPath>.</OutputPath>
     <Name>minimal_rec_cb</Name>
     <RootNamespace>minimal_rec_cb</RootNamespace>
+    <ProjectGuid>{a38cc1fc-76f7-3172-81ac-b754dc0f9d60}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

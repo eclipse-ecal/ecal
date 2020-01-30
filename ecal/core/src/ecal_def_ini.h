@@ -42,24 +42,13 @@
 #define  NET_UDP_MULTICAST_PORT_S         "multicast_port"
 #define  NET_UDP_MULTICAST_TTL_S          "multicast_ttl"
 
-#define  NET_UDP_MULTICAST_GROUP_METAL_S  "multicast_group_mtl"
-#define  NET_UDP_MULTICAST_PORT_METAL_S   "multicast_port_mtl"
-
 #define  NET_UDP_MULTICAST_SNDBUF_S       "multicast_sndbuf"
 #define  NET_UDP_MULTICAST_RCVBUF_S       "multicast_rcvbuf"
-
-#define  NET_UNICAST_MODE_S               "unicast_mode"
-#define  NET_UDP_UNICAST_IPADDR_S         "unicast_ipaddr"
-#define  NET_UDP_UNICAST_PORT_S           "unicast_port"
 
 #define  NET_BANDWIDTH_MAX_UDP_S          "bandwidth_max_udp"
 
 #define  NET_UDP_MC_REC_ENABLED_S         "udp_mc_rec_enabled"
-#define  NET_UDP_UC_REC_ENABLED_S         "udp_uc_rec_enabled"
 #define  NET_SHM_REC_ENABLED_S            "shm_rec_enabled"
-#define  NET_METAL_REC_ENABLED_S          "metal_rec_enabled"
-#define  NET_LCM_REC_ENABLED_S            "lcm_rec_enabled"
-#define  NET_RTPS_REC_ENABLED_S           "rtps_rec_enabled"
 #define  NET_ICEORYX_REC_ENABLED_S        "iceoryx_rec_enabled"
 #define  NET_INPROC_REC_ENABLED_S         "inproc_rec_enabled"
 
@@ -98,12 +87,6 @@
 #define  SYS_FILTER_EXCL_S                "filter_excl"
 
 /////////////////////////////////////
-// rtps
-/////////////////////////////////////
-#define  RTPS_SECTION_S                   "rtps"
-#define  RTPS_DOMAIN_S                    "domain"
-
-/////////////////////////////////////
 // iceoryx
 /////////////////////////////////////
 #define  ICEORYX_SECTION_S                "iceoryx"
@@ -116,10 +99,7 @@
 #define  PUB_SECTION_S                    "publisher"
 
 #define  PUB_USE_UDP_MC_S                 "use_udp_mc"
-#define  PUB_USE_UDP_UC_S                 "use_udp_uc"
 #define  PUB_USE_SHM_S                    "use_shm"
-#define  PUB_USE_LCM_S                    "use_lcm"
-#define  PUB_USE_RTPS_S                   "use_rtps"
 #define  PUB_USE_ICEORYX_S                "use_iceoryx"
 #define  PUB_USE_INPROC_S                 "use_inproc"
 

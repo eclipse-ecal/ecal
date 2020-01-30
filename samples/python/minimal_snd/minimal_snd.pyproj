@@ -10,6 +10,7 @@
     <OutputPath>.</OutputPath>
     <Name>minimal_snd</Name>
     <RootNamespace>minimal_snd</RootNamespace>
+    <ProjectGuid>{5ebed1e0-8867-3120-bbfe-6d6db73e8077}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
