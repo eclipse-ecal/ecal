@@ -536,14 +536,6 @@ extern "C"
     return(0);
   }
 
-  ECALC_API int eCAL_Pub_SetRefFrequency(ECAL_HANDLE handle_, double fmin_, double fmax_)
-  {
-    if (handle_ == NULL) return(0);
-    eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
-    if (pub->SetRefFrequency(fmin_, fmax_)) return(1);
-    return(0);
-  }
-
   ECALC_API int eCAL_Pub_SetMaxBandwidthUDP(ECAL_HANDLE handle_, long bandwidth_)
   {
     if (handle_ == NULL) return(0);
@@ -768,13 +760,6 @@ extern "C"
     if (handle_ == NULL) return(0);
     eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
     return(sub->SetTimeout(timeout_));
-  }
-
-  ECALC_API int eCAL_Sub_SetRefFrequency(ECAL_HANDLE handle_, double fmin_, double fmax_)
-  {
-    if (handle_ == NULL) return(0);
-    eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
-    return(sub->SetRefFrequency(fmin_, fmax_));
   }
 
   ECALC_API int eCAL_Sub_Dump(ECAL_HANDLE handle_, void* buf_, int buf_len_)

@@ -1,4 +1,5 @@
 
+
 # eCAL - enhanced Communication Abstraction Layer
 
 Copyright (c) 2019, Continental Corporation.
@@ -56,7 +57,6 @@ eCAL is using CMake as build system. When configuring with CMake, you can turn o
 - `HAS_CAPNPROTO`, default: `OFF`
   Platform supports Cap'n Proto library, necessary to use capnp serialization as message system and to enable eCAL monitoring capnp message reflection
   eCAL does not add Cap'n Proto as a submodule. If you set this option to `ON`, please make sure that the library is installed on your system and CMake can find it (consider setting CMAKE_PREFIX_PATH to point to the library).
-  Currently Version 0.6.1 is supported and has been tested, to use 0.7.0 some adaptations in CMakeLists.txt files needs to be made to make the samples compile.
 - `BUILD_DOCS`, default `ON`
   Build the eCAL documentation, requires the installation of doxygen and a recent CMake version (>= 3.14 preferred, but some lower versions might work)
 - `BUILD_APPS`, default `ON`,
@@ -70,7 +70,7 @@ eCAL is using CMake as build system. When configuring with CMake, you can turn o
 - `BUILD_TESTS', default `OFF`
   Build the eCAL google tests
 - `ECAL_LAYER_ICEORYX`, default `OFF`
-  Provide iceoryx as communication layer, requires [eclipse/iceoryx](https://github.com/eclipse/iceoryx) installation
+  Use iceoryx shared memory as local communication layer, requires [eclipse/iceoryx](https://github.com/eclipse/iceoryx) installation
 - `ECAL_INCLUDE_PY_SAMPLES`, default: `OFF`
   Include python language sample projects into CMake
 - `ECAL_INSTALL_SAMPLE_SOURCES`, default: `ON`
@@ -294,20 +294,29 @@ There are different ways to configure these layers. They can be set up for a who
 |-----------------|--------------------------|--------------------|-------------------------------------------------------------------------------------------|
 | inproc          | [publisher/use_inproc]   | inner process      | inner process, zeroy copy communication (pointer forwarding)                              |
 | shm             | [publisher/use_shm]      | shared memory      | interprocess, shared memory communication, supports N:M connections, 2 memory copies      |
-| iceoryx         | [publisher/use_iceoryx]  | shared memory      | interprocess, shared memory communication, supports 1:1 connections, 1 memory copy        |
 | udp_mc          | [publisher/use_udp_mc]   | udp multicast      | interhost, topic name based dynamic multicast grouping to optimize pub/sub socket payload |
 
 Every layer can set up in 3 different activation modes. Every mode can be configured as default in the ecal.ini file and can be overwritten by the C++/Python publisher API. This is the activation logic
 
-  • off: layer will not be used for any communication
+  • off: layer is swicthed off
   
-  • on: layer will be used independently if there is any local or host outside subscription
+  • on: layer is always switched on (i.e. payload will be send no matter if there is any local or network subscription)
   
-  • auto: layer will be used on demand (shm = 2 and udp_mc = 2 means shm layer will be used if there is any local subscription, udp_multicast will be used if there is a subscription outside the current host)
-  
-The "auto" mode is currently working for inproc, shm and udp_mc only (planned for iceoryx with the next release). In this mode a publisher send call will return without wasting any CPU time if there is no innerprocess, local host or network subscription.
+  • auto: layer will be switched on autmatically
 
-Independent from this publisher setting you can switch on/off the receiving logic for every layer. This can be done in the ecal.ini file [network] section. By default inproc (inproc_rec_enabled), shm (shm_rec_enabled) and udp_mc (udp_mc_rec_enabled) is switched on. If you want to experiment with iceoryx please set iceoryx_rec_enabled to true. For example switching off the udp multicast layer for a machine or a single process can avoid that the process will process incoming socket traffic even it is not interested in publications outside it's host.
+ - inproc = 2 : layer used automatically for inner process subscribers
+	
+ - shm = 2 : layer used automatically for inter process subscribers
+ 
+ - udp_mc = 2 : layer used autmatically for inter host (network) subcribers
+
+Independent from this publisher setting you can switch on/off the receiving (subscription) logic for every layer. That means you can prevent incoming payload on specific layers. This can be done in the ecal.ini file [network] section.
+
+  • inproc_rec_enabled = true / false : enable / disable inner process subscriptions
+  
+  • shm_rec_enabled = true / false : enable / disable inter process subscriptions
+  
+  • udp_mc_rec_enabled = true / false : enable / disable inter host subscriptions
 
 ## Applications
 
@@ -349,7 +358,7 @@ The following image shows a running replay, publishing 2 messages in realtime.
 
 ## Performance
 
-The following table shows the latency in µs between a single publisher / subscriber connection for different payload sizes (two different processes running on the same host). You can simply measure the latency on your own machine by running the ecal_latency_snd and ecal_latency_rec_cb sample applications. The first two columns are showing the performance for the eCAL builtin shared memory layer and the last column for the iceoryx shared memory layer (configured by adating the ecal configuration file only).
+The following table shows the latency in µs between a single publisher / subscriber connection for different payload sizes (two different processes running on the same host). You can simply measure the latency on your own machine by running the ecal_latency_snd and ecal_latency_rec_cb sample applications. The first two columns are showing the performance for the eCAL builtin shared memory layer and the last column for the iceoryx shared memory layer (configured by cmake option ECAL_LAYER_ICEORYX).
 
 First start ecal_sample_latency_rec_cb. This application will receive the published payloads, send them back to the sender and print out the average receive time, the message frequency and the data throughput over all received messages. The sending application ecal_latency_snd can be configured that way ..
   
@@ -642,8 +651,7 @@ The currently supported layers are
 enum eTransportLayer
 {
   tlayer_udp_mc     = 1,  // udp multicast (eCAL - using multiple multicast groups for high efficient data transport)
-  tlayer_shm        = 4,  // shared memory (eCAL)
-  tlayer_iceoryx    = 7,  // iceoryx       (Bosch zero copy shared memory layer)
+  tlayer_shm        = 4,  // shared memory (eCAL or Iceoryx)
   tlayer_inproc     = 42, // inner process (eCAL - deterministic inner process communication)
 };
 ```

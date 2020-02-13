@@ -68,7 +68,6 @@ namespace eCAL
     bool RemEventCallback(eCAL_Subscriber_Event type_);
 
     bool SetTimeout(int timeout_);
-    bool SetRefFrequency(double fmin_, double fmax_);
 
     void SetID(const std::set<long long>& id_set_);
 
@@ -141,10 +140,6 @@ namespace eCAL
     long long                                 m_clock_old;
     std::chrono::steady_clock::time_point     m_rec_time;
     long                                      m_freq;
-    long                                      m_freq_min;
-    long                                      m_freq_max;
-    long                                      m_freq_min_err;
-    long                                      m_freq_max_err;
 
     std::set<long long>                       m_id_set;
     
@@ -160,7 +155,6 @@ namespace eCAL
 
     bool                                      m_use_udp_mc_confirmed;
     bool                                      m_use_shm_confirmed;
-    bool                                      m_use_iceoryx_confirmed;
     bool                                      m_use_inproc_confirmed;
 
     std::atomic<bool>                         m_created;

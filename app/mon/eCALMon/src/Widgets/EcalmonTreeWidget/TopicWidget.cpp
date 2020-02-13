@@ -243,11 +243,6 @@ void TopicWidget::autoSizeColumns()
   example_topic_pb.set_message_drops(999999);
   example_topic_pb.set_dclock(99999999999);
   example_topic_pb.set_dfreq(999999);
-  example_topic_pb.set_dfreq_min(999999);
-  example_topic_pb.set_dfreq_max(999999);
-  example_topic_pb.set_dfreq_min_err(999999);
-  example_topic_pb.set_dfreq_max_err(999999);
-
 
   TopicTreeItem* example_topic_item = new TopicTreeItem(example_topic_pb);
   GroupTreeItem* example_group_item = new GroupTreeItem("CameraSensorMapFusionCAF___", "", "", QVariant::Invalid, "");
@@ -278,10 +273,6 @@ void TopicWidget::autoSizeColumns()
     (int)TopicTreeModel::Columns::MESSAGE_DROPS,
     (int)TopicTreeModel::Columns::DATA_CLOCK,
     (int)TopicTreeModel::Columns::DATA_FREQUENCY,
-    (int)TopicTreeModel::Columns::DATA_FREQUENCY_MIN,
-    (int)TopicTreeModel::Columns::DATA_FREQUENCY_MAX,
-    (int)TopicTreeModel::Columns::DATA_FREQUENCY_MIN_ERR,
-    (int)TopicTreeModel::Columns::DATA_FREQUENCY_MAX_ERR,
   };
 
   for (int column : columns_to_resize)

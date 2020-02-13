@@ -64,10 +64,6 @@ public:
     MESSAGE_DROPS,
     DATA_CLOCK,
     DATA_FREQUENCY,
-    DATA_FREQUENCY_MIN,
-    DATA_FREQUENCY_MAX,
-    DATA_FREQUENCY_MIN_ERR,
-    DATA_FREQUENCY_MAX_ERR,
 
     COLUMN_COUNT
   };
@@ -109,10 +105,6 @@ private:
     { Columns::MESSAGE_DROPS,          "Drops" },
     { Columns::DATA_CLOCK,             "Data Clock" },
     { Columns::DATA_FREQUENCY,         "Frequency [Hz]" },
-    { Columns::DATA_FREQUENCY_MIN,     "Min Ref. Freq. [Hz]" },
-    { Columns::DATA_FREQUENCY_MAX,     "Max Ref. Freq. [Hz]" },
-    { Columns::DATA_FREQUENCY_MIN_ERR, "Min Ref. Freq. Error [Hz]" },
-    { Columns::DATA_FREQUENCY_MAX_ERR, "Max Ref. Freq. Error [Hz]" },
   };
 
   std::map<Columns, int> topic_tree_item_column_mapping =
@@ -136,10 +128,6 @@ private:
     { Columns::MESSAGE_DROPS,          (int)TopicTreeItem::Columns::MESSAGE_DROPS },
     { Columns::DATA_CLOCK,             (int)TopicTreeItem::Columns::DCLOCK },
     { Columns::DATA_FREQUENCY,         (int)TopicTreeItem::Columns::DFREQ },
-    { Columns::DATA_FREQUENCY_MIN,     (int)TopicTreeItem::Columns::DFREQ_MIN },
-    { Columns::DATA_FREQUENCY_MAX,     (int)TopicTreeItem::Columns::DFREQ_MAX },
-    { Columns::DATA_FREQUENCY_MIN_ERR, (int)TopicTreeItem::Columns::DFREQ_MIN_ERR },
-    { Columns::DATA_FREQUENCY_MAX_ERR, (int)TopicTreeItem::Columns::DFREQ_MAX_ERR },
   };
 
   std::map<std::string, TopicTreeItem*> topic_tree_item_map_;

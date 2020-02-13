@@ -30,16 +30,16 @@
 
 namespace eCAL
 {
-  CDataWriterIceoryx::CDataWriterIceoryx()
+  CDataWriterSHM::CDataWriterSHM()
   {
   }
 
-  CDataWriterIceoryx::~CDataWriterIceoryx()
+  CDataWriterSHM::~CDataWriterSHM()
   {
     Destroy();
   }
 
-  void CDataWriterIceoryx::GetInfo(SWriterInfo info_)
+  void CDataWriterSHM::GetInfo(SWriterInfo info_)
   {
     info_.name                 = "iceoryx";
     info_.description          = "Iceoryx data writer";
@@ -53,7 +53,7 @@ namespace eCAL
     info_.send_size_max        = -1;
   }
 
-  bool CDataWriterIceoryx::Create(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
+  bool CDataWriterSHM::Create(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
   {
     // create the runtime for registering with the RouDi daemon
     iox::runtime::PoshRuntime::getInstance(std::string("/") + eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID()));
@@ -65,7 +65,7 @@ namespace eCAL
     return true;
   }
 
-  bool CDataWriterIceoryx::Destroy()
+  bool CDataWriterSHM::Destroy()
   {
     if(!m_publisher) return false;
 
@@ -75,7 +75,7 @@ namespace eCAL
     return true;
   }
 
-  size_t CDataWriterIceoryx::Send(const SWriterData& data_)
+  size_t CDataWriterSHM::Send(const SWriterData& data_)
   {
     if (!m_publisher) return 0;
 

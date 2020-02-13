@@ -36,8 +36,6 @@ if     (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../include/ecal/e
 endif  (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../include/ecal/ecal_defs.h")
 
 set(ecal_io_cpp_src
-    io/ecal_memfile.cpp
-    io/ecal_memfile_pool.cpp
     io/rcv_sample.cpp
     io/snd_raw_buffer.cpp
     io/snd_sample.cpp
@@ -46,17 +44,23 @@ set(ecal_io_cpp_src
     io/udp_sender.cpp
 )
 
-if(UNIX)
-set(ecal_io_cpp_linux_src
-    io/linux/ecal_memfile_linux.cpp
-)
-endif()
+if(NOT ECAL_LAYER_ICEORYX)
+  set(ecal_io_mem_cpp_src
+      io/ecal_memfile.cpp
+      io/ecal_memfile_pool.cpp
+  )
+  if(UNIX)
+    set(ecal_io_mem_cpp_linux_src
+        io/linux/ecal_memfile_linux.cpp
+    )
+  endif()
 
-if(WIN32)
-set(ecal_io_cpp_win_src
-    io/win32/ecal_memfile_win32.cpp
-)
-endif()
+  if(WIN32)
+    set(ecal_io_mem_cpp_win_src
+       io/win32/ecal_memfile_win32.cpp
+    )
+  endif()
+endif(NOT ECAL_LAYER_ICEORYX)
 
 set(ecal_mon_cpp_src
     mon/ecal_monitoring_def.cpp
@@ -72,24 +76,27 @@ set(ecal_pubsub_cpp_src
     pubsub/ecal_subscriber.cpp
 )
 
-if(ECAL_LAYER_ICEORYX)
-  set(ecal_readwrite_iceoryx_cpp_src
-    readwrite/ecal_reader_iceoryx.cpp
-    readwrite/ecal_writer_iceoryx.cpp
-  )
-endif()
-
 set(ecal_readwrite_cpp_src
     readwrite/ecal_reader.cpp
     readwrite/ecal_reader_inproc.cpp
-    readwrite/ecal_reader_shm.cpp
     readwrite/ecal_reader_udp.cpp
     readwrite/ecal_reader_udp_mc.cpp
     readwrite/ecal_writer.cpp
     readwrite/ecal_writer_inproc.cpp
-    readwrite/ecal_writer_shm.cpp
     readwrite/ecal_writer_udp_mc.cpp
 )
+
+if(ECAL_LAYER_ICEORYX)
+  set(ecal_readwrite_shm_cpp_src
+    readwrite/ecal_reader_iceoryx.cpp
+    readwrite/ecal_writer_iceoryx.cpp
+  )
+else(ECAL_LAYER_ICEORYX)
+  set(ecal_readwrite_shm_cpp_src
+    readwrite/ecal_reader_shm.cpp
+    readwrite/ecal_writer_shm.cpp
+  )
+endif(ECAL_LAYER_ICEORYX)
 
 set(ecal_service_cpp_src
     service/ecal_service_client.cpp
@@ -125,9 +132,6 @@ set(ecal_cmn_cpp_src
 )
 
 set(ecal_io_header_src
-    io/ecal_memfile.h
-    io/ecal_memfile_mtx.h
-    io/ecal_memfile_pool.h
     io/ecal_message.h
     io/ecal_receiver.h
     io/ecal_sender.h
@@ -140,17 +144,25 @@ set(ecal_io_header_src
     io/udp_sender.h
 )
 
-if(WIN32)
-set(ecal_io_header_win_src
-    io/win32/ecal_memfile_mtx.h
-)
-endif()
+if(NOT ECAL_LAYER_ICEORYX)
+  set(ecal_io_mem_header_src
+      io/ecal_memfile.h
+      io/ecal_memfile_mtx.h
+      io/ecal_memfile_pool.h
+  )
 
-if(UNIX)
-set(ecal_io_header_linux_src
-    io/linux/ecal_memfile_mtx.h
-)
-endif()
+  if(WIN32)
+    set(ecal_io_mem_header_win_src
+        io/win32/ecal_memfile_mtx.h
+    )
+  endif()
+
+  if(UNIX)
+    set(ecal_io_mem_header_linux_src
+        io/linux/ecal_memfile_mtx.h
+  )
+  endif()
+endif(NOT ECAL_LAYER_ICEORYX)
 
 set(ecal_mon_header_src
     mon/ecal_monitoring_def.h
@@ -163,25 +175,28 @@ set(ecal_pubsub_header_src
     pubsub/ecal_subgate.h
 )
 
-if(ECAL_LAYER_ICEORYX)
-set(ecal_readwrite_iceoryx_header_src
-    readwrite/ecal_reader_iceoryx.h
-    readwrite/ecal_writer_iceoryx.h
-)
-endif()
-
 set(ecal_readwrite_header_src
     readwrite/ecal_reader.h
     readwrite/ecal_reader_inproc.h
-    readwrite/ecal_reader_shm.h
     readwrite/ecal_reader_udp.h
     readwrite/ecal_reader_udp_mc.h
     readwrite/ecal_writer.h
     readwrite/ecal_writer_base.h
     readwrite/ecal_writer_inproc.h
-    readwrite/ecal_writer_shm.h
     readwrite/ecal_writer_udp_mc.h
 )
+
+if(ECAL_LAYER_ICEORYX)
+  set(ecal_readwrite_shm_header_src
+      readwrite/ecal_reader_iceoryx.h
+      readwrite/ecal_writer_iceoryx.h
+  )
+else(ECAL_LAYER_ICEORYX)
+  set(ecal_readwrite_shm_header_src
+      readwrite/ecal_reader_shm.h
+      readwrite/ecal_writer_shm.h
+  )
+endif(ECAL_LAYER_ICEORYX)
 
 set(ecal_service_header_src
     service/asio_server.h
@@ -237,7 +252,6 @@ set(ecal_header_cmn
     ../include/ecal/ecal_log.h
     ../include/ecal/ecal_log_level.h
     ../include/ecal/ecal_monitoring.h
-    ../include/ecal/ecal_msg.h
     ../include/ecal/ecal_os.h
     ../include/ecal/ecal_process.h
     ../include/ecal/ecal_process_mode.h
@@ -306,23 +320,25 @@ set(ecal_header_base
 
 ecal_add_ecal_shared_library(${PROJECT_NAME} 
     ${ecal_io_cpp_src} 
-    ${ecal_io_cpp_win_src} 
-    ${ecal_io_cpp_linux_src} 
+    ${ecal_io_mem_cpp_src} 
+    ${ecal_io_mem_cpp_win_src} 
+    ${ecal_io_mem_cpp_linux_src} 
     ${ecal_mon_cpp_src} 
     ${ecal_pubsub_cpp_src} 
-    ${ecal_readwrite_iceoryx_cpp_src}
     ${ecal_readwrite_cpp_src} 
+    ${ecal_readwrite_shm_cpp_src}
     ${ecal_service_cpp_src}
     ${ecal_cmn_cpp_src}
 
     ${ecal_cmn_header_src}
     ${ecal_io_header_src}
-    ${ecal_io_header_win_src}
-    ${ecal_io_header_linux_src}
+    ${ecal_io_mem_header_src} 
+    ${ecal_io_mem_header_win_src} 
+    ${ecal_io_mem_header_linux_src} 
     ${ecal_mon_header_src}
     ${ecal_pubsub_header_src}
-    ${ecal_readwrite_iceoryx_header_src}
     ${ecal_readwrite_header_src}
+    ${ecal_readwrite_shm_header_src}
     ${ecal_service_header_src}
 
     ${ecal_header_base}
@@ -391,6 +407,7 @@ target_link_libraries(${PROJECT_NAME}
     $<$<BOOL:${WIN32}>:wsock32>
     asio::asio
     tclap::tclap
+    CustomTclap
     simpleini::simpleini
     eCAL::pb
     Threads::Threads
@@ -417,22 +434,26 @@ install(DIRECTORY
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Source Files" FILES 
     ${ecal_io_cpp_src}
+    ${ecal_io_mem_cpp_src}
     ${ecal_io_cpp_linux_src}
     ${ecal_io_cpp_win32_src}
     ${ecal_mon_cpp_src}
     ${ecal_pubsub_cpp_src}
     ${ecal_readwrite_cpp_src}
+    ${ecal_readwrite_shm_cpp_src}
     ${ecal_service_cpp_src}
   )
   
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Header Files\\internal" FILES 
     ${ecal_cmn_header_src}
     ${ecal_io_header_src}
+    ${ecal_io_mem_header_src}
     ${ecal_io_header_linux_src}
     ${ecal_io_header_win_src}
     ${ecal_mon_header_src}
     ${ecal_pubsub_header_src}
     ${ecal_readwrite_header_src}
+    ${ecal_readwrite_shm_header_src}
     ${ecal_service_header_src}
   )
   

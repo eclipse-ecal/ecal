@@ -84,6 +84,7 @@ namespace eCAL
       new_initialization = true;
     }
 
+#ifndef ECAL_LAYER_ICEORYX
     /////////////////////
     // MEMFILE MAP
     /////////////////////
@@ -101,6 +102,7 @@ namespace eCAL
       memfile_pool_instance = std::unique_ptr<CMemFileThreadPool>(new CMemFileThreadPool);
       new_initialization = true;
     }
+#endif /* !ECAL_LAYER_ICEORYX */
 
     /////////////////////
     // SUBSCRIBER GATE
@@ -182,7 +184,9 @@ namespace eCAL
     if (entity_register_instance)                                 entity_register_instance->Create(true, true, (components_ & Init::ProcessReg) != 0x0);
     if (descgate_instance)                                        descgate_instance->Create();
     if (reggate_instance)                                         reggate_instance->Create();
+#ifndef ECAL_LAYER_ICEORYX
     if (memfile_pool_instance)                                    memfile_pool_instance->Create();
+#endif /* !ECAL_LAYER_ICEORYX */
     if (subgate_instance && (components_ & Init::Subscriber))     subgate_instance->Create();
     if (pubgate_instance && (components_ & Init::Publisher))      pubgate_instance->Create();
     if (servgate_instance && (components_ & Init::Service))       servgate_instance->Create();
@@ -237,7 +241,9 @@ namespace eCAL
     if (reggate_instance)          reggate_instance->Destroy();
     if (descgate_instance)         descgate_instance->Destroy();
     if (entity_register_instance)  entity_register_instance->Destroy();
+#ifndef ECAL_LAYER_ICEORYX
     if (memfile_pool_instance)     memfile_pool_instance->Destroy();
+#endif /* !ECAL_LAYER_ICEORYX */
     if (log_instance)              log_instance->Destroy();
     //if (config_instance)           config_instance->Destroy();
 
@@ -249,8 +255,10 @@ namespace eCAL
     reggate_instance          = nullptr;
     descgate_instance         = nullptr;
     entity_register_instance  = nullptr;
+#ifndef ECAL_LAYER_ICEORYX
     memfile_pool_instance     = nullptr;
     memfile_map_instance      = nullptr;
+#endif /* !ECAL_LAYER_ICEORYX */
     log_instance              = nullptr;
     config_instance           = nullptr;
 

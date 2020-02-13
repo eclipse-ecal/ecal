@@ -18,8 +18,8 @@
 */
 
 /**
- * @file   ecal_msg.h
- * @brief  eCAL generic message interface
+ * @file   ecal_publisher.h
+ * @brief  eCAL message publisher interface
 **/
 
 #pragma once

@@ -78,6 +78,16 @@ This project has dependencies - list with dependency name and license follows.
 2.3.3 convert_utf.cpp/.h
  - Copyright 2001-2004 Unicode, Inc.
 
+2.3.4 Spdlog
+  - Copyright (c) 2016 Gabi Melman
+  - URL: https://github.com/gabime/spdlog
+  - License: MIT License - https://github.com/gabime/spdlog/blob/v1.x/LICENSE
+
+2.3.5 Termocolor
+  - Copyright (c) 2013, Ihor Kalnytskyi
+  - URL: https://github.com/ikalnytskyi/termcolor
+  - License: BSD License - https://github.com/ikalnytskyi/termcolor/blob/master/LICENSE
+
 
 2.4 GUI
 

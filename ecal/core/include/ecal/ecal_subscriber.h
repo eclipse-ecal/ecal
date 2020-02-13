@@ -250,16 +250,6 @@ namespace eCAL
     bool SetTimeout(int timeout_);
 
     /**
-     * @brief Set subscriber frequency control values.
-     *
-     * @param fmin_    Minimum subscriber receive frequency.
-     * @param fmax_    Maximum subscriber receive frequency.
-     *
-     * @return  None zero if it succeeds, false if it fails.
-    **/
-    bool SetRefFrequency(double fmin_, double fmax_);
-
-    /**
      * @brief Dump the whole class state into a string. 
      *
      * @param indent_  Indentation used for dump. 
@@ -486,12 +476,6 @@ namespace eCAL
     {
       if (!m_subscriber) return(false);
       return(eCAL_Sub_SetTimeout(m_subscriber, timeout_) != 0);
-    }
-
-    bool SetRefFrequency(double fmin_, double fmax_)
-    {
-      if (!m_subscriber) return(false);
-      return(eCAL_Sub_SetRefFrequency(m_subscriber, fmin_, fmax_) != 0);
     }
 
     void InitializeQOS()

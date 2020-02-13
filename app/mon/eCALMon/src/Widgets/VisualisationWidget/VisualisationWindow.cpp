@@ -23,6 +23,7 @@
 #include <QSettings>
 #include <QDesktopWidget>
 #include <QKeyEvent>
+#include <QScreen>
 
 
 VisualisationWindow::VisualisationWindow(const QString& topic_name, const QString& topic_type, QWidget *parent)
@@ -50,7 +51,7 @@ void VisualisationWindow::resetLayout(int target_screen)
 {
   showNormal();
   resize(450, 500);
-  move(QApplication::desktop()->availableGeometry(target_screen).center() - rect().center());
+  move(QGuiApplication::screens().at(target_screen)->availableGeometry().center() - rect().center());
 
   visualisation_widget->resetLayout();
 }

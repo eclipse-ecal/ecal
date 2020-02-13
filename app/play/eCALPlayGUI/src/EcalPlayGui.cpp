@@ -26,6 +26,7 @@
 #include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QMimeData>
+#include <QScreen>
 
 #ifdef WIN32
 #include <QWinTaskbarButton>
@@ -626,7 +627,7 @@ void EcalplayGui::resetLayout()
   int screen_number = QApplication::desktop()->screenNumber(this);
   restoreGeometry(initial_geometry_);
   restoreState(initial_state_);
-  move(QApplication::desktop()->availableGeometry(screen_number).center() - rect().center());
+  move(QGuiApplication::screens().at(screen_number)->availableGeometry().center() - rect().center());
 }
 
 ////////////////////////////////////////////////////////////////////////////////

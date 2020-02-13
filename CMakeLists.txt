@@ -46,7 +46,7 @@ option(BUILD_TIME                              "Build the eCAL time interfaces" 
 option(BUILD_PY_BINDING                        "Build eCAL python binding"                                        OFF)
 option(BUILD_TESTS                             "Build the eCAL google tests"                                      OFF)
 
-option(ECAL_LAYER_ICEORYX                      "Provide iceoryx as communication layer"                           OFF)
+option(ECAL_LAYER_ICEORYX                      "Use iceoryx shared memory as local communication layer"           OFF)
 
 option(ECAL_INCLUDE_PY_SAMPLES                 "Include python language sample projects into CMake"               OFF)
 option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samples"                               ON)
@@ -77,6 +77,13 @@ file(TO_CMAKE_PATH "${CMAKE_PREFIX_PATH}" CMAKE_PREFIX_PATH)
 message(STATUS "Module Path: ${CMAKE_MODULE_PATH}")
 message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 
+# --------------------------------------------------------
+# check options
+# --------------------------------------------------------
+if(WIN32 AND ECAL_LAYER_ICEORYX)
+  message(FATAL_ERROR "Iceoryx transport layer not available for windows os. \
+                       Please disable the layer by setting ECAL_LAYER_ICEORYX to OFF.")
+endif()
 
 # --------------------------------------------------------
 # third party dependencies as requested
@@ -113,6 +120,7 @@ endif()
 
 if (ECAL_THIRDPARTY_BUILD_SPDLOG)
   list(APPEND as_subproject spdlog)
+  set(SPDLOG_BUILD_TESTING OFF CACHE BOOL "My option" FORCE)
   add_subdirectory(thirdparty/spdlog)
   add_library(spdlog::spdlog ALIAS spdlog)
 endif ()
@@ -431,7 +439,9 @@ if(BUILD_TESTS)
   add_subdirectory(testing/ecal/core_test/src)
   add_subdirectory(testing/ecal/event_test/src)
   add_subdirectory(testing/ecal/expmap_test/src)
+if(NOT ECAL_LAYER_ICEORYX)
   add_subdirectory(testing/ecal/io_memfile_test/src)
+endif(NOT ECAL_LAYER_ICEORYX)
   add_subdirectory(testing/ecal/pubsub_inproc_test/src)
   add_subdirectory(testing/ecal/pubsub_proto_test/src)
   add_subdirectory(testing/ecal/pubsub_test/src)

@@ -232,20 +232,12 @@ namespace eCAL
     case TLayer::tlayer_shm:
       m_tlayer.sm_shm = mode_;
       break;
-#ifdef ECAL_LAYER_ICEORYX
-    case TLayer::tlayer_iceoryx:
-      m_tlayer.sm_iceoryx = mode_;
-      break;
-#endif /* ECAL_LAYER_ICEORYX */
     case TLayer::tlayer_inproc:
       m_tlayer.sm_inproc = mode_;
       break;
     case TLayer::tlayer_all:
       m_tlayer.sm_udp_mc  = mode_;
       m_tlayer.sm_shm     = mode_;
-#ifdef ECAL_LAYER_ICEORYX
-      m_tlayer.sm_iceoryx = mode_;
-#endif /* ECAL_LAYER_ICEORYX */
       m_tlayer.sm_inproc  = mode_;
       break;
     default:
@@ -256,12 +248,6 @@ namespace eCAL
       return m_datawriter->SetLayerMode(layer_, mode_);
     }
     return true;
-  }
-
-  bool CPublisher::SetRefFrequency(double fmin_, double fmax_)
-  {
-    if (!m_created) return(false);
-    return m_datawriter->SetRefFrequency(fmin_, fmax_);
   }
 
   bool CPublisher::SetMaxBandwidthUDP(long bandwidth_)

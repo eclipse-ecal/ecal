@@ -230,6 +230,14 @@ namespace eCAL
 #endif
       sstream << std::endl;
 
+      if (!eCAL::IsInitialized())
+      {
+        sstream << "Components               : NOT INITIALIZED ( call eCAL::Initialize() )";
+        sstream << std::endl;
+        cfg_s_ = sstream.str();
+        return;
+      }
+
       sstream << "------------------------- CONFIGURATION --------------------------" << std::endl;
       sstream << "Default INI              : " << g_default_ini_file << std::endl;
       sstream << std::endl;
@@ -282,14 +290,12 @@ namespace eCAL
       sstream << "Layer Mode INPROC  (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_INPROC))  << std::endl;
       sstream << "Layer Mode SHM     (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_SHM))     << std::endl;
       sstream << "Layer Mode UDP MC  (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_UDP_MC))  << std::endl;
-      sstream << "Layer Mode ICEORYX (Bosch)    : " << LayerMode(eCALPAR(PUB, USE_ICEORYX)) << std::endl;
       sstream << std::endl;
 
       sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------"               << std::endl;
       sstream << "Layer Mode INPROC  (eCAL)     : " << LayerMode(eCALPAR(NET, INPROC_REC_ENABLED))  << std::endl;
       sstream << "Layer Mode SHM     (eCAL)     : " << LayerMode(eCALPAR(NET, SHM_REC_ENABLED))     << std::endl;
       sstream << "Layer Mode UDP MC  (eCAL)     : " << LayerMode(eCALPAR(NET, UDP_MC_REC_ENABLED))  << std::endl;
-      sstream << "Layer Mode ICEORYX (Bosch)    : " << LayerMode(eCALPAR(NET, ICEORYX_REC_ENABLED)) << std::endl;
       sstream << "Npcap UDP Reciever            : " << LayerMode(eCALPAR(NET, NPCAP_ENABLED));
 #ifdef ECAL_NPCAP_SUPPORT
       if(eCALPAR(NET, NPCAP_ENABLED) && !Udpcap::Initialize())

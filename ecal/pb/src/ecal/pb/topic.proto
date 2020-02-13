@@ -26,7 +26,6 @@ enum eTLayerType                                // transport layer
   tl_none            =   0;                     // undefined
   tl_ecal_udp_mc     =   1;                     // ecal udp multicast
   tl_ecal_shm        =   4;                     // ecal shared memory
-  tl_iceoryx         =   7;                     // iceoryx
   tl_inproc          =  42;                     // inproc (inner process)
   tl_all             = 255;                     // all layer
 }
@@ -82,9 +81,4 @@ message Topic                                   // eCAL topic
   int64            did                   = 19;  // data send id (publisher setid)
   int64            dclock                = 20;  // data clock (send / receive action)
   int32            dfreq                 = 21;  // data frequency (send / receive samples per second) [mHz]
-
-  int32            dfreq_min             = 22;  // data frequency reference minimum [mHz]
-  int32            dfreq_max             = 23;  // data frequency reference maximum [mHz]
-  int32            dfreq_min_err         = 24;  // data frequency minimum violation error counter
-  int32            dfreq_max_err         = 25;  // data frequency maximum violation error counter
 }

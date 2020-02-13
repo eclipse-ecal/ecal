@@ -120,6 +120,7 @@ namespace eCAL
     return(g_globals()->reggate().get());
   }
 
+#ifndef ECAL_LAYER_ICEORYX
   CMemFileThreadPool* g_memfile_pool()
   {
     if (!g_globals()) return(nullptr);
@@ -131,4 +132,5 @@ namespace eCAL
     if (!g_globals()) return(nullptr);
     return(g_globals()->memfile_map().get());
   }
+#endif /* !ECAL_LAYER_ICEORYX */
 }

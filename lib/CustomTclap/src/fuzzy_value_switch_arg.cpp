@@ -63,7 +63,7 @@ namespace CustomTclap
       {
         // Evaluate the next parameter
         std::string bool_string = args[*i + 1];
-        std::transform(bool_string.begin(), bool_string.end(), bool_string.begin(), [](unsigned char c) { return std::tolower(c); });
+        std::transform(bool_string.begin(), bool_string.end(), bool_string.begin(), [](unsigned char c) { return static_cast<unsigned char>(std::tolower(c)); });
 
         // If the user manually specified 0|1|false|true|off|on, we use that value.
         if (bool_string == "1" || bool_string == "true" || bool_string == "on")

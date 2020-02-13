@@ -64,6 +64,8 @@ extern "C"
 
   /**
    * @brief Set the current measured core time in s (for user implemented measuring). 
+   *
+   * @param time_  The core time.
   **/
   ECALC_API void eCAL_Logging_SetCoreTime(double time_);
 

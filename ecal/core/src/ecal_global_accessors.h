@@ -42,8 +42,11 @@ namespace eCAL
   class  CPubGate;
   class  CServGate;
   class  CRegGate;
+
+#ifndef ECAL_LAYER_ICEORYX
   class  CMemFileThreadPool;
   struct SMemFileMap;
+#endif /* !ECAL_LAYER_ICEORYX */
 
   // Declaration of getter functions for globally accessible variable instances
   CGlobals*              g_globals();
@@ -57,8 +60,11 @@ namespace eCAL
   CPubGate*              g_pubgate();
   CServGate*             g_servgate();
   CRegGate*              g_reggate();
+
+#ifndef ECAL_LAYER_ICEORYX
   CMemFileThreadPool*    g_memfile_pool();
   SMemFileMap*           g_memfile_map();
+#endif /* !ECAL_LAYER_ICEORYX */
 
   // declaration of globally accessible variables
   extern CGlobals*                     g_globals_ctx;

@@ -170,22 +170,6 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return topic_.dfreq();
     }
-    else if (column == Columns::DFREQ_MIN)
-    {
-      return topic_.dfreq_min();
-    }
-    else if (column == Columns::DFREQ_MAX)
-    {
-      return topic_.dfreq_max();
-    }
-    else if (column == Columns::DFREQ_MIN_ERR)
-    {
-      return topic_.dfreq_min_err();
-    }
-    else if (column == Columns::DFREQ_MAX_ERR)
-    {
-      return topic_.dfreq_max_err();
-    }
     else
     {
       return QVariant();
@@ -221,9 +205,6 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         case eCAL::pb::eTLayerType::tl_ecal_shm:
           this_layer_string = "shm";
           break;
-        case eCAL::pb::eTLayerType::tl_iceoryx:
-          this_layer_string = "iceoryx";
-          break;
         case eCAL::pb::eTLayerType::tl_inproc:
           this_layer_string = "inproc";
           break;
@@ -245,11 +226,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       return layer_string;
     }
 
-    else if ((column == Columns::DFREQ)
-      || (column == Columns::DFREQ_MIN)
-      || (column == Columns::DFREQ_MAX)
-      || (column == Columns::DFREQ_MIN_ERR)
-      || (column == Columns::DFREQ_MAX_ERR))
+    else if (column == Columns::DFREQ)
     {
       long long raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toLongLong(); //-V1016
       return toFrequencyString(raw_data);
@@ -294,10 +271,6 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       || (column == Columns::MESSAGE_DROPS)
       || (column == Columns::DCLOCK)
       || (column == Columns::DFREQ)
-      || (column == Columns::DFREQ_MIN)
-      || (column == Columns::DFREQ_MAX)
-      || (column == Columns::DFREQ_MIN_ERR)
-      || (column == Columns::DFREQ_MAX_ERR)
       )
     {
       return Qt::AlignmentFlag::AlignRight;

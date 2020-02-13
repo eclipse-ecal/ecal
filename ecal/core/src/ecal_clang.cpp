@@ -286,19 +286,6 @@ ECAL_API bool pub_set_layer_mode(ECAL_HANDLE handle_, const int layer_, const in
 }
 
 /****************************************/
-/*      pub_set_ref_frequency           */
-/****************************************/
-ECAL_API bool pub_set_ref_frequency(ECAL_HANDLE handle_, double fmin_, double fmax_)
-{
-  eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
-  if (pub)
-  {
-    return(pub->SetRefFrequency(fmin_, fmax_));
-  }
-  return(false);
-}
-
-/****************************************/
 /*      pub_set_max_bandwidth_udp       */
 /****************************************/
 ECAL_API bool pub_set_max_bandwidth_udp(ECAL_HANDLE handle_, long bandwidth_)
@@ -406,19 +393,6 @@ ECAL_API bool sub_get_qos(ECAL_HANDLE handle_, struct SReaderQOSC* qos_)
 {
   int ret = eCAL_Sub_GetQOS(handle_, qos_);
   return(ret == 0);
-}
-
-/****************************************/
-/*      sub_set_ref_frequency           */
-/****************************************/
-ECAL_API bool sub_set_ref_frequency(ECAL_HANDLE handle_, double fmin_, double fmax_)
-{
-  eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
-  if (sub)
-  {
-    return(sub->SetRefFrequency(fmin_, fmax_));
-  }
-  return(false);
 }
 
 /****************************************/

@@ -34,16 +34,16 @@
 
 namespace eCAL
 {
-  template<> std::shared_ptr<CIceoryxLayer> CReaderLayer<CIceoryxLayer>::layer(nullptr);
+  template<> std::shared_ptr<CSHMLayer> CReaderLayer<CSHMLayer>::layer(nullptr);
 
   //////////////////////////////////////////////////////////////////
   // CDataReaderIceoryx
   //////////////////////////////////////////////////////////////////
-  CDataReaderIceoryx::CDataReaderIceoryx()
+  CDataReaderSHM::CDataReaderSHM()
   {
   }
 
-  bool CDataReaderIceoryx::CreateIceoryxSub(const std::string& topic_name_)
+  bool CDataReaderSHM::CreateIceoryxSub(const std::string& topic_name_)
   {
     m_topic_name = topic_name_;
 
@@ -52,13 +52,13 @@ namespace eCAL
 
     // create subscriber
     m_subscriber = std::shared_ptr<iox::popo::Subscriber>(new iox::popo::Subscriber({eCALPAR(ICEORYX, SERVICE), eCALPAR(ICEORYX, INSTANCE), topic_name_}));
-    m_subscriber->setReceiveHandler(std::bind(&CDataReaderIceoryx::receiveHandler, this));
+    m_subscriber->setReceiveHandler(std::bind(&CDataReaderSHM::receiveHandler, this));
     m_subscriber->subscribe();
 
     return true;
   }
 
-  bool CDataReaderIceoryx::DestroyIceoryxSub(const std::string& /*topic_name_*/)
+  bool CDataReaderSHM::DestroyIceoryxSub(const std::string& /*topic_name_*/)
   {
     if(!m_subscriber) return false;
 
@@ -69,7 +69,7 @@ namespace eCAL
     return true;
   }
 
-  void CDataReaderIceoryx::receiveHandler()
+  void CDataReaderSHM::receiveHandler()
   {
     const iox::mepoo::ChunkHeader* ch(nullptr);
 
@@ -83,7 +83,7 @@ namespace eCAL
       if(ch->m_info.m_payloadSize == header_size + data_header->len)
       {
         // apply data to subscriber gate
-        if (g_subgate()) g_subgate()->ApplySample(m_topic_name, /*topic_id_*/ "", data_payload, data_header->len, data_header->id, data_header->clock, data_header->time, data_header->hash, eCAL::pb::eTLayerType::tl_iceoryx);
+        if (g_subgate()) g_subgate()->ApplySample(m_topic_name, /*topic_id_*/ "", data_payload, data_header->len, data_header->id, data_header->clock, data_header->time, data_header->hash, eCAL::pb::eTLayerType::tl_ecal_shm);
       }
       // release the chunk
       m_subscriber->releaseChunk(ch);

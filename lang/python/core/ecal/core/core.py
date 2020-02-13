@@ -227,20 +227,6 @@ def pub_set_layer_mode(topic_handle, layer, mode):
   return _ecal.pub_set_layer_mode(topic_handle, layer, mode)
 
 
-def pub_set_ref_frequency(topic_handle, fmin, fmax):
-  """ set publisher frequency control values.
-
-  :param topic_handle: the topic handle
-  :param fmin:         minimum publisher send frequency
-  :type fmin:          int  
-  :param fmax:         maximum publisher send frequency
-  :type fmax:          int
-  
-  """
-
-  return _ecal.pub_set_ref_frequency(topic_handle, fmin, fmax)
-
-
 def pub_set_max_bandwidth_udp(topic_handle, bandwidth):
   """ set publisher maximum transmit bandwidth for the udp layer.
 
@@ -311,20 +297,6 @@ def sub_set_qos_reliability(topic_handle, qpolicy):
   """
 
   return _ecal.sub_set_qos_reliability(topic_handle, qpolicy)
-
-
-def sub_set_ref_frequency(topic_handle, fmin, fmax):
-  """ set subscriber frequency control values.
-
-  :param topic_handle: the topic handle
-  :param fmin:         minimum subscriber send frequency
-  :type fmin:          int
-  :param fmax:         maximum subscriber send frequency
-  :type fmax:          int
-  
-  """
-
-  return _ecal.sub_set_ref_frequency(topic_handle, fmin, fmax)
 
 
 def sub_receive(topic_handle, timeout=0):
@@ -635,18 +607,6 @@ class publisher(object):
     """
     return _ecal.pub_set_layer_mode(self.thandle, layer, mode)
 
-  def set_ref_frequency(self, fmin, fmax):
-    """ set publisher frequency control values.
-
-    :param fmin: minimum publisher send frequency
-    :type fmin:  int 
-    :param fmax: maximum publisher send frequency
-    :type fmax:  int
-
-    """
-
-    return _ecal.pub_set_ref_frequency(self.thandle, fmin, fmax)
-
   def set_max_bandwidth_udp(self, bandwidth):
     """ set publisher maximum transmit bandwidth for the udp layer.
 
@@ -715,18 +675,6 @@ class subscriber(object):
     """
 
     return sub_set_qos_reliability(self.thandle, qpolicy)
-
-  def set_ref_frequency(self, fmin, fmax):
-    """ set subscriber frequency control values.
-
-    :param fmin: minimum publisher send frequency
-    :type fmin:  int
-    :param fmax: maximum publisher send frequency
-    :type fmax:  int
-
-    """
-
-    return _ecal.sub_set_ref_frequency(self.thandle, fmin, fmax)
 
   def receive(self, timeout=0):
     """ receive subscriber content with timeout

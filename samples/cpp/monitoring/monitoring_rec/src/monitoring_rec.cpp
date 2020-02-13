@@ -216,11 +216,6 @@ int main(int argc, char **argv)
         std::cout << "dclock          : " << topic.dclock()          << std::endl;   // data clock (send / receive action)
         std::cout << "dfreq           : " << topic.dfreq()           << std::endl;   // data frequency (send / receive samples per second * 1000)
 
-        std::cout << "dfreq_min       : " << topic.dfreq_min()       << std::endl;   // data frequency reference minimum [mHz]
-        std::cout << "dfreq_max       : " << topic.dfreq_max()       << std::endl;   // data frequency reference maximum [mHz]
-        std::cout << "dfreq_min_err   : " << topic.dfreq_min_err()   << std::endl;   // data frequency minimum violation error counter
-        std::cout << "dfreq_max_err   : " << topic.dfreq_max_err()   << std::endl;   // data frequency maximum violation error counter
-
         std::cout << std::endl;
       }
     }

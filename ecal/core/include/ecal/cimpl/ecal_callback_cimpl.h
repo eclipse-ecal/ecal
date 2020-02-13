@@ -109,7 +109,7 @@ typedef void (*TimerCallbackCT)(void* par_);
 **/
 struct SPubEventCallbackDataC
 {
-  enum eCAL_Publisher_Event type;   //!< event type
+  enum eCAL_Publisher_Event  type;  //!< event type
   long long                  time;  //!< event time stamp
   long long                  clock; //!< event clock
 };

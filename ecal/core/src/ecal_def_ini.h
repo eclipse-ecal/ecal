@@ -49,7 +49,6 @@
 
 #define  NET_UDP_MC_REC_ENABLED_S         "udp_mc_rec_enabled"
 #define  NET_SHM_REC_ENABLED_S            "shm_rec_enabled"
-#define  NET_ICEORYX_REC_ENABLED_S        "iceoryx_rec_enabled"
 #define  NET_INPROC_REC_ENABLED_S         "inproc_rec_enabled"
 
 #define  NET_NPCAP_ENABLED_S              "npcap_enabled"
@@ -100,7 +99,6 @@
 
 #define  PUB_USE_UDP_MC_S                 "use_udp_mc"
 #define  PUB_USE_SHM_S                    "use_shm"
-#define  PUB_USE_ICEORYX_S                "use_iceoryx"
 #define  PUB_USE_INPROC_S                 "use_inproc"
 
 #define  PUB_MEMFILE_MINSIZE_S            "memfile_minsize"

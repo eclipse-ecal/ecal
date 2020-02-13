@@ -69,18 +69,6 @@ class MessagePublisher(object):
     """
     return self.c_publisher.set_layer_mode(layer, mode)
 
-  def set_ref_frequency(self, fmin, fmax):
-    """ set publisher frequency control values.
-
-    :param fmin: minimum publisher send frequency
-    :type fmin:  int
-    :param fmax: maximum publisher send frequency
-    :type fmax:  int    
-
-    """
-
-    return self.c_publisher.set_ref_frequency(fmin, fmax)
-
   def set_max_bandwidth_udp(self, bandwidth):
     """ set publisher maximum transmit bandwidth for the udp layer.
 

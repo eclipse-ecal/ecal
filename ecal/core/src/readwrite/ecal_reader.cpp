@@ -29,13 +29,14 @@
 #include "ecal_reader.h"
 
 #include "readwrite/ecal_reader_udp_mc.h"
-#include "readwrite/ecal_reader_shm.h"
+
 #ifdef ECAL_LAYER_ICEORYX
 #include "readwrite/ecal_reader_iceoryx.h"
+#else  /* ECAL_LAYER_ICEORYX */
+#include "readwrite/ecal_reader_shm.h"
 #endif /* ECAL_LAYER_ICEORYX */
-#include "readwrite/ecal_reader_inproc.h"
 
-#include "io/ecal_memfile_pool.h"
+#include "readwrite/ecal_reader_inproc.h"
 
 #include <algorithm>
 #include <iterator>
@@ -65,10 +66,6 @@ namespace eCAL
                  m_clock_old(0),
                  m_rec_time(),
                  m_freq(0),
-                 m_freq_min(0),
-                 m_freq_max(0),
-                 m_freq_min_err(0),
-                 m_freq_max_err(0),
                  m_message_drops(0),
                  m_loc_published(false),
                  m_ext_published(false),
@@ -76,7 +73,6 @@ namespace eCAL
                  m_use_tdesc(true),
                  m_use_udp_mc_confirmed(false),
                  m_use_shm_confirmed(false),
-                 m_use_iceoryx_confirmed(false),
                  m_use_inproc_confirmed(false),
                  m_created(false)
   {
@@ -99,11 +95,6 @@ namespace eCAL
     m_mcast_address = topic2mcast(topic_name_, eCALPAR(NET, UDP_MULTICAST_GROUP), eCALPAR(NET, UDP_MULTICAST_MASK));
     m_clock         = 0;
     m_clock_old     = 0;
-    m_freq          = 0;
-    m_freq_min      = 0;
-    m_freq_max      = 0;
-    m_freq_min_err  = 0;
-    m_freq_max_err  = 0;
     m_message_drops = 0;
     m_rec_time      = std::chrono::steady_clock::time_point();
     m_created       = false;
@@ -177,16 +168,11 @@ namespace eCAL
     m_clock                   = 0;
     m_clock_old               = 0;
     m_freq                    = 0;
-    m_freq_min                = 0;
-    m_freq_max                = 0;
-    m_freq_min_err            = 0;
-    m_freq_max_err            = 0;
     m_message_drops           = 0;
     m_rec_time                = std::chrono::steady_clock::time_point();
 
     m_use_udp_mc_confirmed    = false;
     m_use_shm_confirmed       = false;
-    m_use_iceoryx_confirmed   = false;
     m_use_inproc_confirmed    = false;
 
     return(true);
@@ -205,14 +191,6 @@ namespace eCAL
     {
       CSHMLayer::Get()->InitializeLayer();
     }
-
-#ifdef ECAL_LAYER_ICEORYX
-    // start iceoryx layer
-    if (eCALPAR(NET, ICEORYX_REC_ENABLED))
-    {
-      CIceoryxLayer::Get()->InitializeLayer();
-    }
-#endif /*ECAL_LAYER_ICEORYX*/
 
     // start inproc layer
     if (eCALPAR(NET, INPROC_REC_ENABLED))
@@ -235,14 +213,6 @@ namespace eCAL
       CSHMLayer::Get()->StartLayer(m_topic_name, m_qos);
     }
 
-#ifdef ECAL_LAYER_ICEORYX
-    // start iceoryx layer
-    if (eCALPAR(NET, ICEORYX_REC_ENABLED))
-    {
-      CIceoryxLayer::Get()->StartLayer(m_topic_name, m_qos);
-    }
-#endif /*ECAL_LAYER_ICEORYX*/
-
     // start inproc layer
     if (eCALPAR(NET, INPROC_REC_ENABLED))
     {
@@ -263,14 +233,6 @@ namespace eCAL
     {
       CSHMLayer::Get()->StopLayer(m_topic_name);
     }
-
-#ifdef ECAL_LAYER_ICEORYX
-    // stop iceoryx layer
-    if (eCALPAR(NET, ICEORYX_REC_ENABLED))
-    {
-      CIceoryxLayer::Get()->StopLayer(m_topic_name);
-    }
-#endif /*ECAL_LAYER_ICEORYX*/
 
     // stop inproc layer
     if (eCALPAR(NET, INPROC_REC_ENABLED))
@@ -311,14 +273,6 @@ namespace eCAL
       tlayer->set_confirmed(m_use_shm_confirmed);
       tlayer->set_par("");
     }
-    // iceoryx layer
-    {
-      auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
-      tlayer->set_type(eCAL::pb::tl_iceoryx);
-      tlayer->set_version(1);
-      tlayer->set_confirmed(m_use_iceoryx_confirmed);
-      tlayer->set_par("");
-    }
     // inproc layer
     {
       auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
@@ -332,10 +286,6 @@ namespace eCAL
     ecal_reg_sample_mutable_topic->set_uname(Process::GetUnitName());
     ecal_reg_sample_mutable_topic->set_dclock(m_clock);
     ecal_reg_sample_mutable_topic->set_dfreq(m_freq);
-    ecal_reg_sample_mutable_topic->set_dfreq_min(google::protobuf::int32(m_freq_min));
-    ecal_reg_sample_mutable_topic->set_dfreq_max(google::protobuf::int32(m_freq_max));
-    ecal_reg_sample_mutable_topic->set_dfreq_min_err(google::protobuf::int32(m_freq_min_err));
-    ecal_reg_sample_mutable_topic->set_dfreq_max_err(google::protobuf::int32(m_freq_max_err));
     ecal_reg_sample_mutable_topic->set_message_drops(google::protobuf::int32(m_message_drops));
 
     size_t loc_connections(0);
@@ -416,10 +366,9 @@ namespace eCAL
     if (!m_created) return(0);
 
     // store receive layer
-    m_use_udp_mc_confirmed    |= layer_ == eCAL::pb::tl_ecal_udp_mc;
-    m_use_shm_confirmed       |= layer_ == eCAL::pb::tl_ecal_shm;
-    m_use_iceoryx_confirmed   |= layer_ == eCAL::pb::tl_iceoryx;
-    m_use_inproc_confirmed    |= layer_ == eCAL::pb::tl_inproc;
+    m_use_udp_mc_confirmed |= layer_ == eCAL::pb::tl_ecal_udp_mc;
+    m_use_shm_confirmed    |= layer_ == eCAL::pb::tl_ecal_shm;
+    m_use_inproc_confirmed |= layer_ == eCAL::pb::tl_inproc;
 
     // use hash to discard multiple receives of the same payload
     //   first we remove outdated hashes
@@ -581,16 +530,6 @@ namespace eCAL
     return(false);
   }
 
-  bool CDataReader::SetRefFrequency(double fmin_, double fmax_)
-  {
-    if (!m_created) return(false);
-    m_freq_min = static_cast<long>(fmin_ * 1000);   // mHz
-    m_freq_max = static_cast<long>(fmax_ * 1000);   // mHz
-    m_freq_min_err = 0;
-    m_freq_max_err = 0;
-    return true;
-  }
-
   void CDataReader::SetID(const std::set<long long>& id_set_)
   {
     m_id_set = id_set_;
@@ -637,13 +576,6 @@ namespace eCAL
       CSHMLayer::Get()->ApplyLayerParameter(par);
       break;
     }
-#ifdef ECAL_LAYER_ICEORYX
-    case eCAL::pb::tl_iceoryx:
-    {
-      CIceoryxLayer::Get()->ApplyLayerParameter(par);
-      break;
-    }
-#endif /* ECAL_LAYER_ICEORYX */
     case eCAL::pb::tl_inproc:
     {
       CInProcLayer::Get()->ApplyLayerParameter(par);
@@ -748,18 +680,6 @@ namespace eCAL
       {
         // calculate frequency in mHz
         m_freq = static_cast<long>((1000 * 1000 * (m_clock - m_clock_old)) / std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - m_rec_time).count());
-        // check min range violation
-        if (m_freq_min)
-        {
-          if (m_freq < m_freq_min)
-            m_freq_min_err++;
-        }
-        // check max range violation
-        if (m_freq_max)
-        {
-          if (m_freq > m_freq_max)
-            m_freq_max_err++;
-        }
         // reset clock and time
         m_clock_old = m_clock;
         m_rec_time  = curr_time;

@@ -198,7 +198,7 @@ QList<QPair<PluginWrapper::PluginData, eCAL::mon::PluginWidgetInterface*>> Plugi
   }
 
   // Sort return vector by priority
-  qSort(supported_plugins.begin(), supported_plugins.end(), [](const auto& lhs, const auto& rhs)
+  std::sort(supported_plugins.begin(), supported_plugins.end(), [](const auto& lhs, const auto& rhs)
   {
     return lhs.first.meta_data.priority < rhs.first.meta_data.priority;
   });

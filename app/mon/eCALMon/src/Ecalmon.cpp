@@ -36,6 +36,7 @@
 #include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QDateTime>
+#include <QScreen>
 
 #include <QDebug>
 
@@ -523,7 +524,7 @@ void Ecalmon::resetLayout()
 
   setParseTimeEnabled(initial_parse_time_);
 
-  move(QApplication::desktop()->availableGeometry(screen_number).center() - rect().center());
+  move(QGuiApplication::screens().at(screen_number)->availableGeometry().center() - rect().center());
 
   log_widget_    ->resetLayout();
   topic_widget_  ->resetLayout();

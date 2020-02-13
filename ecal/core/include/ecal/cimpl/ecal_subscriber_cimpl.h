@@ -50,7 +50,7 @@ extern "C"
    * @param topic_desc_      Topic description.
    * @param topic_desc_len_  Topic type description length.
    *
-   * @return  Handle to created subscriber or NULL if failed.
+   * @return  None zero if succeeded.
   **/
   ECALC_API int eCAL_Sub_Create(ECAL_HANDLE handle_, const char* topic_name_, const char* topic_type_, const char* topic_desc_, int topic_desc_len_);
 
@@ -74,7 +74,7 @@ extern "C"
   ECALC_API int eCAL_Sub_SetQOS(ECAL_HANDLE handle_, struct SReaderQOSC qos_);
 
   /**
-   * @brief Set subscriber quality of service attributes.
+   * @brief Get subscriber quality of service attributes.
    *
    * @param handle_  Subscriber handle.
    * @param qos_     Quality of service policies.
@@ -172,17 +172,6 @@ extern "C"
    * @return  True if succeeded, false if not.
   **/
   ECALC_API int eCAL_Sub_SetTimeout(ECAL_HANDLE handle_, int timeout_);
-
-  /**
-   * @brief Set subscriber frequency control values.
-   *
-   * @param handle_  Subscriber handle.
-   * @param fmin_    Minimum subscriber receive frequency.
-   * @param fmax_    Maximum subscriber receive frequency.
-   *
-   * @return  None zero if it succeeds, false if it fails.
-  **/
-  ECALC_API int eCAL_Sub_SetRefFrequency(ECAL_HANDLE handle_, double fmin_, double fmax_);
 
   /**
    * @brief Dump the whole class state into a string buffer. 

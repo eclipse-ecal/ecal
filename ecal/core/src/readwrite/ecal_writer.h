@@ -30,10 +30,13 @@
 #include "ecal_expmap.h"
 
 #include "ecal_writer_udp_mc.h"
-#include "ecal_writer_shm.h"
+
 #ifdef ECAL_LAYER_ICEORYX
 #include "ecal_writer_iceoryx.h"
+#else  /* ECAL_LAYER_ICEORYX */
+#include "ecal_writer_shm.h"
 #endif /* ECAL_LAYER_ICEORYX */
+
 #include "ecal_writer_inproc.h"
 
 #include <mutex>
@@ -45,8 +48,6 @@ namespace eCAL
 {
   class CDataWriter
   {
-    //friend class CDataWriterSHM;
-
   public:
     CDataWriter();
     ~CDataWriter();
@@ -62,7 +63,6 @@ namespace eCAL
     bool SetQOS(QOS::SWriterQOS& qos_);
 
     bool SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_);
-    bool SetRefFrequency(double fmin_, double fmax_);
     bool SetMaxBandwidthUDP(long bandwidth_);
 
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
@@ -98,9 +98,6 @@ namespace eCAL
 
     bool SetUseUdpMC(TLayer::eSendMode mode_);
     bool SetUseShm(TLayer::eSendMode mode_);
-#ifdef ECAL_LAYER_ICEORYX
-    bool SetUseIceoryx(TLayer::eSendMode mode_);
-#endif /* ECAL_LAYER_ICEORYX */
     bool SetUseInProc(TLayer::eSendMode mode_);
 
     bool IsInternalSubscribedOnly();
@@ -134,10 +131,6 @@ namespace eCAL
     long long          m_clock_old;
     std::chrono::steady_clock::time_point m_snd_time;
     long               m_freq;
-    long               m_freq_min;
-    long               m_freq_max;
-    long               m_freq_min_err;
-    long               m_freq_max_err;
 
     long               m_bandwidth_max_udp;
 
@@ -151,12 +144,6 @@ namespace eCAL
     TLayer::eSendMode  m_use_shm;
     CDataWriterSHM     m_writer_shm;
     bool               m_use_shm_confirmed;
-
-#ifdef ECAL_LAYER_ICEORYX
-    TLayer::eSendMode  m_use_iceoryx;
-    CDataWriterIceoryx m_writer_iceoryx;
-    bool               m_use_iceoryx_confirmed;
-#endif /*ECAL_LAYER_ICEORYX*/
 
     TLayer::eSendMode  m_use_inproc;
     CDataWriterInProc  m_writer_inproc;

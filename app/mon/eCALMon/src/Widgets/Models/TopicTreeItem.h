@@ -55,10 +55,6 @@ public:
     MESSAGE_DROPS,
     DCLOCK,
     DFREQ,
-    DFREQ_MIN,
-    DFREQ_MAX,
-    DFREQ_MIN_ERR,
-    DFREQ_MAX_ERR
   };
 
   TopicTreeItem();

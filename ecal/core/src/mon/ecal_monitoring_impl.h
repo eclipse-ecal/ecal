@@ -79,7 +79,6 @@ namespace eCAL
         pid                   = 0;
         tlayer_ecal_udp_mc    = false;
         tlayer_ecal_shm       = false;
-        tlayer_iceoryx        = false;
         tlayer_inproc         = false;
         tsize                 = 0;
         connections_loc       = 0;
@@ -88,10 +87,6 @@ namespace eCAL
         dclock                = 0;
         ddropped              = 0;
         dfreq                 = 0;
-        dfreq_min             = 0;
-        dfreq_max             = 0;
-        dfreq_min_err         = 0;
-        dfreq_max_err         = 0;
       };
 
       int          rclock;
@@ -106,7 +101,6 @@ namespace eCAL
       std::string  tdesc;
       bool         tlayer_ecal_udp_mc;
       bool         tlayer_ecal_shm;
-      bool         tlayer_iceoryx;
       bool         tlayer_inproc;
       int          tsize;
       int          connections_loc;
@@ -115,10 +109,6 @@ namespace eCAL
       long long    dclock;
       long long    ddropped;
       long         dfreq;
-      long         dfreq_min;
-      long         dfreq_max;
-      long         dfreq_min_err;
-      long         dfreq_max_err;
     };
     typedef eCAL::Util::CExpMap<std::string, STopicMon> TopicMonMapT;
 

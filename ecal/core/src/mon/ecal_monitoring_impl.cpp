@@ -215,13 +215,11 @@ namespace eCAL
     size_t       topic_size      = static_cast<size_t>(sample_topic.tsize());
     bool         topic_tlayer_ecal_udp_mc(false);
     bool         topic_tlayer_ecal_shm(false);
-    bool         topic_tlayer_iceoryx(false);
     bool         topic_tlayer_inproc(false);
     for (auto layer : sample_topic.tlayer())
     {
       topic_tlayer_ecal_udp_mc    |= (layer.type() == eCAL::pb::tl_ecal_udp_mc)    && layer.confirmed();
       topic_tlayer_ecal_shm       |= (layer.type() == eCAL::pb::tl_ecal_shm)       && layer.confirmed();
-      topic_tlayer_iceoryx        |= (layer.type() == eCAL::pb::tl_iceoryx)        && layer.confirmed();
       topic_tlayer_inproc         |= (layer.type() == eCAL::pb::tl_inproc)         && layer.confirmed();
     }
     size_t       connections_loc = static_cast<size_t>(sample_topic.connections_loc());
@@ -230,10 +228,6 @@ namespace eCAL
     long long    dclock          = sample_topic.dclock();
     long long    ddropped        = sample_topic.message_drops();
     long         dfreq           = sample_topic.dfreq();
-    long         dfreq_min       = sample_topic.dfreq_min();
-    long         dfreq_max       = sample_topic.dfreq_max();
-    long         dfreq_min_err   = sample_topic.dfreq_min_err();
-    long         dfreq_max_err   = sample_topic.dfreq_max_err();
 
     // check blacklist topic filter
     {
@@ -297,7 +291,6 @@ namespace eCAL
       TopicInfo.tdesc                 = std::move(topic_desc);
       TopicInfo.tlayer_ecal_udp_mc    = topic_tlayer_ecal_udp_mc;
       TopicInfo.tlayer_ecal_shm       = topic_tlayer_ecal_shm;
-      TopicInfo.tlayer_iceoryx        = topic_tlayer_iceoryx;
       TopicInfo.tlayer_inproc         = topic_tlayer_inproc;
       TopicInfo.tsize                 = static_cast<int>(topic_size);
       TopicInfo.connections_loc       = static_cast<int>(connections_loc);
@@ -306,10 +299,6 @@ namespace eCAL
       TopicInfo.dclock                = dclock;
       TopicInfo.ddropped              = ddropped;
       TopicInfo.dfreq                 = dfreq;
-      TopicInfo.dfreq_min             = dfreq_min;
-      TopicInfo.dfreq_max             = dfreq_max;
-      TopicInfo.dfreq_min_err         = dfreq_min_err;
-      TopicInfo.dfreq_max_err         = dfreq_max_err;
     }
 
     return(true);
@@ -656,12 +645,6 @@ namespace eCAL
         tlayer->set_type(eCAL::pb::tl_ecal_shm);
         tlayer->set_confirmed(true);
       }
-      if (topic.second.tlayer_iceoryx)
-      {
-        auto tlayer = pMonTopic->add_tlayer();
-        tlayer->set_type(eCAL::pb::tl_iceoryx);
-        tlayer->set_confirmed(true);
-      }
       if (topic.second.tlayer_inproc)
       {
         auto tlayer = pMonTopic->add_tlayer();
@@ -692,18 +675,6 @@ namespace eCAL
 
       // data frequency
       pMonTopic->set_dfreq(topic.second.dfreq);
-
-      // data frequency minimum
-      pMonTopic->set_dfreq_min(topic.second.dfreq_min);
-
-      // data frequency maximum
-      pMonTopic->set_dfreq_max(topic.second.dfreq_max);
-
-      // data frequency minimum violation error counter
-      pMonTopic->set_dfreq_min_err(topic.second.dfreq_min_err);
-
-      // data frequency maximum violation error counter
-      pMonTopic->set_dfreq_max_err(topic.second.dfreq_max_err);
     }
   }
 

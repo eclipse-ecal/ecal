@@ -105,7 +105,7 @@ extern "C"
   ECALC_API int eCAL_Pub_SetQOS(ECAL_HANDLE handle_, struct SWriterQOSC qos_);
 
   /**
-   * @brief Set publisher quality of service attributes.
+   * @brief Get publisher quality of service attributes.
    *
    * @param handle_  Publisher handle.
    * @param qos_     Quality of service policies.
@@ -124,17 +124,6 @@ extern "C"
    * @return  True if it succeeds, false if it fails.
   **/
   ECALC_API int eCAL_Pub_SetLayerMode(ECAL_HANDLE handle_, enum eTransportLayerC layer_, enum eSendModeC mode_);
-
-  /**
-   * @brief Set publisher frequency control values.
-   *
-   * @param handle_  Publisher handle.
-   * @param fmin_    Minimum publisher send frequency.
-   * @param fmax_    Maximum publisher send frequency.
-   *
-   * @return  None zero if it succeeds, false if it fails.
-  **/
-  ECALC_API int eCAL_Pub_SetRefFrequency(ECAL_HANDLE handle_, double fmin_, double fmax_);
 
   /**
    * @brief Set publisher maximum transmit bandwidth for the udp layer.

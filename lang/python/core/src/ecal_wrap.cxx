@@ -374,21 +374,6 @@ PyObject* pub_set_layer_mode(PyObject* /*self*/, PyObject* args)
 }
 
 /****************************************/
-/*      pub_set_ref_frequency           */
-/****************************************/
-PyObject* pub_set_ref_frequency(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  double      fmin         = 0.0;
-  double      fmax         = 0.0;
-
-  if (!PyArg_ParseTuple(args, "ndd", &topic_handle, &fmin, &fmax))
-    return nullptr;
-
-  return(Py_BuildValue("i", pub_set_ref_frequency(topic_handle, fmin, fmax)));
-}
-
-/****************************************/
 /*      pub_set_max_bandwidth_udp       */
 /****************************************/
 PyObject* pub_set_max_bandwidth_udp(PyObject* /*self*/, PyObject* args)
@@ -503,26 +488,6 @@ PyObject* sub_set_qos_reliability(PyObject* /*self*/, PyObject* args)
   Py_END_ALLOW_THREADS
 
   return(Py_BuildValue("i", set_qos));
-}
-
-/****************************************/
-/*      sub_set_ref_frequency           */
-/****************************************/
-PyObject* sub_set_ref_frequency(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  double      fmin = 0.0;
-  double      fmax = 0.0;
-
-  if (!PyArg_ParseTuple(args, "ndd", &topic_handle, &fmin, &fmax))
-    return nullptr;
-
-  bool set_ref_frequency{ false };
-  Py_BEGIN_ALLOW_THREADS
-    set_ref_frequency = sub_set_ref_frequency(topic_handle, fmin, fmax);
-  Py_END_ALLOW_THREADS
-
-  return(Py_BuildValue("i", set_ref_frequency));
 }
 
 /****************************************/
@@ -1557,7 +1522,6 @@ static PyMethodDef _ecal_methods[] =
   {"pub_set_qos_reliability",       pub_set_qos_reliability,       METH_VARARGS,  "pub_set_qos_reliability(topic_handle, qpolicy)"},
   {"pub_set_layer_mode",            pub_set_layer_mode,            METH_VARARGS,  "pub_set_layer_mode(topic_handle, layer, mode)"},
 
-  {"pub_set_ref_frequency",         pub_set_ref_frequency,         METH_VARARGS,  "pub_set_ref_frequency(topic_handle, fmin, fmax)"},
   {"pub_set_max_bandwidth_udp",     pub_set_max_bandwidth_udp,     METH_VARARGS,  "pub_set_max_bandwidth_udp(topic_handle, bandwidth)"},
 
   {"pub_send",                      pub_send,                      METH_VARARGS,  "pub_send(topic_handle, payload, time)"},
@@ -1567,8 +1531,6 @@ static PyMethodDef _ecal_methods[] =
 
   {"sub_set_qos_historykind",       sub_set_qos_historykind,       METH_VARARGS,  "sub_set_qos_historykind(topic_handle, qpolicy, depth)"},
   {"sub_set_qos_reliability",       sub_set_qos_reliability,       METH_VARARGS,  "sub_set_qos_reliability(topic_handle, qpolicy)"},
-
-  {"sub_set_ref_frequency",         sub_set_ref_frequency,         METH_VARARGS,  "sub_set_ref_frequency(topic_handle, fmin, fmax)"},
 
   {"sub_receive",                   sub_receive,                   METH_VARARGS,  "sub_receive(topic_handle, timeout)"},
 

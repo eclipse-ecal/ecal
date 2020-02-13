@@ -21,14 +21,14 @@ project(addressbook_snd)
 find_package(CapnProto REQUIRED)
 find_package(eCAL REQUIRED)
 
-set(CAPNPC_IMPORT_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/capnp)
-capnp_generate_cpp(CAPNP_SRCS CAPNP_HDRS capnp/addressbook.capnp)
+set(CAPNPC_IMPORT_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
+capnp_generate_cpp(CAPNP_SRCS CAPNP_HDRS addressbook.capnp)
 
 ecal_add_sample(${PROJECT_NAME} addressbook_snd.cpp ${CAPNP_SRCS} ${CAPNP_HDRS})
 
 set_source_files_properties(${CAPNP_SRCS} PROPERTIES COMPILE_FLAGS $<$<CXX_COMPILER_ID:MSVC>:-W0>)
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/capnp)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(${PROJECT_NAME} PRIVATE CapnProto::capnp eCAL::core)
 target_link_options(${PROJECT_NAME} PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/ignore:4099>)
 
