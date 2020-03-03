@@ -23,6 +23,9 @@ namespace eCAL
 {
   namespace Apps
   {
-    constexpr char MON[] = "ecal_mon";
+    constexpr char MON[]      = "ecal_mon";
+    constexpr char REC[]      = "ecal_rec";
+    constexpr char PLAY_GUI[] = "ecal_play_gui";
+    constexpr char REC_GUI[]  = "ecal_rec_gui";
   }
 }

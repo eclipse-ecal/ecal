@@ -11,11 +11,11 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="512"
    height="512"
-   viewBox="0 0 135.46666 135.46667"
+   viewBox="0 0 135.46666 135.46666"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="circle_record.svg">
+   sodipodi:docname="circle_record.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -25,18 +25,25 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
-     inkscape:cx="-224.28571"
-     inkscape:cy="560"
+     inkscape:zoom="1.8101934"
+     inkscape:cx="113.84767"
+     inkscape:cy="214.22239"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
-     showgrid="false"
+     showgrid="true"
      units="px"
      inkscape:window-width="1920"
      inkscape:window-height="1137"
-     inkscape:window-x="1912"
+     inkscape:window-x="1272"
      inkscape:window-y="-8"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4518"
+       spacingx="2.1166666"
+       spacingy="2.1166666"
+       empspacing="4" />
+  </sodipodi:namedview>
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -45,7 +52,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -53,31 +60,29 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-161.53332)">
-    <g
-       transform="matrix(1.0960086,0,0,-1.0960086,-119.08133,965.45563)"
-       inkscape:label="TaskbarIcons"
-       id="g823">
-      <path
-         inkscape:connector-curvature="0"
-         id="path825"
-         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none"
-         d="m 113.65,671.7 c 0,31.37 25.43,56.8 56.8,56.8 31.37,0 56.8,-25.43 56.8,-56.8 0,-31.37 -25.43,-56.8 -56.8,-56.8 -31.37,0 -56.8,25.43 -56.8,56.8 z" />
-      <path
-         inkscape:connector-curvature="0"
-         id="path827"
-         style="fill:none;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
-         d="m 113.65,671.7 c 0,31.37 25.43,56.8 56.8,56.8 31.37,0 56.8,-25.43 56.8,-56.8 0,-31.37 -25.43,-56.8 -56.8,-56.8 -31.37,0 -56.8,25.43 -56.8,56.8 z" />
-      <path
-         inkscape:connector-curvature="0"
-         id="path829"
-         style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke:none"
-         d="m 149.02,671.7 c 0,11.84 9.59,21.44 21.43,21.44 11.84,0 21.43,-9.6 21.43,-21.44 0,-11.83 -9.59,-21.43 -21.43,-21.43 -11.84,0 -21.43,9.6 -21.43,21.43 z" />
-      <path
-         inkscape:connector-curvature="0"
-         id="path831"
-         style="fill:none;stroke:#c00000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
-         d="m 149.02,671.7 c 0,11.84 9.59,21.44 21.43,21.44 11.84,0 21.43,-9.6 21.43,-21.44 0,-11.83 -9.59,-21.43 -21.43,-21.43 -11.84,0 -21.43,9.6 -21.43,21.43 z" />
-    </g>
+     transform="translate(0,-161.53336)">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="50.799995"
+       y="225.03336"
+       id="text851"><tspan
+         sodipodi:role="line"
+         id="tspan849"
+         x="50.799995"
+         y="234.39713"
+         style="stroke-width:0.26458332" /></text>
+    <circle
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:8.46666667;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="path837"
+       cx="67.73333"
+       cy="229.26669"
+       r="63.5" />
+    <circle
+       style="opacity:1;fill:#b80000;fill-opacity:1;stroke:#800000;stroke-width:4.23333333;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="path835"
+       cx="67.73333"
+       cy="229.26669"
+       r="25.4" />
   </g>
 </svg>

@@ -44,6 +44,7 @@ option(BUILD_APPS                              "Build the eCAL applications"    
 option(BUILD_SAMPLES                           "Build the eCAL samples"                                            ON)
 option(BUILD_TIME                              "Build the eCAL time interfaces"                                    ON)
 option(BUILD_PY_BINDING                        "Build eCAL python binding"                                        OFF)
+option(BUILD_CSHARP_BINDING                    "Build eCAL C# binding"                                            OFF)
 option(BUILD_TESTS                             "Build the eCAL google tests"                                      OFF)
 
 option(ECAL_LAYER_ICEORYX                      "Use iceoryx shared memory as local communication layer"           OFF)
@@ -341,7 +342,7 @@ endif(HAS_QT5)
 # --------------------------------------------------------
 # ecal mon plugin sdk
 # --------------------------------------------------------
-add_subdirectory(app/mon/eCALMonPluginLib)
+add_subdirectory(app/mon/mon_plugin_lib)
 
 # --------------------------------------------------------
 # ecal time
@@ -369,21 +370,29 @@ if(BUILD_PY_BINDING)
 endif()
 
 # --------------------------------------------------------
+# ecal core csharp binding
+# --------------------------------------------------------
+if(BUILD_CSHARP_BINDING AND WIN32)
+  add_subdirectory(lang/csharp/Continental/eCAL/Core/)
+  #add_subdirectory(lang/csharp/Continental/eCAL/Protobuf/)
+endif()
+
+# --------------------------------------------------------
 # console applications
 # --------------------------------------------------------
 add_subdirectory(app/apps)
 if(BUILD_APPS)
-  add_subdirectory(app/mon/eCALTopic/src)
-  add_subdirectory(app/util/eCALConfig/src)
-  add_subdirectory(app/util/eCALStop/src)
+  add_subdirectory(app/mon/topic)
+  add_subdirectory(app/util/config)
+  add_subdirectory(app/util/stop)
 endif()
 
 # --------------------------------------------------------
 # applications using hdf5
 # --------------------------------------------------------
 if(BUILD_APPS AND HAS_HDF5)
-  add_subdirectory(app/play/eCALPlayCore)
-  add_subdirectory(app/play/eCALPlay)
+  add_subdirectory(app/play/play_core)
+  add_subdirectory(app/play/play_cli)
 
   add_subdirectory(app/rec/rec_cli)
   add_subdirectory(app/rec/rec_core)
@@ -394,18 +403,19 @@ endif()
 # qt applications
 # --------------------------------------------------------
 if(BUILD_APPS AND HAS_QT5)
-  add_subdirectory(app/mon/eCALMon)
+  add_subdirectory(app/mon/mon_gui)
+  add_subdirectory(app/util/launcher)
   if(WIN32)
     set(ECAL_MON_PLUGIN_DIR ecalmon_plugins)
   else()
     set(ECAL_MON_PLUGIN_DIR ecal/plugins/mon)
   endif()
-  add_subdirectory(app/mon/eCALMonPlugins)
+  add_subdirectory(app/mon/mon_plugins)
 # --------------------------------------------------------
 # qt applications using hdf5
 # --------------------------------------------------------
 if(BUILD_APPS AND HAS_QT5 AND HAS_HDF5)
-  add_subdirectory(app/play/eCALPlayGUI)
+  add_subdirectory(app/play/play_gui)
   add_subdirectory(app/rec/rec_gui)
 endif()
 endif()

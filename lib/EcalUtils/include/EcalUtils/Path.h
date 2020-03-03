@@ -21,6 +21,9 @@
 
 #include <string>
 #include <list>
+#include <map>
+
+#include <sys/stat.h>
 
 namespace EcalUtils
 {
@@ -41,16 +44,67 @@ namespace EcalUtils
 
     enum Type : int
     {
+      Unknown,
+      RegularFile,
       Dir,
-      File,
-      Unknown
+      CharacterDevice,
+      BlockDevice,
+      Fifo,
+      SymbolicLink,
+      Socket
+    };
+
+    class FileStatus
+    {
+    public:
+      FileStatus(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
+
+      ~FileStatus();
+
+      bool IsOk() const;
+      Type GetType() const;
+
+      int64_t FileSize() const;
+
+#ifdef WIN32
+      bool PermissionRootRead()     const;
+      bool PermissionRootWrite()    const;
+      bool PermissionRootExecute()  const;
+      bool PermissionGroupRead()    const;
+      bool PermissionGroupWrite()   const;
+      bool PermissionGroupExecute() const;
+      bool PermissionOwnerRead()    const;
+      bool PermissionOwnerWrite()   const;
+      bool PermissionOwnerExecute() const;
+#else // WIN32
+      bool PermissionRootRead()     const;
+      bool PermissionRootWrite()    const;
+      bool PermissionRootExecute()  const;
+      bool PermissionGroupRead()    const;
+      bool PermissionGroupWrite()   const;
+      bool PermissionGroupExecute() const;
+      bool PermissionOwnerRead()    const;
+      bool PermissionOwnerWrite()   const;
+      bool PermissionOwnerExecute() const;
+#endif // WIN32
+
+      bool CanOpenDir() const;
+
+    private:
+      std::string path_;
+      bool is_ok_;
+#ifdef WIN32
+      struct __stat64 file_status_;
+#else // WIN32
+      struct stat file_status_;
+#endif 
     };
 
     Type GetType(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
 
     bool IsDir(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
     bool IsFile(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
-
+    std::map<std::string, FileStatus> DirContent(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
 
     bool MkDir(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
     bool MkPath(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
@@ -73,7 +127,16 @@ namespace EcalUtils
     std::string ToUnixSeperators(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
     std::string ToNativeSeperators(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
 
-    inline char NativeSeparator(OsStyle seperator_style = OsStyle::Current);
+    inline char NativeSeparator(OsStyle seperator_style = OsStyle::Current)
+    {
+      switch (seperator_style)
+      {
+      case OsStyle::Windows:
+        return '\\';
+      default:
+        return '/';
+      }
+    }
 
     bool IsEqual(const std::string& path1, const std::string& path2, OsStyle compare_for = OsStyle::Current);
   };

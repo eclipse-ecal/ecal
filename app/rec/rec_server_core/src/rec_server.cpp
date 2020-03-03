@@ -548,7 +548,7 @@ namespace eCAL
       // Send record command
       for (const auto& recorder : recorder_instances_)
       {
-        std::vector<RecorderCommand> commands;
+        //std::vector<RecorderCommand> commands;
 
         RecorderCommand recording_command;
         recording_command.type_       = RecorderCommand::Type::START_RECORDING;

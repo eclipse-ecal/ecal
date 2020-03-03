@@ -29,6 +29,10 @@ ecal_add_python_module(${PROJECT_NAME} SOURCES ${ecal_lang_py_src} PYTHON_CODE $
 target_link_libraries(${PROJECT_NAME} PRIVATE Python::Python)
 target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::hdf5)
 
+if(MSVC)
+  set_property(TARGET ${PROJECT_NAME} PROPERTY LINK_FLAGS "/ignore:4098,4099")
+endif(MSVC)
+
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lang/python/hdf5)
 
 if(ECAL_INCLUDE_PY_SAMPLES)

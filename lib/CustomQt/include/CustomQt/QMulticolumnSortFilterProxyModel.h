@@ -43,6 +43,11 @@ public:
   QMulticolumnSortFilterProxyModel(QObject* parent = 0);
   ~QMulticolumnSortFilterProxyModel();
 
+////////////////////////////////////////////
+// Filtering
+////////////////////////////////////////////
+public:
+
   void setFilterKeyColumn(int column) { setFilterKeyColumns(QVector<int>{column}); } // QSortFilterProxyModel::setFilterKeyColumn is not virtual, unfortunatelly
 
   /**
@@ -64,9 +69,27 @@ public:
 
   Q_DECL_DEPRECATED int filterKeyColumn() const { return QSortFilterProxyModel::filterKeyColumn(); } // QSortFilterProxyModel::setFilterKeyColumn is not virtual, unfortunatelly
 
-  bool filterDirectAcceptsRow(int source_row, const QModelIndex &source_parent) const;
+protected:
+  bool filterDirectAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 
+////////////////////////////////////////////
+// Sorting
+////////////////////////////////////////////
+public:
+  bool lessThan(const QModelIndex &rLeft, const QModelIndex &rRight) const override;
+
+  virtual void setAlwaysSortedColumn(int column);
+  virtual void setAlwaysSortedColumn(int column, Qt::SortOrder forced_sort_order);
+  virtual int  alwaysSortedColumn() const;
+
+////////////////////////////////////////////
+// Member Variables
+////////////////////////////////////////////
 private:
-  QVector<int> filter_columns_;                                                 /**< The columns that are used for filtering */
+  QVector<int>  filter_columns_;                                                /**< The columns that are used for filtering */
+
+  int           always_sorted_column_;                                          /**< A column that will always be kept sorted. */
+  bool          always_sorted_force_sort_order_;                                /**< Whether we force a sort order for the always sorted column and ignore the user-set sort order. */
+  Qt::SortOrder always_sorted_sort_order_;                                      /**< A column that will always be kept sorted. */
 };
 

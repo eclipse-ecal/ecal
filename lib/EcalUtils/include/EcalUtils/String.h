@@ -121,7 +121,7 @@ namespace EcalUtils
       {
         if (current_state == State::NONE)
         {
-          if (!std::isspace(str[pos]))
+          if (!std::isspace(static_cast<unsigned char>(str[pos])))
           {
             if (str[pos] == '\"')
             {
@@ -133,7 +133,7 @@ namespace EcalUtils
                 current_string += str[pos];
               }
             }
-            else if ((str[pos] == escape_char) && (pos < (str.size() - 1))
+            else if ((pos < (str.size() - 1) && (str[pos] == escape_char))
               && ((str[pos + 1] == '\"') || (str[pos + 1] == escape_char)))
             {
               current_state = State::STRING;
@@ -150,7 +150,7 @@ namespace EcalUtils
         }
         else if (current_state == State::STRING)
         {
-          if (std::isspace(str[pos]))
+          if (std::isspace(static_cast<unsigned char>(str[pos])))
           {
             current_state = State::NONE;
             parts.insert(parts.end(), current_string);
@@ -166,7 +166,7 @@ namespace EcalUtils
               current_string += str[pos];
             }
           }
-          else if ((str[pos] == escape_char) && (pos < (str.size() - 1))
+          else if ((pos < (str.size() - 1) && (str[pos] == escape_char))
             && ((str[pos + 1] == '\"') || (str[pos + 1] == escape_char)))
           {
             pos++; // skip escape character and copy the next char
@@ -190,7 +190,7 @@ namespace EcalUtils
               current_string += str[pos];
             }
           }
-          else if ((str[pos] == escape_char) && (pos < (str.size() - 1))
+          else if ((pos < (str.size() - 1) && (str[pos] == escape_char))
             && ((str[pos + 1] == '\"') || (str[pos + 1] == escape_char)))
           {
             pos++; // skip escape character and copy the next char
@@ -216,8 +216,8 @@ namespace EcalUtils
     inline std::string Trim(const std::string &s)
     {
       std::string sCopy(s);
-      sCopy.erase(sCopy.begin(), std::find_if_not(sCopy.begin(), sCopy.end(), [](char c) { return std::isspace(c); }));
-      sCopy.erase(std::find_if_not(sCopy.rbegin(), sCopy.rend(), [](char c) { return std::isspace(c); }).base(), sCopy.end());
+      sCopy.erase(sCopy.begin(), std::find_if_not(sCopy.begin(), sCopy.end(), [](char c) { return std::isspace(static_cast<unsigned char>(c)); }));
+      sCopy.erase(std::find_if_not(sCopy.rbegin(), sCopy.rend(), [](char c) { return std::isspace(static_cast<unsigned char>(c)); }).base(), sCopy.end());
       return sCopy;
     }
 

@@ -296,7 +296,7 @@ namespace eCAL
 
       EcalRecLogger::Instance()->info("Creating eacalmeas file: " + ecalmeas_file_path);
 
-      std::ofstream file{ ecalmeas_file_path };
+      //std::ofstream file{ ecalmeas_file_path };
       return true;
 
     }

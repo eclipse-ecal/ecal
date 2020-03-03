@@ -50,7 +50,6 @@ function(ecal_add_app_gui TARGET_NAME)
     VERSION ${eCAL_VERSION_STRING}
     SOVERSION ${eCAL_VERSION_MAJOR}
     OUTPUT_NAME ecal_${TARGET_NAME})
-    #set_property(INSTALL "${eCAL_install_app_dir}/$<TARGET_FILE_NAME:${TARGET_NAME}>" PROPERTY CPACK_START_MENU_SHORTCUTS "${TARGET_NAME}")
 endfunction()
 
 function(ecal_add_app_qt TARGET_NAME)
@@ -61,16 +60,34 @@ function(ecal_add_app_qt TARGET_NAME)
     OUTPUT_NAME ecal_${TARGET_NAME})
   if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
-    #set_property(INSTALL "${eCAL_install_app_dir}/$<TARGET_FILE_NAME:${TARGET_NAME}>" PROPERTY CPACK_START_MENU_SHORTCUTS "${TARGET_NAME}")
   endif()
 endfunction()
 
 function(ecal_add_mon_plugin TARGET_NAME)
-  add_library(${TARGET_NAME} MODULE ${ARGN})
+  set(options        "")
+  set(oneValueArgs   METADATA)
+  set(multiValueArgs SOURCES)
+  cmake_parse_arguments(MON_PLUGIN 
+   "${options}"
+   "${oneValueArgs}"
+   "${multiValueArgs}"
+   ${ARGN}
+  )
+  add_library(${TARGET_NAME} MODULE ${MON_PLUGIN_SOURCES} ${MON_PLUGIN_METADATA})
+  set_target_properties(${TARGET_NAME} PROPERTIES
+    VERSION ${${TARGET_NAME}_VERSION}
+    SOVERSION ${${TARGET_NAME}_VERSION_MAJOR}
+    LIBRARY_OUTPUT_DIRECTORY $<IF:$<BOOL:${WIN32}>,${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/ecalmon_plugins,${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ecal/plugins/mon>
+  )
+    
 endfunction()
 
 function(ecal_add_time_plugin TARGET_NAME)
   add_library(${TARGET_NAME} MODULE ${ARGN})
+  set_target_properties(${TARGET_NAME} PROPERTIES
+    VERSION ${eCAL_VERSION_STRING}
+    SOVERSION ${eCAL_VERSION_MAJOR}
+  )
 endfunction()
 
 # this appends the 64 / 32 suffix (required for the eCAL Core libraries)

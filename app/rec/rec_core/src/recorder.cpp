@@ -145,7 +145,7 @@ namespace eCAL
       // Get the topic info map from the monitor in order to also store this information in the measurement
       auto topic_info_map = monitoring_thread_->GetTopicInfoMap();
 
-      std::string hostname = eCAL::Process::GetHostName();
+      //std::string hostname = eCAL::Process::GetHostName();
 
       {
         std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
@@ -210,7 +210,7 @@ namespace eCAL
       // Connect to ecal (doesn't do any harm if we are alredy connected)
       ConnectToEcal();
 
-      std::string hostname = eCAL::Process::GetHostName();
+      //std::string hostname = eCAL::Process::GetHostName();
 
       {
         std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);

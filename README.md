@@ -67,6 +67,8 @@ eCAL is using CMake as build system. When configuring with CMake, you can turn o
   Build the eCAL time interfaces, necessary if you want to use ecal in time synchronized mode (based on ptp for example)
 - `BUILD_PY_BINDING`, default `OFF`
   Build the eCAL python language binding
+- `BUILD_CSHARP_BINDING`, default `OFF`
+  Build the eCAL C# language binding
 - `BUILD_TESTS', default `OFF`
   Build the eCAL google tests
 - `ECAL_LAYER_ICEORYX`, default `OFF`
@@ -1112,6 +1114,116 @@ while ecal_core.ok():
 ecal_core.finalize()
 ```
 
+### CSharp
+
+TODO: Describe this ..
+
+#### The Publish-Subscribe Pattern
+
+##### Listing 20
+
+```csharp
+using System;
+using Continental.eCAL.Core;
+
+public class minimal_snd
+{
+  static void Main()
+  {
+    // initialize eCAL API
+    Util.Initialize("minimal_snd");
+
+    // create a publisher (topic name "Hello", type "base:std::string", description "")
+    Publisher publisher = new Publisher("Hello", "base:std::string", "");
+
+    // idle main thread
+    int loop = 0;
+    while (Util.Ok())
+    {
+      // message to send
+      string message = String.Format("HELLO WORLD FROM C# {0,6}", ++loop);
+
+      // send the content
+      publisher.Send(message, -1);
+
+      // cool down
+      System.Threading.Thread.Sleep(100);
+    }
+
+    // finalize eCAL API
+    Util.Terminate();
+  }
+}
+```
+
+##### Listing 21
+
+```csharp
+using System;
+using Continental.eCAL.Core;
+
+public class minimal_rcv
+{
+  static void Main()
+  {
+    // initialize eCAL API
+    Util.Initialize("minimal_rcv");
+
+    // create a subscriber (topic name "Hello", type "base:std::string")
+    Subscriber subscriber = new Subscriber("Hello", "base:std::string", "");
+
+    // idle main thread
+    while (Util.Ok())
+    {
+      // receive content with 100 ms timeout
+      Subscriber.ReceiveCallbackData message = subscriber.Receive(100);
+
+      // print message
+      if (message != null) System.Console.WriteLine(String.Format("Received:  {0}", message.data));
+    }
+
+    // finalize eCAL API
+    Util.Terminate();
+  }
+}
+```
+
+##### Listing 22
+
+```csharp
+using System;
+using Continental.eCAL.Core;
+
+public class minimal_rcv_cb
+{
+  static void MyCallback(String topic, Subscriber.ReceiveCallbackData data)
+  {
+    System.Console.WriteLine("Topic name " + topic);
+    System.Console.WriteLine("Topic content " + data.data);
+  }
+
+  static void Main()
+  {
+    // initialize eCAL API
+    Util.Initialize("minimal_rcv_cb");
+
+    // create a subscriber (topic name "Hello", type "base:std::string")
+    Subscriber subscriber = new Subscriber("Hello", "base:std::string", "");
+    Subscriber.ReceiverCallback callback = MyCallback;
+    subscriber.AddReceiveCallback(callback);
+
+    // idle main thread
+    while (Util.Ok())
+    {
+      System.Threading.Thread.Sleep(100);
+    }
+
+    // finalize eCAL API
+    Util.Terminate();
+  }
+}
+```
+
 ## Command Line Interface
 
 If you pass the argc, argv command line arguments to the eCAL::Initialize API function (see Listing 23) you can set / overwrite all eCAL runtime parameter defined in the eCAL parameter ini file (ecal.ini). Moreover you can force your application to not load the default eCAL ini file but to specify your own parameter file for the system wide default settings.
@@ -1140,10 +1252,10 @@ Sometimes you want to handle your own arguments but still forward eCAL specific 
 ```cpp
 std::vector<std::string> args;
 
-args.push_back("--default-ini-file");
+args.push_back("--ecal-ini-file");
 args.push_back("/home/share/ecal.ini");
 
-args.push_back("--set_config_key");
+args.push_back("--ecal-set-config-key");
 args.push_back("network/network_enabled:true");
 
 eCAL::Initialize(args, "unit name");
@@ -1157,70 +1269,71 @@ foo.exe --help
 
 The output will look like this
 
-  USAGE: 
-  
-     foo.exe  [-s <string>] ...  [-n <string>] [-d <string>] [-c] [--]
-                     [--version] [-h]
-  
-  
-  Where: 
-  
-     -s <string>,  --set_config_key <string>  (accepted multiple times)
-       Overwrite a specific configuration key (set_config_key
+  USAGE:
+
+     ecal_sample_person_snd.exe  [--ecal-set-config-key <string>] ...
+                              [--ecal-ini-file <string>] [--ecal-dump-config]
+                              [--] [--version] [-h]
+
+
+  Where:
+
+     --ecal-set-config-key <string>  (accepted multiple times)
+       Overwrite a specific configuration key (ecal-set-config-key
        "section/key:value".
-  
-     -d <string>,  --default-ini-file <string>
+
+     --ecal-ini-file <string>
        Load default configuration from that file.
-  
-     -c,  --dump-config
+
+     --ecal-dump-config
        Dump current configuration.
-  
+
      --,  --ignore_rest
        Ignores the rest of the labeled arguments following this flag.
-  
+
      --version
        Displays version information and exits.
-  
+
      -h,  --help
        Displays usage information and exits.
-  
 
-### The --default-ini-file (-d) option
+
+### The --ecal-ini-file option
 
 Load default configuration from that file.
 
 Usage:
 
 ```bat
-foo.exe --default-ini-file "/home/share/my_ecal.ini"
+foo.exe --ecal-ini-file "/home/share/my_ecal.ini"
 ```
 
 Will load `/home/share/my_ecal.ini` file instead the eCAL default ini file (located in the `%APPDATA%` folder under windows or in `~/.ecal` under Linux)
 
-### The --set_config_key (-s) option
+### The --ecal-set-config-key option
 
 Overwrite a specific configuration key. This option can be used multiple times.
 
 Usage:
 
 ```bat
-foo.exe --set_config_key "network/network_enabled:true" --set_config_key "network/multicast_ttl:3"
+foo.exe --ecal-set-config-key "network/network_enabled:true" --ecal-set-config-key "network/multicast_ttl:3"
 ```
 
 Will overwrite the 2 network settings network_enabled and multicast_ttl (defined in ecal.ini file) with the values "true" and "3".
 
-### The --dump-config (-d) option
+### The --ecal-dump-config option
 
 Usage:
 
 ```bat
-foo.exe --dump-config
+foo.exe --ecal-dump-config
 ```
 
 Will dump the whole currently used configuration. This option is very useful in combination with the options mentioned above. For example
 
 ```bat
-foo.exe --dump-config --default-ini-file "/home/share/my_ecal.ini"
+foo.exe --ecal-dump-config --ecal-ini-file "/home/share/my_ecal.ini"
 ```
 
 Will load the specified default eCAL ini file and print out the loaded configuration.

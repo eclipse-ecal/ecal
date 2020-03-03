@@ -36,10 +36,10 @@ public:
   QStableSortFilterProxyModel(QObject* parent = 0);
   ~QStableSortFilterProxyModel();
 
-  bool lessThan(const QModelIndex &rLeft, const QModelIndex &rRight) const;
+  bool lessThan(const QModelIndex &rLeft, const QModelIndex &rRight) const override;
 
 protected:
-  bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
+  bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 
   virtual bool filterDirectAcceptsRow(int source_row, const QModelIndex &source_parent) const;
   

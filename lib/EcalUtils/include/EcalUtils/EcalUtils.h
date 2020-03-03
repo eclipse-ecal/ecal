@@ -414,7 +414,7 @@ namespace EcalUtils
       // Find beginning of arguments, if there are whitespaces at the front (which probably will never happen anyway)
       while (pos < arg_string.size())
       {
-        if (std::isspace(arg_string.at(pos)))
+        if (std::isspace(static_cast<unsigned char>(arg_string.at(pos))))
         {
           pos++;
         }
@@ -595,7 +595,7 @@ namespace EcalUtils
       {
         char current_char = command_line.at(pos);
 
-        if (inside_arg && !quote && !squote && std::isspace(current_char))
+        if (inside_arg && !quote && !squote && std::isspace(static_cast<unsigned char>(current_char)))
         {
           // first space outside a quoted string terminates the argument
           argv.insert(argv.end(), current_arg);
@@ -629,7 +629,7 @@ namespace EcalUtils
           // as long as we are in a quoted string we simply copy everything
           current_arg += current_char;
         }
-        else if (!std::isspace(current_char))
+        else if (!std::isspace(static_cast<unsigned char>(current_char)))
         {
           // when we are not in a quoted string and get a non-space character we copy it
           current_arg += current_char;
