@@ -1,4 +1,5 @@
 
+
 # eCAL - enhanced Communication Abstraction Layer
 
 Copyright (c) 2019, Continental Corporation.
@@ -26,7 +27,7 @@ additional informations like a unique name, a type and a description. A topic ca
   
   • Callback: A Callback can be used to react on time events, on incoming messages, on service requests or service responses. 
 
-eCAL is simplifying the data transport as much as possible, It uses different mechanism to transport a topic from a publisher to a connected subscriber. On the same computer node the data are exchanged by using memory mapped files. Between different computing nodes UDP multicast can be used for high performance data throughput, rtps can be used for reliable data transport.
+eCAL is simplifying the data transport as much as possible, It uses different mechanism to transport a topic from a publisher to a connected subscriber. On the same computer node the data are exchanged by using memory mapped files. Between different computing nodes UDP multicast can be used for high performance data throughput.
 
 
 ## Checkout the repository
@@ -49,12 +50,13 @@ git submodule update
 
 eCAL is using CMake as build system. When configuring with CMake, you can turn on / off the following features.
 
+- `HAS_HDF5`, default: `ON`
+  Platform supports HDF5 library, necessary to build eCAL recording / replay tools
 - `HAS_QT5`, default: `ON`
   Platform supports Qt 5 library, necessary to build eCAL monitoring tool
 - `HAS_CAPNPROTO`, default: `OFF`
   Platform supports Cap'n Proto library, necessary to use capnp serialization as message system and to enable eCAL monitoring capnp message reflection
   eCAL does not add Cap'n Proto as a submodule. If you set this option to `ON`, please make sure that the library is installed on your system and CMake can find it (consider setting CMAKE_PREFIX_PATH to point to the library).
-  Currently Version 0.6.1 is supported and has been tested, to use 0.7.0 some adaptations in CMakeLists.txt files needs to be made to make the samples compile.
 - `BUILD_DOCS`, default `ON`
   Build the eCAL documentation, requires the installation of doxygen and a recent CMake version (>= 3.14 preferred, but some lower versions might work)
 - `BUILD_APPS`, default `ON`,
@@ -63,8 +65,16 @@ eCAL is using CMake as build system. When configuring with CMake, you can turn o
   Build the eCAL sample applications
 - `BUILD_TIME`, default `ON`
   Build the eCAL time interfaces, necessary if you want to use ecal in time synchronized mode (based on ptp for example)
-- `ECAL_LAYER_FASTRTPS`, default `OFF`
-  Provide fast rtps as communication layer, requires fast-rtps and fast-cdr installations
+- `BUILD_PY_BINDING`, default `OFF`
+  Build the eCAL python language binding
+- `BUILD_CSHARP_BINDING`, default `OFF`
+  Build the eCAL C# language binding
+- `BUILD_TESTS', default `OFF`
+  Build the eCAL google tests
+- `ECAL_LAYER_ICEORYX`, default `OFF`
+  Use iceoryx shared memory as local communication layer, requires [eclipse/iceoryx](https://github.com/eclipse/iceoryx) installation
+- `ECAL_INCLUDE_PY_SAMPLES`, default: `OFF`
+  Include python language sample projects into CMake
 - `ECAL_INSTALL_SAMPLE_SOURCES`, default: `ON`
   Install the sources of eCAL samples
 - `ECAL_JOIN_MULTICAST_TWICE`, default: `OFF`
@@ -73,8 +83,10 @@ eCAL is using CMake as build system. When configuring with CMake, you can turn o
   Enable the eCAL to use Npcap for udp socket communication (i.e. the Win10 performance fix)
 - `ECAL_THIRDPARTY_BUILD_PROTOBUF`, default `ON`
   Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.5.1 or newer (tested with 3.5.1).
-- `ECAL_THIRDPARTY_BUILD_PROTOBUF`, default `ON`
-  Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.5.1 or newer (tested with 3.5.1).
+- `ECAL_THIRDPARTY_BUILD_SPDLOG`, default `ON`
+  Build Spdlog with eCAL, included as a submodule in the thirdparty folder. You can always use your custom spdlog installation, this is only for convenience.
+- `ECAL_THIRDPARTY_BUILD_GTEST`, default `OFF`
+  Build GoogleTest with eCAL, included as a submodule in the thirdparty folder. You can always use your custom gtest installation, this is only for convenience.
 
 All options can be passed on the command line `cmake -D<option>=<value>` or in the CMake GUI application.
 
@@ -116,6 +128,13 @@ All options can be passed on the command line `cmake -D<option>=<value>` or in t
 	sudo apt-get -y install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler
 	```
 	
+3. If you plan to create the eCAL python language extension (here as an example for the pythonm 3.6 version):
+	```bash
+	sudo apt-get install python3.6-dev
+	sudo apt-get install python3-pip
+	python3 -m pip install setuptools
+	```
+
 ### Compile eCAL
 1. Check out the repository as described [here](#checkout-the-repository).
 2. Compile eCAL:
@@ -128,8 +147,14 @@ All options can be passed on the command line `cmake -D<option>=<value>` or in t
 3. Create a debian package and install it, if desired:
 	```bash
 	cpack -G DEB
-	sudo dpkg -i eCAL-*
+	sudo dpkg -i _deploy/eCAL-*
 	```
+3. Create and install the eCAL python egg:
+	```bash
+	cmake --build . --target create_python_egg --config Release
+	sudo python3 -m easy_install _deploy/ecal-*
+	```
+
 ### UDP network configuration
 
 setup the correct ip address - here for adapter eth0, ip address 192.168.0.1
@@ -187,7 +212,9 @@ sudo gedit /etc/network/interfaces
 	HDF5_DIR = C:\Program Files\HDF_Group\HDF5\1.8.21\cmake
 	```
 
-4. Checkout the eCAL repository as described [here](#checkout-the-repository). Note that it has **submodules**, so use [Git for Windows](https://git-scm.com/download/win) to check out the repo.
+4. Install [Python for Windows](https://www.python.org/downloads/) (64 Bit, Version 3.x) if you plan to build the eCAl python language extension.
+
+5. Checkout the eCAL repository as described [here](#checkout-the-repository). Note that it has **submodules**, so use [Git for Windows](https://git-scm.com/download/win) to check out the repo.
 
 #### Build eCAL
 
@@ -212,7 +239,21 @@ If you installed all mentioned tools and dependencies correctly you can also sim
 win_make_all.bat
 ```
 
-to cmake eCAL build all configurations and create an installer. You will find the installer in the _setup subfolder finally.
+to cmake eCAL build all configurations and create an installer. You will find the installer in the _deploy subfolder inside your build folder finally.
+
+#### Create eCAL python extension
+
+If you configured cmake to build the python extension by setting `BUILD_PY_BINDING` to `ON` you can create the ecal python egg by calling
+
+```bat
+build_win\win_make_python_egg.bat
+```
+
+Afterwards you will find the python eCAL egg in the _deploy subfolder inside your build folder. Install the extesnion by
+
+```bat
+python -m easy_install ecal-X.Y.Z-pyX.Y.egg
+```
 
 ### UDP network configuration
 
@@ -242,6 +283,42 @@ For local communication use 0 for ttl.
 You can find the ecal.ini configuration file under %APPDATA%\eCAL.
 
 Don't forget to disable any windows firewall.
+
+
+## Transport Layer Concept
+
+eCAL is able to communicate on different so called transport layers, but first of all you have to decide if you want to communicate in a network or in a local host only mode. To configure this you need to set the ecal.ini [network/network_enabled] parameter to true (network communication mode) or false (local host only communication mode).
+
+After this you can fine tune the way of message transport for inner-process, interprocess and the interhost connections.
+There are different ways to configure these layers. They can be set up for a whole machine using the central configuration file (ecal.ini) or for a single eCAL process passed by command line arguments or finally for a single publish-subscribe connection using the C++ or python publisher API (see "Setup the transport layer"). Every single builtin transport layer has it's specific communication properties.
+
+| Layer           | Ini parameter            | Physical Layer     | Comment                                                                                   |
+|-----------------|--------------------------|--------------------|-------------------------------------------------------------------------------------------|
+| inproc          | [publisher/use_inproc]   | inner process      | inner process, zeroy copy communication (pointer forwarding)                              |
+| shm             | [publisher/use_shm]      | shared memory      | interprocess, shared memory communication, supports N:M connections, 2 memory copies      |
+| udp_mc          | [publisher/use_udp_mc]   | udp multicast      | interhost, topic name based dynamic multicast grouping to optimize pub/sub socket payload |
+
+Every layer can set up in 3 different activation modes. Every mode can be configured as default in the ecal.ini file and can be overwritten by the C++/Python publisher API. This is the activation logic
+
+  • off: layer is swicthed off
+  
+  • on: layer is always switched on (i.e. payload will be send no matter if there is any local or network subscription)
+  
+  • auto: layer will be switched on autmatically
+
+ - inproc = 2 : layer used automatically for inner process subscribers
+	
+ - shm = 2 : layer used automatically for inter process subscribers
+ 
+ - udp_mc = 2 : layer used autmatically for inter host (network) subcribers
+
+Independent from this publisher setting you can switch on/off the receiving (subscription) logic for every layer. That means you can prevent incoming payload on specific layers. This can be done in the ecal.ini file [network] section.
+
+  • inproc_rec_enabled = true / false : enable / disable inner process subscriptions
+  
+  • shm_rec_enabled = true / false : enable / disable inter process subscriptions
+  
+  • udp_mc_rec_enabled = true / false : enable / disable inter host subscriptions
 
 ## Applications
 
@@ -283,20 +360,20 @@ The following image shows a running replay, publishing 2 messages in realtime.
 
 ## Performance
 
-The following table shows the latency in µs between a single publisher / subscriber connection for different payload sizes (two different processes running on the same host). You can simply measure the latency on your own machine by running the ecal_latency_snd and ecal_latency_rec_cb sample applications.
+The following table shows the latency in µs between a single publisher / subscriber connection for different payload sizes (two different processes running on the same host). You can simply measure the latency on your own machine by running the ecal_latency_snd and ecal_latency_rec_cb sample applications. The first two columns are showing the performance for the eCAL builtin shared memory layer and the last column for the iceoryx shared memory layer (configured by cmake option ECAL_LAYER_ICEORYX).
 
 First start ecal_sample_latency_rec_cb. This application will receive the published payloads, send them back to the sender and print out the average receive time, the message frequency and the data throughput over all received messages. The sending application ecal_latency_snd can be configured that way ..
   
      ecal_latency_snd  -s <payload_size [kB]> -r <send loops>
   
-The table shows the results for a Windows and a Linux platform (10000 samples, zero drops).
+The table shows the results for a Windows and a Linux platform (200000 samples 1kB - 512kB / 10000 samples > 512 kB, zero drops).
 
 ```
 -------------------------------
- Platform Windows 10 (AMD64)
+ Platform
 -------------------------------
-OS Name:                            Microsoft Windows 10 Enterprise
-OS Version:                         10.0.16299
+OS Name:                            Microsoft Windows 10 Pro
+OS Version:                         10.0.18363
 OS Manufacturer:                    Microsoft Corporation
 OS Build Type:                      Multiprocessor Free
 System Manufacturer:                HP
@@ -304,43 +381,28 @@ System Model:                       HP ZBook 15 G5
 System Type:                        x64-based PC
 Processor(s):                       1 Prozessor(s) Installed.
                                     [01]: Intel64 Family 6 Model 158 Stepping 10 GenuineIntel ~2592 MHz
-Total Physical Memory:              32.579 MB
-
--------------------------------
- Platform Ubuntu 16 (AMD64)
--------------------------------
-H/W path      Device    Class       Description
-===============================================
-                        system      HP ZBook 15 G3 (M9R63AV)
-/0                      bus         80D5
-/0/0                    memory      128KiB L1 Cache
-/0/1                    memory      128KiB L1 Cache
-/0/2                    memory      1MiB L2 Cache
-/0/3                    memory      8MiB L3 Cache
-/0/4                    processor   Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz
-/0/5                    memory      16GiB System Memory
-/0/5/0                  memory      8GiB SODIMM Synchron 2133 MHz (0,5 ns)
-/0/5/1                  memory      8GiB SODIMM Synchron 2133 MHz (0,5 ns)
+Total Physical Memory:              32.614 MB
 
 ```
 
-|Payload Size (kB)|Win10 AMD64 (µs)|Ubuntu16 AMD64 (µs)|
-|----------------:|---------------:|------------------:|
-|              1  |            10  |               18  |
-|              2  |            11  |               18  |
-|              4  |            16  |               20  |
-|              8  |            16  |               20  |
-|             16  |            17  |               21  |
-|             32  |            18  |               22  |
-|             64  |            21  |               24  |
-|            128  |            26  |               33  |
-|            256  |            38  |               46  |
-|            512  |            62  |               76  |
-|           1024  |           123  |              196  |
-|           2048  |           378  |              578  |
-|           4096  |           848  |              824  |
-|           8192  |          1762  |             1645  |
-|          16384  |          3681  |             3258  |
+|Payload Size (kB)|Win10 AMD64 (µs)|Ubuntu18 AMD64 (µs)|Ubuntu18 AMD64 (µs)|
+|----------------:|---------------:|------------------:|------------------:|
+|                 |      eCAL SHM  |         eCAL SHM  |      Iceoryx SHM  |
+|              1  |            10  |                4  |                6  |
+|              2  |            10  |                4  |                6  |
+|              4  |            10  |                5  |                6  |
+|              8  |            11  |                5  |                6  |
+|             16  |            12  |                6  |                6  |
+|             32  |            13  |                7  |                8  |
+|             64  |            16  |               10  |               10  |
+|            128  |            21  |               15  |               13  |
+|            256  |            32  |               33  |               19  |
+|            512  |            56  |               50  |               28  |
+|           1024  |           103  |              154  |               82  |
+|           2048  |           363  |              392  |              177  |
+|           4096  |           867  |              877  |              420  |
+|           8192  |          1814  |             1119  |              534  |
+|          16384  |          3956  |             2252  |             1060  |
 
 ## Usage
 
@@ -591,10 +653,7 @@ The currently supported layers are
 enum eTransportLayer
 {
   tlayer_udp_mc     = 1,  // udp multicast (eCAL - using multiple multicast groups for high efficient data transport)
-  tlayer_udp_uc     = 2,  // udp unicast   (eCAL)
-  tlayer_shm        = 4,  // shared memory (eCAL)
-  tlayer_lcm        = 5,  // lcm           (Google)
-  tlayer_rtps       = 6,  // rtps          (eProsima - a standard DDS transport layer)
+  tlayer_shm        = 4,  // shared memory (eCAL or Iceoryx)
   tlayer_inproc     = 42, // inner process (eCAL - deterministic inner process communication)
 };
 ```
@@ -964,6 +1023,207 @@ int main(int argc, char **argv)
 }
 ```
 
+### Python
+
+#### The Publish-Subscribe Pattern
+
+The eCAL API is fully wrapped into python script language. The usage is quite simple ('help ecal' in your python shell ;-)). You can find samples for all common use cases in the eCAL installation. Let's demonstrate the famous publish-subscribe "hello world".
+
+##### Listing 17
+
+```python
+import sys
+import time
+
+# import ecal core and string publishing
+import ecal.core.core as ecal_core
+from ecal.core.publisher import StringPublisher
+
+# initialize eCAL API
+ecal_core.initialize(sys.argv, "minimal python publisher")
+
+# create publisher
+pub = StringPublisher("foo")
+msg = "HELLO WORLD FROM PYTHON"
+
+# sending hello's
+while ecal_core.ok():
+  pub.send(current_message)
+  time.sleep(0.01)
+
+# finalize eCAL API
+ecal_core.finalize()
+```
+
+eCAL is wrapped into python in different packages. ecal.core contains all basic functionalities, ecal.core.publisher and ecal.core.subscriber the publish/subscribe interface. In listing 17 we use a simple string publisher. After initializing the core in line 9 we instanciate a publisher with the topic name "foo" and start pubishing a hello message every 10 ms. This sample is fully communication compatible to the c++ hello world subscribers in the Listings 1-4.
+
+##### Listing 18
+
+```python
+import sys
+
+# import ecal core and string subscribing
+import ecal.core.core as ecal_core
+from ecal.core.subscriber import StringSubscriber
+
+# initialize eCAL API
+ecal_core.initialize(sys.argv, "minimal python subscriber")
+
+# create subscriber
+sub = StringSubscriber("foo")
+
+# receive messages
+while ecal_core.ok():
+  ret, msg, time = sub.receive(500)
+  if ret > 0: print("Received:  {} ms   {}".format(time, msg))
+  else:       print("Subscriber timeout ..")
+  
+# finalize eCAL API
+ecal_core.finalize()
+
+```
+
+Listing 18 shows the python variant of the hello world subscriber. It uses a 500 ms blocking receive call to get the payload in the python msg variable and print it out. Finally Listing 19 shows the python hello world subscriber realized with a receive callback function.
+
+##### Listing 19
+
+```python
+import sys
+import time
+
+# import ecal core and string subscribing
+import ecal.core.core as ecal_core
+from ecal.core.subscriber import StringSubscriber
+
+# eCAL receive callback
+def onreceive(topic_name, msg, time):
+  print("Received:  {} ms   {}".format(time, msg))
+  
+# initialize eCAL API
+ecal_core.initialize(sys.argv, "minimal python subscriber (callback)")
+  
+# create subscriber and connect callback
+sub = StringSubscriber("foo")
+sub.set_callback(onreceive)
+  
+# idle main thread
+while ecal_core.ok():
+  time.sleep(0.1)
+  
+# finalize eCAL API
+ecal_core.finalize()
+```
+
+### CSharp
+
+TODO: Describe this ..
+
+#### The Publish-Subscribe Pattern
+
+##### Listing 20
+
+```csharp
+using System;
+using Continental.eCAL.Core;
+
+public class minimal_snd
+{
+  static void Main()
+  {
+    // initialize eCAL API
+    Util.Initialize("minimal_snd");
+
+    // create a publisher (topic name "Hello", type "base:std::string", description "")
+    Publisher publisher = new Publisher("Hello", "base:std::string", "");
+
+    // idle main thread
+    int loop = 0;
+    while (Util.Ok())
+    {
+      // message to send
+      string message = String.Format("HELLO WORLD FROM C# {0,6}", ++loop);
+
+      // send the content
+      publisher.Send(message, -1);
+
+      // cool down
+      System.Threading.Thread.Sleep(100);
+    }
+
+    // finalize eCAL API
+    Util.Terminate();
+  }
+}
+```
+
+##### Listing 21
+
+```csharp
+using System;
+using Continental.eCAL.Core;
+
+public class minimal_rcv
+{
+  static void Main()
+  {
+    // initialize eCAL API
+    Util.Initialize("minimal_rcv");
+
+    // create a subscriber (topic name "Hello", type "base:std::string")
+    Subscriber subscriber = new Subscriber("Hello", "base:std::string", "");
+
+    // idle main thread
+    while (Util.Ok())
+    {
+      // receive content with 100 ms timeout
+      Subscriber.ReceiveCallbackData message = subscriber.Receive(100);
+
+      // print message
+      if (message != null) System.Console.WriteLine(String.Format("Received:  {0}", message.data));
+    }
+
+    // finalize eCAL API
+    Util.Terminate();
+  }
+}
+```
+
+##### Listing 22
+
+```csharp
+using System;
+using Continental.eCAL.Core;
+
+public class minimal_rcv_cb
+{
+  static void MyCallback(String topic, Subscriber.ReceiveCallbackData data)
+  {
+    System.Console.WriteLine("Topic name " + topic);
+    System.Console.WriteLine("Topic content " + data.data);
+  }
+
+  static void Main()
+  {
+    // initialize eCAL API
+    Util.Initialize("minimal_rcv_cb");
+
+    // create a subscriber (topic name "Hello", type "base:std::string")
+    Subscriber subscriber = new Subscriber("Hello", "base:std::string", "");
+    Subscriber.ReceiverCallback callback = MyCallback;
+    subscriber.AddReceiveCallback(callback);
+
+    // idle main thread
+    while (Util.Ok())
+    {
+      System.Threading.Thread.Sleep(100);
+    }
+
+    // finalize eCAL API
+    Util.Terminate();
+  }
+}
+```
+
 ## Command Line Interface
 
 If you pass the argc, argv command line arguments to the eCAL::Initialize API function (see Listing 23) you can set / overwrite all eCAL runtime parameter defined in the eCAL parameter ini file (ecal.ini). Moreover you can force your application to not load the default eCAL ini file but to specify your own parameter file for the system wide default settings.
@@ -992,10 +1252,10 @@ Sometimes you want to handle your own arguments but still forward eCAL specific 
 ```cpp
 std::vector<std::string> args;
 
-args.push_back("--default-ini-file");
+args.push_back("--ecal-ini-file");
 args.push_back("/home/share/ecal.ini");
 
-args.push_back("--set_config_key");
+args.push_back("--ecal-set-config-key");
 args.push_back("network/network_enabled:true");
 
 eCAL::Initialize(args, "unit name");
@@ -1009,70 +1269,71 @@ foo.exe --help
 
 The output will look like this
 
-  USAGE: 
-  
-     foo.exe  [-s <string>] ...  [-n <string>] [-d <string>] [-c] [--]
-                     [--version] [-h]
-  
-  
-  Where: 
-  
-     -s <string>,  --set_config_key <string>  (accepted multiple times)
-       Overwrite a specific configuration key (set_config_key
+  USAGE:
+
+     ecal_sample_person_snd.exe  [--ecal-set-config-key <string>] ...
+                              [--ecal-ini-file <string>] [--ecal-dump-config]
+                              [--] [--version] [-h]
+
+
+  Where:
+
+     --ecal-set-config-key <string>  (accepted multiple times)
+       Overwrite a specific configuration key (ecal-set-config-key
        "section/key:value".
-  
-     -d <string>,  --default-ini-file <string>
+
+     --ecal-ini-file <string>
        Load default configuration from that file.
-  
-     -c,  --dump-config
+
+     --ecal-dump-config
        Dump current configuration.
-  
+
      --,  --ignore_rest
        Ignores the rest of the labeled arguments following this flag.
-  
+
      --version
        Displays version information and exits.
-  
+
      -h,  --help
        Displays usage information and exits.
-  
 
-### The --default-ini-file (-d) option
+
+### The --ecal-ini-file option
 
 Load default configuration from that file.
 
 Usage:
 
 ```bat
-foo.exe --default-ini-file "/home/share/my_ecal.ini"
+foo.exe --ecal-ini-file "/home/share/my_ecal.ini"
 ```
 
 Will load `/home/share/my_ecal.ini` file instead the eCAL default ini file (located in the `%APPDATA%` folder under windows or in `~/.ecal` under Linux)
 
-### The --set_config_key (-s) option
+### The --ecal-set-config-key option
 
 Overwrite a specific configuration key. This option can be used multiple times.
 
 Usage:
 
 ```bat
-foo.exe --set_config_key "network/network_enabled:true" --set_config_key "network/multicast_ttl:3"
+foo.exe --ecal-set-config-key "network/network_enabled:true" --ecal-set-config-key "network/multicast_ttl:3"
 ```
 
 Will overwrite the 2 network settings network_enabled and multicast_ttl (defined in ecal.ini file) with the values "true" and "3".
 
-### The --dump-config (-d) option
+### The --ecal-dump-config option
 
 Usage:
 
 ```bat
-foo.exe --dump-config
+foo.exe --ecal-dump-config
 ```
 
 Will dump the whole currently used configuration. This option is very useful in combination with the options mentioned above. For example
 
 ```bat
-foo.exe --dump-config --default-ini-file "/home/share/my_ecal.ini"
+foo.exe --ecal-dump-config --ecal-ini-file "/home/share/my_ecal.ini"
 ```
 
 Will load the specified default eCAL ini file and print out the loaded configuration.
