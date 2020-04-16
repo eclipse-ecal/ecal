@@ -1,7 +1,7 @@
 @echo off
 
 if ["%~1"]==[""] (
-  set VERSION=v140
+  set VERSION=v142
   ) else (
   set VERSION=%1
   )

@@ -264,7 +264,7 @@ void PlayerControlsWidget::channelMappingChanged(const std::map<std::string, std
 {
   // Remove non-existing items
   auto children_to_remove = step_reference_channel_model_->root()->findChildren(
-      [this, &channel_mapping](const QAbstractTreeItem* const item)
+      [&channel_mapping](const QAbstractTreeItem* const item)
       {
         if (item && item->type() == (int)TreeItemType::Channel)
         {
@@ -284,7 +284,7 @@ void PlayerControlsWidget::channelMappingChanged(const std::map<std::string, std
   for (auto& channel_pair : channel_mapping)
   {
     auto exisiting_items = step_reference_channel_model_->root()->findChildren(
-        [this, &channel_pair](const QAbstractTreeItem* const item)
+        [&channel_pair](const QAbstractTreeItem* const item)
         {
           if (item && item->type() == (int)TreeItemType::Channel)
           {
@@ -345,7 +345,7 @@ void PlayerControlsWidget::setPlayPauseButtonToPause()
 void PlayerControlsWidget::setSelectedStepReferenceChannel(const QString& step_reference_channel)
 {
   auto exisiting_items = step_reference_channel_model_->root()->findChildren(
-      [this, &step_reference_channel](const QAbstractTreeItem* const item)
+      [&step_reference_channel](const QAbstractTreeItem* const item)
       {
         if (item && item->type() == (int)TreeItemType::Channel)
         {

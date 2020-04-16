@@ -22,7 +22,7 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 
-#include "ui_NpcapStatusDialog.h"
+#include "ui_npcap_status_dialog.h"
 
 #include <string>
 #include <vector>

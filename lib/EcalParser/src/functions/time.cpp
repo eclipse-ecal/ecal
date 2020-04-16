@@ -25,7 +25,7 @@
 #include <utility>
 #include <vector>
 
-#include <EcalUtils/String.h>
+#include <ecal_utils/string.h>
 
 namespace EcalParser
 {

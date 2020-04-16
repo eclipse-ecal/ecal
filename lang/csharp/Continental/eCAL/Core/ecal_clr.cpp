@@ -300,7 +300,7 @@ System::String^ Subscriber::Dump()
 
 void Subscriber::OnReceive(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_)
 {
-  std::string received_bytes = std::string(static_cast<const char*>(data_->buf), data_->size);
+  std::string received_bytes = std::string(static_cast<const char*>(data_->buf), static_cast<size_t>(data_->size));
   ReceiveCallbackData^ data = gcnew ReceiveCallbackData();
   data->data    = StlStringToString(received_bytes);
   data->id      = data_->id;
@@ -309,6 +309,90 @@ void Subscriber::OnReceive(const char* topic_name_, const ::eCAL::SReceiveCallba
   std::string topic_name = std::string(topic_name_);
   m_callbacks(StlStringToString(topic_name), data);
 }
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+// JSONProtobufSubscriber
+/////////////////////////////////////////////////////////////////////////////
+JSONProtobufSubscriber::JSONProtobufSubscriber() : m_sub(new ::eCAL::protobuf::CDynamicJSONSubscriber())
+{
+}
+
+JSONProtobufSubscriber::JSONProtobufSubscriber(System::String^ topic_name_)
+{
+  m_sub = new ::eCAL::protobuf::CDynamicJSONSubscriber(StringToStlString(topic_name_));
+}
+
+JSONProtobufSubscriber::~JSONProtobufSubscriber()
+{
+  if(m_sub == nullptr) return;
+  delete m_sub;
+}
+
+void JSONProtobufSubscriber::Create(System::String^ topic_name_)
+{
+  if(m_sub == nullptr) return;
+  m_sub->Create(StringToStlString(topic_name_));
+}
+
+void JSONProtobufSubscriber::Destroy()
+{
+  if(m_sub == nullptr) return;
+  m_sub->Destroy();
+}
+
+
+bool JSONProtobufSubscriber::AddReceiveCallback(ReceiverCallback^ callback_)
+{
+  if(m_sub == nullptr) return(false);
+
+  if (m_callbacks == nullptr)
+  {
+    m_sub_callback = gcnew subCallback(this, &JSONProtobufSubscriber::OnReceive);
+    m_gch = GCHandle::Alloc(m_sub_callback);
+    IntPtr ip = Marshal::GetFunctionPointerForDelegate(m_sub_callback);
+    m_sub->AddReceiveCallback(static_cast<stdcall_eCAL_ReceiveCallbackT>(ip.ToPointer()));
+  }
+  m_callbacks += callback_;
+  return(true);
+}
+
+bool JSONProtobufSubscriber::RemReceiveCallback(ReceiverCallback^ callback_)
+{
+  if(m_sub == nullptr) return(false);
+
+  if (m_callbacks == callback_)
+  {
+    m_sub->RemReceiveCallback();
+    m_gch.Free();
+  }
+  m_callbacks -= callback_;
+
+  return(false);
+}
+
+bool JSONProtobufSubscriber::IsCreated()
+{
+  if(m_sub == nullptr) return(false);
+  return(m_sub->IsCreated());
+}
+
+void JSONProtobufSubscriber::OnReceive(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_)
+{
+  std::string received_bytes = std::string(static_cast<const char*>(data_->buf), static_cast<size_t>(data_->size));
+  ReceiveCallbackData^ data = gcnew ReceiveCallbackData();
+  data->data    = StlStringToString(received_bytes);
+  data->id      = data_->id;
+  data->time    = data_->time;
+  data->clock   = data_->clock;
+  std::string topic_name = std::string(topic_name_);
+  m_callbacks(StlStringToString(topic_name), data);
+}
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////

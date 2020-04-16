@@ -50,6 +50,9 @@ public class minimal_snd
       System.Threading.Thread.Sleep(100);
     }
 
+    // dispose publisher
+    publisher.Dispose();
+
     // finalize eCAL API
     Util.Terminate();
   }

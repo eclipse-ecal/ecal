@@ -54,7 +54,6 @@
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
-#include <stropts.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>

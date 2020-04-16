@@ -533,6 +533,7 @@ namespace Udpcap
     // TODO: make close thread safe, so one thread can wait for data while another thread closes the socket
     for (auto& pcap_dev : pcap_devices_)
     {
+      LOG_DEBUG(std::string("Closing ") + pcap_dev.device_name_);
       pcap_close(pcap_dev.pcap_handle_);
     }
     pcap_devices_.clear();
@@ -700,7 +701,7 @@ namespace Udpcap
     }
 
 
-    PcapDev pcap_dev(pcap_handle, IsLoopbackDevice(device_name));
+    PcapDev pcap_dev(pcap_handle, IsLoopbackDevice(device_name), device_name);
    
     pcap_devices_.push_back(pcap_dev);
     pcap_win32_handles_.push_back(pcap_getevent(pcap_handle));

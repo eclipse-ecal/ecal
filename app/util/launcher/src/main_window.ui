@@ -47,8 +47,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../resources/resources.qrc">
-    <normaloff>:/ecallauncher/APP_ICON</normaloff>:/ecallauncher/APP_ICON
-   </iconset>
+    <normaloff>:/ecallauncher/APP_ICON</normaloff>:/ecallauncher/APP_ICON</iconset>
   </property>
   <property name="iconSize">
    <size>
@@ -583,7 +582,7 @@ QPushButton:!hover {background-color:rgb(0,0,0);color:rgb(255,200,0)}</string>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="../resources/gfx.qrc"/>
+  <include location="../resources/resources.qrc"/>
  </resources>
  <connections/>
 </ui>

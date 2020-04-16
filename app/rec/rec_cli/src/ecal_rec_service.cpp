@@ -24,7 +24,7 @@
 #include <clocale>
 #include <locale>
 
-#include <EcalUtils/EcalUtils.h>
+#include <ecal_utils/ecal_utils.h>
 
 #include <ecal/ecal.h>
 

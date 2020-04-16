@@ -21,7 +21,7 @@
 
 #include "rec_core/ecal_rec_logger.h"
 
-#include <EcalUtils/Path.h>
+#include <ecal_utils/filesystem.h>
 
 #include <algorithm>
 
@@ -742,7 +742,7 @@ namespace eCAL
     {
       if (main_recorder_thread_
         && main_recorder_thread_->GetState().recording_
-        && EcalUtils::Path::IsEqual(path, main_recorder_thread_->GetCompleteMeasurementPath()))
+        && EcalUtils::Filesystem::IsEqual(path, main_recorder_thread_->GetCompleteMeasurementPath()))
       {
         return true;
       }
@@ -751,7 +751,7 @@ namespace eCAL
       {
         if (buffer_writer
           && buffer_writer->GetState().recording_
-          && EcalUtils::Path::IsEqual(path, buffer_writer->GetCompleteMeasurementPath()))
+          && EcalUtils::Filesystem::IsEqual(path, buffer_writer->GetCompleteMeasurementPath()))
         {
           return true;
         }

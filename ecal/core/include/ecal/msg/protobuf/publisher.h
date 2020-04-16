@@ -30,7 +30,7 @@
 // protobuf includes
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable: 4100 4146 4800)
+#pragma warning(disable: 4100 4127 4146 4800) // disable proto warnings
 #endif
 #include <google/protobuf/descriptor.pb.h>
 #ifdef _MSC_VER
@@ -136,7 +136,11 @@ namespace eCAL
       **/
       size_t GetSize(const T& msg_) const
       {
+#if GOOGLE_PROTOBUF_VERSION >= 3001000
+        return((size_t)msg_.ByteSizeLong());
+#else
         return((size_t)msg_.ByteSize());
+#endif
       }
 
       /**

@@ -22,7 +22,6 @@ project(person_rec_cb_cs LANGUAGES CSharp)
 find_package(eCAL REQUIRED)
 
 set(minimal_rec_cb_cs_src
-    App.config
     person_rec_cb.cs
 )
 
@@ -31,10 +30,10 @@ ecal_add_sample(${PROJECT_NAME} ${minimal_rec_cb_cs_src})
 target_link_libraries(${PROJECT_NAME} Continental.eCAL.Protobuf person_protobufs_cs)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
-  VS_GLOBAL_ROOTNAMESPACE ${PROJECT_NAME}
-  VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.5.2"
-  VS_DOTNET_REFERENCES
-  "System.Buffers;System.Memory;System.Runtime.CompilerServices.Unsafe;Google.Protobuf"
+    VS_GLOBAL_ROOTNAMESPACE ${PROJECT_NAME}
+    VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.5"
+    VS_DOTNET_REFERENCES
+    "Google.Protobuf"
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/csharp/person)

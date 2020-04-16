@@ -21,7 +21,7 @@
 
 #include <ecal/ecal.h>
 
-#include <EcalUtils/EcalUtils.h>
+#include <ecal_utils/ecal_utils.h>
 
 #ifdef _MSC_VER
 #pragma warning(push)

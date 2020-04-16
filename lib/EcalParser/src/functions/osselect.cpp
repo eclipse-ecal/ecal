@@ -20,7 +20,7 @@
 #include "osselect.h"
 
 #include <vector>
-#include <EcalUtils/String.h>
+#include <ecal_utils/string.h>
 
 namespace EcalParser
 {

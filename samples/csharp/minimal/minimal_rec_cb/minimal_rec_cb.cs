@@ -47,6 +47,9 @@ public class minimal_rcv_cb
       System.Threading.Thread.Sleep(100);
     }
 
+    // dispose subscriber
+    subscriber.Dispose();
+
     // finalize eCAL API
     Util.Terminate();
   }

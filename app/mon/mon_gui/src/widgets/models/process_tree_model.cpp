@@ -78,7 +78,7 @@ void ProcessTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
   for (const auto& process_pb : monitoring_pb.processes())
   {
     // Create a Process ID that is unique across all hosts
-    std::string process_identifier = (process_pb.pid() + "@" + process_pb.hname());
+    std::string process_identifier = (std::to_string(process_pb.pid()) + "@" + process_pb.hname());
 
     if (tree_item_map_.find(process_identifier) == tree_item_map_.end())
     {

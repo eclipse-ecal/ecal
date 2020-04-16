@@ -43,6 +43,9 @@ public class minimal_rcv
       if (message != null) System.Console.WriteLine(String.Format("Received:  {0}", message.data));
     }
 
+    // dispose subscriber
+    subscriber.Dispose();
+
     // finalize eCAL API
     Util.Terminate();
   }

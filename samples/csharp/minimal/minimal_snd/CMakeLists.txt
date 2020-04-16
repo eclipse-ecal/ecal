@@ -22,19 +22,11 @@ project(minimal_snd_cs LANGUAGES CSharp)
 find_package(eCAL REQUIRED)
 
 set(minimal_snd_cs_src
-  App.config
-  minimal_snd.cs
+    minimal_snd.cs
 )
 
 ecal_add_sample(${PROJECT_NAME} ${minimal_snd_cs_src})
 
 target_link_libraries(${PROJECT_NAME} Continental.eCAL.Core)
-
-set_target_properties(${PROJECT_NAME} PROPERTIES
-  VS_GLOBAL_ROOTNAMESPACE ${PROJECT_NAME}
-  VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.5.2"
-  VS_DOTNET_REFERENCES
-  "System"
-)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/csharp/minimal)

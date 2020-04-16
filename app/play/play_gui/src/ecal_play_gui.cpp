@@ -575,7 +575,7 @@ void EcalplayGui::populateRecentMeasurementsMenu()
 
       QAction* meas_action = ui_.menu_recent_measurement->addAction(label + ": " + measurement);
       meas_action->setToolTip(measurement);
-      connect(meas_action, &QAction::triggered, this, [this, measurement]() {QEcalPlay::instance()->loadMeasurement(measurement); });
+      connect(meas_action, &QAction::triggered, this, [measurement]() {QEcalPlay::instance()->loadMeasurement(measurement); });
       counter++;
     }
   }
@@ -588,7 +588,7 @@ void EcalplayGui::populateRecentMeasurementsMenu()
   ui_.menu_recent_measurement->addSeparator();
   QAction* clear_recent_measurements_list = ui_.menu_recent_measurement->addAction("Clear list");
   connect(clear_recent_measurements_list, &QAction::triggered, this,
-      [this]()
+      []()
       {
         QSettings settings;
         settings.setValue("recent_measurements", QStringList());

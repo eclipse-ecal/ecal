@@ -150,7 +150,7 @@ target_link_libraries (${PROJECT_NAME}
     eCAL::rec_server_core
     Qt5::Widgets
     CustomQt
-    EcalUtils
+    eCAL::utils
     EcalParser
     QEcalParser
     ThreadingUtils

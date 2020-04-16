@@ -51,7 +51,7 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::pb
     ThreadingUtils
     Threads::Threads
-    EcalUtils
+    eCAL::utils
     EcalParser
 )
 

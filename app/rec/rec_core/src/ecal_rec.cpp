@@ -27,7 +27,7 @@
 #include <iostream>
 #include <fstream>
 
-#include <EcalUtils/Path.h>
+#include <ecal_utils/filesystem.h>
 
 namespace eCAL
 {

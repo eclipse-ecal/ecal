@@ -27,7 +27,6 @@
 #ifndef ECAL_C_DLL
 
 #include <ecal/ecal.h>
-#include <ecal/msg/protobuf/dynamic_subscriber.h>
 
 namespace eCAL
 {
@@ -104,8 +103,8 @@ namespace eCAL
 
     private:
       // this object must not be copied.
-      CDynamicJSONSubscriber(const CDynamicSubscriber&);
-      CDynamicJSONSubscriber& operator=(const CDynamicSubscriber&);
+      CDynamicJSONSubscriber(const CDynamicJSONSubscriber&);
+      CDynamicJSONSubscriber& operator=(const CDynamicJSONSubscriber&);
     };
     /** @example proto_dyn_json.cpp
     * This is an example how to use CDynamicJSONSubscriber to receive dynamic google::protobuf data as a JSON string with eCAL.

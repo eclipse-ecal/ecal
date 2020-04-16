@@ -140,7 +140,9 @@ namespace
     pthread_condattr_t  shattr;
     pthread_condattr_init(&shattr);
     pthread_condattr_setpshared(&shattr, PTHREAD_PROCESS_SHARED);
+#ifndef ECAL_OS_MACOS
     pthread_condattr_setclock(&shattr, CLOCK_MONOTONIC);
+#endif // ECAL_OS_MACOS
     named_event_t* evt = static_cast<named_event_t*>(mmap(nullptr, sizeof(named_event_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
     ::close(fd);
 
@@ -216,7 +218,11 @@ namespace
         // wait with timeout for unlock signal
         if (ts_)
         {
-          ret = pthread_cond_timedwait(&evt_->cvar, &evt_->mtx, ts_);
+#ifndef ECAL_OS_MACOS
+            ret = pthread_cond_timedwait(&evt_->cvar, &evt_->mtx, ts_);
+#else
+            ret = pthread_cond_timedwait_relative_np(&evt_->cvar, &evt_->mtx, ts_);
+#endif
         }
         // blocking wait for unlock signal
         else

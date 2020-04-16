@@ -31,14 +31,14 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
 set(source_files
-	src/EcalplayGuiClient.cpp
-	src/EcalplayGuiClient.h
-	src/main.cpp
+    src/ecalplayer_gui_client.cpp
+    src/ecalplayer_gui_client.h
+    src/main.cpp
 )
 set(qt_resource_files
 )
 set(ui_files
-	src/MainWindow.ui
+   src/main_window.ui
 )
 
 # compile qt resource files and ui files

@@ -85,9 +85,15 @@
         <file alias="ERROR">FlorianReimold/error.svg</file>
         <file alias="HOST_CONNECTED_ERROR">FlorianReimold/screen_green_error.svg</file>
         <file alias="HOST_CONNECTED_WARNING">FlorianReimold/screen_green_warning.svg</file>
+        <file alias="HOST_ERROR">FlorianReimold/screen_blue_error.svg</file>
+        <file alias="HOST_WARNING">FlorianReimold/screen_blue_warning.svg</file>
         <file alias="ADDON_CONNECTED_ERROR">FlorianReimold/puzzle_green_error.svg</file>
         <file alias="ADDON_CONNECTED_WARNING">FlorianReimold/puzzle_green_warning.svg</file>
+        <file alias="ADDON_ERROR">FlorianReimold/puzzle_blue_error.svg</file>
+        <file alias="ADDON_WARNING">FlorianReimold/puzzle_blue_warning.svg</file>
         <file alias="EDIT_FILE">FlorianReimold/edit_file.svg</file>
         <file alias="ADD_FILE">FlorianReimold/add_file.svg</file>
+        <file alias="SHOW">MuraruMihai/show.svg</file>
+        <file alias="HIDE">MuraruMihai/hide.svg</file>
     </qresource>
 </RCC>

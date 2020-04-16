@@ -238,6 +238,12 @@ bool QAdvancedTreeView::restoreState(const QByteArray& state, int32_t version)
   int32_t column_count;
   state_stream >> column_count;
 
+  // Abort when the state binary aparently does not describe the column count of the current treeview
+  if (column_count != model()->columnCount())
+  {
+    return false;
+  }
+
   // Measure how many bytes a ColumnState actually occupies in a QByteArray. This is most likely NOT the same as sizeof(ColumnState)
   QByteArray temp_array;
   QDataStream temp_stream(&temp_array, QIODevice::WriteOnly);
@@ -245,6 +251,7 @@ bool QAdvancedTreeView::restoreState(const QByteArray& state, int32_t version)
   temp_stream << temp_state;
   int size_of_column_state = temp_array.size();
 
+  // Abort when the state binary data contains too few / too much elements to describe all columns
   if (state.size() != (2 * (int)sizeof(int32_t) + (column_count * size_of_column_state)))
   {
     return false;
@@ -273,4 +280,9 @@ bool QAdvancedTreeView::restoreState(const QByteArray& state, int32_t version)
   }
 
   return true;
+}
+
+QStyleOptionViewItem QAdvancedTreeView::viewOptions() const
+{
+  return QTreeView::viewOptions();
 }

@@ -86,7 +86,7 @@ public:
    */
   bool isForced(int column);
 
-  void setModel(QAbstractItemModel *model); // Not virtual, but needs to be overridden
+  void setModel(QAbstractItemModel *model) override; // Not virtual, but needs to be overridden
 
   /**
    * @brief Sets the maximum depth that the tree view will expand a node to, if children are added
@@ -155,8 +155,10 @@ public:
    */
   bool restoreState(const QByteArray& state, int32_t version = 0);
 
+  QStyleOptionViewItem viewOptions() const override;
+
 protected:
-  void keyPressEvent(QKeyEvent* key_event);
+  void keyPressEvent(QKeyEvent* key_event) override;
 
 signals:
   void keySequenceDeletePressed();

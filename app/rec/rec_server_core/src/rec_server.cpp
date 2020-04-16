@@ -26,7 +26,7 @@
 #include "recorder/remote_recorder.h"
 #include "recorder/local_recorder.h"
 
-#include <EcalUtils/String.h>
+#include <ecal_utils/string.h>
 #include <EcalParser/EcalParser.h>
 
 #include <rec_core/ecal_rec_logger.h>

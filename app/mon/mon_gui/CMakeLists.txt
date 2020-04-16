@@ -16,7 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(mon)
+project(mon_gui)
 
 find_package(Qt5 COMPONENTS
     Core
@@ -252,7 +252,7 @@ endif()
 if(WIN32)
 install(CODE
     "
-    set(_file ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/ecal_mon.exe)
+    set(_file ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/ecal_mon_gui.exe)
     execute_process(
             COMMAND \"${CMAKE_COMMAND}\" -E
                 env PATH=\"${_qt_bin_dir}\" \"${WINDEPLOYQT_EXECUTABLE}\"

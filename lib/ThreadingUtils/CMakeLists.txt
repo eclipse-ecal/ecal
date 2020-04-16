@@ -45,4 +45,4 @@ if(MSVC)
     msvc_source_tree(${threading_utils_includes} ${threading_utils_src})
 endif()
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lib/ThreadingUtils)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lib)

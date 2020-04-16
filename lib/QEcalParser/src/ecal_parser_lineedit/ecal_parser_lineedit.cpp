@@ -36,13 +36,13 @@ QEcalParserLineEdit::QEcalParserLineEdit(QWidget *parent)
 QEcalParserLineEdit::QEcalParserLineEdit(const QString &contents, QWidget *parent)
   : QLineEdit(contents, parent)
 {
-  open_dialog_action = new QAction(this);
-  open_dialog_action->setIcon(QIcon(":/qecalparser/SHOW_DIALOG"));
-  addAction(open_dialog_action, QLineEdit::ActionPosition::TrailingPosition);
-  open_dialog_action->setToolTip(tr("Advanced editor..."));
-  open_dialog_action->setText(tr("Advanced editor..."));
+  open_dialog_action_ = new QAction(this);
+  open_dialog_action_->setIcon(QIcon(":/qecalparser/SHOW_DIALOG"));
+  addAction(open_dialog_action_, QLineEdit::ActionPosition::TrailingPosition);
+  open_dialog_action_->setToolTip(tr("Advanced editor..."));
+  open_dialog_action_->setText(tr("Advanced editor..."));
 
-  connect(open_dialog_action, &QAction::triggered, this, &QEcalParserLineEdit::openDialog);
+  connect(open_dialog_action_, &QAction::triggered, this, &QEcalParserLineEdit::openDialog);
 }
 
 QEcalParserLineEdit::~QEcalParserLineEdit()
@@ -62,7 +62,7 @@ void QEcalParserLineEdit::contextMenuEvent(QContextMenuEvent *event)
   QMenu *menu = createStandardContextMenu();
 
   menu->addSeparator();
-  menu->addAction(open_dialog_action);
+  menu->addAction(open_dialog_action_);
   menu->exec(event->globalPos());
 
   delete menu;

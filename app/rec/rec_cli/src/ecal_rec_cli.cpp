@@ -29,7 +29,7 @@
 #include <ecal/ecal.h>
 #include <ecal/msg/protobuf/server.h>
 
-#include <EcalUtils/String.h>
+#include <ecal_utils/string.h>
 
 #include <tclap/CmdLine.h>
 

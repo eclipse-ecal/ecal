@@ -39,7 +39,7 @@ option(HAS_HDF5                                "Platform supports HDF5 library" 
 option(HAS_QT5                                 "Platform supports Qt 5 library"                                    ON)
 option(HAS_CAPNPROTO                           "Platform supports Cap'n Proto library"                            OFF)
 
-option(BUILD_DOCS                              "Build the eCAL documentation"                                      ON)
+option(BUILD_DOCS                              "Build the eCAL documentation"                                     OFF)
 option(BUILD_APPS                              "Build the eCAL applications"                                       ON)
 option(BUILD_SAMPLES                           "Build the eCAL samples"                                            ON)
 option(BUILD_TIME                              "Build the eCAL time interfaces"                                    ON)
@@ -116,7 +116,7 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
     add_executable(protobuf::protoc ALIAS protoc)
     set(Protobuf_PROTOC_EXECUTABLE protoc)
   endif()
-  set(Protobuf_VERSION 3.5.1)
+  set(Protobuf_VERSION 3.11.4)
 endif()
 
 if (ECAL_THIRDPARTY_BUILD_SPDLOG)
@@ -310,24 +310,24 @@ endif()
 # --------------------------------------------------------
 # protobuf utilities
 # --------------------------------------------------------
-add_subdirectory(contrib/ecalproto/src)
+add_subdirectory(contrib/ecalproto)
 
 # --------------------------------------------------------
 # ecal core internal protobuf
 # --------------------------------------------------------
-add_subdirectory(ecal/pb/src)
+add_subdirectory(ecal/pb)
 
 # --------------------------------------------------------
 # ecal core
 # --------------------------------------------------------
-add_subdirectory(ecal/core/src)
+add_subdirectory(ecal/core)
 
 # --------------------------------------------------------
 # custom libs
 # --------------------------------------------------------
 add_subdirectory(lib/ThreadingUtils)
 add_subdirectory(lib/CustomTclap)
-add_subdirectory(lib/EcalUtils)
+add_subdirectory(lib/ecal_utils)
 if(HAS_QT5)
   add_subdirectory(lib/CustomQt)
 endif()
@@ -358,7 +358,7 @@ endif()
 # ecal hdf5 support
 # --------------------------------------------------------
 if(HAS_HDF5)
-  add_subdirectory(contrib/ecalhdf5/src)
+  add_subdirectory(contrib/ecalhdf5)
   add_subdirectory(contrib/message)
 endif()
 
@@ -374,7 +374,7 @@ endif()
 # --------------------------------------------------------
 if(BUILD_CSHARP_BINDING AND WIN32)
   add_subdirectory(lang/csharp/Continental/eCAL/Core/)
-  #add_subdirectory(lang/csharp/Continental/eCAL/Protobuf/)
+  add_subdirectory(lang/csharp/Continental/eCAL/Protobuf/)
 endif()
 
 # --------------------------------------------------------
@@ -382,7 +382,7 @@ endif()
 # --------------------------------------------------------
 add_subdirectory(app/apps)
 if(BUILD_APPS)
-  add_subdirectory(app/mon/topic)
+  add_subdirectory(app/mon/mon_cli)
   add_subdirectory(app/util/config)
   add_subdirectory(app/util/stop)
 endif()
@@ -437,24 +437,24 @@ if(BUILD_TESTS)
   # test contrib
   # ------------------------------------------------------
   if(HAS_HDF5)
-    add_subdirectory(testing/contrib/ecalhdf5/hdf5_test/src)
+    add_subdirectory(testing/contrib/ecalhdf5/hdf5_test)
   endif()
-  add_subdirectory(testing/contrib/ecalproto/dynproto_test/src)
-  add_subdirectory(testing/contrib/ecalproto/ecal_proto_test/src)
+  add_subdirectory(testing/contrib/ecalproto/dynproto_test)
+  add_subdirectory(testing/contrib/ecalproto/ecal_proto_test)
 
   # ------------------------------------------------------
   # test ecal
   # ------------------------------------------------------
-  add_subdirectory(testing/ecal/clientserver_test/src)
-  add_subdirectory(testing/ecal/core_test/src)
-  add_subdirectory(testing/ecal/event_test/src)
-  add_subdirectory(testing/ecal/expmap_test/src)
+  add_subdirectory(testing/ecal/clientserver_test)
+  add_subdirectory(testing/ecal/core_test)
+  add_subdirectory(testing/ecal/event_test)
+  add_subdirectory(testing/ecal/expmap_test)
 if(NOT ECAL_LAYER_ICEORYX)
-  add_subdirectory(testing/ecal/io_memfile_test/src)
+  add_subdirectory(testing/ecal/io_memfile_test)
 endif(NOT ECAL_LAYER_ICEORYX)
-  add_subdirectory(testing/ecal/pubsub_inproc_test/src)
-  add_subdirectory(testing/ecal/pubsub_proto_test/src)
-  add_subdirectory(testing/ecal/pubsub_test/src)
+  add_subdirectory(testing/ecal/pubsub_inproc_test)
+  add_subdirectory(testing/ecal/pubsub_proto_test)
+  add_subdirectory(testing/ecal/pubsub_test)
 endif()
 
 # --------------------------------------------------------

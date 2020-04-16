@@ -52,8 +52,6 @@ protected:
   void mousePressEvent(QMouseEvent *event);
 
 private:
-  bool isOn = true;
-
   std::map<int, std::tuple<bool, bool, Qt::CheckState>> checkbox_data_;         /** (checkable, enabled, state) */
   QSize default_checkbox_size;
 };

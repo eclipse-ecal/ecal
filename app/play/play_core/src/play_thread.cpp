@@ -32,7 +32,7 @@
 PlayThread::PlayThread()
   : time_log_complete_time_span_(0)
 {
-  state_publisher_thread_ = std::move(std::unique_ptr<StatePublisherThread>(new StatePublisherThread(*this)));
+  state_publisher_thread_ = std::unique_ptr<StatePublisherThread>(new StatePublisherThread(*this));
   state_publisher_thread_->Start();
 }
 

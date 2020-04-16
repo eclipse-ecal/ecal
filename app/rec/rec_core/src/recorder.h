@@ -29,7 +29,7 @@
 #include <set>
 #include <thread>
 
-#include <EcalUtils/EcalUtils.h>
+#include <ecal_utils/ecal_utils.h>
 
 #include "rec_core/recorder_state.h"
 #include "rec_core/topic_info.h"

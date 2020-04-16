@@ -23,7 +23,7 @@
 
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable: 4146 4800)
+#pragma warning(disable: 4100 4127 4146 4800) // disable proto warnings
 #endif
 #include "ecal/pb/monitoring.pb.h"
 #ifdef _MSC_VER
@@ -58,17 +58,17 @@ public:
   HostTreeModel(QObject *parent = nullptr);
   ~HostTreeModel();
 
-  int columnCount(const QModelIndex &parent = QModelIndex()) const;
+  int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
   QVector<QPair<int, QString>> getTreeItemColumnNameMapping() const;
 
-  void monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb);
+  void monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb) override;
 
 protected:
   int mapColumnToItem(int model_column, int tree_item_type) const override;
-  int groupColumn() const;
+  int groupColumn() const override;
 
 private:
   std::map<Columns, QString> column_labels_ =

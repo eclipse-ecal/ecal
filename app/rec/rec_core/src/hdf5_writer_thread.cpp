@@ -22,11 +22,9 @@
 #include "rec_core/ecal_rec_logger.h"
 #include "recorder.h"
 
-#include <EcalUtils/Path.h>
-
 #include <fstream>
-#include <EcalUtils/Path.h>
 
+#include <ecal_utils/filesystem.h>
 #include <EcalParser/EcalParser.h>
 
 namespace eCAL
@@ -73,7 +71,7 @@ namespace eCAL
       }
       joined_meas_path += job_config_.GetMeasName();
 
-      return EcalUtils::Path::AbsolutePath(joined_meas_path);
+      return EcalUtils::Filesystem::AbsolutePath(joined_meas_path);
     }
 
 
@@ -270,14 +268,14 @@ namespace eCAL
     bool Hdf5WriterThread::CreateEcalmeasFile() const
     {
       std::string measurement_path = GetCompleteMeasurementPath();
-      if (!EcalUtils::Path::MkPath(measurement_path))
+      if (!EcalUtils::Filesystem::MkPath(measurement_path))
       {
         EcalRecLogger::Instance()->error("Error Creating directory \"" + measurement_path + "\"");
         return false;
       }
 
       // Get the last dirname of the complete measurement path and use it as meas name
-      std::list<std::string> path_components = EcalUtils::Path::CleanPathComponentList(measurement_path);
+      std::list<std::string> path_components = EcalUtils::Filesystem::CleanPathComponentList(measurement_path);
       std::string meas_name;
       if (!path_components.empty())
       {
@@ -292,7 +290,7 @@ namespace eCAL
       meas_name += ".ecalmeas";
 
       // Create file /meas/root/dir/meas_name/meas_name.ecalmeas
-      std::string ecalmeas_file_path = EcalUtils::Path::ToNativeSeperators(GetCompleteMeasurementPath() + '/' + meas_name);
+      std::string ecalmeas_file_path = EcalUtils::Filesystem::ToNativeSeperators(GetCompleteMeasurementPath() + '/' + meas_name);
 
       EcalRecLogger::Instance()->info("Creating eacalmeas file: " + ecalmeas_file_path);
 
@@ -306,11 +304,11 @@ namespace eCAL
       std::string doc_dir   = GetCompleteMeasurementPath() + "/doc/";
       std::string full_path = doc_dir + "description.txt";
 
-      full_path = EcalUtils::Path::ToNativeSeperators(full_path);
+      full_path = EcalUtils::Filesystem::ToNativeSeperators(full_path);
 
       EcalRecLogger::Instance()->info("Saving description to " + full_path);
 
-      if (!EcalUtils::Path::MkPath(doc_dir))
+      if (!EcalUtils::Filesystem::MkPath(doc_dir))
       {
         EcalRecLogger::Instance()->error("Error saving description: Cannot create doc dir \"" + doc_dir + "\"");
         return false;
@@ -334,7 +332,7 @@ namespace eCAL
     bool Hdf5WriterThread::OpenHdf5Writer() const
     {
       std::string host_name = eCAL::Process::GetHostName();
-      std::string hdf5_dir  = EcalUtils::Path::ToNativeSeperators(GetCompleteMeasurementPath() + "/" + host_name);
+      std::string hdf5_dir  = EcalUtils::Filesystem::ToNativeSeperators(GetCompleteMeasurementPath() + "/" + host_name);
 
 #ifndef NDEBUG
       EcalRecLogger::Instance()->debug("Hdf5WriterThread::Open(): hdf5_dir: \"" + hdf5_dir + "\", base_name: \"" + host_name + "\"");

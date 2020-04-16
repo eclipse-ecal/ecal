@@ -23,7 +23,7 @@
 #include <algorithm>
 #include <list>
 
-#include <EcalUtils/String.h>
+#include <ecal_utils/string.h>
 
 #include "functions/env.h"
 #include "functions/hostname.h"

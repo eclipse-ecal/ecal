@@ -386,7 +386,7 @@
   <action name="action_monitor_refresh_now">
    <property name="icon">
     <iconset resource="../../../iconset/ecalicons.qrc">
-     <normaloff>:/ecalicons/RESTART</normaloff>:/ecalicons/RESTART</iconset>
+     <normaloff>:/ecalicons/UPDATE</normaloff>:/ecalicons/UPDATE</iconset>
    </property>
    <property name="text">
     <string>&amp;Refresh monitor now</string>
@@ -446,7 +446,7 @@
   <action name="action_poll_log_now">
    <property name="icon">
     <iconset resource="../../../iconset/ecalicons.qrc">
-     <normaloff>:/ecalicons/RESTART</normaloff>:/ecalicons/RESTART</iconset>
+     <normaloff>:/ecalicons/UPDATE</normaloff>:/ecalicons/UPDATE</iconset>
    </property>
    <property name="text">
     <string>&amp;Poll log now</string>

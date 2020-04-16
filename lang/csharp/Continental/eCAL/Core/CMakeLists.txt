@@ -19,26 +19,27 @@
 project(Continental.eCAL.Core)
 
 set(ecal_clr_src
-  AssemblyInfo.cpp
-  ecal_clr.h
-  ecal_clr.cpp
+    AssemblyInfo.cpp
+    ecal_clr.h
+    ecal_clr.cpp
 ) 
 
 add_library(${PROJECT_NAME} SHARED ${ecal_clr_src})
 
-target_include_directories(${PROJECT_NAME} PRIVATE  .)
+target_include_directories(${PROJECT_NAME} PRIVATE .)
 target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core)
 set_target_properties(${PROJECT_NAME} PROPERTIES
-  COMMON_LANGUAGE_RUNTIME ""
+    COMMON_LANGUAGE_RUNTIME ""
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 install(TARGETS ${PROJECT_NAME}
-  # IMPORTANT: Add the library to the "export-set"
-  EXPORT eCALTargets
-  RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT runtime
-  LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT sdk
-  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/ecal" COMPONENT sdk)
+    # IMPORTANT: Add the library to the "export-set"
+    EXPORT eCALTargets
+    RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT runtime
+    LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT sdk
+    PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/ecal" COMPONENT sdk
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lang/csharp)

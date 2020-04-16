@@ -62,7 +62,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
   ThreadingUtils
-  EcalUtils
+  eCAL::utils
 )
 
 if(MSVC)

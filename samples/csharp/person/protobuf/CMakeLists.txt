@@ -22,11 +22,13 @@ project(person_protobufs_cs LANGUAGES CSharp)
 
 add_library(${PROJECT_NAME} SHARED Animal.cs House.cs Person.cs)
 
+add_dependencies(${PROJECT_NAME} Continental.eCAL.Protobuf)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES
-  VS_GLOBAL_ROOTNAMESPACE ${PROJECT_NAME}
-  VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.5.2"
-  VS_DOTNET_REFERENCES
-  "System.Buffers;System.Memory;System.Runtime.CompilerServices.Unsafe;Google.Protobuf"
+    VS_GLOBAL_ROOTNAMESPACE ${PROJECT_NAME}
+    VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.5"
+    VS_DOTNET_REFERENCES
+    "Google.Protobuf"
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/csharp/person)

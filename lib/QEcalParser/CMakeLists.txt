@@ -108,4 +108,4 @@ if(MSVC)
   )
 endif()
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lib/EcalUtils)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lib)

@@ -16,3 +16,6 @@ CMakeLists.txt.user
 
 # CLion project files
 /.idea
+
+#macOS
+.DS_Store

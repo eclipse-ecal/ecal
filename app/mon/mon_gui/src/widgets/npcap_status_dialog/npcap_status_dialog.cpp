@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "NpcapStatusDialog.h"
+#include "npcap_status_dialog.h"
 
 #include <QPushButton>
 #include <udpcap/npcap_helpers.h>

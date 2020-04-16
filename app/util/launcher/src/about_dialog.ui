@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>326</width>
-    <height>228</height>
+    <height>262</height>
    </rect>
   </property>
   <property name="font">
@@ -110,7 +110,7 @@ Developed by Mihai Muraru
   </layout>
  </widget>
  <resources>
-  <include location="../resources/gfx.qrc"/>
+  <include location="../resources/resources.qrc"/>
  </resources>
  <connections/>
 </ui>

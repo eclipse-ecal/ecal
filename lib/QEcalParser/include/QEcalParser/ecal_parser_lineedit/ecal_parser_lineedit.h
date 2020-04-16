@@ -39,5 +39,5 @@ private slots:
 
 
 private:
-  QAction* open_dialog_action;
+  QAction* open_dialog_action_;
 };

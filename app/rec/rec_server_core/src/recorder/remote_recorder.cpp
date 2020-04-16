@@ -21,7 +21,7 @@
 
 #include <rec_core/ecal_rec_logger.h>
 
-#include <EcalUtils/String.h>
+#include <ecal_utils/string.h>
 
 #include <algorithm>
 

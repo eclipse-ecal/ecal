@@ -23,9 +23,16 @@ function(PROTOBUF_GENERATE_CPP_EXT SRCS_RET HDRS_RET PROTO_OUT_DIR_RET PROTO_ROO
   endif()
   
   #Backwards compatability
-  if (DEFINED PROTOBUF_PROTOC_EXECUTABLE AND NOT DEFINED Protobuf_PROTOC_EXECUTABLE)
-    set(Protobuf_PROTOC_EXECUTABLE ${PROTOBUF_PROTOC_EXECUTABLE})
-  endif (DEFINED PROTOBUF_PROTOC_EXECUTABLE AND NOT DEFINED Protobuf_PROTOC_EXECUTABLE)
+  if (NOT TARGET protobuf::protoc)
+    if (Protobuf_PROTOC_EXECUTABLE)
+      ADD_EXECUTABLE(protobuf::protoc IMPORTED)
+      SET_TARGET_PROPERTIES(protobuf::protoc PROPERTIES
+        IMPORTED_LOCATION "${Protobuf_PROTOC_EXECUTABLE}"
+      )
+    else ()
+      message(FATAL_ERROR "Neither protobuf::protoc not the $(Protobuf_PROTOC_EXECUTABLE) variable is defined. Cannot generate protobuf files.")
+    endif ()     	
+  endif ()
 
   set(PROTO_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/protobuf")
   file(MAKE_DIRECTORY ${PROTO_OUT_DIR})  
@@ -45,10 +52,10 @@ function(PROTOBUF_GENERATE_CPP_EXT SRCS_RET HDRS_RET PROTO_OUT_DIR_RET PROTO_ROO
     add_custom_command(
       OUTPUT "${PROTO_OUT_DIR}/${REL_FIL_WE}.pb.cc"
              "${PROTO_OUT_DIR}/${REL_FIL_WE}.pb.h"
-      COMMAND ${Protobuf_PROTOC_EXECUTABLE}
+      COMMAND protobuf::protoc
       ARGS "--proto_path=${PROTO_ROOT}" "--cpp_out=${PROTO_OUT_DIR}" ${ABS_FIL}
-      DEPENDS ${ABS_FIL} ${Protobuf_PROTOC_EXECUTABLE}
-      COMMENT "Running C++ protocol buffer compiler on ${ABS_FIL} ${Protobuf_PROTOC_EXECUTABLE}"
+      DEPENDS ${ABS_FIL} protobuf::protoc
+      COMMENT "Running C++ protocol buffer compiler on ${ABS_FIL}"
       VERBATIM )
 
   endforeach()

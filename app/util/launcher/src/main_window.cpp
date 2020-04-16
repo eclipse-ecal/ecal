@@ -79,7 +79,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 void MainWindow::on_pushButton_monitor_clicked()
 {
-  QProcess::startDetached(eCAL::Apps::MON);
+  QProcess::startDetached(eCAL::Apps::MON_GUI);
 }
 
 void MainWindow::on_pushButton_play_clicked()

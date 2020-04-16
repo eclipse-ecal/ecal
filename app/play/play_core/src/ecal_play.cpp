@@ -29,7 +29,7 @@
 #include "play_thread.h"
 #include "ecalhdf5/eh5_meas.h"
 
-#include "EcalUtils/String.h"
+#include "ecal_utils/string.h"
 
 EcalPlay::EcalPlay()
 {
