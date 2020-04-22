@@ -119,8 +119,8 @@ All options can be passed on the command line `cmake -D<option>=<value>` or in t
 ### Compile eCAL
 1. Check out the repository as described [here](#checkout-the-repository).
 
-3. Compile eCAL:
-_(Disable the THIRDPARTY_BUILD_PROTOBUF cmake option to not get a conflict with your installed protobuf version!)_
+2. Compile eCAL:
+_(Disable the `THIRDPARTY_BUILD_PROTOBUF` cmake option to not get a conflict with your installed protobuf version!)_
 	```bash
 	mkdir _build
 	cd _build
@@ -128,13 +128,14 @@ _(Disable the THIRDPARTY_BUILD_PROTOBUF cmake option to not get a conflict with 
 	make -j4
 	```
 	
-4. Create a debian package and install it, if desired:
+3. Create a debian package and install it, if desired:
 	```bash
 	cpack -G DEB
 	sudo dpkg -i _deploy/eCAL-*
 	```
 	
-5. Create and install the eCAL python egg:
+4. Create and install the eCAL python egg:
+_(Enable the `BUILD_PY_BINDING` cmake option in step 2 (`-DBUILD_PY_BINDING=ON`) to build the eCAL core including the python language interface)_
 	```bash
 	cmake --build . --target create_python_egg --config Release
 	sudo python3 -m easy_install _deploy/ecal-*
@@ -373,7 +374,7 @@ Besides the communication core eCAL comes with some high-level applications for 
 ### Monitor
 
 To start the monitor please open the application from the windows start menu or type
-```ecal_mon_gui``` on a linux system.
+`ecal_mon_gui` on a linux system.
 
 The monitor provides different kinds of sorted views for all eCAL publications, subscriptions or service instances. The content of messages is visualized with plugins. Currently the monitor is shipped with ready to use plugins for two serialization formats ([google protobuf](https://developers.google.com/protocol-buffers) and [capnproto](https://capnproto.org/).), as well as simple string data.
 

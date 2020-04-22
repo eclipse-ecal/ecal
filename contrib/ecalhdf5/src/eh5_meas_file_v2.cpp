@@ -219,7 +219,7 @@ bool eCAL::eh5::HDF5MeasFileV2::GetEntriesInfo(const std::string& channel_name, 
   for (unsigned int index = 0; index < data_size; index += 2)
   {
     //                        rec timestamp, channel id
-    entries.insert(SEntryInfo(data[index],   data[index + 1], 0));
+    entries.emplace(SEntryInfo(data[index],   data[index + 1], 0));
   }
 
   free(data);

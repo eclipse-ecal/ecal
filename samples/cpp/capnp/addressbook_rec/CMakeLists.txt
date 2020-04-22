@@ -28,7 +28,7 @@ ecal_add_sample(${PROJECT_NAME} src/addressbook_rec.cpp ${CAPNP_SRCS} ${CAPNP_HD
 
 set_source_files_properties(${CAPNP_SRCS} PROPERTIES COMPILE_FLAGS $<$<CXX_COMPILER_ID:MSVC>:-W0>)
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src)
 target_link_libraries(${PROJECT_NAME} PRIVATE CapnProto::capnp eCAL::core)
 target_link_options(${PROJECT_NAME} PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/ignore:4099>)
 

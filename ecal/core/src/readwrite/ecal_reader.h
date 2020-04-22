@@ -57,7 +57,7 @@ namespace eCAL
     bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
     bool Destroy();
 
-    bool SetQOS(QOS::SReaderQOS qos_);
+    bool SetQOS(const QOS::SReaderQOS& qos_);
 
     size_t Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0);
 

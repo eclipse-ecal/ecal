@@ -187,7 +187,7 @@ namespace eCAL
   **/
   int Initialize(std::vector<std::string> args_, const char *unit_name_, unsigned int components_)
   {
-    args_.insert(args_.begin(), eCAL::Process::GetProcessName());
+    args_.emplace(args_.begin(), eCAL::Process::GetProcessName());
     std::vector<const char*> argv(args_.size());
     std::transform(args_.begin(), args_.end(), argv.begin(), [](std::string& s) {return s.c_str();});
     return Initialize(static_cast<int>(argv.size()), const_cast<char**>(argv.data()), unit_name_, components_);

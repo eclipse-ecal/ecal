@@ -129,7 +129,7 @@ namespace
     if(alloc_adapters_size == 0) return std::make_pair(false, 0);
 
     // allocate adapter memory
-    auto adapter_mem = std::make_unique<char[]>(alloc_adapters_size);
+    auto adapter_mem = std::make_unique<char[]>(static_cast<size_t>(alloc_adapters_size));
 
     // get all adapter infos
     PIP_ADAPTER_INFO pAdapter(nullptr);
@@ -473,7 +473,7 @@ namespace eCAL
         creation_flag = CREATE_NEW_CONSOLE;
       }
 
-      short win_state = SW_SHOW;
+      short win_state;
       switch (process_mode_)
       {
       case 0:

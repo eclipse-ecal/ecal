@@ -134,7 +134,7 @@ namespace eCAL
       std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
       connection_shutting_down_ = true;
       actions_to_perform_.clear();
-      actions_to_perform_.push_back(Action(last_command));
+      actions_to_perform_.emplace_back(Action(last_command));
 
       // Notify the thread that we have more work to do
       io_cv_.notify_all();

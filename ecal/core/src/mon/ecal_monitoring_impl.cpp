@@ -354,9 +354,9 @@ namespace eCAL
     ProcessInfo.state_severity_level = process_state_severity_level;
     ProcessInfo.state_info           = std::move(process_state_info);
     ProcessInfo.tsync_state          = process_tsync_state;
-    ProcessInfo.tsync_mod_name       = process_tsync_mod_name;
+    ProcessInfo.tsync_mod_name       = std::move(process_tsync_mod_name);
     ProcessInfo.component_init_state = component_init_state;
-    ProcessInfo.component_init_info  = component_init_info;
+    ProcessInfo.component_init_info  = std::move(component_init_info);
 
     return(true);
   }
@@ -690,7 +690,7 @@ namespace eCAL
         pos = str.length();
         if (pos != lastPos || !trimEmpty)
         {
-          tokens.insert(std::string(str.data() + lastPos, pos - lastPos));
+          tokens.emplace(std::string(str.data() + lastPos, pos - lastPos));
         }
         break;
       }
@@ -698,7 +698,7 @@ namespace eCAL
       {
         if (pos != lastPos || !trimEmpty)
         {
-          tokens.insert(std::string(str.data() + lastPos, pos - lastPos));
+          tokens.emplace(std::string(str.data() + lastPos, pos - lastPos));
         }
       }
       lastPos = pos + 1;

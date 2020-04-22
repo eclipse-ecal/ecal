@@ -329,7 +329,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CDataReader::SetQOS(QOS::SReaderQOS qos_)
+  bool CDataReader::SetQOS(const QOS::SReaderQOS& qos_)
   {
     m_qos = qos_;
     return (!m_created);
@@ -666,7 +666,8 @@ namespace eCAL
     // ensure that registration is not called within zero nanoseconds
     // normally it will be called from registration logic every second
     auto curr_time = std::chrono::steady_clock::now();
-    if((curr_time - m_rec_time) > std::chrono::nanoseconds::zero())
+    auto diff_time = curr_time - m_rec_time;
+    if(diff_time > std::chrono::nanoseconds::zero())
     {
       // reset clock and time on first call
       if (m_clock_old == 0)

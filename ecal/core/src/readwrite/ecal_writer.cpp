@@ -220,7 +220,7 @@ namespace eCAL
     }
   }
 
-  bool CDataWriter::SetQOS(QOS::SWriterQOS& qos_)
+  bool CDataWriter::SetQOS(const QOS::SWriterQOS& qos_)
   {
     m_qos = qos_;
     bool ret = true;
@@ -591,7 +591,8 @@ namespace eCAL
 
     // force to register every second to refresh data clock information
     auto curr_time = std::chrono::steady_clock::now();
-    if ((curr_time - m_snd_time) > std::chrono::nanoseconds::zero())
+    auto diff_time = curr_time - m_snd_time;
+    if (diff_time > std::chrono::nanoseconds::zero())
     {
       // reset clock and time on first call
       if (m_clock_old == 0)

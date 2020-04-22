@@ -54,7 +54,7 @@ set(nuget_package_google
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES
   VS_GLOBAL_ROOTNAMESPACE ${PROJECT_NAME}
-  VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.5"
+  VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1"
   VS_DOTNET_REFERENCE_Google.Protobuf ${nuget_package_google}
 )
 

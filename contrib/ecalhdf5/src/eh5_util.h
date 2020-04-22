@@ -168,7 +168,7 @@ namespace Utility
         }
         if (end - start != 0)
         {
-          parts.push_back(std::string(str, start, end - start));
+          parts.emplace_back(std::string(str, start, end - start));
         }
       }
     }

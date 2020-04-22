@@ -119,7 +119,7 @@ static void tokenize(const std::string& str, std::vector<std::string>& tokens,
       pos = str.length();
       if(pos != lastPos || !trimEmpty)
       {
-        tokens.push_back(std::string(str.data()+lastPos, pos-lastPos));
+        tokens.emplace_back(std::string(str.data()+lastPos, pos-lastPos));
       }
       break;
     }
@@ -127,7 +127,7 @@ static void tokenize(const std::string& str, std::vector<std::string>& tokens,
     {
       if(pos != lastPos || !trimEmpty)
       {
-        tokens.push_back(std::string(str.data()+lastPos, pos-lastPos ));
+        tokens.emplace_back(std::string(str.data()+lastPos, pos-lastPos ));
       }
     }
     lastPos = pos + 1;

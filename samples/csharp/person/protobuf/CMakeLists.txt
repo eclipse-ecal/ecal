@@ -26,7 +26,7 @@ add_dependencies(${PROJECT_NAME} Continental.eCAL.Protobuf)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_ROOTNAMESPACE ${PROJECT_NAME}
-    VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.5"
+    VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1"
     VS_DOTNET_REFERENCES
     "Google.Protobuf"
 )
