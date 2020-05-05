@@ -1,5 +1,3 @@
-
-
 # eCAL - enhanced Communication Abstraction Layer
 
 Copyright (c) 2019, Continental Corporation.
@@ -50,43 +48,26 @@ git submodule update
 
 eCAL is using CMake as build system. When configuring with CMake, you can turn on / off the following features.
 
-- `HAS_HDF5`, default: `ON`
-  Platform supports HDF5 library, necessary to build eCAL recording / replay tools
-- `HAS_QT5`, default: `ON`
-  Platform supports Qt 5 library, necessary to build eCAL monitoring tool
-- `HAS_CAPNPROTO`, default: `OFF`
-  Platform supports Cap'n Proto library, necessary to use capnp serialization as message system and to enable eCAL monitoring capnp message reflection
-  eCAL does not add Cap'n Proto as a submodule. If you set this option to `ON`, please make sure that the library is installed on your system and CMake can find it (consider setting CMAKE_PREFIX_PATH to point to the library).
-- `BUILD_DOCS`, default `ON`
-  Build the eCAL documentation, requires the installation of doxygen and a recent CMake version (>= 3.14 preferred, but some lower versions might work)
-- `BUILD_APPS`, default `ON`,
-  Build the eCAL applications, such as the monitoring tool
-- `BUILD_SAMPLES`, default `OFF`
-  Build the eCAL sample applications
-- `BUILD_TIME`, default `ON`
-  Build the eCAL time interfaces, necessary if you want to use ecal in time synchronized mode (based on ptp for example)
-- `BUILD_PY_BINDING`, default `OFF`
-  Build the eCAL python language binding
-- `BUILD_CSHARP_BINDING`, default `OFF`
-  Build the eCAL C# language binding
-- `BUILD_TESTS', default `OFF`
-  Build the eCAL google tests
-- `ECAL_LAYER_ICEORYX`, default `OFF`
-  Use iceoryx shared memory as local communication layer, requires [eclipse/iceoryx](https://github.com/eclipse/iceoryx) installation
-- `ECAL_INCLUDE_PY_SAMPLES`, default: `OFF`
-  Include python language sample projects into CMake
-- `ECAL_INSTALL_SAMPLE_SOURCES`, default: `ON`
-  Install the sources of eCAL samples
-- `ECAL_JOIN_MULTICAST_TWICE`, default: `OFF`
-  Specific multicast network bug workaround
-- `ECAL_NPCAP_SUPPORT`, default `OFF`
-  Enable the eCAL to use Npcap for udp socket communication (i.e. the Win10 performance fix)
-- `ECAL_THIRDPARTY_BUILD_PROTOBUF`, default `ON`
-  Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.5.1 or newer (tested with 3.5.1).
-- `ECAL_THIRDPARTY_BUILD_SPDLOG`, default `ON`
-  Build Spdlog with eCAL, included as a submodule in the thirdparty folder. You can always use your custom spdlog installation, this is only for convenience.
-- `ECAL_THIRDPARTY_BUILD_GTEST`, default `OFF`
-  Build GoogleTest with eCAL, included as a submodule in the thirdparty folder. You can always use your custom gtest installation, this is only for convenience.
+| CMake option                     | Default | Description |
+|----------------------------------|---------|------------ |
+| `HAS_HDF5`                       | `ON`    | Platform supports HDF5 library, necessary to build eCAL recording / replay tools |
+| `HAS_QT5`                        | `ON`    | Platform supports Qt 5 library, necessary to build eCAL monitoring tool |
+| `HAS_CAPNPROTO`                  | `OFF`   | Platform supports Cap'n Proto library, necessary to use capnp serialization as message system and to enable eCAL monitoring capnp message reflection. eCAL does not add Cap'n Proto as a submodule. If you set this option to `ON`, please make sure that the library is installed on your system and CMake can find it (consider setting CMAKE_PREFIX_PATH to point to the library). |
+| `BUILD_DOCS`                     | `OFF`   | Build the eCAL documentation, requires the installation of doxygen and a recent CMake version (>= 3.14 preferred, but some lower versions might work) |
+| `BUILD_APPS`                     | `ON`    | Build the eCAL applications, such as the monitoring tool |
+| `BUILD_SAMPLES`                  | `OFF`   | Build the eCAL sample applications |
+| `BUILD_TIME`                     | `ON`    | Build the eCAL time interfaces, necessary if you want to use ecal in time synchronized mode (based on ptp for example) |
+| `BUILD_PY_BINDING`               | `OFF`   | Build the eCAL python language binding |
+| `BUILD_CSHARP_BINDING`           | `OFF`   | Build the eCAL C# language binding |
+| `BUILD_TESTS`                    | `OFF`   | Build the eCAL google tests |
+| `ECAL_LAYER_ICEORYX`             | `OFF`   | Use iceoryx shared memory as local communication layer, requires [eclipse/iceoryx](https://github.com/eclipse/iceoryx) installation |
+| `ECAL_INCLUDE_PY_SAMPLES`        | `OFF`   | Include python language sample projects into CMake |
+| `ECAL_INSTALL_SAMPLE_SOURCES`    | `ON`    | Install the sources of eCAL samples |
+| `ECAL_JOIN_MULTICAST_TWICE`      | `OFF`   | Specific multicast network bug workaround |
+| `ECAL_NPCAP_SUPPORT`             | `OFF`   | Enable the eCAL to use Npcap for udp socket communication (i.e. the Win10 performance fix) |
+| `ECAL_THIRDPARTY_BUILD_PROTOBUF` | `ON`    | Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.11.4 or newer (tested with 3.11.4). |
+| `ECAL_THIRDPARTY_BUILD_SPDLOG`   | `ON`    | Build Spdlog with eCAL, included as a submodule in the thirdparty folder. You can always use your custom spdlog installation, this is only for convenience. |
+| `ECAL_THIRDPARTY_BUILD_GTEST`    | `OFF`   | Build GoogleTest with eCAL, included as a submodule in the thirdparty folder. You can always use your custom gtest installation, this is only for convenience. |
 
 All options can be passed on the command line `cmake -D<option>=<value>` or in the CMake GUI application.
 
@@ -128,7 +109,7 @@ All options can be passed on the command line `cmake -D<option>=<value>` or in t
 	sudo apt-get -y install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler
 	```
 	
-3. If you plan to create the eCAL python language extension (here as an example for the pythonm 3.6 version):
+3. If you plan to create the eCAL python language extension (here as an example for the python 3.6 version):
 	```bash
 	sudo apt-get install python3.6-dev
 	sudo apt-get install python3-pip
@@ -137,19 +118,24 @@ All options can be passed on the command line `cmake -D<option>=<value>` or in t
 
 ### Compile eCAL
 1. Check out the repository as described [here](#checkout-the-repository).
+
 2. Compile eCAL:
+_(Disable the `THIRDPARTY_BUILD_PROTOBUF` cmake option to not get a conflict with your installed protobuf version!)_
 	```bash
 	mkdir _build
 	cd _build
 	cmake .. -DCMAKE_BUILD_TYPE=Release -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF
 	make -j4
 	```
+	
 3. Create a debian package and install it, if desired:
 	```bash
 	cpack -G DEB
 	sudo dpkg -i _deploy/eCAL-*
 	```
-3. Create and install the eCAL python egg:
+	
+4. Create and install the eCAL python egg:
+_(Enable the `BUILD_PY_BINDING` cmake option in step 2 (`-DBUILD_PY_BINDING=ON`) to build the eCAL core including the python language interface)_
 	```bash
 	cmake --build . --target create_python_egg --config Release
 	sudo python3 -m easy_install _deploy/ecal-*
@@ -157,7 +143,9 @@ All options can be passed on the command line `cmake -D<option>=<value>` or in t
 
 ### UDP network configuration
 
-setup the correct ip address - here for adapter eth0, ip address 192.168.0.1
+#### Setup the ip address
+
+First you need to setup the correct ip address for sure - here for adapter eth0, ip address 192.168.0.1
 
 ```bash
 sudo ifconfig eth0 192.168.0.1 netmask 255.255.255.0
@@ -165,7 +153,9 @@ sudo ifconfig eth0 192.168.0.1 netmask 255.255.255.0
 
 Restart the ethernet interface or the whole machine to apply changes, check if you can ping to each other.
 
-After the ipc configuration setup the multicast route for udp multicasting
+#### Setup the multicast routes
+
+After the ip configuration you need to setup the multicast route for udp multicasting
 
 ```bash
 ifconfig eth0 multicast 
@@ -255,7 +245,14 @@ Afterwards you will find the python eCAL egg in the _deploy subfolder inside you
 python -m easy_install ecal-X.Y.Z-pyX.Y.egg
 ```
 
+#### Create eCAL csharp extension
+
+To build the eCAL csharp extension you need to set the CMake option `BUILD_CSHARP_BINDING` to `ON`. In order to make the CSharp Google::Protobuf extesnsion work you need to install additionally the Microsoft package management tool [Nuget](https://www.nuget.org/downloads). Please 
+ensure that the installation path is part of your windows user or system PATH environment variable. Nuget will be used to download the .Net Google.Protobuf package automatically when building the extension.
+
 ### UDP network configuration
+
+#### Setup the multicast routes
 
 You need to open a command window with administrative (!) privileges. Then run
 
@@ -283,6 +280,56 @@ For local communication use 0 for ttl.
 You can find the ecal.ini configuration file under %APPDATA%\eCAL.
 
 Don't forget to disable any windows firewall.
+
+
+#### Network performance issue on Windows 10 Systems - Npcap
+
+##### Background
+
+The "normal" eCAL Multicast communication may lead to low performance on Windows 10. This is not an eCAL issue but related to the Windows Firewall Service which cannot be deactivated since Win 10, any more. eCAL however includes an option to work around that issue. For that you have to install the Npcap driver and configure eCAL to use it.
+
+##### How to use Npcap
+
+  1. Download Npcap: https://nmap.org/npcap/
+
+  2. Install Npcap with default Options:
+
+  ![Npcap installer'](gfx/configuration/npcap_installer.png?raw=true "Npcap installer")
+
+  3. Remove all elements / protocols except NPCAP and NPF from the Npcap Loopback Adapter
+
+   **This is important, as you may not be able to connect to your corporate Wifi any more, if you skip this step!**
+
+   The NPF element is only available if you installed Npcap in WinPcap compatibility mode
+
+  ![Npcap settings'](gfx/configuration/npcap_settings.png?raw=true "Npcap settings")
+
+  4. Edit `[C:/Program Data/eCAL/]ecal.ini`:
+
+```
+   npcap_enabled = true
+```
+
+  5. Check eCAL Mon
+
+  ![Npcap eCALMon'](gfx/configuration/npcap_ecalmon.png?raw=true "Npcap eCALMon")
+
+
+##### Troubleshooting
+
+If you enable Npcap but didn't install it, installed it with the wrong settings or your installation is broken, eCAL Mon will tell you that the Npcap Initialization has failed. eCAL will still work, but not use Npcap.
+
+Npcap seems to break itself if you reinstall it, as the uninstaller does not remove the Loopback Adapter properly. The new Npcap installation will fail to create a new Loopback Adapter and the installation will be corrupt!
+
+Please do a clean install of Npcap:
+
+  1. Uninstall Npcap
+
+  2. Manually uninstall all Npcap Loopback Adapters using the Windows device manager.
+
+  3. Manually uninstall all Microsoft KM-TEST Loopback adapters with the device manager
+
+  4. Install Npcap again with the settings above
 
 
 ## Transport Layer Concept
@@ -327,7 +374,7 @@ Besides the communication core eCAL comes with some high-level applications for 
 ### Monitor
 
 To start the monitor please open the application from the windows start menu or type
-```ecal_mon``` on a linux system.
+`ecal_mon_gui` on a linux system.
 
 The monitor provides different kinds of sorted views for all eCAL publications, subscriptions or service instances. The content of messages is visualized with plugins. Currently the monitor is shipped with ready to use plugins for two serialization formats ([google protobuf](https://developers.google.com/protocol-buffers) and [capnproto](https://capnproto.org/).), as well as simple string data.
 
@@ -1150,6 +1197,9 @@ public class minimal_snd
       System.Threading.Thread.Sleep(100);
     }
 
+    // dispose publisher
+    publisher.Dispose();
+
     // finalize eCAL API
     Util.Terminate();
   }
@@ -1181,6 +1231,9 @@ public class minimal_rcv
       // print message
       if (message != null) System.Console.WriteLine(String.Format("Received:  {0}", message.data));
     }
+
+    // dispose subscriber
+    subscriber.Dispose();
 
     // finalize eCAL API
     Util.Terminate();
@@ -1217,6 +1270,9 @@ public class minimal_rcv_cb
     {
       System.Threading.Thread.Sleep(100);
     }
+
+    // dispose subscriber
+    subscriber.Dispose();
 
     // finalize eCAL API
     Util.Terminate();
@@ -1343,3 +1399,4 @@ Will load the specified default eCAL ini file and print out the loaded configura
 *eCAL* is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE.txt) for the full license text.
 
 > Written with [StackEdit](https://stackedit.io/).
+
