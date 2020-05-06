@@ -29,7 +29,7 @@
 #include <algorithm>
 
 #include <ecal/ecal.h>
-#include "EcalUtils/String.h"
+#include "ecal_utils/string.h"
 #include "item_data_roles.h"
 
 //////////////////////////////////////////////////////

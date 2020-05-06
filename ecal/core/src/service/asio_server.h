@@ -23,7 +23,14 @@
 #include <string>
 #include <iostream>
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4834)
+#endif
 #include <asio.hpp>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #include "ecal_tcpheader.h"
 

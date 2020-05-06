@@ -10,6 +10,7 @@
     <OutputPath>.</OutputPath>
     <Name>person_rec</Name>
     <RootNamespace>person_rec</RootNamespace>
+    <ProjectGuid>{299dfe00-c6ff-3496-baa9-f0b2dd2172b4}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

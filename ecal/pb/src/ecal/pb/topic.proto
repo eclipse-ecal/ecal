@@ -25,12 +25,7 @@ enum eTLayerType                                // transport layer
 {
   tl_none            =   0;                     // undefined
   tl_ecal_udp_mc     =   1;                     // ecal udp multicast
-  tl_ecal_udp_uc     =   2;                     // ecal udp unicast
-  tl_ecal_udp_metal  =   3;                     // ecal udp metal
   tl_ecal_shm        =   4;                     // ecal shared memory
-  tl_lcm             =   5;                     // google lcm
-  tl_rtps            =   6;                     // fast rtps
-  tl_iceoryx         =   7;                     // iceoryx
   tl_inproc          =  42;                     // inproc (inner process)
   tl_all             = 255;                     // all layer
 }
@@ -86,12 +81,4 @@ message Topic                                   // eCAL topic
   int64            did                   = 19;  // data send id (publisher setid)
   int64            dclock                = 20;  // data clock (send / receive action)
   int32            dfreq                 = 21;  // data frequency (send / receive samples per second) [mHz]
-
-  int32            dfreq_min             = 22;  // data frequency reference minimum [mHz]
-  int32            dfreq_max             = 23;  // data frequency reference maximum [mHz]
-  int32            dfreq_min_err         = 24;  // data frequency minimum violation error counter
-  int32            dfreq_max_err         = 25;  // data frequency maximum violation error counter
-
-  string           mcast_address         = 40;  // the udp multicast group used for that topic (eCALMetal only)
-  int32            mcast_port            = 41;  // the udp multicast port used for that topic  (eCALMetal only)
 }

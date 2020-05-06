@@ -239,7 +239,7 @@ namespace eCAL
       void update_timestamp(const Key& k)
       {
         _key_tracker.erase(_key_to_value.at(k).second);
-        auto new_iterator = _key_tracker.insert(_key_tracker.end(), std::make_pair(get_curr_time(), k));
+        auto new_iterator = _key_tracker.emplace(_key_tracker.end(), std::make_pair(get_curr_time(), k));
         _key_to_value.at(k).second = new_iterator;
       }
 
@@ -247,10 +247,10 @@ namespace eCAL
       std::pair<typename key_to_value_type::iterator, bool> insert(const Key& k, const T& v)
       {
         // sorted list, containing (pair ( timestamp, K))
-        auto it = _key_tracker.insert(_key_tracker.end(), std::make_pair(get_curr_time(), k));
+        auto it = _key_tracker.emplace(_key_tracker.end(), std::make_pair(get_curr_time(), k));
 
         // entry mapping k -> pair (T, iterator(pair(timestamp, K)))
-        auto ret = _key_to_value.insert(
+        auto ret = _key_to_value.emplace(
           std::make_pair(
             k,
             std::make_pair(v, it)

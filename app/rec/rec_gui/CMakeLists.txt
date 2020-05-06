@@ -150,7 +150,7 @@ target_link_libraries (${PROJECT_NAME}
     eCAL::rec_server_core
     Qt5::Widgets
     CustomQt
-    EcalUtils
+    eCAL::utils
     EcalParser
     QEcalParser
     ThreadingUtils
@@ -197,9 +197,7 @@ if(MSVC)
     )
 endif(MSVC)
 
-if(MSVC)
-    set_property(TARGET ${PROJECT_NAME} PROPERTY LINK_FLAGS "/ignore:4098,4099")
-endif(MSVC)
+target_link_options(${PROJECT_NAME} PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/ignore:4098,4099>)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/rec)
 

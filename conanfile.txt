@@ -1,7 +1,7 @@
 [requires]
 Qt/5.12.4@kwc_bintray/stable
-protobuf/3.5.1@bincrafters/stable
-protoc_installer/3.5.1@bincrafters/stable
+protobuf/3.11.4@bincrafters/stable
+protoc_installer/3.11.4@bincrafters/stable
 spdlog/0.16.3@kwc_bintray/stable
 
 tclap/1.2.2@kwc_bintray/stable

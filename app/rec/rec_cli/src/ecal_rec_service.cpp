@@ -24,7 +24,7 @@
 #include <clocale>
 #include <locale>
 
-#include <EcalUtils/EcalUtils.h>
+#include <ecal_utils/ecal_utils.h>
 
 #include <ecal/ecal.h>
 
@@ -150,8 +150,8 @@ void EcalRecService::SetConfig(::google::protobuf::RpcController*        /*contr
   {
     std::string record_mode_string = config_item_map["record_mode"];
     record_mode_string = EcalUtils::String::Trim(record_mode_string);
-    std::transform(record_mode_string.begin(), record_mode_string.end(), record_mode_string.begin(), ::tolower);
-    
+    std::transform(record_mode_string.begin(), record_mode_string.end(), record_mode_string.begin(), [](char c) {return static_cast<char>(::tolower(c)); });
+
     if (record_mode_string == "all")
       record_mode = eCAL::rec::RecordMode::All;
     else if (record_mode_string == "blacklist")
@@ -392,7 +392,7 @@ bool EcalRecService::strToBool(const std::string& str)
     return true;
 
   std::string lower_string = str;
-  std::transform(lower_string.begin(), lower_string.end(), lower_string.begin(), ::tolower);
+  std::transform(lower_string.begin(), lower_string.end(), lower_string.begin(), [](char c) {return static_cast<char>(::tolower(c)); });
 
   if (lower_string == "true")
     return true;

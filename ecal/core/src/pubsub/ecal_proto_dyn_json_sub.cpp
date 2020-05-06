@@ -23,27 +23,28 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/msg/protobuf/dynamic_json_subscriber.h>
+#include <ecal/msg/protobuf/dynamic_subscriber.h>
 
 #include <stdio.h>
 #include <iostream>
 #include <sstream>
 #include <fstream>
 
-#ifdef ECAL_OS_WINDOWS
+#ifdef _MSVC_VER
 #pragma warning(push)
-#pragma warning(disable: 4100 4146 4800)
+#pragma warning(disable: 4100 4127 4146 4800) // disable proto warnings
 #endif
-#ifdef ECAL_OS_LINUX
+#ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
 #include <google/protobuf/util/json_util.h>
 #include <google/protobuf/util/type_resolver_util.h>
 #include <google/protobuf/util/type_resolver.h>
-#ifdef ECAL_OS_WINDOWS
+#ifdef _MSVC_VER
 #pragma warning(pop)
 #endif
-#ifdef ECAL_OS_LINUX
+#ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif
 

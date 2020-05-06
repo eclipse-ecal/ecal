@@ -42,7 +42,7 @@ namespace eCAL
     {
       if (!g_timegate() || !g_timegate()->IsValid())
       {
-        std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+        std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
         return(std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count());
       }
       return(g_timegate()->GetMicroSeconds());
@@ -52,7 +52,7 @@ namespace eCAL
     {
       if (!g_timegate() || !g_timegate()->IsValid())
       {
-        std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+        std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
         return(std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count());
       }
       return(g_timegate()->GetNanoSeconds());

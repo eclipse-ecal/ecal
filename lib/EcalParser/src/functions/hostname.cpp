@@ -24,9 +24,9 @@
 #define NOMINMAX
 #include <Windows.h>
 #include <WinSock2.h>
-#elif __linux__
+#else // WIN32
 #include <unistd.h>
-#endif
+#endif // WIN32
 
 namespace EcalParser
 {

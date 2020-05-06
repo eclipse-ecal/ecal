@@ -17,6 +17,11 @@
  * ========================= eCAL LICENSE =================================
 */
 
+/**
+ * @file   dynamic.h
+ * @brief  eCAL dynamic reflection exception
+**/
+
 #pragma once
 
 namespace eCAL

@@ -70,7 +70,7 @@ message CommandRequest                   // Request for sending a command to the
   {
     none          = 0;                    // Undefined command (do nothing)
     initialize    = 1;                    // Connect to eCAL (create publishers)
-	de_initialize = 2;                    // Disconnect from eCAL (remove all publishers)
+    de_initialize = 2;                    // Disconnect from eCAL (remove all publishers)
     jump_to       = 3;                    // jump to the rel_time_secs
     play          = 4;                    // Start playback
     pause         = 5;                    // Pause playback

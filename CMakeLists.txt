@@ -39,14 +39,17 @@ option(HAS_HDF5                                "Platform supports HDF5 library" 
 option(HAS_QT5                                 "Platform supports Qt 5 library"                                    ON)
 option(HAS_CAPNPROTO                           "Platform supports Cap'n Proto library"                            OFF)
 
-option(BUILD_DOCS                              "Build the eCAL documentation"                                      ON)
+option(BUILD_DOCS                              "Build the eCAL documentation"                                     OFF)
 option(BUILD_APPS                              "Build the eCAL applications"                                       ON)
 option(BUILD_SAMPLES                           "Build the eCAL samples"                                            ON)
 option(BUILD_TIME                              "Build the eCAL time interfaces"                                    ON)
 option(BUILD_PY_BINDING                        "Build eCAL python binding"                                        OFF)
-option(ECAL_LAYER_FASTRTPS                     "Provide fast rtps as communication layer"                         OFF)
-option(ECAL_LAYER_ICEORYX                      "Provide iceoryx as communication layer"                           OFF)
+option(BUILD_CSHARP_BINDING                    "Build eCAL C# binding"                                            OFF)
+option(BUILD_TESTS                             "Build the eCAL google tests"                                      OFF)
 
+option(ECAL_LAYER_ICEORYX                      "Use iceoryx shared memory as local communication layer"           OFF)
+
+option(ECAL_INCLUDE_PY_SAMPLES                 "Include python language sample projects into CMake"               OFF)
 option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samples"                               ON)
 
 option(ECAL_JOIN_MULTICAST_TWICE               "Specific Multicast Network Bug Workaround"                        OFF)
@@ -54,8 +57,9 @@ option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (
 
 # Set option regarding third party library builds
 option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS   "Build CMakeFunctions with eCAL"                                    ON)
-option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build Protobuf with eCAL"                                          ON)
+option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build protobuf with eCAL"                                          ON)
 option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                            ON)
+option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"                                            OFF)
 
 set(ECAL_INSTALL_PYTHON_DIR "bin" CACHE PATH "Location to install the Python extension modules. Might be set by setupdtools install.")
 
@@ -74,14 +78,20 @@ file(TO_CMAKE_PATH "${CMAKE_PREFIX_PATH}" CMAKE_PREFIX_PATH)
 message(STATUS "Module Path: ${CMAKE_MODULE_PATH}")
 message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 
+# --------------------------------------------------------
+# check options
+# --------------------------------------------------------
+if(WIN32 AND ECAL_LAYER_ICEORYX)
+  message(FATAL_ERROR "Iceoryx transport layer not available for windows os. \
+                       Please disable the layer by setting ECAL_LAYER_ICEORYX to OFF.")
+endif()
 
 # --------------------------------------------------------
 # third party dependencies as requested
 # --------------------------------------------------------
-if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
-  list(APPEND as_subproject Protobuf)
+if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR ECAL_THIRDPARTY_BUILD_SPDLOG OR ECAL_THIRDPARTY_BUILD_GTEST)
   if(MSVC)
-    # supress google protobuf warnings for windows platform
+    # supress thirdparty warnings for windows platform
     set(CMAKE_CXX_FLAGS_OLD "${CMAKE_CXX_FLAGS}")
     if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
       string(REGEX REPLACE "/W[0-4]" "/W0" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -89,6 +99,10 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W0")
     endif()
   endif()
+endif()
+
+if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
+  list(APPEND as_subproject Protobuf)
   set(protobuf_BUILD_TESTS OFF CACHE BOOL "My option" FORCE)
   set(protobuf_MSVC_STATIC_RUNTIME OFF CACHE BOOL "My option" FORCE)
   if(UNIX)
@@ -102,20 +116,39 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
     add_executable(protobuf::protoc ALIAS protoc)
     set(Protobuf_PROTOC_EXECUTABLE protoc)
   endif()
-  if(MSVC)
-    # reset CMAKE_CXX_FLAGS variable
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
-  endif()
-  set(Protobuf_VERSION 3.5.1)
+  set(Protobuf_VERSION 3.11.4)
 endif()
 
 if (ECAL_THIRDPARTY_BUILD_SPDLOG)
   list(APPEND as_subproject spdlog)
+  set(SPDLOG_BUILD_TESTING OFF CACHE BOOL "My option" FORCE)
   add_subdirectory(thirdparty/spdlog)
   add_library(spdlog::spdlog ALIAS spdlog)
 endif ()
 
+if (ECAL_THIRDPARTY_BUILD_GTEST)
+  list(APPEND as_subproject GTest)
+  # Googletest automatically forces MT instead of MD if we do not set this option.
+  if(MSVC)
+    set(gtest_force_shared_crt ON CACHE BOOL "My option" FORCE)
+    set(BUILD_GMOCK OFF CACHE BOOL "My option" FORCE)
+    set(INSTALL_GTEST OFF CACHE BOOL "My option" FORCE)
+  endif()
+  add_subdirectory(thirdparty/googletest)
+  if(NOT TARGET GTest::GTest)
+    add_library(GTest::GTest ALIAS gtest)
+  endif()
+  if(NOT TARGET GTest::Main)
+    add_library(GTest::Main ALIAS gtest_main)
+  endif()
+endif()
 
+if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR ECAL_THIRDPARTY_BUILD_SPDLOG OR ECAL_THIRDPARTY_BUILD_GTEST)
+  if(MSVC)
+    # reset thirdparty warnings for windows platform
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
+  endif()
+endif()
 
 if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
   list(APPEND as_subproject CMakeFunctions)
@@ -277,23 +310,24 @@ endif()
 # --------------------------------------------------------
 # protobuf utilities
 # --------------------------------------------------------
-add_subdirectory(contrib/ecalproto/src)
+add_subdirectory(contrib/ecalproto)
 
 # --------------------------------------------------------
 # ecal core internal protobuf
 # --------------------------------------------------------
-add_subdirectory(ecal/pb/src)
+add_subdirectory(ecal/pb)
 
 # --------------------------------------------------------
 # ecal core
 # --------------------------------------------------------
-add_subdirectory(ecal/core/src)
+add_subdirectory(ecal/core)
 
 # --------------------------------------------------------
 # custom libs
 # --------------------------------------------------------
 add_subdirectory(lib/ThreadingUtils)
-add_subdirectory(lib/EcalUtils)
+add_subdirectory(lib/CustomTclap)
+add_subdirectory(lib/ecal_utils)
 if(HAS_QT5)
   add_subdirectory(lib/CustomQt)
 endif()
@@ -308,7 +342,7 @@ endif(HAS_QT5)
 # --------------------------------------------------------
 # ecal mon plugin sdk
 # --------------------------------------------------------
-add_subdirectory(app/mon/eCALMonPluginLib)
+add_subdirectory(app/mon/mon_plugin_lib)
 
 # --------------------------------------------------------
 # ecal time
@@ -324,7 +358,7 @@ endif()
 # ecal hdf5 support
 # --------------------------------------------------------
 if(HAS_HDF5)
-  add_subdirectory(contrib/ecalhdf5/src)
+  add_subdirectory(contrib/ecalhdf5)
   add_subdirectory(contrib/message)
 endif()
 
@@ -336,21 +370,29 @@ if(BUILD_PY_BINDING)
 endif()
 
 # --------------------------------------------------------
+# ecal core csharp binding
+# --------------------------------------------------------
+if(BUILD_CSHARP_BINDING AND WIN32)
+  add_subdirectory(lang/csharp/Continental/eCAL/Core/)
+  add_subdirectory(lang/csharp/Continental/eCAL/Protobuf/)
+endif()
+
+# --------------------------------------------------------
 # console applications
 # --------------------------------------------------------
 add_subdirectory(app/apps)
 if(BUILD_APPS)
-  add_subdirectory(app/mon/eCALTopic/src)
-  add_subdirectory(app/util/eCALConfig/src)
-  add_subdirectory(app/util/eCALStop/src)
+  add_subdirectory(app/mon/mon_cli)
+  add_subdirectory(app/util/config)
+  add_subdirectory(app/util/stop)
 endif()
 
 # --------------------------------------------------------
 # applications using hdf5
 # --------------------------------------------------------
 if(BUILD_APPS AND HAS_HDF5)
-  add_subdirectory(app/play/eCALPlayCore)
-  add_subdirectory(app/play/eCALPlay)
+  add_subdirectory(app/play/play_core)
+  add_subdirectory(app/play/play_cli)
 
   add_subdirectory(app/rec/rec_cli)
   add_subdirectory(app/rec/rec_core)
@@ -361,27 +403,58 @@ endif()
 # qt applications
 # --------------------------------------------------------
 if(BUILD_APPS AND HAS_QT5)
-  add_subdirectory(app/mon/eCALMon)
+  add_subdirectory(app/mon/mon_gui)
+  add_subdirectory(app/util/launcher)
   if(WIN32)
     set(ECAL_MON_PLUGIN_DIR ecalmon_plugins)
   else()
     set(ECAL_MON_PLUGIN_DIR ecal/plugins/mon)
   endif()
-  add_subdirectory(app/mon/eCALMonPlugins)
+  add_subdirectory(app/mon/mon_plugins)
 # --------------------------------------------------------
-# Qt5 Apps using HDF5
+# qt applications using hdf5
 # --------------------------------------------------------
 if(BUILD_APPS AND HAS_QT5 AND HAS_HDF5)
-  add_subdirectory(app/play/eCALPlayGUI)
+  add_subdirectory(app/play/play_gui)
   add_subdirectory(app/rec/rec_gui)
 endif()
 endif()
 
 # --------------------------------------------------------
-# Samples
+# samples
 # --------------------------------------------------------
 if(BUILD_SAMPLES)
   add_subdirectory(samples)
+endif()
+
+# --------------------------------------------------------
+# unit tests
+# --------------------------------------------------------
+if(BUILD_TESTS)
+  enable_testing()
+
+  # ------------------------------------------------------
+  # test contrib
+  # ------------------------------------------------------
+  if(HAS_HDF5)
+    add_subdirectory(testing/contrib/ecalhdf5/hdf5_test)
+  endif()
+  add_subdirectory(testing/contrib/ecalproto/dynproto_test)
+  add_subdirectory(testing/contrib/ecalproto/ecal_proto_test)
+
+  # ------------------------------------------------------
+  # test ecal
+  # ------------------------------------------------------
+  add_subdirectory(testing/ecal/clientserver_test)
+  add_subdirectory(testing/ecal/core_test)
+  add_subdirectory(testing/ecal/event_test)
+  add_subdirectory(testing/ecal/expmap_test)
+if(NOT ECAL_LAYER_ICEORYX)
+  add_subdirectory(testing/ecal/io_memfile_test)
+endif(NOT ECAL_LAYER_ICEORYX)
+  add_subdirectory(testing/ecal/pubsub_inproc_test)
+  add_subdirectory(testing/ecal/pubsub_proto_test)
+  add_subdirectory(testing/ecal/pubsub_test)
 endif()
 
 # --------------------------------------------------------

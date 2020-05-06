@@ -15,9 +15,6 @@
   <PathMasks>
     <string>\qt\</string>
     <string>\_build\</string>
-    <string>\ecal\core\src\readwrite\fastrtps\string_message_PubSubTypes.cxx</string>
-    <string>\ecal\core\src\readwrite\fastrtps\string_message_.cxx</string>
-    <string>\ecal\core\src\readwrite\lcm\lcmlite.cpp</string>
     <string>\thirdparty\</string>
   </PathMasks>
   <UncheckedButtons>toolstrip_L3Warnings toolStripButton_OP toolStripButton_64</UncheckedButtons>

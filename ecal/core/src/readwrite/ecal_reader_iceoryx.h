@@ -30,10 +30,10 @@
 namespace eCAL
 {
   // ecal Iceoryx reader
-  class CDataReaderIceoryx
+  class CDataReaderSHM
   {
   public:
-    CDataReaderIceoryx();
+    CDataReaderSHM();
 
     bool CreateIceoryxSub(const std::string& topic_name_);
     bool DestroyIceoryxSub(const std::string& topic_name_);
@@ -46,10 +46,10 @@ namespace eCAL
   };
 
   // ecal Iceoryx data layer
-  class CIceoryxLayer : public CReaderLayer<CIceoryxLayer>
+  class CSHMLayer : public CReaderLayer<CSHMLayer>
   {
   public:
-    CIceoryxLayer() {}
+    CSHMLayer() {}
 
     void InitializeLayer()
     {
@@ -70,6 +70,6 @@ namespace eCAL
     }
 
   private:
-    CDataReaderIceoryx reader;
+    CDataReaderSHM reader;
   };
 }

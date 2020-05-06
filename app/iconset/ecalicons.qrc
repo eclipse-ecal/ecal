@@ -1,21 +1,10 @@
 <RCC>
     <qresource prefix="/ecalicons">
         <file alias="FLATICON_LICENSE">flaticon/license.htm</file>
-        <file alias="NEW_FILE">flaticon/Freepik/new_file.svg</file>
-        <file alias="DUPLICATE">flaticon/Freepik/duplicate.svg</file>
-        <file alias="OPEN">flaticon/Smashicons/open.svg</file>
         <file alias="SAVE">flaticon/Freepik/save.svg</file>
         <file alias="SAVE_AS">flaticon/Freepik/save_as.svg</file>
         <file alias="EXIT">FlorianReimold/Exit.svg</file>
-        <file alias="INFO">flaticon/Freepik/info.svg</file>
-        <file alias="WARNING">flaticon/Freepik/warning.svg</file>
-        <file alias="ERROR">flaticon/Freepik/error.svg</file>
-        <file>flaticon/combinations/start_selected.svg</file>
-        <file>flaticon/combinations/stop_selected.svg</file>
-        <file>flaticon/combinations/restart_selected.svg</file>
         <file alias="EDIT">flaticon/Vectors-Market/pencil.svg</file>
-        <file alias="IMPORT_FROM_CLOUD">flaticon/Freepik/import_from_cloud.svg</file>
-        <file alias="UPDATE_FROM_CLOUD">flaticon/Freepik/update_from_cloud.svg</file>
         <file alias="DELETE">flaticon/Freepik/remove.svg</file>
         <file alias="CLEAR">flaticon/Freepik/broom.svg</file>
         <file alias="EXPAND">flaticon/Freepik/expand.svg</file>
@@ -34,12 +23,25 @@
         <file alias="REWIND">flaticon/Google/rewind.svg</file>
         <file alias="SETTINGS">flaticon/Smashicons/gears.svg</file>
         <file alias="TABLE_WIDTH">FlorianReimold/table_width.svg</file>
-        <file alias="TASKBAR_FORWARD_TO">FlorianReimold/circle_forward_to.svg</file>
-        <file alias="TASKBAR_PAUSE">FlorianReimold/circle_pause.svg</file>
         <file alias="TASKBAR_PLAY">FlorianReimold/circle_play.svg</file>
-        <file alias="TASKBAR_PLAY_NEXT">FlorianReimold/circle_play_next.svg</file>
+        <file alias="TASKBAR_PLAY_DISABLED">FlorianReimold/circle_play_disabled.svg</file>
+        <file alias="TASKBAR_PAUSE">FlorianReimold/circle_pause.svg</file>
+        <file alias="TASKBAR_PAUSE_DISABLED">FlorianReimold/circle_pause_disabled.svg</file>
         <file alias="TASKBAR_STOP">FlorianReimold/circle_stop.svg</file>
+        <file alias="TASKBAR_STOP_DISABLED">FlorianReimold/circle_stop_disabled.svg</file>
+        <file alias="TASKBAR_PLAY_NEXT">FlorianReimold/circle_play_next.svg</file>
+        <file alias="TASKBAR_PLAY_NEXT_DISABLED">FlorianReimold/circle_play_next_disabled.svg</file>
+        <file alias="TASKBAR_FORWARD_TO">FlorianReimold/circle_forward_to.svg</file>
+        <file alias="TASKBAR_FORWARD_TO_DISABLED">FlorianReimold/circle_forward_to_disabled.svg</file>
         <file alias="TASKBAR_RECORD">FlorianReimold/circle_record.svg</file>
+        <file alias="TASKBAR_RECORD_DISABLED">FlorianReimold/circle_record_disabled.svg</file>
+        <file alias="TASKBAR_POWER">FlorianReimold/circle_power.svg</file>
+        <file alias="TASKBAR_POWER_DISABLED">FlorianReimold/circle_power_disabled.svg</file>
+        <file alias="TASKBAR_POWER_ON">FlorianReimold/circle_power_green.svg</file>
+        <file alias="TASKBAR_POWER_OFF">FlorianReimold/circle_power_red.svg</file>
+        <file alias="TASKBAR_POWER_ONOFF_DISABLED">FlorianReimold/circle_power_color_disabled.svg</file>
+        <file alias="TASKBAR_SAVE_BUFFER">FlorianReimold/circle_save_to_disk.svg</file>
+        <file alias="TASKBAR_SAVE_BUFFER_DISABLED">FlorianReimold/circle_save_to_disk_disabled.svg</file>
         <file alias="TEXT_ENTRY">flaticon/Freepik/text-entry-box.svg</file>
         <file alias="PAUSE">FlorianReimold/pause.svg</file>
         <file alias="START">FlorianReimold/play.svg</file>
@@ -61,5 +63,37 @@
         <file alias="LOCAL">FlorianReimold/local.svg</file>
         <file alias="CONNECTED">FlorianReimold/connected.svg</file>
         <file alias="DISCONNECTED">FlorianReimold/disconnected.svg</file>
+        <file alias="EXPORT">flaticon/yannick/export-arrow.svg</file>
+        <file alias="CIRCULAR_STOP">flaticon/yannick/circular-stop-button.svg</file>
+        <file alias="IMPORT">flaticon/yannick/import.svg</file>
+        <file alias="ADDON_CONNECTED">FlorianReimold/puzzle_green.svg</file>
+        <file alias="ADDON_DISCONNECTED">FlorianReimold/puzzle_grey_strikethrough.svg</file>
+        <file alias="ADDON">FlorianReimold/puzzle_blue.svg</file>
+        <file alias="HOST">FlorianReimold/screen_blue.svg</file>
+        <file alias="HOST_CONNECTED">FlorianReimold/screen_green.svg</file>
+        <file alias="HOST_DISCONNECTED">FlorianReimold/screen_grey_strikethrough.svg</file>
+        <file alias="UPLOAD">FlorianReimold/upload.svg</file>
+        <file alias="MERGE">FlorianReimold/merge.svg</file>
+        <file alias="NEW_FILE">FlorianReimold/new_file.svg</file>
+        <file alias="DUPLICATE">FlorianReimold/duplicate.svg</file>
+        <file alias="UPDATE_FROM_CLOUD">FlorianReimold/update_from_cloud.svg</file>
+        <file alias="IMPORT_FROM_CLOUD">FlorianReimold/import_from_cloud.svg</file>
+        <file alias="INFO">FlorianReimold/info.svg</file>
+        <file alias="OPEN">FlorianReimold/open.svg</file>
+        <file alias="UPDATE">FlorianReimold/update.svg</file>
+        <file alias="WARNING">FlorianReimold/warning.svg</file>
+        <file alias="ERROR">FlorianReimold/error.svg</file>
+        <file alias="HOST_CONNECTED_ERROR">FlorianReimold/screen_green_error.svg</file>
+        <file alias="HOST_CONNECTED_WARNING">FlorianReimold/screen_green_warning.svg</file>
+        <file alias="HOST_ERROR">FlorianReimold/screen_blue_error.svg</file>
+        <file alias="HOST_WARNING">FlorianReimold/screen_blue_warning.svg</file>
+        <file alias="ADDON_CONNECTED_ERROR">FlorianReimold/puzzle_green_error.svg</file>
+        <file alias="ADDON_CONNECTED_WARNING">FlorianReimold/puzzle_green_warning.svg</file>
+        <file alias="ADDON_ERROR">FlorianReimold/puzzle_blue_error.svg</file>
+        <file alias="ADDON_WARNING">FlorianReimold/puzzle_blue_warning.svg</file>
+        <file alias="EDIT_FILE">FlorianReimold/edit_file.svg</file>
+        <file alias="ADD_FILE">FlorianReimold/add_file.svg</file>
+        <file alias="SHOW">MuraruMihai/show.svg</file>
+        <file alias="HIDE">MuraruMihai/hide.svg</file>
     </qresource>
 </RCC>

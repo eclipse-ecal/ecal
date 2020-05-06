@@ -21,7 +21,7 @@ This project has dependencies - list with dependency name and license follows.
  
   - Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0
   - Boost Software License - http://www.boost.org/LICENSE_1_0.txt
-  - BSD 2-Clause License - http://www.opensource.org/licenses/bsd-license.php
+  - BSD 3-Clause License - https://opensource.org/licenses/BSD-3-Clause
   - GNU Lesser General Public License v2.1 - https://www.gnu.org/licenses/old-licenses/lgpl-2.1.de.html
   - GNU Lesser General Public License v3 - https://www.gnu.org/licenses/lgpl-3.0.de.html
   - MIT License - https://opensource.org/licenses/MIT
@@ -36,17 +36,8 @@ This project has dependencies - list with dependency name and license follows.
   - Copyright © 2003-2018 Christopher M. Kohlhoff
   - URL: https://think-async.com
   - License: Boost Software License - http://www.boost.org/LICENSE_1_0.txt
-
-2.1.2 LCM-Lite
-  - URL: https://github.com/lcm-proj/lcm/tree/master/lcm-lite
-  - License: GNU Lesser General Public License v2.1 - https://github.com/lcm-proj/lcm/blob/master/COPYING
-
-2.1.3 FastRTPS / FastCDR
-  - Copyright 2016 Proyectos y Sistemas de Mantenimiento SL (eProsima)
-  - URL: https://github.com/eProsima/Fast-RTPS
-  - License: Apache License 2.0 - https://github.com/eProsima/Fast-RTPS/blob/master/LICENSE
   
-2.1.4 NPCAP
+2.1.2 NPCAP
   - Copyright 2013-2016 by Insecure.Com LLC
   - URL: https://nmap.org/npcap/
   - License: Npcap License - https://github.com/nmap/npcap/blob/master/LICENSE
@@ -87,6 +78,16 @@ This project has dependencies - list with dependency name and license follows.
 2.3.3 convert_utf.cpp/.h
  - Copyright 2001-2004 Unicode, Inc.
 
+2.3.4 Spdlog
+  - Copyright (c) 2016 Gabi Melman
+  - URL: https://github.com/gabime/spdlog
+  - License: MIT License - https://github.com/gabime/spdlog/blob/v1.x/LICENSE
+
+2.3.5 Termocolor
+  - Copyright (c) 2013, Ihor Kalnytskyi
+  - URL: https://github.com/ikalnytskyi/termcolor
+  - License: BSD License - https://github.com/ikalnytskyi/termcolor/blob/master/LICENSE
+
 
 2.4 GUI
 
@@ -99,3 +100,10 @@ This project has dependencies - list with dependency name and license follows.
   - Copyright 2013-2019 Freepik Company S.L. All rights reserved.
   - URL: https://www.flaticon.com/
   - License: Creative Commons 3.0 - https://creativecommons.org/licenses/by/3.0
+
+2.5 Testing
+
+2.5.1 GoogleTest
+  - Copyright 2008 Google Inc.
+  - URL: https://github.com/google/googletest
+  - License: BSD 3-Clause License - https://github.com/google/googletest/blob/master/LICENSE.txt

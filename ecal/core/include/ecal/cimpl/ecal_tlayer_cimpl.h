@@ -32,11 +32,7 @@ enum eTransportLayerC
 {
   tlayer_none       = 0,
   tlayer_udp_mc     = 1,
-  tlayer_udp_uc     = 2,
-  tlayer_udp_metal  = 3,
   tlayer_shm        = 4,
-  tlayer_lcm        = 5,
-  tlayer_rtps       = 6,
   tlayer_inproc     = 42,
   tlayer_all        = 255
 };

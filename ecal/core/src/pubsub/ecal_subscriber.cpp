@@ -240,12 +240,6 @@ namespace eCAL
     return(m_datareader->SetTimeout(timeout_));
   }
 
-  bool CSubscriber::SetRefFrequency(double fmin_, double fmax_)
-  {
-    if (!m_datareader) return(false);
-    return(m_datareader->SetRefFrequency(fmin_, fmax_));
-  }
-
   void CSubscriber::InitializeQOS()
   {
     m_qos = QOS::SReaderQOS();

@@ -23,7 +23,7 @@
 
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable: 4146 4800)
+#pragma warning(disable: 4100 4127 4146 4800) // disable proto warnings
 #endif
 #include "ecal/pb/monitoring.pb.h"
 #ifdef _MSC_VER
@@ -115,6 +115,8 @@ int main(int argc, char **argv)
         std::cout << "dataread        : " << process.dataread()          << std::endl;   // date read bytes per sec
         std::cout << "severity        : " << process.state().severity()  << std::endl;   // process state severity
         std::cout << "info            : " << process.state().info()      << std::endl;   // process state info
+        std::cout << "tsync state     : " << process.tsync_state()       << std::endl;   // time sync state
+        std::cout << "tsync mod name  : " << process.tsync_mod_name()    << std::endl;   // time sync mod name
         std::cout << std::endl;
       }
     }
@@ -185,20 +187,8 @@ int main(int argc, char **argv)
           case eCAL::TLayer::tlayer_udp_mc:
             layer_type = "tlayer_udp_mc";
             break;
-          case eCAL::TLayer::tlayer_udp_uc:
-            layer_type = "tlayer_udp_uc";
-            break;
-          case eCAL::TLayer::tlayer_udp_metal:
-            layer_type = "tlayer_udp_metal";
-            break;
           case eCAL::TLayer::tlayer_shm:
             layer_type = "tlayer_shm";
-            break;
-          case eCAL::TLayer::tlayer_lcm:
-            layer_type = "tlayer_lcm";
-            break;
-          case eCAL::TLayer::tlayer_rtps:
-            layer_type = "tlayer_rtps";
             break;
           case eCAL::TLayer::tlayer_inproc:
             layer_type = "tlayer_inproc";
@@ -225,14 +215,6 @@ int main(int argc, char **argv)
         std::cout << "did             : " << topic.did()             << std::endl;   // data send id (publisher setid)
         std::cout << "dclock          : " << topic.dclock()          << std::endl;   // data clock (send / receive action)
         std::cout << "dfreq           : " << topic.dfreq()           << std::endl;   // data frequency (send / receive samples per second * 1000)
-
-        std::cout << "dfreq_min       : " << topic.dfreq_min()       << std::endl;   // data frequency reference minimum [mHz]
-        std::cout << "dfreq_max       : " << topic.dfreq_max()       << std::endl;   // data frequency reference maximum [mHz]
-        std::cout << "dfreq_min_err   : " << topic.dfreq_min_err()   << std::endl;   // data frequency minimum violation error counter
-        std::cout << "dfreq_max_err   : " << topic.dfreq_max_err()   << std::endl;   // data frequency maximum violation error counter
-
-        std::cout << "mcast_address   : " << topic.mcast_address()   << std::endl;   // the udp multicast group used for that topic (eCALMetal only)
-        std::cout << "mcast_port      : " << topic.mcast_port()      << std::endl;   // the udp multicast port used for that topic  (eCALMetal only)
 
         std::cout << std::endl;
       }

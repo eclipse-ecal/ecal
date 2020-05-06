@@ -52,12 +52,14 @@ namespace Udpcap
   private:
     struct PcapDev
     {
-      PcapDev(pcap_t* pcap_handle, bool is_loopback)
+      PcapDev(pcap_t* pcap_handle, bool is_loopback, const std::string& device_name)
         : pcap_handle_(pcap_handle)
         , is_loopback_   (is_loopback)
+        , device_name_(device_name)
       {}
       pcap_t*      pcap_handle_;
       bool         is_loopback_;
+      std::string  device_name_;
     };
 
     struct CallbackArgsVector

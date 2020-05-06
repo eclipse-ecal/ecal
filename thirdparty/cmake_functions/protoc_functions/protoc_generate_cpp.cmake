@@ -1,3 +1,21 @@
+# ========================= eCAL LICENSE =================================
+#
+# Copyright (C) 2016 - 2019 Continental Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# ========================= eCAL LICENSE =================================
+
 function(PROTOBUF_GENERATE_CPP_EXT SRCS_RET HDRS_RET PROTO_OUT_DIR_RET PROTO_ROOT)
   if(NOT ARGN)
     message(SEND_ERROR "Error: PROTOBUF_GENERATE_CPP_EXT() called without any proto files")
@@ -5,9 +23,16 @@ function(PROTOBUF_GENERATE_CPP_EXT SRCS_RET HDRS_RET PROTO_OUT_DIR_RET PROTO_ROO
   endif()
   
   #Backwards compatability
-  if (DEFINED PROTOBUF_PROTOC_EXECUTABLE AND NOT DEFINED Protobuf_PROTOC_EXECUTABLE)
-    set(Protobuf_PROTOC_EXECUTABLE ${PROTOBUF_PROTOC_EXECUTABLE})
-  endif (DEFINED PROTOBUF_PROTOC_EXECUTABLE AND NOT DEFINED Protobuf_PROTOC_EXECUTABLE)
+  if (NOT TARGET protobuf::protoc)
+    if (Protobuf_PROTOC_EXECUTABLE)
+      ADD_EXECUTABLE(protobuf::protoc IMPORTED)
+      SET_TARGET_PROPERTIES(protobuf::protoc PROPERTIES
+        IMPORTED_LOCATION "${Protobuf_PROTOC_EXECUTABLE}"
+      )
+    else ()
+      message(FATAL_ERROR "Neither protobuf::protoc not the $(Protobuf_PROTOC_EXECUTABLE) variable is defined. Cannot generate protobuf files.")
+    endif ()     	
+  endif ()
 
   set(PROTO_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/protobuf")
   file(MAKE_DIRECTORY ${PROTO_OUT_DIR})  
@@ -27,10 +52,10 @@ function(PROTOBUF_GENERATE_CPP_EXT SRCS_RET HDRS_RET PROTO_OUT_DIR_RET PROTO_ROO
     add_custom_command(
       OUTPUT "${PROTO_OUT_DIR}/${REL_FIL_WE}.pb.cc"
              "${PROTO_OUT_DIR}/${REL_FIL_WE}.pb.h"
-      COMMAND ${Protobuf_PROTOC_EXECUTABLE}
+      COMMAND protobuf::protoc
       ARGS "--proto_path=${PROTO_ROOT}" "--cpp_out=${PROTO_OUT_DIR}" ${ABS_FIL}
-      DEPENDS ${ABS_FIL} ${Protobuf_PROTOC_EXECUTABLE}
-      COMMENT "Running C++ protocol buffer compiler on ${ABS_FIL} ${Protobuf_PROTOC_EXECUTABLE}"
+      DEPENDS ${ABS_FIL} protobuf::protoc
+      COMMENT "Running C++ protocol buffer compiler on ${ABS_FIL}"
       VERBATIM )
 
   endforeach()
@@ -57,9 +82,12 @@ cmake_parse_arguments(INPUT ""
   "${multiValueArgs}" ${ARGN} )
 
   if (MSVC)
-    set_source_files_properties(${INPUT_CPP_FILES} PROPERTIES COMPILE_FLAGS "/wd4100 /wd4146 /wd4512 /wd4127 /wd4125 /wd4244 /wd4267 /wd4300 /wd4309 /wd4800")
+    set_source_files_properties(${INPUT_CPP_FILES} PROPERTIES COMPILE_FLAGS "/wd4100 /wd4146 /wd4512 /wd4127 /wd4125 /wd4244 /wd4267 /wd4300 /wd4309 /wd4456 /wd4800")
   endif(MSVC)
 
+  if(UNIX)
+    set_source_files_properties(${INPUT_CPP_FILES} PROPERTIES COMPILE_FLAGS "-Wno-unused-parameter")
+  endif(UNIX)
 
   # This adds the pb.h and pb.cc files to the project
   target_include_directories(${TARGET_NAME} PUBLIC 

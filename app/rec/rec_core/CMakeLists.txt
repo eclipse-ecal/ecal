@@ -66,7 +66,7 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::hdf5
     ThreadingUtils
     Threads::Threads
-    EcalUtils
+    eCAL::utils
     EcalParser
 )
 

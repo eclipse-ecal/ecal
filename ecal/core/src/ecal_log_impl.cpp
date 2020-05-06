@@ -47,7 +47,7 @@
 
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable: 4146 4800)
+#pragma warning(disable: 4100 4127 4146 4800) // disable proto warnings
 #endif
 #include "ecal/pb/monitoring.pb.h"
 #ifdef _MSC_VER
@@ -119,7 +119,7 @@ static void tokenize(const std::string& str, std::vector<std::string>& tokens,
       pos = str.length();
       if(pos != lastPos || !trimEmpty)
       {
-        tokens.push_back(std::string(str.data()+lastPos, pos-lastPos));
+        tokens.emplace_back(std::string(str.data()+lastPos, pos-lastPos));
       }
       break;
     }
@@ -127,7 +127,7 @@ static void tokenize(const std::string& str, std::vector<std::string>& tokens,
     {
       if(pos != lastPos || !trimEmpty)
       {
-        tokens.push_back(std::string(str.data()+lastPos, pos-lastPos ));
+        tokens.emplace_back(std::string(str.data()+lastPos, pos-lastPos ));
       }
     }
     lastPos = pos + 1;

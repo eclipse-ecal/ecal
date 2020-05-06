@@ -1,0 +1,328 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2019 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+#include <ecal/protobuf/ecal_proto_dyn.h>
+
+#include <gtest/gtest.h>
+
+#include <cstdio>
+
+#include "person.pb.h"
+
+// message processor
+void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& prefix_ /* = "" */);
+
+// google test
+TEST(IO, dynproto)
+{ 
+  // generate a class instance of Person
+  pb::People::Person person;
+
+  // set person object content
+  person.set_id(42);
+  person.set_name("Max");
+  person.set_stype(pb::People::Person_SType_MALE);
+  person.set_email("max@mail.net");
+  person.set_attitude(pb::People::NICE);
+  person.mutable_dog()->set_name("Brandy");
+  person.mutable_house()->set_rooms(4);
+
+  ///////////////////////////////////////////////
+  // this is the message type string
+  ///////////////////////////////////////////////
+  std::string topic_type = person.GetTypeName();
+  EXPECT_NE(0, static_cast<int>(topic_type.size()));
+
+  // kill namespace and proto: prefix
+  topic_type = topic_type.substr(topic_type.find_first_of(':')+1, topic_type.size());
+  topic_type = topic_type.substr(topic_type.find_last_of('.')+1, topic_type.size());
+
+  ////////////////////////////////////////////////////
+  // this is the message description string
+  ////////////////////////////////////////////////////
+  std::string topic_desc = eCAL::protobuf::GetProtoMessageDescription(person);
+  EXPECT_NE(0, static_cast<int>(topic_desc.size()));
+
+  ////////////////////////////////////////////////////
+  // this is the message payload string
+  ////////////////////////////////////////////////////
+  std::string msg_s = person.SerializeAsString();
+  EXPECT_NE(0, static_cast<int>(msg_s.size()));
+
+  // create a message decoder
+  eCAL::protobuf::CProtoDynDecoder decoder;
+
+  // create google::protobuf::Message pointer
+  std::string error_s;
+  google::protobuf::FileDescriptorSet proto_desc;
+  proto_desc.ParseFromString(topic_desc);
+  google::protobuf::Message* msg_ptr = decoder.GetProtoMessageFromDescriptorSet(proto_desc, topic_type, error_s);
+  if(msg_ptr == nullptr)
+  {
+    std::cout << error_s << std::endl;
+  }
+  EXPECT_NE(nullptr, msg_ptr);
+
+  //std::FILE* f = std::fopen("d:\\temp.log", "w");
+  //std::fwrite(topic_desc.c_str(), 1, topic_desc.size(), f);
+  //std::fclose(f);
+
+  if (msg_ptr)
+  {
+    // fill message with received string
+    msg_ptr->ParseFromString(msg_s);
+
+    // and dynamic decode it
+    ProcProtoMsg(*msg_ptr, "");
+  }
+}
+
+// message processor
+void ProcValue(const std::string& group_, const std::string& name_, const double value_, size_t index_)
+{
+  std::string var_name;
+  if(!group_.empty()) var_name += group_ + ".";
+  var_name += name_;
+  if(index_ > 0) var_name += "[" + std::to_string(index_) + "]";
+  std::cout << var_name << " : " << value_ << std::endl;
+}
+
+void ProcString(const std::string& group_, const std::string& name_, const std::string& value_, size_t index_)
+{
+  std::string var_name;
+  if(!group_.empty()) var_name += group_ + ".";
+  var_name += name_;
+  if(index_ > 0) var_name += "[" + std::to_string(index_) + "]";
+  std::cout << var_name << " : " << value_ << std::endl;
+}
+
+void ProcProtoType(const std::string& group_, const std::string& name_, google::protobuf::int32 value_, size_t index_)
+{
+  ProcValue(group_, name_, double(value_), index_);
+}
+
+void ProcProtoType(const std::string& group_, const std::string& name_, google::protobuf::int64 value_, size_t index_)
+{
+  ProcValue(group_, name_, double(value_), index_);
+}
+
+void ProcProtoType(const std::string& group_, const std::string& name_, google::protobuf::uint32 value_, size_t index_)
+{
+  ProcValue(group_, name_, double(value_), index_);
+}
+
+void ProcProtoType(const std::string& group_, const std::string& name_, google::protobuf::uint64 value_, size_t index_)
+{
+  ProcValue(group_, name_, double(value_), index_);
+}
+
+void ProcProtoType(const std::string& group_, const std::string& name_, float value_, size_t index_)
+{
+  ProcValue(group_, name_, double(value_), index_);
+}
+
+void ProcProtoType(const std::string& group_, const std::string& name_, double value_, size_t index_)
+{
+  ProcValue(group_, name_, double(value_), index_);
+}
+
+void ProcProtoType(const std::string& group_, const std::string& name_, bool value_, size_t index_)
+{
+  ProcValue(group_, name_, double(value_), index_);
+}
+
+void ProcProtoType(const std::string& group_, const std::string& name_, google::protobuf::string value_, size_t index_)
+{
+  ProcString(group_, name_, value_, index_);
+}
+
+void ProcProtoType(const std::string& group_, const std::string& name_, const google::protobuf::EnumValueDescriptor* value_, size_t index_)
+{
+  ProcValue(group_, name_, double(value_->number()), index_);
+}
+
+void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& prefix_ /* = "" */)
+{
+  const google::protobuf::Reflection* ref_ptr = msg_.GetReflection();
+  if(ref_ptr)
+  {
+    std::vector<const google::protobuf::FieldDescriptor*> field_v;
+    ref_ptr->ListFields(msg_, &field_v);
+    for(auto field : field_v)
+    {
+      const google::protobuf::FieldDescriptor::CppType fdt = field->cpp_type();
+      switch(fdt)
+      {
+      case google::protobuf::FieldDescriptor::CPPTYPE_INT32:      // TYPE_INT32, TYPE_SINT32, TYPE_SFIXED32
+        if(field->is_repeated())
+        {
+          int fsize = ref_ptr->FieldSize(msg_, field);
+          for(int fnum = 0; fnum < fsize; ++fnum)
+          {
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedInt32(msg_, field, fnum), fnum);
+          }
+        }
+        else
+        {
+          ProcProtoType(prefix_, field->name(), ref_ptr->GetInt32(msg_, field), 0);
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_INT64:      // TYPE_INT64, TYPE_SINT64, TYPE_SFIXED64
+        if(field->is_repeated())
+        {
+          int fsize = ref_ptr->FieldSize(msg_, field);
+          for(int fnum = 0; fnum < fsize; ++fnum)
+          {
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedInt64(msg_, field, fnum), fnum);
+          }
+        }
+        else
+        {
+          ProcProtoType(prefix_, field->name(), ref_ptr->GetInt64(msg_, field), 0);
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_UINT32:     // TYPE_UINT32, TYPE_FIXED32
+        if(field->is_repeated())
+        {
+          int fsize = ref_ptr->FieldSize(msg_, field);
+          for(int fnum = 0; fnum < fsize; ++fnum)
+          {
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedUInt32(msg_, field, fnum), fnum);
+          }
+        }
+        else
+        {
+          ProcProtoType(prefix_, field->name(), ref_ptr->GetUInt32(msg_, field), 0);
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_UINT64:     // TYPE_UINT64, TYPE_FIXED64
+        if(field->is_repeated())
+        {
+          int fsize = ref_ptr->FieldSize(msg_, field);
+          for(int fnum = 0; fnum < fsize; ++fnum)
+          {
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedUInt64(msg_, field, fnum), fnum);
+          }
+        }
+        else
+        {
+          ProcProtoType(prefix_, field->name(), ref_ptr->GetUInt64(msg_, field), 0);
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_DOUBLE:     // TYPE_DOUBLE
+        if(field->is_repeated())
+        {
+          int fsize = ref_ptr->FieldSize(msg_, field);
+          for(int fnum = 0; fnum < fsize; ++fnum)
+          {
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedDouble(msg_, field, fnum), fnum);
+          }
+        }
+        else
+        {
+          ProcProtoType(prefix_, field->name(), ref_ptr->GetDouble(msg_, field), 0);
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_FLOAT:      // TYPE_FLOAT
+        if(field->is_repeated())
+        {
+          int fsize = ref_ptr->FieldSize(msg_, field);
+          for(int fnum = 0; fnum < fsize; ++fnum)
+          {
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedFloat(msg_, field, fnum), fnum);
+          }
+        }
+        else
+        {
+          ProcProtoType(prefix_, field->name(), ref_ptr->GetFloat(msg_, field), 0);
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_BOOL:       // TYPE_BOOL
+        if(field->is_repeated())
+        {
+          int fsize = ref_ptr->FieldSize(msg_, field);
+          for(int fnum = 0; fnum < fsize; ++fnum)
+          {
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedBool(msg_, field, fnum), fnum);
+          }
+        }
+        else
+        {
+          ProcProtoType(prefix_, field->name(), ref_ptr->GetBool(msg_, field), 0);
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_ENUM:       // TYPE_ENUM
+        if(field->is_repeated())
+        {
+          int fsize = ref_ptr->FieldSize(msg_, field);
+          for(int fnum = 0; fnum < fsize; ++fnum)
+          {
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedEnum(msg_, field, fnum), fnum);
+          }
+        }
+        else
+        {
+          ProcProtoType(prefix_, field->name(), ref_ptr->GetEnum(msg_, field), 0);
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_STRING:     // TYPE_STRING, TYPE_BYTES
+        if(field->is_repeated())
+        {
+          int fsize = ref_ptr->FieldSize(msg_, field);
+          for(int fnum = 0; fnum < fsize; ++fnum)
+          {
+            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedString(msg_, field, fnum), fnum);
+          }
+        }
+        else
+        {
+          ProcProtoType(prefix_, field->name(), ref_ptr->GetString(msg_, field), 0);
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_MESSAGE:    // TYPE_MESSAGE, TYPE_GROUP
+        {
+          if(field->is_repeated())
+          {
+            int fsize = ref_ptr->FieldSize(msg_, field);
+            for(int fnum = 0; fnum < fsize; ++fnum)
+            {
+              const google::protobuf::Message& msg = ref_ptr->GetRepeatedMessage(msg_, field, fnum);
+              std::string prefix = field->name();
+              prefix += "[";
+              prefix += std::to_string(fnum);
+              prefix += "]";
+              if(!prefix_.empty()) prefix = prefix_ + "." + prefix;
+              ProcProtoMsg(msg, prefix);
+            }
+          }
+          else
+          {
+            const google::protobuf::Message& msg = ref_ptr->GetMessage(msg_, field);
+            std::string prefix = field->name();
+            if(!prefix_.empty()) prefix = prefix_ + "." + prefix;
+            ProcProtoMsg(msg, prefix);
+          }
+        }
+        break;
+      default:
+        break;
+      }
+    }
+  }
+}

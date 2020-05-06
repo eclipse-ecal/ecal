@@ -21,7 +21,7 @@
 
 #include "rec_core/ecal_rec_logger.h"
 
-#include <EcalUtils/Path.h>
+#include <ecal_utils/filesystem.h>
 
 #include <algorithm>
 
@@ -145,7 +145,7 @@ namespace eCAL
       // Get the topic info map from the monitor in order to also store this information in the measurement
       auto topic_info_map = monitoring_thread_->GetTopicInfoMap();
 
-      std::string hostname = eCAL::Process::GetHostName();
+      //std::string hostname = eCAL::Process::GetHostName();
 
       {
         std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
@@ -210,7 +210,7 @@ namespace eCAL
       // Connect to ecal (doesn't do any harm if we are alredy connected)
       ConnectToEcal();
 
-      std::string hostname = eCAL::Process::GetHostName();
+      //std::string hostname = eCAL::Process::GetHostName();
 
       {
         std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
@@ -742,7 +742,7 @@ namespace eCAL
     {
       if (main_recorder_thread_
         && main_recorder_thread_->GetState().recording_
-        && EcalUtils::Path::IsEqual(path, main_recorder_thread_->GetCompleteMeasurementPath()))
+        && EcalUtils::Filesystem::IsEqual(path, main_recorder_thread_->GetCompleteMeasurementPath()))
       {
         return true;
       }
@@ -751,7 +751,7 @@ namespace eCAL
       {
         if (buffer_writer
           && buffer_writer->GetState().recording_
-          && EcalUtils::Path::IsEqual(path, buffer_writer->GetCompleteMeasurementPath()))
+          && EcalUtils::Filesystem::IsEqual(path, buffer_writer->GetCompleteMeasurementPath()))
         {
           return true;
         }

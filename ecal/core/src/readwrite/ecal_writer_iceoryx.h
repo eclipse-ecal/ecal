@@ -29,11 +29,11 @@
 
 namespace eCAL
 {
-  class CDataWriterIceoryx : public CDataWriterBase
+  class CDataWriterSHM : public CDataWriterBase
   {
   public:
-    CDataWriterIceoryx();
-    ~CDataWriterIceoryx();
+    CDataWriterSHM();
+    ~CDataWriterSHM();
 
     void GetInfo(SWriterInfo info_) override;
 

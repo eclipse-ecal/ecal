@@ -16,9 +16,9 @@
 #
 # ========================= eCAL LICENSE =================================
 
-if(UNIX)
-  add_subdirectory(linuxptp/src)
+if(UNIX AND NOT APPLE)
+  add_subdirectory(linuxptp)
 endif()
 
-add_subdirectory(localtime/src)
-add_subdirectory(simtime/src)
+add_subdirectory(localtime)
+add_subdirectory(simtime)

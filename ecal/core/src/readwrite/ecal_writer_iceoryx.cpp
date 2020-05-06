@@ -30,16 +30,16 @@
 
 namespace eCAL
 {
-  CDataWriterIceoryx::CDataWriterIceoryx()
+  CDataWriterSHM::CDataWriterSHM()
   {
   }
 
-  CDataWriterIceoryx::~CDataWriterIceoryx()
+  CDataWriterSHM::~CDataWriterSHM()
   {
     Destroy();
   }
 
-  void CDataWriterIceoryx::GetInfo(SWriterInfo info_)
+  void CDataWriterSHM::GetInfo(SWriterInfo info_)
   {
     info_.name                 = "iceoryx";
     info_.description          = "Iceoryx data writer";
@@ -53,7 +53,7 @@ namespace eCAL
     info_.send_size_max        = -1;
   }
 
-  bool CDataWriterIceoryx::Create(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
+  bool CDataWriterSHM::Create(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
   {
     // create the runtime for registering with the RouDi daemon
     iox::runtime::PoshRuntime::getInstance(std::string("/") + eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID()));
@@ -65,7 +65,7 @@ namespace eCAL
     return true;
   }
 
-  bool CDataWriterIceoryx::Destroy()
+  bool CDataWriterSHM::Destroy()
   {
     if(!m_publisher) return false;
 
@@ -75,28 +75,26 @@ namespace eCAL
     return true;
   }
 
-  size_t CDataWriterIceoryx::Send(const SWriterData& data_)
+  size_t CDataWriterSHM::Send(const SWriterData& data_)
   {
     if (!m_publisher) return 0;
 
     // allocate and fill chunk payload
     auto header_data_len = sizeof(SWriterData) + data_.len;
-    auto ci = m_publisher->allocateChunkWithInfo(header_data_len, true);
-    if(!ci)
+    auto ch = m_publisher->allocateChunkWithHeader(header_data_len, true);
+    if(!ch)
     {
       // no more memory from iceoryx :-(
       return 0;
     }
         
-    // set payload size
-    ci->m_payloadSize = header_data_len; // seems to be an issue of iceoryx, should be updated by allocateChunkWithInfo ?
     // copy payload header
-    std::memcpy(ci->m_payload, &data_, sizeof(SWriterData));
+    std::memcpy(ch->payload(), &data_, sizeof(SWriterData));
     // copy payload data
-    std::memcpy(static_cast<char*>(ci->m_payload) + sizeof(SWriterData), data_.buf, data_.len);
+    std::memcpy(static_cast<char*>(ch->payload()) + sizeof(SWriterData), data_.buf, data_.len);
 
     // send the chunk
-    m_publisher->sendChunkWithInfo(ci);
+    m_publisher->sendChunk(ch);
 
     return data_.len;
   }

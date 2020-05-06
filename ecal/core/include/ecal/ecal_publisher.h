@@ -178,16 +178,6 @@ namespace eCAL
     bool SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_);
 
     /**
-     * @brief Set publisher frequency control values.
-     *
-     * @param fmin_    Minimum publisher send frequency.
-     * @param fmax_    Maximum publisher send frequency.
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    bool SetRefFrequency(double fmin_, double fmax_);
-
-    /**
      * @brief Set publisher maximum transmit bandwidth for the udp layer.
      *
      * @param bandwidth_  Maximum bandwidth in bytes/s (-1 == unlimited).
@@ -395,10 +385,7 @@ namespace eCAL
 
       // set layer mode if changed class method function
       if (m_tlayer.sm_udp_mc != TLayer::smode_none) eCAL_Pub_SetLayerMode(m_publisher, static_cast<eTransportLayerC>(TLayer::tlayer_udp_mc), static_cast<eSendModeC>(m_tlayer.sm_udp_mc));
-      if (m_tlayer.sm_udp_uc != TLayer::smode_none) eCAL_Pub_SetLayerMode(m_publisher, static_cast<eTransportLayerC>(TLayer::tlayer_udp_uc), static_cast<eSendModeC>(m_tlayer.sm_udp_uc));
       if (m_tlayer.sm_shm    != TLayer::smode_none) eCAL_Pub_SetLayerMode(m_publisher, static_cast<eTransportLayerC>(TLayer::tlayer_shm),    static_cast<eSendModeC>(m_tlayer.sm_shm));
-      if (m_tlayer.sm_lcm    != TLayer::smode_none) eCAL_Pub_SetLayerMode(m_publisher, static_cast<eTransportLayerC>(TLayer::tlayer_lcm),    static_cast<eSendModeC>(m_tlayer.sm_lcm));
-      if (m_tlayer.sm_rtps   != TLayer::smode_none) eCAL_Pub_SetLayerMode(m_publisher, static_cast<eTransportLayerC>(TLayer::tlayer_rtps),   static_cast<eSendModeC>(m_tlayer.sm_rtps));
 
       // set qos
       struct SWriterQOSC qos;
@@ -471,24 +458,16 @@ namespace eCAL
         case TLayer::tlayer_udp_mc:
           m_tlayer.sm_udp_mc = mode_;
           break;
-        case TLayer::tlayer_udp_uc:
-          m_tlayer.sm_udp_uc = mode_;
-          break;
         case TLayer::tlayer_shm:
           m_tlayer.sm_shm = mode_;
           break;
-        case TLayer::tlayer_lcm:
-          m_tlayer.sm_lcm = mode_;
-          break;
-        case TLayer::tlayer_rtps:
-          m_tlayer.sm_rtps = mode_;
+        case TLayer::tlayer_inproc:
+          m_tlayer.sm_inproc = mode_;
           break;
         case TLayer::tlayer_all:
-          m_tlayer.sm_udp_mc = mode_;
-          m_tlayer.sm_udp_uc = mode_;
-          m_tlayer.sm_shm    = mode_;
-          m_tlayer.sm_lcm    = mode_;
-          m_tlayer.sm_rtps   = mode_;
+          m_tlayer.sm_udp_mc  = mode_;
+          m_tlayer.sm_shm     = mode_;
+          m_tlayer.sm_inproc  = mode_;
           break;
         default:
           break;
@@ -499,12 +478,6 @@ namespace eCAL
       {
         return(eCAL_Pub_SetLayerMode(m_publisher, static_cast<eTransportLayerC>(layer_), static_cast<eSendModeC>(mode_)) != 0);
       }
-    }
-
-    bool SetRefFrequency(double fmin_, double fmax_)
-    {
-      if (!m_publisher) return(false);
-      return(eCAL_Pub_SetRefFrequency(m_publisher, fmin_, fmax_) != 0);
     }
 
     bool SetMaxBandwidthUDP(long bandwidth_)
@@ -575,11 +548,9 @@ namespace eCAL
 
     void InitializeTLayer()
     {
-      m_tlayer.sm_udp_mc = TLayer::smode_none;
-      m_tlayer.sm_udp_uc = TLayer::smode_none;
-      m_tlayer.sm_shm    = TLayer::smode_none;
-      m_tlayer.sm_lcm    = TLayer::smode_none;
-      m_tlayer.sm_rtps   = TLayer::smode_none;
+      m_tlayer.sm_udp_mc  = TLayer::smode_none;
+      m_tlayer.sm_shm     = TLayer::smode_none;
+      m_tlayer.sm_inproc  = TLayer::smode_none;
     }
 
     std::string Dump() const

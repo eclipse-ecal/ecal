@@ -30,15 +30,13 @@
 #include "ecal_expmap.h"
 
 #include "ecal_writer_udp_mc.h"
-#include "ecal_writer_udp_uc.h"
-#include "ecal_writer_shm.h"
-#include "ecal_writer_lcm.h"
-#ifdef ECAL_LAYER_FASTRTPS
-#include "ecal_writer_rtps.h"
-#endif /* ECAL_LAYER_FASTRTPS */
+
 #ifdef ECAL_LAYER_ICEORYX
 #include "ecal_writer_iceoryx.h"
+#else  /* ECAL_LAYER_ICEORYX */
+#include "ecal_writer_shm.h"
 #endif /* ECAL_LAYER_ICEORYX */
+
 #include "ecal_writer_inproc.h"
 
 #include <mutex>
@@ -50,8 +48,6 @@ namespace eCAL
 {
   class CDataWriter
   {
-    //friend class CDataWriterSHM;
-
   public:
     CDataWriter();
     ~CDataWriter();
@@ -64,10 +60,9 @@ namespace eCAL
     void ShareType(bool state_);
     void ShareDescription(bool state_);
 
-    bool SetQOS(QOS::SWriterQOS& qos_);
+    bool SetQOS(const QOS::SWriterQOS& qos_);
 
     bool SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_);
-    bool SetRefFrequency(double fmin_, double fmax_);
     bool SetMaxBandwidthUDP(long bandwidth_);
 
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
@@ -102,15 +97,7 @@ namespace eCAL
     void SetConnected(bool state_);
 
     bool SetUseUdpMC(TLayer::eSendMode mode_);
-    bool SetUseUdpUC(TLayer::eSendMode mode_);
     bool SetUseShm(TLayer::eSendMode mode_);
-    bool SetUseLcm(TLayer::eSendMode mode_);
-#ifdef ECAL_LAYER_FASTRTPS
-    bool SetUseRtps(TLayer::eSendMode mode_);
-#endif /* ECAL_LAYER_FASTRTPS */
-#ifdef ECAL_LAYER_ICEORYX
-    bool SetUseIceoryx(TLayer::eSendMode mode_);
-#endif /* ECAL_LAYER_ICEORYX */
     bool SetUseInProc(TLayer::eSendMode mode_);
 
     bool IsInternalSubscribedOnly();
@@ -144,10 +131,6 @@ namespace eCAL
     long long          m_clock_old;
     std::chrono::steady_clock::time_point m_snd_time;
     long               m_freq;
-    long               m_freq_min;
-    long               m_freq_max;
-    long               m_freq_min_err;
-    long               m_freq_max_err;
 
     long               m_bandwidth_max_udp;
 
@@ -158,29 +141,9 @@ namespace eCAL
     CDataWriterUdpMC   m_writer_udp_mc;
     bool               m_use_udp_mc_confirmed;
 
-    TLayer::eSendMode  m_use_udp_uc;
-    CDataWriterUdpUC   m_writer_udp_uc;
-    bool               m_use_udp_uc_confirmed;
-
     TLayer::eSendMode  m_use_shm;
     CDataWriterSHM     m_writer_shm;
     bool               m_use_shm_confirmed;
-
-    TLayer::eSendMode  m_use_lcm;
-    CDataWriterLCM     m_writer_lcm;
-    bool               m_use_lcm_confirmed;
-
-#ifdef ECAL_LAYER_FASTRTPS
-    TLayer::eSendMode  m_use_rtps;
-    CDataWriterRTPS    m_writer_rtps;
-    bool               m_use_rtps_confirmed;
-#endif /*ECAL_LAYER_FASTRTPS*/
-
-#ifdef ECAL_LAYER_ICEORYX
-    TLayer::eSendMode  m_use_iceoryx;
-    CDataWriterIceoryx m_writer_iceoryx;
-    bool               m_use_iceoryx_confirmed;
-#endif /*ECAL_LAYER_ICEORYX*/
 
     TLayer::eSendMode  m_use_inproc;
     CDataWriterInProc  m_writer_inproc;

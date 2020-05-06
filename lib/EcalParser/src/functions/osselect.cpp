@@ -20,7 +20,7 @@
 #include "osselect.h"
 
 #include <vector>
-#include <EcalUtils/String.h>
+#include <ecal_utils/string.h>
 
 namespace EcalParser
 {
@@ -35,8 +35,8 @@ namespace EcalParser
     while (os_index < ((int)parameter_vector.size() - 1))
     {
       std::string os = parameter_vector[os_index];
-      std::transform(os.begin(), os.end(), os.begin(), ::tolower);
-    
+      std::transform(os.begin(), os.end(), os.begin(), [](char c) {return static_cast<char>(::tolower(c)); });
+
       if (os == "default")
       {
         // If we find a DEFAULT element, we store the index, just in case we  don't find a correct os element for this machine

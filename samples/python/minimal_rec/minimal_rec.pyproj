@@ -10,6 +10,7 @@
     <OutputPath>.</OutputPath>
     <Name>minimal_rec</Name>
     <RootNamespace>minimal_rec</RootNamespace>
+    <ProjectGuid>{093990a3-9395-3bb2-b625-473f1bba2ce6}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

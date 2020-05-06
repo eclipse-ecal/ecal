@@ -10,6 +10,7 @@
     <OutputPath>.</OutputPath>
     <Name>latency_rec</Name>
     <RootNamespace>latency_rec</RootNamespace>
+    <ProjectGuid>{d6fc0687-be86-3f15-a401-e34fcd08fa2a}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

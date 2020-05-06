@@ -25,7 +25,15 @@
 
 #include <thread>
 #include <memory>
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4834)
+#endif
 #include <asio.hpp>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #include <ecal/ecal_os.h>
 

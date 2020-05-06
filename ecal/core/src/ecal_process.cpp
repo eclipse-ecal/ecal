@@ -34,6 +34,7 @@
 #include <iostream>
 #include <sstream>
 #include <algorithm>
+#include <memory>
 
 #include "sys_usage.h"
 
@@ -62,9 +63,14 @@
 #include <netinet/in.h>
 
 #include "ecal_process_stub.h"
-#include "EcalUtils/EcalUtils.h"
+#include <ecal_utils/ecal_utils.h>
 
 #endif /* ECAL_OS_LINUX */
+
+#ifdef ECAL_OS_MACOS
+#include <mach-o/dyld.h>
+#include <sys/sysctl.h>
+#endif // ECAL_OS_MACOS
 
 #ifdef ECAL_NPCAP_SUPPORT
 #include <udpcap/npcap_helpers.h>
@@ -120,26 +126,26 @@ namespace
       IP_ADAPTER_INFO AdapterInfo;
       GetAdaptersInfo(&AdapterInfo, &alloc_adapters_size);
     }
-    // get number of active adapters
-    int num_adapters = alloc_adapters_size / sizeof(IP_ADAPTER_INFO);
-    if (num_adapters == 0) return std::make_pair(false, 0);
+    if(alloc_adapters_size == 0) return std::make_pair(false, 0);
 
     // allocate adapter memory
-    std::vector<IP_ADAPTER_INFO> adapter_vec;
-    adapter_vec.resize(num_adapters);
+    auto adapter_mem = std::make_unique<char[]>(static_cast<size_t>(alloc_adapters_size));
 
     // get all adapter infos
-    DWORD dwStatus = GetAdaptersInfo(adapter_vec.data(), &alloc_adapters_size);
+    PIP_ADAPTER_INFO pAdapter(nullptr);
+    pAdapter = reinterpret_cast<PIP_ADAPTER_INFO>(adapter_mem.get());
+    DWORD dwStatus = GetAdaptersInfo(pAdapter, &alloc_adapters_size);
     if (dwStatus != ERROR_SUCCESS) return std::make_pair(false, 0);
 
     // iterate adapters and create hash
     int hash(0);
-    for(auto adapter : adapter_vec)
+    while(pAdapter)
     {
-      for (UINT i = 0; i < adapter.AddressLength; ++i)
+      for (UINT i = 0; i < pAdapter->AddressLength; ++i)
       {
-        hash += (adapter.Address[i] << ((i & 1) * 8));
+        hash += (pAdapter->Address[i] << ((i & 1) * 8));
       }
+      pAdapter = pAdapter->Next;
     }
 
     // return success
@@ -150,54 +156,7 @@ namespace
 #ifdef ECAL_OS_LINUX
   std::pair<bool, int> get_host_id()
   {
-    int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
-    if (sock == -1) { /* handle error*/ };
-
-    struct ifconf ifc;
-    char          buf[1024];
-    ifc.ifc_len = sizeof(buf);
-    ifc.ifc_buf = buf;
-    if (ioctl(sock, SIOCGIFCONF, &ifc) == -1) { /* handle error */ }
-
-    struct ifreq* it = ifc.ifc_req;
-    const struct ifreq* const end = it + (ifc.ifc_len / sizeof(struct ifreq));
-
-    int success(0);
-    struct ifreq ifr;
-    for (; it != end; ++it)
-    {
-      strcpy(ifr.ifr_name, it->ifr_name); // get name
-      if (ioctl(sock, SIOCGIFFLAGS, &ifr) == 0)
-      {
-        if (!(ifr.ifr_flags & IFF_LOOPBACK)) // skip loopback
-        { 
-          if (ioctl(sock, SIOCGIFHWADDR, &ifr) == 0) // get hw address
-          {
-            success = 1;
-            break;
-          }
-        }
-      }
-      else { /* handle error */ }
-    }
-
-    // close socket
-    close(sock);
-
-    // create hash
-    if (success)
-    {
-      int hash(0);
-      for (auto i = 0; i < 6; ++i)
-      {
-        hash += (ifr.ifr_hwaddr.sa_data[i] << ((i & 1) * 8));
-      }
-      // return success
-      return std::make_pair(true, hash);
-    }
-
-    // return failure
-    return std::make_pair(false, 0);
+    return std::make_pair(true, static_cast<int>(gethostid()));
   }
 #endif /* ECAL_OS_LINUX */
 }
@@ -230,8 +189,16 @@ namespace eCAL
 #endif
       sstream << std::endl;
 
+      if (!eCAL::IsInitialized())
+      {
+        sstream << "Components               : NOT INITIALIZED ( call eCAL::Initialize() )";
+        sstream << std::endl;
+        cfg_s_ = sstream.str();
+        return;
+      }
+
       sstream << "------------------------- CONFIGURATION --------------------------" << std::endl;
-      sstream << "Default INI              : " << g_default_ini_file << std::endl;
+      sstream << "Default INI              : " << g_default_ini_file << std::endl; // WARNING: The eCAL Recorder relies on the identifier "Default INI" to obtain the ecal.ini path (It parses the output of this function)
       sstream << std::endl;
 
       sstream << "------------------------- NETWORK --------------------------------" << std::endl;
@@ -252,8 +219,6 @@ namespace eCAL
       sstream << "Multicast mask           : " << eCALPAR(NET, UDP_MULTICAST_MASK) << std::endl;
       int port = eCALPAR(NET, UDP_MULTICAST_PORT);
       sstream << "Multicast ports          : " << port << " - " << port + 10 << std::endl;
-      sstream << "Multicast group (metal)  : " << eCALPAR(NET, UDP_MULTICAST_GROUP_METAL) << std::endl;
-      sstream << "Multicast port  (metal)  : " << eCALPAR(NET, UDP_MULTICAST_PORT_METAL) << std::endl;
       auto bandwidth = eCALPAR(NET, BANDWIDTH_MAX_UDP);
       if (bandwidth < 0)
       {
@@ -284,20 +249,12 @@ namespace eCAL
       sstream << "Layer Mode INPROC  (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_INPROC))  << std::endl;
       sstream << "Layer Mode SHM     (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_SHM))     << std::endl;
       sstream << "Layer Mode UDP MC  (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_UDP_MC))  << std::endl;
-      sstream << "Layer Mode UDP UC  (eCAL)     : " << LayerMode(eCALPAR(PUB, USE_UDP_UC))  << std::endl;
-      sstream << "Layer Mode LCM     (GOOGLE)   : " << LayerMode(eCALPAR(PUB, USE_LCM))     << std::endl;
-      sstream << "Layer Mode RTPS    (eProsima) : " << LayerMode(eCALPAR(PUB, USE_RTPS))    << std::endl;
-      sstream << "Layer Mode ICEORYX (Bosch)    : " << LayerMode(eCALPAR(PUB, USE_ICEORYX)) << std::endl;
       sstream << std::endl;
 
       sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------"               << std::endl;
       sstream << "Layer Mode INPROC  (eCAL)     : " << LayerMode(eCALPAR(NET, INPROC_REC_ENABLED))  << std::endl;
       sstream << "Layer Mode SHM     (eCAL)     : " << LayerMode(eCALPAR(NET, SHM_REC_ENABLED))     << std::endl;
       sstream << "Layer Mode UDP MC  (eCAL)     : " << LayerMode(eCALPAR(NET, UDP_MC_REC_ENABLED))  << std::endl;
-      sstream << "Layer Mode UDP UC  (eCAL)     : " << LayerMode(eCALPAR(NET, UDP_UC_REC_ENABLED))  << std::endl;
-      sstream << "Layer Mode LCM     (GOOGLE)   : " << LayerMode(eCALPAR(NET, LCM_REC_ENABLED))     << std::endl;
-      sstream << "Layer Mode RTPS    (eProsima) : " << LayerMode(eCALPAR(NET, RTPS_REC_ENABLED))    << std::endl;
-      sstream << "Layer Mode ICEORYX (Bosch)    : " << LayerMode(eCALPAR(NET, ICEORYX_REC_ENABLED)) << std::endl;
       sstream << "Npcap UDP Reciever            : " << LayerMode(eCALPAR(NET, NPCAP_ENABLED));
 #ifdef ECAL_NPCAP_SUPPORT
       if(eCALPAR(NET, NPCAP_ENABLED) && !Udpcap::Initialize())
@@ -516,7 +473,7 @@ namespace eCAL
         creation_flag = CREATE_NEW_CONSOLE;
       }
 
-      short win_state = SW_SHOW;
+      short win_state;
       switch (process_mode_)
       {
       case 0:
@@ -838,11 +795,20 @@ namespace eCAL
     *
     * @return the process path
     */
+
     std::string GetProcessName()
     {
       if (g_process_name.empty()) {
         // Read the link to our own executable
         char buf[PATH_MAX] = { 0 };
+#ifdef ECAL_OS_MACOS
+        uint32_t length = PATH_MAX;
+        if (_NSGetExecutablePath(buf, &length) != 0)
+        {
+          // Buffer size is too small.
+          return "";
+        }
+#else // ECAL_OS_MACOS
         ssize_t length = readlink("/proc/self/exe", buf, PATH_MAX);
 
         if (length < 0)
@@ -850,27 +816,147 @@ namespace eCAL
           std::cerr << "Unable to get process name: " << strerror(errno) << std::endl;
           return "";
         }
-
+#endif // ECAL_OS_MACOS
         // Copy the binary name to a std::string
         g_process_name = std::string(buf, length);
+
       }
       return g_process_name;
     }
-
     std::string GetProcessParameter()
     {
       if (g_process_par.empty())
       {
+#ifdef ECAL_OS_MACOS
+        int pid = getpid();
+
+        int    mib[3], argmax, argc;
+        size_t    size;
+
+        mib[0] = CTL_KERN;
+        mib[1] = KERN_ARGMAX;
+
+        size = sizeof(argmax);
+        if (sysctl(mib, 2, &argmax, &size, NULL, 0) == -1)
+        {
+          return "";
+        }
+
+        /* Allocate space for the arguments. */
+        std::vector<char> procargs(argmax);
+
+        /*
+         * Make a sysctl() call to get the raw argument space of the process.
+         * The layout is documented in start.s, which is part of the Csu
+         * project.  In summary, it looks like:
+         *
+         * /---------------\ 0x00000000
+         * :               :
+         * :               :
+         * |---------------|
+         * | argc          |
+         * |---------------|
+         * | arg[0]        |
+         * |---------------|
+         * :               :
+         * :               :
+         * |---------------|
+         * | arg[argc - 1] |
+         * |---------------|
+         * | 0             |
+         * |---------------|
+         * | env[0]        |
+         * |---------------|
+         * :               :
+         * :               :
+         * |---------------|
+         * | env[n]        |
+         * |---------------|
+         * | 0             |
+         * |---------------| <-- Beginning of data returned by sysctl() is here.
+         * | argc          |
+         * |---------------|
+         * | exec_path     |
+         * |:::::::::::::::|
+         * |               |
+         * | String area.  |
+         * |               |
+         * |---------------| <-- Top of stack.
+         * :               :
+         * :               :
+         * \---------------/ 0xffffffff
+         */
+        mib[0] = CTL_KERN;
+        mib[1] = KERN_PROCARGS2;
+        mib[2] = pid;
+
+        size = (size_t)argmax;
+        if (sysctl(mib, 3, procargs.data(), &size, NULL, 0) == -1)
+        {
+          return "";
+        }
+
+        // First few bytes are the argc
+        memcpy(&argc, procargs.data(), sizeof(argc));
+        size_t pos = sizeof(argc);
+
+        if (argc == 0)
+          return "";
+
+        // Skip the saved exec_path
+        for (; pos <= procargs.size(); pos++)
+        {
+          if (procargs[pos] == '\0')
+          {
+            // End of exec_path reached
+            break;
+          }
+        }
+        if (pos >= procargs.size())
+          return "";
+
+        // Skip trailing '\0' characters
+        for (; pos <= procargs.size(); pos++)
+        {
+          if (procargs[pos] != '\0') {
+            // Beginning of first argument reached
+            break;
+          }
+        }
+        if (pos >= procargs.size())
+          return "";
+
+        // Save where the argv[0] string starts
+        size_t pos_argv0 = pos;
+
+        // Iterate through the '\0' terminated strings and convert '\0' to ' '
+        size_t current_arg = 0;
+        for (size_t i = pos_argv0; i < procargs.size(); ++i)
+        {
+          if ((int)current_arg == (argc - 1))
+            break;
+
+          if (procargs[i] == '\0')
+          {
+            current_arg++;
+            procargs[i] = ' ';
+          }
+        }
+
+        // Copy to the string
+        g_process_par = &procargs[pos_argv0];
+
+#else // ECAL_OS_MACOS
         FILE* f;
         char cmdline[1024] = { 0 };
 
         f = fopen("/proc/self/cmdline", "r");
-        if (f == nullptr) return(0);
+        if (f == nullptr) return "";
 
         char* p = cmdline;
         char* res = fgets(cmdline, sizeof(cmdline) / sizeof(*cmdline), f);
         fclose(f);
-        if (res == nullptr) return(0);
+        if (res == nullptr) return "";
 
         while (*p)
         {
@@ -896,6 +982,7 @@ namespace eCAL
         }
 
         g_process_par = par_s;
+#endif // ECAL_OS_MACOS
       }
       return(g_process_par);
     }
@@ -1276,7 +1363,7 @@ namespace eCAL
             close(fifo_fd);
           }
 
-          delete c_argv;
+          delete[] c_argv;
           STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Process will now exit" << std::endl);
           exit(0);
         }

@@ -56,7 +56,7 @@ namespace eCAL
     bool AddLocConnection(const std::string& process_id_, const std::string& conn_par_) override;
     bool RemLocConnection(const std::string& process_id_) override;
 
-    std::string GetConectionPar();
+    std::string GetConectionPar() override;
 
   protected:
     void SignalMemFileWritten();

@@ -26,7 +26,7 @@
 #include "recorder/remote_recorder.h"
 #include "recorder/local_recorder.h"
 
-#include <EcalUtils/String.h>
+#include <ecal_utils/string.h>
 #include <EcalParser/EcalParser.h>
 
 #include <rec_core/ecal_rec_logger.h>
@@ -548,7 +548,7 @@ namespace eCAL
       // Send record command
       for (const auto& recorder : recorder_instances_)
       {
-        std::vector<RecorderCommand> commands;
+        //std::vector<RecorderCommand> commands;
 
         RecorderCommand recording_command;
         recording_command.type_       = RecorderCommand::Type::START_RECORDING;

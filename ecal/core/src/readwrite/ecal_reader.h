@@ -28,7 +28,7 @@
 
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable: 4146 4800)
+#pragma warning(disable: 4100 4127 4146 4800) // disable proto warnings
 #endif
 #include "ecal/pb/ecal.pb.h"
 #ifdef _MSC_VER
@@ -57,7 +57,7 @@ namespace eCAL
     bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
     bool Destroy();
 
-    bool SetQOS(QOS::SReaderQOS qos_);
+    bool SetQOS(const QOS::SReaderQOS& qos_);
 
     size_t Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0);
 
@@ -68,7 +68,6 @@ namespace eCAL
     bool RemEventCallback(eCAL_Subscriber_Event type_);
 
     bool SetTimeout(int timeout_);
-    bool SetRefFrequency(double fmin_, double fmax_);
 
     void SetID(const std::set<long long>& id_set_);
 
@@ -141,10 +140,6 @@ namespace eCAL
     long long                                 m_clock_old;
     std::chrono::steady_clock::time_point     m_rec_time;
     long                                      m_freq;
-    long                                      m_freq_min;
-    long                                      m_freq_max;
-    long                                      m_freq_min_err;
-    long                                      m_freq_max_err;
 
     std::set<long long>                       m_id_set;
     
@@ -159,12 +154,7 @@ namespace eCAL
     bool                                      m_use_tdesc;
 
     bool                                      m_use_udp_mc_confirmed;
-    bool                                      m_use_udp_uc_confirmed;
-    bool                                      m_use_udp_metal_confirmed;
     bool                                      m_use_shm_confirmed;
-    bool                                      m_use_lcm_confirmed;
-    bool                                      m_use_rtps_confirmed;
-    bool                                      m_use_iceoryx_confirmed;
     bool                                      m_use_inproc_confirmed;
 
     std::atomic<bool>                         m_created;

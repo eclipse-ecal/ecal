@@ -48,6 +48,8 @@ namespace eCAL
   public:
     CReaderLayer() {};
 
+    virtual ~CReaderLayer() {}
+
     virtual void InitializeLayer() = 0;
 
     virtual void StartLayer(std::string& topic_name_, QOS::SReaderQOS qos_) = 0;

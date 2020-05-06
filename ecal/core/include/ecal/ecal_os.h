@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   ecal/ecal_os.h
+ * @file   ecal_os.h
  * @brief  eCAL os interface
 **/
 
@@ -31,6 +31,12 @@
 #if defined(__linux__)
 #define ECAL_OS_LINUX
 #endif
+
+#if defined(__APPLE__)
+#define ECAL_OS_LINUX // macOS does not differ that much from linux
+#define ECAL_OS_MACOS
+#endif
+
 
 #ifdef _MSC_VER
   #ifdef eCAL_EXPORTS

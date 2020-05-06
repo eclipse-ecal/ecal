@@ -23,7 +23,14 @@
 
 QMulticolumnSortFilterProxyModel::QMulticolumnSortFilterProxyModel(QObject* parent)
   : QStableSortFilterProxyModel(parent)
+  , always_sorted_column_          (-1)
+  , always_sorted_force_sort_order_(false)
+  , always_sorted_sort_order_      (Qt::SortOrder::AscendingOrder)
 {}
+
+////////////////////////////////////////////
+// Filtering
+////////////////////////////////////////////
 
 QMulticolumnSortFilterProxyModel::~QMulticolumnSortFilterProxyModel()
 {}
@@ -64,4 +71,59 @@ bool QMulticolumnSortFilterProxyModel::filterDirectAcceptsRow(int source_row, co
     }
   }
   return false;
+}
+
+////////////////////////////////////////////
+// Sorting
+////////////////////////////////////////////
+
+bool QMulticolumnSortFilterProxyModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
+{
+  if (always_sorted_column_ >= 0)
+  {
+    QVariant const left_data   = sourceModel()->data(sourceModel()->index(left.row(), always_sorted_column_, left.parent()), sortRole());
+    QVariant const right_data  = sourceModel()->data(sourceModel()->index(right.row(), always_sorted_column_, right.parent()), sortRole());
+
+    if (left_data != right_data)
+    {
+      if (!always_sorted_force_sort_order_)
+      {
+        // Don't fake the sort order, we have to follow the user-set one
+        return (left_data < right_data);
+      }
+      else
+      {
+        // We want to ignore the user-set sort order, so we fake the less-than method
+        if (sortOrder() == always_sorted_sort_order_)
+          return (left_data < right_data);
+        else
+          return (left_data > right_data);
+      }
+    }
+  }
+
+  return QStableSortFilterProxyModel::lessThan(left, right);
+}
+
+
+void QMulticolumnSortFilterProxyModel::setAlwaysSortedColumn(int column)
+{
+  always_sorted_force_sort_order_ = false;
+  always_sorted_column_           = column;
+
+  invalidate();
+}
+
+void QMulticolumnSortFilterProxyModel::setAlwaysSortedColumn(int column, Qt::SortOrder forced_sort_order)
+{
+  always_sorted_force_sort_order_ = true;
+  always_sorted_sort_order_       = forced_sort_order;
+  always_sorted_column_           = column;
+
+  invalidate();
+}
+
+int QMulticolumnSortFilterProxyModel::alwaysSortedColumn() const
+{
+  return always_sorted_column_;
 }

@@ -33,7 +33,14 @@
 #include "Python.h"
 #include "modsupport.h"
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4100 4127 4146 4800) // disable proto warnings
+#endif
 #include "ecal/pb/monitoring.pb.h"
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 
 /****************************************/
@@ -374,21 +381,6 @@ PyObject* pub_set_layer_mode(PyObject* /*self*/, PyObject* args)
 }
 
 /****************************************/
-/*      pub_set_ref_frequency           */
-/****************************************/
-PyObject* pub_set_ref_frequency(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  double      fmin         = 0.0;
-  double      fmax         = 0.0;
-
-  if (!PyArg_ParseTuple(args, "ndd", &topic_handle, &fmin, &fmax))
-    return nullptr;
-
-  return(Py_BuildValue("i", pub_set_ref_frequency(topic_handle, fmin, fmax)));
-}
-
-/****************************************/
 /*      pub_set_max_bandwidth_udp       */
 /****************************************/
 PyObject* pub_set_max_bandwidth_udp(PyObject* /*self*/, PyObject* args)
@@ -503,26 +495,6 @@ PyObject* sub_set_qos_reliability(PyObject* /*self*/, PyObject* args)
   Py_END_ALLOW_THREADS
 
   return(Py_BuildValue("i", set_qos));
-}
-
-/****************************************/
-/*      sub_set_ref_frequency           */
-/****************************************/
-PyObject* sub_set_ref_frequency(PyObject* /*self*/, PyObject* args)
-{
-  ECAL_HANDLE topic_handle = nullptr;
-  double      fmin = 0.0;
-  double      fmax = 0.0;
-
-  if (!PyArg_ParseTuple(args, "ndd", &topic_handle, &fmin, &fmax))
-    return nullptr;
-
-  bool set_ref_frequency{ false };
-  Py_BEGIN_ALLOW_THREADS
-    set_ref_frequency = sub_set_ref_frequency(topic_handle, fmin, fmax);
-  Py_END_ALLOW_THREADS
-
-  return(Py_BuildValue("i", set_ref_frequency));
 }
 
 /****************************************/
@@ -844,7 +816,6 @@ static int c_server_method_callback(const std::string& method_name_, const std::
     PyEval_InitThreads();
   }
 
-  PyThreadState*   tstate = PyEval_SaveThread();
   PyGILState_STATE gstate = PyGILState_Ensure();
 
   PyObject* method_name = Py_BuildValue("s", method_name_.c_str());
@@ -886,8 +857,7 @@ static int c_server_method_callback(const std::string& method_name_, const std::
 
   Py_DECREF(args);
 
-  PyGILState_Release  (gstate);
-  PyEval_RestoreThread(tstate);
+  PyGILState_Release(gstate);
 
   return ret_state;
 }
@@ -1053,9 +1023,7 @@ PyObject* client_call_method(PyObject* /*self*/, PyObject* args)   // (client_ha
   PyArg_ParseTuple(args, "nsy#", &client_handle, &method_name, &request, &request_len);
 
   bool called_method{ false };
-  Py_BEGIN_ALLOW_THREADS
-    called_method = client_call_method(client_handle, method_name, request, request_len);
-  Py_END_ALLOW_THREADS
+  called_method = client_call_method(client_handle, method_name, request, request_len);
 
   return(Py_BuildValue("i", called_method));
 }
@@ -1071,7 +1039,6 @@ static void c_client_callback(const struct eCAL::SServiceInfo& service_info_, co
     PyEval_InitThreads();
   }
 
-  PyThreadState*   tstate = PyEval_SaveThread();
   PyGILState_STATE gstate = PyGILState_Ensure();
 
   PyObject* args = PyTuple_New(2);
@@ -1121,7 +1088,6 @@ static void c_client_callback(const struct eCAL::SServiceInfo& service_info_, co
   Py_DECREF(args);
 
   PyGILState_Release(gstate);
-  PyEval_RestoreThread(tstate);
 }
 
 PyObject* client_add_response_callback(PyObject* /*self*/, PyObject* args)   // (client_handle, callback)
@@ -1339,8 +1305,17 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
       val = Py_BuildValue("s", process.state().info().c_str());
       PyDict_SetItemString(processDict, "state_info", val); Py_DECREF(val);
 
-      val = Py_BuildValue("i", process.tsync_mode());
-      PyDict_SetItemString(processDict, "tsync_mode", val); Py_DECREF(val);
+      val = Py_BuildValue("i", process.tsync_state());
+      PyDict_SetItemString(processDict, "tsync_state", val); Py_DECREF(val);
+
+      val = Py_BuildValue("s", process.tsync_mod_name().c_str());
+      PyDict_SetItemString(processDict, "tsync_mod_name", val); Py_DECREF(val);
+
+      val = Py_BuildValue("i", process.component_init_state());
+      PyDict_SetItemString(processDict, "component_init_state", val); Py_DECREF(val);
+
+      val = Py_BuildValue("s", process.component_init_info().c_str());
+      PyDict_SetItemString(processDict, "component_init_info", val); Py_DECREF(val);
     }
 
     // collect service infos
@@ -1554,7 +1529,6 @@ static PyMethodDef _ecal_methods[] =
   {"pub_set_qos_reliability",       pub_set_qos_reliability,       METH_VARARGS,  "pub_set_qos_reliability(topic_handle, qpolicy)"},
   {"pub_set_layer_mode",            pub_set_layer_mode,            METH_VARARGS,  "pub_set_layer_mode(topic_handle, layer, mode)"},
 
-  {"pub_set_ref_frequency",         pub_set_ref_frequency,         METH_VARARGS,  "pub_set_ref_frequency(topic_handle, fmin, fmax)"},
   {"pub_set_max_bandwidth_udp",     pub_set_max_bandwidth_udp,     METH_VARARGS,  "pub_set_max_bandwidth_udp(topic_handle, bandwidth)"},
 
   {"pub_send",                      pub_send,                      METH_VARARGS,  "pub_send(topic_handle, payload, time)"},
@@ -1564,8 +1538,6 @@ static PyMethodDef _ecal_methods[] =
 
   {"sub_set_qos_historykind",       sub_set_qos_historykind,       METH_VARARGS,  "sub_set_qos_historykind(topic_handle, qpolicy, depth)"},
   {"sub_set_qos_reliability",       sub_set_qos_reliability,       METH_VARARGS,  "sub_set_qos_reliability(topic_handle, qpolicy)"},
-
-  {"sub_set_ref_frequency",         sub_set_ref_frequency,         METH_VARARGS,  "sub_set_ref_frequency(topic_handle, fmin, fmax)"},
 
   {"sub_receive",                   sub_receive,                   METH_VARARGS,  "sub_receive(topic_handle, timeout)"},
 

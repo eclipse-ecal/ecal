@@ -23,7 +23,8 @@
 
 #include "ecal_globals.h"
 
-#include "tclap/CmdLine.h"
+#include <tclap/CmdLine.h>
+#include <custom_tclap/advanced_tclap_output.h>
 
 namespace eCAL
 {
@@ -85,12 +86,20 @@ namespace eCAL
       TCLAP::CmdLine cmd("", ' ', ECAL_VERSION);
 
       // define command line arguments
-      TCLAP::SwitchArg             dump_config_arg("c", "dump-config", "Dump current configuration.", false);
-      TCLAP::ValueArg<std::string> default_ini_file_arg("d", "default-ini-file", "Load default configuration from that file.", false, ECAL_DEFAULT_CFG, "string");
-      TCLAP::MultiArg<std::string> set_config_key_arg("s", "set_config_key", "Overwrite a specific configuration key (set_config_key \"section/key:value\".", false, "string");
+      TCLAP::SwitchArg             dump_config_arg     ("", "ecal-dump-config",    "Dump current configuration.", false);
+      TCLAP::ValueArg<std::string> default_ini_file_arg("", "ecal-ini-file",       "Load default configuration from that file.", false, ECAL_DEFAULT_CFG, "string");
+      TCLAP::MultiArg<std::string> set_config_key_arg  ("", "ecal-set-config-key", "Overwrite a specific configuration key (ecal-set-config-key \"section/key:value\".", false, "string");
+
+      TCLAP::UnlabeledMultiArg<std::string> dummy_arg("__dummy__", "Dummy", false, ""); // Dummy arg to eat all unrecognized arguments
+
       cmd.add(dump_config_arg);
       cmd.add(default_ini_file_arg);
       cmd.add(set_config_key_arg);
+      cmd.add(dummy_arg);
+
+      CustomTclap::AdvancedTclapOutput advanced_tclap_output(&std::cout, 75);
+      advanced_tclap_output.setArgumentHidden(&dummy_arg, true);
+      cmd.setOutput(&advanced_tclap_output);
 
       // parse command line
       cmd.parse(argc_, argv_);
@@ -178,7 +187,7 @@ namespace eCAL
   **/
   int Initialize(std::vector<std::string> args_, const char *unit_name_, unsigned int components_)
   {
-    args_.insert(args_.begin(), eCAL::Process::GetProcessName());
+    args_.emplace(args_.begin(), eCAL::Process::GetProcessName());
     std::vector<const char*> argv(args_.size());
     std::transform(args_.begin(), args_.end(), argv.begin(), [](std::string& s) {return s.c_str();});
     return Initialize(static_cast<int>(argv.size()), const_cast<char**>(argv.data()), unit_name_, components_);

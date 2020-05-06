@@ -50,19 +50,6 @@ class MessageSubscriber(object):
 
     return self.c_subscriber.set_qos_reliability(topic_handle, qpolicy)
 
-  def set_ref_frequency(self, fmin, fmax):
-    """ set subscriber frequency control values.
-
-    Keyword arguments:
-    :param fmin: minimum publisher send frequency
-    :type fmin:  int
-    :param fmax: maximum publisher send frequency
-    :type fmax:  int
-
-    """
-
-    return self.c_subscriber.set_ref_frequency(fmin, fmax)
-
   def receive(self, timeout=0):
     """ receive subscriber content with timeout
 

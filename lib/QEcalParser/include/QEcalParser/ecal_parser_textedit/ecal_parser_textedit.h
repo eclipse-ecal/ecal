@@ -21,6 +21,8 @@
 
 #include <QTextEdit>
 
+class QToolButton;
+
 class QEcalParserTextEdit : public QTextEdit
 {
   Q_OBJECT
@@ -32,12 +34,15 @@ public:
   ~QEcalParserTextEdit();
 
 protected:
-  void contextMenuEvent(QContextMenuEvent *event) override;
+  void contextMenuEvent(QContextMenuEvent* event) override;
+  void resizeEvent(QResizeEvent* event) override;
+  void showEvent(QShowEvent *event) override;
 
 private slots:
   void openDialog();
-
+  void moveOverlayButton();
 
 private:
-  QAction* open_dialog_action;
+  QAction* open_dialog_action_;
+  QToolButton* overlay_button_;
 };

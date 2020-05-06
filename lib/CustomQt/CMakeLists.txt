@@ -97,4 +97,4 @@ if(MSVC)
   )
 endif()
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lib/CustomQt)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lib)

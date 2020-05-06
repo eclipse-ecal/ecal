@@ -68,7 +68,7 @@ namespace eCAL
       for (unsigned int index = 0; index < data_size; index += 3)
       {
         //                        rec timestamp, channel id,      send clock
-        entries.insert(SEntryInfo(data[index],   data[index + 1], data[index + 2]));
+        entries.emplace(SEntryInfo(data[index],   data[index + 1], data[index + 2]));
       }
 
       free(data);

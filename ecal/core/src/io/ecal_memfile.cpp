@@ -258,15 +258,6 @@ namespace eCAL
     return(len_);
   }
 
-  size_t CMemoryFile::Read(CMemConsumer& cons_, const size_t offset_)
-  {
-    if(!m_opened)                     return(0);
-    if(!m_memfile_info->mem_address)  return(0);
-
-    cons_.ReadBuffer(static_cast<char*>(m_memfile_info->mem_address) + offset_ + sizeof(SMemFileHeader), static_cast<size_t>(m_header.cur_data_size));
-    return static_cast<size_t>(m_header.cur_data_size);
-  }
-
   size_t CMemoryFile::Write(const void* buf_, const size_t len_, const size_t offset_)
   {
     if(!m_opened)                                                         return(0);
@@ -284,28 +275,6 @@ namespace eCAL
     memcpy(static_cast<char*>(m_memfile_info->mem_address) + offset_ + sizeof(SMemFileHeader), buf_, len_);
 
     return(len_);
-  }
-
-  size_t CMemoryFile::Write(CMemProducer& prod_, const size_t len_, const size_t offset_)
-  {
-    if(!m_opened) return(0);
-
-    size_t len = len_;
-    if(len == 0) len = prod_.GetSize();
-    if(len == 0)                                                         return(0);
-
-    if(!m_memfile_info->mem_address)                                     return(0);
-    if((len + offset_ + sizeof(SMemFileHeader)) > m_memfile_info->size)  return(0);
-
-    // update header
-    m_header.cur_data_size = (unsigned long)(len_ + offset_);
-    SMemFileHeader* pHeader = static_cast<SMemFileHeader*>(m_memfile_info->mem_address);
-    pHeader->cur_data_size = m_header.cur_data_size;
-
-    // write content
-    prod_.WriteBuffer(static_cast<char*>(m_memfile_info->mem_address) + offset_ + sizeof(SMemFileHeader));
-
-    return(len);
   }
 
   void CleanupMemoryFileMap()

@@ -214,22 +214,12 @@ namespace eCAL
     std::string  topic_name      = sample_topic.tname();
     size_t       topic_size      = static_cast<size_t>(sample_topic.tsize());
     bool         topic_tlayer_ecal_udp_mc(false);
-    bool         topic_tlayer_ecal_udp_uc(false);
-    bool         topic_tlayer_ecal_udp_metal(false);
     bool         topic_tlayer_ecal_shm(false);
-    bool         topic_tlayer_lcm(false);
-    bool         topic_tlayer_rtps(false);
-    bool         topic_tlayer_iceoryx(false);
     bool         topic_tlayer_inproc(false);
     for (auto layer : sample_topic.tlayer())
     {
       topic_tlayer_ecal_udp_mc    |= (layer.type() == eCAL::pb::tl_ecal_udp_mc)    && layer.confirmed();
-      topic_tlayer_ecal_udp_uc    |= (layer.type() == eCAL::pb::tl_ecal_udp_uc)    && layer.confirmed();
-      topic_tlayer_ecal_udp_metal |= (layer.type() == eCAL::pb::tl_ecal_udp_metal) && layer.confirmed();
       topic_tlayer_ecal_shm       |= (layer.type() == eCAL::pb::tl_ecal_shm)       && layer.confirmed();
-      topic_tlayer_lcm            |= (layer.type() == eCAL::pb::tl_lcm)            && layer.confirmed();
-      topic_tlayer_rtps           |= (layer.type() == eCAL::pb::tl_rtps)           && layer.confirmed();
-      topic_tlayer_iceoryx        |= (layer.type() == eCAL::pb::tl_iceoryx)        && layer.confirmed();
       topic_tlayer_inproc         |= (layer.type() == eCAL::pb::tl_inproc)         && layer.confirmed();
     }
     size_t       connections_loc = static_cast<size_t>(sample_topic.connections_loc());
@@ -238,10 +228,6 @@ namespace eCAL
     long long    dclock          = sample_topic.dclock();
     long long    ddropped        = sample_topic.message_drops();
     long         dfreq           = sample_topic.dfreq();
-    long         dfreq_min       = sample_topic.dfreq_min();
-    long         dfreq_max       = sample_topic.dfreq_max();
-    long         dfreq_min_err   = sample_topic.dfreq_min_err();
-    long         dfreq_max_err   = sample_topic.dfreq_max_err();
 
     // check blacklist topic filter
     {
@@ -304,12 +290,7 @@ namespace eCAL
       TopicInfo.ttype                 = std::move(topic_type);
       TopicInfo.tdesc                 = std::move(topic_desc);
       TopicInfo.tlayer_ecal_udp_mc    = topic_tlayer_ecal_udp_mc;
-      TopicInfo.tlayer_ecal_udp_uc    = topic_tlayer_ecal_udp_uc;
-      TopicInfo.tlayer_ecal_udp_metal = topic_tlayer_ecal_udp_metal;
       TopicInfo.tlayer_ecal_shm       = topic_tlayer_ecal_shm;
-      TopicInfo.tlayer_lcm            = topic_tlayer_lcm;
-      TopicInfo.tlayer_rtps           = topic_tlayer_rtps;
-      TopicInfo.tlayer_iceoryx        = topic_tlayer_iceoryx;
       TopicInfo.tlayer_inproc         = topic_tlayer_inproc;
       TopicInfo.tsize                 = static_cast<int>(topic_size);
       TopicInfo.connections_loc       = static_cast<int>(connections_loc);
@@ -318,10 +299,6 @@ namespace eCAL
       TopicInfo.dclock                = dclock;
       TopicInfo.ddropped              = ddropped;
       TopicInfo.dfreq                 = dfreq;
-      TopicInfo.dfreq_min             = dfreq_min;
-      TopicInfo.dfreq_max             = dfreq_max;
-      TopicInfo.dfreq_min_err         = dfreq_min_err;
-      TopicInfo.dfreq_max_err         = dfreq_max_err;
     }
 
     return(true);
@@ -344,7 +321,10 @@ namespace eCAL
     int             process_state_severity       = sample_process_state.severity();
     int             process_state_severity_level = sample_process_state.severity_level();
     std::string     process_state_info           = sample_process_state.info();
-    int             process_tsync_mode           = sample_process.tsync_mode();
+    int             process_tsync_state          = sample_process.tsync_state();
+    std::string     process_tsync_mod_name       = sample_process.tsync_mod_name();
+    int             component_init_state         = sample_process.component_init_state();
+    std::string     component_init_info          = sample_process.component_init_info();
 
     std::stringstream process_id_ss;
     process_id_ss << process_id;
@@ -373,7 +353,10 @@ namespace eCAL
     ProcessInfo.state_severity       = process_state_severity;
     ProcessInfo.state_severity_level = process_state_severity_level;
     ProcessInfo.state_info           = std::move(process_state_info);
-    ProcessInfo.tsync_mode           = process_tsync_mode;
+    ProcessInfo.tsync_state          = process_tsync_state;
+    ProcessInfo.tsync_mod_name       = std::move(process_tsync_mod_name);
+    ProcessInfo.component_init_state = component_init_state;
+    ProcessInfo.component_init_info  = std::move(component_init_info);
 
     return(true);
   }
@@ -551,8 +534,17 @@ namespace eCAL
       // severity info
       state->set_info(process.second.state_info);
 
-      // time synchronization mode
-      pMonProcs->set_tsync_mode(eCAL::pb::eTSyncState(process.second.tsync_mode));
+      // time synchronization state
+      pMonProcs->set_tsync_state(eCAL::pb::eTSyncState(process.second.tsync_state));
+
+      // time synchronization module name
+      pMonProcs->set_tsync_mod_name(process.second.tsync_mod_name);
+
+      // eCAL component initialization state
+      pMonProcs->set_component_init_state(process.second.component_init_state);
+
+      // eCAL component initialization info
+      pMonProcs->set_component_init_info(process.second.component_init_info);
     }
   }
 
@@ -647,40 +639,10 @@ namespace eCAL
         tlayer->set_type(eCAL::pb::tl_ecal_udp_mc);
         tlayer->set_confirmed(true);
       }
-      if (topic.second.tlayer_ecal_udp_uc)
-      {
-        auto tlayer = pMonTopic->add_tlayer();
-        tlayer->set_type(eCAL::pb::tl_ecal_udp_uc);
-        tlayer->set_confirmed(true);
-      }
-      if (topic.second.tlayer_ecal_udp_metal)
-      {
-        auto tlayer = pMonTopic->add_tlayer();
-        tlayer->set_type(eCAL::pb::tl_ecal_udp_metal);
-        tlayer->set_confirmed(true);
-      }
       if (topic.second.tlayer_ecal_shm)
       {
         auto tlayer = pMonTopic->add_tlayer();
         tlayer->set_type(eCAL::pb::tl_ecal_shm);
-        tlayer->set_confirmed(true);
-      }
-      if (topic.second.tlayer_lcm)
-      {
-        auto tlayer = pMonTopic->add_tlayer();
-        tlayer->set_type(eCAL::pb::tl_lcm);
-        tlayer->set_confirmed(true);
-      }
-      if (topic.second.tlayer_rtps)
-      {
-        auto tlayer = pMonTopic->add_tlayer();
-        tlayer->set_type(eCAL::pb::tl_rtps);
-        tlayer->set_confirmed(true);
-      }
-      if (topic.second.tlayer_iceoryx)
-      {
-        auto tlayer = pMonTopic->add_tlayer();
-        tlayer->set_type(eCAL::pb::tl_iceoryx);
         tlayer->set_confirmed(true);
       }
       if (topic.second.tlayer_inproc)
@@ -713,18 +675,6 @@ namespace eCAL
 
       // data frequency
       pMonTopic->set_dfreq(topic.second.dfreq);
-
-      // data frequency minimum
-      pMonTopic->set_dfreq_min(topic.second.dfreq_min);
-
-      // data frequency maximum
-      pMonTopic->set_dfreq_max(topic.second.dfreq_max);
-
-      // data frequency minimum violation error counter
-      pMonTopic->set_dfreq_min_err(topic.second.dfreq_min_err);
-
-      // data frequency maximum violation error counter
-      pMonTopic->set_dfreq_max_err(topic.second.dfreq_max_err);
     }
   }
 
@@ -740,7 +690,7 @@ namespace eCAL
         pos = str.length();
         if (pos != lastPos || !trimEmpty)
         {
-          tokens.insert(std::string(str.data() + lastPos, pos - lastPos));
+          tokens.emplace(std::string(str.data() + lastPos, pos - lastPos));
         }
         break;
       }
@@ -748,7 +698,7 @@ namespace eCAL
       {
         if (pos != lastPos || !trimEmpty)
         {
-          tokens.insert(std::string(str.data() + lastPos, pos - lastPos));
+          tokens.emplace(std::string(str.data() + lastPos, pos - lastPos));
         }
       }
       lastPos = pos + 1;

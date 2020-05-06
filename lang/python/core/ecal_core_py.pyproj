@@ -9,6 +9,7 @@
     <OutputPath>.</OutputPath>
     <Name>ecal_core_py</Name>
     <RootNamespace>ecal_core_py</RootNamespace>
+    <ProjectGuid>{5edaf79b-03b5-317a-b954-9dba8f0b9b9f}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

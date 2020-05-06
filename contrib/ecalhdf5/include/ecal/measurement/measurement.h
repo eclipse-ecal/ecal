@@ -19,12 +19,9 @@
 
 #pragma once
 
-#ifdef _MSC_VER
-#pragma message("WARNING: The API of eCAL::measurement is not yet stable. It might be subject to API changes in future eCAL versions.")
-#endif /*_MSC_VER*/
-#ifdef __GNUC__
-#pragma message "WARNING: The API of eCAL::measurement is not yet stable. It might be subject to API changes in future eCAL versions."
-#endif /* __GNUC__ */
+/*
+  Please note, the API of eCAL::measurement is not yet stable. It might be subject to API changes in future eCAL versions.
+*/
 
 namespace eCAL
 {

@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "EcalplayGuiClient.h"
+#include "ecalplayer_gui_client.h"
 #include <QtWidgets/QApplication>
 #include <ecal/ecal.h>
 

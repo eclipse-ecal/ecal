@@ -27,19 +27,17 @@
 #include <regex>
 #include <list>
 
-#ifdef _WIN32
+#ifdef WIN32
 #if defined(_MSC_VER) && defined(__clang__) && !defined(CINTERFACE)
 #define CINTERFACE
 #endif
 #include <windows.h>
 #include <direct.h>
-#endif  // _WIN32
-
-#ifdef __linux__
+#else
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#endif  // __linux__
+#endif  // WIN32
 
 namespace Utility
 {
@@ -55,7 +53,7 @@ namespace Utility
     inline eType GetType(const std::string& path)
     {
       eType type = eType::unknown;
-#ifdef _WIN32
+#ifdef WIN32
       DWORD attribs = ::GetFileAttributesA(path.c_str());
       if (attribs == INVALID_FILE_ATTRIBUTES)
         type = eType::unknown;
@@ -63,8 +61,7 @@ namespace Utility
         type = eType::directory;
       else
         type = eType::file;
-
-#elif __linux__
+#else
       struct stat s;
       if (stat(path.c_str(), &s) == 0)
       {
@@ -73,7 +70,7 @@ namespace Utility
         else if (s.st_mode & S_IFREG)
           type = eType::file;
       }
-#endif  //  __linux__
+#endif  // WIN32
 
       return type;
     }
@@ -90,19 +87,19 @@ namespace Utility
     **/
     inline bool Exists(const std::string& path)
     {
-#ifdef _WIN32
+#ifdef ECAL_OS_WINDOWS
       DWORD attribs = ::GetFileAttributesA(path.c_str());
       if (attribs == INVALID_FILE_ATTRIBUTES)
         return false;
 
       return (attribs & FILE_ATTRIBUTE_DIRECTORY) != 0;
-#elif __linux__
+#else
       struct stat st;
       if (stat(path.c_str(), &st) == 0)
         if ((st.st_mode & S_IFDIR) != 0)
           return true;
       return false;
-#endif  //  __linux__
+#endif  //  ECAL_OS_WINDOWS
     }
 
     /**
@@ -130,11 +127,11 @@ namespace Utility
         pre = position;
         if (directory.size() == 0)
           continue;
-#ifdef _WIN32
+#ifdef WIN32
         _mkdir(directory.c_str());
-#elif __linux__
+#else
         mkdir(directory.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
-#endif  //  __linux__
+#endif  //  WIN32
       }
       return Exists(path);
     }
@@ -171,7 +168,7 @@ namespace Utility
         }
         if (end - start != 0)
         {
-          parts.push_back(std::string(str, start, end - start));
+          parts.emplace_back(std::string(str, start, end - start));
         }
       }
     }

@@ -25,7 +25,7 @@ if (MSVC_VERSION GREATER_EQUAL 1930)
 elseif (MSVC_VERSION GREATER_EQUAL 1920)
 # current qt version does nor support VS2019
 # so we can use the binary compatible VS2017 version instead
-  message(WARNING "Visual Studio 2019 detected, using VS2017 qt binaries until Qt supports VS2019")
+  #message(WARNING "Visual Studio 2019 detected, using VS2017 qt binaries until Qt supports VS2019")
   set(${out} "msvc2017" ) 
 elseif (MSVC_VERSION GREATER_EQUAL 1910)
   set(${out} "msvc2017" ) 

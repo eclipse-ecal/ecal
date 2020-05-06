@@ -19,7 +19,7 @@
 
 #include "os.h"
 
-#include <EcalUtils/String.h>
+#include <ecal_utils/string.h>
 
 namespace EcalParser
 {

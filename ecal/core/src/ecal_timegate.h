@@ -111,12 +111,11 @@ namespace eCAL
       {
       }
 
-#ifdef _WIN32
+#ifdef ECAL_OS_WINDOWS
       HINSTANCE                   module_handle;
-#endif //_WIN32
-#ifdef __linux__
+#else // ECAL_OS_WINDOWS
       void*                       module_handle;
-#endif //__linux__
+#endif // ECAL_OS_WINDOWS
 
       std::string                 module_name;
       etime_initialize            etime_initialize_ptr;

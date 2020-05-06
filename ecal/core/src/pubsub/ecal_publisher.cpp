@@ -120,10 +120,7 @@ namespace eCAL
     // to construct befor eCAL::Initialize and so global config is not
     // existing while construction
     if (m_tlayer.sm_udp_mc  == TLayer::smode_none) m_tlayer.sm_udp_mc = TLayer::eSendMode(eCALPAR(PUB, USE_UDP_MC));
-    if (m_tlayer.sm_udp_uc  == TLayer::smode_none) m_tlayer.sm_udp_uc = TLayer::eSendMode(eCALPAR(PUB, USE_UDP_UC));
     if (m_tlayer.sm_shm     == TLayer::smode_none) m_tlayer.sm_shm    = TLayer::eSendMode(eCALPAR(PUB, USE_SHM));
-    if (m_tlayer.sm_lcm     == TLayer::smode_none) m_tlayer.sm_lcm    = TLayer::eSendMode(eCALPAR(PUB, USE_LCM));
-    if (m_tlayer.sm_rtps    == TLayer::smode_none) m_tlayer.sm_rtps   = TLayer::eSendMode(eCALPAR(PUB, USE_RTPS));
     if (m_tlayer.sm_inproc  == TLayer::smode_none) m_tlayer.sm_inproc = TLayer::eSendMode(eCALPAR(PUB, USE_INPROC));
 
     // create data writer
@@ -132,10 +129,7 @@ namespace eCAL
     m_datawriter->SetQOS(m_qos);
     // set transport layer
     m_datawriter->SetLayerMode(TLayer::tlayer_udp_mc,  m_tlayer.sm_udp_mc);
-    m_datawriter->SetLayerMode(TLayer::tlayer_udp_uc,  m_tlayer.sm_udp_uc);
     m_datawriter->SetLayerMode(TLayer::tlayer_shm,     m_tlayer.sm_shm);
-    m_datawriter->SetLayerMode(TLayer::tlayer_lcm,     m_tlayer.sm_lcm);
-    m_datawriter->SetLayerMode(TLayer::tlayer_rtps,    m_tlayer.sm_rtps);
     m_datawriter->SetLayerMode(TLayer::tlayer_inproc,  m_tlayer.sm_inproc);
     // create it
     if (!m_datawriter->Create(topic_name_, topic_type_, topic_desc_))
@@ -235,28 +229,16 @@ namespace eCAL
     case TLayer::tlayer_udp_mc:
       m_tlayer.sm_udp_mc = mode_;
       break;
-    case TLayer::tlayer_udp_uc:
-      m_tlayer.sm_udp_uc = mode_;
-      break;
     case TLayer::tlayer_shm:
       m_tlayer.sm_shm = mode_;
-      break;
-    case TLayer::tlayer_lcm:
-      m_tlayer.sm_lcm = mode_;
-      break;
-    case TLayer::tlayer_rtps:
-      m_tlayer.sm_rtps = mode_;
       break;
     case TLayer::tlayer_inproc:
       m_tlayer.sm_inproc = mode_;
       break;
     case TLayer::tlayer_all:
-      m_tlayer.sm_udp_mc = mode_;
-      m_tlayer.sm_udp_uc = mode_;
-      m_tlayer.sm_shm    = mode_;
-      m_tlayer.sm_lcm    = mode_;
-      m_tlayer.sm_rtps   = mode_;
-      m_tlayer.sm_inproc = mode_;
+      m_tlayer.sm_udp_mc  = mode_;
+      m_tlayer.sm_shm     = mode_;
+      m_tlayer.sm_inproc  = mode_;
       break;
     default:
       break;
@@ -266,12 +248,6 @@ namespace eCAL
       return m_datawriter->SetLayerMode(layer_, mode_);
     }
     return true;
-  }
-
-  bool CPublisher::SetRefFrequency(double fmin_, double fmax_)
-  {
-    if (!m_created) return(false);
-    return m_datawriter->SetRefFrequency(fmin_, fmax_);
   }
 
   bool CPublisher::SetMaxBandwidthUDP(long bandwidth_)

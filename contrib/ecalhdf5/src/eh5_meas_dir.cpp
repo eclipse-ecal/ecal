@@ -23,14 +23,11 @@
 
 #include "eh5_meas_dir.h"
 
-#ifdef __linux__
-#include <dirent.h>
-#endif  // __linux__
-
-#ifdef _WIN32
+#ifdef WIN32
 #include <windows.h>
-#endif // _WIN32
-
+#else
+#include <dirent.h>
+#endif //WIN32
 
 #include <string.h>
 #include <string>
@@ -375,7 +372,7 @@ void eCAL::eh5::HDF5MeasDir::DisconnectPreSplitCallback()
 std::list<std::string> eCAL::eh5::HDF5MeasDir::GetHdfFiles(const std::string& path) const
 {
   std::list<std::string> paths;
-#ifdef _WIN32
+#ifdef WIN32
   std::string dpath = path + "/*.*";
 
   WIN32_FIND_DATAA fd;
@@ -402,8 +399,7 @@ std::list<std::string> eCAL::eh5::HDF5MeasDir::GetHdfFiles(const std::string& pa
     } while (::FindNextFileA(hFind, &fd));
     ::FindClose(hFind);
   }
-#endif  // __WIN32
-#ifdef __linux__
+#else
   struct dirent* de = nullptr;
   DIR* dir = nullptr;
 
@@ -431,7 +427,7 @@ std::list<std::string> eCAL::eh5::HDF5MeasDir::GetHdfFiles(const std::string& pa
     }
     closedir(dir);
 }
-#endif  //  __linux__
+#endif  //  WIN32
   return paths;
 }
 

@@ -79,20 +79,6 @@ namespace eCAL
     MemFileMapT map;
   };
 
-  class CMemProducer
-  {
-  public:
-    virtual size_t GetSize() = 0;
-    virtual void   WriteBuffer(void* buf_) = 0;
-  };
-
-  class CMemConsumer
-  {
-  public:
-    virtual void ReadBuffer(void* buf_, size_t size_) = 0;
-  };
-  struct SMemFileInfo;
-
   /**
    * @brief Shared memory file handler class. 
   **/
@@ -157,16 +143,6 @@ namespace eCAL
     size_t Read(void* buf_, const size_t len_, const size_t offset_);
 
     /**
-     * @brief Read bytes from an opened memory file. 
-     *
-     * @param cons_    The memory consumer. 
-     * @param offset_  The offset where to start reading. 
-     *
-     * @return         Number of copied bytes (can be less then len_). 
-    **/
-    size_t Read(CMemConsumer& cons_, const size_t offset_);
-
-    /**
      * @brief Write bytes to the memory file. 
      *
      * @param buf_     The source address. 
@@ -176,17 +152,6 @@ namespace eCAL
      * @return         Number of bytes copied to the memory file. 
     **/
     size_t Write(const void* buf_, const size_t len_, const size_t offset_);
-
-    /**
-     * @brief Write bytes to the memory file use a memory producer class to avoid memcpy. 
-     *
-     * @param prod_    The memory producer. 
-     * @param len_     The number of bytes to write (if 0 it will be calculated). 
-     * @param offset_  The offset for writing the data. 
-     *
-     * @return         Number of bytes copied to the memory file. 
-    **/
-    size_t Write(CMemProducer& prod_, const size_t len_, const size_t offset_);
 
     /**
      * @brief Maximum data size of the whole memory file.

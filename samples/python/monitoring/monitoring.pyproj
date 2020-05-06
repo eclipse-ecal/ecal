@@ -10,6 +10,7 @@
     <OutputPath>.</OutputPath>
     <Name>monitoring</Name>
     <RootNamespace>monitoring</RootNamespace>
+    <ProjectGuid>{001d5f80-2090-3459-959b-58a5111532c6}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
