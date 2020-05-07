@@ -23,7 +23,7 @@ addons:
 script:
   - mkdir _build
   - cd _build
-  - /usr/bin/cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_PY_BINDING=ON -DBUILD_SAMPLES=ON
+  - /usr/bin/cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_PY_BINDING=ON -DBUILD_SAMPLES=ON -DBUILD_DOCS=ON 
   - make
   - /usr/bin/cpack -G DEB
   - cmake --build . --target create_python_egg --config Release
