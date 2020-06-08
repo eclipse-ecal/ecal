@@ -34,7 +34,7 @@ private slots:
   void measurementRootDirectoryChanged(const std::string& root_dir);
   void measurementNameChanged         (const std::string& name);
   void updatePathPreview              ();
-  void maxFileSizeChanged             (size_t megabytes);
+  void maxFileSizeChanged             (unsigned int megabytes);
   void descriptionChanged             (const std::string& description);
 
 private:

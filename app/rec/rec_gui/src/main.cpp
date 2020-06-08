@@ -42,6 +42,12 @@ int main(int argc, char *argv[])
 
   QEcalRec::instance()->setParent(w);
 
+  if (argc > 1)
+  {
+    std::string config_path = argv[1];
+    QEcalRec::instance()->loadConfigFromFile(config_path);
+  }
+
   w->show();
   int return_code = a.exec();
 

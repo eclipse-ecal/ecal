@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RecorderManagerAddDialog</class>
+ <widget class="QDialog" name="RecorderManagerAddDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>353</width>
+    <height>176</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Add</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QWidget" name="widget" native="true">
+     <layout class="QFormLayout" name="formLayout">
+      <property name="verticalSpacing">
+       <number>12</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="new_host_radiobutton">
+        <property name="text">
+         <string>New &amp;Host:</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../../../../iconset/ecalicons.qrc">
+          <normaloff>:/ecalicons/HOST</normaloff>:/ecalicons/HOST</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="hostname_lineedit">
+        <property name="placeholderText">
+         <string>Hostname</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="new_addon_radiobutton">
+        <property name="text">
+         <string>New &amp;Addon:</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../../../../iconset/ecalicons.qrc">
+          <normaloff>:/ecalicons/ADDON</normaloff>:/ecalicons/ADDON</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QWidget" name="addon_widget" native="true">
+        <layout class="QVBoxLayout" name="addon_widget_layout">
+         <property name="spacing">
+          <number>6</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QComboBox" name="host_combobox"/>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="addon_id_lineedit">
+           <property name="placeholderText">
+            <string>Addon ID</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="font">
+            <font>
+             <italic>true</italic>
+            </font>
+           </property>
+           <property name="text">
+            <string>Remember to enter the Addon ID, not its user-friendly name!</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../../../../../iconset/ecalicons.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>RecorderManagerAddDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>RecorderManagerAddDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

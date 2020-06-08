@@ -555,13 +555,13 @@ namespace EcalUtils
               || (i != max_number_of_arguments - 1))
             {
               // Add the argument to the argument list
-              argument_list.push_back(input_command_line.substr(argument_start, argument_end - argument_start + 1));
+              argument_list.emplace_back(input_command_line.substr(argument_start, argument_end - argument_start + 1));
               next_part_start = argument_end + 1;
             }
             else
             {
               // Add all remaining arguments as one big block
-              argument_list.push_back(input_command_line.substr(argument_start));
+              argument_list.emplace_back(input_command_line.substr(argument_start));
             }
           }
           else

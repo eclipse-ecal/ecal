@@ -1,0 +1,51 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2019 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+syntax = "proto3";
+
+import "ecal/pb/rec/client_state.proto";
+
+package eCAL.pb.rec_server;
+
+message ClientJobStatus
+{
+  int32                        client_pid                     = 1;              // The process ID of the client. The PID is from when the measurement has been started (so for old measurements the process with that PID may even be dead now)
+  rec_client.State.JobStatus   job_status                     = 2;              // The status as reported by the recorder client. If the client is dead or disconnected, this will be the last known state.
+  
+  bool                         last_command_response_ok       = 3;              // Whether the last measurement-related command was successfully executed
+  string                       last_command_response_message  = 4;              // If the last measurement-related command has not been executed successfully, this is a human-readable error message.
+}
+
+message Measurement
+{
+  int64                             id                     =  1;                // The ID of the measurement
+  int64                             local_timestamp_nsecs  =  2;                // When the measurement was triggered. The timestamp is the local eCAL Time as determined by the rec server
+  string                            local_name             =  3;                // The measurement name as locally evaluated by the rec server
+  string                            local_meas_path        =  4;                // The measurement path as locally evaluated by the rec server. If the measurement is uploaded to the internal FTP Server, all files will be stored here.
+  bool                              is_deleted             =  5;                // Whether the measurement has been deleted
+  map<string, ClientJobStatus>      client_job_statuses    =  6;                // The detailed job statuses as reported by the rec client instances that participated in the measurement
+}
+
+message Status
+{
+  string                config_path              =  1;                          // The local path to the currently loaded config file
+  bool                  activated                =  2;                          // Whether the recorder is connected to it's clients and has initialized them
+  int64                 recording_meas_id        =  3;                          // The meas_id of the measurement that is currently recording (or 0/unset if no measurement is recording)
+  repeated Measurement  measurement_history      =  4;                          // A list of all measurements that have been started along with their detailed statuses
+}

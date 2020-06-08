@@ -114,7 +114,7 @@
        </property>
        <property name="icon">
         <iconset resource="../../../../../iconset/ecalicons.qrc">
-         <normaloff>:/ecalicons/RESTART</normaloff>:/ecalicons/RESTART</iconset>
+         <normaloff>:/ecalicons/UPDATE</normaloff>:/ecalicons/UPDATE</iconset>
        </property>
        <property name="iconSize">
         <size>

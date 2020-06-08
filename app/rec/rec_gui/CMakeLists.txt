@@ -48,22 +48,18 @@ set(source_files
     src/ecalrec_gui.cpp
     src/ecalrec_gui.h
 
-    #src/ecalrec_service.cpp
-    #src/ecalrec_service.h
-
     src/main.cpp
-
-    src/monitoring_thread.cpp
-    src/monitoring_thread.h
 
     src/qecalrec.cpp
     src/qecalrec.h
 
     src/models/item_data_roles.h
-    src/models/recorder_model.cpp
-    src/models/recorder_model.h
-    src/models/topic_list_model.cpp
-    src/models/topic_list_model.h
+    src/models/tree_item_types.h
+
+    src/service/rec_server_service.h
+    src/service/rec_server_service.cpp
+
+    src/widgets/bytes_to_pretty_string_utils.h
 
     src/widgets/about_dialog/about_dialog.cpp
     src/widgets/about_dialog/about_dialog.h
@@ -81,22 +77,41 @@ set(source_files
     src/widgets/recordermanager_widget/host_filter_delegate.h
     src/widgets/recordermanager_widget/host_picker.cpp
     src/widgets/recordermanager_widget/host_picker.h
+    src/widgets/recordermanager_widget/recorder_model.cpp
+    src/widgets/recordermanager_widget/recorder_model.h
+    src/widgets/recordermanager_widget/recordermanager_add_dialog.h
+    src/widgets/recordermanager_widget/recordermanager_add_dialog.cpp
     src/widgets/recordermanager_widget/recordermanager_widget.cpp
     src/widgets/recordermanager_widget/recordermanager_widget.h
 
+    src/widgets/recording_history_widget/push_button_delegate.cpp
+    src/widgets/recording_history_widget/push_button_delegate.h
+    src/widgets/recording_history_widget/job_history_jobitem.cpp
+    src/widgets/recording_history_widget/job_history_jobitem.h
+    src/widgets/recording_history_widget/job_history_model.cpp
+    src/widgets/recording_history_widget/job_history_model.h
+    src/widgets/recording_history_widget/job_history_recorderitem.cpp
+    src/widgets/recording_history_widget/job_history_recorderitem.h
     src/widgets/recording_history_widget/recording_history_widget.cpp
     src/widgets/recording_history_widget/recording_history_widget.h
 
     src/widgets/remote_measurement_debug_widget/remote_measurement_debug_widget.cpp
     src/widgets/remote_measurement_debug_widget/remote_measurement_debug_widget.h
 
+    src/widgets/topic_widget/row_height_delegate.cpp
+    src/widgets/topic_widget/row_height_delegate.h
     src/widgets/topic_widget/topiclist_dialog.cpp
     src/widgets/topic_widget/topiclist_dialog.h
     src/widgets/topic_widget/topic_widget.cpp
     src/widgets/topic_widget/topic_widget.h
+    src/widgets/topic_widget/topic_list_model.cpp
+    src/widgets/topic_widget/topic_list_model.h
 
-    src/widgets/wait_for_local_recorder_dialog/wait_for_local_recorder_dialog.cpp
-    src/widgets/wait_for_local_recorder_dialog/wait_for_local_recorder_dialog.h
+    src/widgets/upload_settings_dialog/upload_settings_dialog.cpp
+    src/widgets/upload_settings_dialog/upload_settings_dialog.h
+
+    src/widgets/wait_for_shutdown_dialog/wait_for_shutdown_dialog.cpp
+    src/widgets/wait_for_shutdown_dialog/wait_for_shutdown_dialog.h
 )
 
 set(qt_resource_files
@@ -118,11 +133,13 @@ set(ui_files
     src/widgets/license_dialog/license_dialog.ui
     src/widgets/recordermanager_widget/host_picker.ui
     src/widgets/recordermanager_widget/recordermanager_widget.ui
+    src/widgets/recordermanager_widget/recordermanager_add_dialog.ui
     src/widgets/recording_history_widget/recording_history_widget.ui
     src/widgets/remote_measurement_debug_widget/remote_measurement_debug_widget.ui
     src/widgets/topic_widget/topiclist_dialog.ui
     src/widgets/topic_widget/topic_widget.ui
-    src/widgets/wait_for_local_recorder_dialog/wait_for_local_recorder_dialog.ui
+    src/widgets/upload_settings_dialog/upload_settings_dialog.ui
+    src/widgets/wait_for_shutdown_dialog/wait_for_shutdown_dialog.ui
 )
 
 # compile qt resource files and ui files
@@ -168,7 +185,7 @@ if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 endif(WIN32)
 if(MSVC)
-    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127")
+    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127 /wd4714")
 ENDIF(MSVC)
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)

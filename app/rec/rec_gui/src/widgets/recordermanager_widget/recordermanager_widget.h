@@ -20,14 +20,18 @@
 #pragma once
 
 #include <QWidget>
+#include <QShowEvent>
+
 #include "ui_recordermanager_widget.h"
 
-#include "models/recorder_model.h"
-
-#include <CustomQt/QStableSortFilterProxyModel.h>
+#include <CustomQt/QMulticolumnSortFilterProxyModel.h>
 #include <CustomQt/QCheckboxHeaderView.h>
 
+#include "recorder_model.h"
+
 #include "host_filter_delegate.h"
+
+#include <rec_server_core/rec_server_config.h>
 
 class RecorderManagerWidget : public QWidget
 {
@@ -38,36 +42,53 @@ public:
   ~RecorderManagerWidget();
 
 ////////////////////////////////////
+// Save / Restore layout
+////////////////////////////////////
+protected:
+  virtual void showEvent(QShowEvent *event) override;
+
+private:
+  void saveLayout();
+  void restoreLayout();
+  void saveInitialLayout();
+
+public slots:
+  void resetLayout();
+
+////////////////////////////////////
 /// Internal slots
 ////////////////////////////////////
 private slots:
   void preBufferingEnabledChanged(bool enabled);
   void maxPreBufferLengthChanged(std::chrono::steady_clock::duration max_buffer_length);
+  void updatePreBufferWarning();
 
   void headerClicked(int column, bool checked);
   void updateHeader();
-  void treeDataChanged(const QModelIndex &top_left, const QModelIndex &bottom_right, const QVector<int> &roles);
+
+  void treeDataChanged (const QModelIndex &top_left, const QModelIndex &bottom_right, const QVector<int> &roles);
+  void treeRowsInserted(const QModelIndex &parent, int first, int last);
 
   void localRecordingButtonPressed();
 
-  void addNewRecorder();
-  void removeSelectedRecorders();
+  void addButtonClicked();
+  void removeSelectedRows();
   void enableSelectedRecorders();
   void disableSelectedRecorders();
-  void invertRecorderSelection();
 
+  void updateAddButton();
   void updateRemoveButton();
   void updateLocalRecordingButton();
 
   void contextMenu(const QPoint &pos);
 
-  void setCurrentlyInUseTopicsToDelegate(const std::vector<std::pair<std::string, std::set<std::string>>>& recorder_instances);
+  void setCurrentlyInUseHostsToDelegate(const std::map<std::string, eCAL::rec_server::ClientConfig>& enabled_rec_clients);
 
 ////////////////////////////////////
 /// Helper methods
 ////////////////////////////////////
-  QModelIndexList getSelectedRows() const;
-  QModelIndexList getSelectedRemovableRows() const;
+  QModelIndexList getSelectedRowIndexes() const;
+  std::set<int> getSelectedRows() const;
 
 ////////////////////////////////////
 /// Member variables
@@ -77,8 +98,12 @@ private:
 
   bool activate_button_state_is_ativate_;
 
-  RecorderModel*               recorder_model_;
-  QStableSortFilterProxyModel* recorder_proxy_model_;
-  HostFilterDelegate*          host_filter_delegate_;
-  QCheckboxHeaderView*         tree_header_;
+  RecorderModel*                    recorder_model_;
+  QMulticolumnSortFilterProxyModel* recorder_proxy_model_;
+  HostFilterDelegate*               host_filter_delegate_;
+  QCheckboxHeaderView*              tree_header_;
+
+  // Initial layout
+  bool first_show_event_;
+  QByteArray initial_recorder_list_state_;
 };

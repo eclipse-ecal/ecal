@@ -47,17 +47,17 @@ namespace eCAL
   {
     SReceiverAttr() :
       port(0),
+      broadcast(false),
       unicast(false),
       loopback(true),
-      local_only(false),
       rcvbuf(1024 * 1024)
     {};
 
     std::string ipaddr;
     int         port;
+    bool        broadcast;
     bool        unicast;
     bool        loopback;
-    bool        local_only;
     int         rcvbuf;
   };
 

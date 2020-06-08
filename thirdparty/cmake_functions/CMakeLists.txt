@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 include(cmake_functions.cmake)
 
-project(CMakeFunctions VERSION 0.2.2)
+project(CMakeFunctions VERSION 0.4.1)
 
 if (MSVC)
 # Variable definitions

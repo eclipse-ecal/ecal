@@ -24,7 +24,7 @@
 #include "eh5_meas_file_v1.h"
 
 #include "hdf5.h"
-#include "eh5_util.h"
+#include <ecal_utils/string.h>
 
 #include <iostream>
 
@@ -151,7 +151,7 @@ std::string eCAL::eh5::HDF5MeasFileV1::GetChannelDescription(const std::string& 
 {
   std::string description;
 
-  if (Utility::String::icompare(channel_name, channel_name_) == true)
+  if (EcalUtils::String::Icompare(channel_name, channel_name_) == true)
     GetAttributeValue(file_id_, kChnDescAttrTitle, description);
 
   return  description;
@@ -166,7 +166,7 @@ std::string eCAL::eh5::HDF5MeasFileV1::GetChannelType(const std::string& channel
 {
   std::string type;
 
-  if (Utility::String::icompare(channel_name, channel_name_) == true)
+  if (EcalUtils::String::Icompare(channel_name, channel_name_) == true)
     GetAttributeValue(file_id_, kChnTypeAttrTitle, type);
 
   return type;
@@ -205,7 +205,7 @@ bool eCAL::eh5::HDF5MeasFileV1::GetEntriesInfo(const std::string& channel_name, 
 {
   entries.clear();
 
-  if (Utility::String::icompare(channel_name, channel_name_) == false) return false;
+  if (EcalUtils::String::Icompare(channel_name, channel_name_) == false) return false;
 
   if (this->IsOk() == false) return false;
 

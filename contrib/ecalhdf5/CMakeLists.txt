@@ -21,28 +21,38 @@ project(hdf5)
 find_package(HDF5 COMPONENTS C REQUIRED)
 
 set(ecalhdf5_src
-  src/eh5_meas.cpp
-  src/eh5_meas_dir.cpp
-  src/eh5_meas_file_v1.cpp
-  src/eh5_meas_file_v2.cpp
-  src/eh5_meas_file_v3.cpp
-  src/eh5_meas_file_v4.cpp
-  src/eh5_meas_file_v5.cpp
+    src/eh5_meas.cpp
+    src/eh5_meas_dir.cpp
+    src/eh5_meas_dir.h
+    src/eh5_meas_file_v1.cpp
+    src/eh5_meas_file_v1.h
+    src/eh5_meas_file_v2.cpp
+    src/eh5_meas_file_v2.h
+    src/eh5_meas_file_v3.cpp
+    src/eh5_meas_file_v3.h
+    src/eh5_meas_file_v4.cpp
+    src/eh5_meas_file_v4.h
+    src/eh5_meas_file_v5.cpp
+    src/eh5_meas_file_v5.h
+    src/eh5_meas_impl.h
+    src/eh5_util.h
+    src/escape.h
 )
 
 set(ecalhdf5_header_base
     include/ecal/measurement/imeasurement.h
+    include/ecal/measurement/measurement.h
     include/ecal/measurement/omeasurement.h
     include/ecalhdf5/eh5_defs.h
     include/ecalhdf5/eh5_meas.h
-    include/ecalhdf5/eh5_types.h    
+    include/ecalhdf5/eh5_types.h   
 )
 
 ecal_add_library(${PROJECT_NAME} ${ecalhdf5_src} ${ecalhdf5_header_base})
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}
-  PRIVATE src
+  PRIVATE .
   PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
@@ -56,20 +66,30 @@ target_compile_options(${PROJECT_NAME}
   PRIVATE
     $<$<CXX_COMPILER_ID:GNU>:-Wextra>)
 
-if (WIN32)
+if (TARGET hdf5::hdf5-shared)
   target_link_libraries(${PROJECT_NAME} PRIVATE
-    hdf5::hdf5-static
+    hdf5::hdf5-shared
+    eCAL::utils
   )
 else()
   target_include_directories(${PROJECT_NAME} PRIVATE ${HDF5_INCLUDE_DIRS})
-  target_link_libraries     (${PROJECT_NAME} PRIVATE ${HDF5_LIBRARIES})
+  target_link_libraries(${PROJECT_NAME} PRIVATE
+    ${HDF5_LIBRARIES}
+    eCAL::utils
+  )
 endif()
-
 target_link_libraries(${PROJECT_NAME} PUBLIC eCAL::message)
+
+if(MSVC)
+    msvc_source_tree(
+        ${ecalhdf5_src}
+        ${ecalhdf5_header_base}
+    )
+endif(MSVC)
 
 ecal_install_library(${PROJECT_NAME})
 install(DIRECTORY
-   "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
+    "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
     FILES_MATCHING PATTERN "*.h")
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER contrib)

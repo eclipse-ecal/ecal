@@ -81,11 +81,22 @@ namespace eCAL
 
     // start registration receive thread
     SReceiverAttr attr;
-    attr.ipaddr     = eCALPAR(NET, UDP_MULTICAST_GROUP);
-    attr.port       = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_REG_OFF;
-    attr.loopback   = true;
-    attr.rcvbuf     = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
-    attr.local_only = !m_network;
+    bool local_only = !eCALPAR(NET, ENABLED);
+    // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
+    if (local_only)
+    {
+      attr.ipaddr    = "127.255.255.255";
+      attr.broadcast = true;
+    }
+    else
+    {
+      attr.ipaddr    = eCALPAR(NET, UDP_MULTICAST_GROUP);
+      attr.broadcast = false;
+    }
+    attr.port     = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_REG_OFF;
+    attr.loopback = true;
+    attr.rcvbuf   = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
+
     m_reg_rcv.Create(attr);
     m_reg_rcv_thread.Start(0, std::bind(&CUdpRegistrationReceiver::Receive, &m_reg_rcv_process, &m_reg_rcv));
 

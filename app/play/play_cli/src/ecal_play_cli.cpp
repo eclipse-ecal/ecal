@@ -163,7 +163,7 @@ void printMeasurementInformation(std::shared_ptr<EcalPlay> ecal_player)
 
   // General Measurement information
   std::cout << termcolor::bold << "Measurement information:" << termcolor::reset << std::endl;
-  std::cout << "  Path:            " << ecal_player->GetMeasurementPath() << std::endl;
+  std::cout << "  Directory:       " << ecal_player->GetMeasurementDirectory() << std::endl;
   std::cout << "  Channel count:   " << ecal_player->GetChannelNames().size() << std::endl;
   std::cout << "  Frame count:     " << ecal_player->GetFrameCount() << std::endl;
   auto measurement_boundaries = ecal_player->GetMeasurementBoundaries();
@@ -216,9 +216,9 @@ int main(int argc, char *argv[])
   auto arg_it = cmd.getArgList().begin();
 
   //TCLAP::Arg& ignore_rest_arg = **arg_it;
-  arg_it++;
+  ++arg_it;
   //TCLAP::Arg& version_arg     = **arg_it;
-  arg_it++;
+  ++arg_it;
   TCLAP::Arg& help_arg        = **arg_it;
 
 
@@ -249,7 +249,7 @@ int main(int argc, char *argv[])
     &interactive_arg,
   };
   
-  for (auto arg_iterator = arg_vector.rbegin(); arg_iterator != arg_vector.rend(); arg_iterator++)
+  for (auto arg_iterator = arg_vector.rbegin(); arg_iterator != arg_vector.rend(); ++arg_iterator)
   {
     cmd.add(*arg_iterator);
   }

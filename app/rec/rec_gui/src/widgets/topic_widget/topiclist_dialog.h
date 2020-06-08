@@ -27,8 +27,8 @@
 
 #include <QStandardItemModel>
 
-#include "models/topic_list_model.h"
-#include <CustomQt/QStableSortFilterProxyModel.h>
+#include "topic_list_model.h"
+#include <CustomQt/QMulticolumnSortFilterProxyModel.h>
 
 class TopicListDialog : public QDialog
 {
@@ -47,7 +47,7 @@ private slots:
   void updateListedTopicsButtons();
   void updateVisibleTopicsButtons();
 
-  void monitorUpdated(const std::map<std::string, eCAL::rec::TopicInfo>& topic_info_map);
+  void monitorUpdated(const std::map<std::string, eCAL::rec_server::TopicInfo>& topic_info_map);
   void updateListedTopicsInVisibleTopics();
 
   void addNewTopic();
@@ -70,8 +70,8 @@ private:
   QStandardItemModel*          selected_topics_model_;
   QStableSortFilterProxyModel* selected_topics_proxy_model_;
 
-  TopicListModel*              visible_topics_model_;
-  QStableSortFilterProxyModel* visible_topics_proxy_model_;
+  TopicListModel*                   visible_topics_model_;
+  QMulticolumnSortFilterProxyModel* visible_topics_proxy_model_;
 
   QModelIndex addTopicToList(const QString& topic_name = "");
 };

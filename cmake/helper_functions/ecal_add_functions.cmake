@@ -82,6 +82,17 @@ function(ecal_add_mon_plugin TARGET_NAME)
     
 endfunction()
 
+function(ecal_add_rec_addon TARGET_NAME)
+  add_executable(${TARGET_NAME} ${ARGN})
+  set_target_properties(${TARGET_NAME} PROPERTIES
+    #VERSION ${${TARGET_NAME}_VERSION}
+    #SOVERSION ${${TARGET_NAME}_VERSION_MAJOR}
+    OUTPUT_NAME ecal_${TARGET_NAME}
+    RUNTIME_OUTPUT_DIRECTORY $<IF:$<BOOL:${WIN32}>,${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/ecalrec_addons,${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ecal/addons/rec>
+  )
+    
+endfunction()
+
 function(ecal_add_time_plugin TARGET_NAME)
   add_library(${TARGET_NAME} MODULE ${ARGN})
   set_target_properties(${TARGET_NAME} PROPERTIES

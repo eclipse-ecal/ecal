@@ -37,6 +37,7 @@ cmake_policy(SET CMP0054 NEW)
 # --------------------------------------------------------
 option(HAS_HDF5                                "Platform supports HDF5 library"                                    ON)
 option(HAS_QT5                                 "Platform supports Qt 5 library"                                    ON)
+option(HAS_CURL                                "Build with CURL (i.e. upload support in the recorder app)"         ON)
 option(HAS_CAPNPROTO                           "Platform supports Cap'n Proto library"                            OFF)
 
 option(BUILD_DOCS                              "Build the eCAL documentation"                                     OFF)
@@ -59,7 +60,15 @@ option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (
 option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS   "Build CMakeFunctions with eCAL"                                    ON)
 option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build protobuf with eCAL"                                          ON)
 option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                            ON)
+option(ECAL_THIRDPARTY_BUILD_TINYXML2          "Build tinyxml2 with eCAL"                                          ON)
+option(ECAL_THIRDPARTY_BUILD_FINEFTP           "Build fineFTP with eCAL"                                           ON)
+
+# option(ECAL_THIRDPARTY_BUILD_ZLIB              "Build zlib with eCAL"                                              ON)
+# option(ECAL_THIRDPARTY_BUILD_LIBSSH2           "Build libssh2 with eCAL"                                           ON)
+option(ECAL_THIRDPARTY_BUILD_CURL              "Build CURL with eCAL"                                              ON)
+
 option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"                                            OFF)
+option(ECAL_THIRDPARTY_BUILD_HDF5              "Build HDF5 with eCAL"                                             ON)
 
 set(ECAL_INSTALL_PYTHON_DIR "bin" CACHE PATH "Location to install the Python extension modules. Might be set by setupdtools install.")
 
@@ -68,6 +77,8 @@ if(${CMAKE_CROSSCOMPILING})
   set(THREADS_PTHREAD_ARG "2" CACHE STRING "Forcibly set by CMakeLists.txt." FORCE)
 endif()
 
+
+include(build_location)
 
 # find_project(eCAL calls shall be ignored, eCAL is build as part of the project)
 set(as_subproject eCAL)
@@ -89,9 +100,18 @@ endif()
 # --------------------------------------------------------
 # third party dependencies as requested
 # --------------------------------------------------------
-if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR ECAL_THIRDPARTY_BUILD_SPDLOG OR ECAL_THIRDPARTY_BUILD_GTEST)
+if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR
+    ECAL_THIRDPARTY_BUILD_SPDLOG OR
+    ECAL_THIRDPARTY_BUILD_TINYXML2 OR
+    ECAL_THIRDPARTY_BUILD_FINEFTP OR
+    ECAL_THIRDPARTY_BUILD_ZLIB OR
+    ECAL_THIRDPARTY_BUILD_LIBSSH2 OR
+    ECAL_THIRDPARTY_BUILD_CURL OR
+    ECAL_THIRDPARTY_BUILD_GTEST OR
+    ECAL_THIRDPARTY_BUILD_HDF5
+    )
   if(MSVC)
-    # supress thirdparty warnings for windows platform
+    message(STATUS "supress thirdparty warnings for windows platform ..")
     set(CMAKE_CXX_FLAGS_OLD "${CMAKE_CXX_FLAGS}")
     if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
       string(REGEX REPLACE "/W[0-4]" "/W0" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -116,16 +136,68 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
     add_executable(protobuf::protoc ALIAS protoc)
     set(Protobuf_PROTOC_EXECUTABLE protoc)
   endif()
-  set(Protobuf_VERSION_MAJOR 3)
-  set(Protobuf_VERSION_MINOR 11)
-  set(Protobuf_VERSION_PATCH 4)
+  set(Protobuf_VERSION 3.11.4)
 endif()
 
 if (ECAL_THIRDPARTY_BUILD_SPDLOG)
   list(APPEND as_subproject spdlog)
-  set(SPDLOG_BUILD_TESTING OFF CACHE BOOL "My option" FORCE)
+  set(SPDLOG_BUILD_EXAMPLE OFF CACHE BOOL "My option" FORCE)
+  set(SPDLOG_BUILD_TESTS OFF CACHE BOOL "My option" FORCE)
+  set(SPDLOG_BUILD_BENCH OFF CACHE BOOL "My option" FORCE)
   add_subdirectory(thirdparty/spdlog)
-  add_library(spdlog::spdlog ALIAS spdlog)
+  if (NOT TARGET spdlog::spdlog)
+    add_library(spdlog::spdlog ALIAS spdlog)
+  endif ()
+endif ()
+
+if (ECAL_THIRDPARTY_BUILD_TINYXML2)
+  list(APPEND as_subproject tinyxml2)
+  set(BUILD_SHARED_LIBS OFF CACHE BOOL "My option" FORCE)
+  set(DBUILD_STATIC_LIBS ON CACHE BOOL "My option" FORCE)
+  set(BUILD_TESTING OFF CACHE BOOL "My option" FORCE)
+  set(BUILD_TESTS OFF CACHE BOOL "My option" FORCE)
+  add_subdirectory(thirdparty/tinyxml2)
+  add_library(tinyxml2::tinyxml2 ALIAS tinyxml2)
+endif ()
+
+if (ECAL_THIRDPARTY_BUILD_FINEFTP)
+  list(APPEND as_subproject fineftp)
+  add_subdirectory(thirdparty/fineftp-server/fineftp-server)
+  set_property(TARGET server PROPERTY FOLDER lib/fineftp)
+  add_library(fineftp::server ALIAS server)
+endif ()
+
+# if (ECAL_THIRDPARTY_BUILD_LIBSSH2)
+  # list(APPEND as_subproject libssh2)
+  # set(DBUILD_STATIC_LIBS OFF CACHE BOOL "My option" FORCE)
+  # set(BUILD_TESTING OFF CACHE BOOL "My option" FORCE)
+  # add_subdirectory(thirdparty/libssh2)
+  # add_library(LibSSH2 ALIAS libssh2)
+# endif ()
+
+# if (ECAL_THIRDPARTY_BUILD_ZLIB)
+  # list(APPEND as_subproject zlib zlibstatic)
+  # add_subdirectory(thirdparty/zlib)
+  # add_library(ZLIB::zlibstatic ALIAS zlibstatic)
+  # add_library(ZLIB::zlib ALIAS zlib)
+# endif ()
+
+if (ECAL_THIRDPARTY_BUILD_CURL)
+  list(APPEND as_subproject CURL)
+  
+  if(WIN32)
+    set(CMAKE_USE_WINSSL ON CACHE BOOL "Use native SSL on Windows" FORCE)
+  endif()
+  
+  set(BUILD_CURL_EXE OFF CACHE BOOL "Don't build the curl executable" FORCE)
+  set(ENABLE_MANUAL  OFF CACHE BOOL "Disable built-in manual" FORCE)
+  
+  add_subdirectory(thirdparty/curl)
+  
+  if (NOT TARGET CURL::libcurl)
+    add_library(CURL::libcurl ALIAS libcurl)
+  endif()
+  
 endif ()
 
 if (ECAL_THIRDPARTY_BUILD_GTEST)
@@ -145,9 +217,50 @@ if (ECAL_THIRDPARTY_BUILD_GTEST)
   endif()
 endif()
 
-if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR ECAL_THIRDPARTY_BUILD_SPDLOG OR ECAL_THIRDPARTY_BUILD_GTEST)
+if (ECAL_THIRDPARTY_BUILD_HDF5)
+  list(APPEND as_subproject HDF5)
+
+  set(ONLY_SHARED_LIBS       OFF CACHE BOOL "Do not only Build Shared Libraries" FORCE)
+  set(HDF5_ENABLE_THREADSAFE ON  CACHE BOOL "Enable thread-safety" FORCE)
+  set(BUILD_TESTING          OFF CACHE BOOL "Do not build HDF5 Unit Testing" FORCE)
+  set(HDF5_BUILD_TOOLS       OFF CACHE BOOL "Don not build HDF5 Tools" FORCE)
+  set(HDF5_BUILD_EXAMPLES    OFF CACHE BOOL "Don not build HDF5 Library Examples" FORCE)
+  set(HDF5_BUILD_CPP_LIB     OFF CACHE BOOL "Don not build C++ lib" FORCE)
+  set(HDF5_BUILD_HL_LIB      OFF CACHE BOOL "Don not build hdf5-hl" FORCE)
+  set(ONLY_SHARED_LIBS       ON)
+  
+  set(HDF5_EXTERNALLY_CONFIGURED 1)
+  set(HDF5_EXPORTED_TARGETS eCALCoreTargets)
+
+  #We need to build hdf5 as shared to enable the threadsafe option. HDF5 uses the BUILD_SHARED_LIBS to check if shared build is on.
+  # Hence we need to save the old value, enable it, and then set it back to the old value
+
+  set(BUILD_SHARED_LIBS_OLD ${BUILD_SHARED_LIBS})
+  set(BUILD_SHARED_LIBS ON CACHE BOOL "Build hdf5 shared" FORCE)
+
+  add_subdirectory(thirdparty/hdf5)
+
+  set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD} CACHE BOOL "Build hdf5 shared" FORCE)
+
+  if(NOT TARGET hdf5::hdf5-shared)
+    add_library(hdf5::hdf5-shared ALIAS hdf5-shared)
+  endif()
+
+  target_include_directories(hdf5-shared INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/thirdparty/hdf5>")
+endif()
+
+if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR
+    ECAL_THIRDPARTY_BUILD_SPDLOG OR
+    ECAL_THIRDPARTY_BUILD_TINYXML2 OR
+    ECAL_THIRDPARTY_BUILD_FINEFTP OR
+    ECAL_THIRDPARTY_BUILD_ZLIB OR
+    ECAL_THIRDPARTY_BUILD_LIBSSH2 OR
+    ECAL_THIRDPARTY_BUILD_CURL OR
+    ECAL_THIRDPARTY_BUILD_GTEST OR
+    ECAL_THIRDPARTY_BUILD_HDF5
+    )
   if(MSVC)
-    # reset thirdparty warnings for windows platform
+    message(STATUS "reset thirdparty warnings for windows platform ..")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
   endif()
 endif()
@@ -167,11 +280,10 @@ if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
 endif ()
 
 
-
 find_package(CMakeFunctions REQUIRED)
 
 git_revision_information()
-set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAYOR})
+set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
 set(eCAL_VERSION_MINOR  ${GIT_REVISION_MINOR})
 set(eCAL_VERSION_PATCH  ${GIT_REVISION_PATCH})
 set(eCAL_VERSION_STRING ${eCAL_VERSION_MAJOR}.${eCAL_VERSION_MINOR}.${eCAL_VERSION_PATCH})
@@ -181,7 +293,6 @@ include(helper_functions/ecal_add_functions)
 include(helper_functions/ecal_helper_functions)
 include(helper_functions/ecal_install_functions)
 include(helper_functions/ecal_python_functions)
-include(build_location)
 
 if(MSVC)
   set(eCAL_PLATFORM_TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET})
@@ -330,6 +441,7 @@ add_subdirectory(ecal/core)
 add_subdirectory(lib/ThreadingUtils)
 add_subdirectory(lib/CustomTclap)
 add_subdirectory(lib/ecal_utils)
+
 if(HAS_QT5)
   add_subdirectory(lib/CustomQt)
 endif()
@@ -345,6 +457,12 @@ endif(HAS_QT5)
 # ecal mon plugin sdk
 # --------------------------------------------------------
 add_subdirectory(app/mon/mon_plugin_lib)
+
+# --------------------------------------------------------
+# ecal rec addon sdk
+# --------------------------------------------------------
+add_subdirectory(app/rec/rec_addon_core)
+add_subdirectory(app/rec/rec_addon_dummy)
 
 # --------------------------------------------------------
 # ecal time
@@ -396,8 +514,8 @@ if(BUILD_APPS AND HAS_HDF5)
   add_subdirectory(app/play/play_core)
   add_subdirectory(app/play/play_cli)
 
-  add_subdirectory(app/rec/rec_cli)
-  add_subdirectory(app/rec/rec_core)
+  add_subdirectory(app/rec/rec_client_cli)
+  add_subdirectory(app/rec/rec_client_core)
   add_subdirectory(app/rec/rec_server_core)
 endif()
 

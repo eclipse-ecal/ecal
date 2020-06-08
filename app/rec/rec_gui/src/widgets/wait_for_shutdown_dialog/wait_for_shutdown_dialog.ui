@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>WaitForShutdownDialog</class>
+ <widget class="QDialog" name="WaitForShutdownDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>444</width>
+    <height>436</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Waiting for local recorder</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>12</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="header_label">
+     <property name="text">
+      <string>&lt;b&gt;It is not safe to shut down eCAL Rec at the moment:&lt;/b&gt;</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="wait_for_flushing_groupbox">
+     <property name="title">
+      <string>Wait for flushing recordings:</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QLabel" name="wait_for_flushing_label">
+        <property name="text">
+         <string>0 recordings are being flushed</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QProgressBar" name="wait_for_flushing_progressbar">
+        <property name="maximum">
+         <number>10000</number>
+        </property>
+        <property name="value">
+         <number>0</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="non_uploaded_recordings_groupbox">
+     <property name="title">
+      <string>You have non-merged recordings:</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QLabel" name="non_uploaded_recordings_label">
+        <property name="text">
+         <string>0 recordings are not merged, yet. Click the button to upload them.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="upload_button">
+        <property name="text">
+         <string>Merge / Upload</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../../../../iconset/ecalicons.qrc">
+          <normaloff>:/ecalicons/MERGE</normaloff>:/ecalicons/MERGE</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="built_in_ftp_server_busy_groupbox">
+     <property name="title">
+      <string>The built-in FTP server is busy:</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Open connections:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="built_in_ftp_server_open_connections_label">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="built_in_recorder_uploading_groupbox">
+     <property name="title">
+      <string>The built-in recorder is uploading:</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <widget class="QLabel" name="built_in_recorder_uploading_label">
+        <property name="text">
+         <string>0 recordings are being uploaded</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QProgressBar" name="built_in_recorder_uploading_progressbar">
+        <property name="maximum">
+         <number>10000</number>
+        </property>
+        <property name="value">
+         <number>0</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="safe_to_exit_label">
+     <property name="text">
+      <string>It is safe to close eCAL Rec now.</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="button_box">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../../../../../iconset/ecalicons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -430,7 +430,7 @@ public:
    *
    * @return True if successfull
    */
-  bool PlayToNextOccurenceOfChannel(std::string source_channel_name);
+  bool PlayToNextOccurenceOfChannel(const std::string& source_channel_name);
 
   /**
    * @brief Pauses the playback

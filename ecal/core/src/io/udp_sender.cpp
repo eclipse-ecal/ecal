@@ -46,6 +46,7 @@ namespace eCAL
     size_t Send(const void* buf_, const size_t len_, const char* ipaddr_ = nullptr);
 
   protected:
+    bool                    m_broadcast;
     bool                    m_unicast;
     asio::io_context        m_iocontext;
     asio::ip::udp::endpoint m_endpoint;
@@ -54,12 +55,19 @@ namespace eCAL
   };
 
   CUDPSenderImpl::CUDPSenderImpl(const SSenderAttr& attr_) :
+    m_broadcast(attr_.broadcast),
     m_unicast(attr_.unicast),
     m_endpoint(asio::ip::make_address(attr_.ipaddr), static_cast<unsigned short>(attr_.port)),
     m_socket(m_iocontext, m_endpoint.protocol()),
     m_port(static_cast<unsigned short>(attr_.port))
   {
-    if (m_unicast)
+    if (m_broadcast && m_unicast)
+    {
+      std::cerr << "CUDPSender: Setting broadcast and unicast option true is not allowed." << std::endl;
+      return;
+    }
+
+    if (m_broadcast || m_unicast)
     {
       // set unicast packet TTL
       asio::ip::unicast::hops ttl(attr_.ttl);
@@ -82,12 +90,21 @@ namespace eCAL
       // set loopback option
       {
         asio::ip::multicast::enable_loopback loopback(attr_.loopback);
-        asio::error_code ec;      
+        asio::error_code ec;
         m_socket.set_option(loopback);
         if (ec)
           std::cerr << "CUDPSender: Error setting loopback option: " << ec.message() << std::endl;
       }
     }
+
+    if (m_broadcast)
+    {
+      asio::error_code ec;
+      m_socket.set_option(asio::socket_base::broadcast(true), ec);
+      if (ec)
+        std::cerr << "CUDPSender: Setting broadcast mode failed: " << ec.message() << std::endl;
+    }
+
     m_iocontext.run();
   }
 

@@ -1,9 +1,9 @@
 #ifndef ecal_defs_h_included
 #define ecal_defs_h_included
-#define ECAL_VERSION_MAJOR (@GIT_REVISION_MAYOR@)
+#define ECAL_VERSION_MAJOR (@GIT_REVISION_MAJOR@)
 #define ECAL_VERSION_MINOR (@GIT_REVISION_MINOR@)
 #define ECAL_VERSION_PATCH (@GIT_REVISION_PATCH@)
 #define ECAL_VERSION "@GIT_DESCRIBE_TAG@"
-#define ECAL_DATE "@eCAL_BUILD_DATE@"
+#define ECAL_DATE "@GIT_REVISION_DATE@"
 #define ECAL_PLATFORMTOOLSET "@eCAL_PLATFORM_TOOLSET@"
 #endif // ecal_defs_h_included

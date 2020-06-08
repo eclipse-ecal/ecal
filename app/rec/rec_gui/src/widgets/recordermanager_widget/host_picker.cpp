@@ -23,23 +23,22 @@
 #include <QSet>
 #include <QInputDialog>
 
+#include "qecalrec.h"
+
 HostPicker::HostPicker(const QStringList& available_hosts, const QStringList& initial_selection, QWidget *parent)
   : QDialog(parent)
 {
   ui_.setupUi(this);
 
+  ui_.host_list->setAlternatingRowColors(QEcalRec::instance()->alternatingRowColorsEnabled());
+  connect(QEcalRec::instance(), &QEcalRec::alternatingRowColorsEnabledChanged, ui_.host_list, &QTreeView::setAlternatingRowColors);
+
   host_list_model_ = new QStandardItemModel(this);
 
   // Merge available hosts and initial selections
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-  QSet<QString> host_set = QSet<QString>::fromList(available_hosts + initial_selection);
-  QStringList host_stringlist = host_set.toList();
+  QStringList host_stringlist = available_hosts + initial_selection;
+  host_stringlist.removeDuplicates();
   host_stringlist.sort(Qt::CaseSensitivity::CaseInsensitive);
-#else
-  QStringList host_list = available_hosts + initial_selection;
-  QSet<QString> host_set = QSet<QString>(host_list.begin(), host_list.end());
-  QStringList host_stringlist = host_set.values();
-#endif
 
   // Add available hosts
   for (const auto& host : host_stringlist)

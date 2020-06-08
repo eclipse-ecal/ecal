@@ -27,6 +27,7 @@
 #include <QDesktopServices>
 #include <QMimeData>
 #include <QScreen>
+#include <QMessageBox>
 
 #ifdef WIN32
 #include <QWinTaskbarButton>
@@ -98,8 +99,13 @@ EcalplayGui::EcalplayGui(QWidget *parent)
   current_speed_label_    = new QLabel(" Current Speed: 99999.99 ", this);
   current_frame_label_    = new QLabel(" Frame: 999999 / 999999 ", this);
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
   int current_speed_label_size = current_speed_label_->fontMetrics().width(" Current Speed: 9999999.99 ");
   int current_frame_label_size = current_speed_label_->fontMetrics().width(" Frame: 999999999 / 999999999 ");
+#else
+  int current_speed_label_size = current_speed_label_->fontMetrics().horizontalAdvance(" Current Speed: 9999999.99 ");
+  int current_frame_label_size = current_speed_label_->fontMetrics().horizontalAdvance(" Frame: 999999999 / 999999999 ");
+#endif
 
   int common_size = std::max(current_speed_label_size, current_frame_label_size);
 
@@ -135,6 +141,11 @@ EcalplayGui::EcalplayGui(QWidget *parent)
   connect(QEcalPlay::instance(), &QEcalPlay::channelMappingChangedSignal,              this, &EcalplayGui::channelMappingChanged);
   connect(QEcalPlay::instance(), &QEcalPlay::exitSignal,                               this, &QMainWindow::close);
 
+  connect(QEcalPlay::instance(), &QEcalPlay::scenariosChangedSignal,                   this, &EcalplayGui::updateScenariosModified);
+  connect(QEcalPlay::instance(), &QEcalPlay::scenariosSavedSignal,                     this, &EcalplayGui::updateScenariosModified);
+  connect(QEcalPlay::instance(), &QEcalPlay::measurementClosedSignal,                  this, &EcalplayGui::updateScenariosModified);
+  connect(QEcalPlay::instance(), &QEcalPlay::measurementLoadedSignal,                  this, &EcalplayGui::updateScenariosModified);
+
   connect(QEcalPlay::instance(), &QEcalPlay::channelMappingFileActionChangedSignal,    this, &EcalplayGui::channelMappingFileActionChanged);
 
   // Connect this -> QEcalPlay
@@ -146,8 +157,9 @@ EcalplayGui::EcalplayGui(QWidget *parent)
         else
           QEcalPlay::instance()->deInitializePublishers();
       });
-  connect(ui_.action_load_measurement,       &QAction::triggered, QEcalPlay::instance(), &QEcalPlay::loadMeasurementFromFileDialog);
-  connect(ui_.action_close_measurement,      &QAction::triggered, QEcalPlay::instance(), &QEcalPlay::closeMeasurement);
+  connect(ui_.action_load_measurement,       &QAction::triggered, this,                  &EcalplayGui::loadMeasurementFromFileDialog);
+  connect(ui_.action_close_measurement,      &QAction::triggered, this,                  &EcalplayGui::closeMeasurement);
+  connect(ui_.action_save_scenarios,         &QAction::triggered, QEcalPlay::instance(), []() { QEcalPlay::instance()->saveScenariosToDisk(); });
   connect(ui_.action_save_channel_mapping,   &QAction::triggered, QEcalPlay::instance(), &QEcalPlay::saveChannelMappingAs);
   connect(ui_.action_load_channel_mapping,   &QAction::triggered, QEcalPlay::instance(), &QEcalPlay::loadChannelMappingFileFromFileDialog);
 
@@ -266,12 +278,22 @@ EcalplayGui::EcalplayGui(QWidget *parent)
   saveInitialLayout();
   restoreLayout();
 
+  updateScenariosModified();
+
   //Drag & Drop
   setAcceptDrops(true);
 }
 
 void EcalplayGui::closeEvent(QCloseEvent* event)
 {
+  bool may_continue = askToSaveScenarios();
+
+  if(!may_continue)
+  {
+    event->ignore();
+    return;
+  }
+
   if (QEcalPlay::instance()->isMeasurementLoaded())
   {
     QEcalPlay::instance()->saveChannelMapping();
@@ -575,7 +597,7 @@ void EcalplayGui::populateRecentMeasurementsMenu()
 
       QAction* meas_action = ui_.menu_recent_measurement->addAction(label + ": " + measurement);
       meas_action->setToolTip(measurement);
-      connect(meas_action, &QAction::triggered, this, [measurement]() {QEcalPlay::instance()->loadMeasurement(measurement); });
+      connect(meas_action, &QAction::triggered, this, [this, measurement]() { this->loadMeasurement(measurement); });
       counter++;
     }
   }
@@ -617,6 +639,12 @@ void EcalplayGui::addRecentMeasurement(const QString& measurement)
   }
 
   settings.setValue("recent_measurements", recent_measurements);
+}
+
+void EcalplayGui::updateScenariosModified()
+{
+  ui_.action_save_scenarios->setEnabled(QEcalPlay::instance()->scenariosModified());
+  setWindowModified(QEcalPlay::instance()->scenariosModified());
 }
 
 
@@ -668,6 +696,73 @@ void EcalplayGui::resetLayout()
   move(QGuiApplication::screens().at(screen_number)->availableGeometry().center() - rect().center());
 }
 
+bool EcalplayGui::loadMeasurementFromFileDialog()
+{
+  const bool may_continue = askToSaveScenarios();
+
+  if (may_continue)
+  {
+    return QEcalPlay::instance()->loadMeasurementFromFileDialog();
+  }
+
+  return false;
+}
+
+bool EcalplayGui::loadMeasurement(const QString& path)
+{
+  const bool may_continue = askToSaveScenarios();
+
+  if (may_continue)
+  {
+    return QEcalPlay::instance()->loadMeasurement(path);
+  }
+
+  return false;
+}
+
+bool EcalplayGui::closeMeasurement()
+{
+  const bool may_continue = askToSaveScenarios();
+
+  if (may_continue)
+  {
+    QEcalPlay::instance()->closeMeasurement();
+  }
+
+  return may_continue;
+}
+
+bool EcalplayGui::askToSaveScenarios()
+{
+  bool may_continue = true;
+
+  if (QEcalPlay::instance()->scenariosModified())
+  {
+    QMessageBox config_modified_warning(
+      QMessageBox::Icon::Warning
+      , tr("The Labels have been modified")
+      , tr("Do you want to save your changes?")
+      , QMessageBox::Button::Save | QMessageBox::Button::Discard | QMessageBox::Button::Cancel
+      , this);
+
+    int user_choice = config_modified_warning.exec();
+
+    if (user_choice == QMessageBox::Button::Save)
+    {
+      may_continue = QEcalPlay::instance()->saveScenariosToDisk();
+    }
+    else if (user_choice == QMessageBox::Button::Discard)
+    {
+      may_continue = true;
+    }
+    else if (user_choice == QMessageBox::Button::Cancel)
+    {
+      may_continue = false;
+    }
+  }
+  return may_continue;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //// Drag & drop                                                            ////
 ////////////////////////////////////////////////////////////////////////////////
@@ -710,7 +805,7 @@ void EcalplayGui::dropEvent(QDropEvent* event)
     if (url_list.size() == 1)
     {
       event->acceptProposedAction();
-      QEcalPlay::instance()->loadMeasurement(url_list.front().toLocalFile());
+      loadMeasurement(url_list.front().toLocalFile());
       return;
     }
   }

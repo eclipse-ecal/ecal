@@ -28,12 +28,12 @@ cd /d %BUILD_DIR%
 
 if %ARCH% == "" goto build_no_arch
 set COMPILE_WIN64=%VISUAL_STUDIO_GENERATOR%
-cmake .. -G "%COMPILE_WIN64%" -A "%ARCH%" -DCMAKE_INSTALL_PREFIX=_install
+cmake .. -G "%COMPILE_WIN64%" -A "%ARCH%" -DCMAKE_INSTALL_PREFIX=_install -DBUILD_SHARED_LIBS=OFF
 goto end
 
 :build_no_arch
 set COMPILE_WIN64=%VISUAL_STUDIO_GENERATOR% Win64
-cmake .. -G "%COMPILE_WIN64%" -DCMAKE_INSTALL_PREFIX=_install
+cmake .. -G "%COMPILE_WIN64%" -DCMAKE_INSTALL_PREFIX=_install -DBUILD_SHARED_LIBS=OFF
 
 :end
 popd

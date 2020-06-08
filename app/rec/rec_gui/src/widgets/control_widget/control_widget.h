@@ -20,6 +20,9 @@
 #pragma once
 
 #include <QWidget>
+
+#include <QResizeEvent>
+
 #include <chrono>
 #include "ui_control_widget.h"
 
@@ -31,6 +34,9 @@ public:
   ControlWidget(QWidget *parent = Q_NULLPTR);
   ~ControlWidget();
 
+protected:
+  void resizeEvent(QResizeEvent *event);
+
 private slots:
   void updateRecordButton();
   void updateSaveBufferButton();
@@ -39,12 +45,8 @@ private slots:
 private:
   Ui::ControlWidget ui_;
 
+  bool first_resize_event_;
+
   bool record_button_state_is_record_;
   bool activate_button_state_is_activate_;
-
-  QMenu*   activate_button_menu_;
-  QAction* enable_client_connections_action_;
-  QAction* connect_to_ecal_action_;
-  bool enable_client_connections_action_state_is_enable_;
-  bool connect_to_ecal_action_state_is_connect_;
 };

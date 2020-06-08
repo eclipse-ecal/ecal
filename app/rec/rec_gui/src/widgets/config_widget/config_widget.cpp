@@ -39,6 +39,7 @@ ConfigWidget::ConfigWidget(QWidget *parent)
   connect(QEcalRec::instance(), &QEcalRec::measRootDirChangedSignal,    this, &ConfigWidget::measurementRootDirectoryChanged);
   connect(QEcalRec::instance(), &QEcalRec::measNameChangedSignal,       this, &ConfigWidget::measurementNameChanged);
   connect(QEcalRec::instance(), &QEcalRec::maxFileSizeMibChangedSignal, this, &ConfigWidget::maxFileSizeChanged);
+  connect(QEcalRec::instance(), &QEcalRec::descriptionChangedSignal,    this, &ConfigWidget::descriptionChanged);
 
   measurementRootDirectoryChanged(QEcalRec::instance()->measRootDir());
   measurementNameChanged         (QEcalRec::instance()->measName());
@@ -51,7 +52,7 @@ ConfigWidget::~ConfigWidget()
 {
 }
 
-void ConfigWidget::maxFileSizeChanged(size_t megabytes)
+void ConfigWidget::maxFileSizeChanged(unsigned int megabytes)
 {
   if ((int)megabytes != ui_.max_file_size_spinbox->value())
   {

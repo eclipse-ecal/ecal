@@ -21,7 +21,7 @@
 
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4800) // disable proto warnings
+#pragma warning(disable: 4100 4127 4146 4505 4800) // disable proto warnings
 #endif
 #include <ecal/pb/play/service.pb.h>
 #ifdef _MSC_VER

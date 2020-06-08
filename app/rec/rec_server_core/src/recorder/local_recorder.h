@@ -21,6 +21,8 @@
 
 #include "abstract_recorder.h"
 
+#include <ThreadingUtils/InterruptibleLoopThread.h>
+
 #include <memory>
 
 namespace eCAL
@@ -28,34 +30,61 @@ namespace eCAL
   namespace rec
   {
     class EcalRec;
+  }
 
-    class LocalRecorder : public AbstractRecorder
+  namespace rec_server
+  {
+
+    class LocalRecorder : public AbstractRecorder, protected InterruptibleLoopThread
     {
+    //////////////////////////////////////
+    // Constructor & Destructor
+    //////////////////////////////////////
     public:
-      explicit LocalRecorder(const std::string& hostname, const std::shared_ptr<eCAL::rec::EcalRec>& ecal_rec_instance, const RecorderSettings& initial_settings, bool initially_connected_to_ecal);
+      explicit LocalRecorder(const std::string& hostname
+                            , const std::shared_ptr<eCAL::rec::EcalRec>& ecal_rec_instance
+                            , const std::function<void(const std::string& hostname, const eCAL::rec::RecorderStatus& recorder_status)>& update_jobstatus_function
+                            , const std::function<void(int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& info_command_response)>& report_job_command_response_callback
+                            , const RecorderSettings& initial_settings);
       ~LocalRecorder();
 
+    //////////////////////////////////////
+    // Interruptible Thread overrrides
+    //////////////////////////////////////
+    protected:
+      void Loop() override;
+
+    //////////////////////////////////////
+    // Public API
+    //////////////////////////////////////
     public:
-      virtual void SetClientConnectionEnabled(bool connect) override;
-      virtual bool IsClientConnectionEnabled() const override;
+      virtual void SetRecorderEnabled(bool enabled, bool connect_to_ecal = false) override;
+      virtual bool IsRecorderEnabled() const override;
+
+      virtual bool EverParticipatedInAMeasurement() const override;
 
       virtual void SetSettings(const RecorderSettings& settings) override;
       virtual void SetCommand(const RecorderCommand& command) override;
 
-      virtual void InitiateConnectionShutdown(const RecorderCommand& last_command) override;
-
       virtual bool IsAlive() const override;
-      virtual RecorderState GetState() const override;
+      virtual std::pair<eCAL::rec::RecorderStatus, eCAL::Time::ecal_clock::time_point> GetStatus() const override;
 
       virtual bool IsRequestPending() const override;
       virtual void WaitForPendingRequests() const override;
 
       virtual std::pair<bool, std::string> GetLastResponse() const override;
 
+    //////////////////////////////////////
+    // Member Variables
+    //////////////////////////////////////
     private:
+      mutable std::mutex                  ecal_rec_instance_and_status_mutex_;
       std::shared_ptr<eCAL::rec::EcalRec> ecal_rec_instance_;
+      eCAL::rec::RecorderStatus           last_status_;
 
-      bool             connection_activated_;
+      std::atomic<bool> ever_participated_in_a_measurement_;
+
+      bool             recorder_enabled_;
       bool             is_in_sync_;
 
       std::pair<bool, std::string> last_response_;

@@ -25,7 +25,7 @@
 
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4800) // disable proto warnings
+#pragma warning(disable: 4100 4127 4244 4267 4512 4996 4146 4800) // disable proto warnings
 #endif
 #include <google/protobuf/message.h>
 #ifdef _MSC_VER

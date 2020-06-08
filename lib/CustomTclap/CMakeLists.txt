@@ -31,7 +31,7 @@ set(src_files
   src/fuzzy_value_switch_arg.cpp
 )
 
-add_library (${PROJECT_NAME} 
+ecal_add_static_library(${PROJECT_NAME} 
   ${include_files}
   ${src_files}
 )

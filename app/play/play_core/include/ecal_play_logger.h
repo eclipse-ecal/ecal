@@ -22,6 +22,11 @@
 #include <string>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_sinks.h>
+#ifdef SPDLOG_VER_MAJOR
+#include <spdlog/sinks/rotating_file_sink.h>
+#endif
+
 #include <iostream>
 
 #include "ecal_play_globals.h"

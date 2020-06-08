@@ -32,7 +32,7 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_file">
@@ -60,6 +60,7 @@
     <addaction name="menu_recent_measurement"/>
     <addaction name="action_close_measurement"/>
     <addaction name="separator"/>
+    <addaction name="action_save_scenarios"/>
     <addaction name="menuChannel_Mapping"/>
     <addaction name="separator"/>
     <addaction name="action_exit"/>
@@ -143,7 +144,7 @@
   </widget>
   <widget class="QDockWidget" name="scenario_dockwidget">
    <property name="windowTitle">
-    <string>Scenarios</string>
+    <string>Labels</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>
@@ -260,6 +261,9 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
    </property>
   </action>
   <action name="action_close_measurement">
@@ -404,6 +408,9 @@
    <property name="shortcut">
     <string>F1</string>
    </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
+   </property>
   </action>
   <action name="action_licenses">
    <property name="text">
@@ -502,6 +509,18 @@
    </property>
    <property name="text">
     <string>Ask whether to load mapping file</string>
+   </property>
+  </action>
+  <action name="action_save_scenarios">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/SAVE</normaloff>:/ecalicons/SAVE</iconset>
+   </property>
+   <property name="text">
+    <string>Save labels</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>

@@ -19,100 +19,130 @@
 
 #pragma once
 
+#include <string>
+#include <set>
+#include <map>
+#include <chrono>
+#include <functional>
+#include <memory>
+
 #include <QObject>
 #include <QTimer>
 
-#include <QProgressDialog>
-#include <QFuture>
-#include <QtConcurrent/QtConcurrent>
-#include <QApplication>
-#include <QIcon>
+#include <rec_client_core/state.h>
+#include <rec_client_core/record_mode.h>
 
-#include <map>
-#include <set>
-#include <string>
-#include <memory>
-#include <chrono>
-#include <thread>
+#include <rec_client_core/rec_error.h>
 
-#include <rec_core/record_mode.h>
-#include <rec_core/recorder_state.h>
+#include <rec_server_core/rec_server_config.h>
+#include <rec_server_core/rec_server_types.h>
+#include <rec_server_core/status.h>
 
-#include <rec_core/topic_info.h>
-#include <functional>
+#include <ecal/msg/protobuf/server.h>
 
-namespace eCAL { namespace rec { class RecServer; } }
+// protobuf includes
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4100 4127 4146 4505 4800) // disable proto warnings
+#endif
+#include <ecal/pb/rec/server_service.pb.h>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
-class MonitoringThread;
+
+namespace eCAL { namespace rec_server { class RecServer; } }
 
 class QEcalRec : public QObject
 {
   Q_OBJECT
 
+////////////////////////////////////
+// Constructor, Destructor, Singleton
+////////////////////////////////////
 public:
   static QEcalRec* instance();
   ~QEcalRec();
 
+private:
+  QEcalRec(QObject* parent = nullptr);
+
+  QEcalRec(const QEcalRec&)            = delete;
+  QEcalRec& operator=(const QEcalRec&) = delete;
+
 ////////////////////////////////////
-// Instance management            //
+// Client management
 ////////////////////////////////////
-public:
-  bool addRecorderInstance(const std::string& hostname, const std::set<std::string>& host_filter = {}, bool omit_dialogs = false);
+public slots:
+  bool setEnabledRecClients(const std::map<std::string, eCAL::rec_server::ClientConfig>& enabled_recorders, bool omit_dialogs = false);
+  std::map<std::string, eCAL::rec_server::ClientConfig> enabledRecClients() const;
 
-  bool removeRecorderInstance(const std::string& hostname, bool omit_dialogs = false);
+  bool setHostFilter(const std::string& hostname, const std::set<std::string>& host_filter, bool omit_dialogs = false);
+  std::set<std::string> hostFilter(const std::string& hostname) const;
 
-  bool setRecorderInstances(const std::vector<std::pair<std::string, std::set<std::string>>>& host_hostfilter_list, bool omit_dialogs = false);
-  std::vector<std::pair<std::string, std::set<std::string>>> recorderInstances() const;
-
-  bool setClientConnectionsEnabled(bool enabled, bool omit_dialogs = false);
-  void initiateConnectionShutdown();
-
-  bool clientConnectionsEnabled() const;
+  bool setConnectionToClientsActive(bool active, bool omit_dialogs = false);
+  bool connectionToClientsActive() const;
 
 signals:
-  void recorderInstancesChangedSignal(const std::vector<std::pair<std::string, std::set<std::string>>>& host_hostfilter_list);
-  void clientConnectionsEnabledSignal(bool enabled);
+  void enabledRecClientsChangedSignal(const std::map<std::string, eCAL::rec_server::ClientConfig>& enabled_recorders);
+  void connectionToClientsActiveChangedSignal(bool active);
 
 ////////////////////////////////////
-// Requests                       //
+// Recorder control
 ////////////////////////////////////
-public:
+public slots:
+  bool connectToEcal         (bool omit_dialogs = false);
+  bool disconnectFromEcal    (bool omit_dialogs = false);
+  bool savePreBufferedData   (bool omit_dialogs = false);
+  bool startRecording        (bool omit_dialogs = false);
+  bool stopRecording         (bool omit_dialogs = false);
 
-  std::map<std::string, std::pair<bool, std::string>> lastResponses();
+  bool connectedToEcal()             const;
+  bool recording()                   const;
+  int64_t currentlyRecordingMeasId() const;
 
-  void waitForPendingRequests() const;
+  bool                  anyRequestPending()        const;
+  std::set<std::string> hostsWithPendingRequests() const;
+  void                  waitForPendingRequests()   const;
 
-  std::map<std::string, bool> areRequestsPending() const;
-
-  bool anyRequestPending() const;
+signals:
+  void connectedToEcalStateChangedSignal(bool connected_to_ecal);
+  void recordingStateChangedSignal      (bool recording);
+  void recordJobCreatedSignal           (const eCAL::rec_server::JobHistoryEntry& created_job);
 
 ////////////////////////////////////
-// Settings                       //
+// Status
 ////////////////////////////////////
-public:
-  bool setMaxPreBufferLength (std::chrono::steady_clock::duration max_pre_buffer_length,             bool omit_dialogs = false);
-  bool setPreBufferingEnabled(bool                                pre_buffering_enabled,             bool omit_dialogs = false);
-  bool setRecordMode         (eCAL::rec::RecordMode               record_mode,                       bool omit_dialogs = false);
-  bool setTopicBlacklist     (const std::set<std::string>&        topic_blacklist,                   bool omit_dialogs = false);
-  bool setTopicWhitelist     (const std::set<std::string>&        topic_whitelist,                   bool omit_dialogs = false);
-  bool setHostFilter         (const std::string& hostname, const std::set<std::string>& host_filter, bool omit_dialogs = false);
+public slots:
+  eCAL::rec_server::RecorderStatusMap_T recorderStatuses() const;
+  eCAL::rec::RecorderStatus builtInRecorderInstanceStatus() const;
 
-  void setMeasRootDir        (std::string                         meas_root_dir);
-  void setMeasName           (std::string                         meas_name);
-  void setMaxFileSizeMib     (int                                 max_file_size_mib);
-  void setDescription        (std::string                         description);
+  eCAL::rec_server::TopicInfoMap_T topicInfo() const;
+  eCAL::rec_server::HostsRunningEcalRec_T hostsRunningEcalRec() const;
 
-  std::chrono::steady_clock::duration maxPreBufferLength()                      const;
-  bool                                preBufferingEnabled()                     const;
-  eCAL::rec::RecordMode               recordMode()                              const;
-  std::set<std::string>               topicBlacklist()                          const;
-  std::set<std::string>               topicWhitelist()                          const;
-  std::set<std::string>               hostFilter(const std::string& hostname)   const;
+  std::list<eCAL::rec_server::JobHistoryEntry> jobHistory() const;
 
-  std::string                         measRootDir()                             const;
-  std::string                         measName()                                const;
-  size_t                              maxFileSizeMib()                          const;
-  std::string                         description()                             const;
+  eCAL::rec_server::RecServerStatus status() const;
+
+signals:
+  void recorderStatusUpdateSignal(const eCAL::rec_server::RecorderStatusMap_T& recorder_status_map, const std::list<eCAL::rec_server::JobHistoryEntry>& job_history);
+  void monitorUpdatedSignal(const eCAL::rec_server::TopicInfoMap_T& topic_info_map, const eCAL::rec_server::HostsRunningEcalRec_T& hosts_running_ecal_rec);
+
+////////////////////////////////////
+// General Client Settings
+////////////////////////////////////
+public slots:
+  void setMaxPreBufferLength (std::chrono::steady_clock::duration max_pre_buffer_length, bool omit_dialogs = false);
+  void setPreBufferingEnabled(bool                                       pre_buffering_enabled, bool omit_dialogs = false);
+  bool setRecordMode         (eCAL::rec::RecordMode                      record_mode,           bool omit_dialogs = false);
+  bool setTopicBlacklist     (const std::set<std::string>&               topic_blacklist,       bool omit_dialogs = false);
+  bool setTopicWhitelist     (const std::set<std::string>&               topic_whitelist,       bool omit_dialogs = false);
+
+  std::chrono::steady_clock::duration maxPreBufferLength()  const;
+  bool                                preBufferingEnabled() const;
+  eCAL::rec::RecordMode               recordMode()          const;
+  std::set<std::string>               topicBlacklist()      const;
+  std::set<std::string>               topicWhitelist()      const;
 
 signals:
   void maxPreBufferLengthChangedSignal (std::chrono::steady_clock::duration max_pre_buffer_length);
@@ -120,62 +150,116 @@ signals:
   void recordModeChangedSignal         (eCAL::rec::RecordMode               record_mode);
   void topicBlacklistChangedSignal     (std::set<std::string>               topic_blacklist);
   void topicWhitelistChangedSignal     (std::set<std::string>               topic_whitelist);
-  void hostFilterChangedSignal         (const std::string& hostname, const std::set<std::string>& host_filter);
-
-  void measRootDirChangedSignal        (std::string                         meas_root_dir);
-  void measNameChangedSignal           (std::string                         meas_name);
-  void maxFileSizeMibChangedSignal     (int                                 max_file_size_mib);
-  void descriptionChangedSignal        (std::string                         description);
 
 ////////////////////////////////////
-// Commands                       //
+// Job Settings
 ////////////////////////////////////
-public:
-  bool sendRequestConnectToEcal         (bool omit_dialogs = false);
-  bool sendRequestDisconnectFromEcal    (bool omit_dialogs = false);
-  bool sendRequestSavePreBufferedData   (bool omit_dialogs = false);
-  bool sendRequestStartRecording        (bool omit_dialogs = false);
-  bool sendRequestStopRecording         (bool omit_dialogs = false);
+public slots:
+  void setMeasRootDir        (const std::string& meas_root_dir);
+  void setMeasName           (const std::string& meas_name);
+  void setMaxFileSizeMib     (unsigned int max_file_size_mib);
+  void setDescription        (const std::string& description);
+
+  std::string  measRootDir()    const;
+  std::string  measName()       const;
+  unsigned int maxFileSizeMib() const;
+  std::string  description()    const;
 
 signals:
-  void connectedToEcalStateChangedSignal(bool connected_to_ecal);
-  void recordingStateChangedSignal(bool recording);
+  void measRootDirChangedSignal   (std::string  meas_root_dir);
+  void measNameChangedSignal      (std::string  meas_name);
+  void maxFileSizeMibChangedSignal(unsigned int max_file_size_mib);
+  void descriptionChangedSignal   (std::string  description);
 
 ////////////////////////////////////
-// State                          //
+// Server Settings
 ////////////////////////////////////
-public:
-  bool recordersConnectedToEcal() const;
-  bool recordersRecording() const;
-  std::map<std::string, eCAL::rec::RecorderState> recorderStates() const;
-
-  bool localRecorderInstanceBusy() const;
-  eCAL::rec::RecorderState localRecorderInstanceState() const;
-
-signals:
-  void stateUpdateSignal(std::map<std::string, eCAL::rec::RecorderState>);
-
-////////////////////////////////////
-// Options                        //
-////////////////////////////////////
-public:
-  void setUsingBuiltInRecorderEnabled(bool enabled);
+public slots:
+  bool setUsingBuiltInRecorderEnabled(bool enabled, bool omit_dialogs = false);
   bool usingBuiltInRecorderEnabled() const;
 
 signals:
   void usingBuiltInRecorderEnabledChangedSignal(bool enabled);
 
 ////////////////////////////////////
-// Additional methods             //
+// Measurement Upload
 ////////////////////////////////////
+public slots:
+  void setUploadConfig(const eCAL::rec_server::UploadConfig& upload_config);
+  eCAL::rec_server::UploadConfig uploadConfig() const;
+  int internalFtpServerOpenConnectionsCount() const;
+  uint16_t internalFtpServerPort() const;
 
-public:
-  std::map<std::string, eCAL::rec::TopicInfo> monitorTopicInfo() const;
-  std::map<std::string, bool> hostsRunningEcalRec() const;
+  eCAL::rec::Error uploadMeasurement(int64_t meas_id);
+  bool canUploadMeasurement(int64_t meas_id) const;
+  eCAL::rec::Error simulateUploadMeasurement(int64_t meas_id) const;
+  int uploadNonUploadedMeasurements(bool omit_dialogs = false);
 
-private slots:
-  void sendStateUpdate();
+signals:
+  void uploadConfigChanged(const eCAL::rec_server::UploadConfig& upload_config);
 
+////////////////////////////////////
+// Comments
+////////////////////////////////////
+public slots:
+  eCAL::rec::Error addCommentWithDialog(int64_t job_id);
+  eCAL::rec::Error addComment(int64_t meas_id, const std::string& comment, bool omit_dialogs = false);
+  bool canAddComment(int64_t meas_id) const;
+  eCAL::rec::Error simulateAddComment(int64_t meas_id) const;
+
+////////////////////////////////////
+// Delete measurement
+////////////////////////////////////
+public slots:
+  eCAL::rec::Error deleteMeasurement(int64_t meas_id, bool omit_dialogs = false);
+  eCAL::rec::Error deleteMeasurement(std::set<int64_t> meas_ids, bool omit_dialogs = false);
+
+  bool canDeleteMeasurement(int64_t meas_id) const;
+  eCAL::rec::Error simulateDeleteMeasurement(int64_t meas_id) const;
+
+
+signals:
+  void measurementDeletedSignal(int64_t measid);
+
+////////////////////////////////////
+// Config Save / Load
+////////////////////////////////////
+public slots:
+  bool clearConfig();
+  bool saveConfigToFile  (const std::string& path);
+  bool loadConfigFromFile(const std::string& path, bool omit_dialogs = false);
+
+  std::string loadedConfigPath() const;
+  int loadedConfigVersion() const;
+  int nativeConfigVersion() const;
+
+  bool configHasBeenModified() const;
+
+private:
+  void updateConfigModified(bool modified);
+
+signals:
+  void loadedConfigChangedSignal(const std::string& path, int version);
+  void configHasBeenModifiedChangedSignal(bool has_been_modified);
+
+////////////////////////////////////
+// GUI Settings
+////////////////////////////////////
+public slots:
+  void setShowDisabledElementsAtEnd(bool show_at_end);
+  bool showDisabledElementsAtEnd() const;
+
+  void setAlternatingRowColorsEnabled(bool enabled);
+  bool alternatingRowColorsEnabled() const;
+
+signals:
+  void showDisabledElementsAtEndChanged(bool show_at_end);
+  void alternatingRowColorsEnabledChanged(bool enabled);
+
+
+////////////////////////////////////
+// Auxiliary methods
+////////////////////////////////////
 private:
   static QWidget* widgetOf(QObject* q_object);
 
@@ -226,22 +310,28 @@ private:
     //}
   }
 
-signals:
-  void exitSignal();
-  void monitorUpdatedSignal(const std::map<std::string, eCAL::rec::TopicInfo>& topic_info_map);
 
+////////////////////////////////////
+// Member Variables
+////////////////////////////////////
 private:
-  QEcalRec(QObject* parent = nullptr);
-  QEcalRec(const QEcalRec&) = delete;
-  QEcalRec& operator=(const QEcalRec&) = delete;
+  std::unique_ptr<eCAL::rec_server::RecServer> rec_server_;
 
-  std::unique_ptr<eCAL::rec::RecServer> rec_server_;
+  // Service provider
+  std::shared_ptr<eCAL::pb::rec_server::EcalRecServerService> rec_server_service_;
+  eCAL::protobuf::CServiceServer<eCAL::pb::rec_server::EcalRecServerService> rec_server_service_server_;
 
-  QTimer* state_update_timer_;
-  const int state_update_timer_ms_ = 100;
+  QTimer* recorder_status_poll_timer_;
+  const int recorder_status_poll_time_ms_ = 100;
+
+  QTimer* ecal_state_update_timer_;
+  const int ecal_state_update_time_ms_ = 500;
 
   std::set<std::string> topic_blacklist_;
   std::set<std::string> topic_whitelist_;
 
-  std::unique_ptr<MonitoringThread> monitoring_thread_;
+  bool show_disabled_elements_at_the_end_;
+  bool alternating_row_colors_;
+
+  bool config_has_been_modified_;
 };

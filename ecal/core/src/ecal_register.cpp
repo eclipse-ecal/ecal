@@ -85,12 +85,25 @@ namespace eCAL
     m_reg_process     = process_;
 
     SSenderAttr attr;
-    attr.ipaddr     = eCALPAR(NET, UDP_MULTICAST_GROUP);
-    attr.port       = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_REG_OFF;
-    attr.loopback   = true;
-    attr.ttl        = eCALPAR(NET, UDP_MULTICAST_TTL);
-    attr.sndbuf     = eCALPAR(NET, UDP_MULTICAST_SNDBUF);
-    attr.local_only = !eCALPAR(NET, ENABLED);
+    bool local_only = !eCALPAR(NET, ENABLED);
+    // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
+    if (local_only)
+    {
+      attr.ipaddr    = "127.255.255.255";
+      attr.broadcast = true;
+    }
+    else
+    {
+      attr.ipaddr    = eCALPAR(NET, UDP_MULTICAST_GROUP);
+      attr.broadcast = false;
+    }
+    attr.port     = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_REG_OFF;
+    attr.loopback = true;
+    attr.ttl      = eCALPAR(NET, UDP_MULTICAST_TTL);
+    attr.sndbuf   = eCALPAR(NET, UDP_MULTICAST_SNDBUF);
+
+    m_multicast_group = attr.ipaddr;
+
     m_reg_snd.Create(attr);
     m_reg_snd_thread.Start(eCALPAR(CMN, REGISTRATION_REFRESH), std::bind(&CEntityRegister::RegisterSendThread, this));
 

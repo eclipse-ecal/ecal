@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RecServerServiceGui</class>
+ <widget class="QMainWindow" name="RecServerServiceGui">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>772</width>
+    <height>518</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>:/ecalplay/APP_ICON</normaloff>:/ecalplay/APP_ICON</iconset>
+  </property>
+  <property name="dockNestingEnabled">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Hostname:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="hostname_lineedit"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>Request</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="1" column="1">
+         <widget class="QLabel" name="label">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>config_path:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QRadioButton" name="request_start_recording_radiobutton">
+          <property name="text">
+           <string>StartRecording</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QRadioButton" name="request_delete_measurement_radiobutton">
+          <property name="text">
+           <string>DeleteMeasurement</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QRadioButton" name="request_deactivate_radiobutton">
+          <property name="text">
+           <string>DeActivate</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QRadioButton" name="request_stop_recording_radiobutton">
+          <property name="text">
+           <string>StopRecording</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0">
+         <widget class="QRadioButton" name="request_upload_measurement_radiobutton">
+          <property name="text">
+           <string>UploadMeasurement</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QRadioButton" name="request_load_config_file_radiobutton">
+          <property name="text">
+           <string>LoadConfigFile</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QLineEdit" name="request_load_config_file_param_config_path_lineedit">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QRadioButton" name="request_save_buffer_radiobutton">
+          <property name="text">
+           <string>SaveBuffer</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
+         <widget class="QLabel" name="label_3">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>meas_id:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="2">
+         <widget class="QLineEdit" name="request_upload_measurement_param_meas_id_lineedit">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="inputMethodHints">
+           <set>Qt::ImhDigitsOnly|Qt::ImhPreferNumbers</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QRadioButton" name="request_activate_radiobutton">
+          <property name="text">
+           <string>Activate</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="2">
+         <widget class="QLineEdit" name="request_add_comment_param_meas_id_lineedit">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="inputMethodHints">
+           <set>Qt::ImhDigitsOnly</set>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="1">
+         <widget class="QLabel" name="label_6">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>meas_id:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="2">
+         <widget class="QTextEdit" name="request_add_comment_param_comment_textedit">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="0">
+         <widget class="QRadioButton" name="request_add_comment_radiobutton">
+          <property name="text">
+           <string>AddComment</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="1">
+         <widget class="QLabel" name="label_4">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>meas_id:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="11" column="0" colspan="3">
+         <widget class="QPushButton" name="send_request_button">
+          <property name="text">
+           <string>Send request</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="2">
+         <widget class="QLineEdit" name="request_delete_measurement_lineedit">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="1">
+         <widget class="QLabel" name="label_5">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>comment:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QRadioButton" name="request_get_status_radiobutton">
+          <property name="text">
+           <string>GetStatus</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="title">
+        <string>Response</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QTextEdit" name="response_texteedit">
+          <property name="font">
+           <font>
+            <family>Courier New</family>
+           </font>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="response_clear_button">
+          <property name="text">
+           <string>Clear</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>request_load_config_file_radiobutton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>126</x>
+     <y>101</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>202</x>
+     <y>102</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>request_load_config_file_radiobutton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>request_load_config_file_param_config_path_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>69</x>
+     <y>101</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>468</x>
+     <y>102</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>request_upload_measurement_radiobutton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_3</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>135</x>
+     <y>247</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>202</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>request_upload_measurement_radiobutton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>request_upload_measurement_param_meas_id_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>73</x>
+     <y>247</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>458</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>request_add_comment_radiobutton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_4</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>112</x>
+     <y>299</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>202</x>
+     <y>300</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>request_add_comment_radiobutton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>request_add_comment_param_meas_id_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>84</x>
+     <y>299</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>468</x>
+     <y>300</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>request_add_comment_radiobutton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_5</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>91</x>
+     <y>299</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>196</x>
+     <y>324</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>request_add_comment_radiobutton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>request_add_comment_param_comment_textedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>100</x>
+     <y>299</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>275</x>
+     <y>324</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>request_delete_measurement_radiobutton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_6</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>135</x>
+     <y>273</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>202</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>request_delete_measurement_radiobutton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>request_delete_measurement_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>57</x>
+     <y>273</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>468</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

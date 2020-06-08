@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>579</width>
-    <height>378</height>
+    <width>388</width>
+    <height>466</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,9 +36,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="add_button">
+      <widget class="QPushButton" name="host_add_button">
        <property name="text">
-        <string>Add</string>
+        <string>Add Recorder</string>
        </property>
        <property name="icon">
         <iconset resource="../../../../../iconset/ecalicons.qrc">
@@ -46,109 +46,187 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="host_remove_button">
+       <property name="text">
+        <string>Remove Recorder</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/REMOVE</normaloff>:/ecalicons/REMOVE</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLineEdit" name="addon_id_lineedit">
+       <property name="text">
+        <string>de.conti.can_rec</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="addon_add_button">
+       <property name="text">
+        <string>Add Addon</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/ADD</normaloff>:/ecalicons/ADD</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="addon_remove_button">
+       <property name="text">
+        <string>Remove Addon</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/REMOVE</normaloff>:/ecalicons/REMOVE</iconset>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
     <widget class="QTextEdit" name="instances_textedit">
+     <property name="font">
+      <font>
+       <family>Courier New</family>
+      </font>
+     </property>
+     <property name="lineWrapMode">
+      <enum>QTextEdit::NoWrap</enum>
+     </property>
      <property name="readOnly">
       <bool>true</bool>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="activate_connections_button">
-     <property name="text">
-      <string>Activate connections</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../../../../iconset/ecalicons.qrc">
-       <normaloff>:/ecalicons/CONNECTED</normaloff>:/ecalicons/CONNECTED</iconset>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="deactivate_connections_button">
-     <property name="text">
-      <string>Deactivate connections</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../../../../iconset/ecalicons.qrc">
-       <normaloff>:/ecalicons/DISCONNECTED</normaloff>:/ecalicons/DISCONNECTED</iconset>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="initiate_connection_shutdown_button">
-     <property name="text">
-      <string>Initiate connection shutdown</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../../../../iconset/ecalicons.qrc">
-       <normaloff>:/ecalicons/POWER_OFF</normaloff>:/ecalicons/POWER_OFF</iconset>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="connect_to_ecal_button">
-     <property name="text">
-      <string>Connect to eCAL</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../../../../iconset/ecalicons.qrc">
-       <normaloff>:/ecalicons/CHECKMARK</normaloff>:/ecalicons/CHECKMARK</iconset>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="disconnect_from_ecal_button">
-     <property name="text">
-      <string>Disconnect from eCAL</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../../../../iconset/ecalicons.qrc">
-       <normaloff>:/ecalicons/CROSS</normaloff>:/ecalicons/CROSS</iconset>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="save_current_buffer_button">
-     <property name="text">
-      <string>Save current buffer</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../../../../iconset/ecalicons.qrc">
-       <normaloff>:/ecalicons/SAVE</normaloff>:/ecalicons/SAVE</iconset>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="start_recording_button">
-     <property name="text">
-      <string>Start Recording</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../../../../iconset/ecalicons.qrc">
-       <normaloff>:/ecalicons/RECORD</normaloff>:/ecalicons/RECORD</iconset>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="stop_recording_button">
-     <property name="text">
-      <string>Stop Recording</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../../../../iconset/ecalicons.qrc">
-       <normaloff>:/ecalicons/STOP</normaloff>:/ecalicons/STOP</iconset>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="wait_for_recorder_operations_dialog_button">
-     <property name="text">
-      <string>Show wait for local_recorder_dialog</string>
-     </property>
-    </widget>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QPushButton" name="activate_connections_button">
+       <property name="text">
+        <string>Activate connections</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/CONNECTED</normaloff>:/ecalicons/CONNECTED</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="deactivate_connections_button">
+       <property name="text">
+        <string>Deactivate connections</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/DISCONNECTED</normaloff>:/ecalicons/DISCONNECTED</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="connect_to_ecal_button">
+       <property name="text">
+        <string>Connect to eCAL</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/CHECKMARK</normaloff>:/ecalicons/CHECKMARK</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="disconnect_from_ecal_button">
+       <property name="text">
+        <string>Disconnect from eCAL</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/CROSS</normaloff>:/ecalicons/CROSS</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QPushButton" name="start_recording_button">
+       <property name="text">
+        <string>Start Recording</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/RECORD</normaloff>:/ecalicons/RECORD</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QPushButton" name="stop_recording_button">
+       <property name="text">
+        <string>Stop Recording</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/STOP</normaloff>:/ecalicons/STOP</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QPushButton" name="save_current_buffer_button">
+       <property name="text">
+        <string>Save current buffer</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/SAVE_TO_DISK</normaloff>:/ecalicons/SAVE_TO_DISK</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QPushButton" name="wait_for_recorder_operations_dialog_button">
+       <property name="text">
+        <string>Wait_for_shutdown_dialog</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/WAIT</normaloff>:/ecalicons/WAIT</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QPushButton" name="merge_measurements_button">
+       <property name="text">
+        <string>Merge last measurement</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/MERGE</normaloff>:/ecalicons/MERGE</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QPushButton" name="add_comment_button">
+         <property name="text">
+          <string>Add comment to last meas</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../../../iconset/ecalicons.qrc">
+           <normaloff>:/ecalicons/ADD_FILE</normaloff>:/ecalicons/ADD_FILE</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="add_comment_textedit"/>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </item>
    <item>
     <spacer name="verticalSpacer">

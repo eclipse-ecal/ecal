@@ -77,9 +77,9 @@ ECAL_API int ecal_finalize()
 /****************************************/
 /*      ecal_set_process_state          */
 /****************************************/
-ECAL_API void ecal_set_process_state(const int severity, const int level, const char* info)
+ECAL_API void ecal_set_process_state(const int severity_, const int level_, const char* info_)
 {
-  return(eCAL::Process::SetState(eCAL_Process_eSeverity(severity), eCAL_Process_eSeverity_Level(level), info));
+  return(eCAL::Process::SetState(eCAL_Process_eSeverity(severity_), eCAL_Process_eSeverity_Level(level_), info_));
 }
 
 /****************************************/

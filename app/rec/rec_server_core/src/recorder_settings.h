@@ -23,11 +23,11 @@
 #include <chrono>
 #include <set>
 
-#include <rec_core/record_mode.h>
+#include <rec_client_core/record_mode.h>
 
 namespace eCAL
 {
-  namespace rec
+  namespace rec_server
   {
     class RecorderSettings
     {
@@ -50,23 +50,29 @@ namespace eCAL
       bool IsHostFilterSet() const { return host_filter_.first; }
       std::set<std::string> GetHostFilter() const { return host_filter_.second; }
 
-      void SetRecordMode(const RecordMode& record_mode) { record_mode_.first = true; record_mode_.second = record_mode; }
-      void ClearRecordMode() { record_mode_.first = false; record_mode_.second = RecordMode::All; }
+      void SetRecordMode(const eCAL::rec::RecordMode& record_mode) { record_mode_.first = true; record_mode_.second = record_mode; }
+      void ClearRecordMode() { record_mode_.first = false; record_mode_.second = eCAL::rec::RecordMode::All; }
       bool IsRecordModeSet() const { return record_mode_.first; }
-      RecordMode GetRecordMode() const { return record_mode_.second; }
+      eCAL::rec::RecordMode GetRecordMode() const { return record_mode_.second; }
 
       void SetListedTopics(const std::set<std::string>& listed_topics) { listed_topics_.first = true; listed_topics_.second = listed_topics; }
       void ClearListedTopics() { listed_topics_.first = false; listed_topics_.second.clear(); }
       bool IsListedTopicsSet() const { return listed_topics_.first; }
       std::set<std::string> GetListedTopics() const { return listed_topics_.second; }
 
+      void SetEnabledAddons(const std::set<std::string>& enabled_addons) { enabled_addons_.first = true; enabled_addons_.second = enabled_addons; }
+      void ClearEnabledAddons() { enabled_addons_.first = false; enabled_addons_.second.clear(); }
+      bool IsEnabledAddonsSet() const { return enabled_addons_.first; }
+      std::set<std::string> GetEnabledAddons() const { return enabled_addons_.second; }
+
       void SetAllToDefaults()
       {
         max_pre_buffer_length_.first = true; max_pre_buffer_length_.second = std::chrono::steady_clock::duration(0);
         pre_buffering_enabled_.first = true; pre_buffering_enabled_.second = false;
         host_filter_.first           = true; host_filter_.second.clear();
-        record_mode_.first           = true; record_mode_.second = RecordMode::All;
+        record_mode_.first           = true; record_mode_.second = eCAL::rec::RecordMode::All;
         listed_topics_.first         = true; listed_topics_.second.clear();
+        enabled_addons_.first        = true; enabled_addons_.second.clear();
       }
 
       void AddSettings(const RecorderSettings& other)
@@ -85,14 +91,18 @@ namespace eCAL
 
         if (other.IsListedTopicsSet())
           SetListedTopics(other.GetListedTopics());
+
+        if (other.IsEnabledAddonsSet())
+          SetEnabledAddons(other.GetEnabledAddons());
       }
 
     private:
       std::pair<bool, std::chrono::steady_clock::duration> max_pre_buffer_length_;
-      std::pair<bool, bool> pre_buffering_enabled_;
-      std::pair<bool, std::set<std::string>> host_filter_;
-      std::pair<bool, RecordMode> record_mode_;
-      std::pair<bool, std::set<std::string>> listed_topics_;
+      std::pair<bool, bool>                                pre_buffering_enabled_;
+      std::pair<bool, std::set<std::string>>               host_filter_;
+      std::pair<bool, eCAL::rec::RecordMode>                          record_mode_;
+      std::pair<bool, std::set<std::string>>               listed_topics_;
+      std::pair<bool, std::set<std::string>>               enabled_addons_;
     };
   }
 }

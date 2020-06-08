@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>778</width>
-    <height>201</height>
+    <width>546</width>
+    <height>193</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -35,6 +35,60 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QToolButton" name="activate_button">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>80</width>
+         <height>80</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Activate clients and start pre-buffering</string>
+       </property>
+       <property name="text">
+        <string>Activate / Prepare</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/POWER_ON</normaloff>:/ecalicons/POWER_ON</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>50</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonTextUnderIcon</enum>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Maximum</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>10</width>
+         <height>0</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
      <item>
       <widget class="QToolButton" name="record_button">
        <property name="toolTip">
@@ -92,10 +146,10 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Save content of the pre-buffer without starting a recording</string>
+        <string>Save content of the pre-buffer as its own recording</string>
        </property>
        <property name="text">
-        <string>Save Buffer</string>
+        <string>Save Pre-Buffer</string>
        </property>
        <property name="icon">
         <iconset resource="../../../../../iconset/ecalicons.qrc">
@@ -112,138 +166,6 @@
        </property>
        <property name="autoRaise">
         <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Maximum</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>10</width>
-         <height>0</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QWidget" name="gridWidget" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <layout class="QGridLayout" name="gridLayout">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <property name="spacing">
-         <number>1</number>
-        </property>
-        <item row="0" column="1">
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="3" column="1">
-         <spacer name="verticalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="1" column="0" rowspan="2">
-         <widget class="QToolButton" name="activate_button">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>1</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>80</width>
-            <height>80</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>Connect to clients and initialize them</string>
-          </property>
-          <property name="text">
-           <string>Activate</string>
-          </property>
-          <property name="icon">
-           <iconset resource="../../../../../iconset/ecalicons.qrc">
-            <normaloff>:/ecalicons/POWER_ON</normaloff>:/ecalicons/POWER_ON</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>50</width>
-            <height>50</height>
-           </size>
-          </property>
-          <property name="popupMode">
-           <enum>QToolButton::MenuButtonPopup</enum>
-          </property>
-          <property name="toolButtonStyle">
-           <enum>Qt::ToolButtonTextUnderIcon</enum>
-          </property>
-          <property name="autoRaise">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>1</width>
-         <height>1</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;eCAL Rec 2.0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
        </property>
       </widget>
      </item>

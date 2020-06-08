@@ -24,9 +24,11 @@
   #define NOMINMAX
   #include <windows.h>
   #include <direct.h>
+  #include <shellapi.h> // SHFileOperation
 #else // _WIN32
   #include <dirent.h>
   #include <fcntl.h>    // O_RDONLY
+  #include <fts.h>      // File-tree traversal
   #include <unistd.h>
 
   #if defined (__APPLE__) || defined(__FreeBSD__)
@@ -34,7 +36,7 @@
   #else
     #include <sys/sendfile.h>
   #endif //__linux__
-
+  
 #endif  // _WIN32
 
 #include <sys/stat.h> // stat
@@ -195,7 +197,9 @@ namespace EcalUtils
 
       do
       {
-        content.emplace(std::string(ffd.cFileName), FileStatus(clean_path + "\\" + std::string(ffd.cFileName)));
+        std::string file_name(ffd.cFileName);
+        if ((file_name != ".") && (file_name != ".."))
+          content.emplace(std::string(ffd.cFileName), FileStatus(clean_path + "\\" + std::string(ffd.cFileName)));
       } while (FindNextFileA(hFind, &ffd) != 0);
       FindClose(hFind);
 #else // WIN32
@@ -209,7 +213,9 @@ namespace EcalUtils
 
       while ((dirp = readdir(dp)) != NULL)
       {
-        content.emplace(std::string(dirp->d_name), FileStatus(clean_path + "/" + std::string(dirp->d_name)));
+        std::string file_name(dirp->d_name);
+        if ((file_name != ".") && (file_name != ".."))
+          content.emplace(file_name, FileStatus(clean_path + "/" + std::string(dirp->d_name)));
       }
       closedir(dp);
 
@@ -313,6 +319,127 @@ namespace EcalUtils
 #endif // WIN32
     }
 
+    bool DeleteDir(const std::string& source, OsStyle input_path_style)
+    {
+      std::string clean_path = ToNativeSeperators(CleanPath(source, input_path_style), input_path_style);
+
+#ifdef WIN32
+      
+      // Abuse the internal buffer of the string to make a double-null-
+      // terminated-string as requested by the Win32 API.
+      // This is safe as C++11 demands that the data of an std string is in
+      // continuous memory.
+      clean_path += '\0';
+      clean_path += '\0';
+
+      // Using the Win32 Shell API is the recommended way to delete non-empty directories on Window
+      SHFILEOPSTRUCT file_op = {
+        NULL                                                // hwnd
+        , FO_DELETE                                         // wFunc
+        , clean_path.data()                                 // pFrom
+        , ""                                                // pTo
+        , FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT   // fFlags
+        , false                                             // fAnyOperationsAborted
+        , 0                                                 // hNameMappings
+        , ""                                                // lpszProgressTitle
+      };
+      int error = SHFileOperationA(&file_op);
+      return (error == 0);
+      
+#else // WIN32
+      
+      // This code has been taken from the open-bsd rm sourcecode:
+      // http://cvsweb.openbsd.org/cgi-bin/cvsweb/src/bin/rm/rm.c?rev=1.27
+      // It has then been refactored and specialized.
+      // 
+      // The original code is published under the 3-Clause BSD license:
+      // 
+      // Copyright (c) 1990, 1993, 1994
+      //	The Regents of the University of California.  All rights reserved.
+      //
+      // Redistribution and use in source and binary forms, with or without
+      // modification, are permitted provided that the following conditions
+      // are met:
+      // 1. Redistributions of source code must retain the above copyright
+      //    notice, this list of conditions and the following disclaimer.
+      // 2. Redistributions in binary form must reproduce the above copyright
+      //    notice, this list of conditions and the following disclaimer in the
+      //    documentation and/or other materials provided with the distribution.
+      // 3. Neither the name of the University nor the names of its contributors
+      //    may be used to endorse or promote products derived from this software
+      //    without specific prior written permission.
+
+      FTS *fts;
+      FTSENT *p;
+      int success = true;
+      
+      clean_path += '\0'; // Abuse internal string buffer to build a NULL-terminated C-string
+      char* argv[2];
+      argv[0] = &clean_path[0];
+      argv[1] = nullptr;
+      
+      fts = fts_open(argv, FTS_PHYSICAL, nullptr);
+      if (fts == nullptr)
+        return false;
+      
+      while ((p = fts_read(fts)) != NULL)
+      {
+          switch (p->fts_info)
+          {
+          case FTS_DNR:
+            success = false;
+            continue;
+          case FTS_ERR:
+            std::cerr << p->fts_path << ": " << strerror(p->fts_errno) << std::endl;
+            return false;
+          case FTS_NS:
+            /*
+             * FTS_NS: assume that if can't stat the file, it
+             * can't be unlinked.
+             */
+            success = false;
+            continue;
+          case FTS_D:
+              continue;
+          case FTS_DP:
+              break;
+          default:
+            break;
+          }
+  
+          /*
+           * If we can't read or search the directory, may still be
+           * able to remove it.  Don't print out the un{read,search}able
+           * message unless the remove fails.
+           */
+          switch (p->fts_info) {
+          case FTS_DP:
+          case FTS_DNR:
+            if (!rmdir(p->fts_accpath))
+            {
+              continue;
+            }
+            break;
+  
+          case FTS_F:
+          case FTS_NSOK:
+          default:
+            if (!unlink(p->fts_accpath))
+            {
+                continue;
+            }
+          }
+          std::cerr << p->fts_path << std::endl;
+          success = false;
+      }
+      if (errno)
+          std::cerr << "fts_read" << std::endl;
+      fts_close(fts);
+      
+      return success;
+#endif // WIN32
+    }
+
     std::string GetAbsoluteRoot(const std::string& path, OsStyle input_path_style)
     {
       if ((input_path_style == OsStyle::Windows) || (input_path_style == OsStyle::Combined))
@@ -384,7 +511,7 @@ namespace EcalUtils
       std::string unix_style_path = ToUnixSeperators(path, input_path_style);
 
       // Get information about the root
-      std::string root = GetAbsoluteRoot(path, OsStyle::Combined);
+      std::string root = GetAbsoluteRoot(path, input_path_style);
       bool is_absolute = (root != "");
 
       // Remove the root from the path (we will add it later)
@@ -612,8 +739,8 @@ namespace EcalUtils
           return false;
         }
 
-        path1_component_it++;
-        path2_component_it++;
+        ++path1_component_it;
+        ++path2_component_it;
       }
 
       return true;

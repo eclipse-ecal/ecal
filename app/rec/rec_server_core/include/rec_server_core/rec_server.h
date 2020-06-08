@@ -19,139 +19,172 @@
 
 #pragma once
 
-#include <list>
-#include <vector>
-#include <memory>
+#include <cstdint>
+#include <string>
+#include <map>
+#include <functional>
 #include <chrono>
 #include <set>
-#include <map>
-#include <string>
+#include <memory>
+#include <list>
 
-#include <rec_core/recorder_state.h>
-#include <rec_core/record_mode.h>
-#include <rec_core/job_config.h>
+#include <rec_client_core/topic_info.h>
+#include <rec_client_core/record_mode.h>
+#include <rec_client_core/state.h>
+#include <rec_client_core/rec_error.h>
+
+#include <rec_server_core/rec_server_config.h>
+#include <rec_server_core/rec_server_types.h>
+#include <rec_server_core/status.h>
 
 namespace eCAL
 {
-  namespace rec
+  namespace rec_server
   {
-    class AbstractRecorder;
-    class RecorderSettings;
-    class EcalRec;
+    ////////////////////////////////////
+    // Forward declarations
+    ////////////////////////////////////
+    class RecServerImpl;
 
     class RecServer
     {
+    ////////////////////////////////////
+    // Constructor & Destructor
+    ////////////////////////////////////
     public:
       RecServer();
       ~RecServer();
 
-      ////////////////////////////////////
-      // Instance management            //
-      ////////////////////////////////////
+    ////////////////////////////////////
+    // Client management
+    ////////////////////////////////////
+    public:
+      bool SetEnabledRecClients(const std::map<std::string, ClientConfig>& enabled_rec_clients);
+      std::map<std::string, ClientConfig> GetEnabledRecClients() const;
 
-      bool SetRecorderInstances(const std::vector<std::pair<std::string, std::set<std::string>>>& host_hostfilter_list);
+      bool SetHostFilter (const std::string& hostname, const std::set<std::string>& host_filter); // TODO: evaluate if I really need that
+      std::set<std::string> GetHostFilter (const std::string& hostname) const;
 
-      std::vector<std::pair<std::string, std::set<std::string>>> GetRecorderInstances() const;
+      bool SetConnectionToClientsActive(bool active);
+      bool IsConnectionToClientsActive() const;
 
-      bool SetClientConnectionsEnabled(bool enabled);
-      void InitiateConnectionShutdown();
+    ////////////////////////////////////
+    // Recorder control
+    ////////////////////////////////////
+    public:
+      bool ConnectToEcal      ();
+      bool DisconnectFromEcal ();
+      bool SavePreBufferedData();
+      bool StartRecording     ();
+      bool StopRecording      ();
 
-      bool AreClientConnectionsEnabled() const;
+      bool IsConnectedToEcal             () const;
+      bool IsRecording                   () const;
+      int64_t GetCurrentlyRecordingMeasId() const;
 
-      ////////////////////////////////////
-      // Requests                       //
-      ////////////////////////////////////
+      bool                  IsAnyRequestPending        () const;
+      std::set<std::string> GetHostsWithPendingRequests() const;
+      void                  WaitForPendingRequests     () const;
 
-      std::map<std::string, std::pair<bool, std::string>> GetLastResponses();
+    ////////////////////////////////////
+    // Status
+    ////////////////////////////////////
+    public:
+      eCAL::rec_server::RecorderStatusMap_T GetRecorderStatuses() const;
+      eCAL::rec::RecorderStatus GetBuiltInRecorderInstanceStatus() const;
 
-      void WaitForPendingRequests() const;
+      TopicInfoMap_T GetTopicInfo() const;
+      HostsRunningEcalRec_T GetHostsRunningEcalRec() const;
 
-      std::map<std::string, bool> AreRequestsPending() const;
+      std::list<eCAL::rec_server::JobHistoryEntry> GetJobHistory() const;
 
-      bool IsAnyRequestPending() const;
+      RecServerStatus GetStatus() const;
 
-      ////////////////////////////////////
-      // Settings                       //
-      ////////////////////////////////////
+    ////////////////////////////////////
+    // General Client Settings
+    ////////////////////////////////////
+    public:
+      void SetMaxPreBufferLength (std::chrono::steady_clock::duration max_pre_buffer_length);
+      void SetPreBufferingEnabled(bool pre_buffering_enabled);
+      bool SetRecordMode         (eCAL::rec::RecordMode record_mode);
+      bool SetRecordMode         (eCAL::rec::RecordMode record_mode, const std::set<std::string>& listed_topics);
+      bool SetListedTopics       (std::set<std::string> listed_topics);
 
-      bool SetMaxPreBufferLength(std::chrono::steady_clock::duration max_pre_buffer_length);
-      bool SetPreBufferingEnabled(bool pre_buffering_enabled);
-      bool SetRecordMode(RecordMode record_mode);
-      bool SetRecordMode(RecordMode record_mode, const std::set<std::string>& listed_topics);
-      bool SetListedTopics(std::set<std::string> listed_topics);
-      bool SetHostFilter(const std::string& hostname, const std::set<std::string>& host_filter);
+      std::chrono::steady_clock::duration GetMaxPreBufferLength () const;
+      bool                                GetPreBufferingEnabled() const;
+      eCAL::rec::RecordMode               GetRecordMode         () const;
+      std::set<std::string>               GetListedTopics       () const;
 
-      std::chrono::steady_clock::duration GetMaxPreBufferLength() const;
-      bool GetPreBufferingEnabled() const;
-      RecordMode GetRecordMode() const;
-      std::set<std::string> GetListedTopics() const;
-      std::set<std::string> GetHostFilter(const std::string& hostname) const;
+    ////////////////////////////////////
+    // Job Settings
+    ////////////////////////////////////
+    public:
+      void SetMeasRootDir   (std::string  meas_root_dir);
+      void SetMeasName      (std::string  meas_name);
+      void SetMaxFileSizeMib(unsigned int max_file_size_mib);
+      void SetDescription   (std::string  description);
 
-      ////////////////////////////////////
-      // Shared job config              //
-      ////////////////////////////////////
+      std::string  GetMeasRootDir   () const;
+      std::string  GetMeasName      () const;
+      unsigned int GetMaxFileSizeMib() const;
+      std::string  GetDescription   () const;
 
-      void SetMeasRootDir(std::string meas_root_dir);
-      void SetMeasName(std::string meas_name);
-      void SetMaxFileSizeMib(size_t max_file_size_mib);
-      void SetDescription(std::string description);
+    ////////////////////////////////////
+    // Server Settings
+    ////////////////////////////////////
+    public:
+      void SetMonitoringUpdateCallback(PostUpdateCallback_T post_update_callback);
 
-      std::string GetMeasRootDir() const;
-      std::string GetMeasName() const;
-      size_t GetMaxFileSizeMib() const;
-      std::string GetDescription() const;
-
-      JobConfig GetHostEvaluatedJobConfig() const;
-
-      ////////////////////////////////////
-      // Commands                       //
-      ////////////////////////////////////
-
-      bool SendRequestConnectToEcal();
-
-      bool SendRequestDisconnectFromEcal();
-
-      bool SendRequestSavePreBufferedData();
-
-      bool SendRequestStartRecording();
-
-      bool SendRequestStopRecording();
-
-      ////////////////////////////////////
-      // State                          //
-      ////////////////////////////////////
-
-      bool RecordersConnectedToEcal() const;
-      bool RecordersRecording() const;
-
-      std::map<std::string, RecorderState> GetRecorderStates() const;
-
-      bool IsLocalRecorderInstanceBusy() const;
-      RecorderState GetLocalRecorderInstanceState() const;
-
-      ////////////////////////////////////
-      // Options                        //
-      ////////////////////////////////////
-      void  SetUsingBuiltInRecorderEnabled(bool enabled);
+      bool SetUsingBuiltInRecorderEnabled(bool enabled);
       bool IsUsingBuiltInRecorderEnabled() const;
 
     ////////////////////////////////////
-    // Member Variables               //
+    // Measurement Upload
+    ////////////////////////////////////
+    public:
+      void SetUploadConfig(const UploadConfig& upload_config);
+      UploadConfig GetUploadConfig() const;
+      int GetInternalFtpServerOpenConnectionCount() const;
+      uint16_t GetInternalFtpServerPort() const;
+
+      eCAL::rec::Error UploadMeasurement(int64_t meas_id);
+      bool CanUploadMeasurement(int64_t meas_id) const;
+      eCAL::rec::Error SimulateUploadMeasurement(int64_t meas_id) const;
+      int UploadNonUploadedMeasurements();
+
+    ////////////////////////////////////
+    // Comments
+    ////////////////////////////////////
+    public:
+      eCAL::rec::Error AddComment(int64_t meas_id, const std::string& comment);
+      bool CanAddComment(int64_t meas_id) const;
+      eCAL::rec::Error SimulateAddComment(int64_t meas_id) const;
+
+    ////////////////////////////////////
+    // Delete measurement
+    ////////////////////////////////////
+    public:
+      bool CanDeleteMeasurement(int64_t meas_id) const;
+      eCAL::rec::Error SimulateDeleteMeasurement(int64_t meas_id) const;
+      eCAL::rec::Error DeleteMeasurement(int64_t meas_id);
+
+    ////////////////////////////////////
+    // Config Save / Load
+    ////////////////////////////////////
+    public:
+      bool ClearConfig();
+      bool SaveConfigToFile(const std::string& path) const;
+      bool LoadConfigFromFile(const std::string& path);
+
+      std::string GetLoadedConfigPath() const;
+      int GetLoadedConfigVersion() const;
+      int GetNativeConfigVersion() const;
+
+    ////////////////////////////////////
+    // Private implementation
     ////////////////////////////////////
     private:
-      std::list<std::pair<std::unique_ptr<AbstractRecorder>, std::set<std::string>>> recorder_instances_;
-      bool client_connections_enabled_;
-
-      std::unique_ptr<RecorderSettings> settings_;
-      JobConfig job_config_;
-
-      bool      connected_to_ecal_;
-      bool      recording_;
-      JobConfig host_evaluated_config_;
-
-      // Options
-      bool use_built_in_recorder_;
-      std::shared_ptr<eCAL::rec::EcalRec> ecal_rec_instance_;
+      std::unique_ptr<RecServerImpl> rec_server_impl_;
     };
   }
 }

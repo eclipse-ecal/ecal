@@ -31,12 +31,12 @@ FunctionListModel::FunctionListModel(QObject *parent)
   function_list_.reserve(function_map.size() + 1);
 
   // Add general help item
-  function_list_.push_back(std::make_pair(QString("=== General help ==="), nullptr));
+  function_list_.emplace_back(std::make_pair(QString("=== General help ==="), nullptr));
 
   // Add function help items
   for (const auto& function_pair : function_map)
   {
-    function_list_.push_back(std::make_pair(QString::fromStdString(function_pair.first), function_pair.second));
+    function_list_.emplace_back(std::make_pair(QString::fromStdString(function_pair.first), function_pair.second));
   }
 }
 

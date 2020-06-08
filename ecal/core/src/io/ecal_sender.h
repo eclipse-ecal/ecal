@@ -35,18 +35,18 @@ namespace eCAL
     SSenderAttr() :
       port(0),
       ttl(0),
+      broadcast(false),
       unicast(false),
       loopback(true),
-      local_only(false),
       sndbuf(1024 * 1024)
     {};
 
     std::string ipaddr;
     int         port;
     int         ttl;
+    bool        broadcast;
     bool        unicast;
     bool        loopback;
-    bool        local_only;
     int         sndbuf;
   };
 

@@ -19,16 +19,22 @@
 
 #include "topic_widget.h"
 
+#include <models/item_data_roles.h>
+
 #include "topiclist_dialog.h"
+
+#include <rec_client_core/ecal_rec_defs.h>
 
 #include <QMenu>
 #include <QAction>
 #include <QClipboard>
 #include <QApplication>
+#include <QSettings>
 
 TopicWidget::TopicWidget(QWidget *parent)
   : QWidget(parent)
   , connect_to_ecal_button_state_is_connect_(true)
+  , first_show_event_(true)
 {
   ui_.setupUi(this);
 
@@ -41,17 +47,17 @@ TopicWidget::TopicWidget(QWidget *parent)
   connect(QEcalRec::instance(), &QEcalRec::recordingStateChangedSignal, this, &TopicWidget::updateRecordModeEnabledStates);
 
   connect(ui_.record_mode_all_topics_radiobutton, &QRadioButton::toggled, QEcalRec::instance(),
-    [this](bool checked) { if (checked) QEcalRec::instance()->setRecordMode(eCAL::rec::RecordMode::All); });
+    [](bool checked) { if (checked) QEcalRec::instance()->setRecordMode(eCAL::rec::RecordMode::All); });
   connect(ui_.record_mode_whitelist_radiobutton, &QRadioButton::toggled, QEcalRec::instance(),
-    [this](bool checked) { if (checked) QEcalRec::instance()->setRecordMode(eCAL::rec::RecordMode::Whitelist); });
+    [](bool checked) { if (checked) QEcalRec::instance()->setRecordMode(eCAL::rec::RecordMode::Whitelist); });
   connect(ui_.record_mode_blacklist_radiobutton, &QRadioButton::toggled, QEcalRec::instance(),
-    [this](bool checked) { if (checked) QEcalRec::instance()->setRecordMode(eCAL::rec::RecordMode::Blacklist); });
+    [](bool checked) { if (checked) QEcalRec::instance()->setRecordMode(eCAL::rec::RecordMode::Blacklist); });
 
   connect(ui_.blacklist_button, &QAbstractButton::clicked, this, &TopicWidget::showBlacklistDialog);
   connect(ui_.whitelist_button, &QAbstractButton::clicked, this, &TopicWidget::showWhitelistDialog);
 
   // Topic list models
-  auto topic_info_map = QEcalRec::instance()->monitorTopicInfo();
+  auto topic_info_map = QEcalRec::instance()->topicInfo();
   auto blacklist      = QEcalRec::instance()->topicBlacklist();
   auto whitelist      = QEcalRec::instance()->topicWhitelist();
 
@@ -64,21 +70,80 @@ TopicWidget::TopicWidget(QWidget *parent)
   whitelist_model_ ->reset(topic_info_map, whitelist, true);
   
   topics_hide_disabled_proxy_model_ = new QStableSortFilterProxyModel(this);
-  topics_hide_disabled_proxy_model_->setFilterKeyColumn((int)TopicListModel::Columns::RECORDING_ENABLED);
-  topics_hide_disabled_proxy_model_->setFilterFixedString("Yes");
+  topics_hide_disabled_proxy_model_->setFilterKeyColumn  ((int)TopicListModel::Columns::RECORDING_ENABLED);
+  topics_hide_disabled_proxy_model_->setDynamicSortFilter(true);
+  topics_hide_disabled_proxy_model_->setFilterRole(ItemDataRoles::FilterRole);
 
-  topics_user_filter_proxy_model_ = new QStableSortFilterProxyModel(this);
+  topics_user_filter_proxy_model_ = new QMulticolumnSortFilterProxyModel(this);
   topics_user_filter_proxy_model_->setFilterCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
-  topics_user_filter_proxy_model_->setFilterKeyColumn((int)TopicListModel::Columns::NAME);
-  topics_user_filter_proxy_model_->setSortCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
-  topics_user_filter_proxy_model_->setSourceModel(topics_hide_disabled_proxy_model_);
+  topics_user_filter_proxy_model_->setFilterKeyColumn      ((int)TopicListModel::Columns::NAME);
+  topics_user_filter_proxy_model_->setSortCaseSensitivity  (Qt::CaseSensitivity::CaseInsensitive);
+  topics_user_filter_proxy_model_->setDynamicSortFilter    (true);
+  topics_user_filter_proxy_model_->setFilterRole           (ItemDataRoles::FilterRole);
+  topics_user_filter_proxy_model_->setSortRole             (ItemDataRoles::SortRole);
+  topics_user_filter_proxy_model_->setSourceModel          (topics_hide_disabled_proxy_model_);
+  
+  if (QEcalRec::instance()->showDisabledElementsAtEnd())
+    topics_user_filter_proxy_model_->setAlwaysSortedColumn((int)TopicListModel::Columns::RECORDING_ENABLED, Qt::SortOrder::DescendingOrder);
 
   ui_.topic_treeview->setModel(topics_user_filter_proxy_model_);
+
+  row_height_delegate_ = new RowHeightDelegate(this);
+
+  ui_.topic_treeview->setItemDelegate(row_height_delegate_);
+
+  connect(QEcalRec::instance(), &QEcalRec::showDisabledElementsAtEndChanged, this
+          , [this](bool show_at_end)
+            {
+              if (show_at_end)
+                topics_user_filter_proxy_model_->setAlwaysSortedColumn((int)TopicListModel::Columns::RECORDING_ENABLED, Qt::SortOrder::DescendingOrder);
+              else
+                topics_user_filter_proxy_model_->setAlwaysSortedColumn(-1);
+            });
+
+  // Filter Combobox
+  filter_columns_        = { (int)TopicListModel::Columns::NAME
+                            , (int)TopicListModel::Columns::TYPE
+                            , (int)TopicListModel::Columns::PUBLISHED_BY
+                            , (int)TopicListModel::Columns::RECORDED_BY };
+
+  filter_combobox_model_ = new QStandardItemModel(this);
+
+  QStandardItem* all_columns_item = new QStandardItem("*");
+  all_columns_item->setData(-1, Qt::ItemDataRole::UserRole);
+  filter_combobox_model_->appendRow(all_columns_item);
+
+  for (int column : filter_columns_)
+  {
+    QStandardItem* item = new QStandardItem(all_topics_model_->headerData(column, Qt::Orientation::Horizontal, Qt::ItemDataRole::DisplayRole).toString());
+    item->setData(column, Qt::ItemDataRole::UserRole);
+    filter_combobox_model_->appendRow(item);
+  }
+
+  ui_.filter_combobox->setModel(filter_combobox_model_);
+  connect(ui_.filter_combobox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+    [this]()
+  {
+    int filter_column = ui_.filter_combobox->currentData(Qt::UserRole).toInt();
+    if (filter_column < 0)
+      topics_user_filter_proxy_model_->setFilterKeyColumns(filter_columns_);
+    else
+      topics_user_filter_proxy_model_->setFilterKeyColumn(filter_column);
+  });
+
+  ui_.filter_combobox->setCurrentIndex(0);
+  topics_user_filter_proxy_model_->setFilterKeyColumns(filter_columns_);
 
   // Tree view
   ui_.topic_treeview->setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
   connect(ui_.topic_treeview, &QAbstractItemView::customContextMenuRequested, this, &TopicWidget::treeviewContextMenuRequested);
   connect(ui_.topic_treeview, &QAdvancedTreeView::keySequenceCopyPressed,     this, &TopicWidget::copySelectedTopicNames);
+
+  ui_.topic_treeview->sortByColumn((int)TopicListModel::Columns::NAME, Qt::SortOrder::AscendingOrder);
+
+  // Alternating row colors
+  ui_.topic_treeview->setAlternatingRowColors(QEcalRec::instance()->alternatingRowColorsEnabled());
+  connect(QEcalRec::instance(), &QEcalRec::alternatingRowColorsEnabledChanged, ui_.topic_treeview, &QTreeView::setAlternatingRowColors);
 
   // Hide disabled checkbox
   connect(ui_.hide_disabled_checkbox, &QCheckBox::toggled, topics_hide_disabled_proxy_model_, [this](bool checked) {topics_hide_disabled_proxy_model_->setFilterFixedString(checked ? "Yes" : ""); });
@@ -90,20 +155,117 @@ TopicWidget::TopicWidget(QWidget *parent)
   connect(QEcalRec::instance(), &QEcalRec::monitorUpdatedSignal,        this, &TopicWidget::updateTopicCounterLabel);
 
   // Filter lineedit
-  ui_.filter_lineedit->setClearIcon(QIcon(":/ecalicons/FILTER_CANCEL"));
   connect(ui_.filter_lineedit, &QLineEdit::textChanged, this, [this](const QString& text) {topics_user_filter_proxy_model_->setFilterFixedString(text); });
 
   // Initial state
-  recordModeChanged     (QEcalRec::instance()->recordMode());
+  recordModeChanged    (QEcalRec::instance()->recordMode());
   topicWhitelistChanged(QEcalRec::instance()->topicWhitelist());
   topicBlacklistChanged(QEcalRec::instance()->topicBlacklist());
 
-  ui_.topic_treeview->setColumnHidden((int)TopicListModel::Columns::RECORDING_ENABLED, true);
   updateRecordModeEnabledStates();
 }
 
 TopicWidget::~TopicWidget()
-{}
+{
+  saveLayout();
+}
+
+///////////////////////////////////
+// Save / Restore layout
+///////////////////////////////////
+
+void TopicWidget::showEvent(QShowEvent* /*event*/)
+{
+  if (first_show_event_)
+  {
+    // Auto-size the columns to some dummy data
+    static std::map<TopicListModel::Columns, std::pair<bool, QString>> dummy_data
+    {
+      { TopicListModel::Columns::NAME,              { false, "3DSurroundViewImage" }},
+      { TopicListModel::Columns::PUBLISHED_BY,      { false, "CARPC01 (3DSurroundViewImage)" }},
+      { TopicListModel::Columns::RECORDING_ENABLED, { false, "Yes" }},
+      { TopicListModel::Columns::PUBLISHED_BY,      { true,  "CARPC01 [9999]" }},
+    };
+    
+    QFontMetrics tree_font_metrics   = ui_.topic_treeview->fontMetrics();
+    QFontMetrics header_font_metrics = ui_.topic_treeview->header()->fontMetrics();
+
+    int minimum_column_width = ui_.topic_treeview->header()->minimumSectionSize();
+    
+    for (int column = 0; column < ui_.topic_treeview->model()->columnCount(); column++)
+    {
+      auto dummy_it = dummy_data.find((TopicListModel::Columns)column);
+      if (dummy_it != dummy_data.end())
+      {
+        // This calculation is far from exact, at some points is just relies on some magic numbers (for icon and frame sizes)
+        int dummy_text_width = tree_font_metrics.boundingRect(dummy_it->second.second).width() + 4;
+        int icon_width       = (dummy_it->second.first ? 25 : 0);
+        int header_width     = header_font_metrics.boundingRect(ui_.topic_treeview->model()->headerData(column, Qt::Orientation::Horizontal).toString()).width() + 4;
+        
+        ui_.topic_treeview->header()->resizeSection(column, std::max(std::max((dummy_text_width + icon_width), header_width), minimum_column_width));
+      }
+    }
+
+    // Fix the row height of the list
+    int row_height = ui_.topic_treeview->style()->pixelMetric(QStyle::PixelMetric::PM_ListViewIconSize, nullptr, ui_.topic_treeview);
+    row_height    +=  2 * ui_.topic_treeview->style()->pixelMetric(QStyle::PixelMetric::PM_DefaultFrameWidth, nullptr, ui_.topic_treeview);
+    row_height_delegate_->setRowHeight(row_height);
+
+    // Hide Columns that the user may not need that often
+    ui_.topic_treeview->setColumnHidden((int)TopicListModel::Columns::TYPE,              true);
+    ui_.topic_treeview->setColumnHidden((int)TopicListModel::Columns::RECORDING_ENABLED, true);
+
+    saveInitialLayout();
+
+    restoreLayout();
+  }
+  first_show_event_ = false;
+}
+
+void TopicWidget::saveLayout()
+{
+  QSettings settings;
+  settings.setValue("topic_tree_state",     ui_.topic_treeview        ->saveState(eCAL::rec::Version()));
+  settings.setValue("hide_disabled_topics", ui_.hide_disabled_checkbox->isChecked());
+}
+
+void TopicWidget::restoreLayout()
+{
+  QSettings settings;
+
+  QVariant topic_tree_state_variant     = settings.value("topic_tree_state");
+  QVariant hide_disabled_topics_variant = settings.value("hide_disabled_topics");
+
+  if (topic_tree_state_variant.isValid())
+  {
+    QByteArray topic_tree_state = topic_tree_state_variant.toByteArray();
+    ui_.topic_treeview->restoreState(topic_tree_state, eCAL::rec::Version());
+  }
+
+  if (hide_disabled_topics_variant.isValid())
+  {
+    bool hide_disabled_topics = hide_disabled_topics_variant.toBool();
+    ui_.hide_disabled_checkbox->setChecked(hide_disabled_topics);
+  }
+}
+
+void TopicWidget::saveInitialLayout()
+{
+  initial_topic_tree_state_     = ui_.topic_treeview->saveState();
+  initial_hide_disabled_topics_ = ui_.hide_disabled_checkbox->isChecked();
+}
+
+void TopicWidget::resetLayout()
+{
+  ui_.topic_treeview        ->restoreState(initial_topic_tree_state_);
+  ui_.hide_disabled_checkbox->setChecked  (initial_hide_disabled_topics_);
+  ui_.filter_combobox       ->setCurrentIndex(0);
+  ui_.filter_lineedit       ->clear();
+}
+
+///////////////////////////////////
+// Private slots
+///////////////////////////////////
 
 void TopicWidget::recordModeChanged(eCAL::rec::RecordMode record_mode)
 {
@@ -122,7 +284,6 @@ void TopicWidget::recordModeChanged(eCAL::rec::RecordMode record_mode)
       topics_hide_disabled_proxy_model_->setSourceModel(all_topics_model_);
       ui_.filter_lineedit->clear();
     }
-
 
     break;
 
@@ -165,7 +326,7 @@ void TopicWidget::recordModeChanged(eCAL::rec::RecordMode record_mode)
 
 void TopicWidget::updateRecordModeEnabledStates()
 {
-  if (QEcalRec::instance()->recordersRecording())
+  if (QEcalRec::instance()->recording())
   {
     // While recording we cannot change anything
     ui_.record_mode_all_topics_radiobutton->setEnabled(false);
@@ -226,7 +387,7 @@ void TopicWidget::topicWhitelistChanged(const std::set<std::string>& whitelist)
   whitelist_model_->clean(true, true);
 }
 
-void TopicWidget::monitorUpdated(const std::map<std::string, eCAL::rec::TopicInfo> topic_info_map)
+void TopicWidget::monitorUpdated(const std::map<std::string, eCAL::rec_server::TopicInfo> topic_info_map)
 {
   all_topics_model_->updateVisibleTopics(topic_info_map, true);
   all_topics_model_->clean(true, false);
@@ -279,7 +440,7 @@ void TopicWidget::updateTopicCounterLabel()
     recorded_topics = activeModel()->listedTopicsCount();
   }
 
-  ui_.status_label->setText(tr("Recording ") + QString::number(recorded_topics) + " / " + QString::number(all_topics));
+  ui_.status_label->setText(tr("Selected ") + QString::number(recorded_topics) + " / " + QString::number(all_topics));
 }
 
 void TopicWidget::treeviewContextMenuRequested(const QPoint& pos)
@@ -323,7 +484,7 @@ void TopicWidget::treeviewContextMenuRequested(const QPoint& pos)
       connect(remove_from_list_action, &QAction::triggered, this, &TopicWidget::removeSelectedTopicsFromWhitelist);
     }
 
-    if (QEcalRec::instance()->recordersRecording())
+    if (QEcalRec::instance()->recording())
     {
       add_to_list_action->setEnabled(false);
       remove_from_list_action->setEnabled(false);
@@ -451,7 +612,7 @@ void TopicWidget::copySelectedTopicNames()
     if (index_it != selected_indexes.begin())
       clipboard_string += "\n";
     clipboard_string += activeModel()->data(*index_it, Qt::ItemDataRole::DisplayRole).toString();
-    index_it++;
+    ++index_it;
   }
 
   QClipboard* clipboard = QApplication::clipboard();

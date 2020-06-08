@@ -74,6 +74,10 @@ set(source_files
     src/widgets/player_controls_widget/player_controls_widget.cpp
     src/widgets/player_controls_widget/player_controls_widget.h
 
+    src/widgets/scenario_widget/edit_button_delegate.cpp
+    src/widgets/scenario_widget/edit_button_delegate.h
+    src/widgets/scenario_widget/scenario_model.cpp
+    src/widgets/scenario_widget/scenario_model.h
     src/widgets/scenario_widget/scenario_widget.cpp
     src/widgets/scenario_widget/scenario_widget.h
 
@@ -142,7 +146,7 @@ if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 endif()
 if(MSVC)
-    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127")
+    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127 /wd4714")
 endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)

@@ -591,7 +591,7 @@ void PlayThread::SetMeasurement(std::shared_ptr<eCAL::eh5::HDF5Meas> measurement
 
     command_.playing_                    = false;
 
-    command_.current_frame_index_           = 0;
+    command_.current_frame_index_        = 0;
     command_.next_frame_index_           = 0;
     command_.next_frame_set_manually_    = true;
 
@@ -871,7 +871,7 @@ bool PlayThread::Play(long long until_index)
   return true;
 }
 
-bool PlayThread::PlayToNextOccurenceOfChannel(std::string source_channel_name)
+bool PlayThread::PlayToNextOccurenceOfChannel(const std::string& source_channel_name)
 {
   long long current_index;
   bool repeat_enabled;

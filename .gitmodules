@@ -16,3 +16,21 @@
 [submodule "thirdparty/googletest"]
 	path = thirdparty/googletest
 	url = https://github.com/google/googletest.git
+[submodule "thirdparty/fineftp-server"]
+	path = thirdparty/fineftp-server
+	url = https://github.com/continental/fineftp-server.git
+[submodule "thirdparty/tinyxml2"]
+	path = thirdparty/tinyxml2
+	url = https://github.com/leethomason/tinyxml2
+[submodule "thirdparty/curl"]
+	path = thirdparty/curl
+	url = https://github.com/curl/curl.git
+[submodule "thirdparty/zlib"]
+	path = thirdparty/zlib
+	url = https://github.com/madler/zlib.git
+[submodule "thirdparty/libssh2"]
+	path = thirdparty/libssh2
+	url = https://github.com/libssh2/libssh2.git
+[submodule "thirdparty/hdf5"]
+	path = thirdparty/hdf5
+	url = https://bitbucket.hdfgroup.org/scm/hdffv/hdf5.git
