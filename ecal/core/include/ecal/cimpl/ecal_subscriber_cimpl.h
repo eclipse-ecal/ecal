@@ -106,7 +106,7 @@ extern "C"
    *
    * @return  Length of received buffer. 
   **/
-  ECALC_API int eCAL_Sub_Receive(ECAL_HANDLE handle_, void* buf_, int buf_len_, long long* time_, int rcv_timeout_);
+  ECALC_API int eCAL_Sub_Receive(ECAL_HANDLE handle_, void** buf_, int buf_len_, long long* time_, int rcv_timeout_);
 
   /**
    * @brief Add callback function for incoming receives. 
