@@ -44,6 +44,25 @@ git submodule init
 git submodule update
 ```
 
+## (Optional) Resolve dependencies using Conan
+
+eCAL provides basic support for the [Conan](https://conan.io/) package manager that uses (re)packaged
+thirdparty dependencies to allow for building eCAL using Conan non-intrusively. In order to build this
+project using Conan, one has to install this package manager first and also add so called remotes that
+point to pre-built thirdparty dependencies:
+
+```bash
+# Install Conan
+pip install --upgrade pip
+pip install --upgrade conan
+conan config set general.revisions_enabled=True
+
+# Add Conan remotes with pre-compiled dependencies
+conan remote add -f kwc_bintray https://api.bintray.com/conan/kwc/conan
+conan remote add -f conan-center https://bintray.com/conan/conan-center
+conan remote add -f bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+```
+
 ## CMake build options
 
 eCAL is using CMake as build system. When configuring with CMake, you can turn on / off the following features.
