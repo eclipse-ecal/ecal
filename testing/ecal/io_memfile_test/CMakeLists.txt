@@ -18,7 +18,7 @@
 
 project(test_memfile)
 
-find_package(GTest REQUIRED)
+ecal_find_package(GTest REQUIRED)
 
 set(memfile_test_src
     src/memfile_test.cpp

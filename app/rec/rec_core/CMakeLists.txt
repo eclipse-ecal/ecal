@@ -16,9 +16,9 @@
 #
 # ========================= eCAL LICENSE =================================
 
-find_package(Threads REQUIRED)
-find_package(Protobuf REQUIRED)
-find_package(spdlog REQUIRED)
+ecal_find_package(Threads REQUIRED)
+ecal_find_package(Protobuf REQUIRED)
+ecal_find_package(spdlog REQUIRED)
 
 set(PROJECT_NAME rec_core)
 

@@ -18,9 +18,9 @@
 
 project(play_core)
 
-find_package(Threads REQUIRED)
-find_package(Protobuf REQUIRED)
-find_package(spdlog REQUIRED)
+ecal_find_package(Threads REQUIRED)
+ecal_find_package(Protobuf REQUIRED)
+ecal_find_package(spdlog REQUIRED)
 
 set(source_files
   include/continuity_report.h

@@ -18,10 +18,10 @@
 
 project(core VERSION ${eCAL_VERSION_STRING})
 
-find_package(Threads      REQUIRED)
-find_package(asio         REQUIRED)
-find_package(tclap        REQUIRED)
-find_package(simpleini    REQUIRED)
+ecal_find_package(Threads      REQUIRED)
+ecal_find_package(asio         REQUIRED)
+ecal_find_package(tclap        REQUIRED)
+ecal_find_package(simpleini    REQUIRED)
 
 if (ECAL_JOIN_MULTICAST_TWICE)
   message(STATUS "eCAL ${PROJECT_NAME}: Enabling Specific Multicast Network Bug Workaround")
@@ -370,7 +370,7 @@ target_compile_definitions(${PROJECT_NAME}
 
 if(ECAL_LAYER_ICEORYX)
   if(UNIX)
-    find_package(iceoryx_posh REQUIRED)
+    ecal_find_package(iceoryx_posh REQUIRED)
     target_link_libraries(${PROJECT_NAME} PRIVATE iceoryx_posh::iceoryx_posh)
   endif()
     target_compile_definitions(${PROJECT_NAME} PUBLIC ECAL_LAYER_ICEORYX)

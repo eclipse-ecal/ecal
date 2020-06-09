@@ -18,8 +18,8 @@
 
 project(multiple_rec_cb)
 
-find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
+ecal_find_package(eCAL REQUIRED)
+ecal_find_package(Protobuf REQUIRED)
 
 set(multiple_rec_cb_src
     src/multiple_rec_cb.cpp

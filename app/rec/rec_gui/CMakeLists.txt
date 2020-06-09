@@ -20,20 +20,20 @@ cmake_minimum_required(VERSION 3.0.2)
 
 set(PROJECT_NAME rec_gui)
 
-find_package(Qt5 COMPONENTS
+ecal_find_package(Qt5 COMPONENTS
     Core
     Widgets
 REQUIRED)
 
 if(WIN32)
-    find_package(Qt5 COMPONENTS
+    ecal_find_package(Qt5 COMPONENTS
         WinExtras
     REQUIRED)
 endif(WIN32)
 
-find_package(simpleini REQUIRED)
-find_package(tclap REQUIRED)
-find_package(Protobuf REQUIRED)
+ecal_find_package(simpleini REQUIRED)
+ecal_find_package(tclap REQUIRED)
+ecal_find_package(Protobuf REQUIRED)
 
 if(POLICY CMP0071)
     cmake_policy(SET CMP0071 OLD)

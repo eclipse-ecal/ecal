@@ -18,7 +18,7 @@
 
 project(minimal_snd)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(minimal_snd_src
     src/minimal_snd.cpp

@@ -18,7 +18,7 @@
 
 project(performance_rec)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(performance_rec_src
     src/performance_rec.cpp

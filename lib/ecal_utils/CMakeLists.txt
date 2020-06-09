@@ -17,7 +17,7 @@
 # ========================= eCAL LICENSE =================================
 project(utils)
 
-find_package(Threads REQUIRED)
+ecal_find_package(Threads REQUIRED)
 
 set (ecal_utils_includes
   include/ecal_utils/filesystem.h

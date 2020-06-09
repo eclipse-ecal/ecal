@@ -18,7 +18,7 @@
 
 project(ecaltime-simtime)
 
-find_package(Protobuf REQUIRED)
+ecal_find_package(Protobuf REQUIRED)
 
 set(ecal_time_simtime_src
   src/ecal_time_simtime.cpp

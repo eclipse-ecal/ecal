@@ -18,7 +18,7 @@
 
 project(ecalplayer_client)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(ecalplayer_client_src
     src/ecalplayer_client.cpp

@@ -18,8 +18,8 @@
 
 project(test_pubsub_inproc)
 
-find_package(Threads REQUIRED)
-find_package(GTest REQUIRED)
+ecal_find_package(Threads REQUIRED)
+ecal_find_package(GTest REQUIRED)
 
 set(pubsub_inproc_test_src
   src/pubsub_inproc_test.cpp

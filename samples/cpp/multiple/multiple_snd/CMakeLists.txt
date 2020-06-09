@@ -18,8 +18,8 @@
 
 project(multiple_snd)
 
-find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
+ecal_find_package(eCAL REQUIRED)
+ecal_find_package(Protobuf REQUIRED)
 
 set(multiple_snd_src
     src/multiple_snd.cpp

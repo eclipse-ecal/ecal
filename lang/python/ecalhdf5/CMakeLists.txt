@@ -18,7 +18,7 @@
 
 project(_ecal_hdf5_py)
 
-find_package(Python COMPONENTS Development)
+ecal_find_package(Python COMPONENTS Development)
 
 set(ecal_lang_py_src
     src/ecalhdf5_wrap.cxx

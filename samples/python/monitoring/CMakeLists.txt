@@ -18,7 +18,7 @@
 
 project(monitoring)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(PROJECT_GROUP monitoring)
 

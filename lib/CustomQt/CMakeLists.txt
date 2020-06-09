@@ -20,7 +20,7 @@ cmake_minimum_required(VERSION 3.0.2)
 
 project(CustomQt)
 
-find_package(Qt5 COMPONENTS
+ecal_find_package(Qt5 COMPONENTS
     Core
     Widgets
 REQUIRED)

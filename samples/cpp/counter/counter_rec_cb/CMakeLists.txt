@@ -18,7 +18,7 @@
 
 project(counter_rec_cb)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(counter_rec_cb_src
     src/counter_rec_cb.cpp

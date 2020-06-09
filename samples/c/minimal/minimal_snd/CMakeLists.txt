@@ -18,7 +18,7 @@
 
 project(minimal_snd_c)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 remove_definitions(-std=c++14)
 

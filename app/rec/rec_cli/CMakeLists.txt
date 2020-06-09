@@ -16,9 +16,9 @@
 #
 # ========================= eCAL LICENSE =================================
 
-find_package(tclap REQUIRED)
-find_package(Protobuf REQUIRED)
-find_package(tclap REQUIRED)
+ecal_find_package(tclap REQUIRED)
+ecal_find_package(Protobuf REQUIRED)
+ecal_find_package(tclap REQUIRED)
 
 set(PROJECT_NAME rec)
 

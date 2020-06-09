@@ -18,7 +18,7 @@
 
 project(mon_plugin_dummy VERSION 0.1.0)
 
-find_package(Qt5 COMPONENTS
+ecal_find_package(Qt5 COMPONENTS
     Core
     Widgets
 REQUIRED)

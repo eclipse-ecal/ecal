@@ -20,9 +20,9 @@ cmake_minimum_required(VERSION 3.13) # INTEFACE_LINK_OPTIONS is available since 
 
 project(udpcap)
 
-find_package(Npcap        REQUIRED)
-find_package(PcapPlusPlus REQUIRED)
-find_package(asio         REQUIRED)
+ecal_find_package(Npcap        REQUIRED)
+ecal_find_package(PcapPlusPlus REQUIRED)
+ecal_find_package(asio         REQUIRED)
 
 set (source_files
     include/udpcap/host_address.h

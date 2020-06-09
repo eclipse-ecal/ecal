@@ -19,7 +19,7 @@
 include(CSharpUtilities)
 project(person_rec_cb_cs LANGUAGES CSharp)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(minimal_rec_cb_cs_src
     person_rec_cb.cs

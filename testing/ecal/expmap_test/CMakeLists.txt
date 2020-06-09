@@ -18,8 +18,8 @@
 
 project(test_expmap)
 
-find_package(Threads REQUIRED)
-find_package(GTest REQUIRED)
+ecal_find_package(Threads REQUIRED)
+ecal_find_package(GTest REQUIRED)
 
 set(expmap_test_src
   src/expmap_test.cpp

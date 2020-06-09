@@ -18,7 +18,7 @@
 
 project(ecaltime-linuxptp)
 
-find_package(simpleini REQUIRED)
+ecal_find_package(simpleini REQUIRED)
 
 set(ecal_time_linuxptp_src
   src/ecal_time_linuxptp.cpp

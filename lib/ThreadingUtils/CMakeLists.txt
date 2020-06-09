@@ -18,7 +18,7 @@
 
 project(ThreadingUtils)
 
-find_package(Threads REQUIRED)
+ecal_find_package(Threads REQUIRED)
 
 set (threading_utils_includes
   include/ThreadingUtils/DynamicSleeper.h

@@ -18,12 +18,12 @@
 
 project(mon_plugin_capnproto_reflection VERSION 0.1.0)
 
-find_package(Qt5 COMPONENTS
+ecal_find_package(Qt5 COMPONENTS
     Core
     Widgets
 REQUIRED)
 
-find_package(CapnProto REQUIRED)
+ecal_find_package(CapnProto REQUIRED)
 
 if(POLICY CMP0071)
   cmake_policy(SET CMP0071 OLD)

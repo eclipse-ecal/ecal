@@ -18,8 +18,8 @@
 
 project(play)
 
-find_package(simpleini REQUIRED)
-find_package(tclap REQUIRED)
+ecal_find_package(simpleini REQUIRED)
+ecal_find_package(tclap REQUIRED)
 
 set(source_files
   src/convert_utf.cpp

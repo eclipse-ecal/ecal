@@ -18,7 +18,7 @@
 
 project(timer)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(timer_src
     src/timer.cpp

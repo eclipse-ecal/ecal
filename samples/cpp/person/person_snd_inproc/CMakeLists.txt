@@ -18,8 +18,8 @@
 
 project(person_snd_inproc)
 
-find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
+ecal_find_package(eCAL REQUIRED)
+ecal_find_package(Protobuf REQUIRED)
 
 set(person_snd_inproc_src
     src/person_snd_inproc.cpp

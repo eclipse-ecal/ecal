@@ -156,9 +156,9 @@ if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
   list(APPEND as_subproject CMakeFunctions)
 endif()
 
-macro(find_package)
+macro(ecal_find_package)
   if(NOT "${ARGV0}" IN_LIST as_subproject)
-    _find_package(${ARGV})
+    find_package(${ARGV})
   endif()
 endmacro()
 
@@ -168,7 +168,7 @@ endif ()
 
 
 
-find_package(CMakeFunctions REQUIRED)
+ecal_find_package(CMakeFunctions REQUIRED)
 
 git_revision_information()
 set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAYOR})
@@ -196,7 +196,7 @@ if(WIN32 AND HAS_QT5)
     # the user set the CMAKE_PREFIX_PATH himself. Thus we try to find
     # Qt5 Core just to see if that works. If we can find Qt, we assume
     # that the user knows what he is doing.
-    find_package(Qt5 COMPONENTS Core)
+    ecal_find_package(Qt5 COMPONENTS Core)
     if(NOT Qt5_FOUND)
       message(FATAL_ERROR "QT5_ROOT_DIRECTORY is not defined. Please create an \
         environment variable QT5_ROOT_DIRECTORY pointing to your QT5 installation \

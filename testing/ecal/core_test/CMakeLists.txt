@@ -18,8 +18,8 @@
 
 project(test_core)
 
-find_package(Threads REQUIRED)
-find_package(GTest REQUIRED)
+ecal_find_package(Threads REQUIRED)
+ecal_find_package(GTest REQUIRED)
 
 set(core_test_src
   src/core_test.cpp

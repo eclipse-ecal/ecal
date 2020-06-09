@@ -18,7 +18,7 @@
 
 project(time)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(time_src
     src/time.cpp

@@ -18,7 +18,7 @@
 
 project(dynsize_snd)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(dynsize_snd_src
     src/dynsize_snd.cpp

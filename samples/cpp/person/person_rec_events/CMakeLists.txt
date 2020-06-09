@@ -18,8 +18,8 @@
 
 project(person_rec_events)
 
-find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
+ecal_find_package(eCAL REQUIRED)
+ecal_find_package(Protobuf REQUIRED)
 
 set(person_rec_events_src
     src/person_rec_events.cpp

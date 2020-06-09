@@ -18,8 +18,8 @@
 
 project(latency_snd)
 
-find_package(eCAL REQUIRED)
-find_package(tclap REQUIRED)
+ecal_find_package(eCAL REQUIRED)
+ecal_find_package(tclap REQUIRED)
 
 set(latency_snd_src
     src/latency_snd.cpp

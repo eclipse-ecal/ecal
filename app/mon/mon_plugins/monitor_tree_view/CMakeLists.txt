@@ -18,7 +18,7 @@
 
 project(MonitorTreeView)
 
-find_package(Qt5 
+ecal_find_package(Qt5 
   COMPONENTS Core Widgets
   REQUIRED
 )

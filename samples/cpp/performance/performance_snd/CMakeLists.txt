@@ -18,7 +18,7 @@
 
 project(performance_snd)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(performance_snd_src
     src/performance_snd.cpp

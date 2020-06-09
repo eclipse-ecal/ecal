@@ -18,7 +18,7 @@
 
 project(event_snd)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(event_rec_snd
     src/event_snd.cpp

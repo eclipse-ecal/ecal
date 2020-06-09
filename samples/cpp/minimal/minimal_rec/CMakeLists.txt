@@ -18,7 +18,7 @@
 
 project(minimal_rec)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(minimal_rec_src
     src/minimal_rec.cpp

@@ -18,7 +18,7 @@
 
 project(_ecal_core_py)
 
-find_package(Python COMPONENTS Development Interpreter)
+ecal_find_package(Python COMPONENTS Development Interpreter)
 
 set(ecal_lang_py_src
     src/ecal_wrap.cxx
@@ -30,7 +30,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Python::Python)
 target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core)
 target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::pb)
 
-find_package(Protobuf REQUIRED)
+ecal_find_package(Protobuf REQUIRED)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lang/python/core)
 

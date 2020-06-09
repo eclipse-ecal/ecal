@@ -18,8 +18,8 @@
 
 project(test_hdf5)
 
-find_package(Threads REQUIRED)
-find_package(GTest REQUIRED)
+ecal_find_package(Threads REQUIRED)
+ecal_find_package(GTest REQUIRED)
 
 set(hdf5_test_src
   src/hdf5_test.cpp

@@ -18,7 +18,7 @@
 
 project(hdf5)
 
-find_package(HDF5 COMPONENTS C REQUIRED)
+ecal_find_package(HDF5 COMPONENTS C REQUIRED)
 
 set(ecalhdf5_src
   src/eh5_meas.cpp

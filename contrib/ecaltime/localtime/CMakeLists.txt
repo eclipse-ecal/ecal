@@ -18,7 +18,7 @@
 
 project(ecaltime-localtime)
 
-find_package(Threads REQUIRED)
+ecal_find_package(Threads REQUIRED)
 
 set(ecal_time_localtime_src
   src/ecaltime.cpp

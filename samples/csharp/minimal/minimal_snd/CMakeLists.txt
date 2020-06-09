@@ -19,7 +19,7 @@
 include(CSharpUtilities)
 project(minimal_snd_cs LANGUAGES CSharp)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(minimal_snd_cs_src
     minimal_snd.cs

@@ -18,7 +18,7 @@
 
 project(monitoring_reg)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(monitoring_reg_src
     src/monitoring_reg.cpp

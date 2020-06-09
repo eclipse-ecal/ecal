@@ -18,13 +18,13 @@
 
 project(mon_gui)
 
-find_package(Qt5 COMPONENTS
+ecal_find_package(Qt5 COMPONENTS
     Core
     Widgets
 REQUIRED)
 
-find_package(Protobuf REQUIRED)
-find_package(simpleini REQUIRED)
+ecal_find_package(Protobuf REQUIRED)
+ecal_find_package(simpleini REQUIRED)
 
 if(POLICY CMP0071)
   cmake_policy(SET CMP0071 OLD)

@@ -18,7 +18,7 @@
 
 project(pubsub_throughput)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(pubsub_throughput_src
     src/pubsub_throughput.cpp

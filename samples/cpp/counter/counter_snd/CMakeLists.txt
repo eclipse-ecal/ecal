@@ -18,7 +18,7 @@
 
 project(counter_snd)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(counter_snd_src
     src/counter_snd.cpp

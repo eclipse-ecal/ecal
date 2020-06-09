@@ -18,7 +18,7 @@
 
 project(CustomTclap)
 
-find_package(tclap REQUIRED)
+ecal_find_package(tclap REQUIRED)
 
 set(include_files
   include/custom_tclap/advanced_tclap_output.h

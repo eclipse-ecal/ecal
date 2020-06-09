@@ -18,8 +18,8 @@
 
 project(test_event)
 
-find_package(Threads REQUIRED)
-find_package(GTest REQUIRED)
+ecal_find_package(Threads REQUIRED)
+ecal_find_package(GTest REQUIRED)
 
 set(event_test_src
   src/event_test.cpp

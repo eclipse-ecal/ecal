@@ -16,7 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-find_package(Protobuf REQUIRED)
+ecal_find_package(Protobuf REQUIRED)
 
 project(proto)
 

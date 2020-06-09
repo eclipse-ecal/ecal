@@ -18,7 +18,7 @@
 
 project(event_rec)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(event_rec_src
     src/event_rec.cpp

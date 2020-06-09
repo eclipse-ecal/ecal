@@ -18,8 +18,8 @@
 
 project(ping_client)
 
-find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
+ecal_find_package(eCAL REQUIRED)
+ecal_find_package(Protobuf REQUIRED)
 
 set(ping_client_src
     src/ping_client.cpp

@@ -18,7 +18,7 @@
 
 project(process)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(process_src
     src/process.cpp

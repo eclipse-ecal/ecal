@@ -19,7 +19,7 @@
 include(CSharpUtilities)
 project(person_snd_cs LANGUAGES CSharp)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(person_snd_cs_src
     person_snd.cs

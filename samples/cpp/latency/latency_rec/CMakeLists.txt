@@ -18,7 +18,7 @@
 
 project(latency_rec)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(latency_rec_src
     src/latency_rec.cpp

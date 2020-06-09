@@ -16,9 +16,9 @@
 #
 # ========================= eCAL LICENSE =================================
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
-find_package(Protobuf REQUIRED)
+ecal_find_package(Protobuf REQUIRED)
 create_targets_protobuf()
 
 set(PROJECT_NAME measurement_read)

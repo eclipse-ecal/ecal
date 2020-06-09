@@ -18,7 +18,7 @@
 
 project(measurement_read)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(PROJECT_GROUP measurement)
 

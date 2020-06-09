@@ -18,8 +18,8 @@
 
 project(ecalplayer_gui_client)
 
-find_package(eCAL REQUIRED)
-find_package(Qt5 COMPONENTS
+ecal_find_package(eCAL REQUIRED)
+ecal_find_package(Qt5 COMPONENTS
     Core
     Widgets
 REQUIRED)

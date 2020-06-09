@@ -18,8 +18,8 @@
 
 project(addressbook_rec_dynamic)
 
-find_package(CapnProto REQUIRED)
-find_package(eCAL REQUIRED)
+ecal_find_package(CapnProto REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 ecal_add_sample(${PROJECT_NAME} src/addressbook_rec_dynamic.cpp)
 

@@ -18,7 +18,7 @@
 
 project(pong)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(pong_src
     src/pong.cpp

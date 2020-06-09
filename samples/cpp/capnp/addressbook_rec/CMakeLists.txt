@@ -18,8 +18,8 @@
 
 project(addressbook_rec)
 
-find_package(CapnProto REQUIRED)
-find_package(eCAL REQUIRED)
+ecal_find_package(CapnProto REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(CAPNPC_IMPORT_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
 capnp_generate_cpp(CAPNP_SRCS CAPNP_HDRS src/addressbook.capnp)
