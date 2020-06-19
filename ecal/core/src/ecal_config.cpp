@@ -253,38 +253,38 @@ namespace eCAL
       if (fileexists(cfg_fname))
       {
         // apply file name to manager
-        loaded = LoadFile(cfg_fname.c_str()) == 0;
-
-        // update command line keys
-        for (auto full_key : m_overwrite_keys)
-        {
-          auto sec_pos = full_key.find_last_of('/');
-          if (sec_pos == std::string::npos) continue;
-          std::string section = full_key.substr(0, sec_pos);
-          std::string key     = full_key.substr(sec_pos+1);
-
-          auto val_pos = key.find_first_of(':');
-          if (val_pos == std::string::npos) continue;
-          std::string value = key.substr(val_pos+1);
-          key = key.substr(0, val_pos);
-
-          SI_Error err = SetValue(section.c_str(), key.c_str(), value.c_str());
-          if (err == SI_FAIL)
-          {
-            std::cout << "Error: Could not overwrite key " << key << " in section " << section << ".";
-          }
-        }
+        loaded = LoadFile(cfg_fname.c_str()) == 0;        
       }
 
       // load error ?
       if(!loaded)
-      {
+      { 
         std::cout << "eCAL::Config - Could not load ini file, using defaults. File name : " << cfg_fname << std::endl;
       }
       else
       {
         // return full name
         file_name_ = cfg_fname;
+      }
+
+      // update command line keys
+      for (auto full_key : m_overwrite_keys)
+      {
+         auto sec_pos = full_key.find_last_of('/');
+         if (sec_pos == std::string::npos) continue;
+         std::string section = full_key.substr(0, sec_pos);
+         std::string key     = full_key.substr(sec_pos+1);
+
+         auto val_pos = key.find_first_of(':');
+         if (val_pos == std::string::npos) continue;
+         std::string value = key.substr(val_pos+1);
+         key = key.substr(0, val_pos);
+
+         SI_Error err = SetValue(section.c_str(), key.c_str(), value.c_str());
+         if (err == SI_FAIL)
+         {
+            std::cout << "Error: Could not overwrite key " << key << " in section " << section << ".";
+         }
       }
     }
   protected:
