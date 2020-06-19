@@ -27,7 +27,7 @@ function (git_revision_information)
        OUTPUT_STRIP_TRAILING_WHITESPACE
    )
    
-  MESSAGE(STATUS "Content of the error: ${GIT_ERROR}")
+  MESSAGE(STATUS "Content of the message: ${GIT_ERROR}")
   endif (GIT_FOUND)
   
   # No error occured, we're in a git repo!
