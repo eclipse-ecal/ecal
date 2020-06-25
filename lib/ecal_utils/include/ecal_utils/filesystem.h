@@ -99,6 +99,8 @@ namespace EcalUtils
 
     bool CopyFile(const std::string& source, const std::string& destination, OsStyle input_path_style = OsStyle::Combined);
 
+    bool DeleteDir(const std::string& source, OsStyle input_path_style = OsStyle::Combined);
+
     std::string GetAbsoluteRoot(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
 
     bool IsAbsolute(const std::string& path, OsStyle input_path_style = OsStyle::Combined);

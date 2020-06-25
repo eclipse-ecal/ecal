@@ -57,6 +57,7 @@ namespace eCAL
   protected:
     void RunIOContext(const asio::chrono::steady_clock::duration& timeout);
       
+    bool                    m_broadcast;
     bool                    m_unicast;
     asio::io_context        m_iocontext;
     asio::ip::udp::socket   m_socket;
@@ -64,11 +65,18 @@ namespace eCAL
   };
 
   CUDPReceiverImpl::CUDPReceiverImpl(const SReceiverAttr& attr_) :
+                      m_broadcast(attr_.broadcast),
                       m_unicast(attr_.unicast),
                       m_socket(m_iocontext)
   {
+    if (m_broadcast && m_unicast)
+    {
+      std::cerr << "CUDPReceiver: Setting broadcast and unicast option true is not allowed." << std::endl;
+      return;
+    }
+
     // create socket
-    asio::ip::udp::endpoint listen_endpoint(asio::ip::make_address("0.0.0.0"), static_cast<unsigned short>(attr_.port));
+    asio::ip::udp::endpoint listen_endpoint(asio::ip::udp::v4(), static_cast<unsigned short>(attr_.port));
     {
       asio::error_code ec;      
       m_socket.open(listen_endpoint.protocol());
@@ -119,7 +127,7 @@ namespace eCAL
 
   bool CUDPReceiverImpl::AddMultiCastGroup(const char* ipaddr_)
   {
-    if (!m_unicast)
+    if (!m_broadcast && !m_unicast)
     {
       // join multicast group
       {

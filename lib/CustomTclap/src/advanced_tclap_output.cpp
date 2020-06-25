@@ -128,7 +128,7 @@ namespace CustomTclap
     for (int i = 0; static_cast<size_t>(i) < xor_list.size(); i++)
     {
       s += " {";
-      for (TCLAP::ArgVectorIterator it = xor_list[i].begin(); it != xor_list[i].end(); it++)
+      for (TCLAP::ArgVectorIterator it = xor_list[i].begin(); it != xor_list[i].end(); ++it)
       {
         s += (*it)->shortID() + "|";
       }
@@ -137,7 +137,7 @@ namespace CustomTclap
     }
 
     // then the rest
-    for (TCLAP::ArgListIterator it = arg_list.begin(); it != arg_list.end(); it++)
+    for (TCLAP::ArgListIterator it = arg_list.begin(); it != arg_list.end(); ++it)
     {
       if (!xor_handler.contains((*it))
         && (hidden_arguments_.find(*it) == hidden_arguments_.end()))
@@ -168,7 +168,7 @@ namespace CustomTclap
     // first the xor 
     for (int i = 0; static_cast<unsigned int>(i) < xor_list.size(); i++)
     {
-      for (TCLAP::ArgVectorIterator it = xor_list[i].begin(); it != xor_list[i].end(); it++)
+      for (TCLAP::ArgVectorIterator it = xor_list[i].begin(); it != xor_list[i].end(); ++it)
       {
         spacePrint(os, (*it)->longID(), max_width_, 3, 3);
         spacePrint(os, (*it)->getDescription(), max_width_, 5, 0);
@@ -180,7 +180,7 @@ namespace CustomTclap
     }
 
     // then the rest
-    for (TCLAP::ArgListIterator it = arg_list.begin(); it != arg_list.end(); it++)
+    for (TCLAP::ArgListIterator it = arg_list.begin(); it != arg_list.end(); ++it)
     {
       if (!xor_handler.contains((*it))
         && (hidden_arguments_.find(*it) == hidden_arguments_.end()))

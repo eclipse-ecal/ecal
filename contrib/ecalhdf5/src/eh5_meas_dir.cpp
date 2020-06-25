@@ -34,7 +34,7 @@
 #include <list>
 #include <iostream>
 
-#include "eh5_util.h"
+#include <ecal_utils/filesystem.h>
 
 unsigned int kDefaultMaxFileSizeMB = 50;
 
@@ -97,7 +97,9 @@ bool eCAL::eh5::HDF5MeasDir::Close()
       if (CreateEntriesTableOfContentsFor(channel.first, channel.second.Type, channel.second.Description, channel.second.Entries))
         channels_with_entries += channel.first + ",";
 
-    channels_with_entries.pop_back();
+    if ((channels_with_entries.size() > 0)  && (channels_with_entries.back() == ','))
+      channels_with_entries.pop_back();
+
     SetAttribute(file_id_, kChnAttrTitle, channels_with_entries);
 
     for (auto& channel : channels_)
@@ -435,8 +437,8 @@ hid_t eCAL::eh5::HDF5MeasDir::Create()
 {
   if (output_dir_.empty()) return -1;
 
-  if (!Utility::Directory::Exists(output_dir_) &&
-    !Utility::Directory::CreateDirectories(output_dir_))
+  if (!EcalUtils::Filesystem::IsDir(output_dir_, EcalUtils::Filesystem::OsStyle::Current)
+      && !EcalUtils::Filesystem::MkPath(output_dir_, EcalUtils::Filesystem::OsStyle::Current))
     return -1;
 
   if (file_name_.empty()) return -1;

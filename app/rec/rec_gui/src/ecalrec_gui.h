@@ -29,17 +29,46 @@
 
 #include "widgets/remote_measurement_debug_widget/remote_measurement_debug_widget.h"
 
+#include <QIcon>
+
+#ifdef WIN32
+#include <QWinTaskbarButton>
+#include <QWinThumbnailToolBar>
+#include <QWinThumbnailToolButton>
+#include <QIcon>
+#endif // WIN32
+
 class EcalRecGui : public QMainWindow
 {
   Q_OBJECT
 
+//////////////////////////////////////////
+// Constructor & Destructor
+//////////////////////////////////////////
 public:
   EcalRecGui(QWidget *parent = Q_NULLPTR);
-
   ~EcalRecGui();
 
 protected:
   void closeEvent(QCloseEvent* event) override;
+
+//////////////////////////////////////////
+// Save layout
+//////////////////////////////////////////
+protected:
+  void showEvent(QShowEvent *event) override;
+
+private:
+  void saveLayout();
+  void restoreLayout();
+  void saveInitialLayout();
+
+public slots:
+  void resetLayout();
+
+//////////////////////////////////////////
+// Private slots
+//////////////////////////////////////////
 
 private slots:
   void activateActionTriggered();
@@ -53,6 +82,30 @@ private slots:
   void updateBufferingEnabledAction(bool enabled);
   void updateUsingBuiltInRecorderAction(bool enabled);
 
+  bool clearConfig();
+  bool saveConfigAs();
+  bool saveConfig();
+  bool saveConfig(const QString& path);
+
+  bool askToSaveFile();
+
+  bool openConfigWithDialogs(const QString& path = "");
+  bool openConfig(const QString& path);
+
+  void configHasBeenModifiedChanged(bool modified);
+  void loadedConfigPathChanged(const std::string& path, int version);
+
+  void addToRecentFileList(const std::string& path);
+  void updateRecentFilesMenu();
+  void clearRecentFiles();
+
+  void addCommentToLastMeas();
+
+  void showUploadSettingsDialog();
+
+////////////////////////////////////////////
+// Member variables
+////////////////////////////////////////////
 private:
   Ui::EcalRecMainWindow ui_;
 
@@ -69,8 +122,40 @@ private:
   bool connect_to_ecal_action_state_is_connect_;
   bool record_action_state_is_record_;
 
+  QStringList recent_file_list_;
+
+  // initial layout
+  bool       first_show_event_;
+  QByteArray initial_geometry_;
+  QByteArray initial_state_;
+  bool       initial_show_disabled_elements_at_the_bottom_;
+  bool       initial_alternating_row_colors_;
+
 #ifdef WIN32
+////////////////////////////////////////////
+// Windows specific
+////////////////////////////////////////////
+private:
+  void registerTaskbarButtons();
+
 private slots:
   void showConsole(bool show);
+  void updateTaskbarButton(const eCAL::rec_server::RecorderStatusMap_T& recorder_statuses);
+
+private:
+  QWinTaskbarButton* taskbar_button_;
+  QWinThumbnailToolBar* thumbnail_toolbar_;
+  QWinThumbnailToolButton* taskbar_activate_button_;
+  QWinThumbnailToolButton* taskbar_record_button_;
+  QWinThumbnailToolButton* taskbar_save_buffer_button_;
+
+  QIcon taskbar_activate_icon_;
+  QIcon taskbar_deactivate_icon_;
+
+  QIcon taskbar_record_icon_;
+  QIcon taskbar_record_icon_disabled_;
+
+  QIcon taskbar_save_buffer_icon_;
+  QIcon taskbar_save_buffer_icon_disabled_;
 #endif // WIN32
 };

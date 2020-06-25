@@ -39,7 +39,7 @@ namespace LinuxPtpConfig {
     path_to_ini += "ecaltime.ini";
 
     int err = ini.LoadFile(path_to_ini.c_str());
-    if (!err == SI_OK){
+    if (err != SI_OK){
       std::cerr << "Error reading ecaltime config file" << std::endl;
     }
 

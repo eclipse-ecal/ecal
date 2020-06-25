@@ -31,7 +31,7 @@
 class MeasurementContainer
 {
 public:
-  MeasurementContainer(std::shared_ptr<eCAL::eh5::HDF5Meas> hdf5_meas, const std::string& path = "", bool use_receive_timestamp = true);
+  MeasurementContainer(std::shared_ptr<eCAL::eh5::HDF5Meas> hdf5_meas, const std::string& meas_dir = "", bool use_receive_timestamp = true);
   ~MeasurementContainer();
 
   void CreatePublishers();
@@ -61,7 +61,7 @@ public:
 
   long long GetNextEnabledFrameIndex(long long current_index, bool repeat_from_beginning, std::pair<long long, long long> limit_interval) const;
 
-  long long GetNextOccurenceOfChannel(long long current_index, std::string source_channel_name, bool repeat_from_beginning, std::pair<long long, long long> limit_interval) const;
+  long long GetNextOccurenceOfChannel(long long current_index, const std::string& source_channel_name, bool repeat_from_beginning, std::pair<long long, long long> limit_interval) const;
 
   std::chrono::nanoseconds GetTimeBetweenFrames(long long first, long long second) const;
 
@@ -103,7 +103,7 @@ private:
   };
 
   std::shared_ptr<eCAL::eh5::HDF5Meas>    hdf5_meas_;
-  std::string                             path_;
+  std::string                             meas_dir_;
   bool                                    use_receive_timestamp_;
 
   std::vector<MeasurementFrame>           frame_table_;

@@ -263,7 +263,7 @@ bool QAdvancedTreeView::restoreState(const QByteArray& state, int32_t version)
   {
     ColumnState column_state;
     state_stream >> column_state;
-    column_state_list.push_back(std::make_pair(column, column_state));
+    column_state_list.emplace_back(std::make_pair(column, column_state));
   }
 
   column_state_list.sort([](const std::pair<int, ColumnState>& s1, const std::pair<int, ColumnState>& s2) {return s1.second.position < s2.second.position; });

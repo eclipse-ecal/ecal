@@ -18,7 +18,7 @@
 */
 
 #include "about_dialog.h"
-#include "rec_core/ecal_rec_defs.h"
+#include "rec_client_core/ecal_rec_defs.h"
 
 #include <ecal/ecal_defs.h>
 
@@ -28,7 +28,7 @@ AboutDialog::AboutDialog(QWidget *parent)
   : QDialog(parent)
 {
   ui_.setupUi(this);
-  ui_.version_label->setText("Version: " + QString(ECAL_REC_VERSION));
+  ui_.version_label->setText("Version: " + QString(ECAL_REC_VERSION_STRING));
   ui_.ecalversion_label->setText("eCAL " + QString(ECAL_VERSION) + " (" + QString(ECAL_DATE) + ")");
   connect(ui_.button_box->button(QDialogButtonBox::StandardButton::Ok), SIGNAL(clicked()), this, SLOT(close()));
 }

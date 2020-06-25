@@ -27,6 +27,15 @@
  */
 struct EcalPlayScenario
 {
+  EcalPlayScenario(const std::string& name, const eCAL::Time::ecal_clock::time_point time)
+    : name_(name)
+    , time_(time)
+  {}
+
+  EcalPlayScenario()
+  {}
+
+
   std::string name_;                                                            /**< The name of this time point */
   eCAL::Time::ecal_clock::time_point time_;                                     /**< The actual time point inside the measurement */
 

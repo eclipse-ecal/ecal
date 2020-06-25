@@ -181,19 +181,19 @@ int main(int argc, char **argv)
           std::string layer_type("unknown");
           switch (layer.type())
           {
-          case eCAL::TLayer::tlayer_none:
+          case eCAL::pb::eTLayerType::tl_none:
             layer_type = "tlayer_none";
             break;
-          case eCAL::TLayer::tlayer_udp_mc:
+          case eCAL::pb::eTLayerType::tl_ecal_udp_mc:
             layer_type = "tlayer_udp_mc";
             break;
-          case eCAL::TLayer::tlayer_shm:
+          case eCAL::pb::eTLayerType::tl_ecal_shm:
             layer_type = "tlayer_shm";
             break;
-          case eCAL::TLayer::tlayer_inproc:
+          case eCAL::pb::eTLayerType::tl_inproc:
             layer_type = "tlayer_inproc";
             break;
-          case eCAL::TLayer::tlayer_all:
+          case eCAL::pb::eTLayerType::tl_all:
             layer_type = "tlayer_all";
             break;
           default:

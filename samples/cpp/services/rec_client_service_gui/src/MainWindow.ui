@@ -1,0 +1,898 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EcalrecGuiServiceMainWindow</class>
+ <widget class="QMainWindow" name="EcalrecGuiServiceMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1024</width>
+    <height>707</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>:/ecalplay/APP_ICON</normaloff>:/ecalplay/APP_ICON</iconset>
+  </property>
+  <property name="dockNestingEnabled">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Hostname:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="hostname_lineedit"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="get_config_request_tab">
+        <attribute name="title">
+         <string>GetConfigRequest</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>No settings</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="get_config_request_button">
+           <property name="text">
+            <string>Send request</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="set_config_request_tab">
+        <attribute name="title">
+         <string>SetConfigRequest</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <layout class="QFormLayout" name="formLayout">
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="set_config_max_pre_buffer_length_secs_checkbox">
+             <property name="text">
+              <string>max_pre_buffer_length_secs</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="set_config_max_pre_buffer_length_secs_lineedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QCheckBox" name="set_config_pre_buffering_enabled_checkbox">
+             <property name="text">
+              <string>pre_buffering_enabled</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="set_config_pre_buffering_enabled_lineedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QCheckBox" name="set_config_host_filter_checkbox">
+             <property name="text">
+              <string>host_filter</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QPlainTextEdit" name="set_config_host_filter_textedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QCheckBox" name="set_config_record_mode_checkbox">
+             <property name="text">
+              <string>record_mode</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="set_config_record_mode_lineedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QCheckBox" name="set_config_listed_topics_checkbox">
+             <property name="text">
+              <string>listed_topics</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QPlainTextEdit" name="set_config_listed_topics_textedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QCheckBox" name="set_config_enabled_addons_checkbox">
+             <property name="text">
+              <string>enabled_addons</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QPlainTextEdit" name="set_config_enabled_addons_textedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QPushButton" name="set_config_request_button">
+           <property name="text">
+            <string>Send request</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="command_request_tab">
+        <attribute name="title">
+         <string>CommandRequest</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="command_request_command_label">
+             <property name="text">
+              <string>command</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="command_request_command_combobox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <item>
+              <property name="text">
+               <string>none</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>initialize</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>de_initialize</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>start_recording</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>stop_recording</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>save_pre_buffer</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>upload_measurement</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>add_comment</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>exit</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="command_request_meas_id_checkbox">
+             <property name="text">
+              <string>meas_id</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="command_request_meas_id_lineedit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox">
+           <property name="title">
+            <string>Start recording / Save buffer</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_5">
+            <item row="0" column="0">
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="4" column="1">
+               <widget class="QLineEdit" name="command_request_max_file_size_mib_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QCheckBox" name="command_request_meas_name_checkbox">
+                <property name="text">
+                 <string>meas_name</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QCheckBox" name="command_request_max_file_size_mib_checkbox">
+                <property name="text">
+                 <string>max_file_size_mib</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QCheckBox" name="command_request_description_checkbox">
+                <property name="text">
+                 <string>description</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="command_request_meas_root_dir_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="command_request_meas_name_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QTextEdit" name="command_request_description_textedit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QCheckBox" name="command_request_meas_root_dir_checkbox">
+                <property name="text">
+                 <string>meas_root_dir</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_3">
+           <property name="title">
+            <string>Upload measurement</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_7">
+            <item>
+             <layout class="QGridLayout" name="gridLayout_2">
+              <item row="6" column="1">
+               <widget class="QLineEdit" name="command_request_upload_metadata_files_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="command_request_protocol_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QCheckBox" name="command_request_password_checkbox">
+                <property name="text">
+                 <string>password</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="0">
+               <widget class="QCheckBox" name="command_request_upload_metadata_files_checkbox">
+                <property name="text">
+                 <string>upload_metadata_files</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QCheckBox" name="command_request_port_checkbox">
+                <property name="text">
+                 <string>port</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QLineEdit" name="command_request_port_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QCheckBox" name="command_request_host_checkbox">
+                <property name="text">
+                 <string>host</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="command_request_password_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QLineEdit" name="command_request_upload_path_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="command_request_username_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLineEdit" name="command_request_host_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QCheckBox" name="command_request_upload_path_checkbox">
+                <property name="text">
+                 <string>upload_path</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QCheckBox" name="command_request_protocol_checkbox">
+                <property name="text">
+                 <string>protocol</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QCheckBox" name="command_request_username_checkbox">
+                <property name="text">
+                 <string>username</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_4">
+           <property name="title">
+            <string>Add comment</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="0" column="0">
+             <widget class="QCheckBox" name="command_request_comment_checkbox">
+              <property name="text">
+               <string>comment</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPlainTextEdit" name="command_request_comment_textedit"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="command_request_button">
+           <property name="text">
+            <string>Send request</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="get_state_request_tab">
+        <attribute name="title">
+         <string>GetStateRequest</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>No Settings</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="get_state_request_button">
+           <property name="text">
+            <string>Send Request</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="title">
+        <string>Response</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QTextEdit" name="response_texteedit">
+          <property name="font">
+           <font>
+            <family>Courier New</family>
+           </font>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="response_clear_button">
+          <property name="text">
+           <string>Clear</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <tabstops>
+  <tabstop>hostname_lineedit</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>get_config_request_button</tabstop>
+  <tabstop>set_config_max_pre_buffer_length_secs_checkbox</tabstop>
+  <tabstop>set_config_max_pre_buffer_length_secs_lineedit</tabstop>
+  <tabstop>set_config_pre_buffering_enabled_checkbox</tabstop>
+  <tabstop>set_config_pre_buffering_enabled_lineedit</tabstop>
+  <tabstop>set_config_host_filter_checkbox</tabstop>
+  <tabstop>set_config_host_filter_textedit</tabstop>
+  <tabstop>set_config_record_mode_checkbox</tabstop>
+  <tabstop>set_config_record_mode_lineedit</tabstop>
+  <tabstop>set_config_listed_topics_checkbox</tabstop>
+  <tabstop>set_config_listed_topics_textedit</tabstop>
+  <tabstop>set_config_enabled_addons_checkbox</tabstop>
+  <tabstop>set_config_enabled_addons_textedit</tabstop>
+  <tabstop>set_config_request_button</tabstop>
+  <tabstop>command_request_command_combobox</tabstop>
+  <tabstop>command_request_meas_id_checkbox</tabstop>
+  <tabstop>command_request_meas_id_lineedit</tabstop>
+  <tabstop>command_request_meas_root_dir_checkbox</tabstop>
+  <tabstop>command_request_meas_root_dir_lineedit</tabstop>
+  <tabstop>command_request_meas_name_checkbox</tabstop>
+  <tabstop>command_request_meas_name_lineedit</tabstop>
+  <tabstop>command_request_description_checkbox</tabstop>
+  <tabstop>command_request_description_textedit</tabstop>
+  <tabstop>command_request_max_file_size_mib_checkbox</tabstop>
+  <tabstop>command_request_max_file_size_mib_lineedit</tabstop>
+  <tabstop>command_request_protocol_checkbox</tabstop>
+  <tabstop>command_request_protocol_lineedit</tabstop>
+  <tabstop>command_request_username_checkbox</tabstop>
+  <tabstop>command_request_username_lineedit</tabstop>
+  <tabstop>command_request_password_checkbox</tabstop>
+  <tabstop>command_request_password_lineedit</tabstop>
+  <tabstop>command_request_host_checkbox</tabstop>
+  <tabstop>command_request_host_lineedit</tabstop>
+  <tabstop>command_request_port_checkbox</tabstop>
+  <tabstop>command_request_port_lineedit</tabstop>
+  <tabstop>command_request_upload_path_checkbox</tabstop>
+  <tabstop>command_request_upload_path_lineedit</tabstop>
+  <tabstop>command_request_upload_metadata_files_checkbox</tabstop>
+  <tabstop>command_request_upload_metadata_files_lineedit</tabstop>
+  <tabstop>command_request_comment_checkbox</tabstop>
+  <tabstop>command_request_comment_textedit</tabstop>
+  <tabstop>command_request_button</tabstop>
+  <tabstop>response_texteedit</tabstop>
+  <tabstop>response_clear_button</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>set_config_max_pre_buffer_length_secs_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>set_config_max_pre_buffer_length_secs_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>135</x>
+     <y>85</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>439</x>
+     <y>88</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>set_config_pre_buffering_enabled_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>set_config_pre_buffering_enabled_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>131</x>
+     <y>111</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>439</x>
+     <y>114</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>set_config_host_filter_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>set_config_host_filter_textedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>92</x>
+     <y>137</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>461</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>set_config_listed_topics_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>set_config_listed_topics_textedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>102</x>
+     <y>328</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>461</x>
+     <y>428</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>set_config_record_mode_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>set_config_record_mode_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>99</x>
+     <y>302</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>305</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_meas_root_dir_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_meas_root_dir_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>134</x>
+     <y>165</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>246</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_max_file_size_mib_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_max_file_size_mib_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>111</x>
+     <y>286</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>335</x>
+     <y>288</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_description_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_description_textedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>89</x>
+     <y>243</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>285</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_meas_name_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_meas_name_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>100</x>
+     <y>189</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>312</x>
+     <y>191</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_protocol_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_protocol_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>96</x>
+     <y>355</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>385</x>
+     <y>357</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_username_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_username_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>100</x>
+     <y>381</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_password_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_password_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>162</x>
+     <y>407</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>362</x>
+     <y>409</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_host_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_host_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>120</x>
+     <y>433</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>358</x>
+     <y>435</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_port_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_port_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>155</x>
+     <y>459</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>371</x>
+     <y>461</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_upload_path_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_upload_path_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>162</x>
+     <y>485</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>358</x>
+     <y>487</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_upload_metadata_files_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_upload_metadata_files_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>162</x>
+     <y>511</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>360</x>
+     <y>513</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_meas_id_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_meas_id_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>82</x>
+     <y>114</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>269</x>
+     <y>116</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>set_config_enabled_addons_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>set_config_enabled_addons_textedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>109</x>
+     <y>492</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>341</x>
+     <y>483</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_comment_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_comment_textedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>73</x>
+     <y>587</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>381</x>
+     <y>611</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

@@ -77,6 +77,7 @@ function(ecal_install_shared_library TARGET_NAME)
 # Windows, RUNTIME -> .dll, ARCHIVE -> .lib, Unix: LIBRARY -> .so
   install(TARGETS ${TARGET_NAME}
   # IMPORTANT: Add the library to the "export-set"
+    EXPORT eCALCoreTargets
     RUNTIME       DESTINATION "${eCAL_install_bin_dir}"         COMPONENT runtime
     LIBRARY       DESTINATION "${eCAL_install_lib_dir}"         COMPONENT sdk
     ARCHIVE       DESTINATION "${eCAL_install_archive_dyn_dir}" COMPONENT sdk

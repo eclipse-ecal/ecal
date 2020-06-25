@@ -24,14 +24,14 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu_file">
+   <widget class="QToolTipMenu" name="menu_file">
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <widget class="QMenu" name="menu_recent_files">
+    <widget class="QToolTipMenu" name="menu_recent_files">
      <property name="title">
       <string>&amp;Recent files</string>
      </property>
@@ -45,25 +45,28 @@
     <addaction name="separator"/>
     <addaction name="action_exit"/>
    </widget>
-   <widget class="QMenu" name="menu_view">
+   <widget class="QToolTipMenu" name="menu_view">
     <property name="title">
      <string>&amp;View</string>
     </property>
     <addaction name="action_debug_console"/>
     <addaction name="action_reset_layout"/>
+    <addaction name="separator"/>
+    <addaction name="action_show_disabled_elements_at_the_bottom"/>
+    <addaction name="action_alternating_row_colors"/>
    </widget>
-   <widget class="QMenu" name="menu_help">
+   <widget class="QToolTipMenu" name="menu_help">
     <property name="title">
      <string>&amp;Help</string>
     </property>
     <addaction name="action_about"/>
     <addaction name="action_licenses"/>
    </widget>
-   <widget class="QMenu" name="menu_recording">
+   <widget class="QToolTipMenu" name="menu_recording">
     <property name="title">
      <string>&amp;Recording</string>
     </property>
-    <widget class="QMenu" name="menu_advances">
+    <widget class="QToolTipMenu" name="menu_advances">
      <property name="title">
       <string>A&amp;dvanced</string>
      </property>
@@ -77,32 +80,21 @@
     <addaction name="action_save_pre_buffer"/>
     <addaction name="separator"/>
     <addaction name="action_pre_buffer_data"/>
+    <addaction name="separator"/>
+    <addaction name="action_add_comment_to_last_meas"/>
+    <addaction name="action_upload_all"/>
    </widget>
-   <widget class="QMenu" name="menu_windows">
+   <widget class="QToolTipMenu" name="menu_windows">
     <property name="title">
      <string>&amp;Windows</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menu_options">
+   <widget class="QToolTipMenu" name="menu_options">
     <property name="title">
-     <string>Options</string>
+     <string>&amp;Options</string>
     </property>
-    <widget class="QMenu" name="menu_recorder_state_upate_speed">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="title">
-      <string>&amp;Recorder-State upate speed</string>
-     </property>
-     <addaction name="action_rec_state_update_speed_0_1"/>
-     <addaction name="action_rec_state_update_speed_0_2"/>
-     <addaction name="action_rec_state_update_speed_0_5"/>
-     <addaction name="action_rec_state_update_speed_1"/>
-     <addaction name="action_rec_state_update_speed_2"/>
-     <addaction name="action_rec_state_update_speed_5"/>
-    </widget>
     <addaction name="action_use_built_in_local_recorder"/>
-    <addaction name="menu_recorder_state_upate_speed"/>
+    <addaction name="action_upload_settings"/>
    </widget>
    <addaction name="menu_file"/>
    <addaction name="menu_recording"/>
@@ -117,7 +109,7 @@
     <string>Topics</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>4</number>
+    <number>1</number>
    </attribute>
    <widget class="QWidget" name="topics_dockwidget_content">
     <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -152,7 +144,7 @@
     <string>Configuration</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>4</number>
+    <number>2</number>
    </attribute>
    <widget class="QWidget" name="config_dockwidget_content">
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -187,7 +179,7 @@
     <string>Recorders</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>4</number>
+    <number>2</number>
    </attribute>
    <widget class="QWidget" name="recorder_manager_dockwidget_content">
     <layout class="QVBoxLayout" name="recorder_manager_dockwidgetcontent_layout">
@@ -222,7 +214,7 @@
     <string>Recorder Control [DEBUG]</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>4</number>
+    <number>1</number>
    </attribute>
    <widget class="QWidget" name="remote_measurement_debug_dockwidget_content">
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -254,7 +246,7 @@
   </widget>
   <widget class="QDockWidget" name="recording_history_dockwidget">
    <property name="windowTitle">
-    <string>Recording Histroy (Not implemented, yet)</string>
+    <string>Measurements</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -276,12 +268,63 @@
      <item>
       <widget class="QFrame" name="recording_history_dockwidget_content_frame">
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::NoFrame</enum>
        </property>
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
        </property>
        <layout class="QVBoxLayout" name="recording_history_dockwidget_content_frame_layout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="control_dockwidget">
+   <property name="features">
+    <set>QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <property name="windowTitle">
+    <string>Control</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="control_dockwidget_content">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="control_dockwidget_content_frame">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QVBoxLayout" name="control_dockwidget_content_frame_layout">
         <property name="leftMargin">
          <number>0</number>
         </property>
@@ -308,6 +351,9 @@
    <property name="text">
     <string>&amp;Save config</string>
    </property>
+   <property name="toolTip">
+    <string>Save the current config</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
    </property>
@@ -319,6 +365,9 @@
    </property>
    <property name="text">
     <string>Save config &amp;as...</string>
+   </property>
+   <property name="toolTip">
+    <string>Save the current config as a new file</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+S</string>
@@ -332,6 +381,9 @@
    <property name="text">
     <string>&amp;Open config</string>
    </property>
+   <property name="toolTip">
+    <string>Open a config from your hard drive</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
    </property>
@@ -342,7 +394,10 @@
      <normaloff>:/ecalicons/NEW_FILE</normaloff>:/ecalicons/NEW_FILE</iconset>
    </property>
    <property name="text">
-    <string>New config</string>
+    <string>&amp;New config</string>
+   </property>
+   <property name="toolTip">
+    <string>Start with a new empty config</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -360,6 +415,9 @@
    </property>
    <property name="text">
     <string>&amp;Exit</string>
+   </property>
+   <property name="toolTip">
+    <string>Exit eCAL Rec</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
@@ -396,6 +454,9 @@
    <property name="text">
     <string>&amp;Record</string>
    </property>
+   <property name="toolTip">
+    <string>Start recording</string>
+   </property>
    <property name="shortcut">
     <string>F5</string>
    </property>
@@ -407,6 +468,9 @@
    </property>
    <property name="text">
     <string>&amp;Save pre-buffer</string>
+   </property>
+   <property name="toolTip">
+    <string>Save content of the pre-buffer as its own recording</string>
    </property>
    <property name="shortcut">
     <string>F6</string>
@@ -441,10 +505,10 @@
      <normaloff>:/ecalicons/POWER_ON</normaloff>:/ecalicons/POWER_ON</iconset>
    </property>
    <property name="text">
-    <string>&amp;Activate clients</string>
+    <string>&amp;Activate / Prepare</string>
    </property>
    <property name="toolTip">
-    <string>Start recorder clients and connect to eCAL</string>
+    <string>Activate clients and start pre-buffering</string>
    </property>
    <property name="shortcut">
     <string>F4</string>
@@ -460,12 +524,18 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Buffering enabled</string>
+    <string>&amp;Pre-buffering enabled</string>
+   </property>
+   <property name="toolTip">
+    <string>Enable pre-buffering</string>
    </property>
   </action>
   <action name="action_reset_layout">
    <property name="text">
     <string>&amp;Reset layout</string>
+   </property>
+   <property name="toolTip">
+    <string>Reset the layout to the default view</string>
    </property>
   </action>
   <action name="action_debug_console">
@@ -479,6 +549,9 @@
    <property name="text">
     <string>&amp;Debug console...</string>
    </property>
+   <property name="toolTip">
+    <string>Show the Windows command line prompt</string>
+   </property>
   </action>
   <action name="action_use_built_in_local_recorder">
    <property name="checkable">
@@ -489,54 +562,125 @@
    </property>
   </action>
   <action name="action_rec_state_update_speed_0_1">
-   <property name="enabled">
-    <bool>false</bool>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
    <property name="text">
-    <string>0.1s</string>
+    <string>100 ms</string>
    </property>
   </action>
   <action name="action_rec_state_update_speed_0_2">
-   <property name="enabled">
-    <bool>false</bool>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
    <property name="text">
-    <string>0.2s</string>
+    <string>200 ms</string>
    </property>
   </action>
   <action name="action_rec_state_update_speed_0_5">
-   <property name="enabled">
-    <bool>false</bool>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
    <property name="text">
-    <string>0.5s</string>
+    <string>500 ms</string>
    </property>
   </action>
   <action name="action_rec_state_update_speed_1">
-   <property name="enabled">
-    <bool>false</bool>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
    <property name="text">
-    <string>1s</string>
+    <string>1 s</string>
    </property>
   </action>
   <action name="action_rec_state_update_speed_2">
-   <property name="enabled">
-    <bool>false</bool>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
    <property name="text">
-    <string>2s</string>
+    <string>2 s</string>
    </property>
   </action>
   <action name="action_rec_state_update_speed_5">
-   <property name="enabled">
-    <bool>false</bool>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
    <property name="text">
-    <string>5s</string>
+    <string>5 s</string>
+   </property>
+  </action>
+  <action name="action_show_disabled_elements_at_the_bottom">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Show disabled elements at the bottom</string>
+   </property>
+   <property name="toolTip">
+    <string>Show disabled topics / recorders at the bottom of the list</string>
+   </property>
+  </action>
+  <action name="action_alternating_row_colors">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Alternating row colors</string>
+   </property>
+  </action>
+  <action name="action_upload_settings">
+   <property name="text">
+    <string>Upload &amp;Settings...</string>
+   </property>
+  </action>
+  <action name="actionMerge_all">
+   <property name="text">
+    <string>Merge all</string>
+   </property>
+  </action>
+  <action name="action_upload_all">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/MERGE</normaloff>:/ecalicons/MERGE</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Upload / Merge all</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+U</string>
+   </property>
+  </action>
+  <action name="action_add_comment_to_last_meas">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/ADD_FILE</normaloff>:/ecalicons/ADD_FILE</iconset>
+   </property>
+   <property name="text">
+    <string>Add &amp;Comment to last measurement</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+C</string>
+   </property>
+  </action>
+  <action name="action_rec_state_update_speed_0_05">
+   <property name="text">
+    <string>50 ms</string>
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QToolTipMenu</class>
+   <extends>QMenu</extends>
+   <header location="global">CustomQt/QToolTipMenu.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../resources/resources.qrc"/>
   <include location="../../../iconset/ecalicons.qrc"/>

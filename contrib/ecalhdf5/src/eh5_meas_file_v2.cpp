@@ -24,9 +24,11 @@
 #include "eh5_meas_file_v2.h"
 
 #include "hdf5.h"
-#include "eh5_util.h"
+#include <ecal_utils/string.h>
 
 #include <iostream>
+#include <list>
+#include <set>
 
 eCAL::eh5::HDF5MeasFileV2::HDF5MeasFileV2()
   : file_id_(-1)
@@ -110,7 +112,7 @@ std::set<std::string> eCAL::eh5::HDF5MeasFileV2::GetChannelNames() const
   GetAttributeValue(file_id_, kChnAttrTitle, channel_names);
 
   std::list<std::string> channels;
-  Utility::String::split(channel_names, ",", channels);
+  EcalUtils::String::Split(channel_names, ",", channels);
 
   for (const auto& channel : channels)
     channels_set.insert(channel);

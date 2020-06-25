@@ -22,12 +22,16 @@
 #include <QWidget>
 #include "ui_topic_widget.h"
 #include <QPoint>
+#include <QStandardItemModel>
+#include <QShowEvent>
 
 #include <qecalrec.h>
 
-#include "models/topic_list_model.h"
+#include "topic_list_model.h"
 
-#include <CustomQt/QStableSortFilterProxyModel.h>
+#include "row_height_delegate.h"
+
+#include <CustomQt/QMulticolumnSortFilterProxyModel.h>
 
 class TopicWidget : public QWidget
 {
@@ -37,12 +41,31 @@ public:
   TopicWidget(QWidget *parent = Q_NULLPTR);
   ~TopicWidget();
 
+///////////////////////////////////
+// Save / Restore layout
+///////////////////////////////////
+
+protected:
+  void showEvent(QShowEvent *event) override;
+
+private:
+  void saveLayout();
+  void restoreLayout();
+  void saveInitialLayout();
+
+public slots:
+  void resetLayout();
+
+///////////////////////////////////
+// Private slots
+///////////////////////////////////
+
 private slots:
   void recordModeChanged(eCAL::rec::RecordMode record_mode);
   void updateRecordModeEnabledStates();
   void topicBlacklistChanged(const std::set<std::string>& blacklist);
   void topicWhitelistChanged(const std::set<std::string>& whitelist);
-  void monitorUpdated(const std::map<std::string, eCAL::rec::TopicInfo> topic_info_map);
+  void monitorUpdated(const std::map<std::string, eCAL::rec_server::TopicInfo> topic_info_map);
 
   void showBlacklistDialog();
   void showWhitelistDialog();
@@ -56,16 +79,24 @@ private slots:
   void removeSelectedTopicsFromWhitelist();
   void copySelectedTopicNames();
 
+///////////////////////////////////
+// Member variables
+///////////////////////////////////
+
 private:
   Ui::TopicWidget ui_;
 
   bool connect_to_ecal_button_state_is_connect_;
 
-  TopicListModel*              blacklist_model_;
-  TopicListModel*              whitelist_model_;
-  TopicListModel*              all_topics_model_;
-  QStableSortFilterProxyModel* topics_hide_disabled_proxy_model_;
-  QStableSortFilterProxyModel* topics_user_filter_proxy_model_;
+  TopicListModel*                   blacklist_model_;
+  TopicListModel*                   whitelist_model_;
+  TopicListModel*                   all_topics_model_;
+  QStableSortFilterProxyModel*      topics_hide_disabled_proxy_model_;
+  QMulticolumnSortFilterProxyModel* topics_user_filter_proxy_model_;
+  QStandardItemModel*               filter_combobox_model_;
+  QVector<int>                      filter_columns_;                            /**< Columns that are enabled for filtering */
+
+  RowHeightDelegate*                row_height_delegate_;
 
   inline TopicListModel* activeModel() const;
 
@@ -74,4 +105,9 @@ private:
 
   QModelIndexList selectedSourceIndexes(int column = 0) const;
   int countListedIndexes(const QModelIndexList& index_list) const;
+
+  // Initial layout
+  bool first_show_event_;
+  QByteArray initial_topic_tree_state_;
+  bool       initial_hide_disabled_topics_;
 };

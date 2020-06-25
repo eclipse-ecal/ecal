@@ -75,11 +75,11 @@ namespace EcalParser
           if (word_start < i)
           {
             // Copy the previous word
-            words.push_back(text.substr(word_start, i - word_start));
+            words.emplace_back(text.substr(word_start, i - word_start));
           }
     
           // copy the current special word
-          words.push_back(text.substr(i, 1));
+          words.emplace_back(text.substr(i, 1));
     
           // The next word may start at the next position
           word_start = i + 1;
@@ -91,7 +91,7 @@ namespace EcalParser
       // copy the last word
       if (word_start < text.size())
       {
-        words.push_back(text.substr(word_start));
+        words.emplace_back(text.substr(word_start));
       }
     
       return words;
@@ -106,7 +106,7 @@ namespace EcalParser
         evaluated_function = false;
     
         // Iterate over all words and check if we find elements 
-        for (auto word_it = word_list.begin(); word_it != word_list.end(); word_it++)
+        for (auto word_it = word_list.begin(); word_it != word_list.end(); ++word_it)
         {
           // Check if we have a function starting at i
           if (IsTargetIdentifierWord(*word_it))

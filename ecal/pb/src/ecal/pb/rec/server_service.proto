@@ -1,0 +1,89 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2019 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+syntax = "proto3";
+
+option cc_generic_services = true;
+
+package eCAL.pb.rec_server;
+
+import "ecal/pb/rec/server_state.proto";
+
+///////////////////////////////////////////////////////
+// Requests
+///////////////////////////////////////////////////////
+
+message GenericRequest {}
+
+message LoadConfigRequest
+{
+  string config_path = 1;                   // The path to load the config from
+}
+
+message GenericMeasurementRequest
+{
+  int64 meas_id = 1;                        // Which measurement to upload. If 0, all measurements will be uploaded
+}
+
+message AddCommentRequest
+{
+  int64  meas_id = 1;                        // Which measurement to add the comment to. If 0, the comment will be added to the last measurement, if possible
+  string comment = 2;                        // The comment to add to the measurement
+}
+
+///////////////////////////////////////////////////////
+// Responses
+///////////////////////////////////////////////////////
+
+message ServiceResult
+{
+  enum ErrorCode
+  {
+    no_error         =  0;                   // The service was successfully executed
+    error_parameters =  1;                   // The service was called with faulty or insufficient parameters
+    error_internal   =  2;                   // The command could not be executed
+  }
+  
+  ErrorCode error_code   = 1;                // An error code describing whether the service has been successfully executed or not
+  string    info_message = 2;                // A human readable message describing the reason of the error code
+}
+
+message JobStartedResponse
+{
+  ServiceResult service_result = 1;          // result of the service call
+  int64         meas_id        = 2;          // The ID of the created measurement
+}
+
+///////////////////////////////////////////////////////
+// Actual services
+///////////////////////////////////////////////////////
+
+service EcalRecServerService
+{
+  rpc LoadConfigFile    (LoadConfigRequest)         returns (eCAL.pb.rec_server.ServiceResult);           // Load a config from a config file
+  rpc Activate          (GenericRequest)            returns (eCAL.pb.rec_server.ServiceResult);           // Connect to all clients AND initialize all clients
+  rpc DeActivate        (GenericRequest)            returns (eCAL.pb.rec_server.ServiceResult);           // De-initialize all clients AND disconnect from them
+  rpc StartRecording    (GenericRequest)            returns (eCAL.pb.rec_server.JobStartedResponse);      // Start recording
+  rpc StopRecording     (GenericRequest)            returns (eCAL.pb.rec_server.ServiceResult);           // Stop recording
+  rpc SaveBuffer        (GenericRequest)            returns (eCAL.pb.rec_server.JobStartedResponse);      // Save the content of the current pre-buffer as its own measurement
+  rpc UploadMeasurement (GenericMeasurementRequest) returns (eCAL.pb.rec_server.ServiceResult);           // Upload the specific measurement given by the meas_id or all uploadable measurements, if no ID is given
+  rpc AddComment        (AddCommentRequest)         returns (eCAL.pb.rec_server.ServiceResult);           // Add a comment to the measurement given by meas_id. If no ID is given, the comment will be added to the last measurement, if possible.
+  rpc DeleteMeasurement (GenericMeasurementRequest) returns (eCAL.pb.rec_server.ServiceResult);           // Deletes the measurement given by meas_id. If no ID is given, the last measurement will be deleted.
+  rpc GetStatus         (GenericRequest)            returns (eCAL.pb.rec_server.Status);                  // Get the rec server status that includes the currently recording meas_id, the entire measurement history and other information
+}

@@ -27,12 +27,22 @@
     <number>0</number>
    </property>
    <item>
+    <widget class="QFilterLineEdit" name="filter_lineedit">
+     <property name="placeholderText">
+      <string>Filter</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QAdvancedTreeView" name="recorder_list">
      <property name="editTriggers">
       <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
      </property>
      <property name="selectionMode">
       <enum>QAbstractItemView::ExtendedSelection</enum>
+     </property>
+     <property name="textElideMode">
+      <enum>Qt::ElideMiddle</enum>
      </property>
      <property name="verticalScrollMode">
       <enum>QAbstractItemView::ScrollPerPixel</enum>
@@ -48,9 +58,6 @@
      </property>
      <property name="allColumnsShowFocus">
       <bool>true</bool>
-     </property>
-     <property name="expandsOnDoubleClick">
-      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -113,14 +120,24 @@
       </widget>
      </item>
      <item>
+      <widget class="QLabel" name="pre_buffer_warning_label">
+       <property name="toolTip">
+        <string>You need to click activate the recorders for the pre-buffer to start!</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>1</width>
-         <height>1</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
       </spacer>
@@ -165,7 +182,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>1</height>
+         <height>0</height>
         </size>
        </property>
       </spacer>
@@ -188,7 +205,7 @@
         <string>Add host...</string>
        </property>
        <property name="text">
-        <string/>
+        <string>Add...</string>
        </property>
        <property name="icon">
         <iconset resource="../../../../../iconset/ecalicons.qrc">
@@ -214,11 +231,11 @@
         <string>Remove host</string>
        </property>
        <property name="text">
-        <string/>
+        <string>Delete</string>
        </property>
        <property name="icon">
         <iconset resource="../../../../../iconset/ecalicons.qrc">
-         <normaloff>:/ecalicons/REMOVE</normaloff>:/ecalicons/REMOVE</iconset>
+         <normaloff>:/ecalicons/DELETE</normaloff>:/ecalicons/DELETE</iconset>
        </property>
       </widget>
      </item>
@@ -232,6 +249,11 @@
    <class>QAdvancedTreeView</class>
    <extends>QTreeView</extends>
    <header location="global">CustomQt/QAdvancedTreeView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QFilterLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">CustomQt/QFilterLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources>

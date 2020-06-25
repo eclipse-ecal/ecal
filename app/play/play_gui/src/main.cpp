@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     &unlabled_meas_path_arg,
   };
 
-  for (auto arg_iterator = arg_vector.rbegin(); arg_iterator != arg_vector.rend(); arg_iterator++)
+  for (auto arg_iterator = arg_vector.rbegin(); arg_iterator != arg_vector.rend(); ++arg_iterator)
   {
     cmd.add(*arg_iterator);
   }

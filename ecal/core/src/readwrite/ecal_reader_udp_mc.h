@@ -54,7 +54,6 @@ namespace eCAL
       attr.unicast = false;
       attr.loopback = true;
       attr.rcvbuf = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
-      attr.local_only = false;
       rcv.Create(attr);
     }
 

@@ -73,7 +73,7 @@ namespace EcalUtils
         {
           break;
         }
-        it++;
+        ++it;
       }
       return it;
     }

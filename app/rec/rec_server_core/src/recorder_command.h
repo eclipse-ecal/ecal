@@ -19,11 +19,12 @@
 
 #pragma once
 
-#include <rec_core/job_config.h>
+#include <rec_client_core/job_config.h>
+#include <rec_client_core/upload_config.h>
 
 namespace eCAL
 {
-  namespace rec
+  namespace rec_server
   {
     struct RecorderCommand
     {
@@ -35,17 +36,23 @@ namespace eCAL
         START_RECORDING,
         STOP_RECORDING,
         SAVE_PRE_BUFFER,
-        ADD_SCENARIO,
+        UPLOAD_MEASUREMENT,
+        ADD_COMMENT,
+        DELETE_MEASUREMENT,
         EXIT,
       };
 
       RecorderCommand()
         : type_(Type::NONE)
+        , meas_id_add_delete(0)
       {}
 
-      Type        type_;
-      JobConfig   job_config_;
-      std::string scenario_name_;
+      Type                    type_;
+      eCAL::rec::JobConfig    job_config_;
+      eCAL::rec::UploadConfig upload_config_;
+
+      int64_t                 meas_id_add_delete;
+      std::string             comment_;
     };
   }
 }

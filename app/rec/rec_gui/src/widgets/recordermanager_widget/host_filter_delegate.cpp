@@ -25,12 +25,14 @@
 
 #include "host_picker.h"
 
-HostFilterDelegate::HostFilterDelegate(QObject *parent)
+HostFilterDelegate::HostFilterDelegate(QAbstractItemView* parent)
   : QStyledItemDelegate(parent)
   , first_run_(true)
   , dialog_open_(false)
   , open_popup_(false)
 {
+  parent->viewport()->setAttribute(Qt::WA_Hover); // Important for mouse-hover events
+   
   available_hosts_model_ = new QStandardItemModel(this);
 
   QStandardItem* all_item = new QStandardItem();
@@ -50,7 +52,7 @@ QWidget *HostFilterDelegate::createEditor(QWidget *parent, const QStyleOptionVie
 {
   open_popup_ = true;
 
-  QComboBox *editor = new QComboBox(parent); // TODO: Check if the editor ever becomes destroyed
+  QComboBox *editor = new QComboBox(parent);
 
   editor->setModel(available_hosts_model_);
   
@@ -130,9 +132,16 @@ void HostFilterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
 {
   QStyledItemDelegate::paint(painter, option, index); // call base
 
-  bool hover = option.state & QStyle::State_MouseOver;
+  // Get the ItemView of this delegate
+  const QAbstractItemView* item_view = static_cast<const QAbstractItemView*>(option.widget);
 
-  if (hover && (index.flags() & Qt::ItemFlag::ItemIsEditable))
+  // Check whether the row and / or the item is hovered
+  QPoint p = item_view->viewport()->mapFromGlobal(QCursor::pos());
+
+  bool row_hover  = option.state & QStyle::State_MouseOver;
+  bool cell_hover = (item_view->indexAt(p) == index);
+
+  if (row_hover && (index.flags() & Qt::ItemFlag::ItemIsEditable))
   {
     QStyleOptionComboBox combobox_options;
     
@@ -147,6 +156,10 @@ void HostFilterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
     combobox_options.fontMetrics = QFontMetrics(index.data(Qt::ItemDataRole::FontRole).value<QFont>());
     combobox_options.editable = false;
     combobox_options.state = QFlags<QStyle::StateFlag>(QStyle::StateFlag::State_Enabled & ~QStyle::StateFlag::State_HasFocus);
+
+    if (cell_hover)
+      combobox_options.state |= (QStyle::StateFlag::State_HasFocus | QStyle::StateFlag::State_MouseOver);
+
     combobox_options.frame = true;
     combobox_options.currentIcon = index.data(Qt::ItemDataRole::DecorationRole).value<QIcon>();
     
@@ -158,6 +171,20 @@ void HostFilterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
 
     painter->translate(-option.rect.topLeft().x(), -option.rect.topLeft().y());
   }
+}
+
+QSize HostFilterDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+  auto original_size = QStyledItemDelegate::sizeHint(option, index);
+
+  int frame_width;
+
+  if (option.widget != nullptr)
+    frame_width = option.widget->style()->pixelMetric(QStyle::PixelMetric::PM_DefaultFrameWidth);
+  else
+    frame_width = QApplication::style()->pixelMetric(QStyle::PixelMetric::PM_DefaultFrameWidth);
+
+  return QSize(original_size.width(), option.decorationSize.height() + 4 * frame_width);
 }
 
 void HostFilterDelegate::indexActivated(int index)

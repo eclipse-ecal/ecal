@@ -98,7 +98,7 @@ if(MSVC)
     )
 
     # Disable Compiler warning "Conditional expression is constant"
-    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127")
+    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127 /wd4714")
 
     source_group(autogen FILES 
         ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_automoc.cpp

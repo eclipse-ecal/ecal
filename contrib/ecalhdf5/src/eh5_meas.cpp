@@ -23,7 +23,7 @@
 
 #include <ecalhdf5/eh5_meas.h>
 
-#include "eh5_util.h"
+#include <ecal_utils/filesystem.h>
 
 #include "eh5_meas_dir.h"
 #include "eh5_meas_file_v1.h"
@@ -31,6 +31,8 @@
 #include "eh5_meas_file_v3.h"
 #include "eh5_meas_file_v4.h"
 #include "eh5_meas_file_v5.h"
+
+#include "escape.h"
 
 namespace
 {
@@ -67,19 +69,19 @@ bool eCAL::eh5::HDF5Meas::Open(const std::string& path, eAccessType access /*= e
 
   if (access == eAccessType::CREATE)
   {
-    Utility::Directory::CreateDirectories(path);
+    EcalUtils::Filesystem::MkPath(path, EcalUtils::Filesystem::OsStyle::Current);
   }
 
-  auto type = Utility::Path::GetType(path);
+  auto type = EcalUtils::Filesystem::GetType(path, EcalUtils::Filesystem::OsStyle::Current);
 
   switch (type)
   {
-  case Utility::Path::eType::directory:
+  case EcalUtils::Filesystem::Dir:
   {
     hdf_meas_impl_ = new HDF5MeasDir(path, access);
     break;
   }
-  case Utility::Path::eType::file:
+  case EcalUtils::Filesystem::RegularFile:
   {
     hdf_meas_impl_ = new HDF5MeasFileV5(path, access);
 
@@ -136,7 +138,7 @@ bool eCAL::eh5::HDF5Meas::Open(const std::string& path, eAccessType access /*= e
     }
   }
   break;
-  case Utility::Path::eType::unknown:
+  case EcalUtils::Filesystem::Unknown:
   default:
     return false;
     break;
@@ -144,7 +146,7 @@ bool eCAL::eh5::HDF5Meas::Open(const std::string& path, eAccessType access /*= e
 
   if (access == eAccessType::CREATE)
   {
-    return hdf_meas_impl_ != nullptr ? Utility::Directory::Exists(path) : false;
+    return hdf_meas_impl_ != nullptr ? EcalUtils::Filesystem::IsDir(path, EcalUtils::Filesystem::OsStyle::Current) : false;
   }
   else
   {
@@ -209,7 +211,11 @@ std::set<std::string> eCAL::eh5::HDF5Meas::GetChannelNames() const
   std::set<std::string> ret_val;
   if (hdf_meas_impl_ != nullptr)
   {
-    ret_val = hdf_meas_impl_->GetChannelNames();
+    std::set<std::string> escaped_channel_names = hdf_meas_impl_->GetChannelNames();
+    for (const std::string& escaped_name : escaped_channel_names)
+    {
+      ret_val.emplace(GetUnescapedString(escaped_name));
+    }
   }
 
   return ret_val;
@@ -220,7 +226,7 @@ bool eCAL::eh5::HDF5Meas::HasChannel(const std::string& channel_name) const
   bool ret_val = false;
   if (hdf_meas_impl_ != nullptr)
   {
-    ret_val = hdf_meas_impl_->HasChannel(channel_name);
+    ret_val = hdf_meas_impl_->HasChannel(GetEscapedString(channel_name));
   }
 
   return ret_val;
@@ -231,7 +237,7 @@ std::string eCAL::eh5::HDF5Meas::GetChannelDescription(const std::string& channe
   std::string ret_val;
   if (hdf_meas_impl_ != nullptr)
   {
-    ret_val = hdf_meas_impl_->GetChannelDescription(channel_name);
+    ret_val = hdf_meas_impl_->GetChannelDescription(GetEscapedString(channel_name));
   }
 
   return ret_val;
@@ -241,7 +247,7 @@ void eCAL::eh5::HDF5Meas::SetChannelDescription(const std::string& channel_name,
 {
   if (hdf_meas_impl_ != nullptr)
   {
-    hdf_meas_impl_->SetChannelDescription(channel_name, description);
+    hdf_meas_impl_->SetChannelDescription(GetEscapedString(channel_name), description);
   }
 }
 
@@ -250,7 +256,7 @@ std::string eCAL::eh5::HDF5Meas::GetChannelType(const std::string& channel_name)
   std::string ret_val;
   if (hdf_meas_impl_ != nullptr)
   {
-    ret_val = hdf_meas_impl_->GetChannelType(channel_name);
+    ret_val = hdf_meas_impl_->GetChannelType(GetEscapedString(channel_name));
   }
 
   return ret_val;
@@ -260,7 +266,7 @@ void eCAL::eh5::HDF5Meas::SetChannelType(const std::string& channel_name, const 
 {
   if (hdf_meas_impl_ != nullptr)
   {
-    hdf_meas_impl_->SetChannelType(channel_name, type);
+    hdf_meas_impl_->SetChannelType(GetEscapedString(channel_name), type);
   }
 }
 
@@ -269,7 +275,7 @@ long long eCAL::eh5::HDF5Meas::GetMinTimestamp(const std::string& channel_name) 
   long long ret_val = 0;
   if (hdf_meas_impl_ != nullptr)
   {
-    ret_val = hdf_meas_impl_->GetMinTimestamp(channel_name);
+    ret_val = hdf_meas_impl_->GetMinTimestamp(GetEscapedString(channel_name));
   }
 
   return ret_val;
@@ -280,7 +286,7 @@ long long eCAL::eh5::HDF5Meas::GetMaxTimestamp(const std::string& channel_name) 
   long long ret_val = 0;
   if (hdf_meas_impl_ != nullptr)
   {
-    ret_val = hdf_meas_impl_->GetMaxTimestamp(channel_name);
+    ret_val = hdf_meas_impl_->GetMaxTimestamp(GetEscapedString(channel_name));
   }
 
   return ret_val;
@@ -291,7 +297,7 @@ bool eCAL::eh5::HDF5Meas::GetEntriesInfo(const std::string& channel_name, EntryI
   bool ret_val = false;
   if (hdf_meas_impl_ != nullptr)
   {
-    ret_val = hdf_meas_impl_->GetEntriesInfo(channel_name, entries);
+    ret_val = hdf_meas_impl_->GetEntriesInfo(GetEscapedString(channel_name), entries);
   }
 
   return ret_val;
@@ -302,7 +308,7 @@ bool eCAL::eh5::HDF5Meas::GetEntriesInfoRange(const std::string& channel_name, l
   bool ret_val = false;
   if (hdf_meas_impl_ != nullptr && begin < end)
   {
-    ret_val = hdf_meas_impl_->GetEntriesInfoRange(channel_name, begin, end, entries);
+    ret_val = hdf_meas_impl_->GetEntriesInfoRange(GetEscapedString(channel_name), begin, end, entries);
   }
 
   return ret_val;
@@ -343,7 +349,7 @@ bool eCAL::eh5::HDF5Meas::AddEntryToFile(const void* data, const unsigned long l
   bool ret_val = false;
   if (hdf_meas_impl_ != nullptr)
   {
-    return hdf_meas_impl_->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel_name, id, clock);
+    return hdf_meas_impl_->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, GetEscapedString(channel_name), id, clock);
   }
 
   return ret_val;

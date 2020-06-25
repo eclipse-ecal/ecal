@@ -44,11 +44,22 @@ namespace eCAL
     m_reg_cb(reg_cb_)
   {
     SReceiverAttr attr;
-    attr.ipaddr     = eCALPAR(NET, UDP_MULTICAST_GROUP);
-    attr.port       = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_REG_OFF;
-    attr.loopback   = true;
-    attr.rcvbuf     = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
-    attr.local_only = !eCALPAR(NET, ENABLED);
+    bool local_only = !eCALPAR(NET, ENABLED);
+    // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
+    if (local_only)
+    {
+      attr.ipaddr    = "127.255.255.255";
+      attr.broadcast = true;
+    }
+    else
+    {
+      attr.ipaddr    = eCALPAR(NET, UDP_MULTICAST_GROUP);
+      attr.broadcast = false;
+    }
+    attr.port     = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_REG_OFF;
+    attr.loopback = true;
+    attr.rcvbuf   = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
+
     m_reg_rcv.Create(attr);
     m_reg_rcv_thread.Start(0, std::bind(&CRegistrationReceiveThread::ThreadFun, this));
   }
@@ -69,11 +80,22 @@ namespace eCAL
     m_network_mode(false), m_log_cb(log_cb_)
   {
     SReceiverAttr attr;
-    attr.ipaddr     = eCALPAR(NET, UDP_MULTICAST_GROUP);
-    attr.port       = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_LOG_OFF;
-    attr.loopback   = true;
-    attr.rcvbuf     = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
-    attr.local_only = !eCALPAR(NET, ENABLED);
+    bool local_only = !eCALPAR(NET, ENABLED);
+    // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
+    if (local_only)
+    {
+      attr.ipaddr    = "127.255.255.255";
+      attr.broadcast = true;
+    }
+    else
+    {
+      attr.ipaddr    = eCALPAR(NET, UDP_MULTICAST_GROUP);
+      attr.broadcast = false;
+    }
+    attr.port     = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_LOG_OFF;
+    attr.loopback = true;
+    attr.rcvbuf   = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
+
     m_log_rcv.Create(attr);
     m_log_rcv_thread.Start(0, std::bind(&CLoggingReceiveThread::ThreadFun, this));
     m_msg_buffer.resize(MSG_BUFFER_SIZE);

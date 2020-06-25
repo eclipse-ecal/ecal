@@ -24,6 +24,8 @@
 #include <QMenu>
 #include <QAction>
 
+#include <models/item_data_roles.h>
+
 #include <set>
 
 TopicListDialog::TopicListDialog(eCAL::rec::RecordMode mode, std::set<std::string> initial_topic_list, QWidget *parent)
@@ -50,24 +52,46 @@ TopicListDialog::TopicListDialog(eCAL::rec::RecordMode mode, std::set<std::strin
 
   selected_topics_proxy_model_ = new QStableSortFilterProxyModel(this);
   selected_topics_proxy_model_->setFilterCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
-  selected_topics_proxy_model_->setFilterKeyColumn(0);
-  selected_topics_proxy_model_->setSortCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
-  selected_topics_proxy_model_->setDynamicSortFilter(false);
-  selected_topics_proxy_model_->setSourceModel(selected_topics_model_);
+  selected_topics_proxy_model_->setFilterKeyColumn      (0);
+  selected_topics_proxy_model_->setSortCaseSensitivity  (Qt::CaseSensitivity::CaseInsensitive);
+  selected_topics_proxy_model_->setDynamicSortFilter    (false);
+  selected_topics_proxy_model_->setSortRole             (ItemDataRoles::SortRole);
+  selected_topics_proxy_model_->setFilterRole           (ItemDataRoles::FilterRole);
+  selected_topics_proxy_model_->setSourceModel          (selected_topics_model_);
 
   ui_.topics_treeview->setModel(selected_topics_proxy_model_);
 
   visible_topics_model_ = new TopicListModel(mode, this);
   connect(QEcalRec::instance(), &QEcalRec::monitorUpdatedSignal, this, &TopicListDialog::monitorUpdated);
-  visible_topics_model_->reset(QEcalRec::instance()->monitorTopicInfo(), initial_topic_list, false);
+  visible_topics_model_->reset(QEcalRec::instance()->topicInfo(), initial_topic_list, false);
 
-  visible_topics_proxy_model_ = new QStableSortFilterProxyModel(this);
+  visible_topics_proxy_model_ = new QMulticolumnSortFilterProxyModel(this);
   visible_topics_proxy_model_->setFilterCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
-  visible_topics_proxy_model_->setFilterKeyColumn((int)TopicListModel::Columns::NAME);
-  visible_topics_proxy_model_->setSortCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
-  visible_topics_proxy_model_->setSourceModel(visible_topics_model_);
+  visible_topics_proxy_model_->setFilterKeyColumn      ((int)TopicListModel::Columns::NAME);
+  visible_topics_proxy_model_->setSortCaseSensitivity  (Qt::CaseSensitivity::CaseInsensitive);
+  visible_topics_proxy_model_->setSortRole             (ItemDataRoles::SortRole);
+  visible_topics_proxy_model_->setFilterRole           (ItemDataRoles::FilterRole);
+  visible_topics_proxy_model_->setSourceModel          (visible_topics_model_);
+
+  if (QEcalRec::instance()->showDisabledElementsAtEnd())
+    visible_topics_proxy_model_->setAlwaysSortedColumn((int)TopicListModel::Columns::RECORDING_ENABLED, Qt::SortOrder::DescendingOrder);
 
   ui_.visible_topics_treeview->setModel(visible_topics_proxy_model_);
+  
+  connect(QEcalRec::instance(), &QEcalRec::showDisabledElementsAtEndChanged, this
+          , [this](bool show_at_end)
+            {
+              if (show_at_end)
+                visible_topics_proxy_model_->setAlwaysSortedColumn((int)TopicListModel::Columns::RECORDING_ENABLED, Qt::SortOrder::DescendingOrder);
+              else
+                visible_topics_proxy_model_->setAlwaysSortedColumn(-1);
+            });
+
+  // Alternating row colors
+  ui_.topics_treeview         ->setAlternatingRowColors(QEcalRec::instance()->alternatingRowColorsEnabled());
+  ui_.visible_topics_treeview->setAlternatingRowColors(QEcalRec::instance()->alternatingRowColorsEnabled());
+  connect(QEcalRec::instance(), &QEcalRec::alternatingRowColorsEnabledChanged, ui_.topics_treeview,         &QTreeView::setAlternatingRowColors);
+  connect(QEcalRec::instance(), &QEcalRec::alternatingRowColorsEnabledChanged, ui_.visible_topics_treeview, &QTreeView::setAlternatingRowColors);
 
   connect(selected_topics_model_, &QAbstractItemModel::dataChanged,  this, &TopicListDialog::updateListedTopicsInVisibleTopics);
   connect(selected_topics_model_, &QAbstractItemModel::modelReset,   this, &TopicListDialog::updateListedTopicsInVisibleTopics);
@@ -84,6 +108,9 @@ TopicListDialog::TopicListDialog(eCAL::rec::RecordMode mode, std::set<std::strin
   connect(ui_.visible_topics_treeview, &QAbstractItemView::customContextMenuRequested, this, &TopicListDialog::visibleTopicsContextMenu);
 
   connect(ui_.topics_treeview, &QAdvancedTreeView::keySequenceDeletePressed, this, &TopicListDialog::removeSelectedTopics);
+
+  ui_.topics_treeview        ->sortByColumn((int)TopicListModel::Columns::NAME, Qt::SortOrder::AscendingOrder);
+  ui_.visible_topics_treeview->sortByColumn((int)TopicListModel::Columns::NAME, Qt::SortOrder::AscendingOrder);
 
   // Filter lineedits
   ui_.topic_filter_lineedit         ->setClearIcon(QIcon(":/ecalicons/FILTER_CANCEL"));
@@ -178,7 +205,7 @@ void TopicListDialog::updateVisibleTopicsButtons()
   ui_.add_selected_visible_topics_button->setEnabled(ui_.visible_topics_treeview->selectionModel()->selectedRows().size() > 0);
 }
 
-void TopicListDialog::monitorUpdated(const std::map<std::string, eCAL::rec::TopicInfo>& topic_info_map)
+void TopicListDialog::monitorUpdated(const std::map<std::string, eCAL::rec_server::TopicInfo>& topic_info_map)
 {
   visible_topics_model_->updateVisibleTopics(topic_info_map, true);
   visible_topics_model_->clean(true, false);
@@ -238,7 +265,7 @@ void TopicListDialog::removeSelectedTopics()
   while (row_it != selected_source_rows.rend())
   {
     selected_topics_model_->removeRow(*row_it);
-    row_it++;
+    ++row_it;
   }
 }
 

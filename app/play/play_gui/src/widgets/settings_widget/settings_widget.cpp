@@ -81,11 +81,6 @@ SettingsWidget::SettingsWidget(QWidget *parent)
   frameDroppingAllowedChanged(QEcalPlay::instance()->isFrameDroppingAllowed());
   limitPlaySpeedEnabledChanged(QEcalPlay::instance()->isLimitPlaySpeedEnabled());
 
-  if (QEcalPlay::instance()->isMeasurementLoaded())
-  {
-    measurementLoaded(QEcalPlay::instance()->measurementPath());
-  }
-
   restoreLayout();
 }
 

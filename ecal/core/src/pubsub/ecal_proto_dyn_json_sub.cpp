@@ -30,7 +30,7 @@
 #include <sstream>
 #include <fstream>
 
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4800) // disable proto warnings
 #endif
@@ -41,7 +41,7 @@
 #include <google/protobuf/util/json_util.h>
 #include <google/protobuf/util/type_resolver_util.h>
 #include <google/protobuf/util/type_resolver.h>
-#ifdef _MSVC_VER
+#ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 #ifdef __GNUC__

@@ -51,6 +51,7 @@ public:
 
   // Measurement
   QString                            measurementPath() const;
+  QString                            measurementDirectory() const;
   bool                               isMeasurementLoaded() const;
   QString                            description() const;
   std::chrono::nanoseconds           measurementLength() const;
@@ -58,10 +59,12 @@ public:
   std::map<std::string, ContinuityReport> createContinuityReport() const;
   std::map<std::string, long long>   messageCounters() const;
   std::vector<EcalPlayScenario>      scenarios() const;
+  bool                               scenariosModified() const;
   std::pair<eCAL::Time::ecal_clock::time_point, eCAL::Time::ecal_clock::time_point> measurementBoundaries() const;
 
   long long                          frameCount() const;
   eCAL::Time::ecal_clock::time_point timestampOf(long long frame_index) const;
+
 
   // Settings
   bool    isRepeatEnabled() const;
@@ -116,6 +119,8 @@ public slots:
   //////////////////////////////////////////////////////////////////////////////
   //// Setters                                                              ////
   //////////////////////////////////////////////////////////////////////////////
+  void setScenarios(const std::vector<EcalPlayScenario>& scenarios);
+  bool saveScenariosToDisk(bool suppress_blocking_dialogs = false);
   void setRepeatEnabled(bool enabled);
   void setPlaySpeed(double play_speed);
   void setLimitPlaySpeedEnabled(bool enabled);
@@ -130,6 +135,8 @@ public slots:
   void setChannelMappingFileAction(ChannelMappingFileAction action);
 
 signals:
+  void scenariosChangedSignal(const std::vector<EcalPlayScenario>& scenarios);
+  void scenariosSavedSignal() const;
   void measurementLoadedSignal(const QString& path);
   void measurementClosedSignal();
   void publishersInitStateChangedSignal(bool publishers_initialized);
@@ -171,6 +178,8 @@ private:
   // Internal
   std::map<std::string, std::string> channel_mapping_;
   QString step_reference_channel_;
+
+  bool scenarios_modified_;
 
   static QWidget* widgetOf(QObject* q_object);
   bool isChannelMappingRelevant(const std::map<std::string, std::string>& channel_mapping) const;

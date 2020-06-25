@@ -19,15 +19,35 @@
 find_package(Threads REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(spdlog REQUIRED)
+find_package(fineftp REQUIRED)
+find_package(tinyxml2 REQUIRED)
 
 set(PROJECT_NAME rec_server_core)
 
 set(source_files
+    include/rec_server_core/ecalstate_helpers.h
+    include/rec_server_core/proto_helpers.h
     include/rec_server_core/rec_server.h
+    include/rec_server_core/rec_server_config.h
+    include/rec_server_core/rec_server_types.h
+	include/rec_server_core/status.h
 
+    src/ecalstate_helpers.cpp
+    src/monitoring_thread.cpp
+    src/monitoring_thread.h
+    src/proto_helpers.cpp
     src/rec_server.cpp
+    src/rec_server_impl.cpp
+    src/rec_server_impl.h
     src/recorder_command.h
     src/recorder_settings.h
+
+    src/config/config.cpp
+    src/config/config.h
+    src/config/config_v1.cpp
+    src/config/config_v1.h
+    src/config/config_v2to3.cpp
+    src/config/config_v2to3.h
 
     src/recorder/abstract_recorder.h
     src/recorder/local_recorder.cpp
@@ -46,6 +66,7 @@ create_targets_protobuf()
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
+    tinyxml2::tinyxml2
     protobuf::libprotobuf
     eCAL::core
     eCAL::pb
@@ -57,7 +78,8 @@ target_link_libraries(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
-    eCAL::rec_core
+    eCAL::rec_client_core
+    fineftp::server
 )
 
 if(MSVC)

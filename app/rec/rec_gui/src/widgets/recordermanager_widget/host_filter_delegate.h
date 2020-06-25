@@ -30,7 +30,7 @@ class HostFilterDelegate : public QStyledItemDelegate
     Q_OBJECT
 
 public:
-  HostFilterDelegate(QObject *parent = 0);
+  HostFilterDelegate(QAbstractItemView* parent);
 
   QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
@@ -40,6 +40,8 @@ public:
   void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
   void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+
+  QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
 public slots:
   void setMonitorHosts       (const std::set<QString>& host_list);

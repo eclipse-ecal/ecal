@@ -28,8 +28,14 @@
    </property>
    <item>
     <widget class="QAdvancedTreeView" name="scenario_treeview">
+     <property name="editTriggers">
+      <set>QAbstractItemView::EditKeyPressed</set>
+     </property>
      <property name="alternatingRowColors">
       <bool>true</bool>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::ExtendedSelection</enum>
      </property>
      <property name="rootIsDecorated">
       <bool>false</bool>
@@ -41,9 +47,6 @@
       <bool>false</bool>
      </property>
      <property name="sortingEnabled">
-      <bool>true</bool>
-     </property>
-     <property name="allColumnsShowFocus">
       <bool>true</bool>
      </property>
      <attribute name="headerStretchLastSection">
@@ -65,58 +68,10 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Jump to the selected scenario</string>
+        <string>Jump to the selected label</string>
        </property>
        <property name="text">
-        <string>Jump to position</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Maximum</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>0</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QDoubleSpinBox" name="jump_to_offset_spinbox">
-       <property name="minimumSize">
-        <size>
-         <width>40</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>Don't jump directly to the event, but some seconds before.</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="suffix">
-        <string> s</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="minimumSize">
-        <size>
-         <width>40</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>before</string>
+        <string>Jump to</string>
        </property>
       </widget>
      </item>
@@ -133,6 +88,64 @@
        </property>
       </spacer>
      </item>
+     <item>
+      <widget class="QPushButton" name="add_button">
+       <property name="toolTip">
+        <string>Add new label</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/ADD</normaloff>:/ecalicons/ADD</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="remove_button">
+       <property name="toolTip">
+        <string>Remove labels</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/REMOVE</normaloff>:/ecalicons/REMOVE</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Maximum</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>10</width>
+         <height>0</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="save_button">
+       <property name="toolTip">
+        <string>Save labels to file</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/SAVE</normaloff>:/ecalicons/SAVE</iconset>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
@@ -142,9 +155,11 @@
   <customwidget>
    <class>QAdvancedTreeView</class>
    <extends>QTreeView</extends>
-   <header>CustomQt/QAdvancedTreeView.h</header>
+   <header location="global">CustomQt/QAdvancedTreeView.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../../../../iconset/ecalicons.qrc"/>
+ </resources>
  <connections/>
 </ui>

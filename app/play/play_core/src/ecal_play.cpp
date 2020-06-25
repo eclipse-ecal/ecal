@@ -29,7 +29,8 @@
 #include "play_thread.h"
 #include "ecalhdf5/eh5_meas.h"
 
-#include "ecal_utils/string.h"
+#include <ecal_utils/string.h>
+#include <ecal_utils/filesystem.h>
 
 EcalPlay::EcalPlay()
 {
@@ -57,14 +58,38 @@ bool EcalPlay::LoadMeasurement(const std::string& path)
   EcalPlayLogger::Instance()->info("Loading measurement...");
 
   std::shared_ptr<eCAL::eh5::HDF5Meas> measurement(new eCAL::eh5::HDF5Meas());
-  
-  if (measurement->Open(path) && measurement->IsOk())
-  {
-    EcalPlayLogger::Instance()->info("Measurement path: " + path);
-    play_thread_->SetMeasurement(measurement, path);
 
-    LoadDescription(path + "/doc/description.txt");
-    LoadScenarios(path + "/doc/scenario.txt");
+  std::string meas_dir;
+  
+  // Check if the user opened a .ecalmeas file or a directory
+  auto file_status = EcalUtils::Filesystem::FileStatus(path, EcalUtils::Filesystem::OsStyle::Current);
+  if (!file_status.IsOk())
+  {
+    EcalPlayLogger::Instance()->error("Failed loading measurement from \"" + path + "\": Resource unavailable.");
+    return false;
+  }
+  else
+  {
+    if (file_status.GetType() == EcalUtils::Filesystem::Type::RegularFile)
+    {
+      // Although the path points to a file, our filesystem API will strip out the last componentent (i.e. the filename) when appending a "/.."
+      meas_dir = EcalUtils::Filesystem::CleanPath(path + "/..", EcalUtils::Filesystem::OsStyle::Current);
+    }
+    else
+    {
+      meas_dir = path;
+    }
+  }
+
+  // Load the measurement
+  if (measurement->Open(meas_dir) && measurement->IsOk())
+  {
+    EcalPlayLogger::Instance()->info("Measurement dir:  " + meas_dir);
+    play_thread_->SetMeasurement(measurement, meas_dir);
+    measurement_path_ = path;
+
+    LoadDescription(meas_dir + "/doc/description.txt");
+    LoadScenarios(meas_dir + "/doc/scenario.txt");
 
     LogMeasurementSummary();
     eCAL::Process::SetState(eCAL_Process_eSeverity::proc_sev_healthy, eCAL_Process_eSeverity_Level::proc_sev_level1, "Measurement loaded");
@@ -73,7 +98,7 @@ bool EcalPlay::LoadMeasurement(const std::string& path)
   }
   else
   {
-    EcalPlayLogger::Instance()->error("Failed loading measurement from: " + path);
+    EcalPlayLogger::Instance()->error("Failed loading measurement from: " + meas_dir);
     eCAL::Process::SetState(eCAL_Process_eSeverity::proc_sev_warning, eCAL_Process_eSeverity_Level::proc_sev_level1, "Failed loading measurement");
     return false;
   }
@@ -83,6 +108,7 @@ void EcalPlay::CloseMeasurement()
 {
   description_ = "";
   play_thread_->SetMeasurement(std::shared_ptr<eCAL::eh5::HDF5Meas>(nullptr));
+  measurement_path_ = "";
 }
 
 bool EcalPlay::IsMeasurementLoaded() const
@@ -91,6 +117,11 @@ bool EcalPlay::IsMeasurementLoaded() const
 }
 
 std::string EcalPlay::GetMeasurementPath() const
+{
+  return measurement_path_;
+}
+
+std::string EcalPlay::GetMeasurementDirectory() const
 {
   return play_thread_->GetMeasurementPath();
 }
@@ -247,6 +278,67 @@ std::vector<EcalPlayScenario> EcalPlay::GetScenarios() const
 //// Settings                                                               ////
 ////////////////////////////////////////////////////////////////////////////////
 
+void EcalPlay::SetScenarios(const std::vector<EcalPlayScenario>& scenarios)
+{
+  scenarios_ = scenarios;
+}
+
+bool EcalPlay::SaveScenariosToDisk() const
+{
+  if (!IsMeasurementLoaded()) 
+  {
+    EcalPlayLogger::Instance()->error("Unable to save scenario.txt: No measurement is loaded");
+    return false;
+  }
+  else
+  {
+    std::string doc_path      = GetMeasurementDirectory() + "/doc/";
+    std::string scenario_path = doc_path + "scenario.txt";
+
+    auto doc_dir_status = EcalUtils::Filesystem::FileStatus(doc_path, EcalUtils::Filesystem::Current);
+    if (doc_dir_status.IsOk())
+    {
+      if (doc_dir_status.GetType() != EcalUtils::Filesystem::Type::Dir)
+      {
+        EcalPlayLogger::Instance()->error("Unable to save scenario.txt: \"" + doc_path + "\" is not a directory");
+        return false;
+      }
+    }
+    else
+    {
+      if (!EcalUtils::Filesystem::MkPath(doc_path, EcalUtils::Filesystem::Current))
+      {
+        EcalPlayLogger::Instance()->error("Unable to save scenario.txt: Failed creating directory \"" + doc_path + "\"");
+        return false;
+      }
+    }
+
+    std::ofstream scenario_file_stream;
+    scenario_file_stream.open (scenario_path);
+    if (!scenario_file_stream.is_open())
+    {
+      EcalPlayLogger::Instance()->error("Unable to save scenario.txt: Failed opening file \"" + scenario_path + "\"");
+      return false;
+    }
+
+    auto sorted_scenarios = scenarios_;
+    std::sort(sorted_scenarios.begin(), sorted_scenarios.end(), [](const EcalPlayScenario& a, const EcalPlayScenario& b) { return a.time_ < b.time_; });
+
+    for (const EcalPlayScenario& scenario : sorted_scenarios)
+    {
+      auto time_since_start = scenario.time_ - GetMeasurementBoundaries().first;
+      scenario_file_stream << std::chrono::duration_cast<std::chrono::duration<double>>(time_since_start).count();
+      scenario_file_stream << "; ";
+
+      scenario_file_stream << EcalUtils::String::Replace(scenario.name_, std::string(";"), std::string("_")); // Replace ';' by '_', as the semicolon is used as separator
+      scenario_file_stream << std::endl;
+    }
+    scenario_file_stream.close();
+
+    return true;
+  }
+}
+
 void EcalPlay::SetRepeatEnabled(bool enabled) const
 {
   play_thread_->SetRepeatEnabled(enabled);
@@ -357,7 +449,7 @@ bool EcalPlay::StepForward() const
   return play_thread_->StepForward();
 }
 
-bool EcalPlay::PlayToNextOccurenceOfChannel(std::string source_channel_name) const
+bool EcalPlay::PlayToNextOccurenceOfChannel(const std::string& source_channel_name) const
 {
   return play_thread_->PlayToNextOccurenceOfChannel(source_channel_name);
 }
@@ -447,7 +539,7 @@ void EcalPlay::LogMeasurementSummary() const
   std::stringstream ss;
 
   ss << "Measurement information:" << std::endl;
-  ss << "  Path:            " << GetMeasurementPath() << std::endl;
+  ss << "  Directory:       " << GetMeasurementDirectory() << std::endl;
   ss << "  Channel count:   " << GetChannelNames().size() << std::endl;
   ss << "  Frame count:     " << GetFrameCount() << std::endl;
   auto measurement_boundaries = GetMeasurementBoundaries();

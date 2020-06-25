@@ -45,6 +45,7 @@
 
 QEcalPlay::QEcalPlay()
   : ecal_play_()
+  , scenarios_modified_(false)
 {
   // Start the timer that periodically updates the state
   periodic_update_timer_ = new QTimer(this);
@@ -86,6 +87,11 @@ QString QEcalPlay::measurementPath() const
   return ecal_play_.GetMeasurementPath().c_str();
 }
 
+QString QEcalPlay::measurementDirectory() const
+{
+  return QString::fromStdString(ecal_play_.GetMeasurementDirectory());
+}
+
 bool QEcalPlay::isMeasurementLoaded() const
 {
   return ecal_play_.IsMeasurementLoaded();
@@ -119,6 +125,11 @@ std::map<std::string, long long> QEcalPlay::messageCounters() const
 std::vector<EcalPlayScenario> QEcalPlay::scenarios() const
 {
   return ecal_play_.GetScenarios();
+}
+
+bool QEcalPlay::scenariosModified() const
+{
+  return scenarios_modified_;
 }
 
 std::pair<eCAL::Time::ecal_clock::time_point, eCAL::Time::ecal_clock::time_point> QEcalPlay::measurementBoundaries() const
@@ -192,10 +203,10 @@ void QEcalPlay::loadChannelMappingFileFromFileDialog()
   QWidget* caller = widgetOf(sender());
 
   QString start_dir = "";
-  QString measurement_path = measurementPath();
-  if (!measurement_path.isEmpty())
+  QString measurement_dir = measurementDirectory();
+  if (!measurement_dir.isEmpty())
   {
-    start_dir = measurement_path + "/doc/";
+    start_dir = measurement_dir + "/doc/";
   }
   QString channel_mapping_path = QFileDialog::getOpenFileName(caller, "Load Channel Mapping", start_dir, "Text files (*.txt);;All files (*)");
   if (!channel_mapping_path.isEmpty())
@@ -247,7 +258,7 @@ eCAL::Time::ecal_clock::time_point QEcalPlay::lastFrameTimestamp() const
 
 bool QEcalPlay::loadMeasurementFromFileDialog()
 {
-  QString last_measurement_folder = measurementPath();
+  QString last_measurement_folder = measurementDirectory();
 
   if (last_measurement_folder.isEmpty())
   {
@@ -259,11 +270,33 @@ bool QEcalPlay::loadMeasurementFromFileDialog()
     }
   }
 
-  QString measurement_directory = QFileDialog::getExistingDirectory(nullptr, tr("Choose Measurement Directory"), last_measurement_folder);
-  if (!measurement_directory.isEmpty())
+  // Open measurement directory or file. We use the file chooser (not the
+  // directory chooser). If the user selects a non-existing file we assume that
+  // he wanted to choose the directory. This is a common workaround.
+
+  QFileDialog open_dialog;
+  open_dialog.setWindowTitle("Open measurement");
+  open_dialog.setFileMode   (QFileDialog::AnyFile);
+  open_dialog.setAcceptMode (QFileDialog::AcceptOpen);
+  open_dialog.setDirectory  (last_measurement_folder);
+  open_dialog.selectFile    ("Measurement directory.");
+
+#ifdef __linux__
+  // Disable the native open file dialog, as some Desktop environments are unable to open non-existing files (e.g. Gnome 3)
+  open_dialog.setOption(QFileDialog::Option::DontUseNativeDialog);
+#endif //__linux__
+
+  int result = open_dialog.exec();
+
+  if (result)
   {
-    return loadMeasurement(QDir::toNativeSeparators(measurement_directory));
+    auto filenames = open_dialog.selectedFiles();
+    if (!filenames.empty())
+    {
+      return loadMeasurement(filenames.front());
+    }
   }
+
   return false;
 }
 
@@ -288,7 +321,17 @@ bool QEcalPlay::loadMeasurement(const QString& path, bool suppress_blocking_dial
   dlg.setValue(0);
   dlg.setValue(1);
 
-  QFuture<bool> success_future = QtConcurrent::run(&ecal_play_, &EcalPlay::LoadMeasurement, path.toStdString());
+  QString path_to_load;
+  if (QFile(path).exists())
+  {
+    path_to_load = path;
+  }
+  else
+  {
+    path_to_load = QDir::toNativeSeparators(QFileInfo(path).path());
+  }
+
+  QFuture<bool> success_future = QtConcurrent::run(&ecal_play_, &EcalPlay::LoadMeasurement, path_to_load.toStdString());
 
   while (!success_future.isFinished())
   {
@@ -300,13 +343,14 @@ bool QEcalPlay::loadMeasurement(const QString& path, bool suppress_blocking_dial
 
   if (success)
   {
-    emit measurementLoadedSignal(path);
+    scenarios_modified_ = false;
+    emit measurementLoadedSignal(path_to_load);
     emit publishersInitStateChangedSignal(false);
 
     setStepReferenceChannel("");
 
     // Save last measurment path
-    QDir dir(path);
+    QDir dir(path_to_load);
     QSettings settings;
     settings.setValue("last_measurement_folder", QDir::toNativeSeparators(dir.absolutePath()));
 
@@ -314,7 +358,7 @@ bool QEcalPlay::loadMeasurement(const QString& path, bool suppress_blocking_dial
     bool apply_mapping = false;
 
     // Load channel mapping from the file, but don't tell the user, yet
-    QFile default_channel_mapping_file(path + "/doc/chn_name_mapping.txt");
+    QFile default_channel_mapping_file(measurementDirectory() + "/doc/chn_name_mapping.txt");
     QFileInfo default_channel_mapping_file_info(default_channel_mapping_file);
     auto channel_mapping = QEcalPlay::instance()->loadChannelMappingFile(QDir::toNativeSeparators(default_channel_mapping_file_info.absoluteFilePath()));
 
@@ -365,7 +409,7 @@ bool QEcalPlay::loadMeasurement(const QString& path, bool suppress_blocking_dial
       QMessageBox error_message(
         QMessageBox::Icon::Critical
         , tr("Error")
-        , tr("Unable to load measurement:\n") + QDir::toNativeSeparators(path)
+        , tr("Unable to load measurement:\n") + QDir::toNativeSeparators(path_to_load)
         , QMessageBox::Button::Ok
         , caller);
       error_message.setWindowIcon(icon);
@@ -382,10 +426,10 @@ bool QEcalPlay::saveChannelMappingAs()
   QWidget* caller = widgetOf(sender());
 
   QString start_dir = "";
-  QString measurement_path = measurementPath();
-  if (!measurement_path.isEmpty())
+  QString measurement_directory = measurementDirectory();
+  if (!measurement_directory.isEmpty())
   {
-    start_dir = measurement_path + "/doc/chn_name_mapping.txt";
+    start_dir = measurement_directory + "/doc/chn_name_mapping.txt";
   }
   QString channel_mapping_path = QFileDialog::getSaveFileName(caller, "Export Channel Mapping", start_dir, "Text files (*.txt);;All files (*)");
   if (!channel_mapping_path.isEmpty())
@@ -407,8 +451,8 @@ bool QEcalPlay::saveChannelMapping(const QString& path, bool omit_blocking_dialo
 
   if (path == "")
   {
-    QString measurement_path = measurementPath();
-    if (measurement_path.isEmpty())
+    QString measurement_directory = measurementDirectory();
+    if (measurement_directory.isEmpty())
     {
       EcalPlayLogger::Instance()->error("Error saving Channel mapping to the default path: No measurement loaded or measurement folder unknown.");
       if (!omit_blocking_dialogs)
@@ -424,7 +468,7 @@ bool QEcalPlay::saveChannelMapping(const QString& path, bool omit_blocking_dialo
       }
       return false;
     }
-    channel_mapping_file.setFileName(measurementPath() + "/doc/chn_name_mapping.txt");
+    channel_mapping_file.setFileName(measurement_directory + "/doc/chn_name_mapping.txt");
   }
   else
   {
@@ -470,6 +514,7 @@ void QEcalPlay::closeMeasurement(bool omit_blocking_dialogs)
   saveChannelMapping("", omit_blocking_dialogs);
 
   ecal_play_.CloseMeasurement();
+  scenarios_modified_ = false;
 
   emit measurementClosedSignal();
   emit publishersInitStateChangedSignal(false);
@@ -686,6 +731,48 @@ void QEcalPlay::exit(bool omit_blocking_dialogs)
 ////////////////////////////////////////////////////////////////////////////////
 //// Setter                                                                 ////
 ////////////////////////////////////////////////////////////////////////////////
+
+void QEcalPlay::setScenarios(const std::vector<EcalPlayScenario>& scenarios)
+{
+  bool something_changed = (scenarios_modified_ || (ecal_play_.GetScenarios() != scenarios));
+
+  if (something_changed)
+  {
+    scenarios_modified_ = true;
+    ecal_play_.SetScenarios(scenarios);
+    emit scenariosChangedSignal(scenarios);
+  }
+}
+
+bool QEcalPlay::saveScenariosToDisk(bool suppress_blocking_dialogs)
+{
+  bool success = ecal_play_.SaveScenariosToDisk();
+
+
+  if (success)
+  {
+    scenarios_modified_ = false;
+    emit scenariosSavedSignal();
+  }
+  else
+  {
+    if (!suppress_blocking_dialogs)
+    {
+      QWidget* caller = widgetOf(sender());
+      QMessageBox error_message(
+        QMessageBox::Icon::Critical
+        , tr("Error")
+        , tr("Unable to save Labels to disk")
+        , QMessageBox::Button::Ok
+        , caller);
+      QPixmap icon(":/ecalplay/APP_ICON");
+      error_message.setWindowIcon(icon);
+      error_message.exec();
+    }
+  } 
+
+  return success;
+}
 
 void QEcalPlay::setRepeatEnabled(bool enabled)
 {

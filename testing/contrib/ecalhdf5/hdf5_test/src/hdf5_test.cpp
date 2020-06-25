@@ -25,6 +25,8 @@
 
 #include <gtest/gtest.h>
 
+#include <ecalhdf5/../../src/escape.h> // This header file is usually not available as public include!
+
 #define TEST_RAW_PERF      1
 #define TEST_HDF5_PERF     1
 
@@ -53,6 +55,154 @@ namespace
   std::string output_dir         = "measurement_dir";
   const size_t max_size_per_file = 500;  // MB
   std::vector<char> data;
+}
+
+TEST(HDF5, EscapeUnescape)
+{
+  std::string test_string             = "This string contains commata,slashes/ spaces, a percent sign (%), a bell\a, nasty line endings\r\n and a german letter oe from the Latin-1 codepage: \xF8";
+  std::string expected_escaped_string = "This string contains commata%2Cslashes%2F spaces%2C a percent sign (%25)%2C a bell%07%2C nasty line endings%0D%0A and a german letter oe from the Latin-1 codepage: %F8";
+
+  std::string escaped_string = eCAL::eh5::GetEscapedString(test_string);
+
+  EXPECT_EQ(escaped_string, expected_escaped_string);
+  EXPECT_EQ(eCAL::eh5::GetUnescapedString(escaped_string), test_string);
+
+  std::string faulty_escaped_string     = "This%20String%20has some escapes, a % that is not escaped / one at the end %";
+  std::string expected_unescaped_string = "This String has some escapes, a % that is not escaped / one at the end %";
+  EXPECT_EQ(eCAL::eh5::GetUnescapedString(faulty_escaped_string), expected_unescaped_string);
+}
+
+TEST(HDF5, WriteReadIntegrity)
+{
+  // Define data that will be written to the file
+
+  const std::string t1_name          = "topic / with / slash";
+  const std::string t1_data          = "Hello World";
+  const long long   t1_snd_timestamp = 1001LL;
+  const long long   t1_rcv_timestamp = 2001LL;
+  const long long   t1_id            = 1LL;
+  const long long   t1_clock         = 11LL;
+
+  const std::string t2_name          = "another,topic";
+  const std::string t2_data          = "Data of topic 2";
+  const long long   t2_snd_timestamp = 1002LL;
+  const long long   t2_rcv_timestamp = 2002LL;
+  const long long   t2_id            = 2LL;
+  const long long   t2_clock         = 12LL;
+
+  const std::string t3_name          = " ASCII and beyond!\a\b\t\n\v\f\r\"#$%&\'()*+,-./0123456789:;<=>\?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~¸ˆ‰‹÷ƒ‚¬Ù‘˚€·‡¡¿˙Ÿ";
+  const std::string t3_data          = "o.O";
+  const long long   t3_snd_timestamp = 1003LL;
+  const long long   t3_rcv_timestamp = 2003LL;
+  const long long   t3_id            = 3LL;
+  const long long   t3_clock         = 13LL;
+
+  std::string base_name = "integrity_meas";
+
+  // Write HDF5 file
+  {
+    eCAL::eh5::HDF5Meas hdf5_writer;
+
+
+    if (hdf5_writer.Open(output_dir, eCAL::eh5::eAccessType::CREATE))
+    {
+      hdf5_writer.SetFileBaseName(base_name);
+      hdf5_writer.SetMaxSizePerFile(max_size_per_file);
+    }
+    else
+    {
+      FAIL() << "Failed to open HDF5 Writer";
+    }
+
+    EXPECT_TRUE(hdf5_writer.AddEntryToFile(
+      t1_data.data(),           // data
+      t1_data.size(),           // data size
+      t1_snd_timestamp,         // snd_timestamp
+      t1_rcv_timestamp,         // rcv_timestamp
+      t1_name,                  // channel name
+      t1_id,                    // id
+      t1_clock                  // clock
+    ));
+
+    EXPECT_TRUE(hdf5_writer.AddEntryToFile(
+      t2_data.data(),           // data
+      t2_data.size(),           // data size
+      t2_snd_timestamp,         // snd_timestamp
+      t2_rcv_timestamp,         // rcv_timestamp
+      t2_name,                  // channel name
+      t2_id,                    // id
+      t2_clock                  // clock
+    ));
+
+    EXPECT_TRUE(hdf5_writer.AddEntryToFile(
+      t3_data.data(),           // data
+      t3_data.size(),           // data size
+      t3_snd_timestamp,         // snd_timestamp
+      t3_rcv_timestamp,         // rcv_timestamp
+      t3_name,                  // channel name
+      t3_id,                    // id
+      t3_clock                  // clock
+    ));
+
+    EXPECT_TRUE(hdf5_writer.Close());
+  }
+
+  // Read HDF4 file
+  {
+    eCAL::eh5::HDF5Meas hdf5_reader;
+
+    EXPECT_TRUE(hdf5_reader.Open(output_dir + "/" + base_name + ".hdf5"));
+
+    std::set<std::string> expected_channel_names { t1_name, t2_name, t3_name };
+    EXPECT_EQ(hdf5_reader.GetChannelNames(), expected_channel_names);
+
+    eCAL::eh5::EntryInfoSet entries_info_set_t1;
+    eCAL::eh5::EntryInfoSet entries_info_set_t2;
+    eCAL::eh5::EntryInfoSet entries_info_set_t3;
+
+    EXPECT_TRUE(hdf5_reader.GetEntriesInfo(t1_name, entries_info_set_t1));
+    EXPECT_TRUE(hdf5_reader.GetEntriesInfo(t2_name, entries_info_set_t2));
+    EXPECT_TRUE(hdf5_reader.GetEntriesInfo(t3_name, entries_info_set_t3));
+
+    EXPECT_EQ(entries_info_set_t1.size(), 1);
+    EXPECT_EQ(entries_info_set_t2.size(), 1);
+    EXPECT_EQ(entries_info_set_t3.size(), 1);
+
+    EXPECT_EQ(entries_info_set_t1.begin()->SndTimestamp, t1_snd_timestamp);
+    EXPECT_EQ(entries_info_set_t1.begin()->RcvTimestamp, t1_rcv_timestamp);
+    EXPECT_EQ(entries_info_set_t1.begin()->SndID,        t1_id);
+    EXPECT_EQ(entries_info_set_t1.begin()->SndClock,     t1_clock);
+
+    EXPECT_EQ(entries_info_set_t2.begin()->SndTimestamp, t2_snd_timestamp);
+    EXPECT_EQ(entries_info_set_t2.begin()->RcvTimestamp, t2_rcv_timestamp);
+    EXPECT_EQ(entries_info_set_t2.begin()->SndID,        t2_id);
+    EXPECT_EQ(entries_info_set_t2.begin()->SndClock,     t2_clock);
+
+    EXPECT_EQ(entries_info_set_t3.begin()->SndTimestamp, t3_snd_timestamp);
+    EXPECT_EQ(entries_info_set_t3.begin()->RcvTimestamp, t3_rcv_timestamp);
+    EXPECT_EQ(entries_info_set_t3.begin()->SndID,        t3_id);
+    EXPECT_EQ(entries_info_set_t3.begin()->SndClock,     t3_clock);
+
+    size_t t1_data_size;
+    size_t t2_data_size;
+    size_t t3_data_size;
+
+    EXPECT_TRUE(hdf5_reader.GetEntryDataSize(entries_info_set_t1.begin()->ID, t1_data_size));
+    EXPECT_TRUE(hdf5_reader.GetEntryDataSize(entries_info_set_t2.begin()->ID, t2_data_size));
+    EXPECT_TRUE(hdf5_reader.GetEntryDataSize(entries_info_set_t3.begin()->ID, t3_data_size));
+
+    std::string t1_data_read(t1_data_size, ' ');
+    std::string t2_data_read(t2_data_size, ' ');
+    std::string t3_data_read(t3_data_size, ' ');
+
+    EXPECT_TRUE(hdf5_reader.GetEntryData(entries_info_set_t1.begin()->ID, const_cast<char*>(t1_data_read.data())));
+    EXPECT_TRUE(hdf5_reader.GetEntryData(entries_info_set_t2.begin()->ID, const_cast<char*>(t2_data_read.data())));
+    EXPECT_TRUE(hdf5_reader.GetEntryData(entries_info_set_t3.begin()->ID, const_cast<char*>(t3_data_read.data())));
+
+    EXPECT_EQ(t1_data_read, t1_data);
+    EXPECT_EQ(t2_data_read, t2_data);
+    EXPECT_EQ(t3_data_read, t3_data);
+  }
 }
 
 TEST(HDF5, ReadWrite)

@@ -151,9 +151,25 @@ public:
 
   /**
    * @brief Returns the path of the loaded measurement
+   *
+   * The path may point to a file or a directory; it depends on whether the user
+   * loaded a measurement file (.ecalmeas) or a measurement directory. Use
+   * @see{GetMeasurementDirectory()} to always obtain the measurement directory.
+   *
    * @return the path of the current measurement (or an empty string, if no measurement has been loaded)
    */
   std::string GetMeasurementPath() const;
+
+  /**
+   * @brief Returns the directory of the loaded measurement
+   *
+   * The returned path always point to the loaded measurement directory and does
+   * not depend on whether the user loaded the measurement from a file or a
+   * directory.
+   *
+   * @return the directory of the current measurement (or an empty string, if no measurement has been loaded)
+   */
+  std::string GetMeasurementDirectory() const;
 
   /**
    * @brief Loads the given file as channel mapping file
@@ -308,6 +324,10 @@ public:
   //////////////////////////////////////////////////////////////////////////////
   //// Settings                                                             ////
   //////////////////////////////////////////////////////////////////////////////
+
+  // TODO: document
+  void SetScenarios(const std::vector<EcalPlayScenario>& scenarios);
+  bool SaveScenariosToDisk() const;
 
   /**
    * @brief Enables / disables measurement repeating.
@@ -601,7 +621,7 @@ public:
    *
    * @return True if successfull
    */
-  bool PlayToNextOccurenceOfChannel(std::string source_channel_name) const;
+  bool PlayToNextOccurenceOfChannel(const std::string& source_channel_name) const;
 
   /**
    * @brief Computes and returns the current play speed
@@ -725,6 +745,7 @@ private:
   std::vector<EcalPlayScenario> scenarios_;                                     /**< The scenarios loaded from the current measurement. Empty, if no measurement is loaded or no description file has been found*/
 
   std::unique_ptr<PlayThread> play_thread_;                                     /**< The "actual" eCAL Player that runs in it's own thread and executes commands from outside */
+  std::string                 measurement_path_;                                 /**< The path that was loaded. It may point to a file or a directory (depending on if the user loaded a measurement file or a mesaurement directory */
 
   /**
    * @brief Loads a text file from the given file as measurement description

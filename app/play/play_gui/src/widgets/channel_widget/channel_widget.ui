@@ -127,12 +127,12 @@
   <customwidget>
    <class>QAdvancedTreeView</class>
    <extends>QTreeView</extends>
-   <header>CustomQt/QAdvancedTreeView.h</header>
+   <header location="global">CustomQt/QAdvancedTreeView.h</header>
   </customwidget>
   <customwidget>
    <class>QFilterLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>CustomQt/QFilterLineEdit.h</header>
+   <header location="global">CustomQt/QFilterLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources>

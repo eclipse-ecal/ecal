@@ -82,7 +82,7 @@ target_link_libraries (${PROJECT_NAME}
 )
 
 if(MSVC)
-    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127")
+    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127 /wd4714")
 ENDIF(MSVC)
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)

@@ -24,8 +24,8 @@
 
 #include "q_ecal_play.h"
 
-#include <CustomQt/QStandardTreeModel.h>
-#include <CustomQt/QStandardTreeItem.h>
+#include "scenario_model.h"
+#include "edit_button_delegate.h"
 #include <CustomQt/QStableSortFilterProxyModel.h>
 
 class ScenarioWidget : public QWidget
@@ -44,22 +44,33 @@ public slots:
 
 private slots:
   void jumpToSelectedScenario() const;
+  void updateButtonRow();
 
+  void openEditor();
+  void addScenario();
+  void removeScenarios();
+  void promoteScenariosToQEcalPlay() const;
+
+  void openScenarioContextMenu(const QPoint& pos);
+
+protected:
+  void showEvent(QShowEvent* event) override;
 
 private:
   Ui::ScenarioWidget ui_;
 
-  std::pair<eCAL::Time::ecal_clock::time_point, eCAL::Time::ecal_clock::time_point> measurement_boundaries_;
+  bool first_show_event_;
 
-  QStandardTreeModel*          scenario_tree_model_;
+  ScenarioModel*               scenario_tree_model_;
   QStableSortFilterProxyModel* scenario_tree_proxy_model_;
+  EditButtonDelegate*          edit_button_delegate_;
+
 
   QByteArray initial_tree_state_;
 
-  void reloadScenarioTree();
-  QList<QStandardTreeItem*> selectedItems() const;
+  std::vector<int> selectedSourceRows() const;
 
-  void autoSizeColumns();
+  //void autoSizeColumns();
 
   void saveLayout();
   void restoreLayout();

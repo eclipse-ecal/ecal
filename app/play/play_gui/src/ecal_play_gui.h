@@ -76,7 +76,13 @@ private slots:
   void populateRecentMeasurementsMenu();
   void addRecentMeasurement(const QString& measurement);
 
+  void updateScenariosModified();
+
   void resetLayout();
+
+  bool loadMeasurementFromFileDialog();
+  bool loadMeasurement(const QString& path);
+  bool closeMeasurement();
 
 private:
   Ui::EcalplayMainWindow ui_;
@@ -111,6 +117,8 @@ private:
   void saveLayout();
   void restoreLayout();
   void saveInitialLayout();
+
+  bool askToSaveScenarios();
 
 
 #ifdef WIN32

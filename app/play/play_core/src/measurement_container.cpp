@@ -22,9 +22,9 @@
 #include <stdlib.h>
 #include <algorithm>
 
-MeasurementContainer::MeasurementContainer(std::shared_ptr<eCAL::eh5::HDF5Meas> hdf5_meas, const std::string& path, bool use_receive_timestamp)
+MeasurementContainer::MeasurementContainer(std::shared_ptr<eCAL::eh5::HDF5Meas> hdf5_meas, const std::string& meas_dir, bool use_receive_timestamp)
   : hdf5_meas_             (hdf5_meas)
-  , path_                  (path)
+  , meas_dir_              (meas_dir)
   , use_receive_timestamp_ (use_receive_timestamp)
   , publishers_initialized_(false)
   , send_buffer_           (nullptr)
@@ -213,7 +213,7 @@ bool MeasurementContainer::IsUsingReceiveTimestamp() const
 
 std::string MeasurementContainer::GetPath() const
 {
-  return path_;
+  return meas_dir_;
 }
 
 eCAL::Time::ecal_clock::time_point MeasurementContainer::GetTimestamp(long long index) const
@@ -310,7 +310,7 @@ long long MeasurementContainer::GetNextEnabledFrameIndex(long long current_index
   return -1;
 }
 
-long long MeasurementContainer::GetNextOccurenceOfChannel(long long current_index, std::string source_channel_name, bool repeat_from_beginning, std::pair<long long, long long> limit_interval) const
+long long MeasurementContainer::GetNextOccurenceOfChannel(long long current_index, const std::string& source_channel_name, bool repeat_from_beginning, std::pair<long long, long long> limit_interval) const
 {
   // Search from current_index to the end
   for (long long i = std::max(current_index, limit_interval.first) + 1; i <= std::min(limit_interval.second, GetFrameCount() - 1); i++)

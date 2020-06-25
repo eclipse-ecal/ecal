@@ -27,10 +27,9 @@
 
 ControlWidget::ControlWidget(QWidget *parent)
   : QWidget(parent)
+  , first_resize_event_(true)
   , record_button_state_is_record_(true)
   , activate_button_state_is_activate_(true)
-  , enable_client_connections_action_state_is_enable_(true)
-  , connect_to_ecal_action_state_is_connect_(true)
 {
   ui_.setupUi(this);
 
@@ -39,57 +38,35 @@ ControlWidget::ControlWidget(QWidget *parent)
       [this]()
       {
         if (record_button_state_is_record_)
-          QEcalRec::instance()->sendRequestStartRecording();
+          QEcalRec::instance()->startRecording();
         else
-          QEcalRec::instance()->sendRequestStopRecording();
+          QEcalRec::instance()->stopRecording();
       });
   connect(QEcalRec::instance(), &QEcalRec::recordingStateChangedSignal,    this, &ControlWidget::updateRecordButton);
-  connect(QEcalRec::instance(), &QEcalRec::recorderInstancesChangedSignal, this, &ControlWidget::updateRecordButton);
+  connect(QEcalRec::instance(), &QEcalRec::enabledRecClientsChangedSignal, this, &ControlWidget::updateRecordButton);
 
   // Save Buffer button
-  connect(ui_.save_buffer_button, &QAbstractButton::clicked, QEcalRec::instance(), []() {QEcalRec::instance()->sendRequestSavePreBufferedData(); });
+  connect(ui_.save_buffer_button, &QAbstractButton::clicked, QEcalRec::instance(), []() {QEcalRec::instance()->savePreBufferedData(); });
 
   connect(QEcalRec::instance(), &QEcalRec::preBufferingEnabledChangedSignal,  this, &ControlWidget::updateSaveBufferButton);
-  connect(QEcalRec::instance(), &QEcalRec::clientConnectionsEnabledSignal,    this, &ControlWidget::updateSaveBufferButton);
+  connect(QEcalRec::instance(), &QEcalRec::connectionToClientsActiveChangedSignal,    this, &ControlWidget::updateSaveBufferButton);
   connect(QEcalRec::instance(), &QEcalRec::connectedToEcalStateChangedSignal, this, &ControlWidget::updateSaveBufferButton);
-  connect(QEcalRec::instance(), &QEcalRec::recorderInstancesChangedSignal,    this, &ControlWidget::updateSaveBufferButton);
+  connect(QEcalRec::instance(), &QEcalRec::enabledRecClientsChangedSignal,    this, &ControlWidget::updateSaveBufferButton);
 
   // Activate button
-  activate_button_menu_ = new QMenu(this);
-  enable_client_connections_action_ = new QAction(activate_button_menu_);
-  connect_to_ecal_action_ = new QAction(activate_button_menu_);
-  activate_button_menu_->addAction(enable_client_connections_action_);
-  activate_button_menu_->addAction(connect_to_ecal_action_);
-  ui_.activate_button->setMenu(activate_button_menu_);
-
   connect(ui_.activate_button, &QAbstractButton::clicked, QEcalRec::instance(),
       [this]()
       {
         if (activate_button_state_is_activate_)
-          QEcalRec::instance()->sendRequestConnectToEcal();
+          QEcalRec::instance()->connectToEcal();
         else
-          QEcalRec::instance()->initiateConnectionShutdown();
-      });
-  connect(enable_client_connections_action_, &QAction::triggered, QEcalRec::instance(),
-      [this]()
-      {
-        if (enable_client_connections_action_state_is_enable_)
-          QEcalRec::instance()->setClientConnectionsEnabled(true);
-        else
-          QEcalRec::instance()->setClientConnectionsEnabled(false);
-      });
-  connect(connect_to_ecal_action_, &QAction::triggered, QEcalRec::instance(),
-      [this]()
-      {
-        if (connect_to_ecal_action_state_is_connect_)
-          QEcalRec::instance()->sendRequestConnectToEcal();
-        else
-          QEcalRec::instance()->sendRequestDisconnectFromEcal();
+          QEcalRec::instance()->setConnectionToClientsActive(false);
       });
   connect(QEcalRec::instance(), &QEcalRec::recordingStateChangedSignal,       this, &ControlWidget::updateActivateButton);
-  connect(QEcalRec::instance(), &QEcalRec::recorderInstancesChangedSignal,    this, &ControlWidget::updateActivateButton);
+  connect(QEcalRec::instance(), &QEcalRec::enabledRecClientsChangedSignal,    this, &ControlWidget::updateActivateButton);
   connect(QEcalRec::instance(), &QEcalRec::connectedToEcalStateChangedSignal, this, &ControlWidget::updateActivateButton);
-  connect(QEcalRec::instance(), &QEcalRec::clientConnectionsEnabledSignal,    this, &ControlWidget::updateActivateButton);
+  connect(QEcalRec::instance(), &QEcalRec::connectionToClientsActiveChangedSignal,    this, &ControlWidget::updateActivateButton);
+
 
   // initial state
   updateRecordButton();
@@ -100,9 +77,21 @@ ControlWidget::ControlWidget(QWidget *parent)
 ControlWidget::~ControlWidget()
 {}
 
+void ControlWidget::resizeEvent(QResizeEvent *event)
+{
+  QWidget::resizeEvent(event);
+  if (first_resize_event_)
+  {
+    ui_.activate_button   ->setMinimumWidth(ui_.activate_button->sizeHint().width());
+    ui_.save_buffer_button->setMinimumWidth(ui_.save_buffer_button->sizeHint().width());
+
+    first_resize_event_ = false;
+  }
+}
+
 void ControlWidget::updateRecordButton()
 {
-  if (QEcalRec::instance()->recordersRecording() && record_button_state_is_record_)
+  if (QEcalRec::instance()->recording() && record_button_state_is_record_)
   {
     ui_.record_button->setIcon(QIcon(":/ecalicons/STOP_TEXT"));
     ui_.record_button->setText(tr("Stop"));
@@ -110,7 +99,7 @@ void ControlWidget::updateRecordButton()
     ui_.record_button->setEnabled(true);
     record_button_state_is_record_ = false;
   }
-  else if (!QEcalRec::instance()->recordersRecording())
+  else if (!QEcalRec::instance()->recording())
   {
     if (!record_button_state_is_record_)
     {
@@ -120,66 +109,37 @@ void ControlWidget::updateRecordButton()
       record_button_state_is_record_ = true;
     }
 
-    ui_.record_button->setEnabled(QEcalRec::instance()->recorderInstances().size() > 0);
+    ui_.record_button->setEnabled(QEcalRec::instance()->enabledRecClients().size() > 0);
   }
 }
 
 void ControlWidget::updateSaveBufferButton()
 {
   ui_.save_buffer_button->setEnabled(QEcalRec::instance()->preBufferingEnabled()
-    && QEcalRec::instance()->clientConnectionsEnabled()
-    && QEcalRec::instance()->recordersConnectedToEcal()
-    && QEcalRec::instance()->recorderInstances().size() > 0);
+    && QEcalRec::instance()->connectionToClientsActive()
+    && QEcalRec::instance()->connectedToEcal()
+    && QEcalRec::instance()->enabledRecClients().size() > 0);
 }
 
 void ControlWidget::updateActivateButton()
 {
   // Tool button
-  if ((!QEcalRec::instance()->clientConnectionsEnabled() || !QEcalRec::instance()->recordersConnectedToEcal())
+  if ((!QEcalRec::instance()->connectionToClientsActive() || !QEcalRec::instance()->connectedToEcal())
     && !activate_button_state_is_activate_)
   {
     ui_.activate_button->setIcon(QIcon(":/ecalicons/POWER_ON"));
-    ui_.activate_button->setText(tr("Activate"));
-    ui_.activate_button->setToolTip(tr("Connect to clients and initialize them"));
+    ui_.activate_button->setText(tr("Activate / Prepare"));
+    ui_.activate_button->setToolTip(tr("Activate clients and start pre-buffering"));
     activate_button_state_is_activate_ = true;
   }
-  else if ((QEcalRec::instance()->clientConnectionsEnabled() && QEcalRec::instance()->recordersConnectedToEcal())
+  else if ((QEcalRec::instance()->connectionToClientsActive() && QEcalRec::instance()->connectedToEcal())
     && activate_button_state_is_activate_)
   {
     ui_.activate_button->setIcon(QIcon(":/ecalicons/POWER_OFF"));
     ui_.activate_button->setText(tr("De-activate"));
-    ui_.activate_button->setToolTip(tr("De-initialize clients and disconnect from them"));
+    ui_.activate_button->setToolTip(tr("De-activate clients and stop pre-buffering"));
     activate_button_state_is_activate_ = false;
   }
 
-  ui_.activate_button    ->setEnabled(!QEcalRec::instance()->recordersRecording());
-  enable_client_connections_action_->setEnabled(!QEcalRec::instance()->recordersRecording());
-  connect_to_ecal_action_->setEnabled(!QEcalRec::instance()->recordersRecording());
-
-  // Menu
-  if (QEcalRec::instance()->clientConnectionsEnabled())
-  {
-    enable_client_connections_action_->setText(tr("Disconnect from clients"));
-    enable_client_connections_action_->setIcon(QIcon(":/ecalicons/DISCONNECTED"));
-    enable_client_connections_action_state_is_enable_ = false;
-  }
-  else if (!QEcalRec::instance()->clientConnectionsEnabled())
-  {
-    enable_client_connections_action_->setText(tr("Connect to clients"));
-    enable_client_connections_action_->setIcon(QIcon(":/ecalicons/CONNECTED"));
-    enable_client_connections_action_state_is_enable_ = true;
-  }
-
-  if (QEcalRec::instance()->recordersConnectedToEcal())
-  {
-    connect_to_ecal_action_->setText(tr("Disconnect from eCAL"));
-    connect_to_ecal_action_->setIcon(QIcon(":/ecalicons/CROSS"));
-    connect_to_ecal_action_state_is_connect_ = false;
-  }
-  else if (!QEcalRec::instance()->recordersConnectedToEcal())
-  {
-    connect_to_ecal_action_->setText(tr("Connect to eCAL"));
-    connect_to_ecal_action_->setIcon(QIcon(":/ecalicons/CHECKMARK"));
-    connect_to_ecal_action_state_is_connect_ = true;
-  }
+  ui_.activate_button    ->setEnabled(!QEcalRec::instance()->recording());
 }

@@ -51,9 +51,6 @@
       <bool>false</bool>
      </property>
      <widget class="QAdvancedTreeView" name="topics_treeview">
-      <property name="alternatingRowColors">
-       <bool>true</bool>
-      </property>
       <property name="selectionMode">
        <enum>QAbstractItemView::ExtendedSelection</enum>
       </property>
@@ -257,9 +254,6 @@
        </item>
        <item>
         <widget class="QAdvancedTreeView" name="visible_topics_treeview">
-         <property name="alternatingRowColors">
-          <bool>true</bool>
-         </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::ExtendedSelection</enum>
          </property>

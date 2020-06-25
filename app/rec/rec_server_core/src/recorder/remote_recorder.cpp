@@ -19,36 +19,43 @@
 
 #include "remote_recorder.h"
 
-#include <rec_core/ecal_rec_logger.h>
+#include <rec_client_core/ecal_rec_logger.h>
 
 #include <ecal_utils/string.h>
 
 #include <algorithm>
+#include <clocale>
 
 namespace eCAL
 {
-  namespace rec
+  namespace rec_server
   {
 
     //////////////////////////////////////////
     // Constructor & Destructor
     //////////////////////////////////////////
 
-    RemoteRecorder::RemoteRecorder(const std::string& hostname, const RecorderSettings& initial_settings, bool initially_connected_to_ecal)
-      : AbstractRecorder(hostname)
+    RemoteRecorder::RemoteRecorder(const std::string& hostname
+                                  , const std::function<void(const std::string& hostname, const eCAL::rec::RecorderStatus& recorder_status)>& update_jobstatus_function
+                                  , const std::function<void(int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& info_command_response)>& report_job_command_response_callback
+                                  , const RecorderSettings& initial_settings)
+      : AbstractRecorder(hostname, update_jobstatus_function, report_job_command_response_callback)
       , InterruptibleThread()
-      , next_ping_time_             (std::chrono::steady_clock::time_point(std::chrono::steady_clock::duration(0)))
-      , currently_executing_action_ (false)
-      , connected_pid_              (0)
-      , client_in_sync_             (false)
-      , recorder_alive_             (false)
-      , last_response_              ({true, ""})
-      , should_be_connected_to_ecal_(initially_connected_to_ecal)
-      , complete_settings_          (initial_settings)
-      , connection_shutting_down_   (true)
+      , next_ping_time_                     (std::chrono::steady_clock::time_point(std::chrono::steady_clock::duration(0)))
+      , currently_executing_action_         (false)
+      , recorder_enabled_                   (false)
+      , connected_pid_                      (0)
+      , client_in_sync_                     (false)
+      , recorder_alive_                     (false)
+      , ever_participated_in_a_measurement_ (false)
+      , last_response_                      ({true, ""})
+      , should_be_connected_to_ecal_        (false)
+      , complete_settings_                  (initial_settings)
     {
       // Initial Ping => to perform auto recovery, which also sets the initial settings
-      actions_to_perform_.push_back(std::move(Action()));
+      actions_to_perform_.emplace_back(Action());
+
+      Start();
     }
 
     RemoteRecorder::~RemoteRecorder()
@@ -61,35 +68,62 @@ namespace eCAL
     // Public API
     //////////////////////////////////////////
 
-    void RemoteRecorder::SetClientConnectionEnabled(bool connect)
+    void RemoteRecorder::SetRecorderEnabled(bool enabled, bool connect_to_ecal)
     {
-      if (connect && !IsRunning())
+      std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
+
+      // ENABLE recorder
+      if (!recorder_enabled_ && enabled)
       {
-        Join(); // Just in case an old thread hasn't finished properly, yet
+        recorder_enabled_ = enabled;
 
-        connection_shutting_down_ = false;
-        connected_pid_            = 0;
-        client_in_sync_           = false;
-        recorder_alive_           = false;
+        QueueSetSettings_NoLock(complete_settings_); // TODO: do I need this? The recorder is in un-synced state and will set all settings anyways
 
-        Start();
+        if (connect_to_ecal)
+        {
+          // De-initialize the recorder
+          RecorderCommand initialize_command;
+          initialize_command.type_ = RecorderCommand::Type::INITIALIZE;
+
+          QueueSetCommand_NoLock(initialize_command);
+        }
+
+        // Inform the thread about the settings AND the initialize command
+        io_cv_.notify_all();
       }
-      else if (!connect && IsRunning())
+
+      // DISABLE recorder
+      else if (recorder_enabled_ && !enabled)
       {
-        Interrupt();
+        recorder_enabled_ = enabled;
+        client_in_sync_   = false;
 
-        std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
+        // Remove all unfinished actions from the action queue
+        actions_to_perform_.clear();
 
-        connection_shutting_down_ = true;
-        connected_pid_            = 0;
-        client_in_sync_           = false;
-        recorder_alive_           = false;
+        if (should_be_connected_to_ecal_ && recorder_alive_)
+        {
+          // De-initialize the recorder
+          RecorderCommand de_initialize_command;
+          de_initialize_command.type_ = RecorderCommand::Type::DE_INITIALIZE;
+
+          QueueSetCommand_NoLock(de_initialize_command);
+
+          // Inform the thread about the De-Initialize command
+          io_cv_.notify_all();
+        }
+
       }
     }
 
-    bool RemoteRecorder::IsClientConnectionEnabled() const
+    bool RemoteRecorder::IsRecorderEnabled() const
     {
-      return IsRunning();
+      return recorder_enabled_;
+    }
+
+    bool RemoteRecorder::EverParticipatedInAMeasurement() const
+    {
+      return ever_participated_in_a_measurement_;
     }
 
     void RemoteRecorder::SetSettings(const RecorderSettings& settings)
@@ -99,42 +133,42 @@ namespace eCAL
       // Add the settings to the complete settings. This is important in cases where we want to set everything, e.g. when connecting and syncing a new ecal_rec client instance
       complete_settings_.AddSettings(settings);
 
-      if (connection_shutting_down_ || !IsRunning()) return;
-
-      if ((actions_to_perform_.size() > 0)
-        && (actions_to_perform_.back().IsSettings()))
+      // Only send the settings to the client if this recorder is enabled
+      if (recorder_enabled_ && IsRunning())
       {
-        // If there are settings that haven't been set, yet, we add the new ones, so they can all be set in one single call
-        actions_to_perform_.back().settings_.AddSettings(settings);
-      }
-      else
-      {
-        // If there are no other settings that haven't been set, yet
-        actions_to_perform_.push_back(std::move(Action(settings)));
-      }
+        // Add the settings to the action queue
+        QueueSetSettings_NoLock(settings);
 
-      // Notify the thread that we have more work to do
-      io_cv_.notify_all();
+        // Notify the thread that there is something new in the queue
+        io_cv_.notify_all();
+      }
     }
 
     void RemoteRecorder::SetCommand(const RecorderCommand& command)
     {
       std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
 
-      if (connection_shutting_down_ || !IsRunning()) return;
+      if (!recorder_enabled_
+        && (command.type_ != RecorderCommand::Type::UPLOAD_MEASUREMENT)
+        && (command.type_ != RecorderCommand::Type::ADD_COMMENT)
+        && (command.type_ != RecorderCommand::Type::DELETE_MEASUREMENT)) // The UPLOAD_MEASURMENT, ADD_COMMENT and DELETE_MEASUREMENT command may always be sent
+      {
+        return;
+      }
 
-      actions_to_perform_.push_back(std::move(Action(command)));
+      if ((command.type_ == RecorderCommand::Type::SAVE_PRE_BUFFER)
+        || (command.type_ == RecorderCommand::Type::START_RECORDING))
+      {
+        // Save whether we ever had a measurement started. Connections to
+        // recorders that have a measurement started must not be cut, as the
+        // measurement connection object is responsible for error message
+        // handling
+        ever_participated_in_a_measurement_ = true;
+      }
 
-      // Notify the thread that we have more work to do
-      io_cv_.notify_all();
-    }
 
-    void RemoteRecorder::InitiateConnectionShutdown(const RecorderCommand& last_command)
-    {
-      std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
-      connection_shutting_down_ = true;
-      actions_to_perform_.clear();
-      actions_to_perform_.emplace_back(Action(last_command));
+      // Add command to the action queue
+      QueueSetCommand_NoLock(command);
 
       // Notify the thread that we have more work to do
       io_cv_.notify_all();
@@ -146,10 +180,10 @@ namespace eCAL
       return recorder_alive_;
     }
 
-    RecorderState RemoteRecorder::GetState() const
+    std::pair<eCAL::rec::RecorderStatus, eCAL::Time::ecal_clock::time_point> RemoteRecorder::GetStatus() const
     {
       std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
-      return last_state_;
+      return {last_status_, last_status_timestamp_};
     }
 
     bool RemoteRecorder::IsRequestPending() const
@@ -184,7 +218,6 @@ namespace eCAL
       while (!IsInterrupted())
       {
         Action this_loop_action;
-        bool exit_after_execution;
 
         {
           std::unique_lock<decltype(io_mutex_)> io_lock(io_mutex_);
@@ -208,8 +241,6 @@ namespace eCAL
             actions_to_perform_.pop_front();
           }
 
-          exit_after_execution = connection_shutting_down_;
-
           currently_executing_action_ = !this_loop_action.IsPing();
         }
 
@@ -222,7 +253,7 @@ namespace eCAL
         {
           auto set_config_pb = SettingsToSettingsPb(this_loop_action.settings_);
           eCAL::SServiceInfo      service_info;
-          eCAL::pb::rec::Response response;
+          eCAL::pb::rec_client::Response response;
 
           bool call_successfull = recorder_service_.Call(hostname_, "SetConfig", set_config_pb, service_info, response);
           if (IsInterrupted()) return;
@@ -232,19 +263,19 @@ namespace eCAL
 
             if (call_successfull)
             {
-              bool set_settings_successfull = (response.result() == eCAL::pb::rec::eServiceResult::success);
+              bool set_settings_successfull = (response.result() == eCAL::pb::rec_client::ServiceResult::success);
 
               recorder_alive_ = true;
               client_in_sync_ = set_settings_successfull;
 
               if (set_settings_successfull)
               {
-                EcalRecLogger::Instance()->info("Sucessfully set settings for recorder on " + hostname_);
+                eCAL::rec::EcalRecLogger::Instance()->info("Sucessfully set settings for recorder on " + hostname_);
               }
               else
               {
-                EcalRecLogger::Instance()->error("Failed setting settings for recorder on " + hostname_ + ": " + response.error());
-                actions_to_perform_.push_front(std::move(Action(true))); // Next just ping the client to see if we can recover
+                eCAL::rec::EcalRecLogger::Instance()->error("Failed setting settings for recorder on " + hostname_ + ": " + response.error());
+                actions_to_perform_.emplace_front(Action(true)); // Next just ping the client to see if we can recover
               }
 
               last_response_ = { set_settings_successfull, response.error() };
@@ -253,8 +284,8 @@ namespace eCAL
             {
               recorder_alive_ = false;
               client_in_sync_ = false;
-              EcalRecLogger::Instance()->error("Failed setting settings for recorder on " + hostname_ + ": Unable to contact recorder");
-              actions_to_perform_.push_front(std::move(Action(true))); // Next just ping the client to see if we can recover
+              eCAL::rec::EcalRecLogger::Instance()->error("Failed setting settings for recorder on " + hostname_ + ": Unable to contact recorder");
+              actions_to_perform_.emplace_front(Action(true)); // Next just ping the client to see if we can recover
               last_response_ = { false, "Unable to contact recorder" };
             }
           }
@@ -270,15 +301,15 @@ namespace eCAL
           {
             should_be_connected_to_ecal_ = true;
           }
-          else if ((this_loop_action.command_.type_ == RecorderCommand::Type::DE_INITIALIZE))
+          else if (this_loop_action.command_.type_ == RecorderCommand::Type::DE_INITIALIZE)
           {
             should_be_connected_to_ecal_ = false;
           }
 
-          eCAL::pb::rec::CommandRequest command_request_pb = RecorderCommandToCommandPb(this_loop_action.command_);
+          eCAL::pb::rec_client::CommandRequest command_request_pb = RecorderCommandToCommandPb(this_loop_action.command_);
 
           eCAL::SServiceInfo      service_info;
-          eCAL::pb::rec::Response response_pb;
+          eCAL::pb::rec_client::Response response_pb;
 
           bool call_successfull = recorder_service_.Call(hostname_, "SetCommand", command_request_pb, service_info, response_pb);
 
@@ -287,17 +318,17 @@ namespace eCAL
 
             if (call_successfull)
             {
-              bool execute_command_successfull = (response_pb.result() == eCAL::pb::rec::eServiceResult::success);
+              bool execute_command_successfull = (response_pb.result() == eCAL::pb::rec_client::ServiceResult::success);
 
               recorder_alive_ = true;
 
               if (execute_command_successfull)
               {
-                EcalRecLogger::Instance()->info("Successfully sent command to " + hostname_);
+                eCAL::rec::EcalRecLogger::Instance()->info("Successfully sent command to " + hostname_);
               }
               else
               {
-                EcalRecLogger::Instance()->error("Failed sending command to " + hostname_ + ": " + response_pb.error());
+                eCAL::rec::EcalRecLogger::Instance()->error("Failed sending command to " + hostname_ + ": " + response_pb.error());
               }
 
               last_response_ = { execute_command_successfull, response_pb.error() };
@@ -305,9 +336,29 @@ namespace eCAL
             else
             {
               recorder_alive_ = false;
-              EcalRecLogger::Instance()->error("Failed sending command to " + hostname_ + ": Unable to contact recorder");
-              actions_to_perform_.push_front(std::move(Action(true))); // Next just ping the client to see if we can recover
+              eCAL::rec::EcalRecLogger::Instance()->error("Failed sending command to " + hostname_ + ": Unable to contact recorder");
+              actions_to_perform_.emplace_front(Action(true)); // Next just ping the client to see if we can recover
               last_response_ = { false, "Unable to contact recorder" };
+            }
+
+            // Report the last response
+            switch (this_loop_action.command_.type_)
+            {
+            case eCAL::rec_server::RecorderCommand::Type::START_RECORDING:
+              // Same as SAVE_PRE_BUFFER
+            case eCAL::rec_server::RecorderCommand::Type::SAVE_PRE_BUFFER:
+              report_job_command_response_callback_(this_loop_action.command_.job_config_.GetJobId(), hostname_, last_response_);
+              break;
+            case eCAL::rec_server::RecorderCommand::Type::UPLOAD_MEASUREMENT:
+              report_job_command_response_callback_(this_loop_action.command_.upload_config_.meas_id_, hostname_, last_response_);
+              break;
+            case eCAL::rec_server::RecorderCommand::Type::ADD_COMMENT:
+              // Same as DELETE MEASUREMENT
+            case eCAL::rec_server::RecorderCommand::Type::DELETE_MEASUREMENT:
+              report_job_command_response_callback_(this_loop_action.command_.meas_id_add_delete, hostname_, last_response_);
+              break;
+            default:
+              break;
             }
           }
         }
@@ -316,19 +367,21 @@ namespace eCAL
         ////////////////////////////////////////////
         else
         {
-          eCAL::pb::rec::GetStateRequest request;
+          eCAL::pb::rec_client::GetStateRequest request;
 
           eCAL::SServiceInfo   service_info;
-          eCAL::pb::rec::State state_response_pb;
+          eCAL::pb::rec_client::State state_response_pb;
 
           // Retrieve the state from the client
+          auto before_call_timestamp = eCAL::Time::ecal_clock::now();
           bool call_success = recorder_service_.Call(hostname_, "GetState", request, service_info, state_response_pb);
+          auto after_call_timestamp = eCAL::Time::ecal_clock::now();
           if (IsInterrupted()) return;
 
           if (call_success)
           {
-            RecorderState last_state = StatePbToRecorderState(state_response_pb);
-            int32_t       client_pid = state_response_pb.pid();
+            eCAL::rec::RecorderStatus last_status = StatusPbToRecorderStatus(state_response_pb);
+            int32_t        client_pid  = state_response_pb.pid();
 
             {
               std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
@@ -338,33 +391,43 @@ namespace eCAL
               {
                 // Some recorder on the same host with a different PID has connected!
                 if (!recorder_alive_)
-                  EcalRecLogger::Instance()->info("New recorder on host " + hostname_ + " has connected");
+                  eCAL::rec::EcalRecLogger::Instance()->info("New recorder on host " + hostname_ + " has connected");
 
                 client_in_sync_ = false;
-                connected_pid_ = client_pid;
+                connected_pid_  = client_pid;
               }
               else
               {
                 // Log an info, if the recorder as not been alive, previously
                 if (!recorder_alive_)
-                  EcalRecLogger::Instance()->info("Recorder on host " + hostname_ + " has reconnected!");
+                  eCAL::rec::EcalRecLogger::Instance()->info("Recorder on host " + hostname_ + " has reconnected!");
               }
 
-              last_state_     = std::move(last_state);
+              update_jobstatus_function_(hostname_, last_status);
+
+              last_status_     = std::move(last_status);
+              if (after_call_timestamp >= before_call_timestamp)
+              {
+                last_status_timestamp_ = before_call_timestamp + (after_call_timestamp - before_call_timestamp) / 2;
+              }
+              else
+              {
+                last_status_timestamp_ = after_call_timestamp;
+              }
               recorder_alive_ = true;
 
               // Auto recovery
-              if (recorder_alive_ && !client_in_sync_)
+              if (recorder_enabled_ && recorder_alive_ && !client_in_sync_)
               {
                 // Remove all old autorecovery actions. We don't need them anyways, as we are adding new ones.
                 removeAutorecoveryActions_NoLock();
 
                 // (3) If the recorder is not connected but should be, we connect it again
-                if (should_be_connected_to_ecal_ && !last_state_.initialized_)
+                if (should_be_connected_to_ecal_ && !last_status_.initialized_)
                 {
                   RecorderCommand connect_to_ecal_command;
                   connect_to_ecal_command.type_ = RecorderCommand::Type::INITIALIZE;
-                  actions_to_perform_.push_front(std::move(Action(connect_to_ecal_command, true)));
+                  actions_to_perform_.emplace_front(Action(connect_to_ecal_command, true));
                 }
 
                 // (2) Set all settings again
@@ -376,28 +439,41 @@ namespace eCAL
                 }
                 else
                 {
-                  actions_to_perform_.push_front(std::move(Action(complete_settings_, true)));
+                  actions_to_perform_.emplace_front(Action(complete_settings_, true));
                 }
 
                 // (1) Stop recording (or entirely disconnect from ecal)
-                if (!should_be_connected_to_ecal_ && last_state_.initialized_)
+                if (!should_be_connected_to_ecal_ && last_status_.initialized_)
                 {
                   // If the recorder is connected to ecal but shouldn't, we disconnect it first
                   RecorderCommand disconnect_command;
                   disconnect_command.type_ = RecorderCommand::Type::DE_INITIALIZE;
-                  actions_to_perform_.push_front(std::move(Action(disconnect_command, true)));
+                  actions_to_perform_.emplace_front(Action(disconnect_command, true));
                 }
-                else if (last_state.main_recorder_state_.recording_ && !last_state.main_recorder_state_.flushing_)
+                else
                 {
                   // If the recorder is recording, we need to stop it
-                  RecorderCommand stop_command;
-                  stop_command.type_ = RecorderCommand::Type::STOP_RECORDING;
-                  actions_to_perform_.push_front(std::move(Action(stop_command, true)));
+                  bool is_recording = false;
+                  for (const eCAL::rec::JobStatus& job_status : last_status_.job_statuses_)
+                  {
+                    if (job_status.state_ == eCAL::rec::JobState::Recording)
+                    {
+                      is_recording = true;
+                      break;
+                    }
+                  }
+
+                  if (is_recording)
+                  {
+                    RecorderCommand stop_command;
+                    stop_command.type_ = RecorderCommand::Type::STOP_RECORDING;
+                    actions_to_perform_.emplace_front(Action(stop_command, true));
+                  }
                 }
               }
               else if (!recorder_alive_)
               {
-                actions_to_perform_.push_front(std::move(Action(true)));
+                actions_to_perform_.emplace_front(Action(true));
               }
             }
           }
@@ -407,30 +483,13 @@ namespace eCAL
 
             // Log an info, if the recorder has been alive, previously
             if (recorder_alive_)
-              EcalRecLogger::Instance()->info("Recorder on host " + hostname_ + " is not alive any more.");
+              eCAL::rec::EcalRecLogger::Instance()->info("Recorder on host " + hostname_ + " is not alive any more.");
 
             recorder_alive_ = false;
             last_response_  = { false, "Unable to contact recorder" };
           }
 
-          next_ping_time_ = std::chrono::steady_clock::now() + std::chrono::milliseconds(500);
-        }
-
-        // Shut down the connection
-        if (exit_after_execution)
-        {
-          std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
-
-          connected_pid_            = 0;
-          client_in_sync_           = false;
-          recorder_alive_           = false;
-
-          actions_to_perform_.clear();
-          currently_executing_action_ = false;
-
-          io_cv_.notify_all();
-
-          return;
+          next_ping_time_ = std::chrono::steady_clock::now() + std::chrono::milliseconds(200);
         }
       }
     }
@@ -445,9 +504,11 @@ namespace eCAL
     // Converter Functions
     //////////////////////////////////////////
 
-    eCAL::pb::rec::SetConfigRequest RemoteRecorder::SettingsToSettingsPb(const RecorderSettings& settings)
+    eCAL::pb::rec_client::SetConfigRequest RemoteRecorder::SettingsToSettingsPb(const RecorderSettings& settings)
     {
-      eCAL::pb::rec::SetConfigRequest request;
+      const char decimal_point = std::localeconv()->decimal_point[0]; // Decimal point for std::to_string de-localization
+      
+      eCAL::pb::rec_client::SetConfigRequest request;
 
       auto config = request.mutable_config()->mutable_items();
 
@@ -455,6 +516,7 @@ namespace eCAL
       {
         std::string serialized_string;
         serialized_string = std::to_string(std::chrono::duration_cast<std::chrono::duration<double>>(settings.GetMaxPreBufferLength()).count());
+        std::replace(serialized_string.begin(), serialized_string.end(), decimal_point, '.');
         (*config)["max_pre_buffer_length_secs"] = serialized_string;
       }
       if (settings.IsPreBufferingEnabledSet())
@@ -472,7 +534,7 @@ namespace eCAL
       if (settings.IsRecordModeSet())
       {
         std::string serialized_string;
-        serialized_string = (settings.GetRecordMode() == RecordMode::All ? "all" : (settings.GetRecordMode() == RecordMode::Blacklist ? "blacklist" : "whitelist"));
+        serialized_string = (settings.GetRecordMode() == eCAL::rec::RecordMode::All ? "all" : (settings.GetRecordMode() == eCAL::rec::RecordMode::Blacklist ? "blacklist" : "whitelist"));
         (*config)["record_mode"] = serialized_string;
       }
       if (settings.IsListedTopicsSet())
@@ -481,78 +543,193 @@ namespace eCAL
         serialized_string = EcalUtils::String::Join("\n", settings.GetListedTopics());
         (*config)["listed_topics"] = serialized_string;
       }
+      if (settings.IsEnabledAddonsSet())
+      {
+        std::string serialized_string;
+        serialized_string = EcalUtils::String::Join("\n", settings.GetEnabledAddons());
+        (*config)["enabled_addons"] = serialized_string;
+      }
 
       return request;
     }
 
-    RecorderState RemoteRecorder::StatePbToRecorderState(const eCAL::pb::rec::State& recorder_state_pb)
+    eCAL::rec::RecorderStatus RemoteRecorder::StatusPbToRecorderStatus(const eCAL::pb::rec_client::State& recorder_state_pb)
     {
-      RecorderState recorder_state;
+      eCAL::rec::RecorderStatus recorder_status;
 
-      recorder_state.initialized_ = recorder_state_pb.initialized();
-      recorder_state.main_recorder_state_ = WriterStatePbToWriterState(recorder_state_pb.main_recorder_state());
-      recorder_state.pre_buffer_length_.first = recorder_state_pb.pre_buffer_length_frames_count();
-      recorder_state.pre_buffer_length_.second = std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(recorder_state_pb.pre_buffer_length_secs()));
+      // pid_
+      recorder_status.pid_ = recorder_state_pb.pid();
 
-      for (const auto& buffer_writer_state_pb : recorder_state_pb.buffer_writer_states())
-      {
-        recorder_state.buffer_writers_.push_back(WriterStatePbToWriterState(buffer_writer_state_pb));
-      }
+      // timestamp_
+      recorder_status.timestamp_ = eCAL::Time::ecal_clock::time_point(std::chrono::nanoseconds(recorder_state_pb.timestamp_nsecs()));
 
+      // initialized_
+      recorder_status.initialized_ = recorder_state_pb.initialized();
+
+      // pre_buffer_length_
+      int64_t                             pre_buffer_length_frames = recorder_state_pb.pre_buffer_length_frames_count();
+      std::chrono::steady_clock::duration pre_buffer_length        = std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(recorder_state_pb.pre_buffer_length_secs()));
+      recorder_status.pre_buffer_length_ = std::make_pair(pre_buffer_length_frames, pre_buffer_length);
+
+      // subscribed_topics_
       for (const auto& subscribed_topic : recorder_state_pb.subscribed_topics())
       {
-        recorder_state.subscribed_topics_.emplace(subscribed_topic);
+        recorder_status.subscribed_topics_.emplace(subscribed_topic);
       }
 
-      return recorder_state;
+      // addon_statuses_
+      recorder_status.addon_statuses_.reserve(recorder_state_pb.addon_statuses_size());
+      for (const auto& rec_addon_status_pb : recorder_state_pb.addon_statuses())
+      {
+        eCAL::rec::RecorderAddonStatus rec_addon_status;
+
+        rec_addon_status.addon_executable_path_         = rec_addon_status_pb.addon_executable_path();
+        rec_addon_status.addon_id_                      = rec_addon_status_pb.addon_id();
+        rec_addon_status.initialized_                   = rec_addon_status_pb.initialized();
+        rec_addon_status.name_                          = rec_addon_status_pb.name();
+        rec_addon_status.pre_buffer_length_frame_count_ = rec_addon_status_pb.pre_buffer_length_frame_count();
+        rec_addon_status.info_.first                   = rec_addon_status_pb.info_ok();
+        rec_addon_status.info_.second                  = rec_addon_status_pb.info_message();
+
+        recorder_status.addon_statuses_.push_back(std::move(rec_addon_status));
+      }
+
+      // job_statuses_
+      recorder_status.job_statuses_.reserve(recorder_state_pb.job_statuses_size());
+      for (const auto& job_status_pb : recorder_state_pb.job_statuses())
+      {
+        eCAL::rec::JobStatus job_status;
+
+        // job_statuses_[i].job_id_
+        job_status.job_id_ = job_status_pb.job_id();
+        
+        // job_statuses_[i].state_
+        switch (job_status_pb.state())
+        {
+        case eCAL::pb::rec_client::State::JobState::State_JobState_NotStarted:
+          job_status.state_ = eCAL::rec::JobState::NotStarted;
+          break;
+        case eCAL::pb::rec_client::State::JobState::State_JobState_Recording:
+          job_status.state_ = eCAL::rec::JobState::Recording;
+          break;
+        case eCAL::pb::rec_client::State::JobState::State_JobState_Flushing:
+          job_status.state_ = eCAL::rec::JobState::Flushing;
+          break;
+        case eCAL::pb::rec_client::State::JobState::State_JobState_FinishedFlushing:
+          job_status.state_ = eCAL::rec::JobState::FinishedFlushing;
+          break;
+        case eCAL::pb::rec_client::State::JobState::State_JobState_Uploading:
+          job_status.state_ = eCAL::rec::JobState::Uploading;
+          break;
+        case eCAL::pb::rec_client::State::JobState::State_JobState_FinishedUploading:
+          job_status.state_ = eCAL::rec::JobState::FinishedUploading;
+          break;
+        default:
+          job_status.state_ = eCAL::rec::JobState::NotStarted;
+          break;
+        }
+
+        // job_statuses_[i].rec_hdf5_status_
+        {
+          job_status.rec_hdf5_status_.total_frame_count_     = job_status_pb.rec_hdf5_status().total_frame_count();
+          job_status.rec_hdf5_status_.total_length_          = std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(job_status_pb.rec_hdf5_status().total_length_secs()));
+          job_status.rec_hdf5_status_.unflushed_frame_count_ = job_status_pb.rec_hdf5_status().unflushed_frame_count();
+          job_status.rec_hdf5_status_.info_                  = std::make_pair(job_status_pb.rec_hdf5_status().info_ok(), job_status_pb.rec_hdf5_status().info_message());
+        }
+
+        // job_statuses_[i].rec_addon_statuses_
+        for (const auto& addon_status_pb : job_status_pb.rec_addon_statuses())
+        {
+          eCAL::rec::RecAddonJobStatus rec_addon_status;
+
+          switch (addon_status_pb.second.state())
+          {
+          case ::eCAL::pb::rec_client::State_RecAddonJobStatus_State::State_RecAddonJobStatus_State_NotStarted:// ::eCAL::pb::rec_client::State_JobState_NotStarted:
+            rec_addon_status.state_ = eCAL::rec::RecAddonJobStatus::State::NotStarted;
+            break;
+          case ::eCAL::pb::rec_client::State_RecAddonJobStatus_State::State_RecAddonJobStatus_State_Recording:
+            rec_addon_status.state_ = eCAL::rec::RecAddonJobStatus::State::Recording;
+            break;
+          case ::eCAL::pb::rec_client::State_RecAddonJobStatus_State::State_RecAddonJobStatus_State_Flushing:
+            rec_addon_status.state_ = eCAL::rec::RecAddonJobStatus::State::Flushing;
+            break;
+          case ::eCAL::pb::rec_client::State_RecAddonJobStatus_State::State_RecAddonJobStatus_State_FinishedFlushing:
+            rec_addon_status.state_ = eCAL::rec::RecAddonJobStatus::State::FinishedFlushing;
+            break;
+          default:
+            break;
+          }
+
+          rec_addon_status.total_frame_count_     = addon_status_pb.second.total_frame_count();
+          rec_addon_status.unflushed_frame_count_ = addon_status_pb.second.unflushed_frame_count();
+          rec_addon_status.info_                  = std::make_pair(addon_status_pb.second.info_ok(), addon_status_pb.second.info_message());
+
+          job_status.rec_addon_statuses_.emplace(addon_status_pb.first, std::move(rec_addon_status));
+        }
+
+        // job_statuses_[i].upload_status_
+        {
+          job_status.upload_status_.bytes_total_size_ = job_status_pb.upload_status().bytes_total_size();
+          job_status.upload_status_.bytes_uploaded_   = job_status_pb.upload_status().bytes_uploaded();
+          job_status.upload_status_.info_             = std::make_pair(job_status_pb.upload_status().info_ok(), job_status_pb.upload_status().info_message());
+        }
+
+        // job_statuses[i].is_deleted_
+        {
+          job_status.is_deleted_ = job_status_pb.is_deleted();
+        }
+
+        recorder_status.job_statuses_.push_back(std::move(job_status));
+      }
+
+      // info_
+      recorder_status.info_.first  = recorder_state_pb.info_ok();
+      recorder_status.info_.second = recorder_state_pb.info_message();
+
+      return recorder_status;
     }
 
-    WriterState RemoteRecorder::WriterStatePbToWriterState(const eCAL::pb::rec::State::WriterState& writer_state_pb)
+    eCAL::pb::rec_client::CommandRequest RemoteRecorder::RecorderCommandToCommandPb(const RecorderCommand& command)
     {
-      WriterState writer_state;
-
-      writer_state.recording_               = writer_state_pb.recording();
-      writer_state.flushing_                = writer_state_pb.flushing();
-      writer_state.recording_length_.first  = writer_state_pb.recording_length_frame_count();
-      writer_state.recording_length_.second = std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(writer_state_pb.recording_length_secs()));
-      writer_state.recording_queue_.first   = writer_state_pb.queued_frames_count();
-      writer_state.recording_queue_.second  = std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(writer_state_pb.queued_secs()));
-
-      return writer_state;
-    }
-
-    eCAL::pb::rec::CommandRequest RemoteRecorder::RecorderCommandToCommandPb(const RecorderCommand& command)
-    {
-      eCAL::pb::rec::CommandRequest request;
+      eCAL::pb::rec_client::CommandRequest request;
       
       switch (command.type_)
       {
       case RecorderCommand::Type::NONE:
-        request.set_command(eCAL::pb::rec::CommandRequest::none);
+        request.set_command(eCAL::pb::rec_client::CommandRequest::none);
         break;
       case RecorderCommand::Type::INITIALIZE:
-        request.set_command(eCAL::pb::rec::CommandRequest::initialize);
+        request.set_command(eCAL::pb::rec_client::CommandRequest::initialize);
         break;
       case RecorderCommand::Type::DE_INITIALIZE:
-        request.set_command(eCAL::pb::rec::CommandRequest::de_initialize);
+        request.set_command(eCAL::pb::rec_client::CommandRequest::de_initialize);
         break;
       case RecorderCommand::Type::START_RECORDING:
-        request.set_command(eCAL::pb::rec::CommandRequest::start_recording);
+        request.set_command(eCAL::pb::rec_client::CommandRequest::start_recording);
         SetJobConfig(request.mutable_command_params()->mutable_items(), command.job_config_);
         break;
       case RecorderCommand::Type::STOP_RECORDING:
-        request.set_command(eCAL::pb::rec::CommandRequest::stop_recording);
+        request.set_command(eCAL::pb::rec_client::CommandRequest::stop_recording);
         break;
       case RecorderCommand::Type::SAVE_PRE_BUFFER:
-        request.set_command(eCAL::pb::rec::CommandRequest::save_pre_buffer);
+        request.set_command(eCAL::pb::rec_client::CommandRequest::save_pre_buffer);
         SetJobConfig(request.mutable_command_params()->mutable_items(), command.job_config_);
         break;
-      case RecorderCommand::Type::ADD_SCENARIO:
-        request.set_command(eCAL::pb::rec::CommandRequest::add_scenario);
-        (*request.mutable_command_params()->mutable_items())["scenario_name"] = command.scenario_name_;
+      case RecorderCommand::Type::UPLOAD_MEASUREMENT:
+        request.set_command(eCAL::pb::rec_client::CommandRequest::upload_measurement);
+        SetUploadConfig(request.mutable_command_params()->mutable_items(), command.upload_config_);
+        break;
+      case RecorderCommand::Type::ADD_COMMENT:
+        request.set_command(eCAL::pb::rec_client::CommandRequest::add_comment);
+        (*request.mutable_command_params()->mutable_items())["meas_id"] = std::to_string(command.meas_id_add_delete);
+        (*request.mutable_command_params()->mutable_items())["comment"] = command.comment_;
+        break;
+      case RecorderCommand::Type::DELETE_MEASUREMENT:
+        request.set_command(eCAL::pb::rec_client::CommandRequest::delete_measurement);
+        (*request.mutable_command_params()->mutable_items())["meas_id"] = std::to_string(command.meas_id_add_delete);
         break;
       case RecorderCommand::Type::EXIT:
-        request.set_command(eCAL::pb::rec::CommandRequest::exit);
+        request.set_command(eCAL::pb::rec_client::CommandRequest::exit);
         break;
       default:
         break;
@@ -561,13 +738,28 @@ namespace eCAL
       return request;
     }
 
-    void RemoteRecorder::SetJobConfig(google::protobuf::Map<std::string, std::string>* job_config_pb, const JobConfig& job_config)
+    void RemoteRecorder::SetJobConfig(google::protobuf::Map<std::string, std::string>* job_config_pb, const eCAL::rec::JobConfig& job_config)
     {
+      (*job_config_pb)["meas_id"]           = std::to_string(job_config.GetJobId());
       (*job_config_pb)["meas_root_dir"]     = job_config.GetMeasRootDir();
       (*job_config_pb)["meas_name"]         = job_config.GetMeasName();
       (*job_config_pb)["description"]       = job_config.GetDescription();
       (*job_config_pb)["max_file_size_mib"] = std::to_string(job_config.GetMaxFileSize());
     }
+
+    void RemoteRecorder::SetUploadConfig(google::protobuf::Map<std::string, std::string>* upload_config_pb, const eCAL::rec::UploadConfig& upload_config)
+    {
+      (*upload_config_pb)["protocol"]              = "FTP";
+      (*upload_config_pb)["meas_id"]               = std::to_string(upload_config.meas_id_);
+      (*upload_config_pb)["username"]              = upload_config.username_;
+      (*upload_config_pb)["password"]              = upload_config.password_;
+      (*upload_config_pb)["host"]                  = upload_config.host_;
+      (*upload_config_pb)["port"]                  = std::to_string(upload_config.port_);
+      (*upload_config_pb)["upload_path"]           = upload_config.upload_path_;
+      (*upload_config_pb)["upload_metadata_files"] = upload_config.upload_metadata_files_ ? "true" : "false";
+      (*upload_config_pb)["delete_after_upload"]   = upload_config.delete_after_upload_ ? "true" : "false";
+    }
+
 
     //////////////////////////////////////////
     // Auxiliary helper methods
@@ -577,6 +769,26 @@ namespace eCAL
       auto new_end = std::remove_if(actions_to_perform_.begin(), actions_to_perform_.end(), [](const Action& action) {return action.IsAutorecoveryAction(); });
       actions_to_perform_.erase(new_end, actions_to_perform_.end());
       io_cv_.notify_all();
+    }
+
+    void RemoteRecorder::QueueSetSettings_NoLock(const RecorderSettings& settings)
+    {
+      if ((actions_to_perform_.size() > 0)
+        && (actions_to_perform_.back().IsSettings()))
+      {
+        // If there are settings that haven't been set, yet, we add the new ones, so they can all be set in one single call
+        actions_to_perform_.back().settings_.AddSettings(settings);
+      }
+      else
+      {
+        // If there are no other settings that haven't been set, yet
+        actions_to_perform_.emplace_back(Action(settings));
+      }
+    }
+
+    void RemoteRecorder::QueueSetCommand_NoLock(const RecorderCommand& command)
+    {
+      actions_to_perform_.emplace_back(Action(command));
     }
   }
 }

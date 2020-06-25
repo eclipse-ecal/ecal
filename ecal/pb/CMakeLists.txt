@@ -27,9 +27,10 @@ set(ProtoFiles
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/play/service.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/play/state.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/process.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/control.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/service.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/state.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/client_service.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/client_state.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/server_service.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/server_state.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/service.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/sim_time.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/topic.proto

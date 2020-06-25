@@ -1,0 +1,146 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2019 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+syntax = "proto3";
+
+import "ecal/pb/rec/client_state.proto";
+
+option cc_generic_services = true;
+
+package eCAL.pb.rec_client;
+
+///////////////////////////////////////////////////////
+// Rec Client Service
+///////////////////////////////////////////////////////
+
+enum ServiceResult                        // recorder command result
+{
+  none    = 0;                            // undefined result
+  success = 1;                            // service succeeded
+  failed  = 2;                            // service failed
+}
+
+message Configuration
+{
+  map<string, string>      items   =  1;  // configuration map keys / values ..
+  
+                                          // ==== Recorder ====
+                                          // max_pre_buffer_length_secs  [float]                   The maximum amount of time to keep in the pre-buffer
+                                          // pre_buffering_enabled       [bool]                    Whether pre-buffering is enabled
+                                          // host_filter                 [string-list]             List of hosts (\n separated). The recorder will only record channels published by these hosts. If empty, all hosts are allowed.
+                                          // record_mode                 [all/blacklist/whitelist] Whether to record all topics or use a blacklist / whitelist to only record some topics. Changing the mode will clear the listed_topics, so it is advisable to also provide a new listed_topics list.
+                                          // listed_topics               [string-list]             Whitelist / blacklist, when topic_mode is set accordingly (\n separated). If topic_mode is "all", this setting will be ignored.
+                                          // enabled_addons              [string-list]             List of addon-IDs that shall be enabled (\n separated).
+                                          
+                                          // ==== Job (Start Recording / Save pre buffer) ====
+                                          // meas_id                     [int64]                   An ID to identify the measurement later on
+                                          // meas_root_dir               [string]                  The root directory to save the measurement to (un-evaluated format)
+                                          // meas_name                   [string]                  The name of the measurement (un-evaluated format)
+                                          // description                 [string]                  The description that will be saved to the measurement's doc folder (un-evaluated format)
+                                          // max_file_size_mib           [uint]                    The maximum HDF5 file size (When exceeding the file size, the measurement will be splitted into multiple files).
+                                          
+                                          // ==== Upload measurement config ====
+                                          // protocol                    [string]                  The upload type to use (e.g. ftp). More types may be added in the future, if necessary.
+                                          // meas_id                     [int64]                   The ID of the measurement to upload
+                                          // username                    [string]                  The username of the FTP server
+                                          // password                    [string]                  The password of the FTP server
+                                          // host                        [string]                  The FTP Server host
+                                          // port                        [uint16]                  The FTP Server port
+                                          // upload_path                 [string]                  The directory on the FTP server where the measurement should be uploaded
+                                          // upload_metadata_files       [bool]                    Whether to also upload metadata files (i.e. the description.txt and .ecalmeas file)
+                                          // delete_after_upload         [bool]                    Whether to delete the local files after a successfull upload
+                                          
+                                          // ==== Add comment ====
+                                          // meas_id                     [int64]                   The ID of the measurement to add the comment to
+                                          // comment                     [string]                  The comment to add to the existing measurement
+                                          
+                                          // ==== Delete measurement ====
+                                          // meas_id                     [int64]                   The ID of the measurement to delete
+}
+
+message GetConfigRequest {}
+
+message GetConfigResponse
+{
+  Configuration            config  =  1;  // the current configuration
+
+  ServiceResult            result  =  2;  // service call result
+  string                   error   =  3;  // human readable error message
+}
+
+message SetConfigRequest
+{
+  Configuration            config  =  1;  // the configuration to set
+}
+
+message CommandRequest                    // request recorder state
+{
+  enum Command                           // recorder state
+  {
+    // START of eCAL Rec 1 commands
+    
+    none            = 0;                  // Undefined command (do nothing)
+    
+    // Dev decision comment:
+    // 
+    // In eCALRec 1, the following fields were the "prepare" and "unprepare"
+    // state, which meant something like "start pre-buffering" and
+    // "stop pre-buffering". These commands do not exist any more, as the
+    // "pre_buffering_enabled" option is now a configuration item. We can reuse
+    // the prepare and unprepare number, the initialization behaves like the old
+    // prepare commands, as long as the "pre_buffering_enabled" config element
+    // is set.
+    
+    initialize          = 1;                // Connect to eCAL (create subscribers)                
+    de_initialize       = 2;                // Disconnect from eCAL (remove all subscribers)
+    start_recording     = 3;                // Start recording
+    stop_recording      = 4;                // Stop recording
+    exit                = 5;                // Close the recorder
+    
+    // END of eCAL Rec 1 commands
+    
+    save_pre_buffer     = 8;                // Save the currently pre-buffered data
+    
+    //reserved 9;            // add_scenario
+
+    upload_measurement  = 10;               // Upload a measurement
+    add_comment         = 11;               // Add a comment to an existing measurment
+    delete_measurement  = 12;               // Delete a measurement
+  }
+  
+  Command       command         =  1;     // The command to execute
+  Configuration command_params  =  2;     // Parameters for the command (only valid for start_recording, save_pre_buffer, upload_measurement)
+  
+}
+
+message GetStateRequest {}
+
+message Response                          // common recorder service response
+{
+  ServiceResult            result  =  1;  // service call result
+  string                   error   =  2;  // human readable error message
+}
+
+service EcalRecClientService
+{
+  rpc GetConfig  (GetConfigRequest) returns (eCAL.pb.rec_client.GetConfigResponse);  // Get current configuration
+  rpc SetConfig  (SetConfigRequest) returns (eCAL.pb.rec_client.Response);           // Set configuration
+  rpc SetCommand (CommandRequest)   returns (eCAL.pb.rec_client.Response);           // Send command to the recorder
+  rpc GetState   (GetStateRequest)  returns (eCAL.pb.rec_client.State);              // Get the current recorder state
+}
