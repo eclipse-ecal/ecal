@@ -20,6 +20,7 @@
 #include <plugin/plugin_manager.h>
 
 #include <memory>
+#include <stdexcept>
 
 #include <QApplication>
 #include <QDir>
