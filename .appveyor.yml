@@ -4,7 +4,6 @@ image: Visual Studio 2019
 
 environment:
   QT5_ROOT_DIRECTORY: C:\Qt\5.13.2
-  HDF5_DIR: C:\Program Files\HDF_Group\HDF5\1.8.21\cmake
   PYTHON_HOME: C:\Python38
 
 install:
@@ -12,9 +11,6 @@ install:
   - git submodule update --init --recursive
 
   # Install build requirements
-  - curl -fsS -O https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8/hdf5-1.8.21/bin/hdf5-1.8.21-Std-win7_64-vs14.zip
-  - 7z x -bb0 hdf5-1.8.21-Std-win7_64-vs14.zip
-  - msiexec /package hdf\HDF5-1.8.21-win64.msi /quiet
   - choco install doxygen.install
   - choco install wixtoolset
   - refreshenv
@@ -22,7 +18,7 @@ install:
 build_script:
   - mkdir _build
   - cd _build
-  - cmake .. -G "Visual Studio 16 2019" -A x64 -DBUILD_PY_BINDING=ON -DBUILD_SAMPLES=ON -DBUILD_DOCS=ON -DCMAKE_INSTALL_PREFIX=_install
+  - cmake .. -G "Visual Studio 16 2019" -A x64 -DBUILD_TESTS=ON -DBUILD_CSHARP_BINDING=ON -DECAL_THIRDPARTY_BUILD_GTEST=ON -DBUILD_PY_BINDING=ON -DBUILD_DOCS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=_install
   - cmake --build . --parallel --config Release
   - cmake --build . --target documentation_c
   - cmake --build . --target documentation_cpp
