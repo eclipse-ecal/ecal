@@ -8,22 +8,22 @@ Copyright (c) 2019, Continental Corporation.
 
 ## Preface
 
-The enhanced communication abstraction layer (eCAL) is a middleware that enables scalable, high performance interprocess communication on a single computer node or between different nodes in a computer network. The design is inspired by known Data Distribution Service for Real-Time Systems (see Data distribution service on wikipedia). The current eCAL implementation realizes a subset of such a DDS system, there is only a basic support for Quality of Service (QoS) driven data transport (best effort and reliable). 
+The enhanced communication abstraction layer (eCAL) is a middleware that enables scalable, high performance interprocess communication on a single computer node or between different nodes in a computer network. The design is inspired by known Data Distribution Service for Real-Time Systems (see Data distribution service on wikipedia). The current eCAL implementation realizes a subset of such a DDS system, there is only a basic support for Quality of Service (QoS) driven data transport (best effort and reliable).
 
-eCAL is designed for typical cloud computing scenarios where different processes exchange their I/O's using a publisher/subscriber pattern. The data exchange is based on so called topics. A topic wraps the payload that should be exchanged with 
-additional informations like a unique name, a type and a description. A topic can be connected to more than one publisher and/or subscriber. These are the basic elements of the eCAL API. 
+eCAL is designed for typical cloud computing scenarios where different processes exchange their I/O's using a publisher/subscriber pattern. The data exchange is based on so called topics. A topic wraps the payload that should be exchanged with
+additional informations like a unique name, a type and a description. A topic can be connected to more than one publisher and/or subscriber. These are the basic elements of the eCAL API.
 
   • Topic: The most basic description of the data to be published and subscribed.
-  
-  • Publisher: A Publisher is the object responsible for the actual dissemination of publications. 
-  
-  • Subscriber: A Subscriber is the object responsible for the actual reception of the data resulting from its subscriptions. 
+
+  • Publisher: A Publisher is the object responsible for the actual dissemination of publications.
+
+  • Subscriber: A Subscriber is the object responsible for the actual reception of the data resulting from its subscriptions.
 
   • Service: A collection of methods with arguments (requests) and return types (responses) realized as a server to be called from connected clients.
 
   • Client: Remote interface to a specific service (server) to call it's methods.
-  
-  • Callback: A Callback can be used to react on time events, on incoming messages, on service requests or service responses. 
+
+  • Callback: A Callback can be used to react on time events, on incoming messages, on service requests or service responses.
 
 eCAL is simplifying the data transport as much as possible, It uses different mechanism to transport a topic from a publisher to a connected subscriber. On the same computer node the data are exchanged by using memory mapped files. Between different computing nodes UDP multicast can be used for high performance data throughput.
 
@@ -44,6 +44,25 @@ git submodule init
 git submodule update
 ```
 
+## (Optional) Resolve dependencies using Conan
+
+eCAL provides basic support for the [Conan](https://conan.io/) package manager that uses (re)packaged
+thirdparty dependencies to allow for building eCAL using Conan non-intrusively. In order to build this
+project using Conan, one has to install this package manager first and also add so called remotes that
+point to pre-built thirdparty dependencies:
+
+```bash
+# Install Conan
+pip install --upgrade pip
+pip install --upgrade conan
+conan config set general.revisions_enabled=True
+
+# Add Conan remotes with pre-compiled dependencies
+conan remote add -f kwc_bintray https://api.bintray.com/conan/kwc/conan
+conan remote add -f conan-center https://bintray.com/conan/conan-center
+conan remote add -f bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+```
+
 ## CMake build options
 
 eCAL is using CMake as build system. When configuring with CMake, you can turn on / off the following features.
@@ -52,6 +71,7 @@ eCAL is using CMake as build system. When configuring with CMake, you can turn o
 |----------------------------------|---------|------------ |
 | `HAS_HDF5`                       | `ON`    | Platform supports HDF5 library, necessary to build eCAL recording / replay tools |
 | `HAS_QT5`                        | `ON`    | Platform supports Qt 5 library, necessary to build eCAL monitoring tool |
+| `HAS_CURL`                       | `ON`    | Build with CURL (i.e. upload support in the recorder app) |
 | `HAS_CAPNPROTO`                  | `OFF`   | Platform supports Cap'n Proto library, necessary to use capnp serialization as message system and to enable eCAL monitoring capnp message reflection. eCAL does not add Cap'n Proto as a submodule. If you set this option to `ON`, please make sure that the library is installed on your system and CMake can find it (consider setting CMAKE_PREFIX_PATH to point to the library). |
 | `BUILD_DOCS`                     | `OFF`   | Build the eCAL documentation, requires the installation of doxygen and a recent CMake version (>= 3.14 preferred, but some lower versions might work) |
 | `BUILD_APPS`                     | `ON`    | Build the eCAL applications, such as the monitoring tool |
@@ -67,7 +87,11 @@ eCAL is using CMake as build system. When configuring with CMake, you can turn o
 | `ECAL_NPCAP_SUPPORT`             | `OFF`   | Enable the eCAL to use Npcap for udp socket communication (i.e. the Win10 performance fix) |
 | `ECAL_THIRDPARTY_BUILD_PROTOBUF` | `ON`    | Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.11.4 or newer (tested with 3.11.4). |
 | `ECAL_THIRDPARTY_BUILD_SPDLOG`   | `ON`    | Build Spdlog with eCAL, included as a submodule in the thirdparty folder. You can always use your custom spdlog installation, this is only for convenience. |
+| `ECAL_THIRDPARTY_BUILD_TINYXML2` | `ON`    | Build tinyxml2 with eCAL, included as a submodule in the thirdparty folder. |
+| `ECAL_THIRDPARTY_BUILD_FINEFTP`  | `ON`    | Build fineFTP with eCAL, included as a submodule in the thirdparty folder. |
+| `ECAL_THIRDPARTY_BUILD_CURL`     | `ON`    | Build CURL with eCAL, included as a submodule in the thirdparty folder. |
 | `ECAL_THIRDPARTY_BUILD_GTEST`    | `OFF`   | Build GoogleTest with eCAL, included as a submodule in the thirdparty folder. You can always use your custom gtest installation, this is only for convenience. |
+| `ECAL_THIRDPARTY_BUILD_HDF5`     | `ON`    | Build HDF5 with eCAL, included as a submodule in the thirdparty folder. |
 
 All options can be passed on the command line `cmake -D<option>=<value>` or in the CMake GUI application.
 
@@ -82,18 +106,18 @@ All options can be passed on the command line `cmake -D<option>=<value>` or in t
 	sudo apt-get -y install kitware-archive-keyring
 	sudo apt-key --keyring /etc/apt/trusted.gpg del C1F34CDD40CD72DA
 	```
-	
+
 2. Add a ppa for protobuf >= 3.1. The following (unofficial) ppa will be sufficient:
 	```bash
 	sudo add-apt-repository -y ppa:maarten-fonville/protobuf
 	sudo apt-get -y update
 	```
-	
+
 3. Install the dependencies from the ordinary Ubuntu 16.04 repositories and the ppa we just added:
 	```bash
-	sudo apt-get -y install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler
+	sudo apt-get -y install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev
 	```
-	
+
 ### Dependencies on Ubuntu 18.04
 1. Add the [official cmake repository](https://apt.kitware.com/), as eCAL needs cmake >= 3.13:
 	```bash
@@ -103,12 +127,12 @@ All options can be passed on the command line `cmake -D<option>=<value>` or in t
 	sudo apt-get -y install kitware-archive-keyring
 	sudo apt-key --keyring /etc/apt/trusted.gpg del C1F34CDD40CD72DA
 	```
-	
+
 2. Install all dependencies:
 	```bash
-	sudo apt-get -y install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler
+	sudo apt-get -y install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev
 	```
-	
+
 3. If you plan to create the eCAL python language extension (here as an example for the python 3.6 version):
 	```bash
 	sudo apt-get install python3.6-dev
@@ -124,7 +148,7 @@ _(Disable the `THIRDPARTY_BUILD_PROTOBUF` cmake option to not get a conflict wit
 	```bash
 	mkdir _build
 	cd _build
-	cmake .. -DCMAKE_BUILD_TYPE=Release -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF
+	cmake .. -DCMAKE_BUILD_TYPE=Release -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DECAL_THIRDPARTY_BUILD_HDF5=OFF
 	make -j4
 	```
 	
@@ -158,7 +182,7 @@ Restart the ethernet interface or the whole machine to apply changes, check if y
 After the ip configuration you need to setup the multicast route for udp multicasting
 
 ```bash
-ifconfig eth0 multicast 
+ifconfig eth0 multicast
 route add -net 239.0.0.0 netmask 255.0.0.0 dev eth0
 ```
 
@@ -178,12 +202,7 @@ sudo gedit /etc/network/interfaces
 	- CMake (https://cmake.org)
 	- Doxygen (http://www.doxygen.nl)
 	- Qt5 (>= 5.5) (https://www.qt.io/download)
-	- HDF5, (https://www.hdfgroup.org/downloads/hdf5/)
 	- WIX (http://wixtoolset.org/)
-
-	**HDF5 Compatibility notes**: We recommend using [HDF5 1.8.21](https://portal.hdfgroup.org/display/support/HDF5+1.8.21#files) or a later 1.8 Version. You can use 1.10 as well, but when recording a measurement with eCAL Rec using HDF5 1.10, your eCAL Player must also use HDF5 1.10. So if you want to exchange measurements between systems, make sure you use the same HDF5 versions on all of them.
-	- Ubuntu 16.04 uses HDF5 1.8 by default.
-	- Ubuntu 18.04 uses HDF5 1.10 by default.
 
 2. Install Qt5 by starting the installer and selecting `msvc2015 32-bit` or `msvc2015 64-bit` (VS2015) or `msvc2017 32-bit` and `msvc2017 64-bit` (VS2017) from the latest Qt5 version. Create an environment variable `QT5_ROOT_DIRECTORY` that points to the directory containing the architecture-specific folders. It should look like this:
 	```
@@ -196,10 +215,6 @@ sudo gedit /etc/network/interfaces
 	e.g.:
 	```
 	QT5_ROOT_DIRECTORY = C:\Qt\5.11.1
-	```
-3. Install HDF5. Create an environment variable `HDF5_DIR` pointing to the cmake folder of your HDF5 installation, e.g.:
-	```
-	HDF5_DIR = C:\Program Files\HDF_Group\HDF5\1.8.21\cmake
 	```
 
 4. Install [Python for Windows](https://www.python.org/downloads/) (64 Bit, Version 3.x) if you plan to build the eCAl python language extension.
@@ -247,7 +262,7 @@ python -m easy_install ecal-X.Y.Z-pyX.Y.egg
 
 #### Create eCAL csharp extension
 
-To build the eCAL csharp extension you need to set the CMake option `BUILD_CSHARP_BINDING` to `ON`. In order to make the CSharp Google::Protobuf extesnsion work you need to install additionally the Microsoft package management tool [Nuget](https://www.nuget.org/downloads). Please 
+To build the eCAL csharp extension you need to set the CMake option `BUILD_CSHARP_BINDING` to `ON`. In order to make the CSharp Google::Protobuf extesnsion work you need to install additionally the Microsoft package management tool [Nuget](https://www.nuget.org/downloads). Please
 ensure that the installation path is part of your windows user or system PATH environment variable. Nuget will be used to download the .Net Google.Protobuf package automatically when building the extension.
 
 ### UDP network configuration
@@ -273,9 +288,9 @@ You can delete the route if needed using
 route delete 239.0.0.0 mask 255.0.0.0 192.x.x.x
 ```
 
-In the ecal.ini file configure the udp ttl (time to live) parameter according your needs (local / cloud). If you want to 
+In the ecal.ini file configure the udp ttl (time to live) parameter according your needs (local / cloud). If you want to
 communicate in a network set a value greater then 1 (depends how many network devices should be passed).
-For local communication use 0 for ttl. 
+For local communication use 0 for ttl.
 
 You can find the ecal.ini configuration file under %APPDATA%\eCAL.
 
@@ -348,29 +363,29 @@ There are different ways to configure these layers. They can be set up for a who
 Every layer can set up in 3 different activation modes. Every mode can be configured as default in the ecal.ini file and can be overwritten by the C++/Python publisher API. This is the activation logic
 
   • off: layer is swicthed off
-  
+
   • on: layer is always switched on (i.e. payload will be send no matter if there is any local or network subscription)
-  
+
   • auto: layer will be switched on autmatically
 
  - inproc = 2 : layer used automatically for inner process subscribers
-	
+
  - shm = 2 : layer used automatically for inter process subscribers
- 
+
  - udp_mc = 2 : layer used autmatically for inter host (network) subcribers
 
 Independent from this publisher setting you can switch on/off the receiving (subscription) logic for every layer. That means you can prevent incoming payload on specific layers. This can be done in the ecal.ini file [network] section.
 
   • inproc_rec_enabled = true / false : enable / disable inner process subscriptions
-  
+
   • shm_rec_enabled = true / false : enable / disable inter process subscriptions
-  
+
   • udp_mc_rec_enabled = true / false : enable / disable inter host subscriptions
 
 ## Applications
 
 Besides the communication core eCAL comes with some high-level applications for monitoring, recording and replaying messages. The monitoring application is used to provide an overview of all existing entities (publisher, subscriber, services) that are using the eCAL API to communicate. Recorder and player are designed to record messages in a distributed system efficiently and to replay them for post processing, analysis or simulation.
- 
+
 ### Monitor
 
 To start the monitor please open the application from the windows start menu or type
@@ -393,13 +408,13 @@ Recording eCAL messages is essential for many use cases. A Recording can be used
 The recorded data is stored in the standardized [HDF5](https://www.hdfgroup.org/) data format, a portable, cross platform, hierarchical container format, well designed for large data sets. To minimize network usage in a distributed system, each machine can record only its own data, so the measurement can be merged later (by just copying all files in one directory). Distributed recordings can be started from the eCAL Rec GUI application (a CLI version will come with a future release). When clicking the REC button, it will connect to the eCAL Rec instances running on all selected machines and start the recording.
 
 This image shows the eCAL Rec GUI recording 3 topic on the same host.
- 
+
 ![eCAL recorder recording 3 topics](gfx/app/recorder.png?raw=true "eCAL recorder recording 3 topics")
 
 ### Player
 
 The eCAL Player can replay the recordings from the eCAL Recorder. It comes as GUI, as CLI and as C++ library for custom applications. The player can speed up or slow down the recording and step through a recording on a frame or channel base.
- 
+
 The following image shows a running replay, publishing 2 messages in realtime.
 
 ![eCAL player](gfx/app/player.png?raw=true "eCAL player")
@@ -410,9 +425,9 @@ The following image shows a running replay, publishing 2 messages in realtime.
 The following table shows the latency in µs between a single publisher / subscriber connection for different payload sizes (two different processes running on the same host). You can simply measure the latency on your own machine by running the ecal_latency_snd and ecal_latency_rec_cb sample applications. The first two columns are showing the performance for the eCAL builtin shared memory layer and the last column for the iceoryx shared memory layer (configured by cmake option ECAL_LAYER_ICEORYX).
 
 First start ecal_sample_latency_rec_cb. This application will receive the published payloads, send them back to the sender and print out the average receive time, the message frequency and the data throughput over all received messages. The sending application ecal_latency_snd can be configured that way ..
-  
+
      ecal_latency_snd  -s <payload_size [kB]> -r <send loops>
-  
+
 The table shows the results for a Windows and a Linux platform (200000 samples 1kB - 512kB / 10000 samples > 512 kB, zero drops).
 
 ```
@@ -505,7 +520,7 @@ int main(int argc, char **argv)
   // receive content (infinite timeout)
   std::string msg;
   sub.Receive(msg, nullptr, -1);
- 
+
   // finalize eCAL API
   eCAL::Finalize();
 }
@@ -518,14 +533,14 @@ to wait (blocking) for incoming messages and write them to the string "msg". The
 this
 
 ```cpp
-size_t eCAL::CSubscriber::Receive( std::string & buf_,  
-                                   long long *   time_ = nullptr,  
+size_t eCAL::CSubscriber::Receive( std::string & buf_,
+                                   long long *   time_ = nullptr,
                                    int           rcv_timeout_ = 0
                                  ) const;
 ```
 
 The function returns the number of received bytes and can write the publisher time stamp to "time_". The receive timeout can used to define how long the call should wait for incoming data in milliseconds. A time 0 means the Receive call checks if there is a new received buffer and returns immediately. An argument -1 would block the call until a new message arrives.
-                                 
+
 The rest of listing 2 is equivalent to listing 1 and is shutting down the eCAL API.
 
 Listing 2 showed how to receive data with a polling strategy. This is useful if the users application has it's own threading model and the receive action is placed anywhere in an existing background thread. Another receive strategy is to use a so called eCAL::CSubscriber message callback. Because eCAL itself is using receive threads in the background you can register your own receive function and eCAL will call it when a matching message for your subscriber arrives. Listing 3 shows how to use it.
@@ -592,7 +607,7 @@ The main different to listing 3 is that we use a specialized eCAL::string::Subsc
 
 #### Google::Protobuf
 
-The eCAL middleware does not provide it's own serialization format but supports different standards. There are specialized (templated) publisher and subscriber classes to simplify the usage of existing message protocols (see google flatbuffers, cap'n proto or google protobuf for more details). 
+The eCAL middleware does not provide it's own serialization format but supports different standards. There are specialized (templated) publisher and subscriber classes to simplify the usage of existing message protocols (see google flatbuffers, cap'n proto or google protobuf for more details).
 
 To support a specific message serialization format you need to include the appropriate serialization message header. For google protobuf you need the following eCAL header.
 
@@ -617,7 +632,7 @@ message Shape
     TRIANGLE  = 1;
     RECTANGLE = 2;
   }
- 
+
   ShapeType type = 1 [default = CIRCLE];
   int32     size = 2;
 }
@@ -689,9 +704,9 @@ In general eCAL provides a very simple API to establish interprocess / interhost
 strategies to realize a fast message delivery with low latency. For connections on the same host memory files are used to exchange data. Between different hosts the UDP multicast protocol is used. For special purposes it can make sense to switch of this "automatic" and to define which transport layer should be used or should never be used. This can be done by defining the eCAL transport layer using the eCAL::CPublisher method "SetLayerMode":
 
 ```cpp
-bool eCAL::CPublisher::SetLayerMode( eTransportLayer layer_,  
-                                     eSendMode       mode_  
-                                   ) 
+bool eCAL::CPublisher::SetLayerMode( eTransportLayer layer_,
+                                     eSendMode       mode_
+                                   )
 ```
 
 The currently supported layers are
@@ -801,7 +816,7 @@ int main(int argc, char **argv)
 
 In the lines 11 to 21 a class PingServiceImpl is derived from the autogenerated PingService class from the idl file in listing 10. The PingServiceImpl class has to implement the Ping method that is pure virtual in the PingService base class. The signature of the service methods is standardized with the four parameter to see in line 14, the return value is void. The most interesting parameters are request_ and response_. So every service method is accessing the service parameter passed by request_ and will response by setting the response_ message elements.
 
-To start the service is very simple, just instantiate a PingServiceImpl object and pass it to an eCAL::protobuf::CServiceServer (line 30). The service will start immediately and can be accessed by existing clients. 
+To start the service is very simple, just instantiate a PingServiceImpl object and pass it to an eCAL::protobuf::CServiceServer (line 30). The service will start immediately and can be accessed by existing clients.
 
 A matching client can be implemented like this
 
@@ -1124,7 +1139,7 @@ while ecal_core.ok():
   ret, msg, time = sub.receive(500)
   if ret > 0: print("Received:  {} ms   {}".format(time, msg))
   else:       print("Subscriber timeout ..")
-  
+
 # finalize eCAL API
 ecal_core.finalize()
 
@@ -1145,18 +1160,18 @@ from ecal.core.subscriber import StringSubscriber
 # eCAL receive callback
 def onreceive(topic_name, msg, time):
   print("Received:  {} ms   {}".format(time, msg))
-  
+
 # initialize eCAL API
 ecal_core.initialize(sys.argv, "minimal python subscriber (callback)")
-  
+
 # create subscriber and connect callback
 sub = StringSubscriber("foo")
 sub.set_callback(onreceive)
-  
+
 # idle main thread
 while ecal_core.ok():
   time.sleep(0.1)
-  
+
 # finalize eCAL API
 ecal_core.finalize()
 ```
