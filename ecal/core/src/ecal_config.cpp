@@ -285,7 +285,7 @@ namespace eCAL
          SI_Error err = SetValue(section.c_str(), key.c_str(), value.c_str());
          if (err == SI_FAIL)
          {
-         std::cout << "Error: Could not overwrite key " << key << " in section " << section << ".";
+            std::cout << "Error: Could not overwrite key " << key << " in section " << section << ".";
          }
       }
     }
