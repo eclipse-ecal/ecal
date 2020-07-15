@@ -392,7 +392,7 @@ namespace eCAL
     {
       if(!m_subscriber) return(0);
       void* buf = nullptr;
-      size_t buf_len = eCAL_Sub_Receive(m_subscriber, &buf, ECAL_ALLOCATE_4ME, time_, rcv_timeout_);
+      size_t buf_len = eCAL_Sub_Receive_Alloc(m_subscriber, &buf, time_, rcv_timeout_);
       if(buf_len > 0)
       {
         buf_ = std::string(static_cast<char*>(buf), buf_len);

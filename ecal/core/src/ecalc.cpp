@@ -695,12 +695,38 @@ extern "C"
 
   ECALC_API int eCAL_Sub_Receive(ECAL_HANDLE handle_, void* buf_, int buf_len_, long long* time_, int rcv_timeout_)
   {
-    if(handle_ == NULL) return(0);
+    if (buf_len_ == ECAL_ALLOCATE_4ME)
+    {
+      return eCAL_Sub_Receive_Alloc(handle_, static_cast<void**>(buf_), time_, rcv_timeout_);
+    }
+    else
+    {
+      return eCAL_Sub_Receive_ToBuffer(handle_, buf_, buf_len_, time_, rcv_timeout_);
+    }
+  }
+
+  ECALC_API int eCAL_Sub_Receive_ToBuffer(ECAL_HANDLE handle_, void* buf_, int buf_len_, long long* time_, int rcv_timeout_)
+  {
+    if (handle_ == NULL) return(0);
     eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
+
     std::string buf;
-    if(sub->Receive(buf, time_, rcv_timeout_))
+    if (sub->Receive(buf, time_, rcv_timeout_))
     {
       return(CopyBuffer(buf_, buf_len_, buf));
+    }
+    return(0);
+  }
+
+  ECALC_API int eCAL_Sub_Receive_Alloc(ECAL_HANDLE handle_, void** buf_, long long* time_, int rcv_timeout_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
+
+    std::string buf;
+    if (sub->Receive(buf, time_, rcv_timeout_))
+    {
+      return(CopyBuffer(buf_, ECAL_ALLOCATE_4ME, buf));
     }
     return(0);
   }
