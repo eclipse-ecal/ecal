@@ -22,10 +22,10 @@
 
 int main(int argc, char **argv)
 {
-  ECAL_HANDLE sub = 0;
-  int         rcv = 0;
-  void*       rcv_buf;
-  long long   time;
+  ECAL_HANDLE sub     = 0;
+  int         rcv     = 0;
+  void*       rcv_buf = NULL;
+  long long   time    = 0;
 
   // initialize eCAL API
   eCAL_Initialize(argc, argv, "minimalc_rec", eCAL_Init_Default);
@@ -38,7 +38,7 @@ int main(int argc, char **argv)
   while(eCAL_Ok())
   {
     // receive content with 100 ms timeout
-    rcv = eCAL_Sub_Receive(sub, &rcv_buf, ECAL_ALLOCATE_4ME, &time, 100);
+    rcv = eCAL_Sub_Receive_Alloc(sub, &rcv_buf, &time, 100);
     if(rcv > 0)
     {
       // print content

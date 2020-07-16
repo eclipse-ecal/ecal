@@ -116,7 +116,7 @@ extern "C"
    *            long long time     = 0;
    *            int       time_out = 100;   // ms
    *            void*     buf      = NULL;
-   *            int       buf_len  = eCAL_Sub_Receive(subscriber_handle, &buf, ECAL_ALLOCATE_4ME, &time, timeout);
+   *            int       buf_len  = eCAL_Sub_Receive_Alloc(subscriber_handle, &buf, &time, timeout);
    *            if(buf_len > 0)
    *            {
    *              ...
