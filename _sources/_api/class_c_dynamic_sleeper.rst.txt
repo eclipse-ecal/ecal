@@ -1,0 +1,16 @@
+.. _exhale_class_class_c_dynamic_sleeper:
+
+Class CDynamicSleeper
+=====================
+
+- Defined in :ref:`file_contrib_ecaltime_include_dynamic_sleeper.h`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: CDynamicSleeper
+   :members:
+   :protected-members:
+   :undoc-members:

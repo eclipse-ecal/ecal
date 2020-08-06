@@ -1,0 +1,16 @@
+.. _exhale_struct_structe_c_a_l_1_1_s_sub_event_callback_data:
+
+Struct SSubEventCallbackData
+============================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_callback.h`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: eCAL::SSubEventCallbackData
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,25 @@
+.. _exhale_class_classe_c_a_l_1_1_c_msg_publisher:
+
+Template Class CMsgPublisher
+============================
+
+- Defined in :ref:`file_ecal_core_include_ecal_msg_publisher.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public eCAL::CPublisher`` (:ref:`exhale_class_classe_c_a_l_1_1_c_publisher`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: eCAL::CMsgPublisher
+   :members:
+   :protected-members:
+   :undoc-members:

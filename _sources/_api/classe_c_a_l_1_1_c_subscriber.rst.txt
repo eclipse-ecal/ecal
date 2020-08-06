@@ -1,0 +1,25 @@
+.. _exhale_class_classe_c_a_l_1_1_c_subscriber:
+
+Class CSubscriber
+=================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_subscriber.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Derived Type
+************
+
+- ``public eCAL::CMsgSubscriber< T >`` (:ref:`exhale_class_classe_c_a_l_1_1_c_msg_subscriber`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: eCAL::CSubscriber
+   :members:
+   :protected-members:
+   :undoc-members:
