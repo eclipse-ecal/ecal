@@ -8,7 +8,7 @@
     <meta name="docsearch:release" content="" />
     <meta name="docsearch:version" content="" />
 
-    <title>Building eCAL from source &mdash; eCAL Documentation  documentation</title>
+    <title>CMake options &mdash; eCAL Documentation  documentation</title>
 
     <link rel="shortcut icon" href="../_static/img/favicon.png" />
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
@@ -19,8 +19,9 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
+    <link rel="up" title="Building eCAL" href="build_ecal.html" />
     <link rel="next" title="eCAL API" href="../ecal_api.html" />
-    <link rel="prev" title="7.2. Hello World with protobuf" href="../getting_started/hello_world_proto.html" />
+    <link rel="prev" title="Building eCAL from source" href="building_ecal_from_source.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
     <script src="../_static/js/modernizr.min.js"></script>
@@ -34,7 +35,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://github.com/pages/continental/ecal/" title="eCAL Documentation" class="logo">
+<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
     <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
 </a>
 <!-- /pageheader -->
@@ -88,7 +89,11 @@
 </ul>
 <p class="caption"><span class="caption-text">Development</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Building eCAL from source</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="build_ecal.html">Building eCAL</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="building_ecal_from_source.html">Building eCAL from source</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CMake options</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../ecal_api.html">eCAL API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../_api/ecal_root.html">C++</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../_api/namespace_eCAL.html">Namespace eCAL</a></li>
@@ -313,7 +318,7 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">Building eCAL from source</a></li>
+<li><a class="reference internal" href="#">CMake options</a></li>
 </ul>
 <!-- /menu -->
                             </div>
@@ -324,21 +329,22 @@
                     <div class="rst-content">
 <!-- pager-hidden.html -->
 
-        <a class="no-focus" accesskey="p" href="../getting_started/hello_world_proto.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="p" href="building_ecal_from_source.html" tabindex="-1"></a>
         <a class="no-focus" accesskey="n" href="../ecal_api.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../index.html">Start</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Building eCAL from source</li>
+            <li class="breadcrumb-item"><a href="build_ecal.html">Building eCAL</a></li>
+        <li class="breadcrumb-item active" aria-current="page">CMake options</li>
     </ol>
         <div class="breadcrumb-additions">
-                <a class="btn btn-sm btn-light" href="https://github.com/continental/ecal/blob/master/doc/rst/development/building_ecal.rst">
+                <a class="btn btn-sm btn-light" href="https://github.com/continental/ecal/blob/master/doc/rst/development/ecal_cmake_options.rst">
                     <span class="btn-icon"><span class="fab fa-github"></span></span>
                     <span class="btn-text">Edit on GitHub</span>
                 </a>
-                <a class="btn btn-sm btn-light" href="../_sources/development/building_ecal.rst.txt" rel="nofollow">
+                <a class="btn btn-sm btn-light" href="../_sources/development/ecal_cmake_options.rst.txt" rel="nofollow">
                     <span class="btn-icon"><span class="fas fa-code"></span></span>
                     <span class="btn-text">View source</span>
                 </a>
@@ -348,10 +354,121 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="building-ecal-from-source">
-<span id="development-building-ecal"></span><h1>Building eCAL from source<a class="headerlink" href="#building-ecal-from-source" title="Permalink to this headline">¶</a></h1>
-<p>This section is still under construction. But we are working on it! Just be patient.</p>
-<div align="center" class="align-center"><img alt="Snail" src="../_images/snail.svg" /></div>
+    <div class="section" id="cmake-options">
+<span id="development-ecal-cmake-options"></span><h1>CMake options<a class="headerlink" href="#cmake-options" title="Permalink to this headline">¶</a></h1>
+<p>eCAL is using CMake as build system. When configuring with CMake, you can turn on / off the following features.</p>
+<p>All options can be passed on the command line cmake <code class="docutils literal notranslate"><span class="pre">-D&lt;option&gt;=&lt;value&gt;</span></code> or in the CMake GUI application.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 2%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>CMake option</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">HAS_HDF5</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
+<td><p>Platform supports HDF5 library, necessary to build eCAL recording / replay tools</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">HAS_QT5</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
+<td><p>Platform supports Qt 5 library, necessary to build eCAL monitoring tool</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">HAS_CURL</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
+<td><p>Build with CURL (i.e. upload support in the recorder app)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">HAS_CAPNPROTO</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Platform supports Cap’n Proto library, necessary to use capnp serialization as message system and to enable eCAL monitoring capnp message reflection. eCAL does not add Cap’n Proto as a submodule. If you set this option to <code class="docutils literal notranslate"><span class="pre">ON</span></code>, please make sure that the library is installed on your system and CMake can find it (consider setting CMAKE_PREFIX_PATH to point to the library).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_DOCS</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Build the eCAL documentation, requires the installation of doxygen and a recent CMake version (&gt;= 3.14 preferred, but some lower versions might work)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_APPS</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
+<td><p>Build the eCAL applications, such as the monitoring tool</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_SAMPLES</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Build the eCAL sample applications</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_TIME</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
+<td><p>Build the eCAL time interfaces, necessary if you want to use eCAL in time synchronized mode (based on PTP for example)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_PY_BINDING</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Build the eCAL python language binding</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_CSHARP_BINDING</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Build the eCAL C# language binding</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_ECAL_TESTS</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Build the eCAL google tests</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_LAYER_ICEORYX</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Use iceoryx shared memory as local communication layer, requires <a class="reference external" href="https://github.com/eclipse/iceoryx">eclipse/iceoryx</a> installation</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_INCLUDE_PY_SAMPLES</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Include python language sample projects into CMake</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_INSTALL_SAMPLE_SOURCES</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
+<td><p>Install the sources of eCAL samples</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_JOIN_MULTICAST_TWICE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Specific multicast network bug workaround</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_NPCAP_SUPPORT</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Enable the eCAL to use Npcap for udp socket communication (i.e. the Win10 performance fix)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_PROTOBUF</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
+<td><p>Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.11.4 or newer (tested with 3.11.4).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_SPDLOG</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
+<td><p>Build Spdlog with eCAL, included as a submodule in the thirdparty folder. You can always use your custom spdlog installation, this is only for convenience.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_TINYXML2</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
+<td><p>Build tinyxml2 with eCAL, included as a submodule in the thirdparty folder.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_FINEFTP</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
+<td><p>Build fineFTP with eCAL, included as a submodule in the thirdparty folder.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_CURL</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
+<td><p>Build CURL with eCAL, included as a submodule in the thirdparty folder.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_GTEST</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Build GoogleTest with eCAL, included as a submodule in the thirdparty folder. You can always use your custom gtest installation, this is only for convenience.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_HDF5</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
+<td><p>Build HDF5 with eCAL, included as a submodule in the thirdparty folder.</p></td>
+</tr>
+</tbody>
+</table>
+<p>To build the eCAL csharp extension you need to set the CMake option <code class="docutils literal notranslate"><span class="pre">BUILD_CSHARP_BINDING</span></code> to <code class="docutils literal notranslate"><span class="pre">ON</span></code>.
+In order to make the CSharp Google::Protobuf extension work you need to install additionally the Microsoft package management tool <a class="reference external" href="https://www.nuget.org/downloads">Nuget</a>.
+Please ensure that the installation path is part of your windows user or system PATH environment variable.
+Nuget will be used to download the .Net Google.Protobuf package automatically when building the extension.</p>
 </div>
 
 <!-- /body -->
@@ -361,7 +478,7 @@
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
         <li class="page-item">
-            <a class="page-link" href="../getting_started/hello_world_proto.html" title="Accesskey Alt(+Shift)+p">
+            <a class="page-link" href="building_ecal_from_source.html" title="Accesskey Alt(+Shift)+p">
                 Previous
             </a>
         </li>

@@ -9,7 +9,7 @@ eCAL Samples
 The eCAL installation comes with a set of ready-to-use sample applications. So, let's start one of those to see some eCAL communication! 
 
 .. note::
-   For now, you should start everything on the same PC. We will cover communication between multiple PCs in the next chapter.
+   For now, you should start everything on the same PC. We will cover communication between multiple PCs in the next section.
 
 Basic communication
 ===================

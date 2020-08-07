@@ -142,7 +142,7 @@ If you haven't modified the measurement path, it is saved to:
 eCAL Measurements
 =================
 
-Before continuing to the next chapter and replaying the measurement, let's quickly look at what the Recorder has just created:
+Before continuing to the next section and replaying the measurement, let's quickly look at what the Recorder has just created:
 
 .. image:: img/recorder_measurement_filesystem.png
    :alt: eCAL Measurement
@@ -156,4 +156,4 @@ Before continuing to the next chapter and replaying the measurement, let's quick
 
 * |fa-file| :file:`2020-08-06_02-12-12.596_measurement.ecalmeas`: "Index-File" that can be opened with the eCAL Player. Does not contain any data by itself.
 
-Now that you know how to record data and have created your first eCAL Measurement continue to the next chapter and try to replay it with the eCAL Player!
+Now that you know how to record data and have created your first eCAL Measurement continue to the next section and try to replay it with the eCAL Player!

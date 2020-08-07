@@ -34,7 +34,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://github.com/pages/continental/ecal/" title="eCAL Documentation" class="logo">
+<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
     <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
 </a>
 <!-- /pageheader -->
@@ -88,7 +88,11 @@
 </ul>
 <p class="caption"><span class="caption-text">Development</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../development/building_ecal.html">Building eCAL from source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/build_ecal.html">Building eCAL</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../development/building_ecal_from_source.html">Building eCAL from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development/ecal_cmake_options.html">CMake options</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../ecal_api.html">eCAL API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../_api/ecal_root.html">C++</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../_api/namespace_eCAL.html">Namespace eCAL</a></li>
@@ -355,8 +359,9 @@
 <!-- body -->
     <div class="section" id="ecal-services">
 <span id="getting-started-services"></span><h1><span class="section-number">6. </span>eCAL Services<a class="headerlink" href="#ecal-services" title="Permalink to this headline">¶</a></h1>
-<p>Normal eCAL communication creates a one-way data flow only, i.e. the data is sent each the publisher to one (or multiple) subscriber/s.
-eCAL Services in contrast always have a request and a response, so data must flow in both directions. Internally they also work differently to be more reliable.
+<p>Normal eCAL communication creates a one-way data flow only, i.e. the data is sent from the publisher to one (or multiple) subscriber/s.
+eCAL Services in contrast always have a request and a response, so data must flow in both directions.
+Internally they also work differently to be more reliable.
 They are used by many eCAL applications for providing an external API.</p>
 <div class="section" id="local-service-samples">
 <h2><span class="section-number">6.1. </span>Local service samples<a class="headerlink" href="#local-service-samples" title="Permalink to this headline">¶</a></h2>
@@ -378,7 +383,8 @@ They are used by many eCAL applications for providing an external API.</p>
 <img alt="eCAL Service communication" src="../_images/samples_service.png" />
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Right after you started the client, it may print a few errors about the service not being found. Available eCAL services are propagated every 500ms, so it will always take a short amount of time until a service is known to exist.</p>
+<p>Right after you started the client, it may print a few errors about the service not being found.
+Available eCAL services are propagated every 500ms, so it will always take a short amount of time until a service is known to exist.</p>
 </div>
 </div>
 <div class="section" id="hostname-resolution">
@@ -387,13 +393,15 @@ They are used by many eCAL applications for providing an external API.</p>
 <p>To make services reliable, eCAL uses TCP for them (in contrast to UDP that is used for normal eCAL traffic to increase the performance).
 To obtain the destination for the TCP stream, the Hostname of the machine offering the service is used.
 Thus, eCAL relies on the operating system being able to resolve the host name to an IP address.</p>
-<p>In a pure-Windows network, the operating systems are usually able to resolve the host names out of the box. For Linux devices that might not be the case.</p>
+<p>In a pure-Windows network, the operating systems are usually able to resolve the host names out of the box.
+For Linux devices that might not be the case.</p>
 <p>To check whether the IP address of a given hostname within the network can be resolved, try to ping the device by its name:</p>
 <div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>ping my-host-1
 </pre></div>
 </div>
 <p>If the ping fails, the OS may not be able to derive the machine’s IP address. In that case, the hostname-IP mapping must be added to the hosts file.</p>
-<p>The hosts file maps a hostname to an IP address. Please edit it and add one line for each host (replace the XX.XX.XX.XX with the IP address of the host following it):</p>
+<p>The hosts file maps a hostname to an IP address.
+Please edit it and add one line for each host (replace the XX.XX.XX.XX with the IP address of the host following it):</p>
 <ul class="simple">
 <li><p><i class="fab fa-windows"></i> Windows: <code class="docutils literal notranslate"><span class="pre">C:\Windows\System32\drivers\etc\hosts</span></code></p></li>
 <li><p><i class="fab fa-ubuntu"></i> Ubuntu: <code class="docutils literal notranslate"><span class="pre">/etc/hosts</span></code></p></li>
@@ -412,7 +420,9 @@ XX.XX.XX.XX my-host-2
 </div>
 <div class="section" id="service-sample-over-network">
 <h2><span class="section-number">6.3. </span>Service Sample over network<a class="headerlink" href="#service-sample-over-network" title="Permalink to this headline">¶</a></h2>
-<p>Now start one <code class="file docutils literal notranslate"><span class="pre">ecal_sample_service_server_c</span></code> and one <code class="file docutils literal notranslate"><span class="pre">ecal_sample_service_client_c</span></code>, just as above. But on different machines! If you configured everything correctly, the client will now call the service on a different machine.</p>
+<p>Now start one <code class="file docutils literal notranslate"><span class="pre">ecal_sample_service_server_c</span></code> and one <code class="file docutils literal notranslate"><span class="pre">ecal_sample_service_client_c</span></code>, just as above.
+But on different machines!
+If you configured everything correctly, the client will now call the service on a different machine.</p>
 <img alt="eCAL service samples over network" src="../_images/samples_service_cloud_combined.png" />
 </div>
 </div>

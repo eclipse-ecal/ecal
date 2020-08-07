@@ -14,9 +14,9 @@ eCAL (**e**\ nhanced **C**\ ommunication **A**\ bstraction **L**\ ayer) is a fas
 Getting Started
 ===============
 
-To start learning about eCAL, please refer to the :ref:`Getting Started <getting_started_introduction>` section.
+To start learning about eCAL, please refer to the :ref:`Getting Started <getting_started_introduction>` chapter.
 
-This section will walk you through 
+This chapter will walk you through 
 
 * :ref:`Setting up <getting_started_setup>` and :ref:`configuring eCAL <getting_started_cloud>`
 * The :ref:`applications <getting_started_applications>` that come with eCAL
@@ -74,6 +74,6 @@ eCAL is provided on an "as is" basis without warranties or conditions of any kin
    :hidden:
    :caption: Development
 
-   development/building_ecal
+   development/build_ecal
    ecal_api
 
