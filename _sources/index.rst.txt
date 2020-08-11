@@ -46,6 +46,7 @@ To contribute, please visit our github repository:
          <span class="btn-text">eCAL on Github</span>
       </a>
    </p>
+   
 License
 =======
 
@@ -76,4 +77,10 @@ eCAL is provided on an "as is" basis without warranties or conditions of any kin
 
    development/build_ecal
    ecal_api
+
+.. toctree::
+   :hidden:
+   :caption: Advanced
+
+   configuration
 

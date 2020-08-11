@@ -1,0 +1,12 @@
+.. include:: /include.txt
+
+.. _configuration_cloud:
+
+===================
+Cloud Configuration
+===================
+
+Please refer to the getting started sections:
+
+* :ref:`eCAL & UDP Multicast <getting_started_cloud>`
+* :ref:`Hostname resolution for Services <getting_started_services_cloud>`

@@ -315,6 +315,15 @@
 </ul>
 </li>
 </ul>
+<p class="caption"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../configuration/cloud.html">Cloud Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../configuration/npcap.html"><i class="fab fa-windows"></i> Npcap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../configuration/player.html"><i class="fab fa-ubuntu"></i> Player - Max open files</a></li>
+</ul>
+</li>
+</ul>
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
@@ -371,7 +380,8 @@
 <!-- body -->
     <div class="section" id="building-ecal-from-source">
 <span id="development-building-ecal-from-source"></span><h1>Building eCAL from source<a class="headerlink" href="#building-ecal-from-source" title="Permalink to this headline">¶</a></h1>
-<p>If you want to build eCAL yourself, this tutorial may help you with that.</p>
+<p>If you want to build eCAL yourself, this tutorial may help you with that.
+To build eCAL, you will need a C++14 compliant compiler, such as Visual Studio 2015 or newer, or GCC 5 or newer.</p>
 <p>Currently, we support:</p>
 <ul class="simple">
 <li><p>Windows 7 / 10</p></li>
@@ -406,7 +416,7 @@ git submodule update
 <li><p>Install Qt5 by starting the installer and selecting <cite>msvc2015 32-bit</cite> or <cite>msvc2015 64-bit</cite> (VS2015) or <cite>msvc2017 32-bit</cite> and <cite>msvc2017 64-bit</cite> (VS2017) from the latest Qt5 version.
 Create an environment variable <code class="docutils literal notranslate"><span class="pre">QT5_ROOT_DIRECTORY</span></code> that points to the directory containing the architecture-specific folders.
 It should look like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>%QT5_ROOT_DIRECTORY%
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span><span class="nv">%QT5_ROOT_DIRECTORY%</span>
    ├ msvc2015
    ├ msvc2015_64
    ├ msvc2017
