@@ -18,8 +18,8 @@ Let's start a sample that creates and calls a service!
 
 * |fa-windows| On Windows start:
 
-  * :file:`C:\\eCAL\\samples\\bin\\ecal_sample_service_server_c.exe`
-  * and :file:`C:\\eCAL\\samples\\bin\\ecal_sample_service_client_c.exe`
+  * |service_server_c-path-windows|
+  * and |service_client_c-pathwindows|
 
 * |fa-ubuntu| On Ubuntu start:
 

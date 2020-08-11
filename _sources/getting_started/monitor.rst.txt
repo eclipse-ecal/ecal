@@ -28,7 +28,7 @@ You can replicate that setup yourself or just launch everything on your local PC
 
 Now start the eCAL Monitor!
 
-* |fa-windows| On Windows you can launch it from the Start Menu: :guilabel:`Start / eCAL / eCAL Monitor`
+* |fa-windows| On Windows you can launch it from the Start Menu: |ecal_mon-start-menu-path-windows|
 * |fa-ubuntu| On Ubuntu start :file:`ecal_mon_gui` from a terminal
 
 Overview
@@ -40,12 +40,6 @@ Let us walk through the main panels of the eCAL Monitor!
 .. image:: img/monitor_overview_annotated.svg
    :alt: eCAL Monitor
    :target: ../_images/monitor_overview_blank.png
-
-.. todo:: I probably shouldn't embed that 0px image, but that's the way I found to get the image in the output dir
-
-.. image:: img/monitor_overview_blank.png
-   :alt: eCAL Monitor
-   :width: 0
 
 .. rst-class:: bignums-xxl
 

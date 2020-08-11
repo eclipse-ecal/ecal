@@ -34,7 +34,8 @@ By default, eCAL already is configured in cloud mode, so you don't have to chang
 You however have to configure your operating system, so it knows where to send that multicast traffic to.
 This is done by creating a **multicast route**.
 
-.. todo:: See also configuration
+.. seealso::
+   Please refer to the advanced section to learn about changing between :ref:`local mode <configuration_local>` and :ref:`cloud mode <configuration_cloud>`!
 
 .. _getting_started_cloud_configuration_on_windows:
 

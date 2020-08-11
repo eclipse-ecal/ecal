@@ -20,7 +20,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
     <link rel="up" title="Configuration" href="../configuration.html" />
-    <link rel="next" title="Npcap" href="npcap.html" />
+    <link rel="next" title="Local configuration" href="local.html" />
     <link rel="prev" title="Configuration" href="../configuration.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
@@ -315,14 +315,17 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced</span></p>
+<p class="caption"><span class="caption-text">Using eCAL</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../configuration.html">Configuration</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Cloud Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="local.html">Local configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="npcap.html"><i class="fab fa-windows"></i> Npcap</a></li>
 <li class="toctree-l2"><a class="reference internal" href="player.html"><i class="fab fa-ubuntu"></i> Player - Max open files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">ecal.ini</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
 </ul>
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
@@ -339,7 +342,7 @@
 <!-- pager-hidden.html -->
 
         <a class="no-focus" accesskey="p" href="../configuration.html" tabindex="-1"></a>
-        <a class="no-focus" accesskey="n" href="npcap.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="n" href="local.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
@@ -365,11 +368,24 @@
 <!-- body -->
     <div class="section" id="cloud-configuration">
 <span id="configuration-cloud"></span><h1>Cloud Configuration<a class="headerlink" href="#cloud-configuration" title="Permalink to this headline">¶</a></h1>
-<p>Please refer to the getting started sections:</p>
+<p>To switch eCAL to cloud mode, edit your <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> and change the following settings:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="../getting_started/cloud.html#getting-started-cloud"><span class="std std-ref">eCAL &amp; UDP Multicast</span></a></p></li>
+<li><p><i class="fab fa-windows"></i> Windows: <code class="file docutils literal notranslate"><span class="pre">C:\eCAL\cfg\ecal.ini</span></code></p></li>
+<li><p><i class="fab fa-ubuntu"></i> Ubuntu: <code class="file docutils literal notranslate"><span class="pre">/usr/etc/ecal/ecal.ini</span></code></p></li>
+</ul>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[network]</span>
+<span class="na">network_enabled</span>           <span class="o">=</span> <span class="s">true</span>
+<span class="na">multicast_ttl</span>             <span class="o">=</span> <span class="s">2</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Don’t forget to set your multicast routes and make sure your hostname resolution works on all machines!</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../getting_started/cloud.html#getting-started-cloud"><span class="std std-ref">UDP Multicast routes</span></a></p></li>
 <li><p><a class="reference internal" href="../getting_started/services.html#getting-started-services-cloud"><span class="std std-ref">Hostname resolution for Services</span></a></p></li>
 </ul>
+</div>
 </div>
 
 <!-- /body -->
@@ -384,7 +400,7 @@
             </a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="npcap.html" title="Accesskey Alt(+Shift)+n">
+            <a class="page-link" href="local.html" title="Accesskey Alt(+Shift)+n">
                 Next
             </a>
         </li>

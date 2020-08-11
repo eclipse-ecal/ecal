@@ -30,7 +30,7 @@ How to use Npcap
       :alt: Npcap install options
 
    .. note::
-      If you did not check the legacy loopback support, eCAL not use Npcap!
+      If you did not check the legacy loopback support, eCAL will not use Npcap!
       It will just function as normal (and continue to trigger the Win10 performannce issue).
 
       Please reinstall Npcap with the required options.
@@ -43,9 +43,9 @@ How to use Npcap
    .. image:: img/npcap_loopback_adapter_settings.png
       :alt: Npcap Loopback adapter settings
 
-4. Edit :file:`C:\\eCAL\\cfg\\ecal.ini`:
+4. Edit |ecalini-path-windows|:
 
-   .. code-block:: text
+   .. code-block:: ini
       
       npcap_enabled = true
     

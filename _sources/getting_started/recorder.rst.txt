@@ -55,7 +55,7 @@ GUI Overview
 
 Let's start with a short GUI overview.
 
-* |fa-windows| On Windows you can start the eCAL recorder from the Start Menu: :guilabel:`Start / eCAL / eCAL Recorder`
+* |fa-windows| On Windows you can start the eCAL recorder from the Start Menu: |ecal_rec-start-menu-path-windows| 
 * |fa-ubuntu| On Ubuntu start :file:`ecal_rec_gui` from a terminal
 
 For the screenshot, the Windows machine is running the eCAL Recorder, while the Linux machine is running the `person_snd` sample.
@@ -63,10 +63,6 @@ For the screenshot, the Windows machine is running the eCAL Recorder, while the 
 .. image:: img/recorder_overview_annotated.svg
    :alt: eCAL Recorder
    :target: ../_images/recorder_overview_blank.png
-
-.. image:: img/recorder_overview_blank.png
-   :alt: eCAL Recorder
-   :width: 0
 
 .. rst-class:: bignums-xxl
 

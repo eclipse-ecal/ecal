@@ -16,7 +16,7 @@ After you have created an eCAL measurement in the previous section, you now lear
 
 So, start the eCAL Player!
 
-* |fa-windows| On Windows you can start it from the Start Menu: :guilabel:`Start / eCAL / eCAL Player`
+* |fa-windows| On Windows you can start it from the Start Menu: |ecal_play-start-menu-path-windows|
 * |fa-ubuntu| On Ubuntu start :file:`ecal_play_gui` from a terminal
 
 Also load a measurement, before we get to the GUI overview:
@@ -30,12 +30,6 @@ Overview
 .. image:: img/player_overview_annotated.svg
    :alt: eCAL Player
    :target: ../_images/player_overview_blank.png
-
-.. todo:: I probably shouldn't embed that 0px image, but that's the way I found to get the image in the output dir
-
-.. image:: img/player_overview_blank.png
-   :alt: eCAL Player
-   :width: 0
 
 .. rst-class:: bignums-xxl
 

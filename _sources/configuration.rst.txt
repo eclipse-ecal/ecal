@@ -10,5 +10,7 @@ Configuration
    :maxdepth: 1
 
    configuration/cloud
+   configuration/local
    configuration/npcap
    configuration/player
+   configuration/options

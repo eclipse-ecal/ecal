@@ -21,7 +21,7 @@
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
     <link rel="up" title="Configuration" href="../configuration.html" />
     <link rel="next" title="Player - Max open files" href="player.html" />
-    <link rel="prev" title="Cloud Configuration" href="cloud.html" />
+    <link rel="prev" title="Local configuration" href="local.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
     <script src="../_static/js/modernizr.min.js"></script>
@@ -315,14 +315,17 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced</span></p>
+<p class="caption"><span class="caption-text">Using eCAL</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../configuration.html">Configuration</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="cloud.html">Cloud Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="local.html">Local configuration</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#"><i class="fab fa-windows"></i> Npcap</a></li>
 <li class="toctree-l2"><a class="reference internal" href="player.html"><i class="fab fa-ubuntu"></i> Player - Max open files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">ecal.ini</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
 </ul>
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
@@ -342,7 +345,7 @@
                     <div class="rst-content">
 <!-- pager-hidden.html -->
 
-        <a class="no-focus" accesskey="p" href="cloud.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="p" href="local.html" tabindex="-1"></a>
         <a class="no-focus" accesskey="n" href="player.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
@@ -386,7 +389,7 @@ Windows 7 did not have that issue.</p>
 <li><p>Install Npcap and make sure to check the <strong>Legacy loopback suppport</strong>:</p>
 <img alt="Npcap install options" src="../_images/npcap_install.svg" /><div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If you did not check the legacy loopback support, eCAL not use Npcap!
+<p>If you did not check the legacy loopback support, eCAL will not use Npcap!
 It will just function as normal (and continue to trigger the Win10 performannce issue).</p>
 <p>Please reinstall Npcap with the required options.</p>
 </div>
@@ -399,7 +402,7 @@ If your corporation blocks your Windows to simultaneously connect to domain and 
 </ol>
 <ol class="arabic" start="4">
 <li><p>Edit <code class="file docutils literal notranslate"><span class="pre">C:\eCAL\cfg\ecal.ini</span></code>:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>npcap_enabled = true
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">npcap_enabled</span> <span class="o">=</span> <span class="s">true</span>
 </pre></div>
 </div>
 </li>
@@ -433,7 +436,7 @@ The new Npcap installation will fail to create a new Loopback Adapter and the in
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
         <li class="page-item">
-            <a class="page-link" href="cloud.html" title="Accesskey Alt(+Shift)+p">
+            <a class="page-link" href="local.html" title="Accesskey Alt(+Shift)+p">
                 Previous
             </a>
         </li>
