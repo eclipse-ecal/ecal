@@ -1,3 +1,5 @@
+.. include:: /include.txt
+
 .. _getting_started_introduction:
 
 Introduction

@@ -330,7 +330,12 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">7.1. Hello World</a></li>
+<li><a class="reference internal" href="#">7.1. Hello World</a><ul>
+<li><a class="reference internal" href="#dependencies">7.1.1. Dependencies</a></li>
+<li><a class="reference internal" href="#hello-world-publisher">7.1.2. Hello World Publisher</a></li>
+<li><a class="reference internal" href="#hello-world-subscriber">7.1.3. Hello World Subscriber</a></li>
+</ul>
+</li>
 </ul>
 <!-- /menu -->
                             </div>
@@ -368,8 +373,199 @@
 <!-- body -->
     <div class="section" id="hello-world">
 <span id="getting-started-hello-world"></span><h1><span class="section-number">7.1. </span>Hello World<a class="headerlink" href="#hello-world" title="Permalink to this headline">¶</a></h1>
+<p>After you have learned a lot about the pre-compiled applications that come with eCAL, let’s create our own!
+In the good habit of every tutorial, we will write a Hello World Applications, that sends the string “Hello World” to an eCAL topic.</p>
+<p>eCAL uses CMake as a cross-plattform build toolchain.
+We will explain the CMake commands needed for the tutorial, but not extensively dive into CMake.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<a class="float-right reference internal image-reference" href="../_images/snail.svg"><img alt="Snail" class="float-right" src="../_images/snail.svg" width="100px" /></a>
+<p><i class="fab fa-windows"></i> The Windows version of this tutorial is not finished, yet and will not work.</p>
+<p>Please be patient and use Ubuntu, for now.</p>
+</div>
+<div class="clear-both section" id="dependencies">
+<h2><span class="section-number">7.1.1. </span>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<p>First of all, you have to install some more development dependencies:</p>
+<ul>
+<li><p><i class="fab fa-windows"></i> Windows:</p>
+<ul>
+<li><p>Visual Studio (<a class="reference external" href="https://visualstudio.microsoft.com/">https://visualstudio.microsoft.com/</a>)</p></li>
+<li><p>CMake (<a class="reference external" href="https://cmake.org/download/">https://cmake.org/download/</a>)</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>When installing CMake, choose “Add to PATH”, so you don’t have to always provide the full path to the cmake executable</p>
+</div>
+</li>
+</ul>
+</li>
+<li><p><i class="fab fa-ubuntu"></i> Ubuntu:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt install cmake g++ libprotobuf-dev protobuf-compiler
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="hello-world-publisher">
+<h2><span class="section-number">7.1.2. </span>Hello World Publisher<a class="headerlink" href="#hello-world-publisher" title="Permalink to this headline">¶</a></h2>
+<p>Somewhere on your hard drive create an empty directory and create a file <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> and <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code> with the following content:</p>
+<ul>
+<li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>:</p>
+<div class="highlight-cmake notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nf">cmake_minimum_required(</span><span class="no">VERSION</span><span class="w"> </span><span class="m">3.0</span><span class="nf">)</span><span class="w"></span>
+
+<span class="nf">project(</span><span class="nb">hello_world_snd</span><span class="nf">)</span><span class="w"></span>
+
+<span class="nf">find_package(</span><span class="nb">eCAL</span><span class="w"> </span><span class="no">REQUIRED</span><span class="nf">)</span><span class="w"></span>
+
+<span class="nf">set(</span><span class="nb">source_files</span><span class="w"></span>
+<span class="w">  </span><span class="nb">main.cpp</span><span class="w"></span>
+<span class="nf">)</span><span class="w"></span>
+
+<span class="nf">add_executable(</span><span class="o">${</span><span class="nt">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nt">source_files</span><span class="o">}</span><span class="nf">)</span><span class="w"></span>
+
+<span class="nf">target_link_libraries(</span><span class="o">${</span><span class="nt">PROJECT_NAME</span><span class="o">}</span><span class="w"></span>
+<span class="w">  </span><span class="nb">eCAL</span><span class="o">::</span><span class="nb">core</span><span class="w"></span>
+<span class="nf">)</span><span class="w"></span>
+</pre></div>
+</td></tr></table></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>What is happening here?</strong></p>
+<p><strong>Line 3</strong> creates a project “hello_world_snd”.
+This will also be the name of the executable (<strong>line 11</strong>).</p>
+<p><strong>Line 5</strong> tells CMake to find the eCAL installation. <strong>Line 13-15</strong> will link the executable against it.</p>
+<p><strong>Line 7-9</strong> create a list of all our source files, wich currently only contains <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code>.
+We add that source file for compiling our executable in <strong>line 11</strong>.</p>
+</div>
+</li>
+<li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code>:</p>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;ecal/ecal.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;ecal/msg/string/publisher.h&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">// Initialize eCAL. The name of our Process will be &quot;Hello World Publisher&quot;</span>
+  <span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="s">&quot;Hello World Publisher&quot;</span><span class="p">);</span>
+
+  <span class="c1">// Create a String Publisher that publishes on the topic &quot;hello_world_topic&quot;</span>
+  <span class="n">eCAL</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">CPublisher</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">publisher</span><span class="p">(</span><span class="s">&quot;hello_world_topic&quot;</span><span class="p">);</span>
+
+  <span class="c1">// Create a counter, so something changes in our message</span>
+  <span class="kt">int</span> <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="c1">// Infinite loop (using eCAL::Ok() will enable us to gracefully shutdown the</span>
+  <span class="c1">// Process from another application)</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
+  <span class="p">{</span>
+    <span class="c1">// Create a message with a counter an publish it to the topic</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Hello World &quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="o">++</span><span class="n">counter</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Sending message: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">message</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">publisher</span><span class="p">.</span><span class="n">Send</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+
+    <span class="c1">// Sleep 500 ms</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="c1">// finalize eCAL API</span>
+  <span class="n">eCAL</span><span class="o">::</span><span class="n">Finalize</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>What is happening here?</strong></p>
+<p><strong>Line 1</strong> includes the basic eCAL header.
+As we want to publish raw strings, line 2 includes the eCAL String-Publisher.
+eCAL Supports multiple message formats.</p>
+<p><strong>Line 10</strong> initialized eCAL.
+You always have to initialize eCAL before using it’s API.
+The name of our eCAL Process will be “Hello World Publisher”.
+This name will be visible in the eCAL Monitor, once the Process is running.</p>
+<p><strong>Line 13</strong> creates an eCAL Publisher.
+An eCAL Process can create multiple publishers (and multiple subscribers).
+The topic we are publishing on will be “hello_world_topic”.</p>
+<p>The while loop from <strong>line 20</strong> will cause an infinite publish-loop.
+eCAL supports a stop-signal; when an eCAL Process is stopped, <code class="docutils literal notranslate"><span class="pre">eCAL::Ok()</span></code> will return false.</p>
+<p><strong>Line 25</strong> will publish our message and send it to other eCAL Processes that have subsribed on the topic.</p>
+<p><strong>Line 32</strong> de-initializes eCAL. You should always do that before your application exits.</p>
+</div>
+</li>
+</ul>
+<p>Now that you have the source code ready, create a <code class="file docutils literal notranslate"><span class="pre">_build</span></code> directory and build the code!</p>
+<ul>
+<li><p><i class="fab fa-windows"></i> Windows:</p>
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span><span class="k">mkdir</span> _build
+<span class="k">cd</span> _build
+cmake .. -A x64
+</pre></div>
+</div>
+</li>
+<li><p><i class="fab fa-ubuntu"></i> Ubuntu:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir _build
+<span class="nb">cd</span> _build
+cmake ..
+make
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Now execute the <code class="file docutils literal notranslate"><span class="pre">hello_world_snd</span> <span class="pre">(.exe)</span></code> and take a look at the eCAL Monitor!
+You will see the “Hello World Publisher” process and the “hello_world_topic”.</p>
+<img alt="eCAL Monitor Hello World" src="../_images/hello_world_snd_monitor.png" />
+</div>
+<div class="section" id="hello-world-subscriber">
+<h2><span class="section-number">7.1.3. </span>Hello World Subscriber<a class="headerlink" href="#hello-world-subscriber" title="Permalink to this headline">¶</a></h2>
 <p>This section is still under construction. But we are working on it! Just be patient.</p>
 <div align="center" class="align-center"><img alt="Snail" src="../_images/snail.svg" /></div>
+</div>
 </div>
 
 <!-- /body -->
