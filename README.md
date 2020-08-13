@@ -10,7 +10,7 @@ Copyright (c) 2020, Continental Corporation.
 ## Preface
 
 The **e**nhanced **C**ommunication **A**bstraction **L**ayer (eCAL) is a middleware that enables scalable, high performance interprocess communication on a single computer node or between different nodes in a computer network.
-eCAL uses a **publish / subscribe** pattern to automatically connect different Nodes in the network. It automatically chooses the best available data transport mechanism - **UDP** for notwork communication and **High Performance Shared Memory** for local communication.
+eCAL uses a **publish / subscribe** pattern to automatically connect different Nodes in the network. It's choosing the best available data transport mechanisms - **UDP** for network communication and **High Performance Shared Memory** for local communication.
 
 With eCAL, you can:
 
