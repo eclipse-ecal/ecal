@@ -1,6 +1,7 @@
+
 # eCAL - enhanced Communication Abstraction Layer
 
-Copyright (c) 2019, Continental Corporation.
+Copyright (c) 2020, Continental Corporation.
 
 [![Build Status](https://travis-ci.org/continental/ecal.svg?branch=master)](https://travis-ci.org/continental/ecal)
 [![Build status](https://ci.appveyor.com/api/projects/status/2hnl7p9cedimrkox/branch/master?svg=true)](https://ci.appveyor.com/project/rex-schilasky/ecal/branch/master)
@@ -8,27 +9,23 @@ Copyright (c) 2019, Continental Corporation.
 
 ## Preface
 
-The enhanced communication abstraction layer (eCAL) is a middleware that enables scalable, high performance interprocess communication on a single computer node or between different nodes in a computer network. The design is inspired by known Data Distribution Service for Real-Time Systems (see Data distribution service on wikipedia). The current eCAL implementation realizes a subset of such a DDS system, there is only a basic support for Quality of Service (QoS) driven data transport (best effort and reliable).
+The **e**nhanced **C**ommunication **A**bstraction **L**ayer (eCAL) is a middleware that enables scalable, high performance interprocess communication on a single computer node or between different nodes in a computer network.
+eCAL uses a **publish / subscribe** pattern to automatically connect different Nodes in the network. It automatically chooses the best available data transport mechanism - **UDP** for notwork communication and **High Performance Shared Memory** for local communication.
 
-eCAL is designed for typical cloud computing scenarios where different processes exchange their I/O's using a publisher/subscriber pattern. The data exchange is based on so called topics. A topic wraps the payload that should be exchanged with
-additional informations like a unique name, a type and a description. A topic can be connected to more than one publisher and/or subscriber. These are the basic elements of the eCAL API.
+With eCAL, you can:
 
-  • Topic: The most basic description of the data to be published and subscribed.
+- Independently develop all components of your system; they only have to agree on the data format
+- Dynamically add and remove publishers and subscribers, use different versions or replace the publisher with a replay
+- Spread your publishers and subscribers across multiple machines than may even run different operating systems
+- Record, replay and inspect the traffic with powerfull tools
 
-  • Publisher: A Publisher is the object responsible for the actual dissemination of publications.
+## Links
 
-  • Subscriber: A Subscriber is the object responsible for the actual reception of the data resulting from its subscriptions.
+- **eCAL Documentation**: https://continental.github.io/ecal
+- **Getting Started Tutorial**: https://continental.github.io/ecal/getting_started/introduction
+- **Downloads & Releases**: https://github.com/continental/ecal/releases
 
-  • Service: A collection of methods with arguments (requests) and return types (responses) realized as a server to be called from connected clients.
-
-  • Client: Remote interface to a specific service (server) to call it's methods.
-
-  • Callback: A Callback can be used to react on time events, on incoming messages, on service requests or service responses.
-
-eCAL is simplifying the data transport as much as possible, It uses different mechanism to transport a topic from a publisher to a connected subscriber. On the same computer node the data are exchanged by using memory mapped files. Between different computing nodes UDP multicast can be used for high performance data throughput.
-
-
-## Checkout the repository
+## How to checkout the repository
 
 Because eCAL is using some thirdparty libraries as git submodules you need to clone the repository recursively
 
