@@ -16,7 +16,7 @@ With eCAL, you can:
 
 - Independently develop all components of your system; they only have to agree on the data format
 - Dynamically add and remove publishers and subscribers, use different versions or replace the publisher with a replay
-- Spread your publishers and subscribers across multiple machines than may even run different operating systems
+- Spread your publishers and subscribers across multiple machines that may even run different operating systems
 - Record, replay and inspect the traffic with powerfull tools
 
 ## Links
