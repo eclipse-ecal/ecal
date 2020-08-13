@@ -40,6 +40,8 @@ set(sources
     src/functions/osselect.h
     src/functions/time.cpp
     src/functions/time.h
+    src/functions/username.cpp
+    src/functions/username.h
 )
 
 add_library (${PROJECT_NAME} 

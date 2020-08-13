@@ -28,8 +28,10 @@
 #include <list>
 #include <atomic>
 #include <vector>
+#include <functional>
 
 #include <rec_client_core/state.h>
+#include <rec_client_core/rec_error.h>
 
 namespace eCAL
 {
@@ -50,7 +52,11 @@ namespace eCAL
       // InterruptibleThread overrides
       /////////////////////////////////////////////
     public:
-      FtpUploadThread(const std::string& local_root_dir, const std::string& ftp_server, const std::string& ftp_root_dir, const std::vector<std::string>& skip_files);
+      FtpUploadThread(const std::string&                local_root_dir
+                    , const std::string&                ftp_server
+                    , const std::string&                ftp_root_dir
+                    , const std::vector<std::string>&   skip_files
+                    , const std::function<Error(void)>& post_upload_function = [](){ return Error::OK; });
       ~FtpUploadThread();
 
       void Run() override;
@@ -100,6 +106,8 @@ namespace eCAL
 
       std::pair<bool, std::string> info_;
       int num_file_upload_errors_;
+
+      const std::function<Error(void)> post_upload_function_;
     };
   }
 }

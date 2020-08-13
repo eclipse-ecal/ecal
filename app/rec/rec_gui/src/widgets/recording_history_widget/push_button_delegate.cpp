@@ -29,15 +29,25 @@
 #include <qecalrec.h>
 
 PushButtonDelegate::PushButtonDelegate(const QIcon& icon, const QString& text, const std::function<bool(const QModelIndex& index)>& is_enabled_function, QObject* parent)
-  : QStyledItemDelegate(parent)
-  , icon_(icon)
-  , text_(text)
-  , is_enabled_function_(is_enabled_function)
+  : PushButtonDelegate(icon, [text](const QModelIndex&)->QString { return text; }, is_enabled_function, parent)
 {}
 
 PushButtonDelegate::PushButtonDelegate(const QString& text, const std::function<bool(const QModelIndex& index)>& is_enabled_function, QObject* parent)
-  : PushButtonDelegate(QIcon(), text, is_enabled_function, parent)
+  : PushButtonDelegate(QIcon(), [text](const QModelIndex&)->QString { return text; }, is_enabled_function, parent)
 {}
+
+
+PushButtonDelegate::PushButtonDelegate(const QIcon& icon, const std::function<QString(const QModelIndex& index)>& get_text_function, const std::function<bool(const QModelIndex& index)>& is_enabled_function, QObject* parent)
+  : QStyledItemDelegate (parent)
+  , icon_               (icon)
+  , is_enabled_function_(is_enabled_function)
+  , get_text_function_  (get_text_function)
+{}
+
+PushButtonDelegate::PushButtonDelegate(const std::function<QString(const QModelIndex& index)>& get_text_function, const std::function<bool(const QModelIndex& index)>& is_enabled_function, QObject* parent)
+  : PushButtonDelegate(QIcon(), get_text_function, is_enabled_function, parent)
+{}
+
 
 void PushButtonDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
@@ -85,7 +95,7 @@ void PushButtonDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
   const int icon_size     = item_view->style()->pixelMetric(QStyle::PM_ButtonIconSize);
 
   const int space_left_for_text = button_content_rect.width() - 8 - icon_size;
-  QString button_text = item_view->fontMetrics().elidedText(text_, Qt::TextElideMode::ElideRight, space_left_for_text);
+  QString button_text = item_view->fontMetrics().elidedText(get_text_function_(index), Qt::TextElideMode::ElideRight, space_left_for_text);
   
   painter->translate(button_content_rect.topLeft());
 
@@ -105,7 +115,7 @@ void PushButtonDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
   painter->restore();
 }
 
-QSize PushButtonDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& /*index*/) const
+QSize PushButtonDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
   const QAbstractItemView* item_view = static_cast<const QAbstractItemView*>(option.widget);
 
@@ -116,11 +126,11 @@ QSize PushButtonDelegate::sizeHint(const QStyleOptionViewItem& option, const QMo
   int width;
   if (icon_.isNull())
   {
-    width = (4 * frame_width) + item_view->fontMetrics().boundingRect(text_).width() + button_margin;
+    width = (4 * frame_width) + item_view->fontMetrics().boundingRect(get_text_function_(index)).width() + button_margin;
   }
   else
   {
-    width = (4 * frame_width) + icon_size + 8 + item_view->fontMetrics().boundingRect(text_).width() + button_margin;
+    width = (4 * frame_width) + icon_size + 8 + item_view->fontMetrics().boundingRect(get_text_function_(index)).width() + button_margin;
   }
   return QSize(width, icon_size + 4 * frame_width);
 }

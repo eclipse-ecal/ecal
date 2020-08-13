@@ -23,6 +23,24 @@ import "ecal/pb/rec/client_state.proto";
 
 package eCAL.pb.rec_server;
 
+message UploadConfig
+{
+  enum Type
+  {
+    Unknown         = 0;
+    InternalFtp     = 1;
+    Ftp             = 2;
+  }
+  
+  Type type                             =  1;                                   // Whether the measurement was uploaded to the internal or external FTP
+  string host                           =  2;                                   // External FTP only: Hostname of the FTP Server
+  uint32 port                           =  3;                                   // External FTP only: Port of the FTP Server
+  string username                       =  4;                                   // External FTP only: FTP username
+  string password                       =  5;                                   // External FTP only: FTP password
+  string root_path                      =  6;                                   // External FTP only: The measurement root dir on the FTP server
+  bool delete_after_upload              =  7;                                   // Wether the measurement should have been deleted after a successfull upload
+}
+
 message ClientJobStatus
 {
   int32                        client_pid                     = 1;              // The process ID of the client. The PID is from when the measurement has been started (so for old measurements the process with that PID may even be dead now)
@@ -40,6 +58,8 @@ message Measurement
   string                            local_meas_path        =  4;                // The measurement path as locally evaluated by the rec server. If the measurement is uploaded to the internal FTP Server, all files will be stored here.
   bool                              is_deleted             =  5;                // Whether the measurement has been deleted
   map<string, ClientJobStatus>      client_job_statuses    =  6;                // The detailed job statuses as reported by the rec client instances that participated in the measurement
+  bool                              is_uploaded            =  7;                // Whether the measurement has been uploaded (does not tell whether the upload has been successful)
+  UploadConfig                      upload_config          =  8;                // The config used for uploading the measurement
 }
 
 message Status

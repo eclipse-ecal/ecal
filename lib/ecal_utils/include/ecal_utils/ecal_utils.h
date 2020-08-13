@@ -206,14 +206,18 @@ namespace EcalUtils
 #ifdef _WIN32
       // make the absolute path to the executable
       char abs_path[MAX_PATH];
-      _fullpath(abs_path, path.c_str(), MAX_PATH);
+      if (_fullpath(abs_path, path.c_str(), MAX_PATH) != nullptr)
+      {
+        path = abs_path;
+      }
 #else
       // absolute path is created only by cutting "." and ".." from the path
       char abs_path[PATH_MAX];
-      realpath(path.c_str(), abs_path);
+      if (realpath(path.c_str(), abs_path) != nullptr)
+      {
+        path = abs_path;
+      }
 #endif
-
-      path = abs_path;
     }
 
     #ifdef _WIN32                                                                              

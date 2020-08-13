@@ -54,11 +54,8 @@ QEcalRec::QEcalRec(QObject* parent)
   setMeasRootDir("$TARGET{OSSELECT WIN \"C:\" LINUX \"$TARGET{ENV HOME}\"}/ecal_meas");
   setMeasName("${TIME}_measurement");
   setDescription(
-R"(Date: ${TIME %F %R}
-Car: 
-Scenario: 
-Location: 
-Driver: 
+R"(Measurement started by: ${USERNAME}@${HOSTNAME}
+Date: ${TIME %F %R}
 )"
   );
   setMaxFileSizeMib(100);
@@ -658,6 +655,8 @@ int QEcalRec::uploadNonUploadedMeasurements          (bool omit_dialogs)
 
   return num_uploads_triggered;
 }
+
+bool QEcalRec::hasAnyUploadError                     (int64_t meas_id) const { return rec_server_->HasAnyUploadError(meas_id); }
 
 ////////////////////////////////////
 // Comments

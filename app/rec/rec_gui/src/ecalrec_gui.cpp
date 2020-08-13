@@ -658,9 +658,24 @@ bool EcalRecGui::clearConfig()
 bool EcalRecGui::saveConfigAs()
 {
   std::string current_config_path = QEcalRec::instance()->loadedConfigPath();
-  QString start_dir = (current_config_path == "" ? "New Config.ecalrec" : QString::fromStdString(current_config_path));
 
-  QString selected_file = QFileDialog::getSaveFileName(this, "Save as", start_dir, tr("eCAL Rec files (*.ecalrec);;All Files (*)"));
+  QString start_path;
+
+  if (!current_config_path.empty())
+  {
+    start_path = QString::fromStdString(current_config_path);
+  }
+  else if (!recent_file_list_.empty())
+  {
+    QString last_config_path = recent_file_list_.front();
+    start_path = QFileInfo(last_config_path).absoluteDir().absolutePath() + "/New Config.ecalrec";
+  }
+  else
+  {
+    start_path = "New Config.ecalrec";
+  }
+
+  QString selected_file = QFileDialog::getSaveFileName(this, "Save as", start_path, tr("eCAL Rec files (*.ecalrec);;All Files (*)"));
 
   if (selected_file != "")
     return saveConfig(selected_file);

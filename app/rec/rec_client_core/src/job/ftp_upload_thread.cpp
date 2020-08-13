@@ -48,16 +48,21 @@ namespace eCAL
     // InterruptibleThread overrides
     /////////////////////////////////////////////
 
-    FtpUploadThread::FtpUploadThread(const std::string& local_root_dir, const std::string& ftp_server, const std::string& ftp_root_dir, const std::vector<std::string>& skip_files)
-      : curl_handle                 (nullptr)
-      , local_root_dir_             (local_root_dir)
-      , ftp_server_                 (ftp_server)
-      , ftp_root_dir_               (ftp_root_dir)
-      , skip_files_                 (skip_files)
-      , current_file_size_bytes_    (0)
-      , current_file_uploaded_bytes_(0)
-      , info_                       { true, "" }
-      , num_file_upload_errors_     (0)
+    FtpUploadThread::FtpUploadThread(const std::string&                local_root_dir
+                                   , const std::string&                ftp_server
+                                   , const std::string&                ftp_root_dir
+                                   , const std::vector<std::string>&   skip_files
+                                   , const std::function<Error(void)>& after_successfull_upload_function)
+      : curl_handle                       (nullptr)
+      , local_root_dir_                   (local_root_dir)
+      , ftp_server_                       (ftp_server)
+      , ftp_root_dir_                     (ftp_root_dir)
+      , skip_files_                       (skip_files)
+      , current_file_size_bytes_          (0)
+      , current_file_uploaded_bytes_      (0)
+      , info_                             { true, "" }
+      , num_file_upload_errors_           (0)
+      , post_upload_function_(after_successfull_upload_function)
     {
       finished_files_progress_.num_total_files_    = 0;
       finished_files_progress_.num_complete_files_ = 0;
@@ -166,6 +171,8 @@ namespace eCAL
         std::ifstream file;
         file.open(EcalUtils::Filesystem::ToNativeSeperators(local_complete_file_path), std::ios::binary);
 
+        bool abort_uploading = false;
+
         if (!file.is_open())
         {
           const std::string error_string = "Error uploading " + local_complete_file_path + ": Unable to open file.";
@@ -212,7 +219,7 @@ namespace eCAL
 
           if (res != CURLE_OK)
           {
-            std::string error_string = "Error uploading " + local_complete_file_path + ": " + curl_easy_strerror(res);
+            std::string error_string = "Error uploading: " + std::string(curl_easy_strerror(res)) + " (" + local_complete_file_path + ")";
             if (!ftp_proxy.empty())
             {
               error_string += " [WARNING: Using ftp_proxy=" + ftp_proxy + "]";
@@ -235,6 +242,23 @@ namespace eCAL
             }
           
             info_.second += error_string;
+
+            // Check if we want to abort uploading. For instance if the hostname
+            // cannot be resolved, we don't try any further.
+            if ((res == CURLE_UNSUPPORTED_PROTOCOL)
+              || (res == CURLE_NOT_BUILT_IN)
+              || (res == CURLE_COULDNT_RESOLVE_PROXY)
+              || (res == CURLE_COULDNT_RESOLVE_HOST)
+              || (res == CURLE_COULDNT_CONNECT)
+              || (res == CURLE_REMOTE_DISK_FULL)
+#if (LIBCURL_VERSION_MAJOR >= 7) && (LIBCURL_VERSION_MINOR >= 66)
+              || (res == CURLE_AUTH_ERROR)
+#endif
+              || (res == CURLE_ABORTED_BY_CALLBACK)
+              || (res == CURLE_LOGIN_DENIED))
+            {
+              abort_uploading = true;
+            }
           }
 
           // Clean up the command list
@@ -246,7 +270,11 @@ namespace eCAL
           {
             std::lock_guard<std::mutex> progress_lock(progress_mutex_);
             finished_files_progress_.num_complete_files_++;
-            finished_files_progress_.bytes_completed_ += file_info.second;
+
+            if (res == CURLE_OK)
+              finished_files_progress_.bytes_completed_ += file_info.second;
+            else
+              finished_files_progress_.bytes_completed_ += current_file_uploaded_bytes_;
 
             current_file_size_bytes_ = 0;
             current_file_uploaded_bytes_ = 0;
@@ -256,11 +284,26 @@ namespace eCAL
           EcalRecLogger::Instance()->debug("Finished uploading " + file_name_only);
   #endif // !_NDEBUG
         }
+
+        if (abort_uploading) break;
       }
 
       curl_easy_cleanup(curl_handle);
 
       EcalRecLogger::Instance()->info("Finished uploading.");
+      
+      if (IsInterrupted()) return;
+      if (!info_.first)    return; // Only execute post-upload function if everything is OK
+
+      Error post_upload_function_error = post_upload_function_();
+      if (post_upload_function_error)
+      {
+        std::string info_string = "Post upload error: " + post_upload_function_error.ToString();
+        EcalRecLogger::Instance()->error(info_string);
+
+        std::lock_guard<std::mutex> progress_lock(progress_mutex_);
+        info_ = std::make_pair(false, info_string);
+      }
     }
 
     /////////////////////////////////////////////

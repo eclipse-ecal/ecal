@@ -124,9 +124,6 @@
    </item>
    <item>
     <widget class="QCheckBox" name="delete_files_checkbox">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
      <property name="text">
       <string>Delete files after successfull upload</string>
      </property>

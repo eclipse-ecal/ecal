@@ -60,10 +60,7 @@
 © 2019 Continental AG
 Advanced Engineering Department
 
-Developed by Florian Reimold
-Based on work by Claudiu Vasilescu, Ileana Zepa
-
-</string>
+Developed by Florian Reimold</string>
      </property>
      <property name="textFormat">
       <enum>Qt::PlainText</enum>

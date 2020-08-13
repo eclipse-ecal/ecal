@@ -36,15 +36,15 @@
  */
 struct EcalPlayState
 {
-  bool                                  playing_;                               /**< Whether the player is currently playing a measurement */
-  double                                actual_play_rate_;                      /**< The current actual play rate. This may differ from the selected play rate. The play rate is relative, i.e. a play rate of 1.0 represents realtime. */
+  bool                                  playing_ = false;                       /**< Whether the player is currently playing a measurement */
+  double                                actual_play_rate_ = 0.0;                /**< The current actual play rate. This may differ from the selected play rate. The play rate is relative, i.e. a play rate of 1.0 represents realtime. */
   
-  long long                             current_frame_index;                    /**< The index of the last frame that was published. In cases where the player has just been started or the measurement position has been changed manually, this frame may not have been published, yet. In these cases, it represents the next frame. */
+  long long                             current_frame_index = 0;                /**< The index of the last frame that was published. In cases where the player has just been started or the measurement position has been changed manually, this frame may not have been published, yet. In these cases, it represents the next frame. */
   eCAL::Time::ecal_clock::time_point    current_frame_timestamp;                /**< The timestamp of the last frame that was published. In cases where the player has just been started or the measurement position has been changed manually, this frame may not have been published, yet. In these cases, it represents the next frame. */
 
   eCAL::Time::ecal_clock::time_point    last_simtime_;                          /**< The last sim time. This value will not be updated continuously. In order to compute the current sim time, interpolate this time using the @see{last_simtime_local_timestamp_} and the @see{simtime_rate_}. */
   std::chrono::steady_clock::time_point last_simtime_local_timestamp_;          /**< The local timestamp of the simtime @see{last_simtime_}. */
-  double                                simtime_rate_;                          /**< The rate at which the simetime proceeds / has proceeded since the last @see{last_simtime_local_timestamp_}. A rate of 1.0 represents realtime.*/
+  double                                simtime_rate_ = 0.0;                    /**< The rate at which the simetime proceeds / has proceeded since the last @see{last_simtime_local_timestamp_}. A rate of 1.0 represents realtime.*/
 
   bool operator==(const EcalPlayState& other) const
   {

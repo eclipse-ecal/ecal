@@ -21,6 +21,9 @@
 
 #include <iostream>
 
+const int pings             = 10000;
+long long diff_array[pings] = { 0 };
+
 int main(int argc, char **argv)
 {
   // initialize eCAL API
@@ -33,10 +36,8 @@ int main(int argc, char **argv)
   std::cout << " PING PONG TEST                " << std::endl;
   std::cout << "-------------------------------" << std::endl;
   std::cout << "Press Enter to start .."         << std::endl;
-  getchar();
+  (void)getchar();
 
-  const int pings = 10000;
-  long long diff_array[pings];
   std::string rec_buf;
   long long start_time_all = eCAL::Time::GetMicroSeconds();
   for(int reply = 0; reply < pings; reply++)
@@ -65,7 +66,7 @@ int main(int argc, char **argv)
   eCAL::Finalize();
 
   std::cout << "Press Enter to close .." << std::endl;
-  getchar();
+  (void)getchar();
 
   return(0);
 }

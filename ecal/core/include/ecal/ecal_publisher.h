@@ -99,12 +99,12 @@ namespace eCAL
     /**
      * @brief CPublishers are move-enabled
     **/
-    CPublisher(CPublisher&& rhs);
+    CPublisher(CPublisher&& rhs) noexcept;
 
     /**
      * @brief CPublishers are move-enabled
     **/
-    CPublisher& operator=(CPublisher&& rhs);
+    CPublisher& operator=(CPublisher&& rhs) noexcept;
 
     /**
      * @brief Creates this object. 

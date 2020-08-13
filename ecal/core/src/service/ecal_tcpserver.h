@@ -54,23 +54,13 @@ namespace eCAL
     void Stop();
 
     std::shared_ptr<asio::io_service> GetIOService() { return m_io_service; };
-    unsigned short GetTcpPort() { return m_port; }
+    unsigned short GetTcpPort() { return (m_server ? m_server->get_port() : 0); }
 
   protected:
     void ServerThread(std::uint32_t port_, RequestCallbackT callback_);
 
-    bool GrabSocket();
-    bool FreeSocket();
-
     bool                               m_started;
-    unsigned short                     m_port;
 
-#ifdef ECAL_OS_WINDOWS
-    SOCKET                             m_sock;
-#endif
-#ifdef ECAL_OS_LINUX
-    int                                m_sock;
-#endif
     std::shared_ptr<asio::io_service>  m_io_service;
     std::shared_ptr<CAsioServer>       m_server;
     std::thread                        m_server_thread;

@@ -66,7 +66,7 @@ namespace eCAL
   /**
    * @brief CPublisher are move-enabled
   **/
-  CPublisher::CPublisher(CPublisher&& rhs) :
+  CPublisher::CPublisher(CPublisher&& rhs) noexcept :
                 m_datawriter(std::move(rhs.m_datawriter)),
                 m_qos(rhs.m_qos),
                 m_id(rhs.m_id),
@@ -83,7 +83,7 @@ namespace eCAL
   /**
    * @brief CPublisher are move-enabled
   **/
-  CPublisher& CPublisher::operator=(CPublisher&& rhs)
+  CPublisher& CPublisher::operator=(CPublisher&& rhs) noexcept
   {
     m_datawriter = std::move(rhs.m_datawriter);
 

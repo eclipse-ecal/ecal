@@ -76,7 +76,7 @@ eCAL is using CMake as build system. When configuring with CMake, you can turn o
 | `BUILD_TIME`                     | `ON`    | Build the eCAL time interfaces, necessary if you want to use ecal in time synchronized mode (based on ptp for example) |
 | `BUILD_PY_BINDING`               | `OFF`   | Build the eCAL python language binding |
 | `BUILD_CSHARP_BINDING`           | `OFF`   | Build the eCAL C# language binding |
-| `BUILD_TESTS`                    | `OFF`   | Build the eCAL google tests |
+| `BUILD_ECAL_TESTS`               | `OFF`   | Build the eCAL google tests |
 | `ECAL_LAYER_ICEORYX`             | `OFF`   | Use iceoryx shared memory as local communication layer, requires [eclipse/iceoryx](https://github.com/eclipse/iceoryx) installation |
 | `ECAL_INCLUDE_PY_SAMPLES`        | `OFF`   | Include python language sample projects into CMake |
 | `ECAL_INSTALL_SAMPLE_SOURCES`    | `ON`    | Install the sources of eCAL samples |

@@ -1118,8 +1118,22 @@ namespace eCAL
       if (!error)
         error = UploadMeasurement(job_history_entry);
 
-      if (error)
+      if (!error)
+      {
+        std::unique_lock<decltype(job_history_mutex_)> job_history_lock(job_history_mutex_);
+
+        // Search for the correct job
+        auto job_it = std::find_if(job_history_.begin(), job_history_.end(), [meas_id](const JobHistoryEntry& job_history_entry) { return job_history_entry.local_evaluated_job_config_.GetJobId() == meas_id; });
+        if (job_it != job_history_.end())
+        {
+          job_it->is_uploaded_   = true;
+          job_it->upload_config_ = upload_config_;
+        }
+      }
+      else
+      {
         eCAL::rec::EcalRecLogger::Instance()->error("Failed to upload measurement " + std::to_string(meas_id) + ": " + error.ToString());
+      }
 
       return error;
     }
@@ -1150,10 +1164,35 @@ namespace eCAL
       // Upload all uploadable entries!
       for (const JobHistoryEntry& job_history_entry : job_history_copy)
       {
-        UploadMeasurement(job_history_entry);
+        UploadMeasurement(job_history_entry.local_evaluated_job_config_.GetJobId());
       }
 
       return static_cast<int>(job_history_copy.size());
+    }
+
+    bool RecServerImpl::HasAnyUploadError(int64_t meas_id) const
+    {
+      std::shared_lock<decltype (job_history_mutex_)>job_history_lock(job_history_mutex_);
+      auto job_it = std::find_if(job_history_.begin(), job_history_.end(), [meas_id](const JobHistoryEntry& job_history_entry) { return job_history_entry.local_evaluated_job_config_.GetJobId() == meas_id; });
+
+      if (job_it == job_history_.end())
+      {
+        return false;
+      }
+      else
+      {
+        for (const auto& client_status : job_it->client_statuses_)
+        {
+          if (((client_status.second.job_status_.state_ == eCAL::rec::JobState::Uploading)
+                || (client_status.second.job_status_.state_ == eCAL::rec::JobState::FinishedUploading))
+            && !client_status.second.job_status_.upload_status_.info_.first)
+          {
+            return true;
+          }
+        }
+        return false;
+      }
+
     }
 
     eCAL::rec::Error RecServerImpl::UploadMeasurement(const JobHistoryEntry& job_history_entry)
@@ -1221,28 +1260,20 @@ namespace eCAL
         {
           std::shared_lock<decltype (connected_enabled_rec_clients_mutex_)>rec_clients_lock(connected_enabled_rec_clients_mutex_);
 
-          // Check if we already have the metadata available (i.e. if the local recorder participated in the measurement)
-          bool metadata_already_uploaded = (job_history_entry.client_statuses_.find(eCAL::Process::GetHostName()) != job_history_entry.client_statuses_.end());
-
-          for (const auto& recorder : connected_rec_clients_)
+          auto clients_that_need_to_upload = GetClientsThatNeedToUpload_NoLock(job_history_entry);
+          for (auto& client : clients_that_need_to_upload)
           {
-            // Only let external recorders upload their data that were involved in the measurement
-            if ((job_history_entry.client_statuses_.find(recorder.first) != job_history_entry.client_statuses_.end())
-              && (recorder.first != eCAL::Process::GetHostName()))
+            if (client.second.second)
             {
-              if (metadata_already_uploaded)
-              {
-                recorder.second->SetCommand(upload_command);
-              }
-              else
-              {
-                RecorderCommand also_upload_metadata_command(upload_command);
-                also_upload_metadata_command.upload_config_.upload_metadata_files_ = true;
+              // Upload metadata!
+              RecorderCommand also_upload_metadata_command(upload_command);
+              also_upload_metadata_command.upload_config_.upload_metadata_files_ = true;
 
-                recorder.second->SetCommand(also_upload_metadata_command);
-
-                metadata_already_uploaded = true;
-              }
+              client.second.first->SetCommand(also_upload_metadata_command);
+            }
+            else
+            {
+              client.second.first->SetCommand(upload_command);
             }
           }
         }
@@ -1296,29 +1327,20 @@ namespace eCAL
         {
           std::shared_lock<decltype (connected_enabled_rec_clients_mutex_)>rec_clients_lock(connected_enabled_rec_clients_mutex_);
 
-          // Check if the local recorder is available, as we will use that one to upload the metadata
-          bool metadata_upload_assigned = (job_history_entry.client_statuses_.find(eCAL::Process::GetHostName()) != job_history_entry.client_statuses_.end());
-
-          for (const auto& recorder : connected_rec_clients_)
+          auto clients_that_need_to_upload = GetClientsThatNeedToUpload_NoLock(job_history_entry);
+          for (auto& client : clients_that_need_to_upload)
           {
-            // Only let recorders upload their data that were involved in the measurement
-            if (job_history_entry.client_statuses_.find(recorder.first) != job_history_entry.client_statuses_.end())
+            if (client.second.second)
             {
-              if ((recorder.first == eCAL::Process::GetHostName()) || !metadata_upload_assigned)
-              {
-                // The local recorder or the first one we encounter will upload the metadata
-                RecorderCommand also_upload_metadata_command(upload_command);
-                also_upload_metadata_command.upload_config_.upload_metadata_files_ = true;
+              // Upload metadata!
+              RecorderCommand also_upload_metadata_command(upload_command);
+              also_upload_metadata_command.upload_config_.upload_metadata_files_ = true;
 
-                recorder.second->SetCommand(also_upload_metadata_command);
-
-                metadata_upload_assigned = true;
-              }
-              else
-              {
-                // All other recorder will omit uploading the metadata
-                recorder.second->SetCommand(upload_command);
-              }
+              client.second.first->SetCommand(also_upload_metadata_command);
+            }
+            else
+            {
+              client.second.first->SetCommand(upload_command);
             }
           }
         }
@@ -1377,13 +1399,21 @@ namespace eCAL
         return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::UNSUPPORTED_ACTION, "Unsupported Protocol");
       }
 
+      // Check if the rec server has a valid measurement name. We don't allow
+      // uploading without a measurement name.
+      if (job_history_entry.local_evaluated_job_config_.GetMeasName().empty())
+      {
+        return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::PARAMETER_ERROR, "Meas name is empty");
+      }
+
       eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::OK);
 
       // Check if all clients have finished flushing
       std::set<std::string> hosts_recording;
       std::set<std::string> hosts_flushing;
       std::set<std::string> hosts_uploading;
-      std::set<std::string> hosts_upload_finished;
+
+      std::set<std::string> hosts_upload_finished_but_failed;
 
       for (const auto& client : job_history_entry.client_statuses_)
       {
@@ -1401,9 +1431,10 @@ namespace eCAL
         {
           hosts_uploading.emplace(client.first);
         }
-        else if (client.second.job_status_.state_ == eCAL::rec::JobState::FinishedUploading)
+        else if ((client.second.job_status_.state_ == eCAL::rec::JobState::FinishedUploading)
+          && !client.second.job_status_.upload_status_.info_.first)
         {
-          hosts_upload_finished.emplace(client.first);
+          hosts_upload_finished_but_failed.emplace(client.first);
         }
       }
 
@@ -1413,10 +1444,61 @@ namespace eCAL
         error = eCAL::rec::Error(eCAL::rec::Error::CURRENTLY_FLUSHING, EcalUtils::String::Join(", ", hosts_flushing));
       else if (!hosts_uploading.empty())
         error = eCAL::rec::Error(eCAL::rec::Error::CURRENTLY_UPLOADING, EcalUtils::String::Join(", ", hosts_uploading));
-      else if (!hosts_upload_finished.empty())
-        error = eCAL::rec::Error(eCAL::rec::Error::ALREADY_UPLOADED, EcalUtils::String::Join(", ", hosts_upload_finished));
+      else if (job_history_entry.is_uploaded_ && hosts_upload_finished_but_failed.empty())
+        error = eCAL::rec::Error(eCAL::rec::Error::ALREADY_UPLOADED);
 
       return error;
+    }
+
+    std::map<std::string, std::pair<AbstractRecorder*, bool>> RecServerImpl::GetClientsThatNeedToUpload_NoLock(const JobHistoryEntry& job_history_entry) const
+    {
+      std::set<std::string>                                     all_involved_hosts;
+      std::map<std::string, std::pair<AbstractRecorder*, bool>> hosts_still_need_to_upload;
+
+      for (const auto& client_status : job_history_entry.client_statuses_)
+      {
+        // Create a set of involved client names. The set is always sorted. Thus
+        // we can use it to determine which client has to upload metadata:
+        //   - When the local recorder participated: The local recorder
+        //   - When the local recorder did not participate: The alphabetically first
+        all_involved_hosts.emplace(client_status.first);
+
+        // The local recorder does not need to upload the measurement to its own FTP Server
+        if ((upload_config_.type_ == eCAL::rec_server::UploadConfig::Type::INTERNAL_FTP)
+          && (client_status.first == eCAL::Process::GetHostName()))
+        {
+          continue;
+        }
+
+        // Collect pointers to the client connections that we need to send the upload command to
+        if (!job_history_entry.is_uploaded_ 
+            || (job_history_entry.is_uploaded_ 
+                && (client_status.second.job_status_.state_ == eCAL::rec::JobState::FinishedUploading)
+                && !client_status.second.job_status_.upload_status_.info_.first
+                && !client_status.second.job_status_.is_deleted_)
+            || (job_history_entry.is_uploaded_ && (client_status.second.job_status_.state_ == eCAL::rec::JobState::FinishedFlushing)))
+        {
+          auto connected_client_it = connected_rec_clients_.find(client_status.first);
+          if (connected_client_it != connected_rec_clients_.end())
+          {
+            hosts_still_need_to_upload.emplace(client_status.first, std::make_pair(connected_client_it->second.get(), false));
+          }
+        }
+
+      }
+
+      // Now let's see who is responsible for metadata upload!
+      std::string metadata_uploader;
+      if (all_involved_hosts.find(eCAL::Process::GetHostName()) != all_involved_hosts.end())
+        metadata_uploader = eCAL::Process::GetHostName();
+      else if (!all_involved_hosts.empty())
+        metadata_uploader = *all_involved_hosts.begin();
+
+      auto host_need_to_upload_it = hosts_still_need_to_upload.find(metadata_uploader);
+      if (host_need_to_upload_it != hosts_still_need_to_upload.end())
+        host_need_to_upload_it->second.second = true;
+
+      return hosts_still_need_to_upload;
     }
 
     ////////////////////////////////////
@@ -1424,7 +1506,7 @@ namespace eCAL
     ////////////////////////////////////
     eCAL::rec::Error RecServerImpl::AddComment(int64_t meas_id, const std::string& comment)
     {
-      std::set<std::string> involved_hosts;
+      std::set<std::string> hosts_to_send_command_to;
 
       eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::OK);
 
@@ -1451,7 +1533,9 @@ namespace eCAL
         {
           for (const auto& client_status : job_it->client_statuses_)
           {
-            involved_hosts.emplace(client_status.first);
+            // Create a lists of all involved hosts that haven't deleted the measurement, yet
+            if (!client_status.second.job_status_.is_deleted_)
+              hosts_to_send_command_to.emplace(client_status.first);
           }
         }
       }
@@ -1461,7 +1545,7 @@ namespace eCAL
       {
         std::shared_lock<decltype (connected_enabled_rec_clients_mutex_)>rec_clients_lock(connected_enabled_rec_clients_mutex_);
 
-        for (const std::string& host : involved_hosts)
+        for (const std::string& host : hosts_to_send_command_to)
         {
           auto rec_connection_it = connected_rec_clients_.find(host);
           if (rec_connection_it != connected_rec_clients_.end())
@@ -1557,30 +1641,40 @@ namespace eCAL
       if (job_history_entry.is_deleted_)
         return eCAL::rec::Error::ErrorCode::MEAS_IS_DELETED;
 
-      // We cannot modify the measurement while it is being uploaded!
-      std::set<std::string> hosts_uploading;
-      bool                  anybody_upload_finished = false;
-      for (const auto& client : job_history_entry.client_statuses_)
+      if (!job_history_entry.is_uploaded_)
       {
-        if (client.second.job_status_.state_ == eCAL::rec::JobState::Uploading)
-          hosts_uploading.emplace(client.first);
-        else if (client.second.job_status_.state_ == eCAL::rec::JobState::FinishedUploading)
-          anybody_upload_finished = true;
-      }
-
-      if (!hosts_uploading.empty())
-      {
-        // If any host is currently uploading, we must not write data to the measurement
-        return eCAL::rec::Error(eCAL::rec::Error::CURRENTLY_UPLOADING, EcalUtils::String::Join(", ", hosts_uploading));
-      }
-      else if (!anybody_upload_finished)
-      {
-        // If no host has finished uploading, that means that the upload hasn't been started. Thus we may still modify the measurement
+        // We can always add comments to measurements that haven't been uploaded, yet
         return eCAL::rec::Error::ErrorCode::OK;
       }
       else
       {
-        // The measurement has been uploaded!
+        // We have to check:
+        //   - If the measurement is currently being uploaded => Error!
+        //   - If the measurement has been uploaded successfully...
+        //        - ... to an external FTP => Error!
+        //        - ... to the built-in FTP ...
+        //              - And the local recorder participated and is still online => OK
+        //              - Or the local recorder did not participate or is not online any more => Error!
+
+        std::set<std::string> hosts_uploading;
+        for (const auto& client : job_history_entry.client_statuses_)
+        {
+          if (client.second.job_status_.state_ == eCAL::rec::JobState::Uploading)
+            hosts_uploading.emplace(client.first);
+        }
+
+        if (!hosts_uploading.empty())
+        {
+          // If any host is currently uploading, we must not write data to the measurement
+          return eCAL::rec::Error(eCAL::rec::Error::CURRENTLY_UPLOADING, EcalUtils::String::Join(", ", hosts_uploading));
+        }
+
+        if (job_history_entry.upload_config_.type_ != eCAL::rec_server::UploadConfig::Type::INTERNAL_FTP) 
+        {
+          // If the measurement has been uploaded to an external server we cannot modify it any more
+          return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::ALREADY_UPLOADED, "Unable to change measurement uploaded to an external server");
+        }
+
         // If the measurement has already been uploaded, we must check if the 
         // host that the measurement has been uploaded to (--> this host) can
         // still write data to the measurement.
@@ -1617,7 +1711,7 @@ namespace eCAL
 
     eCAL::rec::Error RecServerImpl::DeleteMeasurement(int64_t meas_id)
     {
-      std::set<std::string> involved_hosts;
+      std::set<std::string> hosts_to_delete_on;
 
       eCAL::rec::Error error(eCAL::rec::Error::OK);
 
@@ -1639,7 +1733,8 @@ namespace eCAL
         {
           for (const auto& client_status : job_it->client_statuses_)
           {
-            involved_hosts.emplace(client_status.first);
+            if (!client_status.second.job_status_.is_deleted_)
+              hosts_to_delete_on.emplace(client_status.first);
           }
           job_it->is_deleted_ = true;
         }
@@ -1648,13 +1743,13 @@ namespace eCAL
       // Send delete commands
       if (!error)
       {
-        eCAL::rec::EcalRecLogger::Instance()->info("Deleting measurement " + std::to_string(meas_id) + " on " + EcalUtils::String::Join(", ", involved_hosts));
+        eCAL::rec::EcalRecLogger::Instance()->info("Deleting measurement " + std::to_string(meas_id) + " on " + EcalUtils::String::Join(", ", hosts_to_delete_on));
         std::shared_lock<decltype (connected_enabled_rec_clients_mutex_)>rec_clients_lock(connected_enabled_rec_clients_mutex_);
 
         for (const auto& recorder : connected_rec_clients_)
         {
           // Only let external recorders upload their data that were involved in the measurement
-          if (involved_hosts.find(recorder.first) != involved_hosts.end())
+          if (hosts_to_delete_on.find(recorder.first) != hosts_to_delete_on.end())
           {
             RecorderCommand delete_command;
             delete_command.type_              = RecorderCommand::Type::DELETE_MEASUREMENT;

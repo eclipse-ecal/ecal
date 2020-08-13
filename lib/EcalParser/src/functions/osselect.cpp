@@ -27,7 +27,7 @@ namespace EcalParser
   std::string FunctionOsselect::Evaluate(const std::string& parameters, std::chrono::system_clock::time_point /*time*/) const
   {
     std::vector<std::string> parameter_vector;
-    EcalUtils::String::SplitQuotedString(parameters, parameter_vector, '\0', true);
+    EcalUtils::String::SplitQuotedString(parameters, parameter_vector, '\0', true, true);
     
     int default_param_index = -1; // Index of the DEFAULT element
     int os_index = 0;
@@ -71,7 +71,7 @@ namespace EcalParser
       os_index += 2;
     }
     
-    if (os_index < ((int)parameters.size() - 1))
+    if (os_index < ((int)parameter_vector.size() - 1))
     {
       return parameter_vector[os_index + 1];
     }

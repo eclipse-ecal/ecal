@@ -25,7 +25,11 @@
 
 #include <QPixmap>
 
+#include <memory>
+
 #include <rec_client_core/state.h>
+
+#include <rec_server_core/status.h>
 
 class WaitForShutdownDialog : public QDialog
 {
@@ -46,7 +50,7 @@ public:
 
 private:
   bool updateWaitForFlushing();
-  bool updateBuiltInRecorderUploading(const eCAL::rec::RecorderStatus& local_rec_status);
+  bool updateBuiltInRecorderUploading(const std::list<eCAL::rec_server::JobHistoryEntry>& job_history);
   bool updateBuiltInFtpServer();
   bool updateNonUploadedMeasurements();
 
@@ -75,6 +79,6 @@ private:
   QTimer*      update_timer_;
   QPushButton* shutdown_button_;
 
-  int64_t built_in_recorder_initial_unflushed_frames_;
-  std::map<uint64_t, eCAL::rec::UploadStatus> built_in_recorer_uploading_jobs_;
+  int64_t initial_unflushed_frames_;
+  std::map<int64_t, std::map<std::string, std::pair<bool, eCAL::rec::UploadStatus>>> uploading_jobs_;  ///< { MeasId: { Hostname: (Uploading, UploadStatus) }} map that can only grow bigger. It contains all Uploads since the dialog opened (even the finished ones)
 };

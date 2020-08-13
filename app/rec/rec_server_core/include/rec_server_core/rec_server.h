@@ -152,6 +152,8 @@ namespace eCAL
       eCAL::rec::Error SimulateUploadMeasurement(int64_t meas_id) const;
       int UploadNonUploadedMeasurements();
 
+      bool HasAnyUploadError(int64_t meas_id) const;
+
     ////////////////////////////////////
     // Comments
     ////////////////////////////////////

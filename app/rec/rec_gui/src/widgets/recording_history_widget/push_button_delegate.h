@@ -33,12 +33,16 @@ public:
   PushButtonDelegate(const QIcon& icon, const QString& text, const std::function<bool(const QModelIndex& index)>& is_enabled_function, QObject* parent = nullptr);
   PushButtonDelegate(const QString& text, const std::function<bool(const QModelIndex& index)>& is_enabled_function, QObject* parent = nullptr);
 
+  PushButtonDelegate(const QIcon& icon, const std::function<QString(const QModelIndex& index)>& get_text_function, const std::function<bool(const QModelIndex& index)>& is_enabled_function, QObject* parent = nullptr);
+  PushButtonDelegate(const std::function<QString(const QModelIndex& index)>& get_text_function, const std::function<bool(const QModelIndex& index)>& is_enabled_function, QObject* parent = nullptr);
+
+
   void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
   QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
 private:
   QIcon   icon_;
-  QString text_;
   const std::function<bool(const QModelIndex& index)> is_enabled_function_;
+  const std::function<QString(const QModelIndex& index)> get_text_function_;
 };

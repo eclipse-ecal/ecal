@@ -50,8 +50,8 @@ public:
     QString type_;
     std::map<std::string, std::set<std::string>>      publishers_;
     std::map<std::pair<std::string, int32_t>, double> rec_subscribers_;
-    bool listed_;
-    bool in_topic_info_map_;
+    bool listed_ = false;
+    bool in_topic_info_map_ = false;
   };
 
   explicit TopicListModel(eCAL::rec::RecordMode mode, QObject *parent = 0);

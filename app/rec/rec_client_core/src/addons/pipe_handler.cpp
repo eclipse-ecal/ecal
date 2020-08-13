@@ -143,11 +143,13 @@ bool PipeHandler::StartProcess(const std::wstring& executable_path)
 bool PipeHandler::WriteLine(const std::string& message)
 {
   // Write to stdin of child process
-  auto write_successs = WriteFile(child_stdin_wr_, message.data(), static_cast<DWORD>(message.size()), NULL, NULL);
+  DWORD num_bytes_written(0);
+  LPDWORD lp_num_bytes_written = &num_bytes_written;
+  auto write_successs = WriteFile(child_stdin_wr_, message.data(), static_cast<DWORD>(message.size()), lp_num_bytes_written, NULL);
 
   // Write \r\n
   if (write_successs)
-    write_successs = WriteFile(child_stdin_wr_, "\r\n", 2, NULL, NULL);
+    write_successs = WriteFile(child_stdin_wr_, "\r\n", 2, lp_num_bytes_written, NULL);
 
   if (!write_successs)
   {

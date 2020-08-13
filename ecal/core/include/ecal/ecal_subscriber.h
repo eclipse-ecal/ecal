@@ -115,12 +115,12 @@ namespace eCAL
     /**
      * @brief CSubscribers are move-enabled
     **/
-    CSubscriber(CSubscriber&& rhs);
+    CSubscriber(CSubscriber&& rhs) noexcept;
 
     /**
      * @brief CSubscribers are move-enabled
     **/
-    CSubscriber& operator=(CSubscriber&& rhs);
+    CSubscriber& operator=(CSubscriber&& rhs) noexcept;
 
     /**
      * @brief Creates this object. 

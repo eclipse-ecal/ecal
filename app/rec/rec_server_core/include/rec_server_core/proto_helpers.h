@@ -36,13 +36,15 @@ namespace eCAL
   {
     namespace proto_helpers
     {
+      void ToProtobuf(const eCAL::rec_server::UploadConfig&    upload_config,     eCAL::pb::rec_server::UploadConfig& upload_config_pb);
       void ToProtobuf(const eCAL::rec_server::ClientJobStatus& client_job_status, eCAL::pb::rec_server::ClientJobStatus& client_job_status_pb);
       void ToProtobuf(const eCAL::rec_server::JobHistoryEntry& job_history_entry, eCAL::pb::rec_server::Measurement& measurement_pb);
       void ToProtobuf(const eCAL::rec_server::RecServerStatus& rec_server_status, eCAL::pb::rec_server::Status& rec_server_status_pb);
 
+      eCAL::pb::rec_server::UploadConfig    ToProtobuf(const eCAL::rec_server::UploadConfig&    upload_config);
       eCAL::pb::rec_server::ClientJobStatus ToProtobuf(const eCAL::rec_server::ClientJobStatus& client_job_status);
-      eCAL::pb::rec_server::Measurement ToProtobuf(const eCAL::rec_server::JobHistoryEntry& job_history_entry);
-      eCAL::pb::rec_server::Status ToProtobuf(const eCAL::rec_server::RecServerStatus& rec_server_status);
+      eCAL::pb::rec_server::Measurement     ToProtobuf(const eCAL::rec_server::JobHistoryEntry& job_history_entry);
+      eCAL::pb::rec_server::Status          ToProtobuf(const eCAL::rec_server::RecServerStatus& rec_server_status);
 
     }
   }

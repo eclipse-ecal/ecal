@@ -165,6 +165,11 @@ public:
     request_cb_ = callback;
   }
 
+  uint16_t get_port()
+  {
+    return acceptor_.local_endpoint().port();
+  }
+
 private:
   void start_accept()
   {

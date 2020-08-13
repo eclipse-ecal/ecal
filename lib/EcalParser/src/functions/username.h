@@ -19,26 +19,19 @@
 
 #pragma once
 
-#define ECAL_REC_VERSION_MAJOR              2
-#define ECAL_REC_VERSION_MINOR              4
-#define ECAL_REC_VERSION_PATCH              0
+#include <EcalParser/Function.h>
 
-#define __ECAL_REC_FUNCTION_TO_STR(x) #x                                // Stringify any input
-#define __ECAL_REC_FUNCTION_TO_STR2(x) __ECAL_REC_FUNCTION_TO_STR(x)    // Evaluate the input, then stringify it
-
-#define ECAL_REC_VERSION_STRING             __ECAL_REC_FUNCTION_TO_STR2(ECAL_REC_VERSION_MAJOR) "." __ECAL_REC_FUNCTION_TO_STR2(ECAL_REC_VERSION_MINOR)
-
-#define ECAL_REC_NAME                       "eCALRec"
-
-namespace eCAL
+namespace EcalParser
 {
-  namespace rec
+  class FunctionUsername : public Function
   {
-    static constexpr int Version()
-    {
-      return (ECAL_REC_VERSION_PATCH
-        + (ECAL_REC_VERSION_MINOR * 1000)
-        + (ECAL_REC_VERSION_MAJOR * 1000 * 1000));
-    }
-  }
+    std::string Evaluate         (const std::string& parameters, std::chrono::system_clock::time_point time) const override;
+
+    std::string Description      () const override;
+
+    std::string ParameterUsage   () const override;
+    std::string ParameterExample () const override;
+
+    std::string HtmlDocumentation() const override;
+  };
 }

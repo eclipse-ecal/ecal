@@ -178,10 +178,14 @@ namespace eCAL
       eCAL::rec::Error SimulateUploadMeasurement(int64_t meas_id) const;
       int  UploadNonUploadedMeasurements();
 
+      bool HasAnyUploadError(int64_t meas_id) const;
+
     private:
       eCAL::rec::Error UploadMeasurement(const JobHistoryEntry& job_history_entry);
       eCAL::rec::Error SimulateUploadMeasurement_NoLock(int64_t meas_id) const;
       eCAL::rec::Error SimulateUploadMeasurement_NoLock(const JobHistoryEntry& job_history_entry) const;
+
+      std::map<std::string, std::pair<AbstractRecorder*, bool>> GetClientsThatNeedToUpload_NoLock(const JobHistoryEntry& job_history_entry) const;
 
     ////////////////////////////////////
     // Comments

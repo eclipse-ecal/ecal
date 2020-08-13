@@ -28,6 +28,7 @@
 #include <rec_client_core/state.h>
 
 #include "rec_server_types.h"
+#include "rec_server_config.h"
 
 namespace eCAL
 {
@@ -50,6 +51,7 @@ namespace eCAL
       JobHistoryEntry()
         : local_start_time_(std::chrono::system_clock::duration(0))
         , is_deleted_      (false)
+        , is_uploaded_     (false)
       {}
 
       std::chrono::system_clock::time_point  local_start_time_;
@@ -58,6 +60,9 @@ namespace eCAL
       bool                                   is_deleted_;
 
       std::map<std::string, ClientJobStatus> client_statuses_;
+
+      bool                                   is_uploaded_;
+      UploadConfig                           upload_config_;
     };
 
     struct RecServerStatus

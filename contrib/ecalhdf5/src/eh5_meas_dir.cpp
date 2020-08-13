@@ -22,6 +22,7 @@
 **/
 
 #include "eh5_meas_dir.h"
+#include "escape.h"
 
 #ifdef WIN32
 #include <windows.h>
@@ -487,21 +488,22 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
       auto channels = reader->GetChannelNames();
       for (const auto& channel : channels)
       {
+        auto escaped_name = GetEscapedString(channel);
         auto description = reader->GetChannelDescription(channel);
 
-        if (channels_info_.find(channel) == channels_info_.end())
+        if (channels_info_.find(escaped_name) == channels_info_.end())
         {
-          channels_info_[channel] = ChannelInfo(reader->GetChannelType(channel), description);
+          channels_info_[escaped_name] = ChannelInfo(reader->GetChannelType(channel), description);
         }
         else
         {
           if (description.empty() == false)
           {
-            channels_info_[channel].description = description;
+            channels_info_[escaped_name].description = description;
           }
         }
 
-        channels_info_[channel].files.push_back(reader);
+        channels_info_[escaped_name].files.push_back(reader);
 
         EntryInfoSet entries;
         if (reader->GetEntriesInfo(channel, entries) == true)
@@ -510,7 +512,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
           {
             entries_by_id_[id] = EntryInfo(entry.ID, reader);
             entry.ID = id;
-            entries_by_chn_[channel].insert(entry);
+            entries_by_chn_[escaped_name].insert(entry);
             id++;
           }
         }

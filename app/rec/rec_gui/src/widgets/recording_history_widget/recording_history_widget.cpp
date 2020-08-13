@@ -93,21 +93,28 @@ RecordingHistoryWidget::RecordingHistoryWidget(QWidget *parent)
   add_comment_delegate_ = new PushButtonDelegate(QIcon(":/ecalicons/ADD_FILE")
                                                 , "Comment..."
                                                 , [](const QModelIndex& index)
-                                                    {
-                                                      int64_t job_id = index.model()->data(index.model()->index(index.row(), (int)JobHistoryModel::Columns::ID)).toLongLong();
-                                                      return QEcalRec::instance()->canAddComment(job_id);
-                                                    }
+                                                      {
+                                                        int64_t job_id = index.model()->data(index.model()->index(index.row(), (int)JobHistoryModel::Columns::ID)).toLongLong();
+                                                        return QEcalRec::instance()->canAddComment(job_id);
+                                                      }
                                                 , ui_.job_history_treeview);
   ui_.job_history_treeview->setItemDelegateForColumn((int)JobHistoryModel::Columns::COMMENT, add_comment_delegate_);
 
   // Delegate for upload button
   upload_button_delegate_ = new PushButtonDelegate(QIcon(":/ecalicons/MERGE")
-                                                  , "Upload"
                                                   , [](const QModelIndex& index)
-                                                      {
-                                                        int64_t job_id = index.model()->data(index.model()->index(index.row(), (int)JobHistoryModel::Columns::ID)).toLongLong();
-                                                        return QEcalRec::instance()->canUploadMeasurement(job_id);
-                                                      }
+                                                        {
+                                                          int64_t job_id = index.model()->data(index.model()->index(index.row(), (int)JobHistoryModel::Columns::ID)).toLongLong();
+                                                          if (QEcalRec::instance()->hasAnyUploadError(job_id))
+                                                            return "Retry failed uploads";
+                                                          else
+                                                            return "Upload";
+                                                        }
+                                                  , [](const QModelIndex& index)
+                                                        {
+                                                          int64_t job_id = index.model()->data(index.model()->index(index.row(), (int)JobHistoryModel::Columns::ID)).toLongLong();
+                                                          return QEcalRec::instance()->canUploadMeasurement(job_id);
+                                                        }
                                                   , ui_.job_history_treeview);
   ui_.job_history_treeview->setItemDelegateForColumn((int)JobHistoryModel::Columns::UPLOAD, upload_button_delegate_);
 

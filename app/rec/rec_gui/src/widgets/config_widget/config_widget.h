@@ -31,12 +31,17 @@ public:
   ~ConfigWidget();
 
 private slots:
-  void measurementRootDirectoryChanged(const std::string& root_dir);
-  void measurementNameChanged         (const std::string& name);
-  void updatePathPreview              ();
-  void maxFileSizeChanged             (unsigned int megabytes);
-  void descriptionChanged             (const std::string& description);
+  void measurementRootDirectoryChanged (const std::string& root_dir);
+  void measurementNameChanged          (const std::string& name);
+  void updatePathPreviewAndWarningLabel();
+  void maxFileSizeChanged              (unsigned int megabytes);
+  void descriptionChanged              (const std::string& description);
+
+protected:
+  void showEvent(QShowEvent *event) override;
 
 private:
   Ui::ConfigWidget ui_;
+
+  bool first_show_event_;
 };

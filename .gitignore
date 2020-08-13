@@ -18,13 +18,8 @@ CMakeLists.txt.user
 # CLion project files
 /.idea
 
-# python compiled files
-*.pyc
-
 #macOS
 .DS_Store
 
-# Visual Studio 2015/2017/Code cache/options directory
+# Visual Studio 2015/2017 cache/options directory
 .vs/
-/doc/rst/_build
-.vscode/

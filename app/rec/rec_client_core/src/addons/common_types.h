@@ -139,7 +139,7 @@ namespace eCAL
         };
 
         using Result = std::unordered_map<std::string, Variant>;
-        Status status;
+        Status status = Status::Ok;
         std::string status_message;
         std::vector<Result> results;
       };

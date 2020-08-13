@@ -59,7 +59,7 @@ namespace eCAL
     Destroy();
   }
 
-  CSubscriber::CSubscriber(CSubscriber&& rhs) :
+  CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept :
                  m_datareader(std::move(rhs.m_datareader)),
                  m_qos(rhs.m_qos),
                  m_created(rhs.m_created),
@@ -71,7 +71,7 @@ namespace eCAL
     rhs.m_initialized = false;
   }
 
-  CSubscriber& CSubscriber::operator=(CSubscriber&& rhs)
+  CSubscriber& CSubscriber::operator=(CSubscriber&& rhs) noexcept
   {
     m_datareader      = std::move(rhs.m_datareader);
 

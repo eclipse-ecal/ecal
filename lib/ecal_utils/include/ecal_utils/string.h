@@ -102,7 +102,7 @@ namespace EcalUtils
     }
 
     template<typename Container>
-    void SplitQuotedString(const std::string& str, Container& parts, char escape_char = '\\', bool remove_quotes = true)
+    void SplitQuotedString(const std::string& str, Container& parts, char escape_char = '\\', bool remove_quotes = true, bool keep_empty_strings = false)
     {
       enum State
       {
@@ -206,7 +206,7 @@ namespace EcalUtils
         pos++;
       }
 
-      if (!current_string.empty())
+      if (!current_string.empty() || keep_empty_strings)
       {
         // Insert the last element
         parts.insert(parts.end(), current_string);

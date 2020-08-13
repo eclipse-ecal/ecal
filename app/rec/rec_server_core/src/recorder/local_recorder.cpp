@@ -251,7 +251,7 @@ namespace eCAL
           eCAL::rec::Error error = ecal_rec_instance_->UploadMeasurement(command.upload_config_);
           if (error)
           {
-            last_response_ = { true, "Unable to add comment: " + error.ToString() };
+            last_response_ = { false, "Unable to add comment: " + error.ToString() };
           }
           report_job_command_response_callback_(command.meas_id_add_delete, hostname_, last_response_);
           break;
@@ -261,7 +261,7 @@ namespace eCAL
           eCAL::rec::Error error = ecal_rec_instance_->AddComment(command.meas_id_add_delete, command.comment_);
           if (error)
           {
-            last_response_ = { true, "Unable to add comment: " + error.ToString() };
+            last_response_ = { false, "Unable to add comment: " + error.ToString() };
           }
           report_job_command_response_callback_(command.meas_id_add_delete, hostname_, last_response_);
           break;
@@ -271,7 +271,7 @@ namespace eCAL
           eCAL::rec::Error error = ecal_rec_instance_->DeleteMeasurement(command.meas_id_add_delete);
           if (error)
           {
-            last_response_ = { true, "Unable to delete measurement: " + error.ToString() };
+            last_response_ = { false, "Unable to delete measurement: " + error.ToString() };
           }
           report_job_command_response_callback_(command.meas_id_add_delete, hostname_, last_response_);
           break;

@@ -194,6 +194,11 @@ void EcalrecGuiClient::commandRequest()
     (*command_params)["upload_metadata_files"] = ui_.command_request_upload_metadata_files_lineedit->text().toStdString();
   }
 
+  if (ui_.command_request_delete_after_upload_checkbox->isChecked())
+  {
+    (*command_params)["delete_after_upload"] = ui_.command_request_delete_after_upload_lineedit->text().toStdString();
+  }
+
   recorder_service_.Call("SetCommand", command_request);
 }
 

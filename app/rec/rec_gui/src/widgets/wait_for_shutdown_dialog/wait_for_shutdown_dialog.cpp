@@ -30,8 +30,6 @@
 
 #include <widgets/bytes_to_pretty_string_utils.h>
 
-// TODO: This window must differentiate between the local recorder flushing frames, uploading from the local recorder and uploading to the local FTP Server
-
 ////////////////////////////////////
 // Constructor & Destructor
 ////////////////////////////////////
@@ -39,7 +37,7 @@
 WaitForShutdownDialog::WaitForShutdownDialog(QWidget *parent)
   : QDialog(parent)
   , safe_to_extit_(false)
-  , built_in_recorder_initial_unflushed_frames_(0)
+  , initial_unflushed_frames_(0)
 {
   ui_.setupUi(this);
 
@@ -73,17 +71,17 @@ WaitForShutdownDialog::WaitForShutdownDialog(QWidget *parent)
   connect(cancel_button,    &QAbstractButton::clicked, this, &QDialog::reject);
 
   // Fix disabled-colors
-  QPalette label_palette = ui_.built_in_recorder_uploading_label->palette();
+  QPalette label_palette = ui_.wait_for_uploads_groupbox->palette();
   label_palette.setCurrentColorGroup(QPalette::ColorGroup::Disabled);
   QColor diabled_label_color = label_palette.color(QPalette::WindowText);
 
-  setDisabledTextColor(ui_.built_in_recorder_uploading_groupbox, diabled_label_color);
+  setDisabledTextColor(ui_.wait_for_uploads_groupbox, diabled_label_color);
   setDisabledTextColor(ui_.built_in_ftp_server_busy_groupbox,    diabled_label_color);
   setDisabledTextColor(ui_.wait_for_flushing_groupbox,           diabled_label_color);
   setDisabledTextColor(ui_.non_uploaded_recordings_groupbox,     diabled_label_color);
 
   // Hide all warnings
-  ui_.built_in_recorder_uploading_groupbox->setVisible(false);
+  ui_.wait_for_uploads_groupbox           ->setVisible(false);
   ui_.built_in_ftp_server_busy_groupbox   ->setVisible(false);
   ui_.wait_for_flushing_groupbox          ->setVisible(false);
   ui_.non_uploaded_recordings_groupbox    ->setVisible(false);
@@ -159,17 +157,17 @@ bool WaitForShutdownDialog::updateWaitForFlushing()
   }
 
   // Set the number of unflushed frames on the first run
-  if (built_in_recorder_initial_unflushed_frames_ == 0)
+  if (initial_unflushed_frames_ == 0)
   {
-    built_in_recorder_initial_unflushed_frames_ = unflushed_frames;
+    initial_unflushed_frames_ = unflushed_frames;
   }
 
   bool finished = (job_ids_flushing.size() == 0);
 
   double relative_flushed = 1.0;
-  if (built_in_recorder_initial_unflushed_frames_ > 0)
+  if (initial_unflushed_frames_ > 0)
   {
-    relative_flushed = (double)(built_in_recorder_initial_unflushed_frames_ - unflushed_frames) / (double)built_in_recorder_initial_unflushed_frames_;
+    relative_flushed = (double)(initial_unflushed_frames_ - unflushed_frames) / (double)initial_unflushed_frames_;
   }
 
   if (!finished)
@@ -198,76 +196,112 @@ bool WaitForShutdownDialog::updateWaitForFlushing()
   return finished;
 }
 
-bool WaitForShutdownDialog::updateBuiltInRecorderUploading(const eCAL::rec::RecorderStatus& local_rec_status)
+bool WaitForShutdownDialog::updateBuiltInRecorderUploading(const std::list<eCAL::rec_server::JobHistoryEntry>& job_history)
 {
-  // Collect all jobs that are in UPLOADING state
-  std::map<uint64_t, eCAL::rec::UploadStatus> currently_uploading_jobs;
-  for (const auto& job_status : local_rec_status.job_statuses_)
+  // Update the state of all uploads that we already know of
+  for (auto& meas_upload_pair : uploading_jobs_)
   {
-    if (job_status.state_ == eCAL::rec::JobState::Uploading)
+    const auto  meas_id       = meas_upload_pair.first;
+    
+    // Search for the according entry in the job_history
+    const auto job_it = std::find_if(job_history.begin(), job_history.end(), [meas_id](const eCAL::rec_server::JobHistoryEntry& job_history_entry) { return job_history_entry.local_evaluated_job_config_.GetJobId() == meas_id; });
+
+    for (auto& host_upload_pair : meas_upload_pair.second)
     {
-      currently_uploading_jobs.emplace(job_status.job_id_, job_status.upload_status_);
+      const auto& hostname        = host_upload_pair.first;
+      bool&       still_uploading = host_upload_pair.second.first;
+      auto&       upload_status   = host_upload_pair.second.second;
+
+      bool upload_status_found = false;
+
+      if (job_it !=  job_history.end())
+      {
+        // Search for the according Host
+        auto client_status_it = job_it->client_statuses_.find(hostname);
+
+        if (client_status_it != job_it->client_statuses_.end())
+        {
+          upload_status   = client_status_it->second.job_status_.upload_status_;
+          still_uploading = (client_status_it->second.job_status_.state_ == eCAL::rec::JobState::Uploading);
+          upload_status_found = true;
+        }
+      }
+
+      if (!upload_status_found)
+      {
+        // Not sure how we got the upload status, but now it is missing. We assume it being finished. This should never happen if all clients function normally.
+        still_uploading = false;
+      }
     }
   }
 
-  // Update the text
-  ui_.built_in_recorder_uploading_label->setText(QString::number(currently_uploading_jobs.size())
-    + (currently_uploading_jobs.size() == 1 ? tr(" recording is being uploaded") : tr(" recordings are being uploaded")));
-
-  // Set all old jobs from the uploading map to 0 bytes still uploading
-  for (auto& job : built_in_recorer_uploading_jobs_)
+  // Now check if there are any new clients uploading something!
+  for (const auto& job_history_entry : job_history)
   {
-    job.second.bytes_uploaded_ = job.second.bytes_total_size_;
+    for (const auto& client_status : job_history_entry.client_statuses_)
+    {
+      if (client_status.second.job_status_.state_ == eCAL::rec::JobState::Uploading)
+      {
+        const int64_t                  meas_id       = job_history_entry.local_evaluated_job_config_.GetJobId();
+        const std::string&             hostname      = client_status.first;
+        const eCAL::rec::UploadStatus& upload_status = client_status.second.job_status_.upload_status_;
+
+        auto known_uploading_meas_it = uploading_jobs_.find(meas_id);
+        if (known_uploading_meas_it == uploading_jobs_.end())
+        {
+          known_uploading_meas_it = uploading_jobs_.emplace(meas_id, std::map<std::string, std::pair<bool, eCAL::rec::UploadStatus>>()).first;
+        }
+
+        auto known_uploading_host_it = known_uploading_meas_it->second.find(hostname);
+        if (known_uploading_host_it == known_uploading_meas_it->second.end())
+        {
+          known_uploading_meas_it->second.emplace(hostname, std::pair<bool, eCAL::rec::UploadStatus>(true, upload_status));
+        }
+      }
+    }
   }
 
-  // Update the uploading map with the jobs that are currently uploading
-  for (const auto& job : currently_uploading_jobs)
+  // Lets accumulate all data!
+  int      num_jobs_uploading(0);
+  uint64_t num_total_bytes   (0);
+  uint64_t num_uploaded_bytes(0);
+  double   rel_uploaded_     (1.0);
+
+  for (const auto& job : uploading_jobs_)
   {
-    built_in_recorer_uploading_jobs_[job.first] = job.second;
+    bool job_uploading(false);
+
+    for (const auto& client_upload_status:  job.second)
+    {
+      job_uploading      = (job_uploading || client_upload_status.second.first);
+      num_total_bytes    += client_upload_status.second.second.bytes_total_size_;
+      num_uploaded_bytes += client_upload_status.second.second.bytes_uploaded_;
+    }
+
+    if (job_uploading)
+      num_jobs_uploading++;
   }
 
-  // Calculate the totals
-  uint64_t bytes_total    = 0;
-  uint64_t bytes_uploaded = 0;
-  for (auto& job : built_in_recorer_uploading_jobs_)
-  {
-    bytes_total    += job.second.bytes_total_size_;
-    bytes_uploaded += job.second.bytes_uploaded_;
-  }
+  if (num_total_bytes > 0)
+    rel_uploaded_ = (double)num_uploaded_bytes / (double)num_total_bytes;
 
-  double relative_uploaded = 1.0;
-  if (bytes_total > 0)
-  {
-    relative_uploaded = (double)bytes_uploaded / (double)bytes_total;
-  }
-
-  bool finished = (currently_uploading_jobs.size() == 0);
+  // Update the GUI text
+  ui_.wait_for_uploads_label->setText(QString::number(num_jobs_uploading)
+    + (num_jobs_uploading == 1 ? tr(" recording is being uploaded") : tr(" recordings are being uploaded")));
   
-  if (!finished)
-  {
-    // Set the progress bar value
-    ui_.built_in_recorder_uploading_progressbar->setValue((int)(relative_uploaded * (double)ui_.built_in_recorder_uploading_progressbar->maximum()));
-  }
-  else
-  {
-    // Clear progressbar value
-    ui_.built_in_recorder_uploading_progressbar->setValue(0);
-  }
+  // Set the progress bar value
+  ui_.wait_for_uploads_progressbar->setValue((int)(rel_uploaded_ * (double)ui_.wait_for_uploads_progressbar->maximum()));
 
   // Set the progress bar text
-  ui_.built_in_recorder_uploading_progressbar->setFormat(bytesToPrettyString(bytes_uploaded) + " of " + bytesToPrettyString(bytes_total));
-
-  // set the label
-  ui_.built_in_recorder_uploading_label->setText(QString::number(currently_uploading_jobs.size())
-    + (currently_uploading_jobs.size() == 1 ? tr(" recording is being uploaded") : tr(" recordings are being uploaded")));
+  ui_.wait_for_uploads_progressbar->setFormat(bytesToPrettyString(num_uploaded_bytes) + " of " + bytesToPrettyString(num_total_bytes));
 
   // Enable / Disable the groupbox
-  ui_.built_in_recorder_uploading_groupbox->setEnabled(!finished);
+  ui_.wait_for_uploads_groupbox->setEnabled(num_jobs_uploading > 0);
 
-  if(!finished)
-    ui_.built_in_recorder_uploading_groupbox->setVisible(true);
+  if(num_jobs_uploading > 0)
+    ui_.wait_for_uploads_groupbox->setVisible(true);
 
-  return finished;
+  return (num_jobs_uploading <= 0);
 }
 
 bool WaitForShutdownDialog::updateBuiltInFtpServer()
@@ -336,10 +370,10 @@ void WaitForShutdownDialog::updateItIsSafeToExit(bool safe_to_exit)
 
 bool WaitForShutdownDialog::updateAllFields()
 {
-  const eCAL::rec::RecorderStatus local_rec_status = QEcalRec::instance()->builtInRecorderInstanceStatus();
+  auto job_history = QEcalRec::instance()->jobHistory();
 
   bool safe_to_exit = updateWaitForFlushing()
-                    & updateBuiltInRecorderUploading(local_rec_status)
+                    & updateBuiltInRecorderUploading(job_history)
                     & updateBuiltInFtpServer()
                     & updateNonUploadedMeasurements();
 

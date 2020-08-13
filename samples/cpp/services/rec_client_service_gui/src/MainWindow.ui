@@ -352,17 +352,10 @@
            <layout class="QVBoxLayout" name="verticalLayout_7">
             <item>
              <layout class="QGridLayout" name="gridLayout_2">
-              <item row="6" column="1">
-               <widget class="QLineEdit" name="command_request_upload_metadata_files_lineedit">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLineEdit" name="command_request_protocol_lineedit">
-                <property name="enabled">
-                 <bool>false</bool>
+              <item row="1" column="0">
+               <widget class="QCheckBox" name="command_request_username_checkbox">
+                <property name="text">
+                 <string>username</string>
                 </property>
                </widget>
               </item>
@@ -370,6 +363,34 @@
                <widget class="QCheckBox" name="command_request_password_checkbox">
                 <property name="text">
                  <string>password</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QLineEdit" name="command_request_port_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QLineEdit" name="command_request_upload_path_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QCheckBox" name="command_request_host_checkbox">
+                <property name="text">
+                 <string>host</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLineEdit" name="command_request_host_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
@@ -387,29 +408,22 @@
                 </property>
                </widget>
               </item>
-              <item row="4" column="1">
-               <widget class="QLineEdit" name="command_request_port_lineedit">
-                <property name="enabled">
-                 <bool>false</bool>
+              <item row="5" column="0">
+               <widget class="QCheckBox" name="command_request_upload_path_checkbox">
+                <property name="text">
+                 <string>upload_path</string>
                 </property>
                </widget>
               </item>
-              <item row="3" column="0">
-               <widget class="QCheckBox" name="command_request_host_checkbox">
-                <property name="text">
-                 <string>host</string>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="command_request_protocol_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
               <item row="2" column="1">
                <widget class="QLineEdit" name="command_request_password_lineedit">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="1">
-               <widget class="QLineEdit" name="command_request_upload_path_lineedit">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
@@ -422,20 +436,6 @@
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
-               <widget class="QLineEdit" name="command_request_host_lineedit">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="0">
-               <widget class="QCheckBox" name="command_request_upload_path_checkbox">
-                <property name="text">
-                 <string>upload_path</string>
-                </property>
-               </widget>
-              </item>
               <item row="0" column="0">
                <widget class="QCheckBox" name="command_request_protocol_checkbox">
                 <property name="text">
@@ -443,10 +443,24 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QCheckBox" name="command_request_username_checkbox">
+              <item row="6" column="1">
+               <widget class="QLineEdit" name="command_request_upload_metadata_files_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="0">
+               <widget class="QCheckBox" name="command_request_delete_after_upload_checkbox">
                 <property name="text">
-                 <string>username</string>
+                 <string>delete_after_upload</string>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="1">
+               <widget class="QLineEdit" name="command_request_delete_after_upload_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
@@ -469,7 +483,11 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QPlainTextEdit" name="command_request_comment_textedit"/>
+             <widget class="QPlainTextEdit" name="command_request_comment_textedit">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -541,7 +559,6 @@
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <tabstops>
-  <tabstop>hostname_lineedit</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>get_config_request_button</tabstop>
   <tabstop>set_config_max_pre_buffer_length_secs_checkbox</tabstop>
@@ -582,11 +599,15 @@
   <tabstop>command_request_upload_path_lineedit</tabstop>
   <tabstop>command_request_upload_metadata_files_checkbox</tabstop>
   <tabstop>command_request_upload_metadata_files_lineedit</tabstop>
+  <tabstop>command_request_delete_after_upload_checkbox</tabstop>
+  <tabstop>command_request_delete_after_upload_lineedit</tabstop>
   <tabstop>command_request_comment_checkbox</tabstop>
   <tabstop>command_request_comment_textedit</tabstop>
   <tabstop>command_request_button</tabstop>
   <tabstop>response_texteedit</tabstop>
   <tabstop>response_clear_button</tabstop>
+  <tabstop>get_state_request_button</tabstop>
+  <tabstop>hostname_lineedit</tabstop>
  </tabstops>
  <resources/>
  <connections>
@@ -601,8 +622,8 @@
      <y>85</y>
     </hint>
     <hint type="destinationlabel">
-     <x>439</x>
-     <y>88</y>
+     <x>612</x>
+     <y>86</y>
     </hint>
    </hints>
   </connection>
@@ -613,12 +634,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>131</x>
-     <y>111</y>
+     <x>143</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>439</x>
-     <y>114</y>
+     <x>612</x>
+     <y>111</y>
     </hint>
    </hints>
   </connection>
@@ -629,8 +650,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>92</x>
-     <y>137</y>
+     <x>86</x>
+     <y>135</y>
     </hint>
     <hint type="destinationlabel">
      <x>461</x>
@@ -645,8 +666,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>102</x>
-     <y>328</y>
+     <x>97</x>
+     <y>326</y>
     </hint>
     <hint type="destinationlabel">
      <x>461</x>
@@ -661,12 +682,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>99</x>
-     <y>302</y>
+     <x>101</x>
+     <y>301</y>
     </hint>
     <hint type="destinationlabel">
-     <x>616</x>
-     <y>305</y>
+     <x>612</x>
+     <y>302</y>
     </hint>
    </hints>
   </connection>
@@ -693,12 +714,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>111</x>
-     <y>286</y>
+     <x>133</x>
+     <y>281</y>
     </hint>
     <hint type="destinationlabel">
-     <x>335</x>
-     <y>288</y>
+     <x>469</x>
+     <y>282</y>
     </hint>
    </hints>
   </connection>
@@ -709,8 +730,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>89</x>
-     <y>243</y>
+     <x>111</x>
+     <y>236</y>
     </hint>
     <hint type="destinationlabel">
      <x>285</x>
@@ -741,12 +762,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>96</x>
-     <y>355</y>
+     <x>118</x>
+     <y>342</y>
     </hint>
     <hint type="destinationlabel">
-     <x>385</x>
-     <y>357</y>
+     <x>546</x>
+     <y>343</y>
     </hint>
    </hints>
   </connection>
@@ -757,12 +778,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>100</x>
-     <y>381</y>
+     <x>122</x>
+     <y>368</y>
     </hint>
     <hint type="destinationlabel">
-     <x>378</x>
-     <y>383</y>
+     <x>539</x>
+     <y>369</y>
     </hint>
    </hints>
   </connection>
@@ -773,12 +794,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>162</x>
-     <y>407</y>
+     <x>163</x>
+     <y>394</y>
     </hint>
     <hint type="destinationlabel">
-     <x>362</x>
-     <y>409</y>
+     <x>523</x>
+     <y>395</y>
     </hint>
    </hints>
   </connection>
@@ -789,12 +810,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>120</x>
-     <y>433</y>
+     <x>142</x>
+     <y>420</y>
     </hint>
     <hint type="destinationlabel">
-     <x>358</x>
-     <y>435</y>
+     <x>519</x>
+     <y>421</y>
     </hint>
    </hints>
   </connection>
@@ -805,12 +826,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>155</x>
-     <y>459</y>
+     <x>163</x>
+     <y>446</y>
     </hint>
     <hint type="destinationlabel">
-     <x>371</x>
-     <y>461</y>
+     <x>532</x>
+     <y>447</y>
     </hint>
    </hints>
   </connection>
@@ -821,12 +842,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>162</x>
-     <y>485</y>
+     <x>163</x>
+     <y>472</y>
     </hint>
     <hint type="destinationlabel">
-     <x>358</x>
-     <y>487</y>
+     <x>519</x>
+     <y>473</y>
     </hint>
    </hints>
   </connection>
@@ -837,12 +858,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>162</x>
-     <y>511</y>
+     <x>163</x>
+     <y>498</y>
     </hint>
     <hint type="destinationlabel">
-     <x>360</x>
-     <y>513</y>
+     <x>521</x>
+     <y>499</y>
     </hint>
    </hints>
   </connection>
@@ -853,12 +874,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>82</x>
+     <x>78</x>
      <y>114</y>
     </hint>
     <hint type="destinationlabel">
-     <x>269</x>
-     <y>116</y>
+     <x>345</x>
+     <y>115</y>
     </hint>
    </hints>
   </connection>
@@ -869,8 +890,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>109</x>
-     <y>492</y>
+     <x>117</x>
+     <y>491</y>
     </hint>
     <hint type="destinationlabel">
      <x>341</x>
@@ -891,6 +912,22 @@
     <hint type="destinationlabel">
      <x>381</x>
      <y>611</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_request_delete_after_upload_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_request_delete_after_upload_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>122</x>
+     <y>515</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>216</x>
+     <y>516</y>
     </hint>
    </hints>
   </connection>

@@ -26,6 +26,7 @@
 
 ConfigWidget::ConfigWidget(QWidget *parent)
   : QWidget(parent)
+  , first_show_event_(true)
 {
   ui_.setupUi(this);
 
@@ -34,18 +35,18 @@ ConfigWidget::ConfigWidget(QWidget *parent)
   connect(ui_.description_textedit,           &QTextEdit::textChanged, QEcalRec::instance(), [this]() {QEcalRec::instance()->setDescription(ui_.description_textedit->toPlainText().toStdString()); });
   connect(ui_.max_file_size_spinbox, static_cast<void (QSpinBox:: *)(int)>(&QSpinBox::valueChanged), QEcalRec::instance(), [](int megabytes) {QEcalRec::instance()->setMaxFileSizeMib(megabytes); });
 
-  connect(ui_.refresh_path_preview_button,    &QAbstractButton::clicked,            QEcalRec::instance(), [this]() { updatePathPreview(); });
+  connect(ui_.refresh_path_preview_button,    &QAbstractButton::clicked,            QEcalRec::instance(), [this]() { updatePathPreviewAndWarningLabel(); });
 
   connect(QEcalRec::instance(), &QEcalRec::measRootDirChangedSignal,    this, &ConfigWidget::measurementRootDirectoryChanged);
   connect(QEcalRec::instance(), &QEcalRec::measNameChangedSignal,       this, &ConfigWidget::measurementNameChanged);
   connect(QEcalRec::instance(), &QEcalRec::maxFileSizeMibChangedSignal, this, &ConfigWidget::maxFileSizeChanged);
   connect(QEcalRec::instance(), &QEcalRec::descriptionChangedSignal,    this, &ConfigWidget::descriptionChanged);
 
-  measurementRootDirectoryChanged(QEcalRec::instance()->measRootDir());
-  measurementNameChanged         (QEcalRec::instance()->measName());
-  descriptionChanged             (QEcalRec::instance()->description());
-  maxFileSizeChanged             (QEcalRec::instance()->maxFileSizeMib());
-  updatePathPreview              ();
+  measurementRootDirectoryChanged (QEcalRec::instance()->measRootDir());
+  measurementNameChanged          (QEcalRec::instance()->measName());
+  descriptionChanged              (QEcalRec::instance()->description());
+  maxFileSizeChanged              (QEcalRec::instance()->maxFileSizeMib());
+  updatePathPreviewAndWarningLabel();
 }
 
 ConfigWidget::~ConfigWidget()
@@ -70,7 +71,7 @@ void ConfigWidget::measurementRootDirectoryChanged(const std::string& root_dir)
     ui_.measurement_directory_lineedit->setText(root_dir.c_str());
     ui_.measurement_directory_lineedit->blockSignals(false);
   }
-  updatePathPreview();
+  updatePathPreviewAndWarningLabel();
 }
 
 void ConfigWidget::measurementNameChanged(const std::string& name)
@@ -81,10 +82,10 @@ void ConfigWidget::measurementNameChanged(const std::string& name)
     ui_.measurement_name_lineedit->setText(name.c_str());
     ui_.measurement_name_lineedit->blockSignals(false);
   }
-  updatePathPreview();
+  updatePathPreviewAndWarningLabel();
 }
 
-void ConfigWidget::updatePathPreview()
+void ConfigWidget::updatePathPreviewAndWarningLabel()
 {
   auto now = std::chrono::system_clock::now();
 
@@ -106,6 +107,8 @@ void ConfigWidget::updatePathPreview()
   QString q_path = QString::fromStdString(complete_path);
   ui_.path_preview_label->setText(q_path);
   ui_.path_preview_label->setToolTip(q_path);
+
+  ui_.measurement_name_warning->setVisible(parsed_meas_name.empty());
 }
 
 void ConfigWidget::descriptionChanged(const std::string& description)
@@ -116,5 +119,14 @@ void ConfigWidget::descriptionChanged(const std::string& description)
     ui_.description_textedit->blockSignals(true);
     ui_.description_textedit->setPlainText(q_description);
     ui_.description_textedit->blockSignals(false);
+  }
+}
+
+void ConfigWidget::showEvent(QShowEvent* /*event*/)
+{
+  if (first_show_event_)
+  {
+    ui_.measurement_name_warning->setPixmap(QPixmap(":/ecalicons/WARNING").scaled(ui_.measurement_name_label->sizeHint().height(), ui_.measurement_name_label->sizeHint().height(), Qt::AspectRatioMode::KeepAspectRatio, Qt::TransformationMode::SmoothTransformation));
+    first_show_event_ = false;
   }
 }

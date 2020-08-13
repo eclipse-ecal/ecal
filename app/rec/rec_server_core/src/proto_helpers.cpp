@@ -26,6 +26,41 @@ namespace eCAL
   {
     namespace proto_helpers
     {
+      void ToProtobuf(const eCAL::rec_server::UploadConfig&    upload_config,     eCAL::pb::rec_server::UploadConfig& upload_config_pb)
+      {
+        // type
+        switch (upload_config.type_)
+        {
+        case eCAL::rec_server::UploadConfig::Type::INTERNAL_FTP:
+          upload_config_pb.set_type(eCAL::pb::rec_server::UploadConfig_Type::UploadConfig_Type_InternalFtp);
+          break;
+        case eCAL::rec_server::UploadConfig::Type::FTP:
+          upload_config_pb.set_type(eCAL::pb::rec_server::UploadConfig_Type::UploadConfig_Type_Ftp);
+          break;
+        default:
+          upload_config_pb.set_type(eCAL::pb::rec_server::UploadConfig_Type::UploadConfig_Type_Unknown);
+          break;
+        }
+
+        // host
+        upload_config_pb.set_host(upload_config.host_);
+
+        // port
+        upload_config_pb.set_port(upload_config.port_);
+
+        // username
+        upload_config_pb.set_username(upload_config.username_);
+
+        // password
+        upload_config_pb.set_password(upload_config.password_);
+
+        // root_path
+        upload_config_pb.set_root_path(upload_config.root_path_);
+
+        // delete_after_upload
+        upload_config_pb.set_delete_after_upload(upload_config.delete_after_upload_);
+      }
+
       void ToProtobuf(const eCAL::rec_server::ClientJobStatus& client_job_status, eCAL::pb::rec_server::ClientJobStatus& client_job_status_pb)
       {
         // client_pid
@@ -63,6 +98,12 @@ namespace eCAL
         {
           (*measurement_pb.mutable_client_job_statuses())[client_job_status.first] = ToProtobuf(client_job_status.second);
         }
+
+        // is_uploaded
+        measurement_pb.set_is_uploaded(job_history_entry.is_uploaded_);
+
+        // upload_config
+        ToProtobuf(job_history_entry.upload_config_, *measurement_pb.mutable_upload_config());
       }
 
       void ToProtobuf(const eCAL::rec_server::RecServerStatus& rec_server_status, eCAL::pb::rec_server::Status& rec_server_status_pb)
@@ -83,6 +124,13 @@ namespace eCAL
         }
       }
 
+      eCAL::pb::rec_server::UploadConfig    ToProtobuf(const eCAL::rec_server::UploadConfig&    upload_config)
+      {
+        eCAL::pb::rec_server::UploadConfig result;
+        ToProtobuf(upload_config, result);
+        return result;
+      }
+
       eCAL::pb::rec_server::ClientJobStatus ToProtobuf(const eCAL::rec_server::ClientJobStatus& client_job_status)
       {
         eCAL::pb::rec_server::ClientJobStatus result;
@@ -90,14 +138,14 @@ namespace eCAL
         return result;
       }
 
-      eCAL::pb::rec_server::Measurement ToProtobuf(const eCAL::rec_server::JobHistoryEntry& job_history_entry)
+      eCAL::pb::rec_server::Measurement     ToProtobuf(const eCAL::rec_server::JobHistoryEntry& job_history_entry)
       {
         eCAL::pb::rec_server::Measurement result;
         ToProtobuf(job_history_entry, result);
         return result;
       }
 
-      eCAL::pb::rec_server::Status ToProtobuf(const eCAL::rec_server::RecServerStatus& rec_server_status)
+      eCAL::pb::rec_server::Status          ToProtobuf(const eCAL::rec_server::RecServerStatus& rec_server_status)
       {
         eCAL::pb::rec_server::Status result;
         ToProtobuf(rec_server_status, result);

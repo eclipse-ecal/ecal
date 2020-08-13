@@ -206,7 +206,7 @@ void RecServerService::UploadMeasurement(::google::protobuf::RpcController*     
     eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
     QMetaObject::invokeMethod(QEcalRec::instance(), "uploadMeasurement", Qt::BlockingQueuedConnection, Q_RETURN_ARG(eCAL::rec::Error, error), Q_ARG(int64_t, request->meas_id()));
     
-    if (error)
+    if (!error)
     {
       response->set_error_code(eCAL::pb::rec_server::ServiceResult::ErrorCode::ServiceResult_ErrorCode_no_error);
       response->set_info_message("Successfully started uploading measurement");
@@ -214,7 +214,7 @@ void RecServerService::UploadMeasurement(::google::protobuf::RpcController*     
     else
     {
       response->set_error_code(eCAL::pb::rec_server::ServiceResult::ErrorCode::ServiceResult_ErrorCode_error_internal);
-      response->set_info_message("Failed to upload measurement");
+      response->set_info_message("Failed to upload measurement: " + error.ToString());
     }
   }
   else

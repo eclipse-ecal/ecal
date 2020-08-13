@@ -496,9 +496,14 @@ namespace eCAL
       std::string working_dir = working_dir_;
       if (working_dir.empty())
       {
-        working_dir = _getcwd(nullptr, 0);
+        char* wd(nullptr);
+        if ((wd = _getcwd(nullptr, 0)) != nullptr)
+        {
+          working_dir = wd;
+          free(wd);
+        }
       }
-      else
+      if (!working_dir.empty())
       {
         char exp_dir[MAX_PATH] = { 0 };
         if (ExpandEnvironmentStringsA(working_dir.c_str(), exp_dir, MAX_PATH) > 0)

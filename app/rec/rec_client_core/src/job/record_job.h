@@ -75,7 +75,7 @@ namespace eCAL
 
       eCAL::rec::Error AddComment(const std::string& comment);
 
-      Error DeleteMeasurement();
+      Error DeleteMeasurement(bool omit_uploading_check = false);
 
     ///////////////////////////////////////////////
     // Status API

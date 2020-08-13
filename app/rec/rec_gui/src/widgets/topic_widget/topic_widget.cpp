@@ -535,7 +535,7 @@ QModelIndexList TopicWidget::selectedSourceIndexes(int column) const
   auto selected_proxy_indexes = ui_.topic_treeview->selectionModel()->selectedRows(column);
   for (const auto& index : selected_proxy_indexes)
   {
-    const QModelIndex source_index = mapToSource(index);
+    QModelIndex source_index = mapToSource(index);
     if (source_index.isValid())
     {
       selected_source_indexes.push_back(std::move(source_index));

@@ -122,6 +122,8 @@ namespace eCAL
 
     int RecServer::UploadNonUploadedMeasurements()                               { return rec_server_impl_->UploadNonUploadedMeasurements(); };
 
+    bool RecServer::HasAnyUploadError(int64_t meas_id) const                     { return rec_server_impl_->HasAnyUploadError(meas_id); }
+
     ////////////////////////////////////
     // Comments
     ////////////////////////////////////

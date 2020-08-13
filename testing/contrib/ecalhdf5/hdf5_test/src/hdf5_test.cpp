@@ -146,8 +146,8 @@ TEST(HDF5, WriteReadIntegrity)
 
     EXPECT_TRUE(hdf5_writer.Close());
   }
-
-  // Read HDF4 file
+    
+  // Read HDF5 file
   {
     eCAL::eh5::HDF5Meas hdf5_reader;
 
@@ -182,6 +182,60 @@ TEST(HDF5, WriteReadIntegrity)
     EXPECT_EQ(entries_info_set_t3.begin()->RcvTimestamp, t3_rcv_timestamp);
     EXPECT_EQ(entries_info_set_t3.begin()->SndID,        t3_id);
     EXPECT_EQ(entries_info_set_t3.begin()->SndClock,     t3_clock);
+
+    size_t t1_data_size;
+    size_t t2_data_size;
+    size_t t3_data_size;
+
+    EXPECT_TRUE(hdf5_reader.GetEntryDataSize(entries_info_set_t1.begin()->ID, t1_data_size));
+    EXPECT_TRUE(hdf5_reader.GetEntryDataSize(entries_info_set_t2.begin()->ID, t2_data_size));
+    EXPECT_TRUE(hdf5_reader.GetEntryDataSize(entries_info_set_t3.begin()->ID, t3_data_size));
+
+    std::string t1_data_read(t1_data_size, ' ');
+    std::string t2_data_read(t2_data_size, ' ');
+    std::string t3_data_read(t3_data_size, ' ');
+
+    EXPECT_TRUE(hdf5_reader.GetEntryData(entries_info_set_t1.begin()->ID, const_cast<char*>(t1_data_read.data())));
+    EXPECT_TRUE(hdf5_reader.GetEntryData(entries_info_set_t2.begin()->ID, const_cast<char*>(t2_data_read.data())));
+    EXPECT_TRUE(hdf5_reader.GetEntryData(entries_info_set_t3.begin()->ID, const_cast<char*>(t3_data_read.data())));
+
+    EXPECT_EQ(t1_data_read, t1_data);
+    EXPECT_EQ(t2_data_read, t2_data);
+    EXPECT_EQ(t3_data_read, t3_data);
+  }
+
+  // Read entries with HDF5 dir API
+  {
+    eCAL::eh5::HDF5Meas hdf5_reader;
+
+    EXPECT_TRUE(hdf5_reader.Open(output_dir));
+
+    eCAL::eh5::EntryInfoSet entries_info_set_t1;
+    eCAL::eh5::EntryInfoSet entries_info_set_t2;
+    eCAL::eh5::EntryInfoSet entries_info_set_t3;
+
+    EXPECT_TRUE(hdf5_reader.GetEntriesInfo(t1_name, entries_info_set_t1));
+    EXPECT_TRUE(hdf5_reader.GetEntriesInfo(t2_name, entries_info_set_t2));
+    EXPECT_TRUE(hdf5_reader.GetEntriesInfo(t3_name, entries_info_set_t3));
+
+    EXPECT_EQ(entries_info_set_t1.size(), 1);
+    EXPECT_EQ(entries_info_set_t2.size(), 1);
+    EXPECT_EQ(entries_info_set_t3.size(), 1);
+
+    EXPECT_EQ(entries_info_set_t1.begin()->SndTimestamp, t1_snd_timestamp);
+    EXPECT_EQ(entries_info_set_t1.begin()->RcvTimestamp, t1_rcv_timestamp);
+    EXPECT_EQ(entries_info_set_t1.begin()->SndID, t1_id);
+    EXPECT_EQ(entries_info_set_t1.begin()->SndClock, t1_clock);
+
+    EXPECT_EQ(entries_info_set_t2.begin()->SndTimestamp, t2_snd_timestamp);
+    EXPECT_EQ(entries_info_set_t2.begin()->RcvTimestamp, t2_rcv_timestamp);
+    EXPECT_EQ(entries_info_set_t2.begin()->SndID, t2_id);
+    EXPECT_EQ(entries_info_set_t2.begin()->SndClock, t2_clock);
+
+    EXPECT_EQ(entries_info_set_t3.begin()->SndTimestamp, t3_snd_timestamp);
+    EXPECT_EQ(entries_info_set_t3.begin()->RcvTimestamp, t3_rcv_timestamp);
+    EXPECT_EQ(entries_info_set_t3.begin()->SndID, t3_id);
+    EXPECT_EQ(entries_info_set_t3.begin()->SndClock, t3_clock);
 
     size_t t1_data_size;
     size_t t2_data_size;

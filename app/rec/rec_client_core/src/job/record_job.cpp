@@ -382,9 +382,41 @@ namespace eCAL
         std::string upload_path    = EcalUtils::Filesystem::CleanPath("/" + upload_config.upload_path_ + "/", EcalUtils::Filesystem::Unix);
 
         if (upload_config.upload_metadata_files_)
-          ftp_upload_thread_ = std::make_unique<FtpUploadThread>(std::move(local_root_dir), std::move(ftp_server), std::move(upload_path), std::vector<std::string>());
+        {
+          if (upload_config.delete_after_upload_)
+          {
+            ftp_upload_thread_ = std::make_unique<FtpUploadThread>(std::move(local_root_dir)
+                                                                 , std::move(ftp_server)
+                                                                 , std::move(upload_path)
+                                                                 , std::vector<std::string>()
+                                                                 , [this]() -> Error { return this->DeleteMeasurement(true); });
+          }
+          else
+          {
+            ftp_upload_thread_ = std::make_unique<FtpUploadThread>(std::move(local_root_dir)
+                                                                 , std::move(ftp_server)
+                                                                 , std::move(upload_path)
+                                                                 , std::vector<std::string>());
+          }
+        }
         else
-          ftp_upload_thread_ = std::make_unique<FtpUploadThread>(std::move(local_root_dir), std::move(ftp_server), std::move(upload_path), files_with_metadata_);
+        {
+          if (upload_config.delete_after_upload_)
+          {
+            ftp_upload_thread_ = std::make_unique<FtpUploadThread>(std::move(local_root_dir)
+                                                                 , std::move(ftp_server)
+                                                                 , std::move(upload_path)
+                                                                 , files_with_metadata_
+                                                                 , [this]() -> Error { return this->DeleteMeasurement(true); });
+          }
+          else
+          {
+            ftp_upload_thread_ = std::make_unique<FtpUploadThread>(std::move(local_root_dir)
+                                                                 , std::move(ftp_server)
+                                                                 , std::move(upload_path)
+                                                                 , files_with_metadata_);
+          }
+        }
         ftp_upload_thread_->Start();
       }
       else
@@ -448,7 +480,7 @@ namespace eCAL
       return error;
     }
 
-    Error RecordJob::DeleteMeasurement()
+    Error RecordJob::DeleteMeasurement(bool omit_uploading_check)
     {
       Error error(Error::OK);
 
@@ -463,7 +495,7 @@ namespace eCAL
           error = Error::CURRENTLY_RECORDING;
         else if ((main_recorder_state_ == JobState::Flushing) || (AnyAddonStateIs_NoLock(RecAddonJobStatus::State::Flushing)))
           error = Error::CURRENTLY_FLUSHING;
-        else if (main_recorder_state_ == JobState::Uploading)
+        else if (!omit_uploading_check && (main_recorder_state_ == JobState::Uploading))
           error = Error::CURRENTLY_UPLOADING;
         else if (!EcalUtils::Filesystem::FileStatus(job_config_.GetCompleteMeasurementPath()).IsOk())
           error = Error(Error::RESOURCE_UNAVAILABLE, job_config_.GetCompleteMeasurementPath());

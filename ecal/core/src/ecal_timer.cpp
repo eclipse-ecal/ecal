@@ -33,7 +33,7 @@ namespace eCAL
   class CTimerImpl
   {
   public:
-    CTimerImpl() : m_stop(false), m_running(false) {}
+    CTimerImpl() : m_stop(false), m_running(false), m_last_error(0) {}
 
     CTimerImpl(const int timeout_, TimerCallbackT callback_, const int delay_) : m_stop(false), m_running(false) { Start(timeout_, callback_, delay_); }
 

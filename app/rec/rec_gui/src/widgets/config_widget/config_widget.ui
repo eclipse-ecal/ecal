@@ -26,32 +26,17 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item row="3" column="1">
-    <widget class="QSpinBox" name="max_file_size_spinbox">
-     <property name="toolTip">
-      <string>Maximum HDF-5 file size (will cause the recorder to split the measurement into multiple files)</string>
-     </property>
-     <property name="keyboardTracking">
-      <bool>false</bool>
-     </property>
-     <property name="suffix">
-      <string> MiB</string>
-     </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>2147483647</number>
-     </property>
-     <property name="singleStep">
-      <number>10</number>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="measurement_directory_label">
      <property name="text">
       <string>Meas dir:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QEcalParserLineEdit" name="measurement_directory_lineedit">
+     <property name="toolTip">
+      <string>Measurement root directory</string>
      </property>
     </widget>
    </item>
@@ -62,26 +47,26 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="max_file_size_label">
-     <property name="text">
-      <string>Max file size:</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="1">
-    <widget class="QEcalParserLineEdit" name="measurement_name_lineedit">
-     <property name="toolTip">
-      <string>Measurement name (will create a directory inside the measurement root directory)</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QEcalParserLineEdit" name="measurement_directory_lineedit">
-     <property name="toolTip">
-      <string>Measurement root directory</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="measurement_name_warning">
+       <property name="toolTip">
+        <string>The measurement name on this PC is empty. This will cause measurements to not be uploadable.</string>
+       </property>
+       <property name="text">
+        <string>Warning label</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QEcalParserLineEdit" name="measurement_name_lineedit">
+       <property name="toolTip">
+        <string>Measurement name (will create a directory inside the measurement root directory)</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item row="2" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -129,6 +114,35 @@
      </item>
     </layout>
    </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="max_file_size_label">
+     <property name="text">
+      <string>Max file size:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QSpinBox" name="max_file_size_spinbox">
+     <property name="toolTip">
+      <string>Maximum HDF-5 file size (will cause the recorder to split the measurement into multiple files)</string>
+     </property>
+     <property name="keyboardTracking">
+      <bool>false</bool>
+     </property>
+     <property name="suffix">
+      <string> MiB</string>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>2147483647</number>
+     </property>
+     <property name="singleStep">
+      <number>10</number>
+     </property>
+    </widget>
+   </item>
    <item row="4" column="0" colspan="2">
     <widget class="QLabel" name="description_label">
      <property name="text">
@@ -164,9 +178,9 @@
  <tabstops>
   <tabstop>measurement_directory_lineedit</tabstop>
   <tabstop>measurement_name_lineedit</tabstop>
+  <tabstop>refresh_path_preview_button</tabstop>
   <tabstop>max_file_size_spinbox</tabstop>
   <tabstop>description_textedit</tabstop>
-  <tabstop>refresh_path_preview_button</tabstop>
  </tabstops>
  <resources>
   <include location="../../../../../iconset/ecalicons.qrc"/>

@@ -195,6 +195,8 @@ public slots:
   eCAL::rec::Error simulateUploadMeasurement(int64_t meas_id) const;
   int uploadNonUploadedMeasurements(bool omit_dialogs = false);
 
+  bool hasAnyUploadError(int64_t meas_id) const;
+
 signals:
   void uploadConfigChanged(const eCAL::rec_server::UploadConfig& upload_config);
 
