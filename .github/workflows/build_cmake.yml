@@ -79,6 +79,9 @@ jobs:
           )
         endif()
 
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+    
     - name: Configure
       shell: cmake -P {0}
       run: |
