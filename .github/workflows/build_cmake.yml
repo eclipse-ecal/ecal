@@ -17,25 +17,16 @@ jobs:
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
           }
         - {
-            name: "Windows Latest MinGW", artifact: "Windows-MinGW.tar.xz",
-            os: windows-latest,
-            build_type: "Release", cc: "gcc", cxx: "g++"
-          }
-        - {
             name: "Ubuntu Latest GCC", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: "Release", cc: "gcc", cxx: "g++"
-          }
-        - {
-            name: "macOS Latest Clang", artifact: "macOS.tar.xz",
-            os: macos-latest,
-            build_type: "Release", cc: "clang", cxx: "clang++"
           }
 
     steps:
     - uses: actions/checkout@v2
       with:
         submodules: 'true'
+
 
     - name: Download Ninja and CMake
       id: cmake_and_ninja
@@ -78,9 +69,11 @@ jobs:
             COMMAND chmod +x ${cmake_dir}/cmake
           )
         endif()
+        
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
+      
     
     - name: Configure
       shell: cmake -P {0}
@@ -115,7 +108,7 @@ jobs:
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "Bad exit status")
         endif()
-
+        
 
     - name: Build
       shell: cmake -P {0}
@@ -210,15 +203,7 @@ jobs:
             os: ubuntu-latest
           }
         - {
-            name: "Windows Latest MinGW", artifact: "Windows-MinGW.tar.xz",
-            os: ubuntu-latest
-          }
-        - {
             name: "Ubuntu Latest GCC", artifact: "Linux.tar.xz",
-            os: ubuntu-latest
-          }
-        - {
-            name: "macOS Latest Clang", artifact: "macOS.tar.xz",
             os: ubuntu-latest
           }
     needs: release
