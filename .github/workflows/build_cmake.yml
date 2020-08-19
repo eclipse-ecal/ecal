@@ -100,6 +100,9 @@ jobs:
             -D CMAKE_BUILD_TYPE=${{ matrix.config.build_type }}
             -G Ninja
             -D CMAKE_MAKE_PROGRAM=${ninja_program}
+            -D BUILD_TESTS=ON
+            -D ECAL_THIRDPARTY_BUILD_GTEST=ON
+            -D BUILD_PY_BINDING=ON
           RESULT_VARIABLE result
         )
         if (NOT result EQUAL 0)
