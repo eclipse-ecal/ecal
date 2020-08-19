@@ -31,12 +31,21 @@ jobs:
       with:
         submodules: 'true'
 
-    - name: Setup CMake
+    - name: Setup CMake (Linux)
       run: |
         mkdir "${{ runner.workspace }}/build"
         cd "${{ runner.workspace }}/build"
-        cmake $GITHUB_WORKSPACE -GNinja -DBUILD_TESTS=ON -DECAL_THIRDPARTY_BUILD_GTEST=ON -DECAL_THIRDPARTY_BUILD_HDF5=OFF -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DBUILD_PY_BINDING=ON -DBUILD_DOCS=ON
+        cmake $GITHUB_WORKSPACE -DBUILD_TESTS=ON -DECAL_THIRDPARTY_BUILD_GTEST=ON -DECAL_THIRDPARTY_BUILD_HDF5=OFF -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DBUILD_PY_BINDING=ON -DBUILD_DOCS=ON
       shell: bash
+      if: matrix.os == 'ubuntu-latest'
+
+    - name: Setup CMake (Windows)
+      run: |
+        mkdir "${{ runner.workspace }}/build"
+        cd "${{ runner.workspace }}/build"
+        cmake $GITHUB_WORKSPACE -G "Visual Studio 16 2019" -A x64 -DBUILD_TESTS=ON -DBUILD_CSHARP_BINDING=ON -DECAL_THIRDPARTY_BUILD_GTEST=ON -DBUILD_PY_BINDING=ON -DBUILD_DOCS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=_install
+      shell: cmd
+      if: matrix.os == 'windows-latest'
 
     - name: Build Release
       run: cmake --build . --config Release
@@ -58,7 +67,12 @@ jobs:
       run: ctest -V
       working-directory: ${{ runner.workspace }}/build
 
-    - name: Pack
+    - name: Pack (Linux)
       run: cpack -G DEB
       working-directory: ${{ runner.workspace }}/build
+      if: matrix.os == 'ubuntu-latest'
   
+    - name: Pack (Windows)
+      run: cpack -C Release
+      working-directory: ${{ runner.workspace }}/build
+      if: matrix.os == 'windows-latest'
