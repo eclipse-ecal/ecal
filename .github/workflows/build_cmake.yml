@@ -16,7 +16,7 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
 
     - name: Install Dependencies (Windows)
-      run: choco install ninja
+      run: choco install ninja doxygen.install wixtoolset
       if: matrix.os == 'windows-latest'
 
     - name: Install Dependencies (macOS)
@@ -43,11 +43,11 @@ jobs:
       run: cmake --build . --target create_python_egg --config Release
       working-directory: ${{ runner.workspace }}/build      
 
-    - name: Build C Documentation
+    - name: Build Documentation C
       run: cmake --build . --target documentation_c
       working-directory: ${{ runner.workspace }}/build      
 
-    - name: Build C++ Documentation
+    - name: Build Documentation C++
       run: cmake --build . --target documentation_cpp
       working-directory: ${{ runner.workspace }}/build      
 
