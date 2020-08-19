@@ -35,7 +35,7 @@ jobs:
       run: |
         mkdir "${{ runner.workspace }}/build"
         cd "${{ runner.workspace }}/build"
-        cmake $GITHUB_WORKSPACE -DBUILD_TESTS=ON -DECAL_THIRDPARTY_BUILD_GTEST=ON -DECAL_THIRDPARTY_BUILD_HDF5=OFF -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DBUILD_PY_BINDING=ON -DBUILD_DOCS=ON
+        cmake .. -DBUILD_TESTS=ON -DECAL_THIRDPARTY_BUILD_GTEST=ON -DECAL_THIRDPARTY_BUILD_HDF5=OFF -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DBUILD_PY_BINDING=ON -DBUILD_DOCS=ON
       shell: bash
       if: matrix.os == 'ubuntu-latest'
 
@@ -43,7 +43,7 @@ jobs:
       run: |
         mkdir "${{ runner.workspace }}/build"
         cd "${{ runner.workspace }}/build"
-        cmake $GITHUB_WORKSPACE -G "Visual Studio 16 2019" -A x64 -DBUILD_TESTS=ON -DBUILD_CSHARP_BINDING=ON -DECAL_THIRDPARTY_BUILD_GTEST=ON -DBUILD_PY_BINDING=ON -DBUILD_DOCS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=_install
+        cmake .. -G "Visual Studio 16 2019" -A x64 -DBUILD_TESTS=ON -DBUILD_CSHARP_BINDING=ON -DECAL_THIRDPARTY_BUILD_GTEST=ON -DBUILD_PY_BINDING=ON -DBUILD_DOCS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=_install
       shell: cmd
       if: matrix.os == 'windows-latest'
 
