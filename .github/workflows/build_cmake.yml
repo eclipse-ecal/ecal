@@ -103,6 +103,7 @@ jobs:
             -D BUILD_TESTS=ON
             -D ECAL_THIRDPARTY_BUILD_GTEST=ON
             -D BUILD_PY_BINDING=ON
+            -D BUILD_CSHARP_BINDING=ON
           RESULT_VARIABLE result
         )
         if (NOT result EQUAL 0)
