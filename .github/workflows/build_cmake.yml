@@ -6,12 +6,13 @@ jobs:
   build:
     strategy:
       matrix:
-        os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
+        # os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
+        os: ['ubuntu-latest']
     runs-on: ${{ matrix.os }}
 
     steps:
     - name: Install Dependencies (Linux)
-      run: sudo apt-get install ninja-build
+      run: sudo apt-get install ninja-build qt5-default
       if: matrix.os == 'ubuntu-latest'
 
     - name: Install Dependencies (Windows)
