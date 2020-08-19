@@ -1,48 +1,43 @@
-name: CMake Build Matrix
+name: Build with CMake and Ninja
 
 on: [push]
 
 jobs:
   build:
-    name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
     strategy:
-      fail-fast: false
       matrix:
-        config:
-        - {
-            name: "Windows VS 2019", artifact: "Windows-MSVC.tar.xz",
-            os: windows-latest,
-            build_type: "Release", cc: "cl", cxx: "cl",
-            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
-          }
-        - {
-            name: "Ubuntu GCC", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            build_type: "Release", cc: "gcc", cxx: "g++"
-          }
+        os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
+    runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Install Dependencies (Linux)
+      run: sudo apt-get install ninja-build
+      if: matrix.os == 'ubuntu-latest'
+
+    - name: Install Dependencies (Windows)
+      run: choco install ninja
+      if: matrix.os == 'windows-latest'
+
+    - name: Install Dependencies (macOS)
+      run: brew install ninja
+      if: matrix.os == 'macos-latest'
+
+    - name: Checkout
+      uses: actions/checkout@v2
       with:
         submodules: 'true'
 
-    - name: Install Python 3.x
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-        architecture: 'x64'
+    - name: Setup CMake
+      run: |
+        mkdir "${{ runner.workspace }}/build"
+        cd "${{ runner.workspace }}/build"
+        cmake $GITHUB_WORKSPACE -GNinja
+      shell: bash
 
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+    - name: Build
+      run: cmake --build .
+      working-directory: ${{ runner.workspace }}/build      
 
-    - name: Install CMake
-      # Using 'latest' branch, the latest CMake is installed.
-      uses: lukka/get-cmake@latest
-
-    - name: Run CMake
-      uses: lukka/run-cmake@v2
-      with:
-        cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
-        buildDirectory: '${{ runner.workspace }}/_build'
-        cmakeAppendedArgs: '-GNinja'
+    - name: Test
+      run: ctest -V
+      working-directory: ${{ runner.workspace }}/build
