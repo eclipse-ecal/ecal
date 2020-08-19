@@ -11,13 +11,13 @@ jobs:
       matrix:
         config:
         - {
-            name: "Windows Latest MSVC", artifact: "Windows-MSVC.tar.xz",
+            name: "Windows VS 2019", artifact: "Windows-MSVC.tar.xz",
             os: windows-latest,
             build_type: "Release", cc: "cl", cxx: "cl",
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
           }
         - {
-            name: "Ubuntu Latest GCC", artifact: "Linux.tar.xz",
+            name: "Ubuntu GCC", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
             build_type: "Release", cc: "gcc", cxx: "g++"
           }
@@ -27,17 +27,22 @@ jobs:
       with:
         submodules: 'true'
 
-    - name: Install CMake
-      # Using 'latest' branch, the latest CMake is installed.
-      uses: lukka/get-cmake@latest
+    - name: Install Python 3.x
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+        architecture: 'x64'
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
+
+    - name: Install CMake
+      # Using 'latest' branch, the latest CMake is installed.
+      uses: lukka/get-cmake@latest
 
     - name: Run CMake
       uses: lukka/run-cmake@v2
       with:
         cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
-        cmakeListsTxtPath: '${{ github.workspace }}/cmakesettings.json/CMakeLists.txt'
         buildDirectory: '${{ runner.workspace }}/_build'
-        cmakeAppendedArgs: '-GNinja '
+        cmakeAppendedArgs: '-GNinja'
