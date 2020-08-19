@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - name: Install Dependencies (Linux)
-      run: sudo apt-get install ninja-build qt5-default
+      run: sudo apt-get install ninja-build doxygen graphviz zlib1g-dev qt5-default libhdf5-dev python3.6-dev python3-pip python3-setuptools libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler
       if: matrix.os == 'ubuntu-latest'
 
     - name: Install Dependencies (Windows)
@@ -32,13 +32,30 @@ jobs:
       run: |
         mkdir "${{ runner.workspace }}/build"
         cd "${{ runner.workspace }}/build"
-        cmake $GITHUB_WORKSPACE -GNinja
+        cmake $GITHUB_WORKSPACE -GNinja -DBUILD_TESTS=ON -DECAL_THIRDPARTY_BUILD_GTEST=ON -DECAL_THIRDPARTY_BUILD_HDF5=OFF -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DBUILD_PY_BINDING=ON -DBUILD_DOCS=ON
       shell: bash
 
-    - name: Build
-      run: cmake --build .
+    - name: Build Release
+      run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/build      
 
-    - name: Test
+    - name: Build Python Egg
+      run: cmake --build . --target create_python_egg --config Release
+      working-directory: ${{ runner.workspace }}/build      
+
+    - name: Build C Documentation
+      run: cmake --build . --target documentation_c
+      working-directory: ${{ runner.workspace }}/build      
+
+    - name: Build C++ Documentation
+      run: cmake --build . --target documentation_cpp
+      working-directory: ${{ runner.workspace }}/build      
+
+    - name: Run Tests
       run: ctest -V
       working-directory: ${{ runner.workspace }}/build
+
+    - name: Pack
+      run: cpack -G DEB
+      working-directory: ${{ runner.workspace }}/build
+  
