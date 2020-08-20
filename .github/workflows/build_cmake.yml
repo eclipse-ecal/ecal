@@ -57,3 +57,119 @@ jobs:
       with:
         name: ubuntu-python-egg
         path: ${{ runner.workspace }}/build/_deploy/*.egg
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+
+    - name: Install Dependencies
+      run: choco install doxygen.install
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: 'true'
+
+    - name: CMake
+      run: |
+        mkdir "${{ runner.workspace }}/build"
+        cd "${{ runner.workspace }}/build"
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -DBUILD_TESTS=ON -DBUILD_CSHARP_BINDING=ON -DECAL_THIRDPARTY_BUILD_GTEST=ON -DBUILD_PY_BINDING=ON -DBUILD_DOCS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=_install
+      shell: cmd
+
+    - name: Build Release
+      run: cmake --build . --config Release
+      working-directory: ${{ runner.workspace }}/build      
+
+    - name: Build Python Egg
+      run: cmake --build . --target create_python_egg --config Release
+      working-directory: ${{ runner.workspace }}/build      
+
+    - name: Build Documentation C
+      run: cmake --build . --target documentation_c
+      working-directory: ${{ runner.workspace }}/build      
+
+    - name: Build Documentation C++
+      run: cmake --build . --target documentation_cpp
+      working-directory: ${{ runner.workspace }}/build      
+
+    - name: Run Tests
+      run: ctest -V
+      working-directory: ${{ runner.workspace }}/build
+
+    - name: Pack
+      run: cpack -C Release
+      working-directory: ${{ runner.workspace }}/build
+
+    - name: Upload MSI
+      uses: actions/upload-artifact@v2
+      with:
+        name: windows-msi
+        path: ${{ runner.workspace }}/build/_deploy/*.msi
+
+    - name: Upload Python Egg
+      uses: actions/upload-artifact@v2
+      with:
+        name: windows-python-egg
+        path: ${{ runner.workspace }}/build/_deploy/*.egg
+
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+
+    - name: Install Dependencies
+      run: brew install doxygen graphviz hdf5 protobuf
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: 'true'
+
+    - name: CMake
+      run: |
+        mkdir "${{ runner.workspace }}/build"
+        cd "${{ runner.workspace }}/build"
+        cmake $GITHUB_WORKSPACE -DBUILD_TESTS=ON -DECAL_THIRDPARTY_BUILD_GTEST=ON -DECAL_THIRDPARTY_BUILD_HDF5=OFF -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DBUILD_PY_BINDING=ON -DBUILD_DOCS=ON
+      shell: bash
+
+    - name: Build Release
+      run: cmake --build . --config Release
+      working-directory: ${{ runner.workspace }}/build      
+
+    - name: Build Python Egg
+      run: cmake --build . --target create_python_egg --config Release
+      working-directory: ${{ runner.workspace }}/build      
+
+    - name: Build Documentation C
+      run: cmake --build . --target documentation_c
+      working-directory: ${{ runner.workspace }}/build      
+
+    - name: Build Documentation C++
+      run: cmake --build . --target documentation_cpp
+      working-directory: ${{ runner.workspace }}/build      
+
+    - name: Run Tests
+      run: ctest -V
+      working-directory: ${{ runner.workspace }}/build
+
+    - name: Pack
+      run: cpack -G DragNDrop
+      working-directory: ${{ runner.workspace }}/build
+
+    - name: Upload DMG
+      uses: actions/upload-artifact@v2
+      with:
+        name: macos-dmg
+        path: ${{ runner.workspace }}/build/_deploy/*.dmg
+
+    - name: Upload Python Egg
+      uses: actions/upload-artifact@v2
+      with:
+        name: macos-python-egg
+        path: ${{ runner.workspace }}/build/_deploy/*.egg
