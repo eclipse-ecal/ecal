@@ -7,6 +7,20 @@ jobs:
     runs-on: macos-latest
 
     steps:
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+
     - name: Install Dependencies
-      #run: brew install zlib1g-dev python3.6-dev python3-pip python3-setuptools libcurl4-openssl-dev
-      run: brew install doxygen graphviz qt5 hdf5 protobuf
+      run: brew install doxygen graphviz hdf5 protobuf
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: 'true'
+
+    - name: Setup CMake
+      run: |
+        mkdir "${{ runner.workspace }}/build"
+        cd "${{ runner.workspace }}/build"
+        cmake $GITHUB_WORKSPACE -DBUILD_TESTS=ON -DECAL_THIRDPARTY_BUILD_GTEST=ON -DECAL_THIRDPARTY_BUILD_HDF5=OFF -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DBUILD_PY_BINDING=ON -DBUILD_DOCS=ON
+      shell: bash
