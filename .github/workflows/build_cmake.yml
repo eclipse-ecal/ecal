@@ -3,13 +3,16 @@ name: Build with CMake
 on: [push]
 
 jobs:
-  build-ubuntu:
-    runs-on: ubuntu-latest
-    
+  build-macos:
+    runs-on: macos-latest
+
     steps:
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+
     - name: Install Dependencies
-      run: sudo apt-get install ninja-build doxygen graphviz zlib1g-dev qt5-default libhdf5-dev python3.6-dev python3-pip python3-setuptools libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler
-  
+      run: brew install doxygen graphviz zlib1g-dev qt5-default libhdf5-dev python3.6-dev python3-pip python3-setuptools libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler
+
     - name: Checkout
       uses: actions/checkout@v2
       with:
@@ -21,74 +24,3 @@ jobs:
         cd "${{ runner.workspace }}/build"
         cmake $GITHUB_WORKSPACE -DBUILD_TESTS=ON -DECAL_THIRDPARTY_BUILD_GTEST=ON -DECAL_THIRDPARTY_BUILD_HDF5=OFF -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DBUILD_PY_BINDING=ON -DBUILD_DOCS=ON
       shell: bash
-
-    - name: Build Release
-      run: cmake --build . --config Release
-      working-directory: ${{ runner.workspace }}/build      
-
-    - name: Build Python Egg
-      run: cmake --build . --target create_python_egg --config Release
-      working-directory: ${{ runner.workspace }}/build      
-
-    - name: Build Documentation C
-      run: cmake --build . --target documentation_c
-      working-directory: ${{ runner.workspace }}/build      
-
-    - name: Build Documentation C++
-      run: cmake --build . --target documentation_cpp
-      working-directory: ${{ runner.workspace }}/build      
-
-    - name: Run Tests
-      run: ctest -V
-      working-directory: ${{ runner.workspace }}/build
-
-    - name: Pack
-      run: cpack -G DEB
-      working-directory: ${{ runner.workspace }}/build
-
-  build-windows:
-    runs-on: windows-latest
-
-    steps:
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v2
-
-    - name: Install Dependencies
-      run: choco install ninja doxygen.install
-
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: 'true'
-
-    - name: Setup CMake
-      run: |
-        mkdir "${{ runner.workspace }}/build"
-        cd "${{ runner.workspace }}/build"
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -DBUILD_TESTS=ON -DBUILD_CSHARP_BINDING=ON -DECAL_THIRDPARTY_BUILD_GTEST=ON -DBUILD_PY_BINDING=ON -DBUILD_DOCS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=_install
-      shell: cmd
-
-    - name: Build Release
-      run: cmake --build . --config Release
-      working-directory: ${{ runner.workspace }}/build      
-
-    - name: Build Python Egg
-      run: cmake --build . --target create_python_egg --config Release
-      working-directory: ${{ runner.workspace }}/build      
-
-    - name: Build Documentation C
-      run: cmake --build . --target documentation_c
-      working-directory: ${{ runner.workspace }}/build      
-
-    - name: Build Documentation C++
-      run: cmake --build . --target documentation_cpp
-      working-directory: ${{ runner.workspace }}/build      
-
-    - name: Run Tests
-      run: ctest -V
-      working-directory: ${{ runner.workspace }}/build
-
-    - name: Pack
-      run: cpack -C Release
-      working-directory: ${{ runner.workspace }}/build
-      if: matrix.os == 'windows-latest'
