@@ -46,8 +46,14 @@ jobs:
       run: cpack -G DEB
       working-directory: ${{ runner.workspace }}/build
 
-    - name: Upload
+    - name: Upload Debian
       uses: actions/upload-artifact@v2
       with:
-        name: eCAL-*-Linux.deb
-        path: ${{ runner.workspace }}/build/_deploy
+        name: ubuntu-debian
+        path: ${{ runner.workspace }}/build/_deploy/*.deb
+
+    - name: Upload Python Egg
+      uses: actions/upload-artifact@v2
+      with:
+        name: ubuntu-python-egg
+        path: ${{ runner.workspace }}/build/_deploy/*.egg
