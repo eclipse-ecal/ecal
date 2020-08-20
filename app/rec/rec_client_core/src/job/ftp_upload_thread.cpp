@@ -24,6 +24,7 @@
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
+#include <unistd.h>
 
 #include <ecal_utils/filesystem.h>
 
