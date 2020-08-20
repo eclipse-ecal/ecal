@@ -7,15 +7,18 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+
     - name: Install Dependencies
-      run: sudo apt-get install doxygen graphviz zlib1g-dev qt5-default libhdf5-dev python3.6-dev python3-pip python3-setuptools libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler
+      run: sudo apt-get install doxygen graphviz zlib1g-dev libhdf5-dev python3.6-dev python3-pip python3-setuptools libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler
   
     - name: Checkout
       uses: actions/checkout@v2
       with:
         submodules: 'true'
 
-    - name: Setup CMake
+    - name: CMake
       run: |
         mkdir "${{ runner.workspace }}/build"
         cd "${{ runner.workspace }}/build"
@@ -54,14 +57,14 @@ jobs:
       uses: jurplel/install-qt-action@v2
 
     - name: Install Dependencies
-      run: choco install ninja doxygen.install
+      run: choco install doxygen.install
 
     - name: Checkout
       uses: actions/checkout@v2
       with:
         submodules: 'true'
 
-    - name: Setup CMake
+    - name: CMake
       run: |
         mkdir "${{ runner.workspace }}/build"
         cd "${{ runner.workspace }}/build"
@@ -107,7 +110,7 @@ jobs:
       with:
         submodules: 'true'
 
-    - name: Setup CMake
+    - name: CMake
       run: |
         mkdir "${{ runner.workspace }}/build"
         cd "${{ runner.workspace }}/build"
