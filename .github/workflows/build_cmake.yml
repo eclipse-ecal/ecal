@@ -107,13 +107,6 @@ jobs:
       run: |
         git fetch --prune --unshallow --tags
 
-    - name: Cache build/thirdparty
-      id: cache-build-thirdparty
-      uses: actions/cache@v2
-      with:
-        path: "${{ runner.workspace }}/build/thirdparty"
-        key: ${{ runner.os }}-build-thirdparty
-
     - name: CMake
       run: |
         mkdir "${{ runner.workspace }}/build"
