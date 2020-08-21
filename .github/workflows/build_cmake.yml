@@ -75,7 +75,21 @@ jobs:
         submodules: 'true'
         fetch-depth: 0
 
-    - name: CMake
+    - name: Cache thirdparty
+      id: cache-thirdparty
+      uses: actions/cache@v2
+      with:
+        path: thirdparty
+        key: ${{ runner.os }}-thirdparty
+
+    - name: Cache build/thirdparty
+      id: cache-build-thirdparty
+      uses: actions/cache@v2
+      with:
+        path: build/thirdparty
+        key: ${{ runner.os }}-build-thirdparty
+
+   - name: CMake
       run: |
         mkdir "${{ runner.workspace }}/build"
         cd "${{ runner.workspace }}/build"
@@ -138,7 +152,7 @@ jobs:
       run: |
         mkdir "${{ runner.workspace }}/build"
         cd "${{ runner.workspace }}/build"
-        cmake $GITHUB_WORKSPACE -G "Ninja" -DBUILD_ECAL_TESTS=OFF -DECAL_THIRDPARTY_BUILD_GTEST=OFF -DECAL_THIRDPARTY_BUILD_HDF5=OFF -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DBUILD_PY_BINDING=ON -DBUILD_DOCS=ON
+        cmake $GITHUB_WORKSPACE -G "Ninja" -DBUILD_ECAL_TESTS=ON -DECAL_THIRDPARTY_BUILD_GTEST=ON -DECAL_THIRDPARTY_BUILD_HDF5=OFF -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DBUILD_PY_BINDING=ON -DBUILD_DOCS=ON
       shell: bash
 
     - name: Build Release
@@ -157,9 +171,9 @@ jobs:
       run: cmake --build . --target documentation_cpp
       working-directory: ${{ runner.workspace }}/build      
 
-    - name: Run Tests
-      run: ctest -V
-      working-directory: ${{ runner.workspace }}/build
+#    - name: Run Tests
+#      run: ctest -V
+#      working-directory: ${{ runner.workspace }}/build
 
     - name: Pack
       run: cpack -G DragNDrop

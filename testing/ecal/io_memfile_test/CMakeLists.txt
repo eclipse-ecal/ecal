@@ -41,9 +41,12 @@ ecal_add_gtest(${PROJECT_NAME} ${memfile_test_src} ${memfile_test_linux_src} ${m
 
 target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
 
-if(UNIX)
-  target_link_libraries(${PROJECT_NAME} PRIVATE rt dl pthread)
-endif()
+target_link_libraries(${PROJECT_NAME} 
+  PRIVATE
+    $<$<BOOL:${UNIX}>:dl>
+    $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>>:rt>
+    Threads::Threads)
+)
 
 ecal_install_gtest(${PROJECT_NAME})
 
