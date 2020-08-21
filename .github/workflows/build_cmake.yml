@@ -10,7 +10,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt update      
-        sudo apt-get install ninja-build libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev qt5-default
+        sudo apt-get install ninja-build doxygen graphviz libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev qt5-default
 
     - name: Checkout
       uses: actions/checkout@v2
