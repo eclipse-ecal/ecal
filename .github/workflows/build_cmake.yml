@@ -8,13 +8,13 @@ jobs:
     
     steps:
     - name: Install Dependencies
-      run: sudo apt-get install ninja-build
+      run: sudo apt-get install ninja-build libprotobuf-dev libprotoc-dev
 
     - name: Checkout
       uses: actions/checkout@v2
       with:
         submodules: 'true'
-        #fetch-depth: 0
+        fetch-depth: 0
 
     - name: CMake
       run: |
@@ -73,20 +73,13 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: 'true'
-        #fetch-depth: 0
-
-    - name: Cache thirdparty
-      id: cache-thirdparty
-      uses: actions/cache@v2
-      with:
-        path: thirdparty
-        key: ${{ runner.os }}-thirdparty
+        fetch-depth: 0
 
     - name: Cache build/thirdparty
       id: cache-build-thirdparty
       uses: actions/cache@v2
       with:
-        path: build/thirdparty
+        path: "${{ runner.workspace }}/build/thirdparty"
         key: ${{ runner.os }}-build-thirdparty
 
     - name: CMake
@@ -146,7 +139,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: 'true'
-        #fetch-depth: 0
+        fetch-depth: 0
 
     - name: CMake
       run: |
