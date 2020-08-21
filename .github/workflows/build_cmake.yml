@@ -12,9 +12,18 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@v2
-      with:
-        submodules: 'true'
-        fetch-depth: 0
+    - run: |
+        git submodule update --init asio
+        git submodule update --init curl
+        git submodule update --init fineftp-server
+        git submodule update --init googletest
+        git submodule update --init simpleini
+        git submodule update --init spdlog
+        git submodule update --init tclap
+        git submodule update --init tinyxml2
+#      with:
+#        submodules: 'true'
+#        fetch-depth: 0
 
     - name: CMake
       run: |
