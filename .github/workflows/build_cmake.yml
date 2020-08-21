@@ -13,17 +13,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - run: |
-        git submodule update --init asio
-        git submodule update --init curl
-        git submodule update --init fineftp-server
-        git submodule update --init googletest
-        git submodule update --init simpleini
-        git submodule update --init spdlog
-        git submodule update --init tclap
-        git submodule update --init tinyxml2
-#      with:
-#        submodules: 'true'
-#        fetch-depth: 0
+      with:
+        submodules: 'true'
+        fetch-depth: 64
 
     - name: CMake
       run: |
@@ -106,7 +98,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: 'true'
-        fetch-depth: 0
+        fetch-depth: 64
 
     - name: Cache build/thirdparty
       id: cache-build-thirdparty
@@ -198,7 +190,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: 'true'
-        fetch-depth: 0
+        fetch-depth: 64
 
     - name: CMake
       run: |
