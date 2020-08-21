@@ -89,7 +89,7 @@ jobs:
         path: build/thirdparty
         key: ${{ runner.os }}-build-thirdparty
 
-   - name: CMake
+    - name: CMake
       run: |
         mkdir "${{ runner.workspace }}/build"
         cd "${{ runner.workspace }}/build"
