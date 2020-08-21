@@ -49,7 +49,8 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_FINEFTP=ON \
         -DECAL_THIRDPARTY_BUILD_CURL=OFF \
         -DECAL_THIRDPARTY_BUILD_GTEST=ON \
-        -DECAL_THIRDPARTY_BUILD_HDF5=OFF
+        -DECAL_THIRDPARTY_BUILD_HDF5=OFF \
+        -DCMAKE_BUILD_TYPE=Release
       shell: bash
 
     - name: Build Release
@@ -223,7 +224,8 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_FINEFTP=ON \
         -DECAL_THIRDPARTY_BUILD_CURL=OFF \
         -DECAL_THIRDPARTY_BUILD_GTEST=ON \
-        -DECAL_THIRDPARTY_BUILD_HDF5=OFF
+        -DECAL_THIRDPARTY_BUILD_HDF5=OFF \
+        -DCMAKE_BUILD_TYPE=Release
       shell: bash
 
     - name: Build Release
