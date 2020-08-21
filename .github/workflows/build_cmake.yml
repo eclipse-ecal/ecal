@@ -137,8 +137,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_CURL=ON ^
         -DECAL_THIRDPARTY_BUILD_GTEST=ON ^
         -DECAL_THIRDPARTY_BUILD_HDF5=ON ^
-        -DBUILD_SHARED_LIBS=OFF ^
-        -DCMAKE_INSTALL_PREFIX=_install        
+        -DBUILD_SHARED_LIBS=OFF
       shell: cmd
 
     - name: Build Release
