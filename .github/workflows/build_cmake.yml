@@ -8,7 +8,7 @@ jobs:
     
     steps:
     - name: Install Dependencies
-      run: sudo apt-get install ninja-build libprotobuf-dev libprotoc-dev protobuf-compiler
+      run: sudo apt-get install ninja-build libprotobuf-dev libprotoc-dev protobuf-compiler qt5-default
 
     - name: Checkout
       uses: actions/checkout@v2
