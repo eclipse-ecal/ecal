@@ -36,8 +36,8 @@ jobs:
 
     - name: CMake
       run: |
-        mkdir "${{ runner.workspace }}/build"
-        cd "${{ runner.workspace }}/build"
+        mkdir "${{ runner.workspace }}/_build"
+        cd "${{ runner.workspace }}/_build"
         cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 ^
         -DHAS_HDF5=ON ^
         -DHAS_QT5=ON ^
@@ -70,36 +70,36 @@ jobs:
 
     - name: Build Release
       run: cmake --build . --parallel --config Release
-      working-directory: ${{ runner.workspace }}/build      
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Build Python Egg
       run: cmake --build . --target create_python_egg --config Release
-      working-directory: ${{ runner.workspace }}/build      
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Build Documentation C
       run: cmake --build . --target documentation_c
-      working-directory: ${{ runner.workspace }}/build      
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Build Documentation C++
       run: cmake --build . --target documentation_cpp
-      working-directory: ${{ runner.workspace }}/build      
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Run Tests
       run: ctest -C Release -V
-      working-directory: ${{ runner.workspace }}/build
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Pack
       run: cpack -C Release
-      working-directory: ${{ runner.workspace }}/build
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Upload MSI
       uses: actions/upload-artifact@v2
       with:
         name: windows-msi
-        path: ${{ runner.workspace }}/build/_deploy/*.msi
+        path: ${{ runner.workspace }}/_build/_deploy/*.msi
 
     - name: Upload Python Egg
       uses: actions/upload-artifact@v2
       with:
         name: windows-python-egg
-        path: ${{ runner.workspace }}/build/_deploy/*.egg
+        path: ${{ runner.workspace }}/_build/_deploy/*.egg

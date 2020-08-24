@@ -35,8 +35,8 @@ jobs:
 
     - name: CMake
       run: |
-        mkdir "${{ runner.workspace }}/build"
-        cd "${{ runner.workspace }}/build"
+        mkdir "${{ runner.workspace }}/_build"
+        cd "${{ runner.workspace }}/_build"
         cmake $GITHUB_WORKSPACE -G "Ninja" \
         -DHAS_HDF5=ON \
         -DHAS_QT5=ON \
@@ -67,37 +67,37 @@ jobs:
 
     - name: Build Release
       run: cmake --build . --config Release
-      working-directory: ${{ runner.workspace }}/build      
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Build Python Egg
       run: cmake --build . --target create_python_egg --config Release
-      working-directory: ${{ runner.workspace }}/build      
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Build Documentation C
       run: cmake --build . --target documentation_c
-      working-directory: ${{ runner.workspace }}/build      
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Build Documentation C++
       run: cmake --build . --target documentation_cpp
-      working-directory: ${{ runner.workspace }}/build      
+      working-directory: ${{ runner.workspace }}/_build
 
 #    currently all tests fail under macos ..
 #    - name: Run Tests
 #      run: ctest -V
-#      working-directory: ${{ runner.workspace }}/build
+#      working-directory: ${{ runner.workspace }}/_build
 
     - name: Pack
       run: cpack -G DragNDrop
-      working-directory: ${{ runner.workspace }}/build
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Upload DMG
       uses: actions/upload-artifact@v2
       with:
         name: macos-dmg
-        path: ${{ runner.workspace }}/build/_deploy/*.dmg
+        path: ${{ runner.workspace }}/_build/_deploy/*.dmg
 
     - name: Upload Python Egg
       uses: actions/upload-artifact@v2
       with:
         name: macos-python-egg
-        path: ${{ runner.workspace }}/build/_deploy/*.egg
+        path: ${{ runner.workspace }}/_build/_deploy/*.egg
