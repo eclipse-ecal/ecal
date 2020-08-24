@@ -17,11 +17,8 @@ jobs:
         mkdir "${{ runner.workspace }}/iceoryx"
         cd "${{ runner.workspace }}/iceoryx"
         git clone -b v0.16.1 --depth 1 https://github.com/eclipse/iceoryx.git
-        mkdir _build
-        cd _build
-        cmake .. -G "Ninja"
-        cmake --build . --parallel --config Release
-        cmake --build . --target install --config Release
+        cd iceoryx
+        ./tools/iceoryx_build_test.sh
 
     - name: Checkout
       uses: actions/checkout@v2
