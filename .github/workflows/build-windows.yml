@@ -13,6 +13,18 @@ jobs:
     - name: Install Dependencies
       run: choco install doxygen.install
 
+    - name: Install Cap’n Proto
+      run: |
+        mkdir "${{ runner.workspace }}/capnp"
+        cd "${{ runner.workspace }}/capnp"
+        git clone -b v0.8.0 --depth 1 https://github.com/sandstorm-io/capnproto.git
+        cd capnproto/c++
+        mkdir _build
+        cd _build
+        cmake .. -G "Visual Studio 16 2019" -A x64
+        cmake --build . --parallel --config Release
+        cmake --build . --target install --config Release
+
     - name: Checkout
       uses: actions/checkout@v2
       with:
@@ -24,13 +36,13 @@ jobs:
 
     - name: CMake
       run: |
-        mkdir "${{ runner.workspace }}/build"
-        cd "${{ runner.workspace }}/build"
+        mkdir "${{ runner.workspace }}/_build"
+        cd "${{ runner.workspace }}/_build"
         cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 ^
         -DHAS_HDF5=ON ^
         -DHAS_QT5=ON ^
         -DHAS_CURL=ON ^
-        -DHAS_CAPNPROTO=OFF ^
+        -DHAS_CAPNPROTO=ON ^
         -DBUILD_DOCS=ON ^
         -DBUILD_APPS=ON ^
         -DBUILD_SAMPLES=ON ^
@@ -52,41 +64,42 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_GTEST=ON ^
         -DECAL_THIRDPARTY_BUILD_HDF5=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
+        -DCMAKE_PREFIX_PATH="%ProgramFiles(x86)%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Release
       shell: cmd
 
     - name: Build Release
       run: cmake --build . --parallel --config Release
-      working-directory: ${{ runner.workspace }}/build      
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Build Python Egg
       run: cmake --build . --target create_python_egg --config Release
-      working-directory: ${{ runner.workspace }}/build      
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Build Documentation C
       run: cmake --build . --target documentation_c
-      working-directory: ${{ runner.workspace }}/build      
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Build Documentation C++
       run: cmake --build . --target documentation_cpp
-      working-directory: ${{ runner.workspace }}/build      
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Run Tests
       run: ctest -C Release -V
-      working-directory: ${{ runner.workspace }}/build
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Pack
       run: cpack -C Release
-      working-directory: ${{ runner.workspace }}/build
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Upload MSI
       uses: actions/upload-artifact@v2
       with:
         name: windows-msi
-        path: ${{ runner.workspace }}/build/_deploy/*.msi
+        path: ${{ runner.workspace }}/_build/_deploy/*.msi
 
     - name: Upload Python Egg
       uses: actions/upload-artifact@v2
       with:
         name: windows-python-egg
-        path: ${{ runner.workspace }}/build/_deploy/*.egg
+        path: ${{ runner.workspace }}/_build/_deploy/*.egg
