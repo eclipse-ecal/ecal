@@ -67,7 +67,3 @@ jobs:
     - name: Build Release
       run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/_build
-
-    - name: Run Tests
-      run: ctest -V
-      working-directory: ${{ runner.workspace }}/_build
