@@ -81,7 +81,7 @@ jobs:
       run: cmake --build . --target documentation_cpp
       working-directory: ${{ runner.workspace }}/_build
 
-#    currently all tests fail under macos ..
+#    currently event test fails under macos ..
 #    - name: Run Tests
 #      run: ctest -V
 #      working-directory: ${{ runner.workspace }}/_build

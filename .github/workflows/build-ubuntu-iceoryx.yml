@@ -10,7 +10,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt update
-        sudo apt-get install ninja-build libprotobuf-dev libprotoc-dev protobuf-compiler libacl1-dev libncurses5-dev pkg-config
+        sudo apt-get install ninja-build doxygen graphviz libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler libacl1-dev libncurses5-dev pkg-config libhdf5-dev qt5-default
 
     - name: Install Iceoryx
       run: |
@@ -36,27 +36,27 @@ jobs:
         mkdir "${{ runner.workspace }}/_build"
         cd "${{ runner.workspace }}/_build"
         cmake $GITHUB_WORKSPACE -G "Ninja" \
-        -DHAS_HDF5=OFF \
-        -DHAS_QT5=OFF \
-        -DHAS_CURL=OFF \
-        -DHAS_CAPNPROTO=OFF \
-        -DBUILD_DOCS=OFF \
-        -DBUILD_APPS=OFF \
+        -DHAS_HDF5=ON \
+        -DHAS_QT5=ON \
+        -DHAS_CURL=ON \
+        -DHAS_CAPNPROTO=ON \
+        -DBUILD_DOCS=ON \
+        -DBUILD_APPS=ON \
         -DBUILD_SAMPLES=ON \
-        -DBUILD_TIME=OFF \
-        -DBUILD_PY_BINDING=OFF \
+        -DBUILD_TIME=ON \
+        -DBUILD_PY_BINDING=ON \
         -DBUILD_CSHARP_BINDING=OFF \
         -DBUILD_ECAL_TESTS=ON \
         -DECAL_LAYER_ICEORYX=ON \
         -DECAL_INCLUDE_PY_SAMPLES=OFF \
-        -DECAL_INSTALL_SAMPLE_SOURCES=OFF \
+        -DECAL_INSTALL_SAMPLE_SOURCES=ON \
         -DECAL_JOIN_MULTICAST_TWICE=OFF \
         -DECAL_NPCAP_SUPPORT=OFF \
         -DECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS=ON \
         -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF \
         -DECAL_THIRDPARTY_BUILD_SPDLOG=ON \
         -DECAL_THIRDPARTY_BUILD_TINYXML2=ON \
-        -DECAL_THIRDPARTY_BUILD_FINEFTP=OFF \
+        -DECAL_THIRDPARTY_BUILD_FINEFTP=ON \
         -DECAL_THIRDPARTY_BUILD_CURL=OFF \
         -DECAL_THIRDPARTY_BUILD_GTEST=ON \
         -DECAL_THIRDPARTY_BUILD_HDF5=OFF \
@@ -67,3 +67,36 @@ jobs:
     - name: Build Release
       run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/_build
+
+    - name: Build Python Egg
+      run: cmake --build . --target create_python_egg --config Release
+      working-directory: ${{ runner.workspace }}/_build
+
+    - name: Build Documentation C
+      run: cmake --build . --target documentation_c
+      working-directory: ${{ runner.workspace }}/_build
+
+    - name: Build Documentation C++
+      run: cmake --build . --target documentation_cpp
+      working-directory: ${{ runner.workspace }}/_build
+
+#    currently pub/sub tests fail under macos ..
+#    - name: Run Tests
+#      run: ctest -V
+#      working-directory: ${{ runner.workspace }}/_build
+
+    - name: Pack
+      run: cpack -G DEB
+      working-directory: ${{ runner.workspace }}/_build
+
+    - name: Upload Debian
+      uses: actions/upload-artifact@v2
+      with:
+        name: ubuntu-debian-iceoryx
+        path: ${{ runner.workspace }}/_build/_deploy/*.deb
+
+    - name: Upload Python Egg
+      uses: actions/upload-artifact@v2
+      with:
+        name: ubuntu-python-egg-iceoryx
+        path: ${{ runner.workspace }}/_build/_deploy/*.egg
