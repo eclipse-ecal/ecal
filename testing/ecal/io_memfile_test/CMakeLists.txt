@@ -45,7 +45,7 @@ target_link_libraries(${PROJECT_NAME}
   PRIVATE
     $<$<BOOL:${UNIX}>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>>:rt>
-    Threads::Threads)
+    Threads::Threads
 )
 
 ecal_install_gtest(${PROJECT_NAME})
