@@ -46,7 +46,7 @@ option(BUILD_SAMPLES                           "Build the eCAL samples"         
 option(BUILD_TIME                              "Build the eCAL time interfaces"                                    ON)
 option(BUILD_PY_BINDING                        "Build eCAL python binding"                                        OFF)
 option(BUILD_CSHARP_BINDING                    "Build eCAL C# binding"                                            OFF)
-option(BUILD_TESTS                             "Build the eCAL google tests"                                      OFF)
+option(BUILD_ECAL_TESTS                        "Build the eCAL google tests"                                      OFF)
 
 option(ECAL_LAYER_ICEORYX                      "Use iceoryx shared memory as local communication layer"           OFF)
 
@@ -550,7 +550,7 @@ endif()
 # --------------------------------------------------------
 # unit tests
 # --------------------------------------------------------
-if(BUILD_TESTS)
+if(BUILD_ECAL_TESTS)
   enable_testing()
 
   # ------------------------------------------------------
