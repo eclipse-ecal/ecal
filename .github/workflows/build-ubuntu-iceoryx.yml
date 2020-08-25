@@ -19,7 +19,7 @@ jobs:
         git clone -b v0.16.1 --depth 1 https://github.com/eclipse/iceoryx.git
         cd iceoryx
         ./tools/iceoryx_build_test.sh
-        ./${{ runner.workspace }}/iceoryx/iceoryx/build/install/prefix/bin/RouDi &
+        .${{ runner.workspace }}/iceoryx/iceoryx/build/install/prefix/bin/RouDi &
 
     - name: Checkout
       uses: actions/checkout@v2
