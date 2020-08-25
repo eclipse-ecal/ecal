@@ -18,6 +18,7 @@
 
 project(test_memfile)
 
+find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
 set(memfile_test_src
