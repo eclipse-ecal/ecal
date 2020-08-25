@@ -18,6 +18,7 @@
 
 project(test_memfile)
 
+find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
 set(memfile_test_src
@@ -45,7 +46,7 @@ target_link_libraries(${PROJECT_NAME}
   PRIVATE
     $<$<BOOL:${UNIX}>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>>:rt>
-    Threads::Threads)
+    Threads::Threads
 )
 
 ecal_install_gtest(${PROJECT_NAME})
