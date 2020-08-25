@@ -20,7 +20,7 @@ jobs:
         cd iceoryx
         ./tools/iceoryx_build_test.sh
         cd ${{ runner.workspace }}/iceoryx/iceoryx/build/install/prefix/bin
-        ./Roudi &
+        ./RouDi &
 
     - name: Checkout
       uses: actions/checkout@v2
