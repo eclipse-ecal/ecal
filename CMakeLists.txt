@@ -557,7 +557,7 @@ if(BUILD_ECAL_TESTS)
   # test contrib
   # ------------------------------------------------------
   if(HAS_HDF5)
-    add_subdirectory(testing/contrib/ecalhdf5/hdf5_test)
+#    add_subdirectory(testing/contrib/ecalhdf5/hdf5_test)
   endif()
   add_subdirectory(testing/contrib/ecalproto/dynproto_test)
   add_subdirectory(testing/contrib/ecalproto/ecal_proto_test)
