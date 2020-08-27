@@ -25,6 +25,10 @@
 #include <chrono>
 #include <cstdlib>
 
+#ifdef ECAL_OS_LINUX
+#include <unistd.h>
+#endif
+
 #include <ecal_utils/filesystem.h>
 
 #ifdef WIN32

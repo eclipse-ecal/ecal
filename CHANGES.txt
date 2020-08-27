@@ -1,2 +1,0 @@
-﻿eCAL v.5.3.0 (13.03.2019):
- - third party dependecies included as git submodules

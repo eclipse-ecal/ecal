@@ -82,7 +82,7 @@ namespace
 
 TEST(IO, ClientServerBaseCallback)
 {
-  const int calls(2);
+  const int calls(1);
   const int sleep(0);
 
   // initialize eCAL API
@@ -119,7 +119,7 @@ TEST(IO, ClientServerBaseCallback)
   // add callback for server response
   client.AddResponseCallback(response_callback);
 
-  // let's match them -> wait 2*REGISTRATION_REFRESH_CYCLE (ecal_def.h)
+  // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
   eCAL::Process::SleepMS(2000);
   
   // call service
@@ -152,7 +152,7 @@ TEST(IO, ClientServerBaseCallback)
 
 TEST(IO, ClientServerBaseBlocking)
 {
-  const int calls(2);
+  const int calls(1);
   const int sleep(0);
 
   // initialize eCAL API
@@ -178,7 +178,7 @@ TEST(IO, ClientServerBaseBlocking)
   // create service client
   eCAL::CServiceClient client("service1");
 
-  // let's match them -> wait 2*REGISTRATION_REFRESH_CYCLE (ecal_def.h)
+  // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
   eCAL::Process::SleepMS(2000);
 
   // call service
@@ -294,7 +294,7 @@ TEST(IO, ClientServerProtoCallback)
   // add callback for server response
   math_client.AddResponseCallback(response_callback);
 
-  // let's match them -> wait 2*REGISTRATION_REFRESH_CYCLE (ecal_def.h)
+  // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
   eCAL::Process::SleepMS(2000);
 
   // test math service
@@ -355,7 +355,7 @@ TEST(IO, ClientServerProtoBlocking)
   // create PingService client
   eCAL::protobuf::CServiceClient<PingService> ping_client;
 
-  // let's match them -> wait 2*REGISTRATION_REFRESH_CYCLE (ecal_def.h)
+  // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
   eCAL::Process::SleepMS(2000);
 
   // test ping service
@@ -396,7 +396,7 @@ TEST(IO, ClientServerProtoBlocking)
 
 TEST(IO, MultipleServerTest)
 {
-  const int calls(2);
+  const int calls(1);
   const int sleep(0);
 
   // initialize eCAL API
@@ -436,7 +436,7 @@ TEST(IO, MultipleServerTest)
   client1.AddResponseCallback(response_callback);
   client2.AddResponseCallback(response_callback);
 
-  // let's match them -> wait 2*REGISTRATION_REFRESH_CYCLE (ecal_def.h)
+  // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
   eCAL::Process::SleepMS(2000);
 
   // call service
@@ -473,7 +473,7 @@ TEST(IO, MultipleServerTest)
 
 TEST(IO, NestedRPCCall)
 {
-  const int calls(2);
+  const int calls(1);
   const int sleep(0);
 
   // initialize eCAL API
@@ -521,7 +521,7 @@ TEST(IO, NestedRPCCall)
   client1.AddResponseCallback(response_callback1);
   client2.AddResponseCallback(response_callback2);
 
-  // let's match them -> wait 2*REGISTRATION_REFRESH_CYCLE (ecal_def.h)
+  // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
   eCAL::Process::SleepMS(2000);
 
   // call service
