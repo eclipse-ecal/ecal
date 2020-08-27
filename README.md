@@ -3,6 +3,12 @@
 
 Copyright (c) 2020, Continental Corporation.
 
+#### License
+
+[![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE.txt)
+
+#### Build States
+
 ![Build Windows Server 2019](https://github.com/continental/ecal/workflows/Build%20Windows%20Server%202019/badge.svg)
 
 ![Build Ubuntu 20.04](https://github.com/continental/ecal/workflows/Build%20Ubuntu%2020.04/badge.svg)
@@ -10,8 +16,6 @@ Copyright (c) 2020, Continental Corporation.
 ![Build Ubuntu 20.04 (Iceoryx)](https://github.com/continental/ecal/workflows/Build%20Ubuntu%2020.04%20(Iceoryx)/badge.svg)
 
 ![Build macOS Catalina 10.15](https://github.com/continental/ecal/workflows/Build%20macOS%20Catalina%2010.15/badge.svg)
-
-[![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE.txt)
 
 ## Preface
 
