@@ -19,7 +19,7 @@ jobs:
         cd "${{ runner.workspace }}/capnp"
         git clone https://github.com/sandstorm-io/capnproto.git
         cd capnproto
-        git checkout release-0.8.0
+        git checkout release-0.7.0
         cd c++
         mkdir _build
         cd _build
