@@ -30,7 +30,7 @@ jobs:
         cd "${{ runner.workspace }}/iceoryx"
         git clone https://github.com/eclipse/iceoryx.git
         cd iceoryx
-        git checkout release_0.17
+        git checkout release_0.16
         ./tools/iceoryx_build_test.sh
         cd ${{ runner.workspace }}/iceoryx/iceoryx/build/install/prefix/bin
         ./RouDi &
