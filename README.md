@@ -3,8 +3,14 @@
 
 Copyright (c) 2020, Continental Corporation.
 
-[![Build Status](https://travis-ci.org/continental/ecal.svg?branch=master)](https://travis-ci.org/continental/ecal)
-[![Build status](https://ci.appveyor.com/api/projects/status/2hnl7p9cedimrkox/branch/master?svg=true)](https://ci.appveyor.com/project/rex-schilasky/ecal/branch/master)
+![Build Windows Server 2019](https://github.com/continental/ecal/workflows/Build%20Windows%20Server%202019/badge.svg)
+
+![Build Ubuntu 20.04](https://github.com/continental/ecal/workflows/Build%20Ubuntu%2020.04/badge.svg)
+
+![Build Ubuntu 20.04 (Iceoryx)](https://github.com/continental/ecal/workflows/Build%20Ubuntu%2020.04%20(Iceoryx)/badge.svg)
+
+![Build macOS Catalina 10.15](https://github.com/continental/ecal/workflows/Build%20macOS%20Catalina%2010.15/badge.svg)
+
 [![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE.txt)
 
 ## Preface
