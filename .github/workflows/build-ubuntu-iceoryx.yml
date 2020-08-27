@@ -28,8 +28,9 @@ jobs:
         sudo apt-get install libacl1-dev libncurses5-dev pkg-config
         mkdir "${{ runner.workspace }}/iceoryx"
         cd "${{ runner.workspace }}/iceoryx"
-        git clone -b v0.16.1 --depth 1 https://github.com/eclipse/iceoryx.git
+        git clone https://github.com/eclipse/iceoryx.git
         cd iceoryx
+        git checkout release_0.17
         ./tools/iceoryx_build_test.sh
         cd ${{ runner.workspace }}/iceoryx/iceoryx/build/install/prefix/bin
         ./RouDi &
