@@ -120,7 +120,7 @@ TEST(IO, ClientServerBaseCallback)
   client.AddResponseCallback(response_callback);
 
   // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
-  eCAL::Process::SleepMS(1500);
+  eCAL::Process::SleepMS(2000);
   
   // call service
   int requests_called(0);
@@ -179,7 +179,7 @@ TEST(IO, ClientServerBaseBlocking)
   eCAL::CServiceClient client("service1");
 
   // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
-  eCAL::Process::SleepMS(1500);
+  eCAL::Process::SleepMS(2000);
 
   // call service
   int requests_called(0);
@@ -295,7 +295,7 @@ TEST(IO, ClientServerProtoCallback)
   math_client.AddResponseCallback(response_callback);
 
   // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
-  eCAL::Process::SleepMS(1500);
+  eCAL::Process::SleepMS(2000);
 
   // test math service
   SFloatTuple math_request;
@@ -356,7 +356,7 @@ TEST(IO, ClientServerProtoBlocking)
   eCAL::protobuf::CServiceClient<PingService> ping_client;
 
   // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
-  eCAL::Process::SleepMS(1500);
+  eCAL::Process::SleepMS(2000);
 
   // test ping service
   eCAL::SServiceInfo service_info;
@@ -437,7 +437,7 @@ TEST(IO, MultipleServerTest)
   client2.AddResponseCallback(response_callback);
 
   // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
-  eCAL::Process::SleepMS(1500);
+  eCAL::Process::SleepMS(2000);
 
   // call service
   int requests_called(0);
@@ -522,7 +522,7 @@ TEST(IO, NestedRPCCall)
   client2.AddResponseCallback(response_callback2);
 
   // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
-  eCAL::Process::SleepMS(1500);
+  eCAL::Process::SleepMS(2000);
 
   // call service
   for (auto i = 0; i < calls; ++i)

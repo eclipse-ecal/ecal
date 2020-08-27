@@ -22,7 +22,7 @@ jobs:
         mkdir _build
         cd _build
         cmake .. -G "Visual Studio 16 2019" -A x64
-        cmake --build . --config Release
+        cmake --build . --parallel --config Release
         cmake --build . --target install --config Release
 
     - name: Checkout
