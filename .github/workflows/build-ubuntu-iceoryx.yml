@@ -32,6 +32,8 @@ jobs:
         cd iceoryx
         git checkout release_0.17
         ./tools/iceoryx_build_test.sh
+        mkdir /etc/iceoryx
+        cp ${{ runner.workspace }}/iceoryx/iceoryx/iceoryx_posh/etc/roudi_config_example.toml /etc/iceoryx/roudi_config.toml
         cd ${{ runner.workspace }}/iceoryx/iceoryx/build/install/prefix/bin
         ./RouDi &
 

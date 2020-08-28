@@ -68,6 +68,8 @@ jobs:
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles(x86)%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Release
+        mkdir "%PROGRAMFILES%\eCAL"
+        copy "%GITHUB_WORKSPACE%\ecal\core\cfg\ecal.ini" "%PROGRAMFILES%\eCAL"
       shell: cmd
 
     - name: Build Release

@@ -62,6 +62,8 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_GTEST=ON \
         -DECAL_THIRDPARTY_BUILD_HDF5=OFF \
         -DCMAKE_BUILD_TYPE=Release
+        mkdir /etc/ecal
+        cp "%GITHUB_WORKSPACE%/ecal/core/cfg/ecal.ini" /etc/ecal
       shell: bash
 
     - name: Build Release
