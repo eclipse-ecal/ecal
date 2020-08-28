@@ -59,7 +59,10 @@ namespace eCAL
     iox::runtime::PoshRuntime::getInstance(std::string("/") + eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID()));
 
     // create publisher
-    m_publisher = std::shared_ptr<iox::popo::Publisher>(new iox::popo::Publisher({eCALPAR(ICEORYX, SERVICE), eCALPAR(ICEORYX, INSTANCE), topic_name_}));
+    const iox::capro::IdString service  (iox::cxx::TruncateToCapacity, eCALPAR(ICEORYX, SERVICE));
+    const iox::capro::IdString instance (iox::cxx::TruncateToCapacity, eCALPAR(ICEORYX, INSTANCE));
+    const iox::capro::IdString event    (iox::cxx::TruncateToCapacity, topic_name_);
+    m_publisher = std::shared_ptr<iox::popo::Publisher>(new iox::popo::Publisher({service, instance, event}));
     m_publisher->offer();
 
     return true;
