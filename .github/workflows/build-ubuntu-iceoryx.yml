@@ -32,6 +32,8 @@ jobs:
         cd iceoryx
         git checkout release_0.17
         ./tools/iceoryx_build_test.sh
+        sudo mkdir /etc/iceoryx
+        sudo cp ${{ runner.workspace }}/iceoryx/iceoryx/iceoryx_posh/etc/iceoryx/roudi_config_example.toml /etc/iceoryx/roudi_config.toml
         cd ${{ runner.workspace }}/iceoryx/iceoryx/build/install/prefix/bin
         ./RouDi &
 
@@ -75,6 +77,8 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_HDF5=OFF \
         -DCMAKE_PREFIX_PATH="${{ runner.workspace }}/iceoryx/iceoryx/build/install/prefix/lib/cmake/iceoryx_posh;${{ runner.workspace }}/iceoryx/iceoryx/build/install/prefix/lib/cmake/iceoryx_utils" \
         -DCMAKE_BUILD_TYPE=Release
+        sudo mkdir /etc/ecal
+        sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.ini" /etc/ecal
       shell: bash
 
     - name: Build Release
