@@ -51,7 +51,10 @@ namespace eCAL
     iox::runtime::PoshRuntime::getInstance(std::string("/") + eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID()));
 
     // create subscriber
-    m_subscriber = std::shared_ptr<iox::popo::Subscriber>(new iox::popo::Subscriber({eCALPAR(ICEORYX, SERVICE), eCALPAR(ICEORYX, INSTANCE), topic_name_}));
+    const iox::capro::IdString service  (iox::cxx::TruncateToCapacity, eCALPAR(ICEORYX, SERVICE));
+    const iox::capro::IdString instance (iox::cxx::TruncateToCapacity, eCALPAR(ICEORYX, INSTANCE));
+    const iox::capro::IdString event    (iox::cxx::TruncateToCapacity, topic_name_);
+    m_subscriber = std::shared_ptr<iox::popo::Subscriber>(new iox::popo::Subscriber({service, instance, event}));
     m_subscriber->setReceiveHandler(std::bind(&CDataReaderSHM::receiveHandler, this));
     m_subscriber->subscribe();
 
