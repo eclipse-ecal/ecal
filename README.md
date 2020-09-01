@@ -22,12 +22,27 @@ Copyright (c) 2020, Continental Corporation.
 The **e**nhanced **C**ommunication **A**bstraction **L**ayer (eCAL) is a middleware that enables scalable, high performance interprocess communication on a single computer node or between different nodes in a computer network.
 eCAL uses a **publish / subscribe** pattern to automatically connect different nodes in the network. It's choosing the best available data transport mechanisms - **UDP** for network communication and **High Performance Shared Memory** for local communication.
 
-With eCAL, you can:
+eCAL
 
-- Independently develop all components of your system; they only have to agree on the data format
-- Dynamically add and remove publishers and subscribers, use different versions or replace the publisher with a replay
-- Spread your publishers and subscribers across multiple machines that may even run different operating systems
-- Record, replay and inspect the traffic with powerful tools
+* is fast (up to 6GB/s for a local interprocess connection)
+* provides publish / subribe and client / server patterns
+* is designed brokerless
+* provides a C++ and C interface for easy integration into other languages (like python or csharp)
+* runs on windows, linux, intel and arm platforms
+* has powerful tools for recording, replay and monitoring all your data flows - decentralized
+
+Really ?? Just another pub/sub middleware ? Why ? What is the different to my beloved fully featured DDS ?
+
+* it's stupid simple - no complex configuration effort for all kind of communication attributes and QOS settings
+* it's message protocol agnostic - choose the message protocol the fits to your needs like [Google Protobuf](https://developers.google.com/protocol-buffers), [CapnProto](https://capnproto.org/), [Flatbuffers](https://google.github.io/flatbuffers/) ..
+* it's using the standardized recording format [HDF5](https://www.hdfgroup.org/solutions/hdf5/)
+
+What is on the roadmap ?
+
+* macos, qnx platform support
+* more language bindings (rust, go-lang)
+* ROS2 integration as ROS middleware layer
+* and ?? tell us about your use case :-)
 
 ## Links
 
