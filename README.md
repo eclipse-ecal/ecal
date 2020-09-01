@@ -33,8 +33,8 @@ eCAL
 
 Really ?? Just another pub/sub middleware ? Why ? What is the different to my beloved fully featured DDS ?
 
-* it's stupid simple - no complex configuration effort for all kind of communication attributes and QOS settings
-* it's message protocol agnostic - choose the message protocol the fits to your needs like [Google Protobuf](https://developers.google.com/protocol-buffers), [CapnProto](https://capnproto.org/), [Flatbuffers](https://google.github.io/flatbuffers/) ..
+* it's stupid simple - no complex configuration effort for all kind of communication details or QOS settings
+* it's message protocol agnostic - choose the message protocol that fits to your needs like [Google Protobuf](https://developers.google.com/protocol-buffers), [CapnProto](https://capnproto.org/), [Flatbuffers](https://google.github.io/flatbuffers/) ..
 * it's using the standardized recording format [HDF5](https://www.hdfgroup.org/solutions/hdf5/)
 
 What is on the roadmap ?
