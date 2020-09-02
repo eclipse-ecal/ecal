@@ -44,6 +44,12 @@ What is on the roadmap ?
 * more language bindings (rust, go-lang)
 * and ?? tell us about your use case :-)
 
+Friends@GitHub using eCAL
+
+* [ROS2 eCAL Middleware Layer](https://www.hdfgroup.org/solutions/hdf5/)
+* [GO language interface](https://github.com/Blutkoete/golang-ecal)
+* [Dockerfiles for eCAL](https://github.com/Blutkoete/docker-ecal)
+
 ## Links
 
 - **eCAL Documentation**: https://continental.github.io/ecal
