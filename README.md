@@ -30,6 +30,7 @@ eCAL
 * provides a C++ and C interface for easy integration into other languages (like python or csharp)
 * runs on windows, linux, intel and arm platforms
 * has powerful tools for recording, replay and monitoring all your data flows - decentralized
+* integrates gently into your ROS2 environement with the brand new [eCAL RMW](https://github.com/continental/rmw_ecal)  
 
 Really ?? Just another pub/sub middleware ? Why ? What is the different to my beloved fully featured DDS ?
 
@@ -41,7 +42,6 @@ What is on the roadmap ?
 
 * macos, qnx platform support
 * more language bindings (rust, go-lang)
-* ROS2 integration as ROS middleware layer
 * and ?? tell us about your use case :-)
 
 ## Links
