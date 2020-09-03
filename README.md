@@ -46,7 +46,7 @@ What is on the roadmap ?
 
 Friends@GitHub using eCAL
 
-* [ROS2 eCAL Middleware Layer](https://www.hdfgroup.org/solutions/hdf5/)
+* [ROS2 eCAL Middleware Layer](https://github.com/continental/rmw_ecal)
 * [GO language interface](https://github.com/Blutkoete/golang-ecal)
 * [Dockerfiles for eCAL](https://github.com/Blutkoete/docker-ecal)
 
