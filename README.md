@@ -24,7 +24,7 @@ eCAL uses a **publish / subscribe** pattern to automatically connect different n
 
 eCAL
 
-* is fast (up to 6GB/s for a local interprocess connection)
+* is fast (1 - 10 GB/s depends on payload size - with [Iceoryx](https://github.com/eclipse/iceoryx) binding even faster)
 * provides publish / subribe and client / server patterns
 * is designed brokerless
 * provides a C++ and C interface for easy integration into other languages (like python or csharp)
