@@ -96,11 +96,11 @@ jobs:
       run: cpack -C Release
       working-directory: ${{ runner.workspace }}/_build
 
-    - name: Upload MSI
+    - name: Upload Windows setup
       uses: actions/upload-artifact@v2
       with:
-        name: windows-msi
-        path: ${{ runner.workspace }}/_build/_deploy/*.msi
+        name: windows-setup
+        path: ${{ runner.workspace }}/_build/_deploy/*.exe
 
     - name: Upload Python Egg
       uses: actions/upload-artifact@v2
