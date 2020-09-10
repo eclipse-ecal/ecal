@@ -16,80 +16,158 @@
 #
 # ========================= eCAL LICENSE =================================
 
+project(documentation_sphinx)
+
+#Setup Python VENV
+# find_package(PythonInterp REQUIRED)
+
+# set(PYTHON_VENV_PATH "${CMAKE_BINARY_DIR}/_python_venv")
+
+# message(STATUS "Creating Python venv at ${PYTHON_VENV_PATH}")
+# exec_program("${PYTHON_EXECUTABLE}"
+    # ARGS -m venv ${PYTHON_VENV_PATH}
+# )
+
+# update the environment with VIRTUAL_ENV variable (mimic the activate script)
+# set (ENV{VIRTUAL_ENV} "${PYTHON_VENV_PATH}")
+# change the context of the search
+# set (Python_FIND_VIRTUALENV FIRST)
+# unset Python3_EXECUTABLE because it is also an input variable (see documentation, Artifacts Specification section)
+# unset (Python3_EXECUTABLE)
+# Launch a new search
+# find_package(PythonInterp REQUIRED)
+
+# message(STATUS "========Python executable: ${PYTHON_EXECUTABLE}")
+# message(STATUS "========PYTHON_VENV_PATH : ${PYTHON_VENV_PATH}")
+
+
+
+
+
+
+
+
+
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
+find_package(Sphinx REQUIRED)
 find_package(Doxygen REQUIRED)
 
-# Find prerequisites for generating the documentation
-if(WIN32)
-  # The HTML Help Workshop is a Microsoft-provided tools used to generate the CHM files.
-  find_program(HHC_EXECUTABLE
-    NAMES hhc hhc.exe
-    PATH_SUFFIXES "HTML Help Workshop"
-    HINTS ENV HHC_LOCATION
-    DOC "HTML Help Workshop executable")
+# This directory contains all files for creating the actual documentation
+set(DOC_SOURCE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/_sources)
+set(PYTHON_SOURCE_DIRECTORY ${CMAKE_BINARY_DIR}/python)
 
-  if(HHC_EXECUTABLE-NOTFOUND)
-    message(FATAL_ERROR "hhc.exe not found")
-  endif()
-  set(DOXYGEN_HHC_LOCATION ${HHC_EXECUTABLE})
-endif()
+#######################################
+# Copy RST files to build directory
+# Also display them all in the IDE
+#######################################
+file(GLOB_RECURSE rst_sources *.rst)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${rst_sources})
 
-if(WIN32)
-  set(DOXYGEN_GENERATE_HTML        YES)
-  set(DOXYGEN_GENERATE_MAN         NO)
-  set(DOXYGEN_SEARCHENGINE         NO)
-  set(DOXYGEN_GENERATE_HTMLHELP    YES)
-else()
-  set(DOXYGEN_GENERATE_HTML        NO)
-  set(DOXYGEN_GENERATE_MAN         YES)
-endif()
+add_custom_target(documentation_copy_rst_files ALL
+  COMMAND cmake -E rename ${CMAKE_CURRENT_SOURCE_DIR}/rst/conf.py ${CMAKE_CURRENT_SOURCE_DIR}/rst/conf.py.local
+  COMMAND cmake -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/rst ${DOC_SOURCE_DIRECTORY}
+  COMMAND cmake -E rename ${CMAKE_CURRENT_SOURCE_DIR}/rst/conf.py.local ${CMAKE_CURRENT_SOURCE_DIR}/rst/conf.py
+  SOURCES ${rst_sources}
+)
+set_property(TARGET documentation_copy_rst_files  PROPERTY FOLDER docs)
 
+add_custom_target(documentation_copy_sample_files ALL
+  COMMAND cmake -E copy_directory ${CMAKE_SOURCE_DIR}/samples/ ${DOC_SOURCE_DIRECTORY}/source_code_samples
+)
+set_property(TARGET documentation_copy_sample_files  PROPERTY FOLDER docs)
+
+add_custom_target(documentation_copy_static_dir ALL
+  COMMAND cmake -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/rst/_static ${DOC_SOURCE_DIRECTORY}/_static
+)
+set_property(TARGET documentation_copy_static_dir  PROPERTY FOLDER docs)
+
+#######################################
+# Doxygen documentation with xml output
+#######################################
+set(DOXYGEN_GENERATE_HTML        NO)
+set(DOXYGEN_GENERATE_MAN         NO)
+set(DOXYGEN_SEARCHENGINE         NO)
+set(DOXYGEN_GENERATE_HTMLHELP    NO)
+set(DOXYGEN_GENERATE_XML         YES)
 set(DOXYGEN_EXTRACT_PRIVATE      NO)
 set(DOXYGEN_ENABLE_PREPROCESSING YES)
 set(DOXYGEN_MACRO_EXPANSION      YES)
 set(DOXYGEN_EXPAND_ONLY_PREDEF   YES)
 set(DOXYGEN_PREDEFINED           protected=private)
 
-# Documentation of eCAL CPP API
-if(WIN32)
-  set(DOXYGEN_CHM_FILE ../eCAL.chm)
-endif()
 
-set(DOXYGEN_PROJECT_NAME         "eCAL C++ API")
+
+set(DOXYGEN_PROJECT_NAME         "eCAL API")
 set(DOXYGEN_PROJECT_BRIEF        "enhanced communication abstraction layer")
 set(DOXYGEN_EXAMPLE_PATH         ../samples)
 set(DOXYGEN_EXAMPLE_RECURSIVE    YES)
 set(DOXYGEN_FILE_PATTERNS        "*.h")
 set(DOXYGEN_RECURSIVE            NO)
-set(DOXYGEN_HTML_OUTPUT          "html_cpp")
+set(DOXYGEN_OUTPUT_DIRECTORY     ${DOC_SOURCE_DIRECTORY})
+set(DOXYGEN_XML_OUTPUT           ${DOC_SOURCE_DIRECTORY}/_doxygen)
+
 doxygen_add_docs(
-  documentation_cpp
+  documentation_run_doxygen
   ./doc.hpp
   ../ecal/core/include/ecal
   ../ecal/core/include/ecal/msg
+  #../ecal/core/include/ecal/cimpl
+  #../lang/csharp/include
+  ../contrib/ecalhdf5/include/ecalhdf5
+  ../contrib/ecaltime/include
+  #../ecal/metal/include/ecalmetal
+  #../ecal/metal/include/ecalmetal/udp
 )
 
-# Documentation of eCAL C API
-if(WIN32)
-  set(DOXYGEN_PROJECT_NAME         "eCAL C API")
-  set(DOXYGEN_PROJECT_BRIEF        "enhanced communication abstraction layer")
-  set(DOXYGEN_CHM_FILE             ../eCALC.chm)
-  set(DOXYGEN_EXAMPLE_PATH         "")
-  set(DOXYGEN_EXAMPLE_RECURSIVE    NO)
-  set(DOXYGEN_FILE_PATTERNS        "*.h")
-  set(DOXYGEN_RECURSIVE            NO)
-  set(DOXYGEN_HTML_OUTPUT          "html_c")
-endif()
-doxygen_add_docs(
-  documentation_c
-  ../ecal/core/include/ecal/cimpl
+set_property(TARGET documentation_run_doxygen PROPERTY FOLDER docs)
+
+
+
+#set(SPHINX_THEME sphinx_rtd_theme)
+
+#if(NOT DEFINED SPHINX_THEME)
+#    set(SPHINX_THEME default)
+#endif()
+ 
+#if(NOT DEFINED SPHINX_THEME_DIR)
+#    set(SPHINX_THEME_DIR)
+#endif()
+ 
+# Sphinx cache with pickled ReST documents
+set(SPHINX_CACHE_DIR "${CMAKE_CURRENT_BINARY_DIR}/_doctrees")
+# HTML output directory
+set(SPHINX_HTML_DIR "${CMAKE_CURRENT_BINARY_DIR}/html")
+ 
+###################################################
+# Configure the conf.py.in file
+#################################################### 
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/conf.py.in"
+    "${DOC_SOURCE_DIRECTORY}/conf.py"
+    @ONLY)
+ 
+###################################################
+# Now run the actual sphinx documentation
+####################################################  
+add_custom_target(documentation_sphinx ALL
+    #${SPHINX_APIDOC} -f
+    #-o ${DOC_SOURCE_DIRECTORY}/_apidoc/ ${PYTHON_SOURCE_DIRECTORY}
+    COMMAND ${SPHINX_EXECUTABLE}
+        -q -b html
+        -c "${DOC_SOURCE_DIRECTORY}"
+        -d "${SPHINX_CACHE_DIR}"
+        -Dbreathe_projects.eCAL=${DOXYGEN_XML_OUTPUT}
+        "${DOC_SOURCE_DIRECTORY}"
+        "${SPHINX_HTML_DIR}"
+    COMMENT "Building HTML documentation with Sphinx"
+    DEPENDS documentation_run_doxygen documentation_copy_rst_files _ecal_core_py _ecal_hdf5_py documentation_copy_sample_files documentation_copy_static_dir
 )
-
-set_property(TARGET documentation_cpp     PROPERTY FOLDER docs)
-set_property(TARGET documentation_c       PROPERTY FOLDER docs)
-
-if (WIN32)
-#install(FILES
-#
-#  COMPONENT doc
-#)
-endif (WIN32)
+    
+set_property(TARGET documentation_sphinx  PROPERTY FOLDER docs)
+    
+# Install the generated files
+install(DIRECTORY ${SPHINX_HTML_DIR}/
+  DESTINATION ${eCAL_install_doc_dir}
+  COMPONENT doc 
+)

@@ -1,4 +1,4 @@
-:orphaned:
+:orphan:
 
 .. image:: img/monitor_overview_blank.png
    :alt: eCAL Monitor
