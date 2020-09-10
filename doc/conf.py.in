@@ -41,9 +41,9 @@ release = u''
 # ones.
 extensions = [
     'sphinx_typo3_theme',
-    'sphinx.ext.autodoc',
+#    'sphinx.ext.autodoc',
 #    'sphinxcontrib.apidoc',
-    'sphinxcontrib.moderncmakedomain',
+#    'sphinxcontrib.moderncmakedomain',
     'sphinx.ext.todo',
     'sphinx.ext.githubpages',
     'breathe',
