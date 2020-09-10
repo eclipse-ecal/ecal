@@ -13,24 +13,30 @@ set(CPACK_SOURCE_STRIP_FILES "")
 SET(CPACK_OUTPUT_FILE_PREFIX _deploy)
 
 
-if(WIN32)
-  set(CPACK_GENERATOR "WIX")
-  set(CPACK_WIX_PRODUCT_GUID "87A6B30D-670A-4752-A10F-37521D01822F")
-  set(CPACK_WIX_UPGRADE_GUID "A025EF91-496F-4E1C-96D1-1E0CC7B00C74")
-  set(CPACK_WIX_SKIP_PROGRAM_FOLDER ON)
-  cpack_add_component(libprotobuf HIDDEN)
-  cpack_add_component(libprotoc HIDDEN)
-  cpack_add_component(protoc HIDDEN)
-  set(CPACK_WIX_PRODUCT_ICON ${CMAKE_SOURCE_DIR}/cpack/ecalproduct.ico)
-  set(CPACK_WIX_UI_BANNER ${CMAKE_SOURCE_DIR}/cpack/banner.png)
-  set(CPACK_WIX_UI_DIALOG ${CMAKE_SOURCE_DIR}/cpack/background.png)
-  set(CPACK_WIX_UI_REF "WixUI_Mondo")
-  set(CPACK_WIX_EXTENSIONS "WixUtilExtension")
-  set(CPACK_WIX_PATCH_FILE ${CMAKE_SOURCE_DIR}/cpack/ecal_path.xml)
-  #set(CPACK_WIX_TEMPLATE   "${CMAKE_SOURCE_DIR}/cpack/custom_template.wxs.in")
-  #configure_file("${CMAKE_SOURCE_DIR}/cpack/custom_template.wxs.in" "${CMAKE_BINARY_DIR}/custom_template.wxi" #@ONLY)
+# if(WIN32)
+  # set(CPACK_GENERATOR "WIX")
+  # set(CPACK_WIX_PRODUCT_GUID "87A6B30D-670A-4752-A10F-37521D01822F")
+  # set(CPACK_WIX_UPGRADE_GUID "A025EF91-496F-4E1C-96D1-1E0CC7B00C74")
+  # set(CPACK_WIX_SKIP_PROGRAM_FOLDER ON)
+  # cpack_add_component(libprotobuf HIDDEN)
+  # cpack_add_component(libprotoc HIDDEN)
+  # cpack_add_component(protoc HIDDEN)
+  # set(CPACK_WIX_PRODUCT_ICON ${CMAKE_SOURCE_DIR}/cpack/ecalproduct.ico)
+  # set(CPACK_WIX_UI_BANNER ${CMAKE_SOURCE_DIR}/cpack/banner.png)
+  # set(CPACK_WIX_UI_DIALOG ${CMAKE_SOURCE_DIR}/cpack/background.png)
+  # set(CPACK_WIX_UI_REF "WixUI_Mondo")
+  # set(CPACK_WIX_EXTENSIONS "WixUtilExtension")
+  ##set(CPACK_WIX_PATCH_FILE ${CMAKE_SOURCE_DIR}/cpack/ecal_path.xml)
+  ##set(CPACK_WIX_TEMPLATE   "${CMAKE_SOURCE_DIR}/cpack/custom_template.wxs.in")
+  ##configure_file("${CMAKE_SOURCE_DIR}/cpack/custom_template.wxs.in" "${CMAKE_BINARY_DIR}/custom_template.wxi" #@ONLY)
   
+#endif()
+if(WIN32)
+  set(CPACK_GENERATOR "External")
+  set(CPACK_EXTERNAL_ENABLE_STAGING ON)
+  set(CPACK_EXTERNAL_PACKAGE_SCRIPT "${CMAKE_SOURCE_DIR}/cpack/innosetup.cmake")
 endif()
+
 
 if(UNIX)
   set(CPACK_GENERATOR "DEB")
@@ -50,10 +56,10 @@ set(CPACK_RESOURCE_FILE_README  ${CMAKE_SOURCE_DIR}/README.md)
 
 get_cmake_property(CPACK_COMPONENTS_ALL COMPONENTS)
 list(REMOVE_ITEM CPACK_COMPONENTS_ALL 
-  "libprotobuf-lite"
-  "protobuf-export"
-  "protobuf-headers"
-  "protobuf-protos"
+  #"libprotobuf-lite"
+  #"protobuf-export"
+  #"protobuf-headers"
+  #"protobuf-protos"
   "tinyxml2_config"
   "tinyxml2_headers"
   "tinyxml2_libraries"
