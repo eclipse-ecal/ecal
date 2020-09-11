@@ -122,3 +122,14 @@ jobs:
       with:
         name: windows-python-egg
         path: ${{ runner.workspace }}/_build/_deploy/*.egg
+
+  deploy-gh-pages:
+    runs-on: windows-latest
+    needs: build-windows
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Deploy GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3.6.4
+        with:
+          publish_branch: gh-pages
+          publish_dir: ${{ runner.workspace }}/_build/doc/html
