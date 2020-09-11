@@ -6,13 +6,14 @@ File ecal_timed_cb.h
 
 
 eCAL timer callback class (for internal use only !!) 
- 
+
+
 
 .. contents:: Contents
    :local:
    :backlinks: none
 
-Definition (``ecal\core\include\ecal\ecal_timed_cb.h``)
+Definition (``ecal/core/include/ecal/ecal_timed_cb.h``)
 -------------------------------------------------------
 
 
@@ -55,5 +56,5 @@ Classes
 -------
 
 
-- :ref:`exhale_class_classe_c_a_l_1_1_c_timed_c_b`
+- :ref:`exhale_class_classeCAL_1_1CTimedCB`
 

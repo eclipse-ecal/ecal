@@ -10,8 +10,8 @@ Directory contrib
 Subdirectories
 --------------
 
-- :ref:`dir_D__Projects_ecal_ecal_contrib_ecalhdf5`
-- :ref:`dir_D__Projects_ecal_ecal_contrib_ecaltime`
+- :ref:`dir__home_runner_work_ecal_ecal_contrib_ecalhdf5`
+- :ref:`dir__home_runner_work_ecal_ecal_contrib_ecaltime`
 
 
 

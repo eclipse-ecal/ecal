@@ -6,13 +6,14 @@ File ecal_init.h
 
 
 eCAL initialize components 
- 
+
+
 
 .. contents:: Contents
    :local:
    :backlinks: none
 
-Definition (``ecal\core\include\ecal\ecal_init.h``)
+Definition (``ecal/core/include/ecal/ecal_init.h``)
 ---------------------------------------------------
 
 

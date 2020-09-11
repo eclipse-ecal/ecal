@@ -6,13 +6,14 @@ File ecal_subscriber.h
 
 
 eCAL subscriber interface 
- 
+
+
 
 .. contents:: Contents
    :local:
    :backlinks: none
 
-Definition (``ecal\core\include\ecal\ecal_subscriber.h``)
+Definition (``ecal/core/include/ecal/ecal_subscriber.h``)
 ---------------------------------------------------------
 
 
@@ -30,15 +31,16 @@ eCAL message subscriber interface
 
 
 
+
 Includes
 --------
 
 
-- ``ecal/ecal_callback.h``
+- ``ecal/ecal_callback.h`` (:ref:`file_ecal_core_include_ecal_ecal_callback.h`)
 
-- ``ecal/ecal_os.h``
+- ``ecal/ecal_os.h`` (:ref:`file_ecal_core_include_ecal_ecal_os.h`)
 
-- ``ecal/ecal_qos.h``
+- ``ecal/ecal_qos.h`` (:ref:`file_ecal_core_include_ecal_ecal_qos.h`)
 
 - ``set``
 
@@ -68,5 +70,5 @@ Classes
 -------
 
 
-- :ref:`exhale_class_classe_c_a_l_1_1_c_subscriber`
+- :ref:`exhale_class_classeCAL_1_1CSubscriber`
 

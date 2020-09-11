@@ -6,13 +6,14 @@ File dynamic.h
 
 
 eCAL dynamic reflection exception 
- 
+
+
 
 .. contents:: Contents
    :local:
    :backlinks: none
 
-Definition (``ecal\core\include\ecal\msg\dynamic.h``)
+Definition (``ecal/core/include/ecal/msg/dynamic.h``)
 -----------------------------------------------------
 
 

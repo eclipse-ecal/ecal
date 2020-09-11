@@ -4,7 +4,7 @@
 Program Listing for File eh5_types.h
 ====================================
 
-|exhale_lsh| :ref:`Return to documentation for file <file_contrib_ecalhdf5_include_ecalhdf5_eh5_types.h>` (``contrib\ecalhdf5\include\ecalhdf5\eh5_types.h``)
+|exhale_lsh| :ref:`Return to documentation for file <file_contrib_ecalhdf5_include_ecalhdf5_eh5_types.h>` (``contrib/ecalhdf5/include/ecalhdf5/eh5_types.h``)
 
 .. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
 

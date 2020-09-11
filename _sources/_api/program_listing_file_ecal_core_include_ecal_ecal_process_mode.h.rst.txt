@@ -4,7 +4,7 @@
 Program Listing for File ecal_process_mode.h
 ============================================
 
-|exhale_lsh| :ref:`Return to documentation for file <file_ecal_core_include_ecal_ecal_process_mode.h>` (``ecal\core\include\ecal\ecal_process_mode.h``)
+|exhale_lsh| :ref:`Return to documentation for file <file_ecal_core_include_ecal_ecal_process_mode.h>` (``ecal/core/include/ecal/ecal_process_mode.h``)
 
 .. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
 

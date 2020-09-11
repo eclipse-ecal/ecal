@@ -6,13 +6,14 @@ File ecal_publisher.h
 
 
 eCAL publisher interface 
- 
+
+
 
 .. contents:: Contents
    :local:
    :backlinks: none
 
-Definition (``ecal\core\include\ecal\ecal_publisher.h``)
+Definition (``ecal/core/include/ecal/ecal_publisher.h``)
 --------------------------------------------------------
 
 
@@ -30,17 +31,18 @@ eCAL message publisher interface
 
 
 
+
 Includes
 --------
 
 
-- ``ecal/ecal_callback.h``
+- ``ecal/ecal_callback.h`` (:ref:`file_ecal_core_include_ecal_ecal_callback.h`)
 
-- ``ecal/ecal_os.h``
+- ``ecal/ecal_os.h`` (:ref:`file_ecal_core_include_ecal_ecal_os.h`)
 
-- ``ecal/ecal_qos.h``
+- ``ecal/ecal_qos.h`` (:ref:`file_ecal_core_include_ecal_ecal_qos.h`)
 
-- ``ecal/ecal_tlayer.h``
+- ``ecal/ecal_tlayer.h`` (:ref:`file_ecal_core_include_ecal_ecal_tlayer.h`)
 
 - ``string``
 
@@ -70,5 +72,5 @@ Classes
 -------
 
 
-- :ref:`exhale_class_classe_c_a_l_1_1_c_publisher`
+- :ref:`exhale_class_classeCAL_1_1CPublisher`
 

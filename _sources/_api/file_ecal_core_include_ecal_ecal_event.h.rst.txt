@@ -6,13 +6,14 @@ File ecal_event.h
 
 
 eCAL event interface 
- 
+
+
 
 .. contents:: Contents
    :local:
    :backlinks: none
 
-Definition (``ecal\core\include\ecal\ecal_event.h``)
+Definition (``ecal/core/include/ecal/ecal_event.h``)
 ----------------------------------------------------
 
 
@@ -29,9 +30,9 @@ Includes
 --------
 
 
-- ``ecal/ecal_eventhandle.h``
+- ``ecal/ecal_eventhandle.h`` (:ref:`file_ecal_core_include_ecal_ecal_eventhandle.h`)
 
-- ``ecal/ecal_os.h``
+- ``ecal/ecal_os.h`` (:ref:`file_ecal_core_include_ecal_ecal_os.h`)
 
 - ``string``
 

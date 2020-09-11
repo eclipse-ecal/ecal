@@ -6,13 +6,14 @@ File ecal_callback.h
 
 
 eCAL subscriber callback interface 
- 
+
+
 
 .. contents:: Contents
    :local:
    :backlinks: none
 
-Definition (``ecal\core\include\ecal\ecal_callback.h``)
+Definition (``ecal/core/include/ecal/ecal_callback.h``)
 -------------------------------------------------------
 
 
@@ -61,11 +62,11 @@ Classes
 -------
 
 
-- :ref:`exhale_struct_structe_c_a_l_1_1_s_pub_event_callback_data`
+- :ref:`exhale_struct_structeCAL_1_1SPubEventCallbackData`
 
-- :ref:`exhale_struct_structe_c_a_l_1_1_s_receive_callback_data`
+- :ref:`exhale_struct_structeCAL_1_1SReceiveCallbackData`
 
-- :ref:`exhale_struct_structe_c_a_l_1_1_s_sub_event_callback_data`
+- :ref:`exhale_struct_structeCAL_1_1SSubEventCallbackData`
 
 
 Typedefs

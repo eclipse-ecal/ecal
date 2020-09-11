@@ -6,6 +6,11 @@ FAQ
 
 Something doesn't work? Read through this list of hotfixes.
 
+What happened to eCAL 1-4?
+==========================
+
+eCAL 1-4 have been developed as internal tool and never got published. The first public version of eCAL is eCAL 5.
+
 eCAL is not functioning while being connected to a VPN
 ======================================================
 

@@ -8,7 +8,7 @@ File dynamic_sleeper.h
    :local:
    :backlinks: none
 
-Definition (``contrib\ecaltime\include\dynamic_sleeper.h``)
+Definition (``contrib/ecaltime/include/dynamic_sleeper.h``)
 -----------------------------------------------------------
 
 
@@ -42,5 +42,5 @@ Classes
 -------
 
 
-- :ref:`exhale_class_class_c_dynamic_sleeper`
+- :ref:`exhale_class_classCDynamicSleeper`
 

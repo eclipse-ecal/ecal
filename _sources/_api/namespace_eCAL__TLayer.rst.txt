@@ -17,7 +17,7 @@ Classes
 -------
 
 
-- :ref:`exhale_struct_structe_c_a_l_1_1_t_layer_1_1_s_t_layer`
+- :ref:`exhale_struct_structeCAL_1_1TLayer_1_1STLayer`
 
 
 Enums

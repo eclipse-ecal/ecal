@@ -4,7 +4,7 @@
 Program Listing for File subscriber.h
 =====================================
 
-|exhale_lsh| :ref:`Return to documentation for file <file_ecal_core_include_ecal_msg_subscriber.h>` (``ecal\core\include\ecal\msg\subscriber.h``)
+|exhale_lsh| :ref:`Return to documentation for file <file_ecal_core_include_ecal_msg_subscriber.h>` (``ecal/core/include/ecal/msg/subscriber.h``)
 
 .. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
 

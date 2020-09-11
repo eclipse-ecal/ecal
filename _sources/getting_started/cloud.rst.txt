@@ -86,6 +86,9 @@ This is done by creating a **multicast route**.
 
       post-up ifconfig lo multicast
       post-up route add -net 239.0.0.0 netmask 255.255.255.0 dev lo metric 1000
+   
+   .. note::
+      The high metric will cause this loopback route to have lower priority than the route to the external interface that we will create in the next step.
 
 #. Configure a route for the external interface:
 

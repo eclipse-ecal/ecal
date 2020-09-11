@@ -4,7 +4,7 @@
 Program Listing for File dynamic_sleeper.h
 ==========================================
 
-|exhale_lsh| :ref:`Return to documentation for file <file_contrib_ecaltime_include_dynamic_sleeper.h>` (``contrib\ecaltime\include\dynamic_sleeper.h``)
+|exhale_lsh| :ref:`Return to documentation for file <file_contrib_ecaltime_include_dynamic_sleeper.h>` (``contrib/ecaltime/include/dynamic_sleeper.h``)
 
 .. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
 

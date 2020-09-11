@@ -6,13 +6,14 @@ File ecal_monitoring.h
 
 
 eCAL monitoring interface 
- 
+
+
 
 .. contents:: Contents
    :local:
    :backlinks: none
 
-Definition (``ecal\core\include\ecal\ecal_monitoring.h``)
+Definition (``ecal/core/include/ecal/ecal_monitoring.h``)
 ---------------------------------------------------------
 
 
@@ -29,7 +30,7 @@ Includes
 --------
 
 
-- ``ecal/ecal_os.h``
+- ``ecal/ecal_os.h`` (:ref:`file_ecal_core_include_ecal_ecal_os.h`)
 
 - ``string``
 

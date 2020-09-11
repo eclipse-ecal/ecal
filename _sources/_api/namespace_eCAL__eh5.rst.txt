@@ -17,9 +17,9 @@ Classes
 -------
 
 
-- :ref:`exhale_struct_structe_c_a_l_1_1eh5_1_1_s_entry_info`
+- :ref:`exhale_struct_structeCAL_1_1eh5_1_1SEntryInfo`
 
-- :ref:`exhale_class_classe_c_a_l_1_1eh5_1_1_h_d_f5_meas`
+- :ref:`exhale_class_classeCAL_1_1eh5_1_1HDF5Meas`
 
 
 Enums

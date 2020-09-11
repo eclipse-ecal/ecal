@@ -6,13 +6,14 @@ File ecal_process_mode.h
 
 
 eCAL process start mode 
- 
+
+
 
 .. contents:: Contents
    :local:
    :backlinks: none
 
-Definition (``ecal\core\include\ecal\ecal_process_mode.h``)
+Definition (``ecal/core/include/ecal/ecal_process_mode.h``)
 -----------------------------------------------------------
 
 

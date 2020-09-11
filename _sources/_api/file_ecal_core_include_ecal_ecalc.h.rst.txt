@@ -6,13 +6,14 @@ File ecalc.h
 
 
 eCAL main c header file 
- 
+
+
 
 .. contents:: Contents
    :local:
    :backlinks: none
 
-Definition (``ecal\core\include\ecal\ecalc.h``)
+Definition (``ecal/core/include/ecal/ecalc.h``)
 -----------------------------------------------
 
 
@@ -59,7 +60,7 @@ Includes
 
 - ``ecal/ecal_defs.h``
 
-- ``ecal/ecal_os.h``
+- ``ecal/ecal_os.h`` (:ref:`file_ecal_core_include_ecal_ecal_os.h`)
 
 - ``string.h``
 

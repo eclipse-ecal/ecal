@@ -6,13 +6,14 @@ File eh5_meas.h
 
 
 eCALHDF5 measurement class 
- 
+
+
 
 .. contents:: Contents
    :local:
    :backlinks: none
 
-Definition (``contrib\ecalhdf5\include\ecalhdf5\eh5_meas.h``)
+Definition (``contrib/ecalhdf5/include/ecalhdf5/eh5_meas.h``)
 -------------------------------------------------------------
 
 
@@ -55,5 +56,5 @@ Classes
 -------
 
 
-- :ref:`exhale_class_classe_c_a_l_1_1eh5_1_1_h_d_f5_meas`
+- :ref:`exhale_class_classeCAL_1_1eh5_1_1HDF5Meas`
 

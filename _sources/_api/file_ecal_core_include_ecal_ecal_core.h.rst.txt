@@ -6,13 +6,14 @@ File ecal_core.h
 
 
 eCAL core function interface 
- 
+
+
 
 .. contents:: Contents
    :local:
    :backlinks: none
 
-Definition (``ecal\core\include\ecal\ecal_core.h``)
+Definition (``ecal/core/include/ecal/ecal_core.h``)
 ---------------------------------------------------
 
 
@@ -29,7 +30,7 @@ Includes
 --------
 
 
-- ``ecal/ecal_init.h``
+- ``ecal/ecal_init.h`` (:ref:`file_ecal_core_include_ecal_ecal_init.h`)
 
 - ``string``
 
@@ -63,9 +64,9 @@ Functions
 
 - :ref:`exhale_function_ecal__core_8h_1aaf5f98fd50238b9b05a20ad01427fafe`
 
-- :ref:`exhale_function_ecal__core_8h_1ac52f8cc16ece6d66783726f78695ff87`
+- :ref:`exhale_function_ecal__core_8h_1ad544729d963328cb79722c7280883719`
 
-- :ref:`exhale_function_ecal__core_8h_1a714f5511a81c28caa345b820bad16bf1`
+- :ref:`exhale_function_ecal__core_8h_1a5f896560f908096e5591785cc00a08d1`
 
 - :ref:`exhale_function_ecal__core_8h_1a390408819d676df7778dc77934dcd7eb`
 

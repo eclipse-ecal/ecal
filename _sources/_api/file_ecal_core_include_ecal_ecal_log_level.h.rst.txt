@@ -6,13 +6,14 @@ File ecal_log_level.h
 
 
 eCAL logging severities 
- 
+
+
 
 .. contents:: Contents
    :local:
    :backlinks: none
 
-Definition (``ecal\core\include\ecal\ecal_log_level.h``)
+Definition (``ecal/core/include/ecal/ecal_log_level.h``)
 --------------------------------------------------------
 
 

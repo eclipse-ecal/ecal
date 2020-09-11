@@ -8,7 +8,7 @@ File ecaltime.h
    :local:
    :backlinks: none
 
-Definition (``contrib\ecaltime\include\ecaltime.h``)
+Definition (``contrib/ecaltime/include/ecaltime.h``)
 ----------------------------------------------------
 
 

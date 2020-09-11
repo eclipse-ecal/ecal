@@ -6,13 +6,14 @@ File ecal_process_severity.h
 
 
 eCAL process severity 
- 
+
+
 
 .. contents:: Contents
    :local:
    :backlinks: none
 
-Definition (``ecal\core\include\ecal\ecal_process_severity.h``)
+Definition (``ecal/core/include/ecal/ecal_process_severity.h``)
 ---------------------------------------------------------------
 
 
