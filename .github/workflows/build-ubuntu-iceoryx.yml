@@ -94,13 +94,13 @@ jobs:
       run: cmake --build . --target create_python_egg --config Release
       working-directory: ${{ runner.workspace }}/_build
 
-    - name: Build Documentation C
-      run: cmake --build . --target documentation_c
-      working-directory: ${{ runner.workspace }}/_build
+#    - name: Build Documentation C
+#      run: cmake --build . --target documentation_c
+#      working-directory: ${{ runner.workspace }}/_build
 
-    - name: Build Documentation C++
-      run: cmake --build . --target documentation_cpp
-      working-directory: ${{ runner.workspace }}/_build
+#    - name: Build Documentation C++
+#      run: cmake --build . --target documentation_cpp
+#      working-directory: ${{ runner.workspace }}/_build
 
 #    currently some pub/sub tests fail on iceoryx layer..
 #    - name: Run Tests
