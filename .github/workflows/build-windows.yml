@@ -47,7 +47,7 @@ jobs:
         python -m pip install --upgrade pip
 
         echo Installing python requirements
-        pip install -r "${{ runner.workspace }}\requirements.txt"
+        pip install -r "%GITHUB_WORKSPACE%\requirements.txt"
 
       shell: cmd
         
