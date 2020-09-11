@@ -49,7 +49,6 @@ jobs:
     - name: Install Python requirements
       shell: bash
       run: |
-        sudo python3 -m pip install --upgrade pip
         sudo pip3 install -r "$GITHUB_WORKSPACE/requirements.txt"
 
     - name: CMake
