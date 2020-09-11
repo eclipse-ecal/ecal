@@ -46,6 +46,11 @@ jobs:
       run: |
         git fetch --prune --unshallow --tags
 
+    - name: Install Python requirements
+      shell: bash
+      run: |
+        sudo pip3 install -r "$GITHUB_WORKSPACE/requirements.txt"
+
     - name: CMake
       run: |
         mkdir "${{ runner.workspace }}/_build"
@@ -89,13 +94,13 @@ jobs:
       run: cmake --build . --target create_python_egg --config Release
       working-directory: ${{ runner.workspace }}/_build
 
-    - name: Build Documentation C
-      run: cmake --build . --target documentation_c
-      working-directory: ${{ runner.workspace }}/_build
+#    - name: Build Documentation C
+#      run: cmake --build . --target documentation_c
+#      working-directory: ${{ runner.workspace }}/_build
 
-    - name: Build Documentation C++
-      run: cmake --build . --target documentation_cpp
-      working-directory: ${{ runner.workspace }}/_build
+#    - name: Build Documentation C++
+#      run: cmake --build . --target documentation_cpp
+#      working-directory: ${{ runner.workspace }}/_build
 
 #    currently some pub/sub tests fail on iceoryx layer..
 #    - name: Run Tests

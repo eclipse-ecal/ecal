@@ -36,9 +36,24 @@ jobs:
       run: |
         git fetch --prune --unshallow --tags
 
+    - name: Create Python virtualenv
+      run: |
+        mkdir "${{ runner.workspace }}\_build"
+        mkdir "${{ runner.workspace }}\_build\.venv"
+        python -m venv "${{ runner.workspace }}\.venv"
+        CALL "${{ runner.workspace }}\.venv\Scripts\activate.bat"
+           
+        echo Upgrading pip
+        python -m pip install --upgrade pip
+
+        echo Installing python requirements
+        pip install -r "%GITHUB_WORKSPACE%\requirements.txt"
+
+      shell: cmd
+        
     - name: CMake
       run: |
-        mkdir "${{ runner.workspace }}/_build"
+        CALL "${{ runner.workspace }}\.venv\Scripts\activate.bat"
         cd "${{ runner.workspace }}/_build"
         cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 ^
         -DHAS_HDF5=ON ^
@@ -80,13 +95,13 @@ jobs:
       run: cmake --build . --target create_python_egg --config Release
       working-directory: ${{ runner.workspace }}/_build
 
-    - name: Build Documentation C
-      run: cmake --build . --target documentation_c
-      working-directory: ${{ runner.workspace }}/_build
-
-    - name: Build Documentation C++
-      run: cmake --build . --target documentation_cpp
-      working-directory: ${{ runner.workspace }}/_build
+#    - name: Build Documentation C
+#      run: cmake --build . --target documentation_c
+#      working-directory: ${{ runner.workspace }}/_build
+#
+#    - name: Build Documentation C++
+#      run: cmake --build . --target documentation_cpp
+#      working-directory: ${{ runner.workspace }}/_build
 
     - name: Run Tests
       run: ctest -C Release -V

@@ -31,6 +31,11 @@ jobs:
     - name: Checkout Tags
       run: |
         git fetch --prune --unshallow --tags
+        
+    - name: Install Python requirements
+      shell: bash
+      run: |
+        sudo pip3 install -r "$GITHUB_WORKSPACE/requirements.txt"
 
     - name: CMake
       run: |
@@ -74,13 +79,13 @@ jobs:
       run: cmake --build . --target create_python_egg --config Release
       working-directory: ${{ runner.workspace }}/_build
 
-    - name: Build Documentation C
-      run: cmake --build . --target documentation_c
-      working-directory: ${{ runner.workspace }}/_build
+#    - name: Build Documentation C
+#      run: cmake --build . --target documentation_c
+#      working-directory: ${{ runner.workspace }}/_build
 
-    - name: Build Documentation C++
-      run: cmake --build . --target documentation_cpp
-      working-directory: ${{ runner.workspace }}/_build
+#    - name: Build Documentation C++
+#      run: cmake --build . --target documentation_cpp
+#      working-directory: ${{ runner.workspace }}/_build
 
     - name: Run Tests
       run: ctest -V
@@ -101,3 +106,11 @@ jobs:
       with:
         name: ubuntu-python-egg
         path: ${{ runner.workspace }}/_build/_deploy/*.egg
+
+    - name: Deploy Documentation
+      if: github.ref == 'refs/heads/master'
+      uses: peaceiris/actions-gh-pages@v3.6.4
+      with:
+        publish_branch: gh-pages
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ${{ runner.workspace }}/_build/doc/html
