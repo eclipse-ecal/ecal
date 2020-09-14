@@ -117,7 +117,7 @@ namespace
     }
     return "???";
   }
-#ifdef ECAL_OS_WINDOWS
+#if defined(ECAL_OS_WINDOWS)
   std::pair<bool, int> get_host_id()
   {
     // retrieve needed buffer size for GetAdaptersInfo
@@ -151,12 +151,10 @@ namespace
     // return success
     return std::make_pair(true, hash);
   }
-#endif /* ECAL_OS_WINDOWS */
-
-#ifdef ECAL_OS_QNX
+#elif defined(ECAL_OS_QNX)
   std::pair<bool, int> get_host_id()
   {
-    // TODO: Find a suitable method on QNX to calculate a unqiue host identifier
+    // TODO: Find a suitable method on QNX to calculate an unqiue host identifier
     return std::make_pair(true, -1);
   }
 #else
@@ -164,7 +162,7 @@ namespace
   {
     return std::make_pair(true, static_cast<int>(gethostid()));
   }
-#endif /* ECAL_OS_LINUX */
+#endif
 }
 
 namespace eCAL
