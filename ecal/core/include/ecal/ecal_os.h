@@ -37,7 +37,7 @@
 #define ECAL_OS_MACOS
 #endif
 
-#if defined(__QNX__)
+#if defined(__QNXNTO__)
 #define ECAL_OS_LINUX
 #define ECAL_OS_QNX
 #endif
