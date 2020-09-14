@@ -397,8 +397,8 @@ target_link_libraries(${PROJECT_NAME}
   PUBLIC
     eCAL::proto
   PRIVATE
-    $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNX}>>>:dl>
-    $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNX}>>>:rt>
+    $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
+    $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:rt>
     $<$<BOOL:${WIN32}>:iphlpapi>
     $<$<BOOL:${WIN32}>:psapi> 
     $<$<BOOL:${WIN32}>:shlwapi.lib> 
