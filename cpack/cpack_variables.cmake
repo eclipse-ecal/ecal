@@ -34,7 +34,9 @@ SET(CPACK_OUTPUT_FILE_PREFIX _deploy)
 if(WIN32)
   set(CPACK_GENERATOR "External")
   set(CPACK_EXTERNAL_ENABLE_STAGING ON)
-  set(CPACK_EXTERNAL_PACKAGE_SCRIPT "${CMAKE_SOURCE_DIR}/cpack/innosetup.cmake")
+  if(CPACK_PACK_WITH_INNOSETUP)
+    set(CPACK_EXTERNAL_PACKAGE_SCRIPT "${CMAKE_SOURCE_DIR}/cpack/innosetup.cmake")
+  endif()
 endif()
 
 

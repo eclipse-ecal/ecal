@@ -82,7 +82,8 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_HDF5=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles(x86)%/Cap'n Proto/lib/cmake/CapnProto" ^
-        -DCMAKE_BUILD_TYPE=Debug
+        -DCMAKE_BUILD_TYPE=Debug ^
+        -DCPACK_PACK_WITH_INNOSETUP=OFF
       shell: cmd
       
     - name: CMake Complete
@@ -116,7 +117,8 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_HDF5=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles(x86)%/Cap'n Proto/lib/cmake/CapnProto" ^
-        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_BUILD_TYPE=Release ^
+        -DCPACK_PACK_WITH_INNOSETUP=ON
         mkdir "%ALLUSERSPROFILE%\eCAL"
         copy "%GITHUB_WORKSPACE%\ecal\core\cfg\ecal.ini" "%ALLUSERSPROFILE%\eCAL"
       shell: cmd
@@ -146,7 +148,7 @@ jobs:
       working-directory: ${{ runner.workspace }}/_build/complete
 
     - name: Pack SDK
-      run: cpack -C Release
+      run: cpack -C Debug
       working-directory: ${{ runner.workspace }}/_build/sdk
 
     - name: Pack complete setup
