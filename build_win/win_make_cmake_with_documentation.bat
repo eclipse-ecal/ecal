@@ -23,12 +23,12 @@ set ARCH=x64
 if %VERSION% == v142 goto build
 
 :build
-if not exist "%BUILD_DIR%" mkdir %BUILD_DIR%
+if not exist "%BUILD_DIR_COMPLETE%" mkdir %BUILD_DIR_COMPLETE%
 
 echo Creating Python venv
-if not exist "%BUILD_DIR%\.venv" mkdir "%BUILD_DIR%\.venv"
-python -m venv "%BUILD_DIR%\.venv"
-CALL "%BUILD_DIR%\.venv\Scripts\activate.bat"
+if not exist "%BUILD_DIR_COMPLETE%\.venv" mkdir "%BUILD_DIR_COMPLETE%\.venv"
+python -m venv "%BUILD_DIR_COMPLETE%\.venv"
+CALL "%BUILD_DIR_COMPLETE%\.venv\Scripts\activate.bat"
 
 echo Upgrading pip
 python -m pip install --upgrade pip
@@ -36,17 +36,17 @@ python -m pip install --upgrade pip
 echo Installing python requirements
 pip install -r requirements.txt
 
-cd /d %BUILD_DIR%
+cd /d %BUILD_DIR_COMPLETE%
 
 if %ARCH% == "" goto build_no_arch
 set COMPILE_WIN64=%VISUAL_STUDIO_GENERATOR%
-cmake .. -G "%COMPILE_WIN64%" -A "%ARCH%" -DCMAKE_INSTALL_PREFIX=_install -DBUILD_SHARED_LIBS=OFF -DBUILD_DOCS=ON
+cmake ../.. -G "%COMPILE_WIN64%" -A "%ARCH%" -DCMAKE_INSTALL_PREFIX=_install -DBUILD_SHARED_LIBS=OFF -DBUILD_DOCS=ON
 goto end
 
 :build_no_arch
 set COMPILE_WIN64=%VISUAL_STUDIO_GENERATOR% Win64
-cmake .. -G "%COMPILE_WIN64%" -DCMAKE_INSTALL_PREFIX=_install -DBUILD_SHARED_LIBS=OFF -DBUILD_DOCS=ON
+cmake ../.. -G "%COMPILE_WIN64%" -DCMAKE_INSTALL_PREFIX=_install -DBUILD_SHARED_LIBS=OFF -DBUILD_DOCS=ON
 
 :end
-CALL "%BUILD_DIR%\.venv\Scripts\deactivate.bat"
+CALL "%BUILD_DIR_COMPLETE%\.venv\Scripts\deactivate.bat"
 popd

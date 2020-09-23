@@ -7,7 +7,8 @@ if ["%~1"]==[""] (
   )
 
 rem - base folder
-set WORKSPACE=%~dp0\..\
+set "WORKSPACE=%~dp0\..\"
 
 rem - cmake will generate the build solution here
-set BUILD_DIR=_build
+set BUILD_DIR_COMPLETE=_build\complete
+set BUILD_DIR_SDK=_build\sdk
