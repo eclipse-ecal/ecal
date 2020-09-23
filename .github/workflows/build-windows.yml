@@ -38,8 +38,7 @@ jobs:
 
     - name: Create Python virtualenv
       run: |
-        mkdir "${{ runner.workspace }}\_build"
-        mkdir "${{ runner.workspace }}\_build\.venv"
+        mkdir "${{ runner.workspace }}\_build\complete\.venv\"
         python -m venv "${{ runner.workspace }}\.venv"
         CALL "${{ runner.workspace }}\.venv\Scripts\activate.bat"
            
@@ -51,11 +50,46 @@ jobs:
 
       shell: cmd
         
-    - name: CMake
+    - name: CMake SDK
+      run: |
+        mkdir "${{ runner.workspace }}\_build\sdk\"
+        cd "${{ runner.workspace }}/_build/sdk"
+        
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 14 2015 Win64" ^
+        -DHAS_HDF5=ON ^
+        -DHAS_QT5=ON ^
+        -DHAS_CURL=ON ^
+        -DHAS_CAPNPROTO=OFF ^
+        -DBUILD_DOCS=OFF ^
+        -DBUILD_APPS=OFF ^
+        -DBUILD_SAMPLES=OFF ^
+        -DBUILD_TIME=ON ^
+        -DBUILD_PY_BINDING=OFF ^
+        -DBUILD_CSHARP_BINDING=OFF ^
+        -DBUILD_ECAL_TESTS=OFF ^
+        -DECAL_LAYER_ICEORYX=OFF ^
+        -DECAL_INCLUDE_PY_SAMPLES=OFF ^
+        -DECAL_INSTALL_SAMPLE_SOURCES=OFF ^
+        -DECAL_JOIN_MULTICAST_TWICE=OFF ^
+        -DECAL_NPCAP_SUPPORT=OFF ^
+        -DECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS=ON ^
+        -DECAL_THIRDPARTY_BUILD_PROTOBUF=ON ^
+        -DECAL_THIRDPARTY_BUILD_SPDLOG=ON ^
+        -DECAL_THIRDPARTY_BUILD_TINYXML2=ON ^
+        -DECAL_THIRDPARTY_BUILD_FINEFTP=ON ^
+        -DECAL_THIRDPARTY_BUILD_CURL=ON ^
+        -DECAL_THIRDPARTY_BUILD_GTEST=ON ^
+        -DECAL_THIRDPARTY_BUILD_HDF5=ON ^
+        -DBUILD_SHARED_LIBS=OFF ^
+        -DCMAKE_PREFIX_PATH="%ProgramFiles(x86)%/Cap'n Proto/lib/cmake/CapnProto" ^
+        -DCMAKE_BUILD_TYPE=Debug
+      shell: cmd
+      
+    - name: CMake Complete
       run: |
         CALL "${{ runner.workspace }}\.venv\Scripts\activate.bat"
-        cd "${{ runner.workspace }}/_build"
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 ^
+        cd "${{ runner.workspace }}/_build/complete"
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 14 2015 Win64" ^
         -DHAS_HDF5=ON ^
         -DHAS_QT5=ON ^
         -DHAS_CURL=ON ^
@@ -87,13 +121,17 @@ jobs:
         copy "%GITHUB_WORKSPACE%\ecal\core\cfg\ecal.ini" "%ALLUSERSPROFILE%\eCAL"
       shell: cmd
 
+    - name: Build SDK
+      run: cmake --build . --parallel --config Debug
+      working-directory: ${{ runner.workspace }}/_build/sdk
+      
     - name: Build Release
       run: cmake --build . --parallel --config Release
-      working-directory: ${{ runner.workspace }}/_build
+      working-directory: ${{ runner.workspace }}/_build/complete
 
     - name: Build Python Egg
       run: cmake --build . --target create_python_egg --config Release
-      working-directory: ${{ runner.workspace }}/_build
+      working-directory: ${{ runner.workspace }}/_build/complete
 
 #    - name: Build Documentation C
 #      run: cmake --build . --target documentation_c
@@ -105,20 +143,24 @@ jobs:
 
     - name: Run Tests
       run: ctest -C Release -V
-      working-directory: ${{ runner.workspace }}/_build
+      working-directory: ${{ runner.workspace }}/_build/complete
 
-    - name: Pack
+    - name: Pack SDK
       run: cpack -C Release
-      working-directory: ${{ runner.workspace }}/_build
+      working-directory: ${{ runner.workspace }}/_build/sdk
+
+    - name: Pack complete setup
+      run: cpack -C Release
+      working-directory: ${{ runner.workspace }}/_build/complete
 
     - name: Upload Windows setup
       uses: actions/upload-artifact@v2
       with:
         name: windows-setup
-        path: ${{ runner.workspace }}/_build/_deploy/*.exe
+        path: ${{ runner.workspace }}/_build/complete/_deploy/*.exe
 
     - name: Upload Python Egg
       uses: actions/upload-artifact@v2
       with:
         name: windows-python-egg
-        path: ${{ runner.workspace }}/_build/_deploy/*.egg
+        path: ${{ runner.workspace }}/_build/complete/_deploy/*.egg
