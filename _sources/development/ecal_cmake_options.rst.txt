@@ -37,6 +37,7 @@ CMake option                       Default   Description
 ``ECAL_THIRDPARTY_BUILD_CURL``     ``ON``    Build CURL with eCAL, included as a submodule in the thirdparty folder.
 ``ECAL_THIRDPARTY_BUILD_GTEST``    ``OFF``   Build GoogleTest with eCAL, included as a submodule in the thirdparty folder. You can always use your custom gtest installation, this is only for convenience.
 ``ECAL_THIRDPARTY_BUILD_HDF5``     ``ON``    Build HDF5 with eCAL, included as a submodule in the thirdparty folder.
+``CPACK_PACK_WITH_INNOSETUP``      ``ON``    Use Innosetup to create a Windows installer with cpack.
 ================================== ========= ============
 
 To build the eCAL csharp extension you need to set the CMake option ``BUILD_CSHARP_BINDING`` to ``ON``.

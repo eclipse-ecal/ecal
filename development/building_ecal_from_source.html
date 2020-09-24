@@ -413,7 +413,6 @@ git submodule update
 <ul class="simple">
 <li><p>CMake (<a class="reference external" href="https://cmake.org">https://cmake.org</a>)</p></li>
 <li><p>Qt5 (&gt;= 5.5) (<a class="reference external" href="https://www.qt.io/download">https://www.qt.io/download</a>)</p></li>
-<li><p>WIX (<a class="reference external" href="http://wixtoolset.org/">http://wixtoolset.org/</a>)</p></li>
 </ul>
 </li>
 <li><p>Install Qt5 by starting the installer and selecting <cite>msvc2015 32-bit</cite> or <cite>msvc2015 64-bit</cite> (VS2015) or <cite>msvc2017 32-bit</cite> and <cite>msvc2017 64-bit</cite> (VS2017) from the latest Qt5 version.
@@ -428,27 +427,43 @@ It should look like this:</p>
 </div>
 <p>e.g.: <code class="docutils literal notranslate"><span class="pre">QT5_ROOT_DIRECTORY</span> <span class="pre">=</span> <span class="pre">C:\Qt\5.11.1</span></code></p>
 </li>
-</ol>
-<ol class="arabic simple" start="4">
-<li><p>If you plan to build the eCAL python language extension:
-Install <a class="reference external" href="https://www.python.org/downloads/">Python for Windows</a> (64 Bit, Version 3.x)</p></li>
+<li><p>Optional: Install additional dependendencies</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.python.org/downloads/">Python for Windows</a> (64 Bit, Version 3.x): To build the python extensions and the documentation</p></li>
+<li><p><a class="reference external" href="https://www.doxygen.nl/download.html#srcbin">Doxygen</a>: To build the documentation</p></li>
+<li><p><a class="reference external" href="https://jrsoftware.org/isdl.php">Innosetup</a>: To create an executable Installer</p></li>
+</ul>
+</li>
 </ol>
 </div>
 <div class="section" id="fa-windows-windows-build">
 <h3><i class="fab fa-windows"></i> Windows build<a class="headerlink" href="#fa-windows-windows-build" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p>To just compile eCAL:</p>
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span><span class="k">mkdir</span> _build\complete
+<span class="k">cd</span> _build\complete
+
+cmake ../.. -A x64 -DCMAKE_INSTALL_PREFIX=_install -DBUILD_SHARED_LIBS=OFF
+cmake --build . --parallel --config Release
+</pre></div>
+</div>
+<p>This will create a <code class="file docutils literal notranslate"><span class="pre">_build\complete\</span></code> directory in your eCAL root folder and build eCAL there.</p>
+</li>
+<li><p>To build even more:</p>
 <ol class="arabic">
-<li><p>Execute the following batch files with the appropriate parameter to create the Visual Studio 2015 (v140) / 2017 (v141) / 2019 (v142) solution and build it:</p>
+<li><p>For creating a setup, you have to also build the documentation and build the debug SDK binaries.
+Execute the following batch files with the appropriate parameter to create the Visual Studio 2015 (v140) / 2017 (v141) / 2019 (v142) solution and build it:</p>
 <div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>build_win\win_make_cmake.bat v140 ( / v141 / v142)
 build_win\win_make_build.bat
 </pre></div>
 </div>
-<p>This will create a <code class="file docutils literal notranslate"><span class="pre">_build\</span></code> directory in your eCAL root folder and build eCAL there.</p>
+<p>This will create a <code class="file docutils literal notranslate"><span class="pre">_build\</span></code> directory in your eCAL root folder and build eCAL in two configurations, there.</p>
 </li>
-<li><p>Run the following batch files to create an eCAL setup as .msi installer:</p>
+<li><p>Run the following batch files to create an eCAL setup as .exe installer:</p>
 <div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>build_win\win_make_setup.bat
 </pre></div>
 </div>
-<p>You will find the .msi installer in the <code class="file docutils literal notranslate"><span class="pre">_build\_deploy\</span></code> directory.</p>
+<p>You will find the .exe installer in the <code class="file docutils literal notranslate"><span class="pre">_build\complete\_deploy\</span></code> directory.</p>
 </li>
 <li><p>Optional: If you configured CMake to build the python extension by setting <cite>BUILD_PY_BINDING</cite> to <cite>ON</cite> you can create the eCAL python egg by calling</p>
 <div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>build_win\win_make_python_egg.bat
@@ -461,6 +476,8 @@ Install the extension by</p>
 </div>
 </li>
 </ol>
+</li>
+</ul>
 </div>
 </div>
 <div class="section" id="fa-ubuntu-building-ecal-on-ubuntu">
