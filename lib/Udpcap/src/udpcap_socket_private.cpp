@@ -846,7 +846,7 @@ namespace Udpcap
     CallbackArgsVector* callback_args = reinterpret_cast<CallbackArgsVector*>(param);
 
     pcpp::RawPacket rawPacket(pkt_data, header->caplen, header->ts, false, callback_args->link_type_);
-    pcpp::Packet    packet(&rawPacket, pcpp::ProtocolType::UDP);
+    pcpp::Packet    packet(&rawPacket, pcpp::UDP);
 
     pcpp::IPv4Layer* ip_layer  = packet.getLayerOfType<pcpp::IPv4Layer>();
     pcpp::UdpLayer*  udp_layer = packet.getLayerOfType<pcpp::UdpLayer>();
@@ -864,7 +864,7 @@ namespace Udpcap
         // If we are done reassembling the packet, we return it to the user
         if (reassembled_packet)
         {
-          pcpp::Packet re_parsed_packet(reassembled_packet->getRawPacket(), pcpp::ProtocolType::UDP);
+          pcpp::Packet re_parsed_packet(reassembled_packet->getRawPacket(), pcpp::UDP);
 
           pcpp::IPv4Layer* reassembled_ip_layer  = re_parsed_packet.getLayerOfType<pcpp::IPv4Layer>();
           pcpp::UdpLayer*  reassembled_udp_layer = re_parsed_packet.getLayerOfType<pcpp::UdpLayer>();
@@ -906,7 +906,7 @@ namespace Udpcap
     CallbackArgsRawPtr* callback_args = reinterpret_cast<CallbackArgsRawPtr*>(param);
 
     pcpp::RawPacket rawPacket(pkt_data, header->caplen, header->ts, false, callback_args->link_type_);
-    pcpp::Packet    packet(&rawPacket, pcpp::ProtocolType::UDP);
+    pcpp::Packet    packet(&rawPacket, pcpp::UDP);
 
     pcpp::IPv4Layer* ip_layer = packet.getLayerOfType<pcpp::IPv4Layer>();
     pcpp::UdpLayer*  udp_layer = packet.getLayerOfType<pcpp::UdpLayer>();
@@ -924,7 +924,7 @@ namespace Udpcap
         // If we are done reassembling the packet, we return it to the user
         if (reassembled_packet)
         {
-          pcpp::Packet re_parsed_packet(reassembled_packet->getRawPacket(), pcpp::ProtocolType::UDP);
+          pcpp::Packet re_parsed_packet(reassembled_packet->getRawPacket(), pcpp::UDP);
 
           pcpp::IPv4Layer* reassembled_ip_layer = re_parsed_packet.getLayerOfType<pcpp::IPv4Layer>();
           pcpp::UdpLayer*  reassembled_udp_layer = re_parsed_packet.getLayerOfType<pcpp::UdpLayer>();
