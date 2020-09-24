@@ -23,3 +23,10 @@ CMakeLists.txt.user
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
+
+# Visual Studio code
+*.vscode
+
+# Sphinx live output
+doc/rst/_build/
+

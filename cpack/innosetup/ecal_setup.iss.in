@@ -25,6 +25,7 @@
 #define AppDateTime             GetDateTimeString('yyyy-mm-dd', '', '');
 #define OutputName              str("ecal-")+str(AppVersion)+str("-win64")
 #define ComponentStagingDir     "@CPACK_TEMPORARY_INSTALL_DIRECTORY@"
+#define DebugSdkStagingDir      StringChange(ComponentStagingDir, "/complete/", "/sdk/")
 #define OutputDir               "@CPACK_PACKAGE_DIRECTORY@/@CPACK_OUTPUT_FILE_PREFIX@"
 #define LicenseFile             "@CPACK_RESOURCE_FILE_LICENSE@"
 
@@ -55,6 +56,7 @@ LicenseFile={#LicenseFile}
 Name: runtime;                     Description: "eCAL Runtime";                             Types: full compact custom; Flags: disablenouninstallwarning fixed
 Name: applications;                Description: "Applications (Monitor, Recorder, Player)"; Types: full compact custom; Flags: disablenouninstallwarning
 Name: samples;                     Description: "Samples";                                  Types: full;                Flags: disablenouninstallwarning
+Name: doc;                         Description: "Documentation";                            Types: full;                Flags: disablenouninstallwarning
 Name: sdk;                         Description: "SDK";                                      Types: full;
 Name: sdk\ecal;                    Description: "eCAL SDK";                                 Types: full;                Flags: disablenouninstallwarning
 Name: sdk\protobuf;                Description: "Protobuf";                                 Types: full;                Flags: disablenouninstallwarning
@@ -75,10 +77,22 @@ Source: "{#ComponentStagingDir}\app\*";              DestDir: "{app}";   Flags: 
 ; samples
 Source: "{#ComponentStagingDir}\samples\*";          DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: samples
 
+; doc
+Source: "{#ComponentStagingDir}\doc\*";              DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: doc
+
 ; sdk\ecal
 Source: "{#ComponentStagingDir}\headers\*";          DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\ecal
 Source: "{#ComponentStagingDir}\libraries\*";        DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\ecal
 Source: "{#ComponentStagingDir}\sdk\*";              DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\ecal
+
+Source: "{#DebugSdkStagingDir}\runtime\*";          DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\ecal
+Source: "{#DebugSdkStagingDir}\Unspecified\*";      DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\ecal
+
+Source: "{#DebugSdkStagingDir}\app\*";              DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\ecal
+
+;Source: "{#DebugSdkStagingDir}\headers\*";          DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\ecal
+Source: "{#DebugSdkStagingDir}\libraries\*";        DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\ecal
+Source: "{#DebugSdkStagingDir}\sdk\*";              DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\ecal
 
 ; sdk\protobuf
 Source: "{#ComponentStagingDir}\libprotobuf\*";      DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
@@ -88,6 +102,14 @@ Source: "{#ComponentStagingDir}\protobuf-export\*";  DestDir: "{app}";   Flags: 
 Source: "{#ComponentStagingDir}\protobuf-headers\*"; DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
 Source: "{#ComponentStagingDir}\protobuf-protos\*";  DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
 Source: "{#ComponentStagingDir}\protoc\*";           DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
+
+Source: "{#DebugSdkStagingDir}\libprotobuf\*";      DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
+Source: "{#DebugSdkStagingDir}\libprotobuf-lite\*"; DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
+Source: "{#DebugSdkStagingDir}\libprotoc\*";        DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
+Source: "{#DebugSdkStagingDir}\protobuf-export\*";  DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
+;Source: "{#DebugSdkStagingDir}\protobuf-headers\*"; DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
+;Source: "{#DebugSdkStagingDir}\protobuf-protos\*";  DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
+; Source: "{#DebugSdkStagingDir}\protoc\*";           DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
 
 [Icons]
 Name: "{group}\eCAL Launcher";                                Filename: "{app}\bin\ecal_launcher.exe";                     Components: applications

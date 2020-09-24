@@ -40,7 +40,6 @@ First check out the eCAL repository and all of the submodules:
 
    * CMake (https://cmake.org)
    * Qt5 (>= 5.5) (https://www.qt.io/download)
-   * WIX (http://wixtoolset.org/)
 
 #. Install Qt5 by starting the installer and selecting `msvc2015 32-bit` or `msvc2015 64-bit` (VS2015) or `msvc2017 32-bit` and `msvc2017 64-bit` (VS2017) from the latest Qt5 version.
    Create an environment variable ``QT5_ROOT_DIRECTORY`` that points to the directory containing the architecture-specific folders.
@@ -56,41 +55,59 @@ First check out the eCAL repository and all of the submodules:
 
    e.g.: ``QT5_ROOT_DIRECTORY = C:\Qt\5.11.1``
 
-4. If you plan to build the eCAL python language extension:
-   Install `Python for Windows <https://www.python.org/downloads/>`_ (64 Bit, Version 3.x) 
+#. Optional: Install additional dependendencies
+
+   * `Python for Windows <https://www.python.org/downloads/>`_ (64 Bit, Version 3.x): To build the python extensions and the documentation
+   * `Doxygen <https://www.doxygen.nl/download.html#srcbin>`_: To build the documentation
+   * `Innosetup <https://jrsoftware.org/isdl.php>`_: To create an executable Installer
 
 |fa-windows| Windows build
 --------------------------
 
-#. Execute the following batch files with the appropriate parameter to create the Visual Studio 2015 (v140) / 2017 (v141) / 2019 (v142) solution and build it:
+* To just compile eCAL:
 
-   .. code-block:: batch
+  .. code-block:: batch
 
-      build_win\win_make_cmake.bat v140 ( / v141 / v142)
-      build_win\win_make_build.bat
-
-   This will create a :file:`_build\\` directory in your eCAL root folder and build eCAL there.
-
-#. Run the following batch files to create an eCAL setup as .msi installer:
-
-   .. code-block:: batch
-
-      build_win\win_make_setup.bat
-
-   You will find the .msi installer in the :file:`_build\\_deploy\\` directory.
-
-#. Optional: If you configured CMake to build the python extension by setting `BUILD_PY_BINDING` to `ON` you can create the eCAL python egg by calling
-
-   .. code-block:: batch
+     mkdir _build\complete
+     cd _build\complete
       
-      build_win\win_make_python_egg.bat
+     cmake ../.. -A x64 -DCMAKE_INSTALL_PREFIX=_install -DBUILD_SHARED_LIBS=OFF
+     cmake --build . --parallel --config Release
 
-   Afterwards you will find the python eCAL egg in the :file:`_build\\_deploy\\` directory.
-   Install the extension by
+  This will create a :file:`_build\\complete\\` directory in your eCAL root folder and build eCAL there.
 
-   .. code-block:: batch
+* To build even more:
+
+  #. For creating a setup, you have to also build the documentation and build the debug SDK binaries.
+     Execute the following batch files with the appropriate parameter to create the Visual Studio 2015 (v140) / 2017 (v141) / 2019 (v142) solution and build it:
+
+     .. code-block:: batch
+
+        build_win\win_make_cmake.bat v140 ( / v141 / v142)
+        build_win\win_make_build.bat
+
+     This will create a :file:`_build\\` directory in your eCAL root folder and build eCAL in two configurations, there.
+
+  #. Run the following batch files to create an eCAL setup as .exe installer:
+
+     .. code-block:: batch
+
+        build_win\win_make_setup.bat
+
+     You will find the .exe installer in the :file:`_build\\complete\\_deploy\\` directory.
+
+  #. Optional: If you configured CMake to build the python extension by setting `BUILD_PY_BINDING` to `ON` you can create the eCAL python egg by calling
+
+     .. code-block:: batch
+      
+        build_win\win_make_python_egg.bat
+
+     Afterwards you will find the python eCAL egg in the :file:`_build\\_deploy\\` directory.
+     Install the extension by
+
+     .. code-block:: batch
    
-      python -m easy_install ecal-X.Y.Z-pyX.Y.egg
+        python -m easy_install ecal-X.Y.Z-pyX.Y.egg
 
 |fa-ubuntu| Building eCAL on Ubuntu
 ===================================
