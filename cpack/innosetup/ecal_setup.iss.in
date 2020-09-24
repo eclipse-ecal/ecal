@@ -56,6 +56,7 @@ LicenseFile={#LicenseFile}
 Name: runtime;                     Description: "eCAL Runtime";                             Types: full compact custom; Flags: disablenouninstallwarning fixed
 Name: applications;                Description: "Applications (Monitor, Recorder, Player)"; Types: full compact custom; Flags: disablenouninstallwarning
 Name: samples;                     Description: "Samples";                                  Types: full;                Flags: disablenouninstallwarning
+Name: doc;                         Description: "Documentation";                            Types: full;                Flags: disablenouninstallwarning
 Name: sdk;                         Description: "SDK";                                      Types: full;
 Name: sdk\ecal;                    Description: "eCAL SDK";                                 Types: full;                Flags: disablenouninstallwarning
 Name: sdk\protobuf;                Description: "Protobuf";                                 Types: full;                Flags: disablenouninstallwarning
@@ -75,6 +76,9 @@ Source: "{#ComponentStagingDir}\app\*";              DestDir: "{app}";   Flags: 
 
 ; samples
 Source: "{#ComponentStagingDir}\samples\*";          DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: samples
+
+; doc
+Source: "{#ComponentStagingDir}\doc\*";              DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: doc
 
 ; sdk\ecal
 Source: "{#ComponentStagingDir}\headers\*";          DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\ecal
