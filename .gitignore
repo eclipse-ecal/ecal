@@ -1,7 +1,6 @@
 # CMake build folders
 /_build*
 /_setup
-/build*
 /_vs_out*
 
 # Binary libraries
