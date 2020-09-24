@@ -37,9 +37,8 @@ jobs:
         git fetch --prune --unshallow --tags
 
     - name: Download NPCAP
-      run: |
-        powershell -Command "& '${{ runner.workspace }}\build_win\download_npcap.ps1'
-      shell: cmd
+      run: ${{ runner.workspace }}\build_win\download_npcap.ps1
+      shell: powershell
       
     - name: Create Python virtualenv
       run: |
