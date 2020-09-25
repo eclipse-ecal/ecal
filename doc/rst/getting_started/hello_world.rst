@@ -12,18 +12,6 @@ In the good habit of every tutorial, we will write a Hello World Applications, t
 eCAL uses CMake as a cross-plattform build toolchain.
 We will explain the CMake commands needed for the tutorial, but not extensively dive into CMake.
 
-.. important::
-   .. image:: /img/snail.svg
-      :alt: Snail
-      :width: 100px
-      :class: float-right
-
-   |fa-windows| The Windows version of this tutorial is not finished, yet and will not work.
-
-   Please be patient and use Ubuntu, for now.
-
-   .. rst-class::  clear-both
-
 Dependencies
 ============
 
@@ -37,6 +25,9 @@ First of all, you have to install some more development dependencies:
     .. tip::
        
        When installing CMake, choose "Add to PATH", so you don't have to always provide the full path to the cmake executable
+
+       .. image:: img/cmake_setup_cut.svg
+          :alt: CMake Add to PATH
 
 * |fa-ubuntu| Ubuntu:
 
@@ -54,7 +45,7 @@ Somewhere on your hard drive create an empty directory and create a file :file:`
   .. literalinclude:: src/hello_world_snd/CMakeLists.txt
      :language: cmake
      :linenos:
-  
+
   .. note::
      **What is happening here?**
 
@@ -78,19 +69,19 @@ Somewhere on your hard drive create an empty directory and create a file :file:`
      **Line 1** includes the basic eCAL header.
      As we want to publish raw strings, line 2 includes the eCAL String-Publisher.
      eCAL Supports multiple message formats.
-
+     
      **Line 10** initialized eCAL.
      You always have to initialize eCAL before using it's API.
      The name of our eCAL Process will be "Hello World Publisher". 
      This name will be visible in the eCAL Monitor, once the Process is running.
-     
+
      **Line 13** creates an eCAL Publisher.
      An eCAL Process can create multiple publishers (and multiple subscribers).
      The topic we are publishing on will be "hello_world_topic".
 
      The while loop from **line 20** will cause an infinite publish-loop.
      eCAL supports a stop-signal; when an eCAL Process is stopped, ``eCAL::Ok()`` will return false.
-
+     
      **Line 25** will publish our message and send it to other eCAL Processes that have subsribed on the topic.
 
      **Line 32** de-initializes eCAL. You should always do that before your application exits.
@@ -104,8 +95,7 @@ Now that you have the source code ready, create a :file:`_build` directory and b
      mkdir _build
      cd _build
      cmake .. -A x64
-
-  .. todo:: Continue Windows
+     cmake --build . --parallel
    
 * |fa-ubuntu| Ubuntu:
 
@@ -125,16 +115,67 @@ You will see the "Hello World Publisher" process and the "hello_world_topic".
 Hello World Subscriber
 ======================
 
-This section is still under construction. But we are working on it! Just be patient.
+Again, create a new directory somewhere and add create the :file:`CMakeLists.txt` and :file:`main.cpp` with the following content:
 
-.. image:: /img/snail.svg
-   :alt: Snail
-   :align: center
+* |fa-file-alt| :file:`CMakeLists.txt`:
 
+  .. literalinclude:: src/hello_world_rec/CMakeLists.txt
+     :language: cmake
+     :linenos:
+  
+  .. note::
+     **What is happening here?**
 
-..
-   Publisher
-   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     **Line 3** creates a project "hello_world_snd".
+     This will also be the name of the executable (**line 11**).
 
-   Subscriber
-   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     **Line 5** tells CMake to find the eCAL installation. **Line 13-15** will link the executable against it.
+
+     **Line 7-9** create a list of all our source files, wich currently only contains :file:`main.cpp`.
+     We add that source file for compiling our executable in **line 11**.
+
+* |fa-file-alt| :file:`main.cpp`:
+
+  .. literalinclude:: src/hello_world_rec/main.cpp
+     :language: cpp
+     :linenos:
+  
+  .. note::
+     **What is happening here?**
+
+     **Line 7-10** Is the recieve callback.
+     This method will be called whenever a new message arrives.
+     
+     **Line 16** creates an eCAL Subsriber that listenes to the "hello_world_topic".
+
+     **Line 19** adds the receive callback from above to the subsriber, so it can be called.
+
+  .. important::
+     eCAL Receive callbacks run in the subscriber's receive thread.
+     While the callback is running, the subscriber cannot receive new data.
+     So if your callback needs really long to compute, you may have to decouple your computations to not loose messages.
+
+Now that you have the source code ready, create a :file:`_build` directory and build the code!
+
+* |fa-windows| Windows:
+
+  .. code-block:: batch
+
+     mkdir _build
+     cd _build
+     cmake .. -A x64
+     cmake --build . --parallel
+   
+* |fa-ubuntu| Ubuntu:
+
+  .. code-block:: bash
+
+     mkdir _build
+     cd _build
+     cmake ..
+     make
+
+When you now execute :file:`hello_world_snd` and :file:`hello_world_rec`, the receiver application will receive the messages sent by the sender.
+
+.. image:: img/hello_world_snd_rec.png
+   :alt: eCAL Hello World sender and receiver

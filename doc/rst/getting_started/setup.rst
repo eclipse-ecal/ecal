@@ -21,7 +21,7 @@ So, let's get started!
 
 For Microsoft Windows we provide binary installers published on our GitHub release page.
 
-#. Head to the GitHub release page and download the latest eCAL installer (ecal-X.X.X-win64.msi):
+#. Head to the GitHub release page and download the latest eCAL installer (ecal-X.X.X-win64.exe):
    
    https://github.com/continental/ecal/releases
 
