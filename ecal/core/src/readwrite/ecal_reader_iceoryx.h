@@ -27,6 +27,11 @@
 
 #include <iceoryx_posh/popo/subscriber.hpp>
 
+#include <memory>
+#include <mutex>
+#include <string>
+#include <unordered_map>
+
 namespace eCAL
 {
   // ecal Iceoryx reader
@@ -57,12 +62,25 @@ namespace eCAL
 
     void StartLayer(std::string& topic_name_, QOS::SReaderQOS /*qos_*/)
     {
-      reader.CreateIceoryxSub(topic_name_);
+      std::lock_guard<std::mutex> lock(m_topic_name_datareadershm_sync);
+      if(m_topic_name_datareadershm_map.find(topic_name_) != m_topic_name_datareadershm_map.end()) return;
+
+      std::shared_ptr<CDataReaderSHM> reader = std::make_shared<CDataReaderSHM>();
+      reader->CreateIceoryxSub(topic_name_);
+
+      m_topic_name_datareadershm_map.insert(std::pair<std::string, std::shared_ptr<CDataReaderSHM>>(topic_name_, reader));
     }
 
     void StopLayer(std::string& topic_name_)
     {
-      reader.DestroyIceoryxSub(topic_name_);
+      std::lock_guard<std::mutex> lock(m_topic_name_datareadershm_sync);
+      TopicNameDataReaderSHMMapT::iterator iter = m_topic_name_datareadershm_map.find(topic_name_);
+      if(iter == m_topic_name_datareadershm_map.end()) return;
+
+      auto reader = iter->second;
+      reader->DestroyIceoryxSub(topic_name_);
+
+      m_topic_name_datareadershm_map.erase(iter);
     }
 
     void ApplyLayerParameter(SReaderLayerPar& /*par_*/)
@@ -70,6 +88,8 @@ namespace eCAL
     }
 
   private:
-    CDataReaderSHM reader;
+    typedef std::unordered_map<std::string, std::shared_ptr<CDataReaderSHM>> TopicNameDataReaderSHMMapT;
+    std::mutex                 m_topic_name_datareadershm_sync;
+    TopicNameDataReaderSHMMapT m_topic_name_datareadershm_map;
   };
 }
