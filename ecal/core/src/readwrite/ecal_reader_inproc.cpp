@@ -37,24 +37,24 @@ namespace eCAL
 
   // initialize layer
   // will be called one time on eCAL initialization
-  void CInProcLayer::InitializeLayer()
+  void CInProcLayer::Initialize()
   {
   }
 
   // start layer
   // activate / create a inproc subscription with defined 
   // quality of service settings if supported
-  void CInProcLayer::StartLayer(std::string& /*topic_name_*/, QOS::SReaderQOS /*qos_*/)
+  void CInProcLayer::AddSubscription(std::string& /*topic_name_*/, std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
   {
   }
 
   // stop layer
   // deactivate / destroy a specific inproc subscription
-  void CInProcLayer::StopLayer(std::string& /*topic_name_*/)
+  void CInProcLayer::RemSubscription(std::string& /*topic_name_*/, std::string& /*topic_id_*/)
   {
   }
 
-  void CInProcLayer::ApplyLayerParameter(SReaderLayerPar& /*par_*/)
+  void CInProcLayer::UpdateParameter(SReaderLayerPar& /*par_*/)
   {
   }
 
