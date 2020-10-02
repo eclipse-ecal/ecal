@@ -183,19 +183,19 @@ namespace eCAL
     // start ecal udp multicast layer
     if (eCALPAR(NET, UDP_MC_REC_ENABLED))
     {
-      CMulticastLayer::Get()->InitializeLayer();
+      CMulticastLayer::Get()->Initialize();
     }
 
     // start ecal shared memory layer
     if (eCALPAR(NET, SHM_REC_ENABLED))
     {
-      CSHMLayer::Get()->InitializeLayer();
+      CSHMLayer::Get()->Initialize();
     }
 
     // start inproc layer
     if (eCALPAR(NET, INPROC_REC_ENABLED))
     {
-      CInProcLayer::Get()->InitializeLayer();
+      CInProcLayer::Get()->Initialize();
     }
   }
 
@@ -204,19 +204,19 @@ namespace eCAL
     // start ecal udp multicast layer
     if (eCALPAR(NET, UDP_MC_REC_ENABLED))
     {
-      CMulticastLayer::Get()->StartLayer(m_topic_name, m_qos);
+      CMulticastLayer::Get()->AddSubscription(m_topic_name, m_topic_id, m_qos);
     }
 
     // start ecal shared memory layer
     if (eCALPAR(NET, SHM_REC_ENABLED))
     {
-      CSHMLayer::Get()->StartLayer(m_topic_name, m_qos);
+      CSHMLayer::Get()->AddSubscription(m_topic_name, m_topic_id, m_qos);
     }
 
     // start inproc layer
     if (eCALPAR(NET, INPROC_REC_ENABLED))
     {
-      CInProcLayer::Get()->StartLayer(m_topic_name, m_qos);
+      CInProcLayer::Get()->AddSubscription(m_topic_name, m_topic_id, m_qos);
     }
   }
   
@@ -225,19 +225,19 @@ namespace eCAL
     // stop ecal udp multicast layer
     if (eCALPAR(NET, UDP_MC_REC_ENABLED))
     {
-      CMulticastLayer::Get()->StopLayer(m_topic_name);
+      CMulticastLayer::Get()->RemSubscription(m_topic_name, m_topic_id);
     }
 
     // stop ecal shared memory layer
     if (eCALPAR(NET, SHM_REC_ENABLED))
     {
-      CSHMLayer::Get()->StopLayer(m_topic_name);
+      CSHMLayer::Get()->RemSubscription(m_topic_name, m_topic_id);
     }
 
     // stop inproc layer
     if (eCALPAR(NET, INPROC_REC_ENABLED))
     {
-      CInProcLayer::Get()->StopLayer(m_topic_name);
+      CInProcLayer::Get()->RemSubscription(m_topic_name, m_topic_id);
     }
   }
 
@@ -568,17 +568,17 @@ namespace eCAL
     {
     case eCAL::pb::tl_ecal_udp_mc:
     {
-      CMulticastLayer::Get()->ApplyLayerParameter(par);
+      CMulticastLayer::Get()->UpdateParameter(par);
       break;
     }
     case eCAL::pb::tl_ecal_shm:
     {
-      CSHMLayer::Get()->ApplyLayerParameter(par);
+      CSHMLayer::Get()->UpdateParameter(par);
       break;
     }
     case eCAL::pb::tl_inproc:
     {
-      CInProcLayer::Get()->ApplyLayerParameter(par);
+      CInProcLayer::Get()->UpdateParameter(par);
       break;
     }
     default:
