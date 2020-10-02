@@ -60,9 +60,9 @@ Functions
 
 - :ref:`exhale_function_ecal__util_8h_1a8bcb30275052a25eb7baa8cddf238a8d`
 
-- :ref:`exhale_function_ecal__util_8h_1a8a6da5c64336cb74d3c3d8d6baae6596`
-
 - :ref:`exhale_function_ecal__util_8h_1a6b718f778eb845effac2fa3cf61973cd`
+
+- :ref:`exhale_function_ecal__util_8h_1a8a6da5c64336cb74d3c3d8d6baae6596`
 
 - :ref:`exhale_function_ecal__util_8h_1abc702b1c24eecfeca0472010ff548a69`
 
@@ -74,9 +74,9 @@ Functions
 
 - :ref:`exhale_function_ecal__util_8h_1a2fb67b525968b2b9f8bd623b9e7dcdc1`
 
-- :ref:`exhale_function_ecal__util_8h_1a5a340cf6e811ea385d783c55ded800b2`
-
 - :ref:`exhale_function_ecal__util_8h_1abe234234065284cc4a621be946b49e16`
+
+- :ref:`exhale_function_ecal__util_8h_1a5a340cf6e811ea385d783c55ded800b2`
 
 - :ref:`exhale_function_ecal__util_8h_1a1daff5885b14d401a446a089c2d149f2`
 
