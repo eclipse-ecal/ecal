@@ -28,9 +28,9 @@ set(person_rec_lambda_in_class_src
 include_directories(include)
 
 set(person_rec_lambda_in_class_proto
-        src/protobuf/animal.proto
-        src/protobuf/house.proto
-        src/protobuf/person.proto
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/animal.proto
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/house.proto
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/person.proto
 )
 ecal_add_sample(${PROJECT_NAME} ${person_rec_lambda_in_class_src})
 PROTOBUF_TARGET_CPP(${PROJECT_NAME} src/protobuf ${person_rec_lambda_in_class_proto})
