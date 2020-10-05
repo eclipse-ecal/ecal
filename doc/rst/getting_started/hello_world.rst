@@ -1,4 +1,4 @@
-.. include:: /include.txt
+﻿.. include:: /include.txt
 
 .. _getting_started_hello_world:
 
@@ -9,13 +9,13 @@ Hello World
 After you have learned a lot about the pre-compiled applications that come with eCAL, let's create our own!
 In the good habit of every tutorial, we will write a Hello World Applications, that sends the string "Hello World" to an eCAL topic.
 
-eCAL uses CMake as a cross-plattform build toolchain.
+eCAL uses CMake as a cross-platform build toolchain.
 We will explain the CMake commands needed for the tutorial, but not extensively dive into CMake.
 
 Dependencies
 ============
 
-First of all, you have to install some more development dependencies:
+First, you have to install some more development dependencies:
 
 * |fa-windows| Windows:
 
@@ -24,10 +24,12 @@ First of all, you have to install some more development dependencies:
 
     .. tip::
        
-       When installing CMake, choose "Add to PATH", so you don't have to always provide the full path to the cmake executable
+       When installing CMake, choose "Add to PATH", so you don't have to always provide the full path to the CMake executable
 
        .. image:: img/cmake_setup_cut.svg
           :alt: CMake Add to PATH
+          :class: with-shadow
+
 
 * |fa-ubuntu| Ubuntu:
 
@@ -42,7 +44,7 @@ Somewhere on your hard drive create an empty directory and create a file :file:`
 
 * |fa-file-alt| :file:`CMakeLists.txt`:
 
-  .. literalinclude:: src/hello_world_snd/CMakeLists.txt
+  .. literalinclude:: src/hello_world/hello_world_snd/CMakeLists.txt
      :language: cmake
      :linenos:
 
@@ -54,12 +56,12 @@ Somewhere on your hard drive create an empty directory and create a file :file:`
 
      **Line 5** tells CMake to find the eCAL installation. **Line 13-15** will link the executable against it.
 
-     **Line 7-9** create a list of all our source files, wich currently only contains :file:`main.cpp`.
+     **Line 7-9** create a list of all our source files, which currently only contains :file:`main.cpp`.
      We add that source file for compiling our executable in **line 11**.
 
 * |fa-file-alt| :file:`main.cpp`:
 
-  .. literalinclude:: src/hello_world_snd/main.cpp
+  .. literalinclude:: src/hello_world/hello_world_snd/main.cpp
      :language: cpp
      :linenos:
   
@@ -71,7 +73,7 @@ Somewhere on your hard drive create an empty directory and create a file :file:`
      eCAL Supports multiple message formats.
      
      **Line 10** initialized eCAL.
-     You always have to initialize eCAL before using it's API.
+     You always have to initialize eCAL before using its API.
      The name of our eCAL Process will be "Hello World Publisher". 
      This name will be visible in the eCAL Monitor, once the Process is running.
 
@@ -82,9 +84,11 @@ Somewhere on your hard drive create an empty directory and create a file :file:`
      The while loop from **line 20** will cause an infinite publish-loop.
      eCAL supports a stop-signal; when an eCAL Process is stopped, ``eCAL::Ok()`` will return false.
      
-     **Line 25** will publish our message and send it to other eCAL Processes that have subsribed on the topic.
+     **Line 25** will publish our message and send it to other eCAL Processes that have subscribed on the topic.
 
      **Line 32** de-initializes eCAL. You should always do that before your application exits.
+
+.. _getting_started_hello_world_build_instructions:
 
 Now that you have the source code ready, create a :file:`_build` directory and build the code!
 
@@ -119,7 +123,7 @@ Again, create a new directory somewhere and add create the :file:`CMakeLists.txt
 
 * |fa-file-alt| :file:`CMakeLists.txt`:
 
-  .. literalinclude:: src/hello_world_rec/CMakeLists.txt
+  .. literalinclude:: src/hello_world/hello_world_rec/CMakeLists.txt
      :language: cmake
      :linenos:
   
@@ -131,29 +135,29 @@ Again, create a new directory somewhere and add create the :file:`CMakeLists.txt
 
      **Line 5** tells CMake to find the eCAL installation. **Line 13-15** will link the executable against it.
 
-     **Line 7-9** create a list of all our source files, wich currently only contains :file:`main.cpp`.
+     **Line 7-9** create a list of all our source files, which currently only contains :file:`main.cpp`.
      We add that source file for compiling our executable in **line 11**.
 
 * |fa-file-alt| :file:`main.cpp`:
 
-  .. literalinclude:: src/hello_world_rec/main.cpp
+  .. literalinclude:: src/hello_world/hello_world_rec/main.cpp
      :language: cpp
      :linenos:
   
   .. note::
      **What is happening here?**
 
-     **Line 7-10** Is the recieve callback.
+     **Line 7-10** Is the receive callback.
      This method will be called whenever a new message arrives.
      
-     **Line 16** creates an eCAL Subsriber that listenes to the "hello_world_topic".
+     **Line 16** creates an eCAL subscriber that listens to the "hello_world_topic".
 
-     **Line 19** adds the receive callback from above to the subsriber, so it can be called.
+     **Line 19** adds the receive callback from above to the subscriber, so it can be called.
 
   .. important::
      eCAL Receive callbacks run in the subscriber's receive thread.
      While the callback is running, the subscriber cannot receive new data.
-     So if your callback needs really long to compute, you may have to decouple your computations to not loose messages.
+     So, if your callback needs really long to compute, you may have to decouple your computations to not loose messages.
 
 Now that you have the source code ready, create a :file:`_build` directory and build the code!
 
@@ -179,3 +183,20 @@ When you now execute :file:`hello_world_snd` and :file:`hello_world_rec`, the re
 
 .. image:: img/hello_world_snd_rec.png
    :alt: eCAL Hello World sender and receiver
+
+In the next chapter you will learn how to properly structure
+ your messages with protobuf!
+
+Files
+=====
+
+.. parsed-literal::
+
+   |fa-folder-open|
+   ├─ |fa-folder-open| hello_world_snd
+   │  ├─ |fa-file-alt| :download:`CMakeLists.txt <src/hello_world/hello_world_snd/CMakeLists.txt>`
+   │  └─ |fa-file-alt| :download:`main.cpp <src/hello_world/hello_world_snd/main.cpp>`
+   │
+   └─ |fa-folder-open| hello_world_rec
+      ├─ |fa-file-alt| :download:`CMakeLists.txt <src/hello_world/hello_world_rec/CMakeLists.txt>`
+      └─ |fa-file-alt| :download:`main.cpp <src/hello_world/hello_world_rec/main.cpp>`
