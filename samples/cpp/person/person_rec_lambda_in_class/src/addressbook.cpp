@@ -18,6 +18,7 @@
 */
 
 #include "addressbook.h"
+#include <csignal>
 
 Addressbook::Addressbook() {
   // create a subscriber (topic name "person")
