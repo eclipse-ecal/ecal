@@ -18,7 +18,6 @@
 */
 
 #include "addressbook.h"
-#include <csignal>
 
 Addressbook::Addressbook() {
   // create a subscriber (topic name "person")
@@ -34,7 +33,7 @@ Addressbook::Addressbook() {
 }
 
 void Addressbook::spin() {
-  while(eCAL::Ok())
+  while(eCAL::Ok() && book_.size() < 5)
   {
     // sleep 100 ms
     eCAL::Process::SleepMS(100);
@@ -66,20 +65,6 @@ void Addressbook::print() {
   }
 }
 
-class InterruptException : public std::exception
-{
- public:
-  InterruptException(int s) : S(s) {}
-  int S;
-};
-
-
-void sig_to_exception(int s)
-{
-  throw InterruptException(s);
-}
-
-
 int main(int argc, char **argv)
 {
   // initialize eCAL API
@@ -92,22 +77,9 @@ int main(int argc, char **argv)
   // Initialize class
   Addressbook addressbook = Addressbook();
 
-  // Setup Ctrl+C catcher
-  struct sigaction sigIntHandler;
-  sigIntHandler.sa_handler = sig_to_exception;
-  sigemptyset(&sigIntHandler.sa_mask);
-  sigIntHandler.sa_flags = 0;
-  sigaction(SIGINT, &sigIntHandler, NULL);
-
-  try
-  {
-    std::cout << "Waiting for messages\n";
-    addressbook.spin();
-  }
-  catch(InterruptException& e)
-  {
-    addressbook.print();
-  }
+  std::cout << "Waiting for 5 messages\n";
+  addressbook.spin();
+  addressbook.print();
 
   // cleanup
   eCAL::Finalize();
