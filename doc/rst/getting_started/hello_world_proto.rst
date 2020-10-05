@@ -60,11 +60,11 @@ Now start implementing the actual sender application. Just as in the :ref:`last 
   .. note::
      **What is happening here?**
 
-     **Line 6** adds Protobuf as dependency
+     **Line 11** adds Protobuf as dependency
      
-     **Line 12-14** Creates a list of .proto files. We only have one.
+     **Line 17-19** Creates a list of .proto files. We only have one.
 
-     **Line 18** Compiles the .proto file to a C++ header file (:file:`hello_world.pb.h`).
+     **Line 23** Compiles the .proto file to a C++ header file (:file:`hello_world.pb.h`).
      The ``PROTOBUF_TARGET_CPP`` function is a convenience function from eCAL.
      If you have already worked with Protobuf and CMake, you may be more familiar with the following code, which basically does the same thing:
 
@@ -74,7 +74,7 @@ Now start implementing the actual sender application. Just as in the :ref:`last 
        protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${protobuf_files})
        add_executable(${PROJECT_NAME} ${source_files} ${PROTO_SRCS} ${PROTO_HDRS}) 
 
-     **Line 22** links the executable against protobuf
+     **Line 27** links the executable against protobuf
 
 * |fa-file-alt| :file:`main.cpp`:
 
