@@ -20,12 +20,6 @@
 #include "addressbook.h"
 
 Addressbook::Addressbook() {
-  // initialize eCAL API
-  eCAL::Initialize();
-
-  // set process state
-  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
-
   // create a subscriber (topic name "person")
   subscriber_ = eCAL::protobuf::CSubscriber<pb::People::Person>("person");
 
@@ -87,6 +81,11 @@ void sig_to_exception(int s)
 
 int main(int argc, char **argv)
 {
+  // initialize eCAL API
+  eCAL::Initialize();
+  // set process state
+  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
+
   std::cout << "Initializing Addressbook class\n";
 
   // Initialize class
@@ -107,11 +106,11 @@ int main(int argc, char **argv)
   catch(InterruptException& e)
   {
     addressbook.print();
-    eCAL::Finalize();
-    return(0);
   }
 
-  return(0);
+  // cleanup
+  eCAL::Finalize();
 
+  return(0);
 }
 
