@@ -42,12 +42,12 @@ namespace eCAL
     CInProcLayer();
     ~CInProcLayer();
 
-    void InitializeLayer();
+    void Initialize();
 
-    void StartLayer(std::string& topic_name_, QOS::SReaderQOS qos_);
-    void StopLayer(std::string& topic_name_);
+    void AddSubscription(std::string& topic_name_, std::string& topic_id_, QOS::SReaderQOS qos_);
+    void RemSubscription(std::string& topic_name_, std::string& topic_id_);
 
-    void ApplyLayerParameter(SReaderLayerPar& par_);
+    void UpdateParameter(SReaderLayerPar& par_);
 
   private:
     CDataReaderInProc reader;
