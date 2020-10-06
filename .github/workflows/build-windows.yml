@@ -65,7 +65,7 @@ jobs:
         mkdir "${{ runner.workspace }}\_build\sdk\"
         cd "${{ runner.workspace }}/_build/sdk"
         
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 ^
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 ^
         -DHAS_HDF5=ON ^
         -DHAS_QT5=ON ^
         -DHAS_CURL=ON ^
