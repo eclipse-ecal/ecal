@@ -140,7 +140,7 @@ Now compile and start both the sender and the receiver application and send some
    :alt: Hello World Protobuf sender and receiver
 
 Congratulations, you have completed the Getting Started chapter!
-Now go ahead and use eCAL in your real-life scenario.
+Now go ahead and use eCAL in your real-world scenario.
 
 If you experience issues, you can create a `GitHub issue <https://github.com/continental/ecal/issues>`_, to get help.
 
