@@ -25,7 +25,7 @@ This chapter will walk you through
 Links
 =====
 
-If you just want to download eCAL for Windows or Linux, click the following button:
+If you just want to download eCAL for |fa-windows| Windows or |fa-ubuntu| Linux, click the following button:
 
 .. raw:: html
 
