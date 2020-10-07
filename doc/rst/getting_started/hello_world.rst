@@ -191,8 +191,7 @@ When you now execute :file:`hello_world_snd` and :file:`hello_world_rec`, the re
 .. image:: img/hello_world_snd_rec.png
    :alt: eCAL Hello World sender and receiver
 
-In the next chapter you will learn how to properly structure
- your messages with protobuf!
+In the next chapter you will learn how to properly structure your messages with protobuf!
 
 Files
 =====
