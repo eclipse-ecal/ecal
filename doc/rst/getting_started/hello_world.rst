@@ -6,6 +6,13 @@
 Hello World
 ===========
 
+.. important::
+
+   |fa-windows| This tutorial will **only work with eCAL 5.7.3** and upwards.
+   It will **not** work with older versions that were published as .msi installer (it missed some libraries).
+
+   Please switch to Ubuntu, if you are using an old eCAL Version.
+
 After you have learned a lot about the pre-compiled applications that come with eCAL, let's create our own!
 In the good habit of every tutorial, we will write a Hello World Applications, that sends the string "Hello World" to an eCAL topic.
 
