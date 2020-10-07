@@ -26,11 +26,17 @@ eCAL uses a **publish / subscribe** pattern to automatically connect different n
 
 eCAL
 
-* is fast (1 - 10 GB/s depends on payload size - with [Iceoryx](https://github.com/eclipse/iceoryx) binding even faster)
+* runs on
+  * Windows (stable)
+  * Linux (stable)
+  * QNX (stable) - Thanks to [MathWorks](https://mathworks.com) for their great support !
+  * MacOS (experimental)
+  * FreeBSD (experimental)
+* is fast (1 - 10 GB/s depends on payload size - check measured performance [here](https://continental.github.io/ecal/advanced/performance.html))
 * provides publish / subscribe and client / server patterns
 * is designed brokerless
 * provides a C++ and C interface for easy integration into other languages (like python or csharp)
-* runs on windows, linux, intel and arm platforms
+* runs on intel and arm platforms
 * has powerful tools for recording, replay and monitoring all your data flows - decentralized
 * integrates gently into your ROS2 environement with the brand new [eCAL RMW](https://github.com/continental/rmw_ecal)  
 
@@ -42,7 +48,6 @@ Really ?? Just another pub/sub middleware ? Why ? What is the different to my be
 
 What is on the roadmap ?
 
-* macos, qnx platform support
 * more language bindings (rust, go-lang)
 * and ?? tell us about your use case :-)
 
