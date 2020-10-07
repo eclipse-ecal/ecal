@@ -1,3 +1,6 @@
+# Windows files
+Thumbs.db
+
 # CMake build folders
 /_build*
 /_setup
