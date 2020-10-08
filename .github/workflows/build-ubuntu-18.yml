@@ -14,10 +14,14 @@ jobs:
     - name: Getting closer to vanilla Ubuntu 18.04
       run: |
         sudo apt-get -y update
-        sudo apt-get -y install libgcc1
+        mkdir libgcc1_deb
+        cd libgcc1_deb
+        apt-get download -t bionic-security libgcc1
         sudo apt-get -y install ppa-purge
         sudo ppa-purge -y ubuntu-toolchain-r/test
+        sudo dpkg -i libgcc1_deb/*
         sudo apt-get -y install g++
+        cd ..
       shell: bash
 
     - name: Install Dependencies
