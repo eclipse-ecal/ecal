@@ -43,6 +43,8 @@ jobs:
 
     - name: CMake
       run: |
+        export CC=/usr/bin/gcc-7
+        export CXX=/usr/bin/g++-7
         mkdir "${{ runner.workspace }}/_build"
         cd "${{ runner.workspace }}/_build"
         cmake $GITHUB_WORKSPACE \
