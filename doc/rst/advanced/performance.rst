@@ -26,10 +26,6 @@ The table shows the results for a Windows and a Linux platform (200000 samples 1
     Platform
    -------------------------------
 
-   OS Name:                 Microsoft Windows 10 Pro
-   OS Version:              10.0.18363
-   OS Manufacturer:         Microsoft Corporation
-   OS Build Type:           Multiprocessor Free
    System Manufacturer:     HP
    System Model:            HP ZBook 15 G5
    System Type:             x64-based PC
