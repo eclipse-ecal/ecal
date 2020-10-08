@@ -38,7 +38,7 @@ eCAL runs on
 
 * Windows (stable)
 * Linux (stable)
-* QNX (stable) - Thanks to [MathWorks](https://mathworks.com) for their great support !
+* QNX (stable)
 * MacOS (experimental)
 * FreeBSD (experimental)
 
