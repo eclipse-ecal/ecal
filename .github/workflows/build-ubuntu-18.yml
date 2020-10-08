@@ -45,7 +45,7 @@ jobs:
       run: |
         mkdir "${{ runner.workspace }}/_build"
         cd "${{ runner.workspace }}/_build"
-        cmake $GITHUB_WORKSPACE -G "Ninja" \
+        cmake $GITHUB_WORKSPACE \
         -DHAS_HDF5=ON \
         -DHAS_QT5=ON \
         -DHAS_CURL=ON \
