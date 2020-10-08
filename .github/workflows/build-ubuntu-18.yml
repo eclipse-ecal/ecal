@@ -111,9 +111,9 @@ jobs:
       run: cmake --build . --target create_python_egg --config Release
       working-directory: ${{ runner.workspace }}/_build
 
-#    - name: Run Tests
-#      run: ctest -V
-#      working-directory: ${{ runner.workspace }}/_build
+    - name: Run Tests
+      run: ctest -V
+      working-directory: ${{ runner.workspace }}/_build
 
     - name: Pack
       run: cpack -G DEB
