@@ -9,14 +9,23 @@ on:
 jobs:
   build-ubuntu:
     runs-on: ubuntu-18.04
+    
+    steps:
+    - name: Getting closer to vanilla Ubuntu 18.04
+      run: |
+        sudo apt-get -y update
+        sudo apt-get -y install ppa-purge
+        sudo ppa-purge -y ubuntu-toolchain-r/test
+        sudo apt-get -y install g++
+      shell: bash
 
     steps:
     - name: Install Dependencies
       run: |
-        sudo apt update
-        sudo apt-get -y purge g++-10 g++-9 g++-8 libgcc-10-dev libgcc-9-dev libgcc-8-dev
+        sudo apt-get -y update
         sudo apt-get -y install cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev python3-setuptools
-        
+      shell: bash
+
     - name: Install Cap’n Proto
       run: |
         mkdir "${{ runner.workspace }}/capnp"
@@ -85,14 +94,6 @@ jobs:
     - name: Build Python Egg
       run: cmake --build . --target create_python_egg --config Release
       working-directory: ${{ runner.workspace }}/_build
-
-#    - name: Build Documentation C
-#      run: cmake --build . --target documentation_c
-#      working-directory: ${{ runner.workspace }}/_build
-
-#    - name: Build Documentation C++
-#      run: cmake --build . --target documentation_cpp
-#      working-directory: ${{ runner.workspace }}/_build
 
 #    - name: Run Tests
 #      run: ctest -V
