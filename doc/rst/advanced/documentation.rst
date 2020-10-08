@@ -6,7 +6,10 @@
 Edit the documentation
 =============================
 
-This tutorial will teach you how to edit this documentation locally on your PC.
+This documentation is created with `Sphinx <https://www.sphinx-doc.org/>`_\ .
+Sphinx uses the reStructuredText (RST) markup format and adds some features like cross-referencing.
+
+In this tutorial we will teach you how to edit the documentation locally on your PC.
 For that we will use Visual Studio Code with the reStructuredText extension, that will give you a (somewhat) live preview.
 
 .. hint::
@@ -55,8 +58,8 @@ For that we will use Visual Studio Code with the reStructuredText extension, tha
 
      .. code-block:: bash
      
-        pip3 install -r requirements.txt
-        pip3 install sphinx-autobuild
+        sudo pip3 install -r requirements.txt
+        sudo pip3 install sphinx-autobuild
 
 #. Install the VS Code Extensions:
 
