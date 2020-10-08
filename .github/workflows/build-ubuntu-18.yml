@@ -19,7 +19,6 @@ jobs:
         sudo apt-get -y install g++
       shell: bash
 
-    steps:
     - name: Install Dependencies
       run: |
         sudo apt-get -y update
