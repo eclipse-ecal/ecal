@@ -14,8 +14,10 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt update
-        sudo apt-get -y install cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev python3-setuptools
-        sudo apt-get -y purge g++-10 g++-9 g++-8 libgcc-10-dev libgcc-9-dev libgcc-8-dev libgcc-s1
+        sudo apt-get -y purge g++-10 g++-9 g++-8
+        
+# sudo apt-get -y install cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev python3-setuptools
+        
         
     - name: Install Cap’n Proto
       run: |
