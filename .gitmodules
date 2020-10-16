@@ -31,6 +31,3 @@
 [submodule "thirdparty/libssh2"]
 	path = thirdparty/libssh2
 	url = https://github.com/libssh2/libssh2.git
-[submodule "thirdparty/hdf5"]
-	path = thirdparty/hdf5
-	url = https://bitbucket.hdfgroup.org/scm/hdffv/hdf5.git
