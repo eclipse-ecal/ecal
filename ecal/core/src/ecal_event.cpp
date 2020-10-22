@@ -306,6 +306,7 @@ namespace eCAL
       m_name(name_ + "_evt"),
       m_event(nullptr)
     {
+      m_name = (m_name[0] != '/') ? "/" + m_name : m_name; // make memory file path compatible for all posix systems
       m_event = named_event_open(m_name.c_str());
       if(m_event == nullptr)
       {
