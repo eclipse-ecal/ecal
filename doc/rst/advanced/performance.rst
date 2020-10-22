@@ -7,16 +7,16 @@ Performance measurements
 ========================
 
 The following table shows the latency in µs between a single publisher / subscriber connection for different payload sizes (two different processes running on the same host).
-You can simply measure the latency on your own machine by running the ecal_latency_snd and ecal_latency_rec_cb sample applications.
+You can simply measure the latency on your own machine by running the ecal_sample_latency_snd and ecal_sample_latency_rec_cb sample applications.
 The first two columns are showing the performance for the eCAL builtin shared memory layer and the last column for the iceoryx shared memory layer (configured by cmake option ECAL_LAYER_ICEORYX).
 
 First start ecal_sample_latency_rec_cb.
 This application will receive the published payloads, send them back to the sender and print out the average receive time, the message frequency and the data throughput over all received messages.
-The sending application ecal_latency_snd can be configured that way:
+The sending application ecal_sample_latency_snd can be configured that way:
 
 .. code-block:: console
    
-   ecal_latency_snd  -s <payload_size [kB]> -r <send loops>
+   ecal_sample_latency_snd  -s <payload_size [kB]> -r <send loops>
 
 The table shows the results for a Windows and a Linux platform (200000 samples 1kB - 512kB / 10000 samples > 512 kB, zero drops).
 
@@ -25,7 +25,6 @@ The table shows the results for a Windows and a Linux platform (200000 samples 1
    -------------------------------
     Platform
    -------------------------------
-
    System Manufacturer:     HP
    System Model:            HP ZBook 15 G5
    System Type:             x64-based PC
