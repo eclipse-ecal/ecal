@@ -47,7 +47,7 @@ namespace eCAL
       oflag = O_RDONLY;
     }
     int previous_umask = umask(000);  // set umask to nothing, so we can create files with all possible permission bits
-    mem_file_info_.name = name.size() ? ( (name_[0] != '/') ? "/" + name_ : name_) : name_; // make memory file path compatible for all posix systems
+    mem_file_info_.name = name_.size() ? ( (name_[0] != '/') ? "/" + name_ : name_) : name_; // make memory file path compatible for all posix systems
     mem_file_info_.memfile = ::shm_open(mem_file_info_.name.c_str(), oflag, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     umask(previous_umask);            // reset umask to previous permissions
     if(mem_file_info_.memfile == -1)
