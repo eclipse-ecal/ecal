@@ -1125,8 +1125,23 @@ namespace eCAL
         // --------------------------- Child process ---------------------------
         STD_COUT_DEBUG("[PID " << getpid() << "]: " << "First message from child process" << std::endl);
 
-        // Create a new Session
-        setsid();
+        // Create a new Session, if we start processes non-blocking. If we start
+        // blocking, we don't create a new session, as otherwise the init
+        // process (PID 1) would take the responsibility of waiting for the
+        // process and retrieving its return value.
+        if (!block_)
+        {
+          STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Creating new session" << std::endl);
+          pid_t session_id = setsid();
+          if (session_id == -1)
+          {
+            std::cerr << "[PID " << getpid() << "]: " << "Failed creating new session: " << strerror(errno) << std::endl;
+          }
+          else
+          {
+            STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Successfully created new session with ID " << session_id << std::endl);
+          }
+        }
 
         // Fork the process again, into the child and the grandchild (The child
         // receives grandchild_pid != 0, the grandchild receives
@@ -1136,11 +1151,11 @@ namespace eCAL
         if (grandchild_pid < 0)
         {
           std::cerr << "[PID " << getpid() << "]: " << "Error forking: " << strerror(errno) << std::endl;
-          exit(EXIT_FAILURE);
+          _exit(EXIT_FAILURE);
         }
-        else if (grandchild_pid == 0)
+        else if (grandchild_pid != 0)
         {
-          exit(EXIT_SUCCESS);
+          _exit(EXIT_SUCCESS);
         }
         else
         {
@@ -1154,7 +1169,7 @@ namespace eCAL
             if (chdir(working_dir_))
             {
               std::cerr << "[PID " << getpid() << "]: " << "Error changing working directory to " << working_dir_ << ": " << strerror(errno) << std::endl;
-              return 0;
+              _exit(EXIT_FAILURE);
             }
           }
 
@@ -1368,8 +1383,19 @@ namespace eCAL
           }
 
           delete[] c_argv;
+
+          STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Unlocking lockfile" << std::endl);
+          if (flock(lockfile_fd, LOCK_UN) == -1)
+          {
+            std::cerr << "[PID " << getpid() << "]: " << "Error unlocking lockfile \"" << lockfile_name << "\": " << strerror(errno) << std::endl;
+          }
+          else
+          {
+            STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Successfully unlocked lockfile!" << std::endl);
+          }
+
           STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Process will now exit" << std::endl);
-          exit(0);
+          _exit(EXIT_FAILURE);
         }
       }
       else
@@ -1379,6 +1405,20 @@ namespace eCAL
         // This is the main process that has to continue normally.
 
         pid_t process_pid = 0;
+
+        // Wait for the child process to finish, so it won't get zombified
+
+        STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Waiting for child (PID " << child_pid << ") to finish" << std::endl);
+        pid_t wait_for_child_result = waitpid(child_pid, nullptr, 0);
+        if ((wait_for_child_result < 1) || (wait_for_child_result == 0 /* should never happen*/))
+        {
+          std::cerr << "[PID " << getpid() << "]: " << "Error waiting for child to exit: " << strerror(errno) << std::endl;
+        }
+        else
+        {
+          STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Child process has finished." << std::endl);
+        }
+
 
         // Open the FIFO and read the PID from it. This will block until we
         // actually receive the data, so we are dependent on some process to
