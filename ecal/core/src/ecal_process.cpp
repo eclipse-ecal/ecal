@@ -35,6 +35,7 @@
 #include <sstream>
 #include <algorithm>
 #include <memory>
+#include <fstream>
 
 #include "sys_usage.h"
 
@@ -951,41 +952,66 @@ namespace eCAL
         g_process_par = &procargs[pos_argv0];
 
 #else // ECAL_OS_MACOS
-        FILE* f;
-        char cmdline[1024] = { 0 };
 
-        f = fopen("/proc/self/cmdline", "r");
-        if (f == nullptr) return "";
+        const std::string filename = "/proc/self/cmdline";
+        std::vector<std::string> argument_vector;
 
-        char* p = cmdline;
-        char* res = fgets(cmdline, sizeof(cmdline) / sizeof(*cmdline), f);
-        fclose(f);
-        if (res == nullptr) return "";
-
-        while (*p)
+        std::ifstream cmdline_file(filename, std::ios::binary);
+        if (!cmdline_file.is_open())
         {
-          p += strlen(p);
-          if (*(p + 1))
+          std::cerr << "Failed to open " << filename << '\n';
+          return "";
+        }
+        else
+        {
+          std::string arg;
+          while (std::getline(cmdline_file, arg, '\0')) // the cmdline contains arguments separated by \0
           {
-            *p = ' ';
+            if (!arg.empty())
+            {
+              argument_vector.emplace_back(arg);
+            }
           }
-          p++;
         }
-        //puts(cmdline);
 
-        char par[1024] = { 0 };
-        int  par_len = 1024;
-        strncpy(par, cmdline, par_len);
-        par[par_len - 1] = '\0';
-
-        std::string par_s = (const char*)par;
-        char chars[] = " \t\n\r";
-        for (unsigned int i = 0; i < strlen(chars); ++i)
+        size_t complete_char_num(0);
+        for (std::string& argument : argument_vector)
         {
-          par_s.erase(std::remove(par_s.begin(), par_s.end(), chars[i]), par_s.end());
+          std::string escaped_arg;
+          escaped_arg.reserve(argument.size() + 2);
+
+          bool constains_space = (argument.find(' ') != std::string::npos);
+
+          // Escape special characters
+          if (constains_space) escaped_arg += '\"';
+          for (char c : argument)
+          {
+            if (c == '\\')                              // Escape \ _
+              escaped_arg += "\\\\";
+            else if (c == '\"')                         // Escape "
+              escaped_arg += "\\\"";
+            else if (c == '\'')                         // Escape '
+              escaped_arg += "\\\'";
+            else
+              escaped_arg += c;
+          }
+          if (constains_space) escaped_arg += '\"';
+
+          complete_char_num += escaped_arg.size();
+          argument = escaped_arg;
         }
 
-        g_process_par = par_s;
+        std::string process_par;
+        process_par.reserve(complete_char_num + argument_vector.size());
+
+        for (auto arg_it = argument_vector.begin(); arg_it != argument_vector.end(); arg_it++)
+        {
+          if (arg_it != argument_vector.begin())
+            process_par += ' ';
+          process_par += *arg_it;
+        }
+
+        g_process_par = process_par;
 #endif // ECAL_OS_MACOS
       }
       return(g_process_par);
