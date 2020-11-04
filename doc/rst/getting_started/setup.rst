@@ -30,10 +30,10 @@ For Microsoft Windows we provide binary installers published on our GitHub relea
    .. image:: img/setup.png
       :alt: eCAL Setup
 
-|fa-ubuntu| Installing eCAL on Ubuntu 18.04
-===========================================
+|fa-ubuntu| Installing eCAL on Ubuntu
+=====================================
 
-For Ubuntu 18.04 (on AMD64) we provide precompiles binaries. 
+We provide precompiled binaries for Ubuntu 18.04 and Ubuntu 20.04.
 
 #. Install the dependencies:
 
@@ -42,12 +42,24 @@ For Ubuntu 18.04 (on AMD64) we provide precompiles binaries.
       sudo apt update
       sudo apt install libc6 libcurl4 libgcc1 libhdf5-100 libprotobuf10 libqt5core5a libqt5gui5 libqt5widgets5 libstdc++6
 
-#. Head to the GitHub release page and download the latest eCAL installer (ecal-X.X.X-linux.deb):
+#. Head to the GitHub release page and download the latest eCAL installer for your Ubuntu version:
    
    https://github.com/continental/ecal/releases
+
+   +----------------+----------+-------------------------------+
+   | Ubuntu Version | Codename | eCAL setup file               |
+   +================+==========+===============================+
+   | 18.04          | Bionic   | :file:`ecal-X.X.X-bionic.deb` |
+   +----------------+----------+-------------------------------+
+   | 20.04          | Focal    | :file:`ecal-X.X.X-focal.deb`  |
+   +----------------+----------+-------------------------------+
 
 #. Install the debian package:
 
    .. code-block:: bash
 
-      sudo dpkg -i ecal-*-linux.deb
+      sudo dpkg -i ecal-*.deb
+
+.. seealso::
+
+   If you want to use eCAL on any other Linux than Ubuntu 18.04 or 20.04, you can :ref:`build eCAL from source <development_building_ecal_from_source>`.

@@ -2,9 +2,9 @@
 
 .. _edit_documentation:
 
-=============================
+======================
 Edit the documentation
-=============================
+======================
 
 This documentation is created with `Sphinx <https://www.sphinx-doc.org/>`_\ .
 Sphinx uses the reStructuredText (RST) markup format and adds some features like cross-referencing.
