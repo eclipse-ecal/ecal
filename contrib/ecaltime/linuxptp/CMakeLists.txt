@@ -42,7 +42,7 @@ target_link_libraries(${PROJECT_NAME} eCAL::core simpleini::simpleini)
 
 target_include_directories(${PROJECT_NAME} 
   PRIVATE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
 ecal_install_time_plugin(${PROJECT_NAME})
