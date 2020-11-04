@@ -24,7 +24,7 @@ Addressbook::Addressbook() {
   subscriber_ = eCAL::protobuf::CSubscriber<pb::People::Person>("person");
 
   // add receiver callback
-  auto lambda = [this](const char* topic_, const pb::People::Person& msg, long long time_, long long clock_, long long id_) { return this->callback(msg); };
+  auto lambda = [this](const char* topic_, const pb::People::Person& msg, long long /*time_*/, long long /*clock_*/, long long /*id_*/) { return this->callback(msg); };
   if (!subscriber_.AddReceiveCallback(lambda)) {
     std::cout << "eCAL subscriber initialization failed\n";
   }
@@ -68,7 +68,7 @@ void Addressbook::print() {
 int main(int argc, char **argv)
 {
   // initialize eCAL API
-  eCAL::Initialize();
+  eCAL::Initialize(argc, argv);
   // set process state
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
