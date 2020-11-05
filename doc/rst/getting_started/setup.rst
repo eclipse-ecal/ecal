@@ -7,7 +7,7 @@ Setup
 ============================
 
 Before using eCAL, you must install it on your PC.
-This section covers how to install eCAL on Microsoft Windows and Ubuntu 18.04 (We only support 64 bit!).
+This section covers how to install eCAL on Microsoft Windows and Ubuntu (both 64 bit only).
 You can either use eCAL just on one PC (local communication) or on multiple PCs (cloud communication).
 We will cover both scenarios in the next sections.
 
