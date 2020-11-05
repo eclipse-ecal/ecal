@@ -530,13 +530,13 @@ endif()
 # --------------------------------------------------------
 if(BUILD_APPS AND HAS_QT5)
   add_subdirectory(app/mon/mon_gui)
-  add_subdirectory(app/util/launcher)
   if(WIN32)
     set(ECAL_MON_PLUGIN_DIR ecalmon_plugins)
   else()
     set(ECAL_MON_PLUGIN_DIR ecal/plugins/mon)
   endif()
   add_subdirectory(app/mon/mon_plugins)
+  add_subdirectory(app/util/launcher)
 # --------------------------------------------------------
 # qt applications using hdf5
 # --------------------------------------------------------

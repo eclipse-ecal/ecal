@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 
+
 class AboutDialog : public QDialog
 {
   Q_OBJECT

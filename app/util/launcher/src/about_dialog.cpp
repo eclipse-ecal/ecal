@@ -27,7 +27,7 @@ AboutDialog::AboutDialog(QWidget *parent)
   : QDialog(parent)
 {
   ui_.setupUi(this);
-  ui_.version_label->setText("Version: " + QString("2.0.0"));
+  ui_.version_label->setText("Version: " + QString("2.1.0"));
   ui_.ecalversion_label->setText("eCAL " + QString(ECAL_VERSION) + " (" + QString(ECAL_DATE) + ")");
   connect(ui_.button_box->button(QDialogButtonBox::StandardButton::Ok), SIGNAL(clicked()), this, SLOT(close()));
 }
