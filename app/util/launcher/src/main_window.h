@@ -22,10 +22,12 @@
 **/
 
 #pragma once
-
 #include <QWidget>
 #include <QtGui>
 #include <QMainWindow>
+#include <QPixmap>
+#include <QIcon>
+#include <QProcess>
 #include <QMouseEvent>
 
 #include "about_dialog.h"
@@ -57,6 +59,8 @@ public:
 private:
 
   Ui::MainWindow*   _ui;
+  QString           _ecal_dir;
   QPoint            _dragPosition;
   AboutDialog*      _about_dialog;
 };
+

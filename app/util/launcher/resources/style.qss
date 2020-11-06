@@ -1,0 +1,40 @@
+QWidget
+{
+    background-color:rgb(77,77,77);
+}
+
+QPushButton
+{
+   background-color:rgb(0,0,0);
+   color:rgb(255,200,0)
+}
+QPushButton:hover
+
+{
+   background-color:rgb(125, 125, 125);
+   color:rgb(0,0,0);
+
+}
+
+QFrame
+{
+   background-color: rgb(255,200,0);
+}
+
+QLabel
+{
+   background-color:rgb(77,77,77);
+   color:rgb(255,200,0)
+}
+
+QDialogButtonBox::item
+{
+   background-color:rgb(0,0,0);
+   color:rgb(255,200,0)
+}
+
+QDialogButtonBox::item:hover
+{
+   background-color:rgb(125, 125, 125);
+   color:rgb(0,0,0);
+}

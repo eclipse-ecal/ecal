@@ -27,6 +27,9 @@ if(POLICY CMP0071)
   cmake_policy(SET CMP0071 OLD)
 endif()
 
+if     (IS_GIT_TREE OR NOT EXISTS "${CMAKE_SOURCE_DIR}/ecal/core/src/ecal_defs.h")
+  configure_file("${CMAKE_SOURCE_DIR}/ecal/core/src/ecal_defs.h.in" "${CMAKE_CURRENT_BINARY_DIR}/include/ecal/ecal_defs.h" @ONLY)
+endif  (IS_GIT_TREE OR NOT EXISTS "${CMAKE_SOURCE_DIR}/ecal/core/src/ecal_defs.h")
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC OFF) # Reason for being turned off: AutoUIC will prevent VS from detecting changes in .ui files
@@ -78,14 +81,15 @@ ecal_add_app_qt(${PROJECT_NAME}
 target_link_libraries (${PROJECT_NAME}
     Qt5::Widgets
     eCAL::apps
-    eCAL::core
 )
 
 if(MSVC)
-    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127 /wd4714")
+    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127")
 ENDIF(MSVC)
 
-target_include_directories(${PROJECT_NAME} PRIVATE src)
+target_include_directories(${PROJECT_NAME} PRIVATE 
+                       src
+										   ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 if(WIN32)
     target_compile_definitions(${PROJECT_NAME} PRIVATE BUILDTIMEUSER="$ENV{USERNAME}")
@@ -117,4 +121,4 @@ endif()
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/util)
 
-ecal_install_app(${PROJECT_NAME} START_MENU_NAME "eCAL Launcher")
+ecal_install_app(${PROJECT_NAME})

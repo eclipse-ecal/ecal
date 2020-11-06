@@ -23,11 +23,8 @@
 
 #include "main_window.h"
 #include "ui_main_window.h"
-#include "qpushbutton.h"
-
 #include <ecal/ecal_apps.h>
-
-#include <QProcess>
+#include "qpushbutton.h"
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -38,6 +35,11 @@ MainWindow::MainWindow(QWidget *parent) :
   _ui->centralWidget->installEventFilter(this);
   connect(_ui->pushButton_minimize, &QPushButton::clicked, [this]() { this->showMinimized();});
   connect(_ui->pushButton_exit_x, &QPushButton::clicked, [this]() { this->close(); });
+
+#ifdef _MSC_VER
+  _ecal_dir = qgetenv("ECAL_HOME");
+  _ecal_dir += "\\bin\\";
+#endif
 }
 
 MainWindow::~MainWindow()
@@ -79,23 +81,36 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 void MainWindow::on_pushButton_monitor_clicked()
 {
-  QProcess::startDetached(eCAL::Apps::MON_GUI);
+  QString pname = eCAL::Apps::MON_GUI;
+#ifdef _MSC_VER
+  pname += ".exe";
+#endif
+  QProcess::startDetached("\"" + _ecal_dir + pname + "\"");
 }
 
 void MainWindow::on_pushButton_play_clicked()
 {
-  QProcess::startDetached(eCAL::Apps::PLAY_GUI);
+  QString pname = eCAL::Apps::PLAY_GUI;
+#ifdef _MSC_VER
+  pname += ".exe";
+#endif
+  QProcess::startDetached("\"" + _ecal_dir + pname + "\"");
 }
 
 void MainWindow::on_pushButton_rec_clicked()
 {
-  QProcess::startDetached(eCAL::Apps::REC_GUI);
+  QString pname = eCAL::Apps::REC_GUI;
+#ifdef _MSC_VER
+  pname += ".exe";
+#endif
+  QProcess::startDetached("\"" + _ecal_dir + pname + "\"");
 }
 
 void MainWindow::on_pushButton_about_clicked()
 {
   _about_dialog = new AboutDialog(this);
   _about_dialog->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+  _about_dialog->setWindowIcon(QIcon(":about.svg"));
   _about_dialog->exec();
   delete _about_dialog;
 }
