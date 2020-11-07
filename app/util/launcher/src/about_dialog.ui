@@ -18,6 +18,10 @@
   <property name="windowTitle">
    <string>About eCAL Launcher</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../resources/resources.qrc">
+    <normaloff>:/ecallauncher/APP_ICON</normaloff>:/ecallauncher/APP_ICON</iconset>
+  </property>
   <property name="sizeGripEnabled">
    <bool>false</bool>
   </property>

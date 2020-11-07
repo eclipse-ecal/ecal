@@ -22,36 +22,17 @@
 **/
 
 #include "main_window.h"
+
 #include <QApplication>
 #include <qfontdatabase.h>
-#ifdef _WIN32
-#include "windows.h"
-#endif // _WIN32
-
 
 int main(int argc, char *argv[])
 {
   QApplication a(argc, argv);
-#ifdef _WIN32
-  qApp->setAttribute(Qt::AA_EnableHighDpiScaling,true);
-  a.setWindowIcon(QIcon(":ecallauncher.ico"));
-#else
-  a.setWindowIcon(QIcon(":ecallauncher.svg"));
-#endif
-  QFile f(":style.qss");
-  if (!f.exists())
-  {
-    printf("Unable to set stylesheet, file not found\n");
-  }
-  else
-  {
-    f.open(QFile::ReadOnly | QFile::Text);
-    QTextStream ts(&f);
-    qApp->setStyleSheet(ts.readAll());
-  }
-  QFontDatabase::addApplicationFont(":NEURPOLI.TTF");
+  QFontDatabase::addApplicationFont(":/ecallauncher/APP_FONT");
 
   MainWindow w;
   w.show();
+
   return a.exec();
 }
