@@ -32,6 +32,8 @@
 
 #include "ecalsys/ecal_sys_logger.h"
 
+#include <ecal_utils/ecal_utils.h>
+
 
 
 EcalSysMonitor::EcalSysMonitor(EcalSys& ecalsys_instance, std::chrono::nanoseconds loop_time)
@@ -283,13 +285,31 @@ std::list<std::shared_ptr<EcalSysTask>> EcalSysMonitor::GetTasksFromCloud()
     // The first argument is always the process itself. Thus, we remove the first argument.
     monitor_process_args = RemoveFirstArg(monitor_process_args);
 
+    std::string algo_path;
+    std::string algo_params;
+
+    std::vector<std::string> algo_cmdline_vector = EcalUtils::CommandLine::splitCommandLine(monitor_process.pparam(), 2); // Split command line in algo + arguments
+    if(algo_cmdline_vector.size() == 0)
+    {
+      algo_path = monitor_process_path;
+    }
+    else if (algo_cmdline_vector.size() == 1)
+    {
+      algo_path = algo_cmdline_vector[0];
+    }
+    else
+    {
+      algo_path   = algo_cmdline_vector[0];
+      algo_params = algo_cmdline_vector[1];
+    }
+
     // Create a new ecalsys task with that data
     std::shared_ptr<EcalSysTask> task(new EcalSysTask());
 
     task->SetName                  (monitor_process_name);
     task->SetTarget                (monitor_process_host);
-    task->SetAlgoPath              (monitor_process_path);
-    task->SetCommandLineArguments  (monitor_process_args);
+    task->SetAlgoPath              (algo_path);
+    task->SetCommandLineArguments  (algo_params);
     task->SetMonitoringEnabled     (true);
     task->SetHostStartedOn         (monitor_process_host);
     task->SetPids                  (std::vector<int>{pid});
