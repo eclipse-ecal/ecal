@@ -967,10 +967,7 @@ namespace eCAL
           std::string arg;
           while (std::getline(cmdline_file, arg, '\0')) // the cmdline contains arguments separated by \0
           {
-            if (!arg.empty())
-            {
-              argument_vector.emplace_back(arg);
-            }
+            argument_vector.emplace_back(arg);
           }
         }
 
@@ -996,6 +993,9 @@ namespace eCAL
               escaped_arg += c;
           }
           if (constains_space) escaped_arg += '\"';
+
+          if(escaped_arg.empty())
+            escaped_arg = "\"\"";
 
           complete_char_num += escaped_arg.size();
           argument = escaped_arg;
