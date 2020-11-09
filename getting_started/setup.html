@@ -324,6 +324,15 @@
 <li class="toctree-l2"><a class="reference internal" href="../configuration/options.html">ecal.ini</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../applications.html">Applications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../applications/rec/recorder.html">eCAL Rec</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../applications/rec/recorder_advanced_overview.html">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../applications/rec/recorder_distributed_recording.html">Distributed recording</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../applications/rec/recorder_ftp_upload.html">FTP Upload</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Advanced</span></p>
@@ -337,7 +346,7 @@
                                     <ul>
 <li><a class="reference internal" href="#">2. Setup</a><ul>
 <li><a class="reference internal" href="#fa-windows-installing-ecal-on-windows">2.1. <i class="fab fa-windows"></i> Installing eCAL on Windows</a></li>
-<li><a class="reference internal" href="#fa-ubuntu-installing-ecal-on-ubuntu-18-04">2.2. <i class="fab fa-ubuntu"></i> Installing eCAL on Ubuntu 18.04</a></li>
+<li><a class="reference internal" href="#fa-ubuntu-installing-ecal-on-ubuntu">2.2. <i class="fab fa-ubuntu"></i> Installing eCAL on Ubuntu</a></li>
 </ul>
 </li>
 </ul>
@@ -377,7 +386,7 @@
     <div class="section" id="setup">
 <span id="getting-started-setup"></span><h1><span class="section-number">2. </span>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h1>
 <p>Before using eCAL, you must install it on your PC.
-This section covers how to install eCAL on Microsoft Windows and Ubuntu 18.04 (We only support 64 bit!).
+This section covers how to install eCAL on Microsoft Windows and Ubuntu (both 64 bit only).
 You can either use eCAL just on one PC (local communication) or on multiple PCs (cloud communication).
 We will cover both scenarios in the next sections.</p>
 <p>So, let’s get started!</p>
@@ -397,25 +406,62 @@ We will cover both scenarios in the next sections.</p>
 </li>
 </ol>
 </div>
-<div class="section" id="fa-ubuntu-installing-ecal-on-ubuntu-18-04">
-<h2><span class="section-number">2.2. </span><i class="fab fa-ubuntu"></i> Installing eCAL on Ubuntu 18.04<a class="headerlink" href="#fa-ubuntu-installing-ecal-on-ubuntu-18-04" title="Permalink to this headline">¶</a></h2>
-<p>For Ubuntu 18.04 (on AMD64) we provide precompiles binaries.</p>
+<div class="section" id="fa-ubuntu-installing-ecal-on-ubuntu">
+<h2><span class="section-number">2.2. </span><i class="fab fa-ubuntu"></i> Installing eCAL on Ubuntu<a class="headerlink" href="#fa-ubuntu-installing-ecal-on-ubuntu" title="Permalink to this headline">¶</a></h2>
+<p>We provide precompiled binaries for Ubuntu 18.04 and Ubuntu 20.04.</p>
 <ol class="arabic">
 <li><p>Install the dependencies:</p>
+<ul>
+<li><p>Ubuntu 18.04:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt update
 sudo apt install libc6 libcurl4 libgcc1 libhdf5-100 libprotobuf10 libqt5core5a libqt5gui5 libqt5widgets5 libstdc++6
 </pre></div>
 </div>
 </li>
-<li><p>Head to the GitHub release page and download the latest eCAL installer (ecal-X.X.X-linux.deb):</p>
+<li><p>Ubuntu 20.04:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt update
+sudo apt install libc6 libcurl4 libgcc-s1 libhdf5-103 libprotobuf17 libqt5core5a libqt5gui5 libqt5widgets5 libstdc++6
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>Head to the GitHub release page and download the latest eCAL installer for your Ubuntu version:</p>
 <p><a class="reference external" href="https://github.com/continental/ecal/releases">https://github.com/continental/ecal/releases</a></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 18%" />
+<col style="width: 54%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Ubuntu Version</p></th>
+<th class="head"><p>Codename</p></th>
+<th class="head"><p>eCAL setup file</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>18.04</p></td>
+<td><p>Bionic</p></td>
+<td><p><code class="file docutils literal notranslate"><span class="pre">ecal-X.X.X-bionic.deb</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>20.04</p></td>
+<td><p>Focal</p></td>
+<td><p><code class="file docutils literal notranslate"><span class="pre">ecal-X.X.X-focal.deb</span></code></p></td>
+</tr>
+</tbody>
+</table>
 </li>
 <li><p>Install the debian package:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo dpkg -i ecal-*-linux.deb
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo dpkg -i ecal-*.deb
 </pre></div>
 </div>
 </li>
 </ol>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>If you want to use eCAL on any other Linux than Ubuntu 18.04 or 20.04, you can <a class="reference internal" href="../development/building_ecal_from_source.html#development-building-ecal-from-source"><span class="std std-ref">build eCAL from source</span></a>.</p>
+</div>
 </div>
 </div>
 

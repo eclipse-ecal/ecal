@@ -83,6 +83,7 @@ eCAL is provided on an "as is" basis without warranties or conditions of any kin
    :caption: Using eCAL
 
    configuration
+   applications
    faq
 
 .. toctree::
