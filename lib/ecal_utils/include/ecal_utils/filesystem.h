@@ -132,5 +132,7 @@ namespace EcalUtils
     }
 
     bool IsEqual(const std::string& path1, const std::string& path2, OsStyle compare_for = OsStyle::Current);
+
+    std::string FileName(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
   };
 }

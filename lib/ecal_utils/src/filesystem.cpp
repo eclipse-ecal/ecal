@@ -522,13 +522,18 @@ namespace EcalUtils
       EcalUtils::String::Split(unix_style_path, "/", splitted_path);
 
       // The components-stack that will increase and shrink depending on the folders and .. elements in the splitted path
-      for (const std::string& part : splitted_path)
+            for (auto part_it = splitted_path.begin(); part_it != splitted_path.end(); part_it++)
       {
-        if (part.empty() || part == ".")
+        if ((part_it == splitted_path.begin()) && (*part_it == ".") && !is_absolute)
+        {
+          // Preserve a leading ".", if the path is relative. It may indicate the working director, so we should not skip it.
+          components.push_back(".");
+        }
+        else if (part_it->empty() || *part_it == ".")
         {
           continue;
         }
-        else if (part == "..")
+        else if (*part_it == "..")
         {
           if (is_absolute)
           {
@@ -553,7 +558,7 @@ namespace EcalUtils
         }
         else
         {
-          components.push_back(part);
+          components.push_back(*part_it);
         }
       }
 
@@ -564,13 +569,13 @@ namespace EcalUtils
     std::string CleanPath(const std::string& path, OsStyle input_path_style)
     {
       if (path.empty())
-        return ".";
+        return "";
 
       // Split the path into its cleaned components
       std::list<std::string> cleaned_path_components = CleanPathComponentList(path, input_path_style);
 
       // Check whether the path ended with a slash
-      bool tailing_separator = ((path.back() == '/') || (path.back() == '\\'));
+      bool tailing_separator = (ToUnixSeperators(path, input_path_style).back() == '/');
 
       // Gather information about the root (it will not be in the components list)
       std::string root = GetAbsoluteRoot(path, input_path_style);
@@ -590,11 +595,11 @@ namespace EcalUtils
       }
       else
       {
-        cleaned_path += '.';
-        if (!cleaned_path_components.empty())
-        {
-          cleaned_path += '/';
-        }
+        //cleaned_path += '.';
+        //if (!cleaned_path_components.empty())
+        //{
+        //  cleaned_path += '/';
+        //}
       }
 
       cleaned_path += EcalUtils::String::Join("/", cleaned_path_components);
@@ -744,6 +749,28 @@ namespace EcalUtils
       }
 
       return true;
+    }
+
+    std::string FileName(const std::string& path, OsStyle input_path_style)
+    {
+      if (path.empty())
+        return "";
+
+      if (path.back() == '/')
+        return "";
+
+      if ((input_path_style == OsStyle::Windows) || (input_path_style == OsStyle::Combined))
+      {
+        if (path.back() == '\\')
+          return "";
+      }
+
+      auto clean_path_component_list = CleanPathComponentList(path, input_path_style);
+      
+      if (clean_path_component_list.empty())
+        return "";
+      else
+        return clean_path_component_list.back();
     }
   }
 }

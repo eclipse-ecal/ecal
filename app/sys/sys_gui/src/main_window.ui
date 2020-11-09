@@ -1,0 +1,847 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EcalsysMainWindow</class>
+ <widget class="QMainWindow" name="EcalsysMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1024</width>
+    <height>768</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string/>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../resources/resources.qrc">
+    <normaloff>:/icons/gfx/ecalsys.ico</normaloff>:/icons/gfx/ecalsys.ico</iconset>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
+  </property>
+  <widget class="QWidget" name="central_widget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1024</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_file">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <widget class="QMenu" name="menu_import">
+     <property name="title">
+      <string>&amp;Import</string>
+     </property>
+     <addaction name="action_file_append"/>
+    </widget>
+    <widget class="QToolTipMenu" name="menu_recent_files">
+     <property name="title">
+      <string>&amp;Recent files</string>
+     </property>
+     <addaction name="action_no_files"/>
+    </widget>
+    <addaction name="action_file_new"/>
+    <addaction name="action_file_open"/>
+    <addaction name="menu_import"/>
+    <addaction name="menu_recent_files"/>
+    <addaction name="separator"/>
+    <addaction name="action_file_save"/>
+    <addaction name="action_file_save_as"/>
+    <addaction name="separator"/>
+    <addaction name="action_file_exit"/>
+   </widget>
+   <widget class="QMenu" name="menu_view">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="action_view_runners"/>
+    <addaction name="action_show_console"/>
+    <addaction name="separator"/>
+    <addaction name="action_view_reset_layout"/>
+   </widget>
+   <widget class="QMenu" name="menu_options">
+    <property name="title">
+     <string>&amp;Options</string>
+    </property>
+    <addaction name="action_options_check_targets_reachable"/>
+    <addaction name="separator"/>
+    <addaction name="action_options_use_configured_targets"/>
+    <addaction name="action_options_local_tasks_only"/>
+    <addaction name="action_options_use_localhost_for_all_tasks"/>
+    <addaction name="separator"/>
+    <addaction name="action_options_kill_all_on_close"/>
+   </widget>
+   <widget class="QMenu" name="menu_help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="action_help_documentation"/>
+    <addaction name="action_help_about"/>
+    <addaction name="separator"/>
+    <addaction name="action_help_licenses"/>
+   </widget>
+   <widget class="QMenu" name="menu_task">
+    <property name="title">
+     <string>&amp;Task</string>
+    </property>
+    <widget class="QMenu" name="menu_task_fast_kill">
+     <property name="title">
+      <string>&amp;Fast-kill</string>
+     </property>
+     <addaction name="action_task_fast_kill"/>
+     <addaction name="action_task_fast_restart"/>
+     <addaction name="separator"/>
+     <addaction name="action_task_fast_kill_selected"/>
+     <addaction name="action_task_fast_restart_selected"/>
+    </widget>
+    <widget class="QMenu" name="menu_task_target_override">
+     <property name="title">
+      <string>Target &amp;override</string>
+     </property>
+     <widget class="QMenu" name="menu_task_start_all_on_host">
+      <property name="title">
+       <string>Start all on Host</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../../../iconset/ecalicons.qrc">
+        <normaloff>:/ecalicons/START</normaloff>:/ecalicons/START</iconset>
+      </property>
+      <addaction name="actiondummy_3"/>
+     </widget>
+     <widget class="QMenu" name="menu_task_restart_all_on_host">
+      <property name="title">
+       <string>Restart all on Host</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../../../iconset/ecalicons.qrc">
+        <normaloff>:/ecalicons/RESTART</normaloff>:/ecalicons/RESTART</iconset>
+      </property>
+      <addaction name="actiondummy_4"/>
+     </widget>
+     <widget class="QMenu" name="menu_task_start_selected_on_host">
+      <property name="title">
+       <string>Start selected on Host</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../../../iconset/ecalicons.qrc">
+        <normaloff>:/ecalicons/START_SELECTED</normaloff>:/ecalicons/START_SELECTED</iconset>
+      </property>
+      <addaction name="actiondummy_5"/>
+     </widget>
+     <widget class="QMenu" name="menu_task_restart_selected_on_host">
+      <property name="title">
+       <string>Restart selected on Host</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../../../iconset/ecalicons.qrc">
+        <normaloff>:/ecalicons/START_SELECTED</normaloff>:/ecalicons/START_SELECTED</iconset>
+      </property>
+      <addaction name="actiondummy_6"/>
+     </widget>
+     <addaction name="menu_task_start_all_on_host"/>
+     <addaction name="menu_task_restart_all_on_host"/>
+     <addaction name="separator"/>
+     <addaction name="menu_task_start_selected_on_host"/>
+     <addaction name="menu_task_restart_selected_on_host"/>
+    </widget>
+    <addaction name="action_task_add"/>
+    <addaction name="separator"/>
+    <addaction name="action_task_edit"/>
+    <addaction name="action_task_duplicate"/>
+    <addaction name="action_task_remove"/>
+    <addaction name="separator"/>
+    <addaction name="action_task_start"/>
+    <addaction name="action_task_stop"/>
+    <addaction name="action_task_restart"/>
+    <addaction name="separator"/>
+    <addaction name="action_task_start_selected"/>
+    <addaction name="action_task_stop_selected"/>
+    <addaction name="action_task_restart_selected"/>
+    <addaction name="separator"/>
+    <addaction name="menu_task_target_override"/>
+    <addaction name="separator"/>
+    <addaction name="menu_task_fast_kill"/>
+    <addaction name="separator"/>
+    <addaction name="action_task_import_from_cloud"/>
+    <addaction name="action_task_update_from_cloud"/>
+   </widget>
+   <widget class="QMenu" name="menu_group">
+    <property name="title">
+     <string>&amp;Group</string>
+    </property>
+    <widget class="QMenu" name="menu_group_fast_kill">
+     <property name="title">
+      <string>&amp;Fast-kill</string>
+     </property>
+     <addaction name="action_group_fast_kill_selected"/>
+     <addaction name="action_group_fast_restart_selected"/>
+    </widget>
+    <widget class="QMenu" name="menu_group_target_override">
+     <property name="title">
+      <string>&amp;Target override</string>
+     </property>
+     <widget class="QMenu" name="menu_group_start_selected_on_host">
+      <property name="title">
+       <string>Start on Host</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../../../iconset/ecalicons.qrc">
+        <normaloff>:/ecalicons/START_SELECTED</normaloff>:/ecalicons/START_SELECTED</iconset>
+      </property>
+      <addaction name="actiondummy"/>
+     </widget>
+     <widget class="QMenu" name="menu_group_restart_selected_on_host">
+      <property name="title">
+       <string>Restart on Host</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../../../iconset/ecalicons.qrc">
+        <normaloff>:/ecalicons/RESTART_SELECTED</normaloff>:/ecalicons/RESTART_SELECTED</iconset>
+      </property>
+      <addaction name="actiondummy_2"/>
+     </widget>
+     <addaction name="menu_group_start_selected_on_host"/>
+     <addaction name="menu_group_restart_selected_on_host"/>
+    </widget>
+    <addaction name="action_group_add"/>
+    <addaction name="separator"/>
+    <addaction name="action_group_edit"/>
+    <addaction name="action_group_duplicate"/>
+    <addaction name="action_group_remove"/>
+    <addaction name="separator"/>
+    <addaction name="action_group_start_selected"/>
+    <addaction name="action_group_stop_selected"/>
+    <addaction name="action_group_restart_selected"/>
+    <addaction name="separator"/>
+    <addaction name="menu_group_target_override"/>
+    <addaction name="separator"/>
+    <addaction name="menu_group_fast_kill"/>
+    <addaction name="separator"/>
+    <addaction name="action_group_expand"/>
+    <addaction name="action_group_collapse"/>
+   </widget>
+   <addaction name="menu_file"/>
+   <addaction name="menu_task"/>
+   <addaction name="menu_group"/>
+   <addaction name="menu_options"/>
+   <addaction name="menu_view"/>
+   <addaction name="menu_help"/>
+  </widget>
+  <widget class="QStatusBar" name="status_bar"/>
+  <widget class="QDockWidget" name="mma_dockwidget">
+   <property name="accessibleName">
+    <string>MMA</string>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>MMA</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="mma_dockwidget_content">
+    <layout class="QVBoxLayout" name="mma_dockwidget_content_layout">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QSizeHintFrame" name="mma_dockwidget_content_frame">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <layout class="QVBoxLayout" name="mma_dockwidget_content_frame_layout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="tasks_dockwidget">
+   <property name="features">
+    <set>QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>Tasks</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="tasks_dockwidget_content">
+    <layout class="QVBoxLayout" name="tasks_dockwidget_content_layout">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QSizeHintFrame" name="tasks_dockwidget_content_frame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <layout class="QVBoxLayout" name="tasks_dockwidget_content_frame_layout"/>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="groups_dockwidget">
+   <property name="features">
+    <set>QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>Groups</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="groups_dockwidget_content">
+    <layout class="QVBoxLayout" name="groups_dockwidget_content_layout">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QSizeHintFrame" name="groups_dockwidget_content_frame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <layout class="QVBoxLayout" name="groups_dockwidget_content_frame_layout"/>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="action_file_open">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/OPEN</normaloff>:/ecalicons/OPEN</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="action_file_save">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/SAVE</normaloff>:/ecalicons/SAVE</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_file_save_as">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/SAVE_AS</normaloff>:/ecalicons/SAVE_AS</iconset>
+   </property>
+   <property name="text">
+    <string>Save &amp;as...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+S</string>
+   </property>
+  </action>
+  <action name="action_file_exit">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/EXIT</normaloff>:/ecalicons/EXIT</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="action_view_runners">
+   <property name="text">
+    <string>&amp;Runners...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="action_view_reset_layout">
+   <property name="text">
+    <string>Reset &amp;Layout</string>
+   </property>
+  </action>
+  <action name="action_options_check_targets_reachable">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Check if targets are &amp;reachable</string>
+   </property>
+  </action>
+  <action name="action_options_kill_all_on_close">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Kill all on close</string>
+   </property>
+  </action>
+  <action name="action_help_about">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/INFO</normaloff>:/ecalicons/INFO</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;About...</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
+  </action>
+  <action name="action_options_use_configured_targets">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Use &amp;configured targets</string>
+   </property>
+  </action>
+  <action name="action_options_local_tasks_only">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Local tasks only</string>
+   </property>
+  </action>
+  <action name="action_options_use_localhost_for_all_tasks">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Use local&amp;host for all tasks</string>
+   </property>
+  </action>
+  <action name="action_help_licenses">
+   <property name="text">
+    <string>&amp;Licenses...</string>
+   </property>
+  </action>
+  <action name="action_file_new">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/NEW_FILE</normaloff>:/ecalicons/NEW_FILE</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;New</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="action_task_start">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/START</normaloff>:/ecalicons/START</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Start all</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="action_task_stop">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/STOP</normaloff>:/ecalicons/STOP</iconset>
+   </property>
+   <property name="text">
+    <string>S&amp;top all</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F5</string>
+   </property>
+  </action>
+  <action name="action_task_restart">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/RESTART</normaloff>:/ecalicons/RESTART</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Restart all</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+F5</string>
+   </property>
+  </action>
+  <action name="action_task_edit">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/EDIT</normaloff>:/ecalicons/EDIT</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Edit</string>
+   </property>
+  </action>
+  <action name="action_task_duplicate">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/DUPLICATE</normaloff>:/ecalicons/DUPLICATE</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Duplicate</string>
+   </property>
+  </action>
+  <action name="action_task_remove">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/DELETE</normaloff>:/ecalicons/DELETE</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Remove</string>
+   </property>
+  </action>
+  <action name="action_task_add">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/ADD</normaloff>:/ecalicons/ADD</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Add</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="action_task_import_from_cloud">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/IMPORT_FROM_CLOUD</normaloff>:/ecalicons/IMPORT_FROM_CLOUD</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Import from cloud...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="action_task_update_from_cloud">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/UPDATE_FROM_CLOUD</normaloff>:/ecalicons/UPDATE_FROM_CLOUD</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Update from cloud</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
+   </property>
+  </action>
+  <action name="action_task_start_selected">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/START_SELECTED</normaloff>:/ecalicons/START_SELECTED</iconset>
+   </property>
+   <property name="text">
+    <string>Start selected</string>
+   </property>
+   <property name="shortcut">
+    <string>F6</string>
+   </property>
+  </action>
+  <action name="action_task_stop_selected">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/STOP_SELECTED</normaloff>:/ecalicons/STOP_SELECTED</iconset>
+   </property>
+   <property name="text">
+    <string>Stop selected</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F6</string>
+   </property>
+  </action>
+  <action name="action_task_restart_selected">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/RESTART_SELECTED</normaloff>:/ecalicons/RESTART_SELECTED</iconset>
+   </property>
+   <property name="text">
+    <string>Restart selected</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+F6</string>
+   </property>
+  </action>
+  <action name="action_task_fast_kill">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/STOP</normaloff>:/ecalicons/STOP</iconset>
+   </property>
+   <property name="text">
+    <string>Fast-kill all</string>
+   </property>
+  </action>
+  <action name="action_task_fast_restart">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/RESTART</normaloff>:/ecalicons/RESTART</iconset>
+   </property>
+   <property name="text">
+    <string>Fast-kill &amp;&amp; restart all</string>
+   </property>
+  </action>
+  <action name="action_task_fast_kill_selected">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/STOP_SELECTED</normaloff>:/ecalicons/STOP_SELECTED</iconset>
+   </property>
+   <property name="text">
+    <string>Fast kill selected</string>
+   </property>
+  </action>
+  <action name="action_task_fast_restart_selected">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/RESTART_SELECTED</normaloff>:/ecalicons/RESTART_SELECTED</iconset>
+   </property>
+   <property name="text">
+    <string>Fast kill &amp;&amp; restart selected</string>
+   </property>
+  </action>
+  <action name="action_group_add">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/ADD</normaloff>:/ecalicons/ADD</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Add</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+G</string>
+   </property>
+  </action>
+  <action name="action_group_edit">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/EDIT</normaloff>:/ecalicons/EDIT</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Edit</string>
+   </property>
+  </action>
+  <action name="action_group_duplicate">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/DUPLICATE</normaloff>:/ecalicons/DUPLICATE</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Duplicate</string>
+   </property>
+  </action>
+  <action name="action_group_remove">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/DELETE</normaloff>:/ecalicons/DELETE</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Remove</string>
+   </property>
+  </action>
+  <action name="action_group_start_selected">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/START_SELECTED</normaloff>:/ecalicons/START_SELECTED</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Start selected</string>
+   </property>
+  </action>
+  <action name="action_group_stop_selected">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/STOP_SELECTED</normaloff>:/ecalicons/STOP_SELECTED</iconset>
+   </property>
+   <property name="text">
+    <string>S&amp;top selected</string>
+   </property>
+  </action>
+  <action name="action_group_restart_selected">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/RESTART_SELECTED</normaloff>:/ecalicons/RESTART_SELECTED</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Restart selected</string>
+   </property>
+  </action>
+  <action name="action_group_expand">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/EXPAND</normaloff>:/ecalicons/EXPAND</iconset>
+   </property>
+   <property name="text">
+    <string>E&amp;xpand all</string>
+   </property>
+  </action>
+  <action name="action_group_collapse">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/COLLAPSE</normaloff>:/ecalicons/COLLAPSE</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Collapse all</string>
+   </property>
+  </action>
+  <action name="action_group_fast_kill_selected">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/STOP_SELECTED</normaloff>:/ecalicons/STOP_SELECTED</iconset>
+   </property>
+   <property name="text">
+    <string>Fast-kill selected</string>
+   </property>
+  </action>
+  <action name="action_group_fast_restart_selected">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/RESTART_SELECTED</normaloff>:/ecalicons/RESTART_SELECTED</iconset>
+   </property>
+   <property name="text">
+    <string>Fast-kill &amp;&amp; restart selected</string>
+   </property>
+  </action>
+  <action name="actiondummy">
+   <property name="text">
+    <string>dummy</string>
+   </property>
+  </action>
+  <action name="actiondummy_2">
+   <property name="text">
+    <string>dummy</string>
+   </property>
+  </action>
+  <action name="actiondummy_3">
+   <property name="text">
+    <string>dummy</string>
+   </property>
+  </action>
+  <action name="actiondummy_4">
+   <property name="text">
+    <string>dummy</string>
+   </property>
+  </action>
+  <action name="actiondummy_5">
+   <property name="text">
+    <string>dummy</string>
+   </property>
+  </action>
+  <action name="actiondummy_6">
+   <property name="text">
+    <string>dummy</string>
+   </property>
+  </action>
+  <action name="action_file_append">
+   <property name="text">
+    <string>&amp;Append to config...</string>
+   </property>
+  </action>
+  <action name="action_no_files">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>(no files)</string>
+   </property>
+  </action>
+  <action name="action_help_documentation">
+   <property name="text">
+    <string>&amp;Documentation...</string>
+   </property>
+  </action>
+  <action name="action_show_console">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/COMMAND_WINDOW</normaloff>:/ecalicons/COMMAND_WINDOW</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Debug console...</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QSizeHintFrame</class>
+   <extends>QFrame</extends>
+   <header>CustomQt/QSizeHintFrame.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QToolTipMenu</class>
+   <extends>QMenu</extends>
+   <header>CustomQt/QToolTipMenu.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../resources/resources.qrc"/>
+  <include location="../../../iconset/ecalicons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

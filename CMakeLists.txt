@@ -511,6 +511,11 @@ if(BUILD_APPS)
   add_subdirectory(app/mon/mon_cli)
   add_subdirectory(app/util/config)
   add_subdirectory(app/util/stop)
+  add_subdirectory(app/sys/sys_core)
+  add_subdirectory(app/sys/sys_cli)
+  add_subdirectory(app/sys/sys_client_cli)
+  add_subdirectory(app/sys/sys_client_core)
+  add_subdirectory(contrib/mma/src)
 endif()
 
 # --------------------------------------------------------
@@ -529,6 +534,7 @@ endif()
 # qt applications
 # --------------------------------------------------------
 if(BUILD_APPS AND HAS_QT5)
+  add_subdirectory(app/sys/sys_gui)
   add_subdirectory(app/mon/mon_gui)
   if(WIN32)
     set(ECAL_MON_PLUGIN_DIR ecalmon_plugins)

@@ -64,6 +64,7 @@ namespace eCAL
     public:
       Error(ErrorCode error_code, const std::string& message) : error_code_(error_code), message_(message) {}
       Error(ErrorCode error_code) : error_code_(error_code) {}
+      Error(const Error& error) : error_code_(error.error_code_), message_(error.message_) {}
 
       ~Error() {}
 

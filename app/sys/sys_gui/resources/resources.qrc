@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>emojies/x_boxed.png</file>
+        <file>emojies/disappointed.png</file>
+        <file>emojies/checkmark.png</file>
+        <file>emojies/x.png</file>
+        <file>gfx/ecalsys.ico</file>
+    </qresource>
+</RCC>

@@ -84,22 +84,43 @@ bool QMulticolumnSortFilterProxyModel::lessThan(const QModelIndex &left, const Q
     QVariant const left_data   = sourceModel()->data(sourceModel()->index(left.row(), always_sorted_column_, left.parent()), sortRole());
     QVariant const right_data  = sourceModel()->data(sourceModel()->index(right.row(), always_sorted_column_, right.parent()), sortRole());
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning (disable : 4996)
+#endif // _MSC_VER
     if (left_data != right_data)
     {
       if (!always_sorted_force_sort_order_)
       {
         // Don't fake the sort order, we have to follow the user-set one
+
+        // Qt Deprecation note:
+        // 
+        // QVariant::operator< is deprecated since Qt 5.15, mainly because
+        // QVariants may contain datatypes that are not comparable at all. The
+        // developer is now supposed to unpack the QVariant and compare the
+        // native values. In a SortFilterProxyModel we cannot do that, as we
+        // don't know what this model will be used for and what the type of the
+        // QVariants will be.
+        // Thus, we would have to implement a best guess approach anyways. As I
+        // doubt that I will hack a custom comparator that is better than the
+        // deprecated QVariant one, we will just keep using it.
+        // 
+        // The operators still exist in Qt 6.0 beta.
         return (left_data < right_data);
       }
       else
       {
         // We want to ignore the user-set sort order, so we fake the less-than method
         if (sortOrder() == always_sorted_sort_order_)
-          return (left_data < right_data);
+          return (left_data < right_data); // Qt 5.15 Deprecation note: see above
         else
-          return (left_data > right_data);
+          return (left_data > right_data); // Qt 5.15 Deprecation note: see above
       }
     }
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif // _MSC_VER
   }
 
   return QStableSortFilterProxyModel::lessThan(left, right);
