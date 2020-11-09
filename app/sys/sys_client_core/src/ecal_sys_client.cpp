@@ -15,6 +15,7 @@
 #include <chrono>
 #include <EcalParser/EcalParser.h>
 #include <ecal_utils/filesystem.h>
+#include <ecal_utils/ecal_utils.h>
 
 #include <sys_client_core/ecal_sys_client_logger.h>
 
@@ -134,11 +135,17 @@ namespace eCAL
       // 3. Check all tasks against all monitored processes and check if they match (by command line)
       for (const Task& evaluated_task : evaluated_task_list)
       {
+#ifndef _WIN32
+        std::vector<std::string> sys_task_argv = EcalUtils::CommandLine::ToArgv("\"" + evaluated_task.path + "\" " + evaluated_task.arguments);
+#endif // !_WIN32
+
         std::vector<int32_t> pid_list;
         for (const auto& process : monitoring_pb.processes())
         {
           if (process.hname() == eCAL::Process::GetHostName()) // Only handle local tasks!
           {
+#ifdef _WIN32
+            // Windows gives us the proper command line, so we can directly match it
             if ((process.pparam() == evaluated_task.path)
               || (process.pparam() == "\"" + evaluated_task.path + "\"")
               || (process.pparam() == (evaluated_task.path + " " + evaluated_task.arguments))
@@ -146,6 +153,23 @@ namespace eCAL
             {
               pid_list.push_back(process.pid());
             }
+#else // _WIN32
+            // Linux splits the command line before we get it, so we cannot know
+            // whether the arguments were enclosed in quotes or if there were
+            // escaped characters. Thus we:
+            //  - split the process' command line to an ARGV
+            //  - split the ecalsys task's command line to an ARGV
+            //  - compare the ARGVs
+            // 
+            // This is also true for macOS and probably most other UNIX systems.
+
+            std::vector<std::string> process_argv  = EcalUtils::CommandLine::ToArgv(process.pparam());
+            if ((sys_task_argv.size() == process_argv.size())
+              && (sys_task_argv == process_argv))
+            {
+              pid_list.push_back(process.pid());
+            }
+#endif // _WIN32
           }
         }
 
