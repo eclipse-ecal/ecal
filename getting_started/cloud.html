@@ -347,9 +347,9 @@
 <li><a class="reference internal" href="#">4. Cloud configuration</a><ul>
 <li><a class="reference internal" href="#fa-windows-multicast-configuration-on-windows">4.1. <i class="fab fa-windows"></i> Multicast configuration on Windows</a></li>
 <li><a class="reference internal" href="#fa-ubuntu-multicast-configuration-on-ubuntu">4.2. <i class="fab fa-ubuntu"></i> Multicast configuration on Ubuntu</a><ul>
-<li><a class="reference internal" href="#multicast-route-via-netplan">4.2.1. Multicast route via Netplan</a></li>
-<li><a class="reference internal" href="#via-gui">4.2.2. Via GUI</a></li>
-<li><a class="reference internal" href="#via-etc-network-interfaces-ubuntu-18-and-older">4.2.3. Via /etc/network/interfaces (Ubuntu 18 and older)</a></li>
+<li><a class="reference internal" href="#multicast-routes-via-netplan">4.2.1. Multicast routes via Netplan</a></li>
+<li><a class="reference internal" href="#multicast-routes-via-gui">4.2.2. Multicast routes via GUI</a></li>
+<li><a class="reference internal" href="#multicast-routes-via-etc-network-interfaces">4.2.3. Multicast routes via /etc/network/interfaces</a></li>
 <li><a class="reference internal" href="#test-the-configuration">4.2.4. Test the configuration</a></li>
 </ul>
 </li>
@@ -485,15 +485,15 @@ It should show your route under <cite>IPv4 Route Table / Persistent Routes</cite
 </li>
 <li><p><a class="reference internal" href="#ubuntu-multicast-route-test"><span class="std std-ref">Test the configuration</span></a></p></li>
 </ol>
-<div class="section" id="multicast-route-via-netplan">
-<span id="ubuntu-multicast-route-netplan"></span><h3><span class="section-number">4.2.1. </span>Multicast route via Netplan<a class="headerlink" href="#multicast-route-via-netplan" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="multicast-routes-via-netplan">
+<span id="ubuntu-multicast-route-netplan"></span><h3><span class="section-number">4.2.1. </span>Multicast routes via Netplan<a class="headerlink" href="#multicast-routes-via-netplan" title="Permalink to this headline">¶</a></h3>
 <p>Netplan is used since Ubuntu 18 and should be used in favor of the legacy (but well known) <code class="file docutils literal notranslate"><span class="pre">/etc/network/interfaces</span></code> file.
 While Ubuntu 18 supports both out of the box, for Ubuntu 20 this is the only file-based networking setup.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>Netplan uses YAML files for configuration.
 YAML uses spaces (<code class="docutils literal notranslate"><span class="pre">'</span> <span class="pre">'</span></code>) as indentation and does not work with tabs (<code class="docutils literal notranslate"><span class="pre">'\t'</span></code>).
-When using gedit, it is recommended to make it use spaces instead of tabs:</p>
+When using gedit, it is recommended to configure it to use spaces instead of tabs:</p>
 <img alt="Space indentation in gedit" src="../_images/gedit_space_indentation.png" />
 </div>
 <ol class="arabic">
@@ -552,8 +552,8 @@ This will get a lower metric and will thus become the preferred route once the i
 </li>
 </ol>
 </div>
-<div class="section" id="via-gui">
-<span id="ubuntu-multicast-route-gui"></span><h3><span class="section-number">4.2.2. </span>Via GUI<a class="headerlink" href="#via-gui" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="multicast-routes-via-gui">
+<span id="ubuntu-multicast-route-gui"></span><h3><span class="section-number">4.2.2. </span>Multicast routes via GUI<a class="headerlink" href="#multicast-routes-via-gui" title="Permalink to this headline">¶</a></h3>
 <p>If you have a graphical network manager installed (-&gt; Desktop Ubuntu), you can use it to configure the external route.</p>
 <ol class="arabic">
 <li><p>Configure the <strong>external multicast</strong> route</p>
@@ -575,8 +575,8 @@ This will get a lower metric and will thus become the preferred route once the i
 You can omit this, but then you will have to explicitly set eCAL to local mode, if you are not connected to any network.</p></li>
 </ol>
 </div>
-<div class="section" id="via-etc-network-interfaces-ubuntu-18-and-older">
-<span id="ubuntu-multicast-route-etc-network-interfaces"></span><h3><span class="section-number">4.2.3. </span>Via /etc/network/interfaces (Ubuntu 18 and older)<a class="headerlink" href="#via-etc-network-interfaces-ubuntu-18-and-older" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="multicast-routes-via-etc-network-interfaces">
+<span id="ubuntu-multicast-route-etc-network-interfaces"></span><h3><span class="section-number">4.2.3. </span>Multicast routes via /etc/network/interfaces<a class="headerlink" href="#multicast-routes-via-etc-network-interfaces" title="Permalink to this headline">¶</a></h3>
 <p>The well known <code class="file docutils literal notranslate"><span class="pre">/etc/network/interfaces</span></code> files is supported up to Ubuntu 18.
 It is not supported since Ubuntu 20, anymore.
 Please use netplan instead.
