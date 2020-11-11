@@ -346,7 +346,13 @@
                                     <ul>
 <li><a class="reference internal" href="#">4. Cloud configuration</a><ul>
 <li><a class="reference internal" href="#fa-windows-multicast-configuration-on-windows">4.1. <i class="fab fa-windows"></i> Multicast configuration on Windows</a></li>
-<li><a class="reference internal" href="#fa-ubuntu-multicast-configuration-on-ubuntu">4.2. <i class="fab fa-ubuntu"></i> Multicast configuration on Ubuntu</a></li>
+<li><a class="reference internal" href="#fa-ubuntu-multicast-configuration-on-ubuntu">4.2. <i class="fab fa-ubuntu"></i> Multicast configuration on Ubuntu</a><ul>
+<li><a class="reference internal" href="#multicast-route-via-netplan">4.2.1. Multicast route via Netplan</a></li>
+<li><a class="reference internal" href="#via-gui">4.2.2. Via GUI</a></li>
+<li><a class="reference internal" href="#via-etc-network-interfaces-ubuntu-18-and-older">4.2.3. Via /etc/network/interfaces (Ubuntu 18 and older)</a></li>
+<li><a class="reference internal" href="#test-the-configuration">4.2.4. Test the configuration</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#ecal-samples-over-network">4.3. eCAL Samples over network</a></li>
 </ul>
 </li>
@@ -467,24 +473,90 @@ It should show your route under <cite>IPv4 Route Table / Persistent Routes</cite
 </div>
 <div class="section" id="fa-ubuntu-multicast-configuration-on-ubuntu">
 <h2><span class="section-number">4.2. </span><i class="fab fa-ubuntu"></i> Multicast configuration on Ubuntu<a class="headerlink" href="#fa-ubuntu-multicast-configuration-on-ubuntu" title="Permalink to this headline">¶</a></h2>
+<p>You can configure the multicast route in various ways, depending on your Ubuntu version.</p>
+<p>Jump to your section of choice below:</p>
+<ol class="arabic simple">
+<li><p>Choose how to create routes:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#ubuntu-multicast-route-netplan"><span class="std std-ref">Via netplan</span></a> (Recommended for Ubuntu 18 and up. Even integrates into the GUI.)</p></li>
+<li><p><a class="reference internal" href="#ubuntu-multicast-route-gui"><span class="std std-ref">Via GUI</span></a> (Works well for desktop Ubuntu)</p></li>
+<li><p><a class="reference internal" href="#ubuntu-multicast-route-etc-network-interfaces"><span class="std std-ref">Via /etc/network/interfaces</span></a> (Legacy, up to Ubuntu 18. Not supported in Ubuntu 20, any more.)</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#ubuntu-multicast-route-test"><span class="std std-ref">Test the configuration</span></a></p></li>
+</ol>
+<div class="section" id="multicast-route-via-netplan">
+<span id="ubuntu-multicast-route-netplan"></span><h3><span class="section-number">4.2.1. </span>Multicast route via Netplan<a class="headerlink" href="#multicast-route-via-netplan" title="Permalink to this headline">¶</a></h3>
+<p>Netplan is used since Ubuntu 18 and should be used in favor of the legacy (but well known) <code class="file docutils literal notranslate"><span class="pre">/etc/network/interfaces</span></code> file.
+While Ubuntu 18 supports both out of the box, for Ubuntu 20 this is the only file-based networking setup.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Netplan uses YAML files for configuration.
+YAML uses spaces (<code class="docutils literal notranslate"><span class="pre">'</span> <span class="pre">'</span></code>) as indentation and does not work with tabs (<code class="docutils literal notranslate"><span class="pre">'\t'</span></code>).
+When using gedit, it is recommended to make it use spaces instead of tabs:</p>
+<img alt="Space indentation in gedit" src="../_images/gedit_space_indentation.png" />
+</div>
 <ol class="arabic">
-<li><p>Configure the loopback route (this will become active, if you disconnect from all networks)</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo gedit /etc/network/interfaces
+<li><p>Configure the <strong>loopback multicast</strong> route (this will become active, if you disconnect from all networks).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo gedit /etc/netplan/50-ecal-multicast-loopback.yaml
 </pre></div>
 </div>
-<p>Add the following lines beneath the <code class="code docutils literal notranslate"><span class="pre">iface</span> <span class="pre">lo</span> <span class="pre">inet</span> <span class="pre">loopback</span></code> line:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>post-up ifconfig lo multicast
-post-up route add -net <span class="m">239</span>.0.0.0 netmask <span class="m">255</span>.255.255.0 dev lo metric <span class="m">1000</span>
+<p>Paste the following configuration:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># eCAL route for loopback (lo)</span>
+<span class="nt">network</span><span class="p">:</span>
+  <span class="nt">version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+  <span class="nt">ethernets</span><span class="p">:</span>
+    <span class="nt">lo</span><span class="p">:</span>
+      <span class="nt">renderer</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">networkd</span>
+      <span class="nt">routes</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="nt">to</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">239.0.0.0/24</span>
+          <span class="nt">via</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0.0.0</span>
+          <span class="nt">metric</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1000</span>
 </pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The high metric will cause this loopback route to have lower priority than the route to the external interface that we will create in the next step.</p>
 </div>
 </li>
-<li><p>Configure a route for the external interface:</p>
-<ul>
-<li><p><strong>Recommended way</strong>: If you have a graphical network manager installed (-&gt; Desktop Ubuntu), you should use it to configure the route.</p>
+<li><p>Configure the <strong>external multicast</strong> route.
+This will get a lower metric and will thus become the preferred route once the interface is up.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo gedit /etc/netplan/50-ecal-multicast.yaml
+</pre></div>
+</div>
+<p>Paste the following configuration and <strong>replace eth0</strong> with your desired interface:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Replace eth0 with your network adapter!</span>
+<span class="nt">network</span><span class="p">:</span>
+  <span class="nt">version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+  <span class="nt">renderer</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NetworkManager</span> <span class="c1"># GUI integration for desktop Ubuntu</span>
+  <span class="nt">ethernets</span><span class="p">:</span>
+
+    <span class="c1"># Replace eth0 with your interface!</span>
+    <span class="nt">eth0</span><span class="p">:</span>
+
+      <span class="c1"># Either use DHCP...</span>
+      <span class="nt">dhcp4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">yes</span>
+      <span class="nt">dhcp6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">yes</span>
+
+      <span class="c1"># ... or configure a static address!</span>
+      <span class="c1">#addresses:</span>
+      <span class="c1">#  - 192.168.178.42/24</span>
+
+      <span class="nt">routes</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="nt">to</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">239.0.0.0/24</span>
+          <span class="nt">via</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0.0.0</span>
+          <span class="nt">metric</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+</pre></div>
+</div>
+</li>
+<li><p>Apply the changes</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo netplan apply
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="via-gui">
+<span id="ubuntu-multicast-route-gui"></span><h3><span class="section-number">4.2.2. </span>Via GUI<a class="headerlink" href="#via-gui" title="Permalink to this headline">¶</a></h3>
+<p>If you have a graphical network manager installed (-&gt; Desktop Ubuntu), you can use it to configure the external route.</p>
+<ol class="arabic">
+<li><p>Configure the <strong>external multicast</strong> route</p>
 <ul>
 <li><p>System Settings -&gt; Network -&gt; Your Adapter -&gt; Options -&gt; IPv4 Tab -&gt; Routes</p></li>
 <li><p>Create a route:</p>
@@ -498,29 +570,59 @@ post-up route add -net <span class="m">239</span>.0.0.0 netmask <span class="m">
 </li>
 </ul>
 </li>
-<li><p><strong>Not recommended</strong> (but works fine): If you do not have a graphical network manager (-&gt; Server Ubuntu), again add the post-up lines to <code class="code docutils literal notranslate"><span class="pre">/etc/network/interfaces</span></code> (just as for loopback, but with metric 1):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># replace eth0 with your network adapter</span>
-post-up ifconfig eth0 multicast
-post-up route add -net <span class="m">239</span>.0.0.0 netmask <span class="m">255</span>.255.255.0 dev eth0 metric <span class="m">1</span>
+<li><p>Turn the interface off and on again</p></li>
+<li><p>Configure the <strong>loopback multicast</strong> route via <a class="reference internal" href="#ubuntu-multicast-route-netplan"><span class="std std-ref">netplan</span></a> or <a class="reference internal" href="#ubuntu-multicast-route-etc-network-interfaces"><span class="std std-ref">/etc/network/interfaces</span></a>.
+You can omit this, but then you will have to explicitly set eCAL to local mode, if you are not connected to any network.</p></li>
+</ol>
+</div>
+<div class="section" id="via-etc-network-interfaces-ubuntu-18-and-older">
+<span id="ubuntu-multicast-route-etc-network-interfaces"></span><h3><span class="section-number">4.2.3. </span>Via /etc/network/interfaces (Ubuntu 18 and older)<a class="headerlink" href="#via-etc-network-interfaces-ubuntu-18-and-older" title="Permalink to this headline">¶</a></h3>
+<p>The well known <code class="file docutils literal notranslate"><span class="pre">/etc/network/interfaces</span></code> files is supported up to Ubuntu 18.
+It is not supported since Ubuntu 20, anymore.
+Please use netplan instead.
+If you are running Ubuntu 18, using netplan is still recommended, unless you want to manager other interfaces via <code class="file docutils literal notranslate"><span class="pre">/etc/network/interfaces</span></code>.</p>
+<p>Edit the file and add the content below.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo gedit /etc/network/interfaces
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>Configure the <strong>loopback multicast</strong> route (this will become active, if you disconnect from all networks).</p>
+<p>Add the following lines beneath the <code class="code docutils literal notranslate"><span class="pre">iface</span> <span class="pre">lo</span> <span class="pre">inet</span> <span class="pre">loopback</span></code> line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>post-up ifconfig lo multicast
+post-up route add -net <span class="m">239</span>.0.0.0 netmask <span class="m">255</span>.255.255.0 dev lo metric <span class="m">1000</span>
 </pre></div>
 </div>
 </li>
-</ul>
+<li><p>Configure the <strong>external multicast</strong> route.
+This will get a lower metric and will thus become the preferred route once the interface is up.</p>
+<p>Add the following lines and <strong>replace eth0</strong> with your interface.
+You may want to replace the dhcp line with your desired configuration.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># replace eth0 with your network adapter</span>
+auto eth0
+  allow-hotplug eth0
+  iface eth0 inet dhcp
+  post-up ifconfig eth0 multicast
+  post-up route add -net <span class="m">239</span>.0.0.0 netmask <span class="m">255</span>.255.255.0 dev eth0 metric <span class="m">1</span>
+</pre></div>
+</div>
 </li>
 <li><p>Restart your PC</p></li>
-<li><p>Check the result from a terminal. It should show routes for local and external communication:</p>
+</ol>
+</div>
+<div class="section" id="test-the-configuration">
+<span id="ubuntu-multicast-route-test"></span><h3><span class="section-number">4.2.4. </span>Test the configuration<a class="headerlink" href="#test-the-configuration" title="Permalink to this headline">¶</a></h3>
+<p>Check the result from a terminal. It should show routes for local and external communication:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>route -n
 </pre></div>
 </div>
 <img alt="Ubuntu route -n" src="../_images/ubuntu_route_print.png" />
-</li>
-</ol>
+</div>
 </div>
 <div class="section" id="ecal-samples-over-network">
 <h2><span class="section-number">4.3. </span>eCAL Samples over network<a class="headerlink" href="#ecal-samples-over-network" title="Permalink to this headline">¶</a></h2>
 <p>Now start one <code class="file docutils literal notranslate"><span class="pre">ecal_sample_person_snd</span></code> and one <code class="file docutils literal notranslate"><span class="pre">ecal_sample_person_rec</span></code>, just as in the <a class="reference internal" href="samples.html#getting-started-samples"><span class="std std-ref">previous section</span></a>.
 But on different machines!
-If you configured everything correctly, publisher and subscriber should connect almost immediatelly and exchange data.</p>
+If you configured everything correctly, publisher and subscriber should connect almost immediately and exchange data.</p>
 <img alt="person_snd and person_rec sample over network" src="../_images/cloud_person_combined.png" />
 </div>
 </div>
