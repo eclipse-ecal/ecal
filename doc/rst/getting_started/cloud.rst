@@ -88,8 +88,8 @@ Jump to your section of choice below:
 
 .. _ubuntu_multicast_route_netplan:
 
-Multicast route via Netplan
----------------------------
+Multicast routes via Netplan
+----------------------------
 
 Netplan is used since Ubuntu 18 and should be used in favor of the legacy (but well known) :file:`/etc/network/interfaces` file.
 While Ubuntu 18 supports both out of the box, for Ubuntu 20 this is the only file-based networking setup.
@@ -98,7 +98,7 @@ While Ubuntu 18 supports both out of the box, for Ubuntu 20 this is the only fil
 
    Netplan uses YAML files for configuration.
    YAML uses spaces (``' '``) as indentation and does not work with tabs (``'\t'``).
-   When using gedit, it is recommended to make it use spaces instead of tabs:
+   When using gedit, it is recommended to configure it to use spaces instead of tabs:
 
    .. image:: img/gedit_space_indentation.png
       :alt: Space indentation in gedit
@@ -135,8 +135,8 @@ While Ubuntu 18 supports both out of the box, for Ubuntu 20 this is the only fil
 
 .. _ubuntu_multicast_route_gui:
 
-Via GUI
--------
+Multicast routes via GUI
+------------------------
 
 If you have a graphical network manager installed (-> Desktop Ubuntu), you can use it to configure the external route.
 
@@ -161,8 +161,8 @@ If you have a graphical network manager installed (-> Desktop Ubuntu), you can u
 
 .. _ubuntu_multicast_route_etc_network_interfaces:
 
-Via /etc/network/interfaces (Ubuntu 18 and older)
--------------------------------------------------
+Multicast routes via /etc/network/interfaces
+--------------------------------------------
 
 The well known :file:`/etc/network/interfaces` files is supported up to Ubuntu 18.
 It is not supported since Ubuntu 20, anymore.
