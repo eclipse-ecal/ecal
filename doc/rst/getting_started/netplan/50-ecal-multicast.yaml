@@ -1,0 +1,21 @@
+# Replace eth0 with your network adapter!
+network:
+  version: 2
+  renderer: NetworkManager # GUI integration for desktop Ubuntu
+  ethernets:
+
+    # Replace eth0 with your interface!
+    eth0:
+
+      # Either use DHCP...
+      dhcp4: yes
+      dhcp6: yes
+
+      # ... or configure a static address!
+      #addresses:
+      #  - 192.168.178.42/24
+
+      routes:
+        - to: 239.0.0.0/24
+          via: 0.0.0.0
+          metric: 1

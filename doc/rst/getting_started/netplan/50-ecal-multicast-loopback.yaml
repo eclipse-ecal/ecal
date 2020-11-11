@@ -1,0 +1,10 @@
+# eCAL route for loopback (lo)
+network:
+  version: 2
+  ethernets:
+    lo:
+      renderer: networkd
+      routes:
+        - to: 239.0.0.0/24
+          via: 0.0.0.0
+          metric: 1000
