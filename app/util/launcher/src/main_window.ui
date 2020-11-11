@@ -205,7 +205,7 @@ QPushButton:!hover {background-color: rgb(0,0,0);color:rgb(255,200,0)}</string>
         <property name="font">
          <font>
           <family>Neuropolitical</family>
-          <pointsize>58</pointsize>
+          <pointsize>48</pointsize>
           <weight>50</weight>
           <bold>false</bold>
          </font>

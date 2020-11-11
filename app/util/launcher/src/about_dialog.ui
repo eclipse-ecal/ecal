@@ -66,7 +66,7 @@
     <widget class="QLabel" name="info_label">
      <property name="text">
       <string>
-© 2019 Continental AG
+© 2020 Continental AG
 Advanced Engineering Department
 
 Developed by Mihai Muraru
