@@ -13,6 +13,8 @@ Copyright (c) 2020, Continental Corporation.
 
 [![Build Windows Server 2019](https://github.com/continental/ecal/workflows/Build%20Windows%20Server%202019/badge.svg)](https://github.com/continental/ecal/actions?workflow=Build+Windows+Server+2019)
 
+[![Build Ubuntu 18.04](https://github.com/continental/ecal/workflows/Build%20Ubuntu%2018.04/badge.svg)](https://github.com/continental/ecal/actions?workflow=Build+Ubuntu+18.04)
+
 [![Build Ubuntu 20.04](https://github.com/continental/ecal/workflows/Build%20Ubuntu%2020.04/badge.svg)](https://github.com/continental/ecal/actions?workflow=Build+Ubuntu+20.04)
 
 [![Build Ubuntu 20.04 (Iceoryx)](https://github.com/continental/ecal/workflows/Build%20Ubuntu%2020.04%20(Iceoryx)/badge.svg)](https://github.com/continental/ecal/actions?workflow=Build+Ubuntu+20.04+(Iceoryx))
