@@ -1213,7 +1213,7 @@ void EcalsysGui::updateRecentFiles()
       QAction* open_file_action = new QAction(label + ": " + config_file_name, ui_.menu_recent_files);
 
       connect(open_file_action, &QAction::triggered, 
-        [this, i]()
+        [this, path = *i]()
         {
           bool continue_open = true;
           if (config_has_been_modified_)
@@ -1222,7 +1222,7 @@ void EcalsysGui::updateRecentFiles()
           }
           if (continue_open)
           {
-            openFile(*i, false);
+            openFile(path, false);
           }
         }
       );
