@@ -21,7 +21,7 @@ So, let's get started!
 
 For Microsoft Windows we provide binary installers published on our GitHub release page.
 
-#. Head to the GitHub release page and download the latest eCAL installer (ecal-X.X.X-win64.exe):
+#. Head to the GitHub release page and download the latest eCAL installer (ecal_X.X.X-win64.exe):
    
    https://github.com/continental/ecal/releases
 
@@ -56,19 +56,19 @@ We provide precompiled binaries for Ubuntu 18.04 and Ubuntu 20.04.
    
    https://github.com/continental/ecal/releases
 
-   +----------------+----------+-------------------------------+
-   | Ubuntu Version | Codename | eCAL setup file               |
-   +================+==========+===============================+
-   | 18.04          | Bionic   | :file:`ecal-X.X.X-bionic.deb` |
-   +----------------+----------+-------------------------------+
-   | 20.04          | Focal    | :file:`ecal-X.X.X-focal.deb`  |
-   +----------------+----------+-------------------------------+
+   +----------------+----------+-------------------------------------+
+   | Ubuntu Version | Codename | eCAL setup file                     |
+   +================+==========+=====================================+
+   | 18.04          | Bionic   | :file:`ecal_X.X.X-bionic_amd64.deb` |
+   +----------------+----------+-------------------------------------+
+   | 20.04          | Focal    | :file:`ecal_X.X.X-focal_amd64.deb`  |
+   +----------------+----------+-------------------------------------+
 
 #. Install the debian package:
 
    .. code-block:: bash
 
-      sudo dpkg -i ecal-*.deb
+      sudo dpkg -i ecal_*.deb
 
 .. seealso::
 
