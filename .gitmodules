@@ -33,4 +33,4 @@
 	url = https://github.com/libssh2/libssh2.git
 [submodule "thirdparty/hdf5"]
 	path = thirdparty/hdf5
-	url = https://github.com/live-clones/hdf5.git
+	url = https://github.com/HDFGroup/hdf5.git
