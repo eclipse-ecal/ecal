@@ -52,10 +52,10 @@ QEcalRec::QEcalRec(QObject* parent)
   setEnabledRecClients(initial_server_config);
 
   setMeasRootDir("$TARGET{OSSELECT WIN \"C:\" LINUX \"$TARGET{ENV HOME}\"}/ecal_meas");
-  setMeasName("${TIME}_measurement");
+  setMeasName("$HOST{TIME}_measurement");
   setDescription(
-R"(Measurement started by: ${USERNAME}@${HOSTNAME}
-Date: ${TIME %F %R}
+R"(Measurement started by: $HOST{USERNAME}@$HOST{HOSTNAME}
+Date: $HOST{TIME %F %R}
 )"
   );
   setMaxFileSizeMib(100);
