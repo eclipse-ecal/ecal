@@ -94,11 +94,11 @@ Multicast routes via Netplan
 Netplan is used since Ubuntu 18 and should be used in favor of the legacy (but well known) :file:`/etc/network/interfaces` file.
 While Ubuntu 18 supports both out of the box, for Ubuntu 20 this is the only file-based networking setup.
 
-.. important::
+.. tip::
 
    Netplan uses YAML files for configuration.
    YAML uses spaces (``' '``) as indentation and does not work with tabs (``'\t'``).
-   When using gedit, it is recommended to configure it to use spaces instead of tabs:
+   When using gedit, it is recommended to configure it to use spaces instead of tabs.
 
    .. image:: img/gedit_space_indentation.png
       :alt: Space indentation in gedit
