@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.0)
 
 project(protobuf_snd)
 
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 if(MSVC)
   # CMake >= 3.15 will erroneously define PROTOBUF_USE_DLLS otherwise
   set (Protobuf_USE_STATIC_LIBS TRUE) 

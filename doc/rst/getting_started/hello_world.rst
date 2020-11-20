@@ -59,12 +59,16 @@ Somewhere on your hard drive create an empty directory and create a file :file:`
      **What is happening here?**
 
      **Line 3** creates a project "hello_world_snd".
-     This will also be the name of the executable (**line 11**).
+     This will also be the name of the executable (**line 14**).
 
-     **Line 5** tells CMake to find the eCAL installation. **Line 13-15** will link the executable against it.
+     **Line 5-6** set the C++ standard to C++14
 
-     **Line 7-9** create a list of all our source files, which currently only contains :file:`main.cpp`.
-     We add that source file for compiling our executable in **line 11**.
+     **Line 8** tells CMake to find the eCAL installation. **Line 16-18** will link the executable against it.
+
+     **Line 10-12** create a list of all our source files, which currently only contains :file:`main.cpp`.
+     We add that source file for compiling our executable in **line 14**.
+
+     **Line 16-18** link our executable against the eCAL core library.
 
 * |fa-file-alt| :file:`main.cpp`:
 
@@ -137,13 +141,8 @@ Again, create a new directory somewhere and add create the :file:`CMakeLists.txt
   .. note::
      **What is happening here?**
 
-     **Line 3** creates a project "hello_world_snd".
-     This will also be the name of the executable (**line 11**).
-
-     **Line 5** tells CMake to find the eCAL installation. **Line 13-15** will link the executable against it.
-
-     **Line 7-9** create a list of all our source files, which currently only contains :file:`main.cpp`.
-     We add that source file for compiling our executable in **line 11**.
+     **Line 3** creates a project "hello_world_rec".
+     This is the only difference to the hello_world_snd Project.
 
 * |fa-file-alt| :file:`main.cpp`:
 
