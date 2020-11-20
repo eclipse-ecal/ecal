@@ -92,7 +92,7 @@ Multicast routes via Netplan
 ----------------------------
 
 Netplan is used since Ubuntu 18 and should be used in favor of the legacy (but well known) :file:`/etc/network/interfaces` file.
-While Ubuntu 18 supports both out of the box, for Ubuntu 20 this is the only file-based networking setup.
+While Ubuntu 18 supports both out of the box, for Ubuntu 20 this is the only file-based networking configuration method.
 
 .. tip::
 

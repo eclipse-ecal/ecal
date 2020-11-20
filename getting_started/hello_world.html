@@ -440,9 +440,15 @@ We will explain the CMake commands needed for the tutorial, but not extensively 
 12
 13
 14
-15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.0</span><span class="p">)</span>
+15
+16
+17
+18</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.0</span><span class="p">)</span>
 
 <span class="nb">project</span><span class="p">(</span><span class="s">hello_world_snd</span><span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span> <span class="s">14</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span> <span class="s">ON</span><span class="p">)</span>
 
 <span class="nb">find_package</span><span class="p">(</span><span class="s">eCAL</span> <span class="s">REQUIRED</span><span class="p">)</span>
 
@@ -461,10 +467,12 @@ We will explain the CMake commands needed for the tutorial, but not extensively 
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
 <p><strong>Line 3</strong> creates a project “hello_world_snd”.
-This will also be the name of the executable (<strong>line 11</strong>).</p>
-<p><strong>Line 5</strong> tells CMake to find the eCAL installation. <strong>Line 13-15</strong> will link the executable against it.</p>
-<p><strong>Line 7-9</strong> create a list of all our source files, which currently only contains <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code>.
-We add that source file for compiling our executable in <strong>line 11</strong>.</p>
+This will also be the name of the executable (<strong>line 14</strong>).</p>
+<p><strong>Line 5-6</strong> set the C++ standard to C++14</p>
+<p><strong>Line 8</strong> tells CMake to find the eCAL installation. <strong>Line 16-18</strong> will link the executable against it.</p>
+<p><strong>Line 10-12</strong> create a list of all our source files, which currently only contains <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code>.
+We add that source file for compiling our executable in <strong>line 14</strong>.</p>
+<p><strong>Line 16-18</strong> link our executable against the eCAL core library.</p>
 </div>
 </li>
 <li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code>:</p>
@@ -597,9 +605,15 @@ You will see the “Hello World Publisher” process and the “hello_world_topi
 12
 13
 14
-15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.0</span><span class="p">)</span>
+15
+16
+17
+18</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.0</span><span class="p">)</span>
 
 <span class="nb">project</span><span class="p">(</span><span class="s">hello_world_rec</span><span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span> <span class="s">14</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span> <span class="s">ON</span><span class="p">)</span>
 
 <span class="nb">find_package</span><span class="p">(</span><span class="s">eCAL</span> <span class="s">REQUIRED</span><span class="p">)</span>
 
@@ -617,11 +631,8 @@ You will see the “Hello World Publisher” process and the “hello_world_topi
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
-<p><strong>Line 3</strong> creates a project “hello_world_snd”.
-This will also be the name of the executable (<strong>line 11</strong>).</p>
-<p><strong>Line 5</strong> tells CMake to find the eCAL installation. <strong>Line 13-15</strong> will link the executable against it.</p>
-<p><strong>Line 7-9</strong> create a list of all our source files, which currently only contains <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code>.
-We add that source file for compiling our executable in <strong>line 11</strong>.</p>
+<p><strong>Line 3</strong> creates a project “hello_world_rec”.
+This is the only difference to the hello_world_snd Project.</p>
 </div>
 </li>
 <li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code>:</p>
