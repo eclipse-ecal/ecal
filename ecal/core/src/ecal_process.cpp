@@ -931,25 +931,25 @@ namespace eCAL
         if (pos >= procargs.size())
           return "";
 
-        // Save where the argv[0] string starts
-        size_t pos_argv0 = pos;
+        // Iterate through the '\0' terminated strings and copy them to a C++ vector
+        std::vector<std::string> argument_vector;
+        argument_vector.reserve(argc);
 
-        // Iterate through the '\0' terminated strings and convert '\0' to ' '
-        size_t current_arg = 0;
-        for (size_t i = pos_argv0; i < procargs.size(); ++i)
+        size_t current_arg_start = pos;
+        int current_arg_number = 0;
+        for (size_t i = pos; i < procargs.size(); ++i)
         {
-          if ((int)current_arg == (argc - 1))
-            break;
-
           if (procargs[i] == '\0')
           {
-            current_arg++;
-            procargs[i] = ' ';
+            std::string arg = std::string(&procargs[current_arg_start], i - current_arg_start);
+            argument_vector.push_back(arg);
+            current_arg_start = i + 1;
+            current_arg_number++;
           }
-        }
 
-        // Copy to the string
-        g_process_par = &procargs[pos_argv0];
+          if (current_arg_number == argc)
+            break;
+        }
 
 #else // ECAL_OS_MACOS
 
@@ -967,12 +967,11 @@ namespace eCAL
           std::string arg;
           while (std::getline(cmdline_file, arg, '\0')) // the cmdline contains arguments separated by \0
           {
-            if (!arg.empty())
-            {
-              argument_vector.emplace_back(arg);
-            }
+            argument_vector.emplace_back(arg);
           }
         }
+
+#endif // ECAL_OS_MACOS
 
         size_t complete_char_num(0);
         for (std::string& argument : argument_vector)
@@ -986,16 +985,19 @@ namespace eCAL
           if (constains_space) escaped_arg += '\"';
           for (char c : argument)
           {
-            if (c == '\\')                              // Escape \ _
+            if (c == '\\')                              // Escape [\]
               escaped_arg += "\\\\";
-            else if (c == '\"')                         // Escape "
+            else if (c == '\"')                         // Escape ["]
               escaped_arg += "\\\"";
-            else if (c == '\'')                         // Escape '
+            else if (c == '\'')                         // Escape [']
               escaped_arg += "\\\'";
             else
               escaped_arg += c;
           }
           if (constains_space) escaped_arg += '\"';
+
+          if(escaped_arg.empty())
+            escaped_arg = "\"\"";
 
           complete_char_num += escaped_arg.size();
           argument = escaped_arg;
@@ -1012,7 +1014,6 @@ namespace eCAL
         }
 
         g_process_par = process_par;
-#endif // ECAL_OS_MACOS
       }
       return(g_process_par);
     }
