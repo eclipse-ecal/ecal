@@ -32,7 +32,7 @@
 PlayThread::PlayThread()
   : time_log_complete_time_span_(0)
 {
-  state_publisher_thread_ = std::unique_ptr<StatePublisherThread>(new StatePublisherThread(*this));
+  state_publisher_thread_ = std::unique_ptr<StatePublisherThread>(std::make_unique<StatePublisherThread>(*this));
   state_publisher_thread_->Start();
 }
 
@@ -582,7 +582,7 @@ void PlayThread::SetMeasurement(std::shared_ptr<eCAL::eh5::HDF5Meas> measurement
 
   if (measurement)
   {
-    new_measurment_container = std::unique_ptr<MeasurementContainer>(new MeasurementContainer(measurement, path));
+    new_measurment_container = std::unique_ptr<MeasurementContainer>(std::make_unique<MeasurementContainer>(measurement, path));
   }
 
   {

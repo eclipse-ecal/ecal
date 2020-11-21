@@ -379,7 +379,7 @@ namespace eCAL
     m_memfile.Close();
 
     // collect all connected process id's
-    std::list<std::string> process_id_list;
+    std::vector<std::string> process_id_list;
     {
       std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
       for (auto iter : m_event_handle_map)

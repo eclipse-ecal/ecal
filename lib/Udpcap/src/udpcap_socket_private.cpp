@@ -658,8 +658,8 @@ namespace Udpcap
     }
 
     pcap_set_snaplen(pcap_handle, MAX_PACKET_SIZE);
-    pcap_set_promisc(pcap_handle, true); // We only want Packets destined for this adapter. We are not interested in others.
-    pcap_set_immediate_mode(pcap_handle, true);
+    pcap_set_promisc(pcap_handle, 1 /*true*/); // We only want Packets destined for this adapter. We are not interested in others.
+    pcap_set_immediate_mode(pcap_handle, 1 /*true*/);
 
     if (receive_buffer_ > 0)
     {

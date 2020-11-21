@@ -63,7 +63,7 @@ namespace eCAL
 
     // register internal service implementation
     std::lock_guard<std::mutex> lock(m_internal_service_sync);
-    m_internal_service_map.insert(std::pair<std::string, CServiceServerImpl*>(service_name_, service_));
+    m_internal_service_map.emplace(std::pair<std::string, CServiceServerImpl*>(service_name_, service_));
 
     return(true);
   }

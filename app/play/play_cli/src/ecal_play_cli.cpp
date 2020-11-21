@@ -294,7 +294,7 @@ int main(int argc, char *argv[])
   //// EcalPlay instance                                                    ////
   //////////////////////////////////////////////////////////////////////////////
 
-  std::shared_ptr<EcalPlay> ecal_player(new EcalPlay());
+  std::shared_ptr<EcalPlay> ecal_player(std::make_shared<EcalPlay>());
 
   //////////////////////////////////////////////////////////////////////////////
   //// Apply command line                                                   ////
@@ -370,7 +370,7 @@ int main(int argc, char *argv[])
     std::cout << "Running interactive mode. Press " << keyCharToString(KEY_EXIT) << " to exit." << std::endl;
     printInteractiveHelp();
 
-    std::shared_ptr<eCAL::pb::play::EcalPlayService> play_service_ (new EcalPlayService(ecal_player));
+    std::shared_ptr<eCAL::pb::play::EcalPlayService> play_service_ (std::make_shared<EcalPlayService>(ecal_player));
     eCAL::protobuf::CServiceServer<eCAL::pb::play::EcalPlayService> play_service_server_(play_service_);
 
     std::string step_reference_channel;
