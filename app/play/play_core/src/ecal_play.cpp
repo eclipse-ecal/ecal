@@ -38,7 +38,7 @@ EcalPlay::EcalPlay()
 
   eCAL::Initialize(0, nullptr, "eCALPlay");
 
-  play_thread_ = std::unique_ptr<PlayThread>(std::make_unique<PlayThread>());
+  play_thread_ = std::make_unique<PlayThread>();
   play_thread_->Start();
 
   eCAL::Process::SetState(eCAL_Process_eSeverity::proc_sev_warning, eCAL_Process_eSeverity_Level::proc_sev_level1, "No measurement loaded");
