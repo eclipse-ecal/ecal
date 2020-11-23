@@ -35,8 +35,9 @@
 #pragma warning(pop)
 #endif
 
+#include <ecal_utils/string.h>
+
 #include "ecalsys/esys_defs.h"
-#include "ecalsys/esys_util.h"
 
 #include "config/config_manager.h"
 
@@ -200,8 +201,8 @@ void EcalSys::LogAppNameVersion() const
   std::string app_version_header = " " + std::string(ECAL_SYS_LIB_NAME) + " " + std::string(ECAL_SYS_VERSION_STRING) + " ";
   std::string ecal_version_header = " (eCAL Lib " + std::string(ECAL_VERSION) + ") ";
 
-  Utility::String::CenterString(app_version_header, '-', 79);
-  Utility::String::CenterString(ecal_version_header, ' ', 79);
+  EcalUtils::String::CenterString(app_version_header, '-', 79);
+  EcalUtils::String::CenterString(ecal_version_header, ' ', 79);
 
   EcalSysLogger::Log("", spdlog::level::info);
   EcalSysLogger::Log(app_version_header, spdlog::level::info);
@@ -667,7 +668,7 @@ bool EcalSys::IseCALSysClientRunningOnHost(const std::string& host_name) const {
   auto hosts_running_ecal_sys_client = m_monitor_thread->GetHostsRunningeCALSysClient();
   for (auto& host : hosts_running_ecal_sys_client)
   {
-    if (Utility::String::icompare(host, host_name))
+    if (host == host_name)
     {
       return true;
     }

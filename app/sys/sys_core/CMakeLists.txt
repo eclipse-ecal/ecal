@@ -27,7 +27,6 @@ set(ecalsyscore_src
   include/ecalsys/ecal_sys.h
   include/ecalsys/ecal_sys_logger.h
   include/ecalsys/esys_defs.h
-  include/ecalsys/esys_util.h
   include/ecalsys/config/config_version.h
   include/ecalsys/task/ecal_sys_runner.h
   include/ecalsys/task/ecal_sys_task.h

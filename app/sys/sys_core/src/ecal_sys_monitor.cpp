@@ -28,11 +28,11 @@
 #include "ecal/pb/sys/state.pb.h"
 #include "ecal/pb/process.pb.h"
 
-#include "ecalsys/esys_util.h"
-
 #include "ecalsys/ecal_sys_logger.h"
 
+#include <ecal_utils/string.h>
 #include <ecal_utils/ecal_utils.h>
+#include <ecal_utils/filesystem.h>
 
 
 
@@ -148,7 +148,7 @@ void EcalSysMonitor::UpdateTaskStates(const std::list<std::shared_ptr<EcalSysTas
         std::vector<int> task_pids = task->GetPids();
 
 
-        if (Utility::String::icompare(task->GetHostStartedOn(), process.hname())
+        if ((task->GetHostStartedOn() == process.hname())
           && (std::find(task_pids.begin(), task_pids.end(), (int)process.pid()) != task_pids.end()))
         {
           // The task is matching!
@@ -273,17 +273,17 @@ std::list<std::shared_ptr<EcalSysTask>> EcalSysMonitor::GetTasksFromCloud()
 
   for (const auto& monitor_process : m_monitoring_pb.processes())
   {
-    std::string monitor_process_name = Utility::String::trim(monitor_process.uname());
-    std::string monitor_process_path = Utility::String::trim(monitor_process.pname());
-    std::string monitor_process_args = Utility::String::trim(monitor_process.pparam());
-    std::string monitor_process_host = Utility::String::trim(monitor_process.hname());
+    std::string monitor_process_name = EcalUtils::String::Trim(monitor_process.uname());
+    std::string monitor_process_path = EcalUtils::String::Trim(monitor_process.pname());
+    std::string monitor_process_args = EcalUtils::String::Trim(monitor_process.pparam());
+    std::string monitor_process_host = EcalUtils::String::Trim(monitor_process.hname());
     int pid                          = monitor_process.pid();
     TaskState task_state             = ConvertState(monitor_process.state());
 
     // If the process has no name we use the executable's name instead
     if (monitor_process_name == "")
     {
-      monitor_process_name = Utility::Path::GetBaseName(monitor_process_path);
+      monitor_process_name = EcalUtils::Filesystem::BaseName(monitor_process_path);
     }
 
     // The first argument is always the process itself. Thus, we remove the first argument.
@@ -399,7 +399,7 @@ void EcalSysMonitor::RemoveMonitorUpdateCallback()
 ////////////////////////////////////////////////////////////////////////////////
 std::string EcalSysMonitor::RemoveFirstArg(const std::string& arg_string)
 {
-  auto arg_list = Utility::CommandLine::splitCommandLine(arg_string, 2);
+  auto arg_list = EcalUtils::CommandLine::splitCommandLine(arg_string, 2);
   return ((arg_list.size() >= 2) ? arg_list[1] : "");
 }
 

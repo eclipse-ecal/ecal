@@ -26,9 +26,9 @@
 #include <memory>
 
 #include "SimpleIni.h"
-#include "ecalsys/esys_util.h"
 
 #include <ecal_def_ini.h>
+#include <ecal_utils/filesystem.h>
 
 EcalsysSettings::EcalsysSettings(void)
   : is_init_(false)
@@ -67,7 +67,8 @@ void EcalsysSettings::LoadIniFile(const std::string& path)
   }
 
   // load settings from file
-  if (Utility::File::Exists(file_name_))
+  auto file_info = EcalUtils::Filesystem::FileStatus(file_name_);
+  if (file_info.IsOk() && (file_info.GetType() == EcalUtils::Filesystem::Type::RegularFile))
   {
     // apply file name to manager
     std::shared_ptr<CSimpleIniA> iniConf(new CSimpleIniA(true, true, true));

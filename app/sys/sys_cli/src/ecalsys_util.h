@@ -24,7 +24,6 @@
 #pragma once
 
 #include "ecalsys/ecal_sys.h"
-#include "ecalsys/esys_util.h"
 
 void StartTasks(std::shared_ptr<EcalSys> ecalsys_inst);
 void StopTasks(std::shared_ptr<EcalSys> ecalsys_inst);

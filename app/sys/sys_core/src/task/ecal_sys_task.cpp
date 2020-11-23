@@ -21,8 +21,6 @@
 
 #include <regex>
 
-#include "ecalsys/esys_util.h"
-
 EcalSysTask::EcalSysTask()
   : m_id                         (0)
   , m_name                       ("")

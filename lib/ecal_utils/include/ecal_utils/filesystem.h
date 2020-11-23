@@ -20,7 +20,7 @@
 #pragma once
 
 #include <string>
-#include <list>
+#include <vector>
 #include <map>
 
 #include <sys/stat.h>
@@ -107,10 +107,12 @@ namespace EcalUtils
     bool IsRelative(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
 
     std::string CleanPath(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
-    std::list<std::string> CleanPathComponentList(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
+    std::vector<std::string> CleanPathComponentList(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
 
     std::string AbsolutePath(const std::string& base_path, const std::string& relative_path, OsStyle input_path_style = OsStyle::Combined);
     std::string AbsolutePath(const std::string& relative_path, OsStyle input_path_style = OsStyle::Combined);
+
+    std::string RelativePath(const std::string& base_path, const std::string& path, OsStyle input_path_style = OsStyle::Combined);
 
     std::string CurrentWorkingDir();
     std::string ApplicationDir();
@@ -134,5 +136,7 @@ namespace EcalUtils
     bool IsEqual(const std::string& path1, const std::string& path2, OsStyle compare_for = OsStyle::Current);
 
     std::string FileName(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
+
+    std::string BaseName(const std::string& path, OsStyle input_path_style = OsStyle::Combined);
   };
 }

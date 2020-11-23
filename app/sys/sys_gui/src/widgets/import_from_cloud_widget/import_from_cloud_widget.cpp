@@ -26,8 +26,6 @@
 
 #include "ecal/ecal.h"
 
-#include "ecalsys/esys_util.h"
-
 #include "globals.h"
 
 #include "ecalsys_settings.h"
@@ -37,6 +35,10 @@
 
 #include <sys_client_core/task.h>
 #include <ecalsys/task/ecal_sys_task_helper.h>
+
+#include <ecal_utils/filesystem.h>
+#include <ecal_utils/string.h>
+#include <ecal_utils/ecal_utils.h>
 
 ImportFromCloudWidget::ImportFromCloudWidget(QWidget *parent)
   : QWidget(parent)
@@ -291,7 +293,7 @@ void ImportFromCloudWidget::autoDetectRunnersFor(const std::list<std::shared_ptr
 
       // Create a new Runner with that path
       std::shared_ptr<EcalSysRunner> new_runner(new EcalSysRunner());
-      new_runner->SetName(Utility::Path::GetBaseName(path));
+      new_runner->SetName(EcalUtils::Filesystem::BaseName(path));
       new_runner->SetPath(path);
 
       // Until now, everything was quite deterministic. Now we have to detect
@@ -331,7 +333,7 @@ void ImportFromCloudWidget::autoDetectRunnersFor(const std::list<std::shared_ptr
       for (auto it = tasks.begin(); it != tasks.end(); ++it)
       {
         std::string complete_command_line = (*it)->GetCommandLineArguments();
-        complete_command_line = Utility::String::trim(complete_command_line);
+        complete_command_line = EcalUtils::String::Trim(complete_command_line);
 
         if (it == tasks.begin())
         {
@@ -373,14 +375,14 @@ void ImportFromCloudWidget::autoDetectRunnersFor(const std::list<std::shared_ptr
           if (reference_first_arg_is_algo_path)
           {
             // Split into (algo_path + rest)
-            auto task_args = Utility::CommandLine::splitCommandLine(task->GetCommandLineArguments(), 2);
+            auto task_args = EcalUtils::CommandLine::splitCommandLine(task->GetCommandLineArguments(), 2);
             task->SetAlgoPath(task_args[0]);
             task->SetCommandLineArguments(task_args.size() >= 2 ? task_args[1] : "");
           }
           else if (reference_second_arg_is_algo_path)
           {
             // Split into (load_arg + algo_path + rest)
-            auto task_args = Utility::CommandLine::splitCommandLine(task->GetCommandLineArguments(), 3);
+            auto task_args = EcalUtils::CommandLine::splitCommandLine(task->GetCommandLineArguments(), 3);
             task->SetAlgoPath(task_args[1]);
             task->SetCommandLineArguments(task_args.size() >= 3 ? task_args[2] : "");
           }
@@ -465,7 +467,7 @@ void ImportFromCloudWidget::attemptRunnerCommandLineSeparation(
 {
   // Let's start by splitting the command line of the task.
   // We can have up to 3 parts here (load_arg + algo_path + rest)
-  auto arguments = Utility::CommandLine::splitCommandLine(input_command_line, 3);
+  auto arguments = EcalUtils::CommandLine::splitCommandLine(input_command_line, 3);
 
   if (arguments.size() == 0)
   {
@@ -557,7 +559,7 @@ void ImportFromCloudWidget::autoAssignRunners(const std::list<std::shared_ptr<Ec
         if (runner->GetLoadCmdArgument() != "")
         {
           // We need to look for 2-3 arguments (load_arg + algo_path + ?rest?)
-          auto task_args = Utility::CommandLine::splitCommandLine(task->GetCommandLineArguments(), 3);
+          auto task_args = EcalUtils::CommandLine::splitCommandLine(task->GetCommandLineArguments(), 3);
           if ((task_args.size() >= 2)
             && (task_args[0] == runner->GetLoadCmdArgument()) // The first argument must be the load argument
             && (task_args[1].at(0) != '-'))                   // The second argument must not start with a dash, as this is an algo path
@@ -580,7 +582,7 @@ void ImportFromCloudWidget::autoAssignRunners(const std::list<std::shared_ptr<Ec
           // We can have 0-2 arguments (?algo_path? + ?rest?).
           // But in any case, the runner matches (due to the same process path).
           // It's now just a case of checking whether we have an algo path.
-          auto task_args = Utility::CommandLine::splitCommandLine(task->GetCommandLineArguments(), 2);
+          auto task_args = EcalUtils::CommandLine::splitCommandLine(task->GetCommandLineArguments(), 2);
           if (task_args.size() >= 1)
           {
             if (task_args[0].at(0) != '-')
@@ -763,7 +765,7 @@ void ImportFromCloudWidget::monitorUpdated()
     if (std::find_if(task_list_.begin(), task_list_.end(),
         [task_from_cloud](const std::shared_ptr<EcalSysTask>& task_from_task_list)
         {
-          return (Utility::String::icompare(task_from_cloud->GetHostStartedOn(), task_from_task_list->GetHostStartedOn()))
+          return (task_from_cloud->GetHostStartedOn() == task_from_task_list->GetHostStartedOn())
             && (task_from_cloud->GetPids().front() == task_from_task_list->GetPids().front());
         })
       == task_list_.end())
@@ -859,7 +861,7 @@ void ImportFromCloudWidget::updateImportCheckboxEnabledStates()
               std::string existing_task_host = existing_task->GetHostStartedOn();
               std::vector<int> existing_task_pids = existing_task->GetPids();
 
-              return (Utility::String::icompare(task->GetHostStartedOn(), existing_task->GetHostStartedOn()))
+              return (task->GetHostStartedOn() == existing_task->GetHostStartedOn())
                 && (std::find(existing_task_pids.begin(), existing_task_pids.end(), task->GetPids().front()) != existing_task_pids.end());
             }
         );

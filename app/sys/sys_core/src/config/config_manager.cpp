@@ -20,10 +20,11 @@
 #include "config_manager.h"
 
 #include <map>
+#include <regex>
 
 #include "esys_cfg.h"
 #include "esys_cfg_parser.h"
-#include "ecalsys/esys_util.h"
+#include "ecal_utils/string.h"
 
 #include "ecalsys/ecal_sys_logger.h"
 
@@ -101,13 +102,13 @@ bool ConfigManager::LoadConfig(EcalSys& ecalsys, const std::string& path, bool a
 
       // parse the start visibility
       eCAL_Process_eStartMode visibility = eCAL_Process_eStartMode::proc_smode_normal;
-      if (Utility::String::icompare(task_config.start_stop_.visibility_, "Normal")    == true)
+      if (EcalUtils::String::Icompare(task_config.start_stop_.visibility_, "Normal")    == true)
         visibility = proc_smode_normal;
-      if (Utility::String::icompare(task_config.start_stop_.visibility_, "Hidden")    == true)
+      if (EcalUtils::String::Icompare(task_config.start_stop_.visibility_, "Hidden")    == true)
         visibility = proc_smode_hidden;
-      if (Utility::String::icompare(task_config.start_stop_.visibility_, "Minimized") == true)
+      if (EcalUtils::String::Icompare(task_config.start_stop_.visibility_, "Minimized") == true)
         visibility = proc_smode_minimized;
-      if (Utility::String::icompare(task_config.start_stop_.visibility_, "Maximized") == true)
+      if (EcalUtils::String::Icompare(task_config.start_stop_.visibility_, "Maximized") == true)
         visibility = proc_smode_maximized;
 
       // Find the correct runner (if the runner was the EXE / BAT runner that we removed earlier we will get a nullpointer, which is exactly what we want, here)

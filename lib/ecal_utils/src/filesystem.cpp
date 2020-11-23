@@ -499,14 +499,14 @@ namespace EcalUtils
       }
     }
 
-    std::list<std::string> CleanPathComponentList(const std::string& path, OsStyle input_path_style)
+    std::vector<std::string> CleanPathComponentList(const std::string& path, OsStyle input_path_style)
     {
       if (path.empty())
       {
         return{};
       }
 
-      std::list<std::string> components;
+      std::vector<std::string> components;
 
       std::string unix_style_path = ToUnixSeperators(path, input_path_style);
 
@@ -565,14 +565,13 @@ namespace EcalUtils
       return components;
     }
 
-
     std::string CleanPath(const std::string& path, OsStyle input_path_style)
     {
       if (path.empty())
         return "";
 
       // Split the path into its cleaned components
-      std::list<std::string> cleaned_path_components = CleanPathComponentList(path, input_path_style);
+      std::vector<std::string> cleaned_path_components = CleanPathComponentList(path, input_path_style);
 
       // Check whether the path ended with a slash
       bool tailing_separator = (ToUnixSeperators(path, input_path_style).back() == '/');
@@ -627,6 +626,43 @@ namespace EcalUtils
       {
         return CleanPath(CurrentWorkingDir() + "/" + relative_path);
       }
+    }
+
+    std::string RelativePath(const std::string& base_path, const std::string& path, OsStyle input_path_style)
+    {
+      auto base_list = CleanPathComponentList(base_path, input_path_style);
+      auto path_list = CleanPathComponentList(path, input_path_style);
+
+      size_t size = (path_list.size() < base_list.size()) ? path_list.size() : base_list.size();
+      unsigned int same_size(0);
+      for (unsigned int i = 0; i < size; ++i)
+      {
+        if (path_list[i] != base_list[i])
+        {
+          same_size = i;
+          break;
+        }
+      }
+
+      std::string relative_path = "";
+      if (same_size > 0)
+      {
+        for (unsigned int i = 0; i < base_list.size() - same_size; ++i)
+        {
+          relative_path += "../";
+        }
+      }
+
+      for (unsigned int i = same_size; i < path_list.size(); ++i)
+      {
+        relative_path += path_list[i];
+        if (i < path_list.size() - 1)
+        {
+          relative_path += "/";
+        }
+      }
+
+      return relative_path;
     }
 
     std::string CurrentWorkingDir()
@@ -771,6 +807,23 @@ namespace EcalUtils
         return "";
       else
         return clean_path_component_list.back();
+    }
+
+    std::string BaseName(const std::string& path, OsStyle input_path_style)
+    {
+      std::string file_name = FileName(path, input_path_style);
+      
+      if (file_name.empty()) return ""; 
+
+      size_t pos = file_name.find('.', 0);
+      if (pos != std::string::npos)
+      {
+        return file_name.substr(0, pos);
+      }
+      else
+      {
+        return file_name;
+      }
     }
   }
 }

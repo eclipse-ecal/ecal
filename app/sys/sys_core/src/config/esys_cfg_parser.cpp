@@ -31,8 +31,8 @@
 
 #include "tinyxml2.h"
 
-#include "ecalsys/esys_util.h"
-
+#include <ecal_utils/string.h>
+#include <ecal_utils/filesystem.h>
 
 namespace eCAL
 {
@@ -255,8 +255,12 @@ namespace eCAL
             {
               for (auto config_element = import_element->FirstChildElement(); config_element != nullptr; config_element = config_element->NextSiblingElement())
               {
-                std::string imported_path = Utility::String::trim(config_element->GetText());
-                Utility::Path::MakeAbsolute(imported_path, path);
+                std::string imported_path = EcalUtils::String::Trim(config_element->GetText());
+
+                // Quick and dirty solution to strip the filename from the path
+                std::string base_path = EcalUtils::Filesystem::CleanPath(path + "/..", EcalUtils::Filesystem::Current);
+
+                EcalUtils::Filesystem::AbsolutePath(base_path, imported_path);
                 configuration.AddImportedConfig(imported_path);
               }
             }
@@ -315,7 +319,7 @@ namespace eCAL
                 std::string element_content;
 
                 if (element->GetText() != nullptr)
-                  element_content = Utility::String::trim(element->GetText());
+                  element_content = EcalUtils::String::Trim(element->GetText());
 
                 if (element_name.compare("path") == 0)
                 {
@@ -376,7 +380,7 @@ namespace eCAL
                     std::string element_content;
 
                     if (element->GetText() != nullptr)
-                      element_content = Utility::String::trim(element->GetText());
+                      element_content = EcalUtils::String::Trim(element->GetText());
 
                     if (element_name.compare("target") == 0)
                     {
@@ -424,7 +428,7 @@ namespace eCAL
                     std::string element_name = element->Value();
                     std::string element_content;
                     if (element->GetText() != nullptr)
-                      element_content = Utility::String::trim(element->GetText());
+                      element_content = EcalUtils::String::Trim(element->GetText());
 
                     if (element_name.compare("restart") == 0)
                     {
@@ -588,7 +592,7 @@ namespace eCAL
             if (layout_element != nullptr)
             {
               if (layout_element->GetText() != nullptr)
-                layout = Utility::String::trim(layout_element->GetText());
+                layout = EcalUtils::String::Trim(layout_element->GetText());
             }
 
             configuration.SetLayout(layout, win_size, win_pos, win_maximized);
@@ -604,8 +608,7 @@ namespace eCAL
 
       bool Open(const std::string& path, CConfiguration& configuration, std::string& exception_msg, bool import /* = false */)
       {
-        std::string abspath = path;
-        Utility::Path::MakeAbsolute(abspath);
+        std::string abspath = EcalUtils::Filesystem::AbsolutePath(path, EcalUtils::Filesystem::OsStyle::Current);
 
         if (ReadConfig(abspath, configuration, import))
         {
@@ -624,8 +627,7 @@ namespace eCAL
 
       bool Save(const std::string& path, CConfiguration& configuration)
       {
-        std::string abspath = path;
-        Utility::Path::MakeAbsolute(abspath);
+        std::string abspath = EcalUtils::Filesystem::AbsolutePath(path, EcalUtils::Filesystem::OsStyle::Current);
         {
           std::ofstream os;
           os.open(abspath, std::ofstream::out);
@@ -654,7 +656,7 @@ namespace eCAL
         {
           auto config_element = doc.NewElement("config");
           config_element->SetValue("config");
-          config_element->SetText(Utility::Path::GetRelativePath(config, abspath).c_str());
+          config_element->SetText(EcalUtils::Filesystem::RelativePath(abspath, config).c_str());
           import_element->InsertEndChild(config_element);
         }
         root_element->InsertEndChild(import_element);

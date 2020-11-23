@@ -23,7 +23,6 @@
 #include <thread>
 
 #include "globals.h"
-#include "ecalsys/esys_util.h"
 #include "ecalsys/ecal_sys_logger.h"
 
 #include "widgets/runnerwidget/runner_window.h"
@@ -990,7 +989,7 @@ void EcalsysGui::performStartupChecks()
   decltype(hosts_running_ecalsys) filtered_hosts_running_ecalsys;
   for (auto& host : hosts_running_ecalsys)
   {
-    if (!(Utility::String::icompare(host.first, eCAL::Process::GetHostName()) && (host.second == eCAL::Process::GetProcessID())))
+    if ((host.first != eCAL::Process::GetHostName()) && (host.second == eCAL::Process::GetProcessID()))
     {
       filtered_hosts_running_ecalsys.push_back(host);
     }

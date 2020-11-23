@@ -80,7 +80,7 @@ void StartTasks(std::shared_ptr<EcalSys> ecalsys_inst)
   if (ecalsys_inst->GetOptions().local_tasks_only) {
     std::string current_host = eCAL::Process::GetHostName();
     for (auto task : task_list_all) {
-      if (Utility::String::icompare(current_host, task->GetTarget()))
+      if (current_host == task->GetTarget())
       {
         tasks_to_start.push_back(task);
       }
@@ -107,7 +107,7 @@ void StopTasks(std::shared_ptr<EcalSys> ecalsys_inst)
     for (auto task : task_list_all)
     {
       std::lock_guard<std::recursive_mutex> task_lock(task->mutex);
-      if (Utility::String::icompare(current_host, task->GetTarget()))
+      if (current_host == task->GetTarget())
       {
         tasks_to_stop.push_back(task);
       }

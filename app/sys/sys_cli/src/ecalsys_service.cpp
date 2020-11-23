@@ -23,7 +23,6 @@
 
 #include "ecalsys/ecal_sys.h"
 #include "ecalsys/ecal_sys_logger.h"
-#include "ecalsys/esys_util.h"
 #include "ecalsys_service.h"
 
 extern bool exit_command_received;
@@ -41,7 +40,7 @@ namespace
       tasks.remove_if(
         [](std::shared_ptr<EcalSysTask> task)
       {
-        return !Utility::String::icompare(task->GetTarget(), eCAL::Process::GetHostName());
+        return task->GetTarget() != eCAL::Process::GetHostName();
       });
     }
     return tasks;
