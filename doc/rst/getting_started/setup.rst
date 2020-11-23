@@ -42,14 +42,14 @@ We provide precompiled binaries for Ubuntu 18.04 and Ubuntu 20.04.
      .. code-block:: bash
 
         sudo apt update
-        sudo apt install libc6 libcurl4 libgcc1 libhdf5-100 libprotobuf10 libqt5core5a libqt5gui5 libqt5widgets5 libstdc++6 sysstat ifstat
+        sudo apt install libc6 libcurl4 libgcc1 libhdf5-100 libprotobuf10 libqt5core5a libqt5gui5 libqt5widgets5 libqt5svg5 libstdc++6 sysstat ifstat
 
    - Ubuntu 20.04:
 
      .. code-block:: bash
 
         sudo apt update
-        sudo apt install libc6 libcurl4 libgcc-s1 libhdf5-103 libprotobuf17 libqt5core5a libqt5gui5 libqt5widgets5 libstdc++6 sysstat ifstat
+        sudo apt install libc6 libcurl4 libgcc-s1 libhdf5-103 libprotobuf17 libqt5core5a libqt5gui5 libqt5widgets5 libqt5svg5 libstdc++6 sysstat ifstat
 
 
 #. Head to the GitHub release page and download the latest eCAL installer for your Ubuntu version:
