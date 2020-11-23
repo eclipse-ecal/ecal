@@ -124,6 +124,8 @@ void EcalSysMonitor::UpdateTaskStates(const std::list<std::shared_ptr<EcalSysTas
       return;
     }
 
+    bool is_starting_or_stopping = m_ecalsys_instance.IsTaskActionRunning(task);
+
     std::lock_guard<std::recursive_mutex> task_lock(task->mutex);
 
     // This function is publicly callable. Thus we have to lock the monitoring mutex again, as the caller might not live in this thread!
@@ -170,7 +172,7 @@ void EcalSysMonitor::UpdateTaskStates(const std::list<std::shared_ptr<EcalSysTas
       auto task_start_stop_state = task->GetStartStopState();
       if (task_start_stop_state == EcalSysTask::StartStopState::Started_Successfully)
       {
-        if (task->IsMonitoringEnabled() && task->FoundInMonitorOnce() && !m_ecalsys_instance.IsStartingOrStopping(task))
+        if (task->IsMonitoringEnabled() && task->FoundInMonitorOnce() && !is_starting_or_stopping)
         {
           task_state.info = "Externally closed";
           task_state.severity = eCAL_Process_eSeverity::proc_sev_failed;
@@ -203,6 +205,8 @@ void EcalSysMonitor::RestartBySeverity()
 
   for (auto& task : m_task_list)
   {
+    bool is_starting_or_stopping = m_ecalsys_instance.IsTaskActionRunning(task);
+
     std::lock_guard<std::recursive_mutex> task_lock(task->mutex);
     // tasks on other hosts than local won't be restarted if the flag local_tasks_only is set
     if ((m_ecalsys_instance.GetOptions().local_tasks_only == true) && (task->GetTarget() != eCAL::Process::GetHostName()))
@@ -221,7 +225,7 @@ void EcalSysMonitor::RestartBySeverity()
       if (current_state.severity != eCAL_Process_eSeverity::proc_sev_unknown
         && current_state >= restart_state)
       {
-        if (!m_ecalsys_instance.IsStartingOrStopping(task))
+        if (!is_starting_or_stopping)
         {
           std::string severity_string;
           std::string severity_level_string;

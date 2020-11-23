@@ -524,7 +524,7 @@ void EcalSys::StartTaskList(const std::list<std::shared_ptr<EcalSysTask>>& task_
   for (auto& task : task_list)
   {
     // Don't start tasks that are currently starting or stopping
-    if (IsStartingOrStopping(task))
+    if (IsTaskActionRunning(task))
       continue;
 
     // Don't start tasks that are running fine
@@ -557,7 +557,7 @@ void EcalSys::StopTaskList(const std::list<std::shared_ptr<EcalSysTask>>& task_l
   std::list<std::shared_ptr<EcalSysTask>> filtered_task_list;
   for (auto& task : task_list)
   {
-    if (!IsStartingOrStopping(task))
+    if (!IsTaskActionRunning(task))
     {
       filtered_task_list.push_back(task);
     }
@@ -576,7 +576,7 @@ void EcalSys::RestartTaskList(const std::list<std::shared_ptr<EcalSysTask>>& tas
   std::list<std::shared_ptr<EcalSysTask>> filtered_task_list;
   for (auto& task : task_list)
   {
-    if (!IsStartingOrStopping(task))
+    if (!IsTaskActionRunning(task))
     {
       filtered_task_list.push_back(task);
     }
@@ -600,7 +600,7 @@ void EcalSys::RestartTaskList(const std::list<std::shared_ptr<EcalSysTask>>& tas
   RemoveFinishedTaskListThreads();
 }
 
-bool EcalSys::IsStartingOrStopping(const std::shared_ptr<EcalSysTask> task)
+bool EcalSys::IsTaskActionRunning(const std::shared_ptr<EcalSysTask> task)
 {
   bool start_stop_scheduled = false;
   m_task_list_action_thread_container.for_each(
@@ -688,7 +688,7 @@ void EcalSys::UpdateFromCloud()
   for (auto& task : task_list)
   {
     // Don't start task actions for tasks that are currently starting or stopping
-    if (IsStartingOrStopping(task))
+    if (IsTaskActionRunning(task))
       continue;
 
     filtered_task_list.push_back(task);

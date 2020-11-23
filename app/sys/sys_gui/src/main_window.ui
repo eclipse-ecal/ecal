@@ -809,7 +809,7 @@
   </action>
   <action name="action_help_documentation">
    <property name="text">
-    <string>&amp;Documentation...</string>
+    <string>Online &amp;documentation...</string>
    </property>
   </action>
   <action name="action_show_console">

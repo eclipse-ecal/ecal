@@ -44,6 +44,8 @@
 #include <QProgressDialog>
 #include <QtConcurrent/QtConcurrent>
 #include <QFuture>
+#include <QDesktopServices>
+#include <QUrl>
 
 #ifdef WIN32
 #include <Windows.h>
@@ -453,7 +455,7 @@ void EcalsysGui::updateStartStopButtons()
       bool buttons_selected_active = true;
       for (auto& task : selected_tasks)
       {
-        if (Globals::EcalSysInstance()->IsStartingOrStopping(task))
+        if (Globals::EcalSysInstance()->IsTaskActionRunning(task))
         {
           // Deactivate Buttons if any Task is already starting or stopping
           buttons_selected_active = false;
@@ -474,7 +476,7 @@ void EcalsysGui::updateStartStopButtons()
     bool buttons_all_active = true;
     for (auto& task : all_tasks)
     {
-      if (Globals::EcalSysInstance()->IsStartingOrStopping(task))
+      if (Globals::EcalSysInstance()->IsTaskActionRunning(task))
       {
         // Deactivate Buttons if any Task is already starting or stopping
         buttons_all_active = false;
@@ -509,7 +511,7 @@ void EcalsysGui::updateStartStopButtons()
         bool buttons_selected_active = true;
         for (auto& task : selected_tasks)
         {
-          if (Globals::EcalSysInstance()->IsStartingOrStopping(task))
+          if (Globals::EcalSysInstance()->IsTaskActionRunning(task))
           {
             // Deactivate Buttons if any Task is already starting or stopping
             buttons_selected_active = false;
@@ -836,24 +838,7 @@ void EcalsysGui::menuOptionsKillAllOnCloseToggled(bool enabled)
 
 void EcalsysGui::menuHelpDocumentationTriggered()
 {
-  bool success = false;
-
-  QString path_to_doc(qgetenv("ECAL_HOME"));
-  if (path_to_doc != "")
-  {
-    path_to_doc += "/doc/eCALSys.pdf";
-    success = QDesktopServices::openUrl(QUrl::fromLocalFile(path_to_doc));
-  }
-  
-  if (!success)
-  {
-    QMessageBox error_message(this);
-    error_message.setWindowTitle("Error");
-    error_message.setText("Unable to open documentation file. Sorry for the inconvenience.");
-    QPixmap icon = QPixmap(":/icons/emojies/disappointed.png").scaled(64, 64, Qt::AspectRatioMode::KeepAspectRatio, Qt::TransformationMode::SmoothTransformation);
-    error_message.setIconPixmap(icon);
-    error_message.exec();
-  }
+  QDesktopServices::openUrl(QUrl("http://ecal.io/"));
 }
 
 void EcalsysGui::menuHelpAboutTriggered()

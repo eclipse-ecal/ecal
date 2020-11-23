@@ -588,7 +588,7 @@ void TaskWidget::taskTableContextMenu(const QPoint &pos)
   else {
     for (auto& task : selected_tasks)
     {
-      if (Globals::EcalSysInstance()->IsStartingOrStopping(task))
+      if (Globals::EcalSysInstance()->IsTaskActionRunning(task))
       {
         // Deactivate Start/Stop/Restart actions, if any task is already starting/stopping/restarting
         start_action        .setEnabled(false);
@@ -670,7 +670,7 @@ void TaskWidget::updateStartStopButtons()
     bool buttons_selected_active = true;
     for (auto& task : selected_tasks)
     {
-      if (Globals::EcalSysInstance()->IsStartingOrStopping(task))
+      if (Globals::EcalSysInstance()->IsTaskActionRunning(task))
       {
         // Deactivate Buttons if any Task is already starting or stopping
         buttons_selected_active = false;
@@ -687,7 +687,7 @@ void TaskWidget::updateStartStopButtons()
   bool buttons_all_active = true;
   for (auto& task : all_tasks)
   {
-    if (Globals::EcalSysInstance()->IsStartingOrStopping(task))
+    if (Globals::EcalSysInstance()->IsTaskActionRunning(task))
     {
       // Deactivate Buttons if any Task is already starting or stopping
       buttons_all_active = false;

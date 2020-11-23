@@ -23,7 +23,7 @@
    <item>
     <widget class="QLabel" name="header_label">
      <property name="text">
-      <string>The following targets must be reachable:</string>
+      <string>An ecal_sys_client instance is required for the following machines:</string>
      </property>
     </widget>
    </item>

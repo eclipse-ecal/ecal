@@ -376,7 +376,7 @@ public:
   /**
    * @brief Returns true if the task is currently stopping / starting / restarting or if it is scheduled for one of those actions.
    */
-  bool IsStartingOrStopping        (const std::shared_ptr<EcalSysTask> task);
+  bool IsTaskActionRunning        (const std::shared_ptr<EcalSysTask> task);
 
   /**
    * @brief Cancels all currently running start / stop / restart actions.

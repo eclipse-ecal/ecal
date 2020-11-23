@@ -52,8 +52,8 @@ private:
   QPushButton* cancel_button_;
   QPushButton* start_button_;
 
-  const QPixmap x_icon         = QPixmap(":/icons/emojies/x.png")        .scaled(IMAGE_SIZE, IMAGE_SIZE, Qt::AspectRatioMode::KeepAspectRatio, Qt::TransformationMode::SmoothTransformation);
-  const QPixmap checkmark_icon = QPixmap(":/icons/emojies/checkmark.png").scaled(IMAGE_SIZE, IMAGE_SIZE, Qt::AspectRatioMode::KeepAspectRatio, Qt::TransformationMode::SmoothTransformation);
+  const QPixmap x_icon         = QPixmap(":/ecalicons/CROSS")    .scaled(IMAGE_SIZE, IMAGE_SIZE, Qt::AspectRatioMode::KeepAspectRatio, Qt::TransformationMode::SmoothTransformation);
+  const QPixmap checkmark_icon = QPixmap(":/ecalicons/CHECKMARK").scaled(IMAGE_SIZE, IMAGE_SIZE, Qt::AspectRatioMode::KeepAspectRatio, Qt::TransformationMode::SmoothTransformation);
 
   std::vector<std::string> targets_;
   std::vector<bool>        targets_available_;

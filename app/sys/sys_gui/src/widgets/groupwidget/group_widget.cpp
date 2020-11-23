@@ -329,7 +329,7 @@ void GroupWidget::groupTreeContextMenu(const QPoint& pos)
   else {
     for (auto& task : selected_tasks)
     {
-      if (Globals::EcalSysInstance()->IsStartingOrStopping(task))
+      if (Globals::EcalSysInstance()->IsTaskActionRunning(task))
       {
         // Deactivate Start/Stop/Restart actions, if any task is already starting/stopping/restarting
         start_action        .setEnabled(false);
@@ -740,7 +740,7 @@ void GroupWidget::updateStartStopButtons()
     bool anything_starting_or_stopping = false;
     for (auto& task : selected_tasks)
     {
-      if (Globals::EcalSysInstance()->IsStartingOrStopping(task))
+      if (Globals::EcalSysInstance()->IsTaskActionRunning(task))
       {
         anything_starting_or_stopping = true;
         break;
