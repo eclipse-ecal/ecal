@@ -151,7 +151,7 @@ bool WaitForAllTargetsReachable(std::shared_ptr<EcalSys> ecalsys_inst)
   std::string current_host = eCAL::Process::GetHostName();
   for (auto task : ecalsys_inst->GetTaskList())
   {
-    if (Utility::String::icompare(task->GetTarget(), current_host))
+    if (task->GetTarget() != current_host)
     {
       targets.emplace(task->GetTarget());
     }

@@ -618,9 +618,31 @@ void EcalSys::InterruptAllTaskActions()
 
 void EcalSys::WaitForTaskActions()
 {
+  // We must not keep the task_thread container locked while waiting for the
+  // threads. Thus we copy the container.
+
+  std::vector<std::shared_ptr<TaskListThread>> copy_of_task_thread_container;
   m_task_list_action_thread_container.for_each(
-    [](std::shared_ptr<TaskListThread> t) {t->Join(); }
+    [&copy_of_task_thread_container](std::shared_ptr<TaskListThread> t)
+    {
+      copy_of_task_thread_container.push_back(t);
+    }
   );
+
+  for (auto& task_thread : copy_of_task_thread_container)
+  {
+    task_thread->Join();
+  }
+
+  //m_task_list_action_thread_container.for_each(
+  //  [](std::shared_ptr<TaskListThread> t)
+  //  {
+  //    auto pid = t->get_pid();
+  //    std::cout << "Waiting for " << pid << std::endl;
+  //    t->Join(); 
+  //    std::cout << "Finished waiting for " << pid << std::endl;
+  //  }
+  //);
 }
 
 void EcalSys::RemoveFinishedTaskListThreads()
