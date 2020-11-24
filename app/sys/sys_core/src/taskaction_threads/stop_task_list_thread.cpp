@@ -114,7 +114,7 @@ void StopTaskListThread::Run()
     if (IsInterrupted()) return;
     if (m_request_shutdown && m_kill_process)
     {
-      SleepFor(std::chrono::seconds(3));
+      SleepFor(m_wait_for_shutdown);
       if (IsInterrupted()) return;
     }
 

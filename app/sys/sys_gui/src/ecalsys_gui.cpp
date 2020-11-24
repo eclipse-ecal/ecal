@@ -945,7 +945,7 @@ void EcalsysGui::closeEvent(QCloseEvent *event)
       dlg.setValue(0);
       dlg.setValue(1);
 
-      QFuture<void> kill_all_future = QtConcurrent::run([this]()
+      QFuture<void> kill_all_future = QtConcurrent::run([]()
       {
         Globals::EcalSysInstance()->InterruptAllTaskActions();
         Globals::EcalSysInstance()->WaitForTaskActions();

@@ -55,9 +55,9 @@ public:
 
   void reload(const std::list<std::shared_ptr<EcalSysTask>>& task_list);
 
-  int columnCount(const QModelIndex &parent = QModelIndex()) const;
+  int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
   using QAbstractTreeModel::index;
   QModelIndex index(const std::shared_ptr<EcalSysTask>& task, int column = 0);

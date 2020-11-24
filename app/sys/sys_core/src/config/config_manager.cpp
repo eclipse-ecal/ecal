@@ -324,7 +324,7 @@ bool ConfigManager::SaveConfig(EcalSys& ecalsys, const std::string& path, Config
         visibility_string = "minimized";
         break;
       case proc_smode_maximized:
-        visibility_string = "maximi´zed";
+        visibility_string = "maximized";
         break;
       default:
         visibility_string = "normal";

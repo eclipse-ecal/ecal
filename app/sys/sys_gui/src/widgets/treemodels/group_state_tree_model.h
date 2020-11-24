@@ -39,9 +39,9 @@ public:
   GroupStateTreeModel(QObject *parent = nullptr);
   ~GroupStateTreeModel();
 
-  int columnCount(const QModelIndex &parent = QModelIndex()) const;
+  int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
 protected:
   int mapColumnToItem(int model_column, int tree_item_type) const override;

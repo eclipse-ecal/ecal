@@ -52,9 +52,9 @@ public:
 
   void reload(const std::list<std::shared_ptr<TaskGroup>>& group_list);
 
-  int columnCount(const QModelIndex &parent = QModelIndex()) const;
+  int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
   using QAbstractTreeModel::index;
   QModelIndex index(std::shared_ptr<TaskGroup> group, int column = 0) const;

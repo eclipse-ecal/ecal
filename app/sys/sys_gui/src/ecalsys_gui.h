@@ -55,7 +55,7 @@ public:
   void setUnmodified() { config_has_been_modified_ = false; };
 
 protected:
-  void closeEvent(QCloseEvent* event);
+  void closeEvent(QCloseEvent* event) override;
 
   void dragEnterEvent(QDragEnterEvent* event) override;
   void dragMoveEvent (QDragMoveEvent* event)  override;

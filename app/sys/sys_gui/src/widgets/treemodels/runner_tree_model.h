@@ -47,9 +47,9 @@ public:
 
   void reload(const std::list<std::shared_ptr<EcalSysRunner>>& runner_list, bool add_empty_runner = true);
 
-  int columnCount(const QModelIndex &parent = QModelIndex()) const;
+  int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
   using QAbstractTreeModel::index;
   QModelIndex index(const std::shared_ptr<EcalSysRunner>& runner, int column = 0);
