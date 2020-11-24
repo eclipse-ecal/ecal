@@ -40,7 +40,7 @@ MMA::MMA()
 
 MMA::~MMA()
 {
-  if (pImpl != nullptr)
+  if (pImpl != nullptr)t
   {
     delete pImpl;
   }
