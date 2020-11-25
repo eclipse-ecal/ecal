@@ -86,7 +86,7 @@ namespace eCAL
 
     // register writer and multicast group
     std::lock_guard<std::mutex> lock(m_topic_name_datawriter_sync);
-    m_topic_name_datawriter_map.insert(std::pair<std::string, CDataWriter*>(topic_name_, datawriter_));
+    m_topic_name_datawriter_map.emplace(std::pair<std::string, CDataWriter*>(topic_name_, datawriter_));
 
     return(true);
   }

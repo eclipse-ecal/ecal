@@ -38,7 +38,7 @@ EcalPlay::EcalPlay()
 
   eCAL::Initialize(0, nullptr, "eCALPlay");
 
-  play_thread_ = std::unique_ptr<PlayThread>(new PlayThread);
+  play_thread_ = std::make_unique<PlayThread>();
   play_thread_->Start();
 
   eCAL::Process::SetState(eCAL_Process_eSeverity::proc_sev_warning, eCAL_Process_eSeverity_Level::proc_sev_level1, "No measurement loaded");
@@ -57,7 +57,7 @@ bool EcalPlay::LoadMeasurement(const std::string& path)
 {
   EcalPlayLogger::Instance()->info("Loading measurement...");
 
-  std::shared_ptr<eCAL::eh5::HDF5Meas> measurement(new eCAL::eh5::HDF5Meas());
+  std::shared_ptr<eCAL::eh5::HDF5Meas> measurement(std::make_shared<eCAL::eh5::HDF5Meas>());
 
   std::string meas_dir;
   

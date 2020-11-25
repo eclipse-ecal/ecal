@@ -101,7 +101,7 @@ namespace eCAL
 
     // register reader
     std::lock_guard<std::mutex> lock(m_topic_name_datareader_sync);
-    m_topic_name_datareader_map.insert(std::pair<std::string, CDataReader*>(topic_name_, datareader_));
+    m_topic_name_datareader_map.emplace(std::pair<std::string, CDataReader*>(topic_name_, datareader_));
 
     return(true);
   }

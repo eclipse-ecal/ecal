@@ -75,7 +75,7 @@ namespace eCAL
       // ENABLE recorder
       if (!recorder_enabled_ && enabled)
       {
-        recorder_enabled_ = enabled;
+        recorder_enabled_ = true;
 
         QueueSetSettings_NoLock(complete_settings_); // TODO: do I need this? The recorder is in un-synced state and will set all settings anyways
 
@@ -95,7 +95,7 @@ namespace eCAL
       // DISABLE recorder
       else if (recorder_enabled_ && !enabled)
       {
-        recorder_enabled_ = enabled;
+        recorder_enabled_ = false;
         client_in_sync_   = false;
 
         // Remove all unfinished actions from the action queue
