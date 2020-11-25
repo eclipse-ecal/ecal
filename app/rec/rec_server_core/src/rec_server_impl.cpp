@@ -253,7 +253,7 @@ namespace eCAL
 
     void RecServerImpl::UpdateRecorderConnections(const HostsRunningEcalRec_T& hosts_running_ecal_rec)
     {
-      std::list<std::unique_ptr<AbstractRecorder>> connections_to_destroy; // The destructor of the rec connections may be expensive, so we copy the connections to this list and destroy the list without having the mutex locked
+      std::vector<std::unique_ptr<AbstractRecorder>> connections_to_destroy; // The destructor of the rec connections may be expensive, so we copy the connections to this list and destroy the list without having the mutex locked
 
       {
         std::unique_lock<decltype (connected_enabled_rec_clients_mutex_)> rec_clients_lock(connected_enabled_rec_clients_mutex_);

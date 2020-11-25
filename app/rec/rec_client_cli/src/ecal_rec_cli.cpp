@@ -344,7 +344,7 @@ int main(int argc, char** argv)
 
   std::cout << header_ss.str();
 
-  std::shared_ptr<eCAL::pb::rec_client::EcalRecClientService> rec_service_(new EcalRecService(ecal_rec));
+  std::shared_ptr<eCAL::pb::rec_client::EcalRecClientService> rec_service_(std::make_shared<EcalRecService>(ecal_rec));
   eCAL::protobuf::CServiceServer<eCAL::pb::rec_client::EcalRecClientService> rec_service_server_(rec_service_);
 
   while (eCAL::Ok())
@@ -424,8 +424,8 @@ void UpdateEcalState()
   else
   {
     const eCAL::rec::JobStatus*            recording_job_status_(nullptr);
-    std::list<const eCAL::rec::JobStatus*> flushing_jobs_;
-    std::list<const eCAL::rec::JobStatus*> uploading_jobs_;
+    std::vector<const eCAL::rec::JobStatus*> flushing_jobs_;
+    std::vector<const eCAL::rec::JobStatus*> uploading_jobs_;
 
     // Collect The currently recording job, the flushing jobs and the jobs that are being uploaded
     for (const auto& job_status : rec_status.job_statuses_)

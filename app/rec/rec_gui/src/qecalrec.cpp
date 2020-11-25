@@ -97,7 +97,7 @@ Date: $HOST{TIME %F %R}
                                               emit monitorUpdatedSignal(topic_info_map, hosts_running_ecal_rec);
                                             });
 
-  rec_server_service_ = std::shared_ptr<eCAL::pb::rec_server::EcalRecServerService>(new RecServerService());
+  rec_server_service_ = std::make_shared<RecServerService>();
   rec_server_service_server_.Create(rec_server_service_);
 }
 

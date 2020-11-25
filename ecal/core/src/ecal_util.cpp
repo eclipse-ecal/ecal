@@ -82,7 +82,7 @@ namespace eCAL
       eCAL::pb::Monitoring monitoring = GetMonitoring();
       std::string        host_name = Process::GetHostName();
 
-      std::list<int> proc_id_list;
+      std::vector<int> proc_id_list;
       for (int i = 0; i < monitoring.processes().size(); i++)
       {
         const eCAL::pb::Process& process = monitoring.processes(i);
@@ -126,7 +126,7 @@ namespace eCAL
       eCAL::pb::Monitoring monitoring = GetMonitoring();
       std::string        host_name = Process::GetHostName();
 
-      std::list<int> proc_id_list;
+      std::vector<int> proc_id_list;
       for (int i = 0; i < monitoring.processes().size(); i++)
       {
         const eCAL::pb::Process& process = monitoring.processes(i);
@@ -162,7 +162,7 @@ namespace eCAL
       eCAL::pb::Monitoring monitoring = GetMonitoring();
       std::string        host_name = Process::GetHostName();
 
-      std::list<int> proc_id_list;
+      std::vector<int> proc_id_list;
       for (int i = 0; i < monitoring.processes().size(); i++)
       {
         const eCAL::pb::Process& process = monitoring.processes(i);

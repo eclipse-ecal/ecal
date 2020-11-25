@@ -158,8 +158,8 @@ namespace eCAL
 
     void AddonManager::SetEnabledAddons(const std::set<std::string>& addon_ids)
     {
-      std::list<std::unique_ptr<Addon>> addons_to_enable;
-      std::list<std::unique_ptr<Addon>> addons_to_disable;
+      std::vector<std::unique_ptr<Addon>> addons_to_enable;
+      std::vector<std::unique_ptr<Addon>> addons_to_disable;
 
       // Collect addons to enable
       for (const std::string& addon_id : addon_ids)

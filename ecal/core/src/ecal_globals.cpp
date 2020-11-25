@@ -48,7 +48,7 @@ namespace eCAL
     /////////////////////
     if (config_instance == nullptr)
     {
-      config_instance = std::unique_ptr<CConfig>(new CConfig);
+      config_instance = std::make_unique<CConfig>();
       if (config_keys_)
       {
         config_instance->OverwriteKeys(*config_keys_);
@@ -62,7 +62,7 @@ namespace eCAL
     /////////////////////
     if (entity_register_instance == nullptr)
     {
-      entity_register_instance = std::unique_ptr<CEntityRegister>(new CEntityRegister);
+      entity_register_instance = std::make_unique<CEntityRegister>();
       new_initialization = true;
     }
 
@@ -71,7 +71,7 @@ namespace eCAL
     /////////////////////
     if(descgate_instance == nullptr) 
     {
-      descgate_instance = std::unique_ptr<CDescGate>(new CDescGate);
+      descgate_instance = std::make_unique<CDescGate>();
       new_initialization = true;
     }
 
@@ -80,7 +80,7 @@ namespace eCAL
     /////////////////////
     if(reggate_instance == nullptr) 
     {
-      reggate_instance = std::unique_ptr<CRegGate>(new CRegGate);
+      reggate_instance = std::make_unique<CRegGate>();
       new_initialization = true;
     }
 
@@ -90,7 +90,7 @@ namespace eCAL
     /////////////////////
     if(memfile_map_instance == nullptr) 
     {
-      memfile_map_instance = std::unique_ptr<SMemFileMap>(new SMemFileMap);
+      memfile_map_instance = std::make_unique<SMemFileMap>();
       new_initialization = true;
     }
 
@@ -99,7 +99,7 @@ namespace eCAL
     /////////////////////
     if(memfile_pool_instance == nullptr) 
     {
-      memfile_pool_instance = std::unique_ptr<CMemFileThreadPool>(new CMemFileThreadPool);
+      memfile_pool_instance = std::make_unique<CMemFileThreadPool>();
       new_initialization = true;
     }
 #endif /* !ECAL_LAYER_ICEORYX */
@@ -111,7 +111,7 @@ namespace eCAL
     {
       if (subgate_instance == nullptr)
       {
-        subgate_instance = std::unique_ptr<CSubGate>(new CSubGate);
+        subgate_instance = std::make_unique<CSubGate>();
         new_initialization = true;
       }
     }
@@ -123,7 +123,7 @@ namespace eCAL
     {
       if (pubgate_instance == nullptr)
       {
-        pubgate_instance = std::unique_ptr<CPubGate>(new CPubGate);
+        pubgate_instance = std::make_unique<CPubGate>();
         new_initialization = true;
       }
     }
@@ -135,7 +135,7 @@ namespace eCAL
     {
       if (servgate_instance == nullptr)
       {
-        servgate_instance = std::unique_ptr<CServGate>(new CServGate);
+        servgate_instance = std::make_unique<CServGate>();
         new_initialization = true;
       }
     }
@@ -147,7 +147,7 @@ namespace eCAL
     {
       if (timegate_instance == nullptr)
       {
-        timegate_instance = std::unique_ptr<CTimeGate>(new CTimeGate);
+        timegate_instance = std::make_unique<CTimeGate>();
         new_initialization = true;
       }
     }
@@ -159,7 +159,7 @@ namespace eCAL
     {
       if (monitoring_instance == nullptr)
       {
-        monitoring_instance = std::unique_ptr<CMonitoring>(new CMonitoring);
+        monitoring_instance = std::make_unique<CMonitoring>();
         new_initialization = true;
       }
     }
@@ -171,7 +171,7 @@ namespace eCAL
     {
       if (log_instance == nullptr)
       {
-        log_instance = std::unique_ptr<CLog>(new CLog);
+        log_instance = std::make_unique<CLog>();
         new_initialization = true;
       }
     }
