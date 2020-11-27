@@ -41,7 +41,7 @@ namespace eCAL
 
       std::string List::Usage() const
       {
-        return "[--tasks | --groups | --runners | ] [ID or name]";
+        return "[--tasks | --groups | --runners ] [ID or name]";
       }
 
       std::string List::Help() const
@@ -213,39 +213,39 @@ namespace eCAL
         }
 
         std::cout << std::right
-          << std::setw(longest_launch_order) << header_data[0] << " "
-          << std::left
-          << std::setw(longest_id)           << header_data[1] << " "
-          << std::setw(longest_task_name)    << header_data[2] << " "
-          << std::setw(longest_target_host)  << header_data[3] << " "
-          << std::setw(longest_pid)          << header_data[4] << " "
-          << std::setw(longest_current_host) << header_data[5] << " "
-          << std::setw(longest_state)        << header_data[6] << " "
-          << header_data[7]
-          << std::endl;
+                  << std::setw(longest_launch_order) << header_data[0] << " "
+                  << std::left
+                  << std::setw(longest_id)           << header_data[1] << " "
+                  << std::setw(longest_task_name)    << header_data[2] << " "
+                  << std::setw(longest_target_host)  << header_data[3] << " "
+                  << std::setw(longest_pid)          << header_data[4] << " "
+                  << std::setw(longest_current_host) << header_data[5] << " "
+                  << std::setw(longest_state)        << header_data[6] << " "
+                  << header_data[7]
+                  << std::endl;
 
         std::cout << std::string(longest_launch_order,  '-') << " "
-          << std::string(longest_id,            '-') << " "
-          << std::string(longest_task_name,     '-') << " "
-          << std::string(longest_target_host,   '-') << " "
-          << std::string(longest_pid,           '-') << " "
-          << std::string(longest_current_host,  '-') << " "
-          << std::string(longest_state,         '-') << " "
-          << std::string(header_data[7].size(), '-')
-          << std::endl;
+                  << std::string(longest_id,            '-') << " "
+                  << std::string(longest_task_name,     '-') << " "
+                  << std::string(longest_target_host,   '-') << " "
+                  << std::string(longest_pid,           '-') << " "
+                  << std::string(longest_current_host,  '-') << " "
+                  << std::string(longest_state,         '-') << " "
+                  << std::string(header_data[7].size(), '-')
+                  << std::endl;
 
         for (size_t i = 0; i < string_data.size(); i++)
         {
           std::vector<std::string>& line = string_data[i];
 
           std::cout << std::right
-            << std::setw(longest_launch_order) << line[0] << " "
-            << std::left
-            << std::setw(longest_id)           << line[1] << " "
-            << std::setw(longest_task_name)    << line[2] << " "
-            << std::setw(longest_target_host)  << line[3] << " "
-            << std::setw(longest_pid)          << line[4] << " "
-            << std::setw(longest_current_host) << line[5] << " ";
+                    << std::setw(longest_launch_order) << line[0] << " "
+                    << std::left
+                    << std::setw(longest_id)           << line[1] << " "
+                    << std::setw(longest_task_name)    << line[2] << " "
+                    << std::setw(longest_target_host)  << line[3] << " "
+                    << std::setw(longest_pid)          << line[4] << " "
+                    << std::setw(longest_current_host) << line[5] << " ";
 
           switch (serverity_data[i])
           {
@@ -266,8 +266,8 @@ namespace eCAL
           }
 
           std::cout << std::setw(longest_state)        << line[6] << termcolor::reset << " "
-            << line[7]
-            << std::endl;
+                    << line[7]
+                    << std::endl;
         }
 
         return Error::ErrorCode::OK;
@@ -376,7 +376,7 @@ namespace eCAL
                   << std::string(header_data[1].size(), '-')
                   << std::endl;
 
-        for (int i = 0; i < string_data.size(); i++)
+        for (size_t i = 0; i < string_data.size(); i++)
         {
           std::vector<std::string>& line = string_data[i];
 
@@ -440,7 +440,7 @@ namespace eCAL
                   << std::string(header_data[2].size(), '-')
                   << std::endl;
 
-        for (int i = 0; i < string_data.size(); i++)
+        for (size_t i = 0; i < string_data.size(); i++)
         {
           std::vector<std::string>& line = string_data[i];
 
