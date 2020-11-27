@@ -33,6 +33,10 @@ namespace eCAL
     namespace command
     {
       Error ToTaskList(const std::shared_ptr<EcalSys> ecalsys_instance, const std::vector<std::string>& argv, std::list<std::shared_ptr<EcalSysTask>>& output_tasklist);
+
+      Error ToRunnerList(const std::shared_ptr<EcalSys> ecalsys_instance, const std::vector<std::string>& argv, std::list<std::shared_ptr<EcalSysRunner>>& output_runnerlist);
+
+      Error ToGroupList(const std::shared_ptr<EcalSys> ecalsys_instance, const std::vector<std::string>& argv, std::list<std::shared_ptr<TaskGroup>>& output_grouplist);
     }
   }
 }

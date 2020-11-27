@@ -46,6 +46,8 @@ namespace eCAL
 
         // Task based errors
         TASK_DOES_NOT_EXIST,
+        RUNNER_DOES_NOT_EXIST,
+        GROUP_DOES_NOT_EXIST,
         TASK_ACTION_IS_RUNNING,
 
         // File based errors
@@ -81,8 +83,10 @@ namespace eCAL
         case UNKNOWN_COMMAND:            return "Unknown command";               break;
         case UNSUPPORTED_ACTION:         return "Unsupported action";            break;
 
-        // Recording based errors
+        // Task based errors
         case TASK_DOES_NOT_EXIST:        return "Task does not exist";           break;
+        case RUNNER_DOES_NOT_EXIST:      return "Runner does not exist";         break;
+        case GROUP_DOES_NOT_EXIST:       return "Group does not exist";          break;
         case TASK_ACTION_IS_RUNNING:     return "An action is already running";  break;
 
         // File based errors

@@ -21,6 +21,8 @@
 
 #include "command.h"
 
+#include <ecalsys/task/task_group.h>
+
 namespace eCAL
 {
   namespace sys
@@ -34,6 +36,15 @@ namespace eCAL
         std::string Example()  const override;
 
         eCAL::sys::Error Execute(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::vector<std::string>& argv) override;
+
+        eCAL::sys::Error ListTasks(const std::list<std::shared_ptr<EcalSysTask>>& task_list);
+        eCAL::sys::Error ListSingleTask(const std::shared_ptr<EcalSysTask>& task);
+
+        eCAL::sys::Error ListRunners(const std::list<std::shared_ptr<EcalSysRunner>>& runner_list);
+        eCAL::sys::Error ListSingleRunner(const std::shared_ptr<EcalSysRunner>& runner);
+
+        eCAL::sys::Error ListGroups(const std::list<std::shared_ptr<TaskGroup>>& group_list);
+        eCAL::sys::Error ListSingleGroup(const std::shared_ptr<TaskGroup>& group);
       };
     }
   }
