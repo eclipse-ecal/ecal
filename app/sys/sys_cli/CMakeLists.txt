@@ -21,24 +21,36 @@ project(sys)
 find_package(tclap REQUIRED)
 find_package(Protobuf REQUIRED)
 
-set(ecalsys_src
-  src/ecalsys_app.cpp
+set(source_files
+  src/command_executor.cpp
+  src/command_executor.h
+  src/ecalsys_cli.cpp
   src/ecalsys_service.cpp
-  src/ecalsys_util.cpp
-)
-
-set(ecalsys_header
   src/ecalsys_service.h
+  src/ecalsys_util.cpp
   src/ecalsys_util.h
+  src/sys_error.h
+
+  src/commands/command.h
+  src/commands/helpers.cpp
+  src/commands/helpers.h
+  src/commands/list.cpp
+  src/commands/list.h
+  src/commands/restart_tasks.cpp
+  src/commands/restart_tasks.h
+  src/commands/start_tasks.cpp
+  src/commands/start_tasks.h
+  src/commands/stop_tasks.cpp
+  src/commands/stop_tasks.h
 )
 
 if(WIN32)
-  set(ecalsys_win_src
+  set(win32_source_files
     src/ecalsys.rc
   )
 endif()
 
-ecal_add_app_console(${PROJECT_NAME} ${ecalsys_src} ${ecalsys_win_src} ${ecalsys_header})
+ecal_add_app_console(${PROJECT_NAME} ${source_files} ${win32_source_files})
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
@@ -54,6 +66,15 @@ target_link_libraries(${PROJECT_NAME}
   protobuf::libprotobuf
   CustomTclap
 )
+
+if(MSVC)
+  # Create a source tree that mirrors the filesystem
+  msvc_source_tree(
+    ${source_files}
+    ${win32_source_files}
+  )
+endif()
+
 
 ecal_install_app(${PROJECT_NAME})
 
