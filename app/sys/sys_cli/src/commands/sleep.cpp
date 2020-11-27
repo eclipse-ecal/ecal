@@ -50,7 +50,7 @@ namespace eCAL
         return "3.5";
       }
 
-      eCAL::sys::Error Sleep::Execute(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::vector<std::string>& argv)
+      eCAL::sys::Error Sleep::Execute(const std::shared_ptr<EcalSys>& /*ecalsys_instance*/, const std::vector<std::string>& argv)
       {
         if (argv.size() > 1)
           return Error(Error::ErrorCode::TOO_MANY_PARAMETERS, EcalUtils::String::Join(" ", std::vector<std::string>(std::next(argv.begin()), argv.end())));
@@ -83,6 +83,8 @@ namespace eCAL
         std::cout << "Sleeping for " << std::chrono::duration_cast<std::chrono::duration<double>>(time_to_sleep).count() << "s..." << std::endl;
 
         std::this_thread::sleep_for(time_to_sleep);
+
+        return Error::ErrorCode::OK;
       }
     }
   }

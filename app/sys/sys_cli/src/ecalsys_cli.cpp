@@ -24,6 +24,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <thread>
 
 #include <ecal/ecal.h>
 #include <ecalsys/ecal_sys.h>

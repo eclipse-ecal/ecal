@@ -135,6 +135,8 @@ namespace eCAL
             return ListSingleGroup(group_list.front());
           }
         }
+
+        return Error(Error::ErrorCode::PARAMETER_ERROR);
       }
 
       eCAL::sys::Error List::ListTasks(const std::list<std::shared_ptr<EcalSysTask>>& task_list)
@@ -232,7 +234,7 @@ namespace eCAL
           << std::string(header_data[7].size(), '-')
           << std::endl;
 
-        for (int i = 0; i < string_data.size(); i++)
+        for (size_t i = 0; i < string_data.size(); i++)
         {
           std::vector<std::string>& line = string_data[i];
 

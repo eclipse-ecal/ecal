@@ -17,8 +17,6 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
-
 #include <vector>
 #include <string>
 #include <sys_error.h>
