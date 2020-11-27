@@ -33,12 +33,16 @@ set(source_files
   src/sys_error.h
 
   src/commands/command.h
+  src/commands/exit.cpp
+  src/commands/exit.h
   src/commands/helpers.cpp
   src/commands/helpers.h
   src/commands/list.cpp
   src/commands/list.h
   src/commands/restart_tasks.cpp
   src/commands/restart_tasks.h
+  src/commands/sleep.cpp
+  src/commands/sleep.h
   src/commands/start_tasks.cpp
   src/commands/start_tasks.h
   src/commands/stop_tasks.cpp

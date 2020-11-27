@@ -41,7 +41,7 @@ namespace eCAL
 
       std::string List::Usage() const
       {
-        return "[--groups] [--runners] [--tasks] [ID or name]";
+        return "[--tasks | --groups | --runners | ] [ID or name]";
       }
 
       std::string List::Help() const
