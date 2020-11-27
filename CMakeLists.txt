@@ -62,6 +62,7 @@ option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build protobuf with eCAL"       
 option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                            ON)
 option(ECAL_THIRDPARTY_BUILD_TINYXML2          "Build tinyxml2 with eCAL"                                          ON)
 option(ECAL_THIRDPARTY_BUILD_FINEFTP           "Build fineFTP with eCAL"                                           ON)
+option(ECAL_THIRDPARTY_BUILD_TERMCOLOR         "Build termcolor with eCAL"                                         ON)
 
 # option(ECAL_THIRDPARTY_BUILD_ZLIB              "Build zlib with eCAL"                                              ON)
 # option(ECAL_THIRDPARTY_BUILD_LIBSSH2           "Build libssh2 with eCAL"                                           ON)
@@ -167,6 +168,11 @@ if (ECAL_THIRDPARTY_BUILD_FINEFTP)
   add_subdirectory(thirdparty/fineftp-server/fineftp-server EXCLUDE_FROM_ALL)
   set_property(TARGET server PROPERTY FOLDER lib/fineftp)
   add_library(fineftp::server ALIAS server)
+endif ()
+
+if (ECAL_THIRDPARTY_BUILD_TERMCOLOR)
+  list(APPEND as_subproject termcolor)
+  add_subdirectory(thirdparty/termcolor EXCLUDE_FROM_ALL)
 endif ()
 
 # if (ECAL_THIRDPARTY_BUILD_LIBSSH2)

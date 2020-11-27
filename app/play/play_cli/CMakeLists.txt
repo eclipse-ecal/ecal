@@ -20,6 +20,7 @@ project(play)
 
 find_package(simpleini REQUIRED)
 find_package(tclap REQUIRED)
+find_package(termcolor REQUIRED)
 
 set(source_files
   src/convert_utf.cpp
@@ -52,6 +53,7 @@ target_compile_definitions(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
     simpleini::simpleini
+    termcolor::termcolor
     tclap::tclap
     eCAL::play_core
 )

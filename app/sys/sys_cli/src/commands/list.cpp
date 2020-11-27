@@ -23,6 +23,13 @@
 #include <iostream>
 #include <iomanip>
 
+// termcolor pollutes everything by including Windows.h in the header file.
+#ifdef _WIN32
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#endif // _WIN32
+#include <termcolor/termcolor.hpp>
+
 #include <ecal_utils/string.h>
 
 namespace eCAL
@@ -54,7 +61,6 @@ namespace eCAL
           // Print a list of all tasks
 
           std::vector<std::string> header_data = {"#", "ID", "Task", "Target", "PID", "Current", "State", "Info"};
-          std::vector<std::vector<std::string>> string_data;
 
           size_t longest_launch_order = header_data[0].size();
           size_t longest_id           = header_data[1].size();
@@ -65,6 +71,12 @@ namespace eCAL
           size_t longest_state        = header_data[6].size();
 
           auto task_list = ecalsys_instance->GetTaskList();
+
+          std::vector<std::vector<std::string>> string_data;
+          std::vector<eCAL_Process_eSeverity>   serverity_data;
+          string_data   .reserve(task_list.size());
+          serverity_data.reserve(task_list.size());
+
           for (const auto& task : task_list)
           {
             std::vector<std::string> this_task_string_data;
@@ -80,10 +92,33 @@ namespace eCAL
 
             this_task_string_data.push_back(task->GetHostStartedOn());
 
+            std::stringstream state_ss;
             auto monitoring_state = task->GetMonitoringTaskState();
             std::string state, level;
             monitoring_state.ToString(state, level);
-            this_task_string_data.push_back(state);
+
+            serverity_data.push_back(monitoring_state.severity);
+
+            switch (monitoring_state.severity)
+            {
+            case eCAL_Process_eSeverity::proc_sev_healthy:
+              state_ss << termcolor::on_green << state << termcolor::reset;
+              break;
+            case eCAL_Process_eSeverity::proc_sev_warning:
+              state_ss << termcolor::on_yellow << state << termcolor::reset;
+              break;
+            case eCAL_Process_eSeverity::proc_sev_critical:
+              state_ss << termcolor::on_red << state << termcolor::reset;
+              break;
+            case eCAL_Process_eSeverity::proc_sev_failed:
+              state_ss << termcolor::on_magenta << state << termcolor::reset;
+              break;
+            default:
+              state_ss << state;
+              break;
+            }
+
+            this_task_string_data.push_back(state_ss.str());
 
             this_task_string_data.push_back(monitoring_state.info);
 
@@ -98,46 +133,63 @@ namespace eCAL
             string_data.push_back(std::move(this_task_string_data));
           }
 
-          std::stringstream list_ss;
-
-          list_ss << std::right
-                  << std::setw(longest_launch_order) << header_data[0] << " "
-                  << std::left
-                  << std::setw(longest_id)           << header_data[1] << " "
-                  << std::setw(longest_task_name)    << header_data[2] << " "
-                  << std::setw(longest_target_host)  << header_data[3] << " "
-                  << std::setw(longest_pid)          << header_data[4] << " "
-                  << std::setw(longest_current_host) << header_data[5] << " "
-                  << std::setw(longest_state)        << header_data[6] << " "
-                  << header_data[7]
-                  << std::endl;
-
-          list_ss << std::string(longest_launch_order,  '-') << " "
-                  << std::string(longest_id,            '-') << " "
-                  << std::string(longest_task_name,     '-') << " "
-                  << std::string(longest_target_host,   '-') << " "
-                  << std::string(longest_pid,           '-') << " "
-                  << std::string(longest_current_host,  '-') << " "
-                  << std::string(longest_state,         '-') << " "
-                  << std::string(header_data[7].size(), '-')
-                  << std::endl;
-
-          for (const auto& line : string_data)
-          {
-            list_ss << std::right
-                    << std::setw(longest_launch_order) << line[0] << " "
+          std::cout << std::right
+                    << std::setw(longest_launch_order) << header_data[0] << " "
                     << std::left
-                    << std::setw(longest_id)           << line[1] << " "
-                    << std::setw(longest_task_name)    << line[2] << " "
-                    << std::setw(longest_target_host)  << line[3] << " "
-                    << std::setw(longest_pid)          << line[4] << " "
-                    << std::setw(longest_current_host) << line[5] << " "
-                    << std::setw(longest_state)        << line[6] << " "
-                    << line[7]
+                    << std::setw(longest_id)           << header_data[1] << " "
+                    << std::setw(longest_task_name)    << header_data[2] << " "
+                    << std::setw(longest_target_host)  << header_data[3] << " "
+                    << std::setw(longest_pid)          << header_data[4] << " "
+                    << std::setw(longest_current_host) << header_data[5] << " "
+                    << std::setw(longest_state)        << header_data[6] << " "
+                    << header_data[7]
                     << std::endl;
-          }
 
-          std::cout << list_ss.str();
+          std::cout << std::string(longest_launch_order,  '-') << " "
+                    << std::string(longest_id,            '-') << " "
+                    << std::string(longest_task_name,     '-') << " "
+                    << std::string(longest_target_host,   '-') << " "
+                    << std::string(longest_pid,           '-') << " "
+                    << std::string(longest_current_host,  '-') << " "
+                    << std::string(longest_state,         '-') << " "
+                    << std::string(header_data[7].size(), '-')
+                    << std::endl;
+
+          for (int i = 0; i < string_data.size(); i++)
+          {
+            std::vector<std::string>& line = string_data[i];
+
+            std::cout << std::right
+                      << std::setw(longest_launch_order) << line[0] << " "
+                      << std::left
+                      << std::setw(longest_id)           << line[1] << " "
+                      << std::setw(longest_task_name)    << line[2] << " "
+                      << std::setw(longest_target_host)  << line[3] << " "
+                      << std::setw(longest_pid)          << line[4] << " "
+                      << std::setw(longest_current_host) << line[5] << " ";
+
+            switch (serverity_data[i])
+            {
+            case eCAL_Process_eSeverity::proc_sev_healthy:
+              std::cout << termcolor::on_green;
+              break;
+            case eCAL_Process_eSeverity::proc_sev_warning:
+              std::cout << termcolor::on_yellow;
+              break;
+            case eCAL_Process_eSeverity::proc_sev_critical:
+              std::cout << termcolor::on_red;
+              break;
+            case eCAL_Process_eSeverity::proc_sev_failed:
+              std::cout << termcolor::on_magenta;
+              break;
+            default:
+              break;
+            }
+
+            std::cout << std::setw(longest_state)        << line[6] << termcolor::reset << " "
+                      << line[7]
+                      << std::endl;
+          }
 
           return Error::ErrorCode::OK;
         }
@@ -153,8 +205,6 @@ namespace eCAL
           else
           {
             auto task = task_list.front();
-
-            std::stringstream info_ss;
 
             std::string visibility_string;
             switch (task->GetVisibility())
@@ -182,25 +232,45 @@ namespace eCAL
             auto task_state = task->GetMonitoringTaskState();
             task_state.ToString(state, level);
 
-            info_ss << "ID:                  " << task->GetId() << std::endl;
-            info_ss << "Launch#:             " << task->GetLaunchOrder() << std::endl;
-            info_ss << "Task Name:           " << task->GetName() << std::endl;
-            info_ss << "Target Host:         " << task->GetTarget() << std::endl;
-            info_ss << "Runner:              " << task->GetRunner()->GetName() << " (" << task->GetRunner()->GetId() << ")" << std::endl;
-            info_ss << "Path:                " << task->GetAlgoPath() << std::endl;
-            info_ss << "Working Dir:         " << task->GetWorkingDir() << std::endl;
-            info_ss << "Command line:        " << task->GetCommandLineArguments() << std::endl;
-            info_ss << "Visibility:          " << visibility_string << std::endl;
-            info_ss << "Waiting time:        " << std::chrono::duration_cast<std::chrono::duration<double>>(task->GetTimeoutAfterStart()).count() << " s" << std::endl;
-            info_ss << "Monitoring enabled:  " << (task->IsMonitoringEnabled() ? "Yes" : "No") << std::endl;
-            info_ss << "Restart by severity: " << (task->IsRestartBySeverityEnabled() ? "Yes: " + task->GetRestartAtSeverity().ToString() : "No") << std::endl;
-            info_ss << "PID:                 " << (pids.empty() ? "" : std::to_string(pids[0])) << std::endl;
-            info_ss << "Current Host:        " << task->GetHostStartedOn() << std::endl;
-            info_ss << "State:               " << (task_state.severity == eCAL_Process_eSeverity::proc_sev_unknown ? state : state + " " + level) << std::endl;
-            info_ss << "Info:                " << task_state.info << std::endl;
+            auto runner = task->GetRunner();
 
+            std::cout << "ID:                  " << task->GetId() << std::endl;
+            std::cout << "Launch#:             " << task->GetLaunchOrder() << std::endl;
+            std::cout << "Task Name:           " << task->GetName() << std::endl;
+            std::cout << "Target Host:         " << task->GetTarget() << std::endl;
+            std::cout << "Runner:              " << (runner ? runner->GetName() +" (" + std::to_string(task->GetRunner()->GetId()) + ")" : "") << std::endl;
+            std::cout << "Path:                " << task->GetAlgoPath() << std::endl;
+            std::cout << "Working Dir:         " << task->GetWorkingDir() << std::endl;
+            std::cout << "Command line:        " << task->GetCommandLineArguments() << std::endl;
+            std::cout << "Visibility:          " << visibility_string << std::endl;
+            std::cout << "Waiting time:        " << std::chrono::duration_cast<std::chrono::duration<double>>(task->GetTimeoutAfterStart()).count() << " s" << std::endl;
+            std::cout << "Monitoring enabled:  " << (task->IsMonitoringEnabled() ? "Yes" : "No") << std::endl;
+            std::cout << "Restart by severity: " << (task->IsRestartBySeverityEnabled() ? "Yes: " + task->GetRestartAtSeverity().ToString() : "No") << std::endl;
+            std::cout << "PID:                 " << (pids.empty() ? "" : std::to_string(pids[0])) << std::endl;
+            std::cout << "Current Host:        " << task->GetHostStartedOn() << std::endl;
 
-            std::cout << info_ss.str();
+            switch (task_state.severity)
+            {
+            case eCAL_Process_eSeverity::proc_sev_healthy:
+              std::cout << termcolor::on_green;
+              break;
+            case eCAL_Process_eSeverity::proc_sev_warning:
+              std::cout << termcolor::on_yellow;
+              break;
+            case eCAL_Process_eSeverity::proc_sev_critical:
+              std::cout << termcolor::on_red;
+              break;
+            case eCAL_Process_eSeverity::proc_sev_failed:
+              std::cout << termcolor::on_magenta;
+              break;
+            default:
+              break;
+            }
+
+            std::cout << "State:               " << (task_state.severity == eCAL_Process_eSeverity::proc_sev_unknown ? state : state + " " + level) << std::endl;
+            std::cout << termcolor::reset;
+
+            std::cout << "Info:                " << task_state.info << std::endl;
             
             return eCAL::sys::Error::ErrorCode::OK;
           }

@@ -20,6 +20,7 @@ project(sys)
 
 find_package(tclap REQUIRED)
 find_package(Protobuf REQUIRED)
+find_package(termcolor REQUIRED)
 
 set(source_files
   src/command_executor.cpp
@@ -62,6 +63,7 @@ create_targets_protobuf()
 
 target_link_libraries(${PROJECT_NAME}
   tclap::tclap
+  termcolor::termcolor
   eCAL::sys_core
   protobuf::libprotobuf
   CustomTclap
