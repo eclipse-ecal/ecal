@@ -129,10 +129,10 @@ void eCALSysServiceImpl::RestartTasks(::google::protobuf::RpcController* /*contr
   response->set_result(eCAL::pb::sys::Response::success);
 }
 
-void eCALSysServiceImpl::GetStatus(::google::protobuf::RpcController* controller,
+void eCALSysServiceImpl::GetStatus(::google::protobuf::RpcController* /*controller*/,
   const ::eCAL::pb::sys::GenericRequest* request,
   ::eCAL::pb::sys::State* response,
-  ::google::protobuf::Closure* done)
+  ::google::protobuf::Closure* /*done*/)
 {
   eCAL::sys::proto_helpers::ToProtobuf(*response, *ecalsys_instance.get());
 }
