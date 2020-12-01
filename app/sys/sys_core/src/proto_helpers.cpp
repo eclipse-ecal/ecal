@@ -122,8 +122,8 @@ namespace eCAL
         std::shared_ptr<TaskGroup::GroupState> dummy_state2 = std::make_shared<TaskGroup::GroupState>();
 
         // We create 2 faked states that appear the same, so always one of them will be available.
-        dummy_state1->SetName(task_group_pb.name());
-        dummy_state2->SetName(task_group_pb.name());
+        dummy_state1->SetName(task_group_pb.state());
+        dummy_state2->SetName(task_group_pb.state());
         dummy_state1->SetColor(TaskGroup::GroupState::Color(
                 static_cast<uint8_t>(task_group_pb.colour().r())
                 , static_cast<uint8_t>(task_group_pb.colour().g())
@@ -144,6 +144,7 @@ namespace eCAL
         std::list<std::shared_ptr<TaskGroup::GroupState>> group_state_list { dummy_state1, dummy_state2 }; 
 
         task_group->SetGroupStateList(group_state_list);
+        task_group->SetName(task_group_pb.name());
       }
 
 
@@ -256,6 +257,11 @@ namespace eCAL
           task_group_pb.mutable_colour()->set_r(state->GetColor().red);
           task_group_pb.mutable_colour()->set_g(state->GetColor().green);
           task_group_pb.mutable_colour()->set_b(state->GetColor().blue);
+        }
+
+        for (const auto& task : task_group->GetAllTasks())
+        {
+          ToProtobuf(*task_group_pb.add_tasks(), task);
         }
       }
 
