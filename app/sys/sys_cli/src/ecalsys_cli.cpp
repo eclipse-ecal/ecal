@@ -27,8 +27,19 @@
 #include <thread>
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_client.h>
 #include <ecalsys/ecal_sys.h>
 #include <ecalsys/esys_defs.h>
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4100 4505 4800)
+#endif
+#include <ecal/msg/protobuf/client.h>
+#include <ecal/pb/sys/service.pb.h>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 
 #include "tclap/CmdLine.h"
@@ -79,6 +90,8 @@ int main(int argc, char** argv)
   std::vector<TCLAP::Arg*> arg_vector =
   {
     &config_arg,
+    &remote_control_arg,
+    &remote_control_host_arg,
     &start_arg,
     &stop_arg,
     &restart_arg,
@@ -113,61 +126,84 @@ int main(int argc, char** argv)
   {
     cfg_file_name             = unlabled_config_arg            .getValue()[0];
   }
+  
+  // Ecalsys instance and ecalsys service. We will only use one of those, depending on the remote-control setting
+  std::shared_ptr<EcalSys>                                                ecalsys_instance;
+  std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>> remote_ecalsys_service;
 
-  /*****************************************************************************************************/
-  /*  check for the 2 options "local-tasks-only" and "use-localhost-for-all-tasks" used simultaneously */
-  /*****************************************************************************************************/
-  if (local_tasks_only_arg.isSet() && use_localhost_for_all_tasks_arg.isSet())
+  if (remote_control_arg.isSet()) // Remote-control-mode
   {
-    std::cout << "eCALSys cannot be used with both options \"" << local_tasks_only_arg.getName() << "\" and \"" << use_localhost_for_all_tasks_arg.getName() << "\"" << std::endl;
-    std::cout << "Please use maximum one option." << std::endl;
-    return EXIT_FAILURE;
-  }
-  
-  /************************************************************************/
-  /*  initialize eCAL API                                                 */
-  /************************************************************************/
-  eCAL::Initialize(0, nullptr, "eCALSys", eCAL::Init::All);
-  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
-  
-  /************************************************************************/
-  /*  load the configuration                                              */
-  /************************************************************************/
-  std::shared_ptr<EcalSys> ecalsys_inst;
-  try
-  {
-    ecalsys_inst = std::make_shared<EcalSys>(cfg_file_name);
-  }
-  catch (const std::exception& e)
-  {
-    std::cerr << e.what() << std::endl;
-    return EXIT_FAILURE;
-  }
-  
-  if (!ecalsys_inst->IsConfigOpened())
-  {
-    std::cout << "Configuration file could not be opened => application will close" << std::endl;
-    return EXIT_FAILURE;
-  }
-  
-  // Create the eCALSys service
-  //std::shared_ptr<eCALSysServiceImpl> ecalsys_service_impl = std::make_shared<eCALSysServiceImpl>(ecalsys_inst);
-  //eCAL::protobuf::CServiceServer<eCAL::pb::sys::Service> ecalsys_service(ecalsys_service_impl);
-  
-  // Give the monitor some time to connect to eCAL and update
-  std::this_thread::sleep_for(std::chrono::seconds(2));
+    /************************************************************************/
+    /*  Remote control mode                                                 */
+    /************************************************************************/
 
-  // TODO:do i need this?
-  //// Add the verbose function, if required
-  //if (verbose_flag)
-  //{
-  //  ecalsys_inst->SetMonitorUpdateCallback([&ecalsys_inst]() {showMonitoringSummary(ecalsys_inst); });
-  //}
+    eCAL::Initialize(0, nullptr, "eCALSys-Remote", eCAL::Init::All);
+    eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
+
+    remote_ecalsys_service = std::make_shared<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>();
+
+  }
+  else                            // Non-remote control mode
+  {
+    /************************************************************************/
+    /*  Non-remote control mode                                             */
+    /************************************************************************/
+
+    /*****************************************************************************************************/
+    /*  check for the 2 options "local-tasks-only" and "use-localhost-for-all-tasks" used simultaneously */
+    /*****************************************************************************************************/
+    if (local_tasks_only_arg.isSet() && use_localhost_for_all_tasks_arg.isSet())
+    {
+      std::cout << "eCALSys cannot be used with both options \"" << local_tasks_only_arg.getName() << "\" and \"" << use_localhost_for_all_tasks_arg.getName() << "\"" << std::endl;
+      std::cout << "Please use maximum one option." << std::endl;
+      return EXIT_FAILURE;
+    }
+
+    /************************************************************************/
+    /*  initialize eCAL API                                                 */
+    /************************************************************************/
+    eCAL::Initialize(0, nullptr, "eCALSys", eCAL::Init::All);
+    eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
+
+    /************************************************************************/
+    /*  load the configuration                                              */
+    /************************************************************************/
+    try
+    {
+      ecalsys_instance = std::make_shared<EcalSys>(cfg_file_name);
+    }
+    catch (const std::exception& e)
+    {
+      std::cerr << e.what() << std::endl;
+      return EXIT_FAILURE;
+    }
+
+    if (!ecalsys_instance->IsConfigOpened())
+    {
+      std::cout << "Configuration file could not be opened => application will close" << std::endl;
+      return EXIT_FAILURE;
+    }
+
+    // Create the eCALSys service
+    //std::shared_ptr<eCALSysServiceImpl> ecalsys_service_impl = std::make_shared<eCALSysServiceImpl>(ecalsys_inst);
+    //eCAL::protobuf::CServiceServer<eCAL::pb::sys::Service> ecalsys_service(ecalsys_service_impl);
+
+    // Give the monitor some time to connect to eCAL and update
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    // TODO:do i need this?
+    //// Add the verbose function, if required
+    //if (verbose_flag)
+    //{
+    //  ecalsys_inst->SetMonitorUpdateCallback([&ecalsys_inst]() {showMonitoringSummary(ecalsys_inst); });
+    //}
+  }
+
 
   if(interactive_arg.isSet())
   {
     std::cout << "Using interactive mode. Type \"help\" to view a list of all commands." << std::endl;
-    eCAL::sys::CommandExecutor command_executor(ecalsys_inst);
+    eCAL::sys::CommandExecutor command_executor(ecalsys_instance, remote_control_host_arg.getValue(), remote_ecalsys_service);
     for(;;)
     {
       std::cout << ">> ";
@@ -181,6 +217,9 @@ int main(int argc, char** argv)
       }
     }
   }
+
+
+  return EXIT_SUCCESS;
 }
 
 

@@ -50,7 +50,17 @@ namespace eCAL
         return "3.5";
       }
 
-      eCAL::sys::Error Sleep::Execute(const std::shared_ptr<EcalSys>& /*ecalsys_instance*/, const std::vector<std::string>& argv)
+      eCAL::sys::Error Sleep::Execute(const std::shared_ptr<EcalSys>& /*ecalsys_instance*/, const std::vector<std::string>& argv) const
+      {
+        return Execute(argv);
+      }
+
+      eCAL::sys::Error Sleep::Execute(const std::string& /*hostname*/, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& /*remote_ecalsys_service*/, const std::vector<std::string>& argv) const
+      {
+        return Execute(argv);
+      }
+
+      eCAL::sys::Error Sleep::Execute(const std::vector<std::string>& argv) const
       {
         if (argv.size() > 1)
           return Error(Error::ErrorCode::TOO_MANY_PARAMETERS, EcalUtils::String::Join(" ", std::vector<std::string>(std::next(argv.begin()), argv.end())));
@@ -67,7 +77,7 @@ namespace eCAL
           std::replace(seconds_string.begin(), seconds_string.end(), '.', decimal_point);
 
           double seconds_to_sleep = std::stod(seconds_string);
-          
+
           time_to_sleep = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(seconds_to_sleep));
         }
         catch (const std::exception& e)
@@ -86,6 +96,7 @@ namespace eCAL
 
         return Error::ErrorCode::OK;
       }
+
     }
   }
 }

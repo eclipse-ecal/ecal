@@ -26,6 +26,16 @@
 #include <memory>
 #include <ecalsys/ecal_sys.h>
 
+#include <ecal/ecal_client.h>
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4100 4505 4800)
+#endif
+#include <ecal/pb/sys/service.pb.h>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
 namespace eCAL
 {
   namespace sys
@@ -37,6 +47,14 @@ namespace eCAL
       Error ToRunnerList(const std::shared_ptr<EcalSys> ecalsys_instance, const std::vector<std::string>& argv, std::list<std::shared_ptr<EcalSysRunner>>& output_runnerlist);
 
       Error ToGroupList(const std::shared_ptr<EcalSys> ecalsys_instance, const std::vector<std::string>& argv, std::list<std::shared_ptr<TaskGroup>>& output_grouplist);
+
+      Error GetCompleteTaskList(const eCAL::pb::sys::State& state_pb, std::list<std::shared_ptr<EcalSysTask>>& output_tasklist);
+
+      Error GetCompleteGroupList(const eCAL::pb::sys::State& state_pb, std::list<std::shared_ptr<TaskGroup>>& output_grouplist);
+
+      Error ToTaskList(const eCAL::pb::sys::State& state_pb, const std::vector<std::string>& argv, std::list<std::shared_ptr<EcalSysTask>>& output_tasklist);
+
+      Error ToGroupList(const eCAL::pb::sys::State& state_pb, const std::vector<std::string>& argv, std::list<std::shared_ptr<TaskGroup>>& output_grouplist);
     }
   }
 }

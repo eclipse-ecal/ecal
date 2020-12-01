@@ -17,8 +17,6 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
-
 #include "command.h"
 
 namespace eCAL
@@ -27,17 +25,20 @@ namespace eCAL
   {
     namespace command
     {
-      class Sleep : public Command
+      eCAL::sys::Error Command::GetRemoteSysStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, eCAL::pb::sys::State& state_output) const
       {
-        std::string Usage()    const override;
-        std::string Help()     const override;
-        std::string Example()  const override;
+        SServiceInfo service_info;
+        bool success = remote_ecalsys_service->Call(hostname, "GetStatus", eCAL::pb::sys::GenericRequest(), service_info, state_output);
 
-        eCAL::sys::Error Execute(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::vector<std::string>& argv) const override;
-        eCAL::sys::Error Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, const std::vector<std::string>& argv) const override;
-
-        eCAL::sys::Error Execute(const std::vector<std::string>& argv) const;
-      };
+        if (!success)
+        {
+          return eCAL::sys::Error(eCAL::sys::Error::ErrorCode::REMOTE_HOST_UNAVAILABLE, service_info.host_name + ": " + service_info.error_msg);
+        }
+        else
+        {
+          return eCAL::sys::Error::OK;
+        }
+      }
     }
   }
 }

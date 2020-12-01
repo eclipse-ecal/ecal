@@ -35,16 +35,17 @@ namespace eCAL
         std::string Help()     const override;
         std::string Example()  const override;
 
-        eCAL::sys::Error Execute(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::vector<std::string>& argv) override;
+        eCAL::sys::Error Execute(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::vector<std::string>& argv) const override;
+        eCAL::sys::Error Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, const std::vector<std::string>& argv) const override;
 
-        eCAL::sys::Error ListTasks(const std::list<std::shared_ptr<EcalSysTask>>& task_list);
-        eCAL::sys::Error ListSingleTask(const std::shared_ptr<EcalSysTask>& task);
+        eCAL::sys::Error ListTasks(const std::list<std::shared_ptr<EcalSysTask>>& task_list) const;
+        eCAL::sys::Error ListSingleTask(const std::shared_ptr<EcalSysTask>& task) const;
 
-        eCAL::sys::Error ListRunners(const std::list<std::shared_ptr<EcalSysRunner>>& runner_list);
-        eCAL::sys::Error ListSingleRunner(const std::shared_ptr<EcalSysRunner>& runner);
+        eCAL::sys::Error ListRunners(const std::list<std::shared_ptr<EcalSysRunner>>& runner_list) const;
+        eCAL::sys::Error ListSingleRunner(const std::shared_ptr<EcalSysRunner>& runner) const;
 
-        eCAL::sys::Error ListGroups(const std::list<std::shared_ptr<TaskGroup>>& group_list);
-        eCAL::sys::Error ListSingleGroup(const std::shared_ptr<TaskGroup>& group);
+        eCAL::sys::Error ListGroups(const std::list<std::shared_ptr<TaskGroup>>& group_list) const;
+        eCAL::sys::Error ListSingleGroup(const std::shared_ptr<TaskGroup>& group) const;
       };
     }
   }

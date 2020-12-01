@@ -42,16 +42,19 @@ namespace eCAL
     // Constructor & Destructor
     /////////////////////////////////
 
-    CommandExecutor::CommandExecutor(const std::shared_ptr<EcalSys>& ecalsys_instance)
-      : ecalsys_instance_(ecalsys_instance)
+    CommandExecutor::CommandExecutor(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::string& remote_hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service)
+      : ecalsys_instance_      (ecalsys_instance)
+      , remote_hostname_       (remote_hostname)
+      , remote_ecalsys_service_(remote_ecalsys_service)
     {
+      assert(bool(ecalsys_instance) != bool(remote_ecalsys_service)); // Make sure that either the ecalsys instance or the remote ecalsys service is set (and only one of them!)
+
       command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("start",   std::make_unique<command::StartTask>()));
       command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("stop",    std::make_unique<command::StopTask>()));
       command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("restart", std::make_unique<command::RestartTask>()));
       command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("list",    std::make_unique<command::List>()));
       command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("sleep",   std::make_unique<command::Sleep>()));
       command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("exit",    std::make_unique<command::Exit>()));
-
     }
 
     CommandExecutor::~CommandExecutor()
@@ -86,7 +89,10 @@ namespace eCAL
         }
         else
         {
-          return command_it->second->Execute(ecalsys_instance_, short_argv);
+          if (ecalsys_instance_)
+            return command_it->second->Execute(ecalsys_instance_, short_argv);
+          else
+            return command_it->second->Execute(remote_hostname_, remote_ecalsys_service_, short_argv);
         }
       }
     }

@@ -28,6 +28,17 @@
 
 #include <commands/command.h>
 
+#include <ecal/ecal_client.h>
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4100 4505 4800)
+#endif
+#include <ecal/msg/protobuf/client.h>
+#include <ecal/pb/sys/service.pb.h>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
 namespace eCAL
 {
   namespace sys
@@ -39,7 +50,7 @@ namespace eCAL
       // Constructor & Destructor
       /////////////////////////////////
     public:
-      CommandExecutor(const std::shared_ptr<EcalSys>& ecalsys_instance);
+      CommandExecutor(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::string& remote_hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service);
       ~CommandExecutor();
 
       /////////////////////////////////
@@ -71,7 +82,9 @@ namespace eCAL
     // Member variables
     /////////////////////////////////
     private:
-      std::shared_ptr<EcalSys> ecalsys_instance_;
+      std::shared_ptr<EcalSys>                                                ecalsys_instance_;
+      std::string                                                             remote_hostname_;
+      std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>> remote_ecalsys_service_;
 
       std::map<std::string, std::unique_ptr<eCAL::sys::command::Command>> command_map_;
     };

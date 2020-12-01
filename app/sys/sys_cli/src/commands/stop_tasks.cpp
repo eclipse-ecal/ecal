@@ -42,7 +42,7 @@ namespace eCAL
         return "name1 name2 \"name with spaces\" 12345";
       }
 
-      eCAL::sys::Error StopTask::Execute(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::vector<std::string>& argv)
+      eCAL::sys::Error StopTask::Execute(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::vector<std::string>& argv) const
       {
         std::list<std::shared_ptr<EcalSysTask>> task_list;
         auto error = ToTaskList(ecalsys_instance, argv, task_list);
@@ -57,6 +57,83 @@ namespace eCAL
           return eCAL::sys::Error::ErrorCode::OK;
         }
       }
+
+      eCAL::sys::Error StopTask::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, const std::vector<std::string>& argv) const
+      {
+        SServiceInfo               service_info;
+        eCAL::pb::sys::TaskRequest task_request_pb;
+        eCAL::pb::sys::Response    response_pb;
+
+        if (argv.empty())
+        {
+          // In this case we simply stop everything
+          task_request_pb.set_all(true);
+        }
+        else
+        {
+          task_request_pb.set_all(false);
+
+          // In this case we have to check if an argument is meant to be an ID or a name
+          eCAL::pb::sys::State state_pb;
+          {
+            auto error = GetRemoteSysStatus(hostname, remote_ecalsys_service, state_pb); 
+            if (error)
+              return error;
+          }
+
+          std::list<std::shared_ptr<EcalSysTask>> complete_task_list;
+          {
+            auto error = GetCompleteTaskList(state_pb, complete_task_list);
+            if (error)
+              return error;
+          }
+
+          // Iterate over argv and check if we can parse the argument to an ID. If a task with that ID exists, we assume that the ID is meant. If not, we treat it as a name.
+          for (const std::string& arg : argv)
+          {
+            bool match_found = false;
+            try
+            {
+              unsigned long id = std::stoul(arg);
+
+              for (const auto& task : complete_task_list)
+              {
+                if (task->GetId() == id)
+                {
+                  task_request_pb.add_tids(id);
+                  match_found = true;
+                }
+              }
+            }
+            catch (const std::exception&) {}
+
+            if (!match_found)
+            {
+              task_request_pb.add_tnames(arg);
+            }
+          }
+        }
+
+        bool success = remote_ecalsys_service->Call(hostname, "StopTasks", task_request_pb, service_info, response_pb);
+
+        if (!success)
+        {
+          return eCAL::sys::Error(eCAL::sys::Error::ErrorCode::REMOTE_HOST_UNAVAILABLE, service_info.host_name + ": " + service_info.error_msg);
+        }
+        else
+        {
+          if (response_pb.result() != eCAL::pb::sys::Response::success)
+          {
+            return eCAL::sys::Error(eCAL::sys::Error::ErrorCode::SERVICE_CALL_RETURNED_ERROR, service_info.host_name + ": " + response_pb.error());
+          }
+          else
+          {
+            return eCAL::sys::Error::ErrorCode::OK;
+
+          }
+        }
+      }
+
     }
   }
 }

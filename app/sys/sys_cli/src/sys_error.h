@@ -44,6 +44,11 @@ namespace eCAL
         TOO_MANY_PARAMETERS,
         UNSUPPORTED_ACTION,
 
+        // Service Errors
+        COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE,
+        SERVICE_CALL_RETURNED_ERROR,
+        REMOTE_HOST_UNAVAILABLE,
+
         // Task based errors
         TASK_DOES_NOT_EXIST,
         RUNNER_DOES_NOT_EXIST,
@@ -73,21 +78,26 @@ namespace eCAL
         switch (error_code_)
         {
         // Generic
-        case OK:                         return "OK";                            break;
-        case GENERIC_ERROR:              return "Error";                         break;
+        case OK:                                   return "OK";                                           break;
+        case GENERIC_ERROR:                        return "Error";                                        break;
 
         // General Errors
-        case NO_COMMAND:                 return "No command";                    break;
-        case PARAMETER_ERROR:            return "Faulty or missing parameters";  break;
-        case TOO_MANY_PARAMETERS:        return "To many parameters";            break;
-        case UNKNOWN_COMMAND:            return "Unknown command";               break;
-        case UNSUPPORTED_ACTION:         return "Unsupported action";            break;
+        case NO_COMMAND:                           return "No command";                                   break;
+        case PARAMETER_ERROR:                      return "Faulty or missing parameters";                 break;
+        case TOO_MANY_PARAMETERS:                  return "To many parameters";                           break;
+        case UNKNOWN_COMMAND:                      return "Unknown command";                              break;
+        case UNSUPPORTED_ACTION:                   return "Unsupported action";                           break;
+
+        // Service errors
+        case COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE: return "Command not available in remote-control mode"; break;
+        case SERVICE_CALL_RETURNED_ERROR:          return "Service call reported error";                  break;
+        case REMOTE_HOST_UNAVAILABLE:              return "Remote host not available";                    break;
 
         // Task based errors
-        case TASK_DOES_NOT_EXIST:        return "Task does not exist";           break;
-        case RUNNER_DOES_NOT_EXIST:      return "Runner does not exist";         break;
-        case GROUP_DOES_NOT_EXIST:       return "Group does not exist";          break;
-        case TASK_ACTION_IS_RUNNING:     return "An action is already running";  break;
+        case TASK_DOES_NOT_EXIST:                  return "Task does not exist";                          break;
+        case RUNNER_DOES_NOT_EXIST:                return "Runner does not exist";                        break;
+        case GROUP_DOES_NOT_EXIST:                 return "Group does not exist";                         break;
+        case TASK_ACTION_IS_RUNNING:               return "An action is already running";                 break;
 
         // File based errors
         case RESOURCE_UNAVAILABLE:       return "Resource unavailable";          break;

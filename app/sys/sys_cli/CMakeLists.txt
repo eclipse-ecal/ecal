@@ -32,6 +32,7 @@ set(source_files
   src/ecalsys_util.h
   src/sys_error.h
 
+  src/commands/command.cpp
   src/commands/command.h
   src/commands/exit.cpp
   src/commands/exit.h

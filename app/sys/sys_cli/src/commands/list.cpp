@@ -32,6 +32,8 @@
 
 #include <ecal_utils/string.h>
 
+#include "helpers.h"
+
 namespace eCAL
 {
   namespace sys
@@ -54,7 +56,7 @@ namespace eCAL
         return "--tasks task1";
       }
 
-      eCAL::sys::Error List::Execute(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::vector<std::string>& argv)
+      eCAL::sys::Error List::Execute(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::vector<std::string>& argv) const
       {
         bool task_mode = false;
         bool group_mode = false;
@@ -139,7 +141,101 @@ namespace eCAL
         return Error(Error::ErrorCode::PARAMETER_ERROR);
       }
 
-      eCAL::sys::Error List::ListTasks(const std::list<std::shared_ptr<EcalSysTask>>& task_list)
+      eCAL::sys::Error List::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, const std::vector<std::string>& argv) const
+      {
+        bool task_mode = false;
+        bool group_mode = false;
+        bool runner_mode = false;
+
+        std::vector<std::string> id_or_name;
+
+        if ((argv.size() >= 1)
+          && ((argv[0] == "--tasks")
+              || (argv[0] == "--runners")
+              || (argv[0] == "--groups")))
+        {
+          if (argv[0] == "--groups")
+            group_mode = true;
+          else if (argv[0] == "--runners")
+            runner_mode = true;
+          else
+            task_mode = true;
+
+          id_or_name = std::vector<std::string>(std::next(argv.begin()), argv.end());
+        }
+        else
+        {
+          task_mode = true;
+          id_or_name = argv;
+        }
+
+        if (id_or_name.size() > 1)
+        {
+          return Error(Error::ErrorCode::TOO_MANY_PARAMETERS, EcalUtils::String::Join(" ", std::vector<std::string>(std::next(argv.begin()), argv.end())));
+        }
+
+        eCAL::pb::sys::State sys_state_pb;
+        {
+          auto error = GetRemoteSysStatus(hostname, remote_ecalsys_service, sys_state_pb);
+          if (error)
+            return error;
+        }
+        
+        if (task_mode)
+        {
+          if (id_or_name.empty())
+          {
+            std::list<std::shared_ptr<EcalSysTask>> task_list;
+            {
+              Error error = eCAL::sys::command::GetCompleteTaskList(sys_state_pb, task_list);
+              if (error)
+                return error;
+            }
+            return ListTasks(task_list);
+          }
+          else
+          {
+            std::list<std::shared_ptr<EcalSysTask>> task_list;
+            {
+              Error error = ToTaskList(sys_state_pb, id_or_name, task_list);
+              if (error)
+                return error;
+            }
+            return ListSingleTask(task_list.front());
+          }
+        }
+        else if (runner_mode)
+        {
+          return Error(Error::ErrorCode::COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE);
+        }
+        else if (group_mode)
+        {
+          if (id_or_name.empty())
+          {
+            std::list<std::shared_ptr<TaskGroup>> group_list;
+            {
+              Error error = eCAL::sys::command::GetCompleteGroupList(sys_state_pb, group_list);
+              if (error)
+                return error;
+            }
+            return ListGroups(group_list);
+          }
+          else
+          {
+            std::list<std::shared_ptr<TaskGroup>> group_list;
+            {
+              Error error = ToGroupList(sys_state_pb, id_or_name, group_list);
+              if (error)
+                return error;
+            }
+            return ListSingleGroup(group_list.front());
+          }
+        }
+
+        return Error(Error::ErrorCode::PARAMETER_ERROR);
+      }
+
+      eCAL::sys::Error List::ListTasks(const std::list<std::shared_ptr<EcalSysTask>>& task_list) const
       {
         std::vector<std::string> header_data = {"#", "ID", "Task", "Target", "PID", "Current", "State", "Info"};
 
@@ -273,7 +369,7 @@ namespace eCAL
         return Error::ErrorCode::OK;
       }
 
-      eCAL::sys::Error List::ListSingleTask(const std::shared_ptr<EcalSysTask>& task)
+      eCAL::sys::Error List::ListSingleTask(const std::shared_ptr<EcalSysTask>& task) const
       {
         std::string visibility_string;
         switch (task->GetVisibility())
@@ -344,7 +440,7 @@ namespace eCAL
         return eCAL::sys::Error::ErrorCode::OK;
       }
 
-      eCAL::sys::Error List::ListRunners(const std::list<std::shared_ptr<EcalSysRunner>>& runner_list)
+      eCAL::sys::Error List::ListRunners(const std::list<std::shared_ptr<EcalSysRunner>>& runner_list) const
       {
         std::vector<std::string> header_data = {"ID", "Name"};
 
@@ -390,7 +486,7 @@ namespace eCAL
         return Error::ErrorCode::OK;
       }
 
-      eCAL::sys::Error List::ListSingleRunner(const std::shared_ptr<EcalSysRunner>& runner)
+      eCAL::sys::Error List::ListSingleRunner(const std::shared_ptr<EcalSysRunner>& runner) const
       {
         std::cout << "ID:                " << runner->GetId()              << std::endl;
         std::cout << "Name:              " << runner->GetName()            << std::endl;
@@ -401,7 +497,7 @@ namespace eCAL
         return eCAL::sys::Error::ErrorCode::OK;
       }
 
-      eCAL::sys::Error List::ListGroups(const std::list<std::shared_ptr<TaskGroup>>& group_list)
+      eCAL::sys::Error List::ListGroups(const std::list<std::shared_ptr<TaskGroup>>& group_list) const
       {
         std::vector<std::string> header_data = {"ID", "Name", "State"};
 
@@ -455,7 +551,7 @@ namespace eCAL
         return Error::ErrorCode::OK;
       }
 
-      eCAL::sys::Error List::ListSingleGroup(const std::shared_ptr<TaskGroup>& group)
+      eCAL::sys::Error List::ListSingleGroup(const std::shared_ptr<TaskGroup>& group) const
       {
         auto task_set = group->GetAllTasks();
         std::list<std::shared_ptr<EcalSysTask>> task_list(task_set.begin(), task_set.end());
