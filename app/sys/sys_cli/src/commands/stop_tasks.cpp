@@ -118,7 +118,7 @@ namespace eCAL
 
         if (!success)
         {
-          return eCAL::sys::Error(eCAL::sys::Error::ErrorCode::REMOTE_HOST_UNAVAILABLE, service_info.host_name + ": " + service_info.error_msg);
+          return eCAL::sys::Error(eCAL::sys::Error::ErrorCode::REMOTE_HOST_UNAVAILABLE, hostname);
         }
         else
         {
