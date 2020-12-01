@@ -214,17 +214,17 @@ void EcalSys::LogAppNameVersion() const
 //// Getting / Removing of Tasks and Runners                                ////
 ////////////////////////////////////////////////////////////////////////////////
 
-std::list<std::shared_ptr<EcalSysTask>> EcalSys::GetTaskList() {
+std::list<std::shared_ptr<EcalSysTask>> EcalSys::GetTaskList() const {
   std::lock_guard<std::recursive_mutex> task_list_lock(m_task_list_mutex);
   return std::list<std::shared_ptr<EcalSysTask>>(m_task_list);
 }
 
-std::list<std::shared_ptr<EcalSysRunner>> EcalSys::GetRunnerList() {
+std::list<std::shared_ptr<EcalSysRunner>> EcalSys::GetRunnerList() const {
   std::lock_guard<std::recursive_mutex> runner_list_lock(m_runner_list_mutex);
   return std::list<std::shared_ptr<EcalSysRunner>>(m_runner_list);
 }
 
-std::list<std::shared_ptr<TaskGroup>> EcalSys::GetGroupList()
+std::list<std::shared_ptr<TaskGroup>> EcalSys::GetGroupList() const
 {
   std::lock_guard<std::recursive_mutex> group_list_lock(m_group_list_mutex);
   return m_group_list;

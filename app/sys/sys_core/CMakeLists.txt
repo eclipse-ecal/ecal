@@ -27,6 +27,7 @@ set(ecalsyscore_src
   include/ecalsys/ecal_sys.h
   include/ecalsys/ecal_sys_logger.h
   include/ecalsys/esys_defs.h
+  include/ecalsys/proto_helpers.h
   include/ecalsys/config/config_version.h
   include/ecalsys/task/ecal_sys_runner.h
   include/ecalsys/task/ecal_sys_task.h
@@ -55,6 +56,7 @@ set(ecalsyscore_src
   src/ecal_sys.cpp
   src/ecal_sys_monitor.cpp
   src/ecal_sys_monitor.h
+  src/proto_helpers.cpp
 
   src/taskaction_threads/restart_task_list_thread.cpp
   src/taskaction_threads/restart_task_list_thread.h

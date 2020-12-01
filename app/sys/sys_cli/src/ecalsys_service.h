@@ -25,6 +25,7 @@
 
 // protobuf remote control
 #include "ecal/pb/sys/service.pb.h"
+#include "ecal/pb/sys/state.pb.h"
 
 class eCALSysServiceImpl : public eCAL::pb::sys::Service
 {
@@ -34,20 +35,20 @@ public:
   void StartTasks(::google::protobuf::RpcController* controller,
     const ::eCAL::pb::sys::TaskRequest* request,
     ::eCAL::pb::sys::Response* response,
-    ::google::protobuf::Closure* done);
+    ::google::protobuf::Closure* done) override;
   void StopTasks(::google::protobuf::RpcController* controller,
     const ::eCAL::pb::sys::TaskRequest* request,
     ::eCAL::pb::sys::Response* response,
-    ::google::protobuf::Closure* done);
+    ::google::protobuf::Closure* done) override;
   void RestartTasks(::google::protobuf::RpcController* controller,
     const ::eCAL::pb::sys::TaskRequest* request,
     ::eCAL::pb::sys::Response* response,
-    ::google::protobuf::Closure* done);
-  void CLose(::google::protobuf::RpcController* controller,
-    const ::eCAL::pb::sys::CloseRequest* request,
-    ::eCAL::pb::sys::Response* response,
-    ::google::protobuf::Closure* done);
-
+    ::google::protobuf::Closure* done) override;
+  void GetStatus(::google::protobuf::RpcController* controller,
+    const ::eCAL::pb::sys::GenericRequest* request,
+    ::eCAL::pb::sys::State* response,
+    ::google::protobuf::Closure* done) override;
+  
 private:
   std::shared_ptr<EcalSys> ecalsys_instance;
 };

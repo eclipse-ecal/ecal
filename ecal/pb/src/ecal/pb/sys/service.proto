@@ -21,6 +21,8 @@ syntax = "proto3";
 
 option cc_generic_services = true;
 
+import "ecal/pb/sys/state.proto";
+
 package eCAL.pb.sys;
 
 ///////////////////////////////////////////////////////
@@ -35,7 +37,7 @@ message TaskRequest
                                                        // (Keep in mind that a task name might not be unique.)
 }
 
-message CloseRequest {}
+message GenericRequest {}
 
 message Response
 {
@@ -51,8 +53,8 @@ message Response
 
 service Service
 {
-  rpc StartTasks   (TaskRequest)  returns (Response);  // start tasks
-  rpc StopTasks    (TaskRequest)  returns (Response);  // stop tasks
-  rpc RestartTasks (TaskRequest)  returns (Response);  // restart tasks
-  rpc Close        (CloseRequest) returns (Response);  // close application
+  rpc StartTasks   (TaskRequest)    returns (Response);  // start tasks
+  rpc StopTasks    (TaskRequest)    returns (Response);  // stop tasks
+  rpc RestartTasks (TaskRequest)    returns (Response);  // restart tasks
+  rpc GetStatus    (GenericRequest) returns (eCAL.pb.sys.State);     // Get status
 }

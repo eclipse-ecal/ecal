@@ -24,6 +24,8 @@
 #include "ecalsys_service.h"
 #include "ecalsys/ecal_sys_logger.h"
 
+#include <ecalsys/proto_helpers.h>
+
 namespace
 {
   std::list<std::shared_ptr<EcalSysTask>> GetAllTasks()
@@ -127,16 +129,10 @@ void eCALSysServiceImpl::RestartTasks(::google::protobuf::RpcController* /*contr
   response->set_result(eCAL::pb::sys::Response::success);
 }
 
-void eCALSysServiceImpl::Close(::google::protobuf::RpcController* /*controller*/,
-  const ::eCAL::pb::sys::CloseRequest* /*request*/,
-  ::eCAL::pb::sys::Response* response,
-  ::google::protobuf::Closure* /*done*/)
+void eCALSysServiceImpl::GetStatus(::google::protobuf::RpcController* controller,
+  const ::eCAL::pb::sys::GenericRequest* request,
+  ::eCAL::pb::sys::State* response,
+  ::google::protobuf::Closure* done)
 {
-  EcalSysLogger::Log("eCALSysServiceImpl::Close");
-  // Just a little hack to directly close everything without user interaction
-  ecalsysgui_instance->setUnmodified();
-  ecalsysgui_instance->setWindowModified(false);
-  ecalsysgui_instance->close();
-
-  response->set_result(eCAL::pb::sys::Response::success);
+  eCAL::sys::proto_helpers::ToProtobuf(*response, *Globals::EcalSysInstance());
 }

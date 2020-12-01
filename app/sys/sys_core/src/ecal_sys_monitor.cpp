@@ -29,6 +29,7 @@
 #include "ecal/pb/process.pb.h"
 
 #include "ecalsys/ecal_sys_logger.h"
+#include <ecalsys/proto_helpers.h>
 
 #include <ecal_utils/string.h>
 #include <ecal_utils/ecal_utils.h>
@@ -153,7 +154,7 @@ void EcalSysMonitor::UpdateTaskStates(const std::list<std::shared_ptr<EcalSysTas
         {
           // The task is matching!
           task_mapping_found = true;
-          task_state = ConvertState(process.state());
+          task_state         = eCAL::sys::proto_helpers::FromProtobuf(process.state());
           break;
         }
       }
@@ -278,7 +279,7 @@ std::list<std::shared_ptr<EcalSysTask>> EcalSysMonitor::GetTasksFromCloud()
     std::string monitor_process_args = EcalUtils::String::Trim(monitor_process.pparam());
     std::string monitor_process_host = EcalUtils::String::Trim(monitor_process.hname());
     int pid                          = monitor_process.pid();
-    TaskState task_state             = ConvertState(monitor_process.state());
+    TaskState task_state             = eCAL::sys::proto_helpers::FromProtobuf(monitor_process.state());
 
     // If the process has no name we use the executable's name instead
     if (monitor_process_name == "")
@@ -330,49 +331,8 @@ std::list<std::shared_ptr<EcalSysTask>> EcalSysMonitor::GetTasksFromCloud()
 
 void EcalSysMonitor::SendEcalsysState()
 {
-  eCAL::pb::sys::State ecalsys_state_pb;
-
-  ecalsys_state_pb.set_host(eCAL::Process::GetHostName());
-
-  // Fill the task field
-  auto task_list = m_ecalsys_instance.GetTaskList();
-  for (auto& task : task_list)
-  {
-    eCAL::pb::sys::State::Task* task_pb = ecalsys_state_pb.add_tasks();
-    task_pb->CopyFrom(ConvertTask(task));
-  }
-
-  // Fill the functions field
-  auto group_list = m_ecalsys_instance.GetGroupList();
-  for (auto& group : group_list)
-  {
-    eCAL::pb::sys::State::Function* group_pb = ecalsys_state_pb.add_functions();
-
-    group_pb->set_name(group->GetName());
-
-    // Set the group state
-    auto current_group_state = group->Evaluate();
-    if (current_group_state)
-    {
-      group_pb->set_state(current_group_state->GetName());
-
-      eCAL::pb::sys::State::Colour colour_pb;
-      colour_pb.set_r(current_group_state->GetColor().red);
-      colour_pb.set_g(current_group_state->GetColor().green);
-      colour_pb.set_b(current_group_state->GetColor().blue);
-
-      group_pb->mutable_colour()->CopyFrom(colour_pb);
-    }
-
-    // Set the list of all tasks
-    for (auto& task : group->GetAllTasks())
-    {
-      eCAL::pb::sys::State::Task* task_pb = group_pb->add_tasks();
-      task_pb->CopyFrom(ConvertTask(task));
-    }
-  }
-
-  m_state_publisher.Send(ecalsys_state_pb);
+  auto state_pb = eCAL::sys::proto_helpers::ToProtobuf(m_ecalsys_instance);
+  m_state_publisher.Send(state_pb);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -401,128 +361,4 @@ std::string EcalSysMonitor::RemoveFirstArg(const std::string& arg_string)
 {
   auto arg_list = EcalUtils::CommandLine::splitCommandLine(arg_string, 2);
   return ((arg_list.size() >= 2) ? arg_list[1] : "");
-}
-
-TaskState EcalSysMonitor::ConvertState(eCAL::pb::ProcessState pb_process_state)
-{
-  TaskState state;
-
-  switch (pb_process_state.severity_level())
-  {
-  case eCAL::pb::eProcessSeverityLevel::proc_sev_level1:
-    state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level1;
-    break;
-  case eCAL::pb::eProcessSeverityLevel::proc_sev_level2:
-    state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level2;
-    break;
-  case eCAL::pb::eProcessSeverityLevel::proc_sev_level3:
-    state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level3;
-    break;
-  case eCAL::pb::eProcessSeverityLevel::proc_sev_level4:
-    state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level4;
-    break;
-  case eCAL::pb::eProcessSeverityLevel::proc_sev_level5:
-    state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level5;
-    break;
-  default:
-    state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level1;
-  }
-
-  switch (pb_process_state.severity())
-  {
-  case eCAL::pb::eProcessSeverity::proc_sev_unknown:
-    state.severity = eCAL_Process_eSeverity::proc_sev_unknown;
-    break;
-  case eCAL::pb::eProcessSeverity::proc_sev_healthy:
-    state.severity = eCAL_Process_eSeverity::proc_sev_healthy;
-    break;
-  case eCAL::pb::eProcessSeverity::proc_sev_warning:
-    state.severity = eCAL_Process_eSeverity::proc_sev_warning;
-    break;
-  case eCAL::pb::eProcessSeverity::proc_sev_critical:
-    state.severity = eCAL_Process_eSeverity::proc_sev_critical;
-    break;
-  case eCAL::pb::eProcessSeverity::proc_sev_failed:
-    state.severity = eCAL_Process_eSeverity::proc_sev_failed;
-    break;
-  default:
-    state.severity = eCAL_Process_eSeverity::proc_sev_unknown;
-  }
-
-  state.info = pb_process_state.info();
-
-  return state;
-}
-
-eCAL::pb::ProcessState EcalSysMonitor::ConvertState(TaskState task_state)
-{
-  eCAL::pb::ProcessState process_state_pb;
-
-  switch (task_state.severity)
-  {
-  case eCAL_Process_eSeverity::proc_sev_unknown:
-    process_state_pb.set_severity(eCAL::pb::eProcessSeverity::proc_sev_unknown);
-    break;
-  case eCAL_Process_eSeverity::proc_sev_healthy:
-    process_state_pb.set_severity(eCAL::pb::eProcessSeverity::proc_sev_healthy);
-    break;
-  case eCAL_Process_eSeverity::proc_sev_warning:
-    process_state_pb.set_severity(eCAL::pb::eProcessSeverity::proc_sev_warning);
-    break;
-  case eCAL_Process_eSeverity::proc_sev_critical:
-    process_state_pb.set_severity(eCAL::pb::eProcessSeverity::proc_sev_critical);
-    break;
-  case eCAL_Process_eSeverity::proc_sev_failed:
-    process_state_pb.set_severity(eCAL::pb::eProcessSeverity::proc_sev_failed);
-    break;
-  default:
-    process_state_pb.set_severity(eCAL::pb::eProcessSeverity::proc_sev_unknown);
-    break;
-  }
-
-  switch (task_state.severity_level)
-  {
-  case eCAL_Process_eSeverity_Level::proc_sev_level1:
-    process_state_pb.set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level1);
-    break;
-  case eCAL_Process_eSeverity_Level::proc_sev_level2:
-    process_state_pb.set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level2);
-    break;
-  case eCAL_Process_eSeverity_Level::proc_sev_level3:
-    process_state_pb.set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level3);
-    break;
-  case eCAL_Process_eSeverity_Level::proc_sev_level4:
-    process_state_pb.set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level4);
-    break;
-  case eCAL_Process_eSeverity_Level::proc_sev_level5:
-    process_state_pb.set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level5);
-    break;
-  default:
-    process_state_pb.set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level_unknown);
-    break;
-  }
-
-  process_state_pb.set_info(task_state.info);
-
-  return process_state_pb;
-}
-
-eCAL::pb::sys::State::Task EcalSysMonitor::ConvertTask(std::shared_ptr<EcalSysTask> task)
-{
-  eCAL::pb::sys::State::Task task_pb;
-  task_pb.set_id  (task->GetId());
-  task_pb.set_name(task->GetName());
-  task_pb.set_host(task->GetTarget());
-  for (int pid : task->GetPids())
-  {
-    task_pb.add_pids(pid);
-  }
-
-  if (task->FoundInLastMonitorLoop())
-  {
-    auto task_state_pb = task_pb.mutable_state();
-    task_state_pb->CopyFrom(ConvertState(task->GetMonitoringTaskState()));
-  }
-
-  return task_pb;
 }

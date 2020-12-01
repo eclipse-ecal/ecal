@@ -206,13 +206,13 @@ public:
   //////////////////////////////////////////////////////////////////////////////
 
   /** @brief Gets a list of all tasks currently configured in EcalSys. */
-  std::list<std::shared_ptr<EcalSysTask>>   GetTaskList();
+  std::list<std::shared_ptr<EcalSysTask>>   GetTaskList() const;
 
   /** @brief Gets a list of all runners currently configured in EcalSys. */
-  std::list<std::shared_ptr<EcalSysRunner>> GetRunnerList();
+  std::list<std::shared_ptr<EcalSysRunner>> GetRunnerList() const;
 
   /** @brief Gets a list of all groups currently configured in EcalSys. */
-  std::list<std::shared_ptr<TaskGroup>>     GetGroupList();
+  std::list<std::shared_ptr<TaskGroup>>     GetGroupList() const;
 
   /** @brief Gets Task by providing it's ID. If no runner with that ID exists, a shared nullpointer is returned. */
   std::shared_ptr<EcalSysTask>   GetTask(uint32_t task_id);
@@ -481,13 +481,13 @@ public:
 
 private:
   std::list<std::shared_ptr<EcalSysTask>>    m_task_list;                       /**< The list of all Tasks */
-  std::recursive_mutex                       m_task_list_mutex;                 /**< A mutex protecting the task list */
+  mutable std::recursive_mutex               m_task_list_mutex;                 /**< A mutex protecting the task list */
 
   std::list<std::shared_ptr<EcalSysRunner>>  m_runner_list;                     /**< The list of all Runners */
-  std::recursive_mutex                       m_runner_list_mutex;               /**< A mutex protecting the runner list */
+  mutable std::recursive_mutex               m_runner_list_mutex;               /**< A mutex protecting the runner list */
 
   std::list<std::shared_ptr<TaskGroup>>      m_group_list;                      /**< The list of all tasks groups */
-  std::recursive_mutex                       m_group_list_mutex;                /**< A mutex protecting the group list */
+  mutable std::recursive_mutex               m_group_list_mutex;                /**< A mutex protecting the group list */
 
   std::unique_ptr<EcalSysMonitor>            m_monitor_thread;                  /**< The monitor thread that is responsible for querying the monitor information, setting task states and providing some specialized methods to get monitor information. */
 

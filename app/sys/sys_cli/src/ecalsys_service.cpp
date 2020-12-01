@@ -25,6 +25,8 @@
 #include "ecalsys/ecal_sys_logger.h"
 #include "ecalsys_service.h"
 
+#include <ecalsys/proto_helpers.h>
+
 extern bool exit_command_received;
 
 namespace
@@ -127,13 +129,10 @@ void eCALSysServiceImpl::RestartTasks(::google::protobuf::RpcController* /*contr
   response->set_result(eCAL::pb::sys::Response::success);
 }
 
-void eCALSysServiceImpl::CLose(::google::protobuf::RpcController* /*controller*/,
-  const ::eCAL::pb::sys::CloseRequest* /*request*/,
-  ::eCAL::pb::sys::Response* response,
-  ::google::protobuf::Closure* /*done*/)
+void eCALSysServiceImpl::GetStatus(::google::protobuf::RpcController* controller,
+  const ::eCAL::pb::sys::GenericRequest* request,
+  ::eCAL::pb::sys::State* response,
+  ::google::protobuf::Closure* done)
 {
-  EcalSysLogger::Log("eCALSysServiceImpl::Close");
-  exit_command_received = true;
-
-  response->set_result(eCAL::pb::sys::Response::success);
+  eCAL::sys::proto_helpers::ToProtobuf(*response, *ecalsys_instance.get());
 }

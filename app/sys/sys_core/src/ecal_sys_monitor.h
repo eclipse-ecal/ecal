@@ -169,19 +169,4 @@ private:
    * @brief Return the given argument string with the first argument removed. If the string contains too less arguments, an empty string is returned.
    */
   std::string RemoveFirstArg(const std::string& arg_string);
-
-  /**
-   * @brief Converts a protobuf ProcessState to an eCal Sys TaskState
-   */
-  TaskState ConvertState(eCAL::pb::ProcessState pb_process_state);
-
-  /**
-   * @brief Converts an eCal Sys TaskState to a protobuf Process state
-   */
-  eCAL::pb::ProcessState ConvertState(TaskState task_state);
-
-  /**
-   * @brief Converts an EcalSysTask to a protobuf eCALSysState::Task
-   */
-  eCAL::pb::sys::State::Task ConvertTask(std::shared_ptr<EcalSysTask> task);
 };

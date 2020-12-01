@@ -45,10 +45,10 @@ public:
     const ::eCAL::pb::sys::TaskRequest* request,
     ::eCAL::pb::sys::Response* response,
     ::google::protobuf::Closure* done);
-  void Close(::google::protobuf::RpcController* controller,
-    const ::eCAL::pb::sys::CloseRequest* request,
-    ::eCAL::pb::sys::Response* response,
-    ::google::protobuf::Closure* done);
+  void GetStatus(::google::protobuf::RpcController* controller,
+    const ::eCAL::pb::sys::GenericRequest* request,
+    ::eCAL::pb::sys::State* response,
+    ::google::protobuf::Closure* done) override;
 
 private:
   EcalsysGui* ecalsysgui_instance;
