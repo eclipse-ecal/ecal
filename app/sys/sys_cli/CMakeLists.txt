@@ -40,6 +40,8 @@ set(source_files
   src/commands/helpers.h
   src/commands/list.cpp
   src/commands/list.h
+  src/commands/load_config.cpp
+  src/commands/load_config.h
   src/commands/restart_tasks.cpp
   src/commands/restart_tasks.h
   src/commands/sleep.cpp

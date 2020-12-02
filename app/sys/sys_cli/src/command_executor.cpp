@@ -32,6 +32,7 @@
 #include <commands/list.h>
 #include <commands/sleep.h>
 #include <commands/exit.h>
+#include <commands/load_config.h>
 
 namespace eCAL
 {
@@ -55,6 +56,7 @@ namespace eCAL
       command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("list",    std::make_unique<command::List>()));
       command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("sleep",   std::make_unique<command::Sleep>()));
       command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("exit",    std::make_unique<command::Exit>()));
+      command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("load",    std::make_unique<command::LoadConfig>()));
     }
 
     CommandExecutor::~CommandExecutor()

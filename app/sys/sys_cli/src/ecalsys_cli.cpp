@@ -31,16 +31,19 @@
 #include <ecalsys/ecal_sys.h>
 #include <ecalsys/esys_defs.h>
 
+#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/server.h>
+
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4100 4505 4800)
 #endif
-#include <ecal/msg/protobuf/client.h>
 #include <ecal/pb/sys/service.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 
+#include "ecalsys_service.h"
 
 #include "tclap/CmdLine.h"
 #include <custom_tclap/advanced_tclap_output.h>
@@ -168,25 +171,32 @@ int main(int argc, char** argv)
     /************************************************************************/
     /*  load the configuration                                              */
     /************************************************************************/
-    try
+    if (cfg_file_name.empty())
     {
-      ecalsys_instance = std::make_shared<EcalSys>(cfg_file_name);
+      ecalsys_instance = std::make_shared<EcalSys>();
     }
-    catch (const std::exception& e)
+    else
     {
-      std::cerr << e.what() << std::endl;
-      return EXIT_FAILURE;
-    }
+      try
+      {
+        ecalsys_instance = std::make_shared<EcalSys>(cfg_file_name);
+      }
+      catch (const std::exception& e)
+      {
+        std::cerr << e.what() << std::endl;
+        return EXIT_FAILURE;
+      }
 
-    if (!ecalsys_instance->IsConfigOpened())
-    {
-      std::cout << "Configuration file could not be opened => application will close" << std::endl;
-      return EXIT_FAILURE;
+      if (!ecalsys_instance->IsConfigOpened())
+      {
+        std::cout << "Configuration file could not be opened => application will close" << std::endl;
+        return EXIT_FAILURE;
+      }
     }
 
     // Create the eCALSys service
-    //std::shared_ptr<eCALSysServiceImpl> ecalsys_service_impl = std::make_shared<eCALSysServiceImpl>(ecalsys_inst);
-    //eCAL::protobuf::CServiceServer<eCAL::pb::sys::Service> ecalsys_service(ecalsys_service_impl);
+    std::shared_ptr<eCALSysServiceImpl> ecalsys_service_impl = std::make_shared<eCALSysServiceImpl>(ecalsys_instance);
+    eCAL::protobuf::CServiceServer<eCAL::pb::sys::Service> ecalsys_service(ecalsys_service_impl);
 
     // Give the monitor some time to connect to eCAL and update
     std::this_thread::sleep_for(std::chrono::seconds(2));
@@ -208,7 +218,11 @@ int main(int argc, char** argv)
     {
       std::cout << ">> ";
       std::string line;
-      std::getline(std::cin, line);
+
+      if (!std::getline(std::cin, line))
+      {
+        return EXIT_SUCCESS;
+      }
 
       eCAL::sys::Error error = command_executor.ExecuteCommand(line);
       if (error)
