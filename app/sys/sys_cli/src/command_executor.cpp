@@ -33,6 +33,7 @@
 #include <commands/sleep.h>
 #include <commands/exit.h>
 #include <commands/load_config.h>
+#include <commands/update_from_cloud.h>
 
 namespace eCAL
 {
@@ -50,13 +51,14 @@ namespace eCAL
     {
       assert(bool(ecalsys_instance) != bool(remote_ecalsys_service)); // Make sure that either the ecalsys instance or the remote ecalsys service is set (and only one of them!)
 
-      command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("start",   std::make_unique<command::StartTask>()));
-      command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("stop",    std::make_unique<command::StopTask>()));
-      command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("restart", std::make_unique<command::RestartTask>()));
-      command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("list",    std::make_unique<command::List>()));
-      command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("sleep",   std::make_unique<command::Sleep>()));
-      command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("exit",    std::make_unique<command::Exit>()));
-      command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("load",    std::make_unique<command::LoadConfig>()));
+      command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("start",             std::make_unique<command::StartTask>()));
+      command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("stop",              std::make_unique<command::StopTask>()));
+      command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("restart",           std::make_unique<command::RestartTask>()));
+      command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("list",              std::make_unique<command::List>()));
+      command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("sleep",             std::make_unique<command::Sleep>()));
+      command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("exit",              std::make_unique<command::Exit>()));
+      command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("load",              std::make_unique<command::LoadConfig>()));
+      command_map_.emplace(std::make_pair<std::string, std::unique_ptr<eCAL::sys::command::Command>>("update_from_cloud", std::make_unique<command::UpdateFromCloud>()));
     }
 
     CommandExecutor::~CommandExecutor()
@@ -139,59 +141,5 @@ namespace eCAL
 
       return Error::ErrorCode::OK;
     }
-
-
-    /////////////////////////////////
-    // EcalSys Commands
-    /////////////////////////////////
-
-    //Error CommandExecutor::ExecuteCommandStartTasks(const std::vector<std::string>& argv)
-    //{
-
-    //}
-
-    //Error CommandExecutor::ExecuteCommandStartTasks(const std::vector<std::shared_ptr<EcalSysTask>>& tasks)
-    //{
-
-    //}
-
-
-    //Error CommandExecutor::ExecuteCommandStopTasks(const std::vector<std::string>& argv)
-    //{
-
-    //}
-
-    //Error CommandExecutor::ExecuteCommandStopTasks(const std::vector<std::shared_ptr<EcalSysTask>>& tasks)
-    //{
-
-    //}
-
-
-    //Error CommandExecutor::ExecuteCommandRestartTasks(const std::vector<std::string>& argv)
-    //{
-
-    //}
-
-    //Error CommandExecutor::ExecuteCommandRestartTasks(const std::vector<std::shared_ptr<EcalSysTask>>& tasks)
-    //{
-
-    //}
-
-
-    //Error CommandExecutor::ExecuteCommandListTasks(const std::vector<std::string>& argv)
-    //{
-
-    //}
-
-    //Error CommandExecutor::ExecuteCommandListAllTasks()
-    //{
-
-    //}
-
-    //Error CommandExecutor::ExecuteCommandListTask(const std::shared_ptr<EcalSysTask>& task)
-    //{
-
-    //}
-
   }
 }

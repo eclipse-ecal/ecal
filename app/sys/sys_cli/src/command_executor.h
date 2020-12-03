@@ -46,37 +46,20 @@ namespace eCAL
     class CommandExecutor
     {
 
-      /////////////////////////////////
-      // Constructor & Destructor
-      /////////////////////////////////
+    /////////////////////////////////
+    // Constructor & Destructor
+    /////////////////////////////////
     public:
       CommandExecutor(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::string& remote_hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service);
       ~CommandExecutor();
 
-      /////////////////////////////////
-      // Generic Command Parsing
-      /////////////////////////////////
+    /////////////////////////////////
+    // Generic Command Parsing
+    /////////////////////////////////
     public:
       Error ExecuteCommand(const std::string& command_string);
 
       Error ExecuteCommandHelp(const std::vector<std::string>& argv);
-
-      /////////////////////////////////
-      // EcalSys Commands
-      /////////////////////////////////
-
-      //Error ExecuteCommandStartTasks(const std::vector<std::string>& argv);
-      //Error ExecuteCommandStartTasks(const std::vector<std::shared_ptr<EcalSysTask>>& tasks);
-
-      //Error ExecuteCommandStopTasks(const std::vector<std::string>& argv);
-      //Error ExecuteCommandStopTasks(const std::vector<std::shared_ptr<EcalSysTask>>& tasks);    
-
-      //Error ExecuteCommandRestartTasks(const std::vector<std::string>& argv);
-      //Error ExecuteCommandRestartTasks(const std::vector<std::shared_ptr<EcalSysTask>>& tasks);
-
-      //Error ExecuteCommandListTasks(const std::vector<std::string>& argv);
-      //Error ExecuteCommandListAllTasks();
-      //Error ExecuteCommandListTask(const std::shared_ptr<EcalSysTask>& task);
 
     /////////////////////////////////
     // Member variables

@@ -50,6 +50,8 @@ set(source_files
   src/commands/start_tasks.h
   src/commands/stop_tasks.cpp
   src/commands/stop_tasks.h
+  src/commands/update_from_cloud.cpp
+  src/commands/update_from_cloud.h
 )
 
 if(WIN32)

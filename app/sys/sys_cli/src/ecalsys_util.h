@@ -25,9 +25,5 @@
 
 #include "ecalsys/ecal_sys.h"
 
-void StartTasks(std::shared_ptr<EcalSys> ecalsys_inst);
-void StopTasks(std::shared_ptr<EcalSys> ecalsys_inst);
-
-bool WaitForAllTargetsReachable(std::shared_ptr<EcalSys> ecalsys_inst);
+bool WaitForClients(std::shared_ptr<EcalSys> ecalsys_inst);
 std::set<std::string> GetTargetsNotReachable(std::shared_ptr<EcalSys> ecalsys_inst, std::set<std::string>& targets);
-void showMonitoringSummary(std::shared_ptr<EcalSys> ecalsys_instance);

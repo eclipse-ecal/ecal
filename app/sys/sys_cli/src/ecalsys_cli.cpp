@@ -47,8 +47,16 @@
 
 #include "tclap/CmdLine.h"
 #include <custom_tclap/advanced_tclap_output.h>
+#include <custom_tclap/fuzzy_value_switch_arg.h>
 
 #include <command_executor.h>
+#include <commands/load_config.h>
+#include <commands/update_from_cloud.h>
+#include <commands/start_tasks.h>
+#include <commands/stop_tasks.h>
+#include <commands/restart_tasks.h>
+
+#include "ecalsys_util.h"
 
 bool exit_command_received;
 
@@ -57,38 +65,24 @@ int main(int argc, char** argv)
   // Define the command line object.
   TCLAP::CmdLine cmd(ECAL_SYS_LIB_NAME, ' ', ECAL_SYS_VERSION_STRING);
   
-  TCLAP::UnlabeledMultiArg<std::string> unlabled_config_arg            ("config_", "The Configuration file to load", false, "Path");
+  TCLAP::UnlabeledMultiArg<std::string> unlabled_config_arg            ("config_", "The Configuration file to load.", false, "Path");
 
-  TCLAP::ValueArg<std::string>          config_arg                     ("c", "config", "The Configuration file to load", false, "", "Path");
+  TCLAP::ValueArg<std::string>          config_arg                     ("c", "config", "The Configuration file to load. Not supported in remote-control mode.", false, "", "Path");
   
-  TCLAP::SwitchArg                      remote_control_arg             ("",  "remote-control",   "Remote control another eCAL Sys instance",                false);
-  TCLAP::ValueArg<std::string>          remote_control_host_arg        ("",  "remote-host",      "Set the hostname for remote-controlling", false, "", "Hostname");
+  TCLAP::SwitchArg                      remote_control_arg             ("",  "remote-control",   "Remote control another eCAL Sys instance.",                false);
+  TCLAP::ValueArg<std::string>          remote_control_host_arg        ("",  "remote-host",      "Set the hostname for remote-controlling.", false, "", "Hostname");
 
-  TCLAP::SwitchArg                      start_arg                      ("s", "start",   "Start all tasks",                false);
-  TCLAP::SwitchArg                      stop_arg                       ("x", "stop",    "Stop all tasks",                 false);
-  TCLAP::SwitchArg                      restart_arg                    ("r", "restart", "Restart all tasks",              false);
+  TCLAP::SwitchArg                      start_arg                      ("s", "start",   "Start all tasks.",                false);
+  TCLAP::SwitchArg                      stop_arg                       ("x", "stop",    "Stop all tasks.",                 false);
+  TCLAP::SwitchArg                      restart_arg                    ("r", "restart", "Restart all tasks.",              false);
   
-  TCLAP::SwitchArg                      local_tasks_only_arg           ("", "local-tasks-only",            "Only tasks on local host will be considered",                                   false);
-  TCLAP::SwitchArg                      use_localhost_for_all_tasks_arg("", "use-localhost-for-all-tasks", "All tasks will be considered as being on local host",                           false);
-  TCLAP::SwitchArg                      disable_target_checks_arg      ("", "disable-target-checks",       "Disable checking for reachable targets before starting tasks",                  false);
-  TCLAP::SwitchArg                      disable_update_from_cloud_arg  ("", "disable-update-from-cloud",   "Do not use the monitor to update the tasks for restarting/stopping/monitoring", false);
+  CustomTclap::FuzzyValueSwitchArg      local_tasks_only_arg           ("", "local-tasks-only",            "Only tasks on local host will be considered. Not supported in remote-control mode.",         false, false, "true|false");
+  CustomTclap::FuzzyValueSwitchArg      use_localhost_for_all_tasks_arg("", "use-localhost-for-all-tasks", "All tasks will be considered as being on local host. Not supported in remote-control mode.", false, false, "true|false");
+  TCLAP::SwitchArg                      no_wait_for_clients_arg        ("", "no-wait-for-clients",         "Don't wait for eCAL Sys clients before starting / stopping tasks.",              false);
+  TCLAP::SwitchArg                      disable_update_from_cloud_arg  ("", "disable-update-from-cloud",   "Do not use the monitor to update the tasks for restarting/stopping/monitoring.", false);
 
-  TCLAP::SwitchArg                      interactive_arg                ("i", "interactive",            "Start eCAL Sys and dont exit. The user can interactively use Sys or control it with the eCAL Service API.", false);
-
-
-
-
-
-
-  // LEGACY ARGS TODO: Add to the arg vector or remove
-  //TCLAP::SwitchArg                      monitor_arg                    ("m", "monitor", "Monitor started tasks while publishing the __ecalsys_state__ topic and executing service requests.", false); // TODO: Hide this, as it is basically the same as interactive arg
-  //TCLAP::SwitchArg                      local_tasks_only_arg           ("", "local_tasks_only",            "Only tasks on local host will be considered",                                   false);
-  //TCLAP::SwitchArg                      use_localhost_for_all_tasks_arg("", "use_localhost_for_all_tasks", "All tasks will be considered as being on local host",                           false);
-  //TCLAP::SwitchArg                      disable_target_checks_arg      ("", "disable_target_checks",       "Disable checking for reachable targets before starting tasks",                  false);
-  //TCLAP::SwitchArg                      disable_update_from_cloud_arg  ("", "disable_update_from_cloud",   "Do not use the monitor to update the tasks for restarting/stopping/monitoring", false);
-
-
-
+  TCLAP::SwitchArg                      interactive_dont_exit_arg      ("",  "interactive-dont-exit",  "When in interactive mode, this option prevents eCAL Sys from exiting, when stdin is closed.", false);
+  TCLAP::SwitchArg                      interactive_arg                ("i", "interactive",            "Start eCAL Sys and listen for commands on stdin. When not in remote-control mode itself, eCAL Sys will offer the eCAL Sys Service for being remote-controlled. Note that eCAL Sys will exit, when stdin is closed. To prevent that, combine this option with \"" + interactive_dont_exit_arg.getName() + "\".", false);
 
   std::vector<TCLAP::Arg*> arg_vector =
   {
@@ -100,11 +94,18 @@ int main(int argc, char** argv)
     &restart_arg,
     &local_tasks_only_arg,
     &use_localhost_for_all_tasks_arg,
-    &disable_target_checks_arg,
+    &no_wait_for_clients_arg,
     &disable_update_from_cloud_arg,
     &interactive_arg,
+    &interactive_dont_exit_arg,
     &unlabled_config_arg,
   };
+
+  std::stringstream tclap_output_stream;
+  CustomTclap::AdvancedTclapOutput advanced_tclap_output(std::vector<std::ostream*>{ &std::cout }, 75);
+  advanced_tclap_output.setArgumentHidden(&unlabled_config_arg, true);
+  
+  cmd.setOutput(&advanced_tclap_output);
 
   for (auto arg_iterator = arg_vector.rbegin(); arg_iterator != arg_vector.rend(); ++arg_iterator)
   {
@@ -133,84 +134,196 @@ int main(int argc, char** argv)
   // Ecalsys instance and ecalsys service. We will only use one of those, depending on the remote-control setting
   std::shared_ptr<EcalSys>                                                ecalsys_instance;
   std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>> remote_ecalsys_service;
+  
+  // Ptrs for eCAL Sys Service (only used in non-remote control mode)
+  std::shared_ptr<eCALSysServiceImpl>                                     ecalsys_service_impl;
+  std::shared_ptr<eCAL::protobuf::CServiceServer<eCAL::pb::sys::Service>> ecalsys_service_server;
 
+  /************************************************************************/
+  /* Argument validation                                                  */
+  /************************************************************************/
+
+  // remote-host without remote-control
+  if (remote_control_host_arg.isSet() && !remote_control_arg.isSet())
+  {
+    std::cerr << "Error: " << remote_control_host_arg.getName() << " can only be used in combination with " << remote_control_arg.getName() << "." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  // multiple commands
+  if (int(start_arg.isSet()) + int(stop_arg.isSet()) + int(restart_arg.isSet()) > 1)
+  {
+    std::cerr << "Error: Only one argument of " << start_arg.getName() << " / " << restart_arg.getName() << " / " << stop_arg.getName() << " can be used simultaneously." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  // No config and not in remote-control or interactive mode 
+  if (!config_arg.isSet()
+    && unlabled_config_arg.getValue().empty()
+    && !remote_control_arg.isSet()
+    && !interactive_arg.isSet()
+    && !interactive_dont_exit_arg.isSet())
+  {
+    std::cerr << "Error: Configuration file needed, when not running as " << remote_control_arg.getName() << " or " << interactive_arg.getName() << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  // local-tasks-only or use-localhost-for-all-tasks in remote-control mode
+  if (remote_control_arg.isSet())
+  {
+    std::cerr << "Error: " << local_tasks_only_arg.getName() << " cannot be used in remote-control mode." << std::endl;
+    return EXIT_FAILURE;
+  }
+  if (use_localhost_for_all_tasks_arg.isSet())
+  {
+    std::cerr << "Error: " << use_localhost_for_all_tasks_arg.getName() << " cannot be used in remote-control mode." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  // Both local-tasks-only and use-localhost-for-all-tasks is given
+  if ((local_tasks_only_arg.isSet() && local_tasks_only_arg.getValue())
+    && (use_localhost_for_all_tasks_arg.isSet() && use_localhost_for_all_tasks_arg.getValue()))
+  {
+    std::cerr << "Error: " << local_tasks_only_arg.getName() << " and " << use_localhost_for_all_tasks_arg.getName() << " are mutually excludsive (only one of them can be used)." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  // There is nothing to do
+  if (!interactive_arg.isSet()
+    && !interactive_dont_exit_arg.isSet()
+    && !start_arg.isSet()
+    && !stop_arg.isSet()
+    && !restart_arg.isSet())
+  {
+    std::cerr << "Error: There is nothing to do." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+
+  /************************************************************************/
+  /*  Remote control mode                                                 */
+  /************************************************************************/
   if (remote_control_arg.isSet()) // Remote-control-mode
   {
-    /************************************************************************/
-    /*  Remote control mode                                                 */
-    /************************************************************************/
-
     eCAL::Initialize(0, nullptr, "eCALSys-Remote", eCAL::Init::All);
     eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
 
     remote_ecalsys_service = std::make_shared<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>();
-
   }
   else                            // Non-remote control mode
   {
-    /************************************************************************/
-    /*  Non-remote control mode                                             */
-    /************************************************************************/
-
-    /*****************************************************************************************************/
-    /*  check for the 2 options "local-tasks-only" and "use-localhost-for-all-tasks" used simultaneously */
-    /*****************************************************************************************************/
-    if (local_tasks_only_arg.isSet() && use_localhost_for_all_tasks_arg.isSet())
-    {
-      std::cout << "eCALSys cannot be used with both options \"" << local_tasks_only_arg.getName() << "\" and \"" << use_localhost_for_all_tasks_arg.getName() << "\"" << std::endl;
-      std::cout << "Please use maximum one option." << std::endl;
-      return EXIT_FAILURE;
-    }
-
-    /************************************************************************/
-    /*  initialize eCAL API                                                 */
-    /************************************************************************/
     eCAL::Initialize(0, nullptr, "eCALSys", eCAL::Init::All);
     eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
 
-    /************************************************************************/
-    /*  load the configuration                                              */
-    /************************************************************************/
-    if (cfg_file_name.empty())
+    ecalsys_instance = std::make_shared<EcalSys>();
+
+    // Create the eCALSys service
+    ecalsys_service_impl   = std::make_shared<eCALSysServiceImpl>(ecalsys_instance);
+    ecalsys_service_server = std::make_shared<eCAL::protobuf::CServiceServer<eCAL::pb::sys::Service>>(ecalsys_service_impl);
+  }
+
+  // Give the monitor some time to connect to eCAL and update
+  std::this_thread::sleep_for(std::chrono::seconds(2));
+
+  /************************************************************************/
+  /* Load the configuration                                               */
+  /************************************************************************/
+  if (config_arg.isSet() || !unlabled_config_arg.getValue().empty())
+  {
+    eCAL::sys::Error error(eCAL::sys::Error::ErrorCode::GENERIC_ERROR);
+    if (ecalsys_instance)
     {
-      ecalsys_instance = std::make_shared<EcalSys>();
+      error = eCAL::sys::command::LoadConfig().Execute(ecalsys_instance, {cfg_file_name});
+      if (error)
+      {
+        std::cerr << error.ToString() << std::endl;
+        return EXIT_FAILURE;
+      }
     }
     else
     {
-      try
-      {
-        ecalsys_instance = std::make_shared<EcalSys>(cfg_file_name);
-      }
-      catch (const std::exception& e)
-      {
-        std::cerr << e.what() << std::endl;
-        return EXIT_FAILURE;
-      }
+      std::cerr << "Warning: Ignoring configuration file in remote control mode" << std::endl;
+    }
+  }
 
-      if (!ecalsys_instance->IsConfigOpened())
+  /************************************************************************/
+  /* Wait for eCAL Sys Clients                                            */
+  /************************************************************************/
+  if (!no_wait_for_clients_arg.isSet())
+  {
+    if (ecalsys_instance)
+    {
+      WaitForClients(ecalsys_instance);
+    }
+  }
+
+  /************************************************************************/
+  /* Update from cloud                                                    */
+  /************************************************************************/
+  if (!disable_update_from_cloud_arg.isSet())
+  {
+    eCAL::sys::Error error(eCAL::sys::Error::ErrorCode::GENERIC_ERROR);
+    if (ecalsys_instance)
+    {
+      error = eCAL::sys::command::UpdateFromCloud().Execute(ecalsys_instance, {});
+      if (error)
       {
-        std::cout << "Configuration file could not be opened => application will close" << std::endl;
+        std::cerr << "Error: " << error.ToString() << std::endl;
         return EXIT_FAILURE;
       }
     }
+  }
 
-    // Create the eCALSys service
-    std::shared_ptr<eCALSysServiceImpl> ecalsys_service_impl = std::make_shared<eCALSysServiceImpl>(ecalsys_instance);
-    eCAL::protobuf::CServiceServer<eCAL::pb::sys::Service> ecalsys_service(ecalsys_service_impl);
+  /************************************************************************/
+  /* Start Tasks                                                          */
+  /************************************************************************/
+  if (start_arg.isSet())
+  {
+    eCAL::sys::Error error(eCAL::sys::Error::ErrorCode::GENERIC_ERROR);
+    if (ecalsys_instance)
+      error = eCAL::sys::command::StartTask().Execute(ecalsys_instance, {});
+    else
+      error = eCAL::sys::command::StartTask().Execute(remote_control_host_arg.getValue(), remote_ecalsys_service, {});
 
-    // Give the monitor some time to connect to eCAL and update
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    if (error)
+      std::cerr << "Error: " << error.ToString() << std::endl;
+  }
 
-    // TODO:do i need this?
-    //// Add the verbose function, if required
-    //if (verbose_flag)
-    //{
-    //  ecalsys_inst->SetMonitorUpdateCallback([&ecalsys_inst]() {showMonitoringSummary(ecalsys_inst); });
-    //}
+  /************************************************************************/
+  /* Restart Tasks                                                        */
+  /************************************************************************/
+  if (restart_arg.isSet())
+  {
+    eCAL::sys::Error error(eCAL::sys::Error::ErrorCode::GENERIC_ERROR);
+    if (ecalsys_instance)
+      error = eCAL::sys::command::RestartTask().Execute(ecalsys_instance, {});
+    else
+      error = eCAL::sys::command::RestartTask().Execute(remote_control_host_arg.getValue(), remote_ecalsys_service, {});
+
+    if (error)
+      std::cerr << "Error: " << error.ToString() << std::endl;
+  }
+
+  /************************************************************************/
+  /* Stop Tasks                                                           */
+  /************************************************************************/
+  if (stop_arg.isSet())
+  {
+    eCAL::sys::Error error(eCAL::sys::Error::ErrorCode::GENERIC_ERROR);
+    if (ecalsys_instance)
+      error = eCAL::sys::command::StopTask().Execute(ecalsys_instance, {});
+    else
+      error = eCAL::sys::command::StopTask().Execute(remote_control_host_arg.getValue(), remote_ecalsys_service, {});
+
+    if (error)
+      std::cerr << "Error: " << error.ToString() << std::endl;
   }
 
 
-  if(interactive_arg.isSet())
+  /************************************************************************/
+  /* Interactive Mode                                                     */
+  /************************************************************************/
+  if(interactive_arg.isSet() || interactive_dont_exit_arg.isSet())
   {
     std::cout << "Using interactive mode. Type \"help\" to view a list of all commands." << std::endl;
     eCAL::sys::CommandExecutor command_executor(ecalsys_instance, remote_control_host_arg.getValue(), remote_ecalsys_service);
@@ -221,7 +334,8 @@ int main(int argc, char** argv)
 
       if (!std::getline(std::cin, line))
       {
-        return EXIT_SUCCESS;
+        std::cout << "Stdin closed." << std::endl;
+        break;
       }
 
       eCAL::sys::Error error = command_executor.ExecuteCommand(line);
@@ -232,7 +346,15 @@ int main(int argc, char** argv)
     }
   }
 
+  if(interactive_dont_exit_arg.isSet())
+  {
+    while(eCAL::Ok())
+    {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+  }
 
+  eCAL::Finalize();
   return EXIT_SUCCESS;
 }
 

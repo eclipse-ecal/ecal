@@ -191,9 +191,11 @@ void EcalSys::SetOptions(const EcalSys::Options& options) {
 
 bool EcalSys::InitializeEcal()
 {
-  bool isInitialized = (0 <= eCAL::Initialize(0, nullptr, "eCALSys", eCAL::Init::Default | eCAL::Init::Monitoring));
-  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
-  return isInitialized;
+  return true;
+  // TODO: Remove?
+  //bool isInitialized = (0 <= eCAL::Initialize(0, nullptr, "eCALSys", eCAL::Init::Default | eCAL::Init::Monitoring));
+  //eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
+  //return isInitialized;
 }
 
 void EcalSys::LogAppNameVersion() const

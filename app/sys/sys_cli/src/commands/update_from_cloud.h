@@ -27,7 +27,7 @@ namespace eCAL
   {
     namespace command
     {
-      class StopTask : public Command
+      class UpdateFromCloud : public Command
       {
       public:
         std::string Usage()    const override;

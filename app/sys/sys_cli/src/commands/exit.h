@@ -29,6 +29,7 @@ namespace eCAL
     {
       class Exit : public Command
       {
+      public:
         std::string Usage()    const override;
         std::string Help()     const override;
         std::string Example()  const override;
