@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2020 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,6 @@ EcalSys::EcalSys()
   m_options.use_localhost_for_all_tasks = false;
 
   LogAppNameVersion();
-  InitializeEcal();
 
   m_connection_manager = std::make_shared<eCAL::sys::ConnectionManager>();
 
@@ -188,15 +187,6 @@ void EcalSys::SetOptions(const EcalSys::Options& options) {
 ////////////////////////////////////////////////////////////////////////////////
 //// Initialization                                                         ////
 ////////////////////////////////////////////////////////////////////////////////
-
-bool EcalSys::InitializeEcal()
-{
-  return true;
-  // TODO: Remove?
-  //bool isInitialized = (0 <= eCAL::Initialize(0, nullptr, "eCALSys", eCAL::Init::Default | eCAL::Init::Monitoring));
-  //eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
-  //return isInitialized;
-}
 
 void EcalSys::LogAppNameVersion() const
 {

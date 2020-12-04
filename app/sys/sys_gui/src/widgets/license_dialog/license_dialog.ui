@@ -31,19 +31,6 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="emoji_license_label">
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/googlei18n/noto-emoji&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Noto Emojies&lt;/span&gt;&lt;/a&gt; made by Google Inc. are lincensed under &lt;a href=&quot;https://github.com/googlei18n/noto-emoji/blob/master/fonts/LICENSE&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;SIL Open Font License, version 1.1&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="textFormat">
-      <enum>Qt::RichText</enum>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>

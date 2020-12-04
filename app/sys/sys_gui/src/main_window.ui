@@ -229,20 +229,23 @@
     <addaction name="action_group_expand"/>
     <addaction name="action_group_collapse"/>
    </widget>
+   <widget class="QMenu" name="menu_windows">
+    <property name="title">
+     <string>Windows</string>
+    </property>
+   </widget>
    <addaction name="menu_file"/>
    <addaction name="menu_task"/>
    <addaction name="menu_group"/>
    <addaction name="menu_options"/>
    <addaction name="menu_view"/>
+   <addaction name="menu_windows"/>
    <addaction name="menu_help"/>
   </widget>
   <widget class="QStatusBar" name="status_bar"/>
   <widget class="QDockWidget" name="mma_dockwidget">
    <property name="accessibleName">
     <string>MMA</string>
-   </property>
-   <property name="features">
-    <set>QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle">
     <string>MMA</string>
@@ -289,9 +292,6 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="tasks_dockwidget">
-   <property name="features">
-    <set>QDockWidget::DockWidgetMovable</set>
-   </property>
    <property name="windowTitle">
     <string>Tasks</string>
    </property>
@@ -324,9 +324,6 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="groups_dockwidget">
-   <property name="features">
-    <set>QDockWidget::DockWidgetMovable</set>
-   </property>
    <property name="windowTitle">
     <string>Groups</string>
    </property>

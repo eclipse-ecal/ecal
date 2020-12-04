@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2020 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,6 +87,14 @@ EcalsysGui::EcalsysGui(QWidget *parent)
   loadGuiSettings();
 
   updateMenuOptions();
+
+  
+  // Windows menu
+  QList<QAction*> dock_actions = createPopupMenu()->actions();
+  for (QAction* action : dock_actions)
+  {
+    ui_.menu_windows->addAction(action);
+  }
   
   // Menu Callbacks
   connect(ui_.action_file_new,                        SIGNAL(triggered()),                this, SLOT(menuFileNewTriggered()));

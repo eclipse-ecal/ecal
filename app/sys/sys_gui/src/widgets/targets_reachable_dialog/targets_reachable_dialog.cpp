@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2020 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,7 +89,7 @@ void TargetsReachableDialog::update()
     else
     {
       icon_label->setPixmap(x_icon);
-      status_label->setText("Waiting for host...");
+      status_label->setText("Waiting for sys client...");
       all_available = false;
     }
   }
