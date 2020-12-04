@@ -72,7 +72,7 @@ MmaHostItem::MmaHostItem(QTreeWidget* tree_widget, const QString& hostname)
   // Create the timer that deactivates this object if no data is received
   deactivation_timer = new QTimer(this);
   deactivation_timer->setSingleShot(true);
-  connect(deactivation_timer, SIGNAL(timeout()), this, SLOT(disable()));
+  connect(deactivation_timer, &QTimer::timeout, this, &MmaHostItem::disable);
 }
 
 MmaHostItem::~MmaHostItem()
@@ -111,10 +111,10 @@ void MmaHostItem::addWidgetsToTree()
   disk_group_widget_   ->setMinimumWidth(2, io_width);
 
   // The widgets might both be deleted when removing this object or when destroying the treeWidget, so we connect the appropriate signals
-  connect(this, SIGNAL(destroyed()), cpu_bar_,               SLOT(deleteLater()));
-  connect(this, SIGNAL(destroyed()), ram_bar_,               SLOT(deleteLater()));
-  connect(this, SIGNAL(destroyed()), network_group_widget_, SLOT(deleteLater()));
-  connect(this, SIGNAL(destroyed()), disk_group_widget_,    SLOT(deleteLater()));
+  connect(this, &QObject::destroyed, cpu_bar_,               &QObject::deleteLater);
+  connect(this, &QObject::destroyed, ram_bar_,               &QObject::deleteLater);
+  connect(this, &QObject::destroyed, network_group_widget_, &QObject::deleteLater);
+  connect(this, &QObject::destroyed, disk_group_widget_,    &QObject::deleteLater);
 
   treeWidget()->setItemWidget(cpu_item_, 0, cpu_bar_);
   treeWidget()->setItemWidget(ram_item_, 0, ram_bar_);
@@ -286,8 +286,8 @@ void MmaHostItem::machineStateChanged(eCAL::pb::mma::State state)
       disk_bar->label->setText(name);
       
       // The widgets might be deleted when removing this object or when destroying the treeWidget, so we connect the appropriate signal
-      connect(this, SIGNAL(destroyed()), disk_bar,       SLOT(deleteLater()));
-      connect(this, SIGNAL(destroyed()), disk_io_widget, SLOT(deleteLater()));
+      connect(this, &QObject::destroyed, disk_bar,       &QObject::deleteLater);
+      connect(this, &QObject::destroyed, disk_io_widget, &QObject::deleteLater);
 
       treeWidget()->setItemWidget(disk_item, 0, disk_bar);
       disk_items_.emplace(name, std::make_tuple(disk_item, disk_bar, disk_io_widget));
@@ -393,7 +393,7 @@ void MmaHostItem::machineStateChanged(eCAL::pb::mma::State state)
       network_io_widget->setMinimumWidth(0, io_width);
       network_io_widget->setMinimumWidth(1, io_width);
       treeWidget()->setItemWidget(network_io_item, 0, network_io_widget);
-      connect(this, SIGNAL(destroyed()), network_io_widget, SLOT(deleteLater()));
+      connect(this, &QObject::destroyed, network_io_widget, &QObject::deleteLater);
 
       network_added = true;
     }
