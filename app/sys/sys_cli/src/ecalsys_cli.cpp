@@ -169,7 +169,7 @@ int main(int argc, char** argv)
   }
 
   // local-tasks-only or use-localhost-for-all-tasks in remote-control mode
-  if (remote_control_arg.isSet())
+  if (local_tasks_only_arg.isSet())
   {
     std::cerr << "Error: " << local_tasks_only_arg.getName() << " cannot be used in remote-control mode." << std::endl;
     return EXIT_FAILURE;
@@ -370,7 +370,7 @@ int main(int argc, char** argv)
 
 
 
-
+// TODO: Cleanup
 
 //#include <iostream>
 //#include <memory>
