@@ -80,7 +80,7 @@ namespace eCAL
 
           time_to_sleep = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(seconds_to_sleep));
         }
-        catch (const std::exception& e)
+        catch (const std::exception&)
         {
           return Error(Error::ErrorCode::PARAMETER_ERROR, std::string("\"") + argv[0] + "\" is not a number");
         }
