@@ -263,13 +263,17 @@ int main(int argc, char** argv)
   if (!disable_update_from_cloud_arg.isSet())
   {
     eCAL::sys::Error error(eCAL::sys::Error::ErrorCode::GENERIC_ERROR);
-    if (ecalsys_instance)
+    if (ecalsys_instance && ecalsys_instance->IsConfigOpened())
     {
       error = eCAL::sys::command::UpdateFromCloud().Execute(ecalsys_instance, {});
       if (error)
       {
         std::cerr << "Error: " << error.ToString() << std::endl;
         return EXIT_FAILURE;
+      }
+      else
+      {
+        ecalsys_instance->WaitForTaskActions();
       }
     }
   }
@@ -281,9 +285,15 @@ int main(int argc, char** argv)
   {
     eCAL::sys::Error error(eCAL::sys::Error::ErrorCode::GENERIC_ERROR);
     if (ecalsys_instance)
+    {
       error = eCAL::sys::command::StartTask().Execute(ecalsys_instance, {});
+      if (!error)
+        ecalsys_instance->WaitForTaskActions();
+    }
     else
+    {
       error = eCAL::sys::command::StartTask().Execute(remote_control_host_arg.getValue(), remote_ecalsys_service, {});
+    }
 
     if (error)
       std::cerr << "Error: " << error.ToString() << std::endl;
@@ -296,9 +306,15 @@ int main(int argc, char** argv)
   {
     eCAL::sys::Error error(eCAL::sys::Error::ErrorCode::GENERIC_ERROR);
     if (ecalsys_instance)
+    {
       error = eCAL::sys::command::RestartTask().Execute(ecalsys_instance, {});
+      if (!error)
+        ecalsys_instance->WaitForTaskActions();
+    }
     else
+    {
       error = eCAL::sys::command::RestartTask().Execute(remote_control_host_arg.getValue(), remote_ecalsys_service, {});
+    }
 
     if (error)
       std::cerr << "Error: " << error.ToString() << std::endl;
@@ -311,9 +327,15 @@ int main(int argc, char** argv)
   {
     eCAL::sys::Error error(eCAL::sys::Error::ErrorCode::GENERIC_ERROR);
     if (ecalsys_instance)
+    {
       error = eCAL::sys::command::StopTask().Execute(ecalsys_instance, {});
+      if (!error)
+        ecalsys_instance->WaitForTaskActions();
+    }
     else
+    {
       error = eCAL::sys::command::StopTask().Execute(remote_control_host_arg.getValue(), remote_ecalsys_service, {});
+    }
 
     if (error)
       std::cerr << "Error: " << error.ToString() << std::endl;
