@@ -31,7 +31,11 @@ public:
   ~MultiLabelItem();
 
   void setText(unsigned int number, const QString& text);
+  void setPixmap(unsigned int number, const QPixmap& pixmap);
   void setMinimumWidth(unsigned int number, int width);
+
+  void setFont(unsigned int number, const QFont& font);
+  void setStyleSheet(unsigned int number, const QString& stylesheet);
 
 private:
   QVector<QLabel*> label_list_;

@@ -45,13 +45,19 @@ void MmaWidget::monitorUpdated()
   bool hosts_added = false;
   for (std::string host : all_hosts)
   {
-    if (host_items_.find(host) == host_items_.end())
+    auto hosts_item_it = host_items_.find(host);
+    if (hosts_item_it == host_items_.end())
     {
       // The host is new
       MmaHostItem* host_item = new MmaHostItem(ui_.mma_tree, QString(host.c_str()));
+      host_item->setSysClientAvailable((host == eCAL::Process::GetHostName()) || Globals::EcalSysInstance()->IseCALSysClientRunningOnHost(host));
       ui_.mma_tree->addTopLevelItem(host_item);
       host_items_[host] = host_item;
       hosts_added = true;
+    }
+    else
+    {
+      hosts_item_it->second->setSysClientAvailable((host == eCAL::Process::GetHostName()) || Globals::EcalSysInstance()->IseCALSysClientRunningOnHost(host));
     }
   }
 

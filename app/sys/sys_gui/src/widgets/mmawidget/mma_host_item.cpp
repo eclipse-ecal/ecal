@@ -38,6 +38,22 @@ MmaHostItem::MmaHostItem(QTreeWidget* tree_widget, const QString& hostname)
   , hostname_(hostname)
   , enabled_(true)
 {
+  // Format the root node 
+  root_widget_ = new MultiLabelItem(2, treeWidget());
+  connect(this, &QObject::destroyed, root_widget_, &QObject::deleteLater);
+  root_widget_->setText(1, hostname_);
+  treeWidget()->setItemWidget(this, 0, root_widget_);
+
+  checkmark_pixmap_ = QPixmap(":ecalicons/CHECKMARK").scaled(root_widget_->height(), root_widget_->height(), Qt::KeepAspectRatio, Qt::TransformationMode::SmoothTransformation);
+  cross_pixmap_     = QPixmap(":ecalicons/CROSS")    .scaled(root_widget_->height(), root_widget_->height(), Qt::KeepAspectRatio, Qt::TransformationMode::SmoothTransformation);
+  
+  setSysClientAvailable(false);
+
+  // Initial Format
+  QFont font;
+  font.setBold(true);
+  root_widget_->setFont(1, font);
+  
   // Fill this node with content
   cpu_item_           = new QTreeWidgetItem(this);
   ram_item_           = new QTreeWidgetItem(this);
@@ -52,12 +68,6 @@ MmaHostItem::MmaHostItem(QTreeWidget* tree_widget, const QString& hostname)
   // Add the progress-bars etc. to the QTreeWidget
   addWidgetsToTree();
 
-  // Initial Format
-  QFont font;
-  font.setBold(true);
-  setFont(0, font);
-  setText(0, hostname);
-  setBackground(0, QColor(240, 240, 240));
   setEnabled(false);
 
   // Create eCAL Subscriber
@@ -122,6 +132,20 @@ void MmaHostItem::addWidgetsToTree()
   treeWidget()->setItemWidget(disks_group_item_, 0, disk_group_widget_);
 }
 
+void MmaHostItem::setSysClientAvailable(bool available)
+{
+  if (available)
+  {
+    root_widget_->setPixmap(0, checkmark_pixmap_);
+    this->setToolTip(0, "Sys Client is available");
+  }
+  else
+  {
+    root_widget_->setPixmap(0, cross_pixmap_);
+    this->setToolTip(0, "Sys Client is not available");
+  }
+}
+
 void MmaHostItem::setEnabled(bool enabled)
 {
   if (enabled_ == enabled)
@@ -155,18 +179,14 @@ void MmaHostItem::setEnabled(bool enabled)
   for (int col : {0})
   {
     // this item
-    QFont font = qvariant_cast<QFont>(data(col, Qt::ItemDataRole::FontRole));
     if (!enabled)
     {
-      setForeground(col, QColor(128, 128, 128));
-      font.setItalic(true);
+      root_widget_->setStyleSheet(1, "QLabel { color: grey; }");
     }
     else
     {
-      setForeground(col, QApplication::palette().windowText().color());
-      font.setItalic(false);
+      root_widget_->setStyleSheet(1, "");
     }
-    setFont(col, font);
 
     // children
     for (int i = 0; i < childCount(); i++)

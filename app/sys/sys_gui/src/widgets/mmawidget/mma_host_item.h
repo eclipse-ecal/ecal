@@ -46,6 +46,8 @@ public:
 
   void addWidgetsToTree();
 
+  void setSysClientAvailable(bool available);
+
 public slots:
   void setEnabled(bool enabled);
 
@@ -68,6 +70,7 @@ private:
   std::map<QString, std::tuple<QTreeWidgetItem*, ResourceBar*, MultiLabelItem*>> disk_items_; /**< In oder to have access to the Resource bar of all disks without having to subclass QTreeWidgetItem again, we create a map here and keep it in sync with the disk_group_item's children*/
   std::map<QString, std::pair<QTreeWidgetItem*, MultiLabelItem*>> network_items;              /**< We also keep a map of all Tree items representing networks for the same reason as the disk_itmes */
 
+  MultiLabelItem* root_widget_;
   ResourceBar*    cpu_bar_;
   ResourceBar*    ram_bar_;
   MultiLabelItem* network_group_widget_;
@@ -78,6 +81,9 @@ private:
   void mmaReceivedCallback(const char* topic_name, const eCAL::pb::mma::State& state);
 
   QString normalizedDataAsString(unsigned long long bytes);
+
+  QPixmap checkmark_pixmap_;
+  QPixmap cross_pixmap_;
 
 private slots:
   void disable();

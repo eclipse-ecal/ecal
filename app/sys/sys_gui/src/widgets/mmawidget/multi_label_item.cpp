@@ -56,7 +56,22 @@ void MultiLabelItem::setText(unsigned int number, const QString& text)
   label_list_[number]->setText(text);
 }
 
+void MultiLabelItem::setPixmap(unsigned int number, const QPixmap& pixmap)
+{
+  label_list_[number]->setPixmap(pixmap);
+}
+
 void MultiLabelItem::setMinimumWidth(unsigned int number, int width)
 {
   label_list_[number]->setMinimumSize(QSize(width, 0));
+}
+
+void MultiLabelItem::setFont(unsigned int number, const QFont& font)
+{
+  label_list_[number]->setFont(font);
+}
+
+void MultiLabelItem::setStyleSheet(unsigned int number, const QString& stylesheet)
+{
+  label_list_[number]->setStyleSheet(stylesheet);
 }
