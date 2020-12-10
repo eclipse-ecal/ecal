@@ -224,13 +224,14 @@ if (ECAL_THIRDPARTY_BUILD_HDF5)
   #we will need threads
   find_package(Threads REQUIRED)
 
+  set(HDF5_GENERATE_HEADERS  OFF CACHE BOOL "Do not re-generate auto-generated files" FORCE)
   set(ONLY_SHARED_LIBS       OFF CACHE BOOL "Do not only Build Shared Libraries" FORCE)
   set(HDF5_ENABLE_THREADSAFE ON  CACHE BOOL "Enable thread-safety" FORCE)
   set(BUILD_TESTING          OFF CACHE BOOL "Do not build HDF5 Unit Testing" FORCE)
-  set(HDF5_BUILD_TOOLS       OFF CACHE BOOL "Don not build HDF5 Tools" FORCE)
-  set(HDF5_BUILD_EXAMPLES    OFF CACHE BOOL "Don not build HDF5 Library Examples" FORCE)
-  set(HDF5_BUILD_CPP_LIB     OFF CACHE BOOL "Don not build C++ lib" FORCE)
-  set(HDF5_BUILD_HL_LIB      OFF CACHE BOOL "Don not build hdf5-hl" FORCE)
+  set(HDF5_BUILD_TOOLS       OFF CACHE BOOL "Do not build HDF5 Tools" FORCE)
+  set(HDF5_BUILD_EXAMPLES    OFF CACHE BOOL "Do not build HDF5 Library Examples" FORCE)
+  set(HDF5_BUILD_CPP_LIB     OFF CACHE BOOL "Do not build C++ lib" FORCE)
+  set(HDF5_BUILD_HL_LIB      OFF CACHE BOOL "Do not build hdf5-hl" FORCE)
   set(ONLY_SHARED_LIBS       ON)
   
   set(HDF5_EXTERNALLY_CONFIGURED 1)
