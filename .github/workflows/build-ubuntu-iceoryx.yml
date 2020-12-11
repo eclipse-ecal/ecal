@@ -44,11 +44,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        submodules: 'true'
-
-    - name: Checkout Tags
-      run: |
-        git fetch --prune --unshallow --tags
+        submodules:  'true'
+        fetch-depth: 0
 
     - name: Install Python requirements
       shell: bash
