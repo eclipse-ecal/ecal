@@ -29,7 +29,7 @@ SET(CPACK_OUTPUT_FILE_PREFIX _deploy)
   ##set(CPACK_WIX_PATCH_FILE ${CMAKE_SOURCE_DIR}/cpack/ecal_path.xml)
   ##set(CPACK_WIX_TEMPLATE   "${CMAKE_SOURCE_DIR}/cpack/custom_template.wxs.in")
   ##configure_file("${CMAKE_SOURCE_DIR}/cpack/custom_template.wxs.in" "${CMAKE_BINARY_DIR}/custom_template.wxi" #@ONLY)
-  
+
 #endif()
 if(WIN32)
   set(CPACK_GENERATOR "External")
@@ -43,6 +43,11 @@ endif()
 if(UNIX)
   set(CPACK_GENERATOR "DEB")
   set(CPACK_SOURCE_GENERATOR "TGZ")
+
+  # When configuring the project, a header file with paths has been created.
+  # These paths are used e.g. in eCAL Mon to find the plugin diretory. Thus we
+  # need to use the same paths for cpack.
+  set(CPACK_PACKAGING_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 endif()
 
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
@@ -57,7 +62,7 @@ set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE.txt)
 set(CPACK_RESOURCE_FILE_README  ${CMAKE_SOURCE_DIR}/README.md)
 
 get_cmake_property(CPACK_COMPONENTS_ALL COMPONENTS)
-list(REMOVE_ITEM CPACK_COMPONENTS_ALL 
+list(REMOVE_ITEM CPACK_COMPONENTS_ALL
   #"libprotobuf-lite"
   #"protobuf-export"
   #"protobuf-headers"

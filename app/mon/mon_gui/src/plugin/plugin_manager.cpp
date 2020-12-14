@@ -53,22 +53,18 @@ QVector<QDir> GetPluginDirectories()
 
   // Specify the default plugin directory
   // On windows: cwd/ecalmon_plugins
-  // On Linux: ../lib/ecal/mon_plugins
-  auto default_plugin_dir = QDir(qApp->applicationDirPath());
+  // On Linux: ../lib/ecal/plugins/mon
+  QString default_plugin_dir = qApp->applicationDirPath();
 #ifdef Q_OS_WIN
-  default_plugin_dir.cd("ecalmon_plugins");
+  default_plugin_dir += QString("/ecalmon_plugins")
 #else
-  default_plugin_dir.cdUp();
-  default_plugin_dir.cd("lib");
-  default_plugin_dir.cd("ecal");
-  default_plugin_dir.cd("plugins");
-  default_plugin_dir.cd("mon");
+  default_plugin_dir += QString("/../lib/ecal/plugins/mon");
 #endif
-  plugin_directories.push_back(default_plugin_dir);
+  plugin_directories.push_back(QDir(default_plugin_dir));
 
   // Retrieve additional plugin directories through the environment varialbe "ECAL_MON_PLUGIN_PATH"
   auto current_environment = QProcessEnvironment::systemEnvironment();
-  auto additional_plugin_paths = current_environment.value("ECAL_MON_PLUGIN_PATH");
+  auto additional_plugin_paths   = current_environment.value("ECAL_MON_PLUGIN_PATH");
 
   if (!additional_plugin_paths.isEmpty())
   {
@@ -78,6 +74,26 @@ QVector<QDir> GetPluginDirectories()
       plugin_directories.push_back(QDir(path));
     }
   }
+
+#ifndef Q_OS_WIN
+  // Add the actually installed plugin directory (which may be a multiarch lib dir!)
+
+  QString installed_plugin_dir;
+
+  if (QString(ECAL_INSTALL_PREFIX).isEmpty()
+     || QString(ECAL_INSTALL_LIB_DIR).startsWith('/'))
+  {
+    // The Path is absolute or the prefix is empty anyways
+    installed_plugin_dir = QString(ECAL_INSTALL_LIB_DIR);
+  }
+  else
+  {
+    installed_plugin_dir = QString(ECAL_INSTALL_PREFIX) + QString("/") + QString(ECAL_INSTALL_LIB_DIR);
+  }
+  installed_plugin_dir += QString("/ecal/plugins/mon");
+
+  plugin_directories.push_back(QDir(installed_plugin_dir));
+#endif
 
   return plugin_directories;
 }
