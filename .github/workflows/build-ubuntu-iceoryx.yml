@@ -82,7 +82,11 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_GTEST=ON \
         -DECAL_THIRDPARTY_BUILD_HDF5=OFF \
         -DCMAKE_PREFIX_PATH="${{ runner.workspace }}/iceoryx/iceoryx/build/install/prefix/lib/cmake/iceoryx_posh;${{ runner.workspace }}/iceoryx/iceoryx/build/install/prefix/lib/cmake/iceoryx_utils" \
-        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_SYSCONFDIR=/etc \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_LOCALSTATEDIR=/var \
+        -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu
         sudo mkdir /etc/ecal
         sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.ini" /etc/ecal
       shell: bash
