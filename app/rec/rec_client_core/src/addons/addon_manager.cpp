@@ -26,6 +26,8 @@
 
 #include <list>
 
+#include <ecal/ecal_defs.h>
+
 namespace eCAL
 {
   namespace rec
