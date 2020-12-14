@@ -56,7 +56,7 @@ QVector<QDir> GetPluginDirectories()
   // On Linux: ../lib/ecal/plugins/mon
   QString default_plugin_dir = qApp->applicationDirPath();
 #ifdef Q_OS_WIN
-  default_plugin_dir += QString("/ecalmon_plugins")
+  default_plugin_dir += QString("/ecalmon_plugins");
 #else
   default_plugin_dir += QString("/../lib/ecal/plugins/mon");
 #endif
