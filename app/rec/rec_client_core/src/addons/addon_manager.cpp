@@ -62,6 +62,29 @@ namespace eCAL
         EcalUtils::String::Split(std::string(additional_addon_dirs), dir_delimiter, addon_dirs);
       }
 
+#ifndef WIN32
+      // Add the actually installed plugin directory (which may be a multiarch lib dir!)
+
+      std::string installed_plugin_dir;
+
+      std::string ecal_install_prefix (ECAL_INSTALL_PREFIX);
+      std::string ecal_install_lib_dir(ECAL_INSTALL_LIB_DIR);
+
+      if (ecal_install_prefix.empty()
+         || (!ecal_install_lib_dir.empty() && (ecal_install_lib_dir.front() == EcalUtils::Filesystem::NativeSeparator())))
+      {
+        // The Path is absolute or the prefix is empty anyways
+        installed_plugin_dir = ecal_install_lib_dir;
+      }
+      else
+      {
+        installed_plugin_dir = ecal_install_prefix + EcalUtils::Filesystem::NativeSeparator() + ecal_install_lib_dir;
+      }
+      installed_plugin_dir += "/ecal/addons/rec";
+
+      addon_dirs.push_back(installed_plugin_dir);
+#endif
+
       return addon_dirs;
     }
 
