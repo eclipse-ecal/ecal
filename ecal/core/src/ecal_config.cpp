@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_defs.h>
 
 #include "ecal_def.h"
 #include "ecal_config.h"
@@ -150,10 +151,22 @@ namespace eCAL
 #endif /* ECAL_OS_WINDOWS */
 
 #ifdef ECAL_OS_LINUX
-      config_path = ECAL_USER_CONFIG_PATH_LINUX;
-      if (!direxists(config_path))
+      std::string ecal_install_config_dir(ECAL_INSTALL_CONFIG_DIR);
+      std::string ecal_install_prefix    (ECAL_INSTALL_PREFIX);
+
+      if ((!ecal_install_config_dir.empty() && (ecal_install_config_dir[0] == '/'))
+          || ecal_install_prefix.empty())
       {
-        config_path = ECAL_CONFIG_PATH_LINUX;
+        config_path = ecal_install_config_dir;
+      }
+      else if (!ecal_install_prefix.empty())
+      {
+        config_path = ecal_install_prefix + "/" + ecal_install_config_dir;
+      }
+
+      if (!config_path.empty() && (config_path.back() != '/'))
+      {
+        config_path += "/";
       }
 #endif /* ECAL_OS_LINUX */
 
