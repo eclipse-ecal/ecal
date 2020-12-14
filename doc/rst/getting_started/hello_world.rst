@@ -14,7 +14,7 @@ Hello World
    Please switch to Ubuntu, if you are using an old eCAL Version.
 
 After you have learned a lot about the pre-compiled applications that come with eCAL, let's create our own!
-In the good habit of every tutorial, we will write a Hello World Applications, that sends the string "Hello World" to an eCAL topic.
+In the good habit of every tutorial, we will write a Hello World Application, that sends the string "Hello World" to an eCAL topic.
 
 eCAL uses CMake as a cross-platform build toolchain.
 We will explain the CMake commands needed for the tutorial, but not extensively dive into CMake.
