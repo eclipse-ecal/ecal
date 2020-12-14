@@ -32,7 +32,7 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_file">
@@ -47,7 +47,7 @@
     </widget>
     <widget class="QMenu" name="menuChannel_Mapping">
      <property name="title">
-      <string>Channel Mapping</string>
+      <string>Channel &amp;Mapping</string>
      </property>
      <addaction name="action_save_channel_mapping"/>
      <addaction name="action_load_channel_mapping"/>
@@ -467,7 +467,10 @@
      <normaloff>:/ecalicons/SAVE_AS</normaloff>:/ecalicons/SAVE_AS</iconset>
    </property>
    <property name="text">
-    <string>Save Channel Mapping as...</string>
+    <string>&amp;Save Channel Mapping as...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
   <action name="action_load_channel_mapping">
@@ -479,7 +482,10 @@
      <normaloff>:/ecalicons/OPEN</normaloff>:/ecalicons/OPEN</iconset>
    </property>
    <property name="text">
-    <string>Load Channel Mapping...</string>
+    <string>&amp;Open Channel Mapping...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+O</string>
    </property>
   </action>
   <action name="action_default_mapping_file_load">
@@ -487,7 +493,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Load mapping file</string>
+    <string>&amp;Load mapping file</string>
    </property>
   </action>
   <action name="actionAlways_ask">
@@ -500,7 +506,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Ignore mapping file</string>
+    <string>&amp;Ignore mapping file</string>
    </property>
   </action>
   <action name="action_default_mapping_file_ask">
@@ -517,7 +523,7 @@
      <normaloff>:/ecalicons/SAVE</normaloff>:/ecalicons/SAVE</iconset>
    </property>
    <property name="text">
-    <string>Save labels</string>
+    <string>&amp;Save labels</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
