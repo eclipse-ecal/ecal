@@ -471,7 +471,7 @@ namespace eCAL
           }
           
           // Sort by launch_order, using default operator<
-          configuration.tasks_.sort();
+          //configuration.tasks_.sort(); // Sorting caused non-deterministic behaviour. We rather sort beforehand and fix this later along with a new configuration format.
 
           // Get Functions
           auto functions_element = FindElementByName(src, "functions");
@@ -664,7 +664,7 @@ namespace eCAL
         // Set Targets
         auto targets_element = doc.NewElement("targets");
         targets_element->SetValue("targets");
-        configuration.targets_.sort();
+        //configuration.targets_.sort();  // Sorting caused non-deterministic behaviour. We rather sort beforehand and fix this later along with a new configuration format.
 
         for (const auto& target : configuration.targets_)
         {
@@ -680,7 +680,7 @@ namespace eCAL
         auto runners_element = doc.NewElement("runners");
         runners_element->SetValue("runners");
 
-        configuration.runners_.sort();
+        //configuration.runners_.sort();  // Sorting caused non-deterministic behaviour. We rather sort beforehand and fix this later along with a new configuration format.
 
         for (const auto& runner: configuration.runners_)
         {
@@ -703,7 +703,7 @@ namespace eCAL
         // Set Tasks
         auto tasks_element = doc.NewElement("tasks");
         tasks_element->SetValue("tasks");
-        configuration.tasks_.sort(LexicographicalTaskComparator);
+        //configuration.tasks_.sort(LexicographicalTaskComparator);  // Sorting caused non-deterministic behaviour. We rather sort beforehand and fix this later along with a new configuration format.
 
         for (const auto& task : configuration.tasks_)
         {
@@ -744,7 +744,7 @@ namespace eCAL
         // Set Functions
         auto functions_element = doc.NewElement("functions");
         functions_element->SetValue("functions");
-        configuration.functions_.sort();
+        //configuration.functions_.sort();  // Sorting caused non-deterministic behaviour. We rather sort beforehand and fix this later along with a new configuration format.
 
         for (const auto& function : configuration.functions_)
         {

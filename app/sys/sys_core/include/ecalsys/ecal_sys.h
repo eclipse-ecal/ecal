@@ -502,12 +502,6 @@ private:
   std::recursive_mutex m_config_mutex;                                          /**< A mutex protecting all configuraiton-relevant data, i.e. m_is_config_opened, m_current_config_path, m_options */
 
   /**
-   * @brief Initializes ecal with all relevant components and sets the name of this node to eCALSys
-   * @return True, if initializing eCAL has been successfull
-   */
-  bool InitializeEcal();
-
-  /**
    * @brief Logs the name and version of eCAL Sys to a log file or the console
    */
   void LogAppNameVersion() const;

@@ -232,6 +232,31 @@ bool ConfigManager::SaveConfig(EcalSys& ecalsys, const std::string& path, Config
     auto group_list  = ecalsys.GetGroupList();
     auto options     = ecalsys.GetOptions();
 
+    // Sort the lists, to get a deterministic xml
+    task_list.sort([](const std::shared_ptr<EcalSysTask>& t1, const std::shared_ptr<EcalSysTask>& t2)
+                  {
+                    if (t1->GetId() != t2->GetId())
+                      return t1->GetId() < t2->GetId();
+                    else
+                      return t1->GetName() < t2->GetName(); // should never happen
+                  });
+
+    runner_list.sort([](const std::shared_ptr<EcalSysRunner>& r1, const std::shared_ptr<EcalSysRunner>& r2)
+                  {
+                    if (r1->GetId() != r2->GetId())
+                      return r1->GetId() < r2->GetId();
+                    else
+                      return r1->GetName() < r2->GetName(); // should never happen
+                  });
+
+    group_list.sort([](const std::shared_ptr<TaskGroup>& g1, const std::shared_ptr<TaskGroup>& g2)
+                  {
+                    if (g1->GetId() != g2->GetId())
+                      return g1->GetId() < g2->GetId();
+                    else
+                      return g1->GetName() < g2->GetName(); // should never happen
+                  });
+
     // save data in the "old" config struct
 
     // save runners
