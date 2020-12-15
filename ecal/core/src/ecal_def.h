@@ -31,8 +31,6 @@
 /* base data path name */
 #define ECAL_HOME_PATH_WINDOWS                     ""
 #define ECAL_HOME_PATH_LINUX                       ".ecal"
-#define ECAL_CONFIG_PATH_LINUX                     "/etc/ecal/"
-#define ECAL_USER_CONFIG_PATH_LINUX                "/usr/etc/ecal/"
 #define ECAL_LOG_PATH                              "logs"
 #define ECAL_SETTINGS_PATH                         "cfg"
 
