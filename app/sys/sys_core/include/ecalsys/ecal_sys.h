@@ -373,6 +373,15 @@ public:
    */
   void RestartTaskList             (const std::list<std::shared_ptr<EcalSysTask>>& task_list, bool request_shutdown, bool kill_process, const std::string& target_override = "", bool by_name = false, std::chrono::nanoseconds wait_for_shutdown = std::chrono::seconds(3));
 
+  // TODO: Document
+  void StartTasks();
+
+  // TODO: Document
+  void StopTasks();
+
+  // TODO: Document
+  void RestartTasks();
+
   /**
    * @brief Returns true if the task is currently stopping / starting / restarting or if it is scheduled for one of those actions.
    */

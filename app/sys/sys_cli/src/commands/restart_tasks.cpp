@@ -44,17 +44,25 @@ namespace eCAL
 
       eCAL::sys::Error RestartTask::Execute(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::vector<std::string>& argv) const
       {
-        std::list<std::shared_ptr<EcalSysTask>> task_list;
-        auto error = ToTaskList(ecalsys_instance, argv, task_list);
-
-        if (error)
+        if (argv.empty())
         {
-          return error;
+          ecalsys_instance->RestartTasks();
+          return eCAL::sys::Error::ErrorCode::OK;
         }
         else
         {
-          ecalsys_instance->RestartTaskList(task_list, true, true);
-          return eCAL::sys::Error::ErrorCode::OK;
+          std::list<std::shared_ptr<EcalSysTask>> task_list;
+          auto error = ToTaskList(ecalsys_instance, argv, task_list);
+
+          if (error)
+          {
+            return error;
+          }
+          else
+          {
+            ecalsys_instance->RestartTaskList(task_list, true, true);
+            return eCAL::sys::Error::ErrorCode::OK;
+          }
         }
       }
 

@@ -593,6 +593,61 @@ void EcalSys::RestartTaskList(const std::list<std::shared_ptr<EcalSysTask>>& tas
   RemoveFinishedTaskListThreads();
 }
 
+void EcalSys::StartTasks()
+{
+  auto options = GetOptions();
+
+  if (options.local_tasks_only)
+  {
+    auto task_list = GetTaskList();
+    task_list.remove_if([](const std::shared_ptr<EcalSysTask> t) -> bool { return t->GetTarget() != eCAL::Process::GetHostName(); });
+    StartTaskList(task_list);
+  }
+  else if (options.use_localhost_for_all_tasks)
+  {
+    StartTaskList(GetTaskList(), eCAL::Process::GetHostName());
+  }
+  else
+  {
+    StartTaskList(GetTaskList());
+  }
+}
+
+void EcalSys::StopTasks()
+{
+  auto options = GetOptions();
+
+  if (options.local_tasks_only)
+  {
+    auto task_list = GetTaskList();
+    task_list.remove_if([](const std::shared_ptr<EcalSysTask> t) -> bool { return t->GetTarget() != eCAL::Process::GetHostName(); });
+    StopTaskList(task_list, true, true);
+  }
+  else
+  {
+    StopTaskList(GetTaskList(), true, true);
+  }
+}
+
+void EcalSys::RestartTasks()
+{
+  auto options = GetOptions();
+
+  if (options.local_tasks_only)
+  {
+    auto task_list = GetTaskList();
+    task_list.remove_if([](const std::shared_ptr<EcalSysTask> t) -> bool { return t->GetTarget() != eCAL::Process::GetHostName(); });
+    RestartTaskList(GetTaskList(), true, true);
+  }
+  else if (options.use_localhost_for_all_tasks)
+  {
+    RestartTaskList(GetTaskList(), true, true, eCAL::Process::GetHostName());
+  }
+  else
+  {
+    RestartTaskList(GetTaskList(), true, true);
+  }}
+
 bool EcalSys::IsTaskActionRunning(const std::shared_ptr<EcalSysTask> task)
 {
   bool start_stop_scheduled = false;

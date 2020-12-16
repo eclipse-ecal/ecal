@@ -222,17 +222,17 @@ int main(int argc, char *argv[])
 
       if (start_arg.isSet())
       {
-        Globals::EcalSysInstance()->StartTaskList(Globals::EcalSysInstance()->GetTaskList());
+        Globals::EcalSysInstance()->StartTasks();
       }
       else if (stop_arg.isSet())
       {
         Globals::EcalSysInstance()->UpdateFromCloud();
-        Globals::EcalSysInstance()->StopTaskList(Globals::EcalSysInstance()->GetTaskList(), true, true);
+        Globals::EcalSysInstance()->StopTasks();
       }
       else if (restart_arg.isSet())
       {
         Globals::EcalSysInstance()->UpdateFromCloud();
-        Globals::EcalSysInstance()->RestartTaskList(Globals::EcalSysInstance()->GetTaskList(), true, true);
+        Globals::EcalSysInstance()->RestartTasks();
       }
     }
     else
