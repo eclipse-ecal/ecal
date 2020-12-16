@@ -169,12 +169,12 @@ int main(int argc, char** argv)
   }
 
   // local-tasks-only or use-localhost-for-all-tasks in remote-control mode
-  if (local_tasks_only_arg.isSet())
+  if (local_tasks_only_arg.isSet() && remote_control_arg.isSet())
   {
     std::cerr << "Error: " << local_tasks_only_arg.getName() << " cannot be used in remote-control mode." << std::endl;
     return EXIT_FAILURE;
   }
-  if (use_localhost_for_all_tasks_arg.isSet())
+  if (use_localhost_for_all_tasks_arg.isSet() && remote_control_arg.isSet())
   {
     std::cerr << "Error: " << use_localhost_for_all_tasks_arg.getName() << " cannot be used in remote-control mode." << std::endl;
     return EXIT_FAILURE;
