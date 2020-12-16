@@ -1,4 +1,4 @@
-USAGE: 
+USAGE:
 
    ecal_sys  [-c <Path>] [--remote-control] [--remote-host <Hostname>] [-s]
              [-x] [-r] [--local-tasks-only <true|false>]
@@ -7,7 +7,7 @@ USAGE:
              [--interactive-dont-exit] [--] [--version] [-h]
 
 
-Where: 
+Where:
 
    -c <Path>,  --config <Path>
      The Configuration file to load. Not supported in remote-control mode.
@@ -37,6 +37,7 @@ Where:
 
    --no-wait-for-clients
      Don't wait for eCAL Sys clients before starting / stopping tasks.
+     Waiting is always disabled in interactive and remote-control mode.
 
    --disable-update-from-cloud
      Do not use the monitor to update the tasks for
@@ -47,7 +48,8 @@ Where:
      remote-control mode itself, eCAL Sys will offer the eCAL Sys Service
      for being remote-controlled. Note that eCAL Sys will exit, when stdin
      is closed. To prevent that, combine this option with
-     "interactive-dont-exit".
+     "interactive-dont-exit". When using interactive mode, waiting for
+     ecal_sys_clients is disabled.
 
    --interactive-dont-exit
      When in interactive mode, this option prevents eCAL Sys from exiting,

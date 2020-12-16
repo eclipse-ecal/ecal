@@ -78,11 +78,11 @@ int main(int argc, char** argv)
   
   CustomTclap::FuzzyValueSwitchArg      local_tasks_only_arg           ("", "local-tasks-only",            "Only tasks on local host will be considered. Not supported in remote-control mode.",         false, false, "true|false");
   CustomTclap::FuzzyValueSwitchArg      use_localhost_for_all_tasks_arg("", "use-localhost-for-all-tasks", "All tasks will be considered as being on local host. Not supported in remote-control mode.", false, false, "true|false");
-  TCLAP::SwitchArg                      no_wait_for_clients_arg        ("", "no-wait-for-clients",         "Don't wait for eCAL Sys clients before starting / stopping tasks.",              false);
+  TCLAP::SwitchArg                      no_wait_for_clients_arg        ("", "no-wait-for-clients",         "Don't wait for eCAL Sys clients before starting / stopping tasks. Waiting is always disabled in interactive and remote-control mode.",              false);
   TCLAP::SwitchArg                      disable_update_from_cloud_arg  ("", "disable-update-from-cloud",   "Do not use the monitor to update the tasks for restarting/stopping/monitoring.", false);
 
   TCLAP::SwitchArg                      interactive_dont_exit_arg      ("",  "interactive-dont-exit",  "When in interactive mode, this option prevents eCAL Sys from exiting, when stdin is closed.", false);
-  TCLAP::SwitchArg                      interactive_arg                ("i", "interactive",            "Start eCAL Sys and listen for commands on stdin. When not in remote-control mode itself, eCAL Sys will offer the eCAL Sys Service for being remote-controlled. Note that eCAL Sys will exit, when stdin is closed. To prevent that, combine this option with \"" + interactive_dont_exit_arg.getName() + "\".", false);
+  TCLAP::SwitchArg                      interactive_arg                ("i", "interactive",            "Start eCAL Sys and listen for commands on stdin. When not in remote-control mode itself, eCAL Sys will offer the eCAL Sys Service for being remote-controlled. Note that eCAL Sys will exit, when stdin is closed. To prevent that, combine this option with \"" + interactive_dont_exit_arg.getName() + "\". When using interactive mode, waiting for ecal_sys_clients is disabled.", false);
 
   std::vector<TCLAP::Arg*> arg_vector =
   {
@@ -249,7 +249,7 @@ int main(int argc, char** argv)
   /************************************************************************/
   /* Wait for eCAL Sys Clients                                            */
   /************************************************************************/
-  if (!no_wait_for_clients_arg.isSet())
+  if (!interactive_arg.isSet() && !interactive_dont_exit_arg.isSet() && !no_wait_for_clients_arg.isSet())
   {
     if (ecalsys_instance)
     {
