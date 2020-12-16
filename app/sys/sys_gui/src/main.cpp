@@ -57,7 +57,6 @@ int main(int argc, char *argv[])
 
   CustomTclap::FuzzyValueSwitchArg local_tasks_only_arg           ("", "local-tasks-only",            "Only tasks on local host will be considered.",                      false, false, "true|false");
   CustomTclap::FuzzyValueSwitchArg use_localhost_for_all_tasks_arg("", "use-localhost-for-all-tasks", "All tasks will be considered as being on local host. ",             false, false, "true|false");
-  CustomTclap::FuzzyValueSwitchArg no_wait_for_clients_arg        ("", "no-wait-for-clients",         "Don't wait for eCAL Sys clients before starting / stopping tasks.", false, false, "true|false");
 
   std::vector<TCLAP::Arg*> arg_vector =
   {
@@ -69,7 +68,6 @@ int main(int argc, char *argv[])
     &restart_arg,
     &local_tasks_only_arg,
     &use_localhost_for_all_tasks_arg,
-    &no_wait_for_clients_arg,
     &unlabled_config_arg,
   };
   
@@ -197,14 +195,6 @@ int main(int argc, char *argv[])
 
     options_changed = true;
   }
-
-  // --no-wait-for-clients
-  if (no_wait_for_clients_arg.isSet())
-  {
-    options.check_target_reachability = !no_wait_for_clients_arg.getValue();
-    options_changed = true;
-  }
-
 
   if (options_changed)
     Globals::EcalSysInstance()->SetOptions(options);
