@@ -55,11 +55,9 @@ int main(int argc, char *argv[])
   TCLAP::SwitchArg stop_arg                                  ("x", "stop",                       "Stop all tasks",                 false);
   TCLAP::SwitchArg restart_arg                               ("r", "restart",                    "Restart all tasks",              false);
 
-  TCLAP::SwitchArg use_configured_targets_arg                ("", "use_configured_targets",      "Use the targets as they are configured in the the .ecalsys file.", false);
-  TCLAP::SwitchArg local_tasks_only_arg                      ("", "local_tasks_only",            "Only tasks on local host will be considered",                      false);
-  TCLAP::SwitchArg use_localhost_for_all_tasks_arg           ("", "use_localhost_for_all_tasks", "All tasks will be considered as being on local host",              false);
-
-  CustomTclap::FuzzyValueSwitchArg disable_target_checks_arg ("", "disable_target_checks",       "Disable checking for reachable targets before starting tasks", false, false, "true|false");
+  CustomTclap::FuzzyValueSwitchArg local_tasks_only_arg           ("", "local-tasks-only",            "Only tasks on local host will be considered.",                      false, false, "true|false");
+  CustomTclap::FuzzyValueSwitchArg use_localhost_for_all_tasks_arg("", "use-localhost-for-all-tasks", "All tasks will be considered as being on local host. ",             false, false, "true|false");
+  CustomTclap::FuzzyValueSwitchArg no_wait_for_clients_arg        ("", "no-wait-for-clients",         "Don't wait for eCAL Sys clients before starting / stopping tasks.", false, false, "true|false");
 
   std::vector<TCLAP::Arg*> arg_vector =
   {
@@ -69,10 +67,9 @@ int main(int argc, char *argv[])
     &start_arg,
     &stop_arg,
     &restart_arg,
-    &use_configured_targets_arg,
     &local_tasks_only_arg,
     &use_localhost_for_all_tasks_arg,
-    &disable_target_checks_arg,
+    &no_wait_for_clients_arg,
     &unlabled_config_arg,
   };
   
@@ -168,56 +165,49 @@ int main(int argc, char *argv[])
   }
 
   //////////////////////////////////////
-  // --use_configured_targets
-  // --local_tasks_only
-  // --use_localhost_for_all_tasks
-  // --disable_target_checks
+  // Option validation
   //////////////////////////////////////
-  if (use_configured_targets_arg.isSet()
-    || local_tasks_only_arg.isSet()
-    || use_localhost_for_all_tasks_arg.isSet()
-    || disable_target_checks_arg.isSet())
+
+  // Both local-tasks-only and use-localhost-for-all-tasks is given
+  if ((local_tasks_only_arg.isSet() && local_tasks_only_arg.getValue())
+    && (use_localhost_for_all_tasks_arg.isSet() && use_localhost_for_all_tasks_arg.getValue()))
   {
-    auto options = Globals::EcalSysInstance()->GetOptions();
-
-    if (use_configured_targets_arg.isSet())
-    {
-      options.local_tasks_only            = false;
-      options.use_localhost_for_all_tasks = false;
-
-      if (local_tasks_only_arg.isSet())
-        EcalSysLogger::Log("Error: Cannot set \"" + local_tasks_only_arg.getName()            + "\" option when using \"" + use_configured_targets_arg.getName() + "\" option.", spdlog::level::err);
-      if (use_localhost_for_all_tasks_arg.isSet())
-        EcalSysLogger::Log("Error: Cannot set \"" + use_localhost_for_all_tasks_arg.getName() + "\" option when using \""  + use_configured_targets_arg.getName() + "\" option.", spdlog::level::err);
-    }
-    else if (local_tasks_only_arg.isSet())
-    {
-      options.local_tasks_only            = true;
-      options.use_localhost_for_all_tasks = false;
-
-      if (use_configured_targets_arg.isSet())
-        EcalSysLogger::Log("Error: Cannot set \"" + use_configured_targets_arg.getName()      + "\" option when using \"" + local_tasks_only_arg.getName() + "\" option.", spdlog::level::err);
-      if (use_localhost_for_all_tasks_arg.isSet())
-        EcalSysLogger::Log("Error: Cannot set \"" + use_localhost_for_all_tasks_arg.getName() + "\" option when using \"" + local_tasks_only_arg.getName() + "\" option.", spdlog::level::err);
-    }
-    else if (use_localhost_for_all_tasks_arg.isSet())
-    {
-      options.local_tasks_only            = false;
-      options.use_localhost_for_all_tasks = true;
-
-      if (use_configured_targets_arg.isSet())
-        EcalSysLogger::Log("Error: Cannot set \"" + use_configured_targets_arg.getName()      + "\" option when using \"" + use_localhost_for_all_tasks_arg.getName() + "\" option.", spdlog::level::err);
-      if (local_tasks_only_arg.isSet())
-        EcalSysLogger::Log("Error: Cannot set \"" + local_tasks_only_arg.getName()            + "\" option when using \"" + use_localhost_for_all_tasks_arg.getName() + "\" option.", spdlog::level::err);
-    }
-
-    if (disable_target_checks_arg.isSet())
-    {
-      options.check_target_reachability = false;
-    }
-
-    Globals::EcalSysInstance()->SetOptions(options);
+    EcalSysLogger::Log("Error: Cannot use \"" + local_tasks_only_arg.getName()      + "\" option when using \"" + use_localhost_for_all_tasks_arg.getName() + "\" option.", spdlog::level::err);
   }
+
+  auto options         = Globals::EcalSysInstance()->GetOptions();
+  bool options_changed = false;
+
+  // --local-tasks-only
+  if (local_tasks_only_arg.isSet())
+  {
+    options.local_tasks_only = local_tasks_only_arg.getValue();
+    if (options.local_tasks_only)
+      options.use_localhost_for_all_tasks = false;
+
+    options_changed = true;
+  }
+  
+  // --use-localhost-for-all-tasks
+  if (use_localhost_for_all_tasks_arg.isSet())
+  {
+    options.use_localhost_for_all_tasks = use_localhost_for_all_tasks_arg.getValue();
+    if (options.use_localhost_for_all_tasks)
+      options.local_tasks_only = false;
+
+    options_changed = true;
+  }
+
+  // --no-wait-for-clients
+  if (no_wait_for_clients_arg.isSet())
+  {
+    options.check_target_reachability = !no_wait_for_clients_arg.getValue();
+    options_changed = true;
+  }
+
+
+  if (options_changed)
+    Globals::EcalSysInstance()->SetOptions(options);
 
   //////////////////////////////////////
   // --start
