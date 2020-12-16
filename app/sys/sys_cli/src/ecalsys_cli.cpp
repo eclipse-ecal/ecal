@@ -78,7 +78,7 @@ int main(int argc, char** argv)
   
   CustomTclap::FuzzyValueSwitchArg      local_tasks_only_arg           ("", "local-tasks-only",            "Only tasks on local host will be considered. Not supported in remote-control mode.",         false, false, "true|false");
   CustomTclap::FuzzyValueSwitchArg      use_localhost_for_all_tasks_arg("", "use-localhost-for-all-tasks", "All tasks will be considered as being on local host. Not supported in remote-control mode.", false, false, "true|false");
-  TCLAP::SwitchArg                      no_wait_for_clients_arg        ("", "no-wait-for-clients",         "Don't wait for eCAL Sys clients before starting / stopping tasks. Waiting is always disabled in interactive and remote-control mode.",              false);
+  CustomTclap::FuzzyValueSwitchArg      no_wait_for_clients_arg        ("", "no-wait-for-clients",         "Don't wait for eCAL Sys clients before starting / stopping tasks. Waiting is always disabled in interactive and remote-control mode.", false, false, "true|false"); // TODO: This arguments was a simple switch arg before.
   TCLAP::SwitchArg                      disable_update_from_cloud_arg  ("", "disable-update-from-cloud",   "Do not use the monitor to update the tasks for restarting/stopping/monitoring.", false);
 
   TCLAP::SwitchArg                      interactive_dont_exit_arg      ("",  "interactive-dont-exit",  "When in interactive mode, this option prevents eCAL Sys from exiting, when stdin is closed.", false);
@@ -199,7 +199,6 @@ int main(int argc, char** argv)
     return EXIT_FAILURE;
   }
 
-
   /************************************************************************/
   /*  Remote control mode                                                 */
   /************************************************************************/
@@ -244,6 +243,45 @@ int main(int argc, char** argv)
     {
       std::cerr << "Warning: Ignoring configuration file in remote control mode" << std::endl;
     }
+  }
+
+  /************************************************************************/
+  /* eCAL Sys Options                                                     */
+  /************************************************************************/
+  if (ecalsys_instance)
+  {
+    auto options         = ecalsys_instance->GetOptions();
+    bool options_changed = false;
+
+    // --local-tasks-only
+    if (local_tasks_only_arg.isSet())
+    {
+      options.local_tasks_only = local_tasks_only_arg.getValue();
+      if (options.local_tasks_only)
+        options.use_localhost_for_all_tasks = false;
+
+      options_changed = true;
+    }
+
+    // --use-localhost-for-all-tasks
+    if (use_localhost_for_all_tasks_arg.isSet())
+    {
+      options.use_localhost_for_all_tasks = use_localhost_for_all_tasks_arg.getValue();
+      if (options.use_localhost_for_all_tasks)
+        options.local_tasks_only = false;
+
+      options_changed = true;
+    }
+
+    // --no-wait-for-clients
+    if (no_wait_for_clients_arg.isSet())
+    {
+      options.check_target_reachability = !no_wait_for_clients_arg.getValue();
+      options_changed = true;
+    }
+
+    if (options_changed)
+      ecalsys_instance->SetOptions(options);
   }
 
   /************************************************************************/
