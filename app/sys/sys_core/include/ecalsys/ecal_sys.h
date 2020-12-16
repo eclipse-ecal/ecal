@@ -373,13 +373,30 @@ public:
    */
   void RestartTaskList             (const std::list<std::shared_ptr<EcalSysTask>>& task_list, bool request_shutdown, bool kill_process, const std::string& target_override = "", bool by_name = false, std::chrono::nanoseconds wait_for_shutdown = std::chrono::seconds(3));
 
-  // TODO: Document
+  /**
+   * @brief Start all tasks
+   *
+   * Starts all tasks with respect to the options (local-tasks-only and use-localhost-for-all-tasks)
+   */
   void StartTasks();
 
-  // TODO: Document
+  /**
+   * @brief Stops all tasks
+   *
+   * Stops all tasks while respecting the options (local-tasks-only).
+   * The Tasks are stopped "normally", i.e. by an eCAL shutdown signal and a
+   * subsequent task kill
+   */
   void StopTasks();
 
-  // TODO: Document
+  /**
+   * @brief Restarts all tasks
+   *
+   * Restarts all tasks with respect to the options (local-tasks-only and
+   * use-localhost-for-all-tasks).
+   * The Tasks are stopped "normally", i.e. by an eCAL shutdown signal and a
+   * subsequent task kill
+   */
   void RestartTasks();
 
   /**
