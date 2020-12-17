@@ -220,4 +220,4 @@ endif()
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/sys)
 
-ecal_install_app(${PROJECT_NAME})
+ecal_install_app(${PROJECT_NAME} START_MENU_NAME "eCAL Sys")

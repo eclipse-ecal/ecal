@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=eCAL Monitor
+Comment=eCAL Monitoring Application
+Exec=@CMAKE_INSTALL_PREFIX@/@eCAL_install_app_dir@/ecal_@TARGET_NAME@
+Terminal=false
+Type=Application
+Icon=ecal_@TARGET_NAME@
