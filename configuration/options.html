@@ -332,6 +332,11 @@
 <li class="toctree-l3"><a class="reference internal" href="../applications/rec/recorder_ftp_upload.html">FTP Upload</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../applications/sys/sys.html">eCAL Sys</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_overview.html">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_cli.html">Sys CLI</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
@@ -349,9 +354,11 @@
 <li><a class="reference internal" href="#network">[network]</a></li>
 <li><a class="reference internal" href="#common">[common]</a></li>
 <li><a class="reference internal" href="#time">[time]</a></li>
+<li><a class="reference internal" href="#process">[process]</a></li>
 <li><a class="reference internal" href="#iceoryx">[iceoryx]</a></li>
 <li><a class="reference internal" href="#publisher">[publisher]</a></li>
 <li><a class="reference internal" href="#monitoring">[monitoring]</a></li>
+<li><a class="reference internal" href="#sys">[sys]</a></li>
 </ul>
 </li>
 </ul>
@@ -518,6 +525,24 @@
 </dd></dl>
 
 </div>
+<div class="section" id="process">
+<h2>[process]<a class="headerlink" href="#process" title="Permalink to this headline">¶</a></h2>
+<dl class="std option">
+<dt id="cmdoption-arg-terminal_emulator">
+<span id="cmdoption-arg-terminal-emulator"></span><code class="sig-name descname">terminal_emulator</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-arg-terminal_emulator" title="Permalink to this definition">¶</a></dt>
+<dd><p>default: <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p>
+<p>command for starting applications with an external terminal emulator.
+If empty, the command will be ignored.
+Ignored on Windows.</p>
+<p>e.g:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/usr/bin/x-terminal-emulator</span> <span class="pre">-e</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/usr/bin/gnome-terminal</span> <span class="pre">-x</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/usr/bin/xterm</span> <span class="pre">-e</span></code></p></li>
+</ul>
+</dd></dl>
+
+</div>
 <div class="section" id="iceoryx">
 <h2>[iceoryx]<a class="headerlink" href="#iceoryx" title="Permalink to this headline">¶</a></h2>
 <dl class="std option">
@@ -655,6 +680,15 @@ Per default includes all eCAL internal topics.</p>
 <span id="cmdoption-arg-filter-log-udp"></span><code class="sig-name descname">filter_log_udp</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-arg-filter_log_udp" title="Permalink to this definition">¶</a></dt>
 <dd><p>log messages to udp bus</p>
 <p>default = <code class="docutils literal notranslate"><span class="pre">info,</span> <span class="pre">warning,</span> <span class="pre">error,</span> <span class="pre">fatal</span></code></p>
+</dd></dl>
+
+</div>
+<div class="section" id="sys">
+<h2>[sys]<a class="headerlink" href="#sys" title="Permalink to this headline">¶</a></h2>
+<dl class="std option">
+<dt id="cmdoption-arg-0">
+<code class="sig-name descname">filter_excl</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-arg-0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apps blacklist to be excluded when importing tasks from cloud.</p>
 </dd></dl>
 
 </div>

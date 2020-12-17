@@ -9,4 +9,5 @@ Applications
 .. toctree::
 
    applications/rec/recorder
+   applications/sys/sys
 
