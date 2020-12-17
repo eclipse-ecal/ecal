@@ -24,13 +24,6 @@ list(APPEND CMAKE_MODULE_PATH
 
 project(eCAL)
 
-# Set CMake policy behavior (alias targets)
-cmake_policy(SET CMP0028 NEW)
-cmake_policy(SET CMP0048 NEW)
-cmake_policy(SET CMP0057 NEW)
-cmake_policy(SET CMP0054 NEW)
-#cmake_policy(SET CMP0077 NEW) // currently not working with older CMake version
-
 # --------------------------------------------------------
 # command line build options
 # use it that way cmake .. -DBUILD_APPS=ON -DBUILD_SAMPLES=ON

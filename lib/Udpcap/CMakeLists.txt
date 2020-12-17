@@ -16,8 +16,6 @@
 #
 # ========================= eCAL LICENSE =================================
 
-cmake_minimum_required(VERSION 3.13) # INTEFACE_LINK_OPTIONS is available since cmake 3.13
-
 project(udpcap)
 
 find_package(Npcap        REQUIRED)

@@ -32,10 +32,6 @@ endif()
 find_package(simpleini REQUIRED)
 find_package(tclap REQUIRED)
 
-if(POLICY CMP0071)
-  cmake_policy(SET CMP0071 OLD)
-endif()
-
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC OFF) # Reason for being turned off: AutoUIC will prevent VS from detecting changes in .ui files
 set(CMAKE_AUTORCC OFF) # Reason for being turned off: AutoRCC will create an entirely new project in VS which clutters the solution appearance. Additionally, we cannot assign a source group to the generated .cpp files which will clutter the project.

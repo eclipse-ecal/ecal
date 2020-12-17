@@ -16,7 +16,6 @@
 #
 # ========================= eCAL LICENSE =================================
 
-cmake_minimum_required (VERSION 3.5)
 project(eCAL_samples VERSION "${ECAL_VERSION_STRING}")
 set (CMAKE_CXX_STANDARD 14)
 

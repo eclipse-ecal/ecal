@@ -16,18 +16,12 @@
 #
 # ========================= eCAL LICENSE =================================
 
-cmake_minimum_required(VERSION 3.0.2)
-
 project(CustomQt)
 
 find_package(Qt5 COMPONENTS
     Core
     Widgets
 REQUIRED)
-
-if(POLICY CMP0071)
-  cmake_policy(SET CMP0071 OLD)
-endif()
 
 
 set(CMAKE_AUTOMOC ON)
