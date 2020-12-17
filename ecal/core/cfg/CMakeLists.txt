@@ -16,8 +16,6 @@
 #
 # ========================= eCAL LICENSE =================================
 
-cmake_minimum_required(VERSION 2.8)
-
 # Merge all ecaltime config files
 # -> The ecaltime.ini will only contain valid settings for the time modules that were actually compiled.
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/ecaltime.ini "")

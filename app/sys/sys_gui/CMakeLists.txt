@@ -23,10 +23,6 @@ find_package(Qt5 COMPONENTS
     Widgets
 REQUIRED)
 
-if(POLICY CMP0071)
-  cmake_policy(SET CMP0071 OLD)
-endif()
-
 find_package(tclap REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(simpleini REQUIRED)

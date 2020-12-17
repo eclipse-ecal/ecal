@@ -23,10 +23,6 @@ find_package(Qt5 COMPONENTS
     Widgets
 REQUIRED)
 
-if(POLICY CMP0071)
-  cmake_policy(SET CMP0071 OLD)
-endif()
-
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC OFF) # Reason for being turned off: AutoUIC will prevent VS from detecting changes in .ui files

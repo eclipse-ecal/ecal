@@ -15,7 +15,6 @@
 # limitations under the License.
 #
 # ========================= eCAL LICENSE =================================
-cmake_minimum_required(VERSION 3.5.1)
 
 set(PROJECT_NAME rec_server_service_gui)
 
