@@ -52,7 +52,7 @@ public:
   void on_pushButton_sys_clicked();
   void on_pushButton_play_clicked();
   void on_pushButton_rec_clicked();
-  void on_pushButton_about_clicked();
+  void on_pushButton_info_clicked();
   void on_pushButton_exit_clicked();
 
 private:

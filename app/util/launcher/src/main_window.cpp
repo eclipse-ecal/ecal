@@ -97,7 +97,7 @@ void MainWindow::on_pushButton_rec_clicked()
   QProcess::startDetached(eCAL::Apps::REC_GUI);
 }
 
-void MainWindow::on_pushButton_about_clicked()
+void MainWindow::on_pushButton_info_clicked()
 {
   _about_dialog = new AboutDialog(this);
   _about_dialog->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
