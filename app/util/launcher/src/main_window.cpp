@@ -82,6 +82,11 @@ void MainWindow::on_pushButton_monitor_clicked()
   QProcess::startDetached(eCAL::Apps::MON_GUI);
 }
 
+void MainWindow::on_pushButton_sys_clicked()
+{
+  QProcess::startDetached(eCAL::Apps::SYS_GUI);
+}
+
 void MainWindow::on_pushButton_play_clicked()
 {
   QProcess::startDetached(eCAL::Apps::PLAY_GUI);

@@ -49,6 +49,7 @@ public:
 
   private slots:
   void on_pushButton_monitor_clicked();
+  void on_pushButton_sys_clicked();
   void on_pushButton_play_clicked();
   void on_pushButton_rec_clicked();
   void on_pushButton_about_clicked();
