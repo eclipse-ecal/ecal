@@ -46,6 +46,7 @@ target_link_libraries(${PROJECT_NAME}
   eCAL::core
   tclap::tclap
   eCAL::utils
+  EcalParser
 )
 
 ecal_install_app(${PROJECT_NAME})

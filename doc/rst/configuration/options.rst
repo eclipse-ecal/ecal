@@ -123,6 +123,24 @@ The network setting drive how and which ...
    - ecaltime-linuxptp     For PTP / gPTP synchronization over ethernet on Linux (device configuration in ecaltime.ini)
    - ecaltime-simtime      Simulation time as published by the eCAL Player.
 
+[process]
+=========
+
+.. option:: terminal_emulator        
+   
+   default: ``""``
+
+   command for starting applications with an external terminal emulator.
+   If empty, the command will be ignored.
+   Ignored on Windows.
+   
+   e.g:
+
+   - ``/usr/bin/x-terminal-emulator -e``
+   - ``/usr/bin/gnome-terminal -x``
+   - ``/usr/bin/xterm -e``
+
+
 [iceoryx]
 =========
 
@@ -246,3 +264,10 @@ Monitor settings are listed in the section ``monitoring``
    log messages to udp bus
    
    default = ``info, warning, error, fatal``
+
+[sys]
+=====
+
+.. option:: filter_excl      
+
+   Apps blacklist to be excluded when importing tasks from cloud.

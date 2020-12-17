@@ -218,7 +218,7 @@ namespace eCAL
       // .ecalmeas file
       {
         // Get the last dirname of the complete measurement path and use it as meas name
-        std::list<std::string> path_components = EcalUtils::Filesystem::CleanPathComponentList(measurement_path);
+        std::vector<std::string> path_components = EcalUtils::Filesystem::CleanPathComponentList(measurement_path);
         std::string ecalmeas_file_name;
         if (!path_components.empty())
         {

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ImportFromCloudWindow</class>
+ <widget class="QMainWindow" name="ImportFromCloudWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Import from cloud</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../../../../../iconset/ecalicons.qrc">
+    <normaloff>:/ecalicons/IMPORT_FROM_CLOUD</normaloff>:/ecalicons/IMPORT_FROM_CLOUD</iconset>
+  </property>
+  <widget class="QWidget" name="central_widget">
+   <layout class="QVBoxLayout" name="central_layout"/>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../../../resources/resources.qrc"/>
+  <include location="../../../../../iconset/ecalicons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

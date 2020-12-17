@@ -1,0 +1,1082 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TaskWidget</class>
+ <widget class="QWidget" name="TaskWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>830</width>
+    <height>591</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QHBoxLayout" name="button_row_layout">
+     <item>
+      <widget class="QPushButton" name="add_task_button">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>16</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>48</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Add</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/ADD</normaloff>:/ecalicons/ADD</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="edit_task_button">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>16</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>48</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Edit</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/EDIT</normaloff>:/ecalicons/EDIT</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="remove_task_button">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>16</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>48</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Remove</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/DELETE</normaloff>:/ecalicons/DELETE</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="button_row_spacer_1">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Preferred</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>0</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="start_all_tasks_button">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>16</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>48</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Start all</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/START</normaloff>:/ecalicons/START</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>28</width>
+         <height>28</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="stop_all_tasks_button">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>16</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>48</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Stop all</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/STOP</normaloff>:/ecalicons/STOP</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>28</width>
+         <height>28</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="restart_all_tasks_button">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>16</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>48</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Restart all</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/RESTART</normaloff>:/ecalicons/RESTART</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>28</width>
+         <height>28</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="button_row_spacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Preferred</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>0</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="start_selected_tasks_button">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>16</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>48</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Start selected tasks</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/START_SELECTED</normaloff>:/ecalicons/START_SELECTED</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="stop_selected_tasks_button">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>16</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>48</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Stop selected tasks</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/STOP_SELECTED</normaloff>:/ecalicons/STOP_SELECTED</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="restart_selected_tasks_button">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>16</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>48</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Restart selected tasks</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/RESTART_SELECTED</normaloff>:/ecalicons/RESTART_SELECTED</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="button_row_spacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Preferred</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>0</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="import_from_cloud_button">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>16</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>48</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Import from cloud</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/IMPORT_FROM_CLOUD</normaloff>:/ecalicons/IMPORT_FROM_CLOUD</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="update_form_cloud_button">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>16</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>48</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Update from cloud</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/UPDATE_FROM_CLOUD</normaloff>:/ecalicons/UPDATE_FROM_CLOUD</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="button_row_spacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::MinimumExpanding</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QFilterLineEdit" name="filter_lineedit">
+     <property name="placeholderText">
+      <string>Filter</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QAdvancedTreeView" name="task_tree">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::CustomContextMenu</enum>
+     </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::ExtendedSelection</enum>
+     </property>
+     <property name="verticalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="rootIsDecorated">
+      <bool>false</bool>
+     </property>
+     <property name="uniformRowHeights">
+      <bool>true</bool>
+     </property>
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="allColumnsShowFocus">
+      <bool>true</bool>
+     </property>
+     <attribute name="headerShowSortIndicator" stdset="0">
+      <bool>true</bool>
+     </attribute>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="hide_edit_control_button">
+     <property name="toolTip">
+      <string>Hide the task properties</string>
+     </property>
+     <property name="text">
+      <string>▼ Hide ▼</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="edit_task_widget" native="true">
+     <layout class="QVBoxLayout" name="edit_task_layout">
+      <item>
+       <layout class="QHBoxLayout" name="edit_task_taskname_layout">
+        <item>
+         <widget class="QLabel" name="task_name_label">
+          <property name="text">
+           <string>Name:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="task_name_lineedit">
+          <property name="toolTip">
+           <string>Name of the selected Task</string>
+          </property>
+          <property name="placeholderText">
+           <string>Task Name</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="edit_task_properties_layout">
+        <item>
+         <widget class="QGroupBox" name="task_properties_groupbox">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="title">
+           <string>Properties</string>
+          </property>
+          <layout class="QFormLayout" name="formLayout">
+           <item row="0" column="0">
+            <widget class="QLabel" name="target_label">
+             <property name="text">
+              <string>Target:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="target_lineedit">
+             <property name="minimumSize">
+              <size>
+               <width>20</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Host to start this Task on</string>
+             </property>
+             <property name="placeholderText">
+              <string>Hostname</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="runner_label">
+             <property name="text">
+              <string>Runner:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="algo_path_label">
+             <property name="text">
+              <string>Algo:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <layout class="QHBoxLayout" name="algo_path_layout">
+             <item>
+              <widget class="QEcalParserLineEdit" name="algo_path_lineedit">
+               <property name="minimumSize">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Path to the algo binary</string>
+               </property>
+               <property name="placeholderText">
+                <string>Path</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="algo_path_button">
+               <property name="minimumSize">
+                <size>
+                 <width>10</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Select algo path</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="working_dir_label">
+             <property name="text">
+              <string>Working dir:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <layout class="QHBoxLayout" name="working_dir_layout">
+             <item>
+              <widget class="QEcalParserLineEdit" name="working_dir_lineedit">
+               <property name="minimumSize">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Working directory</string>
+               </property>
+               <property name="placeholderText">
+                <string>Path</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="working_dir_button">
+               <property name="minimumSize">
+                <size>
+                 <width>10</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Select working directory</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="cmd_args_label">
+             <property name="text">
+              <string>Cmd args:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QEcalParserLineEdit" name="cmd_args_lineedit">
+             <property name="minimumSize">
+              <size>
+               <width>20</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Command line arguments</string>
+             </property>
+             <property name="placeholderText">
+              <string>Arguments</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <layout class="QHBoxLayout" name="runner_layout">
+             <item>
+              <widget class="QComboBox" name="runner_combobox">
+               <property name="minimumSize">
+                <size>
+                 <width>40</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="show_runners_button">
+               <property name="minimumSize">
+                <size>
+                 <width>10</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Show runner window</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../../../../../iconset/ecalicons.qrc">
+                 <normaloff>:/ecalicons/EYE</normaloff>:/ecalicons/EYE</iconset>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="start_attributes_groupbox">
+          <property name="title">
+           <string>Start Attributes</string>
+          </property>
+          <layout class="QFormLayout" name="formLayout_2">
+           <item row="0" column="0">
+            <widget class="QLabel" name="visibility_label">
+             <property name="text">
+              <string>Visibility:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="visibility_combobox">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Visibility of the window</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>Normal</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Maximized</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Minimized</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Hidden</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="launch_order_label">
+             <property name="text">
+              <string>Launch order:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="launch_order_spinbox">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Launch order (lower numbers will be started at first)</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="keyboardTracking">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="waiting_time_label">
+             <property name="text">
+              <string>Waiting time:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="waiting_time_spinbox">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Time to wait after starting the task</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="keyboardTracking">
+              <bool>false</bool>
+             </property>
+             <property name="suffix">
+              <string> ms</string>
+             </property>
+             <property name="prefix">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>10000</number>
+             </property>
+             <property name="singleStep">
+              <number>10</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="monitoring_groupbox">
+          <property name="title">
+           <string>Monitoring</string>
+          </property>
+          <layout class="QFormLayout" name="monitoring_groupbox_layout">
+           <item row="0" column="0" colspan="2">
+            <widget class="QAdvancedCheckBox" name="enable_monitoring_checkbox">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Monitor this task with eCAL Sys</string>
+             </property>
+             <property name="text">
+              <string>Enable Monitoring</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <layout class="QHBoxLayout" name="restart_by_severity_layout">
+             <item>
+              <widget class="QAdvancedCheckBox" name="restart_by_severity_checkbox">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Restart task if its severity drops below a certain level</string>
+               </property>
+               <property name="text">
+                <string>Restart by severity</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="restart_by_severity_warning_label">
+               <property name="toolTip">
+                <string>Using this option is not recommended.
+Consider fixing your task, instead.</string>
+               </property>
+               <property name="text">
+                <string>Warning</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="restart_by_severity_label">
+             <property name="text">
+              <string>Restart on:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QComboBox" name="restart_by_severity_combobox">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;table&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;Healthy&amp;nbsp;Lv1&amp;nbsp;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;≫&amp;nbsp;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;Healthy&amp;nbsp;Lv2&amp;nbsp;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;≫&amp;nbsp;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;...&amp;nbsp;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;≫&amp;nbsp;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;Failed&amp;nbsp;Lv4&amp;nbsp;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;≫&amp;nbsp;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;Failed&amp;nbsp;Lv5&amp;nbsp;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&lt;strong&gt;Best&lt;/strong&gt;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;≫&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;...&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;≫&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;...&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;≫&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;...&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;≫&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&lt;strong&gt;Worst&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</string>
+             </property>
+             <property name="currentIndex">
+              <number>-1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QComboBox" name="restart_by_severity_level_combobox">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;table&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;Healthy&amp;nbsp;Lv1&amp;nbsp;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;≫&amp;nbsp;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;Healthy&amp;nbsp;Lv2&amp;nbsp;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;≫&amp;nbsp;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;...&amp;nbsp;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;≫&amp;nbsp;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;Failed&amp;nbsp;Lv4&amp;nbsp;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;≫&amp;nbsp;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&amp;nbsp;Failed&amp;nbsp;Lv5&amp;nbsp;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&lt;strong&gt;Best&lt;/strong&gt;&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;≫&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;...&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;≫&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;...&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;≫&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;...&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;≫&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;&lt;strong&gt;Worst&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</string>
+             </property>
+             <property name="currentText">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2">
+            <widget class="Line" name="line">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QAdvancedTreeView</class>
+   <extends>QTreeView</extends>
+   <header>CustomQt/QAdvancedTreeView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QAdvancedCheckBox</class>
+   <extends>QCheckBox</extends>
+   <header>CustomQt/QAdvancedCheckBox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QFilterLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>CustomQt/QFilterLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QEcalParserLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">QEcalParser/ecal_parser_lineedit/ecal_parser_lineedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../../resources/resources.qrc"/>
+  <include location="../../../../../iconset/ecalicons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

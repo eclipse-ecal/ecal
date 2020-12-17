@@ -115,6 +115,7 @@ Name: "{group}\eCAL Launcher";                       Filename: "{app}\bin\ecal_l
 Name: "{group}\eCAL Monitor";                        Filename: "{app}\bin\ecal_mon_gui.exe";                      Components: applications
 Name: "{group}\eCAL Recorder";                       Filename: "{app}\bin\ecal_rec_gui.exe";                      Components: applications
 Name: "{group}\eCAL Player";                         Filename: "{app}\bin\ecal_play_gui.exe";                     Components: applications
+Name: "{group}\eCAL Sys";                            Filename: "{app}\bin\ecal_sys_gui.exe";                      Components: applications
 Name: "{group}\Configuration\Edit Configuration";    Filename: "{app}\cfg\ecal.ini";                              Components: runtime
 
 Name: "{group}\{cm:UninstallProgram,{#AppName}}";    Filename: "{uninstallexe}"
@@ -122,7 +123,7 @@ Name: "{commondesktop}\eCAL Launcher";               Filename: "{app}\bin\ecal_l
 
 [Registry]
 Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "ECAL_HOME"; ValueData: "{app}";                                     Flags: uninsdeletevalue;  Components: applications
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "ECAL_DATA"; ValueData: "{app}\cfg";                            Flags: uninsdeletevalue;  Components: applications
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "ECAL_DATA"; ValueData: "{app}\cfg";                                 Flags: uninsdeletevalue;  Components: applications
 
 Root: HKCR; Subkey: ".ecalrec";                                                     ValueType: string; ValueName: "";          ValueData: "ecal_rec_gui";                              Flags: uninsdeletevalue;  Components: applications
 Root: HKCR; Subkey: "ecal_rec_gui";                                                 ValueType: string; ValueName: "";          ValueData: "eCAL Recorder Configuration";               Flags: uninsdeletekey;    Components: applications
@@ -133,6 +134,11 @@ Root: HKCR; Subkey: ".ecalplay";                                                
 Root: HKCR; Subkey: "ecal_play_gui";                                                ValueType: string; ValueName: "";          ValueData: "eCAL Player Configuration";                 Flags: uninsdeletekey;    Components: applications
 Root: HKCR; Subkey: "ecal_play_gui\DefaultIcon";                                    ValueType: string; ValueName: "";          ValueData: "{app}\bin\ecal_play_gui.exe,0";                                       Components: applications
 Root: HKCR; Subkey: "ecal_play_gui\shell\open\command";                             ValueType: string; ValueName: "";          ValueData: """{app}\bin\ecal_play_gui.exe"" ""%1""";                              Components: applications
+
+Root: HKCR; Subkey: ".ecalsys";                                                     ValueType: string; ValueName: "";          ValueData: "ecal_sys_gui";                              Flags: uninsdeletevalue;  Components: applications
+Root: HKCR; Subkey: "ecal_sys_gui";                                                 ValueType: string; ValueName: "";          ValueData: "eCAL Sys Configuration";                    Flags: uninsdeletekey;    Components: applications
+Root: HKCR; Subkey: "ecal_sys_gui\DefaultIcon";                                     ValueType: string; ValueName: "";          ValueData: "{app}\bin\ecal_sys_gui.exe,0";                                       Components: applications
+Root: HKCR; Subkey: "ecal_sys_gui\shell\open\command";                              ValueType: string; ValueName: "";          ValueData: """{app}\bin\ecal_sys_gui.exe"" ""%1""";                              Components: applications
 
 [Code]
 // add eCAL to system path

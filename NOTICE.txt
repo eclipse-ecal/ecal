@@ -83,7 +83,7 @@ This project has dependencies - list with dependency name and license follows.
   - URL: https://github.com/gabime/spdlog
   - License: MIT License - https://github.com/gabime/spdlog/blob/v1.x/LICENSE
 
-2.3.5 Termocolor
+2.3.5 Termcolor
   - Copyright (c) 2013, Ihor Kalnytskyi
   - URL: https://github.com/ikalnytskyi/termcolor
   - License: BSD License - https://github.com/ikalnytskyi/termcolor/blob/master/LICENSE
@@ -107,3 +107,19 @@ This project has dependencies - list with dependency name and license follows.
   - Copyright 2008 Google Inc.
   - URL: https://github.com/google/googletest
   - License: BSD 3-Clause License - https://github.com/google/googletest/blob/master/LICENSE.txt
+  
+2.5 Documentation
+
+2.5.1 Typo 3 Theme
+  - URL: https://github.com/TYPO3-Documentation/sphinx_typo3_theme
+  - License: MIT License - https://github.com/TYPO3-Documentation/sphinx_typo3_theme/blob/master/LICENSE
+  
+2.5.2 Bootstrap
+  - Copyright 2011-2019 The Bootstrap Authors
+  - Copyright 2011-2019 Twitter, Inc.
+  - URL: https://getbootstrap.com/
+  - License: MIT License - https://github.com/twbs/bootstrap/blob/master/LICENSE
+
+2.5.3 Font Awesome
+  - URL: https://fontawesome.com
+  - License: Font Awesome Free License - https://fontawesome.com/license/free

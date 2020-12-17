@@ -62,6 +62,7 @@ option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build protobuf with eCAL"       
 option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                            ON)
 option(ECAL_THIRDPARTY_BUILD_TINYXML2          "Build tinyxml2 with eCAL"                                          ON)
 option(ECAL_THIRDPARTY_BUILD_FINEFTP           "Build fineFTP with eCAL"                                           ON)
+option(ECAL_THIRDPARTY_BUILD_TERMCOLOR         "Build termcolor with eCAL"                                         ON)
 
 # option(ECAL_THIRDPARTY_BUILD_ZLIB              "Build zlib with eCAL"                                              ON)
 # option(ECAL_THIRDPARTY_BUILD_LIBSSH2           "Build libssh2 with eCAL"                                           ON)
@@ -167,6 +168,11 @@ if (ECAL_THIRDPARTY_BUILD_FINEFTP)
   add_subdirectory(thirdparty/fineftp-server/fineftp-server EXCLUDE_FROM_ALL)
   set_property(TARGET server PROPERTY FOLDER lib/fineftp)
   add_library(fineftp::server ALIAS server)
+endif ()
+
+if (ECAL_THIRDPARTY_BUILD_TERMCOLOR)
+  list(APPEND as_subproject termcolor)
+  add_subdirectory(thirdparty/termcolor EXCLUDE_FROM_ALL)
 endif ()
 
 # if (ECAL_THIRDPARTY_BUILD_LIBSSH2)
@@ -512,6 +518,13 @@ if(BUILD_APPS)
   add_subdirectory(app/mon/mon_cli)
   add_subdirectory(app/util/config)
   add_subdirectory(app/util/stop)
+  add_subdirectory(app/sys/sys_core)
+  add_subdirectory(app/sys/sys_cli)
+  add_subdirectory(app/sys/sys_client_cli)
+  add_subdirectory(app/sys/sys_client_core)
+  if(NOT APPLE)
+    add_subdirectory(contrib/mma/src)
+  endif()
 endif()
 
 # --------------------------------------------------------
@@ -530,6 +543,7 @@ endif()
 # qt applications
 # --------------------------------------------------------
 if(BUILD_APPS AND HAS_QT5)
+  add_subdirectory(app/sys/sys_gui)
   add_subdirectory(app/mon/mon_gui)
   if(WIN32)
     set(ECAL_MON_PLUGIN_DIR ecalmon_plugins)

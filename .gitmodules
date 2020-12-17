@@ -34,3 +34,6 @@
 [submodule "thirdparty/hdf5"]
 	path = thirdparty/hdf5
 	url = https://github.com/HDFGroup/hdf5.git
+[submodule "thirdparty/termcolor"]
+	path = thirdparty/termcolor
+	url = https://github.com/ikalnytskyi/termcolor.git
