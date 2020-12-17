@@ -5,9 +5,9 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,7 @@ endfunction()
 
 # this appends the 64 / 32 suffix (required for the eCAL Core libraries)
 function(ecal_install_ecal_static_library TARGET_NAME)
-  
+
   install(TARGETS ${TARGET_NAME}
   # IMPORTANT: Add the library to the "export-set"
     EXPORT eCALCoreTargets
@@ -44,7 +44,7 @@ endfunction()
 # installing shared libraries is a li
 # this appends the 64 / 32 suffix (required for the eCAL Core libraries)
 function(ecal_install_ecal_shared_library TARGET_NAME)
-  
+
 # Windows, RUNTIME -> .dll, ARCHIVE -> .lib, Unix: LIBRARY -> .so
   install(TARGETS ${TARGET_NAME}
   # IMPORTANT: Add the library to the "export-set"
@@ -106,6 +106,21 @@ function(ecal_install_app TARGET_NAME)
   set_property(INSTALL "${eCAL_install_app_dir}/$<TARGET_FILE_NAME:${TARGET_NAME}>"
     PROPERTY CPACK_START_MENU_SHORTCUTS "${ECAL_INSTALL_APP_START_MENU_NAME}"
   )
+
+  if(UNIX AND (DEFINED ECAL_INSTALL_APP_START_MENU_NAME))
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/appmenu/app.desktop.in"
+                   "${CMAKE_CURRENT_BINARY_DIR}/appmenu/ecal_${TARGET_NAME}.desktop"
+                   @ONLY)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/appmenu/icon.png"
+                   "${CMAKE_CURRENT_BINARY_DIR}/appmenu/ecal_${TARGET_NAME}.png"
+                   COPYONLY)
+
+   INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/appmenu/ecal_${TARGET_NAME}.png"
+           DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/256x256/apps/")
+
+    INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/appmenu/ecal_${TARGET_NAME}.desktop"
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/applications/")
+  endif()
 endfunction()
 
 function(ecal_install_gtest TARGET_NAME)
