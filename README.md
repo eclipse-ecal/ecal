@@ -55,9 +55,13 @@ What is on the roadmap ?
 * more language bindings (rust, go-lang)
 * and ?? tell us about your use case :-)
 
-Friends@GitHub using eCAL
+GitHub project using / used by eCAL
 
-* [ROS2 eCAL Middleware Layer](https://github.com/continental/rmw_ecal)
+* eCAL & ROS2:
+  * [ROS2 eCAL Middleware Layer](https://github.com/continental/rmw_ecal)
+  * [ROS2 to eCAL Gateway](https://github.com/schilasky/ros2ecal)
+  * [eCAL to ROS2 Gateway](https://github.com/schilasky/ecal2ros)
+* [Iceoryx](https://github.com/eclipse/iceoryx)
 * [GO language interface](https://github.com/Blutkoete/golang-ecal)
 * [Dockerfiles for eCAL](https://github.com/Blutkoete/docker-ecal)
 
