@@ -45,7 +45,7 @@ if(ECAL_SHARED_CONFIG AND NOT CMAKE_CROSSCOMPILING)
       ${CMAKE_CURRENT_BINARY_DIR}/ecal.ini
     DESTINATION
       ${ECAL_SHARED_CONFIG}
-    COMPONENT runtime
+    COMPONENT configuration
   )
   if(BUILD_TIME)
     install(
@@ -53,7 +53,7 @@ if(ECAL_SHARED_CONFIG AND NOT CMAKE_CROSSCOMPILING)
         ${CMAKE_CURRENT_BINARY_DIR}/ecaltime.ini
       DESTINATION
         ${ECAL_SHARED_CONFIG}
-      COMPONENT runtime        
+      COMPONENT configuration        
     )
   endif()
 endif()
