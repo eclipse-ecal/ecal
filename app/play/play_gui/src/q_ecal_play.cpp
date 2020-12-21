@@ -870,8 +870,12 @@ void QEcalPlay::periodicStateUpdate()
 {
   EcalPlayState current_state = currentPlayState();
 
+  bool state_changed = (last_state_ != current_state);
+
   last_state_ = current_state;
-  emit playStateChangedSignal(current_state);
+
+  if (state_changed)
+    emit playStateChangedSignal(current_state);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
