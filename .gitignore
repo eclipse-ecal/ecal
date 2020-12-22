@@ -23,7 +23,7 @@ CMakeLists.txt.user
 # CLion project files
 /.idea
 
-#macOS
+# macOS
 .DS_Store
 
 # Visual Studio 2015/2017 cache/options directory
@@ -34,4 +34,8 @@ CMakeLists.txt.user
 
 # Sphinx live output
 doc/rst/_build/
+
+# Clion
+.idea
+cmake-build-*
 
