@@ -46,7 +46,7 @@ namespace eCAL
       thread.Stop();
     };
 
-    void InitializeLayer()
+    void Initialize()
     {
       SReceiverAttr attr;
       attr.ipaddr = eCALPAR(NET, UDP_MULTICAST_GROUP);
@@ -57,7 +57,7 @@ namespace eCAL
       rcv.Create(attr);
     }
 
-    void StartLayer(std::string& topic_name_, QOS::SReaderQOS /*qos_*/)
+    void AddSubscription(std::string& topic_name_, std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
     {
       if (!started)
       {
@@ -73,11 +73,11 @@ namespace eCAL
       }
     }
 
-    void StopLayer(std::string& /*topic_name_*/)
+    void RemSubscription(std::string& /*topic_name_*/, std::string& /*topic_id_*/)
     {
     }
 
-    void ApplyLayerParameter(SReaderLayerPar& /*par_*/)
+    void UpdateParameter(SReaderLayerPar& /*par_*/)
     {
     }
 

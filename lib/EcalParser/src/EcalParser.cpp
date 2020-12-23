@@ -285,7 +285,7 @@ namespace EcalParser
       std::transform(lower_word.begin(), lower_word.end(), lower_word.begin(),
         [](char c) {return static_cast<char>(::tolower(c)); });
       return (lower_word == "target")
-        || (lower_word == "_");
+        || (lower_word == "t");
     }
 
     std::string EvaluateFunction(const std::string& function_name, const std::string& param, std::chrono::system_clock::time_point time)

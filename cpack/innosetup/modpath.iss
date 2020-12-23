@@ -170,7 +170,7 @@ var
 begin
 	taskname := ModPathName;
 	if CurStep = ssPostInstall then
-		if IsTaskSelected(taskname) then
+		if WizardIsTaskSelected(taskname) then
 			ModPath();
 end;
 
@@ -211,7 +211,7 @@ var
 	taskname:	String;
 begin
 	taskname := ModPathName;
-	if IsTaskSelected(taskname) and not UsingWinNT() then begin
+	if WizardIsTaskSelected(taskname) and not UsingWinNT() then begin
 		Result := True;
 	end else begin
 		Result := False;

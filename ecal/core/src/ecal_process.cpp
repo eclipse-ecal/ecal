@@ -35,6 +35,7 @@
 #include <sstream>
 #include <algorithm>
 #include <memory>
+#include <fstream>
 
 #include "sys_usage.h"
 
@@ -937,66 +938,92 @@ namespace eCAL
         if (pos >= procargs.size())
           return "";
 
-        // Save where the argv[0] string starts
-        size_t pos_argv0 = pos;
+        // Iterate through the '\0' terminated strings and copy them to a C++ vector
+        std::vector<std::string> argument_vector;
+        argument_vector.reserve(argc);
 
-        // Iterate through the '\0' terminated strings and convert '\0' to ' '
-        size_t current_arg = 0;
-        for (size_t i = pos_argv0; i < procargs.size(); ++i)
+        size_t current_arg_start = pos;
+        int current_arg_number = 0;
+        for (size_t i = pos; i < procargs.size(); ++i)
         {
-          if ((int)current_arg == (argc - 1))
-            break;
-
           if (procargs[i] == '\0')
           {
-            current_arg++;
-            procargs[i] = ' ';
+            std::string arg = std::string(&procargs[current_arg_start], i - current_arg_start);
+            argument_vector.push_back(arg);
+            current_arg_start = i + 1;
+            current_arg_number++;
           }
-        }
 
-        // Copy to the string
-        g_process_par = &procargs[pos_argv0];
+          if (current_arg_number == argc)
+            break;
+        }
 
 #elif defined(ECAL_OS_QNX)
         // TODO: Find a suitable method on QNX to get process arguments of the current executable 
         g_process_par = "";
 #else
-        FILE* f;
-        char cmdline[1024] = { 0 };
 
-        f = fopen("/proc/self/cmdline", "r");
-        if (f == nullptr) return "";
+        const std::string filename = "/proc/self/cmdline";
+        std::vector<std::string> argument_vector;
 
-        char* p = cmdline;
-        char* res = fgets(cmdline, sizeof(cmdline) / sizeof(*cmdline), f);
-        fclose(f);
-        if (res == nullptr) return "";
-
-        while (*p)
+        std::ifstream cmdline_file(filename, std::ios::binary);
+        if (!cmdline_file.is_open())
         {
-          p += strlen(p);
-          if (*(p + 1))
+          std::cerr << "Failed to open " << filename << '\n';
+          return "";
+        }
+        else
+        {
+          std::string arg;
+          while (std::getline(cmdline_file, arg, '\0')) // the cmdline contains arguments separated by \0
           {
-            *p = ' ';
+            argument_vector.emplace_back(arg);
           }
-          p++;
-        }
-        //puts(cmdline);
-
-        char par[1024] = { 0 };
-        int  par_len = 1024;
-        strncpy(par, cmdline, par_len);
-        par[par_len - 1] = '\0';
-
-        std::string par_s = (const char*)par;
-        char chars[] = " \t\n\r";
-        for (unsigned int i = 0; i < strlen(chars); ++i)
-        {
-          par_s.erase(std::remove(par_s.begin(), par_s.end(), chars[i]), par_s.end());
         }
 
-        g_process_par = par_s;
 #endif // ECAL_OS_MACOS
+
+        size_t complete_char_num(0);
+        for (std::string& argument : argument_vector)
+        {
+          std::string escaped_arg;
+          escaped_arg.reserve(argument.size() + 2);
+
+          bool constains_space = (argument.find(' ') != std::string::npos);
+
+          // Escape special characters
+          if (constains_space) escaped_arg += '\"';
+          for (char c : argument)
+          {
+            if (c == '\\')                              // Escape [\]
+              escaped_arg += "\\\\";
+            else if (c == '\"')                         // Escape ["]
+              escaped_arg += "\\\"";
+            else if (c == '\'')                         // Escape [']
+              escaped_arg += "\\\'";
+            else
+              escaped_arg += c;
+          }
+          if (constains_space) escaped_arg += '\"';
+
+          if(escaped_arg.empty())
+            escaped_arg = "\"\"";
+
+          complete_char_num += escaped_arg.size();
+          argument = escaped_arg;
+        }
+
+        std::string process_par;
+        process_par.reserve(complete_char_num + argument_vector.size());
+
+        for (auto arg_it = argument_vector.begin(); arg_it != argument_vector.end(); arg_it++)
+        {
+          if (arg_it != argument_vector.begin())
+            process_par += ' ';
+          process_par += *arg_it;
+        }
+
+        g_process_par = process_par;
       }
       return(g_process_par);
     }
@@ -1135,8 +1162,23 @@ namespace eCAL
         // --------------------------- Child process ---------------------------
         STD_COUT_DEBUG("[PID " << getpid() << "]: " << "First message from child process" << std::endl);
 
-        // Create a new Session
-        setsid();
+        // Create a new Session, if we start processes non-blocking. If we start
+        // blocking, we don't create a new session, as otherwise the init
+        // process (PID 1) would take the responsibility of waiting for the
+        // process and retrieving its return value.
+        if (!block_)
+        {
+          STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Creating new session" << std::endl);
+          pid_t session_id = setsid();
+          if (session_id == -1)
+          {
+            std::cerr << "[PID " << getpid() << "]: " << "Failed creating new session: " << strerror(errno) << std::endl;
+          }
+          else
+          {
+            STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Successfully created new session with ID " << session_id << std::endl);
+          }
+        }
 
         // Fork the process again, into the child and the grandchild (The child
         // receives grandchild_pid != 0, the grandchild receives
@@ -1146,11 +1188,11 @@ namespace eCAL
         if (grandchild_pid < 0)
         {
           std::cerr << "[PID " << getpid() << "]: " << "Error forking: " << strerror(errno) << std::endl;
-          exit(EXIT_FAILURE);
+          _exit(EXIT_FAILURE);
         }
-        else if (grandchild_pid == 0)
+        else if (grandchild_pid != 0)
         {
-          exit(EXIT_SUCCESS);
+          _exit(EXIT_SUCCESS);
         }
         else
         {
@@ -1164,7 +1206,7 @@ namespace eCAL
             if (chdir(working_dir_))
             {
               std::cerr << "[PID " << getpid() << "]: " << "Error changing working directory to " << working_dir_ << ": " << strerror(errno) << std::endl;
-              return 0;
+              _exit(EXIT_FAILURE);
             }
           }
 
@@ -1378,8 +1420,19 @@ namespace eCAL
           }
 
           delete[] c_argv;
+
+          STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Unlocking lockfile" << std::endl);
+          if (flock(lockfile_fd, LOCK_UN) == -1)
+          {
+            std::cerr << "[PID " << getpid() << "]: " << "Error unlocking lockfile \"" << lockfile_name << "\": " << strerror(errno) << std::endl;
+          }
+          else
+          {
+            STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Successfully unlocked lockfile!" << std::endl);
+          }
+
           STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Process will now exit" << std::endl);
-          exit(0);
+          _exit(EXIT_FAILURE);
         }
       }
       else
@@ -1389,6 +1442,20 @@ namespace eCAL
         // This is the main process that has to continue normally.
 
         pid_t process_pid = 0;
+
+        // Wait for the child process to finish, so it won't get zombified
+
+        STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Waiting for child (PID " << child_pid << ") to finish" << std::endl);
+        pid_t wait_for_child_result = waitpid(child_pid, nullptr, 0);
+        if ((wait_for_child_result < 1) || (wait_for_child_result == 0 /* should never happen*/))
+        {
+          std::cerr << "[PID " << getpid() << "]: " << "Error waiting for child to exit: " << strerror(errno) << std::endl;
+        }
+        else
+        {
+          STD_COUT_DEBUG("[PID " << getpid() << "]: " << "Child process has finished." << std::endl);
+        }
+
 
         // Open the FIFO and read the PID from it. This will block until we
         // actually receive the data, so we are dependent on some process to

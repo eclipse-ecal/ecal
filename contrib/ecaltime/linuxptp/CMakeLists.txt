@@ -33,7 +33,7 @@ set(ecal_time_linuxptp_header
 )
 
 if(UNIX)
-  set_source_files_properties(convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
+  set_source_files_properties(src/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
 ecal_add_time_plugin(${PROJECT_NAME} SHARED ${ecal_time_linuxptp_src} ${ecal_time_linuxptp_header})
@@ -42,7 +42,7 @@ target_link_libraries(${PROJECT_NAME} eCAL::core simpleini::simpleini)
 
 target_include_directories(${PROJECT_NAME} 
   PRIVATE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
 ecal_install_time_plugin(${PROJECT_NAME})

@@ -620,7 +620,7 @@ namespace eCAL
     DoRegister(false);
 
     // check connection timeouts
-    std::shared_ptr<std::list<std::string>> loc_timeouts = std::shared_ptr<std::list<std::string>>(new std::list<std::string>);
+    std::shared_ptr<std::list<std::string>> loc_timeouts = std::make_shared<std::list<std::string>>();
     {
       std::lock_guard<std::mutex> lock(m_sub_map_sync);
       m_loc_sub_map.remove_deprecated(loc_timeouts.get());

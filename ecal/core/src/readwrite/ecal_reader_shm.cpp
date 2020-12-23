@@ -38,7 +38,7 @@ namespace eCAL
   {
   }
 
-  void CSHMLayer::ApplyLayerParameter(SReaderLayerPar& par_)
+  void CSHMLayer::UpdateParameter(SReaderLayerPar& par_)
   {
     std::string memfile_name = par_.parameter;
     if (!memfile_name.empty())

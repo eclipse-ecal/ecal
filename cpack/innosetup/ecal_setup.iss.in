@@ -25,6 +25,7 @@
 #define AppDateTime             GetDateTimeString('yyyy-mm-dd', '', '');
 #define OutputName              str("ecal-")+str(AppVersion)+str("-win64")
 #define ComponentStagingDir     "@CPACK_TEMPORARY_INSTALL_DIRECTORY@"
+#define DebugSdkStagingDir      StringChange(ComponentStagingDir, "/complete/", "/sdk/")
 #define OutputDir               "@CPACK_PACKAGE_DIRECTORY@/@CPACK_OUTPUT_FILE_PREFIX@"
 #define LicenseFile             "@CPACK_RESOURCE_FILE_LICENSE@"
 
@@ -39,7 +40,7 @@ AppPublisher={#AppPublisher}
 DefaultDirName={sd}\{#AppName}
 DefaultGroupName={#AppName}
 WizardImageFile=gfx\logo_iss.bmp
-WizardSmallImageFile=gfx\icon.bmp
+WizardSmallImageFile=gfx\logo_icon.bmp
 OutputDir={#OutputDir}
 OutputBaseFilename={#OutputName}
 Compression=lzma2
@@ -52,66 +53,93 @@ VersionInfoVersion={#AppVersion}
 LicenseFile={#LicenseFile}
 
 [Components]
-Name: runtime;                     Description: "eCAL Runtime";                             Types: full compact custom; Flags: disablenouninstallwarning fixed
-Name: applications;                Description: "Applications (Monitor, Recorder, Player)"; Types: full compact custom; Flags: disablenouninstallwarning
-Name: samples;                     Description: "Samples";                                  Types: full;                Flags: disablenouninstallwarning
-Name: sdk;                         Description: "SDK";                                      Types: full;
-Name: sdk\ecal;                    Description: "eCAL SDK";                                 Types: full;                Flags: disablenouninstallwarning
-Name: sdk\protobuf;                Description: "Protobuf";                                 Types: full;                Flags: disablenouninstallwarning
-
+Name: runtime;        Description: "eCAL Runtime";                             Types: full compact custom; Flags: disablenouninstallwarning fixed
+Name: applications;   Description: "Applications (Monitor, Recorder, Player)"; Types: full compact custom; Flags: disablenouninstallwarning
+Name: samples;        Description: "Samples";                                  Types: full;                Flags: disablenouninstallwarning
+Name: doc;            Description: "Documentation";                            Types: full;                Flags: disablenouninstallwarning
+Name: sdk;            Description: "SDK";                                      Types: full;
+Name: sdk\ecal;       Description: "eCAL SDK";                                 Types: full;                Flags: disablenouninstallwarning
+Name: sdk\protobuf;   Description: "Protobuf";                                 Types: full;                Flags: disablenouninstallwarning
 
 [Tasks]
-Name: "desktopicon";     Description: "{cm:CreateDesktopIcon}";     GroupDescription: "{cm:AdditionalIcons}";      Flags: unchecked
-Name: "modifypath";      Description: "Add application directory to your environmental path";                      Flags: checkedonce
+Name: "desktopicon";  Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";     Flags: unchecked
+Name: "modifypath";   Description: "Add application directory to your environmental path";                 Flags: checkedonce
 
 [Files]
 ; runtime
-Source: "{#ComponentStagingDir}\runtime\*";          DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: runtime
-Source: "{#ComponentStagingDir}\Unspecified\*";      DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: runtime
+Source: "{#ComponentStagingDir}\runtime\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: runtime
+Source: "{#ComponentStagingDir}\Unspecified\*";       DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: runtime
+Source: "{#ComponentStagingDir}\configuration\cfg\*"; DestDir: "{commonappdata}\eCAL\";   Flags: ignoreversion recursesubdirs;     Components: runtime
 
 ; applications
-Source: "{#ComponentStagingDir}\app\*";              DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: applications
+Source: "{#ComponentStagingDir}\app\*";               DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: applications
 
 ; samples
-Source: "{#ComponentStagingDir}\samples\*";          DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: samples
+Source: "{#ComponentStagingDir}\samples\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: samples
+
+; doc
+Source: "{#ComponentStagingDir}\doc\*";               DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: doc
 
 ; sdk\ecal
-Source: "{#ComponentStagingDir}\headers\*";          DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\ecal
-Source: "{#ComponentStagingDir}\libraries\*";        DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\ecal
-Source: "{#ComponentStagingDir}\sdk\*";              DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\ecal
+Source: "{#ComponentStagingDir}\headers\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
+Source: "{#ComponentStagingDir}\libraries\*";         DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
+Source: "{#ComponentStagingDir}\sdk\*";               DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
+
+Source: "{#DebugSdkStagingDir}\runtime\*";            DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
+Source: "{#DebugSdkStagingDir}\Unspecified\*";        DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
+
+Source: "{#DebugSdkStagingDir}\app\*";                DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
+
+;Source: "{#DebugSdkStagingDir}\headers\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
+Source: "{#DebugSdkStagingDir}\libraries\*";          DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
+Source: "{#DebugSdkStagingDir}\sdk\*";                DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
 
 ; sdk\protobuf
-Source: "{#ComponentStagingDir}\libprotobuf\*";      DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
-Source: "{#ComponentStagingDir}\libprotobuf-lite\*"; DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
-Source: "{#ComponentStagingDir}\libprotoc\*";        DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
-Source: "{#ComponentStagingDir}\protobuf-export\*";  DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
-Source: "{#ComponentStagingDir}\protobuf-headers\*"; DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
-Source: "{#ComponentStagingDir}\protobuf-protos\*";  DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
-Source: "{#ComponentStagingDir}\protoc\*";           DestDir: "{app}";   Flags: ignoreversion recursesubdirs; Components: sdk\protobuf
+Source: "{#ComponentStagingDir}\libprotobuf\*";       DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
+Source: "{#ComponentStagingDir}\libprotobuf-lite\*";  DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
+Source: "{#ComponentStagingDir}\libprotoc\*";         DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
+Source: "{#ComponentStagingDir}\protobuf-export\*";   DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
+Source: "{#ComponentStagingDir}\protobuf-headers\*";  DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
+Source: "{#ComponentStagingDir}\protobuf-protos\*";   DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
+Source: "{#ComponentStagingDir}\protoc\*";            DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
+
+Source: "{#DebugSdkStagingDir}\libprotobuf\*";        DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
+Source: "{#DebugSdkStagingDir}\libprotobuf-lite\*";   DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
+Source: "{#DebugSdkStagingDir}\libprotoc\*";          DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
+Source: "{#DebugSdkStagingDir}\protobuf-export\*";    DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
+;Source: "{#DebugSdkStagingDir}\protobuf-headers\*";  DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
+;Source: "{#DebugSdkStagingDir}\protobuf-protos\*";   DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
+; Source: "{#DebugSdkStagingDir}\protoc\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
 
 [Icons]
-Name: "{group}\eCAL Launcher";                                Filename: "{app}\bin\ecal_launcher.exe";                     Components: applications
-Name: "{group}\eCAL Monitor";                                 Filename: "{app}\bin\ecal_mon_gui.exe";                      Components: applications
-Name: "{group}\eCAL Recorder";                                Filename: "{app}\bin\ecal_rec_gui.exe";                      Components: applications
-Name: "{group}\eCAL Player";                                  Filename: "{app}\bin\ecal_play_gui.exe";                     Components: applications
-Name: "{group}\Configuration\Edit Configuration";             Filename: "{app}\cfg\ecal.ini";                              Components: runtime
+Name: "{group}\eCAL Launcher";                        Filename: "{app}\bin\ecal_launcher.exe";                     Components: applications
+Name: "{group}\eCAL Monitor";                         Filename: "{app}\bin\ecal_mon_gui.exe";                      Components: applications
+Name: "{group}\eCAL Recorder";                        Filename: "{app}\bin\ecal_rec_gui.exe";                      Components: applications
+Name: "{group}\eCAL Player";                          Filename: "{app}\bin\ecal_play_gui.exe";                     Components: applications
+Name: "{group}\eCAL Sys";                             Filename: "{app}\bin\ecal_sys_gui.exe";                      Components: applications
+Name: "{group}\Configuration\Edit ecal.ini";          Filename: "{commonappdata}\eCAL\ecal.ini";                   Components: runtime
 
-Name: "{group}\{cm:UninstallProgram,{#AppName}}";             Filename: "{uninstallexe}"
-Name: "{commondesktop}\eCAL Launcher";                        Filename: "{app}\bin\ecal_launcher.exe"; Tasks: desktopicon;  Components: applications
+Name: "{group}\{cm:UninstallProgram,{#AppName}}";     Filename: "{uninstallexe}"
+Name: "{commondesktop}\eCAL Launcher";                Filename: "{app}\bin\ecal_launcher.exe"; Tasks: desktopicon; Components: applications
 
 [Registry]
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "ECAL_HOME";            ValueData: "{app}";                                     Flags: uninsdeletevalue;  Components: applications
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "ECAL_DATA";            ValueData: "{app}\cfg";                            Flags: uninsdeletevalue;  Components: applications
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "ECAL_HOME"; ValueData: "{app}";                                     Flags: uninsdeletevalue;  Components: applications
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "ECAL_DATA"; ValueData: "{commonappdata}\eCAL";                                 Flags: uninsdeletevalue;  Components: applications
 
-Root: HKCR; Subkey: ".ecalrec";                                                     ValueType: string; ValueName: "";                     ValueData: "ecal_rec_gui";                              Flags: uninsdeletevalue;  Components: applications
-Root: HKCR; Subkey: "ecal_rec_gui";                                                 ValueType: string; ValueName: "";                     ValueData: "eCAL Recorder Configuration";               Flags: uninsdeletekey;    Components: applications
-Root: HKCR; Subkey: "ecal_rec_gui\DefaultIcon";                                     ValueType: string; ValueName: "";                     ValueData: "{app}\bin\ecal_rec_gui.exe,0";                                        Components: applications
-Root: HKCR; Subkey: "ecal_rec_gui\shell\open\command";                              ValueType: string; ValueName: "";                     ValueData: """{app}\bin\ecal_rec_gui.exe"" ""%1""";                               Components: applications
+Root: HKCR; Subkey: ".ecalrec";                                                     ValueType: string; ValueName: "";          ValueData: "ecal_rec_gui";                              Flags: uninsdeletevalue;  Components: applications
+Root: HKCR; Subkey: "ecal_rec_gui";                                                 ValueType: string; ValueName: "";          ValueData: "eCAL Recorder Configuration";               Flags: uninsdeletekey;    Components: applications
+Root: HKCR; Subkey: "ecal_rec_gui\DefaultIcon";                                     ValueType: string; ValueName: "";          ValueData: "{app}\bin\ecal_rec_gui.exe,0";                                        Components: applications
+Root: HKCR; Subkey: "ecal_rec_gui\shell\open\command";                              ValueType: string; ValueName: "";          ValueData: """{app}\bin\ecal_rec_gui.exe"" ""%1""";                               Components: applications
 
-Root: HKCR; Subkey: ".ecalplay";                                                    ValueType: string; ValueName: "";                     ValueData: "ecal_play_gui";                             Flags: uninsdeletevalue;  Components: applications
-Root: HKCR; Subkey: "ecal_play_gui";                                                ValueType: string; ValueName: "";                     ValueData: "eCAL Player Configuration";                 Flags: uninsdeletekey;    Components: applications
-Root: HKCR; Subkey: "ecal_play_gui\DefaultIcon";                                    ValueType: string; ValueName: "";                     ValueData: "{app}\bin\ecal_play_gui.exe,0";                                       Components: applications
-Root: HKCR; Subkey: "ecal_play_gui\shell\open\command";                             ValueType: string; ValueName: "";                     ValueData: """{app}\bin\ecal_play_gui.exe"" ""%1""";                              Components: applications
+Root: HKCR; Subkey: ".ecalplay";                                                    ValueType: string; ValueName: "";          ValueData: "ecal_play_gui";                             Flags: uninsdeletevalue;  Components: applications
+Root: HKCR; Subkey: "ecal_play_gui";                                                ValueType: string; ValueName: "";          ValueData: "eCAL Player Configuration";                 Flags: uninsdeletekey;    Components: applications
+Root: HKCR; Subkey: "ecal_play_gui\DefaultIcon";                                    ValueType: string; ValueName: "";          ValueData: "{app}\bin\ecal_play_gui.exe,0";                                       Components: applications
+Root: HKCR; Subkey: "ecal_play_gui\shell\open\command";                             ValueType: string; ValueName: "";          ValueData: """{app}\bin\ecal_play_gui.exe"" ""%1""";                              Components: applications
+
+Root: HKCR; Subkey: ".ecalsys";                                                     ValueType: string; ValueName: "";          ValueData: "ecal_sys_gui";                              Flags: uninsdeletevalue;  Components: applications
+Root: HKCR; Subkey: "ecal_sys_gui";                                                 ValueType: string; ValueName: "";          ValueData: "eCAL Sys Configuration";                    Flags: uninsdeletekey;    Components: applications
+Root: HKCR; Subkey: "ecal_sys_gui\DefaultIcon";                                     ValueType: string; ValueName: "";          ValueData: "{app}\bin\ecal_sys_gui.exe,0";                                       Components: applications
+Root: HKCR; Subkey: "ecal_sys_gui\shell\open\command";                              ValueType: string; ValueName: "";          ValueData: """{app}\bin\ecal_sys_gui.exe"" ""%1""";                              Components: applications
 
 [Code]
 // add eCAL to system path

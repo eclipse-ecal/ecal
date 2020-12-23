@@ -25,7 +25,7 @@ This chapter will walk you through
 Links
 =====
 
-If you just want to download eCAL for Windows or Linux, click the following button:
+If you just want to download eCAL for |fa-windows| Windows or |fa-ubuntu| Linux, click the following button:
 
 .. raw:: html
 
@@ -83,5 +83,14 @@ eCAL is provided on an "as is" basis without warranties or conditions of any kin
    :caption: Using eCAL
 
    configuration
+   applications
    faq
+
+.. toctree::
+   :hidden:
+   :caption: Advanced
+   
+   advanced/documentation
+   advanced/performance
+   advanced/transport_layers
 

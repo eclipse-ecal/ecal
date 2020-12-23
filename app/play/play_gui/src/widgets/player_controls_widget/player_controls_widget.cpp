@@ -111,7 +111,7 @@ PlayerControlsWidget::PlayerControlsWidget(QWidget* parent)
         if (proxy_index.isValid())
         {
           auto source_index = step_reference_channel_proxy_model_->mapToSource(proxy_index);
-          ChannelTreeItem* channel_item = static_cast<ChannelTreeItem*>(step_reference_channel_model_->item(source_index));
+          const ChannelTreeItem* channel_item = static_cast<const ChannelTreeItem*>(step_reference_channel_model_->item(source_index));
           QEcalPlay::instance()->setStepReferenceChannel(channel_item->sourceChannelName());
         }
         else
@@ -268,7 +268,7 @@ void PlayerControlsWidget::channelMappingChanged(const std::map<std::string, std
       {
         if (item && item->type() == (int)TreeItemType::Channel)
         {
-          auto channel_item = static_cast<const ChannelTreeItem* const>(item);
+          auto channel_item = static_cast<const ChannelTreeItem*>(item);
           if (channel_mapping.find(channel_item->sourceChannelName().toStdString()) == channel_mapping.end())
           {
             return true;
@@ -288,7 +288,7 @@ void PlayerControlsWidget::channelMappingChanged(const std::map<std::string, std
         {
           if (item && item->type() == (int)TreeItemType::Channel)
           {
-            auto channel_item = static_cast<const ChannelTreeItem* const>(item);
+            auto channel_item = static_cast<const ChannelTreeItem*>(item);
             if (channel_pair.first == channel_item->sourceChannelName().toStdString())
             {
               return true;
@@ -308,7 +308,7 @@ void PlayerControlsWidget::channelMappingChanged(const std::map<std::string, std
     {
       // Update existing item
       QAbstractTreeItem* channel_item = exisiting_items.at(0);
-      if (static_cast<const ChannelTreeItem* const>(channel_item)->targetChannelName() != channel_pair.second.c_str())
+      if (static_cast<const ChannelTreeItem*>(channel_item)->targetChannelName() != channel_pair.second.c_str())
       {
         QModelIndex index = step_reference_channel_model_->index(channel_item, (int)ChannelTreeModel::Columns::CHANNEL_NAME);
         step_reference_channel_model_->setData(index, channel_pair.second.c_str(), Qt::ItemDataRole::EditRole);
@@ -349,7 +349,7 @@ void PlayerControlsWidget::setSelectedStepReferenceChannel(const QString& step_r
       {
         if (item && item->type() == (int)TreeItemType::Channel)
         {
-          auto channel_item = static_cast<const ChannelTreeItem* const>(item);
+          auto channel_item = static_cast<const ChannelTreeItem*>(item);
           if (step_reference_channel == channel_item->sourceChannelName())
           {
             return true;

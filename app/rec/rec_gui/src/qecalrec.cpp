@@ -52,10 +52,10 @@ QEcalRec::QEcalRec(QObject* parent)
   setEnabledRecClients(initial_server_config);
 
   setMeasRootDir("$TARGET{OSSELECT WIN \"C:\" LINUX \"$TARGET{ENV HOME}\"}/ecal_meas");
-  setMeasName("${TIME}_measurement");
+  setMeasName("$HOST{TIME}_measurement");
   setDescription(
-R"(Measurement started by: ${USERNAME}@${HOSTNAME}
-Date: ${TIME %F %R}
+R"(Measurement started by: $HOST{USERNAME}@$HOST{HOSTNAME}
+Date: $HOST{TIME %F %R}
 )"
   );
   setMaxFileSizeMib(100);
@@ -97,7 +97,7 @@ Date: ${TIME %F %R}
                                               emit monitorUpdatedSignal(topic_info_map, hosts_running_ecal_rec);
                                             });
 
-  rec_server_service_ = std::shared_ptr<eCAL::pb::rec_server::EcalRecServerService>(new RecServerService());
+  rec_server_service_ = std::make_shared<RecServerService>();
   rec_server_service_server_.Create(rec_server_service_);
 }
 

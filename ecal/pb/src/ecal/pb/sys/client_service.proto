@@ -1,0 +1,128 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2019 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+syntax = "proto3";
+
+option cc_generic_services = true;
+
+package eCAL.pb.sys_client;
+
+///////////////////////////////////////////////////////
+// Message descriptions
+///////////////////////////////////////////////////////
+
+message Task
+{
+  string path                  =  1;
+  string arguments             =  2;
+  string working_dir           =  3;
+  Runner runner                =  4;
+}
+
+message Runner
+{
+  string path                  =  1;
+  string arguments             =  2;
+  string default_task_dir      =  3;
+}
+
+enum WindowMode                   // start modus
+{
+  normal    = 0;                  // normal start
+  hidden    = 1;                  // process starts hidden
+  minimized = 2;                  // process starts minimized
+  maximized = 3;                  // process starts maximized
+}
+
+///////////////////////////////////////////////////////
+// Requests
+///////////////////////////////////////////////////////
+
+message StartTaskParameters
+{
+  Task         task              = 1;  // The task to start (Required)
+  WindowMode   window_mode       = 2;  // Windows only: How the window should be created
+  bool         create_console    = 3;  // Windows only: Whether to create a console
+}
+
+message StopTaskParameters
+{
+  int32 pid            =  1;  // The PID of the process to stop (preferred)
+  Task  task           =  2;  // The description of the process to stop (if no PID was given)
+  bool  ecal_shutdown  =  3;  // Whether the task shall be gently stopped via eCAL (they are hard killed otherwise!)
+}
+
+message StartTaskRequest
+{
+  repeated StartTaskParameters  tasks = 1;  // List of tasks to start
+}
+
+message StopTaskRequest
+{
+  repeated StopTaskParameters   tasks = 1;  // List of tasks to stop
+}
+
+message TaskList
+{
+  repeated Task tasks = 1;
+}
+
+///////////////////////////////////////////////////////
+// Responses
+///////////////////////////////////////////////////////
+
+enum eServiceResult                        // recorder command result
+{
+  none    = 0;                            // undefined result
+  success = 1;                            // service succeeded
+  failed  = 2;                            // service failed
+}
+
+message SingleTaskResponse
+{
+  eServiceResult     result          =  1;
+  string             error           =  2;
+  int32              pid             =  3;
+}
+
+message TaskResponse
+{
+  repeated SingleTaskResponse responses = 1;
+}
+
+message PidList
+{
+  repeated int32 pids = 1;
+}
+
+message MatchTaskResponse
+{
+  repeated PidList pid_lists = 1;
+}
+
+///////////////////////////////////////////////////////
+// Service
+///////////////////////////////////////////////////////
+
+service EcalSysClientService
+{
+  rpc StartTasks        (StartTaskRequest)        returns (TaskResponse);
+  rpc StopTasks         (StopTaskRequest)         returns (TaskResponse);
+  rpc MatchTasks        (TaskList)                returns (MatchTaskResponse);
+}

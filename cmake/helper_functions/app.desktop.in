@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=@ECAL_INSTALL_APP_START_MENU_NAME@
+Comment=@ECAL_INSTALL_APP_START_MENU_NAME@
+Exec=@CMAKE_INSTALL_PREFIX@/@eCAL_install_app_dir@/@TARGET_NAME@
+Terminal=false
+Type=Application
+# Icon=ecalmon

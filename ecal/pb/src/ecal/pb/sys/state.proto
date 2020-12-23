@@ -1,0 +1,68 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2019 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+syntax = "proto3";
+
+import "ecal/pb/process.proto";
+import "ecal/pb/sys/client_service.proto";
+
+package eCAL.pb.sys;
+
+message State
+{
+  message Colour
+  {
+    uint32                   r               =  1;
+    uint32                   g               =  2;
+    uint32                   b               =  3;
+  }
+  
+  message Task
+  {
+    uint32                        id                   =  1;  // id from configuration file
+    string                        name                 =  2;
+    string                        target_host          =  3;  // The configured target host
+    ProcessState                  state                =  4;
+    repeated int32                pids                 =  5;  // pid; field is repeated because the task can be started multiple times
+
+    uint32                        launch_order         =  6;
+    reserved 7; // Runner
+    string                        path                 =  8;
+    string                        working_dir          =  9;
+    string                        command_line         = 10;
+    eCAL.pb.sys_client.WindowMode window_mode          = 11;
+    double                        waiting_time_secs    = 12;
+    bool                          monitoring_enabled   = 13;
+    ProcessState                  restart_by_severity  = 14;  // Set to "Unknown" when disabled
+    string                        current_host         = 15;
+  }
+  
+  message Group
+  {
+    string                   name            =  1;  // The name of the group
+    string                   state           =  2;  // The name of the state that is currently active
+    repeated Task            tasks           =  3;  // All tasks that are somehow included in this group
+    Colour                   colour          =  4;  // The configured color for the currently active group-state
+  }
+  
+  repeated Task              tasks           =  1;  // tasks
+  repeated Group             groups          =  2;  // groups
+  string                     host            =  3;  // host
+  reserved 4 to 5; // action, action_message
+}

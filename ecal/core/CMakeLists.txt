@@ -349,7 +349,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
 )
 
 if(UNIX)
-  set_source_files_properties(convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
+  set_source_files_properties(src/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
 ecal_add_ecal_shared_library(${PROJECT_NAME}_c ${ecal_c_src} ${ecal_c_win_src})

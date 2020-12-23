@@ -27,6 +27,11 @@
 
 #include <iceoryx_posh/popo/subscriber.hpp>
 
+#include <memory>
+#include <mutex>
+#include <string>
+#include <unordered_map>
+
 namespace eCAL
 {
   // ecal Iceoryx reader
@@ -36,7 +41,7 @@ namespace eCAL
     CDataReaderSHM();
 
     bool CreateIceoryxSub(const std::string& topic_name_);
-    bool DestroyIceoryxSub(const std::string& topic_name_);
+    bool DestroyIceoryxSub();
 
   private:
     std::shared_ptr<iox::popo::Subscriber> m_subscriber;
@@ -51,25 +56,40 @@ namespace eCAL
   public:
     CSHMLayer() {}
 
-    void InitializeLayer()
+    void Initialize()
     {
     }
 
-    void StartLayer(std::string& topic_name_, QOS::SReaderQOS /*qos_*/)
+    void AddSubscription(std::string& topic_name_, std::string& topic_id_, QOS::SReaderQOS /*qos_*/)
     {
-      reader.CreateIceoryxSub(topic_name_);
+      std::lock_guard<std::mutex> lock(m_datareadershm_sync);
+      if(m_datareadershm_map.find(topic_id_) != m_datareadershm_map.end()) return;
+
+      std::shared_ptr<CDataReaderSHM> reader = std::make_shared<CDataReaderSHM>();
+      reader->CreateIceoryxSub(topic_name_);
+
+      m_datareadershm_map.insert(std::pair<std::string, std::shared_ptr<CDataReaderSHM>>(topic_id_, reader));
     }
 
-    void StopLayer(std::string& topic_name_)
+    void RemSubscription(std::string& /*topic_name_*/, std::string& topic_id_)
     {
-      reader.DestroyIceoryxSub(topic_name_);
+      std::lock_guard<std::mutex> lock(m_datareadershm_sync);
+      DataReaderSHMMapT::iterator iter = m_datareadershm_map.find(topic_id_);
+      if(iter == m_datareadershm_map.end()) return;
+
+      auto reader = iter->second;
+      reader->DestroyIceoryxSub();
+
+      m_datareadershm_map.erase(iter);
     }
 
-    void ApplyLayerParameter(SReaderLayerPar& /*par_*/)
+    void UpdateParameter(SReaderLayerPar& /*par_*/)
     {
     }
 
   private:
-    CDataReaderSHM reader;
+    typedef std::unordered_map<std::string, std::shared_ptr<CDataReaderSHM>> DataReaderSHMMapT;
+    std::mutex        m_datareadershm_sync;
+    DataReaderSHMMapT m_datareadershm_map;
   };
 }

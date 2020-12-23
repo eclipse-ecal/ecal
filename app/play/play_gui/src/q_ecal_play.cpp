@@ -52,7 +52,7 @@ QEcalPlay::QEcalPlay()
   connect(periodic_update_timer_, &QTimer::timeout, this, &QEcalPlay::periodicStateUpdate);
   periodic_update_timer_->start(40);
 
-  play_service_ = std::shared_ptr<eCAL::pb::play::EcalPlayService>(new EcalPlayService());
+  play_service_ = std::make_shared<EcalPlayService>();
   play_service_server_.Create(play_service_);
 
   // Load default channel mapping setting
@@ -870,8 +870,12 @@ void QEcalPlay::periodicStateUpdate()
 {
   EcalPlayState current_state = currentPlayState();
 
+  bool state_changed = (last_state_ != current_state);
+
   last_state_ = current_state;
-  emit playStateChangedSignal(current_state);
+
+  if (state_changed)
+    emit playStateChangedSignal(current_state);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

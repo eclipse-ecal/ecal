@@ -50,12 +50,12 @@ namespace eCAL
 
     virtual ~CReaderLayer() {}
 
-    virtual void InitializeLayer() = 0;
+    virtual void Initialize() = 0;
 
-    virtual void StartLayer(std::string& topic_name_, QOS::SReaderQOS qos_) = 0;
-    virtual void StopLayer(std::string& topic_name_) = 0;
+    virtual void AddSubscription(std::string& topic_name_, std::string& topic_id_, QOS::SReaderQOS qos_) = 0;
+    virtual void RemSubscription(std::string& topic_name_, std::string& topic_id_) = 0;
 
-    virtual void ApplyLayerParameter(SReaderLayerPar& par_) = 0;
+    virtual void UpdateParameter(SReaderLayerPar& par_) = 0;
 
     static std::shared_ptr<T> Get()
     {

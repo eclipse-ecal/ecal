@@ -24,13 +24,6 @@ list(APPEND CMAKE_MODULE_PATH
 
 project(eCAL)
 
-# Set CMake policy behavior (alias targets)
-cmake_policy(SET CMP0028 NEW)
-cmake_policy(SET CMP0048 NEW)
-cmake_policy(SET CMP0057 NEW)
-cmake_policy(SET CMP0054 NEW)
-#cmake_policy(SET CMP0077 NEW) // currently not working with older CMake version
-
 # --------------------------------------------------------
 # command line build options
 # use it that way cmake .. -DBUILD_APPS=ON -DBUILD_SAMPLES=ON
@@ -58,17 +51,25 @@ option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (
 
 # Set option regarding third party library builds
 option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS   "Build CMakeFunctions with eCAL"                                    ON)
-option(ECAL_THIRDPARTY_BUILD_PROTOBUF          "Build protobuf with eCAL"                                          ON)
 option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                            ON)
 option(ECAL_THIRDPARTY_BUILD_TINYXML2          "Build tinyxml2 with eCAL"                                          ON)
 option(ECAL_THIRDPARTY_BUILD_FINEFTP           "Build fineFTP with eCAL"                                           ON)
-
+option(ECAL_THIRDPARTY_BUILD_TERMCOLOR         "Build termcolor with eCAL"                                         ON)
 # option(ECAL_THIRDPARTY_BUILD_ZLIB              "Build zlib with eCAL"                                              ON)
 # option(ECAL_THIRDPARTY_BUILD_LIBSSH2           "Build libssh2 with eCAL"                                           ON)
-option(ECAL_THIRDPARTY_BUILD_CURL              "Build CURL with eCAL"                                              ON)
-
 option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"                                            OFF)
-option(ECAL_THIRDPARTY_BUILD_HDF5              "Build HDF5 with eCAL"                                              ON)
+
+if(WIN32)
+  option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                          ON)
+  option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                              ON)
+  option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                              ON)
+else()
+  option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                          OFF)
+  option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                              OFF)
+  option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                              OFF)
+endif()
+
+option(CPACK_PACK_WITH_INNOSETUP               "Create Innosetup installer for the Windows build"                  ON)
 
 set(ECAL_INSTALL_PYTHON_DIR "bin" CACHE PATH "Location to install the Python extension modules. Might be set by setupdtools install.")
 
@@ -167,6 +168,11 @@ if (ECAL_THIRDPARTY_BUILD_FINEFTP)
   add_library(fineftp::server ALIAS server)
 endif ()
 
+if (ECAL_THIRDPARTY_BUILD_TERMCOLOR)
+  list(APPEND as_subproject termcolor)
+  add_subdirectory(thirdparty/termcolor EXCLUDE_FROM_ALL)
+endif ()
+
 # if (ECAL_THIRDPARTY_BUILD_LIBSSH2)
   # list(APPEND as_subproject libssh2)
   # set(DBUILD_STATIC_LIBS OFF CACHE BOOL "My option" FORCE)
@@ -222,13 +228,14 @@ if (ECAL_THIRDPARTY_BUILD_HDF5)
   #we will need threads
   find_package(Threads REQUIRED)
 
+  set(HDF5_GENERATE_HEADERS  OFF CACHE BOOL "Do not re-generate auto-generated files" FORCE)
   set(ONLY_SHARED_LIBS       OFF CACHE BOOL "Do not only Build Shared Libraries" FORCE)
   set(HDF5_ENABLE_THREADSAFE ON  CACHE BOOL "Enable thread-safety" FORCE)
   set(BUILD_TESTING          OFF CACHE BOOL "Do not build HDF5 Unit Testing" FORCE)
-  set(HDF5_BUILD_TOOLS       OFF CACHE BOOL "Don not build HDF5 Tools" FORCE)
-  set(HDF5_BUILD_EXAMPLES    OFF CACHE BOOL "Don not build HDF5 Library Examples" FORCE)
-  set(HDF5_BUILD_CPP_LIB     OFF CACHE BOOL "Don not build C++ lib" FORCE)
-  set(HDF5_BUILD_HL_LIB      OFF CACHE BOOL "Don not build hdf5-hl" FORCE)
+  set(HDF5_BUILD_TOOLS       OFF CACHE BOOL "Do not build HDF5 Tools" FORCE)
+  set(HDF5_BUILD_EXAMPLES    OFF CACHE BOOL "Do not build HDF5 Library Examples" FORCE)
+  set(HDF5_BUILD_CPP_LIB     OFF CACHE BOOL "Do not build C++ lib" FORCE)
+  set(HDF5_BUILD_HL_LIB      OFF CACHE BOOL "Do not build hdf5-hl" FORCE)
   set(ONLY_SHARED_LIBS       ON)
   
   set(HDF5_EXTERNALLY_CONFIGURED 1)
@@ -509,6 +516,13 @@ if(BUILD_APPS)
   add_subdirectory(app/mon/mon_cli)
   add_subdirectory(app/util/config)
   add_subdirectory(app/util/stop)
+  add_subdirectory(app/sys/sys_core)
+  add_subdirectory(app/sys/sys_cli)
+  add_subdirectory(app/sys/sys_client_cli)
+  add_subdirectory(app/sys/sys_client_core)
+  if(NOT APPLE)
+    add_subdirectory(contrib/mma/src)
+  endif()
 endif()
 
 # --------------------------------------------------------
@@ -527,14 +541,15 @@ endif()
 # qt applications
 # --------------------------------------------------------
 if(BUILD_APPS AND HAS_QT5)
+  add_subdirectory(app/sys/sys_gui)
   add_subdirectory(app/mon/mon_gui)
-  add_subdirectory(app/util/launcher)
   if(WIN32)
     set(ECAL_MON_PLUGIN_DIR ecalmon_plugins)
   else()
     set(ECAL_MON_PLUGIN_DIR ecal/plugins/mon)
   endif()
   add_subdirectory(app/mon/mon_plugins)
+  add_subdirectory(app/util/launcher)
 # --------------------------------------------------------
 # qt applications using hdf5
 # --------------------------------------------------------

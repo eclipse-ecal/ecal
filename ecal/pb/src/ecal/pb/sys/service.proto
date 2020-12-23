@@ -1,0 +1,60 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2019 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+syntax = "proto3";
+
+option cc_generic_services = true;
+
+import "ecal/pb/sys/state.proto";
+
+package eCAL.pb.sys;
+
+///////////////////////////////////////////////////////
+// Sys Service
+///////////////////////////////////////////////////////
+
+message TaskRequest
+{
+  bool            all     =  1;                        // ignore list of IDs and Names and start/stop/restart all
+  repeated uint32 tids    =  2;                        // list of IDs specifying which tasks to start/stop/restart
+  repeated string tnames  =  3;                        // list of Names specifying which tasks to start/stop/restart
+                                                       // (Keep in mind that a task name might not be unique.)
+}
+
+message GenericRequest {}
+
+message Response
+{
+  enum eResult                                         // sys command result
+  {                                             
+    none    = 0;                                       // undefined result
+    success = 1;                                       // service succeeded
+    failed  = 2;                                       // service failed
+  }                                             
+  eResult         result  =  1;                        // service call result
+  string          error   =  2;                        // human readable error message
+}
+
+service Service
+{
+  rpc StartTasks   (TaskRequest)    returns (Response);  // start tasks
+  rpc StopTasks    (TaskRequest)    returns (Response);  // stop tasks
+  rpc RestartTasks (TaskRequest)    returns (Response);  // restart tasks
+  rpc GetStatus    (GenericRequest) returns (eCAL.pb.sys.State);     // Get status
+}

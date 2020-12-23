@@ -509,14 +509,14 @@ namespace EcalUtils
       }
     }
 
-    std::list<std::string> CleanPathComponentList(const std::string& path, OsStyle input_path_style)
+    std::vector<std::string> CleanPathComponentList(const std::string& path, OsStyle input_path_style)
     {
       if (path.empty())
       {
         return{};
       }
 
-      std::list<std::string> components;
+      std::vector<std::string> components;
 
       std::string unix_style_path = ToUnixSeperators(path, input_path_style);
 
@@ -532,13 +532,18 @@ namespace EcalUtils
       EcalUtils::String::Split(unix_style_path, "/", splitted_path);
 
       // The components-stack that will increase and shrink depending on the folders and .. elements in the splitted path
-      for (const std::string& part : splitted_path)
+            for (auto part_it = splitted_path.begin(); part_it != splitted_path.end(); part_it++)
       {
-        if (part.empty() || part == ".")
+        if ((part_it == splitted_path.begin()) && (*part_it == ".") && !is_absolute)
+        {
+          // Preserve a leading ".", if the path is relative. It may indicate the working director, so we should not skip it.
+          components.push_back(".");
+        }
+        else if (part_it->empty() || *part_it == ".")
         {
           continue;
         }
-        else if (part == "..")
+        else if (*part_it == "..")
         {
           if (is_absolute)
           {
@@ -563,24 +568,23 @@ namespace EcalUtils
         }
         else
         {
-          components.push_back(part);
+          components.push_back(*part_it);
         }
       }
 
       return components;
     }
 
-
     std::string CleanPath(const std::string& path, OsStyle input_path_style)
     {
       if (path.empty())
-        return ".";
+        return "";
 
       // Split the path into its cleaned components
-      std::list<std::string> cleaned_path_components = CleanPathComponentList(path, input_path_style);
+      std::vector<std::string> cleaned_path_components = CleanPathComponentList(path, input_path_style);
 
       // Check whether the path ended with a slash
-      bool tailing_separator = ((path.back() == '/') || (path.back() == '\\'));
+      bool tailing_separator = (ToUnixSeperators(path, input_path_style).back() == '/');
 
       // Gather information about the root (it will not be in the components list)
       std::string root = GetAbsoluteRoot(path, input_path_style);
@@ -600,11 +604,11 @@ namespace EcalUtils
       }
       else
       {
-        cleaned_path += '.';
-        if (!cleaned_path_components.empty())
-        {
-          cleaned_path += '/';
-        }
+        //cleaned_path += '.';
+        //if (!cleaned_path_components.empty())
+        //{
+        //  cleaned_path += '/';
+        //}
       }
 
       cleaned_path += EcalUtils::String::Join("/", cleaned_path_components);
@@ -632,6 +636,43 @@ namespace EcalUtils
       {
         return CleanPath(CurrentWorkingDir() + "/" + relative_path);
       }
+    }
+
+    std::string RelativePath(const std::string& base_path, const std::string& path, OsStyle input_path_style)
+    {
+      auto base_list = CleanPathComponentList(base_path, input_path_style);
+      auto path_list = CleanPathComponentList(path, input_path_style);
+
+      size_t size = (path_list.size() < base_list.size()) ? path_list.size() : base_list.size();
+      unsigned int same_size(0);
+      for (unsigned int i = 0; i < size; ++i)
+      {
+        if (path_list[i] != base_list[i])
+        {
+          same_size = i;
+          break;
+        }
+      }
+
+      std::string relative_path = "";
+      if (same_size > 0)
+      {
+        for (unsigned int i = 0; i < base_list.size() - same_size; ++i)
+        {
+          relative_path += "../";
+        }
+      }
+
+      for (unsigned int i = same_size; i < path_list.size(); ++i)
+      {
+        relative_path += path_list[i];
+        if (i < path_list.size() - 1)
+        {
+          relative_path += "/";
+        }
+      }
+
+      return relative_path;
     }
 
     std::string CurrentWorkingDir()
@@ -754,6 +795,45 @@ namespace EcalUtils
       }
 
       return true;
+    }
+
+    std::string FileName(const std::string& path, OsStyle input_path_style)
+    {
+      if (path.empty())
+        return "";
+
+      if (path.back() == '/')
+        return "";
+
+      if ((input_path_style == OsStyle::Windows) || (input_path_style == OsStyle::Combined))
+      {
+        if (path.back() == '\\')
+          return "";
+      }
+
+      auto clean_path_component_list = CleanPathComponentList(path, input_path_style);
+      
+      if (clean_path_component_list.empty())
+        return "";
+      else
+        return clean_path_component_list.back();
+    }
+
+    std::string BaseName(const std::string& path, OsStyle input_path_style)
+    {
+      std::string file_name = FileName(path, input_path_style);
+      
+      if (file_name.empty()) return ""; 
+
+      size_t pos = file_name.find('.', 0);
+      if (pos != std::string::npos)
+      {
+        return file_name.substr(0, pos);
+      }
+      else
+      {
+        return file_name;
+      }
     }
   }
 }

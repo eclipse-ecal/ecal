@@ -12,7 +12,7 @@ exhale==0.2.3
 idna==2.10
 imagesize==1.2.0
 Jinja2==2.11.2
-lxml==4.5.2
+lxml
 MarkupSafe==1.1.1
 packaging==20.4
 Pygments==2.6.1

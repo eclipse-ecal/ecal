@@ -1373,7 +1373,7 @@ void RecorderModel::recorderStatusUpdate(const eCAL::rec_server::RecorderStatusM
   updateTimeErrorWarnings(true);
 
   // Add new recorder entries
-  std::list<RecorderEntry> new_entries;
+  std::vector<RecorderEntry> new_entries;
   for (const auto& recorder_status_pair : recorder_statuses)
   {
     // Add the host if necessary

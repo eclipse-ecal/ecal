@@ -146,8 +146,8 @@ QString QEcalParserEditor::generateFunctionHtmlHelp(std::pair<QString, EcalParse
 </html>
 )";
 
-  QString usage_string      = "${" + function_pair.first + (function_pair.second->ParameterUsage().empty() ? "" : " ")    + QString::fromStdString(function_pair.second->ParameterUsage())    + "}";
-  QString example_string    = "${" + function_pair.first + (function_pair.second->ParameterExample().empty() ? "" : " ") + QString::fromStdString(function_pair.second->ParameterExample()) + "}";
+  QString usage_string      = "$HOST{" + function_pair.first + (function_pair.second->ParameterUsage().empty() ? "" : " ")    + QString::fromStdString(function_pair.second->ParameterUsage())    + "}";
+  QString example_string    = "$HOST{" + function_pair.first + (function_pair.second->ParameterExample().empty() ? "" : " ") + QString::fromStdString(function_pair.second->ParameterExample()) + "}";
   QString evaluated_example = QString::fromStdString(EcalParser::Evaluate(example_string.toStdString(), true));
 
   html_help.replace("%CSS_STRING%",               css());
@@ -179,7 +179,7 @@ QString QEcalParserEditor::generateGeneralHtmlHelp()
 
 <h2>Syntax</h2>
 <p> Several functions exist. Some of them accept additional parameters. The format is: </p>
-<p id="example">${FUNCTION Parameters}</p>
+<p id="example">$HOST{FUNCTION Parameters}</p>
 <p>
 The <b>escape character</b> is the back-tick (<span id="code">`</span>). The dollar sign, braces and back-tick have to be escaped , if they are supposed to appear in the output (<span id="code">`$</span>, <span id="code">`{</span>, <span id="code">`}</span>, <span id="code">``</span>).
 </p>
@@ -189,10 +189,10 @@ The <b>escape character</b> is the back-tick (<span id="code">`</span>). The dol
 eCAL is often used to let multiple machines communicate with each other. The eCAL Syntax can therefore differentiate between the current machine (Host) and the client machine (Target), which receives the input.
 </p>
 <p>
-A function that shall be evaluated on the <b>host</b> (i.e. be evaluated before sending the string to the client application) uses the normal syntax:
+A function that shall be evaluated on the <b>host</b> (i.e. be evaluated before sending the string to the client application) starts with <span id="code">$HOST</span>:
 </p>
 <p id="example">
-${FUNCTION Parameters}
+$HOST{FUNCTION Parameters}
 </p>
 <p>
 A function that shall be evaluated by the <b>target</b>, e.g. because it uses a function that evaluates differently on the client, starts with <span id="code">$TARGET</span>:
@@ -217,7 +217,7 @@ You also want the measurement to be in a directory with the current timestamp. Y
 Your solution could look like this:
 </p>
 <p id="example">
-$TARGET{ENV MEAS_ROOT}/${TIME}
+$TARGET{ENV MEAS_ROOT}/$HOST{TIME}
 </p>
 
 <p>
@@ -242,7 +242,7 @@ This string will then be passed to the client applications and evaluate differen
 </html>
 )";
   html_help.replace("%CSS_STRING%", css());
-  html_help.replace("%CURRENT_TIME_STRING%", QString::fromStdString(EcalParser::Evaluate("${TIME}", true)).toHtmlEscaped());
+  html_help.replace("%CURRENT_TIME_STRING%", QString::fromStdString(EcalParser::Evaluate("$HOST{TIME}", true)).toHtmlEscaped());
 
   return html_help;
 }

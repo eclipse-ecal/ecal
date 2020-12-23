@@ -61,7 +61,7 @@ namespace eCAL
     return true;
   }
 
-  bool CDataReaderSHM::DestroyIceoryxSub(const std::string& /*topic_name_*/)
+  bool CDataReaderSHM::DestroyIceoryxSub()
   {
     if(!m_subscriber) return false;
 

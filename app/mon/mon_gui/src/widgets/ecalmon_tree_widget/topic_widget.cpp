@@ -205,8 +205,13 @@ void TopicWidget::loadRegExpLists()
   // split the string into 'actual' regular expressions. This will break every
   // regular expression that properly uses a ",". We cannot do anything about
   // that without changing the ecal.ini specification.
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+  QList<QString> exclude_string_list = exclude_string.split(QRegExp("[\\,,;]"), Qt::SplitBehaviorFlags::SkipEmptyParts);
+  QList<QString> include_string_list = include_string.split(QRegExp("[\\,,;]"), Qt::SplitBehaviorFlags::SkipEmptyParts);
+#else // QT_VERSION
   QList<QString> exclude_string_list = exclude_string.split(QRegExp("[\\,,;]"), QString::SplitBehavior::SkipEmptyParts);
   QList<QString> include_string_list = include_string.split(QRegExp("[\\,,;]"), QString::SplitBehavior::SkipEmptyParts);
+#endif // QT_VERSION
 
   for (auto& s : exclude_string_list)
   {
