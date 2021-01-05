@@ -959,7 +959,8 @@ namespace eCAL
         }
 
 #elif defined(ECAL_OS_QNX)
-        // TODO: Find a suitable method on QNX to get process arguments of the current executable 
+        // TODO: Find a suitable method on QNX to get process arguments of the current executable
+        std::vector<std::string> argument_vector;
         g_process_par = "";
 #else
 
