@@ -11,6 +11,8 @@ eCAL has many options that can be configured via an .ini file which is located a
 * |fa-windows| Windows: |ecalini-path-windows|
 * |fa-ubuntu| Ubuntu: |ecalini-path-ubuntu|
 
+.. note::
+   In eCAL 5.7 the path of the :file:`ecal.ini` file was |ecalini-path-windows-old| and |ecalini-path-ubuntu-old|.
 
 [network]
 =========
