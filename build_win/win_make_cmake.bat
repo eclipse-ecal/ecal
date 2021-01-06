@@ -50,10 +50,10 @@ if %ARCH% == "" goto build_no_arch
 :build_with_arch
 
 cd /d "%WORKSPACE%\%BUILD_DIR_COMPLETE%"
-cmake ../.. -G "%VISUAL_STUDIO_GENERATOR%" -A "%ARCH%" %CMAKE_OPTIONS_COMPLETE%
+cmake ../.. -G "%VISUAL_STUDIO_GENERATOR%" -A "%ARCH%" -T v140 %CMAKE_OPTIONS_COMPLETE%
 
 cd /d "%WORKSPACE%\%BUILD_DIR_SDK%"
-cmake ../.. -G "%VISUAL_STUDIO_GENERATOR%" -A "%ARCH%" %CMAKE_OPTIONS_SDK%
+cmake ../.. -G "%VISUAL_STUDIO_GENERATOR%" -A "%ARCH%" -T v140 %CMAKE_OPTIONS_SDK%
 
 goto end
 
