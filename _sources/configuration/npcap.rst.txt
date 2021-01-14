@@ -24,6 +24,15 @@ How to use Npcap
 
 #. Download Npcap: https://nmap.org/npcap/
 
+   .. important::
+      At least NPCAP 1.10 does not work with eCAL.
+      At the moment, we recommend NPCAP 0.9996 which is known to work just fine.
+      You can download it here:
+      
+      https://nmap.org/npcap/dist/npcap-0.9996.exe
+      
+      We will remove this note, once the incompatibility is fixed on either side.
+
 #. Install Npcap and make sure to check the **Legacy loopback suppport**:
 
    .. image:: img/npcap_install.svg
