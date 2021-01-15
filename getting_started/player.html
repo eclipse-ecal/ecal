@@ -8,7 +8,7 @@
     <meta name="docsearch:release" content="" />
     <meta name="docsearch:version" content="" />
 
-    <title>5.3. Player &mdash; eCAL Documentation  documentation</title>
+    <title>6.3. Player &mdash; eCAL Documentation  documentation</title>
 
     <link rel="shortcut icon" href="../_static/img/favicon.png" />
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
@@ -19,9 +19,9 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
-    <link rel="up" title="5. Applications" href="applications.html" />
-    <link rel="next" title="6. eCAL Services" href="services.html" />
-    <link rel="prev" title="5.2. Recorder" href="recorder.html" />
+    <link rel="up" title="6. Applications" href="applications.html" />
+    <link rel="next" title="6.4. Sys" href="sys.html" />
+    <link rel="prev" title="6.2. Recorder" href="recorder.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
     <script src="../_static/js/modernizr.min.js"></script>
@@ -74,13 +74,14 @@
 <li class="toctree-l1"><a class="reference internal" href="setup.html">2. Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="samples.html">3. eCAL Samples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cloud.html">4. Cloud configuration</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="applications.html">5. Applications</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="monitor.html">5.1. Monitor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recorder.html">5.2. Recorder</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">5.3. Player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="services.html">5. eCAL Services</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="applications.html">6. Applications</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="monitor.html">6.1. Monitor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html">6.2. Recorder</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">6.3. Player</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sys.html">6.4. Sys</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="services.html">6. eCAL Services</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development.html">7. Development</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="hello_world.html">7.1. Hello World</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hello_world_proto.html">7.2. Hello World with protobuf</a></li>
@@ -333,8 +334,8 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/sys/sys.html">eCAL Sys</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_overview.html">Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_cli.html">Sys CLI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_overview.html">eCAL Sys Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_cli.html">eCAL Sys CLI</a></li>
 </ul>
 </li>
 </ul>
@@ -350,9 +351,9 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">5.3. Player</a><ul>
-<li><a class="reference internal" href="#overview">5.3.1. Overview</a></li>
-<li><a class="reference internal" href="#replaying-the-measurement">5.3.2. Replaying the measurement</a></li>
+<li><a class="reference internal" href="#">6.3. Player</a><ul>
+<li><a class="reference internal" href="#overview">6.3.1. Overview</a></li>
+<li><a class="reference internal" href="#replaying-the-measurement">6.3.2. Replaying the measurement</a></li>
 </ul>
 </li>
 </ul>
@@ -366,14 +367,14 @@
 <!-- pager-hidden.html -->
 
         <a class="no-focus" accesskey="p" href="recorder.html" tabindex="-1"></a>
-        <a class="no-focus" accesskey="n" href="services.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="n" href="sys.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../index.html">Start</a></li>
-            <li class="breadcrumb-item"><a href="applications.html"><span class="section-number">5. </span>Applications</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><span class="section-number">5.3. </span>Player</li>
+            <li class="breadcrumb-item"><a href="applications.html"><span class="section-number">6. </span>Applications</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><span class="section-number">6.3. </span>Player</li>
     </ol>
         <div class="breadcrumb-additions">
                 <a class="btn btn-sm btn-light" href="https://github.com/continental/ecal/blob/master/doc/rst/getting_started/player.rst">
@@ -391,7 +392,7 @@
                             <div itemprop="articleBody">
 <!-- body -->
     <div class="section" id="player">
-<span id="getting-started-player"></span><h1><span class="section-number">5.3. </span>Player<a class="headerlink" href="#player" title="Permalink to this headline">¶</a></h1>
+<span id="getting-started-player"></span><h1><span class="section-number">6.3. </span>Player<a class="headerlink" href="#player" title="Permalink to this headline">¶</a></h1>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>Don’t be afraid to play around with the GUI! If you closed or moved something and can’t get it back, just click <span class="guilabel">View / Reset Layout</span>!</p>
@@ -409,7 +410,7 @@
 <li><p>Select the <code class="file docutils literal notranslate"><span class="pre">.ecalmeas</span></code> file from your eCAL measurement</p></li>
 </ol>
 <div class="section" id="overview">
-<h2><span class="section-number">5.3.1. </span>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.3.1. </span>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <a class="reference external image-reference" href="../_images/player_overview_blank.png"><img alt="eCAL Player" src="../_images/player_overview_annotated.svg" /></a>
 <ol class="bignums-xxl arabic">
 <li><p><strong>Channels</strong></p>
@@ -431,7 +432,7 @@ You can then easily jump to that point later.</p>
 </ol>
 </div>
 <div class="section" id="replaying-the-measurement">
-<h2><span class="section-number">5.3.2. </span>Replaying the measurement<a class="headerlink" href="#replaying-the-measurement" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.3.2. </span>Replaying the measurement<a class="headerlink" href="#replaying-the-measurement" title="Permalink to this headline">¶</a></h2>
 <p>Now close any <cite>person_snd</cite> you may still have running, open a <cite>person_rec</cite> or an eCAL Monitor and watch the data incoming from the Player!</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
@@ -453,7 +454,7 @@ You can then easily jump to that point later.</p>
             </a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="services.html" title="Accesskey Alt(+Shift)+n">
+            <a class="page-link" href="sys.html" title="Accesskey Alt(+Shift)+n">
                 Next
             </a>
         </li>
@@ -483,7 +484,7 @@ You can then easily jump to that point later.</p>
                 </div>
                 <div class="footer-meta">
                     <div class="footer-meta-copyright">
-                        &copy; Copyright 2020, Continental
+                        &copy; Copyright 2021, Continental
                     </div>
                 </div>
             </div>

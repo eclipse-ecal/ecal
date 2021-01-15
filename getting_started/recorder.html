@@ -8,7 +8,7 @@
     <meta name="docsearch:release" content="" />
     <meta name="docsearch:version" content="" />
 
-    <title>5.2. Recorder &mdash; eCAL Documentation  documentation</title>
+    <title>6.2. Recorder &mdash; eCAL Documentation  documentation</title>
 
     <link rel="shortcut icon" href="../_static/img/favicon.png" />
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
@@ -19,9 +19,9 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
-    <link rel="up" title="5. Applications" href="applications.html" />
-    <link rel="next" title="5.3. Player" href="player.html" />
-    <link rel="prev" title="5.1. Monitor" href="monitor.html" />
+    <link rel="up" title="6. Applications" href="applications.html" />
+    <link rel="next" title="6.3. Player" href="player.html" />
+    <link rel="prev" title="6.1. Monitor" href="monitor.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
     <script src="../_static/js/modernizr.min.js"></script>
@@ -74,13 +74,14 @@
 <li class="toctree-l1"><a class="reference internal" href="setup.html">2. Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="samples.html">3. eCAL Samples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cloud.html">4. Cloud configuration</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="applications.html">5. Applications</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="monitor.html">5.1. Monitor</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">5.2. Recorder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="player.html">5.3. Player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="services.html">5. eCAL Services</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="applications.html">6. Applications</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="monitor.html">6.1. Monitor</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">6.2. Recorder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html">6.3. Player</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sys.html">6.4. Sys</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="services.html">6. eCAL Services</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development.html">7. Development</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="hello_world.html">7.1. Hello World</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hello_world_proto.html">7.2. Hello World with protobuf</a></li>
@@ -333,8 +334,8 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/sys/sys.html">eCAL Sys</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_overview.html">Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_cli.html">Sys CLI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_overview.html">eCAL Sys Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_cli.html">eCAL Sys CLI</a></li>
 </ul>
 </li>
 </ul>
@@ -350,11 +351,11 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">5.2. Recorder</a><ul>
-<li><a class="reference internal" href="#features">5.2.1. Features</a></li>
-<li><a class="reference internal" href="#gui-overview">5.2.2. GUI Overview</a></li>
-<li><a class="reference internal" href="#let-s-record-some-data">5.2.3. Let’s record some data!</a></li>
-<li><a class="reference internal" href="#ecal-measurements">5.2.4. eCAL Measurements</a></li>
+<li><a class="reference internal" href="#">6.2. Recorder</a><ul>
+<li><a class="reference internal" href="#features">6.2.1. Features</a></li>
+<li><a class="reference internal" href="#gui-overview">6.2.2. GUI Overview</a></li>
+<li><a class="reference internal" href="#let-s-record-some-data">6.2.3. Let’s record some data!</a></li>
+<li><a class="reference internal" href="#ecal-measurements">6.2.4. eCAL Measurements</a></li>
 </ul>
 </li>
 </ul>
@@ -374,8 +375,8 @@
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../index.html">Start</a></li>
-            <li class="breadcrumb-item"><a href="applications.html"><span class="section-number">5. </span>Applications</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><span class="section-number">5.2. </span>Recorder</li>
+            <li class="breadcrumb-item"><a href="applications.html"><span class="section-number">6. </span>Applications</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><span class="section-number">6.2. </span>Recorder</li>
     </ol>
         <div class="breadcrumb-additions">
                 <a class="btn btn-sm btn-light" href="https://github.com/continental/ecal/blob/master/doc/rst/getting_started/recorder.rst">
@@ -393,7 +394,7 @@
                             <div itemprop="articleBody">
 <!-- body -->
     <div class="section" id="recorder">
-<span id="getting-started-recorder"></span><h1><span class="section-number">5.2. </span>Recorder<a class="headerlink" href="#recorder" title="Permalink to this headline">¶</a></h1>
+<span id="getting-started-recorder"></span><h1><span class="section-number">6.2. </span>Recorder<a class="headerlink" href="#recorder" title="Permalink to this headline">¶</a></h1>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>Don’t be afraid to play around with the GUI! If you closed or moved something and can’t get it back, just click <span class="guilabel">View / Reset Layout</span>!</p>
@@ -403,7 +404,7 @@
 The output of the recorder (-&gt; the recording) is called an <strong>eCAL Measurement</strong>.
 You can use that measurement later to analyze it or to stimulate other applications that need that data as input.</p>
 <div class="section" id="features">
-<h2><span class="section-number">5.2.1. </span>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.2.1. </span>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
 <p>The eCAL Recorder is quite powerful, so we will only look at a limited setup in this tutorial.
 First, the Recorder features two essential modes:</p>
 <ol class="arabic">
@@ -433,7 +434,7 @@ After you finished your test, you can then let the Recorder Clients push their f
 </ul>
 </div>
 <div class="section" id="gui-overview">
-<h2><span class="section-number">5.2.2. </span>GUI Overview<a class="headerlink" href="#gui-overview" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.2.2. </span>GUI Overview<a class="headerlink" href="#gui-overview" title="Permalink to this headline">¶</a></h2>
 <p>Let’s start with a short GUI overview.</p>
 <ul class="simple">
 <li><p><i class="fab fa-windows"></i> On Windows you can start the eCAL recorder from the Start Menu: <code class="file docutils literal notranslate"><span class="pre">Start</span> <span class="pre">/</span> <span class="pre">eCAL</span> <span class="pre">/</span> <span class="pre">eCAL</span> <span class="pre">Recorder</span></code></p></li>
@@ -487,7 +488,7 @@ From this panel you can delete it, add comments to it or upload it to an FTP Ser
 </ol>
 </div>
 <div class="section" id="let-s-record-some-data">
-<h2><span class="section-number">5.2.3. </span>Let’s record some data!<a class="headerlink" href="#let-s-record-some-data" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.2.3. </span>Let’s record some data!<a class="headerlink" href="#let-s-record-some-data" title="Permalink to this headline">¶</a></h2>
 <p>As mentioned above, we have a <em>person_snd</em> sample running on a remote machine. Now let’s record it!</p>
 <ol class="arabic simple">
 <li><p>Click <span class="guilabel">REC</span></p></li>
@@ -504,7 +505,7 @@ If you haven’t modified the measurement path, it is saved to:</p>
 <img alt="eCAL Recorder recording" src="../_images/recorder_recording.png" />
 </div>
 <div class="section" id="ecal-measurements">
-<h2><span class="section-number">5.2.4. </span>eCAL Measurements<a class="headerlink" href="#ecal-measurements" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">6.2.4. </span>eCAL Measurements<a class="headerlink" href="#ecal-measurements" title="Permalink to this headline">¶</a></h2>
 <p>Before continuing to the next section and replaying the measurement, let’s quickly look at what the Recorder has just created:</p>
 <img alt="eCAL Measurement" src="../_images/recorder_measurement_filesystem.png" />
 <ul class="simple">
@@ -564,7 +565,7 @@ If you haven’t modified the measurement path, it is saved to:</p>
                 </div>
                 <div class="footer-meta">
                     <div class="footer-meta-copyright">
-                        &copy; Copyright 2020, Continental
+                        &copy; Copyright 2021, Continental
                     </div>
                 </div>
             </div>

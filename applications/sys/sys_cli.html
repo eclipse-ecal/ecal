@@ -8,7 +8,7 @@
     <meta name="docsearch:release" content="" />
     <meta name="docsearch:version" content="" />
 
-    <title>Sys CLI &mdash; eCAL Documentation  documentation</title>
+    <title>eCAL Sys CLI &mdash; eCAL Documentation  documentation</title>
 
     <link rel="shortcut icon" href="../../_static/img/favicon.png" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
@@ -21,7 +21,7 @@
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
     <link rel="up" title="eCAL Sys" href="sys.html" />
     <link rel="next" title="FAQ" href="../../faq.html" />
-    <link rel="prev" title="Overview" href="sys_overview.html" />
+    <link rel="prev" title="eCAL Sys Overview" href="sys_overview.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
     <script src="../../_static/js/modernizr.min.js"></script>
@@ -74,13 +74,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started/setup.html">2. Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started/samples.html">3. eCAL Samples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started/cloud.html">4. Cloud configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../getting_started/applications.html">5. Applications</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../getting_started/monitor.html">5.1. Monitor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../getting_started/recorder.html">5.2. Recorder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../getting_started/player.html">5.3. Player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/services.html">5. eCAL Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/applications.html">6. Applications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/monitor.html">6.1. Monitor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/recorder.html">6.2. Recorder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/player.html">6.3. Player</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/sys.html">6.4. Sys</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../getting_started/services.html">6. eCAL Services</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started/development.html">7. Development</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../getting_started/hello_world.html">7.1. Hello World</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../getting_started/hello_world_proto.html">7.2. Hello World with protobuf</a></li>
@@ -333,8 +334,8 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="sys.html">eCAL Sys</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="sys_overview.html">Overview</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Sys CLI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sys_overview.html">eCAL Sys Overview</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eCAL Sys CLI</a></li>
 </ul>
 </li>
 </ul>
@@ -350,7 +351,7 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">Sys CLI</a><ul>
+<li><a class="reference internal" href="#">eCAL Sys CLI</a><ul>
 <li><a class="reference internal" href="#usage">Usage</a></li>
 </ul>
 </li>
@@ -373,7 +374,7 @@
         <li class="breadcrumb-item"><a href="../../index.html">Start</a></li>
             <li class="breadcrumb-item"><a href="../../applications.html">Applications</a></li>
             <li class="breadcrumb-item"><a href="sys.html">eCAL Sys</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Sys CLI</li>
+        <li class="breadcrumb-item active" aria-current="page">eCAL Sys CLI</li>
     </ol>
         <div class="breadcrumb-additions">
                 <a class="btn btn-sm btn-light" href="https://github.com/continental/ecal/blob/master/doc/rst/applications/sys/sys_cli.rst">
@@ -390,8 +391,8 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="sys-cli">
-<span id="applications-sys-cli"></span><h1>Sys CLI<a class="headerlink" href="#sys-cli" title="Permalink to this headline">¶</a></h1>
+    <div class="section" id="ecal-sys-cli">
+<span id="applications-sys-cli"></span><h1>eCAL Sys CLI<a class="headerlink" href="#ecal-sys-cli" title="Permalink to this headline">¶</a></h1>
 <p>eCAL Sys can be used purely from command line.
 The executable is <code class="file docutils literal notranslate"><span class="pre">ecal_sys</span> <span class="pre">(.exe)</span></code>.
 It can execute start / stop / restart commands provided from the command line or as well as from an interactive console.
@@ -408,7 +409,7 @@ Use this mode when you want to mainly use eCAL Sys manually (e.g. the GUI) but a
 </li>
 </ol>
 <div class="section" id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<span id="applications-sys-cli-usage"></span><h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-txt notranslate"><div class="highlight"><pre><span></span>USAGE:
 
    ecal_sys  [-c &lt;Path&gt;] [--remote-control] [--remote-host &lt;Hostname&gt;] [-s]
@@ -526,7 +527,7 @@ Where:
                 </div>
                 <div class="footer-meta">
                     <div class="footer-meta-copyright">
-                        &copy; Copyright 2020, Continental
+                        &copy; Copyright 2021, Continental
                     </div>
                 </div>
             </div>

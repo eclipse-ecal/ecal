@@ -8,7 +8,7 @@
     <meta name="docsearch:release" content="" />
     <meta name="docsearch:version" content="" />
 
-    <title>Overview &mdash; eCAL Documentation  documentation</title>
+    <title>eCAL Sys Overview &mdash; eCAL Documentation  documentation</title>
 
     <link rel="shortcut icon" href="../../_static/img/favicon.png" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
@@ -20,7 +20,7 @@
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
     <link rel="up" title="eCAL Sys" href="sys.html" />
-    <link rel="next" title="Sys CLI" href="sys_cli.html" />
+    <link rel="next" title="eCAL Sys CLI" href="sys_cli.html" />
     <link rel="prev" title="eCAL Sys" href="sys.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
@@ -74,13 +74,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started/setup.html">2. Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started/samples.html">3. eCAL Samples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started/cloud.html">4. Cloud configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../getting_started/applications.html">5. Applications</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../getting_started/monitor.html">5.1. Monitor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../getting_started/recorder.html">5.2. Recorder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../getting_started/player.html">5.3. Player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/services.html">5. eCAL Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/applications.html">6. Applications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/monitor.html">6.1. Monitor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/recorder.html">6.2. Recorder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/player.html">6.3. Player</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/sys.html">6.4. Sys</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../getting_started/services.html">6. eCAL Services</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started/development.html">7. Development</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../getting_started/hello_world.html">7.1. Hello World</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../getting_started/hello_world_proto.html">7.2. Hello World with protobuf</a></li>
@@ -333,8 +334,8 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="sys.html">eCAL Sys</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sys_cli.html">Sys CLI</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eCAL Sys Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sys_cli.html">eCAL Sys CLI</a></li>
 </ul>
 </li>
 </ul>
@@ -350,7 +351,12 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">Overview</a></li>
+<li><a class="reference internal" href="#">eCAL Sys Overview</a><ul>
+<li><a class="reference internal" href="#architecture">Architecture</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#gui-functions">GUI Functions</a></li>
+</ul>
+</li>
 </ul>
 <!-- /menu -->
                             </div>
@@ -370,7 +376,7 @@
         <li class="breadcrumb-item"><a href="../../index.html">Start</a></li>
             <li class="breadcrumb-item"><a href="../../applications.html">Applications</a></li>
             <li class="breadcrumb-item"><a href="sys.html">eCAL Sys</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Overview</li>
+        <li class="breadcrumb-item active" aria-current="page">eCAL Sys Overview</li>
     </ol>
         <div class="breadcrumb-additions">
                 <a class="btn btn-sm btn-light" href="https://github.com/continental/ecal/blob/master/doc/rst/applications/sys/sys_overview.rst">
@@ -387,10 +393,27 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="overview">
-<span id="applications-sys-overview"></span><h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+    <div class="section" id="ecal-sys-overview">
+<span id="applications-sys-overview"></span><h1>eCAL Sys Overview<a class="headerlink" href="#ecal-sys-overview" title="Permalink to this headline">¶</a></h1>
+<p>In this chapter we will take a deeper look at eCAl Sys.
+We will discuss the Host / Client architecture and look at all available configuration options and functions in the GUI.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>If you are new to eCAL Sys, please first check out the <a class="reference internal" href="../../getting_started/sys.html#getting-started-sys"><span class="std std-ref">Getting Started with eCAL Sys</span></a> chapter.
+That chapter will teach you the very basics of eCAL Sys.</p>
+<p>If you don’t want to use the GUI, please see the <a class="reference internal" href="sys_cli.html#applications-sys-cli"><span class="std std-ref">eCAL Sys CLI</span></a> chapter.</p>
+</div>
+<div class="section" id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="gui-functions">
+<h2>GUI Functions<a class="headerlink" href="#gui-functions" title="Permalink to this headline">¶</a></h2>
 <p>This section is still under construction. But we are working on it! Just be patient.</p>
 <img alt="Snail" class="align-center" src="../../_images/snail.svg" /></div>
+</div>
 
 <!-- /body -->
                             </div>
@@ -434,7 +457,7 @@
                 </div>
                 <div class="footer-meta">
                     <div class="footer-meta-copyright">
-                        &copy; Copyright 2020, Continental
+                        &copy; Copyright 2021, Continental
                     </div>
                 </div>
             </div>
