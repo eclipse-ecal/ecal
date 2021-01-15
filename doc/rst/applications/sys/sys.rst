@@ -11,6 +11,5 @@ This chapter will give you deeper information about eCAL Sys.
 
 .. toctree::
 
-   sys_getting_started
    sys_overview
    sys_cli

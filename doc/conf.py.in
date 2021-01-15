@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.join('@CMAKE_CURRENT_SOURCE_DIR@', 'extensions'))
 # -- Project information -----------------------------------------------------
 
 project = u'eCAL Documentation'
-copyright = u'2020, Continental'
+copyright = u'2021, Continental'
 author = u'Continental'
 
 # The short X.Y version

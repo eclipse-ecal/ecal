@@ -46,3 +46,4 @@
 .. |ecal_mon-start-menu-path-windows|  replace:: :file:`Start / eCAL / eCAL Monitor`
 .. |ecal_rec-start-menu-path-windows|  replace:: :file:`Start / eCAL / eCAL Recorder`
 .. |ecal_play-start-menu-path-windows| replace:: :file:`Start / eCAL / eCAL Player`
+.. |ecal_sys-start-menu-path-windows| replace:: :file:`Start / eCAL / eCAL Sys`

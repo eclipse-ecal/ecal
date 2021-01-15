@@ -2,27 +2,41 @@
 
 .. _applications_sys_overview:
 
-========
-Overview
-========
+=================
+eCAL Sys Overview
+=================
 
-.. note::
-   eCAL Sys is available since eCAL 5.8.
+In this chapter we will take a deeper look at eCAl Sys.
+We will discuss the Host / Client architecture and look at all available configuration options and functions in the GUI.
 
-eCAL Sys is an application for starting, stopping and monitoring applications on one or multiple machines.
-You can use it to automatize the startup of your system and check whether any of your applications report an error.
+.. seealso::
 
-Just like the eCAL Recorder, eCAL Sys consists of a client application and a control application with a GUI.
-So for starting applications on multiple PCs, you will have to:
+   If you are new to eCAL Sys, please first check out the :ref:`Getting Started with eCAL Sys <getting_started_sys>` chapter.
+   That chapter will teach you the very basics of eCAL Sys.
 
-#. Start :file:`ecal_sys_gui (.exe)` on one machine
-#. Start :file:`ecal_sys_client (.exe)` on any other machine than the one you started the GUI on
+   If you don't want to use the GUI, please see the :ref:`applications_sys_cli` chapter.
 
-.. important::
-   The eCAL Sys Client does not perform any kind auf authentication.
-   Any request that is received will be executed, so only use it in networks where you trust all participants.
+Architecture
+============
 
-   If you want to add an extra layer of security, there are existing standards like SSH that should fit your needs.
+Configuration
+=============
+
+GUI Functions
+=============
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 This section is still under construction. But we are working on it! Just be patient.
 
