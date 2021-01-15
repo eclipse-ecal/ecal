@@ -31,8 +31,12 @@
    
    <i class="fas fa-download"></i>
 
-.. |ecalini-path-windows| replace:: :file:`C:\\eCAL\\cfg\\ecal.ini`
-.. |ecalini-path-ubuntu|  replace:: :file:`/usr/etc/ecal/ecal.ini`
+.. |ecalini-path-windows| replace:: :file:`C:\\ProgramData\\eCAL\\ecal.ini`
+.. |ecalini-path-ubuntu|  replace:: :file:`/etc/ecal/ecal.ini`
+
+.. |ecalini-path-windows-old| replace:: :file:`C:\\eCAL\\cfg\\ecal.ini`
+.. |ecalini-path-ubuntu-old|  replace:: :file:`/usr/etc/ecal/ecal.ini`
+
 
 .. |person_snd-path-windows|       replace:: :file:`C:\\eCAL\\samples\\bin\\ecal_sample_person_snd.exe`
 .. |person_rec-path-windows|       replace:: :file:`C:\\eCAL\\samples\\bin\\ecal_sample_person_rec.exe`
@@ -42,3 +46,4 @@
 .. |ecal_mon-start-menu-path-windows|  replace:: :file:`Start / eCAL / eCAL Monitor`
 .. |ecal_rec-start-menu-path-windows|  replace:: :file:`Start / eCAL / eCAL Recorder`
 .. |ecal_play-start-menu-path-windows| replace:: :file:`Start / eCAL / eCAL Player`
+.. |ecal_sys-start-menu-path-windows| replace:: :file:`Start / eCAL / eCAL Sys`

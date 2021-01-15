@@ -19,7 +19,7 @@ import sys
 # -- Project information -----------------------------------------------------
 
 project = u'eCAL Documentation'
-copyright = u'2020, Continental'
+copyright = u'2021, Continental'
 author = u'Continental'
 
 # The short X.Y version

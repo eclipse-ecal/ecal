@@ -8,3 +8,6 @@
 
 .. image:: img/recorder_overview_blank.png
    :alt: eCAL Recorder
+
+.. image:: img/sys_overview_blank.png
+   :alt: eCAL Sys

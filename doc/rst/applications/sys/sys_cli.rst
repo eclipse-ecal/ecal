@@ -2,9 +2,9 @@
 
 .. _applications_sys_cli:
 
-=======
-Sys CLI
-=======
+============
+eCAL Sys CLI
+============
 
 eCAL Sys can be used purely from command line.
 The executable is :file:`ecal_sys (.exe)`.
@@ -22,6 +22,8 @@ eCAL Sys CLI features two modes:
    This mode will connect to another eCAL Sys application (GUI or CLI).
    Commands given to ecal_sys will then be forwarded to the remote-controlled eCAL Sys instance.
    Use this mode when you want to mainly use eCAL Sys manually (e.g. the GUI) but also automatically send commands to it in certain situation.
+
+.. _applications_sys_cli_usage:
 
 Usage
 =====
