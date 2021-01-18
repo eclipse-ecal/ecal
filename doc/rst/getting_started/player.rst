@@ -1,4 +1,5 @@
 .. include:: /include.txt
+.. include:: /_include_ecalicons.txt
 
 .. _getting_started_player:
 
@@ -57,7 +58,8 @@ Overview
 Replaying the measurement
 =========================
 
-Now close any `person_snd` you may still have running, open a `person_rec` or an eCAL Monitor and watch the data incoming from the Player!
+Click |ecalicons_START| :guilabel:`Play` and close any `person_snd` you may still have running.
+Open a `person_rec` or an eCAL Monitor and watch the data incoming from the Player!
 
 .. tip::
 

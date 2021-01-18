@@ -14,13 +14,14 @@
 #
 import os
 import sys
+
 sys.path.insert(0, os.path.join('@CMAKE_BINARY_DIR@', 'python'))
 sys.path.insert(0, os.path.join('@CMAKE_CURRENT_SOURCE_DIR@', 'extensions'))
 
 # -- Generate ecalicons include file-------------------------------------------
 
 import generate_ecalicons
-generate_ecalicons.generate_ecalicons("@CMAKE_CURRENT_SOURCE_DIR@/../app/iconset/ecalicons.qrc", "_include_ecalicons.txt")
+generate_ecalicons.generate_ecalicons("@CMAKE_CURRENT_SOURCE_DIR@/../app/iconset/ecalicons.qrc", "@CMAKE_CURRENT_BINARY_DIR@/_include_ecalicons.txt")
 
 # -- Project information -----------------------------------------------------
 

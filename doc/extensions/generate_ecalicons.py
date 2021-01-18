@@ -26,12 +26,12 @@ def generate_ecalicons(qt_resource_file, output_file_path):
                 size_alias = size_alias + "_" + size_name
             size = sizes[size_name]
 
-            rst_code.append(get_rst_code(size_alias, icon_path, size))
+            rst_code.append(__get_rst_code(size_alias, icon_path, size))
 
     with open(output_file_path, 'w') as output_file:
         output_file.write("".join(rst_code))
 
-def get_rst_code(alias, path, size):
+def __get_rst_code(alias, path, size):
     posix_path = path.replace(os.sep, posixpath.sep)
     return ".. |" + alias + "| image:: " + posix_path + "\n   :width: " + str(size) + "px" + "\n\n"
 
