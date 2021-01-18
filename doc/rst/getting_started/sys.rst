@@ -1,4 +1,5 @@
 .. include:: /include.txt
+.. include:: /_include_ecalicons.txt
 
 .. _getting_started_sys:
 
@@ -104,7 +105,7 @@ For starting applications on multiple PCs, you will have to:
 
    If you want to add an extra layer of security, there are existing standards like SSH that should fit your needs.
 
-Now click the :guilabel:`+` button from the toolbar to add some tasks.
+Now click the |ecalicons_ADD| :guilabel:`Add` button from the toolbar to add some tasks.
 Enter the hostnames and commands so that the command can be executed on the respective host.
 You may have to modify the hostnames and commands accordingly.
 
@@ -128,7 +129,7 @@ You may have to modify the hostnames and commands accordingly.
 
 You can download the .ecalsys file in the :ref:`Files <getting_started_sys_files>` section below, but you must still check the hostnames and paths.
 
-Now start all tasks by hitting the :guilabel:`Start` button from the toolbar!
+Now start all tasks by hitting the |ecalicons_START| :guilabel:`Start` button from the toolbar!
 This will open the Recorder GUI and a person_snd and person_rec sample exchanging data.
 
 Note how the Rec GUI currently reports a warning, because nobody has clicked the *Activate* button, yet!
@@ -139,6 +140,8 @@ Note how the Rec GUI currently reports a warning, because nobody has clicked the
 .. tip::
    Try stopping or restarting your tasks from the eCAL Sys GUI!
    Also just close one of the applications (the Rec GUI for example) and watch eCAL Sys picking it up as an error.
+
+.. _getting_started_sys_files:
 
 Files
 =====
