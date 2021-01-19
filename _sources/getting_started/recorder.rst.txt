@@ -1,4 +1,5 @@
 .. include:: /include.txt
+.. include:: /_include_ecalicons.txt
 
 .. _getting_started_recorder:
 
@@ -101,14 +102,14 @@ For the screenshot, the Windows machine is running the eCAL Recorder, while the 
 
       In this area are the three main buttons for controlling your recording:
 
-      * :guilabel:`Activate`: Clicking this button will cause the recorder to create subscribe to the eCAL topics it is supposed to record.
+      * |ecalicons_POWER_ON| :guilabel:`Activate`: Clicking this button will cause the recorder to create subscribe to the eCAL topics it is supposed to record.
         This will also cause the pre-buffer getting filled.
 
-      * :guilabel:`REC`: This button starts and stops the recording.
+      * |ecalicons_RECORD| :guilabel:`REC`: This button starts and stops the recording.
         If you haven't clicked *Activate*, this step is done automatically.
         So, unless you care about the pre-buffer function, you don't need to manually activate the recorder.
 
-      * :guilabel:`Save Pre-Buffer`: This button only becomes active, when you enabled Pre-buffering.
+      * |ecalicons_SAVE_TO_DISK| :guilabel:`Save Pre-Buffer`: This button only becomes active, when you enabled Pre-buffering.
         Clicking it will save the content of the current pre-buffer as a new measurement, without having to click REC and STOP immediately afterwards. 
 
    #. **Measurement history**
@@ -121,12 +122,12 @@ Let's record some data!
 
 As mentioned above, we have a *person_snd* sample running on a remote machine. Now let's record it!
 
-#. Click :guilabel:`REC`
+#. Click |ecalicons_RECORD| :guilabel:`REC` 
 #. Wait some seconds
-#. Click :guilabel:`STOP`
+#. Click |ecalicons_STOP| :guilabel:`STOP`
 
 That's it. You have just created your first eCAL measurement.
-Also try adding a comment to your measurement by clicking the :guilabel:`Comment...` button in the measurement list!
+Also try adding a comment to your measurement by clicking the |ecalicons_ADD_FILE| :guilabel:`Comment...` button in the measurement list!
 If you haven't modified the measurement path, it is saved to:
 
 * |fa-windows| Windows: :file:`C:\\ecal_meas\\`
