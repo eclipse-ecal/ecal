@@ -73,7 +73,7 @@ So let's look at all of the things you can configure with eCAL Sys GUI.
 .. tip::
    
    You can write your paths and command line arguments in a generic way and e.g. use environment variables or do different things based on the host or target operating system.
-   eCAL provides a replacement syntax for that and marks each text box where you can use it.
+   eCAL provides a replacement syntax for that and displays an icon where you can use it.
 
    For instance to use an environment variable ``my_root_dir`` that you have configured differently on each target, use:
 
