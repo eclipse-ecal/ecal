@@ -78,6 +78,8 @@ We will show you how to do that right after we have taken a look at the GUI.
       The green arrow indicates whether you can start tasks on this host.
       When the *Machine Monitoring Application* (:file:`ecal_mma /.exe`) is running on that host, it will also display information about the CPU and RAM usage, network traffic etc.
 
+.. _getting_started_sys_tasks:
+
 Configuring and Starting Tasks
 ==============================
 

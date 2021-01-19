@@ -192,6 +192,59 @@ The resulting command line for the selected task (Notepad 1) will be:
 Groups
 ------
 
+You can create groups of tasks in eCAL Sys to calculate an "overall state".
+The groups panel can be reached from the lower tab bar.
+
+As explanation, we will use the ``tutorial.ecalsys`` file from the :ref:`Getting Started with eCAL Sys<getting_started_sys_files>` chapter.
+A group can be created by clicking the |ecalicons_ADD| :guilabel:`Add` button.
+
+.. tip::
+   
+   Download the file and check out how those groups are configured!
+
+.. image:: img/ecal_sys_groups_annotated.svg
+   :alt: eCAL Sys Groups
+
+- **Group Attributes**:
+  
+  - **Name**:
+    The name of your group.
+    This name will be used in the group list.
+
+  - **States**:
+    Create states by clicking the :guilabel:`+` button.
+    eCAL Sys will evaluate your states from top to bottom.
+    The first state that meets all its requirements becomes active.
+    The active state will be displayed in the group list ("Some Warning" in the screenshot).
+
+    If no state meets its requirements, no state will be active.
+
+- **State Attributes**:
+
+  - **Name**:
+    The name of your state, that will be displayed when the state is avtive.
+
+  - **Color**:
+    The color that your state shall appear in, when active.
+
+  - **Available tasks**:
+    A list of all tasks that you have configured.
+    Use the :guilabel:`▶` button to move a task to the Selected Tasks list.
+
+  - **Selected Tasks**:
+    The list of tasks that are important for the current state.
+    Here you have to set the minimum serverity for all tasks in the state.
+    The state becomes active, when all tasks report a servery that is *at least* as good as the minimum severity you have configured.
+
+.. tip::
+   
+   Usually, you want to have an empty state indicating a failure at the end of your state list.
+   If no other state is active, this one will always be, as it doesn't have any requirements.
+
+   In the ``tutorial.ecalsys`` file the "FAIL" state is used for that purpose.
+   It has an empty "Selected Tasks" list.
+
+
 GUI Functions
 =============
 
