@@ -71,7 +71,26 @@
             </monitoring>
         </task>
     </tasks>
-    <functions/>
+    <functions>
+        <function name="My First group">
+            <tasks>
+                <task id="1"/>
+                <task id="2"/>
+                <task id="3"/>
+            </tasks>
+            <state name="All Tasks OK" prio="0" colour="rgb(9, 200, 15)">
+                <task id="1" severity="Healthy" severity_level="Level1"/>
+                <task id="2" severity="Healthy" severity_level="Level1"/>
+                <task id="3" severity="Healthy" severity_level="Level1"/>
+            </state>
+            <state name="Some Warning" prio="1" colour="rgb(250, 208, 80)">
+                <task id="1" severity="Warning" severity_level="Level1"/>
+                <task id="2" severity="Warning" severity_level="Level1"/>
+                <task id="3" severity="Warning" severity_level="Level1"/>
+            </state>
+            <state name="FAIL" prio="2" colour="rgb(255, 0, 0)"/>
+        </function>
+    </functions>
     <options>
         <all_targets_reachable>1</all_targets_reachable>
         <only_local_host>0</only_local_host>
@@ -86,6 +105,6 @@
         <x>0</x>
         <y>0</y>
     </window_position>
-    <window_maximized>240</window_maximized>
+    <window_maximized>0</window_maximized>
     <layout></layout>
 </eCALSys>
