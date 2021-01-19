@@ -3,9 +3,9 @@
 
 .. _applications_sys_overview:
 
-=================
-eCAL Sys Overview
-=================
+=======================================
+|ecalsys_APP_ICON_h1| eCAL Sys Overview
+=======================================
 
 In this chapter we will take a deeper look at eCAl Sys.
 We will discuss the Host / Client architecture and look at all available configuration options and functions in the GUI.
@@ -69,6 +69,19 @@ Although you could write .ecalsys files by hand, it is much easier to use eCAL S
 The command line application (eCAL Sys CLI) can only load .ecalsys files, but not write them.
 
 So let's look at all of the things you can configure with eCAL Sys GUI.
+
+.. tip::
+   
+   You can write your paths and command line arguments in a generic way and e.g. use environment variables or do different things based on the host or target operating system.
+   eCAL provides a replacement syntax for that and marks each text box where you can use it.
+
+   For instance to use an environment variable ``my_root_dir`` that you have configured differently on each target, use:
+
+   .. code-block::
+   
+      $TARGET{ENV my_root_dir}/task
+
+   Click one of the |qecalparser_SHOW_DIALOG| :guilabel:`Advanced Editor...` buttons for further information.
 
 Tasks
 -----

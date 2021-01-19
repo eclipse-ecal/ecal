@@ -2,12 +2,16 @@ import xml.etree.ElementTree as ET
 import os
 import posixpath
 
-def generate_ecalicons(qt_resource_file, output_file_path):
-    base_path  = os.path.abspath(os.path.dirname(qt_resource_file))
-    icons_dict = __read_qt_resource_file(qt_resource_file)
+def generate_ecalicons(qt_resource_file_list, output_file_path):
+    icons_dict = {}
+    for qt_resource_path in qt_resource_file_list:
+        this_dict = __read_qt_resource_file(qt_resource_path)
+        icons_dict = {**icons_dict, **this_dict}  # => Merge the two dictionaries
 
     sizes = {
         "" : 16,
+        "h1" : 38,
+        "h2" : 33,
         "16" : 16,
         "20" : 20,
         "32" : 32,
@@ -18,7 +22,7 @@ def generate_ecalicons(qt_resource_file, output_file_path):
     rst_code = []
 
     for icon_alias in icons_dict:
-        icon_path = os.path.join(base_path, icons_dict[icon_alias])
+        icon_path = icons_dict[icon_alias]
         for size_name in sizes:
 
             size_alias = icon_alias
@@ -37,6 +41,7 @@ def __get_rst_code(alias, path, size):
 
 def __read_qt_resource_file(qt_resource_file):
     ecalicons_dict = {}
+    base_path      = os.path.abspath(os.path.dirname(qt_resource_file))
 
     tree     = ET.parse(qt_resource_file)
     rcc_root = tree.getroot()
@@ -74,10 +79,19 @@ def __read_qt_resource_file(qt_resource_file):
             if file_alias == "":
                 file_alias = os.path.basename(file_path)
 
-            ecalicons_dict[prefix + "_" + file_alias] = file_path
+            ecalicons_dict[prefix + "_" + file_alias] = os.path.join(base_path, file_path)
     
     return ecalicons_dict
 
 if __name__ == "__main__":
-    # generate_ecalicons(r"D:\Projects\ecal\ecal-githubcom\app\iconset\ecalicons.qrc", "ecalicons.txt")
-    generate_ecalicons(r"D:/Projects/ecal/ecal-githubcom/app/iconset/ecalicons.qrc", "ecalicons.txt")
+    qresource_list = [
+        r"../../app/iconset/ecalicons.qrc",
+        r"../../lib/QEcalParser/resources/qecalparser.qrc",
+        r"../../app/mon/mon_gui/resources/resources.qrc",
+        r"../../app/play/play_gui/resources/resources.qrc",
+        r"../../app/rec/rec_gui/resources/resources.qrc",
+        r"../../app/sys/sys_gui/resources/resources.qrc",
+        r"../../app/util/launcher/resources/resources.qrc"
+    ]
+
+    generate_ecalicons(qresource_list, "../rst/_include_ecalicons.txt")

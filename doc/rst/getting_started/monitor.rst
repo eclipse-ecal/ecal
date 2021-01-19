@@ -1,10 +1,11 @@
 .. include:: /include.txt
+.. include:: /_include_ecalicons.txt
 
 .. _getting_started_monitor:
 
-=======
-Monitor
-=======
+=============================
+|ecalmon_APP_ICON_h1| Monitor
+=============================
 
 .. hint::
    Don't be afraid to play around with the GUI! If you closed or moved something and can't get it back, just click :guilabel:`View / Reset Layout`!

@@ -3,9 +3,9 @@
 
 .. _getting_started_player:
 
-======
-Player
-======
+=============================
+|ecalplay_APP_ICON_h1| Player
+=============================
 
 .. hint::
    Don't be afraid to play around with the GUI! If you closed or moved something and can't get it back, just click :guilabel:`View / Reset Layout`!
