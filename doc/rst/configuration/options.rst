@@ -128,6 +128,8 @@ The network setting drive how and which ...
 [process]
 =========
 
+.. _ecalini_option_terminal_emulator:
+
 .. option:: terminal_emulator        
    
    default: ``""``

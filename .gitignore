@@ -34,6 +34,8 @@ CMakeLists.txt.user
 
 # Sphinx live output
 doc/rst/_build/
+doc/rst/_include_ecalicons.txt
+*.pyc
 
 # Clion
 .idea
