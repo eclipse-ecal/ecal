@@ -60,15 +60,13 @@ eCAL Sys consists of 2 (or 3) applications:
 
       You can use eCAL Sys to start the MMA Application, by creating an ``ecal_mma`` task.
 
-Configuration
-=============
+Configuration Files
+===================
 
 eCAL Sys saves configuration files with the ``.ecalsys`` extension.
 Those files contain a regular XML description of the configuration.
 Although you could write .ecalsys files by hand, it is much easier to use eCAL Sys GUI for that.
 The command line application (eCAL Sys CLI) can only load .ecalsys files, but not write them.
-
-So let's look at all of the things you can configure with eCAL Sys GUI.
 
 .. tip::
    
@@ -83,11 +81,53 @@ So let's look at all of the things you can configure with eCAL Sys GUI.
 
    Click one of the |qecalparser_SHOW_DIALOG| :guilabel:`Advanced Editor...` buttons for further information.
 
-Tasks
------
+eCAL Sys GUI
+============
+
+In most cases, the eCAL Sys GUI will be your primary application.
+It can both create .ecalsys files and start, stop and monitor your tasks.
+
+So let's look at all of the things you can do with eCAL Sys GUI.
+
 
 .. image:: img/ecal_sys_task_overview.png
    :alt: eCAL Sys Task Overview
+
+Toolbar
+-------
+
+- |ecalicons_ADD| :guilabel:`Add`:
+  Add a new task
+
+- |ecalicons_EDIT| :guilabel:`Edit`:
+  Open the edit panel to edit the selected Tasks
+
+- |ecalicons_DELETE| :guilabel:`Delete`:
+  Delete the selected tasks
+
+- |ecalicons_START| :guilabel:`Start` / |ecalicons_STOP| :guilabel:`Stop` / |ecalicons_RESTART| :guilabel:`Restart`:
+  Start, stop or restart all of your tasks.
+  A task that already been started will not be started again.
+  If you want a task to run multiple times, you have to duplicate it.
+
+  If you only want to start some of your tasks, use the according buttons: |ecalicons_START_SELECTED| / |ecalicons_STOP_SELECTED| / |ecalicons_RESTART_SELECTED|
+
+- |ecalicons_IMPORT_FROM_CLOUD| :guilabel:`Import from cloud...`:
+  This is a function to help you with creating your eCAL Sys configuration.
+  Instead of typing all tasks manually in eCAL Sys, you can also  start you tasks manually on all of your machines and then click this button.
+  You can then select all tasks that you want to appear in your eCAL Sys configuration and import them to replicate the configuration later.
+
+  .. image:: img/ecal_sys_import_from_cloud.png
+     :alt: eCAL Sys - Import from cloud
+
+- |ecalicons_UPDATE_FROM_CLOUD| :guilabel:`Update from cloud`:
+  This function tries to match eCAL Processes that are already running to your loaded configuration.
+  Use this function, if you e.g. have closed eCAL Sys GUI by accident, as this will cause you to loose the information which tasks have already been started and which PID belongs to them.
+
+  Note that Update from cloud needs a running eCAL Sys Client on all remote machines.
+
+Task configuration
+------------------
 
 - **Name**:
   The task name that you can choose freely.
@@ -278,23 +318,3 @@ This section is about the :guilabel:`Options` available from the menubar:
 
 - **Kill all on close**:
   Forcefully shut down all tasks when you close eCAL Sys GUI.
-
-
-GUI Functions
-=============
-
-
-
-
-
-
-
-
-
-
-This section is still under construction. But we are working on it! Just be patient.
-
-.. image:: /img/snail.svg
-   :alt: Snail
-   :align: center
-
