@@ -225,7 +225,7 @@ A group can be created by clicking the |ecalicons_ADD| :guilabel:`Add` button.
     The name of your state, that will be displayed when the state is avtive.
 
   - **Color**:
-    The color that your state shall appear in, when active.
+    The color that your state shall appear in, when being active.
 
   - **Available tasks**:
     A list of all tasks that you have configured.
@@ -243,6 +243,41 @@ A group can be created by clicking the |ecalicons_ADD| :guilabel:`Add` button.
 
    In the ``tutorial.ecalsys`` file the "FAIL" state is used for that purpose.
    It has an empty "Selected Tasks" list.
+
+Options
+-------
+
+This section is about the :guilabel:`Options` available from the menubar:
+
+.. image:: img/ecal_sys_options.png
+   :alt: eCAL Sys Options
+
+- **Check if targets are reachable**:
+  When checked, eCAL Sys will check whether there is a running *eCAL Sys Client* on all target machines (except on the current machine, it doesn't need one there).
+  When one of the clients is missing, it will prompt a warning.
+
+- **Target overrides**:
+  These are "permanent" target overrides, i.e. the options are saved in the .ecalsys file.
+
+  - **Use configured targets**:
+    Start tasks on the host you set as target.
+
+  - **Local tasks only**:
+    Only start tasks that would have been started on the current machine, anyways.
+    Tasks that would have been started remotely are omitted.
+  
+  - **Use localhost for all tasks**:
+    Treat all tasks as if you would have configured them to start on the current machine.
+
+  .. tip::
+    
+     Instead of using these target overrides, you can also temporarily override the target from the context menu!
+
+     .. image:: img/ecal_sys_start_on_host.png
+        :alt: eCAL Sys - Start on Host
+
+- **Kill all on close**:
+  Forcefully shut down all tasks when you close eCAL Sys GUI.
 
 
 GUI Functions
