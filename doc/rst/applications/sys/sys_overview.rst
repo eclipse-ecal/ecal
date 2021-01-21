@@ -3,9 +3,9 @@
 
 .. _applications_sys_overview:
 
-=================
-eCAL Sys Overview
-=================
+=======================================
+|ecalsys_APP_ICON_h1| eCAL Sys Overview
+=======================================
 
 In this chapter we will take a deeper look at eCAl Sys.
 We will discuss the Host / Client architecture and look at all available configuration options and functions in the GUI.
@@ -60,21 +60,74 @@ eCAL Sys consists of 2 (or 3) applications:
 
       You can use eCAL Sys to start the MMA Application, by creating an ``ecal_mma`` task.
 
-Configuration
-=============
+Configuration Files
+===================
 
 eCAL Sys saves configuration files with the ``.ecalsys`` extension.
 Those files contain a regular XML description of the configuration.
 Although you could write .ecalsys files by hand, it is much easier to use eCAL Sys GUI for that.
 The command line application (eCAL Sys CLI) can only load .ecalsys files, but not write them.
 
-So let's look at all of the things you can configure with eCAL Sys GUI.
+.. tip::
+   
+   You can write your paths and command line arguments in a generic way and e.g. use environment variables or do different things based on the host or target operating system.
+   eCAL provides a replacement syntax for that and displays an icon where you can use it.
 
-Tasks
------
+   For instance to use an environment variable ``my_root_dir`` that you have configured differently on each target, use:
+
+   .. code-block::
+   
+      $TARGET{ENV my_root_dir}/task
+
+   Click one of the |qecalparser_SHOW_DIALOG| :guilabel:`Advanced Editor...` buttons for further information.
+
+eCAL Sys GUI
+============
+
+In most cases, the eCAL Sys GUI will be your primary application.
+It can both create .ecalsys files and start, stop and monitor your tasks.
+
+So let's look at all of the things you can do with eCAL Sys GUI.
+
 
 .. image:: img/ecal_sys_task_overview.png
    :alt: eCAL Sys Task Overview
+
+Toolbar
+-------
+
+- |ecalicons_ADD| :guilabel:`Add`:
+  Add a new task
+
+- |ecalicons_EDIT| :guilabel:`Edit`:
+  Open the edit panel to edit the selected Tasks
+
+- |ecalicons_DELETE| :guilabel:`Delete`:
+  Delete the selected tasks
+
+- |ecalicons_START| :guilabel:`Start` / |ecalicons_STOP| :guilabel:`Stop` / |ecalicons_RESTART| :guilabel:`Restart`:
+  Start, stop or restart all of your tasks.
+  A task that already been started will not be started again.
+  If you want a task to run multiple times, you have to duplicate it.
+
+  If you only want to start some of your tasks, use the according buttons: |ecalicons_START_SELECTED| / |ecalicons_STOP_SELECTED| / |ecalicons_RESTART_SELECTED|
+
+- |ecalicons_IMPORT_FROM_CLOUD| :guilabel:`Import from cloud...`:
+  This is a function to help you with creating your eCAL Sys configuration.
+  Instead of typing all tasks manually in eCAL Sys, you can also  start you tasks manually on all of your machines and then click this button.
+  You can then select all tasks that you want to appear in your eCAL Sys configuration and import them to replicate the configuration later.
+
+  .. image:: img/ecal_sys_import_from_cloud.png
+     :alt: eCAL Sys - Import from cloud
+
+- |ecalicons_UPDATE_FROM_CLOUD| :guilabel:`Update from cloud`:
+  This function tries to match eCAL Processes that are already running to your loaded configuration.
+  Use this function, if you e.g. have closed eCAL Sys GUI by accident, as this will cause you to loose the information which tasks have already been started and which PID belongs to them.
+
+  Note that Update from cloud needs a running eCAL Sys Client on all remote machines.
+
+Task configuration
+------------------
 
 - **Name**:
   The task name that you can choose freely.
@@ -179,21 +232,89 @@ The resulting command line for the selected task (Notepad 1) will be:
 Groups
 ------
 
-GUI Functions
-=============
+You can create groups of tasks in eCAL Sys to calculate an "overall state".
+The groups panel can be reached from the lower tab bar.
 
+As explanation, we will use the ``tutorial.ecalsys`` file from the :ref:`Getting Started with eCAL Sys<getting_started_sys_files>` chapter.
+A group can be created by clicking the |ecalicons_ADD| :guilabel:`Add` button.
 
+.. tip::
+   
+   Download the file and check out how those groups are configured!
 
+.. image:: img/ecal_sys_groups_annotated.svg
+   :alt: eCAL Sys Groups
 
+- **Group Attributes**:
+  
+  - **Name**:
+    The name of your group.
+    This name will be used in the group list.
 
+  - **States**:
+    Create states by clicking the :guilabel:`+` button.
+    eCAL Sys will evaluate your states from top to bottom.
+    The first state that meets all its requirements becomes active.
+    The active state will be displayed in the group list ("Some Warning" in the screenshot).
 
+    If no state meets its requirements, no state will be active.
 
+- **State Attributes**:
 
+  - **Name**:
+    The name of your state, that will be displayed when the state is avtive.
 
+  - **Color**:
+    The color that your state shall appear in, when being active.
 
-This section is still under construction. But we are working on it! Just be patient.
+  - **Available tasks**:
+    A list of all tasks that you have configured.
+    Use the :guilabel:`▶` button to move a task to the Selected Tasks list.
 
-.. image:: /img/snail.svg
-   :alt: Snail
-   :align: center
+  - **Selected Tasks**:
+    The list of tasks that are important for the current state.
+    Here you have to set the minimum serverity for all tasks in the state.
+    The state becomes active, when all tasks report a servery that is *at least* as good as the minimum severity you have configured.
 
+.. tip::
+   
+   Usually, you want to have an empty state indicating a failure at the end of your state list.
+   If no other state is active, this one will always be, as it doesn't have any requirements.
+
+   In the ``tutorial.ecalsys`` file the "FAIL" state is used for that purpose.
+   It has an empty "Selected Tasks" list.
+
+Options
+-------
+
+This section is about the :guilabel:`Options` available from the menubar:
+
+.. image:: img/ecal_sys_options.png
+   :alt: eCAL Sys Options
+
+- **Check if targets are reachable**:
+  When checked, eCAL Sys will check whether there is a running *eCAL Sys Client* on all target machines (except on the current machine, it doesn't need one there).
+  When one of the clients is missing, it will prompt a warning.
+
+- **Target overrides**:
+  These are "permanent" target overrides, i.e. the options are saved in the .ecalsys file.
+
+  - **Use configured targets**:
+    Start tasks on the host you set as target.
+
+  - **Local tasks only**:
+    Only start tasks that would have been started on the current machine, anyways.
+    Tasks that would have been started remotely are omitted.
+  
+  - **Use localhost for all tasks**:
+    Treat all tasks as if you would have configured them to start on the current machine.
+
+  .. tip::
+    
+     Instead of using these target overrides, you can also temporarily override the target from the context menu!
+
+     .. image:: img/ecal_sys_start_on_host.png
+        :alt: eCAL Sys - Start on Host
+
+- **Kill all on close**:
+  Forcefully shut down all tasks when you close eCAL Sys GUI.

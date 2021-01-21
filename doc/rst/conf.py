@@ -21,7 +21,16 @@ sys.path.insert(0, os.path.abspath('../extensions'))
 # -- Generate ecalicons include file-------------------------------------------
 
 import generate_ecalicons
-generate_ecalicons.generate_ecalicons("../../app/iconset/ecalicons.qrc", "_include_ecalicons.txt")
+qresource_list = [
+    r"../../app/iconset/ecalicons.qrc",
+    r"../../lib/QEcalParser/resources/qecalparser.qrc",
+    r"../../app/mon/mon_gui/resources/resources.qrc",
+    r"../../app/play/play_gui/resources/resources.qrc",
+    r"../../app/rec/rec_gui/resources/resources.qrc",
+    r"../../app/sys/sys_gui/resources/resources.qrc",
+    r"../../app/util/launcher/resources/resources.qrc"
+]
+generate_ecalicons.generate_ecalicons(qresource_list, "_include_ecalicons.txt")
 
 # -- Project information -----------------------------------------------------
 

@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../../../resources/resources.qrc">
-    <normaloff>:/icons/gfx/ecalsys.ico</normaloff>:/icons/gfx/ecalsys.ico</iconset>
+    <normaloff>:/ecalsys/APP_ICON</normaloff>:/ecalsys/APP_ICON</iconset>
   </property>
   <widget class="QWidget" name="central_widget">
    <layout class="QVBoxLayout" name="central_layout"/>
