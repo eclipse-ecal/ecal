@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import os
 import posixpath
+import sys
 
 def generate_ecalicons(qt_resource_file_list, output_file_path):
     icons_dict = {}
@@ -79,7 +80,18 @@ def __read_qt_resource_file(qt_resource_file):
             if file_alias == "":
                 file_alias = os.path.basename(file_path)
 
-            ecalicons_dict[prefix + "_" + file_alias] = os.path.join(base_path, file_path)
+            # Unfortunatelly, sphinx wants to interpret paths as relative paths
+            # and simply removes a leading "/". This is no issue on Windows,
+            # as absolute paths start with a drive-letter.
+            # On non-Windows OS we however have to add a second "/", so Sphinx
+            # can remove one of them and we still end up with an absolute path.
+
+            if sys.platform.startswith('win32'):
+                # No workaround needed
+                ecalicons_dict[prefix + "_" + file_alias] = os.path.join(base_path, file_path)
+            else:
+                # Add leading "/"
+                ecalicons_dict[prefix + "_" + file_alias] = "/" + os.path.join(base_path, file_path)
     
     return ecalicons_dict
 
