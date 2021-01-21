@@ -335,7 +335,7 @@
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="sys.html">eCAL Sys</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="sys_overview.html"> eCAL Sys Overview</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">eCAL Sys CLI</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"> eCAL Sys CLI</a></li>
 </ul>
 </li>
 </ul>
@@ -356,8 +356,15 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">eCAL Sys CLI</a><ul>
+<li><a class="reference internal" href="#"> eCAL Sys CLI</a><ul>
 <li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#typical-use-cases">Typical use-cases</a><ul>
+<li><a class="reference internal" href="#single-shot-commands">Single-shot commands</a></li>
+<li><a class="reference internal" href="#interactive-mode">Interactive mode</a></li>
+<li><a class="reference internal" href="#remote-control-ecal-sys">Remote-control eCAL Sys</a></li>
+<li><a class="reference internal" href="#automatize-ecal-sys-cli">Automatize eCAL Sys CLI</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -379,7 +386,7 @@
         <li class="breadcrumb-item"><a href="../../index.html">Start</a></li>
             <li class="breadcrumb-item"><a href="../../applications.html">Applications</a></li>
             <li class="breadcrumb-item"><a href="sys.html">eCAL Sys</a></li>
-        <li class="breadcrumb-item active" aria-current="page">eCAL Sys CLI</li>
+        <li class="breadcrumb-item active" aria-current="page"> eCAL Sys CLI</li>
     </ol>
         <div class="breadcrumb-additions">
                 <a class="btn btn-sm btn-light" href="https://github.com/continental/ecal/blob/master/doc/rst/applications/sys/sys_cli.rst">
@@ -396,23 +403,29 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="ecal-sys-cli">
-<span id="applications-sys-cli"></span><h1>eCAL Sys CLI<a class="headerlink" href="#ecal-sys-cli" title="Permalink to this headline">¶</a></h1>
+    <div class="section" id="ecalsys-app-icon-h1-ecal-sys-cli">
+<span id="applications-sys-cli"></span><h1><a class="reference internal" href="../../_images/ecalsys.ico"><img alt="ecalsys_APP_ICON_h1" src="../../_images/ecalsys.ico" style="width: 38px;" /></a> eCAL Sys CLI<a class="headerlink" href="#ecalsys-app-icon-h1-ecal-sys-cli" title="Permalink to this headline">¶</a></h1>
 <p>eCAL Sys can be used purely from command line.
-The executable is <code class="file docutils literal notranslate"><span class="pre">ecal_sys</span> <span class="pre">(.exe)</span></code>.
+The executable is <code class="file docutils literal notranslate"><span class="pre">ecal_sys</span> <span class="pre">/.exe</span></code>.
 It can execute start / stop / restart commands provided from the command line or as well as from an interactive console.
 The interactive mode can also be used to automatize workflows by automatically piping commands to ecal_sys via stdin.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>eCAL Sys CLI cannot create .ecalsys files.
+Please use <a class="reference internal" href="sys_overview.html#applications-sys-gui"><span class="std std-ref">eCAL Sys GUI</span></a> for that purpose.</p>
+</div>
 <p>eCAL Sys CLI features two modes:</p>
 <ol class="arabic">
-<li><p>Direct mode (default):</p>
+<li><p><strong>Direct mode</strong> (default):</p>
 <p>This mode lets you load a configuration and directly start or stop tasks.</p>
 </li>
-<li><p>Remote control mode:</p>
-<p>This mode will connect to another eCAL Sys application (GUI or CLI).
+<li><p><strong>Remote control mode</strong>:</p>
+<p>This mode will connect to another eCAL Sys host application (GUI or CLI).
 Commands given to ecal_sys will then be forwarded to the remote-controlled eCAL Sys instance.
 Use this mode when you want to mainly use eCAL Sys manually (e.g. the GUI) but also automatically send commands to it in certain situation.</p>
 </li>
 </ol>
+<img alt="eCAL Sys CLI" src="../../_images/sys_cli.png" />
 <div class="section" id="usage">
 <span id="applications-sys-cli-usage"></span><h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-txt notranslate"><div class="highlight"><pre><span></span>USAGE:
@@ -485,9 +498,141 @@ Where:
    eCALSys
 </pre></div>
 </div>
-<hr class="docutils" />
-<p>This section is still under construction. But we are working on it! Just be patient.</p>
-<img alt="Snail" class="align-center" src="../../_images/snail.svg" /></div>
+</div>
+<div class="section" id="typical-use-cases">
+<h2>Typical use-cases<a class="headerlink" href="#typical-use-cases" title="Permalink to this headline">¶</a></h2>
+<p>The following examples are meant as an orientation how to use eCAL Sys.</p>
+<div class="section" id="single-shot-commands">
+<h3>Single-shot commands<a class="headerlink" href="#single-shot-commands" title="Permalink to this headline">¶</a></h3>
+<p>Loading an .ecalsys file and starting / Stopping all tasks from it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start:</span>
+ecal_sys -c ~/tutorial.ecalsys --start
+
+<span class="c1"># Stop:</span>
+ecal_sys -c ~/tutorial.ecalsys --stop
+
+<span class="c1"># Restart:</span>
+ecal_sys -c ~/tutorial.ecalsys --restart
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>ecal_sys will terminate once the command has been executed.
+Thus, terminating non-eCAL tasks will not work, as the new instance of ecal_sys that is responsible for stopping does not know the Process IDs.</p>
+</div>
+</div>
+<div class="section" id="interactive-mode">
+<span id="applications-sys-cli-interactive-mode"></span><h3>Interactive mode<a class="headerlink" href="#interactive-mode" title="Permalink to this headline">¶</a></h3>
+<p>Launch the interactive mode to keep eCAL Sys running, while you can directly type commands.
+Type <code class="docutils literal notranslate"><span class="pre">help</span></code> to view a list of all commands available in interactive mode.</p>
+<p>If you combine a single-shot command with the interactive mode, eCAL Sys will continue with the interactive mode after it has executed the command.
+eCAL Sys will not terminate on its own.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ecal_sys -c ~/tutorial.ecalsys --interactive
+</pre></div>
+</div>
+<p>Available commands are:</p>
+<div class="highlight-txt notranslate"><div class="highlight"><pre><span></span>
+exit
+  Quit eCAL Sys.
+
+
+list [--tasks | --groups | --runners ] [ID or name]
+  Prints a list of all tasks / groups / runners. If an ID or name is given,
+  detailed information about that item are printed. If no argument --groups /
+  --runners / --tasks is given, information about tasks are printed.
+
+
+load &lt;Path&gt;
+  Loads an eCAL Sys configuration file.
+
+
+restart [IDs or names]
+  Restart tasks with the given IDs or names. If no ID or name is given, all
+  tasks will be restarted.
+
+
+sleep &lt;seconds&gt;
+  Sleeps for the given amount of time. Usefull when automatically piping input
+  to eCAL Sys via stdin.
+
+
+start [IDs or names]
+  Start tasks with the given IDs or names. If no ID or name is given, all tasks 
+  will be started.
+
+
+stop [IDs or names]
+  Stop tasks with the given IDs or names. If no ID or name is given, all tasks
+  will be stopped.
+
+
+update_from_cloud
+  Updates the state of all (eCAL-) tasks that are visible, even if they have not
+  been started by this eCAL Sys instance.
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When starting terminal applications from the interactive mode, their STDOUT and STDERR will be printed in the ecal_sys terminal.
+This makes it <em>very</em> hard to enter another command or view information.</p>
+<p>You may want to use another ecal_sys instance in remote-control mode to work around that issue.</p>
+</div>
+</div>
+<div class="section" id="remote-control-ecal-sys">
+<h3>Remote-control eCAL Sys<a class="headerlink" href="#remote-control-ecal-sys" title="Permalink to this headline">¶</a></h3>
+<p>First you need something that can be remote controlled:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># GUI</span>
+ecal_sys_gui ~/tutorial.ecalsys
+
+<span class="c1"># CLI (--interactive Flag will prevent the CLI from exiting)</span>
+ecal_sys -c ~/tutorial.ecalsys --interactive
+</pre></div>
+</div>
+<p>Now you can use another instance of ecal_sys to remote-control that application.
+You can use single-shot commands, the interactive mode or both.
+In remote-control mode you cannot load an .ecalsys file, as this is done by the main application.</p>
+<p>The following command will send the <em>start</em> command to your main application and then continue in interactive mode.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ecal_sys --remote-control --remote-host YOUR_HOSTNAME --start --interactive
+</pre></div>
+</div>
+</div>
+<div class="section" id="automatize-ecal-sys-cli">
+<h3>Automatize eCAL Sys CLI<a class="headerlink" href="#automatize-ecal-sys-cli" title="Permalink to this headline">¶</a></h3>
+<p>You can use the ecal_sys interactive mode to automatize it via STDIN.
+Commands are read line-by-line, i.e. they have to be divided by <code class="docutils literal notranslate"><span class="pre">\n</span></code>.
+Semicolons do not work.
+The most concise would probably be to write all your commands in a text file and pipe the content of that to ecal_sys.</p>
+<ul>
+<li><p><i class="fab fa-ubuntu"></i> Ubuntu:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Commands from command line:</span>
+<span class="nb">printf</span> <span class="s2">&quot;Start \n Sleep 10 \n List \n Stop \n Sleep 5&quot;</span> <span class="p">|</span> ecal_sys -c ~/tutorial.ecalsys --interactive
+
+<span class="c1"># Commands from a file:</span>
+cat commands.txt <span class="p">|</span> ecal_sys -c ~/tutorial.ecalsys --interactive
+</pre></div>
+</div>
+</li>
+<li><p><i class="fab fa-windows"></i> Windows CMD.exe:</p>
+<div class="highlight-bat notranslate"><div class="highlight"><pre><span></span><span class="c1">rem Commands from command line:</span>
+<span class="p">(</span><span class="k">echo</span> Start <span class="p">&amp;</span> <span class="k">echo</span> Sleep 10 <span class="p">&amp;</span> <span class="k">echo</span> List <span class="p">&amp;</span> <span class="k">echo</span> Stop <span class="p">&amp;</span> <span class="k">echo</span> Sleep 5<span class="p">)</span> <span class="p">|</span> ecal_sys -c tutorial.ecalsys --interactive
+
+<span class="c1">rem Commands from a file:</span>
+more commands.txt <span class="p">|</span> ecal_sys -c tutorial.ecalsys --interactive
+</pre></div>
+</div>
+</li>
+<li><p><i class="fab fa-windows"></i> Windows PowerShell:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="c"># Commands from command line:</span>
+<span class="nb">echo </span><span class="s2">&quot;Start </span><span class="se">`n</span><span class="s2"> Sleep 10 </span><span class="se">`n</span><span class="s2"> List </span><span class="se">`n</span><span class="s2"> Stop </span><span class="se">`n</span><span class="s2"> Sleep 5&quot;</span> <span class="p">|</span> <span class="n">ecal_sys</span> <span class="n">-c</span> <span class="n">tutorial</span><span class="p">.</span><span class="n">ecalsys</span> <span class="p">-</span><span class="n">-interactive</span>
+
+<span class="c"># Commands from a file:</span>
+<span class="nb">cat </span><span class="n">commands</span><span class="p">.</span><span class="n">txt</span> <span class="p">|</span> <span class="n">ecal_sys</span> <span class="n">-c</span> <span class="n">tutorial</span><span class="p">.</span><span class="n">ecalsys</span> <span class="p">-</span><span class="n">-interactive</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
 </div>
 
 <!-- /body -->
