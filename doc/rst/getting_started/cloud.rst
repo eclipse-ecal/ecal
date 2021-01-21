@@ -167,7 +167,7 @@ Multicast routes via /etc/network/interfaces
 The well known :file:`/etc/network/interfaces` file is supported up to Ubuntu 18.
 It is not supported since Ubuntu 20, anymore.
 Please use netplan instead.
-If you are running Ubuntu 18, using netplan is still recommended, unless you want to manager other interfaces via :file:`/etc/network/interfaces`.
+If you are running Ubuntu 18, using netplan is still recommended, unless you want to manage other interfaces via :file:`/etc/network/interfaces`.
 
 Edit the file and add the content below.
 

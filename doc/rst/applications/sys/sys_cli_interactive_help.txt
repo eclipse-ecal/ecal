@@ -1,0 +1,38 @@
+
+exit
+  Quit eCAL Sys.
+
+
+list [--tasks | --groups | --runners ] [ID or name]
+  Prints a list of all tasks / groups / runners. If an ID or name is given,
+  detailed information about that item are printed. If no argument --groups /
+  --runners / --tasks is given, information about tasks are printed.
+
+
+load <Path>
+  Loads an eCAL Sys configuration file.
+
+
+restart [IDs or names]
+  Restart tasks with the given IDs or names. If no ID or name is given, all
+  tasks will be restarted.
+
+
+sleep <seconds>
+  Sleeps for the given amount of time. Usefull when automatically piping input
+  to eCAL Sys via stdin.
+
+
+start [IDs or names]
+  Start tasks with the given IDs or names. If no ID or name is given, all tasks 
+  will be started.
+
+
+stop [IDs or names]
+  Stop tasks with the given IDs or names. If no ID or name is given, all tasks
+  will be stopped.
+
+
+update_from_cloud
+  Updates the state of all (eCAL-) tasks that are visible, even if they have not
+  been started by this eCAL Sys instance.
