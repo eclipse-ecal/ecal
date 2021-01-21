@@ -1,4 +1,4 @@
-.. include:: /include.txt
+﻿.. include:: /include.txt
 .. include:: /_include_ecalicons.txt
 
 .. _applications_sys_overview:
@@ -16,6 +16,8 @@ We will discuss the Host / Client architecture and look at all available configu
    That chapter will teach you the very basics of eCAL Sys.
 
    If you don't want to use the GUI, please see the :ref:`applications_sys_cli` chapter.
+
+.. _applications_sys_architecture:
 
 Architecture
 ============
@@ -40,7 +42,7 @@ eCAL Sys consists of 2 (or 3) applications:
 
    .. note::
 
-      The eCAL Sys Client is a remote control application with not authentication.
+      The eCAL Sys Client is a remote-control application with not authentication.
       If you are annoyed by accepting this security implication at startup, you can start eCAL Sys Client with:
 
       .. code-block:: console
@@ -59,6 +61,8 @@ eCAL Sys consists of 2 (or 3) applications:
    .. tip::
 
       You can use eCAL Sys to start the MMA Application, by creating an ``ecal_mma`` task.
+
+.. _applications_sys_config_files:
 
 Configuration Files
 ===================
@@ -80,6 +84,8 @@ The command line application (eCAL Sys CLI) can only load .ecalsys files, but no
       $TARGET{ENV my_root_dir}/task
 
    Click one of the |qecalparser_SHOW_DIALOG| :guilabel:`Advanced Editor...` buttons for further information.
+
+.. _applications_sys_gui:
 
 eCAL Sys GUI
 ============
@@ -106,15 +112,15 @@ Toolbar
   Delete the selected tasks
 
 - |ecalicons_START| :guilabel:`Start` / |ecalicons_STOP| :guilabel:`Stop` / |ecalicons_RESTART| :guilabel:`Restart`:
-  Start, stop or restart all of your tasks.
+  Start, stop or restart all your tasks.
   A task that already been started will not be started again.
-  If you want a task to run multiple times, you have to duplicate it.
+  If you want a task to run multiple times, you must duplicate it.
 
   If you only want to start some of your tasks, use the according buttons: |ecalicons_START_SELECTED| / |ecalicons_STOP_SELECTED| / |ecalicons_RESTART_SELECTED|
 
 - |ecalicons_IMPORT_FROM_CLOUD| :guilabel:`Import from cloud...`:
   This is a function to help you with creating your eCAL Sys configuration.
-  Instead of typing all tasks manually in eCAL Sys, you can also  start you tasks manually on all of your machines and then click this button.
+  Instead of typing all tasks manually in eCAL Sys, you can also start you tasks manually on all of your machines and then click this button.
   You can then select all tasks that you want to appear in your eCAL Sys configuration and import them to replicate the configuration later.
 
   .. image:: img/ecal_sys_import_from_cloud.png
@@ -122,7 +128,7 @@ Toolbar
 
 - |ecalicons_UPDATE_FROM_CLOUD| :guilabel:`Update from cloud`:
   This function tries to match eCAL Processes that are already running to your loaded configuration.
-  Use this function, if you e.g. have closed eCAL Sys GUI by accident, as this will cause you to loose the information which tasks have already been started and which PID belongs to them.
+  Use this function, if you e.g. have closed eCAL Sys GUI by accident, as this will cause you to lose the information which tasks have already been started and which PID belongs to them.
 
   Note that Update from cloud needs a running eCAL Sys Client on all remote machines.
 
@@ -151,7 +157,7 @@ Task configuration
     If given, the task will be started in this working directory.
 
   - **Cmd args**:
-    Additional arguments that thall be appended to the command line when starting the task
+    Additional arguments that shall be appended to the command line when starting the task
 
 - **Start Attributes**:
 
@@ -167,11 +173,11 @@ Task configuration
     Tasks that share the same launch order may be started in parallel, there are no guarantees about the order.    
 
   - **Waiting time**:
-    How many milliseconds eCAL Sys has to wait after starting the task.
-    Use this if one of your task needs some time for startup and you don't want other tasks being started during that period.
+    How many milliseconds eCAL Sys must wait after starting the task.
+    Use this if one of your tasks needs some time for startup and you don't want other tasks being started during that period.
     
     Be aware that other tasks sharing the same launch order are still started in parallel.
-    eCAL Sys will shedule the timout after all tasks with the current launch order number have been started.
+    eCAL Sys will schedule the timeout after all tasks with the current launch order number have been started.
 
 - **Monitoring**:
 
@@ -183,7 +189,7 @@ Task configuration
     The task will be killed by means of the operating system.
 
     If you ever tend to use this option, you should consider writing better tasks.
-    It is usually advisable to make the task handle it's own error and not kill and restart it.
+    It is usually advisable to make the task handle its own error and not kill and restart it.
 
 
 .. _applications_sys_runner:
@@ -192,7 +198,7 @@ Runners
 -------
 
 A runner is an executable that you want to execute multiple times with different parameters.
-Often a runner will load a file, e.g. a .dll file that it will then execute, but it can just as well only receive command line arguments that modify its behaviour.
+Often a runner will load a file, e.g. a .dll file that it will then execute, but it can just as well only receive command line arguments that modify its behavior.
 
 To manage the runners, you can click :guilabel:`View / Runners` or click the |ecalicons_EYE| icon.
 
@@ -201,11 +207,11 @@ To manage the runners, you can click :guilabel:`View / Runners` or click the |ec
 
 .. note::
    You can do anything a runner can do with just plain tasks.
-   The runners are only there to help you not typing the same path over and over again.
+   The runners are only there to help you not typing the same path repeatedly.
 
 - **Name**:
   The name of your runner.
-  This name will be displayed in the combobox in the task editor.
+  This name will be displayed in the combo box in the task editor.
 
 - **Path**:
   The path to your runner's executable.
@@ -262,7 +268,7 @@ A group can be created by clicking the |ecalicons_ADD| :guilabel:`Add` button.
 - **State Attributes**:
 
   - **Name**:
-    The name of your state, that will be displayed when the state is avtive.
+    The name of your state, that will be displayed when the state is active.
 
   - **Color**:
     The color that your state shall appear in, when being active.
@@ -273,8 +279,8 @@ A group can be created by clicking the |ecalicons_ADD| :guilabel:`Add` button.
 
   - **Selected Tasks**:
     The list of tasks that are important for the current state.
-    Here you have to set the minimum serverity for all tasks in the state.
-    The state becomes active, when all tasks report a servery that is *at least* as good as the minimum severity you have configured.
+    Here you must set the minimum severity for all tasks in the state.
+    The state becomes active, when all tasks report a severity that is *at least* as good as the minimum severity you have configured.
 
 .. tip::
    
@@ -287,7 +293,7 @@ A group can be created by clicking the |ecalicons_ADD| :guilabel:`Add` button.
 Options
 -------
 
-This section is about the :guilabel:`Options` available from the menubar:
+This section is about the :guilabel:`Options` available from the menu bar:
 
 .. image:: img/ecal_sys_options.png
    :alt: eCAL Sys Options
