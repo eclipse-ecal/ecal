@@ -76,10 +76,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started/cloud.html">4. Cloud configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started/services.html">5. eCAL Services</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started/applications.html">6. Applications</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../getting_started/monitor.html">6.1. Monitor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../getting_started/recorder.html">6.2. Recorder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../getting_started/player.html">6.3. Player</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../getting_started/sys.html">6.4. Sys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/monitor.html">6.1.  Monitor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/recorder.html">6.2.  Recorder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/player.html">6.3.  Player</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/sys.html">6.4.  Sys</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started/development.html">7. Development</a><ul>
@@ -334,7 +334,7 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="sys.html">eCAL Sys</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">eCAL Sys Overview</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"> eCAL Sys Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sys_cli.html">eCAL Sys CLI</a></li>
 </ul>
 </li>
@@ -356,15 +356,17 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">eCAL Sys Overview</a><ul>
+<li><a class="reference internal" href="#"> eCAL Sys Overview</a><ul>
 <li><a class="reference internal" href="#architecture">Architecture</a></li>
-<li><a class="reference internal" href="#configuration">Configuration</a><ul>
-<li><a class="reference internal" href="#tasks">Tasks</a></li>
+<li><a class="reference internal" href="#configuration-files">Configuration Files</a></li>
+<li><a class="reference internal" href="#ecal-sys-gui">eCAL Sys GUI</a><ul>
+<li><a class="reference internal" href="#toolbar">Toolbar</a></li>
+<li><a class="reference internal" href="#task-configuration">Task configuration</a></li>
 <li><a class="reference internal" href="#runners">Runners</a></li>
 <li><a class="reference internal" href="#groups">Groups</a></li>
+<li><a class="reference internal" href="#options">Options</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#gui-functions">GUI Functions</a></li>
 </ul>
 </li>
 </ul>
@@ -386,7 +388,7 @@
         <li class="breadcrumb-item"><a href="../../index.html">Start</a></li>
             <li class="breadcrumb-item"><a href="../../applications.html">Applications</a></li>
             <li class="breadcrumb-item"><a href="sys.html">eCAL Sys</a></li>
-        <li class="breadcrumb-item active" aria-current="page">eCAL Sys Overview</li>
+        <li class="breadcrumb-item active" aria-current="page"> eCAL Sys Overview</li>
     </ol>
         <div class="breadcrumb-additions">
                 <a class="btn btn-sm btn-light" href="https://github.com/continental/ecal/blob/master/doc/rst/applications/sys/sys_overview.rst">
@@ -403,8 +405,8 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="ecal-sys-overview">
-<span id="applications-sys-overview"></span><h1>eCAL Sys Overview<a class="headerlink" href="#ecal-sys-overview" title="Permalink to this headline">¶</a></h1>
+    <div class="section" id="ecalsys-app-icon-h1-ecal-sys-overview">
+<span id="applications-sys-overview"></span><h1><a class="reference internal" href="home/runner/work/ecal/ecal/app/sys/sys_gui/resources/gfx/ecalsys.ico"><img alt="ecalsys_APP_ICON_h1" src="home/runner/work/ecal/ecal/app/sys/sys_gui/resources/gfx/ecalsys.ico" style="width: 38px;" /></a> eCAL Sys Overview<a class="headerlink" href="#ecalsys-app-icon-h1-ecal-sys-overview" title="Permalink to this headline">¶</a></h1>
 <p>In this chapter we will take a deeper look at eCAl Sys.
 We will discuss the Host / Client architecture and look at all available configuration options and functions in the GUI.</p>
 <div class="admonition seealso">
@@ -450,16 +452,59 @@ However, eCAL Sys will display information about system resources of all systems
 </li>
 </ol>
 </div>
-<div class="section" id="configuration">
-<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="configuration-files">
+<h2>Configuration Files<a class="headerlink" href="#configuration-files" title="Permalink to this headline">¶</a></h2>
 <p>eCAL Sys saves configuration files with the <code class="docutils literal notranslate"><span class="pre">.ecalsys</span></code> extension.
 Those files contain a regular XML description of the configuration.
 Although you could write .ecalsys files by hand, it is much easier to use eCAL Sys GUI for that.
 The command line application (eCAL Sys CLI) can only load .ecalsys files, but not write them.</p>
-<p>So let’s look at all of the things you can configure with eCAL Sys GUI.</p>
-<div class="section" id="tasks">
-<h3>Tasks<a class="headerlink" href="#tasks" title="Permalink to this headline">¶</a></h3>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can write your paths and command line arguments in a generic way and e.g. use environment variables or do different things based on the host or target operating system.
+eCAL provides a replacement syntax for that and displays an icon where you can use it.</p>
+<p>For instance to use an environment variable <code class="docutils literal notranslate"><span class="pre">my_root_dir</span></code> that you have configured differently on each target, use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$TARGET{ENV my_root_dir}/task
+</pre></div>
+</div>
+<p>Click one of the <a class="reference internal" href="home/runner/work/ecal/ecal/lib/QEcalParser/resources/show_dialog.svg"><img alt="qecalparser_SHOW_DIALOG" src="home/runner/work/ecal/ecal/lib/QEcalParser/resources/show_dialog.svg" width="16px" /></a> <span class="guilabel">Advanced Editor…</span> buttons for further information.</p>
+</div>
+</div>
+<div class="section" id="ecal-sys-gui">
+<h2>eCAL Sys GUI<a class="headerlink" href="#ecal-sys-gui" title="Permalink to this headline">¶</a></h2>
+<p>In most cases, the eCAL Sys GUI will be your primary application.
+It can both create .ecalsys files and start, stop and monitor your tasks.</p>
+<p>So let’s look at all of the things you can do with eCAL Sys GUI.</p>
 <img alt="eCAL Sys Task Overview" src="../../_images/ecal_sys_task_overview.png" />
+<div class="section" id="toolbar">
+<h3>Toolbar<a class="headerlink" href="#toolbar" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p><a class="reference internal" href="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/plus.svg"><img alt="ecalicons_ADD" src="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/plus.svg" width="16px" /></a> <span class="guilabel">Add</span>:
+Add a new task</p></li>
+<li><p><a class="reference internal" href="home/runner/work/ecal/ecal/app/iconset/flaticon/Vectors-Market/pencil.svg"><img alt="ecalicons_EDIT" src="home/runner/work/ecal/ecal/app/iconset/flaticon/Vectors-Market/pencil.svg" width="16px" /></a> <span class="guilabel">Edit</span>:
+Open the edit panel to edit the selected Tasks</p></li>
+<li><p><a class="reference internal" href="home/runner/work/ecal/ecal/app/iconset/flaticon/Freepik/remove.svg"><img alt="ecalicons_DELETE" src="home/runner/work/ecal/ecal/app/iconset/flaticon/Freepik/remove.svg" width="16px" /></a> <span class="guilabel">Delete</span>:
+Delete the selected tasks</p></li>
+<li><p><a class="reference internal" href="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/play.svg"><img alt="ecalicons_START" src="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/play.svg" width="16px" /></a> <span class="guilabel">Start</span> / <a class="reference internal" href="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/stop.svg"><img alt="ecalicons_STOP" src="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/stop.svg" width="16px" /></a> <span class="guilabel">Stop</span> / <a class="reference internal" href="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/restart.svg"><img alt="ecalicons_RESTART" src="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/restart.svg" width="16px" /></a> <span class="guilabel">Restart</span>:
+Start, stop or restart all of your tasks.
+A task that already been started will not be started again.
+If you want a task to run multiple times, you have to duplicate it.</p>
+<p>If you only want to start some of your tasks, use the according buttons: <a class="reference internal" href="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/start_selected.svg"><img alt="ecalicons_START_SELECTED" src="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/start_selected.svg" width="16px" /></a> / <a class="reference internal" href="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/stop_selected.svg"><img alt="ecalicons_STOP_SELECTED" src="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/stop_selected.svg" width="16px" /></a> / <a class="reference internal" href="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/restart_selected.svg"><img alt="ecalicons_RESTART_SELECTED" src="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/restart_selected.svg" width="16px" /></a></p>
+</li>
+<li><p><a class="reference internal" href="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/import_from_cloud.svg"><img alt="ecalicons_IMPORT_FROM_CLOUD" src="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/import_from_cloud.svg" width="16px" /></a> <span class="guilabel">Import from cloud…</span>:
+This is a function to help you with creating your eCAL Sys configuration.
+Instead of typing all tasks manually in eCAL Sys, you can also  start you tasks manually on all of your machines and then click this button.
+You can then select all tasks that you want to appear in your eCAL Sys configuration and import them to replicate the configuration later.</p>
+<img alt="eCAL Sys - Import from cloud" src="../../_images/ecal_sys_import_from_cloud.png" />
+</li>
+<li><p><a class="reference internal" href="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/update_from_cloud.svg"><img alt="ecalicons_UPDATE_FROM_CLOUD" src="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/update_from_cloud.svg" width="16px" /></a> <span class="guilabel">Update from cloud</span>:
+This function tries to match eCAL Processes that are already running to your loaded configuration.
+Use this function, if you e.g. have closed eCAL Sys GUI by accident, as this will cause you to loose the information which tasks have already been started and which PID belongs to them.</p>
+<p>Note that Update from cloud needs a running eCAL Sys Client on all remote machines.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="task-configuration">
+<h3>Task configuration<a class="headerlink" href="#task-configuration" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p><strong>Name</strong>:
 The task name that you can choose freely.
@@ -518,7 +563,7 @@ It is usually advisable to make the task handle it’s own error and not kill an
 <span id="applications-sys-runner"></span><h3>Runners<a class="headerlink" href="#runners" title="Permalink to this headline">¶</a></h3>
 <p>A runner is an executable that you want to execute multiple times with different parameters.
 Often a runner will load a file, e.g. a .dll file that it will then execute, but it can just as well only receive command line arguments that modify its behaviour.</p>
-<p>To manage the runners, you can click <span class="guilabel">View / Runners</span> or click the <a href="#id1"><span class="problematic" id="id2">|ecalicons_EYE|</span></a> icon.</p>
+<p>To manage the runners, you can click <span class="guilabel">View / Runners</span> or click the <a class="reference internal" href="home/runner/work/ecal/ecal/app/iconset/flaticon/Freepik/eye.svg"><img alt="ecalicons_EYE" src="home/runner/work/ecal/ecal/app/iconset/flaticon/Freepik/eye.svg" width="16px" /></a> icon.</p>
 <img alt="eCAL Sys Runner" src="../../_images/ecal_sys_runner_annotated.svg" /><div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>You can do anything a runner can do with just plain tasks.
@@ -549,12 +594,83 @@ The resulting command line for the selected task (Notepad 1) will be:</p>
 </div>
 <div class="section" id="groups">
 <h3>Groups<a class="headerlink" href="#groups" title="Permalink to this headline">¶</a></h3>
+<p>You can create groups of tasks in eCAL Sys to calculate an “overall state”.
+The groups panel can be reached from the lower tab bar.</p>
+<p>As explanation, we will use the <code class="docutils literal notranslate"><span class="pre">tutorial.ecalsys</span></code> file from the <a class="reference internal" href="../../getting_started/sys.html#getting-started-sys-files"><span class="std std-ref">Getting Started with eCAL Sys</span></a> chapter.
+A group can be created by clicking the <a class="reference internal" href="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/plus.svg"><img alt="ecalicons_ADD" src="home/runner/work/ecal/ecal/app/iconset/FlorianReimold/plus.svg" width="16px" /></a> <span class="guilabel">Add</span> button.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Download the file and check out how those groups are configured!</p>
+</div>
+<img alt="eCAL Sys Groups" src="../../_images/ecal_sys_groups_annotated.svg" /><ul>
+<li><p><strong>Group Attributes</strong>:</p>
+<ul>
+<li><p><strong>Name</strong>:
+The name of your group.
+This name will be used in the group list.</p></li>
+<li><p><strong>States</strong>:
+Create states by clicking the <span class="guilabel">+</span> button.
+eCAL Sys will evaluate your states from top to bottom.
+The first state that meets all its requirements becomes active.
+The active state will be displayed in the group list (“Some Warning” in the screenshot).</p>
+<p>If no state meets its requirements, no state will be active.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>State Attributes</strong>:</p>
+<ul class="simple">
+<li><p><strong>Name</strong>:
+The name of your state, that will be displayed when the state is avtive.</p></li>
+<li><p><strong>Color</strong>:
+The color that your state shall appear in, when being active.</p></li>
+<li><p><strong>Available tasks</strong>:
+A list of all tasks that you have configured.
+Use the <span class="guilabel">▶</span> button to move a task to the Selected Tasks list.</p></li>
+<li><p><strong>Selected Tasks</strong>:
+The list of tasks that are important for the current state.
+Here you have to set the minimum serverity for all tasks in the state.
+The state becomes active, when all tasks report a servery that is <em>at least</em> as good as the minimum severity you have configured.</p></li>
+</ul>
+</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Usually, you want to have an empty state indicating a failure at the end of your state list.
+If no other state is active, this one will always be, as it doesn’t have any requirements.</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">tutorial.ecalsys</span></code> file the “FAIL” state is used for that purpose.
+It has an empty “Selected Tasks” list.</p>
 </div>
 </div>
-<div class="section" id="gui-functions">
-<h2>GUI Functions<a class="headerlink" href="#gui-functions" title="Permalink to this headline">¶</a></h2>
-<p>This section is still under construction. But we are working on it! Just be patient.</p>
-<img alt="Snail" class="align-center" src="../../_images/snail.svg" /></div>
+<div class="section" id="options">
+<h3>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h3>
+<p>This section is about the <span class="guilabel">Options</span> available from the menubar:</p>
+<img alt="eCAL Sys Options" src="../../_images/ecal_sys_options.png" />
+<ul>
+<li><p><strong>Check if targets are reachable</strong>:
+When checked, eCAL Sys will check whether there is a running <em>eCAL Sys Client</em> on all target machines (except on the current machine, it doesn’t need one there).
+When one of the clients is missing, it will prompt a warning.</p></li>
+<li><p><strong>Target overrides</strong>:
+These are “permanent” target overrides, i.e. the options are saved in the .ecalsys file.</p>
+<ul class="simple">
+<li><p><strong>Use configured targets</strong>:
+Start tasks on the host you set as target.</p></li>
+<li><p><strong>Local tasks only</strong>:
+Only start tasks that would have been started on the current machine, anyways.
+Tasks that would have been started remotely are omitted.</p></li>
+<li><p><strong>Use localhost for all tasks</strong>:
+Treat all tasks as if you would have configured them to start on the current machine.</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Instead of using these target overrides, you can also temporarily override the target from the context menu!</p>
+<img alt="eCAL Sys - Start on Host" src="../../_images/ecal_sys_start_on_host.png" />
+</div>
+</li>
+<li><p><strong>Kill all on close</strong>:
+Forcefully shut down all tasks when you close eCAL Sys GUI.</p></li>
+</ul>
+</div>
+</div>
 </div>
 
 <!-- /body -->

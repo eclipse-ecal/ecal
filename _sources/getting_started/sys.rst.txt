@@ -3,9 +3,9 @@
 
 .. _getting_started_sys:
 
-===
-Sys
-===
+=========================
+|ecalsys_APP_ICON_h1| Sys
+=========================
 
 .. hint::
    Don't be afraid to play around with the GUI! If you closed or moved something and can't get it back, just click :guilabel:`View / Reset Layout`!
@@ -77,6 +77,8 @@ We will show you how to do that right after we have taken a look at the GUI.
       All eCAL Hosts (visible hosts running any eCAL application) are listed here.
       The green arrow indicates whether you can start tasks on this host.
       When the *Machine Monitoring Application* (:file:`ecal_mma /.exe`) is running on that host, it will also display information about the CPU and RAM usage, network traffic etc.
+
+.. _getting_started_sys_tasks:
 
 Configuring and Starting Tasks
 ==============================
