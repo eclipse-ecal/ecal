@@ -95,7 +95,7 @@ namespace eCAL
     bool SetHostName(const std::string& host_name_);
 
     /**
-     * @brief Call method of this service (none blocking variant with callback). 
+     * @brief Call method of this service, for all hosts, responses will be returned by callback. 
      *
      * @param method_name_  Method name. 
      * @param request_      Request string. 
@@ -105,7 +105,7 @@ namespace eCAL
     bool Call(const std::string& method_name_, const std::string& request_);
 
     /**
-     * @brief Call method of this service (blocking variant). 
+     * @brief Call method of this service, for specific host. 
      *
      * @param       host_name_     Host name.
      * @param       method_name_   Method name.
@@ -114,9 +114,26 @@ namespace eCAL
      * @param [out] response_      Response string.
      *
      * @return  True if successful. 
-    **/
+    **/ 
     bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceInfo& service_info_, std::string& response_);
     
+    /**
+     * @brief Asynchronously call method of this service, for all hosts, responses will be returned by callback. 
+     *
+     * @param method_name_  Method name. 
+     * @param request_      Request string. 
+    **/
+    void CallAsync(const std::string& method_name_, const std::string& request_);
+
+    /**
+     * @brief Asynchronously call method of this service asynchronously, for specific host, response will be returned by callback. 
+     *
+     * @param       host_name_     Host name.
+     * @param       method_name_   Method name.
+     * @param       request_       Request string. 
+    **/
+    void CallAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_);
+
     /**
      * @brief Add server response callback. 
      *

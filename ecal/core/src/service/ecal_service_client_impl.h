@@ -57,6 +57,10 @@ namespace eCAL
     // callback service using callback, broadcast possible
     bool Call(const std::string& method_name_, const std::string& request_);
 
+    void CallAsync(const std::string& method_name_, const std::string& request_);
+    
+    void CallAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_);
+
     // this object must not be copied.
     CServiceClientImpl(const CServiceClientImpl&) = delete;
     CServiceClientImpl& operator=(const CServiceClientImpl&) = delete;
@@ -65,6 +69,8 @@ namespace eCAL
     void RefreshClientMap();
     bool SendRequests(const std::string& method_name_, const std::string& request_);
     bool SendRequest(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, struct SServiceInfo& service_info_, std::string& response_);
+    void SendRequestsAsync(const std::string& method_name_, const std::string& request_);
+    void SendRequestAsync(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_);
 
     typedef std::map<std::string, std::shared_ptr<CTcpClient>> ClientMapT;
     ClientMapT         m_client_map;
