@@ -114,29 +114,45 @@ namespace eCAL
         }
         std::cout << std::endl;
         std::cout << "For getting additional information, enter:" << std::endl << std::endl;
-        std::cout << "  help <COMMAND_NAME>" << std::endl;
+        std::cout << "  help <COMMAND_NAME | --all>" << std::endl;
       }
       else
       {
-        std::string command = argv[0];
-        std::transform(command.begin(), command.end(), command.begin(), [](char c) { return static_cast<char>(std::tolower(static_cast<unsigned char>(c))); });
-
-        auto command_it = command_map_.find(command);
-        if (command_it == command_map_.end())
+        if (argv[0] == std::string("--all"))
         {
-          return Error(Error::ErrorCode::UNKNOWN_COMMAND, command);
+          for (auto command_map_it = command_map_.begin(); command_map_it != command_map_.end(); command_map_it++)
+          {
+            if (command_map_it != command_map_.begin())
+              std::cout << std::endl;
+
+            std::cout << command_map_it->first << " " << command_map_it->second->Usage() << std::endl;
+            std::cout << "  " << command_map_it->second->Help() << std::endl;
+            std::cout << std::endl;
+          }
+          return Error(Error::ErrorCode::OK);
         }
         else
         {
-          std::cout << "Usage: " << command << " " << command_it->second->Usage() << std::endl;
-          std::cout << command_it->second->Help() << std::endl;
-          std::cout << std::endl;
-          std::cout << "Example:" << std::endl;
-          std::cout << "  " << command << " " << command_it->second->Example() << std::endl;
-          std::cout << std::endl;
-          return Error(Error::ErrorCode::OK);
-        }
+          std::string command = argv[0];
+          std::transform(command.begin(), command.end(), command.begin(), [](char c) { return static_cast<char>(std::tolower(static_cast<unsigned char>(c))); });
 
+          auto command_it = command_map_.find(command);
+          if (command_it == command_map_.end())
+          {
+            return Error(Error::ErrorCode::UNKNOWN_COMMAND, command);
+          }
+          else
+          {
+            std::cout << "Usage: " << command << " " << command_it->second->Usage() << std::endl;
+            std::cout << std::endl;
+            std::cout << command_it->second->Help() << std::endl;
+            std::cout << std::endl;
+            std::cout << "Example:" << std::endl;
+            std::cout << "  " << command << " " << command_it->second->Example() << std::endl;
+            std::cout << std::endl;
+            return Error(Error::ErrorCode::OK);
+          }
+        }
       }
 
       return Error::ErrorCode::OK;
