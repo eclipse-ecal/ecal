@@ -105,7 +105,7 @@ namespace eCAL
   }
 
   /**
-   * @brief Call method of this service (asynchronously method with callback). 
+   * @brief Call method of this service, for all hosts, responses will be returned by callback. 
    *
    * @param method_name_  Method name. 
    * @param request_      Request string. 
@@ -119,20 +119,43 @@ namespace eCAL
   }
 
   /**
-   * @brief Call method of this service (blocking variant). 
+   * @brief Call method of this service, for specific host. 
    *
-   * @param host_name_     Host name.
-   * @param method_name_   Method name.
-   * @param request_       Request string. 
-   * @param service_info_  Service info struct for detailed informations.
-   * @param response_      Response string.
+   * @param       host_name_     Host name.
+   * @param       method_name_   Method name.
+   * @param       request_       Request string. 
+   * @param [out] service_info_  Service info struct for detailed informations.
+   * @param [out] response_      Response string.
    *
    * @return  True if successful. 
-  **/
+  **/ 
   bool CServiceClient::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceInfo& service_info_, std::string& response_)
   {
     if(!m_created) return(false);
     return(m_service_client_impl->Call(host_name_, method_name_, request_, service_info_, response_));
+  }
+
+  /**
+   * @brief Asynchronously call method of this service, for all hosts, responses will be returned by callback. 
+   *
+   * @param method_name_  Method name. 
+   * @param request_      Request string. 
+  **/
+  void CServiceClient::CallAsync(const std::string& method_name_, const std::string& request_)
+  {
+    if(m_created) m_service_client_impl->CallAsync(method_name_, request_);
+  }
+
+  /**
+   * @brief Asynchronously call method of this service asynchronously, for specific host, response will be returned by callback. 
+   *
+   * @param       host_name_     Host name.
+   * @param       method_name_   Method name.
+   * @param       request_       Request string.
+  **/
+  void CServiceClient::CallAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_)
+  {
+    if(m_created) m_service_client_impl->CallAsync(host_name_, method_name_, request_);
   }
 
   /**
