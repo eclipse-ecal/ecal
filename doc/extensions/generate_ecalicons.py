@@ -14,10 +14,10 @@ def generate_ecalicons(qt_resource_file_list, output_file_path):
         "h1" : 38,
         "h2" : 33,
         "h3" : 28,
-        "16" : 16,
-        "32" : 32,
-        "48" : 48,
-        "64" : 64,
+        # "16" : 16,
+        # "32" : 32,
+        # "48" : 48,
+        # "64" : 64,
     }
 
     rst_code = []
