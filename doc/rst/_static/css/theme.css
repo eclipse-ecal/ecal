@@ -7861,7 +7861,7 @@ button.bg-dark:focus {
 
 .shadow-sm,
 .with-shadow {
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.15) !important
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2) !important
 }
 
 .shadow {
@@ -9795,7 +9795,8 @@ button.bg-dark:focus {
 }
 
 .text-center,
-.align-center {
+.align-center,
+.centered {
     text-align: center !important
 }
 
@@ -10107,7 +10108,7 @@ a.text-dark:focus {
     flex-grow: 0;
     flex-shrink: 0;
     background: #ffffff;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.15)
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2)
 }
 
 .page-header-inner {
@@ -10165,6 +10166,12 @@ a.text-dark:focus {
     width: 100%;
     min-width: 0;
     flex-grow: 1
+}
+
+@media (min-width: 2049px) {
+    .page-main-inner {
+        width: 99999px
+    }
 }
 
 @media (min-width: 768px) {
@@ -11378,7 +11385,7 @@ table.docutils.field-list .field-name {
     background-color: #e6e6e6;
     margin: 1rem 0;
     padding: 1rem;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
     border-radius: .25rem;
     overflow: hidden
 }
@@ -11757,15 +11764,32 @@ table.docutils.field-list .field-name {
     margin-top: .5rem
 }
 
+@media (min-width: 992px) {
+    .rst-content .compact-list>ul.simple li+li,
+    .rst-content .compact-list>ol.simple li+li,
+    .rst-content .toctree-wrapper.compact-list ul li+li,
+    .rst-content .toctree-wrapper.compact-list ol li+li,
+    .rst-content ul.simple.compact-list li+li,
+    .rst-content ol.simple.compact-list li+li {
+        margin-top: 0
+    }
+}
+
 .rst-content kbd {
     color: #212121;
     background-color: #f2f2f2;
     border: 1px solid #cbcbcb;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.15), inset 0 0 0 2px #fff
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), inset 0 0 0 2px #fff
 }
 
 .rst-content .versionmodified {
-    font-style: italic
+    background-color: #fdf1e8;
+    border-radius: 3px;
+    border: 1px solid #f9d5b9;
+    color: #661400;
+    font-style: italic;
+    margin: 0 3px 0 0;
+    padding: 0 2px
 }
 
 .rst-content .guilabel {
@@ -11776,38 +11800,39 @@ table.docutils.field-list .field-name {
     border-radius: .25rem
 }
 
-.rst-content img {
+.rst-content img,
+.rst-content object {
     display: inline-block;
     max-width: 100%;
     height: auto
 }
 
-.rst-content img.float-left {
+.rst-content img.float-left,
+.rst-content object.float-left {
     margin-right: 1rem;
     margin-bottom: 1rem
 }
 
-.rst-content img.float-right {
+.rst-content img.float-right,
+.rst-content object.float-right {
     margin-left: 1rem;
     margin-bottom: 1rem
 }
 
-.rst-content .section>img,
-.rst-content .section>a>img,
-.rst-content .figure img {
-    margin-bottom: 1rem
+.rst-content .plantuml object {
+    height: auto !important
 }
 
-.rst-content .figure {
+.rst-content .figure,
+.rst-content .figure>img,
+.rst-content .figure>a>img {
     display: block
 }
 
-.rst-content .figure .caption {
+.rst-content .figure .caption,
+.rst-content .figure>img .caption,
+.rst-content .figure>a>img .caption {
     font-size: .875rem
-}
-
-.rst-content .figure .caption:before {
-    content: 'Figure: '
 }
 
 .rst-content blockquote {
@@ -11816,7 +11841,7 @@ table.docutils.field-list .field-name {
     padding-left: 3.75rem;
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: .25rem;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
     background: #fff
 }
 
@@ -11836,8 +11861,9 @@ table.docutils.field-list .field-name {
 }
 
 .rst-content blockquote .attribution {
-    font-size: 80%;
-    font-style: italic
+    font-size: 92%;
+    font-style: italic;
+    text-align: right
 }
 
 .rst-content blockquote>div>*:last-child {
@@ -11923,6 +11949,109 @@ table.docutils.field-list .field-name {
 .rst-content blockquote dl.dl-parameters dt,
 .rst-content blockquote dl.dl-parameters dd {
     margin-left: 0
+}
+
+.rst-content .line-block>.line-block {
+    margin-left: 1.75em
+}
+
+.rst-content div.genindex-jumpbox {
+    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+    margin: 1em 0;
+    padding: .4em
+}
+
+.rst-content div.modindex-jumpbox {
+    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+    margin: 1em 0;
+    padding: .4em
+}
+
+.rst-content table.indextable {
+    width: 100%
+}
+
+.rst-content table.indextable td {
+    text-align: left;
+    vertical-align: top
+}
+
+.rst-content table.indextable ul {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none
+}
+
+.rst-content table.indextable>tbody>tr>td>ul {
+    padding-left: 0
+}
+
+.rst-content table.indextable tr.pcap {
+    height: 10px
+}
+
+.rst-content table.indextable tr.cap {
+    margin-top: 10px;
+    background-color: transparent
+}
+
+.rst-content .sphinx-tabs {
+    margin-bottom: 2em
+}
+
+.rst-content .sphinx-tabs:last-child {
+    margin-bottom: 1em
+}
+
+.rst-content .sphinx-tabs .sphinx-menu .item p {
+    margin: 0
+}
+
+.rst-content .sphinx-tabs .sphinx-menu a.item {
+    color: #212121 !important
+}
+
+.rst-content .sphinx-tabs .sphinx-menu {
+    border-bottom-color: rgba(0, 0, 0, 0.25) !important;
+    display: flex;
+    flex-flow: row wrap
+}
+
+.rst-content .sphinx-tabs .sphinx-menu a.active.item {
+    border-color: rgba(0, 0, 0, 0.25) !important
+}
+
+.rst-content .sphinx-tab {
+    border-color: rgba(0, 0, 0, 0.25) !important;
+    box-sizing: border-box
+}
+
+.rst-content .sphinx-tab.tab.active {
+    margin-bottom: 0
+}
+
+.rst-content .code-tab.tab {
+    padding: .4em !important
+}
+
+.rst-content .code-tab.tab div[class^='highlight'] {
+    border: none
+}
+
+.rst-content .sphinx-tabs .docutils.container {
+    margin: 0;
+    width: auto
+}
+
+.rst-content .sphinx-tabs.docutils.container {
+    max-width: 100%;
+    padding: 0
+}
+
+.rst-content .sphinx-tabs .top.tabular.menu.docutils.container {
+    padding: 0
 }
 
 span[id*="MathJax-Span"] {
@@ -12023,7 +12152,7 @@ ul[class*="horizbuttons-"][class*="-striking-"]>li {
     background-color: #fff;
     background-clip: padding-box;
     border: 1px solid #cecece;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.15)
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2)
 }
 
 .autocomplete>div {
@@ -12072,7 +12201,7 @@ ul[class*="horizbuttons-"][class*="-striking-"]>li {
 
 .panel {
     background: #fff;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
     border-radius: .25rem;
     padding: 1.25rem 1.25rem;
     border: 1px solid rgba(0, 0, 0, 0.125);
@@ -12103,3 +12232,10 @@ ul[class*="horizbuttons-"][class*="-striking-"]>li {
 .cc {
     clear: both
 }
+
+.rubric {
+    font-weight: 700
+}
+
+
+/*# sourceMappingURL=theme.css.map */
