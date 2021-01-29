@@ -121,8 +121,8 @@ void MmaHostItem::addWidgetsToTree()
   disk_group_widget_   ->setMinimumWidth(2, io_width);
 
   // The widgets might both be deleted when removing this object or when destroying the treeWidget, so we connect the appropriate signals
-  connect(this, &QObject::destroyed, cpu_bar_,               &QObject::deleteLater);
-  connect(this, &QObject::destroyed, ram_bar_,               &QObject::deleteLater);
+  connect(this, &QObject::destroyed, cpu_bar_,              &QObject::deleteLater);
+  connect(this, &QObject::destroyed, ram_bar_,              &QObject::deleteLater);
   connect(this, &QObject::destroyed, network_group_widget_, &QObject::deleteLater);
   connect(this, &QObject::destroyed, disk_group_widget_,    &QObject::deleteLater);
 
@@ -161,7 +161,7 @@ void MmaHostItem::setEnabled(bool enabled)
     treeWidget()->removeItemWidget(it->second.first->child(0), 0);
     network_group_item_->removeChild(it->second.first);
     delete it->second.first;
-    delete it->second.second;
+    it->second.second->deleteLater();
     it = network_items.erase(it);
   }
   for (auto it = disk_items_.begin(); it != disk_items_.end();)
@@ -170,8 +170,8 @@ void MmaHostItem::setEnabled(bool enabled)
     treeWidget()->removeItemWidget(std::get<0>(it->second)->child(0), 0);
     disks_group_item_->removeChild(std::get<0>(it->second));
     delete std::get<0>(it->second);
-    delete std::get<1>(it->second);
-    delete std::get<2>(it->second);
+    std::get<1>(it->second)->deleteLater();
+    std::get<2>(it->second)->deleteLater();
     it = disk_items_.erase(it);
   }
 
@@ -367,8 +367,8 @@ void MmaHostItem::machineStateChanged(eCAL::pb::mma::State state)
       treeWidget()->removeItemWidget(std::get<0>(it->second)->child(0), 0);
       disks_group_item_->removeChild(std::get<0>(it->second));
       delete std::get<0>(it->second);
-      delete std::get<1>(it->second);
-      delete std::get<2>(it->second);
+      std::get<1>(it->second)->deleteLater();
+      std::get<2>(it->second)->deleteLater();
       it = disk_items_.erase(it);
     }
   }
@@ -460,7 +460,7 @@ void MmaHostItem::machineStateChanged(eCAL::pb::mma::State state)
       treeWidget()->removeItemWidget(it->second.first->child(0), 0);
       network_group_item_->removeChild(it->second.first);
       delete it->second.first;
-      delete it->second.second;
+      it->second.second->deleteLater();
       it = network_items.erase(it);
     }
   }
