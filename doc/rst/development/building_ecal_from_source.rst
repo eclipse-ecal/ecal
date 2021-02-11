@@ -56,7 +56,7 @@ First check out the eCAL repository and all of the submodules:
 |fa-windows| Windows build
 --------------------------
 
-* To just compile eCAL:
+* **To just compile eCAL**:
 
   .. code-block:: batch
 
@@ -68,10 +68,17 @@ First check out the eCAL repository and all of the submodules:
 
   This will create a :file:`_build\\complete\\` directory in your eCAL root folder and build eCAL there.
 
-* To build even more:
+* **To build a complete setup**:
 
   #. For creating a setup, you have to also build the documentation and build the debug SDK binaries.
-     Execute the following batch files with the appropriate parameter to create the Visual Studio 2015 (v140) / 2017 (v141) / 2019 (v142) solution and build it:
+     
+     The batch files will compile eCAL with the MSVC 2015 Toolset to provide downwards compatibility.
+     Thus, you will need to install:
+
+     - The MSVC 2015 Toolset (-> v140) for your probably newer Visual Studio
+     - Qt5 as ``msvc2015_64`` (Or manually override it by setting ``Qt5_DIR``)
+
+     Execute the following batch files with the appropriate parameter to create the Visual Studio 2015 (v140) / 2017 (v141) / 2019 (v142) solution and build it.
 
      .. code-block:: batch
 
