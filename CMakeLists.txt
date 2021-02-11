@@ -310,35 +310,9 @@ endif()
 # --------------------------------------------------------
 # detect qt library
 # --------------------------------------------------------
-if(WIN32 AND HAS_QT5)
-  if (NOT DEFINED ENV{QT5_ROOT_DIRECTORY} AND NOT DEFINED ENV{QT5_ROOT})
-    # If the QT5_ROOT_DIRECTORY Variable is not set, there is still a chance that
-    # the user set the CMAKE_PREFIX_PATH himself. Thus we try to find
-    # Qt5 Core just to see if that works. If we can find Qt, we assume
-    # that the user knows what he is doing.
-    find_package(Qt5 COMPONENTS Core)
-    if(NOT Qt5_FOUND)
-      message(FATAL_ERROR "QT5_ROOT_DIRECTORY is not defined. Please create an \
-        environment variable QT5_ROOT_DIRECTORY pointing to your QT5 installation \
-        (the directory that contains the msvc201x or msvc201x_64 \
-        directory) or disable compilation of Qt5 projects by setting \
-        HAS_QT5 to OFF.")
-    endif()
-  else()
-    if (DEFINED ENV{QT5_ROOT})
-      set(qt_directory $ENV{QT5_ROOT})
-      message(WARNING "Please unset the QT5_ROOT environment variable and use \
-        QT5_ROOT_DIRECTORY instead. Using QT5_ROOT will trigger multiple CMake warnings \
-        in newer CMake versions.")
-    endif ()
-    if (DEFINED ENV{QT5_ROOT_DIRECTORY})
-      set(qt_directory $ENV{QT5_ROOT_DIRECTORY})
-    endif ()
-
-    qt_msvc_path(qt_subfolder)
-    list(APPEND CMAKE_PREFIX_PATH ${qt_directory}/${qt_subfolder}/)
-    message(STATUS "Searching for QT in ${qt_directory}/${qt_subfolder}/")
-  endif()
+find_package(Qt5 QUIET)
+if (NOT Qt5_FOUND)
+	autodetect_qt5_msvc_dir()
 endif()
 
 # --------------------------------------------------------
