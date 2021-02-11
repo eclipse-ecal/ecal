@@ -39,22 +39,14 @@ First check out the eCAL repository and all of the submodules:
 #. Download and install the build-dependencies
 
    * CMake (https://cmake.org)
-   * Qt5 (>= 5.5) (https://www.qt.io/download)
+   * Qt5 (>= 5.5 / 64-bit) (https://www.qt.io/download)
 
-#. Install Qt5 by starting the installer and selecting `msvc2015 32-bit` or `msvc2015 64-bit` (VS2015) or `msvc2017 32-bit` and `msvc2017 64-bit` (VS2017) from the latest Qt5 version.
-   Create an environment variable ``QT5_ROOT_DIRECTORY`` that points to the directory containing the architecture-specific folders.
-   It should look like this:
+   .. note::
 
-   .. code-block:: batch
+      If you have multiple Versions of Qt installed, eCAL will try to pick the latest match for your Visual Studio Version.
 
-      %QT5_ROOT_DIRECTORY%
-         ├ msvc2015
-         ├ msvc2015_64
-         ├ msvc2017
-         └ msvc2017_64
-
-   e.g.: ``QT5_ROOT_DIRECTORY = C:\Qt\5.11.1``
-
+      If this fails (e.g. as you have copied the qt directory without properly installing it) or if you want to use a specific Qt5 Version, you may have to manually set the ``CMAKE_PREFIX_PATH`` or ``Qt5_DIR``.
+      
 #. Optional: Install additional dependendencies
 
    * `Python for Windows <https://www.python.org/downloads/>`_ (64 Bit, Version 3.x): To build the python extensions and the documentation
@@ -64,7 +56,7 @@ First check out the eCAL repository and all of the submodules:
 |fa-windows| Windows build
 --------------------------
 
-* To just compile eCAL:
+* **To just compile eCAL**:
 
   .. code-block:: batch
 
@@ -76,10 +68,17 @@ First check out the eCAL repository and all of the submodules:
 
   This will create a :file:`_build\\complete\\` directory in your eCAL root folder and build eCAL there.
 
-* To build even more:
+* **To build a complete setup**:
 
   #. For creating a setup, you have to also build the documentation and build the debug SDK binaries.
-     Execute the following batch files with the appropriate parameter to create the Visual Studio 2015 (v140) / 2017 (v141) / 2019 (v142) solution and build it:
+     
+     The batch files will compile eCAL with the MSVC 2015 Toolset to provide downwards compatibility.
+     Thus, you will need to install:
+
+     - The MSVC 2015 Toolset (-> v140) for your probably newer Visual Studio
+     - Qt5 as ``msvc2015_64`` (Or manually override it by setting ``Qt5_DIR``)
+
+     Execute the following batch files with the appropriate parameter to create the Visual Studio 2015 (v140) / 2017 (v141) / 2019 (v142) solution and build it.
 
      .. code-block:: batch
 
