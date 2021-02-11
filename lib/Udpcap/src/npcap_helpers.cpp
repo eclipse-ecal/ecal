@@ -198,16 +198,20 @@ namespace Udpcap
         }
 
         // Lower-case everything	  
-        //std::transform(given_uuid.begin(), given_uuid.end(), given_uuid.begin(), ::tolower); // cause warning C4244 with VS2017
         std::transform(given_uuid.begin(), given_uuid.end(), given_uuid.begin(),
           [](char c) {return static_cast<char>(::tolower(c)); });
+
         std::string loopback_uuid_lower = loopback_device_uuid_string;
-        //std::transform(loopback_uuid_lower.begin(), loopback_uuid_lower.end(), loopback_uuid_lower.begin(), ::tolower); // cause warning C4244 with VS2017
+
         std::transform(loopback_uuid_lower.begin(), loopback_uuid_lower.end(), loopback_uuid_lower.begin(),
           [](char c) {return static_cast<char>(::tolower(c)); });
 
-        // String compare
-        return (loopback_uuid_lower == given_uuid);
+        // At some point between NPCAP 0.9996 and NPCAP 1.10 the loopback device
+        // was renamed to "\device\npf_loopback".
+        // For newer NPCAP versions the complicated method to get the Device
+        // UUID is obsolete. However, we leave the code in place, as it works
+        // and still provides downwards compatibility to older NPCAP versions.
+        return (given_uuid == "\\device\\npf_loopback") || (loopback_uuid_lower == given_uuid);
       }
     }
 
