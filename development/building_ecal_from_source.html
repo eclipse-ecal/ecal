@@ -438,20 +438,13 @@ git submodule update
 <li><p>Download and install the build-dependencies</p>
 <ul class="simple">
 <li><p>CMake (<a class="reference external" href="https://cmake.org">https://cmake.org</a>)</p></li>
-<li><p>Qt5 (&gt;= 5.5) (<a class="reference external" href="https://www.qt.io/download">https://www.qt.io/download</a>)</p></li>
+<li><p>Qt5 (&gt;= 5.5 / 64-bit) (<a class="reference external" href="https://www.qt.io/download">https://www.qt.io/download</a>)</p></li>
 </ul>
-</li>
-<li><p>Install Qt5 by starting the installer and selecting <cite>msvc2015 32-bit</cite> or <cite>msvc2015 64-bit</cite> (VS2015) or <cite>msvc2017 32-bit</cite> and <cite>msvc2017 64-bit</cite> (VS2017) from the latest Qt5 version.
-Create an environment variable <code class="docutils literal notranslate"><span class="pre">QT5_ROOT_DIRECTORY</span></code> that points to the directory containing the architecture-specific folders.
-It should look like this:</p>
-<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span><span class="nv">%QT5_ROOT_DIRECTORY%</span>
-   ├ msvc2015
-   ├ msvc2015_64
-   ├ msvc2017
-   └ msvc2017_64
-</pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have multiple Versions of Qt installed, eCAL will try to pick the latest match for your Visual Studio Version.</p>
+<p>If this fails (e.g. as you have copied the qt directory without properly installing it) or if you want to use a specific Qt5 Version, you may have to manually set the <code class="docutils literal notranslate"><span class="pre">CMAKE_PREFIX_PATH</span></code> or <code class="docutils literal notranslate"><span class="pre">Qt5_DIR</span></code>.</p>
 </div>
-<p>e.g.: <code class="docutils literal notranslate"><span class="pre">QT5_ROOT_DIRECTORY</span> <span class="pre">=</span> <span class="pre">C:\Qt\5.11.1</span></code></p>
 </li>
 <li><p>Optional: Install additional dependendencies</p>
 <ul class="simple">
@@ -465,7 +458,7 @@ It should look like this:</p>
 <div class="section" id="fa-windows-windows-build">
 <h3><i class="fab fa-windows"></i> Windows build<a class="headerlink" href="#fa-windows-windows-build" title="Permalink to this headline">¶</a></h3>
 <ul>
-<li><p>To just compile eCAL:</p>
+<li><p><strong>To just compile eCAL</strong>:</p>
 <div class="highlight-batch notranslate"><div class="highlight"><pre><span></span><span class="k">mkdir</span> _build\complete
 <span class="k">cd</span> _build\complete
 
@@ -475,10 +468,16 @@ cmake --build . --parallel --config Release
 </div>
 <p>This will create a <code class="file docutils literal notranslate"><span class="pre">_build\complete\</span></code> directory in your eCAL root folder and build eCAL there.</p>
 </li>
-<li><p>To build even more:</p>
+<li><p><strong>To build a complete setup</strong>:</p>
 <ol class="arabic">
-<li><p>For creating a setup, you have to also build the documentation and build the debug SDK binaries.
-Execute the following batch files with the appropriate parameter to create the Visual Studio 2015 (v140) / 2017 (v141) / 2019 (v142) solution and build it:</p>
+<li><p>For creating a setup, you have to also build the documentation and build the debug SDK binaries.</p>
+<p>The batch files will compile eCAL with the MSVC 2015 Toolset to provide downwards compatibility.
+Thus, you will need to install:</p>
+<ul class="simple">
+<li><p>The MSVC 2015 Toolset (-&gt; v140) for your probably newer Visual Studio</p></li>
+<li><p>Qt5 as <code class="docutils literal notranslate"><span class="pre">msvc2015_64</span></code> (Or manually override it by setting <code class="docutils literal notranslate"><span class="pre">Qt5_DIR</span></code>)</p></li>
+</ul>
+<p>Execute the following batch files with the appropriate parameter to create the Visual Studio 2015 (v140) / 2017 (v141) / 2019 (v142) solution and build it.</p>
 <div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>build_win\win_make_cmake.bat v140 ( / v141 / v142)
 build_win\win_make_build.bat
 </pre></div>
