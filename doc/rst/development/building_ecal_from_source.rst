@@ -45,7 +45,7 @@ First check out the eCAL repository and all of the submodules:
 
       If you have multiple Versions of Qt installed, eCAL will try to pick the latest match for your Visual Studio Version.
 
-      If this fails (e.g. as you have copied the qt directory without properly installing it) or if you want to use a specific Qt5 Version, you may have to manually set the ``CMAKE_PREFIX_PATH``.
+      If this fails (e.g. as you have copied the qt directory without properly installing it) or if you want to use a specific Qt5 Version, you may have to manually set the ``CMAKE_PREFIX_PATH`` or ``Qt5_DIR``.
       
 #. Optional: Install additional dependendencies
 
