@@ -83,7 +83,7 @@ macro(autodetect_qt5_msvc_dir)
 					STRING(REPLACE "_64" "" QT_MSVC_YEAR "${QT_MSVC_YEAR}")
 				endif()
 				
-				if ("${QT_MSVC_YEAR}" LESS_EQUAL "${MSVC_YEAR}")
+				if (("${QT_MSVC_YEAR}" LESS_EQUAL "${MSVC_YEAR}") AND (${QT_MSVC_YEAR} GREATER_EQUAL "2015"))
 					# At this point we have found a version that should be usable. Let's check if it is better than the last one we found!
 					message(STATUS "Found Qt5 candidate at ${QT_MSVC_DIR}")
 					if ( ("${QT_MAJOR}" GREATER "${BEST_QT_MAJOR}") OR
