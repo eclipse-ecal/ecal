@@ -49,9 +49,11 @@ namespace Udpcap
   /**
    * @brief Gets the device name of the npcap loopback device as read from the registry
    *
-   * The device name has the form: \Device\NPCAP_{6DBF8591-55F9-4DEF-A317-54B9563A42E3}
+   * The device name has the form: \device\npcap_{6DBF8591-55F9-4DEF-A317-54B9563A42E3}
+   * If a modern NPCAP version has been installed without legacy loopback support,
+   * The device name will always be \device\npf_loopback
    *
-   * @return The name of the loopback device (or "", if the device could not be determined)
+   * @return The name of the loopback device
    */
   std::string GetLoopbackDeviceName();
 
@@ -65,13 +67,13 @@ namespace Udpcap
   std::string GetLoopbackDeviceUuidString();
 
   /**
-   * @brief Checks for a given UUID or device name, if it relates to the npcap loopback device
+   * @brief Checks for a given device name, if it is the npcap loopback device
    *
-   * @param device_name_or_uuid_string  The Entire device name or just the UUID of the device
+   * @param device_name  The entire device name
    *
    * @return True, if the device matches the NPCAP loopback device.
    */
-  bool IsLoopbackDevice(const std::string& device_name_or_uuid_string);
+  bool IsLoopbackDevice(const std::string& device_name);
 
   /**
    * @brief Returns a human readible status message.
