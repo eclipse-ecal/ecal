@@ -137,23 +137,23 @@ namespace Udpcap
       std::wstring loopback_device_name_w;
       GetStringRegKey(hkey, L"LoopbackAdapter", loopback_device_name_w, L"");
 
-      if (loopback_device_name_w.empty())
-      {
-        std::stringstream error_ss;
+      //if (loopback_device_name_w.empty())
+      //{
+      //  std::stringstream error_ss;
 
-        error_ss << "Unable to retrieve NPCAP Loopback adapter name. Please reinstall Npcap:" << std::endl;
-        error_ss << "    1) Uninstall Npcap" << std::endl;
-        error_ss << "    2) Uninstall all \"Npcap Loopback Adapters\" from the device manager" << std::endl;
-        error_ss << "    3) Uninstall all \"Microsoft KM_TEST Loopback Adapters\" from the device manager" << std::endl;
-        error_ss << "    4) Install Npcap again";
+      //  error_ss << "Unable to retrieve NPCAP Loopback adapter name. Please reinstall Npcap:" << std::endl;
+      //  error_ss << "    1) Uninstall Npcap" << std::endl;
+      //  error_ss << "    2) Uninstall all \"Npcap Loopback Adapters\" from the device manager" << std::endl;
+      //  error_ss << "    3) Uninstall all \"Microsoft KM_TEST Loopback Adapters\" from the device manager" << std::endl;
+      //  error_ss << "    4) Install Npcap again";
 
-        human_readible_error_ = error_ss.str();
+      //  human_readible_error_ = error_ss.str();
 
-        std::cerr << "Udpcap ERROR: " << human_readible_error_ << std::endl;
+      //  std::cerr << "Udpcap ERROR: " << human_readible_error_ << std::endl;
 
-        RegCloseKey(hkey);
-        return false;
-      }
+      //  RegCloseKey(hkey);
+      //  return false;
+      //}
 
       RegCloseKey(hkey);
 
@@ -169,50 +169,35 @@ namespace Udpcap
       return true;
     }
 
-    bool IsLoopbackDevice_NoLock(const std::string& device_name_or_uuid_string)
+    bool IsLoopbackDevice_NoLock(const std::string& device_name)
     {
       if (!loopback_device_name_initialized)
       {
         loopback_device_name_initialized = LoadLoopbackDeviceNameFromRegistry();
       }
 
-      if (!loopback_device_name_initialized)
-      {
-        return false;
-      }
+      std::string lower_given_device_name    = device_name;
+      std::string lower_loopback_device_name;
+
+      if (!loopback_device_uuid_string.empty())
+        lower_loopback_device_name = std::string("\\device\\{" + loopback_device_uuid_string + "}");
       else
-      {
-        // Extract the UUID from the input, as it might be an entire device path
-        size_t open_bracket_pos = device_name_or_uuid_string.find('{');
-        size_t closing_bracket_pos = device_name_or_uuid_string.find('}');
+        lower_loopback_device_name = "\\device\\npf_loopback";
 
-        std::string given_uuid;
+      std::transform(lower_given_device_name.begin(), lower_given_device_name.end(), lower_given_device_name.begin(),
+                    [](char c)
+                    {return static_cast<char>(::tolower(c)); });
 
-        if ((open_bracket_pos == std::string::npos) || (closing_bracket_pos == std::string::npos))
-        {
-          given_uuid = device_name_or_uuid_string;
-        }
-        else
-        {
-          given_uuid = device_name_or_uuid_string.substr(open_bracket_pos + 1, closing_bracket_pos - open_bracket_pos - 1);
-        }
+      std::transform(lower_loopback_device_name.begin(), lower_loopback_device_name.end(), lower_loopback_device_name.begin(),
+                    [](char c)
+                    {return static_cast<char>(::tolower(c)); });
 
-        // Lower-case everything	  
-        std::transform(given_uuid.begin(), given_uuid.end(), given_uuid.begin(),
-          [](char c) {return static_cast<char>(::tolower(c)); });
-
-        std::string loopback_uuid_lower = loopback_device_uuid_string;
-
-        std::transform(loopback_uuid_lower.begin(), loopback_uuid_lower.end(), loopback_uuid_lower.begin(),
-          [](char c) {return static_cast<char>(::tolower(c)); });
-
-        // At some point between NPCAP 0.9996 and NPCAP 1.10 the loopback device
-        // was renamed to "\device\npf_loopback".
-        // For newer NPCAP versions the complicated method to get the Device
-        // UUID is obsolete. However, we leave the code in place, as it works
-        // and still provides downwards compatibility to older NPCAP versions.
-        return (given_uuid == "\\device\\npf_loopback") || (loopback_uuid_lower == given_uuid);
-      }
+      // At some point between NPCAP 0.9996 and NPCAP 1.10 the loopback device
+      // was renamed to "\device\npf_loopback".
+      // For newer NPCAP versions the complicated method to get the Device
+      // UUID is obsolete. However, we leave the code in place, as it works
+      // and still provides downwards compatibility to older NPCAP versions.
+      return (lower_given_device_name == "\\device\\npf_loopback") || (lower_loopback_device_name == lower_given_device_name);
     }
 
     bool TestLoopbackDevice()
@@ -275,12 +260,17 @@ namespace Udpcap
 
     std::cout << "Udpcap: Initializing Npcap..." << std::endl;
 
-    if (!LoadLoopbackDeviceNameFromRegistry())
-    {
-      return false;
-    }
+    LoadLoopbackDeviceNameFromRegistry();
+    // Don't return false, as modern NPCAP will work without the registry key
+    //if (!LoadLoopbackDeviceNameFromRegistry())
+    //{
+    //  return false;
+    //}
 
-    std::cout << "Udpcap: Using Loopback device " << loopback_device_uuid_string << std::endl;
+    if (!loopback_device_uuid_string.empty())
+      std::cout << "Udpcap: Using Loopback device " << loopback_device_uuid_string << std::endl;
+    else
+      std::cout << "Udpcap: Using Loopback device \\device\\npf_loopback" << std::endl;
 
     if (!LoadNpcapDlls())
     {
@@ -324,15 +314,20 @@ namespace Udpcap
 
     if (!loopback_device_name_initialized)
     {
-      loopback_device_name_initialized = LoadLoopbackDeviceNameFromRegistry();
+      LoadLoopbackDeviceNameFromRegistry();
+      loopback_device_name_initialized = true;    // Even when we were not able to read the loopback device name, we assume it is present, as recent NPCAP versions don't create the specific adapter any more.
     }
-    return "\\Device\\NPCAP_{" + loopback_device_uuid_string + "}";
+
+    if (!loopback_device_uuid_string.empty())
+      return "\\device\\npcap_{" + loopback_device_uuid_string + "}";
+    else
+      return "\\device\\npf_loopback";
   }
 
-  bool IsLoopbackDevice(const std::string& device_name_or_uuid_string)
+  bool IsLoopbackDevice(const std::string& device_name)
   {
     std::lock_guard<std::mutex> npcap_lock(npcap_mutex);
-    return IsLoopbackDevice_NoLock(device_name_or_uuid_string);
+    return IsLoopbackDevice_NoLock(device_name);
   }
 
   std::string GetHumanReadibleErrorText()
