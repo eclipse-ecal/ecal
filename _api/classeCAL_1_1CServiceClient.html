@@ -490,7 +490,7 @@
 <dl class="cpp function">
 <dt id="_CPPv4N4eCAL14CServiceClient4CallERKNSt6stringERKNSt6stringE">
 <span id="_CPPv3N4eCAL14CServiceClient4CallERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL14CServiceClient4CallERKNSt6stringERKNSt6stringE"></span><span id="eCAL::CServiceClient::Call__ssCR.ssCR"></span><span class="target" id="classeCAL_1_1CServiceClient_1a087ba1df1a8b5cecf7f4ceacfef9dc64"></span>bool <code class="sig-name descname">Call</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>method_name_</em>, <em class="property">const</em> std::string &amp;<em>request_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CServiceClient4CallERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Call method of this service (none blocking variant with callback). </p>
+<dd><p>Call method of this service, for all hosts, responses will be returned by callback. </p>
 <p><dl class="simple">
 <dt><strong>Return</strong></dt><dd><p>True if successful. </p>
 </dd>
@@ -506,7 +506,7 @@
 <dl class="cpp function">
 <dt id="_CPPv4N4eCAL14CServiceClient4CallERKNSt6stringERKNSt6stringERKNSt6stringER12SServiceInfoRNSt6stringE">
 <span id="_CPPv3N4eCAL14CServiceClient4CallERKNSt6stringERKNSt6stringERKNSt6stringER12SServiceInfoRNSt6stringE"></span><span id="_CPPv2N4eCAL14CServiceClient4CallERKNSt6stringERKNSt6stringERKNSt6stringER12SServiceInfoRNSt6stringE"></span><span id="eCAL::CServiceClient::Call__ssCR.ssCR.ssCR.SServiceInfoR.ssR"></span><span class="target" id="classeCAL_1_1CServiceClient_1a845725ac12485ccf6fdb1bce1c15204c"></span>bool <code class="sig-name descname">Call</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>host_name_</em>, <em class="property">const</em> std::string &amp;<em>method_name_</em>, <em class="property">const</em> std::string &amp;<em>request_</em>, <em class="property">struct</em> <a class="reference internal" href="structeCAL_1_1SServiceInfo.html#_CPPv4N4eCAL12SServiceInfoE" title="eCAL::SServiceInfo">SServiceInfo</a> &amp;<em>service_info_</em>, std::string &amp;<em>response_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CServiceClient4CallERKNSt6stringERKNSt6stringERKNSt6stringER12SServiceInfoRNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Call method of this service (blocking variant). </p>
+<dd><p>Call method of this service, for specific host. </p>
 <p><dl class="simple">
 <dt><strong>Return</strong></dt><dd><p>True if successful. </p>
 </dd>
@@ -516,6 +516,35 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">request_</span></code>: Request string. </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">service_info_</span></code>: Service info struct for detailed informations. </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">response_</span></code>: Response string.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N4eCAL14CServiceClient9CallAsyncERKNSt6stringERKNSt6stringE">
+<span id="_CPPv3N4eCAL14CServiceClient9CallAsyncERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL14CServiceClient9CallAsyncERKNSt6stringERKNSt6stringE"></span><span id="eCAL::CServiceClient::CallAsync__ssCR.ssCR"></span><span class="target" id="classeCAL_1_1CServiceClient_1aeacc025137edfbff8763e9e05db32a90"></span>void <code class="sig-name descname">CallAsync</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>method_name_</em>, <em class="property">const</em> std::string &amp;<em>request_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CServiceClient9CallAsyncERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Asynchronously call method of this service, for all hosts, responses will be returned by callback. </p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">method_name_</span></code>: Method name. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">request_</span></code>: Request string. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N4eCAL14CServiceClient9CallAsyncERKNSt6stringERKNSt6stringERKNSt6stringE">
+<span id="_CPPv3N4eCAL14CServiceClient9CallAsyncERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL14CServiceClient9CallAsyncERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="eCAL::CServiceClient::CallAsync__ssCR.ssCR.ssCR"></span><span class="target" id="classeCAL_1_1CServiceClient_1a901c2404dcb533676e98b11d37aab0a4"></span>void <code class="sig-name descname">CallAsync</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>host_name_</em>, <em class="property">const</em> std::string &amp;<em>method_name_</em>, <em class="property">const</em> std::string &amp;<em>request_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CServiceClient9CallAsyncERKNSt6stringERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Asynchronously call method of this service asynchronously, for specific host, response will be returned by callback. </p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">host_name_</span></code>: Host name. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">method_name_</span></code>: Method name. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">request_</span></code>: Request string. </p></li>
 </ul>
 </dd>
 </dl>

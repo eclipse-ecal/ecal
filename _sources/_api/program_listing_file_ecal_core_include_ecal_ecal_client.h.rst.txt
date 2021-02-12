@@ -66,6 +66,10 @@ Program Listing for File ecal_client.h
    
        bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceInfo& service_info_, std::string& response_);
        
+       void CallAsync(const std::string& method_name_, const std::string& request_);
+   
+       void CallAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_);
+   
        bool AddResponseCallback(const ResponseCallbackT& callback_);
    
        bool RemResponseCallback();
