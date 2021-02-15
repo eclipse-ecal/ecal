@@ -745,7 +745,7 @@ private:
   std::vector<EcalPlayScenario> scenarios_;                                     /**< The scenarios loaded from the current measurement. Empty, if no measurement is loaded or no description file has been found*/
 
   std::unique_ptr<PlayThread> play_thread_;                                     /**< The "actual" eCAL Player that runs in it's own thread and executes commands from outside */
-  std::string                 measurement_path_;                                 /**< The path that was loaded. It may point to a file or a directory (depending on if the user loaded a measurement file or a mesaurement directory */
+  std::string                 measurement_path_;                                /**< The path that was loaded. It may point to a file or a directory (depending on whether the user loaded a measurement file or a measurement directory) */
 
   /**
    * @brief Loads a text file from the given file as measurement description
