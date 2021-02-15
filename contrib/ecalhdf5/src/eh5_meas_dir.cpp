@@ -56,6 +56,7 @@ eCAL::eh5::HDF5MeasDir::HDF5MeasDir(const std::string& path, eAccessType access 
   , file_split_counter_(-1)
   , entries_counter_(0)
   , max_size_per_file_(kDefaultMaxFileSizeMB * 1024 * 1024)
+  , access_(RDONLY) // Temporarily set it to RDONLY, so the leading "Close()" from the Open() function will not operate on the uninitialized variable.
 {
   Open(path, access);
 }
