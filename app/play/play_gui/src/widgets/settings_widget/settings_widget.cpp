@@ -93,13 +93,15 @@ void SettingsWidget::measurementLoaded(const QString& /*path*/)
 {
   measurement_boundaries_ = QEcalPlay::instance()->measurementBoundaries();
 
+  ui_.lower_limit_spinbox->blockSignals(true);
+  ui_.upper_limit_spinbox->blockSignals(true);
+
   ui_.lower_limit_spinbox->setMaximum(std::chrono::duration_cast<std::chrono::duration<double>>(measurement_boundaries_.second - measurement_boundaries_.first).count());
   ui_.upper_limit_spinbox->setMaximum(std::chrono::duration_cast<std::chrono::duration<double>>(measurement_boundaries_.second - measurement_boundaries_.first).count() + 0.005);
 
-  ui_.lower_limit_spinbox->blockSignals(true);
-  ui_.upper_limit_spinbox->blockSignals(true);
   ui_.lower_limit_spinbox->setValue(0.0);
   ui_.upper_limit_spinbox->setValue(ui_.upper_limit_spinbox->maximum());
+
   ui_.lower_limit_spinbox->blockSignals(false);
   ui_.upper_limit_spinbox->blockSignals(false);
 
