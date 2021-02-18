@@ -423,6 +423,10 @@
 <span class="cp">#define ECAL_OS_MACOS</span>
 <span class="cp">#endif</span>
 
+<span class="cp">#if defined(__QNXNTO__)</span>
+<span class="cp">#define ECAL_OS_LINUX</span>
+<span class="cp">#define ECAL_OS_QNX</span>
+<span class="cp">#endif</span>
 
 <span class="cp">#ifdef _MSC_VER</span>
   <span class="cp">#ifdef eCAL_EXPORTS</span>
