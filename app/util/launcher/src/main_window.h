@@ -24,7 +24,6 @@
 #pragma once
 
 #include <QWidget>
-#include <QtGui>
 #include <QMainWindow>
 #include <QMouseEvent>
 
@@ -44,10 +43,10 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
   bool eventFilter(QObject * watched, QEvent * event);
-  public slots:
+public slots:
   void mousePressEvent(QMouseEvent * event);
 
-  private slots:
+private slots:
   void on_pushButton_monitor_clicked();
   void on_pushButton_sys_clicked();
   void on_pushButton_play_clicked();

@@ -86,7 +86,7 @@ cmake_parse_arguments(INPUT ""
   endif(MSVC)
 
   if(UNIX)
-    set_source_files_properties(${INPUT_CPP_FILES} PROPERTIES COMPILE_FLAGS "-Wno-unused-parameter")
+    set_source_files_properties(${INPUT_CPP_FILES} PROPERTIES COMPILE_FLAGS "-Wno-unused-parameter -Wno-array-bounds")
   endif(UNIX)
 
   # This adds the pb.h and pb.cc files to the project

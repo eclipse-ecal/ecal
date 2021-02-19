@@ -28,10 +28,9 @@
 
 #include <commands/command.h>
 
-#include <ecal/ecal_client.h>
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable : 4100 4505 4800)
+#pragma warning(disable: 4100 4127 4146 4505 4800) // disable proto warnings
 #endif
 #include <ecal/msg/protobuf/client.h>
 #include <ecal/pb/sys/service.pb.h>

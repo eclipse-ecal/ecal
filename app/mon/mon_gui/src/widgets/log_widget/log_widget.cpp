@@ -23,9 +23,16 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QMenu>
-#include <QDebug>
 #include <QClipboard>
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4251) // disable QTextStream warnings
+#endif
 #include <QTextStream>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #include <ecal/ecal.h>
 

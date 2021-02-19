@@ -20,7 +20,6 @@
 #include "plugin_table_model.h"
 
 #include <QMessageBox>
-#include <QDebug>
 
 PluginTableModel::PluginTableModel(QObject *parent) :
   QAbstractItemModel(parent)

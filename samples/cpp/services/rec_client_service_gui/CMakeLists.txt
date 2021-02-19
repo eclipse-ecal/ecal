@@ -75,6 +75,10 @@ if(WIN32)
 endif(WIN32)
 
 if(MSVC)
+    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127 /wd4714")
+endif()
+
+if(MSVC)
     # Create a source tree that mirrors the filesystem
     msvc_source_tree(
         ${source_files}

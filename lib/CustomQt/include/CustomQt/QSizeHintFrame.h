@@ -30,7 +30,7 @@ class QSizeHintFrame : public QFrame
   Q_OBJECT
 
 public:
-  QSizeHintFrame(QWidget* parent = nullptr, Qt::WindowFlags flags = 0);
+  QSizeHintFrame(QWidget* parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
   ~QSizeHintFrame();
 
   QSize sizeHint() const;

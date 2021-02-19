@@ -38,7 +38,18 @@
 #include <QDateTime>
 #include <QScreen>
 
-#include <QDebug>
+#ifndef NDEBUG
+  #ifdef _MSC_VER
+    #pragma warning(push)
+    #pragma warning(disable: 4251 4800) // disable QDebug Warnings
+  #endif // _MSC_VER
+
+  #include <QDebug>
+
+  #ifdef _MSC_VER
+    #pragma warning(pop)
+  #endif // _MSC_VER
+#endif // NDEBUG
 
 #include <iomanip>
 #include <string>
