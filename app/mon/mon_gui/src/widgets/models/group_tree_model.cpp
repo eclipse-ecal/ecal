@@ -17,17 +17,31 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#ifdef _MSC_VER
+// Disable Qt 5.15 Deprecation Warning about QVariant::operator<(), which is udsed by QMap
+#pragma warning(push)
+#pragma warning (disable : 4996)
+#endif // _MSC_VER
 #include "group_tree_model.h"
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
 #include "tree_item_type.h"
 #include "item_data_roles.h"
 
-#include <QDebug>
+#ifndef NDEBUG
+  #ifdef _MSC_VER
+    #pragma warning(push)
+    #pragma warning(disable: 4251 4800) // disable QDebug Warnings
+  #endif // _MSC_VER
 
-#ifdef _MSC_VER
-// Disable Qt 5.15 Deprecation Warning about QVariant::operator<(), which is udsed by QMap
-#pragma warning (disable : 4996)
-#endif // _MSC_VER
+  #include <QDebug>
 
+  #ifdef _MSC_VER
+    #pragma warning(pop)
+  #endif // _MSC_VER
+#endif // NDEBUG
 GroupTreeModel::GroupTreeModel(const QVector<int>& group_by_columns, QObject *parent)
   : QAbstractTreeModel(parent)
   , group_column_header_("Group")

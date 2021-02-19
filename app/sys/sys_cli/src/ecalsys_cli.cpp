@@ -45,7 +45,15 @@
 
 #include "ecalsys_service.h"
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4505) // disable tclap warning (unreferenced local function has been removed)
+#endif
 #include "tclap/CmdLine.h"
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
 #include <custom_tclap/advanced_tclap_output.h>
 #include <custom_tclap/fuzzy_value_switch_arg.h>
 
