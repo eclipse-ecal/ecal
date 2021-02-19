@@ -83,7 +83,7 @@ bool EcalPlay::LoadMeasurement(const std::string& path)
         std::transform(file_extension.begin(), file_extension.end(), file_extension.begin(),
                         [](char c) -> char
                         {
-                          return std::tolower(static_cast<int>(c));
+                          return static_cast<char>(std::tolower(static_cast<int>(c)));
                         });
         if (file_extension == ".hdf5")
         {

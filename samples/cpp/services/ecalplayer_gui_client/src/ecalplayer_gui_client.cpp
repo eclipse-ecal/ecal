@@ -159,10 +159,10 @@ void EcalplayGuiClient::commandRequest()
   {
     auto channel_map = command_request.mutable_channel_mapping();
     
-    QStringList lines = ui_.command_request_channel_mapping_textedit->toPlainText().split("\n", QString::SkipEmptyParts);
+    QStringList lines = ui_.command_request_channel_mapping_textedit->toPlainText().split("\n", Qt::SplitBehaviorFlags::SkipEmptyParts);
     for (auto& line : lines)
     {
-      QStringList mapping_list = line.split("=", QString::SkipEmptyParts);
+      QStringList mapping_list = line.split("=", Qt::SplitBehaviorFlags::SkipEmptyParts);
       if (mapping_list.size() == 2)
       {
         (*channel_map)[mapping_list.at(0).trimmed().toStdString()] = mapping_list.at(1).trimmed().toStdString();

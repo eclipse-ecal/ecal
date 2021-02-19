@@ -76,7 +76,7 @@ QVariant GroupTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
   }
 
-  else if (role == Qt::ItemDataRole::BackgroundColorRole)
+  else if (role == Qt::ItemDataRole::BackgroundRole)
   {
     if (column == Columns::STATE)
     {
