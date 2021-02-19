@@ -23,7 +23,7 @@
 
 #include "main_window.h"
 #include "ui_main_window.h"
-#include "qpushbutton.h"
+#include <QPushButton>
 
 #include <ecal/ecal_apps.h>
 
