@@ -23,6 +23,11 @@
 
 #include <QDebug>
 
+#ifdef _MSC_VER
+// Disable Qt 5.15 Deprecation Warning about QVariant::operator<(), which is udsed by QMap
+#pragma warning (disable : 4996)
+#endif // _MSC_VER
+
 GroupTreeModel::GroupTreeModel(const QVector<int>& group_by_columns, QObject *parent)
   : QAbstractTreeModel(parent)
   , group_column_header_("Group")
