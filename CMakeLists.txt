@@ -162,7 +162,7 @@ if (ECAL_THIRDPARTY_BUILD_SPDLOG)
   
   # Disable warnings for third-party lib
   target_compile_options(spdlog PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/W0>
+    $<$<CXX_COMPILER_ID:MSVC>:/W0 /wd4996>
     $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
   )
 endif ()
