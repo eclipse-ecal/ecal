@@ -79,22 +79,22 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 void MainWindow::on_pushButton_monitor_clicked()
 {
-  QProcess::startDetached(QString(eCAL::Apps::MON_GUI));
+  QProcess::startDetached(QString(eCAL::Apps::MON_GUI), QStringList());
 }
 
 void MainWindow::on_pushButton_sys_clicked()
 {
-  QProcess::startDetached(QString(eCAL::Apps::SYS_GUI));
+  QProcess::startDetached(QString(eCAL::Apps::SYS_GUI), QStringList());
 }
 
 void MainWindow::on_pushButton_play_clicked()
 {
-  QProcess::startDetached(QString(eCAL::Apps::PLAY_GUI));
+  QProcess::startDetached(QString(eCAL::Apps::PLAY_GUI), QStringList());
 }
 
 void MainWindow::on_pushButton_rec_clicked()
 {
-  QProcess::startDetached(QString(eCAL::Apps::REC_GUI));
+  QProcess::startDetached(QString(eCAL::Apps::REC_GUI), QStringList());
 }
 
 void MainWindow::on_pushButton_info_clicked()
