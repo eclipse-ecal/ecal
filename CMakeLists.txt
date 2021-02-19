@@ -525,7 +525,7 @@ if(BUILD_APPS)
   add_subdirectory(app/sys/sys_client_cli)
   add_subdirectory(app/sys/sys_client_core)
   if(NOT APPLE)
-    add_subdirectory(contrib/mma/src)
+    add_subdirectory(contrib/mma)
   endif()
 endif()
 

@@ -21,43 +21,62 @@ project(mma)
 find_package(Threads REQUIRED)
 find_package(Protobuf REQUIRED)
 
+set(mma_src
+  include/interruptable_timer.h
+  include/logger.h
+  include/mma.h
+  include/mma_defs.h
+  include/mma_impl.h
+  include/query_manager.h
+  include/zombie_instance_killer.h
+
+  src/logger.cpp
+  src/mma.cpp
+  src/mma_application.cpp
+  src/query_manager.cpp
+  src/zombie_instance_killer.cpp
+)
 if(WIN32)
-  set(mma_src
-    mma_application.cpp
-    mma.cpp
-    logger.cpp
-    zombie_instance_killer.cpp
-    query_manager.cpp
-    windows/disk.cpp
-    windows/memory.cpp
-    windows/mma_windows.cpp
-    windows/network.cpp
-    windows/processes.cpp
-    windows/processor.cpp
-    windows/ressource.cpp
+  list(APPEND mma_src
+    include/windows/disk.h
+    include/windows/memory.h
+    include/windows/mma_windows.h
+    include/windows/network.h
+    include/windows/process.h
+    include/windows/processes.h
+    include/windows/processor.h
+    include/windows/ressource.h
+    
+    src/windows/disk.cpp
+    src/windows/memory.cpp
+    src/windows/mma_windows.cpp
+    src/windows/network.cpp
+    src/windows/process.cpp
+    src/windows/processes.cpp
+    src/windows/processor.cpp
+    src/windows/ressource.cpp
   )
 else()
-  set(mma_src
-    mma_application.cpp
-    mma.cpp
-    logger.cpp
-    zombie_instance_killer.cpp
-    query_manager.cpp
-    linux/mma_linux.cpp
-    linux/pipe_refresher.cpp
+  list(APPEND mma_src
+    include/linux/mma_linux.h
+    include/linux/pipe_refresher.h
+    include/linux/ressource.h
+    
+    src/linux/mma_linux.cpp
+    src/linux/pipe_refresher.cpp
   )
 endif()
 
 if(WIN32)
   set(mma_win_src
-      mma.rc
+      src/mma.rc
   )
 endif()
 
 ecal_add_app_console(${PROJECT_NAME} ${mma_src} ${mma_win_src})
 
 target_include_directories(${PROJECT_NAME}
-  PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
+  PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
 create_targets_protobuf()
 
@@ -69,5 +88,12 @@ target_link_libraries(${PROJECT_NAME}
   $<$<BOOL:${WIN32}>:wbemuuid.lib>)
 
 ecal_install_app(${PROJECT_NAME})
+
+if(MSVC)
+  msvc_source_tree(
+    ${mma_src}
+    ${mma_win_src}
+  )
+endif()
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER contrib)
