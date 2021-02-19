@@ -38,7 +38,7 @@ setuptools.setup (
   data_files = data_files_platform,
   package_data={'ecal': ['*.pyd', '*.so']},
   install_requires=[
-    'protobuf==@Protobuf_VERSION@'
+    'protobuf==@Protobuf_required_version@'
   ],
   zip_safe=False,
 )

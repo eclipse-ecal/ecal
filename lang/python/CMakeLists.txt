@@ -24,6 +24,17 @@ find_package(Protobuf REQUIRED)
 set(SETUP_PY_IN "${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in")
 set(SETUP_PY    "${PYTHON_BINARY_DIR}/setup.py")
 
+# Create a shortened protobuf version string
+string(REPLACE "." ";" Protobuf_VERSION_components "${Protobuf_VERSION}")
+list(LENGTH Protobuf_VERSION_components Protobuf_VERSION_components_length)
+
+if ("${Protobuf_VERSION_components_length}" LESS "2")
+  message(FATAL_ERROR "Unable to determine protobuf version for python binding")
+endif()
+list(GET Protobuf_VERSION_components 0 Protobuf_VERSION_major)
+list(GET Protobuf_VERSION_components 1 Protobuf_VERSION_minor)
+set(Protobuf_required_version "${Protobuf_VERSION_major}.${Protobuf_VERSION_minor}")
+
 configure_file(${SETUP_PY_IN} ${SETUP_PY} @ONLY)
 
 if(Python_Interpreter_FOUND)
