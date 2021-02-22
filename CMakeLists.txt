@@ -135,7 +135,7 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
     add_library(protobuf::libprotobuf ALIAS libprotobuf)
   endif()
 
-  get_target_property(is_imported protobuf::libprotobuf IMPORTED)
+  get_target_property(is_imported libprotobuf IMPORTED)
   if (NOT is_imported)
     # Disable warnings for third-party lib
     target_compile_options(libprotobuf PRIVATE
@@ -149,10 +149,10 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
     set(Protobuf_PROTOC_EXECUTABLE protoc)
   endif()
     
-  get_target_property(is_imported protobuf::protoc IMPORTED)
+  get_target_property(is_imported protoc IMPORTED)
   if (NOT is_imported)
     # Disable warnings for third-party lib
-    target_compile_options(protobuf::protoc PRIVATE
+    target_compile_options(protoc PRIVATE
       $<$<CXX_COMPILER_ID:MSVC>:/W0>
       $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
     )
