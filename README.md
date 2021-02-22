@@ -31,7 +31,7 @@ eCAL
 * is fast (1 - 10 GB/s depends on payload size - check measured performance [here](https://continental.github.io/ecal/advanced/performance.html))
 * provides publish / subscribe and client / server patterns
 * is designed brokerless
-* provides a C++ and C interface for easy integration into other languages (like python or csharp)
+* provides a C++ and C interface for easy integration into other languages (like python, csharp or [rust](https://github.com/kopernikusai/ecal-rs))
 * supports intel and arm platforms
 * has powerful tools for [recording](https://continental.github.io/ecal/getting_started/recorder.html), [replay](https://continental.github.io/ecal/getting_started/player.html) and [monitoring](https://continental.github.io/ecal/getting_started/monitor.html) all your data flows - decentralized
 * integrates gently into your ROS2 environement with the brand new [eCAL RMW](https://github.com/continental/rmw_ecal)  
@@ -62,7 +62,8 @@ GitHub project using / used by eCAL
   * [ROS2 to eCAL Gateway](https://github.com/schilasky/ros2ecal)
   * [eCAL to ROS2 Gateway](https://github.com/schilasky/ecal2ros)
 * [Iceoryx](https://github.com/eclipse/iceoryx)
-* [GO language interface](https://github.com/Blutkoete/golang-ecal)
+* [Rust language binding](https://github.com/kopernikusai/ecal-rs)
+* [GO language binding](https://github.com/Blutkoete/golang-ecal)
 * [Dockerfiles for eCAL](https://github.com/Blutkoete/docker-ecal)
 
 ## Links
