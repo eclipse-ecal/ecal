@@ -282,10 +282,10 @@ if (ECAL_THIRDPARTY_BUILD_HDF5)
     target_compile_options(hdf5-shared PRIVATE
       $<$<CXX_COMPILER_ID:MSVC>:/W0>
       $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
+    )
   endif()
 
   target_include_directories(hdf5-shared INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/thirdparty/hdf5>")
-)
 endif()
 
 if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR
