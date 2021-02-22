@@ -26,7 +26,7 @@ import platform
 
 data_files_platform = []
 if platform.system() == 'Windows':
-  data_files_platform = [('ecal',["../bin/Release/ecal_core.dll"])]
+  data_files_platform = [('ecal',["../bin/Release/ecal_core.dll", "../bin/Release/hdf5.dll"])]
 
 setuptools.setup (
   name = 'ecal',
