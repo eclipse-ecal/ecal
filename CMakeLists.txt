@@ -130,23 +130,34 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
     set(protobuf_BUILD_SHARED_LIBS ON CACHE BOOL "My option" FORCE)
   endif()
   add_subdirectory(thirdparty/protobuf/cmake)
+  
   if (NOT TARGET protobuf::libprotobuf)
     add_library(protobuf::libprotobuf ALIAS libprotobuf)
+  endif()
+
+  get_target_property(is_imported protobuf::libprotobuf IMPORTED)
+  if (NOT is_imported)
     # Disable warnings for third-party lib
     target_compile_options(libprotobuf PRIVATE
       $<$<CXX_COMPILER_ID:MSVC>:/W0>
       $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
     )
   endif()
+
   if (NOT TARGET protobuf::protoc)
     add_executable(protobuf::protoc ALIAS protoc)
     set(Protobuf_PROTOC_EXECUTABLE protoc)
+  endif()
+    
+  get_target_property(is_imported protobuf::protoc IMPORTED)
+  if (NOT is_imported)
     # Disable warnings for third-party lib
-    target_compile_options(protoc PRIVATE
+    target_compile_options(protobuf::protoc PRIVATE
       $<$<CXX_COMPILER_ID:MSVC>:/W0>
       $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
     )
   endif()
+
   set(Protobuf_VERSION 3.11.4)
 endif()
 
@@ -156,15 +167,20 @@ if (ECAL_THIRDPARTY_BUILD_SPDLOG)
   set(SPDLOG_BUILD_TESTS OFF CACHE BOOL "My option" FORCE)
   set(SPDLOG_BUILD_BENCH OFF CACHE BOOL "My option" FORCE)
   add_subdirectory(thirdparty/spdlog)
+
   if (NOT TARGET spdlog::spdlog)
     add_library(spdlog::spdlog ALIAS spdlog)
-    # Disable warnings for third-party lib
-    target_compile_options(spdlog PRIVATE
-      $<$<CXX_COMPILER_ID:MSVC>:/W0 /wd4996>
-      $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
-    )
-  endif ()
-endif ()
+    get_target_property(is_imported spdlog IMPORTED)
+    if (NOT is_imported)
+      # Disable warnings for third-party lib
+      target_compile_options(spdlog PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W0 /wd4996>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
+      )
+    endif()
+  endif()
+
+endif()
 
 if (ECAL_THIRDPARTY_BUILD_TINYXML2)
   list(APPEND as_subproject tinyxml2)
@@ -173,14 +189,19 @@ if (ECAL_THIRDPARTY_BUILD_TINYXML2)
   set(BUILD_TESTING OFF CACHE BOOL "My option" FORCE)
   set(BUILD_TESTS OFF CACHE BOOL "My option" FORCE)
   add_subdirectory(thirdparty/tinyxml2 EXCLUDE_FROM_ALL)
+
   if (NOT TARGET tinyxml2::tinyxml2)
-   add_library(tinyxml2::tinyxml2 ALIAS tinyxml2)
-    # Disable warnings for third-party lib
-    target_compile_options(tinyxml2 PRIVATE
-      $<$<CXX_COMPILER_ID:MSVC>:/W0>
-      $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
-    )
-  endif()
+    add_library(tinyxml2::tinyxml2 ALIAS tinyxml2)
+    get_target_property(is_imported tinyxml2 IMPORTED)
+    if (NOT is_imported)
+      # Disable warnings for third-party lib
+      target_compile_options(tinyxml2 PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W0>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
+      )
+    endif ()
+  endif ()
+
 endif ()
 
 if (ECAL_THIRDPARTY_BUILD_FINEFTP)
@@ -224,13 +245,16 @@ if (ECAL_THIRDPARTY_BUILD_CURL)
   
   if (NOT TARGET CURL::libcurl)
     add_library(CURL::libcurl ALIAS libcurl)
-    # Disable Warnings
-    target_compile_options(libcurl PRIVATE
-      $<$<CXX_COMPILER_ID:MSVC>:/W0>
-      $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
-    )
+    get_target_property(is_imported libcurl IMPORTED)
+    if (NOT is_imported)
+      # Disable Warnings
+      target_compile_options(libcurl PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W0>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
+      )
+    endif()
   endif()
-endif ()
+endif()
 
 if (ECAL_THIRDPARTY_BUILD_GTEST)
   list(APPEND as_subproject GTest)
@@ -279,10 +303,13 @@ if (ECAL_THIRDPARTY_BUILD_HDF5)
 
   if(NOT TARGET hdf5::hdf5-shared)
     add_library(hdf5::hdf5-shared ALIAS hdf5-shared)
-    target_compile_options(hdf5-shared PRIVATE
-      $<$<CXX_COMPILER_ID:MSVC>:/W0>
-      $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
-    )
+    get_target_property(is_imported hdf5-shared IMPORTED)
+    if (NOT is_imported)
+      target_compile_options(hdf5-shared PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W0>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
+      )
+    endif()
   endif()
 
   target_include_directories(hdf5-shared INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/thirdparty/hdf5>")
