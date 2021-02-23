@@ -142,8 +142,8 @@ jobs:
       run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/_build/complete
 
-    - name: Build Python Egg
-      run: cmake --build . --target create_python_egg --config Release
+    - name: Build Python Wheel
+      run: cmake --build . --target create_python_wheel --config Release
       working-directory: ${{ runner.workspace }}/_build/complete
 
 #    - name: Build Documentation C
@@ -172,8 +172,8 @@ jobs:
         name: windows-setup
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.exe
 
-    - name: Upload Python Egg
+    - name: Upload Python Wheel
       uses: actions/upload-artifact@v2
       with:
-        name: windows-python-egg
-        path: ${{ runner.workspace }}/_build/complete/_deploy/*.egg
+        name: windows-python-wheel
+        path: ${{ runner.workspace }}/_build/complete/_deploy/*.whl
