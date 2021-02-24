@@ -95,18 +95,18 @@ First check out the eCAL repository and all of the submodules:
 
      You will find the .exe installer in the :file:`_build\\complete\\_deploy\\` directory.
 
-  #. Optional: If you configured CMake to build the python extension by setting `BUILD_PY_BINDING` to `ON` you can create the eCAL python egg by calling
+  #. Optional: If you configured CMake to build the python extension by setting `BUILD_PY_BINDING` to `ON` you can create the eCAL python wheel by calling
 
      .. code-block:: batch
       
-        build_win\win_make_python_egg.bat
+        build_win\win_make_python_wheel.bat
 
-     Afterwards you will find the python eCAL egg in the :file:`_build\\_deploy\\` directory.
+     Afterwards you will find the python eCAL wheel in the :file:`_build\\_deploy\\` directory.
      Install the extension by
 
      .. code-block:: batch
    
-        python -m easy_install ecal-X.Y.Z-pyX.Y.egg
+        pip install ecal-...-win_amd64.whl
 
 |fa-ubuntu| Building eCAL on Ubuntu
 ===================================
@@ -191,9 +191,9 @@ First check out the eCAL repository and all of the submodules:
       cpack -G DEB
       sudo dpkg -i _deploy/eCAL-*
 
-#. Optional: Create and install the eCAL python egg (Only available if you enabled the `BUILD_PY_BINDING` CMake option in step 2):
+#. Optional: Create and install the eCAL python wheel (Only available if you enabled the `BUILD_PY_BINDING` CMake option in step 2):
 
    .. code-block:: bash
 
-      cmake --build . --target create_python_egg --config Release
-      sudo python3 -m easy_install _deploy/ecal-*  
+      cmake --build . --target create_python_wheel --config Release
+      sudo pip3 install _deploy/ecal-*  
