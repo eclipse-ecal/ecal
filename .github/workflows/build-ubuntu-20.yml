@@ -82,8 +82,8 @@ jobs:
       run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/_build
 
-    - name: Build Python Egg
-      run: cmake --build . --target create_python_egg --config Release
+    - name: Build Python Wheel
+      run: cmake --build . --target create_python_wheel --config Release
       working-directory: ${{ runner.workspace }}/_build
 
     - name: Run Tests
@@ -100,11 +100,11 @@ jobs:
         name: ubuntu-debian
         path: ${{ runner.workspace }}/_build/_deploy/*.deb
 
-    - name: Upload Python Egg
+    - name: Upload Python Wheel
       uses: actions/upload-artifact@v2
       with:
-        name: ubuntu-python-egg
-        path: ${{ runner.workspace }}/_build/_deploy/*.egg
+        name: ubuntu-python-wheel
+        path: ${{ runner.workspace }}/_build/_deploy/*.whl
 
     - name: Deploy Documentation
       if: github.ref == 'refs/heads/master'

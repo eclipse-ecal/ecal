@@ -46,8 +46,8 @@ if(Python_Interpreter_FOUND)
   # TODO: this needs to be tested on windows also
   message(STATUS "Installing Python extensions")
   #install(CODE "execute_process(COMMAND ${Python_EXECUTABLE} setup.py install --user WORKING_DIRECTORY ${PYTHON_BINARY_DIR})")
-  add_custom_target(create_python_egg
-      ${Python_EXECUTABLE} setup.py bdist_egg --dist-dir=${BUILD_DEPLOY_DIRECTORY}
+  add_custom_target(create_python_wheel
+      ${Python_EXECUTABLE} setup.py bdist_wheel --dist-dir=${BUILD_DEPLOY_DIRECTORY}
       DEPENDS _ecal_core_py _ecal_hdf5_py
       WORKING_DIRECTORY ${PYTHON_BINARY_DIR}
       COMMENT "Creating python wheel"

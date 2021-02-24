@@ -20,6 +20,12 @@
 
 import setuptools
 import platform
+from setuptools.dist import Distribution
+
+class BinaryDistribution(Distribution):
+    """Distribution which always forces a binary package with platform name"""
+    def has_ext_modules(self):
+        return True
 
 # this is the input file for cmake. for further details have a look at the
 # CMakeLists.txt in this directory.
@@ -29,16 +35,18 @@ if platform.system() == 'Windows':
   data_files_platform = [('ecal',["../bin/Release/ecal_core.dll", "../bin/Release/hdf5.dll"])]
 
 setuptools.setup (
-  name = 'ecal',
-  version = '@eCAL_VERSION_STRING@',
-  description = 'This is the eCAL python API',
-  author = 'Rex Schilasky',
-  author_email = 'rex.schilasky@continental-corporation.com',
-  packages=setuptools.find_packages(),
-  data_files = data_files_platform,
-  package_data={'ecal': ['*.pyd', '*.so']},
-  install_requires=[
-    'protobuf@Protobuf_required_versions@'
-  ],
+  name              = 'ecal',
+  version           = '@eCAL_VERSION_STRING@',
+  description       = 'This is the eCAL python API',
+  license           = 'Apache 2.0',
+  author            = 'Rex Schilasky',
+  author_email      = 'rex.schilasky@continental-corporation.com',
+  packages          = setuptools.find_packages(),
+  data_files        = data_files_platform,
+  package_data      = {'ecal': ['*.pyd', '*.so']},
+  install_requires  = [
+                        'protobuf@Protobuf_required_versions@'
+                      ],
   zip_safe=False,
+  distclass         = BinaryDistribution,
 )
