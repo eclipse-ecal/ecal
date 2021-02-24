@@ -28,13 +28,17 @@
 #else // _WIN32
   #include <dirent.h>
   #include <fcntl.h>    // O_RDONLY
-  #include <fts.h>      // File-tree traversal
+  #ifndef __QNXNTO__
+    #include <fts.h>      // File-tree traversal
+  #endif
   #include <unistd.h>
 
   #if defined (__APPLE__) || defined(__FreeBSD__)
     #include <copyfile.h>
   #else
-    #include <sys/sendfile.h>
+    #ifndef __QNXNTO__
+      #include <sys/sendfile.h>
+    #endif
   #endif //__linux__
   
 #endif  // _WIN32
@@ -310,6 +314,9 @@ namespace EcalUtils
 #if defined (__APPLE__) || defined(__FreeBSD__)
       int result = fcopyfile(input_fd, output_fd, 0, COPYFILE_ALL);
       return (result == 0);
+#elif defined(__QNXNTO__)
+      // TODO: Find an alternative to copy files on QNX operating system
+      return false;
 #else
       off_t bytesCopied = 0;
       FileStatus file_status(source_clean, OsStyle::Current);
@@ -323,7 +330,7 @@ namespace EcalUtils
     {
       std::string clean_path = ToNativeSeperators(CleanPath(source, input_path_style), input_path_style);
 
-#ifdef WIN32
+#if defined(WIN32)
       
       // Abuse the internal buffer of the string to make a double-null-
       // terminated-string as requested by the Win32 API.
@@ -345,7 +352,10 @@ namespace EcalUtils
       };
       int error = SHFileOperationA(&file_op);
       return (error == 0);
-      
+
+#elif defined(__QNXNTO__)
+      // TODO: Find an alternative to traverse directories on QNX operating system that does not use fts
+      return false;
 #else // WIN32
       
       // This code has been taken from the open-bsd rm sourcecode:

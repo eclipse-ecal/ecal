@@ -24,6 +24,19 @@ find_package(Protobuf REQUIRED)
 set(SETUP_PY_IN "${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in")
 set(SETUP_PY    "${PYTHON_BINARY_DIR}/setup.py")
 
+# Create a shortened protobuf version string
+string(REPLACE "." ";" Protobuf_VERSION_components "${Protobuf_VERSION}")
+list(LENGTH Protobuf_VERSION_components Protobuf_VERSION_components_length)
+
+if ("${Protobuf_VERSION_components_length}" LESS "2")
+  message(FATAL_ERROR "Unable to determine protobuf version for python binding")
+endif()
+list(GET Protobuf_VERSION_components 0 Protobuf_VERSION_major)
+list(GET Protobuf_VERSION_components 1 Protobuf_VERSION_minor)
+MATH(EXPR Protobuf_Version_minor_inc "${Protobuf_VERSION_minor}+1")
+
+set(Protobuf_required_versions ">=${Protobuf_VERSION_major}.${Protobuf_VERSION_minor}.0,<${Protobuf_VERSION_major}.${Protobuf_Version_minor_inc}")
+
 configure_file(${SETUP_PY_IN} ${SETUP_PY} @ONLY)
 
 if(Python_Interpreter_FOUND)
@@ -33,8 +46,8 @@ if(Python_Interpreter_FOUND)
   # TODO: this needs to be tested on windows also
   message(STATUS "Installing Python extensions")
   #install(CODE "execute_process(COMMAND ${Python_EXECUTABLE} setup.py install --user WORKING_DIRECTORY ${PYTHON_BINARY_DIR})")
-  add_custom_target(create_python_egg
-      ${Python_EXECUTABLE} setup.py bdist_egg --dist-dir=${BUILD_DEPLOY_DIRECTORY}
+  add_custom_target(create_python_wheel
+      ${Python_EXECUTABLE} setup.py bdist_wheel --dist-dir=${BUILD_DEPLOY_DIRECTORY}
       DEPENDS _ecal_core_py _ecal_hdf5_py
       WORKING_DIRECTORY ${PYTHON_BINARY_DIR}
       COMMENT "Creating python wheel"

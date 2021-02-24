@@ -90,7 +90,7 @@ int main(int argc, char** argv)
     std::string user_input;
     std::getline (std::cin, user_input);
 
-    std::transform(user_input.begin(), user_input.end(), user_input.begin(), [](unsigned char c){ return std::tolower(c); });
+    std::transform(user_input.begin(), user_input.end(), user_input.begin(), [](unsigned char c) -> char { return static_cast<char>(std::tolower(static_cast<int>(c))); });
     if (user_input == std::string("i accept"))
     {
       logger->warn("");

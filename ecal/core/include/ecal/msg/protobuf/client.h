@@ -71,7 +71,7 @@ namespace eCAL
       CServiceClient& operator=(const CServiceClient&) = delete;
 
       /**
-       * @brief Call method of this service (none blocking variant with callback).
+       * @brief Call method of this service, for all hosts, responses will be returned by callback. 
        *
        * @param method_name_  Method name.
        * @param request_      Request message.
@@ -84,7 +84,7 @@ namespace eCAL
       }
 
       /**
-       * @brief Call method of this service (blocking variant).
+       * @brief Call method of this service, for specific host.
        *
        * @param       host_name_     Host name.
        * @param       method_name_   Method name.
@@ -105,7 +105,31 @@ namespace eCAL
         return success;
       }
 
+      /**
+       * @brief Asynchronously call method of this service, for all hosts, responses will be returned by callback. 
+       *
+       * @param method_name_  Method name. 
+       * @param request_      Request message. 
+      **/
+      void CallAsync(const std::string& method_name_, const google::protobuf::Message& request_)
+      {
+        CallAsync(method_name_, request_.SerializeAsString());
+      }
+
+      /**
+       * @brief Asynchronously call method of this service asynchronously, for specific host, response will be returned by callback. 
+       *
+       * @param       host_name_     Host name.
+       * @param       method_name_   Method name.
+       * @param       request_       Request message.
+      **/
+      void CallAsync(const std::string& host_name_, const std::string& method_name_, const google::protobuf::Message& request_)
+      {
+        CallAsync(host_name_, method_name_, request_.SerializeAsString());
+      }
+
       using eCAL::CServiceClient::Call;
+      using eCAL::CServiceClient::CallAsync;
     };
   }
 }

@@ -59,9 +59,11 @@ bool EcalPlay::LoadMeasurement(const std::string& path)
 
   std::shared_ptr<eCAL::eh5::HDF5Meas> measurement(std::make_shared<eCAL::eh5::HDF5Meas>());
 
-  std::string meas_dir;
+  std::string meas_dir;               // The directory of the measurement
+  std::string path_to_load;           // The actual path we load the measurement from. May be a directory or a .hdf5 file
+  bool        is_hdf5_file = false;   // Whether the given path pointed to an hdf5 file
   
-  // Check if the user opened a .ecalmeas file or a directory
+  // Check if the user opened a file or a directory
   auto file_status = EcalUtils::Filesystem::FileStatus(path, EcalUtils::Filesystem::OsStyle::Current);
   if (!file_status.IsOk())
   {
@@ -72,6 +74,23 @@ bool EcalPlay::LoadMeasurement(const std::string& path)
   {
     if (file_status.GetType() == EcalUtils::Filesystem::Type::RegularFile)
     {
+      // The user opened a file! Let's check if it is an HDF5 file or an .ecalmeas file!
+      std::string filename = EcalUtils::Filesystem::FileName(path, EcalUtils::Filesystem::OsStyle::Current);
+      size_t dot_pos = filename.find_last_of('.');
+      if (dot_pos != std::string::npos)
+      {
+        std::string file_extension = filename.substr(dot_pos);
+        std::transform(file_extension.begin(), file_extension.end(), file_extension.begin(),
+                        [](char c) -> char
+                        {
+                          return static_cast<char>(std::tolower(static_cast<int>(c)));
+                        });
+        if (file_extension == ".hdf5")
+        {
+          is_hdf5_file = true;
+        }
+      }
+
       // Although the path points to a file, our filesystem API will strip out the last componentent (i.e. the filename) when appending a "/.."
       meas_dir = EcalUtils::Filesystem::CleanPath(path + "/..", EcalUtils::Filesystem::OsStyle::Current);
     }
@@ -81,8 +100,10 @@ bool EcalPlay::LoadMeasurement(const std::string& path)
     }
   }
 
+  path_to_load = (is_hdf5_file ? path : meas_dir);
+
   // Load the measurement
-  if (measurement->Open(meas_dir) && measurement->IsOk())
+  if (measurement->Open(path_to_load) && measurement->IsOk())
   {
     EcalPlayLogger::Instance()->info("Measurement dir:  " + meas_dir);
     play_thread_->SetMeasurement(measurement, meas_dir);

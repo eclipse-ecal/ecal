@@ -34,7 +34,14 @@
 #include "../include/zombie_instance_killer.h"
 #include "../include/interruptable_timer.h"
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4100 4127 4146 4505 4800) // disable proto warnings
+#endif
 #include "ecal/pb/mma/mma.pb.h"
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #ifdef ECAL_OS_WINDOWS
 #include <windows.h>

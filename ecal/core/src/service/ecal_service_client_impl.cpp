@@ -145,6 +145,55 @@ namespace eCAL
     return SendRequests(method_name_, request_);
   }
 
+  void CServiceClientImpl::CallAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_)
+  {
+    if (!g_servgate()) return;
+    if (!m_created)    return;
+
+    if (m_service_name.empty()
+      || method_name_.empty()
+      )
+      return;
+
+    // check for new server
+    RefreshClientMap();
+
+    std::vector<CServGate::SService> service_vec = g_servgate()->GetServiceInfo(m_service_name);
+    for (auto iter : service_vec)
+    {
+      if (host_name_.empty() || (host_name_ == iter.hname))
+      {
+        std::string key = iter.sname + ":" + std::to_string(iter.tcp_port) + "@" + std::to_string(iter.pid) + "@" + iter.hname;
+        auto client = m_client_map.find(key);
+        if (client != m_client_map.end())
+        {
+          SendRequestAsync(client->second, method_name_, request_);
+        }
+      }
+    }
+  }
+
+  void CServiceClientImpl::CallAsync(const std::string& method_name_, const std::string& request_)
+  {        
+    
+    if (!g_servgate()) return;
+    if (!m_created)    return;
+
+    if (m_service_name.empty()
+      || method_name_.empty()
+      )
+      return;
+
+    std::lock_guard<std::mutex> req_lock(m_req_mtx);
+
+    // check for new server
+    RefreshClientMap();
+
+    // send request to every single service
+    SendRequestsAsync(method_name_, request_);
+
+  }
+
   void CServiceClientImpl::RefreshClientMap()
   {
     if (!g_servgate()) return;
@@ -246,5 +295,82 @@ namespace eCAL
     response_ = response_pb.response();
 
     return (service_info_.call_state == call_state_executed);
+  }
+
+  void CServiceClientImpl::SendRequestsAsync(const std::string& method_name_, const std::string& request_)
+  {
+    if (!g_servgate()) return;
+
+    for (auto client : m_client_map)
+    {
+      if (client.second->IsConnected())
+      {
+        if (m_service_hname.empty() || (m_service_hname == client.second->GetHostName()))
+        {
+          // execute request
+          SendRequestAsync(client.second, method_name_, request_);
+        }
+      }
+    }
+  }
+
+  void CServiceClientImpl::SendRequestAsync(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_)
+  {
+    // create request protocol buffer
+    eCAL::pb::Request request_pb;
+    request_pb.mutable_header()->set_mname(method_name_);
+    request_pb.set_request(request_);
+    std::string request_s = request_pb.SerializeAsString();
+  
+    client_->ExecuteRequestAsync(request_s, [this, client_, method_name_](const std::string &response, bool success)
+    {
+      if (m_callback) 
+      {
+        SServiceInfo service_info;
+        if(!success)
+        {
+          auto error_msg = "Async request failed !";
+          service_info.call_state = call_state_failed;
+          service_info.error_msg = error_msg;
+          service_info.ret_state = 0;
+          service_info.method_name = method_name_;
+          m_callback(service_info, "");
+          return;
+        }
+
+        eCAL::pb::Response response_pb;
+        if (!response_pb.ParseFromString(response))
+        {
+          auto error_msg = "CServiceClientImpl::SendRequestAsync could not parse server response !";
+          std::cerr << error_msg << "\n";
+          service_info.call_state = call_state_failed;
+          service_info.error_msg = error_msg;
+          service_info.ret_state = 0;
+          service_info.method_name = method_name_;
+          m_callback(service_info, "");
+          return;
+        }
+
+        auto response_pb_header = response_pb.header();
+        service_info.host_name = response_pb_header.hname();
+        service_info.service_name = response_pb_header.sname();
+        service_info.method_name = response_pb_header.mname();
+        service_info.error_msg = response_pb_header.error();
+        service_info.ret_state = static_cast<int>(response_pb.ret_state());
+        switch (response_pb_header.state())
+        {
+        case eCAL::pb::ServiceHeader_eCallState_executed:
+          service_info.call_state = call_state_executed;
+          break;
+        case eCAL::pb::ServiceHeader_eCallState_failed:
+          service_info.call_state = call_state_failed;
+          break;
+        default:
+          break;
+        }
+
+        m_callback(service_info, response_pb.response());
+      }
+    });
   }
 }

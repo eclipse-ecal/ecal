@@ -24,6 +24,7 @@
 #pragma once
 
 #include <thread>
+#include <mutex>
 #include <memory>
 
 #ifdef _MSC_VER
@@ -51,6 +52,8 @@ namespace eCAL
   class CTcpClient
   {
   public:
+    typedef std::function<void(const std::string& data_, bool successful_)> AsyncCallbackT;
+
     CTcpClient();
     CTcpClient(const std::string& host_name_, unsigned short port_);
 
@@ -64,12 +67,21 @@ namespace eCAL
     std::string GetHostName() { return m_host_name; }
 
     size_t ExecuteRequest(const std::string& request_, std::string& response_);
+    void ExecuteRequestAsync(const std::string& request_, AsyncCallbackT callback);
 
   protected:
-    std::string                            m_host_name;
-    std::shared_ptr<asio::io_service>      m_io_service;
-    std::shared_ptr<asio::ip::tcp::socket> m_socket;
-    bool                                   m_created;
-    bool                                   m_connected;
+    std::string                             m_host_name;
+    std::mutex                              m_socket_write_mutex; 
+    std::mutex                              m_socket_read_mutex; 
+    std::thread                             m_async_worker;
+    std::shared_ptr<asio::io_service>       m_io_service;
+    std::shared_ptr<asio::io_service::work> m_idle_work;
+    std::shared_ptr<asio::ip::tcp::socket>  m_socket;
+    bool                                    m_created;
+    bool                                    m_connected;
+    
+  private:
+    void ReceiveResponseAsync(AsyncCallbackT callback_);	
+    void ReceiveResponseData(const size_t size, AsyncCallbackT callback_);
   };
 };

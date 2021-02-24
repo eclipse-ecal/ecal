@@ -37,6 +37,10 @@
 #define ECAL_OS_MACOS
 #endif
 
+#if defined(__QNXNTO__)
+#define ECAL_OS_LINUX
+#define ECAL_OS_QNX
+#endif
 
 #ifdef _MSC_VER
   #ifdef eCAL_EXPORTS

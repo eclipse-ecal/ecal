@@ -118,7 +118,7 @@ namespace
     }
     return "???";
   }
-#ifdef ECAL_OS_WINDOWS
+#if defined(ECAL_OS_WINDOWS)
   std::pair<bool, int> get_host_id()
   {
     // retrieve needed buffer size for GetAdaptersInfo
@@ -152,14 +152,18 @@ namespace
     // return success
     return std::make_pair(true, hash);
   }
-#endif /* ECAL_OS_WINDOWS */
-
-#ifdef ECAL_OS_LINUX
+#elif defined(ECAL_OS_QNX)
+  std::pair<bool, int> get_host_id()
+  {
+    // TODO: Find a suitable method on QNX to calculate an unqiue host identifier
+    return std::make_pair(true, -1);
+  }
+#else
   std::pair<bool, int> get_host_id()
   {
     return std::make_pair(true, static_cast<int>(gethostid()));
   }
-#endif /* ECAL_OS_LINUX */
+#endif
 }
 
 namespace eCAL
@@ -806,14 +810,17 @@ namespace eCAL
       if (g_process_name.empty()) {
         // Read the link to our own executable
         char buf[PATH_MAX] = { 0 };
-#ifdef ECAL_OS_MACOS
+#if defined(ECAL_OS_MACOS)
         uint32_t length = PATH_MAX;
         if (_NSGetExecutablePath(buf, &length) != 0)
         {
           // Buffer size is too small.
           return "";
         }
-#else // ECAL_OS_MACOS
+#elif defined(ECAL_OS_QNX)
+        size_t length {0};
+        // TODO: Find a suitable method on QNX to retrieve current process name
+#else
         ssize_t length = readlink("/proc/self/exe", buf, PATH_MAX);
 
         if (length < 0)
@@ -821,7 +828,7 @@ namespace eCAL
           std::cerr << "Unable to get process name: " << strerror(errno) << std::endl;
           return "";
         }
-#endif // ECAL_OS_MACOS
+#endif
         // Copy the binary name to a std::string
         g_process_name = std::string(buf, length);
 
@@ -832,7 +839,7 @@ namespace eCAL
     {
       if (g_process_par.empty())
       {
-#ifdef ECAL_OS_MACOS
+#if defined(ECAL_OS_MACOS)
         int pid = getpid();
 
         int    mib[3], argmax, argc;
@@ -951,7 +958,11 @@ namespace eCAL
             break;
         }
 
-#else // ECAL_OS_MACOS
+#elif defined(ECAL_OS_QNX)
+        // TODO: Find a suitable method on QNX to get process arguments of the current executable
+        std::vector<std::string> argument_vector;
+        g_process_par = "";
+#else
 
         const std::string filename = "/proc/self/cmdline";
         std::vector<std::string> argument_vector;

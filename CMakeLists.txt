@@ -130,13 +130,34 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
     set(protobuf_BUILD_SHARED_LIBS ON CACHE BOOL "My option" FORCE)
   endif()
   add_subdirectory(thirdparty/protobuf/cmake)
+  
   if (NOT TARGET protobuf::libprotobuf)
     add_library(protobuf::libprotobuf ALIAS libprotobuf)
   endif()
+
+  get_target_property(is_imported libprotobuf IMPORTED)
+  if (NOT is_imported)
+    # Disable warnings for third-party lib
+    target_compile_options(libprotobuf PRIVATE
+      $<$<CXX_COMPILER_ID:MSVC>:/W0>
+      $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
+    )
+  endif()
+
   if (NOT TARGET protobuf::protoc)
     add_executable(protobuf::protoc ALIAS protoc)
     set(Protobuf_PROTOC_EXECUTABLE protoc)
   endif()
+    
+  get_target_property(is_imported protoc IMPORTED)
+  if (NOT is_imported)
+    # Disable warnings for third-party lib
+    target_compile_options(protoc PRIVATE
+      $<$<CXX_COMPILER_ID:MSVC>:/W0>
+      $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
+    )
+  endif()
+
   set(Protobuf_VERSION 3.11.4)
 endif()
 
@@ -146,10 +167,20 @@ if (ECAL_THIRDPARTY_BUILD_SPDLOG)
   set(SPDLOG_BUILD_TESTS OFF CACHE BOOL "My option" FORCE)
   set(SPDLOG_BUILD_BENCH OFF CACHE BOOL "My option" FORCE)
   add_subdirectory(thirdparty/spdlog)
+
   if (NOT TARGET spdlog::spdlog)
     add_library(spdlog::spdlog ALIAS spdlog)
-  endif ()
-endif ()
+    get_target_property(is_imported spdlog IMPORTED)
+    if (NOT is_imported)
+      # Disable warnings for third-party lib
+      target_compile_options(spdlog PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W0 /wd4996>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
+      )
+    endif()
+  endif()
+
+endif()
 
 if (ECAL_THIRDPARTY_BUILD_TINYXML2)
   list(APPEND as_subproject tinyxml2)
@@ -158,7 +189,19 @@ if (ECAL_THIRDPARTY_BUILD_TINYXML2)
   set(BUILD_TESTING OFF CACHE BOOL "My option" FORCE)
   set(BUILD_TESTS OFF CACHE BOOL "My option" FORCE)
   add_subdirectory(thirdparty/tinyxml2 EXCLUDE_FROM_ALL)
-  add_library(tinyxml2::tinyxml2 ALIAS tinyxml2)
+
+  if (NOT TARGET tinyxml2::tinyxml2)
+    add_library(tinyxml2::tinyxml2 ALIAS tinyxml2)
+    get_target_property(is_imported tinyxml2 IMPORTED)
+    if (NOT is_imported)
+      # Disable warnings for third-party lib
+      target_compile_options(tinyxml2 PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W0>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
+      )
+    endif ()
+  endif ()
+
 endif ()
 
 if (ECAL_THIRDPARTY_BUILD_FINEFTP)
@@ -202,9 +245,16 @@ if (ECAL_THIRDPARTY_BUILD_CURL)
   
   if (NOT TARGET CURL::libcurl)
     add_library(CURL::libcurl ALIAS libcurl)
+    get_target_property(is_imported libcurl IMPORTED)
+    if (NOT is_imported)
+      # Disable Warnings
+      target_compile_options(libcurl PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W0>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
+      )
+    endif()
   endif()
-  
-endif ()
+endif()
 
 if (ECAL_THIRDPARTY_BUILD_GTEST)
   list(APPEND as_subproject GTest)
@@ -253,6 +303,13 @@ if (ECAL_THIRDPARTY_BUILD_HDF5)
 
   if(NOT TARGET hdf5::hdf5-shared)
     add_library(hdf5::hdf5-shared ALIAS hdf5-shared)
+    get_target_property(is_imported hdf5-shared IMPORTED)
+    if (NOT is_imported)
+      target_compile_options(hdf5-shared PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W0>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
+      )
+    endif()
   endif()
 
   target_include_directories(hdf5-shared INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/thirdparty/hdf5>")
@@ -310,36 +367,13 @@ endif()
 # --------------------------------------------------------
 # detect qt library
 # --------------------------------------------------------
-if(WIN32 AND HAS_QT5)
-  if (NOT DEFINED ENV{QT5_ROOT_DIRECTORY} AND NOT DEFINED ENV{QT5_ROOT})
-    # If the QT5_ROOT_DIRECTORY Variable is not set, there is still a chance that
-    # the user set the CMAKE_PREFIX_PATH himself. Thus we try to find
-    # Qt5 Core just to see if that works. If we can find Qt, we assume
-    # that the user knows what he is doing.
-    find_package(Qt5 COMPONENTS Core)
-    if(NOT Qt5_FOUND)
-      message(FATAL_ERROR "QT5_ROOT_DIRECTORY is not defined. Please create an \
-        environment variable QT5_ROOT_DIRECTORY pointing to your QT5 installation \
-        (the directory that contains the msvc201x or msvc201x_64 \
-        directory) or disable compilation of Qt5 projects by setting \
-        HAS_QT5 to OFF.")
-    endif()
-  else()
-    if (DEFINED ENV{QT5_ROOT})
-      set(qt_directory $ENV{QT5_ROOT})
-      message(WARNING "Please unset the QT5_ROOT environment variable and use \
-        QT5_ROOT_DIRECTORY instead. Using QT5_ROOT will trigger multiple CMake warnings \
-        in newer CMake versions.")
-    endif ()
-    if (DEFINED ENV{QT5_ROOT_DIRECTORY})
-      set(qt_directory $ENV{QT5_ROOT_DIRECTORY})
-    endif ()
-
-    qt_msvc_path(qt_subfolder)
-    list(APPEND CMAKE_PREFIX_PATH ${qt_directory}/${qt_subfolder}/)
-    message(STATUS "Searching for QT in ${qt_directory}/${qt_subfolder}/")
+if (HAS_QT5)
+  find_package(Qt5 COMPONENTS Core QUIET)
+  if (NOT "${Qt5_FOUND}")
+    autodetect_qt5_msvc_dir()
   endif()
 endif()
+
 
 # --------------------------------------------------------
 # set msvc specific options
@@ -521,7 +555,7 @@ if(BUILD_APPS)
   add_subdirectory(app/sys/sys_client_cli)
   add_subdirectory(app/sys/sys_client_core)
   if(NOT APPLE)
-    add_subdirectory(contrib/mma/src)
+    add_subdirectory(contrib/mma)
   endif()
 endif()
 

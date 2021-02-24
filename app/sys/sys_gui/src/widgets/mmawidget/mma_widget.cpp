@@ -73,7 +73,7 @@ void MmaWidget::monitorUpdated()
     if (all_hosts.find(it->first) == all_hosts.end())
     {
       // The host is not present any more
-      delete it->second;
+      it->second->deleteLater();
       it = host_items_.erase(it);
     }
     else

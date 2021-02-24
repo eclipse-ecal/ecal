@@ -56,6 +56,14 @@ namespace eCAL
 
     try
     {
+      m_idle_work = std::make_shared<asio::io_service::work>(*m_io_service);
+      //NOTE: might want to lazy load this in future
+      m_async_worker = std::thread(
+      [this] 
+      {
+        m_io_service->run();
+      });
+
       asio::connect(*m_socket, resolver.resolve({ host_name_, std::to_string(port_) }));
       // set TCP no delay, so Nagle's algorithm will not stuff multiple messages in one TCP segment
       asio::ip::tcp::no_delay no_delay_option(true);
@@ -75,6 +83,9 @@ namespace eCAL
   {
     if (!m_created) return;
 
+    m_io_service->stop();
+    m_async_worker.join();
+
     m_socket     = nullptr;
     m_io_service = nullptr;
     m_connected  = false;
@@ -84,6 +95,8 @@ namespace eCAL
 
   size_t CTcpClient::ExecuteRequest(const std::string& request_, std::string& response_)
   {
+    std::lock_guard<std::mutex> lock(m_socket_write_mutex);
+
     if (!m_created) return 0;
 
     size_t written(0);
@@ -138,5 +151,58 @@ namespace eCAL
       m_connected = false;
       return 0;
     }
+  }
+
+  void CTcpClient::ExecuteRequestAsync(const std::string &request_, AsyncCallbackT callback)
+  {
+    std::unique_lock<std::mutex> lock(m_socket_write_mutex);
+
+    if (!m_created)
+      callback("", false);
+
+    //Start waiting for response
+    ReceiveResponseAsync(callback);
+
+    asio::async_write(*m_socket, asio::buffer(request_),
+    [this, callback, lock = std::move(lock)](auto ec, auto) 
+    {
+      if (ec)
+        callback("", false);
+    });
+  }
+
+  void CTcpClient::ReceiveResponseAsync(AsyncCallbackT callback_)
+  {
+    std::shared_ptr<STcpHeader> tcp_header = std::make_shared<STcpHeader>();
+    std::unique_lock<std::mutex> lock(m_socket_read_mutex);
+
+    m_socket->async_read_some(asio::buffer(tcp_header.get(), sizeof(tcp_header)),
+    [this, tcp_header, callback_, lock = std::move(lock)](auto ec, auto bytes_transferred) 
+    {
+      if(ec) callback_("", false);
+
+      if (bytes_transferred == sizeof(tcp_header))
+      {
+        const auto resp_size = static_cast<size_t>(ntohl(tcp_header->psize_n));
+        this->ReceiveResponseData(resp_size, callback_);
+      }
+      else
+      {
+        std::cerr << "CTcpClient::ExecuteRequest: Failed to receive response: " << "tcp_header size is invalid." << "\n";
+        callback_("", false);
+      }
+    });
+  }
+
+  void CTcpClient::ReceiveResponseData(const size_t size_, AsyncCallbackT callback_)
+  {
+    std::string data(size_, ' ');
+    asio::error_code ec;
+
+    //We are already in io_worker_thread
+    asio::read(*m_socket, asio::buffer(&data[0], data.size()), ec);
+
+    if(ec) callback_("", false);
+    else callback_(data, true);
   }
 };
