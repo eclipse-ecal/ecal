@@ -367,10 +367,13 @@ endif()
 # --------------------------------------------------------
 # detect qt library
 # --------------------------------------------------------
-find_package(Qt5 COMPONENTS Core QUIET)
-if (NOT "${Qt5_FOUND}")
+if (HAS_QT5)
+  find_package(Qt5 COMPONENTS Core QUIET)
+  if (NOT "${Qt5_FOUND}")
     autodetect_qt5_msvc_dir()
+  endif()
 endif()
+
 
 # --------------------------------------------------------
 # set msvc specific options
