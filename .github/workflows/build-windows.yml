@@ -142,8 +142,64 @@ jobs:
       run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/_build/complete
 
-    - name: Build Python Wheel
-      run: cmake --build . --target create_python_wheel --config Release
+    - name: Build Python 3.9 Wheel
+      run: |
+        mkdir ".venv_39"
+        py -3.9 -m venv ".venv_39"
+        CALL ".venv_39\Scripts\activate.bat"
+        pip install wheel
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=FIRST
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=ONLY
+        cmake --build . --target create_python_wheel --config Release
+      shell: cmd
+      working-directory: ${{ runner.workspace }}/_build/complete
+
+    - name: Build Python 3.8 Wheel
+      run: |
+        mkdir ".venv_38"
+        py -3.8 -m venv ".venv_38"
+        CALL ".venv_38\Scripts\activate.bat"
+        pip install wheel
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=FIRST
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=ONLY
+        cmake --build . --target create_python_wheel --config Release
+      shell: cmd
+      working-directory: ${{ runner.workspace }}/_build/complete
+      
+    - name: Build Python 3.7 Wheel
+      run: |
+        mkdir ".venv_37"
+        py -3.7 -m venv ".venv_37"
+        CALL ".venv_37\Scripts\activate.bat"
+        pip install wheel
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=FIRST
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=ONLY
+        cmake --build . --target create_python_wheel --config Release
+      shell: cmd
+      working-directory: ${{ runner.workspace }}/_build/complete
+      
+    - name: Build Python 3.6 Wheel
+      run: |
+        mkdir ".venv_36"
+        py -3.6 -m venv ".venv_36"
+        CALL ".venv_36\Scripts\activate.bat"
+        pip install wheel
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=FIRST
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=ONLY
+        cmake --build . --target create_python_wheel --config Release
+      shell: cmd
+      working-directory: ${{ runner.workspace }}/_build/complete
+      
+      - name: Build Python 3.5 Wheel
+      run: |
+        mkdir ".venv_35"
+        py -3.5 -m venv ".venv_35"
+        CALL ".venv_35\Scripts\activate.bat"
+        pip install wheel
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=FIRST
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=ONLY
+        cmake --build . --target create_python_wheel --config Release
+      shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
 
 #    - name: Build Documentation C
@@ -172,8 +228,8 @@ jobs:
         name: windows-setup
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.exe
 
-    - name: Upload Python Wheel
+    - name: Upload Python Wheels
       uses: actions/upload-artifact@v2
       with:
-        name: windows-python-wheel
+        name: windows-python-wheels
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.whl
