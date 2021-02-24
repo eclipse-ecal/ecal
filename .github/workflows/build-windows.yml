@@ -142,6 +142,11 @@ jobs:
       run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/_build/complete
 
+    # Create Python 3.9 Wheel.
+    # The strang-looking double-cmake is an ugly workaround to force CMake to
+    # re-find Python, after we have changed the venv from the outside. The
+    # alternative would be to clean everything, which would cause an unnecessary
+    # rebuild of eCAL and HDF5 for each python Version.
     - name: Build Python 3.9 Wheel
       run: |
         mkdir ".venv_39"
