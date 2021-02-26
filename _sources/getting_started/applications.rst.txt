@@ -2,9 +2,9 @@
 
 .. _getting_started_applications:
 
-============================
+============
 Applications
-============================
+============
 
 In the following sections we will look at the most important applications that ship with eCAL.
 

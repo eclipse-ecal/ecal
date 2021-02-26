@@ -333,7 +333,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../applications/rec/recorder_ftp_upload.html">FTP Upload</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/sys/sys.html">eCAL Sys</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../applications/sys/sys.html"> eCAL Sys</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_overview.html"> eCAL Sys Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_cli.html"> eCAL Sys CLI</a></li>
 </ul>
@@ -490,13 +490,13 @@ build_win\win_make_build.bat
 </div>
 <p>You will find the .exe installer in the <code class="file docutils literal notranslate"><span class="pre">_build\complete\_deploy\</span></code> directory.</p>
 </li>
-<li><p>Optional: If you configured CMake to build the python extension by setting <cite>BUILD_PY_BINDING</cite> to <cite>ON</cite> you can create the eCAL python egg by calling</p>
-<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>build_win\win_make_python_egg.bat
+<li><p>Optional: If you configured CMake to build the python extension by setting <cite>BUILD_PY_BINDING</cite> to <cite>ON</cite> you can create the eCAL python wheel by calling</p>
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>build_win\win_make_python_wheel.bat
 </pre></div>
 </div>
-<p>Afterwards you will find the python eCAL egg in the <code class="file docutils literal notranslate"><span class="pre">_build\_deploy\</span></code> directory.
+<p>Afterwards you will find the python eCAL wheel in the <code class="file docutils literal notranslate"><span class="pre">_build\_deploy\</span></code> directory.
 Install the extension by</p>
-<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>python -m easy_install ecal-X.Y.Z-pyX.Y.egg
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>pip install ecal-...-win_amd64.whl
 </pre></div>
 </div>
 </li>
@@ -584,9 +584,9 @@ sudo dpkg -i _deploy/eCAL-*
 </pre></div>
 </div>
 </li>
-<li><p>Optional: Create and install the eCAL python egg (Only available if you enabled the <cite>BUILD_PY_BINDING</cite> CMake option in step 2):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake --build . --target create_python_egg --config Release
-sudo python3 -m easy_install _deploy/ecal-*
+<li><p>Optional: Create and install the eCAL python wheel (Only available if you enabled the <cite>BUILD_PY_BINDING</cite> CMake option in step 2):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake --build . --target create_python_wheel --config Release
+sudo pip3 install _deploy/ecal-*
 </pre></div>
 </div>
 </li>
@@ -631,7 +631,7 @@ sudo python3 -m easy_install _deploy/ecal-*
                 <div class="footer-additional">
                     <p class="text-center">
                         <a href="https://github.com/TYPO3-Documentation/sphinx_typo3_theme" rel="nofollow" target="_blank">
-                            TYPO3 Theme 4.2.1
+                            TYPO3 Theme 4.4.3
                         </a>
                     </p>
                 </div>
