@@ -95,6 +95,6 @@ eCAL is provided on an "as is" basis without warranties or conditions of any kin
    advanced/documentation
    advanced/performance
    advanced/transport_layers
-   _download_archive/download_archive
    license
+   _download_archive/download_archive
 

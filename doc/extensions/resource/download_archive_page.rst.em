@@ -4,7 +4,7 @@ eCAL @(ecal_version)
 
 - Release Date: @(gh_release.published_at.strftime("%Y-%m-%d"))
 
-- GitHub Release Page: `@(gh_release.html_url)`
+- GitHub Release Page: @(gh_release.html_url)
 
 @{
 changelog = gh_release.body
@@ -16,6 +16,7 @@ Changelog
 =========
 
 .. literalinclude:: @(changelog_file)
+   :language: txt
 
 @[end if]@
 Downloads
