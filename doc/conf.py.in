@@ -32,6 +32,23 @@ qresource_list = [
 ]
 generate_ecalicons.generate_ecalicons(qresource_list, "@CMAKE_CURRENT_BINARY_DIR@/_sources/_include_ecalicons.txt")
 
+# -- Generate download archive and tables for the homepage --------------------
+import generate_download_tables
+
+download_tables_main_page_dir = "@CMAKE_CURRENT_BINARY_DIR@/_download_main_page"
+download_archive_dir          = "@CMAKE_CURRENT_BINARY_DIR@/_download_archive"
+
+if not os.path.exists(download_tables_main_page_dir) and not os.path.exists(download_archive_dir):
+    # Only generate download tables, if the directories do not exist.
+    # Otherwise we may run out of API calls very quickly.
+    gh_api_key = os.getenv("ECAL_GH_API_KEY")
+    if gh_api_key:
+        os.makedirs(download_tables_main_page_dir)
+        os.makedirs(download_archive_dir)
+        generate_download_tables.generate_download_tables(gh_api_key, download_tables_main_page_dir, download_archive_dir)
+    else:  
+        sys.stderr.write("ERROR: Environment variable ECAL_GH_API_KEY not set. Skipping generating download tables.\n")
+
 # -- Project information -----------------------------------------------------
 
 project = u'eCAL Documentation'

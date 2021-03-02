@@ -22,6 +22,8 @@ This chapter will walk you through
 * The :ref:`applications <getting_started_applications>` that come with eCAL
 * Writing your first :ref:`Hello World <getting_started_hello_world>` program 
 
+.. include:: _download_main_page/__main_page_download_section.rst.txt
+
 Links
 =====
 

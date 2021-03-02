@@ -25,6 +25,13 @@ def group_gh_release_branches(gh_releases):
         if version_string.startswith("."):
             version_string = version_string[1:]
 
+        # Fix format, so it can be parsed by semantic_version:
+        dot_components = version_string.split(".")
+        if len(dot_components) == 4:
+            version_string = '.'.join(dot_components[:-1]) + "+" + dot_components[3]
+        elif len(dot_components) == 5:
+            version_string = '.'.join(dot_components[:-2]) + "-" + dot_components[3] + "+" + dot_components[4]
+
         try:
             version = semantic_version.Version(version_string)    
         except:
@@ -194,21 +201,15 @@ def get_downloads_list(gh_assets, ecal_version):
 
     ubuntu_download_links = sorted(ubuntu_download_links, key= lambda a: a["os_version"])
 
-
     return windows_download_links + ubuntu_download_links + macos_download_links + other_download_links
 
-if __name__ == "__main__":
-    gh = github.Github("")
+def generate_download_tables(gh_api_key, main_page_output_dir, download_archive_output_dir):
+    gh = github.Github(gh_api_key)
 
     gh_ecal_repo = gh.get_repo("continental/ecal")
     gh_releases  = gh_ecal_repo.get_releases()
 
     gh_release_branches_dict = group_gh_release_branches(gh_releases)
-           
-    # for rel_branch in gh_release_branches_dict:
-    #     print("========= eCAL " + str(rel_branch.major) + "." + str(rel_branch.minor) + " =========")
-    #     for rel in gh_release_branches_dict[rel_branch]:
-    #         print ("  " + str(rel))
 
     all_branches = sorted(gh_release_branches_dict.keys())
     
@@ -221,39 +222,44 @@ if __name__ == "__main__":
     latest_branch_latest_release_downloads   = get_downloads_list(gh_release_branches_dict[latest_branch][latest_branch_latest_release_version].get_assets(), latest_branch_latest_release_version)
     previous_branch_latest_release_downloads = get_downloads_list(gh_release_branches_dict[previous_branch][previous_branch_latest_release_version].get_assets(), previous_branch_latest_release_version)
 
-    print(str(latest_branch_latest_release_downloads))
-    print(str(previous_branch_latest_release_downloads))
+    latest_branch_latest_release_date   = gh_release_branches_dict[latest_branch][latest_branch_latest_release_version].published_at
+    previous_branch_latest_release_date = gh_release_branches_dict[previous_branch][previous_branch_latest_release_version].published_at
 
-    a = 1
-
-
-
-    #rate_limit = g.get_rate_limit()
-    #print("Rate Limit: " + str(rate_limit.core))
-
-    #ecal_repo = g.get_repo("continental/ecal")
-
-    #releases = ecal_repo.get_releases()
-    #for release in releases:
-    #    if release.prerelease:
-    #        continue
-    #    a = 1
-    #    print("")
-    #    print(release.title)
-    #    print("===========")
-    #    print("Link to Github: " + release.html_url)
-    #    print("Sourcecode: " + release.zipball_url)
+    # ===========================
+    # Main Page download tables
+    # ===========================
     
-    #    assets = release.get_assets()
-    #    for asset in assets:
-    #        print("- " + asset.browser_download_url + " (Downloads: " + str(asset.download_count) + ")")
+    root_dir = os.path.dirname(os.path.realpath(__file__))
 
-    #        a = 1
-     
-    input = "resource/__download_table.html.em"
-    output = "autogen/__download_table.html"
+    # Generate latest branch download table
+    data = {
+        "downloads" :    latest_branch_latest_release_downloads, 
+        "ecal_version" : latest_branch_latest_release_version
+    }
+    empy_helpers.expand_template(os.path.join(root_dir, "resource/__download_table.html.em"), data, pathlib.Path(os.path.join(main_page_output_dir, "__download_table_latest.html")))
+
+    # Generate previous branch download table
+    data = {
+        "downloads" :    previous_branch_latest_release_downloads, 
+        "ecal_version" : previous_branch_latest_release_version
+    }
+    empy_helpers.expand_template(os.path.join(root_dir, "resource/__download_table.html.em"), data, pathlib.Path(os.path.join(main_page_output_dir, "__download_table_previous.html")))
     
-    empy_helpers.expand_template(input, { "downloads" : latest_branch_latest_release_downloads}, pathlib.Path(output))
+    # Generate heading and text
+    data = {
+        "ecal_latest_version":        latest_branch_latest_release_version,
+        "ecal_latest_release_date":   latest_branch_latest_release_date,
+        "ecal_previous_version":      previous_branch_latest_release_version,
+        "ecal_previous_release_date": previous_branch_latest_release_date,
+    }
+    empy_helpers.expand_template(os.path.join(root_dir, "resource/__main_page_download_section.rst.em"), data, pathlib.Path(os.path.join(main_page_output_dir, "__main_page_download_section.rst.txt")))
 
-    pass
+if __name__=="__main__":
+    # This main function is meant for debugging purposes.
+    gh_api_key = os.getenv("ECAL_GH_API_KEY")
+    if gh_api_key:
+        generate_download_tables(gh_api_key, "_autogen/main_page", "_autogen/download_archive")
+    else:
+        sys.stderr.write("ERROR: Environment variable ECAL_GH_API_KEY not set. Without an API key, GitHub will not provide enough API calls to generate the download tables.\n")
+        exit(1)
     

@@ -123,3 +123,8 @@ This project has dependencies - list with dependency name and license follows.
 2.5.3 Font Awesome
   - URL: https://fontawesome.com
   - License: Font Awesome Free License - https://fontawesome.com/license/free
+  
+2.5.4 empy_helpers
+  - Copyright 2018 Open Source Robotics Foundation, Inc.
+  - URL: https://github.com/ros2/rosidl/blob/master/rosidl_adapter/rosidl_adapter/resource/__init__.py
+  - License: Apache License
