@@ -221,10 +221,13 @@ def generate_download_tables(gh_api_key, main_page_output_dir, download_archive_
     previous_branch_latest_release_version = sorted(gh_release_branches_dict[previous_branch].keys())[-1]
     
     latest_branch_latest_release_downloads   = get_downloads_list(gh_release_branches_dict[latest_branch][latest_branch_latest_release_version].get_assets(), latest_branch_latest_release_version)
+    latest_branch_latest_release_downloads   = filter(lambda x: x["os_group"] != "macos", latest_branch_latest_release_downloads)
     previous_branch_latest_release_downloads = get_downloads_list(gh_release_branches_dict[previous_branch][previous_branch_latest_release_version].get_assets(), previous_branch_latest_release_version)
+    previous_branch_latest_release_downloads = filter(lambda x: x["os_group"] != "macos", previous_branch_latest_release_downloads)
 
     latest_branch_latest_release_date   = gh_release_branches_dict[latest_branch][latest_branch_latest_release_version].published_at
     previous_branch_latest_release_date = gh_release_branches_dict[previous_branch][previous_branch_latest_release_version].published_at
+
 
     # ===========================
     # Main Page download tables

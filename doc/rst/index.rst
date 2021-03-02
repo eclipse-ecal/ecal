@@ -27,17 +27,6 @@ This chapter will walk you through
 Links
 =====
 
-If you just want to download eCAL for |fa-windows| Windows or |fa-ubuntu| Linux, click the following button:
-
-.. raw:: html
-
-   <p>
-      <a class="btn btn-sm btn-primary" href="https://github.com/continental/ecal/releases" target="_blank">
-         <span class="btn-icon"><span class="fas fa-download"></span></span>
-         <span class="btn-text">Download eCAL</span>
-      </a>
-   </p>
-
 To contribute, please visit our github repository:
 
 .. raw:: html
