@@ -11,7 +11,7 @@ eCAL @(ecal_latest_version.major).@(ecal_latest_version.minor) is the latest sta
 eCAL @(ecal_latest_version) was released on @(ecal_latest_release_date.strftime("%Y-%m-%d")).
 
 .. raw:: html
-   :file: __download_table_latest.html
+   :file: _download_table_latest.html
 
 Download eCAL @(ecal_previous_version)
 ---------------------
@@ -20,4 +20,4 @@ eCAL @(ecal_previous_version.major).@(ecal_previous_version.minor) will be suppo
 eCAL @(ecal_previous_version) was released on @(ecal_previous_release_date.strftime("%Y-%m-%d")).
 
 .. raw:: html
-   :file: __download_table_previous.html
+   :file: _download_table_previous.html

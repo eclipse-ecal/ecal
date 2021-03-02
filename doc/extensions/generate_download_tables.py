@@ -87,7 +87,7 @@ def get_asset_properties(asset_name, ecal_version):
 
         if ecal_version <= semantic_version.Version("5.7.2"):
             # Special case for old releases. They only had Ubuntu 20.04 releases that were just named "linux".
-            os_version = semantic_version.Version("20.04.0")
+            os_version = semantic_version.Version("20.4.0")
         else:
             # Match properly named releases
             for ubuntu_codename in ubuntu_codename_dict:
@@ -112,7 +112,8 @@ def get_asset_properties(asset_name, ecal_version):
 
         if ecal_version <= semantic_version.Version("5.7.2") and "linux" in asset_name:
             # Special case for old releases. They only had Ubuntu 20.04 releases that were just named "linux".
-            os_version = semantic_version.Version("20.04.0")
+            os_group   = "ubuntu"
+            os_version = semantic_version.Version("20.4.0")
         else:
             if "darwin" in asset_name or "macosx" in asset_name:
                 os_group = "macos"
@@ -211,10 +212,10 @@ def generate_download_tables(gh_api_key, main_page_output_dir, download_archive_
 
     gh_release_branches_dict = group_gh_release_branches(gh_releases)
 
-    all_branches = sorted(gh_release_branches_dict.keys())
+    sorted_branches = sorted(gh_release_branches_dict.keys())
     
-    latest_branch   = all_branches[-1]
-    previous_branch = all_branches[-2]
+    latest_branch   = sorted_branches[-1]
+    previous_branch = sorted_branches[-2]
 
     latest_branch_latest_release_version   = sorted(gh_release_branches_dict[latest_branch].keys())[-1]
     previous_branch_latest_release_version = sorted(gh_release_branches_dict[previous_branch].keys())[-1]
@@ -236,14 +237,14 @@ def generate_download_tables(gh_api_key, main_page_output_dir, download_archive_
         "downloads" :    latest_branch_latest_release_downloads, 
         "ecal_version" : latest_branch_latest_release_version
     }
-    empy_helpers.expand_template(os.path.join(root_dir, "resource/__download_table.html.em"), data, pathlib.Path(os.path.join(main_page_output_dir, "__download_table_latest.html")))
+    empy_helpers.expand_template(os.path.join(root_dir, "resource/download_table.html.em"), data, pathlib.Path(os.path.join(main_page_output_dir, "_download_table_latest.html")))
 
     # Generate previous branch download table
     data = {
         "downloads" :    previous_branch_latest_release_downloads, 
         "ecal_version" : previous_branch_latest_release_version
     }
-    empy_helpers.expand_template(os.path.join(root_dir, "resource/__download_table.html.em"), data, pathlib.Path(os.path.join(main_page_output_dir, "__download_table_previous.html")))
+    empy_helpers.expand_template(os.path.join(root_dir, "resource/download_table.html.em"), data, pathlib.Path(os.path.join(main_page_output_dir, "_download_table_previous.html")))
     
     # Generate heading and text
     data = {
@@ -252,7 +253,60 @@ def generate_download_tables(gh_api_key, main_page_output_dir, download_archive_
         "ecal_previous_version":      previous_branch_latest_release_version,
         "ecal_previous_release_date": previous_branch_latest_release_date,
     }
-    empy_helpers.expand_template(os.path.join(root_dir, "resource/__main_page_download_section.rst.em"), data, pathlib.Path(os.path.join(main_page_output_dir, "__main_page_download_section.rst.txt")))
+    empy_helpers.expand_template(os.path.join(root_dir, "resource/main_page_download_section.rst.em"), data, pathlib.Path(os.path.join(main_page_output_dir, "_main_page_download_section.rst.txt")))
+
+    # ===========================
+    # Download Archive
+    # ===========================
+
+    ecal_branches_download_archive_pages = {}
+
+    for ecal_branch in sorted_branches:
+        # Collect the pages we generate to link them in the main page
+        current_branch_download_archive_pages             = {}
+        ecal_branches_download_archive_pages[ecal_branch] = current_branch_download_archive_pages
+
+        sorted_releases = sorted(gh_release_branches_dict[ecal_branch].keys())
+        for ecal_version in sorted_releases:
+            gh_release                     = gh_release_branches_dict[ecal_branch][ecal_version]
+            download_list                  = get_downloads_list(gh_release.get_assets(), ecal_version)
+            ecal_version_string            = str(ecal_version).replace('.', '_').replace('-', '_').replace('+', '_')
+            download_table_html_file_name  = "download_archive_table_ecal_" + ecal_version_string + ".html"
+            download_archive_rst_file_name = "download_archive_ecal_" + ecal_version_string + ".rst"
+            changelog_file                 = "changelog_ecal_" + ecal_version_string + ".txt"
+
+            current_branch_download_archive_pages[ecal_version] = download_archive_rst_file_name
+
+            # Generate download table as html rst code
+            data = {
+                "downloads" :    download_list, 
+                "ecal_version" : ecal_version,
+            }
+            empy_helpers.expand_template(os.path.join(root_dir, "resource/download_table.html.em"), data, pathlib.Path(os.path.join(download_archive_output_dir, download_table_html_file_name)))
+
+            # Generate changelog file if necessary
+            changelog = gh_release.body
+            changelog = changelog.replace('\r\n', '\n')
+            if changelog  != "":
+                with open(os.path.join(download_archive_output_dir, changelog_file), "w") as text_file:
+                    text_file.write(changelog)
+            else:
+                changelog_file = ""
+
+            # Generate surrounding rst code
+            data = {
+                "ecal_version" :            ecal_version,
+                "download_table_html_file": download_table_html_file_name, 
+                "gh_release":               gh_release,
+                "changelog_file":           changelog_file,
+            }
+            empy_helpers.expand_template(os.path.join(root_dir, "resource/download_archive_page.rst.em"), data, pathlib.Path(os.path.join(download_archive_output_dir, download_archive_rst_file_name)))
+
+    # Main Download archive page
+    data = {
+        "download_pages" :  ecal_branches_download_archive_pages
+    }
+    empy_helpers.expand_template(os.path.join(root_dir, "resource/download_archive.rst.em"), data, pathlib.Path(os.path.join(download_archive_output_dir, "download_archive.rst")))
 
 if __name__=="__main__":
     # This main function is meant for debugging purposes.

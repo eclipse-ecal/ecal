@@ -22,7 +22,7 @@ This chapter will walk you through
 * The :ref:`applications <getting_started_applications>` that come with eCAL
 * Writing your first :ref:`Hello World <getting_started_hello_world>` program 
 
-.. include:: _download_main_page/__main_page_download_section.rst.txt
+.. include:: _download_main_page/_main_page_download_section.rst.txt
 
 Links
 =====
@@ -95,5 +95,6 @@ eCAL is provided on an "as is" basis without warranties or conditions of any kin
    advanced/documentation
    advanced/performance
    advanced/transport_layers
+   _download_archive/download_archive
    license
 
