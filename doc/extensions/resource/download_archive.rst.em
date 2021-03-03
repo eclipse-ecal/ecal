@@ -1,5 +1,7 @@
 .. include:: /include.txt
 
+.. _download_archive:
+
 =====================
 eCAL Download Archive
 =====================

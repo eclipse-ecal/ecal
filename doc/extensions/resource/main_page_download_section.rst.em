@@ -2,7 +2,7 @@ Download eCAL
 =============
 
 At the moment, we support eCAL @(ecal_latest_version.major).@(ecal_latest_version.minor) and eCAL @(ecal_previous_version.major).@(ecal_previous_version.minor) with fixes.
-If you are looking for older releases, please visit our `GitHub release page <https://github.com/continental/ecal/releases>`_.
+If you are looking for older releases, please visit the :ref:`Download Archive <download_archive>` or our `GitHub release page <https://github.com/continental/ecal/releases>`_.
 
 Download eCAL @(ecal_latest_version)
 ---------------------
