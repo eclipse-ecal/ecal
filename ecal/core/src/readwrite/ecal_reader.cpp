@@ -666,8 +666,7 @@ namespace eCAL
     // ensure that registration is not called within zero nanoseconds
     // normally it will be called from registration logic every second
     auto curr_time = std::chrono::steady_clock::now();
-    auto diff_time = curr_time - m_rec_time;
-    if(diff_time > std::chrono::nanoseconds::zero())
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - m_rec_time) > std::chrono::milliseconds(0))
     {
       // reset clock and time on first call
       if (m_clock_old == 0)
