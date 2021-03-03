@@ -434,7 +434,7 @@
   <customwidget>
    <class>PlayerTimeSlider</class>
    <extends>QSlider</extends>
-   <header>player_time_slider.h</header>
+   <header>widgets/player_controls_widget/player_time_slider.h</header>
   </customwidget>
  </customwidgets>
  <resources>
