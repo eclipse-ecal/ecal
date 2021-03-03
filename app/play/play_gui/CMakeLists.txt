@@ -69,6 +69,8 @@ set(source_files
 
     src/widgets/player_controls_widget/player_controls_widget.cpp
     src/widgets/player_controls_widget/player_controls_widget.h
+    src/widgets/player_controls_widget/player_time_slider.cpp
+    src/widgets/player_controls_widget/player_time_slider.h
 
     src/widgets/scenario_widget/edit_button_delegate.cpp
     src/widgets/scenario_widget/edit_button_delegate.h

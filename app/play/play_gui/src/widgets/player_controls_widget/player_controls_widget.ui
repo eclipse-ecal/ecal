@@ -38,7 +38,7 @@
      <item>
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="1">
-        <widget class="QSlider" name="position_slider">
+        <widget class="PlayerTimeSlider" name="position_slider">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -430,6 +430,11 @@
    <class>QListMenuToolButton</class>
    <extends>QToolButton</extends>
    <header>CustomQt/QListMenuToolButton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PlayerTimeSlider</class>
+   <extends>QSlider</extends>
+   <header>widgets/player_controls_widget/player_time_slider.h</header>
   </customwidget>
  </customwidgets>
  <resources>
