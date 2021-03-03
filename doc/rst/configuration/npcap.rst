@@ -24,41 +24,26 @@ How to use Npcap
 
 #. Download Npcap: https://nmap.org/npcap/
 
-   .. important::
-      At least NPCAP 1.10 does not work with eCAL.
-      At the moment, we recommend NPCAP 0.9996 which is known to work just fine.
-      You can download it here:
-      
-      https://nmap.org/npcap/dist/npcap-0.9996.exe
-      
-      We will remove this note, once the incompatibility is fixed on either side.
+#. Install Npcap with default options
 
-#. Install Npcap and make sure to check the **Legacy loopback suppport**:
-
-   .. image:: img/npcap_install.svg
+   .. image:: img/npcap_install.png
       :alt: Npcap install options
 
    .. note::
-      If you did not check the legacy loopback support, eCAL will not use Npcap!
-      It will just function as normal (and continue to trigger the Win10 performannce issue).
+      As of eCAL 5.7.6 and 5.8.3, eCAL does not need the legacy loopback adapter option any more.
 
-      Please reinstall Npcap with the required options.
+      If you want to use an older Version of eCAL, you have to:
+      
+      - Download an old version of NPCAP: `NPCAP 0.9996 <https://nmap.org/npcap/dist/npcap-0.9996.exe>`_
+      - Select the "Legacy loopback support" when installing NPCAP
 
-#. Optional:
-   If your corporation blocks your Windows to simultaneously connect to domain and non-domain networks, you must remove all elements / protocols except NPCAP and NPF from the Npcap Loopback Adapter
-
-   *(The NPF element is only available if you installed Npcap in WinPcap compatibility mode)*
-    
-   .. image:: img/npcap_loopback_adapter_settings.png
-      :alt: Npcap Loopback adapter settings
-
-4. Edit |ecalini-path-windows|:
+#. Edit |ecalini-path-windows|:
 
    .. code-block:: ini
       
       npcap_enabled = true
     
-5. Check eCAL Mon
+#. Check eCAL Mon
 
    .. image:: img/npcap_ecal_mon.svg
       :alt: Npcap in eCAL Monitor System Information
@@ -69,7 +54,8 @@ Troubleshooting
 If you enable Npcap but didn't install it, installed it with the wrong settings or your installation is broken, eCAL Mon will tell you that the Npcap Initialization has failed.
 eCAL will still work, but not use Npcap.
 
-The System Information will display an error. The detailed error can be seen in the eCAL Monitor under ::guilabel:`View / Npcap Status`:
+The System Information will display an error.
+The detailed error can be seen in the eCAL Monitor under :guilabel:`View / Npcap Status`:
 
 .. image:: img/npcap_error_systeminformation.png
    :alt: eCAL Monitor System Information (Npcap Error)
