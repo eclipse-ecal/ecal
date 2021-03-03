@@ -591,8 +591,7 @@ namespace eCAL
 
     // force to register every second to refresh data clock information
     auto curr_time = std::chrono::steady_clock::now();
-    auto diff_time = curr_time - m_snd_time;
-    if (diff_time > std::chrono::nanoseconds::zero())
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - m_snd_time) > std::chrono::milliseconds(0))
     {
       // reset clock and time on first call
       if (m_clock_old == 0)
