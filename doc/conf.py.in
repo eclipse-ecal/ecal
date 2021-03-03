@@ -35,8 +35,8 @@ generate_ecalicons.generate_ecalicons(qresource_list, "@CMAKE_CURRENT_BINARY_DIR
 # -- Generate download archive and tables for the homepage --------------------
 import generate_download_tables
 
-download_tables_main_page_dir = "@CMAKE_CURRENT_BINARY_DIR@/_download_main_page"
-download_archive_dir          = "@CMAKE_CURRENT_BINARY_DIR@/_download_archive"
+download_tables_main_page_dir = "@CMAKE_CURRENT_BINARY_DIR@/_sources/_download_main_page"
+download_archive_dir          = "@CMAKE_CURRENT_BINARY_DIR@/_sources/_download_archive"
 
 if not os.path.exists(download_tables_main_page_dir) and not os.path.exists(download_archive_dir):
     # Only generate download tables, if the directories do not exist.
