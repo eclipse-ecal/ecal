@@ -411,31 +411,19 @@ Windows 7 did not have that issue.</p>
 <div class="section" id="how-to-use-npcap">
 <h2>How to use Npcap<a class="headerlink" href="#how-to-use-npcap" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
-<li><p>Download Npcap: <a class="reference external" href="https://nmap.org/npcap/">https://nmap.org/npcap/</a></p>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>At least NPCAP 1.10 does not work with eCAL.
-At the moment, we recommend NPCAP 0.9996 which is known to work just fine.
-You can download it here:</p>
-<p><a class="reference external" href="https://nmap.org/npcap/dist/npcap-0.9996.exe">https://nmap.org/npcap/dist/npcap-0.9996.exe</a></p>
-<p>We will remove this note, once the incompatibility is fixed on either side.</p>
-</div>
-</li>
-<li><p>Install Npcap and make sure to check the <strong>Legacy loopback suppport</strong>:</p>
-<img alt="Npcap install options" src="../_images/npcap_install.svg" /><div class="admonition note">
+<li><p>Download Npcap: <a class="reference external" href="https://nmap.org/npcap/">https://nmap.org/npcap/</a></p></li>
+<li><p>Install Npcap with default options</p>
+<img alt="Npcap install options" src="../_images/npcap_install.png" />
+<div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If you did not check the legacy loopback support, eCAL will not use Npcap!
-It will just function as normal (and continue to trigger the Win10 performannce issue).</p>
-<p>Please reinstall Npcap with the required options.</p>
+<p>As of eCAL 5.7.6 and 5.8.3, eCAL does not need the legacy loopback adapter option any more.</p>
+<p>If you want to use an older Version of eCAL, you have to:</p>
+<ul class="simple">
+<li><p>Download an old version of NPCAP: <a class="reference external" href="https://nmap.org/npcap/dist/npcap-0.9996.exe">NPCAP 0.9996</a></p></li>
+<li><p>Select the “Legacy loopback support” when installing NPCAP</p></li>
+</ul>
 </div>
 </li>
-<li><p>Optional:
-If your corporation blocks your Windows to simultaneously connect to domain and non-domain networks, you must remove all elements / protocols except NPCAP and NPF from the Npcap Loopback Adapter</p>
-<p><em>(The NPF element is only available if you installed Npcap in WinPcap compatibility mode)</em></p>
-<img alt="Npcap Loopback adapter settings" src="../_images/npcap_loopback_adapter_settings.png" />
-</li>
-</ol>
-<ol class="arabic" start="4">
 <li><p>Edit <code class="file docutils literal notranslate"><span class="pre">C:\ProgramData\eCAL\ecal.ini</span></code>:</p>
 <div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">npcap_enabled</span> <span class="o">=</span> <span class="s">true</span>
 </pre></div>
@@ -449,7 +437,8 @@ If your corporation blocks your Windows to simultaneously connect to domain and 
 <h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
 <p>If you enable Npcap but didn’t install it, installed it with the wrong settings or your installation is broken, eCAL Mon will tell you that the Npcap Initialization has failed.
 eCAL will still work, but not use Npcap.</p>
-<p>The System Information will display an error. The detailed error can be seen in the eCAL Monitor under :<span class="guilabel">View / Npcap Status</span>:</p>
+<p>The System Information will display an error.
+The detailed error can be seen in the eCAL Monitor under <span class="guilabel">View / Npcap Status</span>:</p>
 <img alt="eCAL Monitor System Information (Npcap Error)" src="../_images/npcap_error_systeminformation.png" />
 <img alt="eCAL Monitor System Information (Npcap Error)" src="../_images/npcap_error_npcapstatus.png" />
 <p>Especially old versions of Npcap seems to break itself if you reinstall it, as the uninstaller does not remove the Loopback Adapter properly.
