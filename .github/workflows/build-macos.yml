@@ -15,7 +15,7 @@ jobs:
       uses: jurplel/install-qt-action@v2
 
     - name: Install Dependencies
-      run: brew install ninja doxygen graphviz protobuf hdf5
+      run: brew install ninja doxygen graphviz protobuf@3.6 hdf5
 
     - name: Install Cap’n Proto
       run: |
