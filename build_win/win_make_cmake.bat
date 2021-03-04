@@ -26,9 +26,9 @@ pip install wheel
 pip install -r requirements.txt
 
 cd /d "%WORKSPACE%\%BUILD_DIR_COMPLETE%"
-cmake ../.. %CMAKE_OPTIONS_COMPLETE%
+cmake ../.. -A x64 %CMAKE_OPTIONS_COMPLETE%
 
 cd /d "%WORKSPACE%\%BUILD_DIR_SDK%"
-cmake ../.. %CMAKE_OPTIONS_SDK%
+cmake ../.. -A x64 %CMAKE_OPTIONS_SDK%
 
 popd
