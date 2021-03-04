@@ -4,26 +4,6 @@ pushd "%~dp0\.."
 
 call build_win\win_set_vars.bat
 
-if ["%~1"]==[""] (
-  set VERSION=v142
-  ) else (
-  set VERSION=%1
-  )
-
-set VISUAL_STUDIO_GENERATOR=Visual Studio 14 2015
-set ARCH=""
-if %VERSION% == v140 goto build
-
-set VISUAL_STUDIO_GENERATOR=Visual Studio 15 2017
-set ARCH=""
-if %VERSION% == v141 goto build
-
-set VISUAL_STUDIO_GENERATOR=Visual Studio 16 2019
-set ARCH=x64
-if %VERSION% == v142 goto build
-
-:build
-
 echo Downloading NPCAP
 powershell -Command "& '%~dp0\download_npcap.ps1'"
 
@@ -45,24 +25,10 @@ echo Installing python requirements
 pip install wheel
 pip install -r requirements.txt
 
-if %ARCH% == "" goto build_no_arch
-
-:build_with_arch
-
 cd /d "%WORKSPACE%\%BUILD_DIR_COMPLETE%"
-cmake ../.. -G "%VISUAL_STUDIO_GENERATOR%" -A "%ARCH%" -T v140 %CMAKE_OPTIONS_COMPLETE%
+cmake ../.. %CMAKE_OPTIONS_COMPLETE%
 
 cd /d "%WORKSPACE%\%BUILD_DIR_SDK%"
-cmake ../.. -G "%VISUAL_STUDIO_GENERATOR%" -A "%ARCH%" -T v140 %CMAKE_OPTIONS_SDK%
+cmake ../.. %CMAKE_OPTIONS_SDK%
 
-goto end
-
-:build_no_arch
-cd /d "%WORKSPACE%\%BUILD_DIR_COMPLETE%"
-cmake ../.. -G "%VISUAL_STUDIO_GENERATOR% Win64" %CMAKE_OPTIONS_COMPLETE%
-
-cd /d "%WORKSPACE%\%BUILD_DIR_SDK%"
-cmake ../.. -G "%VISUAL_STUDIO_GENERATOR% Win64" %CMAKE_OPTIONS_SDK%
-
-:end
 popd
