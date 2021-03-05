@@ -471,14 +471,12 @@ cmake --build . --parallel --config Release
 <li><p><strong>To build a complete setup</strong>:</p>
 <ol class="arabic">
 <li><p>For creating a setup, you have to also build the documentation and build the debug SDK binaries.</p>
-<p>The batch files will compile eCAL with the MSVC 2015 Toolset to provide downwards compatibility.
-Thus, you will need to install:</p>
+<p>To build the eCAL QT based applications, you will need to install additionally:</p>
 <ul class="simple">
-<li><p>The MSVC 2015 Toolset (-&gt; v140) for your probably newer Visual Studio</p></li>
 <li><p>Qt5 as <code class="docutils literal notranslate"><span class="pre">msvc2015_64</span></code> (Or manually override it by setting <code class="docutils literal notranslate"><span class="pre">Qt5_DIR</span></code>)</p></li>
 </ul>
-<p>Execute the following batch files with the appropriate parameter to create the Visual Studio 2015 (v140) / 2017 (v141) / 2019 (v142) solution and build it.</p>
-<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>build_win\win_make_cmake.bat v140 ( / v141 / v142)
+<p>Execute the following batch files to create the Visual Studio 2019 solution and build it.</p>
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>build_win\win_make_cmake.bat
 build_win\win_make_build.bat
 </pre></div>
 </div>
