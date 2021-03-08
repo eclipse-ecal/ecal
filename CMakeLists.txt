@@ -410,7 +410,7 @@ if(UNIX)
   check_cxx_source_compiles("${ATOMIC_TEST_CODE}" ATOMIC_IS_BUILTIN)
   if (NOT ATOMIC_IS_BUILTIN)
       message(STATUS "Adding -latomic flag, as this plattform does not support 64bit atomic operations out of the box.")
-      add_definitions(-latomic)
+      set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -latomic")
   endif ()
 endif()
 
