@@ -30,7 +30,7 @@ How to use Npcap
       :alt: Npcap install options
 
    .. note::
-      As of eCAL 5.7.6 and 5.8.3, eCAL does not need the legacy loopback adapter option any more.
+      As of eCAL 5.7.8 and 5.8.3, eCAL does not need the legacy loopback adapter option any more.
 
       If you want to use an older Version of eCAL, you have to:
       
