@@ -401,6 +401,17 @@ if(UNIX)
   message(STATUS "GCC detected - Adding flags")
   set(CMAKE_CXX_STANDARD 14)
   add_definitions(-Wall -Wextra -std=c++14)
+
+  set(ATOMIC_TEST_CODE "
+      #include <atomic>
+      int main() { std::atomic<int64_t> i(0); i++; return 0; }
+  ")
+  include(CheckCXXSourceCompiles)
+  check_cxx_source_compiles("${ATOMIC_TEST_CODE}" ATOMIC_IS_BUILTIN)
+  if (NOT ATOMIC_IS_BUILTIN)
+      message(STATUS "Adding -latomic flag, as this plattform does not support 64bit atomic operations out of the box.")
+      set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -latomic")
+  endif ()
 endif()
 
 # --------------------------------------------------------
