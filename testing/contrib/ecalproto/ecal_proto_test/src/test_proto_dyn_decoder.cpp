@@ -65,7 +65,7 @@ protected:
   };
 };
 
-void add_favorite_numbers(pb::People::Person& person)
+void add_favorite_numbers(People::Person& person)
 {
   person.mutable_favorite_numbers()->Resize(5, 0);
   for (int num = 0; num < 5; num++)
@@ -78,12 +78,12 @@ void add_favorite_numbers(pb::People::Person& person)
 TEST(protodecoder, no_filter)
 {
   // generate a class instance of Person
-  pb::People::Person person;
+  People::Person person;
 
   // set person object content
   person.set_id(42);
   person.set_name("Max");
-  person.set_stype(pb::People::Person_SType_MALE);
+  person.set_stype(People::Person_SType_MALE);
   person.set_email("max@mail.net");
   person.mutable_dog()->set_name("Brandy");
   person.mutable_house()->set_rooms(4);

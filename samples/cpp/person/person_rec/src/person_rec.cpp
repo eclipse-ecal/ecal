@@ -24,7 +24,7 @@
 
 #include "person.pb.h"
 
-void OnPerson(const char* topic_name_, const pb::People::Person& person_, const long long time_, const long long clock_)
+void OnPerson(const char* topic_name_, const People::Person& person_, const long long time_, const long long clock_)
 {
   std::cout << "------------------------------------------" << std::endl;
   std::cout << " HEAD "                                     << std::endl;
@@ -54,7 +54,7 @@ int main(int argc, char **argv)
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
   // create a subscriber (topic name "person")
-  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person");
+  eCAL::protobuf::CSubscriber<People::Person> sub("person");
 
   // add receive callback function (_1 = topic_name, _2 = msg, _3 = time, _4 = clock, _5 = id)
   auto callback = std::bind(OnPerson, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);

@@ -52,7 +52,7 @@ void OnEvent(const char* topic_name_, const struct eCAL::SSubEventCallbackData* 
   std::cout << std::endl;
 }
 
-void OnPerson(const char* topic_name_, const pb::People::Person& person_, const long long time_, const long long clock_)
+void OnPerson(const char* topic_name_, const People::Person& person_, const long long time_, const long long clock_)
 {
   std::cout << "------------------------------------------" << std::endl;
   std::cout << " HEAD "                                     << std::endl;
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
   // create a subscriber (topic name "person")
-  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person");
+  eCAL::protobuf::CSubscriber<People::Person> sub("person");
 
   // set receive timeout in ms
   sub.SetTimeout(1000);

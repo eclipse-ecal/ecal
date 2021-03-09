@@ -25,7 +25,7 @@
 
 #include "person.pb.h"
 
-void OnPerson(const char* topic_name_, const pb::People::Person& person_, const long long time_, const long long clock_)
+void OnPerson(const char* topic_name_, const People::Person& person_, const long long time_, const long long clock_)
 {
   std::cout << "------------------------------------------" << std::endl;
   std::cout << " HEAD "                                     << std::endl;
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
   // create a publisher (topic name "person")
-  eCAL::protobuf::CPublisher<pb::People::Person> pub("person");
+  eCAL::protobuf::CPublisher<People::Person> pub("person");
 
   // switch all layer off
   pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
@@ -70,14 +70,14 @@ int main(int argc, char **argv)
   pub.SetLayerMode(eCAL::TLayer::tlayer_shm,    eCAL::TLayer::smode_auto);
 
   // create a subscriber (topic name "person")
-  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person");
+  eCAL::protobuf::CSubscriber<People::Person> sub("person");
 
   // add receive callback function (_1 = topic_name, _2 = msg, _3 = time, _4 = clock)
   auto callback = std::bind(OnPerson, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
   sub.AddReceiveCallback(callback);
 
   // generate a class instance of Person
-  pb::People::Person person;
+  People::Person person;
 
   // enter main loop
   auto cnt(0);
@@ -86,7 +86,7 @@ int main(int argc, char **argv)
     // set person object content
     person.set_id(++cnt);
     person.set_name("Max");
-    person.set_stype(pb::People::Person_SType_MALE);
+    person.set_stype(People::Person_SType_MALE);
     person.set_email("max@mail.net");
     person.mutable_dog()->set_name("Brandy");
     person.mutable_house()->set_rooms(4);

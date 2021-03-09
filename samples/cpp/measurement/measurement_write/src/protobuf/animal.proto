@@ -19,7 +19,7 @@
 
 syntax = "proto2";
 
-package pb.Animal;
+package Animal;
 
 message Dog
 {

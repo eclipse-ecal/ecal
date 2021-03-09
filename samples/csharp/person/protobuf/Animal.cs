@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Pb.Animal {
+namespace Animal {
 
   /// <summary>Holder for reflection information generated from animal.proto</summary>
   public static partial class AnimalReflection {
@@ -24,12 +24,12 @@ namespace Pb.Animal {
     static AnimalReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgxhbmltYWwucHJvdG8SCXBiLkFuaW1hbCIjCgNEb2cSDAoEbmFtZRgBIAEo",
-            "CRIOCgZjb2xvdXIYAiABKAliBnByb3RvMw=="));
+            "CgxhbmltYWwucHJvdG8SBkFuaW1hbCIjCgNEb2cSDAoEbmFtZRgBIAEoCRIO",
+            "CgZjb2xvdXIYAiABKAliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Animal.Dog), global::Pb.Animal.Dog.Parser, new[]{ "Name", "Colour" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Animal.Dog), global::Animal.Dog.Parser, new[]{ "Name", "Colour" }, null, null, null, null)
           }));
     }
     #endregion
@@ -44,7 +44,7 @@ namespace Pb.Animal {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Pb.Animal.AnimalReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Animal.AnimalReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

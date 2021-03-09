@@ -21,15 +21,15 @@
 
 Addressbook::Addressbook() {
   // create a subscriber (topic name "person")
-  subscriber_ = eCAL::protobuf::CSubscriber<pb::People::Person>("person");
+  subscriber_ = eCAL::protobuf::CSubscriber<People::Person>("person");
 
   // add receiver callback
-  auto lambda = [this](const char* /*topic_*/, const pb::People::Person& msg, long long /*time_*/, long long /*clock_*/, long long /*id_*/) { return this->callback(msg); };
+  auto lambda = [this](const char* /*topic_*/, const People::Person& msg, long long /*time_*/, long long /*clock_*/, long long /*id_*/) { return this->callback(msg); };
   if (!subscriber_.AddReceiveCallback(lambda)) {
     std::cout << "eCAL subscriber initialization failed\n";
   }
 
-  book_ = std::vector<pb::People::Person>();
+  book_ = std::vector<People::Person>();
 }
 
 void Addressbook::spin() {
@@ -40,7 +40,7 @@ void Addressbook::spin() {
   }
 }
 
-void Addressbook::callback(const pb::People::Person &person_)
+void Addressbook::callback(const People::Person &person_)
 {
   std::cout << "Received message\n";
   book_.push_back(person_);

@@ -34,11 +34,11 @@
 #define PUBLISHER_NUMBER 5
 const std::array<std::string, PUBLISHER_NUMBER> PersonNames{ "Max", "Marie", "Jana", "Christoph", "Sarah"};
 
-using PersonSendVector_t = std::vector<eCAL::protobuf::CPublisher<pb::People::Person>> ;
+using PersonSendVector_t = std::vector<eCAL::protobuf::CPublisher<People::Person>> ;
 
 void SendAll(PersonSendVector_t& vector)
 {
-  pb::People::Person person;
+  People::Person person;
   int person_index = 0;
   for (auto& pub : vector)
   {
@@ -55,7 +55,7 @@ void MultipleSendPerson(int argc, char **argv)
   eCAL::Initialize(argc, argv, "multiple_snd_vector");
 
   // create dummy subscriber
-  std::vector<eCAL::protobuf::CPublisher<pb::People::Person>> vector_of_publishers;
+  std::vector<eCAL::protobuf::CPublisher<People::Person>> vector_of_publishers;
   std::cout << "Creating publishers ..." << std::endl;
   for(int i = 0; i < PUBLISHER_NUMBER; i++)
   {
