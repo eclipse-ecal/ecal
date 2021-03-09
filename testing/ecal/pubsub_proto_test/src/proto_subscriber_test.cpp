@@ -50,15 +50,15 @@ public:
     eCAL::Finalize();
   }
 
-  void SendPerson(eCAL::protobuf::CPublisher<pb::People::Person>& pub)
+  void SendPerson(eCAL::protobuf::CPublisher<People::Person>& pub)
   {
-    pb::People::Person p;
+    People::Person p;
     p.set_id(1);
     p.set_name("Max");
     pub.Send(p);
   }
   
-  void OnPerson(const char*, const pb::People::Person&, long long, long long)
+  void OnPerson(const char*, const People::Person&, long long, long long)
   {
     received_callbacks++;
   }
@@ -69,12 +69,12 @@ public:
 TEST_F(ProtoSubscriberTest, SendReceive)
 {
   // Assert that the Subscriber can be move constructed.
-  eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");
+  eCAL::protobuf::CSubscriber<People::Person> person_rec("ProtoSubscriberTest");
   auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
   person_rec.AddReceiveCallback(person_callback);
   ASSERT_TRUE(person_rec.IsCreated());
 
-  eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoSubscriberTest");
+  eCAL::protobuf::CPublisher<People::Person> person_pub("ProtoSubscriberTest");
 
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
@@ -88,13 +88,13 @@ TEST_F(ProtoSubscriberTest, SendReceive)
 
 TEST_F(ProtoSubscriberTest, MoveAssignment)
 {
-  eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");
+  eCAL::protobuf::CSubscriber<People::Person> person_rec("ProtoSubscriberTest");
   auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
   person_rec.AddReceiveCallback(person_callback);
 
   ASSERT_TRUE(person_rec.IsCreated());
 
-  eCAL::protobuf::CSubscriber<pb::People::Person>person_moved;
+  eCAL::protobuf::CSubscriber<People::Person>person_moved;
 
   ASSERT_FALSE(person_moved.IsCreated());
 
@@ -107,7 +107,7 @@ TEST_F(ProtoSubscriberTest, MoveAssignment)
   ASSERT_EQ("ProtoSubscriberTest", person_moved.GetTopicName());
 
   // Assert that the move constructed object can receive something
-  eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoSubscriberTest");
+  eCAL::protobuf::CPublisher<People::Person> person_pub("ProtoSubscriberTest");
 
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
@@ -120,20 +120,20 @@ TEST_F(ProtoSubscriberTest, MoveAssignment)
 TEST_F(ProtoSubscriberTest, MoveConstruction)
 {
   // Assert that the Subscriber can be move constructed.
-  eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");
+  eCAL::protobuf::CSubscriber<People::Person> person_rec("ProtoSubscriberTest");
   auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
   person_rec.AddReceiveCallback(person_callback);
 
   ASSERT_TRUE(person_rec.IsCreated());
 
-  eCAL::protobuf::CSubscriber<pb::People::Person>person_moved{ std::move(person_rec) };
+  eCAL::protobuf::CSubscriber<People::Person>person_moved{ std::move(person_rec) };
 
   ASSERT_TRUE(person_moved.IsCreated());
   ASSERT_FALSE(person_rec.IsCreated());
   ASSERT_EQ("ProtoSubscriberTest", person_moved.GetTopicName());
 
   // Assert that the move constructed object can receive something
-  eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoSubscriberTest");
+  eCAL::protobuf::CPublisher<People::Person> person_pub("ProtoSubscriberTest");
 
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 

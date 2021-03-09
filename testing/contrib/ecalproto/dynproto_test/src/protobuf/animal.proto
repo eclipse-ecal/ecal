@@ -19,7 +19,7 @@
 
 syntax = "proto3";
 
-package pb.Animal;
+package Animal;
 
 message Dog
 {

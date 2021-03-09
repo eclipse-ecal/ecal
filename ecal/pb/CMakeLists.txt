@@ -47,7 +47,7 @@ protobuf_target_cpp(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src INSTALL_FOLD
 
 target_compile_options(${PROJECT_NAME}
   PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/wd4505>
+    $<$<CXX_COMPILER_ID:MSVC>:/wd4505 /wd4592 /wd4189>
     $<$<CXX_COMPILER_ID:GNU>:-Wno-unused-parameter>)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)

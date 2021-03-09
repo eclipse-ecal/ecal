@@ -33,7 +33,7 @@ int main(int argc, char **argv)
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
   // create a publisher (topic name "person")
-  eCAL::protobuf::CPublisher<pb::People::Person> pub("person");
+  eCAL::protobuf::CPublisher<People::Person> pub("person");
 
   // switch all layer off
   pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
@@ -42,7 +42,7 @@ int main(int argc, char **argv)
   pub.SetLayerMode(eCAL::TLayer::tlayer_udp_mc, eCAL::TLayer::smode_on);
 
   // generate a class instance of Person
-  pb::People::Person person;
+  People::Person person;
 
   // enter main loop
   auto cnt(0);
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
     // set person object content
     person.set_id(++cnt);
     person.set_name("Max");
-    person.set_stype(pb::People::Person_SType_MALE);
+    person.set_stype(People::Person_SType_MALE);
     person.set_email("max@mail.net");
     person.mutable_dog()->set_name("Brandy");
     person.mutable_house()->set_rooms(4);
