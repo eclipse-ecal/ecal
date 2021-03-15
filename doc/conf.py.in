@@ -38,7 +38,11 @@ import generate_download_tables
 download_tables_main_page_dir = "@CMAKE_CURRENT_BINARY_DIR@/_sources/_download_main_page"
 download_archive_dir          = "@CMAKE_CURRENT_BINARY_DIR@/_sources/_download_archive"
 
-if not os.path.exists(download_tables_main_page_dir) and not os.path.exists(download_archive_dir):
+# These variables are otherwise hard-coded in generate_download_tables.py
+main_page_generated_rst_file        = "_main_page_download_section.rst.txt"
+download_archive_generated_rst_file = "download_archive.rst"
+
+if not os.path.exists(download_tables_main_page_dir) or not os.path.exists(download_archive_dir):
     # Only generate download tables, if the directories do not exist.
     # Otherwise we may run out of API calls very quickly.
     gh_api_key = os.getenv("ECAL_GH_API_KEY")
@@ -47,7 +51,11 @@ if not os.path.exists(download_tables_main_page_dir) and not os.path.exists(down
         os.makedirs(download_archive_dir)
         generate_download_tables.generate_download_tables(gh_api_key, download_tables_main_page_dir, download_archive_dir)
     else:  
-        sys.stderr.write("ERROR: Environment variable ECAL_GH_API_KEY not set. Skipping generating download tables.\n")
+        print("ERROR: Environment variable ECAL_GH_API_KEY not set. Skipping generating download tables.")
+        os.makedirs(download_tables_main_page_dir)
+        os.makedirs(download_archive_dir)
+        open(download_tables_main_page_dir + "/" + main_page_generated_rst_file , "w")
+        open(download_archive_dir          + "/" + download_archive_generated_rst_file, "w")
 
 # -- Project information -----------------------------------------------------
 
