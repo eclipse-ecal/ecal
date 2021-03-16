@@ -16,7 +16,9 @@
 #
 # ========================= eCAL LICENSE =================================
 
-set(PROJECT_NAME rec_server_service_gui)
+cmake_minimum_required(VERSION 3.10)
+
+project(rec_server_service_gui)
 
 find_package(eCAL REQUIRED)
 find_package(Qt5 COMPONENTS

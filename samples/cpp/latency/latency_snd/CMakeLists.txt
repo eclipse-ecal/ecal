@@ -16,6 +16,8 @@
 #
 # ========================= eCAL LICENSE =================================
 
+cmake_minimum_required(VERSION 3.10)
+
 project(latency_snd)
 
 find_package(eCAL REQUIRED)
