@@ -16,6 +16,8 @@
 #
 # ========================= eCAL LICENSE =================================
 
+cmake_minimum_required(VERSION 3.0)
+
 project(addressbook_rec_cb)
 
 find_package(CapnProto REQUIRED)

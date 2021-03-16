@@ -16,12 +16,14 @@
 #
 # ========================= eCAL LICENSE =================================
 
+cmake_minimum_required(VERSION 3.0)
+
 project(ecalsys_client)
 
 find_package(eCAL REQUIRED)
 
 set(ecalsys_client_src
-  ecalsys_client.cpp
+  src/ecalsys_client.cpp
 )
 
 ecal_add_sample(${PROJECT_NAME} ${ecalsys_client_src})
