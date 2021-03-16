@@ -14,11 +14,7 @@ eCAL automatically chooses the best available data transport mechanism for each 
 
 Visit the eCAL Documentation at 🌐 http://ecal.io for more information!
 
-<p style="text-align: center;">
-
 ![](doc/rst/getting_started/img/ecal_concept_notebooks.svg)
-
-</p>
 
 ## Facts about eCAL
 
