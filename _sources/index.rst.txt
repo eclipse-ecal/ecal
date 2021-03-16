@@ -22,19 +22,10 @@ This chapter will walk you through
 * The :ref:`applications <getting_started_applications>` that come with eCAL
 * Writing your first :ref:`Hello World <getting_started_hello_world>` program 
 
+.. include:: _download_main_page/_main_page_download_section.rst.txt
+
 Links
 =====
-
-If you just want to download eCAL for |fa-windows| Windows or |fa-ubuntu| Linux, click the following button:
-
-.. raw:: html
-
-   <p>
-      <a class="btn btn-sm btn-primary" href="https://github.com/continental/ecal/releases" target="_blank">
-         <span class="btn-icon"><span class="fas fa-download"></span></span>
-         <span class="btn-text">Download eCAL</span>
-      </a>
-   </p>
 
 To contribute, please visit our github repository:
 
@@ -94,4 +85,5 @@ eCAL is provided on an "as is" basis without warranties or conditions of any kin
    advanced/performance
    advanced/transport_layers
    license
+   _download_archive/download_archive
 
