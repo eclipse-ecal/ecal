@@ -16,6 +16,8 @@
 #
 # ========================= eCAL LICENSE =================================
 
+cmake_minimum_required(VERSION 3.10)
+
 project(pubsub_throughput)
 
 find_package(eCAL REQUIRED)

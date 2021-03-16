@@ -16,6 +16,8 @@
 #
 # ========================= eCAL LICENSE =================================
 
+cmake_minimum_required(VERSION 3.10)
+
 project(addressbook_rec_dynamic)
 
 find_package(CapnProto REQUIRED)
