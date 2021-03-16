@@ -16,7 +16,14 @@
 #
 # ========================= eCAL LICENSE =================================
 
+cmake_minimum_required(VERSION 3.0)
+
 project(multiple_rec_cb)
+
+if(MSVC)
+  # CMake >= 3.15 will erroneously define PROTOBUF_USE_DLLS otherwise
+  set (Protobuf_USE_STATIC_LIBS TRUE) 
+endif()
 
 find_package(eCAL REQUIRED)
 find_package(Protobuf REQUIRED)
