@@ -101,11 +101,3 @@ jobs:
       with:
         name: ubuntu-python-egg
         path: ${{ runner.workspace }}/_build/_deploy/*.egg
-
-    - name: Deploy Documentation
-      if: github.ref == 'refs/heads/master'
-      uses: peaceiris/actions-gh-pages@v3.6.4
-      with:
-        publish_branch: gh-pages
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ${{ runner.workspace }}/_build/doc/html
