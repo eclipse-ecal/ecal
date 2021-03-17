@@ -18,12 +18,9 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-project(math_client)
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
-if(MSVC)
-  # CMake >= 3.15 will erroneously define PROTOBUF_USE_DLLS otherwise
-  set (Protobuf_USE_STATIC_LIBS TRUE) 
-endif()
+project(math_client)
 
 find_package(eCAL REQUIRED)
 find_package(Protobuf REQUIRED)
