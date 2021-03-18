@@ -136,7 +136,7 @@ def get_asset_properties(asset_name, ecal_version):
         if ext == ".whl":
             components = asset_name[:-4].split('-')
             # The python version is either index 2 or 3, depending on whether the optional build tag is used.
-            for index in range(2,3):
+            for index in range(2,4):
                 if re.match(r"[a-zA-Z]{2}[0-9]+", components[index]):
                     python_version.major = int(components[index][2])
                     if len(components[index]) > 3:

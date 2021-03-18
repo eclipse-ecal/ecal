@@ -77,7 +77,7 @@ installer_extension = os.path.splitext(download_dict["ecal_installer_link"])[1]
 @{
 python_binding_extension = os.path.splitext(python_download_link)[1]
 }@
-<li><p><a class="reference external" href="@(python_download_link)"><i class="fab fa-python"></i> Python @(python_version) integration for eCAL @(str(ecal_version)) on @(os_name) (@(python_binding_extension))</a></p></li>
+<li><p><a class="reference external" href="@(python_download_link)"><i class="fab fa-python"></i> Python @(python_version.major).@(python_version.minor) integration for eCAL @(str(ecal_version)) on @(os_name) (@(python_binding_extension))</a></p></li>
 @[        end for]@
 </ul>
 @[    end if]@
