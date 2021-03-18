@@ -16,9 +16,21 @@
 #
 # ========================= eCAL LICENSE =================================
 
+if (WIN32)
+    add_custom_target(copy_ecal_core_dll ALL
+        COMMAND cmake -E copy_if_different "$<TARGET_FILE:eCAL::core>" "${PYTHON_BINARY_MODULE_DIR}"
+        COMMENT "Copy eCAL Core DLL to python directory"
+        DEPENDS eCAL::core
+    )
+    set_property(TARGET copy_ecal_core_dll PROPERTY FOLDER lang/python/core)
+endif()
+
+# ==========================================
+
 project(_ecal_core_py)
 
 find_package(Python COMPONENTS Development Interpreter)
+find_package(Protobuf REQUIRED)
 
 set(ecal_lang_py_src
     src/ecal_wrap.cxx
@@ -26,11 +38,16 @@ set(ecal_lang_py_src
 
 ecal_add_python_module(${PROJECT_NAME} SOURCES ${ecal_lang_py_src} PYTHON_CODE ${CMAKE_CURRENT_SOURCE_DIR}/ecal)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Python::Python)
-target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core)
-target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::pb)
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+        Python::Python
+        eCAL::core
+        eCAL::pb
+)
 
-find_package(Protobuf REQUIRED)
+if (WIN32)
+    add_dependencies(${PROJECT_NAME} copy_ecal_core_dll)
+endif()
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lang/python/core)
 
