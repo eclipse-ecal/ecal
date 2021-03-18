@@ -52,6 +52,8 @@ if(Python_Interpreter_FOUND)
       WORKING_DIRECTORY ${PYTHON_BINARY_DIR}
       COMMENT "Creating python wheel"
   )
+
+  set_property(TARGET ${create_python_wheel} PROPERTY FOLDER lang/python)
 else()
   message(FATAL_ERROR "Could not find python interpreter! This is needed to install the eCAL python binding!")
 endif()
