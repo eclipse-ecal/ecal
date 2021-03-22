@@ -75,7 +75,7 @@ int main(int argc, char** argv)
 
 eCAL comes with a set of read-to-use tools that will help you with developing, testing and debugging your software. **Command line interface** versions and easy to use **GUI** applications are available.
 
-- The **eCAL Monitor** to visualize the data flow and inspect messages sent between publishers and subsribers 
+- The **eCAL Monitor** to visualize the data flow and inspect messages sent between publishers and subscribers 
 
 - The **eCAL Recorder** to record the data sent between your eCAL nodes
 
