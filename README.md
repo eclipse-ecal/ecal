@@ -12,7 +12,7 @@ eCAL automatically chooses the best available data transport mechanism for each 
 - **Shared memory** for local communication _(incredible fast!)_
 - **UDP** for network communication
 
-Visit the eCAL Documentation at 🌐 http://ecal.io for more information!
+Visit the eCAL Documentation at 🌐 http://ecal.io for more information or write an email to support@ecal.io to ask for additional support.
 
 ![](doc/rst/getting_started/img/ecal_concept_notebooks.svg)
 
@@ -23,7 +23,7 @@ Visit the eCAL Documentation at 🌐 http://ecal.io for more information!
 * eCAL is brokerless
 * eCAL provides a C++ and C interface for easy integration into other languages (like python, csharp or [rust](https://github.com/kopernikusai/ecal-rs))
 * eCAL has powerful tools for [recording](https://continental.github.io/ecal/getting_started/recorder.html), [replay](https://continental.github.io/ecal/getting_started/player.html) and [monitoring](https://continental.github.io/ecal/getting_started/monitor.html) all your data flows - decentralized
-* eCAL is simple and zero-conf. No complex configuration for communication details and QOS settings are needed.
+* eCAL is simple and zero-conf. No complex configuration for communication details and QOS settings are needed
 * eCAL is message protocol agnostic. You choose the message protocol that fits to your needs like [Google Protobuf](https://developers.google.com/protocol-buffers), [CapnProto](https://capnproto.org/), [Flatbuffers](https://google.github.io/flatbuffers/)...
 * eCAL uses the standardized recording format [HDF5](https://www.hdfgroup.org/solutions/hdf5/)
 * eCAL integrates gently into your ROS2 environment with the brand new [eCAL RMW](https://github.com/continental/rmw_ecal)  
@@ -75,7 +75,7 @@ int main(int argc, char** argv)
 
 eCAL comes with a set of read-to-use tools that will help you with developing, testing and debugging your software. **Command line interface** versions and easy to use **GUI** applications are available.
 
-- The **eCAL Monitor** to visualize the data flow and inspect messages sent between publishers and subsribers 
+- The **eCAL Monitor** to visualize the data flow and inspect messages sent between publishers and subscribers 
 
 - The **eCAL Recorder** to record the data sent between your eCAL nodes
 
@@ -85,14 +85,9 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 
 ![eCAL Mon](gfx/app/monitor_imagevisu.png)
 
-## Other projects
+## eCAL related projects
 
-GitHub project using / used by eCAL:
-
-* eCAL & ROS2:
-  * [ROS2 eCAL Middleware Layer](https://github.com/continental/rmw_ecal)
-  * [ROS2 to eCAL Gateway](https://github.com/schilasky/ros2ecal)
-  * [eCAL to ROS2 Gateway](https://github.com/schilasky/ecal2ros)
+* [ROS2 eCAL Middleware Layer](https://github.com/continental/rmw_ecal)
 * [Iceoryx](https://github.com/eclipse/iceoryx)
 * [Rust language binding](https://github.com/kopernikusai/ecal-rs)
 * [GO language binding](https://github.com/Blutkoete/golang-ecal)
