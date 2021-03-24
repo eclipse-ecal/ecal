@@ -3,7 +3,7 @@
 .. _getting_started_setup:
 
 ============================
-Setup
+Installation
 ============================
 
 Before using eCAL, you must install it on your PC.
