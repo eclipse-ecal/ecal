@@ -37,7 +37,7 @@ import generate_download_tables
 
 download_tables_main_page_dir = "@CMAKE_CURRENT_BINARY_DIR@/_sources/_download_main_page"
 download_archive_dir          = "@CMAKE_CURRENT_BINARY_DIR@/_sources/_download_archive"
-ppa_tabs_file                 = "@CMAKE_CURRENT_BINARY_DIR@/getting_started/_ppa_tabs.rst.txt"
+ppa_tabs_file                 = "@CMAKE_CURRENT_BINARY_DIR@/_sources/getting_started/_ppa_tabs.rst.txt"
 
 if not os.path.exists(download_tables_main_page_dir) or not os.path.exists(download_archive_dir):
     # Only generate download tables, if the directories do not exist.
