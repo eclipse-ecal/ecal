@@ -26,7 +26,7 @@ Visit the eCAL Documentation at 🌐 http://ecal.io for more information or writ
 * eCAL is simple and zero-conf. No complex configuration for communication details and QOS settings are needed
 * eCAL is message protocol agnostic. You choose the message protocol that fits to your needs like [Google Protobuf](https://developers.google.com/protocol-buffers), [CapnProto](https://capnproto.org/), [Flatbuffers](https://google.github.io/flatbuffers/)...
 * eCAL uses the standardized recording format [HDF5](https://www.hdfgroup.org/solutions/hdf5/)
-* eCAL integrates gently into your ROS2 environment with the brand new [eCAL RMW](https://github.com/continental/rmw_ecal)  
+* eCAL integrates gently into your ROS2 environment with the [eCAL RMW](https://github.com/continental/rmw_ecal)  
 * eCAL supports Intel and arm platforms
 
 * eCAL runs on a wide variety of operating systems:
@@ -85,12 +85,12 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 
 ![eCAL Mon](gfx/app/monitor_imagevisu.png)
 
-## eCAL related projects
+## Related projects
 
+* [GO language binding](https://github.com/Blutkoete/golang-ecal)
+* [Rust language binding](https://github.com/kopernikusai/ecal-rs)
 * [ROS2 eCAL Middleware Layer](https://github.com/continental/rmw_ecal)
 * [Iceoryx](https://github.com/eclipse/iceoryx)
-* [Rust language binding](https://github.com/kopernikusai/ecal-rs)
-* [GO language binding](https://github.com/Blutkoete/golang-ecal)
 * [Dockerfiles for eCAL](https://github.com/Blutkoete/docker-ecal)
 
 ## License
