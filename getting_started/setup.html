@@ -14,6 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
 <!-- linktags -->
     <link rel="index" title="Index" href="../genindex.html" />
@@ -459,6 +460,37 @@ The PPA also supports more Ubuntu Versions and CPU Architectures (x86, x64, arm6
 <span id="getting-started-setup-ubuntu-ppa"></span><h3><span class="section-number">2.2.1. </span><i class="fab fa-ubuntu"></i> Automatically install eCAL from a PPA<a class="headerlink" href="#fa-ubuntu-automatically-install-ecal-from-a-ppa" title="Permalink to this headline">¶</a></h3>
 <p>Installing eCAL from a PPA will cause apt-get to automatically update eCAL for you.
 You can choose from different PPAs, depending on your desired upgrade path.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Rolling Release</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">eCAL 5.8</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">eCAL 5.7</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>This is the rolling release PPA.
+It will always upgrade your installation and you will always receive the latest-and-greatest eCAL version.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo add-apt-repository ppa:ecal/ecal-latest
+sudo apt-get update
+sudo apt-get install ecal
+</pre></div>
+</div>
+<p>Also check out this PPA on <a class="reference external" href="https://launchpad.net/~ecal/+archive/ubuntu/ecal-latest">Launchpad</a>!</p>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>This PPA will always stay on eCAL 5.8.
+You will receive patches as long as eCAL 5.8 is supported.
+If you want to upgrade to a new eCAL Version, you will have to manually add the new PPA.</p>
+<p>At the moment, eCAL 5.8 is the latest supported version.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo add-apt-repository ppa:ecal/ecal-5.8
+sudo apt-get update
+sudo apt-get install ecal
+</pre></div>
+</div>
+<p>Also check out this PPA on <a class="reference external" href="https://launchpad.net/~ecal/+archive/ubuntu/ecal-5.8">Launchpad</a>!</p>
+</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><p>This PPA will always stay on eCAL 5.7.
+You will receive patches as long as eCAL 5.7 is supported.
+If you want to upgrade to a new eCAL Version, you will have to manually add the new PPA.</p>
+<p>At the moment, eCAL 5.7 is the supported legacy-version.
+Support will be dropped when the next eCAL Version is released.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo add-apt-repository ppa:ecal/ecal-5.7
+sudo apt-get update
+sudo apt-get install ecal
+</pre></div>
+</div>
+<p>Also check out this PPA on <a class="reference external" href="https://launchpad.net/~ecal/+archive/ubuntu/ecal-5.7">Launchpad</a>!</p>
+</div></div>
 </div>
 <div class="section" id="fa-ubuntu-manually-install-ecal-from-a-deb-file">
 <h3><span class="section-number">2.2.2. </span><i class="fab fa-ubuntu"></i> Manually install eCAL from a .deb file<a class="headerlink" href="#fa-ubuntu-manually-install-ecal-from-a-deb-file" title="Permalink to this headline">¶</a></h3>
@@ -561,6 +593,7 @@ sudo apt install libc6 libcurl4 libgcc-s1 libhdf5-103 libprotobuf17 libqt5core5a
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script src="../_static/tabs.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">
