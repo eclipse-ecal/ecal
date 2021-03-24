@@ -1,0 +1,48 @@
+.. tabs::
+
+   .. tab:: Rolling Release
+
+      This is the rolling release PPA.
+      It will always upgrade your installation and you will always receive the latest-and-greatest eCAL version.
+      
+      .. code-block:: bash
+      
+         sudo add-apt-repository ppa:ecal/ecal-latest
+         sudo apt-get update
+         sudo apt-get install ecal
+
+      Also check out this PPA on `Launchpad <https://launchpad.net/~ecal/+archive/ubuntu/ecal-latest>`_!
+
+   .. tab:: eCAL 5.8
+
+      This PPA will always stay on eCAL 5.8.
+      You will receive patches as long as eCAL 5.8 is supported.
+      If you want to upgrade to a new eCAL Version, you will have to manually add the new PPA.
+      
+      At the moment, eCAL 5.8 is the latest supported version.
+
+      .. code-block:: bash
+      
+         sudo add-apt-repository ppa:ecal/ecal-5.8
+         sudo apt-get update
+         sudo apt-get install ecal
+
+      Also check out this PPA on `Launchpad <https://launchpad.net/~ecal/+archive/ubuntu/ecal-5.8>`_!
+
+   .. tab:: eCAL 5.7
+
+      This PPA will always stay on eCAL 5.7.
+      You will receive patches as long as eCAL 5.7 is supported.
+      If you want to upgrade to a new eCAL Version, you will have to manually add the new PPA.
+
+      At the moment, eCAL 5.7 is the supported legacy-version.
+      Support will be dropped when the next eCAL Version is released.
+
+      .. code-block:: bash
+      
+         sudo add-apt-repository ppa:ecal/ecal-5.7
+         sudo apt-get update
+         sudo apt-get install ecal
+
+      Also check out this PPA on `Launchpad <https://launchpad.net/~ecal/+archive/ubuntu/ecal-5.7>`_!
+
