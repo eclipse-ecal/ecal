@@ -37,6 +37,7 @@ import generate_download_tables
 
 download_tables_main_page_dir = "_download_main_page"
 download_archive_dir          = "_download_archive"
+ppa_tabs_file                 = "getting_started/_ppa_tabs.rst.txt"
 
 if not os.path.exists(download_tables_main_page_dir) or not os.path.exists(download_archive_dir):
     # Only generate download tables, if the directories do not exist.
@@ -45,7 +46,7 @@ if not os.path.exists(download_tables_main_page_dir) or not os.path.exists(downl
     if gh_api_key:
         os.makedirs(download_tables_main_page_dir)
         os.makedirs(download_archive_dir)
-        generate_download_tables.generate_download_tables(gh_api_key, download_tables_main_page_dir, download_archive_dir)
+        generate_download_tables.generate_download_tables(gh_api_key, download_tables_main_page_dir, download_archive_dir, ppa_tabs_file)
     else:  
         print("WARNING: Environment variable ECAL_GH_API_KEY not set. Skipping generating download tables.")
 
@@ -72,6 +73,7 @@ release = u''
 # ones.
 extensions = [
     'sphinx_typo3_theme',
+    'sphinx_tabs.tabs',
 ]
 
 # Add any paths that contain templates here, relative to this directory.

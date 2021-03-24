@@ -154,7 +154,6 @@ def get_asset_properties(asset_name, ecal_version):
         sys.stderr.write("Warning: Cannot classify file: \"" + asset_name + "\" (from eCAL " + str(ecal_version) + ")\n")
 
     return (os_group, os_version, is_installer, is_python, python_version)
-    
 
 def get_downloads_list(gh_assets, ecal_version):
     
@@ -204,7 +203,18 @@ def get_downloads_list(gh_assets, ecal_version):
 
     return windows_download_links + ubuntu_download_links + macos_download_links + other_download_links
 
-def generate_download_tables(gh_api_key, main_page_output_dir, download_archive_output_dir):
+def get_ppa_enabled_releases(all_releases):
+    ppa_enabled_releases = []
+
+    for ecal_release in all_releases:
+        if ecal_release >= semantic_version.Version("5.7.0"):
+            ppa_enabled_releases.append(ecal_release)
+
+    ppa_enabled_releases = sorted(ppa_enabled_releases, reverse = True)
+
+    return ppa_enabled_releases
+
+def generate_download_tables(gh_api_key, main_page_output_dir, download_archive_output_dir, ppa_tabs_output_file):
     gh = github.Github(gh_api_key)
 
     gh_ecal_repo = gh.get_repo("continental/ecal")
@@ -311,11 +321,25 @@ def generate_download_tables(gh_api_key, main_page_output_dir, download_archive_
     }
     empy_helpers.expand_template(os.path.join(root_dir, "resource/download_archive.rst.em"), data, pathlib.Path(os.path.join(download_archive_output_dir, "download_archive.rst")))
 
+    # ===========================
+    # PPA tabs
+    # ===========================
+
+    ppa_enabled_releases = get_ppa_enabled_releases(sorted_branches)
+    
+    # Only show the last 3 Releases
+    ppa_enabled_releases = ppa_enabled_releases[:3]
+
+    data = {
+        "ppa_list": ppa_enabled_releases
+    }
+    empy_helpers.expand_template(os.path.join(root_dir, "resource/ppa_tabs.rst.em"), data, pathlib.Path(ppa_tabs_output_file))
+
 if __name__=="__main__":
     # This main function is meant for debugging purposes.
     gh_api_key = os.getenv("ECAL_GH_API_KEY")
     if gh_api_key:
-        generate_download_tables(gh_api_key, "_autogen/main_page", "_autogen/download_archive")
+        generate_download_tables(gh_api_key, "_autogen/main_page", "_autogen/download_archive", "_autogen/ppa_tabs.rst.txt")
     else:
         sys.stderr.write("ERROR: Environment variable ECAL_GH_API_KEY not set. Without an API key, GitHub will not provide enough API calls to generate the download tables.\n")
         exit(1)
