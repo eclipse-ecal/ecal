@@ -384,7 +384,11 @@
                                     <ul>
 <li><a class="reference internal" href="#">2. Setup</a><ul>
 <li><a class="reference internal" href="#fa-windows-installing-ecal-on-windows">2.1. <i class="fab fa-windows"></i> Installing eCAL on Windows</a></li>
-<li><a class="reference internal" href="#fa-ubuntu-installing-ecal-on-ubuntu">2.2. <i class="fab fa-ubuntu"></i> Installing eCAL on Ubuntu</a></li>
+<li><a class="reference internal" href="#fa-ubuntu-installing-ecal-on-ubuntu">2.2. <i class="fab fa-ubuntu"></i> Installing eCAL on Ubuntu</a><ul>
+<li><a class="reference internal" href="#fa-ubuntu-automatically-install-ecal-from-a-ppa">2.2.1. <i class="fab fa-ubuntu"></i> Automatically install eCAL from a PPA</a></li>
+<li><a class="reference internal" href="#fa-ubuntu-manually-install-ecal-from-a-deb-file">2.2.2. <i class="fab fa-ubuntu"></i> Manually install eCAL from a .deb file</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -434,11 +438,9 @@ We will cover both scenarios in the next sections.</p>
 </div>
 <div class="section" id="fa-windows-installing-ecal-on-windows">
 <h2><span class="section-number">2.1. </span><i class="fab fa-windows"></i> Installing eCAL on Windows<a class="headerlink" href="#fa-windows-installing-ecal-on-windows" title="Permalink to this headline">¶</a></h2>
-<p>For Microsoft Windows we provide binary installers published on our GitHub release page.</p>
 <ol class="arabic">
-<li><p>Head to the GitHub release page and download the latest eCAL installer (ecal_X.X.X-win64.exe):</p>
-<p><a class="reference external" href="https://github.com/continental/ecal/releases">https://github.com/continental/ecal/releases</a></p>
-</li>
+<li><p>Choose your desired eCAL Version from the <a class="reference internal" href="../_download_archive/download_archive.html#download-archive"><span class="std std-ref">eCAL Download Archive</span></a> and download the Windows installer.
+New users should download the latest Version.</p></li>
 <li><p>Install eCAL with default options (Full installation):</p>
 <img alt="eCAL Setup" src="../_images/setup.png" />
 </li>
@@ -446,9 +448,23 @@ We will cover both scenarios in the next sections.</p>
 </div>
 <div class="section" id="fa-ubuntu-installing-ecal-on-ubuntu">
 <h2><span class="section-number">2.2. </span><i class="fab fa-ubuntu"></i> Installing eCAL on Ubuntu<a class="headerlink" href="#fa-ubuntu-installing-ecal-on-ubuntu" title="Permalink to this headline">¶</a></h2>
-<p>We provide precompiled binaries for Ubuntu 18.04 and Ubuntu 20.04.</p>
+<p>For Ubuntu, you can either install eCAL from a PPA (Personal Package Archive) or manually from debian files.
+For most users, the PPA will provide the easiest way of installing eCAL.
+The PPA also supports more Ubuntu Versions and CPU Architectures (x86, x64, arm64, armhf).</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>Advanced users can also <a class="reference internal" href="../development/building_ecal_from_source.html#development-building-ecal-from-source"><span class="std std-ref">compile eCAL from source</span></a>.</p>
+</div>
+<div class="section" id="fa-ubuntu-automatically-install-ecal-from-a-ppa">
+<span id="getting-started-setup-ubuntu-ppa"></span><h3><span class="section-number">2.2.1. </span><i class="fab fa-ubuntu"></i> Automatically install eCAL from a PPA<a class="headerlink" href="#fa-ubuntu-automatically-install-ecal-from-a-ppa" title="Permalink to this headline">¶</a></h3>
+<p>Installing eCAL from a PPA will cause apt-get to automatically update eCAL for you.
+You can choose from different PPAs, depending on your desired upgrade path.</p>
+</div>
+<div class="section" id="fa-ubuntu-manually-install-ecal-from-a-deb-file">
+<h3><span class="section-number">2.2.2. </span><i class="fab fa-ubuntu"></i> Manually install eCAL from a .deb file<a class="headerlink" href="#fa-ubuntu-manually-install-ecal-from-a-deb-file" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
-<li><p>Install the dependencies:</p>
+<li><p>Choose your desired eCAL Version from the <a class="reference internal" href="../_download_archive/download_archive.html#download-archive"><span class="std std-ref">eCAL Download Archive</span></a>.</p></li>
+<li><p>Install the eCAL Dependencies:</p>
 <ul>
 <li><p>Ubuntu 18.04:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt update
@@ -464,41 +480,12 @@ sudo apt install libc6 libcurl4 libgcc-s1 libhdf5-103 libprotobuf17 libqt5core5a
 </li>
 </ul>
 </li>
-<li><p>Head to the GitHub release page and download the latest eCAL installer for your Ubuntu version:</p>
-<p><a class="reference external" href="https://github.com/continental/ecal/releases">https://github.com/continental/ecal/releases</a></p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 25%" />
-<col style="width: 16%" />
-<col style="width: 59%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Ubuntu Version</p></th>
-<th class="head"><p>Codename</p></th>
-<th class="head"><p>eCAL setup file</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>18.04</p></td>
-<td><p>Bionic</p></td>
-<td><p><code class="file docutils literal notranslate"><span class="pre">ecal_X.X.X-bionic_amd64.deb</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>20.04</p></td>
-<td><p>Focal</p></td>
-<td><p><code class="file docutils literal notranslate"><span class="pre">ecal_X.X.X-focal_amd64.deb</span></code></p></td>
-</tr>
-</tbody>
-</table>
-</li>
 <li><p>Install the debian package:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo dpkg -i ecal_*.deb
 </pre></div>
 </div>
 </li>
 </ol>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p>If you want to use eCAL on any other Linux than Ubuntu 18.04 or 20.04, you can <a class="reference internal" href="../development/building_ecal_from_source.html#development-building-ecal-from-source"><span class="std std-ref">build eCAL from source</span></a>.</p>
 </div>
 </div>
 </div>
