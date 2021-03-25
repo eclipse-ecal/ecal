@@ -2,9 +2,9 @@
 
 .. _getting_started_setup:
 
-============================
-Installation
-============================
+===============
+Installing eCAL
+===============
 
 Before using eCAL, you must install it on your PC.
 This section covers how to install eCAL on Microsoft Windows and Ubuntu (both 64 bit only).
