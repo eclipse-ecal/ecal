@@ -65,9 +65,7 @@ file(GLOB_RECURSE rst_sources *.rst)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${rst_sources})
 
 add_custom_target(documentation_copy_rst_files ALL
-  COMMAND cmake -E rename ${CMAKE_CURRENT_SOURCE_DIR}/rst/conf.py ${CMAKE_CURRENT_SOURCE_DIR}/rst/conf.py.local
   COMMAND cmake -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/rst ${DOC_SOURCE_DIRECTORY}
-  COMMAND cmake -E rename ${CMAKE_CURRENT_SOURCE_DIR}/rst/conf.py.local ${CMAKE_CURRENT_SOURCE_DIR}/rst/conf.py
   SOURCES ${rst_sources}
 )
 set_property(TARGET documentation_copy_rst_files  PROPERTY FOLDER docs)
@@ -76,11 +74,6 @@ add_custom_target(documentation_copy_sample_files ALL
   COMMAND cmake -E copy_directory ${CMAKE_SOURCE_DIR}/samples/ ${DOC_SOURCE_DIRECTORY}/source_code_samples
 )
 set_property(TARGET documentation_copy_sample_files  PROPERTY FOLDER docs)
-
-add_custom_target(documentation_copy_static_dir ALL
-  COMMAND cmake -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/rst/_static ${DOC_SOURCE_DIRECTORY}/_static
-)
-set_property(TARGET documentation_copy_static_dir  PROPERTY FOLDER docs)
 
 #######################################
 # Doxygen documentation with xml output
@@ -140,11 +133,11 @@ set(SPHINX_CACHE_DIR "${CMAKE_CURRENT_BINARY_DIR}/_doctrees")
 set(SPHINX_HTML_DIR "${CMAKE_CURRENT_BINARY_DIR}/html")
  
 ###################################################
-# Configure the conf.py.in file
+# Configure the conf_py_buildvars.py.in file
 #################################################### 
 configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/conf.py.in"
-    "${DOC_SOURCE_DIRECTORY}/conf.py"
+    "${CMAKE_CURRENT_SOURCE_DIR}/conf_py_buildvars.py.in"
+    "${DOC_SOURCE_DIRECTORY}/conf_py_buildvars.py"
     @ONLY)
  
 ###################################################
@@ -161,7 +154,7 @@ add_custom_target(documentation_sphinx ALL
         "${DOC_SOURCE_DIRECTORY}"
         "${SPHINX_HTML_DIR}"
     COMMENT "Building HTML documentation with Sphinx"
-    DEPENDS documentation_run_doxygen documentation_copy_rst_files _ecal_core_py _ecal_hdf5_py documentation_copy_sample_files documentation_copy_static_dir
+    DEPENDS documentation_run_doxygen documentation_copy_rst_files _ecal_core_py _ecal_hdf5_py documentation_copy_sample_files
 )
     
 set_property(TARGET documentation_sphinx  PROPERTY FOLDER docs)
