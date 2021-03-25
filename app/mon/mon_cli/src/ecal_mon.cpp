@@ -21,6 +21,7 @@
  * @brief eCALMon Console Application
 **/
 
+#include <atomic>
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -67,7 +68,6 @@ enum CmdOption
   pub,
   type,
   desc,
-  pause
 };
 
 const int _1kB = 1024;
@@ -77,8 +77,8 @@ const int _10MB = 10 * _1MB;
 int pause_val = 500;
 
 void ProcBandwidth(const std::string& topic_name);
-void ProcEcho(const std::string& topic_name);
-void ProcProto(const std::string& topic_name);
+void ProcEcho(const std::string& topic_name,  int msg_count);
+void ProcProto(const std::string& topic_name, int msg_count);
 void ProcFind(const std::string& topic_type);
 void ProcRate(const std::string& topic_name);
 void ProcInfo(const std::string& topic_name);
@@ -86,8 +86,6 @@ void ProcList();
 void ProcPub(const std::string& topic_name, const std::string& data);
 void ProcType(const std::string& topic_name);
 void ProcDesc(const std::string& topic_name);
-void EchoMsgCallback(const std::string& msg);
-void ProtoMsgCallback(const google::protobuf::Message& msg);
 
 // main entry
 int main(int argc, char** argv)
@@ -115,6 +113,7 @@ int main(int argc, char** argv)
     TCLAP::ValueArg<std::string> message_arg("m", "msg", "message to publish", false, "", "string");
     TCLAP::ValueArg<std::string> type_arg("t", "type", "print topic type", false, "", "string");
     TCLAP::ValueArg<std::string> desc_arg("d", "desc", "print topic description", false, "", "string");
+    TCLAP::ValueArg<int> count_arg("c", "count", "exit application after a defined number of received messages (used with --echo or --proto option)", false, 0, "int");
     TCLAP::ValueArg<int> pause_arg("", "pause", "sleep between command execution [ms]", false, 0, "int");
 
     TCLAP::SwitchArg list_arg("l", "list", "print information about active topics", false);
@@ -129,6 +128,7 @@ int main(int argc, char** argv)
     cmd.add(message_arg);
     cmd.add(type_arg);
     cmd.add(desc_arg);
+    cmd.add(count_arg);
     cmd.add(pause_arg);
     cmd.add(list_arg);
 
@@ -143,6 +143,7 @@ int main(int argc, char** argv)
     std::string topic_name;
     std::string topic_type;
     std::string message;
+    int         message_count(-1);
 
     if (bandwidth_arg.getValue().empty() == false)
     {
@@ -197,6 +198,11 @@ int main(int argc, char** argv)
       topic_name = desc_arg.getValue();
       cmd_option = desc;
     }
+    if (count_arg.isSet())
+    {
+      message_count = count_arg.getValue();
+      if (message_count < 0) message_count = 0;
+    }
     if (pause_arg.getValue() > 0)
     {
       pause_val = pause_arg.getValue();
@@ -214,10 +220,10 @@ int main(int argc, char** argv)
       ProcBandwidth(topic_name);
       break;
     case echo:
-      ProcEcho(topic_name);
+      ProcEcho(topic_name, message_count);
       break;
     case proto:
-      ProcProto(topic_name);
+      ProcProto(topic_name, message_count);
       break;
     case find:
       ProcFind(topic_type);
@@ -318,15 +324,17 @@ void ProcBandwidth(const std::string& topic_name)
 //////////////////////////////////////////
 // print string messages to screen
 //////////////////////////////////////////
-void ProcEcho(const std::string& topic_name)
+void ProcEcho(const std::string& topic_name, int msg_count)
 {
   std::cout << "echo string message output for topic " << topic_name << std::endl << std::endl;;
 
-  // create string subscriber for topic topic_name_
+  // create string subscriber for topic topic_name_ and assign callback
   eCAL::string::CSubscriber<std::string> sub(topic_name);
-  sub.AddReceiveCallback(std::bind(&EchoMsgCallback, std::placeholders::_2));
+  std::atomic<int> cnt(msg_count);
+  auto msg_cb = [&cnt](const std::string& msg_) { if (cnt != 0) { std::cout << msg_ << std::endl; if (cnt > 0) cnt--; } };
+  sub.AddReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
 
-  while(eCAL::Ok())
+  while(eCAL::Ok() && (cnt != 0))
   {
     // sleep 500 ms
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -336,7 +344,7 @@ void ProcEcho(const std::string& topic_name)
 //////////////////////////////////////////
 // print protobuf messages to screen
 //////////////////////////////////////////
-void ProcProto(const std::string& topic_name)
+void ProcProto(const std::string& topic_name, int msg_count)
 {
   std::cout << "echo protobuf message output for topic " << topic_name << std::endl << std::endl;;
 
@@ -351,12 +359,14 @@ void ProcProto(const std::string& topic_name)
     return;
   }
 
-  // create dynamic subscribers for receiving and decoding messages
+  // create dynamic subscribers for receiving and decoding messages and assign callback
   eCAL::protobuf::CDynamicSubscriber sub(topic_name);
-  sub.AddReceiveCallback(std::bind(&ProtoMsgCallback, std::placeholders::_2));
+  std::atomic<int> cnt(msg_count);
+  auto msg_cb = [&cnt](const google::protobuf::Message& msg_) { if (cnt != 0) { std::cout << msg_.DebugString() << std::endl; if (cnt > 0) cnt--; } };
+  sub.AddReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
 
   // enter main loop
-  while(eCAL::Ok())
+  while(eCAL::Ok() && (cnt != 0))
   {
     // sleep 500 ms
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -618,20 +628,4 @@ void ProcDesc(const std::string& topic_name_)
     // print topic description
     std::cout << topic.tdesc() << " (" << topic.hname() << ":"  << topic.direction() << ")" << std::endl;
   }
-}
-
-//////////////////////////////////////////
-// message callback for "echo"
-//////////////////////////////////////////
-void EchoMsgCallback(const std::string& msg_)
-{
-  std::cout << msg_ << std::endl;
-}
-
-//////////////////////////////////////////
-// message callback for "proto"
-//////////////////////////////////////////
-void ProtoMsgCallback(const google::protobuf::Message& msg_)
-{
-  std::cout << msg_.DebugString() << std::endl;
 }
