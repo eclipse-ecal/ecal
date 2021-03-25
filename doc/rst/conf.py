@@ -6,14 +6,19 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+import os
+import sys
+
 # -- Variable setup ----------------------------------------------------------
 
 try:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     from conf_py_buildvars import *
     
     is_cmake_build = True
     
 except ImportError:
+    print("WARNING: conf_py_buildvars NOT imported. Setting in-source-build variables.")
     ecal_python_dir             = ''
     sphinx_custom_extension_dir = r'../extensions'
     rst_source_dir              = '.'
@@ -27,8 +32,6 @@ except ImportError:
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os
-import sys
 
 if is_cmake_build:
     sys.path.insert(0, ecal_python_dir)
