@@ -2,9 +2,9 @@
 
 .. _getting_started_cloud:
 
-===================
-Cloud configuration
-===================
+=====================
+Network configuration
+=====================
 
 .. hint::
    If you don't have two PCs at your hand or if you are just not interested in inter-machine-communication, just skip this topic.
