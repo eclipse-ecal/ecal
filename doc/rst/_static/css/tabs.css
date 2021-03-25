@@ -27,6 +27,8 @@
     border-bottom: 1px solid white;
     margin-bottom: -1px;
     background-color: white;
+
+    box-shadow: 0 9px 0px -1px rgb(255, 255, 255, 255), 0 3px 3px 0 rgba(0, 0, 0, 0.2);
 }
 
 .sphinx-tabs-tab:focus {
@@ -40,6 +42,8 @@
     border-radius: 0 0 5px 5px;
     border-top: 0;
     background: white;
+
+    box-shadow: 0 3px 3px 0px rgba(0, 0, 0, 0.2);
 }
 
 .sphinx-tabs-panel.code-tab {
