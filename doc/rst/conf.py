@@ -6,6 +6,21 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+# -- Variable setup ----------------------------------------------------------
+
+try:
+    from conf_py_buildvars import *
+    
+    is_cmake_build = True
+    
+except ImportError:
+    ecal_python_dir             = ''
+    sphinx_custom_extension_dir = r'../extensions'
+    rst_source_dir              = '.'
+    ecal_source_root_dir        = '../..'
+    
+    is_cmake_build              = False
+
 # -- Path setup --------------------------------------------------------------
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -15,29 +30,31 @@
 import os
 import sys
 
-# sys.path.insert(0, os.path.abspath('python'))
-sys.path.insert(0, os.path.abspath('../extensions'))
+if is_cmake_build:
+    sys.path.insert(0, ecal_python_dir)
+
+sys.path.insert(0, sphinx_custom_extension_dir)
 
 # -- Generate ecalicons include file-------------------------------------------
 
 import generate_ecalicons
 qresource_list = [
-    r"../../app/iconset/ecalicons.qrc",
-    r"../../lib/QEcalParser/resources/qecalparser.qrc",
-    r"../../app/mon/mon_gui/resources/resources.qrc",
-    r"../../app/play/play_gui/resources/resources.qrc",
-    r"../../app/rec/rec_gui/resources/resources.qrc",
-    r"../../app/sys/sys_gui/resources/resources.qrc",
-    r"../../app/util/launcher/resources/resources.qrc"
+    os.path.join(ecal_source_root_dir, r"app/iconset/ecalicons.qrc"),
+    os.path.join(ecal_source_root_dir, r"lib/QEcalParser/resources/qecalparser.qrc"),
+    os.path.join(ecal_source_root_dir, r"app/mon/mon_gui/resources/resources.qrc"),
+    os.path.join(ecal_source_root_dir, r"app/play/play_gui/resources/resources.qrc"),
+    os.path.join(ecal_source_root_dir, r"app/rec/rec_gui/resources/resources.qrc"),
+    os.path.join(ecal_source_root_dir, r"app/sys/sys_gui/resources/resources.qrc"),
+    os.path.join(ecal_source_root_dir, r"app/util/launcher/resources/resources.qrc")
 ]
-generate_ecalicons.generate_ecalicons(qresource_list, "_include_ecalicons.txt")
+generate_ecalicons.generate_ecalicons(qresource_list, os.path.join(rst_source_dir, r"_include_ecalicons.txt"))
 
 # -- Generate download archive and tables for the homepage --------------------
 import generate_download_tables
 
-download_tables_main_page_dir = "_download_main_page"
-download_archive_dir          = "_download_archive"
-ppa_tabs_file                 = "getting_started/_ppa_tabs.rst.txt"
+download_tables_main_page_dir = os.path.join(rst_source_dir, r"_download_main_page")
+download_archive_dir          = os.path.join(rst_source_dir, r"_download_archive")
+ppa_tabs_file                 = os.path.join(rst_source_dir, r"getting_started/_ppa_tabs.rst.txt")
 
 if not os.path.exists(download_tables_main_page_dir) or not os.path.exists(download_archive_dir):
     # Only generate download tables, if the directories do not exist.
@@ -74,7 +91,55 @@ release = u''
 extensions = [
     'sphinx_typo3_theme',
     'sphinx_tabs.tabs',
+    'sphinx.ext.githubpages',
+    'sphinx.ext.todo',
 ]
+
+if is_cmake_build:
+    extensions += [ \
+    #    'sphinx.ext.autodoc',
+    #    'sphinxcontrib.apidoc',
+    #    'sphinxcontrib.moderncmakedomain',
+        'breathe',
+        'exhale',
+    #    'ini-directive'
+    ]
+
+# Todo Configurations
+if is_cmake_build:
+    todo_include_todos = False
+    todo_emit_warnings = True
+
+#apidoc_module_dir = os.path.join(ecal_python_dir)
+#apidoc_output_dir = os.path.join(rst_source_dir, '_apidoc')
+#apidoc_excluded_paths = ['tests']
+#apidoc_separate_modules = True
+#apidoc_extra_args = ['-f']
+
+# Breathe Configuration
+breathe_default_project = "eCAL"
+
+# Setup the exhale extension
+exhale_args = {
+    # These arguments are required
+    "containmentFolder":     "./_api",
+    "rootFileName":          "ecal_root.rst",
+    "rootFileTitle":         "C++",
+    "doxygenStripFromPath":  ecal_source_root_dir,
+    # Suggested optional arguments
+    "createTreeView":        True,
+    # TIP: if using the sphinx-bootstrap-theme, you need
+    # "treeViewIsBootstrap": True,
+    "exhaleExecutesDoxygen": False
+    #"exhaleDoxygenStdin":    "INPUT = ../include"
+}
+
+# Tell sphinx what the primary language being documented is.
+#primary_domain = 'cpp'
+
+# Tell sphinx what the pygments highlight language should be.
+#highlight_language = 'cpp'
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

@@ -65,9 +65,7 @@ file(GLOB_RECURSE rst_sources *.rst)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${rst_sources})
 
 add_custom_target(documentation_copy_rst_files ALL
-  COMMAND cmake -E rename ${CMAKE_CURRENT_SOURCE_DIR}/rst/conf.py ${CMAKE_CURRENT_SOURCE_DIR}/rst/conf.py.local
   COMMAND cmake -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/rst ${DOC_SOURCE_DIRECTORY}
-  COMMAND cmake -E rename ${CMAKE_CURRENT_SOURCE_DIR}/rst/conf.py.local ${CMAKE_CURRENT_SOURCE_DIR}/rst/conf.py
   SOURCES ${rst_sources}
 )
 set_property(TARGET documentation_copy_rst_files  PROPERTY FOLDER docs)
@@ -140,11 +138,11 @@ set(SPHINX_CACHE_DIR "${CMAKE_CURRENT_BINARY_DIR}/_doctrees")
 set(SPHINX_HTML_DIR "${CMAKE_CURRENT_BINARY_DIR}/html")
  
 ###################################################
-# Configure the conf.py.in file
+# Configure the conf_py_buildvars.py.in file
 #################################################### 
 configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/conf.py.in"
-    "${DOC_SOURCE_DIRECTORY}/conf.py"
+    "${CMAKE_CURRENT_SOURCE_DIR}/conf_py_buildvars.py.in"
+    "${DOC_SOURCE_DIRECTORY}/conf_py_buildvars.py"
     @ONLY)
  
 ###################################################

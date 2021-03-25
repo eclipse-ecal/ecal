@@ -1,0 +1,9 @@
+# -*- coding: utf-8 -*-
+
+import os
+
+ecal_python_dir             = os.path.join(r'@CMAKE_BINARY_DIR@',         'python')
+sphinx_custom_extension_dir = os.path.join(r'@CMAKE_CURRENT_SOURCE_DIR@', 'extensions')
+
+rst_source_dir              = os.path.join(r'@CMAKE_CURRENT_BINARY_DIR@', '_sources')
+ecal_source_root_dir        = r'@CMAKE_SOURCE_DIR@'
