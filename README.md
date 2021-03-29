@@ -12,7 +12,7 @@ eCAL automatically chooses the best available data transport mechanism for each 
 - **Shared memory** for local communication _(incredible fast!)_
 - **UDP** for network communication
 
-Visit the eCAL Documentation at 🌐 http://ecal.io for more information or write an email to support@ecal.io to ask for additional support.
+Visit the eCAL Documentation at 🌐 http://ecal.io for more information.
 
 ![](doc/rst/getting_started/img/ecal_concept_notebooks.svg)
 
