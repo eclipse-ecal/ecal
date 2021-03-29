@@ -31,7 +31,7 @@ class BinaryDistribution(Distribution):
 # CMakeLists.txt in this directory.
 
 setuptools.setup (
-  name              = 'ecal',
+  name              = 'ecal5',
   version           = '@eCAL_VERSION_STRING@',
   description       = 'This is the eCAL python API',
   license           = 'Apache 2.0',
