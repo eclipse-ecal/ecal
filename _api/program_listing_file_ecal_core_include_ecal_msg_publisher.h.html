@@ -449,7 +449,7 @@
 
 <span class="k">namespace</span> <span class="n">eCAL</span>
 <span class="p">{</span>
-  <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+  <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="o">&gt;</span>
   <span class="k">class</span> <span class="nc">CMsgPublisher</span> <span class="o">:</span> <span class="k">public</span> <span class="n">CPublisher</span>
   <span class="p">{</span>
   <span class="k">public</span><span class="o">:</span>
@@ -481,7 +481,7 @@
       <span class="k">return</span><span class="p">(</span><span class="n">CPublisher</span><span class="o">::</span><span class="n">Destroy</span><span class="p">());</span>
     <span class="p">}</span>
 
-    <span class="kt">size_t</span> <span class="n">Send</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">msg_</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">time_</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="kt">size_t</span> <span class="n">Send</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">msg_</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">time_</span> <span class="o">=</span> <span class="mi">-1</span><span class="p">)</span>
     <span class="p">{</span>
       <span class="c1">// this is an optimization ...</span>
       <span class="c1">// if there is no subscription we do not waste time for</span>
@@ -511,8 +511,8 @@
   <span class="k">private</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetTypeName</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="k">virtual</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetDescription</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">size_t</span> <span class="nf">GetSize</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">msg_</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">Serialize</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">msg_</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">buffer_</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">size_</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">size_t</span> <span class="n">GetSize</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">msg_</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">Serialize</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">msg_</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">buffer_</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">size_</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="n">m_buffer</span><span class="p">;</span>
   <span class="p">};</span>

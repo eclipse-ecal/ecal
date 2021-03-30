@@ -446,7 +446,7 @@
 
 <span class="k">namespace</span> <span class="n">eCAL</span>
 <span class="p">{</span>
-  <span class="k">struct</span> <span class="n">SServiceInfo</span>
+  <span class="k">struct</span> <span class="nc">SServiceInfo</span>
   <span class="p">{</span>
     <span class="n">SServiceInfo</span><span class="p">()</span>
     <span class="p">{</span>
@@ -463,7 +463,7 @@
 
   <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">method_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">req_type_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">resp_type_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">request_</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">response_</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">MethodCallbackT</span><span class="p">;</span>
 
-  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="k">const</span> <span class="k">struct</span> <span class="n">SServiceInfo</span><span class="o">&amp;</span> <span class="n">service_info_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">response_</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">ResponseCallbackT</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="k">const</span> <span class="k">struct</span> <span class="nc">SServiceInfo</span><span class="o">&amp;</span> <span class="n">service_info_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">response_</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">ResponseCallbackT</span><span class="p">;</span>
 <span class="p">};</span>
 </pre></div>
 </div>

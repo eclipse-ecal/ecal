@@ -506,7 +506,7 @@
 
     <span class="c1">// class members</span>
     <span class="n">CDataReader</span><span class="o">*</span>                     <span class="n">m_datareader</span><span class="p">;</span>
-    <span class="k">struct</span> <span class="n">ECAL_API</span> <span class="n">QOS</span><span class="o">::</span><span class="n">SReaderQOS</span>  <span class="n">m_qos</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="nc">ECAL_API</span> <span class="n">QOS</span><span class="o">::</span><span class="n">SReaderQOS</span>  <span class="n">m_qos</span><span class="p">;</span>
     <span class="kt">bool</span>                             <span class="n">m_created</span><span class="p">;</span>
     <span class="kt">bool</span>                             <span class="n">m_initialized</span><span class="p">;</span>
   <span class="p">};</span>
@@ -589,7 +589,7 @@
       <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">m_subscriber</span><span class="p">)</span> <span class="k">return</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
 
       <span class="c1">// set qos</span>
-      <span class="k">struct</span> <span class="n">SReaderQOSC</span> <span class="n">qos</span><span class="p">;</span>
+      <span class="k">struct</span> <span class="nc">SReaderQOSC</span> <span class="n">qos</span><span class="p">;</span>
       <span class="n">qos</span><span class="p">.</span><span class="n">history_kind</span>       <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">eQOSPolicy_HistoryKindC</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_qos</span><span class="p">.</span><span class="n">history_kind</span><span class="p">);</span>
       <span class="n">qos</span><span class="p">.</span><span class="n">history_kind_depth</span> <span class="o">=</span> <span class="n">m_qos</span><span class="p">.</span><span class="n">history_kind_depth</span><span class="p">;;</span>
       <span class="n">qos</span><span class="p">.</span><span class="n">reliability</span>        <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">eQOSPolicy_ReliabilityC</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_qos</span><span class="p">.</span><span class="n">reliability</span><span class="p">);</span>
@@ -648,7 +648,7 @@
       <span class="k">return</span><span class="p">(</span><span class="n">buf_</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
     <span class="p">}</span>
 
-    <span class="k">static</span> <span class="kt">void</span> <span class="n">ReceiveCallback</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">topic_name_</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="n">SReceiveCallbackDataC</span><span class="o">*</span> <span class="n">data_</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">par_</span><span class="p">)</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="n">ReceiveCallback</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">topic_name_</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="nc">SReceiveCallbackDataC</span><span class="o">*</span> <span class="n">data_</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">par_</span><span class="p">)</span>
     <span class="p">{</span>
       <span class="k">if</span><span class="p">(</span><span class="n">par_</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
       <span class="n">CSubscriber</span><span class="o">*</span> <span class="n">sub</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">CSubscriber</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">par_</span><span class="p">);</span>
@@ -673,7 +673,7 @@
       <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Sub_RemReceiveCallback</span><span class="p">(</span><span class="n">m_subscriber</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
     <span class="p">}</span>
 
-    <span class="k">static</span> <span class="kt">void</span> <span class="n">SubEventCallback</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">topic_name_</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="n">SSubEventCallbackDataC</span><span class="o">*</span> <span class="n">data_</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">par_</span><span class="p">)</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="n">SubEventCallback</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">topic_name_</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="nc">SSubEventCallbackDataC</span><span class="o">*</span> <span class="n">data_</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">par_</span><span class="p">)</span>
     <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="n">par_</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
       <span class="n">CSubscriber</span><span class="o">*</span> <span class="n">sub</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">CSubscriber</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">par_</span><span class="p">);</span>

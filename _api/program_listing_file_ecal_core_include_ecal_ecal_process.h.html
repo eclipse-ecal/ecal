@@ -452,19 +452,19 @@
   <span class="p">{</span>
     <span class="n">ECAL_API</span> <span class="kt">void</span> <span class="n">DumpConfig</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">void</span> <span class="nf">DumpConfig</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">cfg_s_</span><span class="p">);</span>
+    <span class="n">ECAL_API</span> <span class="kt">void</span> <span class="n">DumpConfig</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">cfg_s_</span><span class="p">);</span>
 
     <span class="n">ECAL_API</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetHostName</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">int</span> <span class="nf">GetHostID</span><span class="p">();</span>
+    <span class="n">ECAL_API</span> <span class="kt">int</span> <span class="n">GetHostID</span><span class="p">();</span>
 
     <span class="n">ECAL_API</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetUnitName</span><span class="p">();</span>
 
     <span class="n">ECAL_API</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetTaskParameter</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">sep_</span><span class="p">);</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">void</span> <span class="nf">SleepMS</span><span class="p">(</span><span class="kt">long</span> <span class="n">time_ms_</span><span class="p">);</span>
+    <span class="n">ECAL_API</span> <span class="kt">void</span> <span class="n">SleepMS</span><span class="p">(</span><span class="kt">long</span> <span class="n">time_ms_</span><span class="p">);</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">int</span> <span class="nf">GetProcessID</span><span class="p">();</span>
+    <span class="n">ECAL_API</span> <span class="kt">int</span> <span class="n">GetProcessID</span><span class="p">();</span>
 
     <span class="n">ECAL_API</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetProcessIDAsString</span><span class="p">();</span>
 
@@ -472,9 +472,9 @@
 
     <span class="n">ECAL_API</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetProcessParameter</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">float</span> <span class="nf">GetProcessCpuUsage</span><span class="p">();</span>
+    <span class="n">ECAL_API</span> <span class="kt">float</span> <span class="n">GetProcessCpuUsage</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="nf">GetProcessMemory</span><span class="p">();</span>
+    <span class="n">ECAL_API</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">GetProcessMemory</span><span class="p">();</span>
 
     <span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;use GetWClock() instead&quot;</span><span class="p">)]]</span>
     <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">GetSClock</span><span class="p">();</span>
@@ -482,25 +482,25 @@
     <span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;use GetWBytes() instead&quot;</span><span class="p">)]]</span>
     <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">GetSBytes</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="nf">GetWClock</span><span class="p">();</span>
+    <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">GetWClock</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="nf">GetWBytes</span><span class="p">();</span>
+    <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">GetWBytes</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="nf">GetRClock</span><span class="p">();</span>
+    <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">GetRClock</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="nf">GetRBytes</span><span class="p">();</span>
+    <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">GetRBytes</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">void</span> <span class="nf">SetState</span><span class="p">(</span><span class="n">eCAL_Process_eSeverity</span> <span class="n">severity_</span><span class="p">,</span> <span class="n">eCAL_Process_eSeverity_Level</span> <span class="n">level_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">info_</span><span class="p">);</span>
+    <span class="n">ECAL_API</span> <span class="kt">void</span> <span class="n">SetState</span><span class="p">(</span><span class="n">eCAL_Process_eSeverity</span> <span class="n">severity_</span><span class="p">,</span> <span class="n">eCAL_Process_eSeverity_Level</span> <span class="n">level_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">info_</span><span class="p">);</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">int</span> <span class="nf">AddRegistrationCallback</span><span class="p">(</span><span class="k">enum</span> <span class="n">eCAL_Registration_Event</span> <span class="n">event_</span><span class="p">,</span> <span class="n">RegistrationCallbackT</span> <span class="n">callback_</span><span class="p">);</span>
+    <span class="n">ECAL_API</span> <span class="kt">int</span> <span class="n">AddRegistrationCallback</span><span class="p">(</span><span class="k">enum</span> <span class="nc">eCAL_Registration_Event</span> <span class="n">event_</span><span class="p">,</span> <span class="n">RegistrationCallbackT</span> <span class="n">callback_</span><span class="p">);</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">int</span> <span class="nf">RemRegistrationCallback</span><span class="p">(</span><span class="k">enum</span> <span class="n">eCAL_Registration_Event</span> <span class="n">event_</span><span class="p">);</span>
+    <span class="n">ECAL_API</span> <span class="kt">int</span> <span class="n">RemRegistrationCallback</span><span class="p">(</span><span class="k">enum</span> <span class="nc">eCAL_Registration_Event</span> <span class="n">event_</span><span class="p">);</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">int</span> <span class="nf">StartProcess</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">proc_name_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">proc_args_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">working_dir_</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">create_console_</span><span class="p">,</span> <span class="n">eCAL_Process_eStartMode</span> <span class="n">process_mode_</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">block_</span><span class="p">);</span>
+    <span class="n">ECAL_API</span> <span class="kt">int</span> <span class="n">StartProcess</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">proc_name_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">proc_args_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">working_dir_</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">create_console_</span><span class="p">,</span> <span class="n">eCAL_Process_eStartMode</span> <span class="n">process_mode_</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">block_</span><span class="p">);</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="nf">StopProcess</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">proc_name_</span><span class="p">);</span>
+    <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="n">StopProcess</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">proc_name_</span><span class="p">);</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="nf">StopProcess</span><span class="p">(</span><span class="kt">int</span> <span class="n">proc_id_</span><span class="p">);</span>
+    <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="n">StopProcess</span><span class="p">(</span><span class="kt">int</span> <span class="n">proc_id_</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
 

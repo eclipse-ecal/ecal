@@ -449,19 +449,19 @@
   <span class="p">{</span>
     <span class="n">ECAL_API</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetName</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="nf">GetMicroSeconds</span><span class="p">();</span>
+    <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">GetMicroSeconds</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="nf">GetNanoSeconds</span><span class="p">();</span>
+    <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">GetNanoSeconds</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="nf">SetNanoSeconds</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">time_</span><span class="p">);</span>
+    <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="n">SetNanoSeconds</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">time_</span><span class="p">);</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="nf">IsSynchronized</span><span class="p">();</span>
+    <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="n">IsSynchronized</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="nf">IsMaster</span><span class="p">();</span>
+    <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="n">IsMaster</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">void</span> <span class="nf">SleepForNanoseconds</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">duration_nsecs_</span><span class="p">);</span>
+    <span class="n">ECAL_API</span> <span class="kt">void</span> <span class="n">SleepForNanoseconds</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">duration_nsecs_</span><span class="p">);</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">void</span> <span class="nf">GetStatus</span><span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">error_</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">*</span> <span class="n">status_message_</span><span class="p">);</span>
+    <span class="n">ECAL_API</span> <span class="kt">void</span> <span class="n">GetStatus</span><span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">error_</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">*</span> <span class="n">status_message_</span><span class="p">);</span>
 
 
     <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Rep</span><span class="p">,</span>
@@ -472,7 +472,7 @@
     <span class="p">}</span>
 
     <span class="cm">/* @cond */</span>
-    <span class="k">struct</span> <span class="n">ecal_clock</span>
+    <span class="k">struct</span> <span class="nc">ecal_clock</span>
     <span class="p">{</span>
       <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">nanoseconds</span>            <span class="n">duration</span><span class="p">;</span>
       <span class="k">typedef</span> <span class="n">duration</span><span class="o">::</span><span class="n">rep</span>                       <span class="n">rep</span><span class="p">;</span>
@@ -480,9 +480,9 @@
       <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">time_point</span><span class="o">&lt;</span><span class="n">ecal_clock</span><span class="o">&gt;</span> <span class="n">time_point</span><span class="p">;</span>
       <span class="k">static</span> <span class="k">const</span> <span class="kt">bool</span>                           <span class="n">is_steady</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
 
-      <span class="k">static</span> <span class="n">time_point</span> <span class="nf">now</span><span class="p">()</span>
+      <span class="k">static</span> <span class="n">time_point</span> <span class="n">now</span><span class="p">()</span>
       <span class="p">{</span>
-        <span class="k">return</span> <span class="n">time_point</span> <span class="p">(</span><span class="n">duration</span><span class="p">(</span><span class="n">GetNanoSeconds</span><span class="p">()));</span>
+        <span class="k">return</span> <span class="nf">time_point</span> <span class="p">(</span><span class="n">duration</span><span class="p">(</span><span class="n">GetNanoSeconds</span><span class="p">()));</span>
       <span class="p">}</span>
     <span class="p">};</span>
     <span class="cm">/* @endcond */</span>
@@ -549,7 +549,7 @@
         <span class="n">eCAL_FreeMem</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
       <span class="p">}</span>
       <span class="k">else</span> <span class="p">{</span>
-        <span class="n">eCAL_Time_GetStatus</span><span class="p">(</span><span class="o">&amp;</span><span class="n">error_</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+        <span class="n">eCAL_Time_GetStatus</span><span class="p">(</span><span class="o">&amp;</span><span class="n">error_</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="mi">-1</span><span class="p">);</span>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">}</span>

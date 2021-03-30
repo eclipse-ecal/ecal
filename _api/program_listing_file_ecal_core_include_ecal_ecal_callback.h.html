@@ -445,7 +445,7 @@
 
 <span class="k">namespace</span> <span class="n">eCAL</span>
 <span class="p">{</span>
-  <span class="k">struct</span> <span class="n">SReceiveCallbackData</span>
+  <span class="k">struct</span> <span class="nc">SReceiveCallbackData</span>
   <span class="p">{</span>
     <span class="n">SReceiveCallbackData</span><span class="p">()</span>
     <span class="p">{</span>
@@ -462,13 +462,13 @@
     <span class="kt">long</span> <span class="kt">long</span> <span class="n">clock</span><span class="p">;</span>
   <span class="p">};</span>
 
-  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">topic_name_</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="n">SReceiveCallbackData</span><span class="o">*</span> <span class="n">data_</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">ReceiveCallbackT</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">topic_name_</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="nc">SReceiveCallbackData</span><span class="o">*</span> <span class="n">data_</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">ReceiveCallbackT</span><span class="p">;</span>
 
   <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">TimerCallbackT</span><span class="p">;</span>
 
   <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">sample_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sample_size_</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">RegistrationCallbackT</span><span class="p">;</span>
 
-  <span class="k">struct</span> <span class="n">SPubEventCallbackData</span>
+  <span class="k">struct</span> <span class="nc">SPubEventCallbackData</span>
   <span class="p">{</span>
     <span class="n">SPubEventCallbackData</span><span class="p">()</span>
     <span class="p">{</span>
@@ -481,7 +481,7 @@
     <span class="kt">long</span> <span class="kt">long</span>            <span class="n">clock</span><span class="p">;</span>
   <span class="p">};</span>
 
-  <span class="k">struct</span> <span class="n">SSubEventCallbackData</span>
+  <span class="k">struct</span> <span class="nc">SSubEventCallbackData</span>
   <span class="p">{</span>
     <span class="n">SSubEventCallbackData</span><span class="p">()</span>
     <span class="p">{</span>
@@ -494,9 +494,9 @@
     <span class="kt">long</span> <span class="kt">long</span>             <span class="n">clock</span><span class="p">;</span>
   <span class="p">};</span>
 
-  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">topic_name_</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="n">SPubEventCallbackData</span><span class="o">*</span> <span class="n">data_</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">PubEventCallbackT</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">topic_name_</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="nc">SPubEventCallbackData</span><span class="o">*</span> <span class="n">data_</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">PubEventCallbackT</span><span class="p">;</span>
 
-  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">topic_name_</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="n">SSubEventCallbackData</span><span class="o">*</span> <span class="n">data_</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">SubEventCallbackT</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">topic_name_</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="nc">SSubEventCallbackData</span><span class="o">*</span> <span class="n">data_</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">SubEventCallbackT</span><span class="p">;</span>
 <span class="p">};</span>
 </pre></div>
 </div>
