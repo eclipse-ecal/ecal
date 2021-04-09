@@ -564,38 +564,38 @@ namespace eCAL
             }
 
             // Get layout
-            eCAL::Sys::Config::Size win_size(0, 0);
-            auto size_element = FindElementByName(src, "window_size");
-            if (size_element != nullptr)
-            {
-              win_size.SetHeight(std::stoi(size_element->FirstChildElement("height")->GetText()));
-              win_size.SetWidth(std::stoi(size_element->FirstChildElement("width")->GetText()));
-            }
+            //eCAL::Sys::Config::Size win_size(0, 0);
+            //auto size_element = FindElementByName(src, "window_size");
+            //if (size_element != nullptr)
+            //{
+            //  win_size.SetHeight(std::stoi(size_element->FirstChildElement("height")->GetText()));
+            //  win_size.SetWidth(std::stoi(size_element->FirstChildElement("width")->GetText()));
+            //}
 
-            eCAL::Sys::Config::Point win_pos(0, 0);
-            auto pos_element = FindElementByName(src, "window_position");
-            if (pos_element != nullptr)
-            {
-              win_pos.x = static_cast<int>(std::stof(pos_element->FirstChildElement("x")->GetText()));
-              win_pos.y = static_cast<int>(std::stof(pos_element->FirstChildElement("y")->GetText()));
-            }
+            //eCAL::Sys::Config::Point win_pos(0, 0);
+            //auto pos_element = FindElementByName(src, "window_position");
+            //if (pos_element != nullptr)
+            //{
+            //  win_pos.x = static_cast<int>(std::stof(pos_element->FirstChildElement("x")->GetText()));
+            //  win_pos.y = static_cast<int>(std::stof(pos_element->FirstChildElement("y")->GetText()));
+            //}
 
-            bool win_maximized = false;
-            auto max_element = FindElementByName(src, "window_maximized");
-            if (max_element != nullptr)
-            {
-              win_maximized = std::stoi(max_element->GetText()) != 0;
-            }
+            //bool win_maximized = false;
+            //auto max_element = FindElementByName(src, "window_maximized");
+            //if (max_element != nullptr)
+            //{
+            //  win_maximized = std::stoi(max_element->GetText()) != 0;
+            //}
 
-            std::string layout;
-            auto layout_element = FindElementByName(src, "layout");
-            if (layout_element != nullptr)
-            {
-              if (layout_element->GetText() != nullptr)
-                layout = EcalUtils::String::Trim(layout_element->GetText());
-            }
+            //std::string layout;
+            //auto layout_element = FindElementByName(src, "layout");
+            //if (layout_element != nullptr)
+            //{
+            //  if (layout_element->GetText() != nullptr)
+            //    layout = EcalUtils::String::Trim(layout_element->GetText());
+            //}
 
-            configuration.SetLayout(layout, win_size, win_pos, win_maximized);
+            //configuration.SetLayout(layout, win_size, win_pos, win_maximized);
           }
         }
         catch (...)
