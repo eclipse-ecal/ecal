@@ -30,6 +30,7 @@ eCAL 5.7
    :maxdepth: 0
    :titlesonly:
 
+   download_archive_ecal_5_7_11.rst
    download_archive_ecal_5_7_9.rst
    download_archive_ecal_5_7_8.rst
    download_archive_ecal_5_7_6.rst
