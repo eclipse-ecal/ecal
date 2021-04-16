@@ -90,6 +90,7 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 * [GO language binding](https://github.com/Blutkoete/golang-ecal)
 * [Rust language binding](https://github.com/kopernikusai/ecal-rs)
 * [ROS2 eCAL Middleware Layer](https://github.com/continental/rmw_ecal)
+* [gpsd eCAL gateway](https://github.com/continental/gpsd2ecal)
 * [Iceoryx](https://github.com/eclipse/iceoryx)
 * [Dockerfiles for eCAL](https://github.com/Blutkoete/docker-ecal)
 
