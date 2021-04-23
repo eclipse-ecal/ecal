@@ -1,3 +1,4 @@
+
 # eCAL - enhanced Communication Abstraction Layer
 
 
@@ -36,6 +37,31 @@ Visit the eCAL Documentation at 🌐 http://ecal.io for more information.
   * MacOS (experimental)
   * FreeBSD (experimental)
 
+## Installation
+
+We provide binary installers for Windows and Ubuntu. If you need further help installing and configuring eCAL, please refer to the [documentation](https://continental.github.io/ecal/getting_started/setup.html).
+
+### Windows
+
+1. Visit the [eCAL Download Archive](https://continental.github.io/ecal/_download_archive/download_archive.html)
+2. Download the latest eCAL Installer and follow the Setup Wizard
+    ![eCAL Setup](doc/rst/getting_started/img/setup.png)
+    
+*We only support 64bit Windows 7 / 10*
+
+### Ubuntu
+
+Install eCAL from our PPA:
+
+```bash
+sudo add-apt-repository ppa:ecal/ecal-latest
+sudo apt-get update
+sudo apt-get install ecal
+```
+
+Check out other PPAs (that fixed to a specific eCAL release) [here](https://continental.github.io/ecal/getting_started/setup.html#fa-ubuntu-automatically-install-ecal-from-a-ppa).
+
+*Ubuntu 16.04, 18.04, 20.04, 20.10, 21.04 for CPU architectures i386, x64, armhf, arm64 are supported at the time of writing.*
 
 ## Example
 
@@ -103,4 +129,3 @@ eCAL is licensed under Apache License 2.0. You are free to
 - Distribute eCAL
 
 eCAL is provided on an “as is” basis without warranties or conditions of any kind.
-
