@@ -51,6 +51,7 @@ namespace eCAL
     CUDPReceiverImpl(const SReceiverAttr& attr_);
 
     bool AddMultiCastGroup(const char* ipaddr_);
+    bool RemMultiCastGroup(const char* ipaddr_);
 
     size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr);
 
@@ -148,6 +149,21 @@ namespace eCAL
     return(true);
   }
 
+  bool CUDPReceiverImpl::RemMultiCastGroup(const char* ipaddr_)
+  {
+    if (!m_broadcast && !m_unicast)
+    {
+      // Leave multicast group
+      {
+        asio::error_code ec;
+        m_socket.set_option(asio::ip::multicast::leave_group(asio::ip::make_address(ipaddr_)), ec);
+        if (ec)
+          std::cerr << "CUDPReceiver: Unable to leave multicast group: " << ec.message() << std::endl;
+      }
+    }
+    return(true);
+  }
+
   size_t CUDPReceiverImpl::Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ /* = nullptr */)
   {
     size_t reclen(0);
@@ -212,6 +228,7 @@ namespace eCAL
     CUDPcapReceiverImpl(const SReceiverAttr& attr_);
 
     bool AddMultiCastGroup(const char* ipaddr_);
+    bool RemMultiCastGroup(const char* ipaddr_);
 
     size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr);
 
@@ -248,6 +265,16 @@ namespace eCAL
     {
       // join multicast group
       return m_socket.joinMulticastGroup(Udpcap::HostAddress(ipaddr_));
+    }
+    return(true);
+  }
+
+  bool CUDPcapReceiverImpl::RemMultiCastGroup(const char* ipaddr_)
+  {
+    if (!m_unicast)
+    {
+      // leave multicast group
+      return m_socket.leaveMulticastGroup(Udpcap::HostAddress(ipaddr_));
     }
     return(true);
   }
@@ -341,6 +368,20 @@ namespace eCAL
 
     if (!m_socket_impl) return(0);
     return(m_socket_impl->AddMultiCastGroup(ipaddr_));
+  }
+
+  bool CUDPReceiver::RemMultiCastGroup(const char* ipaddr_)
+  {
+#ifdef ECAL_NPCAP_SUPPORT
+    if (m_use_npcap)
+    {
+      if (!m_udpcap_socket_impl) return false;
+      return m_udpcap_socket_impl->RemMultiCastGroup(ipaddr_);
+    }
+#endif // ECAL_NPCAP_SUPPORT
+
+    if (!m_socket_impl) return(0);
+    return(m_socket_impl->RemMultiCastGroup(ipaddr_));
   }
 
   size_t CUDPReceiver::Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ /* = nullptr */)
