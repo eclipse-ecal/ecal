@@ -64,6 +64,9 @@ option(ECAL_THIRDPARTY_BUILD_CURL              "Build CURL with eCAL"           
 option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"                                            OFF)
 option(ECAL_THIRDPARTY_BUILD_HDF5              "Build HDF5 with eCAL"                                              ON)
 
+# This should be ON, unless build ecal hdf5 for Matlab usage
+option(ECAL_LINK_HDF5_SHARED                   "Link shared libs of HDF5"                                          ON)
+
 option(CPACK_PACK_WITH_INNOSETUP               "Create Innosetup installer for the Windows build"                  ON)
 
 set(ECAL_INSTALL_PYTHON_DIR "bin" CACHE PATH "Location to install the Python extension modules. Might be set by setupdtools install.")
