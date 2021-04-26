@@ -20,6 +20,7 @@ project(hdf5)
 
 if(NOT CMAKE_CROSSCOMPILING)
   find_package(HDF5 COMPONENTS C REQUIRED)
+  find_package(Threads REQUIRED)
 else()
   find_library(hdf5_path NAMES hdf5 REQUIRED PATH_SUFFIXES hdf5/serial)
   find_path(hdf5_include NAMES hdf5.h PATH_SUFFIXES hdf5/serial REQUIRED)  
@@ -74,19 +75,34 @@ target_compile_options(${PROJECT_NAME}
   PRIVATE
     $<$<CXX_COMPILER_ID:GNU>:-Wextra>)
 
-if (TARGET hdf5::hdf5-shared)
-  target_link_libraries(${PROJECT_NAME} PRIVATE
-    hdf5::hdf5-shared
+target_link_libraries(${PROJECT_NAME} 
+  PUBLIC 
+    eCAL::message
+  PRIVATE  
     eCAL::utils
-  )
+)
+
+if (${ECAL_LINK_HDF5_SHARED})
+  if (TARGET hdf5::hdf5-shared)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+      hdf5::hdf5-shared
+    )
+  else()
+    target_include_directories(${PROJECT_NAME} PRIVATE ${HDF5_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+      ${HDF5_LIBRARIES}
+    )
+  endif()
 else()
-  target_include_directories(${PROJECT_NAME} PRIVATE ${HDF5_INCLUDE_DIRS})
-  target_link_libraries(${PROJECT_NAME} PRIVATE
-    ${HDF5_LIBRARIES}
-    eCAL::utils
-  )
+  if (TARGET hdf5::hdf5-static)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+      hdf5::hdf5-static
+    )
+  else()
+    message(FATAL_ERROR "eCAL build configured to link HDF5 statically, however static libs are not available. Consider building with ECAL_LINK_HDF5_SHARED=ON") 
+  endif()
 endif()
-target_link_libraries(${PROJECT_NAME} PUBLIC eCAL::message)
+
 
 if(MSVC)
     msvc_source_tree(
