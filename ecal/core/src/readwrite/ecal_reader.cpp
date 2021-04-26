@@ -56,7 +56,6 @@ namespace eCAL
                  m_topic_name(""),
                  m_topic_id(""),
                  m_topic_type(""),
-                 m_mcast_address(""),
                  m_topic_size(0),
                  m_connected(false),
                  m_read_time(0),
@@ -92,7 +91,6 @@ namespace eCAL
     m_topic_id.clear();
     m_topic_type    = topic_type_;
     m_topic_desc    = topic_desc_;
-    m_mcast_address = topic2mcast(topic_name_, eCALPAR(NET, UDP_MULTICAST_GROUP), eCALPAR(NET, UDP_MULTICAST_MASK));
     m_clock         = 0;
     m_clock_old     = 0;
     m_message_drops = 0;

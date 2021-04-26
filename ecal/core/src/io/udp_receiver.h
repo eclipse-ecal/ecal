@@ -40,6 +40,8 @@ namespace eCAL
     bool Destroy();
 
     bool AddMultiCastGroup(const char* ipaddr_);
+    bool RemMultiCastGroup(const char* ipaddr_);
+
     size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr);
 
   protected:
