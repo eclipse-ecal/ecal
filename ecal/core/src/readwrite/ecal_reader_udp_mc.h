@@ -30,8 +30,8 @@
 #include "ecal_thread.h"
 #include "topic2mcast.h"
 
+#include <map>
 #include <memory>
-#include <set>
 #include <string>
 
 namespace eCAL
@@ -66,15 +66,30 @@ namespace eCAL
       }
       // add topic name based multicast address
       std::string mcast_address = topic2mcast(topic_name_, eCALPAR(NET, UDP_MULTICAST_GROUP), eCALPAR(NET, UDP_MULTICAST_MASK));
-      if (topic_name_mcast_set.find(mcast_address) == topic_name_mcast_set.end())
+      if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
       {
-        topic_name_mcast_set.insert(mcast_address);
+        topic_name_mcast_map.insert(std::pair<std::string, int>(mcast_address, 0));
         rcv.AddMultiCastGroup(mcast_address.c_str());
       }
+      topic_name_mcast_map[mcast_address]++;
     }
 
-    void RemSubscription(std::string& /*topic_name_*/, std::string& /*topic_id_*/)
+    void RemSubscription(std::string& topic_name_, std::string& /*topic_id_*/)
     {
+      std::string mcast_address = topic2mcast(topic_name_, eCALPAR(NET, UDP_MULTICAST_GROUP), eCALPAR(NET, UDP_MULTICAST_MASK));
+      if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
+      {
+        // this should never happen
+      }
+      else
+      {
+        topic_name_mcast_map[mcast_address]--;
+        if (topic_name_mcast_map[mcast_address] == 0)
+        {
+          rcv.RemMultiCastGroup(mcast_address.c_str());
+          topic_name_mcast_map.erase(mcast_address);
+        }
+      }
     }
 
     void UpdateParameter(SReaderLayerPar& /*par_*/)
@@ -82,10 +97,10 @@ namespace eCAL
     }
 
   private:
-    bool                  started;
-    CUDPReceiver          rcv;
-    CThread               thread;
-    CDataReaderUDP        reader;
-    std::set<std::string> topic_name_mcast_set;
+    bool                       started;
+    CUDPReceiver               rcv;
+    CThread                    thread;
+    CDataReaderUDP             reader;
+    std::map<std::string, int> topic_name_mcast_map;
   };
 };

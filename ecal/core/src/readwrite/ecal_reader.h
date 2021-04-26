@@ -107,7 +107,6 @@ namespace eCAL
     std::string                               m_topic_id;
     std::string                               m_topic_type;
     std::string                               m_topic_desc;
-    std::string                               m_mcast_address;
     std::atomic<size_t>                       m_topic_size;
 
     QOS::SReaderQOS                           m_qos;
