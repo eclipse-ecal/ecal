@@ -23,6 +23,7 @@ list(APPEND CMAKE_MODULE_PATH
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
 
 project(eCAL)
+set(ECAL_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}")
 
 # --------------------------------------------------------
 # command line build options

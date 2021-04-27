@@ -1,10 +1,11 @@
 find_path(Asio_INCLUDE_DIR
   NAMES asio.hpp
   HINTS
-    include ${CONAN_ASIO_ROOT}/include
-    ${CMAKE_SOURCE_DIR}/thirdparty/asio/asio/include
-    include
-  )
+    "${CONAN_ASIO_ROOT}/include"
+    "${ECAL_PROJECT_ROOT}/thirdparty/asio/asio/include"
+  NO_DEFAULT_PATH
+  NO_CMAKE_FIND_ROOT_PATH
+)
 
 if(Asio_INCLUDE_DIR-NOTFOUND)
   message(FATAL_ERROR "Could not find Asio library")
