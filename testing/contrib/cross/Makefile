@@ -20,9 +20,16 @@ run-host: build-host
 		ecal-crossbuild-host \
 		/bin/bash
 
-ecal:
+clean-target:
+	rm -rf artifacts
+
+clean:
 	rm -rf build
-	mkdir build
+
+prebuild:
+	mkdir -p build
+
+ecal: prebuild
 	cmake -Bbuild -H../../../ \
 		-DCMAKE_TOOLCHAIN_FILE=$(PWD)/toolchain-arm64.cmake \
 		-DCMAKE_BUILD_TYPE=Release \
