@@ -145,7 +145,20 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
     )
   endif()
 
-  if (NOT TARGET protobuf::protoc)
+  if (NOT TARGET protoc_imported AND CMAKE_CROSSCOMPILING)
+    # In cross compile scenario, we don't build protoc, so we need
+    # to find and import it so downstream usage will use the host compiler.
+
+    # find_program will search the host paths if CMAKE_FIND_ROOT_PATH_MODE_PROGRAM 
+    # is configured correctly (see toolchain file)
+    find_program(protoc_path NAMES protoc REQUIRED)
+    add_executable(protoc_imported IMPORTED)
+    set_target_properties(protoc_imported PROPERTIES IMPORTED_LOCATION ${protoc_path})
+    set_target_properties(protoc_imported PROPERTIES IMPORTED_GLOBAL TRUE)
+    
+    add_executable(protobuf::protoc ALIAS protoc_imported)
+    set(Protobuf_PROTOC_EXECUTABLE protoc_imported)
+  elseif(NOT TARGET protobuf::protoc)
     add_executable(protobuf::protoc ALIAS protoc)
     set(Protobuf_PROTOC_EXECUTABLE protoc)
   endif()
