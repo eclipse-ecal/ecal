@@ -18,7 +18,14 @@
 
 project(hdf5)
 
-find_package(HDF5 COMPONENTS C REQUIRED)
+if(NOT CMAKE_CROSSCOMPILING)
+  find_package(HDF5 COMPONENTS C REQUIRED)
+else()
+  find_library(hdf5_path NAMES hdf5 REQUIRED PATH_SUFFIXES hdf5/serial)
+  find_path(hdf5_include NAMES hdf5.h PATH_SUFFIXES hdf5/serial REQUIRED)  
+  set(HDF5_LIBRARIES "${hdf5_path};m;dl;z;sz;pthread")
+  set(HDF5_INCLUDE_DIRS "${hdf5_include}")
+endif()
 
 set(ecalhdf5_src
     src/eh5_meas.cpp

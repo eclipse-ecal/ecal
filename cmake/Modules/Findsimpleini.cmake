@@ -1,10 +1,11 @@
 find_path(simpleini_INCLUDE_DIR
   NAMES SimpleIni.h
   HINTS
-    include
-    ${CONAN_SIMPLEINI_ROOT}/include
-    ${CMAKE_SOURCE_DIR}/thirdparty/simpleini
-  )
+    "${CONAN_SIMPLEINI_ROOT}/include"
+    "${ECAL_PROJECT_ROOT}/thirdparty/simpleini"
+  NO_DEFAULT_PATH
+  NO_CMAKE_FIND_ROOT_PATH
+)
 
 if(simpleini_INCLUDE_DIR-NOTFOUND)
   message(FATAL_ERROR "Could not find simpleini library")
