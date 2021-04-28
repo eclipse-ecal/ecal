@@ -429,19 +429,6 @@ if(UNIX)
 endif()
 
 # --------------------------------------------------------
-# set install prefix
-# --------------------------------------------------------
-if(WIN32)
-  if(NOT ONCE_SET_CMAKE_INSTALL_PREFIX)
-    set(ONCE_SET_CMAKE_INSTALL_PREFIX TRUE CACHE BOOL
-      "Have we set the install prefix yet?" FORCE)
-    set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/_install CACHE PATH
-      "Install path prefix, prepended onto install directories"
-      FORCE)
-  endif(NOT ONCE_SET_CMAKE_INSTALL_PREFIX)
-endif()
-
-# --------------------------------------------------------
 # offer the user the choice of overriding the installation directories
 # --------------------------------------------------------
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
