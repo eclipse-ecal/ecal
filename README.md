@@ -59,7 +59,7 @@ sudo apt-get update
 sudo apt-get install ecal
 ```
 
-Check out other PPAs (that fixed to a specific eCAL release) [here](https://continental.github.io/ecal/getting_started/setup.html#fa-ubuntu-automatically-install-ecal-from-a-ppa).
+Check out other PPAs (that are fixed to a specific eCAL release) [here](https://continental.github.io/ecal/getting_started/setup.html#fa-ubuntu-automatically-install-ecal-from-a-ppa).
 
 *Ubuntu 16.04, 18.04, 20.04, 20.10, 21.04 for CPU architectures i386, x64, armhf, arm64 are supported at the time of writing.*
 
