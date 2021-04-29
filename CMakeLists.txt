@@ -68,6 +68,8 @@ option(CPACK_PACK_WITH_INNOSETUP               "Create Innosetup installer for t
 
 set(ECAL_INSTALL_PYTHON_DIR "bin" CACHE PATH "Location to install the Python extension modules. Might be set by setupdtools install.")
 
+set(ECAL_BUILD_VERSION "0.0.0" CACHE STRING "Inject a build version if not building from a git repository")
+
 # there is a CMake issue with testing threading availibility via TEST_RUN
 if(${CMAKE_CROSSCOMPILING})
   set(THREADS_PTHREAD_ARG "2" CACHE STRING "Forcibly set by CMakeLists.txt." FORCE)
@@ -286,7 +288,7 @@ endif ()
 
 find_package(CMakeFunctions REQUIRED)
 
-git_revision_information()
+git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
 set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
 set(eCAL_VERSION_MINOR  ${GIT_REVISION_MINOR})
 set(eCAL_VERSION_PATCH  ${GIT_REVISION_PATCH})
