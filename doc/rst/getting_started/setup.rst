@@ -51,6 +51,10 @@ You can choose from different PPAs, depending on your desired upgrade path.
 |fa-ubuntu| Manually install eCAL from a .deb file
 --------------------------------------------------
 
+.. warning:: 
+
+   We usually recommend installing from a PPA (:ref:`see above <getting_started_setup_ubuntu_ppa>`).
+
 #. Choose your desired eCAL Version from the :ref:`eCAL Download Archive<download_archive>`.
 
 #. Install the eCAL Dependencies:

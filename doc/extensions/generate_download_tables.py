@@ -244,21 +244,7 @@ def generate_download_tables(gh_api_key, main_page_output_dir, download_archive_
     # ===========================
     
     root_dir = os.path.dirname(os.path.realpath(__file__))
-
-    # Generate latest branch download table
-    data = {
-        "downloads" :    latest_branch_latest_release_downloads, 
-        "ecal_version" : latest_branch_latest_release_version
-    }
-    empy_helpers.expand_template(os.path.join(root_dir, "resource/download_table.html.em"), data, pathlib.Path(os.path.join(main_page_output_dir, "_download_table_latest.html")))
-
-    # Generate previous branch download table
-    data = {
-        "downloads" :    previous_branch_latest_release_downloads, 
-        "ecal_version" : previous_branch_latest_release_version
-    }
-    empy_helpers.expand_template(os.path.join(root_dir, "resource/download_table.html.em"), data, pathlib.Path(os.path.join(main_page_output_dir, "_download_table_previous.html")))
-    
+   
     # Generate heading and text
     data = {
         "ecal_latest_version":        latest_branch_latest_release_version,

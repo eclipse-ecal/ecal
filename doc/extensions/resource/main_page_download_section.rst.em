@@ -1,26 +1,27 @@
-Download eCAL
-=============
+Downloading and installing eCAL
+===============================
 
 At the moment, we support eCAL @(ecal_latest_version.major).@(ecal_latest_version.minor) and eCAL @(ecal_previous_version.major).@(ecal_previous_version.minor) with fixes.
-If you are looking for older releases, please visit the :ref:`Download Archive <download_archive>` or our `GitHub release page <https://github.com/continental/ecal/releases>`_.
+New users should always use the latest eCAL Version (@(ecal_latest_version.major).@(ecal_latest_version.minor)).
+Support for eCAL @(ecal_previous_version.major).@(ecal_previous_version.minor) will be dropped when eCAL @(ecal_latest_version.major).@(ecal_latest_version.minor + 1) is released.
 
-|fa-ubuntu| **Tip for Ubuntu Users**: You can automatically install :ref:`eCAL from a PPA <getting_started_setup_ubuntu_ppa>` using ``apt-get``!
+- |fa-windows| Windows:
+  
+  #. Visit the :ref:`Download Archive <download_archive>` and download the latest eCAL Installer
 
-Download eCAL @(ecal_latest_version)
----------------------
+  #. Install eCAL
 
-eCAL @(ecal_latest_version.major).@(ecal_latest_version.minor) is the latest stable release branch of eCAL.
-eCAL @(ecal_latest_version) was released on @(ecal_latest_release_date.strftime("%Y-%m-%d")).
+     .. image:: getting_started/img/setup.png
+        :alt: eCAL Setup
 
-.. raw:: html
-   :file: _download_table_latest.html
+- |fa-ubuntu| Ubuntu:
 
-Download eCAL @(ecal_previous_version)
----------------------
+  Install eCAL from our PPA:
 
-eCAL @(ecal_previous_version.major).@(ecal_previous_version.minor) is the currently supported legacy-version.
-It will be supported with bugfixes until eCAL @(ecal_latest_version.major).@(ecal_latest_version.minor + 1) is released.
-eCAL @(ecal_previous_version) was released on @(ecal_previous_release_date.strftime("%Y-%m-%d")).
+  .. code-block:: bash
 
-.. raw:: html
-   :file: _download_table_previous.html
+     sudo add-apt-repository ppa:ecal/ecal-latest
+     sudo apt-get update
+     sudo apt-get install ecal
+
+  Check out other PPAs (that are fixed to a specific eCAL release) :ref:`here <getting_started_setup_ubuntu_ppa>`.
