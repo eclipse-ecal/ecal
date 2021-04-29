@@ -387,11 +387,7 @@
                                     <ul>
 <li><a class="reference internal" href="#">Welcome to eCAL’s documentation!</a><ul>
 <li><a class="reference internal" href="#getting-started">Getting Started</a></li>
-<li><a class="reference internal" href="#download-ecal">Download eCAL</a><ul>
-<li><a class="reference internal" href="#download-ecal-5-8-7">Download eCAL 5.8.7</a></li>
-<li><a class="reference internal" href="#download-ecal-5-7-11">Download eCAL 5.7.11</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#downloading-and-installing-ecal">Downloading and installing eCAL</a></li>
 <li><a class="reference internal" href="#links">Links</a></li>
 <li><a class="reference internal" href="#license">License</a><ul>
 </ul>
@@ -444,84 +440,30 @@
 <li><p>Writing your first <a class="reference internal" href="getting_started/hello_world.html#getting-started-hello-world"><span class="std std-ref">Hello World</span></a> program</p></li>
 </ul>
 </div>
-<div class="section" id="download-ecal">
-<h2>Download eCAL<a class="headerlink" href="#download-ecal" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="downloading-and-installing-ecal">
+<h2>Downloading and installing eCAL<a class="headerlink" href="#downloading-and-installing-ecal" title="Permalink to this headline">¶</a></h2>
 <p>At the moment, we support eCAL 5.8 and eCAL 5.7 with fixes.
-If you are looking for older releases, please visit the <a class="reference internal" href="_download_archive/download_archive.html#download-archive"><span class="std std-ref">Download Archive</span></a> or our <a class="reference external" href="https://github.com/continental/ecal/releases">GitHub release page</a>.</p>
-<p><i class="fab fa-ubuntu"></i> <strong>Tip for Ubuntu Users</strong>: You can automatically install <a class="reference internal" href="getting_started/setup.html#getting-started-setup-ubuntu-ppa"><span class="std std-ref">eCAL from a PPA</span></a> using <code class="docutils literal notranslate"><span class="pre">apt-get</span></code>!</p>
-<div class="section" id="download-ecal-5-8-7">
-<h3>Download eCAL 5.8.7<a class="headerlink" href="#download-ecal-5-8-7" title="Permalink to this headline">¶</a></h3>
-<p>eCAL 5.8 is the latest stable release branch of eCAL.
-eCAL 5.8.7 was released on 2021-04-09.</p>
-<div class="table-responsive"><table class="colwidths-given docutils align-default" id="ecal-5-8-7-download">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 80%">
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><i class="fab fa-windows"></i> Windows</p></td>
-<td><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.8.7/ecal_5.8.7-win64.exe"><i class="fas fa-download"></i> Download eCAL 5.8.7 installer for Windows (.exe)</a></p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.8.7/ecal5-5.8.7-cp35-cp35m-win_amd64.whl"><i class="fab fa-python"></i> Python 3.5 integration for eCAL 5.8.7 on Windows (.whl)</a></p></li>
-<li><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.8.7/ecal5-5.8.7-cp36-cp36m-win_amd64.whl"><i class="fab fa-python"></i> Python 3.6 integration for eCAL 5.8.7 on Windows (.whl)</a></p></li>
-<li><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.8.7/ecal5-5.8.7-cp37-cp37m-win_amd64.whl"><i class="fab fa-python"></i> Python 3.7 integration for eCAL 5.8.7 on Windows (.whl)</a></p></li>
-<li><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.8.7/ecal5-5.8.7-cp38-cp38-win_amd64.whl"><i class="fab fa-python"></i> Python 3.8 integration for eCAL 5.8.7 on Windows (.whl)</a></p></li>
-<li><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.8.7/ecal5-5.8.7-cp39-cp39-win_amd64.whl"><i class="fab fa-python"></i> Python 3.9 integration for eCAL 5.8.7 on Windows (.whl)</a></p></li>
+New users should always use the latest eCAL Version (5.8).
+Support for eCAL 5.7 will be dropped when eCAL 5.9 is released.</p>
+<ul>
+<li><p><i class="fab fa-windows"></i> Windows:</p>
+<ol class="arabic">
+<li><p>Visit the <a class="reference internal" href="_download_archive/download_archive.html#download-archive"><span class="std std-ref">Download Archive</span></a> and download the latest eCAL Installer</p></li>
+<li><p>Install eCAL</p>
+<img alt="eCAL Setup" src="_images/setup.png" />
+</li>
+</ol>
+</li>
+<li><p><i class="fab fa-ubuntu"></i> Ubuntu:</p>
+<p>Install eCAL from our PPA:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo add-apt-repository ppa:ecal/ecal-latest
+sudo apt-get update
+sudo apt-get install ecal
+</pre></div>
+</div>
+<p>Check out other PPAs (that are fixed to a specific eCAL release) <a class="reference internal" href="getting_started/setup.html#getting-started-setup-ubuntu-ppa"><span class="std std-ref">here</span></a>.</p>
+</li>
 </ul>
-</td>
-</tr>
-<tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 18.04</p></td>
-<td><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.8.7/ecal_5.8.7-bionic_amd64.deb"><i class="fas fa-download"></i> Download eCAL 5.8.7 installer for Ubuntu 18.04 (.deb)</a></p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.8.7/ecal5-1bionic-cp36-cp36m-linux_x86_64.whl"><i class="fab fa-python"></i> Python 3.6 integration for eCAL 5.8.7 on Ubuntu 18.04 (.whl)</a></p></li>
-</ul>
-</td>
-</tr>
-<tr class="row-odd"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 20.04</p></td>
-<td><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.8.7/ecal_5.8.7-focal_amd64.deb"><i class="fas fa-download"></i> Download eCAL 5.8.7 installer for Ubuntu 20.04 (.deb)</a></p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.8.7/ecal5-1focal-cp38-cp38-linux_x86_64.whl"><i class="fab fa-python"></i> Python 3.8 integration for eCAL 5.8.7 on Ubuntu 20.04 (.whl)</a></p></li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table></div>
-</div></div>
-<div class="section" id="download-ecal-5-7-11">
-<h3>Download eCAL 5.7.11<a class="headerlink" href="#download-ecal-5-7-11" title="Permalink to this headline">¶</a></h3>
-<p>eCAL 5.7 is the currently supported legacy-version.
-It will be supported with bugfixes until eCAL 5.9 is released.
-eCAL 5.7.11 was released on 2021-04-09.</p>
-<div class="table-responsive"><table class="colwidths-given docutils align-default" id="ecal-5-7-11-download">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 80%">
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><i class="fab fa-windows"></i> Windows</p></td>
-<td><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.7.11/ecal_5.7.11-win64.exe"><i class="fas fa-download"></i> Download eCAL 5.7.11 installer for Windows (.exe)</a></p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.7.11/ecal-5.7.11_py3.9-win64.egg"><i class="fab fa-python"></i> Python 3.9 integration for eCAL 5.7.11 on Windows (.egg)</a></p></li>
-</ul>
-</td>
-</tr>
-<tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 18.04</p></td>
-<td><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.7.11/ecal_5.7.11-bionic_amd64.deb"><i class="fas fa-download"></i> Download eCAL 5.7.11 installer for Ubuntu 18.04 (.deb)</a></p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.7.11/ecal-5.7.11_py3.6-bionic_amd64.egg"><i class="fab fa-python"></i> Python 3.6 integration for eCAL 5.7.11 on Ubuntu 18.04 (.egg)</a></p></li>
-</ul>
-</td>
-</tr>
-<tr class="row-odd"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 20.04</p></td>
-<td><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.7.11/ecal_5.7.11-focal_amd64.deb"><i class="fas fa-download"></i> Download eCAL 5.7.11 installer for Ubuntu 20.04 (.deb)</a></p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.7.11/ecal-5.7.11_py3.8-focal_amd64.egg"><i class="fab fa-python"></i> Python 3.8 integration for eCAL 5.7.11 on Ubuntu 20.04 (.egg)</a></p></li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table></div>
-</div></div>
 </div>
 <div class="section" id="links">
 <h2>Links<a class="headerlink" href="#links" title="Permalink to this headline">¶</a></h2>
