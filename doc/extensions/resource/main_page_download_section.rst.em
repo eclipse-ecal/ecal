@@ -2,7 +2,7 @@ Downloading and installing eCAL
 ===============================
 
 At the moment, we support eCAL @(ecal_latest_version.major).@(ecal_latest_version.minor) and eCAL @(ecal_previous_version.major).@(ecal_previous_version.minor) with fixes.
-New users should always use the latest eCAL Version (@(ecal_latest_version.major).@(ecal_latest_version.minor)).
+New users should always use the latest eCAL Version (@(ecal_latest_version)).
 Support for eCAL @(ecal_previous_version.major).@(ecal_previous_version.minor) will be dropped when eCAL @(ecal_latest_version.major).@(ecal_latest_version.minor + 1) is released.
 
 - |fa-windows| Windows:
