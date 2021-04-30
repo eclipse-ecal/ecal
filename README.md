@@ -45,7 +45,7 @@ We provide binary installers for Windows and Ubuntu. If you need further help in
 
 [Download](https://continental.github.io/ecal/_download_archive/download_archive.html) the latest eCAL Installer and follow the Setup Wizard
 
-    ![eCAL Setup](doc/rst/getting_started/img/setup.png)
+![eCAL Setup](doc/rst/getting_started/img/setup.png)
     
 *We only support 64bit Windows 7 / 10*
 
