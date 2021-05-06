@@ -18,14 +18,15 @@
 */
 
 /**
- * @brief  eCAL iceoryx reader
+ * @brief  shared memory (iceoryx) reader
 **/
 
 #pragma once
 
 #include "readwrite/ecal_reader_layer.h"
 
-#include <iceoryx_posh/popo/subscriber.hpp>
+#include <iceoryx_posh/popo/listener.hpp>
+#include <iceoryx_posh/popo/untyped_subscriber.hpp>
 
 #include <memory>
 #include <mutex>
@@ -34,7 +35,7 @@
 
 namespace eCAL
 {
-  // ecal Iceoryx reader
+  // ecal shared memory (Iceoryx) reader
   class CDataReaderSHM
   {
   public:
@@ -44,8 +45,9 @@ namespace eCAL
     bool DestroyIceoryxSub();
 
   private:
-    std::shared_ptr<iox::popo::Subscriber> m_subscriber;
-    void receiveHandler();
+    std::shared_ptr<iox::popo::UntypedSubscriber> m_subscriber;
+    iox::popo::Listener                           m_listener;
+    static void onSampleReceivedCallback(iox::popo::UntypedSubscriber* subscriber_, CDataReaderSHM* self);
 
     std::string m_topic_name;
   };
