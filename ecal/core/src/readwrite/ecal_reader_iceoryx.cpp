@@ -43,14 +43,10 @@ namespace eCAL
   {
   }
 
-  bool CDataReaderSHM::CreateIceoryxSub(const std::string& topic_name_)
+  bool CDataReaderSHM::Create(const std::string& topic_name_)
   {
     // store topic name
     m_topic_name = topic_name_;
-
-    // create the runtime for registering with the RouDi daemon
-    const iox::capro::IdString_t runtime (iox::cxx::TruncateToCapacity, std::string("/") + eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID()));
-    iox::runtime::PoshRuntime::initRuntime(runtime);
 
     // subscriber description
     const iox::capro::IdString_t service  (iox::cxx::TruncateToCapacity, eCALPAR(ICEORYX, SERVICE));
@@ -71,7 +67,7 @@ namespace eCAL
     return true;
   }
 
-  bool CDataReaderSHM::DestroyIceoryxSub()
+  bool CDataReaderSHM::Destroy()
   {
     if(!m_subscriber) return false;
     m_subscriber = nullptr;

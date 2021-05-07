@@ -35,6 +35,9 @@ namespace eCAL
 {
   CDataWriterSHM::CDataWriterSHM()
   {
+    // create the runtime for registering with the RouDi daemon
+    const iox::capro::IdString_t runtime (iox::cxx::TruncateToCapacity, eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID()));
+    iox::runtime::PoshRuntime::initRuntime(runtime);
   }
 
   CDataWriterSHM::~CDataWriterSHM()
@@ -58,10 +61,6 @@ namespace eCAL
 
   bool CDataWriterSHM::Create(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
   {
-    // create the runtime for registering with the RouDi daemon
-    const iox::capro::IdString_t runtime (iox::cxx::TruncateToCapacity, std::string("/") + eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID()));
-    iox::runtime::PoshRuntime::initRuntime(runtime);
-
     // publisher description
     const iox::capro::IdString_t service  (iox::cxx::TruncateToCapacity, eCALPAR(ICEORYX, SERVICE));
     const iox::capro::IdString_t instance (iox::cxx::TruncateToCapacity, eCALPAR(ICEORYX, INSTANCE));
