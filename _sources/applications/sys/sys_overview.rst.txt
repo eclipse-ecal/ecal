@@ -42,7 +42,7 @@ eCAL Sys consists of 2 (or 3) applications:
 
    .. note::
 
-      The eCAL Sys Client is a remote-control application with not authentication.
+      The eCAL Sys Client is a remote-control application with no authentication.
       If you are annoyed by accepting this security implication at startup, you can start eCAL Sys Client with:
 
       .. code-block:: console
