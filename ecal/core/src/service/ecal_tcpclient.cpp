@@ -83,9 +83,12 @@ namespace eCAL
   {
     if (!m_created) return;
 
+    m_socket    ->close();
     m_io_service->stop();
+
     m_async_worker.join();
 
+    m_idle_work  = nullptr;
     m_socket     = nullptr;
     m_io_service = nullptr;
     m_connected  = false;
