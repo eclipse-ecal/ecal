@@ -67,7 +67,7 @@ namespace eCAL
         if (pid != 0)
           EcalSysClientLogger::Instance()->info("Successfully started process (PID " + std::to_string(pid) + "): " + task.path + " " + task.arguments);
         else
-          EcalSysClientLogger::Instance()->error("Failed to start Task: " + std::to_string(pid) + "): " + task.path + " " + task.arguments);
+          EcalSysClientLogger::Instance()->error(std::string("Failed to start Task: ") + std::to_string(pid) + "): " + task.path + " " + task.arguments);
       }
 
       return pid_list;

@@ -43,16 +43,12 @@ target_include_directories(${PROJECT_NAME} PUBLIC  include)
 create_targets_protobuf()
 
 target_link_libraries(${PROJECT_NAME}
-    PUBLIC
-    spdlog::spdlog
-)
-
-target_link_libraries(${PROJECT_NAME}
   PUBLIC
     protobuf::libprotobuf
     eCAL::core
     eCAL::pb
     eCAL::utils
+    spdlog::spdlog
   PRIVATE
     Threads::Threads  
     EcalParser
