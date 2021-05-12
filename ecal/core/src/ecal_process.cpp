@@ -1601,11 +1601,7 @@ namespace eCAL
     {
       if (proc_id_ <= 0) return false;
 
-      bool ret_val = kill(proc_id_, SIGTERM) == 0;
-
-      sleep(2);
-
-      ret_val |= kill(proc_id_, SIGKILL) == 0;
+      bool ret_val = (kill(proc_id_, SIGTERM) == 0);
 
       return ret_val;
     }
