@@ -28,11 +28,11 @@ Every layer can set up in 3 different activation modes. Every mode can be config
 
 - off: layer is swicthed off
 - on: layer is always switched on (i.e. payload will be send no matter if there is any local or network subscription)
-- auto: layer will be switched on autmatically
+- auto: layer will be switched on automatically
 
   - inproc = 2 : layer used automatically for inner process subscribers
   - shm = 2 : layer used automatically for inter process subscribers
-  - udp_mc = 2 : layer used autmatically for inter host (network) subcribers
+  - udp_mc = 2 : layer used automatically for inter host (network) subscribers
 
 Independent from this publisher setting you can switch on/off the receiving (subscription) logic for every layer.
 That means you can prevent incoming payload on specific layers.
