@@ -26,7 +26,7 @@ Every single builtin transport layer has it's specific communication properties.
 
 Every layer can set up in 3 different activation modes. Every mode can be configured as default in the ecal.ini file and can be overwritten by the C++/Python publisher API. This is the activation logic
 
-- off: layer is swicthed off
+- off: layer is switched off
 - on: layer is always switched on (i.e. payload will be send no matter if there is any local or network subscription)
 - auto: layer will be switched on autmatically
 
