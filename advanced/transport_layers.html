@@ -465,13 +465,13 @@ Every single builtin transport layer has it’s specific communication propertie
 </table>
 <p>Every layer can set up in 3 different activation modes. Every mode can be configured as default in the ecal.ini file and can be overwritten by the C++/Python publisher API. This is the activation logic</p>
 <ul class="simple">
-<li><p>off: layer is swicthed off</p></li>
+<li><p>off: layer is switched off</p></li>
 <li><p>on: layer is always switched on (i.e. payload will be send no matter if there is any local or network subscription)</p></li>
-<li><p>auto: layer will be switched on autmatically</p>
+<li><p>auto: layer will be switched on automatically</p>
 <ul>
 <li><p>inproc = 2 : layer used automatically for inner process subscribers</p></li>
 <li><p>shm = 2 : layer used automatically for inter process subscribers</p></li>
-<li><p>udp_mc = 2 : layer used autmatically for inter host (network) subcribers</p></li>
+<li><p>udp_mc = 2 : layer used automatically for inter host (network) subscribers</p></li>
 </ul>
 </li>
 </ul>
