@@ -25,6 +25,7 @@ This project has dependencies - list with dependency name and license follows.
   - GNU Lesser General Public License v2.1 - https://www.gnu.org/licenses/old-licenses/lgpl-2.1.de.html
   - GNU Lesser General Public License v3 - https://www.gnu.org/licenses/lgpl-3.0.de.html
   - MIT License - https://opensource.org/licenses/MIT
+  - LGPL v3 - http://www.gnu.org/licenses/lgpl-3.0.html
   - Some libraries like Google Protobuf define their own license model, see Details section
 
 
@@ -88,6 +89,10 @@ This project has dependencies - list with dependency name and license follows.
   - URL: https://github.com/ikalnytskyi/termcolor
   - License: BSD License - https://github.com/ikalnytskyi/termcolor/blob/master/LICENSE
 
+2.3.6 modpath.iss
+  - Copyright (c) Jared Breland
+  - URL: http://www.legroom.net/software
+  - License: LGPL 3
 
 2.4 GUI
 
