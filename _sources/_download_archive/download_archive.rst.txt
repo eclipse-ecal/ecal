@@ -15,6 +15,7 @@ eCAL 5.8
    :maxdepth: 0
    :titlesonly:
 
+   download_archive_ecal_5_8_9.rst
    download_archive_ecal_5_8_8.rst
    download_archive_ecal_5_8_7.rst
    download_archive_ecal_5_8_5.rst
@@ -32,6 +33,7 @@ eCAL 5.7
    :maxdepth: 0
    :titlesonly:
 
+   download_archive_ecal_5_7_13.rst
    download_archive_ecal_5_7_12.rst
    download_archive_ecal_5_7_11.rst
    download_archive_ecal_5_7_9.rst
