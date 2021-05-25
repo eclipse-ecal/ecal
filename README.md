@@ -23,6 +23,7 @@ Visit the eCAL Documentation at 🌐 http://ecal.io for more information.
 * eCAL provides both publish-subscribe and server-client patterns
 * eCAL is brokerless
 * eCAL provides a C++ and C interface for easy integration into other languages (like python, csharp or [rust](https://github.com/kopernikusai/ecal-rs))
+* eCAL can be used in conjunction with Matlab Simulink as [eCAL Simulink Toolbox](https://de.mathworks.com/matlabcentral/fileexchange/92825-ecal-toolbox) for simulation and prototyping
 * eCAL has powerful tools for [recording](https://continental.github.io/ecal/getting_started/recorder.html), [replay](https://continental.github.io/ecal/getting_started/player.html) and [monitoring](https://continental.github.io/ecal/getting_started/monitor.html) all your data flows - decentralized
 * eCAL is simple and zero-conf. No complex configuration for communication details and QOS settings are needed
 * eCAL is message protocol agnostic. You choose the message protocol that fits to your needs like [Google Protobuf](https://developers.google.com/protocol-buffers), [CapnProto](https://capnproto.org/), [Flatbuffers](https://google.github.io/flatbuffers/)...
@@ -112,6 +113,7 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 
 ## Related projects
 
+* [eCAL Simulink Toolbox](https://de.mathworks.com/matlabcentral/fileexchange/92825-ecal-toolbox)
 * [GO language binding](https://github.com/Blutkoete/golang-ecal)
 * [Rust language binding](https://github.com/kopernikusai/ecal-rs)
 * [ROS2 eCAL Middleware Layer](https://github.com/continental/rmw_ecal)
