@@ -51,6 +51,7 @@ public:
 ///////////////////////////////////////////
 public:
   int64_t jobId() const;
+  const eCAL::rec::JobConfig& localEvaluatedJobConfig() const;
   std::chrono::system_clock::time_point timestamp() const;
   bool isDeleted() const;
 

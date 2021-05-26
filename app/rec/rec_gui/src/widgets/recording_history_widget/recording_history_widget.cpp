@@ -22,6 +22,7 @@
 #include <QMenu>
 #include <QInputDialog>
 #include <QSettings>
+#include <QDesktopServices> 
 
 #include "models/item_data_roles.h"
 #include "models/tree_item_types.h"
@@ -29,6 +30,8 @@
 #include "qecalrec.h"
 
 #include <rec_client_core/ecal_rec_defs.h>
+
+#include <ecal/ecal_process.h>
 
 ////////////////////////////////////////////////
 // Constructor & Destructor
@@ -147,10 +150,12 @@ void RecordingHistoryWidget::contextMenu(const QPoint &pos)
 
   QAction* add_comment_action = new QAction(QIcon(":/ecalicons/ADD_FILE"), tr("Add comment..."),                                &context_menu);
   QAction* upload_action      = new QAction(QIcon(":/ecalicons/MERGE"),    tr("Merge / Upload (to ") + ftp_target_string + ")", &context_menu);
-  QAction* delete_action      = new QAction(QIcon(":/ecalicons/DELETE"),   tr("Delete from disk"),                                &context_menu);
+  QAction* explore_to_action  = new QAction(QIcon(":/ecalicons/OPEN"),     tr("Explore to..."),                                 &context_menu);
+  QAction* delete_action      = new QAction(QIcon(":/ecalicons/DELETE"),   tr("Delete from disk"),                              &context_menu);
 
   context_menu.addAction(add_comment_action);
   context_menu.addAction(upload_action);
+  context_menu.addAction(explore_to_action);
   context_menu.addSeparator();
   context_menu.addAction(delete_action);
 
@@ -187,6 +192,42 @@ void RecordingHistoryWidget::contextMenu(const QPoint &pos)
     }   
   }
 
+  // Check wether we can explore to the given measurement directory
+  bool can_explore_to_directory = false;
+  std::string explore_to_dir;
+  if (selected_job_item_indexes.size() == 1)
+  {
+    const JobHistoryJobItem* job_item = static_cast<JobHistoryJobItem*>(job_history_model_->item(selected_job_item_indexes.front()));
+    explore_to_dir                    = job_item->localEvaluatedJobConfig().GetCompleteMeasurementPath();
+    
+    // Get the proper job history element
+    auto job_id         = job_item->jobId();
+    auto job_history    = QEcalRec::instance()->jobHistory();
+    auto job_history_it = std::find_if(job_history.begin(), job_history.end(), [job_id](const eCAL::rec_server::JobHistoryEntry& e)->bool { return e.local_evaluated_job_config_.GetJobId() == job_id; });
+
+    if (job_history_it != job_history.end())
+    {
+      // Only explorable, if not deleted
+      if (!job_history_it->is_deleted_)
+      {
+        // Check if localhost has participated in the measurement
+        auto local_status_it = job_history_it->client_statuses_.find(eCAL::Process::GetHostName());
+
+        if (local_status_it == job_history_it->client_statuses_.end())
+        {
+          // If localhost hasn't participated, we can only open the directory if it has been uploaded to localhost
+          can_explore_to_directory = (job_history_it->is_uploaded_
+                                     && (job_history_it->upload_config_.type_ == eCAL::rec_server::UploadConfig::Type::INTERNAL_FTP));
+        }
+        else
+        {
+          // If localhost has participated, we can only open the directory, if it hasn't been deleted on localhost, e.g. by uploading to an external FTP Server
+          can_explore_to_directory = (!local_status_it->second.job_status_.is_deleted_);
+        }
+      }
+    }
+  }
+
   // Check wether we can delete any selected job
   bool can_delete_any = false;
   for (const auto& job_item_index : selected_job_item_indexes)
@@ -202,6 +243,13 @@ void RecordingHistoryWidget::contextMenu(const QPoint &pos)
 
   connect(upload_action,      &QAction::triggered, this, &RecordingHistoryWidget::uploadSelectedMeasurements);
   upload_action->setEnabled(can_upload_any);
+
+  connect(explore_to_action,  &QAction::triggered, this
+    , [explore_to_dir]()
+    {
+      QDesktopServices::openUrl(QString::fromStdString(explore_to_dir));
+    });
+  explore_to_action->setEnabled(can_explore_to_directory);
 
   connect(delete_action,      &QAction::triggered, this, &RecordingHistoryWidget::deleteSelectedMeasurements);
   delete_action->setEnabled(can_delete_any);
