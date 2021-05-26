@@ -1223,7 +1223,7 @@ namespace eCAL
         }
         else if (!dir_status.IsOk())
         {
-          path_ok = EcalUtils::Filesystem::MkDir(local_measurement_path);
+          path_ok = EcalUtils::Filesystem::MkPath(local_measurement_path);
         }
 
         if (!path_ok)
