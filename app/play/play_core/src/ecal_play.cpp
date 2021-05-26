@@ -159,7 +159,7 @@ std::map<std::string, std::string> EcalPlay::LoadChannelMappingFile(const std::s
     while (std::getline(mapping_file, line))
     {
       std::vector<std::string> mapping;
-      EcalUtils::String::Split(line, "\t ", mapping);
+      EcalUtils::String::Split(line, "\t", mapping);
 
       if (mapping.size() == 1)
       {
