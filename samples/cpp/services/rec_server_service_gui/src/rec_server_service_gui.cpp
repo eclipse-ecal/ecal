@@ -52,6 +52,7 @@ void RecServerServiceGui::sendRequest()
 {
   if (ui_.request_get_status_radiobutton->isChecked())              getStatus();
   else if (ui_.request_load_config_file_radiobutton->isChecked())   loadConfigFile();
+  else if (ui_.request_get_config_radiobutton->isChecked())         getConfig();
   else if (ui_.request_activate_radiobutton->isChecked())           activate();
   else if (ui_.request_deactivate_radiobutton->isChecked())         deActivate();
   else if (ui_.request_start_recording_radiobutton->isChecked())    startRecording();
@@ -80,6 +81,16 @@ void RecServerServiceGui::loadConfigFile()
   if (!success)
     ui_.response_texteedit->setText("Unable to call service");
 }
+
+void RecServerServiceGui::getConfig()
+{
+  eCAL::pb::rec_server::GenericRequest request;
+  bool success = recorder_service_.Call("GetConfig", request);
+
+  if (!success)
+    ui_.response_texteedit->setText("Unable to call service");
+}
+
 
 void RecServerServiceGui::activate()
 {
@@ -243,6 +254,15 @@ void RecServerServiceGui::onRecorderResponse(const struct eCAL::SServiceInfo& se
     else if (service_info_.method_name == "GetStatus")
     {
       eCAL::pb::rec_server::Status response;
+      response.ParseFromString(response_);
+
+      response_stream << "RecorderService " << service_info_.method_name.c_str() << " called successfully on host " << service_info_.host_name.c_str() << "\n";
+      response_stream << "------------------------------------------------\n\n";
+      response_stream << response.DebugString().c_str();
+    }
+    else if (service_info_.method_name == "GetConfig")
+    {
+      eCAL::pb::rec_server::RecServerConfig response;
       response.ParseFromString(response_);
 
       response_stream << "RecorderService " << service_info_.method_name.c_str() << " called successfully on host " << service_info_.host_name.c_str() << "\n";

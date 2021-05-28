@@ -580,9 +580,10 @@ if(BUILD_APPS AND HAS_HDF5)
   add_subdirectory(app/play/play_core)
   add_subdirectory(app/play/play_cli)
 
-  add_subdirectory(app/rec/rec_client_cli)
   add_subdirectory(app/rec/rec_client_core)
   add_subdirectory(app/rec/rec_server_core)
+  add_subdirectory(app/rec/rec_client_cli)
+  add_subdirectory(app/rec/rec_server_cli)
 endif()
 
 # --------------------------------------------------------

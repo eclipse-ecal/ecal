@@ -126,7 +126,7 @@ namespace eCAL
 
       std::string  GetMeasRootDir   () const;
       std::string  GetMeasName      () const;
-      unsigned int GetMaxFileSizeMib() const;
+      int64_t      GetMaxFileSizeMib() const;
       std::string  GetDescription   () const;
 
     ////////////////////////////////////
@@ -174,6 +174,9 @@ namespace eCAL
     // Config Save / Load
     ////////////////////////////////////
     public:
+
+      RecServerConfig GetConfig() const;
+
       bool ClearConfig();
       bool SaveConfigToFile(const std::string& path) const;
       bool LoadConfigFromFile(const std::string& path);

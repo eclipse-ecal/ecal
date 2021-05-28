@@ -30,6 +30,7 @@ set(ProtoFiles
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/process.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/client_service.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/client_state.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/server_config.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/server_service.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/server_state.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/service.proto

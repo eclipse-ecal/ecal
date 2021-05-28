@@ -25,6 +25,8 @@ package eCAL.pb.rec_server;
 
 import "ecal/pb/rec/server_state.proto";
 
+import "ecal/pb/rec/server_config.proto";
+
 ///////////////////////////////////////////////////////
 // Requests
 ///////////////////////////////////////////////////////
@@ -86,4 +88,5 @@ service EcalRecServerService
   rpc AddComment        (AddCommentRequest)         returns (eCAL.pb.rec_server.ServiceResult);           // Add a comment to the measurement given by meas_id. If no ID is given, the comment will be added to the last measurement, if possible.
   rpc DeleteMeasurement (GenericMeasurementRequest) returns (eCAL.pb.rec_server.ServiceResult);           // Deletes the measurement given by meas_id. If no ID is given, the last measurement will be deleted.
   rpc GetStatus         (GenericRequest)            returns (eCAL.pb.rec_server.Status);                  // Get the rec server status that includes the currently recording meas_id, the entire measurement history and other information
+  rpc GetConfig         (GenericRequest)            returns (eCAL.pb.rec_server.RecServerConfig);         // Get the current configuration of this rec server instance
 }

@@ -33,7 +33,7 @@
 #pragma warning(pop)
 #endif
 #include <custom_tclap/advanced_tclap_output.h>
-#include <custom_tclap/fuzzy_value_switch_arg.h>
+#include <custom_tclap/fuzzy_value_switch_arg_bool.h>
 
 #include <thread>
 
@@ -55,8 +55,8 @@ int main(int argc, char *argv[])
   TCLAP::SwitchArg stop_arg                                  ("x", "stop",                       "Stop all tasks",                 false);
   TCLAP::SwitchArg restart_arg                               ("r", "restart",                    "Restart all tasks",              false);
 
-  CustomTclap::FuzzyValueSwitchArg local_tasks_only_arg           ("", "local-tasks-only",            "Only tasks on local host will be considered.",                      false, false, "true|false");
-  CustomTclap::FuzzyValueSwitchArg use_localhost_for_all_tasks_arg("", "use-localhost-for-all-tasks", "All tasks will be considered as being on local host. ",             false, false, "true|false");
+  CustomTclap::FuzzyValueSwitchArgBool local_tasks_only_arg           ("", "local-tasks-only",            "Only tasks on local host will be considered.",                      false, false, "true|false");
+  CustomTclap::FuzzyValueSwitchArgBool use_localhost_for_all_tasks_arg("", "use-localhost-for-all-tasks", "All tasks will be considered as being on local host. ",             false, false, "true|false");
 
   std::vector<TCLAP::Arg*> arg_vector =
   {

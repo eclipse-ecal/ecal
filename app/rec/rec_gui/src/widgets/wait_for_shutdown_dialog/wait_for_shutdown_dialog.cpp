@@ -372,6 +372,7 @@ bool WaitForShutdownDialog::updateAllFields()
 {
   auto job_history = QEcalRec::instance()->jobHistory();
 
+  // Bitwise-or is intended!
   bool safe_to_exit = updateWaitForFlushing()
                     & updateBuiltInRecorderUploading(job_history)
                     & updateBuiltInFtpServer()

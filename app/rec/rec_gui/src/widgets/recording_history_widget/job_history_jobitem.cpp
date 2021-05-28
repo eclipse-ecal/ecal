@@ -123,7 +123,7 @@ QVariant JobHistoryJobItem::data(int column, Qt::ItemDataRole role) const
 
   else if (column == (int)Columns::STATUS)
   {
-    eCAL::rec::JobState combined_state = combinedJobSate();
+    eCAL::rec::JobState combined_state = combinedJobState();
 
     if (role == ItemDataRoles::RawDataRole)
     {
@@ -285,7 +285,7 @@ bool JobHistoryJobItem::updateIsDeleted(bool is_deleted)
   return false;
 }
 
-eCAL::rec::JobState                   JobHistoryJobItem::combinedJobSate() const
+eCAL::rec::JobState                   JobHistoryJobItem::combinedJobState() const
 {
   // Create a map to count how many children have which state
   std::map<eCAL::rec::JobState, int> job_state_count

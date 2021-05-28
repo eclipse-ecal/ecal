@@ -932,7 +932,7 @@ namespace eCAL
       job_config_.SetMeasName(meas_name);
     }
 
-    void RecServerImpl::SetMaxFileSizeMib(unsigned int max_file_size_mib)
+    void RecServerImpl::SetMaxFileSizeMib(int64_t max_file_size_mib)
     {
       job_config_.SetMaxFileSize(max_file_size_mib);
     }
@@ -953,7 +953,7 @@ namespace eCAL
       return job_config_.GetMeasName();
     }
 
-    unsigned int RecServerImpl::GetMaxFileSizeMib() const
+    int64_t RecServerImpl::GetMaxFileSizeMib() const
     {
       return job_config_.GetMaxFileSize();
     }
@@ -1831,8 +1831,29 @@ namespace eCAL
     }
 
     ////////////////////////////////////
-    // Config Save / Load
+    // Config Save / Load / Get
     ////////////////////////////////////
+    
+    RecServerConfig RecServerImpl::GetConfig() const
+    {
+      eCAL::rec_server::RecServerConfig config;
+
+      config.root_dir_                  = GetMeasRootDir();
+      config.meas_name_                 = GetMeasName();
+      config.max_file_size_             = GetMaxFileSizeMib();
+      config.description_               = GetDescription();
+      config.enabled_clients_config_    = GetEnabledRecClients();
+      config.pre_buffer_enabled_        = GetPreBufferingEnabled();
+      config.pre_buffer_length_         = GetMaxPreBufferLength();
+      config.built_in_recorder_enabled_ = IsUsingBuiltInRecorderEnabled();
+      config.record_mode_               = GetRecordMode();
+
+      if (config.record_mode_ != eCAL::rec::RecordMode::All)
+        config.listed_topics_ = GetListedTopics();
+
+      return config;
+    }
+
     bool RecServerImpl::ClearConfig()
     {
       if (recording_)

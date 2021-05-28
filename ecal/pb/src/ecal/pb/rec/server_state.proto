@@ -20,26 +20,9 @@
 syntax = "proto3";
 
 import "ecal/pb/rec/client_state.proto";
+import "ecal/pb/rec/server_config.proto";
 
 package eCAL.pb.rec_server;
-
-message UploadConfig
-{
-  enum Type
-  {
-    Unknown         = 0;
-    InternalFtp     = 1;
-    Ftp             = 2;
-  }
-  
-  Type type                             =  1;                                   // Whether the measurement was uploaded to the internal or external FTP
-  string host                           =  2;                                   // External FTP only: Hostname of the FTP Server
-  uint32 port                           =  3;                                   // External FTP only: Port of the FTP Server
-  string username                       =  4;                                   // External FTP only: FTP username
-  string password                       =  5;                                   // External FTP only: FTP password
-  string root_path                      =  6;                                   // External FTP only: The measurement root dir on the FTP server
-  bool delete_after_upload              =  7;                                   // Wether the measurement should have been deleted after a successfull upload
-}
 
 message ClientJobStatus
 {
@@ -48,6 +31,12 @@ message ClientJobStatus
   
   bool                         last_command_response_ok       = 3;              // Whether the last measurement-related command was successfully executed
   string                       last_command_response_message  = 4;              // If the last measurement-related command has not been executed successfully, this is a human-readable error message.
+}
+
+message ClientStatus
+{
+  eCAL.pb.rec_client.State      client_status                 =  1;             // The status that was polled from the client.
+  int64                         server_timestamp_of_status    =  2;             // The (eCAL-) time when the status was retrieved from the client. Important when checking the client-timestamp from the client_status for time-errors.
 }
 
 message Measurement
@@ -64,8 +53,9 @@ message Measurement
 
 message Status
 {
-  string                config_path              =  1;                          // The local path to the currently loaded config file
-  bool                  activated                =  2;                          // Whether the recorder is connected to it's clients and has initialized them
-  int64                 recording_meas_id        =  3;                          // The meas_id of the measurement that is currently recording (or 0/unset if no measurement is recording)
-  repeated Measurement  measurement_history      =  4;                          // A list of all measurements that have been started along with their detailed statuses
+  string                            config_path              =  1;              // The local path to the currently loaded config file
+  bool                              activated                =  2;              // Whether the recorder is connected to it's clients and has initialized them
+  int64                             recording_meas_id        =  3;              // The meas_id of the measurement that is currently recording (or 0/unset if no measurement is recording)
+  repeated Measurement              measurement_history      =  4;              // A list of all measurements that have been started along with their detailed statuses
+  map<string, ClientStatus>         client_statuses          =  5;              // A map with the status of all clients
 }

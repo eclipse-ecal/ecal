@@ -81,7 +81,7 @@ namespace eCAL
 
       std::string                         root_dir_;
       std::string                         meas_name_;
-      int                                 max_file_size_;
+      int64_t                             max_file_size_;
       std::string                         description_;
       std::map<std::string, ClientConfig> enabled_clients_config_;
       bool                                pre_buffer_enabled_;

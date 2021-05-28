@@ -68,8 +68,8 @@ namespace eCAL
     void            JobConfig::SetMeasName      (const std::string& meas_name)     { meas_name_ = meas_name; }
     std::string     JobConfig::GetMeasName      () const                           { return meas_name_; }
 
-    void            JobConfig::SetMaxFileSize   (unsigned int max_file_size_mb)    { max_file_size_mb_ = max_file_size_mb; }
-    unsigned int    JobConfig::GetMaxFileSize   () const                           { return max_file_size_mb_; }
+    void            JobConfig::SetMaxFileSize   (int64_t max_file_size_mb)         { max_file_size_mb_ = max_file_size_mb; }
+    int64_t         JobConfig::GetMaxFileSize   () const                           { return max_file_size_mb_; }
 
     void            JobConfig::SetDescription   (const std::string& description)   { description_ = description; }
     std::string     JobConfig::GetDescription   () const                           { return description_; }

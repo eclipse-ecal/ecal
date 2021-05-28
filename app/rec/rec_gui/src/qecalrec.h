@@ -224,9 +224,11 @@ signals:
   void measurementDeletedSignal(int64_t measid);
 
 ////////////////////////////////////
-// Config Save / Load
+// Config Save / Load / Get
 ////////////////////////////////////
 public slots:
+  eCAL::rec_server::RecServerConfig config() const;
+
   bool clearConfig();
   bool saveConfigToFile  (const std::string& path);
   bool loadConfigFromFile(const std::string& path, bool omit_dialogs = false);
