@@ -33,13 +33,11 @@
   #endif
   #include <unistd.h>
 
-  #if defined (__APPLE__) || defined(__FreeBSD__)
+  #if defined (__APPLE__)
     #include <copyfile.h>
-  #else
-    #ifndef __QNXNTO__
-      #include <sys/sendfile.h>
-    #endif
-  #endif //__linux__
+  #elif defined (__linux__)
+    #include <sys/sendfile.h>
+  #endif
   
 #endif  // _WIN32
 
@@ -311,11 +309,14 @@ namespace EcalUtils
         close(input_fd);
         return false;
       }
-#if defined (__APPLE__) || defined(__FreeBSD__)
+#if defined (__APPLE__)
       int result = fcopyfile(input_fd, output_fd, 0, COPYFILE_ALL);
       return (result == 0);
 #elif defined(__QNXNTO__)
       // TODO: Find an alternative to copy files on QNX operating system
+      return false;
+#elif defined(__FreeBSD__)
+      // TODO: Find an alternative to copy files on FreeBSD operating system
       return false;
 #else
       off_t bytesCopied = 0;

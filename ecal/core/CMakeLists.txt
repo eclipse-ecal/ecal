@@ -397,12 +397,15 @@ target_include_directories(${PROJECT_NAME}
     $<INSTALL_INTERFACE:include>
 )
 
+message("------> ${CMAKE_SYSTEM_NAME}")
+
 target_link_libraries(${PROJECT_NAME} 
   PUBLIC
     eCAL::proto
   PRIVATE
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:rt>
+    $<$<STREQUAL:${CMAKE_SYSTEM_NAME},FreeBSD>:util>
     $<$<BOOL:${WIN32}>:iphlpapi>
     $<$<BOOL:${WIN32}>:psapi> 
     $<$<BOOL:${WIN32}>:shlwapi.lib> 
@@ -418,6 +421,10 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::apps
     eCAL::utils
 )
+
+if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+
+endif()
 
 set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)
 set_property(TARGET ${PROJECT_NAME}_c PROPERTY FOLDER ecal/core)

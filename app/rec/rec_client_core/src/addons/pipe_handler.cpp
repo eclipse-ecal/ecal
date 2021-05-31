@@ -274,6 +274,13 @@ bool PipeHandler::StopProcess()
 #include <locale>
 #include <codecvt>
 
+#ifdef __FreeBSD__
+extern "C"
+{
+  extern char **environ;
+}
+#endif
+
 PipeHandler::PipeHandler(): pid_{0}
 {}
 
