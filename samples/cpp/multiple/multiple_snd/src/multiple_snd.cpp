@@ -25,6 +25,7 @@
 #include <atomic>
 #include <chrono>
 #include <thread>
+#include <memory>
 
 #define PAYLOAD_SIZE      1024
 #define PRINT_LOG            0
