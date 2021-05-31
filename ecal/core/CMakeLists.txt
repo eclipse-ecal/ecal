@@ -397,8 +397,6 @@ target_include_directories(${PROJECT_NAME}
     $<INSTALL_INTERFACE:include>
 )
 
-message("------> ${CMAKE_SYSTEM_NAME}")
-
 target_link_libraries(${PROJECT_NAME} 
   PUBLIC
     eCAL::proto
@@ -421,10 +419,6 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::apps
     eCAL::utils
 )
-
-if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-
-endif()
 
 set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)
 set_property(TARGET ${PROJECT_NAME}_c PROPERTY FOLDER ecal/core)
