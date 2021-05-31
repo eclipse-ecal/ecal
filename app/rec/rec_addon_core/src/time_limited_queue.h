@@ -25,6 +25,7 @@
 #include <chrono>
 #include <thread>
 #include <functional>
+#include <condition_variable>
 
 template <class T>
 class TimeLimtedQueue : public std::enable_shared_from_this<TimeLimtedQueue<T>>
