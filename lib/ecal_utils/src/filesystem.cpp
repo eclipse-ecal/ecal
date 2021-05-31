@@ -37,6 +37,10 @@
     #include <copyfile.h>
   #elif defined (__linux__)
     #include <sys/sendfile.h>
+  #elif defined (__FreeBSD__)
+    #include <sys/types.h>
+    #include <sys/socket.h>
+    #include <sys/uio.h>
   #endif
   
 #endif  // _WIN32
@@ -316,8 +320,9 @@ namespace EcalUtils
       // TODO: Find an alternative to copy files on QNX operating system
       return false;
 #elif defined(__FreeBSD__)
-      // TODO: Find an alternative to copy files on FreeBSD operating system
-      return false;
+      FileStatus file_status(source_clean, OsStyle::Current);
+      int result = sendfile(output_fd, input_fd, 0, file_status.FileSize(), nullptr, nullptr, 0);
+      return (result != -1);
 #else
       off_t bytesCopied = 0;
       FileStatus file_status(source_clean, OsStyle::Current);
