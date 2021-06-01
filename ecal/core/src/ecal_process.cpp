@@ -73,6 +73,12 @@
 #include <sys/sysctl.h>
 #endif // ECAL_OS_MACOS
 
+#ifdef ECAL_OS_FREEBSD
+#include <sys/user.h>
+#include <sys/sysctl.h>
+#include <libutil.h>
+#endif
+
 #ifdef ECAL_NPCAP_SUPPORT
 #include <udpcap/npcap_helpers.h>
 #endif // ECAL_NPCAP_SUPPORT
@@ -813,7 +819,19 @@ namespace eCAL
           // Buffer size is too small.
           return "";
         }
-#else // ECAL_OS_MACOS
+#elif defined(ECAL_OS_QNX)
+        size_t length {0};
+        // TODO: Find a suitable method on QNX to retrieve current process name
+#elif defined(ECAL_OS_FREEBSD)
+        size_t length {0};
+        struct kinfo_proc *proc = kinfo_getproc(getpid());
+        if (proc)
+        {
+          strncpy(buf, proc->ki_comm, sizeof(buf));
+          length = strlen(buf);
+          free(proc);
+        }
+#else
         ssize_t length = readlink("/proc/self/exe", buf, PATH_MAX);
 
         if (length < 0)
@@ -951,7 +969,36 @@ namespace eCAL
             break;
         }
 
-#else // ECAL_OS_MACOS
+#elif defined(ECAL_OS_QNX)
+        // TODO: Find a suitable method on QNX to get process arguments of the current executable
+        std::vector<std::string> argument_vector;
+        g_process_par = "";
+#elif defined(ECAL_OS_FREEBSD)
+        // create mib structure for sysctl call
+        int mib[4];
+        mib[0] = CTL_KERN;
+        mib[1] = KERN_PROC;
+        mib[2] = KERN_PROC_ARGS;
+        mib[3] = getpid();
+
+        // get the length of the return value buffer
+        size_t len {0};
+        sysctl(mib, sizeof mib , NULL, &len, NULL, 0);
+
+        // retrieve process arguments as null-character seperated c-string
+        auto buffer = std::make_unique<char[]>(len);
+        sysctl(mib, sizeof mib, buffer.get(), &len, NULL, 0);
+        size_t position = 0;
+        
+        // convert null-character seperated c-string to std::vector<std::string>
+        std::vector<std::string> argument_vector;
+        while(position < len)
+        {
+          const char* arg = &(buffer.get()[position]);
+          argument_vector.push_back(arg);
+          position += strlen(arg) + 1;
+        }
+#else
 
         const std::string filename = "/proc/self/cmdline";
         std::vector<std::string> argument_vector;

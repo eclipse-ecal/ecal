@@ -38,6 +38,11 @@
 #endif
 
 
+#if defined(__FreeBSD__)
+#define ECAL_OS_LINUX
+#define ECAL_OS_FREEBSD
+#endif
+
 #ifdef _MSC_VER
   #ifdef eCAL_EXPORTS
     #define ECALC_API __declspec(dllexport)
