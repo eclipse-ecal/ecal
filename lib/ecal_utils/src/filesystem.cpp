@@ -41,6 +41,8 @@
     #include <sys/types.h>
     #include <sys/socket.h>
     #include <sys/uio.h>
+  #else
+    #include <sys/mman.h>
   #endif
   
 #endif  // _WIN32
@@ -303,7 +305,8 @@ namespace EcalUtils
 #if defined WIN32
       return (CopyFileA(source_clean.c_str(), destination_clean.c_str(), FALSE) != FALSE);
 #else // WIN32
-      int input_fd, output_fd;    
+      int input_fd {-1}, output_fd {-1};
+      bool copy_succeeded {false};
       if ((input_fd = open(source_clean.c_str(), O_RDONLY)) == -1)
       {
         return false;
@@ -315,20 +318,31 @@ namespace EcalUtils
       }
 #if defined (__APPLE__)
       int result = fcopyfile(input_fd, output_fd, 0, COPYFILE_ALL);
-      return (result == 0);
-#elif defined(__QNXNTO__)
-      // TODO: Find an alternative to copy files on QNX operating system
-      return false;
+      copy_succeeded = (result == 0);
 #elif defined(__FreeBSD__)
       FileStatus file_status(source_clean, OsStyle::Current);
       int result = sendfile(output_fd, input_fd, 0, file_status.FileSize(), nullptr, nullptr, 0);
-      return (result != -1);
-#else
+      copy_succeeded = (result != -1);
+#elif defined(__linux__)
       off_t bytesCopied = 0;
       FileStatus file_status(source_clean, OsStyle::Current);
       int result = sendfile(output_fd, input_fd, &bytesCopied, file_status.FileSize());
-      return (result != -1);
+      copy_succeeded = (result != -1);
+#else
+      FileStatus file_status(source_clean, OsStyle::Current);
+      void *mem = mmap(NULL, file_status.FileSize(), PROT_READ, MAP_SHARED, input_fd, 0);
+      if(mem != MAP_FAILED)
+      {
+        ssize_t written_bytes = write(output_fd, mem, file_status.FileSize());
+        copy_succeeded = (written_bytes == file_status.FileSize());
+        munmap(mem, file_status.FileSize());
+      }
+      else
+        copy_succeeded = false;
 #endif
+      close(input_fd);
+      close(output_fd);
+      return copy_succeeded;
 #endif // WIN32
     }
 
