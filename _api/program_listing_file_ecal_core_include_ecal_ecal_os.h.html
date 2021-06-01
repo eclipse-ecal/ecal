@@ -463,6 +463,11 @@
 <span class="cp">#define ECAL_OS_QNX</span>
 <span class="cp">#endif</span>
 
+<span class="cp">#if defined(__FreeBSD__)</span>
+<span class="cp">#define ECAL_OS_LINUX</span>
+<span class="cp">#define ECAL_OS_FREEBSD</span>
+<span class="cp">#endif</span>
+
 <span class="cp">#ifdef _MSC_VER</span>
   <span class="cp">#ifdef eCAL_EXPORTS</span>
     <span class="cp">#define ECALC_API __declspec(dllexport)</span>
