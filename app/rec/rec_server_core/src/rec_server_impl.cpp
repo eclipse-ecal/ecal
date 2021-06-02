@@ -1847,6 +1847,7 @@ namespace eCAL
       config.pre_buffer_length_         = GetMaxPreBufferLength();
       config.built_in_recorder_enabled_ = IsUsingBuiltInRecorderEnabled();
       config.record_mode_               = GetRecordMode();
+      config.upload_config_             = GetUploadConfig();
 
       if (config.record_mode_ != eCAL::rec::RecordMode::All)
         config.listed_topics_ = GetListedTopics();

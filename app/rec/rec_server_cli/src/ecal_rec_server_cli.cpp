@@ -1076,7 +1076,7 @@ int main(int argc, char** argv)
       {
         eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
 
-        if (start_recording_arg.isSet() && (upload_meas_arg.getValue() == 0))
+        if ((start_recording_arg.isSet() || save_pre_buffer_arg.isSet() || stop_arg.isSet()) && (upload_meas_arg.getValue() == 0))
         {
           // Primivively wait 1 second and hope everybody has finished flushing until then
           std::this_thread::sleep_for(std::chrono::seconds(1));
