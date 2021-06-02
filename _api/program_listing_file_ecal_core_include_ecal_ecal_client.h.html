@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -34,9 +38,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -421,7 +423,7 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="program-listing-for-file-ecal-client-h">
+    <section id="program-listing-for-file-ecal-client-h">
 <span id="program-listing-file-ecal-core-include-ecal-ecal-client-h"></span><h1>Program Listing for File ecal_client.h<a class="headerlink" href="#program-listing-for-file-ecal-client-h" title="Permalink to this headline">¶</a></h1>
 <p>↰ <a class="reference internal" href="file_ecal_core_include_ecal_ecal_client.h.html#file-ecal-core-include-ecal-ecal-client-h"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">ecal/core/include/ecal/ecal_client.h</span></code>)</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* ========================= eCAL LICENSE =================================</span>
@@ -478,7 +480,7 @@
 
     <span class="kt">bool</span> <span class="nf">Call</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">method_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">request_</span><span class="p">);</span>
 
-    <span class="kt">bool</span> <span class="nf">Call</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">host_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">method_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">request_</span><span class="p">,</span> <span class="k">struct</span> <span class="nc">SServiceInfo</span><span class="o">&amp;</span> <span class="n">service_info_</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">response_</span><span class="p">);</span>
+    <span class="kt">bool</span> <span class="nf">Call</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">host_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">method_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">request_</span><span class="p">,</span> <span class="k">struct</span> <span class="n">SServiceInfo</span><span class="o">&amp;</span> <span class="n">service_info_</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">response_</span><span class="p">);</span>
 
     <span class="kt">void</span> <span class="nf">CallAsync</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">method_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">request_</span><span class="p">);</span>
 
@@ -561,11 +563,11 @@
       <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Client_Call</span><span class="p">(</span><span class="n">m_service</span><span class="p">,</span> <span class="n">method_name_</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">request_</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">request_</span><span class="p">.</span><span class="n">size</span><span class="p">()))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
     <span class="p">}</span>
 
-    <span class="kt">bool</span> <span class="nf">Call</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">host_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">method_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">request_</span><span class="p">,</span> <span class="k">struct</span> <span class="nc">SServiceInfo</span><span class="o">&amp;</span> <span class="n">service_info_</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">response_</span><span class="p">)</span>
+    <span class="kt">bool</span> <span class="nf">Call</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">host_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">method_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">request_</span><span class="p">,</span> <span class="k">struct</span> <span class="n">SServiceInfo</span><span class="o">&amp;</span> <span class="n">service_info_</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">response_</span><span class="p">)</span>
     <span class="p">{</span>
       <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">m_service</span><span class="p">)</span> <span class="k">return</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
       <span class="kt">void</span><span class="o">*</span> <span class="n">response</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-      <span class="k">struct</span> <span class="nc">SServiceInfoC</span> <span class="n">service_info</span><span class="p">;</span>
+      <span class="k">struct</span> <span class="n">SServiceInfoC</span> <span class="n">service_info</span><span class="p">;</span>
       <span class="kt">int</span> <span class="n">response_len</span> <span class="o">=</span> <span class="n">eCAL_Client_Call_Wait</span><span class="p">(</span><span class="n">m_service</span><span class="p">,</span> <span class="n">host_name_</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">method_name_</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">request_</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">request_</span><span class="p">.</span><span class="n">size</span><span class="p">()),</span> <span class="o">&amp;</span><span class="n">service_info</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">response</span><span class="p">,</span> <span class="n">ECAL_ALLOCATE_4ME</span><span class="p">);</span>
       <span class="k">if</span><span class="p">(</span><span class="n">response_len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
       <span class="p">{</span>
@@ -582,7 +584,7 @@
       <span class="k">return</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
     <span class="p">}</span>
 
-    <span class="k">static</span> <span class="kt">void</span> <span class="n">ResponseCallback</span><span class="p">(</span><span class="k">const</span> <span class="k">struct</span> <span class="nc">SServiceInfoC</span><span class="o">*</span> <span class="n">service_info_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">response_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">response_len_</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">par_</span><span class="p">)</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">ResponseCallback</span><span class="p">(</span><span class="k">const</span> <span class="k">struct</span> <span class="n">SServiceInfoC</span><span class="o">*</span> <span class="n">service_info_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">response_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">response_len_</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">par_</span><span class="p">)</span>
     <span class="p">{</span>
       <span class="k">if</span><span class="p">(</span><span class="n">par_</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
       <span class="n">CServiceClient</span><span class="o">*</span> <span class="n">client</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">CServiceClient</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">par_</span><span class="p">);</span>
@@ -595,14 +597,14 @@
       <span class="n">service_info</span><span class="p">.</span><span class="n">call_state</span>   <span class="o">=</span> <span class="n">service_info_</span><span class="o">-&gt;</span><span class="n">call_state</span><span class="p">;</span>
       <span class="n">client</span><span class="o">-&gt;</span><span class="n">m_callback</span><span class="p">(</span><span class="n">service_info</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">response_</span><span class="p">,</span> <span class="n">response_len_</span><span class="p">));</span>
     <span class="p">}</span>
-    <span class="kt">bool</span> <span class="n">AddResponseCallback</span><span class="p">(</span><span class="n">ResponseCallbackT</span> <span class="n">callback_</span><span class="p">)</span>
+    <span class="kt">bool</span> <span class="nf">AddResponseCallback</span><span class="p">(</span><span class="n">ResponseCallbackT</span> <span class="n">callback_</span><span class="p">)</span>
     <span class="p">{</span>
       <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">m_service</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
       <span class="n">m_callback</span> <span class="o">=</span> <span class="n">callback_</span><span class="p">;</span>
       <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Client_AddResponseCallbackC</span><span class="p">(</span><span class="n">m_service</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">CServiceClient</span><span class="o">::</span><span class="n">ResponseCallback</span><span class="p">,</span> <span class="k">this</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
     <span class="p">}</span>
 
-    <span class="kt">bool</span> <span class="n">RemResponseCallback</span><span class="p">()</span>
+    <span class="kt">bool</span> <span class="nf">RemResponseCallback</span><span class="p">()</span>
     <span class="p">{</span>
       <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">m_service</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
       <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Client_RemResponseCallback</span><span class="p">(</span><span class="n">m_service</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
@@ -622,7 +624,7 @@
 <span class="cp">#endif </span><span class="cm">/* ! ECAL_C_DLL */</span><span class="cp"></span>
 </pre></div>
 </div>
-</div>
+</section>
 
 <!-- /body -->
                             </div>
@@ -681,6 +683,7 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

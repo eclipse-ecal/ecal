@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -36,9 +40,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -436,7 +438,7 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="network-configuration">
+    <section id="network-configuration">
 <span id="getting-started-cloud"></span><h1><span class="section-number">4. </span>Network configuration<a class="headerlink" href="#network-configuration" title="Permalink to this headline">¶</a></h1>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
@@ -487,7 +489,7 @@ This is done by creating a <strong>multicast route</strong>.</p>
 <p class="admonition-title">See also</p>
 <p>Please refer to the advanced section to learn about changing between <a class="reference internal" href="../configuration/local.html#configuration-local"><span class="std std-ref">local mode</span></a> and <a class="reference internal" href="../configuration/cloud.html#configuration-cloud"><span class="std std-ref">cloud mode</span></a>!</p>
 </div>
-<div class="section" id="fa-windows-multicast-configuration-on-windows">
+<section id="fa-windows-multicast-configuration-on-windows">
 <span id="getting-started-cloud-configuration-on-windows"></span><h2><span class="section-number">4.1. </span><i class="fab fa-windows"></i> Multicast configuration on Windows<a class="headerlink" href="#fa-windows-multicast-configuration-on-windows" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
 <li><p>Check the IPv4 address of the ethernet adapter you are using to connect your two PCs.
@@ -516,8 +518,8 @@ It should show your route under <cite>IPv4 Route Table / Persistent Routes</cite
 <p class="admonition-title">Tip</p>
 <p>It is recommended to assign a static IP, so your multicast route will not become outdated at some point.</p>
 </div>
-</div>
-<div class="section" id="fa-ubuntu-multicast-configuration-on-ubuntu">
+</section>
+<section id="fa-ubuntu-multicast-configuration-on-ubuntu">
 <h2><span class="section-number">4.2. </span><i class="fab fa-ubuntu"></i> Multicast configuration on Ubuntu<a class="headerlink" href="#fa-ubuntu-multicast-configuration-on-ubuntu" title="Permalink to this headline">¶</a></h2>
 <p>You can configure the multicast route in various ways, depending on your Ubuntu version.</p>
 <p>Jump to your section of choice below:</p>
@@ -531,7 +533,7 @@ It should show your route under <cite>IPv4 Route Table / Persistent Routes</cite
 </li>
 <li><p><a class="reference internal" href="#ubuntu-multicast-route-test"><span class="std std-ref">Test the configuration</span></a></p></li>
 </ol>
-<div class="section" id="multicast-routes-via-netplan">
+<section id="multicast-routes-via-netplan">
 <span id="ubuntu-multicast-route-netplan"></span><h3><span class="section-number">4.2.1. </span>Multicast routes via Netplan<a class="headerlink" href="#multicast-routes-via-netplan" title="Permalink to this headline">¶</a></h3>
 <p>Netplan is used since Ubuntu 18 and should be used in favor of the legacy (but well known) <code class="file docutils literal notranslate"><span class="pre">/etc/network/interfaces</span></code> file.
 While Ubuntu 18 supports both out of the box, for Ubuntu 20 this is the only file-based networking configuration method.</p>
@@ -597,8 +599,8 @@ This will get a lower metric and will thus become the preferred route once the i
 </div>
 </li>
 </ol>
-</div>
-<div class="section" id="multicast-routes-via-gui">
+</section>
+<section id="multicast-routes-via-gui">
 <span id="ubuntu-multicast-route-gui"></span><h3><span class="section-number">4.2.2. </span>Multicast routes via GUI<a class="headerlink" href="#multicast-routes-via-gui" title="Permalink to this headline">¶</a></h3>
 <p>If you have a graphical network manager installed (-&gt; Desktop Ubuntu), you can use it to configure the external route.</p>
 <ol class="arabic">
@@ -620,8 +622,8 @@ This will get a lower metric and will thus become the preferred route once the i
 <li><p>Configure the <strong>loopback multicast</strong> route via <a class="reference internal" href="#ubuntu-multicast-route-netplan"><span class="std std-ref">netplan</span></a> or <a class="reference internal" href="#ubuntu-multicast-route-etc-network-interfaces"><span class="std std-ref">/etc/network/interfaces</span></a>.
 You can omit this, but then you will have to explicitly set eCAL to local mode, if you are not connected to any network.</p></li>
 </ol>
-</div>
-<div class="section" id="multicast-routes-via-etc-network-interfaces">
+</section>
+<section id="multicast-routes-via-etc-network-interfaces">
 <span id="ubuntu-multicast-route-etc-network-interfaces"></span><h3><span class="section-number">4.2.3. </span>Multicast routes via /etc/network/interfaces<a class="headerlink" href="#multicast-routes-via-etc-network-interfaces" title="Permalink to this headline">¶</a></h3>
 <p>The well known <code class="file docutils literal notranslate"><span class="pre">/etc/network/interfaces</span></code> file is supported up to Ubuntu 18.
 It is not supported since Ubuntu 20, anymore.
@@ -654,24 +656,24 @@ auto eth0
 </li>
 <li><p>Restart your PC</p></li>
 </ol>
-</div>
-<div class="section" id="test-the-configuration">
+</section>
+<section id="test-the-configuration">
 <span id="ubuntu-multicast-route-test"></span><h3><span class="section-number">4.2.4. </span>Test the configuration<a class="headerlink" href="#test-the-configuration" title="Permalink to this headline">¶</a></h3>
 <p>Check the result from a terminal. It should show routes for local and external communication:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>route -n
 </pre></div>
 </div>
 <img alt="Ubuntu route -n" src="../_images/ubuntu_route_print.png" />
-</div>
-</div>
-<div class="section" id="ecal-samples-over-network">
+</section>
+</section>
+<section id="ecal-samples-over-network">
 <h2><span class="section-number">4.3. </span>eCAL Samples over network<a class="headerlink" href="#ecal-samples-over-network" title="Permalink to this headline">¶</a></h2>
 <p>Now start one <code class="file docutils literal notranslate"><span class="pre">ecal_sample_person_snd</span></code> and one <code class="file docutils literal notranslate"><span class="pre">ecal_sample_person_rec</span></code>, just as in the <a class="reference internal" href="samples.html#getting-started-samples"><span class="std std-ref">previous section</span></a>.
 But on different machines!
 If you configured everything correctly, publisher and subscriber should connect almost immediately and exchange data.</p>
 <img alt="person_snd and person_rec sample over network" src="../_images/cloud_person_combined.png" />
-</div>
-</div>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -744,6 +746,7 @@ If you configured everything correctly, publisher and subscriber should connect 
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

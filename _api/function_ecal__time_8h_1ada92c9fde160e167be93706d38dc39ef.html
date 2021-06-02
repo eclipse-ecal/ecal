@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -37,9 +41,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -431,29 +433,27 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="function-ecal-time-sleepfornanoseconds">
+    <section id="function-ecal-time-sleepfornanoseconds">
 <span id="exhale-function-ecal-time-8h-1ada92c9fde160e167be93706d38dc39ef"></span><h1>Function eCAL::Time::SleepForNanoseconds<a class="headerlink" href="#function-ecal-time-sleepfornanoseconds" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p>Defined in <a class="reference internal" href="file_ecal_core_include_ecal_ecal_time.h.html#file-ecal-core-include-ecal-ecal-time-h"><span class="std std-ref">File ecal_time.h</span></a></p></li>
 </ul>
-<div class="section" id="function-documentation">
+<section id="function-documentation">
 <h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Permalink to this headline">¶</a></h2>
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL4Time19SleepForNanosecondsEx">
-<span id="_CPPv3N4eCAL4Time19SleepForNanosecondsEx"></span><span id="_CPPv2N4eCAL4Time19SleepForNanosecondsEx"></span><span id="eCAL::Time::SleepForNanoseconds__l-l"></span><span class="target" id="ecal__time_8h_1ada92c9fde160e167be93706d38dc39ef"></span>ECAL_API void <code class="sig-prename descclassname">eCAL::Time<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">SleepForNanoseconds</code><span class="sig-paren">(</span>long long <em>duration_nsecs_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL4Time19SleepForNanosecondsEx" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL4Time19SleepForNanosecondsEx">
+<span id="_CPPv3N4eCAL4Time19SleepForNanosecondsEx"></span><span id="_CPPv2N4eCAL4Time19SleepForNanosecondsEx"></span><span id="eCAL::Time::SleepForNanoseconds__l-l"></span><span class="target" id="ecal__time_8h_1ada92c9fde160e167be93706d38dc39ef"></span><span class="pre">ECAL_API</span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">eCAL</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Time</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">SleepForNanoseconds</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">duration_nsecs_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL4Time19SleepForNanosecondsEx" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Blocks for the given amount of nanoseconds. </p>
 <p>The actual amount of (real-) time is influenced by the current rate at which the time is proceeding. It is not guaranteed, that the precision of this function actually is in nanoseconds. Limitations of the operating system might reduce the accuracy.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">duration_nsecs_</span></code>: the duration in nanoseconds </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>duration_nsecs_</strong> – the duration in nanoseconds </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -526,6 +526,7 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

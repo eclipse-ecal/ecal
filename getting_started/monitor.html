@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -37,9 +41,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -437,7 +439,7 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="ecalmon-app-icon-h1-monitor">
+    <section id="ecalmon-app-icon-h1-monitor">
 <span id="getting-started-monitor"></span><h1><span class="section-number">6.1. </span><a class="reference internal" href="../_images/ecalmon.ico"><img alt="ecalmon_APP_ICON_h1" src="../_images/ecalmon.ico" style="width: 38px;" /></a> Monitor<a class="headerlink" href="#ecalmon-app-icon-h1-monitor" title="Permalink to this headline">¶</a></h1>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
@@ -461,7 +463,7 @@ You can replicate that setup yourself or just launch everything on your local PC
 <li><p><i class="fab fa-windows"></i> On Windows you can launch it from the Start Menu: <code class="file docutils literal notranslate"><span class="pre">Start</span> <span class="pre">/</span> <span class="pre">eCAL</span> <span class="pre">/</span> <span class="pre">eCAL</span> <span class="pre">Monitor</span></code></p></li>
 <li><p><i class="fab fa-ubuntu"></i> On Ubuntu start <code class="file docutils literal notranslate"><span class="pre">ecal_mon_gui</span></code> from a terminal</p></li>
 </ul>
-<div class="section" id="overview">
+<section id="overview">
 <h2><span class="section-number">6.1.1. </span>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>When you first start the monitor, you will get the following screen.
 Let us walk through the main panels of the eCAL Monitor!</p>
@@ -487,11 +489,11 @@ You can also find the “cloud-configuration” setting we talked about in the <
 <p>If you ever see the “Error getting Monitoring Information” Error in the lower right corner, you may have to <a class="reference internal" href="samples.html#getting-started-disable-firewall"><span class="std std-ref">turn off your firewall</span></a>!</p>
 <img alt="Error getting Monitoring Information" src="../_images/monitor_error_getting_monitoring_information.png" />
 </div>
-</div>
-<div class="section" id="the-topics-panel">
+</section>
+<section id="the-topics-panel">
 <h2><span class="section-number">6.1.2. </span>The Topics panel<a class="headerlink" href="#the-topics-panel" title="Permalink to this headline">¶</a></h2>
 <p>You may have already noticed the 4 tabs below the topics panel. Let’s go through all of them.</p>
-<div class="section" id="topics">
+<section id="topics">
 <h3><span class="section-number">6.1.2.1. </span>Topics<a class="headerlink" href="#topics" title="Permalink to this headline">¶</a></h3>
 <p>The Topics panel shows you all topics that exist in your eCAL network, including their publishers and subscribers.
 You can expand the items to show the connections between them.</p>
@@ -507,29 +509,29 @@ Later you may have the need to visualize more complex messages (e.g. 3D point cl
 To display the data, the Monitor has to subscribe to the topic just like every other eCAL process.
 As the <cite>Protobuf Reflection</cite> and the <cite>Raw Data</cite> tab both subscribe separately, this will cause two connections that are both displayed in the Monitor, again.</p>
 </div>
-</div>
-<div class="section" id="processes">
+</section>
+<section id="processes">
 <h3><span class="section-number">6.1.2.2. </span>Processes<a class="headerlink" href="#processes" title="Permalink to this headline">¶</a></h3>
 <p>The processes view shows you all running eCAL processes, just like a Task Manager.
 eCAL Processes have the ability to report their process state that is shown here.
 Currently, all processes report being healthy.</p>
 <p>Note how this view displays <strong>all</strong> processes, even if they don’t publish or subscribe to any topic!</p>
 <img alt="eCAL Monitor processes view" src="../_images/monitor_processes_view.png" />
-</div>
-<div class="section" id="hosts">
+</section>
+<section id="hosts">
 <h3><span class="section-number">6.1.2.3. </span>Hosts<a class="headerlink" href="#hosts" title="Permalink to this headline">¶</a></h3>
 <p>The hosts view shows you all hosts that are visible in your eCAL network.
 A host becomes “visible”, when at least one eCAL process is running on it.</p>
 <img alt="eCAL Monitor hosts view" src="../_images/monitor_hosts_view.png" />
-</div>
-<div class="section" id="services">
+</section>
+<section id="services">
 <h3><span class="section-number">6.1.2.4. </span>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h3>
 <p>This view shows you available eCAL Services. A service is a two-way communication; calling a service always consists of sending a request and getting back a response.
 Applications like the eCAL Player or eCAL Recorder use services to provide an external API.</p>
 <p>The samples don’t offer any services, so the service view is empty at the moment.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -602,6 +604,7 @@ Applications like the eCAL Player or eCAL Recorder use services to provide an ex
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

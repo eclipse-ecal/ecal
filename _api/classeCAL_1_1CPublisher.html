@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -37,9 +41,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -435,29 +437,30 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="class-cpublisher">
+    <section id="class-cpublisher">
 <span id="exhale-class-classecal-1-1cpublisher"></span><h1>Class CPublisher<a class="headerlink" href="#class-cpublisher" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p>Defined in <a class="reference internal" href="file_ecal_core_include_ecal_ecal_publisher.h.html#file-ecal-core-include-ecal-ecal-publisher-h"><span class="std std-ref">File ecal_publisher.h</span></a></p></li>
 </ul>
-<div class="section" id="inheritance-relationships">
+<section id="inheritance-relationships">
 <h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="derived-type">
+<section id="derived-type">
 <h3>Derived Type<a class="headerlink" href="#derived-type" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">eCAL::CMsgPublisher&lt;</span> <span class="pre">T</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="classeCAL_1_1CMsgPublisher.html#exhale-class-classecal-1-1cmsgpublisher"><span class="std std-ref">Template Class CMsgPublisher</span></a>)</p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="class-documentation">
+</section>
+</section>
+<section id="class-documentation">
 <h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
 <dl class="cpp class">
-<dt id="_CPPv4N4eCAL10CPublisherE">
-<span id="_CPPv3N4eCAL10CPublisherE"></span><span id="_CPPv2N4eCAL10CPublisherE"></span><span id="eCAL::CPublisher"></span><span class="target" id="classeCAL_1_1CPublisher"></span><em class="property">class </em><code class="sig-prename descclassname">eCAL<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">CPublisher</code><a class="headerlink" href="#_CPPv4N4eCAL10CPublisherE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisherE">
+<span id="_CPPv3N4eCAL10CPublisherE"></span><span id="_CPPv2N4eCAL10CPublisherE"></span><span id="eCAL::CPublisher"></span><span class="target" id="classeCAL_1_1CPublisher"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">eCAL</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">CPublisher</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisherE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>eCAL publisher class. </p>
-<p>The <a class="reference internal" href="#classeCAL_1_1CPublisher"><span class="std std-ref">CPublisher</span></a> class is used to send topics to matching eCAL subscribers. The topic is created automatically by the constructor or by the Create member function. <p> For sending the topic payload the publisher class provides an overloaded Send method. The first one is sending the payload as a std::string. The second needs a preallocated buffer described by a buffer address and a buffer length. The publisher is not taking the ownership for the allocated memory buffer. </p>
-<p> An optional time stamp can be attached to the topic payload. </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">create</span> <span class="n">publisher</span><span class="p">,</span> <span class="n">topic</span> <span class="n">name</span> <span class="s2">&quot;A&quot;</span>
+<p>The <a class="reference internal" href="#classeCAL_1_1CPublisher"><span class="std std-ref">CPublisher</span></a><p>class is used to send topics to matching eCAL subscribers. The topic is created automatically by the constructor or by the Create member function.</p>
+<p>For sending the topic payload the publisher class provides an overloaded Send method. The first one is sending the payload as a std::string. The second needs a preallocated buffer described by a buffer address and a buffer length. The publisher is not taking the ownership for the allocated memory buffer.</p>
+
+ An optional time stamp can be attached to the topic payload. <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">create</span> <span class="n">publisher</span><span class="p">,</span> <span class="n">topic</span> <span class="n">name</span> <span class="s2">&quot;A&quot;</span>
 <span class="n">eCAL</span><span class="p">::</span><span class="n">CPublisher</span> <span class="n">pub</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">);</span>
 
 <span class="o">//</span> <span class="n">send</span> <span class="n">string</span>
@@ -470,342 +473,339 @@
  </p>
 <p>Subclassed by <a class="reference internal" href="classeCAL_1_1CMsgPublisher.html#classeCAL_1_1CMsgPublisher"><span class="std std-ref">eCAL::CMsgPublisher&lt; T &gt;</span></a></p>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisher10CPublisherEv">
-<span id="_CPPv3N4eCAL10CPublisher10CPublisherEv"></span><span id="_CPPv2N4eCAL10CPublisher10CPublisherEv"></span><span id="eCAL::CPublisher::CPublisher"></span><span class="target" id="classeCAL_1_1CPublisher_1abed5a676896ab7f52d74bbe1caddabfd"></span><code class="sig-name descname">CPublisher</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher10CPublisherEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher10CPublisherEv">
+<span id="_CPPv3N4eCAL10CPublisher10CPublisherEv"></span><span id="_CPPv2N4eCAL10CPublisher10CPublisherEv"></span><span id="eCAL::CPublisher::CPublisher"></span><span class="target" id="classeCAL_1_1CPublisher_1abed5a676896ab7f52d74bbe1caddabfd"></span><span class="sig-name descname"><span class="n"><span class="pre">CPublisher</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher10CPublisherEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisher10CPublisherERKNSt6stringERKNSt6stringERKNSt6stringE">
-<span id="_CPPv3N4eCAL10CPublisher10CPublisherERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL10CPublisher10CPublisherERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="eCAL::CPublisher::CPublisher__ssCR.ssCR.ssCR"></span><span class="target" id="classeCAL_1_1CPublisher_1a9231387d1276e19e71c4a247c651f4c9"></span><code class="sig-name descname">CPublisher</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>topic_name_</em>, <em class="property">const</em> std::string &amp;<em>topic_type_</em> = &quot;&quot;, <em class="property">const</em> std::string &amp;<em>topic_desc_</em> = &quot;&quot;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher10CPublisherERKNSt6stringERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher10CPublisherERKNSt6stringERKNSt6stringERKNSt6stringE">
+<span id="_CPPv3N4eCAL10CPublisher10CPublisherERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL10CPublisher10CPublisherERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="eCAL::CPublisher::CPublisher__ssCR.ssCR.ssCR"></span><span class="target" id="classeCAL_1_1CPublisher_1a9231387d1276e19e71c4a247c651f4c9"></span><span class="sig-name descname"><span class="n"><span class="pre">CPublisher</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_name_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_type_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">&quot;&quot;</span></s>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_desc_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">&quot;&quot;</span></s><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher10CPublisherERKNSt6stringERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">topic_name_</span></code>: Unique topic name. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">topic_type_</span></code>: Type name (optional). </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">topic_desc_</span></code>: Type description (optional). </p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topic_name_</strong> – Unique topic name. </p></li>
+<li><p><strong>topic_type_</strong> – Type name (optional). </p></li>
+<li><p><strong>topic_desc_</strong> – Type description (optional). </p></li>
 </ul>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisherD0Ev">
-<span id="_CPPv3N4eCAL10CPublisherD0Ev"></span><span id="_CPPv2N4eCAL10CPublisherD0Ev"></span><span id="eCAL::CPublisher::~CPublisher"></span><span class="target" id="classeCAL_1_1CPublisher_1aada174bb8d5262a7f8520ab6c0e6f804"></span><code class="sig-name descname">~CPublisher</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisherD0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisherD0Ev">
+<span id="_CPPv3N4eCAL10CPublisherD0Ev"></span><span id="_CPPv2N4eCAL10CPublisherD0Ev"></span><span id="eCAL::CPublisher::~CPublisher"></span><span class="target" id="classeCAL_1_1CPublisher_1aada174bb8d5262a7f8520ab6c0e6f804"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">~CPublisher</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisherD0Ev" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Destructor. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisher10CPublisherERK10CPublisher">
-<span id="_CPPv3N4eCAL10CPublisher10CPublisherERK10CPublisher"></span><span id="_CPPv2N4eCAL10CPublisher10CPublisherERK10CPublisher"></span><span id="eCAL::CPublisher::CPublisher__CPublisherCR"></span><span class="target" id="classeCAL_1_1CPublisher_1a87510a96e5de86cffa5f9a3fa09f176c"></span><code class="sig-name descname">CPublisher</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N4eCAL10CPublisher10CPublisherERK10CPublisher" title="eCAL::CPublisher::CPublisher">CPublisher</a>&amp;<span class="sig-paren">)</span> = delete<a class="headerlink" href="#_CPPv4N4eCAL10CPublisher10CPublisherERK10CPublisher" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher10CPublisherERK10CPublisher">
+<span id="_CPPv3N4eCAL10CPublisher10CPublisherERK10CPublisher"></span><span id="_CPPv2N4eCAL10CPublisher10CPublisherERK10CPublisher"></span><span id="eCAL::CPublisher::CPublisher__CPublisherCR"></span><span class="target" id="classeCAL_1_1CPublisher_1a87510a96e5de86cffa5f9a3fa09f176c"></span><span class="sig-name descname"><span class="n"><span class="pre">CPublisher</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4eCAL10CPublisher10CPublisherERK10CPublisher" title="eCAL::CPublisher::CPublisher"><span class="n"><span class="pre">CPublisher</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">delete</span></span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher10CPublisherERK10CPublisher" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>CPublishers are non-copyable. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisheraSERK10CPublisher">
-<span id="_CPPv3N4eCAL10CPublisheraSERK10CPublisher"></span><span id="_CPPv2N4eCAL10CPublisheraSERK10CPublisher"></span><span id="eCAL::CPublisher::assign-operator__CPublisherCR"></span><span class="target" id="classeCAL_1_1CPublisher_1aa9c3038d44fcdd5a6de356ea6218a6ba"></span><a class="reference internal" href="#_CPPv4N4eCAL10CPublisherE" title="eCAL::CPublisher">CPublisher</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N4eCAL10CPublisherE" title="eCAL::CPublisher">CPublisher</a>&amp;<span class="sig-paren">)</span> = delete<a class="headerlink" href="#_CPPv4N4eCAL10CPublisheraSERK10CPublisher" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisheraSERK10CPublisher">
+<span id="_CPPv3N4eCAL10CPublisheraSERK10CPublisher"></span><span id="_CPPv2N4eCAL10CPublisheraSERK10CPublisher"></span><span id="eCAL::CPublisher::assign-operator__CPublisherCR"></span><span class="target" id="classeCAL_1_1CPublisher_1aa9c3038d44fcdd5a6de356ea6218a6ba"></span><a class="reference internal" href="#_CPPv4N4eCAL10CPublisherE" title="eCAL::CPublisher"><span class="n"><span class="pre">CPublisher</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4eCAL10CPublisherE" title="eCAL::CPublisher"><span class="n"><span class="pre">CPublisher</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">delete</span></span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisheraSERK10CPublisher" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>CPublishers are non-copyable. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisher10CPublisherERR10CPublisher">
-<span id="_CPPv3N4eCAL10CPublisher10CPublisherERR10CPublisher"></span><span id="_CPPv2N4eCAL10CPublisher10CPublisherERR10CPublisher"></span><span id="eCAL::CPublisher::CPublisher__CPublisherRR"></span><span class="target" id="classeCAL_1_1CPublisher_1a437840e84f72db0e0a615dc8228b3e16"></span><code class="sig-name descname">CPublisher</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4eCAL10CPublisher10CPublisherERR10CPublisher" title="eCAL::CPublisher::CPublisher">CPublisher</a> &amp;&amp;<em>rhs</em><span class="sig-paren">)</span> <em class="property">noexcept</em><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher10CPublisherERR10CPublisher" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher10CPublisherERR10CPublisher">
+<span id="_CPPv3N4eCAL10CPublisher10CPublisherERR10CPublisher"></span><span id="_CPPv2N4eCAL10CPublisher10CPublisherERR10CPublisher"></span><span id="eCAL::CPublisher::CPublisher__CPublisherRR"></span><span class="target" id="classeCAL_1_1CPublisher_1a437840e84f72db0e0a615dc8228b3e16"></span><span class="sig-name descname"><span class="n"><span class="pre">CPublisher</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4eCAL10CPublisher10CPublisherERR10CPublisher" title="eCAL::CPublisher::CPublisher"><span class="n"><span class="pre">CPublisher</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">rhs</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher10CPublisherERR10CPublisher" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>CPublishers are move-enabled. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisheraSERR10CPublisher">
-<span id="_CPPv3N4eCAL10CPublisheraSERR10CPublisher"></span><span id="_CPPv2N4eCAL10CPublisheraSERR10CPublisher"></span><span id="eCAL::CPublisher::assign-operator__CPublisherRR"></span><span class="target" id="classeCAL_1_1CPublisher_1a89711343d172e9e89e447eb80a1400ae"></span><a class="reference internal" href="#_CPPv4N4eCAL10CPublisherE" title="eCAL::CPublisher">CPublisher</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4eCAL10CPublisherE" title="eCAL::CPublisher">CPublisher</a> &amp;&amp;<em>rhs</em><span class="sig-paren">)</span> <em class="property">noexcept</em><a class="headerlink" href="#_CPPv4N4eCAL10CPublisheraSERR10CPublisher" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisheraSERR10CPublisher">
+<span id="_CPPv3N4eCAL10CPublisheraSERR10CPublisher"></span><span id="_CPPv2N4eCAL10CPublisheraSERR10CPublisher"></span><span id="eCAL::CPublisher::assign-operator__CPublisherRR"></span><span class="target" id="classeCAL_1_1CPublisher_1a89711343d172e9e89e447eb80a1400ae"></span><a class="reference internal" href="#_CPPv4N4eCAL10CPublisherE" title="eCAL::CPublisher"><span class="n"><span class="pre">CPublisher</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4eCAL10CPublisherE" title="eCAL::CPublisher"><span class="n"><span class="pre">CPublisher</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">rhs</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisheraSERR10CPublisher" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>CPublishers are move-enabled. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisher6CreateERKNSt6stringERKNSt6stringERKNSt6stringE">
-<span id="_CPPv3N4eCAL10CPublisher6CreateERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL10CPublisher6CreateERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="eCAL::CPublisher::Create__ssCR.ssCR.ssCR"></span><span class="target" id="classeCAL_1_1CPublisher_1a63b1f26c5c5bd16d34fa97bebb3c104f"></span>bool <code class="sig-name descname">Create</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>topic_name_</em>, <em class="property">const</em> std::string &amp;<em>topic_type_</em> = &quot;&quot;, <em class="property">const</em> std::string &amp;<em>topic_desc_</em> = &quot;&quot;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher6CreateERKNSt6stringERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher6CreateERKNSt6stringERKNSt6stringERKNSt6stringE">
+<span id="_CPPv3N4eCAL10CPublisher6CreateERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL10CPublisher6CreateERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="eCAL::CPublisher::Create__ssCR.ssCR.ssCR"></span><span class="target" id="classeCAL_1_1CPublisher_1a63b1f26c5c5bd16d34fa97bebb3c104f"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Create</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_name_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_type_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">&quot;&quot;</span></s>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_desc_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">&quot;&quot;</span></s><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher6CreateERKNSt6stringERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Creates this object. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if it succeeds, false if it fails. </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">topic_name_</span></code>: Unique topic name. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">topic_type_</span></code>: Type name (optional). </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">topic_desc_</span></code>: Type description (optional).</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topic_name_</strong> – Unique topic name. </p></li>
+<li><p><strong>topic_type_</strong> – Type name (optional). </p></li>
+<li><p><strong>topic_desc_</strong> – Type description (optional).</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it succeeds, false if it fails. </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisher7DestroyEv">
-<span id="_CPPv3N4eCAL10CPublisher7DestroyEv"></span><span id="_CPPv2N4eCAL10CPublisher7DestroyEv"></span><span id="eCAL::CPublisher::Destroy"></span><span class="target" id="classeCAL_1_1CPublisher_1abac4f3a1d76b52756cfeef7691f5b129"></span>bool <code class="sig-name descname">Destroy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher7DestroyEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher7DestroyEv">
+<span id="_CPPv3N4eCAL10CPublisher7DestroyEv"></span><span id="_CPPv2N4eCAL10CPublisher7DestroyEv"></span><span id="eCAL::CPublisher::Destroy"></span><span class="target" id="classeCAL_1_1CPublisher_1abac4f3a1d76b52756cfeef7691f5b129"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Destroy</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher7DestroyEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Destroys this object. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if it succeeds, false if it fails. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if it succeeds, false if it fails. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisher14SetDescriptionERKNSt6stringE">
-<span id="_CPPv3N4eCAL10CPublisher14SetDescriptionERKNSt6stringE"></span><span id="_CPPv2N4eCAL10CPublisher14SetDescriptionERKNSt6stringE"></span><span id="eCAL::CPublisher::SetDescription__ssCR"></span><span class="target" id="classeCAL_1_1CPublisher_1a5b02f6e44433285421c7c60f416aaa21"></span>bool <code class="sig-name descname">SetDescription</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>topic_desc_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher14SetDescriptionERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher14SetDescriptionERKNSt6stringE">
+<span id="_CPPv3N4eCAL10CPublisher14SetDescriptionERKNSt6stringE"></span><span id="_CPPv2N4eCAL10CPublisher14SetDescriptionERKNSt6stringE"></span><span id="eCAL::CPublisher::SetDescription__ssCR"></span><span class="target" id="classeCAL_1_1CPublisher_1a5b02f6e44433285421c7c60f416aaa21"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SetDescription</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_desc_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher14SetDescriptionERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Setup topic description. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if it succeeds, false if it fails. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>topic_desc_</strong> – Description string.</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">topic_desc_</span></code>: Description string.</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it succeeds, false if it fails. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisher9ShareTypeEb">
-<span id="_CPPv3N4eCAL10CPublisher9ShareTypeEb"></span><span id="_CPPv2N4eCAL10CPublisher9ShareTypeEb"></span><span id="eCAL::CPublisher::ShareType__b"></span><span class="target" id="classeCAL_1_1CPublisher_1afea0bbd04a107b0ca349f3ae452f85b8"></span>bool <code class="sig-name descname">ShareType</code><span class="sig-paren">(</span>bool <em>state_</em> = true<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher9ShareTypeEb" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher9ShareTypeEb">
+<span id="_CPPv3N4eCAL10CPublisher9ShareTypeEb"></span><span id="_CPPv2N4eCAL10CPublisher9ShareTypeEb"></span><span id="eCAL::CPublisher::ShareType__b"></span><span class="target" id="classeCAL_1_1CPublisher_1afea0bbd04a107b0ca349f3ae452f85b8"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ShareType</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">state_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher9ShareTypeEb" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Share topic type. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if it succeeds, false if it fails. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state_</strong> – Set type share mode (true == share type).</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">state_</span></code>: Set type share mode (true == share type).</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it succeeds, false if it fails. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisher16ShareDescriptionEb">
-<span id="_CPPv3N4eCAL10CPublisher16ShareDescriptionEb"></span><span id="_CPPv2N4eCAL10CPublisher16ShareDescriptionEb"></span><span id="eCAL::CPublisher::ShareDescription__b"></span><span class="target" id="classeCAL_1_1CPublisher_1a861a3a598cf77746decd18fd7398776b"></span>bool <code class="sig-name descname">ShareDescription</code><span class="sig-paren">(</span>bool <em>state_</em> = true<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher16ShareDescriptionEb" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher16ShareDescriptionEb">
+<span id="_CPPv3N4eCAL10CPublisher16ShareDescriptionEb"></span><span id="_CPPv2N4eCAL10CPublisher16ShareDescriptionEb"></span><span id="eCAL::CPublisher::ShareDescription__b"></span><span class="target" id="classeCAL_1_1CPublisher_1a861a3a598cf77746decd18fd7398776b"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ShareDescription</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">state_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher16ShareDescriptionEb" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Share topic description. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if it succeeds, false if it fails. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state_</strong> – Set description share mode (true == share description).</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">state_</span></code>: Set description share mode (true == share description).</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it succeeds, false if it fails. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisher6SetQOSERKN3QOS10SWriterQOSE">
-<span id="_CPPv3N4eCAL10CPublisher6SetQOSERKN3QOS10SWriterQOSE"></span><span id="_CPPv2N4eCAL10CPublisher6SetQOSERKN3QOS10SWriterQOSE"></span><span id="eCAL::CPublisher::SetQOS__QOS::SWriterQOSCR"></span><span class="target" id="classeCAL_1_1CPublisher_1aed6c35e5abc585bfb9bf5ba692f311fc"></span>bool <code class="sig-name descname">SetQOS</code><span class="sig-paren">(</span><em class="property">const</em> QOS::<a class="reference internal" href="structeCAL_1_1QOS_1_1SWriterQOS.html#_CPPv4N4eCAL3QOS10SWriterQOSE" title="eCAL::QOS::SWriterQOS">SWriterQOS</a> &amp;<em>qos_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher6SetQOSERKN3QOS10SWriterQOSE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher6SetQOSERKN3QOS10SWriterQOSE">
+<span id="_CPPv3N4eCAL10CPublisher6SetQOSERKN3QOS10SWriterQOSE"></span><span id="_CPPv2N4eCAL10CPublisher6SetQOSERKN3QOS10SWriterQOSE"></span><span id="eCAL::CPublisher::SetQOS__QOS::SWriterQOSCR"></span><span class="target" id="classeCAL_1_1CPublisher_1aed6c35e5abc585bfb9bf5ba692f311fc"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SetQOS</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">QOS</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="structeCAL_1_1QOS_1_1SWriterQOS.html#_CPPv4N4eCAL3QOS10SWriterQOSE" title="eCAL::QOS::SWriterQOS"><span class="n"><span class="pre">SWriterQOS</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">qos_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher6SetQOSERKN3QOS10SWriterQOSE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Set publisher quality of service attributes. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if it succeeds, false if it fails. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>qos_</strong> – Quality of service policies.</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">qos_</span></code>: Quality of service policies.</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it succeeds, false if it fails. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisher6GetQOSEv">
-<span id="_CPPv3N4eCAL10CPublisher6GetQOSEv"></span><span id="_CPPv2N4eCAL10CPublisher6GetQOSEv"></span><span id="eCAL::CPublisher::GetQOS"></span><span class="target" id="classeCAL_1_1CPublisher_1ac9b13b76f9c0466d4db175b12f5e7744"></span>QOS::<a class="reference internal" href="structeCAL_1_1QOS_1_1SWriterQOS.html#_CPPv4N4eCAL3QOS10SWriterQOSE" title="eCAL::QOS::SWriterQOS">SWriterQOS</a> <code class="sig-name descname">GetQOS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher6GetQOSEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher6GetQOSEv">
+<span id="_CPPv3N4eCAL10CPublisher6GetQOSEv"></span><span id="_CPPv2N4eCAL10CPublisher6GetQOSEv"></span><span id="eCAL::CPublisher::GetQOS"></span><span class="target" id="classeCAL_1_1CPublisher_1ac9b13b76f9c0466d4db175b12f5e7744"></span><span class="n"><span class="pre">QOS</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="structeCAL_1_1QOS_1_1SWriterQOS.html#_CPPv4N4eCAL3QOS10SWriterQOSE" title="eCAL::QOS::SWriterQOS"><span class="n"><span class="pre">SWriterQOS</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetQOS</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher6GetQOSEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Get current publisher quality of service attributes. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>Quality of service attributes. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Quality of service attributes. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisher12SetLayerModeEN6TLayer15eTransportLayerEN6TLayer9eSendModeE">
-<span id="_CPPv3N4eCAL10CPublisher12SetLayerModeEN6TLayer15eTransportLayerEN6TLayer9eSendModeE"></span><span id="_CPPv2N4eCAL10CPublisher12SetLayerModeEN6TLayer15eTransportLayerEN6TLayer9eSendModeE"></span><span id="eCAL::CPublisher::SetLayerMode__TLayer::eTransportLayer.TLayer::eSendMode"></span><span class="target" id="classeCAL_1_1CPublisher_1a0527cb4df328f32c946513120b9a4c84"></span>bool <code class="sig-name descname">SetLayerMode</code><span class="sig-paren">(</span>TLayer::<a class="reference internal" href="enum_ecal__tlayer_8h_1a65b651c8133a86e4850afa99db69a59a.html#_CPPv4N4eCAL6TLayer15eTransportLayerE" title="eCAL::TLayer::eTransportLayer">eTransportLayer</a> <em>layer_</em>, TLayer::<a class="reference internal" href="enum_ecal__tlayer_8h_1ae475e842a5ad28c0104f9558e9bdb91a.html#_CPPv4N4eCAL6TLayer9eSendModeE" title="eCAL::TLayer::eSendMode">eSendMode</a> <em>mode_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher12SetLayerModeEN6TLayer15eTransportLayerEN6TLayer9eSendModeE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher12SetLayerModeEN6TLayer15eTransportLayerEN6TLayer9eSendModeE">
+<span id="_CPPv3N4eCAL10CPublisher12SetLayerModeEN6TLayer15eTransportLayerEN6TLayer9eSendModeE"></span><span id="_CPPv2N4eCAL10CPublisher12SetLayerModeEN6TLayer15eTransportLayerEN6TLayer9eSendModeE"></span><span id="eCAL::CPublisher::SetLayerMode__TLayer::eTransportLayer.TLayer::eSendMode"></span><span class="target" id="classeCAL_1_1CPublisher_1a0527cb4df328f32c946513120b9a4c84"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SetLayerMode</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">TLayer</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="enum_ecal__tlayer_8h_1a65b651c8133a86e4850afa99db69a59a.html#_CPPv4N4eCAL6TLayer15eTransportLayerE" title="eCAL::TLayer::eTransportLayer"><span class="n"><span class="pre">eTransportLayer</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">layer_</span></span>, <span class="n"><span class="pre">TLayer</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="enum_ecal__tlayer_8h_1ae475e842a5ad28c0104f9558e9bdb91a.html#_CPPv4N4eCAL6TLayer9eSendModeE" title="eCAL::TLayer::eSendMode"><span class="n"><span class="pre">eSendMode</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">mode_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher12SetLayerModeEN6TLayer15eTransportLayerEN6TLayer9eSendModeE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Set publisher send mode for specific transport layer. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if it succeeds, false if it fails. </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">layer_</span></code>: Transport layer. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mode_</span></code>: Send mode.</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layer_</strong> – Transport layer. </p></li>
+<li><p><strong>mode_</strong> – Send mode.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it succeeds, false if it fails. </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisher18SetMaxBandwidthUDPEl">
-<span id="_CPPv3N4eCAL10CPublisher18SetMaxBandwidthUDPEl"></span><span id="_CPPv2N4eCAL10CPublisher18SetMaxBandwidthUDPEl"></span><span id="eCAL::CPublisher::SetMaxBandwidthUDP__l"></span><span class="target" id="classeCAL_1_1CPublisher_1a6737da152a32abf8e5aa003c6e4ac3e9"></span>bool <code class="sig-name descname">SetMaxBandwidthUDP</code><span class="sig-paren">(</span>long <em>bandwidth_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher18SetMaxBandwidthUDPEl" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher18SetMaxBandwidthUDPEl">
+<span id="_CPPv3N4eCAL10CPublisher18SetMaxBandwidthUDPEl"></span><span id="_CPPv2N4eCAL10CPublisher18SetMaxBandwidthUDPEl"></span><span id="eCAL::CPublisher::SetMaxBandwidthUDP__l"></span><span class="target" id="classeCAL_1_1CPublisher_1a6737da152a32abf8e5aa003c6e4ac3e9"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SetMaxBandwidthUDP</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bandwidth_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher18SetMaxBandwidthUDPEl" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Set publisher maximum transmit bandwidth for the udp layer. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if it succeeds, false if it fails. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bandwidth_</strong> – Maximum bandwidth in bytes/s (-1 == unlimited).</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">bandwidth_</span></code>: Maximum bandwidth in bytes/s (-1 == unlimited).</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it succeeds, false if it fails. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisher5SetIDEx">
-<span id="_CPPv3N4eCAL10CPublisher5SetIDEx"></span><span id="_CPPv2N4eCAL10CPublisher5SetIDEx"></span><span id="eCAL::CPublisher::SetID__l-l"></span><span class="target" id="classeCAL_1_1CPublisher_1afd85d61829bc18b1fcff304b6c8233a4"></span>bool <code class="sig-name descname">SetID</code><span class="sig-paren">(</span>long long <em>id_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher5SetIDEx" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher5SetIDEx">
+<span id="_CPPv3N4eCAL10CPublisher5SetIDEx"></span><span id="_CPPv2N4eCAL10CPublisher5SetIDEx"></span><span id="eCAL::CPublisher::SetID__l-l"></span><span class="target" id="classeCAL_1_1CPublisher_1afd85d61829bc18b1fcff304b6c8233a4"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SetID</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">id_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher5SetIDEx" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Set the the specific topic id. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if it succeeds, false if it fails. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id_</strong> – The topic id for subscriber side filtering (0 == no id).</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">id_</span></code>: The topic id for subscriber side filtering (0 == no id).</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it succeeds, false if it fails. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL10CPublisher4SendEPCKv6size_tx">
-<span id="_CPPv3NK4eCAL10CPublisher4SendEPCKv6size_tx"></span><span id="_CPPv2NK4eCAL10CPublisher4SendEPCKv6size_tx"></span><span id="eCAL::CPublisher::Send__voidCPC.s.l-lC"></span><span class="target" id="classeCAL_1_1CPublisher_1abe19027d275baf272e31eb84f9fa6a93"></span>size_t <code class="sig-name descname">Send</code><span class="sig-paren">(</span><em class="property">const</em> void *<em class="property">const</em> <em>buf_</em>, size_t <em>len_</em>, long long <em>time_</em> = -1<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher4SendEPCKv6size_tx" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher4SendEPCKv6size_tx">
+<span id="_CPPv3NK4eCAL10CPublisher4SendEPCKv6size_tx"></span><span id="_CPPv2NK4eCAL10CPublisher4SendEPCKv6size_tx"></span><span id="eCAL::CPublisher::Send__voidCPC.s.l-lC"></span><span class="target" id="classeCAL_1_1CPublisher_1abe19027d275baf272e31eb84f9fa6a93"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Send</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">buf_</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len_</span></span>, <span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="o"><span class="pre">-</span></span><span class="m"><span class="pre">1</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher4SendEPCKv6size_tx" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Send a message to all subscribers. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>Number of bytes sent. </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">buf_</span></code>: Pointer to content buffer. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">len_</span></code>: Length of buffer. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">time_</span></code>: Send time (-1 = use eCAL system time in us, default = -1).</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buf_</strong> – Pointer to content buffer. </p></li>
+<li><p><strong>len_</strong> – Length of buffer. </p></li>
+<li><p><strong>time_</strong> – Send time (-1 = use eCAL system time in us, default = -1).</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of bytes sent. </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL10CPublisher4SendERKNSt6stringEx">
-<span id="_CPPv3NK4eCAL10CPublisher4SendERKNSt6stringEx"></span><span id="_CPPv2NK4eCAL10CPublisher4SendERKNSt6stringEx"></span><span id="eCAL::CPublisher::Send__ssCR.l-lC"></span><span class="target" id="classeCAL_1_1CPublisher_1a400b411a9a104212cd159dddf2e08ce2"></span>size_t <code class="sig-name descname">Send</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>s_</em>, long long <em>time_</em> = -1<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher4SendERKNSt6stringEx" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher4SendERKNSt6stringEx">
+<span id="_CPPv3NK4eCAL10CPublisher4SendERKNSt6stringEx"></span><span id="_CPPv2NK4eCAL10CPublisher4SendERKNSt6stringEx"></span><span id="eCAL::CPublisher::Send__ssCR.l-lC"></span><span class="target" id="classeCAL_1_1CPublisher_1a400b411a9a104212cd159dddf2e08ce2"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Send</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">s_</span></span>, <span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="o"><span class="pre">-</span></span><span class="m"><span class="pre">1</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher4SendERKNSt6stringEx" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Send a message to all subscribers. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>Number of bytes sent. </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">s_</span></code>: String that contains content to send. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">time_</span></code>: Send time (-1 = use eCAL system time in us, default = -1).</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s_</strong> – String that contains content to send. </p></li>
+<li><p><strong>time_</strong> – Send time (-1 = use eCAL system time in us, default = -1).</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of bytes sent. </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisher16AddEventCallbackE20eCAL_Publisher_Event17PubEventCallbackT">
-<span id="_CPPv3N4eCAL10CPublisher16AddEventCallbackE20eCAL_Publisher_Event17PubEventCallbackT"></span><span id="_CPPv2N4eCAL10CPublisher16AddEventCallbackE20eCAL_Publisher_Event17PubEventCallbackT"></span><span id="eCAL::CPublisher::AddEventCallback__eCAL_Publisher_Event.PubEventCallbackT"></span><span class="target" id="classeCAL_1_1CPublisher_1ab50df901b1cf50506468ae4e72e7beda"></span>bool <code class="sig-name descname">AddEventCallback</code><span class="sig-paren">(</span>eCAL_Publisher_Event <em>type_</em>, <a class="reference internal" href="typedef_ecal__callback_8h_1abe3a31dd01a78ed20f8881be6a46dc4a.html#_CPPv4N4eCAL17PubEventCallbackTE" title="eCAL::PubEventCallbackT">PubEventCallbackT</a> <em>callback_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher16AddEventCallbackE20eCAL_Publisher_Event17PubEventCallbackT" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher16AddEventCallbackE20eCAL_Publisher_Event17PubEventCallbackT">
+<span id="_CPPv3N4eCAL10CPublisher16AddEventCallbackE20eCAL_Publisher_Event17PubEventCallbackT"></span><span id="_CPPv2N4eCAL10CPublisher16AddEventCallbackE20eCAL_Publisher_Event17PubEventCallbackT"></span><span id="eCAL::CPublisher::AddEventCallback__eCAL_Publisher_Event.PubEventCallbackT"></span><span class="target" id="classeCAL_1_1CPublisher_1ab50df901b1cf50506468ae4e72e7beda"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AddEventCallback</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">eCAL_Publisher_Event</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">type_</span></span>, <a class="reference internal" href="typedef_ecal__callback_8h_1abe3a31dd01a78ed20f8881be6a46dc4a.html#_CPPv4N4eCAL17PubEventCallbackTE" title="eCAL::PubEventCallbackT"><span class="n"><span class="pre">PubEventCallbackT</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">callback_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher16AddEventCallbackE20eCAL_Publisher_Event17PubEventCallbackT" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Add callback function for publisher events. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if succeeded, false if not. </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">type_</span></code>: The event type to react on. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">callback_</span></code>: The callback function to add.</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type_</strong> – The event type to react on. </p></li>
+<li><p><strong>callback_</strong> – The callback function to add.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if succeeded, false if not. </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL10CPublisher16RemEventCallbackE20eCAL_Publisher_Event">
-<span id="_CPPv3N4eCAL10CPublisher16RemEventCallbackE20eCAL_Publisher_Event"></span><span id="_CPPv2N4eCAL10CPublisher16RemEventCallbackE20eCAL_Publisher_Event"></span><span id="eCAL::CPublisher::RemEventCallback__eCAL_Publisher_Event"></span><span class="target" id="classeCAL_1_1CPublisher_1afe51c92270c387993b354196100dead9"></span>bool <code class="sig-name descname">RemEventCallback</code><span class="sig-paren">(</span>eCAL_Publisher_Event <em>type_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher16RemEventCallbackE20eCAL_Publisher_Event" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher16RemEventCallbackE20eCAL_Publisher_Event">
+<span id="_CPPv3N4eCAL10CPublisher16RemEventCallbackE20eCAL_Publisher_Event"></span><span id="_CPPv2N4eCAL10CPublisher16RemEventCallbackE20eCAL_Publisher_Event"></span><span id="eCAL::CPublisher::RemEventCallback__eCAL_Publisher_Event"></span><span class="target" id="classeCAL_1_1CPublisher_1afe51c92270c387993b354196100dead9"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RemEventCallback</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">eCAL_Publisher_Event</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">type_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher16RemEventCallbackE20eCAL_Publisher_Event" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Remove callback function for publisher events. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if succeeded, false if not. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>type_</strong> – The event type to remove.</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">type_</span></code>: The event type to remove.</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if succeeded, false if not. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL10CPublisher9IsCreatedEv">
-<span id="_CPPv3NK4eCAL10CPublisher9IsCreatedEv"></span><span id="_CPPv2NK4eCAL10CPublisher9IsCreatedEv"></span><span id="eCAL::CPublisher::IsCreatedC"></span><span class="target" id="classeCAL_1_1CPublisher_1a1000f5e41ab9dfb68fe9e0b41f4c173e"></span>bool <code class="sig-name descname">IsCreated</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher9IsCreatedEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher9IsCreatedEv">
+<span id="_CPPv3NK4eCAL10CPublisher9IsCreatedEv"></span><span id="_CPPv2NK4eCAL10CPublisher9IsCreatedEv"></span><span id="eCAL::CPublisher::IsCreatedC"></span><span class="target" id="classeCAL_1_1CPublisher_1a1000f5e41ab9dfb68fe9e0b41f4c173e"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IsCreated</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher9IsCreatedEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Query if the publisher is created. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if created, false if not. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if created, false if not. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL10CPublisher12IsSubscribedEv">
-<span id="_CPPv3NK4eCAL10CPublisher12IsSubscribedEv"></span><span id="_CPPv2NK4eCAL10CPublisher12IsSubscribedEv"></span><span id="eCAL::CPublisher::IsSubscribedC"></span><span class="target" id="classeCAL_1_1CPublisher_1a9f447828b27e1a572adcce187b4fc390"></span>bool <code class="sig-name descname">IsSubscribed</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher12IsSubscribedEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher12IsSubscribedEv">
+<span id="_CPPv3NK4eCAL10CPublisher12IsSubscribedEv"></span><span id="_CPPv2NK4eCAL10CPublisher12IsSubscribedEv"></span><span id="eCAL::CPublisher::IsSubscribedC"></span><span class="target" id="classeCAL_1_1CPublisher_1a9f447828b27e1a572adcce187b4fc390"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IsSubscribed</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher12IsSubscribedEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Query if the publisher is subscribed. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>true if subscribed, false if not. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>true if subscribed, false if not. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL10CPublisher12GetTopicNameEv">
-<span id="_CPPv3NK4eCAL10CPublisher12GetTopicNameEv"></span><span id="_CPPv2NK4eCAL10CPublisher12GetTopicNameEv"></span><span id="eCAL::CPublisher::GetTopicNameC"></span><span class="target" id="classeCAL_1_1CPublisher_1aa6ed69814226a638fccc8ceaab8a8158"></span>std::string <code class="sig-name descname">GetTopicName</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher12GetTopicNameEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher12GetTopicNameEv">
+<span id="_CPPv3NK4eCAL10CPublisher12GetTopicNameEv"></span><span id="_CPPv2NK4eCAL10CPublisher12GetTopicNameEv"></span><span id="eCAL::CPublisher::GetTopicNameC"></span><span class="target" id="classeCAL_1_1CPublisher_1aa6ed69814226a638fccc8ceaab8a8158"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetTopicName</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher12GetTopicNameEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets name of the connected topic. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>The topic name. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The topic name. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL10CPublisher11GetTypeNameEv">
-<span id="_CPPv3NK4eCAL10CPublisher11GetTypeNameEv"></span><span id="_CPPv2NK4eCAL10CPublisher11GetTypeNameEv"></span><span id="eCAL::CPublisher::GetTypeNameC"></span><span class="target" id="classeCAL_1_1CPublisher_1a6a4149fefbc85938275a5915a138a57e"></span>std::string <code class="sig-name descname">GetTypeName</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher11GetTypeNameEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher11GetTypeNameEv">
+<span id="_CPPv3NK4eCAL10CPublisher11GetTypeNameEv"></span><span id="_CPPv2NK4eCAL10CPublisher11GetTypeNameEv"></span><span id="eCAL::CPublisher::GetTypeNameC"></span><span class="target" id="classeCAL_1_1CPublisher_1a6a4149fefbc85938275a5915a138a57e"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetTypeName</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher11GetTypeNameEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets type of the connected topic. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>The type name. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The type name. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL10CPublisher14GetDescriptionEv">
-<span id="_CPPv3NK4eCAL10CPublisher14GetDescriptionEv"></span><span id="_CPPv2NK4eCAL10CPublisher14GetDescriptionEv"></span><span id="eCAL::CPublisher::GetDescriptionC"></span><span class="target" id="classeCAL_1_1CPublisher_1aeb4ede654e0851d0fff4c78e24422807"></span>std::string <code class="sig-name descname">GetDescription</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher14GetDescriptionEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher14GetDescriptionEv">
+<span id="_CPPv3NK4eCAL10CPublisher14GetDescriptionEv"></span><span id="_CPPv2NK4eCAL10CPublisher14GetDescriptionEv"></span><span id="eCAL::CPublisher::GetDescriptionC"></span><span class="target" id="classeCAL_1_1CPublisher_1aeb4ede654e0851d0fff4c78e24422807"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetDescription</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher14GetDescriptionEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets description of the connected topic. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>The description. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The description. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL10CPublisher4DumpERKNSt6stringE">
-<span id="_CPPv3NK4eCAL10CPublisher4DumpERKNSt6stringE"></span><span id="_CPPv2NK4eCAL10CPublisher4DumpERKNSt6stringE"></span><span id="eCAL::CPublisher::Dump__ssCRC"></span><span class="target" id="classeCAL_1_1CPublisher_1a0d3ed2f05c0fb60a3a3750644343cd91"></span>std::string <code class="sig-name descname">Dump</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>indent_</em> = &quot;&quot;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher4DumpERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher4DumpERKNSt6stringE">
+<span id="_CPPv3NK4eCAL10CPublisher4DumpERKNSt6stringE"></span><span id="_CPPv2NK4eCAL10CPublisher4DumpERKNSt6stringE"></span><span id="eCAL::CPublisher::Dump__ssCRC"></span><span class="target" id="classeCAL_1_1CPublisher_1a0d3ed2f05c0fb60a3a3750644343cd91"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Dump</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">indent_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">&quot;&quot;</span></s><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher4DumpERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Dump the whole class state into a string. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>The dump string. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>indent_</strong> – Indentation used for dump.</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">indent_</span></code>: Indentation used for dump.</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The dump string. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 </div>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -878,6 +878,7 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

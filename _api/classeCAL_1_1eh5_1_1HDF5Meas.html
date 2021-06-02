@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -37,9 +41,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -431,63 +433,62 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="class-hdf5meas">
+    <section id="class-hdf5meas">
 <span id="exhale-class-classecal-1-1eh5-1-1hdf5meas"></span><h1>Class HDF5Meas<a class="headerlink" href="#class-hdf5meas" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p>Defined in <a class="reference internal" href="file_contrib_ecalhdf5_include_ecalhdf5_eh5_meas.h.html#file-contrib-ecalhdf5-include-ecalhdf5-eh5-meas-h"><span class="std std-ref">File eh5_meas.h</span></a></p></li>
 </ul>
-<div class="section" id="class-documentation">
+<section id="class-documentation">
 <h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
 <dl class="cpp class">
-<dt id="_CPPv4N4eCAL3eh58HDF5MeasE">
-<span id="_CPPv3N4eCAL3eh58HDF5MeasE"></span><span id="_CPPv2N4eCAL3eh58HDF5MeasE"></span><span id="eCAL::eh5::HDF5Meas"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas"></span><em class="property">class </em><code class="sig-prename descclassname">eCAL::eh5<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">HDF5Meas</code><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5MeasE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh58HDF5MeasE">
+<span id="_CPPv3N4eCAL3eh58HDF5MeasE"></span><span id="_CPPv2N4eCAL3eh58HDF5MeasE"></span><span id="eCAL::eh5::HDF5Meas"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">eCAL</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eh5</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">HDF5Meas</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5MeasE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>eCAL HDF5 measurement API </p>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Public Types</p>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
 <dl class="cpp type">
-<dt id="_CPPv4N4eCAL3eh58HDF5Meas16CallbackFunctionE">
-<span id="_CPPv3N4eCAL3eh58HDF5Meas16CallbackFunctionE"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas16CallbackFunctionE"></span><span id="eCAL::eh5::HDF5Meas::CallbackFunction"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a54dbaccb69979d75e6542d1f62b9c314"></span><em class="property">typedef </em>std::function&lt;void<span class="sig-paren">(</span>void<span class="sig-paren">)</span>&gt; <code class="sig-name descname">CallbackFunction</code><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas16CallbackFunctionE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh58HDF5Meas16CallbackFunctionE">
+<span id="_CPPv3N4eCAL3eh58HDF5Meas16CallbackFunctionE"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas16CallbackFunctionE"></span><span id="eCAL::eh5::HDF5Meas::CallbackFunction"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a54dbaccb69979d75e6542d1f62b9c314"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CallbackFunction</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas16CallbackFunctionE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Callback function type for pre file split notification. </p>
 </dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL3eh58HDF5Meas8HDF5MeasEv">
-<span id="_CPPv3N4eCAL3eh58HDF5Meas8HDF5MeasEv"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas8HDF5MeasEv"></span><span id="eCAL::eh5::HDF5Meas::HDF5Meas"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a38a4a05c222d89a299585e495d176dd3"></span><code class="sig-name descname">HDF5Meas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas8HDF5MeasEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh58HDF5Meas8HDF5MeasEv">
+<span id="_CPPv3N4eCAL3eh58HDF5Meas8HDF5MeasEv"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas8HDF5MeasEv"></span><span id="eCAL::eh5::HDF5Meas::HDF5Meas"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a38a4a05c222d89a299585e495d176dd3"></span><span class="sig-name descname"><span class="n"><span class="pre">HDF5Meas</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas8HDF5MeasEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL3eh58HDF5Meas8HDF5MeasERKNSt6stringE11eAccessType">
-<span id="_CPPv3N4eCAL3eh58HDF5Meas8HDF5MeasERKNSt6stringE11eAccessType"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas8HDF5MeasERKNSt6stringE11eAccessType"></span><span id="eCAL::eh5::HDF5Meas::HDF5Meas__ssCR.eAccessType"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a807356331f5d65c14940416f9ecae710"></span><code class="sig-name descname">HDF5Meas</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>path</em>, <a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html#_CPPv4N4eCAL3eh511eAccessTypeE" title="eCAL::eh5::eAccessType">eAccessType</a> <em>access</em> = <a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html#_CPPv4N4eCAL3eh511eAccessTypeE" title="eCAL::eh5::eAccessType">eAccessType</a>::<a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html#_CPPv4N4eCAL3eh511eAccessType6RDONLYE" title="eCAL::eh5::eAccessType::RDONLY">RDONLY</a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas8HDF5MeasERKNSt6stringE11eAccessType" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh58HDF5Meas8HDF5MeasERKNSt6stringE11eAccessType">
+<span id="_CPPv3N4eCAL3eh58HDF5Meas8HDF5MeasERKNSt6stringE11eAccessType"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas8HDF5MeasERKNSt6stringE11eAccessType"></span><span id="eCAL::eh5::HDF5Meas::HDF5Meas__ssCR.eAccessType"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a807356331f5d65c14940416f9ecae710"></span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HDF5Meas</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">path</span></span>, <a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html#_CPPv4N4eCAL3eh511eAccessTypeE" title="eCAL::eh5::eAccessType"><span class="n"><span class="pre">eAccessType</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">access</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html#_CPPv4N4eCAL3eh511eAccessTypeE" title="eCAL::eh5::eAccessType"><span class="n"><span class="pre">eAccessType</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html#_CPPv4N4eCAL3eh511eAccessType6RDONLYE" title="eCAL::eh5::eAccessType::RDONLY"><span class="n"><span class="pre">RDONLY</span></span></a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas8HDF5MeasERKNSt6stringE11eAccessType" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code>: Input file path / measurement directory path (see meas directory structure description bellow, in Open method). </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">access</span></code>: Access type </p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> – Input file path / measurement directory path (see meas directory structure description bellow, in Open method). </p></li>
+<li><p><strong>access</strong> – Access type </p></li>
 </ul>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL3eh58HDF5MeasD0Ev">
-<span id="_CPPv3N4eCAL3eh58HDF5MeasD0Ev"></span><span id="_CPPv2N4eCAL3eh58HDF5MeasD0Ev"></span><span id="eCAL::eh5::HDF5Meas::~HDF5Meas"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a8586f7c715d04371ec47be6d039dcf16"></span><code class="sig-name descname">~HDF5Meas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5MeasD0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh58HDF5MeasD0Ev">
+<span id="_CPPv3N4eCAL3eh58HDF5MeasD0Ev"></span><span id="_CPPv2N4eCAL3eh58HDF5MeasD0Ev"></span><span id="eCAL::eh5::HDF5Meas::~HDF5Meas"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a8586f7c715d04371ec47be6d039dcf16"></span><span class="sig-name descname"><span class="n"><span class="pre">~HDF5Meas</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5MeasD0Ev" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Destructor. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL3eh58HDF5Meas4OpenERKNSt6stringE11eAccessType">
-<span id="_CPPv3N4eCAL3eh58HDF5Meas4OpenERKNSt6stringE11eAccessType"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas4OpenERKNSt6stringE11eAccessType"></span><span id="eCAL::eh5::HDF5Meas::Open__ssCR.eAccessType"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a894bf415f400cac9194399af83370412"></span>bool <code class="sig-name descname">Open</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>path</em>, <a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html#_CPPv4N4eCAL3eh511eAccessTypeE" title="eCAL::eh5::eAccessType">eAccessType</a> <em>access</em> = <a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html#_CPPv4N4eCAL3eh511eAccessTypeE" title="eCAL::eh5::eAccessType">eAccessType</a>::<a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html#_CPPv4N4eCAL3eh511eAccessType6RDONLYE" title="eCAL::eh5::eAccessType::RDONLY">RDONLY</a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas4OpenERKNSt6stringE11eAccessType" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh58HDF5Meas4OpenERKNSt6stringE11eAccessType">
+<span id="_CPPv3N4eCAL3eh58HDF5Meas4OpenERKNSt6stringE11eAccessType"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas4OpenERKNSt6stringE11eAccessType"></span><span id="eCAL::eh5::HDF5Meas::Open__ssCR.eAccessType"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a894bf415f400cac9194399af83370412"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Open</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">path</span></span>, <a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html#_CPPv4N4eCAL3eh511eAccessTypeE" title="eCAL::eh5::eAccessType"><span class="n"><span class="pre">eAccessType</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">access</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html#_CPPv4N4eCAL3eh511eAccessTypeE" title="eCAL::eh5::eAccessType"><span class="n"><span class="pre">eAccessType</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html#_CPPv4N4eCAL3eh511eAccessType6RDONLYE" title="eCAL::eh5::eAccessType::RDONLY"><span class="n"><span class="pre">RDONLY</span></span></a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas4OpenERKNSt6stringE11eAccessType" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Open file. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>true if output (eAccessType::CREATE) measurement directory structure can be accessed/created, false otherwise. true if input (eAccessType::RDONLY) measurement/file path was opened, false otherwise. </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code>: Input file path / measurement directory path. <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>            <span class="n">Default</span> <span class="n">measurement</span> <span class="n">directory</span> <span class="n">structure</span><span class="p">:</span>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> – Input file path / measurement directory path. <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>            <span class="n">Default</span> <span class="n">measurement</span> <span class="n">directory</span> <span class="n">structure</span><span class="p">:</span>
              <span class="o">-</span> <span class="n">root</span> <span class="n">directory</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="p">:</span> <span class="n">M</span><span class="p">:</span>\<span class="n">measurement_directory</span>\<span class="n">measurement01</span>
              <span class="o">-</span> <span class="n">documents</span> <span class="n">directory</span><span class="p">:</span>                                <span class="o">|</span><span class="n">_doc</span>
              <span class="o">-</span> <span class="n">hosts</span> <span class="n">directories</span><span class="p">:</span>                                  <span class="o">|</span><span class="n">_Host1</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="p">:</span> <span class="n">CARPC01</span><span class="p">)</span>
@@ -504,308 +505,304 @@
 </pre></div>
 </div>
 </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">access</span></code>: Access type</p></li>
+<li><p><strong>access</strong> – Access type</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>true if output (eAccessType::CREATE) measurement directory structure can be accessed/created, false otherwise. true if input (eAccessType::RDONLY) measurement/file path was opened, false otherwise. </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL3eh58HDF5Meas5CloseEv">
-<span id="_CPPv3N4eCAL3eh58HDF5Meas5CloseEv"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas5CloseEv"></span><span id="eCAL::eh5::HDF5Meas::Close"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1abeed7e30c0dfe2c99fcea3dddc5b131a"></span>bool <code class="sig-name descname">Close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas5CloseEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh58HDF5Meas5CloseEv">
+<span id="_CPPv3N4eCAL3eh58HDF5Meas5CloseEv"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas5CloseEv"></span><span id="eCAL::eh5::HDF5Meas::Close"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1abeed7e30c0dfe2c99fcea3dddc5b131a"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Close</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas5CloseEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Close file. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>true if succeeds, false if it fails </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>true if succeeds, false if it fails </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL3eh58HDF5Meas4IsOkEv">
-<span id="_CPPv3NK4eCAL3eh58HDF5Meas4IsOkEv"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas4IsOkEv"></span><span id="eCAL::eh5::HDF5Meas::IsOkC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1aca4422176c24284ea24d694e545d8f68"></span>bool <code class="sig-name descname">IsOk</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas4IsOkEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL3eh58HDF5Meas4IsOkEv">
+<span id="_CPPv3NK4eCAL3eh58HDF5Meas4IsOkEv"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas4IsOkEv"></span><span id="eCAL::eh5::HDF5Meas::IsOkC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1aca4422176c24284ea24d694e545d8f68"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IsOk</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas4IsOkEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Checks if file/measurement is ok. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>true if meas can be opened(read) or location is accessible(write), false otherwise </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>true if meas can be opened(read) or location is accessible(write), false otherwise </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL3eh58HDF5Meas14GetFileVersionEv">
-<span id="_CPPv3NK4eCAL3eh58HDF5Meas14GetFileVersionEv"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas14GetFileVersionEv"></span><span id="eCAL::eh5::HDF5Meas::GetFileVersionC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1aeafef45016e17fabfd091af5663d95ef"></span>std::string <code class="sig-name descname">GetFileVersion</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas14GetFileVersionEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL3eh58HDF5Meas14GetFileVersionEv">
+<span id="_CPPv3NK4eCAL3eh58HDF5Meas14GetFileVersionEv"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas14GetFileVersionEv"></span><span id="eCAL::eh5::HDF5Meas::GetFileVersionC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1aeafef45016e17fabfd091af5663d95ef"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetFileVersion</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas14GetFileVersionEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Get the File Type Version of the current opened file. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>file version </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>file version </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL3eh58HDF5Meas17GetMaxSizePerFileEv">
-<span id="_CPPv3NK4eCAL3eh58HDF5Meas17GetMaxSizePerFileEv"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas17GetMaxSizePerFileEv"></span><span id="eCAL::eh5::HDF5Meas::GetMaxSizePerFileC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a674c3533cd6269ac88ff3f9a88e1791a"></span>size_t <code class="sig-name descname">GetMaxSizePerFile</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas17GetMaxSizePerFileEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL3eh58HDF5Meas17GetMaxSizePerFileEv">
+<span id="_CPPv3NK4eCAL3eh58HDF5Meas17GetMaxSizePerFileEv"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas17GetMaxSizePerFileEv"></span><span id="eCAL::eh5::HDF5Meas::GetMaxSizePerFileC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a674c3533cd6269ac88ff3f9a88e1791a"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetMaxSizePerFile</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas17GetMaxSizePerFileEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets maximum allowed size for an individual file. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>maximum size in MB </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>maximum size in MB </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL3eh58HDF5Meas17SetMaxSizePerFileE6size_t">
-<span id="_CPPv3N4eCAL3eh58HDF5Meas17SetMaxSizePerFileE6size_t"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas17SetMaxSizePerFileE6size_t"></span><span id="eCAL::eh5::HDF5Meas::SetMaxSizePerFile__s"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a5c12487539acba0e4396535ad50550e1"></span>void <code class="sig-name descname">SetMaxSizePerFile</code><span class="sig-paren">(</span>size_t <em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas17SetMaxSizePerFileE6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh58HDF5Meas17SetMaxSizePerFileE6size_t">
+<span id="_CPPv3N4eCAL3eh58HDF5Meas17SetMaxSizePerFileE6size_t"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas17SetMaxSizePerFileE6size_t"></span><span id="eCAL::eh5::HDF5Meas::SetMaxSizePerFile__s"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a5c12487539acba0e4396535ad50550e1"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SetMaxSizePerFile</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas17SetMaxSizePerFileE6size_t" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets maximum allowed size for an individual file. </p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code>: maximum size in MB </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>size</strong> – maximum size in MB </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL3eh58HDF5Meas15GetChannelNamesEv">
-<span id="_CPPv3NK4eCAL3eh58HDF5Meas15GetChannelNamesEv"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas15GetChannelNamesEv"></span><span id="eCAL::eh5::HDF5Meas::GetChannelNamesC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1aaaaf77dbb3707d2016e622d67b8f351f"></span>std::set&lt;std::string&gt; <code class="sig-name descname">GetChannelNames</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas15GetChannelNamesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL3eh58HDF5Meas15GetChannelNamesEv">
+<span id="_CPPv3NK4eCAL3eh58HDF5Meas15GetChannelNamesEv"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas15GetChannelNamesEv"></span><span id="eCAL::eh5::HDF5Meas::GetChannelNamesC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1aaaaf77dbb3707d2016e622d67b8f351f"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">set</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetChannelNames</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas15GetChannelNamesEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Get the available channel names of the current opened file / measurement. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>channel names </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>channel names </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL3eh58HDF5Meas10HasChannelERKNSt6stringE">
-<span id="_CPPv3NK4eCAL3eh58HDF5Meas10HasChannelERKNSt6stringE"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas10HasChannelERKNSt6stringE"></span><span id="eCAL::eh5::HDF5Meas::HasChannel__ssCRC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1ae7433e76c418f226fd448a52a801e2b8"></span>bool <code class="sig-name descname">HasChannel</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>channel_name</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas10HasChannelERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL3eh58HDF5Meas10HasChannelERKNSt6stringE">
+<span id="_CPPv3NK4eCAL3eh58HDF5Meas10HasChannelERKNSt6stringE"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas10HasChannelERKNSt6stringE"></span><span id="eCAL::eh5::HDF5Meas::HasChannel__ssCRC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1ae7433e76c418f226fd448a52a801e2b8"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HasChannel</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">channel_name</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas10HasChannelERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Check if channel exists in measurement. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>true if exists, false otherwise </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>channel_name</strong> – name of the channel</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">channel_name</span></code>: name of the channel</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>true if exists, false otherwise </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL3eh58HDF5Meas21GetChannelDescriptionERKNSt6stringE">
-<span id="_CPPv3NK4eCAL3eh58HDF5Meas21GetChannelDescriptionERKNSt6stringE"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas21GetChannelDescriptionERKNSt6stringE"></span><span id="eCAL::eh5::HDF5Meas::GetChannelDescription__ssCRC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1ab068cdb97d707afe1317f6ab5cbd1e69"></span>std::string <code class="sig-name descname">GetChannelDescription</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>channel_name</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas21GetChannelDescriptionERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL3eh58HDF5Meas21GetChannelDescriptionERKNSt6stringE">
+<span id="_CPPv3NK4eCAL3eh58HDF5Meas21GetChannelDescriptionERKNSt6stringE"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas21GetChannelDescriptionERKNSt6stringE"></span><span id="eCAL::eh5::HDF5Meas::GetChannelDescription__ssCRC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1ab068cdb97d707afe1317f6ab5cbd1e69"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetChannelDescription</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">channel_name</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas21GetChannelDescriptionERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Get the channel description for the given channel. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>channel description </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>channel_name</strong> – channel name</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">channel_name</span></code>: channel name</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>channel description </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL3eh58HDF5Meas21SetChannelDescriptionERKNSt6stringERKNSt6stringE">
-<span id="_CPPv3N4eCAL3eh58HDF5Meas21SetChannelDescriptionERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas21SetChannelDescriptionERKNSt6stringERKNSt6stringE"></span><span id="eCAL::eh5::HDF5Meas::SetChannelDescription__ssCR.ssCR"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1aadf74bed883a202b76a9f556b3ba16f7"></span>void <code class="sig-name descname">SetChannelDescription</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>channel_name</em>, <em class="property">const</em> std::string &amp;<em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas21SetChannelDescriptionERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh58HDF5Meas21SetChannelDescriptionERKNSt6stringERKNSt6stringE">
+<span id="_CPPv3N4eCAL3eh58HDF5Meas21SetChannelDescriptionERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas21SetChannelDescriptionERKNSt6stringERKNSt6stringE"></span><span id="eCAL::eh5::HDF5Meas::SetChannelDescription__ssCR.ssCR"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1aadf74bed883a202b76a9f556b3ba16f7"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SetChannelDescription</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">channel_name</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">description</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas21SetChannelDescriptionERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Set description of the given channel. </p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">channel_name</span></code>: channel name </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">description</span></code>: description of the channel </p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel_name</strong> – channel name </p></li>
+<li><p><strong>description</strong> – description of the channel </p></li>
 </ul>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL3eh58HDF5Meas14GetChannelTypeERKNSt6stringE">
-<span id="_CPPv3NK4eCAL3eh58HDF5Meas14GetChannelTypeERKNSt6stringE"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas14GetChannelTypeERKNSt6stringE"></span><span id="eCAL::eh5::HDF5Meas::GetChannelType__ssCRC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a9ba7555055d7df49f2e73874979e7825"></span>std::string <code class="sig-name descname">GetChannelType</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>channel_name</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas14GetChannelTypeERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL3eh58HDF5Meas14GetChannelTypeERKNSt6stringE">
+<span id="_CPPv3NK4eCAL3eh58HDF5Meas14GetChannelTypeERKNSt6stringE"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas14GetChannelTypeERKNSt6stringE"></span><span id="eCAL::eh5::HDF5Meas::GetChannelType__ssCRC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a9ba7555055d7df49f2e73874979e7825"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetChannelType</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">channel_name</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas14GetChannelTypeERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the channel type of the given channel. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>channel type </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>channel_name</strong> – channel name</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">channel_name</span></code>: channel name</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>channel type </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL3eh58HDF5Meas14SetChannelTypeERKNSt6stringERKNSt6stringE">
-<span id="_CPPv3N4eCAL3eh58HDF5Meas14SetChannelTypeERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas14SetChannelTypeERKNSt6stringERKNSt6stringE"></span><span id="eCAL::eh5::HDF5Meas::SetChannelType__ssCR.ssCR"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1ae4f937af73235f7058ca81139f6cc213"></span>void <code class="sig-name descname">SetChannelType</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>channel_name</em>, <em class="property">const</em> std::string &amp;<em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas14SetChannelTypeERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh58HDF5Meas14SetChannelTypeERKNSt6stringERKNSt6stringE">
+<span id="_CPPv3N4eCAL3eh58HDF5Meas14SetChannelTypeERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas14SetChannelTypeERKNSt6stringERKNSt6stringE"></span><span id="eCAL::eh5::HDF5Meas::SetChannelType__ssCR.ssCR"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1ae4f937af73235f7058ca81139f6cc213"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SetChannelType</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">channel_name</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">type</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas14SetChannelTypeERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Set type of the given channel. </p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">channel_name</span></code>: channel name </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">type</span></code>: type of the channel </p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel_name</strong> – channel name </p></li>
+<li><p><strong>type</strong> – type of the channel </p></li>
 </ul>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL3eh58HDF5Meas15GetMinTimestampERKNSt6stringE">
-<span id="_CPPv3NK4eCAL3eh58HDF5Meas15GetMinTimestampERKNSt6stringE"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas15GetMinTimestampERKNSt6stringE"></span><span id="eCAL::eh5::HDF5Meas::GetMinTimestamp__ssCRC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a3265977aa86b989c4cb9ee4358b35206"></span>long long <code class="sig-name descname">GetMinTimestamp</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>channel_name</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas15GetMinTimestampERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL3eh58HDF5Meas15GetMinTimestampERKNSt6stringE">
+<span id="_CPPv3NK4eCAL3eh58HDF5Meas15GetMinTimestampERKNSt6stringE"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas15GetMinTimestampERKNSt6stringE"></span><span id="eCAL::eh5::HDF5Meas::GetMinTimestamp__ssCRC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a3265977aa86b989c4cb9ee4358b35206"></span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetMinTimestamp</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">channel_name</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas15GetMinTimestampERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets minimum timestamp for specified channel. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>minimum timestamp value </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>channel_name</strong> – channel name</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">channel_name</span></code>: channel name</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>minimum timestamp value </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL3eh58HDF5Meas15GetMaxTimestampERKNSt6stringE">
-<span id="_CPPv3NK4eCAL3eh58HDF5Meas15GetMaxTimestampERKNSt6stringE"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas15GetMaxTimestampERKNSt6stringE"></span><span id="eCAL::eh5::HDF5Meas::GetMaxTimestamp__ssCRC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a72eb031080a9cc9976241cfa83219cac"></span>long long <code class="sig-name descname">GetMaxTimestamp</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>channel_name</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas15GetMaxTimestampERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL3eh58HDF5Meas15GetMaxTimestampERKNSt6stringE">
+<span id="_CPPv3NK4eCAL3eh58HDF5Meas15GetMaxTimestampERKNSt6stringE"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas15GetMaxTimestampERKNSt6stringE"></span><span id="eCAL::eh5::HDF5Meas::GetMaxTimestamp__ssCRC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a72eb031080a9cc9976241cfa83219cac"></span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetMaxTimestamp</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">channel_name</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas15GetMaxTimestampERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets maximum timestamp for specified channel. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>maximum timestamp value </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>channel_name</strong> – channel name</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">channel_name</span></code>: channel name</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>maximum timestamp value </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL3eh58HDF5Meas14GetEntriesInfoERKNSt6stringER12EntryInfoSet">
-<span id="_CPPv3NK4eCAL3eh58HDF5Meas14GetEntriesInfoERKNSt6stringER12EntryInfoSet"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas14GetEntriesInfoERKNSt6stringER12EntryInfoSet"></span><span id="eCAL::eh5::HDF5Meas::GetEntriesInfo__ssCR.EntryInfoSetRC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a988501cbee4f7c2e692302956be166c3"></span>bool <code class="sig-name descname">GetEntriesInfo</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>channel_name</em>, <a class="reference internal" href="typedef_eh5__types_8h_1a753fcaffdfc6a8ee1681c1099adde028.html#_CPPv4N4eCAL3eh512EntryInfoSetE" title="eCAL::eh5::EntryInfoSet">EntryInfoSet</a> &amp;<em>entries</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas14GetEntriesInfoERKNSt6stringER12EntryInfoSet" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL3eh58HDF5Meas14GetEntriesInfoERKNSt6stringER12EntryInfoSet">
+<span id="_CPPv3NK4eCAL3eh58HDF5Meas14GetEntriesInfoERKNSt6stringER12EntryInfoSet"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas14GetEntriesInfoERKNSt6stringER12EntryInfoSet"></span><span id="eCAL::eh5::HDF5Meas::GetEntriesInfo__ssCR.EntryInfoSetRC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a988501cbee4f7c2e692302956be166c3"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetEntriesInfo</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">channel_name</span></span>, <a class="reference internal" href="typedef_eh5__types_8h_1a753fcaffdfc6a8ee1681c1099adde028.html#_CPPv4N4eCAL3eh512EntryInfoSetE" title="eCAL::eh5::EntryInfoSet"><span class="n"><span class="pre">EntryInfoSet</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">entries</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas14GetEntriesInfoERKNSt6stringER12EntryInfoSet" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the header info for all data entries for the given channel Header = timestamp + entry id. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>true if succeeds, false if it fails </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">channel_name</span></code>: channel name </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">entries</span></code>: header info for all data entries</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel_name</strong> – <strong>[in]</strong> channel name </p></li>
+<li><p><strong>entries</strong> – <strong>[out]</strong> header info for all data entries</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>true if succeeds, false if it fails </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL3eh58HDF5Meas19GetEntriesInfoRangeERKNSt6stringExxR12EntryInfoSet">
-<span id="_CPPv3NK4eCAL3eh58HDF5Meas19GetEntriesInfoRangeERKNSt6stringExxR12EntryInfoSet"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas19GetEntriesInfoRangeERKNSt6stringExxR12EntryInfoSet"></span><span id="eCAL::eh5::HDF5Meas::GetEntriesInfoRange__ssCR.l-l.l-l.EntryInfoSetRC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a3e410806eaca9ec637b28a48d94ae13e"></span>bool <code class="sig-name descname">GetEntriesInfoRange</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>channel_name</em>, long long <em>begin</em>, long long <em>end</em>, <a class="reference internal" href="typedef_eh5__types_8h_1a753fcaffdfc6a8ee1681c1099adde028.html#_CPPv4N4eCAL3eh512EntryInfoSetE" title="eCAL::eh5::EntryInfoSet">EntryInfoSet</a> &amp;<em>entries</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas19GetEntriesInfoRangeERKNSt6stringExxR12EntryInfoSet" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL3eh58HDF5Meas19GetEntriesInfoRangeERKNSt6stringExxR12EntryInfoSet">
+<span id="_CPPv3NK4eCAL3eh58HDF5Meas19GetEntriesInfoRangeERKNSt6stringExxR12EntryInfoSet"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas19GetEntriesInfoRangeERKNSt6stringExxR12EntryInfoSet"></span><span id="eCAL::eh5::HDF5Meas::GetEntriesInfoRange__ssCR.l-l.l-l.EntryInfoSetRC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a3e410806eaca9ec637b28a48d94ae13e"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetEntriesInfoRange</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">channel_name</span></span>, <span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">begin</span></span>, <span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">end</span></span>, <a class="reference internal" href="typedef_eh5__types_8h_1a753fcaffdfc6a8ee1681c1099adde028.html#_CPPv4N4eCAL3eh512EntryInfoSetE" title="eCAL::eh5::EntryInfoSet"><span class="n"><span class="pre">EntryInfoSet</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">entries</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas19GetEntriesInfoRangeERKNSt6stringExxR12EntryInfoSet" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the header info for data entries for the given channel included in given time range (begin-&gt;end) Header = timestamp + entry id. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>true if succeeds, false if it fails </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">channel_name</span></code>: channel name </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">begin</span></code>: time range begin timestamp </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">end</span></code>: time range end timestamp </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">entries</span></code>: header info for data entries in given range</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel_name</strong> – <strong>[in]</strong> channel name </p></li>
+<li><p><strong>begin</strong> – <strong>[in]</strong> time range begin timestamp </p></li>
+<li><p><strong>end</strong> – <strong>[in]</strong> time range end timestamp </p></li>
+<li><p><strong>entries</strong> – <strong>[out]</strong> header info for data entries in given range</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>true if succeeds, false if it fails </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL3eh58HDF5Meas16GetEntryDataSizeExR6size_t">
-<span id="_CPPv3NK4eCAL3eh58HDF5Meas16GetEntryDataSizeExR6size_t"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas16GetEntryDataSizeExR6size_t"></span><span id="eCAL::eh5::HDF5Meas::GetEntryDataSize__l-l.sRC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1ae5662887a20255c6b963c4f191dd102d"></span>bool <code class="sig-name descname">GetEntryDataSize</code><span class="sig-paren">(</span>long long <em>entry_id</em>, size_t &amp;<em>size</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas16GetEntryDataSizeExR6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL3eh58HDF5Meas16GetEntryDataSizeExR6size_t">
+<span id="_CPPv3NK4eCAL3eh58HDF5Meas16GetEntryDataSizeExR6size_t"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas16GetEntryDataSizeExR6size_t"></span><span id="eCAL::eh5::HDF5Meas::GetEntryDataSize__l-l.sRC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1ae5662887a20255c6b963c4f191dd102d"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetEntryDataSize</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">entry_id</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">size</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas16GetEntryDataSizeExR6size_t" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets data size of a specific entry. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>true if succeeds, false if it fails </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">entry_id</span></code>: Entry ID </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">size</span></code>: Entry data size</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>entry_id</strong> – <strong>[in]</strong> Entry ID </p></li>
+<li><p><strong>size</strong> – <strong>[out]</strong> Entry data size</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>true if succeeds, false if it fails </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL3eh58HDF5Meas12GetEntryDataExPv">
-<span id="_CPPv3NK4eCAL3eh58HDF5Meas12GetEntryDataExPv"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas12GetEntryDataExPv"></span><span id="eCAL::eh5::HDF5Meas::GetEntryData__l-l.voidPC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1ac228c71238443288a0a271e7d059626e"></span>bool <code class="sig-name descname">GetEntryData</code><span class="sig-paren">(</span>long long <em>entry_id</em>, void *<em>data</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas12GetEntryDataExPv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL3eh58HDF5Meas12GetEntryDataExPv">
+<span id="_CPPv3NK4eCAL3eh58HDF5Meas12GetEntryDataExPv"></span><span id="_CPPv2NK4eCAL3eh58HDF5Meas12GetEntryDataExPv"></span><span id="eCAL::eh5::HDF5Meas::GetEntryData__l-l.voidPC"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1ac228c71238443288a0a271e7d059626e"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetEntryData</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">entry_id</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL3eh58HDF5Meas12GetEntryDataExPv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets data from a specific entry. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>true if succeeds, false if it fails </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">entry_id</span></code>: Entry ID </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">data</span></code>: Entry data</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>entry_id</strong> – <strong>[in]</strong> Entry ID </p></li>
+<li><p><strong>data</strong> – <strong>[out]</strong> Entry data</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>true if succeeds, false if it fails </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL3eh58HDF5Meas15SetFileBaseNameERKNSt6stringE">
-<span id="_CPPv3N4eCAL3eh58HDF5Meas15SetFileBaseNameERKNSt6stringE"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas15SetFileBaseNameERKNSt6stringE"></span><span id="eCAL::eh5::HDF5Meas::SetFileBaseName__ssCR"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1afe55bd6d747fd940242f5a21e03a36a6"></span>void <code class="sig-name descname">SetFileBaseName</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>base_name</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas15SetFileBaseNameERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh58HDF5Meas15SetFileBaseNameERKNSt6stringE">
+<span id="_CPPv3N4eCAL3eh58HDF5Meas15SetFileBaseNameERKNSt6stringE"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas15SetFileBaseNameERKNSt6stringE"></span><span id="eCAL::eh5::HDF5Meas::SetFileBaseName__ssCR"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1afe55bd6d747fd940242f5a21e03a36a6"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SetFileBaseName</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">base_name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas15SetFileBaseNameERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Set measurement file base name (desired name for the actual hdf5 files that will be created) </p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">base_name</span></code>: Name of the hdf5 files that will be created. </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>base_name</strong> – Name of the hdf5 files that will be created. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL3eh58HDF5Meas14AddEntryToFileEPKvRKyRKxRKxRKNSt6stringExx">
-<span id="_CPPv3N4eCAL3eh58HDF5Meas14AddEntryToFileEPKvRKyRKxRKxRKNSt6stringExx"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas14AddEntryToFileEPKvRKyRKxRKxRKNSt6stringExx"></span><span id="eCAL::eh5::HDF5Meas::AddEntryToFile__voidCP.unsigned-l-lCR.l-lCR.l-lCR.ssCR.l-l.l-l"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a6385d17c35fe657d698b743ce1ce35a5"></span>bool <code class="sig-name descname">AddEntryToFile</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>data</em>, <em class="property">const</em> unsigned long long &amp;<em>size</em>, <em class="property">const</em> long long &amp;<em>snd_timestamp</em>, <em class="property">const</em> long long &amp;<em>rcv_timestamp</em>, <em class="property">const</em> std::string &amp;<em>channel_name</em>, long long <em>id</em>, long long <em>clock</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas14AddEntryToFileEPKvRKyRKxRKxRKNSt6stringExx" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh58HDF5Meas14AddEntryToFileEPKvRKyRKxRKxRKNSt6stringExx">
+<span id="_CPPv3N4eCAL3eh58HDF5Meas14AddEntryToFileEPKvRKyRKxRKxRKNSt6stringExx"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas14AddEntryToFileEPKvRKyRKxRKxRKNSt6stringExx"></span><span id="eCAL::eh5::HDF5Meas::AddEntryToFile__voidCP.unsigned-l-lCR.l-lCR.l-lCR.ssCR.l-l.l-l"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a6385d17c35fe657d698b743ce1ce35a5"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AddEntryToFile</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">size</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">snd_timestamp</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">rcv_timestamp</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">channel_name</span></span>, <span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">id</span></span>, <span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">clock</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas14AddEntryToFileEPKvRKyRKxRKxRKNSt6stringExx" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Add entry to file. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>true if succeeds, false if it fails </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: data to be added </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code>: size of the data </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">snd_timestamp</span></code>: send time stamp </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">rcv_timestamp</span></code>: receive time stamp </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">channel_name</span></code>: channel name </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: message id </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">clock</span></code>: message clock</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – data to be added </p></li>
+<li><p><strong>size</strong> – size of the data </p></li>
+<li><p><strong>snd_timestamp</strong> – send time stamp </p></li>
+<li><p><strong>rcv_timestamp</strong> – receive time stamp </p></li>
+<li><p><strong>channel_name</strong> – channel name </p></li>
+<li><p><strong>id</strong> – message id </p></li>
+<li><p><strong>clock</strong> – message clock</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>true if succeeds, false if it fails </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL3eh58HDF5Meas23ConnectPreSplitCallbackE16CallbackFunction">
-<span id="_CPPv3N4eCAL3eh58HDF5Meas23ConnectPreSplitCallbackE16CallbackFunction"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas23ConnectPreSplitCallbackE16CallbackFunction"></span><span id="eCAL::eh5::HDF5Meas::ConnectPreSplitCallback__CallbackFunction"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1adc707f792475c9d03a1b5be24d40e198"></span>void <code class="sig-name descname">ConnectPreSplitCallback</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4eCAL3eh58HDF5Meas16CallbackFunctionE" title="eCAL::eh5::HDF5Meas::CallbackFunction">CallbackFunction</a> <em>cb</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas23ConnectPreSplitCallbackE16CallbackFunction" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh58HDF5Meas23ConnectPreSplitCallbackE16CallbackFunction">
+<span id="_CPPv3N4eCAL3eh58HDF5Meas23ConnectPreSplitCallbackE16CallbackFunction"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas23ConnectPreSplitCallbackE16CallbackFunction"></span><span id="eCAL::eh5::HDF5Meas::ConnectPreSplitCallback__CallbackFunction"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1adc707f792475c9d03a1b5be24d40e198"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ConnectPreSplitCallback</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4eCAL3eh58HDF5Meas16CallbackFunctionE" title="eCAL::eh5::HDF5Meas::CallbackFunction"><span class="n"><span class="pre">CallbackFunction</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">cb</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas23ConnectPreSplitCallbackE16CallbackFunction" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Connect callback for pre file split notification. </p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">cb</span></code>: callback function </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cb</strong> – callback function </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL3eh58HDF5Meas26DisconnectPreSplitCallbackEv">
-<span id="_CPPv3N4eCAL3eh58HDF5Meas26DisconnectPreSplitCallbackEv"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas26DisconnectPreSplitCallbackEv"></span><span id="eCAL::eh5::HDF5Meas::DisconnectPreSplitCallback"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a54e3462d02dad69d9ed9c4ecb1a133fa"></span>void <code class="sig-name descname">DisconnectPreSplitCallback</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas26DisconnectPreSplitCallbackEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh58HDF5Meas26DisconnectPreSplitCallbackEv">
+<span id="_CPPv3N4eCAL3eh58HDF5Meas26DisconnectPreSplitCallbackEv"></span><span id="_CPPv2N4eCAL3eh58HDF5Meas26DisconnectPreSplitCallbackEv"></span><span id="eCAL::eh5::HDF5Meas::DisconnectPreSplitCallback"></span><span class="target" id="classeCAL_1_1eh5_1_1HDF5Meas_1a54e3462d02dad69d9ed9c4ecb1a133fa"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DisconnectPreSplitCallback</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh58HDF5Meas26DisconnectPreSplitCallbackEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Disconnect pre file split callback. </p>
 </dd></dl>
 
 </div>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -878,6 +875,7 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

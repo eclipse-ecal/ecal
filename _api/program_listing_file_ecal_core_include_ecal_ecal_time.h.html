@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -34,9 +38,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -421,7 +423,7 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="program-listing-for-file-ecal-time-h">
+    <section id="program-listing-for-file-ecal-time-h">
 <span id="program-listing-file-ecal-core-include-ecal-ecal-time-h"></span><h1>Program Listing for File ecal_time.h<a class="headerlink" href="#program-listing-for-file-ecal-time-h" title="Permalink to this headline">¶</a></h1>
 <p>↰ <a class="reference internal" href="file_ecal_core_include_ecal_ecal_time.h.html#file-ecal-core-include-ecal-ecal-time-h"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">ecal/core/include/ecal/ecal_time.h</span></code>)</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* ========================= eCAL LICENSE =================================</span>
@@ -455,19 +457,19 @@
   <span class="p">{</span>
     <span class="n">ECAL_API</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetName</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">GetMicroSeconds</span><span class="p">();</span>
+    <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="nf">GetMicroSeconds</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">GetNanoSeconds</span><span class="p">();</span>
+    <span class="n">ECAL_API</span> <span class="kt">long</span> <span class="kt">long</span> <span class="nf">GetNanoSeconds</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="n">SetNanoSeconds</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">time_</span><span class="p">);</span>
+    <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="nf">SetNanoSeconds</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">time_</span><span class="p">);</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="n">IsSynchronized</span><span class="p">();</span>
+    <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="nf">IsSynchronized</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="n">IsMaster</span><span class="p">();</span>
+    <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="nf">IsMaster</span><span class="p">();</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">void</span> <span class="n">SleepForNanoseconds</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">duration_nsecs_</span><span class="p">);</span>
+    <span class="n">ECAL_API</span> <span class="kt">void</span> <span class="nf">SleepForNanoseconds</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">duration_nsecs_</span><span class="p">);</span>
 
-    <span class="n">ECAL_API</span> <span class="kt">void</span> <span class="n">GetStatus</span><span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">error_</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">*</span> <span class="n">status_message_</span><span class="p">);</span>
+    <span class="n">ECAL_API</span> <span class="kt">void</span> <span class="nf">GetStatus</span><span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">error_</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">*</span> <span class="n">status_message_</span><span class="p">);</span>
 
 
     <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Rep</span><span class="p">,</span>
@@ -478,7 +480,7 @@
     <span class="p">}</span>
 
     <span class="cm">/* @cond */</span>
-    <span class="k">struct</span> <span class="nc">ecal_clock</span>
+    <span class="k">struct</span> <span class="n">ecal_clock</span>
     <span class="p">{</span>
       <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">nanoseconds</span>            <span class="n">duration</span><span class="p">;</span>
       <span class="k">typedef</span> <span class="n">duration</span><span class="o">::</span><span class="n">rep</span>                       <span class="n">rep</span><span class="p">;</span>
@@ -486,9 +488,9 @@
       <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">time_point</span><span class="o">&lt;</span><span class="n">ecal_clock</span><span class="o">&gt;</span> <span class="n">time_point</span><span class="p">;</span>
       <span class="k">static</span> <span class="k">const</span> <span class="kt">bool</span>                           <span class="n">is_steady</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
 
-      <span class="k">static</span> <span class="n">time_point</span> <span class="n">now</span><span class="p">()</span>
+      <span class="k">static</span> <span class="n">time_point</span> <span class="nf">now</span><span class="p">()</span>
       <span class="p">{</span>
-        <span class="k">return</span> <span class="nf">time_point</span> <span class="p">(</span><span class="n">duration</span><span class="p">(</span><span class="n">GetNanoSeconds</span><span class="p">()));</span>
+        <span class="k">return</span> <span class="n">time_point</span> <span class="p">(</span><span class="n">duration</span><span class="p">(</span><span class="n">GetNanoSeconds</span><span class="p">()));</span>
       <span class="p">}</span>
     <span class="p">};</span>
     <span class="cm">/* @endcond */</span>
@@ -555,7 +557,7 @@
         <span class="n">eCAL_FreeMem</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
       <span class="p">}</span>
       <span class="k">else</span> <span class="p">{</span>
-        <span class="n">eCAL_Time_GetStatus</span><span class="p">(</span><span class="o">&amp;</span><span class="n">error_</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="mi">-1</span><span class="p">);</span>
+        <span class="n">eCAL_Time_GetStatus</span><span class="p">(</span><span class="o">&amp;</span><span class="n">error_</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">}</span>
@@ -564,7 +566,7 @@
 <span class="cp">#endif </span><span class="cm">/* ECAL_C_DLL */</span><span class="cp"></span>
 </pre></div>
 </div>
-</div>
+</section>
 
 <!-- /body -->
                             </div>
@@ -623,6 +625,7 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -37,9 +41,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -433,7 +435,7 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="ecalrec-app-icon-h1-recorder">
+    <section id="ecalrec-app-icon-h1-recorder">
 <span id="getting-started-recorder"></span><h1><span class="section-number">6.2. </span><a class="reference internal" href="../_images/ecalrec.ico"><img alt="ecalrec_APP_ICON_h1" src="../_images/ecalrec.ico" style="width: 38px;" /></a> Recorder<a class="headerlink" href="#ecalrec-app-icon-h1-recorder" title="Permalink to this headline">¶</a></h1>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
@@ -443,7 +445,7 @@
 <p>The eCAL Recorder can record any data that is sent through your eCAL network and save it to disk.
 The output of the recorder (-&gt; the recording) is called an <strong>eCAL Measurement</strong>.
 You can use that measurement later to analyze it or to stimulate other applications that need that data as input.</p>
-<div class="section" id="features">
+<section id="features">
 <h2><span class="section-number">6.2.1. </span>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
 <p>The eCAL Recorder is quite powerful, so we will only look at a limited setup in this tutorial.
 First, the Recorder features two essential modes:</p>
@@ -472,8 +474,8 @@ After you finished your test, you can then let the Recorder Clients push their f
 <li><p>Distributed recordings can be uploaded to the main machine or to any custom FTP server</p></li>
 <li><p>You can extend the functionality with custom recorder addons</p></li>
 </ul>
-</div>
-<div class="section" id="gui-overview">
+</section>
+<section id="gui-overview">
 <h2><span class="section-number">6.2.2. </span>GUI Overview<a class="headerlink" href="#gui-overview" title="Permalink to this headline">¶</a></h2>
 <p>Let’s start with a short GUI overview.</p>
 <ul class="simple">
@@ -526,8 +528,8 @@ Clicking it will save the content of the current pre-buffer as a new measurement
 From this panel you can delete it, add comments to it or upload it to an FTP Server for merging distributed measurements.</p>
 </li>
 </ol>
-</div>
-<div class="section" id="let-s-record-some-data">
+</section>
+<section id="let-s-record-some-data">
 <h2><span class="section-number">6.2.3. </span>Let’s record some data!<a class="headerlink" href="#let-s-record-some-data" title="Permalink to this headline">¶</a></h2>
 <p>As mentioned above, we have a <em>person_snd</em> sample running on a remote machine. Now let’s record it!</p>
 <ol class="arabic simple">
@@ -543,8 +545,8 @@ If you haven’t modified the measurement path, it is saved to:</p>
 <li><p><i class="fab fa-ubuntu"></i> Linux: <code class="file docutils literal notranslate"><span class="pre">~/ecal_meas/</span></code></p></li>
 </ul>
 <img alt="eCAL Recorder recording" src="../_images/recorder_recording.png" />
-</div>
-<div class="section" id="ecal-measurements">
+</section>
+<section id="ecal-measurements">
 <h2><span class="section-number">6.2.4. </span>eCAL Measurements<a class="headerlink" href="#ecal-measurements" title="Permalink to this headline">¶</a></h2>
 <p>Before continuing to the next section and replaying the measurement, let’s quickly look at what the Recorder has just created:</p>
 <img alt="eCAL Measurement" src="../_images/recorder_measurement_filesystem.png" />
@@ -560,8 +562,8 @@ If you haven’t modified the measurement path, it is saved to:</p>
 <li><p><i class="far fa-file"></i> <code class="file docutils literal notranslate"><span class="pre">2020-08-06_02-12-12.596_measurement.ecalmeas</span></code>: “Index-File” that can be opened with the eCAL Player. Does not contain any data by itself.</p></li>
 </ul>
 <p>Now that you know how to record data and have created your first eCAL Measurement continue to the next section and try to replay it with the eCAL Player!</p>
-</div>
-</div>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -634,6 +636,7 @@ If you haven’t modified the measurement path, it is saved to:</p>
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

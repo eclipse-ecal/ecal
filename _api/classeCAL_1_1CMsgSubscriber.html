@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -37,9 +41,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -435,175 +437,176 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="template-class-cmsgsubscriber">
+    <section id="template-class-cmsgsubscriber">
 <span id="exhale-class-classecal-1-1cmsgsubscriber"></span><h1>Template Class CMsgSubscriber<a class="headerlink" href="#template-class-cmsgsubscriber" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p>Defined in <a class="reference internal" href="file_ecal_core_include_ecal_msg_subscriber.h.html#file-ecal-core-include-ecal-msg-subscriber-h"><span class="std std-ref">File subscriber.h</span></a></p></li>
 </ul>
-<div class="section" id="inheritance-relationships">
+<section id="inheritance-relationships">
 <h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="base-type">
+<section id="base-type">
 <h3>Base Type<a class="headerlink" href="#base-type" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">eCAL::CSubscriber</span></code> (<a class="reference internal" href="classeCAL_1_1CSubscriber.html#exhale-class-classecal-1-1csubscriber"><span class="std std-ref">Class CSubscriber</span></a>)</p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="class-documentation">
+</section>
+</section>
+<section id="class-documentation">
 <h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
 <dl class="cpp class">
-<dt id="_CPPv4I0EN4eCAL14CMsgSubscriberE">
-<span id="_CPPv3I0EN4eCAL14CMsgSubscriberE"></span><span id="_CPPv2I0EN4eCAL14CMsgSubscriberE"></span>template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classeCAL_1_1CMsgSubscriber"></span><em class="property">class </em><code class="sig-prename descclassname">eCAL<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">CMsgSubscriber</code> : <em class="property">public</em> eCAL::<a class="reference internal" href="classeCAL_1_1CSubscriber.html#_CPPv4N4eCAL11CSubscriberE" title="eCAL::CSubscriber">CSubscriber</a><a class="headerlink" href="#_CPPv4I0EN4eCAL14CMsgSubscriberE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4I0EN4eCAL14CMsgSubscriberE">
+<span id="_CPPv3I0EN4eCAL14CMsgSubscriberE"></span><span id="_CPPv2I0EN4eCAL14CMsgSubscriberE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classeCAL_1_1CMsgSubscriber"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">eCAL</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">CMsgSubscriber</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">eCAL</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="classeCAL_1_1CSubscriber.html#_CPPv4N4eCAL11CSubscriberE" title="eCAL::CSubscriber"><span class="n"><span class="pre">CSubscriber</span></span></a><a class="headerlink" href="#_CPPv4I0EN4eCAL14CMsgSubscriberE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>eCAL abstract message subscriber class. </p>
 <p>Abstract subscriber template class for messages. For details see documentation of <a class="reference internal" href="classeCAL_1_1CPublisher.html#classeCAL_1_1CPublisher"><span class="std std-ref">CPublisher</span></a> class. </p>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Public Types</p>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
 <dl class="cpp type">
-<dt id="_CPPv4N4eCAL14CMsgSubscriber19MsgReceiveCallbackTE">
-<span id="_CPPv3N4eCAL14CMsgSubscriber19MsgReceiveCallbackTE"></span><span id="_CPPv2N4eCAL14CMsgSubscriber19MsgReceiveCallbackTE"></span><span id="eCAL::CMsgSubscriber::MsgReceiveCallbackT"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1af215a62bb04debf7eb34a1ce3dfda674"></span><em class="property">typedef </em>std::function&lt;void<span class="sig-paren">(</span><em class="property">const</em> char *topic_name_, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4eCAL14CMsgSubscriberE" title="eCAL::CMsgSubscriber::T">T</a> &amp;msg_, long long time_, long long clock_, long long id_<span class="sig-paren">)</span>&gt; <code class="sig-name descname">MsgReceiveCallbackT</code><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber19MsgReceiveCallbackTE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CMsgSubscriber19MsgReceiveCallbackTE">
+<span id="_CPPv3N4eCAL14CMsgSubscriber19MsgReceiveCallbackTE"></span><span id="_CPPv2N4eCAL14CMsgSubscriber19MsgReceiveCallbackTE"></span><span id="eCAL::CMsgSubscriber::MsgReceiveCallbackT"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1af215a62bb04debf7eb34a1ce3dfda674"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">topic_name_</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN4eCAL14CMsgSubscriberE" title="eCAL::CMsgSubscriber::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n"><span class="pre">msg_</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n"><span class="pre">time_</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n"><span class="pre">clock_</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n"><span class="pre">id_</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MsgReceiveCallbackT</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber19MsgReceiveCallbackTE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>eCAL message receive callback function </p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">topic_name_</span></code>: Topic name of the data source (publisher). </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">msg_</span></code>: Message content. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">time_</span></code>: Message time stamp. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">clock_</span></code>: Message writer clock. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">id_</span></code>: Message id. </p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topic_name_</strong> – Topic name of the data source (publisher). </p></li>
+<li><p><strong>msg_</strong> – Message content. </p></li>
+<li><p><strong>time_</strong> – Message time stamp. </p></li>
+<li><p><strong>clock_</strong> – Message writer clock. </p></li>
+<li><p><strong>id_</strong> – Message id. </p></li>
 </ul>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberEv">
-<span id="_CPPv3N4eCAL14CMsgSubscriber14CMsgSubscriberEv"></span><span id="_CPPv2N4eCAL14CMsgSubscriber14CMsgSubscriberEv"></span><span id="eCAL::CMsgSubscriber::CMsgSubscriber"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1a13a0ea3e138347c12427e27906862ebd"></span><code class="sig-name descname">CMsgSubscriber</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberEv">
+<span id="_CPPv3N4eCAL14CMsgSubscriber14CMsgSubscriberEv"></span><span id="_CPPv2N4eCAL14CMsgSubscriber14CMsgSubscriberEv"></span><span id="eCAL::CMsgSubscriber::CMsgSubscriber"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1a13a0ea3e138347c12427e27906862ebd"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CMsgSubscriber</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberERKNSt6stringERKNSt6stringERKNSt6stringE">
-<span id="_CPPv3N4eCAL14CMsgSubscriber14CMsgSubscriberERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL14CMsgSubscriber14CMsgSubscriberERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="eCAL::CMsgSubscriber::CMsgSubscriber__ssCR.ssCR.ssCR"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1a85f1acc60a0a2433870af7d3ac0521c3"></span><code class="sig-name descname">CMsgSubscriber</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>topic_name_</em>, <em class="property">const</em> std::string &amp;<em>topic_type_</em> = &quot;&quot;, <em class="property">const</em> std::string &amp;<em>topic_desc_</em> = &quot;&quot;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberERKNSt6stringERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberERKNSt6stringERKNSt6stringERKNSt6stringE">
+<span id="_CPPv3N4eCAL14CMsgSubscriber14CMsgSubscriberERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL14CMsgSubscriber14CMsgSubscriberERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="eCAL::CMsgSubscriber::CMsgSubscriber__ssCR.ssCR.ssCR"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1a85f1acc60a0a2433870af7d3ac0521c3"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CMsgSubscriber</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_name_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_type_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">&quot;&quot;</span></s>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_desc_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">&quot;&quot;</span></s><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberERKNSt6stringERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">topic_name_</span></code>: Unique topic name. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">topic_type_</span></code>: Type name (optional for type checking). </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">topic_desc_</span></code>: Type description (optional for description checking). </p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topic_name_</strong> – Unique topic name. </p></li>
+<li><p><strong>topic_type_</strong> – Type name (optional for type checking). </p></li>
+<li><p><strong>topic_desc_</strong> – Type description (optional for description checking). </p></li>
 </ul>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberERK14CMsgSubscriber">
-<span id="_CPPv3N4eCAL14CMsgSubscriber14CMsgSubscriberERK14CMsgSubscriber"></span><span id="_CPPv2N4eCAL14CMsgSubscriber14CMsgSubscriberERK14CMsgSubscriber"></span><span id="eCAL::CMsgSubscriber::CMsgSubscriber__CMsgSubscriberCR"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1abbfecfca61a4f85e87677f50e7579ee8"></span><code class="sig-name descname">CMsgSubscriber</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberERK14CMsgSubscriber" title="eCAL::CMsgSubscriber::CMsgSubscriber">CMsgSubscriber</a>&amp;<span class="sig-paren">)</span> = delete<a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberERK14CMsgSubscriber" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberERK14CMsgSubscriber">
+<span id="_CPPv3N4eCAL14CMsgSubscriber14CMsgSubscriberERK14CMsgSubscriber"></span><span id="_CPPv2N4eCAL14CMsgSubscriber14CMsgSubscriberERK14CMsgSubscriber"></span><span id="eCAL::CMsgSubscriber::CMsgSubscriber__CMsgSubscriberCR"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1abbfecfca61a4f85e87677f50e7579ee8"></span><span class="sig-name descname"><span class="n"><span class="pre">CMsgSubscriber</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberERK14CMsgSubscriber" title="eCAL::CMsgSubscriber::CMsgSubscriber"><span class="n"><span class="pre">CMsgSubscriber</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">delete</span></span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberERK14CMsgSubscriber" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Copy Constructor is not available. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL14CMsgSubscriberaSERK14CMsgSubscriber">
-<span id="_CPPv3N4eCAL14CMsgSubscriberaSERK14CMsgSubscriber"></span><span id="_CPPv2N4eCAL14CMsgSubscriberaSERK14CMsgSubscriber"></span><span id="eCAL::CMsgSubscriber::assign-operator__CMsgSubscriberCR"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1a4eaa67dd19a69d7df9b4de99d2791e55"></span><a class="reference internal" href="#_CPPv4I0EN4eCAL14CMsgSubscriberE" title="eCAL::CMsgSubscriber">CMsgSubscriber</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4eCAL14CMsgSubscriberE" title="eCAL::CMsgSubscriber">CMsgSubscriber</a>&amp;<span class="sig-paren">)</span> = delete<a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriberaSERK14CMsgSubscriber" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CMsgSubscriberaSERK14CMsgSubscriber">
+<span id="_CPPv3N4eCAL14CMsgSubscriberaSERK14CMsgSubscriber"></span><span id="_CPPv2N4eCAL14CMsgSubscriberaSERK14CMsgSubscriber"></span><span id="eCAL::CMsgSubscriber::assign-operator__CMsgSubscriberCR"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1a4eaa67dd19a69d7df9b4de99d2791e55"></span><a class="reference internal" href="#_CPPv4I0EN4eCAL14CMsgSubscriberE" title="eCAL::CMsgSubscriber"><span class="n"><span class="pre">CMsgSubscriber</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN4eCAL14CMsgSubscriberE" title="eCAL::CMsgSubscriber"><span class="n"><span class="pre">CMsgSubscriber</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">delete</span></span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriberaSERK14CMsgSubscriber" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Copy Constructor is not available. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberERR14CMsgSubscriber">
-<span id="_CPPv3N4eCAL14CMsgSubscriber14CMsgSubscriberERR14CMsgSubscriber"></span><span id="_CPPv2N4eCAL14CMsgSubscriber14CMsgSubscriberERR14CMsgSubscriber"></span><span id="eCAL::CMsgSubscriber::CMsgSubscriber__CMsgSubscriberRR"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1abde498b05779c5b14abc1ff6d6a46cef"></span><code class="sig-name descname">CMsgSubscriber</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberERR14CMsgSubscriber" title="eCAL::CMsgSubscriber::CMsgSubscriber">CMsgSubscriber</a> &amp;&amp;<em>rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberERR14CMsgSubscriber" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberERR14CMsgSubscriber">
+<span id="_CPPv3N4eCAL14CMsgSubscriber14CMsgSubscriberERR14CMsgSubscriber"></span><span id="_CPPv2N4eCAL14CMsgSubscriber14CMsgSubscriberERR14CMsgSubscriber"></span><span id="eCAL::CMsgSubscriber::CMsgSubscriber__CMsgSubscriberRR"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1abde498b05779c5b14abc1ff6d6a46cef"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CMsgSubscriber</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberERR14CMsgSubscriber" title="eCAL::CMsgSubscriber::CMsgSubscriber"><span class="n"><span class="pre">CMsgSubscriber</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">rhs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber14CMsgSubscriberERR14CMsgSubscriber" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Move Constructor. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL14CMsgSubscriberaSERR14CMsgSubscriber">
-<span id="_CPPv3N4eCAL14CMsgSubscriberaSERR14CMsgSubscriber"></span><span id="_CPPv2N4eCAL14CMsgSubscriberaSERR14CMsgSubscriber"></span><span id="eCAL::CMsgSubscriber::assign-operator__CMsgSubscriberRR"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1a1c925d1a051449161e6849dcd10219d8"></span><a class="reference internal" href="#_CPPv4I0EN4eCAL14CMsgSubscriberE" title="eCAL::CMsgSubscriber">CMsgSubscriber</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4eCAL14CMsgSubscriberE" title="eCAL::CMsgSubscriber">CMsgSubscriber</a> &amp;&amp;<em>rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriberaSERR14CMsgSubscriber" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CMsgSubscriberaSERR14CMsgSubscriber">
+<span id="_CPPv3N4eCAL14CMsgSubscriberaSERR14CMsgSubscriber"></span><span id="_CPPv2N4eCAL14CMsgSubscriberaSERR14CMsgSubscriber"></span><span id="eCAL::CMsgSubscriber::assign-operator__CMsgSubscriberRR"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1a1c925d1a051449161e6849dcd10219d8"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN4eCAL14CMsgSubscriberE" title="eCAL::CMsgSubscriber"><span class="n"><span class="pre">CMsgSubscriber</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4eCAL14CMsgSubscriberE" title="eCAL::CMsgSubscriber"><span class="n"><span class="pre">CMsgSubscriber</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">rhs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriberaSERR14CMsgSubscriber" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Move assignment. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL14CMsgSubscriberD0Ev">
-<span id="_CPPv3N4eCAL14CMsgSubscriberD0Ev"></span><span id="_CPPv2N4eCAL14CMsgSubscriberD0Ev"></span><span id="eCAL::CMsgSubscriber::~CMsgSubscriber"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1a691bbba8872fc2dd58fbee443a3cd69b"></span><code class="sig-name descname">~CMsgSubscriber</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriberD0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CMsgSubscriberD0Ev">
+<span id="_CPPv3N4eCAL14CMsgSubscriberD0Ev"></span><span id="_CPPv2N4eCAL14CMsgSubscriberD0Ev"></span><span id="eCAL::CMsgSubscriber::~CMsgSubscriber"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1a691bbba8872fc2dd58fbee443a3cd69b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">~CMsgSubscriber</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriberD0Ev" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL14CMsgSubscriber6CreateERKNSt6stringERKNSt6stringERKNSt6stringE">
-<span id="_CPPv3N4eCAL14CMsgSubscriber6CreateERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL14CMsgSubscriber6CreateERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="eCAL::CMsgSubscriber::Create__ssCR.ssCR.ssCR"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1a66f407c0a800d138623cebfdedfabaa6"></span>bool <code class="sig-name descname">Create</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>topic_name_</em>, <em class="property">const</em> std::string &amp;<em>topic_type_</em> = &quot;&quot;, <em class="property">const</em> std::string &amp;<em>topic_desc_</em> = &quot;&quot;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber6CreateERKNSt6stringERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CMsgSubscriber6CreateERKNSt6stringERKNSt6stringERKNSt6stringE">
+<span id="_CPPv3N4eCAL14CMsgSubscriber6CreateERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL14CMsgSubscriber6CreateERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="eCAL::CMsgSubscriber::Create__ssCR.ssCR.ssCR"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1a66f407c0a800d138623cebfdedfabaa6"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Create</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_name_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_type_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">&quot;&quot;</span></s>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_desc_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">&quot;&quot;</span></s><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber6CreateERKNSt6stringERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Creates this object. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>true if it succeeds, false if it fails. </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">topic_name_</span></code>: Unique topic name. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">topic_type_</span></code>: Type name (optional for type checking). </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">topic_desc_</span></code>: Type description (optional for description checking).</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topic_name_</strong> – Unique topic name. </p></li>
+<li><p><strong>topic_type_</strong> – Type name (optional for type checking). </p></li>
+<li><p><strong>topic_desc_</strong> – Type description (optional for description checking).</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>true if it succeeds, false if it fails. </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL14CMsgSubscriber7DestroyEv">
-<span id="_CPPv3N4eCAL14CMsgSubscriber7DestroyEv"></span><span id="_CPPv2N4eCAL14CMsgSubscriber7DestroyEv"></span><span id="eCAL::CMsgSubscriber::Destroy"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1afbe5f1b2feb8aa384a2d9fa08b000cc0"></span>bool <code class="sig-name descname">Destroy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber7DestroyEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CMsgSubscriber7DestroyEv">
+<span id="_CPPv3N4eCAL14CMsgSubscriber7DestroyEv"></span><span id="_CPPv2N4eCAL14CMsgSubscriber7DestroyEv"></span><span id="eCAL::CMsgSubscriber::Destroy"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1afbe5f1b2feb8aa384a2d9fa08b000cc0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Destroy</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber7DestroyEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Destroys this object. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>true if it succeeds, false if it fails. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>true if it succeeds, false if it fails. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4eCAL14CMsgSubscriber7ReceiveER1TPxi">
-<span id="_CPPv3NK4eCAL14CMsgSubscriber7ReceiveER1TPxi"></span><span id="_CPPv2NK4eCAL14CMsgSubscriber7ReceiveER1TPxi"></span><span id="eCAL::CMsgSubscriber::Receive__TR.l-lP.iC"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1a9f55f730114002d9a3df318525c41370"></span>bool <code class="sig-name descname">Receive</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4eCAL14CMsgSubscriberE" title="eCAL::CMsgSubscriber::T">T</a> &amp;<em>msg_</em>, long long *<em>time_</em> = nullptr, int <em>rcv_timeout_</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4eCAL14CMsgSubscriber7ReceiveER1TPxi" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL14CMsgSubscriber7ReceiveER1TPxi">
+<span id="_CPPv3NK4eCAL14CMsgSubscriber7ReceiveER1TPxi"></span><span id="_CPPv2NK4eCAL14CMsgSubscriber7ReceiveER1TPxi"></span><span id="eCAL::CMsgSubscriber::Receive__TR.l-lP.iC"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1a9f55f730114002d9a3df318525c41370"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Receive</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4eCAL14CMsgSubscriberE" title="eCAL::CMsgSubscriber::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">msg_</span></span>, <span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">time_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">rcv_timeout_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL14CMsgSubscriber7ReceiveER1TPxi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Receive deserialized message. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if a message could received, false otherwise. </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">msg_</span></code>: The message object. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">time_</span></code>: Optional receive time stamp. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">rcv_timeout_</span></code>: Receive timeout in ms.</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msg_</strong> – <strong>[out]</strong> The message object. </p></li>
+<li><p><strong>time_</strong> – <strong>[out]</strong> Optional receive time stamp. </p></li>
+<li><p><strong>rcv_timeout_</strong> – Receive timeout in ms.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if a message could received, false otherwise. </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL14CMsgSubscriber18AddReceiveCallbackE19MsgReceiveCallbackT">
-<span id="_CPPv3N4eCAL14CMsgSubscriber18AddReceiveCallbackE19MsgReceiveCallbackT"></span><span id="_CPPv2N4eCAL14CMsgSubscriber18AddReceiveCallbackE19MsgReceiveCallbackT"></span><span id="eCAL::CMsgSubscriber::AddReceiveCallback__MsgReceiveCallbackT"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1aefaca53dac611afbd69e021dcfc09883"></span>bool <code class="sig-name descname">AddReceiveCallback</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4eCAL14CMsgSubscriber19MsgReceiveCallbackTE" title="eCAL::CMsgSubscriber::MsgReceiveCallbackT">MsgReceiveCallbackT</a> <em>callback_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber18AddReceiveCallbackE19MsgReceiveCallbackT" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CMsgSubscriber18AddReceiveCallbackE19MsgReceiveCallbackT">
+<span id="_CPPv3N4eCAL14CMsgSubscriber18AddReceiveCallbackE19MsgReceiveCallbackT"></span><span id="_CPPv2N4eCAL14CMsgSubscriber18AddReceiveCallbackE19MsgReceiveCallbackT"></span><span id="eCAL::CMsgSubscriber::AddReceiveCallback__MsgReceiveCallbackT"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1aefaca53dac611afbd69e021dcfc09883"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AddReceiveCallback</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4eCAL14CMsgSubscriber19MsgReceiveCallbackTE" title="eCAL::CMsgSubscriber::MsgReceiveCallbackT"><span class="n"><span class="pre">MsgReceiveCallbackT</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">callback_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber18AddReceiveCallbackE19MsgReceiveCallbackT" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Add receive callback for incoming messages. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if it succeeds, false if it fails. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>callback_</strong> – The callback function.</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">callback_</span></code>: The callback function.</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it succeeds, false if it fails. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL14CMsgSubscriber18RemReceiveCallbackEv">
-<span id="_CPPv3N4eCAL14CMsgSubscriber18RemReceiveCallbackEv"></span><span id="_CPPv2N4eCAL14CMsgSubscriber18RemReceiveCallbackEv"></span><span id="eCAL::CMsgSubscriber::RemReceiveCallback"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1a41bdbee6fa7b78aade1c972b6b93bf7c"></span>bool <code class="sig-name descname">RemReceiveCallback</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber18RemReceiveCallbackEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL14CMsgSubscriber18RemReceiveCallbackEv">
+<span id="_CPPv3N4eCAL14CMsgSubscriber18RemReceiveCallbackEv"></span><span id="_CPPv2N4eCAL14CMsgSubscriber18RemReceiveCallbackEv"></span><span id="eCAL::CMsgSubscriber::RemReceiveCallback"></span><span class="target" id="classeCAL_1_1CMsgSubscriber_1a41bdbee6fa7b78aade1c972b6b93bf7c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RemReceiveCallback</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL14CMsgSubscriber18RemReceiveCallbackEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Remove receive callback for incoming messages. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if it succeeds, false if it fails. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if it succeeds, false if it fails. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 </div>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -676,6 +679,7 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

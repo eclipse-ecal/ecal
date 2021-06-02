@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -34,9 +38,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -421,7 +423,7 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="program-listing-for-file-eh5-meas-h">
+    <section id="program-listing-for-file-eh5-meas-h">
 <span id="program-listing-file-contrib-ecalhdf5-include-ecalhdf5-eh5-meas-h"></span><h1>Program Listing for File eh5_meas.h<a class="headerlink" href="#program-listing-for-file-eh5-meas-h" title="Permalink to this headline">¶</a></h1>
 <p>↰ <a class="reference internal" href="file_contrib_ecalhdf5_include_ecalhdf5_eh5_meas.h.html#file-contrib-ecalhdf5-include-ecalhdf5-eh5-meas-h"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">contrib/ecalhdf5/include/ecalhdf5/eh5_meas.h</span></code>)</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* ========================= eCAL LICENSE =================================</span>
@@ -490,9 +492,9 @@
 
       <span class="kt">void</span> <span class="nf">SetChannelType</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">channel_name</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">type</span><span class="p">);</span>
 
-      <span class="kt">long</span> <span class="kt">long</span> <span class="n">GetMinTimestamp</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">channel_name</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+      <span class="kt">long</span> <span class="kt">long</span> <span class="nf">GetMinTimestamp</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">channel_name</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
 
-      <span class="kt">long</span> <span class="kt">long</span> <span class="n">GetMaxTimestamp</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">channel_name</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+      <span class="kt">long</span> <span class="kt">long</span> <span class="nf">GetMaxTimestamp</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">channel_name</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
 
       <span class="kt">bool</span> <span class="nf">GetEntriesInfo</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">channel_name</span><span class="p">,</span> <span class="n">EntryInfoSet</span><span class="o">&amp;</span> <span class="n">entries</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
 
@@ -519,7 +521,7 @@
 <span class="p">}</span>  <span class="c1">// namespace eCAL</span>
 </pre></div>
 </div>
-</div>
+</section>
 
 <!-- /body -->
                             </div>
@@ -578,6 +580,7 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

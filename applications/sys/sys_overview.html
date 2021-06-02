@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/tabs.css" />
@@ -37,9 +41,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -440,7 +442,7 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="ecalsys-app-icon-h1-ecal-sys-overview">
+    <section id="ecalsys-app-icon-h1-ecal-sys-overview">
 <span id="applications-sys-overview"></span><h1><a class="reference internal" href="../../_images/ecalsys.ico"><img alt="ecalsys_APP_ICON_h1" src="../../_images/ecalsys.ico" style="width: 38px;" /></a> eCAL Sys Overview<a class="headerlink" href="#ecalsys-app-icon-h1-ecal-sys-overview" title="Permalink to this headline">¶</a></h1>
 <p>In this chapter we will take a deeper look at eCAl Sys.
 We will discuss the Host / Client architecture and look at all available configuration options and functions in the GUI.</p>
@@ -450,7 +452,7 @@ We will discuss the Host / Client architecture and look at all available configu
 That chapter will teach you the very basics of eCAL Sys.</p>
 <p>If you don’t want to use the GUI, please see the <a class="reference internal" href="sys_cli.html#applications-sys-cli"><span class="std std-ref"> eCAL Sys CLI</span></a> chapter.</p>
 </div>
-<div class="section" id="architecture">
+<section id="architecture">
 <span id="applications-sys-architecture"></span><h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
 <p>eCAL Sys consists of 2 (or 3) applications:</p>
 <ol class="arabic">
@@ -486,8 +488,8 @@ However, eCAL Sys will display information about system resources of all systems
 </div>
 </li>
 </ol>
-</div>
-<div class="section" id="configuration-files">
+</section>
+<section id="configuration-files">
 <span id="applications-sys-config-files"></span><h2>Configuration Files<a class="headerlink" href="#configuration-files" title="Permalink to this headline">¶</a></h2>
 <p>eCAL Sys saves configuration files with the <code class="docutils literal notranslate"><span class="pre">.ecalsys</span></code> extension.
 Those files contain a regular XML description of the configuration.
@@ -503,14 +505,14 @@ eCAL provides a replacement syntax for that and displays an icon where you can u
 </div>
 <p>Click one of the <a class="reference internal" href="../../_images/show_dialog.svg"><img alt="qecalparser_SHOW_DIALOG" src="../../_images/show_dialog.svg" width="16px" /></a> <span class="guilabel">Advanced Editor…</span> buttons for further information.</p>
 </div>
-</div>
-<div class="section" id="ecal-sys-gui">
+</section>
+<section id="ecal-sys-gui">
 <span id="applications-sys-gui"></span><h2>eCAL Sys GUI<a class="headerlink" href="#ecal-sys-gui" title="Permalink to this headline">¶</a></h2>
 <p>In most cases, the eCAL Sys GUI will be your primary application.
 It can both create .ecalsys files and start, stop and monitor your tasks.</p>
 <p>So let’s look at all of the things you can do with eCAL Sys GUI.</p>
 <img alt="eCAL Sys Task Overview" src="../../_images/ecal_sys_task_overview.png" />
-<div class="section" id="toolbar">
+<section id="toolbar">
 <h3>Toolbar<a class="headerlink" href="#toolbar" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p><a class="reference internal" href="../../_images/plus.svg"><img alt="ecalicons_ADD" src="../../_images/plus.svg" width="16px" /></a> <span class="guilabel">Add</span>:
@@ -537,8 +539,8 @@ Use this function, if you e.g. have closed eCAL Sys GUI by accident, as this wil
 <p>Note that Update from cloud needs a running eCAL Sys Client on all remote machines.</p>
 </li>
 </ul>
-</div>
-<div class="section" id="task-configuration">
+</section>
+<section id="task-configuration">
 <h3>Task configuration<a class="headerlink" href="#task-configuration" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p><strong>Name</strong>:
@@ -593,8 +595,8 @@ It is usually advisable to make the task handle its own error and not kill and r
 </ul>
 </li>
 </ul>
-</div>
-<div class="section" id="runners">
+</section>
+<section id="runners">
 <span id="applications-sys-runner"></span><h3>Runners<a class="headerlink" href="#runners" title="Permalink to this headline">¶</a></h3>
 <p>A runner is an executable that you want to execute multiple times with different parameters.
 Often a runner will load a file, e.g. a .dll file that it will then execute, but it can just as well only receive command line arguments that modify its behavior.</p>
@@ -626,8 +628,8 @@ The resulting command line for the selected task (Notepad 1) will be:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">Windows</span>\<span class="n">System32</span>\<span class="n">notepad</span><span class="o">.</span><span class="n">exe</span> <span class="s2">&quot;C:\Users\Florian\Desktop\my_file.txt&quot;</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="groups">
+</section>
+<section id="groups">
 <h3>Groups<a class="headerlink" href="#groups" title="Permalink to this headline">¶</a></h3>
 <p>You can create groups of tasks in eCAL Sys to calculate an “overall state”.
 The groups panel can be reached from the lower tab bar.</p>
@@ -675,8 +677,8 @@ If no other state is active, this one will always be, as it doesn’t have any r
 <p>In the <code class="docutils literal notranslate"><span class="pre">tutorial.ecalsys</span></code> file the “FAIL” state is used for that purpose.
 It has an empty “Selected Tasks” list.</p>
 </div>
-</div>
-<div class="section" id="options">
+</section>
+<section id="options">
 <h3>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h3>
 <p>This section is about the <span class="guilabel">Options</span> available from the menu bar:</p>
 <img alt="eCAL Sys Options" src="../../_images/ecal_sys_options.png" />
@@ -704,9 +706,9 @@ Treat all tasks as if you would have configured them to start on the current mac
 <li><p><strong>Kill all on close</strong>:
 Forcefully shut down all tasks when you close eCAL Sys GUI.</p></li>
 </ul>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -779,6 +781,7 @@ Forcefully shut down all tasks when you close eCAL Sys GUI.</p></li>
     <script type="text/javascript" src="../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

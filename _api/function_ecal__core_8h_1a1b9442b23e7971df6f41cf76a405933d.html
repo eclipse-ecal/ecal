@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -37,9 +41,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -431,30 +433,29 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="function-ecal-finalize">
+    <section id="function-ecal-finalize">
 <span id="exhale-function-ecal-core-8h-1a1b9442b23e7971df6f41cf76a405933d"></span><h1>Function eCAL::Finalize<a class="headerlink" href="#function-ecal-finalize" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p>Defined in <a class="reference internal" href="file_ecal_core_include_ecal_ecal_core.h.html#file-ecal-core-include-ecal-ecal-core-h"><span class="std std-ref">File ecal_core.h</span></a></p></li>
 </ul>
-<div class="section" id="function-documentation">
+<section id="function-documentation">
 <h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Permalink to this headline">¶</a></h2>
 <dl class="cpp function">
-<dt id="_CPPv4N4eCAL8FinalizeEj">
-<span id="_CPPv3N4eCAL8FinalizeEj"></span><span id="_CPPv2N4eCAL8FinalizeEj"></span><span id="eCAL::Finalize__unsigned-i"></span><span class="target" id="ecal__core_8h_1a1b9442b23e7971df6f41cf76a405933d"></span>ECAL_API int <code class="sig-prename descclassname">eCAL<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">Finalize</code><span class="sig-paren">(</span>unsigned int <em>components_</em> = Init::<a class="reference internal" href="variable_ecal__init_8h_1ab82498a1e66de8562868e50a2cad2f3d.html#_CPPv4N4eCAL4Init7DefaultE" title="eCAL::Init::Default">Default</a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL8FinalizeEj" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL8FinalizeEj">
+<span id="_CPPv3N4eCAL8FinalizeEj"></span><span id="_CPPv2N4eCAL8FinalizeEj"></span><span id="eCAL::Finalize__unsigned-i"></span><span class="target" id="ecal__core_8h_1a1b9442b23e7971df6f41cf76a405933d"></span><span class="pre">ECAL_API</span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">eCAL</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">Finalize</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span> <span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">components_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">Init</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="variable_ecal__init_8h_1ab82498a1e66de8562868e50a2cad2f3d.html#_CPPv4N4eCAL4Init7DefaultE" title="eCAL::Init::Default"><span class="n"><span class="pre">Default</span></span></a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL8FinalizeEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Finalize eCAL API. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>Zero if succeeded, 1 if already finalized, -1 if failed. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>components_</strong> – Defines which component to finalize (not yet supported).</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">components_</span></code>: Defines which component to finalize (not yet supported).</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Zero if succeeded, 1 if already finalized, -1 if failed. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -527,6 +528,7 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

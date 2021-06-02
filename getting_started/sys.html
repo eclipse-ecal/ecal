@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -37,9 +41,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -432,7 +434,7 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="ecalsys-app-icon-h1-sys">
+    <section id="ecalsys-app-icon-h1-sys">
 <span id="getting-started-sys"></span><h1><span class="section-number">6.4. </span><a class="reference internal" href="../_images/ecalsys.ico"><img alt="ecalsys_APP_ICON_h1" src="../_images/ecalsys.ico" style="width: 38px;" /></a> Sys<a class="headerlink" href="#ecalsys-app-icon-h1-sys" title="Permalink to this headline">¶</a></h1>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
@@ -452,7 +454,7 @@ eCAL Sys will:</p>
 <p class="admonition-title">Note</p>
 <p>eCAL Sys is available since eCAL 5.8.</p>
 </div>
-<div class="section" id="gui-overview">
+<section id="gui-overview">
 <h2><span class="section-number">6.4.1. </span>GUI Overview<a class="headerlink" href="#gui-overview" title="Permalink to this headline">¶</a></h2>
 <p>Let’s start eCAL Sys GUI and take a look at it!</p>
 <ul class="simple">
@@ -490,8 +492,8 @@ The green arrow indicates whether you can start tasks on this host.
 When the <em>Machine Monitoring Application</em> (<code class="file docutils literal notranslate"><span class="pre">ecal_mma</span> <span class="pre">/.exe</span></code>) is running on that host, it will also display information about the CPU and RAM usage, network traffic etc.</p>
 </li>
 </ol>
-</div>
-<div class="section" id="configuring-and-starting-tasks">
+</section>
+<section id="configuring-and-starting-tasks">
 <span id="getting-started-sys-tasks"></span><h2><span class="section-number">6.4.2. </span>Configuring and Starting Tasks<a class="headerlink" href="#configuring-and-starting-tasks" title="Permalink to this headline">¶</a></h2>
 <p>For this tutorial, we are going to use two PCs.
 If you don’t have a second PC or virtual machine at hand, you can just as well start everything on your host machine.</p>
@@ -499,10 +501,10 @@ If you don’t have a second PC or virtual machine at hand, you can just as well
 The GUI (<cite>ecal_sys_gui /.exe</cite>) acts as host, that sends commands to the client.
 The client application is <cite>ecal_sys_client /.exe</cite>.
 The applications use eCAL Services to communicate, so make sure that you have completed the <a class="reference internal" href="services.html#getting-started-services-cloud"><span class="std std-ref">Hostname Resolution Tutorial</span></a> from the eCAL Services chapter.</p>
-<div class="sidebar">
+<aside class="sidebar">
 <p class="sidebar-title">Single PC</p>
 <p>If you don’t use a second PC, you don’t need the ecal_sys_client.</p>
-</div>
+</aside>
 <p>For starting applications on multiple PCs, you will have to:</p>
 <ol class="arabic simple">
 <li><p>Start <code class="file docutils literal notranslate"><span class="pre">ecal_sys_gui</span> <span class="pre">/.exe</span></code> on one machine.</p></li>
@@ -548,12 +550,12 @@ This will open the Recorder GUI and a person_snd and person_rec sample exchangin
 <p>Try stopping or restarting your tasks from the eCAL Sys GUI!
 Also just close one of the applications (the Rec GUI for example) and watch eCAL Sys picking it up as an error.</p>
 </div>
-</div>
-<div class="section" id="files">
+</section>
+<section id="files">
 <span id="getting-started-sys-files"></span><h2><span class="section-number">6.4.3. </span>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h2>
 <pre class="literal-block"><i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/10f2ddad0f2f023da53000932379bbde/tutorial.ecalsys"><code class="xref download docutils literal notranslate"><span class="pre">tutorial.ecalsys</span></code></a></pre>
-</div>
-</div>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -626,6 +628,7 @@ Also just close one of the applications (the Rec GUI for example) and watch eCAL
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

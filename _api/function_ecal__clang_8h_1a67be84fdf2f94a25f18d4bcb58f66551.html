@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -37,9 +41,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -431,32 +433,33 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="function-sub-add-receive-callback">
+    <section id="function-sub-add-receive-callback">
 <span id="exhale-function-ecal-clang-8h-1a67be84fdf2f94a25f18d4bcb58f66551"></span><h1>Function sub_add_receive_callback<a class="headerlink" href="#function-sub-add-receive-callback" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p>Defined in <a class="reference internal" href="file_ecal_core_include_ecal_ecal_clang.h.html#file-ecal-core-include-ecal-ecal-clang-h"><span class="std std-ref">File ecal_clang.h</span></a></p></li>
 </ul>
-<div class="section" id="function-documentation">
+<section id="function-documentation">
 <h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Permalink to this headline">¶</a></h2>
 <dl class="cpp function">
-<dt id="_CPPv424sub_add_receive_callback11ECAL_HANDLEK17ReceiveCallbackCTPv">
-<span id="_CPPv324sub_add_receive_callback11ECAL_HANDLEK17ReceiveCallbackCTPv"></span><span id="_CPPv224sub_add_receive_callback11ECAL_HANDLEK17ReceiveCallbackCTPv"></span><span id="sub_add_receive_callback__ECAL_HANDLE.ReceiveCallbackCTC.voidP"></span><span class="target" id="ecal__clang_8h_1a67be84fdf2f94a25f18d4bcb58f66551"></span>ECAL_API bool <code class="sig-name descname">sub_add_receive_callback</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_ecalc_8h_1a6801786d75d8af7f213d45239018884b.html#_CPPv411ECAL_HANDLE" title="ECAL_HANDLE">ECAL_HANDLE</a> <em>handle_</em>, <em class="property">const</em> ReceiveCallbackCT <em>callback_</em>, void *<em>par_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424sub_add_receive_callback11ECAL_HANDLEK17ReceiveCallbackCTPv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv424sub_add_receive_callback11ECAL_HANDLEK17ReceiveCallbackCTPv">
+<span id="_CPPv324sub_add_receive_callback11ECAL_HANDLEK17ReceiveCallbackCTPv"></span><span id="_CPPv224sub_add_receive_callback11ECAL_HANDLEK17ReceiveCallbackCTPv"></span><span id="sub_add_receive_callback__ECAL_HANDLE.ReceiveCallbackCTC.voidP"></span><span class="target" id="ecal__clang_8h_1a67be84fdf2f94a25f18d4bcb58f66551"></span><span class="pre">ECAL_API</span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sub_add_receive_callback</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_ecalc_8h_1a6801786d75d8af7f213d45239018884b.html#_CPPv411ECAL_HANDLE" title="ECAL_HANDLE"><span class="n"><span class="pre">ECAL_HANDLE</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">handle_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">ReceiveCallbackCT</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">callback_</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">par_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424sub_add_receive_callback11ECAL_HANDLEK17ReceiveCallbackCTPv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Add callback function for incoming receives. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if succeeded. </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">handle_</span></code>: Subscriber handle. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">callback_</span></code>: The callback function to add. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">par_</span></code>: User defined context that will be forwarded to the callback function.</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handle_</strong> – Subscriber handle. </p></li>
+<li><p><strong>callback_</strong> – The callback function to add. </p></li>
+<li><p><strong>par_</strong> – User defined context that will be forwarded to the callback function.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if succeeded. </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -529,6 +532,7 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

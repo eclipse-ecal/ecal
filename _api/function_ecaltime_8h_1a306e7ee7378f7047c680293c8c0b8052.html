@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -37,9 +41,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -431,31 +433,31 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="function-etime-get-status">
+    <section id="function-etime-get-status">
 <span id="exhale-function-ecaltime-8h-1a306e7ee7378f7047c680293c8c0b8052"></span><h1>Function etime_get_status<a class="headerlink" href="#function-etime-get-status" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p>Defined in <a class="reference internal" href="file_contrib_ecaltime_include_ecaltime.h.html#file-contrib-ecaltime-include-ecaltime-h"><span class="std std-ref">File ecaltime.h</span></a></p></li>
 </ul>
-<div class="section" id="function-documentation">
+<section id="function-documentation">
 <h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Permalink to this headline">¶</a></h2>
 <dl class="cpp function">
-<dt id="_CPPv416etime_get_statusPiPci">
-<span id="_CPPv316etime_get_statusPiPci"></span><span id="_CPPv216etime_get_statusPiPci"></span><span id="etime_get_status__iP.cP.i"></span><span class="target" id="ecaltime_8h_1a306e7ee7378f7047c680293c8c0b8052"></span>ECALTIME_API void <code class="sig-name descname">etime_get_status</code><span class="sig-paren">(</span>int *<em>error_</em>, char *<em>status_message_</em>, int <em>max_len_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416etime_get_statusPiPci" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv416etime_get_statusPiPci">
+<span id="_CPPv316etime_get_statusPiPci"></span><span id="_CPPv216etime_get_statusPiPci"></span><span id="etime_get_status__iP.cP.i"></span><span class="target" id="ecaltime_8h_1a306e7ee7378f7047c680293c8c0b8052"></span><span class="pre">ECALTIME_API</span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">etime_get_status</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">error_</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">status_message_</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">max_len_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416etime_get_statusPiPci" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Get the current error code and status message. </p>
 <p>Adapters must return 0 if everything is OK. Each adapter can use it’s own set of error codes. Everything non-zero is considered to indicate a problem. Adapters may provide aditional information with a status message.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">error_</span></code>: [out] the current error code. 0 indicates that everything is OK </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">status_message_</span></code>: [in, out] a pre-allocated char array. The status message will be written to this memory. May be null, if the caller is not interested in the message. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">max_len_</span></code>: [in] length of the allocated memory </p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>error_</strong> – [out] the current error code. 0 indicates that everything is OK </p></li>
+<li><p><strong>status_message_</strong> – [in, out] a pre-allocated char array. The status message will be written to this memory. May be null, if the caller is not interested in the message. </p></li>
+<li><p><strong>max_len_</strong> – [in] length of the allocated memory </p></li>
 </ul>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -528,6 +530,7 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

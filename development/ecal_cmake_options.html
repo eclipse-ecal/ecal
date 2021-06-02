@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -37,9 +41,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -427,7 +429,7 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="cmake-options">
+    <section id="cmake-options">
 <span id="development-ecal-cmake-options"></span><h1>CMake options<a class="headerlink" href="#cmake-options" title="Permalink to this headline">¶</a></h1>
 <p>eCAL is using CMake as build system. When configuring with CMake, you can turn on / off the following features.</p>
 <p>All options can be passed on the command line cmake <code class="docutils literal notranslate"><span class="pre">-D&lt;option&gt;=&lt;value&gt;</span></code> or in the CMake GUI application.</p>
@@ -550,7 +552,7 @@
 In order to make the CSharp Google::Protobuf extension work you need to install additionally the Microsoft package management tool <a class="reference external" href="https://www.nuget.org/downloads">Nuget</a>.
 Please ensure that the installation path is part of your windows user or system PATH environment variable.
 Nuget will be used to download the .Net Google.Protobuf package automatically when building the extension.</p>
-</div>
+</section>
 
 <!-- /body -->
                             </div>
@@ -623,6 +625,7 @@ Nuget will be used to download the .Net Google.Protobuf package automatically wh
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

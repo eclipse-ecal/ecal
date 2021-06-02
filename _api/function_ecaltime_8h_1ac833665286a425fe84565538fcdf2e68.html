@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -37,9 +41,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -431,30 +433,29 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="function-etime-set-nanoseconds">
+    <section id="function-etime-set-nanoseconds">
 <span id="exhale-function-ecaltime-8h-1ac833665286a425fe84565538fcdf2e68"></span><h1>Function etime_set_nanoseconds<a class="headerlink" href="#function-etime-set-nanoseconds" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p>Defined in <a class="reference internal" href="file_contrib_ecaltime_include_ecaltime.h.html#file-contrib-ecaltime-include-ecaltime-h"><span class="std std-ref">File ecaltime.h</span></a></p></li>
 </ul>
-<div class="section" id="function-documentation">
+<section id="function-documentation">
 <h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Permalink to this headline">¶</a></h2>
 <dl class="cpp function">
-<dt id="_CPPv421etime_set_nanosecondsx">
-<span id="_CPPv321etime_set_nanosecondsx"></span><span id="_CPPv221etime_set_nanosecondsx"></span><span id="etime_set_nanoseconds__l-l"></span><span class="target" id="ecaltime_8h_1ac833665286a425fe84565538fcdf2e68"></span>ECALTIME_API int <code class="sig-name descname">etime_set_nanoseconds</code><span class="sig-paren">(</span>long long <em>time_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421etime_set_nanosecondsx" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv421etime_set_nanosecondsx">
+<span id="_CPPv321etime_set_nanosecondsx"></span><span id="_CPPv221etime_set_nanosecondsx"></span><span id="etime_set_nanoseconds__l-l"></span><span class="target" id="ecaltime_8h_1ac833665286a425fe84565538fcdf2e68"></span><span class="pre">ECALTIME_API</span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">etime_set_nanoseconds</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421etime_set_nanosecondsx" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Set current time in nano seconds if host is time master. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>Zero if succeeded non zero otherwise. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time_</strong> – Current time in ns.</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">time_</span></code>: Current time in ns.</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Zero if succeeded non zero otherwise. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -527,6 +528,7 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

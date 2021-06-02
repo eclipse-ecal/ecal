@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -34,9 +38,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -421,7 +423,7 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="program-listing-for-file-ecal-server-h">
+    <section id="program-listing-for-file-ecal-server-h">
 <span id="program-listing-file-ecal-core-include-ecal-ecal-server-h"></span><h1>Program Listing for File ecal_server.h<a class="headerlink" href="#program-listing-for-file-ecal-server-h" title="Permalink to this headline">¶</a></h1>
 <p>↰ <a class="reference internal" href="file_ecal_core_include_ecal_ecal_server.h.html#file-ecal-core-include-ecal-ecal-server-h"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">ecal/core/include/ecal/ecal_server.h</span></code>)</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* ========================= eCAL LICENSE =================================</span>
@@ -537,7 +539,7 @@
       <span class="k">return</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
     <span class="p">}</span>
 
-    <span class="k">static</span> <span class="kt">int</span> <span class="n">MethodCallback</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">method_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">req_type_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">resp_type_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">request_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">request_len_</span><span class="p">,</span> <span class="kt">void</span><span class="o">**</span> <span class="n">response_</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">response_len_</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">par_</span><span class="p">)</span>
+    <span class="k">static</span> <span class="kt">int</span> <span class="nf">MethodCallback</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">method_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">req_type_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">resp_type_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">request_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">request_len_</span><span class="p">,</span> <span class="kt">void</span><span class="o">**</span> <span class="n">response_</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">response_len_</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">par_</span><span class="p">)</span>
     <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="n">par_</span>          <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
       <span class="k">if</span> <span class="p">(</span><span class="n">response_</span>     <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;;</span>
@@ -565,18 +567,18 @@
       <span class="p">}</span>
       <span class="k">return</span> <span class="n">ret_state</span><span class="p">;</span>
     <span class="p">}</span>
-    <span class="kt">bool</span> <span class="n">AddMethodCallback</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">method_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">req_type_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">resp_type_</span><span class="p">,</span> <span class="k">const</span> <span class="n">MethodCallbackT</span><span class="o">&amp;</span> <span class="n">callback_</span><span class="p">)</span>
+    <span class="kt">bool</span> <span class="nf">AddMethodCallback</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">method_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">req_type_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">resp_type_</span><span class="p">,</span> <span class="k">const</span> <span class="n">MethodCallbackT</span><span class="o">&amp;</span> <span class="n">callback_</span><span class="p">)</span>
     <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">m_created</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
       <span class="n">m_callback</span> <span class="o">=</span> <span class="n">callback_</span><span class="p">;</span>
-      <span class="k">return</span> <span class="nf">eCAL_Server_AddMethodCallbackC</span><span class="p">(</span><span class="n">m_service</span><span class="p">,</span> <span class="n">method_</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">req_type_</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">resp_type_</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">CServiceServer</span><span class="o">::</span><span class="n">MethodCallback</span><span class="p">,</span> <span class="k">this</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">return</span> <span class="n">eCAL_Server_AddMethodCallbackC</span><span class="p">(</span><span class="n">m_service</span><span class="p">,</span> <span class="n">method_</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">req_type_</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">resp_type_</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">CServiceServer</span><span class="o">::</span><span class="n">MethodCallback</span><span class="p">,</span> <span class="k">this</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="kt">bool</span> <span class="n">RemMethodCallback</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">method_</span><span class="p">)</span>
+    <span class="kt">bool</span> <span class="nf">RemMethodCallback</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">method_</span><span class="p">)</span>
     <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">m_created</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
       <span class="n">m_callback</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
-      <span class="k">return</span> <span class="nf">eCAL_Server_RemMethodCallbackC</span><span class="p">(</span><span class="n">m_service</span><span class="p">,</span> <span class="n">method_</span><span class="p">.</span><span class="n">c_str</span><span class="p">())</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">return</span> <span class="n">eCAL_Server_RemMethodCallbackC</span><span class="p">(</span><span class="n">m_service</span><span class="p">,</span> <span class="n">method_</span><span class="p">.</span><span class="n">c_str</span><span class="p">())</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="p">}</span>
 
     <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetServiceName</span><span class="p">()</span>
@@ -613,7 +615,7 @@
 <span class="cp">#endif </span><span class="cm">/* ! ECAL_C_DLL */</span><span class="cp"></span>
 </pre></div>
 </div>
-</div>
+</section>
 
 <!-- /body -->
                             </div>
@@ -672,6 +674,7 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

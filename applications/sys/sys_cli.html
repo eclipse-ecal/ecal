@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/tabs.css" />
@@ -37,9 +41,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -438,7 +440,7 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="ecalsys-app-icon-h1-ecal-sys-cli">
+    <section id="ecalsys-app-icon-h1-ecal-sys-cli">
 <span id="applications-sys-cli"></span><h1><a class="reference internal" href="../../_images/ecalsys.ico"><img alt="ecalsys_APP_ICON_h1" src="../../_images/ecalsys.ico" style="width: 38px;" /></a> eCAL Sys CLI<a class="headerlink" href="#ecalsys-app-icon-h1-ecal-sys-cli" title="Permalink to this headline">¶</a></h1>
 <p>eCAL Sys can be used purely from command line.
 The executable is <code class="file docutils literal notranslate"><span class="pre">ecal_sys</span> <span class="pre">/.exe</span></code>.
@@ -461,7 +463,7 @@ Use this mode when you want to mainly use eCAL Sys manually (e.g. the GUI) but a
 </li>
 </ol>
 <img alt="eCAL Sys CLI" src="../../_images/sys_cli.png" />
-<div class="section" id="usage">
+<section id="usage">
 <span id="applications-sys-cli-usage"></span><h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-txt notranslate"><div class="highlight"><pre><span></span>USAGE:
 
@@ -533,11 +535,11 @@ Where:
    eCALSys
 </pre></div>
 </div>
-</div>
-<div class="section" id="typical-use-cases">
+</section>
+<section id="typical-use-cases">
 <h2>Typical use-cases<a class="headerlink" href="#typical-use-cases" title="Permalink to this headline">¶</a></h2>
 <p>The following examples are meant as an orientation how to use eCAL Sys.</p>
-<div class="section" id="single-shot-commands">
+<section id="single-shot-commands">
 <h3>Single-shot commands<a class="headerlink" href="#single-shot-commands" title="Permalink to this headline">¶</a></h3>
 <p>Loading an .ecalsys file and starting / Stopping all tasks from it:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start:</span>
@@ -555,8 +557,8 @@ ecal_sys -c ~/tutorial.ecalsys --restart
 <p>ecal_sys will terminate once the command has been executed.
 Thus, terminating non-eCAL tasks will not work, as the new instance of ecal_sys that is responsible for stopping does not know the Process IDs.</p>
 </div>
-</div>
-<div class="section" id="interactive-mode">
+</section>
+<section id="interactive-mode">
 <span id="applications-sys-cli-interactive-mode"></span><h3>Interactive mode<a class="headerlink" href="#interactive-mode" title="Permalink to this headline">¶</a></h3>
 <p>Launch the interactive mode to keep eCAL Sys running, while you can directly type commands.
 Type <code class="docutils literal notranslate"><span class="pre">help</span></code> to view a list of all commands available in interactive mode.</p>
@@ -612,8 +614,8 @@ update_from_cloud
 This makes it <em>very</em> hard to enter another command or view information.</p>
 <p>You may want to use another ecal_sys instance in remote-control mode to work around that issue.</p>
 </div>
-</div>
-<div class="section" id="remote-control-ecal-sys">
+</section>
+<section id="remote-control-ecal-sys">
 <h3>Remote-control eCAL Sys<a class="headerlink" href="#remote-control-ecal-sys" title="Permalink to this headline">¶</a></h3>
 <p>First you need something that can be remote controlled:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># GUI</span>
@@ -630,8 +632,8 @@ In remote-control mode you cannot load an .ecalsys file, as this is done by the 
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ecal_sys --remote-control --remote-host YOUR_HOSTNAME --start --interactive
 </pre></div>
 </div>
-</div>
-<div class="section" id="automatize-ecal-sys-cli">
+</section>
+<section id="automatize-ecal-sys-cli">
 <h3>Automatize eCAL Sys CLI<a class="headerlink" href="#automatize-ecal-sys-cli" title="Permalink to this headline">¶</a></h3>
 <p>You can use the ecal_sys interactive mode to automatize it via STDIN.
 Commands are read line-by-line, i.e. they have to be divided by <code class="docutils literal notranslate"><span class="pre">\n</span></code>.
@@ -666,9 +668,9 @@ more commands.txt <span class="p">|</span> ecal_sys -c tutorial.ecalsys --intera
 </div>
 </li>
 </ul>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -741,6 +743,7 @@ more commands.txt <span class="p">|</span> ecal_sys -c tutorial.ecalsys --intera
     <script type="text/javascript" src="../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

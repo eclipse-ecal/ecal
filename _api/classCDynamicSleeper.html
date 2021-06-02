@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -14,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -37,9 +41,7 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
 <!-- /pageheader -->
             </div>
         </div>
@@ -431,118 +433,110 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="class-cdynamicsleeper">
+    <section id="class-cdynamicsleeper">
 <span id="exhale-class-classcdynamicsleeper"></span><h1>Class CDynamicSleeper<a class="headerlink" href="#class-cdynamicsleeper" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p>Defined in <a class="reference internal" href="file_contrib_ecaltime_include_dynamic_sleeper.h.html#file-contrib-ecaltime-include-dynamic-sleeper-h"><span class="std std-ref">File dynamic_sleeper.h</span></a></p></li>
 </ul>
-<div class="section" id="class-documentation">
+<section id="class-documentation">
 <h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
 <dl class="cpp class">
-<dt id="_CPPv415CDynamicSleeper">
-<span id="_CPPv315CDynamicSleeper"></span><span id="_CPPv215CDynamicSleeper"></span><span id="CDynamicSleeper"></span><span class="target" id="classCDynamicSleeper"></span><em class="property">class </em><code class="sig-name descname">CDynamicSleeper</code><a class="headerlink" href="#_CPPv415CDynamicSleeper" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv415CDynamicSleeper">
+<span id="_CPPv315CDynamicSleeper"></span><span id="_CPPv215CDynamicSleeper"></span><span id="CDynamicSleeper"></span><span class="target" id="classCDynamicSleeper"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CDynamicSleeper</span></span></span><a class="headerlink" href="#_CPPv415CDynamicSleeper" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>A class that is capable of sleeping the (approximately) correct amount of time while the rate of time is changing. </p>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
-<dt id="_CPPv4N15CDynamicSleeper15CDynamicSleeperEv">
-<span id="_CPPv3N15CDynamicSleeper15CDynamicSleeperEv"></span><span id="_CPPv2N15CDynamicSleeper15CDynamicSleeperEv"></span><span id="CDynamicSleeper::CDynamicSleeper"></span><span class="target" id="classCDynamicSleeper_1aaf4e44427cf259aa63f5937b89203d27"></span><code class="sig-name descname">CDynamicSleeper</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15CDynamicSleeper15CDynamicSleeperEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N15CDynamicSleeper15CDynamicSleeperEv">
+<span id="_CPPv3N15CDynamicSleeper15CDynamicSleeperEv"></span><span id="_CPPv2N15CDynamicSleeper15CDynamicSleeperEv"></span><span id="CDynamicSleeper::CDynamicSleeper"></span><span class="target" id="classCDynamicSleeper_1aaf4e44427cf259aa63f5937b89203d27"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CDynamicSleeper</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15CDynamicSleeper15CDynamicSleeperEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Creates an instance with a rate of 1. </p>
 <p>The rate is the relative speed of time based on the system time. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N15CDynamicSleeper8sleepForEx">
-<span id="_CPPv3N15CDynamicSleeper8sleepForEx"></span><span id="_CPPv2N15CDynamicSleeper8sleepForEx"></span><span id="CDynamicSleeper::sleepFor__l-l"></span><span class="target" id="classCDynamicSleeper_1af83452d2e01780e02deab313ffc2423a"></span>void <code class="sig-name descname">sleepFor</code><span class="sig-paren">(</span>long long <em>durationNsecs_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15CDynamicSleeper8sleepForEx" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N15CDynamicSleeper8sleepForEx">
+<span id="_CPPv3N15CDynamicSleeper8sleepForEx"></span><span id="_CPPv2N15CDynamicSleeper8sleepForEx"></span><span id="CDynamicSleeper::sleepFor__l-l"></span><span class="target" id="classCDynamicSleeper_1af83452d2e01780e02deab313ffc2423a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sleepFor</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">durationNsecs_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15CDynamicSleeper8sleepForEx" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Blocks for the given amount of nanoseconds. </p>
 <p>How long the function actually blocks depends on the current rate at which the time is supposed to run</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">durationNsecs_</span></code>: the duration in nanoseconds </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>durationNsecs_</strong> – the duration in nanoseconds </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N15CDynamicSleeper10sleepUntilEx">
-<span id="_CPPv3N15CDynamicSleeper10sleepUntilEx"></span><span id="_CPPv2N15CDynamicSleeper10sleepUntilEx"></span><span id="CDynamicSleeper::sleepUntil__l-l"></span><span class="target" id="classCDynamicSleeper_1a411b408923558e2579aa2a69179b3956"></span>void <code class="sig-name descname">sleepUntil</code><span class="sig-paren">(</span>long long <em>sleepUntilTimeNsecs_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15CDynamicSleeper10sleepUntilEx" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N15CDynamicSleeper10sleepUntilEx">
+<span id="_CPPv3N15CDynamicSleeper10sleepUntilEx"></span><span id="_CPPv2N15CDynamicSleeper10sleepUntilEx"></span><span id="CDynamicSleeper::sleepUntil__l-l"></span><span class="target" id="classCDynamicSleeper_1a411b408923558e2579aa2a69179b3956"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sleepUntil</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">sleepUntilTimeNsecs_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15CDynamicSleeper10sleepUntilEx" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Blocks until the given point in sim time is reached. </p>
 <p>How long the function actually blocks depends on the current rate at which the time is supposed to run</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">sleepUntilTimeNsecs_</span></code>: the simulation time in nanoseconds </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sleepUntilTimeNsecs_</strong> – the simulation time in nanoseconds </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N15CDynamicSleeper7setRateEd">
-<span id="_CPPv3N15CDynamicSleeper7setRateEd"></span><span id="_CPPv2N15CDynamicSleeper7setRateEd"></span><span id="CDynamicSleeper::setRate__double"></span><span class="target" id="classCDynamicSleeper_1a8f98c51a62fabe7efe13a19875788abe"></span>void <code class="sig-name descname">setRate</code><span class="sig-paren">(</span>double <em>rate_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15CDynamicSleeper7setRateEd" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N15CDynamicSleeper7setRateEd">
+<span id="_CPPv3N15CDynamicSleeper7setRateEd"></span><span id="_CPPv2N15CDynamicSleeper7setRateEd"></span><span id="CDynamicSleeper::setRate__double"></span><span class="target" id="classCDynamicSleeper_1a8f98c51a62fabe7efe13a19875788abe"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setRate</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">rate_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15CDynamicSleeper7setRateEd" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>sets the rate at which the time is supposed to run. </p>
 <p>All threads that are waiting in the sleep function will automatically adjust their actual time to sleep based on the new rate.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">rate_</span></code>: the rate of time relative to the system time </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rate_</strong> – the rate of time relative to the system time </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N15CDynamicSleeper7setTimeEx">
-<span id="_CPPv3N15CDynamicSleeper7setTimeEx"></span><span id="_CPPv2N15CDynamicSleeper7setTimeEx"></span><span id="CDynamicSleeper::setTime__l-l"></span><span class="target" id="classCDynamicSleeper_1a6467320c4e5b657231d8b26c5bd23229"></span>void <code class="sig-name descname">setTime</code><span class="sig-paren">(</span>long long <em>nsecs_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15CDynamicSleeper7setTimeEx" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N15CDynamicSleeper7setTimeEx">
+<span id="_CPPv3N15CDynamicSleeper7setTimeEx"></span><span id="_CPPv2N15CDynamicSleeper7setTimeEx"></span><span id="CDynamicSleeper::setTime__l-l"></span><span class="target" id="classCDynamicSleeper_1a6467320c4e5b657231d8b26c5bd23229"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setTime</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">nsecs_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15CDynamicSleeper7setTimeEx" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets the sim time to the given value. </p>
 <p>If the given time is lower than the time that was given the last time or lower than the time that was computed the last time the rate was changed, all waiting threads will abort waiting and return.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">nsecs_</span></code>: the new simulation time in nanoseconds </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nsecs_</strong> – the new simulation time in nanoseconds </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N15CDynamicSleeper14setTimeAndRateExd">
-<span id="_CPPv3N15CDynamicSleeper14setTimeAndRateExd"></span><span id="_CPPv2N15CDynamicSleeper14setTimeAndRateExd"></span><span id="CDynamicSleeper::setTimeAndRate__l-l.double"></span><span class="target" id="classCDynamicSleeper_1a508629b59fb17f93c48aabd3f5aec1c7"></span>void <code class="sig-name descname">setTimeAndRate</code><span class="sig-paren">(</span>long long <em>time_nsecs_</em>, double <em>rate_</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15CDynamicSleeper14setTimeAndRateExd" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N15CDynamicSleeper14setTimeAndRateExd">
+<span id="_CPPv3N15CDynamicSleeper14setTimeAndRateExd"></span><span id="_CPPv2N15CDynamicSleeper14setTimeAndRateExd"></span><span id="CDynamicSleeper::setTimeAndRate__l-l.double"></span><span class="target" id="classCDynamicSleeper_1a508629b59fb17f93c48aabd3f5aec1c7"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setTimeAndRate</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time_nsecs_</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">rate_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15CDynamicSleeper14setTimeAndRateExd" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets the sim time and the rate of time to the given values. </p>
 <p>If the given time is lower than the time that was given the last time or lower than the time that was computed the last time the rate was changed, all waiting threads will abort waiting and return.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">time_nsecs_</span></code>: the new simulatoin time in nanoseconds </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">rate_</span></code>: the rate of the simulation time relative to the system clock </p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_nsecs_</strong> – the new simulatoin time in nanoseconds </p></li>
+<li><p><strong>rate_</strong> – the rate of the simulation time relative to the system clock </p></li>
 </ul>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N15CDynamicSleeper25getCurrentInternalSimTimeEv">
-<span id="_CPPv3N15CDynamicSleeper25getCurrentInternalSimTimeEv"></span><span id="_CPPv2N15CDynamicSleeper25getCurrentInternalSimTimeEv"></span><span id="CDynamicSleeper::getCurrentInternalSimTime"></span><span class="target" id="classCDynamicSleeper_1af68ca28392ea68d690b67d61342c48cd"></span>long long <code class="sig-name descname">getCurrentInternalSimTime</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15CDynamicSleeper25getCurrentInternalSimTimeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N15CDynamicSleeper25getCurrentInternalSimTimeEv">
+<span id="_CPPv3N15CDynamicSleeper25getCurrentInternalSimTimeEv"></span><span id="_CPPv2N15CDynamicSleeper25getCurrentInternalSimTimeEv"></span><span id="CDynamicSleeper::getCurrentInternalSimTime"></span><span class="target" id="classCDynamicSleeper_1af68ca28392ea68d690b67d61342c48cd"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span> <span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getCurrentInternalSimTime</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15CDynamicSleeper25getCurrentInternalSimTimeEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>getter for the internal simulation time used for computing how long to sleep </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>the current simulation time </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the current simulation time </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N15CDynamicSleeperD0Ev">
-<span id="_CPPv3N15CDynamicSleeperD0Ev"></span><span id="_CPPv2N15CDynamicSleeperD0Ev"></span><span id="CDynamicSleeper::~CDynamicSleeper"></span><span class="target" id="classCDynamicSleeper_1a524d8ad2954ed5e928fa658d68bddfa3"></span><code class="sig-name descname">~CDynamicSleeper</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15CDynamicSleeperD0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N15CDynamicSleeperD0Ev">
+<span id="_CPPv3N15CDynamicSleeperD0Ev"></span><span id="_CPPv2N15CDynamicSleeperD0Ev"></span><span id="CDynamicSleeper::~CDynamicSleeper"></span><span class="target" id="classCDynamicSleeper_1a524d8ad2954ed5e928fa658d68bddfa3"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">~CDynamicSleeper</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15CDynamicSleeperD0Ev" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 </div>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -615,6 +609,7 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">
