@@ -403,6 +403,7 @@ target_link_libraries(${PROJECT_NAME}
   PRIVATE
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:rt>
+    $<$<STREQUAL:${CMAKE_SYSTEM_NAME},FreeBSD>:util>
     $<$<BOOL:${WIN32}>:iphlpapi>
     $<$<BOOL:${WIN32}>:psapi> 
     $<$<BOOL:${WIN32}>:shlwapi.lib> 
