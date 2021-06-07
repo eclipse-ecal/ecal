@@ -213,6 +213,14 @@ namespace eCAL
             if (error)
               return error;
           }
+
+          // description
+          if (cmdline.description_arg.isSet())
+          {
+            auto error = setDescription(rec_server_instance, cmdline.description_arg.getValue());
+            if (error)
+              return error;
+          }
         }
 
         return eCAL::rec::Error::ErrorCode::OK;

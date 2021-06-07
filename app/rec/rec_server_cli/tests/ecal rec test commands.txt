@@ -32,9 +32,9 @@ delete <MeasID>
     - Playback measurement
 
 florian-ubuntu20:
-    - Execute direct commands here
-    - test.ecalrec in /home/florian
+    - test.ecalrec & test_faulty.ecalrec in /home/florian
     - run ecal_sample_person_snd
+    - Execute direct commands here
 
 ################################################################################
 ## Direct-mode only                                                           ##
@@ -91,7 +91,7 @@ ecal_rec \
   --max-file-size 10 \
   --description "My description" \
   --ftp-server internal \
-  --delete-after-upload yes \
+  --delete-after-upload yes
 
 
 ====================================
@@ -116,7 +116,7 @@ printf "save /home/florian/test_changed.ecalrec \n \
         exit" \
 | \
 ecal_rec \
-  --config /home/florian/test.ecalrec \
+  --config /home/florian/test_faulty.ecalrec \
   --set-client "florian-ubuntu20:florian-ubuntu20" \
   --remove-client "florian-ubuntu18" \
   --activate \
