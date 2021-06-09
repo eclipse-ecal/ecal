@@ -1393,16 +1393,33 @@ int main(int argc, char** argv)
     remote_rec_server_service->Destroy();
   }
 
+  // TODO: On rare occations, eCAL rec hangs when hitting ctrl+c on linux. Remove the debug output, once that bug is found.
+  //       Note, just in case the error vanishes: I moved the mutex lock in the signal handler into the SIGINT/SIGTERM if statements, so the signal handler will only aquire the lock when needed. Previously, the handler aquired the lock before checking if it even needed it.
+
+
   {
+    std::cerr << "Shutdown: aquiring lock...\n";
     std::lock_guard<decltype(ecal_rec_exit_mutex_)> ecal_rec_exit_lock(ecal_rec_exit_mutex_); // Wait for the ConsoleHandler / SignalHandler to exit
     
+    std::cerr << "Shutdown: Finalizing eCAL...\n";
     eCAL::Finalize();
   
+    std::cerr << "Shutdown: Destroying recorder_command...\n";
     record_command            = nullptr;
+
+    std::cerr << "Shutdown: Destroying command_executor...\n";
     command_executor          = nullptr;
+
+    std::cerr << "Shutdown: Destroying rec_server_service...\n";
     rec_server_service        = nullptr;
+
+    std::cerr << "Shutdown: Destroying rec_server_service_server...\n";
     rec_server_service_server = nullptr;
+
+    std::cerr << "Shutdown: Destroying rec_server_instance...\n";
     rec_server_instance       = nullptr;
+
+    std::cerr << "Shutdown: Destroying remote_rec_server_service...\n";
     remote_rec_server_service = nullptr;
   }
 
@@ -1670,41 +1687,82 @@ void InterruptStdIn()
 
 void SignalHandler(int s)
 {
-  std::lock_guard<decltype(ecal_rec_exit_mutex_)> ecal_rec_exit_lock(ecal_rec_exit_mutex_);
+  // TODO: On rare occations, eCAL rec hangs when hitting ctrl+c. Remove the debug output, once that bug is found.
+  //       Note, just in case the error vanishes: I moved the mutex lock into the SIGINT/SIGTERM if statements, so the signal handler will only aquire the lock when needed. Previously, the handler aquired the lock before checking if it even needed it.
+
+  std::cerr << "Signal Handler: caught signal " + std::to_string(s) + "\n";
 
   if (s == SIGINT)
   {
+    std::cerr << "Signal Handler: signal is SIGINT\n";
+
+    std::lock_guard<decltype(ecal_rec_exit_mutex_)> ecal_rec_exit_lock(ecal_rec_exit_mutex_);
+    std::cerr << "Signal Handler: Aquired exit_mutex\n";
+
     if (!ctrl_exit_event)
     {
+      std::cerr << "Signal Handler: Start interrupting running eCAL Rec\n";
+
       ctrl_exit_event = true;
 
-
       if(command_executor)
+      {
+        std::cerr << "Signal Handler: Interrupting command_executor...\n";
         command_executor->Interrupt();
+      }
 
       if (record_command)
+      {
+        std::cerr << "Signal Handler: Interrupting record_command...\n";
         record_command->Interrupt();
+      }
 
+      std::cerr << "Signal Handler: Interrupting stdin...\n";
       InterruptStdIn();
+    }
+    else
+    {
+      std::cerr << "Signal Handler: Application has already been interrupted. Doing nothing.\n";
     }
   }
   else if (s == SIGTERM)
   {
+    std::cerr << "Signal Handler: Signal is SIGTERM\n";
+
+    std::lock_guard<decltype(ecal_rec_exit_mutex_)> ecal_rec_exit_lock(ecal_rec_exit_mutex_);
+    std::cerr << "Signal Handler: Aquired exit_mutex\n";
+
     if (!ctrl_exit_event)
     {
       ctrl_exit_event = true;
       ctrl_exit_until = std::chrono::steady_clock::now() + std::chrono::seconds(3); // Give it 3 seconds to finish, kill it otherwise    
 
-
       if(command_executor)
+      {
+        std::cerr << "Signal Handler: Interrupting command_executor...\n";
         command_executor->Interrupt();
+      }
 
       if (record_command)
+      {
+        std::cerr << "Signal Handler: Interrupting record_command...\n";
         record_command->Interrupt();
+      }
 
+      std::cerr << "Signal Handler: Interrupting stdin...\n";
       InterruptStdIn();
     }
+    else
+    {
+      std::cerr << "Signal Handler: Application has already been interrupted. Doing nothing.\n";
+    }
   }
+  else
+  {
+    std::cerr << "Signal Handler: Unknown singal. Doing nothing.\n";
+  }
+
+  std::cerr << "Signal Handler: Finished!\n";
 }
 
 void InterruptStdIn()
