@@ -148,6 +148,9 @@ namespace eCAL
         m_service->CallMethod(method_descriptor, nullptr, request, response, nullptr);
         response_ = response->SerializeAsString();
 
+        delete request;
+        delete response;
+
         return 0;
       };
 
