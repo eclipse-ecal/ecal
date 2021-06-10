@@ -219,7 +219,16 @@ printf "load /home/florian/test_changed.ecalrec \n \
 ecal_rec \
   --interactive \
   --interactive-dont-exit
-  
+
+################################################################################
+> Wenn man diesen Befehl auf florian-ubuntu18 ausführt und strg+c drückt hängt ecal rec
+> Das Uploaden von vielen Messungen gleichzeitig auf einen externen server failed manchmal:
+   florian-ubuntu20: Error uploading: Access denied to remote resource (/home/florian/ecal_meas/2021-06-08_12-46-22.857_measurement/2021-06-08_12-46-22.857_measurement.ecalmeas)
+   ==> nur, wenn ein externer FTP Server verwendet wird (FileZilla FTP Server). Eventuell macht der Probleme?
+
+
+
+
 
 =====================
 Parameter mode test
@@ -237,12 +246,13 @@ Output
     - Description: "My description" + "comment from command line"
 - uploaded to Windows D:\upload_dir
 - Status Print: Deactivated
+- continue in interactive mode
 
 -------------------------
 
 ecal_rec \
   --config "/home/florian/test_changed.ecalrec" \
-  --rec 5 \
+  --record 5 \
   --deactivate \
   --status \
   --upload \
@@ -265,7 +275,7 @@ Output:
 
 - 2 measurements on florian-ubuntu20
   - 1. long measurement
-  - 2. 10 secs measurement (Comment: "Created by paremeter --savebuffer")
+  - 2. 10 secs measurement (Comment: "Created by parameter --savebuffer")
 
 florian-ubuntu20:
 -----------------
@@ -284,7 +294,21 @@ ecal_rec \
   --remote-control \
   --remote-host florian-ubuntu20 \
   --savebuffer \
-  --comment "Created by paremeter --savebuffer" \
+  --comment "Created by parameter --savebuffer" \
   --stop \
   --upload \
   --status
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
