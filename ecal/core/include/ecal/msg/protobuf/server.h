@@ -141,7 +141,12 @@ namespace eCAL
 
         // create request
         google::protobuf::Message* request(m_service->GetRequestPrototype(method_descriptor).New());
-        if (!request->ParseFromString(request_)) return -1;
+        if (!request->ParseFromString(request_))
+        {
+          delete request
+          return -1;
+        }
+
         // create response
         google::protobuf::Message* response(m_service->GetResponsePrototype(method_descriptor).New());
         // call method
