@@ -18,14 +18,15 @@
 */
 
 /**
- * @brief  eCAL iceoryx reader
+ * @brief  shared memory (iceoryx) reader
 **/
 
 #pragma once
 
 #include "readwrite/ecal_reader_layer.h"
 
-#include <iceoryx_posh/popo/subscriber.hpp>
+#include <iceoryx_posh/popo/listener.hpp>
+#include <iceoryx_posh/popo/untyped_subscriber.hpp>
 
 #include <memory>
 #include <mutex>
@@ -34,18 +35,19 @@
 
 namespace eCAL
 {
-  // ecal Iceoryx reader
+  // ecal shared memory (Iceoryx) reader
   class CDataReaderSHM
   {
   public:
     CDataReaderSHM();
 
-    bool CreateIceoryxSub(const std::string& topic_name_);
-    bool DestroyIceoryxSub();
+    bool Create(const std::string& topic_name_);
+    bool Destroy();
 
   private:
-    std::shared_ptr<iox::popo::Subscriber> m_subscriber;
-    void receiveHandler();
+    std::shared_ptr<iox::popo::UntypedSubscriber> m_subscriber;
+    iox::popo::Listener                           m_listener;
+    static void onSampleReceivedCallback(iox::popo::UntypedSubscriber* subscriber_, CDataReaderSHM* self);
 
     std::string m_topic_name;
   };
@@ -58,6 +60,9 @@ namespace eCAL
 
     void Initialize()
     {
+      // create the runtime for registering with the RouDi daemon
+      const iox::capro::IdString_t runtime (iox::cxx::TruncateToCapacity, eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID()));
+      iox::runtime::PoshRuntime::initRuntime(runtime);
     }
 
     void AddSubscription(std::string& topic_name_, std::string& topic_id_, QOS::SReaderQOS /*qos_*/)
@@ -66,7 +71,7 @@ namespace eCAL
       if(m_datareadershm_map.find(topic_id_) != m_datareadershm_map.end()) return;
 
       std::shared_ptr<CDataReaderSHM> reader = std::make_shared<CDataReaderSHM>();
-      reader->CreateIceoryxSub(topic_name_);
+      reader->Create(topic_name_);
 
       m_datareadershm_map.insert(std::pair<std::string, std::shared_ptr<CDataReaderSHM>>(topic_id_, reader));
     }
@@ -78,7 +83,7 @@ namespace eCAL
       if(iter == m_datareadershm_map.end()) return;
 
       auto reader = iter->second;
-      reader->DestroyIceoryxSub();
+      reader->Destroy();
 
       m_datareadershm_map.erase(iter);
     }
