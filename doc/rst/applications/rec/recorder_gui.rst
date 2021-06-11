@@ -10,10 +10,15 @@
 The recorder GUI is the most user friendly application to start recordings and to create :file:`.ecalrec` configuration files.
 So let's walk through it to explain all the feature it has.
 
-????????????????? Insert image here ?????????????????
+.. image:: img/rec_gui_overview.png
+   :alt: eCAL Rec Overview
+
 
 Main Control Panel
 ------------------
+
+.. image:: img/rec_gui_controls.png
+   :alt: eCAL Rec controls
 
 - |ecalicons_POWER_ON| :guilabel:`Activate` / |ecalicons_POWER_OFF| :guilabel:`Deactivate`:
   Clicking this button will Activate and Deactivate eCAL Rec.
@@ -35,6 +40,9 @@ Main Control Panel
 
 Topics
 ------
+
+.. image:: img/rec_gui_topics.png
+   :alt: eCAL Rec topics
 
 The topics panel has multiple functions:
 
