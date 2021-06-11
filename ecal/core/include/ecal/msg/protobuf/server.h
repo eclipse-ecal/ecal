@@ -143,7 +143,7 @@ namespace eCAL
         google::protobuf::Message* request(m_service->GetRequestPrototype(method_descriptor).New());
         if (!request->ParseFromString(request_))
         {
-          delete request
+          delete request;
           return -1;
         }
 
