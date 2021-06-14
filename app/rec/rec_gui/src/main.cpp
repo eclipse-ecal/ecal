@@ -18,6 +18,9 @@
 */
 
 #include "ecalrec_gui.h"
+
+#include <thread>
+
 #include <QtWidgets/QApplication>
 #include <ecal/ecal.h>
 
