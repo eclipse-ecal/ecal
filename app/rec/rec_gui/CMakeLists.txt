@@ -41,6 +41,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(source_files
     src/ecalrec_gui.cpp
     src/ecalrec_gui.h
+    src/help_window.cpp
+    src/help_window.h
 
     src/main.cpp
 
@@ -120,6 +122,7 @@ if(WIN32)
 ENDIF(WIN32)
 
 set(ui_files
+    src/help_window.ui
     src/main_window.ui
     src/widgets/about_dialog/about_dialog.ui
     src/widgets/config_widget/config_widget.ui
@@ -161,6 +164,7 @@ target_link_libraries (${PROJECT_NAME}
     eCAL::rec_server_core
     Qt5::Widgets
     CustomQt
+    CustomTclap
     eCAL::utils
     EcalParser
     QEcalParser
