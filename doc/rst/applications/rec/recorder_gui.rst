@@ -15,7 +15,7 @@ So let's walk through it to explain all the feature it has.
 
 
 Main Control Panel
-------------------
+==================
 
 - |ecalicons_POWER_ON| :guilabel:`Activate` / |ecalicons_POWER_OFF| :guilabel:`Deactivate`:
   Clicking this button will Activate and Deactivate eCAL Rec.
@@ -36,7 +36,7 @@ Main Control Panel
   It will not interfere with that.
 
 Topics
-------
+======
 
 The topics panel on the upper left side has multiple functions:
 
@@ -51,7 +51,7 @@ Having different settins for individual clients is not possible.
     You can either manage your blacklist / whitelist by clicking the gear icon |ecalicons_SETTINGS| or by right-clicking a topic from the list.
 
 Configuration
--------------
+=============
 
 The configuration panel lets you configure your global measurement settings.
 These settings are used for all new recordings.
@@ -83,3 +83,71 @@ These settings are used for all new recordings.
 Recorders
 =========
   
+In this list you can manage your recorder clients and see their status.
+This list also shows the state of your recorder addons (if you have any).
+If the recorder detects any setting as problematic here, it will show a warning icon |ecalicons_WARNING|.
+Move the mouse over that icon to see what went wrong.
+
+If a client is successfully connected, a green icon |ecalicons_HOST_CONNECTED| is shown.
+If something fails, the icon will remain grey |ecalicons_HOST_DISCONNECTED|.
+
+- For **activating** a client, set the checkmark in the first column.
+  By default, only your local PC is checked.
+  All machines that have a running ecal_rec_client are shown as available clients.
+  In a distributed recording scenario, you would activate the client of all machines that are supposed to record data.
+
+- For **setting which hosts a client shall record**, move the mouse over the host column and expand the dropdown menu that appears.
+  By default, each client will record topics from all hosts.
+  For a typical distributed recording (each client records the topics from its own host), you would assign each client its own hostname.
+  There is a button |ecalicons_LOCAL| :guilabel:`Local topics` as a shortcut for that.
+
+  .. image:: img/rec_gui_recorders_dropdown_cut.png
+     :alt: eCAL Rec host filter
+
+  .. warning::
+     The decision which topics to record is made per-topic and not per-message.
+     So if you have one topic which is published by multiple machines and each machine records all local topics, this topic will be recorded multiple times, as each machine will record all messages (even those sent by other machines).
+
+     Thus, if you plan on using distributed recordings (and you should), you should design your topics accordingly and e.g. publish the data from different machines on different topic names.
+
+     We will fix this inconvenience in the future, but at the moment it is an important thing to take care of.
+
+- To set a **pre-buffer** activate the checkbox and set the desired value in the field next to it.
+  As soon as you have activated the recorder, it will buffer data, even when it is not recorded.
+  When starting a recording, the content of the pre-buffer is prepended to the measurement.
+  You can see the amount of that that is kept in the buffer in the recorder list.
+
+- With the |ecalicons_ADD| :guilabel:`Add...` and |ecalicons_DELETE| :guilabel:`Delete` buttons you can manage the recorder list, even if the clients on the desired machines are not runing, yet.
+  This is usefull if you want to prepare a configuration and set all recorder settings offline.
+
+  If you are operating on your target system where all clients are already running, you don't really need these buttons.
+
+Measurements
+============
+
+The measurement list shows all measurement that were created since the recorder has been started along with their state and length.
+It also contains two buttons per measurement:
+
+- |ecalicons_ADD_FILE| :guilabel:`Comment...`: Add a comment to that measurement.
+  It will be appended to the :file:`doc/description.txt` file.
+
+- |ecalicons_MERGE| :guilabel:`Upload`: Upload all measurements to current PC (or another PC, if configured).
+  After all clients have finished uploading their files, you will find one directory for each host in your measurement directory.
+  When loading a measurement with the eCAl Player, all of these host directories are loaded and you will therefore get a monolythic measurement again, even though each client recorded only part of the traffic.
+  
+  .. note::
+
+     This button is only enabled, if any other PC has participated in the measurement or you have configured an external FTP Server.
+
+- **Right-click** a measurement to delete it from all machines or to open a file manager showing the measurement directory.
+
+  .. image:: img/rec_gui_measurements_context_menu_cut.png
+    :alt: eCAL Rec measurements context menu
+
+Options
+=======
+
+There are more options available from the menubar:
+
+.. image:: img/rec_gui_menubar_options_cut.png
+   :alt: eCAL Rec Menubar options
