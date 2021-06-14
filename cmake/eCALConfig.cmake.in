@@ -27,8 +27,8 @@ set(eCAL_VERSION_PATCH  @eCAL_VERSION_PATCH@)
 set(eCAL_VERSION_STRING @eCAL_VERSION_STRING@)
 
 # eCAL is provided only with Release and Debug Version, thus map the other configs to Release build.
-set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL Release)
-set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)
+set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL Release "")
+set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release "")
 
 find_package(Protobuf REQUIRED)
 
