@@ -81,6 +81,7 @@ eCAL is provided on an "as is" basis without warranties or conditions of any kin
    :hidden:
    :caption: Advanced
    
+   advanced/compatibility
    advanced/documentation
    advanced/performance
    advanced/transport_layers

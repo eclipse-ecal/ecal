@@ -10,7 +10,7 @@
     <meta name="docsearch:release" content="" />
     <meta name="docsearch:version" content="" />
 
-    <title>Distributed recording &mdash; eCAL Documentation  documentation</title>
+    <title>eCAL Rec GUI &mdash; eCAL Documentation  documentation</title>
 
     <link rel="shortcut icon" href="../../_static/img/favicon.png" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
@@ -26,8 +26,8 @@
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
     <link rel="up" title="eCAL Rec" href="recorder.html" />
-    <link rel="next" title="FTP Upload" href="recorder_ftp_upload.html" />
-    <link rel="prev" title="Overview" href="recorder_advanced_overview.html" />
+    <link rel="next" title="eCAL Rec CLI" href="recorder_cli.html" />
+    <link rel="prev" title="Overview" href="recorder_overview.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
     <script src="../../_static/js/modernizr.min.js"></script>
@@ -331,14 +331,15 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../applications.html">Applications</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="recorder.html">eCAL Rec</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="recorder_advanced_overview.html">Overview</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Distributed recording</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recorder_ftp_upload.html">FTP Upload</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="recorder.html"> eCAL Rec</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="recorder_overview.html"> Overview</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"> eCAL Rec GUI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recorder_cli.html"> eCAL Rec CLI</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../sys/sys.html"> eCAL Sys</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../sys/sys_overview.html"> eCAL Sys Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sys/sys_gui.html"> eCAL Sys GUI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sys/sys_cli.html"> eCAL Sys CLI</a></li>
 </ul>
 </li>
@@ -348,6 +349,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Advanced</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced/compatibility.html">eCAL Compatibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../advanced/documentation.html">Edit the documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../advanced/performance.html">Performance measurements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../advanced/transport_layers.html">Transport Layers</a></li>
@@ -393,7 +395,15 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">Distributed recording</a></li>
+<li><a class="reference internal" href="#"> eCAL Rec GUI</a><ul>
+<li><a class="reference internal" href="#main-control-panel">Main Control Panel</a></li>
+<li><a class="reference internal" href="#topics">Topics</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#recorders">Recorders</a></li>
+<li><a class="reference internal" href="#measurements">Measurements</a></li>
+<li><a class="reference internal" href="#options">Options</a></li>
+</ul>
+</li>
 </ul>
 <!-- /menu -->
                             </div>
@@ -404,23 +414,23 @@
                     <div class="rst-content">
 <!-- pager-hidden.html -->
 
-        <a class="no-focus" accesskey="p" href="recorder_advanced_overview.html" tabindex="-1"></a>
-        <a class="no-focus" accesskey="n" href="recorder_ftp_upload.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="p" href="recorder_overview.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="n" href="recorder_cli.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../../index.html">Start</a></li>
             <li class="breadcrumb-item"><a href="../../applications.html">Applications</a></li>
-            <li class="breadcrumb-item"><a href="recorder.html">eCAL Rec</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Distributed recording</li>
+            <li class="breadcrumb-item"><a href="recorder.html"> eCAL Rec</a></li>
+        <li class="breadcrumb-item active" aria-current="page"> eCAL Rec GUI</li>
     </ol>
         <div class="breadcrumb-additions">
-                <a class="btn btn-sm btn-light" href="https://github.com/continental/ecal/blob/master/doc/rst/applications/rec/recorder_distributed_recording.rst">
+                <a class="btn btn-sm btn-light" href="https://github.com/continental/ecal/blob/master/doc/rst/applications/rec/recorder_gui.rst">
                     <span class="btn-icon"><span class="fab fa-github"></span></span>
                     <span class="btn-text">Edit on GitHub</span>
                 </a>
-                <a class="btn btn-sm btn-light" href="../../_sources/applications/rec/recorder_distributed_recording.rst.txt" rel="nofollow">
+                <a class="btn btn-sm btn-light" href="../../_sources/applications/rec/recorder_gui.rst.txt" rel="nofollow">
                     <span class="btn-icon"><span class="fas fa-code"></span></span>
                     <span class="btn-text">View source</span>
                 </a>
@@ -430,10 +440,152 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <section id="distributed-recording">
-<span id="applications-recorder-distributed-recording"></span><h1>Distributed recording<a class="headerlink" href="#distributed-recording" title="Permalink to this headline">¶</a></h1>
-<p>This section is still under construction. But we are working on it! Just be patient.</p>
-<img alt="Snail" class="align-center" src="../../_images/snail.svg" /></section>
+    <section id="ecalrec-app-icon-h1-ecal-rec-gui">
+<span id="applications-recorder-gui"></span><h1><a class="reference internal" href="../../_images/ecalrec.ico"><img alt="ecalrec_APP_ICON_h1" src="../../_images/ecalrec.ico" style="width: 38px;" /></a> eCAL Rec GUI<a class="headerlink" href="#ecalrec-app-icon-h1-ecal-rec-gui" title="Permalink to this headline">¶</a></h1>
+<p>The recorder GUI is the most user friendly application to start recordings and to create <code class="file docutils literal notranslate"><span class="pre">.ecalrec</span></code> configuration files.
+So, let’s walk through it to explain all the feature it has.</p>
+<img alt="eCAL Rec Overview" src="../../_images/rec_gui_overview.png" />
+<section id="main-control-panel">
+<h2>Main Control Panel<a class="headerlink" href="#main-control-panel" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p><a class="reference internal" href="../../_images/power_on.svg"><img alt="ecalicons_POWER_ON" src="../../_images/power_on.svg" width="16px" /></a> <span class="guilabel">Activate</span> / <a class="reference internal" href="../../_images/power_off.svg"><img alt="ecalicons_POWER_OFF" src="../../_images/power_off.svg" width="16px" /></a> <span class="guilabel">Deactivate</span>:
+Clicking this button will activate and deactivate eCAL Rec.
+For just starting a recording, it is not mandatory to do that manually.</p>
+<p>However, if you have a pre-buffer configured, activating the recorder actually is important.
+Activating will make the recorder create eCAL Subscribers and start buffering data.
+So, if you don’t click activate, your pre-buffer will not get filled.</p>
+</li>
+<li><p><a class="reference internal" href="../../_images/record.svg"><img alt="ecalicons_RECORD" src="../../_images/record.svg" width="16px" /></a> <span class="guilabel">Rec</span> / <a class="reference internal" href="../../_images/stop.svg"><img alt="ecalicons_STOP" src="../../_images/stop.svg" width="16px" /></a> <span class="guilabel">Stop</span>:
+Starts or stop a recording.</p></li>
+<li><p><a class="reference internal" href="../../_images/save_to_disk.svg"><img alt="ecalicons_SAVE_TO_DISK" src="../../_images/save_to_disk.svg" width="16px" /></a> <span class="guilabel">Save Pre-Buffer</span>: Save the content of the pre-buffer to its own measurement.</p>
+<p>This button is only enabled when you have enabled pre-buffering <em>and</em> the recorders are activated.
+Basically, this is a shortcut for quickly clicking Rec + Stop.
+However, you can even save the pre-buffer while a recording is running.
+It will not interfere with that.</p>
+</li>
+</ul>
+</section>
+<section id="topics">
+<h2>Topics<a class="headerlink" href="#topics" title="Permalink to this headline">¶</a></h2>
+<p>The topics panel on the upper left side has multiple functions:</p>
+<ul class="simple">
+<li><p>It displays all eCAL that are recorded or can be recorded</p></li>
+<li><p>It lets you create a black- or whitelist</p></li>
+<li><p>During a recording it shows which topic is recorded by which recorder</p></li>
+</ul>
+<p>Note that in a distributed recording environment, the blacklist / whitelist setting is used for all clients.
+Having different settings for individual clients is not possible.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can either manage your blacklist / whitelist by clicking the gear icon <a class="reference internal" href="../../_images/gears.svg"><img alt="ecalicons_SETTINGS" src="../../_images/gears.svg" width="16px" /></a> or by right clicking a topic from the list.</p>
+</div>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<p>The configuration panel lets you configure your global measurement settings.
+These settings are used for all new recordings.</p>
+<ul>
+<li><p><strong>Meas dir</strong>: The measurement root directory.
+The recorder will create a directory for individual measurements inside this directory.</p>
+<p>If you are using different operating systems, you must make sure the path works for all clients.
+Click the <a class="reference internal" href="../../_images/show_dialog.svg"><img alt="qecalparser_SHOW_DIALOG" src="../../_images/show_dialog.svg" width="16px" /></a> button to open an improved editor to help you with the replacement syntax.</p>
+<p>The default is:</p>
+<ul class="simple">
+<li><p><i class="fab fa-windows"></i> Windows: <code class="file docutils literal notranslate"><span class="pre">C:/ecal_meas/</span></code></p></li>
+<li><p><i class="fab fa-ubuntu"></i> Ubuntu: <code class="file docutils literal notranslate"><span class="pre">~/ecal_meas/</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>Meas name</strong>: The name of the directory that is created inside the measurement root directory.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You should <strong>always</strong> include a <strong>timestamp</strong> in your measurement name.
+Otherwise multiple measurements will end up in the same directory and may overwrite each other.</p>
+</div>
+</li>
+<li><p><strong>Max file size</strong>: The maximum file size of the <code class="file docutils literal notranslate"><span class="pre">.hdf5</span></code> files that will be created.
+If the maximum file size is reached, the measurement will be splitted into multiple files.</p></li>
+<li><p><strong>Description</strong>: A general purpose measurement description.
+It will be saved to the <code class="file docutils literal notranslate"><span class="pre">doc/description.txt</span></code> file inside each measurement.</p></li>
+</ul>
+</section>
+<section id="recorders">
+<h2>Recorders<a class="headerlink" href="#recorders" title="Permalink to this headline">¶</a></h2>
+<p>In this list you can manage your recorder clients and see their status.
+This list also shows the state of your recorder addons (if you have any).
+If the recorder detects any setting as problematic here, it will show a warning icon <a class="reference internal" href="../../_images/warning.svg"><img alt="ecalicons_WARNING" src="../../_images/warning.svg" width="16px" /></a>.
+Move the mouse over that icon to see what went wrong.</p>
+<p>If a client is successfully connected, a green icon <a class="reference internal" href="../../_images/screen_green.svg"><img alt="ecalicons_HOST_CONNECTED" src="../../_images/screen_green.svg" width="16px" /></a> is shown.
+If something fails, the icon will remain grey <a class="reference internal" href="../../_images/screen_grey_strikethrough.svg"><img alt="ecalicons_HOST_DISCONNECTED" src="../../_images/screen_grey_strikethrough.svg" width="16px" /></a>.</p>
+<ul>
+<li><p>For <strong>activating</strong> a client, set the checkmark in the first column.
+By default, only your local PC is checked.
+All machines that have a running ecal_rec_client are shown as available clients.
+In a distributed recording scenario, you would activate the client of all machines that are supposed to record data.</p></li>
+<li><p>For <strong>setting which hosts a client shall record</strong>, move the mouse over the host column and expand the dropdown menu that appears.
+By default, each client will record topics from all hosts.
+For a typical distributed recording (each client records the topics from its own host), you would assign each client its own hostname.
+There is a button <a class="reference internal" href="../../_images/local.svg"><img alt="ecalicons_LOCAL" src="../../_images/local.svg" width="16px" /></a> <span class="guilabel">Local topics</span> as a shortcut for that.</p>
+<img alt="eCAL Rec host filter" src="../../_images/rec_gui_recorders_dropdown_cut.png" />
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The decision which topics to record is made per-topic and not per-message.
+So, if you have one topic which is published by multiple machines and each machine records all local topics, this topic will be recorded multiple times, as each machine will record all messages (even those sent by other machines).</p>
+<p>Thus, if you plan on using distributed recordings (and you should), you should design your topics accordingly and e.g. publish the data from different machines on different topic names.</p>
+<p>We will fix this inconvenience in the future, but at the moment it is an important thing to take care of.</p>
+</div>
+</li>
+<li><p>To set a <strong>pre-buffer</strong> activate the checkbox and set the desired value in the field next to it.
+As soon as you have activated the recorder, it will buffer data, even when it is not recorded.
+When starting a recording, the content of the pre-buffer is prepended to the measurement.
+You can see the amount of that that is kept in the buffer in the recorder list.</p></li>
+<li><p>With the <a class="reference internal" href="../../_images/plus.svg"><img alt="ecalicons_ADD" src="../../_images/plus.svg" width="16px" /></a> <span class="guilabel">Add…</span> and <a class="reference internal" href="../../_images/remove.svg"><img alt="ecalicons_DELETE" src="../../_images/remove.svg" width="16px" /></a> <span class="guilabel">Delete</span> buttons you can manage the recorder list, even if the clients on the desired machines are not running, yet.
+This is useful if you want to prepare a configuration and set all recorder settings offline.</p>
+<p>If you are operating on your target system where all clients are already running, you don’t really need these buttons.</p>
+</li>
+</ul>
+</section>
+<section id="measurements">
+<h2>Measurements<a class="headerlink" href="#measurements" title="Permalink to this headline">¶</a></h2>
+<p>The measurement list shows all measurement that were created since the recorder has been started along with their state and length.
+It also contains two buttons per measurement:</p>
+<ul>
+<li><p><a class="reference internal" href="../../_images/add_file.svg"><img alt="ecalicons_ADD_FILE" src="../../_images/add_file.svg" width="16px" /></a> <span class="guilabel">Comment…</span>: Add a comment to that measurement.
+It will be appended to the <code class="file docutils literal notranslate"><span class="pre">doc/description.txt</span></code> file.</p></li>
+<li><p><a class="reference internal" href="../../_images/merge.svg"><img alt="ecalicons_MERGE" src="../../_images/merge.svg" width="16px" /></a> <span class="guilabel">Upload</span>: Upload all measurements to current PC (or another PC, if configured).
+After all clients have finished uploading their files, you will find one directory for each host in your measurement directory.
+When loading a measurement with the eCAl Player, all these host directories are loaded and you will therefore get a monolithic measurement again, even though each client recorded only part of the traffic.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This button is only enabled, if any other PC has participated in the measurement or you have configured an external FTP Server.</p>
+</div>
+</li>
+<li><p><strong>Right-click</strong> a measurement to delete it from all machines or to open a file manager showing the measurement directory.</p>
+<img alt="eCAL Rec measurements context menu" src="../../_images/rec_gui_measurements_context_menu_cut.png" />
+</li>
+</ul>
+</section>
+<section id="options">
+<h2>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h2>
+<p>There are more options available from the menu bar:</p>
+<ul>
+<li><p><span class="guilabel">Use built-in local recorder</span>: By default, this option is checked and usually you want to leave it that way.
+If checked, the GUI will not need a separate ecal_rec_client for recording on its own machine.</p>
+<img alt="eCAL Rec menu bar options" src="../../_images/rec_gui_menubar_options_cut.png" />
+</li>
+<li><p><span class="guilabel">Upload Settings…</span>: Opens a configuration dialog for the upload settings:</p>
+<img alt="eCAL Rec Upload Settings" src="../../_images/rec_gui_upload_settings.png" />
+<ul class="simple">
+<li><p><strong>Upload to internal FTP Sever</strong>: This is selected by default.
+All clients will upload their files to the PC the GUI is running on.</p></li>
+<li><p><strong>Manual FTP configuration</strong>: Upload to any other FTP Server.
+The FTP Server needs to be accessible from all clients.</p></li>
+<li><p><strong>Delete after successful upload</strong>: If checked, all clients that have successfully uploaded their part of the measurement will delete the local files.
+This prevents their hard drives to simply fill up over time.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -442,12 +594,12 @@
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
         <li class="page-item">
-            <a class="page-link" href="recorder_advanced_overview.html" title="Accesskey Alt(+Shift)+p">
+            <a class="page-link" href="recorder_overview.html" title="Accesskey Alt(+Shift)+p">
                 Previous
             </a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="recorder_ftp_upload.html" title="Accesskey Alt(+Shift)+n">
+            <a class="page-link" href="recorder_cli.html" title="Accesskey Alt(+Shift)+n">
                 Next
             </a>
         </li>

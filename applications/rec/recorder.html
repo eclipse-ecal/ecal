@@ -26,7 +26,7 @@
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
     <link rel="up" title="Applications" href="../../applications.html" />
-    <link rel="next" title="Overview" href="recorder_advanced_overview.html" />
+    <link rel="next" title="Overview" href="recorder_overview.html" />
     <link rel="prev" title="Applications" href="../../applications.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
@@ -331,14 +331,15 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../applications.html">Applications</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">eCAL Rec</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recorder_advanced_overview.html">Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recorder_distributed_recording.html">Distributed recording</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recorder_ftp_upload.html">FTP Upload</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"> eCAL Rec</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="recorder_overview.html"> Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recorder_gui.html"> eCAL Rec GUI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recorder_cli.html"> eCAL Rec CLI</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../sys/sys.html"> eCAL Sys</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../sys/sys_overview.html"> eCAL Sys Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sys/sys_gui.html"> eCAL Sys GUI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sys/sys_cli.html"> eCAL Sys CLI</a></li>
 </ul>
 </li>
@@ -348,6 +349,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Advanced</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced/compatibility.html">eCAL Compatibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../advanced/documentation.html">Edit the documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../advanced/performance.html">Performance measurements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../advanced/transport_layers.html">Transport Layers</a></li>
@@ -393,7 +395,7 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">eCAL Rec</a></li>
+<li><a class="reference internal" href="#"> eCAL Rec</a></li>
 </ul>
 <!-- /menu -->
                             </div>
@@ -405,14 +407,14 @@
 <!-- pager-hidden.html -->
 
         <a class="no-focus" accesskey="p" href="../../applications.html" tabindex="-1"></a>
-        <a class="no-focus" accesskey="n" href="recorder_advanced_overview.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="n" href="recorder_overview.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../../index.html">Start</a></li>
             <li class="breadcrumb-item"><a href="../../applications.html">Applications</a></li>
-        <li class="breadcrumb-item active" aria-current="page">eCAL Rec</li>
+        <li class="breadcrumb-item active" aria-current="page"> eCAL Rec</li>
     </ol>
         <div class="breadcrumb-additions">
                 <a class="btn btn-sm btn-light" href="https://github.com/continental/ecal/blob/master/doc/rst/applications/rec/recorder.rst">
@@ -429,16 +431,27 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <section id="ecal-rec">
-<span id="applications-recorder"></span><h1>eCAL Rec<a class="headerlink" href="#ecal-rec" title="Permalink to this headline">¶</a></h1>
+    <section id="ecalrec-app-icon-h1-ecal-rec">
+<span id="applications-recorder"></span><h1><a class="reference internal" href="../../_images/ecalrec.ico"><img alt="ecalrec_APP_ICON_h1" src="../../_images/ecalrec.ico" style="width: 38px;" /></a> eCAL Rec<a class="headerlink" href="#ecalrec-app-icon-h1-ecal-rec" title="Permalink to this headline">¶</a></h1>
 <p>This chapter will give you deeper information about the eCAL Recorder.
 If you haven’t done so, make sure to check out the <a class="reference internal" href="../../getting_started/recorder.html#getting-started-recorder"><span class="std std-ref">Getting started with eCAL Rec</span></a> section from the Getting Started chapter!</p>
 <p>Otherwise choose a topic from the list below:</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="recorder_advanced_overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="recorder_distributed_recording.html">Distributed recording</a></li>
-<li class="toctree-l1"><a class="reference internal" href="recorder_ftp_upload.html">FTP Upload</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recorder_overview.html"> Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recorder_overview.html#architecture">Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="recorder_gui.html"> eCAL Rec GUI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recorder_gui.html#main-control-panel">Main Control Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder_gui.html#topics">Topics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder_gui.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder_gui.html#recorders">Recorders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder_gui.html#measurements">Measurements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder_gui.html#options">Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="recorder_cli.html"> eCAL Rec CLI</a></li>
 </ul>
 </div>
 </section>
@@ -455,7 +468,7 @@ If you haven’t done so, make sure to check out the <a class="reference interna
             </a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="recorder_advanced_overview.html" title="Accesskey Alt(+Shift)+n">
+            <a class="page-link" href="recorder_overview.html" title="Accesskey Alt(+Shift)+n">
                 Next
             </a>
         </li>

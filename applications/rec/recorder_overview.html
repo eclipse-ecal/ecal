@@ -26,7 +26,7 @@
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
     <link rel="up" title="eCAL Rec" href="recorder.html" />
-    <link rel="next" title="Distributed recording" href="recorder_distributed_recording.html" />
+    <link rel="next" title="eCAL Rec GUI" href="recorder_gui.html" />
     <link rel="prev" title="eCAL Rec" href="recorder.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
@@ -331,14 +331,15 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../applications.html">Applications</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="recorder.html">eCAL Rec</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recorder_distributed_recording.html">Distributed recording</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recorder_ftp_upload.html">FTP Upload</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="recorder.html"> eCAL Rec</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#"> Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recorder_gui.html"> eCAL Rec GUI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recorder_cli.html"> eCAL Rec CLI</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../sys/sys.html"> eCAL Sys</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../sys/sys_overview.html"> eCAL Sys Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sys/sys_gui.html"> eCAL Sys GUI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sys/sys_cli.html"> eCAL Sys CLI</a></li>
 </ul>
 </li>
@@ -348,6 +349,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Advanced</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced/compatibility.html">eCAL Compatibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../advanced/documentation.html">Edit the documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../advanced/performance.html">Performance measurements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../advanced/transport_layers.html">Transport Layers</a></li>
@@ -393,7 +395,10 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">Overview</a></li>
+<li><a class="reference internal" href="#"> Overview</a><ul>
+<li><a class="reference internal" href="#architecture">Architecture</a></li>
+</ul>
+</li>
 </ul>
 <!-- /menu -->
                             </div>
@@ -405,22 +410,22 @@
 <!-- pager-hidden.html -->
 
         <a class="no-focus" accesskey="p" href="recorder.html" tabindex="-1"></a>
-        <a class="no-focus" accesskey="n" href="recorder_distributed_recording.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="n" href="recorder_gui.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../../index.html">Start</a></li>
             <li class="breadcrumb-item"><a href="../../applications.html">Applications</a></li>
-            <li class="breadcrumb-item"><a href="recorder.html">eCAL Rec</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Overview</li>
+            <li class="breadcrumb-item"><a href="recorder.html"> eCAL Rec</a></li>
+        <li class="breadcrumb-item active" aria-current="page"> Overview</li>
     </ol>
         <div class="breadcrumb-additions">
-                <a class="btn btn-sm btn-light" href="https://github.com/continental/ecal/blob/master/doc/rst/applications/rec/recorder_advanced_overview.rst">
+                <a class="btn btn-sm btn-light" href="https://github.com/continental/ecal/blob/master/doc/rst/applications/rec/recorder_overview.rst">
                     <span class="btn-icon"><span class="fab fa-github"></span></span>
                     <span class="btn-text">Edit on GitHub</span>
                 </a>
-                <a class="btn btn-sm btn-light" href="../../_sources/applications/rec/recorder_advanced_overview.rst.txt" rel="nofollow">
+                <a class="btn btn-sm btn-light" href="../../_sources/applications/rec/recorder_overview.rst.txt" rel="nofollow">
                     <span class="btn-icon"><span class="fas fa-code"></span></span>
                     <span class="btn-text">View source</span>
                 </a>
@@ -430,10 +435,47 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <section id="overview">
-<span id="applications-recorder-advanced-overview"></span><h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
-<p>This section is still under construction. But we are working on it! Just be patient.</p>
-<img alt="Snail" class="align-center" src="../../_images/snail.svg" /></section>
+    <section id="ecalrec-app-icon-h1-overview">
+<span id="applications-recorder-advanced-overview"></span><h1><a class="reference internal" href="../../_images/ecalrec.ico"><img alt="ecalrec_APP_ICON_h1" src="../../_images/ecalrec.ico" style="width: 38px;" /></a> Overview<a class="headerlink" href="#ecalrec-app-icon-h1-overview" title="Permalink to this headline">¶</a></h1>
+<p>In this chapter we will take a deeper look at the eCAL Recorder.
+We will discuss the Host / Client architecture and look at all available configuration options and functions in the GUI.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>If you are new to eCAL Rec, please first check out the <a class="reference internal" href="../../getting_started/recorder.html#getting-started-recorder"><span class="std std-ref">Getting Started with eCAL Rec</span></a> chapter.
+That chapter will teach you the very basics of eCAL Rec.</p>
+<p>If you don’t want to use the GUI, please see the <a class="reference internal" href="recorder_cli.html#applications-recorder-cli"><span class="std std-ref"> eCAL Rec CLI</span></a> chapter.</p>
+</div>
+<section id="architecture">
+<span id="applications-recorder-architecture"></span><h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
+<p>eCAL Rec consists of 2 applications:</p>
+<ol class="arabic">
+<li><p>The <strong>Host Application</strong>.
+This can be either one of:</p>
+<ul class="simple">
+<li><p>eCAL Rec GUI (<code class="file docutils literal notranslate"><span class="pre">ecal_rec_gui</span> <span class="pre">/.exe</span></code>)</p></li>
+<li><p>eCAL Rec CLI (<code class="file docutils literal notranslate"><span class="pre">ecal_rec</span> <span class="pre">/.exe</span></code>)</p></li>
+</ul>
+<p>The Host Application is your main Recording application.</p>
+<p>In a <cite>Centraliced</cite> recording (All topics are recorded over network by just one recorder), this is the only applicaiton you need.
+It will function standalone and record everything that is configured to be recorded.
+In a <cite>Distributed</cite> recording (Each machine records its own topics), this application controls the connected clients.</p>
+<p>The host application can load <code class="file docutils literal notranslate"><span class="pre">.ecalrec</span></code> configuration files.</p>
+</li>
+<li><p>The <strong>Client Application</strong></p>
+<p><code class="file docutils literal notranslate"><span class="pre">ecal_rec_client</span> <span class="pre">/.exe</span></code></p>
+<p>The Client Application is only needed for distributed recordings.
+It is started on all machines, that shall record topics.
+The host application then connects to it and sends the appropriate commands.</p>
+<p>The eCAL Sys Client is not needed on the machine, where the Host Application is running.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Even though you can use <code class="file docutils literal notranslate"><span class="pre">ecal_rec_client</span></code> from command line to start a recording, it is generally advisable to use <code class="file docutils literal notranslate"><span class="pre">ecal_rec</span> <span class="pre">/.exe</span></code> (the eCAL rec cli host application) for that purpose.
+It features a richer set of parameters, can load config files and has an interactive mode.</p>
+</div>
+</li>
+</ol>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
@@ -447,7 +489,7 @@
             </a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="recorder_distributed_recording.html" title="Accesskey Alt(+Shift)+n">
+            <a class="page-link" href="recorder_gui.html" title="Accesskey Alt(+Shift)+n">
                 Next
             </a>
         </li>

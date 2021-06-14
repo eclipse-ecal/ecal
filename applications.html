@@ -330,14 +330,15 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Applications</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="applications/rec/recorder.html">eCAL Rec</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="applications/rec/recorder_advanced_overview.html">Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="applications/rec/recorder_distributed_recording.html">Distributed recording</a></li>
-<li class="toctree-l3"><a class="reference internal" href="applications/rec/recorder_ftp_upload.html">FTP Upload</a></li>
+<li class="toctree-l2"><a class="reference internal" href="applications/rec/recorder.html"> eCAL Rec</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="applications/rec/recorder_overview.html"> Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="applications/rec/recorder_gui.html"> eCAL Rec GUI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="applications/rec/recorder_cli.html"> eCAL Rec CLI</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="applications/sys/sys.html"> eCAL Sys</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="applications/sys/sys_overview.html"> eCAL Sys Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="applications/sys/sys_gui.html"> eCAL Sys GUI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="applications/sys/sys_cli.html"> eCAL Sys CLI</a></li>
 </ul>
 </li>
@@ -347,6 +348,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Advanced</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="advanced/compatibility.html">eCAL Compatibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advanced/documentation.html">Edit the documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advanced/performance.html">Performance measurements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advanced/transport_layers.html">Transport Layers</a></li>
@@ -431,24 +433,35 @@
 <span id="id1"></span><h1>Applications<a class="headerlink" href="#applications" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="applications/rec/recorder.html">eCAL Rec</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="applications/rec/recorder_advanced_overview.html">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="applications/rec/recorder_distributed_recording.html">Distributed recording</a></li>
-<li class="toctree-l2"><a class="reference internal" href="applications/rec/recorder_ftp_upload.html">FTP Upload</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications/rec/recorder.html"> eCAL Rec</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="applications/rec/recorder_overview.html"> Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="applications/rec/recorder_overview.html#architecture">Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="applications/rec/recorder_gui.html"> eCAL Rec GUI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="applications/rec/recorder_gui.html#main-control-panel">Main Control Panel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="applications/rec/recorder_gui.html#topics">Topics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="applications/rec/recorder_gui.html#configuration">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="applications/rec/recorder_gui.html#recorders">Recorders</a></li>
+<li class="toctree-l3"><a class="reference internal" href="applications/rec/recorder_gui.html#measurements">Measurements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="applications/rec/recorder_gui.html#options">Options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="applications/rec/recorder_cli.html"> eCAL Rec CLI</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="applications/sys/sys.html"> eCAL Sys</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="applications/sys/sys_overview.html"> eCAL Sys Overview</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="applications/sys/sys_overview.html#architecture">Architecture</a></li>
 <li class="toctree-l3"><a class="reference internal" href="applications/sys/sys_overview.html#configuration-files">Configuration Files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="applications/sys/sys_overview.html#ecal-sys-gui">eCAL Sys GUI</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="applications/sys/sys_overview.html#toolbar">Toolbar</a></li>
-<li class="toctree-l4"><a class="reference internal" href="applications/sys/sys_overview.html#task-configuration">Task configuration</a></li>
-<li class="toctree-l4"><a class="reference internal" href="applications/sys/sys_overview.html#runners">Runners</a></li>
-<li class="toctree-l4"><a class="reference internal" href="applications/sys/sys_overview.html#groups">Groups</a></li>
-<li class="toctree-l4"><a class="reference internal" href="applications/sys/sys_overview.html#options">Options</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="applications/sys/sys_gui.html"> eCAL Sys GUI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="applications/sys/sys_gui.html#toolbar">Toolbar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="applications/sys/sys_gui.html#task-configuration">Task configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="applications/sys/sys_gui.html#runners">Runners</a></li>
+<li class="toctree-l3"><a class="reference internal" href="applications/sys/sys_gui.html#groups">Groups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="applications/sys/sys_gui.html#options">Options</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="applications/sys/sys_cli.html"> eCAL Sys CLI</a><ul>
