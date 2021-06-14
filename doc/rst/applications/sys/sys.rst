@@ -14,4 +14,5 @@ This chapter will give you deeper information about eCAL Sys.
    :maxdepth: 2
    
    sys_overview
+   sys_gui
    sys_cli
