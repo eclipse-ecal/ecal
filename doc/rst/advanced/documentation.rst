@@ -27,7 +27,7 @@ For that we will use Visual Studio Code with the reStructuredText extension, tha
 
    https://code.visualstudio.com/
 
-#. Download and install Python 3.5 or newer (Python 3.8 recommended) and make sure it is added to the ``PATH``
+#. Download and install Python 3.5 or newer and make sure it is added to the ``PATH``
 
    - |fa-windows| Windows:
 
