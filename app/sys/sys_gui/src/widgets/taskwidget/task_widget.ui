@@ -604,7 +604,7 @@
            <item row="0" column="0">
             <widget class="QLabel" name="target_label">
              <property name="text">
-              <string>Target:</string>
+              <string>Host:</string>
              </property>
             </widget>
            </item>
@@ -631,10 +631,44 @@
              </property>
             </widget>
            </item>
+           <item row="1" column="1">
+            <layout class="QHBoxLayout" name="runner_layout">
+             <item>
+              <widget class="QComboBox" name="runner_combobox">
+               <property name="minimumSize">
+                <size>
+                 <width>40</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="show_runners_button">
+               <property name="minimumSize">
+                <size>
+                 <width>10</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Show runner window</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../../../../../iconset/ecalicons.qrc">
+                 <normaloff>:/ecalicons/EYE</normaloff>:/ecalicons/EYE</iconset>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
            <item row="2" column="0">
             <widget class="QLabel" name="algo_path_label">
              <property name="text">
-              <string>Algo:</string>
+              <string>Executable:</string>
              </property>
             </widget>
            </item>
@@ -674,14 +708,14 @@
              </item>
             </layout>
            </item>
-           <item row="3" column="0">
+           <item row="5" column="0">
             <widget class="QLabel" name="working_dir_label">
              <property name="text">
               <string>Working dir:</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="1">
+           <item row="5" column="1">
             <layout class="QHBoxLayout" name="working_dir_layout">
              <item>
               <widget class="QEcalParserLineEdit" name="working_dir_lineedit">
@@ -717,14 +751,14 @@
              </item>
             </layout>
            </item>
-           <item row="4" column="0">
+           <item row="3" column="0">
             <widget class="QLabel" name="cmd_args_label">
              <property name="text">
-              <string>Cmd args:</string>
+              <string>Arguments:</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="1">
+           <item row="3" column="1">
             <widget class="QEcalParserLineEdit" name="cmd_args_lineedit">
              <property name="minimumSize">
               <size>
@@ -740,39 +774,37 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
-            <layout class="QHBoxLayout" name="runner_layout">
-             <item>
-              <widget class="QComboBox" name="runner_combobox">
-               <property name="minimumSize">
-                <size>
-                 <width>40</width>
-                 <height>0</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QToolButton" name="show_runners_button">
-               <property name="minimumSize">
-                <size>
-                 <width>10</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="toolTip">
-                <string>Show runner window</string>
-               </property>
-               <property name="text">
-                <string>...</string>
-               </property>
-               <property name="icon">
-                <iconset resource="../../../../../iconset/ecalicons.qrc">
-                 <normaloff>:/ecalicons/EYE</normaloff>:/ecalicons/EYE</iconset>
-               </property>
-              </widget>
-             </item>
-            </layout>
+           <item row="4" column="1">
+            <widget class="QLabel" name="command_line_preview_label">
+             <property name="minimumSize">
+              <size>
+               <width>10</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLabel" name="working_dir_preview_label">
+             <property name="minimumSize">
+              <size>
+               <width>10</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>

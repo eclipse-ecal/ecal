@@ -418,7 +418,7 @@ void TaskWidget::deactivateEditArea()
   updateEditAreaRestartAtSeverity          (task_list);
   updateEditAreaRestartAtSeverityLevel     (task_list);
 
-  updateCommandLineTooltip();
+  updateCommandLineWorkingDirPreviews();
 }
 
 void TaskWidget::activateEditArea(std::vector<std::shared_ptr<EcalSysTask>> task_list)
@@ -440,7 +440,7 @@ void TaskWidget::activateEditArea(std::vector<std::shared_ptr<EcalSysTask>> task
   updateEditAreaRestartAtSeverity          (task_list);
   updateEditAreaRestartAtSeverityLevel     (task_list);
 
-  updateCommandLineTooltip();
+  updateCommandLineWorkingDirPreviews();
 
   // Enable Everything
   ui_.edit_task_widget->setEnabled(true);
@@ -478,13 +478,19 @@ void TaskWidget::updateTargetCompleter()
   target_completer_model_->setStringList(target_list);
 }
 
-void TaskWidget::updateCommandLineTooltip()
+void TaskWidget::updateCommandLineWorkingDirPreviews()
 {
   auto selected_tasks = getSelectedTasks();
 
   if (selected_tasks.size() == 0)
   {
     ui_.cmd_args_lineedit->setToolTip(tr("Command line arguments"));
+
+    ui_.command_line_preview_label->setText   ("");
+    ui_.command_line_preview_label->setToolTip("Command line preview");
+
+    ui_.working_dir_preview_label->setText    ("");
+    ui_.working_dir_preview_label->setToolTip ("Working dir preview");
   }
   else
   {
@@ -504,11 +510,24 @@ void TaskWidget::updateCommandLineTooltip()
         command_line += " ";
         command_line += QString::fromStdString(temp_task.arguments);
       }
+
+      ui_.command_line_preview_label->setText   (command_line);
+      ui_.command_line_preview_label->setToolTip(command_line);
+
+      ui_.working_dir_preview_label->setText    (QString::fromStdString(temp_task.working_dir));
+      ui_.working_dir_preview_label->setToolTip (QString::fromStdString(temp_task.working_dir));
     }
     else
     {
       command_line = tr(">> Multiple Values <<");
+
+      ui_.command_line_preview_label->setText   (">> Multiple Values <<");
+      ui_.command_line_preview_label->setToolTip(">> Multiple Values <<");
+
+      ui_.working_dir_preview_label->setText    (">> Multiple Values <<");
+      ui_.working_dir_preview_label->setToolTip (">> Multiple Values <<");
     }
+
     ui_.cmd_args_lineedit->setToolTip(tr("Resulting command line:\n") + command_line);
   }
 }
@@ -1640,7 +1659,7 @@ void TaskWidget::runnerIndexChanged(int index)
 
     if (modified_tasks.size() > 0)
     {
-      updateCommandLineTooltip();
+      updateCommandLineWorkingDirPreviews();
       emit tasksModifiedSignal(modified_tasks);
     }
   }
@@ -1697,7 +1716,7 @@ void TaskWidget::algoPathEditingFinished()
     updateEditAreaName(selected_tasks);
     if (modified_tasks.size() > 0)
     {
-      updateCommandLineTooltip();
+      updateCommandLineWorkingDirPreviews();
       emit tasksModifiedSignal(modified_tasks);
     }
   }
@@ -1842,12 +1861,12 @@ void TaskWidget::algoPathChooseButtonClicked()
         }
       }
 
-      updateEditAreaAlgoPath(selected_tasks);
-      updateEditAreaName    (selected_tasks);
+      updateEditAreaAlgoPath     (selected_tasks);
+      updateEditAreaName         (selected_tasks);
 
       if (modified_tasks.size() > 0)
       {
-        updateCommandLineTooltip();
+        updateCommandLineWorkingDirPreviews();
         emit tasksModifiedSignal(modified_tasks);
       }
 
@@ -1888,6 +1907,7 @@ void TaskWidget::workingDirEditingFinished()
 
     if (modified_tasks.size() > 0)
     {
+      updateCommandLineWorkingDirPreviews();
       emit tasksModifiedSignal(modified_tasks);
     }
   }
@@ -2024,10 +2044,11 @@ void TaskWidget::workingDirChooseButtonClicked()
         }
       }
 
-      updateEditAreaWorkingDir(selected_tasks);
+      updateEditAreaWorkingDir   (selected_tasks);
 
       if (modified_tasks.size() > 0)
       {
+        updateCommandLineWorkingDirPreviews();
         emit tasksModifiedSignal(modified_tasks);
       }
 
@@ -2067,7 +2088,7 @@ void TaskWidget::cmdArgsEditingFinished()
 
     if (modified_tasks.size() > 0)
     {
-      updateCommandLineTooltip();
+      updateCommandLineWorkingDirPreviews();
       emit tasksModifiedSignal(modified_tasks);
     }
   }
@@ -2317,7 +2338,7 @@ void TaskWidget::tasksRemoved(const std::vector<std::shared_ptr<EcalSysTask>>& t
     task_tree_model_->removeTask(task);
   }
   updateTargetCompleter();
-  updateCommandLineTooltip();
+  updateCommandLineWorkingDirPreviews();
 }
 
 void TaskWidget::tasksModified(const std::vector<std::shared_ptr<EcalSysTask>>& tasks)
@@ -2328,7 +2349,7 @@ void TaskWidget::tasksModified(const std::vector<std::shared_ptr<EcalSysTask>>& 
   }
   
   updateTargetCompleter();
-  updateCommandLineTooltip();
+  updateCommandLineWorkingDirPreviews();
 
   // Also update the edit-panel by calling the selection changed method
   taskTableSelectionChanged();
@@ -2359,7 +2380,7 @@ void TaskWidget::runnersModified(const std::vector<std::shared_ptr<EcalSysRunner
   {
     runner_tree_model_->updateRunner(runner);
   }
-  updateCommandLineTooltip();
+  updateCommandLineWorkingDirPreviews();
 }
 
 void TaskWidget::ecalsysOptionsChanged()
@@ -2382,7 +2403,7 @@ void TaskWidget::configChanged()
   runner_tree_model_->reload();
   task_tree_model_->reload();
   updateTargetCompleter();
-  updateCommandLineTooltip();
+  updateCommandLineWorkingDirPreviews();
   taskTableSelectionChanged();
   ui_.filter_lineedit->setText("");
 }
