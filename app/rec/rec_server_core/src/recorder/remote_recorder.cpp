@@ -19,6 +19,8 @@
 
 #include "remote_recorder.h"
 
+#include <rec_client_core/proto_helpers.h>
+
 #include <rec_client_core/ecal_rec_logger.h>
 
 #include <ecal_utils/string.h>
@@ -369,7 +371,7 @@ namespace eCAL
         {
           eCAL::pb::rec_client::GetStateRequest request;
 
-          eCAL::SServiceInfo   service_info;
+          eCAL::SServiceInfo          service_info;
           eCAL::pb::rec_client::State state_response_pb;
 
           // Retrieve the state from the client
@@ -380,8 +382,12 @@ namespace eCAL
 
           if (call_success)
           {
-            eCAL::rec::RecorderStatus last_status = StatusPbToRecorderStatus(state_response_pb);
-            int32_t        client_pid  = state_response_pb.pid();
+            eCAL::rec::RecorderStatus last_status;
+            std::string               hostname;
+
+            eCAL::rec::proto_helpers::FromProtobuf(state_response_pb, hostname, last_status);
+
+            int32_t                   client_pid  = state_response_pb.pid();
 
             {
               std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
@@ -551,142 +557,6 @@ namespace eCAL
       }
 
       return request;
-    }
-
-    eCAL::rec::RecorderStatus RemoteRecorder::StatusPbToRecorderStatus(const eCAL::pb::rec_client::State& recorder_state_pb)
-    {
-      eCAL::rec::RecorderStatus recorder_status;
-
-      // pid_
-      recorder_status.pid_ = recorder_state_pb.pid();
-
-      // timestamp_
-      recorder_status.timestamp_ = eCAL::Time::ecal_clock::time_point(std::chrono::nanoseconds(recorder_state_pb.timestamp_nsecs()));
-
-      // initialized_
-      recorder_status.initialized_ = recorder_state_pb.initialized();
-
-      // pre_buffer_length_
-      int64_t                             pre_buffer_length_frames = recorder_state_pb.pre_buffer_length_frames_count();
-      std::chrono::steady_clock::duration pre_buffer_length        = std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(recorder_state_pb.pre_buffer_length_secs()));
-      recorder_status.pre_buffer_length_ = std::make_pair(pre_buffer_length_frames, pre_buffer_length);
-
-      // subscribed_topics_
-      for (const auto& subscribed_topic : recorder_state_pb.subscribed_topics())
-      {
-        recorder_status.subscribed_topics_.emplace(subscribed_topic);
-      }
-
-      // addon_statuses_
-      recorder_status.addon_statuses_.reserve(recorder_state_pb.addon_statuses_size());
-      for (const auto& rec_addon_status_pb : recorder_state_pb.addon_statuses())
-      {
-        eCAL::rec::RecorderAddonStatus rec_addon_status;
-
-        rec_addon_status.addon_executable_path_         = rec_addon_status_pb.addon_executable_path();
-        rec_addon_status.addon_id_                      = rec_addon_status_pb.addon_id();
-        rec_addon_status.initialized_                   = rec_addon_status_pb.initialized();
-        rec_addon_status.name_                          = rec_addon_status_pb.name();
-        rec_addon_status.pre_buffer_length_frame_count_ = rec_addon_status_pb.pre_buffer_length_frame_count();
-        rec_addon_status.info_.first                   = rec_addon_status_pb.info_ok();
-        rec_addon_status.info_.second                  = rec_addon_status_pb.info_message();
-
-        recorder_status.addon_statuses_.push_back(std::move(rec_addon_status));
-      }
-
-      // job_statuses_
-      recorder_status.job_statuses_.reserve(recorder_state_pb.job_statuses_size());
-      for (const auto& job_status_pb : recorder_state_pb.job_statuses())
-      {
-        eCAL::rec::JobStatus job_status;
-
-        // job_statuses_[i].job_id_
-        job_status.job_id_ = job_status_pb.job_id();
-        
-        // job_statuses_[i].state_
-        switch (job_status_pb.state())
-        {
-        case eCAL::pb::rec_client::State::JobState::State_JobState_NotStarted:
-          job_status.state_ = eCAL::rec::JobState::NotStarted;
-          break;
-        case eCAL::pb::rec_client::State::JobState::State_JobState_Recording:
-          job_status.state_ = eCAL::rec::JobState::Recording;
-          break;
-        case eCAL::pb::rec_client::State::JobState::State_JobState_Flushing:
-          job_status.state_ = eCAL::rec::JobState::Flushing;
-          break;
-        case eCAL::pb::rec_client::State::JobState::State_JobState_FinishedFlushing:
-          job_status.state_ = eCAL::rec::JobState::FinishedFlushing;
-          break;
-        case eCAL::pb::rec_client::State::JobState::State_JobState_Uploading:
-          job_status.state_ = eCAL::rec::JobState::Uploading;
-          break;
-        case eCAL::pb::rec_client::State::JobState::State_JobState_FinishedUploading:
-          job_status.state_ = eCAL::rec::JobState::FinishedUploading;
-          break;
-        default:
-          job_status.state_ = eCAL::rec::JobState::NotStarted;
-          break;
-        }
-
-        // job_statuses_[i].rec_hdf5_status_
-        {
-          job_status.rec_hdf5_status_.total_frame_count_     = job_status_pb.rec_hdf5_status().total_frame_count();
-          job_status.rec_hdf5_status_.total_length_          = std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(job_status_pb.rec_hdf5_status().total_length_secs()));
-          job_status.rec_hdf5_status_.unflushed_frame_count_ = job_status_pb.rec_hdf5_status().unflushed_frame_count();
-          job_status.rec_hdf5_status_.info_                  = std::make_pair(job_status_pb.rec_hdf5_status().info_ok(), job_status_pb.rec_hdf5_status().info_message());
-        }
-
-        // job_statuses_[i].rec_addon_statuses_
-        for (const auto& addon_status_pb : job_status_pb.rec_addon_statuses())
-        {
-          eCAL::rec::RecAddonJobStatus rec_addon_status;
-
-          switch (addon_status_pb.second.state())
-          {
-          case ::eCAL::pb::rec_client::State_RecAddonJobStatus_State::State_RecAddonJobStatus_State_NotStarted:// ::eCAL::pb::rec_client::State_JobState_NotStarted:
-            rec_addon_status.state_ = eCAL::rec::RecAddonJobStatus::State::NotStarted;
-            break;
-          case ::eCAL::pb::rec_client::State_RecAddonJobStatus_State::State_RecAddonJobStatus_State_Recording:
-            rec_addon_status.state_ = eCAL::rec::RecAddonJobStatus::State::Recording;
-            break;
-          case ::eCAL::pb::rec_client::State_RecAddonJobStatus_State::State_RecAddonJobStatus_State_Flushing:
-            rec_addon_status.state_ = eCAL::rec::RecAddonJobStatus::State::Flushing;
-            break;
-          case ::eCAL::pb::rec_client::State_RecAddonJobStatus_State::State_RecAddonJobStatus_State_FinishedFlushing:
-            rec_addon_status.state_ = eCAL::rec::RecAddonJobStatus::State::FinishedFlushing;
-            break;
-          default:
-            break;
-          }
-
-          rec_addon_status.total_frame_count_     = addon_status_pb.second.total_frame_count();
-          rec_addon_status.unflushed_frame_count_ = addon_status_pb.second.unflushed_frame_count();
-          rec_addon_status.info_                  = std::make_pair(addon_status_pb.second.info_ok(), addon_status_pb.second.info_message());
-
-          job_status.rec_addon_statuses_.emplace(addon_status_pb.first, std::move(rec_addon_status));
-        }
-
-        // job_statuses_[i].upload_status_
-        {
-          job_status.upload_status_.bytes_total_size_ = job_status_pb.upload_status().bytes_total_size();
-          job_status.upload_status_.bytes_uploaded_   = job_status_pb.upload_status().bytes_uploaded();
-          job_status.upload_status_.info_             = std::make_pair(job_status_pb.upload_status().info_ok(), job_status_pb.upload_status().info_message());
-        }
-
-        // job_statuses[i].is_deleted_
-        {
-          job_status.is_deleted_ = job_status_pb.is_deleted();
-        }
-
-        recorder_status.job_statuses_.push_back(std::move(job_status));
-      }
-
-      // info_
-      recorder_status.info_.first  = recorder_state_pb.info_ok();
-      recorder_status.info_.second = recorder_state_pb.info_message();
-
-      return recorder_status;
     }
 
     eCAL::pb::rec_client::CommandRequest RemoteRecorder::RecorderCommandToCommandPb(const RecorderCommand& command)

@@ -829,6 +829,11 @@ eCAL::rec::Error QEcalRec::simulateDeleteMeasurement(int64_t meas_id) const { re
 // Config Save / Load
 ////////////////////////////////////
 
+eCAL::rec_server::RecServerConfig QEcalRec::config() const
+{
+  return rec_server_->GetConfig();
+}
+
 bool QEcalRec::clearConfig()
 {
   bool success = rec_server_->ClearConfig();

@@ -49,6 +49,7 @@ private slots:
 
   void getStatus();
   void loadConfigFile();
+  void getConfig();
   void activate();
   void deActivate();
   void startRecording();

@@ -49,8 +49,8 @@ namespace eCAL
       void SetMeasName(const std::string& meas_name);
       std::string GetMeasName() const;
 
-      void SetMaxFileSize(unsigned int max_file_size_mb);
-      unsigned int GetMaxFileSize() const;
+      void SetMaxFileSize(int64_t max_file_size_mb);
+      int64_t GetMaxFileSize() const;
 
       void SetDescription(const std::string& description);
       std::string GetDescription() const;
@@ -71,7 +71,7 @@ namespace eCAL
 
       std::string  meas_root_dir_;
       std::string  meas_name_;
-      unsigned int max_file_size_mb_;
+      int64_t      max_file_size_mb_;
       std::string  description_;
     };
   }

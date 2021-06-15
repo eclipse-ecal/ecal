@@ -17,22 +17,22 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <custom_tclap/fuzzy_value_switch_arg.h>
+#include <custom_tclap/fuzzy_value_switch_arg_bool.h>
 
 #include <algorithm>
 #include <cctype>
 
 namespace CustomTclap
 {
-  FuzzyValueSwitchArg::FuzzyValueSwitchArg(const std::string &flag, const std::string &name, const std::string &desc, bool req, bool value, const std::string &typeDesc, TCLAP::Visitor *v)
+  FuzzyValueSwitchArgBool::FuzzyValueSwitchArgBool(const std::string &flag, const std::string &name, const std::string &desc, bool req, bool value, const std::string &typeDesc, TCLAP::Visitor *v)
     : TCLAP::ValueArg<bool>(flag, name, desc, req, value, typeDesc, v)
   {}
 
-  FuzzyValueSwitchArg::FuzzyValueSwitchArg(const std::string &flag, const std::string &name, const std::string &desc, bool req, bool value, const std::string &typeDesc, TCLAP::CmdLineInterface &parser, TCLAP::Visitor *v)
+  FuzzyValueSwitchArgBool::FuzzyValueSwitchArgBool(const std::string &flag, const std::string &name, const std::string &desc, bool req, bool value, const std::string &typeDesc, TCLAP::CmdLineInterface &parser, TCLAP::Visitor *v)
     : TCLAP::ValueArg<bool>(flag, name, desc, req, value, typeDesc, parser, v)
   {}
 
-  bool FuzzyValueSwitchArg::processArg(int *i, std::vector<std::string> &args)
+  bool FuzzyValueSwitchArgBool::processArg(int *i, std::vector<std::string> &args)
   {
     if ((_ignoreable && Arg::ignoreRest()))
     {
@@ -66,13 +66,13 @@ namespace CustomTclap
         std::transform(bool_string.begin(), bool_string.end(), bool_string.begin(), [](unsigned char c) { return static_cast<unsigned char>(std::tolower(c)); });
 
         // If the user manually specified 0|1|false|true|off|on, we use that value.
-        if (bool_string == "1" || bool_string == "true" || bool_string == "on")
+        if (bool_string == "1" || bool_string == "true" || bool_string == "on" || bool_string == "yes")
         {
           // TRUE
           (*i)++;
           _value = true;
         }
-        else if (bool_string == "0" || bool_string == "false" || bool_string == "off")
+        else if (bool_string == "0" || bool_string == "false" || bool_string == "off" || bool_string == "no")
         {
           // FALSE
           (*i)++;
@@ -80,7 +80,7 @@ namespace CustomTclap
         }
         else
         {
-          // If the user did not specify 0|1|false|true|off|on, we assume TRUE
+          // If the user did not specify 0|1|false|true|off|on|no|yes, we assume TRUE
           _value = true;
         }
       }
@@ -121,7 +121,7 @@ namespace CustomTclap
   }
 
   // Taken from TCLAP::SwitchArg
-  bool FuzzyValueSwitchArg::combinedSwitchesMatch(std::string& combinedSwitches)
+  bool FuzzyValueSwitchArgBool::combinedSwitchesMatch(std::string& combinedSwitches)
   {
     // make sure this is actually a combined switch
     if (combinedSwitches.length() > 0 &&
@@ -157,7 +157,7 @@ namespace CustomTclap
   }
 
   // Taken from TCLAP::SwitchArg
-  bool FuzzyValueSwitchArg::lastCombined(std::string& combinedSwitches)
+  bool FuzzyValueSwitchArgBool::lastCombined(std::string& combinedSwitches)
   {
     for (unsigned int i = 1; i < combinedSwitches.length(); i++)
       if (combinedSwitches[i] != Arg::blankChar())

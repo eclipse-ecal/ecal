@@ -59,7 +59,7 @@ public:
 
   bool updateIsDeleted(bool is_deleted);
 
-  eCAL::rec::JobState                                     combinedJobSate()         const;
+  eCAL::rec::JobState                                     combinedJobState()         const;
   std::pair<std::chrono::steady_clock::duration, int64_t> combinedLength()          const;
   int64_t                                                 combinedUnflushedFrames() const;
   eCAL::rec::UploadStatus                                 combinedUploadStatus()    const;

@@ -20,7 +20,7 @@
 #pragma once
 
 #define ECAL_REC_VERSION_MAJOR              2
-#define ECAL_REC_VERSION_MINOR              4
+#define ECAL_REC_VERSION_MINOR              5
 #define ECAL_REC_VERSION_PATCH              0
 
 #define __ECAL_REC_FUNCTION_TO_STR(x) #x                                // Stringify any input

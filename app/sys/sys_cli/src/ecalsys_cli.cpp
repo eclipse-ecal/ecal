@@ -55,7 +55,7 @@
 #endif
 
 #include <custom_tclap/advanced_tclap_output.h>
-#include <custom_tclap/fuzzy_value_switch_arg.h>
+#include <custom_tclap/fuzzy_value_switch_arg_bool.h>
 
 #include <command_executor.h>
 #include <commands/load_config.h>
@@ -84,9 +84,9 @@ int main(int argc, char** argv)
   TCLAP::SwitchArg                      stop_arg                       ("x", "stop",    "Stop all tasks.",                 false);
   TCLAP::SwitchArg                      restart_arg                    ("r", "restart", "Restart all tasks.",              false);
   
-  CustomTclap::FuzzyValueSwitchArg      local_tasks_only_arg           ("", "local-tasks-only",            "Only tasks on local host will be considered. Not supported in remote-control mode.",         false, false, "true|false");
-  CustomTclap::FuzzyValueSwitchArg      use_localhost_for_all_tasks_arg("", "use-localhost-for-all-tasks", "All tasks will be considered as being on local host. Not supported in remote-control mode.", false, false, "true|false");
-  CustomTclap::FuzzyValueSwitchArg      no_wait_for_clients_arg        ("", "no-wait-for-clients",         "Don't wait for eCAL Sys clients before starting / stopping tasks. Waiting is always disabled in interactive and remote-control mode.", false, false, "true|false"); // TODO: This arguments was a simple switch arg before.
+  CustomTclap::FuzzyValueSwitchArgBool      local_tasks_only_arg           ("", "local-tasks-only",            "Only tasks on local host will be considered. Not supported in remote-control mode.",         false, false, "true|false");
+  CustomTclap::FuzzyValueSwitchArgBool      use_localhost_for_all_tasks_arg("", "use-localhost-for-all-tasks", "All tasks will be considered as being on local host. Not supported in remote-control mode.", false, false, "true|false");
+  CustomTclap::FuzzyValueSwitchArgBool      no_wait_for_clients_arg        ("", "no-wait-for-clients",         "Don't wait for eCAL Sys clients before starting / stopping tasks. Waiting is always disabled in interactive and remote-control mode.", false, false, "true|false"); // TODO: This arguments was a simple switch arg before.
   TCLAP::SwitchArg                      disable_update_from_cloud_arg  ("", "disable-update-from-cloud",   "Do not use the monitor to update the tasks for restarting/stopping/monitoring.", false);
 
   TCLAP::SwitchArg                      interactive_dont_exit_arg      ("",  "interactive-dont-exit",  "When in interactive mode, this option prevents eCAL Sys from exiting, when stdin is closed.", false);

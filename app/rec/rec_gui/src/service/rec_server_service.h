@@ -84,5 +84,10 @@ public:
                             , const ::eCAL::pb::rec_server::GenericRequest* request
                             , ::eCAL::pb::rec_server::Status*               response
                             , ::google::protobuf::Closure*                  done) override;
+
+  virtual void GetConfig(::google::protobuf::RpcController*                 controller
+                            , const ::eCAL::pb::rec_server::GenericRequest* request
+                            , ::eCAL::pb::rec_server::RecServerConfig*      response
+                            , ::google::protobuf::Closure*                  done) override;
 };
 

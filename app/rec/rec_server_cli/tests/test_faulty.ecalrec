@@ -1,0 +1,27 @@
+<ecalRecServerConfig config_version="3">
+    <rootDirectory>$TARGET{OSSELECT WIN "C:" LINUX "$TARGET{ENV HOME}"}/ecal_meas</rootDirectory>
+    <measurementName>$HOST{TIME}_measurement</measurementName>
+    <maxFileSizeMib>100</maxFileSizeMib>
+    <description>Measurement started by: $HOST{USERNAME}@$HOST{HOSTNAME}
+Date: $HOST{TIME %F %R}
+</description>
+    <recorders>
+        <client>
+            <name>FRLBJRXW</name>
+            <hostFilter/>
+            <enabledAddons/>
+        </client>
+        <client>
+            <name>florian-ubuntu18</name>
+            <hostFilter/>
+            <enabledAddons/>
+        </client>
+    </recorders>
+    <preBufferEnabled>true</preBufferEnabled>
+    <preBufferLengthSecs>10.000000</preBufferLengthSecs>
+    <useBuiltInRecorder>true</useBuiltInRecorder>
+    <topicList/>
+    <uploadConfig protocol="internal">
+        <deleteAfterUpload>true</deleteAfterUpload>
+    </uploadConfig>
+</ecalRecServerConfig>

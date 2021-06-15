@@ -97,7 +97,7 @@ namespace eCAL
 
     std::string  RecServer::GetMeasRootDir   () const                   { return rec_server_impl_->GetMeasRootDir(); }
     std::string  RecServer::GetMeasName      () const                   { return rec_server_impl_->GetMeasName(); }
-    unsigned int RecServer::GetMaxFileSizeMib() const                   { return rec_server_impl_->GetMaxFileSizeMib(); }
+    int64_t      RecServer::GetMaxFileSizeMib() const                   { return rec_server_impl_->GetMaxFileSizeMib(); }
     std::string  RecServer::GetDescription   () const                   { return rec_server_impl_->GetDescription(); }
 
     ////////////////////////////////////
@@ -139,8 +139,11 @@ namespace eCAL
     eCAL::rec::Error RecServer::DeleteMeasurement(int64_t meas_id)                { return rec_server_impl_->DeleteMeasurement(meas_id); }
 
     ////////////////////////////////////
-    // Config Save / Load
+    // Config Save / Load / Get
     ////////////////////////////////////
+    
+    RecServerConfig RecServer::GetConfig() const                      { return rec_server_impl_->GetConfig(); }
+
     bool RecServer::ClearConfig       ()                              { return rec_server_impl_->ClearConfig(); }
     bool RecServer::SaveConfigToFile  (const std::string& path) const { return rec_server_impl_->SaveConfigToFile(path); }
     bool RecServer::LoadConfigFromFile(const std::string& path)       { return rec_server_impl_->LoadConfigFromFile(path); }

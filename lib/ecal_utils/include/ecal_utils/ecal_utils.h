@@ -648,5 +648,54 @@ namespace EcalUtils
       }
       return argv;
     }
+
+    inline std::string ToCommandLine(const std::vector<std::string>& argument_vector)
+    {
+      std::vector<std::string> escaped_arguments;
+      escaped_arguments.reserve(argument_vector.size());
+
+      size_t complete_char_num(0);
+      for (const std::string& argument : argument_vector)
+      {
+        std::string escaped_arg;
+        escaped_arg.reserve(argument.size() + 2);
+
+        bool constains_space = (argument.find(' ') != std::string::npos);
+
+        // Escape special characters
+        if (constains_space) escaped_arg += '\"';
+        for (char c : argument)
+        {
+          if (c == '\\')                              // Escape [\]
+            escaped_arg += "\\\\";
+          else if (c == '\"')                         // Escape ["]
+            escaped_arg += "\\\"";
+          else if (c == '\'')                         // Escape [']
+            escaped_arg += "\\\'";
+          else
+            escaped_arg += c;
+        }
+        if (constains_space) escaped_arg += '\"';
+
+        if(escaped_arg.empty())
+          escaped_arg = "\"\"";
+
+        complete_char_num += escaped_arg.size();
+
+        escaped_arguments.push_back(escaped_arg);
+      }
+
+      std::string command_line_string;
+      command_line_string.reserve(complete_char_num + escaped_arguments.size());
+
+      for (auto arg_it = escaped_arguments.begin(); arg_it != escaped_arguments.end(); arg_it++)
+      {
+        if (arg_it != escaped_arguments.begin())
+          command_line_string += ' ';
+        command_line_string += *arg_it;
+      }
+
+      return command_line_string;
+    }
   }
 }   // namespace Utility
