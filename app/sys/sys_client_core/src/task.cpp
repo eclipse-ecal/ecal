@@ -105,32 +105,21 @@ namespace eCAL
       {
         // If the runner path is empty, the executable is the task path.
         executable_path  = task.path;
+
+        // Check for a relative path. If the path is detected to be absolute, we treat it as absolute
         bool is_absolute = EcalUtils::Filesystem::IsAbsolute(executable_path, input_path_style);
-
-        // The executable path may now be absolute or relative.
-        // If it is relative, the default_task_dir from the runner is used.
-        std::string task_dir = task.runner.default_task_dir;
-
-        if (!is_absolute && !task_dir.empty())
+        if (!is_absolute)
         {
-#ifdef WIN32
-          if (task_dir.back() == '/' || task_dir.back() == '\\'
-            || (!executable_path.empty() && (executable_path.front() == '/' || executable_path.front() == '\\')))
-#else // WIN32
-          if (task_dir.back() == '/')
-#endif // WIN32
+          // If the path is not absolute, it may still be a call to a PATH binary.
+          // e.g. when calling "notepad.exe" we want to directly call that executable (=> we treat this as an absolute path!)
+          // The user can however force the path as being treated relative, if he has a slash in the path (e.g. calling ./notepad.exe)
+
+          std::string unix_style_executable_path = EcalUtils::Filesystem::ChangeSeperators(executable_path, EcalUtils::Filesystem::OsStyle::Unix, input_path_style);
+          if (unix_style_executable_path.find('/') == std::string::npos)
           {
-            executable_path = task_dir + executable_path;
-          }
-          else
-          {
-            executable_path = task_dir + EcalUtils::Filesystem::NativeSeparator() + executable_path;
+            is_absolute = true;
           }
         }
-
-
-        // The argument string are the plain task arguments
-        executable_arguments = task.arguments;
 
         // The working dir will evaluate to:
         //  - The task working dir
@@ -138,13 +127,32 @@ namespace eCAL
         //  - Nothing (if no runner task dir is set)
 
         if (!task.working_dir.empty())
-        {
           working_dir = task.working_dir;
-        }
         else
+          working_dir = task.runner.default_task_dir;
+
+        // A relative task path is interpreted as being relative to the working dir
+
+        if (!is_absolute && !working_dir.empty())
         {
-          working_dir = task_dir;
+#ifdef WIN32
+          if (working_dir.back() == '/' || working_dir.back() == '\\'
+            || (!executable_path.empty() && (executable_path.front() == '/' || executable_path.front() == '\\')))
+#else // WIN32
+          if (working_dir.back() == '/')
+#endif // WIN32
+          {
+            executable_path = working_dir + executable_path;
+          }
+          else
+          {
+            executable_path = working_dir + EcalUtils::Filesystem::NativeSeparator() + executable_path;
+          }
         }
+
+
+        // The argument string are the plain task arguments
+        executable_arguments = task.arguments;
       }
 
       task.runner      = eCAL::sys_client::Runner();
