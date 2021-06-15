@@ -139,7 +139,7 @@ namespace eCAL
           if (working_dir.back() == '/' || working_dir.back() == '\\'
             || (!executable_path.empty() && (executable_path.front() == '/' || executable_path.front() == '\\')))
 #else // WIN32
-          if (task_dir.back() == '/')
+          if (working_dir.back() == '/')
 #endif // WIN32
           {
             executable_path = working_dir + executable_path;
