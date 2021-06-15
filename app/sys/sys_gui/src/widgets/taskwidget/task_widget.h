@@ -148,8 +148,9 @@ private:
   void updateEditAreaRestartBySeverityEnabled   (std::vector<std::shared_ptr<EcalSysTask>>& task_list);
   void updateEditAreaRestartAtSeverity          (std::vector<std::shared_ptr<EcalSysTask>>& task_list);
   void updateEditAreaRestartAtSeverityLevel     (std::vector<std::shared_ptr<EcalSysTask>>& task_list);
-
+  
   void updateMonitoringControlsEnabledState();
+
 
   bool checkTargetsReachable(const std::list<std::shared_ptr<EcalSysTask>>& task_list);
   bool checkTargetsReachable(const std::set<std::string>& targets);
@@ -165,7 +166,7 @@ private slots:
   void focusTaskNameLineedit(bool select_text = false);
 
   void updateTargetCompleter();
-  void updateCommandLineTooltip();
+  void updateCommandLineWorkingDirPreviews();
 
   // Edit Area Content Slots
   void nameEditingFinished();
