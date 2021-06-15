@@ -535,14 +535,14 @@ BOOL WINAPI ConsoleHandler(DWORD dwType)
 
 void SignalHandler(int s)
 {
-  std::lock_guard<decltype(ecal_rec_exit_mutex_)> ecal_rec_exit_lock(ecal_rec_exit_mutex_);
-  
   if (s == SIGINT)
   {
+    std::lock_guard<decltype(ecal_rec_exit_mutex_)> ecal_rec_exit_lock(ecal_rec_exit_mutex_);
     ctrl_exit_event = true;
   }
   else if (s == SIGTERM)
   {
+    std::lock_guard<decltype(ecal_rec_exit_mutex_)> ecal_rec_exit_lock(ecal_rec_exit_mutex_);
     ctrl_exit_event = true;
     ctrl_exit_until = std::chrono::steady_clock::now() + std::chrono::seconds(3); // Give it 3 seconds to finish, kill it otherwise    
   }
