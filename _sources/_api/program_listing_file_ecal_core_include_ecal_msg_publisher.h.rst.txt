@@ -61,7 +61,7 @@ Program Listing for File publisher.h
    
        CMsgPublisher& operator=(CMsgPublisher&&) = default;
    
-       virtual ~CMsgPublisher() {}
+       virtual ~CMsgPublisher() = default;
    
        bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "")
        {

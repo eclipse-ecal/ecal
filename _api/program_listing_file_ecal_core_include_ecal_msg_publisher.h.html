@@ -481,19 +481,19 @@
 
     <span class="n">CMsgPublisher</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">CMsgPublisher</span><span class="o">&amp;&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">CMsgPublisher</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">CMsgPublisher</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
 
-    <span class="kt">bool</span> <span class="n">Create</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">topic_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">topic_type_</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">topic_desc_</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+    <span class="kt">bool</span> <span class="nf">Create</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">topic_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">topic_type_</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">topic_desc_</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
     <span class="p">{</span>
       <span class="k">return</span><span class="p">(</span><span class="n">CPublisher</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="n">topic_name_</span><span class="p">,</span> <span class="n">topic_type_</span><span class="p">,</span> <span class="n">topic_desc_</span><span class="p">));</span>
     <span class="p">}</span>
 
-    <span class="kt">bool</span> <span class="n">Destroy</span><span class="p">()</span>
+    <span class="kt">bool</span> <span class="nf">Destroy</span><span class="p">()</span>
     <span class="p">{</span>
       <span class="k">return</span><span class="p">(</span><span class="n">CPublisher</span><span class="o">::</span><span class="n">Destroy</span><span class="p">());</span>
     <span class="p">}</span>
 
-    <span class="kt">size_t</span> <span class="n">Send</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">msg_</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">time_</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="kt">size_t</span> <span class="nf">Send</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">msg_</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">time_</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
     <span class="p">{</span>
       <span class="c1">// this is an optimization ...</span>
       <span class="c1">// if there is no subscription we do not waste time for</span>
