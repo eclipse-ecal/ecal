@@ -68,7 +68,7 @@ namespace eCAL
       std::string mcast_address = topic2mcast(topic_name_, eCALPAR(NET, UDP_MULTICAST_GROUP), eCALPAR(NET, UDP_MULTICAST_MASK));
       if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
       {
-        topic_name_mcast_map.insert(std::pair<std::string, int>(mcast_address, 0));
+        topic_name_mcast_map.emplace(std::pair<std::string, int>(mcast_address, 0));
         rcv.AddMultiCastGroup(mcast_address.c_str());
       }
       topic_name_mcast_map[mcast_address]++;

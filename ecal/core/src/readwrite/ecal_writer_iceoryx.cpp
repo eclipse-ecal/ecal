@@ -22,6 +22,7 @@
 **/
 
 #include <sstream>
+#include <regex>
 
 #include "ecal_def.h"
 #include "ecal_config_hlp.h"
@@ -36,7 +37,12 @@ namespace eCAL
   CDataWriterSHM::CDataWriterSHM()
   {
     // create the runtime for registering with the RouDi daemon
-    const iox::capro::IdString_t runtime (iox::cxx::TruncateToCapacity, eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID()));
+    std::string runtime_name = eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID());
+    // replace whitespace characters
+    std::regex re("[ \t\r\n\f]");
+    runtime_name = std::regex_replace(runtime_name, re, "_");
+    // initialize runtime
+    const iox::capro::IdString_t runtime (iox::cxx::TruncateToCapacity, runtime_name);
     iox::runtime::PoshRuntime::initRuntime(runtime);
   }
 
@@ -68,7 +74,7 @@ namespace eCAL
     const iox::capro::ServiceDescription servicedesc(service, instance, event);
 
     // create publisher
-    m_publisher = std::shared_ptr<iox::popo::UntypedPublisher>(new iox::popo::UntypedPublisher({servicedesc}));
+    m_publisher = std::make_shared<iox::popo::UntypedPublisher>(servicedesc);
 
     return true;
   }
@@ -85,7 +91,12 @@ namespace eCAL
     if (!m_publisher) return 0;
     size_t ret(0);
 
-    m_publisher->loan(data_.len, alignof(data_.buf), sizeof(data_), alignof(data_))
+    uint32_t payload_size(static_cast<uint32_t>(data_.len));
+    uint32_t payload_alignment(static_cast<uint32_t>(alignof(void*)));
+    uint32_t header_size(static_cast<uint32_t>(sizeof(data_)));
+    uint32_t header_alignment(static_cast<uint32_t>(alignof(SWriterData)));
+
+    m_publisher->loan(payload_size, payload_alignment, header_size, header_alignment)
       .and_then([&](auto& userPayload) {
         // loan successful
         // copy payload header

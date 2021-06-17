@@ -94,14 +94,6 @@ message(STATUS "Module Path: ${CMAKE_MODULE_PATH}")
 message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 
 # --------------------------------------------------------
-# check options
-# --------------------------------------------------------
-if(WIN32 AND ECAL_LAYER_ICEORYX)
-  message(FATAL_ERROR "Iceoryx transport layer not available for windows os. \
-                       Please disable the layer by setting ECAL_LAYER_ICEORYX to OFF.")
-endif()
-
-# --------------------------------------------------------
 # third party dependencies as requested
 # --------------------------------------------------------
 if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR
