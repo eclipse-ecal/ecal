@@ -30,6 +30,7 @@
 
 #include <memory>
 #include <mutex>
+#include <regex>
 #include <string>
 #include <unordered_map>
 
@@ -46,7 +47,7 @@ namespace eCAL
 
   private:
     std::shared_ptr<iox::popo::UntypedSubscriber> m_subscriber;
-    iox::popo::Listener                           m_listener;
+    std::shared_ptr<iox::popo::Listener>          m_listener;
     static void onSampleReceivedCallback(iox::popo::UntypedSubscriber* subscriber_, CDataReaderSHM* self);
 
     std::string m_topic_name;
@@ -61,7 +62,12 @@ namespace eCAL
     void Initialize()
     {
       // create the runtime for registering with the RouDi daemon
-      const iox::capro::IdString_t runtime (iox::cxx::TruncateToCapacity, eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID()));
+      std::string runtime_name = eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID());
+      // replace whitespace characters
+      std::regex re("[ \t\r\n\f]");
+      runtime_name = std::regex_replace(runtime_name, re, "_");
+      // initialize runtime
+      const iox::capro::IdString_t runtime(iox::cxx::TruncateToCapacity, runtime_name);
       iox::runtime::PoshRuntime::initRuntime(runtime);
     }
 

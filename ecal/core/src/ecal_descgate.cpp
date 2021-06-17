@@ -29,13 +29,8 @@
 
 namespace eCAL
 {
-  CDescGate::CDescGate()
-  {
-  };
-
-  CDescGate::~CDescGate()
-  {
-  }
+  CDescGate::CDescGate()  = default;
+  CDescGate::~CDescGate() = default;
 
   void CDescGate::Create()
   {

@@ -39,9 +39,7 @@ namespace eCAL
   //////////////////////////////////////////////////////////////////
   // CDataReaderIceoryx
   //////////////////////////////////////////////////////////////////
-  CDataReaderSHM::CDataReaderSHM()
-  {
-  }
+  CDataReaderSHM::CDataReaderSHM() = default;
 
   bool CDataReaderSHM::Create(const std::string& topic_name_)
   {
@@ -54,10 +52,12 @@ namespace eCAL
     const iox::capro::IdString_t event    (iox::cxx::TruncateToCapacity, topic_name_);
     const iox::capro::ServiceDescription servicedesc(service, instance, event);
 
-    // create subscriber
-    m_subscriber = std::shared_ptr<iox::popo::UntypedSubscriber>(new iox::popo::UntypedSubscriber ({servicedesc}));
+    // create subscriber && listener
+    m_subscriber = std::make_shared<iox::popo::UntypedSubscriber>(servicedesc);
+    m_listener   = std::make_shared<iox::popo::Listener>();
+
     m_listener
-        .attachEvent(*m_subscriber,
+        ->attachEvent(*m_subscriber,
                      iox::popo::SubscriberEvent::DATA_RECEIVED,
                      iox::popo::createNotificationCallback(onSampleReceivedCallback, *this))
         .or_else([](auto) {

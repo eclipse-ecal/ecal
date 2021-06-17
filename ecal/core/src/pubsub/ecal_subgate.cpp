@@ -57,9 +57,7 @@ namespace eCAL
   //////////////////////////////////////////////////////////////////
   std::atomic<bool> CSubGate::m_created;
 
-  CSubGate::CSubGate()
-  {
-  };
+  CSubGate::CSubGate() = default;
 
   CSubGate::~CSubGate()
   {

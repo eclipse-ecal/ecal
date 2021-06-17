@@ -373,11 +373,9 @@ target_compile_definitions(${PROJECT_NAME}
   PRIVATE eCAL_EXPORTS)
 
 if(ECAL_LAYER_ICEORYX)
-  if(UNIX)
-    find_package(iceoryx_posh REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PRIVATE iceoryx_posh::iceoryx_posh)
-  endif()
-    target_compile_definitions(${PROJECT_NAME} PUBLIC ECAL_LAYER_ICEORYX)
+  find_package(iceoryx_posh REQUIRED)
+  target_link_libraries(${PROJECT_NAME} PRIVATE iceoryx_posh::iceoryx_posh)
+  target_compile_definitions(${PROJECT_NAME} PUBLIC ECAL_LAYER_ICEORYX)
 endif()
 
 if(ECAL_NPCAP_SUPPORT)
