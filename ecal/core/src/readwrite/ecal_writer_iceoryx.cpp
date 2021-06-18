@@ -82,7 +82,10 @@ namespace eCAL
   bool CDataWriterSHM::Destroy()
   {
     if(!m_publisher) return false;
+
+    // destroy publisher
     m_publisher = nullptr;
+
     return true;
   }
 
