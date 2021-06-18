@@ -13,6 +13,11 @@ This chapter will give you deeper information about eCAL Sys.
 .. toctree::
    :maxdepth: 2
    
-   sys_overview
+   sys_architecture
    sys_gui
    sys_cli
+
+.. seealso::
+   
+  If you are new to eCAL Sys, please first check out the :ref:`Getting Started with eCAL Sys <getting_started_sys>` chapter.
+  That chapter will teach you the very basics of eCAL Sys.

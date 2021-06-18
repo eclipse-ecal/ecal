@@ -13,6 +13,10 @@ So, let's walk through it to explain all the feature it has.
 .. image:: img/rec_gui_overview.png
    :alt: eCAL Rec Overview
 
+.. seealso::
+
+  If you don't want to use the GUI, please see the :ref:`applications_recorder_cli` chapter.
+
 
 Main Control Panel
 ==================

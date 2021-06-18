@@ -17,39 +17,25 @@ The eCAL Recorder can record any data that is sent through your eCAL network and
 The output of the recorder (-> the recording) is called an **eCAL Measurement**.
 You can use that measurement later to analyze it or to stimulate other applications that need that data as input.
 
+.. seealso::
+   This chapter will focus on the very basics of eCAL Rec to get you started.
+   To learn more about all features of eCAL Rec, both the GUI and the command line application, please check out the :ref:`Advanced eCAL Rec <applications_recorder>` chapter. 
+
 Features
 ========
 
 The eCAL Recorder is quite powerful, so we will only look at a limited setup in this tutorial.
-First, the Recorder features two essential modes:
+The eCAL Recorder has two essential modes:
 
-#. **Centralized recording**:
-   
-   This means that you simply start the eCAL Recorder on one of your many machines.
-   It will subscribe to all topics and record the data to your hard drive.
-   Data from remote machines will be sent via network.
+#. **Centralized recording**: Record all topics on your main machine (-> over network).
+   This is the most trivial mode and we will use it in this tutorial
 
-   This is the most trivial mode. We will use that mode in this tutorial.
+#. **Distributed recording**: Each machine records its own topics.
+   This mode is used to avoid network congestion.
 
-#. **Distributed recording**:
+.. seealso::
 
-   When having many eCAL applications, it is generally advisable to run applications that exchange huge amounts of data on the same machine, as eCAL will then use its shared memory transport mechanism, which is way faster than sending data over the network.
-   The recorder can also take advantage of that feature and avoid network congestion while running a recording.
-   For this mode you will have to launch the eCAL Recorder on one of your machines and the eCAL Recorder Client on all of your other machines.
-   
-   Now each Recorder and Recorder Client will only record topics coming from their respectable machine and record them to their local hard drive.
-   After you finished your test, you can then let the Recorder Clients push their files to your main PC to get a contiguous recording.
-
-   Of course, mixed configurations are possible (e.g. some machines will only record their own topics, while other machines will also record topics of some external machines).
-
-Some other notable features of the eCAL Recorder are:
-
-* You can select which topics to record / not to record
-* You can save a description to your measurement and add comments afterwards
-* Data can be pre-buffered, so the measurement will contain data that was buffered before you hit the record button
-* Measurements paths can use an advanced text replacement syntax, e.g. to have environment variable expansion
-* Distributed recordings can be uploaded to the main machine or to any custom FTP server
-* You can extend the functionality with custom recorder addons
+   To learn more about centralized and distributed recordings, please refer to the advanced :ref:`applications_recorder_centralized_distributed_recording` chapter.
 
 GUI Overview
 ============
