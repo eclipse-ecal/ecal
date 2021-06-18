@@ -16,8 +16,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -41,7 +39,9 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
+<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
+</a>
 <!-- /pageheader -->
             </div>
         </div>
@@ -445,8 +445,8 @@
 <section id="function-documentation">
 <h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Permalink to this headline">¶</a></h2>
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv416etime_get_statusPiPci">
-<span id="_CPPv316etime_get_statusPiPci"></span><span id="_CPPv216etime_get_statusPiPci"></span><span id="etime_get_status__iP.cP.i"></span><span class="target" id="ecaltime_8h_1a306e7ee7378f7047c680293c8c0b8052"></span><span class="pre">ECALTIME_API</span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">etime_get_status</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">error_</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">status_message_</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">max_len_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416etime_get_statusPiPci" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv416etime_get_statusPiPci">
+<span id="_CPPv316etime_get_statusPiPci"></span><span id="_CPPv216etime_get_statusPiPci"></span><span id="etime_get_status__iP.cP.i"></span><span class="target" id="ecaltime_8h_1a306e7ee7378f7047c680293c8c0b8052"></span><span class="pre">ECALTIME_API</span> <span class="pre">void</span> <code class="sig-name descname"><span class="pre">etime_get_status</span></code><span class="sig-paren">(</span><span class="pre">int</span> <span class="pre">*</span><em><span class="pre">error_</span></em>, <span class="pre">char</span> <span class="pre">*</span><em><span class="pre">status_message_</span></em>, <span class="pre">int</span> <em><span class="pre">max_len_</span></em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416etime_get_statusPiPci" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Get the current error code and status message. </p>
 <p>Adapters must return 0 if everything is OK. Each adapter can use it’s own set of error codes. Everything non-zero is considered to indicate a problem. Adapters may provide aditional information with a status message.</p>
 <dl class="field-list simple">
@@ -534,7 +534,6 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

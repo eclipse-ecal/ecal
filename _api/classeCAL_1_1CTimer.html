@@ -16,8 +16,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -41,7 +39,9 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
+<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
+</a>
 <!-- /pageheader -->
             </div>
         </div>
@@ -445,21 +445,21 @@
 <section id="class-documentation">
 <h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
 <dl class="cpp class">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL6CTimerE">
-<span id="_CPPv3N4eCAL6CTimerE"></span><span id="_CPPv2N4eCAL6CTimerE"></span><span id="eCAL::CTimer"></span><span class="target" id="classeCAL_1_1CTimer"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">eCAL</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">CTimer</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL6CTimerE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4eCAL6CTimerE">
+<span id="_CPPv3N4eCAL6CTimerE"></span><span id="_CPPv2N4eCAL6CTimerE"></span><span id="eCAL::CTimer"></span><span class="target" id="classeCAL_1_1CTimer"></span><em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">eCAL</span><code class="sig-prename descclassname"><span class="pre">::</span></code></code><code class="sig-name descname"><span class="pre">CTimer</span></code><a class="headerlink" href="#_CPPv4N4eCAL6CTimerE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>eCAL timer class. </p>
 <p>The <a class="reference internal" href="#classeCAL_1_1CTimer"><span class="std std-ref">CTimer</span></a> class is used to realize simple time triggered callbacks. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL6CTimer6CTimerEv">
-<span id="_CPPv3N4eCAL6CTimer6CTimerEv"></span><span id="_CPPv2N4eCAL6CTimer6CTimerEv"></span><span id="eCAL::CTimer::CTimer"></span><span class="target" id="classeCAL_1_1CTimer_1a51d337145dc56e857e6f62cba8cbe0cc"></span><span class="sig-name descname"><span class="n"><span class="pre">CTimer</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL6CTimer6CTimerEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4eCAL6CTimer6CTimerEv">
+<span id="_CPPv3N4eCAL6CTimer6CTimerEv"></span><span id="_CPPv2N4eCAL6CTimer6CTimerEv"></span><span id="eCAL::CTimer::CTimer"></span><span class="target" id="classeCAL_1_1CTimer_1a51d337145dc56e857e6f62cba8cbe0cc"></span><code class="sig-name descname"><span class="pre">CTimer</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL6CTimer6CTimerEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL6CTimer6CTimerEi14TimerCallbackTi">
-<span id="_CPPv3N4eCAL6CTimer6CTimerEi14TimerCallbackTi"></span><span id="_CPPv2N4eCAL6CTimer6CTimerEi14TimerCallbackTi"></span><span id="eCAL::CTimer::CTimer__i.TimerCallbackT.i"></span><span class="target" id="classeCAL_1_1CTimer_1a621ec3ed1106e14e683dc9be4007a709"></span><span class="sig-name descname"><span class="n"><span class="pre">CTimer</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">timeout_</span></span>, <a class="reference internal" href="typedef_ecal__callback_8h_1afa9b0ed5fa82263c5b5a0cb7fe96613d.html#_CPPv4N4eCAL14TimerCallbackTE" title="eCAL::TimerCallbackT"><span class="n"><span class="pre">TimerCallbackT</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">callback_</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">delay_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL6CTimer6CTimerEi14TimerCallbackTi" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4eCAL6CTimer6CTimerEi14TimerCallbackTi">
+<span id="_CPPv3N4eCAL6CTimer6CTimerEi14TimerCallbackTi"></span><span id="_CPPv2N4eCAL6CTimer6CTimerEi14TimerCallbackTi"></span><span id="eCAL::CTimer::CTimer__i.TimerCallbackT.i"></span><span class="target" id="classeCAL_1_1CTimer_1a621ec3ed1106e14e683dc9be4007a709"></span><code class="sig-name descname"><span class="pre">CTimer</span></code><span class="sig-paren">(</span><span class="pre">int</span> <em><span class="pre">timeout_</span></em>, <a class="reference internal" href="typedef_ecal__callback_8h_1afa9b0ed5fa82263c5b5a0cb7fe96613d.html#_CPPv4N4eCAL14TimerCallbackTE" title="eCAL::TimerCallbackT"><span class="pre">TimerCallbackT</span></a> <em><span class="pre">callback_</span></em>, <span class="pre">int</span> <em><span class="pre">delay_</span></em> <span class="pre">=</span> <span class="pre">0</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL6CTimer6CTimerEi14TimerCallbackTi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -473,14 +473,14 @@
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL6CTimerD0Ev">
-<span id="_CPPv3N4eCAL6CTimerD0Ev"></span><span id="_CPPv2N4eCAL6CTimerD0Ev"></span><span id="eCAL::CTimer::~CTimer"></span><span class="target" id="classeCAL_1_1CTimer_1ae40d4af6886869664c9f1e3d20336f76"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">~CTimer</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL6CTimerD0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4eCAL6CTimerD0Ev">
+<span id="_CPPv3N4eCAL6CTimerD0Ev"></span><span id="_CPPv2N4eCAL6CTimerD0Ev"></span><span id="eCAL::CTimer::~CTimer"></span><span class="target" id="classeCAL_1_1CTimer_1ae40d4af6886869664c9f1e3d20336f76"></span><em class="property"><span class="pre">virtual</span></em> <code class="sig-name descname"><span class="pre">~CTimer</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL6CTimerD0Ev" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Destructor. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL6CTimer5StartEi14TimerCallbackTi">
-<span id="_CPPv3N4eCAL6CTimer5StartEi14TimerCallbackTi"></span><span id="_CPPv2N4eCAL6CTimer5StartEi14TimerCallbackTi"></span><span id="eCAL::CTimer::Start__i.TimerCallbackT.i"></span><span class="target" id="classeCAL_1_1CTimer_1af18c5657122547df6b46893f218fd206"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Start</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">timeout_</span></span>, <a class="reference internal" href="typedef_ecal__callback_8h_1afa9b0ed5fa82263c5b5a0cb7fe96613d.html#_CPPv4N4eCAL14TimerCallbackTE" title="eCAL::TimerCallbackT"><span class="n"><span class="pre">TimerCallbackT</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">callback_</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">delay_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL6CTimer5StartEi14TimerCallbackTi" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4eCAL6CTimer5StartEi14TimerCallbackTi">
+<span id="_CPPv3N4eCAL6CTimer5StartEi14TimerCallbackTi"></span><span id="_CPPv2N4eCAL6CTimer5StartEi14TimerCallbackTi"></span><span id="eCAL::CTimer::Start__i.TimerCallbackT.i"></span><span class="target" id="classeCAL_1_1CTimer_1af18c5657122547df6b46893f218fd206"></span><span class="pre">bool</span> <code class="sig-name descname"><span class="pre">Start</span></code><span class="sig-paren">(</span><span class="pre">int</span> <em><span class="pre">timeout_</span></em>, <a class="reference internal" href="typedef_ecal__callback_8h_1afa9b0ed5fa82263c5b5a0cb7fe96613d.html#_CPPv4N4eCAL14TimerCallbackTE" title="eCAL::TimerCallbackT"><span class="pre">TimerCallbackT</span></a> <em><span class="pre">callback_</span></em>, <span class="pre">int</span> <em><span class="pre">delay_</span></em> <span class="pre">=</span> <span class="pre">0</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL6CTimer5StartEi14TimerCallbackTi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Start the timer. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -497,8 +497,8 @@
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL6CTimer4StopEv">
-<span id="_CPPv3N4eCAL6CTimer4StopEv"></span><span id="_CPPv2N4eCAL6CTimer4StopEv"></span><span id="eCAL::CTimer::Stop"></span><span class="target" id="classeCAL_1_1CTimer_1ad3b1bab3f85f8e7cc26e94a3c64376dc"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Stop</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL6CTimer4StopEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4eCAL6CTimer4StopEv">
+<span id="_CPPv3N4eCAL6CTimer4StopEv"></span><span id="_CPPv2N4eCAL6CTimer4StopEv"></span><span id="eCAL::CTimer::Stop"></span><span class="target" id="classeCAL_1_1CTimer_1ad3b1bab3f85f8e7cc26e94a3c64376dc"></span><span class="pre">bool</span> <code class="sig-name descname"><span class="pre">Stop</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL6CTimer4StopEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Stop the timer. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -584,7 +584,6 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">
