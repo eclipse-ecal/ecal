@@ -56,6 +56,7 @@ namespace eCAL
     m_subscriber = std::make_shared<iox::popo::UntypedSubscriber>(servicedesc);
     m_listener   = std::make_shared<iox::popo::Listener>();
 
+    // attach DATA_RECEIVED event
     m_listener
         ->attachEvent(*m_subscriber,
                      iox::popo::SubscriberEvent::DATA_RECEIVED,
@@ -70,7 +71,12 @@ namespace eCAL
   bool CDataReaderSHM::Destroy()
   {
     if(!m_subscriber) return false;
+
+    // detach event and destroy subscriber and listener
+    m_listener->detachEvent(*m_subscriber, iox::popo::SubscriberEvent::DATA_RECEIVED);
     m_subscriber = nullptr;
+    m_listener   = nullptr;
+    
     return true;
   }
 
@@ -83,6 +89,8 @@ namespace eCAL
       auto data_payload = static_cast<const char*>(userPayload);
       // apply data to subscriber gate
       if (g_subgate()) g_subgate()->ApplySample(self->m_topic_name, /*topic_id_*/ "", data_payload, data_header->len, data_header->id, data_header->clock, data_header->time, data_header->hash, eCAL::pb::eTLayerType::tl_ecal_shm);
+      // release payload
+      subscriber_->release(userPayload);
     });
   }
 }
