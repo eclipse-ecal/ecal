@@ -20,7 +20,7 @@ CMake option                        Default   Description
 ``HAS_CAPNPROTO``                   ``OFF``   Platform supports Cap'n Proto library, necessary to use capnp serialization as message system and to enable eCAL monitoring capnp message reflection. eCAL does not add Cap'n Proto as a submodule. If you set this option to ``ON``, please make sure that the library is installed on your system and CMake can find it (consider setting CMAKE_PREFIX_PATH to point to the library).
 ``BUILD_DOCS``                      ``OFF``   Build the eCAL documentation, requires the installation of doxygen and a recent CMake version (>= 3.14 preferred, but some lower versions might work)
 ``BUILD_APPS``                      ``ON``    Build the eCAL applications, such as the monitoring tool
-``BUILD_SAMPLES``                   ``OFF``   Build the eCAL sample applications
+``BUILD_SAMPLES``                   ``ON``    Build the eCAL sample applications
 ``BUILD_TIME``                      ``ON``    Build the eCAL time interfaces, necessary if you want to use eCAL in time synchronized mode (based on PTP for example)
 ``BUILD_PY_BINDING``                ``OFF``   Build the eCAL python language binding
 ``BUILD_CSHARP_BINDING``            ``OFF``   Build the eCAL C# language binding
