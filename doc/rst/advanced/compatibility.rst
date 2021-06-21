@@ -56,12 +56,6 @@ Compatibility table when upgrading from eCAl 5.8:
 
        * Measurements: 100% compatible
 
-   * - Additional notes
-     - * On Ubuntu, the official builds changes the lib dirs to the proper multiarch lib dirs.
-       * On Ubuntu the location of :file:`ecal.ini` changed to ``/etc/ecal/ecal.ini``
-       * On Windows, the location of :file:`ecal.ini` changed to ``C:\ProgramData\eCAL\ecal.ini``
-
-
 eCAL 5.8
 ========
 
@@ -85,3 +79,9 @@ Compatibility table when upgrading from eCAl 5.7:
        * Sys: New in 5.8
 
        * Measurements: 100% compatible
+
+   * - Additional notes
+     - * On Ubuntu, the official builds changes the lib dirs to the proper multiarch lib dirs.
+       * On Ubuntu the location of :file:`ecal.ini` changed to ``/etc/ecal/ecal.ini``
+       * On Windows, the location of :file:`ecal.ini` changed to ``C:\ProgramData\eCAL\ecal.ini``
+  

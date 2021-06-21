@@ -1,26 +1,19 @@
 ﻿.. include:: /include.txt
 .. include:: /_include_ecalicons.txt
 
-.. _applications_sys_overview:
-
-=======================================
-|ecalsys_APP_ICON_h1| eCAL Sys Overview
-=======================================
-
-In this chapter we will take a deeper look at eCAl Sys.
-We will discuss the Host / Client architecture and look at all available configuration options and functions in the GUI.
-
-.. seealso::
-
-   If you are new to eCAL Sys, please first check out the :ref:`Getting Started with eCAL Sys <getting_started_sys>` chapter.
-   That chapter will teach you the very basics of eCAL Sys.
-
-   If you don't want to use the GUI, please see the :ref:`applications_sys_cli` chapter.
-
 .. _applications_sys_architecture:
 
-Architecture
-============
+===========================================
+|ecalsys_APP_ICON_h1| eCAL Sys Architecture
+===========================================
+
+In this chapter we will take a deeper look at eCAl Sys.
+We will discuss the Host / Client architecture and eCAL Sys configuration files.
+
+.. _applications_sys_host_client_architecture:
+
+Sys Applications - Host, Client, MMA
+====================================
 
 eCAL Sys consists of 2 (or 3) applications:
 
@@ -32,6 +25,8 @@ eCAL Sys consists of 2 (or 3) applications:
 
    The Host Application is started only once on the machine that is supposed to control everything else.
    This application is responsible for loading the configuration file and keeping track of all task states.
+
+   If your main machine is the only machine you want to start tasks on, this is the only application you need.
 
 #. The **Client Application** (:file:`ecal_sys_client /.exe`). 
 

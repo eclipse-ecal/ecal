@@ -1,0 +1,175 @@
+USAGE: 
+
+   ecal_rec  [-c <Path>] [--no-default] [--remote-control] [--remote-host
+             <Hostname>] [-r <Seconds>] [--savebuffer] [-x] [--activate]
+             [--deactivate] [--comment [MeasID] <Comment>] [--delete
+             <MeasID>] [--upload [MeasID]] [-s] [--meas-status <MeasID>]
+             [--client-status <Hostname>] [--get-config] [--set-client
+             <Hostname:Hosts,To,Record>] ...  [--set-addons <Hostname:List
+             ,Of,Addon,IDs>] ...  [--remove-client <Hostname>] ...  [-b
+             <Seconds>] [--blacklist <List>] [--whitelist <List>] [-d
+             <Path>] [-n <Directory>] [--max-file-size <megabytes>]
+             [--description <String>] [--ftp-server <FTP_Server>]
+             [--delete-after-upload <yes/no>] [-i]
+             [--interactive-dont-exit] [--] [--version] [-h]
+
+
+Where: 
+
+   -c <Path>,  --config <Path>
+     The configuration file to load.
+
+   --no-default
+     Prevent creating a default config, when no config file is loaded. This
+     prevents having a default root-dir, meas-name and localhost recorder.
+     Not applicable in remote-control mode.
+
+   --remote-control
+     Remote control another eCAL Rec host application.
+
+   --remote-host <Hostname>
+     Set the hostname for remote-controlling.
+
+   -r <Seconds>,  --record <Seconds>
+     Start a new recording. If a duration in seconds is provided, the
+     recording will be stopped after that time. Otherwise, it will keep
+     running until stopped by the user or a succeeding stop-recording
+     call.
+
+   --savebuffer
+     Save the content of the pre-buffer as its own recording. Only
+     available in remote-control mode.
+
+   -x,  --stop
+     Stop the currently running recording. Only available in remote-control
+     mode.
+
+   --activate
+     Activate the recorder and all clients.
+
+   --deactivate
+     Deactivates the recorder and all clients.
+
+   --comment [MeasID] <Comment>
+     Adds a comment to a measurement. If no ID is given, the comment is
+     added to the last measurement. When your intention is to comment a
+     measurement started with -r (--record), you should leave out the
+     MeasID or set it to 0.
+
+   --delete <MeasID>
+     Delete a measurement from the host and all clients.
+
+   --upload
+     Upload the given measurement. If no measurement ID is provided, all
+     measurements will be uploaded. When -r (--record) is provided with a
+     duration, the mesasurement will be uploaded after the recorder has
+     finished the measurement. As a recorder may still be flushing, a small
+     delay (1s) is introduced before uploading in this case. Use
+     interactive mode, if this is not sufficient.
+
+   -s,  --status
+     Print the status of a remote-controlled recorder.
+
+   --meas-status <MeasID>
+     Print the status of the given measurement. Only available in
+     remote-control mode.
+
+   --client-status <Hostname>
+     Print the status of the given recorder client. Only available in
+     remote-control mode.
+
+   --get-config
+     Print the configuration of the recorder to the console.
+
+   --set-client <Hostname:Hosts,To,Record>  (accepted multiple times)
+     Sets which hosts shall be recorded by the given client. Use the syntax
+     "Hostname:Host,To,Record". For instance, to let PC1 record itself and
+     PC2, use "PC1:PC1,PC2". If no tailing list is provided, the client
+     will record topcis from all hosts by default. If a configuration file
+     is being loaded, this will override the setting from the config. Not
+     available in remote-control mode.
+
+   --set-addons <Hostname:List,Of,Addon,IDs>  (accepted multiple times)
+     Sets the addons that the given client shall enable. Use the syntax
+     "Hostname:List,Of,Addon,IDs". You can only set enabled addons for
+     clients that have already been added; i.e. the client will not be
+     added automatically. If no tailing list of addon IDs is provided, all
+     addons will be disabled. If a configuration file is being loaded, this
+     will override the setting from the config. Not available in
+     remote-control mode.
+
+   --remove-client <Hostname>  (accepted multiple times)
+     Removes the given client. If the client had any addons enabled, those
+     are removed as well. Not available in remote-control mode.
+
+   -b <Seconds>,  --pre-buffer <Seconds>
+     Pre-buffer data for some seconds. To turn off pre-buffering, provide a
+     value <= 0.0. If a configuration file is being loaded, this will
+     override the setting from the config. Not available in remote-control
+     mode.
+
+   --blacklist <List>
+     Record all topics except the listed ones (Comma separated list, e.g.:
+     "Topic1,Topic2"). If a configuration file is being loaded, this will
+     override the setting from the config. Not available in remote-control
+     mode.
+
+   --whitelist <List>
+     Only record these topics (Comma separated list, e.g.: "Topic1
+     ,Topic2"). If a configuration file is being loaded, this will override
+     the setting from the config. Not available in remote-control mode.
+
+   -d <Path>,  --meas-root-dir <Path>
+     Root dir used for recording when -r (--record) is set. If a
+     configuration file is being loaded, this will override the setting
+     from the config. Not available in remote-control mode.
+
+   -n <Directory>,  --meas-name <Directory>
+     Name of the measurement, when -r (--record) is set. This will create a
+     folder in the directory provided by -d (--meas-root-dir). If a
+     configuration file is being loaded, this will override the setting
+     from the config.  Not available in remote-control mode.
+
+   --max-file-size <megabytes>
+     Maximum file size of the recording files, when -r (--record) is set.
+     If a configuration file is being loaded, this will override the
+     setting from the config. Not available in remote-control mode.
+
+   --description <String>
+     Description stored in the measurement folder, when -r (--record) is
+     set. If a configuration file is being loaded, this will override the
+     setting from the config. Not available in remote-control mode.
+
+   --ftp-server <FTP_Server>
+     The server where to upload to when uploading a measurement. Use
+     "internal" for the integrated FTP Server. When using an external FTP
+     Server, provide it in the following form:
+     ftp://USERNAME:PASSWORD@HOSTNAME:PORT/path/to/root_dir. If a
+     configuration file is being loaded, this will override the setting
+     from the config. Not available in remote-control mode.
+
+   --delete-after-upload <yes/no>
+     Whether to delete the local measurement files after they have been
+     uploaded to an FTP server. If a configuration file is being loaded,
+     this will override the setting from the config. Not available in
+     remote-control mode.
+
+   -i,  --interactive
+     Start eCAL Rec and listen for commands on stdin. When not in
+     remote-control mode itself, eCAL Rec will offer the eCAL Rec Service
+     for being remote-controlled. Note that eCAL Rec will exit, when stdin
+     is closed. To prevent that, combine this option with
+     (--interactive-dont-exit).
+
+   --interactive-dont-exit
+     When in interactive mode, this option prevents eCAL Rec from exiting,
+     when stdin is closed.
+
+   --,  --ignore_rest
+     Ignores the rest of the labeled arguments following this flag.
+
+   --version
+     Displays version information and exits.
+
+   -h,  --help
+     Displays usage information and exits.
