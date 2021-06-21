@@ -331,13 +331,14 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../applications.html">Applications</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../applications/rec/recorder.html"> eCAL Rec</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../applications/rec/recorder_overview.html"> Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../applications/rec/recorder_architecture.html"> eCAL Rec Architecture</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../applications/rec/recorder_gui.html"> eCAL Rec GUI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../applications/rec/recorder_cli.html"> eCAL Rec CLI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../applications/rec/recorder_client.html"> eCAL Rec Client</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/sys/sys.html"> eCAL Sys</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_overview.html"> eCAL Sys Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_architecture.html"> eCAL Sys Architecture</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_gui.html"> eCAL Sys GUI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_cli.html"> eCAL Sys CLI</a></li>
 </ul>
@@ -494,14 +495,6 @@ It should be possible to mix ecal_rec_gui and ecal_rec_client instances of both 
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p>Additional notes</p></td>
-<td><ul class="simple">
-<li><p>On Ubuntu, the official builds changes the lib dirs to the proper multiarch lib dirs.</p></li>
-<li><p>On Ubuntu the location of <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> changed to <code class="docutils literal notranslate"><span class="pre">/etc/ecal/ecal.ini</span></code></p></li>
-<li><p>On Windows, the location of <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> changed to <code class="docutils literal notranslate"><span class="pre">C:\ProgramData\eCAL\ecal.ini</span></code></p></li>
-</ul>
-</td>
-</tr>
 </tbody>
 </table>
 </section>
@@ -535,6 +528,14 @@ It should be possible to mix ecal_rec_gui and ecal_rec_client instances of both 
 <li><p>Rec: Not compatible. Some features may work, but many won’t.</p></li>
 <li><p>Sys: New in 5.8</p></li>
 <li><p>Measurements: 100% compatible</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>Additional notes</p></td>
+<td><ul class="simple">
+<li><p>On Ubuntu, the official builds changes the lib dirs to the proper multiarch lib dirs.</p></li>
+<li><p>On Ubuntu the location of <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> changed to <code class="docutils literal notranslate"><span class="pre">/etc/ecal/ecal.ini</span></code></p></li>
+<li><p>On Windows, the location of <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> changed to <code class="docutils literal notranslate"><span class="pre">C:\ProgramData\eCAL\ecal.ini</span></code></p></li>
 </ul>
 </td>
 </tr>

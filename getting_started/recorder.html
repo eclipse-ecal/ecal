@@ -332,13 +332,14 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../applications.html">Applications</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../applications/rec/recorder.html"> eCAL Rec</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../applications/rec/recorder_overview.html"> Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../applications/rec/recorder_architecture.html"> eCAL Rec Architecture</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../applications/rec/recorder_gui.html"> eCAL Rec GUI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../applications/rec/recorder_cli.html"> eCAL Rec CLI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../applications/rec/recorder_client.html"> eCAL Rec Client</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/sys/sys.html"> eCAL Sys</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_overview.html"> eCAL Sys Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_architecture.html"> eCAL Sys Architecture</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_gui.html"> eCAL Sys GUI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../applications/sys/sys_cli.html"> eCAL Sys CLI</a></li>
 </ul>
@@ -449,35 +450,25 @@
 <p>The eCAL Recorder can record any data that is sent through your eCAL network and save it to disk.
 The output of the recorder (-&gt; the recording) is called an <strong>eCAL Measurement</strong>.
 You can use that measurement later to analyze it or to stimulate other applications that need that data as input.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>This chapter will focus on the very basics of eCAL Rec to get you started.
+To learn more about all features of eCAL Rec, both the GUI and the command line application, please check out the <a class="reference internal" href="../applications/rec/recorder.html#applications-recorder"><span class="std std-ref">Advanced eCAL Rec</span></a> chapter.</p>
+</div>
 <section id="features">
 <h2><span class="section-number">6.2.1. </span>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
 <p>The eCAL Recorder is quite powerful, so we will only look at a limited setup in this tutorial.
-First, the Recorder features two essential modes:</p>
-<ol class="arabic">
-<li><p><strong>Centralized recording</strong>:</p>
-<p>This means that you simply start the eCAL Recorder on one of your many machines.
-It will subscribe to all topics and record the data to your hard drive.
-Data from remote machines will be sent via network.</p>
-<p>This is the most trivial mode. We will use that mode in this tutorial.</p>
-</li>
-<li><p><strong>Distributed recording</strong>:</p>
-<p>When having many eCAL applications, it is generally advisable to run applications that exchange huge amounts of data on the same machine, as eCAL will then use its shared memory transport mechanism, which is way faster than sending data over the network.
-The recorder can also take advantage of that feature and avoid network congestion while running a recording.
-For this mode you will have to launch the eCAL Recorder on one of your machines and the eCAL Recorder Client on all of your other machines.</p>
-<p>Now each Recorder and Recorder Client will only record topics coming from their respectable machine and record them to their local hard drive.
-After you finished your test, you can then let the Recorder Clients push their files to your main PC to get a contiguous recording.</p>
-<p>Of course, mixed configurations are possible (e.g. some machines will only record their own topics, while other machines will also record topics of some external machines).</p>
-</li>
+The eCAL Recorder has two essential modes:</p>
+<ol class="arabic simple">
+<li><p><strong>Centralized recording</strong>: Record all topics on your main machine (-&gt; over network).
+This is the most trivial mode and we will use it in this tutorial</p></li>
+<li><p><strong>Distributed recording</strong>: Each machine records its own topics.
+This mode is used to avoid network congestion.</p></li>
 </ol>
-<p>Some other notable features of the eCAL Recorder are:</p>
-<ul class="simple">
-<li><p>You can select which topics to record / not to record</p></li>
-<li><p>You can save a description to your measurement and add comments afterwards</p></li>
-<li><p>Data can be pre-buffered, so the measurement will contain data that was buffered before you hit the record button</p></li>
-<li><p>Measurements paths can use an advanced text replacement syntax, e.g. to have environment variable expansion</p></li>
-<li><p>Distributed recordings can be uploaded to the main machine or to any custom FTP server</p></li>
-<li><p>You can extend the functionality with custom recorder addons</p></li>
-</ul>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>To learn more about centralized and distributed recordings, please refer to the advanced <a class="reference internal" href="../applications/rec/recorder_architecture.html#applications-recorder-centralized-distributed-recording"><span class="std std-ref">Centralized vs. Distributed Recordings</span></a> chapter.</p>
+</div>
 </section>
 <section id="gui-overview">
 <h2><span class="section-number">6.2.2. </span>GUI Overview<a class="headerlink" href="#gui-overview" title="Permalink to this headline">¶</a></h2>

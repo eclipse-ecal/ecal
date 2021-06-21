@@ -24,7 +24,7 @@
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
     <link rel="up" title="Applications" href="../../applications.html" />
-    <link rel="next" title="Overview" href="recorder_overview.html" />
+    <link rel="next" title="eCAL Rec Architecture" href="recorder_architecture.html" />
     <link rel="prev" title="Applications" href="../../applications.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
@@ -332,13 +332,14 @@
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../applications.html">Applications</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#"> eCAL Rec</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recorder_overview.html"> Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recorder_architecture.html"> eCAL Rec Architecture</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recorder_gui.html"> eCAL Rec GUI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recorder_cli.html"> eCAL Rec CLI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recorder_client.html"> eCAL Rec Client</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../sys/sys.html"> eCAL Sys</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../sys/sys_overview.html"> eCAL Sys Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sys/sys_architecture.html"> eCAL Sys Architecture</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sys/sys_gui.html"> eCAL Sys GUI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sys/sys_cli.html"> eCAL Sys CLI</a></li>
 </ul>
@@ -409,7 +410,7 @@
 <!-- pager-hidden.html -->
 
         <a class="no-focus" accesskey="p" href="../../applications.html" tabindex="-1"></a>
-        <a class="no-focus" accesskey="n" href="recorder_overview.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="n" href="recorder_architecture.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
@@ -435,13 +436,13 @@
 <!-- body -->
     <section id="ecalrec-app-icon-h1-ecal-rec">
 <span id="applications-recorder"></span><h1><a class="reference internal" href="../../_images/ecalrec.ico"><img alt="ecalrec_APP_ICON_h1" src="../../_images/ecalrec.ico" style="width: 38px;" /></a> eCAL Rec<a class="headerlink" href="#ecalrec-app-icon-h1-ecal-rec" title="Permalink to this headline">¶</a></h1>
-<p>This chapter will give you deeper information about the eCAL Recorder.
-If you haven’t done so, make sure to check out the <a class="reference internal" href="../../getting_started/recorder.html#getting-started-recorder"><span class="std std-ref">Getting started with eCAL Rec</span></a> section from the Getting Started chapter!</p>
-<p>Otherwise choose a topic from the list below:</p>
+<p>In this chapter we will take a deeper look at the eCAL Recorder.
+We will discuss the Host / Client architecture and look at all available configuration options and functions in the GUI.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="recorder_overview.html"> Overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="recorder_overview.html#architecture">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recorder_architecture.html"> eCAL Rec Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recorder_architecture.html#centralized-vs-distributed-recordings">Centralized vs. Distributed Recordings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder_architecture.html#host-client-architecture">Host / Client Architecture</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="recorder_gui.html"> eCAL Rec GUI</a><ul>
@@ -453,8 +454,18 @@ If you haven’t done so, make sure to check out the <a class="reference interna
 <li class="toctree-l2"><a class="reference internal" href="recorder_gui.html#options">Options</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="recorder_cli.html"> eCAL Rec CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recorder_cli.html"> eCAL Rec CLI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recorder_cli.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder_cli.html#interactive-mode">Interactive mode</a></li>
 </ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="recorder_client.html"> eCAL Rec Client</a></li>
+</ul>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>If you are new to eCAL Rec, please first check out the <a class="reference internal" href="../../getting_started/recorder.html#getting-started-recorder"><span class="std std-ref">Getting Started with eCAL Rec</span></a> chapter.
+That chapter will teach you the very basics of eCAL Rec.</p>
 </div>
 </section>
 
@@ -470,7 +481,7 @@ If you haven’t done so, make sure to check out the <a class="reference interna
             </a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="recorder_overview.html" title="Accesskey Alt(+Shift)+n">
+            <a class="page-link" href="recorder_architecture.html" title="Accesskey Alt(+Shift)+n">
                 Next
             </a>
         </li>

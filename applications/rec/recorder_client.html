@@ -10,7 +10,7 @@
     <meta name="docsearch:release" content="" />
     <meta name="docsearch:version" content="" />
 
-    <title>eCAL Sys Overview &mdash; eCAL Documentation  documentation</title>
+    <title>eCAL Rec Client &mdash; eCAL Documentation  documentation</title>
 
     <link rel="shortcut icon" href="../../_static/img/favicon.png" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
@@ -23,9 +23,9 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
-    <link rel="up" title="eCAL Sys" href="sys.html" />
-    <link rel="next" title="eCAL Sys GUI" href="sys_gui.html" />
-    <link rel="prev" title="eCAL Sys" href="sys.html" />
+    <link rel="up" title="eCAL Rec" href="recorder.html" />
+    <link rel="next" title="eCAL Sys" href="../sys/sys.html" />
+    <link rel="prev" title="eCAL Rec CLI" href="recorder_cli.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
     <script src="../../_static/js/modernizr.min.js"></script>
@@ -331,16 +331,17 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../applications.html">Applications</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../rec/recorder.html"> eCAL Rec</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../rec/recorder_overview.html"> Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../rec/recorder_gui.html"> eCAL Rec GUI</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../rec/recorder_cli.html"> eCAL Rec CLI</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="recorder.html"> eCAL Rec</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="recorder_architecture.html"> eCAL Rec Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recorder_gui.html"> eCAL Rec GUI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recorder_cli.html"> eCAL Rec CLI</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"> eCAL Rec Client</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="sys.html"> eCAL Sys</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#"> eCAL Sys Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sys_gui.html"> eCAL Sys GUI</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sys_cli.html"> eCAL Sys CLI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sys/sys.html"> eCAL Sys</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sys/sys_architecture.html"> eCAL Sys Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sys/sys_gui.html"> eCAL Sys GUI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sys/sys_cli.html"> eCAL Sys CLI</a></li>
 </ul>
 </li>
 </ul>
@@ -397,11 +398,7 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#"> eCAL Sys Overview</a><ul>
-<li><a class="reference internal" href="#architecture">Architecture</a></li>
-<li><a class="reference internal" href="#configuration-files">Configuration Files</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#"> eCAL Rec Client</a></li>
 </ul>
 <!-- /menu -->
                             </div>
@@ -412,23 +409,23 @@
                     <div class="rst-content">
 <!-- pager-hidden.html -->
 
-        <a class="no-focus" accesskey="p" href="sys.html" tabindex="-1"></a>
-        <a class="no-focus" accesskey="n" href="sys_gui.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="p" href="recorder_cli.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="n" href="../sys/sys.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../../index.html">Start</a></li>
             <li class="breadcrumb-item"><a href="../../applications.html">Applications</a></li>
-            <li class="breadcrumb-item"><a href="sys.html"> eCAL Sys</a></li>
-        <li class="breadcrumb-item active" aria-current="page"> eCAL Sys Overview</li>
+            <li class="breadcrumb-item"><a href="recorder.html"> eCAL Rec</a></li>
+        <li class="breadcrumb-item active" aria-current="page"> eCAL Rec Client</li>
     </ol>
         <div class="breadcrumb-additions">
-                <a class="btn btn-sm btn-light" href="https://github.com/continental/ecal/blob/master/doc/rst/applications/sys/sys_overview.rst">
+                <a class="btn btn-sm btn-light" href="https://github.com/continental/ecal/blob/master/doc/rst/applications/rec/recorder_client.rst">
                     <span class="btn-icon"><span class="fab fa-github"></span></span>
                     <span class="btn-text">Edit on GitHub</span>
                 </a>
-                <a class="btn btn-sm btn-light" href="../../_sources/applications/sys/sys_overview.rst.txt" rel="nofollow">
+                <a class="btn btn-sm btn-light" href="../../_sources/applications/rec/recorder_client.rst.txt" rel="nofollow">
                     <span class="btn-icon"><span class="fas fa-code"></span></span>
                     <span class="btn-text">View source</span>
                 </a>
@@ -438,71 +435,10 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <section id="ecalsys-app-icon-h1-ecal-sys-overview">
-<span id="applications-sys-overview"></span><h1><a class="reference internal" href="../../_images/ecalsys.ico"><img alt="ecalsys_APP_ICON_h1" src="../../_images/ecalsys.ico" style="width: 38px;" /></a> eCAL Sys Overview<a class="headerlink" href="#ecalsys-app-icon-h1-ecal-sys-overview" title="Permalink to this headline">¶</a></h1>
-<p>In this chapter we will take a deeper look at eCAl Sys.
-We will discuss the Host / Client architecture and look at all available configuration options and functions in the GUI.</p>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p>If you are new to eCAL Sys, please first check out the <a class="reference internal" href="../../getting_started/sys.html#getting-started-sys"><span class="std std-ref">Getting Started with eCAL Sys</span></a> chapter.
-That chapter will teach you the very basics of eCAL Sys.</p>
-<p>If you don’t want to use the GUI, please see the <a class="reference internal" href="sys_cli.html#applications-sys-cli"><span class="std std-ref"> eCAL Sys CLI</span></a> chapter.</p>
-</div>
-<section id="architecture">
-<span id="applications-sys-architecture"></span><h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
-<p>eCAL Sys consists of 2 (or 3) applications:</p>
-<ol class="arabic">
-<li><p>The <strong>Host Application</strong>.
-This can be either one of:</p>
-<ul class="simple">
-<li><p>eCAL Sys GUI (<code class="file docutils literal notranslate"><span class="pre">ecal_sys_gui</span> <span class="pre">/.exe</span></code>)</p></li>
-<li><p>eCAL Sys CLI (<code class="file docutils literal notranslate"><span class="pre">ecal_sys</span> <span class="pre">/.exe</span></code>)</p></li>
-</ul>
-<p>The Host Application is started only once on the machine that is supposed to control everything else.
-This application is responsible for loading the configuration file and keeping track of all task states.</p>
-</li>
-<li><p>The <strong>Client Application</strong> (<code class="file docutils literal notranslate"><span class="pre">ecal_sys_client</span> <span class="pre">/.exe</span></code>).</p>
-<p>The Client Application is started on all machines that shall be remote-controlled.
-It creates an eCAL Service and gets remote-controlled by the eCAL Sys Host Application.</p>
-<p>The eCAL Sys Client is not needed on the machine, where the Host Application is running.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The eCAL Sys Client is a remote-control application with no authentication.
-If you are annoyed by accepting this security implication at startup, you can start eCAL Sys Client with:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecal_sys_client --auto-accept-security-risk</span>
-</pre></div>
-</div>
-</div>
-</li>
-<li><p>The <strong>Machine Monitoring Application</strong> (<code class="file docutils literal notranslate"><span class="pre">ecal_mma</span> <span class="pre">/.exe</span></code>).</p>
-<p>This application is not required for eCAL Sys itself.
-However, eCAL Sys will display information about system resources of all systems that run an ecal_mma:</p>
-<img alt="eCAL Sys MMA" class="align-center" src="../../_images/ecal_sys_mma.png" />
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>You can use eCAL Sys to start the MMA Application, by creating an <code class="docutils literal notranslate"><span class="pre">ecal_mma</span></code> task.</p>
-</div>
-</li>
-</ol>
-</section>
-<section id="configuration-files">
-<span id="applications-sys-config-files"></span><h2>Configuration Files<a class="headerlink" href="#configuration-files" title="Permalink to this headline">¶</a></h2>
-<p>eCAL Sys saves configuration files with the <code class="docutils literal notranslate"><span class="pre">.ecalsys</span></code> extension.
-Those files contain a regular XML description of the configuration.
-Although you could write .ecalsys files by hand, it is much easier to use eCAL Sys GUI for that.
-The command line application (eCAL Sys CLI) can only load .ecalsys files, but not write them.</p>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>You can write your paths and command line arguments in a generic way and e.g. use environment variables or do different things based on the host or target operating system.
-eCAL provides a replacement syntax for that and displays an icon where you can use it.</p>
-<p>For instance to use an environment variable <code class="docutils literal notranslate"><span class="pre">my_root_dir</span></code> that you have configured differently on each target, use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$TARGET{ENV my_root_dir}/task
-</pre></div>
-</div>
-<p>Click one of the <a class="reference internal" href="../../_images/show_dialog.svg"><img alt="qecalparser_SHOW_DIALOG" src="../../_images/show_dialog.svg" width="16px" /></a> <span class="guilabel">Advanced Editor…</span> buttons for further information.</p>
-</div>
-</section>
-</section>
+    <section id="ecalrec-app-icon-h1-ecal-rec-client">
+<span id="applications-recorder-client"></span><h1><a class="reference internal" href="../../_images/ecalrec.ico"><img alt="ecalrec_APP_ICON_h1" src="../../_images/ecalrec.ico" style="width: 38px;" /></a> eCAL Rec Client<a class="headerlink" href="#ecalrec-app-icon-h1-ecal-rec-client" title="Permalink to this headline">¶</a></h1>
+<p>This section is still under construction. But we are working on it! Just be patient.</p>
+<img alt="Snail" class="align-center" src="../../_images/snail.svg" /></section>
 
 <!-- /body -->
                             </div>
@@ -511,12 +447,12 @@ eCAL provides a replacement syntax for that and displays an icon where you can u
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
         <li class="page-item">
-            <a class="page-link" href="sys.html" title="Accesskey Alt(+Shift)+p">
+            <a class="page-link" href="recorder_cli.html" title="Accesskey Alt(+Shift)+p">
                 Previous
             </a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="sys_gui.html" title="Accesskey Alt(+Shift)+n">
+            <a class="page-link" href="../sys/sys.html" title="Accesskey Alt(+Shift)+n">
                 Next
             </a>
         </li>

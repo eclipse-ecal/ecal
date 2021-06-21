@@ -25,7 +25,7 @@
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
     <link rel="up" title="eCAL Sys" href="sys.html" />
     <link rel="next" title="eCAL Sys CLI" href="sys_cli.html" />
-    <link rel="prev" title="eCAL Sys Overview" href="sys_overview.html" />
+    <link rel="prev" title="eCAL Sys Architecture" href="sys_architecture.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
     <script src="../../_static/js/modernizr.min.js"></script>
@@ -332,13 +332,14 @@
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../applications.html">Applications</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../rec/recorder.html"> eCAL Rec</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../rec/recorder_overview.html"> Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rec/recorder_architecture.html"> eCAL Rec Architecture</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../rec/recorder_gui.html"> eCAL Rec GUI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../rec/recorder_cli.html"> eCAL Rec CLI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rec/recorder_client.html"> eCAL Rec Client</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="sys.html"> eCAL Sys</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="sys_overview.html"> eCAL Sys Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sys_architecture.html"> eCAL Sys Architecture</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#"> eCAL Sys GUI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sys_cli.html"> eCAL Sys CLI</a></li>
 </ul>
@@ -415,7 +416,7 @@
                     <div class="rst-content">
 <!-- pager-hidden.html -->
 
-        <a class="no-focus" accesskey="p" href="sys_overview.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="p" href="sys_architecture.html" tabindex="-1"></a>
         <a class="no-focus" accesskey="n" href="sys_cli.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
@@ -447,6 +448,10 @@
 It can both create .ecalsys files and start, stop and monitor your tasks.</p>
 <p>So let’s look at all of the things you can do with eCAL Sys GUI.</p>
 <img alt="eCAL Sys Task Overview" src="../../_images/ecal_sys_task_overview.png" />
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>If you don’t want to use the GUI, please see the <a class="reference internal" href="sys_cli.html#applications-sys-cli"><span class="std std-ref"> eCAL Sys CLI</span></a> chapter.</p>
+</div>
 <section id="toolbar">
 <h2>Toolbar<a class="headerlink" href="#toolbar" title="Permalink to this headline">¶</a></h2>
 <ul>
@@ -651,7 +656,7 @@ Forcefully shut down all tasks when you close eCAL Sys GUI.</p></li>
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
         <li class="page-item">
-            <a class="page-link" href="sys_overview.html" title="Accesskey Alt(+Shift)+p">
+            <a class="page-link" href="sys_architecture.html" title="Accesskey Alt(+Shift)+p">
                 Previous
             </a>
         </li>

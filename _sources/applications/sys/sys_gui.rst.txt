@@ -16,6 +16,10 @@ So let's look at all of the things you can do with eCAL Sys GUI.
 .. image:: img/ecal_sys_task_overview.png
    :alt: eCAL Sys Task Overview
 
+.. seealso::
+
+  If you don't want to use the GUI, please see the :ref:`applications_sys_cli` chapter.
+
 Toolbar
 -------
 
