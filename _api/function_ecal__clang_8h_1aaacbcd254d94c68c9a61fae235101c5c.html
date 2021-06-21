@@ -16,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/webfonts.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fontawesome.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs.css" />
@@ -39,9 +41,10 @@
         <div class="page-header">
             <div class="page-header-inner">
 <!-- pageheader -->
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" class="logo">
-    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
+
+<div class="logo">
+    <img src="../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" title="eCAL Documentation" class="logo-image" />
+</div>
 <!-- /pageheader -->
             </div>
         </div>
@@ -424,7 +427,13 @@
         <li class="breadcrumb-item active" aria-current="page">Function pub_set_description</li>
     </ol>
         <div class="breadcrumb-additions">
-                <a class="btn btn-sm btn-light" href="https://github.com/continental/ecal/blob/master/doc/rst/_api/function_ecal__clang_8h_1aaacbcd254d94c68c9a61fae235101c5c.rst">
+            <a class="btn btn-sm btn-primary" id="btnHowToEdit"
+               href="https://continental.github.io/ecal/advanced/documentation.html"
+               rel="nofollow noopener" target="_blank">
+                <span class="btn-icon"><span class="fas fa-info-circle"></span></span>
+                <span class="btn-text">How to edit</span>
+            </a>
+                <a class="btn btn-sm btn-light" id="btnEditOnGitHub" href="https://github.com/continental/ecal/blob/master/doc/rst/_api/function_ecal__clang_8h_1aaacbcd254d94c68c9a61fae235101c5c.rst">
                     <span class="btn-icon"><span class="fab fa-github"></span></span>
                     <span class="btn-text">Edit on GitHub</span>
                 </a>
@@ -446,8 +455,8 @@
 <section id="function-documentation">
 <h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Permalink to this headline">¶</a></h2>
 <dl class="cpp function">
-<dt id="_CPPv419pub_set_description11ECAL_HANDLEPKcKi">
-<span id="_CPPv319pub_set_description11ECAL_HANDLEPKcKi"></span><span id="_CPPv219pub_set_description11ECAL_HANDLEPKcKi"></span><span id="pub_set_description__ECAL_HANDLE.cCP.iC"></span><span class="target" id="ecal__clang_8h_1aaacbcd254d94c68c9a61fae235101c5c"></span><span class="pre">ECAL_API</span> <span class="pre">bool</span> <code class="sig-name descname"><span class="pre">pub_set_description</span></code><span class="sig-paren">(</span><a class="reference internal" href="typedef_ecalc_8h_1a6801786d75d8af7f213d45239018884b.html#_CPPv411ECAL_HANDLE" title="ECAL_HANDLE"><span class="pre">ECAL_HANDLE</span></a> <em><span class="pre">handle_</span></em>, <em class="property"><span class="pre">const</span></em> <span class="pre">char</span> <span class="pre">*</span><em><span class="pre">topic_desc_</span></em>, <em class="property"><span class="pre">const</span></em> <span class="pre">int</span> <em><span class="pre">topic_desc_length_</span></em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419pub_set_description11ECAL_HANDLEPKcKi" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv419pub_set_description11ECAL_HANDLEPKcKi">
+<span id="_CPPv319pub_set_description11ECAL_HANDLEPKcKi"></span><span id="_CPPv219pub_set_description11ECAL_HANDLEPKcKi"></span><span id="pub_set_description__ECAL_HANDLE.cCP.iC"></span><span class="target" id="ecal__clang_8h_1aaacbcd254d94c68c9a61fae235101c5c"></span><span class="pre">ECAL_API</span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pub_set_description</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_ecalc_8h_1a6801786d75d8af7f213d45239018884b.html#_CPPv411ECAL_HANDLE" title="ECAL_HANDLE"><span class="n"><span class="pre">ECAL_HANDLE</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">handle_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">topic_desc_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">topic_desc_length_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419pub_set_description11ECAL_HANDLEPKcKi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Setup topic type description. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -502,7 +511,7 @@
                 <div class="footer-additional">
                     <p class="text-center">
                         <a href="https://github.com/TYPO3-Documentation/sphinx_typo3_theme" rel="nofollow" target="_blank">
-                            TYPO3 Theme 4.4.3
+                            TYPO3 Theme 4.5.2
                         </a>
                     </p>
                 </div>
@@ -537,6 +546,7 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">
