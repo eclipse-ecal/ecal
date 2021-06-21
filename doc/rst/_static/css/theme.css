@@ -10168,12 +10168,6 @@ a.text-dark:focus {
     flex-grow: 1
 }
 
-@media (min-width: 2049px) {
-    .page-main-inner {
-        width: 99999px
-    }
-}
-
 @media (min-width: 768px) {
     .footer-main {
         margin: -20px;
