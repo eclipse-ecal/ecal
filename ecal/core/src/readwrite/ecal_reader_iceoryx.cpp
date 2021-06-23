@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  eCAL iceoryx reader
+ * @brief  shared memory (iceoryx) reader
 **/
 
 #include "ecal_def.h"
@@ -39,57 +39,58 @@ namespace eCAL
   //////////////////////////////////////////////////////////////////
   // CDataReaderIceoryx
   //////////////////////////////////////////////////////////////////
-  CDataReaderSHM::CDataReaderSHM()
-  {
-  }
+  CDataReaderSHM::CDataReaderSHM() = default;
 
-  bool CDataReaderSHM::CreateIceoryxSub(const std::string& topic_name_)
+  bool CDataReaderSHM::Create(const std::string& topic_name_)
   {
+    // store topic name
     m_topic_name = topic_name_;
 
-    // create the runtime for registering with the RouDi daemon
-    iox::runtime::PoshRuntime::getInstance(std::string("/") + eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID()));
+    // subscriber description
+    const iox::capro::IdString_t service  (iox::cxx::TruncateToCapacity, eCALPAR(ICEORYX, SERVICE));
+    const iox::capro::IdString_t instance (iox::cxx::TruncateToCapacity, eCALPAR(ICEORYX, INSTANCE));
+    const iox::capro::IdString_t event    (iox::cxx::TruncateToCapacity, topic_name_);
+    const iox::capro::ServiceDescription servicedesc(service, instance, event);
 
-    // create subscriber
-    const iox::capro::IdString service  (iox::cxx::TruncateToCapacity, eCALPAR(ICEORYX, SERVICE));
-    const iox::capro::IdString instance (iox::cxx::TruncateToCapacity, eCALPAR(ICEORYX, INSTANCE));
-    const iox::capro::IdString event    (iox::cxx::TruncateToCapacity, topic_name_);
-    m_subscriber = std::shared_ptr<iox::popo::Subscriber>(new iox::popo::Subscriber({service, instance, event}));
-    m_subscriber->setReceiveHandler(std::bind(&CDataReaderSHM::receiveHandler, this));
-    m_subscriber->subscribe();
+    // create subscriber && listener
+    m_subscriber = std::make_shared<iox::popo::UntypedSubscriber>(servicedesc);
+    m_listener   = std::make_shared<iox::popo::Listener>();
+
+    // attach DATA_RECEIVED event
+    m_listener
+        ->attachEvent(*m_subscriber,
+                     iox::popo::SubscriberEvent::DATA_RECEIVED,
+                     iox::popo::createNotificationCallback(onSampleReceivedCallback, *this))
+        .or_else([](auto) {
+          Logging::Log(log_level_fatal, "CDataWriterSHM::CreateIceoryxSub(): Unable to attach subscriber to listener");
+        });
 
     return true;
   }
 
-  bool CDataReaderSHM::DestroyIceoryxSub()
+  bool CDataReaderSHM::Destroy()
   {
     if(!m_subscriber) return false;
 
-    m_subscriber->unsubscribe();
-    m_subscriber->unsetReceiveHandler();
+    // detach event and destroy subscriber and listener
+    m_listener->detachEvent(*m_subscriber, iox::popo::SubscriberEvent::DATA_RECEIVED);
     m_subscriber = nullptr;
-
+    m_listener   = nullptr;
+    
     return true;
   }
 
-  void CDataReaderSHM::receiveHandler()
+  void CDataReaderSHM::onSampleReceivedCallback(iox::popo::UntypedSubscriber* subscriber_, CDataReaderSHM* self)
   {
-    const iox::mepoo::ChunkHeader* ch(nullptr);
-
-    // get all the chunks the FiFo holds. Maybe there are several ones if the publisher produces faster than the subscriber can process
-    while (m_subscriber->getChunk(&ch))
-    {
+    subscriber_->take().and_then([subscriber_, self](auto& userPayload) {
       // extract data header
-      const size_t header_size = sizeof(CDataWriterBase::SWriterData);
-      const CDataWriterBase::SWriterData* data_header  = static_cast<CDataWriterBase::SWriterData*>(ch->payload());
-      const char*                         data_payload = static_cast<char*>(ch->payload()) + header_size;
-      if(ch->m_info.m_payloadSize == header_size + data_header->len)
-      {
-        // apply data to subscriber gate
-        if (g_subgate()) g_subgate()->ApplySample(m_topic_name, /*topic_id_*/ "", data_payload, data_header->len, data_header->id, data_header->clock, data_header->time, data_header->hash, eCAL::pb::eTLayerType::tl_ecal_shm);
-      }
-      // release the chunk
-      m_subscriber->releaseChunk(ch);
-    }
+      auto data_header  = static_cast<const CDataWriterBase::SWriterData*>(iox::mepoo::ChunkHeader::fromUserPayload(userPayload)->userHeader());
+      // extract data
+      auto data_payload = static_cast<const char*>(userPayload);
+      // apply data to subscriber gate
+      if (g_subgate()) g_subgate()->ApplySample(self->m_topic_name, /*topic_id_*/ "", data_payload, data_header->len, data_header->id, data_header->clock, data_header->time, data_header->hash, eCAL::pb::eTLayerType::tl_ecal_shm);
+      // release payload
+      subscriber_->release(userPayload);
+    });
   }
 }

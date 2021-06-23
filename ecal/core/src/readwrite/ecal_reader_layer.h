@@ -46,9 +46,9 @@ namespace eCAL
   class CReaderLayer
   {
   public:
-    CReaderLayer() {};
+    CReaderLayer() = default;
 
-    virtual ~CReaderLayer() {}
+    virtual ~CReaderLayer() = default;
 
     virtual void Initialize() = 0;
 

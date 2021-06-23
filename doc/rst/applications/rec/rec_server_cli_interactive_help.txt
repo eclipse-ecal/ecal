@@ -1,0 +1,84 @@
+load <Path>
+  Loads an eCAL Rec configuration file.
+
+
+save <Path>
+  Saves the current configuration to a file. Not available in remote-control
+  mode.
+
+
+getconfig 
+  Prints the configuration of the recorder.
+
+
+setconfig [--set-client <Hostname:Hosts,To,Record>] ...
+  | [--set-addons <Hostname:List,Of,Addon,IDs>] ... 
+  | [--remove-client <Hostname>] ... 
+  | [--pre-buffer <Seconds>]
+  | [--blacklist <list>]
+  | [--whitelist <List>]
+  | [--meas-root-dir <Path>]
+  | [--meas-name <String>] 
+  | [--max-file-size <Megabytes>]
+  | [--description <String>]
+  | [--ftp-server <FTP_Server>]
+  | [--delete-after-upload <yes/no>]
+  | [--enable-built-in-client <yes/no>]
+  | [--help]
+  | <> ...
+  Sets a config parameter. Not available in remote-control mode. Multiple
+  configuration settings can be changed with a single command. Tip: A more
+  extensive help is available by --help.
+
+
+activate 
+  Activates the recorder and all clients. If Pre-buffering is enabled, all
+  recorders will start to buffer data.
+
+
+deactivate 
+  Deactivates all clients. They keep running but will not subscribe to any
+  channels and buffer data until activated again.
+
+
+rec [Seconds]
+  Starts a recording. If SECS_TO_RECORD is given, the recording will be stopped
+  afterwards.
+
+
+savebuffer 
+  Saves the content of the current pre-buffer to its own measurement.
+
+
+stop 
+  Stops the current recording.
+
+
+status [--meas <MeasID>] | [--host <Hostname>]
+  Prints the recorder status. If no argument is provided, the recorder status,
+  job history and client list ist printed. To get more detailed information,
+  provide the measurement ID or hostname. The --meas and --host specifiers can
+  be omitted, if the given measurement id / hostname is unique.
+
+
+comment [MeasID] <Comment>
+  Adds a comment to a measurement. If no ID is given, the comment will be added
+  to the last measurement.
+
+
+upload [MeasID]
+  Uploads a measurement. If no ID is given, all measurements that can be
+  uploaded will be uploaded.
+
+
+delete <MeasID>
+  Deletes the given measurement from all machines.
+
+
+sleep <Seconds>
+  Sleeps for the given amount of time. Usefull when automatically piping input
+  to eCAL Rec via stdin.
+
+
+exit 
+  Quit eCAL Rec

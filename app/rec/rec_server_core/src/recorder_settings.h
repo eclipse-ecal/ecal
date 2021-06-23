@@ -100,7 +100,7 @@ namespace eCAL
       std::pair<bool, std::chrono::steady_clock::duration> max_pre_buffer_length_;
       std::pair<bool, bool>                                pre_buffering_enabled_;
       std::pair<bool, std::set<std::string>>               host_filter_;
-      std::pair<bool, eCAL::rec::RecordMode>                          record_mode_;
+      std::pair<bool, eCAL::rec::RecordMode>               record_mode_;
       std::pair<bool, std::set<std::string>>               listed_topics_;
       std::pair<bool, std::set<std::string>>               enabled_addons_;
     };

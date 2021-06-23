@@ -22,13 +22,19 @@ find_package(tclap REQUIRED)
 
 set(include_files
   include/custom_tclap/advanced_tclap_output.h
-  include/custom_tclap/fuzzy_value_switch_arg.h
+  include/custom_tclap/fuzzy_duo_value_arg_unsigned_longlong_string.h
+  include/custom_tclap/fuzzy_value_switch_arg_bool.h
+  include/custom_tclap/fuzzy_value_switch_arg_double.h
+  include/custom_tclap/fuzzy_value_switch_arg_unsigned_longlong.h
 )
 
 
 set(src_files
   src/advanced_tclap_output.cpp
-  src/fuzzy_value_switch_arg.cpp
+  src/fuzzy_duo_value_arg_unsigned_longlong_string.cpp
+  src/fuzzy_value_switch_arg_bool.cpp
+  src/fuzzy_value_switch_arg_double.cpp
+  src/fuzzy_value_switch_arg_unsigned_longlong.cpp
 )
 
 ecal_add_static_library(${PROJECT_NAME} 

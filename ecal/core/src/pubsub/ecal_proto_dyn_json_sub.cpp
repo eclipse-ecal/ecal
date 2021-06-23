@@ -160,7 +160,7 @@ namespace eCAL
           binary_input.assign((char*)data_->buf, static_cast<size_t>(data_->size));
           msg_ptr.clear();
           auto status = google::protobuf::util::BinaryToJsonString(resolver_.get(), topic_type_full, binary_input, &msg_ptr, options);
-          if (status == google::protobuf::util::Status::OK)
+          if (status.ok())
           {
             SReceiveCallbackData cb_data;
             cb_data.buf = (void*)msg_ptr.c_str();

@@ -18,11 +18,15 @@
 */
 
 /**
- * @brief  iceoryx data writer
+ * @brief  shared memory (iceoryx) writer
 **/
+
+#include <sstream>
+#include <regex>
 
 #include "ecal_def.h"
 #include "ecal_config_hlp.h"
+#include <ecal/ecal_log.h>
 #include "ecal/ecal_process.h"
 #include "readwrite/ecal_writer_iceoryx.h"
 
@@ -32,6 +36,14 @@ namespace eCAL
 {
   CDataWriterSHM::CDataWriterSHM()
   {
+    // create the runtime for registering with the RouDi daemon
+    std::string runtime_name = eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID());
+    // replace whitespace characters
+    std::regex re("[ \t\r\n\f]");
+    runtime_name = std::regex_replace(runtime_name, re, "_");
+    // initialize runtime
+    const iox::capro::IdString_t runtime (iox::cxx::TruncateToCapacity, runtime_name);
+    iox::runtime::PoshRuntime::initRuntime(runtime);
   }
 
   CDataWriterSHM::~CDataWriterSHM()
@@ -55,15 +67,14 @@ namespace eCAL
 
   bool CDataWriterSHM::Create(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
   {
-    // create the runtime for registering with the RouDi daemon
-    iox::runtime::PoshRuntime::getInstance(std::string("/") + eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID()));
+    // publisher description
+    const iox::capro::IdString_t service  (iox::cxx::TruncateToCapacity, eCALPAR(ICEORYX, SERVICE));
+    const iox::capro::IdString_t instance (iox::cxx::TruncateToCapacity, eCALPAR(ICEORYX, INSTANCE));
+    const iox::capro::IdString_t event    (iox::cxx::TruncateToCapacity, topic_name_);
+    const iox::capro::ServiceDescription servicedesc(service, instance, event);
 
     // create publisher
-    const iox::capro::IdString service  (iox::cxx::TruncateToCapacity, eCALPAR(ICEORYX, SERVICE));
-    const iox::capro::IdString instance (iox::cxx::TruncateToCapacity, eCALPAR(ICEORYX, INSTANCE));
-    const iox::capro::IdString event    (iox::cxx::TruncateToCapacity, topic_name_);
-    m_publisher = std::shared_ptr<iox::popo::Publisher>(new iox::popo::Publisher({service, instance, event}));
-    m_publisher->offer();
+    m_publisher = std::make_shared<iox::popo::UntypedPublisher>(servicedesc);
 
     return true;
   }
@@ -72,7 +83,7 @@ namespace eCAL
   {
     if(!m_publisher) return false;
 
-    m_publisher->stopOffer();
+    // destroy publisher
     m_publisher = nullptr;
 
     return true;
@@ -81,24 +92,30 @@ namespace eCAL
   size_t CDataWriterSHM::Send(const SWriterData& data_)
   {
     if (!m_publisher) return 0;
+    size_t ret(0);
 
-    // allocate and fill chunk payload
-    auto header_data_len = sizeof(SWriterData) + data_.len;
-    auto ch = m_publisher->allocateChunkWithHeader(header_data_len, true);
-    if(!ch)
-    {
-      // no more memory from iceoryx :-(
-      return 0;
-    }
-        
-    // copy payload header
-    std::memcpy(ch->payload(), &data_, sizeof(SWriterData));
-    // copy payload data
-    std::memcpy(static_cast<char*>(ch->payload()) + sizeof(SWriterData), data_.buf, data_.len);
+    uint32_t payload_size(static_cast<uint32_t>(data_.len));
+    uint32_t payload_alignment(static_cast<uint32_t>(alignof(void*)));
+    uint32_t header_size(static_cast<uint32_t>(sizeof(data_)));
+    uint32_t header_alignment(static_cast<uint32_t>(alignof(SWriterData)));
 
-    // send the chunk
-    m_publisher->sendChunk(ch);
+    m_publisher->loan(payload_size, payload_alignment, header_size, header_alignment)
+      .and_then([&](auto& userPayload) {
+        // loan successful
+        // copy payload header
+        std::memcpy(iox::mepoo::ChunkHeader::fromUserPayload(userPayload)->userHeader(), &data_, sizeof(SWriterData));
+        // copy payload data
+        std::memcpy(static_cast<char*>(userPayload), data_.buf, data_.len);
+        // publish all
+        m_publisher->publish(userPayload);
+        ret = data_.len;
+      }).or_else([&](auto& error) {
+        // loan failed
+        std::stringstream ss;
+        ss << "CDataWriterSHM::Send(): Loan of iceoryx chunk failed ! Error code: " << static_cast<uint64_t>(error);
+        Logging::Log(log_level_fatal, ss.str());
+      });
 
-    return data_.len;
+    return ret;
   }
 }

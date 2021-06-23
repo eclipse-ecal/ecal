@@ -60,6 +60,7 @@ def get_asset_properties(asset_name, ecal_version):
 
     ubuntu_codename_dict = \
     {
+        "impish":  semantic_version.Version("21.10.0"),
         "hirsute": semantic_version.Version("21.4.0"),
         "groovy":  semantic_version.Version("20.10.0"),
         "focal":   semantic_version.Version("20.4.0"),

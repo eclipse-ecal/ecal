@@ -169,7 +169,7 @@ language = None
 exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = 'native'
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -201,6 +201,9 @@ html_theme_options = {
     # Footer
     #'docstypo3org'       : 'True',
     'project_repository' : 'https://github.com/continental/ecal',
+
+    # How-to-edit
+    'h2edit_url'          : 'https://continental.github.io/ecal/advanced/documentation.html'
 }
 
 new_html_context = {

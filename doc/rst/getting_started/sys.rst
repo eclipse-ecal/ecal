@@ -26,6 +26,10 @@ eCAL Sys will:
 .. note::
    eCAL Sys is available since eCAL 5.8. 
 
+.. seealso::
+   This chapter will focus on the very basics of eCAL Sys to get you started.
+   To learn more about all features of eCAL Sys, both the GUI and the command line application, please check out the :ref:`Advanced eCAL Sys <applications_sys>` chapter. 
+
 GUI Overview
 ============
 

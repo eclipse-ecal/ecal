@@ -34,7 +34,7 @@ jobs:
         cd "${{ runner.workspace }}/iceoryx"
         git clone https://github.com/eclipse/iceoryx.git
         cd iceoryx
-        git checkout release_0.17
+        git checkout release_1.0
         ./tools/iceoryx_build_test.sh
         sudo mkdir /etc/iceoryx
         sudo cp ${{ runner.workspace }}/iceoryx/iceoryx/iceoryx_posh/etc/iceoryx/roudi_config_example.toml /etc/iceoryx/roudi_config.toml

@@ -36,9 +36,7 @@ namespace eCAL
   // CServGate
   //////////////////////////////////////////////////////////////////
   std::atomic<bool> CServGate::m_created;
-  CServGate::CServGate()
-  {
-  };
+  CServGate::CServGate() = default;
 
   CServGate::~CServGate()
   {

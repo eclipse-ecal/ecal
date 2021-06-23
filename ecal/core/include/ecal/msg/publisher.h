@@ -82,7 +82,7 @@ namespace eCAL
     **/
     CMsgPublisher& operator=(CMsgPublisher&&) = default;
 
-    virtual ~CMsgPublisher() {}
+    virtual ~CMsgPublisher() = default;
 
     /**
      * @brief  Creates this object. 

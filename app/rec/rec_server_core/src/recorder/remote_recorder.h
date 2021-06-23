@@ -134,7 +134,6 @@ namespace eCAL
     //////////////////////////////////////////
     private:
       static eCAL::pb::rec_client::SetConfigRequest SettingsToSettingsPb(const RecorderSettings& settings);
-      static eCAL::rec::RecorderStatus StatusPbToRecorderStatus(const eCAL::pb::rec_client::State& recorder_state_pb);
       static eCAL::pb::rec_client::CommandRequest RecorderCommandToCommandPb(const RecorderCommand& command);
       static void SetJobConfig(google::protobuf::Map<std::string, std::string>* job_config_pb, const eCAL::rec::JobConfig& job_config);
       static void SetUploadConfig(google::protobuf::Map<std::string, std::string>* upload_config_pb, const eCAL::rec::UploadConfig& upload_config);

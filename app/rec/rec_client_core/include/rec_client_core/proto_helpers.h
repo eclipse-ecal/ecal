@@ -36,6 +36,10 @@ namespace eCAL
   {
     namespace proto_helpers
     {
+      /////////////////////////////////
+      /// To Protobuf
+      /////////////////////////////////
+
       void ToProtobuf(const eCAL::rec::RecHdf5JobStatus&        hdf5_job_status,             eCAL::pb::rec_client::State::RecHdf5Status&            hdf5_status_pb);
       void ToProtobuf(const eCAL::rec::RecAddonJobStatus&       rec_addon_job_status,        eCAL::pb::rec_client::State::RecAddonJobStatus&        rec_addon_job_status_pb);
       void ToProtobuf(const eCAL::rec::RecAddonJobStatus::State rec_addon_job_status_state , eCAL::pb::rec_client::State::RecAddonJobStatus::State& rec_addon_job_status_state_pb);
@@ -52,7 +56,29 @@ namespace eCAL
       eCAL::pb::rec_client::State::JobState                 ToProtobuf(const eCAL::rec::JobState                 job_state);
       eCAL::pb::rec_client::State::JobStatus                ToProtobuf(const eCAL::rec::JobStatus&               job_status);
       eCAL::pb::rec_client::State::RecorderAddonStatus      ToProtobuf(const eCAL::rec::RecorderAddonStatus&     rec_addon_status);
-      eCAL::pb::rec_client::State                           ToProtobuf(const eCAL::rec::RecorderStatus& rec_status, const std::string& hostname);    
+      eCAL::pb::rec_client::State                           ToProtobuf(const eCAL::rec::RecorderStatus& rec_status, const std::string& hostname);
+
+      /////////////////////////////////
+      /// From Protobuf
+      /////////////////////////////////
+
+      void FromProtobuf(const eCAL::pb::rec_client::State::RecHdf5Status&           hdf5_status_pb,                eCAL::rec::RecHdf5JobStatus&         hdf5_job_status);
+      void FromProtobuf(const eCAL::pb::rec_client::State::RecAddonJobStatus&       rec_addon_job_status_pb,       eCAL::rec::RecAddonJobStatus&        rec_addon_job_status);
+      void FromProtobuf(const eCAL::pb::rec_client::State::RecAddonJobStatus::State rec_addon_job_status_state_pb, eCAL::rec::RecAddonJobStatus::State& rec_addon_job_status_state);
+      void FromProtobuf(const eCAL::pb::rec_client::State::UploadStatus&            upload_status_pb,              eCAL::rec::UploadStatus&             upload_status);
+      void FromProtobuf(const eCAL::pb::rec_client::State::JobState                 job_state_pb,                  eCAL::rec::JobState&                 job_state);
+      void FromProtobuf(const eCAL::pb::rec_client::State::JobStatus&               job_status_pb,                 eCAL::rec::JobStatus&                job_status);
+      void FromProtobuf(const eCAL::pb::rec_client::State::RecorderAddonStatus&     rec_addon_status_pb,           eCAL::rec::RecorderAddonStatus&      rec_addon_status);
+      void FromProtobuf(const eCAL::pb::rec_client::State&                          rec_status_pb,                 std::string& hostname, eCAL::rec::RecorderStatus& rec_status);
+
+      eCAL::rec::RecHdf5JobStatus                       FromProtobuf(const eCAL::pb::rec_client::State::RecHdf5Status&            hdf5_job_status_pb);
+      eCAL::rec::RecAddonJobStatus                      FromProtobuf(const eCAL::pb::rec_client::State::RecAddonJobStatus&        rec_addon_job_status_pb);
+      eCAL::rec::RecAddonJobStatus::State               FromProtobuf(const eCAL::pb::rec_client::State::RecAddonJobStatus::State& rec_addon_job_status_state_pb);
+      eCAL::rec::UploadStatus                           FromProtobuf(const eCAL::pb::rec_client::State::UploadStatus&             upload_status_pb);
+      eCAL::rec::JobState                               FromProtobuf(const eCAL::pb::rec_client::State::JobState&                 job_state_pb);
+      eCAL::rec::JobStatus                              FromProtobuf(const eCAL::pb::rec_client::State::JobStatus&                job_status_pb);
+      eCAL::rec::RecorderAddonStatus                    FromProtobuf(const eCAL::pb::rec_client::State::RecorderAddonStatus&      rec_addon_status_pb);
+      std::pair<std::string, eCAL::rec::RecorderStatus> FromProtobuf(const eCAL::pb::rec_client::State&                           rec_status_pb);
     }
   }
 }

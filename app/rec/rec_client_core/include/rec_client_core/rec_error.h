@@ -56,6 +56,16 @@ namespace eCAL
         // File based errors
         RESOURCE_UNAVAILABLE,
         DIR_NOT_EMPTY,
+
+        // Rec Server CLI specific errors
+        NO_COMMAND,
+        UNKNOWN_COMMAND,
+        TOO_MANY_PARAMETERS,
+        COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE,
+        COMMAND_ONLY_AVAILABLE_IN_REMOTE_MODE,
+        NOT_RECORDING,
+        REMOTE_HOST_UNAVAILABLE,
+        CLIENT_UNKNOWN,
       };
 
     //////////////////////////////////////////
@@ -77,30 +87,40 @@ namespace eCAL
         switch (error_code_)
         {
         // Generic
-        case OK:                   return "OK";                           break;
-        case GENERIC_ERROR:        return "Error";                        break;
+        case OK:                                    return "OK";                                            break;
+        case GENERIC_ERROR:                         return "Error";                                         break;
 
         // General Errors
-        case ACTION_SUPERFLOUS:    return "Action is superflous";         break;
-        case PARAMETER_ERROR:      return "Faulty or missing parameters"; break;
-        case ABORTED_BY_USER:      return "Aborted by user";              break;
-        case UNSUPPORTED_ACTION:   return "Unsupported action";           break;
+        case ACTION_SUPERFLOUS:                     return "Action is superflous";                          break;
+        case PARAMETER_ERROR:                       return "Faulty or missing parameters";                  break;
+        case ABORTED_BY_USER:                       return "Aborted by user";                               break;
+        case UNSUPPORTED_ACTION:                    return "Unsupported action";                            break;
 
         // Recording based errors
-        case NOT_STARTED:          return "Recording not started";        break;
-        case CURRENTLY_RECORDING:  return "Recording is running";         break;
-        case CURRENTLY_FLUSHING:   return "The recorder is flushing";     break;
-        case CURRENTLY_UPLOADING:  return "The recorder is uploading";    break;
-        case ALREADY_UPLOADED:     return "Measurement already uploaded"; break;
+        case NOT_STARTED:                           return "Recording not started";                         break;
+        case CURRENTLY_RECORDING:                   return "Recording is running";                          break;
+        case CURRENTLY_FLUSHING:                    return "The recorder is flushing";                      break;
+        case CURRENTLY_UPLOADING:                   return "The recorder is uploading";                     break;
+        case ALREADY_UPLOADED:                      return "Measurement already uploaded";                  break;
 
-        case MEAS_ID_NOT_FOUND:    return "Meas ID not found";            break;
-        case MEAS_IS_DELETED:      return "Measurement has been deleted"; break;
+        case MEAS_ID_NOT_FOUND:                     return "Meas ID not found";                             break;
+        case MEAS_IS_DELETED:                       return "Measurement has been deleted";                  break;
 
         // File based errors
-        case RESOURCE_UNAVAILABLE: return "Resource unavailable";         break;
-        case DIR_NOT_EMPTY:        return "Directory not empty";          break;
+        case RESOURCE_UNAVAILABLE:                  return "Resource unavailable";                          break;
+        case DIR_NOT_EMPTY:                         return "Directory not empty";                           break;
 
-        default:                   return "Unknown error";
+        // Rec Server CLI specific errors
+        case NO_COMMAND:                            return "No command";                                    break;
+        case TOO_MANY_PARAMETERS:                   return "To many parameters";                            break;
+        case UNKNOWN_COMMAND:                       return "Unknown command";                               break;
+        case COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE:  return "Command not available in remote-control mode";  break;
+        case COMMAND_ONLY_AVAILABLE_IN_REMOTE_MODE: return "Command only available in remote-control mode"; break;
+        case NOT_RECORDING:                         return "No recording is running";                       break;
+        case REMOTE_HOST_UNAVAILABLE:               return "Remote host unavailable";                       break;
+        case CLIENT_UNKNOWN:                        return "Unknown client";                                break;
+
+        default:                                    return "Unknown error";
         }
       }
 

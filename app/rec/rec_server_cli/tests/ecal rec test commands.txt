@@ -1,0 +1,314 @@
+===== Verbleibende Parameter ====
+
+--set-addons
+--comment ID comment
+--delete ID
+--meas-status ID
+
+===== Verbleibende Interactive commands ====
+
+setconfig [--set-addons <Hostname:List,Of,Addon,IDs>] ...
+setconfig [--remove-client <Hostname>] ...
+setconfig [--blacklist <list>]
+
+status --meas <MeasID>
+status --host <Hostname>
+comment [MeasID] <Comment>
+comment <Comment>
+upload [MeasID]
+delete <MeasID>
+
+################################################################################
+## Prerequisites                                                              ##
+################################################################################
+
+- 2 PCS:
+    - FRLBJRXW (Windows)
+    - florian-ubuntu20 (Linux)
+
+- FRLBJRXW:
+    - ecal_rec_client
+    - FTP Server: ftp://duser:123456@FRLBJRXW:21/
+    - Playback measurement
+
+florian-ubuntu20:
+    - test.ecalrec & test_faulty.ecalrec in /home/florian
+    - run ecal_sample_person_snd
+    - Execute direct commands here
+
+################################################################################
+## Direct-mode only                                                           ##
+################################################################################
+
+=========================
+Direkt record ohne config
+=========================
+
+Description
+-----------
+
+- Config wird per parameter gesetzt
+- Es wird ein 5.5sec recording erstellt
+- Die Messung wird kommentiert
+- Die Messung wird hochgeladen (-> internal FTP)
+- Die recorder werden am Ende deaktiviert
+- Geprinted wird:
+    - Status
+    - Config
+
+
+Output
+------
+
+- Complete Measurement on florian-ubuntu20:
+    - /home/florian/ecal_test_meas
+    - 5.5secs
+    - No __sim_time__,__ecalplay_state__
+    - 22 Frames person
+- mesurement NOT anymore in D:\ecal_test_meas\
+- description.txt:
+    - "My description" + "My first comment"
+- console:
+    - Status tells: "Deactivated"
+    - Config teslls: Pre-Buffer 3.5 secs
+
+
+-------------------------
+
+ecal_rec \
+  --no-default \
+  --record 5.5 \
+  --deactivate \
+  --comment "My first comment" \
+  --upload \
+  --status \
+  --get-config \
+  --set-client "florian-ubuntu20:florian-ubuntu20" --set-client "FRLBJRXW" \
+  --blacklist "__sim_time__,__ecalplay_state__" \
+  --pre-buffer 3.5 \
+  --meas-root-dir "\$TARGET{OSSELECT WIN \"D:/\" LINUX \"/home/florian/\"}/ecal_test_meas" \
+  --meas-name "\$HOST{TIME} meas" \
+  --max-file-size 10 \
+  --description "My description" \
+  --ftp-server internal \
+  --delete-after-upload yes
+
+
+====================================
+Direkt mit config + interactive mode
+====================================
+- Config wird geladen und teils überschrieben
+- The recorder werden aktiviert
+- Anschließend interactive mode
+    - 
+
+Output
+------
+
+- Config saved to /home/florian/test_changed.ecalrec
+- Status tells: activated
+- Config prints
+
+-------------------------
+printf "save /home/florian/test_changed.ecalrec \n \
+        status \n \
+        getconfig \n \
+        exit" \
+| \
+ecal_rec \
+  --config /home/florian/test_faulty.ecalrec \
+  --set-client "florian-ubuntu20:florian-ubuntu20" \
+  --remove-client "florian-ubuntu18" \
+  --activate \
+  --whitelist "VehiclePosePb,TimeCARPC01,person" \
+  --ftp-server "ftp://duser:123456@FRLBJRXW/upload_dir/" \
+  --delete-after-upload no \
+  --interactive \
+  --interactive-dont-exit
+  
+
+====================================
+Interactive config creation
+====================================
+
+Output
+------
+- D:\upload_dir contains uploaded measurement
+- 5 secs long
+- 3 channels
+- Description: "My description"
+
+Command
+-------
+
+printf "setconfig --set-client \"florian-ubuntu20:florian-ubuntu20\" \
+                  --set-client \"FRLBJRXW\" \
+                  --pre-buffer 3.5 \
+                  --whitelist \"VehiclePosePb,TimeCARPC01,person\" \
+                  --meas-root-dir \"\$TARGET{OSSELECT WIN \\\\\"C:/\\\\\" LINUX \\\\\"\$TARGET{ENV HOME}\\\\\"}/ecal_meas_dir\" \
+                  --meas-name \"\$HOST{TIME}\" \
+                  --max-file-size 42 \
+                  --description \"My description\" \
+                  --ftp-server \"ftp://duser:123456@FRLBJRXW/upload_dir/\" \
+                  --delete-after-upload yes \
+                  --enable-built-in-client yes \
+       \n \
+       activate \n \
+       sleep 5 \n \
+       rec 1.5 \n \
+       sleep 1\n \
+       upload \n \
+       sleep 1 \n \
+       getconfig \n \
+       status" \
+| \
+ecal_rec \
+  --no-default \
+  --interactive
+
+
+
+
+
+
+
+
+
+
+################################################################################
+## Universal (direct mode & remote-control)                                   ##
+################################################################################
+
+=====================
+Interactive mode test
+=====================
+
+Additional Prerequisites
+------------------------
+- test_changed.ecalrec in:   florian-ubuntu20:/home/florian (FROM LAST TEST!)
+
+Output
+------
+
+- 3 Measurements with 3 / 6 / 9 seconds
+    - 3 Channels: VehiclePosePb,TimeCARPC01,person
+- uploaded to Windows D:\upload_dir
+- Status Print: Deactivated
+- Config print
+
+-------------------------
+printf "load /home/florian/test_changed.ecalrec \n \
+        activate \n \
+        sleep 3 \n \
+        savebuffer \n \
+        comment \"3 seconds measurement, created by savebuffer\" \n \
+        rec 3 \n \
+        comment \"6 seconds measurement, created by rec 3 + pre-buffering\" \n \
+        rec \n \
+        sleep 3 \n \
+        stop \n \
+        comment \"9 seconds measurement, created by rec + sleep 3 + stop+ pre-buffering\" \n \
+        sleep 1 \n \
+        upload \n \
+        sleep 3 \n \
+        deactivate \n \
+        status \n \
+        getconfig \n \
+        exit" \
+| \
+ecal_rec \
+  --interactive \
+  --interactive-dont-exit
+
+################################################################################
+> Wenn man diesen Befehl auf florian-ubuntu18 ausführt und strg+c drückt hängt ecal rec
+> Das Uploaden von vielen Messungen gleichzeitig auf einen externen server failed manchmal:
+   florian-ubuntu20: Error uploading: Access denied to remote resource (/home/florian/ecal_meas/2021-06-08_12-46-22.857_measurement/2021-06-08_12-46-22.857_measurement.ecalmeas)
+   ==> nur, wenn ein externer FTP Server verwendet wird (FileZilla FTP Server). Eventuell macht der Probleme?
+
+
+
+
+
+=====================
+Parameter mode test
+=====================
+
+Additional Prerequisites
+------------------------
+- test_changed.ecalrec in:   florian-ubuntu20:/home/florian (FROM LAST TEST!)
+
+Output
+------
+
+- 1 Measurements with 5 seconds
+    - 3 Channels: VehiclePosePb,TimeCARPC01,person
+    - Description: "My description" + "comment from command line"
+- uploaded to Windows D:\upload_dir
+- Status Print: Deactivated
+- continue in interactive mode
+
+-------------------------
+
+ecal_rec \
+  --config "/home/florian/test_changed.ecalrec" \
+  --record 5 \
+  --deactivate \
+  --status \
+  --upload \
+  --comment "Comment from command line" \
+  --interactive \
+  --interactive-dont-exit
+
+
+
+################################################################################
+## Remote-control mode only                                                   ##
+################################################################################
+
+=====================
+Parameter mode test
+=====================
+
+Output:
+-------
+
+- 2 measurements on florian-ubuntu20
+  - 1. long measurement
+  - 2. 10 secs measurement (Comment: "Created by parameter --savebuffer")
+
+florian-ubuntu20:
+-----------------
+
+ecal_rec \
+  --config "/home/florian/test.ecalrec" \
+  --record \
+  --interactive
+
+!!! Wait > 10 secs !!!
+
+florian-ubuntu18:
+-----------------
+
+ecal_rec \
+  --remote-control \
+  --remote-host florian-ubuntu20 \
+  --savebuffer \
+  --comment "Created by parameter --savebuffer" \
+  --stop \
+  --upload \
+  --status
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

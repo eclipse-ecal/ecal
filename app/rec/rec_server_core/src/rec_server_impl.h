@@ -147,12 +147,12 @@ namespace eCAL
     public:
       void SetMeasRootDir   (const std::string& meas_root_dir);
       void SetMeasName      (const std::string& meas_name);
-      void SetMaxFileSizeMib(unsigned int max_file_size_mib);
+      void SetMaxFileSizeMib(int64_t max_file_size_mib);
       void SetDescription   (const std::string& description);
 
       std::string  GetMeasRootDir   () const;
       std::string  GetMeasName      () const;
-      unsigned int GetMaxFileSizeMib() const;
+      int64_t      GetMaxFileSizeMib() const;
       std::string  GetDescription   () const;
 
     ////////////////////////////////////
@@ -215,9 +215,11 @@ namespace eCAL
       static bool anyAddonStateIs_NoLock(eCAL::rec::RecAddonJobStatus::State state, const eCAL::rec::JobStatus& job_status);
 
     ////////////////////////////////////
-    // Config Save / Load
+    // Config Save / Load / Get
     ////////////////////////////////////
     public:
+      RecServerConfig GetConfig() const;
+
       bool ClearConfig();
       bool SaveConfigToFile(const std::string& path);
       bool LoadConfigFromFile(const std::string& path);

@@ -353,3 +353,15 @@ void RecServerService::GetStatus(::google::protobuf::RpcController*             
 
   eCAL::rec_server::proto_helpers::ToProtobuf(status, *response);
 }
+
+
+void RecServerService::GetConfig(::google::protobuf::RpcController*               /*controller*/
+                                  , const ::eCAL::pb::rec_server::GenericRequest* /*request*/
+                                  , ::eCAL::pb::rec_server::RecServerConfig*      response
+                                  , ::google::protobuf::Closure*                  /*done*/)
+{
+  eCAL::rec_server::RecServerConfig config;
+  QMetaObject::invokeMethod(QEcalRec::instance(), "config", Qt::BlockingQueuedConnection, Q_RETURN_ARG(eCAL::rec_server::RecServerConfig, config));
+
+  eCAL::rec_server::proto_helpers::ToProtobuf(config, *response);
+}

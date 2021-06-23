@@ -18,17 +18,21 @@
 */
 
 /**
- * @brief  iceoryx data writer
+ * @brief  shared memory (iceoryx) writer
 **/
 
 #pragma once
 
 #include "readwrite/ecal_writer_base.h"
 
-#include <iceoryx_posh/popo/publisher.hpp>
+#include <iceoryx_posh/popo/untyped_publisher.hpp>
+
+#include <memory>
+#include <string>
 
 namespace eCAL
 {
+  // ecal shared memory (Iceoryx) writer
   class CDataWriterSHM : public CDataWriterBase
   {
   public:
@@ -43,6 +47,6 @@ namespace eCAL
     size_t Send(const SWriterData& data_) override;
 
   private:
-    std::shared_ptr<iox::popo::Publisher> m_publisher;
+    std::shared_ptr<iox::popo::UntypedPublisher> m_publisher;
   };
 }

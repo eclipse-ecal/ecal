@@ -829,12 +829,23 @@ eCAL::rec::Error QEcalRec::simulateDeleteMeasurement(int64_t meas_id) const { re
 // Config Save / Load
 ////////////////////////////////////
 
+eCAL::rec_server::RecServerConfig QEcalRec::config() const
+{
+  return rec_server_->GetConfig();
+}
+
 bool QEcalRec::clearConfig()
 {
   bool success = rec_server_->ClearConfig();
 
   if (success)
   {
+    topic_blacklist_.clear();
+    topic_whitelist_.clear();
+
+    emit topicBlacklistChangedSignal(topic_blacklist_);
+    emit topicWhitelistChangedSignal(topic_whitelist_);
+
     emit enabledRecClientsChangedSignal  (rec_server_->GetEnabledRecClients());
     emit maxPreBufferLengthChangedSignal (rec_server_->GetMaxPreBufferLength());
     emit preBufferingEnabledChangedSignal(rec_server_->GetPreBufferingEnabled());
@@ -889,14 +900,30 @@ bool QEcalRec::loadConfigFromFile(const std::string& path, bool omit_dialogs)
     emit recordModeChangedSignal               (rec_server_->GetRecordMode());
 
     if (rec_server_->GetRecordMode() == eCAL::rec::RecordMode::Blacklist)
+    {
+      topic_blacklist_ = rec_server_->GetListedTopics();
+      topic_whitelist_.clear();
       emit topicBlacklistChangedSignal(rec_server_->GetListedTopics());
+    }
     else if (rec_server_->GetRecordMode() == eCAL::rec::RecordMode::Whitelist)
+    {
+      topic_blacklist_.clear();
+      topic_whitelist_ = rec_server_->GetListedTopics();
       emit topicWhitelistChangedSignal(rec_server_->GetListedTopics());
+    }
+    else if (rec_server_->GetRecordMode() == eCAL::rec::RecordMode::All)
+    {
+      topic_blacklist_.clear();
+      topic_whitelist_.clear();
+    }
+    emit topicBlacklistChangedSignal(topic_blacklist_);
+    emit topicWhitelistChangedSignal(topic_whitelist_);
 
     emit measRootDirChangedSignal   (rec_server_->GetMeasRootDir());
     emit measNameChangedSignal      (rec_server_->GetMeasName());
     emit maxFileSizeMibChangedSignal(rec_server_->GetMaxFileSizeMib());
     emit descriptionChangedSignal   (rec_server_->GetDescription());
+    
 
     emit usingBuiltInRecorderEnabledChangedSignal(rec_server_->IsUsingBuiltInRecorderEnabled());
 

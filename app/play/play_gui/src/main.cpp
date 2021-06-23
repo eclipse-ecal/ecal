@@ -32,7 +32,7 @@
 #pragma warning(pop)
 #endif
 #include <custom_tclap/advanced_tclap_output.h>
-#include <custom_tclap/fuzzy_value_switch_arg.h>
+#include <custom_tclap/fuzzy_value_switch_arg_bool.h>
 
 #include "help_window.h"
 #include <ecal_play_logger.h>
@@ -52,11 +52,11 @@ int main(int argc, char *argv[])
   TCLAP::ValueArg<std::string>     measurement_path_arg           ("m", "measurement",            "Loads the measurement from the path.",                                                                       false, "", "Path");
   TCLAP::SwitchArg                 play_arg                       ("p", "play",                   "Automatically starts the playback. Requires a measurement being loaded.",                                    false);
   TCLAP::ValueArg<std::string>     channel_rename_file_path_arg   ("c", "channel-mapping",        "Loads the channel mapping from the given file and uses it to filter and intialize eCAL publishers. Otherwise, all publishers from the measurement will keep their default name.", false, "", "Path");
-  CustomTclap::FuzzyValueSwitchArg no_play_speed_limit_arg        ("u", "unlimited-speed",        "Publish frames as fast as possible",                                                                         false, false, "true|false");
+  CustomTclap::FuzzyValueSwitchArgBool no_play_speed_limit_arg        ("u", "unlimited-speed",        "Publish frames as fast as possible",                                                                         false, false, "true|false");
   TCLAP::ValueArg<double>          play_speed_arg                 ("s", "speed",                  "Relative rate at which the player shall publish the messages. Ignored, when using \"unlimited_play_speed\"", false, 1.0, "Factor");
-  CustomTclap::FuzzyValueSwitchArg allow_framedropping_arg        ("f", "framedropping",          "Drop frames when the messages cannot be sent at the required speed",                                         false, false, "true|false");
-  CustomTclap::FuzzyValueSwitchArg enforce_delay_accuracy_arg     ("d", "enforce-delay-accuracy", "Always wait the correct amount of time between two messages, even if this will slow down the playback",      false, false, "true|false");
-  CustomTclap::FuzzyValueSwitchArg repeat_arg                     ("r", "repeat",                 "Repeat playback from the beginning if the end has been reached",                                             false, false, "true|false");
+  CustomTclap::FuzzyValueSwitchArgBool allow_framedropping_arg        ("f", "framedropping",          "Drop frames when the messages cannot be sent at the required speed",                                         false, false, "true|false");
+  CustomTclap::FuzzyValueSwitchArgBool enforce_delay_accuracy_arg     ("d", "enforce-delay-accuracy", "Always wait the correct amount of time between two messages, even if this will slow down the playback",      false, false, "true|false");
+  CustomTclap::FuzzyValueSwitchArgBool repeat_arg                     ("r", "repeat",                 "Repeat playback from the beginning if the end has been reached",                                             false, false, "true|false");
   TCLAP::ValueArg<double>          limit_interval_start_arg       ("l", "limit-interval-start",   "Start the playback from this time (relative value in seconds, 0.0 indicates the begin of the measurement)",  false, -1.0, "Seconds");
   TCLAP::ValueArg<double>          limit_interval_end_arg         ("e", "limit-interval-end",     "End the playback at this time (relative value in seconds)",                                                  false, -1.0, "Seconds");
 

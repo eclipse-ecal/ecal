@@ -94,14 +94,6 @@ message(STATUS "Module Path: ${CMAKE_MODULE_PATH}")
 message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 
 # --------------------------------------------------------
-# check options
-# --------------------------------------------------------
-if(WIN32 AND ECAL_LAYER_ICEORYX)
-  message(FATAL_ERROR "Iceoryx transport layer not available for windows os. \
-                       Please disable the layer by setting ECAL_LAYER_ICEORYX to OFF.")
-endif()
-
-# --------------------------------------------------------
 # third party dependencies as requested
 # --------------------------------------------------------
 if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR
@@ -582,9 +574,10 @@ if(BUILD_APPS AND HAS_HDF5)
   add_subdirectory(app/play/play_core)
   add_subdirectory(app/play/play_cli)
 
-  add_subdirectory(app/rec/rec_client_cli)
   add_subdirectory(app/rec/rec_client_core)
   add_subdirectory(app/rec/rec_server_core)
+  add_subdirectory(app/rec/rec_client_cli)
+  add_subdirectory(app/rec/rec_server_cli)
 endif()
 
 # --------------------------------------------------------

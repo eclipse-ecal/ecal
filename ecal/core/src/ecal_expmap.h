@@ -31,12 +31,6 @@
 #include <vector>
 #include <chrono>
 
-#ifdef _MSC_VER
-#if _MSC_VER < 1900
-#define noexcept
-#endif /*_MSC_VER < 1900*/
-#endif /*_MSC_VER*/
-
 namespace eCAL
 {
   namespace Util
@@ -83,8 +77,7 @@ namespace eCAL
         iterator(const typename key_to_value_type::iterator _it)
           : it(_it)
         {};
-        ~iterator()
-        {};
+        ~iterator() = default;
         iterator& operator=(const iterator& i)
         {
           it = i.it;

@@ -26,8 +26,8 @@ requests
 six
 snowballstemmer
 soupsieve
-Sphinx
-sphinx-typo3-theme==4.4.3
+Sphinx==3.5.4
+sphinx-typo3-theme==4.5.2
 sphinxcontrib-applehelp
 sphinxcontrib-devhelp
 sphinxcontrib-htmlhelp
