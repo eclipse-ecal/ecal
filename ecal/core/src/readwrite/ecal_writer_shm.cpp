@@ -31,7 +31,7 @@
 #include "ecal_writer.h"
 #include "ecal_writer_shm.h"
 
-#include "io/ecal_message.h"
+#include "io/ecal_memfile_header.h"
 
 #include <algorithm>
 #include <sstream>
@@ -99,7 +99,7 @@ namespace eCAL
     if (len_ == 0)  return false;
 
     // we recreate a memory file if the file size is to small
-    bool file_to_small = m_memfile.FileSize() < (sizeof(SEcalMessage) + len_);
+    bool file_to_small = m_memfile.FileSize() < (sizeof(SMemFileHeader) + len_);
     if (!m_memfile.IsCreated() || file_to_small)
     {
 #ifndef NDEBUG
@@ -108,7 +108,7 @@ namespace eCAL
 #endif
       // estimate size of memory file
       size_t memfile_reserve = static_cast<size_t>(eCALPAR(PUB, MEMFILE_RESERVE));
-      size_t memfile_size = sizeof(SEcalMessage) + len_ + static_cast<size_t>((static_cast<float>(memfile_reserve) / 100.0f) * static_cast<float>(len_));
+      size_t memfile_size    = sizeof(SMemFileHeader) + len_ + static_cast<size_t>((static_cast<float>(memfile_reserve) / 100.0f) * static_cast<float>(len_));
       // destroy existing memory file object
       DestroyMemFile();
       // and create a new one
@@ -144,18 +144,20 @@ namespace eCAL
     }
 
     // create message header
-    struct SEcalMessage ecal_message;
+    struct SMemFileHeader memfile_hdr;
 
     // set data size
-    ecal_message.data_size = static_cast<unsigned long>(data_.len);
+    memfile_hdr.data_size         = static_cast<unsigned long>(data_.len);
     // set header id
-    ecal_message.id        = static_cast<unsigned long>(data_.id);
+    memfile_hdr.id                = static_cast<unsigned long>(data_.id);
     // set header clock
-    ecal_message.clock     = static_cast<unsigned long>(data_.clock);
+    memfile_hdr.clock             = static_cast<unsigned long>(data_.clock);
     // set header time
-    ecal_message.time      = static_cast<long long>(data_.time);
+    memfile_hdr.time              = static_cast<long long>(data_.time);
     // set header hash
-    ecal_message.hash      = static_cast<size_t>(data_.hash);
+    memfile_hdr.hash              = static_cast<size_t>(data_.hash);
+    // set zero copy
+    memfile_hdr.options.zero_copy = static_cast<unsigned char>(data_.zero_copy);
 
     // open the memory file
     bool opened = m_memfile.Open(PUB_MEMFILE_OPEN_TO);
@@ -184,8 +186,8 @@ namespace eCAL
     size_t wbytes(0);
 
     // write the header
-    written &= m_memfile.Write(&ecal_message, ecal_message.hdr_size, wbytes) > 0;
-    wbytes += ecal_message.hdr_size;
+    written &= m_memfile.Write(&memfile_hdr, memfile_hdr.hdr_size, wbytes) > 0;
+    wbytes += memfile_hdr.hdr_size;
     // write the buffer
     written &= m_memfile.Write(data_.buf, data_.len, wbytes) > 0;
     // close memory file
@@ -373,9 +375,9 @@ namespace eCAL
 #endif
 
     // initialize memory file with empty header
-    struct SEcalMessage ecal_message;
+    struct SMemFileHeader memfile_hdr;
     m_memfile.Open(PUB_MEMFILE_OPEN_TO);
-    m_memfile.Write(&ecal_message, ecal_message.hdr_size, 0);
+    m_memfile.Write(&memfile_hdr, memfile_hdr.hdr_size, 0);
     m_memfile.Close();
 
     // collect all connected process id's

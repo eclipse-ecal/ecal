@@ -64,6 +64,7 @@ namespace eCAL
 
     bool SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_);
     bool SetMaxBandwidthUDP(long bandwidth_);
+    bool EnableZeroCopy(bool state_);
 
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
     bool RemEventCallback(eCAL_Publisher_Event type_);
@@ -115,6 +116,7 @@ namespace eCAL
     size_t             m_topic_size;
 
     QOS::SWriterQOS    m_qos;
+    bool               m_zero_copy;
 
     std::atomic<bool>  m_connected;
     typedef Util::CExpMap<std::string, bool> ConnectedMapT;

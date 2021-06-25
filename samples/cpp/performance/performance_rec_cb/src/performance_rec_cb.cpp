@@ -42,8 +42,7 @@ void PrintStatistic(const std::string& topic_name_, const std::chrono::duration<
     out << "Messages/s:            " << int(msgs_                / diff_time_.count()) << std::endl;
     if(buf_)
     {
-      buf_[30] = 0;
-      out << "Message:               " << buf_ << std::endl;
+      out << "Message:               " << std::string(buf_, std::find(buf_, buf_ + 24, '\0')) << std::endl;
     }
     std::cout << out.str() << std::endl;
     msgs_  = 0;

@@ -277,6 +277,19 @@ namespace eCAL
     return(len_);
   }
 
+  size_t CMemoryFile::GetBuffer(const void*& buf_, const size_t len_, const size_t offset_)
+  {
+    if (!m_opened)                                                         return(0);
+    if (len_ == 0)                                                         return(0);
+    if (!m_memfile_info->mem_address)                                      return(0);
+    if ((len_ + offset_ + sizeof(SMemFileHeader)) > m_memfile_info->size)  return(0);
+
+    // read content
+    buf_ = static_cast<char*>(m_memfile_info->mem_address) + offset_ + sizeof(SMemFileHeader);
+
+    return(len_);
+  }
+
   void CleanupMemoryFileMap()
   {
     if (!g_memfile_map()) return;

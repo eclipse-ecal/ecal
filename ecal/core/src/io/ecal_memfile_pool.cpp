@@ -25,7 +25,7 @@
 
 #include "ecal_def.h"
 #include "ecal_config_hlp.h"
-#include "ecal_message.h"
+#include "ecal_memfile_header.h"
 #include "pubsub/ecal_subgate.h"
 
 #include "ecal_memfile_pool.h"
@@ -46,9 +46,7 @@ namespace eCAL
     m_timeout_ack = eCALPAR(PUB, MEMFILE_ACK_TO);
   }
 
-  CMemFileObserver::~CMemFileObserver()
-  {
-  }
+  CMemFileObserver::~CMemFileObserver() = default;
 
   void CMemFileObserver::ResetTimeout()
   {
@@ -97,45 +95,97 @@ namespace eCAL
         if(memfile.Open(5))
         {
           // read memory file header
-          SEcalMessage ecal_message;
+          SMemFileHeader memfile_hdr;
 
           // retrieve size of received buffer
-          size_t data_size = memfile.DataSize();
+          size_t buffer_size = memfile.DataSize();
 
-          // if there are less data then size of the header struct, return false
-          if(data_size >= sizeof(SEcalMessage))
+          // do we have at least the first two bytes ? (hdr_size)
+          if (buffer_size >= 2)
           {
-            // read header from memory buffer
-            memfile.Read(&ecal_message, sizeof(SEcalMessage), 0);
+            // read received header's size
+            memfile.Read(&memfile_hdr, 2, 0);
+            uint16_t rcv_hdr_size = memfile_hdr.hdr_size;
+            // if the header size exceeds current header version size -> limit it to that one
+            uint16_t hdr_bytes2copy = std::min(rcv_hdr_size, static_cast<uint16_t>(sizeof(SMemFileHeader)));
+            if (hdr_bytes2copy <= buffer_size)
+            {
+              // now read all we can get from the received header
+              memfile.Read(&memfile_hdr, hdr_bytes2copy, 0);
+            }
           }
 
-          // read memory file content
-          if(ecal_message.data_size > 0)
+          // are we allowed to use zero copy ?
+          // -------------------------------------------------------------------------
+          // That means we call the user callback (ApplySample) from within the opened memory file.
+          // So we do not waste time by copying the payload in an intermediate buffer
+          // but the file keeps opened and blocked until the callback returns.
+          // Other subscriber can not access the content this time !
+          // -------------------------------------------------------------------------
+          auto zero_copy_allowed = memfile_hdr.options.zero_copy;
+          if (zero_copy_allowed != 0)
           {
-            m_ecal_buffer.resize((size_t)ecal_message.data_size);
-            memfile.Read(m_ecal_buffer.data(), (size_t)ecal_message.data_size, ecal_message.hdr_size);
-          }
-
-          // close memory file
-          memfile.Close();
-
-          // send ack event
-          if (m_timeout_ack != 0)
-          {
-            gSetEvent(m_event_ack);
-          }
-
-          // process content
-          if((m_ecal_buffer.size() > 0) && (ecal_message.clock > sample_clock))
-          {
-            // store clock
-            sample_clock = ecal_message.clock;
+            // read memory file content if
+            // - we have some data and 
+            // - did not receive them before
+            if ((memfile_hdr.data_size > 0) && (memfile_hdr.clock > sample_clock))
+            {
+              // acquire memory file payload pointer (no copying here)
+              const void* buf(nullptr);
+              if (memfile.GetBuffer(buf, memfile_hdr.data_size, memfile_hdr.hdr_size) > 0)
+              {
+                // store clock
+                sample_clock = memfile_hdr.clock;
 #ifndef NDEBUG
-            // log it
-            Logging::Log(log_level_debug3, std::string(topic_name_ + "::MemFile Read (" + std::to_string(m_ecal_buffer.size()) + " Bytes)"));
+                // log it
+                Logging::Log(log_level_debug3, std::string(topic_name_ + "::MemFile GetBuffer (" + std::to_string(memfile_hdr.data_size) + " Bytes)"));
 #endif
-            // add sample to data reader
-            if (g_subgate()) g_subgate()->ApplySample(topic_name_, memfile_name_, m_ecal_buffer.data(), m_ecal_buffer.size(), (long long)ecal_message.id, (long long)ecal_message.clock, (long long)ecal_message.time, (size_t)ecal_message.hash, eCAL::pb::tl_ecal_shm);
+                // add sample to data reader (and call user callback function)
+                if (g_subgate()) g_subgate()->ApplySample(topic_name_, memfile_name_, static_cast<const char*>(buf), memfile_hdr.data_size, (long long)memfile_hdr.id, (long long)memfile_hdr.clock, (long long)memfile_hdr.time, (size_t)memfile_hdr.hash, eCAL::pb::tl_ecal_shm);
+              }
+            }
+
+            // close memory file
+            memfile.Close();
+
+            // send ack event
+            if (m_timeout_ack != 0)
+            {
+              gSetEvent(m_event_ack);
+            }
+          }
+          else // zero_copy_allowed
+          {
+            // read memory file content if we have some data and did not receive them before
+            if ((memfile_hdr.data_size > 0) && (memfile_hdr.clock > sample_clock))
+            {
+              // read payload
+              m_ecal_buffer.resize((size_t)memfile_hdr.data_size);
+              memfile.Read(m_ecal_buffer.data(), (size_t)memfile_hdr.data_size, memfile_hdr.hdr_size);
+
+              // store clock
+              sample_clock = memfile_hdr.clock;
+            }
+
+            // close memory file
+            memfile.Close();
+
+            // send ack event
+            if (m_timeout_ack != 0)
+            {
+              gSetEvent(m_event_ack);
+            }
+
+            // process payload
+            if (m_ecal_buffer.size() > 0)
+            {
+#ifndef NDEBUG
+              // log it
+              Logging::Log(log_level_debug3, std::string(topic_name_ + "::MemFile Read (" + std::to_string(m_ecal_buffer.size()) + " Bytes)"));
+#endif
+              // add sample to data reader (and call user callback function)
+              if (g_subgate()) g_subgate()->ApplySample(topic_name_, memfile_name_, m_ecal_buffer.data(), m_ecal_buffer.size(), (long long)memfile_hdr.id, (long long)memfile_hdr.clock, (long long)memfile_hdr.time, (size_t)memfile_hdr.hash, eCAL::pb::tl_ecal_shm);
+            }
           }
         }
 
@@ -183,9 +233,7 @@ namespace eCAL
     m_thread = std::thread(&CMemFileObserver::Observe, &m_observer, topic_name_, memfile_name_, memfile_event_, timeout_max_);
   }
 
-  CMemFileThread::~CMemFileThread()
-  {
-  }
+  CMemFileThread::~CMemFileThread() = default;
 
   bool CMemFileThread::Stop()
   {
@@ -220,9 +268,7 @@ namespace eCAL
   {
   }
 
-  CMemFileThreadPool::~CMemFileThreadPool()
-  {
-  }
+  CMemFileThreadPool::~CMemFileThreadPool() = default;
 
   void CMemFileThreadPool::Create()
   {

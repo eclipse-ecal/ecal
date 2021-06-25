@@ -132,7 +132,7 @@ set(ecal_cmn_cpp_src
 )
 
 set(ecal_io_header_src
-    src/io/ecal_message.h
+    src/io/ecal_memfile_header.h
     src/io/ecal_receiver.h
     src/io/ecal_sender.h
     src/io/msg_type.h

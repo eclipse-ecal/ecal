@@ -35,6 +35,9 @@ void do_run(const int runs, int snd_size /*kB*/)
   eCAL::CPublisher  pub_pkg("pkg_send");
   eCAL::CSubscriber sub_pkg("pkg_reply");
 
+  // enable zero copy
+  pub_pkg.EnableZeroCopy(true);
+
   // let them match
   eCAL::Process::SleepMS(2000);
 

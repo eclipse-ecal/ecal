@@ -138,7 +138,7 @@ namespace eCAL
      * @param len_     The length of the allocated memory (has to be allocated by caller). 
      * @param offset_  The offset where to start reading. 
      *
-     * @return         Number of copied bytes (can be less then len_). 
+     * @return         Number of copied bytes (or zero if it fails). 
     **/
     size_t Read(void* buf_, const size_t len_, const size_t offset_);
 
@@ -152,6 +152,17 @@ namespace eCAL
      * @return         Number of bytes copied to the memory file. 
     **/
     size_t Write(const void* buf_, const size_t len_, const size_t offset_);
+    
+    /**
+     * @brief Get payload buffer pointer from an opened memory file.
+     *
+     * @param buf_     The destination address.
+     * @param len_     Expected length of the available payload.
+     * @param offset_  The offset where to start reading.
+     *
+     * @return         Number of copied bytes (or zero if it fails).
+    **/
+    size_t GetBuffer(const void*& buf_, const size_t len_, const size_t offset_);
 
     /**
      * @brief Maximum data size of the whole memory file.
