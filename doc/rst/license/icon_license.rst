@@ -1,3 +1,6 @@
+
+.. _icon_licenses:
+
 ============
 Icon License
 ============

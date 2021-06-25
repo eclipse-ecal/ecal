@@ -37,6 +37,8 @@ namespace eCAL
       clock     = 0;
       time      = 0;
       hash      = 0;
+      ZeroMemory(reserved, 16);
+
     };
     uint16_t  hdr_size;
     uint64_t  data_size;
@@ -44,5 +46,6 @@ namespace eCAL
     uint64_t  clock;
     int64_t   time;
     uint64_t  hash;
+    char reserverd[16];
   };
 };
