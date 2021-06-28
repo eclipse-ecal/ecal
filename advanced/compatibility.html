@@ -416,8 +416,8 @@
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
 <li><a class="reference internal" href="#">eCAL Compatibility</a><ul>
-<li><a class="reference internal" href="#ecal-5-9">eCAL 5.9</a></li>
-<li><a class="reference internal" href="#ecal-5-8">eCAL 5.8</a></li>
+<li><a class="reference internal" href="#ecal-5-9-vs-5-8">eCAL 5.9 vs. 5.8</a></li>
+<li><a class="reference internal" href="#ecal-5-8-vs-5-7">eCAL 5.8 vs. 5.7</a></li>
 </ul>
 </li>
 </ul>
@@ -470,6 +470,11 @@ Depending on what we changed in eCAL, we increment the appropriate number:</p>
 By wire-compatibility we mean the data protocol that is transferred over network (UDP Data transfer).
 This number is expected to stay at 5 for a long time, but if it ever increases, eCAL 5 nodes will no longer communicate with eCAL 6 nodes.</p>
 <p><em>All eCAL 5 nodes can communicate with each other.</em></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We don’t make guarantees about the wire-compatibility of eCAL Shared Memory communication, even though we try to keep it compatible as long as possible.
+As Shared Memory is a local communication technique, this is only relevant if you would want to use multiple eCAL Versions on one machine.</p>
+</div>
 </li>
 <li><p><strong>MINOR</strong>: The minor version is the most important for you to take care of.
 We increment the minor version, if:</p>
@@ -483,8 +488,8 @@ We increment the minor version, if:</p>
 You can upgrade through patch versions without having to expect any problems.
 Usually, you just want the latest release to profit from all bugfixes.</p></li>
 </ul>
-<section id="ecal-5-9">
-<h2>eCAL 5.9<a class="headerlink" href="#ecal-5-9" title="Permalink to this headline">¶</a></h2>
+<section id="ecal-5-9-vs-5-8">
+<h2>eCAL 5.9 vs. 5.8<a class="headerlink" href="#ecal-5-9-vs-5-8" title="Permalink to this headline">¶</a></h2>
 <p>Compatibility table when upgrading from eCAl 5.8:</p>
 <table class="colwidths-given docutils align-default" id="id2">
 <caption><span class="caption-text">eCAL 5.9 vs. 5.8</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
@@ -496,8 +501,8 @@ Usually, you just want the latest release to profit from all bugfixes.</p></li>
 <tr class="row-odd"><td><p>Wire compatibility</p></td>
 <td><ul class="simple">
 <li><p>eCAL UDP: 100% compatible</p></li>
-<li><p>eCAL Shared Memory: 100% compatible</p></li>
 <li><p>Services: 100% compatible</p></li>
+<li><p>eCAL Shared Memory: 100% compatible</p></li>
 </ul>
 </td>
 </tr>
@@ -522,8 +527,8 @@ It should be possible to mix ecal_rec_gui and ecal_rec_client instances of both 
 </tbody>
 </table>
 </section>
-<section id="ecal-5-8">
-<h2>eCAL 5.8<a class="headerlink" href="#ecal-5-8" title="Permalink to this headline">¶</a></h2>
+<section id="ecal-5-8-vs-5-7">
+<h2>eCAL 5.8 vs. 5.7<a class="headerlink" href="#ecal-5-8-vs-5-7" title="Permalink to this headline">¶</a></h2>
 <p>Compatibility table when upgrading from eCAl 5.7:</p>
 <table class="colwidths-given docutils align-default" id="id3">
 <caption><span class="caption-text">eCAL 5.8 vs. 5.7</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
@@ -535,8 +540,8 @@ It should be possible to mix ecal_rec_gui and ecal_rec_client instances of both 
 <tr class="row-odd"><td><p>Wire compatibility</p></td>
 <td><ul class="simple">
 <li><p>eCAL UDP: 100% compatible</p></li>
-<li><p>eCAL Shared Memory: 100% compatible</p></li>
 <li><p>Services: 100% compatible</p></li>
+<li><p>eCAL Shared Memory: 100% compatible</p></li>
 </ul>
 </td>
 </tr>
