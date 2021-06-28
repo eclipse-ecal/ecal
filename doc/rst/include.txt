@@ -31,6 +31,18 @@
    
    <i class="fas fa-download"></i>
 
+.. |fa-github| raw:: html
+   
+   <i class="fab fa-github"></i>
+
+.. |fa-book| raw:: html
+   
+   <i class="fas fa-book"></i>
+
+.. |fa-copy| raw:: html
+   
+   <i class="fas fa-copy"></i>
+
 .. |ecalini-path-windows| replace:: :file:`C:\\ProgramData\\eCAL\\ecal.ini`
 .. |ecalini-path-ubuntu|  replace:: :file:`/etc/ecal/ecal.ini`
 
