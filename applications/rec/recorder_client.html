@@ -416,7 +416,10 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#"> eCAL Rec Client</a></li>
+<li><a class="reference internal" href="#"> eCAL Rec Client</a><ul>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+</ul>
+</li>
 </ul>
 <!-- /menu -->
                             </div>
@@ -461,8 +464,80 @@
 <!-- body -->
     <section id="ecalrec-app-icon-h1-ecal-rec-client">
 <span id="applications-recorder-client"></span><h1><a class="reference internal" href="../../_images/ecalrec.ico"><img alt="ecalrec_APP_ICON_h1" src="../../_images/ecalrec.ico" style="width: 38px;" /></a> eCAL Rec Client<a class="headerlink" href="#ecalrec-app-icon-h1-ecal-rec-client" title="Permalink to this headline">¶</a></h1>
-<p>This section is still under construction. But we are working on it! Just be patient.</p>
-<img alt="Snail" class="align-center" src="../../_images/snail.svg" /></section>
+<p>The eCAL Rec Client is a command-line style application that gets remote controlled by an eCAL Rec Host Application (i.e. <a class="reference internal" href="recorder_gui.html#applications-recorder-gui"><span class="std std-ref"> eCAL Rec GUI</span></a> or <a class="reference internal" href="recorder_cli.html#applications-recorder-cli"><span class="std std-ref"> eCAL Rec CLI</span></a>).
+Start this application on all machines that shall record topics in a distributed recording scenario.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Usually you will not need to manually control the eCAL Rec Client, as eCAL Rec CLI provides all the same features and more; it basically has a built-in eCAL Rec Client.</p>
+</div>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-txt notranslate"><div class="highlight"><pre><span></span>USAGE:
+
+   ecal_rec_client  [-b &lt;seconds&gt;] [--blacklist &lt;list&gt;] [--whitelist
+                    &lt;list&gt;] [-f &lt;list&gt;] [--addons &lt;list&gt;] [-r]
+                    [--connect-to-ecal] [-d &lt;path&gt;] [-n &lt;directory&gt;]
+                    [--max-file-size &lt;megabytes&gt;] [--description &lt;string&gt;]
+                    [--list-addons] [--] [--version] [-h]
+
+
+Where:
+
+   -b &lt;seconds&gt;,  --pre-buffer &lt;seconds&gt;
+     Pre-buffer data for some seconds
+
+   --blacklist &lt;list&gt;
+     Record all topics except the listed ones (Comma separated list, e.g.:
+     &quot;Topic1,Topic2&quot;)
+
+   --whitelist &lt;list&gt;
+     Only record these topics (Comma separated list, e.g.: &quot;Topic1,Topic2&quot;)
+
+   -f &lt;list&gt;,  --hosts &lt;list&gt;
+     Only record a topic when it is published by any of these hosts
+     (Comma-separated list, e.g.: &quot;Computer1,Computer2&quot;)
+
+   --addons &lt;list&gt;
+     Enables the given recorder addons (Comma-separated list, e.g.:
+     &quot;de.conti.addon1,de.conti.addon2&quot;
+
+   -r,  --record
+     Directly start a recording. Make sure to set all necessary parameters.
+
+   --connect-to-ecal
+     Directly connect to eCAL.
+
+   -d &lt;path&gt;,  --meas-root-dir &lt;path&gt;
+     Root dir used for recording when --record is set.
+
+   -n &lt;directory&gt;,  --meas-name &lt;directory&gt;
+     Name of the measurement, when --record is set. This will create a
+     folder in the directory provided by --meas-root-dir.
+
+   --max-file-size &lt;megabytes&gt;
+     Maximum file size of the recording files, when --record is set.
+
+   --description &lt;string&gt;
+     Description stored in the measurement folder, when --record is set.
+
+   --list-addons
+     Lists addons and exit.
+
+   --,  --ignore_rest
+     Ignores the rest of the labeled arguments following this flag.
+
+   --version
+     Displays version information and exits.
+
+   -h,  --help
+     Displays usage information and exits.
+
+
+   eCAL Recorder
+</pre></div>
+</div>
+</section>
+</section>
 
 <!-- /body -->
                             </div>
