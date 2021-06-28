@@ -1,0 +1,21 @@
+USAGE:
+
+   ecal_sys_client  [--auto-accept-security-risk] [--] [--version] [-h]
+
+
+Where:
+
+   --auto-accept-security-risk
+     Automatically accept the security risk warning.
+
+   --,  --ignore_rest
+     Ignores the rest of the labeled arguments following this flag.
+
+   --version
+     Displays version information and exits.
+
+   -h,  --help
+     Displays usage information and exits.
+
+
+   eCAL Sys Client
