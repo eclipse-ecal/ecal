@@ -1,0 +1,62 @@
+USAGE:
+
+   ecal_rec_client  [-b <seconds>] [--blacklist <list>] [--whitelist
+                    <list>] [-f <list>] [--addons <list>] [-r]
+                    [--connect-to-ecal] [-d <path>] [-n <directory>]
+                    [--max-file-size <megabytes>] [--description <string>]
+                    [--list-addons] [--] [--version] [-h]
+
+
+Where:
+
+   -b <seconds>,  --pre-buffer <seconds>
+     Pre-buffer data for some seconds
+
+   --blacklist <list>
+     Record all topics except the listed ones (Comma separated list, e.g.:
+     "Topic1,Topic2")
+
+   --whitelist <list>
+     Only record these topics (Comma separated list, e.g.: "Topic1,Topic2")
+
+   -f <list>,  --hosts <list>
+     Only record a topic when it is published by any of these hosts
+     (Comma-separated list, e.g.: "Computer1,Computer2")
+
+   --addons <list>
+     Enables the given recorder addons (Comma-separated list, e.g.:
+     "de.conti.addon1,de.conti.addon2"
+
+   -r,  --record
+     Directly start a recording. Make sure to set all necessary parameters.
+
+   --connect-to-ecal
+     Directly connect to eCAL.
+
+   -d <path>,  --meas-root-dir <path>
+     Root dir used for recording when --record is set.
+
+   -n <directory>,  --meas-name <directory>
+     Name of the measurement, when --record is set. This will create a
+     folder in the directory provided by --meas-root-dir.
+
+   --max-file-size <megabytes>
+     Maximum file size of the recording files, when --record is set.
+
+   --description <string>
+     Description stored in the measurement folder, when --record is set.
+
+   --list-addons
+     Lists addons and exit.
+
+   --,  --ignore_rest
+     Ignores the rest of the labeled arguments following this flag.
+
+   --version
+     Displays version information and exits.
+
+   -h,  --help
+     Displays usage information and exits.
+
+
+   eCAL Recorder
