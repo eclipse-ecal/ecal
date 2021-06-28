@@ -40,10 +40,6 @@ void PrintStatistic(const std::string& topic_name_, const std::chrono::duration<
     out << "kByte/s:               " << int(bytes_ / 1024        / diff_time_.count()) << std::endl;
     out << "MByte/s:               " << int(bytes_ / 1024 / 1024 / diff_time_.count()) << std::endl;
     out << "Messages/s:            " << int(msgs_                / diff_time_.count()) << std::endl;
-    //if(buf_)
-    //{
-    //  out << "Message:               " << std::string(buf_, std::find(buf_, buf_ + 24, '\0')) << std::endl;
-    //}
     std::cout << out.str() << std::endl;
     msgs_  = 0;
     bytes_ = 0;

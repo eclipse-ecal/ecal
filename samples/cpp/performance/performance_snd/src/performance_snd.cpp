@@ -43,9 +43,6 @@ int main(int argc, char **argv)
   unsigned long long  bytes(0);
   size_t              slen (0);
 
-  // enable/disable zero copy
-  pub.EnableZeroCopy(true);
-
   // default send string
   std::string send_s = "Hello World ";
   while(send_s.size() < payload_size)

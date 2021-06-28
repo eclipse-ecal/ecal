@@ -72,7 +72,7 @@ namespace eCAL
     m_snd_time(),
     m_freq(0),
     m_bandwidth_max_udp(NET_BANDWIDTH_MAX_UDP),
-    m_zero_copy(false),
+    m_zero_copy(PUB_MEMFILE_ZERO_COPY),
     m_loc_subscribed(false),
     m_ext_subscribed(false),
     m_use_udp_mc(TLayer::eSendMode(eCALPAR(PUB, USE_UDP_MC))),
@@ -109,7 +109,7 @@ namespace eCAL
     m_snd_time          = std::chrono::steady_clock::time_point();
     m_freq              = 0;
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
-    m_zero_copy         = false;
+    m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY);
     m_ext_subscribed    = false;
     m_created           = false;
 
@@ -177,7 +177,7 @@ namespace eCAL
     m_snd_time          = std::chrono::steady_clock::time_point();
     m_freq              = 0;
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
-    m_zero_copy         = false;
+    m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY);
     m_created           = false;
 
     return(true);
