@@ -368,22 +368,26 @@ namespace eCAL
     m_use_shm_confirmed    |= layer_ == eCAL::pb::tl_ecal_shm;
     m_use_inproc_confirmed |= layer_ == eCAL::pb::tl_inproc;
 
-    // use hash to discard multiple receives of the same payload
-    //   first we remove outdated hashes
-    m_sample_hash.remove_deprecated();
-    //   if this hash is still in the map
-    //   we received it recently (on another transport layer ?)
-    //   so we return and do not process this sample again
-    if (m_sample_hash.find(hash_) != m_sample_hash.end())
+    auto layer_number = (m_use_udp_mc_confirmed ? 1 : 0) + (m_use_shm_confirmed ? 1 : 0) + (m_use_inproc_confirmed ? 1 : 0);
+    if (layer_number > 1)
     {
+      // use hash to discard multiple receives of the same payload
+      //   first we remove outdated hashes
+      m_sample_hash.remove_deprecated();
+      //   if this hash is still in the map
+      //   we received it recently (on another transport layer ?)
+      //   so we return and do not process this sample again
+      if (m_sample_hash.find(hash_) != m_sample_hash.end())
+      {
 #ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug3, m_topic_name + "::CDataReader::AddSample discard sample because of multiple receive");
+        // log it
+        Logging::Log(log_level_debug3, m_topic_name + "::CDataReader::AddSample discard sample because of multiple receive");
 #endif
-      return(size_);
+        return(size_);
+      }
+      //   this is a new sample -> store it's hash
+      m_sample_hash[hash_] = 0;
     }
-    //   this is a new sample -> store it's hash
-    m_sample_hash[hash_] = 0;
 
     // check id
     if (!m_id_set.empty())

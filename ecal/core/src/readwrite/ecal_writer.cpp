@@ -310,8 +310,14 @@ namespace eCAL
     RefreshSendCounter();
 
     // calculate unique send hash
-    std::hash<SSndHash> hf;
-    size_t snd_hash = hf(SSndHash(m_topic_id, m_clock));
+    // in case we transport the same payload on different layer in parallel
+    auto layer_number = (m_use_udp_mc ? 1 : 0) + (m_use_shm ? 1 : 0) + (m_use_inproc ? 1 : 0);
+    size_t snd_hash(0);
+    if (layer_number > 1)
+    {
+      std::hash<SSndHash> hf;
+      snd_hash = hf(SSndHash(m_topic_id, m_clock));
+    }
 
     // increase overall sum send
     g_process_wbytes_sum += len_;
@@ -326,15 +332,15 @@ namespace eCAL
     TLayer::eSendMode use_udp_mc(m_use_udp_mc);
     TLayer::eSendMode use_shm(m_use_shm);
     TLayer::eSendMode use_inproc(m_use_inproc);
-    if ( (use_udp_mc  == TLayer::smode_off)
-      && (use_shm     == TLayer::smode_off)
-      && (use_inproc  == TLayer::smode_off)
+    if ( (use_udp_mc == TLayer::smode_off)
+      && (use_shm    == TLayer::smode_off)
+      && (use_inproc == TLayer::smode_off)
       )
     {
       // failsafe default mode if
       // nothing is activated
       use_udp_mc = TLayer::smode_auto;
-      use_shm     = TLayer::smode_auto;
+      use_shm    = TLayer::smode_auto;
     }
 
     // if we do not have loopback
@@ -351,8 +357,8 @@ namespace eCAL
     // shared memory because of external
     // process subscription, if not
     // let's switch it off
-    if  ((use_shm      != TLayer::smode_off)
-      && (use_inproc   != TLayer::smode_off)
+    if  ((use_shm    != TLayer::smode_off)
+      && (use_inproc != TLayer::smode_off)
       )
     {
       if (!IsExtSubscribed())

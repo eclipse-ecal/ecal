@@ -92,7 +92,7 @@ namespace eCAL
         if(m_do_stop) break;
 
         // try to open memory file with timeout 5 ms
-        if(memfile.Open(5))
+        if(memfile.GetReadAccess(5))
         {
           // read memory file header
           SMemFileHeader memfile_hdr;
@@ -132,7 +132,7 @@ namespace eCAL
             {
               // acquire memory file payload pointer (no copying here)
               const void* buf(nullptr);
-              if (memfile.GetBuffer(buf, memfile_hdr.data_size, memfile_hdr.hdr_size) > 0)
+              if (memfile.GetReadAddress(buf, memfile_hdr.data_size, memfile_hdr.hdr_size) > 0)
               {
                 // store clock
                 sample_clock = memfile_hdr.clock;
@@ -146,7 +146,7 @@ namespace eCAL
             }
 
             // close memory file
-            memfile.Close();
+            memfile.ReleaseReadAccess();
 
             // send ack event
             if (m_timeout_ack != 0)
@@ -168,7 +168,7 @@ namespace eCAL
             }
 
             // close memory file
-            memfile.Close();
+            memfile.ReleaseReadAccess();
 
             // send ack event
             if (m_timeout_ack != 0)
