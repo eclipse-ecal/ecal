@@ -368,8 +368,7 @@ namespace eCAL
     m_use_shm_confirmed    |= layer_ == eCAL::pb::tl_ecal_shm;
     m_use_inproc_confirmed |= layer_ == eCAL::pb::tl_inproc;
 
-    auto layer_number = (m_use_udp_mc_confirmed ? 1 : 0) + (m_use_shm_confirmed ? 1 : 0) + (m_use_inproc_confirmed ? 1 : 0);
-    if (layer_number > 1)
+    if (hash_ != 0)
     {
       // use hash to discard multiple receives of the same payload
       //   first we remove outdated hashes
