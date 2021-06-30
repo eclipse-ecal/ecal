@@ -60,16 +60,16 @@ TEST(IO, MemfileReadWrite)
   EXPECT_EQ(true, mem_file.IsCreated());
 
   // check open state
-  EXPECT_EQ(false, mem_file.IsOpened());
+  //EXPECT_EQ(false, mem_file.IsOpened());
 
   // write content to memory file before open
   EXPECT_EQ(0, mem_file.Write((void*)send_s.c_str(), slen, 0));
 
   // open memory file with timeout 100 ms
-  EXPECT_EQ(true, mem_file.Open(100));
+  EXPECT_EQ(true, mem_file.GetFullAccess(100));
 
   // check open state
-  EXPECT_EQ(true, mem_file.IsOpened());
+  //EXPECT_EQ(true, mem_file.IsOpened());
 
   // write content to memory file
   EXPECT_EQ(slen, mem_file.Write((void*)send_s.c_str(), slen, 0));
@@ -79,16 +79,16 @@ TEST(IO, MemfileReadWrite)
   EXPECT_EQ(0, mem_file.Write((void*)double_send_s.c_str(), double_send_s.size(), 0));
 
   // close memory file
-  EXPECT_EQ(true, mem_file.Close());
+  EXPECT_EQ(true, mem_file.ReleaseFullAccess());
 
   // check open state
-  EXPECT_EQ(false, mem_file.IsOpened());
+  //EXPECT_EQ(false, mem_file.IsOpened());
 
   // write content to closed memory file
   EXPECT_EQ(0, mem_file.Write((void*)send_s.c_str(), slen, 0));
 
   // open memory file with timeout 100 ms
-  EXPECT_EQ(true, mem_file.Open(100));
+  EXPECT_EQ(true, mem_file.GetReadAccess(100));
 
   // read content from memory file
   std::vector<char> read_buf;
@@ -96,7 +96,7 @@ TEST(IO, MemfileReadWrite)
   EXPECT_EQ(slen, mem_file.Read((void*)read_buf.data(), read_buf.size(), 0));
 
   // close memory file
-  EXPECT_EQ(true, mem_file.Close());
+  EXPECT_EQ(true, mem_file.ReleaseReadAccess());
 
   // destroy memory file
   EXPECT_EQ(true, mem_file.Destroy(true));
@@ -121,7 +121,7 @@ TEST(IO, MemfilePerf)
   EXPECT_EQ(true, mem_file.Create(memfile_name.c_str(), true, slen));
 
   // open memory file with timeout 100 ms
-  EXPECT_EQ(true, mem_file.Open(100));
+  EXPECT_EQ(true, mem_file.GetFullAccess(100));
 
   // start time
   auto start = std::chrono::high_resolution_clock::now();
@@ -150,7 +150,7 @@ TEST(IO, MemfilePerf)
   std::cout << "Throughput   : " << int((sum_snd_bytes / (1024.0 * 1024.0)) / elapsed.count()) << " MB/s " << std::endl;
 
   // close memory file
-  EXPECT_EQ(true, mem_file.Close());
+  EXPECT_EQ(true, mem_file.ReleaseFullAccess());
 
   // destroy memory file
   EXPECT_EQ(true, mem_file.Destroy(true));
