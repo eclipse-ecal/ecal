@@ -99,7 +99,7 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
        - |fa-windows| Binary distributions for Windows (Installer only)
 
    * - `HDF5 <https://www.hdfgroup.org/solutions/hdf5>`_
-     - :ref:`hdf5-bsd3`
+     - :ref:`hdf5_bsd_3`
      - 1998-2006 by The Board of Trustees of the University of Illinois
        
        2006 by The HDF Group
