@@ -193,10 +193,14 @@ namespace eCAL
      *
      * @return  The size of the data object. 
     **/
-    size_t DataSize()    const {return static_cast<size_t>(m_header.cur_data_size);};
+    size_t DataSize()        const {return static_cast<size_t>(m_header.cur_data_size);};
 
-    bool IsCreated()     const {return(m_created);};
-    std::string Name()   const {return(m_name);};
+    bool IsCreated()         const {return(m_created);};
+    std::string Name()       const {return(m_name);};
+
+    bool IsOpened()          const {return(m_access_state != access_state::closed);};
+    bool HasFullAccess()     const {return(m_access_state == access_state::full_access);};
+    bool HasReadOnlyAccess() const {return(m_access_state == access_state::read_only_access);};
 
     struct SMemFileHeader
     {
@@ -212,7 +216,7 @@ namespace eCAL
     enum class access_state
     {
       closed,
-      read_access,
+      read_only_access,
       full_access
     };
     bool            m_created;

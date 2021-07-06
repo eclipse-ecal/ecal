@@ -60,16 +60,22 @@ TEST(IO, MemfileReadWrite)
   EXPECT_EQ(true, mem_file.IsCreated());
 
   // check open state
-  //EXPECT_EQ(false, mem_file.IsOpened());
+  EXPECT_EQ(false, mem_file.IsOpened());
 
   // write content to memory file before open
   EXPECT_EQ(0, mem_file.Write((void*)send_s.c_str(), slen, 0));
 
-  // open memory file with timeout 100 ms
+  // open memory file with full access (timeout 100 ms)
   EXPECT_EQ(true, mem_file.GetFullAccess(100));
 
   // check open state
-  //EXPECT_EQ(true, mem_file.IsOpened());
+  EXPECT_EQ(true, mem_file.IsOpened());
+
+  // check full access state
+  EXPECT_EQ(true, mem_file.HasFullAccess());
+
+  // check read only access state
+  EXPECT_EQ(false, mem_file.HasReadOnlyAccess());
 
   // write content to memory file
   EXPECT_EQ(slen, mem_file.Write((void*)send_s.c_str(), slen, 0));
@@ -82,13 +88,25 @@ TEST(IO, MemfileReadWrite)
   EXPECT_EQ(true, mem_file.ReleaseFullAccess());
 
   // check open state
-  //EXPECT_EQ(false, mem_file.IsOpened());
+  EXPECT_EQ(false, mem_file.IsOpened());
+
+  // check full access state
+  EXPECT_EQ(false, mem_file.HasFullAccess());
+
+  // check read only access state
+  EXPECT_EQ(false, mem_file.HasReadOnlyAccess());
 
   // write content to closed memory file
   EXPECT_EQ(0, mem_file.Write((void*)send_s.c_str(), slen, 0));
 
   // open memory file with timeout 100 ms
   EXPECT_EQ(true, mem_file.GetReadAccess(100));
+
+  // check read only access state
+  EXPECT_EQ(true, mem_file.HasReadOnlyAccess());
+
+  // check full access state
+  EXPECT_EQ(false, mem_file.HasFullAccess());
 
   // read content from memory file
   std::vector<char> read_buf;
@@ -97,6 +115,9 @@ TEST(IO, MemfileReadWrite)
 
   // close memory file
   EXPECT_EQ(true, mem_file.ReleaseReadAccess());
+
+  // check read only access state
+  EXPECT_EQ(false, mem_file.HasReadOnlyAccess());
 
   // destroy memory file
   EXPECT_EQ(true, mem_file.Destroy(true));

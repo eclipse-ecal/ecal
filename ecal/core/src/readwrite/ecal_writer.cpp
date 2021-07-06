@@ -310,14 +310,8 @@ namespace eCAL
     RefreshSendCounter();
 
     // calculate unique send hash
-    // in case we transport the same payload on different layer in parallel
-    auto layer_number = (m_use_udp_mc ? 1 : 0) + (m_use_shm ? 1 : 0) + (m_use_inproc ? 1 : 0);
-    size_t snd_hash(0);
-    if (layer_number > 1)
-    {
-      std::hash<SSndHash> hf;
-      snd_hash = hf(SSndHash(m_topic_id, m_clock));
-    }
+    std::hash<SSndHash> hf;
+    size_t snd_hash = hf(SSndHash(m_topic_id, m_clock));
 
     // increase overall sum send
     g_process_wbytes_sum += len_;

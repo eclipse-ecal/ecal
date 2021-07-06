@@ -177,11 +177,11 @@ namespace eCAL
 
   bool CMemoryFile::GetFullAccess(int timeout_)
   {
-    if (m_access_state == access_state::read_access) return(false);
-    if (m_access_state == access_state::full_access) return(true);
-    if (!m_created)                                  return(false);
-    if (!m_memfile_info.mem_address)                 return(false);
-    if (!g_memfile_map())                            return(false);
+    if (m_access_state == access_state::read_only_access) return(false);
+    if (m_access_state == access_state::full_access)      return(true);
+    if (!m_created)                                       return(false);
+    if (!m_memfile_info.mem_address)                      return(false);
+    if (!g_memfile_map())                                 return(false);
 
     // lock mutex
     if (!LockMtx(&m_memfile_info.mutex, timeout_))
@@ -225,11 +225,11 @@ namespace eCAL
 
   bool CMemoryFile::GetReadAccess(int timeout_)
   {
-    if (m_access_state == access_state::full_access) return(false);
-    if (m_access_state == access_state::read_access) return(true);
-    if (!m_created)                                  return(false);
-    if (!m_memfile_info.mem_address)                 return(false);
-    if (!g_memfile_map())                            return(false);
+    if (m_access_state == access_state::full_access)      return(false);
+    if (m_access_state == access_state::read_only_access) return(true);
+    if (!m_created)                                       return(false);
+    if (!m_memfile_info.mem_address)                      return(false);
+    if (!g_memfile_map())                                 return(false);
 
     // lock mutex
     if (!LockMtx(&m_memfile_info.mutex, timeout_))
@@ -252,15 +252,15 @@ namespace eCAL
     }
 
     // mark as opened for read access
-    m_access_state = access_state::read_access;
+    m_access_state = access_state::read_only_access;
 
     return(true);
   }
 
   bool CMemoryFile::ReleaseReadAccess()
   {
-    if (m_access_state != access_state::read_access) return(false);
-    if (!m_created)                                  return(false);
+    if (m_access_state != access_state::read_only_access) return(false);
+    if (!m_created)                                       return(false);
 
     // release read mutex
     UnlockMtx(&m_memfile_info.mutex);
@@ -288,7 +288,7 @@ namespace eCAL
   size_t CMemoryFile::Write(const void* buf_, const size_t len_, const size_t offset_)
   {
     if (m_access_state == access_state::closed)                           return(0);
-    if (m_access_state == access_state::read_access)                      return(0);
+    if (m_access_state == access_state::read_only_access)                 return(0);
     if (!buf_)                                                            return(0);
     if ((len_ + offset_) > static_cast<size_t>(m_header.max_data_size))   return(0);
     if (!m_memfile_info.mem_address)                                      return(0);
@@ -307,7 +307,7 @@ namespace eCAL
 
   size_t CMemoryFile::GetReadAddress(const void*& buf_, const size_t len_, const size_t offset_)
   {
-    if (m_access_state != access_state::read_access)                      return(0);
+    if (m_access_state != access_state::read_only_access)                 return(0);
     if (len_ == 0)                                                        return(0);
     if (!m_memfile_info.mem_address)                                      return(0);
     if ((len_ + offset_ + sizeof(SMemFileHeader)) > m_memfile_info.size)  return(0);
