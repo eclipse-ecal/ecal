@@ -131,6 +131,11 @@
 /* timeout for memory read acknowledge signal from data reader in ms */
 #define PUB_MEMFILE_ACK_TO                            0   /* ms */
 
+/* allow subscriber to access memory file without copying content in advance (zero copy)
+   this memory file is blocked for other readers wihle processed by the user callback function
+*/
+#define PUB_MEMFILE_ZERO_COPY                         0
+
 /**********************************************************************************************/
 /*                                     time settings                                          */
 /**********************************************************************************************/

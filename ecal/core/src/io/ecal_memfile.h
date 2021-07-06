@@ -54,13 +54,13 @@ namespace eCAL
   {
     SMemFileInfo()
     {
-      refcnt      = 0;
-      remove      = false;
-      mutex       = 0;
-      memfile     = 0;
-      map_region  = 0;
-      mem_address = 0;
-      size        = 0;
+      refcnt          = 0;
+      remove          = false;
+      mutex           = 0;
+      memfile         = 0;
+      map_region      = 0;
+      mem_address     = 0;
+      size            = 0;
     }
     int          refcnt;
     bool         remove;
@@ -100,7 +100,7 @@ namespace eCAL
      *
      * @param name_    Unique file name. 
      * @param create_  Add file to system if not exists.
-     * @param len_     Number of bytes to allocate (only if add_ == true). 
+     * @param len_     Number of bytes to allocate (only if create_ == true). 
      *
      * @return  true if it succeeds, false if it fails. 
     **/
@@ -116,20 +116,36 @@ namespace eCAL
     bool Destroy(const bool remove_);
 
     /**
-     * @brief Open the memory file. 
+     * @brief Get memory file full access.
      *
      * @param timeout_  The timeout in ms for access via mutex.
      *
-     * @return  true if file exists and could be opened. 
+     * @return  true if file exists and could be opened with read/write access.
     **/
-    bool Open(const int timeout_);
+    bool GetFullAccess(const int timeout_);
 
     /**
-     * @brief Closes the current opened memory file. 
+     * @brief Release the full access.
+     *
+     * @return  true if it succeeds, false if it fails.
+    **/
+    bool ReleaseFullAccess();
+
+    /**
+     * @brief Get memory file read access. 
+     *
+     * @param timeout_  The timeout in ms for access via mutex.
+     *
+     * @return  true if file exists and could be opened with read access. 
+    **/
+    bool GetReadAccess(const int timeout_);
+
+    /**
+     * @brief Release the read access. 
      *
      * @return  true if it succeeds, false if it fails. 
     **/
-    bool Close();
+    bool ReleaseReadAccess();
 
     /**
      * @brief Read bytes from an opened memory file. 
@@ -138,7 +154,7 @@ namespace eCAL
      * @param len_     The length of the allocated memory (has to be allocated by caller). 
      * @param offset_  The offset where to start reading. 
      *
-     * @return         Number of copied bytes (can be less then len_). 
+     * @return         Number of copied bytes (or zero if it fails). 
     **/
     size_t Read(void* buf_, const size_t len_, const size_t offset_);
 
@@ -152,6 +168,17 @@ namespace eCAL
      * @return         Number of bytes copied to the memory file. 
     **/
     size_t Write(const void* buf_, const size_t len_, const size_t offset_);
+    
+    /**
+     * @brief Get payload buffer pointer from an opened memory file.
+     *
+     * @param buf_     The destination address.
+     * @param len_     Expected length of the available payload.
+     * @param offset_  The offset where to start reading.
+     *
+     * @return         Number of copied bytes (or zero if it fails).
+    **/
+    size_t GetReadAddress(const void*& buf_, const size_t len_, const size_t offset_);
 
     /**
      * @brief Maximum data size of the whole memory file.
@@ -166,31 +193,37 @@ namespace eCAL
      *
      * @return  The size of the data object. 
     **/
-    size_t DataSize()  const {return static_cast<size_t>(m_header.cur_data_size);};
+    size_t DataSize()        const {return static_cast<size_t>(m_header.cur_data_size);};
 
-    bool IsCreated()   const {return(m_created);};
-    bool IsOpened()    const {return(m_opened);};
-    std::string Name() const {return(m_name);};
+    bool IsCreated()         const {return(m_created);};
+    std::string Name()       const {return(m_name);};
+
+    bool IsOpened()          const {return(m_access_state != access_state::closed);};
+    bool HasFullAccess()     const {return(m_access_state == access_state::full_access);};
+    bool HasReadOnlyAccess() const {return(m_access_state == access_state::read_only_access);};
 
     struct SMemFileHeader
     {
-      SMemFileHeader()
-      {
-        hdr_size      = sizeof(SMemFileHeader);
-        cur_data_size = 0;
-        max_data_size = 0;
-      };
-      unsigned short hdr_size;
-      unsigned long  cur_data_size;
-      unsigned long  max_data_size;
+      unsigned short hdr_size      = sizeof(SMemFileHeader);
+      unsigned long  cur_data_size = 0;
+      unsigned long  max_data_size = 0;
     };
 
   protected:
+    bool CheckAvailableReadSize();
+    bool CheckAvailableWriteSize();
+
+    enum class access_state
+    {
+      closed,
+      read_only_access,
+      full_access
+    };
     bool            m_created;
-    bool            m_opened;
+    access_state    m_access_state;
     std::string     m_name;
     SMemFileHeader  m_header;
-    SMemFileInfo*   m_memfile_info;
+    SMemFileInfo    m_memfile_info;
 
   private:
     CMemoryFile(const CMemoryFile&);                 // prevent copy-construction

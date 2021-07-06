@@ -72,6 +72,7 @@ namespace eCAL
     m_snd_time(),
     m_freq(0),
     m_bandwidth_max_udp(NET_BANDWIDTH_MAX_UDP),
+    m_zero_copy(PUB_MEMFILE_ZERO_COPY),
     m_loc_subscribed(false),
     m_ext_subscribed(false),
     m_use_udp_mc(TLayer::eSendMode(eCALPAR(PUB, USE_UDP_MC))),
@@ -108,6 +109,7 @@ namespace eCAL
     m_snd_time          = std::chrono::steady_clock::time_point();
     m_freq              = 0;
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
+    m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY);
     m_ext_subscribed    = false;
     m_created           = false;
 
@@ -175,6 +177,7 @@ namespace eCAL
     m_snd_time          = std::chrono::steady_clock::time_point();
     m_freq              = 0;
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
+    m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY);
     m_created           = false;
 
     return(true);
@@ -255,7 +258,13 @@ namespace eCAL
   bool CDataWriter::SetMaxBandwidthUDP(long bandwidth_)
   {
     m_bandwidth_max_udp = bandwidth_;
-    return false;
+    return true;
+  }
+
+  bool CDataWriter::EnableZeroCopy(bool state_)
+  {
+    m_zero_copy = state_;
+    return true;
   }
 
   bool CDataWriter::AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_)
@@ -317,15 +326,15 @@ namespace eCAL
     TLayer::eSendMode use_udp_mc(m_use_udp_mc);
     TLayer::eSendMode use_shm(m_use_shm);
     TLayer::eSendMode use_inproc(m_use_inproc);
-    if ( (use_udp_mc  == TLayer::smode_off)
-      && (use_shm     == TLayer::smode_off)
-      && (use_inproc  == TLayer::smode_off)
+    if ( (use_udp_mc == TLayer::smode_off)
+      && (use_shm    == TLayer::smode_off)
+      && (use_inproc == TLayer::smode_off)
       )
     {
       // failsafe default mode if
       // nothing is activated
       use_udp_mc = TLayer::smode_auto;
-      use_shm     = TLayer::smode_auto;
+      use_shm    = TLayer::smode_auto;
     }
 
     // if we do not have loopback
@@ -342,8 +351,8 @@ namespace eCAL
     // shared memory because of external
     // process subscription, if not
     // let's switch it off
-    if  ((use_shm      != TLayer::smode_off)
-      && (use_inproc   != TLayer::smode_off)
+    if  ((use_shm    != TLayer::smode_off)
+      && (use_inproc != TLayer::smode_off)
       )
     {
       if (!IsExtSubscribed())
@@ -440,13 +449,14 @@ namespace eCAL
       size_t shm_sent(0);
       {
         struct CDataWriterBase::SWriterData wdata;
-        wdata.buf   = buf_;
-        wdata.len   = len_;
-        wdata.id    = m_id;
-        wdata.clock = m_clock;
-        wdata.hash  = snd_hash;
-        wdata.time  = time_;
-        shm_sent    = m_writer_shm.Send(wdata);
+        wdata.buf       = buf_;
+        wdata.len       = len_;
+        wdata.id        = m_id;
+        wdata.clock     = m_clock;
+        wdata.hash      = snd_hash;
+        wdata.time      = time_;
+        wdata.zero_copy = m_zero_copy;
+        shm_sent        = m_writer_shm.Send(wdata);
         m_use_shm_confirmed = true;
       }
       written |= shm_sent > 0;
