@@ -140,6 +140,11 @@ namespace eCAL
           return(CPublisher::Send(&m_buffer[0], size, time_));
         }
       }
+      else
+      {
+        // see !IsSubscribed()
+        return(CPublisher::Send(nullptr, 0));
+      }
       return(0);
     }
 
