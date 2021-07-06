@@ -28,7 +28,7 @@
 // main entry
 int main(int argc, char **argv)
 {
-  size_t payload_size(102400);
+  size_t payload_size(1024*1024);
   if(argc > 1) payload_size = atoi(argv[1]);
   if(payload_size < 1) payload_size = 1;
 

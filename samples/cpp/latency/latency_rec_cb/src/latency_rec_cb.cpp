@@ -27,7 +27,7 @@
 
 struct SCallbackPar
 {
-  SCallbackPar() { pub_pkg.Create("pkg_reply");  diff_array.reserve(5000); };
+  SCallbackPar() { pub_pkg.Create("pkg_reply");  diff_array.reserve(100000); };
   std::mutex             mtx;
   eCAL::CPublisher       pub_pkg;
   std::vector<long long> diff_array;
@@ -75,6 +75,9 @@ void do_run()
   // detach callback
   sub_pkg.RemReceiveCallback();
 
+  // finalize eCAL API
+  eCAL::Finalize();
+
   // calculate receive time over all received messages
   long long sum_time = std::accumulate(cb_par.diff_array.begin(), cb_par.diff_array.end(), 0LL);
   long long avg_time = sum_time / cb_par.msg_num;
@@ -87,9 +90,6 @@ void do_run()
   std::cout << "Throughput                    :   " << static_cast<int>(((cb_par.rec_size*cb_par.msg_num) / 1024.0) / (sum_time / 1000.0 / 1000.0)) << " kB/s" << std::endl;
   std::cout << "                              :   " << static_cast<int>(((cb_par.rec_size*cb_par.msg_num) / 1024.0 / 1024.0) / (sum_time / 1000.0 / 1000.0)) << " MB/s" << std::endl;
   std::cout << "                              :   " << static_cast<int>(cb_par.msg_num / (sum_time / 1000.0 / 1000.0)) << " Msg/s" << std::endl << std::endl;
-
-  // finalize eCAL API
-  eCAL::Finalize();
 }
 
 int main(int /*argc*/, char** /*argv*/)
