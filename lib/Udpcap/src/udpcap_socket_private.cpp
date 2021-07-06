@@ -872,7 +872,7 @@ namespace Udpcap
           if (reassembled_ip_layer && reassembled_udp_layer)
             FillCallbackArgsVector(callback_args, reassembled_ip_layer, reassembled_udp_layer);
 
-          free(reassembled_packet); // We need to manually free the packet pointer
+          delete reassembled_packet; // We need to manually delete the packet pointer
         }
       }
       else if (udp_layer)
@@ -932,7 +932,7 @@ namespace Udpcap
           if (reassembled_ip_layer && reassembled_udp_layer)
             FillCallbackArgsRawPtr(callback_args, reassembled_ip_layer, reassembled_udp_layer);
 
-          free(reassembled_packet); // We need to manually free the packet pointer
+          delete reassembled_packet; // We need to manually delete the packet pointer
         }
       }
       else if (udp_layer)
