@@ -1,6 +1,6 @@
 set(PcapPlusPlus_FOUND True)
 
-set(PcapPlusPlus_DIR "${CMAKE_CURRENT_LIST_DIR}/../../thirdparty/npcap/pcapplusplus-20.08-windows-vs2015/")
+set(PcapPlusPlus_DIR "${CMAKE_CURRENT_LIST_DIR}/../../thirdparty/npcap/pcapplusplus-21.05-windows-vs2015/")
 
 set(PcapPlusPlus_INCLUDE_DIR "${PcapPlusPlus_DIR}/header/")
 
