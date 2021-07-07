@@ -41,12 +41,6 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
      - 2013-2014 Sandstorm Development Group, Inc. and contributors
      - - |fa-ubuntu| Binary distributions for Linux
 
-   * - `libcurl <https://curl.se/libcurl/>`_
-     - :ref:`mit_license`
-     - 1996 - 2021, Daniel Stenberg, daniel@haxx.se, and many contributors, see the THANKS file
-     - - |fa-github| Git submodule ``/tirdparty/curl``
-       - |fa-windows| Binary distributions for Windows
-
    * - convert_utf
      - :ref:`convert_utf_license`
      - 2001-2004 Unicode, Inc.
@@ -98,11 +92,29 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
      - - |fa-file-alt| Copy in repository: :file:`/cpack/innosetup/modpath.iss`
        - |fa-windows| Binary distributions for Windows (Installer only)
 
+   * - `npcap <https://nmap.org/npcap/>`_
+     - :ref:`npcap_license`
+     - 2013-2021 by Insecure.Com LLC
+     - Not included due to licensing issues.
+       Please check out the :ref:`npcap chapter <configuration_npcap>`.
+       eCAL for Windows links against the npcap SDK.
+
    * - `HDF5 <https://www.hdfgroup.org/solutions/hdf5>`_
      - :ref:`hdf5_bsd_3`
      - 1998-2006 by The Board of Trustees of the University of Illinois
        
        2006 by The HDF Group
+     - - |fa-windows| Binary distributions for Windows
+
+   * - `libcurl <https://curl.se/libcurl/>`_
+     - :ref:`mit_license`
+     - 1996 - 2021, Daniel Stenberg, daniel@haxx.se, and many contributors, see the THANKS file
+     - - |fa-github| Git submodule ``/tirdparty/curl``
+       - |fa-windows| Binary distributions for Windows
+
+   * - `PcapPlusPlus <https://pcapplusplus.github.io/>`_
+     - :ref:`unlicense_license`
+     - 2021 seladb
      - - |fa-windows| Binary distributions for Windows
 
    * - `Qt <https://www.qt.io/>`_
@@ -177,4 +189,6 @@ License texts
    thirdparty_licenses/lgpl-2.1.rst
    thirdparty_licenses/lgpl-3.0.rst
    thirdparty_licenses/mit.rst
+   thirdparty_licenses/npcap.rst
+   thirdparty_licenses/unlicense.rst
    thirdparty_licenses/zlib.rst
