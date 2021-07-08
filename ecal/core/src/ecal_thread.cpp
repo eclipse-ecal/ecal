@@ -68,6 +68,9 @@ namespace eCAL
 
       // ok the thread is stopped
       m_tdata.is_started = false;
+
+      gCloseEvent(m_tdata.event);
+
     }
 
     return(1);
