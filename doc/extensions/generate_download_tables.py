@@ -50,9 +50,8 @@ def group_gh_release_branches(gh_releases):
     return gh_release_branches_dict
 
 def get_asset_properties(asset_name, ecal_version):
-    os_group       = ""
+    os_group       = "other"
     os_version     = semantic_version.Version("0.0.0")
-    is_installer   = False
     is_python      = False
     python_version = semantic_version.Version("0.0.0")
 
@@ -78,12 +77,13 @@ def get_asset_properties(asset_name, ecal_version):
         "trusty":  semantic_version.Version("14.4.0"),
     }
 
-    if ext == ".msi" or ext == ".exe":
-        is_installer = True
+    if asset_name.lower().endswith(".tar.gz"):
+        os_group     = "source"
+
+    elif ext == ".msi" or ext == ".exe":
         os_group     = "windows"
 
     elif ext == ".deb":
-        is_installer = True
         os_group     = "ubuntu"
 
         if ecal_version <= semantic_version.Version("5.7.2"):
@@ -101,7 +101,6 @@ def get_asset_properties(asset_name, ecal_version):
 
     
     elif ext == ".dmg":
-        is_installer = True
         os_group     = "macos"
     
     elif ext == ".egg" or ext == ".whl":
@@ -154,7 +153,7 @@ def get_asset_properties(asset_name, ecal_version):
     else:
         sys.stderr.write("Warning: Cannot classify file: \"" + asset_name + "\" (from eCAL " + str(ecal_version) + ")\n")
 
-    return (os_group, os_version, is_installer, is_python, python_version)
+    return (os_group, os_version, is_python, python_version)
 
 def get_downloads_list(gh_assets, ecal_version):
     
@@ -162,7 +161,7 @@ def get_downloads_list(gh_assets, ecal_version):
 
     for asset in gh_assets:
         asset_name = asset.name
-        (os_group, os_version, is_installer, is_python, python_version) = get_asset_properties(asset_name, ecal_version)
+        (os_group, os_version, is_python, python_version) = get_asset_properties(asset_name, ecal_version)
 
         # Search for a download dict that already exists
         existing_dicts = []
@@ -176,7 +175,7 @@ def get_downloads_list(gh_assets, ecal_version):
             download_dict = {
                 "os_group":              os_group,
                 "os_version":            os_version,
-                "ecal_installer_link":   "",
+                "ecal_installer_link":   [],
                 "python_download_links": [],
             }
             download_list.append(download_dict)
@@ -184,10 +183,11 @@ def get_downloads_list(gh_assets, ecal_version):
             # Use existing download dict
             download_dict = existing_dicts[0]
 
-        if is_installer:
-            download_dict["ecal_installer_link"] = asset.browser_download_url
-        elif is_python:
+
+        if is_python:
             download_dict["python_download_links"].append((python_version, asset.browser_download_url))
+        else:
+            download_dict["ecal_installer_link"].append(asset.browser_download_url)
 
     # Sort python download links
     for download_dict in download_list:
