@@ -410,7 +410,7 @@ endif()
 if(UNIX)
   message(STATUS "GCC detected - Adding flags")
   set(CMAKE_CXX_STANDARD 14)
-  add_definitions(-Wall -Wextra -std=c++14)
+  add_definitions(-Wall -Wextra)
 
   set(ATOMIC_TEST_CODE "
       #include <atomic>
