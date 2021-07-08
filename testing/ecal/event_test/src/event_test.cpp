@@ -38,4 +38,7 @@ TEST(Event, EventSetGet)
 
   // get set event
   EXPECT_EQ(true, gWaitForEvent(event_handle, 100));
+
+  // close the event
+  EXPECT_EQ(true, eCAL::gCloseEvent(event_handle));
 }
