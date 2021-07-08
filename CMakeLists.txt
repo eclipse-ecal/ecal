@@ -422,6 +422,10 @@ if(UNIX)
       message(STATUS "Adding -latomic flag, as this plattform does not support 64bit atomic operations out of the box.")
       set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -latomic")
   endif ()
+  if(BUILD_ECAL_TESTS)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -g")
+    set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -fsanitize=address")
+  endif(BUILD_ECAL_TESTS)
 endif()
 
 # --------------------------------------------------------
