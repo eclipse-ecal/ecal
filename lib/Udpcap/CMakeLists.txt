@@ -30,6 +30,8 @@ set (source_files
     include/udpcap/udpcap_socket.h
     
     src/host_address.cpp
+    src/ip_reassembly.cpp
+    src/ip_reassembly.h
     src/log_debug.h
     src/npcap_helpers.cpp
     src/udpcap_socket.cpp

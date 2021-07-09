@@ -37,10 +37,11 @@
 #include <Packet.h>         // Pcap++
 #include <IPv4Layer.h>      // Pcap++ IPv4
 #include <UdpLayer.h>       // Pcap++ UDP
-#include <IPReassembly.h>   // Pcap++ de-fragmentation of IP packets
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif // _MSC_VER
+
+#include "ip_reassembly.h"
 
 namespace Udpcap
 {
@@ -64,14 +65,14 @@ namespace Udpcap
 
     struct CallbackArgsVector
     {
-      CallbackArgsVector(std::vector<char>* destination_vector, HostAddress* source_address, uint16_t* source_port, uint16_t bound_port, pcpp::LinkLayerType link_type, pcpp::IPReassembly* ip_reassembly)
+      CallbackArgsVector(std::vector<char>* destination_vector, HostAddress* source_address, uint16_t* source_port, uint16_t bound_port, pcpp::LinkLayerType link_type)
         : destination_vector_(destination_vector)
         , source_address_    (source_address)
         , source_port_       (source_port)
         , success_           (false)
         , link_type_         (link_type)
         , bound_port_        (bound_port)
-        , ip_reassembly_     (ip_reassembly)
+        , ip_reassembly_     (nullptr)
       {}
       std::vector<char>* const  destination_vector_;
       HostAddress* const        source_address_;
@@ -80,12 +81,12 @@ namespace Udpcap
 
       pcpp::LinkLayerType       link_type_;
       const uint16_t            bound_port_;
-      pcpp::IPReassembly* const ip_reassembly_;
+      Udpcap::IpReassembly*     ip_reassembly_;
     };
 
     struct CallbackArgsRawPtr
     {
-      CallbackArgsRawPtr(char* destination_buffer, size_t destination_buffer_size, HostAddress* source_address, uint16_t* source_port, uint16_t bound_port, pcpp::LinkLayerType link_type, pcpp::IPReassembly* ip_reassembly)
+      CallbackArgsRawPtr(char* destination_buffer, size_t destination_buffer_size, HostAddress* source_address, uint16_t* source_port, uint16_t bound_port, pcpp::LinkLayerType link_type)
         : destination_buffer_     (destination_buffer)
         , destination_buffer_size_(destination_buffer_size)
         , bytes_copied_           (0)
@@ -94,7 +95,7 @@ namespace Udpcap
         , success_                (false)
         , link_type_              (link_type)
         , bound_port_             (bound_port)
-        , ip_reassembly_          (ip_reassembly)
+        , ip_reassembly_          (nullptr)
       {}
       char* const               destination_buffer_;
       const size_t              destination_buffer_size_;
@@ -103,9 +104,9 @@ namespace Udpcap
       uint16_t* const           source_port_;
       bool                      success_;
 
-      pcpp::LinkLayerType link_type_;
+      pcpp::LinkLayerType       link_type_;
       const uint16_t            bound_port_;
-      pcpp::IPReassembly* const ip_reassembly_;
+      Udpcap::IpReassembly*     ip_reassembly_;
     };
 
   //////////////////////////////////////////
@@ -183,11 +184,10 @@ namespace Udpcap
     std::set<HostAddress> multicast_groups_;
     bool                  multicast_loopback_enabled_;                          /**< Winsocks style IP_MULTICAST_LOOP: if enabled, the socket can receive loopback multicast packages */
 
-    std::vector<PcapDev> pcap_devices_;
-    std::vector<HANDLE>  pcap_win32_handles_;
+    std::vector<PcapDev>            pcap_devices_;                              /**< List of open PcapDevices */
+    std::vector<HANDLE>             pcap_win32_handles_;                        /**< Native Win32 handles to wait for data on the PCAP Devices. The List is in sync with pcap_devices. */
+    std::vector<std::unique_ptr<Udpcap::IpReassembly>> ip_reassembly_;          /**< IP Reassembly for fragmented IP traffic. The list is in sync with the pcap_devices. */
 
-    pcpp::IPReassembly   ip_reassembly_;
-
-    int                  receive_buffer_;
+    int                  receive_buffer_size_;
   };
 }
