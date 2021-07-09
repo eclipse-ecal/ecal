@@ -177,11 +177,9 @@ namespace eCAL
 
   bool CMemoryFile::GetFullAccess(int timeout_)
   {
-    if (m_access_state == access_state::read_only_access) return(false);
-    if (m_access_state == access_state::full_access)      return(true);
-    if (!m_created)                                       return(false);
-    if (!m_memfile_info.mem_address)                      return(false);
-    if (!g_memfile_map())                                 return(false);
+    if (!m_created)                  return(false);
+    if (!m_memfile_info.mem_address) return(false);
+    if (!g_memfile_map())            return(false);
 
     // lock mutex
     if (!LockMtx(&m_memfile_info.mutex, timeout_))
@@ -214,22 +212,20 @@ namespace eCAL
     if (m_access_state != access_state::full_access) return(false);
     if (!m_created)                                  return(false);
 
-    // unlock mutex
-    UnlockMtx(&m_memfile_info.mutex);
-
     // reset access state
     m_access_state = access_state::closed;
+
+    // unlock mutex
+    UnlockMtx(&m_memfile_info.mutex);
 
     return(true);
   }
 
   bool CMemoryFile::GetReadAccess(int timeout_)
   {
-    if (m_access_state == access_state::full_access)      return(false);
-    if (m_access_state == access_state::read_only_access) return(true);
-    if (!m_created)                                       return(false);
-    if (!m_memfile_info.mem_address)                      return(false);
-    if (!g_memfile_map())                                 return(false);
+    if (!m_created)                  return(false);
+    if (!m_memfile_info.mem_address) return(false);
+    if (!g_memfile_map())            return(false);
 
     // lock mutex
     if (!LockMtx(&m_memfile_info.mutex, timeout_))
@@ -262,11 +258,11 @@ namespace eCAL
     if (m_access_state != access_state::read_only_access) return(false);
     if (!m_created)                                       return(false);
 
-    // release read mutex
-    UnlockMtx(&m_memfile_info.mutex);
-
     // reset states
     m_access_state = access_state::closed;
+
+    // release read mutex
+    UnlockMtx(&m_memfile_info.mutex);
 
     return(true);
   }

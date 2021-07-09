@@ -23,17 +23,11 @@
 
 #pragma once
 
-#include "ecal_def.h"
-
 #include "readwrite/ecal_writer_base.h"
-#include "io/ecal_memfile.h"
+#include "io/ecal_memfile_sync.h"
 
-#include <ecal/ecal_eventhandle.h>
-
-#include <mutex>
+#include <memory>
 #include <string>
-#include <unordered_map>
-#include <atomic>
 
 namespace eCAL
 {
@@ -59,24 +53,7 @@ namespace eCAL
     std::string GetConectionPar() override;
 
   protected:
-    void SignalMemFileWritten();
-
-    void BuildMemFileName();
-    bool CreateMemFile(size_t size_);
-    bool DestroyMemFile();
-
-    std::string      m_memfile_name;
-    CMemoryFile      m_memfile;
-
-    struct SEventHandlePair
-    {
-      EventHandleT event_snd;
-      EventHandleT event_ack;
-    };
-    typedef std::unordered_map<std::string, SEventHandlePair> EventHandleMapT;
-    std::mutex       m_event_handle_map_sync;
-    EventHandleMapT  m_event_handle_map;
-
-    int              m_timeout_ack;
+    int                                           m_write_idx = 0;
+    std::vector<std::shared_ptr<CSyncMemoryFile>> m_memory_file_vec;
   };
 }

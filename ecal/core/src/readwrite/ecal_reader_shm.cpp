@@ -23,6 +23,15 @@
 
 #include <ecal/ecal.h>
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
+#endif
+#include "ecal/pb/layer.pb.h"
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
 #include "io/ecal_memfile_pool.h"
 #include "readwrite/ecal_reader_shm.h"
 
@@ -30,18 +39,28 @@ namespace eCAL
 {
   template<> std::shared_ptr<CSHMLayer> CReaderLayer<eCAL::CSHMLayer>::layer(nullptr);
 
-  CDataReaderSHM::CDataReaderSHM()
-  {
-  }
-  
-  CDataReaderSHM::~CDataReaderSHM()
-  {
-  }
-
   void CSHMLayer::UpdateParameter(SReaderLayerPar& par_)
   {
-    std::string memfile_name = par_.parameter;
-    if (!memfile_name.empty())
+    // read connection parameters for the shared memory layer
+    // older ecal versions just send the publishers memory file name
+    // newer versions transmit the connection parameter as
+    // a google protobuf message for more flexibility
+    std::vector<std::string> memfile_names;
+
+    eCAL::pb::ConnnectionPar connection_par;
+    if (connection_par.ParseFromString(par_.parameter))
+    {
+      for (auto memfile_name : connection_par.ecal_shm_par().memory_file_names())
+      {
+        memfile_names.push_back(memfile_name);
+      }
+    }
+    else
+    {
+      memfile_names.push_back(par_.parameter);
+    }
+
+    for (auto memfile_name : memfile_names)
     {
       // start memory file receive thread if topic is subscribed in this process
       if (g_memfile_pool())

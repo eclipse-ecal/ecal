@@ -23,6 +23,7 @@ find_package(Protobuf REQUIRED)
 set(ProtoFiles
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/ecal.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/host.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/layer.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/mma/mma.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/monitoring.proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/play/service.proto

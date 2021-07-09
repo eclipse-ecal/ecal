@@ -23,6 +23,8 @@
 #include <atomic>
 #include <chrono>
 #include <memory>
+#include <iostream>
+#include <thread>
 
 #include <gtest/gtest.h>
 
@@ -175,4 +177,99 @@ TEST(IO, MemfilePerf)
 
   // destroy memory file
   EXPECT_EQ(true, mem_file.Destroy(true));
+}
+
+TEST(IO, MemfileConcurrency)
+{
+  eCAL::CMemoryFile mem_file;
+
+  // global parameter
+  const std::string memfile_name = "my_memory_file";
+
+  // buffer length && runs
+  const size_t buflen(1024);
+  const size_t runs(10);
+
+  // create memory file
+  EXPECT_EQ(true, mem_file.Create(memfile_name.c_str(), true, buflen));
+
+  // producer thread
+  auto num_writes(0);
+  std::thread producer([&]()
+    {
+      std::vector<int> write_buf;
+      write_buf.resize(buflen);
+
+      for (int i = 0; i != runs; ++i)
+      {
+        EXPECT_EQ(true, mem_file.GetFullAccess(100));
+        if (mem_file.HasFullAccess())
+        {
+          write_buf[0] = num_writes;
+          auto written = mem_file.Write((void*)write_buf.data(), write_buf.size(), 0);
+          EXPECT_EQ(buflen, written);
+          std::cout << std::endl;
+          std::cout << "producer write access  : " << num_writes << std::endl;
+          EXPECT_EQ(true, mem_file.ReleaseFullAccess());
+          std::this_thread::sleep_for(std::chrono::milliseconds(1));
+          num_writes++;
+        }
+      }
+    });
+  std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+  // consumer 1 thread
+  auto num_reads1(0);
+  std::thread consumer1([&]()
+    {
+      std::vector<int> read_buf;
+      read_buf.resize(buflen);
+
+      for (int i = 0; i != runs; ++i)
+      {
+        EXPECT_EQ(true, mem_file.GetReadAccess(100));
+        if (mem_file.HasReadOnlyAccess())
+        {
+          auto read = mem_file.Read((void*)read_buf.data(), read_buf.size(), 0);
+          EXPECT_EQ(buflen, read);
+          std::cout << "consumer 1 read access : " << num_reads1 << " with " << read_buf[0] << std::endl;
+          EXPECT_EQ(true, mem_file.ReleaseReadAccess());
+          std::this_thread::sleep_for(std::chrono::milliseconds(1));
+          //EXPECT_EQ(read_buf[0], num_reads1);
+          num_reads1++;
+        }
+      }
+    });
+  std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+  // consumer 2 thread
+  auto num_reads2(0);
+  std::thread consumer2([&]()
+    {
+      std::vector<int> read_buf;
+      read_buf.resize(buflen);
+
+      for (int i = 0; i != runs; ++i)
+      {
+        EXPECT_EQ(true, mem_file.GetReadAccess(100));
+        if (mem_file.HasReadOnlyAccess())
+        {
+          auto read = mem_file.Read((void*)read_buf.data(), read_buf.size(), 0);
+          EXPECT_EQ(buflen, read);
+          std::cout << "consumer 2 read access : " << num_reads2 << " with " << read_buf[0] << std::endl;
+          EXPECT_EQ(true, mem_file.ReleaseReadAccess());
+          std::this_thread::sleep_for(std::chrono::milliseconds(1));
+          //EXPECT_EQ(read_buf[0], num_reads2);
+          num_reads2++;
+        }
+      }
+    });
+
+  // join threads
+  producer.join();
+  consumer1.join();
+  consumer2.join();
+
+  EXPECT_EQ(num_writes, num_reads1);
+  EXPECT_EQ(num_writes, num_reads2);
 }

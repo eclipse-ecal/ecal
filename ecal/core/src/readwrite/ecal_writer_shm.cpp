@@ -23,24 +23,24 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_log.h>
-#include <ecal/ecal_process.h>
-#include <ecal/ecal_event.h>
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
+#endif
+#include "ecal/pb/layer.pb.h"
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #include "ecal_def.h"
 #include "ecal_config_hlp.h"
 #include "ecal_writer.h"
 #include "ecal_writer_shm.h"
 
-#include "io/ecal_memfile_header.h"
-
-#include <algorithm>
-#include <sstream>
-#include <chrono>
-
 namespace eCAL
 {
-  CDataWriterSHM::CDataWriterSHM() : 
-    m_timeout_ack(PUB_MEMFILE_ACK_TO)
+  CDataWriterSHM::CDataWriterSHM()
   {
   }
   
@@ -66,22 +66,30 @@ namespace eCAL
   bool CDataWriterSHM::Create(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string & /*topic_id_*/)
   {
     if (m_created) return false;
-
     m_topic_name = topic_name_;
 
-    m_timeout_ack = eCALPAR(PUB, MEMFILE_ACK_TO);
+    // init write index and create two memory files (double buffering)
+    m_write_idx = 0;
+    m_memory_file_vec.push_back(std::make_shared<CSyncMemoryFile>());
+    m_memory_file_vec.push_back(std::make_shared<CSyncMemoryFile>());
 
-    CreateMemFile(static_cast<size_t>(eCALPAR(PUB, MEMFILE_MINSIZE)));
+    for (auto memory_file : m_memory_file_vec)
+    {
+      if (!memory_file->Create(topic_name_, static_cast<size_t>(eCALPAR(PUB, MEMFILE_MINSIZE))))
+      {
+        return false;
+      }
+    }
 
     m_created = true;
-    return true;
+    return m_created;
   }
 
   bool CDataWriterSHM::Destroy()
   {
     if (!m_created) return false;
 
-    DestroyMemFile();
+    m_memory_file_vec.clear();
 
     m_created = false;
     return true;
@@ -98,353 +106,61 @@ namespace eCAL
     if (!m_created) return false;
     if (len_ == 0)  return false;
 
-    // we recreate a memory file if the file size is to small
-    bool file_to_small = m_memfile.FileSize() < (sizeof(SMemFileHeader) + len_);
-    if (!m_memfile.IsCreated() || file_to_small)
-    {
-#ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::PrepareSend::RecreateFile");
-#endif
-      // estimate size of memory file
-      size_t memfile_reserve = static_cast<size_t>(eCALPAR(PUB, MEMFILE_RESERVE));
-      size_t memfile_size    = sizeof(SMemFileHeader) + len_ + static_cast<size_t>((static_cast<float>(memfile_reserve) / 100.0f) * static_cast<float>(len_));
-      // destroy existing memory file object
-      DestroyMemFile();
-      // and create a new one
-      CreateMemFile(memfile_size);
-      // return true to trigger registration and immediately inform listening subscribers
-      return true;
-    }
-
-    return false;
+    return m_memory_file_vec[m_write_idx]->Reserve(len_);
   }
 
-  /////////////////////////////////////////////////////////////////
-  // write the content into the memory file
-  /////////////////////////////////////////////////////////////////
   size_t CDataWriterSHM::Send(const SWriterData& data_)
   {
-    if (!m_created)      return(0);
-    if (!data_.buf)      return(0);
-    if (data_.len == 0)  return(0);
+    if (!m_created) return 0;
 
-#ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Send::Write2MemFile");
-#endif
+    // write content
+    size_t sent = m_memory_file_vec[m_write_idx]->Send(data_);
 
-    // created ?
-    if (!m_memfile.IsCreated())
-    {
-      // log it
-      Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send::Write2MemFile::IsCreated - FAILED");
+    // and increment file index
+    m_write_idx++;
+    m_write_idx %= m_memory_file_vec.size();
 
-      return(0);
-    }
-
-    // create message header
-    struct SMemFileHeader memfile_hdr;
-
-    // set data size
-    memfile_hdr.data_size         = static_cast<unsigned long>(data_.len);
-    // set header id
-    memfile_hdr.id                = static_cast<unsigned long>(data_.id);
-    // set header clock
-    memfile_hdr.clock             = static_cast<unsigned long>(data_.clock);
-    // set header time
-    memfile_hdr.time              = static_cast<long long>(data_.time);
-    // set header hash
-    memfile_hdr.hash              = static_cast<size_t>(data_.hash);
-    // set zero copy
-    memfile_hdr.options.zero_copy = static_cast<unsigned char>(data_.zero_copy);
-
-    // open the memory file
-    bool opened = m_memfile.GetFullAccess(PUB_MEMFILE_OPEN_TO);
-
-    // maybe it's locked by a zombie or a crashed process
-    // so we try to recreate a new one
-    if (!opened)
-    {
-      // log it
-      Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send::Write2MemFile::OpenMemFile - FAILED");
-
-      // store size of the memory file
-      size_t memfile_size = m_memfile.FileSize();
-      // destroy and
-      DestroyMemFile();
-      // recreate it with the same size
-      if (!CreateMemFile(memfile_size)) return(0);
-      // then reopen
-      opened = m_memfile.GetFullAccess(PUB_MEMFILE_OPEN_TO);
-      // still no chance ? hell .... we give up
-      if (!opened) return(0);
-    }
-
-    // now write content
-    bool written(true);
-    size_t wbytes(0);
-
-    // write the header
-    written &= m_memfile.Write(&memfile_hdr, memfile_hdr.hdr_size, wbytes) > 0;
-    wbytes += memfile_hdr.hdr_size;
-    // write the buffer
-    written &= m_memfile.Write(data_.buf, data_.len, wbytes) > 0;
-    // close memory file
-    m_memfile.ReleaseFullAccess();
-
-    // and fire the publish event for local subscriber
-    if (written) SignalMemFileWritten();
-
-#ifndef NDEBUG
-    // log it
-    if (written)
-    {
-      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Send::Write2MemFile::Written (" + std::to_string(data_.len) + " Bytes)");
-    }
-    else
-    {
-      Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send::Write2MemFile::Written - FAILED");
-    }
-#endif
-
-    // if we failed return 0
-    if (!written) return(0);
-
-    // return success
-    return(data_.len);
+    return sent;
   }
 
   bool CDataWriterSHM::AddLocConnection(const std::string& process_id_, const std::string& /*conn_par_*/)
   {
     if (!m_created) return false;
 
-    // a local subscriber is registering with it's process id
-    // so we have to check the sync events for the
-    // memory content read / write access
-    // we have ONE memory file per publisher and ONE
-    // memory file read thread per subscriber
-
-    std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-    EventHandleMapT::iterator iter = m_event_handle_map.find(process_id_);
-    std::string event_ack_name = m_memfile_name + "_" + process_id_ + "_ack";
-
-    // add a new process id and create the sync and acknowledge event
-    if (iter == m_event_handle_map.end())
+    for (auto& memory_file : m_memory_file_vec)
     {
-      SEventHandlePair event_pair;
-      std::string event_snd_name = m_memfile_name + "_" + process_id_;
-      gOpenEvent(&event_pair.event_snd, event_snd_name);
-      if (m_timeout_ack != 0)
+      if (!memory_file->ConnectProcess(process_id_))
       {
-        gOpenEvent(&event_pair.event_ack, event_ack_name);
+        return false;
       }
-      m_event_handle_map.insert(std::pair<std::string, SEventHandlePair>(process_id_, event_pair));
-      return true;
     }
-    else
-    {
-      if (m_timeout_ack != 0)
-      {
-        // okay we have registered process events for that process id
-        // we have to check the acknowledge event because it's possible that this
-        // event was deactivated by a sync timeout in SignalMemFileWritten
-        if (!gEventIsValid(iter->second.event_ack))
-        {
-          gOpenEvent(&iter->second.event_ack, event_ack_name);
-        }
-      }
-      return true;
-    }
+
+    return true;
   }
 
   bool CDataWriterSHM::RemLocConnection(const std::string& process_id_)
   {
     if (!m_created) return false;
 
-    // a local subscriber connection timed out
-    // we close the associated sync events and
-    // remove them from the event handle map
-
-    std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-    EventHandleMapT::const_iterator iter = m_event_handle_map.find(process_id_);
-    if (iter != m_event_handle_map.end())
+    for (auto& memory_file : m_memory_file_vec)
     {
-      SEventHandlePair event_pair = iter->second;
-      gCloseEvent(event_pair.event_snd);
-      if (m_timeout_ack != 0)
+      if (!memory_file->DisconnectProcess(process_id_))
       {
-        gCloseEvent(event_pair.event_ack);
+        return false;
       }
-      m_event_handle_map.erase(iter);
-      return true;
     }
 
-    return false;
+    return true;
   }
 
   std::string CDataWriterSHM::GetConectionPar()
   {
-    // this is a workaround ! We need to pack all in a protocol buffer to more be flexible
-    return m_memfile_name;
-  }
-
-  /////////////////////////////////////////////////////////////////
-  // fire the publisher events
-  // connected subscribers will read the content from the memory file
-  /////////////////////////////////////////////////////////////////
-  void CDataWriterSHM::SignalMemFileWritten()
-  {
-    std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-
-    // "eat" old acknowledge events :)
-    if (m_timeout_ack != 0)
+    eCAL::pb::ConnnectionPar connection_par;
+    connection_par.set_type(eCAL::pb::eTLayerType::tl_ecal_shm);
+    for (auto& memory_file : m_memory_file_vec)
     {
-      for (auto iter : m_event_handle_map)
-      {
-        while (gWaitForEvent(iter.second.event_ack, 0)) {}
-      }
+      connection_par.mutable_ecal_shm_par()->add_memory_file_names(memory_file->GetName());
     }
-
-    // send new sync
-    for (auto iter = m_event_handle_map.begin(); iter != m_event_handle_map.end(); ++iter)
-    {
-      // send sync event
-      gSetEvent(iter->second.event_snd);
-
-      // sync on acknowledge event
-      if (m_timeout_ack != 0)
-      {
-        if (!gWaitForEvent(iter->second.event_ack, m_timeout_ack))
-        {
-          // we close the event immediately to not waste time in the next
-          // write call, the event will be reopened later
-          // in ApplyLocSubscription if the connection still exists
-          gCloseEvent(iter->second.event_ack);
-          // invalidate it
-          gInvalidateEvent(&iter->second.event_ack);
-#ifndef NDEBUG
-          // log it
-          Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::SignalMemFileWritten - ACK event timeout");
-#endif
-        }
-      }
-
-#ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::SignalMemFileWritten");
-#endif
-    }
-  }
-
-  void CDataWriterSHM::BuildMemFileName()
-  {
-    std::stringstream out;
-    out << m_topic_name << "_" << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-    m_memfile_name = out.str();
-
-    // replace all '\\' to '_'
-    std::replace(m_memfile_name.begin(), m_memfile_name.end(), '\\', '_');
-
-    // replace all '/' to '_'
-    std::replace(m_memfile_name.begin(), m_memfile_name.end(), '/', '_');
-
-    // append "_mem" for debugging puposes
-    m_memfile_name += "_shm";
-  }
-
-  bool CDataWriterSHM::CreateMemFile(size_t size_)
-  {
-    // build new memory file name
-    BuildMemFileName();
-
-    // create new memory file object
-    size_t minsize = static_cast<size_t>(eCALPAR(PUB, MEMFILE_MINSIZE));
-    if (size_ < minsize) size_ = minsize;
-    if (!m_memfile.Create(m_memfile_name.c_str(), true, size_))
-    {
-      // log it
-      Logging::Log(log_level_error, std::string(m_topic_name + "::CDataWriter::CreateMemFile - FAILED : ") + m_memfile_name);
-
-      return(false);
-    }
-
-#ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug2, std::string(m_topic_name + "::CDataWriter::CreateMemFile - SUCCESS : ") + m_memfile_name);
-#endif
-
-    // initialize memory file with empty header
-    struct SMemFileHeader memfile_hdr;
-    m_memfile.GetFullAccess(PUB_MEMFILE_OPEN_TO);
-    m_memfile.Write(&memfile_hdr, memfile_hdr.hdr_size, 0);
-    m_memfile.ReleaseFullAccess();
-
-    // collect all connected process id's
-    std::vector<std::string> process_id_list;
-    {
-      std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-      for (auto iter : m_event_handle_map)
-      {
-        process_id_list.push_back(iter.first);
-      }
-    }
-
-    // and recreate immediately the new events
-    for (auto process_id : process_id_list)
-    {
-      RemLocConnection(process_id);
-      AddLocConnection(process_id, "");
-    }
-
-    return(true);
-  }
-
-  bool CDataWriterSHM::DestroyMemFile()
-  {
-    if (m_timeout_ack != 0)
-    {
-      // fire acknowledge events, to unlock blocking send function
-      std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-      for (auto iter : m_event_handle_map)
-      {
-        gSetEvent(iter.second.event_ack);
-      }
-    }
-
-    // close all events and invalidate them
-    // do not clear the map, because we will use
-    // the map keys (process id's) to recreate the
-    // events in a subsequent CreateMemFile call
-    for (auto iter = m_event_handle_map.begin(); iter != m_event_handle_map.end(); ++iter)
-    {
-      gCloseEvent(iter->second.event_snd);
-      gInvalidateEvent(&iter->second.event_snd);
-      if (m_timeout_ack != 0)
-      {
-        gCloseEvent(iter->second.event_ack);
-        gInvalidateEvent(&iter->second.event_ack);
-      }
-    }
-
-    // destroy the file
-    if (!m_memfile.Destroy(true))
-    {
-#ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug2, std::string(m_topic_name + "::CDataWriter::DestroyMemFile - FAILED : ") + m_memfile.Name());
-#endif
-      // reset memory file name
-      m_memfile_name.clear();
-
-      return(false);
-    }
-
-#ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug2, std::string(m_topic_name + "::CDataWriter::DestroyMemFile - SUCCESS : ") + m_memfile.Name());
-#endif
-
-    return(true);
+    return connection_par.SerializeAsString();
   }
 }
