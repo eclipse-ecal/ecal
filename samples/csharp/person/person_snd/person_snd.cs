@@ -31,18 +31,18 @@ public class PersonSnd
     System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Util.GetVersion(), Util.GetDate()));
 
     // create a publisher (topic name "Hello", type "base:std::string", description "")
-    var publisher = new ProtobufPublisher<People.Person>("person");
+    var publisher = new ProtobufPublisher<Pb.People.Person>("person");
 
     // idle main thread
     int loop = 0;
-    var person = new People.Person
+    var person = new Pb.People.Person
     {
       Id = 0,
       Email = "max@online.de",
       Name = "Max",
-      Stype = People.Person.Types.SType.Female,
-      Dog = new Animal.Dog { Name = "Brandy" },
-      House = new Environment.House { Rooms = 4 }
+      Stype = Pb.People.Person.Types.SType.Female,
+      Dog = new Pb.Animal.Dog { Name = "Brandy" },
+      House = new Pb.Environment.House { Rooms = 4 }
     };
 
     while (Util.Ok())

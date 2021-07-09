@@ -35,11 +35,11 @@ class Addressbook {
   void print();
 
  private:
-  std::vector<People::Person> book_;
+  std::vector<pb::People::Person> book_;
 
-  eCAL::protobuf::CSubscriber<People::Person> subscriber_;
+  eCAL::protobuf::CSubscriber<pb::People::Person> subscriber_;
 
-  void callback(const People::Person& person_);
+  void callback(const pb::People::Person& person_);
 
 };
 

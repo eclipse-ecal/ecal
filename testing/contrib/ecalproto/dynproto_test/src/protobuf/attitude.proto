@@ -19,7 +19,7 @@
 
 syntax = "proto3";
 
-package People;
+package pb.People;
 
 enum Attitude
 {

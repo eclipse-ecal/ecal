@@ -33,10 +33,10 @@ int main(int /*argc*/, char** /*argv*/)
   eCAL::measurement::OMeasurement meas(".");
 
   // create a channel (topic name "person")
-  eCAL::measurement::OChannel<People::Person> person_channel = meas.Create<People::Person>("person");
+  eCAL::measurement::OChannel<pb::People::Person> person_channel = meas.Create<pb::People::Person>("person");
   eCAL::measurement::OStringChannel string_channel = meas.Create<std::string>("string");
 
-  People::Person person;
+  pb::People::Person person;
   person.set_name("Max");
 
   long long timestamp = 0;

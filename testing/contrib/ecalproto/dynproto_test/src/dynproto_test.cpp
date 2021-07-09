@@ -32,14 +32,14 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
 TEST(IO, dynproto)
 { 
   // generate a class instance of Person
-  People::Person person;
+  pb::People::Person person;
 
   // set person object content
   person.set_id(42);
   person.set_name("Max");
-  person.set_stype(People::Person_SType_MALE);
+  person.set_stype(pb::People::Person_SType_MALE);
   person.set_email("max@mail.net");
-  person.set_attitude(People::NICE);
+  person.set_attitude(pb::People::NICE);
   person.mutable_dog()->set_name("Brandy");
   person.mutable_house()->set_rooms(4);
 

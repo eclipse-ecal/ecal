@@ -53,7 +53,7 @@ void MultipleRecPerson(int argc, char **argv)
   eCAL::Initialize(argc, argv, "multiple_rec_cb");
 
   // create dummy subscriber
-  std::vector<eCAL::protobuf::CSubscriber<People::Person>> vector_of_subscribers;
+  std::vector<eCAL::protobuf::CSubscriber<pb::People::Person>> vector_of_subscribers;
   std::cout << "create subscribers .." << std::endl;
   for(int i = 0; i < SUBSCRIBER_NUMBER; i++)
   {
