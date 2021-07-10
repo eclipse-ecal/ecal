@@ -423,8 +423,9 @@ if(UNIX)
       set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -latomic")
   endif ()
   if(BUILD_ECAL_TESTS)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -g")
-    set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -fsanitize=address")
+    add_compile_options(
+    "$<$<CONFIG:ASAN>:-fsanitize=address;-fno-omit-frame-pointer;-g>")
+    add_link_options("$<$<CONFIG:ASAN>:-fsanitize=address>")
   endif(BUILD_ECAL_TESTS)
 endif()
 
