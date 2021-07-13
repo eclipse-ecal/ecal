@@ -45,6 +45,5 @@ include("@PACKAGE_eCAL_install_cmake_dir@/eCALTargets.cmake")
 #endif()
 
 find_package(CMakeFunctions REQUIRED)
-find_package(HDF5 REQUIRED)
 
 find_package(Threads REQUIRED)
