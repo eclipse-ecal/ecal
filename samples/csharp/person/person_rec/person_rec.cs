@@ -30,8 +30,8 @@ public class PersonRecCb
     // print version info
     System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Util.GetVersion(), Util.GetDate()));
 
-    // create a protobuf subscriber of tye People.Person
-    var subscriber = new ProtobufSubscriber<People.Person>("person");
+    // create a protobuf subscriber of tye Pb.People.Person
+    var subscriber = new ProtobufSubscriber<Pb.People.Person>("person");
 
     // idle main thread
     while (Util.Ok())

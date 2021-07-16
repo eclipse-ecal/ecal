@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace People {
+namespace Pb.People {
 
   /// <summary>Holder for reflection information generated from person.proto</summary>
   public static partial class PersonReflection {
@@ -24,16 +24,16 @@ namespace People {
     static PersonReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgxwZXJzb24ucHJvdG8SBlBlb3BsZRoMYW5pbWFsLnByb3RvGgtob3VzZS5w",
-            "cm90byKyAQoGUGVyc29uEgoKAmlkGAEgASgFEgwKBG5hbWUYAiABKAkSIwoF",
-            "c3R5cGUYAyABKA4yFC5QZW9wbGUuUGVyc29uLlNUeXBlEg0KBWVtYWlsGAQg",
-            "ASgJEhgKA2RvZxgFIAEoCzILLkFuaW1hbC5Eb2cSIQoFaG91c2UYBiABKAsy",
-            "Ei5FbnZpcm9ubWVudC5Ib3VzZSIdCgVTVHlwZRIICgRNQUxFEAASCgoGRkVN",
-            "QUxFEAFiBnByb3RvMw=="));
+            "CgxwZXJzb24ucHJvdG8SCXBiLlBlb3BsZRoMYW5pbWFsLnByb3RvGgtob3Vz",
+            "ZS5wcm90byK7AQoGUGVyc29uEgoKAmlkGAEgASgFEgwKBG5hbWUYAiABKAkS",
+            "JgoFc3R5cGUYAyABKA4yFy5wYi5QZW9wbGUuUGVyc29uLlNUeXBlEg0KBWVt",
+            "YWlsGAQgASgJEhsKA2RvZxgFIAEoCzIOLnBiLkFuaW1hbC5Eb2cSJAoFaG91",
+            "c2UYBiABKAsyFS5wYi5FbnZpcm9ubWVudC5Ib3VzZSIdCgVTVHlwZRIICgRN",
+            "QUxFEAASCgoGRkVNQUxFEAFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Animal.AnimalReflection.Descriptor, global::Environment.HouseReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::Pb.Animal.AnimalReflection.Descriptor, global::Pb.Environment.HouseReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::People.Person), global::People.Person.Parser, new[]{ "Id", "Name", "Stype", "Email", "Dog", "House" }, null, new[]{ typeof(global::People.Person.Types.SType) }, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Pb.People.Person), global::Pb.People.Person.Parser, new[]{ "Id", "Name", "Stype", "Email", "Dog", "House" }, null, new[]{ typeof(global::Pb.People.Person.Types.SType) }, null, null)
           }));
     }
     #endregion
@@ -48,7 +48,7 @@ namespace People {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::People.PersonReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Pb.People.PersonReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -103,9 +103,9 @@ namespace People {
 
     /// <summary>Field number for the "stype" field.</summary>
     public const int StypeFieldNumber = 3;
-    private global::People.Person.Types.SType stype_ = global::People.Person.Types.SType.Male;
+    private global::Pb.People.Person.Types.SType stype_ = global::Pb.People.Person.Types.SType.Male;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::People.Person.Types.SType Stype {
+    public global::Pb.People.Person.Types.SType Stype {
       get { return stype_; }
       set {
         stype_ = value;
@@ -125,9 +125,9 @@ namespace People {
 
     /// <summary>Field number for the "dog" field.</summary>
     public const int DogFieldNumber = 5;
-    private global::Animal.Dog dog_;
+    private global::Pb.Animal.Dog dog_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Animal.Dog Dog {
+    public global::Pb.Animal.Dog Dog {
       get { return dog_; }
       set {
         dog_ = value;
@@ -136,9 +136,9 @@ namespace People {
 
     /// <summary>Field number for the "house" field.</summary>
     public const int HouseFieldNumber = 6;
-    private global::Environment.House house_;
+    private global::Pb.Environment.House house_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Environment.House House {
+    public global::Pb.Environment.House House {
       get { return house_; }
       set {
         house_ = value;
@@ -172,7 +172,7 @@ namespace People {
       int hash = 1;
       if (Id != 0) hash ^= Id.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
-      if (Stype != global::People.Person.Types.SType.Male) hash ^= Stype.GetHashCode();
+      if (Stype != global::Pb.People.Person.Types.SType.Male) hash ^= Stype.GetHashCode();
       if (Email.Length != 0) hash ^= Email.GetHashCode();
       if (dog_ != null) hash ^= Dog.GetHashCode();
       if (house_ != null) hash ^= House.GetHashCode();
@@ -197,7 +197,7 @@ namespace People {
         output.WriteRawTag(18);
         output.WriteString(Name);
       }
-      if (Stype != global::People.Person.Types.SType.Male) {
+      if (Stype != global::Pb.People.Person.Types.SType.Male) {
         output.WriteRawTag(24);
         output.WriteEnum((int) Stype);
       }
@@ -227,7 +227,7 @@ namespace People {
       if (Name.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
       }
-      if (Stype != global::People.Person.Types.SType.Male) {
+      if (Stype != global::Pb.People.Person.Types.SType.Male) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Stype);
       }
       if (Email.Length != 0) {
@@ -256,7 +256,7 @@ namespace People {
       if (other.Name.Length != 0) {
         Name = other.Name;
       }
-      if (other.Stype != global::People.Person.Types.SType.Male) {
+      if (other.Stype != global::Pb.People.Person.Types.SType.Male) {
         Stype = other.Stype;
       }
       if (other.Email.Length != 0) {
@@ -264,13 +264,13 @@ namespace People {
       }
       if (other.dog_ != null) {
         if (dog_ == null) {
-          Dog = new global::Animal.Dog();
+          Dog = new global::Pb.Animal.Dog();
         }
         Dog.MergeFrom(other.Dog);
       }
       if (other.house_ != null) {
         if (house_ == null) {
-          House = new global::Environment.House();
+          House = new global::Pb.Environment.House();
         }
         House.MergeFrom(other.House);
       }
@@ -294,7 +294,7 @@ namespace People {
             break;
           }
           case 24: {
-            Stype = (global::People.Person.Types.SType) input.ReadEnum();
+            Stype = (global::Pb.People.Person.Types.SType) input.ReadEnum();
             break;
           }
           case 34: {
@@ -303,14 +303,14 @@ namespace People {
           }
           case 42: {
             if (dog_ == null) {
-              Dog = new global::Animal.Dog();
+              Dog = new global::Pb.Animal.Dog();
             }
             input.ReadMessage(Dog);
             break;
           }
           case 50: {
             if (house_ == null) {
-              House = new global::Environment.House();
+              House = new global::Pb.Environment.House();
             }
             input.ReadMessage(House);
             break;

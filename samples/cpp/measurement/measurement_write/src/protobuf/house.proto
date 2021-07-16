@@ -19,7 +19,7 @@
 
 syntax = "proto2";
 
-package Environment;
+package pb.Environment;
 
 message House
 {

@@ -23,7 +23,7 @@ using Continental.eCAL.Core;
 
 public class PersonRecCb
 {
-  static void PersonCallback(String topic, ProtobufSubscriber<People.Person>.ReceiveCallbackData data)
+  static void PersonCallback(String topic, ProtobufSubscriber<Pb.People.Person>.ReceiveCallbackData data)
   {
     System.Console.WriteLine("Topic name " + topic);
     System.Console.WriteLine("Topic content " + data.data);
@@ -33,13 +33,13 @@ public class PersonRecCb
   {
     // initialize eCAL API
     Util.Initialize("Person Receive Callback C#");
-    var subscriber = new ProtobufSubscriber<People.Person>("person");
+    var subscriber = new ProtobufSubscriber<Pb.People.Person>("person");
     // print version info
     System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Util.GetVersion(), Util.GetDate()));
 
     // create a subscriber (topic name "Hello", type "base:std::string")
 
-    ProtobufSubscriber<People.Person>.ReceiverCallback callback = PersonCallback;
+    ProtobufSubscriber<Pb.People.Person>.ReceiverCallback callback = PersonCallback;
     subscriber.AddReceiveCallback(callback);
 
     // idle main thread

@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Environment {
+namespace Pb.Environment {
 
   /// <summary>Holder for reflection information generated from house.proto</summary>
   public static partial class HouseReflection {
@@ -24,12 +24,12 @@ namespace Environment {
     static HouseReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cgtob3VzZS5wcm90bxILRW52aXJvbm1lbnQiFgoFSG91c2USDQoFcm9vbXMY",
-            "ASABKAViBnByb3RvMw=="));
+            "Cgtob3VzZS5wcm90bxIOcGIuRW52aXJvbm1lbnQiFgoFSG91c2USDQoFcm9v",
+            "bXMYASABKAViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Environment.House), global::Environment.House.Parser, new[]{ "Rooms" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Environment.House), global::Pb.Environment.House.Parser, new[]{ "Rooms" }, null, null, null, null)
           }));
     }
     #endregion
@@ -44,7 +44,7 @@ namespace Environment {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Environment.HouseReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Pb.Environment.HouseReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

@@ -35,12 +35,12 @@ using namespace eCAL::protobuf;
 
 TEST(MaximumArrayDimensions, Standard)
 {
-  People::Person person;
+  pb::People::Person person;
 
   // set person object content
   person.set_id(42);
   person.set_name("Max");
-  person.set_stype(People::Person_SType_MALE);
+  person.set_stype(pb::People::Person_SType_MALE);
   person.set_email("max@mail.net");
   person.mutable_dog()->set_name("Brandy");
   person.mutable_house()->set_rooms(4);

@@ -47,11 +47,11 @@ public:
 
 TEST_F(ProtoPublisherTest, MoveAssignment)
 {
-  eCAL::protobuf::CPublisher<People::Person> person_pub("ProtoPublisherTest");
+  eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoPublisherTest");
 
   ASSERT_TRUE(person_pub.IsCreated());
 
-  eCAL::protobuf::CPublisher<People::Person>person_moved;
+  eCAL::protobuf::CPublisher<pb::People::Person>person_moved;
 
   ASSERT_FALSE(person_moved.IsCreated());
 
@@ -65,11 +65,11 @@ TEST_F(ProtoPublisherTest, MoveAssignment)
 
 TEST_F(ProtoPublisherTest, MoveConstruction)
 {
-  eCAL::protobuf::CPublisher<People::Person> person_pub("ProtoPublisherTest");
+  eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoPublisherTest");
 
   ASSERT_TRUE(person_pub.IsCreated());
 
-  eCAL::protobuf::CPublisher<People::Person>person_moved{ std::move(person_pub) };
+  eCAL::protobuf::CPublisher<pb::People::Person>person_moved{ std::move(person_pub) };
 
   ASSERT_TRUE(person_moved.IsCreated());
   ASSERT_FALSE(person_pub.IsCreated());

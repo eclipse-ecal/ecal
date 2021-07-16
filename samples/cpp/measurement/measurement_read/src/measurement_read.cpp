@@ -24,7 +24,7 @@
 
 #include "person.pb.h"
 
-void print_person(const People::Person& person)
+void print_person(const pb::People::Person& person)
 {
   std::cout << "person id    : " << person.id()            << std::endl;
   std::cout << "person name  : " << person.name()          << std::endl;
@@ -41,7 +41,7 @@ int main(int /*argc*/, char** /*argv*/)
   eCAL::measurement::IMeasurement meas(MEASUREMENT_PATH);
 
   // create a channel (topic name "person")
-  eCAL::measurement::IChannel<People::Person> person_channel = meas.Get<People::Person>("person");
+  eCAL::measurement::IChannel<pb::People::Person> person_channel = meas.Get<pb::People::Person>("person");
 
   // iterate over the messages
   for (const auto& person_entry : person_channel)
