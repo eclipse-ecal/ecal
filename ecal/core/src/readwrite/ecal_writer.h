@@ -118,6 +118,8 @@ namespace eCAL
     size_t             m_topic_size;
 
     QOS::SWriterQOS    m_qos;
+
+    long               m_buffering_shm;
     bool               m_zero_copy;
 
     std::atomic<bool>  m_connected;
@@ -137,7 +139,6 @@ namespace eCAL
     long               m_freq;
 
     long               m_bandwidth_max_udp;
-    long               m_buffering_shm;
 
     std::atomic<bool>  m_loc_subscribed;
     std::atomic<bool>  m_ext_subscribed;

@@ -35,6 +35,8 @@
 #include "io/ecal_memfile_pool.h"
 #include "readwrite/ecal_reader_shm.h"
 
+#include <iostream>
+
 namespace eCAL
 {
   template<> std::shared_ptr<CSHMLayer> CReaderLayer<eCAL::CSHMLayer>::layer(nullptr);

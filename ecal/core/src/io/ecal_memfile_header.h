@@ -41,7 +41,7 @@ namespace eCAL
       unsigned char zero_copy : 1;    // allow reader to access memory without copying
       unsigned char unused    : 7;
     };
-    optflags   options = { 0 };
+    optflags   options = { 0, 0 };
   };
 }
  
