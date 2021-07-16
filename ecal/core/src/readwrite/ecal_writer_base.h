@@ -74,7 +74,6 @@ namespace eCAL
 
     virtual std::string GetConectionPar() { return ""; };
 
-    virtual bool PrepareSend(size_t /*len_*/) { return false; };
     struct SWriterData
     {
       const void*  buf       = nullptr;
@@ -84,9 +83,12 @@ namespace eCAL
       size_t       hash      = 0;
       long long    time      = 0;
       long         bandwidth = 0;
+      long         buffering = 1;
       bool         loopback  = false;
       bool         zero_copy = false;
     };
+
+    virtual bool   PrepareSend(const SWriterData& /*data_*/) { return false; };
     virtual size_t Send(const SWriterData& data_) = 0;
 
   protected:

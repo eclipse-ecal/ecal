@@ -44,7 +44,7 @@ namespace eCAL
 
     bool SetQOS(const QOS::SWriterQOS& qos_) override;
 
-    bool PrepareSend(size_t len_) override;
+    bool PrepareSend(const SWriterData& data_) override;
     size_t Send(const SWriterData& data_) override;
 
     bool AddLocConnection(const std::string& process_id_, const std::string& conn_par_) override;
@@ -54,6 +54,7 @@ namespace eCAL
 
   protected:
     int                                           m_write_idx = 0;
+    int                                           m_buffer_count = 1;
     std::vector<std::shared_ptr<CSyncMemoryFile>> m_memory_file_vec;
   };
 }

@@ -138,7 +138,7 @@ namespace eCAL
                 sample_clock = memfile_hdr.clock;
 #ifndef NDEBUG
                 // log it
-                Logging::Log(log_level_debug3, std::string(topic_name_ + "::MemFile GetBuffer (" + std::to_string(memfile_hdr.data_size) + " Bytes)"));
+                Logging::Log(log_level_debug3, std::string(topic_name_ + "::MemFile GetReadAddress (" + std::to_string(memfile_hdr.data_size) + " Bytes)"));
 #endif
                 // add sample to data reader (and call user callback function)
                 if (g_subgate()) g_subgate()->ApplySample(topic_name_, memfile_name_, static_cast<const char*>(buf), memfile_hdr.data_size, (long long)memfile_hdr.id, (long long)memfile_hdr.clock, (long long)memfile_hdr.time, (size_t)memfile_hdr.hash, eCAL::pb::tl_ecal_shm);

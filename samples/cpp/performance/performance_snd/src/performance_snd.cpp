@@ -54,6 +54,12 @@ int main(int argc, char **argv)
   std::cout << "Message size  =  " << int(send_s.size()) << " Byte = " << int(send_s.size()/1024) << " kByte = " << int(send_s.size()/1024/1024) << " MByte" << std::endl << std::endl;
   slen = send_s.size();
 
+  // set buffering
+  pub.SetBufferCount(2);
+
+  // set zero copy
+  pub.EnableZeroCopy(true);
+  
   // safe the start time
   auto start_time = std::chrono::steady_clock::now();
 

@@ -72,6 +72,7 @@ namespace eCAL
     m_snd_time(),
     m_freq(0),
     m_bandwidth_max_udp(NET_BANDWIDTH_MAX_UDP),
+    m_buffering_shm(PUB_MEMFILE_BUF_COUNT),
     m_zero_copy(PUB_MEMFILE_ZERO_COPY),
     m_loc_subscribed(false),
     m_ext_subscribed(false),
@@ -109,6 +110,7 @@ namespace eCAL
     m_snd_time          = std::chrono::steady_clock::time_point();
     m_freq              = 0;
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
+    m_buffering_shm     = eCALPAR(PUB, MEMFILE_BUF_COUNT);
     m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY);
     m_ext_subscribed    = false;
     m_created           = false;
@@ -177,6 +179,7 @@ namespace eCAL
     m_snd_time          = std::chrono::steady_clock::time_point();
     m_freq              = 0;
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
+    m_buffering_shm     = eCALPAR(PUB, MEMFILE_BUF_COUNT);
     m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY);
     m_created           = false;
 
@@ -258,6 +261,13 @@ namespace eCAL
   bool CDataWriter::SetMaxBandwidthUDP(long bandwidth_)
   {
     m_bandwidth_max_udp = bandwidth_;
+    return true;
+  }
+
+  bool CDataWriter::SetBufferCount(long buffering_)
+  {
+    if (buffering_ < 1) return false;
+    m_buffering_shm = buffering_;
     return true;
   }
 
@@ -384,18 +394,10 @@ namespace eCAL
       Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::InProc");
 #endif
 
-      // prepare send
-      if (m_writer_inproc.PrepareSend(len_))
-      {
-        // register new to update listening subscribers
-        DoRegister(true);
-        // let's rematch writer / reader
-        Process::SleepMS(5);
-      }
-
       // send it
       size_t inproc_sent(0);
       {
+        // fill writer data
         struct CDataWriterBase::SWriterData wdata;
         wdata.buf   = buf_;
         wdata.len   = len_;
@@ -403,7 +405,18 @@ namespace eCAL
         wdata.clock = m_clock;
         wdata.hash  = snd_hash;
         wdata.time  = time_;
+
+        // prepare send
+        if (m_writer_inproc.PrepareSend(wdata))
+        {
+          // register new to update listening subscribers and rematch
+          DoRegister(true);
+          Process::SleepMS(5);
+        }
+
+        // send
         inproc_sent = m_writer_inproc.Send(wdata);
+
         m_use_inproc_confirmed = true;
       }
       written |= inproc_sent > 0;
@@ -435,19 +448,11 @@ namespace eCAL
       // log it
       Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::MemFile");
 #endif
-
-      // prepare send
-      if (m_writer_shm.PrepareSend(len_))
-      {
-        // register new to update listening subscribers
-        DoRegister(true);
-        // let's rematch writer / reader
-        Process::SleepMS(5);
-      }
-
+     
       // send it
       size_t shm_sent(0);
       {
+        // fill writer data
         struct CDataWriterBase::SWriterData wdata;
         wdata.buf       = buf_;
         wdata.len       = len_;
@@ -455,7 +460,18 @@ namespace eCAL
         wdata.clock     = m_clock;
         wdata.hash      = snd_hash;
         wdata.time      = time_;
+        wdata.buffering = m_buffering_shm;
         wdata.zero_copy = m_zero_copy;
+
+        // prepare send
+        if (m_writer_shm.PrepareSend(wdata))
+        {
+          // register new to update listening subscribers and rematch
+          DoRegister(true);
+          Process::SleepMS(5);
+        }
+
+        // send
         shm_sent        = m_writer_shm.Send(wdata);
         m_use_shm_confirmed = true;
       }
@@ -486,18 +502,6 @@ namespace eCAL
       Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::UDP_MC");
 #endif
 
-      // prepare send
-      bool prepared(false);
-      prepared = m_writer_udp_mc.PrepareSend(len_);
-
-      if (prepared)
-      {
-        // register new to update listening subscribers
-        DoRegister(true);
-        // let's rematch writer / reader
-        Process::SleepMS(5);
-      }
-
       // send it
       size_t udp_mc_sent(0);
       {
@@ -505,6 +509,7 @@ namespace eCAL
         // we activate udp message loopback to communicate with local processes too
         bool loopback = use_shm == TLayer::smode_off;
 
+        // fill writer data
         struct CDataWriterBase::SWriterData wdata;
         wdata.buf       = buf_;
         wdata.len       = len_;
@@ -514,7 +519,18 @@ namespace eCAL
         wdata.time      = time_;
         wdata.bandwidth = m_bandwidth_max_udp;
         wdata.loopback  = loopback;
+
+        // prepare send
+        if (m_writer_udp_mc.PrepareSend(wdata))
+        {
+          // register new to update listening subscribers and rematch
+          DoRegister(true);
+          Process::SleepMS(5);
+        }
+
+        // send
         udp_mc_sent     = m_writer_udp_mc.Send(wdata);
+
         m_use_udp_mc_confirmed = true;
       }
       written |= udp_mc_sent > 0;

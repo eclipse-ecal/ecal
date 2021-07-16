@@ -105,6 +105,7 @@
 #define  PUB_MEMFILE_RESERVE_S            "memfile_reserve"
 #define  PUB_MEMFILE_ACK_TO_S             "memfile_ack_timeout"
 #define  PUB_MEMFILE_ZERO_COPY_S          "memfile_zero_copy"
+#define  PUB_MEMFILE_BUF_COUNT_S          "memfile_buffer_count"
 
 #define  PUB_SHARE_TTYPE_S                "share_ttype"
 #define  PUB_SHARE_TDESC_S                "share_tdesc"

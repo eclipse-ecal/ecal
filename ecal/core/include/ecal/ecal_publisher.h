@@ -187,6 +187,15 @@ namespace eCAL
     bool SetMaxBandwidthUDP(long bandwidth_);
 
     /**
+     * @brief Set publisher maximum number of used shared memory buffers.
+     *
+     * @param buffering_  Maximum number of used buffers (needs to be greater than 1, default = 1).
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool SetBufferCount(long buffering_);
+
+    /**
      * @brief Enable zero copy shared memory trasnport mode.
      *
      * By default, the builtin shared memory layer is configured to make one memory copy

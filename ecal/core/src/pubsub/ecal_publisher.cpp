@@ -256,6 +256,12 @@ namespace eCAL
     return m_datawriter->SetMaxBandwidthUDP(bandwidth_);
   }
 
+  bool CPublisher::SetBufferCount(long buffering_)
+  {
+    if (!m_created) return(false);
+    return m_datawriter->SetBufferCount(buffering_);
+  }
+
   bool CPublisher::EnableZeroCopy(bool state_)
   {
     if (!m_created) return(false);

@@ -42,9 +42,7 @@ namespace eCAL
   void CSHMLayer::UpdateParameter(SReaderLayerPar& par_)
   {
     // read connection parameters for the shared memory layer
-    // older ecal versions just send the publishers memory file name
-    // newer versions transmit the connection parameter as
-    // a google protobuf message for more flexibility
+    // as a google protobuf message
     std::vector<std::string> memfile_names;
 
     eCAL::pb::ConnnectionPar connection_par;
@@ -57,7 +55,8 @@ namespace eCAL
     }
     else
     {
-      memfile_names.push_back(par_.parameter);
+      std::cout << "Could not parse layer parameter !" << std::endl;
+      return;
     }
 
     for (auto memfile_name : memfile_names)

@@ -68,10 +68,12 @@ namespace eCAL
     if (m_created) return false;
     m_topic_name = topic_name_;
 
-    // init write index and create two memory files (double buffering)
+    // init write index and create memory files
     m_write_idx = 0;
-    m_memory_file_vec.push_back(std::make_shared<CSyncMemoryFile>());
-    m_memory_file_vec.push_back(std::make_shared<CSyncMemoryFile>());
+    for (auto num(0); num < m_buffer_count; ++num)
+    {
+      m_memory_file_vec.push_back(std::make_shared<CSyncMemoryFile>());
+    }
 
     for (auto memory_file : m_memory_file_vec)
     {
@@ -101,12 +103,44 @@ namespace eCAL
     return true;
   }
 
-  bool CDataWriterSHM::PrepareSend(size_t len_)
+  bool CDataWriterSHM::PrepareSend(const SWriterData& data_)
   {
-    if (!m_created) return false;
-    if (len_ == 0)  return false;
+    if (!m_created)     return false;
+    if (data_.len == 0) return false;
 
-    return m_memory_file_vec[m_write_idx]->Reserve(len_);
+    // false signals no rematching / exchanging of
+    // connection parameters needed
+    bool ret_state(false);
+
+    // check number of requested memory file buffer
+    if (data_.buffering != m_buffer_count)
+    {
+      // store new size and flag change
+      m_buffer_count = data_.buffering;
+      ret_state |= true;
+
+      // increased buffer number
+      // we just append new buffers
+      while (m_memory_file_vec.size() < m_buffer_count)
+      {
+        m_memory_file_vec.push_back(std::make_shared<CSyncMemoryFile>());
+      }
+
+      // buffers decreased
+      while (m_memory_file_vec.size() > m_buffer_count)
+      {
+        m_memory_file_vec.back()->Destroy();
+        m_memory_file_vec.pop_back();
+      }
+    }
+
+    // adapt write index if needed
+    m_write_idx %= m_memory_file_vec.size();
+      
+    // check size and reserve new if needed
+    ret_state |= m_memory_file_vec[m_write_idx]->Reserve(data_.len);
+
+    return ret_state;
   }
 
   size_t CDataWriterSHM::Send(const SWriterData& data_)

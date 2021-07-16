@@ -69,14 +69,14 @@ namespace eCAL
     if (!m_memfile.Create(m_memfile_name.c_str(), true, size_))
     {
       // log it
-      Logging::Log(log_level_error, std::string(m_base_name + "::CDataWriter::CreateMemFile - FAILED : ") + m_memfile_name);
+      Logging::Log(log_level_error, std::string(m_base_name + "::CSyncMemoryFile::Create - FAILED : ") + m_memfile_name);
 
       return false;
     }
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug2, std::string(m_base_name + "::CDataWriter::CreateMemFile - SUCCESS : ") + m_memfile_name);
+    Logging::Log(log_level_debug2, std::string(m_base_name + "::CSyncMemoryFile::Create - SUCCESS : ") + m_memfile_name);
 #endif
 
     // initialize memory file with empty header
@@ -137,7 +137,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug2, std::string(m_base_name + "::CDataWriter::DestroyMemFile - FAILED : ") + m_memfile.Name());
+      Logging::Log(log_level_debug2, std::string(m_base_name + "::CSyncMemoryFile::Destroy - FAILED : ") + m_memfile.Name());
 #endif
       // reset memory file name
       m_memfile_name.clear();
@@ -147,7 +147,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug2, std::string(m_base_name + "::CDataWriter::DestroyMemFile - SUCCESS : ") + m_memfile.Name());
+    Logging::Log(log_level_debug2, std::string(m_base_name + "::CSyncMemoryFile::Destroy - SUCCESS : ") + m_memfile.Name());
 #endif
 
     return true;
@@ -235,7 +235,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug4, m_base_name + "::CDataWriter::PrepareSend::RecreateFile");
+      Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::Reserve::RecreateFile");
 #endif
       // estimate size of memory file
       size_t memfile_reserve = static_cast<size_t>(eCALPAR(PUB, MEMFILE_RESERVE));
@@ -260,14 +260,14 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug4, m_base_name + "::CDataWriter::Send::Write2MemFile");
+    Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::Send");
 #endif
 
     // created ?
     if (!m_memfile.IsCreated())
     {
       // log it
-      Logging::Log(log_level_error, m_base_name + "::CDataWriter::Send::Write2MemFile::IsCreated - FAILED");
+      Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Send::IsCreated - FAILED");
       return 0;
     }
 
@@ -295,7 +295,7 @@ namespace eCAL
     if (!opened)
     {
       // log it
-      Logging::Log(log_level_error, m_base_name + "::CDataWriter::Send::Write2MemFile::OpenMemFile - FAILED");
+      Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Send::Open - FAILED");
 
       // store size of the memory file
       size_t memfile_size = m_memfile.FileSize();
@@ -328,11 +328,11 @@ namespace eCAL
     // log it
     if (written)
     {
-      Logging::Log(log_level_debug4, m_base_name + "::CDataWriter::Send::Write2MemFile::Written (" + std::to_string(data_.len) + " Bytes)");
+      Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::Send::Written (" + std::to_string(data_.len) + " Bytes)");
     }
     else
     {
-      Logging::Log(log_level_error, m_base_name + "::CDataWriter::Send::Write2MemFile::Written - FAILED");
+      Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Send::Written - FAILED");
     }
 #endif
 
@@ -388,14 +388,14 @@ namespace eCAL
           gInvalidateEvent(&iter->second.event_ack);
 #ifndef NDEBUG
           // log it
-          Logging::Log(log_level_debug2, m_base_name + "::CDataWriter::SignalMemFileWritten - ACK event timeout");
+          Logging::Log(log_level_debug2, m_base_name + "::CSyncMemoryFile::SignalWritten - ACK event timeout");
 #endif
         }
       }
 
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug4, m_base_name + "::CDataWriter::SignalMemFileWritten");
+      Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::SignalWritten");
 #endif
     }
   }
