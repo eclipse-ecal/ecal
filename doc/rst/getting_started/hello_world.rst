@@ -153,12 +153,12 @@ Again, create a new directory somewhere and add create the :file:`CMakeLists.txt
   .. note::
      **What is happening here?**
 
-     **Line 7-10** Is the receive callback.
+     **Line 8-11** Is the receive callback.
      This method will be called whenever a new message arrives.
      
-     **Line 16** creates an eCAL subscriber that listens to the "hello_world_topic".
+     **Line 19** creates an eCAL subscriber that listens to the "hello_world_topic".
 
-     **Line 19** adds the receive callback from above to the subscriber, so it can be called.
+     **Line 22** adds the receive callback from above to the subscriber, so it can be called.
 
   .. important::
      eCAL Receive callbacks run in the subscriber's receive thread.

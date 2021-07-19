@@ -61,6 +61,7 @@ eCAL is provided on an "as is" basis without warranties or conditions of any kin
    getting_started/services
    getting_started/applications
    getting_started/development
+   getting_started/development_python
 
 .. toctree::
    :hidden:
