@@ -16,6 +16,7 @@ This chapter will give you deeper information about eCAL Sys.
    sys_architecture
    sys_gui
    sys_cli
+   sys_client
 
 .. seealso::
    

@@ -7,7 +7,7 @@ import os
 #    {
 #        "os_group" :             "windows",
 #        "os_name" :              "Windows",
-#        "ecal_installer_link" :  "https://github.com/continental/ecal/releases/download/v5.8.3/ecal_5.8.3-win64.exe",
+#        "ecal_installer_link" :  ["https://github.com/continental/ecal/releases/download/v5.8.3/ecal_5.8.3-win64.exe"],
 #        "python_download_links" : [
 #                ("3.9" , "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg"),
 #                ("3.8" , "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg"),
@@ -20,7 +20,7 @@ import os
 #    {
 #        "os_group" :             "ubuntu",
 #        "os_name" :              "Ubuntu 18.04",
-#        "ecal_installer_link" :  "https://github.com/continental/ecal/releases/download/v5.8.3/ecal_5.8.3-bionic_amd64.deb",
+#        "ecal_installer_link" :  ["https://github.com/continental/ecal/releases/download/v5.8.3/ecal_5.8.3-bionic_amd64.deb"],
 #        "python_download_links" : [
 #                ("3.8" , "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg"),
 #            ],
@@ -29,7 +29,7 @@ import os
 #    {
 #        "os_group" :             "ubuntu",
 #        "os_name" :              "Ubuntu 20.04",
-#        "ecal_installer_link" :  "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.8-focal_amd64.egg",
+#        "ecal_installer_link" :  ["https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.8-focal_amd64.egg"],
 #        "python_download_links" : [
 #                ("3.8" , "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg"),
 #            ],
@@ -61,16 +61,29 @@ elif download_dict["os_group"] == "ubuntu":
 elif download_dict["os_group"] == "macos":
     os_icon_name = "fab fa-apple"
     os_name      = "macOS"
+elif download_dict["os_group"] == "source":
+    os_icon_name = "fa fa-code"
+    os_name      = "Source"
 else:
     os_icon_name = "fas fa-download"
     os_name      = "Other"
-
-installer_extension = os.path.splitext(download_dict["ecal_installer_link"])[1]
 }@
-@[if download_dict["ecal_installer_link"] != ""]@
+@[for download_link in download_dict["ecal_installer_link"]]@
+@{
+file_name           = os.path.split   (download_link)[1]
+installer_extension = os.path.splitext(download_link)[1]
+if download_dict["os_group"] == "source" and ("fat" in file_name):
+    download_button_suffix = " (Includes git submodules)"
+else:
+    download_button_suffix = ""
+}@
 <tr class="@(table_row_class)"><td><p><i class="@(os_icon_name)"></i> @(os_name)</p></td>
-<td><p><a class="reference external" href="@(download_dict["ecal_installer_link"])"><i class="fas fa-download"></i> Download eCAL @(str(ecal_version)) installer for @(os_name) (@(installer_extension))</a></p>
-@[end if]@
+@[    if download_dict["os_group"] == "source"]@
+<td><p><a class="reference external" href="@(download_link)"><i class="fas fa-download"></i> @(file_name)@(download_button_suffix)</a></p>
+@[    else]@
+<td><p><a class="reference external" href="@(download_link)"><i class="fas fa-download"></i> Download eCAL @(str(ecal_version)) installer for @(os_name) (@(installer_extension))</a></p>
+@[    end if]@
+@[end for]@
 @[    if len(download_dict["python_download_links"]) > 0]@
 <ul class="simple">
 @[        for (python_version, python_download_link) in download_dict["python_download_links"]]@

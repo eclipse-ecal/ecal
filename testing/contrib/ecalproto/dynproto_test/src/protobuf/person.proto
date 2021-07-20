@@ -23,7 +23,7 @@ import "animal.proto";
 import "house.proto";
 import "attitude.proto";
 
-package People;
+package pb.People;
 
 message Person
 {

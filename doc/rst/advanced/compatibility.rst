@@ -16,6 +16,10 @@ Depending on what we changed in eCAL, we increment the appropriate number:
   This number is expected to stay at 5 for a long time, but if it ever increases, eCAL 5 nodes will no longer communicate with eCAL 6 nodes.
 
   *All eCAL 5 nodes can communicate with each other.*
+  
+  .. note::
+     We don't make guarantees about the wire-compatibility of eCAL Shared Memory communication, even though we try to keep it compatible as long as possible.
+     As Shared Memory is a local communication technique, this is only relevant if you would want to use multiple eCAL Versions on one machine.
 
 - **MINOR**: The minor version is the most important for you to take care of.
   We increment the minor version, if:
@@ -29,8 +33,8 @@ Depending on what we changed in eCAL, we increment the appropriate number:
   You can upgrade through patch versions without having to expect any problems.
   Usually, you just want the latest release to profit from all bugfixes.
 
-eCAL 5.9
-========
+eCAL 5.9 vs. 5.8
+================
 
 Compatibility table when upgrading from eCAl 5.8:
 
@@ -39,8 +43,8 @@ Compatibility table when upgrading from eCAl 5.8:
 
    * - Wire compatibility
      - * eCAL UDP: 100% compatible
-       * eCAL Shared Memory: 100% compatible
        * Services: 100% compatible
+       * eCAL Shared Memory: 100% compatible
 
    * - API / ABI
      - * API is downward compatible (New functions have been added)
@@ -56,8 +60,8 @@ Compatibility table when upgrading from eCAl 5.8:
 
        * Measurements: 100% compatible
 
-eCAL 5.8
-========
+eCAL 5.8 vs. 5.7
+================
 
 Compatibility table when upgrading from eCAl 5.7:
 
@@ -66,8 +70,8 @@ Compatibility table when upgrading from eCAl 5.7:
 
    * - Wire compatibility
      - * eCAL UDP: 100% compatible
-       * eCAL Shared Memory: 100% compatible
        * Services: 100% compatible
+       * eCAL Shared Memory: 100% compatible
 
    * - API / ABI
      - * API is downward compatible

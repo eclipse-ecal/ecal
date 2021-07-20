@@ -44,14 +44,14 @@ namespace Udpcap
     , bound_state_(false)
     , bound_port_(0)
     , multicast_loopback_enabled_(true)
-    , receive_buffer_(-1)
+    , receive_buffer_size_(-1)
   {
     is_valid_ = Udpcap::Initialize();
   }
 
   UdpcapSocketPrivate::~UdpcapSocketPrivate()
   {
-    // @todo: reinvestigate why it crashes on close.
+    // @todo: reinvestigate why it crashes on close. (Maybe check if i have implemented copy / move constructors properly)
     //close();
   }
 
@@ -203,7 +203,7 @@ namespace Udpcap
       return false;
     }
 
-    receive_buffer_ = buffer_size;
+    receive_buffer_size_ = buffer_size;
 
     return true;
   }
@@ -285,7 +285,7 @@ namespace Udpcap
     auto wait_until = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeout_ms);
 
     std::vector<char> datagram;
-    CallbackArgsVector callback_args(&datagram, source_address, source_port, bound_port_, pcpp::LinkLayerType::LINKTYPE_NULL, &ip_reassembly_);
+    CallbackArgsVector callback_args(&datagram, source_address, source_port, bound_port_, pcpp::LinkLayerType::LINKTYPE_NULL);
 
     do
     {
@@ -309,7 +309,8 @@ namespace Udpcap
       {
         int dev_index = (wait_result - WAIT_OBJECT_0);
         
-        callback_args.link_type_ = static_cast<pcpp::LinkLayerType>(pcap_datalink(pcap_devices_[dev_index].pcap_handle_));
+        callback_args.link_type_     = static_cast<pcpp::LinkLayerType>(pcap_datalink(pcap_devices_[dev_index].pcap_handle_));
+        callback_args.ip_reassembly_ = ip_reassembly_[dev_index].get();
 
         pcap_dispatch(pcap_devices_[dev_index].pcap_handle_, 1, UdpcapSocketPrivate::PacketHandlerVector, reinterpret_cast<u_char*>(&callback_args));
 
@@ -374,7 +375,7 @@ namespace Udpcap
     bool wait_forever = (timeout_ms == INFINITE);
     auto wait_until = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeout_ms);
 
-    CallbackArgsRawPtr callback_args(data, max_len, source_address, source_port, bound_port_, pcpp::LinkLayerType::LINKTYPE_NULL, &ip_reassembly_);
+    CallbackArgsRawPtr callback_args(data, max_len, source_address, source_port, bound_port_, pcpp::LinkLayerType::LINKTYPE_NULL);
 
     do
     {
@@ -398,7 +399,8 @@ namespace Udpcap
       {
         int dev_index = (wait_result - WAIT_OBJECT_0);
 
-        callback_args.link_type_ = static_cast<pcpp::LinkLayerType>(pcap_datalink(pcap_devices_[dev_index].pcap_handle_));
+        callback_args.link_type_     = static_cast<pcpp::LinkLayerType>(pcap_datalink(pcap_devices_[dev_index].pcap_handle_));
+        callback_args.ip_reassembly_ = ip_reassembly_[dev_index].get();
 
         pcap_dispatch(pcap_devices_[dev_index].pcap_handle_, 1, UdpcapSocketPrivate::PacketHandlerRawPtr, reinterpret_cast<u_char*>(&callback_args));
 
@@ -536,8 +538,9 @@ namespace Udpcap
       LOG_DEBUG(std::string("Closing ") + pcap_dev.device_name_);
       pcap_close(pcap_dev.pcap_handle_);
     }
-    pcap_devices_.clear();
+    pcap_devices_      .clear();
     pcap_win32_handles_.clear();
+    ip_reassembly_     .clear();
 
     bound_state_ = false;
     bound_port_ = 0;
@@ -661,9 +664,9 @@ namespace Udpcap
     pcap_set_promisc(pcap_handle, 1 /*true*/); // We only want Packets destined for this adapter. We are not interested in others.
     pcap_set_immediate_mode(pcap_handle, 1 /*true*/);
 
-    if (receive_buffer_ > 0)
+    if (receive_buffer_size_ > 0)
     {
-      pcap_set_buffer_size(pcap_handle, receive_buffer_);
+      pcap_set_buffer_size(pcap_handle, receive_buffer_size_);
     }
 
     int errorcode = pcap_activate(pcap_handle);
@@ -703,8 +706,9 @@ namespace Udpcap
 
     PcapDev pcap_dev(pcap_handle, IsLoopbackDevice(device_name), device_name);
    
-    pcap_devices_.push_back(pcap_dev);
+    pcap_devices_      .push_back(pcap_dev);
     pcap_win32_handles_.push_back(pcap_getevent(pcap_handle));
+    ip_reassembly_     .emplace_back(std::make_unique<Udpcap::IpReassembly>(std::chrono::seconds(5)));
 
     return true;
   }
@@ -858,7 +862,7 @@ namespace Udpcap
         // Handle fragmented IP traffic
         pcpp::IPReassembly::ReassemblyStatus status;
 
-        // Try to reasseble packet
+        // Try to reassemble packet
         pcpp::Packet* reassembled_packet = callback_args->ip_reassembly_->processPacket(&rawPacket, status);
 
         // If we are done reassembling the packet, we return it to the user
@@ -872,7 +876,7 @@ namespace Udpcap
           if (reassembled_ip_layer && reassembled_udp_layer)
             FillCallbackArgsVector(callback_args, reassembled_ip_layer, reassembled_udp_layer);
 
-          free(reassembled_packet); // We need to manually free the packet pointer
+          delete reassembled_packet; // We need to manually delete the packet pointer
         }
       }
       else if (udp_layer)
@@ -890,7 +894,7 @@ namespace Udpcap
     if (dst_port == callback_args->bound_port_)
     {
       if (callback_args->source_address_)
-        *callback_args->source_address_ = HostAddress(ip_layer->getSrcIpAddress().toInt());
+        *callback_args->source_address_ = HostAddress(ip_layer->getSrcIPv4Address().toInt());
 
       if (callback_args->source_port_)
         *callback_args->source_port_ = ntohs(udp_layer->getUdpHeader()->portSrc);
@@ -932,7 +936,7 @@ namespace Udpcap
           if (reassembled_ip_layer && reassembled_udp_layer)
             FillCallbackArgsRawPtr(callback_args, reassembled_ip_layer, reassembled_udp_layer);
 
-          free(reassembled_packet); // We need to manually free the packet pointer
+          delete reassembled_packet; // We need to manually delete the packet pointer
         }
       }
       else if (udp_layer)
@@ -951,7 +955,7 @@ namespace Udpcap
     if (dst_port == callback_args->bound_port_)
     {
       if (callback_args->source_address_)
-        *callback_args->source_address_ = HostAddress(ip_layer->getSrcIpAddress().toInt());
+        *callback_args->source_address_ = HostAddress(ip_layer->getSrcIPv4Address().toInt());
 
       if (callback_args->source_port_)
         *callback_args->source_port_ = ntohs(udp_layer->getUdpHeader()->portSrc);

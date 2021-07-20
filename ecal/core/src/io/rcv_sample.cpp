@@ -243,6 +243,9 @@ int CSampleReceiver::Receive(eCAL::CUDPReceiver* sample_receiver_)
 
 int CSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_len_)
 {
+  // we need at least the header information to start
+  if (sample_buffer_len_ < sizeof(SUDPMessageHead)) return(0);
+
   // cast buffer to udp message struct
   struct SUDPMessage* ecal_message = (struct SUDPMessage*)sample_buffer_;
 
@@ -273,15 +276,15 @@ int CSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_le
   {
   case msg_type_header:
     if (sample_buffer_len_ < sizeof(SUDPMessageHead))
-      return(-1);
+      return(0);
     break;
   case msg_type_content:
   case msg_type_header_with_content:
     if (sample_buffer_len_ < sizeof(SUDPMessageHead) + static_cast<size_t>(ecal_message->header.len))
-      return(-1);
+      return(0);
     break;
   default:
-    return(-1);
+    return(0);
   }
 
 #ifndef NDEBUG

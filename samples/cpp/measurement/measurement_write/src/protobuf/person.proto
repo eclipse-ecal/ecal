@@ -22,7 +22,7 @@ syntax = "proto2";
 import "animal.proto";
 import "house.proto";
 
-package People;
+package pb.People;
 
 message Person
 {

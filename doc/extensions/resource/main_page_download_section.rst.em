@@ -24,4 +24,5 @@ Support for eCAL @(ecal_previous_version.major).@(ecal_previous_version.minor) w
      sudo apt-get update
      sudo apt-get install ecal
 
-  Check out other PPAs (that are fixed to a specific eCAL release) :ref:`here <getting_started_setup_ubuntu_ppa>`.
+  This PPA will always upgrade you to the latest eCAL Release (-> Rolling Release PPA).
+  If you intend to stay on an specific release, check out other PPAs :ref:`here <getting_started_setup_ubuntu_ppa>`.
