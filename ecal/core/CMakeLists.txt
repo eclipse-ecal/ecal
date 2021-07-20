@@ -408,6 +408,7 @@ target_link_libraries(${PROJECT_NAME}
     $<$<BOOL:${WIN32}>:winmm> 
     $<$<BOOL:${WIN32}>:ws2_32> 
     $<$<BOOL:${WIN32}>:wsock32>
+    $<$<BOOL:${QNXNTO}>:socket>
     asio::asio
     tclap::tclap
     CustomTclap
