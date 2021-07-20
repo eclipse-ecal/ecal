@@ -148,7 +148,7 @@ if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
 
     # find_program will search the host paths if CMAKE_FIND_ROOT_PATH_MODE_PROGRAM 
     # is configured correctly (see toolchain file)
-    find_program(protoc_path NAMES protoc HINTS $ENV{ECAL_HOME} PATH_SUFFIXES bin REQUIRED)
+    find_program(protoc_path NAMES protoc REQUIRED)
     add_executable(protoc IMPORTED)
     set_target_properties(protoc PROPERTIES IMPORTED_LOCATION ${protoc_path})
     set_target_properties(protoc PROPERTIES IMPORTED_GLOBAL TRUE)
