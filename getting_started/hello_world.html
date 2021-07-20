@@ -23,9 +23,9 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
-    <link rel="up" title="7. Development" href="development.html" />
+    <link rel="up" title="7. Development (C++)" href="development.html" />
     <link rel="next" title="7.2. Hello World with protobuf" href="hello_world_proto.html" />
-    <link rel="prev" title="7. Development" href="development.html" />
+    <link rel="prev" title="7. Development (C++)" href="development.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
     <script src="../_static/js/modernizr.min.js"></script>
@@ -89,9 +89,14 @@
 <li class="toctree-l2"><a class="reference internal" href="sys.html">6.4.  Sys</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="development.html">7. Development</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="development.html">7. Development (C++)</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">7.1. Hello World</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hello_world_proto.html">7.2. Hello World with protobuf</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development_python.html">8. Development (Python)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_python.html">8.1. Hello World (Python)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_python_proto.html">8.2. Hello World with protobuf (Python)</a></li>
 </ul>
 </li>
 </ul>
@@ -444,7 +449,7 @@
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../index.html">Start</a></li>
-            <li class="breadcrumb-item"><a href="development.html"><span class="section-number">7. </span>Development</a></li>
+            <li class="breadcrumb-item"><a href="development.html"><span class="section-number">7. </span>Development (C++)</a></li>
         <li class="breadcrumb-item active" aria-current="page"><span class="section-number">7.1. </span>Hello World</li>
     </ol>
         <div class="breadcrumb-additions">
@@ -745,21 +750,27 @@ This is the only difference to the hello_world_snd Project.</p>
 26
 27
 28
-29</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;ecal/ecal.h&gt;</span><span class="cp"></span>
+29
+30
+31
+32</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;ecal/ecal.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;ecal/msg/string/subscriber.h&gt;</span><span class="cp"></span>
 
 <span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
 
+<span class="c1">// Callback for receiving messages</span>
 <span class="kt">void</span> <span class="nf">HelloWorldCallback</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">message</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Received Message: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">message</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 <span class="p">}</span>
 
-
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
 <span class="p">{</span>
+  <span class="c1">// Initialize eCAL</span>
   <span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="s">&quot;Hello World Subscriber&quot;</span><span class="p">);</span>
+
+  <span class="c1">// Create a subscriber that listenes on the &quot;hello_world_topic&quot;</span>
   <span class="n">eCAL</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">CSubscriber</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">subscriber</span><span class="p">(</span><span class="s">&quot;hello_world_topic&quot;</span><span class="p">);</span>
 
   <span class="c1">// Set the Callback</span>
@@ -779,10 +790,10 @@ This is the only difference to the hello_world_snd Project.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
-<p><strong>Line 7-10</strong> Is the receive callback.
+<p><strong>Line 8-11</strong> Is the receive callback.
 This method will be called whenever a new message arrives.</p>
-<p><strong>Line 16</strong> creates an eCAL subscriber that listens to the “hello_world_topic”.</p>
-<p><strong>Line 19</strong> adds the receive callback from above to the subscriber, so it can be called.</p>
+<p><strong>Line 19</strong> creates an eCAL subscriber that listens to the “hello_world_topic”.</p>
+<p><strong>Line 22</strong> adds the receive callback from above to the subscriber, so it can be called.</p>
 </div>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
