@@ -1,4 +1,4 @@
-find_path(Asio_INCLUDE_DIR
+find_path(asio_INCLUDE_DIR
   NAMES asio.hpp
   HINTS
     "${CONAN_ASIO_ROOT}/include"
@@ -7,25 +7,25 @@ find_path(Asio_INCLUDE_DIR
   NO_CMAKE_FIND_ROOT_PATH
 )
 
-if(Asio_INCLUDE_DIR-NOTFOUND)
-  message(FATAL_ERROR "Could not find Asio library")
-  set(Asio_FOUND FALSE)
+if(asio_INCLUDE_DIR-NOTFOUND)
+  message(FATAL_ERROR "Could not find asio library")
+  set(asio_FOUND FALSE)
 else()
-  set(Asio_FOUND TRUE)
-  set(ASIO_INCLUDE_DIR ${Asio_INCLUDE_DIR})
+  set(asio_FOUND TRUE)
+  set(ASIO_INCLUDE_DIR ${asio_INCLUDE_DIR})
 endif()
 
-if(Asio_FOUND)
+if(asio_FOUND)
   include(FindPackageHandleStandardArgs)
-  find_package_handle_standard_args(Asio
-    REQUIRED_VARS Asio_INCLUDE_DIR)
+  find_package_handle_standard_args(asio
+    REQUIRED_VARS asio_INCLUDE_DIR)
 
   if(NOT TARGET asio::asio)
-    set(Asio_INCLUDE_DIRS ${Asio_INCLUDE_DIR})
+    set(asio_INCLUDE_DIRS ${asio_INCLUDE_DIR})
     add_library(asio::asio INTERFACE IMPORTED)
     set_target_properties(asio::asio PROPERTIES
-      INTERFACE_INCLUDE_DIRECTORIES ${Asio_INCLUDE_DIR}
+      INTERFACE_INCLUDE_DIRECTORIES ${asio_INCLUDE_DIR}
       INTERFACE_COMPILE_DEFINITIONS ASIO_STANDALONE)
-    mark_as_advanced(Asio_INCLUDE_DIR)
+    mark_as_advanced(asio_INCLUDE_DIR)
   endif()
 endif()
