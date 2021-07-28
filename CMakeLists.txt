@@ -33,6 +33,7 @@ set(ECAL_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}")
 # command line build options
 # use it that way cmake .. -DBUILD_APPS=ON -DBUILD_SAMPLES=ON
 # --------------------------------------------------------
+option(HAS_ROS2                                "Platform supports ROS2 library"                                    OFF)
 option(HAS_HDF5                                "Platform supports HDF5 library"                                    ON)
 option(HAS_QT5                                 "Platform supports Qt 5 library"                                    ON)
 option(HAS_CURL                                "Build with CURL (i.e. upload support in the recorder app)"         ON)
@@ -127,7 +128,7 @@ set(possible_subprojects
   CMakeFunctions
 )
 
-# We should rename the option, but don't know how to do in in a 
+# We should rename the option, but don't know how to do in in a
 # backwards compatible way
 set(ECAL_THIRDPARTY_BUILD_CMAKEFUNCTIONS ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS})
 

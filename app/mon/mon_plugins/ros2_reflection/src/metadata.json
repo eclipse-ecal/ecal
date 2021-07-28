@@ -1,0 +1,15 @@
+{
+  "Version": "v0.1.0",
+  "Author": "Zhensheng Li",
+  "Name": "ROS2 Reflection",
+
+  "Priority": 1,
+
+  "SupportedTopics":
+    [
+      {
+      }
+    ],
+
+  "OptionalTopics": []
+}

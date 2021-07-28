@@ -45,3 +45,4 @@ doc/extensions/_autogen
 .idea
 cmake-build-*
 
+build/
