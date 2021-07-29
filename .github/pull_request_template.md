@@ -1,12 +1,3 @@
----
-name: Pull request
-about: Create a pull request for this project
-title: ''
-labels: ''
-assignees: ''
-
----
-
 **Pull request type**
 
 <!-- Please do not submit updates to dependencies unless it fixes an issue. --> 
