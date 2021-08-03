@@ -416,7 +416,6 @@ namespace eCAL
 
         // send
         inproc_sent = m_writer_inproc.Send(wdata);
-
         m_use_inproc_confirmed = true;
       }
       written |= inproc_sent > 0;
@@ -472,7 +471,7 @@ namespace eCAL
         }
 
         // send
-        shm_sent        = m_writer_shm.Send(wdata);
+        shm_sent = m_writer_shm.Send(wdata);
         m_use_shm_confirmed = true;
       }
       written |= shm_sent > 0;
@@ -529,8 +528,7 @@ namespace eCAL
         }
 
         // send
-        udp_mc_sent     = m_writer_udp_mc.Send(wdata);
-
+        udp_mc_sent = m_writer_udp_mc.Send(wdata);
         m_use_udp_mc_confirmed = true;
       }
       written |= udp_mc_sent > 0;

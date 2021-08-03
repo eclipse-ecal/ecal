@@ -67,17 +67,17 @@ TEST(IO, MemfileReadWrite)
   // write content to memory file before open
   EXPECT_EQ(0, mem_file.Write((void*)send_s.c_str(), slen, 0));
 
-  // open memory file with full access (timeout 100 ms)
-  EXPECT_EQ(true, mem_file.GetFullAccess(100));
+  // open memory file with write access (timeout 100 ms)
+  EXPECT_EQ(true, mem_file.GetWriteAccess(100));
 
   // check open state
   EXPECT_EQ(true, mem_file.IsOpened());
 
-  // check full access state
-  EXPECT_EQ(true, mem_file.HasFullAccess());
+  // check write access state
+  EXPECT_EQ(true, mem_file.HasWriteAccess());
 
   // check read only access state
-  EXPECT_EQ(false, mem_file.HasReadOnlyAccess());
+  EXPECT_EQ(false, mem_file.HasReadAccess());
 
   // write content to memory file
   EXPECT_EQ(slen, mem_file.Write((void*)send_s.c_str(), slen, 0));
@@ -87,16 +87,16 @@ TEST(IO, MemfileReadWrite)
   EXPECT_EQ(0, mem_file.Write((void*)double_send_s.c_str(), double_send_s.size(), 0));
 
   // close memory file
-  EXPECT_EQ(true, mem_file.ReleaseFullAccess());
+  EXPECT_EQ(true, mem_file.ReleaseWriteAccess());
 
   // check open state
   EXPECT_EQ(false, mem_file.IsOpened());
 
-  // check full access state
-  EXPECT_EQ(false, mem_file.HasFullAccess());
+  // check write access state
+  EXPECT_EQ(false, mem_file.HasWriteAccess());
 
   // check read only access state
-  EXPECT_EQ(false, mem_file.HasReadOnlyAccess());
+  EXPECT_EQ(false, mem_file.HasReadAccess());
 
   // write content to closed memory file
   EXPECT_EQ(0, mem_file.Write((void*)send_s.c_str(), slen, 0));
@@ -105,10 +105,10 @@ TEST(IO, MemfileReadWrite)
   EXPECT_EQ(true, mem_file.GetReadAccess(100));
 
   // check read only access state
-  EXPECT_EQ(true, mem_file.HasReadOnlyAccess());
+  EXPECT_EQ(true, mem_file.HasReadAccess());
 
-  // check full access state
-  EXPECT_EQ(false, mem_file.HasFullAccess());
+  // check write access state
+  EXPECT_EQ(false, mem_file.HasWriteAccess());
 
   // read content from memory file
   std::vector<char> read_buf;
@@ -119,7 +119,7 @@ TEST(IO, MemfileReadWrite)
   EXPECT_EQ(true, mem_file.ReleaseReadAccess());
 
   // check read only access state
-  EXPECT_EQ(false, mem_file.HasReadOnlyAccess());
+  EXPECT_EQ(false, mem_file.HasReadAccess());
 
   // destroy memory file
   EXPECT_EQ(true, mem_file.Destroy(true));
@@ -143,9 +143,6 @@ TEST(IO, MemfilePerf)
   // create memory file
   EXPECT_EQ(true, mem_file.Create(memfile_name.c_str(), true, slen));
 
-  // open memory file with timeout 100 ms
-  EXPECT_EQ(true, mem_file.GetFullAccess(100));
-
   // start time
   auto start = std::chrono::high_resolution_clock::now();
 
@@ -155,11 +152,23 @@ TEST(IO, MemfilePerf)
   const size_t write_loops(1000000);
   for (size_t loops = 0; loops < write_loops; ++loops)
   {
+    // get write access with timeout 10 ms
+    EXPECT_EQ(true, mem_file.GetWriteAccess(10));
+
     // write content to memory file
     EXPECT_EQ(slen, mem_file.Write((void*)send_s.c_str(), slen, 0));
 
+    // release write access
+    EXPECT_EQ(true, mem_file.ReleaseWriteAccess());
+
+    // get read access with timeout 10 ms
+    EXPECT_EQ(true, mem_file.GetReadAccess(10));
+
     // read content from memory file
     EXPECT_EQ(slen, mem_file.Read((void*)read_buf.data(), read_buf.size(), 0));
+
+    // release read access
+    EXPECT_EQ(true, mem_file.ReleaseReadAccess());
   }
 
   // end time
@@ -171,9 +180,6 @@ TEST(IO, MemfilePerf)
   std::cout << "Sent         : " << sum_snd_bytes << " bytes";
   std::cout << " (" << sum_snd_bytes / (1024 * 1024) << " MB)" << std::endl;
   std::cout << "Throughput   : " << int((sum_snd_bytes / (1024.0 * 1024.0)) / elapsed.count()) << " MB/s " << std::endl;
-
-  // close memory file
-  EXPECT_EQ(true, mem_file.ReleaseFullAccess());
 
   // destroy memory file
   EXPECT_EQ(true, mem_file.Destroy(true));
@@ -202,15 +208,15 @@ TEST(IO, MemfileConcurrency)
 
       for (int i = 0; i != runs; ++i)
       {
-        EXPECT_EQ(true, mem_file.GetFullAccess(100));
-        if (mem_file.HasFullAccess())
+        EXPECT_EQ(true, mem_file.GetWriteAccess(100));
+        if (mem_file.HasWriteAccess())
         {
           write_buf[0] = num_writes;
           auto written = mem_file.Write((void*)write_buf.data(), write_buf.size(), 0);
           EXPECT_EQ(buflen, written);
           std::cout << std::endl;
           std::cout << "producer write access  : " << num_writes << std::endl;
-          EXPECT_EQ(true, mem_file.ReleaseFullAccess());
+          EXPECT_EQ(true, mem_file.ReleaseWriteAccess());
           std::this_thread::sleep_for(std::chrono::milliseconds(1));
           num_writes++;
         }
@@ -228,7 +234,7 @@ TEST(IO, MemfileConcurrency)
       for (int i = 0; i != runs; ++i)
       {
         EXPECT_EQ(true, mem_file.GetReadAccess(100));
-        if (mem_file.HasReadOnlyAccess())
+        if (mem_file.HasReadAccess())
         {
           auto read = mem_file.Read((void*)read_buf.data(), read_buf.size(), 0);
           EXPECT_EQ(buflen, read);
@@ -252,7 +258,7 @@ TEST(IO, MemfileConcurrency)
       for (int i = 0; i != runs; ++i)
       {
         EXPECT_EQ(true, mem_file.GetReadAccess(100));
-        if (mem_file.HasReadOnlyAccess())
+        if (mem_file.HasReadAccess())
         {
           auto read = mem_file.Read((void*)read_buf.data(), read_buf.size(), 0);
           EXPECT_EQ(buflen, read);

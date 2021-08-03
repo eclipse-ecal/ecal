@@ -81,9 +81,9 @@ namespace eCAL
 
     // initialize memory file with empty header
     struct SMemFileHeader memfile_hdr;
-    m_memfile.GetFullAccess(PUB_MEMFILE_OPEN_TO);
+    m_memfile.GetWriteAccess(PUB_MEMFILE_OPEN_TO);
     m_memfile.Write(&memfile_hdr, memfile_hdr.hdr_size, 0);
-    m_memfile.ReleaseFullAccess();
+    m_memfile.ReleaseWriteAccess();
 
     // collect all connected process id's
     std::vector<std::string> process_id_list;
@@ -217,16 +217,6 @@ namespace eCAL
     return false;
   }
 
-  bool CSyncMemoryFile::GetFullAccess(const int timeout_)
-  {
-    return m_memfile.GetFullAccess(timeout_);
-  }
-
-  bool CSyncMemoryFile::ReleaseFullAccess()
-  {
-    return m_memfile.ReleaseFullAccess();
-  }
-
   bool CSyncMemoryFile::Reserve(size_t size_)
   {
     // we recreate a memory file if the file size is to small
@@ -288,7 +278,7 @@ namespace eCAL
     memfile_hdr.options.zero_copy = static_cast<unsigned char>(data_.zero_copy);
 
     // open the memory file
-    bool opened = m_memfile.GetFullAccess(PUB_MEMFILE_OPEN_TO);
+    bool opened = m_memfile.GetWriteAccess(PUB_MEMFILE_OPEN_TO);
 
     // maybe it's locked by a zombie or a crashed process
     // so we try to recreate a new one
@@ -304,7 +294,7 @@ namespace eCAL
       // recreate it with the same size
       if (!Create(m_base_name, memfile_size)) return 0;
       // then reopen
-      opened = m_memfile.GetFullAccess(PUB_MEMFILE_OPEN_TO);
+      opened = m_memfile.GetWriteAccess(PUB_MEMFILE_OPEN_TO);
       // still no chance ? hell .... we give up
       if (!opened) return 0;
     }
@@ -319,7 +309,7 @@ namespace eCAL
     // write the buffer
     written &= m_memfile.Write(data_.buf, data_.len, wbytes) > 0;
     // close memory file
-    m_memfile.ReleaseFullAccess();
+    m_memfile.ReleaseWriteAccess();
 
     // and fire the publish event for local subscriber
     if (written) SignalWritten();

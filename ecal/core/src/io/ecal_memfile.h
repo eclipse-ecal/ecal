@@ -116,22 +116,6 @@ namespace eCAL
     bool Destroy(const bool remove_);
 
     /**
-     * @brief Get memory file full access.
-     *
-     * @param timeout_  The timeout in ms for access via mutex.
-     *
-     * @return  true if file exists and could be opened with read/write access.
-    **/
-    bool GetFullAccess(const int timeout_);
-
-    /**
-     * @brief Release the full access.
-     *
-     * @return  true if it succeeds, false if it fails.
-    **/
-    bool ReleaseFullAccess();
-
-    /**
      * @brief Get memory file read access. 
      *
      * @param timeout_  The timeout in ms for access via mutex.
@@ -148,6 +132,17 @@ namespace eCAL
     bool ReleaseReadAccess();
 
     /**
+     * @brief Get payload buffer pointer from an opened memory file for reading.
+     *
+     * @param buf_     The destination address.
+     * @param len_     Expected length of the available payload.
+     * @param offset_  The offset where to start reading.
+     *
+     * @return         Number of available bytes (or zero if it fails).
+    **/
+    size_t GetReadAddress(const void*& buf_, const size_t len_, const size_t offset_);
+
+    /**
      * @brief Read bytes from an opened memory file. 
      *
      * @param buf_     The destination address. 
@@ -157,6 +152,33 @@ namespace eCAL
      * @return         Number of copied bytes (or zero if it fails). 
     **/
     size_t Read(void* buf_, const size_t len_, const size_t offset_);
+
+    /**
+     * @brief Get memory file write access.
+     *
+     * @param timeout_  The timeout in ms for access via mutex.
+     *
+     * @return  true if file exists and could be opened with read/write access.
+    **/
+    bool GetWriteAccess(const int timeout_);
+
+    /**
+     * @brief Release the write access.
+     *
+     * @return  true if it succeeds, false if it fails.
+    **/
+    bool ReleaseWriteAccess();
+
+    /**
+     * @brief Get payload buffer pointer from an opened memory file for writing.
+     *
+     * @param buf_     The destination address.
+     * @param len_     Expected length of the available payload.
+     * @param offset_  The offset where to start writing.
+     *
+     * @return         Number of available bytes (or zero if it fails).
+    **/
+    size_t GetWriteAddress(void*& buf_, const size_t len_, const size_t offset_);
 
     /**
      * @brief Write bytes to the memory file. 
@@ -169,17 +191,6 @@ namespace eCAL
     **/
     size_t Write(const void* buf_, const size_t len_, const size_t offset_);
     
-    /**
-     * @brief Get payload buffer pointer from an opened memory file.
-     *
-     * @param buf_     The destination address.
-     * @param len_     Expected length of the available payload.
-     * @param offset_  The offset where to start reading.
-     *
-     * @return         Number of copied bytes (or zero if it fails).
-    **/
-    size_t GetReadAddress(const void*& buf_, const size_t len_, const size_t offset_);
-
     /**
      * @brief Maximum data size of the whole memory file.
      *
@@ -199,8 +210,8 @@ namespace eCAL
     std::string Name()       const {return(m_name);};
 
     bool IsOpened()          const {return(m_access_state != access_state::closed);};
-    bool HasFullAccess()     const {return(m_access_state == access_state::full_access);};
-    bool HasReadOnlyAccess() const {return(m_access_state == access_state::read_only_access);};
+    bool HasReadAccess()     const {return(m_access_state == access_state::read_access);};
+    bool HasWriteAccess()    const {return(m_access_state == access_state::write_access);};
 
     struct SMemFileHeader
     {
@@ -216,8 +227,8 @@ namespace eCAL
     enum class access_state
     {
       closed,
-      read_only_access,
-      full_access
+      read_access,
+      write_access
     };
     bool            m_created;
     access_state    m_access_state;

@@ -52,9 +52,6 @@ namespace eCAL
     std::string GetName();
 
   protected:
-    bool GetFullAccess(const int timeout_);
-    bool ReleaseFullAccess();
-
     size_t Write(const void* buf_, const size_t len_, const size_t offset_);
     void SignalWritten();
 

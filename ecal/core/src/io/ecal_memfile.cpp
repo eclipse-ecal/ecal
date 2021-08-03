@@ -175,52 +175,6 @@ namespace eCAL
     return(ret_state);
   }
 
-  bool CMemoryFile::GetFullAccess(int timeout_)
-  {
-    if (!m_created)                  return(false);
-    if (!m_memfile_info.mem_address) return(false);
-    if (!g_memfile_map())            return(false);
-
-    // lock mutex
-    if (!LockMtx(&m_memfile_info.mutex, timeout_))
-    {
-#ifndef NDEBUG
-      printf("Could not lock memory file mutex: %s.\n\n", m_name.c_str());
-#endif
-      return(false);
-    }
-
-    // update header
-    m_header = *static_cast<SMemFileHeader*>(m_memfile_info.mem_address);
-
-    // check available file size for writing
-    if (!CheckAvailableWriteSize())
-    {
-      // unlock mutex
-      UnlockMtx(&m_memfile_info.mutex);
-      return(false);
-    }
-
-    // mark as opened for full access
-    m_access_state = access_state::full_access;
-
-    return(true);
-  }
-
-  bool CMemoryFile::ReleaseFullAccess()
-  {
-    if (m_access_state != access_state::full_access) return(false);
-    if (!m_created)                                  return(false);
-
-    // reset access state
-    m_access_state = access_state::closed;
-
-    // unlock mutex
-    UnlockMtx(&m_memfile_info.mutex);
-
-    return(true);
-  }
-
   bool CMemoryFile::GetReadAccess(int timeout_)
   {
     if (!m_created)                  return(false);
@@ -248,15 +202,15 @@ namespace eCAL
     }
 
     // mark as opened for read access
-    m_access_state = access_state::read_only_access;
+    m_access_state = access_state::read_access;
 
     return(true);
   }
 
   bool CMemoryFile::ReleaseReadAccess()
   {
-    if (m_access_state != access_state::read_only_access) return(false);
-    if (!m_created)                                       return(false);
+    if (m_access_state != access_state::read_access) return(false);
+    if (!m_created)                                  return(false);
 
     // reset states
     m_access_state = access_state::closed;
@@ -267,51 +221,117 @@ namespace eCAL
     return(true);
   }
 
-  size_t CMemoryFile::Read(void* buf_, const size_t len_, const size_t offset_)
+  size_t CMemoryFile::GetReadAddress(const void*& buf_, const size_t len_, const size_t offset_)
   {
-    if (m_access_state == access_state::closed)                           return(0);
-    if (!buf_)                                                            return(0);
-    if (len_ == 0)                                                        return(0);
-    if (!m_memfile_info.mem_address)                                      return(0);
-    if ((len_ + offset_ + sizeof(SMemFileHeader)) > m_memfile_info.size)  return(0);
+    if (m_access_state != access_state::read_access)                     return(0);
+    if (len_ == 0)                                                       return(0);
+    if (!m_memfile_info.mem_address)                                     return(0);
+    if ((len_ + offset_ + sizeof(SMemFileHeader)) > m_memfile_info.size) return(0);
 
-    // read content
-    memcpy(buf_, static_cast<char*>(m_memfile_info.mem_address) + offset_ + sizeof(SMemFileHeader), len_);
+    // return read address
+    buf_ = static_cast<char*>(m_memfile_info.mem_address) + offset_ + sizeof(SMemFileHeader);
 
     return(len_);
   }
 
-  size_t CMemoryFile::Write(const void* buf_, const size_t len_, const size_t offset_)
+  size_t CMemoryFile::Read(void* buf_, const size_t len_, const size_t offset_)
   {
-    if (m_access_state == access_state::closed)                           return(0);
-    if (m_access_state == access_state::read_only_access)                 return(0);
-    if (!buf_)                                                            return(0);
-    if ((len_ + offset_) > static_cast<size_t>(m_header.max_data_size))   return(0);
-    if (!m_memfile_info.mem_address)                                      return(0);
-    if ((len_ + offset_ + sizeof(SMemFileHeader)) > m_memfile_info.size)  return(0);
+    if (!buf_) return(0);
+
+    const void* rbuf(nullptr);
+    if (GetReadAddress(rbuf, len_, offset_))
+    {
+      // copy from read buffer
+      memcpy(buf_, rbuf, len_);
+      // return number of read bytes
+      return(len_);
+    }
+    else
+    {
+      return(0);
+    }
+  }
+
+  bool CMemoryFile::GetWriteAccess(int timeout_)
+  {
+    if (!m_created)                  return(false);
+    if (!m_memfile_info.mem_address) return(false);
+    if (!g_memfile_map())            return(false);
+
+    // lock mutex
+    if (!LockMtx(&m_memfile_info.mutex, timeout_))
+    {
+#ifndef NDEBUG
+      printf("Could not lock memory file mutex: %s.\n\n", m_name.c_str());
+#endif
+      return(false);
+    }
+
+    // update header
+    m_header = *static_cast<SMemFileHeader*>(m_memfile_info.mem_address);
+
+    // check available file size for writing
+    if (!CheckAvailableWriteSize())
+    {
+      // unlock mutex
+      UnlockMtx(&m_memfile_info.mutex);
+      return(false);
+    }
+
+    // mark as opened for full access
+    m_access_state = access_state::write_access;
+
+    return(true);
+  }
+
+  bool CMemoryFile::ReleaseWriteAccess()
+  {
+    if (m_access_state != access_state::write_access) return(false);
+    if (!m_created)                                   return(false);
+
+    // reset access state
+    m_access_state = access_state::closed;
+
+    // unlock mutex
+    UnlockMtx(&m_memfile_info.mutex);
+
+    return(true);
+  }
+
+  size_t CMemoryFile::GetWriteAddress(void*& buf_, const size_t len_, const size_t offset_)
+  {
+    if (m_access_state != access_state::write_access)                    return(0);
+    if ((len_ + offset_) > static_cast<size_t>(m_header.max_data_size))  return(0);
+    if (!m_memfile_info.mem_address)                                     return(0);
+    if ((len_ + offset_ + sizeof(SMemFileHeader)) > m_memfile_info.size) return(0);
 
     // update header
     m_header.cur_data_size = (unsigned long)(len_ + offset_);
     SMemFileHeader* pHeader = static_cast<SMemFileHeader*>(m_memfile_info.mem_address);
     pHeader->cur_data_size = m_header.cur_data_size;
 
-    // write content
-    memcpy(static_cast<char*>(m_memfile_info.mem_address) + offset_ + sizeof(SMemFileHeader), buf_, len_);
+    // return write address
+    buf_ = static_cast<char*>(m_memfile_info.mem_address) + offset_ + sizeof(SMemFileHeader);
 
     return(len_);
   }
 
-  size_t CMemoryFile::GetReadAddress(const void*& buf_, const size_t len_, const size_t offset_)
+  size_t CMemoryFile::Write(const void* buf_, const size_t len_, const size_t offset_)
   {
-    if (m_access_state != access_state::read_only_access)                 return(0);
-    if (len_ == 0)                                                        return(0);
-    if (!m_memfile_info.mem_address)                                      return(0);
-    if ((len_ + offset_ + sizeof(SMemFileHeader)) > m_memfile_info.size)  return(0);
+    if (!buf_) return(0);
 
-    // read content
-    buf_ = static_cast<char*>(m_memfile_info.mem_address) + offset_ + sizeof(SMemFileHeader);
-
-    return(len_);
+    void* wbuf(nullptr);
+    if (GetWriteAddress(wbuf, len_, offset_))
+    {
+      // copy to write buffer
+      memcpy(wbuf, buf_, len_);
+      // return number of written bytes
+      return(len_);
+    }
+    else
+    {
+      return(0);
+    }
   }
 
   bool CMemoryFile::CheckAvailableReadSize()
