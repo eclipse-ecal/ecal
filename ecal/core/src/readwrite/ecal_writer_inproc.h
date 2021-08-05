@@ -52,7 +52,7 @@ namespace eCAL
     bool Create(const std::string& host_name_, const std::string& topic_name_, const std::string & topic_id_) override;
     bool Destroy() override;
 
-    size_t Send(const SWriterData& data_) override;
+    size_t Write(const SWriterData& data_) override;
 
   protected:
   };

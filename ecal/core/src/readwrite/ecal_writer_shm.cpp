@@ -103,7 +103,7 @@ namespace eCAL
     return true;
   }
 
-  bool CDataWriterSHM::PrepareSend(const SWriterData& data_)
+  bool CDataWriterSHM::PrepareWrite(const SWriterData& data_)
   {
     if (!m_created)     return false;
     if (data_.len == 0) return false;
@@ -143,7 +143,7 @@ namespace eCAL
     return ret_state;
   }
 
-  size_t CDataWriterSHM::Send(const SWriterData& data_)
+  size_t CDataWriterSHM::Write(const SWriterData& data_)
   {
     if (!m_created) return 0;
 

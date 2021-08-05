@@ -89,7 +89,7 @@ namespace eCAL
     return true;
   }
 
-  size_t CDataWriterSHM::Send(const SWriterData& data_)
+  size_t CDataWriterSHM::Write(const SWriterData& data_)
   {
     if (!m_publisher) return 0;
     size_t ret(0);

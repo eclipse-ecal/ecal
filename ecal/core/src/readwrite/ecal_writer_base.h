@@ -88,8 +88,8 @@ namespace eCAL
       bool         zero_copy = false;
     };
 
-    virtual bool   PrepareSend(const SWriterData& /*data_*/) { return false; };
-    virtual size_t Send(const SWriterData& data_) = 0;
+    virtual bool   PrepareWrite(const SWriterData& /*data_*/) { return false; };
+    virtual size_t Write(const SWriterData& data_) = 0;
 
   protected:
     std::string      m_host_name;

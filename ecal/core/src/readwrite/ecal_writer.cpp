@@ -311,7 +311,7 @@ namespace eCAL
     return(true);
   }
 
-  size_t CDataWriter::Send(const void* const buf_, size_t len_, long long time_, long long id_)
+  size_t CDataWriter::Write(const void* const buf_, size_t len_, long long time_, long long id_)
   {
     // store id
     m_id = id_;
@@ -407,7 +407,7 @@ namespace eCAL
         wdata.time  = time_;
 
         // prepare send
-        if (m_writer_inproc.PrepareSend(wdata))
+        if (m_writer_inproc.PrepareWrite(wdata))
         {
           // register new to update listening subscribers and rematch
           DoRegister(true);
@@ -415,7 +415,7 @@ namespace eCAL
         }
 
         // send
-        inproc_sent = m_writer_inproc.Send(wdata);
+        inproc_sent = m_writer_inproc.Write(wdata);
         m_use_inproc_confirmed = true;
       }
       written |= inproc_sent > 0;
@@ -463,7 +463,7 @@ namespace eCAL
         wdata.zero_copy = m_zero_copy;
 
         // prepare send
-        if (m_writer_shm.PrepareSend(wdata))
+        if (m_writer_shm.PrepareWrite(wdata))
         {
           // register new to update listening subscribers and rematch
           DoRegister(true);
@@ -471,7 +471,7 @@ namespace eCAL
         }
 
         // send
-        shm_sent = m_writer_shm.Send(wdata);
+        shm_sent = m_writer_shm.Write(wdata);
         m_use_shm_confirmed = true;
       }
       written |= shm_sent > 0;
@@ -520,7 +520,7 @@ namespace eCAL
         wdata.loopback  = loopback;
 
         // prepare send
-        if (m_writer_udp_mc.PrepareSend(wdata))
+        if (m_writer_udp_mc.PrepareWrite(wdata))
         {
           // register new to update listening subscribers and rematch
           DoRegister(true);
@@ -528,7 +528,7 @@ namespace eCAL
         }
 
         // send
-        udp_mc_sent = m_writer_udp_mc.Send(wdata);
+        udp_mc_sent = m_writer_udp_mc.Write(wdata);
         m_use_udp_mc_confirmed = true;
       }
       written |= udp_mc_sent > 0;

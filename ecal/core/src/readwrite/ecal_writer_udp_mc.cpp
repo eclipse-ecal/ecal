@@ -92,7 +92,7 @@ namespace eCAL
     return true;
   }
 
-  size_t CDataWriterUdpMC::Send(const SWriterData& data_)
+  size_t CDataWriterUdpMC::Write(const SWriterData& data_)
   {
     if (!m_created) return 0;
 

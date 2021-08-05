@@ -293,8 +293,8 @@ namespace eCAL
 
     // send content via data writer layer
     size_t size = 0;
-    if (time_ == -1) size = m_datawriter->Send(buf_, len_, eCAL::Time::GetMicroSeconds(), m_id);
-    else             size = m_datawriter->Send(buf_, len_, time_, m_id);
+    if (time_ == -1) size = m_datawriter->Write(buf_, len_, eCAL::Time::GetMicroSeconds(), m_id);
+    else             size = m_datawriter->Write(buf_, len_, time_, m_id);
 
     // return success
     return(size);

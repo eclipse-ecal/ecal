@@ -71,7 +71,7 @@ namespace eCAL
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
     bool RemEventCallback(eCAL_Publisher_Event type_);
 
-    size_t Send(const void* const buf_, size_t len_, long long time_, long long id_);
+    size_t Write(const void* const buf_, size_t len_, long long time_, long long id_);
 
     void ApplyLocSubscription(const std::string& process_id_, const std::string& reader_par_);
     void RemoveLocSubscription(const std::string & process_id_);
