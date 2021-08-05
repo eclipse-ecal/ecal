@@ -49,7 +49,7 @@ namespace eCAL
     void Stop();
     bool IsStopped() {return(m_is_stopped);};
 
-    void Observe(const std::string& topic_name_, const std::string& memfile_name_, const std::string& memfile_event_, const int timeout_max_);
+    void Observe(const std::string& topic_name_, const std::string& topic_id_, const std::string& memfile_name_, const std::string& memfile_event_, const int timeout_max_);
 
   protected:
     std::mutex         m_thread_sync;

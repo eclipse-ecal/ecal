@@ -241,7 +241,7 @@ namespace eCAL
     return false;
   }
 
-  size_t CSyncMemoryFile::Send(const CDataWriterBase::SWriterData& data_)
+  size_t CSyncMemoryFile::Write(const CDataWriterBase::SWriterData& data_)
   {
     // write header and payload into the memory file
 
@@ -338,7 +338,7 @@ namespace eCAL
     return m_memfile_name;
   }
 
-  size_t CSyncMemoryFile::Write(const void* buf_, const size_t len_, const size_t offset_)
+  size_t CSyncMemoryFile::WriteBuffer(const void* buf_, const size_t len_, const size_t offset_)
   {
     return m_memfile.Write(buf_, len_, offset_);
   }

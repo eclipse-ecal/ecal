@@ -64,7 +64,7 @@ namespace eCAL
     gSetEvent(m_event_snd);
   }
 
-  void CMemFileObserver::Observe(const std::string& topic_name_, const std::string& memfile_name_, const std::string& memfile_event_, const int timeout_max_)
+  void CMemFileObserver::Observe(const std::string& topic_name_, const std::string& topic_id_, const std::string& memfile_name_, const std::string& memfile_event_, const int timeout_max_)
   {
 #ifndef NDEBUG
     // log it
@@ -141,7 +141,7 @@ namespace eCAL
                 Logging::Log(log_level_debug3, std::string(topic_name_ + "::MemFile GetReadAddress (" + std::to_string(memfile_hdr.data_size) + " Bytes)"));
 #endif
                 // add sample to data reader (and call user callback function)
-                if (g_subgate()) g_subgate()->ApplySample(topic_name_, memfile_name_, static_cast<const char*>(buf), memfile_hdr.data_size, (long long)memfile_hdr.id, (long long)memfile_hdr.clock, (long long)memfile_hdr.time, (size_t)memfile_hdr.hash, eCAL::pb::tl_ecal_shm);
+                if (g_subgate()) g_subgate()->ApplySample(topic_name_, topic_id_, static_cast<const char*>(buf), memfile_hdr.data_size, (long long)memfile_hdr.id, (long long)memfile_hdr.clock, (long long)memfile_hdr.time, (size_t)memfile_hdr.hash, eCAL::pb::tl_ecal_shm);
               }
             }
 
@@ -184,7 +184,7 @@ namespace eCAL
               Logging::Log(log_level_debug3, std::string(topic_name_ + "::MemFile Read (" + std::to_string(m_ecal_buffer.size()) + " Bytes)"));
 #endif
               // add sample to data reader (and call user callback function)
-              if (g_subgate()) g_subgate()->ApplySample(topic_name_, memfile_name_, m_ecal_buffer.data(), m_ecal_buffer.size(), (long long)memfile_hdr.id, (long long)memfile_hdr.clock, (long long)memfile_hdr.time, (size_t)memfile_hdr.hash, eCAL::pb::tl_ecal_shm);
+              if (g_subgate()) g_subgate()->ApplySample(topic_name_, topic_id_, m_ecal_buffer.data(), m_ecal_buffer.size(), (long long)memfile_hdr.id, (long long)memfile_hdr.clock, (long long)memfile_hdr.time, (size_t)memfile_hdr.hash, eCAL::pb::tl_ecal_shm);
             }
           }
         }
@@ -230,7 +230,7 @@ namespace eCAL
   CMemFileThread::CMemFileThread(const std::string& topic_name_, const std::string& topic_id_, const std::string& memfile_name_, const std::string& memfile_event_, const int timeout_max_) :
     m_topic_id(topic_id_)
   {
-    m_thread = std::thread(&CMemFileObserver::Observe, &m_observer, topic_name_, memfile_name_, memfile_event_, timeout_max_);
+    m_thread = std::thread(&CMemFileObserver::Observe, &m_observer, topic_name_, topic_id_, memfile_name_, memfile_event_, timeout_max_);
   }
 
   CMemFileThread::~CMemFileThread() = default;

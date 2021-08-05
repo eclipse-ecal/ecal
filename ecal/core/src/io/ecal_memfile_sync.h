@@ -47,12 +47,12 @@ namespace eCAL
     bool DisconnectProcess(const std::string& process_id_);
 
     bool Reserve(size_t size_);
-    size_t Send(const CDataWriterBase::SWriterData& data_);
+    size_t Write(const CDataWriterBase::SWriterData& data_);
 
     std::string GetName();
 
   protected:
-    size_t Write(const void* buf_, const size_t len_, const size_t offset_);
+    size_t WriteBuffer(const void* buf_, const size_t len_, const size_t offset_);
     void SignalWritten();
 
     void BuildMemFileName();

@@ -148,7 +148,7 @@ namespace eCAL
     if (!m_created) return 0;
 
     // write content
-    size_t sent = m_memory_file_vec[m_write_idx]->Send(data_);
+    size_t sent = m_memory_file_vec[m_write_idx]->Write(data_);
 
     // and increment file index
     m_write_idx++;
