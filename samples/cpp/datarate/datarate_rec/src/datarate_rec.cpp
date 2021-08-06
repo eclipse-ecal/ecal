@@ -19,6 +19,7 @@
 
 #include <chrono>
 #include <thread>
+#include <cstring>
 #include <iostream>
 
 #include <tclap/CmdLine.h>
