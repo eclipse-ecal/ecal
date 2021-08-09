@@ -57,7 +57,7 @@ namespace eCAL
     }
     else
     {
-      std::cout << "Could not parse layer parameter !" << std::endl;
+      std::cout << "FATAL ERROR: Could not parse layer connection parameter ! Did you mix up different eCAL versions on the same host ?" << std::endl;
       return;
     }
 

@@ -26,7 +26,7 @@
 #include <string>
 #include <vector>
 
-void do_run(const int runs, int snd_size /*kB*/)
+void do_run(const int runs, int snd_size /*kB*/, bool zero_copy)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "latency_snd");
@@ -34,6 +34,9 @@ void do_run(const int runs, int snd_size /*kB*/)
   // create publisher and subscriber
   eCAL::CPublisher  pub_pkg("pkg_send");
   eCAL::CSubscriber sub_pkg("pkg_reply");
+  
+  // enable zero copy mode
+  pub_pkg.EnableZeroCopy(zero_copy);
 
   // let them match
   eCAL::Process::SleepMS(2000);
@@ -90,14 +93,16 @@ int main(int argc, char **argv)
   {
     // parse command line
     TCLAP::CmdLine cmd("latency_snd");
-    TCLAP::ValueArg<int> runs("r", "runs", "Number of messages to send.", false, 1000, "int");
-    TCLAP::ValueArg<int> size("s", "size", "Messages size in kB.",        false, 64,   "int");
+    TCLAP::ValueArg<int> runs     ("r", "runs",      "Number of messages to send.", false, 1000, "int");
+    TCLAP::ValueArg<int> size     ("s", "size",      "Messages size in kB.",        false, 64,   "int");
+    TCLAP::SwitchArg     zero_copy("z", "zero_copy", "Zero copy mode on/off."                         );
     cmd.add(runs);
     cmd.add(size);
+    cmd.add(zero_copy);
     cmd.parse(argc, argv);
 
     // run test
-    do_run(runs.getValue(), size.getValue());
+    do_run(runs.getValue(), size.getValue(), zero_copy.getValue() > 0);
   }
   catch (TCLAP::ArgException &e)  // catch any exceptions
   {
