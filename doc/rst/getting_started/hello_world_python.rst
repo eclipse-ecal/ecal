@@ -43,7 +43,7 @@ First, you have to install some more development dependencies:
 
   * The eCAL Python integration.
 
-    * If you have installed eCAL from a :ref:`getting_started_setup_ubuntu_ppa<PPA>`:
+    * If you have installed eCAL from a :ref:`PPA<getting_started_setup_ubuntu_ppa>`:
       
       .. code-block:: bash
 
