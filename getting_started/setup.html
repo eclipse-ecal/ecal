@@ -384,6 +384,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../_download_archive/download_archive.html">eCAL Download Archive</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_9_0.html">eCAL 5.9.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_13.html">eCAL 5.8.13</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_12.html">eCAL 5.8.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_10.html">eCAL 5.8.10</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_9.html">eCAL 5.8.9</a></li>
@@ -508,7 +510,7 @@ The PPA also supports more Ubuntu Versions and CPU Architectures (x86, x64, arm6
 <p>Installing eCAL from a PPA will cause apt-get to automatically update eCAL for you.
 You can choose from different PPAs, depending on your desired upgrade path.</p>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Rolling Release</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">eCAL 5.8</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">eCAL 5.7</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>This is the rolling release PPA.
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Rolling Release</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">eCAL 5.9</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">eCAL 5.8</button><button aria-controls="panel-0-0-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-3" name="0-3" role="tab" tabindex="-1">eCAL 5.7</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>This is the rolling release PPA.
 It will always upgrade your installation and you will always receive the latest-and-greatest eCAL version.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo add-apt-repository ppa:ecal/ecal-latest
 sudo apt-get update
@@ -516,21 +518,32 @@ sudo apt-get install ecal
 </pre></div>
 </div>
 <p>Also check out this PPA on <a class="reference external" href="https://launchpad.net/~ecal/+archive/ubuntu/ecal-latest">Launchpad</a>!</p>
-</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>This PPA will always stay on eCAL 5.8.
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>This PPA will always stay on eCAL 5.9.
+You will receive patches as long as eCAL 5.9 is supported.
+If you want to upgrade to a new eCAL Version, you will have to manually add the new PPA.</p>
+<p>At the moment, eCAL 5.9 is the latest supported version.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo add-apt-repository ppa:ecal/ecal-5.9
+sudo apt-get update
+sudo apt-get install ecal
+</pre></div>
+</div>
+<p>Also check out this PPA on <a class="reference external" href="https://launchpad.net/~ecal/+archive/ubuntu/ecal-5.9">Launchpad</a>!</p>
+</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><p>This PPA will always stay on eCAL 5.8.
 You will receive patches as long as eCAL 5.8 is supported.
 If you want to upgrade to a new eCAL Version, you will have to manually add the new PPA.</p>
-<p>At the moment, eCAL 5.8 is the latest supported version.</p>
+<p>At the moment, eCAL 5.8 is the supported legacy-version.
+Support will be dropped when the next eCAL Version is released.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo add-apt-repository ppa:ecal/ecal-5.8
 sudo apt-get update
 sudo apt-get install ecal
 </pre></div>
 </div>
 <p>Also check out this PPA on <a class="reference external" href="https://launchpad.net/~ecal/+archive/ubuntu/ecal-5.8">Launchpad</a>!</p>
-</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><p>This PPA will always stay on eCAL 5.7.
-You will receive patches as long as eCAL 5.7 is supported.
+</div><div aria-labelledby="tab-0-0-3" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-3" name="0-3" role="tabpanel" tabindex="0"><p>This PPA will always stay on eCAL 5.7.
 If you want to upgrade to a new eCAL Version, you will have to manually add the new PPA.</p>
-<p>At the moment, eCAL 5.7 is the supported legacy-version.
-Support will be dropped when the next eCAL Version is released.</p>
+<p>eCAL 5.7 is not supported any more and will not receive patches.
+You can still use the PPA to install the latest eCAL 5.7.
+Please consider upgrading to a newer version.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo add-apt-repository ppa:ecal/ecal-5.7
 sudo apt-get update
 sudo apt-get install ecal
