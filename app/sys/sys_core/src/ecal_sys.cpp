@@ -24,7 +24,6 @@
 #include <algorithm>
 
 #include <ecal/ecal.h>
-#include <rpc/ecal_rpc.h>
 
 #ifdef _MSC_VER
 #pragma warning(push)
