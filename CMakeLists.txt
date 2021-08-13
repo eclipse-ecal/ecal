@@ -22,6 +22,10 @@ cmake_minimum_required(VERSION 3.13)
 # an extension for CMake's native FetchContent module. FetchContent was extended
 # in CMake 3.14 and CPM needs those improvements.
 
+if (POLICY CMP0077)
+  cmake_policy(SET CMP0077 NEW) # Prevent HDF5 from overwriting our output paths
+endif (POLICY CMP0077)
+
 list(APPEND CMAKE_MODULE_PATH
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
