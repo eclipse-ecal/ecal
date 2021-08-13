@@ -17,6 +17,10 @@
 # ========================= eCAL LICENSE =================================
 
 cmake_minimum_required(VERSION 3.13)
+# Attention: When building HDF5, the minimum required version becomes 3.14.
+# Reason for at least 3.14: We are using CPM (CMake Package Manager), which is
+# an extension for CMake's native FetchContent module. FetchContent was extended
+# in CMake 3.14 and CPM needs those improvements.
 
 list(APPEND CMAKE_MODULE_PATH
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake
@@ -287,45 +291,33 @@ if (ECAL_THIRDPARTY_BUILD_GTEST)
 endif()
 
 if (ECAL_THIRDPARTY_BUILD_HDF5)
-  list(APPEND as_subproject HDF5)
-  #we will need threads
-  find_package(Threads REQUIRED)
-
-  set(HDF5_GENERATE_HEADERS  OFF CACHE BOOL "Do not re-generate auto-generated files" FORCE)
-  set(ONLY_SHARED_LIBS       OFF CACHE BOOL "Do not only Build Shared Libraries" FORCE)
-  set(HDF5_ENABLE_THREADSAFE ON  CACHE BOOL "Enable thread-safety" FORCE)
-  set(BUILD_TESTING          OFF CACHE BOOL "Do not build HDF5 Unit Testing" FORCE)
-  set(HDF5_BUILD_TOOLS       OFF CACHE BOOL "Do not build HDF5 Tools" FORCE)
-  set(HDF5_BUILD_EXAMPLES    OFF CACHE BOOL "Do not build HDF5 Library Examples" FORCE)
-  set(HDF5_BUILD_CPP_LIB     OFF CACHE BOOL "Do not build C++ lib" FORCE)
-  set(HDF5_BUILD_HL_LIB      OFF CACHE BOOL "Do not build hdf5-hl" FORCE)
-  set(ONLY_SHARED_LIBS       ON)
+  include(thirdparty/CPM/CMAKE/CPM.cmake)
+  CPMAddPackage(
+    NAME              hdf5
+    #GIT_REPOSITORY    https://github.com/HDFGroup/hdf5.git
+    #GIT_TAG           hdf5-1_10_7
+    SOURCE_DIR        "${ECAL_PROJECT_ROOT}/thirdparty/hdf5"
+    OPTIONS
+      "HDF5_GENERATE_HEADERS OFF"
+      "ONLY_SHARED_LIBS ON"
+      "HDF5_ENABLE_THREADSAFE ON"
+      "BUILD_TESTING OFF"
+      "HDF5_BUILD_TOOLS OFF"
+      "HDF5_BUILD_EXAMPLES OFF"
+      "HDF5_BUILD_CPP_LIB OFF"
+      "HDF5_BUILD_HL_LIB OFF"
+      "BUILD_SHARED_LIBS ON"
+  )
   
-  set(HDF5_EXTERNALLY_CONFIGURED 1)
-  set(HDF5_EXPORTED_TARGETS eCALCoreTargets)
-
-  #We need to build hdf5 as shared to enable the threadsafe option. HDF5 uses the BUILD_SHARED_LIBS to check if shared build is on.
-  # Hence we need to save the old value, enable it, and then set it back to the old value
-
-  set(BUILD_SHARED_LIBS_OLD ${BUILD_SHARED_LIBS})
-  set(BUILD_SHARED_LIBS ON CACHE BOOL "Build hdf5 shared" FORCE)
-
-  add_subdirectory(thirdparty/hdf5)
-
-  set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD} CACHE BOOL "Build hdf5 shared" FORCE)
-
   if(NOT TARGET hdf5::hdf5-shared)
+    FetchContent_GetProperties(hdf5)
     add_library(hdf5::hdf5-shared ALIAS hdf5-shared)
-    get_target_property(is_imported hdf5-shared IMPORTED)
-    if (NOT is_imported)
-      target_compile_options(hdf5-shared PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W0>
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
-      )
-    endif()
+    target_include_directories(hdf5-shared INTERFACE "$<BUILD_INTERFACE:${hdf5_BINARY_DIR}>")
+    target_compile_options(hdf5-shared PRIVATE
+      $<$<CXX_COMPILER_ID:MSVC>:/W0>
+      $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
+    )
   endif()
-
-  target_include_directories(hdf5-shared INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/thirdparty/hdf5>")
 endif()
 
 if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR
