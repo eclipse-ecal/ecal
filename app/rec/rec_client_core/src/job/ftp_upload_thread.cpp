@@ -19,6 +19,7 @@
 
 #include "ftp_upload_thread.h"
 
+#include <algorithm>
 #include <vector>
 #include <fstream>
 #include <iostream>
