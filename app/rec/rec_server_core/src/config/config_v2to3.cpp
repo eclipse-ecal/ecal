@@ -19,9 +19,11 @@
 
 #include <config/config_v2to3.h>
 
-#include <tinyxml2.h>
+#include <algorithm>
 #include <limits>
 #include <clocale>
+
+#include <tinyxml2.h>
 
 #include <rec_client_core/ecal_rec_logger.h>
 
