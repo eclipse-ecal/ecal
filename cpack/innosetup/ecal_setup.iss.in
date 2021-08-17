@@ -121,7 +121,7 @@ Source: "{#DebugSdkStagingDir}\libraries\lib\*";      DestDir: "{app}\lib";     
 Source: "{#DebugSdkStagingDir}\libraries\bin\*";      DestDir: "{app}\bin\";              Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
 
 ; Terrible hack to fix the even more terrible hdf5 stock installation
-Source: "{#DebugSdkStagingDir}\configinstall\cmake\hdf5\hdf5-config.cmake"; DestDir: "\hdf5\cmake\hdf5-config.cmake"; Flags: ignoreversion recursesubdirs; Components: sdk\hdf5
+Source: "{#DebugSdkStagingDir}\configinstall\cmake\hdf5\hdf5-config.cmake"; DestDir: "{app}\hdf5\cmake\hdf5-config.cmake"; Flags: ignoreversion recursesubdirs; Components: sdk\hdf5
 
 
 [Icons]
