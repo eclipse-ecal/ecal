@@ -37,6 +37,3 @@
 [submodule "thirdparty/termcolor"]
 	path = thirdparty/termcolor
 	url = https://github.com/ikalnytskyi/termcolor.git
-[submodule "thirdparty/CPM"]
-	path = thirdparty/CPM
-	url = https://github.com/cpm-cmake/CPM.cmake.git
