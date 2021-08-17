@@ -104,7 +104,8 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
      - 1998-2006 by The Board of Trustees of the University of Illinois
        
        2006 by The HDF Group
-     - - |fa-windows| Binary distributions for Windows
+     - - |fa-github| Git submodule ``/tirdparty/hdf5``
+       - |fa-windows| Binary distributions for Windows
 
    * - `libcurl <https://curl.se/libcurl/>`_
      - :ref:`mit_license`
