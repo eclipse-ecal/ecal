@@ -209,8 +209,8 @@ namespace eCAL
 
   bool CMemoryFile::ReleaseReadAccess()
   {
-    if (m_access_state != access_state::read_access) return(false);
     if (!m_created)                                  return(false);
+    if (m_access_state != access_state::read_access) return(false);
 
     // reset states
     m_access_state = access_state::closed;
@@ -223,6 +223,7 @@ namespace eCAL
 
   size_t CMemoryFile::GetReadAddress(const void*& buf_, const size_t len_, const size_t offset_)
   {
+    if (!m_created)                                                      return(0);
     if (m_access_state != access_state::read_access)                     return(0);
     if (len_ == 0)                                                       return(0);
     if (!m_memfile_info.mem_address)                                     return(0);
@@ -286,8 +287,8 @@ namespace eCAL
 
   bool CMemoryFile::ReleaseWriteAccess()
   {
-    if (m_access_state != access_state::write_access) return(false);
     if (!m_created)                                   return(false);
+    if (m_access_state != access_state::write_access) return(false);
 
     // reset access state
     m_access_state = access_state::closed;
@@ -300,6 +301,7 @@ namespace eCAL
 
   size_t CMemoryFile::GetWriteAddress(void*& buf_, const size_t len_, const size_t offset_)
   {
+    if (!m_created)                                                      return(0);
     if (m_access_state != access_state::write_access)                    return(0);
     if ((len_ + offset_) > static_cast<size_t>(m_header.max_data_size))  return(0);
     if (!m_memfile_info.mem_address)                                     return(0);
@@ -318,7 +320,8 @@ namespace eCAL
 
   size_t CMemoryFile::Write(const void* buf_, const size_t len_, const size_t offset_)
   {
-    if (!buf_) return(0);
+    if (!m_created) return(0);
+    if (!buf_)      return(0);
 
     void* wbuf(nullptr);
     if (GetWriteAddress(wbuf, len_, offset_))
@@ -336,6 +339,8 @@ namespace eCAL
 
   bool CMemoryFile::CheckAvailableReadSize()
   {
+    if (!m_created) return(false);
+
     // check size again
     size_t len = static_cast<size_t>(m_header.hdr_size) + static_cast<size_t>(m_header.max_data_size);
 
@@ -345,6 +350,8 @@ namespace eCAL
     
   bool CMemoryFile::CheckAvailableWriteSize()
   {
+    if (!m_created) return(false);
+
     // check size again
     size_t len = static_cast<size_t>(m_header.hdr_size) + static_cast<size_t>(m_header.max_data_size);
     if (len > m_memfile_info.size)

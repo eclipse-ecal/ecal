@@ -47,7 +47,21 @@ namespace eCAL
   void CMemFileObserver::Start(const std::string& topic_name_, const std::string& topic_id_, const std::string& memfile_name_, const std::string& memfile_event_, const int timeout_max_)
   {
     if (m_is_running) return;
+
+    // open memory file events
+    gOpenEvent(&m_event_snd, memfile_event_);
+    if (m_timeout_ack != 0)
+    {
+      gOpenEvent(&m_event_ack, memfile_event_ + "_ack");
+    }
+
+    // create memory file access
+    m_memfile.Create(memfile_name_.c_str(), false);
+
+    // start observer thread
     m_thread = std::thread(&CMemFileObserver::Observe, this, topic_name_, topic_id_, memfile_name_, memfile_event_, timeout_max_);
+
+    // mark as running
     m_is_running = true;
 
 #ifndef NDEBUG
@@ -60,13 +74,23 @@ namespace eCAL
   {
     if(!m_is_running) return;
 
-    // signal thread to stop
+    // signal observer thread to stop
     m_do_stop = true;
-    // set sync event to trigger loop
+    // set sync event to unlock loop
     gSetEvent(m_event_snd);
 
-    // and wait for finalization
+    // wait for finalization
     m_thread.join();
+
+    // destroy memory file (access only)
+    m_memfile.Destroy(false);
+
+    // close memory file events
+    gCloseEvent(m_event_snd);
+    if (m_timeout_ack != 0)
+    {
+      gCloseEvent(m_event_ack);
+    }
   }
 
   bool CMemFileObserver::ResetTimeout()
@@ -78,16 +102,6 @@ namespace eCAL
 
   void CMemFileObserver::Observe(const std::string& topic_name_, const std::string& topic_id_, const std::string& memfile_name_, const std::string& memfile_event_, const int timeout_max_)
   {
-    // open memory file events
-    gOpenEvent(&m_event_snd, memfile_event_);
-    if (m_timeout_ack != 0)
-    {
-      gOpenEvent(&m_event_ack, memfile_event_ + "_ack");
-    }
-
-    // create memory file access
-    m_memfile.Create(memfile_name_.c_str(), false);
-
     // internal clock sample update checking
     uint64_t last_sample_clock(0);
 
@@ -95,7 +109,7 @@ namespace eCAL
     while((m_timeout_read < timeout_max_) && !m_do_stop)
     {
       // check for memory file update event from shm writer
-      const int evt_timeout = 5;
+      const int evt_timeout = 100;
       if(gWaitForEvent(m_event_snd, evt_timeout))
       {
         // last chance to stop ..
@@ -154,7 +168,7 @@ namespace eCAL
             // -------------------------------------------------------------------------
             // buffered mode
             // -------------------------------------------------------------------------
-            // we read the data into our receive buffer
+            // we read the data into the receive buffer
             // and close the file immediately
             else
             {
@@ -175,7 +189,7 @@ namespace eCAL
               }
 
               // process payload
-              if (m_ecal_buffer.size() > 0)
+              if (!m_ecal_buffer.empty())
               {
 #ifndef NDEBUG
                 // log it
@@ -193,18 +207,8 @@ namespace eCAL
       else
       {
         // increase timeout
-        m_timeout_read += evt_timeout;
+        m_timeout_read += 10*evt_timeout;
       }
-    }
-
-    // destroy memory file (access only)
-    m_memfile.Destroy(false);
-
-    // close memory file events
-    gCloseEvent(m_event_snd);
-    if (m_timeout_ack != 0)
-    {
-      gCloseEvent(m_event_ack);
     }
 
 #ifndef NDEBUG
@@ -270,11 +274,11 @@ namespace eCAL
     std::lock_guard<std::mutex> lock(m_observer_pool_sync);
 
     // stop and delete them all
-    for (auto observer = m_observer_pool.begin(); observer != m_observer_pool.end(); ++observer)
+    for (auto & observer : m_observer_pool)
     {
-      observer->second->Stop();
-      delete observer->second;
-      observer->second = nullptr;
+      observer.second->Stop();
+      delete observer.second;
+      observer.second = nullptr;
     }
 
     // clear pool
@@ -320,7 +324,7 @@ namespace eCAL
     // okay, we need to start a new observer
     else
     {
-      CMemFileObserver* thread = new CMemFileObserver();
+      auto* thread = new CMemFileObserver();
       thread->Start(topic_name_, topic_id_, memfile_name_, memfile_event_, eCALPAR(CMN, REGISTRATION_TO));
       m_observer_pool[memfile_event_] = thread;
 #ifndef NDEBUG
