@@ -48,11 +48,6 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
-   * - `CPM <https://github.com/cpm-cmake/CPM.cmake>`_
-     - :ref:`mit_license`
-     - 2021 Lars Melchior and additional contributors
-     - - |fa-github| Git submodule ``/tirdparty/CPM``
-
    * - `empy_helpers <https://github.com/ros2/rosidl/blob/master/rosidl_adapter/rosidl_adapter/resource/__init__.py>`_
      - :ref:`apache_2_0`
      - 2018 Open Source Robotics Foundation, Inc.
