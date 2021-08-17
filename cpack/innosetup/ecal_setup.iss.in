@@ -60,6 +60,7 @@ Name: doc;            Description: "Documentation";                            T
 Name: sdk;            Description: "SDK";                                      Types: full;
 Name: sdk\ecal;       Description: "eCAL SDK";                                 Types: full;                Flags: disablenouninstallwarning
 Name: sdk\protobuf;   Description: "Protobuf";                                 Types: full;                Flags: disablenouninstallwarning
+Name: sdk\hdf5;       Description: "HDF5";                                     Types: full;                Flags: disablenouninstallwarning
 
 [Tasks]
 Name: "desktopicon";  Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";     Flags: unchecked
@@ -70,6 +71,7 @@ Name: "modifypath";   Description: "Add application directory to your environmen
 Source: "{#ComponentStagingDir}\runtime\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: runtime
 Source: "{#ComponentStagingDir}\Unspecified\*";       DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: runtime
 Source: "{#ComponentStagingDir}\configuration\cfg\*"; DestDir: "{commonappdata}\eCAL\";   Flags: ignoreversion recursesubdirs;     Components: runtime
+Source: "{#ComponentStagingDir}\libraries\bin\*";     DestDir: "{app}\bin\";              Flags: ignoreversion recursesubdirs;     Components: runtime
 
 ; applications
 Source: "{#ComponentStagingDir}\app\*";               DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: applications
@@ -82,7 +84,6 @@ Source: "{#ComponentStagingDir}\doc\*";               DestDir: "{app}";         
 
 ; sdk\ecal
 Source: "{#ComponentStagingDir}\headers\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
-Source: "{#ComponentStagingDir}\libraries\*";         DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
 Source: "{#ComponentStagingDir}\sdk\*";               DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
 
 Source: "{#DebugSdkStagingDir}\runtime\*";            DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
@@ -91,7 +92,6 @@ Source: "{#DebugSdkStagingDir}\Unspecified\*";        DestDir: "{app}";         
 Source: "{#DebugSdkStagingDir}\app\*";                DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
 
 ;Source: "{#DebugSdkStagingDir}\headers\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
-Source: "{#DebugSdkStagingDir}\libraries\*";          DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
 Source: "{#DebugSdkStagingDir}\sdk\*";                DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\ecal
 
 ; sdk\protobuf
@@ -110,6 +110,19 @@ Source: "{#DebugSdkStagingDir}\protobuf-export\*";    DestDir: "{app}";         
 ;Source: "{#DebugSdkStagingDir}\protobuf-headers\*";  DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
 ;Source: "{#DebugSdkStagingDir}\protobuf-protos\*";   DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
 ; Source: "{#DebugSdkStagingDir}\protoc\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
+
+; sdk\hdf5
+Source: "{#ComponentStagingDir}\configinstall\*";     DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
+Source: "{#ComponentStagingDir}\headers\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
+Source: "{#ComponentStagingDir}\libraries\lib\*";     DestDir: "{app}\lib";               Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
+
+Source: "{#DebugSdkStagingDir}\configinstall\*";      DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
+Source: "{#DebugSdkStagingDir}\libraries\lib\*";      DestDir: "{app}\lib";               Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
+Source: "{#DebugSdkStagingDir}\libraries\bin\*";      DestDir: "{app}\bin\";              Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
+
+; Terrible hack to fix the even more terrible hdf5 stock installation
+Source: "{#DebugSdkStagingDir}\configinstall\cmake\hdf5\hdf5-config.cmake"; DestDir: "{app}\hdf5\cmake\"; Flags: ignoreversion recursesubdirs; Components: sdk\hdf5
+
 
 [Icons]
 Name: "{group}\eCAL Launcher";                        Filename: "{app}\bin\ecal_launcher.exe";                     Components: applications

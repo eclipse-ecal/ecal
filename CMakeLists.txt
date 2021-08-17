@@ -18,6 +18,10 @@
 
 cmake_minimum_required(VERSION 3.13)
 
+if (POLICY CMP0077)
+  cmake_policy(SET CMP0077 NEW) # Prevent HDF5 from overwriting our output paths
+endif (POLICY CMP0077)
+
 list(APPEND CMAKE_MODULE_PATH
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
@@ -287,32 +291,39 @@ if (ECAL_THIRDPARTY_BUILD_GTEST)
 endif()
 
 if (ECAL_THIRDPARTY_BUILD_HDF5)
+  # Save old CMake output paths. HDF5 will 1. require them and 2. pollute them
+  set(OLD_CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}")
+  set(OLD_CMAKE_Fortran_MODULE_DIRECTORY "${CMAKE_Fortran_MODULE_DIRECTORY}")
+  set(OLD_CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+  set(OLD_CMAKE_PDB_OUTPUT_DIRECTORY     "${CMAKE_PDB_OUTPUT_DIRECTORY}")
+  set(OLD_CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+  set(OLD_BUILD_SHARED_LIBS              ${BUILD_SHARED_LIBS})
+  
+  # Fill in variables that have not been set. If a cache variable has been set already, it will not be set by cmake.
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/" CACHE PATH "")
+  set(CMAKE_Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/bin/" CACHE PATH "")
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/" CACHE PATH "")
+  set(CMAKE_PDB_OUTPUT_DIRECTORY     "${CMAKE_BINARY_DIR}/bin/" CACHE PATH "")
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/" CACHE PATH "")
+  set(BUILD_SHARED_LIBS              ON                         CACHE BOOL "Build hdf5 shared" FORCE)
+  
   list(APPEND as_subproject HDF5)
   #we will need threads
   find_package(Threads REQUIRED)
 
   set(HDF5_GENERATE_HEADERS  OFF CACHE BOOL "Do not re-generate auto-generated files" FORCE)
-  set(ONLY_SHARED_LIBS       OFF CACHE BOOL "Do not only Build Shared Libraries" FORCE)
+  set(ONLY_SHARED_LIBS       ON CACHE BOOL  "Only Build Shared Libraries" FORCE)
   set(HDF5_ENABLE_THREADSAFE ON  CACHE BOOL "Enable thread-safety" FORCE)
   set(BUILD_TESTING          OFF CACHE BOOL "Do not build HDF5 Unit Testing" FORCE)
   set(HDF5_BUILD_TOOLS       OFF CACHE BOOL "Do not build HDF5 Tools" FORCE)
   set(HDF5_BUILD_EXAMPLES    OFF CACHE BOOL "Do not build HDF5 Library Examples" FORCE)
   set(HDF5_BUILD_CPP_LIB     OFF CACHE BOOL "Do not build C++ lib" FORCE)
   set(HDF5_BUILD_HL_LIB      OFF CACHE BOOL "Do not build hdf5-hl" FORCE)
-  set(ONLY_SHARED_LIBS       ON)
   
-  set(HDF5_EXTERNALLY_CONFIGURED 1)
-  set(HDF5_EXPORTED_TARGETS eCALCoreTargets)
-
   #We need to build hdf5 as shared to enable the threadsafe option. HDF5 uses the BUILD_SHARED_LIBS to check if shared build is on.
   # Hence we need to save the old value, enable it, and then set it back to the old value
 
-  set(BUILD_SHARED_LIBS_OLD ${BUILD_SHARED_LIBS})
-  set(BUILD_SHARED_LIBS ON CACHE BOOL "Build hdf5 shared" FORCE)
-
   add_subdirectory(thirdparty/hdf5)
-
-  set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD} CACHE BOOL "Build hdf5 shared" FORCE)
 
   if(NOT TARGET hdf5::hdf5-shared)
     add_library(hdf5::hdf5-shared ALIAS hdf5-shared)
@@ -326,6 +337,29 @@ if (ECAL_THIRDPARTY_BUILD_HDF5)
   endif()
 
   target_include_directories(hdf5-shared INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/thirdparty/hdf5>")
+  
+  if("${OLD_CMAKE_ARCHIVE_OUTPUT_DIRECTORY}" STREQUAL "")
+    unset(CMAKE_ARCHIVE_OUTPUT_DIRECTORY CACHE)
+  endif()
+  
+  if("${OLD_CMAKE_Fortran_MODULE_DIRECTORY}" STREQUAL "")
+    unset(CMAKE_Fortran_MODULE_DIRECTORY CACHE)
+  endif()
+  
+  if("${OLD_CMAKE_LIBRARY_OUTPUT_DIRECTORY}" STREQUAL "")
+    unset(CMAKE_LIBRARY_OUTPUT_DIRECTORY CACHE)
+  endif()
+  
+  if("${OLD_CMAKE_PDB_OUTPUT_DIRECTORY}" STREQUAL "")
+    unset(CMAKE_PDB_OUTPUT_DIRECTORY CACHE)
+  endif()
+  
+  if("${OLD_CMAKE_RUNTIME_OUTPUT_DIRECTORY}" STREQUAL "")
+    unset(CMAKE_RUNTIME_OUTPUT_DIRECTORY CACHE)
+  endif()
+  
+  set(BUILD_SHARED_LIBS ${OLD_BUILD_SHARED_LIBS} CACHE BOOL "Build hdf5 shared" FORCE)
+  
 endif()
 
 if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR
