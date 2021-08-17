@@ -319,6 +319,7 @@ if (ECAL_THIRDPARTY_BUILD_HDF5)
   set(HDF5_BUILD_EXAMPLES    OFF CACHE BOOL "Do not build HDF5 Library Examples" FORCE)
   set(HDF5_BUILD_CPP_LIB     OFF CACHE BOOL "Do not build C++ lib" FORCE)
   set(HDF5_BUILD_HL_LIB      OFF CACHE BOOL "Do not build hdf5-hl" FORCE)
+  set(HDF5_EXPORTED_TARGETS eCALCoreTargets)
   
   #We need to build hdf5 as shared to enable the threadsafe option. HDF5 uses the BUILD_SHARED_LIBS to check if shared build is on.
   # Hence we need to save the old value, enable it, and then set it back to the old value
