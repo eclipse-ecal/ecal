@@ -45,7 +45,7 @@ int main(int argc, char **argv)
   
   // get parameters
   std::string topic_name(arg_topic_name.getValue());
-  int         size(arg_size.getValue());
+  size_t      size(arg_size.getValue());
   int         sleep(arg_sleep.getValue());
   bool        zero_copy(arg_zero_copy.getValue());
   int         buffer_count(arg_buffer_count.getValue());
