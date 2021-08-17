@@ -20,95 +20,68 @@
 #include <ecal/ecal.h>
 
 #include <tclap/CmdLine.h>
-
 #include <iostream>
-#include <numeric>
 #include <string>
-#include <vector>
 
-void do_run(const int runs, int snd_size /*kB*/, bool zero_copy)
+void do_run(const int runs, int snd_size /*kB*/, int delay /*ms*/, bool zero_copy)
 {
+  // log parameter
+  std::cout << "--------------------------------------------"    << std::endl;
+  std::cout << "Runs                    : " << runs              << std::endl;
+  std::cout << "Message size            : " << snd_size << " kB" << std::endl;
+  std::cout << "Message delay           : " << delay    << " ms" << std::endl;
+  if (zero_copy)
+  {
+    std::cout << "Zero copy               : ON"  << std::endl;
+  }
+  else
+  {
+    std::cout << "Zero copy               : OFF" << std::endl;
+  }
+
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "latency_snd");
 
   // create publisher and subscriber
-  eCAL::CPublisher  pub_pkg("pkg_send");
-  eCAL::CSubscriber sub_pkg("pkg_reply");
-  
+  eCAL::CPublisher pub("ping");
+
   // enable zero copy mode
-  pub_pkg.EnableZeroCopy(zero_copy);
+  pub.EnableZeroCopy(zero_copy);
+
+  // prepare send buffer
+  std::vector<char> snd_array(snd_size * 1024);
 
   // let them match
   eCAL::Process::SleepMS(2000);
 
-  // prepare timestamp array
-  std::vector<long long> diff_array(runs);
-  std::vector<char> snd_array(snd_size * 1024);
-  int snd_pkgs(0);
-
-  // prepare receive buffer
-  std::string rec_buf;
-  int rec_timeout(1000);
-
-  std::cout << "-------------------------------" << std::endl;
-  std::cout << " LATENCY / THROUGHPUT TEST"      << std::endl;
-  std::cout << " RUNS  : " << runs               << std::endl;
-  std::cout << " SIZE  : " << snd_size <<  " kB" << std::endl;
-  std::cout << "-------------------------------" << std::endl;
-
-  for (int reply = 0; reply < runs; ++reply)
+  int run(0);
+  for (run = 0; run < runs; ++run)
   {
     // get time and send message
-    long long snd_time = eCAL::Time::GetMicroSeconds();
-    pub_pkg.Send(snd_array.data(), snd_array.size(), snd_time);
-    // store sent packages
-    snd_pkgs++;
-
-    // receive reply with timeout
-    if (sub_pkg.Receive(rec_buf, nullptr, rec_timeout))
-    {
-      // store time stamp
-      diff_array[reply] = eCAL::Time::GetMicroSeconds() - snd_time;
-    }
-    else
-    {
-      // we lost a package -> stop
-      std::cout << "Packages lost after message " << snd_pkgs << " -> stop." << std::endl << std::endl;
-      break;
-    }
+    pub.Send(snd_array.data(), snd_array.size(), eCAL::Time::GetMicroSeconds());
+    // delay
+    eCAL::Process::SleepMS(delay);
   }
 
-  // calculate roundtrip time over all received messages
-  long long sum_time = std::accumulate(diff_array.begin(), diff_array.end(), 0LL);
-  long long avg_time = sum_time/ snd_pkgs;
-  std::cout << "Message average roundtrip time " << avg_time << " us" << std::endl << std::endl;
+  // log test
+  std::cout << "Messages sent           : " << run               << std::endl;
+  std::cout << "--------------------------------------------"    << std::endl;
 
   // finalize eCAL API
   eCAL::Finalize();
 }
 
-int main(int argc, char **argv)
+int main(int /*argc*/, char** /*argv*/)
 {
-  try
-  {
-    // parse command line
-    TCLAP::CmdLine cmd("latency_snd");
-    TCLAP::ValueArg<int> runs     ("r", "runs",      "Number of messages to send.", false, 1000, "int");
-    TCLAP::ValueArg<int> size     ("s", "size",      "Messages size in kB.",        false, 64,   "int");
-    TCLAP::SwitchArg     zero_copy("z", "zero_copy", "Zero copy mode on/off."                         );
-    cmd.add(runs);
-    cmd.add(size);
-    cmd.add(zero_copy);
-    cmd.parse(argc, argv);
+  int runs (200); // number of cylces
+  int delay(10);  // delay between two publications in ms
+  int size (0);   // message payload size
 
-    // run test
-    do_run(runs.getValue(), size.getValue(), zero_copy.getValue() > 0);
-  }
-  catch (TCLAP::ArgException &e)  // catch any exceptions
-  {
-    std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
-    return EXIT_FAILURE;
-  }
+  // test for message size from 1 kB to 16 MB (zero copy off)
+  for (size = 1; size <= 16384; size *= 2) do_run(runs, size, delay, false);
+
+  // test for message size from 1 kB to 16 MB (zero copy on)
+  for (size = 1; size <= 16384; size *= 2) do_run(runs, size, delay, true);
 
   return(0);
 }

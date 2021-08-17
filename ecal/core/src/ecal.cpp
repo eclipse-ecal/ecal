@@ -185,7 +185,7 @@ namespace eCAL
    *
    * @return Zero if succeeded, 1 if already initialized, -1 if failed.
   **/
-  int Initialize(std::vector<std::string> args_, const char *unit_name_, unsigned int components_)
+  int Initialize(std::vector<std::string> args_, const char *unit_name_, unsigned int components_) //-V826
   {
     args_.emplace(args_.begin(), eCAL::Process::GetProcessName());
     std::vector<const char*> argv(args_.size());

@@ -70,7 +70,7 @@ namespace eCAL
 
     // init write index and create memory files
     m_write_idx = 0;
-    for (auto num(0); num < m_buffer_count; ++num)
+    for (size_t num(0); num < m_buffer_count; ++num)
     {
       m_memory_file_vec.push_back(std::make_shared<CSyncMemoryFile>());
     }

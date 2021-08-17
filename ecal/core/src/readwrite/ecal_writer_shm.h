@@ -53,8 +53,8 @@ namespace eCAL
     std::string GetConectionPar() override;
 
   protected:
-    int                                           m_write_idx = 0;
-    int                                           m_buffer_count = 1;
+    size_t                                        m_write_idx    = 0;
+    size_t                                        m_buffer_count = 1;
     std::vector<std::shared_ptr<CSyncMemoryFile>> m_memory_file_vec;
   };
 }

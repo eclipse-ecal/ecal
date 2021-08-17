@@ -28,7 +28,7 @@
 namespace eCAL
 {
   struct SMemFileHeader
-  {
+  { //-V802
     uint16_t   hdr_size  = sizeof(SMemFileHeader);
     uint64_t   data_size = 0;
     uint64_t   id        = 0;

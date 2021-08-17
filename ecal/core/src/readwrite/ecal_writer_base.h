@@ -82,8 +82,8 @@ namespace eCAL
       long long    clock     = 0;
       size_t       hash      = 0;
       long long    time      = 0;
+      size_t       buffering = 1;
       long         bandwidth = 0;
-      long         buffering = 1;
       bool         loopback  = false;
       bool         zero_copy = false;
     };

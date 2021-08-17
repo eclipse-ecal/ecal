@@ -697,7 +697,7 @@ extern "C"
   {
     if (buf_len_ == ECAL_ALLOCATE_4ME)
     {
-      return eCAL_Sub_Receive_Alloc(handle_, static_cast<void**>(buf_), time_, rcv_timeout_);
+      return eCAL_Sub_Receive_Alloc(handle_, static_cast<void**>(buf_), time_, rcv_timeout_); //-V206
     }
     else
     {

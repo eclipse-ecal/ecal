@@ -110,7 +110,7 @@ namespace eCAL
     m_snd_time          = std::chrono::steady_clock::time_point();
     m_freq              = 0;
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
-    m_buffering_shm     = eCALPAR(PUB, MEMFILE_BUF_COUNT);
+    m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
     m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY);
     m_ext_subscribed    = false;
     m_created           = false;
@@ -179,7 +179,7 @@ namespace eCAL
     m_snd_time          = std::chrono::steady_clock::time_point();
     m_freq              = 0;
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
-    m_buffering_shm     = eCALPAR(PUB, MEMFILE_BUF_COUNT);
+    m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
     m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY);
     m_created           = false;
 
@@ -267,7 +267,7 @@ namespace eCAL
   bool CDataWriter::SetBufferCount(long buffering_)
   {
     if (buffering_ < 1) return false;
-    m_buffering_shm = buffering_;
+    m_buffering_shm = static_cast<size_t>(buffering_);
     return true;
   }
 

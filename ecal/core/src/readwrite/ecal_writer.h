@@ -119,7 +119,7 @@ namespace eCAL
 
     QOS::SWriterQOS    m_qos;
 
-    long               m_buffering_shm;
+    size_t             m_buffering_shm;
     bool               m_zero_copy;
 
     std::atomic<bool>  m_connected;
