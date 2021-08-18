@@ -564,21 +564,13 @@ As the sender and receiver need the same .proto files, we place them in a separa
 24
 25
 26
-27
-28
-29
-30
-31</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.0</span><span class="p">)</span>
+27</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.0</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_FIND_PACKAGE_PREFER_CONFIG</span> <span class="s">ON</span><span class="p">)</span>
 
 <span class="nb">project</span><span class="p">(</span><span class="s">protobuf_snd</span><span class="p">)</span>
 
 <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span> <span class="s">14</span><span class="p">)</span>
 <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span> <span class="s">ON</span><span class="p">)</span>
-
-<span class="nb">if</span><span class="p">(</span><span class="s">MSVC</span><span class="p">)</span>
-  <span class="c"># CMake &gt;= 3.15 will erroneously define PROTOBUF_USE_DLLS otherwise</span>
-  <span class="nb">set</span> <span class="p">(</span><span class="s">Protobuf_USE_STATIC_LIBS</span> <span class="s">TRUE</span><span class="p">)</span> 
-<span class="nb">endif</span><span class="p">()</span>
 
 <span class="nb">find_package</span><span class="p">(</span><span class="s">eCAL</span> <span class="s">REQUIRED</span><span class="p">)</span>
 <span class="nb">find_package</span><span class="p">(</span><span class="s">Protobuf</span> <span class="s">REQUIRED</span><span class="p">)</span>
@@ -604,9 +596,9 @@ As the sender and receiver need the same .proto files, we place them in a separa
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
-<p><strong>Line 14</strong> adds Protobuf as dependency</p>
-<p><strong>Line 20-22</strong> Creates a list of .proto files. We only have one.</p>
-<p><strong>Line 26</strong> Compiles the .proto file to a C++ header file (<code class="file docutils literal notranslate"><span class="pre">hello_world.pb.h</span></code>).
+<p><strong>Line 10</strong> adds Protobuf as dependency</p>
+<p><strong>Line 16-18</strong> Creates a list of .proto files. We only have one.</p>
+<p><strong>Line 22</strong> Compiles the .proto file to a C++ header file (<code class="file docutils literal notranslate"><span class="pre">hello_world.pb.h</span></code>).
 The <code class="docutils literal notranslate"><span class="pre">PROTOBUF_TARGET_CPP</span></code> function is a convenience function from eCAL.
 If you have already worked with Protobuf and CMake, you may be more familiar with the following code, which basically does the same thing:</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">include_directories</span><span class="p">(</span><span class="o">${</span><span class="nv">CMAKE_CURRENT_BINARY_DIR</span><span class="o">}</span><span class="p">)</span>
@@ -614,7 +606,7 @@ If you have already worked with Protobuf and CMake, you may be more familiar wit
 <span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span> <span class="o">${</span><span class="nv">source_files</span><span class="o">}</span> <span class="o">${</span><span class="nv">PROTO_SRCS</span><span class="o">}</span> <span class="o">${</span><span class="nv">PROTO_HDRS</span><span class="o">}</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Line 30</strong> links the executable against protobuf</p>
+<p><strong>Line 26</strong> links the executable against protobuf</p>
 </div>
 </li>
 <li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code>:</p>
@@ -759,21 +751,13 @@ So, you will only see messages that were sent <em>after</em> you have opened the
 24
 25
 26
-27
-28
-29
-30
-31</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.0</span><span class="p">)</span>
+27</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.0</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_FIND_PACKAGE_PREFER_CONFIG</span> <span class="s">ON</span><span class="p">)</span>
 
 <span class="nb">project</span><span class="p">(</span><span class="s">protobuf_rec</span><span class="p">)</span>
 
 <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span> <span class="s">14</span><span class="p">)</span>
 <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span> <span class="s">ON</span><span class="p">)</span>
-
-<span class="nb">if</span><span class="p">(</span><span class="s">MSVC</span><span class="p">)</span>
-  <span class="c"># CMake &gt;= 3.15 will erroneously define PROTOBUF_USE_DLLS otherwise</span>
-  <span class="nb">set</span> <span class="p">(</span><span class="s">Protobuf_USE_STATIC_LIBS</span> <span class="s">TRUE</span><span class="p">)</span> 
-<span class="nb">endif</span><span class="p">()</span>
 
 <span class="nb">find_package</span><span class="p">(</span><span class="s">eCAL</span> <span class="s">REQUIRED</span><span class="p">)</span>
 <span class="nb">find_package</span><span class="p">(</span><span class="s">Protobuf</span> <span class="s">REQUIRED</span><span class="p">)</span>
