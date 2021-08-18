@@ -19,12 +19,13 @@
 
 #include <ecal/ecal.h>
 
+#include <chrono>
 #include <iostream>
 #include <mutex>
 #include <numeric>
-#include <string>
 #include <vector>
 
+// data structure for later evaluation
 struct SCallbackPar
 {
   SCallbackPar() { latency_array.reserve(100000); };
@@ -34,20 +35,27 @@ struct SCallbackPar
   size_t                 msg_num  = 0;
 };
 
+// time getter
+long long get_microseconds()
+{
+  std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+  return(std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count());
+}
+
+// message receive callback
 void on_receive(const struct eCAL::SReceiveCallbackData* data_, SCallbackPar* par_)
 {
   // get receive time stamp
-  auto rec_time = eCAL::Time::GetMicroSeconds();
-  // update callback struct
-  {
-    std::lock_guard<std::mutex> lock(par_->mtx);
-    // update latency, size and msg number
-    par_->latency_array.push_back(rec_time - data_->time);
-    par_->rec_size = data_->size;
-    par_->msg_num++;
-  }
+  auto rec_time = get_microseconds();
+
+  // update latency, size and msg number
+  std::lock_guard<std::mutex> lock(par_->mtx);
+  par_->latency_array.push_back(rec_time - data_->time);
+  par_->rec_size = data_->size;
+  par_->msg_num++;
 }
 
+// single test run
 void do_run()
 {
   // subscriber
@@ -61,10 +69,10 @@ void do_run()
   size_t msg_last(0);
   while (eCAL::Ok())
   {
-    // check once a second if there are new messages
+    // check once a second if we still receive new messages
+    // if not, we stop and evaluate this run
     {
       std::lock_guard<std::mutex> lock(cb_par.mtx);
-      // if not, we stop the experiment
       if ((cb_par.msg_num > 0) && (msg_last == cb_par.msg_num)) break;
       else msg_last = cb_par.msg_num;
     }
@@ -74,17 +82,19 @@ void do_run()
   // detach callback
   sub.RemReceiveCallback();
 
-  std::cout << "--------------------------------------------"                    << std::endl;
-  std::cout << "Messages received             : " << cb_par.latency_array.size() << std::endl;
-  if (!cb_par.latency_array.empty())
+  // evaluate all
+  long long sum_msg = cb_par.latency_array.size();
+  std::cout << "--------------------------------------------" << std::endl;
+  std::cout << "Messages received             : " << sum_msg  << std::endl;
+  if (sum_msg > 0)
   {
     long long sum_time = std::accumulate(cb_par.latency_array.begin(), cb_par.latency_array.end(), 0LL);
-    long long avg_time = sum_time / cb_par.latency_array.size();
-    std::cout << "Message size                  : " << cb_par.rec_size/1024 << " kB" << std::endl;
+    long long avg_time = sum_time / sum_msg;
+    std::cout << "Message size received         : " << cb_par.rec_size/1024 << " kB" << std::endl;
     std::cout << "Message average latency       : " << avg_time             << " us" << std::endl;
-    std::cout << "Throughput                    : " << static_cast<int>(((cb_par.rec_size * cb_par.msg_num) / 1024.0) / (sum_time / 1000.0 / 1000.0))          << " kB/s"  << std::endl;
-    std::cout << "                              : " << static_cast<int>(((cb_par.rec_size * cb_par.msg_num) / 1024.0 / 1024.0) / (sum_time / 1000.0 / 1000.0)) << " MB/s"  << std::endl;
-    std::cout << "                              : " << static_cast<int>(cb_par.msg_num / (sum_time / 1000.0 / 1000.0))                                         << " Msg/s" << std::endl;
+    std::cout << "Throughput                    : " << static_cast<int>(((cb_par.rec_size * sum_msg) / 1024.0) / (sum_time / 1000.0 / 1000.0))          << " kB/s"  << std::endl;
+    std::cout << "                              : " << static_cast<int>(((cb_par.rec_size * sum_msg) / 1024.0 / 1024.0) / (sum_time / 1000.0 / 1000.0)) << " MB/s"  << std::endl;
+    std::cout << "                              : " << static_cast<int>(sum_msg / (sum_time / 1000.0 / 1000.0))                                         << " Msg/s" << std::endl;
   }
   std::cout << "--------------------------------------------" << std::endl;
 }

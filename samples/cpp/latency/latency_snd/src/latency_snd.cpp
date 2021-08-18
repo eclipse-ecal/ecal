@@ -21,8 +21,15 @@
 
 #include <tclap/CmdLine.h>
 #include <iostream>
-#include <string>
 
+// time getter
+long long get_microseconds()
+{
+  std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+  return(std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count());
+}
+
+// single test run
 void do_run(const int runs, int snd_size /*kB*/, int delay /*ms*/, bool zero_copy)
 {
   // log parameter
@@ -58,7 +65,7 @@ void do_run(const int runs, int snd_size /*kB*/, int delay /*ms*/, bool zero_cop
   for (run = 0; run < runs; ++run)
   {
     // get time and send message
-    pub.Send(snd_array.data(), snd_array.size(), eCAL::Time::GetMicroSeconds());
+    pub.Send(snd_array.data(), snd_array.size(), get_microseconds());
     // delay
     eCAL::Process::SleepMS(delay);
   }
@@ -71,17 +78,38 @@ void do_run(const int runs, int snd_size /*kB*/, int delay /*ms*/, bool zero_cop
   eCAL::Finalize();
 }
 
-int main(int /*argc*/, char** /*argv*/)
+int main(int argc, char **argv)
 {
-  int runs (200); // number of cylces
-  int delay(10);  // delay between two publications in ms
-  int size (0);   // message payload size
+  try
+  {
+    // parse command line
+    TCLAP::CmdLine cmd("latency_snd");
+    TCLAP::ValueArg<int> runs     ("r", "runs",      "Number of messages to send.", false, 1000, "int");
+    TCLAP::ValueArg<int> size     ("s", "size",      "Messages size in kB.",        false, 64,   "int");
+    TCLAP::ValueArg<int> delay    ("d", "delay",     "Messages send delay in ms.",  false, 10,   "int");
+    TCLAP::SwitchArg     zero_copy("z", "zero_copy", "Switch zero copy mode on.");
+    cmd.add(runs);
+    cmd.add(size);
+    cmd.add(delay);
+    cmd.add(zero_copy);
+    cmd.parse(argc, argv);
 
-  // test for message size from 1 kB to 16 MB (zero copy off)
-  for (size = 1; size <= 16384; size *= 2) do_run(runs, size, delay, false);
-
-  // test for message size from 1 kB to 16 MB (zero copy on)
-  for (size = 1; size <= 16384; size *= 2) do_run(runs, size, delay, true);
+    if(size < 0)
+    {
+      // automatic size mode
+      for (int s = 1; s <= 16384; s *= 2) do_run(runs.getValue(), s, delay.getValue(), zero_copy.getValue());
+    }
+    else
+    {
+      // run single test
+      do_run(runs.getValue(), size.getValue(), delay.getValue(), zero_copy.getValue());
+    }
+  }
+  catch (TCLAP::ArgException &e)  // catch any exceptions
+  {
+    std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
+    return EXIT_FAILURE;
+  }
 
   return(0);
 }
