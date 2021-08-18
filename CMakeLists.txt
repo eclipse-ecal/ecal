@@ -320,6 +320,13 @@ if (ECAL_THIRDPARTY_BUILD_HDF5)
   set(HDF5_BUILD_CPP_LIB     OFF CACHE BOOL "Do not build C++ lib" FORCE)
   set(HDF5_BUILD_HL_LIB      OFF CACHE BOOL "Do not build hdf5-hl" FORCE)
   
+  # TODO: Let HDF5 use its own targets.
+  # Adding the HDF5 targets to the eCALCoreTargets is a hack that we have had
+  # before and so I am adding it again, to not break compatibility in eCAL 5.8
+  # and 5.9. It however even prevents using a find_package(hdf5).
+  # So in the future we should definitively remove this line of code.
+  set(HDF5_EXPORTED_TARGETS eCALCoreTargets)                                    
+  
   #We need to build hdf5 as shared to enable the threadsafe option. HDF5 uses the BUILD_SHARED_LIBS to check if shared build is on.
   # Hence we need to save the old value, enable it, and then set it back to the old value
 
