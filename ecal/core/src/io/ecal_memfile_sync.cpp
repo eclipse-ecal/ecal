@@ -64,9 +64,14 @@ namespace eCAL
     BuildMemFileName();
 
     // create new memory file object
+    // with additional space for SMemFileHeader
+    size_t memfile_size = sizeof(SMemFileHeader) + size_;
+    // check for minsize
     size_t minsize = static_cast<size_t>(eCALPAR(PUB, MEMFILE_MINSIZE));
-    if (size_ < minsize) size_ = minsize;
-    if (!m_memfile.Create(m_memfile_name.c_str(), true, size_))
+    if (memfile_size < minsize) memfile_size = minsize;
+
+    // create it
+    if (!m_memfile.Create(m_memfile_name.c_str(), true, memfile_size))
     {
       // log it
       Logging::Log(log_level_error, std::string(m_base_name + "::CSyncMemoryFile::Create - FAILED : ") + m_memfile_name);
@@ -150,6 +155,9 @@ namespace eCAL
     Logging::Log(log_level_debug2, std::string(m_base_name + "::CSyncMemoryFile::Destroy - SUCCESS : ") + m_memfile.Name());
 #endif
 
+    // reset memory file name
+    m_memfile_name.clear();
+
     return true;
   }
 
@@ -217,19 +225,19 @@ namespace eCAL
     return false;
   }
 
-  bool CSyncMemoryFile::Reserve(size_t size_)
+  bool CSyncMemoryFile::CheckSize(size_t size_)
   {
     // we recreate a memory file if the file size is to small
-    bool file_to_small = m_memfile.FileSize() < (sizeof(SMemFileHeader) + size_);
+    bool file_to_small = m_memfile.MaxDataSize() < (sizeof(SMemFileHeader) + size_);
     if (!m_memfile.IsCreated() || file_to_small)
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::Reserve::RecreateFile");
+      Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::CheckSize - RECREATE");
 #endif
       // estimate size of memory file
       size_t memfile_reserve = static_cast<size_t>(eCALPAR(PUB, MEMFILE_RESERVE));
-      size_t memfile_size = sizeof(SMemFileHeader) + size_ + static_cast<size_t>((static_cast<float>(memfile_reserve) / 100.0f) * static_cast<float>(size_));
+      size_t memfile_size    = sizeof(SMemFileHeader) + size_ + static_cast<size_t>((static_cast<float>(memfile_reserve) / 100.0f) * static_cast<float>(size_));
       // destroy existing memory file object
       Destroy();
       // and create a new one
@@ -261,19 +269,18 @@ namespace eCAL
       return 0;
     }
 
-    // create message header
+    // create user file header
     struct SMemFileHeader memfile_hdr;
-
     // set data size
-    memfile_hdr.data_size = static_cast<unsigned long>(data_.len);
+    memfile_hdr.data_size         = static_cast<unsigned long>(data_.len);
     // set header id
-    memfile_hdr.id = static_cast<unsigned long>(data_.id);
+    memfile_hdr.id                = static_cast<unsigned long>(data_.id);
     // set header clock
-    memfile_hdr.clock = static_cast<unsigned long>(data_.clock);
+    memfile_hdr.clock             = static_cast<unsigned long>(data_.clock);
     // set header time
-    memfile_hdr.time = static_cast<long long>(data_.time);
+    memfile_hdr.time              = static_cast<long long>(data_.time);
     // set header hash
-    memfile_hdr.hash = static_cast<size_t>(data_.hash);
+    memfile_hdr.hash              = static_cast<size_t>(data_.hash);
     // set zero copy
     memfile_hdr.options.zero_copy = static_cast<unsigned char>(data_.zero_copy);
 
@@ -290,7 +297,7 @@ namespace eCAL
 #endif
 
       // store size of the memory file
-      size_t memfile_size = m_memfile.FileSize();
+      size_t memfile_size = m_memfile.MaxDataSize();
       // destroy and
       Destroy();
       // recreate it with the same size
@@ -305,7 +312,7 @@ namespace eCAL
     bool written(true);
     size_t wbytes(0);
 
-    // write the header
+    // write the user file header
     written &= m_memfile.Write(&memfile_hdr, memfile_hdr.hdr_size, wbytes) > 0;
     wbytes += memfile_hdr.hdr_size;
     // write the buffer
@@ -338,11 +345,6 @@ namespace eCAL
   std::string CSyncMemoryFile::GetName()
   {
     return m_memfile_name;
-  }
-
-  size_t CSyncMemoryFile::WriteBuffer(const void* buf_, const size_t len_, const size_t offset_)
-  {
-    return m_memfile.Write(buf_, len_, offset_);
   }
 
   void CSyncMemoryFile::SignalWritten()

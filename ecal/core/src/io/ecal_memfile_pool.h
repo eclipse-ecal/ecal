@@ -25,8 +25,6 @@
 
 #include <ecal/ecal.h>
 
-#include "ecal_global_accessors.h"
-#include "ecal_def.h"
 #include "ecal_memfile.h"
 #include "ecal_memfile_header.h"
 
@@ -60,18 +58,18 @@ namespace eCAL
     void Observe(const std::string& topic_name_, const std::string& topic_id_, const int timeout_);
     bool ReadFileHeader(SMemFileHeader& memfile_hdr);
 
-    std::atomic<bool>      m_created;
-    std::atomic<bool>      m_do_stop;
-    std::atomic<bool>      m_is_observing;
+    std::atomic<bool>       m_created;
+    std::atomic<bool>       m_do_stop;
+    std::atomic<bool>       m_is_observing;
 
-    std::atomic<long long> m_timeout_read;
-    std::atomic<int>       m_timeout_ack;
+    std::atomic<long long>  m_timeout_read;
+    std::atomic<int>        m_timeout_ack;
 
-    std::thread            m_thread;
-    EventHandleT           m_event_snd;
-    EventHandleT           m_event_ack;
-    CMemoryFile            m_memfile;
-    std::vector<char>      m_ecal_buffer;
+    std::thread             m_thread;
+    EventHandleT            m_event_snd;
+    EventHandleT            m_event_ack;
+    CMemoryFile             m_memfile;
+    std::vector<char>       m_ecal_buffer;
   };
 
   ////////////////////////////////////////
@@ -89,6 +87,8 @@ namespace eCAL
     bool ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, const std::string& topic_name_, const std::string& topic_id_);
 
   protected:
+    void CleanupPool();
+
     std::atomic<bool>                                         m_created;
     std::mutex                                                m_observer_pool_sync;
     std::map<std::string, std::shared_ptr<CMemFileObserver>>  m_observer_pool;

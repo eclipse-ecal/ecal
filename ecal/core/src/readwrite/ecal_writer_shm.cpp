@@ -72,15 +72,12 @@ namespace eCAL
     m_write_idx = 0;
     for (size_t num(0); num < m_buffer_count; ++num)
     {
-      m_memory_file_vec.push_back(std::make_shared<CSyncMemoryFile>());
-    }
-
-    for (auto memory_file : m_memory_file_vec)
-    {
-      if (!memory_file->Create(topic_name_, static_cast<size_t>(eCALPAR(PUB, MEMFILE_MINSIZE))))
+      auto sync_memfile = std::make_shared<CSyncMemoryFile>();
+      if (!sync_memfile->Create(topic_name_, static_cast<size_t>(eCALPAR(PUB, MEMFILE_MINSIZE))))
       {
         return false;
       }
+      m_memory_file_vec.push_back(sync_memfile);
     }
 
     m_created = true;
@@ -123,7 +120,9 @@ namespace eCAL
       // we just append new buffers
       while (m_memory_file_vec.size() < m_buffer_count)
       {
-        m_memory_file_vec.push_back(std::make_shared<CSyncMemoryFile>());
+        auto sync_memfile = std::make_shared<CSyncMemoryFile>();
+        sync_memfile->Create(m_topic_name, static_cast<size_t>(eCALPAR(PUB, MEMFILE_MINSIZE)));
+        m_memory_file_vec.push_back(sync_memfile);
       }
 
       // buffers decreased
@@ -138,7 +137,7 @@ namespace eCAL
     m_write_idx %= m_memory_file_vec.size();
       
     // check size and reserve new if needed
-    ret_state |= m_memory_file_vec[m_write_idx]->Reserve(data_.len);
+    ret_state |= m_memory_file_vec[m_write_idx]->CheckSize(data_.len);
 
     return ret_state;
   }

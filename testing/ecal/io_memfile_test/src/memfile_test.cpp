@@ -44,12 +44,14 @@ TEST(IO, MemfileReadWrite)
   // global parameter
   const std::string memfile_name = "my_memory_file";
 
-  // default send string
+  // default send string 8kB
+  const size_t ssize(10*1024);
   std::string send_s = "Hello World ";
-  for (int i = 0; i < 10; i++)
+  while (send_s.size() < ssize)
   {
     send_s += send_s;
   }
+  send_s.resize(ssize);
   size_t slen = send_s.size();
 
   // check creation state
@@ -79,12 +81,20 @@ TEST(IO, MemfileReadWrite)
   // check read only access state
   EXPECT_EQ(false, mem_file.HasReadAccess());
 
-  // write content to memory file
+  // write half content to memory file
+  EXPECT_EQ(slen/2, mem_file.Write((void*)send_s.c_str(), slen/2, 0));
+
+  // write full content to memory file
   EXPECT_EQ(slen, mem_file.Write((void*)send_s.c_str(), slen, 0));
 
   // write double sized content to memory file
   std::string double_send_s = send_s + send_s;
   EXPECT_EQ(0, mem_file.Write((void*)double_send_s.c_str(), double_send_s.size(), 0));
+
+  // finally write half content to memory file again for later reader test
+  slen /= 2;
+  send_s.resize(slen);
+  EXPECT_EQ(slen, mem_file.Write((void*)send_s.c_str(), slen, 0));
 
   // close memory file
   EXPECT_EQ(true, mem_file.ReleaseWriteAccess());
@@ -114,6 +124,10 @@ TEST(IO, MemfileReadWrite)
   std::vector<char> read_buf;
   read_buf.resize(slen);
   EXPECT_EQ(slen, mem_file.Read((void*)read_buf.data(), read_buf.size(), 0));
+
+  // read double sized content from memory file
+  read_buf.resize(slen*2);
+  EXPECT_EQ(0, mem_file.Read((void*)read_buf.data(), read_buf.size(), 0));
 
   // close memory file
   EXPECT_EQ(true, mem_file.ReleaseReadAccess());

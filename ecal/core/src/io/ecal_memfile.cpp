@@ -85,11 +85,11 @@ namespace eCAL
       m_name.clear();
 
       // reset header and info
-      m_header       = SMemFileHeader();
+      m_header       = SInternalHeader();
       m_memfile_info = SMemFileInfo();
 
       // create memory file
-      if (!CreateMemFile(name_, create_, len_ + sizeof(SMemFileHeader), m_memfile_info))
+      if (!CreateMemFile(name_, create_, len_ + sizeof(SInternalHeader), m_memfile_info))
       {
 #ifndef NDEBUG
         printf("Could not create memory file: %s.\n\n", name_);
@@ -118,7 +118,7 @@ namespace eCAL
         if (m_memfile_info.mem_address)
         {
           // write header
-          SMemFileHeader* pHeader = new (m_memfile_info.mem_address) SMemFileHeader;
+          SInternalHeader* pHeader = new (m_memfile_info.mem_address) SInternalHeader;
           if (pHeader) *pHeader = m_header;
         }
 
@@ -132,7 +132,7 @@ namespace eCAL
       if (LockMtx(&m_memfile_info.mutex, PUB_MEMFILE_CREATE_TO))
       {
         // read header
-        SMemFileHeader* pHeader = static_cast<SMemFileHeader*>(m_memfile_info.mem_address);
+        SInternalHeader* pHeader = static_cast<SInternalHeader*>(m_memfile_info.mem_address);
         m_header = *pHeader;
 
         // unlock mutex
@@ -169,7 +169,7 @@ namespace eCAL
     m_name.clear();
 
     // reset header and info
-    m_header       = SMemFileHeader();
+    m_header       = SInternalHeader();
     m_memfile_info = SMemFileInfo();
 
     return(ret_state);
@@ -177,34 +177,16 @@ namespace eCAL
 
   bool CMemoryFile::GetReadAccess(int timeout_)
   {
-    if (!m_created)                  return(false);
-    if (!m_memfile_info.mem_address) return(false);
-    if (!g_memfile_map())            return(false);
-
-    // lock mutex
-    if (!LockMtx(&m_memfile_info.mutex, timeout_))
+    // currently we do not differ between read and write access
+    if (GetAccess(timeout_))
     {
-#ifndef NDEBUG
-      printf("Could not lock memory file mutex: %s.\n\n", m_name.c_str());
-#endif
-      return(false);
+      // mark as opened for read access
+      m_access_state = access_state::read_access;
+
+      return(true);
     }
 
-    // update header
-    m_header = *static_cast<SMemFileHeader*>(m_memfile_info.mem_address);
-
-    // check available file size for reading
-    if (!CheckAvailableReadSize())
-    {
-      // unlock mutex
-      UnlockMtx(&m_memfile_info.mutex);
-      return(false);
-    }
-
-    // mark as opened for read access
-    m_access_state = access_state::read_access;
-
-    return(true);
+    return(false);
   }
 
   bool CMemoryFile::ReleaseReadAccess()
@@ -221,16 +203,16 @@ namespace eCAL
     return(true);
   }
 
-  size_t CMemoryFile::GetReadAddress(const void*& buf_, const size_t len_, const size_t offset_)
+  size_t CMemoryFile::GetReadAddress(const void*& buf_, const size_t len_)
   {
-    if (!m_created)                                                      return(0);
-    if (m_access_state != access_state::read_access)                     return(0);
-    if (len_ == 0)                                                       return(0);
-    if (!m_memfile_info.mem_address)                                     return(0);
-    if ((len_ + offset_ + sizeof(SMemFileHeader)) > m_memfile_info.size) return(0);
+    if (!m_created)                                          return(0);
+    if (m_access_state != access_state::read_access)         return(0);
+    if (len_ == 0)                                           return(0);
+    if (len_ > static_cast<size_t>(m_header.cur_data_size))  return(0);
+    if (!m_memfile_info.mem_address)                         return(0);
 
     // return read address
-    buf_ = static_cast<char*>(m_memfile_info.mem_address) + offset_ + sizeof(SMemFileHeader);
+    buf_ = static_cast<char*>(m_memfile_info.mem_address) + sizeof(SInternalHeader);
 
     return(len_);
   }
@@ -240,10 +222,11 @@ namespace eCAL
     if (!buf_) return(0);
 
     const void* rbuf(nullptr);
-    if (GetReadAddress(rbuf, len_, offset_))
+    if (GetReadAddress(rbuf, len_ + offset_))
     {
-      // copy from read buffer
-      memcpy(buf_, rbuf, len_);
+      // copy from read buffer with offset
+      memcpy(buf_, static_cast<const char*>(rbuf) + offset_, len_);
+
       // return number of read bytes
       return(len_);
     }
@@ -255,34 +238,16 @@ namespace eCAL
 
   bool CMemoryFile::GetWriteAccess(int timeout_)
   {
-    if (!m_created)                  return(false);
-    if (!m_memfile_info.mem_address) return(false);
-    if (!g_memfile_map())            return(false);
-
-    // lock mutex
-    if (!LockMtx(&m_memfile_info.mutex, timeout_))
+    // currently we do not differ between read and write access
+    if (GetAccess(timeout_))
     {
-#ifndef NDEBUG
-      printf("Could not lock memory file mutex: %s.\n\n", m_name.c_str());
-#endif
-      return(false);
+      // mark as opened for write access
+      m_access_state = access_state::write_access;
+
+      return(true);
     }
 
-    // update header
-    m_header = *static_cast<SMemFileHeader*>(m_memfile_info.mem_address);
-
-    // check available file size for writing
-    if (!CheckAvailableWriteSize())
-    {
-      // unlock mutex
-      UnlockMtx(&m_memfile_info.mutex);
-      return(false);
-    }
-
-    // mark as opened for full access
-    m_access_state = access_state::write_access;
-
-    return(true);
+    return(false);
   }
 
   bool CMemoryFile::ReleaseWriteAccess()
@@ -299,21 +264,21 @@ namespace eCAL
     return(true);
   }
 
-  size_t CMemoryFile::GetWriteAddress(void*& buf_, const size_t len_, const size_t offset_)
+  size_t CMemoryFile::GetWriteAddress(void*& buf_, const size_t len_)
   {
-    if (!m_created)                                                      return(0);
-    if (m_access_state != access_state::write_access)                    return(0);
-    if ((len_ + offset_) > static_cast<size_t>(m_header.max_data_size))  return(0);
-    if (!m_memfile_info.mem_address)                                     return(0);
-    if ((len_ + offset_ + sizeof(SMemFileHeader)) > m_memfile_info.size) return(0);
+    if (!m_created)                                          return(0);
+    if (m_access_state != access_state::write_access)        return(0);
+    if (len_ == 0)                                           return(0);
+    if (len_ > static_cast<size_t>(m_header.max_data_size))  return(0);
+    if (!m_memfile_info.mem_address)                         return(0);
 
-    // update header
-    m_header.cur_data_size = (unsigned long)(len_ + offset_);
-    SMemFileHeader* pHeader = static_cast<SMemFileHeader*>(m_memfile_info.mem_address);
+    // update m_header and write to memory file header
+    m_header.cur_data_size = (unsigned long)(len_);
+    SInternalHeader* pHeader = static_cast<SInternalHeader*>(m_memfile_info.mem_address);
     pHeader->cur_data_size = m_header.cur_data_size;
 
     // return write address
-    buf_ = static_cast<char*>(m_memfile_info.mem_address) + offset_ + sizeof(SMemFileHeader);
+    buf_ = static_cast<char*>(m_memfile_info.mem_address) + sizeof(SInternalHeader);
 
     return(len_);
   }
@@ -324,10 +289,11 @@ namespace eCAL
     if (!buf_)      return(0);
 
     void* wbuf(nullptr);
-    if (GetWriteAddress(wbuf, len_, offset_))
+    if (GetWriteAddress(wbuf, len_ + offset_))
     {
       // copy to write buffer
-      memcpy(wbuf, buf_, len_);
+      memcpy(static_cast<char*>(wbuf) + offset_, buf_, len_);
+
       // return number of written bytes
       return(len_);
     }
@@ -337,23 +303,26 @@ namespace eCAL
     }
   }
 
-  bool CMemoryFile::CheckAvailableReadSize()
+  bool CMemoryFile::GetAccess(int timeout_)
   {
-    if (!m_created) return(false);
+    if (!m_created)                  return(false);
+    if (!m_memfile_info.mem_address) return(false);
+    if (!g_memfile_map())            return(false);
+
+    // lock mutex
+    if (!LockMtx(&m_memfile_info.mutex, timeout_))
+    {
+#ifndef NDEBUG
+      printf("Could not lock memory file mutex: %s.\n\n", m_name.c_str());
+#endif
+      return(false);
+    }
+
+    // update header
+    m_header = *static_cast<SInternalHeader*>(m_memfile_info.mem_address);
 
     // check size again
-    size_t len = static_cast<size_t>(m_header.hdr_size) + static_cast<size_t>(m_header.max_data_size);
-
-    // check memory file size
-    return (CheckMemFile(len, false, m_memfile_info));
-  }
-    
-  bool CMemoryFile::CheckAvailableWriteSize()
-  {
-    if (!m_created) return(false);
-
-    // check size again
-    size_t len = static_cast<size_t>(m_header.hdr_size) + static_cast<size_t>(m_header.max_data_size);
+    size_t len = static_cast<size_t>(m_header.int_hdr_size) + static_cast<size_t>(m_header.max_data_size);
     if (len > m_memfile_info.size)
     {
       // check memory file size
@@ -368,6 +337,8 @@ namespace eCAL
       // check size again and give up if it is still to small
       if (len > m_memfile_info.size)
       {
+        // unlock mutex
+        UnlockMtx(&m_memfile_info.mutex);
         return(false);
       }
     }

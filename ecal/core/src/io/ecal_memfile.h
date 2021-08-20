@@ -136,20 +136,19 @@ namespace eCAL
      *
      * @param buf_     The destination address.
      * @param len_     Expected length of the available payload.
-     * @param offset_  The offset where to start reading.
      *
      * @return         Number of available bytes (or zero if it fails).
     **/
-    size_t GetReadAddress(const void*& buf_, const size_t len_, const size_t offset_);
+    size_t GetReadAddress(const void*& buf_, const size_t len_);
 
     /**
-     * @brief Read bytes from an opened memory file. 
+     * @brief Read bytes from an opened memory file.
      *
-     * @param buf_     The destination address. 
-     * @param len_     The length of the allocated memory (has to be allocated by caller). 
-     * @param offset_  The offset where to start reading. 
+     * @param buf_     The destination address.
+     * @param len_     The length of the allocated memory (has to be allocated by caller).
+     * @param offset_  The offset where to start reading.
      *
-     * @return         Number of copied bytes (or zero if it fails). 
+     * @return         Number of copied bytes (or zero if it fails).
     **/
     size_t Read(void* buf_, const size_t len_, const size_t offset_);
 
@@ -174,37 +173,36 @@ namespace eCAL
      *
      * @param buf_     The destination address.
      * @param len_     Expected length of the available payload.
-     * @param offset_  The offset where to start writing.
      *
      * @return         Number of available bytes (or zero if it fails).
     **/
-    size_t GetWriteAddress(void*& buf_, const size_t len_, const size_t offset_);
+    size_t GetWriteAddress(void*& buf_, const size_t len_);
 
     /**
-     * @brief Write bytes to the memory file. 
+     * @brief Write bytes to the memory file.
      *
-     * @param buf_     The source address. 
-     * @param len_     The number of bytes to write. 
-     * @param offset_  The offset for writing the data. 
+     * @param buf_     The source address.
+     * @param len_     The number of bytes to write.
+     * @param offset_  The offset for writing the data.
      *
-     * @return         Number of bytes copied to the memory file. 
+     * @return         Number of bytes copied to the memory file.
     **/
     size_t Write(const void* buf_, const size_t len_, const size_t offset_);
-    
+
     /**
      * @brief Maximum data size of the whole memory file.
      *
      * @return  The size of the data object. 
     **/
-    size_t FileSize() const {return static_cast<size_t>(m_header.max_data_size);};
+    size_t MaxDataSize() const {return static_cast<size_t>(m_header.max_data_size);};
 
     /**
      * @brief Size of the stored data object (can be smaller than the size
-     *        of the whole memory file.
+     *        of the available data size.
      *
      * @return  The size of the data object. 
     **/
-    size_t DataSize()        const {return static_cast<size_t>(m_header.cur_data_size);};
+    size_t CurDataSize()     const {return static_cast<size_t>(m_header.cur_data_size);};
 
     bool IsCreated()         const {return(m_created);};
     std::string Name()       const {return(m_name);};
@@ -213,16 +211,15 @@ namespace eCAL
     bool HasReadAccess()     const {return(m_access_state == access_state::read_access);};
     bool HasWriteAccess()    const {return(m_access_state == access_state::write_access);};
 
-    struct SMemFileHeader
+    struct SInternalHeader
     {
-      unsigned short hdr_size      = sizeof(SMemFileHeader);
+      unsigned short int_hdr_size  = sizeof(SInternalHeader);
       unsigned long  cur_data_size = 0;
       unsigned long  max_data_size = 0;
     };
 
   protected:
-    bool CheckAvailableReadSize();
-    bool CheckAvailableWriteSize();
+    bool GetAccess(int timeout_);
 
     enum class access_state
     {
@@ -233,7 +230,7 @@ namespace eCAL
     bool            m_created;
     access_state    m_access_state;
     std::string     m_name;
-    SMemFileHeader  m_header;
+    SInternalHeader m_header;
     SMemFileInfo    m_memfile_info;
 
   private:

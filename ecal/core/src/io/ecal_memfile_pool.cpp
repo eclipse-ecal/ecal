@@ -133,7 +133,7 @@ namespace eCAL
     }
 
     // wait for finalization
-    m_thread.join();
+    if(m_thread.joinable()) m_thread.join();
 
     return true;
   }
@@ -147,13 +147,13 @@ namespace eCAL
     return true;
   }
 
-  void CMemFileObserver::Observe(const std::string& topic_name_, const std::string& topic_id_, const int timeout_max_)
+  void CMemFileObserver::Observe(const std::string& topic_name_, const std::string& topic_id_, const int timeout_)
   {
     // internal clock sample update checking
     uint64_t last_sample_clock(0);
 
     // runs as long as there is no timeout and no external stop request
-    while((m_timeout_read < timeout_max_) && !m_do_stop)
+    while((m_timeout_read < timeout_) && !m_do_stop)
     {
       // loop start in ms
       auto loop_start = eCAL::Time::GetMicroSeconds()/1000;
@@ -179,6 +179,9 @@ namespace eCAL
           }
           else
           {
+            // clear receive buffer
+            m_ecal_buffer.clear();
+
             bool zero_copy_allowed = mfile_hdr.options.zero_copy != 0;
             // -------------------------------------------------------------------------
             // zero copy mode
@@ -192,26 +195,12 @@ namespace eCAL
             {
               // acquire memory file payload pointer (no copying here)
               const void* buf(nullptr);
-              if (m_memfile.GetReadAddress(buf, mfile_hdr.data_size, mfile_hdr.hdr_size) > 0)
+              if (m_memfile.GetReadAddress(buf, mfile_hdr.data_size) > 0)
               {
-#ifndef NDEBUG
-                // log it
-                Logging::Log(log_level_debug3, std::string("CMemFileObserver GetReadAddress  " + m_memfile.Name() + " (" + std::to_string(mfile_hdr.data_size) + " Bytes)"));
-#endif
+                // calculate data buffer offset
+                const char* data_buf = static_cast<const char*>(buf) + mfile_hdr.hdr_size;
                 // add sample to data reader (and call user callback function)
-                if (g_subgate()) g_subgate()->ApplySample(topic_name_, topic_id_, static_cast<const char*>(buf), mfile_hdr.data_size, (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash, eCAL::pb::tl_ecal_shm);
-              }
-
-              // store clock
-              last_sample_clock = mfile_hdr.clock;
-
-              // close memory file
-              m_memfile.ReleaseReadAccess();
-
-              // send ack event
-              if (m_timeout_ack != 0)
-              {
-                gSetEvent(m_event_ack);
+                if (g_subgate()) g_subgate()->ApplySample(topic_name_, topic_id_, data_buf, mfile_hdr.data_size, (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash, eCAL::pb::tl_ecal_shm);
               }
             }
             // -------------------------------------------------------------------------
@@ -224,29 +213,25 @@ namespace eCAL
               // read payload
               m_ecal_buffer.resize((size_t)mfile_hdr.data_size);
               m_memfile.Read(m_ecal_buffer.data(), (size_t)mfile_hdr.data_size, mfile_hdr.hdr_size);
+            }
 
-              // store clock
-              last_sample_clock = mfile_hdr.clock;
+            // store clock
+            last_sample_clock = mfile_hdr.clock;
 
-              // release access
-              m_memfile.ReleaseReadAccess();
+            // release access
+            m_memfile.ReleaseReadAccess();
 
-              // send ack event
-              if (m_timeout_ack != 0)
-              {
-                gSetEvent(m_event_ack);
-              }
+            // send ack event
+            if (m_timeout_ack != 0)
+            {
+              gSetEvent(m_event_ack);
+            }
 
-              // process payload
-              if (!m_ecal_buffer.empty())
-              {
-#ifndef NDEBUG
-                // log it
-                Logging::Log(log_level_debug3, std::string("CMemFileObserver Read " + m_memfile.Name() + " (" + std::to_string(m_ecal_buffer.size()) + " Bytes)"));
-#endif
-                // add sample to data reader (and call user callback function)
-                if (g_subgate()) g_subgate()->ApplySample(topic_name_, topic_id_, m_ecal_buffer.data(), m_ecal_buffer.size(), (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash, eCAL::pb::tl_ecal_shm);
-              }
+            // process receive buffer if buffered mode read some data in
+            if (!m_ecal_buffer.empty())
+            {
+              // add sample to data reader (and call user callback function)
+              if (g_subgate()) g_subgate()->ApplySample(topic_name_, topic_id_, m_ecal_buffer.data(), m_ecal_buffer.size(), (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash, eCAL::pb::tl_ecal_shm);
             }
           }
         }
@@ -280,7 +265,7 @@ namespace eCAL
   bool CMemFileObserver::ReadFileHeader(SMemFileHeader& mfile_hdr_)
   {
     // retrieve size of received buffer
-    size_t buffer_size = m_memfile.DataSize();
+    size_t buffer_size = m_memfile.CurDataSize();
 
     // do we have at least the first two bytes ? (hdr_size)
     if (buffer_size >= 2)
@@ -300,12 +285,11 @@ namespace eCAL
     return false;
   }
 
-
   ////////////////////////////////////////
   // CMemFileThreadPool
   ////////////////////////////////////////
   CMemFileThreadPool::CMemFileThreadPool() :
-    m_created(false)
+  m_created(false)
   {
   }
 
@@ -321,16 +305,13 @@ namespace eCAL
   {
     if(!m_created) return;
 
+    // lock pool
     std::lock_guard<std::mutex> lock(m_observer_pool_sync);
 
-    // stop and destroy them all
-    for (auto & observer : m_observer_pool)
-    {
-      observer.second->Stop();
-      observer.second->Destroy();
-    }
+    // stop all running observers
+    for (auto & observer : m_observer_pool) observer.second->Stop();
 
-    // clear pool
+    // clear pool (and destroy all)
     m_observer_pool.clear();
 
     m_created = false;
@@ -341,9 +322,43 @@ namespace eCAL
     if(!m_created)            return(false);
     if(memfile_name_.empty()) return(false);
 
+    // remove outdated observers
+    //CleanupPool();
+
+    // lock pool
     std::lock_guard<std::mutex> lock(m_observer_pool_sync);
 
-    // first remove outdated / finished observer finally from the thread pool
+    // if the observer is existing reset its timeout
+    // this should avoid that an observer will timeout in the case that
+    // there are no incomming data but the registration layer
+    // confirms that there are still existing (sleepy) shm writer on this host
+    auto observer_it = m_observer_pool.find(memfile_name_);
+    if(observer_it != m_observer_pool.end())
+    {
+      observer_it->second->ResetTimeout();
+      return(true);
+    }
+    // okay, we need to start a new observer
+    else
+    {
+      auto observer = std::make_shared<CMemFileObserver>();
+      observer->Create(memfile_name_, memfile_event_);
+      observer->Start(topic_name_, topic_id_, eCALPAR(CMN, REGISTRATION_TO));
+      m_observer_pool[memfile_name_] = observer;
+#ifndef NDEBUG
+      // log it
+      Logging::Log(log_level_debug2, std::string("CMemFileThreadPool::ObserveFile " + memfile_name_ + " added"));
+#endif
+      return(true);
+    }
+  }
+
+  void CMemFileThreadPool::CleanupPool()
+  {
+    // lock pool
+    std::lock_guard<std::mutex> lock(m_observer_pool_sync);
+
+    // remove outdated / finished observer from the thread pool
     for(auto observer = m_observer_pool.begin(); observer != m_observer_pool.end();)
     {
       if(!observer->second->IsObserving())
@@ -352,39 +367,12 @@ namespace eCAL
         // log it
         Logging::Log(log_level_debug2, std::string("CMemFileThreadPool::ObserveFile " + observer->first + " removed"));
 #endif
-
-        observer->second->Stop();
-        observer->second->Destroy();
         observer = m_observer_pool.erase(observer);
       }
       else
       {
         observer++;
       }
-    }
-
-    // if the observer is existing reset its timeout
-    // this should avoid that an observer will timeout in the case that
-    // there are no incomming data but the registration layer
-    // confirms that there are still existing (sleepy) shm writer on this host
-    auto observer = m_observer_pool.find(memfile_name_);
-    if(observer != m_observer_pool.end())
-    {
-      observer->second->ResetTimeout();
-      return(true);
-    }
-    // okay, we need to start a new observer
-    else
-    {
-      auto thread = std::make_shared<CMemFileObserver>();
-      thread->Create(memfile_name_, memfile_event_);
-      thread->Start(topic_name_, topic_id_, eCALPAR(CMN, REGISTRATION_TO));
-      m_observer_pool[memfile_name_] = thread;
-#ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug2, std::string("CMemFileThreadPool::ObserveFile " + memfile_name_ + " added"));
-#endif
-      return(true);
     }
   }
 }

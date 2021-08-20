@@ -35,6 +35,12 @@ int main(int argc, char **argv)
   // create a publisher (topic name "person")
   eCAL::protobuf::CPublisher<People::Person> pub("person");
 
+  // set buffering
+  pub.SetBufferCount(2);
+
+  // set zero copy
+  pub.EnableZeroCopy(true);
+
   // generate a class instance of Person
   People::Person person;
 
