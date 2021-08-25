@@ -49,6 +49,13 @@
 
 namespace
 {
+#ifdef ECAL_OS_WINDOWS
+  const char path_sep('\\');
+#endif /* ECAL_OS_WINDOWS */
+#ifdef ECAL_OS_LINUX
+  const char path_sep('/');
+#endif /* ECAL_OS_LINUX */
+
   bool fileexists(const std::string& fname_)
   {
     std::ifstream infile(fname_);
@@ -90,11 +97,11 @@ namespace eCAL
       home_path = getEnvVar("ECAL_HOME");
       if (!home_path.empty())
       {
-        if (*home_path.rbegin() != '\\') home_path += '\\';
+        if (*home_path.rbegin() != path_sep) home_path += path_sep;
       }
       if (!std::string(ECAL_HOME_PATH_WINDOWS).empty()) //-V815
       {
-        home_path += "\\";
+        home_path += path_sep;
         home_path += ECAL_HOME_PATH_WINDOWS;
       }
 #endif /* ECAL_OS_WINDOWS */
@@ -118,76 +125,75 @@ namespace eCAL
         createdir(home_path);
       }
 
-#ifdef ECAL_OS_WINDOWS
-      home_path += "\\";
-#endif /* ECAL_OS_WINDOWS */
-
-#ifdef ECAL_OS_LINUX
-      home_path += '/';
-#endif /* ECAL_OS_LINUX */
-
+      home_path += path_sep;
       return(home_path);
     }
 
     ECAL_API std::string GeteCALConfigPath()
     {
-      std::string config_path;
-
-#ifdef ECAL_OS_WINDOWS
-      // Precedence 1:  ECAL_DATA variable
-      std::string ecal_data_path    = getEnvVar("ECAL_DATA");
+      // -----------------------------------------------------------
+      // precedence 1: ECAL_DATA variable (windows and linux)
+      // -----------------------------------------------------------
+      std::string ecal_data_path = getEnvVar("ECAL_DATA");
       if (!ecal_data_path.empty())
       {
-        if (ecal_data_path.back() != '\\')
-          ecal_data_path += "\\";
+        if (ecal_data_path.back() != path_sep)
+          ecal_data_path += path_sep;
       }
 
-      // Precedence 2: ProgramData path (-> all users)
-      std::string program_data_path = getEnvVar("ProgramData");
-      if (!program_data_path.empty())
+      // -----------------------------------------------------------
+      // precedence 2: system data path (windows only)
+      // -----------------------------------------------------------
+      std::string system_data_path;
+#ifdef ECAL_OS_WINDOWS
+      system_data_path = getEnvVar("ProgramData");
+      if (!system_data_path.empty())
       {
-        if (program_data_path.back() != '\\')
-          program_data_path += "\\";
-        program_data_path += "eCAL\\";
+        if (system_data_path.back() != path_sep)
+          system_data_path += path_sep;
+        system_data_path += std::string("eCAL") + path_sep;
       }
+#endif /* ECAL_OS_WINDOWS */
+
+      // -----------------------------------------------------------
+      // precedence 3 & 4: cmake configured data paths (linux only)
+      // -----------------------------------------------------------
+      std::string cmake_data_path;
+#ifdef ECAL_OS_LINUX
+      std::string ecal_install_config_dir(ECAL_INSTALL_CONFIG_DIR);
+      std::string ecal_install_prefix(ECAL_INSTALL_PREFIX);
+
+      if ((!ecal_install_config_dir.empty() && (ecal_install_config_dir[0] == path_sep))
+        || ecal_install_prefix.empty())
+      {
+        cmake_data_path = ecal_install_config_dir;
+      }
+      else if (!ecal_install_prefix.empty())
+      {
+        cmake_data_path = ecal_install_prefix + path_sep + ecal_install_config_dir;
+      }
+#endif /* ECAL_OS_LINUX */
 
       // Check all directories, if
       //    1. The path is not empty
       //    2. The ecal.ini exists in that directory
-      for (const std::string& directory : { ecal_data_path, program_data_path })
+      std::string config_path;
+      for (std::string directory : { ecal_data_path, system_data_path, cmake_data_path })
       {
         if (!directory.empty())
         {
+          // append path separator if needed
+          if (directory.back() != path_sep) directory += path_sep;
+
+          // check existence of ecal.ini file
           EcalUtils::Filesystem::FileStatus ecal_ini_status(directory + std::string(ECAL_DEFAULT_CFG), EcalUtils::Filesystem::Current);
           if (ecal_ini_status.IsOk() && (ecal_ini_status.GetType() == EcalUtils::Filesystem::Type::RegularFile))
           {
-            config_path =  directory;
+            config_path = directory;
             break;
           }
         }
       }
-
-#endif /* ECAL_OS_WINDOWS */
-
-#ifdef ECAL_OS_LINUX
-      std::string ecal_install_config_dir(ECAL_INSTALL_CONFIG_DIR);
-      std::string ecal_install_prefix    (ECAL_INSTALL_PREFIX);
-
-      if ((!ecal_install_config_dir.empty() && (ecal_install_config_dir[0] == '/'))
-          || ecal_install_prefix.empty())
-      {
-        config_path = ecal_install_config_dir;
-      }
-      else if (!ecal_install_prefix.empty())
-      {
-        config_path = ecal_install_prefix + "/" + ecal_install_config_dir;
-      }
-
-      if (!config_path.empty() && (config_path.back() != '/'))
-      {
-        config_path += "/";
-      }
-#endif /* ECAL_OS_LINUX */
 
       return(config_path);
     }
@@ -209,12 +215,7 @@ namespace eCAL
         createdir(settings_path);
       }
 
-#ifdef ECAL_OS_WINDOWS
-      settings_path += "\\";
-#else
-      settings_path += "/";
-#endif
-
+      settings_path += path_sep;
       return(settings_path);
     }
 
@@ -236,20 +237,20 @@ namespace eCAL
         createdir(log_path);
       }
 
-#ifdef ECAL_OS_WINDOWS
-      log_path += "\\";
-#else
-      log_path += "/";
-#endif
-
+      log_path += path_sep;
       return(log_path);
     }
 
-    ECAL_API std::string GeteCALDefaultIniFile()
+    ECAL_API std::string GeteCALActiveIniFile()
     {
       std::string ini_file = GeteCALConfigPath();
       ini_file += ECAL_DEFAULT_CFG;
       return ini_file;
+    }
+
+    ECAL_API std::string GeteCALDefaultIniFile()
+    {
+      return GeteCALActiveIniFile();
     }
   }
 
