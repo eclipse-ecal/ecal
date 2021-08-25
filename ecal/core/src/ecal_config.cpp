@@ -142,16 +142,7 @@ namespace eCAL
           ecal_data_path += "\\";
       }
 
-      // Precedence 2: AppData Path (-> Current User)
-      std::string app_data_path = getEnvVar("AppData");
-      if (!app_data_path.empty())
-      {
-        if (app_data_path.back() != '\\')
-          app_data_path += "\\";
-        app_data_path += "eCAL\\";
-      }
-
-      // Precedence 3: ProgramData path (-> all users)
+      // Precedence 2: ProgramData path (-> all users)
       std::string program_data_path = getEnvVar("ProgramData");
       if (!program_data_path.empty())
       {
@@ -163,7 +154,7 @@ namespace eCAL
       // Check all directories, if
       //    1. The path is not empty
       //    2. The ecal.ini exists in that directory
-      for (const std::string& directory : { ecal_data_path, app_data_path, program_data_path })
+      for (const std::string& directory : { ecal_data_path, program_data_path })
       {
         if (!directory.empty())
         {
