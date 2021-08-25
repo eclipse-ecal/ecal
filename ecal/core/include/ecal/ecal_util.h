@@ -35,11 +35,12 @@ namespace eCAL
   {
     /**
      * @brief Retrieve eCAL home path (for starting eCAL applications).
-     *          Windows: $APPDATA/eCAL
+     *          Windows: $ECAL_HOME/eCAL
      *          Linux:   $HOME/.ecal
      *
      * @return  eCAL home path.
     **/
+    [[deprecated]]
     ECAL_API std::string GeteCALHomePath();
 
     /**
@@ -71,10 +72,18 @@ namespace eCAL
     ECAL_API std::string GeteCALLogPath();
 
     /**
+     * @brief Retrieve full path to active eCAL ini file.
+     *
+     * @return  eCAL active ini file name.
+    **/
+    ECAL_API std::string GeteCALActiveIniFile();
+
+    /**
      * @brief Retrieve full eCAL default ini file name.
      *
      * @return  eCAL default ini file name.
     **/
+    [[deprecated]]
     ECAL_API std::string GeteCALDefaultIniFile();
 
     /**
