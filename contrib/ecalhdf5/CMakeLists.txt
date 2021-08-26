@@ -87,6 +87,11 @@ if (${ECAL_LINK_HDF5_SHARED})
     target_link_libraries(${PROJECT_NAME} PRIVATE
       hdf5::hdf5-shared
     )
+  # conan target names are different
+  elseif (TARGET HDF5::C)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+      HDF5::C
+    )
   else()
     target_include_directories(${PROJECT_NAME} PRIVATE ${HDF5_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -97,6 +102,11 @@ else()
   if (TARGET hdf5::hdf5-static)
     target_link_libraries(${PROJECT_NAME} PRIVATE
       hdf5::hdf5-static
+    )
+  # conan target names are different
+  elseif (TARGET HDF5::C)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+      HDF5::C
     )
   else()
     message(FATAL_ERROR "eCAL build configured to link HDF5 statically, however static libs are not available. Consider building with ECAL_LINK_HDF5_SHARED=ON") 
