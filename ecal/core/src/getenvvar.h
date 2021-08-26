@@ -25,6 +25,7 @@
 
 #include <string>
 #include <cstdlib>
+#include <sstream>
 
 inline std::string getEnvVar(const std::string& key, const std::string& def = "")
 {
@@ -43,3 +44,20 @@ inline std::string getEnvVar(const std::string& key, const std::string& def = ""
   return std::string(val);
 #endif
 }
+
+inline std::vector<std::string> getEnvPaths(const std::string& env_value)
+{
+  std::vector<std::string> tokens;
+  std::string token;
+  std::istringstream tokenStream(env_value);
+#ifdef _WIN32
+  const char delimiter{ ':' };
+#else
+  const char delimiter{ ';' };
+#endif
+  while (std::getline(tokenStream, token, delimiter))
+  {
+    tokens.push_back(token);
+  }
+  return tokens;
+};
