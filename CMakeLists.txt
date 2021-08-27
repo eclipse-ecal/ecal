@@ -100,294 +100,40 @@ file(TO_CMAKE_PATH "${CMAKE_PREFIX_PATH}" CMAKE_PREFIX_PATH)
 message(STATUS "Module Path: ${CMAKE_MODULE_PATH}")
 message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 
-# --------------------------------------------------------
-# third party dependencies as requested
-# --------------------------------------------------------
-if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR
-    ECAL_THIRDPARTY_BUILD_SPDLOG OR
-    ECAL_THIRDPARTY_BUILD_TINYXML2 OR
-    ECAL_THIRDPARTY_BUILD_FINEFTP OR
-    ECAL_THIRDPARTY_BUILD_ZLIB OR
-    ECAL_THIRDPARTY_BUILD_LIBSSH2 OR
-    ECAL_THIRDPARTY_BUILD_CURL OR
-    ECAL_THIRDPARTY_BUILD_GTEST OR
-    ECAL_THIRDPARTY_BUILD_HDF5
-    )
-  if(MSVC)
-    message(STATUS "supress thirdparty warnings for windows platform ..")
-    set(CMAKE_CXX_FLAGS_OLD "${CMAKE_CXX_FLAGS}")
-    if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
-      string(REGEX REPLACE "/W[0-4]" "/W0" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-    else()
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W0")
-    endif()
+if(MSVC)
+  message(STATUS "supress thirdparty warnings for windows platform ..")
+  set(CMAKE_CXX_FLAGS_OLD "${CMAKE_CXX_FLAGS}")
+  if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
+    string(REGEX REPLACE "/W[0-4]" "/W0" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W0")
   endif()
 endif()
 
-if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
-  list(APPEND as_subproject Protobuf)
-  set(protobuf_BUILD_TESTS OFF CACHE BOOL "My option" FORCE)
-  set(protobuf_MSVC_STATIC_RUNTIME OFF CACHE BOOL "My option" FORCE)
-  if(UNIX)
-    set(protobuf_BUILD_SHARED_LIBS ON CACHE BOOL "My option" FORCE)
-  endif()
-  add_subdirectory(thirdparty/protobuf/cmake)
-  
-  if (NOT TARGET protobuf::libprotobuf)
-    add_library(protobuf::libprotobuf ALIAS libprotobuf)
-  endif()
+# This is a list of subprojects, that might be build with eCAL
+# according to how options ECAL_BUILD_<SUBPROJECT> are set
+set(possible_subprojects
+  Protobuf
+  spdlog
+  tinyxml2
+  fineftp
+  termcolor
+  #libssh2
+  #zlib zlibstatic
+  CURL
+  GTest
+  HDF5
+  CMakeFunctions
+)
 
-  get_target_property(is_imported libprotobuf IMPORTED)
-  if (NOT is_imported)
-    # Disable warnings for third-party lib
-    target_compile_options(libprotobuf PRIVATE
-      $<$<CXX_COMPILER_ID:MSVC>:/W0>
-      $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
-    )
-  endif()
-
-  if (NOT TARGET protoc AND CMAKE_CROSSCOMPILING)
-    # In cross compile scenario, we don't build protoc, so we need
-    # to find and import it so downstream usage will use the host compiler.
-
-    # find_program will search the host paths if CMAKE_FIND_ROOT_PATH_MODE_PROGRAM 
-    # is configured correctly (see toolchain file)
-    find_program(protoc_path NAMES protoc REQUIRED)
-    add_executable(protoc IMPORTED)
-    set_target_properties(protoc PROPERTIES IMPORTED_LOCATION ${protoc_path})
-    set_target_properties(protoc PROPERTIES IMPORTED_GLOBAL TRUE)
-    
-    add_executable(protobuf::protoc ALIAS protoc)
-
-    message(STATUS "protoc has been automatically imported from ${protoc_path} for crosscompiling.")
-
-  elseif(NOT TARGET protobuf::protoc)
-    add_executable(protobuf::protoc ALIAS protoc)
-  endif()
-    
-  get_target_property(is_imported protoc IMPORTED)
-  if (NOT is_imported)
-    # Disable warnings for third-party lib
-    target_compile_options(protoc PRIVATE
-      $<$<CXX_COMPILER_ID:MSVC>:/W0>
-      $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
-    )
-  endif()
-
-  set(Protobuf_PROTOC_EXECUTABLE protoc)
-  set(Protobuf_VERSION 3.11.4)
-endif()
-
-if (ECAL_THIRDPARTY_BUILD_SPDLOG)
-  list(APPEND as_subproject spdlog)
-  set(SPDLOG_BUILD_EXAMPLE OFF CACHE BOOL "My option" FORCE)
-  set(SPDLOG_BUILD_TESTS OFF CACHE BOOL "My option" FORCE)
-  set(SPDLOG_BUILD_BENCH OFF CACHE BOOL "My option" FORCE)
-  add_subdirectory(thirdparty/spdlog)
-
-  if (NOT TARGET spdlog::spdlog)
-    add_library(spdlog::spdlog ALIAS spdlog)
-    get_target_property(is_imported spdlog IMPORTED)
-    if (NOT is_imported)
-      # Disable warnings for third-party lib
-      target_compile_options(spdlog PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W0 /wd4996>
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
-      )
-    endif()
-  endif()
-
-endif()
-
-if (ECAL_THIRDPARTY_BUILD_TINYXML2)
-  list(APPEND as_subproject tinyxml2)
-  set(BUILD_SHARED_LIBS OFF CACHE BOOL "My option" FORCE)
-  set(DBUILD_STATIC_LIBS ON CACHE BOOL "My option" FORCE)
-  set(BUILD_TESTING OFF CACHE BOOL "My option" FORCE)
-  set(BUILD_TESTS OFF CACHE BOOL "My option" FORCE)
-  add_subdirectory(thirdparty/tinyxml2 EXCLUDE_FROM_ALL)
-
-  if (NOT TARGET tinyxml2::tinyxml2)
-    add_library(tinyxml2::tinyxml2 ALIAS tinyxml2)
-    get_target_property(is_imported tinyxml2 IMPORTED)
-    if (NOT is_imported)
-      # Disable warnings for third-party lib
-      target_compile_options(tinyxml2 PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W0>
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
-      )
-    endif ()
+# For each dependency, check if option to build was set or not
+# if so append to `as_subproject` list
+foreach (dep IN LISTS possible_subprojects)
+  string(TOUPPER ${dep} dep_upper)
+  if (ECAL_THIRDPARTY_BUILD_${dep_upper})
+    list(APPEND as_subproject ${dep})
   endif ()
-
-endif ()
-
-if (ECAL_THIRDPARTY_BUILD_FINEFTP)
-  list(APPEND as_subproject fineftp)
-  add_subdirectory(thirdparty/fineftp-server/fineftp-server EXCLUDE_FROM_ALL)
-  set_property(TARGET server PROPERTY FOLDER lib/fineftp)
-  add_library(fineftp::server ALIAS server)
-endif ()
-
-if (ECAL_THIRDPARTY_BUILD_TERMCOLOR)
-  list(APPEND as_subproject termcolor)
-  add_subdirectory(thirdparty/termcolor EXCLUDE_FROM_ALL)
-endif ()
-
-# if (ECAL_THIRDPARTY_BUILD_LIBSSH2)
-  # list(APPEND as_subproject libssh2)
-  # set(DBUILD_STATIC_LIBS OFF CACHE BOOL "My option" FORCE)
-  # set(BUILD_TESTING OFF CACHE BOOL "My option" FORCE)
-  # add_subdirectory(thirdparty/libssh2)
-  # add_library(LibSSH2 ALIAS libssh2)
-# endif ()
-
-# if (ECAL_THIRDPARTY_BUILD_ZLIB)
-  # list(APPEND as_subproject zlib zlibstatic)
-  # add_subdirectory(thirdparty/zlib)
-  # add_library(ZLIB::zlibstatic ALIAS zlibstatic)
-  # add_library(ZLIB::zlib ALIAS zlib)
-# endif ()
-
-if (ECAL_THIRDPARTY_BUILD_CURL)
-  list(APPEND as_subproject CURL)
-  
-  if(WIN32)
-    set(CMAKE_USE_WINSSL ON CACHE BOOL "Use native SSL on Windows" FORCE)
-  endif()
-  
-  set(BUILD_CURL_EXE OFF CACHE BOOL "Don't build the curl executable" FORCE)
-  set(ENABLE_MANUAL  OFF CACHE BOOL "Disable built-in manual" FORCE)
-  
-  add_subdirectory(thirdparty/curl)
-  
-  if (NOT TARGET CURL::libcurl)
-    add_library(CURL::libcurl ALIAS libcurl)
-    get_target_property(is_imported libcurl IMPORTED)
-    if (NOT is_imported)
-      # Disable Warnings
-      target_compile_options(libcurl PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W0>
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
-      )
-    endif()
-  endif()
-endif()
-
-if (ECAL_THIRDPARTY_BUILD_GTEST)
-  list(APPEND as_subproject GTest)
-  # Googletest automatically forces MT instead of MD if we do not set this option.
-  if(MSVC)
-    set(gtest_force_shared_crt ON CACHE BOOL "My option" FORCE)
-    set(BUILD_GMOCK OFF CACHE BOOL "My option" FORCE)
-    set(INSTALL_GTEST OFF CACHE BOOL "My option" FORCE)
-  endif()
-  add_subdirectory(thirdparty/googletest EXCLUDE_FROM_ALL)
-  if(NOT TARGET GTest::GTest)
-    add_library(GTest::GTest ALIAS gtest)
-  endif()
-  if(NOT TARGET GTest::Main)
-    add_library(GTest::Main ALIAS gtest_main)
-  endif()
-endif()
-
-if (ECAL_THIRDPARTY_BUILD_HDF5)
-  # Save old CMake output paths. HDF5 will 1. require them and 2. pollute them
-  set(OLD_CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}")
-  set(OLD_CMAKE_Fortran_MODULE_DIRECTORY "${CMAKE_Fortran_MODULE_DIRECTORY}")
-  set(OLD_CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
-  set(OLD_CMAKE_PDB_OUTPUT_DIRECTORY     "${CMAKE_PDB_OUTPUT_DIRECTORY}")
-  set(OLD_CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
-  set(OLD_BUILD_SHARED_LIBS              ${BUILD_SHARED_LIBS})
-  
-  # Fill in variables that have not been set. If a cache variable has been set already, it will not be set by cmake.
-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/" CACHE PATH "")
-  set(CMAKE_Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/bin/" CACHE PATH "")
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/" CACHE PATH "")
-  set(CMAKE_PDB_OUTPUT_DIRECTORY     "${CMAKE_BINARY_DIR}/bin/" CACHE PATH "")
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/" CACHE PATH "")
-  set(BUILD_SHARED_LIBS              ON                         CACHE BOOL "Build hdf5 shared" FORCE)
-  
-  list(APPEND as_subproject HDF5)
-  #we will need threads
-  find_package(Threads REQUIRED)
-
-  set(HDF5_GENERATE_HEADERS  OFF CACHE BOOL "Do not re-generate auto-generated files" FORCE)
-  set(ONLY_SHARED_LIBS       ON CACHE BOOL  "Only Build Shared Libraries" FORCE)
-  set(HDF5_ENABLE_THREADSAFE ON  CACHE BOOL "Enable thread-safety" FORCE)
-  set(BUILD_TESTING          OFF CACHE BOOL "Do not build HDF5 Unit Testing" FORCE)
-  set(HDF5_BUILD_TOOLS       OFF CACHE BOOL "Do not build HDF5 Tools" FORCE)
-  set(HDF5_BUILD_EXAMPLES    OFF CACHE BOOL "Do not build HDF5 Library Examples" FORCE)
-  set(HDF5_BUILD_CPP_LIB     OFF CACHE BOOL "Do not build C++ lib" FORCE)
-  set(HDF5_BUILD_HL_LIB      OFF CACHE BOOL "Do not build hdf5-hl" FORCE)
-  
-  # TODO: Let HDF5 use its own targets.
-  # Adding the HDF5 targets to the eCALCoreTargets is a hack that we have had
-  # before and so I am adding it again, to not break compatibility in eCAL 5.8
-  # and 5.9. It however even prevents using a find_package(hdf5).
-  # So in the future we should definitively remove this line of code.
-  set(HDF5_EXPORTED_TARGETS eCALCoreTargets)                                    
-  
-  #We need to build hdf5 as shared to enable the threadsafe option. HDF5 uses the BUILD_SHARED_LIBS to check if shared build is on.
-  # Hence we need to save the old value, enable it, and then set it back to the old value
-
-  add_subdirectory(thirdparty/hdf5)
-
-  if(NOT TARGET hdf5::hdf5-shared)
-    add_library(hdf5::hdf5-shared ALIAS hdf5-shared)
-    get_target_property(is_imported hdf5-shared IMPORTED)
-    if (NOT is_imported)
-      target_compile_options(hdf5-shared PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W0>
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>
-      )
-    endif()
-  endif()
-
-  target_include_directories(hdf5-shared INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/thirdparty/hdf5>")
-  
-  if("${OLD_CMAKE_ARCHIVE_OUTPUT_DIRECTORY}" STREQUAL "")
-    unset(CMAKE_ARCHIVE_OUTPUT_DIRECTORY CACHE)
-  endif()
-  
-  if("${OLD_CMAKE_Fortran_MODULE_DIRECTORY}" STREQUAL "")
-    unset(CMAKE_Fortran_MODULE_DIRECTORY CACHE)
-  endif()
-  
-  if("${OLD_CMAKE_LIBRARY_OUTPUT_DIRECTORY}" STREQUAL "")
-    unset(CMAKE_LIBRARY_OUTPUT_DIRECTORY CACHE)
-  endif()
-  
-  if("${OLD_CMAKE_PDB_OUTPUT_DIRECTORY}" STREQUAL "")
-    unset(CMAKE_PDB_OUTPUT_DIRECTORY CACHE)
-  endif()
-  
-  if("${OLD_CMAKE_RUNTIME_OUTPUT_DIRECTORY}" STREQUAL "")
-    unset(CMAKE_RUNTIME_OUTPUT_DIRECTORY CACHE)
-  endif()
-  
-  set(BUILD_SHARED_LIBS ${OLD_BUILD_SHARED_LIBS} CACHE BOOL "Build hdf5 shared" FORCE)
-  
-endif()
-
-if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR
-    ECAL_THIRDPARTY_BUILD_SPDLOG OR
-    ECAL_THIRDPARTY_BUILD_TINYXML2 OR
-    ECAL_THIRDPARTY_BUILD_FINEFTP OR
-    ECAL_THIRDPARTY_BUILD_ZLIB OR
-    ECAL_THIRDPARTY_BUILD_LIBSSH2 OR
-    ECAL_THIRDPARTY_BUILD_CURL OR
-    ECAL_THIRDPARTY_BUILD_GTEST OR
-    ECAL_THIRDPARTY_BUILD_HDF5
-    )
-  if(MSVC)
-    message(STATUS "reset thirdparty warnings for windows platform ..")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
-  endif()
-endif()
-
-if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
-  list(APPEND as_subproject CMakeFunctions)
-endif()
+endforeach()
 
 macro(find_package)
   if(NOT "${ARGV0}" IN_LIST as_subproject)
@@ -395,10 +141,19 @@ macro(find_package)
   endif()
 endmacro()
 
-if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
-  add_subdirectory(thirdparty/cmake_functions)
-endif ()
+# if a package does need to be build, include the cmake file with build instructions
+foreach (dep IN LISTS possible_subprojects)
+  string(TOUPPER ${dep} dep_upper)
+  string(TOLOWER ${dep} dep_lower)
+  if (ECAL_THIRDPARTY_BUILD_${dep_upper})
+    include(thirdparty/build-${dep_lower}.cmake)
+  endif ()
+endforeach ()
 
+if(MSVC)
+  message(STATUS "reset thirdparty warnings for windows platform ..")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
+endif()
 
 find_package(CMakeFunctions REQUIRED)
 
