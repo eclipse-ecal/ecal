@@ -10,7 +10,7 @@
     <meta name="docsearch:release" content="" />
     <meta name="docsearch:version" content="" />
 
-    <title>eCAL 5.7.8 &mdash; eCAL Documentation  documentation</title>
+    <title>Building eCAL with Conan dependencies &mdash; eCAL Documentation  documentation</title>
 
     <link rel="shortcut icon" href="../_static/img/favicon.png" />
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
@@ -23,9 +23,9 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
-    <link rel="up" title="eCAL Download Archive" href="download_archive.html" />
-    <link rel="next" title="eCAL 5.7.6" href="download_archive_ecal_5_7_6.html" />
-    <link rel="prev" title="eCAL 5.7.9" href="download_archive_ecal_5_7_9.html" />
+    <link rel="up" title="Building eCAL" href="build_ecal.html" />
+    <link rel="next" title="CMake options" href="ecal_cmake_options.html" />
+    <link rel="prev" title="Building eCAL from source" href="building_ecal_from_source.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
     <script src="../_static/js/modernizr.min.js"></script>
@@ -101,11 +101,11 @@
 </li>
 </ul>
 <p class="caption"><span class="caption-text">Development</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../development/build_ecal.html">Building eCAL</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../development/building_ecal_from_source.html">Building eCAL from source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../development/building_ecal_with_conan_dependencies.html">Building eCAL with Conan dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../development/ecal_cmake_options.html">CMake options</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="build_ecal.html">Building eCAL</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="building_ecal_from_source.html">Building eCAL from source</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Building eCAL with Conan dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecal_cmake_options.html">CMake options</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../ecal_api.html">eCAL API</a><ul>
@@ -358,7 +358,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Advanced</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../advanced/compatibility.html">eCAL Compatibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../advanced/documentation.html">Edit the documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../advanced/performance.html">Performance measurements</a></li>
@@ -385,52 +385,51 @@
 <li class="toctree-l2"><a class="reference internal" href="../license/icon_license.html">Icon License</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="download_archive.html">eCAL Download Archive</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_9_0.html">eCAL 5.9.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_13.html">eCAL 5.8.13</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_12.html">eCAL 5.8.12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_10.html">eCAL 5.8.10</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_9.html">eCAL 5.8.9</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_8.html">eCAL 5.8.8</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_7.html">eCAL 5.8.7</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_5.html">eCAL 5.8.5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_4.html">eCAL 5.8.4</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_3.html">eCAL 5.8.3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_2.html">eCAL 5.8.2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_1.html">eCAL 5.8.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_0.html">eCAL 5.8.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_15.html">eCAL 5.7.15</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_14.html">eCAL 5.7.14</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_13.html">eCAL 5.7.13</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_12.html">eCAL 5.7.12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_11.html">eCAL 5.7.11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_9.html">eCAL 5.7.9</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">eCAL 5.7.8</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_6.html">eCAL 5.7.6</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_5.html">eCAL 5.7.5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_4.html">eCAL 5.7.4</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_3.html">eCAL 5.7.3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_1.html">eCAL 5.7.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_6_0.html">eCAL 5.6.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_5_5.html">eCAL 5.5.5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_5_4.html">eCAL 5.5.4</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_5_3.html">eCAL 5.5.3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_5_2.html">eCAL 5.5.2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_5_1.html">eCAL 5.5.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_5_0.html">eCAL 5.5.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_4_0.html">eCAL 5.4.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_3_5.html">eCAL 5.3.5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_3_4_3.html">eCAL 5.3.4+3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_3_4_4.html">eCAL 5.3.4+4</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_download_archive/download_archive.html">eCAL Download Archive</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_9_0.html">eCAL 5.9.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_13.html">eCAL 5.8.13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_12.html">eCAL 5.8.12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_10.html">eCAL 5.8.10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_9.html">eCAL 5.8.9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_8.html">eCAL 5.8.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_7.html">eCAL 5.8.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_5.html">eCAL 5.8.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_4.html">eCAL 5.8.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_3.html">eCAL 5.8.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_2.html">eCAL 5.8.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_1.html">eCAL 5.8.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_0.html">eCAL 5.8.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_15.html">eCAL 5.7.15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_14.html">eCAL 5.7.14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_13.html">eCAL 5.7.13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_12.html">eCAL 5.7.12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_11.html">eCAL 5.7.11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_9.html">eCAL 5.7.9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_8.html">eCAL 5.7.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_6.html">eCAL 5.7.6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_5.html">eCAL 5.7.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_4.html">eCAL 5.7.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_3.html">eCAL 5.7.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_1.html">eCAL 5.7.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_6_0.html">eCAL 5.6.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_5_5.html">eCAL 5.5.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_5_4.html">eCAL 5.5.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_5_3.html">eCAL 5.5.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_5_2.html">eCAL 5.5.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_5_1.html">eCAL 5.5.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_5_0.html">eCAL 5.5.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_4_0.html">eCAL 5.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_3_5.html">eCAL 5.3.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_3_4_3.html">eCAL 5.3.4+3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_3_4_4.html">eCAL 5.3.4+4</a></li>
 </ul>
 </li>
 </ul>
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">eCAL 5.7.8</a><ul>
-<li><a class="reference internal" href="#changelog">Changelog</a></li>
-<li><a class="reference internal" href="#downloads">Downloads</a></li>
+<li><a class="reference internal" href="#">Building eCAL with Conan dependencies</a><ul>
+<li><a class="reference internal" href="#build-instructions">Build instructions</a></li>
 </ul>
 </li>
 </ul>
@@ -443,15 +442,15 @@
                     <div class="rst-content">
 <!-- pager-hidden.html -->
 
-        <a class="no-focus" accesskey="p" href="download_archive_ecal_5_7_9.html" tabindex="-1"></a>
-        <a class="no-focus" accesskey="n" href="download_archive_ecal_5_7_6.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="p" href="building_ecal_from_source.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="n" href="ecal_cmake_options.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../index.html">Start</a></li>
-            <li class="breadcrumb-item"><a href="download_archive.html">eCAL Download Archive</a></li>
-        <li class="breadcrumb-item active" aria-current="page">eCAL 5.7.8</li>
+            <li class="breadcrumb-item"><a href="build_ecal.html">Building eCAL</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Building eCAL with Conan dependencies</li>
     </ol>
         <div class="breadcrumb-additions">
             <a class="btn btn-sm btn-primary" id="btnHowToEdit"
@@ -460,11 +459,11 @@
                 <span class="btn-icon"><span class="fas fa-info-circle"></span></span>
                 <span class="btn-text">How to edit</span>
             </a>
-                <a class="btn btn-sm btn-light" id="btnEditOnGitHub" href="https://github.com/continental/ecal/blob/master/doc/rst/_download_archive/download_archive_ecal_5_7_8.rst">
+                <a class="btn btn-sm btn-light" id="btnEditOnGitHub" href="https://github.com/continental/ecal/blob/master/doc/rst/development/building_ecal_with_conan_dependencies.rst">
                     <span class="btn-icon"><span class="fab fa-github"></span></span>
                     <span class="btn-text">Edit on GitHub</span>
                 </a>
-                <a class="btn btn-sm btn-light" href="../_sources/_download_archive/download_archive_ecal_5_7_8.rst.txt" rel="nofollow">
+                <a class="btn btn-sm btn-light" href="../_sources/development/building_ecal_with_conan_dependencies.rst.txt" rel="nofollow">
                     <span class="btn-icon"><span class="fas fa-code"></span></span>
                     <span class="btn-text">View source</span>
                 </a>
@@ -474,65 +473,52 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <section id="ecal-5-7-8">
-<h1>eCAL 5.7.8<a class="headerlink" href="#ecal-5-7-8" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><p>Release Date: 2021-02-18</p></li>
-<li><p>GitHub Release Page: <a class="reference external" href="https://github.com/continental/ecal/releases/tag/v5.7.8">https://github.com/continental/ecal/releases/tag/v5.7.8</a></p></li>
-</ul>
-<section id="changelog">
-<h2>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-txt notranslate"><div class="highlight"><pre><span></span># Changes
-
-- Core
-  - Support for NPCAP without legacy loopback adapter (Windows only)
-  - Fixed uninitialized variable (#153) 
-
-- Player
-  - Support loading .hdf5 files directly in the player (Fixes #179) 
-  - Fixed a bug that caused the playback limits to get stuck when loading a measurement
+    <section id="building-ecal-with-conan-dependencies">
+<span id="development-building-ecal-with-conan-dependencies"></span><h1>Building eCAL with Conan dependencies<a class="headerlink" href="#building-ecal-with-conan-dependencies" title="Permalink to this headline">¶</a></h1>
+<p>Conan is a dependency manager, that has a wide range of precompiled open source libraries available.
+Building eCAL with Conan dependencies is mainly a shortcut for Windows users developing eCAL who do not want to build all dependencies from source.
+It lets a developer get up to speed very quickly.
+We certainly <strong>do not recommend</strong> to build eCAL installers from Conan dependencies at this point.</p>
+<p>The Conan build has been tested for VS2019 only, and dependencies might not be aligned with the version included as submodules.</p>
+<section id="build-instructions">
+<h2>Build instructions<a class="headerlink" href="#build-instructions" title="Permalink to this headline">¶</a></h2>
+<p>To build with Conan you need to have a Conan installation.
+It’s best to install Conan inside a virtual environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create virtual environment</span>
+<span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="o">.</span><span class="n">venv</span>
+<span class="c1"># Windows</span>
+<span class="o">.</span><span class="n">venv</span>\<span class="n">Scripts</span>\<span class="n">activate</span><span class="o">.</span><span class="n">bat</span><span class="o">|</span><span class="n">ps1</span>
+<span class="c1"># Linux</span>
+<span class="n">source</span> <span class="o">.</span><span class="n">venv</span>\<span class="nb">bin</span>\<span class="n">activate</span>
+<span class="c1"># Install Conan</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">conan</span>
 </pre></div>
 </div>
+<p>You need to set up a Conan profile to match your development.
+For reference, see <a class="reference external" href="https://docs.conan.io/en/latest/reference/profiles.html">https://docs.conan.io/en/latest/reference/profiles.html</a>.</p>
+<p>First, let Conan install all dependencies, as specified in <code class="docutils literal notranslate"><span class="pre">conanfile.py</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mdkir</span> <span class="n">_build</span>
+<span class="n">cd</span> <span class="n">_build</span>
+<span class="n">conan</span> <span class="n">install</span> <span class="o">..</span> <span class="o">--</span><span class="n">profile</span> <span class="o">&lt;</span><span class="n">your</span><span class="o">-</span><span class="n">profile</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">build</span> <span class="n">missing</span>
+</pre></div>
+</div>
+<p>eCAL uses the <code class="docutils literal notranslate"><span class="pre">WinExtras</span></code> module from QT, which is why, unfortunately, there are no prebuilt QT libraries.
+This is why we need to build QT from source and thus pass a <code class="docutils literal notranslate"><span class="pre">--build</span> <span class="pre">missing</span></code> when running <code class="docutils literal notranslate"><span class="pre">conan</span> <span class="pre">install</span></code>.
+Conan will create a lot of files in the build folder.
+Some are CMake scripts to locate dependencies, others are scripts to use / activate special environments to allow you to build / debug eCAL in a way that all libraries can be located at runtime.
+Thus we recommend to build eCAL with the following commands:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">activate</span><span class="o">.</span><span class="n">bat</span><span class="o">|</span><span class="n">sh</span>
+<span class="n">cmake</span> <span class="o">..</span> <span class="o">-</span><span class="n">DCMAKE_TOOLCHAIN_FILE</span><span class="o">=.</span>\<span class="n">conan_toolchain</span><span class="o">.</span><span class="n">cmake</span>
+<span class="n">cmake</span> <span class="o">--</span><span class="n">build</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>Alternatively, if you can also open the generated Visual Studio solution when working on Windows, and build / debug from within Visual Studio.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span>\<span class="n">eCAL</span><span class="o">.</span><span class="n">sln</span>
+</pre></div>
+</div>
+<p>Beware, that depending on the settings in your Conan profile, the build supports <strong>either</strong> Debug <strong>or</strong> Release builds. Make sure, when building from Visual Studio, to build the appropriate configuration.
+If you have a <code class="docutils literal notranslate"><span class="pre">Release</span></code> Conan profile, but try to build for the <code class="docutils literal notranslate"><span class="pre">Debug</span></code> configuration from Visual Studio, you will receive build errors.</p>
 </section>
-<section id="downloads">
-<h2>Downloads<a class="headerlink" href="#downloads" title="Permalink to this headline">¶</a></h2>
-<div class="table-responsive"><table class="colwidths-given docutils align-default" id="ecal-5-7-8-download">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 80%">
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><i class="fab fa-windows"></i> Windows</p></td>
-<td><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.7.8/ecal_5.7.8-win64.exe"><i class="fas fa-download"></i> Download eCAL 5.7.8 installer for Windows (.exe)</a></p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.7.8/ecal-5.7.8_py3.9-win64.egg"><i class="fab fa-python"></i> Python 3.9 integration for eCAL 5.7.8 on Windows (.egg)</a></p></li>
-</ul>
-</td>
-</tr>
-<tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 18.04</p></td>
-<td><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.7.8/ecal_5.7.8-bionic_amd64.deb"><i class="fas fa-download"></i> Download eCAL 5.7.8 installer for Ubuntu 18.04 (.deb)</a></p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.7.8/ecal-5.7.8_py3.6-bionic_amd64.egg"><i class="fab fa-python"></i> Python 3.6 integration for eCAL 5.7.8 on Ubuntu 18.04 (.egg)</a></p></li>
-</ul>
-</td>
-</tr>
-<tr class="row-odd"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 20.04</p></td>
-<td><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.7.8/ecal_5.7.8-focal_amd64.deb"><i class="fas fa-download"></i> Download eCAL 5.7.8 installer for Ubuntu 20.04 (.deb)</a></p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.7.8/ecal-5.7.8_py3.8-focal_amd64.egg"><i class="fab fa-python"></i> Python 3.8 integration for eCAL 5.7.8 on Ubuntu 20.04 (.egg)</a></p></li>
-</ul>
-</td>
-</tr>
-<tr class="row-even"><td><p><i class="fab fa-apple"></i> macOS</p></td>
-<td><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.7.8/ecal_5.7.8-darwin_amd64.dmg"><i class="fas fa-download"></i> Download eCAL 5.7.8 installer for macOS (.dmg)</a></p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.7.8/ecal-5.7.8_py3.9-darwin_amd64.egg"><i class="fab fa-python"></i> Python 3.9 integration for eCAL 5.7.8 on macOS (.egg)</a></p></li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table></div>
-</div></section>
 </section>
 
 <!-- /body -->
@@ -542,12 +528,12 @@
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
         <li class="page-item">
-            <a class="page-link" href="download_archive_ecal_5_7_9.html" title="Accesskey Alt(+Shift)+p">
+            <a class="page-link" href="building_ecal_from_source.html" title="Accesskey Alt(+Shift)+p">
                 Previous
             </a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="download_archive_ecal_5_7_6.html" title="Accesskey Alt(+Shift)+n">
+            <a class="page-link" href="ecal_cmake_options.html" title="Accesskey Alt(+Shift)+n">
                 Next
             </a>
         </li>
