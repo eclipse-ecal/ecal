@@ -126,6 +126,10 @@ set(possible_subprojects
   CMakeFunctions
 )
 
+# We should rename the option, but don't know how to do in in a 
+# backwards compatible way
+set(ECAL_THIRDPARTY_BUILD_CMAKEFUNCTIONS ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS})
+
 # For each dependency, check if option to build was set or not
 # if so append to `as_subproject` list
 foreach (dep IN LISTS possible_subprojects)
