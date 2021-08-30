@@ -147,13 +147,23 @@ namespace eCAL
 
   void CServiceClientImpl::CallAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_)
   {
-    if (!g_servgate()) return;
-    if (!m_created)    return;
+    if (!g_servgate())
+    {
+      ErrorCallback(method_name_, "Servgate error.");
+      return;
+    }
+    if (!m_created)
+    {
+      ErrorCallback(method_name_, "Client hasn't been created yet.");
+      return;
+    }
 
     if (m_service_name.empty()
-      || method_name_.empty()
-      )
+      || method_name_.empty())
+    {
+      ErrorCallback(method_name_, "Invalid service or method name.");
       return;
+    }
 
     // check for new server
     RefreshClientMap();
@@ -174,16 +184,25 @@ namespace eCAL
   }
 
   void CServiceClientImpl::CallAsync(const std::string& method_name_, const std::string& request_)
-  {        
-    
-    if (!g_servgate()) return;
-    if (!m_created)    return;
+  {
+    if (!g_servgate())
+    {
+      ErrorCallback(method_name_, "Servgate error.");
+      return;
+    }
+    if (!m_created)
+    {
+      ErrorCallback(method_name_, "Client hasn't been created yet.");
+      return;
+    }
 
     if (m_service_name.empty()
       || method_name_.empty()
       )
+    {
+      ErrorCallback(method_name_, "Invalid service or method name.");
       return;
-
+    }
     std::lock_guard<std::mutex> req_lock(m_req_mtx);
 
     // check for new server
@@ -299,8 +318,17 @@ namespace eCAL
 
   void CServiceClientImpl::SendRequestsAsync(const std::string& method_name_, const std::string& request_)
   {
-    if (!g_servgate()) return;
+    if (!g_servgate())
+    {
+      ErrorCallback(method_name_, "Servgate error.");
+      return;
+    }
 
+    if(m_client_map.empty())
+    {
+      ErrorCallback(method_name_, "Service not available.");
+      return;
+    }
     for (auto client : m_client_map)
     {
       if (client.second->IsConnected())
@@ -321,10 +349,10 @@ namespace eCAL
     request_pb.mutable_header()->set_mname(method_name_);
     request_pb.set_request(request_);
     std::string request_s = request_pb.SerializeAsString();
-  
+
     client_->ExecuteRequestAsync(request_s, [this, client_, method_name_](const std::string &response, bool success)
     {
-      if (m_callback) 
+      if (m_callback)
       {
         SServiceInfo service_info;
         if(!success)
@@ -372,5 +400,18 @@ namespace eCAL
         m_callback(service_info, response_pb.response());
       }
     });
+  }
+
+  void CServiceClientImpl::ErrorCallback(const std::string &method_name_, const std::string &error_message_)
+  {
+    if(m_callback)
+    {
+      SServiceInfo service_info;
+      service_info.call_state = call_state_failed;
+      service_info.error_msg = error_message_;
+      service_info.ret_state = 0;
+      service_info.method_name = method_name_;
+      m_callback(service_info, "");
+    }
   }
 }

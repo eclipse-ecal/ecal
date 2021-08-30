@@ -72,6 +72,8 @@ namespace eCAL
     void SendRequestsAsync(const std::string& method_name_, const std::string& request_);
     void SendRequestAsync(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_);
 
+    void ErrorCallback(const std::string &method_name_, const std::string &error_message_);
+
     typedef std::map<std::string, std::shared_ptr<CTcpClient>> ClientMapT;
     ClientMapT         m_client_map;
     std::mutex         m_req_mtx;
