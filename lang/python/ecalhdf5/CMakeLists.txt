@@ -61,8 +61,9 @@ if(BUILD_STANDALONE_PY_WHEEL AND NOT WIN32)
   find_package(patchelf REQUIRED)
   add_custom_command(TARGET ${PROJECT_NAME} 
                      POST_BUILD
-                     COMMAND "${CMAKE_COMMAND}" ARGS "-DRUNTIME_FILE=\"$<TARGET_FILE:${PROJECT_NAME}>\"" "-DRUNTIME_DEP_FILTER=\"hdf5\"" "-DRUNTIME_DEPLOY_DIR=\"${PYTHON_BINARY_MODULE_DIR}\"" -P "${CMAKE_SOURCE_DIR}/cmake/deploy_runtime_deps.cmake"
-                     COMMAND "${PATCHELF_COMMAND}" ARGS "--set-rpath" "\\$$ORIGIN" "\"$<TARGET_FILE:${PROJECT_NAME}>\"")
+                     COMMAND "${CMAKE_COMMAND}" ARGS "-DRUNTIME_FILE=\"$<TARGET_FILE:${PROJECT_NAME}>\"" "-DRUNTIME_DEP_FILTER=\"hdf5|sz|aec\"" "-DRUNTIME_DEPLOY_DIR=\"${PYTHON_BINARY_MODULE_DIR}\"" -P "${CMAKE_SOURCE_DIR}/cmake/deploy_runtime_deps.cmake"
+                     COMMAND "${PATCHELF_COMMAND}" ARGS "--remove-rpath" "\"$<TARGET_FILE:${PROJECT_NAME}>\""
+                     COMMAND "${PATCHELF_COMMAND}" ARGS "--force-rpath" "--set-rpath" "\\$$ORIGIN" "\"$<TARGET_FILE:${PROJECT_NAME}>\"")
 endif()
 
 if(ECAL_INCLUDE_PY_SAMPLES)
