@@ -1,6 +1,6 @@
-message("Runtime file              : ${RUNTIME_FILE}")
-message("Runtime Dependency Filter : ${RUNTIME_DEP_FILTER}")
-message("Runtime Deployment Dir    : ${RUNTIME_DEPLOY_DIR}")
+message("Runtime file                : ${RUNTIME_FILE}")
+message("Runtime dependency filter   : ${RUNTIME_DEP_FILTER}")
+message("Runtime deployment directory: ${RUNTIME_DEPLOY_DIR}")
 
 file(GET_RUNTIME_DEPENDENCIES
      LIBRARIES "${RUNTIME_FILE}"
