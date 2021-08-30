@@ -39,7 +39,7 @@ setuptools.setup (
   author_email      = 'rex.schilasky@continental-corporation.com',
   packages          = setuptools.find_packages(),
   data_files        = [],
-  package_data      = {'ecal': ['*.pyd', '*.so', '*.dll']},
+  package_data      = {'ecal': ['*.pyd', '*.so', '*.so.*', '*.dll']},
   install_requires  = [
                         'protobuf@Protobuf_required_versions@'
                       ],
