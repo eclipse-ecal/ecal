@@ -258,8 +258,13 @@ namespace eCAL
 
   bool CPublisher::SetBufferCount(long buffering_)
   {
+#if PUB_MEMFILE_BUF_COUNT_ENABLE
     if (!m_created) return(false);
     return m_datawriter->SetBufferCount(buffering_);
+#else
+    (void)buffering_;
+    return(false);
+#endif
   }
 
   bool CPublisher::EnableZeroCopy(bool state_)

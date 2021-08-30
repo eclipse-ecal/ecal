@@ -264,12 +264,14 @@ namespace eCAL
     return true;
   }
 
+#if PUB_MEMFILE_BUF_COUNT_ENABLE
   bool CDataWriter::SetBufferCount(long buffering_)
   {
     if (buffering_ < 1) return false;
     m_buffering_shm = static_cast<size_t>(buffering_);
     return true;
   }
+#endif
 
   bool CDataWriter::EnableZeroCopy(bool state_)
   {

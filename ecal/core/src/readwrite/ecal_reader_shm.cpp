@@ -43,10 +43,11 @@ namespace eCAL
 
   void CSHMLayer::SetConnectionPar(SReaderLayerPar& par_)
   {
-    // read connection parameters for the shared memory layer
-    // as a google protobuf message
     std::vector<std::string> memfile_names;
 
+#if PUB_MEMFILE_BUF_COUNT_ENABLE
+    // read connection parameters for the shared memory layer
+    // as a google protobuf message
     eCAL::pb::ConnnectionPar connection_par;
     if (connection_par.ParseFromString(par_.parameter))
     {
@@ -60,6 +61,10 @@ namespace eCAL
       std::cout << "FATAL ERROR: Could not parse layer connection parameter ! Did you mix up different eCAL versions on the same host ?" << std::endl;
       return;
     }
+#else
+    // for eCAL versions below 6 the memory file name == par_.parameter
+    memfile_names.push_back(par_.parameter);
+#endif
 
     for (auto memfile_name : memfile_names)
     {

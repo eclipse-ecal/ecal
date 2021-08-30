@@ -65,7 +65,9 @@ namespace eCAL
     bool SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_);
     bool SetMaxBandwidthUDP(long bandwidth_);
 
+#if PUB_MEMFILE_BUF_COUNT_ENABLE
     bool SetBufferCount(long buffering_);
+#endif
     bool EnableZeroCopy(bool state_);
 
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
