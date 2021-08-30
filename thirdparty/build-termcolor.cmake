@@ -1,0 +1,1 @@
+add_subdirectory(thirdparty/termcolor EXCLUDE_FROM_ALL)
