@@ -21,18 +21,11 @@
 
 #include <chrono>
 #include <iostream>
-
+#include <thread>
 #include <tclap/CmdLine.h>
 
 // warmup runs not to measure
 const int warmups(10);
-
-// time getter
-long long get_microseconds()
-{
-  std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-  return(std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count());
-}
 
 // single test run
 void do_run(const int runs, int snd_size /*kB*/, int delay /*ms*/, int mem_buffer, bool zero_copy)
@@ -68,16 +61,18 @@ void do_run(const int runs, int snd_size /*kB*/, int delay /*ms*/, int mem_buffe
   std::vector<char> snd_array(snd_size * 1024);
 
   // let them match
-  eCAL::Process::SleepMS(2000);
+  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
   // add some extra loops for warmup :-)
   int run(0);
   for (run = 0; run < runs+warmups; ++run)
   {
-    // get time and send message
-    pub.Send(snd_array.data(), snd_array.size(), get_microseconds());
+    // get microseconds
+    auto snd_time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    // send message
+    pub.Send(snd_array.data(), snd_array.size(), snd_time);
     // delay
-    eCAL::Process::SleepMS(delay);
+    std::this_thread::sleep_for(std::chrono::milliseconds(delay));
   }
 
   // log test
@@ -85,7 +80,7 @@ void do_run(const int runs, int snd_size /*kB*/, int delay /*ms*/, int mem_buffe
   std::cout << "--------------------------------------------" << std::endl;
 
   // let the receiver do the evaluation
-  eCAL::Process::SleepMS(2000);
+  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
   // finalize eCAL API
   eCAL::Finalize();

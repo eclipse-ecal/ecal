@@ -17,48 +17,10 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  memory file data reader
-**/
-
 #pragma once
 
-#include "ecal_def.h"
-#include "readwrite/ecal_reader_layer.h"
+#include <string>
+#include <vector>
 
-#include <memory>
-
-namespace eCAL
-{
-  // ecal shared memory reader
-  class CDataReaderSHM
-  {
-  public:
-    CDataReaderSHM() = default;
-    ~CDataReaderSHM() = default;
-  };
-
-  // ecal shared memory layer
-  class CSHMLayer : public CReaderLayer<CSHMLayer>
-  {
-  public:
-    CSHMLayer() {};
-    ~CSHMLayer()
-    {
-    };
-
-    void Initialize()
-    {
-    }
-
-    void AddSubscription(std::string& /*topic_name_*/, std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
-    {
-    }
-
-    void RemSubscription(std::string& /*topic_name_*/, std::string& /*topic_id_*/)
-    {
-    }
-
-    void SetConnectionPar(SReaderLayerPar& par_);
-  };
-}
+void evaluate(std::vector<long long>& lat_arr_, size_t rec_size_, size_t warmups_, std::string& log_file_);
+void log2file(std::vector<long long>& lat_arr_, size_t rec_size_, std::string& log_file_);

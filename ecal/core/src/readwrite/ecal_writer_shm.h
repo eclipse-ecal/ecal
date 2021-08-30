@@ -50,7 +50,7 @@ namespace eCAL
     bool AddLocConnection(const std::string& process_id_, const std::string& conn_par_) override;
     bool RemLocConnection(const std::string& process_id_) override;
 
-    std::string GetConectionPar() override;
+    std::string GetConnectionPar() override;
 
   protected:
     size_t                                        m_write_idx    = 0;

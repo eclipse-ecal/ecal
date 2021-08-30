@@ -186,7 +186,7 @@ namespace eCAL
     return true;
   }
 
-  std::string CDataWriterSHM::GetConectionPar()
+  std::string CDataWriterSHM::GetConnectionPar()
   {
     eCAL::pb::ConnnectionPar connection_par;
     connection_par.set_type(eCAL::pb::eTLayerType::tl_ecal_shm);

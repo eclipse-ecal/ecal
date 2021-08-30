@@ -94,7 +94,7 @@ namespace eCAL
       m_datareadershm_map.erase(iter);
     }
 
-    void UpdateParameter(SReaderLayerPar& /*par_*/)
+    void SetConnectionPar(SReaderLayerPar& /*par_*/)
     {
     }
 

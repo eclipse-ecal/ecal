@@ -92,7 +92,7 @@ namespace eCAL
       }
     }
 
-    void UpdateParameter(SReaderLayerPar& /*par_*/)
+    void SetConnectionPar(SReaderLayerPar& /*par_*/)
     {
     }
 

@@ -41,7 +41,7 @@ namespace eCAL
 {
   template<> std::shared_ptr<CSHMLayer> CReaderLayer<eCAL::CSHMLayer>::layer(nullptr);
 
-  void CSHMLayer::UpdateParameter(SReaderLayerPar& par_)
+  void CSHMLayer::SetConnectionPar(SReaderLayerPar& par_)
   {
     // read connection parameters for the shared memory layer
     // as a google protobuf message
