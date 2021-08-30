@@ -41,7 +41,7 @@ namespace eCAL
 {
   template<> std::shared_ptr<CSHMLayer> CReaderLayer<eCAL::CSHMLayer>::layer(nullptr);
 
-  void CSHMLayer::SetConnectionPar(SReaderLayerPar& par_)
+  void CSHMLayer::SetConnectionParameter(SReaderLayerPar& par_)
   {
     std::vector<std::string> memfile_names;
 

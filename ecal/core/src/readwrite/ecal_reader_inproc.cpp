@@ -54,7 +54,7 @@ namespace eCAL
   {
   }
 
-  void CInProcLayer::SetConnectionPar(SReaderLayerPar& /*par_*/)
+  void CInProcLayer::SetConnectionParameter(SReaderLayerPar& /*par_*/)
   {
   }
 

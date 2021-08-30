@@ -566,17 +566,17 @@ namespace eCAL
     {
     case eCAL::pb::tl_ecal_udp_mc:
     {
-      CMulticastLayer::Get()->SetConnectionPar(par);
+      CMulticastLayer::Get()->SetConnectionParameter(par);
       break;
     }
     case eCAL::pb::tl_ecal_shm:
     {
-      CSHMLayer::Get()->SetConnectionPar(par);
+      CSHMLayer::Get()->SetConnectionParameter(par);
       break;
     }
     case eCAL::pb::tl_inproc:
     {
-      CInProcLayer::Get()->SetConnectionPar(par);
+      CInProcLayer::Get()->SetConnectionParameter(par);
       break;
     }
     default:

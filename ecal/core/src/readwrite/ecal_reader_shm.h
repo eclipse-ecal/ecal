@@ -59,6 +59,6 @@ namespace eCAL
     {
     }
 
-    void SetConnectionPar(SReaderLayerPar& par_);
+    void SetConnectionParameter(SReaderLayerPar& par_);
   };
 }

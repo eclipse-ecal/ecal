@@ -47,7 +47,7 @@ namespace eCAL
     void AddSubscription(std::string& topic_name_, std::string& topic_id_, QOS::SReaderQOS qos_);
     void RemSubscription(std::string& topic_name_, std::string& topic_id_);
 
-    void SetConnectionPar(SReaderLayerPar& par_);
+    void SetConnectionParameter(SReaderLayerPar& par_);
 
   private:
     CDataReaderInProc reader;

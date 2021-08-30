@@ -55,7 +55,7 @@ namespace eCAL
     virtual void AddSubscription(std::string& topic_name_, std::string& topic_id_, QOS::SReaderQOS qos_) = 0;
     virtual void RemSubscription(std::string& topic_name_, std::string& topic_id_) = 0;
 
-    virtual void SetConnectionPar(SReaderLayerPar& par_) = 0;
+    virtual void SetConnectionParameter(SReaderLayerPar& par_) = 0;
 
     static std::shared_ptr<T> Get()
     {

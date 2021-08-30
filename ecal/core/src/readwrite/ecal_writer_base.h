@@ -72,7 +72,7 @@ namespace eCAL
     virtual bool AddExtConnection(const std::string& /*host_name_*/, const std::string& /*process_id_*/, const std::string& /*conn_par_*/) { return false; };
     virtual bool RemExtConnection(const std::string& /*host_name_*/, const std::string& /*process_id_*/) { return false; };
 
-    virtual std::string GetConnectionPar() { return ""; };
+    virtual std::string GetConnectionParameter() { return ""; };
 
     struct SWriterData
     {

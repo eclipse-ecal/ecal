@@ -186,7 +186,7 @@ namespace eCAL
     return true;
   }
 
-  std::string CDataWriterSHM::GetConnectionPar()
+  std::string CDataWriterSHM::GetConnectionParameter()
   {
 #if PUB_MEMFILE_BUF_COUNT_ENABLE
     // starting from eCAL 6 the ConnectionParameter is defined as google protobuf
