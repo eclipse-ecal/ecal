@@ -116,8 +116,16 @@ namespace eCAL
       m_buffer_count = data_.buffering;
       ret_state |= true;
 
-      // increased buffer number
-      // we just append new buffers
+      // recreate memory buffer list
+      // to stay compatible to older versions
+      // for the case we had ONE existing buffer
+      // and that single buffer is communicated with
+      // an older shm datareader
+      if ((m_memory_file_vec.size() == 1) && (m_memory_file_vec.size() < m_buffer_count))
+      {
+        m_memory_file_vec.clear();
+      }
+      // append new buffers
       while (m_memory_file_vec.size() < m_buffer_count)
       {
         auto sync_memfile = std::make_shared<CSyncMemoryFile>();
