@@ -188,26 +188,12 @@ namespace eCAL
 
   std::string CDataWriterSHM::GetConnectionParameter()
   {
-#if PUB_MEMFILE_BUF_COUNT_ENABLE
-    // starting from eCAL 6 the ConnectionParameter is defined as google protobuf
-    // for the shm layer we will support multibuffering and
-    // the list of memory files is packed in the protbuf connection parameter message
+    // starting from eCAL version > 5.8.13/5.9.0 the ConnectionParameter is defined as google protobuf
     eCAL::pb::ConnnectionPar connection_par;
-    connection_par.set_type(eCAL::pb::eTLayerType::tl_ecal_shm);
     for (auto& memory_file : m_memory_file_vec)
     {
-      connection_par.mutable_ecal_shm_par()->add_memory_file_names(memory_file->GetName());
+      connection_par.mutable_layer_par_shm()->add_memory_file_list(memory_file->GetName());
     }
     return connection_par.SerializeAsString();
-#else
-    if (!m_memory_file_vec.empty())
-    {
-      return m_memory_file_vec.front()->GetName();
-    }
-    else
-    {
-      return "";
-    }
-#endif
   }
 }

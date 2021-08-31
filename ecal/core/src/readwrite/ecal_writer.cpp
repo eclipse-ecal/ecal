@@ -264,14 +264,12 @@ namespace eCAL
     return true;
   }
 
-#if PUB_MEMFILE_BUF_COUNT_ENABLE
   bool CDataWriter::SetBufferCount(long buffering_)
   {
     if (buffering_ < 1) return false;
     m_buffering_shm = static_cast<size_t>(buffering_);
     return true;
   }
-#endif
 
   bool CDataWriter::EnableZeroCopy(bool state_)
   {
@@ -732,7 +730,7 @@ namespace eCAL
       tlayer->set_type(eCAL::pb::tl_ecal_udp_mc);
       tlayer->set_version(1);
       tlayer->set_confirmed(m_use_udp_mc_confirmed);
-      tlayer->set_par(m_writer_udp_mc.GetConnectionParameter());
+      tlayer->mutable_par_layer()->ParseFromString(m_writer_udp_mc.GetConnectionParameter());
     }
     // shm layer
     {
@@ -740,7 +738,19 @@ namespace eCAL
       tlayer->set_type(eCAL::pb::tl_ecal_shm);
       tlayer->set_version(1);
       tlayer->set_confirmed(m_use_shm_confirmed);
-      tlayer->set_par(m_writer_shm.GetConnectionParameter());
+      std::string par_layer_s = m_writer_shm.GetConnectionParameter();
+      tlayer->mutable_par_layer()->ParseFromString(par_layer_s);
+      tlayer->set_par_shm("");
+      {
+        // for downward compatibility eCAL version <= 5.8.13/5.9.0
+        // in case of one memory file only we pack the name into 'layer_par_shm()'
+        eCAL::pb::ConnnectionPar cpar;
+        cpar.ParseFromString(par_layer_s);
+        if (cpar.layer_par_shm().memory_file_list_size() == 1)
+        {
+          tlayer->set_par_shm(cpar.layer_par_shm().memory_file_list()[0]);
+        }
+      }
     }
     // inproc layer
     {
@@ -748,7 +758,7 @@ namespace eCAL
       tlayer->set_type(eCAL::pb::tl_inproc);
       tlayer->set_version(1);
       tlayer->set_confirmed(m_use_inproc_confirmed);
-      tlayer->set_par(m_writer_inproc.GetConnectionParameter());
+      tlayer->mutable_par_layer()->ParseFromString(m_writer_inproc.GetConnectionParameter());
     }
     ecal_reg_sample_mutable_topic->set_pid(m_pid);
     ecal_reg_sample_mutable_topic->set_pname(m_pname);

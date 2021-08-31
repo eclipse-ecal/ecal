@@ -124,7 +124,10 @@ namespace eCAL
     std::string reader_par;
     for (auto layer : ecal_sample_topic.tlayer())
     {
-      reader_par = layer.par();
+      // layer parameter as protobuf message
+      // this parameter is not used at all currently
+      // for local subscriber registrations
+      reader_par = layer.par_layer().SerializeAsString();
     }
 
     // store description
@@ -155,7 +158,10 @@ namespace eCAL
     std::string reader_par;
     for (auto layer : ecal_sample_topic.tlayer())
     {
-      reader_par = layer.par();
+      // layer parameter as protobuf message
+      // this parameter is not used at all currently
+      // for external subscriber registrations
+      reader_par = layer.par_layer().SerializeAsString();
     }
 
     // store description

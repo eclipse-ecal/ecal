@@ -135,9 +135,8 @@
    a higher number will increase data throughput, but will also increase the size of used memory, number of semaphores
    and number of memory file observer threads on subscription side, default = 1, double buffering = 2
    higher values than 3 are not recommended
-   activating this option via 'PUB_MEMFILE_BUF_COUNT_ENABLE' will break local IPC compatibility to eCAL 5.9 and older
+   values > 1 will break local IPC compatibility to eCAL 5.9 and older
 */
-#define PUB_MEMFILE_BUF_COUNT_ENABLE                  false
 #define PUB_MEMFILE_BUF_COUNT                         1
 
 /* allow subscriber to access memory file without copying content in advance (zero copy)

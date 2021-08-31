@@ -261,7 +261,6 @@ namespace eCAL
       tlayer->set_type(eCAL::pb::tl_ecal_udp_mc);
       tlayer->set_version(1);
       tlayer->set_confirmed(m_use_udp_mc_confirmed);
-      tlayer->set_par("");
     }
     // shm layer
     {
@@ -269,7 +268,6 @@ namespace eCAL
       tlayer->set_type(eCAL::pb::tl_ecal_shm);
       tlayer->set_version(1);
       tlayer->set_confirmed(m_use_shm_confirmed);
-      tlayer->set_par("");
     }
     // inproc layer
     {
@@ -277,7 +275,6 @@ namespace eCAL
       tlayer->set_type(eCAL::pb::tl_inproc);
       tlayer->set_version(1);
       tlayer->set_confirmed(m_use_inproc_confirmed);
-      tlayer->set_par("");
     }
     ecal_reg_sample_mutable_topic->set_pid(m_pid);
     ecal_reg_sample_mutable_topic->set_pname(m_pname);

@@ -221,7 +221,29 @@ namespace eCAL
       // apply layer specific parameter
       for (auto tlayer : ecal_sample_topic.tlayer())
       {
-        iter->second->ApplyLocLayerParameter(process_id, tlayer.type(), tlayer.par());
+        // layer parameter for local publisher registrations
+        // ---------------------------------------------------------------
+        // eCAL version > 5.8.13/5.9.0:
+        //    new layer parameter 'tlayer.par_layer'
+        //    protobuf message is serialized into reader parameter string
+        // ---------------------------------------------------------------
+        // eCAL version <= 5.8.13/5.9.0:
+        //    old layer parameter 'tlayer.par_shm'
+        //    contains memory file name for shared memory layer
+        //    the memory file name will be prefixed by '#PAR_SHM#' for
+        //    later check in ecal_reader_shm SetConnectionParameter()
+        // ---------------------------------------------------------------
+
+        // first check for new behaviour
+        std::string writer_par = tlayer.par_layer().SerializeAsString();
+
+        // if 'tlayer.par_layer' was not used and
+        // 'tlayer.par_shm' is set
+        if (writer_par.empty() && !tlayer.par_shm().empty())
+        {
+          writer_par = "#PAR_SHM#" + tlayer.par_shm();
+        }
+        iter->second->ApplyLocLayerParameter(process_id, tlayer.type(), writer_par);
       }
       // inform for local publisher connection
       iter->second->ApplyLocPublication(process_id);
@@ -247,7 +269,11 @@ namespace eCAL
       // apply layer specific parameter
       for (auto tlayer : ecal_sample_.topic().tlayer())
       {
-        iter->second->ApplyExtLayerParameter(host_name, tlayer.type(), tlayer.par());
+        // layer parameter as protobuf message
+        // this parameter is not used at all currently
+        // for external publisher registrations
+        std::string writer_par = tlayer.par_layer().SerializeAsString();
+        iter->second->ApplyExtLayerParameter(host_name, tlayer.type(), writer_par);
       }
       // inform for external publisher connection
       iter->second->ApplyExtPublication(host_name);

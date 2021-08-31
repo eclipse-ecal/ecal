@@ -19,24 +19,9 @@
 
 syntax = "proto3";
 
+import "ecal/pb/layer.proto";
+
 package eCAL.pb;
-
-enum eTLayerType                                // transport layer
-{
-  tl_none            =   0;                     // undefined
-  tl_ecal_udp_mc     =   1;                     // ecal udp multicast
-  tl_ecal_shm        =   4;                     // ecal shared memory
-  tl_inproc          =  42;                     // inproc (inner process)
-  tl_all             = 255;                     // all layer
-}
-
-message TLayer
-{
-  eTLayerType      type                  =  1;  // transport layer type
-  int32            version               =  2;  // transport layer version
-  bool             confirmed             =  3;  // transport layer used ?
-  bytes            par                   =  4;  // transport layer parameter
-}
 
 message QOS                                     // quality of service
 {

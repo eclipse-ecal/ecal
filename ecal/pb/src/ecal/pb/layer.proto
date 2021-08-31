@@ -19,22 +19,42 @@
 
 syntax = "proto3";
 
-import "ecal/pb/topic.proto";
-
 package eCAL.pb;
 
-message RWeCALUDP
+message LayerParUdpMC
 {
 }
 
-message RWeCALSHM
+message LayerParShm
 {
-  repeated string  memory_file_names     =  1;     // list of memory file names
+  repeated string  memory_file_list   =   1;    // list of memory file names
 }
 
-message ConnnectionPar                             // connection parameter for reader / writer
+message LayerParInproc
 {
-  eTLayerType      type                  =  1;     // connection layer
-  RWeCALUDP        ecal_udp_mc_par       =  2;     // parameter for ecal udp multicast
-  RWeCALSHM        ecal_shm_par          =  3;     // parameter for ecal shared memory
+}
+
+message ConnnectionPar                          // connection parameter for reader / writer
+{
+  LayerParUdpMC    layer_par_udpmc    =   1;    // parameter for ecal udp multicast
+  LayerParShm      layer_par_shm      =   2;    // parameter for ecal shared memory
+  LayerParInproc   layer_par_inproc   =   3;    // parameter for ecal inner process
+}
+
+enum eTLayerType                                // transport layer
+{
+  tl_none                             =   0;    // undefined
+  tl_ecal_udp_mc                      =   1;    // ecal udp multicast
+  tl_ecal_shm                         =   4;    // ecal shared memory
+  tl_inproc                           =  42;    // inproc (inner process)
+  tl_all                              = 255;    // all layer
+}
+
+message TLayer
+{
+  eTLayerType      type               =   1;    // transport layer type
+  int32            version            =   2;    // transport layer version
+  bool             confirmed          =   3;    // transport layer used ?
+  bytes            par_shm            =   4;    // transport layer parameter (shm only, deprecated)
+  ConnnectionPar   par_layer          =   5;    // transport layer parameter
 }
