@@ -41,7 +41,7 @@ struct SCallbackPar
 };
 
 // message receive callback
-void on_receive(const struct eCAL::SReceiveCallbackData* data_, SCallbackPar* par_, int delay_, std::string& log_file_)
+void on_receive(const struct eCAL::SReceiveCallbackData* data_, SCallbackPar* par_, int delay_)
 {
   // get receive time stamp
   auto rec_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -66,7 +66,7 @@ void do_run(int delay_, std::string& log_file_)
 
   // apply subscriber callback function
   SCallbackPar cb_par;
-  auto callback = std::bind(on_receive, std::placeholders::_2, &cb_par, delay_, log_file_);
+  auto callback = std::bind(on_receive, std::placeholders::_2, &cb_par, delay_);
   sub.AddReceiveCallback(callback);
 
   size_t msg_last(0);
