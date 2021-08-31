@@ -748,7 +748,7 @@ namespace eCAL
         cpar.ParseFromString(par_layer_s);
         if (cpar.layer_par_shm().memory_file_list_size() == 1)
         {
-          tlayer->set_par_shm(cpar.layer_par_shm().memory_file_list().at(0));
+          tlayer->set_par_shm(cpar.layer_par_shm().memory_file_list().begin()->c_str());
         }
       }
     }
