@@ -69,7 +69,7 @@ Automatize eCAL Rec CLI
 -----------------------
 
 You can use the ecal_rec interactive mode to automatize it via STDIN.
-Commands are read line-by-line, i.e. they have to be divided by \n.
+Commands are read line-by-line, i.e. they have to be divided by ``\n``.
 Semicolons do not work.
 The most concise would probably be to write all your commands in a text file and pipe the content of that to ecal_rec.
 
