@@ -55,6 +55,14 @@ message TLayer
   eTLayerType      type               =   1;    // transport layer type
   int32            version            =   2;    // transport layer version
   bool             confirmed          =   3;    // transport layer used ?
+
+  // ----------------------------------------------------------------------
+  // REMOVE ME IN VERSION 6
+  // ----------------------------------------------------------------------
   bytes            par_shm            =   4;    // transport layer parameter (shm only, deprecated)
+  // ----------------------------------------------------------------------
+  // REMOVE ME IN VERSION 6
+  // ----------------------------------------------------------------------
+
   ConnnectionPar   par_layer          =   5;    // transport layer parameter
 }

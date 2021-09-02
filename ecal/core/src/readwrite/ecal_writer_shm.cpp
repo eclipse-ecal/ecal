@@ -116,24 +116,32 @@ namespace eCAL
       m_buffer_count = data_.buffering;
       ret_state |= true;
 
-      // recreate memory buffer list
-      // to stay compatible to older versions
-      // for the case we had ONE existing buffer
-      // and that single buffer is communicated with
-      // an older shm datareader
+      // ----------------------------------------------------------------------
+      // REMOVE ME IN VERSION 6
+      // ----------------------------------------------------------------------
+      // recreate memory buffer list to stay compatible to older versions
+      // for the case that we have ONE existing buffer
+      // and that single buffer is communicated with an older shm datareader
+      // in this case we need to invalidate (destroy) the existing buffer
+      // and the old datareader will get blind (fail safe)
+      // otherwise it would still receive every n-th write
+      // this state change will lead to some lost samples
       if ((m_memory_file_vec.size() == 1) && (m_memory_file_vec.size() < m_buffer_count))
       {
         m_memory_file_vec.clear();
       }
-      // append new buffers
+      // ----------------------------------------------------------------------
+      // REMOVE ME IN VERSION 6
+      // ----------------------------------------------------------------------
+
+      // increase buffer count
       while (m_memory_file_vec.size() < m_buffer_count)
       {
         auto sync_memfile = std::make_shared<CSyncMemoryFile>();
         sync_memfile->Create(m_topic_name, static_cast<size_t>(eCALPAR(PUB, MEMFILE_MINSIZE)));
         m_memory_file_vec.push_back(sync_memfile);
       }
-
-      // buffers decreased
+      // decrease buffer count
       while (m_memory_file_vec.size() > m_buffer_count)
       {
         m_memory_file_vec.back()->Destroy();

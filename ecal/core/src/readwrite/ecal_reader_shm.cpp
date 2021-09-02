@@ -46,6 +46,9 @@ namespace eCAL
     // list of memory file to register
     std::vector<std::string> memfile_names;
 
+    // ----------------------------------------------------------------------
+    // REMOVE ME IN VERSION 6
+    // ----------------------------------------------------------------------
     // check for old behaviour
     bool              par_shm(false);
     const std::string par_shm_prefix("#PAR_SHM#");
@@ -59,6 +62,9 @@ namespace eCAL
         par_shm = true;
       }
     }
+    // ----------------------------------------------------------------------
+    // REMOVE ME IN VERSION 6
+    // ----------------------------------------------------------------------
 
     if (!par_shm)
     {

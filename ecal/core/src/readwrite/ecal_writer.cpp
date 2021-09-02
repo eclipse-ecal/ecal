@@ -740,6 +740,10 @@ namespace eCAL
       tlayer->set_confirmed(m_use_shm_confirmed);
       std::string par_layer_s = m_writer_shm.GetConnectionParameter();
       tlayer->mutable_par_layer()->ParseFromString(par_layer_s);
+
+      // ----------------------------------------------------------------------
+      // REMOVE ME IN VERSION 6
+      // ----------------------------------------------------------------------
       tlayer->set_par_shm("");
       {
         // for downward compatibility eCAL version <= 5.8.13/5.9.0
@@ -751,6 +755,10 @@ namespace eCAL
           tlayer->set_par_shm(cpar.layer_par_shm().memory_file_list().begin()->c_str());
         }
       }
+      // ----------------------------------------------------------------------
+      // REMOVE ME IN VERSION 6
+      // ----------------------------------------------------------------------
+
     }
     // inproc layer
     {
