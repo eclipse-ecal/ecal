@@ -55,10 +55,10 @@ int main(int argc, char **argv)
   slen = send_s.size();
 
   // set buffering
-  pub.SetBufferCount(2);
+  pub.ShmSetBufferCount(2);
 
   // set zero copy
-  pub.EnableZeroCopy(true);
+  pub.ShmEnableZeroCopy(true);
   
   // safe the start time
   auto start_time = std::chrono::steady_clock::now();

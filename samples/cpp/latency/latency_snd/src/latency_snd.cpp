@@ -52,10 +52,10 @@ void do_run(const int runs, int snd_size /*kB*/, int delay /*ms*/, int mem_buffe
   eCAL::CPublisher pub("ping");
 
   // set number of publisher memory buffers
-  pub.SetBufferCount(mem_buffer);
+  pub.ShmSetBufferCount(mem_buffer);
 
   // enable zero copy mode
-  pub.EnableZeroCopy(zero_copy);
+  pub.ShmEnableZeroCopy(zero_copy);
 
   // prepare send buffer
   std::vector<char> snd_array(snd_size * 1024);

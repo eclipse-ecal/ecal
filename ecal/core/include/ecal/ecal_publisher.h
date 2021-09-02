@@ -193,7 +193,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool SetBufferCount(long buffering_);
+    bool ShmSetBufferCount(long buffering_);
 
     /**
      * @brief Enable zero copy shared memory trasnport mode.
@@ -206,7 +206,7 @@ namespace eCAL
      * The different reading subscribers are fully decoupled and can access their memory copy
      * independently.
      * 
-     * If EnableZeroCopy is switched on no memory will be copied at all. The user message callback is
+     * If ShmEnableZeroCopy is switched on no memory will be copied at all. The user message callback is
      * called right after opening the memory file. A direct pointer to the memory payload is forwarded
      * and can be processed with no latency. The memory file will be closed after the user callback function
      * returned. The advantage of this configuration is a much higher performance for large payloads (> 1024 kB).
@@ -222,7 +222,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool EnableZeroCopy(bool state_);
+    bool ShmEnableZeroCopy(bool state_);
 
     /**
      * @brief Set the the specific topic id.

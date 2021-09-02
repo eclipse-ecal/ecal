@@ -73,10 +73,10 @@ int main(int argc, char **argv)
   send_s.resize(size);
 
   // set zero copy
-  pub.EnableZeroCopy(zero_copy);
+  pub.ShmEnableZeroCopy(zero_copy);
   
   // set buffering
-  pub.SetBufferCount(buffer_count);
+  pub.ShmSetBufferCount(buffer_count);
 
   // send updates
   while(eCAL::Ok())
