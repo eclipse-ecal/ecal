@@ -20,10 +20,10 @@ jobs:
         
     # Downgrading nuget is required as of 2021-04-23, as nuget 5.9.1.111 fails installing protobuf
     # https://github.com/actions/virtual-environments/issues/3240
-    - name: Downgrade nuget
-      uses: nuget/setup-nuget@v1
-      with:
-        nuget-version: '5.8.x'
+#    - name: Downgrade nuget
+#      uses: nuget/setup-nuget@v1
+#      with:
+#        nuget-version: '5.8.x'
         
     - name: Install Dependencies
       run: choco install doxygen.install
