@@ -10,7 +10,7 @@
     <meta name="docsearch:release" content="" />
     <meta name="docsearch:version" content="" />
 
-    <title>eCAL 5.5.5 &mdash; eCAL Documentation  documentation</title>
+    <title>Threading model &mdash; eCAL Documentation  documentation</title>
 
     <link rel="shortcut icon" href="../_static/img/favicon.png" />
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
@@ -23,9 +23,8 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
-    <link rel="up" title="eCAL Download Archive" href="download_archive.html" />
-    <link rel="next" title="eCAL 5.5.4" href="download_archive_ecal_5_5_4.html" />
-    <link rel="prev" title="eCAL 5.6.0" href="download_archive_ecal_5_6_0.html" />
+    <link rel="next" title="License" href="../license.html" />
+    <link rel="prev" title="Transport Layers" href="transport_layers.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
     <script src="../_static/js/modernizr.min.js"></script>
@@ -359,11 +358,11 @@
 </ul>
 <p class="caption"><span class="caption-text">Advanced</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../advanced/compatibility.html">eCAL Compatibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/documentation.html">Edit the documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/performance.html">Performance measurements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/transport_layers.html">Transport Layers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/threading_model.html">Threading model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compatibility.html">eCAL Compatibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Edit the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance measurements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transport_layers.html">Transport Layers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Threading model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../license/ecal_license.html">eCAL License</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../license/thirdparty_licenses.html">Thirdparty Licenses</a><ul>
@@ -386,54 +385,50 @@
 <li class="toctree-l2"><a class="reference internal" href="../license/icon_license.html">Icon License</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="download_archive.html">eCAL Download Archive</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_9_0.html">eCAL 5.9.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_13.html">eCAL 5.8.13</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_12.html">eCAL 5.8.12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_10.html">eCAL 5.8.10</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_9.html">eCAL 5.8.9</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_8.html">eCAL 5.8.8</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_7.html">eCAL 5.8.7</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_5.html">eCAL 5.8.5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_4.html">eCAL 5.8.4</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_3.html">eCAL 5.8.3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_2.html">eCAL 5.8.2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_1.html">eCAL 5.8.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_8_0.html">eCAL 5.8.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_15.html">eCAL 5.7.15</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_14.html">eCAL 5.7.14</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_13.html">eCAL 5.7.13</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_12.html">eCAL 5.7.12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_11.html">eCAL 5.7.11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_9.html">eCAL 5.7.9</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_8.html">eCAL 5.7.8</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_6.html">eCAL 5.7.6</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_5.html">eCAL 5.7.5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_4.html">eCAL 5.7.4</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_3.html">eCAL 5.7.3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_7_1.html">eCAL 5.7.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_6_0.html">eCAL 5.6.0</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">eCAL 5.5.5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_5_4.html">eCAL 5.5.4</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_5_3.html">eCAL 5.5.3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_5_2.html">eCAL 5.5.2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_5_1.html">eCAL 5.5.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_5_0.html">eCAL 5.5.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_4_0.html">eCAL 5.4.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_3_5.html">eCAL 5.3.5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_3_4_3.html">eCAL 5.3.4+3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="download_archive_ecal_5_3_4_4.html">eCAL 5.3.4+4</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_download_archive/download_archive.html">eCAL Download Archive</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_9_0.html">eCAL 5.9.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_13.html">eCAL 5.8.13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_12.html">eCAL 5.8.12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_10.html">eCAL 5.8.10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_9.html">eCAL 5.8.9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_8.html">eCAL 5.8.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_7.html">eCAL 5.8.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_5.html">eCAL 5.8.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_4.html">eCAL 5.8.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_3.html">eCAL 5.8.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_2.html">eCAL 5.8.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_1.html">eCAL 5.8.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_8_0.html">eCAL 5.8.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_15.html">eCAL 5.7.15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_14.html">eCAL 5.7.14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_13.html">eCAL 5.7.13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_12.html">eCAL 5.7.12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_11.html">eCAL 5.7.11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_9.html">eCAL 5.7.9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_8.html">eCAL 5.7.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_6.html">eCAL 5.7.6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_5.html">eCAL 5.7.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_4.html">eCAL 5.7.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_3.html">eCAL 5.7.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_7_1.html">eCAL 5.7.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_6_0.html">eCAL 5.6.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_5_5.html">eCAL 5.5.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_5_4.html">eCAL 5.5.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_5_3.html">eCAL 5.5.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_5_2.html">eCAL 5.5.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_5_1.html">eCAL 5.5.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_5_0.html">eCAL 5.5.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_4_0.html">eCAL 5.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_3_5.html">eCAL 5.3.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_3_4_3.html">eCAL 5.3.4+3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../_download_archive/download_archive_ecal_5_3_4_4.html">eCAL 5.3.4+4</a></li>
 </ul>
 </li>
 </ul>
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">eCAL 5.5.5</a><ul>
-<li><a class="reference internal" href="#changelog">Changelog</a></li>
-<li><a class="reference internal" href="#downloads">Downloads</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">Threading model</a></li>
 </ul>
 <!-- /menu -->
                             </div>
@@ -444,15 +439,14 @@
                     <div class="rst-content">
 <!-- pager-hidden.html -->
 
-        <a class="no-focus" accesskey="p" href="download_archive_ecal_5_6_0.html" tabindex="-1"></a>
-        <a class="no-focus" accesskey="n" href="download_archive_ecal_5_5_4.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="p" href="transport_layers.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="n" href="../license.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../index.html">Start</a></li>
-            <li class="breadcrumb-item"><a href="download_archive.html">eCAL Download Archive</a></li>
-        <li class="breadcrumb-item active" aria-current="page">eCAL 5.5.5</li>
+        <li class="breadcrumb-item active" aria-current="page">Threading model</li>
     </ol>
         <div class="breadcrumb-additions">
             <a class="btn btn-sm btn-primary" id="btnHowToEdit"
@@ -461,11 +455,11 @@
                 <span class="btn-icon"><span class="fas fa-info-circle"></span></span>
                 <span class="btn-text">How to edit</span>
             </a>
-                <a class="btn btn-sm btn-light" id="btnEditOnGitHub" href="https://github.com/continental/ecal/blob/master/doc/rst/_download_archive/download_archive_ecal_5_5_5.rst">
+                <a class="btn btn-sm btn-light" id="btnEditOnGitHub" href="https://github.com/continental/ecal/blob/master/doc/rst/advanced/threading_model.rst">
                     <span class="btn-icon"><span class="fab fa-github"></span></span>
                     <span class="btn-text">Edit on GitHub</span>
                 </a>
-                <a class="btn btn-sm btn-light" href="../_sources/_download_archive/download_archive_ecal_5_5_5.rst.txt" rel="nofollow">
+                <a class="btn btn-sm btn-light" href="../_sources/advanced/threading_model.rst.txt" rel="nofollow">
                     <span class="btn-icon"><span class="fas fa-code"></span></span>
                     <span class="btn-text">View source</span>
                 </a>
@@ -475,59 +469,24 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <section id="ecal-5-5-5">
-<h1>eCAL 5.5.5<a class="headerlink" href="#ecal-5-5-5" title="Permalink to this headline">¶</a></h1>
+    <section id="threading-model">
+<span id="id1"></span><h1>Threading model<a class="headerlink" href="#threading-model" title="Permalink to this headline">¶</a></h1>
+<p>eCAL is using different transport layers for intraprocess, interprocess or interhost communication. With a call of ‘eCAL::Initialize’ different internal, global threads are startet:</p>
 <ul class="simple">
-<li><p>Release Date: 2020-05-01</p></li>
-<li><p>GitHub Release Page: <a class="reference external" href="https://github.com/continental/ecal/releases/tag/v5.5.5">https://github.com/continental/ecal/releases/tag/v5.5.5</a></p></li>
+<li><p>udp registration send / receive thread (2 threads)</p></li>
+<li><p>udp logging receive thread (1 thread)</p></li>
+<li><p>udp monitoring send thread (1 thread)</p></li>
+<li><p>udp message receive thread (1 thread)</p></li>
 </ul>
-<section id="changelog">
-<h2>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-txt notranslate"><div class="highlight"><pre><span></span>eCAL v5.5.5:
-* documenation:
-  * CMake options documentation improved
-  * Npcap section installation and usage added
-  * instruction how to build the documenation added
-* common:
-  * CMakeLists.txt files moved outside source folders
-* thirdparty:
-  * protobuf updated to 3.11.4
-  * asio updated to 1.14.0
-* core:
-  * MacOS port prepared
-* language bindings
-  * CSharp JSONProtobufSubscriber added
-  * CSharp protobuf publisher / subscriber API added
-* apps
-  * monitor application renamed from mon to mon_gui
-</pre></div>
-</div>
-</section>
-<section id="downloads">
-<h2>Downloads<a class="headerlink" href="#downloads" title="Permalink to this headline">¶</a></h2>
-<div class="table-responsive"><table class="colwidths-given docutils align-default" id="ecal-5-5-5-download">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 80%">
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><i class="fab fa-windows"></i> Windows</p></td>
-<td><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.5.5/eCAL-5.5.5-win64.msi"><i class="fas fa-download"></i> Download eCAL 5.5.5 installer for Windows (.msi)</a></p>
+<p>For the eCAL user interface entities ‘CTimer’, ‘CSubscriber’, ‘CServiceServer’, ‘CServiceClient’ additional threads are utilized:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.5.5/ecal-5.5.5-win64-py3.8.egg"><i class="fab fa-python"></i> Python 3.8 integration for eCAL 5.5.5 on Windows (.egg)</a></p></li>
+<li><p>shm message receive thread (1 thread per handled memory file)</p></li>
+<li><p>timer callback (1 thread per instance)</p></li>
+<li><p>tcp client/server implementation (2 threads per instance)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 20.04</p></td>
-<td><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.5.5/eCAL-5.5.5-linux.deb"><i class="fas fa-download"></i> Download eCAL 5.5.5 installer for Ubuntu 20.04 (.deb)</a></p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/continental/ecal/releases/download/v5.5.5/ecal-5.5.5-linux-py3.6.egg"><i class="fab fa-python"></i> Python 3.6 integration for eCAL 5.5.5 on Ubuntu 20.04 (.egg)</a></p></li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table></div>
-</div></section>
+<p>For user API callback functions eCAL is protecting the forwarded data (message header, message payload ..) as long as the callback is processed.
+For subscriptions and their callbacks it is recommended to not block the callback but to copy the data for later processing into user defined container.
+Blocking callbacks can lead to dropped (missed) messages.</p>
 </section>
 
 <!-- /body -->
@@ -537,12 +496,12 @@
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
         <li class="page-item">
-            <a class="page-link" href="download_archive_ecal_5_6_0.html" title="Accesskey Alt(+Shift)+p">
+            <a class="page-link" href="transport_layers.html" title="Accesskey Alt(+Shift)+p">
                 Previous
             </a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="download_archive_ecal_5_5_4.html" title="Accesskey Alt(+Shift)+n">
+            <a class="page-link" href="../license.html" title="Accesskey Alt(+Shift)+n">
                 Next
             </a>
         </li>
