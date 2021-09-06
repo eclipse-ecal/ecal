@@ -214,6 +214,11 @@ jobs:
       shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
 
+    # Chocolatey v0.11.1 leads to issues in combination with nuget
+    - name: Uninstall Chocolatey
+      run: move %PROGRAMDATA%\chocolatey %PROGRAMDATA%\_chocolatey
+      working-directory: ${{ runner.workspace }}/_build/complete
+
 #    - name: Build Documentation C
 #      run: cmake --build . --target documentation_c
 #      working-directory: ${{ runner.workspace }}/_build
