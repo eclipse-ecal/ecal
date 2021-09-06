@@ -45,17 +45,17 @@ inline std::string getEnvVar(const std::string& key, const std::string& def = ""
 #endif
 }
 
-inline std::vector<std::string> getEnvPaths(const std::string& env_value)
+inline std::vector<std::string> splitPaths(const std::string& paths_value)
 {
   std::vector<std::string> tokens;
   std::string token;
-  std::istringstream tokenStream(env_value);
+  std::istringstream token_stream(paths_value);
 #ifdef _WIN32
-  const char delimiter{ ':' };
-#else
   const char delimiter{ ';' };
+#else
+  const char delimiter{ ':' };
 #endif
-  while (std::getline(tokenStream, token, delimiter))
+  while (std::getline(token_stream, token, delimiter))
   {
     tokens.push_back(token);
   }

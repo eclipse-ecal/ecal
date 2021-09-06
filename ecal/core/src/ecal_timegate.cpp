@@ -358,7 +358,7 @@ namespace eCAL
       }
     }
 
-    const auto ecal_time_plugin_paths = getEnvPaths(getEnvVar("ECAL_TIME_PLUGIN_PATH"));
+    const auto ecal_time_plugin_paths = splitPaths(getEnvVar("ECAL_TIME_PLUGIN_PATH"));
 
 #ifdef _WIN32
   #ifndef NDEBUG
