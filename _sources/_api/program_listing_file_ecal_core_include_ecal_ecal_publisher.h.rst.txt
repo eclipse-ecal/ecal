@@ -79,6 +79,10 @@ Program Listing for File ecal_publisher.h
    
        bool SetMaxBandwidthUDP(long bandwidth_);
    
+       bool ShmSetBufferCount(long buffering_);
+   
+       bool ShmEnableZeroCopy(bool state_);
+   
        bool SetID(long long id_);
    
        size_t Send(const void* const buf_, size_t len_, long long time_ = -1) const;
