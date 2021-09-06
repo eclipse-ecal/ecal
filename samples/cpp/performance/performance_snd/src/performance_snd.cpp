@@ -28,7 +28,7 @@
 // main entry
 int main(int argc, char **argv)
 {
-  size_t payload_size(102400);
+  size_t payload_size(1024*1024);
   if(argc > 1) payload_size = atoi(argv[1]);
   if(payload_size < 1) payload_size = 1;
 
@@ -54,6 +54,12 @@ int main(int argc, char **argv)
   std::cout << "Message size  =  " << int(send_s.size()) << " Byte = " << int(send_s.size()/1024) << " kByte = " << int(send_s.size()/1024/1024) << " MByte" << std::endl << std::endl;
   slen = send_s.size();
 
+  // set buffering
+  pub.ShmSetBufferCount(2);
+
+  // set zero copy
+  pub.ShmEnableZeroCopy(true);
+  
   // safe the start time
   auto start_time = std::chrono::steady_clock::now();
 

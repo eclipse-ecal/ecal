@@ -65,6 +65,8 @@ namespace eCAL
     m_pid(Process::GetProcessID()),
     m_pname(Process::GetProcessName()),
     m_topic_size(0),
+    m_buffering_shm(PUB_MEMFILE_BUF_COUNT),
+    m_zero_copy(PUB_MEMFILE_ZERO_COPY),
     m_connected(false),
     m_id(0),
     m_clock(0),
@@ -108,6 +110,8 @@ namespace eCAL
     m_snd_time          = std::chrono::steady_clock::time_point();
     m_freq              = 0;
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
+    m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
+    m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY);
     m_ext_subscribed    = false;
     m_created           = false;
 
@@ -175,6 +179,8 @@ namespace eCAL
     m_snd_time          = std::chrono::steady_clock::time_point();
     m_freq              = 0;
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
+    m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
+    m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY);
     m_created           = false;
 
     return(true);
@@ -255,7 +261,20 @@ namespace eCAL
   bool CDataWriter::SetMaxBandwidthUDP(long bandwidth_)
   {
     m_bandwidth_max_udp = bandwidth_;
-    return false;
+    return true;
+  }
+
+  bool CDataWriter::ShmSetBufferCount(long buffering_)
+  {
+    if (buffering_ < 1) return false;
+    m_buffering_shm = static_cast<size_t>(buffering_);
+    return true;
+  }
+
+  bool CDataWriter::ShmEnableZeroCopy(bool state_)
+  {
+    m_zero_copy = state_;
+    return true;
   }
 
   bool CDataWriter::AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_)
@@ -292,7 +311,7 @@ namespace eCAL
     return(true);
   }
 
-  size_t CDataWriter::Send(const void* const buf_, size_t len_, long long time_, long long id_)
+  size_t CDataWriter::Write(const void* const buf_, size_t len_, long long time_, long long id_)
   {
     // store id
     m_id = id_;
@@ -317,15 +336,15 @@ namespace eCAL
     TLayer::eSendMode use_udp_mc(m_use_udp_mc);
     TLayer::eSendMode use_shm(m_use_shm);
     TLayer::eSendMode use_inproc(m_use_inproc);
-    if ( (use_udp_mc  == TLayer::smode_off)
-      && (use_shm     == TLayer::smode_off)
-      && (use_inproc  == TLayer::smode_off)
+    if ( (use_udp_mc == TLayer::smode_off)
+      && (use_shm    == TLayer::smode_off)
+      && (use_inproc == TLayer::smode_off)
       )
     {
       // failsafe default mode if
       // nothing is activated
       use_udp_mc = TLayer::smode_auto;
-      use_shm     = TLayer::smode_auto;
+      use_shm    = TLayer::smode_auto;
     }
 
     // if we do not have loopback
@@ -342,8 +361,8 @@ namespace eCAL
     // shared memory because of external
     // process subscription, if not
     // let's switch it off
-    if  ((use_shm      != TLayer::smode_off)
-      && (use_inproc   != TLayer::smode_off)
+    if  ((use_shm    != TLayer::smode_off)
+      && (use_inproc != TLayer::smode_off)
       )
     {
       if (!IsExtSubscribed())
@@ -375,18 +394,10 @@ namespace eCAL
       Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::InProc");
 #endif
 
-      // prepare send
-      if (m_writer_inproc.PrepareSend(len_))
-      {
-        // register new to update listening subscribers
-        DoRegister(true);
-        // let's rematch writer / reader
-        Process::SleepMS(5);
-      }
-
       // send it
       size_t inproc_sent(0);
       {
+        // fill writer data
         struct CDataWriterBase::SWriterData wdata;
         wdata.buf   = buf_;
         wdata.len   = len_;
@@ -394,7 +405,17 @@ namespace eCAL
         wdata.clock = m_clock;
         wdata.hash  = snd_hash;
         wdata.time  = time_;
-        inproc_sent = m_writer_inproc.Send(wdata);
+
+        // prepare send
+        if (m_writer_inproc.PrepareWrite(wdata))
+        {
+          // register new to update listening subscribers and rematch
+          DoRegister(true);
+          Process::SleepMS(5);
+        }
+
+        // send
+        inproc_sent = m_writer_inproc.Write(wdata);
         m_use_inproc_confirmed = true;
       }
       written |= inproc_sent > 0;
@@ -426,27 +447,31 @@ namespace eCAL
       // log it
       Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::MemFile");
 #endif
-
-      // prepare send
-      if (m_writer_shm.PrepareSend(len_))
-      {
-        // register new to update listening subscribers
-        DoRegister(true);
-        // let's rematch writer / reader
-        Process::SleepMS(5);
-      }
-
+     
       // send it
       size_t shm_sent(0);
       {
+        // fill writer data
         struct CDataWriterBase::SWriterData wdata;
-        wdata.buf   = buf_;
-        wdata.len   = len_;
-        wdata.id    = m_id;
-        wdata.clock = m_clock;
-        wdata.hash  = snd_hash;
-        wdata.time  = time_;
-        shm_sent    = m_writer_shm.Send(wdata);
+        wdata.buf       = buf_;
+        wdata.len       = len_;
+        wdata.id        = m_id;
+        wdata.clock     = m_clock;
+        wdata.hash      = snd_hash;
+        wdata.time      = time_;
+        wdata.buffering = m_buffering_shm;
+        wdata.zero_copy = m_zero_copy;
+
+        // prepare send
+        if (m_writer_shm.PrepareWrite(wdata))
+        {
+          // register new to update listening subscribers and rematch
+          DoRegister(true);
+          Process::SleepMS(5);
+        }
+
+        // send
+        shm_sent = m_writer_shm.Write(wdata);
         m_use_shm_confirmed = true;
       }
       written |= shm_sent > 0;
@@ -476,18 +501,6 @@ namespace eCAL
       Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::UDP_MC");
 #endif
 
-      // prepare send
-      bool prepared(false);
-      prepared = m_writer_udp_mc.PrepareSend(len_);
-
-      if (prepared)
-      {
-        // register new to update listening subscribers
-        DoRegister(true);
-        // let's rematch writer / reader
-        Process::SleepMS(5);
-      }
-
       // send it
       size_t udp_mc_sent(0);
       {
@@ -495,6 +508,7 @@ namespace eCAL
         // we activate udp message loopback to communicate with local processes too
         bool loopback = use_shm == TLayer::smode_off;
 
+        // fill writer data
         struct CDataWriterBase::SWriterData wdata;
         wdata.buf       = buf_;
         wdata.len       = len_;
@@ -504,7 +518,17 @@ namespace eCAL
         wdata.time      = time_;
         wdata.bandwidth = m_bandwidth_max_udp;
         wdata.loopback  = loopback;
-        udp_mc_sent     = m_writer_udp_mc.Send(wdata);
+
+        // prepare send
+        if (m_writer_udp_mc.PrepareWrite(wdata))
+        {
+          // register new to update listening subscribers and rematch
+          DoRegister(true);
+          Process::SleepMS(5);
+        }
+
+        // send
+        udp_mc_sent = m_writer_udp_mc.Write(wdata);
         m_use_udp_mc_confirmed = true;
       }
       written |= udp_mc_sent > 0;
@@ -706,7 +730,7 @@ namespace eCAL
       tlayer->set_type(eCAL::pb::tl_ecal_udp_mc);
       tlayer->set_version(1);
       tlayer->set_confirmed(m_use_udp_mc_confirmed);
-      tlayer->set_par("");
+      tlayer->mutable_par_layer()->ParseFromString(m_writer_udp_mc.GetConnectionParameter());
     }
     // shm layer
     {
@@ -714,7 +738,27 @@ namespace eCAL
       tlayer->set_type(eCAL::pb::tl_ecal_shm);
       tlayer->set_version(1);
       tlayer->set_confirmed(m_use_shm_confirmed);
-      tlayer->set_par(m_writer_shm.GetConectionPar());
+      std::string par_layer_s = m_writer_shm.GetConnectionParameter();
+      tlayer->mutable_par_layer()->ParseFromString(par_layer_s);
+
+      // ----------------------------------------------------------------------
+      // REMOVE ME IN VERSION 6
+      // ----------------------------------------------------------------------
+      tlayer->set_par_shm("");
+      {
+        // for downward compatibility eCAL version <= 5.8.13/5.9.0
+        // in case of one memory file only we pack the name into 'layer_par_shm()'
+        eCAL::pb::ConnnectionPar cpar;
+        cpar.ParseFromString(par_layer_s);
+        if (cpar.layer_par_shm().memory_file_list_size() == 1)
+        {
+          tlayer->set_par_shm(cpar.layer_par_shm().memory_file_list().begin()->c_str());
+        }
+      }
+      // ----------------------------------------------------------------------
+      // REMOVE ME IN VERSION 6
+      // ----------------------------------------------------------------------
+
     }
     // inproc layer
     {
@@ -722,7 +766,7 @@ namespace eCAL
       tlayer->set_type(eCAL::pb::tl_inproc);
       tlayer->set_version(1);
       tlayer->set_confirmed(m_use_inproc_confirmed);
-      tlayer->set_par("");
+      tlayer->mutable_par_layer()->ParseFromString(m_writer_inproc.GetConnectionParameter());
     }
     ecal_reg_sample_mutable_topic->set_pid(m_pid);
     ecal_reg_sample_mutable_topic->set_pname(m_pname);

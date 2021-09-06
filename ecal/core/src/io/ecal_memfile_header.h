@@ -27,22 +27,21 @@
 
 namespace eCAL
 {
-  struct SEcalMessage
-  {
-    SEcalMessage()
+  struct SMemFileHeader
+  { //-V802
+    uint16_t   hdr_size  = sizeof(SMemFileHeader);
+    uint64_t   data_size = 0;
+    uint64_t   id        = 0;
+    uint64_t   clock     = 0;
+    int64_t    time      = 0;
+    uint64_t   hash      = 0;
+    // ----- > 5.8 -----
+    struct optflags
     {
-      hdr_size  = sizeof(SEcalMessage);
-      data_size = 0;
-      id        = 0;
-      clock     = 0;
-      time      = 0;
-      hash      = 0;
+      unsigned char zero_copy : 1;    // allow reader to access memory without copying
+      unsigned char unused    : 7;
     };
-    uint16_t  hdr_size;
-    uint64_t  data_size;
-    uint64_t  id;
-    uint64_t  clock;
-    int64_t   time;
-    uint64_t  hash;
+    optflags   options = { 0, 0 };
   };
-};
+}
+ 

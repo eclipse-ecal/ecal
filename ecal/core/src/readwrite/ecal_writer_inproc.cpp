@@ -72,7 +72,7 @@ namespace eCAL
   /////////////////////////////////////////////////////////////////
   // apply the data straight to the subscriber gate
   /////////////////////////////////////////////////////////////////
-  size_t CDataWriterInProc::Send(const SWriterData& data_)
+  size_t CDataWriterInProc::Write(const SWriterData& data_)
   {
     if (!m_created)     return(0);
     if (!data_.buf)     return(0);

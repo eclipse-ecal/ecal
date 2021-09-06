@@ -25,13 +25,13 @@
 
 #include <ecal/ecal.h>
 
-#include "ecal_global_accessors.h"
-#include "ecal_def.h"
 #include "ecal_memfile.h"
+#include "ecal_memfile_header.h"
 
 #include <mutex>
 #include <atomic>
 #include <map>
+#include <memory>
 #include <thread>
 
 namespace eCAL
@@ -45,42 +45,31 @@ namespace eCAL
     CMemFileObserver();
     ~CMemFileObserver();
 
-    void ResetTimeout();
-    void Stop();
-    bool IsStopped() {return(m_is_stopped);};
+    bool Create(const std::string& memfile_name_, const std::string& memfile_event_);
+    bool Destroy();
 
-    void Observe(const std::string& topic_name_, const std::string& memfile_name_, const std::string& memfile_event_, const int timeout_max_);
-
-  protected:
-    std::mutex         m_thread_sync;
-    std::atomic<bool>  m_do_stop;
-    std::atomic<bool>  m_is_stopped;
-    std::atomic<int>   m_timeout_read;
-    std::atomic<int>   m_timeout_ack;
-    EventHandleT       m_event_snd;
-    EventHandleT       m_event_ack;
-    CMemoryFile        m_memfile;
-    std::vector<char>  m_ecal_buffer;
-  };
-
-  ////////////////////////////////////////
-  // CMemFileThread
-  ////////////////////////////////////////
-  class CMemFileThread
-  {
-  public:
-    CMemFileThread(const std::string& topic_name_, const std::string& topic_id_, const std::string& memfile_name_, const std::string& memfile_event_, const int timeout_max_);
-    ~CMemFileThread();
-
+    bool Start(const std::string& topic_name_, const std::string& topic_id_, const int timeout_);
     bool Stop();
-    bool Join();
+    bool IsObserving() {return(m_is_observing);};
+
     bool ResetTimeout();
-    bool IsStopped();
 
   protected:
-    std::thread       m_thread;
-    CMemFileObserver  m_observer;
-    std::string       m_topic_id;
+    void Observe(const std::string& topic_name_, const std::string& topic_id_, const int timeout_);
+    bool ReadFileHeader(SMemFileHeader& memfile_hdr);
+
+    std::atomic<bool>       m_created;
+    std::atomic<bool>       m_do_stop;
+    std::atomic<bool>       m_is_observing;
+
+    std::atomic<long long>  m_timeout_read;
+    std::atomic<int>        m_timeout_ack;
+
+    std::thread             m_thread;
+    EventHandleT            m_event_snd;
+    EventHandleT            m_event_ack;
+    CMemoryFile             m_memfile;
+    std::vector<char>       m_ecal_buffer;
   };
 
   ////////////////////////////////////////
@@ -95,11 +84,13 @@ namespace eCAL
     void Create();
     void Destroy();
 
-    bool AssignThread(const std::string& topic_id_, const std::string& memfile_event_, const std::string& memfile_name_, const std::string& topic_name_);
+    bool ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, const std::string& topic_name_, const std::string& topic_id_);
 
   protected:
-    std::atomic<bool>                       m_created;
-    std::mutex                              m_thread_pool_sync;
-    std::map<std::string, CMemFileThread*>  m_thread_pool;
+    void CleanupPool();
+
+    std::atomic<bool>                                         m_created;
+    std::mutex                                                m_observer_pool_sync;
+    std::map<std::string, std::shared_ptr<CMemFileObserver>>  m_observer_pool;
   };
 }

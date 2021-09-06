@@ -65,10 +65,13 @@ namespace eCAL
     bool SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_);
     bool SetMaxBandwidthUDP(long bandwidth_);
 
+    bool ShmSetBufferCount(long buffering_);
+    bool ShmEnableZeroCopy(bool state_);
+
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
     bool RemEventCallback(eCAL_Publisher_Event type_);
 
-    size_t Send(const void* const buf_, size_t len_, long long time_, long long id_);
+    size_t Write(const void* const buf_, size_t len_, long long time_, long long id_);
 
     void ApplyLocSubscription(const std::string& process_id_, const std::string& reader_par_);
     void RemoveLocSubscription(const std::string & process_id_);
@@ -83,7 +86,7 @@ namespace eCAL
 
     bool IsCreated() const {return(m_created);}
     bool IsSubscribed() const {return(m_loc_subscribed || m_ext_subscribed);}
-    bool IsExtSubscribed() const { return(m_ext_subscribed); }
+    bool IsExtSubscribed() const {return(m_ext_subscribed);}
 
     const std::string& GetTopicName() const {return(m_topic_name);}
     const std::string& GetTopicID() const {return(m_topic_id);}
@@ -115,6 +118,9 @@ namespace eCAL
     size_t             m_topic_size;
 
     QOS::SWriterQOS    m_qos;
+
+    size_t             m_buffering_shm;
+    bool               m_zero_copy;
 
     std::atomic<bool>  m_connected;
     typedef Util::CExpMap<std::string, bool> ConnectedMapT;

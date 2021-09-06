@@ -23,14 +23,19 @@ set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 project(latency_rec)
 
 find_package(eCAL REQUIRED)
+find_package(tclap REQUIRED)
 
 set(latency_rec_src
     src/latency_rec.cpp
+    src/latency_log.cpp
+    src/latency_log.h
 )
 
 ecal_add_sample(${PROJECT_NAME} ${latency_rec_src})
 
-target_link_libraries(${PROJECT_NAME} eCAL::core)
+target_link_libraries(${PROJECT_NAME}
+    eCAL::core
+    tclap::tclap)
 
 ecal_install_sample(${PROJECT_NAME})
 

@@ -17,39 +17,10 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  eCAL inproc reader
-**/
-
 #pragma once
 
-#include "ecal_def.h"
-#include "readwrite/ecal_reader_layer.h"
+#include <string>
+#include <vector>
 
-namespace eCAL
-{
-  class CDataReaderInProc
-  {
-  public:
-    CDataReaderInProc();
-    ~CDataReaderInProc();
-  };
-
-  // ecal inproc data layer
-  class CInProcLayer : public CReaderLayer<CInProcLayer>
-  {
-  public:
-    CInProcLayer();
-    ~CInProcLayer();
-
-    void Initialize();
-
-    void AddSubscription(std::string& topic_name_, std::string& topic_id_, QOS::SReaderQOS qos_);
-    void RemSubscription(std::string& topic_name_, std::string& topic_id_);
-
-    void SetConnectionParameter(SReaderLayerPar& par_);
-
-  private:
-    CDataReaderInProc reader;
-  };
-};
+void evaluate(std::vector<long long>& lat_arr_, size_t rec_size_, size_t warmups_, std::string& log_file_);
+void log2file(std::vector<long long>& lat_arr_, size_t rec_size_, std::string& log_file_);

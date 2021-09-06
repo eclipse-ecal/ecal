@@ -19,73 +19,101 @@
 
 #include <ecal/ecal.h>
 
+#include <chrono>
 #include <iostream>
-#include <numeric>
-#include <string>
-#include <vector>
+#include <mutex>
+#include <thread>
+#include <tclap/CmdLine.h>
 
-void do_run()
+#include "latency_log.h"
+
+// warmup runs not to measure
+const int warmups(10);
+
+// data structure for later evaluation
+struct SCallbackPar
+{
+  SCallbackPar() { latency_array.reserve(100000); };
+  std::mutex             mtx;
+  std::vector<long long> latency_array;
+  size_t                 rec_size = 0;
+  size_t                 msg_num  = 0;
+};
+
+// message receive callback
+void on_receive(const struct eCAL::SReceiveCallbackData* data_, SCallbackPar* par_, int delay_)
+{
+  // get receive time stamp
+  auto rec_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+
+  // update latency, size and msg number
+  std::lock_guard<std::mutex> lock(par_->mtx);
+  par_->latency_array.push_back(rec_time - data_->time);
+  par_->rec_size = data_->size;
+  par_->msg_num++;
+  // delay callback
+  if(delay_ > 0) std::this_thread::sleep_for(std::chrono::milliseconds(delay_));
+}
+
+// single test run
+void do_run(int delay_, std::string& log_file_)
 {
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "latency_rec");
 
-  // create publisher and subscriber
-  eCAL::CSubscriber sub_pkg("pkg_send");
-  eCAL::CPublisher  pub_pkg("pkg_reply");
+  // subscriber
+  eCAL::CSubscriber sub("ping");
 
-  // prepare timestamp array and
-  std::vector<long long> diff_array;
-  // reserve for 5000 elements
-  diff_array.reserve(5000);
+  // apply subscriber callback function
+  SCallbackPar cb_par;
+  auto callback = std::bind(on_receive, std::placeholders::_2, &cb_par, delay_);
+  sub.AddReceiveCallback(callback);
 
-  // prepare receive buffer
-  std::string rec_buf;
-  int rec_timeout(-1);
-  int rec_pkgs(0);
-
-  for(;;)
+  size_t msg_last(0);
+  while (eCAL::Ok())
   {
-    long long snd_time(0);
-    if (sub_pkg.Receive(rec_buf, &snd_time, rec_timeout))
+    // check once a second if we still receive new messages
+    // if not, we stop and evaluate this run
     {
-      // store time stamp
-      diff_array.push_back(eCAL::Time::GetMicroSeconds() - snd_time);
-      rec_pkgs++;
-      // reply
-      pub_pkg.Send(rec_buf);
-      // we reduce timeout to 1000 ms to detect lost packages
-      rec_timeout = 1000;
+      std::lock_guard<std::mutex> lock(cb_par.mtx);
+      if ((cb_par.msg_num > 0) && (msg_last == cb_par.msg_num)) break;
+      else msg_last = cb_par.msg_num;
     }
-    else
-    {
-      // timeout, let's stop and summarize
-      break;
-    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   }
 
-  // calculate receive time over all received messages
-  long long sum_time = std::accumulate(diff_array.begin(), diff_array.end(), 0LL);
-  long long avg_time = sum_time/rec_pkgs;
-  std::cout << "-------------------------------"    << std::endl;
-  std::cout << " LATENCY / THROUGHPUT TEST     "    << std::endl;
-  std::cout << "-------------------------------"    << std::endl;
-  std::cout << "Received buffer size          :   " << rec_buf.size()/1024 << " kB" << std::endl;
-  std::cout << "Received packages             :   " << rec_pkgs << std::endl;
-  std::cout << "Message average receive time  :   " << avg_time << " us" << std::endl;
-  std::cout << "Throughput                    :   " << static_cast<int>(((rec_buf.size()*rec_pkgs)/1024.0)/(sum_time /1000.0/1000.0))        << " kB/s"  << std::endl;
-  std::cout << "                              :   " << static_cast<int>(((rec_buf.size()*rec_pkgs)/1024.0/1024.0)/(sum_time /1000.0/1000.0)) << " MB/s"  << std::endl;
-  std::cout << "                              :   " << static_cast<int>(rec_pkgs /(sum_time /1000.0/1000.0))                                 << " Msg/s" << std::endl << std::endl;
+  // detach callback
+  sub.RemReceiveCallback();
+
+  // evaluate all
+  evaluate(cb_par.latency_array, cb_par.rec_size, warmups, log_file_);
+
+  // log all latencies into file
+  log2file(cb_par.latency_array, cb_par.rec_size, log_file_);
 
   // finalize eCAL API
   eCAL::Finalize();
 }
 
-int main(int /*argc*/, char** /*argv*/)
+int main(int argc, char** argv)
 {
-  // run tests
-  while (eCAL::Ok())
+  try
   {
-    do_run();
+    // parse command line
+    TCLAP::CmdLine cmd("latency_rec");
+    TCLAP::ValueArg<int>         delay(   "d", "delay",    "Callback process delay in ms.",     false,  0, "int");
+    TCLAP::ValueArg<std::string> log_file("l", "log_file", "Base file name to export results.", false, "", "string");
+    cmd.add(delay);
+    cmd.add(log_file);
+    cmd.parse(argc, argv);
+
+    // run tests
+    do { do_run(delay.getValue(), log_file.getValue()); } while (eCAL::Ok());
+  }
+  catch (TCLAP::ArgException& e)  // catch any exceptions
+  {
+    std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
+    return EXIT_FAILURE;
   }
 
   return(0);

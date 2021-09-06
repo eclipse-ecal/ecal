@@ -23,17 +23,11 @@
 
 #pragma once
 
-#include "ecal_def.h"
-
 #include "readwrite/ecal_writer_base.h"
-#include "io/ecal_memfile.h"
+#include "io/ecal_memfile_sync.h"
 
-#include <ecal/ecal_eventhandle.h>
-
-#include <mutex>
+#include <memory>
 #include <string>
-#include <unordered_map>
-#include <atomic>
 
 namespace eCAL
 {
@@ -50,33 +44,17 @@ namespace eCAL
 
     bool SetQOS(const QOS::SWriterQOS& qos_) override;
 
-    bool PrepareSend(size_t len_) override;
-    size_t Send(const SWriterData& data_) override;
+    bool PrepareWrite(const SWriterData& data_) override;
+    size_t Write(const SWriterData& data_) override;
 
     bool AddLocConnection(const std::string& process_id_, const std::string& conn_par_) override;
     bool RemLocConnection(const std::string& process_id_) override;
 
-    std::string GetConectionPar() override;
+    std::string GetConnectionParameter() override;
 
   protected:
-    void SignalMemFileWritten();
-
-    void BuildMemFileName();
-    bool CreateMemFile(size_t size_);
-    bool DestroyMemFile();
-
-    std::string      m_memfile_name;
-    CMemoryFile      m_memfile;
-
-    struct SEventHandlePair
-    {
-      EventHandleT event_snd;
-      EventHandleT event_ack;
-    };
-    typedef std::unordered_map<std::string, SEventHandlePair> EventHandleMapT;
-    std::mutex       m_event_handle_map_sync;
-    EventHandleMapT  m_event_handle_map;
-
-    int              m_timeout_ack;
+    size_t                                        m_write_idx    = 0;
+    size_t                                        m_buffer_count = 1;
+    std::vector<std::shared_ptr<CSyncMemoryFile>> m_memory_file_vec;
   };
 }

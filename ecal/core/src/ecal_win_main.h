@@ -27,6 +27,14 @@
 #define CINTERFACE
 #endif
 
+#if !defined(NOMINMAX)
+  #define NOMINMAX
+#endif // !defined(NOMINMAX)
+
+#if !defined(WIN32_LEAN_AND_CLEAN)
+  #define WIN32_LEAN_AND_CLEAN
+#endif // !defined(WIN32_LEAN_AND_CLEAN)
+
 #include <windows.h>
 #include <direct.h>
 #include <psapi.h>

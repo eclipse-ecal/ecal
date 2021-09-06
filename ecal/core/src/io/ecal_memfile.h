@@ -54,13 +54,13 @@ namespace eCAL
   {
     SMemFileInfo()
     {
-      refcnt      = 0;
-      remove      = false;
-      mutex       = 0;
-      memfile     = 0;
-      map_region  = 0;
-      mem_address = 0;
-      size        = 0;
+      refcnt          = 0;
+      remove          = false;
+      mutex           = 0;
+      memfile         = 0;
+      map_region      = 0;
+      mem_address     = 0;
+      size            = 0;
     }
     int          refcnt;
     bool         remove;
@@ -100,7 +100,7 @@ namespace eCAL
      *
      * @param name_    Unique file name. 
      * @param create_  Add file to system if not exists.
-     * @param len_     Number of bytes to allocate (only if add_ == true). 
+     * @param len_     Number of bytes to allocate (only if create_ == true). 
      *
      * @return  true if it succeeds, false if it fails. 
     **/
@@ -116,40 +116,76 @@ namespace eCAL
     bool Destroy(const bool remove_);
 
     /**
-     * @brief Open the memory file. 
+     * @brief Get memory file read access. 
      *
      * @param timeout_  The timeout in ms for access via mutex.
      *
-     * @return  true if file exists and could be opened. 
+     * @return  true if file exists and could be opened with read access. 
     **/
-    bool Open(const int timeout_);
+    bool GetReadAccess(const int timeout_);
 
     /**
-     * @brief Closes the current opened memory file. 
+     * @brief Release the read access. 
      *
      * @return  true if it succeeds, false if it fails. 
     **/
-    bool Close();
+    bool ReleaseReadAccess();
 
     /**
-     * @brief Read bytes from an opened memory file. 
+     * @brief Get payload buffer pointer from an opened memory file for reading.
      *
-     * @param buf_     The destination address. 
-     * @param len_     The length of the allocated memory (has to be allocated by caller). 
-     * @param offset_  The offset where to start reading. 
+     * @param buf_     The destination address.
+     * @param len_     Expected length of the available payload.
      *
-     * @return         Number of copied bytes (can be less then len_). 
+     * @return         Number of available bytes (or zero if it fails).
+    **/
+    size_t GetReadAddress(const void*& buf_, const size_t len_);
+
+    /**
+     * @brief Read bytes from an opened memory file.
+     *
+     * @param buf_     The destination address.
+     * @param len_     The length of the allocated memory (has to be allocated by caller).
+     * @param offset_  The offset where to start reading.
+     *
+     * @return         Number of copied bytes (or zero if it fails).
     **/
     size_t Read(void* buf_, const size_t len_, const size_t offset_);
 
     /**
-     * @brief Write bytes to the memory file. 
+     * @brief Get memory file write access.
      *
-     * @param buf_     The source address. 
-     * @param len_     The number of bytes to write. 
-     * @param offset_  The offset for writing the data. 
+     * @param timeout_  The timeout in ms for access via mutex.
      *
-     * @return         Number of bytes copied to the memory file. 
+     * @return  true if file exists and could be opened with read/write access.
+    **/
+    bool GetWriteAccess(const int timeout_);
+
+    /**
+     * @brief Release the write access.
+     *
+     * @return  true if it succeeds, false if it fails.
+    **/
+    bool ReleaseWriteAccess();
+
+    /**
+     * @brief Get payload buffer pointer from an opened memory file for writing.
+     *
+     * @param buf_     The destination address.
+     * @param len_     Expected length of the available payload.
+     *
+     * @return         Number of available bytes (or zero if it fails).
+    **/
+    size_t GetWriteAddress(void*& buf_, const size_t len_);
+
+    /**
+     * @brief Write bytes to the memory file.
+     *
+     * @param buf_     The source address.
+     * @param len_     The number of bytes to write.
+     * @param offset_  The offset for writing the data.
+     *
+     * @return         Number of bytes copied to the memory file.
     **/
     size_t Write(const void* buf_, const size_t len_, const size_t offset_);
 
@@ -158,39 +194,44 @@ namespace eCAL
      *
      * @return  The size of the data object. 
     **/
-    size_t FileSize() const {return static_cast<size_t>(m_header.max_data_size);};
+    size_t MaxDataSize() const {return static_cast<size_t>(m_header.max_data_size);};
 
     /**
      * @brief Size of the stored data object (can be smaller than the size
-     *        of the whole memory file.
+     *        of the available data size.
      *
      * @return  The size of the data object. 
     **/
-    size_t DataSize()  const {return static_cast<size_t>(m_header.cur_data_size);};
+    size_t CurDataSize()     const {return static_cast<size_t>(m_header.cur_data_size);};
 
-    bool IsCreated()   const {return(m_created);};
-    bool IsOpened()    const {return(m_opened);};
-    std::string Name() const {return(m_name);};
+    bool IsCreated()         const {return(m_created);};
+    std::string Name()       const {return(m_name);};
 
-    struct SMemFileHeader
+    bool IsOpened()          const {return(m_access_state != access_state::closed);};
+    bool HasReadAccess()     const {return(m_access_state == access_state::read_access);};
+    bool HasWriteAccess()    const {return(m_access_state == access_state::write_access);};
+
+    struct SInternalHeader
     {
-      SMemFileHeader()
-      {
-        hdr_size      = sizeof(SMemFileHeader);
-        cur_data_size = 0;
-        max_data_size = 0;
-      };
-      unsigned short hdr_size;
-      unsigned long  cur_data_size;
-      unsigned long  max_data_size;
+      unsigned short int_hdr_size  = sizeof(SInternalHeader);
+      unsigned long  cur_data_size = 0;
+      unsigned long  max_data_size = 0;
     };
 
   protected:
+    bool GetAccess(int timeout_);
+
+    enum class access_state
+    {
+      closed,
+      read_access,
+      write_access
+    };
     bool            m_created;
-    bool            m_opened;
+    access_state    m_access_state;
     std::string     m_name;
-    SMemFileHeader  m_header;
-    SMemFileInfo*   m_memfile_info;
+    SInternalHeader m_header;
+    SMemFileInfo    m_memfile_info;
 
   private:
     CMemoryFile(const CMemoryFile&);                 // prevent copy-construction

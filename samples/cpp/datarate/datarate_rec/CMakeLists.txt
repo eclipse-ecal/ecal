@@ -20,18 +20,21 @@ cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
-project(latency_rec_cb)
+project(datarate_rec)
 
 find_package(eCAL REQUIRED)
+find_package(tclap REQUIRED)
 
-set(latency_rec_cb_src
-    src/latency_rec_cb.cpp
+set(datarate_rec_src
+    src/datarate_rec.cpp
 )
 
-ecal_add_sample(${PROJECT_NAME} ${latency_rec_cb_src})
+ecal_add_sample(${PROJECT_NAME} ${datarate_rec_src})
 
-target_link_libraries(${PROJECT_NAME} eCAL::core)
+target_link_libraries(${PROJECT_NAME}
+    eCAL::core
+    tclap::tclap)
 
 ecal_install_sample(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/latency)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/datarate)

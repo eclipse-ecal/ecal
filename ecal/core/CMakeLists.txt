@@ -48,6 +48,7 @@ if(NOT ECAL_LAYER_ICEORYX)
   set(ecal_io_mem_cpp_src
       src/io/ecal_memfile.cpp
       src/io/ecal_memfile_pool.cpp
+      src/io/ecal_memfile_sync.cpp
   )
   if(UNIX)
     set(ecal_io_mem_cpp_linux_src
@@ -132,7 +133,7 @@ set(ecal_cmn_cpp_src
 )
 
 set(ecal_io_header_src
-    src/io/ecal_message.h
+    src/io/ecal_memfile_header.h
     src/io/ecal_receiver.h
     src/io/ecal_sender.h
     src/io/msg_type.h
@@ -149,6 +150,7 @@ if(NOT ECAL_LAYER_ICEORYX)
       src/io/ecal_memfile.h
       src/io/ecal_memfile_mtx.h
       src/io/ecal_memfile_pool.h
+      src/io/ecal_memfile_sync.h
   )
 
   if(WIN32)

@@ -27,18 +27,18 @@ set(memfile_test_src
 )
 
 if(UNIX)
-set(memfile_test_linux_src
+set(memfile_test_os_src
     ../../../ecal/core/src/io/linux/ecal_memfile_linux.cpp
 )
 endif()
 
 if(WIN32)
-set(memfile_test_linux_src
+set(memfile_test_os_src
     ../../../ecal/core/src/io/win32/ecal_memfile_win32.cpp
 )
 endif()
 
-ecal_add_gtest(${PROJECT_NAME} ${memfile_test_src} ${memfile_test_linux_src} ${memfile_test_win32_src})
+ecal_add_gtest(${PROJECT_NAME} ${memfile_test_src} ${memfile_test_os_src})
 
 target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
 

@@ -53,18 +53,14 @@ namespace eCAL
 
   CMemoryFile::CMemoryFile() :
     m_created(false),
-    m_opened(false),
-    m_name(""),
-    m_memfile_info(new SMemFileInfo)
+    m_access_state(access_state::closed),
+    m_name("")
   {
   }
 
   CMemoryFile::~CMemoryFile()
   {
-    Close();
     Destroy(false);
-
-    delete m_memfile_info;
   }
 
   bool CMemoryFile::Create(const char* name_, const bool create_, const size_t len_)
@@ -72,27 +68,28 @@ namespace eCAL
     assert((create_ && len_ > 0) || (!create_ && len_ == 0));
 
     // do we have to recreate the file ?
-    if(   (m_name != name_)
+    if ((m_name != name_)
       || (
-      create_
-      && (len_ > 0)
-      && (m_header.max_data_size != (unsigned long)len_)
-      )
+        create_
+        && (len_ > 0)
+        && (m_header.max_data_size != (unsigned long)len_)
+        )
       )
     {
       // destroy existing connection
       Destroy(create_);
 
       // reset states
-      m_created              = false;
-      m_opened               = false;
+      m_created      = false;
+      m_access_state = access_state::closed;
       m_name.clear();
-      m_memfile_info->mutex  = nullptr;
-      m_header.max_data_size = 0;
-      m_header.cur_data_size = 0;
+
+      // reset header and info
+      m_header       = SInternalHeader();
+      m_memfile_info = SMemFileInfo();
 
       // create memory file
-      if(!CreateMemFile(name_, create_, len_ + sizeof(SMemFileHeader), *m_memfile_info))
+      if (!CreateMemFile(name_, create_, len_ + sizeof(SInternalHeader), m_memfile_info))
       {
 #ifndef NDEBUG
         printf("Could not create memory file: %s.\n\n", name_);
@@ -102,7 +99,7 @@ namespace eCAL
     }
 
     // create mutex
-    if(!CreateMtx(name_, m_memfile_info->mutex))
+    if (!CreateMtx(name_, m_memfile_info.mutex))
     {
 #ifndef NDEBUG
       printf("Could not create memory file mutex: %s.\n\n", name_);
@@ -110,36 +107,36 @@ namespace eCAL
       return(false);
     }
 
-    if(create_)
+    if (create_)
     {
       // create header
       m_header.max_data_size = (unsigned long)len_;
 
       // lock mutex
-      if(LockMtx(&m_memfile_info->mutex, PUB_MEMFILE_CREATE_TO))
+      if (LockMtx(&m_memfile_info.mutex, PUB_MEMFILE_CREATE_TO))
       {
-        if(m_memfile_info->mem_address)
+        if (m_memfile_info.mem_address)
         {
           // write header
-          SMemFileHeader* pHeader = new (m_memfile_info->mem_address) SMemFileHeader;
-          if(pHeader) *pHeader = m_header;
+          SInternalHeader* pHeader = new (m_memfile_info.mem_address) SInternalHeader;
+          if (pHeader) *pHeader = m_header;
         }
 
         // unlock mutex
-        UnlockMtx(&m_memfile_info->mutex);
+        UnlockMtx(&m_memfile_info.mutex);
       }
     }
     else
     {
       // lock mutex
-      if(LockMtx(&m_memfile_info->mutex, PUB_MEMFILE_CREATE_TO))
+      if (LockMtx(&m_memfile_info.mutex, PUB_MEMFILE_CREATE_TO))
       {
         // read header
-        SMemFileHeader* pHeader = static_cast<SMemFileHeader*>(m_memfile_info->mem_address);
+        SInternalHeader* pHeader = static_cast<SInternalHeader*>(m_memfile_info.mem_address);
         m_header = *pHeader;
 
         // unlock mutex
-        UnlockMtx(&m_memfile_info->mutex);
+        UnlockMtx(&m_memfile_info.mutex);
       }
     }
 
@@ -152,8 +149,7 @@ namespace eCAL
 
   bool CMemoryFile::Destroy(const bool remove_)
   {
-    if(!m_created)      return(false);
-    if(!m_memfile_info) return(false);
+    if (!m_created) return(false);
 
     // return state
     bool ret_state = true;
@@ -162,35 +158,159 @@ namespace eCAL
     ret_state &= DestroyMemFile(m_name, remove_);
 
     // unlock mutex
-    ret_state &= DestroyMtx(&m_memfile_info->mutex);
+    ret_state &= DestroyMtx(&m_memfile_info.mutex);
 
     // cleanup mutex
-    ret_state &= CleanupMtx(m_memfile_info->name);
+    ret_state &= CleanupMtx(m_name);
 
     // reset states
-    m_created                   = false;
-    m_opened                    = false;
+    m_created      = false;
+    m_access_state = access_state::closed;
     m_name.clear();
-    m_header.max_data_size      = 0;
-    m_header.cur_data_size      = 0;
 
-    m_memfile_info->mutex       = nullptr;
-    m_memfile_info->memfile     = 0;
-    m_memfile_info->map_region  = 0;
-    m_memfile_info->mem_address = nullptr;
+    // reset header and info
+    m_header       = SInternalHeader();
+    m_memfile_info = SMemFileInfo();
 
     return(ret_state);
   }
 
-  bool CMemoryFile::Open(int timeout_)
+  bool CMemoryFile::GetReadAccess(int timeout_)
   {
-    if(m_opened)                     return(true);
-    if(!m_created)                   return(false);
-    if(!m_memfile_info->mem_address) return(false);
-    if(!g_memfile_map())             return(false);
+    // currently we do not differ between read and write access
+    if (GetAccess(timeout_))
+    {
+      // mark as opened for read access
+      m_access_state = access_state::read_access;
+
+      return(true);
+    }
+
+    return(false);
+  }
+
+  bool CMemoryFile::ReleaseReadAccess()
+  {
+    if (!m_created)                                  return(false);
+    if (m_access_state != access_state::read_access) return(false);
+
+    // reset states
+    m_access_state = access_state::closed;
+
+    // release read mutex
+    UnlockMtx(&m_memfile_info.mutex);
+
+    return(true);
+  }
+
+  size_t CMemoryFile::GetReadAddress(const void*& buf_, const size_t len_)
+  {
+    if (!m_created)                                          return(0);
+    if (m_access_state != access_state::read_access)         return(0);
+    if (len_ == 0)                                           return(0);
+    if (len_ > static_cast<size_t>(m_header.cur_data_size))  return(0);
+    if (!m_memfile_info.mem_address)                         return(0);
+
+    // return read address
+    buf_ = static_cast<char*>(m_memfile_info.mem_address) + sizeof(SInternalHeader);
+
+    return(len_);
+  }
+
+  size_t CMemoryFile::Read(void* buf_, const size_t len_, const size_t offset_)
+  {
+    if (!buf_) return(0);
+
+    const void* rbuf(nullptr);
+    if (GetReadAddress(rbuf, len_ + offset_))
+    {
+      // copy from read buffer with offset
+      memcpy(buf_, static_cast<const char*>(rbuf) + offset_, len_);
+
+      // return number of read bytes
+      return(len_);
+    }
+    else
+    {
+      return(0);
+    }
+  }
+
+  bool CMemoryFile::GetWriteAccess(int timeout_)
+  {
+    // currently we do not differ between read and write access
+    if (GetAccess(timeout_))
+    {
+      // mark as opened for write access
+      m_access_state = access_state::write_access;
+
+      return(true);
+    }
+
+    return(false);
+  }
+
+  bool CMemoryFile::ReleaseWriteAccess()
+  {
+    if (!m_created)                                   return(false);
+    if (m_access_state != access_state::write_access) return(false);
+
+    // reset access state
+    m_access_state = access_state::closed;
+
+    // unlock mutex
+    UnlockMtx(&m_memfile_info.mutex);
+
+    return(true);
+  }
+
+  size_t CMemoryFile::GetWriteAddress(void*& buf_, const size_t len_)
+  {
+    if (!m_created)                                          return(0);
+    if (m_access_state != access_state::write_access)        return(0);
+    if (len_ == 0)                                           return(0);
+    if (len_ > static_cast<size_t>(m_header.max_data_size))  return(0);
+    if (!m_memfile_info.mem_address)                         return(0);
+
+    // update m_header and write to memory file header
+    m_header.cur_data_size = (unsigned long)(len_);
+    SInternalHeader* pHeader = static_cast<SInternalHeader*>(m_memfile_info.mem_address);
+    pHeader->cur_data_size = m_header.cur_data_size;
+
+    // return write address
+    buf_ = static_cast<char*>(m_memfile_info.mem_address) + sizeof(SInternalHeader);
+
+    return(len_);
+  }
+
+  size_t CMemoryFile::Write(const void* buf_, const size_t len_, const size_t offset_)
+  {
+    if (!m_created) return(0);
+    if (!buf_)      return(0);
+
+    void* wbuf(nullptr);
+    if (GetWriteAddress(wbuf, len_ + offset_))
+    {
+      // copy to write buffer
+      memcpy(static_cast<char*>(wbuf) + offset_, buf_, len_);
+
+      // return number of written bytes
+      return(len_);
+    }
+    else
+    {
+      return(0);
+    }
+  }
+
+  bool CMemoryFile::GetAccess(int timeout_)
+  {
+    if (!m_created)                  return(false);
+    if (!m_memfile_info.mem_address) return(false);
+    if (!g_memfile_map())            return(false);
 
     // lock mutex
-    if(!LockMtx(&m_memfile_info->mutex, timeout_))
+    if (!LockMtx(&m_memfile_info.mutex, timeout_))
     {
 #ifndef NDEBUG
       printf("Could not lock memory file mutex: %s.\n\n", m_name.c_str());
@@ -199,83 +319,36 @@ namespace eCAL
     }
 
     // update header
-    SMemFileHeader* pHeader = static_cast<SMemFileHeader*>(m_memfile_info->mem_address);
-    m_header = *pHeader;
+    m_header = *static_cast<SInternalHeader*>(m_memfile_info.mem_address);
 
     // check size again
-    size_t len = static_cast<size_t>(m_header.hdr_size) + static_cast<size_t>(m_header.max_data_size);
-    if(len > m_memfile_info->size)
+    size_t len = static_cast<size_t>(m_header.int_hdr_size) + static_cast<size_t>(m_header.max_data_size);
+    if (len > m_memfile_info.size)
     {
       // check memory file size
-      CheckMemFile(len, false, *m_memfile_info);
+      CheckMemFile(len, false, m_memfile_info);
 
       // update memory file map
       {
         std::lock_guard<std::mutex> lock(g_memfile_map()->sync);
-        g_memfile_map()->map[m_name] = *m_memfile_info;
+        g_memfile_map()->map[m_name] = m_memfile_info;
       }
 
       // check size again and give up if it is still to small
-      if(len > m_memfile_info->size)
+      if (len > m_memfile_info.size)
       {
         // unlock mutex
-        UnlockMtx(&m_memfile_info->mutex);
+        UnlockMtx(&m_memfile_info.mutex);
         return(false);
       }
     }
 
-    // mark as opened
-    m_opened = true;
-
     return(true);
   }
 
-  bool CMemoryFile::Close()
-  {
-    if(!m_opened)  return(true);
-    if(!m_created) return(false);
-
-    // unlock mutex
-    UnlockMtx(&m_memfile_info->mutex);
-
-    // reset states
-    m_opened = false;
-
-    return(true);
-  }
-
-  size_t CMemoryFile::Read(void* buf_, const size_t len_, const size_t offset_)
-  {
-    if(!m_opened)                                                         return(0);
-    if(!buf_)                                                             return(0);
-    if(len_ == 0)                                                         return(0);
-    if(!m_memfile_info->mem_address)                                      return(0);
-    if((len_ + offset_ + sizeof(SMemFileHeader)) > m_memfile_info->size)  return(0);
-
-    // read content
-    memcpy(buf_, static_cast<char*>(m_memfile_info->mem_address) + offset_ + sizeof(SMemFileHeader), len_);
-
-    return(len_);
-  }
-
-  size_t CMemoryFile::Write(const void* buf_, const size_t len_, const size_t offset_)
-  {
-    if(!m_opened)                                                         return(0);
-    if(!buf_)                                                             return(0);
-    if((len_ + offset_) > static_cast<size_t>(m_header.max_data_size))    return(0);
-    if(!m_memfile_info->mem_address)                                      return(0);
-    if((len_ + offset_ + sizeof(SMemFileHeader)) > m_memfile_info->size)  return(0);
-
-    // update header
-    m_header.cur_data_size = (unsigned long)(len_ + offset_);
-    SMemFileHeader* pHeader = static_cast<SMemFileHeader*>(m_memfile_info->mem_address);
-    pHeader->cur_data_size = m_header.cur_data_size;
-
-    // write content
-    memcpy(static_cast<char*>(m_memfile_info->mem_address) + offset_ + sizeof(SMemFileHeader), buf_, len_);
-
-    return(len_);
-  }
+  /////////////////////////////////////////////////////////////////////////////////
+  // Memory file global map handling
+  /////////////////////////////////////////////////////////////////////////////////
 
   void CleanupMemoryFileMap()
   {
@@ -286,7 +359,7 @@ namespace eCAL
 
     // erase memory files from memory map
     auto& memfile_map = g_memfile_map()->map;
-    for(MemFileMapT::iterator iter = memfile_map.begin(); iter != memfile_map.end(); ++iter)
+    for (MemFileMapT::iterator iter = memfile_map.begin(); iter != memfile_map.end(); ++iter)
     {
       auto& memfile_info = iter->second;
 
@@ -294,7 +367,7 @@ namespace eCAL
       UnMapMemFile(memfile_info);
 
       // remove memory file from system
-      if(memfile_info.remove) RemoveMemFile(memfile_info);
+      if (memfile_info.remove) RemoveMemFile(memfile_info);
 
       // deallocate memory file
       DeAllocMemFile(memfile_info);
@@ -320,10 +393,10 @@ namespace eCAL
 
     // check for existing memory file
     MemFileMapT::iterator iter = g_memfile_map()->map.find(name_);
-    if(iter == g_memfile_map()->map.end())
+    if (iter == g_memfile_map()->map.end())
     {
       // create memory file
-      if(!AllocMemFile(name_, create_, mem_file_info_))
+      if (!AllocMemFile(name_, create_, mem_file_info_))
       {
 #ifndef NDEBUG
         printf("Could create memory file: %s.\n\n", name_.c_str());
@@ -364,7 +437,7 @@ namespace eCAL
     // erase memory file from memory map
     auto& memfile_map = g_memfile_map()->map;
     MemFileMapT::iterator iter = memfile_map.find(name_);
-    if(iter != memfile_map.end())
+    if (iter != memfile_map.end())
     {
       auto& memfile_info = iter->second;
 
@@ -372,7 +445,7 @@ namespace eCAL
       memfile_info.refcnt--;
       // mark for remove
       memfile_info.remove |= remove_;
-      if(memfile_info.refcnt < 1)
+      if (memfile_info.refcnt < 1)
       {
         bool remove_from_system = memfile_info.remove;
 
@@ -380,7 +453,7 @@ namespace eCAL
         UnMapMemFile(memfile_info);
 
         // remove memory file from system
-        if(remove_from_system) RemoveMemFile(memfile_info);
+        if (remove_from_system) RemoveMemFile(memfile_info);
 
         // dealloc memory file
         DeAllocMemFile(memfile_info);

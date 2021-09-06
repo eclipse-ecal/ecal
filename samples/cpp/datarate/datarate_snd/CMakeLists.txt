@@ -20,16 +20,16 @@ cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
-project(latency_snd)
+project(datarate_snd)
 
 find_package(eCAL REQUIRED)
 find_package(tclap REQUIRED)
 
-set(latency_snd_src
-    src/latency_snd.cpp
+set(datarate_snd_src
+    src/datarate_snd.cpp
 )
 
-ecal_add_sample(${PROJECT_NAME} ${latency_snd_src})
+ecal_add_sample(${PROJECT_NAME} ${datarate_snd_src})
 
 target_link_libraries(${PROJECT_NAME}
     eCAL::core
@@ -37,4 +37,4 @@ target_link_libraries(${PROJECT_NAME}
 
 ecal_install_sample(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/latency)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/datarate)

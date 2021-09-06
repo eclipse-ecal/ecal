@@ -256,6 +256,18 @@ namespace eCAL
     return m_datawriter->SetMaxBandwidthUDP(bandwidth_);
   }
 
+  bool CPublisher::ShmSetBufferCount(long buffering_)
+  {
+    if (!m_created) return(false);
+    return m_datawriter->ShmSetBufferCount(buffering_);
+  }
+
+  bool CPublisher::ShmEnableZeroCopy(bool state_)
+  {
+    if (!m_created) return(false);
+    return m_datawriter->ShmEnableZeroCopy(state_);
+  }
+
   bool CPublisher::SetID(long long id_)
   {
     m_id = id_;
@@ -281,8 +293,8 @@ namespace eCAL
 
     // send content via data writer layer
     size_t size = 0;
-    if (time_ == -1) size = m_datawriter->Send(buf_, len_, eCAL::Time::GetMicroSeconds(), m_id);
-    else             size = m_datawriter->Send(buf_, len_, time_, m_id);
+    if (time_ == -1) size = m_datawriter->Write(buf_, len_, eCAL::Time::GetMicroSeconds(), m_id);
+    else             size = m_datawriter->Write(buf_, len_, time_, m_id);
 
     // return success
     return(size);

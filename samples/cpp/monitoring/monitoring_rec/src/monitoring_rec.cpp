@@ -201,10 +201,6 @@ int main(int argc, char **argv)
           }
           std::cout << "  tlayer.type     : " << layer_type              << std::endl;   // transport layers type
           std::cout << "  tlayer.confirmed: " << layer.confirmed()       << std::endl;   // transport layers confirmation
-          if (!layer.par().empty())
-          {
-            std::cout << "  tlayer.par      : " << layer.par() << std::endl;   // transport layers parameter
-          }
         }
         std::cout << "tsize           : " << topic.tsize()           << std::endl;   // topic size
 

@@ -34,10 +34,8 @@ namespace eCAL
   class CDataReaderSHM
   {
   public:
-    CDataReaderSHM();
-    ~CDataReaderSHM();
-
-  protected:
+    CDataReaderSHM() = default;
+    ~CDataReaderSHM() = default;
   };
 
   // ecal shared memory layer
@@ -61,6 +59,6 @@ namespace eCAL
     {
     }
 
-    void UpdateParameter(SReaderLayerPar& par_);
+    void SetConnectionParameter(SReaderLayerPar& par_);
   };
 }

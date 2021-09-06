@@ -187,6 +187,44 @@ namespace eCAL
     bool SetMaxBandwidthUDP(long bandwidth_);
 
     /**
+     * @brief Set publisher maximum number of used shared memory buffers.
+     *
+     * @param buffering_  Maximum number of used buffers (needs to be greater than 1, default = 1).
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool ShmSetBufferCount(long buffering_);
+
+    /**
+     * @brief Enable zero copy shared memory trasnport mode.
+     *
+     * By default, the builtin shared memory layer is configured to make one memory copy
+     * on the receiver side. That means the payload is copied by the internal eCAL memory pool manager
+     * out of the memory file and the file is closed immediately after this.
+     * The intention of this implementation is to free the file as fast as possible after reading
+     * its content to allow other subscribing processes to access the content with minimal latency.
+     * The different reading subscribers are fully decoupled and can access their memory copy
+     * independently.
+     * 
+     * If ShmEnableZeroCopy is switched on no memory will be copied at all. The user message callback is
+     * called right after opening the memory file. A direct pointer to the memory payload is forwarded
+     * and can be processed with no latency. The memory file will be closed after the user callback function
+     * returned. The advantage of this configuration is a much higher performance for large payloads (> 1024 kB).
+     * The disadvantage of this configuration is that in the time when the callback is executed the memory file 
+     * is blocked for other subscribers and for writing publishers too. Maybe this can be eliminated
+     * by a better memory file read/write access implementation (lock free read) in future releases.
+     * 
+     * Today, for specific scenarios (1:1 pub/sub connections with large payloads for example) this feature
+     * can increase the performance remarkable. But please keep in mind to return from the message callback function
+     * as fast as possible to not delay subsequent read/write access operations.
+     *
+     * @state_  Set type zero copy mode for shared memory trasnport layer (true == zero copy enabled).
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool ShmEnableZeroCopy(bool state_);
+
+    /**
      * @brief Set the the specific topic id.
      *
      * @param id_     The topic id for subscriber side filtering (0 == no id).

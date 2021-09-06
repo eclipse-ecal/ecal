@@ -32,7 +32,7 @@ long long                             g_msgs (0);
 long long                             g_bytes(0);
 
 // print performance results
-void PrintStatistic(const std::string& topic_name_, const std::chrono::duration<double>& diff_time_, const size_t size_, long long& bytes_, long long& msgs_, char* buf_)
+void PrintStatistic(const std::string& topic_name_, const std::chrono::duration<double>& diff_time_, const size_t size_, long long& bytes_, long long& msgs_)
 {
     std::stringstream out;
     out << "Topic Name:            " << topic_name_                                    << std::endl;
@@ -40,11 +40,6 @@ void PrintStatistic(const std::string& topic_name_, const std::chrono::duration<
     out << "kByte/s:               " << int(bytes_ / 1024        / diff_time_.count()) << std::endl;
     out << "MByte/s:               " << int(bytes_ / 1024 / 1024 / diff_time_.count()) << std::endl;
     out << "Messages/s:            " << int(msgs_                / diff_time_.count()) << std::endl;
-    if(buf_)
-    {
-      buf_[30] = 0;
-      out << "Message:               " << buf_ << std::endl;
-    }
     std::cout << out.str() << std::endl;
     msgs_  = 0;
     bytes_ = 0;
@@ -53,17 +48,19 @@ void PrintStatistic(const std::string& topic_name_, const std::chrono::duration<
 // subscriber callback function
 void OnReceive(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_)
 {
-  size_t      size = data_->size;
-  const void* data = data_->buf;
+  size_t size = data_->size;
 
   g_msgs++;
   g_bytes += size;
+
+  // block it 10 ms, so we emulate some workload in the callback
+  // std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
   // check time and print results every second
   std::chrono::duration<double> diff_time = std::chrono::steady_clock::now() - start_time;
   if (diff_time >= std::chrono::seconds(1))
   {
-    PrintStatistic(topic_name_, diff_time, size, g_bytes, g_msgs, (char*)data);
+    PrintStatistic(topic_name_, diff_time, size, g_bytes, g_msgs);
     start_time = std::chrono::steady_clock::now();
   }
 }

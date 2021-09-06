@@ -70,11 +70,6 @@ int main(int argc, char **argv)
       out << "kByte/s:               " << int(bytes / 1024 / diff_time.count())        << std::endl;
       out << "MByte/s:               " << int(bytes / 1024 / 1024 / diff_time.count()) << std::endl;
       out << "Messages/s:            " << int(msgs / diff_time.count())                << std::endl;
-      if(!rcv_buf.empty())
-      {
-        rcv_buf.resize(30);
-        out << "Message:               " << rcv_buf << std::endl;
-      }
       std::cout << out.str() << std::endl;
       msgs  = 0;
       bytes = 0;

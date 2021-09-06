@@ -544,6 +544,22 @@ extern "C"
     return(0);
   }
 
+  ECALC_API int eCAL_Pub_ShmSetBufferCount(ECAL_HANDLE handle_, long buffering_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
+    if (pub->ShmSetBufferCount(buffering_)) return(1);
+    return(0);
+  }
+
+  ECALC_API int eCAL_Pub_ShmEnableZeroCopy(ECAL_HANDLE handle_, int state_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
+    if (pub->ShmEnableZeroCopy(state_ != 0)) return(1);
+    return(0);
+  }
+
   ECALC_API int eCAL_Pub_SetID(ECAL_HANDLE handle_, long long id_)
   {
     if (handle_ == NULL) return(0);
@@ -697,7 +713,7 @@ extern "C"
   {
     if (buf_len_ == ECAL_ALLOCATE_4ME)
     {
-      return eCAL_Sub_Receive_Alloc(handle_, static_cast<void**>(buf_), time_, rcv_timeout_);
+      return eCAL_Sub_Receive_Alloc(handle_, static_cast<void**>(buf_), time_, rcv_timeout_); //-V206
     }
     else
     {

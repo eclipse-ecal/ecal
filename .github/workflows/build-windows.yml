@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-windows:
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     steps:
     - name: Install Qt
@@ -27,6 +27,9 @@ jobs:
         
     - name: Install Dependencies
       run: choco install doxygen.install
+
+    - name: Uninstall Chocolatey
+      run: move "$env:PROGRAMDATA\chocolatey" "$env:PROGRAMDATA\_chocolatey"
 
 #    - name: Install Cap’n Proto
 #      run: |

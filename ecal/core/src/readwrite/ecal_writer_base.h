@@ -72,32 +72,24 @@ namespace eCAL
     virtual bool AddExtConnection(const std::string& /*host_name_*/, const std::string& /*process_id_*/, const std::string& /*conn_par_*/) { return false; };
     virtual bool RemExtConnection(const std::string& /*host_name_*/, const std::string& /*process_id_*/) { return false; };
 
-    virtual std::string GetConectionPar() { return ""; };
+    virtual std::string GetConnectionParameter() { return ""; };
 
-    virtual bool PrepareSend(size_t /*len_*/) { return false; };
     struct SWriterData
     {
-      SWriterData()
-      {
-        buf              = nullptr;
-        len              = 0;
-        id               = 0;
-        clock            = 0;
-        hash             = 0;
-        time             = 0;
-        bandwidth        = -1;
-        loopback         = 0;
-      }
-      const void*  buf;
-      size_t       len;
-      long long    id;
-      long long    clock;
-      size_t       hash;
-      long long    time;
-      long         bandwidth;
-      bool         loopback;
+      const void*  buf       = nullptr;
+      size_t       len       = 0;
+      long long    id        = 0;
+      long long    clock     = 0;
+      size_t       hash      = 0;
+      long long    time      = 0;
+      size_t       buffering = 1;
+      long         bandwidth = 0;
+      bool         loopback  = false;
+      bool         zero_copy = false;
     };
-    virtual size_t Send(const SWriterData& data_) = 0;
+
+    virtual bool   PrepareWrite(const SWriterData& /*data_*/) { return false; };
+    virtual size_t Write(const SWriterData& data_) = 0;
 
   protected:
     std::string      m_host_name;
