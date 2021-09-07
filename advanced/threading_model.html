@@ -471,21 +471,22 @@
 <!-- body -->
     <section id="threading-model">
 <span id="id1"></span><h1>Threading model<a class="headerlink" href="#threading-model" title="Permalink to this headline">¶</a></h1>
-<p>eCAL is using different transport layers for intraprocess, interprocess or interhost communication. With a call of ‘eCAL::Initialize’ different internal, global threads are startet:</p>
+<p>eCAL is using different transport layers for intraprocess, interprocess or interhost communication. With a call of <code class="docutils literal notranslate"><span class="pre">eCAL::Initialize</span></code> different internal, global threads are startet:</p>
 <ul class="simple">
-<li><p>udp registration send / receive thread (2 threads)</p></li>
-<li><p>udp logging receive thread (1 thread)</p></li>
-<li><p>udp monitoring send thread (1 thread)</p></li>
-<li><p>udp message receive thread (1 thread)</p></li>
+<li><p>udp monitoring send thread</p></li>
+<li><p>udp registration send thread</p></li>
+<li><p>udp registration receive thread</p></li>
+<li><p>udp logging receive thread</p></li>
+<li><p>udp message (payload) receive thread</p></li>
 </ul>
-<p>For the eCAL user interface entities ‘CTimer’, ‘CSubscriber’, ‘CServiceServer’, ‘CServiceClient’ additional threads are utilized:</p>
+<p>For the eCAL user interface entities <code class="docutils literal notranslate"><span class="pre">CTimer</span></code>, <code class="docutils literal notranslate"><span class="pre">CSubscriber</span></code>, <code class="docutils literal notranslate"><span class="pre">CServiceServer</span></code>, <code class="docutils literal notranslate"><span class="pre">CServiceClient</span></code> additional threads are utilized:</p>
 <ul class="simple">
-<li><p>shm message receive thread (1 thread per handled memory file)</p></li>
-<li><p>timer callback (1 thread per instance)</p></li>
+<li><p>shared memory synchronization event thread (1 thread per handled memory file)</p></li>
+<li><p>timer callback (1 thread per callback)</p></li>
 <li><p>tcp client/server implementation (2 threads per instance)</p></li>
 </ul>
-<p>For user API callback functions eCAL is protecting the forwarded data (message header, message payload ..) as long as the callback is processed.
-For subscriptions and their callbacks it is recommended to not block the callback but to copy the data for later processing into user defined container.
+<p>For user API callback functions eCAL is protecting the forwarded data (message header, message payload ..) as long as the callback is processed.</p>
+<p>For subscriptions and their callbacks it is recommended to not block the callback but to copy the data for later processing into user defined container.
 Blocking callbacks can lead to dropped (missed) messages.</p>
 </section>
 
