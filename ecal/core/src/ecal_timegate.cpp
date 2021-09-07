@@ -358,6 +358,8 @@ namespace eCAL
       }
     }
 
+    const auto ecal_time_plugin_paths = splitPaths(getEnvVar("ECAL_TIME_PLUGIN_PATH"));
+
 #ifdef _WIN32
   #ifndef NDEBUG
       module_name += "d";
@@ -373,25 +375,43 @@ namespace eCAL
     if (!interface_.module_handle)
     {
 #ifdef _WIN32
-      // create module path
-      std::string module_path = module_name;
+      // try to load plugin from paths that are specified in the time plugin environment variable
+      for (const auto& ecal_time_plugin_path : ecal_time_plugin_paths)
+      {
+        const auto module_path = ecal_time_plugin_path + "\\" + module_name;
+        interface_.module_handle = LoadLibrary(module_path.c_str());
+        if (interface_.module_handle) break;
+      }
+
       // try to load plugin in standard path
-      interface_.module_handle = LoadLibrary(module_path.c_str());
+      if (!interface_.module_handle)
+      {
+        const auto module_path = module_name;
+        interface_.module_handle = LoadLibrary(module_path.c_str());
+      }
+
       // try to load plugin from sub folder "ecal_time_plugin_dir"
       if (!interface_.module_handle)
       {
-        module_path = std::string(ecal_time_plugin_dir) + "\\" + module_name;
-        interface_.module_handle = LoadLibrary(module_path.c_str());
-      }
-      // try to load it from "%ECAL_HOME\bin\ecal_time_plugin_dir"
-      if (!interface_.module_handle)
-      {
-        module_path = getEnvVar("ECAL_HOME") + "\\bin\\" + std::string(ecal_time_plugin_dir) + "\\" + module_name;
+        const auto module_path = std::string(ecal_time_plugin_dir) + "\\" + module_name;
         interface_.module_handle = LoadLibrary(module_path.c_str());
       }
 #endif
 #ifdef __linux__
-      interface_.module_handle = dlopen(module_name.c_str(), RTLD_NOW);
+      // try to load plugin from paths that are specified in the time plugin environment variable
+      for (const auto& ecal_time_plugin_path : ecal_time_plugin_paths)
+      {
+        const auto module_path = ecal_time_plugin_path + "/" + module_name;
+        interface_.module_handle = dlopen(module_path.c_str(), RTLD_NOW);
+        if (interface_.module_handle) break;
+      }
+
+      // try to load plugin in standard path
+      if (!interface_.module_handle)
+      {
+        const auto module_path = module_name;
+        interface_.module_handle = dlopen(module_path.c_str(), RTLD_NOW);
+      }
 #endif
 
       if (!interface_.module_handle)
