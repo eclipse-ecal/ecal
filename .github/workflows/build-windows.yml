@@ -37,11 +37,11 @@ jobs:
 #        cd "${{ runner.workspace }}/capnp"
 #        git clone https://github.com/sandstorm-io/capnproto.git
 #        cd capnproto
-#        git checkout release-0.8.0
+#        git checkout release-0.9.0
 #        cd c++
 #        mkdir _build
 #        cd _build
-#        cmake .. -G "Visual Studio 16 2019" -A x64 -T v140
+#        cmake .. -G "Visual Studio 16 2019" -A x64
 #        cmake --build . --parallel --config Release
 #        cmake --build . --target install --config Release
 
@@ -102,7 +102,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_GTEST=ON ^
         -DECAL_THIRDPARTY_BUILD_HDF5=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
-        -DCMAKE_PREFIX_PATH="%ProgramFiles(x86)%/Cap'n Proto/lib/cmake/CapnProto" ^
+        -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Debug ^
         -DCPACK_PACK_WITH_INNOSETUP=OFF
       shell: cmd
@@ -137,7 +137,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_GTEST=ON ^
         -DECAL_THIRDPARTY_BUILD_HDF5=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
-        -DCMAKE_PREFIX_PATH="%ProgramFiles(x86)%/Cap'n Proto/lib/cmake/CapnProto" ^
+        -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Release ^
         -DCPACK_PACK_WITH_INNOSETUP=ON
         mkdir "%ALLUSERSPROFILE%\eCAL"
