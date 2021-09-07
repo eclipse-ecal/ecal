@@ -31,19 +31,19 @@ jobs:
     - name: Uninstall Chocolatey
       run: move "$env:PROGRAMDATA\chocolatey" "$env:PROGRAMDATA\_chocolatey"
 
-    - name: Install Cap’n Proto
-      run: |
-        mkdir "${{ runner.workspace }}/capnp"
-        cd "${{ runner.workspace }}/capnp"
-        git clone https://github.com/sandstorm-io/capnproto.git
-        cd capnproto
-        git checkout release-0.9.0
-        cd c++
-        mkdir _build
-        cd _build
-        cmake .. -G "Visual Studio 16 2019" -A x64
-        cmake --build . --parallel --config Release
-        cmake --build . --target install --config Release
+#    - name: Install Cap’n Proto
+#      run: |
+#        mkdir "${{ runner.workspace }}/capnp"
+#        cd "${{ runner.workspace }}/capnp"
+#        git clone https://github.com/sandstorm-io/capnproto.git
+#        cd capnproto
+#        git checkout release-0.9.0
+#        cd c++
+#        mkdir _build
+#        cd _build
+#        cmake .. -G "Visual Studio 16 2019" -A x64
+#        cmake --build . --parallel --config Release
+#        cmake --build . --target install --config Release
 
     - name: Checkout
       uses: actions/checkout@v2
@@ -80,7 +80,7 @@ jobs:
         -DHAS_HDF5=ON ^
         -DHAS_QT5=ON ^
         -DHAS_CURL=ON ^
-        -DHAS_CAPNPROTO=ON ^
+        -DHAS_CAPNPROTO=OFF ^
         -DBUILD_DOCS=OFF ^
         -DBUILD_APPS=OFF ^
         -DBUILD_SAMPLES=OFF ^
@@ -115,7 +115,7 @@ jobs:
         -DHAS_HDF5=ON ^
         -DHAS_QT5=ON ^
         -DHAS_CURL=ON ^
-        -DHAS_CAPNPROTO=ON ^
+        -DHAS_CAPNPROTO=OFF ^
         -DBUILD_DOCS=ON ^
         -DBUILD_APPS=ON ^
         -DBUILD_SAMPLES=ON ^
