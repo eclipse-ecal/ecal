@@ -102,7 +102,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_GTEST=ON ^
         -DECAL_THIRDPARTY_BUILD_HDF5=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
-        -DCMAKE_PREFIX_PATH="%ProgramFiles(x86)%/Cap'n Proto/lib/cmake/CapnProto" ^
+        -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Debug ^
         -DCPACK_PACK_WITH_INNOSETUP=OFF
       shell: cmd
@@ -137,7 +137,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_GTEST=ON ^
         -DECAL_THIRDPARTY_BUILD_HDF5=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
-        -DCMAKE_PREFIX_PATH="%ProgramFiles(x86)%/Cap'n Proto/lib/cmake/CapnProto" ^
+        -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Release ^
         -DCPACK_PACK_WITH_INNOSETUP=ON
         mkdir "%ALLUSERSPROFILE%\eCAL"
