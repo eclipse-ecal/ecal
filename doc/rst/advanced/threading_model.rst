@@ -6,7 +6,7 @@
 Threading model
 ==================================
 
-eCAL is using different transport layers for intraprocess, interprocess or interhost communication. With a call of ``eCAL::Initialize`` different internal, global threads are startet:
+eCAL is using different transport layers for intraprocess, interprocess or interhost communication. With a call of ``eCAL::Initialize`` different internal threads are started, with a call of ``eCAL::Finalize`` they are stopped:
 
 - udp monitoring send thread
 - udp registration send thread
@@ -14,7 +14,7 @@ eCAL is using different transport layers for intraprocess, interprocess or inter
 - udp logging receive thread
 - udp message (payload) receive thread
 
-For the eCAL user interface entities ``CTimer``, ``CSubscriber``, ``CServiceServer``, ``CServiceClient`` additional threads are utilized:
+For the eCAL user interface entities ``eCAL::CTimer``, ``eCAL::CSubscriber``, ``eCAL::CServiceServer``, ``eCAL::CServiceClient`` additional threads are utilized:
 
 - shared memory synchronization event thread (1 thread per handled memory file)
 - timer callback (1 thread per callback)
