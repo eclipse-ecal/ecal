@@ -471,7 +471,7 @@
 <!-- body -->
     <section id="threading-model">
 <span id="id1"></span><h1>Threading model<a class="headerlink" href="#threading-model" title="Permalink to this headline">¶</a></h1>
-<p>eCAL is using different transport layers for intraprocess, interprocess or interhost communication. With a call of <code class="docutils literal notranslate"><span class="pre">eCAL::Initialize</span></code> different internal, global threads are startet:</p>
+<p>eCAL is using different transport layers for intraprocess, interprocess or interhost communication. With a call of <code class="docutils literal notranslate"><span class="pre">eCAL::Initialize</span></code> different internal threads are started, with a call of <code class="docutils literal notranslate"><span class="pre">eCAL::Finalize</span></code> they are stopped:</p>
 <ul class="simple">
 <li><p>udp monitoring send thread</p></li>
 <li><p>udp registration send thread</p></li>
@@ -479,7 +479,7 @@
 <li><p>udp logging receive thread</p></li>
 <li><p>udp message (payload) receive thread</p></li>
 </ul>
-<p>For the eCAL user interface entities <code class="docutils literal notranslate"><span class="pre">CTimer</span></code>, <code class="docutils literal notranslate"><span class="pre">CSubscriber</span></code>, <code class="docutils literal notranslate"><span class="pre">CServiceServer</span></code>, <code class="docutils literal notranslate"><span class="pre">CServiceClient</span></code> additional threads are utilized:</p>
+<p>For the eCAL user interface entities <code class="docutils literal notranslate"><span class="pre">eCAL::CTimer</span></code>, <code class="docutils literal notranslate"><span class="pre">eCAL::CSubscriber</span></code>, <code class="docutils literal notranslate"><span class="pre">eCAL::CServiceServer</span></code>, <code class="docutils literal notranslate"><span class="pre">eCAL::CServiceClient</span></code> additional threads are utilized:</p>
 <ul class="simple">
 <li><p>shared memory synchronization event thread (1 thread per handled memory file)</p></li>
 <li><p>timer callback (1 thread per callback)</p></li>
