@@ -81,6 +81,8 @@ namespace eCAL
     /**
      * @brief Retrieve full eCAL default ini file name.
      *
+     * @deprecated  Use GeteCALActiveIniFile() instead
+     *
      * @return  eCAL default ini file name.
     **/
     [[deprecated]]

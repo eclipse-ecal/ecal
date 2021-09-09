@@ -183,7 +183,7 @@ void TopicWidget::loadRegExpLists()
   // the topics and takes a LOT of time to do that. By manually loading the
   // filter we can manually filter the topic list and thereby instantaneously
   // update the GUI.
-  std::string default_ini_path = eCAL::Util::GeteCALDefaultIniFile();
+  std::string default_ini_path = eCAL::Util::GeteCALActiveIniFile();
 
   CSimpleIniA ini;
   SI_Error rc = ini.LoadFile(default_ini_path.c_str());
