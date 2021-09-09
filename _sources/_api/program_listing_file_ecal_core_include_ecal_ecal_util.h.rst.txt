@@ -40,6 +40,7 @@ Program Listing for File ecal_util.h
    {
      namespace Util
      {
+       [[deprecated]]
        ECAL_API std::string GeteCALHomePath();
    
        ECAL_API std::string GeteCALConfigPath();
@@ -48,6 +49,9 @@ Program Listing for File ecal_util.h
    
        ECAL_API std::string GeteCALLogPath();
    
+       ECAL_API std::string GeteCALActiveIniFile();
+   
+       [[deprecated]]
        ECAL_API std::string GeteCALDefaultIniFile();
    
        ECAL_API void ShutdownProcess(const std::string& unit_name_);
