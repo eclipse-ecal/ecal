@@ -136,11 +136,24 @@ namespace eCAL
       **/
       size_t GetSize(const T& msg_) const
       {
+        size_t size(0);
 #if GOOGLE_PROTOBUF_VERSION >= 3001000
-        return((size_t)msg_.ByteSizeLong());
+        size = (size_t)msg_.ByteSizeLong();
 #else
-        return((size_t)msg_.ByteSize());
+        size = (size_t)msg_.ByteSize();
 #endif
+        // In case we have an empty protocol buffer message object
+        // (containing default values only) the serialized size
+        // will be zero and the message will not be transported by
+        // any layer.
+        // We increase message size to 1 byte to force transport.
+        // protobuf::CSubscriber::Deserialize will check this and
+        // return an empty message object as expected.
+        if (size == 0)
+        {
+          size = 1;
+        }
+        return(size);
       }
 
       /**

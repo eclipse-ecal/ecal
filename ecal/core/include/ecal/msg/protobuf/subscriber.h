@@ -139,7 +139,26 @@ namespace eCAL
       **/
       bool Deserialize(T& msg_, const void* buffer_, size_t size_) const
       {
-        return(msg_.ParseFromArray(buffer_, static_cast<int>(size_)));
+        // we try to parse the message from the received buffer
+        if (msg_.ParseFromArray(buffer_, static_cast<int>(size_)))
+        {
+          return(true);
+        }
+        else
+        {
+          // If deserialization failed we check for message size.
+          // Empty messages will set to a minimum size of 1 byte
+          // by the protobuf::CPublisher::GetSize function to force
+          // the transport through all layers.
+          // In this case we clear the message object and 
+          // return success.
+          if (size_ == 1)
+          {
+            msg_.Clear();
+            return(true);
+          }
+        }
+        return(false);
       }
 
     };
