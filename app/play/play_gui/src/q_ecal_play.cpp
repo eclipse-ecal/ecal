@@ -293,7 +293,17 @@ bool QEcalPlay::loadMeasurementFromFileDialog()
     auto filenames = open_dialog.selectedFiles();
     if (!filenames.empty())
     {
-      return loadMeasurement(filenames.front());
+      QString path_to_load;
+      if (QFile(filenames.front()).exists())
+      {
+        path_to_load = filenames.front();
+      }
+      else
+      {
+        path_to_load = QDir::toNativeSeparators(QFileInfo(filenames.front()).path());
+      }
+
+      return loadMeasurement(path_to_load);
     }
   }
 
@@ -321,17 +331,7 @@ bool QEcalPlay::loadMeasurement(const QString& path, bool suppress_blocking_dial
   dlg.setValue(0);
   dlg.setValue(1);
 
-  QString path_to_load;
-  if (QFile(path).exists())
-  {
-    path_to_load = path;
-  }
-  else
-  {
-    path_to_load = QDir::toNativeSeparators(QFileInfo(path).path());
-  }
-
-  QFuture<bool> success_future = QtConcurrent::run(&ecal_play_, &EcalPlay::LoadMeasurement, path_to_load.toStdString());
+  QFuture<bool> success_future = QtConcurrent::run(&ecal_play_, &EcalPlay::LoadMeasurement, path.toStdString());
 
   while (!success_future.isFinished())
   {
@@ -344,13 +344,13 @@ bool QEcalPlay::loadMeasurement(const QString& path, bool suppress_blocking_dial
   if (success)
   {
     scenarios_modified_ = false;
-    emit measurementLoadedSignal(path_to_load);
+    emit measurementLoadedSignal(path);
     emit publishersInitStateChangedSignal(false);
 
     setStepReferenceChannel("");
 
     // Save last measurment path
-    QDir dir(path_to_load);
+    QDir dir(path);
     QSettings settings;
     settings.setValue("last_measurement_folder", QDir::toNativeSeparators(dir.absolutePath()));
 
@@ -409,7 +409,7 @@ bool QEcalPlay::loadMeasurement(const QString& path, bool suppress_blocking_dial
       QMessageBox error_message(
         QMessageBox::Icon::Critical
         , tr("Error")
-        , tr("Unable to load measurement:\n") + QDir::toNativeSeparators(path_to_load)
+        , tr("Unable to load measurement:\n") + QDir::toNativeSeparators(path)
         , QMessageBox::Button::Ok
         , caller);
       error_message.setWindowIcon(icon);
