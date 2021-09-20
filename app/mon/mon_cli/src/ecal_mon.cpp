@@ -54,7 +54,7 @@
 
 #define GetMessageA GetMessage
 
-enum CmdOption
+enum class CmdOption
 {
   version,
   bandwidth,
@@ -138,7 +138,7 @@ int main(int argc, char** argv)
     /************************************************************************/
     /*                                                                      */
     /************************************************************************/
-    enum CmdOption cmd_option(version);
+    enum CmdOption cmd_option(CmdOption::version);
 
     std::string topic_name;
     std::string topic_type;
@@ -147,41 +147,41 @@ int main(int argc, char** argv)
     if (bandwidth_arg.getValue().empty() == false)
     {
       topic_name = bandwidth_arg.getValue();
-      cmd_option = bandwidth;
+      cmd_option = CmdOption::bandwidth;
     }
     if (echo_arg.getValue().empty() == false)
     {
       topic_name = echo_arg.getValue();
-      cmd_option = echo;
+      cmd_option = CmdOption::echo;
     }
     if (proto_arg.getValue().empty() == false)
     {
       topic_name = proto_arg.getValue();
-      cmd_option = proto;
+      cmd_option = CmdOption::proto;
     }
     if (find_arg.getValue().empty() == false)
     {
       topic_type = find_arg.getValue();
-      cmd_option = find;
+      cmd_option = CmdOption::find;
     }
     if (rate_arg.getValue().empty() == false)
     {
       topic_name = rate_arg.getValue();
-      cmd_option = rate;
+      cmd_option = CmdOption::rate;
     }
     if (info_arg.getValue().empty() == false)
     {
       topic_name = info_arg.getValue();
-      cmd_option = info;
+      cmd_option = CmdOption::info;
     }
     if (list_arg.getValue() == true)
     {
-      cmd_option = list;
+      cmd_option = CmdOption::list;
     }
     if (pub_arg.getValue().empty() == false)
     {
       topic_name = pub_arg.getValue();
-      cmd_option = pub;
+      cmd_option = CmdOption::pub;
     }
     if (message_arg.getValue().empty() == false)
     {
@@ -190,12 +190,12 @@ int main(int argc, char** argv)
     if (type_arg.getValue().empty() == false)
     {
       topic_name = type_arg.getValue();
-      cmd_option = type;
+      cmd_option = CmdOption::type;
     }
     if (desc_arg.getValue().empty() == false)
     {
       topic_name = desc_arg.getValue();
-      cmd_option = desc;
+      cmd_option = CmdOption::desc;
     }
     if (pause_arg.getValue() > 0)
     {
@@ -210,34 +210,34 @@ int main(int argc, char** argv)
 
     switch (cmd_option)
     {
-    case bandwidth:
+    case CmdOption::bandwidth:
       ProcBandwidth(topic_name);
       break;
-    case echo:
+    case CmdOption::echo:
       ProcEcho(topic_name);
       break;
-    case proto:
+    case CmdOption::proto:
       ProcProto(topic_name);
       break;
-    case find:
+    case CmdOption::find:
       ProcFind(topic_type);
       break;
-    case rate:
+    case CmdOption::rate:
       ProcRate(topic_name);
       break;
-    case info:
+    case CmdOption::info:
       ProcInfo(topic_name);
       break;
-    case list:
+    case CmdOption::list:
       ProcList();
       break;
-    case pub:
+    case CmdOption::pub:
       ProcPub(topic_name, message);
       break;
-    case type:
+    case CmdOption::type:
       ProcType(topic_name);
       break;
-    case desc:
+    case CmdOption::desc:
       ProcDesc(topic_name);
       break;
     default:
