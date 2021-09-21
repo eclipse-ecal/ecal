@@ -138,7 +138,7 @@ int main(int argc, char** argv)
     /************************************************************************/
     /*                                                                      */
     /************************************************************************/
-    enum CmdOption cmd_option(CmdOption::version);
+    CmdOption cmd_option(CmdOption::version);
 
     std::string topic_name;
     std::string topic_type;
