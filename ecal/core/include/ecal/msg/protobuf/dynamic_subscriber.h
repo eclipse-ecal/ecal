@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -295,7 +295,22 @@ namespace eCAL
           }
           else
           {
-            throw DynamicReflectionException("CDynamicSubscriber: DataContent could not be parsed");
+            // If deserialization failed we check for message size.
+            // Empty messages will set to a minimum size of 1 byte
+            // by the protobuf::CPublisher::GetSize function to force
+            // the transport through all layers.
+            // In this case we clear the message object and
+            // return success.
+            if (data_->size == 1)
+            {
+              msg_ptr->Clear();
+              msg_callback(topic_name_, *msg_ptr, data_->time);
+            }
+            else
+            {
+              throw DynamicReflectionException("CDynamicSubscriber: DataContent could not be parsed");
+            }
+
           }
         }
       }
