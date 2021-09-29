@@ -128,7 +128,11 @@ namespace eCAL
       
       size_t GetSize(const google::protobuf::Message& msg_) const
       {
+#if GOOGLE_PROTOBUF_VERSION >= 3001000
         return ((size_t)msg_.ByteSizeLong());
+#else
+        return ((size_t)msg_.ByteSize());
+#endif
       }
       
       bool Serialize(const google::protobuf::Message& msg_, char* buffer_, size_t size_) const
