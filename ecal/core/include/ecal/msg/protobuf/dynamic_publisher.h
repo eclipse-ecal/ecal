@@ -84,6 +84,8 @@ namespace eCAL
       }
 
     private:
+      size_t Send(const google::protobuf::Message& msg_, long long time_ = -1) = delete;
+
       std::string GetTypeName() const override
       {
         return GetTypeNameFromMessage(m_msg.get());
