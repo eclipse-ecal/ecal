@@ -83,6 +83,27 @@ namespace eCAL
         return CMsgPublisher::Send(*m_msg, time_);
       }
 
+      /**
+       * @brief  Get underlying protobuf message object.
+       *
+       * @return  Message object.
+      **/
+      std::shared_ptr<google::protobuf::Message> GetMessage()
+      {
+        return m_msg;
+      }
+
+      /**
+       * @brief  Get underlying protobuf message object as T.
+       *
+       * @return  Message object.
+      **/
+      template<typename T>
+      std::shared_ptr<T> GetAs()
+      {
+        return std::static_pointer_cast<T>(m_msg);
+      }
+
     private:
       size_t Send(const google::protobuf::Message& msg_, long long time_ = -1) = delete;
 
