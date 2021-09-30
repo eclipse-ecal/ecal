@@ -27,11 +27,14 @@
 int main(int argc, char **argv)
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "proto_dyn_pub");
+  eCAL::Initialize(argc, argv, "person publisher dynamic");
+
+  // set process state
+  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
   // create a dynamic publisher (topic name "person")
   std::shared_ptr<pb::People::Person> person{ new pb::People::Person() };
-  eCAL::protobuf::CDynamicPublisher pub("dyn_pub", person);
+  eCAL::protobuf::CDynamicPublisher pub("person", person);
 
   // enter main loop
   auto cnt = 0;
@@ -46,7 +49,7 @@ int main(int argc, char **argv)
     person->mutable_house()->set_rooms(4);
 
     // send the person object
-    pub.Send(*person);
+    pub.Send();
 
     // print content
     std::cout << "person id    : " << person->id()            << std::endl;

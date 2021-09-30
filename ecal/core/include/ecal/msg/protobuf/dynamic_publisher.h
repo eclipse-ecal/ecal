@@ -57,7 +57,7 @@ namespace eCAL
        * @param msg_         Protobuf message object.
       **/
       CDynamicPublisher(const std::string& topic_name_, std::shared_ptr<google::protobuf::Message> msg_)
-        : CMsgPublisher<google::protobuf::Message>(topic_name_, GetTypeName(msg_.get()), GetDescription(msg_.get())),
+        : CMsgPublisher<google::protobuf::Message>(topic_name_, GetTypeNameFromMessage(msg_.get()), GetDescriptionFromMessage(msg_.get())),
         m_msg{ msg_ } {}
 
       /**
@@ -67,19 +67,69 @@ namespace eCAL
        * @param proto_type_name_  Protobuf message type name.
       **/
       CDynamicPublisher(const std::string& topic_name_, const std::string& proto_type_name_)
-        : CMsgPublisher<google::protobuf::Message>(topic_name_, GetTypeName(CreateMessageByName(proto_type_name_).get()),
-          GetDescription(CreateMessageByName(proto_type_name_).get())),
+        : CMsgPublisher<google::protobuf::Message>(topic_name_, GetTypeNameFromMessage(CreateMessageByName(proto_type_name_).get()),
+          GetDescriptionFromMessage(CreateMessageByName(proto_type_name_).get())),
         m_msg{ CreateMessageByName(proto_type_name_) } {}
+
+      /**
+       * @brief  Send message.
+       *
+       * @param time_  Optional time stamp.
+       *
+       * @return  Number of bytes sent.
+      **/
+      size_t Send(long long time_ = -1)
+      {
+        return CMsgPublisher::Send(*m_msg, time_);
+      }
 
     private:
       std::string GetTypeName() const override
       {
-        return GetTypeName(m_msg.get());
+        return GetTypeNameFromMessage(m_msg.get());
       }
 
-      static std::string GetTypeName(const google::protobuf::Message* msg_ptr_)
+      std::string GetDescription() const override
       {
+        return GetDescriptionFromMessage(m_msg.get());
+      }
+
+      size_t GetSize(const google::protobuf::Message& msg_) const override
+      {
+#if GOOGLE_PROTOBUF_VERSION >= 3001000
+        return ((size_t)msg_.ByteSizeLong());
+#else
+        return ((size_t)msg_.ByteSize());
+#endif
+      }
+
+      bool Serialize(const google::protobuf::Message& msg_, char* buffer_, size_t size_) const override
+      {
+        return (msg_.SerializeToArray((void*)buffer_, (int)size_));
+      }
+
+
+      static std::string GetTypeNameFromMessage(const google::protobuf::Message* msg_ptr_)
+      {
+        assert(msg_ptr_);
+
         return ("proto:" + msg_ptr_->GetTypeName());
+      }
+
+      static std::string GetDescriptionFromMessage(const google::protobuf::Message* msg_ptr_)
+      {
+        assert(msg_ptr_);
+
+        const google::protobuf::Descriptor* desc = msg_ptr_->GetDescriptor();
+        google::protobuf::FileDescriptorSet pset;
+
+        if (eCAL::protobuf::GetFileDescriptor(desc, pset))
+        {
+          std::string desc_s = pset.SerializeAsString();
+          return (desc_s);
+        }
+
+        return ("");
       }
 
       static std::shared_ptr<google::protobuf::Message> CreateMessageByName(const std::string& type_name_)
@@ -105,39 +155,6 @@ namespace eCAL
         }
 
         return message;
-      }
-
-      static std::string GetDescription(const google::protobuf::Message* msg_ptr_)
-      {
-        const google::protobuf::Descriptor* desc = msg_ptr_->GetDescriptor();
-        google::protobuf::FileDescriptorSet pset;
-        
-        if (eCAL::protobuf::GetFileDescriptor(desc, pset))
-        {
-          std::string desc_s = pset.SerializeAsString();
-          return (desc_s);
-        }
-        
-        return ("");
-      }
-
-      std::string GetDescription() const override
-      {
-        return GetDescription(m_msg.get());
-      }
-      
-      size_t GetSize(const google::protobuf::Message& msg_) const
-      {
-#if GOOGLE_PROTOBUF_VERSION >= 3001000
-        return ((size_t)msg_.ByteSizeLong());
-#else
-        return ((size_t)msg_.ByteSize());
-#endif
-      }
-      
-      bool Serialize(const google::protobuf::Message& msg_, char* buffer_, size_t size_) const
-      {
-        return (msg_.SerializeToArray((void*)buffer_, (int)size_));
       }
 
       CDynamicPublisher(const CDynamicPublisher&) = delete;

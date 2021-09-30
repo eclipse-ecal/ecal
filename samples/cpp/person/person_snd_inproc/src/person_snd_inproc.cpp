@@ -49,7 +49,7 @@ void OnPerson(const char* topic_name_, const pb::People::Person& person_, const 
 int main(int argc, char **argv)
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "person publisher");
+  eCAL::Initialize(argc, argv, "person publisher inproc");
 
   // enable loopback
   eCAL::Util::EnableLoopback(true);
