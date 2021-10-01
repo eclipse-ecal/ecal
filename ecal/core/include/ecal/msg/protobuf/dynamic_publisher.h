@@ -86,7 +86,7 @@ namespace eCAL
       /**
        * @brief  Get underlying protobuf message object.
        *
-       * @return  Message object.
+       * @return  Message object <google::protobuf::Message>.
       **/
       std::shared_ptr<google::protobuf::Message> GetMessage()
       {
@@ -96,12 +96,12 @@ namespace eCAL
       /**
        * @brief  Get underlying protobuf message object as T.
        *
-       * @return  Message object.
+       * @return  Message object <T>.
       **/
       template<typename T>
       std::shared_ptr<T> GetAs()
       {
-        return std::static_pointer_cast<T>(m_msg);
+        return std::dynamic_pointer_cast<T>(m_msg);
       }
 
     private:
