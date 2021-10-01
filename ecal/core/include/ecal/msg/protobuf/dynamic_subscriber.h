@@ -18,8 +18,8 @@
 */
 
 /**
- * @file   ecal_proto_dyn_sub.h
- * @brief  dynamic protobuf message decoder
+ * @file   dynamic_subscriber.h
+ * @brief  dynamic protobuf message subscriber
 **/
 
 #pragma once

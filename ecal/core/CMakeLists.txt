@@ -303,6 +303,7 @@ set(ecal_header_msg
     include/ecal/msg/messagepack/subscriber.h
     include/ecal/msg/protobuf/client.h
     include/ecal/msg/protobuf/dynamic_json_subscriber.h
+    include/ecal/msg/protobuf/dynamic_publisher.h
     include/ecal/msg/protobuf/dynamic_subscriber.h
     include/ecal/msg/protobuf/publisher.h
     include/ecal/msg/protobuf/server.h
