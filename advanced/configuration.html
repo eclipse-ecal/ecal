@@ -432,7 +432,10 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">eCAL Configuration</a></li>
+<li><a class="reference internal" href="#">eCAL Configuration</a><ul>
+<li><a class="reference internal" href="#loading-strategy-priority">Loading strategy (Priority)</a></li>
+</ul>
+</li>
 </ul>
 <!-- /menu -->
                             </div>
@@ -475,6 +478,22 @@
 <!-- body -->
     <section id="ecal-configuration">
 <span id="id1"></span><h1>eCAL Configuration<a class="headerlink" href="#ecal-configuration" title="Permalink to this headline">¶</a></h1>
+<section id="loading-strategy-priority">
+<h2>Loading strategy (Priority)<a class="headerlink" href="#loading-strategy-priority" title="Permalink to this headline">¶</a></h2>
+<p>The eCAL configuration file is loaded based on the following priorities for Windows and Linux. In addition, it can be passed explicitly to every eCAL application with the command line option <code class="docutils literal notranslate"><span class="pre">--ecal-ini-file</span></code>.</p>
+<dl class="simple">
+<dt>Windows:</dt><dd><ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">$ECAL_DATA/ecal.ini</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$AppData/ecal/ecal.ini</span></code></p></li>
+</ol>
+</dd>
+<dt>Linux:</dt><dd><ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">$ECAL_DATA/ecal.ini</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CMAKE_CONFIGURED_PATH/ecal.ini</span></code>    (e.g. /usr/local/etc/ecal/ecal.ini)</p></li>
+</ol>
+</dd>
+</dl>
+</section>
 </section>
 
 <!-- /body -->
