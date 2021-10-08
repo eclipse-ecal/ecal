@@ -64,14 +64,18 @@ Name: sdk\hdf5;       Description: "HDF5";                                     T
 
 [Tasks]
 Name: "desktopicon";  Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";     Flags: unchecked
+Name: "replaceconf";  Description: "Overwrite existing configuration";                                     Flags: checkedonce
 Name: "modifypath";   Description: "Add application directory to your environmental path";                 Flags: checkedonce
 
 [Files]
 ; runtime
-Source: "{#ComponentStagingDir}\runtime\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: runtime
-Source: "{#ComponentStagingDir}\Unspecified\*";       DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: runtime
-Source: "{#ComponentStagingDir}\configuration\cfg\*"; DestDir: "{commonappdata}\eCAL\";   Flags: ignoreversion recursesubdirs;     Components: runtime
-Source: "{#ComponentStagingDir}\libraries\bin\*";     DestDir: "{app}\bin\";              Flags: ignoreversion recursesubdirs;     Components: runtime
+Source: "{#ComponentStagingDir}\runtime\*";           DestDir: "{app}";      Flags: ignoreversion recursesubdirs; Components: runtime
+Source: "{#ComponentStagingDir}\Unspecified\*";       DestDir: "{app}";      Flags: ignoreversion recursesubdirs; Components: runtime
+Source: "{#ComponentStagingDir}\libraries\bin\*";     DestDir: "{app}\bin\"; Flags: ignoreversion recursesubdirs; Components: runtime
+
+Source: "{#ComponentStagingDir}\configuration\cfg\ecal.ini";     DestDir: "{commonappdata}\eCAL\"; Tasks: not replaceconf; Flags: ignoreversion confirmoverwrite; Components: runtime
+Source: "{#ComponentStagingDir}\configuration\cfg\ecal.ini";     DestDir: "{commonappdata}\eCAL\"; Tasks: replaceconf;     Flags: ignoreversion;                  Components: runtime
+Source: "{#ComponentStagingDir}\configuration\cfg\ecaltime.ini"; DestDir: "{commonappdata}\eCAL\";                         Flags: ignoreversion;                  Components: runtime
 
 ; applications
 Source: "{#ComponentStagingDir}\app\*";               DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: applications
