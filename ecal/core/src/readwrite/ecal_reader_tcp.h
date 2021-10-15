@@ -44,24 +44,14 @@ namespace eCAL
   class CTCPLayer : public CReaderLayer<CTCPLayer>
   {
   public:
-    CTCPLayer() {}
+    CTCPLayer();
 
-    void Initialize()
-    {
-      int foo(0);
-    }
+    void Initialize();
 
-    void AddSubscription(std::string& topic_name_, std::string& topic_id_, QOS::SReaderQOS /*qos_*/)
-    {
-    }
+    void AddSubscription(std::string& topic_name_, std::string& topic_id_, QOS::SReaderQOS /*qos_*/);
+    void RemSubscription(std::string& /*topic_name_*/, std::string& topic_id_);
 
-    void RemSubscription(std::string& /*topic_name_*/, std::string& topic_id_)
-    {
-    }
-
-    void SetConnectionParameter(SReaderLayerPar& /*par_*/)
-    {
-    }
+    void SetConnectionParameter(SReaderLayerPar& /*par_*/);
 
   private:
   };

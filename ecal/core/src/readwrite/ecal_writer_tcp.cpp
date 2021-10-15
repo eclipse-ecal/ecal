@@ -21,9 +21,6 @@
  * @brief  tcp writer
 **/
 
-#include <sstream>
-#include <regex>
-
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
@@ -36,7 +33,6 @@
 #include "ecal_def.h"
 #include "ecal_config_hlp.h"
 #include <ecal/ecal_log.h>
-#include "ecal/ecal_process.h"
 #include "readwrite/ecal_writer_tcp.h"
 
 

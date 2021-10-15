@@ -26,7 +26,6 @@
 #include "ecal_global_accessors.h"
 #include "pubsub/ecal_subgate.h"
 
-#include "ecal/ecal_process.h"
 #include "readwrite/ecal_writer_base.h"
 #include "readwrite/ecal_reader_tcp.h"
 
@@ -39,14 +38,30 @@ namespace eCAL
   //////////////////////////////////////////////////////////////////
   CDataReaderTCP::CDataReaderTCP() = default;
 
+  CTCPLayer::CTCPLayer()
+  {
+  }
+
+  void CTCPLayer::Initialize()
+  {
+  }
+    
+  void CTCPLayer::AddSubscription(std::string& topic_name_, std::string& topic_id_, QOS::SReaderQOS /*qos_*/)
+  {
+  }
+
+  void CTCPLayer::RemSubscription(std::string& topic_name_, std::string& topic_id_)
+  {
+  }
+
   void CTCPLayer::SetConnectionParameter(SReaderLayerPar& par_)
   {
     eCAL::pb::ConnnectionPar connection_par;
     if (connection_par.ParseFromString(par_.parameter))
     {
-      ///////////////////////////////////////////
-      // get parameter from a matching writer
-      ///////////////////////////////////////////
+      //////////////////////////////////
+      // get parameter from a new writer
+      //////////////////////////////////
       // topic name
       auto topic_name = par_.topic_name;
       // topic id
