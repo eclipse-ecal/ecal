@@ -18,35 +18,51 @@
 */
 
 /**
- * @file   ecal_tlayer_cimpl.h
- * @brief  eCAL transport layer
+ * @brief  tcp reader
 **/
 
-#ifndef ecal_tlayer_cimpl_h_included
-#define ecal_tlayer_cimpl_h_included
+#pragma once
 
-/**
- * @brief eCAL transport layer types.
-**/
-enum eTransportLayerC
+#include "readwrite/ecal_reader_layer.h"
+
+namespace eCAL
 {
-  tlayer_none       = 0,
-  tlayer_udp_mc     = 1,
-  tlayer_shm        = 4,
-  tlayer_tcp        = 5,
-  tlayer_inproc     = 42,
-  tlayer_all        = 255
-};
+  // ecal tcp reader
+  class CDataReaderTCP
+  {
+  public:
+    CDataReaderTCP();
 
-/**
- * @brief eCAL transport layer modes.
-**/
-enum eSendModeC
-{
-  smode_none = -1,
-  smode_off  = 0,
-  smode_on,
-  smode_auto
-};
+    bool Create(const std::string& topic_name_);
+    bool Destroy();
 
-#endif /*ecal_tlayer_cimpl_h_included*/
+  private:
+    std::string m_topic_name;
+  };
+
+  // ecal tcp data layer
+  class CTCPLayer : public CReaderLayer<CTCPLayer>
+  {
+  public:
+    CTCPLayer() {}
+
+    void Initialize()
+    {
+      int foo(0);
+    }
+
+    void AddSubscription(std::string& topic_name_, std::string& topic_id_, QOS::SReaderQOS /*qos_*/)
+    {
+    }
+
+    void RemSubscription(std::string& /*topic_name_*/, std::string& topic_id_)
+    {
+    }
+
+    void SetConnectionParameter(SReaderLayerPar& /*par_*/)
+    {
+    }
+
+  private:
+  };
+}

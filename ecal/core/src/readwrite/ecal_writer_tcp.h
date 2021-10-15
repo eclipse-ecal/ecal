@@ -18,35 +18,33 @@
 */
 
 /**
- * @file   ecal_tlayer_cimpl.h
- * @brief  eCAL transport layer
+ * @brief  tcp writer
 **/
 
-#ifndef ecal_tlayer_cimpl_h_included
-#define ecal_tlayer_cimpl_h_included
+#pragma once
 
-/**
- * @brief eCAL transport layer types.
-**/
-enum eTransportLayerC
+#include "readwrite/ecal_writer_base.h"
+
+#include <string>
+
+namespace eCAL
 {
-  tlayer_none       = 0,
-  tlayer_udp_mc     = 1,
-  tlayer_shm        = 4,
-  tlayer_tcp        = 5,
-  tlayer_inproc     = 42,
-  tlayer_all        = 255
-};
+  // ecal tcp writer
+  class CDataWriterTCP : public CDataWriterBase
+  {
+  public:
+    CDataWriterTCP();
+    ~CDataWriterTCP();
 
-/**
- * @brief eCAL transport layer modes.
-**/
-enum eSendModeC
-{
-  smode_none = -1,
-  smode_off  = 0,
-  smode_on,
-  smode_auto
-};
+    void GetInfo(SWriterInfo info_) override;
 
-#endif /*ecal_tlayer_cimpl_h_included*/
+    bool Create(const std::string& host_name_, const std::string& topic_name_, const std::string & topic_id_) override;
+    bool Destroy() override;
+
+    size_t Write(const SWriterData& data_) override;
+
+    std::string GetConnectionParameter() override;
+
+  private:
+  };
+}

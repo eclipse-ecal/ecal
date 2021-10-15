@@ -82,9 +82,11 @@ set(ecal_readwrite_cpp_src
     src/readwrite/ecal_reader_inproc.cpp
     src/readwrite/ecal_reader_udp.cpp
     src/readwrite/ecal_reader_udp_mc.cpp
+    src/readwrite/ecal_reader_tcp.cpp
     src/readwrite/ecal_writer.cpp
     src/readwrite/ecal_writer_inproc.cpp
     src/readwrite/ecal_writer_udp_mc.cpp
+    src/readwrite/ecal_writer_tcp.cpp
 )
 
 if(ECAL_LAYER_ICEORYX)
@@ -182,10 +184,12 @@ set(ecal_readwrite_header_src
     src/readwrite/ecal_reader_inproc.h
     src/readwrite/ecal_reader_udp.h
     src/readwrite/ecal_reader_udp_mc.h
+    src/readwrite/ecal_reader_tcp.h
     src/readwrite/ecal_writer.h
     src/readwrite/ecal_writer_base.h
     src/readwrite/ecal_writer_inproc.h
     src/readwrite/ecal_writer_udp_mc.h
+    src/readwrite/ecal_writer_tcp.h
 )
 
 if(ECAL_LAYER_ICEORYX)

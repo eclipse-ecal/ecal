@@ -34,18 +34,27 @@ message LayerParInproc
 {
 }
 
+message LayerParTcp
+{
+  int32            port               =   1;    // tcp writers port number
+}
+
 message ConnnectionPar                          // connection parameter for reader / writer
 {
   LayerParUdpMC    layer_par_udpmc    =   1;    // parameter for ecal udp multicast
   LayerParShm      layer_par_shm      =   2;    // parameter for ecal shared memory
   LayerParInproc   layer_par_inproc   =   3;    // parameter for ecal inner process
+  LayerParTcp      layer_par_tcp      =   4;    // parameter for ecal tcp
 }
 
 enum eTLayerType                                // transport layer
 {
   tl_none                             =   0;    // undefined
   tl_ecal_udp_mc                      =   1;    // ecal udp multicast
+                                                // 2 = ecal udp unicast (not supported anymore)
+                                                // 3 = ecal udp metal (not supported anymore)
   tl_ecal_shm                         =   4;    // ecal shared memory
+  tl_ecal_tcp                         =   5;    // ecal tcp
   tl_inproc                           =  42;    // inproc (inner process)
   tl_all                              = 255;    // all layer
 }

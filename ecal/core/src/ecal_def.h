@@ -84,6 +84,7 @@
 #define NET_BANDWIDTH_MAX_UDP                         -1
 
 #define NET_INPROC_REC_ENABLED                      true
+#define NET_TCP_REC_ENABLED                         true
 #define NET_SHM_REC_ENABLED                         true
 
 #ifdef CFG_FORCE_DEFAULT_LOCAL
@@ -107,6 +108,8 @@
 #define PUB_USE_INPROC                                 0
 /* use shared memory transport layer [auto = 2, on = 1, off = 0] */
 #define PUB_USE_SHM                                    2
+/* use tcp transport layer           [on = 1, off = 0] */
+#define PUB_USE_TCP                                    0
 /* use udp multicast transport layer [auto = 2, on = 1, off = 0] */
 #ifdef CFG_FORCE_DEFAULT_LOCAL
 #define PUB_USE_UDP_MC                                 0

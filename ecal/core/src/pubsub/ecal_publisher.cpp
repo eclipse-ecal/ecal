@@ -121,6 +121,7 @@ namespace eCAL
     // existing while construction
     if (m_tlayer.sm_udp_mc  == TLayer::smode_none) m_tlayer.sm_udp_mc = TLayer::eSendMode(eCALPAR(PUB, USE_UDP_MC));
     if (m_tlayer.sm_shm     == TLayer::smode_none) m_tlayer.sm_shm    = TLayer::eSendMode(eCALPAR(PUB, USE_SHM));
+    if (m_tlayer.sm_tcp     == TLayer::smode_none) m_tlayer.sm_tcp    = TLayer::eSendMode(eCALPAR(PUB, USE_TCP));
     if (m_tlayer.sm_inproc  == TLayer::smode_none) m_tlayer.sm_inproc = TLayer::eSendMode(eCALPAR(PUB, USE_INPROC));
 
     // create data writer
@@ -130,6 +131,7 @@ namespace eCAL
     // set transport layer
     m_datawriter->SetLayerMode(TLayer::tlayer_udp_mc,  m_tlayer.sm_udp_mc);
     m_datawriter->SetLayerMode(TLayer::tlayer_shm,     m_tlayer.sm_shm);
+    m_datawriter->SetLayerMode(TLayer::tlayer_tcp,     m_tlayer.sm_tcp);
     m_datawriter->SetLayerMode(TLayer::tlayer_inproc,  m_tlayer.sm_inproc);
     // create it
     if (!m_datawriter->Create(topic_name_, topic_type_, topic_desc_))

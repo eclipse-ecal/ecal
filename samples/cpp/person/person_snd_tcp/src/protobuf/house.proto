@@ -17,36 +17,11 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @file   ecal_tlayer_cimpl.h
- * @brief  eCAL transport layer
-**/
+syntax = "proto3";
 
-#ifndef ecal_tlayer_cimpl_h_included
-#define ecal_tlayer_cimpl_h_included
+package pb.Environment;
 
-/**
- * @brief eCAL transport layer types.
-**/
-enum eTransportLayerC
+message House
 {
-  tlayer_none       = 0,
-  tlayer_udp_mc     = 1,
-  tlayer_shm        = 4,
-  tlayer_tcp        = 5,
-  tlayer_inproc     = 42,
-  tlayer_all        = 255
-};
-
-/**
- * @brief eCAL transport layer modes.
-**/
-enum eSendModeC
-{
-  smode_none = -1,
-  smode_off  = 0,
-  smode_on,
-  smode_auto
-};
-
-#endif /*ecal_tlayer_cimpl_h_included*/
+  int32 rooms = 1;
+}

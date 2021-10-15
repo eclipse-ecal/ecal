@@ -17,36 +17,26 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @file   ecal_tlayer_cimpl.h
- * @brief  eCAL transport layer
-**/
+syntax = "proto3";
 
-#ifndef ecal_tlayer_cimpl_h_included
-#define ecal_tlayer_cimpl_h_included
+import "animal.proto";
+import "house.proto";
 
-/**
- * @brief eCAL transport layer types.
-**/
-enum eTransportLayerC
+package pb.People;
+
+message Person
 {
-  tlayer_none       = 0,
-  tlayer_udp_mc     = 1,
-  tlayer_shm        = 4,
-  tlayer_tcp        = 5,
-  tlayer_inproc     = 42,
-  tlayer_all        = 255
-};
+  enum SType
+  {
+    MALE   = 0;
+    FEMALE = 1;
+  }
 
-/**
- * @brief eCAL transport layer modes.
-**/
-enum eSendModeC
-{
-  smode_none = -1,
-  smode_off  = 0,
-  smode_on,
-  smode_auto
-};
+  int32  id               = 1;
+  string name             = 2;
+  SType  stype            = 3;
+  string email            = 4;
 
-#endif /*ecal_tlayer_cimpl_h_included*/
+  Animal.Dog        dog   = 5;
+  Environment.House house = 6;
+}

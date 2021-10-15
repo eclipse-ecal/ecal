@@ -80,6 +80,8 @@ namespace eCAL
     m_use_udp_mc_confirmed(false),
     m_use_shm(TLayer::eSendMode(eCALPAR(PUB, USE_SHM))),
     m_use_shm_confirmed(false),
+    m_use_tcp(TLayer::eSendMode(eCALPAR(PUB, USE_TCP))),
+    m_use_tcp_confirmed(false),
     m_use_inproc(TLayer::eSendMode(eCALPAR(PUB, USE_INPROC))),
     m_use_inproc_confirmed(false),
     m_use_ttype(true),
@@ -142,6 +144,9 @@ namespace eCAL
 
     // create shm layer
     SetUseShm(m_use_shm);
+
+    // create tcp layer
+    SetUseTcp(m_use_tcp);
 
     // create inproc layer
     SetUseInProc(m_use_inproc);
@@ -244,6 +249,9 @@ namespace eCAL
     case TLayer::tlayer_shm:
       SetUseShm(mode_);
       break;
+    case TLayer::tlayer_tcp:
+      SetUseTcp(mode_);
+      break;
     case TLayer::tlayer_inproc:
       SetUseInProc(mode_);
       break;
@@ -251,6 +259,7 @@ namespace eCAL
       SetUseUdpMC   (mode_);
       SetUseShm     (mode_);
       SetUseInProc  (mode_);
+      SetUseTcp     (mode_);
       break;
     default:
       break;
@@ -335,9 +344,11 @@ namespace eCAL
     // check send modes
     TLayer::eSendMode use_udp_mc(m_use_udp_mc);
     TLayer::eSendMode use_shm(m_use_shm);
+    TLayer::eSendMode use_tcp(m_use_tcp);
     TLayer::eSendMode use_inproc(m_use_inproc);
     if ( (use_udp_mc == TLayer::smode_off)
       && (use_shm    == TLayer::smode_off)
+      && (use_tcp    == TLayer::smode_off)
       && (use_inproc == TLayer::smode_off)
       )
     {
@@ -391,7 +402,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::InProc");
+      Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::INPROC");
 #endif
 
       // send it
@@ -424,7 +435,7 @@ namespace eCAL
       // log it
       if (inproc_sent > 0)
       {
-        Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::InProc - SUCCESS");
+        Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::INPROC - SUCCESS");
       }
       else
       {
@@ -445,7 +456,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::MemFile");
+      Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::SHM");
 #endif
      
       // send it
@@ -480,11 +491,11 @@ namespace eCAL
       // log it
       if (shm_sent > 0)
       {
-        Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::MemFile - SUCCESS");
+        Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::SHM - SUCCESS");
       }
       else
       {
-        Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send::MemFile - FAILED");
+        Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send::SHM - FAILED");
       }
 #endif
     }
@@ -546,6 +557,48 @@ namespace eCAL
 #endif
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    // LAYER 4 : TCP
+    ////////////////////////////////////////////////////////////////////////////
+    if (use_tcp == TLayer::smode_on)
+    {
+#ifndef NDEBUG
+      // log it
+      Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::TCP");
+#endif
+
+      // send it
+      size_t tcp_sent(0);
+      {
+        // fill writer data
+        struct CDataWriterBase::SWriterData wdata;
+        wdata.buf       = buf_;
+        wdata.len       = len_;
+        wdata.id        = m_id;
+        wdata.clock     = m_clock;
+        wdata.hash      = snd_hash;
+        wdata.time      = time_;
+        wdata.buffering = 0;
+        wdata.zero_copy = false;
+
+        // send
+        tcp_sent = m_writer_tcp.Write(wdata);
+        m_use_tcp_confirmed = true;
+      }
+      written |= tcp_sent > 0;
+
+#ifndef NDEBUG
+      // log it
+      if (tcp_sent > 0)
+      {
+        Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::TCP - SUCCESS");
+      }
+      else
+      {
+        Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send::TCP - FAILED");
+      }
+#endif
+    }
 
     // return length if we succeeded
     if (!written) return(0);
@@ -897,6 +950,31 @@ namespace eCAL
     case TLayer::eSendMode::smode_none:
     case TLayer::eSendMode::smode_off:
       m_writer_shm.Destroy();
+      break;
+    }
+
+    return(true);
+  }
+
+  bool CDataWriter::SetUseTcp(TLayer::eSendMode mode_)
+  {
+    m_use_tcp = mode_;
+    if (!m_created) return true;
+
+    // log send mode
+    LogSendMode(m_use_tcp, m_topic_name + "::CDataWriter::Create::TCP_SENDMODE::");
+
+    switch (m_use_tcp)
+    {
+    case TLayer::eSendMode::smode_on:
+      m_writer_tcp.Create(m_host_name, m_topic_name, m_topic_id);
+#ifndef NDEBUG
+      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::TCP_WRITER");
+#endif
+      break;
+    case TLayer::eSendMode::smode_none:
+    case TLayer::eSendMode::smode_off:
+      m_writer_tcp.Destroy();
       break;
     }
 

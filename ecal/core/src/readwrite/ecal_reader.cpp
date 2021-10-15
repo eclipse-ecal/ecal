@@ -36,6 +36,7 @@
 #include "readwrite/ecal_reader_shm.h"
 #endif /* ECAL_LAYER_ICEORYX */
 
+#include "readwrite/ecal_reader_tcp.h"
 #include "readwrite/ecal_reader_inproc.h"
 
 #include <algorithm>
@@ -72,6 +73,7 @@ namespace eCAL
                  m_use_tdesc(true),
                  m_use_udp_mc_confirmed(false),
                  m_use_shm_confirmed(false),
+                 m_use_tcp_confirmed(false),
                  m_use_inproc_confirmed(false),
                  m_created(false)
   {
@@ -171,6 +173,7 @@ namespace eCAL
 
     m_use_udp_mc_confirmed    = false;
     m_use_shm_confirmed       = false;
+    m_use_tcp_confirmed       = false;
     m_use_inproc_confirmed    = false;
 
     return(true);
@@ -188,6 +191,12 @@ namespace eCAL
     if (eCALPAR(NET, SHM_REC_ENABLED))
     {
       CSHMLayer::Get()->Initialize();
+    }
+
+    // start ecal tcp layer
+    if (eCALPAR(NET, TCP_REC_ENABLED))
+    {
+      CTCPLayer::Get()->Initialize();
     }
 
     // start inproc layer
@@ -268,6 +277,13 @@ namespace eCAL
       tlayer->set_type(eCAL::pb::tl_ecal_shm);
       tlayer->set_version(1);
       tlayer->set_confirmed(m_use_shm_confirmed);
+    }
+    // tcp layer
+    {
+      auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
+      tlayer->set_type(eCAL::pb::tl_ecal_tcp);
+      tlayer->set_version(1);
+      tlayer->set_confirmed(m_use_tcp_confirmed);
     }
     // inproc layer
     {
@@ -363,6 +379,7 @@ namespace eCAL
     // store receive layer
     m_use_udp_mc_confirmed |= layer_ == eCAL::pb::tl_ecal_udp_mc;
     m_use_shm_confirmed    |= layer_ == eCAL::pb::tl_ecal_shm;
+    m_use_tcp_confirmed    |= layer_ == eCAL::pb::tl_ecal_tcp;
     m_use_inproc_confirmed |= layer_ == eCAL::pb::tl_inproc;
 
     // use hash to discard multiple receives of the same payload
