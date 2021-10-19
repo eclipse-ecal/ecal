@@ -61,6 +61,8 @@ option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"         
 option(ECAL_THIRDPARTY_BUILD_TINYXML2          "Build tinyxml2 with eCAL"                                          ON)
 option(ECAL_THIRDPARTY_BUILD_FINEFTP           "Build fineFTP with eCAL"                                           ON)
 option(ECAL_THIRDPARTY_BUILD_TERMCOLOR         "Build termcolor with eCAL"                                         ON)
+option(ECAL_THIRDPARTY_BUILD_TCPUB             "Build tcpub library with eCAL"                                     ON)
+option(ECAL_THIRDPARTY_BUILD_RECYCLE           "Build steinwurf::recylce with eCAL"                                ON)
 # option(ECAL_THIRDPARTY_BUILD_ZLIB              "Build zlib with eCAL"                                              ON)
 # option(ECAL_THIRDPARTY_BUILD_LIBSSH2           "Build libssh2 with eCAL"                                           ON)
 option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"                                            OFF)
@@ -119,6 +121,8 @@ set(possible_subprojects
   tinyxml2
   fineftp
   termcolor
+  recycle
+  tcpub
   #libssh2
   #zlib zlibstatic
   CURL

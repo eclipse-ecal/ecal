@@ -22,6 +22,7 @@ find_package(Threads      REQUIRED)
 find_package(asio         REQUIRED)
 find_package(tclap        REQUIRED)
 find_package(simpleini    REQUIRED)
+find_package(tcpub        REQUIRED)
 
 if (ECAL_JOIN_MULTICAST_TWICE)
   message(STATUS "eCAL ${PROJECT_NAME}: Enabling Specific Multicast Network Bug Workaround")
@@ -424,6 +425,7 @@ target_link_libraries(${PROJECT_NAME}
     Threads::Threads
     eCAL::apps
     eCAL::utils
+    tcpub::tcpub
 )
 
 set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)
