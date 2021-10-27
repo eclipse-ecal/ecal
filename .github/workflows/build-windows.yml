@@ -65,7 +65,9 @@ jobs:
            
         echo Upgrading pip
         python -m pip install --upgrade pip
-
+        
+        pip install wheel
+        
         echo Installing python requirements
         pip install -r "%GITHUB_WORKSPACE%\requirements.txt"
 
