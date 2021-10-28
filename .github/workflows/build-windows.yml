@@ -57,12 +57,16 @@ jobs:
     - name: Create Python virtualenv
       run: |
         mkdir "${{ runner.workspace }}\_build\complete\.venv\"
-        python -m venv "${{ runner.workspace }}\.venv"
+        
+        # At the moment (2021-10-27) there is no official Python 3.10 lxml package available on pypi. Thus we use python 3.9.
+        py -3.9 -m venv "${{ runner.workspace }}\.venv"
         CALL "${{ runner.workspace }}\.venv\Scripts\activate.bat"
            
         echo Upgrading pip
         python -m pip install --upgrade pip
-
+        
+        pip install wheel
+        
         echo Installing python requirements
         pip install -r "%GITHUB_WORKSPACE%\requirements.txt"
 
@@ -149,11 +153,23 @@ jobs:
       run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/_build/complete
 
-    # Create Python 3.9 Wheel.
+    # Create Python.
     # The strang-looking double-cmake is an ugly workaround to force CMake to
     # re-find Python, after we have changed the venv from the outside. The
     # alternative would be to clean everything, which would cause an unnecessary
     # rebuild of eCAL and HDF5 for each python Version.
+    - name: Build Python 3.10 Wheel
+      run: |
+        mkdir ".venv_310"
+        py -3.10 -m venv ".venv_310"
+        CALL ".venv_310\Scripts\activate.bat"
+        pip install wheel
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=FIRST
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=ONLY
+        cmake --build . --target create_python_wheel --config Release
+      shell: cmd
+      working-directory: ${{ runner.workspace }}/_build/complete
+      
     - name: Build Python 3.9 Wheel
       run: |
         mkdir ".venv_39"
