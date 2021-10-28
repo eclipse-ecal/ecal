@@ -2,8 +2,6 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -481,7 +479,7 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <section id="hello-world-python">
+    <div class="section" id="hello-world-python">
 <span id="getting-started-hello-world-python"></span><h1><span class="section-number">8.1. </span>Hello World (Python)<a class="headerlink" href="#hello-world-python" title="Permalink to this headline">¶</a></h1>
 <p>While eCAL is written in C++, it also offers a great python integration.
 Again, we are going to explore that integration by implementing a Hello World Application, that sends the string “Hello World” to an eCAL topic.</p>
@@ -491,7 +489,7 @@ Again, we are going to explore that integration by implementing a Hello World Ap
 With the <code class="docutils literal notranslate"><span class="pre">5</span></code> at the end.
 The other name has already been taken by another package.</p>
 </div>
-<section id="dependencies">
+<div class="section" id="dependencies">
 <h2><span class="section-number">8.1.1. </span>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
 <p>First, you have to install some more development dependencies:</p>
 <ul>
@@ -532,8 +530,8 @@ Open a terminal in your donwload directory and install the python whl with:</p>
 </ul>
 </li>
 </ul>
-</section>
-<section id="hello-world-publisher">
+</div>
+<div class="section" id="hello-world-publisher">
 <h2><span class="section-number">8.1.2. </span>Hello World Publisher<a class="headerlink" href="#hello-world-publisher" title="Permalink to this headline">¶</a></h2>
 <p>Somewhere on your hard drive create an empty directory and create a file <code class="file docutils literal notranslate"><span class="pre">hello_world.py</span></code> with the following content:</p>
 <ul>
@@ -626,8 +624,8 @@ You will see the “Python Hello World Publisher” process and the “hello_wor
 <li><p><i class="fab fa-ubuntu"></i> Ubuntu: <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">hello_world_snd.py</span></code></p></li>
 </ul>
 <img alt="eCAL Monitor Hello World" src="../_images/python_hello_world_snd_monitor.png" />
-</section>
-<section id="hello-world-subscriber">
+</div>
+<div class="section" id="hello-world-subscriber">
 <h2><span class="section-number">8.1.3. </span>Hello World Subscriber<a class="headerlink" href="#hello-world-subscriber" title="Permalink to this headline">¶</a></h2>
 <p>For the subscriber, create another file <code class="file docutils literal notranslate"><span class="pre">hello_world_rec.py</span></code> with the following content:</p>
 <ul>
@@ -707,14 +705,14 @@ So, if your callback needs really long to compute, you may have to decouple your
 <p>Awesome, you have written your first eCAL publisher and subscriber with python!
 In general however you will want to have a better way to structure your data than a raw string.
 So let’s head on to the next topic where we will check out protobuf!</p>
-</section>
-<section id="files">
+</div>
+<div class="section" id="files">
 <h2><span class="section-number">8.1.4. </span>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i>
 ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/63b9884ef3036127c2e59fd4258777da/hello_world_snd.py"><code class="xref download docutils literal notranslate"><span class="pre">hello_world_snd.py</span></code></a>
 └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/0f0d9e30c42f5cd902adf8a5ceb3cc47/hello_world_rec.py"><code class="xref download docutils literal notranslate"><span class="pre">hello_world_rec.py</span></code></a></pre>
-</section>
-</section>
+</div>
+</div>
 
 <!-- /body -->
                             </div>

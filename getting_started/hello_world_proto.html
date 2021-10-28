@@ -2,8 +2,6 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -480,7 +478,7 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <section id="hello-world-with-protobuf">
+    <div class="section" id="hello-world-with-protobuf">
 <span id="getting-started-hello-world-proto"></span><h1><span class="section-number">7.2. </span>Hello World with protobuf<a class="headerlink" href="#hello-world-with-protobuf" title="Permalink to this headline">¶</a></h1>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
@@ -504,7 +502,7 @@ Our recommended way however is to use Google protobuf, because:</p>
 <p>It is important to remember, that all your applications must agree on the data format.
 As protobuf messages are defined in <code class="file docutils literal notranslate"><span class="pre">.proto</span></code> files, all of your applications should be compiled with the same files.</p>
 </div>
-<section id="protobuf-sender">
+<div class="section" id="protobuf-sender">
 <h2><span class="section-number">7.2.1. </span>Protobuf sender<a class="headerlink" href="#protobuf-sender" title="Permalink to this headline">¶</a></h2>
 <p>Let’s implement a small application, that lets the user input his name and send a message to an eCAL topic.
 As the sender and receiver need the same .proto files, we place them in a separate directory next to the source directories for the sender and the receiver:</p>
@@ -726,8 +724,8 @@ Sending different messages to the same topic is a bad idea and will break the de
 <p>The eCAL Monitor will not start listening to messages, until you open the reflection window.
 So, you will only see messages that were sent <em>after</em> you have opened the window.</p>
 </div>
-</section>
-<section id="protobuf-receiver">
+</div>
+<div class="section" id="protobuf-receiver">
 <h2><span class="section-number">7.2.2. </span>Protobuf receiver<a class="headerlink" href="#protobuf-receiver" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>:</p>
@@ -872,8 +870,8 @@ Just like the publisher, it is templated to the <code class="docutils literal no
 <p>Congratulations, you have completed the Getting Started chapter!
 Now go ahead and use eCAL in your real-world scenario.</p>
 <p>If you experience issues, you can create a <a class="reference external" href="https://github.com/continental/ecal/issues">GitHub issue</a>, to get help.</p>
-</section>
-<section id="files">
+</div>
+<div class="section" id="files">
 <h2><span class="section-number">7.2.3. </span>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i>
 ├─ <i class="far fa-folder-open"></i> proto_messages
@@ -886,8 +884,8 @@ Now go ahead and use eCAL in your real-world scenario.</p>
 └─ <i class="far fa-folder-open"></i> protobuf_rec
    ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/599e0541a3c4051667f6c5e413bec2a7/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
    └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/745ee1bb61a6469c7703ba1c5f49db57/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a></pre>
-</section>
-</section>
+</div>
+</div>
 
 <!-- /body -->
                             </div>

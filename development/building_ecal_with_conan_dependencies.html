@@ -2,8 +2,6 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -478,14 +476,14 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <section id="building-ecal-with-conan-dependencies">
+    <div class="section" id="building-ecal-with-conan-dependencies">
 <span id="development-building-ecal-with-conan-dependencies"></span><h1>Building eCAL with Conan dependencies<a class="headerlink" href="#building-ecal-with-conan-dependencies" title="Permalink to this headline">¶</a></h1>
 <p>Conan is a dependency manager, that has a wide range of precompiled open source libraries available.
 Building eCAL with Conan dependencies is mainly a shortcut for Windows users developing eCAL who do not want to build all dependencies from source.
 It lets a developer get up to speed very quickly.
 We certainly <strong>do not recommend</strong> to build eCAL installers from Conan dependencies at this point.</p>
 <p>The Conan build has been tested for VS2019 only, and dependencies might not be aligned with the version included as submodules.</p>
-<section id="build-instructions">
+<div class="section" id="build-instructions">
 <h2>Build instructions<a class="headerlink" href="#build-instructions" title="Permalink to this headline">¶</a></h2>
 <p>To build with Conan you need to have a Conan installation.
 It’s best to install Conan inside a virtual environment:</p>
@@ -523,8 +521,8 @@ Thus we recommend to build eCAL with the following commands:</p>
 </div>
 <p>Beware, that depending on the settings in your Conan profile, the build supports <strong>either</strong> Debug <strong>or</strong> Release builds. Make sure, when building from Visual Studio, to build the appropriate configuration.
 If you have a <code class="docutils literal notranslate"><span class="pre">Release</span></code> Conan profile, but try to build for the <code class="docutils literal notranslate"><span class="pre">Debug</span></code> configuration from Visual Studio, you will receive build errors.</p>
-</section>
-</section>
+</div>
+</div>
 
 <!-- /body -->
                             </div>

@@ -2,8 +2,6 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -473,7 +471,7 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <section id="threading-model">
+    <div class="section" id="threading-model">
 <span id="id1"></span><h1>Threading model<a class="headerlink" href="#threading-model" title="Permalink to this headline">¶</a></h1>
 <p>eCAL is using different transport layers for intraprocess, interprocess or interhost communication. With a call of <code class="docutils literal notranslate"><span class="pre">eCAL::Initialize</span></code> different internal threads are started, with a call of <code class="docutils literal notranslate"><span class="pre">eCAL::Finalize</span></code> they are stopped:</p>
 <ul class="simple">
@@ -492,7 +490,7 @@
 <p>For user API callback functions eCAL is protecting the forwarded data (message header, message payload ..) as long as the callback is processed.</p>
 <p>For subscriptions and their callbacks it is recommended to not block the callback but to copy the data for later processing into user defined container.
 Blocking callbacks can lead to dropped (missed) messages.</p>
-</section>
+</div>
 
 <!-- /body -->
                             </div>

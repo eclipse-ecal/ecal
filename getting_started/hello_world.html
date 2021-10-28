@@ -2,8 +2,6 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -481,7 +479,7 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <section id="hello-world">
+    <div class="section" id="hello-world">
 <span id="getting-started-hello-world"></span><h1><span class="section-number">7.1. </span>Hello World<a class="headerlink" href="#hello-world" title="Permalink to this headline">¶</a></h1>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
@@ -493,7 +491,7 @@ It will <strong>not</strong> work with older versions that were published as .ms
 In the good habit of every tutorial, we will write a Hello World Application, that sends the string “Hello World” to an eCAL topic.</p>
 <p>eCAL uses CMake as a cross-platform build toolchain.
 We will explain the CMake commands needed for the tutorial, but not extensively dive into CMake.</p>
-<section id="dependencies">
+<div class="section" id="dependencies">
 <h2><span class="section-number">7.1.1. </span>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
 <p>First, you have to install some more development dependencies:</p>
 <ul>
@@ -514,8 +512,8 @@ We will explain the CMake commands needed for the tutorial, but not extensively 
 </div>
 </li>
 </ul>
-</section>
-<section id="hello-world-publisher">
+</div>
+<div class="section" id="hello-world-publisher">
 <h2><span class="section-number">7.1.2. </span>Hello World Publisher<a class="headerlink" href="#hello-world-publisher" title="Permalink to this headline">¶</a></h2>
 <p>Somewhere on your hard drive create an empty directory and create a file <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> and <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code> with the following content:</p>
 <ul>
@@ -683,8 +681,8 @@ make
 <p>Now execute the <code class="file docutils literal notranslate"><span class="pre">hello_world_snd</span> <span class="pre">(.exe)</span></code> and take a look at the eCAL Monitor!
 You will see the “Hello World Publisher” process and the “hello_world_topic”.</p>
 <img alt="eCAL Monitor Hello World" src="../_images/hello_world_snd_monitor.png" />
-</section>
-<section id="hello-world-subscriber">
+</div>
+<div class="section" id="hello-world-subscriber">
 <h2><span class="section-number">7.1.3. </span>Hello World Subscriber<a class="headerlink" href="#hello-world-subscriber" title="Permalink to this headline">¶</a></h2>
 <p>Again, create a new directory somewhere and add create the <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> and <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code> with the following content:</p>
 <ul>
@@ -839,8 +837,8 @@ make
 <p>When you now execute <code class="file docutils literal notranslate"><span class="pre">hello_world_snd</span></code> and <code class="file docutils literal notranslate"><span class="pre">hello_world_rec</span></code>, the receiver application will receive the messages sent by the sender.</p>
 <img alt="eCAL Hello World sender and receiver" src="../_images/hello_world_snd_rec.png" />
 <p>In the next chapter you will learn how to properly structure your messages with protobuf!</p>
-</section>
-<section id="files">
+</div>
+<div class="section" id="files">
 <h2><span class="section-number">7.1.4. </span>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i>
 ├─ <i class="far fa-folder-open"></i> hello_world_snd
@@ -850,8 +848,8 @@ make
 └─ <i class="far fa-folder-open"></i> hello_world_rec
    ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/7d3bda427fdf1fd3a0b98854060bba5f/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
    └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/d0d86cc7199f2c4b757fe5543e8b6cfa/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a></pre>
-</section>
-</section>
+</div>
+</div>
 
 <!-- /body -->
                             </div>

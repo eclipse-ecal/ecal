@@ -2,8 +2,6 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="docsearch:name" content="eCAL Documentation" />
     <meta name="docsearch:package_type" content="" />
@@ -478,7 +476,7 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <section id="about-ecal-udp-windows-10-winsocks-and-npcap">
+    <div class="section" id="about-ecal-udp-windows-10-winsocks-and-npcap">
 <span id="npcap-details"></span><h1>About eCAL, UDP, Windows 10, Winsocks and Npcap<a class="headerlink" href="#about-ecal-udp-windows-10-winsocks-and-npcap" title="Permalink to this headline">¶</a></h1>
 <p>When migrating from Windows 7 to Windows 10, we experienced a major performance issue in basically all eCAL applications.
 Using them on Windows 10 would cause maximum CPU load on one CPU core.
@@ -494,7 +492,7 @@ The CPU load even caused the mouse curser to not move smoothly any more (it’s 
 <p>If you are interested in further details, please read the internal analysis of the issue:</p>
 <hr class="docutils" />
 <p><em>From GitHub, written by Florian Reimold (2019-02-06):</em></p>
-<section id="the-problem">
+<div class="section" id="the-problem">
 <h2>The Problem<a class="headerlink" href="#the-problem" title="Permalink to this headline">¶</a></h2>
 <p>The Problem is not eCAL specific, as it can easily be reproduced just by receiving a lot of UDP multicast packets (Sending them doesn’t seem to be an issue).
 When investigating the System with Process Hacker, one can see that the System process (the Windows Kernel) occupies as much as an entire CPU core.
@@ -503,11 +501,11 @@ It is always one thread inside the kernel that that uses up all CPU cycles and i
 <p>The reason for that is the built in Windows Defender Firewall (The MpsSvc Service).
 The Defender Firewall cannot be deactivated in Windows 10 any more.
 The MpsSvc Service will even keep running when temporarily deactivated, as it offers further security features besides the Defender Firewall.</p>
-</section>
-<section id="solutions">
+</div>
+<div class="section" id="solutions">
 <h2>Solutions<a class="headerlink" href="#solutions" title="Permalink to this headline">¶</a></h2>
 <p>In order to fix the issue (besides just not using Win10, which would be the easiest), I propose two solutions:</p>
-<section id="solution-1-disable-mpssvc">
+<div class="section" id="solution-1-disable-mpssvc">
 <h3>Solution 1: Disable MpsSvc<a class="headerlink" href="#solution-1-disable-mpssvc" title="Permalink to this headline">¶</a></h3>
 <p>When disabling the Windows Defender Firewall Service (MpsSvc), the problem vanishes.
 In order to do that, we have to modify <code class="docutils literal notranslate"><span class="pre">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MpsSvc</span></code> and set <code class="docutils literal notranslate"><span class="pre">Start</span> <span class="pre">=</span> <span class="pre">4</span></code> (Disabling the Windows Defender is not supported in Windows 10, so it cannot be done using the GUI).
@@ -539,8 +537,8 @@ Stuff like that can happen.</p></li>
 </ul>
 <p>All in all this is not an acceptable solution for our dev machines that are administrated by the Continental IT.
 It may however be acceptable for offline Car PCs.</p>
-</section>
-<section id="solution-2-avoid-tcpip-sys">
+</div>
+<div class="section" id="solution-2-avoid-tcpip-sys">
 <h3>Solution 2: Avoid tcpip.sys<a class="headerlink" href="#solution-2-avoid-tcpip-sys" title="Permalink to this headline">¶</a></h3>
 <p>On Windows, every (User space initiated) network access uses the Winsocks/2 API.
 That API uses the Kernel-Mode filesystem driver Afd.sys, which the uses the Transport Protocol Driver tcpip.sys.
@@ -579,9 +577,9 @@ In my small examples I can receive UDP MC traffic without any performance issues
 We can implement an NPCAP autodetection (ideas on how to do that are on the NPCAP website), and switch to the high-performance NPCAP mode when NPCAP is installed.</p>
 <hr class="docutils" />
 <p><em>From GitHub, written by Florian Reimold (2019-02-07):</em></p>
-</section>
-</section>
-<section id="some-notes">
+</div>
+</div>
+<div class="section" id="some-notes">
 <h2>Some Notes<a class="headerlink" href="#some-notes" title="Permalink to this headline">¶</a></h2>
 <p>I use this section to write down some things I discovered. They may not entirely blend in with the section above.</p>
 <ul class="simple">
@@ -674,8 +672,8 @@ I still have some issues detecting npcap, but on systems having npcap installed 
 <p><em>From GitHub, written by Florian Reimold (2019-03-07):</em></p>
 <p>I call this issue officially fixed.
 If there are any issues with the current solution we can re-open it.</p>
-</section>
-</section>
+</div>
+</div>
 
 <!-- /body -->
                             </div>
