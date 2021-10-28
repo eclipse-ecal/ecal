@@ -29,6 +29,7 @@ set(sources
     src/executor_impl.cpp
     src/executor_impl.h
     src/portable_endian.h
+    src/protocol_handshake_message.h
     src/publisher.cpp
     src/publisher_impl.cpp
     src/publisher_impl.h

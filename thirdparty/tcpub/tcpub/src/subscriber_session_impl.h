@@ -1,3 +1,6 @@
+// Copyright (c) Continental. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for details.
+
 #pragma once
 
 #include <string>
@@ -24,7 +27,7 @@ namespace tcpub
                           , int                                                                 max_reconnection_attempts
                           , const std::function<std::shared_ptr<std::vector<char>>()>&          get_buffer_handler
                           , const std::function<void(const std::shared_ptr<SubscriberSession_Impl>&)>& session_closed_handler
-                          , const tcpub::logger::logger_t&                                 log_function);
+                          , const tcpub::logger::logger_t&                                     log_function);
 
 
     // Copy
@@ -47,6 +50,8 @@ namespace tcpub
   private:
     void resolveEndpoint();
     void connectToEndpoint(asio::ip::tcp::resolver::iterator resolved_endpoints);
+
+    void sendProtokolHandshakeRequest();
 
     void connectionFailedHandler();
 

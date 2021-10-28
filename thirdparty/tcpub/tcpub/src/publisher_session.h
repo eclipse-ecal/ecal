@@ -1,3 +1,6 @@
+// Copyright (c) Continental. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for details.
+
 #pragma once
 
 #include <functional>
@@ -5,6 +8,7 @@
 
 #include <asio.hpp>
 
+#include "tcp_header.h"
 #include "tcpub_logger_abstraction.h"
 
 namespace tcpub
@@ -13,12 +17,24 @@ namespace tcpub
     : public std::enable_shared_from_this<PublisherSession>
   {
   //////////////////////////////////////////////
+  /// Nested classes
+  //////////////////////////////////////////////
+  private:
+    enum class State
+    {
+      NotStarted,
+      Handshaking,
+      Running,
+      Canceled
+    };
+
+  //////////////////////////////////////////////
   /// Constructor & Destructor
   //////////////////////////////////////////////
   public:
     PublisherSession(const std::shared_ptr<asio::io_service>&                               io_service
                     , const std::function<void(const std::shared_ptr<PublisherSession>&)>&  session_closed_handler
-                    , const tcpub::logger::logger_t&                                   log_function);
+                    , const tcpub::logger::logger_t&                                        log_function);
 
     // Copy
     PublisherSession(const PublisherSession&)            = delete;
@@ -42,9 +58,21 @@ namespace tcpub
     void sessionClosedHandler();
   
   //////////////////////////////////////////////
+  /// ProtocolHandshake
+  //////////////////////////////////////////////
+  private:
+    void receiveTcpPacket();
+    void readHeaderLength ();
+    void discardDataBetweenHeaderAndPayload(const std::shared_ptr<TcpHeader>& header, uint16_t bytes_to_discard);
+    void readHeaderContent(const std::shared_ptr<TcpHeader>& header);
+    void readPayload(const std::shared_ptr<TcpHeader>& header);
+
+
+    void sendProtocolHandshakeResponse();
+
+  //////////////////////////////////////////////
   /// Send Data
   //////////////////////////////////////////////
-  
   public:
     void sendDataBuffer(const std::shared_ptr<std::vector<char>>& buffer);
   private:
@@ -68,7 +96,7 @@ namespace tcpub
     std::shared_ptr<asio::io_service> io_service_;
 
     // Whether the session has been canceled
-    std::atomic<bool>  canceled_;
+    std::atomic<State>  state_;
 
     // Handlers
     const std::function<void(const std::shared_ptr<PublisherSession>&)>  session_closed_handler_;

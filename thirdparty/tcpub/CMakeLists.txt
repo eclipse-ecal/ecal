@@ -23,7 +23,9 @@ if (_cmp)
 endif()
 
 add_subdirectory(tcpub)
-add_subdirectory(thirdparty/recycle)
+
+add_subdirectory(thirdparty/recycle EXCLUDE_FROM_ALL)
+
 add_subdirectory(performance_publisher)
 add_subdirectory(performance_subscriber)
 add_subdirectory(hello_world_publisher)

@@ -1,3 +1,6 @@
+// Copyright (c) Continental. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for details.
+
 #include <iostream>
 #include <thread>
 #include <atomic>
@@ -48,7 +51,6 @@ int main() {
         std::this_thread::sleep_for(time_to_sleep);
       }
     }
-
     {
       auto now  = std::chrono::steady_clock::now();
 

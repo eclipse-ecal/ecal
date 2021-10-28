@@ -1,6 +1,11 @@
+// Copyright (c) Continental. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for details.
+
 #include "subscriber_session_impl.h"
 
 #include "portable_endian.h"
+
+#include "protocol_handshake_message.h"
 
 namespace tcpub
 {
@@ -14,7 +19,7 @@ namespace tcpub
                                                 , int                                                                 max_reconnection_attempts
                                                 , const std::function<std::shared_ptr<std::vector<char>>()>&          get_buffer_handler
                                                 , const std::function<void(const std::shared_ptr<SubscriberSession_Impl>&)>& session_closed_handler
-                                                , const tcpub::logger::logger_t&                                 log_function)
+                                                , const tcpub::logger::logger_t&                                      log_function)
     : address_                (address)
     , port_                   (port)
     , resolver_               (*io_service)
@@ -83,6 +88,7 @@ namespace tcpub
                                 }
                               });
   }
+
   void SubscriberSession_Impl::connectToEndpoint(asio::ip::tcp::resolver::iterator resolved_endpoints)
   {
     if (canceled_)
@@ -124,10 +130,50 @@ namespace tcpub
 #endif
                                   // Start reading a package by reading the header length. Everything will
                                   // unfold from there automatically.
-                                  me->readHeaderLength();
+                                  me->sendProtokolHandshakeRequest();
                                 }
                               });
   }
+
+  void SubscriberSession_Impl::sendProtokolHandshakeRequest()
+  {
+    if (canceled_)
+    {
+      connectionFailedHandler();
+      return;
+    }
+
+#if (TCPUB_LOG_DEBUG_ENABLED)
+    log_(logger::LogLevel::Debug,  "SubscriberSession " + endpointToString() + ": Sending ProtocolHandshakeRequest.");
+#endif
+
+    std::shared_ptr<std::vector<char>> buffer = std::make_shared<std::vector<char>>();
+    buffer->resize(sizeof(TcpHeader) + sizeof(ProtocolHandshakeMessage));
+
+    TcpHeader* header   = reinterpret_cast<TcpHeader*>(buffer->data());
+    header->header_size = htole16(sizeof(TcpHeader));
+    header->type        = MessageContentType::ProtocolHandshake;
+    header->reserved    = 0;
+    header->data_size   = htole64(sizeof(ProtocolHandshakeMessage));
+
+    ProtocolHandshakeMessage* handshake_message = reinterpret_cast<ProtocolHandshakeMessage*>(&(buffer->operator[](sizeof(TcpHeader))));
+    handshake_message->protocol_version         = 0; // At the moment, we only support Version 0. 
+
+    asio::async_write(data_socket_
+                , asio::buffer(*buffer)
+                , data_strand_.wrap(
+                  [me = shared_from_this(), buffer](asio::error_code ec, std::size_t /*bytes_to_transfer*/)
+                  {
+                    if (ec)
+                    {
+                      me->log_(logger::LogLevel::Warning, "SubscriberSession " + me->endpointToString() + ": Failed sending ProtocolHandshakeRequest: " + ec.message());
+                      me->connectionFailedHandler();
+                      return;
+                    }
+                    me->readHeaderLength();
+                  }));
+  }
+
 
   void SubscriberSession_Impl::connectionFailedHandler()
   {
@@ -320,7 +366,22 @@ namespace tcpub
                                       // Reset the max amount of reconnects
                                       me->retries_left_ = me->max_reconnection_attempts_;
 
-                                      if (header->type == MessageContentType::RegularPayload)
+                                      if (header->type == MessageContentType::ProtocolHandshake)
+                                      {
+                                        ProtocolHandshakeMessage handshake_message;
+                                        size_t bytes_to_copy = std::min(data_buffer->size(), sizeof(ProtocolHandshakeMessage));
+                                        std::memcpy(&handshake_message, data_buffer->data(), bytes_to_copy);
+#if (TCPUB_LOG_DEBUG_ENABLED)
+                                        me->log_(logger::LogLevel::Debug,  "SubscriberSession " + me->endpointToString() + ": Received Handshake message. Using Protocol version v" + std::to_string(handshake_message.protocol_version));
+#endif
+                                        if (handshake_message.protocol_version > 0)
+                                        {
+                                          me->log_(logger::LogLevel::Error,  "SubscriberSession " + me->endpointToString() + ": Publisher set protocol version to v" + std::to_string(handshake_message.protocol_version) + ". This protocol is not supported.");
+                                          me->connectionFailedHandler();
+                                          return;
+                                        }
+                                      }
+                                      else if (header->type == MessageContentType::RegularPayload)
                                       {
 #if (TCPUB_LOG_DEBUG_VERBOSE_ENABLED)
                                         me->log_(logger::LogLevel::DebugVerbose,  "SubscriberSession " + me->endpointToString() + ": Received message of type \"RegularPayload\"");
@@ -431,7 +492,16 @@ namespace tcpub
 
   bool SubscriberSession_Impl::isConnected() const
   {
-    return data_socket_.is_open(); // TODO: check if is_open() does mean that it is connected
+    asio::error_code ec;
+    data_socket_.remote_endpoint(ec);
+
+    // If we can get the remote endpoint, we consider the socket as connected.
+    // Otherwise it is not connected.
+
+    if (ec)
+      return false;
+    else
+      return true;
   }
 
   std::string SubscriberSession_Impl::remoteEndpointToString() const

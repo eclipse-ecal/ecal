@@ -1,3 +1,6 @@
+// Copyright (c) Continental. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for details.
+
 #include "subscriber_impl.h"
 
 #include "tcp_header.h"
@@ -120,7 +123,14 @@ namespace tcpub
 #endif
       callback_thread_stop_ = true;
       last_callback_data_cv_.notify_all();
-      callback_thread_->join(); // TODO: This will prevent changing a callback from within a callback
+
+      // Join or detach the old thread. We cannot join a thread from it's own
+      // thread, so we detach the thread in that case.
+      if (std::this_thread::get_id() == callback_thread_->get_id())
+        callback_thread_->detach();
+      else
+        callback_thread_->join();
+
       callback_thread_.reset();
 #if (TCPUB_LOG_DEBUG_VERBOSE_ENABLED)
       log_(logger::LogLevel::DebugVerbose, "Subscriber " + subscriberIdString() + ": Old callback thread has terminated.");
@@ -144,7 +154,6 @@ namespace tcpub
       synchronous_user_callback_    = [](const auto&) {};
       user_callback_is_synchronous_ = synchronous_execution;
 
-      // TODO: Try to set a new callback from within a callback
       // Create a new callback thread with the new callback from the function parameter
       callback_thread_stop_ = false;
       callback_thread_ = std::make_unique<std::thread>(
@@ -169,7 +178,7 @@ namespace tcpub
                         me->log_(logger::LogLevel::DebugVerbose, "Subscriber " + me->subscriberIdString() + ": Executing asynchronous callback");
 #endif            
                         // Execute the user callback. Note that the callback mutex is not locked any more, so while the expensive user callback is executed, our tcp sessions can already store new data.
-                        callback_function(this_callback_data); // TODO: When the user sets a synchronous callback from a callback, everything will lock
+                        callback_function(this_callback_data);
                       }
                     });
     }
@@ -245,7 +254,14 @@ namespace tcpub
 #endif
       callback_thread_stop_ = true;
       last_callback_data_cv_.notify_all();
-      callback_thread_->join();
+
+      // Join or detach the old thread. We cannot join a thread from it's own
+      // thread, so we detach the thread in that case.
+      if (std::this_thread::get_id() == callback_thread_->get_id())
+        callback_thread_->detach();
+      else
+        callback_thread_->join();
+
       callback_thread_.reset();
 #if (TCPUB_LOG_DEBUG_VERBOSE_ENABLED)
       log_(logger::LogLevel::DebugVerbose, "Subscriber " + subscriberIdString() + ": Callback thread has terminated.");

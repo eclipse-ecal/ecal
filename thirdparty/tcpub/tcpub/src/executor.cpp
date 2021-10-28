@@ -1,3 +1,6 @@
+// Copyright (c) Continental. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for details.
+
 #include <tcpub/executor.h>
 
 #include "executor_impl.h"
