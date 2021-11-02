@@ -87,6 +87,11 @@ namespace eCAL
     bool IsCreated() const {return(m_created);}
     bool IsSubscribed() const {return(m_loc_subscribed || m_ext_subscribed);}
     bool IsExtSubscribed() const {return(m_ext_subscribed);}
+    size_t GetSubscriberCount() const
+    {
+      std::lock_guard<std::mutex> lock(m_sub_map_sync);
+      return(m_loc_sub_map.size() + m_ext_sub_map.size());
+    }
 
     const std::string& GetTopicName() const {return(m_topic_name);}
     const std::string& GetTopicID() const {return(m_topic_id);}
@@ -124,7 +129,7 @@ namespace eCAL
 
     std::atomic<bool>  m_connected;
     typedef Util::CExpMap<std::string, bool> ConnectedMapT;
-    std::mutex         m_sub_map_sync;
+    mutable std::mutex  m_sub_map_sync;
     ConnectedMapT      m_loc_sub_map;
     ConnectedMapT      m_ext_sub_map;
 
