@@ -324,6 +324,12 @@ namespace eCAL
     return(m_datawriter->IsSubscribed());
   }
 
+  size_t CPublisher::GetSubscriberCount() const
+  {
+    if(!m_datawriter) return(0);
+    return(m_datawriter->GetSubscriberCount());
+  }
+
   std::string CPublisher::GetTopicName() const
   {
     if(!m_datawriter) return("");

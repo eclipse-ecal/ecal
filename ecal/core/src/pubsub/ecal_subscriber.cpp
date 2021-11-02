@@ -216,6 +216,12 @@ namespace eCAL
     return(m_datareader->RemEventCallback(type_));
   }
 
+  size_t CSubscriber::GetPublisherCount() const
+  {
+    if(!m_datareader) return(0);
+    return(m_datareader->GetPublisherCount());
+  }
+
   std::string CSubscriber::GetTopicName() const
   {
     if(!m_datareader) return("");
