@@ -97,6 +97,8 @@ Program Listing for File ecal_publisher.h
    
        bool IsSubscribed() const;
    
+       size_t GetSubscriberCount() const;
+   
        std::string GetTopicName() const;
    
        std::string GetTypeName() const;

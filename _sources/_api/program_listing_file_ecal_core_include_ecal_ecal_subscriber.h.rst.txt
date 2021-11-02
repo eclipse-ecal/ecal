@@ -83,6 +83,8 @@ Program Listing for File ecal_subscriber.h
    
        bool IsCreated() const {return(m_created);}
    
+       size_t GetPublisherCount() const;
+   
        std::string GetTopicName() const;
    
        std::string GetTypeName() const;
