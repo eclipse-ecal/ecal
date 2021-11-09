@@ -17,6 +17,8 @@ file(COPY        "${CMAKE_CURRENT_LIST_DIR}/innosetup/gfx"
 find_program(ISSC_PATH
   ISCC
   PATHS
+    "C:/Program Files (x86)/Inno Setup 6"
+    "C:/Program Files/Inno Setup 6"
     "C:/Program Files (x86)/Inno Setup 5"
     "C:/Program Files/Inno Setup 5"
 )
