@@ -1106,6 +1106,38 @@ Consider fixing your task, instead.</string>
    <header location="global">QEcalParser/ecal_parser_lineedit/ecal_parser_lineedit.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>add_task_button</tabstop>
+  <tabstop>edit_task_button</tabstop>
+  <tabstop>remove_task_button</tabstop>
+  <tabstop>start_all_tasks_button</tabstop>
+  <tabstop>stop_all_tasks_button</tabstop>
+  <tabstop>restart_all_tasks_button</tabstop>
+  <tabstop>start_selected_tasks_button</tabstop>
+  <tabstop>stop_selected_tasks_button</tabstop>
+  <tabstop>restart_selected_tasks_button</tabstop>
+  <tabstop>import_from_cloud_button</tabstop>
+  <tabstop>update_form_cloud_button</tabstop>
+  <tabstop>filter_lineedit</tabstop>
+  <tabstop>task_tree</tabstop>
+  <tabstop>hide_edit_control_button</tabstop>
+  <tabstop>task_name_lineedit</tabstop>
+  <tabstop>target_lineedit</tabstop>
+  <tabstop>runner_combobox</tabstop>
+  <tabstop>show_runners_button</tabstop>
+  <tabstop>algo_path_lineedit</tabstop>
+  <tabstop>algo_path_button</tabstop>
+  <tabstop>cmd_args_lineedit</tabstop>
+  <tabstop>working_dir_lineedit</tabstop>
+  <tabstop>working_dir_button</tabstop>
+  <tabstop>visibility_combobox</tabstop>
+  <tabstop>launch_order_spinbox</tabstop>
+  <tabstop>waiting_time_spinbox</tabstop>
+  <tabstop>enable_monitoring_checkbox</tabstop>
+  <tabstop>restart_by_severity_checkbox</tabstop>
+  <tabstop>restart_by_severity_combobox</tabstop>
+  <tabstop>restart_by_severity_level_combobox</tabstop>
+ </tabstops>
  <resources>
   <include location="../../../resources/resources.qrc"/>
   <include location="../../../../../iconset/ecalicons.qrc"/>
