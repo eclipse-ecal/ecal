@@ -92,7 +92,7 @@ namespace eCAL
       if (iter == m_datareadershm_map.end()) return;
 
       auto reader = iter->second;
-      reader->SetPortNumber(static_cast<uint16_t>(port));
+      reader->SetConnection(host_name, static_cast<uint16_t>(port));
     }
     else
     {
@@ -116,13 +116,13 @@ namespace eCAL
     return true;
   }
 
-  bool CDataReaderTCP::SetPortNumber(uint16_t port_)
+  bool CDataReaderTCP::SetConnection(const std::string& host_name_, uint16_t port_)
   {
     if (m_port != 0)   return false;
     if (!m_subscriber) return false;
     if (port_ == 0)    return false;
     m_port = port_;
-    m_subscriber->addSession("127.0.0.1", m_port);
+    m_subscriber->addSession(host_name_, m_port);
     return true;
   }
 

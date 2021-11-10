@@ -48,7 +48,7 @@ namespace eCAL
     bool Create(std::shared_ptr<tcpub::Executor>& executor_);
     bool Destroy();
 
-    bool SetPortNumber(uint16_t port_);
+    bool SetConnection(const std::string& host_name_, uint16_t port_);
 
   private:
     void CDataReaderTCP::OnTcpMessage(const tcpub::CallbackData& callback_data);
