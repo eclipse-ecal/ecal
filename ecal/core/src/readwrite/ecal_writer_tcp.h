@@ -25,7 +25,20 @@
 
 #include "readwrite/ecal_writer_base.h"
 
+#include <tcpub/executor.h>
+#include <tcpub/publisher.h>
+
 #include <string>
+#include <vector>
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
+#endif
+#include "ecal/pb/ecal.pb.h"
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 namespace eCAL
 {
@@ -46,5 +59,11 @@ namespace eCAL
     std::string GetConnectionParameter() override;
 
   private:
+    static std::shared_ptr<tcpub::Executor> m_executor;
+    std::shared_ptr<tcpub::Publisher>       m_publisher;
+    uint16_t                                m_port;
+
+    eCAL::pb::Sample                        m_ecal_sample;
+    std::vector<char>                       m_sample_buffer;
   };
 }

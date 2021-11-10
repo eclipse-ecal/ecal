@@ -25,6 +25,18 @@
 
 #include "readwrite/ecal_reader_layer.h"
 
+#include <tcpub/executor.h>
+#include <tcpub/subscriber.h>
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
+#endif
+#include "ecal/pb/ecal.pb.h"
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
 namespace eCAL
 {
   // ecal tcp reader
@@ -33,26 +45,37 @@ namespace eCAL
   public:
     CDataReaderTCP();
 
-    bool Create(const std::string& topic_name_);
+    bool Create(std::shared_ptr<tcpub::Executor>& executor_);
     bool Destroy();
 
+    bool SetPortNumber(uint16_t port_);
+
   private:
-    std::string m_topic_name;
+    void CDataReaderTCP::OnTcpMessage(const tcpub::CallbackData& callback_data);
+    std::shared_ptr<tcpub::Subscriber> m_subscriber;
+
+    uint16_t                           m_port = 0;
+    eCAL::pb::Sample                   m_ecal_sample;
   };
 
-  // ecal tcp data layer
-  class CTCPLayer : public CReaderLayer<CTCPLayer>
+  // ecal tcp reader data layer
+  class CTCPReaderLayer : public CReaderLayer<CTCPReaderLayer>
   {
   public:
-    CTCPLayer();
+    CTCPReaderLayer();
 
     void Initialize();
 
-    void AddSubscription(std::string& topic_name_, std::string& topic_id_, QOS::SReaderQOS /*qos_*/);
+    void AddSubscription(std::string& /*topic_name_*/, std::string& topic_id_, QOS::SReaderQOS /*qos_*/);
     void RemSubscription(std::string& /*topic_name_*/, std::string& topic_id_);
 
     void SetConnectionParameter(SReaderLayerPar& /*par_*/);
 
   private:
+    std::shared_ptr<tcpub::Executor> m_executor;
+
+    typedef std::unordered_map<std::string, std::shared_ptr<CDataReaderTCP>> DataReaderSHMMapT;
+    std::mutex        m_datareadershm_sync;
+    DataReaderSHMMapT m_datareadershm_map;
   };
 }

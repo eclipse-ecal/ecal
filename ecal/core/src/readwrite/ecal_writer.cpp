@@ -813,6 +813,14 @@ namespace eCAL
       // ----------------------------------------------------------------------
 
     }
+    // tcp layer
+    {
+      auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
+      tlayer->set_type(eCAL::pb::tl_ecal_tcp);
+      tlayer->set_version(1);
+      tlayer->set_confirmed(m_use_tcp_confirmed);
+      tlayer->mutable_par_layer()->ParseFromString(m_writer_tcp.GetConnectionParameter());
+    }
     // inproc layer
     {
       auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();

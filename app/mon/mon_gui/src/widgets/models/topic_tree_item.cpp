@@ -199,6 +199,9 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         QString this_layer_string;
         switch ((*layer).type())
         {
+        case eCAL::pb::eTLayerType::tl_ecal_tcp:
+          this_layer_string = "tcp";
+          break;
         case eCAL::pb::eTLayerType::tl_ecal_udp_mc:
           this_layer_string = "udp_mc";
           break;

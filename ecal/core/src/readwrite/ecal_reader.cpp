@@ -196,7 +196,7 @@ namespace eCAL
     // start ecal tcp layer
     if (eCALPAR(NET, TCP_REC_ENABLED))
     {
-      CTCPLayer::Get()->Initialize();
+      CTCPReaderLayer::Get()->Initialize();
     }
 
     // start inproc layer
@@ -220,6 +220,12 @@ namespace eCAL
       CSHMLayer::Get()->AddSubscription(m_topic_name, m_topic_id, m_qos);
     }
 
+    // start ecal tcp layer
+    if (eCALPAR(NET, TCP_REC_ENABLED))
+    {
+      CTCPReaderLayer::Get()->AddSubscription(m_topic_name, m_topic_id, m_qos);
+    }
+
     // start inproc layer
     if (eCALPAR(NET, INPROC_REC_ENABLED))
     {
@@ -239,6 +245,12 @@ namespace eCAL
     if (eCALPAR(NET, SHM_REC_ENABLED))
     {
       CSHMLayer::Get()->RemSubscription(m_topic_name, m_topic_id);
+    }
+
+    // stop ecal tcp layer
+    if (eCALPAR(NET, TCP_REC_ENABLED))
+    {
+      CTCPReaderLayer::Get()->RemSubscription(m_topic_name, m_topic_id);
     }
 
     // stop inproc layer
@@ -586,6 +598,11 @@ namespace eCAL
     case eCAL::pb::tl_ecal_shm:
     {
       CSHMLayer::Get()->SetConnectionParameter(par);
+      break;
+    }
+    case eCAL::pb::tl_ecal_tcp:
+    {
+      CTCPReaderLayer::Get()->SetConnectionParameter(par);
       break;
     }
     case eCAL::pb::tl_inproc:
