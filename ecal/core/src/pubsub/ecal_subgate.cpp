@@ -149,6 +149,8 @@ namespace eCAL
 
       // update globals
       g_process_rclock++;
+      auto& ecal_sample_content         = ecal_sample_.content();
+      auto& ecal_sample_content_payload = ecal_sample_content.payload();
       g_process_rbytes_sum += ecal_sample_.content().payload().size();
 
       // add sample to data reader
@@ -158,12 +160,12 @@ namespace eCAL
       {
         sent = it->second->AddSample(
           ecal_sample_.topic().tid(),
-          ecal_sample_.content().payload().data(),
-          ecal_sample_.content().payload().size(),
-          ecal_sample_.content().id(),
-          ecal_sample_.content().clock(),
-          ecal_sample_.content().time(),
-          static_cast<size_t>(ecal_sample_.content().hash()),
+          ecal_sample_content_payload.data(),
+          ecal_sample_content_payload.size(),
+          ecal_sample_content.id(),
+          ecal_sample_content.clock(),
+          ecal_sample_content.time(),
+          static_cast<size_t>(ecal_sample_content.hash()),
           layer_
         );
       }

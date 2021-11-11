@@ -93,10 +93,10 @@ namespace eCAL
   {
     if (!m_publisher) return 0;
 
-    // create new sample
-    m_ecal_sample.Clear();
-    m_ecal_sample.set_cmd_type(eCAL::pb::bct_set_sample);
-    auto ecal_sample_mutable_topic = m_ecal_sample.mutable_topic();
+    // create new sample (header information only, no payload)
+    m_ecal_header.Clear();
+    m_ecal_header.set_cmd_type(eCAL::pb::bct_set_sample);
+    auto ecal_sample_mutable_topic = m_ecal_header.mutable_topic();
     ecal_sample_mutable_topic->set_hname(m_host_name);
     ecal_sample_mutable_topic->set_tname(m_topic_name);
     ecal_sample_mutable_topic->set_tid(m_topic_id);
@@ -107,27 +107,38 @@ namespace eCAL
     layer->set_confirmed(true);
 
     // append content
-    auto ecal_sample_mutable_content = m_ecal_sample.mutable_content();
+    auto ecal_sample_mutable_content = m_ecal_header.mutable_content();
     ecal_sample_mutable_content->set_id(data_.id);
     ecal_sample_mutable_content->set_clock(data_.clock);
     ecal_sample_mutable_content->set_time(data_.time);
     ecal_sample_mutable_content->set_hash(data_.hash);
     ecal_sample_mutable_content->set_size((google::protobuf::int32)data_.len);
-    ecal_sample_mutable_content->set_payload(data_.buf, data_.len);
 
-    size_t size(0);
+    uint64_t header_size(0);
 #if GOOGLE_PROTOBUF_VERSION >= 3001000
-    size = (size_t)m_ecal_sample.ByteSizeLong();
+    header_size = (uint64_t)m_ecal_header.ByteSizeLong();
 #else
-    size = (size_t)m_ecal_sample.ByteSize();
+    header_size = (uint64_t)m_ecal_sample.ByteSize();
 #endif
 
-    m_sample_buffer.resize(size);
-    m_ecal_sample.SerializeToArray((void*)m_sample_buffer.data(), (int)size);
+    // prepare and fill header buffer (with leading uint64_t size field)
+    m_header_buffer.resize(header_size + sizeof(uint64_t));
+    // add size
+    reinterpret_cast<uint64_t*>(m_header_buffer.data())[0] = header_size;
+    // serialize header message right after size field
+    m_ecal_header.SerializeToArray((void*)(m_header_buffer.data() + sizeof(uint64_t)), (int)header_size);
 
-    if (m_publisher->send(m_sample_buffer.data(), m_sample_buffer.size()))
+    // create tcp send buffer
+    std::vector<std::pair<const char* const, const size_t>> send_vec;
+    // push header data
+    send_vec.push_back(std::pair<const char* const, const size_t>(m_header_buffer.data(), m_header_buffer.size()));
+    // push payload data
+    send_vec.push_back(std::pair<const char* const, const size_t>(static_cast<const char*>(data_.buf), data_.len));
+
+    // send it
+    if (m_publisher->send(send_vec))
     {
-      return m_sample_buffer.size();
+      return data_.len;
     }
     else
     {

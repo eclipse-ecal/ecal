@@ -53,9 +53,7 @@ namespace eCAL
   private:
     void CDataReaderTCP::OnTcpMessage(const tcpub::CallbackData& callback_data);
     std::shared_ptr<tcpub::Subscriber> m_subscriber;
-
-    uint16_t                           m_port = 0;
-    eCAL::pb::Sample                   m_ecal_sample;
+    eCAL::pb::Sample                   m_ecal_header;
   };
 
   // ecal tcp reader data layer

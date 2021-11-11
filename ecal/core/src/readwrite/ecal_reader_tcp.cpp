@@ -124,19 +124,72 @@ namespace eCAL
 
   bool CDataReaderTCP::SetConnection(const std::string& host_name_, uint16_t port_)
   {
-    if (m_port != 0)   return false;
     if (!m_subscriber) return false;
     if (port_ == 0)    return false;
-    m_port = port_;
-    m_subscriber->addSession(host_name_, m_port);
+
+    bool new_session(true);
+    auto sessions = m_subscriber->getSessions();
+
+
+
+
+
+    // NEEDS TO BE FIXED !
+    if (sessions.empty())
+    {
+      m_subscriber->addSession(host_name_, port_);
+    }
+    return true;
+    // NEEDS TO BE FIXED !
+
+
+
+
+
+    for (auto session : sessions)
+    {
+      auto address = session->getAddress();
+      auto port    = session->getPort();
+      if ((address == host_name_) && (port == port_))
+      {
+        new_session = false;
+        break;
+      }
+    }
+
+    if (new_session)
+    {
+      m_subscriber->addSession(host_name_, port_);
+    }
+
     return true;
   }
 
   void CDataReaderTCP::OnTcpMessage(const tcpub::CallbackData& data_)
   {
-    if (m_ecal_sample.ParseFromArray(data_.buffer_->data(), static_cast<int>(data_.buffer_->size())))
+    // extract header size
+    uint64_t    header_size    = reinterpret_cast<uint64_t*>(data_.buffer_->data())[0];
+    // extract header and data payload
+    const char* header_payload = data_.buffer_->data() + sizeof(uint64_t);
+    const char* data_payload   = header_payload + header_size;
+
+    // parse header
+    if (m_ecal_header.ParseFromArray(header_payload, static_cast<int>(header_size)))
     {
-      if (g_subgate()) g_subgate()->ApplySample(m_ecal_sample, eCAL::pb::tl_ecal_tcp);
+      if (g_subgate())
+      {
+        // apply sample
+        g_subgate()->ApplySample(
+          m_ecal_header.topic().tname(),
+          m_ecal_header.topic().tid(),
+          data_payload,
+          m_ecal_header.content().size(),
+          m_ecal_header.content().id(),
+          m_ecal_header.content().clock(),
+          m_ecal_header.content().time(),
+          m_ecal_header.content().hash(),
+          eCAL::pb::tl_ecal_tcp);
+      }
     }
   };
 }

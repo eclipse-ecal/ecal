@@ -63,7 +63,7 @@ namespace eCAL
     std::shared_ptr<tcpub::Publisher>       m_publisher;
     uint16_t                                m_port;
 
-    eCAL::pb::Sample                        m_ecal_sample;
-    std::vector<char>                       m_sample_buffer;
+    eCAL::pb::Sample                        m_ecal_header;
+    std::vector<char>                       m_header_buffer;
   };
 }
