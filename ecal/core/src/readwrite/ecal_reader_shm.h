@@ -51,11 +51,11 @@ namespace eCAL
     {
     }
 
-    void AddSubscription(std::string& /*topic_name_*/, std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
+    void AddSubscription(std::string& /*host_name_*/, std::string& /*topic_name_*/, std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
     {
     }
 
-    void RemSubscription(std::string& /*topic_name_*/, std::string& /*topic_id_*/)
+    void RemSubscription(std::string& /*host_name_*/, std::string& /*topic_name_*/, std::string& /*topic_id_*/)
     {
     }
 

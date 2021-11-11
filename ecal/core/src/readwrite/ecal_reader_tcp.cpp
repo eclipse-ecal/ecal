@@ -47,27 +47,31 @@ namespace eCAL
     m_executor = std::make_shared<tcpub::Executor>(4);
   }
 
-  void CTCPReaderLayer::AddSubscription(std::string& /*topic_name_*/, std::string& topic_id_, QOS::SReaderQOS /*qos_*/)
+  void CTCPReaderLayer::AddSubscription(std::string& host_name_, std::string& /*topic_name_*/, std::string& topic_id_, QOS::SReaderQOS /*qos_*/)
   {
-    std::lock_guard<std::mutex> lock(m_datareadershm_sync);
-    if (m_datareadershm_map.find(topic_id_) != m_datareadershm_map.end()) return;
+    std::string map_key(host_name_ + topic_id_);
+
+    std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
+    if (m_datareadertcp_map.find(map_key) != m_datareadertcp_map.end()) return;
 
     std::shared_ptr<CDataReaderTCP> reader = std::make_shared<CDataReaderTCP>();
     reader->Create(m_executor);
 
-    m_datareadershm_map.insert(std::pair<std::string, std::shared_ptr<CDataReaderTCP>>(topic_id_, reader));
+    m_datareadertcp_map.insert(std::pair<std::string, std::shared_ptr<CDataReaderTCP>>(map_key, reader));
   }
 
-  void CTCPReaderLayer::RemSubscription(std::string& /*topic_name_*/, std::string& topic_id_)
+  void CTCPReaderLayer::RemSubscription(std::string& host_name_, std::string& /*topic_name_*/, std::string& topic_id_)
   {
-    std::lock_guard<std::mutex> lock(m_datareadershm_sync);
-    DataReaderSHMMapT::iterator iter = m_datareadershm_map.find(topic_id_);
-    if (iter == m_datareadershm_map.end()) return;
+    std::string map_key(host_name_ + topic_id_);
+
+    std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
+    DataReaderTCPMapT::iterator iter = m_datareadertcp_map.find(map_key);
+    if (iter == m_datareadertcp_map.end()) return;
 
     auto reader = iter->second;
     reader->Destroy();
 
-    m_datareadershm_map.erase(iter);
+    m_datareadertcp_map.erase(iter);
   }
 
   void CTCPReaderLayer::SetConnectionParameter(SReaderLayerPar& par_)
@@ -78,18 +82,20 @@ namespace eCAL
       //////////////////////////////////
       // get parameter from a new writer
       //////////////////////////////////
+      // host name
+      auto host_name = par_.host_name;
       // topic name
       auto topic_name = par_.topic_name;
       // topic id
       auto topic_id   = par_.topic_id;
-      // host name
-      auto host_name  = par_.host_name;
       // port
       auto port = connection_par.layer_par_tcp().port();
 
-      std::lock_guard<std::mutex> lock(m_datareadershm_sync);
-      DataReaderSHMMapT::iterator iter = m_datareadershm_map.find(topic_id);
-      if (iter == m_datareadershm_map.end()) return;
+      std::string map_key(host_name + topic_id);
+
+      std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
+      DataReaderTCPMapT::iterator iter = m_datareadertcp_map.find(map_key);
+      if (iter == m_datareadertcp_map.end()) return;
 
       auto reader = iter->second;
       reader->SetConnection(host_name, static_cast<uint16_t>(port));
@@ -128,8 +134,7 @@ namespace eCAL
 
   void CDataReaderTCP::OnTcpMessage(const tcpub::CallbackData& data_)
   {
-    m_ecal_sample.Clear();
-    if (m_ecal_sample.ParseFromArray(data_.buffer_->data(), data_.buffer_->size()))
+    if (m_ecal_sample.ParseFromArray(data_.buffer_->data(), static_cast<int>(data_.buffer_->size())))
     {
       if (g_subgate()) g_subgate()->ApplySample(m_ecal_sample, eCAL::pb::tl_ecal_tcp);
     }

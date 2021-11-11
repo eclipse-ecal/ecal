@@ -211,25 +211,25 @@ namespace eCAL
     // start ecal udp multicast layer
     if (eCALPAR(NET, UDP_MC_REC_ENABLED))
     {
-      CMulticastLayer::Get()->AddSubscription(m_topic_name, m_topic_id, m_qos);
+      CMulticastLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
 
     // start ecal shared memory layer
     if (eCALPAR(NET, SHM_REC_ENABLED))
     {
-      CSHMLayer::Get()->AddSubscription(m_topic_name, m_topic_id, m_qos);
+      CSHMLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
 
     // start ecal tcp layer
     if (eCALPAR(NET, TCP_REC_ENABLED))
     {
-      CTCPReaderLayer::Get()->AddSubscription(m_topic_name, m_topic_id, m_qos);
+      CTCPReaderLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
 
     // start inproc layer
     if (eCALPAR(NET, INPROC_REC_ENABLED))
     {
-      CInProcLayer::Get()->AddSubscription(m_topic_name, m_topic_id, m_qos);
+      CInProcLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
   }
   
@@ -238,25 +238,25 @@ namespace eCAL
     // stop ecal udp multicast layer
     if (eCALPAR(NET, UDP_MC_REC_ENABLED))
     {
-      CMulticastLayer::Get()->RemSubscription(m_topic_name, m_topic_id);
+      CMulticastLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
 
     // stop ecal shared memory layer
     if (eCALPAR(NET, SHM_REC_ENABLED))
     {
-      CSHMLayer::Get()->RemSubscription(m_topic_name, m_topic_id);
+      CSHMLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
 
     // stop ecal tcp layer
     if (eCALPAR(NET, TCP_REC_ENABLED))
     {
-      CTCPReaderLayer::Get()->RemSubscription(m_topic_name, m_topic_id);
+      CTCPReaderLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
 
     // stop inproc layer
     if (eCALPAR(NET, INPROC_REC_ENABLED))
     {
-      CInProcLayer::Get()->RemSubscription(m_topic_name, m_topic_id);
+      CInProcLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
   }
 

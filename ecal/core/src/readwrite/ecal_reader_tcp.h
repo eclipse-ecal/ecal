@@ -66,16 +66,16 @@ namespace eCAL
 
     void Initialize();
 
-    void AddSubscription(std::string& /*topic_name_*/, std::string& topic_id_, QOS::SReaderQOS /*qos_*/);
-    void RemSubscription(std::string& /*topic_name_*/, std::string& topic_id_);
+    void AddSubscription(std::string& host_name_, std::string& topic_name_, std::string& topic_id_, QOS::SReaderQOS qos_);
+    void RemSubscription(std::string& host_name_, std::string& topic_name_, std::string& topic_id_);
 
     void SetConnectionParameter(SReaderLayerPar& /*par_*/);
 
   private:
     std::shared_ptr<tcpub::Executor> m_executor;
 
-    typedef std::unordered_map<std::string, std::shared_ptr<CDataReaderTCP>> DataReaderSHMMapT;
-    std::mutex        m_datareadershm_sync;
-    DataReaderSHMMapT m_datareadershm_map;
+    typedef std::unordered_map<std::string, std::shared_ptr<CDataReaderTCP>> DataReaderTCPMapT;
+    std::mutex        m_datareadertcp_sync;
+    DataReaderTCPMapT m_datareadertcp_map;
   };
 }

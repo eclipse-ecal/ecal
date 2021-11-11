@@ -52,8 +52,8 @@ namespace eCAL
 
     virtual void Initialize() = 0;
 
-    virtual void AddSubscription(std::string& topic_name_, std::string& topic_id_, QOS::SReaderQOS qos_) = 0;
-    virtual void RemSubscription(std::string& topic_name_, std::string& topic_id_) = 0;
+    virtual void AddSubscription(std::string& host_name_, std::string& topic_name_, std::string& topic_id_, QOS::SReaderQOS qos_) = 0;
+    virtual void RemSubscription(std::string& host_name_, std::string& topic_name_, std::string& topic_id_) = 0;
 
     virtual void SetConnectionParameter(SReaderLayerPar& par_) = 0;
 
