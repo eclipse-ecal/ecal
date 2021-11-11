@@ -35,6 +35,8 @@
 #include <ecal/ecal_log.h>
 #include "readwrite/ecal_writer_tcp.h"
 
+#include "ecal_utils/portable_endian.h"
+
 namespace eCAL
 {
   std::shared_ptr<tcpub::Executor> CDataWriterTCP::m_executor;
@@ -124,7 +126,7 @@ namespace eCAL
     // prepare and fill header buffer (with leading uint64_t size field)
     m_header_buffer.resize(header_size + sizeof(uint64_t));
     // add size
-    reinterpret_cast<uint64_t*>(m_header_buffer.data())[0] = header_size;
+    *reinterpret_cast<uint64_t*>(&m_header_buffer[0]) = htole64(header_size);
     // serialize header message right after size field
     m_ecal_header.SerializeToArray((void*)(m_header_buffer.data() + sizeof(uint64_t)), (int)header_size);
 

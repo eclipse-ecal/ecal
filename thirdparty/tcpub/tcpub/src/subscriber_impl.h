@@ -47,7 +47,7 @@ namespace tcpub
     std::shared_ptr<SubscriberSession>              addSession(const std::string& address, uint16_t port, int max_reconnection_attempts);
     std::vector<std::shared_ptr<SubscriberSession>> getSessions() const;
 
-    void setCallback(const std::function<void(const CallbackData& callback_data)>callback_function, bool synchronous_execution);
+    void setCallback(const std::function<void(const CallbackData& callback_data)>& callback_function, bool synchronous_execution);
   private:
     void setCallbackToSession(const std::shared_ptr<SubscriberSession>& session);
 

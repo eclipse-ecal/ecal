@@ -49,7 +49,7 @@ namespace tcpub
 
   private:
     void resolveEndpoint();
-    void connectToEndpoint(asio::ip::tcp::resolver::iterator resolved_endpoints);
+    void connectToEndpoint(const asio::ip::tcp::resolver::iterator& resolved_endpoints);
 
     void sendProtokolHandshakeRequest();
 

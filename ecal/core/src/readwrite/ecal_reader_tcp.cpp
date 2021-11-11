@@ -29,6 +29,8 @@
 #include "readwrite/ecal_writer_base.h"
 #include "readwrite/ecal_reader_tcp.h"
 
+#include "ecal_utils/portable_endian.h"
+
 namespace eCAL
 {
   template<> std::shared_ptr<CTCPReaderLayer> CReaderLayer<CTCPReaderLayer>::layer(nullptr);
@@ -168,7 +170,7 @@ namespace eCAL
   void CDataReaderTCP::OnTcpMessage(const tcpub::CallbackData& data_)
   {
     // extract header size
-    uint64_t    header_size    = reinterpret_cast<uint64_t*>(data_.buffer_->data())[0];
+    uint64_t    header_size    = le64toh(*reinterpret_cast<uint64_t*>(data_.buffer_->data()));
     // extract header and data payload
     const char* header_payload = data_.buffer_->data() + sizeof(uint64_t);
     const char* data_payload   = header_payload + header_size;

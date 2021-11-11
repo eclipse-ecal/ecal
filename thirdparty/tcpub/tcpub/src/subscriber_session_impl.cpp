@@ -74,7 +74,7 @@ namespace tcpub
     }
 
     resolver_.async_resolve(query
-                            , [me = shared_from_this()](asio::error_code ec, asio::ip::tcp::resolver::iterator resolved_endpoints)
+                            , [me = shared_from_this()](asio::error_code ec, const asio::ip::tcp::resolver::iterator& resolved_endpoints)
                               {
                                 if (ec)
                                 {
@@ -89,7 +89,7 @@ namespace tcpub
                               });
   }
 
-  void SubscriberSession_Impl::connectToEndpoint(asio::ip::tcp::resolver::iterator resolved_endpoints)
+  void SubscriberSession_Impl::connectToEndpoint(const asio::ip::tcp::resolver::iterator& resolved_endpoints)
   {
     if (canceled_)
     {
@@ -128,6 +128,20 @@ namespace tcpub
 #if (TCPUB_LOG_DEBUG_ENABLED)
                                   me->log_(logger::LogLevel::Debug, "SubscriberSession " + me->endpointToString() + ": Successfully connected to publisher " + me->endpointToString());
 #endif
+
+#if (TCPUB_LOG_DEBUG_VERBOSE_ENABLED)
+                                  me->log_(logger::LogLevel::DebugVerbose, "SubscriberSession " + me->endpointToString() + ": Setting tcp::no_delay option.");
+#endif
+                                  // Disable Nagle's algorithm. Nagles Algorithm will otherwise cause the
+                                  // Socket to wait for more data, if it encounters a frame that can still
+                                  // fit more data. Obviously, this is an awfull default behaviour, if we
+                                  // want to transmit our data in a timely fashion.
+                                  {
+                                    asio::error_code nodelay_ec;
+                                    me->data_socket_.set_option(asio::ip::tcp::no_delay(true), nodelay_ec);
+                                    if (nodelay_ec) me->log_(logger::LogLevel::Warning, "SubscriberSession " + me->endpointToString() + ": Failed setting tcp::no_delay option. The performance may suffer.");
+                                  }
+
                                   // Start reading a package by reading the header length. Everything will
                                   // unfold from there automatically.
                                   me->sendProtokolHandshakeRequest();
@@ -433,12 +447,12 @@ namespace tcpub
 
   std::string SubscriberSession_Impl::getAddress() const
   {
-    return endpoint_.address().to_string();
+    return address_;
   }
 
   uint16_t SubscriberSession_Impl::getPort() const
   {
-    return endpoint_.port();
+    return port_;
   }
 
   void SubscriberSession_Impl::cancel()

@@ -329,6 +329,11 @@ namespace tcpub
     return publisher_sessions_.size();
   }
 
+  bool Publisher_Impl::isRunning() const
+  {
+    return is_running_;
+  }
+
   std::string Publisher_Impl::toString(const asio::ip::tcp::endpoint& endpoint) const
   {
     return endpoint.address().to_string() + ":" + std::to_string(endpoint.port());

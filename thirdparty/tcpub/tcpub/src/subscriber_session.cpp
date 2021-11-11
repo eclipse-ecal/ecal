@@ -1,8 +1,6 @@
 // Copyright (c) Continental. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for details.
 
-#pragma once
-
 #include <tcpub/subscriber_session.h>
 
 #include "subscriber_session_impl.h"

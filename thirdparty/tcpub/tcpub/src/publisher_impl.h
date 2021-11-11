@@ -65,6 +65,8 @@ namespace tcpub
     uint16_t           getPort()            const;
     size_t             getSubscriberCount() const;
 
+    bool               isRunning()          const;
+
   private:
     std::string toString(const asio::ip::tcp::endpoint& endpoint) const;
     std::string localEndpointToString() const;

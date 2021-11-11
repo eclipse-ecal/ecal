@@ -42,6 +42,6 @@ namespace tcpub
     bool        isConnected() const;
 
   private:
-    const std::shared_ptr<SubscriberSession_Impl> subscriber_session_impl_;
+    std::shared_ptr<SubscriberSession_Impl> subscriber_session_impl_;
   };
 }

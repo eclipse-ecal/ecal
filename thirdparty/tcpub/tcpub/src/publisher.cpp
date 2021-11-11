@@ -27,6 +27,9 @@ namespace tcpub
   size_t Publisher::getSubscriberCount() const
     { return publisher_impl_->getSubscriberCount(); }
 
+  bool Publisher::isRunning() const
+  { return publisher_impl_->isRunning(); }
+
   bool Publisher::send(const char* const data, size_t size) const
     { return this->send({ {data, size} }); }
 

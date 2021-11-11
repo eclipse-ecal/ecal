@@ -22,10 +22,10 @@ namespace tcpub
     : io_service_             (io_service)
     , state_                  (State::NotStarted)
     , session_closed_handler_ (session_closed_handler)
-    , sending_in_progress_    (false)
     , log_                    (log_function)
     , data_socket_            (*io_service_)
     , data_strand_            (*io_service_)
+    , sending_in_progress_    (false)
   {
 #if (TCPUB_LOG_DEBUG_VERBOSE_ENABLED)
     log_(logger::LogLevel::DebugVerbose, "PublisherSession " + endpointToString() + ": Created.");

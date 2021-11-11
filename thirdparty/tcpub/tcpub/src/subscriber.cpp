@@ -25,7 +25,7 @@ namespace tcpub
   std::vector<std::shared_ptr<SubscriberSession>> Subscriber::getSessions() const
     { return subscriber_impl_->getSessions(); }
 
-  void Subscriber::setCallback(const std::function<void(const CallbackData& callback_data)>callback_function, bool synchronous_execution)
+  void Subscriber::setCallback(const std::function<void(const CallbackData& callback_data)>& callback_function, bool synchronous_execution)
     { subscriber_impl_->setCallback(callback_function, synchronous_execution); }
 
   void Subscriber::clearCallback()

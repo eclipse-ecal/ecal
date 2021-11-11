@@ -31,5 +31,5 @@ add_subdirectory(performance_subscriber)
 add_subdirectory(hello_world_publisher)
 add_subdirectory(hello_world_subscriber)
 
-add_subdirectory(ecal_to_tcp)
-add_subdirectory(tcp_to_ecal)
+# add_subdirectory(ecal_to_tcp)
+# add_subdirectory(tcp_to_ecal)

@@ -109,7 +109,7 @@ namespace tcpub
     return session_list_;
   }
 
-  void Subscriber_Impl::setCallback(const std::function<void(const CallbackData& callback_data)>callback_function, bool synchronous_execution)
+  void Subscriber_Impl::setCallback(const std::function<void(const CallbackData& callback_data)>& callback_function, bool synchronous_execution)
   {
 #if (TCPUB_LOG_DEBUG_ENABLED)
     log_(logger::LogLevel::Debug, "Subscriber " + subscriberIdString() + ": Setting new " + (synchronous_execution ? "synchronous" : "asynchronous") + " callback.");

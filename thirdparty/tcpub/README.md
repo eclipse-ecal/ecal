@@ -158,6 +158,7 @@ The protocol uses the following message layout. Values that are not sent by the 
 
 - **General Message header**
 	Each message will have a message header as follows. Values are to be interpreted little-endian.
+	This header is defined in [tcpub/src/tcp_header.h](tcpub/src/tcp_header.h)
 
 	- 16 bit: Header size
 	- 8 bit: Type
@@ -169,6 +170,7 @@ The protocol uses the following message layout. Values that are not sent by the 
 
 2. **ProtocolHandshakeReq & ProtocolHandshakeResp**
 	The layout of ProtocolHandshakeReq / ProtocolHandshakeResp is the same.  Values are to be interpreted little-endian
+	This message is defined in [tcpub/src/protocol_handshake_message.h](tcpub/src/protocol_handshake_message.h)
 	
 	- Message Header (size given in the first 16 bit)
 	- 8 bit: Protocol Version

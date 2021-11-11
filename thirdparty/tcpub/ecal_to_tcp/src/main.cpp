@@ -50,6 +50,7 @@ int main(int argc, char** argv)
 
   // Parse command line
   start_port = static_cast<uint16_t>(std::stoul(argv[1]));
+  topics.reserve(argc - 1);
   for (int i = 2; i < argc; i++)
   {
     topics.push_back(std::string(argv[i]));
