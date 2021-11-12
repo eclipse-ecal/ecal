@@ -97,18 +97,11 @@ namespace eCAL
 
     // create new sample (header information only, no payload)
     m_ecal_header.Clear();
-    m_ecal_header.set_cmd_type(eCAL::pb::bct_set_sample);
     auto ecal_sample_mutable_topic = m_ecal_header.mutable_topic();
-    ecal_sample_mutable_topic->set_hname(m_host_name);
     ecal_sample_mutable_topic->set_tname(m_topic_name);
     ecal_sample_mutable_topic->set_tid(m_topic_id);
 
-    // set layer
-    auto layer = ecal_sample_mutable_topic->add_tlayer();
-    layer->set_type(eCAL::pb::eTLayerType::tl_ecal_tcp);
-    layer->set_confirmed(true);
-
-    // append content
+    // append payload header (without payload)
     auto ecal_sample_mutable_content = m_ecal_header.mutable_content();
     ecal_sample_mutable_content->set_id(data_.id);
     ecal_sample_mutable_content->set_clock(data_.clock);
@@ -116,26 +109,34 @@ namespace eCAL
     ecal_sample_mutable_content->set_hash(data_.hash);
     ecal_sample_mutable_content->set_size((google::protobuf::int32)data_.len);
 
-    uint64_t header_size(0);
+    uint16_t header_size(0);
 #if GOOGLE_PROTOBUF_VERSION >= 3001000
-    header_size = (uint64_t)m_ecal_header.ByteSizeLong();
+    header_size = (uint16_t)m_ecal_header.ByteSizeLong();
 #else
-    header_size = (uint64_t)m_ecal_sample.ByteSize();
+    header_size = (uint16_t)m_ecal_sample.ByteSize();
 #endif
 
-    // prepare and fill header buffer (with leading uint64_t size field)
-    m_header_buffer.resize(header_size + sizeof(uint64_t));
+    // create header
+    const size_t ecal_magic(4 * sizeof(char));
+    //                     ECAL       +  payload size field  +  proto header
+    m_header_buffer.resize(ecal_magic +  sizeof(uint16_t)    +  header_size);
     // add size
-    *reinterpret_cast<uint64_t*>(&m_header_buffer[0]) = htole64(header_size);
+    *reinterpret_cast<uint16_t*>(&m_header_buffer[ecal_magic]) = htole16(header_size);
     // serialize header message right after size field
-    m_ecal_header.SerializeToArray((void*)(m_header_buffer.data() + sizeof(uint64_t)), (int)header_size);
+    m_ecal_header.SerializeToArray((void*)(m_header_buffer.data() + ecal_magic + sizeof(uint16_t)), (int)header_size);
+
+    // add magic ecal header :-)
+    m_header_buffer[0] = 'E';
+    m_header_buffer[1] = 'C';
+    m_header_buffer[2] = 'A';
+    m_header_buffer[3] = 'L';
 
     // create tcp send buffer
     std::vector<std::pair<const char* const, const size_t>> send_vec;
     // push header data
-    send_vec.push_back(std::pair<const char* const, const size_t>(m_header_buffer.data(), m_header_buffer.size()));
+    send_vec.emplace_back(std::pair<const char* const, const size_t>(m_header_buffer.data(), m_header_buffer.size()));
     // push payload data
-    send_vec.push_back(std::pair<const char* const, const size_t>(static_cast<const char*>(data_.buf), data_.len));
+    send_vec.emplace_back(std::pair<const char* const, const size_t>(static_cast<const char*>(data_.buf), data_.len));
 
     // send it
     if (m_publisher->send(send_vec))

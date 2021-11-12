@@ -86,10 +86,8 @@ namespace eCAL
       //////////////////////////////////
       // host name
       auto host_name = par_.host_name;
-      // topic name
-      auto topic_name = par_.topic_name;
       // topic id
-      auto topic_id   = par_.topic_id;
+      auto topic_id  = par_.topic_id;
       // port
       auto port = connection_par.layer_par_tcp().port();
 
@@ -129,25 +127,9 @@ namespace eCAL
     if (!m_subscriber) return false;
     if (port_ == 0)    return false;
 
+    // check for new session
     bool new_session(true);
     auto sessions = m_subscriber->getSessions();
-
-
-
-
-
-    // NEEDS TO BE FIXED !
-    if (sessions.empty())
-    {
-      m_subscriber->addSession(host_name_, port_);
-    }
-    return true;
-    // NEEDS TO BE FIXED !
-
-
-
-
-
     for (auto session : sessions)
     {
       auto address = session->getAddress();
@@ -159,6 +141,7 @@ namespace eCAL
       }
     }
 
+    // add new session
     if (new_session)
     {
       m_subscriber->addSession(host_name_, port_);
@@ -170,9 +153,14 @@ namespace eCAL
   void CDataReaderTCP::OnTcpMessage(const tcpub::CallbackData& data_)
   {
     // extract header size
-    uint64_t    header_size    = le64toh(*reinterpret_cast<uint64_t*>(data_.buffer_->data()));
-    // extract header and data payload
-    const char* header_payload = data_.buffer_->data() + sizeof(uint64_t);
+    const size_t ecal_magic(4 * sizeof(char));
+    //                           ECAL        +  payload size field
+    const size_t header_length = ecal_magic  +  sizeof(uint16_t);
+    uint16_t     header_size   = le16toh(*reinterpret_cast<uint16_t*>(data_.buffer_->data() + ecal_magic));
+
+    // extract header
+    const char* header_payload = data_.buffer_->data() + header_length;
+    // extract data payload
     const char* data_payload   = header_payload + header_size;
 
     // parse header
@@ -185,7 +173,7 @@ namespace eCAL
           m_ecal_header.topic().tname(),
           m_ecal_header.topic().tid(),
           data_payload,
-          m_ecal_header.content().size(),
+          static_cast<size_t>(m_ecal_header.content().size()),
           m_ecal_header.content().id(),
           m_ecal_header.content().clock(),
           m_ecal_header.content().time(),
