@@ -393,6 +393,14 @@ namespace eCAL
       }
     }
 
+    if ( (use_tcp    == TLayer::smode_auto)
+      && (use_udp_mc == TLayer::smode_auto)
+      )
+    {
+      Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send: TCP layer and UDP layer are both set to auto mode - Publication failed !");
+      return 0;
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     // LAYER 1 : INPROC
     ////////////////////////////////////////////////////////////////////////////
@@ -560,7 +568,9 @@ namespace eCAL
     ////////////////////////////////////////////////////////////////////////////
     // LAYER 4 : TCP
     ////////////////////////////////////////////////////////////////////////////
-    if (use_tcp == TLayer::smode_on)
+    if (((use_tcp == TLayer::smode_auto) && m_ext_subscribed)
+      || (use_tcp == TLayer::smode_on)
+      )
     {
 #ifndef NDEBUG
       // log it
@@ -974,6 +984,7 @@ namespace eCAL
 
     switch (m_use_tcp)
     {
+    case TLayer::eSendMode::smode_auto:
     case TLayer::eSendMode::smode_on:
       m_writer_tcp.Create(m_host_name, m_topic_name, m_topic_id);
 #ifndef NDEBUG
