@@ -5,4 +5,4 @@ Convert UTF License
 ===================
 
 .. literalinclude:: convert-utf.txt
-   :language: txt
+   :language: none

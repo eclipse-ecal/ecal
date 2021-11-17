@@ -16,11 +16,15 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/fontawesome.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/collapsible-lists/css/tree_view.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/theme_addon.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/tabs.css" />
 <!-- linktags -->
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
+    <link rel="up" title="eCAL Sys" href="sys.html" />
+    <link rel="next" title="FAQ" href="../../faq.html" />
+    <link rel="prev" title="eCAL Sys CLI" href="sys_cli.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
     <script src="../../_static/js/modernizr.min.js"></script>
@@ -33,16 +37,27 @@
 
         <div class="page-header">
             <div class="page-header-inner">
-<!-- pageheader -->
+<!--block pageheader-->
+<div class="row">
+    <div class="col-sm-6 col-lg-7">
 
-<div class="logo">
-<a href="https://continental.github.io/ecal/" title="eCAL Documentation" >
-    <img src="../../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
-</a>
-</div>
-<!-- /pageheader -->
-            </div>
+        <div class="logo">
+        <a href="https://continental.github.io/ecal/" title="eCAL Documentation" >
+
+            <img src="../../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
+        </a>
         </div>
+    </div><!--/.col-x-->
+    <div class="col-sm-6 col-lg-5">
+        <div role="search">
+            
+            <!--form global search-->
+        </div>
+    </div><!--/.col-x-->
+</div><!--/.row-->
+<!--/block pageheader-->
+            </div><!--/.page-header-inner-->
+        </div><!--/.page-header-inner-->
 
         
 
@@ -322,11 +337,34 @@
 <li class="toctree-l3"><a class="reference internal" href="../../_api/typedef_ecalc_8h_1a6801786d75d8af7f213d45239018884b.html">Typedef ECAL_HANDLE</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../_api_python/modules.html">python</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../_api_python/ecal.html">ecal package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../_api_python/ecal.core.html">ecal.core package</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../_api_python/ecal.core.core.html">ecal.core.core module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../_api_python/ecal.core.publisher.html">ecal.core.publisher module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../_api_python/ecal.core.service.html">ecal.core.service module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../_api_python/ecal.core.subscriber.html">ecal.core.subscriber module</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api_python/ecal.measurement.html">ecal.measurement package</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../_api_python/ecal.measurement.hdf5.html">ecal.measurement.hdf5 module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../_api_python/ecal.measurement.measurement.html">ecal.measurement.measurement module</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api_python/ecal.proto.html">ecal.proto package</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../_api_python/ecal.proto.helper.html">ecal.proto.helper module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../_api_python/setup.html">setup module</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 <p class="caption"><span class="caption-text">Using eCAL</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../configuration.html">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../configuration/cloud.html">Cloud Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../configuration/local.html">Local configuration</a></li>
@@ -335,7 +373,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../configuration/options.html">ecal.ini</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../applications.html">Applications</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="../../applications.html">Applications</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../rec/recorder.html"> eCAL Rec</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../rec/recorder_architecture.html"> eCAL Rec Architecture</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../rec/recorder_gui.html"> eCAL Rec GUI</a></li>
@@ -343,10 +381,11 @@
 <li class="toctree-l3"><a class="reference internal" href="../rec/recorder_client.html"> eCAL Rec Client</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="sys.html"> eCAL Sys</a><ul>
+<li class="toctree-l2 current"><a class="reference internal" href="sys.html"> eCAL Sys</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="sys_architecture.html"> eCAL Sys Architecture</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sys_gui.html"> eCAL Sys GUI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sys_cli.html"> eCAL Sys CLI</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"> eCAL Sys Client</a></li>
 </ul>
 </li>
 </ul>
@@ -368,6 +407,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/boost-1.0.html">Boost Software License 1.0</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/bsd-3.html">BSD 3</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/convert-utf.html">Convert UTF License</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/creative-commons-3.0.html">Creative Commons 3.0</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/fontawesome-free.html">Fontawesome Free License</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/gpl-2.0.html">GPL 2.0</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/gpl-3.0.html">GPL 3.0</a></li>
@@ -444,29 +484,33 @@
                     <div class="rst-content">
 <!-- pager-hidden.html -->
 
+        <a class="no-focus" accesskey="p" href="sys_cli.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="n" href="../../faq.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../../index.html">Start</a></li>
+            <li class="breadcrumb-item"><a href="../../applications.html">Applications</a></li>
+            <li class="breadcrumb-item"><a href="sys.html"> eCAL Sys</a></li>
         <li class="breadcrumb-item active" aria-current="page"> eCAL Sys Client</li>
     </ol>
-        <div class="breadcrumb-additions">
-            <a class="btn btn-sm btn-primary" id="btnHowToEdit"
-               href="https://continental.github.io/ecal/advanced/documentation.html"
-               rel="nofollow noopener" target="_blank">
-                <span class="btn-icon"><span class="fas fa-info-circle"></span></span>
-                <span class="btn-text">How to edit</span>
-            </a>
-                <a class="btn btn-sm btn-light" id="btnEditOnGitHub" href="https://github.com/continental/ecal/blob/master/doc/rst/applications/sys/sys_client..rst">
-                    <span class="btn-icon"><span class="fab fa-github"></span></span>
-                    <span class="btn-text">Edit on GitHub</span>
-                </a>
-                <a class="btn btn-sm btn-light" href="../../_sources/applications/sys/sys_client..rst.txt" rel="nofollow">
-                    <span class="btn-icon"><span class="fas fa-code"></span></span>
-                    <span class="btn-text">View source</span>
-                </a>
-        </div>
+    <div class="breadcrumb-additions">
+        <a class="btn btn-sm btn-light" href="../../_sources/applications/sys/sys_client.rst.txt" rel="nofollow">
+            <span class="btn-icon"><span class="fas fa-code"></span></span>
+            <span class="btn-text">View source</span>
+        </a>
+        <a class="btn btn-sm btn-light" id="btnHowToEdit"
+           href="https://continental.github.io/ecal/advanced/documentation.html"
+           rel="nofollow noopener" target="_blank">
+            <span class="btn-icon"><span class="fas fa-info-circle"></span></span>
+            <span class="btn-text">How to edit</span>
+        </a>
+        <a class="btn btn-sm btn-light" id="btnEditOnGitHub" href="https://github.com/continental/ecal/blob/master/doc/rst/applications/sys/sys_client.rst">
+            <span class="btn-icon"><span class="fab fa-github"></span></span>
+            <span class="btn-text">Edit on GitHub</span>
+        </a>
+    </div>
 </div>
 <!-- /breadcrumbs.html -->
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -474,7 +518,7 @@
 <!-- body -->
     <div class="section" id="ecalsys-app-icon-h1-ecal-sys-client">
 <span id="applications-sys-client"></span><h1><a class="reference internal" href="../../_images/ecalsys.ico"><img alt="ecalsys_APP_ICON_h1" src="../../_images/ecalsys.ico" style="width: 38px;" /></a> eCAL Sys Client<a class="headerlink" href="#ecalsys-app-icon-h1-ecal-sys-client" title="Permalink to this headline">¶</a></h1>
-<p>eCAL Sys Client provides the client for the eCAL Sys Host Applications (í.e. <a class="reference internal" href="sys_gui.html#applications-sys-gui"><span class="std std-ref"> eCAL Sys GUI</span></a> or <a class="reference internal" href="sys_cli.html#applications-sys-cli"><span class="std std-ref"> eCAL Sys CLI</span></a>).
+<p>eCAL Sys Client provides the client for the eCAL Sys Host Applications (i.e. <a class="reference internal" href="sys_gui.html#applications-sys-gui"><span class="std std-ref"> eCAL Sys GUI</span></a> or <a class="reference internal" href="sys_cli.html#applications-sys-cli"><span class="std std-ref"> eCAL Sys CLI</span></a>).
 Start this application on all machines, that shall be remote controlled.</p>
 <p>eCAL Sys Client is not needed on the machine that runs the eCAL Sys Host Application.</p>
 <div class="admonition important">
@@ -487,7 +531,7 @@ If you are annoyed by accepting this security implication at startup, you can st
 </div>
 <div class="section" id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-txt notranslate"><div class="highlight"><pre><span></span>USAGE:
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>USAGE:
 
    ecal_sys_client  [--auto-accept-security-risk] [--] [--version] [-h]
 
@@ -517,7 +561,21 @@ Where:
                             </div>
                         </div>
 <!-- pager.html -->
-
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item">
+            <a class="page-link" href="sys_cli.html" title="Accesskey Alt(+Shift)+p">
+                Previous
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="../../faq.html" title="Accesskey Alt(+Shift)+n">
+                Next
+            </a>
+        </li>
+        
+    </ul>
+</nav>
 <!-- /pager.html -->
                     </div>
                 </div>
@@ -535,7 +593,7 @@ Where:
                 <div class="footer-additional">
                     <p class="text-center">
                         <a href="https://github.com/TYPO3-Documentation/sphinx_typo3_theme" rel="nofollow" target="_blank">
-                            TYPO3 Theme 4.5.2
+                            TYPO3 Theme 4.6.2
                         </a>
                     </p>
                 </div>

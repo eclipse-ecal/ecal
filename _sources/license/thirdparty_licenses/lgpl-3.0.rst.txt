@@ -5,4 +5,4 @@ LGPL 3.0
 ========
 
 .. literalinclude:: lgpl-3.0.txt
-   :language: txt
+   :language: none
