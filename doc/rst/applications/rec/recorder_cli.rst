@@ -51,7 +51,7 @@ Usage
 =====
 
 .. literalinclude:: rec_server_cli_usage.txt
-   :language: txt
+   :language: none
 
 
 Interactive mode
@@ -63,7 +63,7 @@ Instead of exiting eCAL rec will then go to an interactive console that lets you
 If you want to remote-control eCAL Rec CLI with another eCAL Rec CLI instance, you also have to set it to interactive mode, just to prevent it from shutting down prematurely.
 
 .. literalinclude:: rec_server_cli_interactive_help.txt
-   :language: txt
+   :language: none
 
 Automatize eCAL Rec CLI
 -----------------------

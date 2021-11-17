@@ -5,4 +5,4 @@ GPL 3.0
 =======
 
 .. literalinclude:: gpl-3.0.txt
-   :language: txt
+   :language: none

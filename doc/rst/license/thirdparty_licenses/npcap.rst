@@ -5,4 +5,4 @@ Npcap license
 =============
 
 .. literalinclude:: npcap.txt
-   :language: txt
+   :language: none

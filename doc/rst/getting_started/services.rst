@@ -61,7 +61,7 @@ Please edit it and add one line for each host (replace the XX.XX.XX.XX with the 
 - |fa-windows| Windows: ``C:\Windows\System32\drivers\etc\hosts``
 - |fa-ubuntu| Ubuntu: ``/etc/hosts``
 
-.. code-block:: txt
+.. code-block:: none
 
    XX.XX.XX.XX my-host-1
    XX.XX.XX.XX my-host-2

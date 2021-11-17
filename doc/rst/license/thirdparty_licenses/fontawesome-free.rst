@@ -5,4 +5,4 @@ Fontawesome Free License
 ========================
 
 .. literalinclude:: fontawesome-free.txt
-   :language: txt
+   :language: none

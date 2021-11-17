@@ -5,4 +5,4 @@ MIT
 ===
 
 .. literalinclude:: mit.txt
-   :language: txt
+   :language: none

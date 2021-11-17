@@ -1,0 +1,186 @@
+:root {
+    --primary: #ffa700;
+}
+
+a {
+    color: #ffa700;
+}
+
+a:hover {
+    color: #b37400;
+}
+
+.btn-primary {
+    background-color: #ffa700;
+    border-color: #ffa700
+}
+.btn-primary:hover {
+    background-color: #E69500;
+    border-color: #cc8500
+}
+.btn-primary:focus, .btn-primary.focus {
+    background-color: #E69500;
+    border-color: #cc8500;
+}
+.btn-primary.disabled, .btn-primary:disabled {
+    background-color: #ffa700;
+    border-color: #ffa700
+}
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show>.btn-primary.dropdown-toggle {
+    background-color: #cc8500;
+    border-color: #bf7c00
+}
+
+.btn-outline-primary {
+    color: #ffa700;
+    border-color: #ffa700
+}
+.btn-outline-primary:hover {
+    background-color: #ffa700;
+    border-color: #ffa700
+}
+.btn-outline-primary.disabled, .btn-outline-primary:disabled {
+    color: #ffa700;
+}
+.btn-outline-primary:not(:disabled):not(.disabled):active, .btn-outline-primary:not(:disabled):not(.disabled).active, .show>.btn-outline-primary.dropdown-toggle {
+    background-color: #ffa700;
+    border-color: #ffa700
+}
+
+.btn-link {
+    color: #ffa700;
+}
+.btn-link:hover {
+    color: #b37400;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    background-color: #ffa700
+}
+
+.custom-control-input:checked~.custom-control-label::before {
+    border-color: #ffa700;
+    background-color: #ffa700
+}
+
+.custom-checkbox .custom-control-input:indeterminate~.custom-control-label::before {
+    border-color: #ffa700;
+    background-color: #ffa700
+}
+
+.custom-range::-moz-range-thumb {
+    background-color: #ffa700;
+}
+
+.custom-range::-ms-thumb {
+    background-color: #ffa700;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    background-color: #ffa700
+}
+
+.page-link {
+    color: #ffa700;
+}
+.page-link:hover {
+    color: #b37400;
+}
+
+.page-item.active .page-link {
+    background-color: #ffa700;
+    border-color: #ffa700
+}
+
+.badge-primary {
+    background-color: #ffa700
+}
+
+a.badge-primary:hover, a.badge-primary:focus {
+    background-color: #cc8500
+}
+
+.progress-bar {
+    background-color: #ffa700;
+}
+
+.list-group-item.active {
+    background-color: #ffa700;
+    border-color: #ffa700
+}
+
+.bg-primary {
+    background-color: #ffa700 !important
+}
+
+a.bg-primary:hover, a.bg-primary:focus, button.bg-primary:hover, button.bg-primary:focus {
+    background-color: #cc8500 !important
+}
+
+.border-primary {
+    border-color: #ffa700 !important
+}
+
+.text-primary {
+    color: #ffa700 !important
+}
+a.text-primary:hover, a.text-primary:focus {
+    color: #b37400 !important
+}
+
+.footer-menu-group-list-item-icon {
+    color: #ffa700;
+}
+
+.frame-background-primary {
+    background-color: #ffa700
+}
+
+.frame-background-light a:not(.btn):not(.toc-toggle) {
+    color: #ffa700
+}
+.frame-background-light a:not(.btn):not(.toc-toggle):hover {
+    color: #b37400
+}
+
+.frame-background-dark a:not(.btn):not(.toc-toggle) {
+    color: #ffa700
+}
+.frame-background-dark a:not(.btn):not(.toc-toggle):hover {
+    color: #b37400
+}
+
+.toc .current>a {
+    color: #ffa700
+}
+.toc .current>a>.toctree-expand {
+    background-color: #ffa700;
+}
+
+.toc-version-options a:hover {
+    background-color: #ffa700
+}
+
+.t3-cell .term {
+    color: #ffa700;
+}
+
+ul[class*="horizbuttons-"][class*="-typo3-"]>li, ul[class*="horizbuttons-"][class*="-primary-"]>li {
+    background-color: #ffa700
+}
+
+.autocomplete .selected {
+    background-color: #ffa700
+}
+
+.logo-image {
+    max-width: 200px;
+}
+
+.py {
+    color: #000
+}
+
+.n {
+    color: #4592a9
+}

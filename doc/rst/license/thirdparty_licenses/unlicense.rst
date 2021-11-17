@@ -5,4 +5,4 @@ Unlicense
 =========
 
 .. literalinclude:: unlicense.txt
-   :language: txt
+   :language: none

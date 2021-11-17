@@ -9,4 +9,4 @@ eCAL License
    Please refer to :ref:`thirdparty_licenses` for that.
 
 .. literalinclude:: thirdparty_licenses/apache-2.0.txt
-   :language: txt
+   :language: none

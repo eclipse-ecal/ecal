@@ -100,8 +100,8 @@ extensions = [
 
 if is_cmake_build:
     extensions += [ \
-    #    'sphinx.ext.autodoc',
-    #    'sphinxcontrib.apidoc',
+        'sphinx.ext.autodoc',
+        'sphinxcontrib.apidoc',
     #    'sphinxcontrib.moderncmakedomain',
         'breathe',
         'exhale',
@@ -113,11 +113,11 @@ if is_cmake_build:
     todo_include_todos = False
     todo_emit_warnings = True
 
-#apidoc_module_dir = os.path.join(ecal_python_dir)
-#apidoc_output_dir = os.path.join(rst_source_dir, '_apidoc')
-#apidoc_excluded_paths = ['tests']
-#apidoc_separate_modules = True
-#apidoc_extra_args = ['-f']
+apidoc_module_dir = os.path.join(ecal_python_dir)
+apidoc_output_dir = os.path.join(rst_source_dir, '_api_python')
+apidoc_excluded_paths = ['tests']
+apidoc_separate_modules = True
+apidoc_extra_args = ['-f']
 
 # Breathe Configuration
 breathe_default_project = "eCAL"
@@ -169,7 +169,7 @@ language = None
 exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'native'
+pygments_style = 'sphinx'
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -182,6 +182,10 @@ html_theme = 'sphinx_typo3_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+html_css_files = [
+    'css/theme_addon.css',
+]
 
 #https://github.com/TYPO3-Documentation/sphinx_typo3_theme/tree/master/sphinx_typo3_theme
 html_theme_options = {
