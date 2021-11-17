@@ -1,5 +1,6 @@
 wheel
 PyGithub
+autodoc
 empy
 semantic-version 
 sphinx-tabs==2.1.0
@@ -28,6 +29,7 @@ snowballstemmer
 soupsieve
 Sphinx==3.5.4
 sphinx-typo3-theme==4.5.2
+sphinxcontrib-apidoc
 sphinxcontrib-applehelp
 sphinxcontrib-devhelp
 sphinxcontrib-htmlhelp
@@ -35,3 +37,4 @@ sphinxcontrib-jsmath
 sphinxcontrib-qthelp
 sphinxcontrib-serializinghtml
 urllib3
+WebOb
