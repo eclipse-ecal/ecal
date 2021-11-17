@@ -183,6 +183,10 @@ html_theme = 'sphinx_typo3_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+html_css_files = [
+    'css/theme_addon.css',
+]
+
 #https://github.com/TYPO3-Documentation/sphinx_typo3_theme/tree/master/sphinx_typo3_theme
 html_theme_options = {
     # Banner

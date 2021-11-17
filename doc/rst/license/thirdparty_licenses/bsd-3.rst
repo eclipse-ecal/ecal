@@ -5,4 +5,4 @@ BSD 3
 =====
 
 .. literalinclude:: bsd-3.txt
-   :language: txt
+   :language: none

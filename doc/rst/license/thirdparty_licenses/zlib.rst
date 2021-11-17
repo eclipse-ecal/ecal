@@ -5,4 +5,4 @@ zlib
 ====
 
 .. literalinclude:: zlib.txt
-   :language: txt
+   :language: none

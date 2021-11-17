@@ -17,4 +17,4 @@ Usage
 =====
 
 .. literalinclude:: rec_client_usage.txt
-   :language: txt
+   :language: none
