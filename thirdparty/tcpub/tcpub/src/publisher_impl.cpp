@@ -49,7 +49,6 @@ namespace tcpub
   
   bool Publisher_Impl::start(const std::string& address, uint16_t port)
   {
-    // TODO: Return false if already running
 #if (TCPUB_LOG_DEBUG_VERBOSE_ENABLED)
     log_(logger::LogLevel::DebugVerbose, "Publisher: Parsing address " + address + ":" + std::to_string(port) + ".");
 #endif

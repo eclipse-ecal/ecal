@@ -1,13 +1,12 @@
 cmake_minimum_required(VERSION 3.5.1)
 
 project(tcpub)
-# TODO: Remove or consider how to set these variables
-#set(PROJECT_VERSION_STRING 1.0.11)
-#set(PROJECT_VERSION_MAJOR 1)
-#set(PROJECT_VERSION_MINOR 0)
-#set(PROJECT_VERSION_PATCH 11)
 
-set(CMAKE_CXX_STANDARD 14) #TODO: You are not supposed to do that any more, i guess
+set(PROJECT_VERSION_STRING 1.0.0)
+set(PROJECT_VERSION_MAJOR 1)
+set(PROJECT_VERSION_MINOR 0)
+set(PROJECT_VERSION_PATCH 0)
+
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 find_package(Threads REQUIRED)
