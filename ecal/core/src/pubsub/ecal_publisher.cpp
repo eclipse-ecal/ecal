@@ -234,12 +234,16 @@ namespace eCAL
     case TLayer::tlayer_shm:
       m_tlayer.sm_shm = mode_;
       break;
+    case TLayer::tlayer_tcp:
+      m_tlayer.sm_tcp = mode_;
+      break;
     case TLayer::tlayer_inproc:
       m_tlayer.sm_inproc = mode_;
       break;
     case TLayer::tlayer_all:
       m_tlayer.sm_udp_mc  = mode_;
       m_tlayer.sm_shm     = mode_;
+      m_tlayer.sm_tcp     = mode_;
       m_tlayer.sm_inproc  = mode_;
       break;
     default:

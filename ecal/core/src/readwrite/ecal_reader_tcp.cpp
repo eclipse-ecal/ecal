@@ -154,7 +154,7 @@ namespace eCAL
   {
     // extract header size
     const size_t ecal_magic(4 * sizeof(char));
-    //                           ECAL        +  payload size field
+    //                           ECAL        +  header size field
     const size_t header_length = ecal_magic  +  sizeof(uint16_t);
     uint16_t     header_size   = le16toh(*reinterpret_cast<uint16_t*>(data_.buffer_->data() + ecal_magic));
 

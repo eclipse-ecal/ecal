@@ -118,7 +118,7 @@ namespace eCAL
 
     // create header
     const size_t ecal_magic(4 * sizeof(char));
-    //                     ECAL       +  payload size field  +  proto header
+    //                     ECAL       +  header size field   +  proto header
     m_header_buffer.resize(ecal_magic +  sizeof(uint16_t)    +  header_size);
     // add size
     *reinterpret_cast<uint16_t*>(&m_header_buffer[ecal_magic]) = htole16(header_size);
@@ -133,6 +133,8 @@ namespace eCAL
 
     // create tcp send buffer
     std::vector<std::pair<const char* const, const size_t>> send_vec;
+    send_vec.reserve(2);
+
     // push header data
     send_vec.emplace_back(std::pair<const char* const, const size_t>(m_header_buffer.data(), m_header_buffer.size()));
     // push payload data
