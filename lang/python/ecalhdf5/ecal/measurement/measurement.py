@@ -33,11 +33,24 @@ class Channel(object):
     self._channel_name = channel_name
     self._entries = self._measurement._reader.get_entries_info(channel_name)
 
-    protocol, type = measurement._reader.get_channel_type(channel_name).split(":")
-    if protocol == "proto":
-      self._proto_msg_class = pb_helper.get_type_from_descriptor(type, measurement._reader.get_channel_description(channel_name))
+    self._protocol, self._type = measurement._reader.get_channel_type(channel_name).split(":")
+    self._descriptor = measurement._reader.get_channel_description(channel_name)
+    if self._protocol == "proto":
+      self._proto_msg_class = pb_helper.get_type_from_descriptor(self._type, self._descriptor )
     else:
        raise NotImplementedError
+
+  @property
+  def type(self):
+    return self._type
+
+  @property
+  def descriptor(self):
+    return self._descriptor
+
+  @property
+  def protocol(self):
+    return self._protocol
     
   class Iterator(object):
 
