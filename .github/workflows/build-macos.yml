@@ -55,7 +55,7 @@ jobs:
         -DHAS_QT5=ON \
         -DHAS_CURL=ON \
         -DHAS_CAPNPROTO=ON \
-        -DBUILD_DOCS=ON \
+        -DBUILD_DOCS=OFF \
         -DBUILD_APPS=ON \
         -DBUILD_SAMPLES=ON \
         -DBUILD_TIME=ON \
