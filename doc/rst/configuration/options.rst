@@ -14,8 +14,32 @@ eCAL has many options that can be configured via an .ini file which is located a
 .. note::
    In eCAL 5.7 the path of the :file:`ecal.ini` file was |ecalini-path-windows-old| and |ecalini-path-ubuntu-old|.
 
+Loading strategy (Priority)
+===========================
+
+The eCAL configuration file is loaded based on the following priorities for Windows and Linux. In addition, it can be passed explicitly to every eCAL application with the command line option ``--ecal-ini-file``.
+
+- |fa-windows| Windows:
+
+  1. ``%ECAL_DATA%/ecal.ini``
+  2. ``%AppData%/ecal/ecal.ini``
+
+- |fa-ubuntu| Ubuntu:
+
+  1. ``$ECAL_DATA/ecal.ini``
+  2. ``/etc/ecal/ecal.ini``
+      
+     .. note::
+
+        This path is set from CMake to ``CMAKE_INSTALL_SYSCONFDIR/ecal/ecal.ini``.
+        Official builds are configured to use ``/etc``.
+        If you are compiling eCAL yourself and don't provide the SYSCONFDIR, CMake will usually use ``/usr/local/etc/ecal/ecal.ini``.
+
+ecal.ini options
+================
+
 [network]
-=========
+---------
 
 The network setting drive how and which ...
 
@@ -95,7 +119,7 @@ The network setting drive how and which ...
 
 
 [common]
-========
+--------
 
 .. option:: registration_timeout
   
@@ -111,7 +135,7 @@ The network setting drive how and which ...
 
 
 [time]
-======
+------
 
 .. option:: timesync_module_rt        
    
@@ -126,7 +150,7 @@ The network setting drive how and which ...
    - ecaltime-simtime      Simulation time as published by the eCAL Player.
 
 [process]
-=========
+---------
 
 .. _ecalini_option_terminal_emulator:
 
@@ -146,7 +170,7 @@ The network setting drive how and which ...
 
 
 [iceoryx]
-=========
+---------
 
 .. option:: service  
    
@@ -161,7 +185,7 @@ The network setting drive how and which ...
    Default Iceoryx service instance name
 
 [publisher]
-===========
+-----------
 
 .. option:: use_inproc
    
@@ -227,7 +251,7 @@ The network setting drive how and which ...
    default = 1
 
 [monitoring]
-============
+------------
 
 Monitor settings are listed in the section ``monitoring``
 
@@ -270,7 +294,7 @@ Monitor settings are listed in the section ``monitoring``
    default = ``info, warning, error, fatal``
 
 [sys]
-=====
+-----
 
 .. option:: filter_excl      
 
