@@ -22,7 +22,7 @@ The eCAL configuration file is loaded based on the following priorities for Wind
 - |fa-windows| Windows:
 
   1. ``%ECAL_DATA%/ecal.ini``
-  2. ``%AppData%/ecal/ecal.ini``
+  2. ``%ProgramData%/ecal/ecal.ini``
 
 - |fa-ubuntu| Ubuntu:
 
