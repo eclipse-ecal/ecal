@@ -63,6 +63,10 @@ namespace Udpcap
         fprintf(stderr, "Error in SetDllDirectory: %x", GetLastError());
         return false;
       }
+
+      if(LoadLibrary("wpcap.dll") == NULL)
+        return false;
+
       return true;
     }
 
