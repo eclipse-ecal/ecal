@@ -25,6 +25,8 @@
 #include "ecal_clientgate.h"
 #include "ecal_service_client_impl.h"
 
+#include <iostream>
+
 namespace eCAL
 {
   /**
