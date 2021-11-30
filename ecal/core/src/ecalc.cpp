@@ -1102,17 +1102,19 @@ extern "C"
   {
     if(handle_ == NULL) return(0);
     eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
-    std::string response;
-    eCAL::SServiceInfo service_info;
-    if(client->Call(host_name_, method_name_, std::string(request_, static_cast<size_t>(request_len_)), service_info, response))
+    eCAL::ServiceInfoVecT service_info_vec;
+    if(client->Call(host_name_, method_name_, std::string(request_, static_cast<size_t>(request_len_)), service_info_vec))
     {
-      service_info_->host_name    = NULL;
-      service_info_->service_name = NULL;
-      service_info_->method_name  = NULL;
-      service_info_->error_msg    = NULL;
-      service_info_->ret_state    = service_info.ret_state;
-      service_info_->call_state   = service_info.call_state;
-      return(CopyBuffer(response_, response_len_, response));
+      if (service_info_vec.size() > 0)
+      {
+        service_info_->host_name    = NULL;
+        service_info_->service_name = NULL;
+        service_info_->method_name  = NULL;
+        service_info_->error_msg    = NULL;
+        service_info_->ret_state    = service_info_vec[0].ret_state;
+        service_info_->call_state   = service_info_vec[0].call_state;
+        return(CopyBuffer(response_, response_len_, service_info_vec[0].response));
+      }
     }
     return(0);
   }

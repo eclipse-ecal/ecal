@@ -18,13 +18,15 @@
 */
 
 /**
- * @brief  eCAL server gateway class
+ * @brief  eCAL client gateway class
 **/
 
 #pragma once
 
 #include "ecal_def.h"
-#include "service/ecal_service_server_impl.h"
+#include "ecal_expmap.h"
+
+#include <ecal/ecal_callback.h>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -41,43 +43,35 @@
 
 namespace eCAL
 {
-  class CServGate
+  class CServiceClientImpl;
+
+  class CClientGate
   {
   public:
-    CServGate();
-    ~CServGate();
+    CClientGate();
+    ~CClientGate();
 
     void Create();
     void Destroy();
 
-    bool Register(const std::string& service_name_, CServiceServerImpl* service_);
-    bool Unregister(const std::string& service_name_, CServiceServerImpl* service_);
-
-    struct SService
-    {
-      SService() : pid(0), tcp_port(0) {};
-      std::string    hname;
-      std::string    pname;
-      std::string    uname;
-      int            pid;
-      std::string    sname;
-      unsigned short tcp_port;
-    };
-    std::vector<SService> GetServiceInfo(const std::string& service_name_);
+    bool Register  (const std::string& service_name_, CServiceClientImpl* service_);
+    bool Unregister(const std::string& service_name_, CServiceClientImpl* service_);
 
     void ApplyServiceRegistration(const eCAL::pb::Sample& ecal_sample_);
+
+    std::vector<SServiceAttr> GetServiceAttr(const std::string& service_name_);
+
     void RefreshRegistrations();
 
   protected:
     static std::atomic<bool>    m_created;
 
-    typedef std::multimap<std::string, CServiceServerImpl*> ServiceNameServiceImplMapT;
-    std::mutex                  m_internal_service_sync;
-    ServiceNameServiceImplMapT  m_internal_service_map;
+    typedef std::multimap<std::string, CServiceClientImpl*> ServiceNameServiceImplMapT;
+    std::mutex                  m_client_sync;
+    ServiceNameServiceImplMapT  m_client_map;
 
-    typedef std::chrono::steady_clock RegClockT;
-    typedef std::map<std::string, std::pair<SService, RegClockT::time_point>> ServiceNameServiceMapT;
+    typedef Util::CExpMap<std::string, SServiceAttr> ConnectedMapT;
     std::mutex                  m_service_register_sync;
-    ServiceNameServiceMapT      m_service_register_map;
+    ConnectedMapT               m_service_register_map;
   };
 };

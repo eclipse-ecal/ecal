@@ -22,7 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_service_info.h>
+#include <ecal/ecal_callback.h>
 
 #include "service/ecal_tcpclient.h"
 
@@ -51,8 +51,15 @@ namespace eCAL
     bool AddResponseCallback(const ResponseCallbackT& callback_);
     bool RemResponseCallback();
 
-    // call service on a specific host
+    bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
+    bool RemEventCallback(eCAL_Client_Event type_);
+      
+    // call service on a specific host, no broadcast, first will react service only
+    [[deprecated]]
     bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceInfo& service_info_, std::string& response_);
+    
+    // call all services on a specific host
+    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceInfoVecT& service_info_vec_);
 
     // callback service using callback, broadcast possible
     bool Call(const std::string& method_name_, const std::string& request_);
@@ -61,27 +68,40 @@ namespace eCAL
     
     void CallAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_);
 
+    void RegisterService(const std::string& key_, const SServiceAttr& service_);
+    void RefreshRegistration();
+
     // this object must not be copied.
     CServiceClientImpl(const CServiceClientImpl&) = delete;
     CServiceClientImpl& operator=(const CServiceClientImpl&) = delete;
 
   protected:
-    void RefreshClientMap();
+    void CheckForNewServices();
     bool SendRequests(const std::string& method_name_, const std::string& request_);
-    bool SendRequest(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, struct SServiceInfo& service_info_, std::string& response_);
+    bool SendRequest(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, struct SServiceInfo& service_info_);
     void SendRequestsAsync(const std::string& method_name_, const std::string& request_);
     void SendRequestAsync(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_);
 
     void ErrorCallback(const std::string &method_name_, const std::string &error_message_);
 
     typedef std::map<std::string, std::shared_ptr<CTcpClient>> ClientMapT;
+    std::mutex         m_client_map_sync;
     ClientMapT         m_client_map;
-    std::mutex         m_req_mtx;
 
     enum { max_length = 64 * 1024 };
     char m_reply[max_length];
 
-    ResponseCallbackT  m_callback;
+    std::mutex         m_response_callback_sync;
+    ResponseCallbackT  m_response_callback;
+
+    std::mutex         m_event_callback_map_sync;
+    typedef std::map<eCAL_Client_Event, ClientEventCallbackT> EventCallbackMapT;
+    EventCallbackMapT  m_event_callback_map;
+
+    std::mutex         m_connected_services_map_sync;
+    typedef std::map<std::string, SServiceAttr> ServiceAttrMapT;
+    ServiceAttrMapT    m_connected_services_map;
+
 
     std::string        m_service_hname;
     std::string        m_service_name;

@@ -42,6 +42,7 @@ message Monitoring                                // eCAL monitoring information
   repeated Host         hosts          =  1;      // hosts
   repeated Process      processes      =  2;      // processes
   repeated Service      services       =  3;      // services
+  repeated Client       clients        =  5;      // clients
   repeated Topic        topics         =  4;      // topics
 }
 

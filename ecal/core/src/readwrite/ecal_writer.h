@@ -133,7 +133,7 @@ namespace eCAL
     ConnectedMapT      m_loc_sub_map;
     ConnectedMapT      m_ext_sub_map;
 
-    std::mutex         m_event_callback_sync;
+    std::mutex         m_event_callback_map_sync;
     typedef std::map<eCAL_Publisher_Event, PubEventCallbackT> EventCallbackMapT;
     EventCallbackMapT  m_event_callback_map;
 

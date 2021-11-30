@@ -112,6 +112,7 @@ namespace eCAL
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
     m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
     m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY);
+    m_connected         = false;
     m_ext_subscribed    = false;
     m_created           = false;
 
@@ -181,6 +182,21 @@ namespace eCAL
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
     m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
     m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY);
+    m_connected         = false;
+
+    // reset subscriber maps
+    {
+      std::lock_guard<std::mutex> lock(m_sub_map_sync);
+      m_loc_sub_map.clear();
+      m_ext_sub_map.clear();
+    }
+
+    // reset event callback map
+    {
+      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+      m_event_callback_map.clear();
+    }
+
     m_created           = false;
 
     return(true);
@@ -283,7 +299,7 @@ namespace eCAL
 
     // store event callback
     {
-      std::lock_guard<std::mutex> lock(m_event_callback_sync);
+      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
 #ifndef NDEBUG
       // log it
       Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::AddEventCallback");
@@ -300,7 +316,7 @@ namespace eCAL
 
     // reset event callback
     {
-      std::lock_guard<std::mutex> lock(m_event_callback_sync);
+      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
 #ifndef NDEBUG
       // log it
       Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::RemEventCallback");
