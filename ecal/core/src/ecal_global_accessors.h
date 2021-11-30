@@ -40,7 +40,8 @@ namespace eCAL
   class  CDescGate;
   class  CSubGate;
   class  CPubGate;
-  class  CServGate;
+  class  CServiceGate;
+  class  CClientGate;
   class  CRegGate;
 
 #ifndef ECAL_LAYER_ICEORYX
@@ -58,7 +59,8 @@ namespace eCAL
   CDescGate*             g_descgate();
   CSubGate*              g_subgate();
   CPubGate*              g_pubgate();
-  CServGate*             g_servgate();
+  CServiceGate*          g_servicegate();
+  CClientGate*           g_clientgate();
   CRegGate*              g_reggate();
 
 #ifndef ECAL_LAYER_ICEORYX

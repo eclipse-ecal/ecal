@@ -103,11 +103,13 @@ else(ECAL_LAYER_ICEORYX)
 endif(ECAL_LAYER_ICEORYX)
 
 set(ecal_service_cpp_src
+    src/service/ecal_clientgate.cpp
     src/service/ecal_service_client.cpp
     src/service/ecal_service_client_impl.cpp
     src/service/ecal_service_server.cpp
     src/service/ecal_service_server_impl.cpp
     src/service/ecal_tcpclient.cpp
+    src/service/ecal_servicegate.cpp
     src/service/ecal_tcpserver.cpp
 )
 
@@ -125,7 +127,6 @@ set(ecal_cmn_cpp_src
     src/ecal_process.cpp
     src/ecal_reggate.cpp
     src/ecal_register.cpp
-    src/ecal_servgate.cpp
     src/ecal_thread.cpp
     src/ecal_time.cpp
     src/ecal_timegate.cpp
@@ -209,8 +210,10 @@ endif(ECAL_LAYER_ICEORYX)
 
 set(ecal_service_header_src
     src/service/asio_server.h
+    src/service/ecal_clientgate.h
     src/service/ecal_service_client_impl.h
     src/service/ecal_service_server_impl.h
+    src/service/ecal_servicegate.h
     src/service/ecal_tcpclient.h
     src/service/ecal_tcpserver.h
 )
@@ -228,7 +231,6 @@ set(ecal_cmn_header_src
     src/ecal_log_impl.h
     src/ecal_reggate.h
     src/ecal_register.h
-    src/ecal_servgate.h
     src/ecal_thread.h
     src/ecal_timegate.h
     src/ecal_win_main.h

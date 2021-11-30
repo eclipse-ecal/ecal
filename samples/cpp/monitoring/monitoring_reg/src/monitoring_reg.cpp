@@ -58,6 +58,20 @@ void OnServiceRegistration(const char* sample_, int sample_size_)
   }
 }
 
+void OnClientRegistration(const char* sample_, int sample_size_)
+{
+  eCAL::pb::Sample sample;
+  if (sample.ParseFromArray(sample_, sample_size_))
+  {
+    std::cout << std::endl;
+    std::cout << "----------------------------------" << std::endl;
+    std::cout << "Client Registration"                << std::endl;
+    std::cout << "----------------------------------" << std::endl;
+    std::cout << sample.DebugString();
+    std::cout << std::endl;
+  }
+}
+
 void OnSubscriberRegistration(const char* sample_, int sample_size_)
 {
   eCAL::pb::Sample sample;
@@ -99,6 +113,9 @@ int main(int argc, char **argv)
 
   // add service register callback function
   eCAL::Process::AddRegistrationCallback(reg_event_service,    std::bind(OnServiceRegistration, std::placeholders::_1, std::placeholders::_2));
+
+  // add client register callback function
+  eCAL::Process::AddRegistrationCallback(reg_event_client,     std::bind(OnClientRegistration, std::placeholders::_1, std::placeholders::_2));
 
   // add subscriber register callback function
   eCAL::Process::AddRegistrationCallback(reg_event_subscriber, std::bind(OnSubscriberRegistration, std::placeholders::_1, std::placeholders::_2));

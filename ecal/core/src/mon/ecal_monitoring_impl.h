@@ -66,7 +66,8 @@ namespace eCAL
     size_t ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/);
 
     bool RegisterProcess(const eCAL::pb::Sample& sample_);
-    bool RegisterService(const eCAL::pb::Sample& sample_);
+    bool RegisterServer(const eCAL::pb::Sample& sample_);
+    bool RegisterClient(const eCAL::pb::Sample& sample_);
     bool RegisterTopic(const eCAL::pb::Sample& sample_, enum ePubSub pubsub_type_);
     void RegisterLogMessage(const eCAL::pb::LogMessage& log_msg_);
 
@@ -185,9 +186,9 @@ namespace eCAL
       long long    call_count;
     };
 
-    struct SServiceMon
+    struct SServerMon
     {
-      SServiceMon()
+      SServerMon()
       {
         rclock   = 0;
         pid      = 0;
@@ -203,16 +204,43 @@ namespace eCAL
       int                      tcp_port;
       std::vector<SMethodMon>  methods;
     };
-    typedef eCAL::Util::CExpMap<std::string, SServiceMon> ServiceMonMapT;
+    typedef eCAL::Util::CExpMap<std::string, SServerMon> ServerMonMapT;
 
-    struct SServiceMonMap
+    struct SServerMonMap
     {
-      explicit SServiceMonMap(const std::chrono::milliseconds& timeout_) :
-        map(new ServiceMonMapT(timeout_))
+      explicit SServerMonMap(const std::chrono::milliseconds& timeout_) :
+        map(new ServerMonMapT(timeout_))
       {
       };
-      std::mutex                       sync;
-      std::unique_ptr<ServiceMonMapT>  map;
+      std::mutex                      sync;
+      std::unique_ptr<ServerMonMapT>  map;
+    };
+
+    struct SClientMon
+    {
+      SClientMon()
+      {
+        rclock = 0;
+        pid = 0;
+      };
+
+      int          rclock;
+      std::string  hname;
+      std::string  sname;
+      std::string  pname;
+      std::string  uname;
+      int          pid;
+    };
+    typedef eCAL::Util::CExpMap<std::string, SClientMon> ClientMonMapT;
+
+    struct SClientMonMap
+    {
+      explicit SClientMonMap(const std::chrono::milliseconds& timeout_) :
+        map(new ClientMonMapT(timeout_))
+      {
+      };
+      std::mutex                      sync;
+      std::unique_ptr<ClientMonMapT>  map;
     };
 
     struct InsensitiveCompare
@@ -233,7 +261,8 @@ namespace eCAL
 
 
     void MonitorProcs(eCAL::pb::Monitoring& monitoring_);
-    void MonitorServices(eCAL::pb::Monitoring& monitoring_);
+    void MonitorServer(eCAL::pb::Monitoring& monitoring_);
+    void MonitorClients(eCAL::pb::Monitoring& monitoring_);
     void MonitorTopics(STopicMonMap& map_, eCAL::pb::Monitoring& monitoring_, const std::string& direction_);
 
     void Tokenize(const std::string& str, StrICaseSetT& tokens, const std::string& delimiters, bool trimEmpty);
@@ -254,7 +283,8 @@ namespace eCAL
     STopicMonMap                                 m_publisher_map;
     STopicMonMap                                 m_subscriber_map;
     SProcessMonMap                               m_process_map;
-    SServiceMonMap                               m_service_map;
+    SServerMonMap                                m_server_map;
+    SClientMonMap                                m_client_map;
 
     // logging
     typedef std::list<eCAL::pb::LogMessage> LogMessageListT;

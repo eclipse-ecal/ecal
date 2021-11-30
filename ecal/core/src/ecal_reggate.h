@@ -72,6 +72,7 @@ namespace eCAL
     RegistrationCallbackT     m_callback_pub;
     RegistrationCallbackT     m_callback_sub;
     RegistrationCallbackT     m_callback_service;
+    RegistrationCallbackT     m_callback_client;
     RegistrationCallbackT     m_callback_process;
 
     CUDPReceiver              m_reg_rcv;

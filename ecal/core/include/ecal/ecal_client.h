@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
 
 #include <string>
@@ -115,8 +116,21 @@ namespace eCAL
      *
      * @return  True if successful. 
     **/ 
+    [[deprecated]]
     bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceInfo& service_info_, std::string& response_);
     
+    /**
+     * @brief Call method of this service, for specific host.
+     *
+     * @param       host_name_     Host name.
+     * @param       method_name_   Method name.
+     * @param       request_       Request string.
+     * @param [out] response_vec_  Response vector containing service info and response string from every called service.
+     *
+     * @return  True if successful.
+    **/
+    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceInfoVecT& service_info_vec_);
+
     /**
      * @brief Asynchronously call method of this service, for all hosts, responses will be returned by callback. 
      *
@@ -149,6 +163,25 @@ namespace eCAL
      * @return  True if successful.
     **/
     bool RemResponseCallback();
+
+    /**
+     * @brief Add callback function for client events.
+     *
+     * @param type_      The event type to react on.
+     * @param callback_  The callback function to add.
+     *
+     * @return  True if succeeded, false if not.
+    **/
+    bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
+
+    /**
+     * @brief Remove callback function for client events.
+     *
+     * @param type_  The event type to remove.
+     *
+     * @return  True if succeeded, false if not.
+    **/
+    bool RemEventCallback(eCAL_Client_Event type_);
 
   protected:
     CServiceClientImpl*  m_service_client_impl;

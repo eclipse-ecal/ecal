@@ -132,14 +132,40 @@ namespace eCAL
   bool CServiceClient::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceInfo& service_info_, std::string& response_)
   {
     if(!m_created) return(false);
-    return(m_service_client_impl->Call(host_name_, method_name_, request_, service_info_, response_));
+    ServiceInfoVecT service_info_vec;
+    if (m_service_client_impl->Call(host_name_, method_name_, request_, service_info_vec))
+    {
+      if (service_info_vec.size() > 0)
+      {
+        service_info_ = service_info_vec[0];
+        response_     = service_info_vec[0].response;
+      }
+      return true;
+    }
+    return false;
   }
 
   /**
-   * @brief Asynchronously call method of this service, for all hosts, responses will be returned by callback. 
+   * @brief Call method of this service, for specific host.
    *
-   * @param method_name_  Method name. 
-   * @param request_      Request string. 
+   * @param       host_name_     Host name.
+   * @param       method_name_   Method name.
+   * @param       request_       Request string.
+   * @param [out] response_vec_  Response vector containing service info and response string from every called service.
+   *
+   * @return  True if successful.
+  **/
+  bool CServiceClient::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceInfoVecT& service_info_vec_)
+  {
+    if (!m_created) return(false);
+    return(m_service_client_impl->Call(host_name_, method_name_, request_, service_info_vec_));
+  }
+
+  /**
+   * @brief Asynchronously call method of this service, for all hosts, responses will be returned by callback.
+   *
+   * @param method_name_  Method name.
+   * @param request_      Request string.
   **/
   void CServiceClient::CallAsync(const std::string& method_name_, const std::string& request_)
   {
@@ -176,5 +202,32 @@ namespace eCAL
   {
     if (!m_created) return false;
     return(m_service_client_impl->RemResponseCallback());
+  }
+
+  /**
+   * @brief Add callback function for client events.
+   *
+   * @param type_      The event type to react on.
+   * @param callback_  The callback function to add.
+   *
+   * @return  True if succeeded, false if not.
+  **/
+  bool CServiceClient::AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_)
+  {
+    if (!m_created) return false;
+    return m_service_client_impl->AddEventCallback(type_, callback_);
+  }
+
+  /**
+   * @brief Remove callback function for client events.
+   *
+   * @param type_  The event type to remove.
+   *
+   * @return  True if succeeded, false if not.
+  **/
+  bool CServiceClient::RemEventCallback(eCAL_Client_Event type_)
+  {
+    if (!m_created) return false;
+    return m_service_client_impl->RemEventCallback(type_);
   }
 }

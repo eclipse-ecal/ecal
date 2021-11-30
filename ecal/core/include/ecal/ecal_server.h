@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
 
 #include <string>
@@ -112,6 +113,25 @@ namespace eCAL
      * @return  The service name.
     **/
     std::string GetServiceName();
+
+    /**
+     * @brief Add callback function for server events.
+     *
+     * @param type_      The event type to react on.
+     * @param callback_  The callback function to add.
+     *
+     * @return  True if succeeded, false if not.
+    **/
+    bool AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_);
+
+    /**
+     * @brief Remove callback function for server events.
+     *
+     * @param type_  The event type to remove.
+     *
+     * @return  True if succeeded, false if not.
+    **/
+    bool RemEventCallback(eCAL_Server_Event type_);
 
   protected:
     CServiceServerImpl*  m_service_server_impl;

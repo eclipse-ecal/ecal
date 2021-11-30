@@ -21,20 +21,12 @@
  * @brief  eCAL service server implementation
 **/
 
-#include "ecal_service_server_impl.h"
+#include "ecal_def.h"
+#include "ecal_config_hlp.h"
 #include "ecal_register.h"
-#include "ecal_servgate.h"
+#include "ecal_servicegate.h"
 #include "ecal_global_accessors.h"
-
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
-#endif
-#include "ecal/pb/ecal.pb.h"
-#include "ecal/pb/service.pb.h"
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include "ecal_service_server_impl.h"
 
 namespace eCAL
 {
@@ -63,10 +55,13 @@ namespace eCAL
 
     m_service_name = service_name_;
 
+    std::chrono::milliseconds registration_timeout(eCALPAR(CMN, REGISTRATION_REFRESH) * 5);
+    m_connected_clients_map.set_expiration(registration_timeout);
+
     m_tcp_server.Create();
     m_tcp_server.Start(std::bind(&CServiceServerImpl::RequestCallback, this, std::placeholders::_1, std::placeholders::_2));
 
-    if (g_servgate()) g_servgate()->Register(service_name_, this);
+    if (g_servicegate()) g_servicegate()->Register(service_name_, this);
 
     m_created = true;
 
@@ -80,10 +75,22 @@ namespace eCAL
     m_tcp_server.Stop();
     m_tcp_server.Destroy();
 
-    if (g_servgate()) g_servgate()->Unregister(m_service_name, this);
-    if (g_entity_register()) g_entity_register()->UnregisterService(m_service_name);
+    if (g_servicegate())     g_servicegate()->Unregister(m_service_name, this);
+    if (g_entity_register()) g_entity_register()->UnregisterServer(m_service_name);
 
-    m_created = false;
+    // reset method callback map
+    {
+      std::lock_guard<std::mutex> lock(m_method_callback_map_sync);
+      m_method_callback_map.clear();
+    }
+
+    // reset event callback map
+    {
+      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+      m_event_callback_map.clear();
+    }
+
+    m_created   = false;
 
     return(true);
   }
@@ -95,50 +102,65 @@ namespace eCAL
     mcallback.method.set_req_type(req_type_);
     mcallback.method.set_resp_type(resp_type_);
     mcallback.callback = callback_;
-    m_callback_map[method_] = mcallback;
+
+    std::lock_guard<std::mutex> lock(m_method_callback_map_sync);
+    m_method_callback_map[method_] = mcallback;
+
     return true;
   }
 
   bool CServiceServerImpl::RemMethodCallback(const std::string& method_)
   {
-    auto iter = m_callback_map.find(method_);
-    if (iter != m_callback_map.end())
+    std::lock_guard<std::mutex> lock(m_method_callback_map_sync);
+
+    auto iter = m_method_callback_map.find(method_);
+    if (iter != m_method_callback_map.end())
     {
-      m_callback_map.erase(iter);
+      m_method_callback_map.erase(iter);
       return true;
     }
     return false;
   }
 
-  void CServiceServerImpl::RefreshRegistration()
+  bool CServiceServerImpl::AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_)
   {
-    if (!m_created)             return;
-    if (m_service_name.empty()) return;
+    if (!m_created) return false;
 
-    eCAL::pb::Sample service;
-    service.set_cmd_type(eCAL::pb::bct_reg_service);
-    auto service_mutable_service = service.mutable_service();
-    service_mutable_service->set_hname(Process::GetHostName());
-    service_mutable_service->set_pname(Process::GetProcessName());
-    service_mutable_service->set_uname(Process::GetUnitName());
-    service_mutable_service->set_pid(Process::GetProcessID());
-    service_mutable_service->set_sname(m_service_name);
-    service_mutable_service->set_tcp_port(m_tcp_server.GetTcpPort());
-    for (auto iter : m_callback_map)
+    // store event callback
     {
-      auto method = service_mutable_service->add_methods();
-      method->set_mname(iter.first);
-      method->set_req_type(iter.second.method.req_type());
-      method->set_resp_type(iter.second.method.resp_type());
-      method->set_call_count(iter.second.method.call_count());
+      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+#ifndef NDEBUG
+      // log it
+      Logging::Log(log_level_debug2, m_service_name + "::CServiceServerImpl::AddEventCallback");
+#endif
+      m_event_callback_map[type_] = callback_;
     }
 
-    if (g_entity_register()) g_entity_register()->RegisterService(m_service_name, service, false);
+    return true;
+  }
+
+  bool CServiceServerImpl::RemEventCallback(eCAL_Server_Event type_)
+  {
+    if (!m_created) return false;
+
+    // reset event callback
+    {
+      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+#ifndef NDEBUG
+      // log it
+      Logging::Log(log_level_debug2, m_service_name + "::CServiceServerImpl::RemEventCallback");
+#endif
+      m_event_callback_map[type_] = nullptr;
+    }
+
+    return true;
   }
 
   int CServiceServerImpl::RequestCallback(const std::string& request_, std::string& response_)
   {
-    if (m_callback_map.empty()) return 0;
+    std::lock_guard<std::mutex> lock(m_method_callback_map_sync);
+
+    if (m_method_callback_map.empty()) return 0;
 
     int success(-1);
     eCAL::pb::Response response_pb;
@@ -156,15 +178,15 @@ namespace eCAL
       auto request_pb_header = request_pb.header();
       response_pb_mutable_header->set_mname(request_pb_header.mname());
 
-      auto iter = m_callback_map.find(request_pb_header.mname());
-      if (iter != m_callback_map.end())
+      auto iter = m_method_callback_map.find(request_pb_header.mname());
+      if (iter != m_method_callback_map.end())
       {
         auto call_count = iter->second.method.call_count();
         iter->second.method.set_call_count(++call_count);
 
         std::string request_s = request_pb.request();
         std::string response_s;
-        int service_return_state = m_callback_map[request_pb_header.mname()].callback(iter->second.method.mname(), iter->second.method.req_type(), iter->second.method.resp_type(), request_s, response_s);
+        int service_return_state = m_method_callback_map[request_pb_header.mname()].callback(iter->second.method.mname(), iter->second.method.req_type(), iter->second.method.resp_type(), request_s, response_s);
 
         response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
         response_pb.set_response(response_s);
@@ -179,5 +201,94 @@ namespace eCAL
       response_ = response_pb.SerializeAsString();
     }
     return success;
+  }
+
+  void CServiceServerImpl::RegisterClient(const std::string& key_, const SClientAttr& client_)
+  {
+    // check connections
+    std::lock_guard<std::mutex> lock(m_connected_clients_map_sync);
+
+    // is this a new connection ?
+    if (m_connected_clients_map.find(key_) == m_connected_clients_map.end())
+    {
+      // call connect event
+      std::lock_guard<std::mutex> lock_cb(m_event_callback_map_sync);
+      auto e_iter = m_event_callback_map.find(server_event_connected);
+      if (e_iter != m_event_callback_map.end())
+      {
+        SServerEventCallbackData sdata;
+        sdata.type = server_event_connected;
+        sdata.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+        sdata.attr = client_;
+        (e_iter->second)(m_service_name.c_str(), &sdata);
+      }
+    }
+
+    // add / update client (time expiration !)
+    m_connected_clients_map[key_] = client_;
+  }
+
+  void CServiceServerImpl::RefreshRegistration()
+  {
+    if (!m_created)             return;
+    if (m_service_name.empty()) return;
+
+    eCAL::pb::Sample sample;
+    sample.set_cmd_type(eCAL::pb::bct_reg_service);
+    auto service_mutable_service = sample.mutable_service();
+    service_mutable_service->set_hname(Process::GetHostName());
+    service_mutable_service->set_pname(Process::GetProcessName());
+    service_mutable_service->set_uname(Process::GetUnitName());
+    service_mutable_service->set_pid(Process::GetProcessID());
+    service_mutable_service->set_sname(m_service_name);
+    service_mutable_service->set_tcp_port(m_tcp_server.GetTcpPort());
+
+    {
+      std::lock_guard<std::mutex> lock(m_method_callback_map_sync);
+      for (auto iter : m_method_callback_map)
+      {
+        auto method = service_mutable_service->add_methods();
+        method->set_mname(iter.first);
+        method->set_req_type(iter.second.method.req_type());
+        method->set_resp_type(iter.second.method.resp_type());
+        method->set_call_count(iter.second.method.call_count());
+      }
+    }
+
+    // register entity
+    if (g_entity_register()) g_entity_register()->RegisterServer(m_service_name, sample, false);
+
+    // check for disconnected services
+    {
+      std::lock_guard<std::mutex> lock(m_connected_clients_map_sync);
+
+      // last connections
+      ClientAttrMapT last_connected_clients_map = m_connected_clients_map;
+
+      // remove timeouted clients
+      m_connected_clients_map.remove_deprecated();
+
+      // did we remove some ?
+      if (last_connected_clients_map.size() != m_connected_clients_map.size())
+      {
+        for (auto client : last_connected_clients_map)
+        {
+          if (m_connected_clients_map.find(client.first) == m_connected_clients_map.end())
+          {
+            // call disconnect event
+            std::lock_guard<std::mutex> lock_cb(m_event_callback_map_sync);
+            auto e_iter = m_event_callback_map.find(server_event_disconnected);
+            if (e_iter != m_event_callback_map.end())
+            {
+              SServerEventCallbackData sdata;
+              sdata.type = server_event_disconnected;
+              sdata.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+              sdata.attr = client.second;
+              (e_iter->second)(m_service_name.c_str(), &sdata);
+            }
+          }
+        }
+      }
+    }
   }
 };

@@ -152,9 +152,21 @@ namespace eCAL
     /////////////////////
     if (components_ & Init::Service)
     {
-      if (servgate_instance == nullptr)
+      if (servicegate_instance == nullptr)
       {
-        servgate_instance = std::make_unique<CServGate>();
+        servicegate_instance = std::make_unique<CServiceGate>();
+        new_initialization = true;
+      }
+    }
+
+    /////////////////////
+    // CLIENT GATE
+    /////////////////////
+    if (components_ & Init::Service)
+    {
+      if (clientgate_instance == nullptr)
+      {
+        clientgate_instance = std::make_unique<CClientGate>();
         new_initialization = true;
       }
     }
@@ -208,7 +220,8 @@ namespace eCAL
 #endif /* !ECAL_LAYER_ICEORYX */
     if (subgate_instance && (components_ & Init::Subscriber))     subgate_instance->Create();
     if (pubgate_instance && (components_ & Init::Publisher))      pubgate_instance->Create();
-    if (servgate_instance && (components_ & Init::Service))       servgate_instance->Create();
+    if (servicegate_instance && (components_ & Init::Service))     servicegate_instance->Create();
+    if (clientgate_instance && (components_ & Init::Service))     clientgate_instance->Create();
     if (timegate_instance && (components_ & Init::TimeSync))      timegate_instance->Create(CTimeGate::eTimeSyncMode::realtime);
     if (monitoring_instance && (components_ & Init::Monitoring))  monitoring_instance->Create();
 
@@ -235,7 +248,7 @@ namespace eCAL
     case Init::Subscriber:
       return(subgate_instance != nullptr);
     case Init::Service:
-      return(servgate_instance != nullptr);
+      return(servicegate_instance != nullptr);
     case Init::Monitoring:
       return(monitoring_instance != nullptr);
     case Init::Logging:
@@ -254,7 +267,8 @@ namespace eCAL
     // start destruction
     if (monitoring_instance)       monitoring_instance->Destroy();
     if (timegate_instance)         timegate_instance->Destroy();
-    if (servgate_instance)         servgate_instance->Destroy();
+    if (clientgate_instance)       clientgate_instance->Destroy();
+    if (servicegate_instance)       servicegate_instance->Destroy();
     if (pubgate_instance)          pubgate_instance->Destroy();
     if (subgate_instance)          subgate_instance->Destroy();
     if (reggate_instance)          reggate_instance->Destroy();
@@ -268,7 +282,7 @@ namespace eCAL
 
     monitoring_instance       = nullptr;
     timegate_instance         = nullptr;
-    servgate_instance         = nullptr;
+    servicegate_instance         = nullptr;
     pubgate_instance          = nullptr;
     subgate_instance          = nullptr;
     reggate_instance          = nullptr;

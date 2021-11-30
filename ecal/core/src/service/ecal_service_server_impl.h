@@ -24,20 +24,22 @@
 #pragma once
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_service_info.h>
+#include <ecal/ecal_callback.h>
+
+#include "ecal_expmap.h"
+#include "ecal_tcpserver.h"
 
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
-#include "ecal/pb/service.pb.h"
+#include <ecal/pb/ecal.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 
-#include "ecal_tcpserver.h"
-
 #include <map>
+#include <mutex>
 
 namespace eCAL
 {
@@ -59,6 +61,10 @@ namespace eCAL
     bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_);
     bool RemMethodCallback(const std::string& method_);
 
+    bool AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_);
+    bool RemEventCallback(eCAL_Server_Event type_);
+      
+    void RegisterClient(const std::string& key_, const SClientAttr& client_);
     void RefreshRegistration();
 
     std::string GetServiceName() { return m_service_name; };
@@ -70,16 +76,26 @@ namespace eCAL
   protected:
     int RequestCallback(const std::string& request_, std::string& response_);
 
-    CTcpServer          m_tcp_server;
+    CTcpServer         m_tcp_server;
 
-    std::string         m_service_name;
+    std::string        m_service_name;
     struct SMethodCallback
     {
       eCAL::pb::Method method;
       MethodCallbackT  callback;
     };
+    std::mutex         m_method_callback_map_sync;
     typedef std::map<std::string, SMethodCallback> MethodCallbackMapT;
-    MethodCallbackMapT  m_callback_map;
-    bool                m_created;
+    MethodCallbackMapT m_method_callback_map;
+
+    std::mutex         m_event_callback_map_sync;
+    typedef std::map<eCAL_Server_Event, ServerEventCallbackT> EventCallbackMapT;
+    EventCallbackMapT  m_event_callback_map;
+    
+    std::mutex         m_connected_clients_map_sync;
+    typedef Util::CExpMap<std::string, SClientAttr> ClientAttrMapT;
+    ClientAttrMapT     m_connected_clients_map;
+
+    bool               m_created;
   };
 }

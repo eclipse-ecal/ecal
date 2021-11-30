@@ -26,6 +26,39 @@
 
 #include "math.pb.h"
 
+// client state callback
+void OnClientState(const eCAL::SClientEventCallbackData* data_, int* refcnt_)
+{
+  assert(data_);
+  assert(refcnt_);
+
+  switch (data_->type)
+  {
+  case client_event_connected:
+    std::cout << "---------------------------------" << std::endl;
+    std::cout << "Client connected to service      " << std::endl;
+    std::cout << "---------------------------------" << std::endl;
+    (*refcnt_)++;
+    break;
+  case client_event_disconnected:
+    std::cout << "---------------------------------" << std::endl;
+    std::cout << "Client disconnected from service " << std::endl;
+    std::cout << "---------------------------------" << std::endl;
+    (*refcnt_)--;
+    break;
+  default:
+    std::cout << "Unknown client event." << std::endl;
+    break;
+  }
+
+  std::cout << "Server Hostname : " << data_->attr.hname    << std::endl;
+  std::cout << "Server Name     : " << data_->attr.sname    << std::endl;
+  std::cout << "Server Process  : " << data_->attr.pname    << std::endl;
+  std::cout << "Server PID      : " << data_->attr.pid      << std::endl;
+  std::cout << "Server TCP Port : " << data_->attr.tcp_port << std::endl;
+  std::cout << "---------------------------------"          << std::endl << std::endl;
+}
+
 // callback for math service response
 void OnMathResponse(const struct eCAL::SServiceInfo& service_info_, const std::string& response_)
 {
@@ -56,7 +89,14 @@ int main(int argc, char **argv)
 
   // create math service client
   eCAL::protobuf::CServiceClient<MathService> math_service;
+
+  // add response callback
   math_service.AddResponseCallback(OnMathResponse);
+
+  // add event callbacks
+  int refcnt(0);
+  math_service.AddEventCallback(client_event_connected,    std::bind(OnClientState, std::placeholders::_2, &refcnt));
+  math_service.AddEventCallback(client_event_disconnected, std::bind(OnClientState, std::placeholders::_2, &refcnt));
 
   // loop variables
   int inp1(0);
@@ -64,38 +104,45 @@ int main(int argc, char **argv)
 
   while(eCAL::Ok())
   {
-    //////////////////////////////////////
-    // Math service (callback variant)
-    //////////////////////////////////////
-    SFloatTuple math_request;
-    math_request.set_inp1(inp1++);
-    math_request.set_inp2(inp2++);
-
-    if (math_service.Call("Add", math_request))
+    if (refcnt > 0)
     {
-      std::cout << std::endl << "MathService::Add method called with      : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
+      //////////////////////////////////////
+      // Math service (callback variant)
+      //////////////////////////////////////
+      SFloatTuple math_request;
+      math_request.set_inp1(inp1++);
+      math_request.set_inp2(inp2++);
+
+      if (math_service.Call("Add", math_request))
+      {
+        std::cout << std::endl << "MathService::Add method called with      : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
+      }
+      else
+      {
+        std::cout << "MathService::Add method call failed .." << std::endl << std::endl;
+      }
+
+      if (math_service.Call("Multiply", math_request))
+      {
+        std::cout << std::endl << "MathService::Multiply method called with : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
+      }
+      else
+      {
+        std::cout << "MathService::Multiply method call failed .." << std::endl << std::endl;
+      }
+
+      if (math_service.Call("Divide", math_request))
+      {
+        std::cout << std::endl << "MathService::Divide method called with   : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
+      }
+      else
+      {
+        std::cout << "MathService::Divide method call failed .." << std::endl << std::endl;
+      }
     }
     else
     {
-      std::cout << "MathService::Add method call failed .." << std::endl << std::endl;
-    }
-
-    if (math_service.Call("Multiply", math_request))
-    {
-      std::cout << std::endl << "MathService::Multiply method called with : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
-    }
-    else
-    {
-      std::cout << "MathService::Multiply method call failed .." << std::endl << std::endl;
-    }
-
-    if (math_service.Call("Divide", math_request))
-    {
-      std::cout << std::endl << "MathService::Divide method called with   : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
-    }
-    else
-    {
-      std::cout << "MathService::Divide method call failed .." << std::endl << std::endl;
+      std::cout << "Waiting for MathService .." << std::endl << std::endl;
     }
 
     // sleep a second
