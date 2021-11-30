@@ -140,23 +140,9 @@ namespace eCAL
         if (ecal_data_path.back() != path_sep)
           ecal_data_path += path_sep;
       }
-
+      
       // -----------------------------------------------------------
-      // precedence 2: system data path (windows only)
-      // -----------------------------------------------------------
-      std::string system_data_path;
-#ifdef ECAL_OS_WINDOWS
-      system_data_path = getEnvVar("ProgramData");
-      if (!system_data_path.empty())
-      {
-        if (system_data_path.back() != path_sep)
-          system_data_path += path_sep;
-        system_data_path += std::string("eCAL") + path_sep;
-      }
-#endif /* ECAL_OS_WINDOWS */
-
-      // -----------------------------------------------------------
-      // precedence 3 & 4: cmake configured data paths (linux only)
+      // precedence 2 & 3: cmake configured data paths (linux only)
       // -----------------------------------------------------------
       std::string cmake_data_path;
 #ifdef ECAL_OS_LINUX
@@ -172,13 +158,31 @@ namespace eCAL
       {
         cmake_data_path = ecal_install_prefix + path_sep + ecal_install_config_dir;
       }
+#endif /* ECAL_OS_LINUX */  
+
+      // -----------------------------------------------------------
+      // precedence 4: system data path 
+      // -----------------------------------------------------------
+      std::string system_data_path;
+#ifdef ECAL_OS_WINDOWS
+      system_data_path = getEnvVar("ProgramData");
+      if (!system_data_path.empty())
+      {
+        if (system_data_path.back() != path_sep)
+          system_data_path += path_sep;
+        system_data_path += std::string("eCAL") + path_sep;
+      }
+#endif /* ECAL_OS_WINDOWS */
+      
+#ifdef ECAL_OS_LINUX
+      system_data_path = "/etc/ecal/"
 #endif /* ECAL_OS_LINUX */
 
       // Check all directories, if
       //    1. The path is not empty
       //    2. The ecal.ini exists in that directory
       std::string config_path;
-      for (std::string directory : { ecal_data_path, system_data_path, cmake_data_path })
+      for (std::string directory : { ecal_data_path, cmake_data_path, system_data_path })
       {
         if (!directory.empty())
         {
