@@ -900,6 +900,7 @@ int main(int argc, char** argv)
   /************************************************************************/
   /* Start recording                                                      */
   /************************************************************************/
+  bool need_to_wait_for_local_recording = false;
   if (start_recording_arg.isSet())
   {
     bool is_exiting;
@@ -920,6 +921,14 @@ int main(int argc, char** argv)
         if (rec_server_instance)
         {
           error = record_command->Execute(rec_server_instance, std::chrono::duration<double>(start_recording_arg.getValue()));
+
+          if (!error && (start_recording_arg.getValue() <= 0.0))
+          {
+            // If we are recording locally, we need to wait for the local
+            // Brecorder. We must not exit immediatelly, even if the user didn't
+            // set the interactive arg.
+            need_to_wait_for_local_recording = true;
+          }
         }
         else
         {
@@ -1294,8 +1303,33 @@ int main(int argc, char** argv)
   }
 
   // ==========================================================================
-  // ======================== Interactive mode         ========================
+  // ======================== Blocking behaviour       ========================
   // ==========================================================================
+
+  /************************************************************************/
+  /* Recording in non-interactive-mode                                    */
+  /************************************************************************/
+  if (!interactive_arg.isSet() && !interactive_dont_exit_arg.isSet() && need_to_wait_for_local_recording)
+  {
+    std::cout << "A recording is running. eCAL Rec will exit, when the recording is stopped." << std::endl;
+
+    for (;;)
+    {
+      std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+      {
+        // Exit if the user pressed CTRL+C / tent SIGINT / etc.
+        std::lock_guard<decltype(ecal_rec_exit_mutex_)> ecal_rec_exit_lock(ecal_rec_exit_mutex_);
+        if (ctrl_exit_event)
+          break;
+      }
+
+      // Exit, if the recorder is not recoring any more, e.g. because someone
+      // stopped the recording via the eCAL Service
+      if (!rec_server_instance->IsRecording())
+        break;
+    }
+  }
 
   /************************************************************************/
   /* Interactive Mode                                                     */
