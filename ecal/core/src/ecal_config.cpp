@@ -175,7 +175,7 @@ namespace eCAL
 #endif /* ECAL_OS_WINDOWS */
       
 #ifdef ECAL_OS_LINUX
-      system_data_path = "/etc/ecal/"
+      system_data_path = "/etc/ecal/";
 #endif /* ECAL_OS_LINUX */
 
       // Check all directories, if
