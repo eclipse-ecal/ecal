@@ -67,6 +67,8 @@ namespace eCAL
     void RegisterClient(const std::string& key_, const SClientAttr& client_);
     void RefreshRegistration();
 
+    bool IsConnected();
+
     std::string GetServiceName() { return m_service_name; };
 
     // this object must not be copied.

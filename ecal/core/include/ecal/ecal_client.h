@@ -122,14 +122,14 @@ namespace eCAL
     /**
      * @brief Call method of this service, for specific host.
      *
-     * @param       host_name_     Host name.
+     * @param       host_name_     Host name (empty == broadcast to all hosts).
      * @param       method_name_   Method name.
      * @param       request_       Request string.
-     * @param [out] response_vec_  Response vector containing service info and response string from every called service.
+     * @param [out] response_vec_  Response vector containing service info and response string from every called service (optional).
      *
      * @return  True if successful.
     **/
-    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceInfoVecT& service_info_vec_);
+    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceInfoVecT* service_info_vec_ = nullptr);
 
     /**
      * @brief Asynchronously call method of this service, for all hosts, responses will be returned by callback. 
@@ -182,6 +182,13 @@ namespace eCAL
      * @return  True if succeeded, false if not.
     **/
     bool RemEventCallback(eCAL_Client_Event type_);
+
+    /**
+     * @brief Check connection state.
+     *
+     * @return  True if connected, false if not.
+    **/
+    bool IsConnected();
 
   protected:
     CServiceClientImpl*  m_service_client_impl;

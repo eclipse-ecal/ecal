@@ -59,7 +59,7 @@ namespace eCAL
     bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceInfo& service_info_, std::string& response_);
     
     // call all services on a specific host
-    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceInfoVecT& service_info_vec_);
+    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceInfoVecT* service_info_vec_);
 
     // callback service using callback, broadcast possible
     bool Call(const std::string& method_name_, const std::string& request_);
@@ -70,6 +70,8 @@ namespace eCAL
 
     void RegisterService(const std::string& key_, const SServiceAttr& service_);
     void RefreshRegistration();
+
+    bool IsConnected();
 
     // this object must not be copied.
     CServiceClientImpl(const CServiceClientImpl&) = delete;
