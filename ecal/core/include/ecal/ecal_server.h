@@ -133,6 +133,13 @@ namespace eCAL
     **/
     bool RemEventCallback(eCAL_Server_Event type_);
 
+    /**
+     * @brief Check connection state.
+     *
+     * @return  True if connected, false if not.
+    **/
+    bool IsConnected();
+
   protected:
     CServiceServerImpl*  m_service_server_impl;
     bool                 m_created;

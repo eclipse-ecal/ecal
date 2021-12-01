@@ -291,4 +291,13 @@ namespace eCAL
       }
     }
   }
+  
+  bool CServiceServerImpl::IsConnected()
+  {
+    if (!m_created) return false;
+
+    // check for connected services
+    std::lock_guard<std::mutex> lock(m_connected_clients_map_sync);
+    return !m_connected_clients_map.empty();
+  }
 };

@@ -186,7 +186,7 @@ namespace eCAL
     return false;
   }
 
-  bool CServiceClientImpl::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceInfoVecT& service_info_vec_)
+  bool CServiceClientImpl::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceInfoVecT* service_info_vec_)
   {
     if (!g_clientgate()) return false;
     if (!m_created)      return false;
@@ -197,11 +197,12 @@ namespace eCAL
       return false;
 
     // reset response
-    service_info_vec_.clear();
+    if(service_info_vec_) service_info_vec_->clear();
 
     // check for new server
     CheckForNewServices();
 
+    bool called(false);
     std::vector<SServiceAttr> service_vec = g_clientgate()->GetServiceAttr(m_service_name);
     for (auto& iter : service_vec)
     {
@@ -214,12 +215,13 @@ namespace eCAL
           struct SServiceInfo service_info;
           if (SendRequest(client->second, method_name_, request_, service_info))
           {
-            service_info_vec_.push_back(service_info);
+            if(service_info_vec_) service_info_vec_->push_back(service_info);
+            called = true;
           }
         }
       }
     }
-    return !service_info_vec_.empty();
+    return called;
   }
 
   bool CServiceClientImpl::Call(const std::string& method_name_, const std::string& request_)
@@ -558,6 +560,9 @@ namespace eCAL
     // register entity
     if (g_entity_register()) g_entity_register()->RegisterClient(m_service_name, sample, false);
 
+    // refresh connected services map
+    CheckForNewServices();
+
     // check for disconnected services
     {
       std::lock_guard<std::mutex> lock(m_client_map_sync);
@@ -588,5 +593,14 @@ namespace eCAL
         }
       }
     }
+  }
+  
+  bool CServiceClientImpl::IsConnected()
+  {
+    if (!m_created) return false;
+
+    // check for connected clients
+    std::lock_guard<std::mutex> lock(m_connected_services_map_sync);
+    return !m_connected_services_map.empty();
   }
 }

@@ -80,13 +80,13 @@ namespace eCAL
   **/
   bool CServiceClient::Destroy()
   {
-    if(!m_created)   return(false);
+    if(!m_created) return(false);
+    m_created = false;
 
     m_service_client_impl->Destroy();
     delete m_service_client_impl;
     m_service_client_impl = nullptr;
 
-    m_created = false;
     return(true);
   }
 
@@ -133,7 +133,7 @@ namespace eCAL
   {
     if(!m_created) return(false);
     ServiceInfoVecT service_info_vec;
-    if (m_service_client_impl->Call(host_name_, method_name_, request_, service_info_vec))
+    if (m_service_client_impl->Call(host_name_, method_name_, request_, &service_info_vec))
     {
       if (service_info_vec.size() > 0)
       {
@@ -151,11 +151,11 @@ namespace eCAL
    * @param       host_name_     Host name.
    * @param       method_name_   Method name.
    * @param       request_       Request string.
-   * @param [out] response_vec_  Response vector containing service info and response string from every called service.
+   * @param [out] response_vec_  Response vector containing service info and response string from every called service (optional).
    *
    * @return  True if successful.
   **/
-  bool CServiceClient::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceInfoVecT& service_info_vec_)
+  bool CServiceClient::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceInfoVecT* service_info_vec_)
   {
     if (!m_created) return(false);
     return(m_service_client_impl->Call(host_name_, method_name_, request_, service_info_vec_));
@@ -229,5 +229,16 @@ namespace eCAL
   {
     if (!m_created) return false;
     return m_service_client_impl->RemEventCallback(type_);
+  }
+
+  /**
+   * @brief Check connection state.
+   *
+   * @return  True if connected, false if not.
+  **/
+  bool CServiceClient::IsConnected()
+  {
+    if (!m_created) return false;
+    return m_service_client_impl->IsConnected();
   }
 }

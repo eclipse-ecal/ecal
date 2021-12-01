@@ -27,10 +27,9 @@
 #include "math.pb.h"
 
 // client state callback
-void OnClientState(const eCAL::SClientEventCallbackData* data_, int* refcnt_)
+void OnClientState(const eCAL::SClientEventCallbackData* data_)
 {
   assert(data_);
-  assert(refcnt_);
 
   switch (data_->type)
   {
@@ -38,13 +37,11 @@ void OnClientState(const eCAL::SClientEventCallbackData* data_, int* refcnt_)
     std::cout << "---------------------------------" << std::endl;
     std::cout << "Client connected to service      " << std::endl;
     std::cout << "---------------------------------" << std::endl;
-    (*refcnt_)++;
     break;
   case client_event_disconnected:
     std::cout << "---------------------------------" << std::endl;
     std::cout << "Client disconnected from service " << std::endl;
     std::cout << "---------------------------------" << std::endl;
-    (*refcnt_)--;
     break;
   default:
     std::cout << "Unknown client event." << std::endl;
@@ -88,23 +85,29 @@ int main(int argc, char **argv)
   eCAL::Initialize(argc, argv, "math client");
 
   // create math service client
-  eCAL::protobuf::CServiceClient<MathService> math_service;
+  eCAL::protobuf::CServiceClient<MathService> math_client;
 
   // add response callback
-  math_service.AddResponseCallback(OnMathResponse);
+  math_client.AddResponseCallback(OnMathResponse);
 
   // add event callbacks
-  int refcnt(0);
-  math_service.AddEventCallback(client_event_connected,    std::bind(OnClientState, std::placeholders::_2, &refcnt));
-  math_service.AddEventCallback(client_event_disconnected, std::bind(OnClientState, std::placeholders::_2, &refcnt));
+  math_client.AddEventCallback(client_event_connected,    std::bind(OnClientState, std::placeholders::_2));
+  math_client.AddEventCallback(client_event_disconnected, std::bind(OnClientState, std::placeholders::_2));
 
   // loop variables
   int inp1(0);
   int inp2(0);
 
+  // waiting for service
+  while (!math_client.IsConnected())
+  {
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::cout << "Waiting for the service .." << std::endl;
+  }
+
   while(eCAL::Ok())
   {
-    if (refcnt > 0)
+    if (math_client.IsConnected())
     {
       //////////////////////////////////////
       // Math service (callback variant)
@@ -113,7 +116,7 @@ int main(int argc, char **argv)
       math_request.set_inp1(inp1++);
       math_request.set_inp2(inp2++);
 
-      if (math_service.Call("Add", math_request))
+      if (math_client.Call("Add", math_request))
       {
         std::cout << std::endl << "MathService::Add method called with      : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
       }
@@ -122,7 +125,7 @@ int main(int argc, char **argv)
         std::cout << "MathService::Add method call failed .." << std::endl << std::endl;
       }
 
-      if (math_service.Call("Multiply", math_request))
+      if (math_client.Call("Multiply", math_request))
       {
         std::cout << std::endl << "MathService::Multiply method called with : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
       }
@@ -131,7 +134,7 @@ int main(int argc, char **argv)
         std::cout << "MathService::Multiply method call failed .." << std::endl << std::endl;
       }
 
-      if (math_service.Call("Divide", math_request))
+      if (math_client.Call("Divide", math_request))
       {
         std::cout << std::endl << "MathService::Divide method called with   : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
       }
@@ -142,7 +145,7 @@ int main(int argc, char **argv)
     }
     else
     {
-      std::cout << "Waiting for MathService .." << std::endl << std::endl;
+      std::cout << "Waiting for the service .." << std::endl;
     }
 
     // sleep a second

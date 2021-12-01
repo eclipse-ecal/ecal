@@ -85,12 +85,12 @@ namespace eCAL
   bool CServiceServer::Destroy()
   {
     if(!m_created) return(false);
+    m_created = false;
 
     m_service_server_impl->Destroy();
     delete m_service_server_impl;
     m_service_server_impl = nullptr;
 
-    m_created = false;
     return(true);
   }
 
@@ -154,5 +154,16 @@ namespace eCAL
   {
     if (!m_created) return false;
     return m_service_server_impl->RemEventCallback(type_);
+  }
+
+  /**
+   * @brief Check connection state.
+   *
+   * @return  True if connected, false if not.
+  **/
+  bool CServiceServer::IsConnected()
+  {
+    if (!m_created) return false;
+    return m_service_server_impl->IsConnected();
   }
 }

@@ -1103,7 +1103,7 @@ extern "C"
     if(handle_ == NULL) return(0);
     eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
     eCAL::ServiceInfoVecT service_info_vec;
-    if(client->Call(host_name_, method_name_, std::string(request_, static_cast<size_t>(request_len_)), service_info_vec))
+    if(client->Call(host_name_, method_name_, std::string(request_, static_cast<size_t>(request_len_)), &service_info_vec))
     {
       if (service_info_vec.size() > 0)
       {

@@ -100,8 +100,12 @@ int main(int argc, char **argv)
   eCAL::protobuf::CServiceClient<eCAL::pb::rec_client::EcalRecClientService> recorder_service;
   recorder_service.AddResponseCallback(OnRecorderResponse);
 
-  // sleep for service matching
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+  // waiting for service
+  while (!recorder_service.IsConnected())
+  {
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::cout << "Waiting for the service .." << std::endl;
+  }
 
   // "GetConfig"
   eCAL::pb::rec_client::GetConfigRequest get_config_request;
