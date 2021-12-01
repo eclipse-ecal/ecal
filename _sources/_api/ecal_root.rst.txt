@@ -1,6 +1,10 @@
-
+===
 C++
 ===
+
+.. include:: page_index.rst
+
+.. include:: page_view_hierarchy.rst
 
 .. include:: class_view_hierarchy.rst
 

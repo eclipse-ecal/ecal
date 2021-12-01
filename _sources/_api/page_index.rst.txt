@@ -1,0 +1,6 @@
+.. _page_index:
+
+eCAL - enhanced communication abstraction layer
+===============================================
+
+.. doxygenpage:: index
