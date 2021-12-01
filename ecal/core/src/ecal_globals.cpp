@@ -25,6 +25,8 @@
 #include "io/udp_init.h"
 #include "ecal_config.h"
 
+#include <stdexcept>
+
 namespace eCAL
 {
   CGlobals::CGlobals() : initialized(false), components(0)
@@ -67,7 +69,7 @@ namespace eCAL
         std::cerr << "----------------------------------------------------------" << std::endl;
         std::cerr                                                                 << std::endl;
         
-        throw std::exception(emsg.c_str());
+        throw std::runtime_error(emsg.c_str());
         std::exit(-1);
       }
 
