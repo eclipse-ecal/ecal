@@ -15,8 +15,13 @@ endif()
 
 set(file_list_no_include
   protoc_functions/protoc_generate_cpp.cmake
-  qt/qt_windeployqt_threadsafe_cmake.bat.in
 )
+
+if(WIN32)
+  list(APPEND file_list_no_include
+    qt/qt_windeployqt_threadsafe_cmake.bat.in
+  )
+endif()
 
 # Set list of all files to be installed by CMake Script.
 set(file_list
