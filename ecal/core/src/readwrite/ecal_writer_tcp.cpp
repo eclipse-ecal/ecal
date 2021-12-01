@@ -113,7 +113,7 @@ namespace eCAL
 #if GOOGLE_PROTOBUF_VERSION >= 3001000
     header_size = (uint16_t)m_ecal_header.ByteSizeLong();
 #else
-    header_size = (uint16_t)m_ecal_sample.ByteSize();
+    header_size = (uint16_t)m_ecal_header.ByteSize();
 #endif
 
     // create header
