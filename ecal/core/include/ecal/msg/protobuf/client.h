@@ -96,11 +96,30 @@ namespace eCAL
       **/
       bool Call(const std::string& host_name_, const std::string& method_name_, const google::protobuf::Message& request_, struct SServiceInfo& service_info_, google::protobuf::Message& response_)
       {
-        std::string response_s;
-        bool success = Call(host_name_, method_name_, request_.SerializeAsString(), service_info_, response_s);
+        // TODO: Find a solution to get a signuture like
+        // 
+        //  bool Call(const std::string & host_name_, const std::string & method_name_, const google::protobuf::Message & request_, struct SServiceInfoPbVecT& service_info_)
+        // 
+        //  and SServiceInfoPbVecT looks like
+        // 
+        //    struct SServiceInfoPb
+        //    {
+        //      std::string                host_name;      //!< [in]  service host name
+        //      std::string                service_name;   //!< [in]  name of the service
+        //      std::string                method_name;    //!< [in]  name of the service method
+        //      std::string                error_msg;      //!< [out] human readable error message
+        //      int                        ret_state;      //!< [out] return state of the called service method
+        //      eCallState                 call_state;     //!< [out] call state (see eCallState)
+        //      google::protobuf::Message  response;       //!< [out] service response as google protobuf message
+        //    };
+        //    typedef std::vector<SServiceInfoPb> SServiceInfoPbVecT;
+        //
+        // for now we just return the response from the first service that answered, to get all responses please use the callback variant
+        ServiceInfoVecT service_info_vec;
+        bool success = Call(host_name_, method_name_, request_.SerializeAsString(), &service_info_vec);
         if (success)
         {
-          response_.ParseFromString(response_s);
+          response_.ParseFromString(service_info_vec[0].response);
         }
         return success;
       }
