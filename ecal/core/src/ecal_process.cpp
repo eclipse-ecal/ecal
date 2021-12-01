@@ -29,6 +29,7 @@
 #include "ecal_reggate.h"
 #include "ecal_globals.h"
 
+#include <array>
 #include <chrono>
 #include <thread>
 #include <iostream>
