@@ -51,7 +51,7 @@ namespace eCAL
     bool SetConnection(const std::string& host_name_, uint16_t port_);
 
   private:
-    void CDataReaderTCP::OnTcpMessage(const tcpub::CallbackData& callback_data);
+    void OnTcpMessage(const tcpub::CallbackData& callback_data);
     std::shared_ptr<tcpub::Subscriber> m_subscriber;
     eCAL::pb::Sample                   m_ecal_header;
   };
