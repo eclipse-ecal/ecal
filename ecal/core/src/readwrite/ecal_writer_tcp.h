@@ -28,6 +28,7 @@
 #include <tcpub/executor.h>
 #include <tcpub/publisher.h>
 
+#include <mutex>
 #include <string>
 #include <vector>
 
@@ -59,7 +60,9 @@ namespace eCAL
     std::string GetConnectionParameter() override;
 
   private:
-    static std::shared_ptr<tcpub::Executor> m_executor;
+    static std::mutex                       g_tcp_writer_executor_mtx;
+    static std::shared_ptr<tcpub::Executor> g_tcp_writer_executor;
+
     std::shared_ptr<tcpub::Publisher>       m_publisher;
     uint16_t                                m_port;
 

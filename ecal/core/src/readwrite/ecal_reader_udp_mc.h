@@ -57,7 +57,7 @@ namespace eCAL
       rcv.Create(attr);
     }
 
-    void AddSubscription(std::string& /*host_name_*/, std::string& topic_name_, std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
+    void AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
     {
       if (!started)
       {
@@ -74,7 +74,7 @@ namespace eCAL
       topic_name_mcast_map[mcast_address]++;
     }
 
-    void RemSubscription(std::string& /*host_name_*/, std::string& topic_name_, std::string& /*topic_id_*/)
+    void RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
     {
       std::string mcast_address = topic2mcast(topic_name_, eCALPAR(NET, UDP_MULTICAST_GROUP), eCALPAR(NET, UDP_MULTICAST_MASK));
       if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())

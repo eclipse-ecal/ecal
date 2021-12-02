@@ -49,7 +49,7 @@ namespace eCAL
     m_executor = std::make_shared<tcpub::Executor>(4);
   }
 
-  void CTCPReaderLayer::AddSubscription(std::string& host_name_, std::string& /*topic_name_*/, std::string& topic_id_, QOS::SReaderQOS /*qos_*/)
+  void CTCPReaderLayer::AddSubscription(const std::string& host_name_, const std::string& /*topic_name_*/, const std::string& topic_id_, QOS::SReaderQOS /*qos_*/)
   {
     std::string map_key(host_name_ + topic_id_);
 
@@ -62,7 +62,7 @@ namespace eCAL
     m_datareadertcp_map.insert(std::pair<std::string, std::shared_ptr<CDataReaderTCP>>(map_key, reader));
   }
 
-  void CTCPReaderLayer::RemSubscription(std::string& host_name_, std::string& /*topic_name_*/, std::string& topic_id_)
+  void CTCPReaderLayer::RemSubscription(const std::string& host_name_, const std::string& /*topic_name_*/, const std::string& topic_id_)
   {
     std::string map_key(host_name_ + topic_id_);
 

@@ -183,14 +183,15 @@ set(ecal_pubsub_header_src
 set(ecal_readwrite_header_src
     src/readwrite/ecal_reader.h
     src/readwrite/ecal_reader_inproc.h
+    src/readwrite/ecal_reader_layer.h
+    src/readwrite/ecal_reader_tcp.h
     src/readwrite/ecal_reader_udp.h
     src/readwrite/ecal_reader_udp_mc.h
-    src/readwrite/ecal_reader_tcp.h
     src/readwrite/ecal_writer.h
     src/readwrite/ecal_writer_base.h
     src/readwrite/ecal_writer_inproc.h
-    src/readwrite/ecal_writer_udp_mc.h
     src/readwrite/ecal_writer_tcp.h
+    src/readwrite/ecal_writer_udp_mc.h
 )
 
 if(ECAL_LAYER_ICEORYX)

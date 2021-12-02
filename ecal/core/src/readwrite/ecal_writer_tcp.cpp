@@ -39,7 +39,8 @@
 
 namespace eCAL
 {
-  std::shared_ptr<tcpub::Executor> CDataWriterTCP::m_executor;
+  std::mutex                       CDataWriterTCP::g_tcp_writer_executor_mtx;
+  std::shared_ptr<tcpub::Executor> CDataWriterTCP::g_tcp_writer_executor;
 
   CDataWriterTCP::CDataWriterTCP() : m_port(0)
   {
@@ -66,10 +67,13 @@ namespace eCAL
 
   bool CDataWriterTCP::Create(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_)
   {
-    if (!m_executor) m_executor = std::make_shared<tcpub::Executor>(4);
+    {
+      std::lock_guard<std::mutex> lock(g_tcp_writer_executor_mtx);
+      if (!g_tcp_writer_executor) g_tcp_writer_executor = std::make_shared<tcpub::Executor>(4);
+    }
 
     // create publisher
-    m_publisher = std::make_shared<tcpub::Publisher>(m_executor);
+    m_publisher = std::make_shared<tcpub::Publisher>(g_tcp_writer_executor);
     m_port      = m_publisher->getPort();
 
     // writer parameter
