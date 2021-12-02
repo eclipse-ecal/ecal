@@ -283,6 +283,7 @@ set(ecal_header_cmn
 
 set(ecal_header_cimpl
     include/ecal/cimpl/ecal_callback_cimpl.h
+    include/ecal/cimpl/ecal_client_cimpl.h
     include/ecal/cimpl/ecal_core_cimpl.h
     include/ecal/cimpl/ecal_event_cimpl.h
     include/ecal/cimpl/ecal_init_cimpl.h
@@ -292,6 +293,7 @@ set(ecal_header_cimpl
     include/ecal/cimpl/ecal_proto_dyn_json_subscriber_cimpl.h
     include/ecal/cimpl/ecal_publisher_cimpl.h
     include/ecal/cimpl/ecal_qos_cimpl.h
+    include/ecal/cimpl/ecal_server_cimpl.h
     include/ecal/cimpl/ecal_service_cimpl.h
     include/ecal/cimpl/ecal_service_info_cimpl.h
     include/ecal/cimpl/ecal_subscriber_cimpl.h

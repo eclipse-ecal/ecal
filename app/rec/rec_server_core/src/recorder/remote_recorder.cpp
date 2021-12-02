@@ -254,10 +254,10 @@ namespace eCAL
         if (this_loop_action.IsSettings())
         {
           auto set_config_pb = SettingsToSettingsPb(this_loop_action.settings_);
-          eCAL::SServiceInfo      service_info;
+          eCAL::SServiceResponse         service_response;
           eCAL::pb::rec_client::Response response;
 
-          bool call_successfull = recorder_service_.Call(hostname_, "SetConfig", set_config_pb, service_info, response);
+          bool call_successfull = recorder_service_.Call(hostname_, "SetConfig", set_config_pb, service_response, response);
           if (IsInterrupted()) return;
 
           {
@@ -310,10 +310,10 @@ namespace eCAL
 
           eCAL::pb::rec_client::CommandRequest command_request_pb = RecorderCommandToCommandPb(this_loop_action.command_);
 
-          eCAL::SServiceInfo      service_info;
+          eCAL::SServiceResponse         service_response;
           eCAL::pb::rec_client::Response response_pb;
 
-          bool call_successfull = recorder_service_.Call(hostname_, "SetCommand", command_request_pb, service_info, response_pb);
+          bool call_successfull = recorder_service_.Call(hostname_, "SetCommand", command_request_pb, service_response, response_pb);
 
           {
             std::unique_lock<decltype(io_mutex_)> io_lock(io_mutex_);
@@ -371,12 +371,12 @@ namespace eCAL
         {
           eCAL::pb::rec_client::GetStateRequest request;
 
-          eCAL::SServiceInfo          service_info;
+          eCAL::SServiceResponse      service_response;
           eCAL::pb::rec_client::State state_response_pb;
 
           // Retrieve the state from the client
           auto before_call_timestamp = eCAL::Time::ecal_clock::now();
-          bool call_success = recorder_service_.Call(hostname_, "GetState", request, service_info, state_response_pb);
+          bool call_success = recorder_service_.Call(hostname_, "GetState", request, service_response, state_response_pb);
           auto after_call_timestamp = eCAL::Time::ecal_clock::now();
           if (IsInterrupted()) return;
 

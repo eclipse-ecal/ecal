@@ -119,12 +119,12 @@ namespace eCAL
         }
 
         // Service call
-        SServiceInfo                                    service_info;
+        SServiceResponse                                service_response;
         eCAL::pb::rec_server::GenericMeasurementRequest request_pb;
         eCAL::pb::rec_server::ServiceResult             response_pb;
 
         request_pb.set_meas_id(meas_id);
-        bool success = remote_rec_server_service->Call(hostname, "UploadMeasurement", request_pb, service_info, response_pb);
+        bool success = remote_rec_server_service->Call(hostname, "UploadMeasurement", request_pb, service_response, response_pb);
 
         // Service call failed
         if (!success)

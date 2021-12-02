@@ -32,7 +32,7 @@ RecServerServiceGui::RecServerServiceGui(QWidget *parent)
   eCAL::Initialize(0, nullptr, "RecServerServiceGui");
 
   // create player service client
-  recorder_service_.AddResponseCallback([this](const struct eCAL::SServiceInfo& service_info, const std::string& response) {this->onRecorderResponse(service_info, response); });
+  recorder_service_.AddResponseCallback([this](const struct eCAL::SServiceResponse& service_response) {this->onRecorderResponse(service_response); });
 
   connect(ui_.hostname_lineedit, &QLineEdit::editingFinished, this, [this]() {recorder_service_.SetHostName(ui_.hostname_lineedit->text().toStdString()); });
 
@@ -230,50 +230,50 @@ void RecServerServiceGui::addComment()
 //// Response                                                               ////
 ////////////////////////////////////////////////////////////////////////////////
 
-void RecServerServiceGui::onRecorderResponse(const struct eCAL::SServiceInfo& service_info_, const std::string& response_)
+void RecServerServiceGui::onRecorderResponse(const struct eCAL::SServiceResponse& service_response_)
 {
   QString     response_string;
   QTextStream response_stream(&response_string);
 
-  switch (service_info_.call_state)
+  switch (service_response_.call_state)
   {
 
   // service successful executed
   case call_state_executed:
   {
-    if ((service_info_.method_name == "StartRecording")
-      || (service_info_.method_name == "SaveBuffer"))
+    if ((service_response_.method_name == "StartRecording")
+      || (service_response_.method_name == "SaveBuffer"))
     {
       eCAL::pb::rec_server::JobStartedResponse response;
-      response.ParseFromString(response_);
+      response.ParseFromString(service_response_.response);
 
-      response_stream << "RecorderService " << service_info_.method_name.c_str() << " called successfully on host " << service_info_.host_name.c_str() << "\n";
+      response_stream << "RecorderService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
-    else if (service_info_.method_name == "GetStatus")
+    else if (service_response_.method_name == "GetStatus")
     {
       eCAL::pb::rec_server::Status response;
-      response.ParseFromString(response_);
+      response.ParseFromString(service_response_.response);
 
-      response_stream << "RecorderService " << service_info_.method_name.c_str() << " called successfully on host " << service_info_.host_name.c_str() << "\n";
+      response_stream << "RecorderService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
-    else if (service_info_.method_name == "GetConfig")
+    else if (service_response_.method_name == "GetConfig")
     {
       eCAL::pb::rec_server::RecServerConfig response;
-      response.ParseFromString(response_);
+      response.ParseFromString(service_response_.response);
 
-      response_stream << "RecorderService " << service_info_.method_name.c_str() << " called successfully on host " << service_info_.host_name.c_str() << "\n";
+      response_stream << "RecorderService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
     else
     {
       eCAL::pb::rec_server::ServiceResult response;
-      response.ParseFromString(response_);
-      response_stream << "RecorderService " << service_info_.method_name.c_str() << " called successfully on host " << service_info_.host_name.c_str() << "\n";
+      response.ParseFromString(service_response_.response);
+      response_stream << "RecorderService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
@@ -285,7 +285,7 @@ void RecServerServiceGui::onRecorderResponse(const struct eCAL::SServiceInfo& se
   {
     //eCAL::pb::Response response;
     //response.ParseFromString(response_);
-    //response_stream << "RecorderService " << service_info_.method_name.c_str() << " failed with \"" << response.error().c_str() << "\" on host " << service_info_.host_name.c_str() << "\n";
+    //response_stream << "RecorderService " << service_response_.method_name.c_str() << " failed with \"" << response.error().c_str() << "\" on host " << service_response_.host_name.c_str() << "\n";
     //response_stream << "------------------------------------------------\n\n";
     //response_stream << response.DebugString().c_str();
     response_stream << "Service call failed.\n";

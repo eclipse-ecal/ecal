@@ -57,21 +57,21 @@ void OnClientState(const eCAL::SClientEventCallbackData* data_)
 }
 
 // callback for math service response
-void OnMathResponse(const struct eCAL::SServiceInfo& service_info_, const std::string& response_)
+void OnMathResponse(const struct eCAL::SServiceResponse& service_response_)
 {
-  switch(service_info_.call_state)
+  switch(service_response_.call_state)
   {
   // service successful executed
   case call_state_executed:
     {
       SFloat response;
-      response.ParseFromString(response_);
-      std::cout << "Received response MathService / " << service_info_.method_name << " : " << response.out() << " from host " << service_info_.host_name << std::endl;
+      response.ParseFromString(service_response_.response);
+      std::cout << "Received response MathService / " << service_response_.method_name << " : " << response.out() << " from host " << service_response_.host_name << std::endl;
     }
     break;
   // service execution failed
   case call_state_failed:
-    std::cout << "Received error MathService / " << service_info_.method_name << " : " << service_info_.error_msg << " from host " << service_info_.host_name << std::endl;
+    std::cout << "Received error MathService / " << service_response_.method_name << " : " << service_response_.error_msg << " from host " << service_response_.host_name << std::endl;
     break;
   default:
     break;

@@ -88,21 +88,21 @@ namespace eCAL
        *
        * @param       host_name_     Host name.
        * @param       method_name_   Method name.
-       * @param       request_       Request message.
-       * @param [out] service_info_  Service info struct for detailed informations.
-       * @param [out] response_      Response string.
+       * @param       request_           Request message.
+       * @param [out] service_response_  Service info struct for detailed informations.
+       * @param [out] response_          Response string.
        *
       * @return  True if successful.
       **/
-      bool Call(const std::string& host_name_, const std::string& method_name_, const google::protobuf::Message& request_, struct SServiceInfo& service_info_, google::protobuf::Message& response_)
+      bool Call(const std::string& host_name_, const std::string& method_name_, const google::protobuf::Message& request_, struct SServiceResponse& service_response_, google::protobuf::Message& response_)
       {
-        // TODO: Find a solution to get a signuture like
+        // TODO: Find a solution to get a signature like
         // 
-        //  bool Call(const std::string & host_name_, const std::string & method_name_, const google::protobuf::Message & request_, struct SServiceInfoPbVecT& service_info_)
+        //  bool Call(const std::string & host_name_, const std::string & method_name_, const google::protobuf::Message & request_, struct SServiceResponsePbVecT& service_response_)
         // 
-        //  and SServiceInfoPbVecT looks like
+        //  SServiceResponsePbVecT would look like
         // 
-        //    struct SServiceInfoPb
+        //    struct SServiceResponsePb
         //    {
         //      std::string                host_name;      //!< [in]  service host name
         //      std::string                service_name;   //!< [in]  name of the service
@@ -112,16 +112,20 @@ namespace eCAL
         //      eCallState                 call_state;     //!< [out] call state (see eCallState)
         //      google::protobuf::Message  response;       //!< [out] service response as google protobuf message
         //    };
-        //    typedef std::vector<SServiceInfoPb> SServiceInfoPbVecT;
+        //    typedef std::vector<SServiceResponsePb> SServiceResponsePbVecT;
         //
         // for now we just return the response from the first service that answered, to get all responses please use the callback variant
-        ServiceInfoVecT service_info_vec;
-        bool success = Call(host_name_, method_name_, request_.SerializeAsString(), &service_info_vec);
-        if (success)
+        ServiceResponseVecT service_response_vec;
+        if (Call(host_name_, method_name_, request_.SerializeAsString(), &service_response_vec))
         {
-          response_.ParseFromString(service_info_vec[0].response);
+          if (service_response_vec.size() > 0)
+          {
+            service_response_ = service_response_vec[0];
+            response_.ParseFromString(service_response_vec[0].response);
+            return true;
+          }
         }
-        return success;
+        return false;
       }
 
       /**
@@ -136,7 +140,7 @@ namespace eCAL
       }
 
       /**
-       * @brief Asynchronously call method of this service asynchronously, for specific host, response will be returned by callback. 
+       * @brief Asynchronously call method of this service, for specific host, response will be returned by callback. 
        *
        * @param       host_name_     Host name.
        * @param       method_name_   Method name.

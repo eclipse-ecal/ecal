@@ -63,7 +63,7 @@ signals:
   void setResponseSignal(QString response);
 
 private:
-  void onRecorderResponse(const struct eCAL::SServiceInfo& service_info_, const std::string& response_);
+  void onRecorderResponse(const struct eCAL::SServiceResponse& service_response_);
 
 
 

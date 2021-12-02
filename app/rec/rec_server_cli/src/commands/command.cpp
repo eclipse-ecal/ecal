@@ -38,9 +38,9 @@ namespace eCAL
     {
       eCAL::rec::Error Command::GetRemoteStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, eCAL::rec_server::RecServerStatus& status_output)
       {
-        SServiceInfo service_info;
+        SServiceResponse service_response;
         eCAL::pb::rec_server::Status status_pb;
-        bool success = remote_rec_server_service->Call(hostname, "GetStatus", eCAL::pb::rec_server::GenericRequest(), service_info, status_pb);
+        bool success = remote_rec_server_service->Call(hostname, "GetStatus", eCAL::pb::rec_server::GenericRequest(), service_response, status_pb);
 
         if (!success)
         {
@@ -56,11 +56,11 @@ namespace eCAL
       eCAL::rec::Error Command::GetRemoteConfig(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, eCAL::rec_server::RecServerConfig& config_output)
       {
         // Service call
-        SServiceInfo                                    service_info;
+        SServiceResponse                                service_response;
         eCAL::pb::rec_server::GenericRequest            request_pb;
         eCAL::pb::rec_server::RecServerConfig           response_pb;
 
-        bool success = remote_rec_server_service->Call(hostname, "GetConfig", request_pb, service_info, response_pb);
+        bool success = remote_rec_server_service->Call(hostname, "GetConfig", request_pb, service_response, response_pb);
 
         // Service call failed
         if (!success)

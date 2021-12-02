@@ -49,24 +49,24 @@ int main(int argc, char **argv)
       //////////////////////////////////////
     // Ping service (blocking call)
     //////////////////////////////////////
-      eCAL::SServiceInfo service_info;
+      eCAL::SServiceResponse service_response;
       PingRequest        ping_request;
       PingResponse       ping_response;
       ping_request.set_message("PING");
-      if (ping_client.Call("", "Ping", ping_request, service_info, ping_response))
+      if (ping_client.Call("", "Ping", ping_request, service_response, ping_response))
       {
         std::cout << std::endl << "PingService::Ping method called with message : " << ping_request.message() << std::endl;
-        switch (service_info.call_state)
+        switch (service_response.call_state)
         {
           // service successful executed
         case call_state_executed:
         {
-          std::cout << "Received response PingService / Ping : " << ping_response.answer() << " from host " << service_info.host_name << std::endl;
+          std::cout << "Received response PingService / Ping : " << ping_response.answer() << " from host " << service_response.host_name << std::endl;
         }
         break;
         // service execution failed
         case call_state_failed:
-          std::cout << "Received error PingService / Ping : " << service_info.error_msg << " from host " << service_info.host_name << std::endl;
+          std::cout << "Received error PingService / Ping : " << service_response.error_msg << " from host " << service_response.host_name << std::endl;
           break;
         default:
           break;

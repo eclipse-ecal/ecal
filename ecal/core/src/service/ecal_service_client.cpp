@@ -123,22 +123,22 @@ namespace eCAL
    *
    * @param       host_name_     Host name.
    * @param       method_name_   Method name.
-   * @param       request_       Request string. 
-   * @param [out] service_info_  Service info struct for detailed informations.
-   * @param [out] response_      Response string.
+   * @param       request_           Request string. 
+   * @param [out] service_response_  Service info struct for detailed informations.
+   * @param [out] response_          Response string.
    *
    * @return  True if successful. 
   **/ 
-  bool CServiceClient::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceInfo& service_info_, std::string& response_)
+  bool CServiceClient::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_, std::string& response_)
   {
     if(!m_created) return(false);
-    ServiceInfoVecT service_info_vec;
-    if (m_service_client_impl->Call(host_name_, method_name_, request_, &service_info_vec))
+    ServiceResponseVecT service_response_vec;
+    if (m_service_client_impl->Call(host_name_, method_name_, request_, &service_response_vec))
     {
-      if (service_info_vec.size() > 0)
+      if (service_response_vec.size() > 0)
       {
-        service_info_ = service_info_vec[0];
-        response_     = service_info_vec[0].response;
+        service_response_ = service_response_vec[0];
+        response_     = service_response_vec[0].response;
       }
       return true;
     }
@@ -155,10 +155,10 @@ namespace eCAL
    *
    * @return  True if successful.
   **/
-  bool CServiceClient::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceInfoVecT* service_info_vec_)
+  bool CServiceClient::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceResponseVecT* service_response_vec_)
   {
     if (!m_created) return(false);
-    return(m_service_client_impl->Call(host_name_, method_name_, request_, service_info_vec_));
+    return(m_service_client_impl->Call(host_name_, method_name_, request_, service_response_vec_));
   }
 
   /**
