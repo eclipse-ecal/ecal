@@ -153,7 +153,7 @@ namespace eCAL
     return true;
   }
 
-  bool CServiceClientImpl::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceInfo& service_info_, std::string& response_)
+  bool CServiceClientImpl::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_, std::string& response_)
   {
     if (!g_clientgate()) return false;
     if (!m_created)      return false;
@@ -175,9 +175,9 @@ namespace eCAL
         auto client = m_client_map.find(iter.key);
         if (client != m_client_map.end())
         {
-          if (SendRequest(client->second, method_name_, request_, service_info_))
+          if (SendRequest(client->second, method_name_, request_, service_response_))
           {
-            response_ = service_info_.response;
+            response_ = service_response_.response;
             return true;
           }
         }
@@ -186,7 +186,7 @@ namespace eCAL
     return false;
   }
 
-  bool CServiceClientImpl::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceInfoVecT* service_info_vec_)
+  bool CServiceClientImpl::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceResponseVecT* service_response_vec_)
   {
     if (!g_clientgate()) return false;
     if (!m_created)      return false;
@@ -197,7 +197,7 @@ namespace eCAL
       return false;
 
     // reset response
-    if(service_info_vec_) service_info_vec_->clear();
+    if(service_response_vec_) service_response_vec_->clear();
 
     // check for new server
     CheckForNewServices();
@@ -212,10 +212,10 @@ namespace eCAL
         auto client = m_client_map.find(iter.key);
         if (client != m_client_map.end())
         {
-          struct SServiceInfo service_info;
-          if (SendRequest(client->second, method_name_, request_, service_info))
+          struct SServiceResponse service_response;
+          if (SendRequest(client->second, method_name_, request_, service_response))
           {
-            if(service_info_vec_) service_info_vec_->push_back(service_info);
+            if(service_response_vec_) service_response_vec_->push_back(service_response);
             called = true;
           }
         }
@@ -345,18 +345,18 @@ namespace eCAL
         if (m_service_hname.empty() || (m_service_hname == client.second->GetHostName()))
         {
           // execute request
-          SServiceInfo service_info;
-          bool ret = SendRequest(client.second, method_name_, request_, service_info);
+          SServiceResponse service_response;
+          bool ret = SendRequest(client.second, method_name_, request_, service_response);
           if (ret == false)
           {
             std::cerr << "CServiceClientImpl::SendRequests failed." << std::endl;
             return false;
           }
           // call response callback
-          if (service_info.call_state != call_state_none)
+          if (service_response.call_state != call_state_none)
           {
             std::lock_guard<std::mutex> lock_cb(m_response_callback_sync);
-            if (m_response_callback) m_response_callback(service_info, service_info.response);
+            if (m_response_callback) m_response_callback(service_response);
           }
           else
           {
@@ -372,7 +372,7 @@ namespace eCAL
     return ret_state;
   }
 
-  bool CServiceClientImpl::SendRequest(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, struct SServiceInfo& service_info_)
+  bool CServiceClientImpl::SendRequest(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_)
   {
     // create request protocol buffer
     eCAL::pb::Request request_pb;
@@ -394,25 +394,25 @@ namespace eCAL
     }
 
     auto response_pb_header = response_pb.header();
-    service_info_.host_name = response_pb_header.hname();
-    service_info_.service_name = response_pb_header.sname();
-    service_info_.method_name = response_pb_header.mname();
-    service_info_.error_msg = response_pb_header.error();
-    service_info_.ret_state = static_cast<int>(response_pb.ret_state());
+    service_response_.host_name = response_pb_header.hname();
+    service_response_.service_name = response_pb_header.sname();
+    service_response_.method_name = response_pb_header.mname();
+    service_response_.error_msg = response_pb_header.error();
+    service_response_.ret_state = static_cast<int>(response_pb.ret_state());
     switch (response_pb_header.state())
     {
     case eCAL::pb::ServiceHeader_eCallState_executed:
-      service_info_.call_state = call_state_executed;
+      service_response_.call_state = call_state_executed;
       break;
     case eCAL::pb::ServiceHeader_eCallState_failed:
-      service_info_.call_state = call_state_failed;
+      service_response_.call_state = call_state_failed;
       break;
     default:
       break;
     }
-    service_info_.response = response_pb.response();
+    service_response_.response = response_pb.response();
 
-    return (service_info_.call_state == call_state_executed);
+    return (service_response_.call_state == call_state_executed);
   }
 
   void CServiceClientImpl::SendRequestsAsync(const std::string& method_name_, const std::string& request_)
@@ -457,15 +457,16 @@ namespace eCAL
         std::lock_guard<std::mutex> lock(m_response_callback_sync);
         if (m_response_callback)
         {
-          SServiceInfo service_info;
+          SServiceResponse service_response;
           if (!success)
           {
             auto error_msg = "Async request failed !";
-            service_info.call_state = call_state_failed;
-            service_info.error_msg = error_msg;
-            service_info.ret_state = 0;
-            service_info.method_name = method_name_;
-            m_response_callback(service_info, "");
+            service_response.call_state  = call_state_failed;
+            service_response.error_msg   = error_msg;
+            service_response.ret_state   = 0;
+            service_response.method_name = method_name_;
+            service_response.response    = "";
+            m_response_callback(service_response);
             return;
           }
 
@@ -474,33 +475,35 @@ namespace eCAL
           {
             auto error_msg = "CServiceClientImpl::SendRequestAsync could not parse server response !";
             std::cerr << error_msg << "\n";
-            service_info.call_state = call_state_failed;
-            service_info.error_msg = error_msg;
-            service_info.ret_state = 0;
-            service_info.method_name = method_name_;
-            m_response_callback(service_info, "");
+            service_response.call_state  = call_state_failed;
+            service_response.error_msg   = error_msg;
+            service_response.ret_state   = 0;
+            service_response.method_name = method_name_;
+            service_response.response    = "";
+            m_response_callback(service_response);
             return;
           }
 
-          auto response_pb_header = response_pb.header();
-          service_info.host_name = response_pb_header.hname();
-          service_info.service_name = response_pb_header.sname();
-          service_info.method_name = response_pb_header.mname();
-          service_info.error_msg = response_pb_header.error();
-          service_info.ret_state = static_cast<int>(response_pb.ret_state());
+          auto response_pb_header   = response_pb.header();
+          service_response.host_name    = response_pb_header.hname();
+          service_response.service_name = response_pb_header.sname();
+          service_response.method_name  = response_pb_header.mname();
+          service_response.error_msg    = response_pb_header.error();
+          service_response.ret_state    = static_cast<int>(response_pb.ret_state());
           switch (response_pb_header.state())
           {
           case eCAL::pb::ServiceHeader_eCallState_executed:
-            service_info.call_state = call_state_executed;
+            service_response.call_state = call_state_executed;
             break;
           case eCAL::pb::ServiceHeader_eCallState_failed:
-            service_info.call_state = call_state_failed;
+            service_response.call_state = call_state_failed;
             break;
           default:
             break;
           }
+          service_response.response = response_pb.response();
 
-          m_response_callback(service_info, response_pb.response());
+          m_response_callback(service_response);
         }
       });
   }
@@ -510,12 +513,13 @@ namespace eCAL
     std::lock_guard<std::mutex> lock(m_response_callback_sync);
     if (m_response_callback)
     {
-      SServiceInfo service_info;
-      service_info.call_state = call_state_failed;
-      service_info.error_msg = error_message_;
-      service_info.ret_state = 0;
-      service_info.method_name = method_name_;
-      m_response_callback(service_info, "");
+      SServiceResponse service_response;
+      service_response.call_state  = call_state_failed;
+      service_response.error_msg   = error_message_;
+      service_response.ret_state   = 0;
+      service_response.method_name = method_name_;
+      service_response.response    = "";
+      m_response_callback(service_response);
     }
   }
 

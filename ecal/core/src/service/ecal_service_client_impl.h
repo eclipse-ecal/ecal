@@ -56,10 +56,10 @@ namespace eCAL
       
     // call service on a specific host, no broadcast, first will react service only
     [[deprecated]]
-    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceInfo& service_info_, std::string& response_);
+    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_, std::string& response_);
     
     // call all services on a specific host
-    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceInfoVecT* service_info_vec_);
+    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceResponseVecT* service_response_vec_);
 
     // callback service using callback, broadcast possible
     bool Call(const std::string& method_name_, const std::string& request_);
@@ -80,7 +80,7 @@ namespace eCAL
   protected:
     void CheckForNewServices();
     bool SendRequests(const std::string& method_name_, const std::string& request_);
-    bool SendRequest(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, struct SServiceInfo& service_info_);
+    bool SendRequest(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_);
     void SendRequestsAsync(const std::string& method_name_, const std::string& request_);
     void SendRequestAsync(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_);
 

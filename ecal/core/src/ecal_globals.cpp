@@ -128,23 +128,20 @@ namespace eCAL
       }
     }
 
-    /////////////////////
-    // SERVICE GATE
-    /////////////////////
     if (components_ & Init::Service)
     {
+      /////////////////////
+      // SERVICE GATE
+      /////////////////////
       if (servicegate_instance == nullptr)
       {
         servicegate_instance = std::make_unique<CServiceGate>();
         new_initialization = true;
       }
-    }
 
-    /////////////////////
-    // CLIENT GATE
-    /////////////////////
-    if (components_ & Init::Service)
-    {
+      /////////////////////
+      // CLIENT GATE
+      /////////////////////
       if (clientgate_instance == nullptr)
       {
         clientgate_instance = std::make_unique<CClientGate>();

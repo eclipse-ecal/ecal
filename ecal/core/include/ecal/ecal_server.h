@@ -225,6 +225,7 @@ namespace eCAL
       }
       return ret_state;
     }
+
     bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_)
     {
       if (!m_created) return false;
@@ -266,8 +267,6 @@ namespace eCAL
 
     bool               m_created;
   };
-
-
 } 
 
 #endif /* ! ECAL_C_DLL */

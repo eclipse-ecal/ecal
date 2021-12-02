@@ -31,7 +31,7 @@ EcalrecGuiClient::EcalrecGuiClient(QWidget *parent)
   eCAL::Initialize(0, nullptr, "RecClientServiceGui");
 
   // create player service client
-  recorder_service_.AddResponseCallback([this](const struct eCAL::SServiceInfo& service_info, const std::string& response) {this->onRecorderResponse(service_info, response); });
+  recorder_service_.AddResponseCallback([this](const struct eCAL::SServiceResponse& service_response) {this->onRecorderResponse(service_response); });
 
   connect(ui_.hostname_lineedit, &QLineEdit::editingFinished, this, [this]() {recorder_service_.SetHostName(ui_.hostname_lineedit->text().toStdString()); });
 
@@ -213,39 +213,39 @@ void EcalrecGuiClient::getStateRequest()
 //// Response                                                               ////
 ////////////////////////////////////////////////////////////////////////////////
 
-void EcalrecGuiClient::onRecorderResponse(const struct eCAL::SServiceInfo& service_info_, const std::string& response_)
+void EcalrecGuiClient::onRecorderResponse(const struct eCAL::SServiceResponse& service_response_)
 {
   QString response_string;
   QTextStream response_stream(&response_string);
 
-  switch (service_info_.call_state)
+  switch (service_response_.call_state)
   {
     // service successful executed
   case call_state_executed:
   {
-    if (service_info_.method_name == "GetConfig")
+    if (service_response_.method_name == "GetConfig")
     {
       eCAL::pb::rec_client::GetConfigResponse response;
-      response.ParseFromString(response_);
+      response.ParseFromString(service_response_.response);
 
-      response_stream << "RecorderService " << service_info_.method_name.c_str() << " called successfully on host " << service_info_.host_name.c_str() << "\n";
+      response_stream << "RecorderService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
-    else if (service_info_.method_name == "GetState")
+    else if (service_response_.method_name == "GetState")
     {
       eCAL::pb::rec_client::State response;
-      response.ParseFromString(response_);
+      response.ParseFromString(service_response_.response);
 
-      response_stream << "RecorderService " << service_info_.method_name.c_str() << " called successfully on host " << service_info_.host_name.c_str() << "\n";
+      response_stream << "RecorderService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
     else
     {
       eCAL::pb::rec_client::Response response;
-      response.ParseFromString(response_);
-      response_stream << "RecorderService " << service_info_.method_name.c_str() << " called successfully on host " << service_info_.host_name.c_str() << "\n";
+      response.ParseFromString(service_response_.response);
+      response_stream << "RecorderService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
@@ -255,8 +255,8 @@ void EcalrecGuiClient::onRecorderResponse(const struct eCAL::SServiceInfo& servi
   case call_state_failed:
   {
     eCAL::pb::rec_client::Response response;
-    response.ParseFromString(response_);
-    response_stream << "RecorderService " << service_info_.method_name.c_str() << " failed with \"" << response.error().c_str() << "\" on host " << service_info_.host_name.c_str() << "\n";
+    response.ParseFromString(service_response_.response);
+    response_stream << "RecorderService " << service_response_.method_name.c_str() << " failed with \"" << response.error().c_str() << "\" on host " << service_response_.host_name.c_str() << "\n";
     response_stream << "------------------------------------------------\n\n";
     response_stream << response.DebugString().c_str();
     break;

@@ -1053,17 +1053,18 @@ extern "C"
 extern "C"
 {
   static std::recursive_mutex g_response_callback_mtx;
-  static void g_response_callback(const struct eCAL::SServiceInfo& service_info_, const std::string& response_, const ResponseCallbackCT callback_, void* par_)
+  static void g_response_callback(const struct eCAL::SServiceResponse& service_response_, const ResponseCallbackCT callback_, void* par_)
   {
     std::lock_guard<std::recursive_mutex> lock(g_response_callback_mtx);
-    struct SServiceInfoC service_info;
-    service_info.host_name     = service_info_.host_name.c_str();
-    service_info.service_name  = service_info_.service_name.c_str();
-    service_info.method_name   = service_info_.method_name.c_str();
-    service_info.error_msg     = service_info_.error_msg.c_str();
-    service_info.ret_state     = service_info_.ret_state;
-    service_info.call_state    = service_info_.call_state;
-    callback_(&service_info, response_.c_str(), static_cast<int>(response_.size()), par_);
+    struct SServiceResponseC service_response;
+    service_response.host_name     = service_response_.host_name.c_str();
+    service_response.service_name  = service_response_.service_name.c_str();
+    service_response.method_name   = service_response_.method_name.c_str();
+    service_response.error_msg     = service_response_.error_msg.c_str();
+    service_response.ret_state     = service_response_.ret_state;
+    service_response.call_state    = service_response_.call_state;
+    service_response.response      = service_response_.response.c_str();
+    callback_(&service_response, par_);
   }
 
   ECALC_API ECAL_HANDLE eCAL_Client_Create(const char* service_name_)
@@ -1098,22 +1099,22 @@ extern "C"
     return(0);
   }
 
-  ECALC_API int eCAL_Client_Call_Wait(ECAL_HANDLE handle_, const char* host_name_, const char* method_name_, const char* request_, int request_len_, struct SServiceInfoC* service_info_, void* response_, int response_len_)
+  ECALC_API int eCAL_Client_Call_Wait(ECAL_HANDLE handle_, const char* host_name_, const char* method_name_, const char* request_, int request_len_, struct SServiceResponseC* service_response_, void* response_, int response_len_)
   {
     if(handle_ == NULL) return(0);
     eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
-    eCAL::ServiceInfoVecT service_info_vec;
-    if(client->Call(host_name_, method_name_, std::string(request_, static_cast<size_t>(request_len_)), &service_info_vec))
+    eCAL::ServiceResponseVecT service_response_vec;
+    if(client->Call(host_name_, method_name_, std::string(request_, static_cast<size_t>(request_len_)), &service_response_vec))
     {
-      if (service_info_vec.size() > 0)
+      if (service_response_vec.size() > 0)
       {
-        service_info_->host_name    = NULL;
-        service_info_->service_name = NULL;
-        service_info_->method_name  = NULL;
-        service_info_->error_msg    = NULL;
-        service_info_->ret_state    = service_info_vec[0].ret_state;
-        service_info_->call_state   = service_info_vec[0].call_state;
-        return(CopyBuffer(response_, response_len_, service_info_vec[0].response));
+        service_response_->host_name    = NULL;
+        service_response_->service_name = NULL;
+        service_response_->method_name  = NULL;
+        service_response_->error_msg    = NULL;
+        service_response_->ret_state    = service_response_vec[0].ret_state;
+        service_response_->call_state   = service_response_vec[0].call_state;
+        return(CopyBuffer(response_, response_len_, service_response_vec[0].response));
       }
     }
     return(0);
@@ -1124,7 +1125,7 @@ int eCAL_Client_AddResponseCallbackC(ECAL_HANDLE handle_, ResponseCallbackCT cal
 {
   if(handle_ == NULL) return(0);
   eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
-  auto callback = std::bind(g_response_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
+  auto callback = std::bind(g_response_callback, std::placeholders::_1, callback_, par_);
   return client->AddResponseCallback(callback);
 }
 

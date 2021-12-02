@@ -81,11 +81,11 @@ namespace eCAL
           return eCAL::rec::Error::NOT_RECORDING;
 
         // Service call
-        SServiceInfo                         service_info;
+        SServiceResponse                     service_response;
         eCAL::pb::rec_server::GenericRequest request_pb;
         eCAL::pb::rec_server::ServiceResult  response_pb;
 
-        bool success = remote_rec_server_service->Call(hostname, "StopRecording", request_pb, service_info, response_pb);
+        bool success = remote_rec_server_service->Call(hostname, "StopRecording", request_pb, service_response, response_pb);
 
         // Service call failed
         if (!success)

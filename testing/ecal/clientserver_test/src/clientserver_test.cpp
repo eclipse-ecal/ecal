@@ -31,12 +31,15 @@
 #include "math.pb.h"
 #include "ping.pb.h"
 
-#define ClientServerBaseCallbackTest    1
-#define ClientServerBaseBlockingTest    1
-#define ClientServerProtoCallbackTest   1
-#define ClientServerProtoBlockingTest   1
-#define MultipleServerTest              1
-#define NestedRPCCallTest               1
+#define ClientServerBaseCallbackTest       1
+#define ClientServerBaseAsyncCallbackTest  0       // Async API NOT WORKING !
+
+#define ClientServerBaseBlockingTest       1
+#define ClientServerProtoCallbackTest      1
+#define ClientServerProtoBlockingTest      1
+
+#define MultipleServerTest                 1
+#define NestedRPCCallTest                  1
 
 namespace
 {
@@ -51,15 +54,15 @@ namespace
     std::cout << std::endl;
   }
 
-  void PrintResponse(const struct eCAL::SServiceInfo& service_info_, const std::string& response_)
+  void PrintResponse(const struct eCAL::SServiceResponse& service_response_)
   {
     std::cout << "------ RESPONSE ------" << std::endl;
-    std::cout << "Executed on host name : " << service_info_.host_name    << std::endl;
-    std::cout << "Executed service name : " << service_info_.service_name << std::endl;
-    std::cout << "Executed method name  : " << service_info_.method_name  << std::endl;
-    std::cout << "Return value          : " << service_info_.ret_state    << std::endl;
+    std::cout << "Executed on host name : " << service_response_.host_name    << std::endl;
+    std::cout << "Executed service name : " << service_response_.service_name << std::endl;
+    std::cout << "Executed method name  : " << service_response_.method_name  << std::endl;
+    std::cout << "Return value          : " << service_response_.ret_state    << std::endl;
     std::cout << "Execution state       : ";
-    switch (service_info_.call_state)
+    switch (service_response_.call_state)
     {
     case call_state_none:
       std::cout << "call_state_none";
@@ -72,8 +75,8 @@ namespace
       break;
     }
     std::cout << std::endl;
-    std::cout << "Execution error msg   : " << service_info_.error_msg << std::endl;
-    std::cout << "Response              : " << response_ << std::endl  << std::endl;
+    std::cout << "Execution error msg   : " << service_response_.error_msg << std::endl;
+    std::cout << "Response              : " << service_response_.response  << std::endl  << std::endl;
     std::cout << std::endl;
   };
 }
@@ -110,9 +113,9 @@ TEST(IO, ClientServerBaseCallback)
 
   // response callback function
   int responses_executed(0);
-  auto response_callback = [&](const struct eCAL::SServiceInfo& service_info_, const std::string& response_)
+  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
   {
-    PrintResponse(service_info_, response_);
+    PrintResponse(service_response_);
     responses_executed++;
   };
 
@@ -147,6 +150,74 @@ TEST(IO, ClientServerBaseCallback)
 }
 
 #endif /* ClientServerBaseCallbackTest */
+
+#if ClientServerBaseAsyncCallbackTest
+
+TEST(IO, ClientServerBaseAsyncCallback)
+{
+  const int calls(1);
+  const int sleep(0);
+
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "clientserver base async callback test");
+
+  // create service server
+  eCAL::CServiceServer server("service1");
+
+  // request callback function
+  int requests_executed(0);
+  auto request_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
+  {
+    PrintRequest(method_, req_type_, resp_type_, request_);
+    response_ = "I answer on " + request_;
+    requests_executed++;
+    return 42;
+  };
+
+  // add callback for client request
+  server.AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", request_callback);
+  server.AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", request_callback);
+
+  // create service client
+  eCAL::CServiceClient client("service1");
+
+  // response callback function
+  int responses_executed(0);
+  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
+  {
+    PrintResponse(service_response_);
+    responses_executed++;
+  };
+
+  // add callback for server response
+  client.AddResponseCallback(response_callback);
+
+  // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
+  eCAL::Process::SleepMS(2000);
+
+  // call service
+  int requests_called(0);
+  for (auto i = 0; i < calls; ++i)
+  {
+    // call a method1
+    client.CallAsync("foo::method1", "my request for method 1");
+    eCAL::Process::SleepMS(sleep);
+    requests_called++;
+
+    // call a method2
+    client.CallAsync("foo::method2", "my request for method 2");
+    eCAL::Process::SleepMS(sleep);
+    requests_called++;
+  }
+
+  EXPECT_EQ(requests_called, requests_executed);
+  EXPECT_EQ(requests_called, responses_executed);
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+#endif /* ClientServerBaseAsyncCallbackTest */
 
 #if ClientServerBaseBlockingTest
 
@@ -186,21 +257,22 @@ TEST(IO, ClientServerBaseBlocking)
   int responses_executed(0);
   for (auto i = 0; i < calls; ++i)
   {
-    eCAL::SServiceInfo service_info;
-    std::string        response;
+    eCAL::ServiceResponseVecT service_response_vec;
     // call a method1
-    if (client.Call("", "foo::method1", "my request for method 1", service_info, response))
+    if (client.Call("", "foo::method1", "my request for method 1", &service_response_vec))
     {
-      PrintResponse(service_info, response);
+      ASSERT_EQ(1, service_response_vec.size());
+      PrintResponse(service_response_vec[0]);
       responses_executed++;
     }
     eCAL::Process::SleepMS(sleep);
     requests_called++;
 
     // call a method2
-    if (client.Call("", "foo::method2", "my request for method 2", service_info, response))
+    if (client.Call("", "foo::method2", "my request for method 2", &service_response_vec))
     {
-      PrintResponse(service_info, response);
+      ASSERT_EQ(1, service_response_vec.size());
+      PrintResponse(service_response_vec[0]);
       responses_executed++;
     }
     eCAL::Process::SleepMS(sleep);
@@ -268,23 +340,23 @@ TEST(IO, ClientServerProtoCallback)
 
   // response callback function
   double math_response(0.0);
-  auto response_callback = [&](const struct eCAL::SServiceInfo& service_info_, const std::string& response_)
+  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
   {
     math_response = 0.0;
-    switch (service_info_.call_state)
+    switch (service_response_.call_state)
     {
     // service successful executed
     case call_state_executed:
     {
       SFloat response;
-      response.ParseFromString(response_);
-      std::cout << "Received response MathService / " << service_info_.method_name << " : " << response.out() << " from host " << service_info_.host_name << std::endl;
+      response.ParseFromString(service_response_.response);
+      std::cout << "Received response MathService / " << service_response_.method_name << " : " << response.out() << " from host " << service_response_.host_name << std::endl;
       math_response = response.out();
     }
     break;
     // service execution failed
     case call_state_failed:
-      std::cout << "Received error MathService / " << service_info_.method_name << " : " << service_info_.error_msg << " from host " << service_info_.host_name << std::endl;
+      std::cout << "Received error MathService / " << service_response_.method_name << " : " << service_response_.error_msg << " from host " << service_response_.host_name << std::endl;
       break;
     default:
       break;
@@ -359,28 +431,28 @@ TEST(IO, ClientServerProtoBlocking)
   eCAL::Process::SleepMS(2000);
 
   // test ping service
-  eCAL::SServiceInfo service_info;
+  eCAL::ServiceResponseVecT service_response_vec;
   PingRequest ping_request;
   ping_request.set_message("PING");
   std::string ping_request_s = ping_request.SerializeAsString();
-  std::string ping_response_s;
   std::cout << std::endl << "Ping method called with message : " << ping_request.message() << std::endl;
-  ping_client.Call("", "Ping", ping_request_s, service_info, ping_response_s);
-  EXPECT_EQ(service_info.call_state, call_state_executed);
-  switch (service_info.call_state)
+  ping_client.Call("", "Ping", ping_request_s, &service_response_vec);
+  ASSERT_EQ(1, service_response_vec.size());
+  EXPECT_EQ(call_state_executed, service_response_vec[0].call_state);
+  switch (service_response_vec[0].call_state)
   {
   // service successful executed
   case call_state_executed:
   {
     PingResponse response;
-    response.ParseFromString(ping_response_s);
-    std::cout << "Received response PingService / Ping : " << response.answer() << " from host " << service_info.host_name << std::endl;
+    response.ParseFromString(service_response_vec[0].response);
+    std::cout << "Received response PingService / Ping : " << response.answer() << " from host " << service_response_vec[0].host_name << std::endl;
     EXPECT_STREQ(response.answer().c_str(), "PONG");
   }
   break;
   // service execution failed
   case call_state_failed:
-    std::cout << "Received error PingService / Ping : " << service_info.error_msg << " from host " << service_info.host_name << std::endl;
+    std::cout << "Received error PingService / Ping : " << service_response_vec[0].error_msg << " from host " << service_response_vec[0].host_name << std::endl;
     break;
   default:
     break;
@@ -426,9 +498,9 @@ TEST(IO, MultipleServerTest)
 
   // response callback function
   int responses_executed(0);
-  auto response_callback = [&](const struct eCAL::SServiceInfo& service_info_, const std::string& response_)
+  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
   {
-    PrintResponse(service_info_, response_);
+    PrintResponse(service_response_);
     responses_executed++;
   };
 
@@ -504,16 +576,16 @@ TEST(IO, NestedRPCCall)
   int requests_called(0);
   int responses_executed(0);
   bool success(true);
-  auto response_callback1 = [&](const struct eCAL::SServiceInfo& service_info_, const std::string& response_)
+  auto response_callback1 = [&](const struct eCAL::SServiceResponse& service_response_)
   {
-    PrintResponse(service_info_, response_);
+    PrintResponse(service_response_);
     success &= client2.Call("foo::method2", "my request for method 2");
     requests_called++;
     responses_executed++;
   };
-  auto response_callback2 = [&](const struct eCAL::SServiceInfo& service_info_, const std::string& response_)
+  auto response_callback2 = [&](const struct eCAL::SServiceResponse& service_response_)
   {
-    PrintResponse(service_info_, response_);
+    PrintResponse(service_response_);
     responses_executed++;
   };
 

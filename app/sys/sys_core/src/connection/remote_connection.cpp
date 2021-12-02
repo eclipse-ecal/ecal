@@ -28,12 +28,12 @@ namespace eCAL
 
       eCAL::pb::sys_client::StartTaskRequest start_task_request_pb = eCAL::sys_client::proto_helpers::ToProtobuf(evaluated_task_list);
 
-      eCAL::SServiceInfo                 service_info;
+      eCAL::SServiceResponse             service_response;
       eCAL::pb::sys_client::TaskResponse response_pb;
 
       {
         std::lock_guard<decltype(connection_mutex_)> connection_lock(connection_mutex_);
-        sys_client_service_.Call(m_hostname, "StartTasks", start_task_request_pb, service_info, response_pb);
+        sys_client_service_.Call(m_hostname, "StartTasks", start_task_request_pb, service_response, response_pb);
       }
 
       std::vector<int32_t> return_values;
@@ -59,12 +59,12 @@ namespace eCAL
 
       eCAL::pb::sys_client::StopTaskRequest stop_task_request_pb = eCAL::sys_client::proto_helpers::ToProtobuf(evaluated_task_list);
 
-      eCAL::SServiceInfo                 service_info;
+      eCAL::SServiceResponse             service_response;
       eCAL::pb::sys_client::TaskResponse response_pb;
 
       {
         std::lock_guard<decltype(connection_mutex_)> connection_lock(connection_mutex_);
-        sys_client_service_.Call(m_hostname, "StopTasks", stop_task_request_pb, service_info, response_pb);
+        sys_client_service_.Call(m_hostname, "StopTasks", stop_task_request_pb, service_response, response_pb);
       }
 
       std::vector<bool> return_values;
@@ -90,12 +90,12 @@ namespace eCAL
 
       eCAL::pb::sys_client::TaskList task_list_pb = eCAL::sys_client::proto_helpers::ToProtobuf(evaluated_task_list);
 
-      eCAL::SServiceInfo                      service_info;
+      eCAL::SServiceResponse                  service_response;
       eCAL::pb::sys_client::MatchTaskResponse response_pb;
 
       {
         std::lock_guard<decltype(connection_mutex_)> connection_lock(connection_mutex_);
-        sys_client_service_.Call(m_hostname, "MatchTasks", task_list_pb, service_info, response_pb);
+        sys_client_service_.Call(m_hostname, "MatchTasks", task_list_pb, service_response, response_pb);
       }
 
       return eCAL::sys_client::proto_helpers::FromProtobuf(response_pb);

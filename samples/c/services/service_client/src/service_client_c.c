@@ -34,15 +34,15 @@ int main(int argc, char **argv)
   // call service method
   while (eCAL_Ok())
   {
-    struct SServiceInfoC service_info;
-    char                 request[]                 = "HELLO";
-    char                 response[sizeof(request)] = { 0 };
+    struct SServiceResponseC service_response;
+    char                     request[]                 = "HELLO";
+    char                     response[sizeof(request)] = { 0 };
     // call method "echo"
     printf("Calling service1:echo ..\n");
-    if (eCAL_Client_Call_Wait(clt, "", "echo", request, sizeof(request), &service_info, &response, sizeof(response)))
+    if (eCAL_Client_Call_Wait(clt, "", "echo", request, sizeof(request), &service_response, &response, sizeof(response)))
     {
       // process response
-      switch (service_info.call_state)
+      switch (service_response.call_state)
       {
       case call_state_executed:
         printf("Method 'echo' executed. Response : ");
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
         break;
       case call_state_failed:
         printf("Method 'echo' failed. Error : ");
-        printf("%s", service_info.error_msg);
+        printf("%s", service_response.error_msg);
         printf("\n\n");
         break;
       default:
