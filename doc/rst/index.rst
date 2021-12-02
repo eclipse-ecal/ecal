@@ -82,12 +82,9 @@ eCAL is provided on an "as is" basis without warranties or conditions of any kin
    :hidden:
    :caption: Advanced
    
-   advanced/compatibility
-   advanced/documentation
-   advanced/configuration
-   advanced/performance
-   advanced/transport_layers
-   advanced/threading_model
-   license
    _download_archive/download_archive
+   advanced/compatibility.rst
+   advanced/tutorials
+   advanced/ecal_internals.rst
+   license
 
