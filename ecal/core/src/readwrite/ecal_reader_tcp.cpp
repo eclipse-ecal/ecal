@@ -24,10 +24,12 @@
 #include "ecal_def.h"
 #include "ecal_config_hlp.h"
 #include "ecal_global_accessors.h"
+
 #include "pubsub/ecal_subgate.h"
 
 #include "readwrite/ecal_writer_base.h"
 #include "readwrite/ecal_reader_tcp.h"
+#include "readwrite/ecal_tcpub_logger.h"
 
 #include "ecal_utils/portable_endian.h"
 
@@ -46,7 +48,8 @@ namespace eCAL
 
   void CTCPReaderLayer::Initialize()
   {
-    m_executor = std::make_shared<tcpub::Executor>(4);
+    tcpub::logger::logger_t tcpub_logger = std::bind(TcpubLogger, std::placeholders::_1, std::placeholders::_2);
+    m_executor = std::make_shared<tcpub::Executor>(4, tcpub_logger);
   }
 
   void CTCPReaderLayer::AddSubscription(const std::string& host_name_, const std::string& /*topic_name_*/, const std::string& topic_id_, QOS::SReaderQOS /*qos_*/)

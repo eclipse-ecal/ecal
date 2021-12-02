@@ -192,6 +192,7 @@ set(ecal_readwrite_header_src
     src/readwrite/ecal_writer_inproc.h
     src/readwrite/ecal_writer_tcp.h
     src/readwrite/ecal_writer_udp_mc.h
+    src/readwrite/ecal_tcpub_logger.h
 )
 
 if(ECAL_LAYER_ICEORYX)

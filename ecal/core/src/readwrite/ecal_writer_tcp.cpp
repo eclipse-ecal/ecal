@@ -32,8 +32,9 @@
 
 #include "ecal_def.h"
 #include "ecal_config_hlp.h"
-#include <ecal/ecal_log.h>
+
 #include "readwrite/ecal_writer_tcp.h"
+#include "readwrite/ecal_tcpub_logger.h"
 
 #include "ecal_utils/portable_endian.h"
 
@@ -69,7 +70,11 @@ namespace eCAL
   {
     {
       std::lock_guard<std::mutex> lock(g_tcp_writer_executor_mtx);
-      if (!g_tcp_writer_executor) g_tcp_writer_executor = std::make_shared<tcpub::Executor>(4);
+      if (!g_tcp_writer_executor)
+      {
+        tcpub::logger::logger_t tcpub_logger = std::bind(TcpubLogger, std::placeholders::_1, std::placeholders::_2);
+        g_tcp_writer_executor = std::make_shared<tcpub::Executor>(4, TcpubLogger);
+      }
     }
 
     // create publisher
