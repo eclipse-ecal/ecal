@@ -5,4 +5,5 @@ Boost Software License 1.0
 ==========================
 
 .. literalinclude:: boost-1.0.txt
-   :language: txt
+   :language: none
+   

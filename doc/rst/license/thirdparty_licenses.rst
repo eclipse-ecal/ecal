@@ -197,6 +197,7 @@ License texts
    thirdparty_licenses/boost-1.0.rst
    thirdparty_licenses/bsd-3.rst
    thirdparty_licenses/convert-utf.rst
+   thirdparty_licenses/creative-commons-3.0.rst
    thirdparty_licenses/fontawesome-free.rst
    thirdparty_licenses/gpl-2.0.rst
    thirdparty_licenses/gpl-3.0.rst

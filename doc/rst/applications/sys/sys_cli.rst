@@ -38,8 +38,8 @@ Usage
 =====
 
 .. literalinclude:: sys_cli_usage.txt
-   :language: txt
-
+   :language: none
+   
 Typical use-cases
 =================
 
@@ -84,7 +84,7 @@ eCAL Sys will not terminate on its own.
 Available commands are:
 
 .. literalinclude:: sys_cli_interactive_help.txt
-   :language: txt
+   :language: none
 
 .. note::
 

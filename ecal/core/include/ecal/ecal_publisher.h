@@ -288,6 +288,13 @@ namespace eCAL
     bool IsSubscribed() const;
 
     /**
+     * @brief Query the number of subscribers. 
+     *
+     * @return  Number of subscribers. 
+    **/
+    size_t GetSubscriberCount() const;
+
+    /**
      * @brief Gets name of the connected topic. 
      *
      * @return  The topic name. 
