@@ -73,7 +73,7 @@ namespace eCAL
       if (!g_tcp_writer_executor)
       {
         tcpub::logger::logger_t tcpub_logger = std::bind(TcpubLogger, std::placeholders::_1, std::placeholders::_2);
-        g_tcp_writer_executor = std::make_shared<tcpub::Executor>(4, TcpubLogger);
+        g_tcp_writer_executor = std::make_shared<tcpub::Executor>(eCALPAR(NET, TCPUB_NUM_EXECUTOR_WRITER), TcpubLogger);
       }
     }
 

@@ -49,7 +49,7 @@ namespace eCAL
   void CTCPReaderLayer::Initialize()
   {
     tcpub::logger::logger_t tcpub_logger = std::bind(TcpubLogger, std::placeholders::_1, std::placeholders::_2);
-    m_executor = std::make_shared<tcpub::Executor>(4, tcpub_logger);
+    m_executor = std::make_shared<tcpub::Executor>(eCALPAR(NET, TCPUB_NUM_EXECUTOR_READER), tcpub_logger);
   }
 
   void CTCPReaderLayer::AddSubscription(const std::string& host_name_, const std::string& /*topic_name_*/, const std::string& topic_id_, QOS::SReaderQOS /*qos_*/)
@@ -147,7 +147,7 @@ namespace eCAL
     // add new session
     if (new_session)
     {
-      m_subscriber->addSession(host_name_, port_);
+      m_subscriber->addSession(host_name_, port_, eCALPAR(NET, TCPUB_MAX_RECONNECTIONS));
     }
 
     return true;
