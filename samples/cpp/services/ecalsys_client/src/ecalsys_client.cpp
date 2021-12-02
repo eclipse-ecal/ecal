@@ -34,24 +34,24 @@
 #include <iostream>
 
 // callback for sys service response
-void OnSysResponse(const struct eCAL::SServiceInfo& service_info_, const std::string& response_)
+void OnSysResponse(const struct eCAL::SServiceResponse& service_response_)
 {
-  switch (service_info_.call_state)
+  switch (service_response_.call_state)
   {
   // service successful executed
   case call_state_executed:
     {
       eCAL::pb::sys::Response response;
-      response.ParseFromString(response_);
-      std::cout << "SysService " << service_info_.method_name << " called successfully on host " << service_info_.host_name << std::endl;
+      response.ParseFromString(service_response_.response);
+      std::cout << "SysService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
     }
     break;
   // service execution failed
   case call_state_failed:
     {
       eCAL::pb::sys::Response response;
-      response.ParseFromString(response_);
-      std::cout << "SysService " << service_info_.method_name << " failed with \"" << response.error() << "\" on host " << service_info_.host_name << std::endl;
+      response.ParseFromString(service_response_.response);
+      std::cout << "SysService " << service_response_.method_name << " failed with \"" << response.error() << "\" on host " << service_response_.host_name << std::endl;
     }
     break;
   default:
@@ -73,8 +73,7 @@ int main(int argc, char **argv)
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
   // requests
-  eCAL::pb::sys::TaskRequest  trequest;
-  eCAL::pb::sys::CloseRequest crequest;
+  eCAL::pb::sys::TaskRequest trequest;
 
   // "StartTasks - All"
   std::cout << "eCALPB.Sys.Service:StartTasks()" << std::endl;
@@ -93,11 +92,6 @@ int main(int argc, char **argv)
   trequest.set_all(true);
   sys_service.Call("StopTasks", trequest);
   std::cout << trequest.DebugString() << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-
-  // "Close"
-  std::cout << "eCALPB.Sys.Service:Close()" << std::endl;
-  sys_service.Call("Close", crequest);
-  std::cout << crequest.DebugString() << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
   // finalize eCAL API
   eCAL::Finalize();
