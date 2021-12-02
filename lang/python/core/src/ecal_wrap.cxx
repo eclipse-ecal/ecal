@@ -1031,7 +1031,7 @@ PyObject* client_call_method(PyObject* /*self*/, PyObject* args)   // (client_ha
 /****************************************/
 /*      client_add_response_callback    */
 /****************************************/
-static void c_client_callback(const struct eCAL::SServiceInfo& service_info_, const std::string& response_, ECAL_HANDLE handle_)
+static void c_client_callback(const struct eCAL::SResponseInfo& service_response_, ECAL_HANDLE handle_)
 {
   if (!g_pygil_init)
   {
@@ -1045,18 +1045,18 @@ static void c_client_callback(const struct eCAL::SServiceInfo& service_info_, co
   PyObject* dict = PyDict_New();
   PyObject* val;
 
-  val = Py_BuildValue("s", service_info_.host_name.c_str());
+  val = Py_BuildValue("s", service_response_.host_name.c_str());
   PyDict_SetItemString(dict, "host_name", val); Py_DECREF(val);
-  val = Py_BuildValue("s", service_info_.service_name.c_str());
+  val = Py_BuildValue("s", service_response_.service_name.c_str());
   PyDict_SetItemString(dict, "service_name", val); Py_DECREF(val);
-  val = Py_BuildValue("s", service_info_.method_name.c_str());
+  val = Py_BuildValue("s", service_response_.method_name.c_str());
   PyDict_SetItemString(dict, "method_name", val); Py_DECREF(val);
-  val = Py_BuildValue("s", service_info_.error_msg.c_str());
+  val = Py_BuildValue("s", service_response_.error_msg.c_str());
   PyDict_SetItemString(dict, "error_msg", val); Py_DECREF(val);
-  val = Py_BuildValue("i", service_info_.ret_state);
+  val = Py_BuildValue("i", service_response_.ret_state);
   PyDict_SetItemString(dict, "ret_state", val); Py_DECREF(val);
   std::string call_state_s;
-  switch (service_info_.call_state)
+  switch (service_response_.call_state)
   {
   case call_state_none:
     call_state_s = "call_state_none";
@@ -1075,7 +1075,7 @@ static void c_client_callback(const struct eCAL::SServiceInfo& service_info_, co
   PyDict_SetItemString(dict, "call_state", val); Py_DECREF(val);
   PyTuple_SetItem(args, 0, dict);
 
-  val = Py_BuildValue("y#", response_.c_str(), response_.size());
+  val = Py_BuildValue("y#", service_response_.response.c_str(), service_response_.response.size());
   PyTuple_SetItem(args, 1, val);
 
   PyClientCallbackMapT::const_iterator iter = g_client_pycallback_map.find(handle_);
