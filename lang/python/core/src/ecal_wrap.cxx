@@ -1125,7 +1125,7 @@ PyObject* client_add_response_callback(PyObject* /*self*/, PyObject* args)   // 
 
     bool added_callback{ false };
     Py_BEGIN_ALLOW_THREADS
-      added_callback = client->AddResponseCallback(std::bind(c_client_callback, std::placeholders::_1, std::placeholders::_2, client));
+      added_callback = client->AddResponseCallback(std::bind(c_client_callback, std::placeholders::_1, client));
     Py_END_ALLOW_THREADS
     
     if (added_callback)
