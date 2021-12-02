@@ -1031,7 +1031,7 @@ PyObject* client_call_method(PyObject* /*self*/, PyObject* args)   // (client_ha
 /****************************************/
 /*      client_add_response_callback    */
 /****************************************/
-static void c_client_callback(const struct eCAL::SResponseInfo& service_response_, ECAL_HANDLE handle_)
+static void c_client_callback(const struct eCAL::SServiceResponse& service_response_, ECAL_HANDLE handle_)
 {
   if (!g_pygil_init)
   {
