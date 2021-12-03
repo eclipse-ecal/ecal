@@ -539,13 +539,15 @@
 <li><p><i class="fab fa-windows"></i> Windows: <code class="file docutils literal notranslate"><span class="pre">C:\ProgramData\eCAL\ecal.ini</span></code></p></li>
 <li><p><i class="fab fa-ubuntu"></i> Ubuntu: <code class="file docutils literal notranslate"><span class="pre">/etc/ecal/ecal.ini</span></code></p></li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>In eCAL 5.7 the path of the <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> file was <code class="file docutils literal notranslate"><span class="pre">C:\eCAL\cfg\ecal.ini</span></code> and <code class="file docutils literal notranslate"><span class="pre">/usr/etc/ecal/ecal.ini</span></code>.</p>
-</div>
 <div class="section" id="loading-strategy-priority">
 <h2>Loading strategy (Priority)<a class="headerlink" href="#loading-strategy-priority" title="Permalink to this headline">¶</a></h2>
-<p>The eCAL configuration file is loaded based on the following priorities for Windows and Linux. In addition, it can be passed explicitly to every eCAL application with the command line option <code class="docutils literal notranslate"><span class="pre">--ecal-ini-file</span></code>.</p>
+<p>The eCAL configuration file is loaded based on the following priorities, whereever it is found first.
+If you want a specific eCAL Node to run with another <code class="docutils literal notranslate"><span class="pre">ecal.ini</span></code> than the others, you can set the <code class="docutils literal notranslate"><span class="pre">ECAL_DATA</span></code> variable before starting the process, e.g. from a batch or shell skript.
+In addition, some eCAL applications support providing a path from the command line option <code class="docutils literal notranslate"><span class="pre">--ecal-ini-file</span></code>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This loading strategy is valid for eCAL 5.10 and up.</p>
+</div>
 <ul>
 <li><p><i class="fab fa-windows"></i> Windows:</p>
 <ol class="arabic simple">
@@ -556,10 +558,11 @@
 <li><p><i class="fab fa-ubuntu"></i> Ubuntu:</p>
 <ol class="arabic">
 <li><p><code class="docutils literal notranslate"><span class="pre">$ECAL_DATA/ecal.ini</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/etc/ecal/ecal.ini</span></code></p>
+<li><p><code class="docutils literal notranslate"><span class="pre">/etc/ecal/ecal.ini</span></code> (from <code class="docutils literal notranslate"><span class="pre">CMAKE_INSTALL_SYSCONFDIR</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/etc/ecal/ecal.ini</span></code> (fallback)</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This path is set from CMake to <code class="docutils literal notranslate"><span class="pre">CMAKE_INSTALL_SYSCONFDIR/ecal/ecal.ini</span></code>.
+<p>This second path is set from CMake to <code class="docutils literal notranslate"><span class="pre">CMAKE_INSTALL_SYSCONFDIR/ecal/ecal.ini</span></code>.
 Official builds are configured to use <code class="docutils literal notranslate"><span class="pre">/etc</span></code>.
 If you are compiling eCAL yourself and don’t provide the SYSCONFDIR, CMake will usually use <code class="docutils literal notranslate"><span class="pre">/usr/local/etc/ecal/ecal.ini</span></code>.</p>
 </div>
