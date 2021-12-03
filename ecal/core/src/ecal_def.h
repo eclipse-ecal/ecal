@@ -97,7 +97,7 @@
 
 #define NET_TCPUB_NUM_EXECUTOR_READER                 4
 #define NET_TCPUB_NUM_EXECUTOR_WRITER                 4
-#define NET_TCPUB_MAX_RECONNECTIONS                  50
+#define NET_TCPUB_MAX_RECONNECTIONS                   5
 
 /**********************************************************************************************/
 /*                                     iceoryx settings                                       */
