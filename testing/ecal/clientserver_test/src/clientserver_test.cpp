@@ -32,7 +32,7 @@
 #include "ping.pb.h"
 
 #define ClientServerBaseCallbackTest       1
-#define ClientServerBaseAsyncCallbackTest  0
+#define ClientServerBaseAsyncCallbackTest  0   // still crashing
 
 #define ClientServerBaseBlockingTest       1
 #define ClientServerProtoCallbackTest      1
@@ -200,12 +200,12 @@ TEST(IO, ClientServerBaseAsyncCallback)
   for (auto i = 0; i < calls; ++i)
   {
     // call a method1
-    client.CallAsync("foo::method1", "my request for method 1");
+    client.CallAsync("foo::method1", "my request for method 1", -1);
     eCAL::Process::SleepMS(sleep);
     requests_called++;
 
     // call a method2
-    client.CallAsync("foo::method2", "my request for method 2");
+    client.CallAsync("foo::method2", "my request for method 2", -1);
     eCAL::Process::SleepMS(sleep);
     requests_called++;
   }
@@ -259,7 +259,7 @@ TEST(IO, ClientServerBaseBlocking)
   {
     eCAL::ServiceResponseVecT service_response_vec;
     // call a method1
-    if (client.Call("", "foo::method1", "my request for method 1", &service_response_vec))
+    if (client.Call("foo::method1", "my request for method 1", -1, &service_response_vec))
     {
       ASSERT_EQ(1, service_response_vec.size());
       PrintResponse(service_response_vec[0]);
@@ -269,7 +269,7 @@ TEST(IO, ClientServerBaseBlocking)
     requests_called++;
 
     // call a method2
-    if (client.Call("", "foo::method2", "my request for method 2", &service_response_vec))
+    if (client.Call("foo::method2", "my request for method 2", -1, &service_response_vec))
     {
       ASSERT_EQ(1, service_response_vec.size());
       PrintResponse(service_response_vec[0]);
@@ -436,7 +436,7 @@ TEST(IO, ClientServerProtoBlocking)
   ping_request.set_message("PING");
   std::string ping_request_s = ping_request.SerializeAsString();
   std::cout << std::endl << "Ping method called with message : " << ping_request.message() << std::endl;
-  ping_client.Call("", "Ping", ping_request_s, &service_response_vec);
+  ping_client.Call("Ping", ping_request_s, -1, &service_response_vec);
   ASSERT_EQ(1, service_response_vec.size());
   EXPECT_EQ(call_state_executed, service_response_vec[0].call_state);
   switch (service_response_vec[0].call_state)
