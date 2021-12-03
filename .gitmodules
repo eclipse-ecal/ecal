@@ -37,3 +37,6 @@
 [submodule "thirdparty/termcolor"]
 	path = thirdparty/termcolor
 	url = https://github.com/ikalnytskyi/termcolor.git
+[submodule "thirdparty/recycle"]
+	path = thirdparty/recycle
+	url = https://github.com/steinwurf/recycle.git

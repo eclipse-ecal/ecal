@@ -23,6 +23,7 @@ set (ecal_utils_includes
   include/ecal_utils/filesystem.h
   include/ecal_utils/ecal_utils.h
   include/ecal_utils/string.h
+  include/ecal_utils/portable_endian.h
 )
 
 set(ecal_utils_src

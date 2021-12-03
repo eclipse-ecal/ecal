@@ -79,6 +79,7 @@ namespace eCAL
         pid                   = 0;
         tlayer_ecal_udp_mc    = false;
         tlayer_ecal_shm       = false;
+        tlayer_ecal_tcp       = false;
         tlayer_inproc         = false;
         tsize                 = 0;
         connections_loc       = 0;
@@ -101,6 +102,7 @@ namespace eCAL
       std::string  tdesc;
       bool         tlayer_ecal_udp_mc;
       bool         tlayer_ecal_shm;
+      bool         tlayer_ecal_tcp;
       bool         tlayer_inproc;
       int          tsize;
       int          connections_loc;

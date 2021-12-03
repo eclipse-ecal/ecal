@@ -61,9 +61,13 @@ TEST(INPROC, CLOCKS)
   eCAL::Util::EnableLoopback(true);
 
   // create simple string publisher
-  // and force him to send on all layers in parallel
   eCAL::string::CPublisher<std::string> pub("CLOCK");
-  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_on);
+
+  // and force him to send on 3 layers in parallel
+  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
+  pub.SetLayerMode(eCAL::TLayer::tlayer_udp_mc, eCAL::TLayer::smode_on);
+  pub.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);
+  pub.SetLayerMode(eCAL::TLayer::tlayer_inproc, eCAL::TLayer::smode_on);
 
   // create subscriber number 1
   eCAL::string::CSubscriber<std::string> sub1("CLOCK");

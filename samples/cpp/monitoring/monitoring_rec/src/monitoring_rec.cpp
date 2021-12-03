@@ -190,6 +190,9 @@ int main(int argc, char **argv)
           case eCAL::pb::eTLayerType::tl_ecal_shm:
             layer_type = "tlayer_shm";
             break;
+          case eCAL::pb::eTLayerType::tl_ecal_tcp:
+            layer_type = "tlayer_tcp";
+            break;
           case eCAL::pb::eTLayerType::tl_inproc:
             layer_type = "tlayer_inproc";
             break;
