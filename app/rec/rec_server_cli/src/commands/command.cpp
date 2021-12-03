@@ -40,7 +40,9 @@ namespace eCAL
       {
         SServiceResponse service_response;
         eCAL::pb::rec_server::Status status_pb;
-        bool success = remote_rec_server_service->Call(hostname, "GetStatus", eCAL::pb::rec_server::GenericRequest(), service_response, status_pb);
+
+        remote_rec_server_service->SetHostName(hostname);
+        bool success = remote_rec_server_service->Call("GetStatus", eCAL::pb::rec_server::GenericRequest(), service_response, status_pb);
 
         if (!success)
         {
@@ -60,7 +62,8 @@ namespace eCAL
         eCAL::pb::rec_server::GenericRequest            request_pb;
         eCAL::pb::rec_server::RecServerConfig           response_pb;
 
-        bool success = remote_rec_server_service->Call(hostname, "GetConfig", request_pb, service_response, response_pb);
+        remote_rec_server_service->SetHostName(hostname);
+        bool success = remote_rec_server_service->Call("GetConfig", request_pb, service_response, response_pb);
 
         // Service call failed
         if (!success)

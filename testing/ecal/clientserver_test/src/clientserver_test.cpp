@@ -32,7 +32,7 @@
 #include "ping.pb.h"
 
 #define ClientServerBaseCallbackTest       1
-#define ClientServerBaseAsyncCallbackTest  0       // Async API NOT WORKING !
+#define ClientServerBaseAsyncCallbackTest  0
 
 #define ClientServerBaseBlockingTest       1
 #define ClientServerProtoCallbackTest      1
@@ -156,7 +156,7 @@ TEST(IO, ClientServerBaseCallback)
 TEST(IO, ClientServerBaseAsyncCallback)
 {
   const int calls(1);
-  const int sleep(0);
+  const int sleep(10);
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver base async callback test");

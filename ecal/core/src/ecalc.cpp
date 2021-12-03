@@ -1100,26 +1100,26 @@ extern "C"
 
   ECALC_API int eCAL_Client_SetHostName(ECAL_HANDLE handle_, const char* host_name_)
   {
-    if(handle_ == NULL) return(0);
+    if (handle_ == NULL) return(0);
     eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
-    if(client->SetHostName(host_name_)) return(1);
+    if (client->SetHostName(host_name_)) return(1);
     return(0);
   }
 
-  ECALC_API int eCAL_Client_Call(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_)
+  ECALC_API int eCAL_Client_Call(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_)
   {
     if(handle_ == NULL) return(0);
     eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
-    if(client->Call(method_name_, std::string(request_, static_cast<size_t>(request_len_)))) return(1);
+    if(client->Call(method_name_, std::string(request_, static_cast<size_t>(request_len_)), timeout_)) return(1);
     return(0);
   }
 
-  ECALC_API int eCAL_Client_Call_Wait(ECAL_HANDLE handle_, const char* host_name_, const char* method_name_, const char* request_, int request_len_, struct SServiceResponseC* service_response_, void* response_, int response_len_)
+  ECALC_API int eCAL_Client_Call_Wait(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_, struct SServiceResponseC* service_response_, void* response_, int response_len_)
   {
     if(handle_ == NULL) return(0);
     eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
     eCAL::ServiceResponseVecT service_response_vec;
-    if(client->Call(host_name_, method_name_, std::string(request_, static_cast<size_t>(request_len_)), &service_response_vec))
+    if(client->Call(method_name_, std::string(request_, static_cast<size_t>(request_len_)), timeout_, &service_response_vec))
     {
       if (service_response_vec.size() > 0)
       {

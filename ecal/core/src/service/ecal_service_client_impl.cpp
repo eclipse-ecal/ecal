@@ -72,8 +72,8 @@ namespace eCAL
     if (g_clientgate())      g_clientgate()->Unregister(m_service_name, this);
     if (g_entity_register()) g_entity_register()->UnregisterClient(m_service_name);
 
-    m_service_hname.clear();
     m_service_name.clear();
+    m_host_name.clear();
 
     // reset client map
     {
@@ -100,11 +100,12 @@ namespace eCAL
 
   bool CServiceClientImpl::SetHostName(const std::string& host_name_)
   {
-    if (host_name_ == "*") m_service_hname.clear();
-    else                   m_service_hname = host_name_;
+    if (host_name_ == "*") m_host_name.clear();
+    else                   m_host_name = host_name_;
     return(true);
   }
 
+  // add callback function for service response
   bool CServiceClientImpl::AddResponseCallback(const ResponseCallbackT& callback_)
   {
     std::lock_guard<std::mutex> lock(m_response_callback_sync);
@@ -112,6 +113,7 @@ namespace eCAL
     return true;
   }
 
+  // remove callback function for service response
   bool CServiceClientImpl::RemResponseCallback()
   {
     std::lock_guard<std::mutex> lock(m_response_callback_sync);
@@ -119,6 +121,7 @@ namespace eCAL
     return true;
   }
 
+  // add callback function for client events
   bool CServiceClientImpl::AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_)
   {
     if (!m_created) return false;
@@ -136,6 +139,7 @@ namespace eCAL
     return true;
   }
 
+  // remove callback function for client events
   bool CServiceClientImpl::RemEventCallback(eCAL_Client_Event type_)
   {
     if (!m_created) return false;
@@ -153,7 +157,9 @@ namespace eCAL
     return true;
   }
 
-  bool CServiceClientImpl::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_, std::string& response_)
+  // blocking call, no broadcast, first matching service only, response will be returned in service_response_
+  [[deprecated]]
+  bool CServiceClientImpl::Call(const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_)
   {
     if (!g_clientgate()) return false;
     if (!m_created)      return false;
@@ -169,7 +175,7 @@ namespace eCAL
     std::vector<SServiceAttr> service_vec = g_clientgate()->GetServiceAttr(m_service_name);
     for (auto& iter : service_vec)
     {
-      if (host_name_.empty() || (host_name_ == iter.hname))
+      if (m_host_name.empty() || (m_host_name == iter.hname))
       {
         std::lock_guard<std::mutex> lock(m_client_map_sync);
         auto client = m_client_map.find(iter.key);
@@ -177,7 +183,6 @@ namespace eCAL
         {
           if (SendRequest(client->second, method_name_, request_, service_response_))
           {
-            response_ = service_response_.response;
             return true;
           }
         }
@@ -186,8 +191,11 @@ namespace eCAL
     return false;
   }
 
-  bool CServiceClientImpl::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceResponseVecT* service_response_vec_)
+  // blocking call, all responses will be returned in service_response_vec_
+  bool CServiceClientImpl::Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_)
   {
+    // TODO: implement timeout
+
     if (!g_clientgate()) return false;
     if (!m_created)      return false;
 
@@ -206,7 +214,7 @@ namespace eCAL
     std::vector<SServiceAttr> service_vec = g_clientgate()->GetServiceAttr(m_service_name);
     for (auto& iter : service_vec)
     {
-      if (host_name_.empty() || (host_name_ == iter.hname))
+      if (m_host_name.empty() || (m_host_name == iter.hname))
       {
         std::lock_guard<std::mutex> lock(m_client_map_sync);
         auto client = m_client_map.find(iter.key);
@@ -224,8 +232,11 @@ namespace eCAL
     return called;
   }
 
-  bool CServiceClientImpl::Call(const std::string& method_name_, const std::string& request_)
+  // blocking call, using callback
+  bool CServiceClientImpl::Call(const std::string& method_name_, const std::string& request_, int timeout_)
   {
+    // TODO: implement timeout
+
     if (!g_clientgate()) return false;
     if (!m_created)      return false;
 
@@ -238,11 +249,14 @@ namespace eCAL
     CheckForNewServices();
 
     // send request to every single service
-    return SendRequests(method_name_, request_);
+    return SendRequests(m_host_name, method_name_, request_);
   }
 
-  void CServiceClientImpl::CallAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_)
+  // asynchronuously call, using callback
+  void CServiceClientImpl::CallAsync(const std::string& method_name_, const std::string& request_, int timeout_)
   {
+    // TODO: implement timeout
+
     if (!g_clientgate())
     {
       ErrorCallback(method_name_, "Clientgate error.");
@@ -268,7 +282,7 @@ namespace eCAL
     std::vector<SServiceAttr> service_vec = g_clientgate()->GetServiceAttr(m_service_name);
     for (auto& iter : service_vec)
     {
-      if (host_name_.empty() || (host_name_ == iter.hname))
+      if (m_host_name.empty() || (m_host_name == iter.hname))
       {
         std::lock_guard<std::mutex> lock(m_client_map_sync);
         auto client = m_client_map.find(iter.key);
@@ -280,249 +294,17 @@ namespace eCAL
     }
   }
 
-  void CServiceClientImpl::CallAsync(const std::string& method_name_, const std::string& request_)
+  // check connection state
+  bool CServiceClientImpl::IsConnected()
   {
-    if (!g_clientgate())
-    {
-      ErrorCallback(method_name_, "Clientgate error.");
-      return;
-    }
+    if (!m_created) return false;
 
-    if (!m_created)
-    {
-      ErrorCallback(method_name_, "Client hasn't been created yet.");
-      return;
-    }
-
-    if (m_service_name.empty()
-      || method_name_.empty()
-      )
-    {
-      ErrorCallback(method_name_, "Invalid service or method name.");
-      return;
-    }
-
-    // check for new server
-    CheckForNewServices();
-
-    // send request to every single service
-    SendRequestsAsync(method_name_, request_);
+    // check for connected clients
+    std::lock_guard<std::mutex> lock(m_connected_services_map_sync);
+    return !m_connected_services_map.empty();
   }
 
-  void CServiceClientImpl::CheckForNewServices()
-  {
-    if (!g_clientgate()) return;
-
-    // check for new services
-    std::vector<SServiceAttr> service_vec = g_clientgate()->GetServiceAttr(m_service_name);
-    for (auto& iter : service_vec)
-    {
-      if (m_service_hname.empty() || (m_service_hname == iter.hname))
-      {
-        std::lock_guard<std::mutex> lock(m_client_map_sync);
-        auto client = m_client_map.find(iter.key);
-        if (client == m_client_map.end())
-        {
-          // create new client for that service
-          std::shared_ptr<CTcpClient> new_client = std::make_shared<CTcpClient>(iter.hname, iter.tcp_port);
-          m_client_map[iter.key] = new_client;
-        }
-      }
-    }
-  }
-
-  bool CServiceClientImpl::SendRequests(const std::string& method_name_, const std::string& request_)
-  {
-    if (!g_clientgate()) return false;
-
-    bool ret_state(false);
-
-    std::lock_guard<std::mutex> lock(m_client_map_sync);
-    for (auto& client : m_client_map)
-    {
-      if (client.second->IsConnected())
-      {
-        if (m_service_hname.empty() || (m_service_hname == client.second->GetHostName()))
-        {
-          // execute request
-          SServiceResponse service_response;
-          bool ret = SendRequest(client.second, method_name_, request_, service_response);
-          if (ret == false)
-          {
-            std::cerr << "CServiceClientImpl::SendRequests failed." << std::endl;
-            return false;
-          }
-          // call response callback
-          if (service_response.call_state != call_state_none)
-          {
-            std::lock_guard<std::mutex> lock_cb(m_response_callback_sync);
-            if (m_response_callback) m_response_callback(service_response);
-          }
-          else
-          {
-            // call_state_none means service no more available
-            // we destroy the client here
-            client.second->Destroy();
-          }
-          // collect return state
-          ret_state = true;
-        }
-      }
-    }
-    return ret_state;
-  }
-
-  bool CServiceClientImpl::SendRequest(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_)
-  {
-    // create request protocol buffer
-    eCAL::pb::Request request_pb;
-    request_pb.mutable_header()->set_mname(method_name_);
-    request_pb.set_request(request_);
-    std::string request_s = request_pb.SerializeAsString();
-
-    // execute request
-    std::string response_s;
-    size_t sent = client_->ExecuteRequest(request_s, response_s);
-    if (sent == 0) return false;
-
-    // parse response protocol buffer
-    eCAL::pb::Response response_pb;
-    if (!response_pb.ParseFromString(response_s))
-    {
-      std::cerr << "CServiceClientImpl::SendRequest Could not parse server response !" << std::endl;
-      return false;
-    }
-
-    auto response_pb_header = response_pb.header();
-    service_response_.host_name = response_pb_header.hname();
-    service_response_.service_name = response_pb_header.sname();
-    service_response_.method_name = response_pb_header.mname();
-    service_response_.error_msg = response_pb_header.error();
-    service_response_.ret_state = static_cast<int>(response_pb.ret_state());
-    switch (response_pb_header.state())
-    {
-    case eCAL::pb::ServiceHeader_eCallState_executed:
-      service_response_.call_state = call_state_executed;
-      break;
-    case eCAL::pb::ServiceHeader_eCallState_failed:
-      service_response_.call_state = call_state_failed;
-      break;
-    default:
-      break;
-    }
-    service_response_.response = response_pb.response();
-
-    return (service_response_.call_state == call_state_executed);
-  }
-
-  void CServiceClientImpl::SendRequestsAsync(const std::string& method_name_, const std::string& request_)
-  {
-    if (!g_clientgate())
-    {
-      ErrorCallback(method_name_, "Clientgate error.");
-      return;
-    }
-
-    std::lock_guard<std::mutex> lock(m_client_map_sync);
-
-    if (m_client_map.empty())
-    {
-      ErrorCallback(method_name_, "Service not available.");
-      return;
-    }
-
-    for (auto& client : m_client_map)
-    {
-      if (client.second->IsConnected())
-      {
-        if (m_service_hname.empty() || (m_service_hname == client.second->GetHostName()))
-        {
-          // execute request
-          SendRequestAsync(client.second, method_name_, request_);
-        }
-      }
-    }
-  }
-
-  void CServiceClientImpl::SendRequestAsync(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_)
-  {
-    // create request protocol buffer
-    eCAL::pb::Request request_pb;
-    request_pb.mutable_header()->set_mname(method_name_);
-    request_pb.set_request(request_);
-    std::string request_s = request_pb.SerializeAsString();
-
-    client_->ExecuteRequestAsync(request_s, [this, client_, method_name_](const std::string& response, bool success)
-      {
-        std::lock_guard<std::mutex> lock(m_response_callback_sync);
-        if (m_response_callback)
-        {
-          SServiceResponse service_response;
-          if (!success)
-          {
-            auto error_msg = "Async request failed !";
-            service_response.call_state  = call_state_failed;
-            service_response.error_msg   = error_msg;
-            service_response.ret_state   = 0;
-            service_response.method_name = method_name_;
-            service_response.response    = "";
-            m_response_callback(service_response);
-            return;
-          }
-
-          eCAL::pb::Response response_pb;
-          if (!response_pb.ParseFromString(response))
-          {
-            auto error_msg = "CServiceClientImpl::SendRequestAsync could not parse server response !";
-            std::cerr << error_msg << "\n";
-            service_response.call_state  = call_state_failed;
-            service_response.error_msg   = error_msg;
-            service_response.ret_state   = 0;
-            service_response.method_name = method_name_;
-            service_response.response    = "";
-            m_response_callback(service_response);
-            return;
-          }
-
-          auto response_pb_header   = response_pb.header();
-          service_response.host_name    = response_pb_header.hname();
-          service_response.service_name = response_pb_header.sname();
-          service_response.method_name  = response_pb_header.mname();
-          service_response.error_msg    = response_pb_header.error();
-          service_response.ret_state    = static_cast<int>(response_pb.ret_state());
-          switch (response_pb_header.state())
-          {
-          case eCAL::pb::ServiceHeader_eCallState_executed:
-            service_response.call_state = call_state_executed;
-            break;
-          case eCAL::pb::ServiceHeader_eCallState_failed:
-            service_response.call_state = call_state_failed;
-            break;
-          default:
-            break;
-          }
-          service_response.response = response_pb.response();
-
-          m_response_callback(service_response);
-        }
-      });
-  }
-
-  void CServiceClientImpl::ErrorCallback(const std::string& method_name_, const std::string& error_message_)
-  {
-    std::lock_guard<std::mutex> lock(m_response_callback_sync);
-    if (m_response_callback)
-    {
-      SServiceResponse service_response;
-      service_response.call_state  = call_state_failed;
-      service_response.error_msg   = error_message_;
-      service_response.ret_state   = 0;
-      service_response.method_name = method_name_;
-      service_response.response    = "";
-      m_response_callback(service_response);
-    }
-  }
-
+  // called by the eCAL::CClientGate to register a service
   void CServiceClientImpl::RegisterService(const std::string& key_, const SServiceAttr& service_)
   {
     // check connections
@@ -547,6 +329,7 @@ namespace eCAL
     }
   }
 
+  // called by eCAL:CClientGate every second to update registration layer
   void CServiceClientImpl::RefreshRegistration()
   {
     if (!m_created)             return;
@@ -598,13 +381,215 @@ namespace eCAL
       }
     }
   }
-  
-  bool CServiceClientImpl::IsConnected()
-  {
-    if (!m_created) return false;
 
-    // check for connected clients
-    std::lock_guard<std::mutex> lock(m_connected_services_map_sync);
-    return !m_connected_services_map.empty();
+  void CServiceClientImpl::CheckForNewServices()
+  {
+    if (!g_clientgate()) return;
+
+    // check for new services
+    std::vector<SServiceAttr> service_vec = g_clientgate()->GetServiceAttr(m_service_name);
+    for (auto& iter : service_vec)
+    {
+      std::lock_guard<std::mutex> lock(m_client_map_sync);
+      auto client = m_client_map.find(iter.key);
+      if (client == m_client_map.end())
+      {
+        // create new client for that service
+        std::shared_ptr<CTcpClient> new_client = std::make_shared<CTcpClient>(iter.hname, iter.tcp_port);
+        m_client_map[iter.key] = new_client;
+      }
+    }
+  }
+
+  bool CServiceClientImpl::SendRequests(const std::string& host_name_, const std::string& method_name_, const std::string& request_)
+  {
+    if (!g_clientgate()) return false;
+
+    bool ret_state(false);
+
+    std::lock_guard<std::mutex> lock(m_client_map_sync);
+    for (auto& client : m_client_map)
+    {
+      if (client.second->IsConnected())
+      {
+        if (host_name_.empty() || (host_name_ == client.second->GetHostName()))
+        {
+          // execute request
+          SServiceResponse service_response;
+          bool ret = SendRequest(client.second, method_name_, request_, service_response);
+          if (ret == false)
+          {
+            std::cerr << "CServiceClientImpl::SendRequests failed." << std::endl;
+            return false;
+          }
+          // call response callback
+          if (service_response.call_state != call_state_none)
+          {
+            std::lock_guard<std::mutex> lock_cb(m_response_callback_sync);
+            if (m_response_callback) m_response_callback(service_response);
+          }
+          else
+          {
+            // call_state_none means service no more available
+            // we destroy the client here
+            client.second->Destroy();
+          }
+          // collect return state
+          ret_state = true;
+        }
+      }
+    }
+    return ret_state;
+  }
+
+  bool CServiceClientImpl::SendRequest(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_)
+  {
+    // create request protocol buffer
+    eCAL::pb::Request request_pb;
+    request_pb.mutable_header()->set_mname(method_name_);
+    request_pb.set_request(request_);
+    std::string request_s = request_pb.SerializeAsString();
+
+    // execute request
+    std::string response_s;
+    size_t sent = client_->ExecuteRequest(request_s, response_s);
+    if (sent == 0) return false;
+
+    // parse response protocol buffer
+    eCAL::pb::Response response_pb;
+    if (!response_pb.ParseFromString(response_s))
+    {
+      std::cerr << "CServiceClientImpl::SendRequest Could not parse server response !" << std::endl;
+      return false;
+    }
+
+    auto& response_pb_header = response_pb.header();
+    service_response_.host_name    = response_pb_header.hname();
+    service_response_.service_name = response_pb_header.sname();
+    service_response_.method_name  = response_pb_header.mname();
+    service_response_.error_msg    = response_pb_header.error();
+    service_response_.ret_state    = static_cast<int>(response_pb.ret_state());
+    switch (response_pb_header.state())
+    {
+    case eCAL::pb::ServiceHeader_eCallState_executed:
+      service_response_.call_state = call_state_executed;
+      break;
+    case eCAL::pb::ServiceHeader_eCallState_failed:
+      service_response_.call_state = call_state_failed;
+      break;
+    default:
+      break;
+    }
+    service_response_.response = response_pb.response();
+
+    return (service_response_.call_state == call_state_executed);
+  }
+
+  void CServiceClientImpl::SendRequestsAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_)
+  {
+    if (!g_clientgate())
+    {
+      ErrorCallback(method_name_, "Clientgate error.");
+      return;
+    }
+
+    std::lock_guard<std::mutex> lock(m_client_map_sync);
+
+    if (m_client_map.empty())
+    {
+      ErrorCallback(method_name_, "Service not available.");
+      return;
+    }
+
+    for (auto& client : m_client_map)
+    {
+      if (client.second->IsConnected())
+      {
+        if (host_name_.empty() || (host_name_ == client.second->GetHostName()))
+        {
+          // execute request
+          SendRequestAsync(client.second, method_name_, request_);
+        }
+      }
+    }
+  }
+
+  void CServiceClientImpl::SendRequestAsync(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_)
+  {
+    // create request protocol buffer
+    eCAL::pb::Request request_pb;
+    request_pb.mutable_header()->set_mname(method_name_);
+    request_pb.set_request(request_);
+    std::string request_s = request_pb.SerializeAsString();
+
+    client_->ExecuteRequestAsync(request_s, [this, client_, method_name_](const std::string& response, bool success)
+      {
+        std::lock_guard<std::mutex> lock(m_response_callback_sync);
+        if (m_response_callback)
+        {
+          SServiceResponse service_response;
+          if (!success)
+          {
+            auto error_msg = "Async request failed !";
+            service_response.call_state  = call_state_failed;
+            service_response.error_msg   = error_msg;
+            service_response.ret_state   = 0;
+            service_response.method_name = method_name_;
+            service_response.response    = "";
+            m_response_callback(service_response);
+            return;
+          }
+
+          eCAL::pb::Response response_pb;
+          if (!response_pb.ParseFromString(response))
+          {
+            auto error_msg = "CServiceClientImpl::SendRequestAsync could not parse server response !";
+            std::cerr << error_msg << "\n";
+            service_response.call_state  = call_state_failed;
+            service_response.error_msg   = error_msg;
+            service_response.ret_state   = 0;
+            service_response.method_name = method_name_;
+            service_response.response    = "";
+            m_response_callback(service_response);
+            return;
+          }
+
+          auto& response_pb_header = response_pb.header();
+          service_response.host_name    = response_pb_header.hname();
+          service_response.service_name = response_pb_header.sname();
+          service_response.method_name  = response_pb_header.mname();
+          service_response.error_msg    = response_pb_header.error();
+          service_response.ret_state    = static_cast<int>(response_pb.ret_state());
+          switch (response_pb_header.state())
+          {
+          case eCAL::pb::ServiceHeader_eCallState_executed:
+            service_response.call_state = call_state_executed;
+            break;
+          case eCAL::pb::ServiceHeader_eCallState_failed:
+            service_response.call_state = call_state_failed;
+            break;
+          default:
+            break;
+          }
+          service_response.response = response_pb.response();
+
+          m_response_callback(service_response);
+        }
+      });
+  }
+
+  void CServiceClientImpl::ErrorCallback(const std::string& method_name_, const std::string& error_message_)
+  {
+    std::lock_guard<std::mutex> lock(m_response_callback_sync);
+    if (m_response_callback)
+    {
+      SServiceResponse service_response;
+      service_response.call_state  = call_state_failed;
+      service_response.error_msg   = error_message_;
+      service_response.ret_state   = 0;
+      service_response.method_name = method_name_;
+      service_response.response    = "";
+      m_response_callback(service_response);
+    }
   }
 }

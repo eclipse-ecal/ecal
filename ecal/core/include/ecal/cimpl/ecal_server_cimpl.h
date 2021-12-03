@@ -50,7 +50,7 @@ extern "C"
   ECALC_API int eCAL_Server_Destroy(ECAL_HANDLE handle_);
 
   /**
-   * @brief Add server method callback.
+   * @brief Add a server method callback.
    *
    * @param handle_     Server handle.
    * @param method_     Service method name.
@@ -64,7 +64,7 @@ extern "C"
   ECALC_API int eCAL_Server_AddMethodCallbackC(ECAL_HANDLE handle_, const char* method_, const char* req_type_, const char* resp_type_, MethodCallbackCT callback_, void * par_);
 
   /**
-   * @brief Remove server method callback.
+   * @brief Remove a server method callback.
    *
    * @param handle_  Server handle.
    * @param method_  Service method name.

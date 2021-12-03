@@ -59,7 +59,7 @@ int main(int argc, char** argv)
     // call service method "hello" subcalls times (for better time accuracy)
     for (auto i = 0; i < subcalls; ++i)
     {
-      latency_client.Call("", "hello", "");
+      latency_client.Call("hello", "");
     }
     
     // take return time and store it into the latency array

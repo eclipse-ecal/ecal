@@ -90,64 +90,43 @@ namespace eCAL
     /**
      * @brief Change the host name filter for that client instance
      *
-     * @param host_name_  Host name filter (empty or "*" == all hosts) 
+     * @param host_name_  Host name filter (empty == all hosts)
      *
-     * @return  True if successful. 
+     * @return  True if successful.
     **/
     bool SetHostName(const std::string& host_name_);
 
     /**
-     * @brief Call method of this service, for all hosts, responses will be returned by callback. 
+     * @brief Call a method of this service, responses will be returned by callback. 
      *
-     * @param method_name_  Method name. 
+     * @param method_name_  Method name.
      * @param request_      Request string. 
+     * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
      *
      * @return  True if successful. 
     **/
-    bool Call(const std::string& method_name_, const std::string& request_);
+    bool Call(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
 
     /**
-     * @brief Call method of this service, for specific host. 
+     * @brief Call a method of this service, responses will be returned in service_response_vec_. 
      *
-     * @param       host_name_     Host name.
-     * @param       method_name_   Method name.
-     * @param       request_           Request string. 
-     * @param [out] service_response_  Service info struct for detailed informations.
-     * @param [out] response_          Response string.
-     *
-     * @return  True if successful. 
-    **/ 
-    [[deprecated]]
-    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_, std::string& response_);
-    
-    /**
-     * @brief Call method of this service, for specific host.
-     *
-     * @param       host_name_             Host name (empty == broadcast to all hosts).
      * @param       method_name_           Method name.
      * @param       request_               Request string.
-     * @param [out] service_response_vec_  Response vector containing service info and response string from every called service (optional).
+     * @param       timeout_               Maximum time before operation returns (in milliseconds, -1 means infinite).
+     * @param [out] service_response_vec_  Response vector containing service responses from every called service (nullptr == no response).
      *
      * @return  True if successful.
     **/
-    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceResponseVecT* service_response_vec_ = nullptr);
+    bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_);
 
     /**
-     * @brief Asynchronously call method of this service, for all hosts, responses will be returned by callback. 
+     * @brief Call a method of this service asynchronously, responses will be returned by callback. 
      *
-     * @param method_name_  Method name. 
+     * @param method_name_  Method name.
      * @param request_      Request string. 
+     * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
     **/
-    void CallAsync(const std::string& method_name_, const std::string& request_);
-
-    /**
-     * @brief Asynchronously call method of this service, for specific host, response will be returned by callback. 
-     *
-     * @param       host_name_     Host name.
-     * @param       method_name_   Method name.
-     * @param       request_       Request string. 
-    **/
-    void CallAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_);
+    void CallAsync(const std::string& method_name_, const std::string& request_, int timeout_);
 
     /**
      * @brief Add server response callback. 
@@ -166,7 +145,7 @@ namespace eCAL
     bool RemResponseCallback();
 
     /**
-     * @brief Add callback function for client events.
+     * @brief Add client event callback function.
      *
      * @param type_      The event type to react on.
      * @param callback_  The callback function to add.
@@ -176,7 +155,7 @@ namespace eCAL
     bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
 
     /**
-     * @brief Remove callback function for client events.
+     * @brief Remove client event callback function.
      *
      * @param type_  The event type to remove.
      *
@@ -246,67 +225,35 @@ namespace eCAL
 
       m_service       = nullptr;
       m_service_name.clear();
-      m_service_hname.clear();
       m_created       = false;
       return(true);
     }
 
     bool SetHostName(const std::string& host_name_)
     {
-      if(!m_service) return(false);
-      m_service_hname = host_name_;
+      if (!m_service) return(false);
       return(eCAL_Client_SetHostName(m_service, host_name_.c_str()) != 0);
     }
 
-    bool Call(const std::string& method_name_, const std::string& request_)
+    bool Call(const std::string& method_name_, const std::string& request_, int timeout_ = -1)
     {
       if(!m_service) return(false);
-      return(eCAL_Client_Call(m_service, method_name_.c_str(), request_.c_str(), static_cast<int>(request_.size())) != 0);
+      return(eCAL_Client_Call(m_service, method_name_.c_str(), request_.c_str(), static_cast<int>(request_.size()), timeout_) != 0);
     }
 
-    [[deprecated]]
-    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_, std::string& response_)
-    {
-      if(!m_service) return(false);
-      void* response = NULL;
-      struct SServiceResponseC service_response;
-      int response_len = eCAL_Client_Call_Wait(m_service, host_name_.c_str(), method_name_.c_str(), request_.c_str(), static_cast<int>(request_.size()), &service_response, &response, ECAL_ALLOCATE_4ME);
-      if(response_len > 0)
-      {
-        service_response_.host_name    = host_name_;
-        service_response_.service_name = m_service_name;
-        service_response_.method_name  = method_name_;
-        service_response_.error_msg.clear(); // TODO
-        service_response_.ret_state    = service_response.ret_state;
-        service_response_.call_state   = service_response.call_state;
-        response_ = std::string(static_cast<const char*>(response), response_len);
-        eCAL_FreeMem(response);
-        return(true);
-      }
-      return(false);
-    }
-
-    bool Call(const std::string& /*host_name_*/, const std::string& /*method_name_*/, const std::string& /*request_*/, ServiceResponseVecT* /*service_response_vec_ = nullptr*/)
+    bool Call(const std::string& method_name_, const std::string& request_, int timeout_ = -1, ServiceResponseVecT* service_response_vec_ = nullptr)
     {
       if (!m_service) return(false);
       // TODO: implement this !
-      std::cout << "CServiceClient::Call method with ServiceResponseVecT argument not yet implemented" << std::endl;
+      std::cout << "C API for CServiceClient::Call method with ServiceResponseVecT argument not yet implemented" << std::endl;
       return(false);
     }
 
-    void CallAsync(const std::string& /*method_name_*/, const std::string& /*request_*/)
+    void CallAsync(const std::string& method_name_, const std::string& request_, int timeout_ = -1)
     {
       if (!m_service) return;
       // TODO: implement this !
-      std::cout << "CServiceClient::CallAsync method not yet implemented" << std::endl;
-      return;
-    }
-
-    void CallAsync(const std::string& /*host_name_*/, const std::string& /*method_name_*/, const std::string& /*request_*/)
-    {
-      if (!m_service) return;
-      // TODO: implement this !
-      std::cout << "CServiceClient::CallAsync method not yet implemented" << std::endl;
+      std::cout << "C API for CServiceClient::CallAsync method not yet implemented" << std::endl;
       return;
     }
       
@@ -343,8 +290,6 @@ namespace eCAL
     ResponseCallbackT  m_callback;
 
     std::string        m_service_name;
-    std::string        m_service_hname;
-    std::string        m_method_name;
     bool               m_created;
   };
 } 

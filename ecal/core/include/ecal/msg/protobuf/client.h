@@ -71,34 +71,36 @@ namespace eCAL
       CServiceClient& operator=(const CServiceClient&) = delete;
 
       /**
-       * @brief Call method of this service, for all hosts, responses will be returned by callback. 
+       * @brief Call a method of this service, responses will be returned by callback. 
        *
        * @param method_name_  Method name.
        * @param request_      Request message.
+       * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
        *
        * @return  True if successful.
       **/
-      bool Call(const std::string& method_name_, const google::protobuf::Message& request_)
+      bool Call(const std::string& method_name_, const google::protobuf::Message& request_, const int timeout_ = -1)
       {
-        return Call(method_name_, request_.SerializeAsString());
+        return Call(method_name_, request_.SerializeAsString(), timeout_);
       }
 
       /**
-       * @brief Call method of this service, for specific host.
+       * @brief Call a method of this service, response will be returned in service_response_ and response_ (first matching service only for now).
        *
-       * @param       host_name_     Host name.
-       * @param       method_name_   Method name.
+       * THIS WILL BE CHANGED !
+       * 
+       * @param       method_name_       Method name.
        * @param       request_           Request message.
-       * @param [out] service_response_  Service info struct for detailed informations.
+       * @param [out] service_response_  Service response struct for detailed informations.
        * @param [out] response_          Response string.
        *
       * @return  True if successful.
       **/
-      bool Call(const std::string& host_name_, const std::string& method_name_, const google::protobuf::Message& request_, struct SServiceResponse& service_response_, google::protobuf::Message& response_)
+      bool Call(const std::string& method_name_, const google::protobuf::Message& request_, struct SServiceResponse& service_response_, google::protobuf::Message& response_)
       {
         // TODO: Find a solution to get a signature like
         // 
-        //  bool Call(const std::string & host_name_, const std::string & method_name_, const google::protobuf::Message & request_, struct SServiceResponsePbVecT& service_response_)
+        //  bool Call(const std::string & method_name_, const google::protobuf::Message & request_, const int timeout_, struct SServiceResponsePbVecT& service_response_)
         // 
         //  SServiceResponsePbVecT would look like
         // 
@@ -114,9 +116,10 @@ namespace eCAL
         //    };
         //    typedef std::vector<SServiceResponsePb> SServiceResponsePbVecT;
         //
-        // for now we just return the response from the first service that answered, to get all responses please use the callback variant
+        // for now we just call the first matching service and return it's answer, to get all responses please use the callback variant
         ServiceResponseVecT service_response_vec;
-        if (Call(host_name_, method_name_, request_.SerializeAsString(), &service_response_vec))
+        const int timeout_(-1);
+        if (Call(method_name_, request_.SerializeAsString(), timeout_, &service_response_vec))
         {
           if (service_response_vec.size() > 0)
           {
@@ -129,26 +132,14 @@ namespace eCAL
       }
 
       /**
-       * @brief Asynchronously call method of this service, for all hosts, responses will be returned by callback. 
+       * @brief Call a method of this service asynchronously, responses will be returned by callback. 
        *
-       * @param method_name_  Method name. 
-       * @param request_      Request message. 
+       * @param method_name_  Method name.
+       * @param request_      Request message.
       **/
       void CallAsync(const std::string& method_name_, const google::protobuf::Message& request_)
       {
         CallAsync(method_name_, request_.SerializeAsString());
-      }
-
-      /**
-       * @brief Asynchronously call method of this service, for specific host, response will be returned by callback. 
-       *
-       * @param       host_name_     Host name.
-       * @param       method_name_   Method name.
-       * @param       request_       Request message.
-      **/
-      void CallAsync(const std::string& host_name_, const std::string& method_name_, const google::protobuf::Message& request_)
-      {
-        CallAsync(host_name_, method_name_, request_.SerializeAsString());
       }
 
       using eCAL::CServiceClient::Call;

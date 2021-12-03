@@ -93,95 +93,58 @@ namespace eCAL
   /**
    * @brief Change the host name filter for that client instance
    *
-   * @param host_name_  Host name filter (empty or "*" == all hosts) 
+   * @param host_name_  Host name filter (empty == all hosts)
    *
-   * @return  True if successful. 
+   * @return  True if successful.
   **/
   bool CServiceClient::SetHostName(const std::string& host_name_)
   {
-    if(!m_created) return(false);
+    if (!m_created) return(false);
     m_service_client_impl->SetHostName(host_name_);
     return(true);
   }
 
   /**
-   * @brief Call method of this service, for all hosts, responses will be returned by callback. 
-   *
-   * @param method_name_  Method name. 
-   * @param request_      Request string. 
-   *
-   * @return  True if successful. 
-  **/
-  bool CServiceClient::Call(const std::string& method_name_, const std::string& request_)
-  {
-    if(!m_created) return(false);
-    return(m_service_client_impl->Call(method_name_, request_));
-  }
-
-  /**
-   * @brief Call method of this service, for specific host. 
-   *
-   * @param       host_name_     Host name.
-   * @param       method_name_   Method name.
-   * @param       request_           Request string. 
-   * @param [out] service_response_  Service info struct for detailed informations.
-   * @param [out] response_          Response string.
-   *
-   * @return  True if successful. 
-  **/ 
-  bool CServiceClient::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_, std::string& response_)
-  {
-    if(!m_created) return(false);
-    ServiceResponseVecT service_response_vec;
-    if (m_service_client_impl->Call(host_name_, method_name_, request_, &service_response_vec))
-    {
-      if (service_response_vec.size() > 0)
-      {
-        service_response_ = service_response_vec[0];
-        response_     = service_response_vec[0].response;
-      }
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * @brief Call method of this service, for specific host.
-   *
-   * @param       host_name_     Host name.
-   * @param       method_name_   Method name.
-   * @param       request_       Request string.
-   * @param [out] response_vec_  Response vector containing service info and response string from every called service (optional).
-   *
-   * @return  True if successful.
-  **/
-  bool CServiceClient::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceResponseVecT* service_response_vec_)
-  {
-    if (!m_created) return(false);
-    return(m_service_client_impl->Call(host_name_, method_name_, request_, service_response_vec_));
-  }
-
-  /**
-   * @brief Asynchronously call method of this service, for all hosts, responses will be returned by callback.
+   * @brief Call method of this service for a specific host, responses will be returned by callback.
    *
    * @param method_name_  Method name.
    * @param request_      Request string.
+   * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+   *
+   * @return  True if successful.
   **/
-  void CServiceClient::CallAsync(const std::string& method_name_, const std::string& request_)
+  bool CServiceClient::Call(const std::string& method_name_, const std::string& request_, int timeout_)
   {
-    if(m_created) m_service_client_impl->CallAsync(method_name_, request_);
+    if(!m_created) return(false);
+    return(m_service_client_impl->Call(method_name_, request_, timeout_));
   }
 
   /**
-   * @brief Asynchronously call method of this service asynchronously, for specific host, response will be returned by callback. 
+   * @brief Call method of this service, for specific host, responses will be returned in service_response_vec_.
    *
-   * @param       host_name_     Host name.
-   * @param       method_name_   Method name.
-   * @param       request_       Request string.
+   * @param       method_name_           Method name.
+   * @param       request_               Request string.
+   * @param       timeout_               Maximum time before operation returns (in milliseconds, -1 means infinite).
+   * @param [out] service_response_vec_  Response vector containing service info and response string from every called service (optional).
+   *
+   * @return  True if successful.
   **/
-  void CServiceClient::CallAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_)
+  bool CServiceClient::Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_)
   {
-    if(m_created) m_service_client_impl->CallAsync(host_name_, method_name_, request_);
+    if (!m_created) return(false);
+    return(m_service_client_impl->Call(method_name_, request_, timeout_, service_response_vec_));
+  }
+
+  /**
+   * @brief Asynchronously call of this service, for specific host, response will be returned by callback.
+   *
+   * @param method_name_  Method name.
+   * @param request_      Request string.
+   * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+  **/
+  void CServiceClient::CallAsync(const std::string& method_name_, const std::string& request_, int timeout_)
+  {
+    if(m_created) m_service_client_impl->CallAsync(method_name_, request_, timeout_);
   }
 
   /**

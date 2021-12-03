@@ -33,7 +33,8 @@ namespace eCAL
 
       {
         std::lock_guard<decltype(connection_mutex_)> connection_lock(connection_mutex_);
-        sys_client_service_.Call(m_hostname, "StartTasks", start_task_request_pb, service_response, response_pb);
+        sys_client_service_.SetHostName(m_hostname);
+        sys_client_service_.Call("StartTasks", start_task_request_pb, service_response, response_pb);
       }
 
       std::vector<int32_t> return_values;
@@ -64,7 +65,8 @@ namespace eCAL
 
       {
         std::lock_guard<decltype(connection_mutex_)> connection_lock(connection_mutex_);
-        sys_client_service_.Call(m_hostname, "StopTasks", stop_task_request_pb, service_response, response_pb);
+        sys_client_service_.SetHostName(m_hostname);
+        sys_client_service_.Call("StopTasks", stop_task_request_pb, service_response, response_pb);
       }
 
       std::vector<bool> return_values;
@@ -95,7 +97,8 @@ namespace eCAL
 
       {
         std::lock_guard<decltype(connection_mutex_)> connection_lock(connection_mutex_);
-        sys_client_service_.Call(m_hostname, "MatchTasks", task_list_pb, service_response, response_pb);
+        sys_client_service_.SetHostName(m_hostname);
+        sys_client_service_.Call("MatchTasks", task_list_pb, service_response, response_pb);
       }
 
       return eCAL::sys_client::proto_helpers::FromProtobuf(response_pb);

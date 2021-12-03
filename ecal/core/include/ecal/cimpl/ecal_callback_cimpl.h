@@ -19,7 +19,7 @@
 
 /**
  * @file   ecal_callback_cimpl.h
- * @brief  eCAL subscriber callback interface for C Interface
+ * @brief  eCAL callback interface events, structs and functions
 **/
 
 #ifndef ecal_callback_cimpl_h_included
@@ -57,6 +57,7 @@ enum eCAL_Client_Event
   client_event_none         = 0,
   client_event_connected    = 1,
   client_event_disconnected = 2,
+  client_event_timeout      = 3,
 };
 
 /**
@@ -159,7 +160,7 @@ typedef void (*TimerCallbackCT)(void* par_);
 /**
  * @brief eCAL publisher event callback function
  *
- * @param topic_name_  Topic name of the data connection (subscriber).
+ * @param topic_name_  The topic name of the data connection (subscriber).
  * @param data_        Event type struct.
  * @param par_         Forwarded user defined parameter.
 **/
@@ -168,7 +169,7 @@ typedef void(*SubEventCallbackCT)(const char* topic_name_, const struct SSubEven
 /**
  * @brief eCAL subscriber event callback function
  *
- * @param topic_name_  Topic name of the data connection (publisher).
+ * @param topic_name_  The topic name of the data connection (publisher).
  * @param data_        Event type struct.
  * @param par_         Forwarded user defined parameter.
 **/
@@ -177,7 +178,7 @@ typedef void(*PubEventCallbackCT)(const char* topic_name_, const struct SPubEven
 /**
  * @brief eCAL client event callback function
  *
- * @param name_  The name of the data connection (server).
+ * @param name_  The service name.
  * @param data_  Event type struct.
  * @param par_   Forwarded user defined parameter.
 **/
@@ -186,7 +187,7 @@ typedef void(*ClientEventCallbackCT)(const char* name_, const struct SClientEven
 /**
  * @brief eCAL server event callback function
  *
- * @param name_  The name of the data connection (client).
+ * @param name_  The service name.
  * @param data_  Event type struct.
  * @param par_   Forwarded user defined parameter.
 **/
