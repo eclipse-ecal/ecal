@@ -11,13 +11,15 @@ eCAL has many options that can be configured via an .ini file which is located a
 * |fa-windows| Windows: |ecalini-path-windows|
 * |fa-ubuntu| Ubuntu: |ecalini-path-ubuntu|
 
-.. note::
-   In eCAL 5.7 the path of the :file:`ecal.ini` file was |ecalini-path-windows-old| and |ecalini-path-ubuntu-old|.
-
 Loading strategy (Priority)
 ===========================
 
-The eCAL configuration file is loaded based on the following priorities for Windows and Linux. In addition, it can be passed explicitly to every eCAL application with the command line option ``--ecal-ini-file``.
+The eCAL configuration file is loaded based on the following priorities, whereever it is found first.
+If you want a specific eCAL Node to run with another ``ecal.ini`` than the others, you can set the ``ECAL_DATA`` variable before starting the process, e.g. from a batch or shell skript.
+In addition, some eCAL applications support providing a path from the command line option ``--ecal-ini-file``.
+
+.. important::
+   This loading strategy is valid for eCAL 5.10 and up.
 
 - |fa-windows| Windows:
 
@@ -27,11 +29,12 @@ The eCAL configuration file is loaded based on the following priorities for Wind
 - |fa-ubuntu| Ubuntu:
 
   1. ``$ECAL_DATA/ecal.ini``
-  2. ``/etc/ecal/ecal.ini``
+  2. ``/etc/ecal/ecal.ini`` (from ``CMAKE_INSTALL_SYSCONFDIR``)
+  3. ``/etc/ecal/ecal.ini`` (fallback)
       
      .. note::
 
-        This path is set from CMake to ``CMAKE_INSTALL_SYSCONFDIR/ecal/ecal.ini``.
+        This second path is set from CMake to ``CMAKE_INSTALL_SYSCONFDIR/ecal/ecal.ini``.
         Official builds are configured to use ``/etc``.
         If you are compiling eCAL yourself and don't provide the SYSCONFDIR, CMake will usually use ``/usr/local/etc/ecal/ecal.ini``.
 
