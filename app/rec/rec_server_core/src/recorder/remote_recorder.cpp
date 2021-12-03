@@ -257,7 +257,8 @@ namespace eCAL
           eCAL::SServiceResponse         service_response;
           eCAL::pb::rec_client::Response response;
 
-          bool call_successfull = recorder_service_.Call(hostname_, "SetConfig", set_config_pb, service_response, response);
+          recorder_service_.SetHostName(hostname_);
+          bool call_successfull = recorder_service_.Call("SetConfig", set_config_pb, service_response, response);
           if (IsInterrupted()) return;
 
           {
@@ -313,7 +314,8 @@ namespace eCAL
           eCAL::SServiceResponse         service_response;
           eCAL::pb::rec_client::Response response_pb;
 
-          bool call_successfull = recorder_service_.Call(hostname_, "SetCommand", command_request_pb, service_response, response_pb);
+          recorder_service_.SetHostName(hostname_);
+          bool call_successfull = recorder_service_.Call("SetCommand", command_request_pb, service_response, response_pb);
 
           {
             std::unique_lock<decltype(io_mutex_)> io_lock(io_mutex_);
@@ -376,7 +378,10 @@ namespace eCAL
 
           // Retrieve the state from the client
           auto before_call_timestamp = eCAL::Time::ecal_clock::now();
-          bool call_success = recorder_service_.Call(hostname_, "GetState", request, service_response, state_response_pb);
+
+          recorder_service_.SetHostName(hostname_);
+          bool call_success = recorder_service_.Call("GetState", request, service_response, state_response_pb);
+
           auto after_call_timestamp = eCAL::Time::ecal_clock::now();
           if (IsInterrupted()) return;
 

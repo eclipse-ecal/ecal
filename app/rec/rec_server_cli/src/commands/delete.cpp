@@ -119,7 +119,8 @@ namespace eCAL
         eCAL::pb::rec_server::ServiceResult             response_pb;
 
         request_pb.set_meas_id(meas_id);
-        bool success = remote_rec_server_service->Call(hostname, "DeleteMeasurement", request_pb, service_response, response_pb);
+        remote_rec_server_service->SetHostName(hostname);
+        bool success = remote_rec_server_service->Call("DeleteMeasurement", request_pb, service_response, response_pb);
 
         // Service call failed
         if (!success)

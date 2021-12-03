@@ -52,33 +52,34 @@ extern "C"
   /**
    * @brief Change the host name filter for that client instance
    *
-   * @param handle_     Client handle. 
-   * @param host_name_  Host name filter (empty or "*" == all hosts) 
+   * @param handle_     Client handle.
+   * @param host_name_  Host name filter (empty == all hosts)
    *
    * @return  None zero if succeeded.
   **/
   ECALC_API int eCAL_Client_SetHostName(ECAL_HANDLE handle_, const char* host_name_);
 
   /**
-   * @brief Call method of this service (none blocking variant with callback). 
+   * @brief Call a method of this service (none blocking variant with callback). 
    *
    * @param handle_       Client handle. 
-   * @param method_name_  Method name. 
+   * @param method_name_  Method name.
    * @param request_      Request message buffer. 
    * @param request_len_  Request message length. 
+   * @param timeout_           Maximum time before operation returns (in milliseconds, -1 means infinite).
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Client_Call(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_);
+  ECALC_API int eCAL_Client_Call(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_);
 
   /**
-   * @brief Call method of this service (blocking variant with timeout). 
+   * @brief Call a method of this service (blocking variant). 
    *
    * @param       handle_            Client handle. 
-   * @param       host_name_         Host name.
    * @param       method_name_       Method name.
    * @param       request_           Request message buffer. 
    * @param       request_len_       Request message length. 
+   * @param       timeout_           Maximum time before operation returns (in milliseconds, -1 means infinite).
    * @param [out] service_response_  Service response struct with additional infos like call state and
    *                                 error message.
    * @param [out] response_          Pointer to the allocated buffer for the response message.
@@ -87,7 +88,7 @@ extern "C"
    *
    * @return  Size of response buffer if succeeded, otherwise zero.
   **/
-  ECALC_API int eCAL_Client_Call_Wait(ECAL_HANDLE handle_, const char* host_name_, const char* method_name_, const char* request_, int request_len_, struct SServiceResponseC* service_response_, void* response_, int response_len_);
+  ECALC_API int eCAL_Client_Call_Wait(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_, struct SServiceResponseC* service_response_, void* response_, int response_len_);
 
   /**
    * @brief Add server response callback. 

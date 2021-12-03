@@ -87,7 +87,7 @@ namespace eCAL
     bool Destroy();
 
     /**
-     * @brief Add method callback for server response.
+     * @brief Add method callback.
      *
      * @param method_     Service method name.
      * @param req_type_   Service method request type.
@@ -99,7 +99,7 @@ namespace eCAL
     bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_);
 
     /**
-     * @brief Remove client request callback.
+     * @brief Remove method callback.
      *
      * @param method_  Service method name.
      *
@@ -115,7 +115,7 @@ namespace eCAL
     std::string GetServiceName();
 
     /**
-     * @brief Add callback function for server events.
+     * @brief Add server event callback function.
      *
      * @param type_      The event type to react on.
      * @param callback_  The callback function to add.
@@ -125,7 +125,7 @@ namespace eCAL
     bool AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_);
 
     /**
-     * @brief Remove callback function for server events.
+     * @brief Remove server event callback function.
      *
      * @param type_  The event type to remove.
      *

@@ -95,6 +95,7 @@ namespace eCAL
     return(true);
   }
 
+  // add callback function for server method calls
   bool CServiceServerImpl::AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_)
   {
     SMethodCallback mcallback;
@@ -109,6 +110,7 @@ namespace eCAL
     return true;
   }
 
+  // remove callback function for server method calls
   bool CServiceServerImpl::RemMethodCallback(const std::string& method_)
   {
     std::lock_guard<std::mutex> lock(m_method_callback_map_sync);
@@ -122,6 +124,7 @@ namespace eCAL
     return false;
   }
 
+  // add callback function for server events
   bool CServiceServerImpl::AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_)
   {
     if (!m_created) return false;
@@ -139,6 +142,7 @@ namespace eCAL
     return true;
   }
 
+  // remove callback function for server events
   bool CServiceServerImpl::RemEventCallback(eCAL_Server_Event type_)
   {
     if (!m_created) return false;
@@ -156,53 +160,17 @@ namespace eCAL
     return true;
   }
 
-  int CServiceServerImpl::RequestCallback(const std::string& request_, std::string& response_)
+  // check connection state
+  bool CServiceServerImpl::IsConnected()
   {
-    std::lock_guard<std::mutex> lock(m_method_callback_map_sync);
+    if (!m_created) return false;
 
-    if (m_method_callback_map.empty()) return 0;
-
-    int success(-1);
-    eCAL::pb::Response response_pb;
-    auto response_pb_mutable_header = response_pb.mutable_header();
-    response_pb_mutable_header->set_hname(eCAL::Process::GetHostName());
-    response_pb_mutable_header->set_sname(m_service_name);
-
-    eCAL::pb::Request request_pb;
-    if (request_pb.ParseFromString(request_))
-    {
-      // success == 0 means we could deserialize and
-      // no need to try to read more bytes for the server
-      // socket
-      success = 0;
-      auto request_pb_header = request_pb.header();
-      response_pb_mutable_header->set_mname(request_pb_header.mname());
-
-      auto iter = m_method_callback_map.find(request_pb_header.mname());
-      if (iter != m_method_callback_map.end())
-      {
-        auto call_count = iter->second.method.call_count();
-        iter->second.method.set_call_count(++call_count);
-
-        std::string request_s = request_pb.request();
-        std::string response_s;
-        int service_return_state = m_method_callback_map[request_pb_header.mname()].callback(iter->second.method.mname(), iter->second.method.req_type(), iter->second.method.resp_type(), request_s, response_s);
-
-        response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
-        response_pb.set_response(response_s);
-        response_pb.set_ret_state(service_return_state);
-      }
-      else
-      {
-        response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
-        std::string emsg = "Service " + m_service_name + " has no method " + request_pb_header.mname();
-        response_pb_mutable_header->set_error(emsg);
-      }
-      response_ = response_pb.SerializeAsString();
-    }
-    return success;
+    // check for connected services
+    std::lock_guard<std::mutex> lock(m_connected_clients_map_sync);
+    return !m_connected_clients_map.empty();
   }
 
+  // called by the eCAL::CServiceGate to register a client
   void CServiceServerImpl::RegisterClient(const std::string& key_, const SClientAttr& client_)
   {
     // check connections
@@ -228,6 +196,7 @@ namespace eCAL
     m_connected_clients_map[key_] = client_;
   }
 
+  // called by eCAL:CServiceGate every second to update registration layer
   void CServiceServerImpl::RefreshRegistration()
   {
     if (!m_created)             return;
@@ -291,13 +260,51 @@ namespace eCAL
       }
     }
   }
-  
-  bool CServiceServerImpl::IsConnected()
-  {
-    if (!m_created) return false;
 
-    // check for connected services
-    std::lock_guard<std::mutex> lock(m_connected_clients_map_sync);
-    return !m_connected_clients_map.empty();
+  int CServiceServerImpl::RequestCallback(const std::string& request_, std::string& response_)
+  {
+    std::lock_guard<std::mutex> lock(m_method_callback_map_sync);
+
+    if (m_method_callback_map.empty()) return 0;
+
+    int success(-1);
+    eCAL::pb::Response response_pb;
+    auto response_pb_mutable_header = response_pb.mutable_header();
+    response_pb_mutable_header->set_hname(eCAL::Process::GetHostName());
+    response_pb_mutable_header->set_sname(m_service_name);
+
+    eCAL::pb::Request request_pb;
+    if (request_pb.ParseFromString(request_))
+    {
+      // success == 0 means we could deserialize and
+      // no need to try to read more bytes for the server
+      // socket
+      success = 0;
+      auto request_pb_header = request_pb.header();
+      response_pb_mutable_header->set_mname(request_pb_header.mname());
+
+      auto iter = m_method_callback_map.find(request_pb_header.mname());
+      if (iter != m_method_callback_map.end())
+      {
+        auto call_count = iter->second.method.call_count();
+        iter->second.method.set_call_count(++call_count);
+
+        std::string request_s = request_pb.request();
+        std::string response_s;
+        int service_return_state = m_method_callback_map[request_pb_header.mname()].callback(iter->second.method.mname(), iter->second.method.req_type(), iter->second.method.resp_type(), request_s, response_s);
+
+        response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
+        response_pb.set_response(response_s);
+        response_pb.set_ret_state(service_return_state);
+      }
+      else
+      {
+        response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
+        std::string emsg = "Service " + m_service_name + " has no method " + request_pb_header.mname();
+        response_pb_mutable_header->set_error(emsg);
+      }
+      response_ = response_pb.SerializeAsString();
+    }
+    return success;
   }
 };

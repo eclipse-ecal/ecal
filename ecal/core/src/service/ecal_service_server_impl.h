@@ -58,16 +58,22 @@ namespace eCAL
 
     bool Destroy();
 
+    // add and remove callback function for server method calls
     bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_);
     bool RemMethodCallback(const std::string& method_);
 
+    // add and remove callback function for server events
     bool AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_);
     bool RemEventCallback(eCAL_Server_Event type_);
       
-    void RegisterClient(const std::string& key_, const SClientAttr& client_);
-    void RefreshRegistration();
-
+    // check connection state
     bool IsConnected();
+
+    // called by the eCAL::CServiceGate to register a client
+    void RegisterClient(const std::string& key_, const SClientAttr& client_);
+
+    // called by eCAL:CServiceGate every second to update registration layer
+    void RefreshRegistration();
 
     std::string GetServiceName() { return m_service_name; };
 

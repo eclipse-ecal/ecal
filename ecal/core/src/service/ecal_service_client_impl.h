@@ -48,30 +48,35 @@ namespace eCAL
 
     bool SetHostName(const std::string& host_name_);
 
+    // add and remove callback function for service response
     bool AddResponseCallback(const ResponseCallbackT& callback_);
     bool RemResponseCallback();
 
+    // add and remove callback function for client events
     bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
     bool RemEventCallback(eCAL_Client_Event type_);
       
-    // call service on a specific host, no broadcast, first will react service only
+    // blocking call, no broadcast, first matching service only, response will be returned in service_response_
     [[deprecated]]
-    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_, std::string& response_);
+    bool Call(const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_);
     
-    // call all services on a specific host
-    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, ServiceResponseVecT* service_response_vec_);
+    // blocking call, all responses will be returned in service_response_vec_
+    bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_);
 
-    // callback service using callback, broadcast possible
-    bool Call(const std::string& method_name_, const std::string& request_);
+    // blocking call, using callback
+    bool Call(const std::string& method_name_, const std::string& request_, int timeout_);
 
-    void CallAsync(const std::string& method_name_, const std::string& request_);
-    
-    void CallAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_);
+    // asynchronuously call, using callback
+    void CallAsync(const std::string& method_name_, const std::string& request_, int timeout_);
 
-    void RegisterService(const std::string& key_, const SServiceAttr& service_);
-    void RefreshRegistration();
-
+    // check connection state
     bool IsConnected();
+
+    // called by the eCAL::CClientGate to register a service
+    void RegisterService(const std::string& key_, const SServiceAttr& service_);
+
+    // called by eCAL:CClientGate every second to update registration layer
+    void RefreshRegistration();
 
     // this object must not be copied.
     CServiceClientImpl(const CServiceClientImpl&) = delete;
@@ -79,9 +84,11 @@ namespace eCAL
 
   protected:
     void CheckForNewServices();
-    bool SendRequests(const std::string& method_name_, const std::string& request_);
+
+    bool SendRequests(const std::string& host_name_, const std::string& method_name_, const std::string& request_);
     bool SendRequest(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_);
-    void SendRequestsAsync(const std::string& method_name_, const std::string& request_);
+
+    void SendRequestsAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_);
     void SendRequestAsync(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_);
 
     void ErrorCallback(const std::string &method_name_, const std::string &error_message_);
@@ -104,9 +111,8 @@ namespace eCAL
     typedef std::map<std::string, SServiceAttr> ServiceAttrMapT;
     ServiceAttrMapT    m_connected_services_map;
 
-
-    std::string        m_service_hname;
     std::string        m_service_name;
+    std::string        m_host_name;
     bool               m_created;
   };
 }
