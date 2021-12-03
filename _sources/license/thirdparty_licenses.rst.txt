@@ -144,6 +144,13 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
+   * - `recycle <https://github.com/steinwurf/recycle>`_
+     - :ref:`bsd_3`
+     - Copyright (c) 2014, Steinwurf ApS
+     - - |fa-github| Git submodule ``/tirdparty/recycle``
+       - |fa-windows| Binary distributions for Windows
+       - |fa-ubuntu| Binary distributions for Linux
+
    * - `tclap <http://tclap.sourceforge.net>`_
      - :ref:`mit_license`
      - Copyright (c) 2003 Michael E. Smoot 
@@ -152,6 +159,13 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
        Copyright (c) 2017 Google Inc.
      - - |fa-github| Git submodule ``/tirdparty/tclap``
+       - |fa-windows| Binary distributions for Windows
+       - |fa-ubuntu| Binary distributions for Linux
+
+   * - `tcpub <https://github.com/continental/tcpub>`_
+     - :ref:`mit_license`
+     - Copyright (c) 2021 Continental
+     - - |fa-github| Git submodule ``/tirdparty/tcpub``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
