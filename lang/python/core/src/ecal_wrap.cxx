@@ -1019,11 +1019,12 @@ PyObject* client_call_method(PyObject* /*self*/, PyObject* args)   // (client_ha
   const char* method_name   = nullptr;
   const char* request       = nullptr;
   int         request_len   = 0;
+  int         timeout       = -1;
 
-  PyArg_ParseTuple(args, "nsy#", &client_handle, &method_name, &request, &request_len);
+  PyArg_ParseTuple(args, "nsy#i", &client_handle, &method_name, &request, &request_len, &timeout);
 
   bool called_method{ false };
-  called_method = client_call_method(client_handle, method_name, request, request_len);
+  called_method = client_call_method(client_handle, method_name, request, request_len, timeout);
 
   return(Py_BuildValue("i", called_method));
 }
