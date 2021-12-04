@@ -235,7 +235,7 @@ namespace eCAL
       return(eCAL_Client_SetHostName(m_service, host_name_.c_str()) != 0);
     }
 
-    bool Call(const std::string& method_name_, const std::string& request_, int timeout_ = -1)
+    bool Call(const std::string& method_name_, const std::string& request_, int timeout_)
     {
       if(!m_service) return(false);
       return(eCAL_Client_Call(m_service, method_name_.c_str(), request_.c_str(), static_cast<int>(request_.size()), timeout_) != 0);
