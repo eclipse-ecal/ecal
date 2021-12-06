@@ -200,12 +200,12 @@ TEST(IO, ClientServerBaseAsyncCallback)
   for (auto i = 0; i < calls; ++i)
   {
     // call a method1
-    client.CallAsync("foo::method1", "my request for method 1", -1);
+    client.CallAsync("foo::method1", "my request for method 1");
     eCAL::Process::SleepMS(sleep);
     requests_called++;
 
     // call a method2
-    client.CallAsync("foo::method2", "my request for method 2", -1);
+    client.CallAsync("foo::method2", "my request for method 2");
     eCAL::Process::SleepMS(sleep);
     requests_called++;
   }

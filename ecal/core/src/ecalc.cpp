@@ -1121,6 +1121,14 @@ extern "C"
   }
 }
 
+ECALC_API int eCAL_Client_Call_Async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_)
+{
+  if (handle_ == NULL) return(0);
+  eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+  if (client->CallAsync(method_name_, std::string(request_, static_cast<size_t>(request_len_)), timeout_)) return(1);
+  return(0);
+}
+
 int eCAL_Client_AddResponseCallbackC(ECAL_HANDLE handle_, ResponseCallbackCT callback_, void* par_)
 {
   if(handle_ == NULL) return(0);

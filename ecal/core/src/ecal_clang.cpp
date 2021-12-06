@@ -706,6 +706,23 @@ ECAL_API bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, 
 }
 
 /****************************************/
+/*      client_call_method_async        */
+/****************************************/
+ECAL_API bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_)
+{
+  eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+  if (client)
+  {
+    std::string request(request_, request_len_);
+    return(client->CallAsync(method_name_, request, timeout_));
+  }
+  else
+  {
+    return(false);
+  }
+}
+
+/****************************************/
 /*      client_add_response_callback    */
 /****************************************/
 

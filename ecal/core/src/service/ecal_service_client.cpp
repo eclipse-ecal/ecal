@@ -105,7 +105,7 @@ namespace eCAL
   }
 
   /**
-   * @brief Call method of this service for a specific host, responses will be returned by callback.
+   * @brief Call method of this service, responses will be returned by callback.
    *
    * @param method_name_  Method name.
    * @param request_      Request string.
@@ -120,7 +120,7 @@ namespace eCAL
   }
 
   /**
-   * @brief Call method of this service, for specific host, responses will be returned in service_response_vec_.
+   * @brief Call method of this service, responses will be returned in service_response_vec_.
    *
    * @param       method_name_           Method name.
    * @param       request_               Request string.
@@ -136,15 +136,18 @@ namespace eCAL
   }
 
   /**
-   * @brief Asynchronously call of this service, for specific host, response will be returned by callback.
+   * @brief Asynchronously call of this service, response will be returned by callback.
    *
    * @param method_name_  Method name.
    * @param request_      Request string.
    * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+   *
+   * @return  True if successful.
   **/
-  void CServiceClient::CallAsync(const std::string& method_name_, const std::string& request_, int timeout_)
+  bool CServiceClient::CallAsync(const std::string& method_name_, const std::string& request_, int timeout_)
   {
-    if(m_created) m_service_client_impl->CallAsync(method_name_, request_, timeout_);
+    if (!m_created) return(false);
+    return(m_service_client_impl->CallAsync(method_name_, request_, timeout_));
   }
 
   /**

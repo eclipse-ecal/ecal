@@ -253,32 +253,33 @@ namespace eCAL
   }
 
   // asynchronuously call, using callback
-  void CServiceClientImpl::CallAsync(const std::string& method_name_, const std::string& request_, int timeout_)
+  bool CServiceClientImpl::CallAsync(const std::string& method_name_, const std::string& request_, int timeout_)
   {
     // TODO: implement timeout
 
     if (!g_clientgate())
     {
       ErrorCallback(method_name_, "Clientgate error.");
-      return;
+      return false;
     }
 
     if (!m_created)
     {
       ErrorCallback(method_name_, "Client hasn't been created yet.");
-      return;
+      return false;
     }
 
     if (m_service_name.empty()
       || method_name_.empty())
     {
       ErrorCallback(method_name_, "Invalid service or method name.");
-      return;
+      return false;
     }
 
     // check for new server
     CheckForNewServices();
 
+    bool called(false);
     std::vector<SServiceAttr> service_vec = g_clientgate()->GetServiceAttr(m_service_name);
     for (auto& iter : service_vec)
     {
@@ -289,9 +290,11 @@ namespace eCAL
         if (client != m_client_map.end())
         {
           SendRequestAsync(client->second, method_name_, request_);
+          called = true;
         }
       }
     }
+    return(called);
   }
 
   // check connection state
