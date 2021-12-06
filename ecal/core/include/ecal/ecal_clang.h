@@ -19,7 +19,7 @@
 
 /**
  * @file   ecal_clang.h
- * @brief  eCAL C language interface
+ * @brief  eCAL C language interface (to wrap ecal into other languages easily)
 **/
 
 #ifndef ECAL_CLANG_H_INCLUDED
@@ -451,7 +451,7 @@ ECAL_API bool dyn_json_sub_add_receive_callback(ECAL_HANDLE handle_, const Recei
 **/
 ECAL_API bool dyn_json_sub_rem_receive_callback(ECAL_HANDLE handle_);
 
-/* TODO: deal with this later */
+/* TODO: not implemented and not used for now */
 //ECAL_API bool dyn_json_sub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_, const EventCallbackCT callback_, void* par_);
 //ECAL_API bool dyn_json_sub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_);
 //ECAL_API bool dyn_json_sub_set_timeout(ECAL_HANDLE handle_, int timeout_);
@@ -542,7 +542,7 @@ ECAL_API bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_);
 **/
 ECAL_API bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_);
 
-/* TODO: deal with this later */
+/* TODO: not implemented and not used for now */
 //ECAL_API client_add_response_callback
 //ECAL_API client_rem_response_callback
 
@@ -627,6 +627,6 @@ ECAL_API int mon_get_monitoring(const char** mon_buf_, int* mon_buf_len_);
  *
  * @return  Logging buffer length or zero if failed.
 **/
-ECAL_API int          mon_get_logging(const char** log_buf_, int* log_buf_len_);
+ECAL_API int mon_get_logging(const char** log_buf_, int* log_buf_len_);
 
 #endif /* ECAL_CLANG_H_INCLUDED */

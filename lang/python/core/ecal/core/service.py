@@ -105,15 +105,18 @@ class Client(object):
     """
     return ecal_core.client_rem_response_callback(self.shandle)
 
-  def call_method(self, method_name, request):
+  def call_method(self, method_name, request, timeout = -1):
     """ call a method of the service
 
     :param method_name: the method name to call
-    :type method_name: string
+    :type  method_name: string
     :param request:     the request argument for the method
+    :type  request:     string
+    :param timeout:     maximum time before operation returns (in milliseconds, -1 means infinite)
+    :type  timeout:     integer
 
     """
-    return ecal_core.client_call_method(self.shandle, method_name, request)
+    return ecal_core.client_call_method(self.shandle, method_name, request, timeout)
 
 
 if __name__ == '__main__':
