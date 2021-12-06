@@ -544,7 +544,7 @@ ECAL_API bool client_destroy(ECAL_HANDLE handle_);
 ECAL_API bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_);
 
 /**
-* @brief Call method of this service (none blocking variant with callback).
+ * @brief Call method of this service (none blocking variant with callback).
  *
  * @param handle_       Client handle.
  * @param method_name_  Method name.
@@ -555,6 +555,19 @@ ECAL_API bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_);
  * @return  True if succeeded.
 **/
 ECAL_API bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_);
+
+/**
+ * @brief Call method of this service (asynchronously with callback).
+ *
+ * @param handle_       Client handle.
+ * @param method_name_  Method name.
+ * @param request_      Request message buffer.
+ * @param request_len_  Request message length.
+ * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+ *
+ * @return  True if succeeded.
+**/
+ECAL_API bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_);
 
 /* TODO: not implemented and not used for now */
 //ECAL_API client_add_response_callback

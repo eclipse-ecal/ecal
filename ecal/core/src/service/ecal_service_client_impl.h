@@ -67,7 +67,7 @@ namespace eCAL
     bool Call(const std::string& method_name_, const std::string& request_, int timeout_);
 
     // asynchronuously call, using callback
-    void CallAsync(const std::string& method_name_, const std::string& request_, int timeout_);
+    bool CallAsync(const std::string& method_name_, const std::string& request_, int timeout_);
 
     // check connection state
     bool IsConnected();

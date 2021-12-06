@@ -94,7 +94,7 @@ namespace eCAL
        * @param [out] service_response_  Service response struct for detailed informations.
        * @param [out] response_          Response string.
        *
-      * @return  True if successful.
+       * @return  True if successful.
       **/
       bool Call(const std::string& method_name_, const google::protobuf::Message& request_, struct SServiceResponse& service_response_, google::protobuf::Message& response_)
       {
@@ -136,10 +136,13 @@ namespace eCAL
        *
        * @param method_name_  Method name.
        * @param request_      Request message.
+       * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+       *
+       * @return  True if successful.
       **/
-      void CallAsync(const std::string& method_name_, const google::protobuf::Message& request_)
+      bool CallAsync(const std::string& method_name_, const google::protobuf::Message& request_, const int timeout_ = -1)
       {
-        CallAsync(method_name_, request_.SerializeAsString());
+        return CallAsync(method_name_, request_.SerializeAsString(), timeout_);
       }
 
       using eCAL::CServiceClient::Call;

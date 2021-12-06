@@ -125,8 +125,10 @@ namespace eCAL
      * @param method_name_  Method name.
      * @param request_      Request string. 
      * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+     *
+     * @return  True if successful.
     **/
-    void CallAsync(const std::string& method_name_, const std::string& request_, int timeout_);
+    bool CallAsync(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
 
     /**
      * @brief Add server response callback. 
@@ -249,12 +251,11 @@ namespace eCAL
       return(false);
     }
 
-    void CallAsync(const std::string& method_name_, const std::string& request_, int timeout_ = -1)
+    bool CallAsync(const std::string& method_name_, const std::string& request_, int timeout_ = -1)
     {
-      if (!m_service) return;
-      // TODO: implement this !
-      std::cout << "C API for CServiceClient::CallAsync method not yet implemented" << std::endl;
-      return;
+      if (!m_service) return(false);
+      return(eCAL_Client_Call_Async(m_service, method_name_.c_str(), request_.c_str(), static_cast<int>(request_.size()), timeout_) != 0);
+      return(false);
     }
       
     static void ResponseCallback(const struct SServiceResponseC* service_response_, void* par_)

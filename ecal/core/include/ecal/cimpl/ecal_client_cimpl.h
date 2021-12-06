@@ -66,7 +66,7 @@ extern "C"
    * @param method_name_  Method name.
    * @param request_      Request message buffer. 
    * @param request_len_  Request message length. 
-   * @param timeout_           Maximum time before operation returns (in milliseconds, -1 means infinite).
+   * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
    *
    * @return  None zero if succeeded.
   **/
@@ -91,6 +91,19 @@ extern "C"
   ECALC_API int eCAL_Client_Call_Wait(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_, struct SServiceResponseC* service_response_, void* response_, int response_len_);
 
   /**
+   * @brief Call a method of this service (asynchronously with callback).
+   *
+   * @param handle_       Client handle.
+   * @param method_name_  Method name.
+   * @param request_      Request message buffer.
+   * @param request_len_  Request message length.
+   * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+   *
+   * @return  None zero if succeeded.
+  **/
+  ECALC_API int eCAL_Client_Call_Async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_);
+
+ /**
    * @brief Add server response callback. 
    *
    * @param handle_    Client handle. 
