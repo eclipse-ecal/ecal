@@ -45,11 +45,10 @@ target_link_libraries(${PROJECT_NAME}_cpp
   ecal_install_gtest(${PROJECT_NAME}_cpp)
 set_property(TARGET ${PROJECT_NAME}_cpp PROPERTY FOLDER testing/ecal/service)
 
-# TODO: Add c variant after C API is finished
-#if(WIN32)
-#  ecal_add_gtest(${PROJECT_NAME}_c   ${clientserver_test_src})
-#  target_link_libraries(${PROJECT_NAME}_c PRIVATE
-#    eCAL::core_c clientserver_proto Threads::Threads)
-#  ecal_install_gtest(${PROJECT_NAME}_c)
-#  set_property(TARGET ${PROJECT_NAME}_c   PROPERTY FOLDER testing/ecal/service)
-#endif()
+if(WIN32)
+  ecal_add_gtest(${PROJECT_NAME}_c   ${clientserver_test_src})
+  target_link_libraries(${PROJECT_NAME}_c PRIVATE
+    eCAL::core_c clientserver_proto Threads::Threads)
+  ecal_install_gtest(${PROJECT_NAME}_c)
+  set_property(TARGET ${PROJECT_NAME}_c   PROPERTY FOLDER testing/ecal/service)
+endif()

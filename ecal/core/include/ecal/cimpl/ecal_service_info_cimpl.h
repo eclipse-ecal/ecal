@@ -44,13 +44,14 @@ enum eCallState
 **/
 struct SServiceResponseC
 {
-  const char*      host_name;      //!< service host name
-  const char*      service_name;   //!< name of the service
-  const char*      method_name;    //!< name of the service method
-  const char*      error_msg;      //!< human readable error message
-  int              ret_state;      //!< return state of the called service method
-  enum eCallState  call_state;     //!< call state (see eCallState)
-  const char*      response;       //!< service response
+  const char*      host_name;     //!< service host name
+  const char*      service_name;  //!< name of the service
+  const char*      method_name;   //!< name of the service method
+  const char*      error_msg;     //!< human readable error message
+  int              ret_state;     //!< return state of the called service method
+  enum eCallState  call_state;    //!< call state (see eCallState)
+  const char*      response;      //!< service response
+  int              response_len;  //!< service response length (response string could include zeros)
 };
 
 #ifdef _MSC_VER

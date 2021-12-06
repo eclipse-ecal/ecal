@@ -385,7 +385,7 @@ TEST(IO, ClientServerProtoCallback)
   math_response = 0.0;
   math_client.Call("Multiply", math_request_s);
   std::cout << std::endl << "Multiply method called with : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
-  EXPECT_EQ(inp1*inp2, static_cast<double>(math_response));
+  EXPECT_EQ(inp1 * inp2, static_cast<double>(math_response));
 
   math_response = 0.0;
   math_client.Call("Divide", math_request_s);

@@ -1057,13 +1057,14 @@ extern "C"
   {
     std::lock_guard<std::recursive_mutex> lock(g_response_callback_mtx);
     struct SServiceResponseC service_response;
-    service_response.host_name     = service_response_.host_name.c_str();
-    service_response.service_name  = service_response_.service_name.c_str();
-    service_response.method_name   = service_response_.method_name.c_str();
-    service_response.error_msg     = service_response_.error_msg.c_str();
-    service_response.ret_state     = service_response_.ret_state;
-    service_response.call_state    = service_response_.call_state;
-    service_response.response      = service_response_.response.c_str();
+    service_response.host_name    = service_response_.host_name.c_str();
+    service_response.service_name = service_response_.service_name.c_str();
+    service_response.method_name  = service_response_.method_name.c_str();
+    service_response.error_msg    = service_response_.error_msg.c_str();
+    service_response.ret_state    = service_response_.ret_state;
+    service_response.call_state   = service_response_.call_state;
+    service_response.response     = service_response_.response.c_str();
+    service_response.response_len = static_cast<int>(service_response_.response.size());
     callback_(&service_response, par_);
   }
 
@@ -1114,6 +1115,8 @@ extern "C"
         service_response_->error_msg    = NULL;
         service_response_->ret_state    = service_response_vec[0].ret_state;
         service_response_->call_state   = service_response_vec[0].call_state;
+        service_response_->response     = NULL;
+        service_response_->response_len = 0;
         return(CopyBuffer(response_, response_len_, service_response_vec[0].response));
       }
     }
