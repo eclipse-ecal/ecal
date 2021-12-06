@@ -154,29 +154,29 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not.
     **/
-    bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
+bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
 
-    /**
-     * @brief Remove client event callback function.
-     *
-     * @param type_  The event type to remove.
-     *
-     * @return  True if succeeded, false if not.
-    **/
-    bool RemEventCallback(eCAL_Client_Event type_);
+/**
+ * @brief Remove client event callback function.
+ *
+ * @param type_  The event type to remove.
+ *
+ * @return  True if succeeded, false if not.
+**/
+bool RemEventCallback(eCAL_Client_Event type_);
 
-    /**
-     * @brief Check connection state.
-     *
-     * @return  True if connected, false if not.
-    **/
-    bool IsConnected();
+/**
+ * @brief Check connection state.
+ *
+ * @return  True if connected, false if not.
+**/
+bool IsConnected();
 
   protected:
-    CServiceClientImpl*  m_service_client_impl;
+    CServiceClientImpl* m_service_client_impl;
     bool                 m_created;
   };
-} 
+}
 
 #else /* ! ECAL_C_DLL */
 
@@ -211,23 +211,23 @@ namespace eCAL
 
     bool Create(const std::string& service_name_)
     {
-      if(m_created) return(false);
+      if (m_created) return(false);
       m_service = eCAL_Client_Create(service_name_.c_str());
-      if(!m_service) return(false);
+      if (!m_service) return(false);
 
       m_service_name = service_name_;
-      m_created      = true;
+      m_created = true;
       return(true);
     }
 
     bool Destroy()
     {
-      if(!m_created) return(false);
-      if(m_service) eCAL_Client_Destroy(m_service);
+      if (!m_created) return(false);
+      if (m_service) eCAL_Client_Destroy(m_service);
 
-      m_service       = nullptr;
+      m_service = nullptr;
       m_service_name.clear();
-      m_created       = false;
+      m_created = false;
       return(true);
     }
 
@@ -237,17 +237,42 @@ namespace eCAL
       return(eCAL_Client_SetHostName(m_service, host_name_.c_str()) != 0);
     }
 
-    bool Call(const std::string& method_name_, const std::string& request_, int timeout_)
+    bool Call(const std::string& method_name_, const std::string& request_, int timeout_ = -1)
     {
-      if(!m_service) return(false);
+      if (!m_service) return(false);
       return(eCAL_Client_Call(m_service, method_name_.c_str(), request_.c_str(), static_cast<int>(request_.size()), timeout_) != 0);
     }
 
-    bool Call(const std::string& method_name_, const std::string& request_, int timeout_ = -1, ServiceResponseVecT* service_response_vec_ = nullptr)
+    bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_)
     {
+      // TODO: reimplement this to support vector of responses
+      //       for now we just push back the first service response to the service response vector
+      //       besides this host_name and error_msg are not returned
+
       if (!m_service) return(false);
-      // TODO: implement this !
-      std::cout << "C API for CServiceClient::Call method with ServiceResponseVecT argument not yet implemented" << std::endl;
+      void* response = NULL;
+      struct SServiceResponseC service_info;
+      int response_len = eCAL_Client_Call_Wait(m_service, method_name_.c_str(), request_.c_str(), static_cast<int>(request_.size()), timeout_, &service_info, &response, ECAL_ALLOCATE_4ME);
+      if (response_len > 0)
+      {
+        if (service_response_vec_)
+        {
+          SServiceResponse service_info_response;
+          service_info_response.host_name = "";                         //  host_name not yet available in C API
+          service_info_response.service_name = m_service_name;
+          service_info_response.method_name  = method_name_;
+          service_info_response.error_msg    = "";                      // error_msg not yet available in C API
+          service_info_response.ret_state    = service_info.ret_state;
+          service_info_response.call_state   = service_info.call_state;
+          service_info_response.response     = std::string(static_cast<const char*>(response), response_len);
+
+          // first response only .. see to do comment
+          service_response_vec_->clear();
+          service_response_vec_->push_back(service_info_response);
+        }
+        eCAL_FreeMem(response);
+        return(true);
+      }
       return(false);
     }
 
@@ -269,7 +294,7 @@ namespace eCAL
       service_response.error_msg    = service_response_->error_msg;
       service_response.ret_state    = service_response_->ret_state;
       service_response.call_state   = service_response_->call_state;
-      service_response.response     = service_response_->response;
+      service_response.response     = std::string(static_cast<const char*>(service_response_->response), service_response_->response_len);
       client->m_callback(service_response);
     }
 
