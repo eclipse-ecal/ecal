@@ -1560,7 +1560,7 @@ static PyMethodDef _ecal_methods[] =
   {"client_destroy",                client_destroy,                METH_VARARGS,  "client_destroy(client_handle)" },
 
   {"client_set_hostname",           client_set_hostname,           METH_VARARGS,  "client_set_hostname(client_handle, host_name)" },
-  {"client_call_method",            client_call_method,            METH_VARARGS,  "client_call_method(client_handle, method_name, request)" },
+  {"client_call_method",            client_call_method,            METH_VARARGS,  "client_call_method(client_handle, method_name, request, timeout)" },
 
   {"client_add_response_callback",  client_add_response_callback,  METH_VARARGS,  "client_add_response_callback(client_handle, callback)" },
   {"client_rem_response_callback",  client_add_response_callback,  METH_VARARGS,  "client_rem_response_callback(client_handle)" },

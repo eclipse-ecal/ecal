@@ -462,16 +462,19 @@ def client_rem_method_callback(client_handle):
   return _ecal.client_rem_response_callback(client_handle)
 
 
-def client_call_method(client_handle, method_name, request):
+def client_call_method(client_handle, method_name, request, timeout = -1):
   """ call a method of the service
 
   :param client_handle: the client handle
   :param method_name:   the method name to call
-  :type method_name:    string
+  :type  method_name:   string
   :param request:       the request argument for the method
+  :type  request:       string
+  :param timeout:       maximum time before operation returns (in milliseconds, -1 means infinite)
+  :type  timeout:       integer
 
   """
-  return _ecal.client_call_method(client_handle, method_name, request)
+  return _ecal.client_call_method(client_handle, method_name, request, timeout)
 
 
 def mon_initialize():
