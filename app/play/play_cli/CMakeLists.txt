@@ -56,6 +56,7 @@ target_link_libraries(${PROJECT_NAME}
     termcolor::termcolor
     tclap::tclap
     eCAL::play_core
+    eCAL::utils
 )
 
 if(MSVC)

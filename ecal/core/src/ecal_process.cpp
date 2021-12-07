@@ -83,6 +83,7 @@
 #include <udpcap/npcap_helpers.h>
 #endif // ECAL_NPCAP_SUPPORT
 
+#include <ecal_utils/command_line.h>
 
 #ifndef NDEBUG
 #define STD_COUT_DEBUG( x ) { std::stringstream ss; ss << x; std::cout << ss.str(); }
@@ -455,7 +456,7 @@ namespace eCAL
     {
       if (g_process_par.empty())
       {
-        g_process_par = GetCommandLineA();
+        g_process_par = EcalUtils::CommandLine::GetUtf8CommandLine();
       }
       return(g_process_par);
     }
