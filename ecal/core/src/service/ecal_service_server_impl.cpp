@@ -28,6 +28,9 @@
 #include "ecal_global_accessors.h"
 #include "ecal_service_server_impl.h"
 
+#include <chrono>
+#include <sstream>
+
 namespace eCAL
 {
   /**
@@ -53,7 +56,13 @@ namespace eCAL
   {
     if (m_created) return(false);
 
+    // set service name
     m_service_name = service_name_;
+
+    // create service id
+    std::stringstream counter;
+    counter << std::chrono::steady_clock::now().time_since_epoch().count();
+    m_service_id = counter.str();
 
     std::chrono::milliseconds registration_timeout(eCALPAR(CMN, REGISTRATION_REFRESH) * 5);
     m_connected_clients_map.set_expiration(registration_timeout);
@@ -61,7 +70,7 @@ namespace eCAL
     m_tcp_server.Create();
     m_tcp_server.Start(std::bind(&CServiceServerImpl::RequestCallback, this, std::placeholders::_1, std::placeholders::_2));
 
-    if (g_servicegate()) g_servicegate()->Register(service_name_, this);
+    if (g_servicegate()) g_servicegate()->Register(this);
 
     m_created = true;
 
@@ -75,8 +84,8 @@ namespace eCAL
     m_tcp_server.Stop();
     m_tcp_server.Destroy();
 
-    if (g_servicegate())     g_servicegate()->Unregister(m_service_name, this);
-    if (g_entity_register()) g_entity_register()->UnregisterServer(m_service_name);
+    if (g_servicegate())     g_servicegate()->Unregister(this);
+    if (g_entity_register()) g_entity_register()->UnregisterServer(m_service_name, m_service_id);
 
     // reset method callback map
     {
@@ -89,6 +98,9 @@ namespace eCAL
       std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
       m_event_callback_map.clear();
     }
+
+    m_service_name.clear();
+    m_service_id.clear();
 
     m_created   = false;
 
@@ -210,6 +222,7 @@ namespace eCAL
     service_mutable_service->set_uname(Process::GetUnitName());
     service_mutable_service->set_pid(Process::GetProcessID());
     service_mutable_service->set_sname(m_service_name);
+    service_mutable_service->set_sid(m_service_id);
     service_mutable_service->set_tcp_port(m_tcp_server.GetTcpPort());
 
     {
@@ -225,7 +238,7 @@ namespace eCAL
     }
 
     // register entity
-    if (g_entity_register()) g_entity_register()->RegisterServer(m_service_name, sample, false);
+    if (g_entity_register()) g_entity_register()->RegisterServer(m_service_name, m_service_id ,sample, false);
 
     // check for disconnected services
     {
@@ -272,6 +285,7 @@ namespace eCAL
     auto response_pb_mutable_header = response_pb.mutable_header();
     response_pb_mutable_header->set_hname(eCAL::Process::GetHostName());
     response_pb_mutable_header->set_sname(m_service_name);
+    response_pb_mutable_header->set_sid(m_service_id);
 
     eCAL::pb::Request request_pb;
     if (request_pb.ParseFromString(request_))

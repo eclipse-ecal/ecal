@@ -153,13 +153,13 @@ namespace eCAL
     return(false);
   }
 
-  bool CEntityRegister::RegisterServer(const std::string& service_name_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
+  bool CEntityRegister::RegisterServer(const std::string& service_name_, const std::string& service_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
   {
     if(!m_created)      return(false);
     if(!m_reg_services) return(false);
 
     std::lock_guard<std::mutex> lock(m_server_map_sync);
-    m_server_map[service_name_] = ecal_sample_;
+    m_server_map[service_name_ + service_id_] = ecal_sample_;
     if(force_)
     {
       RegisterProcess();
@@ -170,13 +170,13 @@ namespace eCAL
     return(true);
   }
 
-  bool CEntityRegister::UnregisterServer(const std::string& service_name_)
+  bool CEntityRegister::UnregisterServer(const std::string& service_name_, const std::string& service_id_)
   {
     if(!m_created) return(false);
 
     SampleMapT::iterator iter;
     std::lock_guard<std::mutex> lock(m_server_map_sync);
-    iter = m_server_map.find(service_name_);
+    iter = m_server_map.find(service_name_ + service_id_);
     if(iter != m_server_map.end())
     {
       m_server_map.erase(iter);
@@ -186,30 +186,30 @@ namespace eCAL
     return(false);
   }
 
-  bool CEntityRegister::RegisterClient(const std::string& service_name_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
+  bool CEntityRegister::RegisterClient(const std::string& client_name_, const std::string& client_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
   {
     if (!m_created)      return(false);
     if (!m_reg_services) return(false);
 
     std::lock_guard<std::mutex> lock(m_client_map_sync);
-    m_client_map[service_name_] = ecal_sample_;
+    m_client_map[client_name_ + client_id_] = ecal_sample_;
     if (force_)
     {
       RegisterProcess();
-      RegisterSample(service_name_, ecal_sample_);
+      RegisterSample(client_name_, ecal_sample_);
       std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
     return(true);
   }
 
-  bool CEntityRegister::UnregisterClient(const std::string& service_name_)
+  bool CEntityRegister::UnregisterClient(const std::string& client_name_, const std::string& client_id_)
   {
     if (!m_created) return(false);
 
     SampleMapT::iterator iter;
     std::lock_guard<std::mutex> lock(m_client_map_sync);
-    iter = m_client_map.find(service_name_);
+    iter = m_client_map.find(client_name_ + client_id_);
     if (iter != m_client_map.end())
     {
       m_client_map.erase(iter);

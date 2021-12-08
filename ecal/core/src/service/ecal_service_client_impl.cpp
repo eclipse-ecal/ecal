@@ -25,7 +25,8 @@
 #include "ecal_clientgate.h"
 #include "ecal_service_client_impl.h"
 
-#include <iostream>
+#include <chrono>
+#include <sstream>
 
 namespace eCAL
 {
@@ -56,9 +57,15 @@ namespace eCAL
   {
     if (m_created) return(false);
 
+    // set service name
     m_service_name = service_name_;
 
-    if (g_clientgate()) g_clientgate()->Register(service_name_, this);
+    // create service id
+    std::stringstream counter;
+    counter << std::chrono::steady_clock::now().time_since_epoch().count();
+    m_service_id = counter.str();
+
+    if (g_clientgate()) g_clientgate()->Register(this);
 
     m_created = true;
 
@@ -69,11 +76,8 @@ namespace eCAL
   {
     if (!m_created) return(false);
 
-    if (g_clientgate())      g_clientgate()->Unregister(m_service_name, this);
-    if (g_entity_register()) g_entity_register()->UnregisterClient(m_service_name);
-
-    m_service_name.clear();
-    m_host_name.clear();
+    if (g_clientgate())      g_clientgate()->Unregister(this);
+    if (g_entity_register()) g_entity_register()->UnregisterClient(m_service_name, m_service_id);
 
     // reset client map
     {
@@ -92,6 +96,10 @@ namespace eCAL
       std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
       m_event_callback_map.clear();
     }
+
+    m_service_name.clear();
+    m_service_id.clear();
+    m_host_name.clear();
 
     m_created = false;
 
@@ -346,9 +354,10 @@ namespace eCAL
     service_mutable_client->set_uname(Process::GetUnitName());
     service_mutable_client->set_pid(Process::GetProcessID());
     service_mutable_client->set_sname(m_service_name);
+    service_mutable_client->set_sid(m_service_id);
 
     // register entity
-    if (g_entity_register()) g_entity_register()->RegisterClient(m_service_name, sample, false);
+    if (g_entity_register()) g_entity_register()->RegisterClient(m_service_name, m_service_id, sample, false);
 
     // refresh connected services map
     CheckForNewServices();
@@ -469,6 +478,7 @@ namespace eCAL
     auto& response_pb_header = response_pb.header();
     service_response_.host_name    = response_pb_header.hname();
     service_response_.service_name = response_pb_header.sname();
+    service_response_.service_id   = response_pb_header.sid();
     service_response_.method_name  = response_pb_header.mname();
     service_response_.error_msg    = response_pb_header.error();
     service_response_.ret_state    = static_cast<int>(response_pb.ret_state());
@@ -560,6 +570,7 @@ namespace eCAL
           auto& response_pb_header = response_pb.header();
           service_response.host_name    = response_pb_header.hname();
           service_response.service_name = response_pb_header.sname();
+          service_response.service_id   = response_pb_header.sid();
           service_response.method_name  = response_pb_header.mname();
           service_response.error_msg    = response_pb_header.error();
           service_response.ret_state    = static_cast<int>(response_pb.ret_state());

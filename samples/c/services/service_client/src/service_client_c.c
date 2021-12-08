@@ -39,7 +39,7 @@ int main(int argc, char **argv)
     char                     response[sizeof(request)] = { 0 };
     // call method "echo"
     printf("Calling service1:echo ..\n");
-    if (eCAL_Client_Call_Wait(clt, "", "echo", request, sizeof(request), &service_response, &response, sizeof(response)))
+    if (eCAL_Client_Call_Wait(clt, "echo", request, sizeof(request), -1, &service_response, &response, sizeof(response)))
     {
       // process response
       switch (service_response.call_state)

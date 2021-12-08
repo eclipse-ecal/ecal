@@ -198,6 +198,7 @@ namespace eCAL
       int                      rclock;
       std::string              hname;
       std::string              sname;
+      std::string              sid;
       std::string              pname;
       std::string              uname;
       int                      pid;
@@ -227,6 +228,7 @@ namespace eCAL
       int          rclock;
       std::string  hname;
       std::string  sname;
+      std::string  sid;
       std::string  pname;
       std::string  uname;
       int          pid;

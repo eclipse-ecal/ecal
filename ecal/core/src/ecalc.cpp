@@ -1074,6 +1074,7 @@ extern "C"
     struct SServiceResponseC service_response;
     service_response.host_name    = service_response_.host_name.c_str();
     service_response.service_name = service_response_.service_name.c_str();
+    service_response.service_id   = service_response_.service_id.c_str();
     service_response.method_name  = service_response_.method_name.c_str();
     service_response.error_msg    = service_response_.error_msg.c_str();
     service_response.ret_state    = service_response_.ret_state;
@@ -1126,6 +1127,7 @@ extern "C"
       {
         service_response_->host_name    = NULL;
         service_response_->service_name = NULL;
+        service_response_->service_id   = NULL;
         service_response_->method_name  = NULL;
         service_response_->error_msg    = NULL;
         service_response_->ret_state    = service_response_vec[0].ret_state;

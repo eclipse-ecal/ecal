@@ -25,6 +25,8 @@
 
 #include "ecal_def.h"
 
+#include <ecal/ecal_callback.h>
+
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
@@ -34,9 +36,9 @@
 #pragma warning(pop)
 #endif
 
-#include <mutex>
 #include <atomic>
-#include <map>
+#include <mutex>
+#include <set>
 
 namespace eCAL
 {
@@ -51,8 +53,8 @@ namespace eCAL
     void Create();
     void Destroy();
 
-    bool Register  (const std::string& service_name_, CServiceServerImpl* service_);
-    bool Unregister(const std::string& service_name_, CServiceServerImpl* service_);
+    bool Register  (CServiceServerImpl* service_);
+    bool Unregister(CServiceServerImpl* service_);
 
     void ApplyClientRegistration(const eCAL::pb::Sample& ecal_sample_);
 
@@ -61,8 +63,8 @@ namespace eCAL
   protected:
     static std::atomic<bool>    m_created;
 
-    typedef std::multimap<std::string, CServiceServerImpl*> ServiceNameServiceImplMapT;
-    std::mutex                  m_service_sync;
-    ServiceNameServiceImplMapT  m_service_map;
+    typedef std::set<CServiceServerImpl*> ServiceNameServiceImplSetT;
+    std::mutex                  m_service_set_sync;
+    ServiceNameServiceImplSetT  m_service_set;
   };
 };
