@@ -377,6 +377,7 @@ namespace eCAL
     auto sample_service = sample_.service();
     std::string  host_name    = sample_service.hname();
     std::string  service_name = sample_service.sname();
+    std::string  service_id   = sample_service.sid();
     std::string  process_name = sample_service.pname();
     std::string  unit_name    = sample_service.uname();
     int          process_id   = sample_service.pid();
@@ -384,7 +385,7 @@ namespace eCAL
 
     std::stringstream process_id_ss;
     process_id_ss << process_id;
-    std::string service_name_id = service_name + process_id_ss.str();
+    std::string service_name_id = service_name + service_id + process_id_ss.str();
 
     // acquire access
     std::lock_guard<std::mutex> lock(m_server_map.sync);
@@ -395,6 +396,7 @@ namespace eCAL
     // set static content
     ServerInfo.hname    = std::move(host_name);
     ServerInfo.sname    = std::move(service_name);
+    ServerInfo.sid      = std::move(service_id);
     ServerInfo.pname    = std::move(process_name);
     ServerInfo.uname    = std::move(unit_name);
     ServerInfo.pid      = process_id;
@@ -422,13 +424,14 @@ namespace eCAL
     auto sample_client = sample_.client();
     std::string  host_name    = sample_client.hname();
     std::string  service_name = sample_client.sname();
+    std::string  service_id   = sample_client.sid();
     std::string  process_name = sample_client.pname();
     std::string  unit_name    = sample_client.uname();
     int          process_id   = sample_client.pid();
 
     std::stringstream process_id_ss;
     process_id_ss << process_id;
-    std::string service_name_id = service_name + process_id_ss.str();
+    std::string service_name_id = service_name + service_id + process_id_ss.str();
 
     // acquire access
     std::lock_guard<std::mutex> lock(m_client_map.sync);
@@ -439,6 +442,7 @@ namespace eCAL
     // set static content
     ClientInfo.hname = std::move(host_name);
     ClientInfo.sname = std::move(service_name);
+    ClientInfo.sid   = std::move(service_id);
     ClientInfo.pname = std::move(process_name);
     ClientInfo.uname = std::move(unit_name);
     ClientInfo.pid = process_id;
@@ -622,6 +626,9 @@ namespace eCAL
       // service name
       pMonService->set_sname(service.second.sname);
 
+      // service id
+      pMonService->set_sid(service.second.sid);
+
       // tcp port
       pMonService->set_tcp_port(service.second.tcp_port);
 
@@ -666,6 +673,9 @@ namespace eCAL
 
       // service name
       pMonClient->set_sname(service.second.sname);
+
+      // service id
+      pMonClient->set_sid(service.second.sid);
     }
   }
 

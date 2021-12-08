@@ -21,15 +21,8 @@
  * @brief  eCAL client gateway class
 **/
 
-#include <ecal/ecal.h>
-
-#include "ecal_def.h"
 #include "ecal_clientgate.h"
-#include "ecal_config_hlp.h"
 #include "service/ecal_service_client_impl.h"
-
-#include <iterator>
-#include <atomic>
 
 namespace eCAL
 {
@@ -56,30 +49,34 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CClientGate::Register(const std::string & service_name_, CServiceClientImpl * service_)
+  bool CClientGate::Register(CServiceClientImpl* client_)
   {
     if (!m_created) return(false);
 
-    // register internal service implementation
-    std::lock_guard<std::mutex> lock(m_client_sync);
-    m_client_map.emplace(std::pair<std::string, CServiceClientImpl*>(service_name_, service_));
+    // register internal client
+    std::lock_guard<std::mutex> lock(m_client_set_sync);
+    m_client_set.insert(client_);
 
     return(true);
   }
 
-  bool CClientGate::Unregister(const std::string & service_name_, CServiceClientImpl * service_)
+  bool CClientGate::Unregister(CServiceClientImpl* client_)
   {
     if (!m_created) return(false);
-    bool ret_state = false;
+    bool ret_state(false);
 
-    std::lock_guard<std::mutex> lock(m_client_sync);
-    auto res = m_client_map.equal_range(service_name_);
-    for (ServiceNameServiceImplMapT::iterator iter = res.first; iter != res.second; ++iter)
+    // unregister internal service
+    std::lock_guard<std::mutex> lock(m_client_set_sync);
+    for (auto iter = m_client_set.begin(); iter != m_client_set.end();)
     {
-      if (iter->second == service_)
+      if (*iter == client_)
       {
-        m_client_map.erase(iter);
-        break;
+        iter = m_client_set.erase(iter);
+        ret_state = true;
+      }
+      else
+      {
+        iter++;
       }
     }
 
@@ -94,29 +91,33 @@ namespace eCAL
     service.pname    = ecal_sample_service.pname();
     service.uname    = ecal_sample_service.uname();
     service.sname    = ecal_sample_service.sname();
+    service.sid      = ecal_sample_service.sid();
     service.pid      = static_cast<int>(ecal_sample_service.pid());
     service.tcp_port = static_cast<unsigned short>(ecal_sample_service.tcp_port());
 
-    // set service key
-    service.key = service.sname + ":" + std::to_string(service.tcp_port) + "@" + std::to_string(service.pid) + "@" + service.hname;
+    // create service key
+    service.key = service.sname + ":" + service.sid + "@" + std::to_string(service.pid) + "@" + service.hname;
 
-    // register service
+    // add or remove (timeouted) services
     {
-      std::lock_guard<std::mutex> lock(m_service_register_sync);
+      std::lock_guard<std::mutex> lock(m_service_register_map_sync);
+
       // add / update service
       m_service_register_map[service.key] = service;
-      
+
       // remove timeouted services
       m_service_register_map.remove_deprecated();
     }
 
-    // inform matching services
+    // inform matching clients
     {
-      std::lock_guard<std::mutex> lock(m_client_sync);
-      auto res = m_client_map.equal_range(service.sname);
-      for (ServiceNameServiceImplMapT::iterator iter = res.first; iter != res.second; ++iter)
+      std::lock_guard<std::mutex> lock(m_client_set_sync);
+      for (auto& iter : m_client_set)
       {
-        iter->second->RegisterService(service.key, service);
+        if (iter->GetServiceName() == service.sname)
+        {
+          iter->RegisterService(service.key, service);
+        }
       }
     }
   }
@@ -124,7 +125,7 @@ namespace eCAL
   std::vector<SServiceAttr> CClientGate::GetServiceAttr(const std::string& service_name_)
   {
     std::vector<SServiceAttr> ret_vec;
-    std::lock_guard<std::mutex> lock(m_service_register_sync);
+    std::lock_guard<std::mutex> lock(m_service_register_map_sync);
 
     // Look for requested services
     for (auto service : m_service_register_map)
@@ -142,10 +143,10 @@ namespace eCAL
     if (!m_created) return;
 
     // refresh service registrations
-    std::lock_guard<std::mutex> lock(m_client_sync);
-    for (auto iter : m_client_map)
+    std::lock_guard<std::mutex> lock(m_client_set_sync);
+    for (auto iter : m_client_set)
     {
-      iter.second->RefreshRegistration();
+      iter->RefreshRegistration();
     }
   }
 };

@@ -59,11 +59,11 @@ namespace eCAL
     bool RegisterTopic(const std::string& topic_name_, const std::string& topic_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_);
     bool UnregisterTopic(const std::string& topic_name_, const std::string& topic_id_);
 
-    bool RegisterServer(const std::string& service_name_, const eCAL::pb::Sample& ecal_sample_, const bool force_);
-    bool UnregisterServer(const std::string& service_name_);
+    bool RegisterServer(const std::string& service_name_, const std::string& service_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_);
+    bool UnregisterServer(const std::string& service_name_, const std::string& service_id_);
 
-    bool RegisterClient(const std::string& service_name_, const eCAL::pb::Sample& ecal_sample_, const bool force_);
-    bool UnregisterClient(const std::string& service_name_);
+    bool RegisterClient(const std::string& client_name_, const std::string& client_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_);
+    bool UnregisterClient(const std::string& client_name_, const std::string& client_id_);
 
   protected:
     size_t RegisterProcess();

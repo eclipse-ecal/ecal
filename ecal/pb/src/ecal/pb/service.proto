@@ -32,6 +32,7 @@ message ServiceHeader
 
   string           hname       =  1;  // host name
   string           sname       =  2;  // service name
+  string           sid         =  7;  // service id
   string           mname       =  3;  // method name
   string           error       =  4;  // error message
   int32            id          =  5;  // session id
@@ -67,6 +68,7 @@ message Service                       // service
   string           uname       =  4;  // unit name
   int32            pid         =  5;  // process id
   string           sname       =  6;  // service name
+  string           sid         =  9;  // service id
   uint32           tcp_port    =  7;  // the tcp port used for that service
   repeated Method  methods     =  8;  // list of methods
 }
@@ -79,4 +81,5 @@ message Client                        // client
   string           uname       =  4;  // unit name
   int32            pid         =  5;  // process id
   string           sname       =  6;  // service name
+  string           sid         =  7;  // service id
 }

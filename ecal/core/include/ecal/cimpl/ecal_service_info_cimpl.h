@@ -46,6 +46,7 @@ struct SServiceResponseC
 {
   const char*      host_name;     //!< service host name
   const char*      service_name;  //!< name of the service
+  const char*      service_id;    //!< id of the service
   const char*      method_name;   //!< name of the service method
   const char*      error_msg;     //!< human readable error message
   int              ret_state;     //!< return state of the called service method

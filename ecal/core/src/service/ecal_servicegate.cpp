@@ -18,18 +18,11 @@
 */
 
 /**
- * @brief  eCAL server gateway class
+ * @brief  eCAL service gateway class
 **/
 
-#include <ecal/ecal.h>
-
-#include "ecal_def.h"
 #include "ecal_servicegate.h"
-#include "ecal_config_hlp.h"
 #include "service/ecal_service_server_impl.h"
-
-#include <iterator>
-#include <atomic>
 
 namespace eCAL
 {
@@ -56,30 +49,34 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CServiceGate::Register(const std::string& service_name_, CServiceServerImpl* service_)
+  bool CServiceGate::Register(CServiceServerImpl* service_)
   {
     if(!m_created) return(false);
 
-    // register internal service implementation
-    std::lock_guard<std::mutex> lock(m_service_sync);
-    m_service_map.emplace(std::pair<std::string, CServiceServerImpl*>(service_name_, service_));
+    // register internal service
+    std::lock_guard<std::mutex> lock(m_service_set_sync);
+    m_service_set.insert(service_);
 
     return(true);
   }
 
-  bool CServiceGate::Unregister(const std::string& service_name_, CServiceServerImpl* service_)
+  bool CServiceGate::Unregister(CServiceServerImpl* service_)
   {
     if(!m_created) return(false);
-    bool ret_state = false;
+    bool ret_state(false);
 
-    std::lock_guard<std::mutex> lock(m_service_sync);
-    auto res = m_service_map.equal_range(service_name_);
-    for(ServiceNameServiceImplMapT::iterator iter = res.first; iter != res.second; ++iter)
+    // unregister internal service
+    std::lock_guard<std::mutex> lock(m_service_set_sync);
+    for (auto iter = m_service_set.begin(); iter != m_service_set.end();)
     {
-      if(iter->second == service_)
+      if (*iter == service_)
       {
-        m_service_map.erase(iter);
-        break;
+        iter = m_service_set.erase(iter);
+        ret_state = true;
+      }
+      else
+      {
+        iter++;
       }
     }
 
@@ -94,17 +91,22 @@ namespace eCAL
     client.pname = ecal_sample_client.pname();
     client.uname = ecal_sample_client.uname();
     client.sname = ecal_sample_client.sname();
-    client.pid = static_cast<int>(ecal_sample_client.pid());
+    client.sid   = ecal_sample_client.sid();
+    client.pid   = static_cast<int>(ecal_sample_client.pid());
 
-    // set client key
-    client.key = client.sname + ":" + std::to_string(client.pid) + "@" + client.hname;
+    // create unique client key
+    client.key = client.sname + ":" + client.sid + "@" + std::to_string(client.pid) + "@" + client.hname;
 
     // inform matching services
-    std::lock_guard<std::mutex> lock(m_service_sync);
-    auto res = m_service_map.equal_range(client.sname);
-    for (ServiceNameServiceImplMapT::iterator iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->RegisterClient(client.key, client);
+      std::lock_guard<std::mutex> lock(m_service_set_sync);
+      for (auto& iter : m_service_set)
+      {
+        if (iter->GetServiceName() == client.sname)
+        {
+          iter->RegisterClient(client.key, client);
+        }
+      }
     }
   }
 
@@ -113,10 +115,10 @@ namespace eCAL
     if (!m_created) return;
 
     // refresh service registrations
-    std::lock_guard<std::mutex> lock(m_service_sync);
-    for (auto iter : m_service_map)
+    std::lock_guard<std::mutex> lock(m_service_set_sync);
+    for (auto& iter : m_service_set)
     {
-      iter.second->RefreshRegistration();
+      iter->RefreshRegistration();
     }
   }
 };

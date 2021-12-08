@@ -78,6 +78,8 @@ namespace eCAL
     // called by eCAL:CClientGate every second to update registration layer
     void RefreshRegistration();
 
+    std::string GetServiceName() { return m_service_name; };
+
     // this object must not be copied.
     CServiceClientImpl(const CServiceClientImpl&) = delete;
     CServiceClientImpl& operator=(const CServiceClientImpl&) = delete;
@@ -112,7 +114,9 @@ namespace eCAL
     ServiceAttrMapT    m_connected_services_map;
 
     std::string        m_service_name;
+    std::string        m_service_id;
     std::string        m_host_name;
+
     bool               m_created;
   };
 }

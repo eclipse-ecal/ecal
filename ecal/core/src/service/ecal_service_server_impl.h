@@ -87,6 +87,8 @@ namespace eCAL
     CTcpServer         m_tcp_server;
 
     std::string        m_service_name;
+    std::string        m_service_id;
+
     struct SMethodCallback
     {
       eCAL::pb::Method method;

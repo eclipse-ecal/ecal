@@ -44,6 +44,7 @@ namespace eCAL
     };
     std::string  host_name;      //!< service host name
     std::string  service_name;   //!< name of the service
+    std::string  service_id;     //!< id of the service
     std::string  method_name;    //!< name of the service method
     std::string  error_msg;      //!< human readable error message
     int          ret_state;      //!< return state of the called service method

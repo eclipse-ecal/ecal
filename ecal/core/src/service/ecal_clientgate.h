@@ -37,9 +37,9 @@
 #pragma warning(pop)
 #endif
 
-#include <mutex>
 #include <atomic>
-#include <map>
+#include <mutex>
+#include <set>
 
 namespace eCAL
 {
@@ -54,8 +54,8 @@ namespace eCAL
     void Create();
     void Destroy();
 
-    bool Register  (const std::string& service_name_, CServiceClientImpl* service_);
-    bool Unregister(const std::string& service_name_, CServiceClientImpl* service_);
+    bool Register  (CServiceClientImpl* client_);
+    bool Unregister(CServiceClientImpl* client_);
 
     void ApplyServiceRegistration(const eCAL::pb::Sample& ecal_sample_);
 
@@ -66,12 +66,12 @@ namespace eCAL
   protected:
     static std::atomic<bool>    m_created;
 
-    typedef std::multimap<std::string, CServiceClientImpl*> ServiceNameServiceImplMapT;
-    std::mutex                  m_client_sync;
-    ServiceNameServiceImplMapT  m_client_map;
+    typedef std::set<CServiceClientImpl*> ServiceNameServiceImplSetT;
+    std::mutex                  m_client_set_sync;
+    ServiceNameServiceImplSetT  m_client_set;
 
     typedef Util::CExpMap<std::string, SServiceAttr> ConnectedMapT;
-    std::mutex                  m_service_register_sync;
+    std::mutex                  m_service_register_map_sync;
     ConnectedMapT               m_service_register_map;
   };
 };
