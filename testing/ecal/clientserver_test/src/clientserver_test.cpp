@@ -32,15 +32,16 @@
 #include "math.pb.h"
 #include "ping.pb.h"
 
-#define ClientServerBaseCallbackTest       1
-#define ClientServerBaseAsyncCallbackTest  1
+#define ClientServerBaseCallbackTest               1
+#define ClientServerBaseAsyncCallbackTest          1
+#define ClientServerBaseAsyncMultipleRequestsTest  1
 
-#define ClientServerBaseBlockingTest       0   // C API is not supporting vector of responses
+#define ClientServerBaseBlockingTest               0   // C API is not supporting vector of responses
 
-#define ClientServerProtoCallbackTest      1
-#define ClientServerProtoBlockingTest      1
+#define ClientServerProtoCallbackTest              1
+#define ClientServerProtoBlockingTest              1
 
-#define NestedRPCCallTest                  1
+#define NestedRPCCallTest                          1
 
 namespace
 {
@@ -246,6 +247,68 @@ TEST(IO, ClientServerBaseAsyncCallback)
 }
 
 #endif /* ClientServerBaseAsyncCallbackTest */
+
+#if ClientServerBaseAsyncMultipleRequestsTest
+
+TEST(IO, ClientServerBaseAsyncMultipleRequests)
+{
+  const int calls(2);
+
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "clientserver base async multiple requests test");
+
+  // create service server
+  eCAL::CServiceServer server("service");
+
+  // request callback function
+  int requests_executed(0);
+  auto request_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
+  {
+    PrintRequest(method_, req_type_, resp_type_, request_);
+    response_ = "I answer on " + request_;
+    requests_executed++;
+    eCAL::Process::SleepMS(500); //simlate long request
+    return 42;
+  };
+
+  // add callback for client request
+  server.AddMethodCallback("foo::method", "foo::req_type", "foo::resp_type", request_callback);
+
+  // create service client
+  eCAL::CServiceClient client("service");
+
+  // response callback function
+  int responses_executed(0);
+  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
+  {
+    PrintResponse(service_response_);
+    responses_executed++;
+  };
+
+  // add callback for server response
+  client.AddResponseCallback(response_callback);
+
+  // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
+  eCAL::Process::SleepMS(2000);
+
+  // call service
+  int requests_called(0);
+  for (auto i = 0; i < calls; ++i)
+  {
+    client.CallAsync("foo::method", std::to_string(i));
+    requests_called++;
+  }
+
+  eCAL::Process::SleepMS(1500);
+
+  EXPECT_EQ(requests_called, requests_executed);
+  EXPECT_EQ(requests_called, responses_executed);
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+#endif /* ClientServerBaseAsyncMultipleRequestsTest */
 
 #if ClientServerBaseBlockingTest
 
