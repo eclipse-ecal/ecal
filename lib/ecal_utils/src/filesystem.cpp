@@ -68,7 +68,6 @@ namespace EcalUtils
 
     FileStatus::FileStatus(const std::string& path, OsStyle input_path_style)
     {
-      path_ = CleanPath(path, input_path_style);
 #ifdef WIN32
       std::wstring w_native_path_ = StrConvert::Utf8ToWide(ToNativeSeperators(path, input_path_style));
       const int error_code = _wstat64(w_native_path_.c_str(), &file_status_);
