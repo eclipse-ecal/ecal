@@ -79,9 +79,11 @@ namespace eCAL
     std::shared_ptr<asio::ip::tcp::socket>  m_socket;
     bool                                    m_created;
     bool                                    m_connected;
-    
+
   private:
-    void ReceiveResponseAsync(AsyncCallbackT callback_);	
+    bool SendRequest(const std::string &request_);
+    size_t ReceiveResponse(std::string &response_);
+    void ReceiveResponseAsync(AsyncCallbackT callback_);
     void ReceiveResponseData(const size_t size, AsyncCallbackT callback_);
   };
 };

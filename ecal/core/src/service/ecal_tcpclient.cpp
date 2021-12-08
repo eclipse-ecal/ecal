@@ -96,36 +96,60 @@ namespace eCAL
     m_created = false;
   }
 
-  size_t CTcpClient::ExecuteRequest(const std::string& request_, std::string& response_)
+  size_t CTcpClient::ExecuteRequest(const std::string &request_, std::string &response_)
   {
     std::lock_guard<std::mutex> lock(m_socket_write_mutex);
 
     if (!m_created) return 0;
 
+    if(!SendRequest(request_)) return 0;
+
+    return ReceiveResponse(response_);
+  }
+
+  void CTcpClient::ExecuteRequestAsync(const std::string &request_, AsyncCallbackT callback)
+  {
+    std::unique_lock<std::mutex> lock(m_socket_write_mutex);
+
+    if (!m_created)
+      callback("", false);
+
+    //Start waiting for response
+    ReceiveResponseAsync(callback);
+    
+    if(!SendRequest(request_)) 
+      callback("", false);
+  }
+
+  bool CTcpClient::SendRequest(const std::string &request_)
+  {
     size_t written(0);
     try
     {
       // send payload to server
       while (written != request_.size())
       {
-        const size_t bytes_wrote = m_socket->write_some(asio::buffer(request_.c_str() + written, request_.size() - written));
-        //std::cout << "CTcpClient::ExecuteRequest wrote request bytes " << bytes_wrote << std::endl;
-        written += bytes_wrote;
+        auto bytes_written = m_socket->write_some(asio::buffer(request_.c_str() + written, request_.size() - written));
+        written += bytes_written;
       }
     }
-    catch (std::exception& e)
+    catch (std::exception &e)
     {
       std::cerr << "CTcpClient::ExecuteRequest: Failed to send request: " << e.what() << "\n";
       m_connected = false;
-      return 0;
+      return false;
     }
+  }
 
+  size_t CTcpClient::ReceiveResponse(std::string &response_)
+  {
     try
     {
       // read stream header
       STcpHeader tcp_header;
       size_t bytes_read = m_socket->read_some(asio::buffer(&tcp_header, sizeof(tcp_header)));
-      if (bytes_read != sizeof(tcp_header)) return 0;
+      if (bytes_read != sizeof(tcp_header))
+        return 0;
 
       // extract data size
       const size_t rsize = static_cast<size_t>(ntohl(tcp_header.psize_n));
@@ -148,7 +172,7 @@ namespace eCAL
 
       return response_.size();
     }
-    catch (std::exception& e)
+    catch (std::exception &e)
     {
       std::cerr << "CTcpClient::ExecuteRequest: Failed to recieve response: " << e.what() << std::endl;
       m_connected = false;
@@ -156,31 +180,13 @@ namespace eCAL
     }
   }
 
-  void CTcpClient::ExecuteRequestAsync(const std::string &request_, AsyncCallbackT callback)
-  {
-    std::unique_lock<std::mutex> lock(m_socket_write_mutex);
-
-    if (!m_created)
-      callback("", false);
-
-    //Start waiting for response
-    ReceiveResponseAsync(callback);
-
-    asio::async_write(*m_socket, asio::buffer(request_),
-    [this, callback, lock = std::move(lock)](auto ec, auto) 
-    {
-      if (ec)
-        callback("", false);
-    });
-  }
-
   void CTcpClient::ReceiveResponseAsync(AsyncCallbackT callback_)
   {
     std::shared_ptr<STcpHeader> tcp_header = std::make_shared<STcpHeader>();
-    std::unique_lock<std::mutex> lock(m_socket_read_mutex);
+    //std::unique_lock<std::mutex> lock(m_socket_read_mutex);
 
     m_socket->async_read_some(asio::buffer(tcp_header.get(), sizeof(tcp_header)),
-    [this, tcp_header, callback_, lock = std::move(lock)](auto ec, auto bytes_transferred) 
+    [this, tcp_header, callback_/*, lock = std::move(lock)*/](auto ec, auto bytes_transferred) 
     {
       if(ec) callback_("", false);
 
