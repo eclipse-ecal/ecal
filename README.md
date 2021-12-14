@@ -113,6 +113,7 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 
 ## Related projects
 
+* [Agtonomy Trellis](https://github.com/agtonomy/trellis)
 * [eCAL Simulink Toolbox](https://de.mathworks.com/matlabcentral/fileexchange/92825-ecal-toolbox)
 * [GO language binding](https://github.com/Blutkoete/golang-ecal)
 * [Rust language binding](https://github.com/kopernikusai/ecal-rs)
