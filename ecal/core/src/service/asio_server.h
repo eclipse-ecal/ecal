@@ -33,8 +33,10 @@
 #endif
 
 #include "ecal_tcpheader.h"
+#include "ecal/cimpl/ecal_callback_cimpl.h"
 
-typedef std::function<int(const std::string& request, std::string& response)> RequestCallbackT;
+typedef std::function<int(const std::string& request, std::string& response)>    RequestCallbackT;
+typedef std::function<void(eCAL_Server_Event event, const std::string& message)> EventCallbackT;
 
 class CAsioSession
 {
@@ -57,9 +59,14 @@ public:
         std::placeholders::_2));
   }
 
-  void add_request_callback(RequestCallbackT callback_)
+  void add_request_callback1(RequestCallbackT callback_)
   {
     request_callback_ = callback_;
+  }
+
+  void add_event_callback(EventCallbackT callback_)
+  {
+    event_callback_ = callback_;
   }
 
 private:
@@ -105,6 +112,15 @@ private:
     }
     else
     {
+      if ((ec == asio::error::eof) ||
+          (ec == asio::error::connection_reset))
+      {
+        // handle the disconnect
+        if (event_callback_)
+        {
+          event_callback_(server_event_disconnected, "CAsioSession disconnected on read");
+        }
+      }
       delete this;
     }
   }
@@ -135,13 +151,22 @@ private:
     }
     else
     {
-      std::cerr << "CAsioSession::handle_write: Failed write : " << ec.message() << std::endl;
+      if ((ec == asio::error::eof) ||
+          (ec == asio::error::connection_reset))
+      {
+        // handle the disconnect
+        if (event_callback_)
+        {
+          event_callback_(server_event_disconnected, "CAsioSession disconnected on write");
+        }
+      }
       delete this;
     }
   }
 
   asio::ip::tcp::socket  socket_;
   RequestCallbackT       request_callback_;
+  EventCallbackT         event_callback_;
   std::string            request_;
   std::string            response_;
   std::vector<char>      packed_response_;
@@ -155,14 +180,25 @@ class CAsioServer
 public:
   CAsioServer(asio::io_service& io_service, unsigned short port)
     : io_service_(io_service),
-    acceptor_(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
+    acceptor_(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port)),
+    connect_cnt_(0)
   {
     start_accept();
   }
 
-  void add_request_callback(RequestCallbackT callback)
+  bool is_connected()
+  {
+    return (connect_cnt_ > 0);
+  }
+
+  void add_request_callback1(RequestCallbackT callback)
   {
     request_cb_ = callback;
+  }
+
+  void add_event_callback(EventCallbackT callback)
+  {
+    event_cb_ = callback;
   }
 
   uint16_t get_port()
@@ -184,8 +220,16 @@ private:
   {
     if (!ec)
     {
+      // handle the connect
+      connect_cnt_++;
+      if (event_cb_)
+      {
+        event_cb_(server_event_connected, "CAsioSession connected");
+      }
+
       new_session->start();
-      new_session->add_request_callback(std::bind(&CAsioServer::do_request, this, std::placeholders::_1, std::placeholders::_2));
+      new_session->add_request_callback1(std::bind(&CAsioServer::on_request, this, std::placeholders::_1, std::placeholders::_2));
+      new_session->add_event_callback(std::bind(&CAsioServer::on_event,      this, std::placeholders::_1, std::placeholders::_2));
     }
     else
     {
@@ -195,7 +239,7 @@ private:
     start_accept();
   }
 
-  int do_request(const std::string& request, std::string& response)
+  int on_request(const std::string& request, std::string& response)
   {
     if (request_cb_)
     {
@@ -204,7 +248,29 @@ private:
     return 0;
   }
 
+  void on_event(eCAL_Server_Event event, const std::string& message)
+  {
+    switch (event)
+    {
+    case server_event_connected:
+      connect_cnt_++;
+      break;
+    case server_event_disconnected:
+      connect_cnt_--;
+      break;
+    default:
+      break;
+    }
+
+    if (event_cb_)
+    {
+      event_cb_(event, message);
+    }
+  }
+
   asio::io_service&        io_service_;
   asio::ip::tcp::acceptor  acceptor_;
   RequestCallbackT         request_cb_;
+  EventCallbackT           event_cb_;
+  int                      connect_cnt_;
 };

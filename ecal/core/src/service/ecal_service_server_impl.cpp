@@ -37,12 +37,12 @@ namespace eCAL
    * @brief Service server implementation class.
   **/
   CServiceServerImpl::CServiceServerImpl() :
-    m_created(false)
+    m_created(false), m_connected(false)
   {
   }
 
   CServiceServerImpl::CServiceServerImpl(const std::string& service_name_) :
-    m_created(false)
+    m_created(false), m_connected(false)
   {
     Create(service_name_);
   }
@@ -64,11 +64,9 @@ namespace eCAL
     counter << std::chrono::steady_clock::now().time_since_epoch().count();
     m_service_id = counter.str();
 
-    std::chrono::milliseconds registration_timeout(eCALPAR(CMN, REGISTRATION_REFRESH) * 5);
-    m_connected_clients_map.set_expiration(registration_timeout);
-
     m_tcp_server.Create();
-    m_tcp_server.Start(std::bind(&CServiceServerImpl::RequestCallback, this, std::placeholders::_1, std::placeholders::_2));
+    m_tcp_server.Start(std::bind(&CServiceServerImpl::RequestCallback, this, std::placeholders::_1, std::placeholders::_2),
+                       std::bind(&CServiceServerImpl::EventCallback,   this, std::placeholders::_1, std::placeholders::_2));
 
     if (g_servicegate()) g_servicegate()->Register(this);
 
@@ -102,6 +100,7 @@ namespace eCAL
     m_service_name.clear();
     m_service_id.clear();
 
+    m_connected = false;
     m_created   = false;
 
     return(true);
@@ -176,36 +175,13 @@ namespace eCAL
   bool CServiceServerImpl::IsConnected()
   {
     if (!m_created) return false;
-
-    // check for connected services
-    std::lock_guard<std::mutex> lock(m_connected_clients_map_sync);
-    return !m_connected_clients_map.empty();
+    return m_tcp_server.IsConnected();
   }
 
   // called by the eCAL::CServiceGate to register a client
-  void CServiceServerImpl::RegisterClient(const std::string& key_, const SClientAttr& client_)
+  void CServiceServerImpl::RegisterClient(const std::string& /*key_*/, const SClientAttr& /*client_*/)
   {
-    // check connections
-    std::lock_guard<std::mutex> lock(m_connected_clients_map_sync);
-
-    // is this a new connection ?
-    if (m_connected_clients_map.find(key_) == m_connected_clients_map.end())
-    {
-      // call connect event
-      std::lock_guard<std::mutex> lock_cb(m_event_callback_map_sync);
-      auto e_iter = m_event_callback_map.find(server_event_connected);
-      if (e_iter != m_event_callback_map.end())
-      {
-        SServerEventCallbackData sdata;
-        sdata.type = server_event_connected;
-        sdata.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-        sdata.attr = client_;
-        (e_iter->second)(m_service_name.c_str(), &sdata);
-      }
-    }
-
-    // add / update client (time expiration !)
-    m_connected_clients_map[key_] = client_;
+    // not used yet
   }
 
   // called by eCAL:CServiceGate every second to update registration layer
@@ -238,40 +214,7 @@ namespace eCAL
     }
 
     // register entity
-    if (g_entity_register()) g_entity_register()->RegisterServer(m_service_name, m_service_id ,sample, false);
-
-    // check for disconnected services
-    {
-      std::lock_guard<std::mutex> lock(m_connected_clients_map_sync);
-
-      // last connections
-      ClientAttrMapT last_connected_clients_map = m_connected_clients_map;
-
-      // remove timeouted clients
-      m_connected_clients_map.remove_deprecated();
-
-      // did we remove some ?
-      if (last_connected_clients_map.size() != m_connected_clients_map.size())
-      {
-        for (auto client : last_connected_clients_map)
-        {
-          if (m_connected_clients_map.find(client.first) == m_connected_clients_map.end())
-          {
-            // call disconnect event
-            std::lock_guard<std::mutex> lock_cb(m_event_callback_map_sync);
-            auto e_iter = m_event_callback_map.find(server_event_disconnected);
-            if (e_iter != m_event_callback_map.end())
-            {
-              SServerEventCallbackData sdata;
-              sdata.type = server_event_disconnected;
-              sdata.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-              sdata.attr = client.second;
-              (e_iter->second)(m_service_name.c_str(), &sdata);
-            }
-          }
-        }
-      }
-    }
+    if (g_entity_register()) g_entity_register()->RegisterServer(m_service_name, m_service_id, sample, false);
   }
 
   int CServiceServerImpl::RequestCallback(const std::string& request_, std::string& response_)
@@ -320,5 +263,40 @@ namespace eCAL
       response_ = response_pb.SerializeAsString();
     }
     return success;
+  }
+
+  void CServiceServerImpl::EventCallback(eCAL_Server_Event event_, const std::string& /*message_*/)
+  {
+    bool mode_changed(false);
+    if (m_connected)
+    {
+      if (!m_tcp_server.IsConnected())
+      {
+        mode_changed = true;
+        m_connected  = false;
+      }
+    }
+    else
+    {
+      if (m_tcp_server.IsConnected())
+      {
+        mode_changed = true;
+        m_connected  = true;
+      }
+    }
+
+    if (mode_changed)
+    {
+      // call event
+      std::lock_guard<std::mutex> lock_cb(m_event_callback_map_sync);
+      auto e_iter = m_event_callback_map.find(event_);
+      if (e_iter != m_event_callback_map.end())
+      {
+        SServerEventCallbackData sdata;
+        sdata.type = event_;
+        sdata.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+        (e_iter->second)(m_service_name.c_str(), &sdata);
+      }
+    }
   }
 };

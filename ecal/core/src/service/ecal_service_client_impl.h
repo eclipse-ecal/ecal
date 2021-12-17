@@ -87,11 +87,11 @@ namespace eCAL
   protected:
     void CheckForNewServices();
 
-    bool SendRequests(const std::string& host_name_, const std::string& method_name_, const std::string& request_);
-    bool SendRequest(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_);
+    bool SendRequests(const std::string& host_name_, const std::string& method_name_, const std::string& request_, int timeout_);
+    bool SendRequest(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, int timeout_, struct SServiceResponse& service_response_);
 
-    void SendRequestsAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_);
-    void SendRequestAsync(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_);
+    void SendRequestsAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_, int timeout_);
+    void SendRequestAsync(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, int timeout_);
 
     void ErrorCallback(const std::string &method_name_, const std::string &error_message_);
 

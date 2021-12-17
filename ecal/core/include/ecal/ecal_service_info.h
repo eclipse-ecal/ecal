@@ -55,7 +55,7 @@ namespace eCAL
 
   // for downwards API compatibilty
   [[deprecated]]
-  typedef SServiceResponse SServiceInfo; //!< Old service response struct (deprecated)
+  typedef SServiceResponse SServiceInfo; //!< Old service info struct (deprecated)
 
   /**
    * @brief Service method callback function type (low level server interface).

@@ -108,8 +108,8 @@ namespace eCAL
       type = client_event_none;
       time = 0;
     };
-    eCAL_Client_Event type;  //!< client event type
-    long long         time;  //!< client event time in µs
+    eCAL_Client_Event type;  //!< event type
+    long long         time;  //!< event time in µs
     SServiceAttr      attr;  //!< event related service attributes
   };
 
@@ -137,9 +137,8 @@ namespace eCAL
       type = server_event_none;
       time = 0;
     };
-    eCAL_Server_Event type;  //!< server event type
-    long long         time;  //!< client event time in µs
-    SClientAttr       attr;  //!< event related client attributes
+    eCAL_Server_Event type;  //!< event type
+    long long         time;  //!< event time in µs
   };
 
   /**
