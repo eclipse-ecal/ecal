@@ -112,7 +112,7 @@ extern "C"
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Client_AddResponseCallbackC(ECAL_HANDLE handle_, ResponseCallbackCT callback_, void* par_);
+  ECALC_API int eCAL_Client_AddResponseCallback(ECAL_HANDLE handle_, ResponseCallbackCT callback_, void* par_);
 
   /**
    * @brief Remove server response callback. 
@@ -122,6 +122,28 @@ extern "C"
    * @return  None zero if succeeded.
   **/
   ECALC_API int eCAL_Client_RemResponseCallback(ECAL_HANDLE handle_);
+
+  /**
+   * @brief Add client event callback function.
+   *
+   * @param handle_    Client handle.
+   * @param type_      The event type to react on.
+   * @param callback_  The callback function to add.
+   * @param par_       User defined context that will be forwarded to the callback function.
+   *
+   * @return  True if succeeded, false if not.
+  **/
+  ECALC_API int eCAL_Client_AddEventCallback(ECAL_HANDLE handle_, eCAL_Client_Event type_, ClientEventCallbackCT callback_, void* par_);
+
+  /**
+   * @brief Remove client event callback function.
+   *
+   * @param handle_  Client handle.
+   * @param type_    The event type to remove.
+   *
+   * @return  True if succeeded, false if not.
+  **/
+  ECALC_API int eCAL_Client_RemEventCallback(ECAL_HANDLE handle_, eCAL_Client_Event type_);
 
 #ifdef __cplusplus
 }

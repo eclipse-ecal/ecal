@@ -22,10 +22,6 @@
 #include <ecal/msg/protobuf/server.h>
 
 #include <iostream>
-#include <chrono>
-#include <thread>
-#include <cmath>
-#include <memory>
 
 #include <gtest/gtest.h>
 
@@ -33,10 +29,10 @@
 #include "ping.pb.h"
 
 #define ClientServerBaseCallbackTest             1
-#define ClientServerBaseCallbackTimeoutTest      0   // C API is not supporting AddEventCallback (under development)
+#define ClientServerBaseCallbackTimeoutTest      1
 
 #define ClientServerBaseAsyncCallbackTest        1
-#define ClientServerBaseAsyncCallbackTimeoutTest 0   // Crashing all API's (under development)
+#define ClientServerBaseAsyncCallbackTimeoutTest 1
 
 #define ClientServerBaseBlockingTest             0   // C API is not supporting vector of responses (under development)
 
@@ -107,23 +103,23 @@ TEST(IO, ClientServerBaseCallback)
     service_vec.push_back(std::make_shared<eCAL::CServiceServer>("service"));
   }
 
-  // request callback function
-  int requests_executed(0);
-  int request_sleep_time(0);
-  auto request_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
+  // method callback function
+  int methods_executed(0);
+  int method_process_time(0);
+  auto method_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
   {
-    eCAL::Process::SleepMS(request_sleep_time);
+    eCAL::Process::SleepMS(method_process_time);
     PrintRequest(method_, req_type_, resp_type_, request_);
     response_ = "I answer on " + request_;
-    requests_executed++;
+    methods_executed++;
     return 42;
   };
 
-  // add callback for client request
+  // add method callbacks
   for (auto service : service_vec)
   {
-    service->AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", request_callback);
-    service->AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", request_callback);
+    service->AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", method_callback);
+    service->AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", method_callback);
   }
 
   // create service clients
@@ -151,49 +147,49 @@ TEST(IO, ClientServerBaseCallback)
   eCAL::Process::SleepMS(2000);
 
   // call service
-  int requests_called(0);
+  int methods_called(0);
   bool success(true);
 
-  // some calls with no sleep in the method request callbacks
+  // some calls with no sleep in the method callback
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
     for (auto client : client_vec)
     {
-      // call a method1
+      // call method 1
       success &= client->Call("foo::method1", "my request for method 1");
       eCAL::Process::SleepMS(sleep);
-      requests_called++;
+      methods_called++;
 
-      // call a method2
+      // call method 2
       success &= client->Call("foo::method2", "my request for method 2");
       eCAL::Process::SleepMS(sleep);
-      requests_called++;
+      methods_called++;
     }
   }
 
-  // some calls with 100 ms sleep in the method request callbacks
-  request_sleep_time = 100;
+  // some calls with method_process_time sleep in the method callback
+  method_process_time = 100;
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
     for (auto client : client_vec)
     {
-      // call a method1
+      // call method 1
       success &= client->Call("foo::method1", "my request for method 1");
       eCAL::Process::SleepMS(sleep);
-      requests_called++;
+      methods_called++;
 
-      // call a method2
+      // call method 2
       success &= client->Call("foo::method2", "my request for method 2");
       eCAL::Process::SleepMS(sleep);
-      requests_called++;
+      methods_called++;
     }
   }
 
   EXPECT_EQ(true, success);
-  EXPECT_EQ(requests_called * num_services, requests_executed);
-  EXPECT_EQ(requests_called * num_services, responses_executed);
+  EXPECT_EQ(methods_called * num_services, methods_executed);
+  EXPECT_EQ(methods_called * num_services, responses_executed);
 
 
   // finalize eCAL API
@@ -221,23 +217,23 @@ TEST(IO, ClientServerBaseCallbackTimeoutTest)
     service_vec.push_back(std::make_shared<eCAL::CServiceServer>("service"));
   }
 
-  // request callback function
-  int requests_executed(0);
-  int request_sleep_time(0);
-  auto request_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
+  // method callback function
+  int methods_executed(0);
+  int method_process_time(0);
+  auto method_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
   {
-    eCAL::Process::SleepMS(request_sleep_time);
+    eCAL::Process::SleepMS(method_process_time);
     PrintRequest(method_, req_type_, resp_type_, request_);
     response_ = "I answer on " + request_;
-    requests_executed++;
+    methods_executed++;
     return 42;
   };
 
-  // add callback for client request
+  // add method callbacks
   for (auto service : service_vec)
   {
-    service->AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", request_callback);
-    service->AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", request_callback);
+    service->AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", method_callback);
+    service->AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", method_callback);
   }
 
   // create service clients
@@ -277,94 +273,94 @@ TEST(IO, ClientServerBaseCallbackTimeoutTest)
   eCAL::Process::SleepMS(2000);
 
   // call service
-  int requests_called(0);
+  int methods_called(0);
   bool success(true);
 
-  // some calls with 100 ms sleep in the method request callbacks
-  request_sleep_time = 100;
+  // some calls with method_process_time sleep in the method callback
+  method_process_time = 100;
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
     for (auto client : client_vec)
     {
-      // call a method1
+      // call method 1
       success &= client->Call("foo::method1", "my request for method 1");
       eCAL::Process::SleepMS(sleep);
-      requests_called++;
+      methods_called++;
 
-      // call a method2
+      // call method 2
       success &= client->Call("foo::method2", "my request for method 2");
       eCAL::Process::SleepMS(sleep);
-      requests_called++;
+      methods_called++;
     }
   }
 
   EXPECT_EQ(true, success);
-  EXPECT_EQ(requests_called * num_services, requests_executed);
-  EXPECT_EQ(requests_called * num_services, responses_executed);
+  EXPECT_EQ(methods_called * num_services, methods_executed);
+  EXPECT_EQ(methods_called * num_services, responses_executed);
   EXPECT_EQ(0, timeout_fired);
 
   // reset all
   success = true;
-  requests_called = 0;
-  requests_executed = 0;
+  methods_called = 0;
+  methods_executed = 0;
   responses_executed = 0;
   timeout_fired = 0;
 
-  // some calls with 100 ms sleep in the method request callbacks and timeout parameter
-  request_sleep_time = 100;
+  // some calls with method_process_time sleep in the method callback and a proper timeout parameter
+  method_process_time = 100;
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
     for (auto client : client_vec)
     {
-      // call a method1
-      success &= client->Call("foo::method1", "my request for method 1", request_sleep_time * 2);
+      // call method 1
+      success &= client->Call("foo::method1", "my request for method 1", method_process_time * 2);
       eCAL::Process::SleepMS(sleep);
-      requests_called++;
+      methods_called++;
 
-      // call a method2
-      success &= client->Call("foo::method2", "my request for method 2", request_sleep_time * 2);
+      // call method 2
+      success &= client->Call("foo::method2", "my request for method 2", method_process_time * 2);
       eCAL::Process::SleepMS(sleep);
-      requests_called++;
+      methods_called++;
     }
   }
 
   EXPECT_EQ(true, success);
-  EXPECT_EQ(requests_called * num_services, requests_executed);
-  EXPECT_EQ(requests_called * num_services, responses_executed);
+  EXPECT_EQ(methods_called * num_services, methods_executed);
+  EXPECT_EQ(methods_called * num_services, responses_executed);
   EXPECT_EQ(0, timeout_fired);
 
   // reset all
   success = true;
-  requests_called = 0;
-  requests_executed = 0;
+  methods_called = 0;
+  methods_executed = 0;
   responses_executed = 0;
   timeout_fired = 0;
 
-  // some calls with 100 ms sleep in the method request callbacks and to small timeout parameter
-  request_sleep_time = 100;
+  // some calls with method_process_time sleep in the method callback and to small timeout parameter
+  method_process_time = 100;
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
     for (auto client : client_vec)
     {
-      // call a method1
-      success &= client->Call("foo::method1", "my request for method 1", request_sleep_time / 10);
-      eCAL::Process::SleepMS(request_sleep_time * 2);
-      requests_called++;
+      // call method 1
+      success &= client->Call("foo::method1", "my request for method 1", method_process_time / 10);
+      eCAL::Process::SleepMS(method_process_time * 2);
+      methods_called++;
 
-      // call a method2
-      success &= client->Call("foo::method2", "my request for method 2", request_sleep_time / 10);
-      eCAL::Process::SleepMS(request_sleep_time * 2);
-      requests_called++;
+      // call method 2
+      success &= client->Call("foo::method2", "my request for method 2", method_process_time / 10);
+      eCAL::Process::SleepMS(method_process_time * 2);
+      methods_called++;
     }
   }
   eCAL::Process::SleepMS(1000);
 
   EXPECT_EQ(false, success);
   EXPECT_EQ(0, responses_executed);
-  EXPECT_EQ(requests_executed, timeout_fired);
+  EXPECT_EQ(methods_executed, timeout_fired);
 
   // finalize eCAL API
   eCAL::Finalize();
@@ -383,24 +379,24 @@ TEST(IO, ClientServerBaseAsyncCallback)
   eCAL::Initialize(0, nullptr, "clientserver base async callback test");
 
   // create service server
-  eCAL::CServiceServer server("service1");
+  eCAL::CServiceServer server("service");
 
-  // request callback function
-  int requests_executed(0);
-  auto request_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
+  // method callback function
+  int methods_executed(0);
+  auto method_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
   {
     PrintRequest(method_, req_type_, resp_type_, request_);
     response_ = "I answered on " + request_;
-    requests_executed++;
+    methods_executed++;
     return 42;
   };
 
   // add callback for client request
-  server.AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", request_callback);
-  server.AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", request_callback);
+  server.AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", method_callback);
+  server.AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", method_callback);
 
   // create service client
-  eCAL::CServiceClient client("service1");
+  eCAL::CServiceClient client("service");
 
   // response callback function
   int responses_executed(0);
@@ -417,28 +413,28 @@ TEST(IO, ClientServerBaseAsyncCallback)
   eCAL::Process::SleepMS(2000);
 
   // call service
-  int requests_called(0);
+  int methods_called(0);
   std::string m1("foo::method1");
   std::string m2("foo::method2");
   std::string r1("my request for method 1");
   std::string r2("my request for method 2");
 
-  // some calls with no sleep in the method request callbacks
+  // some calls with no sleep in the method callback
   for (auto i = 0; i < calls; ++i)
   {
-    // call a method1
+    // call method 1
     client.CallAsync(m1, r1);
     eCAL::Process::SleepMS(sleep);
-    requests_called++;
+    methods_called++;
 
-    // call a method2
+    // call method 2
     client.CallAsync(m2, r2);
     eCAL::Process::SleepMS(sleep);
-    requests_called++;
+    methods_called++;
   }
 
-  EXPECT_EQ(requests_called, requests_executed);
-  EXPECT_EQ(requests_called, responses_executed);
+  EXPECT_EQ(methods_called, methods_executed);
+  EXPECT_EQ(methods_called, responses_executed);
 
   // finalize eCAL API
   eCAL::Finalize();
@@ -448,7 +444,7 @@ TEST(IO, ClientServerBaseAsyncCallback)
 
 #if ClientServerBaseAsyncCallbackTimeoutTest
 
-TEST(IO, ClientServerBaseAsyncCallbackTimeoutTest)
+TEST(IO, ClientServerBaseAsyncCallbackTimeout)
 {
   const int calls(1);
   const int sleep(10);
@@ -457,26 +453,26 @@ TEST(IO, ClientServerBaseAsyncCallbackTimeoutTest)
   eCAL::Initialize(0, nullptr, "clientserver base async callback test with timeout");
 
   // create service server
-  eCAL::CServiceServer server("service1");
+  eCAL::CServiceServer server("service");
 
-  // request callback function
-  int requests_executed(0);
-  int request_sleep_time(0);
-  auto request_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
+  // method callback function
+  int methods_executed(0);
+  int method_process_time(0);
+  auto method_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
   {
-    eCAL::Process::SleepMS(request_sleep_time);
+    eCAL::Process::SleepMS(method_process_time);
     PrintRequest(method_, req_type_, resp_type_, request_);
     response_ = "I answered on " + request_;
-    requests_executed++;
+    methods_executed++;
     return 42;
   };
 
   // add callback for client request
-  server.AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", request_callback);
-  server.AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", request_callback);
+  server.AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", method_callback);
+  server.AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", method_callback);
 
   // create service client
-  eCAL::CServiceClient client("service1");
+  eCAL::CServiceClient client("service");
 
   // response callback function
   int responses_executed(0);
@@ -493,29 +489,48 @@ TEST(IO, ClientServerBaseAsyncCallbackTimeoutTest)
   eCAL::Process::SleepMS(2000);
 
   // call service
-  int requests_called(0);
+  int methods_called(0);
   std::string m1("foo::method1");
   std::string m2("foo::method2");
   std::string r1("my request for method 1");
   std::string r2("my request for method 2");
 
-  // some calls with 100 ms sleep in the method request callbacks
-  request_sleep_time = 100;
+  // some calls with method_process_time sleep in the method callback
+  method_process_time = 100;
   for (auto i = 0; i < calls; ++i)
   {
-    // call a method1
-    client.CallAsync(m1, r1, request_sleep_time * 2);
-    eCAL::Process::SleepMS(sleep);
-    requests_called++;
+    // call method 1
+    client.CallAsync(m1, r1, method_process_time * 2);
+    eCAL::Process::SleepMS(method_process_time * 2);
+    methods_called++;
 
-    // call a method2
-    client.CallAsync(m2, r2, request_sleep_time * 2);
-    eCAL::Process::SleepMS(sleep);
-    requests_called++;
+    // call method 2
+    client.CallAsync(m2, r2, method_process_time * 2);
+    eCAL::Process::SleepMS(method_process_time * 2);
+    methods_called++;
   }
 
-  EXPECT_EQ(requests_called, requests_executed);
-  EXPECT_EQ(requests_called, responses_executed);
+#if 0
+  // call the same method with method_process_time sleep in the method callback
+  // and less than method_process_time sleep time between
+  // the calls -> this leads to a crash currently !
+  method_process_time = 100;
+  for (auto i = 0; i < calls; ++i)
+  {
+    // call method 1
+    client.CallAsync(m1, r1);
+    eCAL::Process::SleepMS(method_process_time / 2);
+    methods_called++;
+
+    // call method 1
+    client.CallAsync(m1, r1);                             // <<< BAAAAMMM !!
+    eCAL::Process::SleepMS(method_process_time / 2);
+    methods_called++;
+  }
+#endif
+
+  EXPECT_EQ(methods_called, methods_executed);
+  EXPECT_EQ(methods_called, responses_executed);
 
   // finalize eCAL API
   eCAL::Finalize();
@@ -542,21 +557,21 @@ TEST(IO, ClientServerBaseBlocking)
     service_vec.push_back(std::make_shared<eCAL::CServiceServer>("service"));
   }
 
-  // request callback function
-  int requests_executed(0);
-  auto request_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
+  // method callback function
+  int methods_executed(0);
+  auto method_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
   {
     PrintRequest(method_, req_type_, resp_type_, request_);
     response_ = "I answer on " + request_;
-    requests_executed++;
+    methods_executed++;
     return 24;
   };
 
-  // add callback for client request
+  // add method callback
   for (auto service : service_vec)
   {
-    service->AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", request_callback);
-    service->AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", request_callback);
+    service->AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", method_callback);
+    service->AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", method_callback);
   }
 
   // create service clients
@@ -570,7 +585,7 @@ TEST(IO, ClientServerBaseBlocking)
   eCAL::Process::SleepMS(2000);
 
   // call service
-  int requests_called(0);
+  int methods_called(0);
   int responses_executed(0);
   eCAL::ServiceResponseVecT service_response_vec;
   for (auto i = 0; i < calls; ++i)
@@ -578,7 +593,7 @@ TEST(IO, ClientServerBaseBlocking)
     // call methods
     for (auto client : client_vec)
     {
-      // call a method1
+      // call method 1
       if (client->Call("foo::method1", "my request for method 1", -1, &service_response_vec))
       {
         ASSERT_EQ(2, service_response_vec.size());
@@ -590,10 +605,10 @@ TEST(IO, ClientServerBaseBlocking)
         responses_executed++;
 
         eCAL::Process::SleepMS(sleep);
-        requests_called++;
+        methods_called++;
       }
 
-      // call a method2
+      // call method 2
       if (client->Call("foo::method2", "my request for method 2", -1, &service_response_vec))
       {
         ASSERT_EQ(2, service_response_vec.size());
@@ -605,15 +620,15 @@ TEST(IO, ClientServerBaseBlocking)
         responses_executed++;
 
         eCAL::Process::SleepMS(sleep);
-        requests_called++;
+        methods_called++;
       }
     }
   }
 
-  EXPECT_EQ(requests_called * num_services, requests_executed);
-  EXPECT_EQ(requests_called * num_services, responses_executed);
+  EXPECT_EQ(methods_called * num_services, methods_executed);
+  EXPECT_EQ(methods_called * num_services, responses_executed);
 
-  // remove server request callback
+  // remove method callback
   for (auto service : service_vec)
   {
     service->RemMethodCallback("foo::method1");
@@ -809,35 +824,35 @@ TEST(IO, NestedRPCCall)
   eCAL::Initialize(0, nullptr, "nested rpc call test");
 
   // create service server
-  eCAL::CServiceServer server("service1");
+  eCAL::CServiceServer server("service");
 
   // request callback function
-  int requests_executed(0);
-  auto request_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
+  int methods_executed(0);
+  auto method_callback = [&](const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_) -> int
   {
     PrintRequest(method_, req_type_, resp_type_, request_);
     response_ = "I answer on " + request_;
-    requests_executed++;
+    methods_executed++;
     return 42;
   };
 
   // add callback for client request
-  server.AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", request_callback);
-  server.AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", request_callback);
+  server.AddMethodCallback("foo::method1", "foo::req_type1", "foo::resp_type1", method_callback);
+  server.AddMethodCallback("foo::method2", "foo::req_type2", "foo::resp_type2", method_callback);
 
   // create service client
-  eCAL::CServiceClient client1("service1");
-  eCAL::CServiceClient client2("service1");
+  eCAL::CServiceClient client1("service");
+  eCAL::CServiceClient client2("service");
 
   // response callback function
-  int requests_called(0);
+  int methods_called(0);
   int responses_executed(0);
   bool success(true);
   auto response_callback1 = [&](const struct eCAL::SServiceResponse& service_response_)
   {
     PrintResponse(service_response_);
     success &= client2.Call("foo::method2", "my request for method 2");
-    requests_called++;
+    methods_called++;
     responses_executed++;
   };
   auto response_callback2 = [&](const struct eCAL::SServiceResponse& service_response_)
@@ -856,17 +871,17 @@ TEST(IO, NestedRPCCall)
   // call service
   for (auto i = 0; i < calls; ++i)
   {
-    // call a method1
+    // call method 1
     success &= client1.Call("foo::method1", "my request for method 1");
     eCAL::Process::SleepMS(sleep);
-    requests_called++;
+    methods_called++;
   }
 
   EXPECT_EQ(true, success);
-  EXPECT_EQ(requests_called, requests_executed);
-  EXPECT_EQ(requests_called, responses_executed);
+  EXPECT_EQ(methods_called, methods_executed);
+  EXPECT_EQ(methods_called, responses_executed);
 
-  // remove server request callback
+  // remove method callback
   server.RemMethodCallback("foo::method1");
   server.RemMethodCallback("foo::method2");
 
