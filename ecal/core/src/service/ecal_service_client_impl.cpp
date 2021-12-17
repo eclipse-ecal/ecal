@@ -189,7 +189,7 @@ namespace eCAL
         auto client = m_client_map.find(iter.key);
         if (client != m_client_map.end())
         {
-          if (SendRequest(client->second, method_name_, request_, service_response_))
+          if (SendRequest(client->second, method_name_, request_, -1, service_response_))
           {
             return true;
           }
@@ -202,8 +202,6 @@ namespace eCAL
   // blocking call, all responses will be returned in service_response_vec_
   bool CServiceClientImpl::Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_)
   {
-    // TODO: implement timeout
-
     if (!g_clientgate()) return false;
     if (!m_created)      return false;
 
@@ -229,7 +227,7 @@ namespace eCAL
         if (client != m_client_map.end())
         {
           struct SServiceResponse service_response;
-          if (SendRequest(client->second, method_name_, request_, service_response))
+          if (SendRequest(client->second, method_name_, request_, timeout_, service_response))
           {
             if(service_response_vec_) service_response_vec_->push_back(service_response);
             called = true;
@@ -257,7 +255,7 @@ namespace eCAL
     CheckForNewServices();
 
     // send request to every single service
-    return SendRequests(m_host_name, method_name_, request_);
+    return SendRequests(m_host_name, method_name_, request_, timeout_);
   }
 
   // asynchronuously call, using callback
@@ -297,7 +295,7 @@ namespace eCAL
         auto client = m_client_map.find(iter.key);
         if (client != m_client_map.end())
         {
-          SendRequestAsync(client->second, method_name_, request_);
+          SendRequestAsync(client->second, method_name_, request_, timeout_);
           called = true;
         }
       }
@@ -413,7 +411,7 @@ namespace eCAL
     }
   }
 
-  bool CServiceClientImpl::SendRequests(const std::string& host_name_, const std::string& method_name_, const std::string& request_)
+  bool CServiceClientImpl::SendRequests(const std::string& host_name_, const std::string& method_name_, const std::string& request_, int timeout_)
   {
     if (!g_clientgate()) return false;
 
@@ -428,7 +426,7 @@ namespace eCAL
         {
           // execute request
           SServiceResponse service_response;
-          bool ret = SendRequest(client.second, method_name_, request_, service_response);
+          bool ret = SendRequest(client.second, method_name_, request_, timeout_, service_response);
           if (ret == false)
           {
             std::cerr << "CServiceClientImpl::SendRequests failed." << std::endl;
@@ -454,7 +452,7 @@ namespace eCAL
     return ret_state;
   }
 
-  bool CServiceClientImpl::SendRequest(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_)
+  bool CServiceClientImpl::SendRequest(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, int timeout_, struct SServiceResponse& service_response_)
   {
     // create request protocol buffer
     eCAL::pb::Request request_pb;
@@ -462,9 +460,32 @@ namespace eCAL
     request_pb.set_request(request_);
     std::string request_s = request_pb.SerializeAsString();
 
+    // catch events
+    client_->AddEventCallback([&](eCAL_Client_Event event, const std::string& /*message*/)
+      {
+        switch (event)
+        {
+        case client_event_timeout:
+        {
+          std::lock_guard<std::mutex> lock_eb(m_event_callback_map_sync);
+          auto e_iter = m_event_callback_map.find(client_event_timeout);
+          if (e_iter != m_event_callback_map.end())
+          {
+            SClientEventCallbackData sdata;
+            sdata.type = client_event_timeout;
+            sdata.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+            (e_iter->second)(m_service_name.c_str(), &sdata);
+          }
+        }
+          break;
+        default:
+          break;
+        }
+      });
+
     // execute request
     std::string response_s;
-    size_t sent = client_->ExecuteRequest(request_s, response_s);
+    size_t sent = client_->ExecuteRequest(request_s, timeout_, response_s);
     if (sent == 0) return false;
 
     // parse response protocol buffer
@@ -498,7 +519,7 @@ namespace eCAL
     return (service_response_.call_state == call_state_executed);
   }
 
-  void CServiceClientImpl::SendRequestsAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_)
+  void CServiceClientImpl::SendRequestsAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_, int timeout_)
   {
     if (!g_clientgate())
     {
@@ -521,13 +542,13 @@ namespace eCAL
         if (host_name_.empty() || (host_name_ == client.second->GetHostName()))
         {
           // execute request
-          SendRequestAsync(client.second, method_name_, request_);
+          SendRequestAsync(client.second, method_name_, request_, timeout_);
         }
       }
     }
   }
 
-  void CServiceClientImpl::SendRequestAsync(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_)
+  void CServiceClientImpl::SendRequestAsync(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, int timeout_)
   {
     // create request protocol buffer
     eCAL::pb::Request request_pb;
@@ -535,7 +556,7 @@ namespace eCAL
     request_pb.set_request(request_);
     std::string request_s = request_pb.SerializeAsString();
 
-    client_->ExecuteRequestAsync(request_s, [this, client_, method_name_](const std::string& response, bool success)
+    client_->ExecuteRequestAsync(request_s, timeout_, [this, client_, method_name_](const std::string& response, bool success)
       {
         std::lock_guard<std::mutex> lock(m_response_callback_sync);
         if (m_response_callback)

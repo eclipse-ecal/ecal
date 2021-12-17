@@ -85,9 +85,36 @@ namespace eCAL
       }
 
       /**
-       * @brief Call a method of this service, response will be returned in service_response_ and response_ (first matching service only for now).
+       * @brief Call a method of this service, all responses will be returned in service_response_vec.
        *
-       * THIS WILL BE CHANGED !
+       * @param       method_name_           Method name.
+       * @param       request_               Request message.
+       * @param       timeout_               Maximum time before operation returns (in milliseconds, -1 means infinite).
+       * @param [out] service_response_vec_  Response vector containing service responses from every called service (nullptr == no response).
+       *
+       * @return  True if successful.
+      **/
+      bool Call(const std::string& method_name_, const google::protobuf::Message& request_, int timeout_, ServiceResponseVecT* service_response_vec_)
+      {
+        return Call(method_name_, request_.SerializeAsString(), timeout_, &service_response_vec_);
+      }
+
+      /**
+       * @brief Call a method of this service asynchronously, responses will be returned by callback.
+       *
+       * @param method_name_  Method name.
+       * @param request_      Request message.
+       * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+       *
+       * @return  True if successful.
+      **/
+      bool CallAsync(const std::string& method_name_, const google::protobuf::Message& request_, const int timeout_ = -1)
+      {
+        return CallAsync(method_name_, request_.SerializeAsString(), timeout_);
+      }
+
+      /**
+       * @brief Call a method of this service, response will be returned in service_response_ and response_ (first matching service only !).
        * 
        * @param       method_name_       Method name.
        * @param       request_           Request message.
@@ -96,27 +123,9 @@ namespace eCAL
        *
        * @return  True if successful.
       **/
+      [[deprecated]]
       bool Call(const std::string& method_name_, const google::protobuf::Message& request_, struct SServiceResponse& service_response_, google::protobuf::Message& response_)
       {
-        // TODO: Find a solution to get a signature like
-        // 
-        //  bool Call(const std::string & method_name_, const google::protobuf::Message & request_, const int timeout_, struct SServiceResponsePbVecT& service_response_)
-        // 
-        //  SServiceResponsePbVecT would look like
-        // 
-        //    struct SServiceResponsePb
-        //    {
-        //      std::string                host_name;      //!< [in]  service host name
-        //      std::string                service_name;   //!< [in]  name of the service
-        //      std::string                method_name;    //!< [in]  name of the service method
-        //      std::string                error_msg;      //!< [out] human readable error message
-        //      int                        ret_state;      //!< [out] return state of the called service method
-        //      eCallState                 call_state;     //!< [out] call state (see eCallState)
-        //      google::protobuf::Message  response;       //!< [out] service response as google protobuf message
-        //    };
-        //    typedef std::vector<SServiceResponsePb> SServiceResponsePbVecT;
-        //
-        // for now we just call the first matching service and return it's answer, to get all responses please use the callback variant
         ServiceResponseVecT service_response_vec;
         const int timeout_(-1);
         if (Call(method_name_, request_.SerializeAsString(), timeout_, &service_response_vec))
@@ -129,20 +138,6 @@ namespace eCAL
           }
         }
         return false;
-      }
-
-      /**
-       * @brief Call a method of this service asynchronously, responses will be returned by callback. 
-       *
-       * @param method_name_  Method name.
-       * @param request_      Request message.
-       * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
-       *
-       * @return  True if successful.
-      **/
-      bool CallAsync(const std::string& method_name_, const google::protobuf::Message& request_, const int timeout_ = -1)
-      {
-        return CallAsync(method_name_, request_.SerializeAsString(), timeout_);
       }
 
       using eCAL::CServiceClient::Call;

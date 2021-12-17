@@ -154,27 +154,27 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not.
     **/
-bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
+    bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_);
 
-/**
- * @brief Remove client event callback function.
- *
- * @param type_  The event type to remove.
- *
- * @return  True if succeeded, false if not.
-**/
-bool RemEventCallback(eCAL_Client_Event type_);
+    /**
+     * @brief Remove client event callback function.
+     *
+     * @param type_  The event type to remove.
+     *
+     * @return  True if succeeded, false if not.
+    **/
+    bool RemEventCallback(eCAL_Client_Event type_);
 
-/**
- * @brief Check connection state.
- *
- * @return  True if connected, false if not.
-**/
-bool IsConnected();
+    /**
+     * @brief Check connection state.
+     *
+     * @return  True if connected, false if not.
+    **/
+    bool IsConnected();
 
   protected:
     CServiceClientImpl* m_service_client_impl;
-    bool                 m_created;
+    bool                m_created;
   };
 }
 
@@ -280,7 +280,6 @@ namespace eCAL
     {
       if (!m_service) return(false);
       return(eCAL_Client_Call_Async(m_service, method_name_.c_str(), request_.c_str(), static_cast<int>(request_.size()), timeout_) != 0);
-      return(false);
     }
       
     static void ResponseCallback(const struct SServiceResponseC* service_response_, void* par_)

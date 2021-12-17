@@ -26,7 +26,6 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_callback.h>
 
-#include "ecal_expmap.h"
 #include "ecal_tcpserver.h"
 
 #ifdef _MSC_VER
@@ -83,6 +82,7 @@ namespace eCAL
 
   protected:
     int RequestCallback(const std::string& request_, std::string& response_);
+    void EventCallback(eCAL_Server_Event event_, const std::string& message_);
 
     CTcpServer         m_tcp_server;
 
@@ -102,10 +102,7 @@ namespace eCAL
     typedef std::map<eCAL_Server_Event, ServerEventCallbackT> EventCallbackMapT;
     EventCallbackMapT  m_event_callback_map;
     
-    std::mutex         m_connected_clients_map_sync;
-    typedef Util::CExpMap<std::string, SClientAttr> ClientAttrMapT;
-    ClientAttrMapT     m_connected_clients_map;
-
+    bool               m_connected;
     bool               m_created;
   };
 }

@@ -50,14 +50,16 @@ namespace eCAL
     void Create();
     void Destroy();
 
-    void Start(RequestCallbackT callback_);
+    void Start(RequestCallbackT request_callback_, EventCallbackT event_callback_);
     void Stop();
+
+    bool IsConnected();
 
     std::shared_ptr<asio::io_service> GetIOService() { return m_io_service; };
     unsigned short GetTcpPort() { return (m_server ? m_server->get_port() : 0); }
 
   protected:
-    void ServerThread(std::uint32_t port_, RequestCallbackT callback_);
+    void ServerThread(std::uint32_t port_, RequestCallbackT request_callback_, EventCallbackT event_callback_);
 
     bool                               m_started;
 

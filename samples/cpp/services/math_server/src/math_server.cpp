@@ -70,24 +70,18 @@ void OnServerEvent(const eCAL::SServerEventCallbackData* data_)
   {
   case server_event_connected:
     std::cout << "-----------------------------------" << std::endl;
-    std::cout << "Server connected to a client       " << std::endl;
+    std::cout << "Server connected                   " << std::endl;
     std::cout << "-----------------------------------" << std::endl;
     break;
   case server_event_disconnected:
     std::cout << "-----------------------------------" << std::endl;
-    std::cout << "Server disconnected from a client  " << std::endl;
+    std::cout << "Server disconnected                " << std::endl;
     std::cout << "-----------------------------------" << std::endl;
     break;
   default:
     std::cout << "Unknown server event." << std::endl;
     break;
   }
-
-  std::cout << "Client Hostname : " << data_->attr.hname << std::endl;
-  std::cout << "Client Name     : " << data_->attr.sname << std::endl;
-  std::cout << "Client Process  : " << data_->attr.pname << std::endl;
-  std::cout << "Client PID      : " << data_->attr.pid   << std::endl;
-  std::cout << "-----------------------------------"     << std::endl << std::endl;
 }
 
 // main entry

@@ -43,6 +43,11 @@ void OnClientState(const eCAL::SClientEventCallbackData* data_)
     std::cout << "Client disconnected from service " << std::endl;
     std::cout << "---------------------------------" << std::endl;
     break;
+  case client_event_timeout:
+    std::cout << "---------------------------------" << std::endl;
+    std::cout << "Client request timeouted         " << std::endl;
+    std::cout << "---------------------------------" << std::endl;
+    break;
   default:
     std::cout << "Unknown client event." << std::endl;
     break;
@@ -93,6 +98,7 @@ int main(int argc, char **argv)
   // add event callbacks
   math_client.AddEventCallback(client_event_connected,    std::bind(OnClientState, std::placeholders::_2));
   math_client.AddEventCallback(client_event_disconnected, std::bind(OnClientState, std::placeholders::_2));
+  math_client.AddEventCallback(client_event_timeout,      std::bind(OnClientState, std::placeholders::_2));
 
   // loop variables
   int inp1(0);
