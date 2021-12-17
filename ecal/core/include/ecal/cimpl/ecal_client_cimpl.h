@@ -25,6 +25,7 @@
 #ifndef ecal_client_cimpl_h_included
 #define ecal_client_cimpl_h_included
 
+#include <ecal/cimpl/ecal_callback_cimpl.h>
 #include <ecal/cimpl/ecal_service_info_cimpl.h>
 
 #ifdef __cplusplus
