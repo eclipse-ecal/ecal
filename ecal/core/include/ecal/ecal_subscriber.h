@@ -416,6 +416,8 @@ namespace eCAL
     {
       if(par_ == nullptr) return;
       CSubscriber* sub = static_cast<CSubscriber*>(par_);
+      if (sub->m_receive_callback == nullptr) return;
+
       SReceiveCallbackData data;
       data.buf   = data_->buf;
       data.size  = data_->size;
@@ -428,7 +430,7 @@ namespace eCAL
     {
       if(!m_subscriber) return(false);
       m_receive_callback = callback_;
-      return(eCAL_Sub_AddReceiveCallbackC(m_subscriber, &CSubscriber::ReceiveCallback, this) != 0);
+      return(eCAL_Sub_AddReceiveCallback(m_subscriber, &CSubscriber::ReceiveCallback, this) != 0);
     }
 
     bool RemReceiveCallback()
@@ -441,6 +443,8 @@ namespace eCAL
     {
       if (par_ == nullptr) return;
       CSubscriber* sub = static_cast<CSubscriber*>(par_);
+      if (sub->m_event_callback == nullptr) return;
+
       SSubEventCallbackData data;
       data.type = data_->type;
       data.time = data_->time;
@@ -450,7 +454,7 @@ namespace eCAL
     {
       if (!m_subscriber) return(false);
       m_event_callback = callback_;
-      return(eCAL_Sub_AddEventCallbackC(m_subscriber, type_, &CSubscriber::SubEventCallback, this) != 0);
+      return(eCAL_Sub_AddEventCallback(m_subscriber, type_, &CSubscriber::SubEventCallback, this) != 0);
     }
 
     bool RemEventCallback(eCAL_Subscriber_Event type_)

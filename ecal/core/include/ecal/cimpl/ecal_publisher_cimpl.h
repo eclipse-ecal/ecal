@@ -214,7 +214,7 @@ extern "C"
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Pub_AddEventCallbackC(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, PubEventCallbackCT callback_, void* par_);
+  ECALC_API int eCAL_Pub_AddEventCallback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, PubEventCallbackCT callback_, void* par_);
 
   /**
    * @brief Remove callback function for publisher events.

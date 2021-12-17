@@ -286,6 +286,8 @@ namespace eCAL
     {
       if(par_ == nullptr) return;
       CServiceClient* client = static_cast<CServiceClient*>(par_);
+      if (client->m_response_callback == nullptr) return;
+
       SServiceResponse service_response;
       service_response.host_name    = service_response_->host_name;
       service_response.service_name = service_response_->service_name;
@@ -294,14 +296,13 @@ namespace eCAL
       service_response.ret_state    = service_response_->ret_state;
       service_response.call_state   = service_response_->call_state;
       service_response.response     = std::string(static_cast<const char*>(service_response_->response), service_response_->response_len);
-      client->m_callback(service_response);
+      client->m_response_callback(service_response);
     }
-
     bool AddResponseCallback(ResponseCallbackT callback_)
     {
       if(!m_service) return false;
-      m_callback = callback_;
-      return(eCAL_Client_AddResponseCallbackC(m_service, &CServiceClient::ResponseCallback, this) != 0);
+      m_response_callback = callback_;
+      return(eCAL_Client_AddResponseCallback(m_service, &CServiceClient::ResponseCallback, this) != 0);
     }
 
     bool RemResponseCallback()
@@ -310,12 +311,37 @@ namespace eCAL
       return(eCAL_Client_RemResponseCallback(m_service) != 0);
     }
 
-  protected:
-    ECAL_HANDLE        m_service;
-    ResponseCallbackT  m_callback;
+    static void EventCallback(const char* name_, const struct SClientEventCallbackDataC* data_, void* par_)
+    {
+      if (par_ == nullptr) return;
+      CServiceClient* client = static_cast<CServiceClient*>(par_);
+      if (client->m_event_callback == nullptr) return;
 
-    std::string        m_service_name;
-    bool               m_created;
+      SClientEventCallbackData data;
+      data.type = data_->type;
+      data.time = data_->time;
+      client->m_event_callback(name_, &data);
+    }
+    bool AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_)
+    {
+      if (!m_service) return false;
+      m_event_callback = callback_;
+      return(eCAL_Client_AddEventCallback(m_service, type_ , &CServiceClient::EventCallback, this) != 0);
+    }
+
+    bool RemEventCallback(eCAL_Client_Event type_)
+    {
+      if (!m_service) return false;
+      return(eCAL_Client_RemEventCallback(m_service, type_) != 0);
+    }
+
+  protected:
+    ECAL_HANDLE           m_service;
+    ResponseCallbackT     m_response_callback;
+    ClientEventCallbackT  m_event_callback;
+
+    std::string           m_service_name;
+    bool                  m_created;
   };
 } 
 

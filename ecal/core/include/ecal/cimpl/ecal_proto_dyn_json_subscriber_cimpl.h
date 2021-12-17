@@ -58,7 +58,7 @@ extern "C"
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Proto_Dyn_JSON_Sub_AddReceiveCallbackC(ECAL_HANDLE handle_, ReceiveCallbackCT callback_, void* par_);
+  ECALC_API int eCAL_Proto_Dyn_JSON_Sub_AddReceiveCallback(ECAL_HANDLE handle_, ReceiveCallbackCT callback_, void* par_);
 
   /**
    * @brief Remove callback function for incoming receives. 
