@@ -218,7 +218,7 @@ namespace eCAL
       {
         if (!m_subscriber) return(false);
         m_receive_callback = callback_;
-        return(eCAL_Proto_Dyn_JSON_Sub_AddReceiveCallbackC(m_subscriber, &CDynamicJSONSubscriber::ReceiveCallback, this) != 0);
+        return(eCAL_Proto_Dyn_JSON_Sub_AddReceiveCallback(m_subscriber, &CDynamicJSONSubscriber::ReceiveCallback, this) != 0);
       }
 
       /**

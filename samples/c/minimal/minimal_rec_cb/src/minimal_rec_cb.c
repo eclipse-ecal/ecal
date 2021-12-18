@@ -39,7 +39,7 @@ int main(int argc, char **argv)
   eCAL_Sub_Create(sub, "Hello", "base:std::string", "", 0);
 
   // add callback
-  eCAL_Sub_AddReceiveCallbackC(sub, OnReceive, NULL);
+  eCAL_Sub_AddReceiveCallback(sub, OnReceive, NULL);
 
   // idle main thread
   while(eCAL_Ok())
