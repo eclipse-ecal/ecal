@@ -134,7 +134,7 @@ extern "C"
    *
    * @return  True if succeeded, false if not.
   **/
-  ECALC_API int eCAL_Client_AddEventCallback(ECAL_HANDLE handle_, eCAL_Client_Event type_, ClientEventCallbackCT callback_, void* par_);
+  ECALC_API int eCAL_Client_AddEventCallback(ECAL_HANDLE handle_, enum eCAL_Client_Event type_, ClientEventCallbackCT callback_, void* par_);
 
   /**
    * @brief Remove client event callback function.
@@ -144,7 +144,7 @@ extern "C"
    *
    * @return  True if succeeded, false if not.
   **/
-  ECALC_API int eCAL_Client_RemEventCallback(ECAL_HANDLE handle_, eCAL_Client_Event type_);
+  ECALC_API int eCAL_Client_RemEventCallback(ECAL_HANDLE handle_, enum eCAL_Client_Event type_);
 
 #ifdef __cplusplus
 }

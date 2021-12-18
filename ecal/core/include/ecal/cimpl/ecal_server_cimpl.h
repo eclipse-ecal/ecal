@@ -83,7 +83,7 @@ extern "C"
    *
    * @return  True if succeeded, false if not.
   **/
-  ECALC_API int eCAL_Server_AddEventCallback(ECAL_HANDLE handle_, eCAL_Server_Event type_, ServerEventCallbackCT callback_, void* par_);
+  ECALC_API int eCAL_Server_AddEventCallback(ECAL_HANDLE handle_, enum eCAL_Server_Event type_, ServerEventCallbackCT callback_, void* par_);
 
   /**
    * @brief Remove server event callback function.
@@ -93,7 +93,7 @@ extern "C"
    *
    * @return  True if succeeded, false if not.
   **/
-  ECALC_API int eCAL_Server_RemEventCallback(ECAL_HANDLE handle_, eCAL_Server_Event type_);
+  ECALC_API int eCAL_Server_RemEventCallback(ECAL_HANDLE handle_, enum eCAL_Server_Event type_);
     
   /**
    * @brief Retrieve the service name.
