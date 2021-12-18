@@ -21,6 +21,7 @@
 #include <ecal/msg/protobuf/client.h>
 #include <ecal/msg/protobuf/server.h>
 
+#include <cmath>
 #include <iostream>
 
 #include <gtest/gtest.h>
