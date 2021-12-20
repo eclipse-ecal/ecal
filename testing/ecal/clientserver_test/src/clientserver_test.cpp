@@ -29,18 +29,21 @@
 #include "math.pb.h"
 #include "ping.pb.h"
 
-#define ClientServerBaseCallbackTest             1
-#define ClientServerBaseCallbackTimeoutTest      1
+#define ClientConnectEventTest                    1
+#define ServerConnectEventTest                    1
 
-#define ClientServerBaseAsyncCallbackTest        1
-#define ClientServerBaseAsyncCallbackTimeoutTest 1
+#define ClientServerBaseCallbackTest              1
+#define ClientServerBaseCallbackTimeoutTest       1
 
-#define ClientServerBaseBlockingTest             0   // C API is not supporting vector of responses (under development)
+#define ClientServerBaseAsyncCallbackTest         1
+#define ClientServerBaseAsyncCallbackTimeoutTest  1
 
-#define ClientServerProtoCallbackTest            1
-#define ClientServerProtoBlockingTest            1
+#define ClientServerBaseBlockingTest              0   // C API is not supporting vector of responses (under development)
 
-#define NestedRPCCallTest                        1
+#define ClientServerProtoCallbackTest             1
+#define ClientServerProtoBlockingTest             1
+
+#define NestedRPCCallTest                         1
 
 namespace
 {
@@ -84,6 +87,141 @@ namespace
     std::cout << std::endl;
   };
 }
+
+#if ClientConnectEventTest
+
+TEST(IO, ClientConnectEvent)
+{
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "clientserver base connect event callback");
+
+  // create client
+  eCAL::CServiceClient client("service");
+
+  // add client event callback for connect event
+  int event_connected_fired(0);
+  int event_disconnected_fired(0);
+  auto event_callback = [&](const struct eCAL::SClientEventCallbackData* data_) -> void
+  {
+    switch (data_->type)
+    {
+    case client_event_connected:
+      std::cout << "event connected fired" << std::endl;
+      event_connected_fired++;
+      break;
+    case client_event_disconnected:
+      std::cout << "event disconnected fired" << std::endl;
+      event_disconnected_fired++;
+      break;
+    default:
+      break;
+    }
+  };
+  // attach event
+  client.AddEventCallback(client_event_connected,    std::bind(event_callback, std::placeholders::_2));
+  client.AddEventCallback(client_event_disconnected, std::bind(event_callback, std::placeholders::_2));
+
+  // check events
+  eCAL::Process::SleepMS(1000);
+  EXPECT_EQ(0, event_connected_fired);
+  EXPECT_EQ(0, event_disconnected_fired);
+
+  // create server
+  {
+    eCAL::CServiceServer server1("service");
+
+    eCAL::Process::SleepMS(2000);
+    EXPECT_EQ(1, event_connected_fired);
+    EXPECT_EQ(0, event_disconnected_fired);
+
+    eCAL::CServiceServer server2("service");
+
+    eCAL::Process::SleepMS(2000);
+    EXPECT_EQ(2, event_connected_fired);
+    EXPECT_EQ(0, event_disconnected_fired);
+  }
+
+  // do a dummy call
+  // after that disconnect events should fire for now
+  // this needs to be improved, clients needs to be
+  // informed about disconnection without calling a service method
+  client.Call("foo", "");
+  eCAL::Process::SleepMS(1000);
+  EXPECT_EQ(1, event_disconnected_fired);
+  client.Call("foo", "");
+  eCAL::Process::SleepMS(1000);
+  EXPECT_EQ(2, event_disconnected_fired);
+  client.Call("foo", "");
+  eCAL::Process::SleepMS(1000);
+  EXPECT_EQ(2, event_disconnected_fired);
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+#endif /* ServerConnectEventTest */
+
+#if ServerConnectEventTest
+
+TEST(IO, ServerConnectEvent)
+{
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "clientserver base connect event callback");
+
+  // create server
+  eCAL::CServiceServer server("service");
+
+  // add server event callback for connect event
+  int event_connected_fired(0);
+  int event_disconnected_fired(0);
+  auto event_callback = [&](const struct eCAL::SServerEventCallbackData* data_) -> void
+  {
+    switch (data_->type)
+    {
+    case client_event_connected:
+      std::cout << "event connected fired" << std::endl;
+      event_connected_fired++;
+      break;
+    case client_event_disconnected:
+      std::cout << "event disconnected fired" << std::endl;
+      event_disconnected_fired++;
+      break;
+    default:
+      break;
+    }
+  };
+  // attach event
+  server.AddEventCallback(server_event_connected,    std::bind(event_callback, std::placeholders::_2));
+  server.AddEventCallback(server_event_disconnected, std::bind(event_callback, std::placeholders::_2));
+
+  // check events
+  eCAL::Process::SleepMS(1000);
+  EXPECT_EQ(0, event_connected_fired);
+  EXPECT_EQ(0, event_disconnected_fired);
+
+  // create server
+  {
+    eCAL::CServiceClient client1("service");
+
+    eCAL::Process::SleepMS(2000);
+    EXPECT_EQ(1, event_connected_fired);
+    EXPECT_EQ(0, event_disconnected_fired);
+
+    eCAL::CServiceClient client2("service");
+
+    eCAL::Process::SleepMS(2000);
+    EXPECT_EQ(1, event_connected_fired);
+    EXPECT_EQ(0, event_disconnected_fired);
+  }
+  eCAL::Process::SleepMS(2000);
+  EXPECT_EQ(1, event_connected_fired);
+  EXPECT_EQ(1, event_disconnected_fired);
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+#endif /* ServerConnectEventTest */
 
 #if ClientServerBaseCallbackTest
 
@@ -201,7 +339,7 @@ TEST(IO, ClientServerBaseCallback)
 
 #if ClientServerBaseCallbackTimeoutTest
 
-TEST(IO, ClientServerBaseCallbackTimeoutTest)
+TEST(IO, ClientServerBaseCallbackTimeout)
 {
   const int num_services(2);
   const int num_clients(3);
