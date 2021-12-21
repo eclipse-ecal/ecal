@@ -38,7 +38,7 @@
 #define ClientServerBaseAsyncCallbackTest         1
 #define ClientServerBaseAsyncCallbackTimeoutTest  1
 
-#define ClientServerBaseBlockingTest              0   // C API is not supporting vector of responses (under development)
+#define ClientServerBaseBlockingTest              1
 
 #define ClientServerProtoCallbackTest             1
 #define ClientServerProtoBlockingTest             1
@@ -735,6 +735,12 @@ TEST(IO, ClientServerBaseBlocking)
       // call method 1
       if (client->Call("foo::method1", "my request for method 1", -1, &service_response_vec))
       {
+#ifdef ECAL_C_DLL
+        ASSERT_EQ(1, service_response_vec.size());
+
+        PrintResponse(service_response_vec[0]);
+        responses_executed++;
+#else  /*ECAL_C_DLL*/
         ASSERT_EQ(2, service_response_vec.size());
 
         PrintResponse(service_response_vec[0]);
@@ -742,6 +748,7 @@ TEST(IO, ClientServerBaseBlocking)
 
         PrintResponse(service_response_vec[1]);
         responses_executed++;
+#endif /*ECAL_C_DLL*/
 
         eCAL::Process::SleepMS(sleep);
         methods_called++;
@@ -750,6 +757,12 @@ TEST(IO, ClientServerBaseBlocking)
       // call method 2
       if (client->Call("foo::method2", "my request for method 2", -1, &service_response_vec))
       {
+#ifdef ECAL_C_DLL
+        ASSERT_EQ(1, service_response_vec.size());
+
+        PrintResponse(service_response_vec[0]);
+        responses_executed++;
+#else  /*ECAL_C_DLL*/
         ASSERT_EQ(2, service_response_vec.size());
 
         PrintResponse(service_response_vec[0]);
@@ -757,6 +770,7 @@ TEST(IO, ClientServerBaseBlocking)
 
         PrintResponse(service_response_vec[1]);
         responses_executed++;
+#endif /*ECAL_C_DLL*/
 
         eCAL::Process::SleepMS(sleep);
         methods_called++;
@@ -765,7 +779,12 @@ TEST(IO, ClientServerBaseBlocking)
   }
 
   EXPECT_EQ(methods_called * num_services, methods_executed);
+
+#ifdef ECAL_C_DLL
+  EXPECT_EQ(methods_called,                responses_executed);
+#else  /*ECAL_C_DLL*/
   EXPECT_EQ(methods_called * num_services, responses_executed);
+#endif /*ECAL_C_DLL*/
 
   // remove method callback
   for (auto service : service_vec)

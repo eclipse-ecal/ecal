@@ -84,6 +84,8 @@ extern "C"
    * @param [out] service_response_  Service response struct with additional infos like call state and
    *                                 error message.
    * @param [out] response_          Pointer to the allocated buffer for the response message.
+   *                                 In case of more then one connected server, only the reponse of the first
+   *                                 answering server is returned (use callback variant to get all responses).
    * @param       response_len_      Response message buffer length or ECAL_ALLOCATE_4ME if
    *                                 eCAL should allocate the buffer for you (see eCAL_FreeMem). 
    *
