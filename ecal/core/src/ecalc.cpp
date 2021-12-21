@@ -1135,6 +1135,7 @@ extern "C"
     return(0);
   }
 
+  // The C API variant is not able to return all service repsonses but only the first one !
   ECALC_API int eCAL_Client_Call_Wait(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_, struct SServiceResponseC* service_response_, void* response_, int response_len_)
   {
     if(handle_ == NULL) return(0);
@@ -1198,4 +1199,20 @@ ECALC_API int eCAL_Client_RemEventCallback(ECAL_HANDLE handle_, eCAL_Client_Even
   eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
   if (client->RemEventCallback(type_)) return(1);
   return(0);
+}
+
+ECALC_API int eCAL_Client_GetServiceName(ECAL_HANDLE handle_, void* buf_, int buf_len_)
+{
+  if (handle_ == NULL) return(0);
+  eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
+  std::string service_name = client->GetServiceName();
+  int buffer_len = CopyBuffer(buf_, buf_len_, service_name);
+  if (buffer_len != static_cast<int>(service_name.size()))
+  {
+    return(0);
+  }
+  else
+  {
+    return(buffer_len);
+  }
 }

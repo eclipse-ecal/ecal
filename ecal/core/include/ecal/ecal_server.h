@@ -108,13 +108,6 @@ namespace eCAL
     bool RemMethodCallback(const std::string& method_);
 
     /**
-     * @brief Retrieve service name.
-     *
-     * @return  The service name.
-    **/
-    std::string GetServiceName();
-
-    /**
      * @brief Add server event callback function.
      *
      * @param type_      The event type to react on.
@@ -132,6 +125,13 @@ namespace eCAL
      * @return  True if succeeded, false if not.
     **/
     bool RemEventCallback(eCAL_Server_Event type_);
+
+    /**
+     * @brief Retrieve service name.
+     *
+     * @return  The service name.
+    **/
+    std::string GetServiceName();
 
     /**
      * @brief Check connection state.
@@ -183,6 +183,7 @@ namespace eCAL
       m_service = eCAL_Server_Create(service_name_.c_str());
       if(!m_service) return(false);
 
+      m_service_name = service_name_;
       m_created = true;
       return(true);
     }
@@ -193,6 +194,7 @@ namespace eCAL
       if(m_service) eCAL_Server_Destroy(m_service);
 
       m_service = nullptr;
+      m_service_name.clear();
       m_created = false;
       return(true);
     }
@@ -266,15 +268,7 @@ namespace eCAL
     std::string GetServiceName()
     {
       if (!m_created) return "";
-      std::string service_name;
-      void* buf = nullptr;
-      size_t buf_len = eCAL_Server_GetServiceName(m_service, &buf, ECAL_ALLOCATE_4ME);
-      if (buf_len > 0)
-      {
-        service_name = std::string(static_cast<char*>(buf), buf_len);
-        eCAL_FreeMem(buf);
-      }
-      return(service_name);
+      return(m_service_name);
     }
 
     std::vector<char>& GetResponseBuffer()
@@ -288,6 +282,7 @@ namespace eCAL
     ServerEventCallbackT  m_event_callback;
     std::vector<char>     m_response_buf;
 
+    std::string           m_service_name;
     bool                  m_created;
   };
 } 

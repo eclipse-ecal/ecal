@@ -119,17 +119,6 @@ namespace eCAL
   }
 
   /**
-   * @brief Retrieve service name.
-   *
-   * @return  The service name.
-  **/
-  std::string CServiceServer::GetServiceName()
-  {
-    if (!m_created) return "";
-    return m_service_server_impl->GetServiceName();
-  }
-
-  /**
    * @brief Add callback function for server events.
    *
    * @param type_      The event type to react on.
@@ -154,6 +143,17 @@ namespace eCAL
   {
     if (!m_created) return false;
     return m_service_server_impl->RemEventCallback(type_);
+  }
+
+  /**
+   * @brief Retrieve service name.
+   *
+   * @return  The service name.
+  **/
+  std::string CServiceServer::GetServiceName()
+  {
+    if (!m_created) return "";
+    return m_service_server_impl->GetServiceName();
   }
 
   /**

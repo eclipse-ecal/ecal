@@ -512,7 +512,7 @@ TEST(IO, ClientServerBaseCallbackTimeout)
 TEST(IO, ClientServerBaseAsyncCallback)
 {
   const int calls(1);
-  const int sleep(10);
+  const int sleep(100);
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver base async callback test");
@@ -586,7 +586,6 @@ TEST(IO, ClientServerBaseAsyncCallback)
 TEST(IO, ClientServerBaseAsyncCallbackTimeout)
 {
   const int calls(1);
-  const int sleep(10);
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "clientserver base async callback test with timeout");
@@ -726,19 +725,25 @@ TEST(IO, ClientServerBaseBlocking)
   // call service
   int methods_called(0);
   int responses_executed(0);
+#ifdef ECAL_C_DLL
+  eCAL::SServiceResponse service_response;
+#else  /*ECAL_C_DLL*/
   eCAL::ServiceResponseVecT service_response_vec;
+#endif /*ECAL_C_DLL*/
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
     for (auto client : client_vec)
     {
       // call method 1
+#ifdef ECAL_C_DLL
+      if (client->Call("foo::method1", "my request for method 1", -1, &service_response))
+#else  /*ECAL_C_DLL*/
       if (client->Call("foo::method1", "my request for method 1", -1, &service_response_vec))
+#endif /*ECAL_C_DLL*/
       {
 #ifdef ECAL_C_DLL
-        ASSERT_EQ(1, service_response_vec.size());
-
-        PrintResponse(service_response_vec[0]);
+        PrintResponse(service_response);
         responses_executed++;
 #else  /*ECAL_C_DLL*/
         ASSERT_EQ(2, service_response_vec.size());
@@ -755,12 +760,14 @@ TEST(IO, ClientServerBaseBlocking)
       }
 
       // call method 2
+#ifdef ECAL_C_DLL
+      if (client->Call("foo::method2", "my request for method 2", -1, &service_response))
+#else  /*ECAL_C_DLL*/
       if (client->Call("foo::method2", "my request for method 2", -1, &service_response_vec))
+#endif /*ECAL_C_DLL*/
       {
 #ifdef ECAL_C_DLL
-        ASSERT_EQ(1, service_response_vec.size());
-
-        PrintResponse(service_response_vec[0]);
+        PrintResponse(service_response);
         responses_executed++;
 #else  /*ECAL_C_DLL*/
         ASSERT_EQ(2, service_response_vec.size());
@@ -938,28 +945,27 @@ TEST(IO, ClientServerProtoBlocking)
   eCAL::Process::SleepMS(2000);
 
   // test ping service
-  eCAL::ServiceResponseVecT service_response_vec;
+  eCAL::SServiceResponse service_response;
   PingRequest ping_request;
   ping_request.set_message("PING");
   std::string ping_request_s = ping_request.SerializeAsString();
   std::cout << std::endl << "Ping method called with message : " << ping_request.message() << std::endl;
-  ping_client.Call("Ping", ping_request_s, -1, &service_response_vec);
-  ASSERT_EQ(1, service_response_vec.size());
-  EXPECT_EQ(call_state_executed, service_response_vec[0].call_state);
-  switch (service_response_vec[0].call_state)
+  ping_client.Call("Ping", ping_request_s, -1, &service_response);
+  EXPECT_EQ(call_state_executed, service_response.call_state);
+  switch (service_response.call_state)
   {
   // service successful executed
   case call_state_executed:
   {
     PingResponse response;
-    response.ParseFromString(service_response_vec[0].response);
-    std::cout << "Received response PingService / Ping : " << response.answer() << " from host " << service_response_vec[0].host_name << std::endl;
+    response.ParseFromString(service_response.response);
+    std::cout << "Received response PingService / Ping : " << response.answer() << " from host " << service_response.host_name << std::endl;
     EXPECT_STREQ(response.answer().c_str(), "PONG");
   }
   break;
   // service execution failed
   case call_state_failed:
-    std::cout << "Received error PingService / Ping : " << service_response_vec[0].error_msg << " from host " << service_response_vec[0].host_name << std::endl;
+    std::cout << "Received error PingService / Ping : " << service_response.error_msg << " from host " << service_response.host_name << std::endl;
     break;
   default:
     break;
