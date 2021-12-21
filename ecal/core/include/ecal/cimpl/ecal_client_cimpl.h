@@ -148,6 +148,18 @@ extern "C"
   **/
   ECALC_API int eCAL_Client_RemEventCallback(ECAL_HANDLE handle_, enum eCAL_Client_Event type_);
 
+  /**
+   * @brief Retrieve the service name.
+   *
+   * @param       handle_   Server handle.
+   * @param [out] buf_      Pointer to store the server service string.
+   * @param       buf_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
+   *                        eCAL should allocate the buffer for you (see eCAL_FreeMem).
+   *
+   * @return  Description buffer length or zero if failed.
+  **/
+  ECALC_API int eCAL_Client_GetServiceName(ECAL_HANDLE handle_, void* buf_, int buf_len_);
+
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

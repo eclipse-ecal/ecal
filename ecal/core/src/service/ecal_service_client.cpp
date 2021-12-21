@@ -120,7 +120,7 @@ namespace eCAL
   }
 
   /**
-   * @brief Call method of this service, responses will be returned in service_response_vec_.
+   * @brief Call method of this service, all responses will be returned in service_response_vec_.
    *
    * @param       method_name_           Method name.
    * @param       request_               Request string.
@@ -133,6 +133,38 @@ namespace eCAL
   {
     if (!m_created) return(false);
     return(m_service_client_impl->Call(method_name_, request_, timeout_, service_response_vec_));
+  }
+
+  /**
+   * @brief Call a method of this service, first response will be returned in service_response_.
+   *
+   * @param       method_name_       Method name.
+   * @param       request_           Request string.
+   * @param       timeout_           Maximum time before operation returns (in milliseconds, -1 means infinite).
+   * @param [out] service_response_  Service response from first service (nullptr == no response).
+   *
+   * @return  True if successful.
+  **/
+  bool CServiceClient::Call(const std::string& method_name_, const std::string& request_, int timeout_, SServiceResponse* service_response_)
+  {
+    if (!m_created) return(false);
+    if (service_response_)
+    {
+      ServiceResponseVecT service_response_vec;
+      if (m_service_client_impl->Call(method_name_, request_, timeout_, &service_response_vec))
+      {
+        if (!service_response_vec.empty())
+        {
+          *service_response_ = service_response_vec[0];
+          return(true);
+        }
+      }
+      return(false);
+    }
+    else
+    {
+      return(m_service_client_impl->Call(method_name_, request_, timeout_, nullptr));
+    }
   }
 
   /**
@@ -195,6 +227,17 @@ namespace eCAL
   {
     if (!m_created) return false;
     return m_service_client_impl->RemEventCallback(type_);
+  }
+
+  /**
+   * @brief Retrieve service name.
+   *
+   * @return  The service name.
+  **/
+  std::string CServiceClient::GetServiceName()
+  {
+    if (!m_created) return "";
+    return m_service_client_impl->GetServiceName();
   }
 
   /**

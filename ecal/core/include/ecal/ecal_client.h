@@ -108,7 +108,7 @@ namespace eCAL
     bool Call(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
 
     /**
-     * @brief Call a method of this service, responses will be returned in service_response_vec_. 
+     * @brief Call a method of this service, all responses will be returned in service_response_vec_. 
      *
      * @param       method_name_           Method name.
      * @param       request_               Request string.
@@ -118,6 +118,18 @@ namespace eCAL
      * @return  True if successful.
     **/
     bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_);
+
+    /**
+     * @brief Call a method of this service, first response will be returned in service_response_.
+     *
+     * @param       method_name_       Method name.
+     * @param       request_           Request string.
+     * @param       timeout_           Maximum time before operation returns (in milliseconds, -1 means infinite).
+     * @param [out] service_response_  Service response from first service (nullptr == no response).
+     *
+     * @return  True if successful.
+    **/
+    bool Call(const std::string& method_name_, const std::string& request_, int timeout_, SServiceResponse* service_response_);
 
     /**
      * @brief Call a method of this service asynchronously, responses will be returned by callback. 
@@ -164,6 +176,13 @@ namespace eCAL
      * @return  True if succeeded, false if not.
     **/
     bool RemEventCallback(eCAL_Client_Event type_);
+
+    /**
+     * @brief Retrieve service name.
+     *
+     * @return  The service name.
+    **/
+    std::string GetServiceName();
 
     /**
      * @brief Check connection state.
@@ -243,33 +262,24 @@ namespace eCAL
       return(eCAL_Client_Call(m_service, method_name_.c_str(), request_.c_str(), static_cast<int>(request_.size()), timeout_) != 0);
     }
 
-    [[deprecated]]
-    bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_)
+    // The C API variant is not able to return all service repsonses but only the first one !
+    bool Call(const std::string& method_name_, const std::string& request_, int timeout_, SServiceResponse* service_response_)
     {
-      // TODO: reimplement this to support vector of responses
-      //       for now we just push back the first service response to the service response vector
-      //       besides this host_name and error_msg are not returned
-
       if (!m_service) return(false);
       void* response = NULL;
       struct SServiceResponseC service_info;
       int response_len = eCAL_Client_Call_Wait(m_service, method_name_.c_str(), request_.c_str(), static_cast<int>(request_.size()), timeout_, &service_info, &response, ECAL_ALLOCATE_4ME);
       if (response_len > 0)
       {
-        if (service_response_vec_)
+        if (service_response_)
         {
-          SServiceResponse service_info_response;
-          service_info_response.host_name = "";                         //  host_name not yet available in C API
-          service_info_response.service_name = m_service_name;
-          service_info_response.method_name  = method_name_;
-          service_info_response.error_msg    = "";                      // error_msg not yet available in C API
-          service_info_response.ret_state    = service_info.ret_state;
-          service_info_response.call_state   = service_info.call_state;
-          service_info_response.response     = std::string(static_cast<const char*>(response), response_len);
-
-          // first response only .. see to do comment
-          service_response_vec_->clear();
-          service_response_vec_->push_back(service_info_response);
+          service_response_->host_name = "";                         //  host_name not yet available in C API
+          service_response_->service_name = m_service_name;
+          service_response_->method_name  = method_name_;
+          service_response_->error_msg    = "";                      // error_msg not yet available in C API
+          service_response_->ret_state    = service_info.ret_state;
+          service_response_->call_state   = service_info.call_state;
+          service_response_->response     = std::string(static_cast<const char*>(response), response_len);
         }
         eCAL_FreeMem(response);
         return(true);
@@ -334,6 +344,12 @@ namespace eCAL
     {
       if (!m_service) return false;
       return(eCAL_Client_RemEventCallback(m_service, type_) != 0);
+    }
+
+    std::string GetServiceName()
+    {
+      if (!m_created) return "";
+      return(m_service_name);
     }
 
   protected:
