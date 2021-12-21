@@ -243,6 +243,7 @@ namespace eCAL
       return(eCAL_Client_Call(m_service, method_name_.c_str(), request_.c_str(), static_cast<int>(request_.size()), timeout_) != 0);
     }
 
+    [[deprecated]]
     bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_)
     {
       // TODO: reimplement this to support vector of responses
