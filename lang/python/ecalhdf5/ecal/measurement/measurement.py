@@ -29,6 +29,9 @@ import ecal.proto.helper as pb_helper
 class Channel(object):
 
   def __init__(self, measurement, channel_name):
+    if channel_name not in measurement.channel_names:
+      raise KeyError("Channel "+ channel_name + " does not exist in measurement.")
+    
     self._measurement = measurement
     self._channel_name = channel_name
     self._entries = self._measurement._reader.get_entries_info(channel_name)
@@ -106,7 +109,6 @@ class Measurement(object):
     return self._reader.get_channel_names()
 
   def __getitem__(self, channel_name):
-    # TODO: check if channel_name exists
     return Channel(self, channel_name)
 
   def __iter__(self):
