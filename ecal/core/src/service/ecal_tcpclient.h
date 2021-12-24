@@ -77,6 +77,7 @@ namespace eCAL
     std::shared_ptr<asio::io_service>       m_io_service;
     std::shared_ptr<asio::io_service::work> m_idle_work;
     std::shared_ptr<asio::ip::tcp::socket>  m_socket;
+    std::atomic_bool                        m_async_request_in_progress;
     bool                                    m_created;
     bool                                    m_connected;
 
@@ -85,5 +86,6 @@ namespace eCAL
     size_t ReceiveResponse(std::string &response_);
     void ReceiveResponseAsync(AsyncCallbackT callback_);
     void ReceiveResponseData(const size_t size, AsyncCallbackT callback_);
+    void ExecuteCallback(AsyncCallbackT callback_, const std::string &data_, bool success_);
   };
 };

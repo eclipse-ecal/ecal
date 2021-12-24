@@ -543,7 +543,7 @@ namespace eCAL
           SServiceResponse service_response;
           if (!success)
           {
-            auto error_msg = "Async request failed !";
+            auto error_msg = response.empty() ? "Async request failed !" : response;
             service_response.call_state  = call_state_failed;
             service_response.error_msg   = error_msg;
             service_response.ret_state   = 0;

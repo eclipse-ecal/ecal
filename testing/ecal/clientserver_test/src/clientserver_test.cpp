@@ -279,10 +279,10 @@ TEST(IO, ClientServerBaseAsyncMultipleRequests)
 
   // response callback function
   int responses_executed(0);
-  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
+  auto response_callback = [&](const struct eCAL::SServiceResponse &service_response_)
   {
-    PrintResponse(service_response_);
     responses_executed++;
+    PrintResponse(service_response_);
   };
 
   // add callback for server response
@@ -299,9 +299,9 @@ TEST(IO, ClientServerBaseAsyncMultipleRequests)
     requests_called++;
   }
 
-  eCAL::Process::SleepMS(1500);
+  eCAL::Process::SleepMS(1000);
 
-  EXPECT_EQ(requests_called, requests_executed);
+  EXPECT_EQ((requests_called - 1), requests_executed);
   EXPECT_EQ(requests_called, responses_executed);
 
   // finalize eCAL API

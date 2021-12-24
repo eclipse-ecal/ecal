@@ -75,7 +75,7 @@ namespace eCAL
       //std::cerr << "CTcpClient::Connect conect exception: " << e.what() << "\n";
       m_connected = false;
     }
-
+    m_async_request_in_progress = false;
     m_created = true;
   }
 
@@ -111,14 +111,22 @@ namespace eCAL
   {
     std::unique_lock<std::mutex> lock(m_socket_write_mutex);
 
-    if (!m_created)
-      callback("", false);
+    if (!m_async_request_in_progress)
+    {
+      m_async_request_in_progress.store(true);
+      if (!m_created)
+        ExecuteCallback(callback, "", false);
 
-    //Start waiting for response
-    ReceiveResponseAsync(callback);
+      //Start waiting for response
+      ReceiveResponseAsync(callback);
     
-    if(!SendRequest(request_)) 
-      callback("", false);
+      if(!SendRequest(request_))
+        ExecuteCallback(callback, "", false);
+    }
+    else
+    {
+      ExecuteCallback(callback, "Another request is already in progress", false);
+    }
   }
 
   bool CTcpClient::SendRequest(const std::string &request_)
@@ -198,7 +206,7 @@ namespace eCAL
       else
       {
         std::cerr << "CTcpClient::ExecuteRequest: Failed to receive response: " << "tcp_header size is invalid." << "\n";
-        callback_("", false);
+        ExecuteCallback(callback_, "", false);
       }
     });
   }
@@ -211,7 +219,15 @@ namespace eCAL
     //We are already in io_worker_thread
     asio::read(*m_socket, asio::buffer(&data[0], data.size()), ec);
 
-    if(ec) callback_("", false);
-    else callback_(data, true);
+    if(ec)
+      ExecuteCallback(callback_, "", false);
+    else
+      ExecuteCallback(callback_, data, true);
+  }
+
+  void CTcpClient::ExecuteCallback(AsyncCallbackT callback_, const std::string &data_, bool success_)
+  {
+    m_async_request_in_progress = false;
+    callback_(data_, success_);
   }
 };
