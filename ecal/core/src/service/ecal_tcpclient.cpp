@@ -33,11 +33,11 @@ namespace eCAL
   //////////////////////////////////////////////////////////////////
   // CTcpClient
   //////////////////////////////////////////////////////////////////
-  CTcpClient::CTcpClient() : m_created(false), m_connected(false)
+  CTcpClient::CTcpClient() : m_created(false), m_connected(false), m_async_request_in_progress(false)
   {
   }
 
-  CTcpClient::CTcpClient(const std::string& host_name_, unsigned short port_) : m_created(false)
+  CTcpClient::CTcpClient(const std::string& host_name_, unsigned short port_) : m_created(false), m_connected(false), m_async_request_in_progress(false)
   {
     Create(host_name_, port_);
   }
@@ -106,9 +106,10 @@ namespace eCAL
     m_idle_work  = nullptr;
     m_socket     = nullptr;
     m_io_service = nullptr;
-    m_connected  = false;
 
-    m_created = false;
+    m_connected                 = false;
+    m_async_request_in_progress = false;
+    m_created                   = false;
   }
 
   bool CTcpClient::IsConnected()
@@ -142,15 +143,24 @@ namespace eCAL
   void CTcpClient::ExecuteRequestAsync(const std::string& request_, int timeout_, AsyncCallbackT callback)
   {
     std::unique_lock<std::mutex> lock(m_socket_write_mutex);
+    if (!m_async_request_in_progress)
+    {
+      m_async_request_in_progress.store(true);
 
-    if (!m_created)
-      callback("", false);
+      if (!m_created)
+        ExecuteCallback(callback, "", false);
 
-    // start waiting for response
-    ReceiveResponseAsync(callback, timeout_);
+      // start waiting for response
+      ReceiveResponseAsync(callback, timeout_);
 
-    if (!SendRequest(request_))
-      callback("", false);
+      if (!SendRequest(request_))
+        ExecuteCallback(callback, "", false);
+    }
+    else
+    {
+      std::cerr << "CTcpClient::ExecuteRequestAsync failed: Another request is already in progress" << std::endl;
+      ExecuteCallback(callback, "", false);
+    }
   }
 
   bool CTcpClient::SendRequest(const std::string& request_)
@@ -317,7 +327,7 @@ namespace eCAL
     m_socket->async_read_some(asio::buffer(tcp_header.get(), sizeof(tcp_header)),
       [this, tcp_header, callback_/*, lock = std::move(lock)*/](auto ec, auto bytes_transferred)
       {
-        if (ec) callback_("", false);
+        if (ec) ExecuteCallback(callback_, "", false);
 
         if (bytes_transferred == sizeof(tcp_header))
         {
@@ -327,7 +337,7 @@ namespace eCAL
         else
         {
           std::cerr << "CTcpClient::ReceiveResponseAsync: Failed to receive response: " << "tcp_header size is invalid." << "\n";
-          callback_("", false);
+          ExecuteCallback(callback_, "", false);
         }
       });
   }
@@ -340,7 +350,13 @@ namespace eCAL
     // we are already in io_worker_thread
     asio::read(*m_socket, asio::buffer(&data[0], data.size()), ec);
 
-    if (ec) callback_("", false);
-    else callback_(data, true);
+    if (ec) ExecuteCallback(callback_, "", false);
+    else ExecuteCallback(callback_, data, true);
   }
+
+  void CTcpClient::ExecuteCallback(AsyncCallbackT callback_, const std::string &data_, bool success_)
+  {
+    m_async_request_in_progress = false;
+    callback_(data_, success_);
+  }  
 };
