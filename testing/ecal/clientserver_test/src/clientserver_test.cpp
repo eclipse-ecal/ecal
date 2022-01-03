@@ -648,10 +648,18 @@ TEST(IO, ClientServerBaseAsyncCallbackTimeout)
     methods_called++;
   }
 
-#if 0
+  eCAL::Process::SleepMS(1000);
+
+  EXPECT_EQ(methods_called, methods_executed);
+  EXPECT_EQ(methods_called, responses_executed);
+
   // call the same method with method_process_time sleep in the method callback
   // and less than method_process_time sleep time between
-  // the calls -> this leads to a crash currently !
+  // the calls -> second call should be blocked and fail
+  methods_called      = 0;
+  methods_executed    = 0;
+  responses_executed  = 0;
+
   method_process_time = 100;
   for (auto i = 0; i < calls; ++i)
   {
@@ -660,15 +668,19 @@ TEST(IO, ClientServerBaseAsyncCallbackTimeout)
     eCAL::Process::SleepMS(method_process_time / 2);
     methods_called++;
 
-    // call method 1
-    client.CallAsync(m1, r1);                             // <<< BAAAAMMM !!
+    // call method 1 
+    // this one should fail that means:
+    //   server method is not called
+    //   response is called with error message
+    client.CallAsync(m1, r1);
     eCAL::Process::SleepMS(method_process_time / 2);
     methods_called++;
   }
-#endif
 
-  EXPECT_EQ(methods_called, methods_executed);
-  EXPECT_EQ(methods_called, responses_executed);
+  eCAL::Process::SleepMS(1000);
+
+  EXPECT_EQ(methods_called/2, methods_executed);
+  EXPECT_EQ(methods_called,   responses_executed);
 
   // finalize eCAL API
   eCAL::Finalize();

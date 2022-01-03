@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <atomic>
 #include <thread>
 #include <mutex>
 #include <memory>
@@ -85,11 +86,13 @@ namespace eCAL
     EventCallbackT                          m_event_callback;
     bool                                    m_created;
     bool                                    m_connected;
+    std::atomic<bool>                       m_async_request_in_progress;
 
   private:
     bool SendRequest(const std::string &request_);
     size_t ReceiveResponse(std::string &response_, int timeout_);
     void ReceiveResponseAsync(AsyncCallbackT callback_, int timeout_);
     void ReceiveResponseData(const size_t size, AsyncCallbackT callback_);
+    void ExecuteCallback(AsyncCallbackT callback_, const std::string &data_, bool success_);
   };
 };
