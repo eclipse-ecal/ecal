@@ -111,7 +111,7 @@ namespace eCAL
     m_freq              = 0;
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
     m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
-    m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY);
+    m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY) != 0;
     m_connected         = false;
     m_ext_subscribed    = false;
     m_created           = false;
