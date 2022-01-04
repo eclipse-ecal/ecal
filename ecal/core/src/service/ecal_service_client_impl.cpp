@@ -569,7 +569,7 @@ namespace eCAL
             service_response.error_msg   = error_msg;
             service_response.ret_state   = 0;
             service_response.method_name = method_name_;
-            service_response.response    = "";
+            service_response.response.clear();
             m_response_callback(service_response);
             return;
           }
@@ -583,7 +583,7 @@ namespace eCAL
             service_response.error_msg   = error_msg;
             service_response.ret_state   = 0;
             service_response.method_name = method_name_;
-            service_response.response    = "";
+            service_response.response.clear();
             m_response_callback(service_response);
             return;
           }
@@ -623,7 +623,7 @@ namespace eCAL
       service_response.error_msg   = error_message_;
       service_response.ret_state   = 0;
       service_response.method_name = method_name_;
-      service_response.response    = "";
+      service_response.response.clear();
       m_response_callback(service_response);
     }
   }
