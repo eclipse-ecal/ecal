@@ -594,7 +594,7 @@ namespace eCAL
         // send
         tcp_sent = m_writer_tcp.Write(wdata);
         m_use_tcp_confirmed = true;
-      }
+  }
       written |= tcp_sent;
 
 #ifndef NDEBUG
