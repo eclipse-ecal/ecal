@@ -24,6 +24,7 @@ class eCALConan(ConanFile):
         #self.requires("asio/1.19.2")
         self.requires("gtest/1.11.0")
         self.requires("tinyxml2/8.0.0")
+        self.requires("openssl/1.1.1l", override=True)
         
     def configure(self):
         if self.settings.os == "Windows":
@@ -32,7 +33,7 @@ class eCALConan(ConanFile):
         
     def generate(self):
         # Don't generate the config files for doxygen. They don't work properlyexit
-        self.deps_cpp_info["doxygen"].set_property("skip_deps_file", True)
+        self.deps_cpp_info["doxygen"].set_property("cmake_find_mode", "none")
         cmake = CMakeDeps(self)
         cmake.generate()
         
