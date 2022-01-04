@@ -171,16 +171,19 @@ namespace eCAL
     {
       if (g_subgate())
       {
+        // use this intermediate variables as optimization
+        auto& ecal_header_topic   = m_ecal_header.topic();
+        auto& ecal_header_content = m_ecal_header.content();
         // apply sample
         g_subgate()->ApplySample(
-          m_ecal_header.topic().tname(),
-          m_ecal_header.topic().tid(),
+          ecal_header_topic.tname(),
+          ecal_header_topic.tid(),
           data_payload,
-          static_cast<size_t>(m_ecal_header.content().size()),
-          m_ecal_header.content().id(),
-          m_ecal_header.content().clock(),
-          m_ecal_header.content().time(),
-          m_ecal_header.content().hash(),
+          static_cast<size_t>(ecal_header_content.size()),
+          ecal_header_content.id(),
+          ecal_header_content.clock(),
+          ecal_header_content.time(),
+          ecal_header_content.hash(),
           eCAL::pb::tl_ecal_tcp);
       }
     }

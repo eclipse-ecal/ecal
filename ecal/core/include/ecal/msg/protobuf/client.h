@@ -116,6 +116,41 @@ namespace eCAL
       /**
        * @brief Call a method of this service, response will be returned in service_response_ and response_ (first matching service only !).
        * 
+       * This method is deprecated. Instead using
+       * 
+       * @code
+       *            eCAL::SServiceResponse              srv_response;
+       *
+       *            pb::protobuf_message_request_type   msg_request_pb;
+       *            pb::protobuf_message_response_type  msg_response_pb;
+       *
+       *            auto success = my_service.Call("service_name", msg_request_pb, srv_response, msg_response_pb);
+       *            if (success)
+       *            {
+       *              // process msg_response_pb here
+       *            }
+       * @endcode
+       * 
+       * you should use the new Call API function returning a vector of all service responses like this
+       * 
+       * @code
+       *            eCAL::ServiceResponseVecT           srv_response_vec;
+       *
+       *            pb::protobuf_message_request_type   msg_request_pb;
+       *            pb::protobuf_message_response_type  msg_response_pb;
+       *
+       *            auto success = my_service.Call("service_name", msg_request_pb, -1, &srv_response_vec);
+       *            if (success)
+       *            {
+       *              for (auto srv_response : srv_response_vec)
+       *              {
+       *                msg_response_pb.ParseFromString(service_response.response);
+       * 
+       *                // process msg_response_pb here
+       *              }
+       *            }
+       * @endcode
+       *
        * @param       method_name_       Method name.
        * @param       request_           Request message.
        * @param [out] service_response_  Service response struct for detailed informations.
