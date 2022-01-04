@@ -117,6 +117,10 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return process_.component_init_info().c_str();
     }
+    else if (column == Columns::ECAL_RUNTIME_VERSION)
+    {
+      return process_.ecal_runtime_version().c_str();
+    }
     else
     {
       return QVariant();

@@ -159,6 +159,7 @@ namespace eCAL
       std::string    tsync_mod_name;
       int            component_init_state;
       std::string    component_init_info;
+      std::string    ecal_runtime_version;
     };
     typedef eCAL::Util::CExpMap<std::string, SProcessMon> ProcessMonMapT;
 

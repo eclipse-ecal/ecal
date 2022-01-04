@@ -72,6 +72,5 @@ message Process                                           // process
   string                    tsync_mod_name       = 14;    // time sychronisation module name
   int32                     component_init_state = 15;    // eCAL component initilization state (eCAL::Initialize(..))
   string                    component_init_info  = 16;    // like comp_init_state as human readable string (pub|sub|srv|mon|log|time|proc)
-  string                    ecal_version_build   = 17;  // Build time eCAL Version of a component
-  string                    ecal_version_runtime = 18;  // Loaded / runtime eCAL version of  a Component
+  string                    ecal_runtime_version = 17;    // loaded / runtime eCAL version of a component
 }

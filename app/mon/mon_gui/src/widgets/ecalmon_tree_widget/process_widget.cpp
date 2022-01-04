@@ -84,6 +84,7 @@ ProcessWidget::ProcessWidget(QWidget *parent)
     (int)ProcessTreeModel::Columns::CPU_PERCENTAGE,
     (int)ProcessTreeModel::Columns::DATAWRITE,
     (int)ProcessTreeModel::Columns::DATAREAD,
+    (int)ProcessTreeModel::Columns::ECAL_RUNTIME_VERSION,
   };
   setVisibleColumns(default_visible_columns);
 
@@ -144,6 +145,7 @@ void ProcessWidget::autoSizeColumns()
     (int)ProcessTreeModel::Columns::TIMESYNC_STATE,
     (int)ProcessTreeModel::Columns::TIMESYNC_MOD_NAME,
     (int)ProcessTreeModel::Columns::COMPONENT_INIT_INFO,
+    (int)ProcessTreeModel::Columns::ECAL_RUNTIME_VERSION,
   };
 
   for (int column : columns_to_resize)

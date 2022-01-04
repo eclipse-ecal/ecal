@@ -328,6 +328,7 @@ namespace eCAL
     std::string     process_tsync_mod_name       = sample_process.tsync_mod_name();
     int             component_init_state         = sample_process.component_init_state();
     std::string     component_init_info          = sample_process.component_init_info();
+    std::string     ecal_runtime_version         = sample_process.ecal_runtime_version();
 
     std::stringstream process_id_ss;
     process_id_ss << process_id;
@@ -360,6 +361,7 @@ namespace eCAL
     ProcessInfo.tsync_mod_name       = std::move(process_tsync_mod_name);
     ProcessInfo.component_init_state = component_init_state;
     ProcessInfo.component_init_info  = std::move(component_init_info);
+    ProcessInfo.ecal_runtime_version = std::move(ecal_runtime_version);
 
     return(true);
   }
@@ -548,6 +550,9 @@ namespace eCAL
 
       // eCAL component initialization info
       pMonProcs->set_component_init_info(process.second.component_init_info);
+
+      // eCAL component runtime version
+      pMonProcs->set_ecal_runtime_version(process.second.ecal_runtime_version);
     }
   }
 
