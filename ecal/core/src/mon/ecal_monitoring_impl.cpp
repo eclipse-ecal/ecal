@@ -226,11 +226,13 @@ namespace eCAL
     size_t       topic_size      = static_cast<size_t>(sample_topic.tsize());
     bool         topic_tlayer_ecal_udp_mc(false);
     bool         topic_tlayer_ecal_shm(false);
+    bool         topic_tlayer_ecal_tcp(false);
     bool         topic_tlayer_inproc(false);
     for (auto layer : sample_topic.tlayer())
     {
       topic_tlayer_ecal_udp_mc    |= (layer.type() == eCAL::pb::tl_ecal_udp_mc)    && layer.confirmed();
       topic_tlayer_ecal_shm       |= (layer.type() == eCAL::pb::tl_ecal_shm)       && layer.confirmed();
+      topic_tlayer_ecal_tcp       |= (layer.type() == eCAL::pb::tl_ecal_tcp)       && layer.confirmed();
       topic_tlayer_inproc         |= (layer.type() == eCAL::pb::tl_inproc)         && layer.confirmed();
     }
     size_t       connections_loc = static_cast<size_t>(sample_topic.connections_loc());
@@ -302,6 +304,7 @@ namespace eCAL
       TopicInfo.tdesc                 = std::move(topic_desc);
       TopicInfo.tlayer_ecal_udp_mc    = topic_tlayer_ecal_udp_mc;
       TopicInfo.tlayer_ecal_shm       = topic_tlayer_ecal_shm;
+      TopicInfo.tlayer_ecal_tcp       = topic_tlayer_ecal_tcp;
       TopicInfo.tlayer_inproc         = topic_tlayer_inproc;
       TopicInfo.tsize                 = static_cast<int>(topic_size);
       TopicInfo.connections_loc       = static_cast<int>(connections_loc);
@@ -729,6 +732,12 @@ namespace eCAL
       {
         auto tlayer = pMonTopic->add_tlayer();
         tlayer->set_type(eCAL::pb::tl_ecal_shm);
+        tlayer->set_confirmed(true);
+      }
+      if (topic.second.tlayer_ecal_tcp)
+      {
+        auto tlayer = pMonTopic->add_tlayer();
+        tlayer->set_type(eCAL::pb::tl_ecal_tcp);
         tlayer->set_confirmed(true);
       }
       if (topic.second.tlayer_inproc)

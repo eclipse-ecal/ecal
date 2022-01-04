@@ -29,6 +29,7 @@
 
 #define TEST_UDP         0
 #define TEST_SHM         1
+#define TEST_TCP         0
 #define TEST_INPROC      0
 
 auto g_snd_size (1000 * 1024);
@@ -166,6 +167,12 @@ int main(int argc, char **argv)
   std::cout << "RESULT       : " << success << std::endl << std::endl;
 #endif
 
+#if TEST_TCP
+  std::cout << "RELIABLE     : TCP" << std::endl;
+  success = test_throughput(4000, g_snd_loops, eCAL::TLayer::tlayer_tcp, true);
+  std::cout << "RESULT       : " << success << std::endl << std::endl;
+#endif
+
 #if TEST_INPROC
   std::cout << "RELIABLE     : INPROC" << std::endl;
   success = test_throughput(4000, g_snd_loops, eCAL::TLayer::tlayer_inproc, true);
@@ -185,6 +192,12 @@ int main(int argc, char **argv)
 #if TEST_SHM
   std::cout << "BEST EFFORT : SHM" << std::endl;
   success = test_throughput(g_snd_size, g_snd_loops, eCAL::TLayer::tlayer_shm, false);
+  std::cout << "RESULT       : " << success << std::endl << std::endl;
+#endif
+
+#if TEST_TCP
+  std::cout << "BEST EFFORT : TCP" << std::endl;
+  success = test_throughput(g_snd_size, g_snd_loops, eCAL::TLayer::tlayer_tcp, false);
   std::cout << "RESULT       : " << success << std::endl << std::endl;
 #endif
 

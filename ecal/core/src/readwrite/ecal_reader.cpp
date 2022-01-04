@@ -36,6 +36,7 @@
 #include "readwrite/ecal_reader_shm.h"
 #endif /* ECAL_LAYER_ICEORYX */
 
+#include "readwrite/ecal_reader_tcp.h"
 #include "readwrite/ecal_reader_inproc.h"
 
 #include <algorithm>
@@ -72,6 +73,7 @@ namespace eCAL
                  m_use_tdesc(true),
                  m_use_udp_mc_confirmed(false),
                  m_use_shm_confirmed(false),
+                 m_use_tcp_confirmed(false),
                  m_use_inproc_confirmed(false),
                  m_created(false)
   {
@@ -171,6 +173,7 @@ namespace eCAL
 
     m_use_udp_mc_confirmed    = false;
     m_use_shm_confirmed       = false;
+    m_use_tcp_confirmed       = false;
     m_use_inproc_confirmed    = false;
 
     return(true);
@@ -190,6 +193,12 @@ namespace eCAL
       CSHMLayer::Get()->Initialize();
     }
 
+    // start ecal tcp layer
+    if (eCALPAR(NET, TCP_REC_ENABLED))
+    {
+      CTCPReaderLayer::Get()->Initialize();
+    }
+
     // start inproc layer
     if (eCALPAR(NET, INPROC_REC_ENABLED))
     {
@@ -202,19 +211,25 @@ namespace eCAL
     // start ecal udp multicast layer
     if (eCALPAR(NET, UDP_MC_REC_ENABLED))
     {
-      CMulticastLayer::Get()->AddSubscription(m_topic_name, m_topic_id, m_qos);
+      CMulticastLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
 
     // start ecal shared memory layer
     if (eCALPAR(NET, SHM_REC_ENABLED))
     {
-      CSHMLayer::Get()->AddSubscription(m_topic_name, m_topic_id, m_qos);
+      CSHMLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
+    }
+
+    // start ecal tcp layer
+    if (eCALPAR(NET, TCP_REC_ENABLED))
+    {
+      CTCPReaderLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
 
     // start inproc layer
     if (eCALPAR(NET, INPROC_REC_ENABLED))
     {
-      CInProcLayer::Get()->AddSubscription(m_topic_name, m_topic_id, m_qos);
+      CInProcLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
   }
   
@@ -223,19 +238,25 @@ namespace eCAL
     // stop ecal udp multicast layer
     if (eCALPAR(NET, UDP_MC_REC_ENABLED))
     {
-      CMulticastLayer::Get()->RemSubscription(m_topic_name, m_topic_id);
+      CMulticastLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
 
     // stop ecal shared memory layer
     if (eCALPAR(NET, SHM_REC_ENABLED))
     {
-      CSHMLayer::Get()->RemSubscription(m_topic_name, m_topic_id);
+      CSHMLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
+    }
+
+    // stop ecal tcp layer
+    if (eCALPAR(NET, TCP_REC_ENABLED))
+    {
+      CTCPReaderLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
 
     // stop inproc layer
     if (eCALPAR(NET, INPROC_REC_ENABLED))
     {
-      CInProcLayer::Get()->RemSubscription(m_topic_name, m_topic_id);
+      CInProcLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
   }
 
@@ -268,6 +289,13 @@ namespace eCAL
       tlayer->set_type(eCAL::pb::tl_ecal_shm);
       tlayer->set_version(1);
       tlayer->set_confirmed(m_use_shm_confirmed);
+    }
+    // tcp layer
+    {
+      auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
+      tlayer->set_type(eCAL::pb::tl_ecal_tcp);
+      tlayer->set_version(1);
+      tlayer->set_confirmed(m_use_tcp_confirmed);
     }
     // inproc layer
     {
@@ -363,6 +391,7 @@ namespace eCAL
     // store receive layer
     m_use_udp_mc_confirmed |= layer_ == eCAL::pb::tl_ecal_udp_mc;
     m_use_shm_confirmed    |= layer_ == eCAL::pb::tl_ecal_shm;
+    m_use_tcp_confirmed    |= layer_ == eCAL::pb::tl_ecal_tcp;
     m_use_inproc_confirmed |= layer_ == eCAL::pb::tl_inproc;
 
     // use hash to discard multiple receives of the same payload
@@ -569,6 +598,11 @@ namespace eCAL
     case eCAL::pb::tl_ecal_shm:
     {
       CSHMLayer::Get()->SetConnectionParameter(par);
+      break;
+    }
+    case eCAL::pb::tl_ecal_tcp:
+    {
+      CTCPReaderLayer::Get()->SetConnectionParameter(par);
       break;
     }
     case eCAL::pb::tl_inproc:

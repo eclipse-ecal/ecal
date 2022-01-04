@@ -268,7 +268,8 @@ namespace eCAL
       {
         sstream << "Layer Mode SHM           : " << LayerMode(eCALPAR(PUB, USE_SHM)) << std::endl;
       }
-      sstream << "Layer Mode UDP MC        : " << LayerMode(eCALPAR(PUB, USE_UDP_MC))  << std::endl;
+      sstream << "Layer Mode TCP           : " << LayerMode(eCALPAR(PUB, USE_TCP)) << std::endl;
+      sstream << "Layer Mode UDP MC        : " << LayerMode(eCALPAR(PUB, USE_UDP_MC)) << std::endl;
       sstream << std::endl;
 
       sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------"               << std::endl;

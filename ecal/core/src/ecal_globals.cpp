@@ -25,6 +25,8 @@
 #include "io/udp_init.h"
 #include "ecal_config.h"
 
+#include <stdexcept>
+
 namespace eCAL
 {
   CGlobals::CGlobals() : initialized(false), components(0)
@@ -54,6 +56,23 @@ namespace eCAL
         config_instance->OverwriteKeys(*config_keys_);
       }
       config_instance->AddFile(g_default_ini_file);
+
+      if (!config_instance->Validate())
+      {
+        std::string emsg("Core initialization failed cause by a configuration error.");
+
+        std::cerr                                                                 << std::endl;
+        std::cerr << "----------------------------------------------------------" << std::endl;
+        std::cerr << "eCAL CORE PANIC :-("                                        << std::endl;
+        std::cerr                                                                 << std::endl;
+        std::cerr << emsg                                                         << std::endl;
+        std::cerr << "----------------------------------------------------------" << std::endl;
+        std::cerr                                                                 << std::endl;
+        
+        throw std::runtime_error(emsg.c_str());
+        std::exit(-1);
+      }
+
       new_initialization = true;
     }
 

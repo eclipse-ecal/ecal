@@ -149,9 +149,9 @@ namespace eCAL
 
       // update globals
       g_process_rclock++;
-      auto ecal_sample_content = ecal_sample_.content();
-      auto ecal_sample_content_payload = ecal_sample_content.payload();
-      g_process_rbytes_sum += ecal_sample_content_payload.size();
+      auto& ecal_sample_content         = ecal_sample_.content();
+      auto& ecal_sample_content_payload = ecal_sample_content.payload();
+      g_process_rbytes_sum += ecal_sample_.content().payload().size();
 
       // add sample to data reader
       std::lock_guard<std::mutex> lock(m_topic_name_datareader_sync);
