@@ -26,7 +26,8 @@ jobs:
         nuget-version: '5.8.x'
         
     - name: Install Dependencies
-      run: choco install doxygen.install
+      # choco install of version 1.9.3 produced a checksum error
+      run: choco install doxygen.install --version=1.9.2
 
     - name: Uninstall Chocolatey
       run: move "$env:PROGRAMDATA\chocolatey" "$env:PROGRAMDATA\_chocolatey"
