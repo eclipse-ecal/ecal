@@ -79,6 +79,10 @@ function(ecal_add_mon_plugin TARGET_NAME)
     SOVERSION $<NOT:$<CXX_COMPILER_ID:Clang,AppleClang>:${${TARGET_NAME}_VERSION_MAJOR}>>
     LIBRARY_OUTPUT_DIRECTORY $<IF:$<BOOL:${WIN32}>,${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/ecalmon_plugins,${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ecal/plugins/mon>
   )
+  target_compile_definitions(${TARGET_NAME}
+    PRIVATE
+      $<$<CONFIG:Release,RelWithDebInfo,MinSizeRel>:QT_NO_DEBUG>
+  )
     
 endfunction()
 

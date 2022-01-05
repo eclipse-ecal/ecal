@@ -88,13 +88,15 @@ void ProcProtoType(const std::string& group_, const std::string& name_, const go
 
 void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& prefix_ /* = "" */)
 {
+  int count = msg_.GetDescriptor()->field_count();
   const google::protobuf::Reflection* ref_ptr = msg_.GetReflection();
+
   if(ref_ptr)
   {
-    std::vector<const google::protobuf::FieldDescriptor*> field_v;
-    ref_ptr->ListFields(msg_, &field_v);
-    for(auto field : field_v)
+    for (int i = 0; i < count; ++i)
     {
+      auto field = msg_.GetDescriptor()->field(i);
+  
       const google::protobuf::FieldDescriptor::CppType fdt = field->cpp_type();
       switch(fdt)
       {
