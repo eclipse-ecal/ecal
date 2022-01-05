@@ -155,5 +155,17 @@ namespace protobuf
     );
     return names_vec;
   }
+
+  inline std::vector<std::string> GetProtoMessageFieldNames(const google::protobuf::Descriptor* descriptor)
+  {
+    std::vector<std::string> names_vec;
+    auto count = descriptor->field_count();
+    for (int i = 0; i < count; ++i)
+    {
+      auto field = descriptor->field(i);
+      names_vec.push_back(field->name());
+    }
+    return names_vec;
+  }
 }
 }

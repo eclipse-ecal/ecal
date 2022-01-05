@@ -42,22 +42,25 @@ namespace protobuf
     const google::protobuf::Reflection* ref_ptr = msg_.GetReflection();
     if (ref_ptr == nullptr) return false;
 
-    std::vector<const google::protobuf::FieldDescriptor*> field_v;
-    ref_ptr->ListFields(msg_, &field_v);
+    auto descriptor = msg_.GetDescriptor();
+
+    int count = descriptor->field_count();
 
     if (!is_Array_)
     {
-      visitor->ScalarMessageStart({ name_, prefix_, (int)index_, msg_.GetTypeName()}, GetProtoMessageFieldNames(field_v));
+      visitor->ScalarMessageStart({ name_, prefix_, (int)index_, msg_.GetTypeName()}, GetProtoMessageFieldNames(descriptor));
     }
     else
     {
-      visitor->ArrayMessageStart({ name_, prefix_, (int)index_, msg_.GetTypeName()}, GetProtoMessageFieldNames(field_v));
+      visitor->ArrayMessageStart({ name_, prefix_, (int)index_, msg_.GetTypeName()}, GetProtoMessageFieldNames(descriptor));
     }
 
     std::string complete_message_name = CreateCompleteMessageName(name_, prefix_);
 
-    for (auto field : field_v)
+
+    for (int i = 0; i < count; ++i)
     {
+      auto field = descriptor->field(i);
       std::string child_message_name = CreateCompleteMessageName(field->name(), complete_message_name);
 
       if (visitor->AcceptMessage(child_message_name))

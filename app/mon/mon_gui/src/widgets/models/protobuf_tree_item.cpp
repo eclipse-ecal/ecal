@@ -201,13 +201,13 @@ void ProtobufTreeItem::setMessage(const google::protobuf::Message& message)
     return;
   }
 
-  std::vector<const google::protobuf::FieldDescriptor*> field_list;
-  reflection->ListFields(message, &field_list);
+  int count = message.GetDescriptor()->field_count();
 
   // Remove old Items that are not present any more
   QSet<int> existing_field_numbers;
-  for (auto field : field_list)
+  for (int i = 0; i < count; ++i)
   {
+    auto field = message.GetDescriptor()->field(i);
     existing_field_numbers.insert(field->number());
   }
   for (int child_number : children_.keys())
@@ -219,8 +219,9 @@ void ProtobufTreeItem::setMessage(const google::protobuf::Message& message)
     }
   }
 
-  for (auto field : field_list)
+  for (int i = 0; i < count; ++i)
   {
+    auto field = message.GetDescriptor()->field(i);
     ProtobufTreeItem* child;
     int field_number = field->number();
 

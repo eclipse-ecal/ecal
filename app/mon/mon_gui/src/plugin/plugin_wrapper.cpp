@@ -121,6 +121,7 @@ bool PluginWrapper::load()
     }
     else
       eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_warning, "Unable to load plugin " + plugin_data_.path.toStdString() + ".");
+      eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_warning, loader.errorString().toStdString());
   }
   else
     return true;
