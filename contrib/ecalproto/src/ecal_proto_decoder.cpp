@@ -266,14 +266,28 @@ namespace protobuf
                 const google::protobuf::Message& msg = ref_ptr->GetRepeatedMessage(msg_, field, fnum);
                 std::stringstream name;
                 name << field->name() << "[" << fnum << "]";
-                ProcProtoMsg(msg, name.str(), complete_message_name, true, fnum);
+
+                // do not process default messages to avoid infinite recursions.
+                std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
+                msg.GetReflection()->ListFields(msg, &msg_fields);
+                if (msg_fields.size() > 0)
+                {
+                  ProcProtoMsg(msg, name.str(), complete_message_name, true, fnum);
+                }
               }
             }
           }
           else
           {
             const google::protobuf::Message& msg = ref_ptr->GetMessage(msg_, field);
-            ProcProtoMsg(msg, field->name(), complete_message_name, false, field->number());
+
+            // do not process default messages to avoid infinite recursions.
+            std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
+            msg.GetReflection()->ListFields(msg, &msg_fields);
+            if (msg_fields.size() > 0)
+            {
+              ProcProtoMsg(msg, field->name(), complete_message_name, false, field->number());
+            }
           }
         }
         break;
