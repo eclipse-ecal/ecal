@@ -30,6 +30,7 @@
 #include <ecal/msg/protobuf/server.h>
 
 #include <ecal_utils/string.h>
+#include <ecal_utils/command_line.h>
 
 #include <tclap/CmdLine.h>
 
@@ -125,7 +126,12 @@ int main(int argc, char** argv)
  
   try
   {
+#ifdef WIN32
+    auto utf8_args_vector = EcalUtils::CommandLine::GetUtf8Argv();
+    cmd.parse(utf8_args_vector);
+#else
     cmd.parse(argc, argv);
+#endif // WIN32
   }
   catch (TCLAP::ArgException& e)
   {

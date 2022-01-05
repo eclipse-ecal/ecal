@@ -24,6 +24,8 @@
 
 #include "hdf5_writer_thread.h"
 
+#include <ecal_utils/str_convert.h>
+
 #ifdef ECAL_HAS_CURL
   #include "ftp_upload_thread.h"
 #endif // ECAL_HAS_CURL
@@ -140,7 +142,13 @@ namespace eCAL
           std::string system_information_path = hostname_dir + "/system_information.txt";
 
           std::ofstream system_information_file;
+#ifdef WIN32
+          std::wstring w_system_information_path = EcalUtils::StrConvert::Utf8ToWide(system_information_path);
+          system_information_file.open(w_system_information_path, std::ios::trunc);
+#else
           system_information_file.open(system_information_path, std::ios::trunc);
+#endif // WIN32
+
           if (system_information_file.is_open())
           {
             std::string config_dump;
@@ -238,7 +246,13 @@ namespace eCAL
         EcalRecLogger::Instance()->info("Creating eacalmeas file: " + ecalmeas_file_path);
 
         std::ofstream ecalmeas_file;
+#ifdef WIN32
+        std::wstring w_ecalmeas_file_path = EcalUtils::StrConvert::Utf8ToWide(ecalmeas_file_path);
+        ecalmeas_file.open(w_ecalmeas_file_path, std::ios::out | std::ios::trunc);
+#else
         ecalmeas_file.open(ecalmeas_file_path, std::ios::out | std::ios::trunc);
+#endif // WIN32
+
         if (ecalmeas_file.is_open())
         {
           ecalmeas_file.close();
@@ -261,7 +275,13 @@ namespace eCAL
         EcalRecLogger::Instance()->info("Saving description to " + full_path);
 
         std::ofstream description_file;
+#ifdef WIN32
+        std::wstring w_full_path = EcalUtils::StrConvert::Utf8ToWide(full_path);
+        description_file.open(w_full_path, std::ios::out | std::ios::trunc);
+#else
         description_file.open(full_path, std::ios::out | std::ios::trunc);
+#endif // WIN32
+
         if (description_file.is_open())
         {
           description_file << job_config_.GetDescription();
@@ -452,7 +472,13 @@ namespace eCAL
       if (!error)
       {
         std::ofstream description_file;
+#ifdef WIN32
+        std::wstring w_description_path = EcalUtils::StrConvert::Utf8ToWide(description_path);
+        description_file.open(w_description_path, std::ios::out | std::ios::app);
+#else
         description_file.open(description_path, std::ios::out | std::ios::app);
+#endif // WIN32
+
         if (description_file.is_open())
         {
           description_file << std::endl;

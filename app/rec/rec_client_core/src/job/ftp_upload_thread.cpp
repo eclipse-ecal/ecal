@@ -31,6 +31,7 @@
 #endif
 
 #include <ecal_utils/filesystem.h>
+#include <ecal_utils/str_convert.h>
 
 #ifdef WIN32
   #define WIN32_LEAN_AND_MEAN
@@ -174,7 +175,12 @@ namespace eCAL
 
         // Open the local file
         std::ifstream file;
+#ifdef WIN32
+        std::wstring w_native_path = EcalUtils::StrConvert::Utf8ToWide(EcalUtils::Filesystem::ToNativeSeperators(local_complete_file_path));
+        file.open(w_native_path, std::ios::binary);
+#else
         file.open(EcalUtils::Filesystem::ToNativeSeperators(local_complete_file_path), std::ios::binary);
+#endif // WIN32
 
         bool abort_uploading = false;
 

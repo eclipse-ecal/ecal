@@ -20,6 +20,9 @@
 #include "config.h"
 
 #include <tinyxml2.h>
+#include <stdio.h>
+
+#include <ecal_utils/str_convert.h>
 
 #include <rec_client_core/ecal_rec_logger.h>
 
@@ -62,9 +65,24 @@ namespace eCAL
 
       bool readConfigFromFile(eCAL::rec_server::RecServerImpl& rec_server, const std::string& path, int* version)
       {
-        tinyxml2::XMLDocument document;
+        FILE* xml_file;
+#ifdef WIN32
+        std::wstring w_path = EcalUtils::StrConvert::Utf8ToWide(path);
+        xml_file = _wfopen(w_path.c_str(), L"rb");
+#else
+        xml_file = fopen(path.c_str(), "rb");
+#endif // WIN32
 
-        tinyxml2::XMLError errorcode = document.LoadFile(path.c_str());
+        if (xml_file == nullptr)
+        {
+          eCAL::rec::EcalRecLogger::Instance()->error(std::string("Error opening file \"") + path + "\"");
+          return false;
+        }
+
+        tinyxml2::XMLDocument document;
+        tinyxml2::XMLError errorcode = document.LoadFile(xml_file);
+
+        fclose(xml_file);
 
         if (errorcode != tinyxml2::XML_SUCCESS)
         {

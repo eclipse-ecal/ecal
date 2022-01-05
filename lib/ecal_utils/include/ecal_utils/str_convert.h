@@ -24,17 +24,17 @@ namespace EcalUtils
   namespace StrConvert
   {
 #ifdef WIN32
-    std::string WideToAnsi(const std::wstring& wstr);
+    std::string WideToAnsi(const std::wstring& wstr, unsigned int ansi_code_page);
 
-    std::wstring AnsiToWide(const std::string& str);
+    std::wstring AnsiToWide(const std::string& str, unsigned int ansi_code_page);
 
     std::string WideToUtf8(const std::wstring& wstr);
 
     std::wstring Utf8ToWide(const std::string& str);
 
-    std::string AnsiToUtf8(const std::string& str);
+    std::string AnsiToUtf8(const std::string& str, unsigned int ansi_code_page);
 
-    std::string Utf8ToAnsi(const std::string& str);
+    std::string Utf8ToAnsi(const std::string& str, unsigned int ansi_code_page);
 #endif // WIN32
   }
 }

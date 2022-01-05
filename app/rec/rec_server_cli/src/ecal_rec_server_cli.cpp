@@ -47,6 +47,9 @@
 
 #include <rec_server_service.h>
 
+#include <ecal_utils/command_line.h>
+#include <ecal_utils/str_convert.h>
+
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4505) // disable tclap warning (unreferenced local function has been removed)
@@ -139,6 +142,12 @@ std::unique_ptr<eCAL::rec_cli::command::Record> record_command;
 
 int main(int argc, char** argv)
 {
+#ifdef WIN32
+  int old_console_output_cp = GetConsoleOutputCP();
+  SetConsoleOutputCP(CP_UTF8);
+#endif // WIN32
+
+
   // Define the command line object.
   TCLAP::CmdLine cmd(ECAL_REC_NAME, ' ', ECAL_REC_VERSION_STRING);
 
@@ -251,7 +260,12 @@ int main(int argc, char** argv)
 
   try
   {
+#ifdef WIN32
+    auto utf8_args_vector = EcalUtils::CommandLine::GetUtf8Argv();
+    cmd.parse(utf8_args_vector);
+#else
     cmd.parse(argc, argv);
+#endif // WIN32
   }
   catch (TCLAP::ArgException& e)
   {
@@ -1336,6 +1350,12 @@ int main(int argc, char** argv)
   /************************************************************************/
   if (interactive_arg.isSet() || interactive_dont_exit_arg.isSet())
   {
+#ifdef WIN32
+    // Create buffer fo the manual ReadConsoleW call
+    std::wstring w_buffer;
+    w_buffer.reserve(4096);
+#endif // WIN32
+
     std::cout << "Using interactive mode. Type \"help\" to view a list of all commands." << std::endl;
     for (;;)
     {
@@ -1346,8 +1366,47 @@ int main(int argc, char** argv)
       }
 
       std::cout << ">> ";
+
       std::string line;
-      if (!std::getline(std::cin, line) || ctrl_exit_event)
+      bool success = false;
+
+#ifdef WIN32
+      HANDLE h_in = GetStdHandle(STD_INPUT_HANDLE);
+      DWORD std_handle_type = GetFileType(h_in);
+      if (std_handle_type == FILE_TYPE_CHAR)
+      {
+        // This is an (interactive) console => read console as UTF16
+        DWORD chars_read(0);
+        w_buffer.resize(4096);
+
+        success = ReadConsoleW(h_in, (LPVOID)(w_buffer.data()), static_cast<DWORD>(w_buffer.size()), &chars_read, NULL) != 0;
+
+        if (success)
+        {
+          w_buffer.resize(chars_read);
+          line = EcalUtils::StrConvert::WideToUtf8(w_buffer);
+          
+          // Trim \r\n at the end
+          for (int i = 0; i < 2; i++)
+          {
+            if (line.size() > 0 
+              && ((line.back() == '\r') || (line.back() == '\n')))
+            {
+              line.pop_back();
+            }
+          }
+        }
+      }
+      else
+      {
+        // This is a pipe => read binary data directly as UTF8
+        success = bool(std::getline(std::cin, line));
+      }
+#else
+      success = bool(std::getline(std::cin, line));
+#endif // WIN32
+      
+      if (!success || ctrl_exit_event)
       {
         std::cout << "Stdin closed." << std::endl;
         break;
@@ -1458,6 +1517,11 @@ int main(int argc, char** argv)
   }
 
   std::cout << "Exiting" << std::endl;
+
+#ifdef WIN32
+  if (old_console_output_cp != 0)
+    SetConsoleOutputCP(old_console_output_cp);
+#endif // WIN32
 
   // Interactive mode always return EXIT_SUCCESS
   // Non-interactive mode returns EXIT_FAILURE, if any command has returned an error.

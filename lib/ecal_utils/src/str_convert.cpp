@@ -32,19 +32,19 @@ namespace EcalUtils
   namespace StrConvert
   {
 #ifdef WIN32
-    std::string WideToAnsi(const std::wstring& wstr)
+    std::string WideToAnsi(const std::wstring& wstr,  unsigned int ansi_code_page)
     {
-        int count = WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), static_cast<int>(wstr.length()), NULL, 0, NULL, NULL);
+        int count = WideCharToMultiByte(ansi_code_page, 0, wstr.c_str(), static_cast<int>(wstr.length()), NULL, 0, NULL, NULL);
         std::string str(count, 0);
-        WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, &str[0], count, NULL, NULL);
+        WideCharToMultiByte(ansi_code_page, 0, wstr.c_str(), -1, &str[0], count, NULL, NULL);
         return str;
     }
 
-    std::wstring AnsiToWide(const std::string& str)
+    std::wstring AnsiToWide(const std::string& str,  unsigned int ansi_code_page)
     {
-        int count = MultiByteToWideChar(CP_ACP, 0, str.c_str(), static_cast<int>(str.length()), NULL, 0);
+        int count = MultiByteToWideChar(ansi_code_page, 0, str.c_str(), static_cast<int>(str.length()), NULL, 0);
         std::wstring wstr(count, 0);
-        MultiByteToWideChar(CP_ACP, 0, str.c_str(), static_cast<int>(str.length()), &wstr[0], count);
+        MultiByteToWideChar(ansi_code_page, 0, str.c_str(), static_cast<int>(str.length()), &wstr[0], count);
         return wstr;
     }
 
@@ -64,14 +64,14 @@ namespace EcalUtils
         return wstr;
     }
 
-    std::string AnsiToUtf8(const std::string& str)
+    std::string AnsiToUtf8(const std::string& str, unsigned int ansi_code_page)
     {
-      return WideToUtf8(AnsiToWide(str));
+      return WideToUtf8(AnsiToWide(str, ansi_code_page));
     }
 
-    std::string Utf8ToAnsi(const std::string& str)
+    std::string Utf8ToAnsi(const std::string& str, unsigned int ansi_code_page)
     {
-      return WideToAnsi(Utf8ToWide(str));
+      return WideToAnsi(Utf8ToWide(str), ansi_code_page);
     }
 #endif
   }
