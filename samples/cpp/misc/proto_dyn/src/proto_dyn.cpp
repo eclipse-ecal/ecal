@@ -239,7 +239,14 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
               prefix += std::to_string(fnum);
               prefix += "]";
               if(!prefix_.empty()) prefix = prefix_ + "." + prefix;
-              ProcProtoMsg(msg, prefix);
+
+              // do not process default messages to avoid infinite recursions.
+              std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
+              msg.GetReflection()->ListFields(msg, &msg_fields);
+              if (msg_fields.size() > 0)
+              {
+                ProcProtoMsg(msg, prefix);
+              }
             }
           }
           else
@@ -247,7 +254,14 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
             const google::protobuf::Message& msg = ref_ptr->GetMessage(msg_, field);
             std::string prefix = field->name();
             if(!prefix_.empty()) prefix = prefix_ + "." + prefix;
-            ProcProtoMsg(msg, prefix);
+
+            // do not process default messages to avoid infinite recursions.
+            std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
+            msg.GetReflection()->ListFields(msg, &msg_fields);
+            if (msg_fields.size() > 0)
+            {
+              ProcProtoMsg(msg, prefix);
+            }
           }
         }
         break;
