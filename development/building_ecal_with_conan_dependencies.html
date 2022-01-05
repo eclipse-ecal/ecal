@@ -555,8 +555,10 @@ This is why we need to build QT from source and thus pass a <code class="docutil
 Conan will create a lot of files in the build folder.
 Some are CMake scripts to locate dependencies, others are scripts to use / activate special environments to allow you to build / debug eCAL in a way that all libraries can be located at runtime.
 Thus we recommend to build eCAL with the following commands:</p>
-<div class="highlight-bat notranslate"><div class="highlight"><pre><span></span>activate.bat<span class="p">|</span>sh
-cmake .. -DCMAKE_TOOLCHAIN_FILE=.\conan_toolchain.cmake
+<div class="highlight-bat notranslate"><div class="highlight"><pre><span></span>activate.bat<span class="p">|</span>ps1<span class="p">|</span>sh
+<span class="k">mkdir</span> _cmake
+<span class="k">cd</span> _cmake
+cmake ../.. -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../conan_toolchain.cmake
 cmake --build .
 </pre></div>
 </div>

@@ -50,8 +50,10 @@ Thus we recommend to build eCAL with the following commands:
 
 .. code-block:: bat
 
-   activate.bat|sh
-   cmake .. -DCMAKE_TOOLCHAIN_FILE=.\conan_toolchain.cmake
+   activate.bat|ps1|sh
+   mkdir _cmake
+   cd _cmake
+   cmake ../.. -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../conan_toolchain.cmake
    cmake --build .
   
 Alternatively, if you can also open the generated Visual Studio solution when working on Windows, and build / debug from within Visual Studio.:
