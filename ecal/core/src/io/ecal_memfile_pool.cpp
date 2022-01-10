@@ -172,7 +172,7 @@ namespace eCAL
           ReadFileHeader(mfile_hdr);
 
           // check for new content
-          if ((mfile_hdr.data_size == 0) || (mfile_hdr.clock <= last_sample_clock))
+          if (mfile_hdr.clock <= last_sample_clock)
           {
             // release access and leave
             m_memfile.ReleaseReadAccess();
@@ -183,6 +183,7 @@ namespace eCAL
             m_ecal_buffer.clear();
 
             bool zero_copy_allowed = mfile_hdr.options.zero_copy != 0;
+            bool post_process_buffer(false);
             // -------------------------------------------------------------------------
             // zero copy mode
             // -------------------------------------------------------------------------
@@ -211,8 +212,18 @@ namespace eCAL
             else
             {
               // read payload
-              m_ecal_buffer.resize((size_t)mfile_hdr.data_size);
-              m_memfile.Read(m_ecal_buffer.data(), (size_t)mfile_hdr.data_size, mfile_hdr.hdr_size);
+              // if data length == 0, there is no need to further read data
+              // we just flag to process the empty buffer
+              if (mfile_hdr.data_size == 0)
+              {
+                post_process_buffer = true;
+              }
+              else
+              {
+                m_ecal_buffer.resize((size_t)mfile_hdr.data_size);
+                m_memfile.Read(m_ecal_buffer.data(), (size_t)mfile_hdr.data_size, mfile_hdr.hdr_size);
+                post_process_buffer = true;
+              }
             }
 
             // store clock
@@ -228,7 +239,7 @@ namespace eCAL
             }
 
             // process receive buffer if buffered mode read some data in
-            if (!m_ecal_buffer.empty())
+            if (post_process_buffer)
             {
               // add sample to data reader (and call user callback function)
               if (g_subgate()) g_subgate()->ApplySample(topic_name_, topic_id_, m_ecal_buffer.data(), m_ecal_buffer.size(), (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash, eCAL::pb::tl_ecal_shm);

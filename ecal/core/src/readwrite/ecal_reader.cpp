@@ -434,9 +434,6 @@ namespace eCAL
     // store size
     m_topic_size = size_;
 
-    // check buffer
-    if((size_ == 0) || (payload_ == nullptr)) return(0);
-
     // execute callback
     bool processed = false;
     {

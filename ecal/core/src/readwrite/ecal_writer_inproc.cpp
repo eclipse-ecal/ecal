@@ -72,12 +72,10 @@ namespace eCAL
   /////////////////////////////////////////////////////////////////
   // apply the data straight to the subscriber gate
   /////////////////////////////////////////////////////////////////
-  size_t CDataWriterInProc::Write(const SWriterData& data_)
+  bool CDataWriterInProc::Write(const SWriterData& data_)
   {
-    if (!m_created)     return(0);
-    if (!data_.buf)     return(0);
-    if (data_.len == 0) return(0);
-    if (!g_subgate())   return(0);
+    if (!m_created)   return(false);
+    if (!g_subgate()) return(false);
 
 #ifndef NDEBUG
     // log it

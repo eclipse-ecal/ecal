@@ -279,8 +279,11 @@ namespace tcpub
       size_t current_position = header_size;
       for (const auto& payload : payloads)
       {
-        memcpy(&((*buffer)[current_position]), payload.first, payload.second);
-        current_position += payload.second;
+        if (payload.first && (payload.second > 0))
+        {
+          memcpy(&((*buffer)[current_position]), payload.first, payload.second);
+          current_position += payload.second;
+        }
       }
     }
 
