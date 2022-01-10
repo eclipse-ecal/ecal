@@ -456,10 +456,11 @@ TEST(IO, ZeroPayloadMessageInProc)
 
   g_callback_received_bytes = 0;
   g_callback_received_count = 0;
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
-  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
 
-  // let the data flow
+  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+
+  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
   eCAL::Process::SleepMS(DATA_FLOW_TIME);
 
   // check callback receive
@@ -503,10 +504,11 @@ TEST(IO, ZeroPayloadMessageSHM)
 
   g_callback_received_bytes = 0;
   g_callback_received_count = 0;
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
-  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
 
-  // let the data flow
+  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+
+  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
   eCAL::Process::SleepMS(DATA_FLOW_TIME);
 
   // check callback receive
@@ -550,10 +552,11 @@ TEST(IO, ZeroPayloadMessageUDP)
 
   g_callback_received_bytes = 0;
   g_callback_received_count = 0;
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
-  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
 
-  // let the data flow
+  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+
+  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
   eCAL::Process::SleepMS(DATA_FLOW_TIME);
 
   // check callback receive
@@ -598,10 +601,11 @@ TEST(IO, ZeroPayloadMessageTCP)
 
   g_callback_received_bytes = 0;
   g_callback_received_count = 0;
-  EXPECT_EQ(send_s.size(), pub.Send(send_s));
-  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
 
-  // let the data flow
+  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+
+  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
   eCAL::Process::SleepMS(DATA_FLOW_TIME);
 
   // check callback receive
