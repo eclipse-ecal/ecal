@@ -638,12 +638,12 @@ TEST(IO, ClientServerBaseAsyncCallbackTimeout)
   for (auto i = 0; i < calls; ++i)
   {
     // call method 1
-    client.CallAsync(m1, r1, method_process_time * 2);
+    client.CallAsync(m1, r1);
     eCAL::Process::SleepMS(method_process_time * 2);
     methods_called++;
 
     // call method 2
-    client.CallAsync(m2, r2, method_process_time * 2);
+    client.CallAsync(m2, r2);
     eCAL::Process::SleepMS(method_process_time * 2);
     methods_called++;
   }

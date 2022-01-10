@@ -113,19 +113,19 @@ namespace eCAL
      * @param       method_name_           Method name.
      * @param       request_               Request string.
      * @param       timeout_               Maximum time before operation returns (in milliseconds, -1 means infinite).
-     * @param [out] service_response_vec_  Response vector containing service responses from every called service (nullptr == no response).
+     * @param [out] service_response_vec_  Response vector containing service responses from every called service (null pointer == no response).
      *
      * @return  True if successful.
     **/
     bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_);
 
     /**
-     * @brief Call a method of this service, first response will be returned in service_response_.
+     * @brief Call a method of this service, first response only will be returned in service_response_.
      *
      * @param       method_name_       Method name.
      * @param       request_           Request string.
      * @param       timeout_           Maximum time before operation returns (in milliseconds, -1 means infinite).
-     * @param [out] service_response_  Service response from first service (nullptr == no response).
+     * @param [out] service_response_  Service response from first service (null pointer == no response).
      *
      * @return  True if successful.
     **/
@@ -136,7 +136,7 @@ namespace eCAL
      *
      * @param method_name_  Method name.
      * @param request_      Request string. 
-     * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+     * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite) - NOT SUPPORTED YET.
      *
      * @return  True if successful.
     **/
@@ -262,7 +262,7 @@ namespace eCAL
       return(eCAL_Client_Call(m_service, method_name_.c_str(), request_.c_str(), static_cast<int>(request_.size()), timeout_) != 0);
     }
 
-    // The C API variant is not able to return all service repsonses but only the first one !
+    // The C API variant is not able to return all service responses but only the first one !
     bool Call(const std::string& method_name_, const std::string& request_, int timeout_, SServiceResponse* service_response_)
     {
       if (!m_service) return(false);

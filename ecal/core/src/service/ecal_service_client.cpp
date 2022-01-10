@@ -120,12 +120,12 @@ namespace eCAL
   }
 
   /**
-   * @brief Call method of this service, all responses will be returned in service_response_vec_.
+   * @brief Call a method of this service, all responses will be returned in service_response_vec_.
    *
    * @param       method_name_           Method name.
    * @param       request_               Request string.
    * @param       timeout_               Maximum time before operation returns (in milliseconds, -1 means infinite).
-   * @param [out] service_response_vec_  Response vector containing service info and response string from every called service (optional).
+   * @param [out] service_response_vec_  Response vector containing service responses from every called service (null pointer == no response).
    *
    * @return  True if successful.
   **/
@@ -136,12 +136,12 @@ namespace eCAL
   }
 
   /**
-   * @brief Call a method of this service, first response will be returned in service_response_.
+   * @brief Call a method of this service, first response only will be returned in service_response_.
    *
    * @param       method_name_       Method name.
    * @param       request_           Request string.
    * @param       timeout_           Maximum time before operation returns (in milliseconds, -1 means infinite).
-   * @param [out] service_response_  Service response from first service (nullptr == no response).
+   * @param [out] service_response_  Service response from first service (null pointer == no response).
    *
    * @return  True if successful.
   **/
@@ -168,24 +168,27 @@ namespace eCAL
   }
 
   /**
-   * @brief Asynchronously call of this service, response will be returned by callback.
+   * @brief Call a method of this service asynchronously, responses will be returned by callback.
    *
    * @param method_name_  Method name.
    * @param request_      Request string.
-   * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+   * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite) - NOT SUPPORTED YET.
    *
    * @return  True if successful.
   **/
   bool CServiceClient::CallAsync(const std::string& method_name_, const std::string& request_, int timeout_)
   {
     if (!m_created) return(false);
-    return(m_service_client_impl->CallAsync(method_name_, request_, timeout_));
+    (void)timeout_; // will be implemented later
+    return(m_service_client_impl->CallAsync(method_name_, request_ /*, timeout_*/));
   }
 
   /**
-   * @brief Add server response callback. 
+   * @brief Add server response callback.
    *
-   * @param callback_  Callback function for server response.  
+   * @param callback_  Callback function for server response.
+   *
+   * @return  True if successful.
   **/
   bool CServiceClient::AddResponseCallback(const ResponseCallbackT& callback_)
   {
@@ -194,7 +197,9 @@ namespace eCAL
   }
 
   /**
-   * @brief Remove server response callback. 
+   * @brief Remove server response callback.
+   *
+   * @return  True if successful.
   **/
   bool CServiceClient::RemResponseCallback()
   {
@@ -203,7 +208,7 @@ namespace eCAL
   }
 
   /**
-   * @brief Add callback function for client events.
+   * @brief Add client event callback function.
    *
    * @param type_      The event type to react on.
    * @param callback_  The callback function to add.
@@ -217,7 +222,7 @@ namespace eCAL
   }
 
   /**
-   * @brief Remove callback function for client events.
+   * @brief Remove client event callback function.
    *
    * @param type_  The event type to remove.
    *
