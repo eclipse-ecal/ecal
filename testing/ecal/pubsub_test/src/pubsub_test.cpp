@@ -570,6 +570,7 @@ TEST(IO, ZeroPayloadMessageUDP)
   eCAL::Finalize();
 }
 
+#if 0
 TEST(IO, ZeroPayloadMessageTCP)
 {
   // default send string
@@ -616,3 +617,4 @@ TEST(IO, ZeroPayloadMessageTCP)
   // finalize eCAL API
   eCAL::Finalize();
 }
+#endif
