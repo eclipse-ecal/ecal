@@ -241,8 +241,6 @@ namespace eCAL
   // blocking call, using callback
   bool CServiceClientImpl::Call(const std::string& method_name_, const std::string& request_, int timeout_)
   {
-    // TODO: implement timeout
-
     if (!g_clientgate()) return false;
     if (!m_created)      return false;
 
@@ -258,8 +256,8 @@ namespace eCAL
     return SendRequests(m_host_name, method_name_, request_, timeout_);
   }
 
-  // asynchronuously call, using callback
-  bool CServiceClientImpl::CallAsync(const std::string& method_name_, const std::string& request_, int timeout_)
+  // asynchronously call, using callback
+  bool CServiceClientImpl::CallAsync(const std::string& method_name_, const std::string& request_ /*, int timeout_*/)
   {
     // TODO: implement timeout
 
@@ -295,7 +293,7 @@ namespace eCAL
         auto client = m_client_map.find(iter.key);
         if (client != m_client_map.end())
         {
-          SendRequestAsync(client->second, method_name_, request_, timeout_);
+          SendRequestAsync(client->second, method_name_, request_ /*, timeout_*/, -1);
           called = true;
         }
       }

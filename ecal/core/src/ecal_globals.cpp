@@ -70,7 +70,6 @@ namespace eCAL
         std::cerr                                                                 << std::endl;
         
         throw std::runtime_error(emsg.c_str());
-        std::exit(-1);
       }
 
       new_initialization = true;
