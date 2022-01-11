@@ -47,7 +47,7 @@ namespace eCAL
     EcalRecImpl::EcalRecImpl()
       : addon_manager_(std::make_unique<AddonManager>([this](int64_t job_id, const std::string& addon_id, const RecAddonJobStatus& job_status)
                                                       {
-                                                        std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
+                                                        std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
 
                                                         // find the corresponding record job
                                                         auto record_job_it = std::find_if(record_job_history_.begin(), record_job_history_.end(), [job_id](const RecordJob& job) -> bool { return job.GetJobConfig().GetJobId() == job_id; });
@@ -57,8 +57,7 @@ namespace eCAL
                                                         }
                                                       }))
       , recording_recorder_job_(nullptr)
-      , pre_buffering_enabled_ (false)
-      , max_pre_buffer_length_ (std::chrono::steady_clock::duration(0))
+      , pre_buffer_            (false, std::chrono::steady_clock::duration(0))
       , info_                  {true, ""}
       , connected_to_ecal_     (false)
       , record_mode_           (RecordMode::All)
@@ -83,7 +82,7 @@ namespace eCAL
       garbage_collector_trigger_thread_->Join();
 
       {
-        std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
+        std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
 
         // Interrupt all writer / upload threads
         for (auto& rec_job : record_job_history_)
@@ -100,45 +99,41 @@ namespace eCAL
 
     void EcalRecImpl::SetPreBufferingEnabled(bool enabled)
     {
-      std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
+      pre_buffer_.set_enabled(enabled);
+
       {
-        if (!enabled)
-        {
-          frame_buffer_.clear();
-        }
-        pre_buffering_enabled_ = enabled;
+        std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
+        addon_manager_->SetPreBuffer(enabled, pre_buffer_.get_max_buffer_length());
       }
-      addon_manager_->SetPreBuffer(pre_buffering_enabled_, max_pre_buffer_length_);
+
       EcalRecLogger::Instance()->info(std::string("Pre-buffering enabled: ") + (enabled ? "True" : "False"));
     }
 
     void EcalRecImpl::SetMaxPreBufferLength(std::chrono::steady_clock::duration max_pre_buffer_length)
     {
+      pre_buffer_.set_max_buffer_length(max_pre_buffer_length);
+
       {
-        std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
-        max_pre_buffer_length_ = max_pre_buffer_length;
+        std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
+        addon_manager_->SetPreBuffer(pre_buffer_.is_enabled(), max_pre_buffer_length);
       }
-      addon_manager_->SetPreBuffer(pre_buffering_enabled_, max_pre_buffer_length_);
+
       EcalRecLogger::Instance()->info(std::string("Max pre-buffer length: ") + std::to_string(std::chrono::duration_cast<std::chrono::duration<double>>(max_pre_buffer_length).count()) + "s");
     }
 
     std::chrono::steady_clock::duration EcalRecImpl::GetMaxPreBufferLength() const
     {
-      std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
-      return max_pre_buffer_length_;
+      return pre_buffer_.get_max_buffer_length();
     }
 
     bool EcalRecImpl::IsPreBufferingEnabled() const
     {
-      std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
-
-      return pre_buffering_enabled_;
+      return pre_buffer_.is_enabled();
     }
 
     std::pair<int64_t, std::chrono::steady_clock::duration> EcalRecImpl::GetCurrentPreBufferLength() const
     {
-      std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
-      return GetCurrentPreBufferLength_NoLock();
+      return pre_buffer_.length();
     }
 
     bool EcalRecImpl::SavePreBufferedData(const JobConfig& job_config)
@@ -164,9 +159,9 @@ namespace eCAL
       auto topic_info_map  = monitoring_thread_->GetTopicInfoMap();
 
       {
-        std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
+        std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
 
-        if (pre_buffering_enabled_)
+        if (pre_buffer_.is_enabled())
         {
           // Check if there is alreay something recording to the given path
           std::string complete_measurement_path = evaluated_job_config.GetCompleteMeasurementPath();
@@ -179,7 +174,7 @@ namespace eCAL
           }
 
           // Write an info to the log output
-          auto current_buffer_length = GetCurrentPreBufferLength_NoLock();
+          auto current_buffer_length = pre_buffer_.length();
           double buffer_length_secs = std::chrono::duration_cast<std::chrono::duration<double>>(current_buffer_length.second).count();
           std::stringstream ss;
           ss << "Saving buffer to disk (ID: " << evaluated_job_config.GetJobId() << "). Content: " << current_buffer_length.first << " Frames / " << std::setprecision(3) << std::fixed << buffer_length_secs << " secs";
@@ -200,7 +195,7 @@ namespace eCAL
           }
 
           // Start the job
-          if (!record_job_history_.back().SaveBuffer(topic_info_map, frame_buffer_))
+          if (!record_job_history_.back().SaveBuffer(topic_info_map, pre_buffer_.get_as_deque()))
           {
             const std::string error_string = "Unable to save buffer: Failed to start buffer writer thread";
             info_ = { false, error_string };
@@ -250,7 +245,7 @@ namespace eCAL
       auto topic_info_map = monitoring_thread_->GetTopicInfoMap();
 
       {
-        std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
+        std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
 
         // Check if we are already recording. We prevent starting simultaneous recordings.
         if ((recording_recorder_job_ != nullptr)
@@ -276,9 +271,9 @@ namespace eCAL
         }
 
         // Write an info to the log output
-        if (pre_buffering_enabled_)
+        if (pre_buffer_.is_enabled())
         {
-          auto current_buffer_length = GetCurrentPreBufferLength_NoLock();
+          auto current_buffer_length = pre_buffer_.length();
           double buffer_length_secs = std::chrono::duration_cast<std::chrono::duration<double>>(current_buffer_length.second).count();
           std::stringstream ss;
           ss << "Start recording (ID: " << evaluated_job_config.GetJobId() << "). Initial buffer: " << current_buffer_length.first << " Frames / " << std::setprecision(3) << std::fixed << buffer_length_secs << " secs";
@@ -304,7 +299,7 @@ namespace eCAL
         }
 
         // Start the job
-        if (!record_job_history_.back().StartRecording(topic_info_map, frame_buffer_))
+        if (!record_job_history_.back().StartRecording(topic_info_map, pre_buffer_.get_as_deque()))
         {
           const std::string error_message = "Unable to start recording: Failed to start recorder thread";
           info_ = { false, error_message };
@@ -323,7 +318,7 @@ namespace eCAL
 
     bool EcalRecImpl::StopRecording()
     {
-      std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
+      std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
 
       bool success = StopRecording_NoLock();
 
@@ -368,12 +363,12 @@ namespace eCAL
 
       // info_
       recorder_status.info_ = info_;
+
+      // pre_buffer_length_
+      recorder_status.pre_buffer_length_ = pre_buffer_.length();
       
       {
-        std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
-
-        // pre_buffer_length_
-        recorder_status.pre_buffer_length_ = GetCurrentPreBufferLength_NoLock();
+        std::shared_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
 
         // job_statuses_
         recorder_status.job_statuses_.reserve(record_job_history_.size());
@@ -391,7 +386,7 @@ namespace eCAL
       {
         eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::OK);
 
-        std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
+        std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
 
         // Look up the measurement
         auto job_it = std::find_if(record_job_history_.begin(), record_job_history_.end(), [job_id = upload_config.meas_id_](const RecordJob& job_history_entry) -> bool { return job_history_entry.GetJobConfig().GetJobId() == job_id; });
@@ -421,7 +416,7 @@ namespace eCAL
 
     bool EcalRecImpl::SetEnabledAddons(const std::set<std::string>& addon_ids)
     {
-      std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
+      std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
       if (recording_recorder_job_ && (recording_recorder_job_->GetMainRecorderState() == JobState::Recording))
       {
         // We block enabling / disabling addons while a recording is running
@@ -440,7 +435,7 @@ namespace eCAL
 
     std::set<std::string> EcalRecImpl::GetEnabledAddons() const
     {
-      std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
+      std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
       return addon_manager_->GetEnabledAddons();
     }
 
@@ -448,7 +443,7 @@ namespace eCAL
     {
       eCAL::rec::Error error (eCAL::rec::Error::ErrorCode::OK);
 
-      std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
+      std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
 
       auto job_it = std::find_if(record_job_history_.begin(), record_job_history_.end(), [job_id](const RecordJob& job_history_entry) -> bool { return job_history_entry.GetJobConfig().GetJobId() == job_id; });
 
@@ -479,7 +474,7 @@ namespace eCAL
       Error error(Error::OK);
 
       {
-        std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
+        std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
 
         auto job_it = std::find_if(record_job_history_.begin(), record_job_history_.end(), [job_id](const RecordJob& job_history_entry) -> bool { return job_history_entry.GetJobConfig().GetJobId() == job_id; });
         if (job_it == record_job_history_.end())
@@ -516,8 +511,8 @@ namespace eCAL
 
       {
         std::lock(ecal_mutex_, recorder_mutex_);
-        std::lock_guard<decltype(ecal_mutex_)>     ecal_lock    (ecal_mutex_,     std::adopt_lock);
-        std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_, std::adopt_lock);
+        std::lock_guard<decltype(ecal_mutex_)>      ecal_lock    (ecal_mutex_,     std::adopt_lock);
+        std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_, std::adopt_lock);
 
         if (recording_recorder_job_ && (recording_recorder_job_->GetMainRecorderState() == JobState::Recording))
         {
@@ -527,7 +522,7 @@ namespace eCAL
         else
         {
           hosts_filter_ = hosts;
-          frame_buffer_.clear();
+          pre_buffer_.clear();
           success = true;
         }
       }
@@ -561,7 +556,7 @@ namespace eCAL
       {
         std::lock(ecal_mutex_, recorder_mutex_);
         std::lock_guard<decltype(ecal_mutex_)>     ecal_lock    (ecal_mutex_,     std::adopt_lock);
-        std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_, std::adopt_lock);
+        std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_, std::adopt_lock);
 
         if (recording_recorder_job_ && (recording_recorder_job_->GetMainRecorderState() == JobState::Recording))
         {
@@ -572,7 +567,7 @@ namespace eCAL
         {
           record_mode_   = mode;
           listed_topics_ = listed_topics;
-          frame_buffer_.clear();
+          pre_buffer_.clear();
           success = true;
         }
       }
@@ -676,9 +671,9 @@ namespace eCAL
         addon_manager_->Deinitialize();
 
       {
-        std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
+        std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
         StopRecording_NoLock();
-        frame_buffer_.clear();
+        pre_buffer_.clear();
       }
     }
 
@@ -707,13 +702,10 @@ namespace eCAL
 
       std::shared_ptr<Frame> frame = std::make_shared<Frame>(callback_data, topic_name, ecal_receive_time, system_receive_time);
 
-      {
-        std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
-        if (pre_buffering_enabled_)
-        {
-          frame_buffer_.push_back(frame);
-        }
+      pre_buffer_.push_back(frame);
 
+      {
+        std::shared_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
         if (recording_recorder_job_ != nullptr)
         {
           recording_recorder_job_->AddFrame(std::move(frame));
@@ -726,22 +718,7 @@ namespace eCAL
     //////////////////////////////////////
     void EcalRecImpl::GarbageCollect()
     {
-      auto now = std::chrono::steady_clock::now();
-
-      std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
-
-      // Clean frame buffer
-      while (!frame_buffer_.empty())
-      {
-        if ((now - max_pre_buffer_length_) > frame_buffer_.front()->system_receive_time_)
-        {
-          frame_buffer_.pop_front();
-        }
-        else
-        {
-          break;
-        }
-      }
+      pre_buffer_.remove_old_frames();
     }
 
     void EcalRecImpl::SetTopicInfo(const std::map<std::string, TopicInfo>& topic_info_map)
@@ -759,7 +736,7 @@ namespace eCAL
 
       {
         // Set Topic information on the recording job
-        std::lock_guard<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
+        std::shared_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
         if (recording_recorder_job_ != nullptr)
         {
           recording_recorder_job_->SetTopicInfo(topic_info_map);
@@ -900,21 +877,6 @@ namespace eCAL
         recording_recorder_job_ = nullptr;
         return success;
       }
-    }
-
-    std::pair<int64_t, std::chrono::steady_clock::duration> EcalRecImpl::GetCurrentPreBufferLength_NoLock() const
-    {
-      int64_t frame_count = frame_buffer_.size();
-      std::chrono::steady_clock::duration buffer_length;
-      if (frame_count > 0)
-      {
-        buffer_length = std::chrono::steady_clock::now() - frame_buffer_.front()->system_receive_time_;
-      }
-      else
-      {
-        buffer_length = std::chrono::steady_clock::duration(0);
-      }
-      return std::make_pair(frame_count, buffer_length);
     }
 
     Error EcalRecImpl::IsAnyJobUsingPath_NoLock(const std::string& path) const
