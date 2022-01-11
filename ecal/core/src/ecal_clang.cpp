@@ -424,6 +424,33 @@ ECAL_API int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_bu
 }
 
 /****************************************/
+/*      sub_receive_buffer              */
+/****************************************/
+ECAL_API bool sub_receive_buffer(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, const int timeout_)
+{
+  eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
+  if (sub)
+  {
+    std::string rcv_buf;
+    long long rcv_time = 0;
+
+    if (sub->ReceiveBuffer(rcv_buf, &rcv_time, timeout_))
+    {
+      // this has to be freed by caller (ecal_free_mem)
+      char* cbuf = str_malloc(rcv_buf);
+      if (cbuf == nullptr) return(0);
+
+      if (rcv_buf_)     *rcv_buf_ = cbuf;
+      if (rcv_buf_len_) *rcv_buf_len_ = static_cast<int>(rcv_buf.size());
+      if (rcv_time_)    *rcv_time_ = rcv_time;
+
+      return(true);
+    }
+  }
+  return(false);
+}
+
+/****************************************/
 /*      sub_add_receive_callback        */
 /****************************************/
 static std::mutex g_sub_receive_callback_mtx;

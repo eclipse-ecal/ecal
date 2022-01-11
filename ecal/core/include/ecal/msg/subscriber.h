@@ -156,8 +156,8 @@ namespace eCAL
     {
       assert(IsCreated());
       std::string rec_buf;
-      size_t rec_len = CSubscriber::Receive(rec_buf, time_, rcv_timeout_);
-      if(rec_len == 0) return(false);
+      bool success = CSubscriber::ReceiveBuffer(rec_buf, time_, rcv_timeout_);
+      if(!success) return(false);
       return(Deserialize(msg_, rec_buf.c_str(), rec_buf.size()));
     }
 

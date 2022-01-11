@@ -177,6 +177,17 @@ namespace eCAL
     size_t Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const;
 
     /**
+     * @brief Receive a message from the publisher (able to process zero length buffer).
+     *
+     * @param [out] buf_    Standard string for copying message content.
+     * @param [out] time_   Time from publisher in us (default = nullptr).
+     * @param rcv_timeout_  Maximum time before receive operation returns (in milliseconds, -1 means infinite).
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool ReceiveBuffer(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const;
+
+    /**
      * @brief Add callback function for incoming receives. 
      *
      * @param callback_  The callback function to add.
