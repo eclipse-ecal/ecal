@@ -57,8 +57,8 @@ namespace eCAL
                                                         }
                                                       }))
       , recording_recorder_job_(nullptr)
-      , pre_buffer_            (false, std::chrono::steady_clock::duration(0))
       , info_                  {true, ""}
+      , pre_buffer_            (false, std::chrono::steady_clock::duration(0))
       , connected_to_ecal_     (false)
       , record_mode_           (RecordMode::All)
     {
