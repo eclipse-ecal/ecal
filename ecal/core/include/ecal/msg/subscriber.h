@@ -211,8 +211,6 @@ namespace eCAL
     {
       if(m_cb_active == false) return;
       assert(m_cb_callback != nullptr);
-      if(data_->buf == nullptr) return;
-      if(data_->size < 1)       return;
 
       T msg;
       if(Deserialize(msg, data_->buf, data_->size))
