@@ -137,6 +137,21 @@ extern "C"
   ECALC_API int eCAL_Sub_Receive_Alloc(ECAL_HANDLE handle_, void** buf_, long long* time_, int rcv_timeout_);
 
   /**
+   * @brief Receive a message from the publisher and let eCAL allocate the memory (able to process zero length buffer).
+   *
+   * @param       handle_       Subscriber handle.
+   * @param [out] buf_          Buffer to store the received message content.
+   * @param [out] buf_len_      Length of allocated buffer,
+   *                            eCAL is allocating the buffer for you, use ecal_free_mem to free the buffer finally.
+   *                            You need to free the memory finally calling eCAL_FreeMem.
+   * @param [out] time_         Time from publisher in us.
+   * @param       rcv_timeout_  Maximum time before receive operation returns (in milliseconds, -1 means infinite).
+   *
+   * @return  None zero if succeeded.
+  **/
+  ECALC_API int eCAL_Sub_Receive_Buffer_Alloc(ECAL_HANDLE handle_, void** buf_, int* buf_len_, long long* time_, int rcv_timeout_);
+
+  /**
    * @brief Add callback function for incoming receives. 
    *
    * @param handle_    Subscriber handle. 
