@@ -33,12 +33,13 @@ namespace eCAL
     ///////////////////////////////
 
     Hdf5WriterThread::Hdf5WriterThread(const JobConfig& job_config, const std::map<std::string, TopicInfo>& initial_topic_info_map, const std::deque<std::shared_ptr<Frame>>& initial_frame_buffer)
-      : InterruptibleThread    ()
-      , job_config_            (job_config)
-      , frame_buffer_          (initial_frame_buffer)
-      , written_frames_        (0)
-      , initial_topic_info_map_(initial_topic_info_map)
-      , flushing_              (false)
+      : InterruptibleThread          ()
+      , job_config_                  (job_config)
+      , frame_buffer_                (initial_frame_buffer)
+      , written_frames_              (0)
+      , new_topic_info_map_          (initial_topic_info_map)
+      , new_topic_info_map_available_(true)
+      , flushing_                    (false)
     {
       hdf5_writer_ = std::make_unique<eCAL::eh5::HDF5Meas>();
     }
@@ -61,16 +62,16 @@ namespace eCAL
 #endif // NDEBUG
 
       InterruptibleThread::Interrupt();
-      frame_buffer_cv_.notify_all();
+      input_cv_.notify_all();
     }
 
     bool Hdf5WriterThread::AddFrame(const std::shared_ptr<Frame>& frame)
     {
-      std::lock_guard<decltype(frame_buffer_mutex_)> frame_buffer_lock(frame_buffer_mutex_);
+      std::lock_guard<decltype(input_mutex_)> input_lock(input_mutex_);
       if (!flushing_)
       {
         frame_buffer_.push_back(frame);
-        frame_buffer_cv_.notify_one();
+        input_cv_.notify_one();
         return true;
       }
       else
@@ -79,15 +80,19 @@ namespace eCAL
       }
     }
 
-    void Hdf5WriterThread::SetTopicInfo(const std::map<std::string, TopicInfo>& topic_info_map)
+    void Hdf5WriterThread::SetTopicInfo(std::map<std::string, TopicInfo> topic_info_map)
     {
-      std::unique_lock<decltype(hdf5_writer_mutex_)> hdf5_writer_lock(hdf5_writer_mutex_);
-      SetTopicInfo_NoLock(topic_info_map);
+      std::unique_lock<decltype(input_mutex_)> input_lock(input_mutex_);
+      
+      new_topic_info_map_           = std::move(topic_info_map);
+      new_topic_info_map_available_ = true;
+
+      input_cv_.notify_one();
     }
 
     void Hdf5WriterThread::Flush()
     {
-      std::lock_guard<decltype(frame_buffer_mutex_)> frame_buffer_lock(frame_buffer_mutex_);
+      std::lock_guard<decltype(input_mutex_)> input_lock(input_mutex_);
       flushing_ = true;
 
       if (IsRunning())
@@ -99,7 +104,7 @@ namespace eCAL
         }
       }
 
-      frame_buffer_cv_.notify_all();
+      input_cv_.notify_all();
     }
 
     void Hdf5WriterThread::Run()
@@ -116,20 +121,34 @@ namespace eCAL
       // Loop
       while (!IsInterrupted())
       {
+        // Frame to write to the HDF5 file
         std::shared_ptr<Frame> frame;
-        {
-          // Lock the frame buffer mutex
-          std::unique_lock<decltype(frame_buffer_mutex_)> frame_buffer_lock(frame_buffer_mutex_);
 
-          // Wait until something is in the buffer
-          frame_buffer_cv_.wait(frame_buffer_lock, [this]() { return IsInterrupted() || IsFlushing() || !frame_buffer_.empty(); });
+        // Topic info to write to the HDF5 file
+        bool set_topic_info_map = false;
+        std::map<std::string, TopicInfo> topic_info_map_to_set; 
+
+        {
+          // Lock the input mutex
+          std::unique_lock<decltype(input_mutex_)> input_lock(input_mutex_);
+
+          // Wait until something is set to an input variable (frame_buffer_, topic info)
+          input_cv_.wait(input_lock, [this]() { return IsInterrupted() || IsFlushing() || !frame_buffer_.empty() || !new_topic_info_map_available_; });
 
           if (IsInterrupted())
             break;
 
-          // Copy one element from the buffer
-          if (!frame_buffer_.empty())
+          if (new_topic_info_map_available_)
           {
+            // Take topic info map
+            set_topic_info_map = true;
+            topic_info_map_to_set.swap(new_topic_info_map_);
+
+            new_topic_info_map_available_ = false;
+          }
+          else if (!frame_buffer_.empty())
+          {
+            // take one frame from the framebuffer
             frame = frame_buffer_.front();
             frame_buffer_.pop_front();
             if (written_frames_ == 0)
@@ -141,7 +160,17 @@ namespace eCAL
           }
         }
 
-        if (frame)
+        if (set_topic_info_map)
+        {
+          std::unique_lock<decltype(hdf5_writer_mutex_)> hdf5_writer_lock(hdf5_writer_mutex_);
+
+          for (const auto& topic : topic_info_map_to_set)
+          {
+            hdf5_writer_->SetChannelType(topic.first, topic.second.type_);
+            hdf5_writer_->SetChannelDescription(topic.first, topic.second.description_);
+          }
+        }
+        else if (frame)
         {
           std::unique_lock<decltype(hdf5_writer_mutex_)> hdf5_writer_lock(hdf5_writer_mutex_);
 
@@ -202,7 +231,7 @@ namespace eCAL
     RecHdf5JobStatus Hdf5WriterThread::GetStatus() const
     {
       {
-        std::lock_guard<decltype(frame_buffer_mutex_)> frame_buffer_lock(frame_buffer_mutex_);
+        std::lock_guard<decltype(input_mutex_)> input_lock(input_mutex_);
 
         if (frame_buffer_.size() > 0)
         {
@@ -249,8 +278,6 @@ namespace eCAL
         return false;
       }
 
-      SetTopicInfo_NoLock(initial_topic_info_map_);
-
       return true;
     }
 
@@ -273,15 +300,6 @@ namespace eCAL
         EcalRecLogger::Instance()->debug("Hdf5WriterThread::Close(): Successfully closed measurement");
 #endif // NDEBUG
         return true;
-      }
-    }
-
-    void Hdf5WriterThread::SetTopicInfo_NoLock(const std::map<std::string, TopicInfo>& topic_info_map) const
-    {
-      for (const auto& topic : topic_info_map)
-      {
-        hdf5_writer_->SetChannelType(topic.first, topic.second.type_);
-        hdf5_writer_->SetChannelDescription(topic.first, topic.second.description_);
       }
     }
   }
