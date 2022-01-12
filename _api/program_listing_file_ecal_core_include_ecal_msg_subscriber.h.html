@@ -298,6 +298,7 @@
 <li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1afe3c3a74ccfa61f0d811befc8d40f60a.html">Function sub_destroy</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1abc58eef47fc5fa983d5d8a72af212a14.html">Function sub_get_qos</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1a1ec1f718a0335eb6844c47e3f58c2398.html">Function sub_receive</a></li>
+<li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1ac6cdc9785b833cd571c373aab28794d2.html">Function sub_receive_buffer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1a326dd7ba23bbd7df7c28038a5914928d.html">Function sub_rem_event_callback</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1a5423009de750bc100d6fd3ff088f20f1.html">Function sub_rem_receive_callback</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1abc7e3b35431d935887d7484a390362d7.html">Function sub_set_qos</a></li>
@@ -617,8 +618,8 @@
     <span class="p">{</span>
       <span class="n">assert</span><span class="p">(</span><span class="n">IsCreated</span><span class="p">());</span>
       <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">rec_buf</span><span class="p">;</span>
-      <span class="kt">size_t</span> <span class="n">rec_len</span> <span class="o">=</span> <span class="n">CSubscriber</span><span class="o">::</span><span class="n">Receive</span><span class="p">(</span><span class="n">rec_buf</span><span class="p">,</span> <span class="n">time_</span><span class="p">,</span> <span class="n">rcv_timeout_</span><span class="p">);</span>
-      <span class="k">if</span><span class="p">(</span><span class="n">rec_len</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+      <span class="kt">bool</span> <span class="n">success</span> <span class="o">=</span> <span class="n">CSubscriber</span><span class="o">::</span><span class="n">ReceiveBuffer</span><span class="p">(</span><span class="n">rec_buf</span><span class="p">,</span> <span class="n">time_</span><span class="p">,</span> <span class="n">rcv_timeout_</span><span class="p">);</span>
+      <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="k">return</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
       <span class="k">return</span><span class="p">(</span><span class="n">Deserialize</span><span class="p">(</span><span class="n">msg_</span><span class="p">,</span> <span class="n">rec_buf</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">rec_buf</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
     <span class="p">}</span>
 
@@ -651,8 +652,6 @@
     <span class="p">{</span>
       <span class="k">if</span><span class="p">(</span><span class="n">m_cb_active</span> <span class="o">==</span> <span class="nb">false</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
       <span class="n">assert</span><span class="p">(</span><span class="n">m_cb_callback</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
-      <span class="k">if</span><span class="p">(</span><span class="n">data_</span><span class="o">-&gt;</span><span class="n">buf</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
-      <span class="k">if</span><span class="p">(</span><span class="n">data_</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span>       <span class="k">return</span><span class="p">;</span>
 
       <span class="n">T</span> <span class="n">msg</span><span class="p">;</span>
       <span class="k">if</span><span class="p">(</span><span class="n">Deserialize</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">data_</span><span class="o">-&gt;</span><span class="n">buf</span><span class="p">,</span> <span class="n">data_</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">))</span>

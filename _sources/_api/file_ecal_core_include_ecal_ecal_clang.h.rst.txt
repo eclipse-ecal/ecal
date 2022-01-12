@@ -147,6 +147,8 @@ Functions
 
 - :ref:`exhale_function_ecal__clang_8h_1a1ec1f718a0335eb6844c47e3f58c2398`
 
+- :ref:`exhale_function_ecal__clang_8h_1ac6cdc9785b833cd571c373aab28794d2`
+
 - :ref:`exhale_function_ecal__clang_8h_1a326dd7ba23bbd7df7c28038a5914928d`
 
 - :ref:`exhale_function_ecal__clang_8h_1a5423009de750bc100d6fd3ff088f20f1`

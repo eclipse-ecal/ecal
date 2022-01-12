@@ -301,6 +301,7 @@
 <li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1afe3c3a74ccfa61f0d811befc8d40f60a.html">Function sub_destroy</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1abc58eef47fc5fa983d5d8a72af212a14.html">Function sub_get_qos</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1a1ec1f718a0335eb6844c47e3f58c2398.html">Function sub_receive</a></li>
+<li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1ac6cdc9785b833cd571c373aab28794d2.html">Function sub_receive_buffer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1a326dd7ba23bbd7df7c28038a5914928d.html">Function sub_rem_event_callback</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1a5423009de750bc100d6fd3ff088f20f1.html">Function sub_rem_receive_callback</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1abc7e3b35431d935887d7484a390362d7.html">Function sub_set_qos</a></li>
@@ -716,6 +717,24 @@
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Length of received buffer. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK4eCAL11CSubscriber13ReceiveBufferERNSt6stringEPxi">
+<span id="_CPPv3NK4eCAL11CSubscriber13ReceiveBufferERNSt6stringEPxi"></span><span id="_CPPv2NK4eCAL11CSubscriber13ReceiveBufferERNSt6stringEPxi"></span><span id="eCAL::CSubscriber::ReceiveBuffer__ssR.l-lP.iC"></span><span class="target" id="classeCAL_1_1CSubscriber_1a73b90c15c1ede22b045ac3d484509bc2"></span><span class="pre">bool</span> <code class="sig-name descname"><span class="pre">ReceiveBuffer</span></code><span class="sig-paren">(</span><span class="pre">std</span><span class="pre">::</span><span class="pre">string</span> <span class="pre">&amp;</span><em><span class="pre">buf_</span></em>, <span class="pre">long</span> <span class="pre">long</span> <span class="pre">*</span><em><span class="pre">time_</span></em> <span class="pre">=</span> <span class="pre">nullptr</span>, <span class="pre">int</span> <em><span class="pre">rcv_timeout_</span></em> <span class="pre">=</span> <span class="pre">0</span><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em><a class="headerlink" href="#_CPPv4NK4eCAL11CSubscriber13ReceiveBufferERNSt6stringEPxi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Receive a message from the publisher (able to process zero length buffer). </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buf_</strong> – <strong>[out]</strong> Standard string for copying message content. </p></li>
+<li><p><strong>time_</strong> – <strong>[out]</strong> Time from publisher in us (default = nullptr). </p></li>
+<li><p><strong>rcv_timeout_</strong> – Maximum time before receive operation returns (in milliseconds, -1 means infinite).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it succeeds, false if it fails. </p>
 </dd>
 </dl>
 </dd></dl>

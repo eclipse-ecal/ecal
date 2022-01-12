@@ -926,6 +926,11 @@ Functions
 .. toctree::
    :maxdepth: 5
 
+   function_ecal__clang_8h_1ac6cdc9785b833cd571c373aab28794d2.rst
+
+.. toctree::
+   :maxdepth: 5
+
    function_ecal__clang_8h_1a326dd7ba23bbd7df7c28038a5914928d.rst
 
 .. toctree::
