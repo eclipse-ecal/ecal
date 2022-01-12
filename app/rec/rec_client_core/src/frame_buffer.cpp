@@ -20,7 +20,6 @@
 #include "frame_buffer.h"
 
 #include <thread>
-#include <iostream>
 
 namespace eCAL
 {
@@ -38,14 +37,12 @@ namespace eCAL
 
     bool FrameBuffer::is_enabled() const
     {
-      std::cout << "Framebuffer:: is_enabled: " << std::this_thread::get_id() << std::endl;
       std::shared_lock<decltype(frame_buffer_mutex_)> frame_buffer_lock(frame_buffer_mutex_);
       return is_enabled_;
     }
 
     void FrameBuffer::set_enabled(bool enabled)
     {
-      std::cout << "Framebuffer:: set_enabled: " << std::this_thread::get_id() << std::endl;
       std::unique_lock<decltype(frame_buffer_mutex_)> frame_buffer_lock(frame_buffer_mutex_);
 
       // Clear just in case something has happend while the frame-buffer was disabled
@@ -60,15 +57,12 @@ namespace eCAL
 
     std::chrono::steady_clock::duration FrameBuffer::get_max_buffer_length() const
     {
-      std::cout << "Framebuffer:: get_max_buffer_length: " << std::this_thread::get_id() << std::endl;
-
       std::shared_lock<decltype(frame_buffer_mutex_)> frame_buffer_lock(frame_buffer_mutex_);
       return max_buffer_length_;
     }
 
     void FrameBuffer::set_max_buffer_length(std::chrono::steady_clock::duration new_length)
     {
-      std::cout << "Framebuffer:: set_max_buffer_length: " << std::this_thread::get_id() << std::endl;
       std::unique_lock<decltype(frame_buffer_mutex_)> frame_buffer_lock(frame_buffer_mutex_);
       max_buffer_length_ = new_length;
       remove_old_frames_no_lock();
@@ -76,7 +70,6 @@ namespace eCAL
 
     void FrameBuffer::push_back(const std::shared_ptr<Frame>& frame)
     {
-      std::cout << "Framebuffer:: push_back: " << std::this_thread::get_id() << std::endl;
       std::unique_lock<decltype(frame_buffer_mutex_)> frame_buffer_lock(frame_buffer_mutex_);
       if (is_enabled_)
       {
@@ -86,7 +79,6 @@ namespace eCAL
 
     std::pair<int64_t, std::chrono::steady_clock::duration> FrameBuffer::length() const
     {
-      std::cout << "Framebuffer:: length: " << std::this_thread::get_id() << std::endl;
       std::shared_lock<decltype(frame_buffer_mutex_)> frame_buffer_lock(frame_buffer_mutex_);
 
       if (!is_enabled_)
@@ -107,7 +99,6 @@ namespace eCAL
 
     void FrameBuffer::remove_old_frames()
     {
-      std::cout << "Framebuffer:: remove_old_frames: " << std::this_thread::get_id() << std::endl;
       std::unique_lock<decltype(frame_buffer_mutex_)> frame_buffer_lock(frame_buffer_mutex_);
       remove_old_frames_no_lock();
     }
@@ -139,14 +130,12 @@ namespace eCAL
 
     void FrameBuffer::clear()
     {
-      std::cout << "Framebuffer:: clear: " << std::this_thread::get_id() << std::endl;
       std::unique_lock<decltype(frame_buffer_mutex_)> frame_buffer_lock(frame_buffer_mutex_);
       frame_buffer_deque_.clear();
     }
 
     std::deque<std::shared_ptr<Frame>> FrameBuffer::get_as_deque() const
     {
-      std::cout << "Framebuffer:: get_as_deque: " << std::this_thread::get_id() << std::endl;
       std::shared_lock<decltype(frame_buffer_mutex_)> frame_buffer_lock(frame_buffer_mutex_);
       if (!is_enabled_)
         return std::deque<std::shared_ptr<Frame>>();
