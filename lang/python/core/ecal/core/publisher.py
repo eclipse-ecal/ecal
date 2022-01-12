@@ -92,7 +92,7 @@ class ProtoPublisher(MessagePublisher):
       super(ProtoPublisher, self).__init__(name)
 
   def send(self, msg, time=-1):
-    self.c_publisher.send(msg.SerializeToString(), time)
+    return self.c_publisher.send(msg.SerializeToString(), time)
 
 
 class StringPublisher(MessagePublisher):
@@ -104,7 +104,7 @@ class StringPublisher(MessagePublisher):
     super(StringPublisher, self).__init__(name, topic_type, topic_desc)
 
   def send(self, msg, time=-1):
-    self.c_publisher.send(msg.encode(), time)
+    return self.c_publisher.send(msg.encode(), time)
 
 
 if __name__ == '__main__':
