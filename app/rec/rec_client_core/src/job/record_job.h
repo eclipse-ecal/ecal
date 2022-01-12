@@ -23,7 +23,7 @@
 
 #include <map>
 #include <memory>
-#include <mutex>
+#include <shared_mutex>
 #include <deque>
 #include <string>
 
@@ -98,12 +98,13 @@ namespace eCAL
     ///////////////////////////////////////////////
     private:
       void UpdateJobState_NoLock() const;
+      void UpdateJobState() const;
 
     ///////////////////////////////////////////////
     // Member Variables
     ///////////////////////////////////////////////
     private:
-      mutable std::mutex                       job_mutex_;
+      mutable std::shared_timed_mutex          job_mutex_;
 
       const JobConfig                          job_config_;
       std::unique_ptr<Hdf5WriterThread>        hdf5_writer_thread_;

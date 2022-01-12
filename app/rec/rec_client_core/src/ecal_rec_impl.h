@@ -22,7 +22,6 @@
 #include "frame.h"
 
 #include <chrono>
-#include <deque>
 #include <mutex>
 #include <list>
 #include <map>
@@ -38,6 +37,8 @@
 #include <rec_client_core/upload_config.h>
 
 #include "job/record_job.h"
+
+#include "frame_buffer.h"
 
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_subscriber.h>
@@ -135,29 +136,27 @@ namespace eCAL
       void RemoveOldSubscribers_NoLock(const std::set<std::string>& topic_set);
 
       bool StopRecording_NoLock();
-      std::pair<int64_t, std::chrono::steady_clock::duration> GetCurrentPreBufferLength_NoLock() const;
       Error IsAnyJobUsingPath_NoLock(const std::string& path) const;
 
     //////////////////////////////////////////////////////////////////////////////
     //// Member variables                                                     ////
     //////////////////////////////////////////////////////////////////////////////
     private:
-      mutable std::mutex                    recorder_mutex_;
+      mutable std::shared_timed_mutex       recorder_mutex_;
 
       std::unique_ptr<AddonManager>         addon_manager_;
 
       std::list<RecordJob>                  record_job_history_;                /**< All Record Jobs ever started. Those include "Save Buffer" jobs and "Start Recording" jobs.*/
       RecordJob*                            recording_recorder_job_;            /**< The last RecorderJob that was started by hitting "Record" and may thus be in a state still accepting new frames. */
 
-      std::deque<std::shared_ptr<Frame>>    frame_buffer_;
-      bool                                  pre_buffering_enabled_;
-      std::chrono::steady_clock::duration   max_pre_buffer_length_;
-
       std::pair<bool, std::string>          info_;
 
       // Threads
       std::unique_ptr<GarbageCollectorTriggerThread> garbage_collector_trigger_thread_; /** frame_buffer_, buffer_writer_threads_, max_pre_buffer_length_ */
       std::unique_ptr<MonitoringThread>              monitoring_thread_;                /** connected_to_ecal_, FilterAvailableTopics_NoLock(hosts_filter_, topic_whitelist_, topic_blacklist_), CreateNewSubscribers_NoLock(subscriber_map_), main_writer_thread_, buffer_writer_threads_ */
+
+      // Pre-buffer
+      FrameBuffer                                    pre_buffer_;             /** < Thread-safe framebuffer */
 
       // eCAL subscribers
       mutable std::mutex                                        ecal_mutex_;
