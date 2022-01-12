@@ -43,6 +43,8 @@ set(source_files
     src/ecal_rec_impl.cpp
     src/ecal_rec_impl.h
     src/frame.h
+    src/frame_buffer.cpp
+    src/frame_buffer.h
     src/garbage_collector_trigger_thread.cpp
     src/garbage_collector_trigger_thread.h
     src/job_config.cpp
