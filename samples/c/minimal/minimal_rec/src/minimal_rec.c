@@ -22,10 +22,11 @@
 
 int main(int argc, char **argv)
 {
-  ECAL_HANDLE sub     = 0;
-  int         rcv     = 0;
-  void*       rcv_buf = NULL;
-  long long   time    = 0;
+  ECAL_HANDLE sub         = 0;
+  int         success     = 0;
+  void*       rcv_buf     = NULL;
+  int         rcv_buf_len = 0;
+  long long   time        = 0;
 
   // initialize eCAL API
   eCAL_Initialize(argc, argv, "minimalc_rec", eCAL_Init_Default);
@@ -38,11 +39,11 @@ int main(int argc, char **argv)
   while(eCAL_Ok())
   {
     // receive content with 100 ms timeout
-    rcv = eCAL_Sub_Receive_Alloc(sub, &rcv_buf, &time, 100);
-    if(rcv > 0)
+    success = eCAL_Sub_Receive_Buffer_Alloc(sub, &rcv_buf, &rcv_buf_len, &time, 100);
+    if(success != 0)
     {
       // print content
-      printf("Received topic \"Hello\" with \"%.*s\"\n", rcv, (char*)rcv_buf);
+      printf("Received topic \"Hello\" with \"%.*s\"\n", rcv_buf_len, (char*)rcv_buf);
 
       // free buffer allocated by eCAL
       eCAL_FreeMem(rcv_buf);

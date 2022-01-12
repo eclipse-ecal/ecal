@@ -28,10 +28,12 @@
 #define PAYLOAD_SIZE               1024
 
 // subscriber callback function
-std::atomic<size_t> g_callback_received;
+std::atomic<size_t> g_callback_received_bytes;
+std::atomic<size_t> g_callback_received_count;
 void OnReceive(const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_)
 {
-  g_callback_received += data_->size;
+  g_callback_received_bytes += data_->size;
+  g_callback_received_count++;
 }
 
 static std::string CreatePayLoad(size_t payload_size_)
@@ -126,8 +128,9 @@ TEST(IO, CreateDestroy)
 
 TEST(IO, SimpleMessage1)
 { 
-  // default send string
+  // default send / receive strings
   std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
+  std::string recv_s;
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
@@ -148,11 +151,15 @@ TEST(IO, SimpleMessage1)
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
   // receive content with DATA_FLOW_TIME ms timeout
-  EXPECT_EQ(send_s.size(), sub.Receive(send_s, nullptr, DATA_FLOW_TIME));
+  recv_s.clear();
+  EXPECT_EQ(true, sub.ReceiveBuffer(recv_s, nullptr, DATA_FLOW_TIME));
+  EXPECT_EQ(send_s.size(), recv_s.size());
 
   // receive content with DATA_FLOW_TIME ms timeout
   // should return because no new publishing
-  EXPECT_EQ(0, sub.Receive(send_s, nullptr, DATA_FLOW_TIME));
+  recv_s.clear();
+  EXPECT_EQ(false, sub.ReceiveBuffer(recv_s, nullptr, DATA_FLOW_TIME));
+  EXPECT_EQ(0, recv_s.size());
 
   // destroy publisher
   pub.Destroy();
@@ -166,8 +173,9 @@ TEST(IO, SimpleMessage1)
 
 TEST(IO, SimpleMessage2)
 { 
-  // default send string
+  // default send / receive strings
   std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
+  std::string recv_s;
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
@@ -188,7 +196,9 @@ TEST(IO, SimpleMessage2)
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
   // receive content with DATA_FLOW_TIME ms timeout
-  EXPECT_EQ(send_s.size(), sub.Receive(send_s, nullptr, DATA_FLOW_TIME));
+  recv_s.clear();
+  EXPECT_EQ(true, sub.ReceiveBuffer(recv_s, nullptr, DATA_FLOW_TIME));
+  EXPECT_EQ(send_s.size(), recv_s.size());
 
   // destroy publisher
   pub.Destroy();
@@ -224,53 +234,53 @@ TEST(IO, SimpleMessageCB)
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
 
   // send content
-  g_callback_received = 0;
+  g_callback_received_bytes = 0;
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME);
 
   // check callback receive
-  EXPECT_EQ(send_s.size(), g_callback_received);
+  EXPECT_EQ(send_s.size(), g_callback_received_bytes);
 
   // remove receive callback
   sub.RemReceiveCallback();
 
   // send content
-  g_callback_received = 0;
+  g_callback_received_bytes = 0;
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME);
 
   // check callback receive
-  EXPECT_EQ(0, g_callback_received);
+  EXPECT_EQ(0, g_callback_received_bytes);
 
   // add callback again
   EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
 
   // send content
-  g_callback_received = 0;
+  g_callback_received_bytes = 0;
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME);
 
   // check callback receive
-  EXPECT_EQ(send_s.size(), g_callback_received);
+  EXPECT_EQ(send_s.size(), g_callback_received_bytes);
 
   // destroy subscriber
   sub.Destroy();
 
   // send content
-  g_callback_received = 0;
+  g_callback_received_bytes = 0;
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME);
 
   // check callback receive
-  EXPECT_EQ(0, g_callback_received);
+  EXPECT_EQ(0, g_callback_received_bytes);
 
   // destroy publisher
   pub.Destroy();
@@ -303,27 +313,27 @@ TEST(IO, DynamicSizeCB)
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
 
   // send content
-  g_callback_received = 0;
+  g_callback_received_bytes = 0;
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME);
 
   // check callback receive
-  EXPECT_EQ(send_s.size(), g_callback_received);
+  EXPECT_EQ(send_s.size(), g_callback_received_bytes);
 
   // increase payload size
   send_s = CreatePayLoad(PAYLOAD_SIZE*10);
 
   // send content
-  g_callback_received = 0;
+  g_callback_received_bytes = 0;
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME);
 
   // check callback receive
-  EXPECT_EQ(send_s.size(), g_callback_received);
+  EXPECT_EQ(send_s.size(), g_callback_received_bytes);
 
   // destroy publisher
   pub.Destroy();
@@ -361,14 +371,14 @@ TEST(IO, DynamicCreate)
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
 
   // send content
-  g_callback_received = 0;
+  g_callback_received_bytes = 0;
   EXPECT_EQ(send_s.size(), pub->Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME);
 
   // check callback receive
-  EXPECT_EQ(send_s.size(), g_callback_received);
+  EXPECT_EQ(send_s.size(), g_callback_received_bytes);
 
   // destroy subscriber
   delete sub;
@@ -384,14 +394,14 @@ TEST(IO, DynamicCreate)
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
 
   // send content
-  g_callback_received = 0;
+  g_callback_received_bytes = 0;
   EXPECT_EQ(send_s.size(), pub->Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME);
 
   // check callback receive
-  EXPECT_EQ(send_s.size(), g_callback_received);
+  EXPECT_EQ(send_s.size(), g_callback_received_bytes);
 
   // destroy subscriber
   sub->Destroy();
@@ -406,14 +416,14 @@ TEST(IO, DynamicCreate)
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
 
   // send content
-  g_callback_received = 0;
+  g_callback_received_bytes = 0;
   EXPECT_EQ(send_s.size(), pub->Send(send_s));
 
   // let the data flow
   eCAL::Process::SleepMS(DATA_FLOW_TIME);
 
   // check callback receive
-  EXPECT_EQ(send_s.size(), g_callback_received);
+  EXPECT_EQ(send_s.size(), g_callback_received_bytes);
 
   // destroy publisher
   delete pub;
@@ -426,3 +436,197 @@ TEST(IO, DynamicCreate)
   // finalize eCAL API
   eCAL::Finalize();
 }
+
+TEST(IO, ZeroPayloadMessageInProc)
+{
+  // default send string
+  std::string send_s;
+
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "pubsub_test");
+
+  // publish / subscribe match in the same process
+  eCAL::Util::EnableLoopback(true);
+
+  // create subscriber for topic "A"
+  eCAL::CSubscriber sub("A");
+
+  // create publisher for topic "A"
+  eCAL::CPublisher pub("A");
+  pub.SetLayerMode(eCAL::TLayer::tlayer_all,    eCAL::TLayer::smode_off);
+  pub.SetLayerMode(eCAL::TLayer::tlayer_inproc, eCAL::TLayer::smode_on);
+
+  // add callback
+  EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
+
+  // let's match them
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+
+  g_callback_received_bytes = 0;
+  g_callback_received_count = 0;
+
+  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+
+  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+
+  // check callback receive
+  EXPECT_EQ(send_s.size(), g_callback_received_bytes);
+  EXPECT_EQ(2,             g_callback_received_count);
+
+  // destroy subscriber
+  sub.Destroy();
+
+  // destroy publisher
+  pub.Destroy();
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+TEST(IO, ZeroPayloadMessageSHM)
+{
+  // default send string
+  std::string send_s;
+
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "pubsub_test");
+
+  // publish / subscribe match in the same process
+  eCAL::Util::EnableLoopback(true);
+
+  // create subscriber for topic "A"
+  eCAL::CSubscriber sub("A");
+
+  // create publisher for topic "A"
+  eCAL::CPublisher pub("A");
+  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
+  pub.SetLayerMode(eCAL::TLayer::tlayer_shm, eCAL::TLayer::smode_on);
+
+  // add callback
+  EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
+
+  // let's match them
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+
+  g_callback_received_bytes = 0;
+  g_callback_received_count = 0;
+
+  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+
+  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+
+  // check callback receive
+  EXPECT_EQ(send_s.size(), g_callback_received_bytes);
+  EXPECT_EQ(2,             g_callback_received_count);
+
+  // destroy subscriber
+  sub.Destroy();
+
+  // destroy publisher
+  pub.Destroy();
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+TEST(IO, ZeroPayloadMessageUDP)
+{
+  // default send string
+  std::string send_s;
+
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "pubsub_test");
+
+  // publish / subscribe match in the same process
+  eCAL::Util::EnableLoopback(true);
+
+  // create subscriber for topic "A"
+  eCAL::CSubscriber sub("A");
+
+  // create publisher for topic "A"
+  eCAL::CPublisher pub("A");
+  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
+  pub.SetLayerMode(eCAL::TLayer::tlayer_udp_mc, eCAL::TLayer::smode_on);
+
+  // add callback
+  EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
+
+  // let's match them
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+
+  g_callback_received_bytes = 0;
+  g_callback_received_count = 0;
+
+  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+
+  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+
+  // check callback receive
+  EXPECT_EQ(send_s.size(), g_callback_received_bytes);
+  EXPECT_EQ(2,             g_callback_received_count);
+
+  // destroy subscriber
+  sub.Destroy();
+
+  // destroy publisher
+  pub.Destroy();
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+#if 0
+TEST(IO, ZeroPayloadMessageTCP)
+{
+  // default send string
+  std::string send_s;
+
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "pubsub_test");
+
+  // publish / subscribe match in the same process
+  eCAL::Util::EnableLoopback(true);
+
+  // create subscriber for topic "A"
+  eCAL::CSubscriber sub("A");
+
+  // create publisher for topic "A"
+  eCAL::CPublisher pub("A");
+  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
+  pub.SetLayerMode(eCAL::TLayer::tlayer_tcp, eCAL::TLayer::smode_on);
+
+  // add callback
+  EXPECT_EQ(true, sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2)));
+
+  // let's match them
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+
+  g_callback_received_bytes = 0;
+  g_callback_received_count = 0;
+
+  EXPECT_EQ(send_s.size(), pub.Send(send_s));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+
+  EXPECT_EQ(send_s.size(), pub.Send(nullptr, 0));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME);
+
+  // check callback receive
+  EXPECT_EQ(send_s.size(), g_callback_received_bytes);
+  EXPECT_EQ(2,             g_callback_received_count);
+
+  // destroy subscriber
+  sub.Destroy();
+
+  // destroy publisher
+  pub.Destroy();
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+#endif

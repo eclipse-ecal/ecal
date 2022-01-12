@@ -174,7 +174,19 @@ namespace eCAL
      *
      * @return  Length of received buffer. 
     **/
+    [[deprecated]]
     size_t Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const;
+
+    /**
+     * @brief Receive a message from the publisher (able to process zero length buffer).
+     *
+     * @param [out] buf_    Standard string for copying message content.
+     * @param [out] time_   Time from publisher in us (default = nullptr).
+     * @param rcv_timeout_  Maximum time before receive operation returns (in milliseconds, -1 means infinite).
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool ReceiveBuffer(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const;
 
     /**
      * @brief Add callback function for incoming receives. 
@@ -410,6 +422,24 @@ namespace eCAL
         buf_.clear();
       }
       return(buf_.size());
+    }
+
+    bool ReceiveBuffer(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const
+    {
+      if (!m_subscriber) return(0);
+      void* buf     = nullptr;
+      int   buf_len = 0;
+      bool success = eCAL_Sub_Receive_Buffer_Alloc(m_subscriber, &buf, &buf_len, time_, rcv_timeout_);
+      if (buf_len > 0)
+      {
+        buf_ = std::string(static_cast<char*>(buf), buf_len);
+        eCAL_FreeMem(buf);
+      }
+      else
+      {
+        buf_.clear();
+      }
+      return(success);
     }
 
     static void ReceiveCallback(const char* topic_name_, const struct SReceiveCallbackDataC* data_, void* par_)

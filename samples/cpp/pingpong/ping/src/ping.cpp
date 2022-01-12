@@ -44,7 +44,7 @@ int main(int argc, char **argv)
   {
     long long start_time_loop = eCAL::Time::GetMicroSeconds();
     pub_pulse.Send(&start_time_loop, sizeof(long long));
-    if(sub_pulse.Receive(rec_buf, nullptr, 100))
+    if(sub_pulse.ReceiveBuffer(rec_buf, nullptr, 100))
     {
      diff_array[reply] = eCAL::Time::GetMicroSeconds() - start_time_loop;
     }

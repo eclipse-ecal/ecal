@@ -320,7 +320,7 @@ namespace eCAL
     return(true);
   }
 
-  size_t CDataWriter::Write(const void* const buf_, size_t len_, long long time_, long long id_)
+  bool CDataWriter::Write(const void* const buf_, size_t len_, long long time_, long long id_)
   {
     // store id
     m_id = id_;
@@ -414,7 +414,7 @@ namespace eCAL
 #endif
 
       // send it
-      size_t inproc_sent(0);
+      bool inproc_sent(false);
       {
         // fill writer data
         struct CDataWriterBase::SWriterData wdata;
@@ -437,11 +437,11 @@ namespace eCAL
         inproc_sent = m_writer_inproc.Write(wdata);
         m_use_inproc_confirmed = true;
       }
-      written |= inproc_sent > 0;
+      written |= inproc_sent;
 
 #ifndef NDEBUG
       // log it
-      if (inproc_sent > 0)
+      if (inproc_sent)
       {
         Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::INPROC - SUCCESS");
       }
@@ -468,7 +468,7 @@ namespace eCAL
 #endif
      
       // send it
-      size_t shm_sent(0);
+      bool shm_sent(false);
       {
         // fill writer data
         struct CDataWriterBase::SWriterData wdata;
@@ -493,11 +493,11 @@ namespace eCAL
         shm_sent = m_writer_shm.Write(wdata);
         m_use_shm_confirmed = true;
       }
-      written |= shm_sent > 0;
+      written |= shm_sent;
 
 #ifndef NDEBUG
       // log it
-      if (shm_sent > 0)
+      if (shm_sent)
       {
         Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::SHM - SUCCESS");
       }
@@ -521,7 +521,7 @@ namespace eCAL
 #endif
 
       // send it
-      size_t udp_mc_sent(0);
+      bool udp_mc_sent(false);
       {
         // if shared memory layer for local communication is switched off
         // we activate udp message loopback to communicate with local processes too
@@ -550,11 +550,11 @@ namespace eCAL
         udp_mc_sent = m_writer_udp_mc.Write(wdata);
         m_use_udp_mc_confirmed = true;
       }
-      written |= udp_mc_sent > 0;
+      written |= udp_mc_sent;
 
 #ifndef NDEBUG
       // log it
-      if (udp_mc_sent > 0)
+      if (udp_mc_sent)
       {
         Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::UDP_MC - SUCCESS");
       }
@@ -578,7 +578,7 @@ namespace eCAL
 #endif
 
       // send it
-      size_t tcp_sent(0);
+      bool tcp_sent(false);
       {
         // fill writer data
         struct CDataWriterBase::SWriterData wdata;
@@ -595,11 +595,11 @@ namespace eCAL
         tcp_sent = m_writer_tcp.Write(wdata);
         m_use_tcp_confirmed = true;
       }
-      written |= tcp_sent > 0;
+      written |= tcp_sent;
 
 #ifndef NDEBUG
       // log it
-      if (tcp_sent > 0)
+      if (tcp_sent)
       {
         Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::TCP - SUCCESS");
       }
@@ -610,9 +610,8 @@ namespace eCAL
 #endif
     }
 
-    // return length if we succeeded
-    if (!written) return(0);
-    else          return(len_);
+    // return success
+    return(written);
   }
 
   void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& reader_par_)

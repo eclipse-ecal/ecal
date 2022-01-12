@@ -289,21 +289,20 @@ namespace eCAL
     // or we do not have any subscription at all
     // then the data writer will only do some statistics
     // for the monitoring layer and return
-    if (!IsSubscribed()
-      || (buf_ == nullptr)
-      || (len_ == 0))
+    if (!IsSubscribed())
     {
       m_datawriter->RefreshSendCounter();
       return(len_);
     }
 
     // send content via data writer layer
-    size_t size = 0;
-    if (time_ == -1) size = m_datawriter->Write(buf_, len_, eCAL::Time::GetMicroSeconds(), m_id);
-    else             size = m_datawriter->Write(buf_, len_, time_, m_id);
+    bool sent = 0;
+    if (time_ == -1) sent = m_datawriter->Write(buf_, len_, eCAL::Time::GetMicroSeconds(), m_id);
+    else             sent = m_datawriter->Write(buf_, len_, time_, m_id);
 
     // return success
-    return(size);
+    if (sent) return(len_);
+    else      return(0);
   }
 
   size_t CPublisher::Send(const std::string& s_, const long long time_ /* = -1 */) const

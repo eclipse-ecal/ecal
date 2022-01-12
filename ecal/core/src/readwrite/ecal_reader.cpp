@@ -358,9 +358,9 @@ namespace eCAL
     return (!m_created);
   }
 
-  size_t CDataReader::Receive(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */)
+  bool CDataReader::Receive(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */)
   {
-    if(!m_created) return(0);
+    if(!m_created) return(false);
 
     // did we receive new samples ?
     if(gWaitForEvent(m_receive_event, rcv_timeout_))
@@ -376,10 +376,11 @@ namespace eCAL
 
       // apply time
       if(time_) *time_ = m_read_time;
+
       // return success
-      return(buf_.size());
+      return(true);
     }
-    return(0);
+    return(false);
   }
 
   size_t CDataReader::AddSample(const std::string& tid_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eCAL::pb::eTLayerType layer_)
@@ -433,9 +434,6 @@ namespace eCAL
 
     // store size
     m_topic_size = size_;
-
-    // check buffer
-    if((size_ == 0) || (payload_ == nullptr)) return(0);
 
     // execute callback
     bool processed = false;

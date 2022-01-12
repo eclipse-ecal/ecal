@@ -37,7 +37,7 @@ int main(int argc, char **argv)
   std::string rec_buf;
   for(int reply = 0; reply < pings; reply++)
   {
-    if(sub_pulse.Receive(rec_buf, nullptr, -1))
+    if(sub_pulse.ReceiveBuffer(rec_buf, nullptr, -1))
     {
       diff_array[reply] = eCAL::Time::GetMicroSeconds() - *((long long*)rec_buf.c_str());
       pub_pulse.Send(&diff_array[reply], sizeof(long long));

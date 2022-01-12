@@ -514,7 +514,7 @@ PyObject* sub_receive(PyObject* /*self*/, PyObject* args)
   
   int ret{ 0 };
   Py_BEGIN_ALLOW_THREADS
-    ret = sub_receive(topic_handle, &rcv_buf, &rcv_buf_len, &rcv_time, timeout);
+    ret = sub_receive_buffer(topic_handle, &rcv_buf, &rcv_buf_len, &rcv_time, timeout);
   Py_END_ALLOW_THREADS
 
   PyObject* ret_obj = Py_BuildValue("iy#L", ret, rcv_buf, rcv_buf_len, rcv_time);

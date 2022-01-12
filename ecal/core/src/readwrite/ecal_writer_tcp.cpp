@@ -100,9 +100,9 @@ namespace eCAL
     return true;
   }
 
-  size_t CDataWriterTCP::Write(const SWriterData& data_)
+  bool CDataWriterTCP::Write(const SWriterData& data_)
   {
-    if (!m_publisher) return 0;
+    if (!m_publisher) return false;
 
     // create new sample (header information only, no payload)
     m_ecal_header.Clear();
@@ -150,14 +150,10 @@ namespace eCAL
     send_vec.emplace_back(std::pair<const char* const, const size_t>(static_cast<const char*>(data_.buf), data_.len));
 
     // send it
-    if (m_publisher->send(send_vec))
-    {
-      return data_.len;
-    }
-    else
-    {
-      return 0;
-    }
+    bool success = m_publisher->send(send_vec);
+
+    // return success
+    return success;
   }
 
   std::string CDataWriterTCP::GetConnectionParameter()

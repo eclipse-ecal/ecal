@@ -47,7 +47,7 @@ namespace eCAL
     bool DisconnectProcess(const std::string& process_id_);
 
     bool CheckSize(size_t size_);
-    size_t Write(const CDataWriterBase::SWriterData& data_);
+    bool Write(const CDataWriterBase::SWriterData& data_);
 
     std::string GetName();
 
