@@ -128,8 +128,9 @@ TEST(IO, CreateDestroy)
 
 TEST(IO, SimpleMessage1)
 { 
-  // default send string
+  // default send / receive strings
   std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
+  std::string recv_s;
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
@@ -150,11 +151,15 @@ TEST(IO, SimpleMessage1)
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
   // receive content with DATA_FLOW_TIME ms timeout
-  EXPECT_EQ(send_s.size(), sub.Receive(send_s, nullptr, DATA_FLOW_TIME));
+  recv_s.clear();
+  EXPECT_EQ(true, sub.ReceiveBuffer(recv_s, nullptr, DATA_FLOW_TIME));
+  EXPECT_EQ(send_s.size(), recv_s.size());
 
   // receive content with DATA_FLOW_TIME ms timeout
   // should return because no new publishing
-  EXPECT_EQ(0, sub.Receive(send_s, nullptr, DATA_FLOW_TIME));
+  recv_s.clear();
+  EXPECT_EQ(false, sub.ReceiveBuffer(recv_s, nullptr, DATA_FLOW_TIME));
+  EXPECT_EQ(0, recv_s.size());
 
   // destroy publisher
   pub.Destroy();
@@ -168,8 +173,9 @@ TEST(IO, SimpleMessage1)
 
 TEST(IO, SimpleMessage2)
 { 
-  // default send string
+  // default send / receive strings
   std::string send_s = CreatePayLoad(PAYLOAD_SIZE);
+  std::string recv_s;
 
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_test");
@@ -190,7 +196,9 @@ TEST(IO, SimpleMessage2)
   EXPECT_EQ(send_s.size(), pub.Send(send_s));
 
   // receive content with DATA_FLOW_TIME ms timeout
-  EXPECT_EQ(send_s.size(), sub.Receive(send_s, nullptr, DATA_FLOW_TIME));
+  recv_s.clear();
+  EXPECT_EQ(true, sub.ReceiveBuffer(recv_s, nullptr, DATA_FLOW_TIME));
+  EXPECT_EQ(send_s.size(), recv_s.size());
 
   // destroy publisher
   pub.Destroy();

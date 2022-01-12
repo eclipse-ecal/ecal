@@ -405,7 +405,7 @@ ECAL_API int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_bu
   {
     std::string rcv_buf;
     long long rcv_time  = 0;
-    sub->Receive(rcv_buf, &rcv_time, timeout_);
+    sub->ReceiveBuffer(rcv_buf, &rcv_time, timeout_);
 
     if(!rcv_buf.empty())
     {
