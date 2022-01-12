@@ -240,7 +240,7 @@ namespace eCAL
       **/
       bool Receive(long long* time_ = nullptr, int rcv_timeout_ = 0)
       {
-        bool success = subscriber.ReceiveBuffer(builder, time_, rcv_timeout_);
+        bool success = subscriber.Receive(builder, time_, rcv_timeout_);
         // Update the Reader
         root_builder = typename message_type::Builder(builder.getRoot<message_type>());
         return success;
