@@ -19,6 +19,8 @@
 
 syntax = "proto3";
 
+import "ecal/pb/play/state.proto";
+
 option cc_generic_services = true;
 
 package eCAL.pb.play;
@@ -90,9 +92,12 @@ message Response                         // common player service response
   string                   error  =  2;  // human readable error message
 }
 
+message Empty {}
+
 service EcalPlayService
 {
   rpc GetConfig  (GetConfigRequest) returns (GetConfigResponse);  // get current configuration
   rpc SetConfig  (SetConfigRequest) returns (Response);           // set configuration
   rpc SetCommand (CommandRequest)   returns (Response);           // set recorder command
+  rpc GetState (Empty) returns (State);           // set current playback status
 }
