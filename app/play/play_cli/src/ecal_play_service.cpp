@@ -376,6 +376,45 @@ void EcalPlayService::SetCommand(::google::protobuf::RpcController*       /*cont
   }
 }
 
+void EcalPlayService::GetState(::google::protobuf::RpcController* /*controller*/,
+                      const ::eCAL::pb::play::Empty*              /*request*/,
+                      ::eCAL::pb::play::State*                    response,
+                      ::google::protobuf::Closure*                /*done*/)
+{
+    EcalPlayState state = ecal_player_->GetCurrentPlayState();
+
+    eCAL::pb::play::State& state_pb = *response;
+
+    state_pb.set_host_name(eCAL::Process::GetHostName());
+    state_pb.set_process_id(eCAL::Process::GetProcessID());
+    state_pb.set_playing(state.playing_);
+    state_pb.set_measurement_loaded(ecal_player_->IsMeasurementLoaded());
+    state_pb.set_actual_speed(state.actual_play_rate_);
+    state_pb.set_current_measurement_index(state.current_frame_index);
+    state_pb.set_current_measurement_timestamp_nsecs(std::chrono::duration_cast<std::chrono::nanoseconds>(state.current_frame_timestamp.time_since_epoch()).count());
+
+    if (state_pb.measurement_loaded())
+    {
+        auto meas_info = state_pb.mutable_measurement_info();
+        meas_info->set_path                 (ecal_player_->GetMeasurementPath());
+        meas_info->set_frame_count          (ecal_player_->GetFrameCount());
+
+        auto meas_boundaries = ecal_player_->GetMeasurementBoundaries();
+        meas_info->set_first_timestamp_nsecs(std::chrono::duration_cast<std::chrono::nanoseconds>(meas_boundaries.first.time_since_epoch()).count());
+        meas_info->set_last_timestamp_nsecs (std::chrono::duration_cast<std::chrono::nanoseconds>(meas_boundaries.second.time_since_epoch()).count());
+    }
+
+    auto settings = state_pb.mutable_settings();
+    settings->set_play_speed                    (ecal_player_->GetPlaySpeed());
+    settings->set_limit_play_speed              (ecal_player_->IsLimitPlaySpeedEnabled());
+    settings->set_repeat_enabled                (ecal_player_->IsRepeatEnabled());
+    settings->set_framedropping_allowed         (ecal_player_->IsFrameDroppingAllowed());
+    settings->set_enforce_delay_accuracy_enabled(ecal_player_->IsEnforceDelayAccuracyEnabled());
+    auto limit_interval = ecal_player_->GetLimitInterval();
+    settings->set_limit_interval_lower_index    (limit_interval.first);
+    settings->set_limit_interval_upper_index    (limit_interval.second);
+}
+
 bool EcalPlayService::IsExitRequested() const
 {
   return exit_request_;
