@@ -48,12 +48,23 @@ void OnPlayerResponse(const struct eCAL::SServiceInfo& service_info_, const std:
       std::cout << "PlayerService " << service_info_.method_name << " called successfully on host " << service_info_.host_name << std::endl;
       std::cout << response.DebugString();
     }
-    else
+    else if (service_info_.method_name == "Response")
     {
       eCAL::pb::play::Response response;
       response.ParseFromString(response_);
       std::cout << "PlayerService " << service_info_.method_name << " called successfully on host " << service_info_.host_name << std::endl;
       std::cout << response.DebugString();
+    }
+    else if (service_info_.method_name == "GetState")
+    {
+        eCAL::pb::play::State response;
+        response.ParseFromString(response_);
+        std::cout << "PlayerService " << service_info_.method_name << " called successfully on host " << service_info_.host_name << std::endl;
+        std::cout << response.DebugString();
+    }
+    else
+    {
+        std::cout << "PlayerService " << service_info_.method_name << " received unknown message on host " << service_info_.host_name << std::endl;
     }
   }
   break;
@@ -120,6 +131,9 @@ int main(int argc, char **argv)
 
     player_service.Call("SetConfig", set_config_request);
     std::cout << set_config_request.DebugString() << std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+
+    player_service.Call("GetState", eCAL::pb::play::Empty());
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
     ////////////////////////////////////

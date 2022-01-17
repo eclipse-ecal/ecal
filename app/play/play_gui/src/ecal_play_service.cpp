@@ -468,6 +468,42 @@ void EcalPlayService::SetCommand(::google::protobuf::RpcController*       /*cont
   }
 }
 
+void EcalPlayService::GetState(google::protobuf::RpcController* /*controller*/, const eCAL::pb::play::Empty*  /*request*/, eCAL::pb::play::State *response, google::protobuf::Closure*  /* done*/)
+{
+    EcalPlayState state = QEcalPlay::instance()->currentPlayState();
+
+    eCAL::pb::play::State& state_pb = *response;
+
+    state_pb.set_host_name(eCAL::Process::GetHostName());
+    state_pb.set_process_id(eCAL::Process::GetProcessID());
+    state_pb.set_playing(state.playing_);
+    state_pb.set_measurement_loaded(QEcalPlay::instance()->isMeasurementLoaded());
+    state_pb.set_actual_speed(state.actual_play_rate_);
+    state_pb.set_current_measurement_index(state.current_frame_index);
+    state_pb.set_current_measurement_timestamp_nsecs(std::chrono::duration_cast<std::chrono::nanoseconds>(state.current_frame_timestamp.time_since_epoch()).count());
+
+    if (state_pb.measurement_loaded())
+    {
+        auto meas_info = state_pb.mutable_measurement_info();
+        meas_info->set_path                 (QEcalPlay::instance()->measurementPath().toStdString());
+        meas_info->set_frame_count          (QEcalPlay::instance()->frameCount());
+
+        auto meas_boundaries = QEcalPlay::instance()->measurementBoundaries();
+        meas_info->set_first_timestamp_nsecs(std::chrono::duration_cast<std::chrono::nanoseconds>(meas_boundaries.first.time_since_epoch()).count());
+        meas_info->set_last_timestamp_nsecs (std::chrono::duration_cast<std::chrono::nanoseconds>(meas_boundaries.second.time_since_epoch()).count());
+    }
+
+    auto settings = state_pb.mutable_settings();
+    settings->set_play_speed                    (QEcalPlay::instance()->playSpeed());
+    settings->set_limit_play_speed              (QEcalPlay::instance()->isLimitPlaySpeedEnabled());
+    settings->set_repeat_enabled                (QEcalPlay::instance()->isRepeatEnabled());
+    settings->set_framedropping_allowed         (QEcalPlay::instance()->isFrameDroppingAllowed());
+    settings->set_enforce_delay_accuracy_enabled(QEcalPlay::instance()->isEnforceDelayAccuracyEnabled());
+    auto limit_interval = QEcalPlay::instance()->limitInterval();
+    settings->set_limit_interval_lower_index    (limit_interval.first);
+    settings->set_limit_interval_upper_index    (limit_interval.second);
+}
+
 bool EcalPlayService::strToBool(const std::string& str)
 {
   if (str == "1")
