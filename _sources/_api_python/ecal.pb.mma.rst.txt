@@ -1,0 +1,18 @@
+ecal.pb.mma package
+===================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ecal.pb.mma.mma_pb2
+
+Module contents
+---------------
+
+.. automodule:: ecal.pb.mma
+   :members:
+   :undoc-members:
+   :show-inheritance:

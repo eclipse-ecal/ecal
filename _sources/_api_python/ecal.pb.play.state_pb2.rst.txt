@@ -1,0 +1,7 @@
+ecal.pb.play.state\_pb2 module
+==============================
+
+.. automodule:: ecal.pb.play.state_pb2
+   :members:
+   :undoc-members:
+   :show-inheritance:
