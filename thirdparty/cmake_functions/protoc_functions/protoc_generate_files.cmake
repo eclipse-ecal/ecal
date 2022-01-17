@@ -21,3 +21,4 @@
 # you will have to provide the source folder to this structure.
 
 include(${CMAKE_CURRENT_LIST_DIR}/protoc_generate_cpp.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/protoc_generate_python.cmake)
