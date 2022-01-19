@@ -174,7 +174,7 @@ int main(int argc, char **argv)
 
     // "SetCommand - step_channel"
     std::cout << "eCALPB.Play.GUIService:SetCommand() - step_channel \"VehiclePosePb\"" << std::endl;
-    command_request.set_command(eCAL::pb::play::CommandRequest::step);
+    command_request.set_command(eCAL::pb::play::CommandRequest::step_channel);
     command_request.set_step_reference_channel("VehiclePosePb");
     player_service.Call("SetCommand", command_request);
     std::cout << command_request.DebugString() << std::endl;
