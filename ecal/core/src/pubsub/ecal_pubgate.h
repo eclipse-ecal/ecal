@@ -28,7 +28,7 @@
 
 #include "readwrite/ecal_writer.h"
 
-#include <mutex>
+#include <shared_mutex>
 #include <atomic>
 #include <unordered_map>
 
@@ -64,7 +64,7 @@ namespace eCAL
     bool                      m_share_desc;
 
     typedef std::multimap<std::string, CDataWriter*> TopicNameDataWriterMapT;
-    std::mutex                m_topic_name_datawriter_sync;
+    std::shared_timed_mutex   m_topic_name_datawriter_sync;
     TopicNameDataWriterMapT   m_topic_name_datawriter_map;
   };
 };

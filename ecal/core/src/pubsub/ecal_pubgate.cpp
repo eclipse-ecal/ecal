@@ -60,8 +60,8 @@ namespace eCAL
   {
     if(!m_created) return;
 
-    // destroy all undestroyed publisher
-    std::lock_guard<std::mutex> lock(m_topic_name_datawriter_sync);
+    // destroy all remaining publisher
+    std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     for (auto iter = m_topic_name_datawriter_map.begin(); iter != m_topic_name_datawriter_map.end(); ++iter)
     {
       iter->second->Destroy();
@@ -85,7 +85,7 @@ namespace eCAL
     if(!m_created) return(false);
 
     // register writer and multicast group
-    std::lock_guard<std::mutex> lock(m_topic_name_datawriter_sync);
+    std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     m_topic_name_datawriter_map.emplace(std::pair<std::string, CDataWriter*>(topic_name_, datawriter_));
 
     return(true);
@@ -96,7 +96,7 @@ namespace eCAL
     if(!m_created) return(false);
     bool ret_state = false;
 
-    std::lock_guard<std::mutex> lock(m_topic_name_datawriter_sync);
+    std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     auto res = m_topic_name_datawriter_map.equal_range(topic_name_);
     for(TopicNameDataWriterMapT::iterator iter = res.first; iter != res.second; ++iter)
     {
@@ -139,7 +139,7 @@ namespace eCAL
     }
 
     // register local subscriber
-    std::lock_guard<std::mutex> lock(m_topic_name_datawriter_sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     auto res = m_topic_name_datawriter_map.equal_range(topic_name);
     for(TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
@@ -173,7 +173,7 @@ namespace eCAL
     }
 
     // register external subscriber
-    std::lock_guard<std::mutex> lock(m_topic_name_datawriter_sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     auto res = m_topic_name_datawriter_map.equal_range(topic_name);
     for(TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
@@ -186,7 +186,7 @@ namespace eCAL
     if (!m_created) return;
 
     // refresh publisher registrations
-    std::lock_guard<std::mutex> lock(m_topic_name_datawriter_sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     for (auto iter : m_topic_name_datawriter_map)
     {
       iter.second->RefreshRegistration();
