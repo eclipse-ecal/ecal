@@ -344,6 +344,7 @@ bool eCAL::eh5::HDF5MeasDir::AddEntryToFile(const void* data, const unsigned lon
 
   //  Create creation property for dataSpace
   auto dsProperty = H5Pcreate(H5P_DATASET_CREATE);
+  H5Pset_obj_track_times(dsProperty, false);
 
   //  Create dataset in dataSpace
   auto dataSet = H5Dcreate(file_id_, std::to_string(entries_counter_).c_str(), H5T_NATIVE_UCHAR, dataSpace, H5P_DEFAULT, dsProperty, H5P_DEFAULT);
@@ -598,6 +599,7 @@ bool eCAL::eh5::HDF5MeasDir::CreateEntriesTableOfContentsFor(const std::string& 
 
   //  Create creation property for dataSpace
   auto dsProperty = H5Pcreate(H5P_DATASET_CREATE);
+  H5Pset_obj_track_times(dsProperty, false);
 
   auto dataSet = H5Dcreate(file_id_, channelName.c_str(), H5T_NATIVE_LLONG, dataSpace, H5P_DEFAULT, dsProperty, H5P_DEFAULT);
 
