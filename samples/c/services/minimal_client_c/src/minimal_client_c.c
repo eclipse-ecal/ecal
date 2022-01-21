@@ -23,13 +23,13 @@
 int main(int argc, char **argv)
 {
   // the client handle
-  ECAL_HANDLE clt = 0;
+  ECAL_HANDLE hclient = 0;
 
   // initialize eCAL API
-  eCAL_Initialize(argc, argv, "service_client_c", eCAL_Init_Default);
+  eCAL_Initialize(argc, argv, "minimal client c", eCAL_Init_Default);
 
   // create client for "service1"
-  clt = eCAL_Client_Create("service1");
+  hclient = eCAL_Client_Create("service1");
 
   // call service method
   while (eCAL_Ok())
@@ -39,7 +39,7 @@ int main(int argc, char **argv)
     char                     response[sizeof(request)] = { 0 };
     // call method "echo"
     printf("Calling service1:echo ..\n");
-    if (eCAL_Client_Call_Wait(clt, "echo", request, sizeof(request), -1, &service_response, &response, sizeof(response)))
+    if (eCAL_Client_Call_Wait(hclient, "echo", request, sizeof(request), -1, &service_response, &response, sizeof(response)))
     {
       // process response
       switch (service_response.call_state)
@@ -62,12 +62,13 @@ int main(int argc, char **argv)
     {
       printf("Service / method not found :-(\n\n");
     }
-    // sleep 100 ms
-    eCAL_Process_SleepMS(100);
+
+    // sleep a second
+    eCAL_Process_SleepMS(1000);
   }
 
   // destroy client for "service1"
-  eCAL_Client_Destroy(clt);
+  eCAL_Client_Destroy(hclient);
 
   // finalize eCAL API
   eCAL_Finalize(eCAL_Init_All);

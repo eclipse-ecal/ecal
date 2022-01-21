@@ -47,16 +47,16 @@ int OnMethodCallback(const char* method_, const char* req_type_, const char* res
 
 int main(int argc, char **argv)
 {
-  ECAL_HANDLE srv = 0;
+  ECAL_HANDLE hserver = 0;
 
   // initialize eCAL API
-  eCAL_Initialize(argc, argv, "service_server_c", eCAL_Init_Default);
+  eCAL_Initialize(argc, argv, "minimal server c", eCAL_Init_Default);
 
   // create server "service1"
-  srv = eCAL_Server_Create("service1");
+  hserver = eCAL_Server_Create("service1");
 
   // add method callback for method "echo"
-  eCAL_Server_AddMethodCallback(srv, "echo", "", "", OnMethodCallback, 0);
+  eCAL_Server_AddMethodCallback(hserver, "echo", "", "", OnMethodCallback, 0);
 
   // idle
   while (eCAL_Ok())
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
   }
 
   // destroy server "service1"
-  eCAL_Server_Destroy(srv);
+  eCAL_Server_Destroy(hserver);
 
   // finalize eCAL API
   eCAL_Finalize(eCAL_Init_All);

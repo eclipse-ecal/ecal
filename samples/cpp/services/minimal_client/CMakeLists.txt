@@ -20,21 +20,20 @@ cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
-project(service_server_c)
+project(minimal_client)
 
 find_package(eCAL REQUIRED)
 
-remove_definitions(-std=c++14)
-
-set(service_server_c_src
-    src/service_server_c.c
+set(minimal_client_src
+    src/minimal_client.cpp
 )
 
-ecal_add_sample(${PROJECT_NAME} ${service_server_c_src})
-target_include_directories(${PROJECT_NAME} PRIVATE .)
+ecal_add_sample(${PROJECT_NAME} ${minimal_client_src})
 
-target_link_libraries(${PROJECT_NAME} eCAL::core_c)
+target_link_libraries(${PROJECT_NAME}
+    eCAL::core
+)
 
 ecal_install_sample(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/c/services)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/services)
