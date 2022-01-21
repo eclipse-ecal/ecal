@@ -48,12 +48,23 @@ void OnPlayerResponse(const struct eCAL::SServiceResponse& service_response_)
       std::cout << "PlayerService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
       std::cout << response.DebugString();
     }
-    else
+    else if (service_info_.method_name == "Response")
     {
       eCAL::pb::play::Response response;
       response.ParseFromString(service_response_.response);
       std::cout << "PlayerService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
       std::cout << response.DebugString();
+    }
+    else if (service_info_.method_name == "GetState")
+    {
+        eCAL::pb::play::State response;
+        response.ParseFromString(response_);
+        std::cout << "PlayerService " << service_info_.method_name << " called successfully on host " << service_info_.host_name << std::endl;
+        std::cout << response.DebugString();
+    }
+    else
+    {
+        std::cout << "PlayerService " << service_info_.method_name << " received unknown message on host " << service_info_.host_name << std::endl;
     }
   }
   break;
@@ -122,6 +133,9 @@ int main(int argc, char **argv)
     std::cout << set_config_request.DebugString() << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
+    player_service.Call("GetState", eCAL::pb::play::Empty());
+    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+
     ////////////////////////////////////
     // "SetCommand"                   //
     ////////////////////////////////////
@@ -174,7 +188,7 @@ int main(int argc, char **argv)
 
     // "SetCommand - step_channel"
     std::cout << "eCALPB.Play.GUIService:SetCommand() - step_channel \"VehiclePosePb\"" << std::endl;
-    command_request.set_command(eCAL::pb::play::CommandRequest::step);
+    command_request.set_command(eCAL::pb::play::CommandRequest::step_channel);
     command_request.set_step_reference_channel("VehiclePosePb");
     player_service.Call("SetCommand", command_request);
     std::cout << command_request.DebugString() << std::endl;

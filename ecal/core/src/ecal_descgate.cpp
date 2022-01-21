@@ -42,7 +42,7 @@ namespace eCAL
 
   void CDescGate::ApplyDescription(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_)
   {
-    std::lock_guard<std::mutex> lock(m_topic_name_desc_sync);
+    std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_desc_sync);
     TopicNameDescMapT::iterator iter = m_topic_name_desc_map.find(topic_name_);
     
     // new element (no need to check anything, just add it)
@@ -104,7 +104,7 @@ namespace eCAL
   {
     if(topic_name_.empty()) return(false);
 
-    std::lock_guard<std::mutex> lock(m_topic_name_desc_sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_desc_sync);
     TopicNameDescMapT::iterator iter = m_topic_name_desc_map.find(topic_name_);
 
     if(iter == m_topic_name_desc_map.end()) return(false);
@@ -116,7 +116,7 @@ namespace eCAL
   {
     if(topic_name_.empty()) return(false);
 
-    std::lock_guard<std::mutex> lock(m_topic_name_desc_sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_desc_sync);
     TopicNameDescMapT::iterator iter = m_topic_name_desc_map.find(topic_name_);
 
     if(iter == m_topic_name_desc_map.end()) return(false);

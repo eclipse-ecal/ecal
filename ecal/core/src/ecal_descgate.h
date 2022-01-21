@@ -26,7 +26,7 @@
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
 
-#include <mutex>
+#include <shared_mutex>
 #include <string>
 #include <map>
 #include <memory>
@@ -69,7 +69,7 @@ namespace eCAL
     };
 
     typedef std::map<std::string, STypeDesc> TopicNameDescMapT;
-    std::mutex        m_topic_name_desc_sync;
-    TopicNameDescMapT m_topic_name_desc_map;
+    std::shared_timed_mutex  m_topic_name_desc_sync;
+    TopicNameDescMapT        m_topic_name_desc_map;
   };
 };

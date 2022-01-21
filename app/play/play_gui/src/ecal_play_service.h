@@ -49,6 +49,11 @@ public:
                         , ::eCAL::pb::play::Response*               response
                         , ::google::protobuf::Closure*              done);
 
+  virtual void GetState(::google::protobuf::RpcController*          controller,
+                        const ::eCAL::pb::play::Empty*              request,
+                        ::eCAL::pb::play::State*                    response,
+                        ::google::protobuf::Closure*                done);
+
 private:
   static bool strToBool(const std::string& str);
 };

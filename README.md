@@ -111,16 +111,22 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 
 ![eCAL Mon](gfx/app/monitor_imagevisu.png)
 
-## Related projects
+## Using eCAL
+* [trellis](https://github.com/agtonomy/trellis) - General purpose middleware framework for distributed applications
+* [ecal-toolbox](https://de.mathworks.com/matlabcentral/fileexchange/92825-ecal-toolbox) - Mathworks simulink toolbox for eCAL
+* [golang-ecal](https://github.com/Blutkoete/golang-ecal) - eCAL go language binding
+* [ecal-rs](https://github.com/kopernikusai/ecal-rs) - eCAL rust language binding
+* [rmw_ecal](https://github.com/continental/rmw_ecal) - eCAL / ROS2 middleware layer
+* [gpsd2ecal](https://github.com/continental/gpsd2ecal) - eCAL gps gateway
+* [ecal_mongraph](https://github.com/ecal-io/ecal_mongraph) - Simple graph visualization for eCAL
+* [ecal2ros](https://github.com/ecal-io/ecal2ros) - Demo gateway eCAL5 to ROS2
+* [ros2ecal](https://github.com/ecal-io/ros2ecal) - Demo gateway ROS2 to eCAL5
 
-* [Agtonomy Trellis](https://github.com/agtonomy/trellis)
-* [eCAL Simulink Toolbox](https://de.mathworks.com/matlabcentral/fileexchange/92825-ecal-toolbox)
-* [GO language binding](https://github.com/Blutkoete/golang-ecal)
-* [Rust language binding](https://github.com/kopernikusai/ecal-rs)
-* [ROS2 eCAL Middleware Layer](https://github.com/continental/rmw_ecal)
-* [gpsd eCAL gateway](https://github.com/continental/gpsd2ecal)
-* [Iceoryx](https://github.com/eclipse/iceoryx)
-* [Dockerfiles for eCAL](https://github.com/Blutkoete/docker-ecal)
+## Used by eCAL
+* [fine-ftpserver](https://github.com/continental/fineftp-server) - FTP functionality to collect distributed measurement artifacts over network
+* [tcp_pubsub](https://github.com/continental/tcp_pubsub) - Additional TCP transport layer for higher reliability for publication/subscription over network
+* [iceoryx](https://github.com/eclipse/iceoryx) - Alternative shared memory transport layer (needs to be activated via CMake options)
+* [docker-ecal](https://github.com/Blutkoete/docker-ecal) - Inoffical dockerfiles for eCAL
 
 ## License
 
