@@ -48,23 +48,23 @@ void OnPlayerResponse(const struct eCAL::SServiceResponse& service_response_)
       std::cout << "PlayerService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
       std::cout << response.DebugString();
     }
-    else if (service_info_.method_name == "Response")
+    else if (service_response_.method_name == "Response")
     {
       eCAL::pb::play::Response response;
       response.ParseFromString(service_response_.response);
       std::cout << "PlayerService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
       std::cout << response.DebugString();
     }
-    else if (service_info_.method_name == "GetState")
+    else if (service_response_.method_name == "GetState")
     {
         eCAL::pb::play::State response;
-        response.ParseFromString(response_);
-        std::cout << "PlayerService " << service_info_.method_name << " called successfully on host " << service_info_.host_name << std::endl;
+        response.ParseFromString(service_response_.response);
+        std::cout << "PlayerService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
         std::cout << response.DebugString();
     }
     else
     {
-        std::cout << "PlayerService " << service_info_.method_name << " received unknown message on host " << service_info_.host_name << std::endl;
+        std::cout << "PlayerService " << service_response_.method_name << " received unknown message on host " << service_response_.host_name << std::endl;
     }
   }
   break;
