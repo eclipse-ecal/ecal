@@ -44,7 +44,7 @@ namespace eCAL
     bool Create(const std::string& host_name_, const std::string& topic_name_, const std::string & topic_id_) override;
     bool Destroy() override;
 
-    size_t Write(const SWriterData& data_) override;
+    bool Write(const SWriterData& data_) override;
 
   private:
     std::shared_ptr<iox::popo::UntypedPublisher> m_publisher;

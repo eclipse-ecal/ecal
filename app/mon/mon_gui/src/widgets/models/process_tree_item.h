@@ -52,7 +52,8 @@ public:
     INFO,
     TSYNC_STATE,
     TSYNC_MOD_NAME,
-    COMPONENT_INIT_INFO
+    COMPONENT_INIT_INFO,
+    ECAL_RUNTIME_VERSION
   };
 
   ProcessTreeItem();

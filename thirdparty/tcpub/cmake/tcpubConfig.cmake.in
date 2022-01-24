@@ -1,0 +1,4 @@
+@PACKAGE_INIT@
+
+INCLUDE("@PACKAGE_TCPUB_INSTALL_CMAKE_DIR@/tcpubTargets.cmake")
+find_package(Threads)

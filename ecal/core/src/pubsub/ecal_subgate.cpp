@@ -84,7 +84,7 @@ namespace eCAL
     m_subtimeout_thread.Stop();
 
     // destroy all remaining subscriber
-    std::lock_guard<std::mutex> lock(m_topic_name_datareader_sync);
+    std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
     for (auto iter = m_topic_name_datareader_map.begin(); iter != m_topic_name_datareader_map.end(); ++iter)
     {
       iter->second->Destroy();
@@ -98,7 +98,7 @@ namespace eCAL
     if(!m_created) return(false);
 
     // register reader
-    std::lock_guard<std::mutex> lock(m_topic_name_datareader_sync);
+    std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
     m_topic_name_datareader_map.emplace(std::pair<std::string, CDataReader*>(topic_name_, datareader_));
 
     return(true);
@@ -109,7 +109,7 @@ namespace eCAL
     if(!m_created) return(false);
     bool ret_state = false;
 
-    std::lock_guard<std::mutex> lock(m_topic_name_datareader_sync);
+    std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
     auto res = m_topic_name_datareader_map.equal_range(topic_name_);
     for(TopicNameDataReaderMapT::iterator iter = res.first; iter != res.second; ++iter)
     {
@@ -125,7 +125,7 @@ namespace eCAL
 
   bool CSubGate::HasSample(const std::string& sample_name_)
   {
-    std::lock_guard<std::mutex> lock(m_topic_name_datareader_sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
     return(m_topic_name_datareader_map.find(sample_name_) != m_topic_name_datareader_map.end());
   }
 
@@ -149,12 +149,12 @@ namespace eCAL
 
       // update globals
       g_process_rclock++;
-      auto ecal_sample_content = ecal_sample_.content();
-      auto ecal_sample_content_payload = ecal_sample_content.payload();
-      g_process_rbytes_sum += ecal_sample_content_payload.size();
+      auto& ecal_sample_content         = ecal_sample_.content();
+      auto& ecal_sample_content_payload = ecal_sample_content.payload();
+      g_process_rbytes_sum += ecal_sample_.content().payload().size();
 
-      // add sample to data reader
-      std::lock_guard<std::mutex> lock(m_topic_name_datareader_sync);
+      // apply sample to data reader
+      std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
       auto res = m_topic_name_datareader_map.equal_range(ecal_sample_.topic().tname());
       for (auto it = res.first; it != res.second; ++it)
       {
@@ -186,9 +186,9 @@ namespace eCAL
     g_process_rclock++;
     g_process_rbytes_sum += len_;
 
-    // add sample to data reader
+    // apply sample to data reader
     size_t sent(0);
-    std::lock_guard<std::mutex> lock(m_topic_name_datareader_sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
     auto res = m_topic_name_datareader_map.equal_range(topic_name_);
     for (auto it = res.first; it != res.second; ++it)
     {
@@ -214,7 +214,7 @@ namespace eCAL
     std::string process_id = std::to_string(ecal_sample_.topic().pid());
 
     // handle local publisher connection
-    std::lock_guard<std::mutex> lock(m_topic_name_datareader_sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
     auto res = m_topic_name_datareader_map.equal_range(topic_name);
     for (TopicNameDataReaderMapT::iterator iter = res.first; iter != res.second; ++iter)
     {
@@ -234,7 +234,7 @@ namespace eCAL
         //    later check in ecal_reader_shm SetConnectionParameter()
         // ---------------------------------------------------------------
 
-        // first check for new behaviour
+        // first check for new behavior
         std::string writer_par = tlayer.par_layer().SerializeAsString();
 
         // ----------------------------------------------------------------------
@@ -269,7 +269,7 @@ namespace eCAL
     if (g_descgate()) g_descgate()->ApplyDescription(topic_name, sample_topic.ttype(), sample_topic.tdesc());
 
     // handle external publisher connection
-    std::lock_guard<std::mutex> lock(m_topic_name_datareader_sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
     auto res = m_topic_name_datareader_map.equal_range(topic_name);
     for (TopicNameDataReaderMapT::iterator iter = res.first; iter != res.second; ++iter)
     {
@@ -292,7 +292,7 @@ namespace eCAL
     if (!m_created) return;
 
     // refresh reader registrations
-    std::lock_guard<std::mutex> lock(m_topic_name_datareader_sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
     for (auto iter : m_topic_name_datareader_map)
     {
       iter.second->RefreshRegistration();
@@ -304,7 +304,7 @@ namespace eCAL
     if (!m_created) return(0);
 
     // check subscriber timeouts
-    std::lock_guard<std::mutex> lock(m_topic_name_datareader_sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
     for (auto iter = m_topic_name_datareader_map.begin(); iter != m_topic_name_datareader_map.end(); ++iter)
     {
       iter->second->CheckReceiveTimeout();

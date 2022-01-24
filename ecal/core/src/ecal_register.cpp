@@ -246,6 +246,8 @@ namespace eCAL
     if (!component_info.empty()) component_info = component_info.substr(1);
     process_sample_mutable_process->set_component_init_info(component_info);
 
+    process_sample_mutable_process->set_ecal_runtime_version(eCAL::GetVersionString());
+
     // register sample
     size_t sent_sum = RegisterSample(Process::GetHostName(), process_sample);
     std::this_thread::sleep_for(std::chrono::milliseconds(1));

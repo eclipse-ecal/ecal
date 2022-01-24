@@ -158,12 +158,12 @@ namespace eCAL
     return ret_state;
   }
 
-  size_t CDataWriterSHM::Write(const SWriterData& data_)
+  bool CDataWriterSHM::Write(const SWriterData& data_)
   {
     if (!m_created) return 0;
 
     // write content
-    size_t sent = m_memory_file_vec[m_write_idx]->Write(data_);
+    bool sent = m_memory_file_vec[m_write_idx]->Write(data_);
 
     // and increment file index
     m_write_idx++;

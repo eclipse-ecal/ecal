@@ -124,7 +124,7 @@ namespace eCAL
       bool Deserialize(T& msg_, const void* buffer_, size_t size_) const
       {
         msg_ = std::string(static_cast<const char*>(buffer_), size_);
-        return(!msg_.empty());
+        return true;
       }
 
     };

@@ -59,7 +59,7 @@ namespace eCAL
 
     bool SetQOS(const QOS::SReaderQOS& qos_);
 
-    size_t Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0);
+    bool Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0);
 
     bool AddReceiveCallback(ReceiveCallbackT callback_);
     bool RemReceiveCallback();
@@ -160,6 +160,7 @@ namespace eCAL
 
     bool                                      m_use_udp_mc_confirmed;
     bool                                      m_use_shm_confirmed;
+    bool                                      m_use_tcp_confirmed;
     bool                                      m_use_inproc_confirmed;
 
     std::atomic<bool>                         m_created;

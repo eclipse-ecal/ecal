@@ -80,6 +80,8 @@ namespace eCAL
     m_use_udp_mc_confirmed(false),
     m_use_shm(TLayer::eSendMode(eCALPAR(PUB, USE_SHM))),
     m_use_shm_confirmed(false),
+    m_use_tcp(TLayer::eSendMode(eCALPAR(PUB, USE_TCP))),
+    m_use_tcp_confirmed(false),
     m_use_inproc(TLayer::eSendMode(eCALPAR(PUB, USE_INPROC))),
     m_use_inproc_confirmed(false),
     m_use_ttype(true),
@@ -111,7 +113,7 @@ namespace eCAL
     m_freq              = 0;
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
     m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
-    m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY);
+    m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY) != 0;
     m_ext_subscribed    = false;
     m_created           = false;
 
@@ -142,6 +144,9 @@ namespace eCAL
 
     // create shm layer
     SetUseShm(m_use_shm);
+
+    // create tcp layer
+    SetUseTcp(m_use_tcp);
 
     // create inproc layer
     SetUseInProc(m_use_inproc);
@@ -180,7 +185,7 @@ namespace eCAL
     m_freq              = 0;
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
     m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
-    m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY);
+    m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY) != 0;
     m_created           = false;
 
     return(true);
@@ -244,6 +249,9 @@ namespace eCAL
     case TLayer::tlayer_shm:
       SetUseShm(mode_);
       break;
+    case TLayer::tlayer_tcp:
+      SetUseTcp(mode_);
+      break;
     case TLayer::tlayer_inproc:
       SetUseInProc(mode_);
       break;
@@ -251,6 +259,7 @@ namespace eCAL
       SetUseUdpMC   (mode_);
       SetUseShm     (mode_);
       SetUseInProc  (mode_);
+      SetUseTcp     (mode_);
       break;
     default:
       break;
@@ -311,7 +320,7 @@ namespace eCAL
     return(true);
   }
 
-  size_t CDataWriter::Write(const void* const buf_, size_t len_, long long time_, long long id_)
+  bool CDataWriter::Write(const void* const buf_, size_t len_, long long time_, long long id_)
   {
     // store id
     m_id = id_;
@@ -335,9 +344,11 @@ namespace eCAL
     // check send modes
     TLayer::eSendMode use_udp_mc(m_use_udp_mc);
     TLayer::eSendMode use_shm(m_use_shm);
+    TLayer::eSendMode use_tcp(m_use_tcp);
     TLayer::eSendMode use_inproc(m_use_inproc);
     if ( (use_udp_mc == TLayer::smode_off)
       && (use_shm    == TLayer::smode_off)
+      && (use_tcp    == TLayer::smode_off)
       && (use_inproc == TLayer::smode_off)
       )
     {
@@ -382,6 +393,14 @@ namespace eCAL
       }
     }
 
+    if ( (use_tcp    == TLayer::smode_auto)
+      && (use_udp_mc == TLayer::smode_auto)
+      )
+    {
+      Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send: TCP layer and UDP layer are both set to auto mode - Publication failed !");
+      return 0;
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     // LAYER 1 : INPROC
     ////////////////////////////////////////////////////////////////////////////
@@ -391,11 +410,11 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::InProc");
+      Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::INPROC");
 #endif
 
       // send it
-      size_t inproc_sent(0);
+      bool inproc_sent(false);
       {
         // fill writer data
         struct CDataWriterBase::SWriterData wdata;
@@ -418,13 +437,13 @@ namespace eCAL
         inproc_sent = m_writer_inproc.Write(wdata);
         m_use_inproc_confirmed = true;
       }
-      written |= inproc_sent > 0;
+      written |= inproc_sent;
 
 #ifndef NDEBUG
       // log it
-      if (inproc_sent > 0)
+      if (inproc_sent)
       {
-        Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::InProc - SUCCESS");
+        Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::INPROC - SUCCESS");
       }
       else
       {
@@ -445,11 +464,11 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::MemFile");
+      Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::SHM");
 #endif
      
       // send it
-      size_t shm_sent(0);
+      bool shm_sent(false);
       {
         // fill writer data
         struct CDataWriterBase::SWriterData wdata;
@@ -474,17 +493,17 @@ namespace eCAL
         shm_sent = m_writer_shm.Write(wdata);
         m_use_shm_confirmed = true;
       }
-      written |= shm_sent > 0;
+      written |= shm_sent;
 
 #ifndef NDEBUG
       // log it
-      if (shm_sent > 0)
+      if (shm_sent)
       {
-        Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::MemFile - SUCCESS");
+        Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::SHM - SUCCESS");
       }
       else
       {
-        Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send::MemFile - FAILED");
+        Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send::SHM - FAILED");
       }
 #endif
     }
@@ -502,7 +521,7 @@ namespace eCAL
 #endif
 
       // send it
-      size_t udp_mc_sent(0);
+      bool udp_mc_sent(false);
       {
         // if shared memory layer for local communication is switched off
         // we activate udp message loopback to communicate with local processes too
@@ -531,11 +550,11 @@ namespace eCAL
         udp_mc_sent = m_writer_udp_mc.Write(wdata);
         m_use_udp_mc_confirmed = true;
       }
-      written |= udp_mc_sent > 0;
+      written |= udp_mc_sent;
 
 #ifndef NDEBUG
       // log it
-      if (udp_mc_sent > 0)
+      if (udp_mc_sent)
       {
         Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::UDP_MC - SUCCESS");
       }
@@ -546,10 +565,53 @@ namespace eCAL
 #endif
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    // LAYER 4 : TCP
+    ////////////////////////////////////////////////////////////////////////////
+    if (((use_tcp == TLayer::smode_auto) && m_ext_subscribed)
+      || (use_tcp == TLayer::smode_on)
+      )
+    {
+#ifndef NDEBUG
+      // log it
+      Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::TCP");
+#endif
 
-    // return length if we succeeded
-    if (!written) return(0);
-    else          return(len_);
+      // send it
+      bool tcp_sent(false);
+      {
+        // fill writer data
+        struct CDataWriterBase::SWriterData wdata;
+        wdata.buf       = buf_;
+        wdata.len       = len_;
+        wdata.id        = m_id;
+        wdata.clock     = m_clock;
+        wdata.hash      = snd_hash;
+        wdata.time      = time_;
+        wdata.buffering = 0;
+        wdata.zero_copy = false;
+
+        // send
+        tcp_sent = m_writer_tcp.Write(wdata);
+        m_use_tcp_confirmed = true;
+      }
+      written |= tcp_sent;
+
+#ifndef NDEBUG
+      // log it
+      if (tcp_sent)
+      {
+        Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::TCP - SUCCESS");
+      }
+      else
+      {
+        Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send::TCP - FAILED");
+      }
+#endif
+    }
+
+    // return success
+    return(written);
   }
 
   void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& reader_par_)
@@ -760,6 +822,14 @@ namespace eCAL
       // ----------------------------------------------------------------------
 
     }
+    // tcp layer
+    {
+      auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
+      tlayer->set_type(eCAL::pb::tl_ecal_tcp);
+      tlayer->set_version(1);
+      tlayer->set_confirmed(m_use_tcp_confirmed);
+      tlayer->mutable_par_layer()->ParseFromString(m_writer_tcp.GetConnectionParameter());
+    }
     // inproc layer
     {
       auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
@@ -897,6 +967,32 @@ namespace eCAL
     case TLayer::eSendMode::smode_none:
     case TLayer::eSendMode::smode_off:
       m_writer_shm.Destroy();
+      break;
+    }
+
+    return(true);
+  }
+
+  bool CDataWriter::SetUseTcp(TLayer::eSendMode mode_)
+  {
+    m_use_tcp = mode_;
+    if (!m_created) return true;
+
+    // log send mode
+    LogSendMode(m_use_tcp, m_topic_name + "::CDataWriter::Create::TCP_SENDMODE::");
+
+    switch (m_use_tcp)
+    {
+    case TLayer::eSendMode::smode_auto:
+    case TLayer::eSendMode::smode_on:
+      m_writer_tcp.Create(m_host_name, m_topic_name, m_topic_id);
+#ifndef NDEBUG
+      Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Create::TCP_WRITER");
+#endif
+      break;
+    case TLayer::eSendMode::smode_none:
+    case TLayer::eSendMode::smode_off:
+      m_writer_tcp.Destroy();
       break;
     }
 

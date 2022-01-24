@@ -302,7 +302,7 @@ namespace eCAL
 
     bool RecordJob::StartRecording(const std::map<std::string, TopicInfo>& initial_topic_info_map, const std::deque<std::shared_ptr<Frame>>& initial_frame_buffer)
     {
-      std::lock_guard<std::mutex> lock(job_mutex_);
+      std::unique_lock<std::shared_timed_mutex> lock(job_mutex_);
 
       if (main_recorder_state_ != JobState::NotStarted)
       {
@@ -319,7 +319,7 @@ namespace eCAL
 
     bool RecordJob::StopRecording()
     {
-      std::lock_guard<std::mutex> lock(job_mutex_);
+      std::unique_lock<std::shared_timed_mutex> lock(job_mutex_);
 
       if ((main_recorder_state_ != JobState::Recording) || !hdf5_writer_thread_)
       {
@@ -336,7 +336,7 @@ namespace eCAL
 
     bool RecordJob::SaveBuffer(const std::map<std::string, TopicInfo>& topic_info_map, const std::deque<std::shared_ptr<Frame>>& frame_buffer)
     {
-      std::lock_guard<std::mutex> lock(job_mutex_);
+      std::unique_lock<std::shared_timed_mutex> lock(job_mutex_);
 
       if (main_recorder_state_ != JobState::NotStarted)
       {
@@ -354,7 +354,7 @@ namespace eCAL
 
     bool RecordJob::AddFrame(const std::shared_ptr<Frame>& frame)
     {
-      std::lock_guard<std::mutex> lock(job_mutex_);
+      std::shared_lock<std::shared_timed_mutex> lock(job_mutex_);
       if ((main_recorder_state_ != JobState::Recording) || !hdf5_writer_thread_)
         return false;
 
@@ -363,7 +363,7 @@ namespace eCAL
 
     void RecordJob::SetTopicInfo(const std::map<std::string, TopicInfo>& topic_info_map)
     {
-      std::lock_guard<std::mutex> lock(job_mutex_);
+      std::shared_lock<std::shared_timed_mutex> lock(job_mutex_);
       if ((main_recorder_state_ != JobState::Recording) || !hdf5_writer_thread_)
         return;
 
@@ -375,7 +375,7 @@ namespace eCAL
       eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::OK);
 
 #ifdef ECAL_HAS_CURL
-      std::lock_guard<std::mutex> lock(job_mutex_);
+      std::unique_lock<std::shared_timed_mutex> lock(job_mutex_);
       UpdateJobState_NoLock();
 
       if (is_deleted_)
@@ -457,7 +457,7 @@ namespace eCAL
       eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::OK);
 
       {
-        std::lock_guard<std::mutex> lock(job_mutex_);
+        std::unique_lock<std::shared_timed_mutex> lock(job_mutex_);
         UpdateJobState_NoLock();
 
         if (is_deleted_)
@@ -497,7 +497,7 @@ namespace eCAL
       }
       else
       {
-        std::lock_guard<std::mutex> lock(job_mutex_);
+        std::unique_lock<std::shared_timed_mutex> lock(job_mutex_);
 
         info_ = { false, "Error adding comment: " + error.ToString() };
         EcalRecLogger::Instance()->error(info_.second);
@@ -510,8 +510,9 @@ namespace eCAL
     {
       Error error(Error::OK);
 
+
       {
-        std::lock_guard<std::mutex> lock(job_mutex_);
+        std::unique_lock<std::shared_timed_mutex> lock(job_mutex_);
         UpdateJobState_NoLock();
 
         // Check if we can safely delete the directory
@@ -539,7 +540,7 @@ namespace eCAL
       }
 
       {
-        std::lock_guard<std::mutex> lock(job_mutex_);
+        std::unique_lock<std::shared_timed_mutex> lock(job_mutex_);
 
         if (error)
           info_ = { false, "Error deleting measurement: " + error.ToString() };
@@ -564,10 +565,10 @@ namespace eCAL
       job_status.job_id_     = job_config_.GetJobId();
       job_status.is_deleted_ = is_deleted_;
 
-      {
-        std::lock_guard<std::mutex> lock(job_mutex_);
-        UpdateJobState_NoLock();
+      UpdateJobState(); // Peforms unique lock on job_mutex_
 
+      {
+        std::shared_lock<std::shared_timed_mutex> lock(job_mutex_);
         job_status.state_ = main_recorder_state_;
 
         if (hdf5_writer_thread_)
@@ -592,20 +593,21 @@ namespace eCAL
 
     JobState RecordJob::GetMainRecorderState() const
     {
-      std::lock_guard<std::mutex> lock(job_mutex_);
-      UpdateJobState_NoLock();
+      UpdateJobState(); // Peforms unique lock on job_mutex_
+
+      std::shared_lock<std::shared_timed_mutex> lock(job_mutex_);
       return main_recorder_state_;
     }
 
     bool RecordJob::IsDeleted() const
     {
-      std::lock_guard<std::mutex> lock(job_mutex_);
+      std::shared_lock<std::shared_timed_mutex> lock(job_mutex_);
       return is_deleted_;
     }
 
     void RecordJob::SetAddonStatus(const std::string& addon, const RecAddonJobStatus& status)
     {
-      std::lock_guard<std::mutex> lock(job_mutex_);
+      std::unique_lock<std::shared_timed_mutex> lock(job_mutex_);
       rec_addon_statuses_[addon] = status;
     }
 
@@ -645,6 +647,12 @@ namespace eCAL
         }
 #endif //ECAL_HAS_CURL
       }
+    }
+
+    void RecordJob::UpdateJobState() const
+    {
+      std::unique_lock<std::shared_timed_mutex> lock(job_mutex_);
+      UpdateJobState_NoLock();
     }
   }
 }

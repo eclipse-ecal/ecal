@@ -37,6 +37,7 @@
 #include "ecal_writer_shm.h"
 #endif /* ECAL_LAYER_ICEORYX */
 
+#include "ecal_writer_tcp.h"
 #include "ecal_writer_inproc.h"
 
 #include <mutex>
@@ -71,7 +72,7 @@ namespace eCAL
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
     bool RemEventCallback(eCAL_Publisher_Event type_);
 
-    size_t Write(const void* const buf_, size_t len_, long long time_, long long id_);
+    bool Write(const void* const buf_, size_t len_, long long time_, long long id_);
 
     void ApplyLocSubscription(const std::string& process_id_, const std::string& reader_par_);
     void RemoveLocSubscription(const std::string & process_id_);
@@ -106,6 +107,7 @@ namespace eCAL
 
     bool SetUseUdpMC(TLayer::eSendMode mode_);
     bool SetUseShm(TLayer::eSendMode mode_);
+    bool SetUseTcp(TLayer::eSendMode mode_);
     bool SetUseInProc(TLayer::eSendMode mode_);
 
     bool IsInternalSubscribedOnly();
@@ -155,6 +157,10 @@ namespace eCAL
     TLayer::eSendMode  m_use_shm;
     CDataWriterSHM     m_writer_shm;
     bool               m_use_shm_confirmed;
+
+    TLayer::eSendMode  m_use_tcp;
+    CDataWriterTCP     m_writer_tcp;
+    bool               m_use_tcp_confirmed;
 
     TLayer::eSendMode  m_use_inproc;
     CDataWriterInProc  m_writer_inproc;

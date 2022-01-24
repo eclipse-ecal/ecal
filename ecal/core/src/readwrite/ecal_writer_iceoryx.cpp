@@ -89,10 +89,10 @@ namespace eCAL
     return true;
   }
 
-  size_t CDataWriterSHM::Write(const SWriterData& data_)
+  bool CDataWriterSHM::Write(const SWriterData& data_)
   {
-    if (!m_publisher) return 0;
-    size_t ret(0);
+    if (!m_publisher) return false;
+    bool ret(false);
 
     uint32_t payload_size(static_cast<uint32_t>(data_.len));
     uint32_t payload_alignment(static_cast<uint32_t>(alignof(void*)));
@@ -108,7 +108,7 @@ namespace eCAL
         std::memcpy(static_cast<char*>(userPayload), data_.buf, data_.len);
         // publish all
         m_publisher->publish(userPayload);
-        ret = data_.len;
+        ret = true;
       }).or_else([&](auto& error) {
         // loan failed
         std::stringstream ss;

@@ -88,13 +88,15 @@ void ProcProtoType(const std::string& group_, const std::string& name_, const go
 
 void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& prefix_ /* = "" */)
 {
+  int count = msg_.GetDescriptor()->field_count();
   const google::protobuf::Reflection* ref_ptr = msg_.GetReflection();
+
   if(ref_ptr)
   {
-    std::vector<const google::protobuf::FieldDescriptor*> field_v;
-    ref_ptr->ListFields(msg_, &field_v);
-    for(auto field : field_v)
+    for (int i = 0; i < count; ++i)
     {
+      auto field = msg_.GetDescriptor()->field(i);
+  
       const google::protobuf::FieldDescriptor::CppType fdt = field->cpp_type();
       switch(fdt)
       {
@@ -237,7 +239,14 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
               prefix += std::to_string(fnum);
               prefix += "]";
               if(!prefix_.empty()) prefix = prefix_ + "." + prefix;
-              ProcProtoMsg(msg, prefix);
+
+              // do not process default messages to avoid infinite recursions.
+              std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
+              msg.GetReflection()->ListFields(msg, &msg_fields);
+              if (msg_fields.size() > 0)
+              {
+                ProcProtoMsg(msg, prefix);
+              }
             }
           }
           else
@@ -245,7 +254,14 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
             const google::protobuf::Message& msg = ref_ptr->GetMessage(msg_, field);
             std::string prefix = field->name();
             if(!prefix_.empty()) prefix = prefix_ + "." + prefix;
-            ProcProtoMsg(msg, prefix);
+
+            // do not process default messages to avoid infinite recursions.
+            std::vector<const google::protobuf::FieldDescriptor*> msg_fields;
+            msg.GetReflection()->ListFields(msg, &msg_fields);
+            if (msg_fields.size() > 0)
+            {
+              ProcProtoMsg(msg, prefix);
+            }
           }
         }
         break;

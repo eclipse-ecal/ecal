@@ -26,6 +26,7 @@ set (ecal_utils_includes
   include/ecal_utils/str_convert.h
   include/ecal_utils/string.h
   include/ecal_utils/win_cp_changer.h
+  include/ecal_utils/portable_endian.h
 )
 
 set(ecal_utils_src

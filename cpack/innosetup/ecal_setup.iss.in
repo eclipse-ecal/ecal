@@ -148,7 +148,7 @@ Root: HKCR; Subkey: "ecal_rec_gui";                                             
 Root: HKCR; Subkey: "ecal_rec_gui\DefaultIcon";                                     ValueType: string; ValueName: "";          ValueData: "{app}\bin\ecal_rec_gui.exe,0";                                        Components: applications
 Root: HKCR; Subkey: "ecal_rec_gui\shell\open\command";                              ValueType: string; ValueName: "";          ValueData: """{app}\bin\ecal_rec_gui.exe"" ""%1""";                               Components: applications
 
-Root: HKCR; Subkey: ".ecalplay";                                                    ValueType: string; ValueName: "";          ValueData: "ecal_play_gui";                             Flags: uninsdeletevalue;  Components: applications
+Root: HKCR; Subkey: ".ecalmeas";                                                    ValueType: string; ValueName: "";          ValueData: "ecal_play_gui";                             Flags: uninsdeletevalue;  Components: applications
 Root: HKCR; Subkey: "ecal_play_gui";                                                ValueType: string; ValueName: "";          ValueData: "eCAL Player Configuration";                 Flags: uninsdeletekey;    Components: applications
 Root: HKCR; Subkey: "ecal_play_gui\DefaultIcon";                                    ValueType: string; ValueName: "";          ValueData: "{app}\bin\ecal_play_gui.exe,0";                                       Components: applications
 Root: HKCR; Subkey: "ecal_play_gui\shell\open\command";                             ValueType: string; ValueName: "";          ValueData: """{app}\bin\ecal_play_gui.exe"" ""%1""";                              Components: applications

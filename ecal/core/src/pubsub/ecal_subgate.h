@@ -28,7 +28,7 @@
 #include "readwrite/ecal_reader.h"
 
 #include <atomic>
-#include <mutex>
+#include <shared_mutex>
 #include <string>
 #include <unordered_map>
 
@@ -60,13 +60,8 @@ namespace eCAL
 
     // database data reader
     typedef std::unordered_multimap<std::string, CDataReader*> TopicNameDataReaderMapT;
-    std::mutex               m_topic_name_datareader_sync;
+    std::shared_timed_mutex  m_topic_name_datareader_sync;
     TopicNameDataReaderMapT  m_topic_name_datareader_map;
-
-    // database topics
-    typedef std::map<std::string, std::string> TopicNameDescMapT;
-    std::mutex               m_topic_name_desc_sync;
-    TopicNameDescMapT        m_topic_name_desc_map;
 
     eCAL::CThread            m_subtimeout_thread;
     int CheckTimeouts();

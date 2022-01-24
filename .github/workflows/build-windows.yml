@@ -26,7 +26,8 @@ jobs:
         nuget-version: '5.8.x'
         
     - name: Install Dependencies
-      run: choco install doxygen.install
+      # choco install of version 1.9.3 produced a checksum error
+      run: choco install doxygen.install --version=1.9.2
 
     - name: Uninstall Chocolatey
       run: move "$env:PROGRAMDATA\chocolatey" "$env:PROGRAMDATA\_chocolatey"
@@ -105,6 +106,8 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_CURL=ON ^
         -DECAL_THIRDPARTY_BUILD_GTEST=ON ^
         -DECAL_THIRDPARTY_BUILD_HDF5=ON ^
+        -DECAL_THIRDPARTY_BUILD_RECYCLE=ON ^
+        -DECAL_THIRDPARTY_BUILD_TCPUB=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Debug ^
@@ -140,6 +143,8 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_CURL=ON ^
         -DECAL_THIRDPARTY_BUILD_GTEST=ON ^
         -DECAL_THIRDPARTY_BUILD_HDF5=ON ^
+        -DECAL_THIRDPARTY_BUILD_RECYCLE=ON ^
+        -DECAL_THIRDPARTY_BUILD_TCPUB=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Release ^

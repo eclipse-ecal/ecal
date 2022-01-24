@@ -343,6 +343,28 @@ namespace eCAL
     m_impl->AddFile(ini_file_);
   }
 
+  bool CConfig::Validate()
+  {
+    // ------------------------------------------------------------------
+    // UDP and TCP publlisher mode should not set to "auto (2)" both
+    // 
+    // [publisher]
+    // use_tcp    = 2
+    // use_udp_mc = 2
+    // ------------------------------------------------------------------
+    {
+      int use_tcp    = get("publisher", "use_tcp",    0);
+      int use_udp_mc = get("publisher", "use_udp_mc", 0);
+      if ((use_tcp == 2) && (use_udp_mc == 2))
+      {
+        std::cerr << "eCAL config error: to set [publisher/use_tcp] and [publisher/use_udp_mc] both on auto mode (2) is not allowed" << std::endl;
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   bool CConfig::get(const std::string& section_, const std::string& key_, bool default_)
   {
     std::string default_s("false");

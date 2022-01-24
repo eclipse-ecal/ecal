@@ -249,12 +249,9 @@ namespace eCAL
     return false;
   }
 
-  size_t CSyncMemoryFile::Write(const CDataWriterBase::SWriterData& data_)
+  bool CSyncMemoryFile::Write(const CDataWriterBase::SWriterData& data_)
   {
     // write header and payload into the memory file
-
-    if (!data_.buf)      return 0;
-    if (data_.len == 0)  return 0;
 
 #ifndef NDEBUG
     // log it
@@ -266,7 +263,7 @@ namespace eCAL
     {
       // log it
       Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Write::IsCreated - FAILED");
-      return 0;
+      return false;
     }
 
     // create user file header
@@ -301,11 +298,11 @@ namespace eCAL
       // destroy and
       Destroy();
       // recreate it with the same size
-      if (!Create(m_base_name, memfile_size)) return 0;
+      if (!Create(m_base_name, memfile_size)) return false;
       // then reopen
       opened = m_memfile.GetWriteAccess(PUB_MEMFILE_OPEN_TO);
       // still no chance ? hell .... we give up
-      if (!opened) return 0;
+      if (!opened) return false;
     }
 
     // now write content
@@ -316,7 +313,10 @@ namespace eCAL
     written &= m_memfile.Write(&memfile_hdr, memfile_hdr.hdr_size, wbytes) > 0;
     wbytes += memfile_hdr.hdr_size;
     // write the buffer
-    written &= m_memfile.Write(data_.buf, data_.len, wbytes) > 0;
+    if (data_.len > 0)
+    {
+      written &= m_memfile.Write(data_.buf, data_.len, wbytes) > 0;
+    }
     // close memory file
     m_memfile.ReleaseWriteAccess();
 
@@ -335,11 +335,8 @@ namespace eCAL
     }
 #endif
 
-    // if we failed return 0
-    if (!written) return 0;
-
     // return success
-    return data_.len;
+    return written;
   }
 
   std::string CSyncMemoryFile::GetName()

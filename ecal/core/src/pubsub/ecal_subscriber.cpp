@@ -187,6 +187,16 @@ namespace eCAL
   size_t CSubscriber::Receive(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */) const
   {
     if(!m_created) return(0);
+    if (m_datareader->Receive(buf_, time_, rcv_timeout_))
+    {
+      return(buf_.size());
+    }
+    return(0);
+  }
+
+  bool CSubscriber::ReceiveBuffer(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */) const
+  {
+    if (!m_created) return(false);
     return(m_datareader->Receive(buf_, time_, rcv_timeout_));
   }
 

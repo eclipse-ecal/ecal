@@ -42,6 +42,8 @@ namespace eCAL
     void OverwriteKeys(const std::vector<std::string>& key_vec_);
     void AddFile(std::string& ini_file_);
 
+    bool Validate();
+
     // common getter
     bool        get(const std::string& section_, const std::string& key_, bool        default_);
     int         get(const std::string& section_, const std::string& key_, int         default_);

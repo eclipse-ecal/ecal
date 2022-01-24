@@ -121,6 +121,7 @@ namespace eCAL
     // existing while construction
     if (m_tlayer.sm_udp_mc  == TLayer::smode_none) m_tlayer.sm_udp_mc = TLayer::eSendMode(eCALPAR(PUB, USE_UDP_MC));
     if (m_tlayer.sm_shm     == TLayer::smode_none) m_tlayer.sm_shm    = TLayer::eSendMode(eCALPAR(PUB, USE_SHM));
+    if (m_tlayer.sm_tcp     == TLayer::smode_none) m_tlayer.sm_tcp    = TLayer::eSendMode(eCALPAR(PUB, USE_TCP));
     if (m_tlayer.sm_inproc  == TLayer::smode_none) m_tlayer.sm_inproc = TLayer::eSendMode(eCALPAR(PUB, USE_INPROC));
 
     // create data writer
@@ -130,6 +131,7 @@ namespace eCAL
     // set transport layer
     m_datawriter->SetLayerMode(TLayer::tlayer_udp_mc,  m_tlayer.sm_udp_mc);
     m_datawriter->SetLayerMode(TLayer::tlayer_shm,     m_tlayer.sm_shm);
+    m_datawriter->SetLayerMode(TLayer::tlayer_tcp,     m_tlayer.sm_tcp);
     m_datawriter->SetLayerMode(TLayer::tlayer_inproc,  m_tlayer.sm_inproc);
     // create it
     if (!m_datawriter->Create(topic_name_, topic_type_, topic_desc_))
@@ -232,12 +234,16 @@ namespace eCAL
     case TLayer::tlayer_shm:
       m_tlayer.sm_shm = mode_;
       break;
+    case TLayer::tlayer_tcp:
+      m_tlayer.sm_tcp = mode_;
+      break;
     case TLayer::tlayer_inproc:
       m_tlayer.sm_inproc = mode_;
       break;
     case TLayer::tlayer_all:
       m_tlayer.sm_udp_mc  = mode_;
       m_tlayer.sm_shm     = mode_;
+      m_tlayer.sm_tcp     = mode_;
       m_tlayer.sm_inproc  = mode_;
       break;
     default:
@@ -283,21 +289,20 @@ namespace eCAL
     // or we do not have any subscription at all
     // then the data writer will only do some statistics
     // for the monitoring layer and return
-    if (!IsSubscribed()
-      || (buf_ == nullptr)
-      || (len_ == 0))
+    if (!IsSubscribed())
     {
       m_datawriter->RefreshSendCounter();
       return(len_);
     }
 
     // send content via data writer layer
-    size_t size = 0;
-    if (time_ == -1) size = m_datawriter->Write(buf_, len_, eCAL::Time::GetMicroSeconds(), m_id);
-    else             size = m_datawriter->Write(buf_, len_, time_, m_id);
+    bool sent = 0;
+    if (time_ == -1) sent = m_datawriter->Write(buf_, len_, eCAL::Time::GetMicroSeconds(), m_id);
+    else             sent = m_datawriter->Write(buf_, len_, time_, m_id);
 
     // return success
-    return(size);
+    if (sent) return(len_);
+    else      return(0);
   }
 
   size_t CPublisher::Send(const std::string& s_, const long long time_ /* = -1 */) const

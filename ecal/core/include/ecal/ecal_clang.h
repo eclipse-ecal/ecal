@@ -358,6 +358,20 @@ ECAL_API bool sub_get_qos(ECAL_HANDLE handle_, struct SReaderQOSC* qos_);
 ECAL_API int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, const int timeout_);
 
 /**
+ * @brief Receive a message from the publisher (able to process zero length buffer).
+ *
+ * @param       handle_       Subscriber handle.
+ * @param [out] rcv_buf_      Buffer to store the received message content.
+ * @param [out] rcv_buf_len_  Length of allocated buffer,
+ *                            eCAL is allocating the buffer for you, use ecal_free_mem to free the buffer finally.
+ * @param [out] rcv_time_     Time from publisher in us.
+ * @param       timeout_      Maximum time before receive operation returns (in milliseconds, -1 means infinite).
+ *
+ * @return  True if succeeded.
+**/
+ECAL_API bool sub_receive_buffer(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf_len_, long long* rcv_time_, const int timeout_);
+
+/**
  * @brief Add callback function for incoming receives.
  *
  * @param handle_    Subscriber handle.

@@ -241,8 +241,8 @@ namespace eCAL
     inline bool CDynamicSubscriber::Receive(google::protobuf::Message& msg_, long long* time_, int rcv_timeout_)
     {
       std::string rec_buf;
-      size_t rec_len = msg_sub.Receive(rec_buf, time_, rcv_timeout_);
-      if (rec_len == 0) return(false);
+      bool success = msg_sub.ReceiveBuffer(rec_buf, time_, rcv_timeout_);
+      if (!success) return(false);
 
       // Parse current message content
       auto parsed = msg_.ParseFromString(rec_buf);

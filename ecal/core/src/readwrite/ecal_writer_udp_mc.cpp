@@ -92,9 +92,9 @@ namespace eCAL
     return true;
   }
 
-  size_t CDataWriterUdpMC::Write(const SWriterData& data_)
+  bool CDataWriterUdpMC::Write(const SWriterData& data_)
   {
-    if (!m_created) return 0;
+    if (!m_created) return false;
 
     // create new sample
     m_ecal_sample.Clear();
@@ -135,6 +135,6 @@ namespace eCAL
       Logging::Log(log_level_fatal, "CDataWriterUDP::Send failed to send message !");
     }
 
-    return(sent);
+    return(sent > 0);
   }
 }
