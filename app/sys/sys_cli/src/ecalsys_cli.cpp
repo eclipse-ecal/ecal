@@ -86,7 +86,9 @@ int main()
 int main(int argc, char** argv)
 #endif
 {
+#ifdef WIN32
   EcalUtils::WinCpChanger win_cp_changer(CP_UTF8); // The WinCpChanger will set the Codepage back to the original, once destroyed
+#endif // WIN32
 
   // Define the command line object.
   TCLAP::CmdLine cmd(ECAL_SYS_LIB_NAME, ' ', ECAL_SYS_VERSION_STRING);
