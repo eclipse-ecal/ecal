@@ -50,30 +50,6 @@
 
 namespace EcalUtils
 {
-  namespace File
-  {
-    /**
-    * @brief  Checks if file exists
-    *
-    * @param  path   file path
-    *
-    * @return true if exists, false if it does not
-    **/
-    inline bool Exists(const std::string& path)
-    {
-#ifdef _WIN32
-      DWORD attribs = ::GetFileAttributesA(path.c_str());
-      return (attribs != INVALID_FILE_ATTRIBUTES);
-#else
-      struct stat st;
-      if (stat(path.c_str(), &st) == 0)
-        if ((st.st_mode & S_IFREG) != 0)
-          return true;
-      return false;
-#endif  //  _WIN32
-    }
-  }  // namespace File
-
   namespace Filesystem
   {
     /**

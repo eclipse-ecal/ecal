@@ -48,6 +48,7 @@
 #ifdef ECAL_OS_WINDOWS
 #include "ecal_win_main.h"
 #include <iphlpapi.h>
+#include <ecal_utils/str_convert.h>
 #endif /* ECAL_OS_WINDOWS */
 
 #ifdef ECAL_OS_LINUX
@@ -445,9 +446,9 @@ namespace eCAL
     {
       if (g_process_name.empty())
       {
-        char pname[1024] = { 0 };
-        GetModuleFileNameEx(GetCurrentProcess(), 0, pname, 1024);
-        g_process_name = pname;
+        WCHAR pname[1024] = { 0 };
+        GetModuleFileNameExW(GetCurrentProcess(), 0, pname, 1024);
+        g_process_name = EcalUtils::StrConvert::WideToUtf8(pname);
       }
       return(g_process_name);
     }
@@ -533,7 +534,7 @@ namespace eCAL
       }
 
       PROCESS_INFORMATION pi = { 0 };
-      STARTUPINFO si =
+      STARTUPINFOW si =
       {
         sizeof(STARTUPINFO),          //DWORD   cb;
         NULL,                         //LPTSTR  lpReserved;
@@ -555,7 +556,14 @@ namespace eCAL
         NULL                          //HANDLE  hStdError;
       };
 
-      if (CreateProcessA(NULL, (char*)proc_name.c_str(), NULL, NULL, 0, creation_flag, NULL, working_dir.c_str(), (LPSTARTUPINFOA)&si, &pi) != 0)
+      std::wstring w_proc_name   = EcalUtils::StrConvert::Utf8ToWide(proc_name);
+      std::wstring w_working_dir = EcalUtils::StrConvert::Utf8ToWide(working_dir);
+
+      w_proc_name.  push_back('\0'); // 0-termiante string
+      w_working_dir.push_back('\0'); // 0-termiante string
+
+
+      if (CreateProcessW(NULL, &w_proc_name[0], NULL, NULL, 0, creation_flag, NULL, w_working_dir.c_str(), (LPSTARTUPINFOW)&si, &pi) != 0)
       {
         ret_pid = pi.dwProcessId;
       }
@@ -596,7 +604,7 @@ namespace eCAL
       commandline += " /t";
 
       PROCESS_INFORMATION pi = { 0 };
-      STARTUPINFO si =
+      STARTUPINFOW si =
       {
         sizeof(STARTUPINFO),          //DWORD   cb;
         NULL,                         //LPTSTR  lpReserved;
@@ -618,7 +626,10 @@ namespace eCAL
         NULL                          //HANDLE  hStdError;
       };
 
-      if (CreateProcessA(NULL, (char*)commandline.c_str(), NULL, NULL, 0, 0, NULL, NULL, (LPSTARTUPINFOA)&si, &pi) != 0) {
+      std::wstring w_commandline = EcalUtils::StrConvert::Utf8ToWide(commandline);
+      w_commandline.push_back('\0'); // 0-termiante string
+
+      if (CreateProcessW(NULL, &w_commandline[0], NULL, NULL, 0, 0, NULL, NULL, (LPSTARTUPINFOW)&si, &pi) != 0) {
         // Wait until child process exits.
         WaitForSingleObject(pi.hProcess, INFINITE);
 
@@ -646,7 +657,7 @@ namespace eCAL
       commandline += " /t";
 
       PROCESS_INFORMATION pi = { 0 };
-      STARTUPINFO si =
+      STARTUPINFOW si =
       {
         sizeof(STARTUPINFO),          //DWORD   cb;
         NULL,                         //LPTSTR  lpReserved;
@@ -668,7 +679,10 @@ namespace eCAL
         NULL                          //HANDLE  hStdError;
       };
 
-      if (CreateProcessA(NULL, (char*)commandline.c_str(), NULL, NULL, 0, 0, NULL, NULL, (LPSTARTUPINFOA)&si, &pi) != 0) {
+      std::wstring w_commandline = EcalUtils::StrConvert::Utf8ToWide(commandline);
+      w_commandline.push_back('\0'); // 0-termiante string
+
+      if (CreateProcessW(NULL, &w_commandline[0], NULL, NULL, 0, 0, NULL, NULL, (LPSTARTUPINFOW)&si, &pi) != 0) {
         // Wait until child process exits.
         WaitForSingleObject(pi.hProcess, INFINITE);
 

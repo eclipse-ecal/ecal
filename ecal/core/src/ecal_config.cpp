@@ -64,23 +64,13 @@ namespace
 
   bool direxists(const std::string& path_)
   {
-#ifdef ECAL_OS_WINDOWS
-    DWORD dwAttrib = GetFileAttributes(path_.c_str());
-    return(dwAttrib != INVALID_FILE_ATTRIBUTES && (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
-#endif
-#ifdef ECAL_OS_LINUX
-    struct stat sb;
-    return(stat(path_.c_str(), &sb) == 0 && S_ISDIR(sb.st_mode));
-#endif
+    EcalUtils::Filesystem::FileStatus status(path_, EcalUtils::Filesystem::Current);
+    return (status.IsOk() && (status.GetType() == EcalUtils::Filesystem::Type::Dir));
   }
 
   void createdir(const std::string& path_)
   {
-#ifdef ECAL_OS_WINDOWS
-    CreateDirectoryA(path_.c_str(), NULL);
-#else
-    mkdir(path_.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
-#endif
+    EcalUtils::Filesystem::MkDir(path_, EcalUtils::Filesystem::Current);
   }
 }
 

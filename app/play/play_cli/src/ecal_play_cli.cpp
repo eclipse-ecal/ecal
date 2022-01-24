@@ -211,7 +211,11 @@ void printMeasurementInformation(std::shared_ptr<EcalPlay> ecal_player)
   }
 }
 
+#ifdef WIN32
+int main()
+#else
 int main(int argc, char *argv[])
+#endif // WIN32
 {
   TCLAP::CmdLine cmd("eCAL Player", ' ', EcalPlayGlobals::VERSION_STRING);
   

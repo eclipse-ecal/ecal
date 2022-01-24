@@ -43,7 +43,6 @@ set(ecalhdf5_src
     src/eh5_meas_file_v5.cpp
     src/eh5_meas_file_v5.h
     src/eh5_meas_impl.h
-    src/eh5_util.h
     src/escape.cpp
     src/escape.h
 )

@@ -28,15 +28,20 @@
 #include <list>
 
 #ifdef WIN32
-#if defined(_MSC_VER) && defined(__clang__) && !defined(CINTERFACE)
-#define CINTERFACE
-#endif
-#include <windows.h>
-#include <direct.h>
+  #if defined(_MSC_VER) && defined(__clang__) && !defined(CINTERFACE)
+    #define CINTERFACE
+  #endif
+
+  #define WIN32_LEAN_AND_MEAN
+  #define NOMINMAX
+  #include <windows.h>
+  #include <direct.h>
+
+  #include <ecal_utils/str_convert.h>
 #else
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <unistd.h>
 #endif  // WIN32
 
 namespace Utility
@@ -54,7 +59,8 @@ namespace Utility
     {
       eType type = eType::unknown;
 #ifdef WIN32
-      DWORD attribs = ::GetFileAttributesA(path.c_str());
+      std::wstring w_path = EcalUtils::StrConvert::Utf8ToWide(path);
+      DWORD attribs = ::GetFileAttributesW(w_path.c_str());
       if (attribs == INVALID_FILE_ATTRIBUTES)
         type = eType::unknown;
       else if ((attribs & FILE_ATTRIBUTE_DIRECTORY) != 0)
@@ -87,8 +93,9 @@ namespace Utility
     **/
     inline bool Exists(const std::string& path)
     {
-#ifdef ECAL_OS_WINDOWS
-      DWORD attribs = ::GetFileAttributesA(path.c_str());
+#ifdef WIN32
+      std::wstring w_path = EcalUtils::StrConvert::Utf8ToWide(path);
+      DWORD attribs = ::GetFileAttributesW(w_path.c_str());
       if (attribs == INVALID_FILE_ATTRIBUTES)
         return false;
 
@@ -127,8 +134,10 @@ namespace Utility
         pre = position;
         if (directory.size() == 0)
           continue;
+
 #ifdef WIN32
-        _mkdir(directory.c_str());
+        std::wstring w_directory = EcalUtils::StrConvert::Utf8ToWide(directory);
+        _mkdir(w_directory.c_str());
 #else
         mkdir(directory.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
 #endif  //  WIN32

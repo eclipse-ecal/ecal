@@ -56,15 +56,13 @@
 
 #ifdef ECAL_OS_WINDOWS
 #include "ecal_win_main.h"
+#include <ecal_utils/filesystem.h>
 
 static bool isDirectory(const std::string& path_)
 {
   if (path_.empty()) return false;
 
-  DWORD attr = GetFileAttributes(path_.c_str());
-  if (attr == INVALID_FILE_ATTRIBUTES)
-    return false;
-  return (attr & FILE_ATTRIBUTE_DIRECTORY) != 0;
+  return EcalUtils::Filesystem::IsDir(path_, EcalUtils::Filesystem::Current);
 }
 
 static std::string get_time_str()

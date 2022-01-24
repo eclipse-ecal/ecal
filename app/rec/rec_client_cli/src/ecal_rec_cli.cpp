@@ -69,8 +69,11 @@ std::chrono::steady_clock::time_point ctrl_exit_until(std::chrono::steady_clock:
 bool                                  ctrl_exit_event(false);
 
 
-
+#ifdef WIN32
+int main()
+#else
 int main(int argc, char** argv)
+#endif // WIN32
 {
   TCLAP::CmdLine cmd("eCAL Recorder", ' ', ECAL_REC_VERSION_STRING);
   
