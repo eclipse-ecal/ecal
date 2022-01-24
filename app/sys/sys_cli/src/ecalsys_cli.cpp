@@ -66,10 +66,28 @@
 
 #include "ecalsys_util.h"
 
+
+#include <ecal_utils/command_line.h>
+#include <ecal_utils/str_convert.h>
+#include <ecal_utils/win_cp_changer.h>
+
+#ifdef WIN32
+  #define WIN32_LEAN_AND_MEAN
+  #define NOMINMAX
+  #include <Windows.h>
+#endif // WIN32
+
+
 bool exit_command_received;
 
+#ifdef WIN32
+int main()
+#else
 int main(int argc, char** argv)
+#endif
 {
+  EcalUtils::WinCpChanger win_cp_changer(CP_UTF8); // The WinCpChanger will set the Codepage back to the original, once destroyed
+
   // Define the command line object.
   TCLAP::CmdLine cmd(ECAL_SYS_LIB_NAME, ' ', ECAL_SYS_VERSION_STRING);
   
@@ -122,7 +140,12 @@ int main(int argc, char** argv)
 
   try
   {
+#ifdef WIN32
+    auto utf8_args_vector = EcalUtils::CommandLine::GetUtf8Argv();
+    cmd.parse(utf8_args_vector);
+#else
     cmd.parse(argc, argv);
+#endif // WIN32
   }
   catch (TCLAP::ArgException& e)
   {
@@ -393,14 +416,57 @@ int main(int argc, char** argv)
   /************************************************************************/
   if(interactive_arg.isSet() || interactive_dont_exit_arg.isSet())
   {
+#ifdef WIN32
+    // Create buffer fo the manual ReadConsoleW call
+    std::wstring w_buffer;
+    w_buffer.reserve(4096);
+#endif // WIN32
+
     std::cout << "Using interactive mode. Type \"help\" to view a list of all commands." << std::endl;
     eCAL::sys::CommandExecutor command_executor(ecalsys_instance, remote_control_host_arg.getValue(), remote_ecalsys_service);
     for(;;)
     {
       std::cout << ">> ";
       std::string line;
+      bool success = false;
 
-      if (!std::getline(std::cin, line))
+#ifdef WIN32
+      HANDLE h_in = GetStdHandle(STD_INPUT_HANDLE);
+      DWORD std_handle_type = GetFileType(h_in);
+      if (std_handle_type == FILE_TYPE_CHAR)
+      {
+        // This is an (interactive) console => read console as UTF16
+        DWORD chars_read(0);
+        w_buffer.resize(4096);
+
+        success = ReadConsoleW(h_in, (LPVOID)(w_buffer.data()), static_cast<DWORD>(w_buffer.size()), &chars_read, NULL) != 0;
+
+        if (success)
+        {
+          w_buffer.resize(chars_read);
+          line = EcalUtils::StrConvert::WideToUtf8(w_buffer);
+
+          // Trim \r\n at the end
+          for (int i = 0; i < 2; i++)
+          {
+            if (line.size() > 0 
+              && ((line.back() == '\r') || (line.back() == '\n')))
+            {
+              line.pop_back();
+            }
+          }
+        }
+      }
+      else
+      {
+        // This is a pipe => read binary data directly as UTF8
+        success = bool(std::getline(std::cin, line));
+      }
+#else
+      success = bool(std::getline(std::cin, line));
+#endif // WIN32
+
+      if (!success)
       {
         std::cout << "Stdin closed." << std::endl;
         break;

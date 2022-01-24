@@ -49,6 +49,7 @@
 
 #include <ecal_utils/command_line.h>
 #include <ecal_utils/str_convert.h>
+#include <ecal_utils/win_cp_changer.h>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -142,11 +143,7 @@ std::unique_ptr<eCAL::rec_cli::command::Record> record_command;
 
 int main(int argc, char** argv)
 {
-#ifdef WIN32
-  int old_console_output_cp = GetConsoleOutputCP();
-  SetConsoleOutputCP(CP_UTF8);
-#endif // WIN32
-
+  EcalUtils::WinCpChanger win_cp_changer(CP_UTF8); // The WinCpChanger will set the Codepage back to the original, once destroyed
 
   // Define the command line object.
   TCLAP::CmdLine cmd(ECAL_REC_NAME, ' ', ECAL_REC_VERSION_STRING);
@@ -1517,11 +1514,6 @@ int main(int argc, char** argv)
   }
 
   std::cout << "Exiting" << std::endl;
-
-#ifdef WIN32
-  if (old_console_output_cp != 0)
-    SetConsoleOutputCP(old_console_output_cp);
-#endif // WIN32
 
   // Interactive mode always return EXIT_SUCCESS
   // Non-interactive mode returns EXIT_FAILURE, if any command has returned an error.
