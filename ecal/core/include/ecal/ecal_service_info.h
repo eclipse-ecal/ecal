@@ -53,10 +53,6 @@ namespace eCAL
   };
   typedef std::vector<SServiceResponse> ServiceResponseVecT; //!< vector of multiple service responses
 
-  // for downwards API compatibilty
-  [[deprecated]]
-  typedef SServiceResponse SServiceInfo; //!< Old service info struct (deprecated)
-
   /**
    * @brief Service method callback function type (low level server interface).
    *

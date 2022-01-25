@@ -122,8 +122,7 @@ namespace eCAL
           }
         }
 
-        remote_ecalsys_service->SetHostName(hostname);
-        bool success = remote_ecalsys_service->Call("StopTasks", task_request_pb, service_response, response_pb);
+        bool success = remote_ecalsys_service->Call(hostname, "StopTasks", task_request_pb, service_response, response_pb);
 
         if (!success)
         {

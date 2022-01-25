@@ -232,7 +232,7 @@ namespace eCAL
     {
       if (!m_created) return false;
       m_method_callback = callback_;
-      return eCAL_Server_AddMethodCallback(m_service, method_.c_str(), req_type_.c_str(), resp_type_.c_str(), &CServiceServer::MethodCallback, this) != 0;
+      return eCAL_Server_AddMethodCallbackC(m_service, method_.c_str(), req_type_.c_str(), resp_type_.c_str(), &CServiceServer::MethodCallback, this) != 0;
     }
 
     bool RemMethodCallback(const std::string& method_)

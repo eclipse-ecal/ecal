@@ -53,7 +53,7 @@ int main(int argc, char **argv)
       PingRequest        ping_request;
       PingResponse       ping_response;
       ping_request.set_message("PING");
-      if (ping_client.Call("Ping", ping_request, service_response, ping_response))
+      if (ping_client.Call("", "Ping", ping_request, service_response, ping_response))
       {
         std::cout << std::endl << "PingService::Ping method called with message : " << ping_request.message() << std::endl;
         switch (service_response.call_state)

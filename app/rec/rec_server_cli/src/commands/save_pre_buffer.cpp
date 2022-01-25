@@ -91,8 +91,7 @@ namespace eCAL
         eCAL::pb::rec_server::GenericRequest     request_pb;
         eCAL::pb::rec_server::JobStartedResponse response_pb;
 
-        remote_rec_server_service->SetHostName(hostname);
-        bool success = remote_rec_server_service->Call("SaveBuffer", request_pb, service_response, response_pb);
+        bool success = remote_rec_server_service->Call(hostname, "SaveBuffer", request_pb, service_response, response_pb);
 
         // Service call failed
         if (!success)

@@ -114,7 +114,7 @@ namespace eCAL
       }
 
       /**
-       * @brief Call a method of this service, response will be returned in service_response_ and response_ (first matching service only !).
+       * @brief Call method of this service, for specific host.
        * 
        * This method is deprecated. Instead using
        * 
@@ -124,7 +124,7 @@ namespace eCAL
        *            pb::protobuf_message_request_type   msg_request_pb;
        *            pb::protobuf_message_response_type  msg_response_pb;
        *
-       *            auto success = my_service.Call("service_name", msg_request_pb, srv_response, msg_response_pb);
+       *            auto success = my_service.Call("host_name", "service_name", msg_request_pb, srv_response, msg_response_pb);
        *            if (success)
        *            {
        *              // process msg_response_pb here
@@ -151,18 +151,20 @@ namespace eCAL
        *            }
        * @endcode
        *
+       * @param       host_name_         Host name.
        * @param       method_name_       Method name.
        * @param       request_           Request message.
        * @param [out] service_response_  Service response struct for detailed informations.
-       * @param [out] response_          Response string.
+       * @param [out] response_          Response message.
        *
        * @return  True if successful.
       **/
       [[deprecated]]
-      bool Call(const std::string& method_name_, const google::protobuf::Message& request_, struct SServiceResponse& service_response_, google::protobuf::Message& response_)
+      bool Call(const std::string& host_name_, const std::string& method_name_, const google::protobuf::Message& request_, struct SServiceResponse& service_response_, google::protobuf::Message& response_)
       {
         ServiceResponseVecT service_response_vec;
         const int timeout_(-1);
+        SetHostName(host_name_);
         if (Call(method_name_, request_.SerializeAsString(), timeout_, &service_response_vec))
         {
           if (service_response_vec.size() > 0)

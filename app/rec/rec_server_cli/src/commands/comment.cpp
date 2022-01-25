@@ -118,8 +118,7 @@ namespace eCAL
         request_pb.set_meas_id(meas_id);
         request_pb.set_comment(*comment);
 
-        remote_rec_server_service->SetHostName(hostname);
-        bool success = remote_rec_server_service->Call("AddComment", request_pb, service_response, response_pb);
+        bool success = remote_rec_server_service->Call(hostname, "AddComment", request_pb, service_response, response_pb);
 
         // Service call failed
         if (!success)

@@ -56,7 +56,7 @@ int main(int argc, char **argv)
   hserver = eCAL_Server_Create("service1");
 
   // add method callback for method "echo"
-  eCAL_Server_AddMethodCallback(hserver, "echo", "", "", OnMethodCallback, 0);
+  eCAL_Server_AddMethodCallbackC(hserver, "echo", "", "", OnMethodCallback, 0);
 
   // idle
   while (eCAL_Ok())

@@ -1038,7 +1038,7 @@ extern "C"
     return(1);
   }
 
-  ECALC_API int eCAL_Server_AddMethodCallback(ECAL_HANDLE handle_, const char* method_, const char* req_type_, const char* resp_type_, MethodCallbackCT callback_, void* par_)
+  ECALC_API int eCAL_Server_AddMethodCallbackC(ECAL_HANDLE handle_, const char* method_, const char* req_type_, const char* resp_type_, MethodCallbackCT callback_, void* par_)
   {
     if (handle_ == NULL) return(0);
     eCAL::CServiceServer* server = static_cast<eCAL::CServiceServer*>(handle_);

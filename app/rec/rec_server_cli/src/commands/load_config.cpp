@@ -103,8 +103,7 @@ namespace eCAL
 
         request_pb.set_config_path(argv[0]);
 
-        remote_rec_server_service->SetHostName(hostname);
-        bool success = remote_rec_server_service->Call("LoadConfigFile", request_pb, service_response, response_pb);
+        bool success = remote_rec_server_service->Call(hostname, "LoadConfigFile", request_pb, service_response, response_pb);
 
         // Service call failed
         if (!success)
