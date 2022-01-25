@@ -1,4 +1,4 @@
-name: Build macOS Catalina 10.15
+name: Build macOS
 
 on:  
   push:
