@@ -95,9 +95,9 @@
 
 #define NET_NPCAP_ENABLED                           false
 
-#define NET_TCPUB_NUM_EXECUTOR_READER                 4
-#define NET_TCPUB_NUM_EXECUTOR_WRITER                 4
-#define NET_TCPUB_MAX_RECONNECTIONS                   5
+#define NET_TCP_PUBSUB_NUM_EXECUTOR_READER          4
+#define NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER          4
+#define NET_TCP_PUBSUB_MAX_RECONNECTIONS            5
 
 /**********************************************************************************************/
 /*                                     iceoryx settings                                       */

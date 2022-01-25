@@ -25,8 +25,8 @@
 
 #include "readwrite/ecal_reader_layer.h"
 
-#include <tcpub/executor.h>
-#include <tcpub/subscriber.h>
+#include <tcp_pubsub/executor.h>
+#include <tcp_pubsub/subscriber.h>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -45,14 +45,14 @@ namespace eCAL
   public:
     CDataReaderTCP();
 
-    bool Create(std::shared_ptr<tcpub::Executor>& executor_);
+    bool Create(std::shared_ptr<tcp_pubsub::Executor>& executor_);
     bool Destroy();
 
     bool SetConnection(const std::string& host_name_, uint16_t port_);
 
   private:
-    void OnTcpMessage(const tcpub::CallbackData& callback_data);
-    std::shared_ptr<tcpub::Subscriber> m_subscriber;
+    void OnTcpMessage(const tcp_pubsub::CallbackData& callback_data);
+    std::shared_ptr<tcp_pubsub::Subscriber> m_subscriber;
     eCAL::pb::Sample                   m_ecal_header;
   };
 
@@ -70,7 +70,7 @@ namespace eCAL
     void SetConnectionParameter(SReaderLayerPar& /*par_*/);
 
   private:
-    std::shared_ptr<tcpub::Executor> m_executor;
+    std::shared_ptr<tcp_pubsub::Executor> m_executor;
 
     typedef std::unordered_map<std::string, std::shared_ptr<CDataReaderTCP>> DataReaderTCPMapT;
     std::mutex        m_datareadertcp_sync;
