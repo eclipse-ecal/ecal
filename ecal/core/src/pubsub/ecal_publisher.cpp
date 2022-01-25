@@ -200,7 +200,8 @@ namespace eCAL
 
   bool CPublisher::SetGenericDescription(const std::string &generic_desc_)
   {
-    return true;
+    if(!m_datawriter) return false;
+    return m_datawriter->SetGenericDescription(generic_desc_);
   }
 
   bool CPublisher::ShareType(bool state_ /*= true*/)
@@ -361,7 +362,7 @@ namespace eCAL
   std::string CPublisher::GetGenericDescription() const
   {
     if(!m_datawriter) return("");
-    return("");
+    return(m_datawriter->GetGenericDescription());
   }
 
   void CPublisher::InitializeQOS()

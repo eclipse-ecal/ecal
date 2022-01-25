@@ -57,6 +57,7 @@ namespace eCAL
     bool Destroy();
 
     bool SetDescription(const std::string& topic_desc_);
+    bool SetGenericDescription(const std::string& generic_desc_);
 
     void ShareType(bool state_);
     void ShareDescription(bool state_);
@@ -98,6 +99,7 @@ namespace eCAL
     const std::string& GetTopicID() const {return(m_topic_id);}
     const std::string& GetTypeName() const {return(m_topic_type);}
     const std::string& GetDescription() const {return(m_topic_desc);}
+    const std::string& GetGenericDescription() const {return(m_generic_desc);}
     long long GetClock() const {return(m_clock);}
     long GetFrequency() const {return(m_freq);}
 
@@ -122,6 +124,7 @@ namespace eCAL
     std::string        m_topic_id;
     std::string        m_topic_type;
     std::string        m_topic_desc;
+    std::string        m_generic_desc;
     size_t             m_topic_size;
 
     QOS::SWriterQOS    m_qos;
