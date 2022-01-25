@@ -275,6 +275,7 @@ namespace eCAL
     ecal_reg_sample_mutable_topic->set_tid(m_topic_id);
     if (m_use_ttype) ecal_reg_sample_mutable_topic->set_ttype(m_topic_type);
     if (m_use_tdesc) ecal_reg_sample_mutable_topic->set_tdesc(m_topic_desc);
+    ecal_reg_sample_mutable_topic->set_tgeneric_desc(m_generic_desc);
     ecal_reg_sample_mutable_topic->set_tsize(google::protobuf::int32(m_topic_size));
     // udp multicast layer
     {
@@ -356,6 +357,22 @@ namespace eCAL
   {
     m_qos = qos_;
     return (!m_created);
+  }
+
+  bool CDataReader::SetGenericDescription(const std::string& generic_desc_)
+  {
+    bool force = m_generic_desc != generic_desc_;
+    m_generic_desc = generic_desc_;
+
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::SetGenericDescription");
+#endif
+
+    // register it
+    DoRegister(force);
+
+    return(true);
   }
 
   bool CDataReader::Receive(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */)

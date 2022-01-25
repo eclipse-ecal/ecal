@@ -71,6 +71,8 @@ namespace eCAL
 
     void SetID(const std::set<long long>& id_set_);
 
+    bool SetGenericDescription(const std::string& generic_desc_);
+
     void ApplyLocPublication(const std::string& process_id_);
     void ApplyExtPublication(const std::string& host_name_);
 
@@ -90,6 +92,7 @@ namespace eCAL
     const std::string GetTopicName()   const {return(m_topic_name);}
     const std::string GetTopicID()     const {return(m_topic_id);}
     const std::string GetTypeName()    const {return(m_topic_type);}
+    const std::string GetGenericDescription() const {return(m_generic_desc);}
     const std::string GetDescription() const;
 
     void RefreshRegistration();
@@ -113,6 +116,7 @@ namespace eCAL
     std::string                               m_topic_id;
     std::string                               m_topic_type;
     std::string                               m_topic_desc;
+    std::string                               m_generic_desc;
     std::atomic<size_t>                       m_topic_size;
 
     QOS::SReaderQOS                           m_qos;
