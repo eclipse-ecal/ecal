@@ -184,6 +184,11 @@ namespace eCAL
     return(true);
   }
 
+  bool CSubscriber::SetGenericDescription(const std::string &generic_desc_)
+  {
+    return true;
+  }
+
   size_t CSubscriber::Receive(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */) const
   {
     if(!m_created) return(0);
@@ -248,6 +253,12 @@ namespace eCAL
   {
     if(!m_datareader) return("");
     return(m_datareader->GetDescription());
+  }
+
+  std::string CSubscriber::GetGenericDescription() const
+  {
+    if(!m_datareader) return("");
+    return("");
   }
 
   bool CSubscriber::SetTimeout(int timeout_)

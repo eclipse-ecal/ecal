@@ -93,7 +93,18 @@ extern "C"
    * @return  None zero if succeeded.
   **/
   ECALC_API int eCAL_Sub_SetID(ECAL_HANDLE handle_, const long long* id_array_, const int id_num_);
-  
+
+  /**
+   * @brief Setup generic subscriber description. 
+   *
+   * @param handle_          Publisher handle. 
+   * @param topic_desc_      Generic description. 
+   * @param topic_desc_len_  Generic description length. 
+   *
+   * @return  None zero if succeeded.
+  **/
+  ECALC_API int eCAL_Sub_SetGenericDescription(ECAL_HANDLE handle_, const char* generic_desc_, int generic_desc_len_);
+
   /**
    * @brief Receive a message from the publisher
    *

@@ -75,6 +75,17 @@ extern "C"
   ECALC_API int eCAL_Pub_SetDescription(ECAL_HANDLE handle_, const char* topic_desc_, int topic_desc_len_);
 
   /**
+   * @brief Setup generic publisher description. 
+   *
+   * @param handle_          Publisher handle. 
+   * @param topic_desc_      Generic description. 
+   * @param topic_desc_len_  Generic description length. 
+   *
+   * @return  None zero if succeeded.
+  **/
+  ECALC_API int eCAL_Pub_SetGenericDescription(ECAL_HANDLE handle_, const char* generic_desc_, int generic_desc_len_);
+
+  /**
    * @brief Share topic type.
    *
    * @param handle_ Publisher handle. 

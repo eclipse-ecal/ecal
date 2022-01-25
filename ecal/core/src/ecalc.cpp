@@ -488,6 +488,14 @@ extern "C"
     return(0);
   }
 
+  ECALC_API int eCAL_Pub_SetGenericDescription(ECAL_HANDLE handle_, const char* generic_desc_, int generic_desc_len_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
+    if (pub->SetGenericDescription(std::string(generic_desc_, static_cast<size_t>(generic_desc_len_)))) return(1);
+    return(0);
+  }
+
   ECALC_API int eCAL_Pub_ShareType(ECAL_HANDLE handle_, int state_)
   {
     if (handle_ == NULL) return(0);
@@ -695,6 +703,14 @@ extern "C"
     }
     if (sub->SetID(id_set)) return(1);
     return(1);
+  }
+
+  ECALC_API int eCAL_Sub_SetGenericDescription(ECAL_HANDLE handle_, const char* generic_desc_, int generic_desc_len_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
+    if (sub->SetGenericDescription(std::string(generic_desc_, static_cast<size_t>(generic_desc_len_)))) return(1);
+    return(0);
   }
 
   ECALC_API int eCAL_Sub_GetQOS(ECAL_HANDLE handle_, struct SReaderQOSC* qos_)

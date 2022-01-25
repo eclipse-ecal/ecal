@@ -133,6 +133,16 @@ namespace eCAL
     **/
     bool SetDescription(const std::string& topic_desc_);
 
+
+    /**
+     * @brief Setup generic topic description. 
+     *
+     * @param generic_desc_   Description string. 
+     *
+     * @return  True if it succeeds, false if it fails. 
+    **/
+    bool SetGenericDescription(const std::string &generic_desc_);
+
     /**
      * @brief Share topic type.
      *
@@ -314,6 +324,13 @@ namespace eCAL
      * @return  The description. 
     **/
     std::string GetDescription() const;
+
+    /**
+     * @brief Gets generic description for publisher. 
+     *
+     * @return  The description. 
+    **/
+    std::string GetGenericDescription() const;
 
     /**
      * @brief Dump the whole class state into a string. 
