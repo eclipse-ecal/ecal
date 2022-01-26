@@ -83,6 +83,16 @@ Classes and Structs
 .. toctree::
    :maxdepth: 5
 
+   structeCAL_1_1SClientAttr.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structeCAL_1_1SClientEventCallbackData.rst
+
+.. toctree::
+   :maxdepth: 5
+
    structeCAL_1_1SEventHandle.rst
 
 .. toctree::
@@ -98,7 +108,17 @@ Classes and Structs
 .. toctree::
    :maxdepth: 5
 
-   structeCAL_1_1SServiceInfo.rst
+   structeCAL_1_1SServerEventCallbackData.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structeCAL_1_1SServiceAttr.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structeCAL_1_1SServiceResponse.rst
 
 .. toctree::
    :maxdepth: 5
@@ -216,7 +236,12 @@ Functions
 .. toctree::
    :maxdepth: 5
 
-   function_ecal__clang_8h_1aa62e7968018d3c25e443ba6a7278fe06.rst
+   function_ecal__clang_8h_1a8f33dfb4c563e82391cb4a0e3d1b0089.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_ecal__clang_8h_1a7b5e4e316b89e78eef3da213d4f9dd8d.rst
 
 .. toctree::
    :maxdepth: 5
@@ -1063,6 +1088,11 @@ Typedefs
 .. toctree::
    :maxdepth: 5
 
+   typedef_ecal__callback_8h_1a5fa5b41873ca4d69095ec3bdfd84e8d9.rst
+
+.. toctree::
+   :maxdepth: 5
+
    typedef_eh5__types_8h_1a753fcaffdfc6a8ee1681c1099adde028.rst
 
 .. toctree::
@@ -1093,7 +1123,17 @@ Typedefs
 .. toctree::
    :maxdepth: 5
 
-   typedef_ecal__service__info_8h_1a35d0d500d3f8aed326e36ab5ddd3c535.rst
+   typedef_ecal__service__info_8h_1a572360f74991bd1369ea24b5b7a0b6bb.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_ecal__callback_8h_1a4421750eb800d4ae997ed45622bece4b.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_ecal__service__info_8h_1a36106945ed691d2225be35b428072270.rst
 
 .. toctree::
    :maxdepth: 5

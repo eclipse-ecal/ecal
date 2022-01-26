@@ -35,25 +35,29 @@ Program Listing for File ecal_service_info.h
    
    #include <functional>
    #include <string>
+   #include <vector>
    
    namespace eCAL
    {
-     struct SServiceInfo
+     struct SServiceResponse
      {
-       SServiceInfo()
+       SServiceResponse()
        {
          ret_state  = 0;
          call_state = call_state_none;
        };
        std::string  host_name;      
        std::string  service_name;   
+       std::string  service_id;     
        std::string  method_name;    
        std::string  error_msg;      
        int          ret_state;      
        eCallState   call_state;     
+       std::string  response;       
      };
+     typedef std::vector<SServiceResponse> ServiceResponseVecT; 
    
      typedef std::function<int(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_)> MethodCallbackT;
    
-     typedef std::function<void(const struct SServiceInfo& service_info_, const std::string& response_)> ResponseCallbackT;
+     typedef std::function<void(const struct SServiceResponse& service_response_)> ResponseCallbackT;
    };

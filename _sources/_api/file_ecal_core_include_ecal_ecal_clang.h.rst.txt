@@ -5,7 +5,7 @@ File ecal_clang.h
 =================
 
 
-eCAL C language interface 
+eCAL C language interface (to wrap ecal into other languages easily) 
 
 
 
@@ -41,7 +41,9 @@ Functions
 ---------
 
 
-- :ref:`exhale_function_ecal__clang_8h_1aa62e7968018d3c25e443ba6a7278fe06`
+- :ref:`exhale_function_ecal__clang_8h_1a8f33dfb4c563e82391cb4a0e3d1b0089`
+
+- :ref:`exhale_function_ecal__clang_8h_1a7b5e4e316b89e78eef3da213d4f9dd8d`
 
 - :ref:`exhale_function_ecal__clang_8h_1a10bdcde88fbe9b6c7491b2b3ba794e4e`
 

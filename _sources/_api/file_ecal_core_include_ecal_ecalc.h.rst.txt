@@ -30,6 +30,8 @@ Includes
 --------
 
 
+- ``ecal/cimpl/ecal_client_cimpl.h``
+
 - ``ecal/cimpl/ecal_core_cimpl.h``
 
 - ``ecal/cimpl/ecal_event_cimpl.h``
@@ -46,7 +48,7 @@ Includes
 
 - ``ecal/cimpl/ecal_qos_cimpl.h``
 
-- ``ecal/cimpl/ecal_service_cimpl.h``
+- ``ecal/cimpl/ecal_server_cimpl.h``
 
 - ``ecal/cimpl/ecal_subscriber_cimpl.h``
 

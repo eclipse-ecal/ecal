@@ -5,7 +5,7 @@ File ecal_client.h
 ==================
 
 
-eCAL service interface 
+eCAL client interface 
 
 
 
@@ -30,9 +30,13 @@ Includes
 --------
 
 
+- ``ecal/ecal_callback.h`` (:ref:`file_ecal_core_include_ecal_ecal_callback.h`)
+
 - ``ecal/ecal_os.h`` (:ref:`file_ecal_core_include_ecal_ecal_os.h`)
 
 - ``ecal/ecal_service_info.h`` (:ref:`file_ecal_core_include_ecal_ecal_service_info.h`)
+
+- ``iostream``
 
 - ``string``
 

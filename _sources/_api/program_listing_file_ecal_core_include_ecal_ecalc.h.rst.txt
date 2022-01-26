@@ -43,6 +43,7 @@ Program Listing for File ecalc.h
    // all ecal c includes
    #include <ecal/ecal_os.h>
    #include <ecal/ecal_defs.h>
+   #include <ecal/cimpl/ecal_client_cimpl.h>
    #include <ecal/cimpl/ecal_core_cimpl.h>
    #include <ecal/cimpl/ecal_event_cimpl.h>
    #include <ecal/cimpl/ecal_log_cimpl.h>
@@ -50,7 +51,7 @@ Program Listing for File ecalc.h
    #include <ecal/cimpl/ecal_process_cimpl.h>
    #include <ecal/cimpl/ecal_publisher_cimpl.h>
    #include <ecal/cimpl/ecal_qos_cimpl.h>
-   #include <ecal/cimpl/ecal_service_cimpl.h>
+   #include <ecal/cimpl/ecal_server_cimpl.h>
    #include <ecal/cimpl/ecal_subscriber_cimpl.h>
    #include <ecal/cimpl/ecal_proto_dyn_json_subscriber_cimpl.h>
    #include <ecal/cimpl/ecal_time_cimpl.h>

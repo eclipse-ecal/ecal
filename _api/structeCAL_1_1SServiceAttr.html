@@ -8,7 +8,7 @@
     <meta name="docsearch:release" content="" />
     <meta name="docsearch:version" content="" />
 
-    <title>Function client_call_method &mdash; eCAL Documentation  documentation</title>
+    <title>Struct SServiceAttr &mdash; eCAL Documentation  documentation</title>
 
     <link rel="shortcut icon" href="../_static/img/favicon.png" />
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
@@ -23,8 +23,8 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
     <link rel="up" title="C++" href="ecal_root.html" />
-    <link rel="next" title="Function client_create" href="function_ecal__clang_8h_1a10bdcde88fbe9b6c7491b2b3ba794e4e.html" />
-    <link rel="prev" title="Enum eCAL_Process_eStartMode" href="enum_ecal__process__mode_8h_1ac07aba7e64cb7795b08212f4072658b8.html" />
+    <link rel="next" title="Struct SServiceResponse" href="structeCAL_1_1SServiceResponse.html" />
+    <link rel="prev" title="Struct SServerEventCallbackData" href="structeCAL_1_1SServerEventCallbackData.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
     <script src="../_static/js/modernizr.min.js"></script>
@@ -134,10 +134,14 @@
 <li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1eh5_1_1SEntryInfo.html">Struct SEntryInfo</a></li>
 <li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1QOS_1_1SReaderQOS.html">Struct SReaderQOS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1QOS_1_1SWriterQOS.html">Struct SWriterQOS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SClientAttr.html">Struct SClientAttr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SClientEventCallbackData.html">Struct SClientEventCallbackData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SEventHandle.html">Struct SEventHandle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SPubEventCallbackData.html">Struct SPubEventCallbackData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SReceiveCallbackData.html">Struct SReceiveCallbackData</a></li>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SServiceInfo.html">Struct SServiceInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SServerEventCallbackData.html">Struct SServerEventCallbackData</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Struct SServiceAttr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SServiceResponse.html">Struct SServiceResponse</a></li>
 <li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SSubEventCallbackData.html">Struct SSubEventCallbackData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1TLayer_1_1STLayer.html">Struct STLayer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="classCDynamicSleeper.html">Class CDynamicSleeper</a></li>
@@ -159,7 +163,8 @@
 <li class="toctree-l3"><a class="reference internal" href="enum_ecal__process__severity_8h_1af54a320816f7e73015680c0cef91ca17.html">Enum eCAL_Process_eSeverity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="enum_ecal__process__severity_8h_1a2555c88c6ad7b7279f700f0357a8312a.html">Enum eCAL_Process_eSeverity_Level</a></li>
 <li class="toctree-l3"><a class="reference internal" href="enum_ecal__process__mode_8h_1ac07aba7e64cb7795b08212f4072658b8.html">Enum eCAL_Process_eStartMode</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Function client_call_method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1a8f33dfb4c563e82391cb4a0e3d1b0089.html">Function client_call_method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1a7b5e4e316b89e78eef3da213d4f9dd8d.html">Function client_call_method_async</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1a10bdcde88fbe9b6c7491b2b3ba794e4e.html">Function client_create</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1a7acefeb93d842698df5ade150870d107.html">Function client_destroy</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_ecal__clang_8h_1ade6b59f214874534a6518be2f186eaa0.html">Function client_set_hostname</a></li>
@@ -326,13 +331,16 @@
 <li class="toctree-l3"><a class="reference internal" href="define_eh5__defs_8h_1a2b1361eb83e2597c992f296441ac20e2.html">Define ECAL_HDF5_VERSION_PATCH</a></li>
 <li class="toctree-l3"><a class="reference internal" href="define_ecal__os_8h_1a6debe968e7507b0d497436c312288015.html">Define ECALC_API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="define_ecaltime_8h_1a7fbc67f7baf03488d730190a9b7df7e5.html">Define ECALTIME_API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="typedef_ecal__callback_8h_1a5fa5b41873ca4d69095ec3bdfd84e8d9.html">Typedef eCAL::ClientEventCallbackT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="typedef_eh5__types_8h_1a753fcaffdfc6a8ee1681c1099adde028.html">Typedef eCAL::eh5::EntryInfoSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="typedef_eh5__types_8h_1af075e29570c5ae5b8947a5c47c48c30a.html">Typedef eCAL::eh5::EntryInfoVect</a></li>
 <li class="toctree-l3"><a class="reference internal" href="typedef_ecal__service__info_8h_1ae0436af7a525f2b5fcc30025def57c30.html">Typedef eCAL::MethodCallbackT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="typedef_ecal__callback_8h_1abe3a31dd01a78ed20f8881be6a46dc4a.html">Typedef eCAL::PubEventCallbackT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="typedef_ecal__callback_8h_1a24e137588a5d25b62798efa64dfc8835.html">Typedef eCAL::ReceiveCallbackT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="typedef_ecal__callback_8h_1a6029e274ff176ebb67d94d03a8577b31.html">Typedef eCAL::RegistrationCallbackT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="typedef_ecal__service__info_8h_1a35d0d500d3f8aed326e36ab5ddd3c535.html">Typedef eCAL::ResponseCallbackT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="typedef_ecal__service__info_8h_1a572360f74991bd1369ea24b5b7a0b6bb.html">Typedef eCAL::ResponseCallbackT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="typedef_ecal__callback_8h_1a4421750eb800d4ae997ed45622bece4b.html">Typedef eCAL::ServerEventCallbackT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="typedef_ecal__service__info_8h_1a36106945ed691d2225be35b428072270.html">Typedef eCAL::ServiceResponseVecT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="typedef_ecal__callback_8h_1acfa9950c8768a6a9a4445c8bb0f6cccf.html">Typedef eCAL::SubEventCallbackT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="typedef_ecal__callback_8h_1afa9b0ed5fa82263c5b5a0cb7fe96613d.html">Typedef eCAL::TimerCallbackT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="typedef_ecalc_8h_1a6801786d75d8af7f213d45239018884b.html">Typedef ECAL_HANDLE</a></li>
@@ -513,8 +521,8 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">Function client_call_method</a><ul>
-<li><a class="reference internal" href="#function-documentation">Function Documentation</a></li>
+<li><a class="reference internal" href="#">Struct SServiceAttr</a><ul>
+<li><a class="reference internal" href="#struct-documentation">Struct Documentation</a></li>
 </ul>
 </li>
 </ul>
@@ -527,8 +535,8 @@
                     <div class="rst-content">
 <!-- pager-hidden.html -->
 
-        <a class="no-focus" accesskey="p" href="enum_ecal__process__mode_8h_1ac07aba7e64cb7795b08212f4072658b8.html" tabindex="-1"></a>
-        <a class="no-focus" accesskey="n" href="function_ecal__clang_8h_1a10bdcde88fbe9b6c7491b2b3ba794e4e.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="p" href="structeCAL_1_1SServerEventCallbackData.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="n" href="structeCAL_1_1SServiceResponse.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
@@ -536,10 +544,10 @@
         <li class="breadcrumb-item"><a href="../index.html">Start</a></li>
             <li class="breadcrumb-item"><a href="../ecal_api.html">eCAL API</a></li>
             <li class="breadcrumb-item"><a href="ecal_root.html">C++</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Function client_call_method</li>
+        <li class="breadcrumb-item active" aria-current="page">Struct SServiceAttr</li>
     </ol>
     <div class="breadcrumb-additions">
-        <a class="btn btn-sm btn-light" href="../_sources/_api/function_ecal__clang_8h_1aa62e7968018d3c25e443ba6a7278fe06.rst.txt" rel="nofollow">
+        <a class="btn btn-sm btn-light" href="../_sources/_api/structeCAL_1_1SServiceAttr.rst.txt" rel="nofollow">
             <span class="btn-icon"><span class="fas fa-code"></span></span>
             <span class="btn-text">View source</span>
         </a>
@@ -549,7 +557,7 @@
             <span class="btn-icon"><span class="fas fa-info-circle"></span></span>
             <span class="btn-text">How to edit</span>
         </a>
-        <a class="btn btn-sm btn-light" id="btnEditOnGitHub" href="https://github.com/continental/ecal/blob/master/doc/rst/_api/function_ecal__clang_8h_1aa62e7968018d3c25e443ba6a7278fe06.rst">
+        <a class="btn btn-sm btn-light" id="btnEditOnGitHub" href="https://github.com/continental/ecal/blob/master/doc/rst/_api/structeCAL_1_1SServiceAttr.rst">
             <span class="btn-icon"><span class="fab fa-github"></span></span>
             <span class="btn-text">Edit on GitHub</span>
         </a>
@@ -559,30 +567,68 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="function-client-call-method">
-<span id="exhale-function-ecal-clang-8h-1aa62e7968018d3c25e443ba6a7278fe06"></span><h1>Function client_call_method<a class="headerlink" href="#function-client-call-method" title="Permalink to this headline">¶</a></h1>
+    <div class="section" id="struct-sserviceattr">
+<span id="exhale-struct-structecal-1-1sserviceattr"></span><h1>Struct SServiceAttr<a class="headerlink" href="#struct-sserviceattr" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li><p>Defined in <a class="reference internal" href="file_ecal_core_include_ecal_ecal_clang.h.html#file-ecal-core-include-ecal-ecal-clang-h"><span class="std std-ref">File ecal_clang.h</span></a></p></li>
+<li><p>Defined in <a class="reference internal" href="file_ecal_core_include_ecal_ecal_callback.h.html#file-ecal-core-include-ecal-ecal-callback-h"><span class="std std-ref">File ecal_callback.h</span></a></p></li>
 </ul>
-<div class="section" id="function-documentation">
-<h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Permalink to this headline">¶</a></h2>
-<dl class="cpp function">
-<dt id="_CPPv418client_call_method11ECAL_HANDLEPKcPKcKi">
-<span id="_CPPv318client_call_method11ECAL_HANDLEPKcPKcKi"></span><span id="_CPPv218client_call_method11ECAL_HANDLEPKcPKcKi"></span><span id="client_call_method__ECAL_HANDLE.cCP.cCP.iC"></span><span class="target" id="ecal__clang_8h_1aa62e7968018d3c25e443ba6a7278fe06"></span><span class="pre">ECAL_API</span> <span class="pre">bool</span> <code class="sig-name descname"><span class="pre">client_call_method</span></code><span class="sig-paren">(</span><a class="reference internal" href="typedef_ecalc_8h_1a6801786d75d8af7f213d45239018884b.html#_CPPv411ECAL_HANDLE" title="ECAL_HANDLE"><span class="pre">ECAL_HANDLE</span></a> <em><span class="pre">handle_</span></em>, <em class="property"><span class="pre">const</span></em> <span class="pre">char</span> <span class="pre">*</span><em><span class="pre">method_name_</span></em>, <em class="property"><span class="pre">const</span></em> <span class="pre">char</span> <span class="pre">*</span><em><span class="pre">request_</span></em>, <em class="property"><span class="pre">const</span></em> <span class="pre">int</span> <em><span class="pre">request_len_</span></em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418client_call_method11ECAL_HANDLEPKcPKcKi" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Call method of this service (none blocking variant with callback). </p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>handle_</strong> – Client handle. </p></li>
-<li><p><strong>method_name_</strong> – Method name. </p></li>
-<li><p><strong>request_</strong> – Request message buffer. </p></li>
-<li><p><strong>request_len_</strong> – Request message length.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>True if succeeded. </p>
-</dd>
-</dl>
+<div class="section" id="struct-documentation">
+<h2>Struct Documentation<a class="headerlink" href="#struct-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp struct">
+<dt id="_CPPv4N4eCAL12SServiceAttrE">
+<span id="_CPPv3N4eCAL12SServiceAttrE"></span><span id="_CPPv2N4eCAL12SServiceAttrE"></span><span id="eCAL::SServiceAttr"></span><span class="target" id="structeCAL_1_1SServiceAttr"></span><em class="property"><span class="pre">struct</span> </em><code class="sig-prename descclassname"><span class="pre">eCAL</span><code class="sig-prename descclassname"><span class="pre">::</span></code></code><code class="sig-name descname"><span class="pre">SServiceAttr</span></code><a class="headerlink" href="#_CPPv4N4eCAL12SServiceAttrE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>eCAL service attributes. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt id="_CPPv4N4eCAL12SServiceAttr3keyE">
+<span id="_CPPv3N4eCAL12SServiceAttr3keyE"></span><span id="_CPPv2N4eCAL12SServiceAttr3keyE"></span><span id="eCAL::SServiceAttr::key__ss"></span><span class="target" id="structeCAL_1_1SServiceAttr_1a0d1654876635a8c90b5b26b3f0323a5e"></span><span class="pre">std</span><span class="pre">::</span><span class="pre">string</span> <code class="sig-name descname"><span class="pre">key</span></code><a class="headerlink" href="#_CPPv4N4eCAL12SServiceAttr3keyE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>unique service key (internal) </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N4eCAL12SServiceAttr5hnameE">
+<span id="_CPPv3N4eCAL12SServiceAttr5hnameE"></span><span id="_CPPv2N4eCAL12SServiceAttr5hnameE"></span><span id="eCAL::SServiceAttr::hname__ss"></span><span class="target" id="structeCAL_1_1SServiceAttr_1a105b9481795caee865132433dcecfad5"></span><span class="pre">std</span><span class="pre">::</span><span class="pre">string</span> <code class="sig-name descname"><span class="pre">hname</span></code><a class="headerlink" href="#_CPPv4N4eCAL12SServiceAttr5hnameE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>host name </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N4eCAL12SServiceAttr5pnameE">
+<span id="_CPPv3N4eCAL12SServiceAttr5pnameE"></span><span id="_CPPv2N4eCAL12SServiceAttr5pnameE"></span><span id="eCAL::SServiceAttr::pname__ss"></span><span class="target" id="structeCAL_1_1SServiceAttr_1a2489e2452ca0ecc8a68554032ff52635"></span><span class="pre">std</span><span class="pre">::</span><span class="pre">string</span> <code class="sig-name descname"><span class="pre">pname</span></code><a class="headerlink" href="#_CPPv4N4eCAL12SServiceAttr5pnameE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>process name </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N4eCAL12SServiceAttr5unameE">
+<span id="_CPPv3N4eCAL12SServiceAttr5unameE"></span><span id="_CPPv2N4eCAL12SServiceAttr5unameE"></span><span id="eCAL::SServiceAttr::uname__ss"></span><span class="target" id="structeCAL_1_1SServiceAttr_1ab61d4012dedd1460e9cd40749d77dc5f"></span><span class="pre">std</span><span class="pre">::</span><span class="pre">string</span> <code class="sig-name descname"><span class="pre">uname</span></code><a class="headerlink" href="#_CPPv4N4eCAL12SServiceAttr5unameE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>process unit name </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N4eCAL12SServiceAttr5snameE">
+<span id="_CPPv3N4eCAL12SServiceAttr5snameE"></span><span id="_CPPv2N4eCAL12SServiceAttr5snameE"></span><span id="eCAL::SServiceAttr::sname__ss"></span><span class="target" id="structeCAL_1_1SServiceAttr_1afb255b538350960654dd065dd0d98cfd"></span><span class="pre">std</span><span class="pre">::</span><span class="pre">string</span> <code class="sig-name descname"><span class="pre">sname</span></code><a class="headerlink" href="#_CPPv4N4eCAL12SServiceAttr5snameE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>service name </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N4eCAL12SServiceAttr3sidE">
+<span id="_CPPv3N4eCAL12SServiceAttr3sidE"></span><span id="_CPPv2N4eCAL12SServiceAttr3sidE"></span><span id="eCAL::SServiceAttr::sid__ss"></span><span class="target" id="structeCAL_1_1SServiceAttr_1ad0d8fc6a5950fe4e1432e0d1dc6ed834"></span><span class="pre">std</span><span class="pre">::</span><span class="pre">string</span> <code class="sig-name descname"><span class="pre">sid</span></code><a class="headerlink" href="#_CPPv4N4eCAL12SServiceAttr3sidE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>service id </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N4eCAL12SServiceAttr3pidE">
+<span id="_CPPv3N4eCAL12SServiceAttr3pidE"></span><span id="_CPPv2N4eCAL12SServiceAttr3pidE"></span><span id="eCAL::SServiceAttr::pid__i"></span><span class="target" id="structeCAL_1_1SServiceAttr_1a1a1d2d4278e651f82c6d22935c8d1ab7"></span><span class="pre">int</span> <code class="sig-name descname"><span class="pre">pid</span></code> <span class="pre">=</span> <span class="pre">0</span><a class="headerlink" href="#_CPPv4N4eCAL12SServiceAttr3pidE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>process id </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N4eCAL12SServiceAttr8tcp_portE">
+<span id="_CPPv3N4eCAL12SServiceAttr8tcp_portE"></span><span id="_CPPv2N4eCAL12SServiceAttr8tcp_portE"></span><span id="eCAL::SServiceAttr::tcp_port__unsigned-short"></span><span class="target" id="structeCAL_1_1SServiceAttr_1ad80f83a040aaa430c3f1f3eb0da3909c"></span><span class="pre">unsigned</span> <span class="pre">short</span> <code class="sig-name descname"><span class="pre">tcp_port</span></code> <span class="pre">=</span> <span class="pre">0</span><a class="headerlink" href="#_CPPv4N4eCAL12SServiceAttr8tcp_portE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>service tcp port </p>
+</dd></dl>
+
+</div>
 </dd></dl>
 
 </div>
@@ -595,12 +641,12 @@
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
         <li class="page-item">
-            <a class="page-link" href="enum_ecal__process__mode_8h_1ac07aba7e64cb7795b08212f4072658b8.html" title="Accesskey Alt(+Shift)+p">
+            <a class="page-link" href="structeCAL_1_1SServerEventCallbackData.html" title="Accesskey Alt(+Shift)+p">
                 Previous
             </a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="function_ecal__clang_8h_1a10bdcde88fbe9b6c7491b2b3ba794e4e.html" title="Accesskey Alt(+Shift)+n">
+            <a class="page-link" href="structeCAL_1_1SServiceResponse.html" title="Accesskey Alt(+Shift)+n">
                 Next
             </a>
         </li>
