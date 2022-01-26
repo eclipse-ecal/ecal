@@ -100,6 +100,7 @@ namespace eCAL
       std::string  tid;
       std::string  ttype;
       std::string  tdesc;
+      std::string  tgeneric_desc;
       bool         tlayer_ecal_udp_mc;
       bool         tlayer_ecal_shm;
       bool         tlayer_ecal_tcp;
