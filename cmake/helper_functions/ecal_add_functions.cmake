@@ -81,7 +81,9 @@ function(ecal_add_mon_plugin TARGET_NAME)
   )
   target_compile_definitions(${TARGET_NAME}
     PRIVATE
-      $<$<CONFIG:Release,RelWithDebInfo,MinSizeRel>:QT_NO_DEBUG>
+      $<$<CONFIG:Release>:QT_NO_DEBUG>
+      $<$<CONFIG:RelWithDebInfo>:QT_NO_DEBUG>
+      $<$<CONFIG:MinSizeRel>:QT_NO_DEBUG>
   )
     
 endfunction()
