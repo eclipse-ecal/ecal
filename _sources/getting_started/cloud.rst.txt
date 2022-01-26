@@ -44,7 +44,10 @@ This is done by creating a **multicast route**.
 
 #. Check the IPv4 address of the ethernet adapter you are using to connect your two PCs.
    You can do that by typing ``ipconfig`` in a command prompt.
+   You will need the IP of your *current* machine you are setting the route on.
+   
 #. Open a command prompt with **administrator** privileges
+
 #. Enter the following line and replace xx.xx.xx.xx with your IP address
    
    .. code-block:: bat

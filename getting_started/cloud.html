@@ -627,7 +627,8 @@ This is done by creating a <strong>multicast route</strong>.</p>
 <span id="getting-started-cloud-configuration-on-windows"></span><h2><span class="section-number">4.1. </span><i class="fab fa-windows"></i> Multicast configuration on Windows<a class="headerlink" href="#fa-windows-multicast-configuration-on-windows" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
 <li><p>Check the IPv4 address of the ethernet adapter you are using to connect your two PCs.
-You can do that by typing <code class="docutils literal notranslate"><span class="pre">ipconfig</span></code> in a command prompt.</p></li>
+You can do that by typing <code class="docutils literal notranslate"><span class="pre">ipconfig</span></code> in a command prompt.
+You will need the IP of your <em>current</em> machine you are setting the route on.</p></li>
 <li><p>Open a command prompt with <strong>administrator</strong> privileges</p></li>
 <li><p>Enter the following line and replace xx.xx.xx.xx with your IP address</p>
 <div class="highlight-bat notranslate"><div class="highlight"><pre><span></span>route -p add 239.0.0.0 mask 255.255.255.0 xx.xx.xx.xx
