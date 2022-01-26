@@ -22,7 +22,7 @@ find_package(Threads      REQUIRED)
 find_package(asio         REQUIRED)
 find_package(tclap        REQUIRED)
 find_package(simpleini    REQUIRED)
-find_package(tcpub        REQUIRED)
+find_package(tcp_pubsub        REQUIRED)
 
 if (ECAL_JOIN_MULTICAST_TWICE)
   message(STATUS "eCAL ${PROJECT_NAME}: Enabling Specific Multicast Network Bug Workaround")
@@ -193,7 +193,7 @@ set(ecal_readwrite_header_src
     src/readwrite/ecal_writer_inproc.h
     src/readwrite/ecal_writer_tcp.h
     src/readwrite/ecal_writer_udp_mc.h
-    src/readwrite/ecal_tcpub_logger.h
+    src/readwrite/ecal_tcp_pubsub_logger.h
 )
 
 if(ECAL_LAYER_ICEORYX)
@@ -431,7 +431,7 @@ target_link_libraries(${PROJECT_NAME}
     Threads::Threads
     eCAL::apps
     eCAL::utils
-    tcpub::tcpub
+    tcp_pubsub::tcp_pubsub
 )
 
 set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)

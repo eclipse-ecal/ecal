@@ -29,7 +29,7 @@
 
 #include "readwrite/ecal_writer_base.h"
 #include "readwrite/ecal_reader_tcp.h"
-#include "readwrite/ecal_tcpub_logger.h"
+#include "readwrite/ecal_tcp_pubsub_logger.h"
 
 #include "ecal_utils/portable_endian.h"
 
@@ -48,8 +48,8 @@ namespace eCAL
 
   void CTCPReaderLayer::Initialize()
   {
-    tcpub::logger::logger_t tcpub_logger = std::bind(TcpubLogger, std::placeholders::_1, std::placeholders::_2);
-    m_executor = std::make_shared<tcpub::Executor>(eCALPAR(NET, TCPUB_NUM_EXECUTOR_READER), tcpub_logger);
+    tcp_pubsub::logger::logger_t tcp_pubsub_logger = std::bind(TcpPubsubLogger, std::placeholders::_1, std::placeholders::_2);
+    m_executor = std::make_shared<tcp_pubsub::Executor>(eCALPAR(NET, TCP_PUBSUB_NUM_EXECUTOR_READER), tcp_pubsub_logger);
   }
 
   void CTCPReaderLayer::AddSubscription(const std::string& host_name_, const std::string& /*topic_name_*/, const std::string& topic_id_, QOS::SReaderQOS /*qos_*/)
@@ -110,10 +110,10 @@ namespace eCAL
     }
   }
 
-  bool CDataReaderTCP::Create(std::shared_ptr<tcpub::Executor>& executor_)
+  bool CDataReaderTCP::Create(std::shared_ptr<tcp_pubsub::Executor>& executor_)
   {
     // create tcp subscriber
-    m_subscriber = std::make_shared<tcpub::Subscriber>(executor_);
+    m_subscriber = std::make_shared<tcp_pubsub::Subscriber>(executor_);
     m_subscriber->setCallback(std::bind(&CDataReaderTCP::OnTcpMessage, this, std::placeholders::_1));
     return true;
   }
@@ -147,13 +147,13 @@ namespace eCAL
     // add new session
     if (new_session)
     {
-      m_subscriber->addSession(host_name_, port_, eCALPAR(NET, TCPUB_MAX_RECONNECTIONS));
+      m_subscriber->addSession(host_name_, port_, eCALPAR(NET, TCP_PUBSUB_MAX_RECONNECTIONS));
     }
 
     return true;
   }
 
-  void CDataReaderTCP::OnTcpMessage(const tcpub::CallbackData& data_)
+  void CDataReaderTCP::OnTcpMessage(const tcp_pubsub::CallbackData& data_)
   {
     // extract header size
     const size_t ecal_magic(4 * sizeof(char));

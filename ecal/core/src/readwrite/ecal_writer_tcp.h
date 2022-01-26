@@ -25,8 +25,8 @@
 
 #include "readwrite/ecal_writer_base.h"
 
-#include <tcpub/executor.h>
-#include <tcpub/publisher.h>
+#include <tcp_pubsub/executor.h>
+#include <tcp_pubsub/publisher.h>
 
 #include <mutex>
 #include <string>
@@ -61,9 +61,9 @@ namespace eCAL
 
   private:
     static std::mutex                       g_tcp_writer_executor_mtx;
-    static std::shared_ptr<tcpub::Executor> g_tcp_writer_executor;
+    static std::shared_ptr<tcp_pubsub::Executor> g_tcp_writer_executor;
 
-    std::shared_ptr<tcpub::Publisher>       m_publisher;
+    std::shared_ptr<tcp_pubsub::Publisher>       m_publisher;
     uint16_t                                m_port;
 
     eCAL::pb::Sample                        m_ecal_header;
