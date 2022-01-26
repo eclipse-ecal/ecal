@@ -120,16 +120,18 @@ namespace eCAL
     bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_);
 
     /**
-     * @brief Call a method of this service, first response only will be returned in service_response_.
+     * @brief Call method of this service, for specific host (deprecated). 
      *
+     * @param       host_name_         Host name.
      * @param       method_name_       Method name.
      * @param       request_           Request string.
-     * @param       timeout_           Maximum time before operation returns (in milliseconds, -1 means infinite).
-     * @param [out] service_response_  Service response from first service (null pointer == no response).
+     * @param [out] service_info_      Service response struct for detailed informations.
+     * @param [out] response_          Response string.
      *
      * @return  True if successful.
     **/
-    bool Call(const std::string& method_name_, const std::string& request_, int timeout_, SServiceResponse* service_response_);
+    [[deprecated]]
+    bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_info_, std::string& response_);
 
     /**
      * @brief Call a method of this service asynchronously, responses will be returned by callback. 

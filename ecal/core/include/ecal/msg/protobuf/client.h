@@ -90,7 +90,7 @@ namespace eCAL
        * @param       method_name_           Method name.
        * @param       request_               Request message.
        * @param       timeout_               Maximum time before operation returns (in milliseconds, -1 means infinite).
-       * @param [out] service_response_vec_  Response vector containing service responses from every called service (nullptr == no response).
+       * @param [out] service_response_vec_  Response vector containing service responses from every called service (null pointer == no response).
        *
        * @return  True if successful.
       **/
@@ -114,7 +114,7 @@ namespace eCAL
       }
 
       /**
-       * @brief Call method of this service, for specific host.
+       * @brief Call method of this service, for specific host (deprecated).
        * 
        * This method is deprecated. Instead using
        * 

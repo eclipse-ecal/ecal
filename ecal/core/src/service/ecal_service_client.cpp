@@ -136,35 +136,33 @@ namespace eCAL
   }
 
   /**
-   * @brief Call a method of this service, first response only will be returned in service_response_.
+   * @brief Call method of this service, for specific host (deprecated).
    *
+   * @param       host_name_         Host name.
    * @param       method_name_       Method name.
    * @param       request_           Request string.
-   * @param       timeout_           Maximum time before operation returns (in milliseconds, -1 means infinite).
-   * @param [out] service_response_  Service response from first service (null pointer == no response).
+   * @param [out] service_info_      Service response struct for detailed informations.
+   * @param [out] response_          Response string.
    *
    * @return  True if successful.
   **/
-  bool CServiceClient::Call(const std::string& method_name_, const std::string& request_, int timeout_, SServiceResponse* service_response_)
+  bool CServiceClient::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_info_, std::string& response_)
   {
     if (!m_created) return(false);
-    if (service_response_)
+
+    m_service_client_impl->SetHostName(host_name_);
+
+    ServiceResponseVecT service_response_vec;
+    if (m_service_client_impl->Call(method_name_, request_, -1, &service_response_vec))
     {
-      ServiceResponseVecT service_response_vec;
-      if (m_service_client_impl->Call(method_name_, request_, timeout_, &service_response_vec))
+      if (!service_response_vec.empty())
       {
-        if (!service_response_vec.empty())
-        {
-          *service_response_ = service_response_vec[0];
-          return(true);
-        }
+        service_info_ = service_response_vec[0];
+        response_ = service_info_.response;
+        return(true);
       }
-      return(false);
     }
-    else
-    {
-      return(m_service_client_impl->Call(method_name_, request_, timeout_, nullptr));
-    }
+    return(false);
   }
 
   /**
