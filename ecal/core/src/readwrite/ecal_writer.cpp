@@ -114,6 +114,7 @@ namespace eCAL
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
     m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
     m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY) != 0;
+    m_connected         = false;
     m_ext_subscribed    = false;
     m_created           = false;
 
@@ -186,6 +187,21 @@ namespace eCAL
     m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
     m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
     m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY) != 0;
+    m_connected         = false;
+
+    // reset subscriber maps
+    {
+      std::lock_guard<std::mutex> lock(m_sub_map_sync);
+      m_loc_sub_map.clear();
+      m_ext_sub_map.clear();
+    }
+
+    // reset event callback map
+    {
+      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+      m_event_callback_map.clear();
+    }
+
     m_created           = false;
 
     return(true);
@@ -292,7 +308,7 @@ namespace eCAL
 
     // store event callback
     {
-      std::lock_guard<std::mutex> lock(m_event_callback_sync);
+      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
 #ifndef NDEBUG
       // log it
       Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::AddEventCallback");
@@ -309,7 +325,7 @@ namespace eCAL
 
     // reset event callback
     {
-      std::lock_guard<std::mutex> lock(m_event_callback_sync);
+      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
 #ifndef NDEBUG
       // log it
       Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::RemEventCallback");
@@ -589,12 +605,11 @@ namespace eCAL
         wdata.hash      = snd_hash;
         wdata.time      = time_;
         wdata.buffering = 0;
-        wdata.zero_copy = false;
 
         // send
         tcp_sent = m_writer_tcp.Write(wdata);
         m_use_tcp_confirmed = true;
-      }
+  }
       written |= tcp_sent;
 
 #ifndef NDEBUG
@@ -788,25 +803,25 @@ namespace eCAL
     ecal_reg_sample_mutable_topic->set_tsize(google::protobuf::int32(m_topic_size));
     // udp multicast layer
     {
-      auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
-      tlayer->set_type(eCAL::pb::tl_ecal_udp_mc);
-      tlayer->set_version(1);
-      tlayer->set_confirmed(m_use_udp_mc_confirmed);
-      tlayer->mutable_par_layer()->ParseFromString(m_writer_udp_mc.GetConnectionParameter());
+      auto udp_tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
+      udp_tlayer->set_type(eCAL::pb::tl_ecal_udp_mc);
+      udp_tlayer->set_version(1);
+      udp_tlayer->set_confirmed(m_use_udp_mc_confirmed);
+      udp_tlayer->mutable_par_layer()->ParseFromString(m_writer_udp_mc.GetConnectionParameter());
     }
     // shm layer
     {
-      auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
-      tlayer->set_type(eCAL::pb::tl_ecal_shm);
-      tlayer->set_version(1);
-      tlayer->set_confirmed(m_use_shm_confirmed);
+      auto shm_tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
+      shm_tlayer->set_type(eCAL::pb::tl_ecal_shm);
+      shm_tlayer->set_version(1);
+      shm_tlayer->set_confirmed(m_use_shm_confirmed);
       std::string par_layer_s = m_writer_shm.GetConnectionParameter();
-      tlayer->mutable_par_layer()->ParseFromString(par_layer_s);
+      shm_tlayer->mutable_par_layer()->ParseFromString(par_layer_s);
 
       // ----------------------------------------------------------------------
       // REMOVE ME IN VERSION 6
       // ----------------------------------------------------------------------
-      tlayer->set_par_shm("");
+      shm_tlayer->set_par_shm("");
       {
         // for downward compatibility eCAL version <= 5.8.13/5.9.0
         // in case of one memory file only we pack the name into 'layer_par_shm()'
@@ -814,7 +829,7 @@ namespace eCAL
         cpar.ParseFromString(par_layer_s);
         if (cpar.layer_par_shm().memory_file_list_size() == 1)
         {
-          tlayer->set_par_shm(cpar.layer_par_shm().memory_file_list().begin()->c_str());
+          shm_tlayer->set_par_shm(cpar.layer_par_shm().memory_file_list().begin()->c_str());
         }
       }
       // ----------------------------------------------------------------------
@@ -824,19 +839,19 @@ namespace eCAL
     }
     // tcp layer
     {
-      auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
-      tlayer->set_type(eCAL::pb::tl_ecal_tcp);
-      tlayer->set_version(1);
-      tlayer->set_confirmed(m_use_tcp_confirmed);
-      tlayer->mutable_par_layer()->ParseFromString(m_writer_tcp.GetConnectionParameter());
+      auto tcp_tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
+      tcp_tlayer->set_type(eCAL::pb::tl_ecal_tcp);
+      tcp_tlayer->set_version(1);
+      tcp_tlayer->set_confirmed(m_use_tcp_confirmed);
+      tcp_tlayer->mutable_par_layer()->ParseFromString(m_writer_tcp.GetConnectionParameter());
     }
     // inproc layer
     {
-      auto tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
-      tlayer->set_type(eCAL::pb::tl_inproc);
-      tlayer->set_version(1);
-      tlayer->set_confirmed(m_use_inproc_confirmed);
-      tlayer->mutable_par_layer()->ParseFromString(m_writer_inproc.GetConnectionParameter());
+      auto inproc_tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
+      inproc_tlayer->set_type(eCAL::pb::tl_inproc);
+      inproc_tlayer->set_version(1);
+      inproc_tlayer->set_confirmed(m_use_inproc_confirmed);
+      inproc_tlayer->mutable_par_layer()->ParseFromString(m_writer_inproc.GetConnectionParameter());
     }
     ecal_reg_sample_mutable_topic->set_pid(m_pid);
     ecal_reg_sample_mutable_topic->set_pname(m_pname);

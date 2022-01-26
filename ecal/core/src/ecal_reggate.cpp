@@ -28,9 +28,10 @@
 
 #include "ecal_config_hlp.h"
 #include "ecal_reggate.h"
-#include "ecal_servgate.h"
 #include "pubsub/ecal_pubgate.h"
 #include "pubsub/ecal_subgate.h"
+#include "service/ecal_servicegate.h"
+#include "service/ecal_clientgate.h"
 
 #include <iterator>
 
@@ -63,6 +64,7 @@ namespace eCAL
               m_callback_pub(nullptr),
               m_callback_sub(nullptr),
               m_callback_service(nullptr),
+              m_callback_client(nullptr),
               m_callback_process(nullptr)
   {
   };
@@ -114,6 +116,7 @@ namespace eCAL
     m_callback_pub     = nullptr;
     m_callback_sub     = nullptr;
     m_callback_service = nullptr;
+    m_callback_client  = nullptr;
     m_callback_process = nullptr;
 
     // finished
@@ -133,6 +136,7 @@ namespace eCAL
     if ( m_callback_pub
       || m_callback_sub
       || m_callback_service
+      || m_callback_client
       || m_callback_process
       )
     {
@@ -152,7 +156,11 @@ namespace eCAL
       break;
     case eCAL::pb::bct_reg_service:
       if (m_callback_service) m_callback_service(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
-      if (g_servgate()) g_servgate()->ApplyServiceRegistration(ecal_sample_);
+      if (g_clientgate())  g_clientgate()->ApplyServiceRegistration(ecal_sample_);
+      break;
+    case eCAL::pb::bct_reg_client:
+      if (m_callback_client) m_callback_client(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
+      if (g_servicegate()) g_servicegate()->ApplyClientRegistration(ecal_sample_);
       break;
     case eCAL::pb::bct_reg_subscriber:
       {
@@ -224,6 +232,9 @@ namespace eCAL
     case reg_event_service:
       m_callback_service = callback_;
       return true;
+    case reg_event_client:
+      m_callback_client = callback_;
+      return true;
     case reg_event_process:
       m_callback_process = callback_;
       return true;
@@ -245,6 +256,9 @@ namespace eCAL
       return true;
     case reg_event_service:
       m_callback_service = nullptr;
+      return true;
+    case reg_event_client:
+      m_callback_client = nullptr;
       return true;
     case reg_event_process:
       m_callback_process = nullptr;

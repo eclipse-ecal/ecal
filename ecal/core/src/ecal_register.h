@@ -59,12 +59,16 @@ namespace eCAL
     bool RegisterTopic(const std::string& topic_name_, const std::string& topic_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_);
     bool UnregisterTopic(const std::string& topic_name_, const std::string& topic_id_);
 
-    bool RegisterService(const std::string& service_name_, const eCAL::pb::Sample& ecal_sample_, const bool force_);
-    bool UnregisterService(const std::string& service_name_);
+    bool RegisterServer(const std::string& service_name_, const std::string& service_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_);
+    bool UnregisterServer(const std::string& service_name_, const std::string& service_id_);
+
+    bool RegisterClient(const std::string& client_name_, const std::string& client_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_);
+    bool UnregisterClient(const std::string& client_name_, const std::string& client_id_);
 
   protected:
     size_t RegisterProcess();
-    size_t RegisterServices();
+    size_t RegisterServer();
+    size_t RegisterClient();
     size_t RegisterTopics();
     size_t RegisterSample(const std::string& sample_name_, const eCAL::pb::Sample& sample_);
 
@@ -84,9 +88,10 @@ namespace eCAL
     std::mutex                m_topics_map_sync;
     SampleMapT                m_topics_map;
 
-    std::mutex                m_service_map_sync;
-    SampleMapT                m_service_map;
+    std::mutex                m_server_map_sync;
+    SampleMapT                m_server_map;
 
-    //eCAL::pb::Sample            m_process_sample;
+    std::mutex                m_client_map_sync;
+    SampleMapT                m_client_map;
   };
 };

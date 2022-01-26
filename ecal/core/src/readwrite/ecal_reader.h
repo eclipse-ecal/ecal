@@ -137,7 +137,7 @@ namespace eCAL
     typedef Util::CExpMap<size_t, size_t>     SampleHashMapT;
     SampleHashMapT                            m_sample_hash;
 
-    std::mutex                                m_event_callback_sync;
+    std::mutex                                m_event_callback_map_sync;
     typedef std::map<eCAL_Subscriber_Event, SubEventCallbackT> EventCallbackMapT;
     EventCallbackMapT                         m_event_callback_map;
 

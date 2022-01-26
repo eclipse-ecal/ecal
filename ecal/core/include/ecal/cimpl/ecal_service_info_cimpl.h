@@ -40,16 +40,19 @@ enum eCallState
 #endif
 
 /**
- * @brief eCAL service info struct returned as service response (C API).
+ * @brief Service response struct containing the (responding) server informations and the response itself (C API).
 **/
-struct SServiceInfoC
+struct SServiceResponseC
 {
-  const char*      host_name;      //!< service host
-  const char*      service_name;   //!< service name
-  const char*      method_name;    //!< method name
-  const char*      error_msg;      //!< error message in case of failure
-  int              ret_state;      //!< return state from method callback
-  enum eCallState  call_state;     //!< service call state
+  const char*      host_name;     //!< service host name
+  const char*      service_name;  //!< name of the service
+  const char*      service_id;    //!< id of the service
+  const char*      method_name;   //!< name of the service method
+  const char*      error_msg;     //!< human readable error message
+  int              ret_state;     //!< return state of the called service method
+  enum eCallState  call_state;    //!< call state (see eCallState)
+  const char*      response;      //!< service response
+  int              response_len;  //!< service response length (response string could include zeros)
 };
 
 #ifdef _MSC_VER
@@ -73,11 +76,9 @@ typedef int(*MethodCallbackCT)(const char* method_, const char* req_type_, const
 /**
  * @brief eCAL service response callback function (client side)
  *
- * @param service_info_       Service info struct.
- * @param reponse_            Method response payload.
- * @param reponse_len_        Method response payload length.
+ * @param service_response_   Service response struct containing the (responding) server informations and the response itself.
  * @param par_                Forwarded user defined parameter.
 **/
-typedef void (*ResponseCallbackCT)(const struct SServiceInfoC* service_info_, const char* response_, int response_len_, void* par_);
+typedef void(*ResponseCallbackCT)(const struct SServiceResponseC* service_response_, void* par_);
 
 #endif /* ecal_service_info_cimpl_h_included */

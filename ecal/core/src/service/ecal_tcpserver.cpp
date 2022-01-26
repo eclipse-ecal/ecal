@@ -46,12 +46,12 @@ namespace eCAL
     Stop();
   }
 
-  void CTcpServer::Start(RequestCallbackT callback_)
+  void CTcpServer::Start(RequestCallbackT request_callback_, EventCallbackT event_callback_)
   {
     if (m_started)           return;
     if (m_server != nullptr) return;
 
-    m_server_thread = std::thread(&CTcpServer::ServerThread, this, 0, callback_);
+    m_server_thread = std::thread(&CTcpServer::ServerThread, this, 0, request_callback_, event_callback_);
 
     m_started = true;
   }
@@ -66,15 +66,26 @@ namespace eCAL
 
     m_started = false;
   }
-  
-  void CTcpServer::ServerThread(std::uint32_t port_, RequestCallbackT callback_)
-  {
 
+  bool CTcpServer::IsConnected()
+  {
+    if (!m_started) return false;
+
+    if (m_server == nullptr) return false;
+
+    return m_server->is_connected();
+  }
+  
+  void CTcpServer::ServerThread(std::uint32_t port_, RequestCallbackT request_callback_, EventCallbackT event_callback_)
+  {
     m_io_service = std::make_shared<asio::io_service>();
-    m_server = std::make_shared<CAsioServer>(*m_io_service, static_cast<unsigned short>(port_));
-    m_server->add_request_callback(callback_);
+    m_server     = std::make_shared<CAsioServer>(*m_io_service, static_cast<unsigned short>(port_));
+    
+    m_server->add_request_callback1(request_callback_);
+    m_server->add_event_callback(event_callback_);
 
     m_io_service->run();
+
     m_server = nullptr;
   }
 };

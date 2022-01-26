@@ -34,25 +34,25 @@
 #include <iostream>
 
 // callback for recorder service response
-void OnRecorderResponse(const struct eCAL::SServiceInfo& service_info_, const std::string& response_)
+void OnRecorderResponse(const struct eCAL::SServiceResponse& service_response_)
 {
-  switch (service_info_.call_state)
+  switch (service_response_.call_state)
   {
   // service successful executed
   case call_state_executed:
   {
-    if (service_info_.method_name == "GetConfig")
+    if (service_response_.method_name == "GetConfig")
     {
       eCAL::pb::rec_client::GetConfigResponse response;
-      response.ParseFromString(response_);
-      std::cout << "RecorderService " << service_info_.method_name << " called successfully on host " << service_info_.host_name << std::endl;
+      response.ParseFromString(service_response_.response);
+      std::cout << "RecorderService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
       std::cout << response.DebugString();
     }
     else
     {
       eCAL::pb::rec_client::Response response;
-      response.ParseFromString(response_);
-      std::cout << "RecorderService " << service_info_.method_name << " called successfully on host " << service_info_.host_name << std::endl;
+      response.ParseFromString(service_response_.response);
+      std::cout << "RecorderService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
       std::cout << response.DebugString();
     }
   }
@@ -60,27 +60,27 @@ void OnRecorderResponse(const struct eCAL::SServiceInfo& service_info_, const st
   // service execution failed
   case call_state_failed:
   {
-    if (service_info_.method_name == "GetConfig")
+    if (service_response_.method_name == "GetConfig")
     {
       eCAL::pb::rec_client::GetConfigResponse response;
-      response.ParseFromString(response_);
-      std::cout << "RecorderService " << service_info_.method_name << " failed with \"" << response.error() << "\" on host " << service_info_.host_name << std::endl;
+      response.ParseFromString(service_response_.response);
+      std::cout << "RecorderService " << service_response_.method_name << " failed with \"" << response.error() << "\" on host " << service_response_.host_name << std::endl;
       std::cout << response.DebugString();
     }
 
-    if (service_info_.method_name == "SetConfig")
+    if (service_response_.method_name == "SetConfig")
     {
       eCAL::pb::rec_client::Response response;
-      response.ParseFromString(response_);
-      std::cout << "RecorderService " << service_info_.method_name << " failed with \"" << response.error() << "\" on host " << service_info_.host_name << std::endl;
+      response.ParseFromString(service_response_.response);
+      std::cout << "RecorderService " << service_response_.method_name << " failed with \"" << response.error() << "\" on host " << service_response_.host_name << std::endl;
       std::cout << response.DebugString();
     }
 
-    if (service_info_.method_name == "SetCommand")
+    if (service_response_.method_name == "SetCommand")
     {
       eCAL::pb::rec_client::Response response;
-      response.ParseFromString(response_);
-      std::cout << "RecorderService " << service_info_.method_name << " failed with \"" << response.error() << "\" on host " << service_info_.host_name << std::endl;
+      response.ParseFromString(service_response_.response);
+      std::cout << "RecorderService " << service_response_.method_name << " failed with \"" << response.error() << "\" on host " << service_response_.host_name << std::endl;
       std::cout << response.DebugString();
     }
   }
@@ -100,8 +100,12 @@ int main(int argc, char **argv)
   eCAL::protobuf::CServiceClient<eCAL::pb::rec_client::EcalRecClientService> recorder_service;
   recorder_service.AddResponseCallback(OnRecorderResponse);
 
-  // sleep for service matching
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+  // waiting for service
+  while (!recorder_service.IsConnected())
+  {
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::cout << "Waiting for the service .." << std::endl;
+  }
 
   // "GetConfig"
   eCAL::pb::rec_client::GetConfigRequest get_config_request;

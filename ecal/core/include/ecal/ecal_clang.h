@@ -19,7 +19,7 @@
 
 /**
  * @file   ecal_clang.h
- * @brief  eCAL C language interface
+ * @brief  eCAL C language interface (to wrap ecal into other languages easily)
 **/
 
 #ifndef ECAL_CLANG_H_INCLUDED
@@ -465,7 +465,7 @@ ECAL_API bool dyn_json_sub_add_receive_callback(ECAL_HANDLE handle_, const Recei
 **/
 ECAL_API bool dyn_json_sub_rem_receive_callback(ECAL_HANDLE handle_);
 
-/* TODO: deal with this later */
+/* TODO: not implemented and not used for now */
 //ECAL_API bool dyn_json_sub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_, const EventCallbackCT callback_, void* par_);
 //ECAL_API bool dyn_json_sub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_);
 //ECAL_API bool dyn_json_sub_set_timeout(ECAL_HANDLE handle_, int timeout_);
@@ -544,18 +544,32 @@ ECAL_API bool client_destroy(ECAL_HANDLE handle_);
 ECAL_API bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_);
 
 /**
-* @brief Call method of this service (none blocking variant with callback).
+ * @brief Call method of this service (none blocking variant with callback).
  *
  * @param handle_       Client handle.
  * @param method_name_  Method name.
  * @param request_      Request message buffer.
  * @param request_len_  Request message length.
+ * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
  *
  * @return  True if succeeded.
 **/
-ECAL_API bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_);
+ECAL_API bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_);
 
-/* TODO: deal with this later */
+/**
+ * @brief Call method of this service (asynchronously with callback).
+ *
+ * @param handle_       Client handle.
+ * @param method_name_  Method name.
+ * @param request_      Request message buffer.
+ * @param request_len_  Request message length.
+ * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+ *
+ * @return  True if succeeded.
+**/
+ECAL_API bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, const int request_len_, const int timeout_);
+
+/* TODO: not implemented and not used for now */
 //ECAL_API client_add_response_callback
 //ECAL_API client_rem_response_callback
 
@@ -640,6 +654,6 @@ ECAL_API int mon_get_monitoring(const char** mon_buf_, int* mon_buf_len_);
  *
  * @return  Logging buffer length or zero if failed.
 **/
-ECAL_API int          mon_get_logging(const char** log_buf_, int* log_buf_len_);
+ECAL_API int mon_get_logging(const char** log_buf_, int* log_buf_len_);
 
 #endif /* ECAL_CLANG_H_INCLUDED */

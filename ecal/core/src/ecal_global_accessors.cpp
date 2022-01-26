@@ -108,10 +108,16 @@ namespace eCAL
     return(g_globals()->pubgate().get());
   }
 
-  CServGate* g_servgate()
+  CServiceGate* g_servicegate()
   {
     if (!g_globals()) return(nullptr);
-    return(g_globals()->servgate().get());
+    return(g_globals()->servicegate().get());
+  }
+
+  CClientGate* g_clientgate()
+  {
+    if (!g_globals()) return(nullptr);
+    return(g_globals()->clientgate().get());
   }
 
   CRegGate* g_reggate()

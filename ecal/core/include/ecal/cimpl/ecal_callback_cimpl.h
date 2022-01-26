@@ -19,46 +19,68 @@
 
 /**
  * @file   ecal_callback_cimpl.h
- * @brief  eCAL subscriber callback interface for C Interface
+ * @brief  eCAL callback interface events, structs and functions
 **/
 
 #ifndef ecal_callback_cimpl_h_included
 #define ecal_callback_cimpl_h_included
 
 /**
- * @brief eCAL subscriber event callback struct.
+ * @brief eCAL subscriber event callback type.
 **/
 enum eCAL_Subscriber_Event
 {
-  sub_event_none          =  0,
-  sub_event_connected     =  1,
-  sub_event_disconnected  =  2,
-  sub_event_dropped       =  3,
-  sub_event_timeout       =  4,
-  sub_event_corrupted     =  5,
+  sub_event_none            = 0,
+  sub_event_connected       = 1,
+  sub_event_disconnected    = 2,
+  sub_event_dropped         = 3,
+  sub_event_timeout         = 4,
+  sub_event_corrupted       = 5,
 };
 
 /**
- * @brief eCAL publisher event callback struct.
+ * @brief eCAL publisher event callback type.
 **/
 enum eCAL_Publisher_Event
 {
-  pub_event_none          =  0,
-  pub_event_connected     =  1,
-  pub_event_disconnected  =  2,
-  pub_event_dropped       =  3,
+  pub_event_none            = 0,
+  pub_event_connected       = 1,
+  pub_event_disconnected    = 2,
+  pub_event_dropped         = 3,
 };
 
 /**
- * @brief eCAL registration event type.
+ * @brief eCAL service client event callback type.
+**/
+enum eCAL_Client_Event
+{
+  client_event_none         = 0,
+  client_event_connected    = 1,
+  client_event_disconnected = 2,
+  client_event_timeout      = 3,
+};
+
+/**
+ * @brief eCAL service server event callback type.
+**/
+enum eCAL_Server_Event
+{
+  server_event_none         = 0,
+  server_event_connected    = 1,
+  server_event_disconnected = 2,
+};
+
+/**
+ * @brief eCAL common registration event type.
 **/
 enum eCAL_Registration_Event
 {
-  reg_event_none          = 0,
-  reg_event_publisher     = 1,
-  reg_event_subscriber    = 2,
-  reg_event_service       = 3,
-  reg_event_process       = 4
+  reg_event_none            = 0,
+  reg_event_publisher       = 1,
+  reg_event_subscriber      = 2,
+  reg_event_service         = 3,
+  reg_event_client          = 5,
+  reg_event_process         = 4,
 };
 
 #ifdef _MSC_VER
@@ -75,6 +97,44 @@ struct SReceiveCallbackDataC
   long long id;     //!< source id
   long long time;   //!< source time stamp
   long long clock;  //!< source write clock
+};
+
+/**
+ * @brief eCAL publisher event callback struct (C variant).
+**/
+struct SPubEventCallbackDataC
+{
+  enum eCAL_Publisher_Event  type;  //!< event type
+  long long                  time;  //!< event time stamp
+  long long                  clock; //!< event clock
+};
+
+/**
+ * @brief eCAL subscriber event callback struct (C variant).
+**/
+struct SSubEventCallbackDataC
+{
+  enum eCAL_Subscriber_Event type;  //!< event type
+  long long                  time;  //!< event time stamp
+  long long                  clock; //!< event clock
+};
+
+/**
+ * @brief eCAL client event callback struct (C variant).
+**/
+struct SClientEventCallbackDataC
+{
+  enum eCAL_Client_Event type;  //!< event type
+  long long              time;  //!< event time stamp
+};
+
+/**
+ * @brief eCAL server event callback struct (C variant).
+**/
+struct SServerEventCallbackDataC
+{
+  enum eCAL_Server_Event type;  //!< event type
+  long long              time;  //!< event time stamp
 };
 
 #ifdef _MSC_VER
@@ -98,40 +158,9 @@ typedef void (*ReceiveCallbackCT)(const char* topic_name_, const struct SReceive
 typedef void (*TimerCallbackCT)(void* par_);
 
 /**
- * @brief eCAL subscriber event callback struct (C variant).
-**/
-#ifdef _MSC_VER
-#pragma pack(push, 8)
-#endif
-
-/**
- * @brief eCAL publisher event callback struct (C variant).
-**/
-struct SPubEventCallbackDataC
-{
-  enum eCAL_Publisher_Event  type;  //!< event type
-  long long                  time;  //!< event time stamp
-  long long                  clock; //!< event clock
-};
-
-/**
- * @brief eCAL subscriber event callback struct (C variant).
-**/
-struct SSubEventCallbackDataC
-{
-  enum eCAL_Subscriber_Event type;  //!< event type
-  long long                  time;  //!< event time stamp
-  long long                  clock; //!< event clock
-};
-
-#ifdef _MSC_VER
-#pragma pack(pop)
-#endif
-
-/**
  * @brief eCAL publisher event callback function
  *
- * @param topic_name_  Topic name of the data connection (subscriber).
+ * @param topic_name_  The topic name of the data connection (subscriber).
  * @param data_        Event type struct.
  * @param par_         Forwarded user defined parameter.
 **/
@@ -140,10 +169,28 @@ typedef void(*SubEventCallbackCT)(const char* topic_name_, const struct SSubEven
 /**
  * @brief eCAL subscriber event callback function
  *
- * @param topic_name_  Topic name of the data connection (publisher).
+ * @param topic_name_  The topic name of the data connection (publisher).
  * @param data_        Event type struct.
  * @param par_         Forwarded user defined parameter.
 **/
 typedef void(*PubEventCallbackCT)(const char* topic_name_, const struct SPubEventCallbackDataC* data_, void* par_);
+
+/**
+ * @brief eCAL client event callback function
+ *
+ * @param name_  The service name.
+ * @param data_  Event type struct.
+ * @param par_   Forwarded user defined parameter.
+**/
+typedef void(*ClientEventCallbackCT)(const char* name_, const struct SClientEventCallbackDataC* data_, void* par_);
+
+/**
+ * @brief eCAL server event callback function
+ *
+ * @param name_  The service name.
+ * @param data_  Event type struct.
+ * @param par_   Forwarded user defined parameter.
+**/
+typedef void(*ServerEventCallbackCT)(const char* name_, const struct SServerEventCallbackDataC* data_, void* par_);
 
 #endif /* ecal_callback_cimpl_h_included */

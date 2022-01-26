@@ -80,88 +80,113 @@ namespace eCAL
   **/
   bool CServiceClient::Destroy()
   {
-    if(!m_created)   return(false);
+    if(!m_created) return(false);
+    m_created = false;
 
     m_service_client_impl->Destroy();
     delete m_service_client_impl;
     m_service_client_impl = nullptr;
 
-    m_created = false;
     return(true);
   }
 
   /**
    * @brief Change the host name filter for that client instance
    *
-   * @param host_name_  Host name filter (empty or "*" == all hosts) 
+   * @param host_name_  Host name filter (empty == all hosts)
    *
-   * @return  True if successful. 
+   * @return  True if successful.
   **/
   bool CServiceClient::SetHostName(const std::string& host_name_)
   {
-    if(!m_created) return(false);
+    if (!m_created) return(false);
     m_service_client_impl->SetHostName(host_name_);
     return(true);
   }
 
   /**
-   * @brief Call method of this service, for all hosts, responses will be returned by callback. 
+   * @brief Call method of this service, responses will be returned by callback.
    *
-   * @param method_name_  Method name. 
-   * @param request_      Request string. 
+   * @param method_name_  Method name.
+   * @param request_      Request string.
+   * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
    *
-   * @return  True if successful. 
+   * @return  True if successful.
   **/
-  bool CServiceClient::Call(const std::string& method_name_, const std::string& request_)
+  bool CServiceClient::Call(const std::string& method_name_, const std::string& request_, int timeout_)
   {
     if(!m_created) return(false);
-    return(m_service_client_impl->Call(method_name_, request_));
+    return(m_service_client_impl->Call(method_name_, request_, timeout_));
   }
 
   /**
-   * @brief Call method of this service, for specific host. 
+   * @brief Call a method of this service, all responses will be returned in service_response_vec_.
    *
-   * @param       host_name_     Host name.
-   * @param       method_name_   Method name.
-   * @param       request_       Request string. 
-   * @param [out] service_info_  Service info struct for detailed informations.
-   * @param [out] response_      Response string.
+   * @param       method_name_           Method name.
+   * @param       request_               Request string.
+   * @param       timeout_               Maximum time before operation returns (in milliseconds, -1 means infinite).
+   * @param [out] service_response_vec_  Response vector containing service responses from every called service (null pointer == no response).
    *
-   * @return  True if successful. 
-  **/ 
-  bool CServiceClient::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceInfo& service_info_, std::string& response_)
-  {
-    if(!m_created) return(false);
-    return(m_service_client_impl->Call(host_name_, method_name_, request_, service_info_, response_));
-  }
-
-  /**
-   * @brief Asynchronously call method of this service, for all hosts, responses will be returned by callback. 
-   *
-   * @param method_name_  Method name. 
-   * @param request_      Request string. 
+   * @return  True if successful.
   **/
-  void CServiceClient::CallAsync(const std::string& method_name_, const std::string& request_)
+  bool CServiceClient::Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_)
   {
-    if(m_created) m_service_client_impl->CallAsync(method_name_, request_);
+    if (!m_created) return(false);
+    return(m_service_client_impl->Call(method_name_, request_, timeout_, service_response_vec_));
   }
 
   /**
-   * @brief Asynchronously call method of this service asynchronously, for specific host, response will be returned by callback. 
+   * @brief Call method of this service, for specific host (deprecated).
    *
-   * @param       host_name_     Host name.
-   * @param       method_name_   Method name.
-   * @param       request_       Request string.
+   * @param       host_name_         Host name.
+   * @param       method_name_       Method name.
+   * @param       request_           Request string.
+   * @param [out] service_info_      Service response struct for detailed informations.
+   * @param [out] response_          Response string.
+   *
+   * @return  True if successful.
   **/
-  void CServiceClient::CallAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_)
+  bool CServiceClient::Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_info_, std::string& response_)
   {
-    if(m_created) m_service_client_impl->CallAsync(host_name_, method_name_, request_);
+    if (!m_created) return(false);
+
+    m_service_client_impl->SetHostName(host_name_);
+
+    ServiceResponseVecT service_response_vec;
+    if (m_service_client_impl->Call(method_name_, request_, -1, &service_response_vec))
+    {
+      if (!service_response_vec.empty())
+      {
+        service_info_ = service_response_vec[0];
+        response_ = service_info_.response;
+        return(true);
+      }
+    }
+    return(false);
   }
 
   /**
-   * @brief Add server response callback. 
+   * @brief Call a method of this service asynchronously, responses will be returned by callback.
    *
-   * @param callback_  Callback function for server response.  
+   * @param method_name_  Method name.
+   * @param request_      Request string.
+   * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite) - NOT SUPPORTED YET.
+   *
+   * @return  True if successful.
+  **/
+  bool CServiceClient::CallAsync(const std::string& method_name_, const std::string& request_, int timeout_)
+  {
+    if (!m_created) return(false);
+    (void)timeout_; // will be implemented later
+    return(m_service_client_impl->CallAsync(method_name_, request_ /*, timeout_*/));
+  }
+
+  /**
+   * @brief Add server response callback.
+   *
+   * @param callback_  Callback function for server response.
+   *
+   * @return  True if successful.
   **/
   bool CServiceClient::AddResponseCallback(const ResponseCallbackT& callback_)
   {
@@ -170,11 +195,62 @@ namespace eCAL
   }
 
   /**
-   * @brief Remove server response callback. 
+   * @brief Remove server response callback.
+   *
+   * @return  True if successful.
   **/
   bool CServiceClient::RemResponseCallback()
   {
     if (!m_created) return false;
     return(m_service_client_impl->RemResponseCallback());
+  }
+
+  /**
+   * @brief Add client event callback function.
+   *
+   * @param type_      The event type to react on.
+   * @param callback_  The callback function to add.
+   *
+   * @return  True if succeeded, false if not.
+  **/
+  bool CServiceClient::AddEventCallback(eCAL_Client_Event type_, ClientEventCallbackT callback_)
+  {
+    if (!m_created) return false;
+    return m_service_client_impl->AddEventCallback(type_, callback_);
+  }
+
+  /**
+   * @brief Remove client event callback function.
+   *
+   * @param type_  The event type to remove.
+   *
+   * @return  True if succeeded, false if not.
+  **/
+  bool CServiceClient::RemEventCallback(eCAL_Client_Event type_)
+  {
+    if (!m_created) return false;
+    return m_service_client_impl->RemEventCallback(type_);
+  }
+
+  /**
+   * @brief Retrieve service name.
+   *
+   * @return  The service name.
+  **/
+  std::string CServiceClient::GetServiceName()
+  {
+    if (!m_created) return "";
+    return m_service_client_impl->GetServiceName();
+  }
+
+  /**
+   * @brief Check connection state.
+   *
+   * @return  True if connected, false if not.
+  **/
+  bool CServiceClient::IsConnected()
+  {
+    if (!m_created) return false;
+    return m_service_client_impl->IsConnected();
   }
 }

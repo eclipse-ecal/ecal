@@ -34,37 +34,37 @@
 #include <thread>
 
 // callback for player service response
-void OnPlayerResponse(const struct eCAL::SServiceInfo& service_info_, const std::string& response_)
+void OnPlayerResponse(const struct eCAL::SServiceResponse& service_response_)
 {
-  switch (service_info_.call_state)
+  switch (service_response_.call_state)
   {
   // service successful executed
   case call_state_executed:
   {
-    if (service_info_.method_name == "GetConfig")
+    if (service_response_.method_name == "GetConfig")
     {
       eCAL::pb::play::GetConfigResponse response;
-      response.ParseFromString(response_);
-      std::cout << "PlayerService " << service_info_.method_name << " called successfully on host " << service_info_.host_name << std::endl;
+      response.ParseFromString(service_response_.response);
+      std::cout << "PlayerService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
       std::cout << response.DebugString();
     }
-    else if (service_info_.method_name == "Response")
+    else if (service_response_.method_name == "Response")
     {
       eCAL::pb::play::Response response;
-      response.ParseFromString(response_);
-      std::cout << "PlayerService " << service_info_.method_name << " called successfully on host " << service_info_.host_name << std::endl;
+      response.ParseFromString(service_response_.response);
+      std::cout << "PlayerService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
       std::cout << response.DebugString();
     }
-    else if (service_info_.method_name == "GetState")
+    else if (service_response_.method_name == "GetState")
     {
         eCAL::pb::play::State response;
-        response.ParseFromString(response_);
-        std::cout << "PlayerService " << service_info_.method_name << " called successfully on host " << service_info_.host_name << std::endl;
+        response.ParseFromString(service_response_.response);
+        std::cout << "PlayerService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
         std::cout << response.DebugString();
     }
     else
     {
-        std::cout << "PlayerService " << service_info_.method_name << " received unknown message on host " << service_info_.host_name << std::endl;
+        std::cout << "PlayerService " << service_response_.method_name << " received unknown message on host " << service_response_.host_name << std::endl;
     }
   }
   break;
@@ -72,8 +72,8 @@ void OnPlayerResponse(const struct eCAL::SServiceInfo& service_info_, const std:
   case call_state_failed:
   {
     eCAL::pb::play::Response response;
-    response.ParseFromString(response_);
-    std::cout << "PlayerService " << service_info_.method_name << " failed with \"" << response.error() << "\" on host " << service_info_.host_name << std::endl;
+    response.ParseFromString(service_response_.response);
+    std::cout << "PlayerService " << service_response_.method_name << " failed with \"" << response.error() << "\" on host " << service_response_.host_name << std::endl;
     std::cout << response.DebugString();
   }
   break;

@@ -20,20 +20,19 @@ cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
-project(ecalrpcservice_client)
+project(minimal_client)
 
 find_package(eCAL REQUIRED)
 
-set(ecalrpcservice_client_src
-  src/ecalrpcservice_client.cpp
+set(minimal_client_src
+    src/minimal_client.cpp
 )
 
-ecal_add_sample(${PROJECT_NAME} ${ecalrpcservice_client_src})
+ecal_add_sample(${PROJECT_NAME} ${minimal_client_src})
 
-target_include_directories(${PROJECT_NAME} PRIVATE .)
-
-target_link_libraries(${PROJECT_NAME} eCAL::core)
-target_link_libraries(${PROJECT_NAME} eCAL::rpc)
+target_link_libraries(${PROJECT_NAME}
+    eCAL::core
+)
 
 ecal_install_sample(${PROJECT_NAME})
 

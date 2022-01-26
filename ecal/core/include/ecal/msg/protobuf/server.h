@@ -50,7 +50,7 @@ namespace eCAL
      * @brief Google Protobuf Server wrapper class.
     **/
     template <typename T>
-    class CServiceServer
+    class CServiceServer : public eCAL::CServiceServer
     {
     public:
       /**
@@ -101,14 +101,14 @@ namespace eCAL
         m_service = service_;
 
         const google::protobuf::ServiceDescriptor* service_descriptor = service_->GetDescriptor();
-        m_server.Create(service_descriptor->full_name());
+        Create(service_descriptor->full_name());
 
         for (int i = 0; i < service_descriptor->method_count(); ++i)
         {
           const google::protobuf::MethodDescriptor* method_descriptor = service_descriptor->method(i);
           std::string method_name = method_descriptor->name();
           m_methods[method_name] = method_descriptor;
-          m_server.AddMethodCallback(method_name,
+          AddMethodCallback(method_name,
             method_descriptor->input_type()->name(),
             method_descriptor->output_type()->name(),
             std::bind(&CServiceServer::RequestCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5)
@@ -125,8 +125,10 @@ namespace eCAL
       bool Destroy()
       {
         m_service = nullptr;
-        return m_server.Destroy();
+        return true;
       }
+
+      using eCAL::CServiceServer::Create;
 
     protected:
       int RequestCallback(const std::string& method_, const std::string& /*req_type_*/, const std::string& /*resp_type_*/, const std::string& request_, std::string& response_)
@@ -159,9 +161,13 @@ namespace eCAL
         return 0;
       };
 
-      eCAL::CServiceServer                                              m_server;
       std::shared_ptr<T>                                                m_service;
       std::map<std::string, const google::protobuf::MethodDescriptor*>  m_methods;
+
+      private:
+        using eCAL::CServiceServer::AddMethodCallback;
+        using eCAL::CServiceServer::RemMethodCallback;
+        using eCAL::CServiceServer::GetServiceName;
     };
   }
 }

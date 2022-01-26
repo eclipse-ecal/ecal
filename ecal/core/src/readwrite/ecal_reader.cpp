@@ -154,9 +154,9 @@ namespace eCAL
       m_receive_callback = nullptr;
     }
 
-    // reset event callback
+    // reset event callback map
     {
-      std::lock_guard<std::mutex> lock(m_event_callback_sync);
+      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
       m_event_callback_map.clear();
     }
 
@@ -518,7 +518,7 @@ namespace eCAL
 
     // store event callback
     {
-      std::lock_guard<std::mutex> lock(m_event_callback_sync);
+      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
 #ifndef NDEBUG
       // log it
       Logging::Log(log_level_debug2, m_topic_name + "::CDataReader::AddEventCallback");
@@ -535,7 +535,7 @@ namespace eCAL
 
     // reset event callback
     {
-      std::lock_guard<std::mutex> lock(m_event_callback_sync);
+      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
 #ifndef NDEBUG
       // log it
       Logging::Log(log_level_debug2, m_topic_name + "::CDataReader::RemEventCallback");
@@ -745,7 +745,7 @@ namespace eCAL
       m_receive_time += CMN_DATAREADER_TIMEOUT_DTIME;
       if(m_receive_time > m_receive_timeout)
       {
-        std::lock_guard<std::mutex> lock(m_event_callback_sync);
+        std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
         auto iter = m_event_callback_map.find(sub_event_timeout);
         if(iter != m_event_callback_map.end())
         {

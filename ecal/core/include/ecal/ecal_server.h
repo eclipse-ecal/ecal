@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
 
 #include <string>
@@ -86,7 +87,7 @@ namespace eCAL
     bool Destroy();
 
     /**
-     * @brief Add method callback for server response.
+     * @brief Add method callback.
      *
      * @param method_     Service method name.
      * @param req_type_   Service method request type.
@@ -98,7 +99,7 @@ namespace eCAL
     bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_);
 
     /**
-     * @brief Remove client request callback.
+     * @brief Remove method callback.
      *
      * @param method_  Service method name.
      *
@@ -107,11 +108,37 @@ namespace eCAL
     bool RemMethodCallback(const std::string& method_);
 
     /**
+     * @brief Add server event callback function.
+     *
+     * @param type_      The event type to react on.
+     * @param callback_  The callback function to add.
+     *
+     * @return  True if succeeded, false if not.
+    **/
+    bool AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_);
+
+    /**
+     * @brief Remove server event callback function.
+     *
+     * @param type_  The event type to remove.
+     *
+     * @return  True if succeeded, false if not.
+    **/
+    bool RemEventCallback(eCAL_Server_Event type_);
+
+    /**
      * @brief Retrieve service name.
      *
      * @return  The service name.
     **/
     std::string GetServiceName();
+
+    /**
+     * @brief Check connection state.
+     *
+     * @return  True if connected, false if not.
+    **/
+    bool IsConnected();
 
   protected:
     CServiceServerImpl*  m_service_server_impl;
@@ -156,6 +183,7 @@ namespace eCAL
       m_service = eCAL_Server_Create(service_name_.c_str());
       if(!m_service) return(false);
 
+      m_service_name = service_name_;
       m_created = true;
       return(true);
     }
@@ -166,6 +194,7 @@ namespace eCAL
       if(m_service) eCAL_Server_Destroy(m_service);
 
       m_service = nullptr;
+      m_service_name.clear();
       m_created = false;
       return(true);
     }
@@ -176,9 +205,10 @@ namespace eCAL
       if (response_     == nullptr) return 0;;
       if (response_len_ == nullptr) return 0;;
       CServiceServer* server = static_cast<CServiceServer*>(par_);
+      if (server->m_method_callback == nullptr) return 0;
 
       std::string response;
-      int ret_state = server->m_callback(method_, req_type_, resp_type_, std::string(request_, request_len_), response);
+      int ret_state = server->m_method_callback(method_, req_type_, resp_type_, std::string(request_, request_len_), response);
       if (!response.empty())
       {
         int response_size = static_cast<int>(response.size());
@@ -201,31 +231,45 @@ namespace eCAL
     bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_)
     {
       if (!m_created) return false;
-      m_callback = callback_;
+      m_method_callback = callback_;
       return eCAL_Server_AddMethodCallbackC(m_service, method_.c_str(), req_type_.c_str(), resp_type_.c_str(), &CServiceServer::MethodCallback, this) != 0;
     }
 
     bool RemMethodCallback(const std::string& method_)
     {
       if (!m_created) return false;
-      m_callback = nullptr;
-      return eCAL_Server_RemMethodCallbackC(m_service, method_.c_str()) != 0;
+      return eCAL_Server_RemMethodCallback(m_service, method_.c_str()) != 0;
+    }
+
+    static void EventCallback(const char* name_, const struct SServerEventCallbackDataC* data_, void* par_)
+    {
+      if (par_ == nullptr) return;
+      CServiceServer* server = static_cast<CServiceServer*>(par_);
+      if (server->m_event_callback == nullptr) return;
+
+      SServerEventCallbackData data;
+      data.type = data_->type;
+      data.time = data_->time;
+      server->m_event_callback(name_, &data);
+    }
+    bool AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_)
+    {
+      if (!m_service) return false;
+      m_event_callback = callback_;
+      return(eCAL_Server_AddEventCallback(m_service, type_, &CServiceServer::EventCallback, this) != 0);
+    }
+
+    bool RemEventCallback(eCAL_Client_Event type_)
+    {
+      if (!m_service) return false;
+      return(eCAL_Client_RemEventCallback(m_service, type_) != 0);
     }
 
     std::string GetServiceName()
     {
       if (!m_created) return "";
-      std::string service_name;
-      void* buf = nullptr;
-      size_t buf_len = eCAL_Server_GetServiceName(m_service, &buf, ECAL_ALLOCATE_4ME);
-      if (buf_len > 0)
-      {
-        service_name = std::string(static_cast<char*>(buf), buf_len);
-        eCAL_FreeMem(buf);
-      }
-      return(service_name);
+      return(m_service_name);
     }
-
 
     std::vector<char>& GetResponseBuffer()
     {
@@ -233,14 +277,14 @@ namespace eCAL
     }
 
   protected:
-    ECAL_HANDLE        m_service;
-    MethodCallbackT    m_callback;
-    std::vector<char>  m_response_buf;
+    ECAL_HANDLE           m_service;
+    MethodCallbackT       m_method_callback;
+    ServerEventCallbackT  m_event_callback;
+    std::vector<char>     m_response_buf;
 
-    bool               m_created;
+    std::string           m_service_name;
+    bool                  m_created;
   };
-
-
 } 
 
 #endif /* ! ECAL_C_DLL */

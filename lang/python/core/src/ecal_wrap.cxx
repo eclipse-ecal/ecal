@@ -1019,11 +1019,12 @@ PyObject* client_call_method(PyObject* /*self*/, PyObject* args)   // (client_ha
   const char* method_name   = nullptr;
   const char* request       = nullptr;
   int         request_len   = 0;
+  int         timeout       = -1;
 
-  PyArg_ParseTuple(args, "nsy#", &client_handle, &method_name, &request, &request_len);
+  PyArg_ParseTuple(args, "nsy#i", &client_handle, &method_name, &request, &request_len, &timeout);
 
   bool called_method{ false };
-  called_method = client_call_method(client_handle, method_name, request, request_len);
+  called_method = client_call_method(client_handle, method_name, request, request_len, timeout);
 
   return(Py_BuildValue("i", called_method));
 }
@@ -1031,7 +1032,7 @@ PyObject* client_call_method(PyObject* /*self*/, PyObject* args)   // (client_ha
 /****************************************/
 /*      client_add_response_callback    */
 /****************************************/
-static void c_client_callback(const struct eCAL::SServiceInfo& service_info_, const std::string& response_, ECAL_HANDLE handle_)
+static void c_client_callback(const struct eCAL::SServiceResponse& service_response_, ECAL_HANDLE handle_)
 {
   if (!g_pygil_init)
   {
@@ -1045,18 +1046,18 @@ static void c_client_callback(const struct eCAL::SServiceInfo& service_info_, co
   PyObject* dict = PyDict_New();
   PyObject* val;
 
-  val = Py_BuildValue("s", service_info_.host_name.c_str());
+  val = Py_BuildValue("s", service_response_.host_name.c_str());
   PyDict_SetItemString(dict, "host_name", val); Py_DECREF(val);
-  val = Py_BuildValue("s", service_info_.service_name.c_str());
+  val = Py_BuildValue("s", service_response_.service_name.c_str());
   PyDict_SetItemString(dict, "service_name", val); Py_DECREF(val);
-  val = Py_BuildValue("s", service_info_.method_name.c_str());
+  val = Py_BuildValue("s", service_response_.method_name.c_str());
   PyDict_SetItemString(dict, "method_name", val); Py_DECREF(val);
-  val = Py_BuildValue("s", service_info_.error_msg.c_str());
+  val = Py_BuildValue("s", service_response_.error_msg.c_str());
   PyDict_SetItemString(dict, "error_msg", val); Py_DECREF(val);
-  val = Py_BuildValue("i", service_info_.ret_state);
+  val = Py_BuildValue("i", service_response_.ret_state);
   PyDict_SetItemString(dict, "ret_state", val); Py_DECREF(val);
   std::string call_state_s;
-  switch (service_info_.call_state)
+  switch (service_response_.call_state)
   {
   case call_state_none:
     call_state_s = "call_state_none";
@@ -1075,7 +1076,7 @@ static void c_client_callback(const struct eCAL::SServiceInfo& service_info_, co
   PyDict_SetItemString(dict, "call_state", val); Py_DECREF(val);
   PyTuple_SetItem(args, 0, dict);
 
-  val = Py_BuildValue("y#", response_.c_str(), response_.size());
+  val = Py_BuildValue("y#", service_response_.response.c_str(), service_response_.response.size());
   PyTuple_SetItem(args, 1, val);
 
   PyClientCallbackMapT::const_iterator iter = g_client_pycallback_map.find(handle_);
@@ -1125,7 +1126,7 @@ PyObject* client_add_response_callback(PyObject* /*self*/, PyObject* args)   // 
 
     bool added_callback{ false };
     Py_BEGIN_ALLOW_THREADS
-      added_callback = client->AddResponseCallback(std::bind(c_client_callback, std::placeholders::_1, std::placeholders::_2, client));
+      added_callback = client->AddResponseCallback(std::bind(c_client_callback, std::placeholders::_1, client));
     Py_END_ALLOW_THREADS
     
     if (added_callback)
@@ -1559,7 +1560,7 @@ static PyMethodDef _ecal_methods[] =
   {"client_destroy",                client_destroy,                METH_VARARGS,  "client_destroy(client_handle)" },
 
   {"client_set_hostname",           client_set_hostname,           METH_VARARGS,  "client_set_hostname(client_handle, host_name)" },
-  {"client_call_method",            client_call_method,            METH_VARARGS,  "client_call_method(client_handle, method_name, request)" },
+  {"client_call_method",            client_call_method,            METH_VARARGS,  "client_call_method(client_handle, method_name, request, timeout)" },
 
   {"client_add_response_callback",  client_add_response_callback,  METH_VARARGS,  "client_add_response_callback(client_handle, callback)" },
   {"client_rem_response_callback",  client_add_response_callback,  METH_VARARGS,  "client_rem_response_callback(client_handle)" },

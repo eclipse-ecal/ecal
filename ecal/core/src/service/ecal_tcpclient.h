@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <atomic>
 #include <thread>
 #include <mutex>
 #include <memory>
@@ -41,6 +42,7 @@
 #ifdef ECAL_OS_WINDOWS
 #include "ecal_win_socket.h"
 #endif
+#include "ecal/cimpl/ecal_callback_cimpl.h"
 
 #ifdef ECAL_OS_LINUX
 #include <sys/types.h>
@@ -53,6 +55,7 @@ namespace eCAL
   {
   public:
     typedef std::function<void(const std::string& data_, bool successful_)> AsyncCallbackT;
+    typedef std::function<void(eCAL_Client_Event event, const std::string& message)> EventCallbackT;
 
     CTcpClient();
     CTcpClient(const std::string& host_name_, unsigned short port_);
@@ -62,12 +65,15 @@ namespace eCAL
     void Create(const std::string& host_name_, unsigned short port_);
     void Destroy();
 
-    bool IsConnected() { return m_connected; };
+    bool IsConnected();
 
     std::string GetHostName() { return m_host_name; }
 
-    size_t ExecuteRequest(const std::string& request_, std::string& response_);
-    void ExecuteRequestAsync(const std::string& request_, AsyncCallbackT callback);
+    bool AddEventCallback(EventCallbackT callback_);
+    bool RemEventCallback();
+
+    size_t ExecuteRequest(const std::string& request_, int timeout_, std::string& response_);
+    void ExecuteRequestAsync(const std::string& request_, int timeout_, AsyncCallbackT callback);
 
   protected:
     std::string                             m_host_name;
@@ -77,11 +83,16 @@ namespace eCAL
     std::shared_ptr<asio::io_service>       m_io_service;
     std::shared_ptr<asio::io_service::work> m_idle_work;
     std::shared_ptr<asio::ip::tcp::socket>  m_socket;
+    EventCallbackT                          m_event_callback;
     bool                                    m_created;
     bool                                    m_connected;
-    
+    std::atomic<bool>                       m_async_request_in_progress;
+
   private:
-    void ReceiveResponseAsync(AsyncCallbackT callback_);	
+    bool SendRequest(const std::string &request_);
+    size_t ReceiveResponse(std::string &response_, int timeout_);
+    void ReceiveResponseAsync(AsyncCallbackT callback_, int timeout_);
     void ReceiveResponseData(const size_t size, AsyncCallbackT callback_);
+    void ExecuteCallback(AsyncCallbackT callback_, const std::string &data_, bool success_);
   };
 };

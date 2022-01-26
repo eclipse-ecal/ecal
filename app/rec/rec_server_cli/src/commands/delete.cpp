@@ -54,7 +54,7 @@ namespace eCAL
 
         // (Try to) parse measurement ID
         int64_t meas_id = 0;
-        if (argv.size() == 1)
+        // if (argv.size() == 1) this is always true
         {
           try
           {
@@ -80,7 +80,7 @@ namespace eCAL
 
         // (Try to) parse measurement ID
         int64_t meas_id = 0;
-        if (argv.size() == 1)
+        // if (argv.size() == 1) this is always true
         {
           try
           {
@@ -114,12 +114,12 @@ namespace eCAL
           return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::MEAS_ID_NOT_FOUND, std::to_string(meas_id));
 
         // Service call
-        SServiceInfo                                    service_info;
+        SServiceResponse                                service_response;
         eCAL::pb::rec_server::GenericMeasurementRequest request_pb;
         eCAL::pb::rec_server::ServiceResult             response_pb;
 
         request_pb.set_meas_id(meas_id);
-        bool success = remote_rec_server_service->Call(hostname, "DeleteMeasurement", request_pb, service_info, response_pb);
+        bool success = remote_rec_server_service->Call(hostname, "DeleteMeasurement", request_pb, service_response, response_pb);
 
         // Service call failed
         if (!success)

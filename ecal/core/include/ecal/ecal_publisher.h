@@ -218,7 +218,7 @@ namespace eCAL
      * can increase the performance remarkable. But please keep in mind to return from the message callback function
      * as fast as possible to not delay subsequent read/write access operations.
      *
-     * @state_  Set type zero copy mode for shared memory trasnport layer (true == zero copy enabled).
+     * @param state_  Set type zero copy mode for shared memory trasnport layer (true == zero copy enabled).
      *
      * @return  True if it succeeds, false if it fails.
     **/
@@ -555,6 +555,8 @@ namespace eCAL
     {
       if (par_ == nullptr) return;
       CPublisher* pub = static_cast<CPublisher*>(par_);
+      if (pub->m_event_callback == nullptr) return;
+
       SPubEventCallbackData data;
       data.type = data_->type;
       data.time = data_->time;
@@ -564,7 +566,7 @@ namespace eCAL
     {
       if (!m_publisher) return(false);
       m_event_callback = callback_;
-      return(eCAL_Pub_AddEventCallbackC(m_publisher, type_, &CPublisher::PubEventCallback, this) != 0);
+      return(eCAL_Pub_AddEventCallback(m_publisher, type_, &CPublisher::PubEventCallback, this) != 0);
     }
 
     bool RemEventCallback(eCAL_Publisher_Event type_)

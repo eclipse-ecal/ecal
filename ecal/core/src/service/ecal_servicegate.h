@@ -24,7 +24,8 @@
 #pragma once
 
 #include "ecal_def.h"
-#include "service/ecal_service_server_impl.h"
+
+#include <ecal/ecal_callback.h>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -35,49 +36,35 @@
 #pragma warning(pop)
 #endif
 
-#include <mutex>
 #include <atomic>
-#include <map>
+#include <mutex>
+#include <set>
 
 namespace eCAL
 {
-  class CServGate
+  class CServiceServerImpl;
+
+  class CServiceGate
   {
   public:
-    CServGate();
-    ~CServGate();
+    CServiceGate();
+    ~CServiceGate();
 
     void Create();
     void Destroy();
 
-    bool Register(const std::string& service_name_, CServiceServerImpl* service_);
-    bool Unregister(const std::string& service_name_, CServiceServerImpl* service_);
+    bool Register  (CServiceServerImpl* service_);
+    bool Unregister(CServiceServerImpl* service_);
 
-    struct SService
-    {
-      SService() : pid(0), tcp_port(0) {};
-      std::string    hname;
-      std::string    pname;
-      std::string    uname;
-      int            pid;
-      std::string    sname;
-      unsigned short tcp_port;
-    };
-    std::vector<SService> GetServiceInfo(const std::string& service_name_);
+    void ApplyClientRegistration(const eCAL::pb::Sample& ecal_sample_);
 
-    void ApplyServiceRegistration(const eCAL::pb::Sample& ecal_sample_);
     void RefreshRegistrations();
 
   protected:
     static std::atomic<bool>    m_created;
 
-    typedef std::multimap<std::string, CServiceServerImpl*> ServiceNameServiceImplMapT;
-    std::mutex                  m_internal_service_sync;
-    ServiceNameServiceImplMapT  m_internal_service_map;
-
-    typedef std::chrono::steady_clock RegClockT;
-    typedef std::map<std::string, std::pair<SService, RegClockT::time_point>> ServiceNameServiceMapT;
-    std::mutex                  m_service_register_sync;
-    ServiceNameServiceMapT      m_service_register_map;
+    typedef std::set<CServiceServerImpl*> ServiceNameServiceImplSetT;
+    std::mutex                  m_service_set_sync;
+    ServiceNameServiceImplSetT  m_service_set;
   };
 };

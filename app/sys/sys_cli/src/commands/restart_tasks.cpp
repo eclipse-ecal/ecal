@@ -68,7 +68,7 @@ namespace eCAL
 
       eCAL::sys::Error RestartTask::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, const std::vector<std::string>& argv) const
       {
-        SServiceInfo               service_info;
+        SServiceResponse           service_response;
         eCAL::pb::sys::TaskRequest task_request_pb;
         eCAL::pb::sys::Response    response_pb;
         
@@ -122,7 +122,7 @@ namespace eCAL
           }
         }
 
-        bool success = remote_ecalsys_service->Call(hostname, "RestartTasks", task_request_pb, service_info, response_pb);
+        bool success = remote_ecalsys_service->Call(hostname, "RestartTasks", task_request_pb, service_response, response_pb);
 
         if (!success)
         {
@@ -132,7 +132,7 @@ namespace eCAL
         {
           if (response_pb.result() != eCAL::pb::sys::Response::success)
           {
-            return eCAL::sys::Error(eCAL::sys::Error::ErrorCode::SERVICE_CALL_RETURNED_ERROR, service_info.host_name + ": " + response_pb.error());
+            return eCAL::sys::Error(eCAL::sys::Error::ErrorCode::SERVICE_CALL_RETURNED_ERROR, service_response.host_name + ": " + response_pb.error());
           }
           else
           {

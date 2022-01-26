@@ -27,10 +27,11 @@
 #include "ecal_config_hlp.h"
 #include "ecal_globals.h"
 #include "ecal_register.h"
-#include "ecal_servgate.h"
 #include "ecal_timegate.h"
 #include "pubsub/ecal_pubgate.h"
 #include "pubsub/ecal_subgate.h"
+#include "service/ecal_servicegate.h"
+#include "service/ecal_clientgate.h"
 
 #include <sstream>
 #include <iostream>
@@ -152,13 +153,13 @@ namespace eCAL
     return(false);
   }
 
-  bool CEntityRegister::RegisterService(const std::string& service_name_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
+  bool CEntityRegister::RegisterServer(const std::string& service_name_, const std::string& service_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
   {
     if(!m_created)      return(false);
     if(!m_reg_services) return(false);
 
-    std::lock_guard<std::mutex> lock(m_service_map_sync);
-    m_service_map[service_name_] = ecal_sample_;
+    std::lock_guard<std::mutex> lock(m_server_map_sync);
+    m_server_map[service_name_ + service_id_] = ecal_sample_;
     if(force_)
     {
       RegisterProcess();
@@ -169,16 +170,49 @@ namespace eCAL
     return(true);
   }
 
-  bool CEntityRegister::UnregisterService(const std::string& service_name_)
+  bool CEntityRegister::UnregisterServer(const std::string& service_name_, const std::string& service_id_)
   {
     if(!m_created) return(false);
 
     SampleMapT::iterator iter;
-    std::lock_guard<std::mutex> lock(m_service_map_sync);
-    iter = m_service_map.find(service_name_);
-    if(iter != m_service_map.end())
+    std::lock_guard<std::mutex> lock(m_server_map_sync);
+    iter = m_server_map.find(service_name_ + service_id_);
+    if(iter != m_server_map.end())
     {
-      m_service_map.erase(iter);
+      m_server_map.erase(iter);
+      return(true);
+    }
+
+    return(false);
+  }
+
+  bool CEntityRegister::RegisterClient(const std::string& client_name_, const std::string& client_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
+  {
+    if (!m_created)      return(false);
+    if (!m_reg_services) return(false);
+
+    std::lock_guard<std::mutex> lock(m_client_map_sync);
+    m_client_map[client_name_ + client_id_] = ecal_sample_;
+    if (force_)
+    {
+      RegisterProcess();
+      RegisterSample(client_name_, ecal_sample_);
+      std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+
+    return(true);
+  }
+
+  bool CEntityRegister::UnregisterClient(const std::string& client_name_, const std::string& client_id_)
+  {
+    if (!m_created) return(false);
+
+    SampleMapT::iterator iter;
+    std::lock_guard<std::mutex> lock(m_client_map_sync);
+    iter = m_client_map.find(client_name_ + client_id_);
+    if (iter != m_client_map.end())
+    {
+      m_client_map.erase(iter);
       return(true);
     }
 
@@ -255,18 +289,43 @@ namespace eCAL
     return(sent_sum);
   }
 
-  size_t CEntityRegister::RegisterServices()
+  size_t CEntityRegister::RegisterServer()
   {
     if(!m_created)      return(0);
     if(!m_reg_services) return(0);
 
     size_t sent_sum(0);
     int    sent_cnt(0);
-    std::lock_guard<std::mutex> lock(m_service_map_sync);
-    for(SampleMapT::const_iterator iter = m_service_map.begin(); iter != m_service_map.end(); ++iter)
+    std::lock_guard<std::mutex> lock(m_server_map_sync);
+    for(SampleMapT::const_iterator iter = m_server_map.begin(); iter != m_server_map.end(); ++iter)
     {
       // register sample
       sent_sum += RegisterSample(iter->second.service().sname(), iter->second);
+
+      // we make minimal sleeps every 10th sample to not overload
+      // registration thread
+      sent_cnt++;
+      if (sent_cnt % 10 == 0)
+      {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+      }
+    }
+
+    return(sent_sum);
+  }
+
+  size_t CEntityRegister::RegisterClient()
+  {
+    if (!m_created)      return(0);
+    if (!m_reg_services) return(0);
+
+    size_t sent_sum(0);
+    int    sent_cnt(0);
+    std::lock_guard<std::mutex> lock(m_client_map_sync);
+    for (SampleMapT::const_iterator iter = m_client_map.begin(); iter != m_client_map.end(); ++iter)
+    {
+      // register sample
+      sent_sum += RegisterSample(iter->second.client().sname(), iter->second);
 
       // we make minimal sleeps every 10th sample to not overload
       // registration thread
@@ -333,7 +392,10 @@ namespace eCAL
     if (g_pubgate()) g_pubgate()->RefreshRegistrations();
 
     // refresh server registration
-    if (g_servgate()) g_servgate()->RefreshRegistrations();
+    if (g_servicegate()) g_servicegate()->RefreshRegistrations();
+
+    // refresh client registration
+    if (g_clientgate()) g_clientgate()->RefreshRegistrations();
 
     // overall registration udp send size for debugging
     /*size_t sent_sum(0);*/
@@ -341,8 +403,11 @@ namespace eCAL
     // register process
     /*sent_sum += */RegisterProcess();
 
-    // register services
-    /*sent_sum += */RegisterServices();
+    // register server
+    /*sent_sum += */RegisterServer();
+
+    // register clients
+    /*sent_sum += */RegisterClient();
 
     // register topics
     /*sent_sum += */RegisterTopics();

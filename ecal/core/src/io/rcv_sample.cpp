@@ -194,7 +194,10 @@ int CSampleReceiver::CSampleReceiveSlot::OnMessageCompleted(std::vector<char> &&
       eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - REGISTER PROCESS");
       break;
     case eCAL::pb::bct_reg_service:
-      eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - REGISTER SERVICE");
+      eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - REGISTER SERVER");
+      break;
+    case eCAL::pb::bct_reg_client:
+      eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - REGISTER CLIENT");
       break;
     default:
       eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - UNKNOWN");
@@ -275,8 +278,6 @@ int CSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_le
   switch (ecal_message->header.type)
   {
   case msg_type_header:
-    if (sample_buffer_len_ < sizeof(SUDPMessageHead))
-      return(0);
     break;
   case msg_type_content:
   case msg_type_header_with_content:
@@ -342,6 +343,9 @@ int CSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_le
         break;
       case eCAL::pb::bct_reg_service:
         eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - REGISTER SERVICE");
+        break;
+      case eCAL::pb::bct_reg_client:
+        eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - REGISTER CLIENT");
         break;
       default:
         eCAL::Logging::Log(log_level_debug4, sample_name + "::UDP Sample Command Type - UNKNOWN");

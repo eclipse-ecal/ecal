@@ -27,6 +27,7 @@
 #include <ecal/cimpl/ecal_callback_cimpl.h>
 
 #include <functional>
+#include <string>
 
 namespace eCAL
 {
@@ -51,35 +52,14 @@ namespace eCAL
   };
 
   /**
-   * @brief Raw data receive callback function type.
-   *
-   * @param topic_name_  The topic name of the received message.
-   * @param data_        Data atruct containing payload, timestamp and publication clock.
-  **/
-  typedef std::function<void(const char* topic_name_, const struct SReceiveCallbackData* data_)> ReceiveCallbackT;
-
-  /**
-   * @brief Timer callback function type.
-  **/
-  typedef std::function<void(void)> TimerCallbackT;
-
-  /**
-   * @brief Registration callback type.
-   *
-   * @param sample_       The sample protocol buffer regsitration payload buffer.
-   * @param sample_size_  The payload buffer size.
-  **/
-  typedef std::function<void(const char* sample_, int sample_size_)> RegistrationCallbackT;
-
-  /**
    * @brief eCAL publisher event callback struct.
   **/
   struct SPubEventCallbackData
   {
     SPubEventCallbackData()
     {
-      type = pub_event_none;
-      time = 0;
+      type  = pub_event_none;
+      time  = 0;
       clock = 0;
     };
     eCAL_Publisher_Event type;    //!< publisher event type
@@ -104,6 +84,85 @@ namespace eCAL
   };
 
   /**
+   * @brief eCAL service attributes.
+  **/
+  struct SServiceAttr
+  {
+    std::string    key;           //!< unique service key (internal)
+    std::string    hname;         //!< host name
+    std::string    pname;         //!< process name
+    std::string    uname;         //!< process unit name
+    std::string    sname;         //!< service name
+    std::string    sid;           //!< service id
+    int            pid = 0;       //!< process id
+    unsigned short tcp_port = 0;  //!< service tcp port
+  };
+
+  /**
+   * @brief eCAL client event callback struct.
+  **/
+  struct SClientEventCallbackData
+  {
+    SClientEventCallbackData()
+    {
+      type = client_event_none;
+      time = 0;
+    };
+    eCAL_Client_Event type;  //!< event type
+    long long         time;  //!< event time in µs
+    SServiceAttr      attr;  //!< event related service attributes
+  };
+
+  /**
+   * @brief eCAL client attributes.
+  **/
+  struct SClientAttr
+  {
+    std::string    key;           //!< unique service key (internal)
+    std::string    hname;         //!< host name
+    std::string    pname;         //!< process name
+    std::string    uname;         //!< process unit name
+    std::string    sname;         //!< service name
+    std::string    sid;           //!< service id
+    int            pid = 0;       //!< process id
+  };
+
+  /**
+   * @brief eCAL server event callback struct.
+  **/
+  struct SServerEventCallbackData
+  {
+    SServerEventCallbackData()
+    {
+      type = server_event_none;
+      time = 0;
+    };
+    eCAL_Server_Event type;  //!< event type
+    long long         time;  //!< event time in µs
+  };
+
+  /**
+   * @brief Raw data receive callback function type.
+   *
+   * @param topic_name_  The topic name of the received message.
+   * @param data_        Data atruct containing payload, timestamp and publication clock.
+  **/
+  typedef std::function<void(const char* topic_name_, const struct SReceiveCallbackData* data_)> ReceiveCallbackT;
+
+  /**
+   * @brief Timer callback function type.
+  **/
+  typedef std::function<void(void)> TimerCallbackT;
+
+  /**
+   * @brief Registration callback type.
+   *
+   * @param sample_       The sample protocol buffer regsitration payload buffer.
+   * @param sample_size_  The payload buffer size.
+  **/
+  typedef std::function<void(const char* sample_, int sample_size_)> RegistrationCallbackT;
+
+  /**
    * @brief Publisher event callback function type.
    *
    * @param topic_name_  The topic name of the publisher that triggered the event.
@@ -118,4 +177,20 @@ namespace eCAL
    * @param data_        Event callback data structure with the event specific informations.
   **/
   typedef std::function<void(const char* topic_name_, const struct SSubEventCallbackData* data_)> SubEventCallbackT;
+
+  /**
+   * @brief Client event callback function type.
+   *
+   * @param name_  The name of the connection that triggered the event.
+   * @param data_  Event callback data structure with the event specific informations.
+  **/
+  typedef std::function<void(const char* name_, const struct SClientEventCallbackData* data_)> ClientEventCallbackT;
+
+  /**
+   * @brief Server event callback function type.
+   *
+   * @param name_  The name of the connection that triggered the event.
+   * @param data_  Event callback data structure with the event specific informations.
+  **/
+  typedef std::function<void(const char* name_, const struct SServerEventCallbackData* data_)> ServerEventCallbackT;
 };

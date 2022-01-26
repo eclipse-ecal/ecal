@@ -85,12 +85,12 @@ namespace eCAL
   bool CServiceServer::Destroy()
   {
     if(!m_created) return(false);
+    m_created = false;
 
     m_service_server_impl->Destroy();
     delete m_service_server_impl;
     m_service_server_impl = nullptr;
 
-    m_created = false;
     return(true);
   }
 
@@ -119,6 +119,33 @@ namespace eCAL
   }
 
   /**
+   * @brief Add callback function for server events.
+   *
+   * @param type_      The event type to react on.
+   * @param callback_  The callback function to add.
+   *
+   * @return  True if succeeded, false if not.
+  **/
+  bool CServiceServer::AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_)
+  {
+    if (!m_created) return false;
+    return m_service_server_impl->AddEventCallback(type_, callback_);
+  }
+
+  /**
+   * @brief Remove callback function for server events.
+   *
+   * @param type_  The event type to remove.
+   *
+   * @return  True if succeeded, false if not.
+  **/
+  bool CServiceServer::RemEventCallback(eCAL_Server_Event type_)
+  {
+    if (!m_created) return false;
+    return m_service_server_impl->RemEventCallback(type_);
+  }
+
+  /**
    * @brief Retrieve service name.
    *
    * @return  The service name.
@@ -127,5 +154,16 @@ namespace eCAL
   {
     if (!m_created) return "";
     return m_service_server_impl->GetServiceName();
+  }
+
+  /**
+   * @brief Check connection state.
+   *
+   * @return  True if connected, false if not.
+  **/
+  bool CServiceServer::IsConnected()
+  {
+    if (!m_created) return false;
+    return m_service_server_impl->IsConnected();
   }
 }

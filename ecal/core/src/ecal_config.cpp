@@ -193,7 +193,7 @@ namespace eCAL
           EcalUtils::Filesystem::FileStatus ecal_ini_status(directory + std::string(ECAL_DEFAULT_CFG), EcalUtils::Filesystem::Current);
           if (ecal_ini_status.IsOk() && (ecal_ini_status.GetType() == EcalUtils::Filesystem::Type::RegularFile))
           {
-            config_path = directory;
+            config_path = std::move(directory);
             break;
           }
         }

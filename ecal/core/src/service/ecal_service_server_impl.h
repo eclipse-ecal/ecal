@@ -24,20 +24,21 @@
 #pragma once
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_service_info.h>
+#include <ecal/ecal_callback.h>
+
+#include "ecal_tcpserver.h"
 
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
-#include "ecal/pb/service.pb.h"
+#include <ecal/pb/ecal.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 
-#include "ecal_tcpserver.h"
-
 #include <map>
+#include <mutex>
 
 namespace eCAL
 {
@@ -56,9 +57,21 @@ namespace eCAL
 
     bool Destroy();
 
+    // add and remove callback function for server method calls
     bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_);
     bool RemMethodCallback(const std::string& method_);
 
+    // add and remove callback function for server events
+    bool AddEventCallback(eCAL_Server_Event type_, ServerEventCallbackT callback_);
+    bool RemEventCallback(eCAL_Server_Event type_);
+      
+    // check connection state
+    bool IsConnected();
+
+    // called by the eCAL::CServiceGate to register a client
+    void RegisterClient(const std::string& key_, const SClientAttr& client_);
+
+    // called by eCAL:CServiceGate every second to update registration layer
     void RefreshRegistration();
 
     std::string GetServiceName() { return m_service_name; };
@@ -69,17 +82,27 @@ namespace eCAL
 
   protected:
     int RequestCallback(const std::string& request_, std::string& response_);
+    void EventCallback(eCAL_Server_Event event_, const std::string& message_);
 
-    CTcpServer          m_tcp_server;
+    CTcpServer         m_tcp_server;
 
-    std::string         m_service_name;
+    std::string        m_service_name;
+    std::string        m_service_id;
+
     struct SMethodCallback
     {
       eCAL::pb::Method method;
       MethodCallbackT  callback;
     };
+    std::mutex         m_method_callback_map_sync;
     typedef std::map<std::string, SMethodCallback> MethodCallbackMapT;
-    MethodCallbackMapT  m_callback_map;
-    bool                m_created;
+    MethodCallbackMapT m_method_callback_map;
+
+    std::mutex         m_event_callback_map_sync;
+    typedef std::map<eCAL_Server_Event, ServerEventCallbackT> EventCallbackMapT;
+    EventCallbackMapT  m_event_callback_map;
+    
+    bool               m_connected;
+    bool               m_created;
   };
 }

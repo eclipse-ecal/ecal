@@ -27,8 +27,8 @@ namespace eCAL
     {
       eCAL::sys::Error Command::GetRemoteSysStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, eCAL::pb::sys::State& state_output) const
       {
-        SServiceInfo service_info;
-        bool success = remote_ecalsys_service->Call(hostname, "GetStatus", eCAL::pb::sys::GenericRequest(), service_info, state_output);
+        SServiceResponse service_response;
+        bool success = remote_ecalsys_service->Call(hostname, "GetStatus", eCAL::pb::sys::GenericRequest(), service_response, state_output);
 
         if (!success)
         {

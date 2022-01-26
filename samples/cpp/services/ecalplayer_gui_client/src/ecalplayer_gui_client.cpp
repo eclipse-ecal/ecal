@@ -31,7 +31,7 @@ EcalplayGuiClient::EcalplayGuiClient(QWidget *parent)
   eCAL::Initialize(0, nullptr, "ecalplayer gui client");
 
   // create player service client
-  player_service_.AddResponseCallback([this](const struct eCAL::SServiceInfo& service_info, const std::string& response) {this->onPlayerResponse(service_info, response); });
+  player_service_.AddResponseCallback([this](const struct eCAL::SServiceResponse& service_response) {this->onPlayerResponse(service_response); });
 
   connect(ui_.get_config_request_button, &QPushButton::clicked,                 this,                   &EcalplayGuiClient::getConfigRequest);
   connect(ui_.set_config_request_button, &QPushButton::clicked,                 this,                   &EcalplayGuiClient::setConfigRequest);
@@ -196,30 +196,30 @@ void EcalplayGuiClient::commandRequest()
 //// Response                                                               ////
 ////////////////////////////////////////////////////////////////////////////////
 
-void EcalplayGuiClient::onPlayerResponse(const struct eCAL::SServiceInfo& service_info_, const std::string& response_)
+void EcalplayGuiClient::onPlayerResponse(const struct eCAL::SServiceResponse& service_response_)
 {
   QString response_string;
   QTextStream response_stream(&response_string);
 
-  switch (service_info_.call_state)
+  switch (service_response_.call_state)
   {
     // service successful executed
   case call_state_executed:
   {
-    if (service_info_.method_name == "GetConfig")
+    if (service_response_.method_name == "GetConfig")
     {
       eCAL::pb::play::GetConfigResponse response;
-      response.ParseFromString(response_);
+      response.ParseFromString(service_response_.response);
 
-      response_stream << "PlayerService " << service_info_.method_name.c_str() << " called successfully on host " << service_info_.host_name.c_str() << "\n";
+      response_stream << "PlayerService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
     else
     {
       eCAL::pb::play::Response response;
-      response.ParseFromString(response_);
-      response_stream << "PlayerService " << service_info_.method_name.c_str() << " called successfully on host " << service_info_.host_name.c_str() << "\n";
+      response.ParseFromString(service_response_.response);
+      response_stream << "PlayerService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
@@ -229,8 +229,8 @@ void EcalplayGuiClient::onPlayerResponse(const struct eCAL::SServiceInfo& servic
   case call_state_failed:
   {
     eCAL::pb::play::Response response;
-    response.ParseFromString(response_);
-    response_stream << "PlayerService " << service_info_.method_name.c_str() << " failed with \"" << response.error().c_str() << "\" on host " << service_info_.host_name.c_str() << "\n";
+    response.ParseFromString(service_response_.response);
+    response_stream << "PlayerService " << service_response_.method_name.c_str() << " failed with \"" << response.error().c_str() << "\" on host " << service_response_.host_name.c_str() << "\n";
     response_stream << "------------------------------------------------\n\n";
     response_stream << response.DebugString().c_str();
     break;

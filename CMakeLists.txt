@@ -435,8 +435,7 @@ if(BUILD_ECAL_TESTS)
   # ------------------------------------------------------
   # test ecal
   # ------------------------------------------------------
-  # TODO: check this for github actions (ubuntu) - send failed because of broken pipe
-  #add_subdirectory(testing/ecal/clientserver_test)
+  #add_subdirectory(testing/ecal/clientserver_test)   THIS TEST IS NOT ABLE TO RUN ON GH ACTIONS
   add_subdirectory(testing/ecal/core_test)
   add_subdirectory(testing/ecal/event_test)
   add_subdirectory(testing/ecal/expmap_test)

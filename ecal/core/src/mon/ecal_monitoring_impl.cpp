@@ -52,6 +52,10 @@ namespace eCAL
     {
       host_name_ = ecal_sample_.service().hname();
     }
+    if (ecal_sample_.has_client())
+    {
+      host_name_ = ecal_sample_.client().hname();
+    }
     if (ecal_sample_.has_topic())
     {
       host_name_ = ecal_sample_.topic().hname();
@@ -77,7 +81,8 @@ namespace eCAL
     m_publisher_map (std::chrono::milliseconds(eCALPAR(MON, TIMEOUT))),
     m_subscriber_map(std::chrono::milliseconds(eCALPAR(MON, TIMEOUT))),
     m_process_map   (std::chrono::milliseconds(eCALPAR(MON, TIMEOUT))),
-    m_service_map   (std::chrono::milliseconds(eCALPAR(MON, TIMEOUT)))
+    m_server_map    (std::chrono::milliseconds(eCALPAR(MON, TIMEOUT))),
+    m_client_map    (std::chrono::milliseconds(eCALPAR(MON, TIMEOUT)))
   {
   }
 
@@ -183,7 +188,13 @@ namespace eCAL
     case eCAL::pb::bct_reg_service:
     {
       // register service
-      RegisterService(ecal_sample_);
+      RegisterServer(ecal_sample_);
+    }
+    break;
+    case eCAL::pb::bct_reg_client:
+    {
+      // register client
+      RegisterClient(ecal_sample_);
     }
     break;
     case eCAL::pb::bct_reg_publisher:
@@ -366,11 +377,12 @@ namespace eCAL
     return(true);
   }
 
-  bool CMonitoringImpl::RegisterService(const eCAL::pb::Sample& sample_)
+  bool CMonitoringImpl::RegisterServer(const eCAL::pb::Sample& sample_)
   {
     auto sample_service = sample_.service();
     std::string  host_name    = sample_service.hname();
     std::string  service_name = sample_service.sname();
+    std::string  service_id   = sample_service.sid();
     std::string  process_name = sample_service.pname();
     std::string  unit_name    = sample_service.uname();
     int          process_id   = sample_service.pid();
@@ -378,25 +390,26 @@ namespace eCAL
 
     std::stringstream process_id_ss;
     process_id_ss << process_id;
-    std::string service_name_id = service_name + process_id_ss.str();
+    std::string service_name_id = service_name + service_id + process_id_ss.str();
 
     // acquire access
-    std::lock_guard<std::mutex> lock(m_service_map.sync);
+    std::lock_guard<std::mutex> lock(m_server_map.sync);
 
     // try to get service info
-    SServiceMon& ServiceInfo = (*m_service_map.map)[service_name_id];
+    SServerMon& ServerInfo = (*m_server_map.map)[service_name_id];
 
     // set static content
-    ServiceInfo.hname    = std::move(host_name);
-    ServiceInfo.sname    = std::move(service_name);
-    ServiceInfo.pname    = std::move(process_name);
-    ServiceInfo.uname    = std::move(unit_name);
-    ServiceInfo.pid      = process_id;
-    ServiceInfo.tcp_port = tcp_port;
+    ServerInfo.hname    = std::move(host_name);
+    ServerInfo.sname    = std::move(service_name);
+    ServerInfo.sid      = std::move(service_id);
+    ServerInfo.pname    = std::move(process_name);
+    ServerInfo.uname    = std::move(unit_name);
+    ServerInfo.pid      = process_id;
+    ServerInfo.tcp_port = tcp_port;
 
     // update flexible content
-    ServiceInfo.rclock++;
-    ServiceInfo.methods.clear();
+    ServerInfo.rclock++;
+    ServerInfo.methods.clear();
     for (int i = 0; i < sample_.service().methods_size(); ++i)
     {
       struct SMethodMon method;
@@ -405,8 +418,42 @@ namespace eCAL
       method.req_type   = sample_service_methods.req_type();
       method.resp_type  = sample_service_methods.resp_type();
       method.call_count = sample_service_methods.call_count();
-      ServiceInfo.methods.push_back(method);
+      ServerInfo.methods.push_back(method);
     }
+
+    return(true);
+  }
+
+  bool CMonitoringImpl::RegisterClient(const eCAL::pb::Sample& sample_)
+  {
+    auto sample_client = sample_.client();
+    std::string  host_name    = sample_client.hname();
+    std::string  service_name = sample_client.sname();
+    std::string  service_id   = sample_client.sid();
+    std::string  process_name = sample_client.pname();
+    std::string  unit_name    = sample_client.uname();
+    int          process_id   = sample_client.pid();
+
+    std::stringstream process_id_ss;
+    process_id_ss << process_id;
+    std::string service_name_id = service_name + service_id + process_id_ss.str();
+
+    // acquire access
+    std::lock_guard<std::mutex> lock(m_client_map.sync);
+
+    // try to get service info
+    SClientMon& ClientInfo = (*m_client_map.map)[service_name_id];
+
+    // set static content
+    ClientInfo.hname = std::move(host_name);
+    ClientInfo.sname = std::move(service_name);
+    ClientInfo.sid   = std::move(service_id);
+    ClientInfo.pname = std::move(process_name);
+    ClientInfo.uname = std::move(unit_name);
+    ClientInfo.pid = process_id;
+
+    // update flexible content
+    ClientInfo.rclock++;
 
     return(true);
   }
@@ -439,7 +486,8 @@ namespace eCAL
 
     // write all registrations to monitoring message object
     MonitorProcs(monitoring_);
-    MonitorServices(monitoring_);
+    MonitorServer(monitoring_);
+    MonitorClients(monitoring_);
     MonitorTopics(m_publisher_map, monitoring_, "publisher");
     MonitorTopics(m_subscriber_map, monitoring_, "subscriber");
   }
@@ -556,14 +604,14 @@ namespace eCAL
     }
   }
 
-  void CMonitoringImpl::MonitorServices(eCAL::pb::Monitoring& monitoring_)
+  void CMonitoringImpl::MonitorServer(eCAL::pb::Monitoring& monitoring_)
   {
     // acquire access
-    std::lock_guard<std::mutex> lock(m_service_map.sync);
+    std::lock_guard<std::mutex> lock(m_server_map.sync);
 
     // iterate map
-    m_service_map.map->remove_deprecated();
-    for (auto service : (*m_service_map.map))
+    m_server_map.map->remove_deprecated();
+    for (auto service : (*m_server_map.map))
     {
       // add host
       eCAL::pb::Service* pMonService = monitoring_.add_services();
@@ -586,6 +634,9 @@ namespace eCAL
       // service name
       pMonService->set_sname(service.second.sname);
 
+      // service id
+      pMonService->set_sid(service.second.sid);
+
       // tcp port
       pMonService->set_tcp_port(service.second.tcp_port);
 
@@ -598,6 +649,41 @@ namespace eCAL
         pMonMethod->set_resp_type(method.resp_type);
         pMonMethod->set_call_count(method.call_count);
       }
+    }
+  }
+
+  void CMonitoringImpl::MonitorClients(eCAL::pb::Monitoring& monitoring_)
+  {
+    // acquire access
+    std::lock_guard<std::mutex> lock(m_client_map.sync);
+
+    // iterate map
+    m_client_map.map->remove_deprecated();
+    for (auto service : (*m_client_map.map))
+    {
+      // add host
+      eCAL::pb::Client* pMonClient = monitoring_.add_clients();
+
+      // registration clock
+      pMonClient->set_rclock(service.second.rclock);
+
+      // host name
+      pMonClient->set_hname(service.second.hname);
+
+      // process name
+      pMonClient->set_pname(service.second.pname);
+
+      // unit name
+      pMonClient->set_uname(service.second.uname);
+
+      // process id
+      pMonClient->set_pid(service.second.pid);
+
+      // service name
+      pMonClient->set_sname(service.second.sname);
+
+      // service id
+      pMonClient->set_sid(service.second.sid);
     }
   }
 

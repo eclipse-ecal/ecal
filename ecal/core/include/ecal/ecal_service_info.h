@@ -28,26 +28,30 @@
 
 #include <functional>
 #include <string>
+#include <vector>
 
 namespace eCAL
 {
   /**
-   * @brief eCAL service info struct.
+   * @brief Service response struct containing the (responding) server informations and the response itself.
   **/
-  struct SServiceInfo
+  struct SServiceResponse
   {
-    SServiceInfo()
+    SServiceResponse()
     {
       ret_state  = 0;
       call_state = call_state_none;
     };
     std::string  host_name;      //!< service host name
     std::string  service_name;   //!< name of the service
+    std::string  service_id;     //!< id of the service
     std::string  method_name;    //!< name of the service method
     std::string  error_msg;      //!< human readable error message
     int          ret_state;      //!< return state of the called service method
     eCallState   call_state;     //!< call state (see eCallState)
+    std::string  response;       //!< service response
   };
+  typedef std::vector<SServiceResponse> ServiceResponseVecT; //!< vector of multiple service responses
 
   /**
    * @brief Service method callback function type (low level server interface).
@@ -63,8 +67,7 @@ namespace eCAL
   /**
    * @brief Service response callback function type (low level client interface).
    *
-   * @param service_info_  The service info containing the server side response result.
-   * @param response_      The response returned from the server.
+   * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
   **/
-  typedef std::function<void(const struct SServiceInfo& service_info_, const std::string& response_)> ResponseCallbackT;
+  typedef std::function<void(const struct SServiceResponse& service_response_)> ResponseCallbackT;
 };
