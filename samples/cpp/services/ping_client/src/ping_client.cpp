@@ -47,29 +47,34 @@ int main(int argc, char **argv)
     if (ping_client.IsConnected())
     {
       //////////////////////////////////////
-    // Ping service (blocking call)
-    //////////////////////////////////////
-      eCAL::SServiceResponse service_response;
-      PingRequest        ping_request;
-      PingResponse       ping_response;
+      // Ping service (blocking call)
+      //////////////////////////////////////
+      PingRequest               ping_request;
+      eCAL::ServiceResponseVecT service_response_vec;
       ping_request.set_message("PING");
-      if (ping_client.Call("", "Ping", ping_request, service_response, ping_response))
+      if (ping_client.Call("Ping", ping_request, -1, &service_response_vec))
       {
         std::cout << std::endl << "PingService::Ping method called with message : " << ping_request.message() << std::endl;
-        switch (service_response.call_state)
+
+        for (auto service_response : service_response_vec)
         {
-          // service successful executed
-        case call_state_executed:
-        {
-          std::cout << "Received response PingService / Ping : " << ping_response.answer() << " from host " << service_response.host_name << std::endl;
-        }
-        break;
-        // service execution failed
-        case call_state_failed:
-          std::cout << "Received error PingService / Ping : " << service_response.error_msg << " from host " << service_response.host_name << std::endl;
+          switch (service_response.call_state)
+          {
+            // service successful executed
+          case call_state_executed:
+          {
+            PingResponse ping_response;
+            ping_response.ParseFromString(service_response.response);
+            std::cout << "Received response PingService / Ping : " << ping_response.answer() << " from host " << service_response.host_name << std::endl;
+          }
           break;
-        default:
-          break;
+          // service execution failed
+          case call_state_failed:
+            std::cout << "Received error PingService / Ping : " << service_response.error_msg << " from host " << service_response.host_name << std::endl;
+            break;
+          default:
+            break;
+          }
         }
       }
       else
@@ -77,11 +82,6 @@ int main(int argc, char **argv)
         std::cout << "PingService::Ping method call failed .." << std::endl << std::endl;
       }
     }
-    else
-    {
-      std::cout << "Waiting for the service .." << std::endl;
-    }
-
 
     // sleep a second
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
