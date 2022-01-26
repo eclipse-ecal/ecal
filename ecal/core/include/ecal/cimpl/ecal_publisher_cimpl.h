@@ -78,8 +78,8 @@ extern "C"
    * @brief Setup generic publisher description. 
    *
    * @param handle_          Publisher handle. 
-   * @param topic_desc_      Generic description. 
-   * @param topic_desc_len_  Generic description length. 
+   * @param generic_desc_      Generic description. 
+   * @param generic_desc_len_  Generic description length. 
    *
    * @return  None zero if succeeded.
   **/
