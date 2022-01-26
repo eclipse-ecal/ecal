@@ -33,6 +33,49 @@ Depending on what we changed in eCAL, we increment the appropriate number:
   You can upgrade through patch versions without having to expect any problems.
   Usually, you just want the latest release to profit from all bugfixes.
 
+eCAL 5.10 vs. 5.9
+================
+
+Compatibility table when upgrading from eCAl 5.8:
+
+.. list-table:: eCAL 5.10 vs. 5.9
+   :widths: 20 80
+
+   * - Wire compatibility
+     
+     - * eCAL UDP: 100% compatible
+  
+       * eCAL TCP: New in 5.10.
+
+         Prior versions of eCAL will not be able to receive data from TCP publishers.
+
+       * Services: 100% compatible
+
+       * eCAL Shared Memory: Downwards compatible
+     
+         eCAL 5.10 offers an option to use multi-buffering for increased performance.
+         Prior Versions of eCAL cannot receive data from publishern using that feature.
+
+         By default, the feature is turned off, which makes the Shared memory layer 100% compatible.
+
+   * - API / ABI
+
+     - * API is *mostly* downward compatible.
+
+         When using the raw (non-protobuf) Service API, you may incorporate some incompatibilities.
+         Please check :ref:`this guide <compatibility_details_5_10_service_api>` on how to upgrade.
+         
+       * ABI is not compatible
+
+   * - Tools
+
+     - * Rec: 100% compatible
+
+       * Sys: 100% compatible
+
+       * Measurements: 100% compatible
+
+
 eCAL 5.9 vs. 5.8
 ================
 
