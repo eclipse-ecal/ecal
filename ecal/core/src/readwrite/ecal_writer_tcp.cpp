@@ -34,14 +34,14 @@
 #include "ecal_config_hlp.h"
 
 #include "readwrite/ecal_writer_tcp.h"
-#include "readwrite/ecal_tcpub_logger.h"
+#include "readwrite/ecal_tcp_pubsub_logger.h"
 
 #include "ecal_utils/portable_endian.h"
 
 namespace eCAL
 {
   std::mutex                       CDataWriterTCP::g_tcp_writer_executor_mtx;
-  std::shared_ptr<tcpub::Executor> CDataWriterTCP::g_tcp_writer_executor;
+  std::shared_ptr<tcp_pubsub::Executor> CDataWriterTCP::g_tcp_writer_executor;
 
   CDataWriterTCP::CDataWriterTCP() : m_port(0)
   {
@@ -72,13 +72,13 @@ namespace eCAL
       std::lock_guard<std::mutex> lock(g_tcp_writer_executor_mtx);
       if (!g_tcp_writer_executor)
       {
-        tcpub::logger::logger_t tcpub_logger = std::bind(TcpubLogger, std::placeholders::_1, std::placeholders::_2);
-        g_tcp_writer_executor = std::make_shared<tcpub::Executor>(eCALPAR(NET, TCPUB_NUM_EXECUTOR_WRITER), TcpubLogger);
+        tcp_pubsub::logger::logger_t tcp_pubsub_logger = std::bind(TcpPubsubLogger, std::placeholders::_1, std::placeholders::_2);
+        g_tcp_writer_executor = std::make_shared<tcp_pubsub::Executor>(eCALPAR(NET, TCP_PUBSUB_NUM_EXECUTOR_WRITER), TcpPubsubLogger);
       }
     }
 
     // create publisher
-    m_publisher = std::make_shared<tcpub::Publisher>(g_tcp_writer_executor);
+    m_publisher = std::make_shared<tcp_pubsub::Publisher>(g_tcp_writer_executor);
     m_port      = m_publisher->getPort();
 
     // writer parameter

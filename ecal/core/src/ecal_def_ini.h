@@ -54,9 +54,9 @@
 
 #define  NET_NPCAP_ENABLED_S              "npcap_enabled"
 
-#define  NET_TCPUB_NUM_EXECUTOR_READER_S  "tcpub_num_executor_reader"
-#define  NET_TCPUB_NUM_EXECUTOR_WRITER_S  "tcpub_num_executor_writer"
-#define  NET_TCPUB_MAX_RECONNECTIONS_S    "tcpub_max_reconnections"
+#define  NET_TCP_PUBSUB_NUM_EXECUTOR_READER_S  "tcp_pubsub_num_executor_reader"
+#define  NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER_S  "tcp_pubsub_num_executor_writer"
+#define  NET_TCP_PUBSUB_MAX_RECONNECTIONS_S    "tcp_pubsub_max_reconnections"
 
 /////////////////////////////////////
 // time
