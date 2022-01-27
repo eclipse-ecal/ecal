@@ -15,6 +15,7 @@ endif()
 
 set(file_list_no_include
   protoc_functions/protoc_generate_cpp.cmake
+  protoc_functions/protoc_generate_python.cmake
 )
 
 if(WIN32)
