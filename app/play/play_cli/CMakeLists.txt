@@ -60,11 +60,10 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 # Create a source tree that mirrors the filesystem
-create_source_tree(
-  ${source_files}
-  ${qt_resource_files}
-  ${win32_resource_files}
-  ${ui_files}
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
+    FILES
+        ${source_files}
+        ${win32_resource_files}
 )
 
 target_link_options(${PROJECT_NAME} PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/ignore:4098,4099>)

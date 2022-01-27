@@ -52,7 +52,11 @@ target_include_directories(${PROJECT_NAME}
   PRIVATE src/)
 
 # Create a source tree that mirrors the filesystem
-create_source_tree(${include_files} ${src_files})
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
+    FILES
+        ${include_files}
+        ${src_files}
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lib/)

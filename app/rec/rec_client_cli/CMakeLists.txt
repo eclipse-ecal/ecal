@@ -51,9 +51,10 @@ target_link_libraries(${PROJECT_NAME}
 
 ecal_install_app(${PROJECT_NAME})
 
-create_source_tree(
-    ${source_files}
-    ${win_src}
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
+    FILES
+        ${source_files}
+        ${win_src}
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/rec)

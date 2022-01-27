@@ -88,11 +88,12 @@ if(MSVC)
 endif()
 
 # Create a source tree that mirrors the filesystem
-create_source_tree(
-    ${qecalparser_includes}
-    ${qecalparser_src}
-    ${qecalparser_ui}
-    ${qecalparser_resources}
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
+    FILES
+        ${qecalparser_includes}
+        ${qecalparser_src}
+        ${qecalparser_ui}
+        ${qecalparser_resources}
 )
 
 source_group(autogen FILES

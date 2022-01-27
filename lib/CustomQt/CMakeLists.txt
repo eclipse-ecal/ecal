@@ -79,7 +79,11 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 # Create a source tree that mirrors the filesystem
-create_source_tree(${custom_qt_includes} ${custom_qt_src})
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
+    FILES
+        ${custom_qt_includes}
+        ${custom_qt_src}
+)
 
 if (MSVC)
   # Disable Compiler warning "Conditional expression is constant"

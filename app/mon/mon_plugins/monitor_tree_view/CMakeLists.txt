@@ -44,8 +44,9 @@ target_link_libraries(${PROJECT_NAME}
   Qt5::Widgets CustomQt
 )
 
-create_source_tree(
-  ${source_files}
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
+    FILES
+        ${source_files}
 )
 
 if(MSVC)

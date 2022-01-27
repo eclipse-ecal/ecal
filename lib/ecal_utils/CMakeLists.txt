@@ -50,7 +50,11 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 # Create a source tree that mirrors the filesystem
-create_source_tree(${ecal_utils_includes} ${ecal_utils_src})
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
+    FILES
+        ${ecal_utils_includes}
+        ${ecal_utils_src}
+)
 
 ecal_install_library(${PROJECT_NAME})
 

@@ -113,9 +113,10 @@ else()
 endif()
 
 
-create_source_tree(
-    ${ecalhdf5_src}
-    ${ecalhdf5_header_base}
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
+    FILES
+        ${ecalhdf5_src}
+        ${ecalhdf5_header_base}
 )
 
 ecal_install_library(${PROJECT_NAME})

@@ -79,9 +79,10 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 # Create a source tree that mirrors the filesystem
-create_source_tree(
-    ${source_files}
-    ${win32_source_files}
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
+    FILES
+        ${source_files}
+        ${win32_source_files}
 )
 
 ecal_install_app(${PROJECT_NAME})
