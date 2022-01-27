@@ -20,14 +20,20 @@ project(utils)
 find_package(Threads REQUIRED)
 
 set (ecal_utils_includes
+  include/ecal_utils/command_line.h
   include/ecal_utils/filesystem.h
   include/ecal_utils/ecal_utils.h
+  include/ecal_utils/str_convert.h
   include/ecal_utils/string.h
+  include/ecal_utils/win_cp_changer.h
   include/ecal_utils/portable_endian.h
 )
 
 set(ecal_utils_src
+    src/command_line.cpp
     src/filesystem.cpp
+    src/str_convert.cpp
+    src/win_cp_changer.cpp
 )
 
 ecal_add_static_library(${PROJECT_NAME}

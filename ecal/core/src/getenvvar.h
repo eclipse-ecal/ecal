@@ -27,15 +27,17 @@
 #include <cstdlib>
 #include <sstream>
 
+#include <ecal_utils/str_convert.h>
+
 inline std::string getEnvVar(const std::string& key, const std::string& def = "")
 {
 #if _WIN32
-  char*  val(nullptr);
+  wchar_t*  val(nullptr);
   size_t len(0);
-  errno_t err = _dupenv_s(&val, &len, key.c_str());
+  errno_t err = _wdupenv_s(&val, &len, EcalUtils::StrConvert::Utf8ToWide(key).c_str());
   if (err)            return def;
   if (val == nullptr) return def;
-  std::string ret(val);
+  std::string ret = EcalUtils::StrConvert::WideToUtf8(val);
   free(val);
   return ret;
 #else

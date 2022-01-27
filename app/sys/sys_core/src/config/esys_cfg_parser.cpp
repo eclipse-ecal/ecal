@@ -34,6 +34,11 @@
 #include <ecal_utils/string.h>
 #include <ecal_utils/filesystem.h>
 
+#ifdef WIN32
+#include <ecal_utils/str_convert.h>
+#endif // WIN32
+
+
 namespace eCAL
 {
   namespace Sys
@@ -229,16 +234,24 @@ namespace eCAL
       **/
       bool ReadConfig(const std::string& path, CConfiguration& configuration, bool import = false)
       {
-        std::ifstream is;
-        is.open(path, std::ifstream::in);
-        if (is.good() == false)
+        FILE* xml_file;
+#ifdef WIN32
+        std::wstring w_path = EcalUtils::StrConvert::Utf8ToWide(path);
+        xml_file = _wfopen(w_path.c_str(), L"rb");
+#else
+        xml_file = fopen(path.c_str(), "rb");
+#endif // WIN32
+
+        if (xml_file == nullptr)
         {
-          //throw "Invalid input file path";
           return false;
         }
 
         tinyxml2::XMLDocument src;
-        src.LoadFile(path.c_str());
+        tinyxml2::XMLError errorcode = src.LoadFile(xml_file);
+
+        fclose(xml_file);
+
         try
         {
           auto root_element = src.FirstChildElement();
@@ -628,14 +641,6 @@ namespace eCAL
       bool Save(const std::string& path, CConfiguration& configuration)
       {
         std::string abspath = EcalUtils::Filesystem::AbsolutePath(path, EcalUtils::Filesystem::OsStyle::Current);
-        {
-          std::ofstream os;
-          os.open(abspath, std::ofstream::out);
-          if (!os.good())
-          {
-            throw std::runtime_error("Unable to save config to \"" + abspath + "\"");
-          }
-        }
 
         tinyxml2::XMLDocument doc;
 
@@ -822,9 +827,30 @@ namespace eCAL
 
         AddChildElement(doc, *root_element, "layout", configuration.GetLayout());
 
-        doc.SaveFile(abspath.c_str());
+        FILE* xml_file;
+#ifdef WIN32
+        std::wstring w_path = EcalUtils::StrConvert::Utf8ToWide(path);
+        xml_file = _wfopen(w_path.c_str(), L"w");
+#else
+        xml_file = fopen(path.c_str(), "w");
+#endif // WIN32
 
-        return true;
+        if (xml_file == nullptr)
+        {
+          return false;
+        }
+
+        tinyxml2::XMLError errorcode = doc.SaveFile(xml_file, false);
+        fclose(xml_file);
+
+        if (errorcode == tinyxml2::XML_SUCCESS)
+        {
+          return true;
+        }
+        else
+        {
+          return false;
+        }
       }
     }  //  namespace Config
   }  //  namespace Sys

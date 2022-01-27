@@ -25,6 +25,8 @@
   #include <windows.h>
   #include <direct.h>
   #include <shellapi.h> // SHFileOperation
+
+  #include <ecal_utils/str_convert.h> // ANSI/Wide/UTF8 conversion
 #else // _WIN32
   #include <dirent.h>
   #include <fcntl.h>    // O_RDONLY
@@ -66,9 +68,9 @@ namespace EcalUtils
 
     FileStatus::FileStatus(const std::string& path, OsStyle input_path_style)
     {
-      path_ = CleanPath(path, input_path_style);
 #ifdef WIN32
-      const int error_code = _stat64(ToNativeSeperators(path, input_path_style).c_str(), &file_status_);
+      std::wstring w_native_path_ = StrConvert::Utf8ToWide(ToNativeSeperators(path, input_path_style));
+      const int error_code = _wstat64(w_native_path_.c_str(), &file_status_);
 #else // WIN32
       const int error_code = stat(ToNativeSeperators(path, input_path_style).c_str(), &file_status_);
 #endif // WIN32
@@ -145,9 +147,11 @@ namespace EcalUtils
       std::string find_file_path = path_ + "\\*";
       std::replace(find_file_path.begin(), find_file_path.end(), '/', '\\');
 
+      std::wstring w_find_file_path = StrConvert::Utf8ToWide(find_file_path);
+
       HANDLE hFind;
-      WIN32_FIND_DATAA ffd;
-      hFind = FindFirstFileA(find_file_path.c_str(), &ffd);
+      WIN32_FIND_DATAW ffd;
+      hFind = FindFirstFileW(w_find_file_path.c_str(), &ffd);
       if (hFind != INVALID_HANDLE_VALUE)
       {
         can_open_dir = true;
@@ -194,9 +198,11 @@ namespace EcalUtils
       std::string find_file_path = clean_path + "\\*";
       std::replace(find_file_path.begin(), find_file_path.end(), '/', '\\');
 
+      std::wstring w_find_file_path = StrConvert::Utf8ToWide(find_file_path);
+
       HANDLE hFind;
-      WIN32_FIND_DATAA ffd;
-      hFind = FindFirstFileA(find_file_path.c_str(), &ffd);
+      WIN32_FIND_DATAW ffd;
+      hFind = FindFirstFileW(w_find_file_path.c_str(), &ffd);
       if (hFind == INVALID_HANDLE_VALUE)
       {
         std::cerr << "FindFirstFile Error" << std::endl;
@@ -205,10 +211,10 @@ namespace EcalUtils
 
       do
       {
-        std::string file_name(ffd.cFileName);
+        std::string file_name = StrConvert::WideToUtf8(std::wstring(ffd.cFileName));
         if ((file_name != ".") && (file_name != ".."))
-          content.emplace(std::string(ffd.cFileName), FileStatus(clean_path + "\\" + std::string(ffd.cFileName)));
-      } while (FindNextFileA(hFind, &ffd) != 0);
+          content.emplace(file_name, FileStatus(clean_path + "\\" + file_name));
+      } while (FindNextFileW(hFind, &ffd) != 0);
       FindClose(hFind);
 #else // WIN32
       DIR *dp;
@@ -236,7 +242,7 @@ namespace EcalUtils
       std::string native_path = ChangeSeperators(path, OsStyle::Current, input_path_style);
 
 #if defined(_WIN32)
-      int ret = _mkdir(native_path.c_str());
+      int ret = _wmkdir(StrConvert::Utf8ToWide(native_path).c_str());
 #else
       mode_t mode = 0755;
       int ret = mkdir(native_path.c_str(), mode);
@@ -303,7 +309,9 @@ namespace EcalUtils
       std::string destination_clean = ToNativeSeperators(CleanPath(destination, input_path_style), input_path_style);
 
 #if defined WIN32
-      return (CopyFileA(source_clean.c_str(), destination_clean.c_str(), FALSE) != FALSE);
+      std::wstring w_source_clean      = StrConvert::Utf8ToWide(source_clean);
+      std::wstring w_destination_clean = StrConvert::Utf8ToWide(destination_clean);
+      return (CopyFileW(w_source_clean.c_str(), w_destination_clean.c_str(), FALSE) != FALSE);
 #else // WIN32
       int input_fd {-1}, output_fd {-1};
       bool copy_succeeded {false};
@@ -352,25 +360,27 @@ namespace EcalUtils
 
 #if defined(WIN32)
       
+      std::wstring w_clean_path = StrConvert::Utf8ToWide(source);
+
       // Abuse the internal buffer of the string to make a double-null-
       // terminated-string as requested by the Win32 API.
       // This is safe as C++11 demands that the data of an std string is in
       // continuous memory.
-      clean_path += '\0';
-      clean_path += '\0';
+      w_clean_path += L'\0';
+      w_clean_path += L'\0';
 
       // Using the Win32 Shell API is the recommended way to delete non-empty directories on Window
-      SHFILEOPSTRUCT file_op = {
+      SHFILEOPSTRUCTW file_op = {
         NULL                                                // hwnd
         , FO_DELETE                                         // wFunc
-        , clean_path.data()                                 // pFrom
-        , ""                                                // pTo
+        , w_clean_path.data()                               // pFrom
+        , L""                                               // pTo
         , FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT   // fFlags
         , false                                             // fAnyOperationsAborted
         , 0                                                 // hNameMappings
-        , ""                                                // lpszProgressTitle
+        , L""                                               // lpszProgressTitle
       };
-      int error = SHFileOperationA(&file_op);
+      int error = SHFileOperationW(&file_op);
       return (error == 0);
 
 #elif defined(__QNXNTO__)
@@ -698,8 +708,13 @@ namespace EcalUtils
     std::string CurrentWorkingDir()
     {
 #ifdef _WIN32
-      char working_dir[MAX_PATH];
-      return (_getcwd(working_dir, MAX_PATH) ? working_dir : std::string(""));
+      wchar_t working_dir[MAX_PATH];
+      bool success (_wgetcwd(working_dir, MAX_PATH) != nullptr);
+
+      if (success)
+        return StrConvert::WideToUtf8(working_dir);
+      else
+        return "";
 #else
       char working_dir[PATH_MAX];
       return (getcwd(working_dir, PATH_MAX) ? working_dir : std::string(""));
@@ -709,8 +724,9 @@ namespace EcalUtils
     std::string ApplicationDir()
     {
 #ifdef _WIN32
-      char app_path_buffer[MAX_PATH];
-      auto app_path { std::string(app_path_buffer, static_cast<std::size_t>(GetModuleFileName(NULL, app_path_buffer, MAX_PATH))) };
+      wchar_t w_app_path_buffer[MAX_PATH];
+      std::wstring w_app_path { std::wstring(w_app_path_buffer, static_cast<std::size_t>(GetModuleFileNameW(NULL, w_app_path_buffer, MAX_PATH))) };
+      std::string app_path = StrConvert::WideToUtf8(w_app_path);
 #else
       char app_path_buffer[PATH_MAX];
       ssize_t count { readlink("/proc/self/exe", app_path_buffer, PATH_MAX) };

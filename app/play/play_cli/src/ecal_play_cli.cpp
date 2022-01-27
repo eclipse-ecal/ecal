@@ -32,6 +32,9 @@
 #include <iomanip>
 #include <sstream>
 
+#include <ecal_utils/str_convert.h>
+#include <ecal_utils/command_line.h>
+
 #ifdef WIN32
 #define NOMINMAX
 #endif // WIN32
@@ -208,7 +211,11 @@ void printMeasurementInformation(std::shared_ptr<EcalPlay> ecal_player)
   }
 }
 
+#ifdef WIN32
+int main()
+#else
 int main(int argc, char *argv[])
+#endif // WIN32
 {
   TCLAP::CmdLine cmd("eCAL Player", ' ', EcalPlayGlobals::VERSION_STRING);
   
@@ -254,6 +261,17 @@ int main(int argc, char *argv[])
     cmd.add(*arg_iterator);
   }
  
+#ifdef WIN32
+  auto utf8_argv_vector = EcalUtils::CommandLine::GetUtf8Argv();
+  try
+  {
+    cmd.parse(utf8_argv_vector);
+  }
+  catch (TCLAP::ArgException& e)
+  {
+    std::cerr << "Error parsing command line: " << e.what() << std::endl;
+  }
+#else
   try
   {
     cmd.parse(argc, argv);
@@ -262,6 +280,8 @@ int main(int argc, char *argv[])
   {
     std::cerr << "Error parsing command line: " << e.what() << std::endl;
   }
+#endif // WIN32
+
   
   //////////////////////////////////////////////////////////////////////////////
   //// Argument constraints                                                 ////
