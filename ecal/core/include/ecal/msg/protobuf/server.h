@@ -102,12 +102,24 @@ namespace eCAL
       /**
        * @brief Create service.
        *
-       * @param service_  Google protobuf service instance.
+       * @param service_ Google protobuf service instance.
+       *
+       * @return  True if successful.
+      **/
+      bool Create(std::shared_ptr<T> service_)
+      {
+        return Create(service_, "");
+      }
+        
+      /**
+       * @brief Create service.
+       *
+       * @param service_       Google protobuf service instance.
        * @param service_name_  Unique service name.
        *
        * @return  True if successful.
       **/
-      bool Create(std::shared_ptr<T> service_, const std::string& service_name_ = "")
+      bool Create(std::shared_ptr<T> service_, const std::string& service_name_)
       {
         if (service_ == nullptr) return false;
         m_service = service_;
