@@ -82,10 +82,8 @@ target_link_libraries(${PROJECT_NAME}
     fineftp::server
 )
 
-if(MSVC)
-    msvc_source_tree(
-        ${source_files}
-    )
-endif(MSVC)
+create_source_tree(
+    ${source_files}
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/rec)

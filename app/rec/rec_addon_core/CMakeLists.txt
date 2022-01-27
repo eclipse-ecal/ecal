@@ -59,10 +59,8 @@ install(DIRECTORY
   "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
    FILES_MATCHING PATTERN "*.h")
 
-if(MSVC)
-    msvc_source_tree(
-        ${source_files}
-    )
-endif(MSVC)
+create_source_tree(
+    ${source_files}
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/rec)

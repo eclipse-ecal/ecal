@@ -40,9 +40,7 @@ target_include_directories(${PROJECT_NAME}
   PUBLIC include/
   PRIVATE src/)
 
-if(MSVC)
-    # Create a source tree that mirrors the filesystem
-    msvc_source_tree(${threading_utils_includes} ${threading_utils_src})
-endif()
+# Create a source tree that mirrors the filesystem
+create_source_tree(${threading_utils_includes} ${threading_utils_src})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lib)

@@ -93,13 +93,11 @@ target_link_libraries(${PROJECT_NAME}
   ThreadingUtils
 )
 
-if(MSVC)
-  # Create a source tree that mirrors the filesystem
-  msvc_source_tree(
+# Create a source tree that mirrors the filesystem
+create_source_tree(
     ${source_files}
     ${win32_source_files}
-  )
-endif()
+)
 
 
 ecal_install_app(${PROJECT_NAME})

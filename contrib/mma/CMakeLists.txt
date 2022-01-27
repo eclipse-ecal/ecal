@@ -89,11 +89,9 @@ target_link_libraries(${PROJECT_NAME}
 
 ecal_install_app(${PROJECT_NAME})
 
-if(MSVC)
-  msvc_source_tree(
+create_source_tree(
     ${mma_src}
     ${mma_win_src}
-  )
-endif()
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER contrib)

@@ -54,11 +54,9 @@ target_link_libraries(${PROJECT_NAME}
     EcalParser
 )
 
-if(MSVC)
-    msvc_source_tree(
-        ${source_files}
-    )
-endif(MSVC)
+create_source_tree(
+    ${source_files}
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/sys)
 

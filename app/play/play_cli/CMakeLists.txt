@@ -59,15 +59,13 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::utils
 )
 
-if(MSVC)
-  # Create a source tree that mirrors the filesystem
-  msvc_source_tree(
-    ${source_files}
-    ${qt_resource_files}
-    ${win32_resource_files}
-    ${ui_files}
-  )
-endif()
+# Create a source tree that mirrors the filesystem
+create_source_tree(
+  ${source_files}
+  ${qt_resource_files}
+  ${win32_resource_files}
+  ${ui_files}
+)
 
 target_link_options(${PROJECT_NAME} PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/ignore:4098,4099>)
 

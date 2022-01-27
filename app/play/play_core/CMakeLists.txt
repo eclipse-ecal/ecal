@@ -65,10 +65,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   eCAL::utils
 )
 
-if(MSVC)
-  msvc_source_tree(
-    ${source_files}
-  )
-endif()
+create_source_tree(
+  ${source_files}
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/play)

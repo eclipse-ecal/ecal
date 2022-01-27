@@ -113,12 +113,10 @@ else()
 endif()
 
 
-if(MSVC)
-    msvc_source_tree(
-        ${ecalhdf5_src}
-        ${ecalhdf5_header_base}
-    )
-endif(MSVC)
+create_source_tree(
+    ${ecalhdf5_src}
+    ${ecalhdf5_header_base}
+)
 
 ecal_install_library(${PROJECT_NAME})
 install(DIRECTORY

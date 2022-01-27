@@ -52,11 +52,9 @@ target_link_libraries(${PROJECT_NAME}
 
 ecal_install_app(${PROJECT_NAME})
 
-if(MSVC)
-    msvc_source_tree(
-        ${source_files}
-        ${win_src}
-    )
-endif(MSVC)
+create_source_tree(
+    ${source_files}
+    ${win_src}
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/sys)
