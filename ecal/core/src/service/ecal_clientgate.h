@@ -38,7 +38,7 @@
 #endif
 
 #include <atomic>
-#include <mutex>
+#include <shared_mutex>
 #include <set>
 
 namespace eCAL
@@ -67,11 +67,11 @@ namespace eCAL
     static std::atomic<bool>    m_created;
 
     typedef std::set<CServiceClientImpl*> ServiceNameServiceImplSetT;
-    std::mutex                  m_client_set_sync;
+    std::shared_timed_mutex     m_client_set_sync;
     ServiceNameServiceImplSetT  m_client_set;
 
     typedef Util::CExpMap<std::string, SServiceAttr> ConnectedMapT;
-    std::mutex                  m_service_register_map_sync;
+    std::shared_timed_mutex     m_service_register_map_sync;
     ConnectedMapT               m_service_register_map;
   };
 };

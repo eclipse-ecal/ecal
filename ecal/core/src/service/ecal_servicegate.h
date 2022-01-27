@@ -37,7 +37,7 @@
 #endif
 
 #include <atomic>
-#include <mutex>
+#include <shared_mutex>
 #include <set>
 
 namespace eCAL
@@ -64,7 +64,7 @@ namespace eCAL
     static std::atomic<bool>    m_created;
 
     typedef std::set<CServiceServerImpl*> ServiceNameServiceImplSetT;
-    std::mutex                  m_service_set_sync;
+    std::shared_timed_mutex     m_service_set_sync;
     ServiceNameServiceImplSetT  m_service_set;
   };
 };

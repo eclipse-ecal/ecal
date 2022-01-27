@@ -54,7 +54,7 @@ namespace eCAL
     if (!m_created) return(false);
 
     // register internal client
-    std::lock_guard<std::mutex> lock(m_client_set_sync);
+    std::unique_lock<std::shared_timed_mutex> lock(m_client_set_sync);
     m_client_set.insert(client_);
 
     return(true);
@@ -66,7 +66,7 @@ namespace eCAL
     bool ret_state(false);
 
     // unregister internal service
-    std::lock_guard<std::mutex> lock(m_client_set_sync);
+    std::unique_lock<std::shared_timed_mutex> lock(m_client_set_sync);
     for (auto iter = m_client_set.begin(); iter != m_client_set.end();)
     {
       if (*iter == client_)
@@ -100,7 +100,7 @@ namespace eCAL
 
     // add or remove (timeouted) services
     {
-      std::lock_guard<std::mutex> lock(m_service_register_map_sync);
+      std::unique_lock<std::shared_timed_mutex> lock(m_service_register_map_sync);
 
       // add / update service
       m_service_register_map[service.key] = service;
@@ -111,7 +111,7 @@ namespace eCAL
 
     // inform matching clients
     {
-      std::lock_guard<std::mutex> lock(m_client_set_sync);
+      std::shared_lock<std::shared_timed_mutex> lock(m_client_set_sync);
       for (auto& iter : m_client_set)
       {
         if (iter->GetServiceName() == service.sname)
@@ -125,7 +125,7 @@ namespace eCAL
   std::vector<SServiceAttr> CClientGate::GetServiceAttr(const std::string& service_name_)
   {
     std::vector<SServiceAttr> ret_vec;
-    std::lock_guard<std::mutex> lock(m_service_register_map_sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_service_register_map_sync);
 
     // Look for requested services
     for (auto service : m_service_register_map)
@@ -143,7 +143,7 @@ namespace eCAL
     if (!m_created) return;
 
     // refresh service registrations
-    std::lock_guard<std::mutex> lock(m_client_set_sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_client_set_sync);
     for (auto iter : m_client_set)
     {
       iter->RefreshRegistration();

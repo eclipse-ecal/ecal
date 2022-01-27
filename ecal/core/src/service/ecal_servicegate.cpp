@@ -54,7 +54,7 @@ namespace eCAL
     if(!m_created) return(false);
 
     // register internal service
-    std::lock_guard<std::mutex> lock(m_service_set_sync);
+    std::unique_lock<std::shared_timed_mutex> lock(m_service_set_sync);
     m_service_set.insert(service_);
 
     return(true);
@@ -66,7 +66,7 @@ namespace eCAL
     bool ret_state(false);
 
     // unregister internal service
-    std::lock_guard<std::mutex> lock(m_service_set_sync);
+    std::unique_lock<std::shared_timed_mutex> lock(m_service_set_sync);
     for (auto iter = m_service_set.begin(); iter != m_service_set.end();)
     {
       if (*iter == service_)
@@ -99,7 +99,7 @@ namespace eCAL
 
     // inform matching services
     {
-      std::lock_guard<std::mutex> lock(m_service_set_sync);
+      std::shared_lock<std::shared_timed_mutex> lock(m_service_set_sync);
       for (auto& iter : m_service_set)
       {
         if (iter->GetServiceName() == client.sname)
@@ -115,7 +115,7 @@ namespace eCAL
     if (!m_created) return;
 
     // refresh service registrations
-    std::lock_guard<std::mutex> lock(m_service_set_sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_service_set_sync);
     for (auto& iter : m_service_set)
     {
       iter->RefreshRegistration();
