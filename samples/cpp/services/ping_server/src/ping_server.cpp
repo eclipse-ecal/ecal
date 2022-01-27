@@ -48,8 +48,8 @@ int main(int argc, char **argv)
   eCAL::Initialize(argc, argv, "ping server");
 
   // create Ping service server
-  std::shared_ptr<PingService> ping_servive = std::make_shared<PingServiceImpl>();
-  eCAL::protobuf::CServiceServer<PingService> ping_server(ping_servive);
+  std::shared_ptr<PingService> ping_service = std::make_shared<PingServiceImpl>();
+  eCAL::protobuf::CServiceServer<PingService> ping_server(ping_service, "ping service");
 
   while(eCAL::Ok())
   {

@@ -71,6 +71,17 @@ namespace eCAL
       }
 
       /**
+       * @brief Constructor.
+       *
+       * @param service_       Google protobuf service instance.
+       * @param service_name_  Unique service name.
+      **/
+      CServiceServer(std::shared_ptr<T> service_, const std::string& service_name_) : m_service(nullptr)
+      {
+        Create(service_, service_name_);
+      }
+
+      /**
        * @brief Destructor.
       **/
       ~CServiceServer()
@@ -92,16 +103,24 @@ namespace eCAL
        * @brief Create service.
        *
        * @param service_  Google protobuf service instance.
+       * @param service_name_  Unique service name.
        *
        * @return  True if successful.
       **/
-      bool Create(std::shared_ptr<T> service_)
+      bool Create(std::shared_ptr<T> service_, const std::string& service_name_ = "")
       {
         if (service_ == nullptr) return false;
         m_service = service_;
 
         const google::protobuf::ServiceDescriptor* service_descriptor = service_->GetDescriptor();
-        Create(service_descriptor->full_name());
+        if (service_name_.empty())
+        {
+          Create(service_descriptor->full_name());
+        }
+        else
+        {
+          Create(service_name_);
+        }
 
         for (int i = 0; i < service_descriptor->method_count(); ++i)
         {
