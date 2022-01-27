@@ -488,11 +488,11 @@ extern "C"
     return(0);
   }
 
-  ECALC_API int eCAL_Pub_SetGenericDescription(ECAL_HANDLE handle_, const char* generic_desc_, int generic_desc_len_)
+  ECALC_API int eCAL_Pub_SetAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_, const char* attr_value_, int attr_value_len_)
   {
     if (handle_ == NULL) return(0);
     eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
-    if (pub->SetGenericDescription(std::string(generic_desc_, static_cast<size_t>(generic_desc_len_)))) return(1);
+    if (pub->SetAttribute(std::string(attr_name_, static_cast<size_t>(attr_name_len_)), std::string(attr_value_, static_cast<size_t>(attr_value_len_)))) return(1);
     return(0);
   }
 
@@ -705,11 +705,11 @@ extern "C"
     return(1);
   }
 
-  ECALC_API int eCAL_Sub_SetGenericDescription(ECAL_HANDLE handle_, const char* generic_desc_, int generic_desc_len_)
+  ECALC_API int eCAL_Sub_SetAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_, const char* attr_value_, int attr_value_len_)
   {
     if (handle_ == NULL) return(0);
     eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
-    if (sub->SetGenericDescription(std::string(generic_desc_, static_cast<size_t>(generic_desc_len_)))) return(1);
+    if (sub->SetAttribute(std::string(attr_name_, static_cast<size_t>(attr_name_len_)), std::string(attr_value_, static_cast<size_t>(attr_value_len_)))) return(1);
     return(0);
   }
 

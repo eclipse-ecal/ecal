@@ -57,7 +57,8 @@ namespace eCAL
     bool Destroy();
 
     bool SetDescription(const std::string& topic_desc_);
-    bool SetGenericDescription(const std::string& generic_desc_);
+
+    bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
 
     void ShareType(bool state_);
     void ShareDescription(bool state_);
@@ -99,7 +100,7 @@ namespace eCAL
     const std::string& GetTopicID() const {return(m_topic_id);}
     const std::string& GetTypeName() const {return(m_topic_type);}
     const std::string& GetDescription() const {return(m_topic_desc);}
-    const std::string& GetGenericDescription() const {return(m_generic_desc);}
+    const std::string GetAttribute(const std::string& attr_name_) const;
     long long GetClock() const {return(m_clock);}
     long GetFrequency() const {return(m_freq);}
 
@@ -116,16 +117,16 @@ namespace eCAL
 
     void LogSendMode(TLayer::eSendMode smode_, const std::string & base_msg_);
 
-    std::string        m_host_name;
-    int                m_host_id;
-    int                m_pid;
-    std::string        m_pname;
-    std::string        m_topic_name;
-    std::string        m_topic_id;
-    std::string        m_topic_type;
-    std::string        m_topic_desc;
-    std::string        m_generic_desc;
-    size_t             m_topic_size;
+    std::string                        m_host_name;
+    int                                m_host_id;
+    int                                m_pid;
+    std::string                        m_pname;
+    std::string                        m_topic_name;
+    std::string                        m_topic_id;
+    std::string                        m_topic_type;
+    std::string                        m_topic_desc;
+    std::map<std::string, std::string> m_attr;
+    size_t                             m_topic_size;
 
     QOS::SWriterQOS    m_qos;
 

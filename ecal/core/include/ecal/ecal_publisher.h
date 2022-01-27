@@ -135,13 +135,14 @@ namespace eCAL
 
 
     /**
-     * @brief Setup generic topic description. 
+     * @brief Sets publisher attribute. 
      *
-     * @param generic_desc_   Description string. 
+     * @param attr_name_   Attribute name. 
+     * @param attr_value_  Attribute value. 
      *
      * @return  True if it succeeds, false if it fails. 
     **/
-    bool SetGenericDescription(const std::string &generic_desc_);
+    bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
 
     /**
      * @brief Share topic type.
@@ -326,11 +327,14 @@ namespace eCAL
     std::string GetDescription() const;
 
     /**
-     * @brief Gets generic description for publisher. 
+     * @brief Gets publisher attribute. 
      *
-     * @return  The description. 
+     * @param attr_name_   Attribute name. 
+     * @param attr_value_  Attribute value. 
+     *
+     * @return  Attribute value if it succeeds, empty string if it fails. 
     **/
-    std::string GetGenericDescription() const;
+    std::string GetAttribute(const std::string& attr_name_) const;
 
     /**
      * @brief Dump the whole class state into a string. 

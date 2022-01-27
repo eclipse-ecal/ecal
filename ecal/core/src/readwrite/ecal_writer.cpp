@@ -207,20 +207,29 @@ namespace eCAL
     return(true);
   }
 
-  bool CDataWriter::SetGenericDescription(const std::string& generic_desc_)
+  bool CDataWriter::SetAttribute(const std::string &attr_name_, const std::string& attr_value_)
   {
-    bool force = m_generic_desc != generic_desc_;
-    m_generic_desc = generic_desc_;
+    auto current_val = m_attr.find(attr_name_);
+
+    bool force = current_val == m_attr.end() || current_val->second != attr_value_;
+    m_attr[attr_name_] = attr_value_;
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::SetGenericDescription");
+    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::SetAttribute");
 #endif
 
     // register it
     DoRegister(force);
 
     return(true);
+  }
+
+  const std::string CDataWriter::GetAttribute(const std::string& attr_name_) const
+  {
+    auto search = m_attr.find(attr_name_);
+    if(search == m_attr.end()) return "";
+    return search->second;
   }
 
   void CDataWriter::ShareType(bool state_)
@@ -801,7 +810,7 @@ namespace eCAL
     ecal_reg_sample_mutable_topic->set_tid(m_topic_id);
     if (share_ttype) ecal_reg_sample_mutable_topic->set_ttype(m_topic_type);
     if (share_tdesc) ecal_reg_sample_mutable_topic->set_tdesc(m_topic_desc);
-    ecal_reg_sample_mutable_topic->set_tgeneric_desc(m_generic_desc);
+    *ecal_reg_sample_mutable_topic->mutable_attr() = google::protobuf::Map<std::string, std::string> { m_attr.begin(), m_attr.end() };
     ecal_reg_sample_mutable_topic->set_tsize(google::protobuf::int32(m_topic_size));
     // udp multicast layer
     {

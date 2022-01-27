@@ -184,10 +184,10 @@ namespace eCAL
     return(true);
   }
 
-  bool CSubscriber::SetGenericDescription(const std::string &generic_desc_)
+  bool CSubscriber::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
   {
-    if (!m_datareader) return(false);
-    return m_datareader->SetGenericDescription(generic_desc_);
+    if(!m_datareader) return false;
+    return m_datareader->SetAttribute(attr_name_, attr_value_);
   }
 
   size_t CSubscriber::Receive(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */) const
@@ -256,10 +256,10 @@ namespace eCAL
     return(m_datareader->GetDescription());
   }
 
-  std::string CSubscriber::GetGenericDescription() const
+  std::string CSubscriber::GetAttribute(const std::string& attr_name_) const
   {
     if(!m_datareader) return("");
-    return(m_datareader->GetGenericDescription());
+    return(m_datareader->GetAttribute(attr_name_));
   }
 
   bool CSubscriber::SetTimeout(int timeout_)

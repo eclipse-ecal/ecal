@@ -69,9 +69,9 @@ namespace eCAL
 
     bool SetTimeout(int timeout_);
 
-    void SetID(const std::set<long long>& id_set_);
+    bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
 
-    bool SetGenericDescription(const std::string& generic_desc_);
+    void SetID(const std::set<long long>& id_set_);
 
     void ApplyLocPublication(const std::string& process_id_);
     void ApplyExtPublication(const std::string& host_name_);
@@ -89,11 +89,11 @@ namespace eCAL
       return(m_loc_pub_map.size() + m_ext_pub_map.size());
     }
 
-    const std::string GetTopicName()   const {return(m_topic_name);}
-    const std::string GetTopicID()     const {return(m_topic_id);}
-    const std::string GetTypeName()    const {return(m_topic_type);}
-    const std::string GetGenericDescription() const {return(m_generic_desc);}
-    const std::string GetDescription() const;
+    const std::string GetTopicName()                              const {return(m_topic_name);}
+    const std::string GetTopicID()                                const {return(m_topic_id);}
+    const std::string GetTypeName()                               const {return(m_topic_type);}
+    const std::string GetAttribute(const std::string& attr_name_) const;
+    const std::string GetDescription()                            const;
 
     void RefreshRegistration();
     void CheckReceiveTimeout();
@@ -116,7 +116,7 @@ namespace eCAL
     std::string                               m_topic_id;
     std::string                               m_topic_type;
     std::string                               m_topic_desc;
-    std::string                               m_generic_desc;
+    std::map<std::string, std::string>        m_attr;
     std::atomic<size_t>                       m_topic_size;
 
     QOS::SReaderQOS                           m_qos;

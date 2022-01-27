@@ -274,7 +274,7 @@ namespace eCAL
       std::string topic_id             = sample_topic.tid();
       std::string topic_type           = sample_topic.ttype();
       std::string topic_desc           = sample_topic.tdesc();
-      std::string topic_generic_desc   = sample_topic.tgeneric_desc();
+      auto attr                        = sample_topic.attr();
 
       // try to get topic info
       std::string topic_name_id = topic_name + topic_id;
@@ -292,7 +292,7 @@ namespace eCAL
       TopicInfo.rclock++;
       TopicInfo.ttype                 = std::move(topic_type);
       TopicInfo.tdesc                 = std::move(topic_desc);
-      TopicInfo.tgeneric_desc         = std::move(topic_generic_desc);
+      TopicInfo.attr                  = std::map<std::string, std::string>{attr.begin(), attr.end()};
       TopicInfo.tlayer_ecal_udp_mc    = topic_tlayer_ecal_udp_mc;
       TopicInfo.tlayer_ecal_shm       = topic_tlayer_ecal_shm;
       TopicInfo.tlayer_ecal_tcp       = topic_tlayer_ecal_tcp;
@@ -671,8 +671,8 @@ namespace eCAL
       // topic description
       pMonTopic->set_tdesc(topic.second.tdesc);
 
-      // topic description
-      pMonTopic->set_tgeneric_desc(topic.second.tgeneric_desc);
+      // topic attributes
+      *pMonTopic->mutable_attr() = google::protobuf::Map<std::string, std::string> {topic.second.attr.begin(), topic.second.attr.end()};
 
       // topic size
       pMonTopic->set_tsize(topic.second.tsize);

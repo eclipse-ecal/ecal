@@ -95,15 +95,17 @@ extern "C"
   ECALC_API int eCAL_Sub_SetID(ECAL_HANDLE handle_, const long long* id_array_, const int id_num_);
 
   /**
-   * @brief Setup generic subscriber description. 
+   * @brief Sets subscriber attribute. 
    *
-   * @param handle_          Publisher handle. 
-   * @param topic_desc_      Generic description. 
-   * @param topic_desc_len_  Generic description length. 
+   * @param handle_             Subscriber handle. 
+   * @param attr_name_          Attribute name. 
+   * @param attr_name_len_      Attribute name length. 
+   * @param attr_value_         Attribute value. 
+   * @param attr_value_len_     Attribute value length. 
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Sub_SetGenericDescription(ECAL_HANDLE handle_, const char* generic_desc_, int generic_desc_len_);
+  ECALC_API int eCAL_Sub_SetAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_, const char* attr_value_, int attr_value_len_);
 
   /**
    * @brief Receive a message from the publisher

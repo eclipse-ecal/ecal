@@ -198,10 +198,10 @@ namespace eCAL
     return m_datawriter->SetDescription(topic_desc_);
   }
 
-  bool CPublisher::SetGenericDescription(const std::string &generic_desc_)
+  bool CPublisher::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
   {
     if(!m_datawriter) return false;
-    return m_datawriter->SetGenericDescription(generic_desc_);
+    return m_datawriter->SetAttribute(attr_name_, attr_value_);
   }
 
   bool CPublisher::ShareType(bool state_ /*= true*/)
@@ -359,10 +359,10 @@ namespace eCAL
     return(m_datawriter->GetDescription());
   }
 
-  std::string CPublisher::GetGenericDescription() const
+  std::string CPublisher::GetAttribute(const std::string& attr_name_) const
   {
     if(!m_datawriter) return("");
-    return(m_datawriter->GetGenericDescription());
+    return(m_datawriter->GetAttribute(attr_name_));
   }
 
   void CPublisher::InitializeQOS()

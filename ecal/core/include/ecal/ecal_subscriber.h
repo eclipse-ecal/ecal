@@ -166,13 +166,14 @@ namespace eCAL
     bool SetID(const std::set<long long>& id_set_);
 
     /**
-     * @brief Setup generic topic description. 
+     * @brief Sets subscriber attribute. 
      *
-     * @param generic_desc_   Description string. 
+     * @param attr_name_   Attribute name. 
+     * @param attr_value_  Attribute value. 
      *
      * @return  True if it succeeds, false if it fails. 
     **/
-    bool SetGenericDescription(const std::string &generic_desc_);
+    bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
 
     /**
      * @brief Receive a message from the publisher. 
@@ -268,11 +269,14 @@ namespace eCAL
     std::string GetDescription() const;
 
     /**
-     * @brief Gets generic description for subscriber. 
+     * @brief Gets subscriber attribute. 
      *
-     * @return  The description. 
+     * @param attr_name_   Attribute name. 
+     * @param attr_value_  Attribute value. 
+     *
+     * @return  Attribute value if it succeeds, empty string if it fails. 
     **/
-    std::string GetGenericDescription() const;
+    std::string GetAttribute(const std::string& attr_name_) const;
 
     /**
      * @brief Set the timeout parameter for triggering
