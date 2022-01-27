@@ -52,12 +52,22 @@ namespace eCAL
     {
     public:
       /**
-       * @brief Constructor.
+       * @brief Constructor (using protobuf defined service name).
        *
       **/
       CServiceClient()
       {
         Create(T::descriptor()->full_name());
+      }
+
+      /**
+       * @brief Constructor.
+       *
+       * @param service_name_  Unique service name.
+      **/
+      CServiceClient(const std::string& service_name_)
+      {
+        Create(service_name_);
       }
 
       /**
