@@ -103,14 +103,17 @@ QString QEcalParserEditor::css()
 {
   return R"(
 #usage {
+    color: rgb(0,0,0);
     font-family: "Courier New", Courier, monospace;
     background-color: rgb(220,220,220);
 }
 #code {
+    color: rgb(0,0,0);
     font-family: "Courier New", Courier, monospace;
     background-color: rgb(220,220,220);
 }
 #example {
+    color: rgb(0,0,0);
     font-family: "Courier New", Courier, monospace;
     background-color: rgb(220,220,220);
     margin-left: 10px;
