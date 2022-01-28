@@ -45,6 +45,7 @@
 #include <QFuture>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QStyleFactory>
 
 #ifdef WIN32
 #include <Windows.h>
@@ -52,6 +53,7 @@
 
 EcalsysGui::EcalsysGui(QWidget *parent)
   : QMainWindow(parent)
+  , first_show_event_(true)
   , config_has_been_modified_(false)
 {
   ui_.setupUi(this);
@@ -79,13 +81,6 @@ EcalsysGui::EcalsysGui(QWidget *parent)
   // Set the initial layout
   applyInitialLayout();
 
-  // Save the initial layout for restoring it later
-  initial_geometry_ = saveGeometry();
-  initial_state_ = saveState();
-
-  // Load settings from the last session
-  loadGuiSettings();
-
   updateMenuOptions();
 
   
@@ -111,6 +106,17 @@ EcalsysGui::EcalsysGui(QWidget *parent)
   connect(ui_.action_help_documentation,              SIGNAL(triggered()),                this, SLOT(menuHelpDocumentationTriggered()));
   connect(ui_.action_help_about,                      SIGNAL(triggered()),                this, SLOT(menuHelpAboutTriggered()));
   connect(ui_.action_help_licenses,                   SIGNAL(triggered()),                this, SLOT(menuHelpLicensesTriggered()));
+
+  theme_action_group_ = new QActionGroup(this);
+  theme_action_group_->addAction(ui_.action_theme_default);
+  theme_action_group_->addAction(ui_.action_theme_dark);
+  connect(theme_action_group_, &QActionGroup::triggered, this, [this](QAction* action)
+    {
+      if(action == ui_.action_theme_default)
+        this->setTheme(Theme::Default);
+      else if(action == ui_.action_theme_dark)
+        this->setTheme(Theme::Dark);
+    });
 
   connect(ui_.action_task_add,                   &QAction::triggered, [=]() {ui_.tasks_dockwidget->raise(); task_widget_->addTask(); });
   connect(ui_.action_task_edit,                  &QAction::triggered, [=]() {ui_.tasks_dockwidget->raise(); task_widget_->setEditControlsVisibility(); });
@@ -189,12 +195,36 @@ EcalsysGui::EcalsysGui(QWidget *parent)
 EcalsysGui::~EcalsysGui()
 {}
 
+void EcalsysGui::showEvent(QShowEvent* /*event*/)
+{
+  if (first_show_event_)
+  {
+    // Save the initial layout for restoring it later
+    initial_geometry_ = saveGeometry();
+    initial_state_    = saveState();
+
+    initial_style_sheet_ = qApp->styleSheet();
+    initial_palette_     = qApp->palette();
+    initial_style_       = qApp->style();
+
+    // Load settings from the last session
+    loadGuiSettings();
+  }
+  first_show_event_ = false;
+}
+
 void EcalsysGui::saveGuiSettings()
 {
   QSettings settings;
   settings.beginGroup("mainwindow");
   settings.setValue("geometry", saveGeometry());
   settings.setValue("window_state", saveState(Globals::ecalSysVersion()));
+
+  if(ui_.action_theme_default->isChecked())
+    settings.setValue("theme", static_cast<int>(Theme::Default));
+  else if (ui_.action_theme_dark->isChecked())
+    settings.setValue("theme", static_cast<int>(Theme::Dark));
+
   settings.endGroup();
 }
 
@@ -202,6 +232,14 @@ void EcalsysGui::loadGuiSettings()
 {
   QSettings settings;
   settings.beginGroup("mainwindow");
+
+  QVariant theme_variant = settings.value("theme");
+  if (theme_variant.isValid())
+  {
+    if (theme_variant.toInt() == static_cast<int>(Theme::Dark))
+      setTheme(Theme::Dark);
+  }
+
   restoreGeometry(settings.value("geometry").toByteArray());
   restoreState(settings.value("window_state").toByteArray(), Globals::ecalSysVersion());
 
@@ -216,6 +254,63 @@ void EcalsysGui::loadGuiSettings()
   }
 
   settings.endGroup();
+}
+
+void EcalsysGui::setTheme(Theme theme)
+{
+  if (theme == Theme::Default)
+  {
+    theme_action_group_->blockSignals(true);
+    ui_.action_theme_default->setChecked(true);
+    theme_action_group_->blockSignals(false);
+
+    qApp->setStyle     (initial_style_);
+    qApp->setPalette   (initial_palette_);
+    qApp->setStyleSheet(initial_style_sheet_);
+  }
+  else if (theme == Theme::Dark)
+  {
+    theme_action_group_->blockSignals(true);
+    ui_.action_theme_dark->setChecked(true);
+    theme_action_group_->blockSignals(false);
+
+    initial_style_->setParent(this); // Prevent deleting the initial style
+    qApp->setStyle(QStyleFactory::create("Fusion"));
+
+    QColor darkGray( 58,  58,  58);
+    QColor gray    (128, 128, 128);
+    QColor black   ( 31,  31,  31);
+    QColor blue    ( 42, 130, 218);
+
+    QPalette darkPalette;
+    darkPalette.setColor(QPalette::Window         , darkGray);
+    darkPalette.setColor(QPalette::WindowText     , Qt::white);
+    darkPalette.setColor(QPalette::Base           , black);
+    darkPalette.setColor(QPalette::AlternateBase  , darkGray);
+    darkPalette.setColor(QPalette::ToolTipBase    , blue);
+    darkPalette.setColor(QPalette::ToolTipText    , Qt::white);
+    darkPalette.setColor(QPalette::Text           , Qt::white);
+    darkPalette.setColor(QPalette::Button         , darkGray);
+    darkPalette.setColor(QPalette::ButtonText     , Qt::white);
+    darkPalette.setColor(QPalette::Link           , blue);
+    darkPalette.setColor(QPalette::Highlight      , blue);
+    darkPalette.setColor(QPalette::HighlightedText, Qt::black);
+
+    darkPalette.setColor(QPalette::Active,   QPalette::Button,     gray.darker());
+    darkPalette.setColor(QPalette::Disabled, QPalette::ButtonText, gray);
+    darkPalette.setColor(QPalette::Disabled, QPalette::WindowText, gray);
+    darkPalette.setColor(QPalette::Disabled, QPalette::Text,       gray);
+    darkPalette.setColor(QPalette::Disabled, QPalette::Light,      darkGray);
+
+    qApp->setPalette(darkPalette);
+
+    QString style_sheet;
+    style_sheet += "QToolTip { color: #ffffff; background-color: #2b2b2b; border: 1px solid #767676; }";
+    //style_sheet += "QMenu { background-color: #3A3A3A; border: none; }";
+    //style_sheet += "QMenu::item:selected { background-color: #FF0000}";
+
+    qApp->setStyleSheet(style_sheet);
+  }
 }
 
 void EcalsysGui::createWidgets()
@@ -790,6 +885,8 @@ void EcalsysGui::menuEditRunnersTriggered()
 
 void EcalsysGui::menuViewResetLayoutTriggered()
 {
+  setTheme(Theme::Default);
+
   // Back when we saved the initial window geometry, the window-manager might not have positioned the window on the screen, yet
   int screen_number = QApplication::desktop()->screenNumber(this);
 

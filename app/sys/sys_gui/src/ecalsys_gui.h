@@ -44,13 +44,26 @@ class EcalsysGui : public QMainWindow
 {
   Q_OBJECT
 
+private:
+  enum class Theme:int
+  {
+    Default,
+    Dark,
+  };
+
 public:
   EcalsysGui(QWidget *parent = Q_NULLPTR);
 
   ~EcalsysGui();
 
+protected:
+  void showEvent(QShowEvent *event) override;
+
+public:
   void saveGuiSettings();
   void loadGuiSettings();
+
+  void setTheme(Theme theme);
 
   void setUnmodified() { config_has_been_modified_ = false; };
 
@@ -64,6 +77,7 @@ protected:
 
 private:
   Ui::EcalsysMainWindow  ui_;
+  bool                   first_show_event_;
 
   QStringList last_config_list;
 
@@ -71,10 +85,15 @@ private:
   QByteArray             initial_geometry_;
   QByteArray             initial_state_;
 
+  QPalette               initial_palette_;
+  QStyle*                initial_style_;
+  QString                initial_style_sheet_;
 
   bool                   config_has_been_modified_;
   QActionGroup*          task_target_action_group_;
   QTimer*                button_update_timer_;
+
+  QActionGroup*          theme_action_group_;
 
   eCAL::protobuf::CServiceServer<eCAL::pb::sys::Service> ecalsys_service_;
 
