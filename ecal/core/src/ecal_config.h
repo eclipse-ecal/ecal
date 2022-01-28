@@ -28,8 +28,6 @@
 #include <string>
 #include <vector>
 
-#ifndef ECAL_C_DLL
-
 namespace eCAL
 {
   class CConfigImpl;
@@ -59,5 +57,3 @@ namespace eCAL
   ECAL_API double      CfgGetDouble(const std::string& section_, const std::string& key_, double      default_ = 0.0);
   ECAL_API std::string CfgGetString(const std::string& section_, const std::string& key_, const char* default_ = "");
 }
-
-#endif /* ! ECAL_C_DLL */
