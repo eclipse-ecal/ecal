@@ -85,10 +85,18 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
+    <widget class="QMenu" name="menu_theme">
+     <property name="title">
+      <string>Theme</string>
+     </property>
+     <addaction name="action_theme_default"/>
+     <addaction name="action_theme_dark"/>
+    </widget>
     <addaction name="action_settings"/>
     <addaction name="action_debug_console"/>
     <addaction name="separator"/>
     <addaction name="action_reset_layout"/>
+    <addaction name="menu_theme"/>
    </widget>
    <widget class="QMenu" name="menu_windows">
     <property name="title">
@@ -527,6 +535,25 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_theme_default">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Default</string>
+   </property>
+  </action>
+  <action name="action_theme_dark">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Dark</string>
    </property>
   </action>
  </widget>
