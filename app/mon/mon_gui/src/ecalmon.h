@@ -44,12 +44,22 @@
 class Ecalmon : public QMainWindow
 {
   Q_OBJECT
+private:
+  enum class Theme:int
+  {
+    Default,
+    Dark,
+  };
 
 public:
   Ecalmon(QWidget *parent = Q_NULLPTR);
 
   ~Ecalmon();
 
+protected:
+  void showEvent(QShowEvent *event) override;
+
+public:
   bool isMonitorUpdatePaused() const;
   bool isParseTimeEnabled() const;
 
@@ -59,6 +69,7 @@ public slots:
   void setMonitorUpdatePaused(bool paused);
   void setLogUpdatePaused(bool paused);
   void setParseTimeEnabled(bool enabled);
+  void setTheme(Theme theme);
 
   void resetLayout();
   
@@ -91,11 +102,16 @@ private:
 
   QActionGroup*  monitor_update_speed_group_;
   QActionGroup*  log_update_speed_group_;
+  QActionGroup*  theme_action_group_;
 
+  bool       first_show_event_;
   QByteArray initial_geometry_;
   QByteArray initial_state_;
   bool       initial_alternating_row_colors_;
   bool       initial_parse_time_;
+  QPalette   initial_palette_;
+  QStyle*    initial_style_;
+  QString    initial_style_sheet_;
 
   int monitor_error_counter_;
 
