@@ -41,6 +41,12 @@
 class EcalRecGui : public QMainWindow
 {
   Q_OBJECT
+private:
+  enum class Theme:int
+  {
+    Default,
+    Dark,
+  };
 
 //////////////////////////////////////////
 // Constructor & Destructor
@@ -65,6 +71,9 @@ private:
 
 public slots:
   void resetLayout();
+
+private:
+  void setTheme(Theme theme);
 
 //////////////////////////////////////////
 // Private slots
@@ -124,12 +133,18 @@ private:
 
   QStringList recent_file_list_;
 
+  QActionGroup* theme_action_group_;
+
   // initial layout
   bool       first_show_event_;
   QByteArray initial_geometry_;
   QByteArray initial_state_;
   bool       initial_show_disabled_elements_at_the_bottom_;
   bool       initial_alternating_row_colors_;
+
+  QPalette   initial_palette_;
+  QStyle*    initial_style_;
+  QString    initial_style_sheet_;
 
 #ifdef WIN32
 ////////////////////////////////////////////

@@ -29,6 +29,7 @@
 #include <QDesktopWidget>
 #include <QApplication>
 #include <QScreen>
+#include <QStyleFactory>
 
 #include <iostream>
 
@@ -247,6 +248,21 @@ EcalRecGui::EcalRecGui(QWidget *parent)
   connect(ui_.action_reset_layout, &QAction::triggered, this, &EcalRecGui::resetLayout);
 
   /////////////////////////////////////////////
+  // Reset layout
+  /////////////////////////////////////////////
+  theme_action_group_ = new QActionGroup(this);
+  theme_action_group_->addAction(ui_.action_theme_default);
+  theme_action_group_->addAction(ui_.action_theme_dark);
+
+  connect(theme_action_group_, &QActionGroup::triggered, this, [this](QAction* action)
+    {
+      if(action == ui_.action_theme_default)
+        this->setTheme(Theme::Default);
+      else if(action == ui_.action_theme_dark)
+        this->setTheme(Theme::Dark);
+    });
+
+  /////////////////////////////////////////////
   // Show disabled elements at the end
   /////////////////////////////////////////////
   ui_.action_show_disabled_elements_at_the_bottom->setChecked(QEcalRec::instance()->showDisabledElementsAtEnd());
@@ -392,6 +408,11 @@ void EcalRecGui::saveLayout()
   settings.setValue("window_state",                         saveState(eCAL::rec::Version()));
   settings.setValue("show_disabled_elements_at_the_bottom", ui_.action_show_disabled_elements_at_the_bottom->isChecked());
   settings.setValue("alternating_row_colors",               ui_.action_alternating_row_colors->isChecked());
+
+  if(ui_.action_theme_default->isChecked())
+    settings.setValue("theme", static_cast<int>(Theme::Default));
+  else if (ui_.action_theme_dark->isChecked())
+    settings.setValue("theme", static_cast<int>(Theme::Dark));
 }
 
 void EcalRecGui::restoreLayout()
@@ -403,6 +424,13 @@ void EcalRecGui::restoreLayout()
   QVariant state_variant                                = settings.value("window_state");
   QVariant show_disabled_elements_at_the_bottom_variant = settings.value("show_disabled_elements_at_the_bottom");
   QVariant alternating_row_colors_variant               = settings.value("alternating_row_colors");
+  QVariant theme_variant                                = settings.value("theme");
+
+  if (theme_variant.isValid())
+  {
+    if (theme_variant.toInt() == static_cast<int>(Theme::Dark))
+      setTheme(Theme::Dark);
+  }
 
   if (geometry_variant.isValid() && state_variant.isValid())
   {
@@ -433,10 +461,16 @@ void EcalRecGui::saveInitialLayout()
   initial_state_                                = saveState();
   initial_show_disabled_elements_at_the_bottom_ = ui_.action_show_disabled_elements_at_the_bottom->isChecked();
   initial_alternating_row_colors_               = ui_.action_alternating_row_colors->isChecked();
+
+  initial_style_sheet_ = qApp->styleSheet();
+  initial_palette_     = qApp->palette();
+  initial_style_       = qApp->style();
 }
 
 void EcalRecGui::resetLayout()
 {
+  setTheme(Theme::Default);
+
   topic_widget_           ->resetLayout();
   recorder_manager_widget_->resetLayout();
   recording_history_widget_->resetLayout();
@@ -449,6 +483,65 @@ void EcalRecGui::resetLayout()
   ui_.action_show_disabled_elements_at_the_bottom->setChecked(initial_show_disabled_elements_at_the_bottom_);
   ui_.action_alternating_row_colors              ->setChecked(initial_alternating_row_colors_);
 }
+
+
+void EcalRecGui::setTheme(Theme theme)
+{
+  if (theme == Theme::Default)
+  {
+    theme_action_group_->blockSignals(true);
+    ui_.action_theme_default->setChecked(true);
+    theme_action_group_->blockSignals(false);
+
+    qApp->setStyle     (initial_style_);
+    qApp->setPalette   (initial_palette_);
+    qApp->setStyleSheet(initial_style_sheet_);
+  }
+  else if (theme == Theme::Dark)
+  {
+    theme_action_group_->blockSignals(true);
+    ui_.action_theme_dark->setChecked(true);
+    theme_action_group_->blockSignals(false);
+
+    initial_style_->setParent(this); // Prevent deleting the initial style
+    qApp->setStyle(QStyleFactory::create("Fusion"));
+
+    QColor darkGray( 58,  58,  58);
+    QColor gray    (128, 128, 128);
+    QColor black   ( 31,  31,  31);
+    QColor blue    ( 42, 130, 218);
+
+    QPalette darkPalette;
+    darkPalette.setColor(QPalette::Window         , darkGray);
+    darkPalette.setColor(QPalette::WindowText     , Qt::white);
+    darkPalette.setColor(QPalette::Base           , black);
+    darkPalette.setColor(QPalette::AlternateBase  , darkGray);
+    darkPalette.setColor(QPalette::ToolTipBase    , blue);
+    darkPalette.setColor(QPalette::ToolTipText    , Qt::white);
+    darkPalette.setColor(QPalette::Text           , Qt::white);
+    darkPalette.setColor(QPalette::Button         , darkGray);
+    darkPalette.setColor(QPalette::ButtonText     , Qt::white);
+    darkPalette.setColor(QPalette::Link           , blue);
+    darkPalette.setColor(QPalette::Highlight      , blue);
+    darkPalette.setColor(QPalette::HighlightedText, Qt::black);
+
+    darkPalette.setColor(QPalette::Active,   QPalette::Button,     gray.darker());
+    darkPalette.setColor(QPalette::Disabled, QPalette::ButtonText, gray);
+    darkPalette.setColor(QPalette::Disabled, QPalette::WindowText, gray);
+    darkPalette.setColor(QPalette::Disabled, QPalette::Text,       gray);
+    darkPalette.setColor(QPalette::Disabled, QPalette::Light,      darkGray);
+
+    qApp->setPalette(darkPalette);
+
+    QString style_sheet;
+    style_sheet += "QToolTip { color: #ffffff; background-color: #2b2b2b; border: 1px solid #767676; }";
+    //style_sheet += "QMenu { background-color: #3A3A3A; border: none; }";
+    //style_sheet += "QMenu::item:selected { background-color: #FF0000}";
+
+    qApp->setStyleSheet(style_sheet);
+  }
+}
+
 
 //////////////////////////////////////////
 // Private slots

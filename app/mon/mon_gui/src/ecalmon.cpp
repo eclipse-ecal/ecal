@@ -37,6 +37,7 @@
 #include <QDesktopServices>
 #include <QDateTime>
 #include <QScreen>
+#include <QStyleFactory>
 
 #ifndef NDEBUG
   #ifdef _MSC_VER
@@ -59,6 +60,7 @@
 
 Ecalmon::Ecalmon(QWidget *parent)
   : QMainWindow(parent)
+  , first_show_event_(true)
   , monitor_error_counter_(0)
 {
   // Just make sure that eCAL is initialized
@@ -187,6 +189,19 @@ Ecalmon::Ecalmon(QWidget *parent)
   // Reset layout
   connect(ui_.action_reset_layout, &QAction::triggered, this, &Ecalmon::resetLayout);
 
+  // Theme
+  theme_action_group_ = new QActionGroup(this);
+  theme_action_group_->addAction(ui_.action_theme_default);
+  theme_action_group_->addAction(ui_.action_theme_dark);
+
+  connect(theme_action_group_, &QActionGroup::triggered, this, [this](QAction* action)
+    {
+      if(action == ui_.action_theme_default)
+        this->setTheme(Theme::Default);
+      else if(action == ui_.action_theme_dark)
+        this->setTheme(Theme::Dark);
+    });
+
   //Plugin settings dialog
   connect(ui_.action_plugin_settings, &QAction::triggered,
     [this]()
@@ -210,12 +225,6 @@ Ecalmon::Ecalmon(QWidget *parent)
         LicenseDialog license_dialog(this);
         license_dialog.exec();
       });
-
-  // Save the initial state for the resetLayout function
-  saveInitialState();
-
-  // Load the old window state
-  loadGuiSettings();
 
   // Dock widgets in view menu
   createDockWidgetMenu();
@@ -241,6 +250,17 @@ Ecalmon::Ecalmon(QWidget *parent)
 Ecalmon::~Ecalmon()
 {
   eCAL::Finalize();
+}
+
+void Ecalmon::showEvent(QShowEvent* /*event*/)
+{
+  if (first_show_event_)
+  {
+    saveInitialState();
+
+    loadGuiSettings();
+  }
+  first_show_event_ = false;
 }
 
 void Ecalmon::updateMonitor()
@@ -435,6 +455,63 @@ void Ecalmon::setParseTimeEnabled(bool enabled)
   topic_widget_->setParseTimeEnabled(enabled);
 }
 
+void Ecalmon::setTheme(Theme theme)
+{
+  if (theme == Theme::Default)
+  {
+    theme_action_group_->blockSignals(true);
+    ui_.action_theme_default->setChecked(true);
+    theme_action_group_->blockSignals(false);
+
+    qApp->setStyle     (initial_style_);
+    qApp->setPalette   (initial_palette_);
+    qApp->setStyleSheet(initial_style_sheet_);
+  }
+  else if (theme == Theme::Dark)
+  {
+    theme_action_group_->blockSignals(true);
+    ui_.action_theme_dark->setChecked(true);
+    theme_action_group_->blockSignals(false);
+
+    initial_style_->setParent(this); // Prevent deleting the initial style
+    qApp->setStyle(QStyleFactory::create("Fusion"));
+
+    QColor darkGray( 58,  58,  58);
+    QColor gray    (128, 128, 128);
+    QColor black   ( 31,  31,  31);
+    QColor blue    ( 42, 130, 218);
+
+    QPalette darkPalette;
+    darkPalette.setColor(QPalette::Window         , darkGray);
+    darkPalette.setColor(QPalette::WindowText     , Qt::white);
+    darkPalette.setColor(QPalette::Base           , black);
+    darkPalette.setColor(QPalette::AlternateBase  , darkGray);
+    darkPalette.setColor(QPalette::ToolTipBase    , blue);
+    darkPalette.setColor(QPalette::ToolTipText    , Qt::white);
+    darkPalette.setColor(QPalette::Text           , Qt::white);
+    darkPalette.setColor(QPalette::Button         , darkGray);
+    darkPalette.setColor(QPalette::ButtonText     , Qt::white);
+    darkPalette.setColor(QPalette::Link           , blue);
+    darkPalette.setColor(QPalette::Highlight      , blue);
+    darkPalette.setColor(QPalette::HighlightedText, Qt::black);
+
+    darkPalette.setColor(QPalette::Active,   QPalette::Button,     gray.darker());
+    darkPalette.setColor(QPalette::Disabled, QPalette::ButtonText, gray);
+    darkPalette.setColor(QPalette::Disabled, QPalette::WindowText, gray);
+    darkPalette.setColor(QPalette::Disabled, QPalette::Text,       gray);
+    darkPalette.setColor(QPalette::Disabled, QPalette::Light,      darkGray);
+
+    qApp->setPalette(darkPalette);
+
+    QString style_sheet;
+    style_sheet += "QToolTip { color: #ffffff; background-color: #2b2b2b; border: 1px solid #767676; }";
+    //style_sheet += "QMenu { background-color: #3A3A3A; border: none; }";
+    //style_sheet += "QMenu::item:selected { background-color: #FF0000}";
+
+    qApp->setStyleSheet(style_sheet);
+  }
+}
+
 void Ecalmon::createDockWidgetMenu()
 {
   QList<QDockWidget*> dock_widget_list = findChildren<QDockWidget*>();
@@ -482,6 +559,12 @@ void Ecalmon::closeEvent(QCloseEvent* event)
   settings.setValue("window_state", saveState(EcalmonGlobals::Version()));
   settings.setValue("alternating_row_colors", ui_.action_alternating_row_colors->isChecked());
   settings.setValue("parse_time", isParseTimeEnabled());
+
+  if(ui_.action_theme_default->isChecked())
+    settings.setValue("theme", static_cast<int>(Theme::Default));
+  else if (ui_.action_theme_dark->isChecked())
+    settings.setValue("theme", static_cast<int>(Theme::Dark));
+
   settings.endGroup();
 
   // save plugin state by iid
@@ -497,6 +580,14 @@ void Ecalmon::loadGuiSettings()
 {
   QSettings settings;
   settings.beginGroup("mainwindow");
+
+  QVariant theme_variant = settings.value("theme");
+  if (theme_variant.isValid())
+  {
+    if (theme_variant.toInt() == static_cast<int>(Theme::Dark))
+      setTheme(Theme::Dark);
+  }
+
   restoreGeometry(settings.value("geometry").toByteArray());
   restoreState(settings.value("window_state").toByteArray() , EcalmonGlobals::Version());
 
@@ -521,10 +612,16 @@ void Ecalmon::saveInitialState()
   initial_state_                  = saveState();
   initial_alternating_row_colors_ = ui_.action_alternating_row_colors->isChecked();
   initial_parse_time_             = isParseTimeEnabled();
+
+  initial_style_sheet_ = qApp->styleSheet();
+  initial_palette_     = qApp->palette();
+  initial_style_       = qApp->style();
 }
 
 void Ecalmon::resetLayout()
 {
+  setTheme(Theme::Default);
+
   // Back when we saved the initial window geometry, the window-manager might not have positioned the window on the screen, yet
   int screen_number = QApplication::desktop()->screenNumber(this);
 

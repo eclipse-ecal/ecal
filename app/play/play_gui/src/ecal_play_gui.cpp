@@ -28,6 +28,7 @@
 #include <QMimeData>
 #include <QScreen>
 #include <QMessageBox>
+#include <QStyleFactory>
 
 #ifdef WIN32
 #include <QWinTaskbarButton>
@@ -46,6 +47,7 @@
 
 EcalplayGui::EcalplayGui(QWidget *parent)
   : QMainWindow(parent)
+  , first_show_event_                       (true)
   , play_pause_button_state_is_play_        (true)
   , connect_to_ecal_button_state_is_connect_(true)
   , measurement_loaded_                     (false)
@@ -181,6 +183,19 @@ EcalplayGui::EcalplayGui(QWidget *parent)
   connect(ui_.action_enforce_delay_accuracy, &QAction::toggled,   QEcalPlay::instance(), &QEcalPlay::setEnforceDelayAccuracyEnabled);
   connect(ui_.action_limit_playback_speed,   &QAction::toggled,   QEcalPlay::instance(), &QEcalPlay::setLimitPlaySpeedEnabled);
   connect(ui_.action_reset_layout,           &QAction::triggered, this,                  &EcalplayGui::resetLayout);
+
+  // Theme
+  theme_action_group_ = new QActionGroup(this);
+  theme_action_group_->addAction(ui_.action_theme_default);
+  theme_action_group_->addAction(ui_.action_theme_dark);
+  connect(theme_action_group_, &QActionGroup::triggered, this, [this](QAction* action)
+    {
+      if(action == ui_.action_theme_default)
+        this->setTheme(Theme::Default);
+      else if(action == ui_.action_theme_dark)
+        this->setTheme(Theme::Dark);
+    });
+
   connect(ui_.action_settings,               &QAction::triggered, player_control_widget_, [this]() {player_control_widget_->setSettingsVisible(true); });
 
 
@@ -275,13 +290,26 @@ EcalplayGui::EcalplayGui(QWidget *parent)
   enforceDelayAccuracyEnabledChanged(QEcalPlay::instance()->isEnforceDelayAccuracyEnabled());
   limitPlaySpeedEnabledChanged      (QEcalPlay::instance()->isLimitPlaySpeedEnabled());
 
-  saveInitialLayout();
-  restoreLayout();
-
   updateScenariosModified();
 
   //Drag & Drop
   setAcceptDrops(true);
+}
+
+void EcalplayGui::showEvent(QShowEvent* /*event*/)
+{
+  if (first_show_event_)
+  {
+#ifdef WIN32
+  taskbar_button_   ->setWindow(this->windowHandle());
+  thumbnail_toolbar_->setWindow(this->windowHandle());
+#endif // WIN32
+
+    saveInitialLayout();
+
+    restoreLayout();
+  }
+  first_show_event_ = false;
 }
 
 void EcalplayGui::closeEvent(QCloseEvent* event)
@@ -658,6 +686,12 @@ void EcalplayGui::saveLayout()
   settings.beginGroup("main_window");
   settings.setValue("geometry", saveGeometry());
   settings.setValue("state", saveState(EcalPlayGlobals::Version()));
+
+  if(ui_.action_theme_default->isChecked())
+    settings.setValue("theme", static_cast<int>(Theme::Default));
+  else if (ui_.action_theme_dark->isChecked())
+    settings.setValue("theme", static_cast<int>(Theme::Dark));
+
   settings.endGroup();
 }
 
@@ -665,6 +699,13 @@ void EcalplayGui::restoreLayout()
 {
   QSettings settings;
   settings.beginGroup("main_window");
+
+  QVariant theme_variant = settings.value("theme");
+  if (theme_variant.isValid())
+  {
+    if (theme_variant.toInt() == static_cast<int>(Theme::Dark))
+      setTheme(Theme::Dark);
+  }
 
   QVariant geometry_variant = settings.value("geometry");
   QVariant state_variant = settings.value("state");
@@ -682,10 +723,16 @@ void EcalplayGui::saveInitialLayout()
 {
   initial_geometry_ = saveGeometry();
   initial_state_    = saveState();
+
+  initial_style_sheet_ = qApp->styleSheet();
+  initial_palette_     = qApp->palette();
+  initial_style_       = qApp->style();
 }
 
 void EcalplayGui::resetLayout()
 {
+  setTheme(Theme::Default);
+
   player_control_widget_->resetLayout();
   channel_widget_       ->resetLayout();
   scenario_widget_      ->resetLayout();
@@ -694,6 +741,63 @@ void EcalplayGui::resetLayout()
   restoreGeometry(initial_geometry_);
   restoreState(initial_state_);
   move(QGuiApplication::screens().at(screen_number)->availableGeometry().center() - rect().center());
+}
+
+void EcalplayGui::setTheme(Theme theme)
+{
+  if (theme == Theme::Default)
+  {
+    theme_action_group_->blockSignals(true);
+    ui_.action_theme_default->setChecked(true);
+    theme_action_group_->blockSignals(false);
+
+    qApp->setStyle     (initial_style_);
+    qApp->setPalette   (initial_palette_);
+    qApp->setStyleSheet(initial_style_sheet_);
+  }
+  else if (theme == Theme::Dark)
+  {
+    theme_action_group_->blockSignals(true);
+    ui_.action_theme_dark->setChecked(true);
+    theme_action_group_->blockSignals(false);
+
+    initial_style_->setParent(this); // Prevent deleting the initial style
+    qApp->setStyle(QStyleFactory::create("Fusion"));
+
+    QColor darkGray( 58,  58,  58);
+    QColor gray    (128, 128, 128);
+    QColor black   ( 31,  31,  31);
+    QColor blue    ( 42, 130, 218);
+
+    QPalette darkPalette;
+    darkPalette.setColor(QPalette::Window         , darkGray);
+    darkPalette.setColor(QPalette::WindowText     , Qt::white);
+    darkPalette.setColor(QPalette::Base           , black);
+    darkPalette.setColor(QPalette::AlternateBase  , darkGray);
+    darkPalette.setColor(QPalette::ToolTipBase    , blue);
+    darkPalette.setColor(QPalette::ToolTipText    , Qt::white);
+    darkPalette.setColor(QPalette::Text           , Qt::white);
+    darkPalette.setColor(QPalette::Button         , darkGray);
+    darkPalette.setColor(QPalette::ButtonText     , Qt::white);
+    darkPalette.setColor(QPalette::Link           , blue);
+    darkPalette.setColor(QPalette::Highlight      , blue);
+    darkPalette.setColor(QPalette::HighlightedText, Qt::black);
+
+    darkPalette.setColor(QPalette::Active,   QPalette::Button,     gray.darker());
+    darkPalette.setColor(QPalette::Disabled, QPalette::ButtonText, gray);
+    darkPalette.setColor(QPalette::Disabled, QPalette::WindowText, gray);
+    darkPalette.setColor(QPalette::Disabled, QPalette::Text,       gray);
+    darkPalette.setColor(QPalette::Disabled, QPalette::Light,      darkGray);
+
+    qApp->setPalette(darkPalette);
+
+    QString style_sheet;
+    style_sheet += "QToolTip { color: #ffffff; background-color: #2b2b2b; border: 1px solid #767676; }";
+    //style_sheet += "QMenu { background-color: #3A3A3A; border: none; }";
+    //style_sheet += "QMenu::item:selected { background-color: #FF0000}";
+
+    qApp->setStyleSheet(style_sheet);
+  }
 }
 
 bool EcalplayGui::loadMeasurementFromFileDialog()
@@ -816,11 +920,6 @@ void EcalplayGui::dropEvent(QDropEvent* event)
 ////////////////////////////////////////////////////////////////////////////////
 //// Windows Taskbar                                                        ////
 ////////////////////////////////////////////////////////////////////////////////
-void EcalplayGui::showEvent(QShowEvent* /*event*/)
-{
-  taskbar_button_   ->setWindow(this->windowHandle());
-  thumbnail_toolbar_->setWindow(this->windowHandle());
-}
 
 void EcalplayGui::updateTaskbarProgress(const EcalPlayState& current_state)
 {

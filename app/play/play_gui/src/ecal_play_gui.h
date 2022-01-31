@@ -43,12 +43,20 @@ class EcalplayGui : public QMainWindow
 {
   Q_OBJECT
 
+private:
+  enum class Theme:int
+  {
+    Default,
+    Dark,
+  };
+
 public:
   EcalplayGui(QWidget *parent = Q_NULLPTR);
 
   ~EcalplayGui();
 
 protected:
+  void showEvent(QShowEvent *event) override;
   void closeEvent(QCloseEvent* event) override;
 
   void dragEnterEvent(QDragEnterEvent* event) override;
@@ -79,6 +87,7 @@ private slots:
   void updateScenariosModified();
 
   void resetLayout();
+  void setTheme(Theme theme);
 
   bool loadMeasurementFromFileDialog();
   bool loadMeasurement(const QString& path);
@@ -87,7 +96,10 @@ private slots:
 private:
   Ui::EcalplayMainWindow ui_;
 
+  bool       first_show_event_;
+
   QActionGroup* default_channel_mapping_action_group_;
+  QActionGroup*  theme_action_group_;
 
   bool play_pause_button_state_is_play_;
   bool connect_to_ecal_button_state_is_connect_;
@@ -108,6 +120,10 @@ private:
   QByteArray initial_geometry_;
   QByteArray initial_state_;
 
+  QPalette   initial_palette_;
+  QStyle*    initial_style_;
+  QString    initial_style_sheet_;
+
   void setPlayPauseActionToPlay();
   void setPlayPauseActionToPause();
 
@@ -125,9 +141,6 @@ private:
 ////////////////////////////////////////////////////////////////////////////////
 //// Windows specific                                                        ////
 ////////////////////////////////////////////////////////////////////////////////
-protected:
-  void showEvent(QShowEvent* event) override;
-
 private slots:
   void updateTaskbarProgress(const EcalPlayState& current_state);
   void showConsole(bool show);
