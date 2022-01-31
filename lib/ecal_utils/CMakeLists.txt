@@ -49,10 +49,12 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-if(MSVC)
-  # Create a source tree that mirrors the filesystem
-  msvc_source_tree(${ecal_utils_includes} ${ecal_utils_src})
-endif()
+# Create a source tree that mirrors the filesystem
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
+    FILES
+        ${ecal_utils_includes}
+        ${ecal_utils_src}
+)
 
 ecal_install_library(${PROJECT_NAME})
 

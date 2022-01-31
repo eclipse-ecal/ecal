@@ -54,11 +54,10 @@ target_link_libraries(${PROJECT_NAME}
     EcalParser
 )
 
-if(MSVC)
-    msvc_source_tree(
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
+    FILES
         ${source_files}
-    )
-endif(MSVC)
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/sys)
 

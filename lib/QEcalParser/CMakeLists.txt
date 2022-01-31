@@ -83,23 +83,24 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 if(MSVC)
-    # Create a source tree that mirrors the filesystem
-    msvc_source_tree(
+    # Disable Compiler warning "Conditional expression is constant"
+    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127 /wd4714")
+endif()
+
+# Create a source tree that mirrors the filesystem
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
+    FILES
         ${qecalparser_includes}
         ${qecalparser_src}
         ${qecalparser_ui}
         ${qecalparser_resources}
-    )
+)
 
-    # Disable Compiler warning "Conditional expression is constant"
-    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127 /wd4714")
-
-    source_group(autogen FILES 
-        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_automoc.cpp
-        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_autogen/mocs_compilation.cpp
-        ${autogen_resources}
-        ${autogen_ui}
-  )
-endif()
+source_group(autogen FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_automoc.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_autogen/mocs_compilation.cpp
+    ${autogen_resources}
+    ${autogen_ui}
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lib)

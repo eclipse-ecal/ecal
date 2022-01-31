@@ -78,17 +78,21 @@ target_link_libraries(${PROJECT_NAME}
     Qt5::Widgets
 )
 
-if(MSVC)
-  # Create a source tree that mirrors the filesystem
-  msvc_source_tree(${custom_qt_includes} ${custom_qt_src})
+# Create a source tree that mirrors the filesystem
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
+    FILES
+        ${custom_qt_includes}
+        ${custom_qt_src}
+)
 
+if (MSVC)
   # Disable Compiler warning "Conditional expression is constant"
   set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127 /wd4714")
+endif()
 
-  source_group(autogen FILES 
+source_group(autogen FILES
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_automoc.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_autogen/mocs_compilation.cpp
-  )
-endif()
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lib)

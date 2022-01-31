@@ -1,7 +1,6 @@
 set (file_list_include 
   git/git_revision_information.cmake
   msvc_helper/msvc_macros.cmake
-  msvc_helper/msvc_sourcetree.cmake
   protoc_functions/protoc_generate_files.cmake
   target_definitions/targets_protobuf.cmake
 )

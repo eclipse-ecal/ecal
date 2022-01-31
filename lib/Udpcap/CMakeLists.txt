@@ -69,9 +69,10 @@ set_target_properties(${PROJECT_NAME}
   -DELAYLOAD:wpcap.dll
 )
 
-if(MSVC)
-    # Create a source tree that mirrors the filesystem
-    msvc_source_tree(${source_files})
-endif()
+# Create a source tree that mirrors the filesystem
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
+    FILES
+        ${source_files}
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lib/udpcap)

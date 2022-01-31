@@ -59,11 +59,11 @@ if(WIN32)
   target_link_libraries(${PROJECT_NAME} PRIVATE wsock32 ws2_32)
 endif()
 
-
-if(MSVC)
-    # Create a source tree that mirrors the filesystem
-    msvc_source_tree(${includes} ${sources})
-endif()
-
+# Create a source tree that mirrors the filesystem
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
+    FILES
+        ${includes}
+        ${sources}
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lib)

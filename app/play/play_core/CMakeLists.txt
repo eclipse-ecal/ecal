@@ -65,10 +65,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   eCAL::utils
 )
 
-if(MSVC)
-  msvc_source_tree(
-    ${source_files}
-  )
-endif()
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
+    FILES
+        ${source_files}
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/play)
