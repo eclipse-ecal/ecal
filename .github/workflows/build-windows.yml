@@ -117,9 +117,9 @@ jobs:
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Debug ^
-        -DCPACK_PACK_WITH_INNOSETUP=OFF
-        -DCMAKE_C_COMPILER_LAUNCHER=buildcache
-        -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
+        -DCPACK_PACK_WITH_INNOSETUP=OFF ^
+        -DCMAKE_C_COMPILER_LAUNCHER=buildcache ^
+        -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache 
       shell: cmd
       
     - name: CMake Complete
@@ -156,9 +156,9 @@ jobs:
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Release ^
-        -DCPACK_PACK_WITH_INNOSETUP=ON
-        -DCMAKE_C_COMPILER_LAUNCHER=buildcache
-        -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache
+        -DCPACK_PACK_WITH_INNOSETUP=ON ^
+        -DCMAKE_C_COMPILER_LAUNCHER=buildcache ^
+        -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache 
         mkdir "%ALLUSERSPROFILE%\eCAL"
         copy "%GITHUB_WORKSPACE%\ecal\core\cfg\ecal.ini" "%ALLUSERSPROFILE%\eCAL"
       shell: cmd

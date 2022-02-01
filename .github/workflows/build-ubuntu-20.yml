@@ -32,6 +32,11 @@ jobs:
       with:
         submodules:  'true'
         fetch-depth: 0
+
+    - name: BuildCache
+      uses: mikehardy/buildcache-action@v1
+      with:
+        cache_key: Ubuntu20 # optional: separate caches maybe?
         
     - name: Install Python requirements
       shell: bash
@@ -76,7 +81,9 @@ jobs:
         -DCMAKE_INSTALL_SYSCONFDIR=/etc \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LOCALSTATEDIR=/var \
-        -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu
+        -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu \
+        -DCMAKE_C_COMPILER_LAUNCHER=buildcache \
+        -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache 
         sudo mkdir /etc/ecal
         sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.ini" /etc/ecal
       shell: bash
