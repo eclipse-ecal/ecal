@@ -198,6 +198,18 @@ namespace eCAL
     return m_datawriter->SetDescription(topic_desc_);
   }
 
+  bool CPublisher::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
+  {
+    if(!m_datawriter) return false;
+    return m_datawriter->SetAttribute(attr_name_, attr_value_);
+  }
+
+  bool CPublisher::ClearAttribute(const std::string& attr_name_)
+  {
+    if(!m_datawriter) return false;
+    return m_datawriter->ClearAttribute(attr_name_);
+  }
+
   bool CPublisher::ShareType(bool state_ /*= true*/)
   {
     if (!m_datawriter) return false;

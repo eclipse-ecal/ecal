@@ -58,6 +58,9 @@ namespace eCAL
 
     bool SetDescription(const std::string& topic_desc_);
 
+    bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
+    bool ClearAttribute(const std::string& attr_name_);
+
     void ShareType(bool state_);
     void ShareDescription(bool state_);
 
@@ -114,15 +117,16 @@ namespace eCAL
 
     void LogSendMode(TLayer::eSendMode smode_, const std::string & base_msg_);
 
-    std::string        m_host_name;
-    int                m_host_id;
-    int                m_pid;
-    std::string        m_pname;
-    std::string        m_topic_name;
-    std::string        m_topic_id;
-    std::string        m_topic_type;
-    std::string        m_topic_desc;
-    size_t             m_topic_size;
+    std::string                        m_host_name;
+    int                                m_host_id;
+    int                                m_pid;
+    std::string                        m_pname;
+    std::string                        m_topic_name;
+    std::string                        m_topic_id;
+    std::string                        m_topic_type;
+    std::string                        m_topic_desc;
+    std::map<std::string, std::string> m_attr;
+    size_t                             m_topic_size;
 
     QOS::SWriterQOS    m_qos;
 

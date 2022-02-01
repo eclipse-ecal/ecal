@@ -184,6 +184,18 @@ namespace eCAL
     return(true);
   }
 
+  bool CSubscriber::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
+  {
+    if(!m_datareader) return false;
+    return m_datareader->SetAttribute(attr_name_, attr_value_);
+  }
+
+  bool CSubscriber::ClearAttribute(const std::string& attr_name_)
+  {
+    if(!m_datareader) return false;
+    return m_datareader->ClearAttribute(attr_name_);
+  }
+
   size_t CSubscriber::Receive(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */) const
   {
     if(!m_created) return(0);

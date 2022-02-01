@@ -279,12 +279,13 @@ namespace eCAL
       std::lock_guard<std::mutex> lock(pTopicMap->sync);
 
       // common infos
-      std::string host_name    = sample_topic.hname();
-      std::string process_name = sample_topic.pname();
-      std::string unit_name    = sample_topic.uname();
-      std::string topic_id     = sample_topic.tid();
-      std::string topic_type   = sample_topic.ttype();
-      std::string topic_desc   = sample_topic.tdesc();
+      std::string host_name            = sample_topic.hname();
+      std::string process_name         = sample_topic.pname();
+      std::string unit_name            = sample_topic.uname();
+      std::string topic_id             = sample_topic.tid();
+      std::string topic_type           = sample_topic.ttype();
+      std::string topic_desc           = sample_topic.tdesc();
+      auto attr                        = sample_topic.attr();
 
       // try to get topic info
       std::string topic_name_id = topic_name + topic_id;
@@ -302,6 +303,7 @@ namespace eCAL
       TopicInfo.rclock++;
       TopicInfo.ttype                 = std::move(topic_type);
       TopicInfo.tdesc                 = std::move(topic_desc);
+      TopicInfo.attr                  = std::map<std::string, std::string>{attr.begin(), attr.end()};
       TopicInfo.tlayer_ecal_udp_mc    = topic_tlayer_ecal_udp_mc;
       TopicInfo.tlayer_ecal_shm       = topic_tlayer_ecal_shm;
       TopicInfo.tlayer_ecal_tcp       = topic_tlayer_ecal_tcp;
@@ -754,6 +756,9 @@ namespace eCAL
 
       // topic description
       pMonTopic->set_tdesc(topic.second.tdesc);
+
+      // topic attributes
+      *pMonTopic->mutable_attr() = google::protobuf::Map<std::string, std::string> {topic.second.attr.begin(), topic.second.attr.end()};
 
       // topic size
       pMonTopic->set_tsize(topic.second.tsize);

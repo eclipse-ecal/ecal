@@ -75,6 +75,31 @@ extern "C"
   ECALC_API int eCAL_Pub_SetDescription(ECAL_HANDLE handle_, const char* topic_desc_, int topic_desc_len_);
 
   /**
+   * @brief Sets publisher attribute. 
+   *
+   * @param handle_             Publisher handle. 
+   * @param attr_name_          Attribute name. 
+   * @param attr_name_len_      Attribute name length. 
+   * @param attr_value_         Attribute value. 
+   * @param attr_value_len_     Attribute value length. 
+   *
+   * @return  None zero if succeeded.
+  **/
+  ECALC_API int eCAL_Pub_SetAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_, const char* attr_value_, int attr_value_len_);
+
+  /**
+   * @brief Removes publisher attribute. 
+   *
+   * @param handle_             Publisher handle. 
+   * @param attr_name_          Attribute name. 
+   * @param attr_name_len_      Attribute name length. 
+   *
+   * @return  None zero if succeeded.
+   * @experimental
+  **/
+  ECALC_API int eCAL_Pub_ClearAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_);
+
+  /**
    * @brief Share topic type.
    *
    * @param handle_ Publisher handle. 

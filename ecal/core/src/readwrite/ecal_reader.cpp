@@ -275,6 +275,7 @@ namespace eCAL
     ecal_reg_sample_mutable_topic->set_tid(m_topic_id);
     if (m_use_ttype) ecal_reg_sample_mutable_topic->set_ttype(m_topic_type);
     if (m_use_tdesc) ecal_reg_sample_mutable_topic->set_tdesc(m_topic_desc);
+    *ecal_reg_sample_mutable_topic->mutable_attr() = google::protobuf::Map<std::string, std::string> { m_attr.begin(), m_attr.end() };
     ecal_reg_sample_mutable_topic->set_tsize(google::protobuf::int32(m_topic_size));
     // udp multicast layer
     {
@@ -356,6 +357,41 @@ namespace eCAL
   {
     m_qos = qos_;
     return (!m_created);
+  }
+
+  bool CDataReader::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
+  {
+    auto current_val = m_attr.find(attr_name_);
+
+    bool force = current_val == m_attr.end() || current_val->second != attr_value_;
+    m_attr[attr_name_] = attr_value_;
+
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug2, m_topic_name + "::CDataReader::SetAttribute");
+#endif
+
+    // register it
+    DoRegister(force);
+
+    return(true);
+  }
+
+  bool CDataReader::ClearAttribute(const std::string& attr_name_)
+  {
+    auto force = m_attr.find(attr_name_) != m_attr.end();
+
+    m_attr.erase(attr_name_);
+
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug2, m_topic_name + "::CDataReader::ClearAttribute");
+#endif
+
+    // register it
+    DoRegister(force);
+
+    return(true);
   }
 
   bool CDataReader::Receive(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */)
