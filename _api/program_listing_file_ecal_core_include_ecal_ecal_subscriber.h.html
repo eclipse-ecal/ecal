@@ -621,6 +621,10 @@
 
     <span class="kt">bool</span> <span class="nf">SetID</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;&amp;</span> <span class="n">id_set_</span><span class="p">);</span>
 
+    <span class="kt">bool</span> <span class="nf">SetAttribute</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">attr_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">attr_value_</span><span class="p">);</span>
+
+    <span class="kt">bool</span> <span class="nf">ClearAttribute</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">attr_name_</span><span class="p">);</span>
+
     <span class="p">[[</span><span class="n">deprecated</span><span class="p">]]</span>
     <span class="kt">size_t</span> <span class="n">Receive</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">buf_</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">*</span> <span class="n">time_</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rcv_timeout_</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
 

@@ -71,6 +71,10 @@ Program Listing for File ecal_subscriber.h
    
        bool SetID(const std::set<long long>& id_set_);
    
+       bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
+   
+       bool ClearAttribute(const std::string& attr_name_);
+   
        [[deprecated]]
        size_t Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const;
    
