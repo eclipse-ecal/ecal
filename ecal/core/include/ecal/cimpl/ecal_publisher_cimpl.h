@@ -88,6 +88,18 @@ extern "C"
   ECALC_API int eCAL_Pub_SetAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_, const char* attr_value_, int attr_value_len_);
 
   /**
+   * @brief Removes publisher attribute. 
+   *
+   * @param handle_             Publisher handle. 
+   * @param attr_name_          Attribute name. 
+   * @param attr_name_len_      Attribute name length. 
+   *
+   * @return  None zero if succeeded.
+   * @experimental
+  **/
+  ECALC_API int eCAL_Pub_ClearAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_);
+
+  /**
    * @brief Share topic type.
    *
    * @param handle_ Publisher handle. 

@@ -225,11 +225,21 @@ namespace eCAL
     return(true);
   }
 
-  const std::string CDataWriter::GetAttribute(const std::string& attr_name_) const
+  bool CDataWriter::ClearAttribute(const std::string& attr_name_)
   {
-    auto search = m_attr.find(attr_name_);
-    if(search == m_attr.end()) return "";
-    return search->second;
+    auto force = m_attr.find(attr_name_) != m_attr.end();
+
+    m_attr.erase(attr_name_);
+
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::ClearAttribute");
+#endif
+
+    // register it
+    DoRegister(force);
+
+    return(true);
   }
 
   void CDataWriter::ShareType(bool state_)

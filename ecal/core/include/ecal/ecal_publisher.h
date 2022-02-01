@@ -133,7 +133,6 @@ namespace eCAL
     **/
     bool SetDescription(const std::string& topic_desc_);
 
-
     /**
      * @brief Sets publisher attribute. 
      *
@@ -141,8 +140,19 @@ namespace eCAL
      * @param attr_value_  Attribute value. 
      *
      * @return  True if it succeeds, false if it fails. 
+     * @experimental
     **/
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
+
+    /**
+     * @brief Removes publisher attribute. 
+     *
+     * @param attr_name_   Attribute name. 
+     *
+     * @return  True if it succeeds, false if it fails.
+     * @experimental
+    **/
+    bool ClearAttribute(const std::string& attr_name_);
 
     /**
      * @brief Share topic type.
@@ -325,16 +335,6 @@ namespace eCAL
      * @return  The description. 
     **/
     std::string GetDescription() const;
-
-    /**
-     * @brief Gets publisher attribute. 
-     *
-     * @param attr_name_   Attribute name. 
-     * @param attr_value_  Attribute value. 
-     *
-     * @return  Attribute value if it succeeds, empty string if it fails. 
-    **/
-    std::string GetAttribute(const std::string& attr_name_) const;
 
     /**
      * @brief Dump the whole class state into a string. 

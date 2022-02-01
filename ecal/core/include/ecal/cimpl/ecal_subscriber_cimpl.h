@@ -108,6 +108,18 @@ extern "C"
   ECALC_API int eCAL_Sub_SetAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_, const char* attr_value_, int attr_value_len_);
 
   /**
+   * @brief Removes subscriber attribute. 
+   *
+   * @param handle_             Subscriber handle. 
+   * @param attr_name_          Attribute name. 
+   * @param attr_name_len_      Attribute name length. 
+   *
+   * @return  None zero if succeeded.
+   * @experimental
+  **/
+  ECALC_API int eCAL_Sub_ClearAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_);
+
+  /**
    * @brief Receive a message from the publisher
    *
    * @deprecated  Use the eCAL_Sub_Receive_ToBuffer or eCAL_Sub_Receive_Alloc instead.

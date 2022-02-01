@@ -377,6 +377,23 @@ namespace eCAL
     return(true);
   }
 
+  bool CDataReader::ClearAttribute(const std::string& attr_name_)
+  {
+    auto force = m_attr.find(attr_name_) != m_attr.end();
+
+    m_attr.erase(attr_name_);
+
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug2, m_topic_name + "::CDataReader::ClearAttribute");
+#endif
+
+    // register it
+    DoRegister(force);
+
+    return(true);
+  }
+
   bool CDataReader::Receive(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */)
   {
     if(!m_created) return(false);
@@ -787,13 +804,6 @@ namespace eCAL
       return(topic_desc);
     }
     return("");
-  }
-
-  const std::string CDataReader::GetAttribute(const std::string& attr_name_) const
-  {
-    auto search = m_attr.find(attr_name_);
-    if(search == m_attr.end()) return "";
-    return search->second;
   }
 
   std::string CDataReader::Dump(const std::string& indent_ /* = "" */)

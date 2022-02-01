@@ -70,6 +70,7 @@ namespace eCAL
     bool SetTimeout(int timeout_);
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
+    bool ClearAttribute(const std::string& attr_name_);
 
     void SetID(const std::set<long long>& id_set_);
 
@@ -92,7 +93,6 @@ namespace eCAL
     const std::string GetTopicName()                              const {return(m_topic_name);}
     const std::string GetTopicID()                                const {return(m_topic_id);}
     const std::string GetTypeName()                               const {return(m_topic_type);}
-    const std::string GetAttribute(const std::string& attr_name_) const;
     const std::string GetDescription()                            const;
 
     void RefreshRegistration();

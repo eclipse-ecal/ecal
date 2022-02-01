@@ -204,6 +204,12 @@ namespace eCAL
     return m_datawriter->SetAttribute(attr_name_, attr_value_);
   }
 
+  bool CPublisher::ClearAttribute(const std::string& attr_name_)
+  {
+    if(!m_datawriter) return false;
+    return m_datawriter->ClearAttribute(attr_name_);
+  }
+
   bool CPublisher::ShareType(bool state_ /*= true*/)
   {
     if (!m_datawriter) return false;
@@ -357,12 +363,6 @@ namespace eCAL
   {
     if(!m_datawriter) return("");
     return(m_datawriter->GetDescription());
-  }
-
-  std::string CPublisher::GetAttribute(const std::string& attr_name_) const
-  {
-    if(!m_datawriter) return("");
-    return(m_datawriter->GetAttribute(attr_name_));
   }
 
   void CPublisher::InitializeQOS()

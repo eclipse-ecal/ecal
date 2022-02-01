@@ -190,6 +190,12 @@ namespace eCAL
     return m_datareader->SetAttribute(attr_name_, attr_value_);
   }
 
+  bool CSubscriber::ClearAttribute(const std::string& attr_name_)
+  {
+    if(!m_datareader) return false;
+    return m_datareader->ClearAttribute(attr_name_);
+  }
+
   size_t CSubscriber::Receive(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */) const
   {
     if(!m_created) return(0);
@@ -254,12 +260,6 @@ namespace eCAL
   {
     if(!m_datareader) return("");
     return(m_datareader->GetDescription());
-  }
-
-  std::string CSubscriber::GetAttribute(const std::string& attr_name_) const
-  {
-    if(!m_datareader) return("");
-    return(m_datareader->GetAttribute(attr_name_));
   }
 
   bool CSubscriber::SetTimeout(int timeout_)

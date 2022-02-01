@@ -496,6 +496,14 @@ extern "C"
     return(0);
   }
 
+  ECALC_API int eCAL_Pub_ClearAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
+    if (pub->ClearAttribute(std::string(attr_name_, static_cast<size_t>(attr_name_len_)))) return(1);
+    return(0);
+  }
+
   ECALC_API int eCAL_Pub_ShareType(ECAL_HANDLE handle_, int state_)
   {
     if (handle_ == NULL) return(0);
@@ -710,6 +718,14 @@ extern "C"
     if (handle_ == NULL) return(0);
     eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
     if (sub->SetAttribute(std::string(attr_name_, static_cast<size_t>(attr_name_len_)), std::string(attr_value_, static_cast<size_t>(attr_value_len_)))) return(1);
+    return(0);
+  }
+
+  ECALC_API int eCAL_Sub_ClearAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
+    if (sub->ClearAttribute(std::string(attr_name_, static_cast<size_t>(attr_name_len_)))) return(1);
     return(0);
   }
 

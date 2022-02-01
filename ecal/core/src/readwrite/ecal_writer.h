@@ -59,6 +59,7 @@ namespace eCAL
     bool SetDescription(const std::string& topic_desc_);
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
+    bool ClearAttribute(const std::string& attr_name_);
 
     void ShareType(bool state_);
     void ShareDescription(bool state_);
@@ -100,7 +101,6 @@ namespace eCAL
     const std::string& GetTopicID() const {return(m_topic_id);}
     const std::string& GetTypeName() const {return(m_topic_type);}
     const std::string& GetDescription() const {return(m_topic_desc);}
-    const std::string GetAttribute(const std::string& attr_name_) const;
     long long GetClock() const {return(m_clock);}
     long GetFrequency() const {return(m_freq);}
 
