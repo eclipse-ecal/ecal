@@ -76,12 +76,18 @@ jobs:
 
       shell: cmd
         
+    - name: Activate MSVC command
+      uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64 
+          toolset: 14.0
+        
     - name: CMake SDK
       run: |
         mkdir "${{ runner.workspace }}\_build\sdk\"
         cd "${{ runner.workspace }}/_build/sdk"
         
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 ^
+        cmake %GITHUB_WORKSPACE% -G "Ninja" ^
         -DHAS_HDF5=ON ^
         -DHAS_QT5=ON ^
         -DHAS_CURL=ON ^
@@ -118,7 +124,7 @@ jobs:
       run: |
         CALL "${{ runner.workspace }}\.venv\Scripts\activate.bat"
         cd "${{ runner.workspace }}/_build/complete"
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 ^
+        cmake %GITHUB_WORKSPACE% -G "Ninja" ^
         -DHAS_HDF5=ON ^
         -DHAS_QT5=ON ^
         -DHAS_CURL=ON ^
@@ -172,8 +178,8 @@ jobs:
         py -3.10 -m venv ".venv_310"
         CALL ".venv_310\Scripts\activate.bat"
         pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=ONLY
+        cmake %GITHUB_WORKSPACE% -G "Ninja" -DPython_FIND_VIRTUALENV=FIRST
+        cmake %GITHUB_WORKSPACE% -G "Ninja" -DPython_FIND_VIRTUALENV=ONLY
         cmake --build . --target create_python_wheel --config Release
       shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
@@ -184,8 +190,8 @@ jobs:
         py -3.9 -m venv ".venv_39"
         CALL ".venv_39\Scripts\activate.bat"
         pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=ONLY
+        cmake %GITHUB_WORKSPACE% -G "Ninja" -DPython_FIND_VIRTUALENV=FIRST
+        cmake %GITHUB_WORKSPACE% -G "Ninja" -DPython_FIND_VIRTUALENV=ONLY
         cmake --build . --target create_python_wheel --config Release
       shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
@@ -196,8 +202,8 @@ jobs:
         py -3.8 -m venv ".venv_38"
         CALL ".venv_38\Scripts\activate.bat"
         pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=ONLY
+        cmake %GITHUB_WORKSPACE% -G "Ninja" -DPython_FIND_VIRTUALENV=FIRST
+        cmake %GITHUB_WORKSPACE% -G "Ninja" -DPython_FIND_VIRTUALENV=ONLY
         cmake --build . --target create_python_wheel --config Release
       shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
@@ -208,8 +214,8 @@ jobs:
         py -3.7 -m venv ".venv_37"
         CALL ".venv_37\Scripts\activate.bat"
         pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=ONLY
+        cmake %GITHUB_WORKSPACE% -G "Ninja" -DPython_FIND_VIRTUALENV=FIRST
+        cmake %GITHUB_WORKSPACE% -G "Ninja" -DPython_FIND_VIRTUALENV=ONLY
         cmake --build . --target create_python_wheel --config Release
       shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
@@ -220,8 +226,8 @@ jobs:
         py -3.6 -m venv ".venv_36"
         CALL ".venv_36\Scripts\activate.bat"
         pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=ONLY
+        cmake %GITHUB_WORKSPACE% -G "Ninja" -DPython_FIND_VIRTUALENV=FIRST
+        cmake %GITHUB_WORKSPACE% -G "Ninja" -DPython_FIND_VIRTUALENV=ONLY
         cmake --build . --target create_python_wheel --config Release
       shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
@@ -232,8 +238,8 @@ jobs:
         py -3.5 -m venv ".venv_35"
         CALL ".venv_35\Scripts\activate.bat"
         pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 -DPython_FIND_VIRTUALENV=ONLY
+        cmake %GITHUB_WORKSPACE% -G "Ninja"-DPython_FIND_VIRTUALENV=FIRST
+        cmake %GITHUB_WORKSPACE% -G "Ninja"-DPython_FIND_VIRTUALENV=ONLY
         cmake --build . --target create_python_wheel --config Release
       shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
