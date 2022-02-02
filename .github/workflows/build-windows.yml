@@ -78,9 +78,9 @@ jobs:
         
     - name: Activate MSVC command
       uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x64 
-          toolset: 14.0
+      with:
+        arch: 'x64' 
+        toolset: '14.0'
         
     - name: CMake SDK
       run: |
