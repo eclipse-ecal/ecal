@@ -115,6 +115,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON ^
         -DECAL_THIRDPARTY_BUILD_TCPUB=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
+        -DCMAKE_BUILD_TYPE=Debug ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Debug ^
         -DCPACK_PACK_WITH_INNOSETUP=OFF
@@ -152,8 +153,8 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON ^
         -DECAL_THIRDPARTY_BUILD_TCPUB=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
-        -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Release ^
+        -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCPACK_PACK_WITH_INNOSETUP=ON
         mkdir "%ALLUSERSPROFILE%\eCAL"
         copy "%GITHUB_WORKSPACE%\ecal\core\cfg\ecal.ini" "%ALLUSERSPROFILE%\eCAL"

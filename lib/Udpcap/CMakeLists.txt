@@ -57,6 +57,7 @@ target_link_libraries(${PROJECT_NAME}
     wsock32
     ws2_32
     asio::asio
+    Delayimp.lib #Ninja needs this because of delayload
 )
 
 target_compile_definitions(${PROJECT_NAME}

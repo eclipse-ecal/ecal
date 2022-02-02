@@ -20,7 +20,10 @@ cmake_minimum_required(VERSION 3.13)
 
 if (POLICY CMP0077)
   cmake_policy(SET CMP0077 NEW) # Prevent HDF5 from overwriting our output paths
-endif (POLICY CMP0077)
+endif ()
+if (POLICY CMP0092)
+  cmake_policy(SET CMP0092 NEW) # Prevent ton of linker warnings (hopefully) To be removed when CMake_minimum_required >= 3.15
+endif ()
 
 list(APPEND CMAKE_MODULE_PATH
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake
