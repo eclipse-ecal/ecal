@@ -47,6 +47,11 @@ jobs:
         submodules:  'true'
         fetch-depth: 0
 
+    - name: BuildCache
+      uses: mikehardy/buildcache-action@v1
+      with:
+        cache_key: UbuntuIceoryx # optional: separate caches maybe?
+        
     - name: Install Python requirements
       shell: bash
       run: |
@@ -54,6 +59,8 @@ jobs:
 
     - name: CMake
       run: |
+        export CC=/usr/bin/gcc-9
+        export CXX=/usr/bin/g++-9
         mkdir "${{ runner.workspace }}/_build"
         cd "${{ runner.workspace }}/_build"
         cmake $GITHUB_WORKSPACE -G "Ninja" \
@@ -89,7 +96,9 @@ jobs:
         -DCMAKE_INSTALL_SYSCONFDIR=/etc \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LOCALSTATEDIR=/var \
-        -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu
+        -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu \
+        -DCMAKE_C_COMPILER_LAUNCHER=buildcache \
+        -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache 
         sudo mkdir /etc/ecal
         sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.ini" /etc/ecal
       shell: bash
