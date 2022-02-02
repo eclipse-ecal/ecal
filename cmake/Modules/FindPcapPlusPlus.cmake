@@ -4,7 +4,7 @@ set(PcapPlusPlus_DIR "${CMAKE_CURRENT_LIST_DIR}/../../thirdparty/npcap/pcapplusp
 
 set(PcapPlusPlus_INCLUDE_DIR "${PcapPlusPlus_DIR}/header/")
 
-if(("${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64") OR ("${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)"))
+if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
   set(PcapPlusPlus_LIB_DIR "${PcapPlusPlus_DIR}/x64/")
 else()
   set(PcapPlusPlus_LIB_DIR "${PcapPlusPlus_DIR}/x86/")
