@@ -111,9 +111,9 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 
 ![eCAL Mon](gfx/app/monitor_imagevisu.png)
 
-## Using eCAL
+## Projects using eCAL
 * [trellis](https://github.com/agtonomy/trellis) - General purpose middleware framework for distributed applications
-* [ecal-toolbox](https://de.mathworks.com/matlabcentral/fileexchange/92825-ecal-toolbox) - Mathworks simulink toolbox for eCAL
+* [ecal-toolbox](https://github.com/mathworks/ecal-toolbox) - Mathworks simulink toolbox for eCAL
 * [golang-ecal](https://github.com/Blutkoete/golang-ecal) - eCAL go language binding
 * [ecal-rs](https://github.com/kopernikusai/ecal-rs) - eCAL rust language binding
 * [rmw_ecal](https://github.com/continental/rmw_ecal) - eCAL / ROS2 middleware layer
@@ -122,7 +122,7 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 * [ecal2ros](https://github.com/ecal-io/ecal2ros) - Demo gateway eCAL5 to ROS2
 * [ros2ecal](https://github.com/ecal-io/ros2ecal) - Demo gateway ROS2 to eCAL5
 
-## Used by eCAL
+## Projects used by eCAL
 * [fine-ftpserver](https://github.com/continental/fineftp-server) - FTP functionality to collect distributed measurement artifacts over network
 * [tcp_pubsub](https://github.com/continental/tcp_pubsub) - Additional TCP transport layer for higher reliability for publication/subscription over network
 * [iceoryx](https://github.com/eclipse/iceoryx) - Alternative shared memory transport layer (needs to be activated via CMake options)
