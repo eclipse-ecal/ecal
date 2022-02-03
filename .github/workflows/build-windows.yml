@@ -80,6 +80,7 @@ jobs:
       run: | 
         mkdir "%ALLUSERSPROFILE%\eCAL"
         copy ".\ecal\core\cfg\ecal.ini" "%ALLUSERSPROFILE%\eCAL"
+      shell: cmd  
         
     - name: Activate MSVC command
       uses: ilammy/msvc-dev-cmd@v1
@@ -92,12 +93,12 @@ jobs:
     - name: CMake SDK
       run: |
         cmake --version
-        cmake . --preset windows-ci-components-sdk
+        cmake . --preset windows-ci-sdk
         
     - name: Build SDK
       run: |
         cmake --version
-        cmake --build --preset windows-ci-components-sdk    
+        cmake --build --preset windows-ci-sdk
 
     - name: CMake complete
       run: |
