@@ -8,8 +8,8 @@
   "configurePresets": [
     {
       "name": "windows-ci-thirdparty",
-      "displayName": "windows-ci-thirdparty",
-      "description": "This build is only available on Windows",
+      "hidden": "true",
+      "description": "default thirdparty settings for Windows CI build",
       "cacheVariables": {
         "ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS": "ON",
         "ECAL_THIRDPARTY_BUILD_PROTOBUF": "ON",
@@ -25,7 +25,7 @@
     },
     {
       "name": "windows",
-      "displayName": "windows-settings",
+      "hidden": "true",
       "description": "Set settings applicable for windows",
       "cacheVariables": {
         "BUILD_SHARED_LIBS": "OFF",
@@ -34,7 +34,7 @@
     },
     {
       "name": "windows-ci-components-sdk",
-      "displayName": "windows-ci-components-sdk",
+      "hidden": "true",
       "description": "Set features for SDK build",
       "cacheVariables": {
         "HAS_HDF5": "ON",
@@ -56,15 +56,14 @@
     },
     {
       "name": "windows-ci-components-complete",
+      "hidden": "true",
       "inherits": "windows-ci-components-sdk",
-      "displayName": "windows-ci-components-complete",
       "description": "Set features for Complete build",
       "cacheVariables": {
         "BUILD_DOCS": "ON",
         "BUILD_APPS": "ON",
         "BUILD_SAMPLES": "ON",
         "BUILD_PY_BINDING": "OFF",
-        "BUILD_CSHARP_BINDING": "ON",
         "BUILD_ECAL_TESTS": "ON",
         "CPACK_PACK_WITH_INNOSETUP": "ON"
       }
@@ -72,13 +71,13 @@
     {
       "name": "windows-ci-sdk",
       "inherits": ["windows", "windows-ci-components-sdk", "windows-ci-thirdparty"],
-      "displayName": "SDK BUILD",
+      "displayName": "windows-ci-sdk",
       "description": "Default build using Ninja generator",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/_build/sdk",
+      "installDir":  "${sourceDir}/_install/sdk",
       "cacheVariables": {
-        "DCMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/_install/complete"
+        "DCMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
@@ -88,9 +87,9 @@
       "description": "Complete build using Ninja generator",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/_build/complete",
+      "installDir":  "${sourceDir}/_install/complete",
       "cacheVariables": {
-        "DCMAKE_BUILD_TYPE": "Release",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/_install/complete"
+        "DCMAKE_BUILD_TYPE": "Release"
       }
     }
   ],

@@ -93,7 +93,7 @@ jobs:
     - name: CMake SDK
       run: |
         cmake --version
-        cmake . --preset windows-ci-sdk
+        cmake --preset windows-ci-sdk
         
     - name: Build SDK
       run: |
@@ -103,7 +103,7 @@ jobs:
     - name: CMake complete
       run: |
         cmake --version
-        cmake . --preset windows-ci-complete
+        cmake --preset windows-ci-complete
         
     - name: Build complete
       run: |
@@ -199,10 +199,6 @@ jobs:
 #    - name: Build Documentation C++
 #      run: cmake --build . --target documentation_cpp
 #      working-directory: ${{ runner.workspace }}/_build
-
-    - name: Run Tests
-      run: ctest -C Release -V
-      working-directory: ${{ runner.workspace }}/_build/complete
       
     - name: Test complete
       run: |
