@@ -8,7 +8,7 @@
   "configurePresets": [
     {
       "name": "windows-ci-thirdparty",
-      "hidden": "true",
+      "hidden": true,
       "description": "default thirdparty settings for Windows CI build",
       "cacheVariables": {
         "ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS": "ON",
@@ -25,7 +25,7 @@
     },
     {
       "name": "windows",
-      "hidden": "true",
+      "hidden": true,
       "description": "Set settings applicable for windows",
       "cacheVariables": {
         "BUILD_SHARED_LIBS": "OFF",
@@ -34,7 +34,7 @@
     },
     {
       "name": "windows-ci-components-sdk",
-      "hidden": "true",
+      "hidden": true,
       "description": "Set features for SDK build",
       "cacheVariables": {
         "HAS_HDF5": "ON",
@@ -56,7 +56,7 @@
     },
     {
       "name": "windows-ci-components-complete",
-      "hidden": "true",
+      "hidden": true,
       "inherits": "windows-ci-components-sdk",
       "description": "Set features for Complete build",
       "cacheVariables": {
