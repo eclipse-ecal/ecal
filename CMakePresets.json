@@ -75,9 +75,10 @@
       "displayName": "SDK BUILD",
       "description": "Default build using Ninja generator",
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build/win-sdk",
+      "binaryDir": "${sourceDir}/_build/sdk",
       "cacheVariables": {
-        "DCMAKE_BUILD_TYPE": "Debug"
+        "DCMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/_install/complete"
       }
     },
     {
@@ -86,9 +87,10 @@
       "displayName": "windows-ci-complete",
       "description": "Complete build using Ninja generator",
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build/win-sdk",
+      "binaryDir": "${sourceDir}/_build/complete",
       "cacheVariables": {
-        "DCMAKE_BUILD_TYPE": "Release"
+        "DCMAKE_BUILD_TYPE": "Release",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/_install/complete"
       }
     }
   ],

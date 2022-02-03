@@ -87,19 +87,32 @@ jobs:
         arch: 'x64' 
         toolset: '14.0'
     
-    - uses: lukka/get-cmake@latest
+    #- uses: lukka/get-cmake@latest
 
+    - name: CMake SDK
+      run: |
+        cmake --version
+        cmake . --preset windows-ci-components-sdk
+        
     - name: Build SDK
-      uses: lukka/run-cmake@v10
-      with:
-        configurePreset: 'windows-ci-components-sdk'
-        buildPreset: 'windows-ci-components-sdk'
+      run: |
+        cmake --version
+        cmake --build --preset windows-ci-components-sdk    
 
-    - name: Build Complete
-      uses: lukka/run-cmake@v10
-      with:
-        configurePreset: 'windows-ci-components-sdk'
-        buildPreset: 'windows-ci-components-sdk'
+    - name: CMake complete
+      run: |
+        cmake --version
+        cmake . --preset windows-ci-complete
+        
+    - name: Build complete
+      run: |
+        cmake --version
+        cmake --build --preset windows-ci-complete 
+        
+    - name: Install complete
+      run: |
+        cmake --version
+        cmake  --build --preset windows-ci-complete --target install  
 
 #    # Create Python.
 #    # The strang-looking double-cmake is an ugly workaround to force CMake to
@@ -189,6 +202,10 @@ jobs:
     - name: Run Tests
       run: ctest -C Release -V
       working-directory: ${{ runner.workspace }}/_build/complete
+      
+    - name: Test complete
+      run: |
+        ctest --preset windows-ci-complete -V
 
     - name: Pack SDK
       run: cpack -C Debug
