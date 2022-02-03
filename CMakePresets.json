@@ -1,0 +1,113 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "windows-ci-thirdparty",
+      "displayName": "windows-ci-thirdparty",
+      "description": "This build is only available on Windows",
+      "cacheVariables": {
+        "ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS": "ON",
+        "ECAL_THIRDPARTY_BUILD_PROTOBUF": "ON",
+        "ECAL_THIRDPARTY_BUILD_SPDLOG": "ON",
+        "ECAL_THIRDPARTY_BUILD_TINYXML2": "ON",
+        "ECAL_THIRDPARTY_BUILD_FINEFTP": "ON",
+        "ECAL_THIRDPARTY_BUILD_CURL": "ON",
+        "ECAL_THIRDPARTY_BUILD_GTEST": "ON",
+        "ECAL_THIRDPARTY_BUILD_HDF5": "ON",
+        "ECAL_THIRDPARTY_BUILD_RECYCLE": "ON",
+        "ECAL_THIRDPARTY_BUILD_TCPUB":"ON"
+      }
+    },
+    {
+      "name": "windows",
+      "displayName": "windows-settings",
+      "description": "Set settings applicable for windows",
+      "cacheVariables": {
+        "BUILD_SHARED_LIBS": "OFF",
+        "ECAL_LAYER_ICEORYX": "OFF"        
+      }
+    },
+    {
+      "name": "windows-ci-components-sdk",
+      "displayName": "windows-ci-components-sdk",
+      "description": "Set features for SDK build",
+      "cacheVariables": {
+        "HAS_HDF5": "ON",
+        "HAS_QT5": "ON",
+        "HAS_CURL": "ON",
+        "HAS_CAPNPROTO": "OFF",
+        "BUILD_DOCS": "OFF",
+        "BUILD_APPS": "OFF",
+        "BUILD_SAMPLES": "OFF",
+        "BUILD_TIME": "ON",
+        "BUILD_PY_BINDING": "OFF",
+        "BUILD_CSHARP_BINDING": "OFF",
+        "BUILD_ECAL_TESTS": "OFF",
+        "ECAL_INCLUDE_PY_SAMPLES": "OFF",
+        "ECAL_JOIN_MULTICAST_TWICE": "OFF",
+        "ECAL_NPCAP_SUPPORT": "ON",
+        "CPACK_PACK_WITH_INNOSETUP": "OFF"
+      }
+    },
+    {
+      "name": "windows-ci-components-complete",
+      "inherits": "windows-ci-components-sdk",
+      "displayName": "windows-ci-components-complete",
+      "description": "Set features for Complete build",
+      "cacheVariables": {
+        "BUILD_DOCS": "ON",
+        "BUILD_APPS": "ON",
+        "BUILD_SAMPLES": "ON",
+        "BUILD_PY_BINDING": "OFF",
+        "BUILD_CSHARP_BINDING": "ON",
+        "BUILD_ECAL_TESTS": "ON",
+        "CPACK_PACK_WITH_INNOSETUP": "ON"
+      }
+    },
+    {
+      "name": "windows-ci-sdk",
+      "inherits": ["windows", "windows-ci-components-sdk", "windows-ci-thirdparty"],
+      "displayName": "SDK BUILD",
+      "description": "Default build using Ninja generator",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/win-sdk",
+      "cacheVariables": {
+        "DCMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "windows-ci-complete",
+      "inherits": ["windows", "windows-ci-components-complete", "windows-ci-thirdparty"],
+      "displayName": "windows-ci-complete",
+      "description": "Complete build using Ninja generator",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/win-sdk",
+      "cacheVariables": {
+        "DCMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "windows-ci-sdk",
+      "configurePreset": "windows-ci-sdk"
+    },
+    {
+      "name": "windows-ci-complete",
+      "configurePreset": "windows-ci-complete"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "windows-ci-complete",
+      "configurePreset": "windows-ci-complete",
+      "output": {"outputOnFailure": true},
+      "execution": {"noTestsAction": "error", "stopOnFailure": true}
+    }
+  ]
+}
