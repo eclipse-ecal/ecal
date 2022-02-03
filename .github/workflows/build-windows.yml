@@ -79,7 +79,7 @@ jobs:
     - name: Create eCAL ini
       run: | 
         mkdir "%ALLUSERSPROFILE%\eCAL"
-        copy "%GITHUB_WORKSPACE%\ecal\core\cfg\ecal.ini" "%ALLUSERSPROFILE%\eCAL"
+        copy ".\ecal\core\cfg\ecal.ini" "%ALLUSERSPROFILE%\eCAL"
         
     - name: Activate MSVC command
       uses: ilammy/msvc-dev-cmd@v1
