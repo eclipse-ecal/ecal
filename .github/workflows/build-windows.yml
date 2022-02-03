@@ -94,26 +94,31 @@ jobs:
       run: |
         cmake --version
         cmake --preset windows-ci-sdk
+      shell: cmd
         
     - name: Build SDK
       run: |
         cmake --version
         cmake --build --preset windows-ci-sdk
+      shell: cmd  
 
     - name: CMake complete
       run: |
         cmake --version
         cmake --preset windows-ci-complete
+      shell: cmd  
         
     - name: Build complete
       run: |
         cmake --version
         cmake --build --preset windows-ci-complete 
+      shell: cmd  
         
     - name: Install complete
       run: |
         cmake --version
         cmake  --build --preset windows-ci-complete --target install  
+      shell: cmd  
 
 #    # Create Python.
 #    # The strang-looking double-cmake is an ugly workaround to force CMake to
@@ -203,6 +208,7 @@ jobs:
     - name: Test complete
       run: |
         ctest --preset windows-ci-complete -V
+      shell: cmd  
 
     - name: Pack SDK
       run: cpack -C Debug
