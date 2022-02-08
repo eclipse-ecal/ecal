@@ -127,8 +127,8 @@ namespace eCAL
     // start transport layers
     StartDataLayers();
 
-    // register now
-    DoRegister(true);
+    // register
+    DoRegister(false);
 
     // mark as created
     m_created = true;
