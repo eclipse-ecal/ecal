@@ -134,8 +134,8 @@ namespace eCAL
     // allow to share topic description
     m_use_tdesc = eCALPAR(PUB, SHARE_TDESC) != 0;
 
-    // register now
-    DoRegister(true);
+    // register
+    DoRegister(false);
 
     // mark as created
     m_created = true;
