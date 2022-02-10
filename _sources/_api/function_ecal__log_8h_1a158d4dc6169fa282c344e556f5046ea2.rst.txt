@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: eCAL::Logging::Log(const std::string&)
+   :project: eCAL

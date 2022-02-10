@@ -20,6 +20,7 @@ Class Documentation
 
 
 .. doxygenclass:: eCAL::CMsgPublisher
+   :project: eCAL
    :members:
    :protected-members:
    :undoc-members:

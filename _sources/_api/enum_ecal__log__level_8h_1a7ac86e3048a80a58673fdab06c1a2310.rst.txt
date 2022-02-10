@@ -11,3 +11,4 @@ Enum Documentation
 
 
 .. doxygenenum:: eCAL_Logging_eLogLevel
+   :project: eCAL

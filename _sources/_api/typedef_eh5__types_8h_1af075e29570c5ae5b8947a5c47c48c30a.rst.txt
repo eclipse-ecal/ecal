@@ -11,3 +11,4 @@ Typedef Documentation
 
 
 .. doxygentypedef:: eCAL::eh5::EntryInfoVect
+   :project: eCAL

@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: pub_set_layer_mode(ECAL_HANDLE, const int, const int)
+   :project: eCAL

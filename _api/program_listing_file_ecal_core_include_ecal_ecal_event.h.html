@@ -599,53 +599,6 @@
 
   <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="nf">gEventIsValid</span><span class="p">(</span><span class="k">const</span> <span class="n">EventHandleT</span><span class="o">&amp;</span> <span class="n">event_</span><span class="p">);</span>
 <span class="p">}</span>
-
-<span class="cp">#ifdef ECAL_C_DLL</span>
-
-<span class="cp">#include</span> <span class="cpf">&lt;ecal/ecalc.h&gt;</span><span class="cp"></span>
-
-<span class="k">namespace</span> <span class="n">eCAL</span>
-<span class="p">{</span>
-  <span class="kr">inline</span> <span class="kt">bool</span> <span class="n">gOpenEvent</span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">EventHandleT</span><span class="o">*</span> <span class="n">event_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">event_name_</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">event_</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="k">return</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
-    <span class="n">ECAL_HANDLE</span> <span class="n">event</span> <span class="o">=</span> <span class="n">eCAL_Event_gOpenEvent</span><span class="p">(</span><span class="n">event_name_</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">event</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="k">return</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
-    <span class="n">event_</span><span class="o">-&gt;</span><span class="n">handle</span> <span class="o">=</span> <span class="n">event</span><span class="p">;</span>
-    <span class="n">event_</span><span class="o">-&gt;</span><span class="n">name</span>   <span class="o">=</span> <span class="n">event_name_</span><span class="p">;</span>
-    <span class="k">return</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
-  <span class="p">}</span>
-
-  <span class="kr">inline</span> <span class="kt">bool</span> <span class="n">gCloseEvent</span><span class="p">(</span><span class="k">const</span> <span class="n">EventHandleT</span><span class="o">&amp;</span> <span class="n">event_</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Event_gCloseEvent</span><span class="p">(</span><span class="n">event_</span><span class="p">.</span><span class="n">handle</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-  <span class="p">}</span>
-
-  <span class="kr">inline</span> <span class="kt">bool</span> <span class="n">gSetEvent</span><span class="p">(</span><span class="k">const</span> <span class="n">EventHandleT</span><span class="o">&amp;</span> <span class="n">event_</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Event_gSetEvent</span><span class="p">(</span><span class="n">event_</span><span class="p">.</span><span class="n">handle</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-  <span class="p">}</span>
-
-  <span class="kr">inline</span> <span class="kt">bool</span> <span class="n">gWaitForEvent</span><span class="p">(</span><span class="k">const</span> <span class="n">EventHandleT</span><span class="o">&amp;</span> <span class="n">event_</span><span class="p">,</span> <span class="kt">long</span> <span class="n">timeout_</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Event_gWaitForEvent</span><span class="p">(</span><span class="n">event_</span><span class="p">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">timeout_</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-  <span class="p">}</span>
-
-  <span class="kr">inline</span> <span class="kt">bool</span> <span class="n">gInvalidateEvent</span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">EventHandleT</span><span class="o">*</span> <span class="n">event_</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">event_</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="k">return</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">event_</span><span class="o">-&gt;</span><span class="n">handle</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="k">return</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
-    <span class="n">event_</span><span class="o">-&gt;</span><span class="n">handle</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
-    <span class="k">return</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
-  <span class="p">}</span>
-
-  <span class="kr">inline</span> <span class="kt">bool</span> <span class="n">gEventIsValid</span><span class="p">(</span><span class="k">const</span> <span class="n">EventHandleT</span><span class="o">&amp;</span> <span class="n">event_</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Event_gEventIsValid</span><span class="p">(</span><span class="n">event_</span><span class="p">.</span><span class="n">handle</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="cp">#endif </span><span class="cm">/* ECAL_C_DLL */</span><span class="cp"></span>
 </pre></div>
 </div>
 </div>

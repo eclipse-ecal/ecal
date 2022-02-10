@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: ecal_sleep_ms(const long)
+   :project: eCAL

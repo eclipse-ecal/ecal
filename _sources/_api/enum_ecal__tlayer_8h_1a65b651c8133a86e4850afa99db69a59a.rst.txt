@@ -11,3 +11,4 @@ Enum Documentation
 
 
 .. doxygenenum:: eCAL::TLayer::eTransportLayer
+   :project: eCAL

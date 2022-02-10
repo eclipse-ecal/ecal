@@ -610,53 +610,6 @@
     <span class="n">ECAL_API</span> <span class="kt">double</span> <span class="nf">GetCoreTime</span><span class="p">();</span>
   <span class="p">}</span>
 <span class="p">}</span>
-
-<span class="cp">#ifdef ECAL_C_DLL</span>
-
-<span class="cp">#include</span> <span class="cpf">&lt;ecal/ecalc.h&gt;</span><span class="cp"></span>
-
-<span class="k">namespace</span> <span class="n">eCAL</span>
-<span class="p">{</span>
-  <span class="k">namespace</span> <span class="n">Logging</span>
-  <span class="p">{</span>
-    <span class="kr">inline</span> <span class="kt">void</span> <span class="n">SetLogLevel</span><span class="p">(</span><span class="n">eCAL_Logging_eLogLevel</span> <span class="n">level_</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="n">eCAL_Logging_SetLogLevel</span><span class="p">(</span><span class="n">level_</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="kr">inline</span> <span class="n">eCAL_Logging_eLogLevel</span> <span class="n">GetLogLevel</span><span class="p">()</span>
-    <span class="p">{</span>
-      <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Logging_GetLogLevel</span><span class="p">());</span>
-    <span class="p">}</span>
-
-    <span class="kr">inline</span> <span class="kt">void</span> <span class="n">Log</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">msg_</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="n">eCAL_Logging_Log</span><span class="p">(</span><span class="n">msg_</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
-    <span class="p">}</span>
-
-    <span class="kr">inline</span> <span class="kt">void</span> <span class="n">StartCoreTimer</span><span class="p">()</span>
-    <span class="p">{</span>
-      <span class="n">eCAL_Logging_StartCoreTimer</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="kr">inline</span> <span class="kt">void</span> <span class="n">StopCoreTimer</span><span class="p">()</span>
-    <span class="p">{</span>
-      <span class="n">eCAL_Logging_StopCoreTimer</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="kr">inline</span> <span class="kt">void</span> <span class="n">SetCoreTime</span><span class="p">(</span><span class="kt">double</span> <span class="n">time_</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="n">eCAL_Logging_SetCoreTime</span><span class="p">(</span><span class="n">time_</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="kr">inline</span> <span class="kt">double</span> <span class="n">GetCoreTime</span><span class="p">()</span>
-    <span class="p">{</span>
-      <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Logging_GetCoreTime</span><span class="p">());</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="cp">#endif </span><span class="cm">/* ECAL_C_DLL */</span><span class="cp"></span>
 </pre></div>
 </div>
 </div>

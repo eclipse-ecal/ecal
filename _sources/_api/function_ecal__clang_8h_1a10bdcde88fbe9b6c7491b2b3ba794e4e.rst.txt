@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: client_create(const char *)
+   :project: eCAL

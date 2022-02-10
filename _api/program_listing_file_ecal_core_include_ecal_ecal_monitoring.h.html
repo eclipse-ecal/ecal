@@ -603,67 +603,6 @@
     <span class="n">ECAL_API</span> <span class="kt">int</span> <span class="nf">PubLogging</span><span class="p">(</span><span class="kt">bool</span> <span class="n">state_</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name_</span> <span class="o">=</span> <span class="s">&quot;ecal.logging&quot;</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
-
-<span class="cp">#ifdef ECAL_C_DLL</span>
-
-<span class="cp">#include</span> <span class="cpf">&lt;ecal/ecalc.h&gt;</span><span class="cp"></span>
-
-<span class="k">namespace</span> <span class="n">eCAL</span>
-<span class="p">{</span>
-  <span class="k">namespace</span> <span class="n">Monitoring</span>
-  <span class="p">{</span>
-    <span class="kr">inline</span> <span class="kt">int</span> <span class="n">SetExclFilter</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">filter_</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Monitoring_SetExclFilter</span><span class="p">(</span><span class="n">filter_</span><span class="p">.</span><span class="n">c_str</span><span class="p">()));</span>
-    <span class="p">}</span>
-
-    <span class="kr">inline</span> <span class="kt">int</span> <span class="n">SetInclFilter</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">filter_</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Monitoring_SetInclFilter</span><span class="p">(</span><span class="n">filter_</span><span class="p">.</span><span class="n">c_str</span><span class="p">()));</span>
-    <span class="p">}</span>
-
-    <span class="kr">inline</span> <span class="kt">int</span> <span class="n">SetFilterState</span><span class="p">(</span><span class="kt">bool</span> <span class="n">state_</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Monitoring_SetFilterState</span><span class="p">(</span><span class="n">state_</span><span class="p">));</span>
-    <span class="p">}</span>
-
-    <span class="kr">inline</span> <span class="kt">int</span> <span class="n">GetMonitoring</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">mon_</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="kt">void</span><span class="o">*</span> <span class="n">buf</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
-      <span class="kt">size_t</span> <span class="n">buf_len</span> <span class="o">=</span> <span class="n">eCAL_Monitoring_GetMonitoring</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buf</span><span class="p">,</span> <span class="n">ECAL_ALLOCATE_4ME</span><span class="p">);</span>
-      <span class="k">if</span><span class="p">(</span><span class="n">buf_len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-      <span class="p">{</span>
-        <span class="n">mon_</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="n">buf_len</span><span class="p">);</span>
-        <span class="n">eCAL_FreeMem</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
-      <span class="p">}</span>
-      <span class="k">return</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">mon_</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
-    <span class="p">}</span>
-
-    <span class="kr">inline</span> <span class="kt">int</span> <span class="n">GetLogging</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">mon_</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="kt">void</span><span class="o">*</span> <span class="n">buf</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
-      <span class="kt">size_t</span> <span class="n">buf_len</span> <span class="o">=</span> <span class="n">eCAL_Monitoring_GetLogging</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buf</span><span class="p">,</span> <span class="n">ECAL_ALLOCATE_4ME</span><span class="p">);</span>
-      <span class="k">if</span><span class="p">(</span><span class="n">buf_len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-      <span class="p">{</span>
-        <span class="n">mon_</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="n">buf_len</span><span class="p">);</span>
-        <span class="n">eCAL_FreeMem</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
-      <span class="p">}</span>
-      <span class="k">return</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">mon_</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
-    <span class="p">}</span>
-
-    <span class="kr">inline</span> <span class="kt">int</span> <span class="n">PubMonitoring</span><span class="p">(</span><span class="kt">bool</span> <span class="n">state_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name_</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Monitoring_PubMonitoring</span><span class="p">(</span><span class="n">state_</span><span class="p">,</span> <span class="n">name_</span><span class="p">.</span><span class="n">c_str</span><span class="p">()));</span>
-    <span class="p">}</span>
-
-    <span class="kr">inline</span> <span class="kt">int</span> <span class="n">PubLogging</span><span class="p">(</span><span class="kt">bool</span> <span class="n">state_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name_</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Monitoring_PubLogging</span><span class="p">(</span><span class="n">state_</span><span class="p">,</span> <span class="n">name_</span><span class="p">.</span><span class="n">c_str</span><span class="p">()));</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="cp">#endif </span><span class="cm">/* ECAL_C_DLL */</span><span class="cp"></span>
 </pre></div>
 </div>
 </div>

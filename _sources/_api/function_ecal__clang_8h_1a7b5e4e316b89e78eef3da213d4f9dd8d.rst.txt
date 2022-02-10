@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: client_call_method_async(ECAL_HANDLE, const char *, const char *, const int, const int)
+   :project: eCAL

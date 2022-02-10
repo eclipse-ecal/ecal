@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: log_setcoretime(const double)
+   :project: eCAL

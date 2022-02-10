@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: pub_set_max_bandwidth_udp(ECAL_HANDLE, long)
+   :project: eCAL

@@ -11,3 +11,4 @@ Typedef Documentation
 
 
 .. doxygentypedef:: eCAL::TimerCallbackT
+   :project: eCAL

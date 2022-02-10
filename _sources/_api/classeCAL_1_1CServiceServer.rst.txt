@@ -11,6 +11,7 @@ Class Documentation
 
 
 .. doxygenclass:: eCAL::CServiceServer
+   :project: eCAL
    :members:
    :protected-members:
    :undoc-members:

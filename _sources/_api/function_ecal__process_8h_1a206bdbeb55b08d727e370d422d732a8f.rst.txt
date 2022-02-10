@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: eCAL::Process::StartProcess(const char *, const char *, const char *, bool, eCAL_Process_eStartMode, bool)
+   :project: eCAL

@@ -11,3 +11,4 @@ Enum Documentation
 
 
 .. doxygenenum:: eCAL::QOS::eQOSPolicy_HistoryKind
+   :project: eCAL

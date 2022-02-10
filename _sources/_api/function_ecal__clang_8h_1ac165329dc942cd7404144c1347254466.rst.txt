@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: mon_finalize()
+   :project: eCAL

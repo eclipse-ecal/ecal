@@ -11,3 +11,4 @@ Enum Documentation
 
 
 .. doxygenenum:: eCAL::QOS::eQOSPolicy_Reliability
+   :project: eCAL

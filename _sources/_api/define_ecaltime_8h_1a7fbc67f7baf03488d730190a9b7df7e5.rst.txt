@@ -11,3 +11,4 @@ Define Documentation
 
 
 .. doxygendefine:: ECALTIME_API
+   :project: eCAL

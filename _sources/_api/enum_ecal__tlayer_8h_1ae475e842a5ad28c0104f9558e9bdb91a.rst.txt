@@ -11,3 +11,4 @@ Enum Documentation
 
 
 .. doxygenenum:: eCAL::TLayer::eSendMode
+   :project: eCAL

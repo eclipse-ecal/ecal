@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: pub_send(ECAL_HANDLE, const char *, const int, const long long)
+   :project: eCAL

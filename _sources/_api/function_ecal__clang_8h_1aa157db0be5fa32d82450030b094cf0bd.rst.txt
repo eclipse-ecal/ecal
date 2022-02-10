@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: sub_add_event_callback(ECAL_HANDLE, enum eCAL_Subscriber_Event, const SubEventCallbackCT, void *)
+   :project: eCAL

@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: eCAL::Time::sleep_for(const std::chrono::duration<_Rep, _Period>&)
+   :project: eCAL

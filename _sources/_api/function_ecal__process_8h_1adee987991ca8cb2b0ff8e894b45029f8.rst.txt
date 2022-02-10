@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: eCAL::Process::GetSClock()
+   :project: eCAL

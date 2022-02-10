@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: eCAL::Time::GetStatus(int&, std::string *)
+   :project: eCAL

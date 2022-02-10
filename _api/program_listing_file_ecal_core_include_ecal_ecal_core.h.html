@@ -607,55 +607,6 @@
 
   <span class="n">ECAL_API</span> <span class="kt">bool</span> <span class="nf">Ok</span><span class="p">();</span>
 <span class="p">}</span>
-
-<span class="cp">#ifdef ECAL_C_DLL</span>
-
-<span class="cp">#include</span> <span class="cpf">&lt;ecal/ecalc.h&gt;</span><span class="cp"></span>
-
-<span class="k">namespace</span> <span class="n">eCAL</span>
-<span class="p">{</span>
-  <span class="kr">inline</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">GetVersionString</span><span class="p">()</span>
-  <span class="p">{</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">eCAL_GetVersionString</span><span class="p">());</span>
-  <span class="p">}</span>
-
-  <span class="kr">inline</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">GetVersionDateString</span><span class="p">()</span>
-  <span class="p">{</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">eCAL_GetVersionDateString</span><span class="p">());</span>
-  <span class="p">}</span>
-
-  <span class="kr">inline</span> <span class="kt">int</span> <span class="n">GetVersion</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">major_</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">minor_</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">patch_</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">eCAL_GetVersion</span><span class="p">(</span><span class="n">major_</span><span class="p">,</span> <span class="n">minor_</span><span class="p">,</span> <span class="n">patch_</span><span class="p">));</span>
-  <span class="p">}</span>
-
-  <span class="kr">inline</span> <span class="kt">int</span> <span class="n">Initialize</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc_</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">unit_name_</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">components_</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Initialize</span><span class="p">(</span><span class="n">argc_</span><span class="p">,</span> <span class="n">argv_</span><span class="p">,</span> <span class="n">unit_name_</span><span class="p">,</span> <span class="n">components_</span><span class="p">));</span>
-  <span class="p">}</span>
-
-  <span class="kr">inline</span> <span class="kt">int</span> <span class="n">Finalize</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">components_</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Finalize</span><span class="p">(</span><span class="n">components_</span><span class="p">));</span>
-  <span class="p">}</span>
-
-  <span class="kr">inline</span> <span class="kt">int</span> <span class="n">IsInitialized</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">component_</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">eCAL_IsInitialized</span><span class="p">(</span><span class="n">component_</span><span class="p">));</span>
-  <span class="p">}</span>
-
-  <span class="kr">inline</span> <span class="kt">int</span> <span class="n">SetUnitName</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">unit_name_</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">eCAL_SetUnitName</span><span class="p">(</span><span class="n">unit_name_</span><span class="p">));</span>
-  <span class="p">}</span>
-
-  <span class="kr">inline</span> <span class="kt">bool</span> <span class="n">Ok</span><span class="p">()</span>
-  <span class="p">{</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Ok</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="cp">#endif </span><span class="cm">/* ECAL_C_DLL */</span><span class="cp"></span>
 </pre></div>
 </div>
 </div>

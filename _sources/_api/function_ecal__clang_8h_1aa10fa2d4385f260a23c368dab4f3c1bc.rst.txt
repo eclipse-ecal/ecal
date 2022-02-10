@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: ecal_shutdown_process_uname(const char *)
+   :project: eCAL

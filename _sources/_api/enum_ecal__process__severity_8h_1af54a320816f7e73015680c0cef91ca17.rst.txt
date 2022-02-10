@@ -11,3 +11,4 @@ Enum Documentation
 
 
 .. doxygenenum:: eCAL_Process_eSeverity
+   :project: eCAL

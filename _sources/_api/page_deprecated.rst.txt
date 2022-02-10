@@ -4,3 +4,4 @@ Deprecated List
 ===============
 
 .. doxygenpage:: deprecated
+   :project: eCAL

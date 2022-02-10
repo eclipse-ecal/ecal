@@ -11,3 +11,4 @@ Variable Documentation
 
 
 .. doxygenvariable:: eCAL::Init::All
+   :project: eCAL

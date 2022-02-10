@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: mon_set_excl_filter(const char *)
+   :project: eCAL

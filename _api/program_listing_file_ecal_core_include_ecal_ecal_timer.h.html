@@ -584,8 +584,6 @@
 <span class="cp">#include</span> <span class="cpf">&lt;ecal/ecal_os.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;functional&gt;</span><span class="cp"></span>
 
-<span class="cp">#ifndef ECAL_C_DLL</span>
-
 <span class="k">namespace</span> <span class="n">eCAL</span>
 <span class="p">{</span>
   <span class="k">class</span> <span class="nc">CTimerImpl</span><span class="p">;</span>
@@ -614,65 +612,6 @@
     <span class="n">CTimer</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">CTimer</span><span class="o">&amp;</span><span class="p">);</span>
   <span class="p">};</span>
 <span class="p">}</span>
-
-<span class="cp">#else </span><span class="cm">/* ! ECAL_C_DLL */</span><span class="cp"></span>
-
-<span class="cp">#include</span> <span class="cpf">&lt;ecal/ecalc.h&gt;</span><span class="cp"></span>
-
-<span class="k">namespace</span> <span class="n">eCAL</span>
-<span class="p">{</span>
-  <span class="k">class</span> <span class="nc">CTimer</span>
-  <span class="p">{</span>
-  <span class="k">public</span><span class="o">:</span>
-    <span class="n">CTimer</span><span class="p">()</span> <span class="o">:</span> <span class="n">m_timer</span><span class="p">(</span><span class="k">nullptr</span><span class="p">)</span> <span class="p">{}</span>
-
-    <span class="n">CTimer</span><span class="p">(</span><span class="kt">int</span> <span class="n">timeout_</span><span class="p">,</span> <span class="n">TimerCallbackT</span> <span class="n">callback_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">delay_</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">:</span> <span class="n">m_timer</span><span class="p">(</span><span class="k">nullptr</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="n">Start</span><span class="p">(</span><span class="n">timeout_</span><span class="p">,</span> <span class="n">callback_</span><span class="p">,</span> <span class="n">delay_</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">CTimer</span><span class="p">()</span>
-    <span class="p">{</span>
-      <span class="n">Stop</span><span class="p">();</span>
-    <span class="p">}</span>
-
-    <span class="k">static</span> <span class="kt">void</span> <span class="n">TimerCallback</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">par_</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="k">if</span><span class="p">(</span><span class="n">par_</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
-      <span class="n">CTimer</span><span class="o">*</span> <span class="n">timer</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">CTimer</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">par_</span><span class="p">);</span>
-      <span class="n">timer</span><span class="o">-&gt;</span><span class="n">m_callback</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="kt">bool</span> <span class="n">Start</span><span class="p">(</span><span class="kt">int</span> <span class="n">timeout_</span><span class="p">,</span> <span class="n">TimerCallbackT</span> <span class="n">callback_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">delay_</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="k">if</span><span class="p">(</span><span class="n">m_timer</span><span class="p">)</span> <span class="k">return</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
-      <span class="n">m_timer</span> <span class="o">=</span> <span class="n">eCAL_Timer_Create</span><span class="p">();</span>
-      <span class="k">if</span><span class="p">(</span><span class="n">m_timer</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="k">return</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
-      <span class="n">m_callback</span> <span class="o">=</span> <span class="n">callback_</span><span class="p">;</span>
-      <span class="k">return</span><span class="p">(</span><span class="n">eCAL_Timer_Start</span><span class="p">(</span><span class="n">m_timer</span><span class="p">,</span> <span class="n">timeout_</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">CTimer</span><span class="o">::</span><span class="n">TimerCallback</span><span class="p">,</span> <span class="n">delay_</span><span class="p">,</span> <span class="k">this</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="kt">bool</span> <span class="n">Stop</span><span class="p">()</span>
-    <span class="p">{</span>
-      <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">m_timer</span><span class="p">)</span> <span class="k">return</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
-      <span class="kt">bool</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">eCAL_Timer_Stop</span><span class="p">(</span><span class="n">m_timer</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-      <span class="n">eCAL_Timer_Destroy</span><span class="p">(</span><span class="n">m_timer</span><span class="p">);</span>
-      <span class="n">m_timer</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
-      <span class="k">return</span><span class="p">(</span><span class="n">ret</span><span class="p">);</span>
-    <span class="p">}</span>
-
-  <span class="k">protected</span><span class="o">:</span>
-    <span class="c1">// class members</span>
-    <span class="n">ECAL_HANDLE</span>     <span class="n">m_timer</span><span class="p">;</span>
-    <span class="n">TimerCallbackT</span>  <span class="n">m_callback</span><span class="p">;</span>
-
-  <span class="k">private</span><span class="o">:</span>
-    <span class="c1">// this object must not be copied.</span>
-    <span class="n">CTimer</span><span class="p">(</span><span class="k">const</span> <span class="n">CTimer</span><span class="o">&amp;</span><span class="p">);</span>
-    <span class="n">CTimer</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">CTimer</span><span class="o">&amp;</span><span class="p">);</span>
-  <span class="p">};</span>
-<span class="p">}</span>
-
-<span class="cp">#endif </span><span class="cm">/* ! ECAL_C_DLL */</span><span class="cp"></span>
 </pre></div>
 </div>
 </div>

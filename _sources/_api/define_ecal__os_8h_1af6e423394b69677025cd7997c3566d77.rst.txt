@@ -11,3 +11,4 @@ Define Documentation
 
 
 .. doxygendefine:: ECAL_API
+   :project: eCAL

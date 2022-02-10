@@ -11,3 +11,4 @@ Enum Documentation
 
 
 .. doxygenenum:: eCAL::eh5::eAccessType
+   :project: eCAL

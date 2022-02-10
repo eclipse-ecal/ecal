@@ -11,3 +11,4 @@ Define Documentation
 
 
 .. doxygendefine:: ECAL_HDF5_VERSION_MAJOR
+   :project: eCAL

@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: pub_add_event_callback(ECAL_HANDLE, enum eCAL_Publisher_Event, const PubEventCallbackCT, void *)
+   :project: eCAL

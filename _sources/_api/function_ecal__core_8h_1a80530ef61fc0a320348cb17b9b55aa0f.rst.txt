@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: eCAL::Initialize(std::vector<std::string>, const char *, unsigned int)
+   :project: eCAL

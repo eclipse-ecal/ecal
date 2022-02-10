@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: eCAL::Process::RemRegistrationCallback(enum eCAL_Registration_Event)
+   :project: eCAL

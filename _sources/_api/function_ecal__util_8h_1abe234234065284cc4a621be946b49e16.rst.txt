@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: eCAL::Util::GetTypeName(const std::string&)
+   :project: eCAL

@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: eCAL::Logging::Log(eCAL_Logging_eLogLevel, const std::string&)
+   :project: eCAL

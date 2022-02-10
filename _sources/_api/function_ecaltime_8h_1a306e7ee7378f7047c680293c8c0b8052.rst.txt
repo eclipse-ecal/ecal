@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: etime_get_status(int *, char *, int)
+   :project: eCAL

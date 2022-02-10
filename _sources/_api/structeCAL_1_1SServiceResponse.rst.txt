@@ -11,6 +11,7 @@ Struct Documentation
 
 
 .. doxygenstruct:: eCAL::SServiceResponse
+   :project: eCAL
    :members:
    :protected-members:
    :undoc-members:

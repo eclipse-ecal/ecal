@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: sub_set_timeout(ECAL_HANDLE, int)
+   :project: eCAL

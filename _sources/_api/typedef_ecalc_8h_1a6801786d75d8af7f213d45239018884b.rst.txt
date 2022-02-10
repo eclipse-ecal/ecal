@@ -11,3 +11,4 @@ Typedef Documentation
 
 
 .. doxygentypedef:: ECAL_HANDLE
+   :project: eCAL

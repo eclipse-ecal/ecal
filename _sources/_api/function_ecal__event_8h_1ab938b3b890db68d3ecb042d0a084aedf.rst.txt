@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: eCAL::gWaitForEvent(const EventHandleT&, long)
+   :project: eCAL

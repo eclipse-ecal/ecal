@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: etime_is_synchronized()
+   :project: eCAL

@@ -11,3 +11,4 @@ Define Documentation
 
 
 .. doxygendefine:: ECAL_HDF5_NAME
+   :project: eCAL

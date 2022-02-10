@@ -34,8 +34,6 @@ Program Listing for File ecal_util.h
    #include <ecal/ecal_os.h>
    #include <string>
    
-   #ifndef ECAL_C_DLL
-   
    namespace eCAL
    {
      namespace Util
@@ -77,82 +75,3 @@ Program Listing for File ecal_util.h
        ECAL_API std::string GetDescription(const std::string& topic_name_);
      }
    }
-   
-   #else /* ! ECAL_C_DLL */
-   
-   #include <ecal/ecalc.h>
-   
-   namespace eCAL
-   {
-     namespace Util
-     {
-       inline void ShutdownProcess(const std::string& unit_name_)
-       {
-         eCAL_Util_ShutdownUnitName(unit_name_.c_str());
-       }
-   
-       inline void ShutdownProcess(int process_id_)
-       {
-         eCAL_Util_ShutdownProcessID(process_id_);
-       }
-   
-       inline void ShutdownProcesses()
-       {
-         eCAL_Util_ShutdownProcesses();
-       }
-   
-       inline void ShutdownCore()
-       {
-         eCAL_Util_ShutdownCore();
-       }
-   
-       inline void EnableLoopback(bool state_)
-       {
-         eCAL_Util_EnableLoopback(state_);
-       }
-   
-       inline bool GetTypeName(const std::string& topic_name_, std::string& topic_type_)
-       {
-         void* buf = nullptr;
-         std::string type;
-         size_t buf_len = eCAL_Util_GetTypeName(topic_name_.c_str(), &buf, ECAL_ALLOCATE_4ME);
-         if(buf_len > 0)
-         {
-           type = std::string(static_cast<char*>(buf), buf_len);
-           eCAL_FreeMem(buf);
-         }
-         topic_type_ = type;
-         return(!type.empty());
-       }
-   
-       inline std::string GetTypeName(const std::string& topic_name_)
-       {
-         std::string topic_type;
-         GetTypeName(topic_name_, topic_type);
-         return(topic_type);
-       }
-   
-       inline bool GetDescription(const std::string& topic_name_, std::string& topic_desc_)
-       {
-         void* buf = nullptr;
-         std::string desc;
-         size_t buf_len = eCAL_Util_GetDescription(topic_name_.c_str(), &buf, ECAL_ALLOCATE_4ME);
-         if(buf_len > 0)
-         {
-           desc = std::string(static_cast<char*>(buf), buf_len);
-           eCAL_FreeMem(buf);
-         }
-         topic_desc_ = desc;
-         return(!desc.empty());
-       }
-   
-       inline std::string GetDescription(const std::string& topic_name_)
-       {
-         std::string topic_desc;
-         GetDescription(topic_name_, topic_desc);
-         return(topic_desc);
-       }
-     }
-   }
-   
-   #endif /* ! ECAL_C_DLL */

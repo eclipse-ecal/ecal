@@ -11,3 +11,4 @@ Typedef Documentation
 
 
 .. doxygentypedef:: eCAL::SubEventCallbackT
+   :project: eCAL

@@ -11,6 +11,7 @@ Struct Documentation
 
 
 .. doxygenstruct:: eCAL::SEventHandle
+   :project: eCAL
    :members:
    :protected-members:
    :undoc-members:

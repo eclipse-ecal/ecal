@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: server_destroy(ECAL_HANDLE)
+   :project: eCAL

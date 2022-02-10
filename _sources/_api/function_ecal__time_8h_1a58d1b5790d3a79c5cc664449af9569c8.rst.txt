@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: eCAL::Time::GetNanoSeconds()
+   :project: eCAL

@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: mon_get_monitoring(const char **, int *)
+   :project: eCAL

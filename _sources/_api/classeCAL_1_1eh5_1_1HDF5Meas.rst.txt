@@ -11,6 +11,7 @@ Class Documentation
 
 
 .. doxygenclass:: eCAL::eh5::HDF5Meas
+   :project: eCAL
    :members:
    :protected-members:
    :undoc-members:

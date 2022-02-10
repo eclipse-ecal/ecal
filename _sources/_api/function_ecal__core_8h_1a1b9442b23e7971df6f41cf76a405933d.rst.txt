@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: eCAL::Finalize(unsigned int)
+   :project: eCAL

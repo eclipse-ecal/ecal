@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: sub_set_qos(ECAL_HANDLE, struct SReaderQOSC)
+   :project: eCAL

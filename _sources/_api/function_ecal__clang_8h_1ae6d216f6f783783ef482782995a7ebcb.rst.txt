@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: server_add_method_callback(ECAL_HANDLE, const char *, const char *, const char *, const MethodCallbackCT, void *)
+   :project: eCAL

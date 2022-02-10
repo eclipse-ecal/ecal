@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: dyn_json_sub_add_receive_callback(ECAL_HANDLE, const ReceiveCallbackCT, void *)
+   :project: eCAL

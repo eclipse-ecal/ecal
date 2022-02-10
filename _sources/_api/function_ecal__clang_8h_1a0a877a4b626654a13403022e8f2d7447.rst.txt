@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: server_rem_method_callback(ECAL_HANDLE, const char *)
+   :project: eCAL

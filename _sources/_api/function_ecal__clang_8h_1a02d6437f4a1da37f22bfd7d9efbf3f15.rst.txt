@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: pub_destroy(ECAL_HANDLE)
+   :project: eCAL
