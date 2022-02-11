@@ -163,7 +163,6 @@ namespace eCAL
     {
       RegisterProcess();
       RegisterSample(service_name_, ecal_sample_);
-      std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
     return(true);
@@ -196,7 +195,6 @@ namespace eCAL
     {
       RegisterProcess();
       RegisterSample(client_name_, ecal_sample_);
-      std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
     return(true);
@@ -283,7 +281,6 @@ namespace eCAL
 
     // register sample
     size_t sent_sum = RegisterSample(Process::GetHostName(), process_sample);
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
     return(sent_sum);
   }
@@ -294,20 +291,11 @@ namespace eCAL
     if(!m_reg_services) return(0);
 
     size_t sent_sum(0);
-    int    sent_cnt(0);
     std::lock_guard<std::mutex> lock(m_server_map_sync);
     for(SampleMapT::const_iterator iter = m_server_map.begin(); iter != m_server_map.end(); ++iter)
     {
       // register sample
       sent_sum += RegisterSample(iter->second.service().sname(), iter->second);
-
-      // we make minimal sleeps every 10th sample to not overload
-      // registration thread
-      sent_cnt++;
-      if (sent_cnt % 10 == 0)
-      {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-      }
     }
 
     return(sent_sum);
@@ -319,20 +307,11 @@ namespace eCAL
     if (!m_reg_services) return(0);
 
     size_t sent_sum(0);
-    int    sent_cnt(0);
     std::lock_guard<std::mutex> lock(m_client_map_sync);
     for (SampleMapT::const_iterator iter = m_client_map.begin(); iter != m_client_map.end(); ++iter)
     {
       // register sample
       sent_sum += RegisterSample(iter->second.client().sname(), iter->second);
-
-      // we make minimal sleeps every 10th sample to not overload
-      // registration thread
-      sent_cnt++;
-      if (sent_cnt % 10 == 0)
-      {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-      }
     }
 
     return(sent_sum);
@@ -344,19 +323,10 @@ namespace eCAL
     if(!m_reg_topics) return(0);
 
     size_t sent_sum(0);
-    int    sent_cnt(0);
     std::lock_guard<std::mutex> lock(m_topics_map_sync);
     for(SampleMapT::const_iterator iter = m_topics_map.begin(); iter != m_topics_map.end(); ++iter)
     {
       sent_sum += RegisterSample(iter->second.topic().tname(), iter->second);
-
-      // we make minimal sleeps every 10th sample to not overload
-      // registration thread
-      sent_cnt++;
-      if (sent_cnt % 10 == 0)
-      {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-      }
     }
 
     return(sent_sum);
