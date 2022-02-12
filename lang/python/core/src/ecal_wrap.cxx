@@ -870,6 +870,7 @@ PyObject* server_add_method_callback(PyObject* /*self*/, PyObject* args)   // (s
   char*       resp_type     = nullptr;
   PyObject*   cb_func       = nullptr;
 
+  // TODO: Check req_type and resp_type (should be bytes and handled with y#)
   if (!PyArg_ParseTuple(args, "nsssO", &server_handle, &method_name, &req_type, &resp_type, &cb_func))
     return nullptr;
 

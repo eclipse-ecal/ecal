@@ -158,7 +158,7 @@ def pub_create(topic_name, topic_type, topic_desc):
   :param topic_type: optional type name
   :type topic_type: string
   :param topic_desc: optional type description
-  :type topic_desc: string
+  :type topic_desc: bytes
 
   """
   topic_handle = _ecal.pub_create(topic_name, topic_type)
@@ -180,8 +180,8 @@ def pub_set_description(topic_handle, description):
 
   :param topic_handle: the topic handle
   :type topic_handle: string
-  :param description:  the publisher description
-  :type description: string
+  :param description:  the topic description
+  :type description: bytes
 
   """
   return _ecal.pub_set_description(topic_handle, description)
@@ -244,7 +244,7 @@ def pub_send(topic_handle, msg_payload, msg_time=-1):
 
   :param topic_handle: the topic handle
   :param msg_payload:  message python string (can contain zeros)
-  :type msg_payload:   string
+  :type msg_payload:   bytes
   :param msg_time:     optional message time in us (default -1 == eCAL system time)
   :type msg_time:      int
 
@@ -257,7 +257,7 @@ def sub_create(topic_name, topic_type):
 
   :param topic_name: the unique topic name
   :type topic_name:  string
-  :param topic_type: optional type description
+  :param topic_type: optional topic type
   :type topic_type:  string
   
   """
@@ -469,7 +469,7 @@ def client_call_method(client_handle, method_name, request, timeout = -1):
   :param method_name:   the method name to call
   :type  method_name:   string
   :param request:       the request argument for the method
-  :type  request:       string
+  :type  request:       bytes
   :param timeout:       maximum time before operation returns (in milliseconds, -1 means infinite)
   :type  timeout:       integer
 
@@ -563,7 +563,7 @@ class publisher(object):
     :param topic_type: optional type name
     :type topic_type:  string
     :param topic_desc: optional type description
-    :type topic_desc:  string
+    :type topic_desc:  bytes
 
     """
     # topic name
@@ -624,7 +624,7 @@ class publisher(object):
     """ send publisher content
 
     :param msg_payload: message python string (can contain zeros)
-    :type msg_payload:  string
+    :type msg_payload:  bytes
     :param msg_time:    optional message time in us (default -1 == eCAL system time)
     :type msg_time:     int
 
@@ -641,7 +641,7 @@ class subscriber(object):
 
     :param topic_name: the unique topic name
     :type topic_name:  string
-    :param topic_type: optional type description
+    :param topic_type: optional topic type
     :type topic_type:  string
 
     """
