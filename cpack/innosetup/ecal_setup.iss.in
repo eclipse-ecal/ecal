@@ -124,10 +124,6 @@ Source: "{#DebugSdkStagingDir}\configinstall\*";      DestDir: "{app}";         
 Source: "{#DebugSdkStagingDir}\libraries\lib\*";      DestDir: "{app}\lib";               Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
 Source: "{#DebugSdkStagingDir}\libraries\bin\*";      DestDir: "{app}\bin\";              Flags: ignoreversion recursesubdirs;     Components: sdk\hdf5
 
-; Terrible hack to fix the even more terrible hdf5 stock installation
-Source: "{#DebugSdkStagingDir}\configinstall\cmake\hdf5\hdf5-config.cmake"; DestDir: "{app}\hdf5\cmake\"; Flags: ignoreversion recursesubdirs; Components: sdk\hdf5
-
-
 [Icons]
 Name: "{group}\eCAL Launcher";                        Filename: "{app}\bin\ecal_launcher.exe";                     Components: applications
 Name: "{group}\eCAL Monitor";                         Filename: "{app}\bin\ecal_mon_gui.exe";                      Components: applications
