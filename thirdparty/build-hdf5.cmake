@@ -22,6 +22,7 @@
   set(ONLY_SHARED_LIBS       ON CACHE BOOL  "Only Build Shared Libraries" FORCE)
   set(HDF5_ENABLE_THREADSAFE ON  CACHE BOOL "Enable thread-safety" FORCE)
   set(BUILD_TESTING          OFF CACHE BOOL "Do not build HDF5 Unit Testing" FORCE)
+  set(HDF5_BUILD_UTILS       OFF CACHE BOOL "Do not build HDF5 Utils" FORCE)
   set(HDF5_BUILD_TOOLS       OFF CACHE BOOL "Do not build HDF5 Tools" FORCE)
   set(HDF5_BUILD_EXAMPLES    OFF CACHE BOOL "Do not build HDF5 Library Examples" FORCE)
   set(HDF5_BUILD_CPP_LIB     OFF CACHE BOOL "Do not build C++ lib" FORCE)
