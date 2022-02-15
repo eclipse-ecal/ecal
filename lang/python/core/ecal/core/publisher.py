@@ -25,7 +25,7 @@ class MessagePublisher(object):
   Classes inheriting from this class need to implement the 
   :func:`~msg_publisher.msg_publisher.send` function.
   """
-  def __init__(self, name, topic_type="", topic_descriptor=""):
+  def __init__(self, name, topic_type="", topic_descriptor=b""):
     """ Initialize a message publisher
 
     :param name:             subscription name of the publisher
@@ -34,7 +34,7 @@ class MessagePublisher(object):
     :type topic_type:        string
     :param topic_descriptor: optional, a string which can be registered with ecal to allow io
       reflection features
-    :type topic_descriptor:  string
+    :type topic_descriptor:  bytes
 
     """
     self.c_publisher = ecal_core.publisher(name, topic_type, topic_descriptor)
