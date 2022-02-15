@@ -594,7 +594,7 @@ Python wrapper for eCAL the enhanced communication abstraction layer.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>client_handle</strong> – the client handle</p></li>
 <li><p><strong>method_name</strong> (<em>string</em>) – the method name to call</p></li>
-<li><p><strong>request</strong> (<em>string</em>) – the request argument for the method</p></li>
+<li><p><strong>request</strong> (<em>bytes</em>) – the request argument for the method</p></li>
 <li><p><strong>timeout</strong> (<em>integer</em>) – maximum time before operation returns (in milliseconds, -1 means infinite)</p></li>
 </ul>
 </dd>
@@ -880,7 +880,7 @@ Python wrapper for eCAL the enhanced communication abstraction layer.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>topic_name</strong> (<em>string</em>) – the unique topic name</p></li>
 <li><p><strong>topic_type</strong> (<em>string</em>) – optional type name</p></li>
-<li><p><strong>topic_desc</strong> (<em>string</em>) – optional type description</p></li>
+<li><p><strong>topic_desc</strong> (<em>bytes</em>) – optional type description</p></li>
 </ul>
 </dd>
 </dl>
@@ -905,7 +905,7 @@ Python wrapper for eCAL the enhanced communication abstraction layer.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>topic_handle</strong> – the topic handle</p></li>
-<li><p><strong>msg_payload</strong> (<em>string</em>) – message python string (can contain zeros)</p></li>
+<li><p><strong>msg_payload</strong> (<em>bytes</em>) – message python string (can contain zeros)</p></li>
 <li><p><strong>msg_time</strong> (<em>int</em>) – optional message time in us (default -1 == eCAL system time)</p></li>
 </ul>
 </dd>
@@ -920,7 +920,7 @@ Python wrapper for eCAL the enhanced communication abstraction layer.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>topic_handle</strong> (<em>string</em>) – the topic handle</p></li>
-<li><p><strong>description</strong> (<em>string</em>) – the publisher description</p></li>
+<li><p><strong>description</strong> (<em>bytes</em>) – the topic description</p></li>
 </ul>
 </dd>
 </dl>
@@ -1003,7 +1003,7 @@ Python wrapper for eCAL the enhanced communication abstraction layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>msg_payload</strong> (<em>string</em>) – message python string (can contain zeros)</p></li>
+<li><p><strong>msg_payload</strong> (<em>bytes</em>) – message python string (can contain zeros)</p></li>
 <li><p><strong>msg_time</strong> (<em>int</em>) – optional message time in us (default -1 == eCAL system time)</p></li>
 </ul>
 </dd>
@@ -1174,7 +1174,7 @@ Python wrapper for eCAL the enhanced communication abstraction layer.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>topic_name</strong> (<em>string</em>) – the unique topic name</p></li>
-<li><p><strong>topic_type</strong> (<em>string</em>) – optional type description</p></li>
+<li><p><strong>topic_type</strong> (<em>string</em>) – optional topic type</p></li>
 </ul>
 </dd>
 </dl>
