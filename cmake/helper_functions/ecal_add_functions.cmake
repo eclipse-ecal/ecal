@@ -35,7 +35,16 @@ function(ecal_add_gtest TARGET_NAME)
     COMMAND           $<TARGET_FILE:${TARGET_NAME}>
     WORKING_DIRECTORY $<TARGET_FILE_DIR:${TARGET_NAME}>
   )
-  target_link_libraries(${TARGET_NAME} PRIVATE GTest::GTest GTest::Main)
+  target_link_libraries(${TARGET_NAME} 
+  PRIVATE 
+    # Targets from GTestConfig.cmake, FindGtest.cmake ( CMake >= 3.20 )
+    $<$<TARGET_EXISTS:GTest::gtest>:GTest::gtest>
+    $<$<TARGET_EXISTS:GTest::gtest_main>:GTest::gtest_main>
+    # Deprecated Targets from CMake < 3.20, to be removed in the future
+    $<$<TARGET_EXISTS:GTest::GTest>:GTest::GTest>
+    $<$<TARGET_EXISTS:GTest::Main>:GTest::Main>
+  )
+  
   #ecal_set_subsystem_windows(${TARGET_NAME})
   set_target_properties(${TARGET_NAME} PROPERTIES
     VERSION ${eCAL_VERSION_STRING}
