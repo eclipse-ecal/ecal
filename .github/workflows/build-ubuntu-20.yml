@@ -41,6 +41,9 @@ jobs:
     - name: Install Black Duck C/C++ Scanner
       shell: bash
       run: |
+        sudo pip uninstall protobuf python3-protobuf
+        sudo pip install --upgrade pip
+        sudo pip install --upgrade protobuf
         sudo pip3 install blackduck-c-cpp
 
     - name: CMake
