@@ -81,30 +81,30 @@ jobs:
         sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.ini" /etc/ecal
       shell: bash
 
-    - name: Build Release
-      run: cmake --build . --config Release
-      working-directory: ${{ runner.workspace }}/_build
+    #- name: Build Release
+    #  run: cmake --build . --config Release
+    #  working-directory: ${{ runner.workspace }}/_build
 
-    - name: Build Python Wheel
-      run: cmake --build . --target create_python_wheel --config Release
-      working-directory: ${{ runner.workspace }}/_build
+    #- name: Build Python Wheel
+    #  run: cmake --build . --target create_python_wheel --config Release
+    #  working-directory: ${{ runner.workspace }}/_build
 
-    - name: Run Tests
-      run: ctest -V
-      working-directory: ${{ runner.workspace }}/_build
+    #- name: Run Tests
+    #  run: ctest -V
+    #  working-directory: ${{ runner.workspace }}/_build
 
-    - name: Pack
-      run: cpack -G DEB
-      working-directory: ${{ runner.workspace }}/_build
+    #- name: Pack
+    #  run: cpack -G DEB
+    #  working-directory: ${{ runner.workspace }}/_build
 
-    - name: Upload Debian
-      uses: actions/upload-artifact@v2
-      with:
-        name: ubuntu-debian
-        path: ${{ runner.workspace }}/_build/_deploy/*.deb
+    #- name: Upload Debian
+    #  uses: actions/upload-artifact@v2
+    #  with:
+    #    name: ubuntu-debian
+    #    path: ${{ runner.workspace }}/_build/_deploy/*.deb
 
-    - name: Upload Python Wheel
-      uses: actions/upload-artifact@v2
-      with:
-        name: ubuntu-python-wheel
-        path: ${{ runner.workspace }}/_build/_deploy/*.whl
+    #- name: Upload Python Wheel
+    #  uses: actions/upload-artifact@v2
+    #  with:
+    #    name: ubuntu-python-wheel
+    #    path: ${{ runner.workspace }}/_build/_deploy/*.whl
