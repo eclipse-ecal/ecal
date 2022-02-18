@@ -29,7 +29,7 @@ jobs:
 
       # Run Synopsys Detect
       - name: Run Synopsys Detect
-        uses: jcroall/detect-action@${{ secrets.DETECT_ACTION_VERSION }}
+        uses: jcroall/detect-action@v0.3.1jc4
         # This server does not require a local CA Cert
         #env:
         #  NODE_EXTRA_CA_CERTS: ${{ secrets.LOCAL_CA_CERT_PATH }}
