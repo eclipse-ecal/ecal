@@ -38,13 +38,20 @@ jobs:
       run: |
         sudo pip3 install -r "$GITHUB_WORKSPACE/requirements.txt"
 
+    - name: Install Black Duck C/C++ Scanner
+      shell: bash
+      run: |
+        sudo pip3 install blackduck-c-cpp
+
+    - name: CMake
+
     - name: CMake
       run: |
         export CC=/usr/bin/gcc-9
         export CXX=/usr/bin/g++-9
         mkdir "${{ runner.workspace }}/_build"
         cd "${{ runner.workspace }}/_build"
-        cmake $GITHUB_WORKSPACE -G "Ninja" \
+        blackduck-c-cpp --build_cmd 'cmake $GITHUB_WORKSPACE -G "Ninja" \
         -DHAS_HDF5=ON \
         -DHAS_QT5=ON \
         -DHAS_CURL=ON \
@@ -76,7 +83,13 @@ jobs:
         -DCMAKE_INSTALL_SYSCONFDIR=/etc \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LOCALSTATEDIR=/var \
-        -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu
+        -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu' \
+        --build_dir . \
+        --project_name conti-ecal \
+        --project_version 7.1 \
+        --bd_url ${{ secrets.BLACKDUCK_URL }} \
+        --api_token ${{ secrets.BLACKDUCK_API_TOKEN }} \
+        --insecure false
         sudo mkdir /etc/ecal
         sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.ini" /etc/ecal
       shell: bash
