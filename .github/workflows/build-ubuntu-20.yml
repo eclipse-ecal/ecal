@@ -1,6 +1,6 @@
 name: Build Ubuntu 20.04
 
-on:  
+on:
   push:
   pull_request:
     branches:
@@ -42,8 +42,6 @@ jobs:
       shell: bash
       run: |
         sudo pip3 install blackduck-c-cpp
-
-    - name: CMake
 
     - name: CMake
       run: |
