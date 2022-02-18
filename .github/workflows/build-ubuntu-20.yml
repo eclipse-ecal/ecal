@@ -1,10 +1,11 @@
 name: Build Ubuntu 20.04
 
 on:
-  push:
-  pull_request:
-    branches:
-      - master
+  #push:
+  #pull_request:
+  #  branches:
+  #    - master
+  workflow_dispatch:
 
 jobs:
   build-ubuntu:
