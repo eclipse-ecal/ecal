@@ -51,8 +51,8 @@ jobs:
       run: |
         export CC=/usr/bin/gcc-9
         export CXX=/usr/bin/g++-9
-        mkdir "${{ runner.workspace }}/_build"
-        cd "${{ runner.workspace }}/_build"
+        #mkdir "${{ runner.workspace }}/_build"
+        #cd "${{ runner.workspace }}/_build"
         blackduck-c-cpp --build_cmd 'cmake $GITHUB_WORKSPACE -G "Ninja" \
         -DHAS_HDF5=ON \
         -DHAS_QT5=ON \
