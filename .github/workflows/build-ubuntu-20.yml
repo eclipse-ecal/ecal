@@ -92,6 +92,8 @@ jobs:
         --bd_url ${{ secrets.BLACKDUCK_URL }} \
         --api_token ${{ secrets.BLACKDUCK_API_TOKEN }} \
         --insecure false
+        echo CAT /home/runner/.synopsys/blackduck-c-cpp/output/conti-ecal/cov-build.sh
+        cat /home/runner/.synopsys/blackduck-c-cpp/output/conti-ecal/cov-build.sh
         sudo mkdir /etc/ecal
         sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.ini" /etc/ecal
       shell: bash
