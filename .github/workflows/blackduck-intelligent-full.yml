@@ -1,4 +1,4 @@
-name: Black Duck Intelligent Scan - Full
+name: Black Duck FULL Scan
 
 on:
   #pull_request:
@@ -27,10 +27,10 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
-    - name: Install Python requirements
-      shell: bash
-      run: |
-        sudo pip3 install -r "$GITHUB_WORKSPACE/requirements.txt"
+      - name: Install Python requirements
+        shell: bash
+        run: |
+          sudo pip3 install -r "$GITHUB_WORKSPACE/requirements.txt"
 
       # Run Synopsys Detect
       - name: Run Synopsys Detect
