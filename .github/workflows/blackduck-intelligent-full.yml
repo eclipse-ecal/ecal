@@ -27,6 +27,11 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
+    - name: Install Python requirements
+      shell: bash
+      run: |
+        sudo pip3 install -r "$GITHUB_WORKSPACE/requirements.txt"
+
       # Run Synopsys Detect
       - name: Run Synopsys Detect
         uses: jcroall/detect-action@v0.3.1jc5
