@@ -1,0 +1,50 @@
+name: Black Duck Intelligent Scan - Full
+
+on:
+  #pull_request:
+  #  branches:
+  #    - main
+  #schedule:
+  #  - cron: '5 23 * * *'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Set up JDK 11 in runtime environment
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      # Run Synopsys Detect
+      - name: Run Synopsys Detect
+        uses: jcroall/detect-action@v0.3.1jc5
+        # This server does not require a local CA Cert
+        #env:
+        #  NODE_EXTRA_CA_CERTS: ${{ secrets.LOCAL_CA_CERT_PATH }}
+        # Enable diagnostic mode
+        #env:
+        #  DETECT_DIAGNOSTIC: true
+        #  DETECT_DIAGNOSTIC_EXTENDED: true
+        env:
+          DETECT_PROJECT_NAME: ecal-conti-jc
+          DETECT_PROJECT_VERSION_NAME: 7.1-jc
+        with:
+            scan-mode: INTELLIGENT
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            detect-version: 7.9.0
+            blackduck-url: ${{ secrets.BLACKDUCK_URL }}
+            blackduck-api-token: ${{ secrets.BLACKDUCK_API_TOKEN }}
+            #project-name: conti-ecal
+            #project-version: 7.1
