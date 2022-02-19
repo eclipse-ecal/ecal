@@ -47,8 +47,8 @@ jobs:
         #  DETECT_DIAGNOSTIC: true
         #  DETECT_DIAGNOSTIC_EXTENDED: true
         env:
-          DETECT_PROJECT_NAME: ecal-conti-jc
-          DETECT_PROJECT_VERSION_NAME: 7.1-jc
+          DETECT_PROJECT_NAME: ecal-conti
+          DETECT_PROJECT_VERSION_NAME: 7.1
         with:
             scan-mode: INTELLIGENT
             github-token: ${{ secrets.GITHUB_TOKEN }}
