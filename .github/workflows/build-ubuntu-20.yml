@@ -51,9 +51,9 @@ jobs:
       run: |
         export CC=/usr/bin/gcc-9
         export CXX=/usr/bin/g++-9
-        #mkdir "${{ runner.workspace }}/_build"
-        #cd "${{ runner.workspace }}/_build"
-        blackduck-c-cpp --build_cmd 'cmake $GITHUB_WORKSPACE -G "Ninja" \
+        mkdir "${{ runner.workspace }}/_build"
+        cd "${{ runner.workspace }}/_build"
+        cmake $GITHUB_WORKSPACE -G "Ninja" \
         -DHAS_HDF5=ON \
         -DHAS_QT5=ON \
         -DHAS_CURL=ON \
@@ -85,13 +85,7 @@ jobs:
         -DCMAKE_INSTALL_SYSCONFDIR=/etc \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LOCALSTATEDIR=/var \
-        -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu' \
-        --build_dir . \
-        --project_name conti-ecal \
-        --project_version 7.1 \
-        --bd_url ${{ secrets.BLACKDUCK_URL }} \
-        --api_token ${{ secrets.BLACKDUCK_API_TOKEN }} \
-        --insecure false
+        -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu
         echo CAT /home/runner/.synopsys/blackduck-c-cpp/output/conti-ecal/cov-build.sh
         cat /home/runner/.synopsys/blackduck-c-cpp/output/conti-ecal/cov-build.sh
         echo CAT /home/runner/.synopsys/blackduck-c-cpp/output/conti-ecal/build-log.txt
@@ -100,13 +94,20 @@ jobs:
         sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.ini" /etc/ecal
       shell: bash
 
-    #- name: Build Release
-    #  run: cmake --build . --config Release
-    #  working-directory: ${{ runner.workspace }}/_build
+    - name: Build Release
+      run: |
+        blackduck-c-cpp --build_cmd 'cmake --build . --config Release' \
+        --build_dir . \
+        --project_name conti-ecal \
+        --project_version 7.1 \
+        --bd_url ${{ secrets.BLACKDUCK_URL }} \
+        --api_token ${{ secrets.BLACKDUCK_API_TOKEN }} \
+        --insecure false
+      working-directory: ${{ runner.workspace }}/_build
 
-    #- name: Build Python Wheel
-    #  run: cmake --build . --target create_python_wheel --config Release
-    #  working-directory: ${{ runner.workspace }}/_build
+    - name: Build Python Wheel
+      run: cmake --build . --target create_python_wheel --config Release
+      working-directory: ${{ runner.workspace }}/_build
 
     #- name: Run Tests
     #  run: ctest -V
