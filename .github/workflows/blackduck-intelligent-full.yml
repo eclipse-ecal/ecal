@@ -47,7 +47,7 @@ jobs:
         #  DETECT_DIAGNOSTIC: true
         #  DETECT_DIAGNOSTIC_EXTENDED: true
         env:
-          DETECT_PROJECT_NAME: ecal-conti
+          DETECT_PROJECT_NAME: conti-ecal
           DETECT_PROJECT_VERSION_NAME: 7.1
         with:
             scan-mode: INTELLIGENT
