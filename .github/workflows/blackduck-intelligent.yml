@@ -27,6 +27,15 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
+      - name: Install Conan
+        id: conan
+        uses: turtlebrowser/get-conan@main
+
+      - name: Install Python requirements
+        shell: bash
+        run: |
+          sudo pip3 install -r "$GITHUB_WORKSPACE/requirements.txt"
+
       # Run Synopsys Detect
       - name: Run Synopsys Detect
         uses: jcroall/detect-action@v0.3.1jc5
@@ -37,11 +46,14 @@ jobs:
         #env:
         #  DETECT_DIAGNOSTIC: true
         #  DETECT_DIAGNOSTIC_EXTENDED: true
+        #env:
+        #  DETECT_PROJECT_NAME: conti-ecal
+        #  DETECT_PROJECT_VERSION_NAME: 7.1
         with:
-            scan-mode: CPP
+            scan-mode: INTELLIGENT
             github-token: ${{ secrets.GITHUB_TOKEN }}
             detect-version: 7.9.0
             blackduck-url: ${{ secrets.BLACKDUCK_URL }}
             blackduck-api-token: ${{ secrets.BLACKDUCK_API_TOKEN }}
-            project-name: conti-ecal
-            project-version: 7.1
+            #project-name: conti-ecal
+            #project-version: 7.1
