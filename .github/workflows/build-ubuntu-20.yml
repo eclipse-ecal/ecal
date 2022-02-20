@@ -94,7 +94,7 @@ jobs:
       run: |
         blackduck-c-cpp --build_cmd 'cmake --build . --config Release' \
         --build_dir . \
-        --project_name conti-ecal \
+        --project_name ecal \
         --project_version 7.1 \
         --bd_url ${{ secrets.BLACKDUCK_URL }} \
         --api_token ${{ secrets.BLACKDUCK_API_TOKEN }} \
