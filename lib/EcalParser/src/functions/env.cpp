@@ -53,3 +53,7 @@ namespace EcalParser
     return "<p>Evaluates to the given environment variable. If there is no variable with that name, this function evaluates to nothing.</p>\n<p>The case-sensitiveness depends on the operating system.</p>";
   }
 }
+
+
+
+
