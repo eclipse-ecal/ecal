@@ -1,7 +1,8 @@
 name: Black Duck Intelligent Scan
 
 on:
-  #pull_request:
+  pull_request:
+
   #  branches:
   #    - main
   #schedule:
