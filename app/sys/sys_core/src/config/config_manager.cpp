@@ -396,6 +396,10 @@ bool ConfigManager::SaveConfig(EcalSys& ecalsys, const std::string& path, Config
         eCAL::Sys::Config::CConfiguration::Function::Task task_config((unsigned int)task->GetId());
         function_config.tasks_.push_back(task_config);
       }
+      function_config.tasks_.sort([](const eCAL::Sys::Config::CConfiguration::Function::Task& t1, const eCAL::Sys::Config::CConfiguration::Function::Task& t2)
+                                  {
+                                    return t1.GetId() < t2.GetId();
+                                  });
        
       // Add all group states. The position in the list of our states represent the priority of the function config. The user had to set that priority manually in the old ecalsys version.
       int priority = 0;
@@ -428,6 +432,10 @@ bool ConfigManager::SaveConfig(EcalSys& ecalsys, const std::string& path, Config
             function_state_task_config((unsigned int)minmimal_task_state.first->GetId(), minimal_severity_string, minimal_severity_level_string);
           function_state_config.tasks_.push_back(function_state_task_config);
         }
+        function_state_config.tasks_.sort([](const eCAL::Sys::Config::CConfiguration::Function::State::Task& t1, const eCAL::Sys::Config::CConfiguration::Function::State::Task& t2)
+                                          {
+                                            return t1.GetId() < t2.GetId();
+                                          });
 
         function_config.states_.push_back(function_state_config);
       }
