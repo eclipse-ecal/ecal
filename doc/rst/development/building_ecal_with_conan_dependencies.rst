@@ -6,6 +6,11 @@
 Building eCAL with Conan dependencies
 =======================================
 
+.. important::
+   As eCAL uses the ``CMakeDeps`` generator, unfortunately a rather old Conan version (1.41.0) has to be used at the moment, because internal Conan behavior was changed after that version and not all recipes on CCI yet support ``CMakeDeps`` generator.
+   The release of a new ``markupsafe`` package has broken the API and breaks older ``Jinja2`` versions which Conan 1.41.0 uses. Hence the Conan build of eCAL may not be functional at this point of time.
+
+
 Conan is a dependency manager, that has a wide range of precompiled open source libraries available. 
 Building eCAL with Conan dependencies is mainly a shortcut for Windows users developing eCAL who do not want to build all dependencies from source.
 It lets a developer get up to speed very quickly.
@@ -29,7 +34,8 @@ It's best to install Conan inside a virtual environment:
    # Linux
    source .venv\bin\activate
    # Install Conan
-   pip install conan
+   pip install conan==1.41.0
+  
   
 You need to set up a Conan profile to match your development.
 For reference, see https://docs.conan.io/en/latest/reference/profiles.html.
