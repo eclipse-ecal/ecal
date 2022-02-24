@@ -53,7 +53,7 @@ However there are two key factors which sets eCAL apart from ROS today:
 
   eCAL was build with modularity and ease of integration in mind. When building communication components, they only need to link to the eCAL core library.
   eCAL tools may be installed in addition.
-  ROS on the other hand comes with a complete ecosystem, bundling C++ libraries, providing its own builsystem.
+  ROS on the other hand comes with a complete ecosystem, bundling C++ libraries, providing its own build system.
   While this can be seen as an advantage for inexperienced users, it might make ROS harder to integrate into already existing ecosystems.
   
 There are also some additional points which set both frameworks apart:  
