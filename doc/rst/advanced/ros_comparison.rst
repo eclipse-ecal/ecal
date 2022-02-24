@@ -44,7 +44,7 @@ However there are two key factors which sets eCAL apart from ROS today:
 - **eCAL is message protocol agnostic**
 
   ROS's IDL system is tied into ROS. And it's still not backwards compatible regarding message evolution.
-  eCAL on the other hand transports binary data. Thus, there is not fix coupling between the message serialization (and thus also the message definitions), and the actual transport of this data.
+  eCAL on the other hand transports binary data. Thus, there is no coupling between the message serialization (and thus also the message definitions), and the actual transport of this data.
   This allows eCAL to be used in conjunction with many serialization libraries such as Protobuf, Flatbuffers, Capnproto or MessagePack.
   Is it necessary that the schema is backwards compatible? Does the user need fast serialization or easy indexing? 
   Depending on the usecase, the user can choose whatever format fits them best, on a per message basis.
