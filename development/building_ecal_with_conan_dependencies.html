@@ -568,6 +568,12 @@
 <!-- body -->
     <div class="section" id="building-ecal-with-conan-dependencies">
 <span id="development-building-ecal-with-conan-dependencies"></span><h1>Building eCAL with Conan dependencies<a class="headerlink" href="#building-ecal-with-conan-dependencies" title="Permalink to this headline">¶</a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>As eCAL uses the <code class="docutils literal notranslate"><span class="pre">CMakeDeps</span></code> generator, unfortunately a rather old Conan version (1.41.0) has to be used at the moment, because internal Conan behavior was changed after that version and not all recipes on CCI yet support <code class="docutils literal notranslate"><span class="pre">CMakeDeps</span></code> generator.
+The release of a new <code class="docutils literal notranslate"><span class="pre">markupsafe</span></code> package has broken the API and breaks older <code class="docutils literal notranslate"><span class="pre">Jinja2</span></code> versions which Conan 1.41.0 uses.</p>
+<p>Hence the Conan build of eCAL <strong>may not be functional</strong> at this point of time.</p>
+</div>
 <p>Conan is a dependency manager, that has a wide range of precompiled open source libraries available.
 Building eCAL with Conan dependencies is mainly a shortcut for Windows users developing eCAL who do not want to build all dependencies from source.
 It lets a developer get up to speed very quickly.
@@ -577,14 +583,14 @@ We certainly <strong>do not recommend</strong> to build eCAL installers from Con
 <h2>Build instructions<a class="headerlink" href="#build-instructions" title="Permalink to this headline">¶</a></h2>
 <p>To build with Conan you need to have a Conan installation.
 It’s best to install Conan inside a virtual environment:</p>
-<div class="highlight-bat notranslate"><div class="highlight"><pre><span></span># Create virtual environment
-python3 -m venv .venv
-# Windows
-.venv\Scripts\activate.bat<span class="p">|</span>ps1
-# Linux
-source .venv\bin\activate
-# Install Conan
-pip install conan
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">#</span> Create virtual environment
+<span class="go">python3 -m venv .venv</span>
+<span class="gp">#</span> Windows
+<span class="go">.venv\Scripts\activate.bat|ps1</span>
+<span class="gp">#</span> Linux
+<span class="go">source .venv\bin\activate</span>
+<span class="gp">#</span> Install Conan
+<span class="go">pip install conan==1.41.0</span>
 </pre></div>
 </div>
 <p>You need to set up a Conan profile to match your development.
@@ -595,11 +601,11 @@ For reference, see <a class="reference external" href="https://docs.conan.io/en/
 conan install .. --profile <span class="p">&lt;</span>your-profile<span class="p">&gt;</span> --build missing
 </pre></div>
 </div>
-<p>eCAL uses the <code class="docutils literal notranslate"><span class="pre">WinExtras</span></code> module from QT, which is why, unfortunately, there are no prebuilt QT libraries.
-This is why we need to build QT from source and thus pass a <code class="docutils literal notranslate"><span class="pre">--build</span> <span class="pre">missing</span></code> when running <code class="docutils literal notranslate"><span class="pre">conan</span> <span class="pre">install</span></code>.
+<p>eCAL uses the <code class="docutils literal notranslate"><span class="pre">WinExtras</span></code> module from Qt, which is why, unfortunately, there are no prebuilt QT libraries.
+This is why we need to build Qt from source and thus pass a <code class="docutils literal notranslate"><span class="pre">--build</span> <span class="pre">missing</span></code> when running <code class="docutils literal notranslate"><span class="pre">conan</span> <span class="pre">install</span></code>.
 Conan will create a lot of files in the build folder.
 Some are CMake scripts to locate dependencies, others are scripts to use / activate special environments to allow you to build / debug eCAL in a way that all libraries can be located at runtime.
-Thus we recommend to build eCAL with the following commands:</p>
+Thus, we recommend to build eCAL with the following commands:</p>
 <div class="highlight-bat notranslate"><div class="highlight"><pre><span></span>activate.bat<span class="p">|</span>ps1<span class="p">|</span>sh
 <span class="k">mkdir</span> _cmake
 <span class="k">cd</span> _cmake
@@ -608,7 +614,8 @@ cmake --build .
 </pre></div>
 </div>
 <p>Alternatively, if you can also open the generated Visual Studio solution when working on Windows, and build / debug from within Visual Studio.:</p>
-<p>Beware, that depending on the settings in your Conan profile, the build supports <strong>either</strong> Debug <strong>or</strong> Release builds. Make sure, when building from Visual Studio, to build the appropriate configuration.
+<p>Beware, that depending on the settings in your Conan profile, the build supports <strong>either</strong> Debug <strong>or</strong> Release builds.
+Make sure, when building from Visual Studio, to build the appropriate configuration.
 If you have a <code class="docutils literal notranslate"><span class="pre">Release</span></code> Conan profile, but try to build for the <code class="docutils literal notranslate"><span class="pre">Debug</span></code> configuration from Visual Studio, you will receive build errors.</p>
 </div>
 </div>
