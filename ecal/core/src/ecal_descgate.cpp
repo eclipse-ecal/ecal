@@ -25,7 +25,7 @@
 #include "ecal_descgate.h"
 #include <assert.h>
 #include <algorithm>
-
+#include <mutex>
 
 namespace eCAL
 {
