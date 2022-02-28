@@ -30,6 +30,14 @@
 #include <QMenu>
 #include <QClipboard>
 
+namespace {
+const auto get_first_non_group_item = [] (auto && items_list) {
+    const auto pred_is_item_not_group_type = [](auto* selected_item) { return !(selected_item->type() == static_cast<int>(TreeItemType::Group)); };
+    const auto result = std::find_if(std::begin(items_list), std::end(items_list), pred_is_item_not_group_type);
+    return (result != std::end(items_list) ? *result : nullptr);
+};
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //// Constructor & Destructor                                               ////
 ////////////////////////////////////////////////////////////////////////////////
@@ -372,17 +380,7 @@ void EcalmonTreeWidget::contextMenu(const QPoint &pos)
 
 void EcalmonTreeWidget::fillContextMenu(QMenu& menu, const QList<QAbstractTreeItem*>& selected_items)
 {
-  QAbstractTreeItem* item = nullptr;
-  for (QAbstractTreeItem* selected_item : selected_items)
-  {
-    // get the first non-group item
-    if (!(selected_item->type() == (int)TreeItemType::Group))
-    {
-      item = selected_item;
-      break;
-    }
-  }
-
+  QAbstractTreeItem* item = get_first_non_group_item(selected_items);
   if (item)
   {
     int current_column = ui_.tree_view->currentIndex().column();
@@ -401,16 +399,7 @@ void EcalmonTreeWidget::fillContextMenu(QMenu& menu, const QList<QAbstractTreeIt
 
 void EcalmonTreeWidget::copyCurrentIndexToClipboard()
 {
-  QAbstractTreeItem* item = nullptr;
-  for (QAbstractTreeItem* selected_item : getSelectedItems())
-  {
-    // get the first non-group item
-    if (!(selected_item->type() == (int)TreeItemType::Group))
-    {
-      item = selected_item;
-      break;
-    }
-  }
+  QAbstractTreeItem* item = get_first_non_group_item(getSelectedItems());
   if (item)
   {
     QModelIndex current_source_index = mapToSource(ui_.tree_view->currentIndex());
@@ -425,17 +414,7 @@ void EcalmonTreeWidget::copyCurrentIndexToClipboard()
 
 void EcalmonTreeWidget::copySelectedRowToClipboard()
 {
-  QAbstractTreeItem* item = nullptr;
-  for (QAbstractTreeItem* selected_item : getSelectedItems())
-  {
-    // get the first non-group item
-    if (!(selected_item->type() == (int)TreeItemType::Group))
-    {
-      item = selected_item;
-      break;
-    }
-  }
-
+  QAbstractTreeItem* item = get_first_non_group_item(getSelectedItems());
   if (item)
   {
     QString clipboard_string;
