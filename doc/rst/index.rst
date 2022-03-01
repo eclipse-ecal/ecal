@@ -83,8 +83,9 @@ eCAL is provided on an "as is" basis without warranties or conditions of any kin
    :caption: Advanced
    
    _download_archive/download_archive
-   advanced/compatibility.rst
+   advanced/compatibility
    advanced/tutorials
-   advanced/ecal_internals.rst
+   advanced/ecal_internals
+   advanced/ros_comparison
    license
 
