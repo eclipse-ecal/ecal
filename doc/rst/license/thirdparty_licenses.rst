@@ -182,6 +182,12 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
      - - |fa-github| Git submodule ``/tirdparty/tinyxml``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
+   * - `qwt <https://sourceforge.net/projects/qwt/>`_
+     - :ref:`qwt_license`
+     - 	Uwe Rathmann
+     - - |fa-github| Git submodule ``/tirdparty/qwt/qwt``
+       - |fa-windows| Binary distributions for Windows
+       - |fa-ubuntu| Binary distributions for Linux
 
 License texts
 =============
@@ -208,3 +214,4 @@ License texts
    thirdparty_licenses/npcap.rst
    thirdparty_licenses/unlicense.rst
    thirdparty_licenses/zlib.rst
+   thirdparty_licenses/qwt.rst

@@ -77,6 +77,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_HDF5=OFF \
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
         -DECAL_THIRDPARTY_BUILD_TCPUB=ON \
+        -DECAL_THIRDPARTY_BUILD_QWT=ON \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_CXX_STANDARD=14
         sudo mkdir /etc/ecal

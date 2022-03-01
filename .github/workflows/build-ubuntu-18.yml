@@ -39,7 +39,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get -y update
-        sudo apt-get -y install cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev python3-setuptools
+        sudo apt-get -y install cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev python3-setuptools libqwt-qt5-dev
       shell: bash
 
     - name: Install Cap’n Proto
@@ -98,6 +98,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_HDF5=OFF \
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
         -DECAL_THIRDPARTY_BUILD_TCPUB=ON \
+        -DECAL_THIRDPARTY_BUILD_QWT=OFF \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_SYSCONFDIR=/etc \
         -DCMAKE_INSTALL_PREFIX=/usr \
