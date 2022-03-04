@@ -136,6 +136,13 @@ While Ubuntu 18 supports both out of the box, for Ubuntu 20 this is the only fil
 
       sudo netplan apply
 
+   .. important::
+
+      In some Ubuntus you will also have to *activate* the netplan setting in the network configuration GUI!
+
+      .. image:: img/gnome_netplan_gui.svg
+         :alt: Activate the netplan settings from the Gnome GUI
+
 .. _ubuntu_multicast_route_gui:
 
 Multicast routes via GUI
