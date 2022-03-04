@@ -31,11 +31,12 @@
 #include <QClipboard>
 
 namespace {
-const auto get_first_non_group_item = [] (auto && items_list) {
+template<typename T1>
+auto get_first_non_group_item(T1 && items_list) {
     const auto pred_is_item_not_group_type = [](auto* selected_item) { return !(selected_item->type() == static_cast<int>(TreeItemType::Group)); };
     const auto result = std::find_if(std::begin(items_list), std::end(items_list), pred_is_item_not_group_type);
     return (result != std::end(items_list) ? *result : nullptr);
-};
+}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
