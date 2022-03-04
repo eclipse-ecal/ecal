@@ -83,133 +83,133 @@ Jump to your section of choice below:
 
 #. Choose how to create routes:
 
-   - :ref:`Via netplan<ubuntu_multicast_route_netplan>` (Recommended for Ubuntu 18 and up. Even integrates into the GUI.)
-   - :ref:`Via GUI<ubuntu_multicast_route_gui>` (Works well for desktop Ubuntu)
-   - :ref:`Via /etc/network/interfaces<ubuntu_multicast_route_etc_network_interfaces>` (Legacy, up to Ubuntu 18. Not supported in Ubuntu 20, any more.)
+   - **Via netplan** (Recommended for Ubuntu 18 and up. Even integrates into the GUI.)
+   - **Via GUI** (Works well for desktop Ubuntu)
+   - **Via /etc/network/interfaces** (Legacy, up to Ubuntu 18. Not supported in Ubuntu 20, any more.)
 
 #. :ref:`Test the configuration<ubuntu_multicast_route_test>`
 
-.. _ubuntu_multicast_route_netplan:
 
-Multicast routes via Netplan
-----------------------------
+.. tabs::
 
-Netplan is used since Ubuntu 18 and should be used in favor of the legacy (but well known) :file:`/etc/network/interfaces` file.
-While Ubuntu 18 supports both out of the box, for Ubuntu 20 this is the only file-based networking configuration method.
+   .. tab:: Netplan (recommended)
 
-.. tip::
+      Netplan is used since Ubuntu 18 and should be used in favor of the legacy (but well known) :file:`/etc/network/interfaces` file.
+      While Ubuntu 18 supports both out of the box, for Ubuntu 20 this is the only file-based networking configuration method.
 
-   Netplan uses YAML files for configuration.
-   YAML uses spaces (``' '``) as indentation and does not work with tabs (``'\t'``).
-   When using gedit, it is recommended to configure it to use spaces instead of tabs.
+      .. tip::
 
-   .. image:: img/gedit_space_indentation.png
-      :alt: Space indentation in gedit
+         Netplan uses YAML files for configuration.
+         YAML uses spaces (``' '``) as indentation and does not work with tabs (``'\t'``).
+         When using gedit, it is recommended to configure it to use spaces instead of tabs.
+
+         .. image:: img/gedit_space_indentation.png
+            :alt: Space indentation in gedit
 
 
-#. Configure the **loopback multicast** route (this will become active, if you disconnect from all networks).
+      #. Configure the **loopback multicast** route (this will become active, if you disconnect from all networks).
 
-   .. code-block:: bash
+         .. code-block:: bash
 
-      sudo gedit /etc/netplan/50-ecal-multicast-loopback.yaml
+            sudo gedit /etc/netplan/50-ecal-multicast-loopback.yaml
 
-   Paste the following configuration:
+         Paste the following configuration:
 
-   .. literalinclude:: netplan/50-ecal-multicast-loopback.yaml
-      :language: yaml
+         .. literalinclude:: netplan/50-ecal-multicast-loopback.yaml
+            :language: yaml
 
-#. Configure the **external multicast** route.
-   This will get a lower metric and will thus become the preferred route once the interface is up.
+      #. Configure the **external multicast** route.
+         This will get a lower metric and will thus become the preferred route once the interface is up.
 
-   .. code-block:: bash
+         .. code-block:: bash
 
-      sudo gedit /etc/netplan/50-ecal-multicast.yaml
+            sudo gedit /etc/netplan/50-ecal-multicast.yaml
 
-   Paste the following configuration and **replace eth0** with your desired interface:
+         Paste the following configuration and **replace eth0** with your desired interface:
 
-   .. literalinclude:: netplan/50-ecal-multicast.yaml
-      :language: yaml
+         .. literalinclude:: netplan/50-ecal-multicast.yaml
+            :language: yaml
 
-#. Apply the changes
+      #. Apply the changes
 
-   .. code-block:: bash
+         .. code-block:: bash
 
-      sudo netplan apply
+            sudo netplan apply
 
-   .. important::
+         .. important::
 
-      In some Ubuntus you will also have to *activate* the netplan setting in the network configuration GUI!
+            In Ubuntu 20.04 and up you may also have to *activate* the netplan setting in the network configuration GUI!
 
-      .. image:: img/gnome_netplan_gui.svg
-         :alt: Activate the netplan settings from the Gnome GUI
+            .. image:: img/gnome_netplan_gui.svg
+               :alt: Activate the netplan settings from the Gnome GUI
 
-.. _ubuntu_multicast_route_gui:
+   .. tab:: GUI (easiest)
 
-Multicast routes via GUI
-------------------------
+      If you have a graphical network manager installed (-> Desktop Ubuntu), you can use it to configure the external route.
 
-If you have a graphical network manager installed (-> Desktop Ubuntu), you can use it to configure the external route.
+      .. important::
 
-#. Configure the **external multicast** route
+         This method lacks the ability to configure a loopback route. 
+         When you are not connected to any network, your eCAL communication will fail.
+         You can however combine this method with the loopback configuration from netplan.
 
-   - System Settings -> Network -> Your Adapter -> Options -> IPv4 Tab -> Routes
+      #. Configure the **external multicast** route
 
-   - Create a route:
+         - System Settings -> Network -> Your Adapter -> Options -> IPv4 Tab -> Routes
 
-     - Address: :code:`239.0.0.0`
-     - Netmask: :code:`255.255.255.0`
-     - Gateway: :code:`0.0.0.0`
-     - Metric: :code:`1`
+         - Create a route:
 
-     .. image:: img/ubuntu_route_gui.png
-        :alt: Ubuntu multicast route
+         - Address: :code:`239.0.0.0`
+         - Netmask: :code:`255.255.255.0`
+         - Gateway: :code:`0.0.0.0`
+         - Metric: :code:`1`
 
-#. Turn the interface off and on again
+         .. image:: img/ubuntu_route_gui.png
+            :alt: Ubuntu multicast route
 
-#. Configure the **loopback multicast** route via :ref:`netplan<ubuntu_multicast_route_netplan>` or :ref:`/etc/network/interfaces<ubuntu_multicast_route_etc_network_interfaces>`.
-   You can omit this, but then you will have to explicitly set eCAL to local mode, if you are not connected to any network.
+      #. Turn the interface off and on again
 
-.. _ubuntu_multicast_route_etc_network_interfaces:
+      #. Configure the **loopback multicast** route via :ref:`netplan<ubuntu_multicast_route_netplan>` or :ref:`/etc/network/interfaces<ubuntu_multicast_route_etc_network_interfaces>`.
+         You can omit this, but then you will have to explicitly set eCAL to local mode, if you are not connected to any network.
+ 
+   .. tab:: etc/network/interfaces (legacy)
 
-Multicast routes via /etc/network/interfaces
---------------------------------------------
+      The well known :file:`/etc/network/interfaces` file is supported up to Ubuntu 18.
+      It is not supported since Ubuntu 20, anymore.
+      Please use netplan instead.
+      If you are running Ubuntu 18, using netplan is still recommended, unless you want to manage other interfaces via :file:`/etc/network/interfaces`.
 
-The well known :file:`/etc/network/interfaces` file is supported up to Ubuntu 18.
-It is not supported since Ubuntu 20, anymore.
-Please use netplan instead.
-If you are running Ubuntu 18, using netplan is still recommended, unless you want to manage other interfaces via :file:`/etc/network/interfaces`.
+      Edit the file and add the content below.
 
-Edit the file and add the content below.
+      .. code-block:: bash
 
-.. code-block:: bash
+         sudo gedit /etc/network/interfaces
 
-   sudo gedit /etc/network/interfaces
+      #. Configure the **loopback multicast** route (this will become active, if you disconnect from all networks).
 
-#. Configure the **loopback multicast** route (this will become active, if you disconnect from all networks).
+         Add the following lines beneath the :code:`iface lo inet loopback` line:
 
-   Add the following lines beneath the :code:`iface lo inet loopback` line:
+         .. code-block:: bash
 
-   .. code-block:: bash
+            post-up ifconfig lo multicast
+            post-up route add -net 239.0.0.0 netmask 255.255.255.0 dev lo metric 1000
 
-      post-up ifconfig lo multicast
-      post-up route add -net 239.0.0.0 netmask 255.255.255.0 dev lo metric 1000
+      #. Configure the **external multicast** route.
+         This will get a lower metric and will thus become the preferred route once the interface is up.
 
-#. Configure the **external multicast** route.
-   This will get a lower metric and will thus become the preferred route once the interface is up.
+         Add the following lines and **replace eth0** with your interface.
+         You may want to replace the dhcp line with your desired configuration.
 
-   Add the following lines and **replace eth0** with your interface.
-   You may want to replace the dhcp line with your desired configuration.
+         .. code-block:: bash
 
-   .. code-block:: bash
+            # replace eth0 with your network adapter
+            auto eth0
+            allow-hotplug eth0
+            iface eth0 inet dhcp
+            post-up ifconfig eth0 multicast
+            post-up route add -net 239.0.0.0 netmask 255.255.255.0 dev eth0 metric 1
 
-      # replace eth0 with your network adapter
-      auto eth0
-        allow-hotplug eth0
-        iface eth0 inet dhcp
-        post-up ifconfig eth0 multicast
-        post-up route add -net 239.0.0.0 netmask 255.255.255.0 dev eth0 metric 1
-
-#. Restart your PC
+      #. Restart your PC
 
 .. _ubuntu_multicast_route_test:
 
