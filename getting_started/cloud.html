@@ -526,10 +526,7 @@
 <li><a class="reference internal" href="#">4. Network configuration</a><ul>
 <li><a class="reference internal" href="#fa-windows-multicast-configuration-on-windows">4.1. <i class="fab fa-windows"></i> Multicast configuration on Windows</a></li>
 <li><a class="reference internal" href="#fa-ubuntu-multicast-configuration-on-ubuntu">4.2. <i class="fab fa-ubuntu"></i> Multicast configuration on Ubuntu</a><ul>
-<li><a class="reference internal" href="#multicast-routes-via-netplan">4.2.1. Multicast routes via Netplan</a></li>
-<li><a class="reference internal" href="#multicast-routes-via-gui">4.2.2. Multicast routes via GUI</a></li>
-<li><a class="reference internal" href="#multicast-routes-via-etc-network-interfaces">4.2.3. Multicast routes via /etc/network/interfaces</a></li>
-<li><a class="reference internal" href="#test-the-configuration">4.2.4. Test the configuration</a></li>
+<li><a class="reference internal" href="#test-the-configuration">4.2.1. Test the configuration</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#ecal-samples-over-network">4.3. eCAL Samples over network</a></li>
@@ -664,16 +661,15 @@ It should show your route under <cite>IPv4 Route Table / Persistent Routes</cite
 <ol class="arabic simple">
 <li><p>Choose how to create routes:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#ubuntu-multicast-route-netplan"><span class="std std-ref">Via netplan</span></a> (Recommended for Ubuntu 18 and up. Even integrates into the GUI.)</p></li>
-<li><p><a class="reference internal" href="#ubuntu-multicast-route-gui"><span class="std std-ref">Via GUI</span></a> (Works well for desktop Ubuntu)</p></li>
-<li><p><a class="reference internal" href="#ubuntu-multicast-route-etc-network-interfaces"><span class="std std-ref">Via /etc/network/interfaces</span></a> (Legacy, up to Ubuntu 18. Not supported in Ubuntu 20, any more.)</p></li>
+<li><p><strong>Via netplan</strong> (Recommended for Ubuntu 18 and up. Even integrates into the GUI.)</p></li>
+<li><p><strong>Via GUI</strong> (Works well for desktop Ubuntu)</p></li>
+<li><p><strong>Via /etc/network/interfaces</strong> (Legacy, up to Ubuntu 18. Not supported in Ubuntu 20, any more.)</p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#ubuntu-multicast-route-test"><span class="std std-ref">Test the configuration</span></a></p></li>
 </ol>
-<div class="section" id="multicast-routes-via-netplan">
-<span id="ubuntu-multicast-route-netplan"></span><h3><span class="section-number">4.2.1. </span>Multicast routes via Netplan<a class="headerlink" href="#multicast-routes-via-netplan" title="Permalink to this headline">¶</a></h3>
-<p>Netplan is used since Ubuntu 18 and should be used in favor of the legacy (but well known) <code class="file docutils literal notranslate"><span class="pre">/etc/network/interfaces</span></code> file.
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Netplan (recommended)</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">GUI (easiest)</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">etc/network/interfaces (legacy)</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>Netplan is used since Ubuntu 18 and should be used in favor of the legacy (but well known) <code class="file docutils literal notranslate"><span class="pre">/etc/network/interfaces</span></code> file.
 While Ubuntu 18 supports both out of the box, for Ubuntu 20 this is the only file-based networking configuration method.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
@@ -735,18 +731,24 @@ This will get a lower metric and will thus become the preferred route once the i
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo netplan apply
 </pre></div>
 </div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>In Ubuntu 20.04 and up you may also have to <em>activate</em> the netplan setting in the network configuration GUI!</p>
+<img alt="Activate the netplan settings from the Gnome GUI" src="../_images/gnome_netplan_gui.svg" /></div>
 </li>
 </ol>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>If you have a graphical network manager installed (-&gt; Desktop Ubuntu), you can use it to configure the external route.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This method lacks the ability to configure a loopback route.
+When you are not connected to any network, your eCAL communication will fail.
+You can however combine this method with the loopback configuration from netplan.</p>
 </div>
-<div class="section" id="multicast-routes-via-gui">
-<span id="ubuntu-multicast-route-gui"></span><h3><span class="section-number">4.2.2. </span>Multicast routes via GUI<a class="headerlink" href="#multicast-routes-via-gui" title="Permalink to this headline">¶</a></h3>
-<p>If you have a graphical network manager installed (-&gt; Desktop Ubuntu), you can use it to configure the external route.</p>
 <ol class="arabic">
 <li><p>Configure the <strong>external multicast</strong> route</p>
-<ul>
-<li><p>System Settings -&gt; Network -&gt; Your Adapter -&gt; Options -&gt; IPv4 Tab -&gt; Routes</p></li>
-<li><p>Create a route:</p>
 <ul class="simple">
+<li><p>System Settings -&gt; Network -&gt; Your Adapter -&gt; Options -&gt; IPv4 Tab -&gt; Routes</p></li>
+<li><p>Create a route:</p></li>
 <li><p>Address: <code class="code docutils literal notranslate"><span class="pre">239.0.0.0</span></code></p></li>
 <li><p>Netmask: <code class="code docutils literal notranslate"><span class="pre">255.255.255.0</span></code></p></li>
 <li><p>Gateway: <code class="code docutils literal notranslate"><span class="pre">0.0.0.0</span></code></p></li>
@@ -754,16 +756,11 @@ This will get a lower metric and will thus become the preferred route once the i
 </ul>
 <img alt="Ubuntu multicast route" src="../_images/ubuntu_route_gui.png" />
 </li>
-</ul>
-</li>
 <li><p>Turn the interface off and on again</p></li>
-<li><p>Configure the <strong>loopback multicast</strong> route via <a class="reference internal" href="#ubuntu-multicast-route-netplan"><span class="std std-ref">netplan</span></a> or <a class="reference internal" href="#ubuntu-multicast-route-etc-network-interfaces"><span class="std std-ref">/etc/network/interfaces</span></a>.
+<li><p>Configure the <strong>loopback multicast</strong> route via <span class="xref std std-ref">netplan</span> or <span class="xref std std-ref">/etc/network/interfaces</span>.
 You can omit this, but then you will have to explicitly set eCAL to local mode, if you are not connected to any network.</p></li>
 </ol>
-</div>
-<div class="section" id="multicast-routes-via-etc-network-interfaces">
-<span id="ubuntu-multicast-route-etc-network-interfaces"></span><h3><span class="section-number">4.2.3. </span>Multicast routes via /etc/network/interfaces<a class="headerlink" href="#multicast-routes-via-etc-network-interfaces" title="Permalink to this headline">¶</a></h3>
-<p>The well known <code class="file docutils literal notranslate"><span class="pre">/etc/network/interfaces</span></code> file is supported up to Ubuntu 18.
+</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><p>The well known <code class="file docutils literal notranslate"><span class="pre">/etc/network/interfaces</span></code> file is supported up to Ubuntu 18.
 It is not supported since Ubuntu 20, anymore.
 Please use netplan instead.
 If you are running Ubuntu 18, using netplan is still recommended, unless you want to manage other interfaces via <code class="file docutils literal notranslate"><span class="pre">/etc/network/interfaces</span></code>.</p>
@@ -785,18 +782,18 @@ This will get a lower metric and will thus become the preferred route once the i
 You may want to replace the dhcp line with your desired configuration.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># replace eth0 with your network adapter</span>
 auto eth0
-  allow-hotplug eth0
-  iface eth0 inet dhcp
-  post-up ifconfig eth0 multicast
-  post-up route add -net <span class="m">239</span>.0.0.0 netmask <span class="m">255</span>.255.255.0 dev eth0 metric <span class="m">1</span>
+allow-hotplug eth0
+iface eth0 inet dhcp
+post-up ifconfig eth0 multicast
+post-up route add -net <span class="m">239</span>.0.0.0 netmask <span class="m">255</span>.255.255.0 dev eth0 metric <span class="m">1</span>
 </pre></div>
 </div>
 </li>
 <li><p>Restart your PC</p></li>
 </ol>
-</div>
+</div></div>
 <div class="section" id="test-the-configuration">
-<span id="ubuntu-multicast-route-test"></span><h3><span class="section-number">4.2.4. </span>Test the configuration<a class="headerlink" href="#test-the-configuration" title="Permalink to this headline">¶</a></h3>
+<span id="ubuntu-multicast-route-test"></span><h3><span class="section-number">4.2.1. </span>Test the configuration<a class="headerlink" href="#test-the-configuration" title="Permalink to this headline">¶</a></h3>
 <p>Check the result from a terminal. It should show routes for local and external communication:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>route -n
 </pre></div>
@@ -884,6 +881,7 @@ If you configured everything correctly, publisher and subscriber should connect 
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script src="../_static/tabs.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">
