@@ -27,6 +27,12 @@
     <layout class="QHBoxLayout" name="log_level_layout">
      <item>
       <widget class="QLabel" name="show_log_level_label">
+       <property name="minimumSize">
+        <size>
+         <width>5</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="text">
         <string>Show Log Level:</string>
        </property>
@@ -34,6 +40,12 @@
      </item>
      <item>
       <widget class="QCheckBox" name="debug_checkbox">
+       <property name="minimumSize">
+        <size>
+         <width>5</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="text">
         <string>Debug</string>
        </property>
@@ -44,6 +56,12 @@
      </item>
      <item>
       <widget class="QCheckBox" name="info_checkbox">
+       <property name="minimumSize">
+        <size>
+         <width>5</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="text">
         <string>Info</string>
        </property>
@@ -54,6 +72,12 @@
      </item>
      <item>
       <widget class="QCheckBox" name="warning_checkbox">
+       <property name="minimumSize">
+        <size>
+         <width>5</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="text">
         <string>Warning</string>
        </property>
@@ -64,6 +88,12 @@
      </item>
      <item>
       <widget class="QCheckBox" name="error_checkbox">
+       <property name="minimumSize">
+        <size>
+         <width>5</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="text">
         <string>Error</string>
        </property>
@@ -74,6 +104,12 @@
      </item>
      <item>
       <widget class="QCheckBox" name="fatal_checkbox">
+       <property name="minimumSize">
+        <size>
+         <width>5</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="text">
         <string>Fatal</string>
        </property>
@@ -87,12 +123,6 @@
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
       </spacer>
      </item>
     </layout>
@@ -101,13 +131,26 @@
     <layout class="QHBoxLayout" name="filter_layout">
      <item>
       <widget class="QFilterLineEdit" name="filter_lineedit">
+       <property name="minimumSize">
+        <size>
+         <width>10</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="placeholderText">
         <string>Filter</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="filter_combobox"/>
+      <widget class="QComboBox" name="filter_combobox">
+       <property name="minimumSize">
+        <size>
+         <width>10</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
