@@ -42,7 +42,7 @@ set(ProtoFiles
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/topic.proto
 )
 
-ecal_add_static_library(${PROJECT_NAME} src/ecalpb.cpp)
+ecal_add_library(${PROJECT_NAME} src/ecalpb.cpp)
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 protobuf_target_cpp(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src INSTALL_FOLDER include ${ProtoFiles})
@@ -56,7 +56,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 target_link_libraries(${PROJECT_NAME} protobuf::libprotobuf)
 
-ecal_install_static_library(${PROJECT_NAME})
+ecal_install_library(${PROJECT_NAME})
 
 if(BUILD_PY_BINDING)
   protobuf_generate_python_ext(python_sources ${PYTHON_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${ProtoFiles})
