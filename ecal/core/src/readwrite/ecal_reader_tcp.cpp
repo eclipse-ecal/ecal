@@ -114,7 +114,6 @@ namespace eCAL
   {
     // create tcp subscriber
     m_subscriber = std::make_shared<tcp_pubsub::Subscriber>(executor_);
-    m_subscriber->setCallback(std::bind(&CDataReaderTCP::OnTcpMessage, this, std::placeholders::_1));
     return true;
   }
 
@@ -148,6 +147,7 @@ namespace eCAL
     if (new_session)
     {
       m_subscriber->addSession(host_name_, port_, eCALPAR(NET, TCP_PUBSUB_MAX_RECONNECTIONS));
+      m_subscriber->setCallback(std::bind(&CDataReaderTCP::OnTcpMessage, this, std::placeholders::_1));
     }
 
     return true;
