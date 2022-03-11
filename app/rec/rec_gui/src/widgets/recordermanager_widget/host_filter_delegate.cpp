@@ -31,8 +31,6 @@ HostFilterDelegate::HostFilterDelegate(QAbstractItemView* parent)
   , dialog_open_(false)
   , open_popup_(false)
 {
-  parent->viewport()->setAttribute(Qt::WA_Hover); // Important for mouse-hover events
-   
   available_hosts_model_ = new QStandardItemModel(this);
 
   QStandardItem* all_item = new QStandardItem();
