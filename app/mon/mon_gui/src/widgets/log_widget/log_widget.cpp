@@ -92,6 +92,23 @@ LogWidget::LogWidget(QWidget *parent)
   // Pause button
   connect(ui_.pause_button, &QPushButton::toggled, this, &LogWidget::setPaused);
 
+  /*
+   * Workaround for a bug in the Qt Fusion theme that is used in Linux and
+   * Windows Dark mode by default. The Fusion theme will (at least in Qt 5.15)
+   * ignore the ON Icon. It is fixed in Qt 6.10 and up.
+   * 
+   * https://forum.qt.io/topic/129728/different-behaviour-of-icons-in-vista-style-vs-fusion-style
+   * https://codereview.qt-project.org/c/qt/qtbase/+/327734
+  */
+  connect(ui_.pause_button, &QPushButton::toggled, this,
+                      [this]()
+                      {
+                        if(ui_.pause_button->isChecked())
+                          ui_.pause_button->setIcon(QIcon(":ecalicons/START"));
+                        else
+                          ui_.pause_button->setIcon(QIcon(":ecalicons/PAUSE"));
+                      });
+
   // Clear Button
   connect(ui_.clear_button, &QPushButton::clicked, this, &LogWidget::clearLog);
 
