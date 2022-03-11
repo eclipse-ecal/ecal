@@ -24,19 +24,19 @@ project(many_connections)
 
 find_package(eCAL REQUIRED)
 
-ecal_add_sample(many_connections_send
-  many_connections_send.cpp
+ecal_add_sample(many_connections_snd
+  many_connections_snd.cpp
 )
 
 ecal_add_sample(many_connections_rec
   many_connections_rec.cpp
 )
 
-target_link_libraries(many_connections_send PRIVATE eCAL::core)
-target_link_libraries(many_connections_rec  PRIVATE eCAL::core)
+target_link_libraries(many_connections_snd PRIVATE eCAL::core)
+target_link_libraries(many_connections_rec PRIVATE eCAL::core)
 
-ecal_install_sample(many_connections_send)
+ecal_install_sample(many_connections_snd)
 ecal_install_sample(many_connections_rec)
 
-set_property(TARGET many_connections_send PROPERTY FOLDER samples/cpp/benchmarks)
-set_property(TARGET many_connections_rec  PROPERTY FOLDER samples/cpp/benchmarks)
+set_property(TARGET many_connections_snd PROPERTY FOLDER samples/cpp/benchmarks)
+set_property(TARGET many_connections_rec PROPERTY FOLDER samples/cpp/benchmarks)

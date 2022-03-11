@@ -18,24 +18,24 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/msg/string/subscriber.h>
-
 
 #include <iostream>
 #include <thread>
 #include <vector>
-
 
 class SubscriberCreator
 {
 public:
   SubscriberCreator(int publisher_count)
   {
+    std::string ttype("THIS IS THE TOPIC TYPE NAME");
+    std::string tdesc("THIS IS THE LONG TOPIC DESCRIPTOR ");
+    for (auto rep = 0; rep < 4; ++rep) tdesc = tdesc + tdesc;
+
     for (int i = 0; i < publisher_count; ++i)
     {
-      subscribers.emplace_back("Publisher" + std::to_string(i));
-      subscribers.at(i).AddReceiveCallback(std::bind(&SubscriberCreator::Receive,
-        this));
+      subscribers.emplace_back("Publisher" + std::to_string(i), ttype, tdesc);
+      subscribers.at(i).AddReceiveCallback(std::bind(&SubscriberCreator::Receive, this));
     }
   }
 
@@ -44,8 +44,7 @@ public:
   }
 
 private:
-  std::vector<eCAL::string::CSubscriber<std::string>> subscribers;
-
+  std::vector<eCAL::CSubscriber> subscribers;
 };
 
 
@@ -53,6 +52,8 @@ int main(int argc, char** argv)
 {
   // initialize eCAL API
   eCAL::Initialize(argc, argv, "many_connections_rec");
+
+  // create many subscriber
   SubscriberCreator subscribers(1000);
   std::cout << "Done Initializing" << std::endl;
 
@@ -61,6 +62,6 @@ int main(int argc, char** argv)
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
+  // finalize eCAL API
   eCAL::Finalize();
-
 }

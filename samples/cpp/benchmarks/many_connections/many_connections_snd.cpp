@@ -18,21 +18,23 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/msg/string/publisher.h>
 
 #include <iostream>
 #include <thread>
 #include <vector>
-
 
 class PublisherCreator
 {
 public:
   PublisherCreator(int publisher_count)
   {
+    std::string ttype("THIS IS THE TOPIC TYPE NAME");
+    std::string tdesc("THIS IS THE LONG TOPIC DESCRIPTOR ");
+    for (auto rep = 0; rep < 4; ++rep) tdesc = tdesc + tdesc;
+
     for (int i = 0; i < publisher_count; ++i)
     {
-      publishers.emplace_back("Publisher" + std::to_string(i));
+      publishers.emplace_back("Publisher" + std::to_string(i), ttype, tdesc);
     }
   }
 
@@ -45,15 +47,16 @@ public:
   }
 
 private:
-  std::vector<eCAL::string::CPublisher<std::string>> publishers;
-
+  std::vector<eCAL::CPublisher> publishers;
 };
 
 
 int main(int argc, char** argv)
 {
   // initialize eCAL API
-  eCAL::Initialize(argc, argv, "many_connections_send");
+  eCAL::Initialize(argc, argv, "many_connections_snd");
+
+  // create many publisher
   PublisherCreator publishers(1000);
   std::cout << "Done Initializing" << std::endl;
 
@@ -63,6 +66,6 @@ int main(int argc, char** argv)
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
+  // finalize eCAL API
   eCAL::Finalize();
-
 }
