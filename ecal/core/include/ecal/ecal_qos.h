@@ -49,7 +49,7 @@ namespace eCAL
     /**
      * @brief eCAL data writer QOS settings.
     **/
-    struct SWriterQOS
+    struct ECAL_API SWriterQOS
     {
       SWriterQOS()
       {
@@ -65,7 +65,7 @@ namespace eCAL
     /**
      * @brief eCAL data reader QOS settings.
     **/
-    struct SReaderQOS
+    struct ECAL_API SReaderQOS
     {
       SReaderQOS()
       {

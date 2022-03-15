@@ -37,12 +37,12 @@ namespace eCAL
    * @brief Service server implementation class.
   **/
   CServiceServerImpl::CServiceServerImpl() :
-    m_created(false), m_connected(false)
+    m_connected(false), m_created(false)
   {
   }
 
   CServiceServerImpl::CServiceServerImpl(const std::string& service_name_) :
-    m_created(false), m_connected(false)
+    m_connected(false), m_created(false)
   {
     Create(service_name_);
   }
