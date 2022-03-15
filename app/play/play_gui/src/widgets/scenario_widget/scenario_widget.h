@@ -54,7 +54,8 @@ private slots:
   void openScenarioContextMenu(const QPoint& pos);
 
 protected:
-  void showEvent(QShowEvent* event) override;
+  virtual void showEvent(QShowEvent* event) override;
+  virtual void changeEvent(QEvent* event) override;
 
 private:
   Ui::ScenarioWidget ui_;
