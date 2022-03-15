@@ -448,7 +448,7 @@ int main(int argc, char** argv)
     Date: $HOST{TIME %F %R}
     )"
     );
-        rec_server_instance->SetMaxFileSizeMib(100);
+        rec_server_instance->SetMaxFileSizeMib(1000);
 
       }
     }
