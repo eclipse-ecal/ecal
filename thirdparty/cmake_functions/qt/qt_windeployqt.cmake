@@ -17,7 +17,7 @@
 # ========================= eCAL LICENSE =================================
 
 
-set (qt_windeployqt_cmake_path ${CMAKE_CURRENT_LIST_DIR} PARENT_SCOPE)
+set (qt_windeployqt_cmake_path ${CMAKE_CURRENT_LIST_DIR})
 
 # Create convenient function to run windeployqt
 function(qt_add_windeployqt_postbuild arguments)
