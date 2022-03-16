@@ -47,7 +47,7 @@ Program Listing for File ecal_qos.h
          reliable_reliability_qos,       
        };
    
-       struct SWriterQOS
+       struct ECAL_API SWriterQOS
        {
          SWriterQOS()
          {
@@ -60,7 +60,7 @@ Program Listing for File ecal_qos.h
          eQOSPolicy_Reliability  reliability;               
        };
    
-       struct SReaderQOS
+       struct ECAL_API SReaderQOS
        {
          SReaderQOS()
          {

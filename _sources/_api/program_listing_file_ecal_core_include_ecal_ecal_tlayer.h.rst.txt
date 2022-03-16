@@ -53,7 +53,7 @@ Program Listing for File ecal_tlayer.h
          smode_auto
        };
    
-       struct STLayer
+       struct ECAL_API STLayer
        {
          STLayer()
          {
