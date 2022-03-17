@@ -55,7 +55,7 @@ A (distributed) eCAL Rec setup consists of 2 applications:
 
    The Host Application is your main Recording application.
 
-   In a `Centraliced` recording (All topics are recorded over network by just one recorder), this is the only applicaiton you need.
+   In a `Centralized` recording (All topics are recorded over network by just one recorder), this is the only application you need.
    It will function standalone and record everything that is configured to be recorded.
    In a `Distributed` recording (Each machine records its own topics), this application controls the connected clients.
 
