@@ -21,7 +21,7 @@ The eCAL Player is crashing on Ubuntu
 =====================================
 
 The eCAL Player creates a lot of shared memory files; multiple files for each topic from the measurement.
-When opening a large measurement, this triggers a limti set by the operating system.
+When opening a large measurement, this triggers a limit set by the operating system.
 
 :ref:`Increase the limit <configuration_player>` and the Player should work just fine, again!
 
