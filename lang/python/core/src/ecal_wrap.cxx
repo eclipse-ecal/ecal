@@ -549,6 +549,7 @@ static void c_subscriber_callback(const char* topic_name_, const struct eCAL::SR
   {
     PyObject* py_callback = iter->second;
     PyObject_CallObject(py_callback, args);
+    if (PyErr_Occurred()) { PyErr_Print(); }
   }
 
   Py_DECREF(args);
@@ -840,6 +841,7 @@ static int c_server_method_callback(const std::string& method_name_, const std::
   {
     PyObject* py_callback = iter->second;
     PyObject* result = PyObject_CallObject(py_callback, args);
+    if (PyErr_Occurred()) { PyErr_Print(); }
 
     int         cb_ret_state    = 0;
     const char* cb_response     = nullptr;
@@ -1084,6 +1086,7 @@ static void c_client_callback(const struct eCAL::SServiceResponse& service_respo
   {
     PyObject* py_callback = iter->second;
     PyObject_CallObject(py_callback, args);
+    if (PyErr_Occurred()) { PyErr_Print(); }
   }
 
   Py_DECREF(args);
