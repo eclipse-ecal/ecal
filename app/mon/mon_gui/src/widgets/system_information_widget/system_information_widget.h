@@ -31,6 +31,13 @@ public:
   SystemInformationWidget(QWidget *parent = Q_NULLPTR);
   ~SystemInformationWidget();
 
+protected:
+  virtual void changeEvent(QEvent* event) override;
+
+private:
+  void setLabelText();
+  static QString toHtml(const QString& system_information);
+
 private:
   Ui::SystemInformationWidget ui_;
 };
