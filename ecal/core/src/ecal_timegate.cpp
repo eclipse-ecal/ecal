@@ -25,7 +25,7 @@
 #include <ecal/ecal_os.h>
 
 #include "ecal_def.h"
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include "ecal_timegate.h"
 #include "getenvvar.h"
 

@@ -24,7 +24,7 @@
 #include <ecal/ecal.h>
 
 #include "ecal_def.h"
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include "ecal_reggate.h"
 #include "ecal_writer.h"
 #include "ecal_writer_base.h"
