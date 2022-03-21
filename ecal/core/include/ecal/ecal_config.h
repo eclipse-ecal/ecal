@@ -102,6 +102,6 @@ namespace eCAL
     ECAL_API bool        IsMemfileZerocopyEnabled             ();
     ECAL_API int         GetMemfileBufferCount                ();
     ECAL_API bool        IsTopicTypeSharingEnabled            ();
-    ECAL_API int         IsTopicDescriptionSharingEnabled     ();
+    ECAL_API bool        IsTopicDescriptionSharingEnabled     ();
   }
 }
