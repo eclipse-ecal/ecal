@@ -20,6 +20,7 @@
 #include "ecalmon.h"
 
 #include "ecal/ecal.h"
+#include <ecal/ecal_config.h>
 
 #include "widgets/about_dialog/about_dialog.h"
 #include "widgets/license_dialog/license_dialog.h"
@@ -38,6 +39,7 @@
 #include <QDateTime>
 #include <QScreen>
 #include <QStyleFactory>
+#include <QLayout>
 
 #ifndef NDEBUG
   #ifdef _MSC_VER
@@ -71,19 +73,62 @@ Ecalmon::Ecalmon(QWidget *parent)
   ui_.setupUi(this);
 
   // Setup Status bar
+  network_mode_widget_                      = new QWidget(ui_.statusbar);
+  QHBoxLayout* network_mode_widget_layout   = new QHBoxLayout(network_mode_widget_);
+  network_mode_widget_layout->setContentsMargins(9, 0, 9, 0);
+  network_mode_widget_layout->setSpacing        (6);
+  network_mode_warning_icon_                = new QLabel(ui_.statusbar);
+  network_mode_label_                       = new QLabel(ui_.statusbar);
+
+  network_mode_widget_layout->addWidget(network_mode_warning_icon_);
+  network_mode_widget_layout->addWidget(network_mode_label_);
+
+  int label_height = network_mode_warning_icon_->sizeHint().height();
+  QPixmap warning_icon = QPixmap(":/ecalicons/ERROR").scaled(label_height, label_height, Qt::AspectRatioMode::KeepAspectRatio, Qt::TransformationMode::SmoothTransformation);
+  network_mode_warning_icon_->setPixmap(warning_icon);
+  network_mode_warning_icon_->setVisible(false);
+
+  bool network_mode = eCAL::Config::IsNetworkEnabled();
+  int multicast_ttl = eCAL::Config::GetMulticastTtl();
+
+  if (network_mode)
+  {
+    network_mode_label_->setText("Network mode: Cloud (TTL: " + QString::number(multicast_ttl) + ")");
+
+    if (multicast_ttl <= 0)
+    {
+      network_mode_widget_->setToolTip("ERROR: Network enabled but TTL is " + QString::number(multicast_ttl) + ". Change via ecal.ini");
+      network_mode_widget_->setStyleSheet("background-color: rgb(255, 128, 128); color: black");
+      network_mode_warning_icon_->setVisible(true);
+    }
+    else
+    {
+      network_mode_widget_->setStyleSheet("background-color: rgb(80, 255, 120); color: black");
+      network_mode_widget_->setToolTip("Change via ecal.ini");
+    }
+  }
+  else
+  {
+    network_mode_label_->setText("Network mode: Local");
+    network_mode_widget_->setStyleSheet("background-color: rgb(44, 148, 255); color: black");
+    network_mode_widget_->setToolTip("Change via ecal.ini");
+  }
+
   error_label_                = new QLabel(this);
   error_label_                ->setHidden(true);
-  error_label_                ->setStyleSheet("background-color: rgb(255, 128, 128);");
+  error_label_                ->setStyleSheet("background-color: rgb(255, 128, 128); color: black");
 
   monitor_update_speed_label_ = new QLabel(this);
   log_update_speed_label_     = new QLabel(this);
   time_label_                 = new QLabel(this);
 
+  network_mode_label_        ->setMinimumWidth(10);
   monitor_update_speed_label_->setMinimumWidth(10);
   log_update_speed_label_    ->setMinimumWidth(10);
   time_label_                ->setMinimumWidth(10);
   error_label_               ->setMinimumWidth(10);
 
+  ui_.statusbar->addWidget(network_mode_widget_);
   ui_.statusbar->addWidget(monitor_update_speed_label_);
   ui_.statusbar->addWidget(log_update_speed_label_);
   ui_.statusbar->addWidget(time_label_);
