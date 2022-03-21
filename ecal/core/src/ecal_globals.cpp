@@ -23,7 +23,7 @@
 
 #include "ecal_globals.h"
 #include "io/udp_init.h"
-#include "ecal_config.h"
+#include <ecal/ecal_config.h>
 
 #include <stdexcept>
 

@@ -220,7 +220,6 @@ set(ecal_service_header_src
 
 set(ecal_cmn_header_src
     src/convert_utf.h
-    src/ecal_config.h
     src/ecal_config_hlp.h
     src/ecal_def.h
     src/ecal_def_ini.h
@@ -256,6 +255,7 @@ set(ecal_header_cmn
     include/ecal/ecal_callback.h
     include/ecal/ecal_clang.h
     include/ecal/ecal_client.h
+    include/ecal/ecal_config.h
     include/ecal/ecal_core.h
     include/ecal/ecal_event.h
     include/ecal/ecal_eventhandle.h

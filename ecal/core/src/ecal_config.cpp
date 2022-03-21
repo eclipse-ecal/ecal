@@ -25,7 +25,8 @@
 #include <ecal/ecal_defs.h>
 
 #include "ecal_def.h"
-#include "ecal_config.h"
+#include <ecal/ecal_config.h>
+#include "ecal_config_hlp.h"
 #include "ecal_global_accessors.h"
 #include "getenvvar.h"
 
@@ -245,6 +246,24 @@ namespace eCAL
     ECAL_API std::string GeteCALDefaultIniFile()
     {
       return GeteCALActiveIniFile();
+    }
+  }
+
+  namespace Config
+  {
+    ECAL_API std::string GetLoadedEcalIniPath()
+    {
+      return g_default_ini_file;
+    }
+
+    ECAL_API bool IsNetworkEnabled()
+    {
+      return bool(eCALPAR(NET, ENABLED));
+    }
+
+    ECAL_API int GetMulticastTtl()
+    {
+      return eCALPAR(NET, UDP_MULTICAST_TTL);
     }
   }
 

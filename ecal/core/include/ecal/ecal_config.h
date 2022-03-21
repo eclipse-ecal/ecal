@@ -30,6 +30,15 @@
 
 namespace eCAL
 {
+  namespace Config
+  {
+    ECAL_API std::string GetLoadedEcalIniPath();
+    
+    ECAL_API bool IsNetworkEnabled();
+    ECAL_API int GetMulticastTtl();
+  }
+
+
   class CConfigImpl;
   class CConfig
   {

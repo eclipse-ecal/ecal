@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "ecal_config.h"
+#include <ecal/ecal_config.h>
 #include "ecal_def_ini.h"
 #include "ecal_global_accessors.h"
 
