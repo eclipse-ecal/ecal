@@ -26,11 +26,17 @@
 #include <QFileInfo>
 #include <QUrl>
 #include <QTimer>
+#include <QDesktopServices>
+#include <QMimeDatabase>
+#include <QProcess>
+#include <QMessageBox>
 
 SystemInformationWidget::SystemInformationWidget(QWidget *parent)
   : QWidget(parent)
 {
   ui_.setupUi(this);
+
+  connect(ui_.system_information_label, &QLabel::linkActivated, this, &SystemInformationWidget::openEcalIni);
 
   setLabelText();
 }
@@ -103,4 +109,118 @@ QString SystemInformationWidget::toHtml(const QString& system_information)
   lines.push_back("</pre></body>");
 
   return lines.join("\n");
+}
+
+void SystemInformationWidget::openEcalIni(const QUrl& url)
+{
+  bool success = false;
+
+#ifdef __linux__
+  bool use_fallback = false;
+
+  // 1) Check if the file is a local file
+  if (!url.isLocalFile())
+    use_fallback = true;
+
+  // 2) Check if we even need root
+  if (!use_fallback)
+  {
+    QFileInfo file_info(url.path());
+    bool can_write = file_info.permission(QFile::WriteUser);
+
+    if (!file_info.exists() || !file_info.isFile() || can_write)
+      use_fallback = true;
+  }
+
+  // 3) Get the MIME type
+  QMimeType mime_type;
+  if (!use_fallback)
+  {
+    QMimeDatabase mimedatabase;
+    mime_type = mimedatabase.mimeTypeForFile(url.path());
+
+    if (!mime_type.isValid())
+      use_fallback = true;
+  }
+
+  // 4) Get the associated *.desktop (-> the application) via "xdg-mime"
+  QString xdg_mime_query_output;
+  if (!use_fallback)
+  {
+    QProcess xdg_mime_process;
+    xdg_mime_process.start("xdg-mime", {"query", "default", mime_type.name()});
+
+    if (xdg_mime_process.waitForFinished(1000) && (xdg_mime_process.exitCode() == 0))
+    {
+      xdg_mime_query_output = QString::fromUtf8(xdg_mime_process.readAllStandardOutput()).trimmed();
+    }
+    else
+    {
+      xdg_mime_process.terminate();
+      use_fallback = true;
+    }
+  }
+
+  // 5) Check the xdg-mime output. Fallback to plain opening for anything else than gedit
+  if (!use_fallback
+      && (xdg_mime_query_output.isEmpty() || (xdg_mime_query_output != "org.gnome.gedit.desktop")))
+  {
+    use_fallback = true;
+  }
+
+  // 5) If it is gedit launch it via "gtk-launch"
+  if (!use_fallback)
+  {
+    QProcess gtk_launch_process;
+    gtk_launch_process.start("gtk-launch", {xdg_mime_query_output, "admin://" + url.path()});
+
+    if (gtk_launch_process.waitForFinished(1000))
+    {
+      if (gtk_launch_process.exitCode() == 0)
+        success = true;
+      else
+        use_fallback = true;
+    }
+    else
+    {
+      gtk_launch_process.terminate();
+      use_fallback = true;
+    }
+  }
+
+  // --- FALLBACK ---
+  if (use_fallback)
+  {
+#endif
+
+    // For non-linux this is the only relevant code. On linux it acts as fallback.
+    if (url.isLocalFile())
+    {
+      QFileInfo file_info(url.path());
+      if (file_info.isFile())
+        success = QDesktopServices::openUrl(url);
+      else
+        success = false;
+    }
+    else
+    {
+      success = QDesktopServices::openUrl(url);
+    }
+
+#ifdef __linux__
+  }
+#endif
+
+
+  if (!success)
+  {
+    QMessageBox warning(
+      QMessageBox::Icon::Warning
+      , tr("Error opening file")
+      , tr("Failed to open file:") + "\n" + url.toString()
+      , QMessageBox::Button::Ok
+      , this);
+
+    warning.exec();
+  }
 }

@@ -23,6 +23,8 @@
 #include "CustomQt/QStableSortFilterProxyModel.h"
 #include "ui_system_information_widget.h"
 
+#include <QUrl>
+
 class SystemInformationWidget : public QWidget
 {
   Q_OBJECT
@@ -37,6 +39,8 @@ protected:
 private:
   void setLabelText();
   static QString toHtml(const QString& system_information);
+
+  void openEcalIni(const QUrl& url);
 
 private:
   Ui::SystemInformationWidget ui_;
