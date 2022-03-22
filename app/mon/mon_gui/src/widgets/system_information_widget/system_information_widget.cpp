@@ -125,7 +125,7 @@ void SystemInformationWidget::openEcalIni(const QUrl& url)
   // 2) Check if we even need root
   if (!use_fallback)
   {
-    QFileInfo file_info(url.path());
+    QFileInfo file_info(url.toLocalFile());
     bool can_write = file_info.permission(QFile::WriteUser);
 
     if (!file_info.exists() || !file_info.isFile() || can_write)
@@ -137,7 +137,7 @@ void SystemInformationWidget::openEcalIni(const QUrl& url)
   if (!use_fallback)
   {
     QMimeDatabase mimedatabase;
-    mime_type = mimedatabase.mimeTypeForFile(url.path());
+    mime_type = mimedatabase.mimeTypeForFile(url.toLocalFile());
 
     if (!mime_type.isValid())
       use_fallback = true;
@@ -172,7 +172,7 @@ void SystemInformationWidget::openEcalIni(const QUrl& url)
   if (!use_fallback)
   {
     QProcess gtk_launch_process;
-    gtk_launch_process.start("gtk-launch", {xdg_mime_query_output, "admin://" + url.path()});
+    gtk_launch_process.start("gtk-launch", {xdg_mime_query_output, "admin://" + url.toLocalFile()});
 
     if (gtk_launch_process.waitForFinished(1000))
     {
@@ -196,7 +196,8 @@ void SystemInformationWidget::openEcalIni(const QUrl& url)
     // For non-linux this is the only relevant code. On linux it acts as fallback.
     if (url.isLocalFile())
     {
-      QFileInfo file_info(url.path());
+      QString path = url.toLocalFile();
+      QFileInfo file_info(path);
       if (file_info.isFile())
         success = QDesktopServices::openUrl(url);
       else
