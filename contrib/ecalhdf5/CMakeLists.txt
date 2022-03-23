@@ -16,7 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(hdf5)
+project(hdf5 LANGUAGES C CXX)
 
 if(NOT CMAKE_CROSSCOMPILING)
   find_package(HDF5 COMPONENTS C REQUIRED)
