@@ -31,6 +31,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <cassert>
 
 #include <ecal_utils/filesystem.h>
 
@@ -72,6 +73,77 @@ namespace
   {
     EcalUtils::Filesystem::MkDir(path_, EcalUtils::Filesystem::Current);
   }
+
+  std::string eCALDataEnvPath()
+  {
+    std::string ecal_data_path = getEnvVar("ECAL_DATA");
+    if (!ecal_data_path.empty())
+    {
+      if (ecal_data_path.back() != path_sep)
+        ecal_data_path += path_sep;
+    }
+    return ecal_data_path;
+  }
+
+  std::string eCALDataCMakePath()
+  {
+    std::string cmake_data_path;
+#ifdef ECAL_OS_LINUX
+    std::string ecal_install_config_dir(ECAL_INSTALL_CONFIG_DIR);
+    std::string ecal_install_prefix(ECAL_INSTALL_PREFIX);
+
+    if ((!ecal_install_config_dir.empty() && (ecal_install_config_dir[0] == path_sep))
+      || ecal_install_prefix.empty())
+    {
+      cmake_data_path = ecal_install_config_dir;
+    }
+    else if (!ecal_install_prefix.empty())
+    {
+      cmake_data_path = ecal_install_prefix + path_sep + ecal_install_config_dir;
+    }
+    if (cmake_data_path.back() != path_sep) { cmake_data_path += path_sep; }
+#endif /* ECAL_OS_LINUX */  
+    return cmake_data_path;
+  }
+
+  std::string eCALDataSystemPath()
+  {
+    std::string system_data_path;
+#ifdef ECAL_OS_WINDOWS
+    system_data_path = getEnvVar("ProgramData");
+    if (!system_data_path.empty())
+    {
+      if (system_data_path.back() != path_sep)
+      {
+        system_data_path += path_sep;
+      }
+      system_data_path += std::string("eCAL") + path_sep;
+    }
+#endif /* ECAL_OS_WINDOWS */
+
+#ifdef ECAL_OS_LINUX
+    system_data_path = "/etc/ecal/";
+#endif /* ECAL_OS_LINUX */
+    return system_data_path;
+  }
+
+
+  // 1. The path is not empty
+  // 2. The ecal.ini exists in that directory
+  bool IsValidConfigFilePath(const std::string& path)
+  {
+    if (path.empty()) { return false; };
+
+    // check existence of ecal.ini file
+    EcalUtils::Filesystem::FileStatus ecal_ini_status(path + std::string(ECAL_DEFAULT_CFG), EcalUtils::Filesystem::Current);
+    if (ecal_ini_status.IsOk() && (ecal_ini_status.GetType() == EcalUtils::Filesystem::Type::RegularFile))
+    {
+      return true;
+    }
+
+    return false;
+  }
+
 }
 
 namespace eCAL
@@ -124,72 +196,26 @@ namespace eCAL
       // -----------------------------------------------------------
       // precedence 1: ECAL_DATA variable (windows and linux)
       // -----------------------------------------------------------
-      std::string ecal_data_path = getEnvVar("ECAL_DATA");
-      if (!ecal_data_path.empty())
-      {
-        if (ecal_data_path.back() != path_sep)
-          ecal_data_path += path_sep;
-      }
+      std::string ecal_data_path{ eCALDataEnvPath() };
       
       // -----------------------------------------------------------
-      // precedence 2 & 3: cmake configured data paths (linux only)
+      // precedence 2:  cmake configured data paths (linux only)
       // -----------------------------------------------------------
-      std::string cmake_data_path;
-#ifdef ECAL_OS_LINUX
-      std::string ecal_install_config_dir(ECAL_INSTALL_CONFIG_DIR);
-      std::string ecal_install_prefix(ECAL_INSTALL_PREFIX);
-
-      if ((!ecal_install_config_dir.empty() && (ecal_install_config_dir[0] == path_sep))
-        || ecal_install_prefix.empty())
-      {
-        cmake_data_path = ecal_install_config_dir;
-      }
-      else if (!ecal_install_prefix.empty())
-      {
-        cmake_data_path = ecal_install_prefix + path_sep + ecal_install_config_dir;
-      }
-#endif /* ECAL_OS_LINUX */  
+      std::string cmake_data_path{ eCALDataCMakePath() };
 
       // -----------------------------------------------------------
-      // precedence 4: system data path 
+      // precedence 3: system data path 
       // -----------------------------------------------------------
-      std::string system_data_path;
-#ifdef ECAL_OS_WINDOWS
-      system_data_path = getEnvVar("ProgramData");
-      if (!system_data_path.empty())
-      {
-        if (system_data_path.back() != path_sep)
-          system_data_path += path_sep;
-        system_data_path += std::string("eCAL") + path_sep;
-      }
-#endif /* ECAL_OS_WINDOWS */
-      
-#ifdef ECAL_OS_LINUX
-      system_data_path = "/etc/ecal/";
-#endif /* ECAL_OS_LINUX */
+      std::string system_data_path(eCALDataSystemPath());
 
-      // Check all directories, if
-      //    1. The path is not empty
-      //    2. The ecal.ini exists in that directory
-      std::string config_path;
-      for (std::string directory : { ecal_data_path, cmake_data_path, system_data_path })
-      {
-        if (!directory.empty())
-        {
-          // append path separator if needed
-          if (directory.back() != path_sep) directory += path_sep;
+      // Check for first directory which contains the ini file.
+      std::vector<std::string> search_directories{ ecal_data_path, cmake_data_path, system_data_path };
 
-          // check existence of ecal.ini file
-          EcalUtils::Filesystem::FileStatus ecal_ini_status(directory + std::string(ECAL_DEFAULT_CFG), EcalUtils::Filesystem::Current);
-          if (ecal_ini_status.IsOk() && (ecal_ini_status.GetType() == EcalUtils::Filesystem::Type::RegularFile))
-          {
-            config_path = std::move(directory);
-            break;
-          }
-        }
-      }
+      auto it = std::find_if(search_directories.begin(), search_directories.end(), IsValidConfigFilePath);
+      // We should have encountered a valid path
+      assert(it != search_directories.end());
 
-      return(config_path);
+      return(*it);
     }
 
     ECAL_API std::string GeteCALUserSettingsPath()
