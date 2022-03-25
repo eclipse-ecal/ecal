@@ -145,7 +145,7 @@ namespace eCAL
    * @brief Raw data receive callback function type.
    *
    * @param topic_name_  The topic name of the received message.
-   * @param data_        Data atruct containing payload, timestamp and publication clock.
+   * @param data_        Data struct containing payload, timestamp and publication clock.
   **/
   typedef std::function<void(const char* topic_name_, const struct SReceiveCallbackData* data_)> ReceiveCallbackT;
 
@@ -157,7 +157,7 @@ namespace eCAL
   /**
    * @brief Registration callback type.
    *
-   * @param sample_       The sample protocol buffer regsitration payload buffer.
+   * @param sample_       The sample protocol buffer registration payload buffer.
    * @param sample_size_  The payload buffer size.
   **/
   typedef std::function<void(const char* sample_, int sample_size_)> RegistrationCallbackT;

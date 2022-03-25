@@ -837,7 +837,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Defaukt</string>
+    <string>Default</string>
    </property>
   </action>
   <action name="action_theme_dark">
