@@ -25,7 +25,7 @@
 #include <ecal/ecal_defs.h>
 
 #include "ecal_def.h"
-#include "ecal_config.h"
+#include "ecal_config_reader.h"
 #include "ecal_global_accessors.h"
 #include "getenvvar.h"
 
