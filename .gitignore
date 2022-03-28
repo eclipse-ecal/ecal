@@ -45,3 +45,5 @@ doc/extensions/_autogen
 .idea
 cmake-build-*
 
+# build and clang-tidy logs
+log_*.txt
