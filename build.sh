@@ -31,6 +31,7 @@ DATE_TIME=$(date +"%Y-%m-%d_%H-%M-%S")
 FILE_MAKE_OUTPUT="log_make_${DATE_TIME}.txt"
 FILE_CLANG_TIDY_OUTPUT="log_clang_tidy_${DATE_TIME}.txt"
 FILE_CLANG_TIDY_CONFIG='config_clang_tidy.yaml'
+DCMAKE_EXPORT_COMPILE_COMMANDS=
 # leave empty for the default compiler
 DCMAKE_C_COMPILER=    #"-DCMAKE_C_COMPILER=/usr/bin/clang-14"
 DCMAKE_CXX_COMPILER=  #"-DCMAKE_CXX_COMPILER=/usr/bin/clang++-14"
@@ -76,9 +77,11 @@ fi
 echo "++ clang-tidy: ${RUN_CLANG_TIDY}"
 if [[ "${RUN_CLANG_TIDY}" == 'ON' ]]
 then
+    DCMAKE_EXPORT_COMPILE_COMMANDS="-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
     CMAKE_BUILD_TYPE='Debug'
     clang-tidy --version
 fi
+
 echo "++ build type: ${CMAKE_BUILD_TYPE}"
 echo -e "\n++ running cmake ..."
 
@@ -86,7 +89,8 @@ rm -rf "${DIR_BUILD}/"
 mkdir ${DIR_BUILD}
 cd "${DIR_BUILD}/"
 
-cmake .. ${DCMAKE_C_COMPILER} \
+cmake .. ${DCMAKE_EXPORT_COMPILE_COMMANDS} \
+         ${DCMAKE_C_COMPILER} \
          ${DCMAKE_CXX_COMPILER} \
          -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} \
          -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF \

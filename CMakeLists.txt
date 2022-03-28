@@ -97,11 +97,12 @@ include(build_location)
 # find_project(eCAL calls shall be ignored, eCAL is build as part of the project)
 set(as_subproject eCAL)
 
-# to be used later with clang-tidy
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-# source is relative to the current source directory,
-# destination is relative to the current build directory
-file(COPY .clang-tidy DESTINATION .)
+if(CMAKE_EXPORT_COMPILE_COMMANDS)
+  message(STATUS "Copying clang-tidy configuration file")
+  # source is relative to the current source directory,
+  # destination is relative to the current build directory
+  file(COPY .clang-tidy DESTINATION .)
+endif()
 
 # Normalize backslashes from Windows paths
 file(TO_CMAKE_PATH "${CMAKE_MODULE_PATH}" CMAKE_MODULE_PATH)
@@ -510,6 +511,7 @@ include(cpack/cpack_variables.cmake)
 
 message(STATUS "Build Options:")
 message(STATUS "--------------------------------------------------------------------------------")
+message(STATUS "CMAKE_EXPORT_COMPILE_COMMANDS                  : ${CMAKE_EXPORT_COMPILE_COMMANDS}")
 message(STATUS "HAS_HDF5                                       : ${HAS_HDF5}")
 message(STATUS "HAS_QT5                                        : ${HAS_QT5}")
 message(STATUS "HAS_CURL                                       : ${HAS_CURL}")
