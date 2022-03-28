@@ -365,46 +365,35 @@ void Ecalmon::updateMonitorUpdateTimerAndStatusbar()
   if (isMonitorUpdatePaused())
   {
     monitor_update_timer_->stop();
+    monitor_update_speed_label_->setVisible(true);
     monitor_update_speed_label_->setText(tr("  Monitor update speed: PAUSED  "));
   }
   else
   {
     QAction* update_speed_action = monitor_update_speed_group_->checkedAction();
+    monitor_update_speed_label_->setVisible(false);
     if (update_speed_action)
     {
       if (update_speed_action == ui_.action_monitor_refresh_speed_0_5s)
       {
         monitor_update_timer_->start(500);
-        monitor_update_speed_label_->setText(tr("  Monitor update speed: 0.5 s  "));
       }
       else if (update_speed_action == ui_.action_monitor_refresh_speed_1s)
       {
         monitor_update_timer_->start(1000);
-        monitor_update_speed_label_->setText(tr("  Monitor update speed: 1 s  "));
       }
       else if (update_speed_action == ui_.action_monitor_refresh_speed_2s)
       {
         monitor_update_timer_->start(2000);
-        monitor_update_speed_label_->setText(tr("  Monitor update speed: 2 s  "));
       }
       else if (update_speed_action == ui_.action_monitor_refresh_speed_5s)
       {
         monitor_update_timer_->start(5000);
-        monitor_update_speed_label_->setText(tr("  Monitor update speed: 5 s  "));
       }
       else if (update_speed_action == ui_.action_monitor_refresh_speed_10s)
       {
         monitor_update_timer_->start(10000);
-        monitor_update_speed_label_->setText(tr("  Monitor update speed: 10 s  "));
       }
-      else
-      {
-        monitor_update_speed_label_->setText(tr("  Monitor update speed: ???  "));
-      }
-    }
-    else
-    {
-      monitor_update_speed_label_->setText(tr("  Monitor update speed: ???  "));
     }
   }
 }
@@ -417,7 +406,7 @@ void Ecalmon::setLogUpdatePaused(bool paused)
   {
     ui_.action_log_poll_speed_paused->setChecked(paused);
   }
-  if (!log_widget_->isPaused())
+  if (log_widget_->isPaused() != paused)
   {
     log_widget_->blockSignals(true);
     log_widget_->setPaused(paused);
@@ -433,50 +422,38 @@ void Ecalmon::updateLogUpdateTimerAndStatusbar()
   if (log_widget_->isPaused())
   {
     log_update_speed_label_->setText(tr("  Log frequency: PAUSED  "));
+    log_update_speed_label_->setVisible(true);
   }
   else
   {
     QAction* update_speed_action = log_update_speed_group_->checkedAction();
+    log_update_speed_label_->setVisible(false);
     if (update_speed_action)
     {
       if (update_speed_action == ui_.action_log_poll_speed_100hz)
       {
         log_widget_->setPollSpeed(10);
-        log_update_speed_label_->setText(tr("  Log frequency: 100 Hz  "));
       }
       else if (update_speed_action == ui_.action_log_poll_speed_50hz)
       {
         log_widget_->setPollSpeed(20);
-        log_update_speed_label_->setText(tr("  Log frequency: 50 Hz  "));
       }
       else if (update_speed_action == ui_.action_log_poll_speed_20hz)
       {
         log_widget_->setPollSpeed(50);
-        log_update_speed_label_->setText(tr("  Log frequency: 20 Hz  "));
       }
       else if (update_speed_action == ui_.action_log_poll_speed_10hz)
       {
         log_widget_->setPollSpeed(100);
-        log_update_speed_label_->setText(tr("  Log frequency: 10 Hz  "));
       }
       else if (update_speed_action == ui_.action_log_poll_speed_2hz)
       {
         log_widget_->setPollSpeed(500);
-        log_update_speed_label_->setText(tr("  Log frequency: 2 Hz  "));
       }
       else if (update_speed_action == ui_.action_log_poll_speed_1hz)
       {
         log_widget_->setPollSpeed(1000);
-        log_update_speed_label_->setText(tr("  Log frequency: 1 Hz  "));
       }
-      else
-      {
-        log_update_speed_label_->setText(tr("  Log frequency: ??? Hz  "));
-      }
-    }
-    else
-    {
-      log_update_speed_label_->setText(tr("  Log frequency: ??? Hz  "));
     }
   }
 }
