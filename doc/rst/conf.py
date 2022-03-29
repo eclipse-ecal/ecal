@@ -100,13 +100,18 @@ extensions = [
 
 if is_cmake_build:
     extensions += [ \
-        'sphinx.ext.autodoc',
-        'sphinxcontrib.apidoc',
     #    'sphinxcontrib.moderncmakedomain',
         'breathe',
         'exhale',
     #    'ini-directive'
     ]
+    
+    # For some reason the apidoc crashes on macOS
+    if sys.plattform.lower() != "darwin":
+        extensions += [ \
+            'sphinx.ext.autodoc',
+            'sphinxcontrib.apidoc',
+        ]
 
 # Todo Configurations
 if is_cmake_build:
