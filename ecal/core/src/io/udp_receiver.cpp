@@ -321,6 +321,11 @@ namespace eCAL
         std::cerr << "Npcap is enabled, but cannot be initialized. Using socket fallback mode." << std::endl;
       }
     }
+#else  //ECAL_NPCAP_SUPPORT
+    if (eCALPAR(NET, NPCAP_ENABLED))
+    {
+      std::cerr << "Npcap is enabled, but not configured via CMake. Using socket fallback mode." << std::endl;
+    }
 #endif //ECAL_NPCAP_SUPPORT
   }
 
