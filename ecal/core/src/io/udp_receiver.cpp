@@ -32,10 +32,10 @@
 #pragma warning(pop)
 #endif
 
+#include "ecal_config_hlp.h"
 #include "udp_receiver.h"
 
 #ifdef ECAL_NPCAP_SUPPORT
-#include "ecal_config_hlp.h"
 #include <udpcap/npcap_helpers.h>
 #include <udpcap/udpcap_socket.h>
 #endif //ECAL_NPCAP_SUPPORT
@@ -139,7 +139,7 @@ namespace eCAL
       }
 
 #ifdef ECAL_JOIN_MULTICAST_TWICE
-      // this is a very bad workaround because of an idendified bug on a specific embedded device
+      // this is a very bad workaround because of an identified bug on a specific embedded device
       // we join the multicast group multiple times otherwise the socket will not receive any data
       std::cerr << "eCAL was compiled with ECAL_JOIN_MULTICAST_TWICE" << std::endl;
       m_socket.set_option(asio::ip::multicast::leave_group(asio::ip::make_address(ipaddr_)));
@@ -179,7 +179,7 @@ namespace eCAL
     // run for timeout ms
     RunIOContext(asio::chrono::milliseconds(timeout_));
 
-    // retrive underlaying raw socket informations
+    // retrieve underlaying raw socket informations
     if (address_)
     {
       if (m_sender_endpoint.address().is_v4())
@@ -207,7 +207,7 @@ namespace eCAL
     // block until the asynchronous operation has completed, or timed out
     m_iocontext.run_for(timeout);
 
-    // stop the context if even the operation was not succesful completed
+    // stop the context if even the operation was not successful completed
     if (!m_iocontext.stopped())
     {
       // cancel the outstanding asynchronous operation
@@ -320,6 +320,11 @@ namespace eCAL
       {
         std::cerr << "Npcap is enabled, but cannot be initialized. Using socket fallback mode." << std::endl;
       }
+    }
+#else  //ECAL_NPCAP_SUPPORT
+    if (eCALPAR(NET, NPCAP_ENABLED))
+    {
+      std::cerr << "Npcap is enabled, but not configured via CMake. Using socket fallback mode." << std::endl;
     }
 #endif //ECAL_NPCAP_SUPPORT
   }
