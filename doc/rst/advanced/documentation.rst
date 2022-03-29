@@ -91,6 +91,13 @@ For that we will use Visual Studio Code with the reStructuredText extension, tha
    .. image:: img_documentation/vscode_statusbar.svg
       :alt: VS Code Statusbar with Sphinx and Esbonio
 
+   .. important:: 
+
+      The reStructuredText extension may warn you about Syntax highlighting not being available.
+      Install the extenstion and discard **any** warning it presents you (also check the bell icon in the statusbar).
+
+      It sometimes happens that the extension will not launch, unless you have discarded all warnings.
+
 #. Click the preview button in the upper right corner.
    The preview will be updated every time you save the .rst file.
 
