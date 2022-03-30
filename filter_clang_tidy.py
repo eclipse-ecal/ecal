@@ -8,7 +8,7 @@ This script processes the 'compile_commands.json' file which CMake can generate 
 The CPP files which are located in the directories given by 'excludes_clang_tidy.json' are filtered out.
 The filtering results in two JSON files, one for included and one for excluded commands.
 H files located in this directories are included as '-isystem' instead of '-I', so that they are excluded
-from static analysis.
+from static analysis as well.
 """
 
 import json
@@ -134,6 +134,7 @@ def filter_headers():
 def save_commands():
     """
     Save two JSON files, one for included and one for excluded commands.
+    Line counts of these files must match the original commands, minus the extra '[' and ']' lines.
     """
     PATH_COMPILE_COMMANDS_INC = os.path.join(PATH_RELATIVE, BUILD_DIR, 'compile_commands_inc.json')
     PATH_COMPILE_COMMANDS_EXC = os.path.join(PATH_RELATIVE, BUILD_DIR, 'compile_commands_exc.json')

@@ -2,7 +2,7 @@
 
 ################################################################################
 #                                                                              #
-# This script runs the build and optionally clang-tidy.                        #
+# This script generates build scripts, and may run make and clang-tidy.        #
 #                                                                              #
 # Check help with '-h|--help'.                                                 #
 # After running cmake, unless '-n|--no-make' arg is given, make runs.          #
