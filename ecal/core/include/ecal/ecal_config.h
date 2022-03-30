@@ -18,6 +18,8 @@
 */
 
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_tlayer.h>
+
 #include <string>
 
 namespace eCAL
@@ -28,80 +30,81 @@ namespace eCAL
     // common
     /////////////////////////////////////
 
-    ECAL_API std::string GetLoadedEcalIniPath                 ();
-    ECAL_API int         GetRegistrationTimeoutMs             ();
-    ECAL_API int         GetRegistrationRefreshMs             ();
+    ECAL_API std::string       GetLoadedEcalIniPath                 ();
+    ECAL_API int               GetRegistrationTimeoutMs             ();
+    ECAL_API int               GetRegistrationRefreshMs             ();
 
     /////////////////////////////////////
     // network
     /////////////////////////////////////
 
-    ECAL_API bool        IsNetworkEnabled                     ();
+    ECAL_API bool              IsNetworkEnabled                     ();
 
-    ECAL_API std::string GetUdpMulticastGroup                 ();
-    ECAL_API std::string GetUdpMulticastMask                  ();
-    ECAL_API int         GetUdpMulticastPort                  ();
-    ECAL_API int         GetUdpMulticastTtl                   ();
+    ECAL_API std::string       GetUdpMulticastGroup                 ();
+    ECAL_API std::string       GetUdpMulticastMask                  ();
+    ECAL_API int               GetUdpMulticastPort                  ();
+    ECAL_API int               GetUdpMulticastTtl                   ();
 
-    ECAL_API int         GetUdpMulticastSndBufSizeBytes       ();
-    ECAL_API int         GetUdpMulticastRcvBufSizeBytes       ();
+    ECAL_API int               GetUdpMulticastSndBufSizeBytes       ();
+    ECAL_API int               GetUdpMulticastRcvBufSizeBytes       ();
 
-    ECAL_API int         GetMaxUdpBandwidthBytesPerSecond     ();
+    ECAL_API int               GetMaxUdpBandwidthBytesPerSecond     ();
 
-    ECAL_API bool        IsUdpMulticastRecEnabled             ();
-    ECAL_API bool        IsShmRecEnabled                      ();
-    ECAL_API bool        IsTcpRecEnabled                      ();
-    ECAL_API bool        IsInprocRecEnabled                   ();
+    ECAL_API bool              IsUdpMulticastRecEnabled             ();
+    ECAL_API bool              IsShmRecEnabled                      ();
+    ECAL_API bool              IsTcpRecEnabled                      ();
+    ECAL_API bool              IsInprocRecEnabled                   ();
 
-    ECAL_API bool        IsNpcapEnabled                       ();
+    ECAL_API bool              IsNpcapEnabled                       ();
 
-    ECAL_API int         GetTcpPubsubReaderThreadpoolSize     ();
-    ECAL_API int         GetTcpPubsubWriterThreadpoolSize     ();
-    ECAL_API int         GetTcpPubsubMaxReconnectionAttemps   ();
+    ECAL_API int               GetTcpPubsubReaderThreadpoolSize     ();
+    ECAL_API int               GetTcpPubsubWriterThreadpoolSize     ();
+    ECAL_API int               GetTcpPubsubMaxReconnectionAttemps   ();
 
     /////////////////////////////////////
     // time
     /////////////////////////////////////
 
-    ECAL_API std::string GetTimesyncModuleName                ();
+    ECAL_API std::string       GetTimesyncModuleName                ();
 
     /////////////////////////////////////
     // process
     /////////////////////////////////////
 
-    ECAL_API std::string GetTerminalEmulatorCommand           ();
+    ECAL_API std::string       GetTerminalEmulatorCommand           ();
 
     /////////////////////////////////////
     // monitoring
     /////////////////////////////////////
 
-    ECAL_API int         GetMonitoringTimeoutMs               ();
-    ECAL_API std::string GetMonitoringFilterExcludeList       ();
-    ECAL_API std::string GetMonitoringFilterIncludeList       ();
-    ECAL_API std::string GetConsoleLogFilter                  ();
-    ECAL_API std::string GetLogFileName                       ();
-    ECAL_API std::string GetUdpLogFilter                      ();
+    ECAL_API int               GetMonitoringTimeoutMs               ();
+    ECAL_API std::string       GetMonitoringFilterExcludeList       ();
+    ECAL_API std::string       GetMonitoringFilterIncludeList       ();
+    ECAL_API std::string       GetConsoleLogFilter                  ();
+    ECAL_API std::string       GetLogFileName                       ();
+    ECAL_API std::string       GetUdpLogFilter                      ();
 
     /////////////////////////////////////
     // sys
     /////////////////////////////////////
 
-    //ECAL_API std::string GetEcalSysFilterExcludeList          ();
+    //ECAL_API std::string       GetEcalSysFilterExcludeList          ();
 
     /////////////////////////////////////
     // publisher
     /////////////////////////////////////
+    ECAL_API TLayer::eSendMode GetPublisherInprocMode               ();
+    ECAL_API TLayer::eSendMode GetPublisherShmMode                  ();
+    ECAL_API TLayer::eSendMode GetPublisherTcpMode                  ();
+    ECAL_API TLayer::eSendMode GetPublisherUdpMulticastMode         ();
 
-    ECAL_API int         GetPublisherInprocMode               ();
-    ECAL_API int         GetPublisherShmMode                  ();
-    ECAL_API int         GetPublisherTcpMode                  ();
-    ECAL_API int         GetPublisherUdpMulticastMode         ();
-    ECAL_API int         GetMemfileMinsizeBytes               ();
-    ECAL_API int         GetMemfileOverprovisioningPercentage ();
-    ECAL_API int         GetMemfileAckTimeoutMs               ();
-    ECAL_API bool        IsMemfileZerocopyEnabled             ();
-    ECAL_API int         GetMemfileBufferCount                ();
-    ECAL_API bool        IsTopicTypeSharingEnabled            ();
-    ECAL_API bool        IsTopicDescriptionSharingEnabled     ();
+    ECAL_API int               GetMemfileMinsizeBytes               ();
+    ECAL_API int               GetMemfileOverprovisioningPercentage ();
+    ECAL_API int               GetMemfileAckTimeoutMs               ();
+    ECAL_API bool              IsMemfileZerocopyEnabled             ();
+    ECAL_API int               GetMemfileBufferCount                ();
+
+    ECAL_API bool              IsTopicTypeSharingEnabled            ();
+    ECAL_API bool              IsTopicDescriptionSharingEnabled     ();
   }
 }
