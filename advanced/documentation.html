@@ -577,7 +577,7 @@ For that we will use Visual Studio Code with the reStructuredText extension, tha
 <p>For small changes you can click the <span class="guilabel">Edit on GitHub</span> button in the top right corner.
 GitHub however will only render the files as plain RST and miss all features that Sphinx adds.</p>
 </div>
-<ol class="arabic">
+<ol class="bignums-xxl arabic">
 <li><p>Checkout the eCAL git repository:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone https://github.com/continental/ecal.git</span>
 </pre></div>
@@ -586,7 +586,11 @@ GitHub however will only render the files as plain RST and miss all features tha
 <li><p>Download and install Visual Studio Code on your PC (it is available for Windows, Linux and macOS).</p>
 <p><a class="reference external" href="https://code.visualstudio.com/">https://code.visualstudio.com/</a></p>
 </li>
-<li><p>Download and install Python 3.5 or newer and make sure it is added to the <code class="docutils literal notranslate"><span class="pre">PATH</span></code></p>
+<li><p>Download and install any Python between 3.6 and 3.9 and make sure it is added to the <code class="docutils literal notranslate"><span class="pre">PATH</span></code></p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Python 3.10 and up will not work at the moment, as we are still using Sphinx 3.5.</p>
+</div>
 <ul>
 <li><p><i class="fab fa-windows"></i> Windows:</p>
 <ul class="simple">
@@ -608,15 +612,14 @@ GitHub however will only render the files as plain RST and miss all features tha
 </div>
 <ul>
 <li><p><i class="fab fa-windows"></i> Windows:</p>
-<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>pip install wheel
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>pip install wheel esbonio
 pip install -r requirements.txt
-pip install sphinx-autobuild
 </pre></div>
 </div>
 </li>
 <li><p><i class="fab fa-ubuntu"></i> Ubuntu:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo pip3 install -r requirements.txt
-sudo pip3 install sphinx-autobuild
+<div class="highlight-bash. notranslate"><div class="highlight"><pre><span></span>sudo pip3 install -r requirements.txt
+sudo pip3 install esbonio
 </pre></div>
 </div>
 </li>
@@ -629,14 +632,31 @@ sudo pip3 install sphinx-autobuild
 <img alt="VS Code reStructuredText extension" src="../_images/vscode_rst_addon.svg" /></li>
 </ul>
 </li>
-<li><p>Open the <code class="file docutils literal notranslate"><span class="pre">doc/rst/</span></code> directory in VS Code.
-Open an .rst file of your choice and click the preview button in the upper right corner.
-If VS Code asks you how to create the preview, select <code class="docutils literal notranslate"><span class="pre">Sphinx</span></code></p>
-<img alt="VS Code Preview button" src="../_images/vscode_preview_button.svg" /></li>
-</ol>
-<p>After a short time you should have a beautiful preview of the documentation.
+<li><p>Create the <code class="file docutils literal notranslate"><span class="pre">doc/rst/.vscode/settings.json</span></code> and paste the following code:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;esbonio.sphinx.buildDir&quot;</span> <span class="p">:</span> <span class="s2">&quot;${workspaceFolder}/_build/html&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;esbonio.sphinx.confDir&quot;</span>  <span class="p">:</span> <span class="s2">&quot;${workspaceFolder}&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;esbonio.sphinx.srcDir&quot;</span>   <span class="p">:</span> <span class="s2">&quot;${workspaceFolder}&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Open the <code class="file docutils literal notranslate"><span class="pre">doc/rst/</span></code> directory in VS Code and click on an .rst file of your choice.
+Make sure that the statusbar displays “Sphinx” <em>(not docutils)</em>.
+If is doesn’t, click on it and select “Sphinx”.
+Wait for esbonio to finish building.</p>
+<img alt="VS Code Statusbar with Sphinx and Esbonio" src="../_images/vscode_statusbar.svg" /><div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The reStructuredText extension may warn you about Syntax highlighting not being available.
+Install the extenstion and discard <strong>any</strong> warning it presents you (also check the bell icon in the statusbar).</p>
+<p>It sometimes happens that the extension will not launch, unless you have discarded all warnings.</p>
+</div>
+</li>
+<li><p>Click the preview button in the upper right corner.
 The preview will be updated every time you save the .rst file.</p>
-<img alt="VS Code Preview" src="../_images/vscode_preview.png" />
+<img alt="VS Code Preview button" src="../_images/vscode_preview_button.svg" /><img alt="VS Code Preview" src="../_images/vscode_preview.png" />
+</li>
+</ol>
 </div>
 
 <!-- /body -->
