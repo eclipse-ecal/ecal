@@ -5,13 +5,14 @@
 # This script runs the build and optionally clang-tidy.                        #
 #                                                                              #
 # Check help with '-h|--help'.                                                 #
+# After running cmake, unless '-n|--no-make' arg is given, make runs.          #
 # If '-c|--clang-tidy' arg is given, it sets the run-clang-tidy parameter ON.  #
-# The default value of the run-clang-tidy parameter is OFF.                    #
 # If the run-clang-tidy parameter is ON:                                       #
-#   - the 'compile_commands.json' file be filtered for inc/exc source files,   #
-#   - the excluded commands will be saved as 'compile_commands_exc.json',      #
-#   - the original file will be renamed as 'compile_commands_orig.json',       #
-#   - build type will be set as 'Debug',                                       #
+#   - the 'compile_commands.json' file be filtered for inc/exc commands,       #
+#   - the excluded commands are saved as 'compile_commands_exc.json',          #
+#   - the original file is renamed as 'compile_commands_orig.json',            #
+#   - the file of included commmands is renamed as 'compile_commands.json',    #
+#   - build type is set as 'Debug',                                            #
 #   - clang-tidy configuration is dumped to 'config_clang_tidy.yaml',          #
 #   - clang-tidy runs with the filtered 'compile_commands.json'.               #
 # The config file to set excluded dirs is 'excludes_clang_tidy.json'.          #
@@ -23,6 +24,7 @@
 # exit at the first error
 set -e
 
+RUN_MAKE='ON'
 RUN_CLANG_TIDY='OFF'
 CMAKE_BUILD_TYPE='Release'
 DIR_BUILD='_build'
@@ -38,10 +40,11 @@ DCMAKE_CXX_COMPILER=  #"-DCMAKE_CXX_COMPILER=/usr/bin/clang++-14"
 
 # ------------------------------------------------------------------------------
 
-USAGE="$(basename $0) [-h|-help] [-c|--clang-tidy] [-o|compiler C CXX]
-run the build scripts - where:
+USAGE="$(basename $0) [-h|-help] [-n|--no-make] [-c|--clang-tidy] [-o|compiler C CXX]
+run cmake, and then optinonally make or clang-tidy - where:
     -h | --help             show this help message and exit
-    -c | --clang-tidy       launch clang-tidy
+    -n | --no-make          do not run make
+    -c | --clang-tidy       run clang-tidy
     -o | --compiler C CXX   set C & CXX compiler paths
 "
 
@@ -51,6 +54,8 @@ then
     do
         case "$1" in
             -h | --help )       echo -e "${USAGE}" ; shift ; exit 0 ;;
+            -n | --no-make )    RUN_MAKE='OFF' ; shift ;
+                                if [[  $# -eq 0 ]];then break ; fi ;;
             -c | --clang-tidy ) RUN_CLANG_TIDY='ON' ; shift ;
                                 if [[  $# -eq 0 ]];then break ; fi ;;
             -o | --compiler )   if [[  $# -lt 3 ]];then echo "ERROR - missing compiler args"; exit 1 ; fi ;
@@ -72,8 +77,6 @@ then
     fi
 fi
 
-# ------------------------------------------------------------------------------
-
 echo "++ clang-tidy: ${RUN_CLANG_TIDY}"
 if [[ "${RUN_CLANG_TIDY}" == 'ON' ]]
 then
@@ -82,6 +85,9 @@ then
     clang-tidy --version
 fi
 
+# ------------------------------------------------------------------------------
+
+# run cmake always
 echo "++ build type: ${CMAKE_BUILD_TYPE}"
 echo -e "\n++ running cmake ..."
 
@@ -97,8 +103,11 @@ cmake .. ${DCMAKE_EXPORT_COMPILE_COMMANDS} \
          -DECAL_THIRDPARTY_BUILD_CURL=OFF  \
          -DECAL_THIRDPARTY_BUILD_HDF5=OFF
 
-echo -e "\n++ running make ...\nsee: ${FILE_MAKE_OUTPUT}"
-time make -j${NUM_INST} &> ${FILE_MAKE_OUTPUT}
+if [[ "${RUN_MAKE}" == 'ON' ]]
+then
+    echo -e "\n++ running make ...\nsee: ${FILE_MAKE_OUTPUT}"
+    time make -j${NUM_INST} &> ${FILE_MAKE_OUTPUT}
+fi
 
 if [[ "${RUN_CLANG_TIDY}" == 'ON' ]]
 then
