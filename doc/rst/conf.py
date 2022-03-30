@@ -107,7 +107,7 @@ if is_cmake_build:
     ]
     
     # For some reason the apidoc crashes on macOS
-    if sys.plattform.lower() != "darwin":
+    if sys.platform.lower() != "darwin":
         extensions += [ \
             'sphinx.ext.autodoc',
             'sphinxcontrib.apidoc',
