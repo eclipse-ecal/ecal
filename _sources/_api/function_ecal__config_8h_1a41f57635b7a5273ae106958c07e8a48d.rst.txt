@@ -1,0 +1,14 @@
+.. _exhale_function_ecal__config_8h_1a41f57635b7a5273ae106958c07e8a48d:
+
+Function eCAL::Config::GetMemfileBufferCount
+============================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_config.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: eCAL::Config::GetMemfileBufferCount()
+   :project: eCAL

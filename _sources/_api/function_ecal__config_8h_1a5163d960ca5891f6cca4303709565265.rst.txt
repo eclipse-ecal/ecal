@@ -1,0 +1,14 @@
+.. _exhale_function_ecal__config_8h_1a5163d960ca5891f6cca4303709565265:
+
+Function eCAL::Config::IsTcpRecEnabled
+======================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_config.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: eCAL::Config::IsTcpRecEnabled()
+   :project: eCAL

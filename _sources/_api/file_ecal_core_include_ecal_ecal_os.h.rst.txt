@@ -36,6 +36,8 @@ Included By
 
 - :ref:`file_ecal_core_include_ecal_ecal_client.h`
 
+- :ref:`file_ecal_core_include_ecal_ecal_config.h`
+
 - :ref:`file_ecal_core_include_ecal_ecal_event.h`
 
 - :ref:`file_ecal_core_include_ecal_ecal_log.h`

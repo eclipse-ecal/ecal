@@ -1,0 +1,14 @@
+.. _exhale_function_ecal__config_8h_1ad8c0262692c3356446eb368c9707d11d:
+
+Function eCAL::Config::GetUdpLogFilter
+======================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_config.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: eCAL::Config::GetUdpLogFilter()
+   :project: eCAL

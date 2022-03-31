@@ -1,0 +1,14 @@
+.. _exhale_function_ecal__config_8h_1adb3cad37c09cde95582697237f0b3d33:
+
+Function eCAL::Config::GetMemfileMinsizeBytes
+=============================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_config.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: eCAL::Config::GetMemfileMinsizeBytes()
+   :project: eCAL

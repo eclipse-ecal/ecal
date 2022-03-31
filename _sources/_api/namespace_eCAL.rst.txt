@@ -17,6 +17,8 @@ Namespaces
 ----------
 
 
+- :ref:`namespace_eCAL__Config`
+
 - :ref:`namespace_eCAL__eh5`
 
 - :ref:`namespace_eCAL__Init`
