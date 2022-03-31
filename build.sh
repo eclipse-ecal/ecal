@@ -5,27 +5,29 @@
 # This script generates build scripts, and may run make and clang-tidy.        #
 #                                                                              #
 # Check help with '-h|--help'.                                                 #
-# After running cmake, unless '-n|--no-make' arg is given, make runs.          #
-# If '-c|--clang-tidy' arg is given, it sets the run-clang-tidy parameter ON.  #
-# If the run-clang-tidy parameter is ON:                                       #
+# The C and C++ compilers can be set to alternative compilers with the         #
+# '-o|--compiler' option.                                                      #
+# After running cmake, with '-m|--make', make runs.                            #
+# If the '-d|--database' arg is given, it sets the RUN_DATABASE parameter ON.  #
+# If the RUN_DATABASE parameter is ON, the compile commands database is        #
+# filtered first:                                                              #
 #   - the 'compile_commands.json' file be filtered for inc/exc commands,       #
 #   - the excluded commands are saved as 'compile_commands_exc.json',          #
 #   - the original file is renamed as 'compile_commands_orig.json',            #
-#   - the file of included commmands is renamed as 'compile_commands.json',    #
-#   - build type is set as 'Debug',                                            #
+#   - the file of included commmands is renamed as 'compile_commands.json'.    #
 #   - clang-tidy configuration is dumped to 'config_clang_tidy.yaml',          #
 #   - clang-tidy runs with the filtered 'compile_commands.json'.               #
-# The config file to set excluded dirs is 'excludes_clang_tidy.json'.          #
-# The C and C++ compilers can be set to alternative compilers with the         #
-# '-o|--compiler' option.                                                      #
+# Outputs are redirected into timestamped log files, 'log_*.txt', in the build #
+# directory as well.                                                           #
 #                                                                              #
 ################################################################################
 
 # exit at the first error
 set -e
 
-RUN_MAKE='ON'
-RUN_CLANG_TIDY='OFF'
+RUN_MAKE='OFF'
+RUN_DATABASE='OFF'
+
 CMAKE_BUILD_TYPE='Release'
 DIR_BUILD='_build'
 NUM_INST=4
@@ -33,19 +35,20 @@ DATE_TIME=$(date +"%Y-%m-%d_%H-%M-%S")
 FILE_MAKE_OUTPUT="log_make_${DATE_TIME}.txt"
 FILE_CLANG_TIDY_OUTPUT="log_clang_tidy_${DATE_TIME}.txt"
 FILE_CLANG_TIDY_CONFIG='config_clang_tidy.yaml'
-DCMAKE_EXPORT_COMPILE_COMMANDS=
-# leave empty for the default compiler
-DCMAKE_C_COMPILER=    #"-DCMAKE_C_COMPILER=/usr/bin/clang-14"
-DCMAKE_CXX_COMPILER=  #"-DCMAKE_CXX_COMPILER=/usr/bin/clang++-14"
+
+# leave empty for default values
+DCMAKE_EXPORT_COMPILE_COMMANDS=   #'-DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+DCMAKE_C_COMPILER=                #'-DCMAKE_C_COMPILER=/usr/bin/clang-14'
+DCMAKE_CXX_COMPILER=              #'-DCMAKE_CXX_COMPILER=/usr/bin/clang++-14'
 
 # ------------------------------------------------------------------------------
 
-USAGE="$(basename $0) [-h|-help] [-n|--no-make] [-c|--clang-tidy] [-o|compiler C CXX]
+USAGE="$(basename $0) [-h|-help] [-o|compiler <C> <CXX>] [-m|--make] [-d|--database]
 run cmake, and then optinonally make or clang-tidy - where:
-    -h | --help             show this help message and exit
-    -n | --no-make          do not run make
-    -c | --clang-tidy       run clang-tidy
-    -o | --compiler C CXX   set C & CXX compiler paths
+    -h | --help                 show this help message and exit
+    -o | --compiler <C> <CXX>   set C & CXX compiler paths
+    -m | --make                 run make
+    -d | --database             run clang-tidy on the compilation database
 "
 
 if [[ $# -ge 1 ]]
@@ -54,34 +57,34 @@ then
     do
         case "$1" in
             -h | --help )       echo -e "${USAGE}" ; shift ; exit 0 ;;
-            -n | --no-make )    RUN_MAKE='OFF' ; shift ;
-                                if [[  $# -eq 0 ]];then break ; fi ;;
-            -c | --clang-tidy ) RUN_CLANG_TIDY='ON' ; shift ;
-                                if [[  $# -eq 0 ]];then break ; fi ;;
-            -o | --compiler )   if [[  $# -lt 3 ]];then echo "ERROR - missing compiler args"; exit 1 ; fi ;
+            -o | --compiler )   if [[  $# -lt 3 ]];then echo "ERROR - missing compiler args" ; exit 1 ; fi ;
                                 DCMAKE_C_COMPILER="-DCMAKE_C_COMPILER=$2" ;
                                 DCMAKE_CXX_COMPILER="-DCMAKE_CXX_COMPILER=$3" ;
                                 shift 3 ; if [[  $# -eq 0 ]];then break ; fi ;;
+            -m | --make )       RUN_MAKE='ON' ; shift ;
+                                if [[  $# -eq 0 ]];then break ; fi ;;
+            -d | --database )   RUN_DATABASE='ON' ; shift ;
+                                if [[  $# -eq 0 ]];then break ; fi ;;
             * )                 echo "ERROR - unknown option: '$1'" ; shift ; exit 1 ;;
         esac
     done
 fi
 
-if [[ "${RUN_CLANG_TIDY}" == 'ON' ]]
+if [[ "${RUN_DATABASE}" == 'ON' ]]
 then
     CLANG_TIDY=$(which clang-tidy)
     if [[ -z ${CLANG_TIDY} ]]
     then
         echo -e "WARNING: clang-tidy is not available"
-        RUN_CLANG_TIDY='OFF'
+        RUN_DATABASE='OFF'
     fi
 fi
 
-echo "++ clang-tidy: ${RUN_CLANG_TIDY}"
-if [[ "${RUN_CLANG_TIDY}" == 'ON' ]]
+echo "++ run clang-tidy on the compilation database: ${RUN_DATABASE}"
+
+if [[ "${RUN_DATABASE}" == 'ON' ]]
 then
-    DCMAKE_EXPORT_COMPILE_COMMANDS="-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
-    CMAKE_BUILD_TYPE='Debug'
+    DCMAKE_EXPORT_COMPILE_COMMANDS='-DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
     clang-tidy --version
 fi
 
@@ -105,11 +108,12 @@ cmake .. ${DCMAKE_EXPORT_COMPILE_COMMANDS} \
 
 if [[ "${RUN_MAKE}" == 'ON' ]]
 then
-    echo -e "\n++ running make ...\nsee: ${FILE_MAKE_OUTPUT}"
-    time make -j${NUM_INST} &> ${FILE_MAKE_OUTPUT}
+    echo -e "\n++ running make -j${NUM_INST} ...\nsee: ${FILE_MAKE_OUTPUT}"
+    echo "make -j${NUM_INST}" >> ${FILE_MAKE_OUTPUT}
+    time make -j${NUM_INST} |& tee -a ${FILE_MAKE_OUTPUT}
 fi
 
-if [[ "${RUN_CLANG_TIDY}" == 'ON' ]]
+if [[ "${RUN_DATABASE}" == 'ON' ]]
 then
     echo -e "\n++ filtering the compile commands ..."
     cd ..
@@ -121,11 +125,12 @@ then
     mv compile_commands.json compile_commands_orig.json
     mv compile_commands_inc.json compile_commands.json
 
-    #see: clang-tidy --help
-    #see: run-clang-tidy --help
-    echo -e "\n++ running clang-tidy ...\ncfg: ${FILE_CLANG_TIDY_CONFIG}\nsee: ${FILE_CLANG_TIDY_OUTPUT}"
+    # see: clang-tidy --help
+    # see: run-clang-tidy --help
+    echo -e "\n++ running clang-tidy -j${NUM_INST} ...\ncfg: ${FILE_CLANG_TIDY_CONFIG}\nsee: ${FILE_CLANG_TIDY_OUTPUT}"
     clang-tidy --dump-config > ${FILE_CLANG_TIDY_CONFIG}
-    time run-clang-tidy -j${NUM_INST} &> ${FILE_CLANG_TIDY_OUTPUT}
+    echo "run-clang-tidy -j${NUM_INST}" >> ${FILE_CLANG_TIDY_OUTPUT}
+    time run-clang-tidy -j${NUM_INST} |& tee -a ${FILE_CLANG_TIDY_OUTPUT}
 fi
 
 echo -e "\n++ completed"
