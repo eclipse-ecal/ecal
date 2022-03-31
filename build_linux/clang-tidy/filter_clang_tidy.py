@@ -45,7 +45,7 @@ def read_args():
     global path_relative
 
     # display default values
-    parser = argparse.ArgumentParser(description='Filter compilation database',
+    parser = argparse.ArgumentParser(description='Filter compilation database.',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--build',
                         help='rel/abs path of the build directory',
@@ -62,6 +62,8 @@ def read_args():
         print(f'arg :: build  = "{build}"')
         print(f'arg :: config = "{config}"')
 
+    # change first working directory to script's directory
+    os.chdir(os.path.dirname(os.path.abspath(sys.argv[0])))
     path_relative = os.getcwd()
 
     if os.path.isabs(build):
