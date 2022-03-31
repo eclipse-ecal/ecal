@@ -26,7 +26,7 @@
 #include "ecal_def.h"
 #include "io/msg_type.h"
 
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include "ecal_monitoring_threads.h"
 #include "ecal_global_accessors.h"
 

@@ -35,7 +35,7 @@
 #include "udp_receiver.h"
 
 #ifdef ECAL_NPCAP_SUPPORT
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include <udpcap/npcap_helpers.h>
 #include <udpcap/udpcap_socket.h>
 #endif //ECAL_NPCAP_SUPPORT

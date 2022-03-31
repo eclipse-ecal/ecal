@@ -25,7 +25,7 @@
 #include <ecal/ecal_log.h>
 
 #include "ecal_def.h"
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include "ecal_writer_udp_mc.h"
 
 #include "topic2mcast.h"

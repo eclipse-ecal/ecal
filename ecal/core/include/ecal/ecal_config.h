@@ -17,52 +17,94 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  Global eCAL configuration interface
-**/
-
-#pragma once
-
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_tlayer.h>
 
 #include <string>
-#include <vector>
 
 namespace eCAL
 {
   namespace Config
   {
-    ECAL_API std::string GetLoadedEcalIniPath();
-    
-    ECAL_API bool IsNetworkEnabled();
-    ECAL_API int GetMulticastTtl();
+    /////////////////////////////////////
+    // common
+    /////////////////////////////////////
+
+    ECAL_API std::string       GetLoadedEcalIniPath                 ();
+    ECAL_API int               GetRegistrationTimeoutMs             ();
+    ECAL_API int               GetRegistrationRefreshMs             ();
+
+    /////////////////////////////////////
+    // network
+    /////////////////////////////////////
+
+    ECAL_API bool              IsNetworkEnabled                     ();
+
+    ECAL_API std::string       GetUdpMulticastGroup                 ();
+    ECAL_API std::string       GetUdpMulticastMask                  ();
+    ECAL_API int               GetUdpMulticastPort                  ();
+    ECAL_API int               GetUdpMulticastTtl                   ();
+
+    ECAL_API int               GetUdpMulticastSndBufSizeBytes       ();
+    ECAL_API int               GetUdpMulticastRcvBufSizeBytes       ();
+
+    ECAL_API int               GetMaxUdpBandwidthBytesPerSecond     ();
+
+    ECAL_API bool              IsUdpMulticastRecEnabled             ();
+    ECAL_API bool              IsShmRecEnabled                      ();
+    ECAL_API bool              IsTcpRecEnabled                      ();
+    ECAL_API bool              IsInprocRecEnabled                   ();
+
+    ECAL_API bool              IsNpcapEnabled                       ();
+
+    ECAL_API int               GetTcpPubsubReaderThreadpoolSize     ();
+    ECAL_API int               GetTcpPubsubWriterThreadpoolSize     ();
+    ECAL_API int               GetTcpPubsubMaxReconnectionAttemps   ();
+
+    /////////////////////////////////////
+    // time
+    /////////////////////////////////////
+
+    ECAL_API std::string       GetTimesyncModuleName                ();
+
+    /////////////////////////////////////
+    // process
+    /////////////////////////////////////
+
+    ECAL_API std::string       GetTerminalEmulatorCommand           ();
+
+    /////////////////////////////////////
+    // monitoring
+    /////////////////////////////////////
+
+    ECAL_API int               GetMonitoringTimeoutMs               ();
+    ECAL_API std::string       GetMonitoringFilterExcludeList       ();
+    ECAL_API std::string       GetMonitoringFilterIncludeList       ();
+    ECAL_API std::string       GetConsoleLogFilter                  ();
+    ECAL_API std::string       GetLogFileName                       ();
+    ECAL_API std::string       GetUdpLogFilter                      ();
+
+    /////////////////////////////////////
+    // sys
+    /////////////////////////////////////
+
+    //ECAL_API std::string       GetEcalSysFilterExcludeList          ();
+
+    /////////////////////////////////////
+    // publisher
+    /////////////////////////////////////
+    ECAL_API TLayer::eSendMode GetPublisherInprocMode               ();
+    ECAL_API TLayer::eSendMode GetPublisherShmMode                  ();
+    ECAL_API TLayer::eSendMode GetPublisherTcpMode                  ();
+    ECAL_API TLayer::eSendMode GetPublisherUdpMulticastMode         ();
+
+    ECAL_API int               GetMemfileMinsizeBytes               ();
+    ECAL_API int               GetMemfileOverprovisioningPercentage ();
+    ECAL_API int               GetMemfileAckTimeoutMs               ();
+    ECAL_API bool              IsMemfileZerocopyEnabled             ();
+    ECAL_API int               GetMemfileBufferCount                ();
+
+    ECAL_API bool              IsTopicTypeSharingEnabled            ();
+    ECAL_API bool              IsTopicDescriptionSharingEnabled     ();
   }
-
-
-  class CConfigImpl;
-  class CConfig
-  {
-  public:
-    CConfig();
-    virtual ~CConfig();
-
-    void OverwriteKeys(const std::vector<std::string>& key_vec_);
-    void AddFile(std::string& ini_file_);
-
-    bool Validate();
-
-    // common getter
-    bool        get(const std::string& section_, const std::string& key_, bool        default_);
-    int         get(const std::string& section_, const std::string& key_, int         default_);
-    double      get(const std::string& section_, const std::string& key_, double      default_);
-    std::string get(const std::string& section_, const std::string& key_, const char* default_);
-
-  private:
-    CConfigImpl* m_impl;
-  };
-
-  ECAL_API bool        CfgGetBool  (const std::string& section_, const std::string& key_, bool        default_ = false);
-  ECAL_API int         CfgGetInt   (const std::string& section_, const std::string& key_, int         default_ = 0);
-  ECAL_API double      CfgGetDouble(const std::string& section_, const std::string& key_, double      default_ = 0.0);
-  ECAL_API std::string CfgGetString(const std::string& section_, const std::string& key_, const char* default_ = "");
 }

@@ -34,7 +34,7 @@
 #endif
 
 #include "ecal_def.h"
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include "ecal_writer.h"
 #include "ecal_writer_shm.h"
 
