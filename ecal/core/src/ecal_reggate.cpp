@@ -26,7 +26,7 @@
 #include "ecal_def.h"
 #include <ecal/ecal_core.h>
 
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include "ecal_reggate.h"
 #include "pubsub/ecal_pubgate.h"
 #include "pubsub/ecal_subgate.h"

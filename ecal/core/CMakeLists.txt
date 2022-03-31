@@ -118,6 +118,7 @@ set(ecal_cmn_cpp_src
     src/ecal.cpp
     src/ecal_clang.cpp
     src/ecal_config.cpp
+    src/ecal_config_reader.cpp
     src/ecal_descgate.cpp
     src/ecal_event.cpp
     src/ecal_global_accessors.cpp
@@ -220,8 +221,8 @@ set(ecal_service_header_src
 
 set(ecal_cmn_header_src
     src/convert_utf.h
-    src/ecal_config.h
-    src/ecal_config_hlp.h
+    src/ecal_config_reader.h
+    src/ecal_config_reader_hlp.h
     src/ecal_def.h
     src/ecal_def_ini.h
     src/ecal_descgate.h
@@ -255,6 +256,7 @@ set(ecal_header_cmn
     include/ecal/ecal.h
     include/ecal/ecal_callback.h
     include/ecal/ecal_clang.h
+    include/ecal/ecal_config.h
     include/ecal/ecal_client.h
     include/ecal/ecal_core.h
     include/ecal/ecal_event.h
