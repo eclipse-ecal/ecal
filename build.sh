@@ -43,7 +43,7 @@ DCMAKE_CXX_COMPILER=              #'-DCMAKE_CXX_COMPILER=/usr/bin/clang++-14'
 
 # ------------------------------------------------------------------------------
 
-USAGE="$(basename $0) [-h|-help] [-o|compiler <C> <CXX>] [-m|--make] [-d|--database]
+USAGE="$(basename $0) [-h|-help] [-c|compiler <C> <CXX>] [-m|--make] [-d|--database]
 run cmake, and then optionally make and/or clang-tidy - where:
     -h | --help                 show this help message and exit
     -c | --compiler <C> <CXX>   set C & CXX compiler paths
