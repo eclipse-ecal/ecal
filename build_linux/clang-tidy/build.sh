@@ -28,8 +28,12 @@ set -e
 RUN_MAKE='OFF'
 RUN_DATABASE='OFF'
 
+REL_ROOT='../..'
 CMAKE_BUILD_TYPE='Release'
 DIR_BUILD='_build'
+PATH_BUILD=
+FILE_CONFIG='excludes_clang_tidy.json'
+FILE_FILTER='filter_clang_tidy.py'
 NUM_INST=4
 DATE_TIME=$(date +"%Y-%m-%d_%H-%M-%S")
 FILE_MAKE_OUTPUT="log_make_${DATE_TIME}.txt"
@@ -70,67 +74,97 @@ then
     done
 fi
 
-if [[ "${RUN_DATABASE}" == 'ON' ]]
-then
-    CLANG_TIDY=$(which clang-tidy)
-    if [[ -z ${CLANG_TIDY} ]]
-    then
-        echo -e "WARNING: clang-tidy is not available"
-        RUN_DATABASE='OFF'
-    fi
-fi
+# ------------------------------------------------------------------------------
 
-echo "++ run clang-tidy on the compilation database: ${RUN_DATABASE}"
-
-if [[ "${RUN_DATABASE}" == 'ON' ]]
-then
-    DCMAKE_EXPORT_COMPILE_COMMANDS='-DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
-    clang-tidy --version
-fi
+# cd to script's directory
+cd "${0%/*}"
+DIR_SCRIPT=$(pwd)
+# cd to root directory
+cd $REL_ROOT
+DIR_ROOT=$(pwd)
 
 # ------------------------------------------------------------------------------
 
-# run cmake always
-echo "++ build type: ${CMAKE_BUILD_TYPE}"
-echo -e "\n++ running cmake ..."
+check_args() {
+    if [[ "${RUN_DATABASE}" == 'ON' ]]
+    then
+        CLANG_TIDY=$(which clang-tidy)
+        if [[ -z ${CLANG_TIDY} ]]
+        then
+            echo -e "WARNING: clang-tidy is not available"
+            RUN_DATABASE='OFF'
+        fi
+    fi
 
-rm -rf "${DIR_BUILD}/"
-mkdir ${DIR_BUILD}
-cd "${DIR_BUILD}/"
+    echo "++ run clang-tidy on the compilation database: ${RUN_DATABASE}"
 
-cmake .. ${DCMAKE_EXPORT_COMPILE_COMMANDS} \
-         ${DCMAKE_C_COMPILER} \
-         ${DCMAKE_CXX_COMPILER} \
-         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} \
-         -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF \
-         -DECAL_THIRDPARTY_BUILD_CURL=OFF  \
-         -DECAL_THIRDPARTY_BUILD_HDF5=OFF
+    if [[ "${RUN_DATABASE}" == 'ON' ]]
+    then
+        DCMAKE_EXPORT_COMPILE_COMMANDS='-DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+        clang-tidy --version
+    fi
+}
 
-if [[ "${RUN_MAKE}" == 'ON' ]]
-then
-    echo -e "\n++ running make -j${NUM_INST} ...\nsee: ${FILE_MAKE_OUTPUT}"
-    echo "make -j${NUM_INST}" >> ${FILE_MAKE_OUTPUT}
-    time make -j${NUM_INST} |& tee -a ${FILE_MAKE_OUTPUT}
-fi
+run_cmake() {
+    # run cmake always
+    echo "++ build type: ${CMAKE_BUILD_TYPE}"
+    echo -e "\n++ running cmake ..."
 
-if [[ "${RUN_DATABASE}" == 'ON' ]]
-then
-    echo -e "\n++ filtering the compile commands ..."
-    cd ..
-    echo "excluded directories:"
-    cat excludes_clang_tidy.json
-    python3 filter_clang_tidy.py
+    rm -rf "${DIR_BUILD}/"
+    mkdir ${DIR_BUILD}
     cd "${DIR_BUILD}/"
-    # use the included commands as compile commands
-    mv compile_commands.json compile_commands_orig.json
-    mv compile_commands_inc.json compile_commands.json
 
-    # see: clang-tidy --help
-    # see: run-clang-tidy --help
-    echo -e "\n++ running clang-tidy -j${NUM_INST} ...\ncfg: ${FILE_CLANG_TIDY_CONFIG}\nsee: ${FILE_CLANG_TIDY_OUTPUT}"
-    clang-tidy --dump-config > ${FILE_CLANG_TIDY_CONFIG}
-    echo "run-clang-tidy -j${NUM_INST}" >> ${FILE_CLANG_TIDY_OUTPUT}
-    time run-clang-tidy -j${NUM_INST} |& tee -a ${FILE_CLANG_TIDY_OUTPUT}
-fi
+    cmake .. ${DCMAKE_EXPORT_COMPILE_COMMANDS} \
+             ${DCMAKE_C_COMPILER} \
+             ${DCMAKE_CXX_COMPILER} \
+             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} \
+             -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF \
+             -DECAL_THIRDPARTY_BUILD_CURL=OFF  \
+             -DECAL_THIRDPARTY_BUILD_HDF5=OFF
+}
+
+run_make() {
+    if [[ "${RUN_MAKE}" == 'ON' ]]
+    then
+        echo -e "\n++ running make -j${NUM_INST} ...\nsee: ${FILE_MAKE_OUTPUT}"
+        echo "make -j${NUM_INST}" >> ${FILE_MAKE_OUTPUT}
+        time make -j${NUM_INST} |& tee -a ${FILE_MAKE_OUTPUT}
+    fi
+}
+
+filter_compile_commands() {
+    if [[ "${RUN_DATABASE}" == 'ON' ]]
+    then
+        echo -e "\n++ filtering the compile commands ..."
+        cd ${DIR_SCRIPT}
+        echo "excluded directories:"
+        cat ${FILE_CONFIG}
+        python3 ${FILE_FILTER}
+        cd ${DIR_ROOT}/${DIR_BUILD}/
+        # use the included commands as compile commands
+        mv compile_commands.json compile_commands_orig.json
+        mv compile_commands_inc.json compile_commands.json
+    fi
+}
+
+run_clang_tidy_on_database() {
+    if [[ "${RUN_DATABASE}" == 'ON' ]]
+    then
+        # see: clang-tidy --help
+        # see: run-clang-tidy --help
+        echo -e "\n++ running clang-tidy -j${NUM_INST} ...\ncfg: ${FILE_CLANG_TIDY_CONFIG}\nsee: ${FILE_CLANG_TIDY_OUTPUT}"
+        clang-tidy --dump-config > ${FILE_CLANG_TIDY_CONFIG}
+        echo "run-clang-tidy -j${NUM_INST}" >> ${FILE_CLANG_TIDY_OUTPUT}
+        time run-clang-tidy -j${NUM_INST} |& tee -a ${FILE_CLANG_TIDY_OUTPUT}
+    fi
+}
+
+# ------------------------------------------------------------------------------
+
+check_args
+run_cmake
+run_make
+filter_compile_commands
+run_clang_tidy_on_database
 
 echo -e "\n++ completed"

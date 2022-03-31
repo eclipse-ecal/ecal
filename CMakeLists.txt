@@ -101,7 +101,7 @@ if(CMAKE_EXPORT_COMPILE_COMMANDS)
   message(STATUS "Copying clang-tidy configuration file")
   # source is relative to the current source directory,
   # destination is relative to the current build directory
-  file(COPY .clang-tidy DESTINATION .)
+  file(COPY ./build_linux/clang-tidy/.clang-tidy DESTINATION .)
 endif()
 
 # Normalize backslashes from Windows paths
