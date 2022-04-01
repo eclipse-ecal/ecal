@@ -208,7 +208,9 @@ namespace eCAL
         auto method = service_mutable_service->add_methods();
         method->set_mname(iter.first);
         method->set_req_type(iter.second.method.req_type());
+        method->set_req_desc(iter.second.method.req_desc());
         method->set_resp_type(iter.second.method.resp_type());
+        method->set_resp_desc(iter.second.method.resp_desc());
         method->set_call_count(iter.second.method.call_count());
       }
     }

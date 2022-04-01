@@ -183,7 +183,9 @@ namespace eCAL
       };
       std::string  mname;
       std::string  req_type;
+      std::string  req_desc;
       std::string  resp_type;
+      std::string  resp_desc;
       long long    call_count;
     };
 
