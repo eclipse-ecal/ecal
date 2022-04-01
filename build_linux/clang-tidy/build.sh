@@ -28,10 +28,10 @@ set -e
 RUN_MAKE='OFF'
 RUN_DATABASE='OFF'
 
-REL_ROOT='../..'
+# assumption: CMake build directory is located in the root directory
+PATH_BUILD='../../_build'
+DIR_BUILD=   # extracted from PATH_BUILD by removing the rel part
 CMAKE_BUILD_TYPE='Release'
-DIR_BUILD='_build'
-PATH_BUILD=
 FILE_CONFIG='excludes_clang_tidy.json'
 FILE_FILTER='filter_clang_tidy.py'
 NUM_INST=4
@@ -47,9 +47,10 @@ DCMAKE_CXX_COMPILER=              #'-DCMAKE_CXX_COMPILER=/usr/bin/clang++-14'
 
 # ------------------------------------------------------------------------------
 
-USAGE="$(basename $0) [-h|-help] [-c|compiler <C> <CXX>] [-m|--make] [-d|--database]
+USAGE="$(basename $0) [-h|-help] [-b|--build] [-c|compiler <C> <CXX>] [-m|--make] [-d|--database]
 run cmake, and then optionally make and/or clang-tidy - where:
     -h | --help                 show this help message and exit
+    -b | --build                build path rel to root dir, default: '${PATH_BUILD}'
     -c | --compiler <C> <CXX>   set C & CXX compiler paths
     -m | --make                 run make
     -d | --database             run clang-tidy on the compilation database
@@ -61,6 +62,8 @@ then
     do
         case "$1" in
             -h | --help )       echo -e "${USAGE}" ; shift ; exit 0 ;;
+            -b | --build )      PATH_BUILD="$2" ; shift 2 ;
+                                if [[  $# -eq 0 ]];then break ; fi ;;
             -c | --compiler )   if [[  $# -lt 3 ]];then echo "ERROR - missing compiler args" ; exit 1 ; fi ;
                                 DCMAKE_C_COMPILER="-DCMAKE_C_COMPILER=$2" ;
                                 DCMAKE_CXX_COMPILER="-DCMAKE_CXX_COMPILER=$3" ;
@@ -76,22 +79,25 @@ fi
 
 # ------------------------------------------------------------------------------
 
-# cd to script's directory
-cd "${0%/*}"
-DIR_SCRIPT=$(pwd)
-# cd to root directory
-cd $REL_ROOT
-DIR_ROOT=$(pwd)
-
-# ------------------------------------------------------------------------------
-
 check_args() {
+    # detect relative path by removing the final '/' and all trailing chars '*'
+    DIR_REL=${PATH_BUILD%/*}
+    # extract build directory name by removing prefix
+    DIR_BUILD=${PATH_BUILD#$DIR_REL/}
+
+    # cd to script's directory
+    cd "${0%/*}"
+    DIR_SCRIPT=$(pwd)
+    # cd to root directory
+    cd "${DIR_REL}"
+    DIR_ROOT=$(pwd)
+
     if [[ "${RUN_DATABASE}" == 'ON' ]]
     then
         CLANG_TIDY=$(which clang-tidy)
         if [[ -z ${CLANG_TIDY} ]]
         then
-            echo -e "WARNING: clang-tidy is not available"
+            echo "WARNING: clang-tidy is not available"
             RUN_DATABASE='OFF'
         fi
     fi
