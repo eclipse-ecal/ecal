@@ -563,9 +563,13 @@
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
 <li><a class="reference internal" href="#">4. Network configuration</a><ul>
-<li><a class="reference internal" href="#fa-windows-multicast-configuration-on-windows">4.1. <i class="fab fa-windows"></i> Multicast configuration on Windows</a></li>
-<li><a class="reference internal" href="#fa-ubuntu-multicast-configuration-on-ubuntu">4.2. <i class="fab fa-ubuntu"></i> Multicast configuration on Ubuntu</a><ul>
-<li><a class="reference internal" href="#test-the-configuration">4.2.1. Test the configuration</a></li>
+<li><a class="reference internal" href="#enable-network-mode-in-ecal-ini">4.1. Enable network-mode in <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code></a></li>
+<li><a class="reference internal" href="#multicast-route-configuration">4.2. Multicast route configuration</a><ul>
+<li><a class="reference internal" href="#fa-windows-multicast-configuration-on-windows">4.2.1. <i class="fab fa-windows"></i> Multicast configuration on Windows</a></li>
+<li><a class="reference internal" href="#fa-ubuntu-multicast-configuration-on-ubuntu">4.2.2. <i class="fab fa-ubuntu"></i> Multicast configuration on Ubuntu</a><ul>
+<li><a class="reference internal" href="#test-the-configuration">4.2.2.1. Test the configuration</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#ecal-samples-over-network">4.3. eCAL Samples over network</a></li>
@@ -655,15 +659,40 @@ eCAL can run in two modes, that differ from each other: <strong>local mode</stro
 </tr>
 </tbody>
 </table>
-<p>By default, eCAL already is configured in cloud mode, so you don’t have to change anything.
-You however have to configure your operating system, so it knows where to send that multicast traffic to.
-This is done by creating a <strong>multicast route</strong>.</p>
+<div class="section" id="enable-network-mode-in-ecal-ini">
+<h2><span class="section-number">4.1. </span>Enable network-mode in <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code><a class="headerlink" href="#enable-network-mode-in-ecal-ini" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Up to eCAL 5.9, eCAL shipped with a cloud-mode-configuration by default.
+This changed with eCAL 5.10.</p>
+<p>So since eCAL 5.10 you will have to enable network-mode first.</p>
+</div>
+<p>By default, eCAL is configured in local mode.
+To switch eCAL to cloud mode, edit your <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> and change the following settings:</p>
+<ul class="simple">
+<li><p><i class="fab fa-windows"></i> Windows: <code class="file docutils literal notranslate"><span class="pre">C:\ProgramData\eCAL\ecal.ini</span></code></p></li>
+<li><p><i class="fab fa-ubuntu"></i> Ubuntu: <code class="file docutils literal notranslate"><span class="pre">/etc/ecal/ecal.ini</span></code></p></li>
+</ul>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[network]</span>
+<span class="na">network_enabled</span>           <span class="o">=</span> <span class="s">true</span>
+<span class="na">multicast_ttl</span>             <span class="o">=</span> <span class="s">2</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">multicast_ttl</span></code> setting configures the <em>time to live</em> of the UDP datagrams, i.e. the number of hops a datagram can take before it is discarded.
+Usually, <code class="docutils literal notranslate"><span class="pre">2</span></code> is sufficient, but if you have a network with many routers, you may have to increase that number.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p>Please refer to the advanced section to learn about changing between <a class="reference internal" href="../configuration/local.html#configuration-local"><span class="std std-ref">local mode</span></a> and <a class="reference internal" href="../configuration/cloud.html#configuration-cloud"><span class="std std-ref">cloud mode</span></a>!</p>
+<p>Also see the advanced section to learn about changing between <a class="reference internal" href="../configuration/local.html#configuration-local"><span class="std std-ref">local mode</span></a> and <a class="reference internal" href="../configuration/cloud.html#configuration-cloud"><span class="std std-ref">cloud mode</span></a>!</p>
 </div>
+</div>
+<div class="section" id="multicast-route-configuration">
+<h2><span class="section-number">4.2. </span>Multicast route configuration<a class="headerlink" href="#multicast-route-configuration" title="Permalink to this headline">¶</a></h2>
+<p>Now that you have set eCAL to cloud mode, it will already start sending out UDP Multicast packages for detecting other eCAL Nodes.
+Your Operating System however has to send those Multicast packages to a proper network interface controller (NIC).
+This is not trivial, as the destination IP <code class="docutils literal notranslate"><span class="pre">239.0.0.1</span></code> does not “really” exist.</p>
+<p>Therefore you have to create a <strong>route</strong>, i.e. a <code class="docutils literal notranslate"><span class="pre">239.0.0.x</span> <span class="pre">-&gt;</span> <span class="pre">outgoing</span> <span class="pre">NIC</span></code> mapping.</p>
 <div class="section" id="fa-windows-multicast-configuration-on-windows">
-<span id="getting-started-cloud-configuration-on-windows"></span><h2><span class="section-number">4.1. </span><i class="fab fa-windows"></i> Multicast configuration on Windows<a class="headerlink" href="#fa-windows-multicast-configuration-on-windows" title="Permalink to this headline">¶</a></h2>
+<span id="getting-started-cloud-configuration-on-windows"></span><h3><span class="section-number">4.2.1. </span><i class="fab fa-windows"></i> Multicast configuration on Windows<a class="headerlink" href="#fa-windows-multicast-configuration-on-windows" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
 <li><p>Check the IPv4 address of the ethernet adapter you are using to connect your two PCs.
 You can do that by typing <code class="docutils literal notranslate"><span class="pre">ipconfig</span></code> in a command prompt.
@@ -694,7 +723,7 @@ It should show your route under <cite>IPv4 Route Table / Persistent Routes</cite
 </div>
 </div>
 <div class="section" id="fa-ubuntu-multicast-configuration-on-ubuntu">
-<h2><span class="section-number">4.2. </span><i class="fab fa-ubuntu"></i> Multicast configuration on Ubuntu<a class="headerlink" href="#fa-ubuntu-multicast-configuration-on-ubuntu" title="Permalink to this headline">¶</a></h2>
+<h3><span class="section-number">4.2.2. </span><i class="fab fa-ubuntu"></i> Multicast configuration on Ubuntu<a class="headerlink" href="#fa-ubuntu-multicast-configuration-on-ubuntu" title="Permalink to this headline">¶</a></h3>
 <p>You can configure the multicast route in various ways, depending on your Ubuntu version.</p>
 <p>Jump to your section of choice below:</p>
 <ol class="arabic simple">
@@ -796,7 +825,7 @@ You can however combine this method with the loopback configuration from netplan
 <img alt="Ubuntu multicast route" src="../_images/ubuntu_route_gui.png" />
 </li>
 <li><p>Turn the interface off and on again</p></li>
-<li><p>Configure the <strong>loopback multicast</strong> route via <span class="xref std std-ref">netplan</span> or <span class="xref std std-ref">/etc/network/interfaces</span>.
+<li><p>Configure the <strong>loopback multicast</strong> route via <em>netplan</em> or <code class="file docutils literal notranslate"><span class="pre">/etc/network/interfaces</span></code>.
 You can omit this, but then you will have to explicitly set eCAL to local mode, if you are not connected to any network.</p></li>
 </ol>
 </div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><p>The well known <code class="file docutils literal notranslate"><span class="pre">/etc/network/interfaces</span></code> file is supported up to Ubuntu 18.
@@ -832,12 +861,13 @@ post-up route add -net <span class="m">239</span>.0.0.0 netmask <span class="m">
 </ol>
 </div></div>
 <div class="section" id="test-the-configuration">
-<span id="ubuntu-multicast-route-test"></span><h3><span class="section-number">4.2.1. </span>Test the configuration<a class="headerlink" href="#test-the-configuration" title="Permalink to this headline">¶</a></h3>
+<span id="ubuntu-multicast-route-test"></span><h4><span class="section-number">4.2.2.1. </span>Test the configuration<a class="headerlink" href="#test-the-configuration" title="Permalink to this headline">¶</a></h4>
 <p>Check the result from a terminal. It should show routes for local and external communication:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>route -n
 </pre></div>
 </div>
 <img alt="Ubuntu route -n" src="../_images/ubuntu_route_print.png" />
+</div>
 </div>
 </div>
 <div class="section" id="ecal-samples-over-network">
