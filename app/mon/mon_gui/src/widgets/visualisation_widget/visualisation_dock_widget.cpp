@@ -1,0 +1,90 @@
+﻿/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2019 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+#include "visualisation_dock_widget.h"
+
+#include <CustomQt/QStandardTreeItem.h>
+
+#include <QTabWidget>
+#include <QMessageBox>
+#include <QDateTime>
+#include <QFileDialog>
+#include <QTimer>
+
+#ifndef NDEBUG
+  #ifdef _MSC_VER
+    #pragma warning(push)
+    #pragma warning(disable: 4251 4800) // disable QDebug Warnings
+  #endif // _MSC_VER
+
+  #include <QDebug>
+
+  #ifdef _MSC_VER
+    #pragma warning(pop)
+  #endif // _MSC_VER
+#endif // NDEBUG
+
+#include <QLibrary>
+#include <QPluginLoader>
+#include <QJsonArray>
+
+#include <chrono>
+
+#include "ecalmon_globals.h"
+
+#include "ecal/ecal.h"
+
+using namespace eCAL::mon;
+
+VisualisationDockWidget::VisualisationDockWidget(const QString& topic_name, const QString& topic_type, const QString& plugin_iid, QWidget *parent)
+  : QWidget(parent), topic_name_(topic_name), topic_type_(topic_type), plugin_iid_(plugin_iid)
+{
+  ui_.setupUi(this);
+
+  auto plugin_widget = PluginManager::getInstance()->CreatePlugin(topic_name, topic_type, plugin_iid, this);
+
+  if (plugin_widget != nullptr)
+  {
+    ui_.visualisation_dock_widget_context_layout->addWidget(plugin_widget->getWidget());
+    ui_.visualisation_unavailable_label->hide();
+    connect(&update_timer_, &QTimer::timeout, [plugin_widget]() {plugin_widget->onUpdate(); });
+    update_timer_.setSingleShot(false);
+    update_timer_.setInterval(UPDATE_INTERVAL_MS);
+    update_timer_.start();
+  }
+}
+
+QString VisualisationDockWidget::getTopicName() const
+{
+  return topic_name_;
+}
+
+QString VisualisationDockWidget::getTopicType() const
+{
+  return topic_type_;
+}
+
+QString VisualisationDockWidget::getPluginIID() const
+{
+  return plugin_iid_;
+}
+
+VisualisationDockWidget::~VisualisationDockWidget()
+{
+}

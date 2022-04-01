@@ -24,6 +24,8 @@
 
 #include "widgets/visualisation_widget/visualisation_window.h"
 
+#include "ecalmon.h"
+
 #include <ecal/ecal_util.h>
 #include <ecal_def_ini.h>
 #include <SimpleIni.h>
@@ -351,12 +353,24 @@ void TopicWidget::fillContextMenu(QMenu& menu, const QList<QAbstractTreeItem*>& 
   if (item)
   {
     QString topic_name = item->data((int)TopicTreeItem::Columns::TNAME).toString();
+    QString topic_type =  item->data((int)TopicTreeItem::Columns::TTYPE).toString();
 
     QAction* reflection_action = new QAction(tr("Inspect topic \"") + topic_name + "\"", &menu);
     connect(reflection_action, &QAction::triggered, this, &TopicWidget::openReflectionWindowForSelection);
-
     menu.addSeparator();
     menu.addAction(reflection_action);
+
+    auto reflection_with_menu = menu.addMenu(tr("Inspect topic \"") + topic_name + "\" with");
+    for (const auto& matching_plugin_data : PluginManager::getInstance()->getMatchingPluginData(topic_name, topic_type))
+    {
+      auto reflection_with_action = reflection_with_menu->addAction(matching_plugin_data.meta_data.name);
+      const auto iid = matching_plugin_data.iid;
+      connect(reflection_with_action, &QAction::triggered, this, [this, iid, topic_name, topic_type]() {
+          // TO DO: pass main windows ref instead of this->parent()->parent()->parent()->parent()
+          Ecalmon* main_window = qobject_cast<Ecalmon*> (this->parent()->parent()->parent()->parent());
+          main_window->createVisualizationDockWidget(topic_name, topic_type, iid);
+        });
+    }  
   }
 }
 

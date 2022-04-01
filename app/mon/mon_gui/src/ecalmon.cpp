@@ -24,6 +24,7 @@
 #include "widgets/about_dialog/about_dialog.h"
 #include "widgets/license_dialog/license_dialog.h"
 #include "widgets/plugin_settings_dialog/plugin_settings_dialog.h"
+#include "widgets/visualisation_widget/visualisation_dock_widget.h"
 
 #ifdef ECAL_NPCAP_SUPPORT
 #include "widgets/npcap_status_dialog/npcap_status_dialog.h"
@@ -38,6 +39,7 @@
 #include <QDateTime>
 #include <QScreen>
 #include <QStyleFactory>
+#include <Quuid>
 
 #ifndef NDEBUG
   #ifdef _MSC_VER
@@ -245,6 +247,34 @@ Ecalmon::Ecalmon(QWidget *parent)
     PluginManager::getInstance()->setActive(iid, isActive);
   }
   settings.endGroup();
+
+  settings.beginGroup("dock_widget_visualisation");
+  for (const auto& object_name : settings.childGroups())
+  {
+    settings.beginGroup(object_name);
+    const auto topic_name = settings.value("topic_name").toString();
+    const auto topic_type = settings.value("topic_type").toString();
+    const auto plugin_iid = settings.value("plugin_iid").toString();
+    auto dock_widget = createVisualizationDockWidget(topic_name, topic_type, plugin_iid, object_name);
+    dock_widget->restoreGeometry(settings.value("geometry").toByteArray());
+    settings.endGroup();
+  }
+  settings.endGroup();
+}
+
+QDockWidget* Ecalmon::createVisualizationDockWidget(const QString& topic_name, const QString& topic_type, const QString& iid, const QString& object_name)
+{
+  const auto& plugin_name = PluginManager::getInstance()->getPluginData(iid).meta_data.name;
+  const auto dock_widget_title = plugin_name + " - " + topic_name + "(" + topic_type + ")";
+  auto dock_widget = new QDockWidget(dock_widget_title, this);
+  
+  auto visualization_dock_widget = new VisualisationDockWidget(topic_name, topic_type, iid, dock_widget);
+  dock_widget->setWidget(visualization_dock_widget);
+  this->addDockWidget(Qt::TopDockWidgetArea, dock_widget);
+  dock_widget->setAttribute(Qt::WA_DeleteOnClose);
+  dock_widget->setObjectName(object_name.isEmpty() ? QUuid::createUuid().toString() : object_name);
+
+  return dock_widget;
 }
 
 Ecalmon::~Ecalmon()
@@ -526,30 +556,29 @@ void Ecalmon::createDockWidgetMenu()
     ui_.menu_windows->addAction(view_dock_widget_action);
 
     connect(view_dock_widget_action, &QAction::toggled,
-        [dock_widget](bool enabled)
+      [dock_widget](bool enabled)
+      {
+        dock_widget->blockSignals(true);
+        if (enabled)
         {
-          dock_widget->blockSignals(true);
-          if (enabled)
-          {
-            dock_widget->show();
-          }
-          else
-          {
-            dock_widget->close();
-          }
-          dock_widget->blockSignals(false);
-        });
+          dock_widget->show();
+        }
+        else
+        {
+          dock_widget->close();
+        }
+        dock_widget->blockSignals(false);
+      });
 
     connect(dock_widget, &QDockWidget::visibilityChanged,
-        [view_dock_widget_action, dock_widget]()
-        {
-          view_dock_widget_action->blockSignals(true);
-          view_dock_widget_action->setChecked(dock_widget->isVisible());
-          view_dock_widget_action->blockSignals(false);
-        });
+      [view_dock_widget_action, dock_widget]()
+      {
+        view_dock_widget_action->blockSignals(true);
+        view_dock_widget_action->setChecked(dock_widget->isVisible());
+        view_dock_widget_action->blockSignals(false);
+      });
   }
 }
-
 
 void Ecalmon::closeEvent(QCloseEvent* event)
 {
@@ -571,6 +600,21 @@ void Ecalmon::closeEvent(QCloseEvent* event)
   settings.beginGroup("plugins");
   for (const auto& iid : PluginManager::getInstance()->getAvailableIIDs())
     settings.setValue(iid, PluginManager::getInstance()->isActive(iid));
+  settings.endGroup();
+
+  QList<VisualisationDockWidget*> visualisation_dock_widget_list = findChildren<VisualisationDockWidget*>();
+  settings.beginGroup("dock_widget_visualisation");
+  settings.remove("");
+  for (const auto& visualisation_dock_widget : visualisation_dock_widget_list)
+  {
+    auto object_name = qobject_cast<QDockWidget*>(visualisation_dock_widget->parent())->objectName();
+    settings.beginGroup(object_name);
+    settings.setValue("topic_name", visualisation_dock_widget->getTopicName());
+    settings.setValue("topic_type", visualisation_dock_widget->getTopicType());
+    settings.setValue("plugin_iid", visualisation_dock_widget->getPluginIID());
+    settings.setValue("geometry", qobject_cast<QDockWidget*>(visualisation_dock_widget->parent())->saveGeometry());
+    settings.endGroup();
+  }
   settings.endGroup();
 
   event->accept();
@@ -620,6 +664,12 @@ void Ecalmon::saveInitialState()
 
 void Ecalmon::resetLayout()
 {
+  QList<VisualisationDockWidget*> visualisation_dock_widget_list = findChildren<VisualisationDockWidget*>();
+  for (const auto& visualisation_dock_widget : visualisation_dock_widget_list)
+  {
+    qobject_cast<QDockWidget*>(visualisation_dock_widget->parent())->close();
+  }
+
   setTheme(Theme::Default);
 
   // Back when we saved the initial window geometry, the window-manager might not have positioned the window on the screen, yet
