@@ -32,7 +32,6 @@ RUN_DATABASE='OFF'
 PATH_BUILD='../../_build'
 DIR_BUILD=   # extracted from PATH_BUILD by removing the rel part
 CMAKE_BUILD_TYPE='Release'
-FILE_CONFIG='excludes_clang_tidy.json'
 FILE_FILTER='filter_clang_tidy.py'
 NUM_INST=4
 DATE_TIME=$(date +"%Y-%m-%d_%H-%M-%S")
@@ -143,8 +142,6 @@ filter_compile_commands() {
     then
         echo -e "\n++ filtering the compile commands ..."
         cd ${DIR_SCRIPT}
-        echo "excluded directories:"
-        cat ${FILE_CONFIG}
         python3 ${FILE_FILTER}
         cd ${DIR_ROOT}/${DIR_BUILD}/
         # use the included commands as compile commands
