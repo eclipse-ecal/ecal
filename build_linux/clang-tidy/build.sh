@@ -61,7 +61,8 @@ then
     do
         case "$1" in
             -h | --help )       echo -e "${USAGE}" ; shift ; exit 0 ;;
-            -b | --build )      PATH_BUILD="$2" ; shift 2 ;
+            -b | --build )      if [[  $# -lt 2 ]];then echo "ERROR - missing build path arg" ; exit 1 ; fi ;
+                                PATH_BUILD="$2" ; shift 2 ;
                                 if [[  $# -eq 0 ]];then break ; fi ;;
             -c | --compiler )   if [[  $# -lt 3 ]];then echo "ERROR - missing compiler args" ; exit 1 ; fi ;
                                 DCMAKE_C_COMPILER="-DCMAKE_C_COMPILER=$2" ;
