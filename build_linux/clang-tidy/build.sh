@@ -2,21 +2,33 @@
 
 ################################################################################
 #                                                                              #
-# This script generates build scripts, and may run make and clang-tidy.        #
+# This script first runs cmake, and later may run make, and/or clang-tidy      #
+# either on the compilation database or on selected files.                     #
 #                                                                              #
 # Check help with '-h|--help'.                                                 #
+# The build path, which is relative to the root directory, can be given with   #
+# the '-b|--build' option.                                                     #
 # The C and C++ compilers can be set to alternative compilers with the         #
 # '-o|--compiler' option.                                                      #
 # After running cmake, with '-m|--make', make runs.                            #
-# If the '-d|--database' arg is given, it sets the RUN_DATABASE parameter ON.  #
-# If the RUN_DATABASE parameter is ON, the compile commands database is        #
-# filtered first:                                                              #
+# With the '-i|--filter' option the paths to the filtering Python application  #
+# and to its JSON configuration can be given.                                  #
+# If the '-d|--database' option is given, it sets the RUN_DATABASE parameter   #
+# ON.                                                                          #
+# If the '-f|--files' option is given, the rest of the parameters are read as  #
+# a list of files and the RUN_FILES parameter is set as ON.                    #
+# If '-d' or '-f' is given, the compile commands database is filtered first:   #
 #   - the 'compile_commands.json' file be filtered for inc/exc commands,       #
 #   - the excluded commands are saved as 'compile_commands_exc.json',          #
 #   - the original file is renamed as 'compile_commands_orig.json',            #
 #   - the file of included commmands is renamed as 'compile_commands.json'.    #
-#   - clang-tidy configuration is dumped to 'config_clang_tidy.yaml',          #
+# If the RUN_DATABASE parameter is ON:                                         #
+#   - clang-tidy configuration is dumped to 'config_clang_tidy.yml',           #
 #   - clang-tidy runs with the filtered 'compile_commands.json'.               #
+# If the RUN_FILES parameter is ON:                                            #
+#   - file extensions are checked for relevance,                               #
+#   - if relevant, and located in an included directory, the file is analyzed  #
+#     by clang-tidy.                                                           #
 # Outputs are redirected into timestamped log files, 'log_*.txt', in the build #
 # directory as well.                                                           #
 #                                                                              #
@@ -27,19 +39,29 @@ set -e
 
 RUN_MAKE='OFF'
 RUN_DATABASE='OFF'
+RUN_FILES='OFF'
 
+PATTERN='^(h|hpp|c|cc|cpp|cxx)$'
 # assumption: CMake build directory is located in the root directory
 PATH_BUILD='../../_build'
-DIR_BUILD=   # extracted from PATH_BUILD by removing the rel part
+# dir names are extracted from PATH_BUILD by removing the rel part
+DIR_BUILD=
+DIR_SCRIPT=
+DIR_ROOT=
+PATH_FILTER='filter_clang_tidy.py'
+PATH_EXC_CONFIG='excludes_clang_tidy.json'
 CMAKE_BUILD_TYPE='Release'
-FILE_FILTER='filter_clang_tidy.py'
 NUM_INST=4
 DATE_TIME=$(date +"%Y-%m-%d_%H-%M-%S")
 FILE_MAKE_OUTPUT="log_make_${DATE_TIME}.txt"
 FILE_CLANG_TIDY_OUTPUT="log_clang_tidy_${DATE_TIME}.txt"
-FILE_CLANG_TIDY_CONFIG='config_clang_tidy.yaml'
+FILE_CLANG_TIDY_CONFIG='config_clang_tidy.yml'
 # optionally specify with version number, for example: 'clang-tidy-14'
 CLANG_TIDY='clang-tidy'
+SEP_1=$(printf "%0.s=" {1..80})
+SEP_2=$(printf "%0.s-" {1..80})
+declare -a FILE_LIST
+declare -a EXC_LIST
 
 # leave empty for default values
 DCMAKE_EXPORT_COMPILE_COMMANDS=   #'-DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
@@ -48,13 +70,15 @@ DCMAKE_CXX_COMPILER=              #'-DCMAKE_CXX_COMPILER=/usr/bin/clang++-14'
 
 # ------------------------------------------------------------------------------
 
-USAGE="$(basename $0) [-h|-help] [-b|--build] [-c|compiler <C> <CXX>] [-m|--make] [-d|--database]
+USAGE="$(basename $0) [-h|-help] [-b|--build <build>] [-c|compiler <C> <CXX>] [-m|--make] [-i|--filter <app> <cfg>] [-d|--database] [-f|--files <files...>]
 run cmake, and then optionally make and/or clang-tidy - where:
     -h | --help                 show this help message and exit
-    -b | --build                build path rel to root dir, default: '${PATH_BUILD}'
+    -b | --build <build>        build path relative to this script, default: '${PATH_BUILD}'
     -c | --compiler <C> <CXX>   set C & CXX compiler paths
     -m | --make                 run make
+    -i | --filter <app> <cfg>   filtering app & its config rel. to this script or abs. paths, default: '${PATH_FILTER} ${PATH_EXC_CONFIG}'
     -d | --database             run clang-tidy on the compilation database
+    -f | --files <files...>     run clang-tidy on the given files (remaining args)
 "
 
 if [[ $# -ge 1 ]]
@@ -72,8 +96,14 @@ then
                                 shift 3 ; if [[  $# -eq 0 ]];then break ; fi ;;
             -m | --make )       RUN_MAKE='ON' ; shift ;
                                 if [[  $# -eq 0 ]];then break ; fi ;;
+            -i | --filter )     if [[  $# -lt 3 ]];then echo "ERROR - missing filtering path arg" ; exit 1 ; fi ;
+                                PATH_FILTER="$2" ; PATH_EXC_CONFIG="$3" ;
+                                shift 3 ; if [[  $# -eq 0 ]];then break ; fi ;;
             -d | --database )   RUN_DATABASE='ON' ; shift ;
                                 if [[  $# -eq 0 ]];then break ; fi ;;
+            -f | --files )      RUN_MAKE='OFF' ; RUN_DATABASE='OFF' ; RUN_FILES='ON' ; shift ;
+                                if [[  $# -eq 0 ]];then echo "WARNING - missing file list" ; exit 0 ; fi ;
+                                FILE_LIST=($@) ; break ;;
             * )                 echo "ERROR - unknown option: '$1'" ; shift ; exit 1 ;;
         esac
     done
@@ -83,33 +113,41 @@ fi
 
 check_args() {
     # detect relative path by removing the final '/' and all trailing chars '*'
-    DIR_REL=${PATH_BUILD%/*}
+    local dir_rel=${PATH_BUILD%/*}
     # extract build directory name by removing prefix
-    DIR_BUILD=${PATH_BUILD#$DIR_REL/}
+    DIR_BUILD=${PATH_BUILD#$dir_rel/}
 
     # cd to script's directory
     cd "${0%/*}"
     DIR_SCRIPT=$(pwd)
     # cd to root directory
-    cd "${DIR_REL}"
+    cd "${dir_rel}"
     DIR_ROOT=$(pwd)
 
-    if [[ "${RUN_DATABASE}" == 'ON' ]]
+    if [[ "${RUN_DATABASE}" == 'ON' || "${RUN_FILES}" == 'ON' ]]
     then
-        PATH_CLANG_TIDY=$(which ${CLANG_TIDY})
-        if [[ -z ${PATH_CLANG_TIDY} ]]
+        set +e
+        local path_clang_tidy=${CLANG_TIDY}
+        set -e
+        if [[ -z ${path_clang_tidy} ]]
         then
-            echo "WARNING: clang-tidy is not available"
-            RUN_DATABASE='OFF'
+            echo -e "FATAL: ${CLANG_TIDY} is not available"
+            exit 1
         fi
     fi
 
-    echo "++ run clang-tidy on the compilation database: ${RUN_DATABASE}"
+    if [[ "${RUN_DATABASE}" == 'ON' && "${RUN_FILES}" == 'ON' ]]
+    then
+        RUN_DATABASE='OFF'
+    fi
 
-    if [[ "${RUN_DATABASE}" == 'ON' ]]
+    echo "++ run clang-tidy on the compilation database: ${RUN_DATABASE}"
+    echo "++ run clang-tidy on the given files         : ${RUN_FILES}"
+
+    if [[ "${RUN_DATABASE}" == 'ON' || "${RUN_FILES}" == 'ON' ]]
     then
         DCMAKE_EXPORT_COMPILE_COMMANDS='-DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
-        ${CLANG_TIDY} --version
+        ( set -x ; ${CLANG_TIDY} --version )
     fi
 }
 
@@ -134,19 +172,23 @@ run_cmake() {
 run_make() {
     if [[ "${RUN_MAKE}" == 'ON' ]]
     then
-        echo -e "\n++ running make -j${NUM_INST} ...\nsee: ${FILE_MAKE_OUTPUT}"
-        echo "make -j${NUM_INST}" >> ${FILE_MAKE_OUTPUT}
-        time make -j${NUM_INST} |& tee -a ${FILE_MAKE_OUTPUT}
+        local cmd="make -j${NUM_INST}"
+        echo -e "\n++ ${cmd} ...\nsee: ${FILE_MAKE_OUTPUT}"
+        echo "${cmd}" >> ${FILE_MAKE_OUTPUT}
+        time ${cmd} |& tee -a ${FILE_MAKE_OUTPUT}
     fi
 }
 
 filter_compile_commands() {
-    if [[ "${RUN_DATABASE}" == 'ON' ]]
+    if [[ "${RUN_DATABASE}" == 'ON' || "${RUN_FILES}" == 'ON' ]]
     then
         echo -e "\n++ filtering the compile commands ..."
         cd ${DIR_SCRIPT}
-        python3 ${FILE_FILTER}
+        echo "excluded directories:"
+        cat "$PATH_EXC_CONFIG"
+        python3 ${PATH_FILTER}
         cd ${DIR_ROOT}/${DIR_BUILD}/
+        ${CLANG_TIDY} --dump-config > ${FILE_CLANG_TIDY_CONFIG}
         # use the included commands as compile commands
         mv compile_commands.json compile_commands_orig.json
         mv compile_commands_inc.json compile_commands.json
@@ -156,12 +198,155 @@ filter_compile_commands() {
 run_clang_tidy_on_database() {
     if [[ "${RUN_DATABASE}" == 'ON' ]]
     then
-        # see: clang-tidy --help
         # see: run-clang-tidy --help
-        echo -e "\n++ running clang-tidy -j${NUM_INST} ...\ncfg: ${FILE_CLANG_TIDY_CONFIG}\nsee: ${FILE_CLANG_TIDY_OUTPUT}"
-        ${CLANG_TIDY} --dump-config > ${FILE_CLANG_TIDY_CONFIG}
-        echo "run-${CLANG_TIDY} -j${NUM_INST}" >> ${FILE_CLANG_TIDY_OUTPUT}
-        time run-${CLANG_TIDY} -j${NUM_INST} |& tee -a ${FILE_CLANG_TIDY_OUTPUT}
+        local cmd="run-${CLANG_TIDY} -j${NUM_INST}"
+        echo -e "\n++ ${cmd} ...\ncfg: ${FILE_CLANG_TIDY_CONFIG}\nsee: ${FILE_CLANG_TIDY_OUTPUT}"
+        echo "${cmd}" >> ${FILE_CLANG_TIDY_OUTPUT}
+        time ${cmd} |& tee -a ${FILE_CLANG_TIDY_OUTPUT}
+    fi
+}
+
+# ASSUMPTION: JSON is well-formed and pretty-printed.
+# if empty:
+#     []
+# else (for example):
+#     [
+#         ["a", "b"],
+#         ["c"]
+#     ]
+read_config_basic() {
+    cd ${DIR_SCRIPT}
+    if [[ -f "$PATH_EXC_CONFIG" ]]
+    then
+        local line_count=$(wc -l < "$PATH_EXC_CONFIG")
+        if [[ "${line_count}" -gt "1" ]]
+        then
+            declare -a exc_dirs
+            while IFS= read -r line
+            do
+                exc_dirs[${#exc_dirs[@]}]="$line"
+            done < "$PATH_EXC_CONFIG"
+            # eliminate the first and the last element, '[' and ']' respectively
+            unset exc_dirs[0]
+            unset exc_dirs[-1]
+            for exc_dir in "${exc_dirs[@]}"
+            do
+                local line_trim=$(echo "${exc_dir}" | tr -d '[:space:]')
+                local line_no_quotes=$(echo "${line_trim}" | tr -d '"')
+                local line_no_brackets=$(echo "${line_no_quotes}" | tr -d '[\[\]]')
+                declare -a dirs
+                IFS=',' read -a dirs <<< $line_no_brackets
+                local subdir=$(printf "/%s" "${dirs[@]}")
+                EXC_LIST[${#EXC_LIST[@]}]="${subdir}/"
+            done
+        else
+            echo "WARNING: JSON for exclusion list is empty"
+        fi
+    else
+        echo "FATAL: config file does not exist"
+        exit 1
+    fi
+}
+
+# jq can parse valid JSONs, pretty-print is not required.
+read_config() {
+    cd ${DIR_SCRIPT}
+    local path_jq=$(which jq)
+    if [[ -z ${path_jq} ]]
+    then
+        echo -e "WARNING: 'jq' is not available, fallig back to the simple Bash JSON parser"
+        read_config_basic
+    else
+        if [[ -f "$PATH_EXC_CONFIG" ]]
+        then
+            for row in $(cat ${PATH_EXC_CONFIG} | jq -c '.[]')
+            do
+                local subdir=''
+                for dir in $(echo "${row}" | jq -r '.[]')
+                do
+                    subdir="${subdir}/${dir}"
+                done
+                EXC_LIST[${#EXC_LIST[@]}]="${subdir}/"
+            done
+        else
+            echo "FATAL: config file does not exist"
+            exit 1
+        fi
+    fi
+}
+
+is_excluded() {
+    local path="$1"
+    for subdir in "${EXC_LIST[@]}"
+    do
+        if [[ "${path}" =~ .*"${subdir}".* ]]
+        then
+            true
+            return
+        fi
+    done
+    false
+    return
+}
+
+run_clang_tidy_on_files() {
+    if [[ "${RUN_FILES}" == 'ON' ]]
+    then
+        read_config
+
+        cd "${DIR_ROOT}/${DIR_BUILD}/"
+
+        # see: clang-tidy --help
+        echo -e "\n++ analyzing source files by clang-tidy ..."
+        printf -- "-- %s\n" "${FILE_LIST[@]}"
+        echo
+
+        for file in "${FILE_LIST[@]}"
+        do
+            local file_abs="${file}"
+            local file_char="${file_abs:0:1}"
+
+            if [[ ${file_char} != '/' ]]
+            then
+                file_abs="${DIR_ROOT}/${file}"
+            fi
+
+            local file_base=$(basename "${file_abs}")
+            local file_name="${file_base%.*}"
+            local file_ext="${file_base##*.}"
+
+            echo "${SEP_1}"
+            echo -e "-- ${file}\n   ${file_name} . ${file_ext}"
+
+            # existing?
+            if [[ -f "${file_abs}" ]]
+            then
+                # if 1. the file is by its extension a C++-related one
+                #    2. its path does not contain any excluded directories
+                # then analyze it by clang-tidy
+                if [[ "${file_ext}" =~ $PATTERN ]]
+                then
+                    if is_excluded "${file_abs}"
+                    then
+                        echo "## excluded"
+                    else
+                        # if 'compile_commands.json' is unreachable, clang-tidy gives the following error:
+                        # "Error while trying to load a compilation database: ..."
+                        local cmd="${CLANG_TIDY} -p . ${file_abs}"
+                        echo "## analyzing"
+                        echo "${SEP_2}"
+                        echo "${cmd}" |& tee -a ${FILE_CLANG_TIDY_OUTPUT}
+                        ${cmd} |& tee -a ${FILE_CLANG_TIDY_OUTPUT}
+                        echo "${SEP_2}" >> ${FILE_CLANG_TIDY_OUTPUT}
+                    fi
+                else
+                    echo "## skipping"
+                fi
+            else
+                echo "## not existing"
+            fi
+        done
+        echo "${SEP_1}"
     fi
 }
 
@@ -172,5 +357,10 @@ run_cmake
 run_make
 filter_compile_commands
 run_clang_tidy_on_database
+run_clang_tidy_on_files
+
+# for GitHub actions
+# https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions
+echo "::set-output name=timestamp::${DATE_TIME}"
 
 echo -e "\n++ completed"
