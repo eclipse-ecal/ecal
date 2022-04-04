@@ -38,6 +38,8 @@ DATE_TIME=$(date +"%Y-%m-%d_%H-%M-%S")
 FILE_MAKE_OUTPUT="log_make_${DATE_TIME}.txt"
 FILE_CLANG_TIDY_OUTPUT="log_clang_tidy_${DATE_TIME}.txt"
 FILE_CLANG_TIDY_CONFIG='config_clang_tidy.yaml'
+# optionally specify with version number, for example: 'clang-tidy-14'
+CLANG_TIDY='clang-tidy'
 
 # leave empty for default values
 DCMAKE_EXPORT_COMPILE_COMMANDS=   #'-DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
@@ -94,8 +96,8 @@ check_args() {
 
     if [[ "${RUN_DATABASE}" == 'ON' ]]
     then
-        CLANG_TIDY=$(which clang-tidy)
-        if [[ -z ${CLANG_TIDY} ]]
+        PATH_CLANG_TIDY=$(which ${CLANG_TIDY})
+        if [[ -z ${PATH_CLANG_TIDY} ]]
         then
             echo "WARNING: clang-tidy is not available"
             RUN_DATABASE='OFF'
@@ -107,7 +109,7 @@ check_args() {
     if [[ "${RUN_DATABASE}" == 'ON' ]]
     then
         DCMAKE_EXPORT_COMPILE_COMMANDS='-DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
-        clang-tidy --version
+        ${CLANG_TIDY} --version
     fi
 }
 
@@ -157,9 +159,9 @@ run_clang_tidy_on_database() {
         # see: clang-tidy --help
         # see: run-clang-tidy --help
         echo -e "\n++ running clang-tidy -j${NUM_INST} ...\ncfg: ${FILE_CLANG_TIDY_CONFIG}\nsee: ${FILE_CLANG_TIDY_OUTPUT}"
-        clang-tidy --dump-config > ${FILE_CLANG_TIDY_CONFIG}
-        echo "run-clang-tidy -j${NUM_INST}" >> ${FILE_CLANG_TIDY_OUTPUT}
-        time run-clang-tidy -j${NUM_INST} |& tee -a ${FILE_CLANG_TIDY_OUTPUT}
+        ${CLANG_TIDY} --dump-config > ${FILE_CLANG_TIDY_CONFIG}
+        echo "run-${CLANG_TIDY} -j${NUM_INST}" >> ${FILE_CLANG_TIDY_OUTPUT}
+        time run-${CLANG_TIDY} -j${NUM_INST} |& tee -a ${FILE_CLANG_TIDY_OUTPUT}
     fi
 }
 
