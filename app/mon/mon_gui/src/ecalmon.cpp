@@ -39,7 +39,7 @@
 #include <QDateTime>
 #include <QScreen>
 #include <QStyleFactory>
-#include <Quuid>
+#include <QUuid>
 
 #ifndef NDEBUG
   #ifdef _MSC_VER
