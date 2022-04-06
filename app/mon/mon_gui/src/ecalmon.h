@@ -92,6 +92,10 @@ private:
   LogWidget*               log_widget_;
   SystemInformationWidget* syste_information_widget_;
 
+  QWidget* network_mode_widget_;
+  QLabel*  network_mode_warning_icon_;
+  QLabel*  network_mode_label_;
+
   QLabel* error_label_;
   QLabel* monitor_update_speed_label_;
   QLabel* log_update_speed_label_;
