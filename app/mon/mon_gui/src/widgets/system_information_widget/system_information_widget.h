@@ -41,6 +41,9 @@ private:
   static QString toHtml(const QString& system_information);
 
   void openEcalIni(const QUrl& url);
+#ifdef __linux__
+  bool openEcalIniElevated(const QUrl& url);
+#endif
 
 private:
   Ui::SystemInformationWidget ui_;

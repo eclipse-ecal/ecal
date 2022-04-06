@@ -116,80 +116,8 @@ void SystemInformationWidget::openEcalIni(const QUrl& url)
   bool success = false;
 
 #ifdef __linux__
-  bool use_fallback = false;
-
-  // 1) Check if the file is a local file
-  if (!url.isLocalFile())
-    use_fallback = true;
-
-  // 2) Check if we even need root
-  if (!use_fallback)
-  {
-    QFileInfo file_info(url.toLocalFile());
-    bool can_write = file_info.permission(QFile::WriteUser);
-
-    if (!file_info.exists() || !file_info.isFile() || can_write)
-      use_fallback = true;
-  }
-
-  // 3) Get the MIME type
-  QMimeType mime_type;
-  if (!use_fallback)
-  {
-    QMimeDatabase mimedatabase;
-    mime_type = mimedatabase.mimeTypeForFile(url.toLocalFile());
-
-    if (!mime_type.isValid())
-      use_fallback = true;
-  }
-
-  // 4) Get the associated *.desktop (-> the application) via "xdg-mime"
-  QString xdg_mime_query_output;
-  if (!use_fallback)
-  {
-    QProcess xdg_mime_process;
-    xdg_mime_process.start("xdg-mime", {"query", "default", mime_type.name()});
-
-    if (xdg_mime_process.waitForFinished(1000) && (xdg_mime_process.exitCode() == 0))
-    {
-      xdg_mime_query_output = QString::fromUtf8(xdg_mime_process.readAllStandardOutput()).trimmed();
-    }
-    else
-    {
-      xdg_mime_process.terminate();
-      use_fallback = true;
-    }
-  }
-
-  // 5) Check the xdg-mime output. Fallback to plain opening for anything else than gedit
-  if (!use_fallback
-      && (xdg_mime_query_output.isEmpty() || (xdg_mime_query_output != "org.gnome.gedit.desktop")))
-  {
-    use_fallback = true;
-  }
-
-  // 5) If it is gedit launch it via "gtk-launch"
-  if (!use_fallback)
-  {
-    QProcess gtk_launch_process;
-    gtk_launch_process.start("gtk-launch", {xdg_mime_query_output, "admin://" + url.toLocalFile()});
-
-    if (gtk_launch_process.waitForFinished(1000))
-    {
-      if (gtk_launch_process.exitCode() == 0)
-        success = true;
-      else
-        use_fallback = true;
-    }
-    else
-    {
-      gtk_launch_process.terminate();
-      use_fallback = true;
-    }
-  }
-
-  // --- FALLBACK ---
-  if (use_fallback)
+  success = openEcalIniElevated(url);
+  if (!success)
   {
 #endif
 
@@ -212,7 +140,6 @@ void SystemInformationWidget::openEcalIni(const QUrl& url)
   }
 #endif
 
-
   if (!success)
   {
     QMessageBox warning(
@@ -225,3 +152,73 @@ void SystemInformationWidget::openEcalIni(const QUrl& url)
     warning.exec();
   }
 }
+
+#ifdef __linux__
+  bool SystemInformationWidget::openEcalIniElevated(const QUrl& url)
+  {
+    // 1) Check if the file is a local file
+    if (!url.isLocalFile())
+      return false;
+
+    // 2) Check if we even need root
+    {
+      QFileInfo file_info(url.toLocalFile());
+      bool can_write = file_info.permission(QFile::WriteUser);
+
+      if (!file_info.exists() || !file_info.isFile() || can_write)
+        return false;
+    }
+
+    // 3) Get the MIME type
+    QMimeType mime_type;
+    {
+      QMimeDatabase mimedatabase;
+      mime_type = mimedatabase.mimeTypeForFile(url.toLocalFile());
+
+      if (!mime_type.isValid())
+        return false;
+    }
+
+    // 4) Get the associated *.desktop (-> the application) via "xdg-mime"
+    QString xdg_mime_query_output;
+    {
+      QProcess xdg_mime_process;
+      xdg_mime_process.start("xdg-mime", {"query", "default", mime_type.name()});
+
+      if (xdg_mime_process.waitForFinished(1000) && (xdg_mime_process.exitCode() == 0))
+      {
+        xdg_mime_query_output = QString::fromUtf8(xdg_mime_process.readAllStandardOutput()).trimmed();
+      }
+      else
+      {
+        xdg_mime_process.terminate();
+        return false;
+      }
+    }
+
+    // 5) Check the xdg-mime output. Fallback to plain opening for anything else than gedit
+    if (xdg_mime_query_output.isEmpty() || (xdg_mime_query_output != "org.gnome.gedit.desktop"))
+    {
+      return false;
+    }
+
+    // 5) If it is gedit launch it via "gtk-launch"
+    {
+      QProcess gtk_launch_process;
+      gtk_launch_process.start("gtk-launch", {xdg_mime_query_output, "admin://" + url.toLocalFile()});
+
+      if (gtk_launch_process.waitForFinished(1000))
+      {
+        if (gtk_launch_process.exitCode() == 0)
+          return true;
+        else
+          return false;
+      }
+      else
+      {
+        gtk_launch_process.terminate();
+        return false;
+      }
+    }
+  }
+#endif
