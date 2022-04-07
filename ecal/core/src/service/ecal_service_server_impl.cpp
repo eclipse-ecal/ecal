@@ -121,6 +121,23 @@ namespace eCAL
     return true;
   }
 
+  // add callback function for server method calls (including type descriptions)
+  bool CServiceServerImpl::AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_, const MethodCallbackT& callback_)
+  {
+    SMethodCallback mcallback;
+    mcallback.method.set_mname(method_);
+    mcallback.method.set_req_type(req_type_);
+    mcallback.method.set_req_desc(req_desc_);
+    mcallback.method.set_resp_type(resp_type_);
+    mcallback.method.set_resp_desc(resp_desc_);
+    mcallback.callback = callback_;
+
+    std::lock_guard<std::mutex> lock(m_method_callback_map_sync);
+    m_method_callback_map[method_] = mcallback;
+
+    return true;
+  }
+
   // remove callback function for server method calls
   bool CServiceServerImpl::RemMethodCallback(const std::string& method_)
   {

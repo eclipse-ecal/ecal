@@ -59,6 +59,7 @@ namespace eCAL
 
     // add and remove callback function for server method calls
     bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_);
+    bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_, const MethodCallbackT& callback_);
     bool RemMethodCallback(const std::string& method_);
 
     // add and remove callback function for server events
