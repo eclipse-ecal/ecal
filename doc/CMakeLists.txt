@@ -71,7 +71,7 @@ add_custom_target(documentation_copy_rst_files ALL
 set_property(TARGET documentation_copy_rst_files  PROPERTY FOLDER docs)
 
 add_custom_target(documentation_copy_sample_files ALL
-  COMMAND cmake -E copy_directory ${CMAKE_SOURCE_DIR}/samples/ ${DOC_SOURCE_DIRECTORY}/source_code_samples
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/samples/ ${DOC_SOURCE_DIRECTORY}/source_code_samples
 )
 set_property(TARGET documentation_copy_sample_files  PROPERTY FOLDER docs)
 
