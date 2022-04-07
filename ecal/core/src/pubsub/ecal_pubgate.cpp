@@ -135,7 +135,7 @@ namespace eCAL
     {
       std::string topic_type = ecal_sample_topic.ttype();
       std::string topic_desc = ecal_sample_topic.tdesc();
-      g_descgate()->ApplyDescription(topic_name, topic_type, topic_desc);
+      g_descgate()->ApplyTopicDescription(topic_name, topic_type, topic_desc);
     }
 
     // register local subscriber
@@ -169,7 +169,7 @@ namespace eCAL
     {
       std::string topic_type = ecal_sample_topic.ttype();
       std::string topic_desc = ecal_sample_topic.tdesc();
-      g_descgate()->ApplyDescription(topic_name, topic_type, topic_desc);
+      g_descgate()->ApplyTopicDescription(topic_name, topic_type, topic_desc);
     }
 
     // register external subscriber

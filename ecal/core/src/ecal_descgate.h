@@ -43,9 +43,16 @@ namespace eCAL
     void Create();
     void Destroy();
 
-    void ApplyDescription(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
-    bool GetTypeName(const std::string& topic_name_, std::string& topic_type_);
-    bool GetDescription(const std::string& topic_name_, std::string& topic_desc_);
+    void ApplyTopicDescription(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
+    bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
+    bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_);
+
+    void ApplyServiceDescription(const std::string& service_name_, 
+                                 const std::string& method_name_, 
+                                 const std::string& req_type_name_, 
+                                 const std::string& req_type_desc_, 
+                                 const std::string& resp_type_name_,
+                                 const std::string& resp_type_desc_);
 
   protected:
     struct STypeDesc

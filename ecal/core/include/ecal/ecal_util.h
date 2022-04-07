@@ -143,6 +143,7 @@ namespace eCAL
      *
      * @return  True if succeeded. 
     **/
+    [[deprecated]]
     ECAL_API bool GetTypeName(const std::string& topic_name_, std::string& topic_type_);
 
     /**
@@ -152,6 +153,7 @@ namespace eCAL
      *
      * @return  Topic type name. 
     **/
+    [[deprecated]]
     ECAL_API std::string GetTypeName(const std::string& topic_name_);
 
     /**
@@ -162,6 +164,7 @@ namespace eCAL
      *
      * @return  True if succeeded. 
     **/
+    [[deprecated]]
     ECAL_API bool GetDescription(const std::string& topic_name_, std::string& topic_desc_);
 
     /**
@@ -171,6 +174,45 @@ namespace eCAL
      *
      * @return  Topic description. 
     **/
+    [[deprecated]]
     ECAL_API std::string GetDescription(const std::string& topic_name_);
+
+    /**
+     * @brief Gets type name of the specified topic.
+     *
+     * @param topic_name_   Topic name.
+     * @param topic_type_   String to store type name.
+     *
+     * @return  True if succeeded.
+    **/
+    ECAL_API bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
+
+    /**
+     * @brief Gets type name of the specified topic.
+     *
+     * @param topic_name_   Topic name.
+     *
+     * @return  Topic type name.
+    **/
+    ECAL_API std::string GetTopicTypeName(const std::string& topic_name_);
+
+    /**
+     * @brief Gets description of the specified topic.
+     *
+     * @param topic_name_   Topic name.
+     * @param topic_desc_   String to store description.
+     *
+     * @return  True if succeeded.
+    **/
+    ECAL_API bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_);
+
+    /**
+     * @brief Gets description of the specified topic.
+     *
+     * @param topic_name_   Topic name.
+     *
+     * @return  Topic description.
+    **/
+    ECAL_API std::string GetTopicDescription(const std::string& topic_name_);
   }
 }

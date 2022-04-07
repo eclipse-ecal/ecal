@@ -95,6 +95,23 @@ namespace eCAL
   }
 
   /**
+   * @brief Add method type descriptions.
+   *
+   * @param method_     Service method name.
+   * @param req_type_   Service method request type.
+   * @param req_desc_   Service method request description.
+   * @param resp_type_  Service method response type.
+   * @param resp_desc_  Service method response description.
+   *
+   * @return  True if successful.
+  **/
+  bool CServiceServer::AddDescription(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_)
+  {
+    if (!m_created) return false;
+    return m_service_server_impl->AddDescription(method_, req_type_, req_desc_, resp_type_, resp_desc_);
+  }
+
+  /**
    * @brief Add client request callback.
    *
      * @param method_     Service method name.
@@ -108,24 +125,6 @@ namespace eCAL
   {
     if (!m_created) return false;
     return m_service_server_impl->AddMethodCallback(method_, req_type_, resp_type_, callback_);
-  }
-
-  /**
-   * @brief Add method callback (with additional type descriptions).
-   *
-   * @param method_     Service method name.
-   * @param req_type_   Service method request type.
-   * @param req_desc_   Service method request type description.
-   * @param resp_type_  Service method response type.
-   * @param req_desc_   Service method response type description.
-   * @param callback_   Callback function for client request.
-   *
-   * @return  True if successful.
-  **/
-  bool CServiceServer::AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_, const MethodCallbackT& callback_)
-  {
-    if (!m_created) return false;
-    return m_service_server_impl->AddMethodCallback(method_, req_type_, req_desc_, resp_type_, resp_desc_, callback_);
   }
 
   /**

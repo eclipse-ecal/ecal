@@ -232,10 +232,16 @@ namespace eCAL
      *
      * @return  True if succeeded.
     **/
-    bool GetTypeName(const std::string& topic_name_, std::string& topic_type_)
+    bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_)
     {
       if (!g_descgate()) return(false);
-      return(g_descgate()->GetTypeName(topic_name_, topic_type_));
+      return(g_descgate()->GetTopicTypeName(topic_name_, topic_type_));
+    }
+
+    // deprecated version
+    bool GetTypeName(const std::string& topic_name_, std::string& topic_type_)
+    {
+      return GetTopicTypeName(topic_name_, topic_type_);
     }
 
     /**
@@ -245,7 +251,7 @@ namespace eCAL
      *
      * @return  Topic type name.
     **/
-    std::string GetTypeName(const std::string& topic_name_)
+    std::string GetTopicTypeName(const std::string& topic_name_)
     {
       std::string topic_type;
       if (GetTypeName(topic_name_, topic_type))
@@ -253,6 +259,12 @@ namespace eCAL
         return(topic_type);
       }
       return("");
+    }
+
+    // deprecated version
+    std::string GetTypeName(const std::string& topic_name_)
+    {
+      return GetTopicTypeName(topic_name_);
     }
 
     /**
@@ -263,10 +275,16 @@ namespace eCAL
      *
      * @return  True if succeeded.
     **/
-    bool GetDescription(const std::string& topic_name_, std::string& topic_desc_)
+    bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_)
     {
       if (!g_descgate()) return(false);
-      return(g_descgate()->GetDescription(topic_name_, topic_desc_));
+      return(g_descgate()->GetTopicDescription(topic_name_, topic_desc_));
+    }
+
+    // deprecated version
+    bool GetDescription(const std::string& topic_name_, std::string& topic_desc_)
+    {
+      return GetTopicDescription(topic_name_, topic_desc_);
     }
 
     /**
@@ -276,7 +294,7 @@ namespace eCAL
      *
      * @return  Topic description.
     **/
-    std::string GetDescription(const std::string& topic_name_)
+    std::string GetTopicDescription(const std::string& topic_name_)
     {
       std::string topic_desc;
       if (GetDescription(topic_name_, topic_desc))
@@ -284,6 +302,12 @@ namespace eCAL
         return(topic_desc);
       }
       return("");
+    }
+
+    // deprecated version
+    std::string GetDescription(const std::string& topic_name_)
+    {
+      return GetTopicDescription(topic_name_);
     }
   }
 }

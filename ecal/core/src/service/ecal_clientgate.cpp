@@ -22,6 +22,7 @@
 **/
 
 #include "ecal_clientgate.h"
+#include "ecal_descgate.h"
 #include "service/ecal_service_client_impl.h"
 
 namespace eCAL
@@ -94,6 +95,15 @@ namespace eCAL
     service.sid      = ecal_sample_service.sid();
     service.pid      = static_cast<int>(ecal_sample_service.pid());
     service.tcp_port = static_cast<unsigned short>(ecal_sample_service.tcp_port());
+
+    // store description
+    if (g_descgate())
+    {
+      for (auto method : ecal_sample_service.methods())
+      {
+        g_descgate()->ApplyServiceDescription(ecal_sample_service.sname(), method.mname(), method.req_type(), method.req_desc(), method.resp_type(), method.resp_desc());
+      }
+    }
 
     // create service key
     service.key = service.sname + ":" + service.sid + "@" + std::to_string(service.pid) + "@" + service.hname;

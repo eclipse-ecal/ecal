@@ -208,7 +208,7 @@ namespace eCAL
     if (topic_name.empty()) return;
 
     // store description
-    if (g_descgate()) g_descgate()->ApplyDescription(topic_name, ecal_sample_topic.ttype(), ecal_sample_topic.tdesc());
+    if (g_descgate()) g_descgate()->ApplyTopicDescription(topic_name, ecal_sample_topic.ttype(), ecal_sample_topic.tdesc());
 
     // get process id
     std::string process_id = std::to_string(ecal_sample_.topic().pid());
@@ -266,7 +266,7 @@ namespace eCAL
     std::string topic_name = sample_topic.tname();
 
     // store description
-    if (g_descgate()) g_descgate()->ApplyDescription(topic_name, sample_topic.ttype(), sample_topic.tdesc());
+    if (g_descgate()) g_descgate()->ApplyTopicDescription(topic_name, sample_topic.ttype(), sample_topic.tdesc());
 
     // handle external publisher connection
     std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);

@@ -152,12 +152,13 @@ namespace eCAL
           GetServiceMessageDescFromType(service_descriptor, input_type_name, input_type_desc, error_s);
           GetServiceMessageDescFromType(service_descriptor, output_type_name, output_type_desc, error_s);
 
+          // store descriptions
+          AddDescription(method_name, input_type_name, input_type_desc, output_type_name, output_type_desc);
+
           // add callback
           AddMethodCallback(method_name,
             input_type_name,
-            input_type_desc,
             output_type_name,
-            output_type_desc,
             std::bind(&CServiceServer::RequestCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5)
           );
         }

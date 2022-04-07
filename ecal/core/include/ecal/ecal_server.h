@@ -85,6 +85,19 @@ namespace eCAL
     bool Destroy();
 
     /**
+     * @brief Add method type descriptions.
+     *
+     * @param method_     Service method name.
+     * @param req_type_   Service method request type.
+     * @param req_desc_   Service method request description.
+     * @param resp_type_  Service method response type.
+     * @param resp_desc_  Service method response description.
+     *
+     * @return  True if successful.
+    **/
+    bool AddDescription(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_);
+
+    /**
      * @brief Add method callback.
      *
      * @param method_     Service method name.
@@ -95,20 +108,6 @@ namespace eCAL
      * @return  True if successful.
     **/
     bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_);
-
-    /**
-     * @brief Add method callback (with additional type descriptions).
-     *
-     * @param method_     Service method name.
-     * @param req_type_   Service method request type.
-     * @param req_desc_   Service method request type description.
-     * @param resp_type_  Service method response type.
-     * @param req_desc_   Service method response type description.
-     * @param callback_   Callback function for client request.
-     *
-     * @return  True if successful.
-    **/
-    bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_, const MethodCallbackT& callback_);
 
     /**
      * @brief Remove method callback.

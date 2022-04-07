@@ -23,6 +23,7 @@
 
 #include "ecal_def.h"
 #include "ecal_config_hlp.h"
+#include "ecal_descgate.h"
 #include "ecal_register.h"
 #include "ecal_servicegate.h"
 #include "ecal_global_accessors.h"
@@ -106,6 +107,16 @@ namespace eCAL
     return(true);
   }
 
+  bool CServiceServerImpl::AddDescription(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_)
+  {
+    if (g_descgate())
+    {
+      g_descgate()->ApplyServiceDescription(m_service_name, method_, req_type_, req_desc_, resp_type_, resp_desc_);
+      return true;
+    }
+    return false;
+  }
+
   // add callback function for server method calls
   bool CServiceServerImpl::AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_)
   {
@@ -113,23 +124,6 @@ namespace eCAL
     mcallback.method.set_mname(method_);
     mcallback.method.set_req_type(req_type_);
     mcallback.method.set_resp_type(resp_type_);
-    mcallback.callback = callback_;
-
-    std::lock_guard<std::mutex> lock(m_method_callback_map_sync);
-    m_method_callback_map[method_] = mcallback;
-
-    return true;
-  }
-
-  // add callback function for server method calls (including type descriptions)
-  bool CServiceServerImpl::AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_, const MethodCallbackT& callback_)
-  {
-    SMethodCallback mcallback;
-    mcallback.method.set_mname(method_);
-    mcallback.method.set_req_type(req_type_);
-    mcallback.method.set_req_desc(req_desc_);
-    mcallback.method.set_resp_type(resp_type_);
-    mcallback.method.set_resp_desc(resp_desc_);
     mcallback.callback = callback_;
 
     std::lock_guard<std::mutex> lock(m_method_callback_map_sync);

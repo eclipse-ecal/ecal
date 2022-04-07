@@ -40,7 +40,7 @@ namespace eCAL
   {
   }
 
-  void CDescGate::ApplyDescription(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_)
+  void CDescGate::ApplyTopicDescription(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_)
   {
     std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_desc_sync);
     TopicNameDescMapT::iterator iter = m_topic_name_desc_map.find(topic_name_);
@@ -100,7 +100,7 @@ namespace eCAL
     }
   }
 
-  bool CDescGate::GetTypeName(const std::string& topic_name_, std::string& topic_type_)
+  bool CDescGate::GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_)
   {
     if(topic_name_.empty()) return(false);
 
@@ -112,7 +112,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CDescGate::GetDescription(const std::string& topic_name_, std::string& topic_desc_)
+  bool CDescGate::GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_)
   {
     if(topic_name_.empty()) return(false);
 
@@ -122,5 +122,11 @@ namespace eCAL
     if(iter == m_topic_name_desc_map.end()) return(false);
     topic_desc_ = iter->second.desc;
     return(true);
+  }
+  
+  void CDescGate::ApplyServiceDescription(const std::string& service_name_, const std::string& method_name_, const std::string& req_type_name_, const std::string& req_type_desc_, const std::string& resp_type_name_, const std::string& resp_type_desc_)
+  {
+    // TODO: STORE THIS !
+    int i = 0;
   }
 };
