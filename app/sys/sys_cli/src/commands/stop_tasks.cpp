@@ -68,7 +68,6 @@ namespace eCAL
 
       eCAL::sys::Error StopTask::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, const std::vector<std::string>& argv) const
       {
-        SServiceResponse           service_response;
         eCAL::pb::sys::TaskRequest task_request_pb;
         eCAL::pb::sys::Response    response_pb;
 
@@ -122,17 +121,17 @@ namespace eCAL
           }
         }
 
-        bool success = remote_ecalsys_service->Call(hostname, "StopTasks", task_request_pb, service_response, response_pb);
+        auto call_service_error = CallRemoteEcalsysService(remote_ecalsys_service, hostname, "StopTasks", task_request_pb, response_pb);
 
-        if (!success)
+        if (call_service_error)
         {
-          return eCAL::sys::Error(eCAL::sys::Error::ErrorCode::REMOTE_HOST_UNAVAILABLE, hostname);
+          return call_service_error;
         }
         else
         {
           if (response_pb.result() != eCAL::pb::sys::Response::success)
           {
-            return eCAL::sys::Error(eCAL::sys::Error::ErrorCode::SERVICE_CALL_RETURNED_ERROR, service_response.host_name + ": " + response_pb.error());
+            return eCAL::sys::Error(eCAL::sys::Error::ErrorCode::SERVICE_CALL_RETURNED_ERROR, hostname + ": " + response_pb.error());
           }
           else
           {

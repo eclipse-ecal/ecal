@@ -25,19 +25,31 @@ namespace eCAL
   {
     namespace command
     {
-      eCAL::sys::Error Command::GetRemoteSysStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, eCAL::pb::sys::State& state_output) const
+      eCAL::sys::Error Command::GetRemoteSysStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, eCAL::pb::sys::State& state_output)
       {
-        SServiceResponse service_response;
-        bool success = remote_ecalsys_service->Call(hostname, "GetStatus", eCAL::pb::sys::GenericRequest(), service_response, state_output);
+        return CallRemoteEcalsysService(remote_ecalsys_service, hostname, "GetStatus", eCAL::pb::sys::GenericRequest(), state_output);
+      }
 
-        if (!success)
+      eCAL::sys::Error Command::CallRemoteEcalsysService(const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service
+                                                        , const std::string&                hostname
+                                                        , const std::string&                method_name
+                                                        , const google::protobuf::Message&  request
+                                                        , google::protobuf::Message&        response)
+      {
+        remote_ecalsys_service->SetHostName(hostname);
+
+        eCAL::ServiceResponseVecT service_response_vec;
+        constexpr int timeout_ms = 1000;
+
+        if (remote_ecalsys_service->Call(method_name, request.SerializeAsString(), timeout_ms, &service_response_vec))
         {
-          return eCAL::sys::Error(eCAL::sys::Error::ErrorCode::REMOTE_HOST_UNAVAILABLE, hostname);
+          if (service_response_vec.size() > 0)
+          {
+            response.ParseFromString(service_response_vec[0].response);
+            return eCAL::sys::Error::ErrorCode::OK;
+          }
         }
-        else
-        {
-          return eCAL::sys::Error::OK;
-        }
+        return eCAL::sys::Error(eCAL::sys::Error::ErrorCode::REMOTE_HOST_UNAVAILABLE, hostname);
       }
     }
   }

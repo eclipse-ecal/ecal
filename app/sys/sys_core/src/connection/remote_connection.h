@@ -33,6 +33,10 @@ namespace eCAL
     private:
       eCAL::sys_client::Task EvaluateEcalParserHostFunctions(const eCAL::sys_client::Task& task, std::chrono::system_clock::time_point now) const;
 
+      bool CallRemoteEcalsysService(const std::string&                 method_name
+                                    , const google::protobuf::Message& request
+                                    , google::protobuf::Message&       response);
+
     //////////////////////////////////////////
     // Member Variables
     //////////////////////////////////////////
