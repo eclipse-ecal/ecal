@@ -89,7 +89,7 @@ namespace eCAL
 
   size_t CUDPReceiver::Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ /* = nullptr */)
   {
-    if (!m_socket_impl) return(false);
+    if (!m_socket_impl) return(0);
     return(m_socket_impl->Receive(buf_, len_, timeout_, address_));
   }
 }
