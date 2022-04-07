@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,34 +17,38 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  UDP receiver class
-**/
-
 #pragma once
 
-#include <memory>
-#include "ecal_receiver.h"
+#include <io/udp_receiver_base.h>
 
-namespace eCAL
-{
-  class CUDPReceiverBase;
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4834)
+#endif
+#include <asio.hpp>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
-  class CUDPReceiver : public CReceiver
+namespace eCAL {
+
+  class CUDPReceiverAsio : public CUDPReceiverBase
   {
   public:
-    CUDPReceiver();
+    CUDPReceiverAsio(const SReceiverAttr& attr_);
 
-    bool Create(const SReceiverAttr& attr_);
-    bool Destroy();
+    bool AddMultiCastGroup(const char* ipaddr_) override;
+    bool RemMultiCastGroup(const char* ipaddr_) override;
 
-    bool AddMultiCastGroup(const char* ipaddr_);
-    bool RemMultiCastGroup(const char* ipaddr_);
-
-    size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr);
+    size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr) override;
 
   protected:
-    bool m_use_npcap;
-    std::shared_ptr<CUDPReceiverBase> m_socket_impl;
+    void RunIOContext(const asio::chrono::steady_clock::duration& timeout);
+
+    bool                    m_broadcast;
+    bool                    m_unicast;
+    asio::io_context        m_iocontext;
+    asio::ip::udp::socket   m_socket;
+    asio::ip::udp::endpoint m_sender_endpoint;
   };
 }

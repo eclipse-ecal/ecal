@@ -42,6 +42,7 @@ set(ecal_io_cpp_src
     src/io/snd_sample.cpp
     src/io/udp_init.cpp
     src/io/udp_receiver.cpp
+    src/io/udp_receiver_asio.cpp
     src/io/udp_sender.cpp
 )
 
@@ -147,6 +148,8 @@ set(ecal_io_header_src
     src/io/snd_sample.h
     src/io/udp_init.h
     src/io/udp_receiver.h
+    src/io/udp_receiver_base.h
+    src/io/udp_receiver_asio.h
     src/io/udp_sender.h
 )
 
@@ -395,12 +398,18 @@ if(ECAL_LAYER_ICEORYX)
 endif()
 
 if(ECAL_NPCAP_SUPPORT)
-  add_definitions(-DECAL_NPCAP_SUPPORT)
+  target_compile_definitions(${PROJECT_NAME}
+    PRIVATE ECAL_NPCAP_SUPPORT)
+  target_sources(${PROJECT_NAME}
+    PRIVATE 
+      src/io/udp_receiver_npcap.h
+      src/io/udp_receiver_npcap.cpp
+  )
   target_link_libraries(${PROJECT_NAME}
     PRIVATE
       udpcap
   )
- endif(ECAL_NPCAP_SUPPORT)
+endif(ECAL_NPCAP_SUPPORT)
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE 
