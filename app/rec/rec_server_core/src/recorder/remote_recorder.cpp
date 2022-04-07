@@ -54,6 +54,9 @@ namespace eCAL
       , should_be_connected_to_ecal_        (false)
       , complete_settings_                  (initial_settings)
     {
+      // Bind the recorder_service_ to the hostname
+      recorder_service_.SetHostName(hostname);
+
       // Initial Ping => to perform auto recovery, which also sets the initial settings
       actions_to_perform_.emplace_back(Action());
 
@@ -254,10 +257,10 @@ namespace eCAL
         if (this_loop_action.IsSettings())
         {
           auto set_config_pb = SettingsToSettingsPb(this_loop_action.settings_);
-          eCAL::SServiceResponse         service_response;
           eCAL::pb::rec_client::Response response;
 
-          bool call_successfull = recorder_service_.Call(hostname_, "SetConfig", set_config_pb, service_response, response);
+          bool call_successfull = CallRecorderService("SetConfig", set_config_pb, response);
+
           if (IsInterrupted()) return;
 
           {
@@ -309,11 +312,9 @@ namespace eCAL
           }
 
           eCAL::pb::rec_client::CommandRequest command_request_pb = RecorderCommandToCommandPb(this_loop_action.command_);
-
-          eCAL::SServiceResponse         service_response;
           eCAL::pb::rec_client::Response response_pb;
 
-          bool call_successfull = recorder_service_.Call(hostname_, "SetCommand", command_request_pb, service_response, response_pb);
+          bool call_successfull = CallRecorderService("SetCommand", command_request_pb, response_pb);
 
           {
             std::unique_lock<decltype(io_mutex_)> io_lock(io_mutex_);
@@ -370,14 +371,12 @@ namespace eCAL
         else
         {
           eCAL::pb::rec_client::GetStateRequest request;
-
-          eCAL::SServiceResponse      service_response;
-          eCAL::pb::rec_client::State state_response_pb;
+          eCAL::pb::rec_client::State           state_response_pb;
 
           // Retrieve the state from the client
           auto before_call_timestamp = eCAL::Time::ecal_clock::now();
 
-          bool call_success = recorder_service_.Call(hostname_, "GetState", request, service_response, state_response_pb);
+          bool call_success = CallRecorderService("GetState", request, state_response_pb);
 
           auto after_call_timestamp = eCAL::Time::ecal_clock::now();
           if (IsInterrupted()) return;
@@ -661,6 +660,23 @@ namespace eCAL
     void RemoteRecorder::QueueSetCommand_NoLock(const RecorderCommand& command)
     {
       actions_to_perform_.emplace_back(Action(command));
+    }
+
+    bool RemoteRecorder::CallRecorderService(const std::string& method_name, const google::protobuf::Message& request, google::protobuf::Message& response)
+    {
+      // The target (i.e. the hostname) has already been set in the Constructor.
+
+      eCAL::ServiceResponseVecT service_response_vec;
+      constexpr int timeout_ms = 1000;
+      if (recorder_service_.Call(method_name, request.SerializeAsString(), timeout_ms, &service_response_vec))
+      {
+        if (service_response_vec.size() > 0)
+        {
+          response.ParseFromString(service_response_vec[0].response);
+          return true;
+        }
+      }
+      return false;
     }
   }
 }

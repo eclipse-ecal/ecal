@@ -60,6 +60,12 @@ namespace eCAL
 
         static eCAL::rec::Error GetRemoteStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, eCAL::rec_server::RecServerStatus& status_output);
         static eCAL::rec::Error GetRemoteConfig(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, eCAL::rec_server::RecServerConfig& config_output);
+
+        static eCAL::rec::Error CallRemoteEcalrecService(const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_ecalsys_service
+                                                        , const std::string&                hostname
+                                                        , const std::string&                method_name
+                                                        , const google::protobuf::Message&  request
+                                                        , google::protobuf::Message&        response);
       };
     }
   }
