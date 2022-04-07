@@ -227,12 +227,13 @@ namespace eCAL
         auto req_msg = msg_decoder.GetProtoMessageFromDescriptorSet(pset, type_name_, error_s_);
         if (!req_msg) return false;
 
+#ifdef I_WANT_TO_HAVE_IT_HUMAN_READABLE
         auto req_desc = req_msg->GetDescriptor();
         if (!req_desc) return false;
-
-        // TODO: Extract "real" protobuf descriptors here (not that human readable ones).
         type_desc_ = req_desc->DebugString();
-
+#else
+        type_desc_ = pset.SerializeAsString();
+#endif
         return true;
       }
 
