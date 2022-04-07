@@ -103,10 +103,10 @@ namespace eCAL
     ECAL_API int               GetMemfileMinsizeBytes               () { return eCALPAR(PUB, MEMFILE_MINSIZE); }
     ECAL_API int               GetMemfileOverprovisioningPercentage () { return eCALPAR(PUB, MEMFILE_RESERVE); }
     ECAL_API int               GetMemfileAckTimeoutMs               () { return eCALPAR(PUB, MEMFILE_ACK_TO); }
-    ECAL_API bool              IsMemfileZerocopyEnabled             () { return bool(eCALPAR(PUB, MEMFILE_ZERO_COPY)); }
+    ECAL_API bool              IsMemfileZerocopyEnabled             () { return (eCALPAR(PUB, MEMFILE_ZERO_COPY) != 0); }
     ECAL_API int               GetMemfileBufferCount                () { return eCALPAR(PUB, MEMFILE_BUF_COUNT); }
 
-    ECAL_API bool              IsTopicTypeSharingEnabled            () { return bool(eCALPAR(PUB, SHARE_TTYPE)); }
-    ECAL_API bool              IsTopicDescriptionSharingEnabled     () { return bool(eCALPAR(PUB, SHARE_TDESC)); }
+    ECAL_API bool              IsTopicTypeSharingEnabled            () { return (eCALPAR(PUB, SHARE_TTYPE) != 0); }
+    ECAL_API bool              IsTopicDescriptionSharingEnabled     () { return (eCALPAR(PUB, SHARE_TDESC) != 0); }
   }
 }
