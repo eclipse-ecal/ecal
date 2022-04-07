@@ -246,14 +246,20 @@ void LogWidget::setPaused(bool paused)
     log_update_timer_->stop();
     ui_.pause_button->setText("Resume");
     if (!ui_.pause_button->isChecked())
+    {
       ui_.pause_button->setChecked(true);
+      ui_.pause_button->setIcon(QIcon(":ecalicons/START")); // Manually set icon as workaround for Qt Bug
+    }
   }
   else
   {
     log_update_timer_->start(log_update_time_milliseconds_);
     ui_.pause_button->setText("Pause");
     if (ui_.pause_button->isChecked())
+    {
       ui_.pause_button->setChecked(false);
+      ui_.pause_button->setIcon(QIcon(":ecalicons/PAUSE")); // Manually set icon as workaround for Qt Bug
+    }
   }
 
   ui_.pause_button->blockSignals(false);

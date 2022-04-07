@@ -22,7 +22,8 @@
 **/
 
 #include "ecal_def.h"
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
+
 #include "ecal_descgate.h"
 #include "ecal_register.h"
 #include "ecal_servicegate.h"

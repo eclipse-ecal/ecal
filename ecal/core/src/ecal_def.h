@@ -56,21 +56,13 @@
 /*                                     network settings                                       */
 /**********************************************************************************************/
 /* network switch */
-#ifdef CFG_FORCE_DEFAULT_LOCAL
 #define NET_ENABLED                                 false
-#else /* CFG_FORCE_DEFAULT_LOCAL */
-#define NET_ENABLED                                 true
-#endif /* CFG_FORCE_DEFAULT_LOCAL */
 
 /* eCAL udp multicast defines */
 #define NET_UDP_MULTICAST_GROUP                    "239.0.0.1"
 #define NET_UDP_MULTICAST_MASK                     "0.0.0.15"
 #define NET_UDP_MULTICAST_PORT                     14000
-#ifdef CFG_FORCE_DEFAULT_LOCAL
-#define NET_UDP_MULTICAST_TTL                          0
-#else /* CFG_FORCE_DEFAULT_LOCAL */
 #define NET_UDP_MULTICAST_TTL                          3
-#endif /* CFG_FORCE_DEFAULT_LOCAL */
 #define NET_UDP_MULTICAST_PORT_REG_OFF                 0
 #define NET_UDP_MULTICAST_PORT_LOG_OFF                 1
 #define NET_UDP_MULTICAST_PORT_SAMPLE_OFF              2
@@ -87,11 +79,7 @@
 #define NET_TCP_REC_ENABLED                         true
 #define NET_SHM_REC_ENABLED                         true
 
-#ifdef CFG_FORCE_DEFAULT_LOCAL
-#define NET_UDP_MC_REC_ENABLED                      false
-#else /* CFG_FORCE_DEFAULT_LOCAL */
 #define NET_UDP_MC_REC_ENABLED                      true
-#endif /* CFG_FORCE_DEFAULT_LOCAL */
 
 #define NET_NPCAP_ENABLED                           false
 
@@ -115,11 +103,7 @@
 /* use tcp transport layer           [auto = 2, on = 1, off = 0] */
 #define PUB_USE_TCP                                    0
 /* use udp multicast transport layer [auto = 2, on = 1, off = 0] */
-#ifdef CFG_FORCE_DEFAULT_LOCAL
-#define PUB_USE_UDP_MC                                 0
-#else /* CFG_FORCE_DEFAULT_LOCAL */
 #define PUB_USE_UDP_MC                                 2
-#endif /* CFG_FORCE_DEFAULT_LOCAL */
 
 /* share topic type                  [          on = 1, off = 0] */
 #define PUB_SHARE_TTYPE                                1

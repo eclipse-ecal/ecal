@@ -25,7 +25,7 @@
 
 #include <ecal/ecal_core.h>
 
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include "ecal_monitoring_impl.h"
 
 #include "ecal_def.h"

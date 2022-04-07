@@ -27,18 +27,46 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QPlainTextEdit" name="system_information_text">
-     <property name="font">
-      <font>
-       <family>Courier New</family>
-      </font>
-     </property>
-     <property name="lineWrapMode">
-      <enum>QPlainTextEdit::NoWrap</enum>
-     </property>
-     <property name="readOnly">
+    <widget class="QScrollArea" name="system_information_scrollarea">
+     <property name="widgetResizable">
       <bool>true</bool>
      </property>
+     <widget class="QWidget" name="system_information_scrollarea_content">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>828</width>
+        <height>589</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="system_information_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <family>Courier New</family>
+          </font>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+         <property name="textInteractionFlags">
+          <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>

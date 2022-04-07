@@ -30,17 +30,50 @@ eCAL can run in two modes, that differ from each other: **local mode** and **clo
      - * Uses UDP multicast (239.0.0.x) to send data to other hosts
        * Uses shared memory to send data to processes on the same host
 
-By default, eCAL already is configured in cloud mode, so you don't have to change anything.
-You however have to configure your operating system, so it knows where to send that multicast traffic to.
-This is done by creating a **multicast route**.
+
+Enable network-mode in :file:`ecal.ini`
+=======================================
+
+.. note:: 
+
+   Up to eCAL 5.9, eCAL shipped with a cloud-mode-configuration by default.
+   This changed with eCAL 5.10.
+
+   So since eCAL 5.10 you will have to enable network-mode first.
+
+By default, eCAL is configured in local mode.
+To switch eCAL to cloud mode, edit your :file:`ecal.ini` and change the following settings:
+
+* |fa-windows| Windows: |ecalini-path-windows|
+* |fa-ubuntu| Ubuntu: |ecalini-path-ubuntu|
+
+.. code-block:: ini
+
+   [network]
+   network_enabled           = true
+   multicast_ttl             = 2
+
+The ``multicast_ttl`` setting configures the *time to live* of the UDP datagrams, i.e. the number of hops a datagram can take before it is discarded.
+Usually, ``2`` is sufficient, but if you have a network with many routers, you may have to increase that number.
 
 .. seealso::
-   Please refer to the advanced section to learn about changing between :ref:`local mode <configuration_local>` and :ref:`cloud mode <configuration_cloud>`!
+
+   Also see the advanced section to learn about changing between :ref:`local mode <configuration_local>` and :ref:`cloud mode <configuration_cloud>`!
+
+
+Multicast route configuration
+=============================
+
+Now that you have set eCAL to cloud mode, it will already start sending out UDP Multicast packages for detecting other eCAL Nodes.
+Your Operating System however has to send those Multicast packages to a proper network interface controller (NIC).
+This is not trivial, as the destination IP ``239.0.0.1`` does not "really" exist.
+
+Therefore you have to create a **route**, i.e. a ``239.0.0.x -> outgoing NIC`` mapping.
 
 .. _getting_started_cloud_configuration_on_windows:
 
 |fa-windows| Multicast configuration on Windows
-===============================================
+-----------------------------------------------
 
 #. Check the IPv4 address of the ethernet adapter you are using to connect your two PCs.
    You can do that by typing ``ipconfig`` in a command prompt.
@@ -75,7 +108,7 @@ This is done by creating a **multicast route**.
 
 
 |fa-ubuntu| Multicast configuration on Ubuntu
-=============================================
+---------------------------------------------
 
 You can configure the multicast route in various ways, depending on your Ubuntu version.
 
@@ -169,7 +202,7 @@ Jump to your section of choice below:
 
       #. Turn the interface off and on again
 
-      #. Configure the **loopback multicast** route via :ref:`netplan<ubuntu_multicast_route_netplan>` or :ref:`/etc/network/interfaces<ubuntu_multicast_route_etc_network_interfaces>`.
+      #. Configure the **loopback multicast** route via *netplan* or :file:`/etc/network/interfaces`.
          You can omit this, but then you will have to explicitly set eCAL to local mode, if you are not connected to any network.
  
    .. tab:: etc/network/interfaces (legacy)
@@ -214,7 +247,7 @@ Jump to your section of choice below:
 .. _ubuntu_multicast_route_test:
 
 Test the configuration
-----------------------
+''''''''''''''''''''''
 
 Check the result from a terminal. It should show routes for local and external communication:
 

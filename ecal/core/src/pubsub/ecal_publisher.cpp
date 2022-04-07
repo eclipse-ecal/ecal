@@ -25,7 +25,7 @@
 #include <ecal/ecal_tlayer.h>
 
 #include "ecal_def.h"
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include "ecal_globals.h"
 #include "ecal_pubgate.h"
 #include "ecal_register.h"

@@ -34,7 +34,7 @@
 #endif
 
 #include "ecal_def.h"
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 
 #include "io/ecal_memfile_header.h"
 #include "io/ecal_memfile_sync.h"
