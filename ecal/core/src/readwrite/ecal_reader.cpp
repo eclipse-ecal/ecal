@@ -195,7 +195,7 @@ namespace eCAL
     }
 
     // start ecal tcp layer
-    if (eCALPAR(NET, TCP_REC_ENABLED))
+    if (Config::IsTcpRecEnabled())
     {
       CTCPReaderLayer::Get()->Initialize();
     }
@@ -222,7 +222,7 @@ namespace eCAL
     }
 
     // start ecal tcp layer
-    if (eCALPAR(NET, TCP_REC_ENABLED))
+    if (Config::IsTcpRecEnabled())
     {
       CTCPReaderLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
@@ -249,7 +249,7 @@ namespace eCAL
     }
 
     // stop ecal tcp layer
-    if (eCALPAR(NET, TCP_REC_ENABLED))
+    if (Config::IsTcpRecEnabled())
     {
       CTCPReaderLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
