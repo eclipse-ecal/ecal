@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
 #include "io/msg_type.h"
@@ -44,7 +45,7 @@ namespace eCAL
     m_reg_cb(reg_cb_)
   {
     SReceiverAttr attr;
-    bool local_only = !eCALPAR(NET, ENABLED);
+    bool local_only = !Config::IsNetworkEnabled();
     // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
     if (local_only)
     {
@@ -53,7 +54,7 @@ namespace eCAL
     }
     else
     {
-      attr.ipaddr    = eCALPAR(NET, UDP_MULTICAST_GROUP);
+      attr.ipaddr    = Config::GetUdpMulticastGroup();
       attr.broadcast = false;
     }
     attr.port     = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_REG_OFF;
@@ -80,7 +81,7 @@ namespace eCAL
     m_network_mode(false), m_log_cb(log_cb_)
   {
     SReceiverAttr attr;
-    bool local_only = !eCALPAR(NET, ENABLED);
+    bool local_only = !Config::IsNetworkEnabled();
     // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
     if (local_only)
     {
@@ -89,7 +90,7 @@ namespace eCAL
     }
     else
     {
-      attr.ipaddr    = eCALPAR(NET, UDP_MULTICAST_GROUP);
+      attr.ipaddr    = Config::GetUdpMulticastGroup();
       attr.broadcast = false;
     }
     attr.port     = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_LOG_OFF;

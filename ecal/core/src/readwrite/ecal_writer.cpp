@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
@@ -124,7 +125,7 @@ namespace eCAL
     m_topic_id = counter.str();
 
     // set registration expiration
-    std::chrono::milliseconds registration_timeout(eCALPAR(CMN, REGISTRATION_TO));
+    std::chrono::milliseconds registration_timeout(Config::GetRegistrationTimeoutMs());
     m_loc_sub_map.set_expiration(registration_timeout);
     m_ext_sub_map.set_expiration(registration_timeout);
 

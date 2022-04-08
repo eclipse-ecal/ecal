@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_config.h>
 
 #include <ecal/ecal_core.h>
 
@@ -77,7 +78,7 @@ namespace eCAL
   ////////////////////////////////////////
   CMonitoringImpl::CMonitoringImpl() :
     m_init(false),
-    m_network       (eCALPAR(NET, ENABLED)),
+    m_network       (Config::IsNetworkEnabled()),
     m_publisher_map (std::chrono::milliseconds(eCALPAR(MON, TIMEOUT))),
     m_subscriber_map(std::chrono::milliseconds(eCALPAR(MON, TIMEOUT))),
     m_process_map   (std::chrono::milliseconds(eCALPAR(MON, TIMEOUT))),
@@ -95,7 +96,7 @@ namespace eCAL
     if (m_init) return;
 
     // network mode
-    m_network = eCALPAR(NET, ENABLED);
+    m_network = Config::IsNetworkEnabled();
 
     // get name of this host
     m_host_name = Process::GetHostName();
@@ -107,7 +108,7 @@ namespace eCAL
     // start logging receive thread
     CLoggingReceiveThread::LogMessageCallbackT logmsg_cb = std::bind(&CMonitoringImpl::RegisterLogMessage, this, std::placeholders::_1);
     m_log_rcv_threadcaller = std::make_shared<CLoggingReceiveThread>(logmsg_cb);
-    m_log_rcv_threadcaller->SetNetworkMode(eCALPAR(NET, ENABLED));
+    m_log_rcv_threadcaller->SetNetworkMode(Config::IsNetworkEnabled());
 
     // start monitoring and logging publishing thread
     CMonLogPublishingThread::MonitoringCallbackT mon_cb = std::bind(&CMonitoringImpl::GetMonitoringMsg, this, std::placeholders::_1);

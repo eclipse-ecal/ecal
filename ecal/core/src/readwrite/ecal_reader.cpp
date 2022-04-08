@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
 #include "ecal_register.h"
@@ -111,7 +112,7 @@ namespace eCAL
     gOpenEvent(&m_receive_event);
 
     // set registration expiration
-    std::chrono::milliseconds registration_timeout(eCALPAR(CMN, REGISTRATION_TO));
+    std::chrono::milliseconds registration_timeout(Config::GetRegistrationTimeoutMs());
     m_loc_pub_map.set_expiration(registration_timeout);
     m_ext_pub_map.set_expiration(registration_timeout);
 

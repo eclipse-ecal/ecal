@@ -23,6 +23,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_log.h>
+#include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
@@ -60,7 +61,7 @@ namespace eCAL
     m_topic_name  = topic_name_;
     m_topic_id    = topic_id_;
 
-    m_udp_ipaddr  = topic2mcast(topic_name_, eCALPAR(NET, UDP_MULTICAST_GROUP), eCALPAR(NET, UDP_MULTICAST_MASK));
+    m_udp_ipaddr  = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), eCALPAR(NET, UDP_MULTICAST_MASK));
 
     SSenderAttr attr;
     attr.ipaddr     = m_udp_ipaddr;
@@ -75,7 +76,7 @@ namespace eCAL
 
     // create sample sender with activated loopback
     int ttl(0);
-    if (eCALPAR(NET, ENABLED)) ttl = eCALPAR(NET, UDP_MULTICAST_TTL);
+    if (Config::IsNetworkEnabled()) ttl = eCALPAR(NET, UDP_MULTICAST_TTL);
     attr.loopback   = true;
     attr.ttl        = ttl;
     m_sample_snd_loopback.Create(attr);

@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
@@ -218,7 +219,7 @@ namespace eCAL
       sstream << "------------------------- NETWORK --------------------------------" << std::endl;
       sstream << "Host name                : " << Process::GetHostName() << std::endl;
       sstream << "Host id                  : " << Process::GetHostID() << std::endl;
-      if (eCALPAR(NET, ENABLED))
+      if (Config::IsNetworkEnabled())
       {
         sstream << "Network mode             : cloud" << std::endl;
       }
@@ -229,7 +230,7 @@ namespace eCAL
       sstream << "Network ttl              : " << eCALPAR(NET, UDP_MULTICAST_TTL) << std::endl;
       sstream << "Network sndbuf           : " << GetBufferStr(eCALPAR(NET, UDP_MULTICAST_SNDBUF)) << std::endl;
       sstream << "Network rcvbuf           : " << GetBufferStr(eCALPAR(NET, UDP_MULTICAST_RCVBUF)) << std::endl;
-      sstream << "Multicast group          : " << eCALPAR(NET, UDP_MULTICAST_GROUP) << std::endl;
+      sstream << "Multicast group          : " << Config::GetUdpMulticastGroup() << std::endl;
       sstream << "Multicast mask           : " << eCALPAR(NET, UDP_MULTICAST_MASK) << std::endl;
       int port = eCALPAR(NET, UDP_MULTICAST_PORT);
       sstream << "Multicast ports          : " << port << " - " << port + 10 << std::endl;

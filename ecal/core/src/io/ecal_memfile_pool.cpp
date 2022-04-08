@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
@@ -354,7 +355,7 @@ namespace eCAL
     {
       auto observer = std::make_shared<CMemFileObserver>();
       observer->Create(memfile_name_, memfile_event_);
-      observer->Start(topic_name_, topic_id_, eCALPAR(CMN, REGISTRATION_TO));
+      observer->Start(topic_name_, topic_id_, Config::GetRegistrationTimeoutMs());
       m_observer_pool[memfile_name_] = observer;
 #ifndef NDEBUG
       // log it
