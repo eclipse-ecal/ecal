@@ -36,13 +36,22 @@ if     (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/ecal
   configure_file(src/ecal_defs.h.in "${CMAKE_CURRENT_BINARY_DIR}/include/ecal/ecal_defs.h" @ONLY)
 endif  (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/ecal_defs.h")
 
+
+if(ECAL_NPCAP_SUPPORT)
+set(ecal_io_cpp_src_npcap 
+   src/io/udp_receiver_npcap.cpp
+)
+endif()
+
 set(ecal_io_cpp_src
     src/io/rcv_sample.cpp
     src/io/snd_raw_buffer.cpp
     src/io/snd_sample.cpp
     src/io/udp_init.cpp
     src/io/udp_receiver.cpp
+    src/io/udp_receiver_asio.cpp
     src/io/udp_sender.cpp
+    ${ecal_io_cpp_src_npcap}
 )
 
 if(NOT ECAL_LAYER_ICEORYX)
@@ -137,6 +146,12 @@ set(ecal_cmn_cpp_src
     src/sys_usage.cpp
 )
 
+if(ECAL_NPCAP_SUPPORT)
+set(ecal_io_header_src_npcap 
+   src/io/udp_receiver_npcap.h
+)
+endif()
+
 set(ecal_io_header_src
     src/io/ecal_memfile_header.h
     src/io/ecal_receiver.h
@@ -147,7 +162,10 @@ set(ecal_io_header_src
     src/io/snd_sample.h
     src/io/udp_init.h
     src/io/udp_receiver.h
+    src/io/udp_receiver_base.h
+    src/io/udp_receiver_asio.h
     src/io/udp_sender.h
+    ${ecal_io_header_src_npcap}
 )
 
 if(NOT ECAL_LAYER_ICEORYX)
@@ -396,12 +414,13 @@ if(ECAL_LAYER_ICEORYX)
 endif()
 
 if(ECAL_NPCAP_SUPPORT)
-  add_definitions(-DECAL_NPCAP_SUPPORT)
+  target_compile_definitions(${PROJECT_NAME}
+    PRIVATE ECAL_NPCAP_SUPPORT)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE
       udpcap
   )
- endif(ECAL_NPCAP_SUPPORT)
+endif(ECAL_NPCAP_SUPPORT)
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE 
