@@ -280,7 +280,7 @@ void EcalsysGui::setTheme(Theme theme)
     QColor darkGray( 58,  58,  58);
     QColor gray    (128, 128, 128);
     QColor black   ( 31,  31,  31);
-    QColor blue    ( 42, 130, 218);
+    QColor blue    ( 44, 148, 255);
 
     QPalette darkPalette;
     darkPalette.setColor(QPalette::Window         , darkGray);

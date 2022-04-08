@@ -20,6 +20,7 @@
 #include "ecalmon.h"
 
 #include "ecal/ecal.h"
+#include <ecal/ecal_config.h>
 
 #include "widgets/about_dialog/about_dialog.h"
 #include "widgets/license_dialog/license_dialog.h"
@@ -38,6 +39,7 @@
 #include <QDateTime>
 #include <QScreen>
 #include <QStyleFactory>
+#include <QLayout>
 
 #ifndef NDEBUG
   #ifdef _MSC_VER
@@ -71,19 +73,62 @@ Ecalmon::Ecalmon(QWidget *parent)
   ui_.setupUi(this);
 
   // Setup Status bar
+  network_mode_widget_                      = new QWidget(ui_.statusbar);
+  QHBoxLayout* network_mode_widget_layout   = new QHBoxLayout(network_mode_widget_);
+  network_mode_widget_layout->setContentsMargins(9, 0, 9, 0);
+  network_mode_widget_layout->setSpacing        (6);
+  network_mode_warning_icon_                = new QLabel(ui_.statusbar);
+  network_mode_label_                       = new QLabel(ui_.statusbar);
+
+  network_mode_widget_layout->addWidget(network_mode_warning_icon_);
+  network_mode_widget_layout->addWidget(network_mode_label_);
+
+  int label_height = network_mode_warning_icon_->sizeHint().height();
+  QPixmap warning_icon = QPixmap(":/ecalicons/ERROR").scaled(label_height, label_height, Qt::AspectRatioMode::KeepAspectRatio, Qt::TransformationMode::SmoothTransformation);
+  network_mode_warning_icon_->setPixmap(warning_icon);
+  network_mode_warning_icon_->setVisible(false);
+
+  bool network_mode = eCAL::Config::IsNetworkEnabled();
+  int multicast_ttl = eCAL::Config::GetUdpMulticastTtl();
+
+  if (network_mode)
+  {
+    network_mode_label_->setText("Network mode: Cloud (TTL: " + QString::number(multicast_ttl) + ")");
+
+    if (multicast_ttl <= 0)
+    {
+      network_mode_widget_->setToolTip("ERROR: Network enabled but TTL is " + QString::number(multicast_ttl) + ". Change via ecal.ini");
+      network_mode_widget_->setStyleSheet("background-color: rgb(255, 128, 128); color: black");
+      network_mode_warning_icon_->setVisible(true);
+    }
+    else
+    {
+      network_mode_widget_->setStyleSheet("background-color: rgb(80, 255, 120); color: black");
+      network_mode_widget_->setToolTip("Change via ecal.ini");
+    }
+  }
+  else
+  {
+    network_mode_label_->setText("Network mode: Local");
+    network_mode_widget_->setStyleSheet("background-color: rgb(44, 148, 255); color: black");
+    network_mode_widget_->setToolTip("Change via ecal.ini");
+  }
+
   error_label_                = new QLabel(this);
   error_label_                ->setHidden(true);
-  error_label_                ->setStyleSheet("background-color: rgb(255, 128, 128);");
+  error_label_                ->setStyleSheet("background-color: rgb(255, 128, 128); color: black");
 
   monitor_update_speed_label_ = new QLabel(this);
   log_update_speed_label_     = new QLabel(this);
   time_label_                 = new QLabel(this);
 
+  network_mode_label_        ->setMinimumWidth(10);
   monitor_update_speed_label_->setMinimumWidth(10);
   log_update_speed_label_    ->setMinimumWidth(10);
   time_label_                ->setMinimumWidth(10);
   error_label_               ->setMinimumWidth(10);
 
+  ui_.statusbar->addWidget(network_mode_widget_);
   ui_.statusbar->addWidget(monitor_update_speed_label_);
   ui_.statusbar->addWidget(log_update_speed_label_);
   ui_.statusbar->addWidget(time_label_);
@@ -320,46 +365,35 @@ void Ecalmon::updateMonitorUpdateTimerAndStatusbar()
   if (isMonitorUpdatePaused())
   {
     monitor_update_timer_->stop();
+    monitor_update_speed_label_->setVisible(true);
     monitor_update_speed_label_->setText(tr("  Monitor update speed: PAUSED  "));
   }
   else
   {
     QAction* update_speed_action = monitor_update_speed_group_->checkedAction();
+    monitor_update_speed_label_->setVisible(false);
     if (update_speed_action)
     {
       if (update_speed_action == ui_.action_monitor_refresh_speed_0_5s)
       {
         monitor_update_timer_->start(500);
-        monitor_update_speed_label_->setText(tr("  Monitor update speed: 0.5 s  "));
       }
       else if (update_speed_action == ui_.action_monitor_refresh_speed_1s)
       {
         monitor_update_timer_->start(1000);
-        monitor_update_speed_label_->setText(tr("  Monitor update speed: 1 s  "));
       }
       else if (update_speed_action == ui_.action_monitor_refresh_speed_2s)
       {
         monitor_update_timer_->start(2000);
-        monitor_update_speed_label_->setText(tr("  Monitor update speed: 2 s  "));
       }
       else if (update_speed_action == ui_.action_monitor_refresh_speed_5s)
       {
         monitor_update_timer_->start(5000);
-        monitor_update_speed_label_->setText(tr("  Monitor update speed: 5 s  "));
       }
       else if (update_speed_action == ui_.action_monitor_refresh_speed_10s)
       {
         monitor_update_timer_->start(10000);
-        monitor_update_speed_label_->setText(tr("  Monitor update speed: 10 s  "));
       }
-      else
-      {
-        monitor_update_speed_label_->setText(tr("  Monitor update speed: ???  "));
-      }
-    }
-    else
-    {
-      monitor_update_speed_label_->setText(tr("  Monitor update speed: ???  "));
     }
   }
 }
@@ -372,7 +406,7 @@ void Ecalmon::setLogUpdatePaused(bool paused)
   {
     ui_.action_log_poll_speed_paused->setChecked(paused);
   }
-  if (!log_widget_->isPaused())
+  if (log_widget_->isPaused() != paused)
   {
     log_widget_->blockSignals(true);
     log_widget_->setPaused(paused);
@@ -388,50 +422,38 @@ void Ecalmon::updateLogUpdateTimerAndStatusbar()
   if (log_widget_->isPaused())
   {
     log_update_speed_label_->setText(tr("  Log frequency: PAUSED  "));
+    log_update_speed_label_->setVisible(true);
   }
   else
   {
     QAction* update_speed_action = log_update_speed_group_->checkedAction();
+    log_update_speed_label_->setVisible(false);
     if (update_speed_action)
     {
       if (update_speed_action == ui_.action_log_poll_speed_100hz)
       {
         log_widget_->setPollSpeed(10);
-        log_update_speed_label_->setText(tr("  Log frequency: 100 Hz  "));
       }
       else if (update_speed_action == ui_.action_log_poll_speed_50hz)
       {
         log_widget_->setPollSpeed(20);
-        log_update_speed_label_->setText(tr("  Log frequency: 50 Hz  "));
       }
       else if (update_speed_action == ui_.action_log_poll_speed_20hz)
       {
         log_widget_->setPollSpeed(50);
-        log_update_speed_label_->setText(tr("  Log frequency: 20 Hz  "));
       }
       else if (update_speed_action == ui_.action_log_poll_speed_10hz)
       {
         log_widget_->setPollSpeed(100);
-        log_update_speed_label_->setText(tr("  Log frequency: 10 Hz  "));
       }
       else if (update_speed_action == ui_.action_log_poll_speed_2hz)
       {
         log_widget_->setPollSpeed(500);
-        log_update_speed_label_->setText(tr("  Log frequency: 2 Hz  "));
       }
       else if (update_speed_action == ui_.action_log_poll_speed_1hz)
       {
         log_widget_->setPollSpeed(1000);
-        log_update_speed_label_->setText(tr("  Log frequency: 1 Hz  "));
       }
-      else
-      {
-        log_update_speed_label_->setText(tr("  Log frequency: ??? Hz  "));
-      }
-    }
-    else
-    {
-      log_update_speed_label_->setText(tr("  Log frequency: ??? Hz  "));
     }
   }
 }
@@ -479,7 +501,7 @@ void Ecalmon::setTheme(Theme theme)
     QColor darkGray( 58,  58,  58);
     QColor gray    (128, 128, 128);
     QColor black   ( 31,  31,  31);
-    QColor blue    ( 42, 130, 218);
+    QColor blue    ( 44, 148, 255);
 
     QPalette darkPalette;
     darkPalette.setColor(QPalette::Window         , darkGray);
