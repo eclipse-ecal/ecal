@@ -67,7 +67,7 @@ namespace eCAL
         started = true;
       }
       // add topic name based multicast address
-      std::string mcast_address = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), eCALPAR(NET, UDP_MULTICAST_MASK));
+      std::string mcast_address = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
       if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
       {
         topic_name_mcast_map.emplace(std::pair<std::string, int>(mcast_address, 0));
@@ -78,7 +78,7 @@ namespace eCAL
 
     void RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
     {
-      std::string mcast_address = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), eCALPAR(NET, UDP_MULTICAST_MASK));
+      std::string mcast_address = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
       if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
       {
         // this should never happen

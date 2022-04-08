@@ -231,7 +231,7 @@ namespace eCAL
       sstream << "Network sndbuf           : " << GetBufferStr(eCALPAR(NET, UDP_MULTICAST_SNDBUF)) << std::endl;
       sstream << "Network rcvbuf           : " << GetBufferStr(eCALPAR(NET, UDP_MULTICAST_RCVBUF)) << std::endl;
       sstream << "Multicast group          : " << Config::GetUdpMulticastGroup() << std::endl;
-      sstream << "Multicast mask           : " << eCALPAR(NET, UDP_MULTICAST_MASK) << std::endl;
+      sstream << "Multicast mask           : " << Config::GetUdpMulticastMask() << std::endl;
       int port = eCALPAR(NET, UDP_MULTICAST_PORT);
       sstream << "Multicast ports          : " << port << " - " << port + 10 << std::endl;
       auto bandwidth = eCALPAR(NET, BANDWIDTH_MAX_UDP);

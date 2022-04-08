@@ -61,7 +61,7 @@ namespace eCAL
     m_topic_name  = topic_name_;
     m_topic_id    = topic_id_;
 
-    m_udp_ipaddr  = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), eCALPAR(NET, UDP_MULTICAST_MASK));
+    m_udp_ipaddr  = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
 
     SSenderAttr attr;
     attr.ipaddr     = m_udp_ipaddr;
