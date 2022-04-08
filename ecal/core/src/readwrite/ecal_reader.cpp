@@ -189,7 +189,7 @@ namespace eCAL
     }
 
     // start ecal shared memory layer
-    if (eCALPAR(NET, SHM_REC_ENABLED))
+    if (Config::IsShmRecEnabled())
     {
       CSHMLayer::Get()->Initialize();
     }
@@ -216,7 +216,7 @@ namespace eCAL
     }
 
     // start ecal shared memory layer
-    if (eCALPAR(NET, SHM_REC_ENABLED))
+    if (Config::IsShmRecEnabled())
     {
       CSHMLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
@@ -237,13 +237,13 @@ namespace eCAL
   void CDataReader::StopDataLayers()
   {
     // stop ecal udp multicast layer
-    if (Config::IsUdpMulticastRecEnabled())
+    if (eCALPAR(NET, UDP_MC_REC_ENABLED))
     {
       CMulticastLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
 
     // stop ecal shared memory layer
-    if (eCALPAR(NET, SHM_REC_ENABLED))
+    if (Config::IsShmRecEnabled())
     {
       CSHMLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
