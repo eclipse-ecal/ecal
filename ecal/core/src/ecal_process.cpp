@@ -234,7 +234,7 @@ namespace eCAL
       sstream << "Multicast mask           : " << Config::GetUdpMulticastMask() << std::endl;
       int port = Config::GetUdpMulticastPort();
       sstream << "Multicast ports          : " << port << " - " << port + 10 << std::endl;
-      auto bandwidth = eCALPAR(NET, BANDWIDTH_MAX_UDP);
+      auto bandwidth = Config::GetMaxUdpBandwidthBytesPerSecond();
       if (bandwidth < 0)
       {
         sstream << "Bandwidth limit (udp)    : not limited" << std::endl;

@@ -112,7 +112,7 @@ namespace eCAL
     m_clock_old         = 0;
     m_snd_time          = std::chrono::steady_clock::time_point();
     m_freq              = 0;
-    m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
+    m_bandwidth_max_udp = Config::GetMaxUdpBandwidthBytesPerSecond();
     m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
     m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY) != 0;
     m_connected         = false;
@@ -185,7 +185,7 @@ namespace eCAL
     m_clock_old         = 0;
     m_snd_time          = std::chrono::steady_clock::time_point();
     m_freq              = 0;
-    m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
+    m_bandwidth_max_udp = Config::GetMaxUdpBandwidthBytesPerSecond();
     m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
     m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY) != 0;
     m_connected         = false;
