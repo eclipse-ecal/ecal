@@ -57,7 +57,7 @@ namespace eCAL
       attr.ipaddr    = Config::GetUdpMulticastGroup();
       attr.broadcast = false;
     }
-    attr.port     = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_REG_OFF;
+    attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
     attr.loopback = true;
     attr.rcvbuf   = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
 
@@ -93,7 +93,7 @@ namespace eCAL
       attr.ipaddr    = Config::GetUdpMulticastGroup();
       attr.broadcast = false;
     }
-    attr.port     = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_LOG_OFF;
+    attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
     attr.loopback = true;
     attr.rcvbuf   = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
 

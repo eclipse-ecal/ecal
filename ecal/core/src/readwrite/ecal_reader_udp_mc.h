@@ -52,7 +52,7 @@ namespace eCAL
     {
       SReceiverAttr attr;
       attr.ipaddr = Config::GetUdpMulticastGroup();
-      attr.port = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
+      attr.port = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
       attr.unicast = false;
       attr.loopback = true;
       attr.rcvbuf = eCALPAR(NET, UDP_MULTICAST_RCVBUF);

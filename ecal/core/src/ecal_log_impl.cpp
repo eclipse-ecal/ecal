@@ -195,7 +195,7 @@ namespace eCAL
         attr.ipaddr    = Config::GetUdpMulticastGroup();
         attr.broadcast = false;
       }
-      attr.port     = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_LOG_OFF;
+      attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
       attr.loopback = true;
       attr.ttl      = eCALPAR(NET, UDP_MULTICAST_TTL);
       attr.sndbuf   = eCALPAR(NET, UDP_MULTICAST_SNDBUF);

@@ -65,7 +65,7 @@ namespace eCAL
 
     SSenderAttr attr;
     attr.ipaddr     = m_udp_ipaddr;
-    attr.port       = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
+    attr.port       = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
     attr.unicast    = false;
     attr.sndbuf     = eCALPAR(NET, UDP_MULTICAST_SNDBUF);
 
