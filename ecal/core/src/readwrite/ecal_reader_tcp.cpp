@@ -148,7 +148,7 @@ namespace eCAL
     // add new session
     if (new_session)
     {
-      m_subscriber->addSession(host_name_, port_, eCALPAR(NET, TCP_PUBSUB_MAX_RECONNECTIONS));
+      m_subscriber->addSession(host_name_, port_, Config::GetTcpPubsubMaxReconnectionAttemps());
       m_subscriber->setCallback(std::bind(&CDataReaderTCP::OnTcpMessage, this, std::placeholders::_1));
     }
 
