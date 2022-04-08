@@ -279,14 +279,14 @@ namespace eCAL
       sstream << "Layer Mode INPROC        : " << LayerMode(Config::IsInprocRecEnabled())  << std::endl;
       sstream << "Layer Mode SHM           : " << LayerMode(Config::IsShmRecEnabled())     << std::endl;
       sstream << "Layer Mode UDP MC        : " << LayerMode(Config::IsUdpMulticastRecEnabled())  << std::endl;
-      sstream << "Npcap UDP Reciever       : " << LayerMode(eCALPAR(NET, NPCAP_ENABLED));
+      sstream << "Npcap UDP Reciever       : " << LayerMode(Config::IsNpcapEnabled());
 #ifdef ECAL_NPCAP_SUPPORT
-      if(eCALPAR(NET, NPCAP_ENABLED) && !Udpcap::Initialize())
+      if(Config::IsNpcapEnabled() && !Udpcap::Initialize())
       {
         sstream << " (Init FAILED!)";
       }
 #else  // ECAL_NPCAP_SUPPORT
-      if (eCALPAR(NET, NPCAP_ENABLED))
+      if (Config::IsNpcapEnabled())
       {
         sstream << " (Npcap is enabled, but not configured via CMake!)";
       }
