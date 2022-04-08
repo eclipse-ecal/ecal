@@ -201,7 +201,7 @@ namespace eCAL
     }
 
     // start inproc layer
-    if (eCALPAR(NET, INPROC_REC_ENABLED))
+    if (Config::IsInprocRecEnabled())
     {
       CInProcLayer::Get()->Initialize();
     }
@@ -228,7 +228,7 @@ namespace eCAL
     }
 
     // start inproc layer
-    if (eCALPAR(NET, INPROC_REC_ENABLED))
+    if (Config::IsInprocRecEnabled())
     {
       CInProcLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
@@ -255,7 +255,7 @@ namespace eCAL
     }
 
     // stop inproc layer
-    if (eCALPAR(NET, INPROC_REC_ENABLED))
+    if (Config::IsInprocRecEnabled())
     {
       CInProcLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
