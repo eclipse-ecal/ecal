@@ -35,13 +35,13 @@ namespace eCAL
   public:
     CUDPReceiver();
 
-    bool Create(const SReceiverAttr& attr_);
-    bool Destroy();
+    bool Create(const SReceiverAttr& attr_) override;
+    bool Destroy() override;
 
     bool AddMultiCastGroup(const char* ipaddr_);
     bool RemMultiCastGroup(const char* ipaddr_);
 
-    size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr);
+    size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr) override;
 
   protected:
     bool m_use_npcap;
