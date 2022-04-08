@@ -25,6 +25,8 @@
 #include "ecal_config_reader_hlp.h"
 #include "ecal_global_accessors.h"
 
+#include <ecal/ecal_config.h>
+
 #include "pubsub/ecal_subgate.h"
 
 #include "readwrite/ecal_writer_base.h"
@@ -49,7 +51,7 @@ namespace eCAL
   void CTCPReaderLayer::Initialize()
   {
     tcp_pubsub::logger::logger_t tcp_pubsub_logger = std::bind(TcpPubsubLogger, std::placeholders::_1, std::placeholders::_2);
-    m_executor = std::make_shared<tcp_pubsub::Executor>(eCALPAR(NET, TCP_PUBSUB_NUM_EXECUTOR_READER), tcp_pubsub_logger);
+    m_executor = std::make_shared<tcp_pubsub::Executor>(Config::GetTcpPubsubReaderThreadpoolSize(), tcp_pubsub_logger);
   }
 
   void CTCPReaderLayer::AddSubscription(const std::string& host_name_, const std::string& /*topic_name_*/, const std::string& topic_id_, QOS::SReaderQOS /*qos_*/)
