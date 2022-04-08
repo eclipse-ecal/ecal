@@ -66,13 +66,13 @@ namespace eCAL
     // time
     /////////////////////////////////////
     
-    ECAL_API std::string       GetTimesyncModuleName                () { return eCALPAR(TIME,  SYNC_MOD_RT); }
+    ECAL_API std::string       GetTimesyncModuleName                () { return eCALPAR(TIME, SYNC_MOD_RT); }
 
     /////////////////////////////////////
     // process
     /////////////////////////////////////
     
-    ECAL_API std::string       GetTerminalEmulatorCommand           () { return eCALPAR(PROCESS,  TERMINAL_EMULATOR); }
+    ECAL_API std::string       GetTerminalEmulatorCommand           () { return eCALPAR(PROCESS, TERMINAL_EMULATOR); }
 
     /////////////////////////////////////
     // monitoring

@@ -246,7 +246,7 @@ namespace eCAL
       sstream << std::endl;
 
       sstream << "------------------------- TIME -----------------------------------" << std::endl;
-      sstream << "Synchronization realtime : " << eCALPAR(TIME, SYNC_MOD_RT) << std::endl;
+      sstream << "Synchronization realtime : " << Config::GetTimesyncModuleName() << std::endl;
       sstream << "Synchronization replay   : " << eCALPAR(TIME, SYNC_MOD_REPLAY) << std::endl;
       sstream << "State                    : ";
       if (g_timegate()->IsSynchronized()) sstream << " synchronized " << std::endl;
