@@ -183,7 +183,7 @@ namespace eCAL
   void CDataReader::InitializeLayers()
   {
     // start ecal udp multicast layer
-    if (eCALPAR(NET, UDP_MC_REC_ENABLED))
+    if (Config::IsUdpMulticastRecEnabled())
     {
       CMulticastLayer::Get()->Initialize();
     }
@@ -210,7 +210,7 @@ namespace eCAL
   void CDataReader::StartDataLayers()
   {
     // start ecal udp multicast layer
-    if (eCALPAR(NET, UDP_MC_REC_ENABLED))
+    if (Config::IsUdpMulticastRecEnabled())
     {
       CMulticastLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
@@ -237,7 +237,7 @@ namespace eCAL
   void CDataReader::StopDataLayers()
   {
     // stop ecal udp multicast layer
-    if (eCALPAR(NET, UDP_MC_REC_ENABLED))
+    if (Config::IsUdpMulticastRecEnabled())
     {
       CMulticastLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
