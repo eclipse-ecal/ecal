@@ -98,7 +98,7 @@ namespace eCAL
     }
     attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
     attr.loopback = true;
-    attr.rcvbuf   = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
+    attr.rcvbuf   = Config::GetUdpMulticastRcvBufSizeBytes();
 
     m_reg_rcv.Create(attr);
     m_reg_rcv_thread.Start(0, std::bind(&CUdpRegistrationReceiver::Receive, &m_reg_rcv_process, &m_reg_rcv));

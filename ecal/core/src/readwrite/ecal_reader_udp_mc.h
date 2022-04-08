@@ -55,7 +55,7 @@ namespace eCAL
       attr.port = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
       attr.unicast = false;
       attr.loopback = true;
-      attr.rcvbuf = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
+      attr.rcvbuf = Config::GetUdpMulticastRcvBufSizeBytes();
       rcv.Create(attr);
     }
 

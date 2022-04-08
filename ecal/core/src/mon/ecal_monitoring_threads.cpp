@@ -59,7 +59,7 @@ namespace eCAL
     }
     attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
     attr.loopback = true;
-    attr.rcvbuf   = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
+    attr.rcvbuf   = Config::GetUdpMulticastRcvBufSizeBytes();
 
     m_reg_rcv.Create(attr);
     m_reg_rcv_thread.Start(0, std::bind(&CRegistrationReceiveThread::ThreadFun, this));
@@ -95,7 +95,7 @@ namespace eCAL
     }
     attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
     attr.loopback = true;
-    attr.rcvbuf   = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
+    attr.rcvbuf   = Config::GetUdpMulticastRcvBufSizeBytes();
 
     m_log_rcv.Create(attr);
     m_log_rcv_thread.Start(0, std::bind(&CLoggingReceiveThread::ThreadFun, this));
