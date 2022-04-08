@@ -71,12 +71,12 @@ namespace eCAL
 
     // create sample sender without activated loopback
     attr.loopback   = false;
-    attr.ttl        = eCALPAR(NET, UDP_MULTICAST_TTL);
+    attr.ttl        = Config::GetUdpMulticastTtl();
     m_sample_snd_no_loopback.Create(attr);
 
     // create sample sender with activated loopback
     int ttl(0);
-    if (Config::IsNetworkEnabled()) ttl = eCALPAR(NET, UDP_MULTICAST_TTL);
+    if (Config::IsNetworkEnabled()) ttl = Config::GetUdpMulticastTtl();
     attr.loopback   = true;
     attr.ttl        = ttl;
     m_sample_snd_loopback.Create(attr);
