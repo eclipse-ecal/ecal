@@ -198,7 +198,7 @@ namespace eCAL
       attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
       attr.loopback = true;
       attr.ttl      = Config::GetUdpMulticastTtl();
-      attr.sndbuf   = eCALPAR(NET, UDP_MULTICAST_SNDBUF);
+      attr.sndbuf   = Config::GetUdpMulticastSndBufSizeBytes();
 
       m_udp_sender->Create(attr);
     }
