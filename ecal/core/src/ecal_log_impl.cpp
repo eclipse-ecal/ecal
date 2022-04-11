@@ -162,9 +162,9 @@ namespace eCAL
     m_level = log_level_info;
 
     // parse logging filter strings
-    m_filter_mask_con  = ParseLogLevel(eCALPAR(MON, LOG_FILTER_CON));
-    m_filter_mask_file = ParseLogLevel(eCALPAR(MON, LOG_FILTER_FILE));
-    m_filter_mask_udp  = ParseLogLevel(eCALPAR(MON, LOG_FILTER_UDP));
+    m_filter_mask_con  = ParseLogLevel(Config::GetConsoleLogFilter());
+    m_filter_mask_file = ParseLogLevel(Config::GetFileLogFilter());
+    m_filter_mask_udp  = ParseLogLevel(Config::GetUdpLogFilter());
 
     // create log file
     if(m_filter_mask_file)

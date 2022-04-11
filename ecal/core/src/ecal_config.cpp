@@ -82,7 +82,7 @@ namespace eCAL
     ECAL_API std::string       GetMonitoringFilterExcludeList       () { return eCALPAR(MON, FILTER_EXCL); }
     ECAL_API std::string       GetMonitoringFilterIncludeList       () { return eCALPAR(MON, FILTER_INCL); }
     ECAL_API std::string       GetConsoleLogFilter                  () { return eCALPAR(MON, LOG_FILTER_CON); }
-    ECAL_API std::string       GetLogFileName                       () { return eCALPAR(MON, LOG_FILTER_FILE); }
+    ECAL_API std::string       GetFileLogFilter                     () { return eCALPAR(MON, LOG_FILTER_FILE); }
     ECAL_API std::string       GetUdpLogFilter                      () { return eCALPAR(MON, LOG_FILTER_UDP); }
 
     /////////////////////////////////////
