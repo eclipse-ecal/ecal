@@ -79,11 +79,11 @@ namespace eCAL
   CMonitoringImpl::CMonitoringImpl() :
     m_init(false),
     m_network       (Config::IsNetworkEnabled()),
-    m_publisher_map (std::chrono::milliseconds(eCALPAR(MON, TIMEOUT))),
-    m_subscriber_map(std::chrono::milliseconds(eCALPAR(MON, TIMEOUT))),
-    m_process_map   (std::chrono::milliseconds(eCALPAR(MON, TIMEOUT))),
-    m_server_map    (std::chrono::milliseconds(eCALPAR(MON, TIMEOUT))),
-    m_client_map    (std::chrono::milliseconds(eCALPAR(MON, TIMEOUT)))
+    m_publisher_map (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
+    m_subscriber_map(std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
+    m_process_map   (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
+    m_server_map    (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
+    m_client_map    (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs()))
   {
   }
 
