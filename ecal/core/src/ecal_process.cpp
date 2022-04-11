@@ -28,6 +28,7 @@
 #include "ecal_register.h"
 #include "ecal_reggate.h"
 #include "ecal_globals.h"
+#include "ecal_process.h"
 
 #include <array>
 #include <chrono>
@@ -217,7 +218,6 @@ namespace eCAL
 
       sstream << "------------------------- NETWORK --------------------------------" << std::endl;
       sstream << "Host name                : " << Process::GetHostName() << std::endl;
-      sstream << "Host id                  : " << Process::GetHostID() << std::endl;
       if (eCALPAR(NET, ENABLED))
       {
         sstream << "Network mode             : cloud" << std::endl;
@@ -315,6 +315,11 @@ namespace eCAL
     }
 
     int GetHostID()
+    {
+      return __GetHostID();
+    }
+
+    int __GetHostID()
     {
       if (g_host_id == 0)
       {
