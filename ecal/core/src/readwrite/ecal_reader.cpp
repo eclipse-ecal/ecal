@@ -120,10 +120,10 @@ namespace eCAL
     m_sample_hash.set_expiration(std::chrono::milliseconds(500));
 
     // allow to share topic type
-    m_use_ttype = eCALPAR(PUB, SHARE_TTYPE) != 0;
+    m_use_ttype = Config::IsTopicTypeSharingEnabled();
 
     // allow to share topic description
-    m_use_tdesc = eCALPAR(PUB, SHARE_TDESC) != 0;
+    m_use_tdesc = Config::IsTopicDescriptionSharingEnabled();
 
     // start transport layers
     StartDataLayers();
