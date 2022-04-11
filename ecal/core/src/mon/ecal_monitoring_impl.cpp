@@ -116,8 +116,8 @@ namespace eCAL
     m_pub_threadcaller = std::make_shared<CMonLogPublishingThread>(mon_cb, log_cb);
 
     // setup blacklist and whitelist filter strings#
-    m_topic_filter_excl_s = eCALPAR(MON, FILTER_EXCL);
-    m_topic_filter_incl_s = eCALPAR(MON, FILTER_INCL);
+    m_topic_filter_excl_s = Config::GetMonitoringFilterExcludeList();
+    m_topic_filter_incl_s = Config::GetMonitoringFilterIncludeList();
 
     // setup filtering on by default
     SetFilterState(true);
