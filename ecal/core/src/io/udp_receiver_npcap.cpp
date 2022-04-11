@@ -21,8 +21,8 @@
 namespace eCAL
 {
   ////////////////////////////////////////////////////////
-// Npcap based receiver class implementation
-////////////////////////////////////////////////////////
+  // Npcap based receiver class implementation
+  ////////////////////////////////////////////////////////
   CUDPReceiverPcap::CUDPReceiverPcap(const SReceiverAttr& attr_)
     : CUDPReceiverBase(attr_)
     , m_unicast(attr_.unicast)
@@ -30,11 +30,21 @@ namespace eCAL
     // set receive buffer size (default = 1 MB)
     int rcvbuf = 1024 * 1024;
     if (attr_.rcvbuf > 0)
+    {
       rcvbuf = attr_.rcvbuf;
-    m_socket.setReceiveBufferSize(rcvbuf);
+    }
+    if (!m_socket.setReceiveBufferSize(rcvbuf))
+    {
+      std::cerr << "CUDPReceiverPcap: Unable to set receive buffer size." << std::endl;
+      return;
+    }
 
     // bind socket
-    m_socket.bind(Udpcap::HostAddress::Any(), static_cast<uint16_t>(attr_.port));
+    if (!m_socket.bind(Udpcap::HostAddress::Any(), static_cast<uint16_t>(attr_.port)))
+    {
+      std::cerr << "CUDPReceiverPcap: Unable to bind socket." << std::endl;
+      return;
+    }
 
     if (!m_unicast)
     {
@@ -51,7 +61,11 @@ namespace eCAL
     if (!m_unicast)
     {
       // join multicast group
-      return m_socket.joinMulticastGroup(Udpcap::HostAddress(ipaddr_));
+      if (!m_socket.joinMulticastGroup(Udpcap::HostAddress(ipaddr_)))
+      {
+        std::cerr << "CUDPReceiverPcap: Unable to join multicast group." << std::endl;
+        return(false);
+      }
     }
     return(true);
   }
@@ -61,7 +75,11 @@ namespace eCAL
     if (!m_unicast)
     {
       // leave multicast group
-      return m_socket.leaveMulticastGroup(Udpcap::HostAddress(ipaddr_));
+      if (!m_socket.leaveMulticastGroup(Udpcap::HostAddress(ipaddr_)))
+      {
+        std::cerr << "CUDPReceiverPcap: Unable to leave multicast group." << std::endl;
+        return(false);
+      }
     }
     return(true);
   }
