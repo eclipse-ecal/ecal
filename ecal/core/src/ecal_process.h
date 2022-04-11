@@ -24,6 +24,8 @@
 
 #pragma once
 
+#include <ecal/ecal.h>
+
 namespace eCAL
 {
   namespace Process
@@ -35,7 +37,7 @@ namespace eCAL
        *
        * @return  Host id or zero if failed.
       **/
-      int GetHostID();
+      ECAL_API int GetHostID();
     }
   }
 }
