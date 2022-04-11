@@ -43,9 +43,14 @@ namespace eCAL
   {
   public:
     CUDPSenderImpl(const SSenderAttr& attr_);
-    size_t Send(const void* buf_, const size_t len_, const char* ipaddr_ = nullptr);
+
+    size_t Send     (const void* buf_, const size_t len_, const char* ipaddr_ = nullptr);
+    void   SendAsync(const void* buf_, const size_t len_, const char* ipaddr_ = nullptr);
 
   protected:
+    void SendAsync(asio::const_buffer buf_, const char* ipaddr_);
+    void OnSendAsync(asio::error_code ec_, std::size_t bytes_transferred_, asio::const_buffer buf_, const char* ipaddr_);
+
     bool                    m_broadcast;
     bool                    m_unicast;
     asio::io_context        m_iocontext;
@@ -104,11 +109,9 @@ namespace eCAL
       if (ec)
         std::cerr << "CUDPSender: Setting broadcast mode failed: " << ec.message() << std::endl;
     }
-
-    m_iocontext.run();
   }
 
-  size_t CUDPSenderImpl::Send(const void* buf_, const size_t len_, const char* ipaddr_ /* = nullptr */)
+  size_t CUDPSenderImpl::Send(const void* buf_, const size_t len_, const char* ipaddr_)
   {
     asio::socket_base::message_flags flags(0);
     asio::error_code                 ec;
@@ -122,6 +125,37 @@ namespace eCAL
     }
     return(sent);
   }
+
+  void CUDPSenderImpl::SendAsync(const void* buf_, const size_t len_, const char* ipaddr_)
+  {
+    SendAsync(asio::buffer(buf_, len_), ipaddr_);
+    m_iocontext.run();
+   }
+
+  void CUDPSenderImpl::SendAsync(asio::const_buffer buf_, const char* ipaddr_)
+  {
+    if (ipaddr_ && (ipaddr_[0] != '\0')) m_socket.async_send_to(buf_, asio::ip::udp::endpoint(asio::ip::make_address(ipaddr_), m_port), std::bind(&CUDPSenderImpl::OnSendAsync, this, std::placeholders::_1, std::placeholders::_2, buf_, ipaddr_));
+    else                                 m_socket.async_send_to(buf_, m_endpoint,                                                       std::bind(&CUDPSenderImpl::OnSendAsync, this, std::placeholders::_1, std::placeholders::_2, buf_, ipaddr_));
+  }
+
+  void CUDPSenderImpl::OnSendAsync(asio::error_code ec_, std::size_t bytes_transferred_, asio::const_buffer buf_, const char* ipaddr_)
+  {
+    if (!ec_)
+    {
+      // bytes_transferred_ amount of data was successfully sent
+      auto bytes_left = buf_ + bytes_transferred_;
+      if (bytes_left.size())
+      {
+        // send "rest data" in the next SendAsync operation
+        SendAsync(bytes_left, ipaddr_);
+      }
+      m_iocontext.stop();
+    }
+    else
+    {
+      std::cout << "CUDPSender::OnSend failed with: \'" << ec_.message() << "\'" << std::endl;
+    }
+  };
 
   ////////////////////////////////////////////////////////
   // udp sender class
@@ -142,9 +176,15 @@ namespace eCAL
     return(true);
   }
 
-  size_t CUDPSender::Send(const void* buf_, const size_t len_, const char* ipaddr_ /* = nullptr */)
+  size_t CUDPSender::Send(const void* buf_, const size_t len_, const char* ipaddr_)
   {
     if (!m_socket_impl) return(0);
     return(m_socket_impl->Send(buf_, len_, ipaddr_));
+  }
+
+  void CUDPSender::SendAsync(const void* buf_, const size_t len_, const char* ipaddr_)
+  {
+    if (!m_socket_impl) return;
+    m_socket_impl->SendAsync(buf_, len_, ipaddr_);
   }
 }

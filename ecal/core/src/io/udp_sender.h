@@ -38,7 +38,8 @@ namespace eCAL
     bool Create(const SSenderAttr& attr_);
     bool Destroy();
 
-    size_t Send(const void* buf_, const size_t len_, const char* ipaddr_ = nullptr);
+    size_t Send     (const void* buf_, const size_t len_, const char* ipaddr_ = nullptr);
+    void   SendAsync(const void* buf_, const size_t len_, const char* ipaddr_ = nullptr);
 
   protected:
     std::shared_ptr<CUDPSenderImpl> m_socket_impl;

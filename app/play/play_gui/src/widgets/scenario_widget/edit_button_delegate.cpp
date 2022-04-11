@@ -41,7 +41,6 @@ EditButtonDelegate::EditButtonDelegate(QAbstractItemView* parent)
   , last_time_button_hover_(false)
 {
   qApp->installEventFilter(this);
-  parent->viewport()->setAttribute( Qt::WA_Hover ); // We need to repaint the buttons when the mouse hovers over a row
 }
 
 EditButtonDelegate::~EditButtonDelegate()

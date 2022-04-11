@@ -26,7 +26,7 @@
 #include "readwrite/ecal_reader_udp.h"
 #include "readwrite/ecal_reader_layer.h"
 
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include "ecal_thread.h"
 #include "topic2mcast.h"
 

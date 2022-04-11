@@ -24,7 +24,7 @@
 #include <ecal/ecal.h>
 
 #include "ecal_def.h"
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include "ecal_register.h"
 #include "ecal_reggate.h"
 #include "ecal_globals.h"
@@ -283,6 +283,11 @@ namespace eCAL
       if(eCALPAR(NET, NPCAP_ENABLED) && !Udpcap::Initialize())
       {
         sstream << " (Init FAILED!)";
+      }
+#else  // ECAL_NPCAP_SUPPORT
+      if (eCALPAR(NET, NPCAP_ENABLED))
+      {
+        sstream << " (Npcap is enabled, but not configured via CMake!)";
       }
 #endif // ECAL_NPCAP_SUPPORT
       sstream << std::endl;

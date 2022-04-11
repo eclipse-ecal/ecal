@@ -31,7 +31,7 @@
 #endif
 
 #include "ecal_def.h"
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 
 #include "readwrite/ecal_writer_tcp.h"
 #include "readwrite/ecal_tcp_pubsub_logger.h"

@@ -166,7 +166,7 @@ Again, create a new directory somewhere and add create the :file:`CMakeLists.txt
   .. important::
      eCAL Receive callbacks run in the subscriber's receive thread.
      While the callback is running, the subscriber cannot receive new data.
-     So, if your callback needs really long to compute, you may have to decouple your computations to not loose messages.
+     So, if your callback needs really long to compute, you may have to decouple your computations to not lose messages.
 
 Now that you have the source code ready, create a :file:`_build` directory and build the code!
 

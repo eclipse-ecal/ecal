@@ -119,10 +119,12 @@ endif()
 # --------------------------------------------------------
 # detect qt library
 # --------------------------------------------------------
-if (HAS_QT5)
-  find_package(Qt5 COMPONENTS Core QUIET)
-  if (NOT "${Qt5_FOUND}")
-    autodetect_qt5_msvc_dir()
+if(MSVC)
+  if (HAS_QT5)
+    find_package(Qt5 COMPONENTS Core QUIET)
+    if (NOT "${Qt5_FOUND}")
+      autodetect_qt5_msvc_dir()
+    endif()
   endif()
 endif()
 
