@@ -63,7 +63,7 @@ void SignalTreeModel::setRoot(QAbstractTreeItem* root)
 Qt::ItemFlags SignalTreeModel::flags(const QModelIndex& index) const
 {
   if (!index.isValid())
-    return 0;
+    return Qt::ItemFlag();
   int column = index.column();
   SignalTreeItem* tree_item = static_cast<SignalTreeItem*>(item(index));
   return tree_item->flags(column);

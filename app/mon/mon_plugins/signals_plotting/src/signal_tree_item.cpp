@@ -17,9 +17,6 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#ifdef _MSC_VER
-#pragma warning(disable : 4718)  // push and pop warnings not working ??
-#endif
 #include "signal_tree_item.h"
 #include "signal_tree_model.h"
 

@@ -103,9 +103,9 @@ public:
   void setMetaData(const SignalTreeMetaData& data_);
 
   // Getter for the visitor pattern to check whether this child has been processed
-  inline bool isAccessed() const;
+  bool isAccessed() const;
   // Setter for the visitor pattern to save whether this child has been processed
-  inline void setAccessed(bool accessed);
+  void setAccessed(bool accessed);
 
 signals:
 
