@@ -764,7 +764,7 @@ namespace
 
     // -------------------- terminal_emulator command check --------------------
 
-    const std::string terminal_emulator_command = Config::GetTerminalEmulatorCommand();
+    const std::string terminal_emulator_command = eCAL::Config::GetTerminalEmulatorCommand();
     if (!terminal_emulator_command.empty())
     {
       STD_COUT_DEBUG("[PID " << getpid() << "]: " << "ecal.ini terminal emulator command is: " << terminal_emulator_command << std::endl);
