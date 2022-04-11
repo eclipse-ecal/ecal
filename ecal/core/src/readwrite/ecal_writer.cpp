@@ -114,7 +114,7 @@ namespace eCAL
     m_freq              = 0;
     m_bandwidth_max_udp = Config::GetMaxUdpBandwidthBytesPerSecond();
     m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
-    m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY) != 0;
+    m_zero_copy         = Config::IsMemfileZerocopyEnabled();
     m_connected         = false;
     m_ext_subscribed    = false;
     m_created           = false;
@@ -187,7 +187,7 @@ namespace eCAL
     m_freq              = 0;
     m_bandwidth_max_udp = Config::GetMaxUdpBandwidthBytesPerSecond();
     m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
-    m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY) != 0;
+    m_zero_copy         = Config::IsMemfileZerocopyEnabled();
     m_connected         = false;
 
     // reset subscriber maps
