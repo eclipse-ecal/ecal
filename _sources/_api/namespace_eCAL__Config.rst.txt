@@ -19,9 +19,9 @@ Functions
 
 - :ref:`exhale_function_ecal__config_8h_1ad76c9ac57214042875cbbab511b63b14`
 
-- :ref:`exhale_function_ecal__config_8h_1a0e61706ed81e23d251be210649974bba`
+- :ref:`exhale_function_ecal__config_8h_1a06ba53ce1ef7a5d11e2b6583cbef77f5`
 
-- :ref:`exhale_function_ecal__config_8h_1ad696974c31fa4349284fb848570cb065`
+- :ref:`exhale_function_ecal__config_8h_1a0e61706ed81e23d251be210649974bba`
 
 - :ref:`exhale_function_ecal__config_8h_1a0e2293d2d291224c6715ed8441242970`
 

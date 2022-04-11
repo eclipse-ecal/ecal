@@ -1,0 +1,14 @@
+.. _exhale_function_ecal__config_8h_1a06ba53ce1ef7a5d11e2b6583cbef77f5:
+
+Function eCAL::Config::GetFileLogFilter
+=======================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_config.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: eCAL::Config::GetFileLogFilter()
+   :project: eCAL
