@@ -59,7 +59,7 @@ namespace eCAL
   bool CSyncMemoryFile::Create(const std::string& base_name_, size_t size_)
   {
     m_base_name   = base_name_;
-    m_timeout_ack = eCALPAR(PUB, MEMFILE_ACK_TO);
+    m_timeout_ack = Config::GetMemfileAckTimeoutMs();
 
     // build unique memfile name
     BuildMemFileName();

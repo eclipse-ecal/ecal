@@ -40,7 +40,7 @@ namespace eCAL
     m_do_stop(false),
     m_is_observing(false),
     m_timeout_read(0),
-    m_timeout_ack(eCALPAR(PUB, MEMFILE_ACK_TO))
+    m_timeout_ack(Config::GetMemfileAckTimeoutMs())
   {
   }
 
