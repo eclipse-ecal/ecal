@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
@@ -218,7 +219,7 @@ namespace eCAL
       sstream << "------------------------- NETWORK --------------------------------" << std::endl;
       sstream << "Host name                : " << Process::GetHostName() << std::endl;
       sstream << "Host id                  : " << Process::GetHostID() << std::endl;
-      if (eCALPAR(NET, ENABLED))
+      if (Config::IsNetworkEnabled())
       {
         sstream << "Network mode             : cloud" << std::endl;
       }
@@ -226,14 +227,14 @@ namespace eCAL
       {
         sstream << "Network mode             : local" << std::endl;
       }
-      sstream << "Network ttl              : " << eCALPAR(NET, UDP_MULTICAST_TTL) << std::endl;
-      sstream << "Network sndbuf           : " << GetBufferStr(eCALPAR(NET, UDP_MULTICAST_SNDBUF)) << std::endl;
-      sstream << "Network rcvbuf           : " << GetBufferStr(eCALPAR(NET, UDP_MULTICAST_RCVBUF)) << std::endl;
-      sstream << "Multicast group          : " << eCALPAR(NET, UDP_MULTICAST_GROUP) << std::endl;
-      sstream << "Multicast mask           : " << eCALPAR(NET, UDP_MULTICAST_MASK) << std::endl;
-      int port = eCALPAR(NET, UDP_MULTICAST_PORT);
+      sstream << "Network ttl              : " << Config::GetUdpMulticastTtl() << std::endl;
+      sstream << "Network sndbuf           : " << GetBufferStr(Config::GetUdpMulticastSndBufSizeBytes()) << std::endl;
+      sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetUdpMulticastRcvBufSizeBytes()) << std::endl;
+      sstream << "Multicast group          : " << Config::GetUdpMulticastGroup() << std::endl;
+      sstream << "Multicast mask           : " << Config::GetUdpMulticastMask() << std::endl;
+      int port = Config::GetUdpMulticastPort();
       sstream << "Multicast ports          : " << port << " - " << port + 10 << std::endl;
-      auto bandwidth = eCALPAR(NET, BANDWIDTH_MAX_UDP);
+      auto bandwidth = Config::GetMaxUdpBandwidthBytesPerSecond();
       if (bandwidth < 0)
       {
         sstream << "Bandwidth limit (udp)    : not limited" << std::endl;
@@ -245,7 +246,7 @@ namespace eCAL
       sstream << std::endl;
 
       sstream << "------------------------- TIME -----------------------------------" << std::endl;
-      sstream << "Synchronization realtime : " << eCALPAR(TIME, SYNC_MOD_RT) << std::endl;
+      sstream << "Synchronization realtime : " << Config::GetTimesyncModuleName() << std::endl;
       sstream << "Synchronization replay   : " << eCALPAR(TIME, SYNC_MOD_REPLAY) << std::endl;
       sstream << "State                    : ";
       if (g_timegate()->IsSynchronized()) sstream << " synchronized " << std::endl;
@@ -260,32 +261,32 @@ namespace eCAL
       sstream << std::endl;
 
       sstream << "------------------------- PUBLISHER LAYER DEFAULTS ---------------"       << std::endl;
-      sstream << "Layer Mode INPROC        : " << LayerMode(eCALPAR(PUB, USE_INPROC))  << std::endl;
-      auto zero_copy = eCALPAR(PUB, MEMFILE_ZERO_COPY);
+      sstream << "Layer Mode INPROC        : " << LayerMode(Config::GetPublisherInprocMode())  << std::endl;
+      auto zero_copy = Config::IsMemfileZerocopyEnabled();
       if (zero_copy > 0)
       {
-        sstream << "Layer Mode SHM (ZEROCPY) : " << LayerMode(eCALPAR(PUB, USE_SHM)) << std::endl;
+        sstream << "Layer Mode SHM (ZEROCPY) : " << LayerMode(Config::GetPublisherShmMode()) << std::endl;
       }
       else
       {
-        sstream << "Layer Mode SHM           : " << LayerMode(eCALPAR(PUB, USE_SHM)) << std::endl;
+        sstream << "Layer Mode SHM           : " << LayerMode(Config::GetPublisherShmMode()) << std::endl;
       }
-      sstream << "Layer Mode TCP           : " << LayerMode(eCALPAR(PUB, USE_TCP)) << std::endl;
-      sstream << "Layer Mode UDP MC        : " << LayerMode(eCALPAR(PUB, USE_UDP_MC)) << std::endl;
+      sstream << "Layer Mode TCP           : " << LayerMode(Config::GetPublisherTcpMode()) << std::endl;
+      sstream << "Layer Mode UDP MC        : " << LayerMode(Config::GetPublisherUdpMulticastMode()) << std::endl;
       sstream << std::endl;
 
       sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------"               << std::endl;
-      sstream << "Layer Mode INPROC        : " << LayerMode(eCALPAR(NET, INPROC_REC_ENABLED))  << std::endl;
-      sstream << "Layer Mode SHM           : " << LayerMode(eCALPAR(NET, SHM_REC_ENABLED))     << std::endl;
-      sstream << "Layer Mode UDP MC        : " << LayerMode(eCALPAR(NET, UDP_MC_REC_ENABLED))  << std::endl;
-      sstream << "Npcap UDP Reciever       : " << LayerMode(eCALPAR(NET, NPCAP_ENABLED));
+      sstream << "Layer Mode INPROC        : " << LayerMode(Config::IsInprocRecEnabled())  << std::endl;
+      sstream << "Layer Mode SHM           : " << LayerMode(Config::IsShmRecEnabled())     << std::endl;
+      sstream << "Layer Mode UDP MC        : " << LayerMode(Config::IsUdpMulticastRecEnabled())  << std::endl;
+      sstream << "Npcap UDP Reciever       : " << LayerMode(Config::IsNpcapEnabled());
 #ifdef ECAL_NPCAP_SUPPORT
-      if(eCALPAR(NET, NPCAP_ENABLED) && !Udpcap::Initialize())
+      if(Config::IsNpcapEnabled() && !Udpcap::Initialize())
       {
         sstream << " (Init FAILED!)";
       }
 #else  // ECAL_NPCAP_SUPPORT
-      if (eCALPAR(NET, NPCAP_ENABLED))
+      if (Config::IsNpcapEnabled())
       {
         sstream << " (Npcap is enabled, but not configured via CMake!)";
       }
@@ -763,7 +764,7 @@ namespace
 
     // -------------------- terminal_emulator command check --------------------
 
-    const std::string terminal_emulator_command = eCALPAR(PROCESS, TERMINAL_EMULATOR);
+    const std::string terminal_emulator_command = eCAL::Config::GetTerminalEmulatorCommand();
     if (!terminal_emulator_command.empty())
     {
       STD_COUT_DEBUG("[PID " << getpid() << "]: " << "ecal.ini terminal emulator command is: " << terminal_emulator_command << std::endl);

@@ -25,6 +25,8 @@
 
 #include "udp_receiver.h"
 
+#include <ecal/ecal_config.h>
+
 #include "io/udp_receiver_base.h"
 #include "io/udp_receiver_asio.h"
 #ifdef ECAL_NPCAP_SUPPORT
@@ -41,7 +43,7 @@ namespace eCAL
     , m_use_npcap(false)
   {
 #ifdef ECAL_NPCAP_SUPPORT
-    if (eCALPAR(NET, NPCAP_ENABLED))
+    if (Config::IsNpcapEnabled())
     {
       m_use_npcap = Udpcap::Initialize(); // Only use NPCAP if we can initialize it (or it has already been initialized successfully)
       if (!m_use_npcap)

@@ -23,6 +23,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
@@ -161,9 +162,9 @@ namespace eCAL
     m_level = log_level_info;
 
     // parse logging filter strings
-    m_filter_mask_con  = ParseLogLevel(eCALPAR(MON, LOG_FILTER_CON));
-    m_filter_mask_file = ParseLogLevel(eCALPAR(MON, LOG_FILTER_FILE));
-    m_filter_mask_udp  = ParseLogLevel(eCALPAR(MON, LOG_FILTER_UDP));
+    m_filter_mask_con  = ParseLogLevel(Config::GetConsoleLogFilter());
+    m_filter_mask_file = ParseLogLevel(Config::GetFileLogFilter());
+    m_filter_mask_udp  = ParseLogLevel(Config::GetUdpLogFilter());
 
     // create log file
     if(m_filter_mask_file)
@@ -182,7 +183,7 @@ namespace eCAL
     if(m_filter_mask_udp)
     {
       SSenderAttr attr;
-      bool local_only = !eCALPAR(NET, ENABLED);
+      bool local_only = !Config::IsNetworkEnabled();
       // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
       if (local_only)
       {
@@ -191,13 +192,13 @@ namespace eCAL
       }
       else
       {
-        attr.ipaddr    = eCALPAR(NET, UDP_MULTICAST_GROUP);
+        attr.ipaddr    = Config::GetUdpMulticastGroup();
         attr.broadcast = false;
       }
-      attr.port     = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_LOG_OFF;
+      attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
       attr.loopback = true;
-      attr.ttl      = eCALPAR(NET, UDP_MULTICAST_TTL);
-      attr.sndbuf   = eCALPAR(NET, UDP_MULTICAST_SNDBUF);
+      attr.ttl      = Config::GetUdpMulticastTtl();
+      attr.sndbuf   = Config::GetUdpMulticastSndBufSizeBytes();
 
       m_udp_sender->Create(attr);
     }

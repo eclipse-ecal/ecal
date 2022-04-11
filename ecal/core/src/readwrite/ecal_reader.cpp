@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
 #include "ecal_register.h"
@@ -111,7 +112,7 @@ namespace eCAL
     gOpenEvent(&m_receive_event);
 
     // set registration expiration
-    std::chrono::milliseconds registration_timeout(eCALPAR(CMN, REGISTRATION_TO));
+    std::chrono::milliseconds registration_timeout(Config::GetRegistrationTimeoutMs());
     m_loc_pub_map.set_expiration(registration_timeout);
     m_ext_pub_map.set_expiration(registration_timeout);
 
@@ -119,10 +120,10 @@ namespace eCAL
     m_sample_hash.set_expiration(std::chrono::milliseconds(500));
 
     // allow to share topic type
-    m_use_ttype = eCALPAR(PUB, SHARE_TTYPE) != 0;
+    m_use_ttype = Config::IsTopicTypeSharingEnabled();
 
     // allow to share topic description
-    m_use_tdesc = eCALPAR(PUB, SHARE_TDESC) != 0;
+    m_use_tdesc = Config::IsTopicDescriptionSharingEnabled();
 
     // start transport layers
     StartDataLayers();
@@ -182,25 +183,25 @@ namespace eCAL
   void CDataReader::InitializeLayers()
   {
     // start ecal udp multicast layer
-    if (eCALPAR(NET, UDP_MC_REC_ENABLED))
+    if (Config::IsUdpMulticastRecEnabled())
     {
       CMulticastLayer::Get()->Initialize();
     }
 
     // start ecal shared memory layer
-    if (eCALPAR(NET, SHM_REC_ENABLED))
+    if (Config::IsShmRecEnabled())
     {
       CSHMLayer::Get()->Initialize();
     }
 
     // start ecal tcp layer
-    if (eCALPAR(NET, TCP_REC_ENABLED))
+    if (Config::IsTcpRecEnabled())
     {
       CTCPReaderLayer::Get()->Initialize();
     }
 
     // start inproc layer
-    if (eCALPAR(NET, INPROC_REC_ENABLED))
+    if (Config::IsInprocRecEnabled())
     {
       CInProcLayer::Get()->Initialize();
     }
@@ -209,25 +210,25 @@ namespace eCAL
   void CDataReader::StartDataLayers()
   {
     // start ecal udp multicast layer
-    if (eCALPAR(NET, UDP_MC_REC_ENABLED))
+    if (Config::IsUdpMulticastRecEnabled())
     {
       CMulticastLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
 
     // start ecal shared memory layer
-    if (eCALPAR(NET, SHM_REC_ENABLED))
+    if (Config::IsShmRecEnabled())
     {
       CSHMLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
 
     // start ecal tcp layer
-    if (eCALPAR(NET, TCP_REC_ENABLED))
+    if (Config::IsTcpRecEnabled())
     {
       CTCPReaderLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
 
     // start inproc layer
-    if (eCALPAR(NET, INPROC_REC_ENABLED))
+    if (Config::IsInprocRecEnabled())
     {
       CInProcLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
@@ -242,19 +243,19 @@ namespace eCAL
     }
 
     // stop ecal shared memory layer
-    if (eCALPAR(NET, SHM_REC_ENABLED))
+    if (Config::IsShmRecEnabled())
     {
       CSHMLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
 
     // stop ecal tcp layer
-    if (eCALPAR(NET, TCP_REC_ENABLED))
+    if (Config::IsTcpRecEnabled())
     {
       CTCPReaderLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
 
     // stop inproc layer
-    if (eCALPAR(NET, INPROC_REC_ENABLED))
+    if (Config::IsInprocRecEnabled())
     {
       CInProcLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }

@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
 #include <ecal/ecal_core.h>
@@ -79,11 +80,11 @@ namespace eCAL
     if(m_created) return;
 
     // network mode
-    m_network = eCALPAR(NET, ENABLED);
+    m_network = Config::IsNetworkEnabled();
 
     // start registration receive thread
     SReceiverAttr attr;
-    bool local_only = !eCALPAR(NET, ENABLED);
+    bool local_only = !Config::IsNetworkEnabled();
     // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
     if (local_only)
     {
@@ -92,12 +93,12 @@ namespace eCAL
     }
     else
     {
-      attr.ipaddr    = eCALPAR(NET, UDP_MULTICAST_GROUP);
+      attr.ipaddr    = Config::GetUdpMulticastGroup();
       attr.broadcast = false;
     }
-    attr.port     = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_REG_OFF;
+    attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
     attr.loopback = true;
-    attr.rcvbuf   = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
+    attr.rcvbuf   = Config::GetUdpMulticastRcvBufSizeBytes();
 
     m_reg_rcv.Create(attr);
     m_reg_rcv_thread.Start(0, std::bind(&CUdpRegistrationReceiver::Receive, &m_reg_rcv_process, &m_reg_rcv));
