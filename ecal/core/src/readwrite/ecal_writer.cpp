@@ -62,7 +62,7 @@ namespace eCAL
 {
   CDataWriter::CDataWriter() :
     m_host_name(Process::GetHostName()),
-    m_host_id(Process::__GetHostID()),
+    m_host_id(Process::internal::GetHostID()),
     m_pid(Process::GetProcessID()),
     m_pname(Process::GetProcessName()),
     m_topic_size(0),

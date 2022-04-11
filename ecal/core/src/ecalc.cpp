@@ -186,7 +186,7 @@ extern "C"
 
   ECALC_API int eCAL_Process_GetHostID()
   {
-    return(eCAL::Process::__GetHostID());
+    return(eCAL::Process::internal::GetHostID());
   }
 
   ECALC_API int eCAL_Process_GetUnitName(void* name_, int name_len_)

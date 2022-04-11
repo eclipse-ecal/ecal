@@ -28,11 +28,14 @@ namespace eCAL
 {
   namespace Process
   {
-    /**
-     * @brief  Get unique host id. (internal version only)
-     *
-     * @return  Host id or zero if failed.
-    **/
-    int __GetHostID();
+    namespace internal  // non-public namespace of eCAL::Process
+    {
+      /**
+       * @brief  Get unique host id.
+       *
+       * @return  Host id or zero if failed.
+      **/
+      int GetHostID();
+    }
   }
 }
