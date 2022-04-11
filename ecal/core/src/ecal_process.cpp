@@ -261,18 +261,18 @@ namespace eCAL
       sstream << std::endl;
 
       sstream << "------------------------- PUBLISHER LAYER DEFAULTS ---------------"       << std::endl;
-      sstream << "Layer Mode INPROC        : " << LayerMode(eCALPAR(PUB, USE_INPROC))  << std::endl;
+      sstream << "Layer Mode INPROC        : " << LayerMode(Config::GetPublisherInprocMode())  << std::endl;
       auto zero_copy = eCALPAR(PUB, MEMFILE_ZERO_COPY);
       if (zero_copy > 0)
       {
-        sstream << "Layer Mode SHM (ZEROCPY) : " << LayerMode(eCALPAR(PUB, USE_SHM)) << std::endl;
+        sstream << "Layer Mode SHM (ZEROCPY) : " << LayerMode(Config::GetPublisherShmMode()) << std::endl;
       }
       else
       {
-        sstream << "Layer Mode SHM           : " << LayerMode(eCALPAR(PUB, USE_SHM)) << std::endl;
+        sstream << "Layer Mode SHM           : " << LayerMode(Config::GetPublisherShmMode()) << std::endl;
       }
-      sstream << "Layer Mode TCP           : " << LayerMode(eCALPAR(PUB, USE_TCP)) << std::endl;
-      sstream << "Layer Mode UDP MC        : " << LayerMode(eCALPAR(PUB, USE_UDP_MC)) << std::endl;
+      sstream << "Layer Mode TCP           : " << LayerMode(Config::GetPublisherTcpMode()) << std::endl;
+      sstream << "Layer Mode UDP MC        : " << LayerMode(Config::GetPublisherUdpMulticastMode()) << std::endl;
       sstream << std::endl;
 
       sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------"               << std::endl;
