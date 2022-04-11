@@ -28,10 +28,8 @@ namespace eCAL
 {
   namespace Process
   {
-
-
     /**
-     * @brief  Get unique host id.(internal version)
+     * @brief  Get unique host id. (internal version only)
      *
      * @return  Host id or zero if failed.
     **/
