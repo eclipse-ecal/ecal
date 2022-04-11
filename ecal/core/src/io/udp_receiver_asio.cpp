@@ -32,8 +32,7 @@ namespace eCAL {
   {
     if (m_broadcast && m_unicast)
     {
-      std::cerr << "CUDPReceiverAsio: Setting broadcast and unicast option true is not allowed." << std::endl;
-      return;
+      throw std::runtime_error("CUDPReceiverAsio: Setting broadcast and unicast option true is not allowed.");
     }
 
     // create socket
@@ -43,8 +42,7 @@ namespace eCAL {
       m_socket.open(listen_endpoint.protocol(), ec);
       if (ec)
       {
-        std::cerr << "CUDPReceiverAsio: Unable to open socket: " << ec.message() << std::endl;
-        return;
+        throw std::runtime_error(std::string("CUDPReceiverAsio: Unable to open socket: ") + ec.message());
       }
     }
 
@@ -54,8 +52,7 @@ namespace eCAL {
       m_socket.set_option(asio::ip::udp::socket::reuse_address(true), ec);
       if (ec)
       {
-        std::cerr << "CUDPReceiverAsio: Unable to set reuse-address option: " << ec.message() << std::endl;
-        return;
+        throw std::runtime_error(std::string("CUDPReceiverAsio: Unable to set reuse-address option: ") + ec.message());
       }
     }
 
@@ -65,8 +62,7 @@ namespace eCAL {
       m_socket.bind(listen_endpoint, ec);
       if (ec)
       {
-        std::cerr << "CUDPReceiverAsio: Unable to bind socket to " << listen_endpoint.address().to_string() << ":" << listen_endpoint.port() << ": " << ec.message() << std::endl;
-        return;
+        throw std::runtime_error(std::string("CUDPReceiverAsio: Unable to bind socket to ") + listen_endpoint.address().to_string() + std::string(":") + std::to_string(listen_endpoint.port()) + std::string(": ") + ec.message());
       }
     }
 
@@ -79,7 +75,6 @@ namespace eCAL {
       if (ec)
       {
         std::cerr << "CUDPReceiverAsio: Unable to enable loopback: " << ec.message() << std::endl;
-        return;
       }
     }
 
@@ -93,7 +88,6 @@ namespace eCAL {
       if (ec)
       {
         std::cerr << "CUDPReceiverAsio: Unable to set receive buffer size: " << ec.message() << std::endl;
-        return;
       }
     }
 

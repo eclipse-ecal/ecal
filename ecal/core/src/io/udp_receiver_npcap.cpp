@@ -36,14 +36,12 @@ namespace eCAL
     if (!m_socket.setReceiveBufferSize(rcvbuf))
     {
       std::cerr << "CUDPReceiverPcap: Unable to set receive buffer size." << std::endl;
-      return;
     }
 
     // bind socket
     if (!m_socket.bind(Udpcap::HostAddress::Any(), static_cast<uint16_t>(attr_.port)))
     {
-      std::cerr << "CUDPReceiverPcap: Unable to bind socket." << std::endl;
-      return;
+      throw std::runtime_error("CUDPReceiverPcap: Unable to bind socket.");
     }
 
     if (!m_unicast)
