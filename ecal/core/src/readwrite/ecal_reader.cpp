@@ -28,6 +28,7 @@
 #include "ecal_register.h"
 #include "ecal_descgate.h"
 #include "ecal_reader.h"
+#include "ecal_process.h"
 
 #include "readwrite/ecal_reader_udp_mc.h"
 
@@ -52,7 +53,7 @@ namespace eCAL
   ////////////////////////////////////////
   CDataReader::CDataReader() :
                  m_host_name(Process::GetHostName()),
-                 m_host_id(Process::GetHostID()),
+                 m_host_id(Process::internal::GetHostID()),
                  m_pid(Process::GetProcessID()),
                  m_pname(Process::GetProcessName()),
                  m_topic_name(""),

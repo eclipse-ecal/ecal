@@ -29,6 +29,7 @@
 #include "ecal_reggate.h"
 #include "ecal_writer.h"
 #include "ecal_writer_base.h"
+#include "ecal_process.h"
 
 #include "ecal_register.h"
 #include "pubsub/ecal_pubgate.h"
@@ -62,7 +63,7 @@ namespace eCAL
 {
   CDataWriter::CDataWriter() :
     m_host_name(Process::GetHostName()),
-    m_host_id(Process::GetHostID()),
+    m_host_id(Process::internal::GetHostID()),
     m_pid(Process::GetProcessID()),
     m_pname(Process::GetProcessName()),
     m_topic_size(0),

@@ -271,13 +271,8 @@ namespace eCAL
 
   bool CRegGate::IsLocalHost(const eCAL::pb::Sample& ecal_sample_)
   {
-    std::string host_name = ecal_sample_.topic().hname();
-    int         host_id   = ecal_sample_.topic().hid();
+    const std::string host_name = ecal_sample_.topic().hname();
     if (host_name.empty()) return false;
-    if (host_id != 0)
-    {
-      if (host_id != Process::GetHostID()) return false;
-    }
     if (host_name != Process::GetHostName()) return false;
     return true;
   }

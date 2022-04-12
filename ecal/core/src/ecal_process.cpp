@@ -29,6 +29,7 @@
 #include "ecal_register.h"
 #include "ecal_reggate.h"
 #include "ecal_globals.h"
+#include "ecal_process.h"
 
 #include <array>
 #include <chrono>
@@ -218,7 +219,7 @@ namespace eCAL
 
       sstream << "------------------------- NETWORK --------------------------------" << std::endl;
       sstream << "Host name                : " << Process::GetHostName() << std::endl;
-      sstream << "Host id                  : " << Process::GetHostID() << std::endl;
+
       if (Config::IsNetworkEnabled())
       {
         sstream << "Network mode             : cloud" << std::endl;
@@ -317,24 +318,32 @@ namespace eCAL
 
     int GetHostID()
     {
-      if (g_host_id == 0)
+      return internal::GetHostID();
+    }
+
+    namespace internal
+    {
+      int GetHostID()
       {
-        // try to get unique host id
-        bool success(false);
-        int  id(0);
-        std::tie(success, id) = get_host_id();
-        if (success)
+        if (g_host_id == 0)
         {
-          g_host_id = id;
+          // try to get unique host id
+          bool success(false);
+          int  id(0);
+          std::tie(success, id) = get_host_id();
+          if (success)
+          {
+            g_host_id = id;
+          }
+          // never try again to not waste time
+          else
+          {
+            g_host_id = -1;
+            std::cerr << "Unable to get host id" << std::endl;
+          }
         }
-        // never try again to not waste time
-        else
-        {
-          g_host_id = -1;
-          std::cerr << "Unable to get host id" << std::endl;
-        }
+        return(g_host_id);
       }
-      return(g_host_id);
     }
 
     std::string GetUnitName()
