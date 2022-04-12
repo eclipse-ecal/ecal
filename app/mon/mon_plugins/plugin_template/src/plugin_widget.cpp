@@ -17,12 +17,36 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "PluginWidget.h"
-#include "Plugin.h"
+#include "plugin_widget.h"
 
-using namespace eCAL::mon;
+#include <QDebug>
 
-PluginWidgetInterface* Plugin::create(const QString& topic_name, const QString& topic_type, QWidget* parent)
+PluginWidget::PluginWidget(const QString& topic_name, const QString& topic_type, QWidget* parent): QWidget(parent)
 {
-  return new PluginWidget(topic_name, topic_type, parent);
+  qDebug() << "Template plugin initialized with topic " << topic_name << " (" << topic_type << ")"; 
+}
+
+PluginWidget::~PluginWidget()
+{
+  qDebug() << "Template plugin deinitialized";
+}
+
+void PluginWidget::onUpdate()
+{
+  //qDebug() << "Dummy Plugin on update";
+}
+
+void PluginWidget::onResume()
+{
+  qDebug() << "Template plugin onResume";
+}
+
+void PluginWidget::onPause()
+{
+  qDebug() << "Template plugin onPause";
+}
+
+QWidget* PluginWidget::getWidget()
+{
+  return this;
 }

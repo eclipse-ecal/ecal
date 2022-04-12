@@ -24,7 +24,7 @@
 class Plugin : public QObject, public eCAL::mon::PluginInterface
 {
   Q_OBJECT
-  Q_PLUGIN_METADATA(IID "de.conti.ecal.monitor.plugin.dummy/v0.1.0" FILE "metadata.json")
+  Q_PLUGIN_METADATA(IID "de.conti.ecal.monitor.plugin.template/v0.1.0" FILE "metadata.json")
   Q_INTERFACES(eCAL::mon::PluginInterface)
 public:
   virtual eCAL::mon::PluginWidgetInterface* create(const QString& topic_name, const QString& topic_type, QWidget* parent = Q_NULLPTR);

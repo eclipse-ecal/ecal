@@ -16,7 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-#add_subdirectory(DummyPlugin)
+add_subdirectory(plugin_template)
 add_subdirectory(monitor_tree_view)
 add_subdirectory(protobuf_reflection)
 if (HAS_CAPNPROTO)
