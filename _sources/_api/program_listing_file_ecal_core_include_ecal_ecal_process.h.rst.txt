@@ -48,6 +48,7 @@ Program Listing for File ecal_process.h
    
        ECAL_API std::string GetHostName();
    
+       [[deprecated]]
        ECAL_API int GetHostID();
    
        ECAL_API std::string GetUnitName();
