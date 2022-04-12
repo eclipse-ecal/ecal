@@ -54,7 +54,22 @@ typedef std::unordered_map<ECAL_HANDLE, PyObject*> PyClientCallbackMapT;
 /****************************************/
 /*      globals                         */
 /****************************************/
-static std::atomic<int>     g_pygil_init;
+#if (PY_VERSION_HEX < ((3 << 24) | (9 << 16)))
+//   ^^               ^^
+//   PY_Version     < 3.9
+// 
+// => Only call PyEval_InitThreads() for Python up to 3.8
+// 
+// Version Check Dokumentation: https://github.com/python/cpython/blob/3.7/Include/patchlevel.h
+// Init Threads Documentation:  https://docs.python.org/3.10/c-api/init.html#c.PyEval_InitThreads
+
+  #define ECAL_PY_INIT_THREADS_NEEDED 1
+#endif
+
+#if ECAL_PY_INIT_THREADS_NEEDED
+  static std::atomic<int>     g_pygil_init;
+#endif
+
 PySubscriberCallbackMapT    g_subscriber_pycallback_map;
 PyServerMethodCallbackMapT  g_server_method_pycallback_map;
 PyClientCallbackMapT        g_client_pycallback_map;
@@ -528,11 +543,14 @@ PyObject* sub_receive(PyObject* /*self*/, PyObject* args)
 /****************************************/
 static void c_subscriber_callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_, ECAL_HANDLE handle_, const std::string& python_formatter)
 {
+#if ECAL_PY_INIT_THREADS_NEEDED
   if (!g_pygil_init)
   {
     g_pygil_init = 1;
     PyEval_InitThreads();
   }
+#endif
+
   PyGILState_STATE state = PyGILState_Ensure();
 
   PyObject* topic_name = Py_BuildValue("s",  topic_name_);
@@ -581,11 +599,13 @@ PyObject* sub_set_callback(PyObject* /*self*/, PyObject* args)
 
   if (PyCallable_Check(cb_func))
   {
+#if ECAL_PY_INIT_THREADS_NEEDED
     if (!g_pygil_init)
     {
       g_pygil_init = 1;
       PyEval_InitThreads();
     }
+#endif
 
     Py_XINCREF(cb_func);                        /* Add a reference to new callback */
     g_subscriber_pycallback_map[sub] = cb_func;            /* Add new callback */
@@ -706,11 +726,13 @@ PyObject* dyn_json_sub_set_callback(PyObject* /*self*/, PyObject* args)
 
   if (PyCallable_Check(cb_func))
   {
+#if ECAL_PY_INIT_THREADS_NEEDED
     if (!g_pygil_init)
     {
       g_pygil_init = 1;
       PyEval_InitThreads();
     }
+#endif
 
     Py_XINCREF(cb_func);                        /* Add a reference to new callback */
     g_subscriber_pycallback_map[sub] = cb_func;            /* Add new callback */
@@ -811,11 +833,13 @@ static int c_server_method_callback(const std::string& method_name_, const std::
 {
   int ret_state = 0;
 
+#if ECAL_PY_INIT_THREADS_NEEDED
   if (!g_pygil_init)
   {
     g_pygil_init = 1;
     PyEval_InitThreads();
   }
+#endif
 
   PyGILState_STATE gstate = PyGILState_Ensure();
 
@@ -893,11 +917,13 @@ PyObject* server_add_method_callback(PyObject* /*self*/, PyObject* args)   // (s
 
   if (PyCallable_Check(cb_func))
   {
+#if ECAL_PY_INIT_THREADS_NEEDED
     if (!g_pygil_init)
     {
       g_pygil_init = 1;
       PyEval_InitThreads();
     }
+#endif
 
     Py_XINCREF(cb_func);                               /* Add a reference to new callback */
     g_server_method_pycallback_map[server_method] = cb_func;  /* Add new callback */
@@ -1036,11 +1062,13 @@ PyObject* client_call_method(PyObject* /*self*/, PyObject* args)   // (client_ha
 /****************************************/
 static void c_client_callback(const struct eCAL::SServiceResponse& service_response_, ECAL_HANDLE handle_)
 {
+#if ECAL_PY_INIT_THREADS_NEEDED
   if (!g_pygil_init)
   {
     g_pygil_init = 1;
     PyEval_InitThreads();
   }
+#endif
 
   PyGILState_STATE gstate = PyGILState_Ensure();
 
@@ -1118,11 +1146,13 @@ PyObject* client_add_response_callback(PyObject* /*self*/, PyObject* args)   // 
 
   if (PyCallable_Check(cb_func))
   {
+#if ECAL_PY_INIT_THREADS_NEEDED
     if (!g_pygil_init)
     {
       g_pygil_init = 1;
       PyEval_InitThreads();
     }
+#endif
 
     Py_XINCREF(cb_func);                               /* Add a reference to new callback */
     g_client_pycallback_map[client_handle] = cb_func;  /* Add new callback */

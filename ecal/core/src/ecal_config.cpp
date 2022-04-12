@@ -66,13 +66,13 @@ namespace eCAL
     // time
     /////////////////////////////////////
     
-    ECAL_API std::string       GetTimesyncModuleName                () { return eCALPAR(TIME,  SYNC_MOD_RT); }
+    ECAL_API std::string       GetTimesyncModuleName                () { return eCALPAR(TIME, SYNC_MOD_RT); }
 
     /////////////////////////////////////
     // process
     /////////////////////////////////////
     
-    ECAL_API std::string       GetTerminalEmulatorCommand           () { return eCALPAR(PROCESS,  TERMINAL_EMULATOR); }
+    ECAL_API std::string       GetTerminalEmulatorCommand           () { return eCALPAR(PROCESS, TERMINAL_EMULATOR); }
 
     /////////////////////////////////////
     // monitoring
@@ -82,7 +82,7 @@ namespace eCAL
     ECAL_API std::string       GetMonitoringFilterExcludeList       () { return eCALPAR(MON, FILTER_EXCL); }
     ECAL_API std::string       GetMonitoringFilterIncludeList       () { return eCALPAR(MON, FILTER_INCL); }
     ECAL_API std::string       GetConsoleLogFilter                  () { return eCALPAR(MON, LOG_FILTER_CON); }
-    ECAL_API std::string       GetLogFileName                       () { return eCALPAR(MON, LOG_FILTER_FILE); }
+    ECAL_API std::string       GetFileLogFilter                     () { return eCALPAR(MON, LOG_FILTER_FILE); }
     ECAL_API std::string       GetUdpLogFilter                      () { return eCALPAR(MON, LOG_FILTER_UDP); }
 
     /////////////////////////////////////
@@ -94,11 +94,11 @@ namespace eCAL
     /////////////////////////////////////
     // publisher
     /////////////////////////////////////
-
-    ECAL_API TLayer::eSendMode GetPublisherInprocMode               () { return TLayer::eSendMode(eCALPAR(PUB, USE_UDP_MC)); }
+    
+    ECAL_API TLayer::eSendMode GetPublisherUdpMulticastMode         () { return TLayer::eSendMode(eCALPAR(PUB, USE_UDP_MC)); }
     ECAL_API TLayer::eSendMode GetPublisherShmMode                  () { return TLayer::eSendMode(eCALPAR(PUB, USE_SHM)); }
     ECAL_API TLayer::eSendMode GetPublisherTcpMode                  () { return TLayer::eSendMode(eCALPAR(PUB, USE_TCP)); }
-    ECAL_API TLayer::eSendMode GetPublisherUdpMulticastMode         () { return TLayer::eSendMode(eCALPAR(PUB, USE_INPROC)); }
+    ECAL_API TLayer::eSendMode GetPublisherInprocMode               () { return TLayer::eSendMode(eCALPAR(PUB, USE_INPROC)); }
 
     ECAL_API int               GetMemfileMinsizeBytes               () { return eCALPAR(PUB, MEMFILE_MINSIZE); }
     ECAL_API int               GetMemfileOverprovisioningPercentage () { return eCALPAR(PUB, MEMFILE_RESERVE); }
