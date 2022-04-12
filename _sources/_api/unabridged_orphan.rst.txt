@@ -259,4 +259,9 @@ Pages
 .. toctree::
    :maxdepth: 5
 
+   page_experimental.rst
+
+.. toctree::
+   :maxdepth: 5
+
    page_deprecated.rst
