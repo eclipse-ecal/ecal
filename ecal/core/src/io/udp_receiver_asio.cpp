@@ -20,19 +20,22 @@
 
 #include <io/udp_receiver_asio.h>
 
-namespace eCAL {
+namespace eCAL
+{
   ////////////////////////////////////////////////////////
   // Default ASIO based receiver class implementation
   ////////////////////////////////////////////////////////
   CUDPReceiverAsio::CUDPReceiverAsio(const SReceiverAttr& attr_) :
     CUDPReceiverBase(attr_),
+    m_created(false),
     m_broadcast(attr_.broadcast),
     m_unicast(attr_.unicast),
     m_socket(m_iocontext)
   {
     if (m_broadcast && m_unicast)
     {
-      throw std::runtime_error("CUDPReceiverAsio: Setting broadcast and unicast option true is not allowed.");
+      std::cerr << "CUDPReceiverAsio: Setting broadcast and unicast option true is not allowed." << std::endl;
+      return;
     }
 
     // create socket
@@ -42,7 +45,8 @@ namespace eCAL {
       m_socket.open(listen_endpoint.protocol(), ec);
       if (ec)
       {
-        throw std::runtime_error(std::string("CUDPReceiverAsio: Unable to open socket: ") + ec.message());
+        std::cerr << "CUDPReceiverAsio: Unable to open socket: " << ec.message() << std::endl;
+        return;
       }
     }
 
@@ -52,7 +56,7 @@ namespace eCAL {
       m_socket.set_option(asio::ip::udp::socket::reuse_address(true), ec);
       if (ec)
       {
-        throw std::runtime_error(std::string("CUDPReceiverAsio: Unable to set reuse-address option: ") + ec.message());
+        std::cerr << "CUDPReceiverAsio: Unable to set reuse-address option: " << ec.message() << std::endl;
       }
     }
 
@@ -62,7 +66,8 @@ namespace eCAL {
       m_socket.bind(listen_endpoint, ec);
       if (ec)
       {
-        throw std::runtime_error(std::string("CUDPReceiverAsio: Unable to bind socket to ") + listen_endpoint.address().to_string() + std::string(":") + std::to_string(listen_endpoint.port()) + std::string(": ") + ec.message());
+        std::cerr << "CUDPReceiverAsio: Unable to bind socket to " << listen_endpoint.address().to_string() << ":" << listen_endpoint.port() << ": " << ec.message() << std::endl;
+        return;
       }
     }
 
@@ -93,6 +98,9 @@ namespace eCAL {
 
     // join multicast group
     AddMultiCastGroup(attr_.ipaddr.c_str());
+
+    // state successful creation
+    m_created = true;
   }
 
   bool CUDPReceiverAsio::AddMultiCastGroup(const char* ipaddr_)
@@ -141,6 +149,8 @@ namespace eCAL {
 
   size_t CUDPReceiverAsio::Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ /* = nullptr */)
   {
+    if (!m_created) return 0;
+
     size_t reclen(0);
     m_socket.async_receive_from(asio::buffer(buf_, len_), m_sender_endpoint,
       [&reclen](std::error_code ec, std::size_t length)

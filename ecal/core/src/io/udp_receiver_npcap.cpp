@@ -25,6 +25,7 @@ namespace eCAL
   ////////////////////////////////////////////////////////
   CUDPReceiverPcap::CUDPReceiverPcap(const SReceiverAttr& attr_)
     : CUDPReceiverBase(attr_)
+    , m_created(false)
     , m_unicast(attr_.unicast)
   {
     // set receive buffer size (default = 1 MB)
@@ -41,7 +42,8 @@ namespace eCAL
     // bind socket
     if (!m_socket.bind(Udpcap::HostAddress::Any(), static_cast<uint16_t>(attr_.port)))
     {
-      throw std::runtime_error("CUDPReceiverPcap: Unable to bind socket.");
+      std::cerr << "CUDPReceiverPcap: Unable to bind socket." << std::endl;
+      return;
     }
 
     if (!m_unicast)
@@ -52,6 +54,9 @@ namespace eCAL
 
     // join multicast group
     AddMultiCastGroup(attr_.ipaddr.c_str());
+
+    // state successful creation
+    m_created = true;
   }
 
   bool CUDPReceiverPcap::AddMultiCastGroup(const char* ipaddr_)
@@ -84,6 +89,8 @@ namespace eCAL
 
   size_t CUDPReceiverPcap::Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ /* = nullptr */)
   {
+    if (!m_created) return 0;
+
     size_t bytes_received;
     if (address_)
     {
