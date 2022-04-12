@@ -145,6 +145,7 @@ namespace eCAL
       void removeAutorecoveryActions_NoLock();
       void QueueSetSettings_NoLock(const RecorderSettings& settings);
       void QueueSetCommand_NoLock(const RecorderCommand& command);
+      bool CallRecorderService(const std::string& method_name_, const google::protobuf::Message& request_, google::protobuf::Message& response_);
 
     //////////////////////////////////////////
     // Member Variables

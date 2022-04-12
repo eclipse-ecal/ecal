@@ -63,7 +63,7 @@ bool ConfigManager::LoadConfig(EcalSys& ecalsys, const std::string& path, bool a
     std::map<uint32_t, uint32_t> runner_id_map;
 
     // Add Runners
-    for (const auto runner_config : config.runners_) {
+    for (const auto& runner_config : config.runners_) {
       // Silently remove the EXE and BAT runner as those were unnecessary.
       if (((runner_config.name_ == eCAL::Sys::Config::EXE_RUNNER) || (runner_config.name_ == eCAL::Sys::Config::BAT_RUNNER))
         && runner_config.default_algo_dir_  == ""

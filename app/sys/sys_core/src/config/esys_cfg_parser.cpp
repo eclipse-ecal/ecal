@@ -252,6 +252,16 @@ namespace eCAL
 
         fclose(xml_file);
 
+        if (errorcode != tinyxml2::XML_SUCCESS)
+        {
+#if TINYXML2_MAJOR_VERSION >= 6
+          throw std::runtime_error(std::string("Error loading file from \"") + path + "\": " + src.ErrorStr());
+#else // TINYXML2_MAJOR_VERSION
+          throw std::runtime_error(std::string("Error loading file from \"") + path + "\": " + src.GetErrorStr1());
+#endif // TINYXML2_MAJOR_VERSION
+          return false;
+        }
+
         try
         {
           auto root_element = src.FirstChildElement();

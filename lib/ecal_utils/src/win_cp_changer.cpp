@@ -31,7 +31,7 @@ namespace EcalUtils
   WinCpChanger::WinCpChanger(const int target_cp)
   {
     initial_cp = GetConsoleOutputCP();
-    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleOutputCP(target_cp);
   }
 
   // Destructor

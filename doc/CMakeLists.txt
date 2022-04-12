@@ -100,6 +100,12 @@ set(DOXYGEN_RECURSIVE            NO)
 set(DOXYGEN_OUTPUT_DIRECTORY     ${DOC_SOURCE_DIRECTORY})
 set(DOXYGEN_XML_OUTPUT           ${DOC_SOURCE_DIRECTORY}/_doxygen)
 
+# Allow @experimental to be used in headers to mark an API as experimental and add it to a list of
+# experimental APIs.
+set(DOXYGEN_ALIASES
+    "experimental = \\xrefitem experimental \\\"This feature is marked as experimental\\\" \\\"Experimental List\\\""
+    "experimental{1} = \\xrefitem experimental \\\"Experimental\\\" \\\"Experimental List\\\" \\1")
+
 doxygen_add_docs(
   documentation_run_doxygen
   ./doc.hpp

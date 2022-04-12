@@ -87,6 +87,6 @@ namespace eCAL
     // maybe no one is subscribing in the current process
     size_t sent = g_subgate()->ApplySample(m_topic_name, m_topic_id, static_cast<const char*>(data_.buf), data_.len, data_.id, data_.clock, data_.time, data_.hash, eCAL::pb::tl_inproc);
 
-    return(sent);
+    return (sent != 0);
   }
 }
