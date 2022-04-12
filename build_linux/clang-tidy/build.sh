@@ -22,13 +22,16 @@
 #   - the excluded commands are saved as 'compile_commands_exc.json',          #
 #   - the original file is renamed as 'compile_commands_orig.json',            #
 #   - the file of included commmands is renamed as 'compile_commands.json'.    #
-# If the RUN_DATABASE parameter is ON:                                         #
-#   - clang-tidy configuration is dumped to 'config_clang_tidy.yml',           #
-#   - clang-tidy runs with the filtered 'compile_commands.json'.               #
-# If the RUN_FILES parameter is ON:                                            #
+# If the RUN_DATABASE or RUN_FILES option is ON:                               #
+#   - clang-tidy configuration is dumped to 'config_clang_tidy.yml'.           #
+# If the RUN_DATABASE option is ON:                                            #
+#   - make is run to obtain all generated header files (protobuf),             #
+#   - clang-tidy runs with the filtered 'compile_commands.json' database.      #
+# If the RUN_FILES option is ON:                                               #
 #   - file extensions are checked for relevance,                               #
-#   - if relevant, and located in an included directory, the file is analyzed  #
-#     by clang-tidy.                                                           #
+#   - if relevant, and located in an included directory, first make is called, #
+#   - after ensuring generation of source/header files (protobuf) by           #
+#     calling make first, the file is analyzed by clang-tidy.                  #                                                           #
 # Outputs are redirected into timestamped log files, 'log_*.txt', in the build #
 # directory as well.                                                           #
 #                                                                              #
@@ -99,9 +102,9 @@ then
             -i | --filter )     if [[  $# -lt 3 ]];then echo "ERROR - missing filtering path arg" ; exit 1 ; fi ;
                                 PATH_FILTER="$2" ; PATH_EXC_CONFIG="$3" ;
                                 shift 3 ; if [[  $# -eq 0 ]];then break ; fi ;;
-            -d | --database )   RUN_DATABASE='ON' ; shift ;
+            -d | --database )   RUN_MAKE='ON' ; RUN_DATABASE='ON' ; shift ;
                                 if [[  $# -eq 0 ]];then break ; fi ;;
-            -f | --files )      RUN_MAKE='OFF' ; RUN_DATABASE='OFF' ; RUN_FILES='ON' ; shift ;
+            -f | --files )      RUN_FILES='ON' ; shift ;
                                 if [[  $# -eq 0 ]];then echo "WARNING - missing file list" ; exit 0 ; fi ;
                                 FILE_LIST=($@) ; break ;;
             * )                 echo "ERROR - unknown option: '$1'" ; shift ; exit 1 ;;
@@ -170,7 +173,7 @@ run_cmake() {
 }
 
 run_make() {
-    if [[ "${RUN_MAKE}" == 'ON' ]]
+    if [[ "${RUN_MAKE}" == 'ON' || ! -z $1 ]]
     then
         local cmd="make -j${NUM_INST}"
         echo -e "\n++ ${cmd} ...\nsee: ${FILE_MAKE_OUTPUT}"
@@ -301,6 +304,8 @@ run_clang_tidy_on_files() {
         printf -- "-- %s\n" "${FILE_LIST[@]}"
         echo
 
+        local make_first=true
+
         for file in "${FILE_LIST[@]}"
         do
             local file_abs="${file}"
@@ -330,6 +335,14 @@ run_clang_tidy_on_files() {
                     then
                         echo "## excluded"
                     else
+                        # at least one C/C++ source/header file is going to be scanned with clang-tidy
+                        # therefore all machine-generated files may be needed
+                        if $make_first
+                        then
+                            make_first=false
+                            run_make 'go'
+                        fi
+
                         # if 'compile_commands.json' is unreachable, clang-tidy gives the following error:
                         # "Error while trying to load a compilation database: ..."
                         local cmd="${CLANG_TIDY} -p . ${file_abs}"
