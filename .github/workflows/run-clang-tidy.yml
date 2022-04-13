@@ -2,6 +2,13 @@ name: Run clang-tidy
 
 on:
   push:
+    paths:
+      - '**.cpp'
+      - '**.cxx'
+      - '**.cc'
+      - '**.c'
+      - '**.h'
+      - '**.hpp'
   pull_request:
     branches:
       - master
