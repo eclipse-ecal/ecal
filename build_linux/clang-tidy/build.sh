@@ -102,7 +102,7 @@ then
             -i | --filter )     if [[  $# -lt 3 ]];then echo "ERROR - missing filtering path arg" ; exit 1 ; fi ;
                                 PATH_FILTER="$2" ; PATH_EXC_CONFIG="$3" ;
                                 shift 3 ; if [[  $# -eq 0 ]];then break ; fi ;;
-            -d | --database )   RUN_MAKE='ON' ; RUN_DATABASE='ON' ; shift ;
+            -d | --database )   RUN_DATABASE='ON' ; shift ;
                                 if [[  $# -eq 0 ]];then break ; fi ;;
             -f | --files )      RUN_FILES='ON' ; shift ;
                                 if [[  $# -eq 0 ]];then echo "WARNING - missing file list" ; exit 0 ; fi ;
@@ -173,13 +173,35 @@ run_cmake() {
 }
 
 run_make() {
-    if [[ "${RUN_MAKE}" == 'ON' || ! -z $1 ]]
+    if [[ "${RUN_MAKE}" == 'ON' ]]
     then
-        local cmd="make -j${NUM_INST}"
+        local cmd="cmake --build . -- -j${NUM_INST}"
         echo -e "\n++ ${cmd} ...\nsee: ${FILE_MAKE_OUTPUT}"
         echo "${cmd}" >> ${FILE_MAKE_OUTPUT}
         time ${cmd} |& tee -a ${FILE_MAKE_OUTPUT}
     fi
+}
+
+# searched for in the output of 'make --debug=b all'
+run_protoc() {
+    make -f ecal/pb/CMakeFiles/pb.dir/build.make ecal/pb/CMakeFiles/pb.dir/depend
+    make -f samples/cpp/measurement/measurement_read/CMakeFiles/measurement_read.dir/build.make samples/cpp/measurement/measurement_read/CMakeFiles/measurement_read.dir/depend
+    make -f samples/cpp/measurement/measurement_write/CMakeFiles/measurement_write.dir/build.make samples/cpp/measurement/measurement_write/CMakeFiles/measurement_write.dir/depend
+    make -f samples/cpp/multiple/multiple_rec_cb/CMakeFiles/multiple_rec_cb.dir/build.make samples/cpp/multiple/multiple_rec_cb/CMakeFiles/multiple_rec_cb.dir/depend
+    make -f samples/cpp/multiple/multiple_snd/CMakeFiles/multiple_snd.dir/build.make samples/cpp/multiple/multiple_snd/CMakeFiles/multiple_snd.dir/depend
+    make -f samples/cpp/person/person_rec/CMakeFiles/person_rec.dir/build.make samples/cpp/person/person_rec/CMakeFiles/person_rec.dir/depend
+    make -f samples/cpp/person/person_rec_events/CMakeFiles/person_rec_events.dir/build.make samples/cpp/person/person_rec_events/CMakeFiles/person_rec_events.dir/depend
+    make -f samples/cpp/person/person_rec_lambda_in_class/CMakeFiles/person_rec_lambda_in_class.dir/build.make samples/cpp/person/person_rec_lambda_in_class/CMakeFiles/person_rec_lambda_in_class.dir/depend
+    make -f samples/cpp/person/person_snd/CMakeFiles/person_snd.dir/build.make samples/cpp/person/person_snd/CMakeFiles/person_snd.dir/depend
+    make -f samples/cpp/person/person_snd_dyn/CMakeFiles/person_snd_dyn.dir/build.make samples/cpp/person/person_snd_dyn/CMakeFiles/person_snd_dyn.dir/depend
+    make -f samples/cpp/person/person_snd_events/CMakeFiles/person_snd_events.dir/build.make samples/cpp/person/person_snd_events/CMakeFiles/person_snd_events.dir/depend
+    make -f samples/cpp/person/person_snd_inproc/CMakeFiles/person_snd_inproc.dir/build.make samples/cpp/person/person_snd_inproc/CMakeFiles/person_snd_inproc.dir/depend
+    make -f samples/cpp/person/person_snd_multicast/CMakeFiles/person_snd_multicast.dir/build.make samples/cpp/person/person_snd_multicast/CMakeFiles/person_snd_multicast.dir/depend
+    make -f samples/cpp/person/person_snd_tcp/CMakeFiles/person_snd_tcp.dir/build.make samples/cpp/person/person_snd_tcp/CMakeFiles/person_snd_tcp.dir/depend
+    make -f samples/cpp/services/math_client/CMakeFiles/math_client.dir/build.make samples/cpp/services/math_client/CMakeFiles/math_client.dir/depend
+    make -f samples/cpp/services/math_server/CMakeFiles/math_server.dir/build.make samples/cpp/services/math_server/CMakeFiles/math_server.dir/depend
+    make -f samples/cpp/services/ping_client/CMakeFiles/ping_client.dir/build.make samples/cpp/services/ping_client/CMakeFiles/ping_client.dir/depend
+    make -f samples/cpp/services/ping_server/CMakeFiles/ping_server.dir/build.make samples/cpp/services/ping_server/CMakeFiles/ping_server.dir/depend
 }
 
 filter_compile_commands() {
@@ -192,9 +214,16 @@ filter_compile_commands() {
         python3 ${PATH_FILTER}
         cd ${DIR_ROOT}/${DIR_BUILD}/
         ${CLANG_TIDY} --dump-config > ${FILE_CLANG_TIDY_CONFIG}
+
         # use the included commands as compile commands
         mv compile_commands.json compile_commands_orig.json
         mv compile_commands_inc.json compile_commands.json
+
+        # for protobuf generated source & header files, protoc is fast
+        if [[ "${RUN_MAKE}" != 'ON' ]]
+        then
+            run_protoc
+        fi
     fi
 }
 
@@ -304,8 +333,6 @@ run_clang_tidy_on_files() {
         printf -- "-- %s\n" "${FILE_LIST[@]}"
         echo
 
-        local make_first=true
-
         for file in "${FILE_LIST[@]}"
         do
             local file_abs="${file}"
@@ -335,14 +362,6 @@ run_clang_tidy_on_files() {
                     then
                         echo "## excluded"
                     else
-                        # at least one C/C++ source/header file is going to be scanned with clang-tidy
-                        # therefore all machine-generated files may be needed
-                        if $make_first
-                        then
-                            make_first=false
-                            run_make 'go'
-                        fi
-
                         # if 'compile_commands.json' is unreachable, clang-tidy gives the following error:
                         # "Error while trying to load a compilation database: ..."
                         local cmd="${CLANG_TIDY} -p . ${file_abs}"
