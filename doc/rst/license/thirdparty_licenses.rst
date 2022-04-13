@@ -60,6 +60,13 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
+   * - `Findqwt.cmake <https://gitlab.kitware.com/cmake/community/-/wikis/contrib/modules/FindQwt>`_
+     - :ref:`findqwt-bsd-2`
+     - Copyright 2010-2013, Julien Schueller
+
+       Copyright 2018-2020, Rolf Eike Beer
+     - - |fa-file-alt| Copy in repository (modified): ``cmake/Modules/Findqwt.cmake``
+
    * - `Flaticons <https://www.flaticon.com/>`_
      - :ref:`creative_commons_3_0`
      - see :ref:`icon_licenses`
@@ -182,6 +189,7 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
      - - |fa-github| Git submodule ``/tirdparty/tinyxml``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
+
    * - `qwt <https://sourceforge.net/projects/qwt/>`_
      - :ref:`qwt_license`
      - 	Uwe Rathmann
