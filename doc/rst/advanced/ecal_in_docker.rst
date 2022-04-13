@@ -11,7 +11,7 @@ Prerequisite
 -------------
 * Installed Docker
    * install docker from repository: `Docker Instalation <https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository>`_ 
-   * If you hvae problems regarding to the installation, check these links:
+   * If you have problems regarding to the installation, check these links:
       * `docker package not found <https://stackoverflow.com/questions/61401626/docker-installation-failed-on-ubuntu-20-04-ltsvmware>`_
       * `docker installation failed <https://forums.docker.com/t/cant-install-docker-on-ubuntu-20-04/93058>`_
 
@@ -117,7 +117,7 @@ Getting Started
          sudo docker run --rm -it --ipc=host --network host ecal-subscriber:1.0.0
          sudo docker run --rm -it --ipc=host --network host ecal-publisher:1.0.0
 
-#. You can use the docker-compose file to manager multiple containres.
+#. You can use the docker-compose file to manage multiple containers.
     * In the parent folder create file:  |fa-file-alt| :file:`docker-compose.yaml`
      
       .. literalinclude:: src/ecal_in_docker/docker-compose.yaml
