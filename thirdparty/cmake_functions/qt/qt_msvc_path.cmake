@@ -42,8 +42,10 @@ macro(autodetect_qt5_msvc_dir)
 			set(MSVC_YEAR "2017")
 		elseif (MSVC_VERSION LESS_EQUAL "1929")
 			set(MSVC_YEAR "2019")
+		elseif (MSVC_VERSION LESS_EQUAL "1939")
+			set(MSVC_YEAR "2022")
 		else () # Assume each 2 years a new Visual Studio Version with a range of 10 MSVC_VERSIONs
-			MATH(EXPR MSVC_YEAR "2015 + ((${MSVC_VERSION} - 1900) / 10) * 2")
+			MATH(EXPR MSVC_YEAR "2022 + ((${MSVC_VERSION} - 1930) / 10) * 2")
 		endif ()
 		
 		message(STATUS "Detected Visual Studio ${MSVC_YEAR} (from MSVC_VERSION ${MSVC_VERSION})")
