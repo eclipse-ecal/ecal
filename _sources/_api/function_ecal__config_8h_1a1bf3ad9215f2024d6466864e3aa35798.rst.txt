@@ -1,4 +1,4 @@
-.. _exhale_function_ecal__config_8h_1a41f57635b7a5273ae106958c07e8a48d:
+.. _exhale_function_ecal__config_8h_1a1bf3ad9215f2024d6466864e3aa35798:
 
 Function eCAL::Config::GetMemfileBufferCount
 ============================================
