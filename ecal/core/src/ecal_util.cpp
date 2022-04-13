@@ -238,7 +238,7 @@ namespace eCAL
       return(g_descgate()->GetTopicTypeName(topic_name_, topic_type_));
     }
 
-    // deprecated version
+    // [[deprecated]]
     bool GetTypeName(const std::string& topic_name_, std::string& topic_type_)
     {
       return GetTopicTypeName(topic_name_, topic_type_);
@@ -261,7 +261,7 @@ namespace eCAL
       return("");
     }
 
-    // deprecated version
+    // [[deprecated]]
     std::string GetTypeName(const std::string& topic_name_)
     {
       return GetTopicTypeName(topic_name_);
@@ -281,7 +281,7 @@ namespace eCAL
       return(g_descgate()->GetTopicDescription(topic_name_, topic_desc_));
     }
 
-    // deprecated version
+    // [[deprecated]]
     bool GetDescription(const std::string& topic_name_, std::string& topic_desc_)
     {
       return GetTopicDescription(topic_name_, topic_desc_);
@@ -304,10 +304,42 @@ namespace eCAL
       return("");
     }
 
-    // deprecated version
+    // [[deprecated]]
     std::string GetDescription(const std::string& topic_name_)
     {
       return GetTopicDescription(topic_name_);
+    }
+
+    /**
+     * @brief Gets service method request and response type names.
+     *
+     * @param service_name_  Service name.
+     * @param method_name_   Method name.
+     * @param req_type_      String to store request type.
+     * @param resp_type_     String to store response type.
+     *
+     * @return  True if succeeded.
+    **/
+    bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_)
+    {
+      if (!g_descgate()) return(false);
+      return(g_descgate()->GetServiceTypeNames(service_name_, method_name_, req_type_, resp_type_));
+    }
+
+    /**
+     * @brief Gets service method request and response descriptions.
+     *
+     * @param service_name_  Service name.
+     * @param method_name_   Method name.
+     * @param req_desc_      String to store request description.
+     * @param resp_desc_     String to store response description.
+     *
+     * @return  True if succeeded.
+    **/
+    bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_desc_, std::string& resp_desc_)
+    {
+      if (!g_descgate()) return(false);
+      return(g_descgate()->GetServiceDescription(service_name_, method_name_, req_desc_, resp_desc_));
     }
   }
 }

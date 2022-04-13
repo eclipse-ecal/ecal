@@ -126,7 +126,55 @@ namespace eCAL
   
   void CDescGate::ApplyServiceDescription(const std::string& service_name_, const std::string& method_name_, const std::string& req_type_name_, const std::string& req_type_desc_, const std::string& resp_type_name_, const std::string& resp_type_desc_)
   {
-    // TODO: STORE THIS !
-    int i = 0;
+    std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
+
+    std::shared_lock<std::shared_timed_mutex> lock(m_service_method_desc_sync);
+    ServiceMethodDescMapT::iterator iter = m_service_method_desc_map.find(service_method_tuple);
+    if (iter == m_service_method_desc_map.end())
+    {
+      STypeDesc req_typedesc;
+      req_typedesc.set_type(req_type_name_);
+      req_typedesc.set_desc(req_type_desc_);
+
+      STypeDesc resp_typedesc;
+      resp_typedesc.set_type(resp_type_name_);
+      resp_typedesc.set_desc(resp_type_desc_);
+
+      m_service_method_desc_map[service_method_tuple] = std::make_tuple(req_typedesc, resp_typedesc);;
+    }
+    else
+    {
+      // do we need to check consistency ?
+    }
+  }
+
+  bool CDescGate::GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_name_, std::string& resp_type_name_)
+  {
+    std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
+
+    std::shared_lock<std::shared_timed_mutex> lock(m_service_method_desc_sync);
+    ServiceMethodDescMapT::iterator iter = m_service_method_desc_map.find(service_method_tuple);
+
+    if (iter == m_service_method_desc_map.end()) return false;
+    auto req_typedesc_tuple = *iter;
+    req_type_name_  = std::get<0>(req_typedesc_tuple.second).type;
+    resp_type_name_ = std::get<1>(req_typedesc_tuple.second).type;
+
+    return true;
+  }
+
+  bool CDescGate::GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_type_desc_, std::string& resp_type_desc_)
+  {
+    std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
+
+    std::shared_lock<std::shared_timed_mutex> lock(m_service_method_desc_sync);
+    ServiceMethodDescMapT::iterator iter = m_service_method_desc_map.find(service_method_tuple);
+
+    if (iter == m_service_method_desc_map.end()) return false;
+    auto req_typedesc_tuple = *iter;
+    req_type_desc_  = std::get<0>(req_typedesc_tuple.second).desc;
+    resp_type_desc_ = std::get<1>(req_typedesc_tuple.second).desc;
+
+    return true;
   }
 };

@@ -136,48 +136,6 @@ namespace eCAL
     ECAL_API void PubShareDescription(bool state_);
 
     /**
-     * @brief Gets type name of the specified topic. 
-     *
-     * @param topic_name_   Topic name. 
-     * @param topic_type_   String to store type name. 
-     *
-     * @return  True if succeeded. 
-    **/
-    [[deprecated]]
-    ECAL_API bool GetTypeName(const std::string& topic_name_, std::string& topic_type_);
-
-    /**
-     * @brief Gets type name of the specified topic. 
-     *
-     * @param topic_name_   Topic name. 
-     *
-     * @return  Topic type name. 
-    **/
-    [[deprecated]]
-    ECAL_API std::string GetTypeName(const std::string& topic_name_);
-
-    /**
-     * @brief Gets description of the specified topic. 
-     *
-     * @param topic_name_   Topic name. 
-     * @param topic_desc_   String to store description. 
-     *
-     * @return  True if succeeded. 
-    **/
-    [[deprecated]]
-    ECAL_API bool GetDescription(const std::string& topic_name_, std::string& topic_desc_);
-
-    /**
-     * @brief Gets description of the specified topic. 
-     *
-     * @param topic_name_   Topic name. 
-     *
-     * @return  Topic description. 
-    **/
-    [[deprecated]]
-    ECAL_API std::string GetDescription(const std::string& topic_name_);
-
-    /**
      * @brief Gets type name of the specified topic.
      *
      * @param topic_name_   Topic name.
@@ -214,5 +172,71 @@ namespace eCAL
      * @return  Topic description.
     **/
     ECAL_API std::string GetTopicDescription(const std::string& topic_name_);
+
+    /**
+     * @brief Gets service method request and response type names.
+     *
+     * @param service_name_  Service name.
+     * @param method_name_   Method name.
+     * @param req_type_      String to store request type.
+     * @param resp_type_     String to store response type.
+     *
+     * @return  True if succeeded.
+    **/
+    ECAL_API bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_);
+
+    /**
+     * @brief Gets service method request and response descriptions.
+     *
+     * @param service_name_  Service name.
+     * @param method_name_   Method name.
+     * @param req_desc_      String to store request description.
+     * @param resp_desc_     String to store response description.
+     *
+     * @return  True if succeeded.
+    **/
+    ECAL_API bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_desc_, std::string& resp_desc_);
+
+    /**
+     * @brief Gets type name of the specified topic.
+     *
+     * @param topic_name_   Topic name.
+     * @param topic_type_   String to store type name.
+     *
+     * @return  True if succeeded.
+    **/
+    [[deprecated]]
+    ECAL_API bool GetTypeName(const std::string& topic_name_, std::string& topic_type_);
+
+    /**
+     * @brief Gets type name of the specified topic.
+     *
+     * @param topic_name_   Topic name.
+     *
+     * @return  Topic type name.
+    **/
+    [[deprecated]]
+    ECAL_API std::string GetTypeName(const std::string& topic_name_);
+
+    /**
+     * @brief Gets description of the specified topic.
+     *
+     * @param topic_name_   Topic name.
+     * @param topic_desc_   String to store description.
+     *
+     * @return  True if succeeded.
+    **/
+    [[deprecated]]
+    ECAL_API bool GetDescription(const std::string& topic_name_, std::string& topic_desc_);
+
+    /**
+     * @brief Gets description of the specified topic.
+     *
+     * @param topic_name_   Topic name.
+     *
+     * @return  Topic description.
+    **/
+    [[deprecated]]
+    ECAL_API std::string GetDescription(const std::string& topic_name_);
   }
 }

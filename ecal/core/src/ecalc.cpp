@@ -137,28 +137,92 @@ extern "C"
     eCAL::Util::EnableLoopback(state_ != 0);
   }
 
-  ECALC_API int eCAL_Util_GetTypeName(const char* topic_name_, void* topic_type_, int topic_type_len_)
+  ECALC_API int eCAL_Util_GetTopicTypeName(const char* topic_name_, void* topic_type_, int topic_type_len_)
   {
     if(!topic_name_) return(0);
     if(!topic_type_) return(0);
     std::string topic_type;
-    if(eCAL::Util::GetTypeName(topic_name_, topic_type))
+    if(eCAL::Util::GetTopicTypeName(topic_name_, topic_type))
     {
       return(CopyBuffer(topic_type_, topic_type_len_, topic_type));
     }
     return(0);
   }
 
-  ECALC_API int eCAL_Util_GetDescription(const char* topic_name_, void* topic_desc_, int topic_desc_len_)
+  // [[deprecated]]
+  ECALC_API int eCAL_Util_GetTypeName(const char* topic_name_, void* topic_type_, int topic_type_len_)
+  {
+    return(eCAL_Util_GetTopicTypeName(topic_name_, topic_type_, topic_type_len_));
+  }
+
+  ECALC_API int eCAL_Util_GetTopicDescription(const char* topic_name_, void* topic_desc_, int topic_desc_len_)
   {
     if(!topic_name_) return(0);
     if(!topic_desc_) return(0);
     std::string topic_desc;
-    if(eCAL::Util::GetDescription(topic_name_, topic_desc))
+    if(eCAL::Util::GetTopicDescription(topic_name_, topic_desc))
     {
       return(CopyBuffer(topic_desc_, topic_desc_len_, topic_desc));
     }
     return(0);
+  }
+
+  // [[deprecated]]
+  ECALC_API int eCAL_Util_GetDescription(const char* topic_name_, void* topic_desc_, int topic_desc_len_)
+  {
+    return(eCAL_Util_GetTopicDescription(topic_name_, topic_desc_, topic_desc_len_));
+  }
+
+  ECALC_API int eCAL_Util_GetServiceRequestTypeName(const char* service_name_, const char* method_name_, void* req_type_, int req_type_len_)
+  {
+    if (!service_name_) return(0);
+    if (!method_name_)  return(0);
+    if (!req_type_)     return(0);
+    std::string req_type, resp_type;
+    if (eCAL::Util::GetServiceTypeNames(service_name_, method_name_, req_type, resp_type))
+    {
+      return(CopyBuffer(req_type_, req_type_len_, req_type));
+    }
+    return 0;
+  }
+
+  ECALC_API int eCAL_Util_GetServiceResponseTypeName(const char* service_name_, const char* method_name_, void* resp_type_, int resp_type_len_)
+  {
+    if (!service_name_) return(0);
+    if (!method_name_)  return(0);
+    if (!resp_type_)    return(0);
+    std::string req_type, resp_type;
+    if (eCAL::Util::GetServiceTypeNames(service_name_, method_name_, req_type, resp_type))
+    {
+      return(CopyBuffer(resp_type_, resp_type_len_, resp_type));
+    }
+    return 0;
+  }
+
+  ECALC_API int eCAL_Util_GetServiceRequestDescription(const char* service_name_, const char* method_name_, void* req_desc_, int req_desc_len_)
+  {
+    if (!service_name_) return(0);
+    if (!method_name_)  return(0);
+    if (!req_desc_)     return(0);
+    std::string req_desc, resp_desc;
+    if (eCAL::Util::GetServiceDescription(service_name_, method_name_, req_desc, resp_desc))
+    {
+      return(CopyBuffer(req_desc_, req_desc_len_, req_desc));
+    }
+    return 0;
+  }
+
+  ECALC_API int eCAL_Util_GetServiceResponseDescription(const char* service_name_, const char* method_name_, void* resp_desc_, int resp_desc_len_)
+  {
+    if (!service_name_) return(0);
+    if (!method_name_)  return(0);
+    if (!resp_desc_)    return(0);
+    std::string req_desc, resp_desc;
+    if (eCAL::Util::GetServiceDescription(service_name_, method_name_, req_desc, resp_desc))
+    {
+      return(CopyBuffer(resp_desc_, resp_desc_len_, resp_desc));
+    }
+    return 0;
   }
 }
 
