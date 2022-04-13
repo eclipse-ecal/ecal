@@ -74,7 +74,7 @@ namespace eCAL
     for (size_t num(0); num < m_buffer_count; ++num)
     {
       auto sync_memfile = std::make_shared<CSyncMemoryFile>();
-      if (!sync_memfile->Create(topic_name_, static_cast<size_t>(Config::GetMemfileMinsizeBytes())))
+      if (!sync_memfile->Create(topic_name_, Config::GetMemfileMinsizeBytes()))
       {
         return false;
       }
@@ -139,7 +139,7 @@ namespace eCAL
       while (m_memory_file_vec.size() < m_buffer_count)
       {
         auto sync_memfile = std::make_shared<CSyncMemoryFile>();
-        sync_memfile->Create(m_topic_name, static_cast<size_t>(Config::GetMemfileMinsizeBytes()));
+        sync_memfile->Create(m_topic_name, Config::GetMemfileMinsizeBytes());
         m_memory_file_vec.push_back(sync_memfile);
       }
       // decrease buffer count

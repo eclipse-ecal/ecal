@@ -98,7 +98,7 @@ namespace eCAL
     ECAL_API TLayer::eSendMode GetPublisherTcpMode                  ();
     ECAL_API TLayer::eSendMode GetPublisherUdpMulticastMode         ();
 
-    ECAL_API int               GetMemfileMinsizeBytes               ();
+    ECAL_API size_t            GetMemfileMinsizeBytes               ();
     ECAL_API int               GetMemfileOverprovisioningPercentage ();
     ECAL_API int               GetMemfileAckTimeoutMs               ();
     ECAL_API bool              IsMemfileZerocopyEnabled             ();

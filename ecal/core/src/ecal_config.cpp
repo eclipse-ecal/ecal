@@ -100,7 +100,7 @@ namespace eCAL
     ECAL_API TLayer::eSendMode GetPublisherTcpMode                  () { return TLayer::eSendMode(eCALPAR(PUB, USE_TCP)); }
     ECAL_API TLayer::eSendMode GetPublisherInprocMode               () { return TLayer::eSendMode(eCALPAR(PUB, USE_INPROC)); }
 
-    ECAL_API int               GetMemfileMinsizeBytes               () { return eCALPAR(PUB, MEMFILE_MINSIZE); }
+    ECAL_API size_t            GetMemfileMinsizeBytes               () { return static_cast<size_t>(eCALPAR(PUB, MEMFILE_MINSIZE)); }
     ECAL_API int               GetMemfileOverprovisioningPercentage () { return eCALPAR(PUB, MEMFILE_RESERVE); }
     ECAL_API int               GetMemfileAckTimeoutMs               () { return eCALPAR(PUB, MEMFILE_ACK_TO); }
     ECAL_API bool              IsMemfileZerocopyEnabled             () { return (eCALPAR(PUB, MEMFILE_ZERO_COPY) != 0); }

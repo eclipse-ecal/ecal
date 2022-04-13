@@ -68,7 +68,7 @@ namespace eCAL
     // with additional space for SMemFileHeader
     size_t memfile_size = sizeof(SMemFileHeader) + size_;
     // check for minsize
-    size_t minsize = static_cast<size_t>(Config::GetMemfileMinsizeBytes());
+    size_t minsize = Config::GetMemfileMinsizeBytes();
     if (memfile_size < minsize) memfile_size = minsize;
 
     // create it
