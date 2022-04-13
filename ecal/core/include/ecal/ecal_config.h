@@ -102,7 +102,7 @@ namespace eCAL
     ECAL_API int               GetMemfileOverprovisioningPercentage ();
     ECAL_API int               GetMemfileAckTimeoutMs               ();
     ECAL_API bool              IsMemfileZerocopyEnabled             ();
-    ECAL_API int               GetMemfileBufferCount                ();
+    ECAL_API size_t            GetMemfileBufferCount                ();
 
     ECAL_API bool              IsTopicTypeSharingEnabled            ();
     ECAL_API bool              IsTopicDescriptionSharingEnabled     ();
