@@ -19,6 +19,7 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_tlayer.h>
+#include <ecal/ecal_log_level.h>
 
 #include <string>
 
@@ -77,12 +78,12 @@ namespace eCAL
     // monitoring
     /////////////////////////////////////
 
-    ECAL_API int               GetMonitoringTimeoutMs               ();
-    ECAL_API std::string       GetMonitoringFilterExcludeList       ();
-    ECAL_API std::string       GetMonitoringFilterIncludeList       ();
-    ECAL_API std::string       GetConsoleLogFilter                  ();
-    ECAL_API std::string       GetFileLogFilter                     ();
-    ECAL_API std::string       GetUdpLogFilter                      ();
+    ECAL_API int                 GetMonitoringTimeoutMs               ();
+    ECAL_API std::string         GetMonitoringFilterExcludeList       ();
+    ECAL_API std::string         GetMonitoringFilterIncludeList       ();
+    ECAL_API eCAL_Logging_Filter GetConsoleLogFilter                  ();
+    ECAL_API eCAL_Logging_Filter GetFileLogFilter                     ();
+    ECAL_API eCAL_Logging_Filter GetUdpLogFilter                      ();
 
     /////////////////////////////////////
     // sys
