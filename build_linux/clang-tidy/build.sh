@@ -184,6 +184,7 @@ run_make() {
 
 # searched for in the output of 'make --debug=b all'
 run_protoc() {
+    echo -e "\n++ run protoc ..."
     make -f ecal/pb/CMakeFiles/pb.dir/build.make ecal/pb/CMakeFiles/pb.dir/depend
     make -f samples/cpp/measurement/measurement_read/CMakeFiles/measurement_read.dir/build.make samples/cpp/measurement/measurement_read/CMakeFiles/measurement_read.dir/depend
     make -f samples/cpp/measurement/measurement_write/CMakeFiles/measurement_write.dir/build.make samples/cpp/measurement/measurement_write/CMakeFiles/measurement_write.dir/depend
