@@ -237,7 +237,7 @@ namespace eCAL
       Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::CheckSize - RECREATE");
 #endif
       // estimate size of memory file
-      size_t memfile_reserve = static_cast<size_t>(Config::GetMemfileOverprovisioningPercentage());
+      size_t memfile_reserve = Config::GetMemfileOverprovisioningPercentage();
       size_t memfile_size    = sizeof(SMemFileHeader) + size_ + static_cast<size_t>((static_cast<float>(memfile_reserve) / 100.0f) * static_cast<float>(size_));
       // destroy existing memory file object
       Destroy();
