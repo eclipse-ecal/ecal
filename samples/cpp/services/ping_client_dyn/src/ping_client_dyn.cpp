@@ -18,14 +18,45 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/protobuf/ecal_proto_dyn.h>
 
 #include <iostream>
 #include <chrono>
 #include <thread>
 
-#include <google/protobuf/descriptor.h>
-#include <google/protobuf/dynamic_message.h>
+#include <google/protobuf/util/json_util.h>
+
+// helper function to create a serialized google message out of a message descriptor, a message type and a JSON message
+std::string GetSerialzedMessageFromJSON(const std::string& msg_desc_, const std::string& msg_type_, const std::string& msg_json_)
+{
+  // create file descriptor set
+  google::protobuf::FileDescriptorSet req_pset;
+  if (!req_pset.ParseFromString(msg_desc_))
+  {
+    std::cerr << "Could not create google file descriptor set." << std::endl;
+    return "";
+  }
+
+  // create message object
+  eCAL::protobuf::CProtoDynDecoder msg_decoder;
+  std::string error_s;
+  google::protobuf::Message* req_msg = msg_decoder.GetProtoMessageFromDescriptorSet(req_pset, msg_type_, error_s);
+  if(!req_msg)
+  {
+    std::cerr << "Could not create google message object." << std::endl;
+    return "";
+  }
+
+  // convert JSON request string into message
+  google::protobuf::util::Status status = google::protobuf::util::JsonStringToMessage(msg_json_, req_msg);
+  if (!status.ok())
+  {
+    std::cerr << "Could not convert JSON request to google message." << std::endl;
+    return "";
+  }
+
+  return req_msg->SerializeAsString();
+}
 
 // main entry
 int main(int argc, char **argv)
@@ -48,37 +79,31 @@ int main(int argc, char **argv)
 
   // get service method type names
   std::string req_type, resp_type;
-  if (eCAL::Util::GetServiceTypeNames(service_name, method_name, req_type, resp_type))
-  {
-    std::cout << "Service request  type        : " << req_type  << std::endl;
-    std::cout << "Service response type        : " << resp_type << std::endl;
-  }
-  else
+  if (!eCAL::Util::GetServiceTypeNames(service_name, method_name, req_type, resp_type))
   {
     std::cerr << "Could not get service type names !" << std::endl;
   }
 
   // get service method type descriptions
   std::string req_desc, resp_desc;
-  if (eCAL::Util::GetServiceDescription(service_name, method_name, req_desc, resp_desc))
-  {
-    std::cout << "Service request  desc length : " << req_desc.size()  << std::endl;
-    std::cout << "Service response desc length : " << resp_desc.size() << std::endl;
-  }
-  else
+  if (!eCAL::Util::GetServiceDescription(service_name, method_name, req_desc, resp_desc))
   {
     std::cerr << "Could not get service type descriptions !" << std::endl;
   }
 
-  // TODO:
-  // Create a google protobuf message object 'request_msg' based on the descriptor 'req_desc'
-  // Set the attributes of that message and Call 'Ping' method
-
+  int cnt(0);
   while(eCAL::Ok())
   {
     if (ping_client.IsConnected())
     {
-      //ping_client.Call(method_name, request_msg);
+      // create JSON request
+      std::string req_json = "{\"message\": \"HELLO WORLD FROM DYNAMIC PING CLIENT (" + std::to_string(++cnt) + ")\"}";
+       
+      // create serialized google message based on message descriptor, message type and message JSON representation
+      std::string ping_request = GetSerialzedMessageFromJSON(req_desc, req_type, req_json);
+
+      // call service
+      ping_client.Call(method_name, ping_request);
     }
 
     // sleep a second
