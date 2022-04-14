@@ -16,7 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(mon_plugin_dummy VERSION 0.1.0)
+project(mon_plugin_template VERSION 0.1.0)
 
 find_package(Qt5 COMPONENTS
     Core
@@ -52,7 +52,8 @@ ENDIF(MSVC)
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
 
-ecal_install_mon_plugin(${PROJECT_NAME})
+# In order to add the plugin to the cmake install step, the following line needs to be commented in
+#ecal_install_mon_plugin(${PROJECT_NAME})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>/${ECAL_MON_PLUGIN_DIR}

@@ -19,6 +19,7 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_tlayer.h>
+#include <ecal/ecal_log_level.h>
 
 #include <string>
 
@@ -77,12 +78,12 @@ namespace eCAL
     // monitoring
     /////////////////////////////////////
 
-    ECAL_API int               GetMonitoringTimeoutMs               ();
-    ECAL_API std::string       GetMonitoringFilterExcludeList       ();
-    ECAL_API std::string       GetMonitoringFilterIncludeList       ();
-    ECAL_API std::string       GetConsoleLogFilter                  ();
-    ECAL_API std::string       GetLogFileName                       ();
-    ECAL_API std::string       GetUdpLogFilter                      ();
+    ECAL_API int                 GetMonitoringTimeoutMs               ();
+    ECAL_API std::string         GetMonitoringFilterExcludeList       ();
+    ECAL_API std::string         GetMonitoringFilterIncludeList       ();
+    ECAL_API eCAL_Logging_Filter GetConsoleLogFilter                  ();
+    ECAL_API eCAL_Logging_Filter GetFileLogFilter                     ();
+    ECAL_API eCAL_Logging_Filter GetUdpLogFilter                      ();
 
     /////////////////////////////////////
     // sys
@@ -98,11 +99,11 @@ namespace eCAL
     ECAL_API TLayer::eSendMode GetPublisherTcpMode                  ();
     ECAL_API TLayer::eSendMode GetPublisherUdpMulticastMode         ();
 
-    ECAL_API int               GetMemfileMinsizeBytes               ();
-    ECAL_API int               GetMemfileOverprovisioningPercentage ();
+    ECAL_API size_t            GetMemfileMinsizeBytes               ();
+    ECAL_API size_t            GetMemfileOverprovisioningPercentage ();
     ECAL_API int               GetMemfileAckTimeoutMs               ();
     ECAL_API bool              IsMemfileZerocopyEnabled             ();
-    ECAL_API int               GetMemfileBufferCount                ();
+    ECAL_API size_t            GetMemfileBufferCount                ();
 
     ECAL_API bool              IsTopicTypeSharingEnabled            ();
     ECAL_API bool              IsTopicDescriptionSharingEnabled     ();

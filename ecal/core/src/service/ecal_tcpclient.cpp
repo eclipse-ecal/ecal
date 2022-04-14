@@ -296,9 +296,11 @@ namespace eCAL
     }
   }
 
-  void CTcpClient::ReceiveResponseAsync(AsyncCallbackT callback_, int timeout_)
+  void CTcpClient::ReceiveResponseAsync(AsyncCallbackT callback_, int /*timeout_*/)
   {
-    assert((timeout_ == -1) || (timeout_ > 0));
+    // TODO: Actually implement this function
+    
+    //assert((timeout_ == -1) || (timeout_ > 0));
 
     // start timer
     //asio::steady_timer timer(*m_io_service);

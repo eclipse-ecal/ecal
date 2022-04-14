@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
@@ -78,15 +79,15 @@ namespace eCAL
   {
     if(m_created) return;
 
-    m_multicast_group = eCALPAR(NET, UDP_MULTICAST_GROUP);
-    m_reg_refresh     = eCALPAR(CMN, REGISTRATION_REFRESH);
+    m_multicast_group = Config::GetUdpMulticastGroup();
+    m_reg_refresh     = Config::GetRegistrationRefreshMs();
 
     m_reg_topics      = topics_;
     m_reg_services    = services_;
     m_reg_process     = process_;
 
     SSenderAttr attr;
-    bool local_only = !eCALPAR(NET, ENABLED);
+    bool local_only = !Config::IsNetworkEnabled();
     // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
     if (local_only)
     {
@@ -95,18 +96,18 @@ namespace eCAL
     }
     else
     {
-      attr.ipaddr    = eCALPAR(NET, UDP_MULTICAST_GROUP);
+      attr.ipaddr    = Config::GetUdpMulticastGroup();
       attr.broadcast = false;
     }
-    attr.port     = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_REG_OFF;
+    attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
     attr.loopback = true;
-    attr.ttl      = eCALPAR(NET, UDP_MULTICAST_TTL);
-    attr.sndbuf   = eCALPAR(NET, UDP_MULTICAST_SNDBUF);
+    attr.ttl      = Config::GetUdpMulticastTtl();
+    attr.sndbuf   = Config::GetUdpMulticastSndBufSizeBytes();
 
     m_multicast_group = attr.ipaddr;
 
     m_reg_snd.Create(attr);
-    m_reg_snd_thread.Start(eCALPAR(CMN, REGISTRATION_REFRESH), std::bind(&CEntityRegister::RegisterSendThread, this));
+    m_reg_snd_thread.Start(Config::GetRegistrationRefreshMs(), std::bind(&CEntityRegister::RegisterSendThread, this));
 
     m_created = true;
   }

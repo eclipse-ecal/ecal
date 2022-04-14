@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_config.h>
 #include <ecal/ecal_log.h>
 
 #ifdef _MSC_VER
@@ -58,7 +59,7 @@ namespace eCAL
   bool CSyncMemoryFile::Create(const std::string& base_name_, size_t size_)
   {
     m_base_name   = base_name_;
-    m_timeout_ack = eCALPAR(PUB, MEMFILE_ACK_TO);
+    m_timeout_ack = Config::GetMemfileAckTimeoutMs();
 
     // build unique memfile name
     BuildMemFileName();
@@ -67,7 +68,7 @@ namespace eCAL
     // with additional space for SMemFileHeader
     size_t memfile_size = sizeof(SMemFileHeader) + size_;
     // check for minsize
-    size_t minsize = static_cast<size_t>(eCALPAR(PUB, MEMFILE_MINSIZE));
+    size_t minsize = Config::GetMemfileMinsizeBytes();
     if (memfile_size < minsize) memfile_size = minsize;
 
     // create it
@@ -236,7 +237,7 @@ namespace eCAL
       Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::CheckSize - RECREATE");
 #endif
       // estimate size of memory file
-      size_t memfile_reserve = static_cast<size_t>(eCALPAR(PUB, MEMFILE_RESERVE));
+      size_t memfile_reserve = Config::GetMemfileOverprovisioningPercentage();
       size_t memfile_size    = sizeof(SMemFileHeader) + size_ + static_cast<size_t>((static_cast<float>(memfile_reserve) / 100.0f) * static_cast<float>(size_));
       // destroy existing memory file object
       Destroy();

@@ -23,6 +23,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_tlayer.h>
+#include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
@@ -119,10 +120,10 @@ namespace eCAL
     // this can not be done in the constructor because a publisher is allowed
     // to construct befor eCAL::Initialize and so global config is not
     // existing while construction
-    if (m_tlayer.sm_udp_mc  == TLayer::smode_none) m_tlayer.sm_udp_mc = TLayer::eSendMode(eCALPAR(PUB, USE_UDP_MC));
-    if (m_tlayer.sm_shm     == TLayer::smode_none) m_tlayer.sm_shm    = TLayer::eSendMode(eCALPAR(PUB, USE_SHM));
-    if (m_tlayer.sm_tcp     == TLayer::smode_none) m_tlayer.sm_tcp    = TLayer::eSendMode(eCALPAR(PUB, USE_TCP));
-    if (m_tlayer.sm_inproc  == TLayer::smode_none) m_tlayer.sm_inproc = TLayer::eSendMode(eCALPAR(PUB, USE_INPROC));
+    if (m_tlayer.sm_udp_mc  == TLayer::smode_none) m_tlayer.sm_udp_mc = Config::GetPublisherUdpMulticastMode();
+    if (m_tlayer.sm_shm     == TLayer::smode_none) m_tlayer.sm_shm    = Config::GetPublisherShmMode();
+    if (m_tlayer.sm_tcp     == TLayer::smode_none) m_tlayer.sm_tcp    = Config::GetPublisherTcpMode();
+    if (m_tlayer.sm_inproc  == TLayer::smode_none) m_tlayer.sm_inproc = Config::GetPublisherInprocMode();
 
     // create data writer
     m_datawriter = new CDataWriter();

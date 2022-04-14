@@ -81,15 +81,14 @@ namespace eCAL
           return eCAL::rec::Error::NOT_RECORDING;
 
         // Service call
-        SServiceResponse                     service_response;
         eCAL::pb::rec_server::GenericRequest request_pb;
         eCAL::pb::rec_server::ServiceResult  response_pb;
 
-        bool success = remote_rec_server_service->Call(hostname, "StopRecording", request_pb, service_response, response_pb);
+        eCAL::rec::Error service_call_error = CallRemoteEcalrecService(remote_rec_server_service, hostname, "StopRecording", request_pb, response_pb);
 
         // Service call failed
-        if (!success)
-          return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::REMOTE_HOST_UNAVAILABLE, hostname);
+        if (service_call_error)
+          return service_call_error;
 
         // Service call reported error
         {

@@ -17,12 +17,15 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "PluginWidget.h"
-#include "Plugin.h"
+#pragma once
 
-using namespace eCAL::mon;
+#include <ecal/mon/plugin.h> 
 
-PluginWidgetInterface* Plugin::create(const QString& topic_name, const QString& topic_type, QWidget* parent)
+class Plugin : public QObject, public eCAL::mon::PluginInterface
 {
-  return new PluginWidget(topic_name, topic_type, parent);
-}
+  Q_OBJECT
+  Q_PLUGIN_METADATA(IID "de.conti.ecal.monitor.plugin.template/v0.1.0" FILE "metadata.json")
+  Q_INTERFACES(eCAL::mon::PluginInterface)
+public:
+  virtual eCAL::mon::PluginWidgetInterface* create(const QString& topic_name, const QString& topic_type, QWidget* parent = Q_NULLPTR);
+};

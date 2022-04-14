@@ -28,25 +28,23 @@
 
 namespace eCAL
 {
-  class CUDPReceiverImpl;
-  class CUDPcapReceiverImpl;
+  class CUDPReceiverBase;
 
   class CUDPReceiver : public CReceiver
   {
   public:
     CUDPReceiver();
 
-    bool Create(const SReceiverAttr& attr_);
-    bool Destroy();
+    bool Create(const SReceiverAttr& attr_) override;
+    bool Destroy() override;
 
     bool AddMultiCastGroup(const char* ipaddr_);
     bool RemMultiCastGroup(const char* ipaddr_);
 
-    size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr);
+    size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr) override;
 
   protected:
     bool m_use_npcap;
-    std::shared_ptr<CUDPReceiverImpl>    m_socket_impl;
-    std::shared_ptr<CUDPcapReceiverImpl> m_udpcap_socket_impl;
+    std::shared_ptr<CUDPReceiverBase> m_socket_impl;
   };
 }
