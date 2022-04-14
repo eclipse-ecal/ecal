@@ -27,6 +27,7 @@ find_package(Protobuf REQUIRED)
 
 set(ping_client_dyn_src
     src/ping_client_dyn.cpp
+    src/proto_json_conv.cpp
 )
 
 ecal_add_sample(${PROJECT_NAME} ${ping_client_dyn_src})
