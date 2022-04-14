@@ -3,7 +3,7 @@
 .. _ecal_in_docker:
 
 ==============
-eCAL In Docker
+eCAL in Docker
 ==============
 
 Here we will show how to deploy eCAL into a docker container, and how to use its image from other containers.
@@ -69,7 +69,7 @@ The file hierarchy that we are going to follow:
  
    * Build the image:
  
-     .. code-block:: bash
+     .. code-block:: console
 
         cd ecal_in_docker
         sudo docker build . --rm -t ecal-runtime
@@ -136,8 +136,8 @@ The file hierarchy that we are going to follow:
 
    .. code-block:: bash
 
-      sudo docker run --rm -it --ipc=host --network host ecal-subscriber:1.0.0
-      sudo docker run --rm -it --ipc=host --network host ecal-publisher:1.0.0
+      sudo docker run --rm -it --ipc=host --network=host ecal-subscriber:1.0.0
+      sudo docker run --rm -it --ipc=host --network=host ecal-publisher:1.0.0
 
 #. You can use the docker-compose file to manage multiple containers.
 

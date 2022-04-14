@@ -7,4 +7,4 @@ RUN apt-get update && \
 	rm -rf /var/lib/apt/lists/*
 RUN add-apt-repository ppa:ecal/ecal-latest
 RUN apt-get install -y ecal
-RUN apt install -y cmake g++ libprotobuf-dev protobuf-compiler
+RUN apt-get install -y cmake g++ libprotobuf-dev protobuf-compiler
