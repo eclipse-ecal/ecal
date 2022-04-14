@@ -51,13 +51,51 @@ std::string GetSerialzedMessageFromJSON(const std::string& msg_desc_, const std:
   google::protobuf::util::Status status = google::protobuf::util::JsonStringToMessage(msg_json_, req_msg);
   if (!status.ok())
   {
-    std::cerr << "Could not convert JSON request to google message." << std::endl;
+    std::cerr << "Could not convert JSON to google message." << std::endl;
     return "";
   }
 
   return req_msg->SerializeAsString();
 }
 
+// helper function to create a serialized google message out of a message descriptor, a message type and a JSON message
+std::string GetJSONFromSerialzedMessage(const std::string& msg_desc_, const std::string& msg_type_, const std::string& msg_google_)
+{
+  // create file descriptor set
+  google::protobuf::FileDescriptorSet req_pset;
+  if (!req_pset.ParseFromString(msg_desc_))
+  {
+    std::cerr << "Could not create google file descriptor set." << std::endl;
+    return "";
+  }
+
+  // create message object
+  eCAL::protobuf::CProtoDynDecoder msg_decoder;
+  std::string error_s;
+  google::protobuf::Message* req_msg = msg_decoder.GetProtoMessageFromDescriptorSet(req_pset, msg_type_, error_s);
+  if (!req_msg)
+  {
+    std::cerr << "Could not create google message object." << std::endl;
+    return "";
+  }
+
+  if (!req_msg->ParseFromString(msg_google_))
+  {
+    std::cerr << "Could not parse google message content from string." << std::endl;
+    return "";
+  }
+
+  std::string msg_json;
+  google::protobuf::util::Status status = google::protobuf::util::MessageToJsonString(*req_msg, &msg_json);
+  if (!status.ok())
+  {
+    std::cerr << "Could not convert google message to JSON." << std::endl;
+    return "";
+  }
+
+  return msg_json;
+}
+  
 // main entry
 int main(int argc, char **argv)
 {
@@ -96,14 +134,47 @@ int main(int argc, char **argv)
   {
     if (ping_client.IsConnected())
     {
+      //////////////////////////////////////
       // create JSON request
-      std::string req_json = "{\"message\": \"HELLO WORLD FROM DYNAMIC PING CLIENT (" + std::to_string(++cnt) + ")\"}";
-       
-      // create serialized google message based on message descriptor, message type and message JSON representation
+      //////////////////////////////////////
+      std::string req_json     = "{\"message\": \"HELLO WORLD FROM DYNAMIC PING CLIENT (" + std::to_string(++cnt) + ")\"}";
       std::string ping_request = GetSerialzedMessageFromJSON(req_desc, req_type, req_json);
 
-      // call service
-      ping_client.Call(method_name, ping_request);
+      if (!ping_request.empty())
+      {
+        //////////////////////////////////////
+      // Ping service (blocking call)
+      //////////////////////////////////////
+        eCAL::ServiceResponseVecT service_response_vec;
+        if (ping_client.Call("Ping", ping_request, -1, &service_response_vec))
+        {
+          std::cout << std::endl << "PingService::Ping method called with message (JSON) : " << req_json << std::endl;
+
+          for (auto service_response : service_response_vec)
+          {
+            switch (service_response.call_state)
+            {
+              // service successful executed
+            case call_state_executed:
+            {
+              std::string resp_json = GetJSONFromSerialzedMessage(req_desc, req_type, service_response.response);
+              std::cout << "Received response PingService / Ping (JSON) : " << resp_json << " from host " << service_response.host_name << std::endl;
+            }
+            break;
+            // service execution failed
+            case call_state_failed:
+              std::cout << "Received error PingService / Ping           : " << service_response.error_msg << " from host " << service_response.host_name << std::endl;
+              break;
+            default:
+              break;
+            }
+          }
+        }
+        else
+        {
+          std::cout << "PingService::Ping method call failed .." << std::endl << std::endl;
+        }
+      }
     }
 
     // sleep a second
