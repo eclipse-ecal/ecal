@@ -51,13 +51,13 @@ The file hierarchy that we are going to follow:
    |
    ├─ |fa-folder-open| pub_container
    |  ├─ |fa-file-alt| :download:`Dockerfile <src/ecal_in_docker/pub_container/Dockerfile>`
-   |  ├─ |fa-file-alt| :download:`CMakeLists.txt <src/ecal_in_docker/pub_container/CMakeLists.txt>`
-   |  └─ |fa-file-alt| :download:`main.cpp <src/ecal_in_docker/pub_container/main.cpp>`
+   |  ├─ |fa-file-alt| :download:`CMakeLists.txt </getting_started/src/hello_world/hello_world_snd/CMakeLists.txt>`
+   |  └─ |fa-file-alt| :download:`main.cpp </getting_started/src/hello_world/hello_world_snd/main.cpp>`
    |
    └─ |fa-folder-open| sub_container
       ├─ |fa-file-alt| :download:`Dockerfile <src/ecal_in_docker/sub_container/Dockerfile>`
-      ├─ |fa-file-alt| :download:`CMakeLists.txt <src/ecal_in_docker/sub_container/CMakeLists.txt>`
-      └─ |fa-file-alt| :download:`main.cpp <src/ecal_in_docker/sub_container/main.cpp>`
+      ├─ |fa-file-alt| :download:`CMakeLists.txt </getting_started/src/hello_world/hello_world_rec/CMakeLists.txt>`
+      └─ |fa-file-alt| :download:`main.cpp </getting_started/src/hello_world/hello_world_rec/main.cpp>`
 
 #. Create a container for the eCAL runtime and build it:
 
@@ -88,13 +88,13 @@ The file hierarchy that we are going to follow:
 
    * Create publisher source code: |fa-file-alt| :file:`pub_container/main.cpp`
 
-     .. literalinclude:: src/ecal_in_docker/pub_container/main.cpp
+     .. literalinclude:: /getting_started/src/hello_world/hello_world_snd/main.cpp
         :language: c++
         :linenos:
 
    * Create file  |fa-file-alt| :file:`pub_container/CMakeLists.txt`
    
-     .. literalinclude:: src/ecal_in_docker/pub_container/CMakeLists.txt
+     .. literalinclude:: /getting_started/src/hello_world/hello_world_snd/CMakeLists.txt
         :language: cmake
         :linenos:
 
@@ -115,13 +115,13 @@ The file hierarchy that we are going to follow:
 
    * Create subscriber source code: |fa-file-alt| :file:`sub_container/main.cpp`
 
-     .. literalinclude:: src/ecal_in_docker/sub_container/main.cpp
+     .. literalinclude:: /getting_started/src/hello_world/hello_world_rec/main.cpp
         :language: c++
         :linenos:
 
    * Create file |fa-file-alt| :file:`sub_container/CMakeLists.txt`
      
-     .. literalinclude:: src/ecal_in_docker/sub_container/CMakeLists.txt
+     .. literalinclude:: /getting_started/src/hello_world/hello_world_rec/CMakeLists.txt
         :language: cmake
         :linenos:
     
