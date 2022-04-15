@@ -138,7 +138,7 @@ void ChartWidget::onPlotTimeOut()
             if (std::fabs(minimum_received_point_ - DBL_MAX) > DBL_EPSILON)
             {
               auto current_delta = std::abs(maximum_received_point_ - minimum_received_point_);
-              if (FP_ZERO == fpclassify(current_delta))
+              if (FP_ZERO == std::fpclassify(current_delta))
               {
                 curve->forced_maximum_scale_ = true;
                 maximum_value_to_set = maximum_received_point_ < 0 ? maximum_received_point_ * SignalPlotting::kDefaultMinimumFactor : maximum_received_point_ * SignalPlotting::kDefaultMaximumFactor;
@@ -162,7 +162,7 @@ void ChartWidget::onPlotTimeOut()
             }
 
             auto current_delta = std::abs(maximum_received_point_ - minimum_received_point_);
-            if (FP_ZERO == fpclassify(current_delta))
+            if (FP_ZERO == std::fpclassify(current_delta))
             {
               curve->forced_minimum_scale_ = true;
               minimum_value_to_set = minimum_received_point_ > 0 ? minimum_received_point_ * SignalPlotting::kDefaultMinimumFactor : minimum_received_point_ * SignalPlotting::kDefaultMaximumFactor;

@@ -41,11 +41,7 @@
 #include "qwt_text.h"
 
 #include <cfloat>
-#ifdef __linux__ 
-  #include <math.h>
-#elif _WIN32
-  #include <cmath>
-#endif
+#include <cmath>
 #include <algorithm>
 
 

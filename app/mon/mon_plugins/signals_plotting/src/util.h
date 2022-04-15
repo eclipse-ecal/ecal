@@ -78,7 +78,7 @@ namespace SignalPlotting
   constexpr  double  kMinimumAllowedIntervalDifference   = 1e-306;
   constexpr  double  kFactorToIncreaseIntervalDifference = 1e-305;
 
-  enum PLUGIN_STATE : int
+  enum class PLUGIN_STATE : int
   {
     UNKNOWN = 0,
     PAUSED,
