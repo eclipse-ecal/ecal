@@ -23,65 +23,65 @@
 #include <iostream>
 #include <string>
 
-std::string GetSerialzedMessageFromJSON(const std::string& msg_desc_, const std::string& msg_type_, const std::string& msg_json_)
+google::protobuf::Message* GetProtoMessage(eCAL::protobuf::CProtoDynDecoder& msg_decoder_, const std::string& msg_desc_, const std::string& msg_type_)
 {
   // create file descriptor set
   google::protobuf::FileDescriptorSet msg_pset;
   if (!msg_pset.ParseFromString(msg_desc_))
   {
     std::cerr << "Could not create google file descriptor set." << std::endl;
-    return "";
+    return nullptr;
   }
 
   // create message object
-  eCAL::protobuf::CProtoDynDecoder msg_decoder;
   std::string error_s;
-  google::protobuf::Message* msg_proto = msg_decoder.GetProtoMessageFromDescriptorSet(msg_pset, msg_type_, error_s);
+  google::protobuf::Message* msg_proto = msg_decoder_.GetProtoMessageFromDescriptorSet(msg_pset, msg_type_, error_s);
   if (!msg_proto)
   {
     std::cerr << "Could not create google message object: " << error_s << std::endl;
+    return nullptr;
+  }
+
+  return msg_proto;
+}
+
+std::string GetSerialzedMessageFromJSON(google::protobuf::Message* msg_proto_, const std::string& msg_json_)
+{
+  if (!msg_proto_)
+  {
+    std::cerr << "Google message pointer empty." << std::endl;
     return "";
   }
 
-  // convert JSON string into message
-  google::protobuf::util::Status status = google::protobuf::util::JsonStringToMessage(msg_json_, msg_proto);
+  // read JSON string into message object
+  google::protobuf::util::Status status = google::protobuf::util::JsonStringToMessage(msg_json_, msg_proto_);
   if (!status.ok())
   {
     std::cerr << "Could not convert JSON to google message." << std::endl;
     return "";
   }
 
-  return msg_proto->SerializeAsString();
+  return msg_proto_->SerializeAsString();
 }
 
-std::string GetJSONFromSerialzedMessage(const std::string& msg_desc_, const std::string& msg_type_, const std::string& msg_ser_)
+std::string GetJSONFromSerialzedMessage(google::protobuf::Message* msg_proto_, const std::string& msg_ser_)
 {
-  // create file descriptor set
-  google::protobuf::FileDescriptorSet msg_pset;
-  if (!msg_pset.ParseFromString(msg_desc_))
+  if (!msg_proto_)
   {
-    std::cerr << "Could not create google file descriptor set." << std::endl;
+    std::cerr << "Google message pointer empty." << std::endl;
     return "";
   }
 
-  // create message object
-  eCAL::protobuf::CProtoDynDecoder msg_decoder;
-  std::string error_s;
-  google::protobuf::Message* msg_proto = msg_decoder.GetProtoMessageFromDescriptorSet(msg_pset, msg_type_, error_s);
-  if (!msg_proto)
-  {
-    std::cerr << "Could not create google message object: " << error_s << std::endl;
-    return "";
-  }
-
-  if (!msg_proto->ParseFromString(msg_ser_))
+  // read serialized message string into message object
+  if (!msg_proto_->ParseFromString(msg_ser_))
   {
     std::cerr << "Could not parse google message content from string." << std::endl;
     return "";
   }
 
+  // convert message object to JSON string
   std::string msg_json;
-  google::protobuf::util::Status status = google::protobuf::util::MessageToJsonString(*msg_proto, &msg_json);
+  google::protobuf::util::Status status = google::protobuf::util::MessageToJsonString(*msg_proto_, &msg_json);
   if (!status.ok())
   {
     std::cerr << "Could not convert google message to JSON." << std::endl;

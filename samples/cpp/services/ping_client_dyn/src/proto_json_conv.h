@@ -20,25 +20,35 @@
 #pragma once
 
 #include <string>
+#include <ecal/protobuf/ecal_proto_dyn.h>
 
 /**
-  * @brief Create a serialized protobuf message from a JSON string.
+  * @brief Create a protobuf message object using the dynamic message decoder from message descriptor and message type name
   *
-  * @param  msg_desc_   Protobuf message descriptor.
-  * @param  msg_type_   Protobuf message type name.
+  * @param  msg_decoder_  Protobuf dynamic message decoder.
+  * @param  msg_desc_     Protobuf message descriptor.
+  * @param  msg_type_     Protobuf message type name.
+  *
+  * @return google protobuf message object or null pointer if conversion failed
+**/
+google::protobuf::Message* GetProtoMessage(eCAL::protobuf::CProtoDynDecoder& msg_decoder_, const std::string& msg_desc_, const std::string& msg_type_);
+
+/**
+  * @brief Create a serialized protobuf message from a google message object and a JSON string.
+  *
+  * @param  msg_proto_  Protobuf message object.
   * @param  msg_json_   JSON string.
   * 
   * @return serialized google message string or empty string if conversion failed
 **/
-std::string GetSerialzedMessageFromJSON(const std::string& msg_desc_, const std::string& msg_type_, const std::string& msg_json_);
+std::string GetSerialzedMessageFromJSON(google::protobuf::Message* msg_proto_, const std::string& msg_json_);
 
 /**
-  * @brief Create a JSON string from a serialized protobuf message.
+  * @brief Create a JSON string from a google message object and a serialized protobuf message.
   *
-  * @param  msg_desc_   Protobuf message descriptor.
-  * @param  msg_type_   Protobuf message type name.
+  * @param  msg_proto_  Protobuf message object.
   * @param  msg_ser_    Serialized google protobuf message.
   *
   * @return JSON string or empty string if conversion failed
 **/
-std::string GetJSONFromSerialzedMessage(const std::string& msg_desc_, const std::string& msg_type_, const std::string& msg_ser_);
+std::string GetJSONFromSerialzedMessage(google::protobuf::Message* msg_proto_, const std::string& msg_ser_);

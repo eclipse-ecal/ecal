@@ -22,6 +22,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <stdexcept>
 
 #include "proto_json_conv.h"
 
@@ -47,18 +48,22 @@ int main(int argc, char **argv)
   std::string req_type, resp_type;
   if (!eCAL::Util::GetServiceTypeNames(service_name, method_name, req_type, resp_type))
   {
-    std::cerr << "Could not get service type names !" << std::endl;
-    eCAL::Finalize();
-    return -1;
+    throw std::runtime_error("Could not get service type names !");
   }
 
   // get service method type descriptions
   std::string req_desc, resp_desc;
   if (!eCAL::Util::GetServiceDescription(service_name, method_name, req_desc, resp_desc))
   {
-    std::cerr << "Could not get service type descriptions !" << std::endl;
-    eCAL::Finalize();
-    return -1;
+    throw std::runtime_error("Could not get service type descriptions !");
+  }
+
+  // create the google message object
+  eCAL::protobuf::CProtoDynDecoder msg_decoder;
+  google::protobuf::Message* msg_proto = GetProtoMessage(msg_decoder, req_desc, req_type);
+  if (!msg_proto)
+  {
+    throw std::runtime_error("Could not create google message object !");
   }
 
   int cnt(0);
@@ -70,7 +75,7 @@ int main(int argc, char **argv)
       // create JSON request
       //////////////////////////////////////
       std::string req_json     = "{\"message\": \"HELLO WORLD FROM DYNAMIC PING CLIENT (" + std::to_string(++cnt) + ")\"}";
-      std::string ping_request = GetSerialzedMessageFromJSON(req_desc, req_type, req_json);
+      std::string ping_request = GetSerialzedMessageFromJSON(msg_proto, req_json);
 
       if (!ping_request.empty())
       {
@@ -89,7 +94,7 @@ int main(int argc, char **argv)
               // service successful executed
             case call_state_executed:
             {
-              std::string resp_json = GetJSONFromSerialzedMessage(resp_desc, resp_type, service_response.response);
+              std::string resp_json = GetJSONFromSerialzedMessage(msg_proto, service_response.response);
               std::cout << "Received response PingService / Ping         (JSON) : " << resp_json << " from host " << service_response.host_name << std::endl;
             }
             break;
