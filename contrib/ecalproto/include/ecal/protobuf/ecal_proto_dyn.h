@@ -106,6 +106,15 @@ namespace protobuf
     google::protobuf::Message* GetProtoMessageFromDescriptor(const google::protobuf::FileDescriptorProto& proto_desc_, const std::string& msg_type_, std::string& error_s_);
 
     /**
+      * @brief Create message from serialized proto descriptor string.
+      *
+      * @param       msg_desc_    Serialized message descriptor.
+      * @param       msg_type_    Type name.
+      * @param [out] error_s_     Error string.
+    **/
+    google::protobuf::Message* GetProtoMessageFromDescriptor(const std::string& msg_desc_, const std::string& msg_type_, std::string& error_s_);
+
+    /**
       * @brief Create message from proto descriptor set.
       *
       * @param       proto_desc_set_  Proto descriptor set.

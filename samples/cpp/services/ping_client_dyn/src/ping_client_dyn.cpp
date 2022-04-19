@@ -18,6 +18,7 @@
 */
 
 #include <ecal/ecal.h>
+#include <ecal/protobuf/ecal_proto_dyn.h>
 
 #include <iostream>
 #include <chrono>
@@ -59,11 +60,12 @@ int main(int argc, char **argv)
   }
 
   // create the google message object
-  eCAL::protobuf::CProtoDynDecoder msg_decoder;
-  google::protobuf::Message* msg_proto = GetProtoMessage(msg_decoder, req_desc, req_type);
+  eCAL::protobuf::CProtoDynDecoder dyn_decoder;
+  std::string error_s;
+  google::protobuf::Message* msg_proto = dyn_decoder.GetProtoMessageFromDescriptor(req_desc, req_type, error_s);
   if (!msg_proto)
   {
-    throw std::runtime_error("Could not create google message object !");
+    throw std::runtime_error("Could not create google message object: " + error_s);
   }
 
   int cnt(0);

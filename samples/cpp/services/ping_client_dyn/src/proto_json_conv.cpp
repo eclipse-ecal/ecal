@@ -18,32 +18,11 @@
 */
 
 #include <ecal/protobuf/ecal_proto_dyn.h>
+
 #include <google/protobuf/util/json_util.h>
 
 #include <iostream>
 #include <string>
-
-google::protobuf::Message* GetProtoMessage(eCAL::protobuf::CProtoDynDecoder& msg_decoder_, const std::string& msg_desc_, const std::string& msg_type_)
-{
-  // create file descriptor set
-  google::protobuf::FileDescriptorSet msg_pset;
-  if (!msg_pset.ParseFromString(msg_desc_))
-  {
-    std::cerr << "Could not create google file descriptor set." << std::endl;
-    return nullptr;
-  }
-
-  // create message object
-  std::string error_s;
-  google::protobuf::Message* msg_proto = msg_decoder_.GetProtoMessageFromDescriptorSet(msg_pset, msg_type_, error_s);
-  if (!msg_proto)
-  {
-    std::cerr << "Could not create google message object: " << error_s << std::endl;
-    return nullptr;
-  }
-
-  return msg_proto;
-}
 
 std::string GetSerialzedMessageFromJSON(google::protobuf::Message* msg_proto_, const std::string& msg_json_)
 {

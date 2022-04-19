@@ -19,19 +19,9 @@
 
 #pragma once
 
-#include <string>
-#include <ecal/protobuf/ecal_proto_dyn.h>
+#include <google/protobuf/message.h>
 
-/**
-  * @brief Create a protobuf message object using the dynamic message decoder from message descriptor and message type name
-  *
-  * @param  msg_decoder_  Protobuf dynamic message decoder.
-  * @param  msg_desc_     Protobuf message descriptor.
-  * @param  msg_type_     Protobuf message type name.
-  *
-  * @return google protobuf message object or null pointer if conversion failed
-**/
-google::protobuf::Message* GetProtoMessage(eCAL::protobuf::CProtoDynDecoder& msg_decoder_, const std::string& msg_desc_, const std::string& msg_type_);
+#include <string>
 
 /**
   * @brief Create a serialized protobuf message from a google message object and a JSON string.

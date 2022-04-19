@@ -139,6 +139,26 @@ namespace protobuf
     return(GetProtoMessageFromDescriptorSet(pset, msg_type_, error_s_));
   }
 
+  google::protobuf::Message* CProtoDynDecoder::GetProtoMessageFromDescriptor(const std::string& msg_desc_, const std::string& msg_type_, std::string& error_s_)
+  {
+    // create file descriptor set
+    google::protobuf::FileDescriptorSet pset;
+    if (!pset.ParseFromString(msg_desc_))
+    {
+      error_s_ = "Cannot get file descriptor of message: " + msg_type_;
+      return(NULL);
+    }
+
+    // create message object
+    google::protobuf::Message* proto_msg = GetProtoMessageFromDescriptorSet(pset, msg_type_, error_s_);
+    if (!proto_msg)
+    {
+      return(NULL);
+    }
+
+    return(proto_msg);
+  }
+
   google::protobuf::Message* CProtoDynDecoder::GetProtoMessageFromDescriptorSet(const google::protobuf::FileDescriptorSet& proto_desc_set_, const std::string& msg_type_, std::string& error_s_)
   {
     // suppose you want to parse a message type with a specific type name.
