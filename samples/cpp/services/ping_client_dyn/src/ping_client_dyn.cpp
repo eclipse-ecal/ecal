@@ -59,60 +59,56 @@ int main(int argc, char **argv)
     throw std::runtime_error("Could not get service type descriptions !");
   }
 
-  // create the google message object
+  // create dynamic protobuf message decoder to create request and response message objects
   eCAL::protobuf::CProtoDynDecoder dyn_decoder;
   std::string error_s;
-  google::protobuf::Message* msg_proto = dyn_decoder.GetProtoMessageFromDescriptor(req_desc, req_type, error_s);
-  if (!msg_proto)
-  {
-    throw std::runtime_error("Could not create google message object: " + error_s);
-  }
+
+  // create the request message object
+  google::protobuf::Message* req_msg = dyn_decoder.GetProtoMessageFromDescriptor(req_desc, req_type, error_s);
+  if (!req_msg) throw std::runtime_error("Could not create request message object: " + error_s);
+
+  // create the response message object
+  google::protobuf::Message* resp_msg = dyn_decoder.GetProtoMessageFromDescriptor(resp_desc, resp_type, error_s);
+  if (!req_msg) throw std::runtime_error("Could not create request message object: " + error_s);
 
   int cnt(0);
-  while(eCAL::Ok())
+  while(eCAL::Ok() && ping_client.IsConnected())
   {
-    if (ping_client.IsConnected())
+    // create JSON request
+    std::string req_json = "{\"message\": \"HELLO WORLD FROM DYNAMIC PING CLIENT (" + std::to_string(++cnt) + ")\"}";
+    std::string ping_request = GetSerialzedMessageFromJSON(req_msg, req_json);
+
+    if (!ping_request.empty())
     {
-      //////////////////////////////////////
-      // create JSON request
-      //////////////////////////////////////
-      std::string req_json     = "{\"message\": \"HELLO WORLD FROM DYNAMIC PING CLIENT (" + std::to_string(++cnt) + ")\"}";
-      std::string ping_request = GetSerialzedMessageFromJSON(msg_proto, req_json);
-
-      if (!ping_request.empty())
+      // call Ping service method
+      eCAL::ServiceResponseVecT service_response_vec;
+      if (ping_client.Call("Ping", ping_request, -1, &service_response_vec))
       {
-        //////////////////////////////////////
-      // Ping service (blocking call)
-      //////////////////////////////////////
-        eCAL::ServiceResponseVecT service_response_vec;
-        if (ping_client.Call("Ping", ping_request, -1, &service_response_vec))
-        {
-          std::cout << std::endl << "PingService::Ping method called with message (JSON) : " << req_json << std::endl;
+        std::cout << std::endl << "PingService::Ping method called with message (JSON) : " << req_json << std::endl;
 
-          for (auto service_response : service_response_vec)
+        for (auto service_response : service_response_vec)
+        {
+          switch (service_response.call_state)
           {
-            switch (service_response.call_state)
-            {
-              // service successful executed
-            case call_state_executed:
-            {
-              std::string resp_json = GetJSONFromSerialzedMessage(msg_proto, service_response.response);
-              std::cout << "Received response PingService / Ping         (JSON) : " << resp_json << " from host " << service_response.host_name << std::endl;
-            }
+          // service successful executed
+          case call_state_executed:
+          {
+            std::string resp_json = GetJSONFromSerialzedMessage(resp_msg, service_response.response);
+            std::cout << "Received response PingService / Ping         (JSON) : " << resp_json << " from host " << service_response.host_name << std::endl;
+          }
+          break;
+          // service execution failed
+          case call_state_failed:
+            std::cout << "Received error PingService / Ping           : " << service_response.error_msg << " from host " << service_response.host_name << std::endl;
             break;
-            // service execution failed
-            case call_state_failed:
-              std::cout << "Received error PingService / Ping           : " << service_response.error_msg << " from host " << service_response.host_name << std::endl;
-              break;
-            default:
-              break;
-            }
+          default:
+            break;
           }
         }
-        else
-        {
-          std::cout << "PingService::Ping method call failed .." << std::endl << std::endl;
-        }
+      }
+      else
+      {
+        std::cout << "PingService::Ping method call failed .." << std::endl << std::endl;
       }
     }
 
