@@ -69,7 +69,7 @@ int main(int argc, char **argv)
 
   // create the response message object
   google::protobuf::Message* resp_msg = dyn_decoder.GetProtoMessageFromDescriptor(resp_desc, resp_type, error_s);
-  if (!req_msg) throw std::runtime_error("Could not create request message object: " + error_s);
+  if (!req_msg) throw std::runtime_error("Could not create response message object: " + error_s);
 
   int cnt(0);
   while(eCAL::Ok() && ping_client.IsConnected())
