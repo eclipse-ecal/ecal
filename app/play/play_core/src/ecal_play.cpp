@@ -111,7 +111,7 @@ bool EcalPlay::LoadMeasurement(const std::string& path)
     measurement_path_ = path;
 
     LoadDescription(meas_dir + "/doc/description.txt");
-    LoadScenarios(meas_dir + "/doc/scenario.txt");
+    LoadScenarios(meas_dir + "/doc", meas_dir + "/doc/scenario.txt");
 
     LogMeasurementSummary();
     eCAL::Process::SetState(eCAL_Process_eSeverity::proc_sev_healthy, eCAL_Process_eSeverity_Level::proc_sev_level1, "Measurement loaded");
@@ -131,6 +131,8 @@ void EcalPlay::CloseMeasurement()
   description_ = "";
   play_thread_->SetMeasurement(std::shared_ptr<eCAL::eh5::HDF5Meas>(nullptr));
   measurement_path_ = "";
+  clearScenariosPath();
+  channel_mapping_path_ = "";
 }
 
 bool EcalPlay::IsMeasurementLoaded() const
@@ -148,7 +150,22 @@ std::string EcalPlay::GetMeasurementDirectory() const
   return play_thread_->GetMeasurementPath();
 }
 
-std::map<std::string, std::string> EcalPlay::LoadChannelMappingFile(const std::string& path) const
+std::string EcalPlay::GetScenariosDirectory() const
+{
+  return scenarios_path_.first;
+}
+
+std::string EcalPlay::GetScenariosPath() const
+{
+  return scenarios_path_.second;
+}
+
+std::string EcalPlay::GetChannelMappingPath() const
+{
+  return channel_mapping_path_;
+}
+
+std::map<std::string, std::string> EcalPlay::LoadChannelMappingFile(const std::string& path)
 {
   std::map<std::string, std::string> channel_mapping;
 
@@ -176,6 +193,8 @@ std::map<std::string, std::string> EcalPlay::LoadChannelMappingFile(const std::s
         channel_mapping[EcalUtils::String::Trim(mapping[0])] = EcalUtils::String::Trim(mapping[1]);
       }
     }
+
+    channel_mapping_path_ = path;
   }
   else
   {
@@ -232,12 +251,18 @@ bool EcalPlay::LoadDescription(const std::string& path)
   return true;
 }
 
+void EcalPlay::clearScenariosPath()
+{
+  scenarios_path_.first.clear();
+  scenarios_path_.second.clear();
+}
+
 std::string EcalPlay::GetDescription() const
 {
   return description_;
 }
 
-bool EcalPlay::LoadScenarios(const std::string& path)
+bool EcalPlay::LoadScenarios(const std::string& selected_dir, const std::string& selected_file)
 {
   // Remove old scenarios
   scenarios_.clear();
@@ -245,10 +270,10 @@ bool EcalPlay::LoadScenarios(const std::string& path)
   std::string scenario_line;
 
 #ifdef WIN32
-  std::wstring w_path = EcalUtils::StrConvert::Utf8ToWide(path);
+  std::wstring w_path = EcalUtils::StrConvert::Utf8ToWide(selected_file);
   std::ifstream scenario_file(w_path);
 #else
-  std::ifstream scenario_file(path);
+  std::ifstream scenario_file(selected_file);
 #endif // WIN32
 
   if (scenario_file.is_open())
@@ -291,15 +316,15 @@ bool EcalPlay::LoadScenarios(const std::string& path)
     }
     scenario_file.close();
 
-    EcalPlayLogger::Instance()->info("Scenario file:    " + path);
-
+    EcalPlayLogger::Instance()->info("Scenario file:    " + selected_file);
+    scenarios_path_ = std::make_pair(selected_dir, selected_file);
     // Sort the scenario list by timestamp
     std::sort(scenarios_.begin(), scenarios_.end(), [](const EcalPlayScenario& s1, const EcalPlayScenario& s2) {return s1.time_ < s2.time_; });
     return true;
   }
   else
   {
-    EcalPlayLogger::Instance()->warn("Unable to load scenario file: " + path);
+    EcalPlayLogger::Instance()->warn("Unable to load scenario file: " + selected_file);
     return false;
   }
 }
@@ -320,7 +345,7 @@ void EcalPlay::SetScenarios(const std::vector<EcalPlayScenario>& scenarios)
   scenarios_ = scenarios;
 }
 
-bool EcalPlay::SaveScenariosToDisk() const
+bool EcalPlay::SaveScenariosToDisk(const std::string& selected_dir, const std::string& selected_file)
 {
   if (!IsMeasurementLoaded()) 
   {
@@ -329,23 +354,36 @@ bool EcalPlay::SaveScenariosToDisk() const
   }
   else
   {
-    std::string doc_path      = GetMeasurementDirectory() + "/doc/";
-    std::string scenario_path = doc_path + "scenario.txt";
+    std::string dir_path = selected_dir;
+    std::string scenario_path = selected_file;
+    if (dir_path.empty() || scenario_path.empty())
+    {
+      if (scenarios_path_.first.empty() || scenarios_path_.second.empty())
+      {
+        dir_path      = GetMeasurementDirectory() + "/doc/";
+        scenario_path = dir_path + "scenario.txt";
+      }
+      else
+      {
+        dir_path = scenarios_path_.first;
+        scenario_path = scenarios_path_.second;
+      }
+    }
 
-    auto doc_dir_status = EcalUtils::Filesystem::FileStatus(doc_path, EcalUtils::Filesystem::Current);
+    auto doc_dir_status = EcalUtils::Filesystem::FileStatus(dir_path, EcalUtils::Filesystem::Current);
     if (doc_dir_status.IsOk())
     {
       if (doc_dir_status.GetType() != EcalUtils::Filesystem::Type::Dir)
       {
-        EcalPlayLogger::Instance()->error("Unable to save scenario.txt: \"" + doc_path + "\" is not a directory");
+        EcalPlayLogger::Instance()->error("Unable to save scenario.txt: \"" + dir_path + "\" is not a directory");
         return false;
       }
     }
     else
     {
-      if (!EcalUtils::Filesystem::MkPath(doc_path, EcalUtils::Filesystem::Current))
+      if (!EcalUtils::Filesystem::MkPath(dir_path, EcalUtils::Filesystem::Current))
       {
-        EcalPlayLogger::Instance()->error("Unable to save scenario.txt: Failed creating directory \"" + doc_path + "\"");
+        EcalPlayLogger::Instance()->error("Unable to save scenario.txt: Failed creating directory \"" + dir_path + "\"");
         return false;
       }
     }
@@ -378,9 +416,15 @@ bool EcalPlay::SaveScenariosToDisk() const
       scenario_file_stream << std::endl;
     }
     scenario_file_stream.close();
+    scenarios_path_ = std::make_pair(dir_path, scenario_path);
 
     return true;
   }
+}
+
+void EcalPlay::SetChannelMappingPath(const std::string& channel_mapping_path)
+{
+  channel_mapping_path_ = channel_mapping_path;
 }
 
 void EcalPlay::SetRepeatEnabled(bool enabled) const

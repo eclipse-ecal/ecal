@@ -85,6 +85,7 @@ private slots:
   void addRecentMeasurement(const QString& measurement);
 
   void updateScenariosModified();
+  void updateChannelMappingModified();
 
   void resetLayout();
   void setTheme(Theme theme);
