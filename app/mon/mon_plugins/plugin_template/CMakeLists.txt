@@ -46,7 +46,7 @@ ecal_add_mon_plugin(${PROJECT_NAME}
 target_link_libraries (${PROJECT_NAME} Qt5::Widgets eCAL::core eCAL::mon_plugin_lib)
 
 if(MSVC)
-    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127")
+    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127 /wd4714")
 ENDIF(MSVC)
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
