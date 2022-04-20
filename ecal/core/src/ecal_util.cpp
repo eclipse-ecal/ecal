@@ -254,7 +254,7 @@ namespace eCAL
     std::string GetTopicTypeName(const std::string& topic_name_)
     {
       std::string topic_type;
-      if (GetTypeName(topic_name_, topic_type))
+      if (GetTopicTypeName(topic_name_, topic_type))
       {
         return(topic_type);
       }
@@ -297,7 +297,7 @@ namespace eCAL
     std::string GetTopicDescription(const std::string& topic_name_)
     {
       std::string topic_desc;
-      if (GetDescription(topic_name_, topic_desc))
+      if (GetTopicDescription(topic_name_, topic_desc))
       {
         return(topic_desc);
       }
