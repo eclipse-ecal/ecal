@@ -22,11 +22,12 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
 #include "io/msg_type.h"
 
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include "ecal_monitoring_threads.h"
 #include "ecal_global_accessors.h"
 
@@ -44,7 +45,7 @@ namespace eCAL
     m_reg_cb(reg_cb_)
   {
     SReceiverAttr attr;
-    bool local_only = !eCALPAR(NET, ENABLED);
+    bool local_only = !Config::IsNetworkEnabled();
     // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
     if (local_only)
     {
@@ -53,12 +54,12 @@ namespace eCAL
     }
     else
     {
-      attr.ipaddr    = eCALPAR(NET, UDP_MULTICAST_GROUP);
+      attr.ipaddr    = Config::GetUdpMulticastGroup();
       attr.broadcast = false;
     }
-    attr.port     = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_REG_OFF;
+    attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
     attr.loopback = true;
-    attr.rcvbuf   = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
+    attr.rcvbuf   = Config::GetUdpMulticastRcvBufSizeBytes();
 
     m_reg_rcv.Create(attr);
     m_reg_rcv_thread.Start(0, std::bind(&CRegistrationReceiveThread::ThreadFun, this));
@@ -80,7 +81,7 @@ namespace eCAL
     m_network_mode(false), m_log_cb(log_cb_)
   {
     SReceiverAttr attr;
-    bool local_only = !eCALPAR(NET, ENABLED);
+    bool local_only = !Config::IsNetworkEnabled();
     // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
     if (local_only)
     {
@@ -89,12 +90,12 @@ namespace eCAL
     }
     else
     {
-      attr.ipaddr    = eCALPAR(NET, UDP_MULTICAST_GROUP);
+      attr.ipaddr    = Config::GetUdpMulticastGroup();
       attr.broadcast = false;
     }
-    attr.port     = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_LOG_OFF;
+    attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
     attr.loopback = true;
-    attr.rcvbuf   = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
+    attr.rcvbuf   = Config::GetUdpMulticastRcvBufSizeBytes();
 
     m_log_rcv.Create(attr);
     m_log_rcv_thread.Start(0, std::bind(&CLoggingReceiveThread::ThreadFun, this));

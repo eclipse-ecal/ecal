@@ -16,44 +16,71 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(mon_plugin_dummy VERSION 0.1.0)
+project(mon_plugin_signals_plotting VERSION 1.0.0)
 
 find_package(Qt5 COMPONENTS
     Core
     Widgets
 REQUIRED)
 
+find_package(Protobuf REQUIRED)
+find_package(qwt REQUIRED)
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC OFF) # Reason for being turned off: AutoUIC will prevent VS from detecting changes in .ui files
-set(CMAKE_AUTORCC OFF) # Reason for being turned off: AutoRCC will create an entirely new project in VS which clutters the solution appearance. Additionally, we cannot assign a source group to the generated .cpp files which will clutter the project.
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(ecalmonplugin_src
+set(${PROJECT_NAME}_src
   src/plugin_widget.cpp
   src/plugin.cpp
+  src/protobuf_tree_builder.cpp
+  src/signal_tree_item.cpp
+  src/signal_tree_model.cpp
+  src/tabwidget_container.cpp
+  src/chart_widget.cpp
+  src/chart_settings.cpp
 )
 
-set(ecalmonplugin_header
+set(${PROJECT_NAME}_header
   src/plugin_widget.h
   src/plugin.h
+  src/protobuf_tree_builder.h
+  src/signal_tree_item.h
+  src/signal_tree_model.h
+  src/tabwidget_container.h
+  src/util.h
+  src/chart_widget.h
+  src/chart_settings.h
 )
 
+set(${PROJECT_NAME}_ui
+  src/plugin_widget.ui
+  src/chart_settings.ui
+)
+
+qt5_wrap_ui(autogen_ui ${${PROJECT_NAME}_ui})
+
 ecal_add_mon_plugin(${PROJECT_NAME} 
-  SOURCES ${ecalmonplugin_src} ${ecalmonplugin_header}
+  SOURCES ${${PROJECT_NAME}_src} ${${PROJECT_NAME}_header} ${${PROJECT_NAME}_ui} ${autogen_ui} 
   METADATA src/metadata.json
 )
 
-target_link_libraries (${PROJECT_NAME} Qt5::Widgets eCAL::core eCAL::mon_plugin_lib)
+create_targets_protobuf()
+
+target_link_libraries (${PROJECT_NAME} Qt5::Widgets Qt5::Core eCAL::core eCAL::pb protobuf::libprotobuf eCAL::mon_plugin_lib qwt::qwt CustomQt)
 
 if(MSVC)
-    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127")
-ENDIF(MSVC)
+  set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127 /wd4714" )
+endif(MSVC)
+
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
+target_compile_definitions(${PROJECT_NAME} PRIVATE QWT_DLL) 
 
 ecal_install_mon_plugin(${PROJECT_NAME})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>/${ECAL_MON_PLUGIN_DIR}
-  FOLDER app/mon/plugins)
+  FOLDER app/mon/plugins
+)

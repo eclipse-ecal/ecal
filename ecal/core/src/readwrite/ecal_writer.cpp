@@ -22,12 +22,14 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include "ecal_reggate.h"
 #include "ecal_writer.h"
 #include "ecal_writer_base.h"
+#include "ecal_process.h"
 
 #include "ecal_register.h"
 #include "pubsub/ecal_pubgate.h"
@@ -61,7 +63,7 @@ namespace eCAL
 {
   CDataWriter::CDataWriter() :
     m_host_name(Process::GetHostName()),
-    m_host_id(Process::GetHostID()),
+    m_host_id(Process::internal::GetHostID()),
     m_pid(Process::GetProcessID()),
     m_pname(Process::GetProcessName()),
     m_topic_size(0),
@@ -76,13 +78,13 @@ namespace eCAL
     m_bandwidth_max_udp(NET_BANDWIDTH_MAX_UDP),
     m_loc_subscribed(false),
     m_ext_subscribed(false),
-    m_use_udp_mc(TLayer::eSendMode(eCALPAR(PUB, USE_UDP_MC))),
+    m_use_udp_mc(Config::GetPublisherUdpMulticastMode()),
     m_use_udp_mc_confirmed(false),
-    m_use_shm(TLayer::eSendMode(eCALPAR(PUB, USE_SHM))),
+    m_use_shm(Config::GetPublisherShmMode()),
     m_use_shm_confirmed(false),
-    m_use_tcp(TLayer::eSendMode(eCALPAR(PUB, USE_TCP))),
+    m_use_tcp(Config::GetPublisherTcpMode()),
     m_use_tcp_confirmed(false),
-    m_use_inproc(TLayer::eSendMode(eCALPAR(PUB, USE_INPROC))),
+    m_use_inproc(Config::GetPublisherInprocMode()),
     m_use_inproc_confirmed(false),
     m_use_ttype(true),
     m_use_tdesc(true),
@@ -111,9 +113,9 @@ namespace eCAL
     m_clock_old         = 0;
     m_snd_time          = std::chrono::steady_clock::time_point();
     m_freq              = 0;
-    m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
-    m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
-    m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY) != 0;
+    m_bandwidth_max_udp = Config::GetMaxUdpBandwidthBytesPerSecond();
+    m_buffering_shm     = Config::GetMemfileBufferCount();
+    m_zero_copy         = Config::IsMemfileZerocopyEnabled();
     m_connected         = false;
     m_ext_subscribed    = false;
     m_created           = false;
@@ -124,15 +126,15 @@ namespace eCAL
     m_topic_id = counter.str();
 
     // set registration expiration
-    std::chrono::milliseconds registration_timeout(eCALPAR(CMN, REGISTRATION_TO));
+    std::chrono::milliseconds registration_timeout(Config::GetRegistrationTimeoutMs());
     m_loc_sub_map.set_expiration(registration_timeout);
     m_ext_sub_map.set_expiration(registration_timeout);
 
     // allow to share topic type
-    m_use_ttype = eCALPAR(PUB, SHARE_TTYPE) != 0;
+    m_use_ttype = Config::IsTopicTypeSharingEnabled();
 
     // allow to share topic description
-    m_use_tdesc = eCALPAR(PUB, SHARE_TDESC) != 0;
+    m_use_tdesc = Config::IsTopicDescriptionSharingEnabled();
 
     // register
     DoRegister(false);
@@ -184,9 +186,9 @@ namespace eCAL
     m_clock_old         = 0;
     m_snd_time          = std::chrono::steady_clock::time_point();
     m_freq              = 0;
-    m_bandwidth_max_udp = eCALPAR(NET, BANDWIDTH_MAX_UDP);
-    m_buffering_shm     = static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT));
-    m_zero_copy         = eCALPAR(PUB, MEMFILE_ZERO_COPY) != 0;
+    m_bandwidth_max_udp = Config::GetMaxUdpBandwidthBytesPerSecond();
+    m_buffering_shm     = Config::GetMemfileBufferCount();
+    m_zero_copy         = Config::IsMemfileZerocopyEnabled();
     m_connected         = false;
 
     // reset subscriber maps

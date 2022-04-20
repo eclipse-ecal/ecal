@@ -63,6 +63,7 @@ option(ECAL_THIRDPARTY_BUILD_FINEFTP           "Build fineFTP with eCAL"        
 option(ECAL_THIRDPARTY_BUILD_TERMCOLOR         "Build termcolor with eCAL"                                         ON)
 option(ECAL_THIRDPARTY_BUILD_TCP_PUBSUB        "Build tcp_pubsub library with eCAL"                                ON)
 option(ECAL_THIRDPARTY_BUILD_RECYCLE           "Build steinwurf::recylce with eCAL"                                ON)
+option(ECAL_THIRDPARTY_BUILD_QWT               "Build qwt::qwt with eCAL"                                          ON)
 # option(ECAL_THIRDPARTY_BUILD_ZLIB              "Build zlib with eCAL"                                              ON)
 # option(ECAL_THIRDPARTY_BUILD_LIBSSH2           "Build libssh2 with eCAL"                                           ON)
 option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"                                            OFF)
@@ -71,10 +72,12 @@ if(WIN32)
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                          ON)
   option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                              ON)
   option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                              ON)
+  option(ECAL_THIRDPARTY_BUILD_QWT             "Build qwt::qwt with eCAL"                                          ON)
 else()
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                          OFF)
   option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                              OFF)
   option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                              OFF)
+  option(ECAL_THIRDPARTY_BUILD_QWT             "Build qwt::qwt with eCAL"                                          OFF)
 endif()
 
 # This should be ON, unless build ecal hdf5 for Matlab usage
@@ -113,6 +116,18 @@ if(MSVC)
   endif()
 endif()
 
+# --------------------------------------------------------
+# detect qt library
+# --------------------------------------------------------
+if(MSVC)
+  if (HAS_QT5)
+    find_package(Qt5 COMPONENTS Core QUIET)
+    if (NOT "${Qt5_FOUND}")
+      autodetect_qt5_msvc_dir()
+    endif()
+  endif()
+endif()
+
 # This is a list of subprojects, that might be build with eCAL
 # according to how options ECAL_BUILD_<SUBPROJECT> are set
 set(possible_subprojects
@@ -129,6 +144,7 @@ set(possible_subprojects
   GTest
   HDF5
   CMakeFunctions
+  qwt
 )
 
 # We should rename the option, but don't know how to do in in a 
@@ -181,17 +197,6 @@ include(helper_functions/ecal_python_functions)
 if(MSVC)
   set(eCAL_PLATFORM_TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET})
 endif()
-
-# --------------------------------------------------------
-# detect qt library
-# --------------------------------------------------------
-if (HAS_QT5)
-  find_package(Qt5 COMPONENTS Core QUIET)
-  if (NOT "${Qt5_FOUND}")
-    autodetect_qt5_msvc_dir()
-  endif()
-endif()
-
 
 # --------------------------------------------------------
 # set msvc specific options

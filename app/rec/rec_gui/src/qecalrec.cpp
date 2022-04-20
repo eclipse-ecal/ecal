@@ -58,7 +58,7 @@ R"(Measurement started by: $HOST{USERNAME}@$HOST{HOSTNAME}
 Date: $HOST{TIME %F %R}
 )"
   );
-  setMaxFileSizeMib(100);
+  setMaxFileSizeMib(1000);
 
   updateConfigModified(false);
 

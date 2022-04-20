@@ -38,14 +38,13 @@ namespace eCAL
     {
       eCAL::rec::Error Command::GetRemoteStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, eCAL::rec_server::RecServerStatus& status_output)
       {
-        SServiceResponse service_response;
         eCAL::pb::rec_server::Status status_pb;
 
-        bool success = remote_rec_server_service->Call(hostname, "GetStatus", eCAL::pb::rec_server::GenericRequest(), service_response, status_pb);
+        eCAL::rec::Error service_call_error = CallRemoteEcalrecService(remote_rec_server_service, hostname, "GetStatus", eCAL::pb::rec_server::GenericRequest(), status_pb);
 
-        if (!success)
+        if (service_call_error)
         {
-          return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::REMOTE_HOST_UNAVAILABLE, hostname);
+          return service_call_error;
         }
         else
         {
@@ -57,22 +56,43 @@ namespace eCAL
       eCAL::rec::Error Command::GetRemoteConfig(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, eCAL::rec_server::RecServerConfig& config_output)
       {
         // Service call
-        SServiceResponse                                service_response;
         eCAL::pb::rec_server::GenericRequest            request_pb;
         eCAL::pb::rec_server::RecServerConfig           response_pb;
 
-        bool success = remote_rec_server_service->Call(hostname, "GetConfig", request_pb, service_response, response_pb);
+        eCAL::rec::Error service_call_error = CallRemoteEcalrecService(remote_rec_server_service, hostname, "GetConfig", request_pb, response_pb);
 
         // Service call failed
-        if (!success)
+        if (service_call_error)
         {
-          return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::REMOTE_HOST_UNAVAILABLE, hostname);
+          return service_call_error;
         }
         else
         {
           eCAL::rec_server::proto_helpers::FromProtobuf(response_pb, config_output);
           return eCAL::rec::Error::OK;
         }
+      }
+
+      eCAL::rec::Error Command::CallRemoteEcalrecService(const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_ecalsys_service
+                                                        , const std::string&                hostname
+                                                        , const std::string&                method_name
+                                                        , const google::protobuf::Message&  request
+                                                        , google::protobuf::Message&        response)
+      {
+        remote_ecalsys_service->SetHostName(hostname);
+
+        eCAL::ServiceResponseVecT service_response_vec;
+        constexpr int timeout_ms = 1000;
+
+        if (remote_ecalsys_service->Call(method_name, request.SerializeAsString(), timeout_ms, &service_response_vec))
+        {
+          if (service_response_vec.size() > 0)
+          {
+            response.ParseFromString(service_response_vec[0].response);
+            return eCAL::rec::Error::ErrorCode::OK;
+          }
+        }
+        return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::REMOTE_HOST_UNAVAILABLE, hostname);
       }
     }
   }

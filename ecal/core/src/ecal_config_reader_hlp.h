@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,15 +17,16 @@
  * ========================= eCAL LICENSE =================================
 */
 
+/**
+ * @brief  Global database class helper
+**/
+
 #pragma once
 
-#include <ecal/mon/plugin.h> 
+#include "ecal_config_reader.h"
+#include "ecal_def_ini.h"
+#include "ecal_global_accessors.h"
 
-class Plugin : public QObject, public eCAL::mon::PluginInterface
-{
-  Q_OBJECT
-  Q_PLUGIN_METADATA(IID "de.conti.ecal.monitor.plugin.dummy/v0.1.0" FILE "metadata.json")
-  Q_INTERFACES(eCAL::mon::PluginInterface)
-public:
-  virtual eCAL::mon::PluginWidgetInterface* create(const QString& topic_name, const QString& topic_type, QWidget* parent = Q_NULLPTR);
-};
+// macro to simplify configuration parameter access (internal use only)
+// eCALPAR(GROUP,PAR) -> eCAL::g_config()->get(GROUP_SECTION_S, GROUP_PAR_S, GROUP_PAR)
+#define eCALPAR(x,y) eCAL::g_config()->get(x##_SECTION_S, x##_##y##_S, x##_##y)

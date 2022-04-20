@@ -55,7 +55,7 @@ namespace eCAL
     /**
      * @brief eCAL transport layer state struct.
     **/
-    struct STLayer
+    struct ECAL_API STLayer
     {
       STLayer()
       {

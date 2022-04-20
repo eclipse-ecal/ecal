@@ -52,6 +52,9 @@ ScenarioWidget::ScenarioWidget(QWidget *parent)
 
   edit_button_delegate_ = new EditButtonDelegate(ui_.scenario_treeview);
   ui_.scenario_treeview->setItemDelegate(edit_button_delegate_);
+
+  ui_.scenario_treeview->viewport()->setAttribute(Qt::WA_Hover); // Set WA_Hove to display the "Edit" button on hover
+
   connect(edit_button_delegate_, &EditButtonDelegate::buttonStateChanged, scenario_tree_model_,
           [this](const QModelIndex& index)
           {
@@ -269,6 +272,18 @@ void ScenarioWidget::showEvent(QShowEvent* /*event*/)
     restoreLayout();
   }
   first_show_event_ = false;
+}
+
+void ScenarioWidget::changeEvent(QEvent* event)
+{
+  QWidget::changeEvent(event);
+
+  if (event->type() == QEvent::StyleChange)
+  {
+    // When switching to Fusion Style on Windows (mostly because of Dark mode),
+    // The hover attribute will be deactivated. So we activate it again.
+    ui_.scenario_treeview->viewport()->setAttribute(Qt::WA_Hover);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

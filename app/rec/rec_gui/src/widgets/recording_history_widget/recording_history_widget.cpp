@@ -102,6 +102,7 @@ RecordingHistoryWidget::RecordingHistoryWidget(QWidget *parent)
                                                       }
                                                 , ui_.job_history_treeview);
   ui_.job_history_treeview->setItemDelegateForColumn((int)JobHistoryModel::Columns::COMMENT, add_comment_delegate_);
+  ui_.job_history_treeview->viewport()->setAttribute(Qt::WA_Hover);
 
   // Delegate for upload button
   upload_button_delegate_ = new PushButtonDelegate(QIcon(":/ecalicons/MERGE")
@@ -320,6 +321,18 @@ void RecordingHistoryWidget::showEvent(QShowEvent* /*event*/)
     restoreLayout();
   }
   first_show_event_ = false;
+}
+
+void RecordingHistoryWidget::changeEvent(QEvent* event)
+{
+  QWidget::changeEvent(event);
+
+  if (event->type() == QEvent::StyleChange)
+  {
+    // When switching to Fusion Style on Windows (mostly because of Dark mode),
+    // The hover attribute will be deactivated. So we activate it again.
+    ui_.job_history_treeview->viewport()->setAttribute(Qt::WA_Hover);
+  }
 }
 
 void RecordingHistoryWidget::saveLayout()

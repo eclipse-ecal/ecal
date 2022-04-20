@@ -23,10 +23,12 @@
 
 #pragma once
 
+#include <ecal/ecal_config.h>
+
 #include "readwrite/ecal_reader_udp.h"
 #include "readwrite/ecal_reader_layer.h"
 
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include "ecal_thread.h"
 #include "topic2mcast.h"
 
@@ -49,11 +51,11 @@ namespace eCAL
     void Initialize()
     {
       SReceiverAttr attr;
-      attr.ipaddr = eCALPAR(NET, UDP_MULTICAST_GROUP);
-      attr.port = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
+      attr.ipaddr = Config::GetUdpMulticastGroup();
+      attr.port = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
       attr.unicast = false;
       attr.loopback = true;
-      attr.rcvbuf = eCALPAR(NET, UDP_MULTICAST_RCVBUF);
+      attr.rcvbuf = Config::GetUdpMulticastRcvBufSizeBytes();
       rcv.Create(attr);
     }
 
@@ -65,7 +67,7 @@ namespace eCAL
         started = true;
       }
       // add topic name based multicast address
-      std::string mcast_address = topic2mcast(topic_name_, eCALPAR(NET, UDP_MULTICAST_GROUP), eCALPAR(NET, UDP_MULTICAST_MASK));
+      std::string mcast_address = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
       if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
       {
         topic_name_mcast_map.emplace(std::pair<std::string, int>(mcast_address, 0));
@@ -76,7 +78,7 @@ namespace eCAL
 
     void RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
     {
-      std::string mcast_address = topic2mcast(topic_name_, eCALPAR(NET, UDP_MULTICAST_GROUP), eCALPAR(NET, UDP_MULTICAST_MASK));
+      std::string mcast_address = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
       if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
       {
         // this should never happen

@@ -154,7 +154,7 @@ First check out the eCAL repository and all of the submodules:
 
       sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev
 
-#. If you plan to create the eCAL python language extension (here as an example for the python 3.6 version):
+#. If you plan to create the eCAL python language extension:
 
    .. code-block:: bash
 
@@ -170,10 +170,17 @@ First check out the eCAL repository and all of the submodules:
 
       sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev
 
+#. If you plan to create the eCAL python language extension:
+
+   .. code-block:: bash
+
+      sudo apt-get install python3.8-dev python3-pip
+      python3 -m pip install setuptools
+
 |fa-ubuntu| Ubuntu 16/18/20 build
 ---------------------------------
 
-#. Compile eCAL with the following options:
+#. Compile eCAL with the following options (additional set `BUILD_PY_BINDING` to `ON` if plan to build the python extension):
 
    .. code-block:: bash
 
@@ -188,10 +195,11 @@ First check out the eCAL repository and all of the submodules:
 
       cpack -G DEB
       sudo dpkg -i _deploy/eCAL-*
+      sudo ldconfig
 
-#. Optional: Create and install the eCAL python wheel (Only available if you enabled the `BUILD_PY_BINDING` CMake option in step 2):
+#. Optional: Create and install the eCAL python wheel (Only available if you enabled the `BUILD_PY_BINDING` CMake option in step 1):
 
    .. code-block:: bash
 
       cmake --build . --target create_python_wheel --config Release
-      sudo pip3 install _deploy/ecal-*  
+      sudo pip3 install _deploy/ecal5-*  

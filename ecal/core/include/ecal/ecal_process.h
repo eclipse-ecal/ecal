@@ -59,6 +59,7 @@ namespace eCAL
      *
      * @return  Host id or zero if failed.
     **/
+    [[deprecated]]
     ECAL_API int GetHostID();
 
     /**

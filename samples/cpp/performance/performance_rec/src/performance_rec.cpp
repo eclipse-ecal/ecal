@@ -51,13 +51,13 @@ int main(int argc, char **argv)
   while(eCAL::Ok())
   {
     // receive content with infinite timeout
-    size_t rcv_len = sub.Receive(rcv_buf, nullptr, -1);
+    bool success = sub.ReceiveBuffer(rcv_buf, nullptr, -1);
     // collect data
-    if(rcv_len > 0)
+    if(success)
     {
       msgs++;
-      slen = rcv_len;
-      bytes += rcv_len;
+      slen = rcv_buf.size();
+      bytes += rcv_buf.size();
     }
 
     // check time and print results every second

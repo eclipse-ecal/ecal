@@ -25,7 +25,7 @@
 #include <regex>
 
 #include "ecal_def.h"
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include <ecal/ecal_log.h>
 #include "ecal/ecal_process.h"
 #include "readwrite/ecal_writer_iceoryx.h"

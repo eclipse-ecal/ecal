@@ -43,3 +43,6 @@
 [submodule "thirdparty/tcp_pubsub"]
 	path = thirdparty/tcp_pubsub
 	url = https://github.com/continental/tcp_pubsub.git
+[submodule "thirdparty/qwt/qwt"]
+	path = thirdparty/qwt/qwt
+	url = https://git.code.sf.net/p/qwt/git

@@ -14,7 +14,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt update
-        sudo apt-get install ninja-build doxygen graphviz libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev qt5-default
+        sudo apt-get install ninja-build doxygen graphviz libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev qt5-default libqwt-qt5-dev
 
     - name: Install Cap’n Proto
       run: |
@@ -83,7 +83,8 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_GTEST=ON \
         -DECAL_THIRDPARTY_BUILD_HDF5=OFF \
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
-        -DECAL_THIRDPARTY_BUILD_TCPUB=ON \
+        -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
+        -DECAL_THIRDPARTY_BUILD_QWT=OFF \
         -DCMAKE_PREFIX_PATH="${{ runner.workspace }}/iceoryx/iceoryx/build/install/prefix/lib/cmake/iceoryx_posh;${{ runner.workspace }}/iceoryx/iceoryx/build/install/prefix/lib/cmake/iceoryx_utils" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_SYSCONFDIR=/etc \

@@ -40,3 +40,8 @@ enum eCAL_Logging_eLogLevel
   log_level_debug3  =  64,
   log_level_debug4  = 128,
 };
+
+/*
+* @brief This type is to be used as a bitmask for the activated logging levels
+*/
+typedef char eCAL_Logging_Filter;

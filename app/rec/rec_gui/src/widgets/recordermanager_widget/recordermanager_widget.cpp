@@ -118,6 +118,7 @@ RecorderManagerWidget::RecorderManagerWidget(QWidget *parent)
   // Delegate for Host filter
   host_filter_delegate_ = new HostFilterDelegate(ui_.recorder_list);
   ui_.recorder_list->setItemDelegateForColumn((int)RecorderModel::Columns::HOST_FILTER, host_filter_delegate_);
+  ui_.recorder_list->viewport()->setAttribute(Qt::WA_Hover); // Important for mouse-hover events
 
   connect(QEcalRec::instance(), &QEcalRec::monitorUpdatedSignal, this,
       [this](const eCAL::rec_server::TopicInfoMap_T& /*topic_info_map*/, const eCAL::rec_server::HostsRunningEcalRec_T& hosts_running_ecal_rec)
@@ -257,6 +258,18 @@ void RecorderManagerWidget::showEvent(QShowEvent * /*event*/)
     restoreLayout();
   }
   first_show_event_ = false;
+}
+
+void RecorderManagerWidget::changeEvent(QEvent* event)
+{
+  QWidget::changeEvent(event);
+
+  if (event->type() == QEvent::StyleChange)
+  {
+    // When switching to Fusion Style on Windows (mostly because of Dark mode),
+    // The hover attribute will be deactivated. So we activate it again.
+    ui_.recorder_list->viewport()->setAttribute(Qt::WA_Hover);
+  }
 }
 
 void RecorderManagerWidget::saveLayout()

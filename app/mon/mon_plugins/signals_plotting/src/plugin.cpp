@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,16 +17,12 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  Global database class helper
-**/
+#include "plugin_widget.h"
+#include "plugin.h"
 
-#pragma once
+using namespace eCAL::mon;
 
-#include "ecal_config.h"
-#include "ecal_def_ini.h"
-#include "ecal_global_accessors.h"
-
-// macro to simplify configuration parameter access (internal use only)
-// eCALPAR(GROUP,PAR) -> eCAL::g_config()->get(GROUP_SECTION_S, GROUP_PAR_S, GROUP_PAR)
-#define eCALPAR(x,y) eCAL::g_config()->get(x##_SECTION_S, x##_##y##_S, x##_##y)
+PluginWidgetInterface* Plugin::create(const QString& topic_name, const QString& topic_type, QWidget* parent)
+{
+  return new PluginWidget(topic_name, topic_type, parent);
+}

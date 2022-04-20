@@ -11,7 +11,9 @@ namespace eCAL
 
     RemoteConnection::RemoteConnection(const std::string& hostname)
       : AbstractConnection(hostname)
-    {}
+    {
+      sys_client_service_.SetHostName(hostname);
+    }
 
     RemoteConnection::~RemoteConnection()
     {}
@@ -27,24 +29,24 @@ namespace eCAL
       }
 
       eCAL::pb::sys_client::StartTaskRequest start_task_request_pb = eCAL::sys_client::proto_helpers::ToProtobuf(evaluated_task_list);
+      eCAL::pb::sys_client::TaskResponse     response_pb;
 
-      eCAL::SServiceResponse             service_response;
-      eCAL::pb::sys_client::TaskResponse response_pb;
-
+      if (CallRemoteEcalsysService("StartTasks", start_task_request_pb, response_pb))
       {
-        std::lock_guard<decltype(connection_mutex_)> connection_lock(connection_mutex_);
-        sys_client_service_.Call(m_hostname, "StartTasks", start_task_request_pb, service_response, response_pb);
+        std::vector<int32_t> return_values;
+        return_values.reserve(evaluated_task_list.size());
+
+        for(const auto& task_response_pb : response_pb.responses())
+        {
+          return_values.push_back(task_response_pb.pid());
+        }
+
+        return return_values;
       }
-
-      std::vector<int32_t> return_values;
-      return_values.reserve(evaluated_task_list.size());
-
-      for(const auto& task_response_pb : response_pb.responses())
+      else
       {
-        return_values.push_back(task_response_pb.pid());
+        return {};
       }
-
-      return return_values;
     }
 
     std::vector<bool> RemoteConnection::StopTasks (const std::vector<eCAL::sys_client::StopTaskParameters>& task_list)
@@ -58,24 +60,24 @@ namespace eCAL
       }
 
       eCAL::pb::sys_client::StopTaskRequest stop_task_request_pb = eCAL::sys_client::proto_helpers::ToProtobuf(evaluated_task_list);
+      eCAL::pb::sys_client::TaskResponse    response_pb;
 
-      eCAL::SServiceResponse             service_response;
-      eCAL::pb::sys_client::TaskResponse response_pb;
-
+      if (CallRemoteEcalsysService("StopTasks", stop_task_request_pb, response_pb))
       {
-        std::lock_guard<decltype(connection_mutex_)> connection_lock(connection_mutex_);
-        sys_client_service_.Call(m_hostname, "StopTasks", stop_task_request_pb, service_response, response_pb);
+        std::vector<bool> return_values;
+        return_values.reserve(evaluated_task_list.size());
+
+        for(const auto& task_response_pb : response_pb.responses())
+        {
+          return_values.push_back(task_response_pb.result() == eCAL::pb::sys_client::eServiceResult::success);
+        }
+
+        return return_values;
       }
-
-      std::vector<bool> return_values;
-      return_values.reserve(evaluated_task_list.size());
-
-      for(const auto& task_response_pb : response_pb.responses())
+      else
       {
-        return_values.push_back(task_response_pb.result() == eCAL::pb::sys_client::eServiceResult::success);
+        return {};
       }
-
-      return return_values;    
     }
 
     std::vector<std::vector<int32_t>> RemoteConnection::MatchTasks(const std::vector<eCAL::sys_client::Task>& task_list)
@@ -88,17 +90,17 @@ namespace eCAL
         task = EvaluateEcalParserHostFunctions(task, now);
       }
 
-      eCAL::pb::sys_client::TaskList task_list_pb = eCAL::sys_client::proto_helpers::ToProtobuf(evaluated_task_list);
-
-      eCAL::SServiceResponse                  service_response;
+      eCAL::pb::sys_client::TaskList          task_list_pb = eCAL::sys_client::proto_helpers::ToProtobuf(evaluated_task_list);
       eCAL::pb::sys_client::MatchTaskResponse response_pb;
 
+      if (CallRemoteEcalsysService("MatchTasks", task_list_pb, response_pb))
       {
-        std::lock_guard<decltype(connection_mutex_)> connection_lock(connection_mutex_);
-        sys_client_service_.Call(m_hostname, "MatchTasks", task_list_pb, service_response, response_pb);
+        return eCAL::sys_client::proto_helpers::FromProtobuf(response_pb);
       }
-
-      return eCAL::sys_client::proto_helpers::FromProtobuf(response_pb);
+      else
+      {
+        return {};
+      }
     }
 
     eCAL::sys_client::Task RemoteConnection::EvaluateEcalParserHostFunctions(const eCAL::sys_client::Task& task, std::chrono::system_clock::time_point now) const
@@ -115,5 +117,26 @@ namespace eCAL
 
       return evaluated_task;
     }
+
+    bool RemoteConnection::CallRemoteEcalsysService(const std::string&               method_name
+                                                  , const google::protobuf::Message& request
+                                                  , google::protobuf::Message&       response)
+    {
+      std::lock_guard<decltype(connection_mutex_)> connection_lock(connection_mutex_);
+
+      eCAL::ServiceResponseVecT service_response_vec;
+      constexpr int timeout_ms = 1000;
+
+      if (sys_client_service_.Call(method_name, request.SerializeAsString(), timeout_ms, &service_response_vec))
+      {
+        if (service_response_vec.size() > 0)
+        {
+          response.ParseFromString(service_response_vec[0].response);
+          return true;
+        }
+      }
+      return false;
+    }
+
   }
 }

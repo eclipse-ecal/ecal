@@ -23,9 +23,10 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_log.h>
+#include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include "ecal_writer_udp_mc.h"
 
 #include "topic2mcast.h"
@@ -60,22 +61,22 @@ namespace eCAL
     m_topic_name  = topic_name_;
     m_topic_id    = topic_id_;
 
-    m_udp_ipaddr  = topic2mcast(topic_name_, eCALPAR(NET, UDP_MULTICAST_GROUP), eCALPAR(NET, UDP_MULTICAST_MASK));
+    m_udp_ipaddr  = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
 
     SSenderAttr attr;
     attr.ipaddr     = m_udp_ipaddr;
-    attr.port       = eCALPAR(NET, UDP_MULTICAST_PORT) + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
+    attr.port       = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
     attr.unicast    = false;
-    attr.sndbuf     = eCALPAR(NET, UDP_MULTICAST_SNDBUF);
+    attr.sndbuf     = Config::GetUdpMulticastSndBufSizeBytes();
 
     // create sample sender without activated loopback
     attr.loopback   = false;
-    attr.ttl        = eCALPAR(NET, UDP_MULTICAST_TTL);
+    attr.ttl        = Config::GetUdpMulticastTtl();
     m_sample_snd_no_loopback.Create(attr);
 
     // create sample sender with activated loopback
     int ttl(0);
-    if (eCALPAR(NET, ENABLED)) ttl = eCALPAR(NET, UDP_MULTICAST_TTL);
+    if (Config::IsNetworkEnabled()) ttl = Config::GetUdpMulticastTtl();
     attr.loopback   = true;
     attr.ttl        = ttl;
     m_sample_snd_loopback.Create(attr);

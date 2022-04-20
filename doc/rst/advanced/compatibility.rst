@@ -27,7 +27,7 @@ Depending on what we changed in eCAL, we increment the appropriate number:
   - The API or ABI has changed. You may have to re-compile your nodes e.g. when upgrading from eCAL 5.8 to eCAL 5.9
   - We have added (or removed) features, altered eCAL Tools or did anything that disqualifies the eCAL Release from being a drop-in replacement
 
-  *Alle eCAL releases sharing the same minor version number can act as drop-in replacements.*
+  *All eCAL releases sharing the same minor version number can act as drop-in replacements.*
 
 - **PATCH**: The last number indicates that we have fixed bugs.
   You can upgrade through patch versions without having to expect any problems.
@@ -36,7 +36,7 @@ Depending on what we changed in eCAL, we increment the appropriate number:
 eCAL 5.10 vs. 5.9
 ================
 
-Compatibility table when upgrading from eCAl 5.8:
+Compatibility table when upgrading from eCAL 5.9:
 
 .. list-table:: eCAL 5.10 vs. 5.9
    :widths: 20 80
@@ -54,7 +54,7 @@ Compatibility table when upgrading from eCAl 5.8:
        * eCAL Shared Memory: Downwards compatible
      
          eCAL 5.10 offers an option to use multi-buffering for increased performance.
-         Prior Versions of eCAL cannot receive data from publishern using that feature.
+         Prior Versions of eCAL cannot receive data from publishers using that feature.
 
          By default, the feature is turned off, which makes the Shared memory layer 100% compatible.
 
@@ -79,7 +79,7 @@ Compatibility table when upgrading from eCAl 5.8:
 eCAL 5.9 vs. 5.8
 ================
 
-Compatibility table when upgrading from eCAl 5.8:
+Compatibility table when upgrading from eCAL 5.8:
 
 .. list-table:: eCAL 5.9 vs. 5.8
    :widths: 20 80
@@ -106,7 +106,7 @@ Compatibility table when upgrading from eCAl 5.8:
 eCAL 5.8 vs. 5.7
 ================
 
-Compatibility table when upgrading from eCAl 5.7:
+Compatibility table when upgrading from eCAL 5.7:
 
 .. list-table:: eCAL 5.8 vs. 5.7
    :widths: 20 80

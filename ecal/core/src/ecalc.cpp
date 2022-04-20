@@ -27,6 +27,8 @@
 #include <ecal/msg/protobuf/dynamic_json_subscriber.h>
 #include <ecal/ecalc.h>
 
+#include "ecal_process.h"
+
 static int CopyBuffer(void* target_, int target_len_, const std::string& source_s_)
 {
   if(target_ == nullptr) return(0);
@@ -184,7 +186,7 @@ extern "C"
 
   ECALC_API int eCAL_Process_GetHostID()
   {
-    return(eCAL::Process::GetHostID());
+    return(eCAL::Process::internal::GetHostID());
   }
 
   ECALC_API int eCAL_Process_GetUnitName(void* name_, int name_len_)

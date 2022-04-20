@@ -71,7 +71,7 @@ add_custom_target(documentation_copy_rst_files ALL
 set_property(TARGET documentation_copy_rst_files  PROPERTY FOLDER docs)
 
 add_custom_target(documentation_copy_sample_files ALL
-  COMMAND cmake -E copy_directory ${CMAKE_SOURCE_DIR}/samples/ ${DOC_SOURCE_DIRECTORY}/source_code_samples
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/samples/ ${DOC_SOURCE_DIRECTORY}/source_code_samples
 )
 set_property(TARGET documentation_copy_sample_files  PROPERTY FOLDER docs)
 
@@ -99,6 +99,12 @@ set(DOXYGEN_FILE_PATTERNS        "*.h")
 set(DOXYGEN_RECURSIVE            NO)
 set(DOXYGEN_OUTPUT_DIRECTORY     ${DOC_SOURCE_DIRECTORY})
 set(DOXYGEN_XML_OUTPUT           ${DOC_SOURCE_DIRECTORY}/_doxygen)
+
+# Allow @experimental to be used in headers to mark an API as experimental and add it to a list of
+# experimental APIs.
+set(DOXYGEN_ALIASES
+    "experimental = \\xrefitem experimental \\\"This feature is marked as experimental\\\" \\\"Experimental List\\\""
+    "experimental{1} = \\xrefitem experimental \\\"Experimental\\\" \\\"Experimental List\\\" \\1")
 
 doxygen_add_docs(
   documentation_run_doxygen

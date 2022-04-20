@@ -24,8 +24,10 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_os.h>
 
+#include <ecal/ecal_config.h>
+
 #include "ecal_def.h"
-#include "ecal_config_hlp.h"
+#include "ecal_config_reader_hlp.h"
 #include "ecal_timegate.h"
 #include "getenvvar.h"
 
@@ -84,7 +86,7 @@ namespace eCAL
     case eTimeSyncMode::none:
       break;
     case eTimeSyncMode::realtime:
-      m_time_sync_modname = eCALPAR(TIME, SYNC_MOD_RT);
+      m_time_sync_modname = Config::GetTimesyncModuleName();
       m_successfully_loaded_rt = LoadModule(m_time_sync_modname, m_time_sync_rt);
       break;
     case eTimeSyncMode::replay:

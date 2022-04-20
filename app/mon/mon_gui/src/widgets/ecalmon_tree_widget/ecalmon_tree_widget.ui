@@ -30,6 +30,12 @@
     <layout class="QHBoxLayout" name="group_by_layout">
      <item>
       <widget class="QLabel" name="group_by_label">
+       <property name="minimumSize">
+        <size>
+         <width>20</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="text">
         <string>Group by:</string>
        </property>
@@ -52,8 +58,8 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
-         <height>20</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
       </spacer>
@@ -64,6 +70,12 @@
     <layout class="QHBoxLayout" name="filter_layout">
      <item>
       <widget class="QFilterLineEdit" name="filter_lineedit">
+       <property name="minimumSize">
+        <size>
+         <width>20</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="placeholderText">
         <string>Filter</string>
        </property>
@@ -83,6 +95,12 @@
    </item>
    <item>
     <widget class="QAdvancedTreeView" name="tree_view">
+     <property name="minimumSize">
+      <size>
+       <width>40</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>

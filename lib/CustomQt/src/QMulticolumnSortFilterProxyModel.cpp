@@ -85,9 +85,12 @@ bool QMulticolumnSortFilterProxyModel::lessThan(const QModelIndex &left, const Q
     QVariant const right_data  = sourceModel()->data(sourceModel()->index(right.row(), always_sorted_column_, right.parent()), sortRole());
 
 #ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning (disable : 4996)
-#endif // _MSC_VER
+  #pragma warning(push)
+  #pragma warning (disable : 4996)
+#elif __GNUC__
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
     if (left_data != right_data)
     {
       if (!always_sorted_force_sort_order_)
@@ -119,8 +122,10 @@ bool QMulticolumnSortFilterProxyModel::lessThan(const QModelIndex &left, const Q
       }
     }
 #ifdef _MSC_VER
-#pragma warning(pop)
-#endif // _MSC_VER
+  #pragma warning(pop)
+#elif __GNUC__
+  #pragma GCC diagnostic pop
+#endif
   }
 
   return QStableSortFilterProxyModel::lessThan(left, right);

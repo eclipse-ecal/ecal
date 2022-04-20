@@ -44,6 +44,8 @@ First, you have to install some more development dependencies:
 
      sudo apt install cmake g++ libprotobuf-dev protobuf-compiler
 
+.. _getting_started_hello_world_publisher:
+
 Hello World Publisher
 =====================
 
@@ -130,6 +132,8 @@ You will see the "Hello World Publisher" process and the "hello_world_topic".
 .. image:: img/hello_world_snd_monitor.png
    :alt: eCAL Monitor Hello World
 
+.. _getting_started_hello_world_subscriber:
+
 Hello World Subscriber
 ======================
 
@@ -166,7 +170,7 @@ Again, create a new directory somewhere and add create the :file:`CMakeLists.txt
   .. important::
      eCAL Receive callbacks run in the subscriber's receive thread.
      While the callback is running, the subscriber cannot receive new data.
-     So, if your callback needs really long to compute, you may have to decouple your computations to not loose messages.
+     So, if your callback needs really long to compute, you may have to decouple your computations to not lose messages.
 
 Now that you have the source code ready, create a :file:`_build` directory and build the code!
 

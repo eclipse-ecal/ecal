@@ -50,7 +50,8 @@ private:
 ////////////////////////////////////////////////
 
 protected:
-  void showEvent(QShowEvent *event) override;
+  virtual void showEvent(QShowEvent *event) override;
+  virtual void changeEvent(QEvent* event) override;
 
 private:
   void saveLayout();
