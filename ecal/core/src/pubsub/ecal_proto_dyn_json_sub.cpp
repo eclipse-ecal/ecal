@@ -122,7 +122,7 @@ namespace eCAL
         if (msg_ptr.empty())
         {
           // get topic type
-          topic_type_full = eCAL::Util::GetTypeName(topic_name_);
+          topic_type_full = eCAL::Util::GetTopicTypeName(topic_name_);
           topic_type_full = topic_type_full.substr(topic_type_full.find_first_of(':') + 1, topic_type_full.size());
           topic_type = topic_type_full.substr(topic_type_full.find_last_of('.') + 1, topic_type_full.size());
           topic_type_full = "/" + topic_type_full;
@@ -134,7 +134,7 @@ namespace eCAL
           }
 
           // get topic description
-          topic_desc = eCAL::Util::GetDescription(topic_name_);
+          topic_desc = eCAL::Util::GetTopicDescription(topic_name_);
           if (topic_desc.empty())
           {
             std::cout << "could not get description for topic " << topic_name_ << std::endl;
