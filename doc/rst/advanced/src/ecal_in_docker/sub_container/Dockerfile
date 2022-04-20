@@ -5,4 +5,4 @@ WORKDIR /src/sub
 
 COPY CMakeLists.txt main.cpp ./
 RUN cmake . && make
-CMD ./hello_world_subscriber
+CMD ./hello_world_rec

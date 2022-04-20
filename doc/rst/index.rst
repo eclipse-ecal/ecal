@@ -86,7 +86,6 @@ eCAL is provided on an "as is" basis without warranties or conditions of any kin
    advanced/compatibility
    advanced/tutorials
    advanced/ecal_internals
-   advanced/ecal_in_docker
    advanced/ros_comparison
    license
 
