@@ -85,6 +85,7 @@ ScenarioWidget::ScenarioWidget(QWidget *parent)
   connect(QEcalPlay::instance(), &QEcalPlay::measurementLoadedSignal, this, &ScenarioWidget::updateButtonRow);
   connect(QEcalPlay::instance(), &QEcalPlay::scenariosChangedSignal,  this, &ScenarioWidget::updateButtonRow);
   connect(QEcalPlay::instance(), &QEcalPlay::scenariosSavedSignal,    this, &ScenarioWidget::updateButtonRow);
+  connect(QEcalPlay::instance(), &QEcalPlay::scenariosLoadedSignal,   this, &ScenarioWidget::reloadScenarios);
 
   connect(ui_.add_button,    &QAbstractButton::clicked, this, &ScenarioWidget::addScenario);
   connect(ui_.remove_button, &QAbstractButton::clicked, this, &ScenarioWidget::removeScenarios);
@@ -108,6 +109,11 @@ ScenarioWidget::~ScenarioWidget()
 }
 
 void ScenarioWidget::measurementLoaded(const QString& /*path*/)
+{
+  reloadScenarios();
+}
+
+void ScenarioWidget::reloadScenarios()
 {
   const auto measurement_boundaries_ = QEcalPlay::instance()->measurementBoundaries();
   const auto scenarios               = QEcalPlay::instance()->scenarios();

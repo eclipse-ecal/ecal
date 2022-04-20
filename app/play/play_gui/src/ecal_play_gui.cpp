@@ -140,8 +140,12 @@ EcalplayGui::EcalplayGui(QWidget *parent)
   connect(QEcalPlay::instance(), &QEcalPlay::enforceDelayAccuracyEnabledChangedSignal, this, &EcalplayGui::enforceDelayAccuracyEnabledChanged);
   connect(QEcalPlay::instance(), &QEcalPlay::limitPlaySpeedEnabledChangedSignal,       this, &EcalplayGui::limitPlaySpeedEnabledChanged);
   connect(QEcalPlay::instance(), &QEcalPlay::stepReferenceChannelChangedSignal,        this, &EcalplayGui::stepReferenceChannelChanged);
-  connect(QEcalPlay::instance(), &QEcalPlay::channelMappingChangedSignal,              this, &EcalplayGui::channelMappingChanged);
   connect(QEcalPlay::instance(), &QEcalPlay::exitSignal,                               this, &QMainWindow::close);
+
+  connect(QEcalPlay::instance(), &QEcalPlay::channelMappingChangedSignal,              this, &EcalplayGui::channelMappingChanged);
+  connect(QEcalPlay::instance(), &QEcalPlay::channelMappingChangedSignal,              this, &EcalplayGui::updateChannelMappingModified);
+  connect(QEcalPlay::instance(), &QEcalPlay::channelMappingSavedSignal,                this, &EcalplayGui::updateChannelMappingModified);
+  connect(QEcalPlay::instance(), &QEcalPlay::measurementClosedSignal,                  this, &EcalplayGui::updateChannelMappingModified);
 
   connect(QEcalPlay::instance(), &QEcalPlay::scenariosChangedSignal,                   this, &EcalplayGui::updateScenariosModified);
   connect(QEcalPlay::instance(), &QEcalPlay::scenariosSavedSignal,                     this, &EcalplayGui::updateScenariosModified);
@@ -151,7 +155,7 @@ EcalplayGui::EcalplayGui(QWidget *parent)
   connect(QEcalPlay::instance(), &QEcalPlay::channelMappingFileActionChangedSignal,    this, &EcalplayGui::channelMappingFileActionChanged);
 
   // Connect this -> QEcalPlay
-  connect(ui_.action_connect_to_ecal,       &QAction::triggered, 
+  connect(ui_.action_connect_to_ecal,       &QAction::triggered,
       [this]()
       {
         if (connect_to_ecal_button_state_is_connect_)
@@ -159,15 +163,18 @@ EcalplayGui::EcalplayGui(QWidget *parent)
         else
           QEcalPlay::instance()->deInitializePublishers();
       });
-  connect(ui_.action_load_measurement,       &QAction::triggered, this,                  &EcalplayGui::loadMeasurementFromFileDialog);
-  connect(ui_.action_close_measurement,      &QAction::triggered, this,                  &EcalplayGui::closeMeasurement);
-  connect(ui_.action_save_scenarios,         &QAction::triggered, QEcalPlay::instance(), []() { QEcalPlay::instance()->saveScenariosToDisk(); });
-  connect(ui_.action_save_channel_mapping,   &QAction::triggered, QEcalPlay::instance(), &QEcalPlay::saveChannelMappingAs);
-  connect(ui_.action_load_channel_mapping,   &QAction::triggered, QEcalPlay::instance(), &QEcalPlay::loadChannelMappingFileFromFileDialog);
+  connect(ui_.action_load_measurement,        &QAction::triggered, this,                  &EcalplayGui::loadMeasurementFromFileDialog);
+  connect(ui_.action_close_measurement,       &QAction::triggered, this,                  &EcalplayGui::closeMeasurement);
+  connect(ui_.action_save_scenarios,          &QAction::triggered, QEcalPlay::instance(), []() { QEcalPlay::instance()->saveScenariosToDisk(); });
+  connect(ui_.action_save_scenarios_as,       &QAction::triggered, QEcalPlay::instance(), &QEcalPlay::saveScenariosToDiskAs);
+  connect(ui_.action_load_scenario,           &QAction::triggered, QEcalPlay::instance(), &QEcalPlay::loadScenarioFromFileDialog);
+  connect(ui_.action_save_channel_mapping,    &QAction::triggered, QEcalPlay::instance(), []() { QEcalPlay::instance()->saveChannelMapping(); });
+  connect(ui_.action_save_channel_mapping_as, &QAction::triggered, QEcalPlay::instance(), &QEcalPlay::saveChannelMappingAs);
+  connect(ui_.action_load_channel_mapping,    &QAction::triggered, QEcalPlay::instance(), &QEcalPlay::loadChannelMappingFileFromFileDialog);
 
-  connect(ui_.action_exit,                   &QAction::triggered, this,                  &QMainWindow::close);
+  connect(ui_.action_exit,                    &QAction::triggered, this,                  &QMainWindow::close);
 
-  connect(ui_.action_play,                   &QAction::triggered, 
+  connect(ui_.action_play,                    &QAction::triggered,
       [this]()
       {
         if (play_pause_button_state_is_play_)
@@ -291,6 +298,7 @@ EcalplayGui::EcalplayGui(QWidget *parent)
   limitPlaySpeedEnabledChanged      (QEcalPlay::instance()->isLimitPlaySpeedEnabled());
 
   updateScenariosModified();
+  updateChannelMappingModified();
 
   //Drag & Drop
   setAcceptDrops(true);
@@ -343,13 +351,16 @@ void EcalplayGui::measurementLoaded(const QString& path)
   measurement_loaded_     = true;
   measurement_boundaries_ = QEcalPlay::instance()->measurementBoundaries();
 
-  ui_.action_play                ->setEnabled(true);
-  ui_.action_stop                ->setEnabled(true);
-  ui_.action_step_forward        ->setEnabled(true);
-  ui_.action_connect_to_ecal     ->setEnabled(true);
+  ui_.action_play                   ->setEnabled(true);
+  ui_.action_stop                   ->setEnabled(true);
+  ui_.action_step_forward           ->setEnabled(true);
+  ui_.action_connect_to_ecal        ->setEnabled(true);
 
-  ui_.action_save_channel_mapping->setEnabled(true);
-  ui_.action_load_channel_mapping->setEnabled(true);
+  ui_.action_save_channel_mapping_as->setEnabled(true);
+  ui_.action_load_channel_mapping   ->setEnabled(true);
+
+  ui_.action_save_scenarios_as      ->setEnabled(true);
+  ui_.action_load_scenario          ->setEnabled(true);
 
   measurement_frame_count_ = QEcalPlay::instance()->frameCount();
 
@@ -358,14 +369,14 @@ void EcalplayGui::measurementLoaded(const QString& path)
   addRecentMeasurement(path);
 
 #ifdef WIN32
-  thumbnail_play_pause_button_  ->setEnabled(true);
-  thumbnail_play_pause_button_  ->setIcon(play_pause_button_state_is_play_ ? taskbar_play_icon_ : taskbar_pause_icon_);
+  thumbnail_play_pause_button_      ->setEnabled(true);
+  thumbnail_play_pause_button_      ->setIcon(play_pause_button_state_is_play_ ? taskbar_play_icon_ : taskbar_pause_icon_);
 
-  thumbnail_stop_button_        ->setEnabled(true);
-  thumbnail_stop_button_        ->setIcon(taskbar_stop_icon_);
+  thumbnail_stop_button_            ->setEnabled(true);
+  thumbnail_stop_button_            ->setIcon(taskbar_stop_icon_);
 
-  thumbnail_step_button_        ->setEnabled(true);
-  thumbnail_step_button_        ->setIcon(taskbar_step_icon_);
+  thumbnail_step_button_            ->setEnabled(true);
+  thumbnail_step_button_            ->setIcon(taskbar_step_icon_);
 
   updateTaskbarProgressRange();
 #endif //WIN32
@@ -376,13 +387,16 @@ void EcalplayGui::measurementClosed()
   measurement_loaded_ = false;
   measurement_boundaries_ = QEcalPlay::instance()->measurementBoundaries();
 
-  ui_.action_play                ->setEnabled(false);
-  ui_.action_stop                ->setEnabled(false);
-  ui_.action_step_forward        ->setEnabled(false);
-  ui_.action_connect_to_ecal     ->setEnabled(false);
+  ui_.action_play                   ->setEnabled(false);
+  ui_.action_stop                   ->setEnabled(false);
+  ui_.action_step_forward           ->setEnabled(false);
+  ui_.action_connect_to_ecal        ->setEnabled(false);
 
-  ui_.action_save_channel_mapping->setEnabled(false);
-  ui_.action_load_channel_mapping->setEnabled(false);
+  ui_.action_save_channel_mapping_as->setEnabled(false);
+  ui_.action_load_channel_mapping   ->setEnabled(false);
+
+  ui_.action_save_scenarios_as      ->setEnabled(false);
+  ui_.action_load_scenario          ->setEnabled(false);
 
   measurement_frame_count_ = 0;
 
@@ -390,14 +404,14 @@ void EcalplayGui::measurementClosed()
   measurement_path_label_->setText(tr(" No measurement loaded "));
 
 #ifdef WIN32
-  thumbnail_play_pause_button_  ->setEnabled(false);
-  thumbnail_play_pause_button_  ->setIcon(play_pause_button_state_is_play_ ? taskbar_play_icon_disabled_ : taskbar_pause_icon_disabled_);
+  thumbnail_play_pause_button_      ->setEnabled(false);
+  thumbnail_play_pause_button_      ->setIcon(play_pause_button_state_is_play_ ? taskbar_play_icon_disabled_ : taskbar_pause_icon_disabled_);
 
-  thumbnail_stop_button_        ->setEnabled(false);
-  thumbnail_stop_button_        ->setIcon(taskbar_stop_icon_disabled_);
+  thumbnail_stop_button_            ->setEnabled(false);
+  thumbnail_stop_button_            ->setIcon(taskbar_stop_icon_disabled_);
 
-  thumbnail_step_button_        ->setEnabled(false);
-  thumbnail_step_button_        ->setIcon(taskbar_step_icon_disabled_);
+  thumbnail_step_button_            ->setEnabled(false);
+  thumbnail_step_button_            ->setIcon(taskbar_step_icon_disabled_);
 
   updateTaskbarProgressRange();
 #endif //WIN32
@@ -675,6 +689,11 @@ void EcalplayGui::updateScenariosModified()
   setWindowModified(QEcalPlay::instance()->scenariosModified());
 }
 
+void EcalplayGui::updateChannelMappingModified()
+{
+  ui_.action_save_channel_mapping->setEnabled(QEcalPlay::instance()->channelMappingModified());
+  setWindowModified(QEcalPlay::instance()->channelMappingModified());
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //// Save Layout                                                            ////

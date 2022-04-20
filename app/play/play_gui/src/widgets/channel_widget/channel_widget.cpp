@@ -121,6 +121,7 @@ ChannelWidget::ChannelWidget(QWidget *parent)
   connect(QEcalPlay::instance(), &QEcalPlay::measurementClosedSignal,           this, &ChannelWidget::measurementClosed);
   connect(QEcalPlay::instance(), &QEcalPlay::publishersInitStateChangedSignal,  this, &ChannelWidget::publishersInitStateChanged);
   connect(QEcalPlay::instance(), &QEcalPlay::channelMappingChangedSignal,       this, &ChannelWidget::channelMappingChanged);
+  connect(QEcalPlay::instance(), &QEcalPlay::channelMappingLoadedSignal,        this, &ChannelWidget::channelMappingChanged);
   connect(QEcalPlay::instance(), &QEcalPlay::playStateChangedSignal,            this, [this]() {channel_model_->updateMessageCounters(); });
 
   // connect this -> QEcalPlay
@@ -160,7 +161,8 @@ void ChannelWidget::measurementLoaded(const QString& /*path*/)
   ui_.filter_lineedit->clear();
   updateHeader();
   updateSelectionCountLabel();
-  QEcalPlay::instance()->setChannelMapping(getChannelMapping());
+
+  QEcalPlay::instance()->setChannelMapping(getChannelMapping(), true);
 
   channel_model_->updateMessageCounters();
 }
@@ -171,7 +173,7 @@ void ChannelWidget::measurementClosed()
   ui_.filter_lineedit->clear();
   updateHeader();
   updateSelectionCountLabel();
-  QEcalPlay::instance()->setChannelMapping(getChannelMapping());
+  QEcalPlay::instance()->setChannelMapping(getChannelMapping(), true);
 
   channel_model_->updateMessageCounters();
 }
