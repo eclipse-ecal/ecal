@@ -107,6 +107,8 @@ Therefore you have to create a **route**, i.e. a ``239.0.0.x -> outgoing NIC`` m
    It is recommended to assign a static IP, so your multicast route will not become outdated at some point.
 
 
+.. _getting_started_cloud_ubuntu_routes:
+
 |fa-ubuntu| Multicast configuration on Ubuntu
 ---------------------------------------------
 

@@ -8,7 +8,7 @@
     <meta name="docsearch:release" content="" />
     <meta name="docsearch:version" content="" />
 
-    <title>eCAL In Docker &mdash; eCAL Documentation  documentation</title>
+    <title>eCAL in Docker &mdash; eCAL Documentation  documentation</title>
 
     <link rel="shortcut icon" href="../_static/img/favicon.png" />
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
@@ -22,8 +22,9 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
-    <link rel="next" title="How eCAL relates to ROS" href="ros_comparison.html" />
-    <link rel="prev" title="eCAL Measurement Format" href="measurement_format.html" />
+    <link rel="up" title="Tutorials" href="tutorials.html" />
+    <link rel="next" title="eCAL internals" href="ecal_internals.html" />
+    <link rel="prev" title="Edit the documentation" href="documentation.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
     <script src="../_static/js/modernizr.min.js"></script>
@@ -524,8 +525,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="compatibility.html">eCAL Compatibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">Tutorials</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="documentation.html">Edit the documentation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">eCAL in Docker</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ecal_internals.html">eCAL internals</a><ul>
@@ -535,7 +537,6 @@
 <li class="toctree-l2"><a class="reference internal" href="measurement_format.html">eCAL Measurement Format</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">eCAL In Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ros_comparison.html">How eCAL relates to ROS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../license/ecal_license.html">eCAL License</a></li>
@@ -564,9 +565,15 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">eCAL In Docker</a><ul>
+<li><a class="reference internal" href="#">eCAL in Docker</a><ul>
 <li><a class="reference internal" href="#prerequisite">Prerequisite</a></li>
-<li><a class="reference internal" href="#getting-started">Getting Started</a></li>
+<li><a class="reference internal" href="#getting-started">Getting Started</a><ul>
+<li><a class="reference internal" href="#ecal-runtime-container">eCAL runtime container</a></li>
+<li><a class="reference internal" href="#publisher-container">Publisher container</a></li>
+<li><a class="reference internal" href="#subscriber-container">Subscriber container</a></li>
+<li><a class="reference internal" href="#run-the-docker-containers">Run the docker containers</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -579,14 +586,15 @@
                     <div class="rst-content">
 <!-- pager-hidden.html -->
 
-        <a class="no-focus" accesskey="p" href="measurement_format.html" tabindex="-1"></a>
-        <a class="no-focus" accesskey="n" href="ros_comparison.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="p" href="documentation.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="n" href="ecal_internals.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../index.html">Start</a></li>
-        <li class="breadcrumb-item active" aria-current="page">eCAL In Docker</li>
+            <li class="breadcrumb-item"><a href="tutorials.html">Tutorials</a></li>
+        <li class="breadcrumb-item active" aria-current="page">eCAL in Docker</li>
     </ol>
     <div class="breadcrumb-additions">
         <a class="btn btn-sm btn-light" href="../_sources/advanced/ecal_in_docker.rst.txt" rel="nofollow">
@@ -610,51 +618,59 @@
                             <div itemprop="articleBody">
 <!-- body -->
     <div class="section" id="ecal-in-docker">
-<span id="id1"></span><h1>eCAL In Docker<a class="headerlink" href="#ecal-in-docker" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>eCAL in Docker<a class="headerlink" href="#ecal-in-docker" title="Permalink to this headline">¶</a></h1>
 <p>Here we will show how to deploy eCAL into a docker container, and how to use its image from other containers.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This will work with eCAL 5.10 and up.
+Older eCAL versions will lack Shared Memory communication when being run in a docker container.</p>
+</div>
 <div class="section" id="prerequisite">
 <h2>Prerequisite<a class="headerlink" href="#prerequisite" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Install Docker as described in the <a class="reference external" href="https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository">Docker installation documentation</a></p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>If you have problems regarding to the installation, check these links:</p>
 <ul class="simple">
-<li><dl class="simple">
-<dt>Installed Docker</dt><dd><ul>
-<li><p>install docker from repository: <a class="reference external" href="https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository">Docker Instalation</a></p></li>
-<li><dl class="simple">
-<dt>If you have problems regarding to the installation, check these links:</dt><dd><ul>
-<li><p><a class="reference external" href="https://stackoverflow.com/questions/61401626/docker-installation-failed-on-ubuntu-20-04-ltsvmware">docker package not found</a></p></li>
-<li><p><a class="reference external" href="https://forums.docker.com/t/cant-install-docker-on-ubuntu-20-04/93058">docker installation failed</a></p></li>
+<li><p><a class="reference external" href="https://stackoverflow.com/questions/61401626/docker-installation-failed-on-ubuntu-20-04-ltsvmware">Docker package not found</a></p></li>
+<li><p><a class="reference external" href="https://forums.docker.com/t/cant-install-docker-on-ubuntu-20-04/93058">Docker installation failed</a></p></li>
 </ul>
-</dd>
-</dl>
+</div>
 </li>
-</ul>
-</dd>
-</dl>
-</li>
+<li><p>Optional: If you want your docker container to talk to eCAL Nodes on other machines:
+Set up you <a class="reference internal" href="../getting_started/cloud.html#getting-started-cloud-ubuntu-routes"><span class="std std-ref">multicast routes</span></a> on the host.</p></li>
+<li><p>Optional: If you want to use eCAL on your host to subscribe to data from your docker containers: <a class="reference internal" href="../getting_started/setup.html#getting-started-setup-ubuntu"><span class="std std-ref">Install eCAL</span></a> on the host.</p></li>
 </ul>
 </div>
 <div class="section" id="getting-started">
 <h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial we are going to create:</p>
+<ul class="simple">
+<li><p>A general purpose eCAL Docker container</p></li>
+<li><p>A publisher container with a custom Hello World Publisher</p></li>
+<li><p>A subscriber container receiving the Hello World data.</p></li>
+</ul>
+<p>The file hierarchy that we are going to follow:</p>
+<pre class="literal-block"><i class="far fa-folder-open"></i> ecal_in_docker
+├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/304360402df9652a0869c7762bb50cdd/docker-compose.yaml"><code class="xref download docutils literal notranslate"><span class="pre">docker-compose.yaml</span></code></a>
+|
+├─ <i class="far fa-folder-open"></i> ecal_runtime_container
+|  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/1faac69541d517e0f0f35f41ebbd748d/Dockerfile"><code class="xref download docutils literal notranslate"><span class="pre">Dockerfile</span></code></a>
+|
+├─ <i class="far fa-folder-open"></i> pub_container
+|  ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/fa5b06b870ebaeeac7d9094ce6f77e00/Dockerfile"><code class="xref download docutils literal notranslate"><span class="pre">Dockerfile</span></code></a>
+|  ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/de030105a2759ef0432ac8316a6e7deb/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
+|  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/e62ace93fccc50817f03e27c4f7a3163/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a>
+|
+└─ <i class="far fa-folder-open"></i> sub_container
+   ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/4b443fc3edc84fe91ad82b8473385dfc/Dockerfile"><code class="xref download docutils literal notranslate"><span class="pre">Dockerfile</span></code></a>
+   ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/7d3bda427fdf1fd3a0b98854060bba5f/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
+   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/d0d86cc7199f2c4b757fe5543e8b6cfa/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a></pre>
+<div class="section" id="ecal-runtime-container">
+<h3>eCAL runtime container<a class="headerlink" href="#ecal-runtime-container" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
-<li><p>File Hierarchy that we are going to follow:</p>
-<pre class="literal-block"><i class="far fa-folder-open"></i>
-├─ <i class="far fa-folder-open"></i> ecal_in_docker
-│  ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/304360402df9652a0869c7762bb50cdd/docker-compose.yaml"><code class="xref download docutils literal notranslate"><span class="pre">docker-compose.yaml</span></code></a>
-│  └─ <i class="far fa-folder-open"></i> ecal_runtime_container
-|  |  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/1faac69541d517e0f0f35f41ebbd748d/Dockerfile"><code class="xref download docutils literal notranslate"><span class="pre">Dockerfile</span></code></a>
-|  └─ <i class="far fa-folder-open"></i> pub_container
-|  |  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/fa5b06b870ebaeeac7d9094ce6f77e00/Dockerfile"><code class="xref download docutils literal notranslate"><span class="pre">Dockerfile</span></code></a>
-|  |  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/f38e1c3c326828e90d38fdbfb069cfc0/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
-|  |  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/554db34516a3c07fa1ca99873bfe87f7/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a>
-└─ └─ <i class="far fa-folder-open"></i> sub_container
-      └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/4b443fc3edc84fe91ad82b8473385dfc/Dockerfile"><code class="xref download docutils literal notranslate"><span class="pre">Dockerfile</span></code></a>
-      └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/e014c2b443115724091c00682f0dade5/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
-      └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/1522acbaa5ffc860a00ea057064791b0/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a></pre>
-</li>
-<li><dl>
-<dt>Create a container for the eCAL runtime:</dt><dd><ul>
-<li><p>Create a folder: ecal_runtime_container</p></li>
-<li><p>Create a file: Dockerfile</p></li>
-<li><p>Add installation steps of ecal to the   <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">Dockerfile</span></code>:</p>
+<li><p>Create the file <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">ecal_runtime_container/Dockerfile</span></code> and paste the following installation commands:</p>
 <div class="highlight-Docker notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -664,35 +680,78 @@
  7
  8
  9
-10</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c"># base image:</span>
-<span class="k">FROM</span><span class="s"> ubuntu:bionic</span>
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c"># Base image:</span>
+<span class="k">FROM</span><span class="s"> ubuntu:focal</span>
 
-<span class="c">#install eCAL from PPA:</span>
+<span class="c"># Install eCAL from PPA:</span>
 <span class="k">RUN</span> apt-get update <span class="o">&amp;&amp;</span> <span class="se">\</span>
 	apt-get install -y software-properties-common <span class="o">&amp;&amp;</span> <span class="se">\</span>
 	rm -rf /var/lib/apt/lists/*
 <span class="k">RUN</span> add-apt-repository ppa:ecal/ecal-latest
 <span class="k">RUN</span> apt-get install -y ecal
-<span class="k">RUN</span> apt install -y cmake g++ libprotobuf-dev protobuf-compiler
+
+<span class="c"># Install dependencies for compiling the hello world examples.</span>
+<span class="c"># You can omit this, if you don&#39;t want to build applications in the container.</span>
+<span class="k">RUN</span> apt-get install -y cmake g++ libprotobuf-dev protobuf-compiler
+
+<span class="c"># Set network_enabled = true in ecal.ini.</span>
+<span class="c"># You can omit this, if you only need local communication.</span>
+<span class="k">RUN</span> awk -F<span class="s2">&quot;=&quot;</span> <span class="s1">&#39;/^network_enabled/{$2=&quot;= true&quot;}1&#39;</span> /etc/ecal/ecal.ini &gt; /etc/ecal/ecal.tmp <span class="o">&amp;&amp;</span> <span class="se">\</span>
+	rm /etc/ecal/ecal.ini <span class="o">&amp;&amp;</span> <span class="se">\</span>
+	mv /etc/ecal/ecal.tmp /etc/ecal/ecal.ini 
+
+<span class="c"># Print the eCAL config</span>
+<span class="k">RUN</span> ecal_config
 </pre></div>
 </td></tr></table></div>
 </li>
 <li><p>Build the image:</p>
-<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>sudo docker build . --rm -t ecal-runtime
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd ecal_in_docker</span>
+<span class="go">sudo docker build . --rm -t ecal-runtime</span>
 </pre></div>
 </div>
 </li>
+<li><p>Test the image</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo docker run --rm -it --ipc<span class="o">=</span>host --pid<span class="o">=</span>host --network<span class="o">=</span>host ecal-runtime
+</pre></div>
+</div>
+<p>At this point you are in the docker container.
+You can exit it with <code class="docutils literal notranslate"><span class="pre">exit</span></code>.
+If you run <code class="docutils literal notranslate"><span class="pre">ecal_sample_person_snd</span></code> in the docker container and have an eCAL installation on your host, you can subscribe to the data via the eCAL Monitor or <code class="docutils literal notranslate"><span class="pre">ecal_sample_person_rec</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--ipc=host</span></code> will enable Shared Memory communication with your host system and other docker containers that are started with the same parameter.
+This is important for local communication.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--network=host</span></code> will share the host’s network.
+This is important for network communcation with other machines.
+It is also important for local shared memory communication, as it affects the hostname of the container.
+The hostname is used to determine whether an eCAL topic is avaialble via shared memory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--pid=host</span></code> will share the Process-ID range with the host.
+Otherwise processes from different containers may get the same Process ID, which will prevent communication between those two processes.</p></li>
 </ul>
-</dd>
-</dl>
+</div>
 </li>
-<li><p>The eCAL image is ready now, so you can depend on it in your images.
-So, let’s create 2 containers that act as a publisher and a subscriber,
-both of them will depend on the eCAL runtime image.</p></li>
-<li><dl>
-<dt>Publisher container:</dt><dd><ul>
-<li><p>Create a folder: pub_container</p></li>
-<li><p>Create a file:  <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">Dockerfile</span></code></p>
+</ol>
+</div>
+<div class="section" id="publisher-container">
+<h3>Publisher container<a class="headerlink" href="#publisher-container" title="Permalink to this headline">¶</a></h3>
+<p>The publisher container will be built on top of the <code class="docutils literal notranslate"><span class="pre">ecal-runtime</span></code> container.
+It will contain the Hello World Sample from the <a class="reference internal" href="../getting_started/hello_world.html#getting-started-hello-world-publisher"><span class="std std-ref">Getting Started Section</span></a>.</p>
+<ol class="arabic">
+<li><p>Create a file <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">pub_container/Dockerfile</span></code> and paste the following content:</p>
 <div class="highlight-Docker notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -707,11 +766,11 @@ both of them will depend on the eCAL runtime image.</p></li>
 
 <span class="k">COPY</span> CMakeLists.txt main.cpp ./
 <span class="k">RUN</span> cmake . <span class="o">&amp;&amp;</span> make
-<span class="k">CMD</span> ./hello_world_publisher
+<span class="k">CMD</span> ./hello_world_snd
 </pre></div>
 </td></tr></table></div>
 </li>
-<li><p>Create publisher source code: <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code></p>
+<li><p>Create publisher source code: <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">pub_container/main.cpp</span></code></p>
 <div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -737,36 +796,50 @@ both of them will depend on the eCAL runtime image.</p></li>
 23
 24
 25
-26</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;ecal/ecal.h&gt;</span><span class="cp"></span>
+26
+27
+28
+29
+30
+31
+32
+33</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;ecal/ecal.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;ecal/msg/string/publisher.h&gt;</span><span class="cp"></span>
 
 <span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
 
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Publisher Is Starting...</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>  
+  <span class="c1">// Initialize eCAL. The name of our Process will be &quot;Hello World Publisher&quot;</span>
   <span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="s">&quot;Hello World Publisher&quot;</span><span class="p">);</span>
-  <span class="n">eCAL</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">CPublisher</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">publisher</span><span class="p">(</span><span class="s">&quot;eCAL:hello_world_topic&quot;</span><span class="p">);</span>  
-  <span class="n">publisher</span><span class="p">.</span><span class="n">SetLayerMode</span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">TLayer</span><span class="o">::</span><span class="n">tlayer_all</span><span class="p">,</span> <span class="n">eCAL</span><span class="o">::</span><span class="n">TLayer</span><span class="o">::</span><span class="n">smode_off</span><span class="p">);</span>
-  <span class="c1">// enable this to publish messages over udp</span>
-  <span class="c1">//publisher.SetLayerMode(eCAL::TLayer::tlayer_udp_mc, eCAL::TLayer::smode_on);</span>
-  <span class="c1">// this is enabled to publish messages over shared memory</span>
-  <span class="n">publisher</span><span class="p">.</span><span class="n">SetLayerMode</span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">TLayer</span><span class="o">::</span><span class="n">tlayer_shm</span><span class="p">,</span> <span class="n">eCAL</span><span class="o">::</span><span class="n">TLayer</span><span class="o">::</span><span class="n">smode_on</span><span class="p">);</span>  
+
+  <span class="c1">// Create a String Publisher that publishes on the topic &quot;hello_world_topic&quot;</span>
+  <span class="n">eCAL</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">CPublisher</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">publisher</span><span class="p">(</span><span class="s">&quot;hello_world_topic&quot;</span><span class="p">);</span>
+
+  <span class="c1">// Create a counter, so something changes in our message</span>
   <span class="kt">int</span> <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
-  <span class="k">while</span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
+
+  <span class="c1">// Infinite loop (using eCAL::Ok() will enable us to gracefully shutdown the</span>
+  <span class="c1">// Process from another application)</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
   <span class="p">{</span>
-    <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;Hello World &quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="o">++</span><span class="n">counter</span><span class="p">);</span>
-    <span class="n">publisher</span><span class="p">.</span><span class="n">Send</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>  
+    <span class="c1">// Create a message with a counter an publish it to the topic</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Hello World &quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="o">++</span><span class="n">counter</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Sending message: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">message</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">publisher</span><span class="p">.</span><span class="n">Send</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+
+    <span class="c1">// Sleep 500 ms</span>
     <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
-  <span class="p">}</span>  
+  <span class="p">}</span>
+
+  <span class="c1">// finalize eCAL API</span>
   <span class="n">eCAL</span><span class="o">::</span><span class="n">Finalize</span><span class="p">();</span>
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
 </li>
-<li><p>Create file  <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></p>
+<li><p>Create file  <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">pub_container/CMakeLists.txt</span></code></p>
 <div class="highlight-cmake notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -781,37 +854,45 @@ both of them will depend on the eCAL runtime image.</p></li>
 12
 13
 14
-15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.0</span><span class="p">)</span>
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.0</span><span class="p">)</span>
 <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_FIND_PACKAGE_PREFER_CONFIG</span> <span class="s">ON</span><span class="p">)</span>
 
-<span class="nb">project</span><span class="p">(</span><span class="s">hello_world_publisher</span><span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span><span class="s">hello_world_snd</span><span class="p">)</span>
 
 <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span> <span class="s">14</span><span class="p">)</span>
 <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span> <span class="s">ON</span><span class="p">)</span>
 
 <span class="nb">find_package</span><span class="p">(</span><span class="s">eCAL</span> <span class="s">REQUIRED</span><span class="p">)</span>
 
-<span class="nb">set</span><span class="p">(</span><span class="s">source_files</span> <span class="s">main.cpp</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">source_files</span>
+  <span class="s">main.cpp</span>
+<span class="p">)</span>
 
 <span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span> <span class="o">${</span><span class="nv">source_files</span><span class="o">}</span><span class="p">)</span>
 
-<span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span> <span class="s">eCAL::core</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
+  <span class="s">eCAL::core</span>
+<span class="p">)</span>
 </pre></div>
 </td></tr></table></div>
 </li>
 <li><p>Build the image:</p>
-<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>sudo docker build . --rm -t ecal-publisher:1.0.0
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> pub_container
+sudo docker build . --rm -t ecal-publisher:1.0.0
 </pre></div>
 </div>
 </li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl>
-<dt>Subscriber container:</dt><dd><ul>
-<li><p>Create a folder: sub_container</p></li>
-<li><p>Create a file:  <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">Dockerfile</span></code></p>
+</ol>
+</div>
+<div class="section" id="subscriber-container">
+<h3>Subscriber container<a class="headerlink" href="#subscriber-container" title="Permalink to this headline">¶</a></h3>
+<p>The subscriber container will also be based on the <code class="docutils literal notranslate"><span class="pre">ecal-runtime</span></code> container and contain the Hello World Sample from the <a class="reference internal" href="../getting_started/hello_world.html#getting-started-hello-world-subscriber"><span class="std std-ref">Getting Started Section</span></a>.</p>
+<ol class="arabic">
+<li><p>Create a file: <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">sub_container/Dockerfile</span></code></p>
 <div class="highlight-Docker notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -826,11 +907,11 @@ both of them will depend on the eCAL runtime image.</p></li>
 
 <span class="k">COPY</span> CMakeLists.txt main.cpp ./
 <span class="k">RUN</span> cmake . <span class="o">&amp;&amp;</span> make
-<span class="k">CMD</span> ./hello_world_subscriber
+<span class="k">CMD</span> ./hello_world_rec
 </pre></div>
 </td></tr></table></div>
 </li>
-<li><p>Create subscriber source code: <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code></p>
+<li><p>Create subscriber source code: <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">sub_container/main.cpp</span></code></p>
 <div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -853,33 +934,51 @@ both of them will depend on the eCAL runtime image.</p></li>
 20
 21
 22
-23</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;ecal/ecal.h&gt;</span><span class="cp"></span>
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;ecal/ecal.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;ecal/msg/string/subscriber.h&gt;</span><span class="cp"></span>
 
 <span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
 
-<span class="kt">void</span> <span class="nf">HelloWorldCallback</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">msg</span><span class="p">)</span>
+<span class="c1">// Callback for receiving messages</span>
+<span class="kt">void</span> <span class="nf">HelloWorldCallback</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">message</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Received Message: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">msg</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Received Message: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">message</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Subscriber Is Starting...</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>  
+  <span class="c1">// Initialize eCAL</span>
   <span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="s">&quot;Hello World Subscriber&quot;</span><span class="p">);</span>
-  <span class="n">eCAL</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">CSubscriber</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">subscriber</span><span class="p">(</span><span class="s">&quot;eCAL:hello_world_topic&quot;</span><span class="p">);</span>
-  <span class="n">subscriber</span><span class="p">.</span><span class="n">AddReceiveCallback</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">HelloWorldCallback</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_2</span><span class="p">));</span>  
-  <span class="k">while</span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
+
+  <span class="c1">// Create a subscriber that listenes on the &quot;hello_world_topic&quot;</span>
+  <span class="n">eCAL</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">CSubscriber</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">subscriber</span><span class="p">(</span><span class="s">&quot;hello_world_topic&quot;</span><span class="p">);</span>
+
+  <span class="c1">// Set the Callback</span>
+  <span class="n">subscriber</span><span class="p">.</span><span class="n">AddReceiveCallback</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">HelloWorldCallback</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_2</span><span class="p">));</span>
+
+  <span class="c1">// Just don&#39;t exit</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
   <span class="p">{</span>
     <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
-  <span class="p">}</span>  
+  <span class="p">}</span>
+
+  <span class="c1">// finalize eCAL API</span>
   <span class="n">eCAL</span><span class="o">::</span><span class="n">Finalize</span><span class="p">();</span>
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
 </li>
-<li><p>Create file  <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></p>
+<li><p>Create file <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">sub_container/CMakeLists.txt</span></code></p>
 <div class="highlight-cmake notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -894,44 +993,52 @@ both of them will depend on the eCAL runtime image.</p></li>
 12
 13
 14
-15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.0</span><span class="p">)</span>
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.0</span><span class="p">)</span>
 <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_FIND_PACKAGE_PREFER_CONFIG</span> <span class="s">ON</span><span class="p">)</span>
 
-<span class="nb">project</span><span class="p">(</span><span class="s">hello_world_subscriber</span><span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span><span class="s">hello_world_rec</span><span class="p">)</span>
 
 <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span> <span class="s">14</span><span class="p">)</span>
 <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span> <span class="s">ON</span><span class="p">)</span>
 
 <span class="nb">find_package</span><span class="p">(</span><span class="s">eCAL</span> <span class="s">REQUIRED</span><span class="p">)</span>
 
-<span class="nb">set</span><span class="p">(</span><span class="s">source_files</span> <span class="s">main.cpp</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">source_files</span>
+  <span class="s">main.cpp</span>
+<span class="p">)</span>
 
 <span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span> <span class="o">${</span><span class="nv">source_files</span><span class="o">}</span><span class="p">)</span>
 
-<span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span> <span class="s">eCAL::core</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
+  <span class="s">eCAL::core</span>
+<span class="p">)</span>
 </pre></div>
 </td></tr></table></div>
 </li>
 <li><p>Build the image:</p>
-<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>sudo docker build . --rm -t ecal-subscriber:1.0.0
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> sub_container
+sudo docker build . --rm -t ecal-subscriber:1.0.0
 </pre></div>
 </div>
 </li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl>
-<dt>You have built the publisher and subscriber images, then run them:</dt><dd><div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>sudo docker run --rm -it --ipc=host --network host ecal-subscriber:1.0.0
-sudo docker run --rm -it --ipc=host --network host ecal-publisher:1.0.0
+</ol>
+</div>
+<div class="section" id="run-the-docker-containers">
+<h3>Run the docker containers<a class="headerlink" href="#run-the-docker-containers" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p>You can run the publisher and subscriber images manually with <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo docker run --rm -it --ipc<span class="o">=</span>host --network<span class="o">=</span>host --pid<span class="o">=</span>host ecal-subscriber:1.0.0
+sudo docker run --rm -it --ipc<span class="o">=</span>host --network<span class="o">=</span>host --pid<span class="o">=</span>host ecal-publisher:1.0.0
 </pre></div>
 </div>
-</dd>
-</dl>
 </li>
-<li><dl>
-<dt>You can use the docker-compose file to manage multiple containers.</dt><dd><ul>
-<li><p>In the parent folder create file:  <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">docker-compose.yaml</span></code></p>
+<li><p>You can also use the docker-compose file to manage multiple containers.</p>
+<ol class="arabic">
+<li><p>In the parent folder create file <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">docker-compose.yaml</span></code> and paste the following content:</p>
 <div class="highlight-yaml notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -946,7 +1053,9 @@ sudo docker run --rm -it --ipc=host --network host ecal-publisher:1.0.0
 12
 13
 14
-15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span> <span class="s">&quot;3&quot;</span>
+15
+16
+17</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span> <span class="s">&quot;3&quot;</span>
 
 <span class="nt">services</span><span class="p">:</span>
     <span class="nt">subscriber</span><span class="p">:</span>
@@ -955,27 +1064,27 @@ sudo docker run --rm -it --ipc=host --network host ecal-publisher:1.0.0
         <span class="nt">container_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ecal-subscriber</span>
         <span class="nt">network_mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">host</span>
         <span class="nt">ipc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">host</span>
+        <span class="nt">pid</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">host</span>
     <span class="nt">publisher</span><span class="p">:</span>
         <span class="nt">build</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">./pub_container</span>
         <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ecal-publisher:1.0.0</span>
         <span class="nt">container_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ecal-publisher</span>
         <span class="nt">network_mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">host</span>
         <span class="nt">ipc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">host</span>
+        <span class="nt">pid</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">host</span>
 </pre></div>
 </td></tr></table></div>
 </li>
 <li><p>You can now use that docker-compose to build/run the publisher and subscriber containers:</p>
-<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>sudo docker-compose build
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo docker-compose build
 sudo docker-compose up
 </pre></div>
 </div>
 </li>
-</ul>
-</dd>
-</dl>
-</li>
 </ol>
-<p>That was guidelines about how to use eCAL inside a container, and how your containers can make use of it.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 
@@ -986,12 +1095,12 @@ sudo docker-compose up
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
         <li class="page-item">
-            <a class="page-link" href="measurement_format.html" title="Accesskey Alt(+Shift)+p">
+            <a class="page-link" href="documentation.html" title="Accesskey Alt(+Shift)+p">
                 Previous
             </a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="ros_comparison.html" title="Accesskey Alt(+Shift)+n">
+            <a class="page-link" href="ecal_internals.html" title="Accesskey Alt(+Shift)+n">
                 Next
             </a>
         </li>
