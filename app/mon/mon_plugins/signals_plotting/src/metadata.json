@@ -1,0 +1,16 @@
+{
+  "Version": "v1.0.0",
+  "Author": "Adriana Chirila, Mihai Muraru",
+  "Name": "Signals Plotting",
+  
+  "Priority": 1,
+  
+  "SupportedTopics": 
+    [
+      {
+        "Format": "proto"
+      }
+    ],
+  
+  "OptionalTopics": []
+}
