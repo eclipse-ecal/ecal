@@ -1,18 +1,7 @@
-name: Run clang-tidy
+name: Run clang-tidy after download
 
 on:
-  push:
-    paths:
-      - '**.cpp'
-      - '**.cxx'
-      - '**.cc'
-      - '**.c'
-      - '**.h'
-      - '**.hpp'
-      - '**/CMakeLists.txt'
-  pull_request:
-    branches:
-      - master
+  workflow_call:
 
 jobs:
   clang-tidy-scan:
@@ -32,11 +21,15 @@ jobs:
           echo $(cmake --version)
           echo $(clang-tidy --version)
 
-      - name: Checkout
-        uses: actions/checkout@v3
+      # https://github.com/actions/download-artifact
+      - name: Download the built directory
+        uses: actions/download-artifact@v3
         with:
-          submodules: 'true'
-          fetch-depth: 0
+          name: ecal-dir
+
+      # replace the working directory
+      - name: Extract the tarball archive
+        run: mv ecal.tar.gz ../. && cd .. && rm -rf ecal && tar -xzf ecal.tar.gz && cd ecal
 
       # https://github.com/Ana06/get-changed-files
       - name: Detect the changeset
@@ -47,23 +40,33 @@ jobs:
       - name: Run clang-tidy on the changeset
         id: suffix
         run: |
-          build_linux/clang-tidy/build.sh -f ${{ steps.changed_files.outputs.added_modified }}
+          build_linux/clang-tidy/build.sh -a -b ../../../_build -f ${{ steps.changed_files.outputs.added_modified }}
 
       # https://github.com/actions/upload-artifact
       # If make or clang-tidy is never called, artifact upload will fail (no log files) with just a warning.
       - name: Archive logs as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: logs_${{ steps.suffix.outputs.timestamp }}
-          path: _build/log_*.txt
+          name: clang_tidy_log_${{ steps.suffix.outputs.timestamp }}
+          path: ~/work/ecal/_build/clang_tidy_log_*.txt
           if-no-files-found: warn
 
-      # https://github.com/mxschmitt/action-tmate#only-on-failure
-      # To debug failures, use either the Web shell link or SSH to the address given on this step,
-      # and press 'Q' or 'Ctrl+C' to continue.
-      - name: Setup SSH session
-        #if: ${{ always() }}
-        if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3.11
+      - name: Detect number of clang-tidy warnings
+        id: num_warnings
+        run: |
+          NUM_WARNINGS=0
+          NUM_LOG_FILES=$(ls ~/work/ecal/_build/clang_tidy_log_*.txt 2> /dev/null | wc -l)
+          if [[ ${NUM_LOG_FILES} -gt 0 ]]
+          then
+            NUM_WARNINGS=$(grep -oE "\w+\.\w+:\w+:\w+:\s?warning:\s?.*" -- ~/work/ecal/_build/clang_tidy_log_*.txt | wc -l)
+          fi
+          echo "::set-output name=value::${NUM_WARNINGS}"
+
+      # https://github.com/actions/github-script
+      - name: Check clang-tidy warnings
+        continue-on-error: true
+        if: ${{ steps.num_warnings.outputs.value > 0 }}
+        uses: actions/github-script@v6
         with:
-          sudo: true
+          script: |
+            core.setFailed('number of clang-tidy warnings: ${{ steps.num_warnings.outputs.value}}')
