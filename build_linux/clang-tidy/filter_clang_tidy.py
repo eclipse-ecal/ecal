@@ -99,10 +99,10 @@ def read_config():
 
     if not os.path.exists(path_config):
         if GRACEFUL_EXIT:
-            print('ERROR - Directory exclusion configuration is missing, skipping further processing')
+            print(f'** ERROR - directory exclusion configuration is missing:\n{path_config}')
             sys.exit(0)
         else:
-            raise SystemExit(f'** FATAL - file to list excluded directories is missing:\n{path_config}')
+            raise SystemExit(f'** FATAL - directory exclusion configuration is missing:\n{path_config}')
 
     with open(path_config, 'r') as excludes_file:
         excludes_raw = json.load(excludes_file)
@@ -127,10 +127,10 @@ def read_commands():
     path_database = os.path.join(path_build, 'compile_commands.json')
     if not os.path.exists(path_database):
         if GRACEFUL_EXIT:
-            print('ERROR - CMake-generated file "compile_commands.json" is missing, skipping further processing')
+            print(f'** ERROR - CMake-generated compilation database is missing:\n{path_database}')
             sys.exit(0)
         else:
-            raise SystemExit(f'** FATAL - file to list compile commands is missing:\n{path_database}')
+            raise SystemExit(f'** FATAL - CMake-generated compilation database is missing:\n{path_database}')
 
     with open(path_database, 'r') as cmake_gen_file:
         commands = json.load(cmake_gen_file)
