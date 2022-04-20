@@ -133,7 +133,7 @@ First check out the eCAL repository and all of the submodules:
 
    .. code-block:: bash
 
-      sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev
+      sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
 
 |fa-ubuntu| Ubuntu 18.04 dependencies
 -------------------------------------
@@ -152,7 +152,7 @@ First check out the eCAL repository and all of the submodules:
 
    .. code-block:: bash
 
-      sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev
+      sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
 
 #. If you plan to create the eCAL python language extension:
 
@@ -168,7 +168,7 @@ First check out the eCAL repository and all of the submodules:
 
    .. code-block:: bash
 
-      sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev
+      sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
 
 #. If you plan to create the eCAL python language extension:
 
