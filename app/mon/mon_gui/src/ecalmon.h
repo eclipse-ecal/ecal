@@ -71,11 +71,10 @@ public slots:
   void setParseTimeEnabled(bool enabled);
   void setTheme(Theme theme);
 
-  QDockWidget* createVisualizationDockWidget(const QString& topic_name, const QString& topic_type, const QString& iid, const QString& object_name = "");
-
   void resetLayout();
   
 private slots:
+  void createVisualizationDockWidget(const QString& topic_name, const QString& topic_type, const QString& iid, const QString& object_name = QString());
   void updateEcalTime();
 
 signals:

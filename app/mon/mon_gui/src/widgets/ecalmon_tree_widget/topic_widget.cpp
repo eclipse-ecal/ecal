@@ -366,9 +366,8 @@ void TopicWidget::fillContextMenu(QMenu& menu, const QList<QAbstractTreeItem*>& 
       auto reflection_with_action = reflection_with_menu->addAction(matching_plugin_data.meta_data.name);
       const auto iid = matching_plugin_data.iid;
       connect(reflection_with_action, &QAction::triggered, this, [this, iid, topic_name, topic_type]() {
-          // TO DO: pass main windows ref instead of this->parent()->parent()->parent()->parent()
-          Ecalmon* main_window = qobject_cast<Ecalmon*> (this->parent()->parent()->parent()->parent());
-          main_window->createVisualizationDockWidget(topic_name, topic_type, iid);
+          //&main_window->createVisualizationDockWidget(topic_name, topic_type, iid);
+        emit requestVisualisationDockWidget(topic_name, topic_type, iid);
         });
     }  
   }

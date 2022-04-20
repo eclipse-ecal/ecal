@@ -20,30 +20,9 @@
 #pragma once
 
 #include <QWidget>
-#include "ui_visualisation_dock_widget.h"
-
-#include "plugin/plugin_manager.h"
-
-#include <memory>
-#include <mutex>
-#include <chrono>
-#include <atomic>
-
-#include <QFile>
-#include <QTextStream>
-#include <QDateTime>
 #include <QTimer>
-#include <ecal/ecal.h>
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4146)
-#endif
-#include "ecal/pb/monitoring.pb.h"
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
+#include "ui_visualisation_dock_widget.h"
 
 class VisualisationDockWidget : public QWidget
 {

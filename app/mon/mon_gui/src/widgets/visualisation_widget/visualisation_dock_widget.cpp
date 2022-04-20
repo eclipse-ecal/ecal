@@ -19,13 +19,7 @@
 
 #include "visualisation_dock_widget.h"
 
-#include <CustomQt/QStandardTreeItem.h>
-
-#include <QTabWidget>
-#include <QMessageBox>
-#include <QDateTime>
-#include <QFileDialog>
-#include <QTimer>
+#include "plugin/plugin_manager.h"
 
 #ifndef NDEBUG
   #ifdef _MSC_VER
@@ -39,18 +33,6 @@
     #pragma warning(pop)
   #endif // _MSC_VER
 #endif // NDEBUG
-
-#include <QLibrary>
-#include <QPluginLoader>
-#include <QJsonArray>
-
-#include <chrono>
-
-#include "ecalmon_globals.h"
-
-#include "ecal/ecal.h"
-
-using namespace eCAL::mon;
 
 VisualisationDockWidget::VisualisationDockWidget(const QString& topic_name, const QString& topic_type, const QString& plugin_iid, QWidget *parent)
   : QWidget(parent), topic_name_(topic_name), topic_type_(topic_type), plugin_iid_(plugin_iid)

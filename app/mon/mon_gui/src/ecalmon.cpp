@@ -255,14 +255,18 @@ Ecalmon::Ecalmon(QWidget *parent)
     const auto topic_name = settings.value("topic_name").toString();
     const auto topic_type = settings.value("topic_type").toString();
     const auto plugin_iid = settings.value("plugin_iid").toString();
-    auto dock_widget = createVisualizationDockWidget(topic_name, topic_type, plugin_iid, object_name);
-    dock_widget->restoreGeometry(settings.value("geometry").toByteArray());
+    createVisualizationDockWidget(topic_name, topic_type, plugin_iid, object_name);
     settings.endGroup();
   }
   settings.endGroup();
+
+  connect(topic_widget_, &TopicWidget::requestVisualisationDockWidget, [this](const QString& topic_name, const QString& topic_type, const QString& iid)
+    {
+      createVisualizationDockWidget(topic_name, topic_type, iid);
+    });
 }
 
-QDockWidget* Ecalmon::createVisualizationDockWidget(const QString& topic_name, const QString& topic_type, const QString& iid, const QString& object_name)
+void Ecalmon::createVisualizationDockWidget(const QString& topic_name, const QString& topic_type, const QString& iid, const QString& object_name)
 {
   const auto& plugin_name = PluginManager::getInstance()->getPluginData(iid).meta_data.name;
   const auto dock_widget_title = plugin_name + " - " + topic_name + "(" + topic_type + ")";
@@ -273,8 +277,6 @@ QDockWidget* Ecalmon::createVisualizationDockWidget(const QString& topic_name, c
   this->addDockWidget(Qt::TopDockWidgetArea, dock_widget);
   dock_widget->setAttribute(Qt::WA_DeleteOnClose);
   dock_widget->setObjectName(object_name.isEmpty() ? QUuid::createUuid().toString() : object_name);
-
-  return dock_widget;
 }
 
 Ecalmon::~Ecalmon()
@@ -612,7 +614,6 @@ void Ecalmon::closeEvent(QCloseEvent* event)
     settings.setValue("topic_name", visualisation_dock_widget->getTopicName());
     settings.setValue("topic_type", visualisation_dock_widget->getTopicType());
     settings.setValue("plugin_iid", visualisation_dock_widget->getPluginIID());
-    settings.setValue("geometry", qobject_cast<QDockWidget*>(visualisation_dock_widget->parent())->saveGeometry());
     settings.endGroup();
   }
   settings.endGroup();
