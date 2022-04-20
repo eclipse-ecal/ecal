@@ -34,6 +34,8 @@ Includes
 
 - ``ecal/ecal_client.h`` (:ref:`file_ecal_core_include_ecal_ecal_client.h`)
 
+- ``ecal/ecal_config.h`` (:ref:`file_ecal_core_include_ecal_ecal_config.h`)
+
 - ``ecal/ecal_core.h`` (:ref:`file_ecal_core_include_ecal_ecal_core.h`)
 
 - ``ecal/ecal_defs.h``
