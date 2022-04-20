@@ -35,7 +35,7 @@
 #endif // NDEBUG
 
 VisualisationDockWidget::VisualisationDockWidget(const QString& topic_name, const QString& topic_type, const QString& plugin_iid, QWidget *parent)
-  : QWidget(parent), topic_name_(topic_name), topic_type_(topic_type), plugin_iid_(plugin_iid)
+  : QDockWidget(parent), topic_name_(topic_name), topic_type_(topic_type), plugin_iid_(plugin_iid)
 {
   ui_.setupUi(this);
 
@@ -43,12 +43,18 @@ VisualisationDockWidget::VisualisationDockWidget(const QString& topic_name, cons
 
   if (plugin_widget != nullptr)
   {
-    ui_.visualisation_dock_widget_context_layout->addWidget(plugin_widget->getWidget());
+    const auto& plugin_name = PluginManager::getInstance()->getPluginData(plugin_iid).meta_data.name;
+    setWindowTitle(plugin_name + " - " + topic_name + "(" + topic_type + ")");
+    ui_.visualisation_dock_widget_context_frame_layout->addWidget(plugin_widget->getWidget());
     ui_.visualisation_unavailable_label->hide();
     connect(&update_timer_, &QTimer::timeout, [plugin_widget]() {plugin_widget->onUpdate(); });
     update_timer_.setSingleShot(false);
     update_timer_.setInterval(UPDATE_INTERVAL_MS);
     update_timer_.start();
+  }
+  else
+  {
+    setWindowTitle("Visualisation - " + topic_name + "(" + topic_type + ")");
   }
 }
 

@@ -366,7 +366,6 @@ void TopicWidget::fillContextMenu(QMenu& menu, const QList<QAbstractTreeItem*>& 
       auto reflection_with_action = reflection_with_menu->addAction(matching_plugin_data.meta_data.name);
       const auto iid = matching_plugin_data.iid;
       connect(reflection_with_action, &QAction::triggered, this, [this, iid, topic_name, topic_type]() {
-          //&main_window->createVisualizationDockWidget(topic_name, topic_type, iid);
         emit requestVisualisationDockWidget(topic_name, topic_type, iid);
         });
     }  

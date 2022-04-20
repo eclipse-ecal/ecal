@@ -313,15 +313,10 @@ Ecalmon::Ecalmon(QWidget *parent)
 
 void Ecalmon::createVisualizationDockWidget(const QString& topic_name, const QString& topic_type, const QString& iid, const QString& object_name)
 {
-  const auto& plugin_name = PluginManager::getInstance()->getPluginData(iid).meta_data.name;
-  const auto dock_widget_title = plugin_name + " - " + topic_name + "(" + topic_type + ")";
-  auto dock_widget = new QDockWidget(dock_widget_title, this);
-  
-  auto visualization_dock_widget = new VisualisationDockWidget(topic_name, topic_type, iid, dock_widget);
-  dock_widget->setWidget(visualization_dock_widget);
-  this->addDockWidget(Qt::TopDockWidgetArea, dock_widget);
-  dock_widget->setAttribute(Qt::WA_DeleteOnClose);
-  dock_widget->setObjectName(object_name.isEmpty() ? QUuid::createUuid().toString() : object_name);
+  auto visualization_dock_widget = new VisualisationDockWidget(topic_name, topic_type, iid, this);
+  this->addDockWidget(Qt::TopDockWidgetArea, visualization_dock_widget);
+  visualization_dock_widget->setAttribute(Qt::WA_DeleteOnClose);
+  visualization_dock_widget->setObjectName(object_name.isEmpty() ? QUuid::createUuid().toString() : object_name);
 }
 
 Ecalmon::~Ecalmon()
@@ -631,8 +626,7 @@ void Ecalmon::closeEvent(QCloseEvent* event)
   settings.remove("");
   for (const auto& visualisation_dock_widget : visualisation_dock_widget_list)
   {
-    auto object_name = qobject_cast<QDockWidget*>(visualisation_dock_widget->parent())->objectName();
-    settings.beginGroup(object_name);
+    settings.beginGroup(visualisation_dock_widget->objectName());
     settings.setValue("topic_name", visualisation_dock_widget->getTopicName());
     settings.setValue("topic_type", visualisation_dock_widget->getTopicType());
     settings.setValue("plugin_iid", visualisation_dock_widget->getPluginIID());
@@ -690,7 +684,7 @@ void Ecalmon::resetLayout()
   QList<VisualisationDockWidget*> visualisation_dock_widget_list = findChildren<VisualisationDockWidget*>();
   for (const auto& visualisation_dock_widget : visualisation_dock_widget_list)
   {
-    qobject_cast<QDockWidget*>(visualisation_dock_widget->parent())->close();
+    visualisation_dock_widget->close();
   }
 
   setTheme(Theme::Default);

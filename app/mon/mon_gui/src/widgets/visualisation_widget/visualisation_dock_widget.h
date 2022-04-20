@@ -24,7 +24,7 @@
 
 #include "ui_visualisation_dock_widget.h"
 
-class VisualisationDockWidget : public QWidget
+class VisualisationDockWidget : public QDockWidget
 {
   Q_OBJECT
 
@@ -42,7 +42,7 @@ protected:
 private:
   static const int UPDATE_INTERVAL_MS = 50;
 
-  QTimer    update_timer_;
+  QTimer update_timer_;
 
   QString topic_name_;
   QString topic_type_;
