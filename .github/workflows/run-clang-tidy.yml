@@ -23,7 +23,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install ninja-build doxygen graphviz libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev qt5-default
-          sudo apt-get install jq clang-tidy
+          sudo apt-get install clang-tidy
 
       - name: Display version info
         run: |
