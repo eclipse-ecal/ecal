@@ -98,10 +98,10 @@ include(build_location)
 set(as_subproject eCAL)
 
 if(CMAKE_EXPORT_COMPILE_COMMANDS)
-  message(STATUS "Copying clang-tidy configuration file")
-  # source is relative to the current source directory,
-  # destination is relative to the current build directory
-  file(COPY ./build_linux/clang-tidy/.clang-tidy DESTINATION .)
+  message(STATUS "Compilation database will be created")
+else()
+  # to make it visible it is explicitly set to OFF
+  set(CMAKE_EXPORT_COMPILE_COMMANDS OFF)
 endif()
 
 # Normalize backslashes from Windows paths

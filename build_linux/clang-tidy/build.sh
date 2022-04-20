@@ -6,32 +6,34 @@
 # either on the compilation database or on selected files.                     #
 #                                                                              #
 # Check help with '-h|--help'.                                                 #
-# The build path, which is relative to the root directory, can be given with   #
-# the '-b|--build' option.                                                     #
+# The build path, which is relative to the current script's directory, can be  #
+# given with the '-b|--build' option.                                          #
 # The C and C++ compilers can be set to alternative compilers with the         #
 # '-o|--compiler' option.                                                      #
-# After running cmake, with '-m|--make', make runs.                            #
+# With the '-m|--make' option cmake and make runs.                             #
+# With the '-a|--already' option cmake and make does not run, the build is     #
+# already completed.                                                           #
+# If not building now or not already built, still 'protoc' will be called to   #
+# to enable running clang-tidy.                                                #
 # With the '-i|--filter' option the paths to the filtering Python application  #
 # and to its JSON configuration can be given.                                  #
 # If the '-d|--database' option is given, it sets the RUN_DATABASE parameter   #
 # ON.                                                                          #
 # If the '-f|--files' option is given, the rest of the parameters are read as  #
 # a list of files and the RUN_FILES parameter is set as ON.                    #
-# If '-d' or '-f' is given, the compile commands database is filtered first:   #
-#   - the 'compile_commands.json' file be filtered for inc/exc commands,       #
+# If the RUN_DATABASE or RUN_FILES option is ON:                               #
+#   - the 'compile_commands.json' file is filtered for inc/exc commands,       #
 #   - the excluded commands are saved as 'compile_commands_exc.json',          #
 #   - the original file is renamed as 'compile_commands_orig.json',            #
-#   - the file of included commmands is renamed as 'compile_commands.json'.    #
-# If the RUN_DATABASE or RUN_FILES option is ON:                               #
-#   - clang-tidy configuration is dumped to 'config_clang_tidy.yml'.           #
+#   - the file of included commmands is renamed as 'compile_commands.json',    #
+#   - clang-tidy configuration is dumped to a YAML file,                       #
+#   - if required protobuf will be called.                                     #
 # If the RUN_DATABASE option is ON:                                            #
-#   - make is run to obtain all generated header files (protobuf),             #
 #   - clang-tidy runs with the filtered 'compile_commands.json' database.      #
 # If the RUN_FILES option is ON:                                               #
 #   - file extensions are checked for relevance,                               #
-#   - if relevant, and located in an included directory, first make is called, #
-#   - after ensuring generation of source/header files (protobuf) by           #
-#     calling make first, the file is analyzed by clang-tidy.                  #                                                           #
+#   - file paths are checked for excluded directories,                         #
+#   - after these checks the files are analyzed by clang-tidy one-by-one.      #
 # Outputs are redirected into timestamped log files, 'log_*.txt', in the build #
 # directory as well.                                                           #
 #                                                                              #
@@ -43,11 +45,10 @@ set -e
 RUN_MAKE='OFF'
 RUN_DATABASE='OFF'
 RUN_FILES='OFF'
+GEN_FILES='ON'
 
-PATTERN='^(h|hpp|c|cc|cpp|cxx)$'
-# assumption: CMake build directory is located in the root directory
+EXT_PATTERN='^(cpp|cxx|cc|c|h|hh|hxx|hpp)$'
 PATH_BUILD='../../_build'
-# dir names are extracted from PATH_BUILD by removing the rel part
 DIR_BUILD=
 DIR_SCRIPT=
 DIR_ROOT=
@@ -73,7 +74,7 @@ DCMAKE_CXX_COMPILER=              #'-DCMAKE_CXX_COMPILER=/usr/bin/clang++-14'
 
 # ------------------------------------------------------------------------------
 
-USAGE="$(basename $0) [-h|-help] [-b|--build <build>] [-c|compiler <C> <CXX>] [-m|--make] [-i|--filter <app> <cfg>] [-d|--database] [-f|--files <files...>]
+USAGE="$(basename $0) [-h|-help] [-b|--build <build>] [-c|compiler <C> <CXX>] [-m|--make] [-i|--filter <app> <cfg>] [-d|--database] [-a|--already] [-f|--files <files...>]
 run cmake, and then optionally make and/or clang-tidy - where:
     -h | --help                 show this help message and exit
     -b | --build <build>        build path relative to this script, default: '${PATH_BUILD}'
@@ -81,6 +82,7 @@ run cmake, and then optionally make and/or clang-tidy - where:
     -m | --make                 run make
     -i | --filter <app> <cfg>   filtering app & its config rel. to this script or abs. paths, default: '${PATH_FILTER} ${PATH_EXC_CONFIG}'
     -d | --database             run clang-tidy on the compilation database
+    -a | --already              already built, all machine-generated codes are available
     -f | --files <files...>     run clang-tidy on the given files (remaining args)
 "
 
@@ -104,6 +106,8 @@ then
                                 shift 3 ; if [[  $# -eq 0 ]];then break ; fi ;;
             -d | --database )   RUN_DATABASE='ON' ; shift ;
                                 if [[  $# -eq 0 ]];then break ; fi ;;
+            -a | --already )    GEN_FILES='OFF' ; shift ;
+                                if [[  $# -eq 0 ]];then break ; fi ;;
             -f | --files )      RUN_FILES='ON' ; shift ;
                                 if [[  $# -eq 0 ]];then echo "WARNING - missing file list" ; exit 0 ; fi ;
                                 FILE_LIST=($@) ; break ;;
@@ -114,23 +118,45 @@ fi
 
 # ------------------------------------------------------------------------------
 
-check_args() {
-    # detect relative path by removing the final '/' and all trailing chars '*'
-    local dir_rel=${PATH_BUILD%/*}
-    # extract build directory name by removing prefix
-    DIR_BUILD=${PATH_BUILD#$dir_rel/}
+find_root_dir() {
+    local path=''
 
+    while true
+    do
+        if [[ -d '.git' ]]
+        then
+            path=$(pwd)
+            break
+        else
+            cd ..
+        fi
+    done
+
+    echo "${path}"
+}
+
+check_args() {
     # cd to script's directory
     cd "${0%/*}"
     DIR_SCRIPT=$(pwd)
-    # cd to root directory
+
+    # detect relative path by removing the final '/' and all trailing chars '*'
+    local dir_rel=${PATH_BUILD%/*}
+    DIR_BUILD_NAME=${PATH_BUILD#$dir_rel/}
     cd "${dir_rel}"
+    DIR_BUILD_ROOT=$(pwd)
+    DIR_BUILD="${DIR_BUILD_ROOT}/${DIR_BUILD_NAME}"
+
+    # find the root directory where '.git/' resides
+    cd "${DIR_SCRIPT}"
+    local root_dir_git=$(find_root_dir "${DIR_SCRIPT}")
+    cd "${root_dir_git}"
     DIR_ROOT=$(pwd)
 
     if [[ "${RUN_DATABASE}" == 'ON' || "${RUN_FILES}" == 'ON' ]]
     then
         set +e
-        local path_clang_tidy=${CLANG_TIDY}
+        local path_clang_tidy=$(which ${CLANG_TIDY})
         set -e
         if [[ -z ${path_clang_tidy} ]]
         then
@@ -155,28 +181,32 @@ check_args() {
 }
 
 run_cmake() {
-    # run cmake always
-    echo "++ build type: ${CMAKE_BUILD_TYPE}"
-    echo -e "\n++ running cmake ..."
+    if [[ "${GEN_FILES}" == 'ON' ]]
+    then
+        echo "++ build type: ${CMAKE_BUILD_TYPE}"
+        echo -e "\n++ running cmake ..."
 
-    rm -rf "${DIR_BUILD}/"
-    mkdir ${DIR_BUILD}
-    cd "${DIR_BUILD}/"
+        rm -rf "${DIR_BUILD}/"
+        mkdir -p ${DIR_BUILD}
+        cd "${DIR_BUILD}"
 
-    cmake .. ${DCMAKE_EXPORT_COMPILE_COMMANDS} \
-             ${DCMAKE_C_COMPILER} \
-             ${DCMAKE_CXX_COMPILER} \
-             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} \
-             -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF \
-             -DECAL_THIRDPARTY_BUILD_CURL=OFF  \
-             -DECAL_THIRDPARTY_BUILD_HDF5=OFF
+        cmake "${DIR_ROOT}" ${DCMAKE_EXPORT_COMPILE_COMMANDS} \
+                            ${DCMAKE_C_COMPILER} \
+                            ${DCMAKE_CXX_COMPILER} \
+                            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} \
+                            -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF \
+                            -DECAL_THIRDPARTY_BUILD_CURL=OFF  \
+                            -DECAL_THIRDPARTY_BUILD_HDF5=OFF
+    fi
 }
 
 run_make() {
     if [[ "${RUN_MAKE}" == 'ON' ]]
     then
+        GEN_FILES='OFF'
+        cd "${DIR_BUILD}"
         local cmd="cmake --build . -- -j${NUM_INST}"
-        echo -e "\n++ ${cmd} ...\nsee: ${FILE_MAKE_OUTPUT}"
+        echo -e "\n++ ${cmd}\nsee: ${FILE_MAKE_OUTPUT}"
         echo "${cmd}" >> ${FILE_MAKE_OUTPUT}
         time ${cmd} |& tee -a ${FILE_MAKE_OUTPUT}
     fi
@@ -184,7 +214,7 @@ run_make() {
 
 # searched for in the output of 'make --debug=b all'
 run_protoc() {
-    echo -e "\n++ run protoc ..."
+    echo -e "\n++ running protoc ..."
     make -f ecal/pb/CMakeFiles/pb.dir/build.make ecal/pb/CMakeFiles/pb.dir/depend
     make -f samples/cpp/measurement/measurement_read/CMakeFiles/measurement_read.dir/build.make samples/cpp/measurement/measurement_read/CMakeFiles/measurement_read.dir/depend
     make -f samples/cpp/measurement/measurement_write/CMakeFiles/measurement_write.dir/build.make samples/cpp/measurement/measurement_write/CMakeFiles/measurement_write.dir/depend
@@ -209,11 +239,14 @@ filter_compile_commands() {
     if [[ "${RUN_DATABASE}" == 'ON' || "${RUN_FILES}" == 'ON' ]]
     then
         echo -e "\n++ filtering the compile commands ..."
-        cd ${DIR_SCRIPT}
+        cd "${DIR_SCRIPT}"
         echo "excluded directories:"
         cat "$PATH_EXC_CONFIG"
-        python3 ${PATH_FILTER}
-        cd ${DIR_ROOT}/${DIR_BUILD}/
+        python3 ${PATH_FILTER} --build "${DIR_BUILD}"
+
+        cp -a "${DIR_SCRIPT}/.clang-tidy" "${DIR_ROOT}"
+        cp -a "${DIR_SCRIPT}/.clang-tidy" "${DIR_BUILD}"
+        cd "${DIR_BUILD}"
         ${CLANG_TIDY} --dump-config > ${FILE_CLANG_TIDY_CONFIG}
 
         # use the included commands as compile commands
@@ -221,7 +254,8 @@ filter_compile_commands() {
         mv compile_commands_inc.json compile_commands.json
 
         # for protobuf generated source & header files, protoc is fast
-        if [[ "${RUN_MAKE}" != 'ON' ]]
+        # if built with this script (-m) or built already (-a), then there is no need to call protoc
+        if [[ "${GEN_FILES}" == 'ON' ]]
         then
             run_protoc
         fi
@@ -233,7 +267,7 @@ run_clang_tidy_on_database() {
     then
         # see: run-clang-tidy --help
         local cmd="run-${CLANG_TIDY} -j${NUM_INST}"
-        echo -e "\n++ ${cmd} ...\ncfg: ${FILE_CLANG_TIDY_CONFIG}\nsee: ${FILE_CLANG_TIDY_OUTPUT}"
+        echo -e "\n++ ${cmd}\ncfg: ${FILE_CLANG_TIDY_CONFIG}\nsee: ${FILE_CLANG_TIDY_OUTPUT}"
         echo "${cmd}" >> ${FILE_CLANG_TIDY_OUTPUT}
         time ${cmd} |& tee -a ${FILE_CLANG_TIDY_OUTPUT}
     fi
@@ -248,7 +282,7 @@ run_clang_tidy_on_database() {
 #         ["c"]
 #     ]
 read_config_basic() {
-    cd ${DIR_SCRIPT}
+    cd "${DIR_SCRIPT}"
     if [[ -f "$PATH_EXC_CONFIG" ]]
     then
         local line_count=$(wc -l < "$PATH_EXC_CONFIG")
@@ -283,8 +317,10 @@ read_config_basic() {
 
 # jq can parse valid JSONs, pretty-print is not required.
 read_config() {
-    cd ${DIR_SCRIPT}
+    cd "${DIR_SCRIPT}"
+    set +e
     local path_jq=$(which jq)
+    set -e
     if [[ -z ${path_jq} ]]
     then
         echo -e "WARNING: 'jq' is not available, fallig back to the simple Bash JSON parser"
@@ -327,8 +363,7 @@ run_clang_tidy_on_files() {
     then
         read_config
 
-        cd "${DIR_ROOT}/${DIR_BUILD}/"
-
+        cd "${DIR_BUILD}"
         # see: clang-tidy --help
         echo -e "\n++ analyzing source files by clang-tidy ..."
         printf -- "-- %s\n" "${FILE_LIST[@]}"
@@ -357,7 +392,7 @@ run_clang_tidy_on_files() {
                 # if 1. the file is by its extension a C++-related one
                 #    2. its path does not contain any excluded directories
                 # then analyze it by clang-tidy
-                if [[ "${file_ext}" =~ $PATTERN ]]
+                if [[ "${file_ext}" =~ $EXT_PATTERN ]]
                 then
                     if is_excluded "${file_abs}"
                     then
