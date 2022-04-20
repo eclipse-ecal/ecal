@@ -12,7 +12,7 @@ To build eCAL, you will need a C++14 compliant compiler, such as Visual Studio 2
 Currently, we support:
 
 * Windows 7 / 10
-* Ubuntu 16.04 / 18.04 / 20.04
+* Ubuntu 16.04 / 18.04 / 20.04 / 22.04
 
 .. seealso::
 
@@ -177,7 +177,23 @@ First check out the eCAL repository and all of the submodules:
       sudo apt-get install python3.8-dev python3-pip
       python3 -m pip install setuptools
 
-|fa-ubuntu| Ubuntu 16/18/20 build
+|fa-ubuntu| Ubuntu 22.04 dependencies
+-------------------------------------
+
+#. Install the dependencies from the ordinary Ubuntu 22.04 repositories:
+
+   .. code-block:: bash
+
+      sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
+
+#. If you plan to create the eCAL python language extension:
+
+   .. code-block:: bash
+
+      sudo apt-get install python3.10-dev python3-pip
+      python3 -m pip install setuptools
+
+|fa-ubuntu| Ubuntu 16/18/20/22 build
 ---------------------------------
 
 #. Compile eCAL with the following options (additional set `BUILD_PY_BINDING` to `ON` if plan to build the python extension):
