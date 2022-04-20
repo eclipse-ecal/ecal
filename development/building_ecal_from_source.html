@@ -577,7 +577,8 @@
 <li><a class="reference internal" href="#fa-ubuntu-ubuntu-16-04-dependencies"><i class="fab fa-ubuntu"></i> Ubuntu 16.04 dependencies</a></li>
 <li><a class="reference internal" href="#fa-ubuntu-ubuntu-18-04-dependencies"><i class="fab fa-ubuntu"></i> Ubuntu 18.04 dependencies</a></li>
 <li><a class="reference internal" href="#fa-ubuntu-ubuntu-20-04-dependencies"><i class="fab fa-ubuntu"></i> Ubuntu 20.04 dependencies</a></li>
-<li><a class="reference internal" href="#fa-ubuntu-ubuntu-16-18-20-build"><i class="fab fa-ubuntu"></i> Ubuntu 16/18/20 build</a></li>
+<li><a class="reference internal" href="#fa-ubuntu-ubuntu-22-04-dependencies"><i class="fab fa-ubuntu"></i> Ubuntu 22.04 dependencies</a></li>
+<li><a class="reference internal" href="#fa-ubuntu-ubuntu-16-18-20-22-build"><i class="fab fa-ubuntu"></i> Ubuntu 16/18/20/22 build</a></li>
 </ul>
 </li>
 </ul>
@@ -630,7 +631,7 @@ To build eCAL, you will need a C++14 compliant compiler, such as Visual Studio 2
 <p>Currently, we support:</p>
 <ul class="simple">
 <li><p>Windows 7 / 10</p></li>
-<li><p>Ubuntu 16.04 / 18.04 / 20.04</p></li>
+<li><p>Ubuntu 16.04 / 18.04 / 20.04 / 22.04</p></li>
 </ul>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -740,7 +741,7 @@ sudo apt-get -y update
 </div>
 </li>
 <li><p>Install the dependencies from the ordinary Ubuntu 16.04 repositories and the ppa we just added:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
 </pre></div>
 </div>
 </li>
@@ -759,7 +760,7 @@ sudo rm /etc/apt/trusted.gpg.d/kitware.gpg
 </div>
 </li>
 <li><p>Install the dependencies from the ordinary Ubuntu 18.04 repositories:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
 </pre></div>
 </div>
 </li>
@@ -775,7 +776,7 @@ python3 -m pip install setuptools
 <h3><i class="fab fa-ubuntu"></i> Ubuntu 20.04 dependencies<a class="headerlink" href="#fa-ubuntu-ubuntu-20-04-dependencies" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
 <li><p>Install the dependencies from the ordinary Ubuntu 20.04 repositories:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
 </pre></div>
 </div>
 </li>
@@ -787,8 +788,24 @@ python3 -m pip install setuptools
 </li>
 </ol>
 </div>
-<div class="section" id="fa-ubuntu-ubuntu-16-18-20-build">
-<h3><i class="fab fa-ubuntu"></i> Ubuntu 16/18/20 build<a class="headerlink" href="#fa-ubuntu-ubuntu-16-18-20-build" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="fa-ubuntu-ubuntu-22-04-dependencies">
+<h3><i class="fab fa-ubuntu"></i> Ubuntu 22.04 dependencies<a class="headerlink" href="#fa-ubuntu-ubuntu-22-04-dependencies" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p>Install the dependencies from the ordinary Ubuntu 22.04 repositories:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
+</pre></div>
+</div>
+</li>
+<li><p>If you plan to create the eCAL python language extension:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install python3.10-dev python3-pip
+python3 -m pip install setuptools
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="fa-ubuntu-ubuntu-16-18-20-22-build">
+<h3><i class="fab fa-ubuntu"></i> Ubuntu 16/18/20/22 build<a class="headerlink" href="#fa-ubuntu-ubuntu-16-18-20-22-build" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
 <li><p>Compile eCAL with the following options (additional set <cite>BUILD_PY_BINDING</cite> to <cite>ON</cite> if plan to build the python extension):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir _build
