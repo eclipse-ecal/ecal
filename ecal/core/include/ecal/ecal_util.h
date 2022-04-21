@@ -199,6 +199,8 @@ namespace eCAL
 
     /**
      * @brief Gets type name of the specified topic.
+     * 
+     * This function is deprecated with eCAL 5.10. Please use GetTopicTypeName.
      *
      * @param topic_name_   Topic name.
      * @param topic_type_   String to store type name.
@@ -211,6 +213,8 @@ namespace eCAL
     /**
      * @brief Gets type name of the specified topic.
      *
+     * This function is deprecated with eCAL 5.10. Please use GetTopicTypeName.
+     *
      * @param topic_name_   Topic name.
      *
      * @return  Topic type name.
@@ -220,6 +224,8 @@ namespace eCAL
 
     /**
      * @brief Gets description of the specified topic.
+     *
+     * This function is deprecated with eCAL 5.10. Please use GetTopicDescription.
      *
      * @param topic_name_   Topic name.
      * @param topic_desc_   String to store description.
@@ -231,6 +237,8 @@ namespace eCAL
 
     /**
      * @brief Gets description of the specified topic.
+     *
+     * This function is deprecated with eCAL 5.10. Please use GetTopicDescription.
      *
      * @param topic_name_   Topic name.
      *
