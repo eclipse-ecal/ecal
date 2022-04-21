@@ -45,5 +45,4 @@ As there may still be use cases in which a static library would be beneficial, t
    :maxdepth: 1
    
    building_ecal_from_source
-   building_ecal_with_conan_dependencies
    ecal_cmake_options
