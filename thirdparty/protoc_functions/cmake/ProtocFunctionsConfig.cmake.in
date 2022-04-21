@@ -1,0 +1,4 @@
+@PACKAGE_INIT@
+
+# make all runtask helper functions available
+include("@PACKAGE_protoc_functions_install_cmake_dir@/protoc_functions.cmake")

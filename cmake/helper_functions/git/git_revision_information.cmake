@@ -1,12 +1,12 @@
 function(deprecate_git_mayor_version _variable _access)
   if (_access STREQUAL "READ_ACCESS")
-    message(WARNING "The variable ${_variable} is deprecated. Please use the variable GIT_REVISION_MAJOR instead. The old variable may be removed in future versions of cmake_functions.")
+    message(WARNING "The variable ${_variable} is deprecated. Please use the variable GIT_REVISION_MAJOR instead. The old variable may be removed in future versions.")
   endif ()
 endfunction()
 
 function(deprecate_ecal_build_date _variable _access)
   if (_access STREQUAL "READ_ACCESS")
-    message(WARNING "The variable ${_variable} is deprecated. Please use the variable GIT_REVISION_DATE instead. The old variable may be removed in future versions of cmake_functions.")
+    message(WARNING "The variable ${_variable} is deprecated. Please use the variable GIT_REVISION_DATE instead. The old variable may be removed in future versions.")
   endif ()
 endfunction()
 

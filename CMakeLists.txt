@@ -56,7 +56,7 @@ option(ECAL_JOIN_MULTICAST_TWICE               "Specific Multicast Network Bug W
 option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
 
 # Set option regarding third party library builds
-option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS   "Build CMakeFunctions with eCAL"                                    ON)
+option(ECAL_THIRDPARTY_BUILD_PROTOCFUNCTIONS   "Build ProtocFunctions with eCAL"                                   ON)
 option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                            ON)
 option(ECAL_THIRDPARTY_BUILD_TINYXML2          "Build tinyxml2 with eCAL"                                          ON)
 option(ECAL_THIRDPARTY_BUILD_FINEFTP           "Build fineFTP with eCAL"                                           ON)
@@ -121,8 +121,6 @@ endif()
 # Include auxiliary CMake helpers
 # --------------------------------------------------------
 
-find_package(CMakeFunctions REQUIRED)
-
 include(helper_functions/ecal_add_functions)
 include(helper_functions/ecal_helper_functions)
 include(helper_functions/ecal_install_functions)
@@ -160,13 +158,9 @@ set(possible_subprojects
   CURL
   GTest
   HDF5
-  CMakeFunctions
+  ProtocFunctions
   qwt
 )
-
-# We should rename the option, but don't know how to do in in a 
-# backwards compatible way
-set(ECAL_THIRDPARTY_BUILD_CMAKEFUNCTIONS ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS})
 
 # For each dependency, check if option to build was set or not
 # if so append to `as_subproject` list
@@ -196,6 +190,8 @@ if(MSVC)
   message(STATUS "reset thirdparty warnings for windows platform ..")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
 endif()
+
+find_package(ProtocFunctions REQUIRED)
 
 git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
 set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
