@@ -58,8 +58,6 @@ namespace protobuf
     * The CProtoDynDecoder class is used to decode a protobuf message using protobuf reflection interface. The returned
     * google message objects are owned by CProtoDynDecoder and freed on destruction.
     *
-  **/
-  /**
     * @code
     *            // create dynamic decoder
     *            std::string error_s;
