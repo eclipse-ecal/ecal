@@ -49,7 +49,7 @@ jobs:
         
         export ecal_version_patch="${ecal_patch_array[0]}"
         
-        cd ${{ runner.workspace }}/cleaned/ecal/thirdparty/cmake_functions/git/
+        cd ${{ runner.workspace }}/cleaned/ecal/cmake/helper_functions/git/
         echo "
         function (git_revision_information)
           set(GIT_REVISION_MAJOR ${ecal_version_major}   PARENT_SCOPE)    

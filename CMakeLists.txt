@@ -116,6 +116,23 @@ if(MSVC)
   endif()
 endif()
 
+
+# --------------------------------------------------------
+# Include auxiliary CMake helpers
+# --------------------------------------------------------
+
+find_package(CMakeFunctions REQUIRED)
+
+include(helper_functions/ecal_add_functions)
+include(helper_functions/ecal_helper_functions)
+include(helper_functions/ecal_install_functions)
+include(helper_functions/ecal_python_functions)
+include(helper_functions/git/git_revision_information)
+if (WIN32)
+  include(helper_functions/qt/qt_msvc_path)
+  include(helper_functions/qt/qt_windeployqt)
+endif()
+
 # --------------------------------------------------------
 # detect qt library
 # --------------------------------------------------------
@@ -180,19 +197,12 @@ if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
 endif()
 
-find_package(CMakeFunctions REQUIRED)
-
 git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
 set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
 set(eCAL_VERSION_MINOR  ${GIT_REVISION_MINOR})
 set(eCAL_VERSION_PATCH  ${GIT_REVISION_PATCH})
 set(eCAL_VERSION_STRING ${eCAL_VERSION_MAJOR}.${eCAL_VERSION_MINOR}.${eCAL_VERSION_PATCH})
 set(eCAL_VERSION        ${eCAL_VERSION_STRING})
-
-include(helper_functions/ecal_add_functions)
-include(helper_functions/ecal_helper_functions)
-include(helper_functions/ecal_install_functions)
-include(helper_functions/ecal_python_functions)
 
 if(MSVC)
   set(eCAL_PLATFORM_TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET})
