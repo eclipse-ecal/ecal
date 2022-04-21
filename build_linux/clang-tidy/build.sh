@@ -80,7 +80,7 @@ run cmake, and then optionally make and/or clang-tidy - where:
     -b | --build <build>        build path relative to this script, default: '${PATH_BUILD}'
     -c | --compiler <C> <CXX>   set C & CXX compiler paths
     -m | --make                 run make
-    -i | --filter <app> <cfg>   filtering app & its config rel. to this script or abs. paths, default: '${PATH_FILTER} ${PATH_EXC_CONFIG}'
+    -i | --filter <app> <cfg>   filtering app & its config rel. to this script or abs. paths, default: '${PATH_FILTER}' '${PATH_EXC_CONFIG}'
     -d | --database             run clang-tidy on the compilation database
     -a | --already              already built, all machine-generated codes are available
     -f | --files <files...>     run clang-tidy on the given files (remaining args)
@@ -418,6 +418,10 @@ run_clang_tidy_on_files() {
     fi
 }
 
+tear_down() {
+    rm -f "${DIR_ROOT}/.clang-tidy"
+}
+
 # ------------------------------------------------------------------------------
 
 check_args
@@ -426,6 +430,7 @@ run_make
 filter_compile_commands
 run_clang_tidy_on_database
 run_clang_tidy_on_files
+tear_down
 
 # for GitHub actions
 # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions
