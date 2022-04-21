@@ -62,7 +62,7 @@ namespace protobuf
     *            // create dynamic decoder
     *            std::string error_s;
     *            eCAL::CProtoDynDecoder decoder;
-    *            google::protobuf::Message* msg_obj = decoder.GetProtoMessageFromFile("foo.proto", "FooMessage", error_s);
+    *            std::shared_ptr<google::protobuf::Message> msg_obj(decoder.GetProtoMessageFromFile("foo.proto", "FooMessage", error_s));
     *
     *            // receive a message
     *            std::string msg_s = ReceiveMessageFromAnyWhere("foo");
@@ -79,6 +79,8 @@ namespace protobuf
   public:
     /**
       * @brief Create message from proto file.
+      * 
+      * Note: Ownership of the google::protobuf::Message pointer is passed to the caller.
       *
       * @param       proto_filename_  Proto file name.
       * @param       msg_type_        Type name.
@@ -91,6 +93,8 @@ namespace protobuf
     /**
       * @brief Create message from proto string.
       *
+      * Note: Ownership of the google::protobuf::Message pointer is passed to the caller.
+      *
       * @param       proto_string_  Proto string.
       * @param       msg_type_      Type name.
       * @param [out] error_s_       Error string.
@@ -101,6 +105,8 @@ namespace protobuf
 
     /**
       * @brief Create message from proto descriptor.
+      *
+      * Note: Ownership of the google::protobuf::Message pointer is passed to the caller.
       *
       * @param       proto_desc_  Proto descriptor.
       * @param       msg_type_    Type name.
@@ -113,6 +119,8 @@ namespace protobuf
     /**
       * @brief Create message from serialized proto descriptor string.
       *
+      * Note: Ownership of the google::protobuf::Message pointer is passed to the caller.
+      *
       * @param       msg_desc_    Serialized message descriptor.
       * @param       msg_type_    Type name.
       * @param [out] error_s_     Error string.
@@ -123,6 +131,8 @@ namespace protobuf
 
     /**
       * @brief Create message from proto descriptor set.
+      *
+      * Note: Ownership of the google::protobuf::Message pointer is passed to the caller.
       *
       * @param       proto_desc_set_  Proto descriptor set.
       * @param       msg_type_        Type name.

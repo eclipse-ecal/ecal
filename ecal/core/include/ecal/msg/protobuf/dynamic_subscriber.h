@@ -109,7 +109,11 @@ namespace eCAL
 
       /**
        * @brief get a Pointer to a temporary message that can be passed to receive
+       * 
+       * This function is deprecated and will return a nullptr now.
+       *
       **/
+      [[deprecated]]
       google::protobuf::Message* getMessagePointer();
 
       /**
@@ -150,15 +154,15 @@ namespace eCAL
     protected:
       void OnReceive(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_);
 
-      google::protobuf::Message* CreateMessagePointer(const std::string& topic_name_);
+      std::shared_ptr<google::protobuf::Message> CreateMessagePointer(const std::string& topic_name_);
 
-      bool                              created;
-      std::string                       topic_name;
-      eCAL::protobuf::CProtoDynDecoder* msg_decoder;
-      google::protobuf::Message*        msg_ptr;
-      eCAL::CSubscriber                 msg_sub;
-      ProtoMsgCallbackT                 msg_callback;
-      ProtoErrorCallbackT               err_callback;
+      bool                                        created;
+      std::string                                 topic_name;
+      eCAL::protobuf::CProtoDynDecoder*           msg_decoder;
+      std::shared_ptr<google::protobuf::Message>  msg_ptr;
+      eCAL::CSubscriber                           msg_sub;
+      ProtoMsgCallbackT                           msg_callback;
+      ProtoErrorCallbackT                         err_callback;
 
     private:
       // this object must not be copied.
@@ -171,15 +175,13 @@ namespace eCAL
 
     inline CDynamicSubscriber::CDynamicSubscriber() :
       created(false),
-      msg_decoder(nullptr),
-      msg_ptr(nullptr)
+      msg_decoder(nullptr)
     {
     }
 
     inline CDynamicSubscriber::CDynamicSubscriber(const std::string& topic_name_) :
       created(false),
-      msg_decoder(nullptr),
-      msg_ptr(nullptr)
+      msg_decoder(nullptr)
     {
       Create(topic_name_);
     }
@@ -213,7 +215,7 @@ namespace eCAL
       msg_sub.Destroy();
 
       // delete message pointer
-      delete msg_ptr;
+      msg_ptr = nullptr;
 
       // delete message decoder
       delete msg_decoder;
@@ -223,19 +225,7 @@ namespace eCAL
 
     inline google::protobuf::Message* CDynamicSubscriber::getMessagePointer()
     {
-      try
-      {
-        // Create Message Pointer for our topic name.
-        if (msg_ptr == nullptr)
-        {
-          msg_ptr = CreateMessagePointer(topic_name);
-        }
-      }
-      catch (DynamicReflectionException& /*e*/)
-      {
-        return nullptr;
-      }
-      return msg_ptr;
+      return nullptr;
     }
 
     inline bool CDynamicSubscriber::Receive(google::protobuf::Message& msg_, long long* time_, int rcv_timeout_)
@@ -295,22 +285,7 @@ namespace eCAL
           }
           else
           {
-            // If deserialization failed we check for message size.
-            // Empty messages will set to a minimum size of 1 byte
-            // by the protobuf::CPublisher::GetSize function to force
-            // the transport through all layers.
-            // In this case we clear the message object and
-            // return success.
-            if (data_->size == 1)
-            {
-              msg_ptr->Clear();
-              msg_callback(topic_name_, *msg_ptr, data_->time);
-            }
-            else
-            {
-              throw DynamicReflectionException("CDynamicSubscriber: DataContent could not be parsed");
-            }
-
+            throw DynamicReflectionException("CDynamicSubscriber: DataContent could not be parsed");
           }
         }
       }
@@ -326,7 +301,7 @@ namespace eCAL
     /*
     * Might throw DynamicReflectionException!
     */
-    inline google::protobuf::Message* CDynamicSubscriber::CreateMessagePointer(const std::string& topic_name_)
+    inline std::shared_ptr<google::protobuf::Message> CDynamicSubscriber::CreateMessagePointer(const std::string& topic_name_)
     {
       // get topic type
       std::string topic_type = eCAL::Util::GetTopicTypeName(topic_name_);
@@ -346,8 +321,8 @@ namespace eCAL
       google::protobuf::FileDescriptorSet proto_desc;
       proto_desc.ParseFromString(topic_desc);
       std::string error_s;
-      msg_ptr = msg_decoder->GetProtoMessageFromDescriptorSet(proto_desc, topic_type, error_s);
-      if (msg_ptr == nullptr)
+      std::shared_ptr<google::protobuf::Message> proto_msg_ptr(msg_decoder->GetProtoMessageFromDescriptorSet(proto_desc, topic_type, error_s));
+      if (proto_msg_ptr == nullptr)
       {
         std::stringstream s;
         s << "CDynamicSubscriber: Message of type " + std::string(topic_name_) << " could not be decoded" << std::endl;
@@ -355,7 +330,7 @@ namespace eCAL
         throw DynamicReflectionException(s.str());
       }
 
-      return msg_ptr;
+      return proto_msg_ptr;
     }
   }
 }

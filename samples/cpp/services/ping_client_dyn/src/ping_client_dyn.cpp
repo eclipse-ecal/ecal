@@ -20,10 +20,11 @@
 #include <ecal/ecal.h>
 #include <ecal/protobuf/ecal_proto_dyn.h>
 
-#include <iostream>
 #include <chrono>
-#include <thread>
+#include <iostream>
+#include <memory>
 #include <stdexcept>
+#include <thread>
 
 #include "proto_json_conv.h"
 
@@ -64,11 +65,11 @@ int main(int argc, char **argv)
   std::string error_s;
 
   // create the request message object
-  google::protobuf::Message* req_msg = dyn_decoder.GetProtoMessageFromDescriptor(req_desc, req_type, error_s);
+  std::shared_ptr<google::protobuf::Message> req_msg(dyn_decoder.GetProtoMessageFromDescriptor(req_desc, req_type, error_s));
   if (!req_msg) throw std::runtime_error("Could not create request message object: " + error_s);
 
   // create the response message object
-  google::protobuf::Message* resp_msg = dyn_decoder.GetProtoMessageFromDescriptor(resp_desc, resp_type, error_s);
+  std::shared_ptr<google::protobuf::Message> resp_msg(dyn_decoder.GetProtoMessageFromDescriptor(resp_desc, resp_type, error_s));
   if (!resp_msg) throw std::runtime_error("Could not create response message object: " + error_s);
 
   int cnt(0);
@@ -76,7 +77,7 @@ int main(int argc, char **argv)
   {
     // create JSON request
     std::string req_json = "{\"message\": \"HELLO WORLD FROM DYNAMIC PING CLIENT (" + std::to_string(++cnt) + ")\"}";
-    std::string ping_request = GetSerialzedMessageFromJSON(req_msg, req_json);
+    std::string ping_request = GetSerialzedMessageFromJSON(req_msg.get(), req_json);
 
     if (!ping_request.empty())
     {
@@ -93,7 +94,7 @@ int main(int argc, char **argv)
           // service successful executed
           case call_state_executed:
           {
-            std::string resp_json = GetJSONFromSerialzedMessage(resp_msg, service_response.response);
+            std::string resp_json = GetJSONFromSerialzedMessage(resp_msg.get(), service_response.response);
             std::cout << "Received response PingService / Ping         (JSON) : " << resp_json << " from host " << service_response.host_name << std::endl;
           }
           break;

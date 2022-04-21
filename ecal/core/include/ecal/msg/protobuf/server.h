@@ -224,16 +224,10 @@ namespace eCAL
         google::protobuf::FileDescriptorProto* pdesc = pset.add_file();
         pdesc->CopyFrom(file_desc_proto);
 
-        auto req_msg = msg_decoder.GetProtoMessageFromDescriptorSet(pset, type_name_, error_s_);
+        std::shared_ptr<google::protobuf::Message> req_msg(msg_decoder.GetProtoMessageFromDescriptorSet(pset, type_name_, error_s_));
         if (!req_msg) return false;
 
-#ifdef I_WANT_TO_HAVE_IT_HUMAN_READABLE
-        auto req_desc = req_msg->GetDescriptor();
-        if (!req_desc) return false;
-        type_desc_ = req_desc->DebugString();
-#else
         type_desc_ = pset.SerializeAsString();
-#endif
         return true;
       }
 
