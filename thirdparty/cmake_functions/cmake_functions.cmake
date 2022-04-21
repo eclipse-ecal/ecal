@@ -24,9 +24,11 @@ if(WIN32)
 endif()
 
 # Set list of all files to be installed by CMake Script.
-set(file_list
-  ${file_list_include}
-  ${file_list_no_include}
+set(install_file_list
+  protoc_functions/protoc_generate_files.cmake
+  protoc_functions/protoc_generate_cpp.cmake
+  protoc_functions/protoc_generate_python.cmake
+  target_definitions/targets_protobuf.cmake
 )
 
 # Include all files which need to be included

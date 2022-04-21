@@ -35,7 +35,7 @@ install(FILES
   DESTINATION "${cmake_functions_install_cmake_dir}"
 ) 
 
-foreach (f ${file_list})
+foreach (f ${install_file_list})
   get_filename_component( dir ${f} DIRECTORY )
   install( FILES ${f} DESTINATION "${cmake_functions_install_cmake_dir}/${dir}" )
 endforeach()
