@@ -46,21 +46,33 @@
      <addaction name="actiondummy"/>
     </widget>
     <widget class="QMenu" name="menuChannel_Mapping">
+     <property name="contextMenuPolicy">
+      <enum>Qt::NoContextMenu</enum>
+     </property>
      <property name="title">
       <string>Channel &amp;Mapping</string>
      </property>
      <addaction name="action_save_channel_mapping"/>
+     <addaction name="action_save_channel_mapping_as"/>
      <addaction name="action_load_channel_mapping"/>
      <addaction name="separator"/>
      <addaction name="action_default_mapping_file_ask"/>
      <addaction name="action_default_mapping_file_load"/>
      <addaction name="action_default_mapping_file_ignore"/>
     </widget>
+    <widget class="QMenu" name="menuLabels">
+     <property name="title">
+      <string>&amp;Labels</string>
+     </property>
+     <addaction name="action_save_scenarios"/>
+     <addaction name="action_save_scenarios_as"/>
+     <addaction name="action_load_scenario"/>
+    </widget>
     <addaction name="action_load_measurement"/>
     <addaction name="menu_recent_measurement"/>
     <addaction name="action_close_measurement"/>
     <addaction name="separator"/>
-    <addaction name="action_save_scenarios"/>
+    <addaction name="menuLabels"/>
     <addaction name="menuChannel_Mapping"/>
     <addaction name="separator"/>
     <addaction name="action_exit"/>
@@ -466,7 +478,7 @@
     <string>Debug console...</string>
    </property>
   </action>
-  <action name="action_save_channel_mapping">
+  <action name="action_save_channel_mapping_as">
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -475,10 +487,7 @@
      <normaloff>:/ecalicons/SAVE_AS</normaloff>:/ecalicons/SAVE_AS</iconset>
    </property>
    <property name="text">
-    <string>&amp;Save Channel Mapping as...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Shift+S</string>
+    <string>Save Channel Mapping &amp;as...</string>
    </property>
   </action>
   <action name="action_load_channel_mapping">
@@ -554,6 +563,42 @@
    </property>
    <property name="text">
     <string>Dark</string>
+   </property>
+  </action>
+  <action name="action_save_scenarios_as">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/SAVE_AS</normaloff>:/ecalicons/SAVE_AS</iconset>
+   </property>
+   <property name="text">
+    <string>Save labels &amp;as...</string>
+   </property>
+  </action>
+  <action name="action_load_scenario">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/OPEN</normaloff>:/ecalicons/OPEN</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open labels...</string>
+   </property>
+  </action>
+  <action name="action_save_channel_mapping">
+   <property name="icon">
+    <iconset resource="../../../iconset/ecalicons.qrc">
+     <normaloff>:/ecalicons/SAVE</normaloff>:/ecalicons/SAVE</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Save Channel Mapping</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
  </widget>

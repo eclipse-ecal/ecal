@@ -105,6 +105,11 @@ This project has dependencies - list with dependency name and license follows.
   - Copyright 2013-2019 Freepik Company S.L. All rights reserved.
   - URL: https://www.flaticon.com/
   - License: Creative Commons 3.0 - https://creativecommons.org/licenses/by/3.0
+  
+2.4.3 Qwt
+  - Uwe Rathmann, Josef Wilgen ( <= Qwt 0.2 )
+  - URL: https://sourceforge.net/p/qwt/git/ci/develop/tree
+  - License: Qwt License Version 1.0, January 1, 2003
 
 2.5 Testing
 

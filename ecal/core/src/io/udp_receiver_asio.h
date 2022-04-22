@@ -30,8 +30,8 @@
 #pragma warning(pop)
 #endif
 
-namespace eCAL {
-
+namespace eCAL
+{
   class CUDPReceiverAsio : public CUDPReceiverBase
   {
   public:
@@ -47,6 +47,7 @@ namespace eCAL {
   protected:
     void RunIOContext(const asio::chrono::steady_clock::duration& timeout);
 
+    bool                    m_created;
     bool                    m_broadcast;
     bool                    m_unicast;
     asio::io_context        m_iocontext;

@@ -27,6 +27,8 @@ So, let's get started!
    .. image:: img/setup.png
       :alt: eCAL Setup
 
+.. _getting_started_setup_ubuntu:
+
 |fa-ubuntu| Installing eCAL on Ubuntu
 =====================================
 

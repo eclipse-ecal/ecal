@@ -74,12 +74,14 @@ public:
   bool    isEnforceDelayAccuracyEnabled() const;
   QString stepReferenceChannel() const;
   std::map<std::string, std::string> channelMapping() const;
+  bool channelMappingModified() const;
   std::pair<long long, long long> limitInterval() const;
 
   ChannelMappingFileAction channelMappingFileAction() const;
 
-  std::map<std::string, std::string> loadChannelMappingFile(const QString& path) const;
+  std::map<std::string, std::string> loadChannelMappingFile(const QString& path);
   void loadChannelMappingFileFromFileDialog();
+  void loadScenarioFromFileDialog();
 
   // State
   EcalPlayState currentPlayState() const;
@@ -120,13 +122,14 @@ public slots:
   //// Setters                                                              ////
   //////////////////////////////////////////////////////////////////////////////
   void setScenarios(const std::vector<EcalPlayScenario>& scenarios);
-  bool saveScenariosToDisk(bool suppress_blocking_dialogs = false);
+  bool saveScenariosToDisk(bool suppress_blocking_dialogs = false, const std::string& selected_dir = "", const std::string& selected_file = "");
+  bool saveScenariosToDiskAs();
   void setRepeatEnabled(bool enabled);
   void setPlaySpeed(double play_speed);
   void setLimitPlaySpeedEnabled(bool enabled);
   void setFrameDroppingAllowed(bool allowed);
   void setStepReferenceChannel(const QString& step_reference_chanel);
-  void setChannelMapping(const std::map<std::string, std::string>& channel_mapping);
+  void setChannelMapping(const std::map<std::string, std::string>& channel_mapping, bool onlyUpdateNoSignalling = false);
   void setEnforceDelayAccuracyEnabled(bool enabled);
 
   bool setLimitInterval(const std::pair<long long, long long>& limit_interval);
@@ -137,10 +140,12 @@ public slots:
 signals:
   void scenariosChangedSignal(const std::vector<EcalPlayScenario>& scenarios);
   void scenariosSavedSignal() const;
+  void scenariosLoadedSignal();
   void measurementLoadedSignal(const QString& path);
   void measurementClosedSignal();
   void publishersInitStateChangedSignal(bool publishers_initialized);
   void playStateChangedSignal(const EcalPlayState& current_state);
+  void channelMappingSavedSignal() const;
 
   void repeatEnabledChangedSignal(bool enabled); 
   void playSpeedChangedSignal(double play_speed);
@@ -150,6 +155,7 @@ signals:
 
   void stepReferenceChannelChangedSignal(const QString& step_reference_channel);
   void channelMappingChangedSignal(const std::map<std::string, std::string>& channel_mapping);
+  void channelMappingLoadedSignal(const std::map<std::string, std::string>& channel_mapping);
 
   void limitIntervalChangedSignal(const std::pair<long long, long long> indexes, const std::pair<eCAL::Time::ecal_clock::time_point, eCAL::Time::ecal_clock::time_point>& time_points);
 
@@ -180,6 +186,7 @@ private:
   QString step_reference_channel_;
 
   bool scenarios_modified_;
+  bool channel_mapping_modified_;
 
   static QWidget* widgetOf(QObject* q_object);
   bool isChannelMappingRelevant(const std::map<std::string, std::string>& channel_mapping) const;

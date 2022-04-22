@@ -23,18 +23,22 @@ import google.protobuf.descriptor_pb2
 
 
 # define add protobuf description for message incl. dependencies
-def add_proto_desc(file_desc_set, file_desc):
+def add_proto_desc(file_desc_set, file_desc, inserted_files):
   """ Add the file descriptor and all its dependencies to the protobuf file descriptor set
 
   :param file_desc_set: a protobuf file descriptor set
   :param file_desc:     the current file descriptor
 
   """
-  for dep in file_desc.dependencies:
-    add_proto_desc(file_desc_set, dep)
-  desc_proto = file_desc_set.file.add()
-  file_desc.CopyToProto(desc_proto)
+  # Do not add descriptors twice
+  if not file_desc.name in inserted_files:
+    inserted_files.add(file_desc.name)
+    for dep in file_desc.dependencies:
+      add_proto_desc(file_desc_set, dep, inserted_files)
 
+    current_file_desc = google.protobuf.descriptor_pb2.FileDescriptorProto()
+    file_desc.CopyToProto(current_file_desc)
+    file_desc_set.file.append(current_file_desc)
 
 # define get function for protobuf message descriptor
 def get_descriptor_from_type(type_):
@@ -46,7 +50,8 @@ def get_descriptor_from_type(type_):
   """
   file_desc_set = google.protobuf.descriptor_pb2.FileDescriptorSet()
   desc_file = type_.DESCRIPTOR.file
-  add_proto_desc(file_desc_set, desc_file)
+  tracing_set = set()
+  add_proto_desc(file_desc_set, desc_file, tracing_set)
   return file_desc_set.SerializeToString()
   
 # define get function for protobuf message descriptor

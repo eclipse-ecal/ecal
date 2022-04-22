@@ -108,6 +108,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_HDF5=ON ^
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON ^
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON ^
+        -DECAL_THIRDPARTY_BUILD_QWT=OFF ^
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Debug ^
@@ -145,6 +146,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_HDF5=ON ^
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON ^
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON ^
+        -DECAL_THIRDPARTY_BUILD_QWT=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Release ^

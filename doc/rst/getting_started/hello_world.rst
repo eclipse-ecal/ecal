@@ -44,6 +44,8 @@ First, you have to install some more development dependencies:
 
      sudo apt install cmake g++ libprotobuf-dev protobuf-compiler
 
+.. _getting_started_hello_world_publisher:
+
 Hello World Publisher
 =====================
 
@@ -129,6 +131,8 @@ You will see the "Hello World Publisher" process and the "hello_world_topic".
 
 .. image:: img/hello_world_snd_monitor.png
    :alt: eCAL Monitor Hello World
+
+.. _getting_started_hello_world_subscriber:
 
 Hello World Subscriber
 ======================
