@@ -26,8 +26,9 @@ import google.protobuf.descriptor_pb2
 def add_proto_desc(file_desc_set, file_desc, inserted_files):
   """ Add the file descriptor and all its dependencies to the protobuf file descriptor set
 
-  :param file_desc_set: a protobuf file descriptor set
-  :param file_desc:     the current file descriptor
+  :param file_desc_set:  a protobuf file descriptor set
+  :param file_desc:      the current file descriptor
+  :param inserted_files: accumulator variable for checking whether the file has already been inserted.
 
   """
   # Do not add descriptors twice
@@ -36,9 +37,8 @@ def add_proto_desc(file_desc_set, file_desc, inserted_files):
     for dep in file_desc.dependencies:
       add_proto_desc(file_desc_set, dep, inserted_files)
 
-    current_file_desc = google.protobuf.descriptor_pb2.FileDescriptorProto()
-    file_desc.CopyToProto(current_file_desc)
-    file_desc_set.file.append(current_file_desc)
+    desc_proto = file_desc_set.file.add()
+    file_desc.CopyToProto(desc_proto)
 
 # define get function for protobuf message descriptor
 def get_descriptor_from_type(type_):
