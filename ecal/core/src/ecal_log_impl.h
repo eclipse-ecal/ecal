@@ -133,9 +133,9 @@ namespace eCAL
     FILE*                        m_logfile;
 
     eCAL_Logging_eLogLevel       m_level;
-    char                         m_filter_mask_con;
-    char                         m_filter_mask_file;
-    char                         m_filter_mask_udp;
+    eCAL_Logging_Filter          m_filter_mask_con;
+    eCAL_Logging_Filter          m_filter_mask_file;
+    eCAL_Logging_Filter          m_filter_mask_udp;
 
     std::chrono::duration<double> m_core_time;
 

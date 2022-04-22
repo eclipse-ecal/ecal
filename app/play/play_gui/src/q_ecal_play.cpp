@@ -46,6 +46,7 @@
 QEcalPlay::QEcalPlay()
   : ecal_play_()
   , scenarios_modified_(false)
+  , channel_mapping_modified_(false)
 {
   // Start the timer that periodically updates the state
   periodic_update_timer_ = new QTimer(this);
@@ -183,6 +184,11 @@ std::map<std::string, std::string> QEcalPlay::channelMapping() const
   return channel_mapping_;
 }
 
+bool QEcalPlay::channelMappingModified() const
+{
+  return channel_mapping_modified_;
+}
+
 std::pair<long long, long long> QEcalPlay::limitInterval() const
 {
   return ecal_play_.GetLimitInterval();
@@ -193,7 +199,7 @@ QEcalPlay::ChannelMappingFileAction QEcalPlay::channelMappingFileAction() const
   return channel_mapping_file_action_;
 }
 
-std::map<std::string, std::string> QEcalPlay::loadChannelMappingFile(const QString& path) const
+std::map<std::string, std::string> QEcalPlay::loadChannelMappingFile(const QString& path)
 {
   return ecal_play_.LoadChannelMappingFile(path.toStdString());
 }
@@ -203,16 +209,28 @@ void QEcalPlay::loadChannelMappingFileFromFileDialog()
   QWidget* caller = widgetOf(sender());
 
   QString start_dir = "";
-  QString measurement_dir = measurementDirectory();
-  if (!measurement_dir.isEmpty())
+  QString loaded_channel_mapping_path = QString::fromStdString(ecal_play_.GetChannelMappingPath());
+  if (!loaded_channel_mapping_path.isEmpty())
   {
-    start_dir = measurement_dir + "/doc/";
+    QFileInfo fi(loaded_channel_mapping_path);
+    start_dir = fi.absolutePath();
   }
+  else
+  {
+    QString measurement_dir = measurementDirectory();
+    if (!measurement_dir.isEmpty())
+    {
+      start_dir = measurement_dir + "/doc/";
+    }
+  }
+
   QString channel_mapping_path = QFileDialog::getOpenFileName(caller, "Load Channel Mapping", start_dir, "Text files (*.txt);;All files (*)");
   if (!channel_mapping_path.isEmpty())
   {
     auto channel_mapping = loadChannelMappingFile(channel_mapping_path);
-    setChannelMapping(channel_mapping);
+    channel_mapping_ = channel_mapping;
+    channel_mapping_modified_ = false;
+    emit channelMappingLoadedSignal(channel_mapping_);
   }
 }
 
@@ -399,7 +417,9 @@ bool QEcalPlay::loadMeasurement(const QString& path, bool suppress_blocking_dial
 
     if (apply_mapping)
     {
-      QEcalPlay::instance()->setChannelMapping(channel_mapping);
+      channel_mapping_ = channel_mapping;
+      channel_mapping_modified_ = false;
+      emit channelMappingLoadedSignal(channel_mapping_);
     }
   }
   else 
@@ -426,10 +446,18 @@ bool QEcalPlay::saveChannelMappingAs()
   QWidget* caller = widgetOf(sender());
 
   QString start_dir = "";
-  QString measurement_directory = measurementDirectory();
-  if (!measurement_directory.isEmpty())
+  QString loaded_channel_mapping_path = QString::fromStdString(ecal_play_.GetChannelMappingPath());
+  if (!loaded_channel_mapping_path.isEmpty())
   {
-    start_dir = measurement_directory + "/doc/chn_name_mapping.txt";
+    start_dir = loaded_channel_mapping_path;
+  }
+  else
+  {
+    QString measurement_directory = measurementDirectory();
+    if (!measurement_directory.isEmpty())
+    {
+      start_dir = measurement_directory + "/doc/chn_name_mapping.txt";
+    }
   }
   QString channel_mapping_path = QFileDialog::getSaveFileName(caller, "Export Channel Mapping", start_dir, "Text files (*.txt);;All files (*)");
   if (!channel_mapping_path.isEmpty())
@@ -451,24 +479,32 @@ bool QEcalPlay::saveChannelMapping(const QString& path, bool omit_blocking_dialo
 
   if (path == "")
   {
-    QString measurement_directory = measurementDirectory();
-    if (measurement_directory.isEmpty())
+    QString loaded_channel_mapping_path = QString::fromStdString(ecal_play_.GetChannelMappingPath());
+    if (!loaded_channel_mapping_path.isEmpty())
     {
-      EcalPlayLogger::Instance()->error("Error saving Channel mapping to the default path: No measurement loaded or measurement folder unknown.");
-      if (!omit_blocking_dialogs)
-      {
-        QMessageBox error_message(
-          QMessageBox::Icon::Critical
-          , tr("Error")
-          , tr("Error saving Channel mapping to the default path: No measurement loaded or measurement folder unknown.")
-          , QMessageBox::Button::Ok
-          , caller);
-        error_message.setWindowIcon(icon);
-        error_message.exec();
-      }
-      return false;
+      channel_mapping_file.setFileName(loaded_channel_mapping_path);
     }
-    channel_mapping_file.setFileName(measurement_directory + "/doc/chn_name_mapping.txt");
+    else
+    {
+      QString measurement_directory = measurementDirectory();
+      if (measurement_directory.isEmpty())
+      {
+        EcalPlayLogger::Instance()->error("Error saving Channel mapping to the default path: No measurement loaded or measurement folder unknown.");
+        if (!omit_blocking_dialogs)
+        {
+          QMessageBox error_message(
+            QMessageBox::Icon::Critical
+            , tr("Error")
+            , tr("Error saving Channel mapping to the default path: No measurement loaded or measurement folder unknown.")
+            , QMessageBox::Button::Ok
+            , caller);
+          error_message.setWindowIcon(icon);
+          error_message.exec();
+        }
+        return false;
+      }
+      channel_mapping_file.setFileName(measurement_directory + "/doc/chn_name_mapping.txt");
+    }
   }
   else
   {
@@ -488,6 +524,11 @@ bool QEcalPlay::saveChannelMapping(const QString& path, bool omit_blocking_dialo
       file_stream << channel_mapping_pair.first.c_str() << "\t" << channel_mapping_pair.second.c_str() << "\n";
     }
     channel_mapping_file.close();
+    channel_mapping_modified_ = false;
+    emit channelMappingSavedSignal();
+
+    ecal_play_.SetChannelMappingPath(channel_mapping_file_info.absoluteFilePath().toStdString());
+
     return true;
   }
   else
@@ -519,7 +560,9 @@ void QEcalPlay::closeMeasurement(bool omit_blocking_dialogs)
   emit measurementClosedSignal();
   emit publishersInitStateChangedSignal(false);
 
-  setChannelMapping(std::map<std::string, std::string>());
+  channel_mapping_modified_ = false;
+  channel_mapping_ = std::map<std::string, std::string>();
+  emit channelMappingLoadedSignal(channel_mapping_);
   setStepReferenceChannel("");
 }
 
@@ -744,9 +787,9 @@ void QEcalPlay::setScenarios(const std::vector<EcalPlayScenario>& scenarios)
   }
 }
 
-bool QEcalPlay::saveScenariosToDisk(bool suppress_blocking_dialogs)
+bool QEcalPlay::saveScenariosToDisk(bool suppress_blocking_dialogs, const std::string& selected_dir, const std::string& selected_file)
 {
-  bool success = ecal_play_.SaveScenariosToDisk();
+  bool success = ecal_play_.SaveScenariosToDisk(selected_dir, selected_file);
 
 
   if (success)
@@ -772,6 +815,67 @@ bool QEcalPlay::saveScenariosToDisk(bool suppress_blocking_dialogs)
   } 
 
   return success;
+}
+
+bool QEcalPlay::saveScenariosToDiskAs()
+{
+  QWidget* caller = widgetOf(sender());
+
+  QString start_dir = "";
+
+  QString scenario_path = QString::fromStdString(ecal_play_.GetScenariosPath());
+  if (!scenario_path.isEmpty())
+  {
+    start_dir = scenario_path;
+  }
+  else
+  {
+    QString measurement_dir = measurementDirectory();
+    if (!measurement_dir.isEmpty())
+    {
+      start_dir = measurement_dir + "/doc/scenario.txt";
+    }
+  }
+
+  QString selected_file = QFileDialog::getSaveFileName(caller, "Save labels as", start_dir, tr("Text files (*.txt);;All files (*)"));
+  if (!selected_file.isEmpty())
+  {
+    QFileInfo fi(selected_file);
+    return saveScenariosToDisk(false, fi.absolutePath().toStdString(), fi.absoluteFilePath().toStdString());
+  }
+  else
+  {
+    return false;
+  }
+}
+
+void QEcalPlay::loadScenarioFromFileDialog()
+{
+  QWidget* caller = widgetOf(sender());
+
+  QString start_dir = "";
+
+  QString scenario_dir = QString::fromStdString(ecal_play_.GetScenariosDirectory());
+  if (!scenario_dir.isEmpty())
+  {
+    start_dir = scenario_dir;
+  }
+  else
+  {
+    QString measurement_dir = measurementDirectory();
+    if (!measurement_dir.isEmpty())
+    {
+      start_dir = measurement_dir + "/doc/";
+    }
+  }
+
+  QString scenario_path = QFileDialog::getOpenFileName(caller, "Load labels", start_dir, "Text files (*.txt);;All files (*)");
+  if (!scenario_path.isEmpty())
+  {
+    QFileInfo fi(scenario_path);
+    ecal_play_.LoadScenarios(fi.absolutePath().toStdString(), fi.absoluteFilePath().toStdString());
+    emit scenariosLoadedSignal();
+  }
 }
 
 void QEcalPlay::setRepeatEnabled(bool enabled)
@@ -843,15 +947,26 @@ void QEcalPlay::setChannelMappingFileAction(ChannelMappingFileAction action)
   emit channelMappingFileActionChangedSignal(action);
 }
 
-void QEcalPlay::setChannelMapping(const std::map<std::string, std::string>& channel_mapping)
+void QEcalPlay::setChannelMapping(const std::map<std::string, std::string>& channel_mapping, bool onlyUpdateNoSignalling)
 {
-  channel_mapping_ = channel_mapping;
-
-  emit channelMappingChangedSignal(channel_mapping_);
-
-  if (channel_mapping_.find(step_reference_channel_.toStdString()) == channel_mapping_.end())
+  if (onlyUpdateNoSignalling)
   {
-    setStepReferenceChannel("");
+      channel_mapping_ = channel_mapping;
+      return;
+  }
+
+  bool something_changed = channel_mapping_modified_ || (channelMapping() != channel_mapping);
+
+  if (something_changed)
+  {
+    channel_mapping_modified_ = true;
+    channel_mapping_ = channel_mapping;
+    emit channelMappingChangedSignal(channel_mapping_);
+
+    if (channel_mapping_.find(step_reference_channel_.toStdString()) == channel_mapping_.end())
+    {
+      setStepReferenceChannel("");
+    }
   }
 }
 

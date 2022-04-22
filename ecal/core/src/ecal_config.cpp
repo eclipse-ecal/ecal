@@ -18,10 +18,69 @@
 */
 
 #include <ecal/ecal_config.h>
+#include <ecal/ecal_log_level.h>
 
 #include "ecal_config_reader.h"
 #include "ecal_config_reader_hlp.h"
 #include "ecal_def.h"
+
+
+
+namespace
+{
+  void tokenize(const std::string& str, std::vector<std::string>& tokens,
+    const std::string& delimiters = " ", bool trimEmpty = false)
+  {
+    std::string::size_type pos, lastPos = 0;
+
+    for (;;)
+    {
+      pos = str.find_first_of(delimiters, lastPos);
+      if (pos == std::string::npos)
+      {
+        pos = str.length();
+        if (pos != lastPos || !trimEmpty)
+        {
+          tokens.emplace_back(std::string(str.data() + lastPos, pos - lastPos));
+        }
+        break;
+      }
+      else
+      {
+        if (pos != lastPos || !trimEmpty)
+        {
+          tokens.emplace_back(std::string(str.data() + lastPos, pos - lastPos));
+        }
+      }
+      lastPos = pos + 1;
+    }
+  }
+
+
+  eCAL_Logging_Filter ParseLogLevel(const std::string& filter_)
+  {
+    // tokenize it
+    std::vector<std::string> token_filter_;
+    tokenize(filter_, token_filter_, " ,;");
+    // create excluding filter list
+    char filter_mask = log_level_none;
+    for (auto& it : token_filter_)
+    {
+      if (it == "all")     filter_mask |= log_level_all;
+      if (it == "info")    filter_mask |= log_level_info;
+      if (it == "warning") filter_mask |= log_level_warning;
+      if (it == "error")   filter_mask |= log_level_error;
+      if (it == "fatal")   filter_mask |= log_level_fatal;
+      if (it == "debug1")  filter_mask |= log_level_debug1;
+      if (it == "debug2")  filter_mask |= log_level_debug2;
+      if (it == "debug3")  filter_mask |= log_level_debug3;
+      if (it == "debug4")  filter_mask |= log_level_debug4;
+    }
+    return(filter_mask);
+  }
+
+}
+
 
 namespace eCAL
 {
@@ -78,12 +137,12 @@ namespace eCAL
     // monitoring
     /////////////////////////////////////
     
-    ECAL_API int               GetMonitoringTimeoutMs               () { return eCALPAR(MON, TIMEOUT); }
-    ECAL_API std::string       GetMonitoringFilterExcludeList       () { return eCALPAR(MON, FILTER_EXCL); }
-    ECAL_API std::string       GetMonitoringFilterIncludeList       () { return eCALPAR(MON, FILTER_INCL); }
-    ECAL_API std::string       GetConsoleLogFilter                  () { return eCALPAR(MON, LOG_FILTER_CON); }
-    ECAL_API std::string       GetFileLogFilter                     () { return eCALPAR(MON, LOG_FILTER_FILE); }
-    ECAL_API std::string       GetUdpLogFilter                      () { return eCALPAR(MON, LOG_FILTER_UDP); }
+    ECAL_API int                 GetMonitoringTimeoutMs               () { return eCALPAR(MON, TIMEOUT); }
+    ECAL_API std::string         GetMonitoringFilterExcludeList       () { return eCALPAR(MON, FILTER_EXCL); }
+    ECAL_API std::string         GetMonitoringFilterIncludeList       () { return eCALPAR(MON, FILTER_INCL); }
+    ECAL_API eCAL_Logging_Filter GetConsoleLogFilter                  () { return ParseLogLevel(eCALPAR(MON, LOG_FILTER_CON)); }
+    ECAL_API eCAL_Logging_Filter GetFileLogFilter                     () { return ParseLogLevel(eCALPAR(MON, LOG_FILTER_FILE)); }
+    ECAL_API eCAL_Logging_Filter GetUdpLogFilter                      () { return ParseLogLevel(eCALPAR(MON, LOG_FILTER_UDP)); }
 
     /////////////////////////////////////
     // sys
@@ -100,11 +159,11 @@ namespace eCAL
     ECAL_API TLayer::eSendMode GetPublisherTcpMode                  () { return TLayer::eSendMode(eCALPAR(PUB, USE_TCP)); }
     ECAL_API TLayer::eSendMode GetPublisherInprocMode               () { return TLayer::eSendMode(eCALPAR(PUB, USE_INPROC)); }
 
-    ECAL_API int               GetMemfileMinsizeBytes               () { return eCALPAR(PUB, MEMFILE_MINSIZE); }
-    ECAL_API int               GetMemfileOverprovisioningPercentage () { return eCALPAR(PUB, MEMFILE_RESERVE); }
+    ECAL_API size_t            GetMemfileMinsizeBytes               () { return static_cast<size_t>(eCALPAR(PUB, MEMFILE_MINSIZE)); }
+    ECAL_API size_t            GetMemfileOverprovisioningPercentage () { return static_cast<size_t>(eCALPAR(PUB, MEMFILE_RESERVE)); }
     ECAL_API int               GetMemfileAckTimeoutMs               () { return eCALPAR(PUB, MEMFILE_ACK_TO); }
     ECAL_API bool              IsMemfileZerocopyEnabled             () { return (eCALPAR(PUB, MEMFILE_ZERO_COPY) != 0); }
-    ECAL_API int               GetMemfileBufferCount                () { return eCALPAR(PUB, MEMFILE_BUF_COUNT); }
+    ECAL_API size_t            GetMemfileBufferCount                () { return static_cast<size_t>(eCALPAR(PUB, MEMFILE_BUF_COUNT)); }
 
     ECAL_API bool              IsTopicTypeSharingEnabled            () { return (eCALPAR(PUB, SHARE_TTYPE) != 0); }
     ECAL_API bool              IsTopicDescriptionSharingEnabled     () { return (eCALPAR(PUB, SHARE_TDESC) != 0); }

@@ -213,9 +213,11 @@ namespace eCAL
 
       auto it = std::find_if(search_directories.begin(), search_directories.end(), IsValidConfigFilePath);
       // We should have encountered a valid path
-      assert(it != search_directories.end());
+      if (it != search_directories.end())
+        return (*it);
 
-      return(*it);
+      // If valid path is not encountered, defaults should be used
+      return std::string("");
     }
 
     ECAL_API std::string GeteCALUserSettingsPath()

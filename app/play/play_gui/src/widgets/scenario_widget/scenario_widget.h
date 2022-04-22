@@ -39,6 +39,7 @@ public:
 public slots:
   void measurementLoaded(const QString& path);
   void measurementClosed();
+  void reloadScenarios();
 
   void resetLayout();
 

@@ -234,8 +234,6 @@ void ChannelTreeModel::reload()
     new_channel_list.push_back(channel_item);
   }
   insertItems(new_channel_list);
-
-  updateMessageCounters();
 }
 
 void ChannelTreeModel::updateMessageCounters()

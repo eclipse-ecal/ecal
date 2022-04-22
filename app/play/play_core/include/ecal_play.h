@@ -172,6 +172,54 @@ public:
   std::string GetMeasurementDirectory() const;
 
   /**
+   * @brief Returns the directory of the loaded scenario
+   *
+   * The returned path always points to the loaded scenario directory
+   *
+   * @return the directory of the current scenario (or an empty string, if no scenario has been loaded)
+   */
+  std::string GetScenariosDirectory() const;
+
+  /**
+   * @brief Returns the full path of the loaded scenario
+   *
+   * The returned path always points to the loaded scenario
+   *
+   * @return the path of the current scenario (or an empty string, if no scenario has been loaded)
+   */
+  std::string GetScenariosPath() const;
+
+  /**
+   * @brief Returns the full path of the loaded channel mapping file
+   *
+   * The returned path always points to the loaded channel mapping file
+   *
+   * @return the path of the current channel mapping (or an empty string, if no channel mapping has been loaded)
+   */
+  std::string GetChannelMappingPath() const;
+
+  /**
+   * @brief Loads and parses scenarios from the given path
+   *
+   * A scenario file is a text file containing semicolon-separated name and time
+   * inforamtion with one timestamp per line. The timestamps are relative
+   * timestamps in seconds starting with the first frame of the measurment
+   * as 0.0s.
+   *
+   * Example:
+   *
+   *    1.474 ; extraordinary event
+   *    3.995 ; construction site
+   *    7.421 ; curve left
+   *
+   * If the file does not exist, the scenario list will stay empty.
+   *
+   * @param path    The path to the directory and the scenario file to load
+   * @return True if successfull
+   */
+  bool LoadScenarios(const std::string& selected_dir, const std::string& selected_file);
+
+  /**
    * @brief Loads the given file as channel mapping file
    *
    * A channel mapping file contains source- and target channel names separated
@@ -185,7 +233,7 @@ public:
    *
    * @return the channel mapping from the given file
    */
-  std::map<std::string, std::string> LoadChannelMappingFile(const std::string& path) const;
+  std::map<std::string, std::string> LoadChannelMappingFile(const std::string& path);
 
   /**
    * @brief Returns the description of the measurement found in the @code{doc/description.txt} file
@@ -327,7 +375,9 @@ public:
 
   // TODO: document
   void SetScenarios(const std::vector<EcalPlayScenario>& scenarios);
-  bool SaveScenariosToDisk() const;
+  bool SaveScenariosToDisk(const std::string& selected_dir = "", const std::string& selected_file = "");
+
+  void SetChannelMappingPath(const std::string& channel_mapping_path);
 
   /**
    * @brief Enables / disables measurement repeating.
@@ -744,9 +794,10 @@ private:
   std::string description_;                                                     /**< The description loaded from the current measurement. Empty, if no measurement is loaded or no description file has been found*/
   std::vector<EcalPlayScenario> scenarios_;                                     /**< The scenarios loaded from the current measurement. Empty, if no measurement is loaded or no description file has been found*/
 
-  std::unique_ptr<PlayThread> play_thread_;                                     /**< The "actual" eCAL Player that runs in it's own thread and executes commands from outside */
-  std::string                 measurement_path_;                                /**< The path that was loaded. It may point to a file or a directory (depending on whether the user loaded a measurement file or a measurement directory) */
-
+  std::unique_ptr<PlayThread>         play_thread_;                             /**< The "actual" eCAL Player that runs in it's own thread and executes commands from outside */
+  std::string                         measurement_path_;                        /**< The path that was loaded. It may point to a file or a directory (depending on whether the user loaded a measurement file or a measurement directory) */
+  std::pair<std::string, std::string> scenarios_path_;                          /**< The loaded scenario path. First element is the path to the directory and the second the path to the file. Both are needed because of the saveScenariosToDisk method */
+  std::string                         channel_mapping_path_;                    /**< The loaded channel mapping file path. */
   /**
    * @brief Loads a text file from the given file as measurement description
    *
@@ -758,25 +809,9 @@ private:
   bool LoadDescription(const std::string& path);
 
   /**
-   * @brief Loads and parses scenarios from the given path
-   *
-   * A scenario file is a text file containing semicolon-separated name and time
-   * inforamtion with one timestamp per line. The timestamps are relative
-   * timestamps in seconds starting with the first frame of the measurment
-   * as 0.0s.
-   *
-   * Example:
-   *
-   *    1.474 ; extraordinary event
-   *    3.995 ; construction site
-   *    7.421 ; curve left
-   *
-   * If the file does not exist, the scenario list will stay empty.
-   *
-   * @param path    The path to the senario file
-   * @return True if successfull
+   * @brief Clears the scenarios directory and file paths
    */
-  bool LoadScenarios(const std::string& path);
+  void clearScenariosPath();
 
   /**
    * @brief Prints version information to the logging ouptut

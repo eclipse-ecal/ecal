@@ -19,6 +19,7 @@
 add_subdirectory(plugin_template)
 add_subdirectory(monitor_tree_view)
 add_subdirectory(protobuf_reflection)
+add_subdirectory(signals_plotting)
 if (HAS_CAPNPROTO)
 add_subdirectory(capnproto_reflection)
 endif (HAS_CAPNPROTO)

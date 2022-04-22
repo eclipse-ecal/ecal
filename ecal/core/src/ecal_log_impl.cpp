@@ -105,34 +105,6 @@ static std::string get_time_str()
 }
 #endif
 
-static void tokenize(const std::string& str, std::vector<std::string>& tokens,
-                     const std::string& delimiters = " ", bool trimEmpty = false)
-{
-  std::string::size_type pos, lastPos = 0;
-
-  for(;;)
-  {
-    pos = str.find_first_of(delimiters, lastPos);
-    if(pos == std::string::npos)
-    {
-      pos = str.length();
-      if(pos != lastPos || !trimEmpty)
-      {
-        tokens.emplace_back(std::string(str.data()+lastPos, pos-lastPos));
-      }
-      break;
-    }
-    else
-    {
-      if(pos != lastPos || !trimEmpty)
-      {
-        tokens.emplace_back(std::string(str.data()+lastPos, pos-lastPos ));
-      }
-    }
-    lastPos = pos + 1;
-  }
-}
-
 namespace eCAL
 {
   CLog::CLog() :
@@ -162,9 +134,9 @@ namespace eCAL
     m_level = log_level_info;
 
     // parse logging filter strings
-    m_filter_mask_con  = ParseLogLevel(Config::GetConsoleLogFilter());
-    m_filter_mask_file = ParseLogLevel(Config::GetFileLogFilter());
-    m_filter_mask_udp  = ParseLogLevel(Config::GetUdpLogFilter());
+    m_filter_mask_con  = Config::GetConsoleLogFilter();
+    m_filter_mask_file = Config::GetFileLogFilter();
+    m_filter_mask_udp  = Config::GetUdpLogFilter();
 
     // create log file
     if(m_filter_mask_file)
@@ -218,28 +190,6 @@ namespace eCAL
     m_created = false;
   }
 
-  char CLog::ParseLogLevel(const std::string& filter_)
-  {
-    // tokenize it
-    std::vector<std::string> token_filter_;
-    tokenize(filter_, token_filter_, " ,;");
-    // create excluding filter list
-    char filter_mask = log_level_none;
-    for(auto& it : token_filter_)
-    {
-      if(it == "all")     filter_mask |= log_level_all;
-      if(it == "info")    filter_mask |= log_level_info;
-      if(it == "warning") filter_mask |= log_level_warning;
-      if(it == "error")   filter_mask |= log_level_error;
-      if(it == "fatal")   filter_mask |= log_level_fatal;
-      if(it == "debug1")  filter_mask |= log_level_debug1;
-      if(it == "debug2")  filter_mask |= log_level_debug2;
-      if(it == "debug3")  filter_mask |= log_level_debug3;
-      if(it == "debug4")  filter_mask |= log_level_debug4;
-    }
-    return(filter_mask);
-  }
-
   void CLog::SetLogLevel(const eCAL_Logging_eLogLevel level_)
   { 
     std::lock_guard<std::mutex> lock(m_log_sync);
@@ -259,9 +209,9 @@ namespace eCAL
     if(!m_created) return;
     if(msg_.empty()) return;
 
-    char log_con  = level_ & m_filter_mask_con;
-    char log_file = level_ & m_filter_mask_file;
-    char log_udp  = level_ & m_filter_mask_udp;
+    eCAL_Logging_Filter log_con  = level_ & m_filter_mask_con;
+    eCAL_Logging_Filter log_file = level_ & m_filter_mask_file;
+    eCAL_Logging_Filter log_udp  = level_ & m_filter_mask_udp;
     if(!(log_con | log_file | log_udp)) return;
 
     static eCAL::pb::LogMessage ecal_msg;
