@@ -23,7 +23,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
     <link rel="up" title="Building eCAL" href="build_ecal.html" />
-    <link rel="next" title="Building eCAL with Conan dependencies" href="building_ecal_with_conan_dependencies.html" />
+    <link rel="next" title="CMake options" href="ecal_cmake_options.html" />
     <link rel="prev" title="Building eCAL" href="build_ecal.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
@@ -114,7 +114,6 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="build_ecal.html">Building eCAL</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Building eCAL from source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="building_ecal_with_conan_dependencies.html">Building eCAL with Conan dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ecal_cmake_options.html">CMake options</a></li>
 </ul>
 </li>
@@ -528,6 +527,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../advanced/tutorials.html">Tutorials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../advanced/documentation.html">Edit the documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../advanced/ecal_in_docker.html">eCAL in Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building_ecal_with_conan_dependencies.html">Building eCAL with Conan dependencies</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../advanced/ecal_internals.html">eCAL internals</a><ul>
@@ -574,10 +574,7 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#fa-ubuntu-building-ecal-on-ubuntu"><i class="fab fa-ubuntu"></i> Building eCAL on Ubuntu</a><ul>
-<li><a class="reference internal" href="#fa-ubuntu-ubuntu-16-04-dependencies"><i class="fab fa-ubuntu"></i> Ubuntu 16.04 dependencies</a></li>
-<li><a class="reference internal" href="#fa-ubuntu-ubuntu-18-04-dependencies"><i class="fab fa-ubuntu"></i> Ubuntu 18.04 dependencies</a></li>
-<li><a class="reference internal" href="#fa-ubuntu-ubuntu-20-04-dependencies"><i class="fab fa-ubuntu"></i> Ubuntu 20.04 dependencies</a></li>
-<li><a class="reference internal" href="#fa-ubuntu-ubuntu-22-04-dependencies"><i class="fab fa-ubuntu"></i> Ubuntu 22.04 dependencies</a></li>
+<li><a class="reference internal" href="#fa-ubuntu-build-dependencies"><i class="fab fa-ubuntu"></i> Build dependencies</a></li>
 <li><a class="reference internal" href="#fa-ubuntu-ubuntu-16-18-20-22-build"><i class="fab fa-ubuntu"></i> Ubuntu 16/18/20/22 build</a></li>
 </ul>
 </li>
@@ -594,7 +591,7 @@
 <!-- pager-hidden.html -->
 
         <a class="no-focus" accesskey="p" href="build_ecal.html" tabindex="-1"></a>
-        <a class="no-focus" accesskey="n" href="building_ecal_with_conan_dependencies.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="n" href="ecal_cmake_options.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
@@ -722,40 +719,42 @@ Install the extension by</p>
 </div>
 <div class="section" id="fa-ubuntu-building-ecal-on-ubuntu">
 <h2><i class="fab fa-ubuntu"></i> Building eCAL on Ubuntu<a class="headerlink" href="#fa-ubuntu-building-ecal-on-ubuntu" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="fa-ubuntu-ubuntu-16-04-dependencies">
-<h3><i class="fab fa-ubuntu"></i> Ubuntu 16.04 dependencies<a class="headerlink" href="#fa-ubuntu-ubuntu-16-04-dependencies" title="Permalink to this headline">¶</a></h3>
-<ol class="arabic">
-<li><p>Add the <a class="reference external" href="https://apt.kitware.com/">official cmake repository</a>, as eCAL needs cmake &gt;= 3.13:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc <span class="m">2</span>&gt;/dev/null <span class="p">|</span> gpg --dearmor - <span class="p">|</span> sudo tee /etc/apt/trusted.gpg.d/kitware.gpg &gt;/dev/null
-sudo apt-add-repository -y <span class="s1">&#39;deb https://apt.kitware.com/ubuntu/ xenial main&#39;</span>
-sudo apt-get -y update
-sudo apt-get install kitware-archive-keyring
-sudo rm /etc/apt/trusted.gpg.d/kitware.gpg
-</pre></div>
-</div>
-</li>
-<li><p>Add a ppa for protobuf &gt;= 3.0. The following (unofficial) ppa will be sufficient:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo add-apt-repository -y ppa:maarten-fonville/protobuf
-sudo apt-get -y update
-</pre></div>
-</div>
-</li>
-<li><p>Install the dependencies from the ordinary Ubuntu 16.04 repositories and the ppa we just added:</p>
+<div class="section" id="fa-ubuntu-build-dependencies">
+<h3><i class="fab fa-ubuntu"></i> Build dependencies<a class="headerlink" href="#fa-ubuntu-build-dependencies" title="Permalink to this headline">¶</a></h3>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Ubuntu 22.04</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Ubuntu 20.04</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">Ubuntu 18.04</button><button aria-controls="panel-0-0-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-3" name="0-3" role="tab" tabindex="-1">Ubuntu 16.04</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><ol class="arabic">
+<li><p>Install the dependencies from the ordinary Ubuntu 22.04 repositories:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
 </pre></div>
 </div>
 </li>
-</ol>
+<li><p>If you plan to create the eCAL python language extension:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install python3.10-dev python3-pip
+python3 -m pip install setuptools
+</pre></div>
 </div>
-<div class="section" id="fa-ubuntu-ubuntu-18-04-dependencies">
-<h3><i class="fab fa-ubuntu"></i> Ubuntu 18.04 dependencies<a class="headerlink" href="#fa-ubuntu-ubuntu-18-04-dependencies" title="Permalink to this headline">¶</a></h3>
-<ol class="arabic">
+</li>
+</ol>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><ol class="arabic">
+<li><p>Install the dependencies from the ordinary Ubuntu 20.04 repositories:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
+</pre></div>
+</div>
+</li>
+<li><p>If you plan to create the eCAL python language extension:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install python3.8-dev python3-pip
+python3 -m pip install setuptools
+</pre></div>
+</div>
+</li>
+</ol>
+</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><ol class="arabic">
 <li><p>Add the <a class="reference external" href="https://apt.kitware.com/">official CMake repository</a>, as eCAL needs CMake &gt;= 3.13:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc <span class="m">2</span>&gt;/dev/null <span class="p">|</span> gpg --dearmor - <span class="p">|</span> sudo tee /etc/apt/trusted.gpg.d/kitware.gpg &gt;/dev/null
-sudo apt-add-repository <span class="s1">&#39;deb https://apt.kitware.com/ubuntu/ bionic main&#39;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc <span class="m">2</span>&gt;/dev/null <span class="p">|</span> gpg --dearmor - <span class="p">|</span> sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg &gt;/dev/null
+<span class="nb">echo</span> <span class="s1">&#39;deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ bionic main&#39;</span> <span class="p">|</span> sudo tee /etc/apt/sources.list.d/kitware.list &gt;/dev/null
 sudo apt-get -y update
+sudo rm /usr/share/keyrings/kitware-archive-keyring.gpg
 sudo apt-get install kitware-archive-keyring
-sudo rm /etc/apt/trusted.gpg.d/kitware.gpg
 </pre></div>
 </div>
 </li>
@@ -771,38 +770,29 @@ python3 -m pip install setuptools
 </div>
 </li>
 </ol>
+</div><div aria-labelledby="tab-0-0-3" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-3" name="0-3" role="tabpanel" tabindex="0"><ol class="arabic">
+<li><p>Add the <a class="reference external" href="https://apt.kitware.com/">official cmake repository</a>, as eCAL needs cmake &gt;= 3.13:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc <span class="m">2</span>&gt;/dev/null <span class="p">|</span> gpg --dearmor - <span class="p">|</span> sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg &gt;/dev/null
+<span class="nb">echo</span> <span class="s1">&#39;deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ xenial main&#39;</span> <span class="p">|</span> sudo tee /etc/apt/sources.list.d/kitware.list &gt;/dev/null
+sudo apt-get -y update
+sudo rm /usr/share/keyrings/kitware-archive-keyring.gpg
+sudo apt-get install kitware-archive-keyring
+</pre></div>
 </div>
-<div class="section" id="fa-ubuntu-ubuntu-20-04-dependencies">
-<h3><i class="fab fa-ubuntu"></i> Ubuntu 20.04 dependencies<a class="headerlink" href="#fa-ubuntu-ubuntu-20-04-dependencies" title="Permalink to this headline">¶</a></h3>
-<ol class="arabic">
-<li><p>Install the dependencies from the ordinary Ubuntu 20.04 repositories:</p>
+</li>
+<li><p>Add a ppa for protobuf &gt;= 3.0. The following (unofficial) ppa will be sufficient:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo add-apt-repository -y ppa:maarten-fonville/protobuf
+sudo apt-get -y update
+</pre></div>
+</div>
+</li>
+<li><p>Install the dependencies from the ordinary Ubuntu 16.04 repositories and the ppa we just added:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
 </pre></div>
 </div>
 </li>
-<li><p>If you plan to create the eCAL python language extension:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install python3.8-dev python3-pip
-python3 -m pip install setuptools
-</pre></div>
-</div>
-</li>
 </ol>
-</div>
-<div class="section" id="fa-ubuntu-ubuntu-22-04-dependencies">
-<h3><i class="fab fa-ubuntu"></i> Ubuntu 22.04 dependencies<a class="headerlink" href="#fa-ubuntu-ubuntu-22-04-dependencies" title="Permalink to this headline">¶</a></h3>
-<ol class="arabic">
-<li><p>Install the dependencies from the ordinary Ubuntu 22.04 repositories:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
-</pre></div>
-</div>
-</li>
-<li><p>If you plan to create the eCAL python language extension:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install python3.10-dev python3-pip
-python3 -m pip install setuptools
-</pre></div>
-</div>
-</li>
-</ol>
+</div></div>
 </div>
 <div class="section" id="fa-ubuntu-ubuntu-16-18-20-22-build">
 <h3><i class="fab fa-ubuntu"></i> Ubuntu 16/18/20/22 build<a class="headerlink" href="#fa-ubuntu-ubuntu-16-18-20-22-build" title="Permalink to this headline">¶</a></h3>
@@ -845,7 +835,7 @@ sudo pip3 install _deploy/ecal5-*
             </a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="building_ecal_with_conan_dependencies.html" title="Accesskey Alt(+Shift)+n">
+            <a class="page-link" href="ecal_cmake_options.html" title="Accesskey Alt(+Shift)+n">
                 Next
             </a>
         </li>
@@ -904,6 +894,7 @@ sudo pip3 install _deploy/ecal5-*
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/searchtools.min.js"></script>
     <script type="text/javascript" src="../_static/js/autocomplete.min.js"></script>
+    <script src="../_static/tabs.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script type="text/javascript">

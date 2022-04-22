@@ -109,89 +109,93 @@ First check out the eCAL repository and all of the submodules:
 |fa-ubuntu| Building eCAL on Ubuntu
 ===================================
 
-|fa-ubuntu| Ubuntu 16.04 dependencies
--------------------------------------
 
-#. Add the `official cmake repository <https://apt.kitware.com/>`_, as eCAL needs cmake >= 3.13:
 
-   .. code-block:: bash
+|fa-ubuntu| Build dependencies
+------------------------------
 
-      wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
-      sudo apt-add-repository -y 'deb https://apt.kitware.com/ubuntu/ xenial main'
-      sudo apt-get -y update
-      sudo apt-get install kitware-archive-keyring
-      sudo rm /etc/apt/trusted.gpg.d/kitware.gpg
+.. tabs::
 
-#. Add a ppa for protobuf >= 3.0. The following (unofficial) ppa will be sufficient:
+   .. tab:: Ubuntu 22.04
 
-   .. code-block:: bash
+      #. Install the dependencies from the ordinary Ubuntu 22.04 repositories:
 
-      sudo add-apt-repository -y ppa:maarten-fonville/protobuf
-      sudo apt-get -y update
+         .. code-block:: bash
 
-#. Install the dependencies from the ordinary Ubuntu 16.04 repositories and the ppa we just added:
+            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
 
-   .. code-block:: bash
+      #. If you plan to create the eCAL python language extension:
 
-      sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
+         .. code-block:: bash
 
-|fa-ubuntu| Ubuntu 18.04 dependencies
--------------------------------------
+            sudo apt-get install python3.10-dev python3-pip
+            python3 -m pip install setuptools
 
-#. Add the `official CMake repository <https://apt.kitware.com/>`_, as eCAL needs CMake >= 3.13:
+   .. tab:: Ubuntu 20.04
 
-   .. code-block:: bash
+      #. Install the dependencies from the ordinary Ubuntu 20.04 repositories:
 
-      wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
-      sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
-      sudo apt-get -y update
-      sudo apt-get install kitware-archive-keyring
-      sudo rm /etc/apt/trusted.gpg.d/kitware.gpg
+         .. code-block:: bash
 
-#. Install the dependencies from the ordinary Ubuntu 18.04 repositories:
+            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
 
-   .. code-block:: bash
+      #. If you plan to create the eCAL python language extension:
 
-      sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
+         .. code-block:: bash
 
-#. If you plan to create the eCAL python language extension:
+            sudo apt-get install python3.8-dev python3-pip
+            python3 -m pip install setuptools
 
-   .. code-block:: bash
+   .. tab:: Ubuntu 18.04
 
-      sudo apt-get install python3.6-dev python3-pip
-      python3 -m pip install setuptools
+      #. Add the `official CMake repository <https://apt.kitware.com/>`_, as eCAL needs CMake >= 3.13:
 
-|fa-ubuntu| Ubuntu 20.04 dependencies
--------------------------------------
+         .. code-block:: bash
 
-#. Install the dependencies from the ordinary Ubuntu 20.04 repositories:
+            wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
+            echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ bionic main' | sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null
+            sudo apt-get -y update
+            sudo rm /usr/share/keyrings/kitware-archive-keyring.gpg
+            sudo apt-get install kitware-archive-keyring
 
-   .. code-block:: bash
+      #. Install the dependencies from the ordinary Ubuntu 18.04 repositories:
 
-      sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
+         .. code-block:: bash
 
-#. If you plan to create the eCAL python language extension:
+            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
 
-   .. code-block:: bash
+      #. If you plan to create the eCAL python language extension:
 
-      sudo apt-get install python3.8-dev python3-pip
-      python3 -m pip install setuptools
+         .. code-block:: bash
 
-|fa-ubuntu| Ubuntu 22.04 dependencies
--------------------------------------
+            sudo apt-get install python3.6-dev python3-pip
+            python3 -m pip install setuptools
 
-#. Install the dependencies from the ordinary Ubuntu 22.04 repositories:
+   .. tab:: Ubuntu 16.04
 
-   .. code-block:: bash
 
-      sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
+      #. Add the `official cmake repository <https://apt.kitware.com/>`_, as eCAL needs cmake >= 3.13:
 
-#. If you plan to create the eCAL python language extension:
+         .. code-block:: bash
 
-   .. code-block:: bash
+            wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
+            echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ xenial main' | sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null
+            sudo apt-get -y update
+            sudo rm /usr/share/keyrings/kitware-archive-keyring.gpg
+            sudo apt-get install kitware-archive-keyring
 
-      sudo apt-get install python3.10-dev python3-pip
-      python3 -m pip install setuptools
+      #. Add a ppa for protobuf >= 3.0. The following (unofficial) ppa will be sufficient:
+
+         .. code-block:: bash
+
+            sudo add-apt-repository -y ppa:maarten-fonville/protobuf
+            sudo apt-get -y update
+
+      #. Install the dependencies from the ordinary Ubuntu 16.04 repositories and the ppa we just added:
+
+         .. code-block:: bash
+
+            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
 
 |fa-ubuntu| Ubuntu 16/18/20/22 build
 ---------------------------------
