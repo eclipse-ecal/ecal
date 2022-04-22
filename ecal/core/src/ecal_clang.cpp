@@ -159,8 +159,16 @@ ECAL_API bool ecal_get_type_name(const char* topic_name_, const char** topic_typ
     char* cbuf = str_malloc(topic_type_s);
     if(cbuf == nullptr) return(false);
 
-    if(topic_type_)     *topic_type_     = cbuf;
-    if(topic_type_len_) *topic_type_len_ = static_cast<int>(topic_type_s.size());
+    if (topic_type_) {
+      *topic_type_ = cbuf;
+      if(topic_type_len_) *topic_type_len_ = static_cast<int>(topic_type_s.size());
+    }
+    else {
+      // free allocated memory:
+      ecal_free_mem(cbuf);
+      if (topic_type_len_) *topic_type_len_ = 0;
+      ret = false;
+    }
   }
   return(ret);
 }
@@ -178,8 +186,16 @@ ECAL_API bool ecal_get_description(const char* topic_name_, const char** topic_d
     char* cbuf = str_malloc(topic_desc_s);
     if(cbuf == nullptr) return(false);
 
-    if(topic_desc_)     *topic_desc_     = cbuf;
-    if(topic_desc_len_) *topic_desc_len_ = static_cast<int>(topic_desc_s.size());
+    if (topic_desc_) {
+      *topic_desc_ = cbuf;
+      if (topic_desc_len_) *topic_desc_len_ = static_cast<int>(topic_desc_s.size());
+    }
+    else {
+      // free allocated memory:
+      ecal_free_mem(cbuf);
+      if (topic_desc_len_) *topic_desc_len_ = 0;
+      ret = false;
+    }
   }
   return(ret);
 }
@@ -413,8 +429,18 @@ ECAL_API int sub_receive(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_bu
       char* cbuf = str_malloc(rcv_buf);
       if(cbuf == nullptr) return(0);
 
-      if(rcv_buf_)     *rcv_buf_     = cbuf;
-      if(rcv_buf_len_) *rcv_buf_len_ = static_cast<int>(rcv_buf.size());
+      if (rcv_buf_) {
+        *rcv_buf_ = cbuf;
+        if (rcv_buf_len_) *rcv_buf_len_ = static_cast<int>(rcv_buf.size());
+      }
+      else {
+        // free allocated memory:
+        ecal_free_mem(cbuf);
+        if (rcv_buf_len_) *rcv_buf_len_ = 0;
+        // operation could't be completed successfully
+        return(0);
+      }
+
       if(rcv_time_)    *rcv_time_    = rcv_time;
 
       return(static_cast<int>(rcv_buf.size()));
@@ -440,8 +466,17 @@ ECAL_API bool sub_receive_buffer(ECAL_HANDLE handle_, const char** rcv_buf_, int
       char* cbuf = str_malloc(rcv_buf);
       if (cbuf == nullptr) return(0);
 
-      if (rcv_buf_)     *rcv_buf_ = cbuf;
-      if (rcv_buf_len_) *rcv_buf_len_ = static_cast<int>(rcv_buf.size());
+      if (rcv_buf_) {
+        *rcv_buf_ = cbuf;
+        if (rcv_buf_len_) *rcv_buf_len_ = static_cast<int>(rcv_buf.size());
+      }
+      else {
+        // free allocated memory:
+        ecal_free_mem(cbuf);
+        if (rcv_buf_len_) *rcv_buf_len_ = 0;
+        // operation couldn't be completed successfullly.
+        return(false);
+      }
       if (rcv_time_)    *rcv_time_ = rcv_time;
 
       return(true);
@@ -811,8 +846,18 @@ ECAL_API int mon_get_monitoring(const char** mon_buf_, int* mon_buf_len_)
     char* cbuf = str_malloc(mon_s);
     if(cbuf == nullptr) return(0);
 
-    if(mon_buf_)     *mon_buf_     = cbuf;
-    if(mon_buf_len_) *mon_buf_len_ = static_cast<int>(mon_s.size());
+    if (mon_buf_) {
+      *mon_buf_ = cbuf;
+      if (mon_buf_len_) *mon_buf_len_ = static_cast<int>(mon_s.size());
+    }
+    else
+    {
+      // free allocated memory:
+      ecal_free_mem(cbuf);
+      if (mon_buf_len_) *mon_buf_len_ = 0;
+      // operation could't be completed successfully
+      return(0);
+    }
     return(static_cast<int>(mon_s.size()));
   }
   else
@@ -834,8 +879,17 @@ ECAL_API int mon_get_logging(const char** log_buf_, int* log_buf_len_)
     char* cbuf = str_malloc(log_s);
     if(cbuf == nullptr) return(0);
 
-    if(log_buf_)     *log_buf_     = cbuf;
-    if(log_buf_len_) *log_buf_len_ = static_cast<int>(log_s.size());
+    if (log_buf_) {
+      *log_buf_ = cbuf;
+      if (log_buf_len_) *log_buf_len_ = static_cast<int>(log_s.size());
+    }
+    else {
+      // free allocated memory:
+      ecal_free_mem(cbuf);
+      if (log_buf_len_) *log_buf_len_ = 0;
+      // operation couldn't be completed successfullly.
+      return(0);
+    }
     return(static_cast<int>(log_s.size()));
   }
   else

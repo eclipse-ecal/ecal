@@ -43,6 +43,11 @@ static int CopyBuffer(void* target_, int target_len_, const std::string& source_
       *((void**)target_) = buf_alloc; //-V206
       return(copied);
     }
+    else
+    {
+      // copying buffer failed, so free allocated memory.
+      free(buf_alloc);
+    }
   }
   else
   {

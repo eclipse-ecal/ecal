@@ -264,7 +264,7 @@ namespace eCAL
       sstream << "------------------------- PUBLISHER LAYER DEFAULTS ---------------"       << std::endl;
       sstream << "Layer Mode INPROC        : " << LayerMode(Config::GetPublisherInprocMode())  << std::endl;
       auto zero_copy = Config::IsMemfileZerocopyEnabled();
-      if (zero_copy > 0)
+      if (true == zero_copy)
       {
         sstream << "Layer Mode SHM (ZEROCPY) : " << LayerMode(Config::GetPublisherShmMode()) << std::endl;
       }
@@ -550,7 +550,7 @@ namespace eCAL
         }
       }
 
-      PROCESS_INFORMATION pi = { 0 };
+      PROCESS_INFORMATION pi{};
       STARTUPINFOW si =
       {
         sizeof(STARTUPINFO),          //DWORD   cb;
@@ -620,7 +620,7 @@ namespace eCAL
       commandline += full_proc_name;
       commandline += " /t";
 
-      PROCESS_INFORMATION pi = { 0 };
+      PROCESS_INFORMATION pi{};
       STARTUPINFOW si =
       {
         sizeof(STARTUPINFO),          //DWORD   cb;
@@ -673,7 +673,7 @@ namespace eCAL
       commandline += std::to_string(proc_id_);
       commandline += " /t";
 
-      PROCESS_INFORMATION pi = { 0 };
+      PROCESS_INFORMATION pi{};
       STARTUPINFOW si =
       {
         sizeof(STARTUPINFO),          //DWORD   cb;
