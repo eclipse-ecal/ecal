@@ -53,19 +53,19 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
      - 2018 Open Source Robotics Foundation, Inc.
      - - |fa-file-alt| Copy in repository: :file:`/doc/extensions/empy_helpers/__init__.py` (modified)
 
-   * - `fineFTP Server <https://github.com/continental/fineftp-server>`_
-     - :ref:`mit_license`
-     - 2020 Continental Corporation
-     - - |fa-github| Git submodule ``/tirdparty/fineftp-server``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
-
    * - `Findqwt.cmake <https://gitlab.kitware.com/cmake/community/-/wikis/contrib/modules/FindQwt>`_
      - :ref:`findqwt-bsd-2`
      - Copyright 2010-2013, Julien Schueller
 
        Copyright 2018-2020, Rolf Eike Beer
      - - |fa-file-alt| Copy in repository (modified): ``cmake/Modules/Findqwt.cmake``
+
+   * - `fineFTP Server <https://github.com/continental/fineftp-server>`_
+     - :ref:`mit_license`
+     - 2020 Continental Corporation
+     - - |fa-github| Git submodule ``/tirdparty/fineftp-server``
+       - |fa-windows| Binary distributions for Windows
+       - |fa-ubuntu| Binary distributions for Linux
 
    * - `Flaticons <https://www.flaticon.com/>`_
      - :ref:`creative_commons_3_0`
@@ -82,29 +82,16 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
-   * - `Google Test <https://github.com/google/googletest>`_
-     - :ref:`bsd_3`
-     - Copyright 2008 Google Inc.
-     - - |fa-github| Git submodule ``/tirdparty/googletest``
-
    * - `Google Protobuf <https://developers.google.com/protocol-buffers>`_
      - :ref:`bsd_3`
      - Copyright 2008 Google Inc.
      - - |fa-github| Git submodule ``/tirdparty/protobuf``
        - |fa-windows| Binary distributions for Windows
 
-   * - `modpath.iss <http://www.legroom.net/software>`_
-     - :ref:`lgpl_3_0`
-     - Jared Breland
-     - - |fa-file-alt| Copy in repository: :file:`/cpack/innosetup/modpath.iss`
-       - |fa-windows| Binary distributions for Windows (Installer only)
-
-   * - `npcap <https://nmap.org/npcap/>`_
-     - :ref:`npcap_license`
-     - 2013-2021 by Insecure.Com LLC
-     - Not included due to licensing issues.
-       Please check out the :ref:`npcap chapter <configuration_npcap>`.
-       eCAL for Windows links against the npcap SDK.
+   * - `Google Test <https://github.com/google/googletest>`_
+     - :ref:`bsd_3`
+     - Copyright 2008 Google Inc.
+     - - |fa-github| Git submodule ``/tirdparty/googletest``
 
    * - `HDF5 <https://www.hdfgroup.org/solutions/hdf5>`_
      - :ref:`hdf5_bsd_3`
@@ -120,6 +107,19 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
      - - |fa-github| Git submodule ``/tirdparty/curl``
        - |fa-windows| Binary distributions for Windows
 
+   * - `modpath.iss <http://www.legroom.net/software>`_
+     - :ref:`lgpl_3_0`
+     - Jared Breland
+     - - |fa-file-alt| Copy in repository: :file:`/cpack/innosetup/modpath.iss`
+       - |fa-windows| Binary distributions for Windows (Installer only)
+
+   * - `npcap <https://nmap.org/npcap/>`_
+     - :ref:`npcap_license`
+     - 2013-2021 by Insecure.Com LLC
+     - Not included due to licensing issues.
+       Please check out the :ref:`npcap chapter <configuration_npcap>`.
+       eCAL for Windows links against the npcap SDK.
+
    * - `PcapPlusPlus <https://pcapplusplus.github.io/>`_
      - :ref:`unlicense_license`
      - 2021 seladb
@@ -129,6 +129,20 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
      - :ref:`lgpl_3_0`
      - The Qt Company Ltd.
      - - |fa-windows| Binary distributions for Windows
+
+   * - `qwt <https://sourceforge.net/projects/qwt/>`_
+     - :ref:`qwt_license`
+     - 	Uwe Rathmann
+     - - |fa-github| Git submodule ``/tirdparty/qwt/qwt``
+       - |fa-windows| Binary distributions for Windows
+       - |fa-ubuntu| Binary distributions for Linux
+
+   * - `recycle <https://github.com/steinwurf/recycle>`_
+     - :ref:`bsd_3`
+     - Copyright (c) 2014, Steinwurf ApS
+     - - |fa-github| Git submodule ``/tirdparty/recycle``
+       - |fa-windows| Binary distributions for Windows
+       - |fa-ubuntu| Binary distributions for Linux
 
    * - `SimpleIni <https://github.com/brofield/simpleini>`_
      - :ref:`mit_license`
@@ -151,13 +165,6 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
-   * - `recycle <https://github.com/steinwurf/recycle>`_
-     - :ref:`bsd_3`
-     - Copyright (c) 2014, Steinwurf ApS
-     - - |fa-github| Git submodule ``/tirdparty/recycle``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
-
    * - `tclap <http://tclap.sourceforge.net>`_
      - :ref:`mit_license`
      - Copyright (c) 2003 Michael E. Smoot 
@@ -169,10 +176,10 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
-   * - `tcpub <https://github.com/continental/tcpub>`_
+   * - `tcp_pubsub <https://github.com/continental/tcp_pubsub>`_
      - :ref:`mit_license`
      - Copyright (c) 2021 Continental
-     - - |fa-github| Git submodule ``/tirdparty/tcpub``
+     - - |fa-github| Git submodule ``/tirdparty/tcp_pubsub``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
@@ -190,12 +197,6 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
-   * - `qwt <https://sourceforge.net/projects/qwt/>`_
-     - :ref:`qwt_license`
-     - 	Uwe Rathmann
-     - - |fa-github| Git submodule ``/tirdparty/qwt/qwt``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
 
 License texts
 =============
