@@ -99,9 +99,6 @@ namespace eCAL
     std::mutex         m_client_map_sync;
     ClientMapT         m_client_map;
 
-    enum { max_length = 64 * 1024 };
-    char m_reply[max_length];
-
     std::mutex         m_response_callback_sync;
     ResponseCallbackT  m_response_callback;
 

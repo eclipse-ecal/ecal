@@ -72,7 +72,7 @@ TEST(IO, dynproto)
   std::string error_s;
   google::protobuf::FileDescriptorSet proto_desc;
   proto_desc.ParseFromString(topic_desc);
-  google::protobuf::Message* msg_ptr = decoder.GetProtoMessageFromDescriptorSet(proto_desc, topic_type, error_s);
+  std::shared_ptr<google::protobuf::Message> msg_ptr(decoder.GetProtoMessageFromDescriptorSet(proto_desc, topic_type, error_s));
   if(msg_ptr == nullptr)
   {
     std::cout << error_s << std::endl;

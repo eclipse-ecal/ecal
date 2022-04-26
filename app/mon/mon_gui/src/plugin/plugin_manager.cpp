@@ -227,6 +227,34 @@ QList<QPair<PluginWrapper::PluginData, eCAL::mon::PluginWidgetInterface*>> Plugi
   return supported_plugins;
 }
 
+eCAL::mon::PluginWidgetInterface* PluginManager::CreatePlugin(const QString& topic_name, const QString& topic_type, const QString& plugin_iid, QWidget* parent)
+{
+  auto plugin_iter = plugins_.find(plugin_iid);
+  if (plugin_iter == plugins_.end())
+    return nullptr;
+  
+  if (!plugin_iter->active)
+    return nullptr;
+
+  return plugin_iter->wrapper.create(topic_name, topic_type, parent);
+}
+
+QList<PluginWrapper::PluginData> PluginManager::getMatchingPluginData(const QString& topic_name, const QString& topic_type) const
+{
+  QList<PluginWrapper::PluginData> matching_plugin_data;
+  for (const auto& plugin : plugins_)
+  {
+    if (!plugin.active)
+      continue;
+
+    if (AcceptsTopic(plugin.wrapper, topic_name, topic_type))
+    {
+      matching_plugin_data.push_back(plugin.wrapper.getPluginData());
+    }
+  }
+  return matching_plugin_data;
+}
+
 PluginManager* PluginManager::getInstance()
 {
   if (!instance_)

@@ -97,7 +97,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         std::string monitor_topic_name = topic_.tname();
         if (!monitor_topic_name.empty())
         {
-          return eCAL::Util::GetTypeName(monitor_topic_name).c_str();
+          return eCAL::Util::GetTopicTypeName(monitor_topic_name).c_str();
         }
       }
       return "";

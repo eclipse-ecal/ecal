@@ -419,7 +419,9 @@ namespace eCAL
       auto sample_service_methods = sample_.service().methods(i);
       method.mname      = sample_service_methods.mname();
       method.req_type   = sample_service_methods.req_type();
+      method.req_desc   = sample_service_methods.req_desc();
       method.resp_type  = sample_service_methods.resp_type();
+      method.resp_desc  = sample_service_methods.resp_desc();
       method.call_count = sample_service_methods.call_count();
       ServerInfo.methods.push_back(method);
     }
@@ -649,7 +651,9 @@ namespace eCAL
         eCAL::pb::Method* pMonMethod = pMonService->add_methods();
         pMonMethod->set_mname(method.mname);
         pMonMethod->set_req_type(method.req_type);
+        pMonMethod->set_req_desc(method.req_desc);
         pMonMethod->set_resp_type(method.resp_type);
+        pMonMethod->set_resp_desc(method.resp_desc);
         pMonMethod->set_call_count(method.call_count);
       }
     }

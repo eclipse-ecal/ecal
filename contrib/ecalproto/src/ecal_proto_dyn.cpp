@@ -139,18 +139,56 @@ namespace protobuf
     return(GetProtoMessageFromDescriptorSet(pset, msg_type_, error_s_));
   }
 
+  google::protobuf::Message* CProtoDynDecoder::GetProtoMessageFromDescriptor(const std::string& msg_desc_, const std::string& msg_type_, std::string& error_s_)
+  {
+    // create file descriptor set
+    google::protobuf::FileDescriptorSet pset;
+    if (!pset.ParseFromString(msg_desc_))
+    {
+      error_s_ = "Cannot get file descriptor of message: " + msg_type_;
+      return(nullptr);
+    }
+
+    // create message object
+    google::protobuf::Message* proto_msg = GetProtoMessageFromDescriptorSet(pset, msg_type_, error_s_);
+    if (!proto_msg)
+    {
+      return(nullptr);
+    }
+
+    return(proto_msg);
+  }
+
   google::protobuf::Message* CProtoDynDecoder::GetProtoMessageFromDescriptorSet(const google::protobuf::FileDescriptorSet& proto_desc_set_, const std::string& msg_type_, std::string& error_s_)
   {
+    // check if msg_type_ is available in descriptor pool
+    const google::protobuf::Descriptor* desc = m_descriptor_pool.FindMessageTypeByName(msg_type_);
+    if (desc != nullptr)
+    {
+      const google::protobuf::Message* prototype_msg = m_message_factory.GetPrototype(desc);
+      if (prototype_msg != nullptr)
+      {
+        // ownership passed to caller here !
+        google::protobuf::Message* proto_msg = prototype_msg->New();
+        if (proto_msg == nullptr)
+        {
+          error_s_ = "Failed in prototype_msg->New(); to create mutable message";
+          return(nullptr);
+        }
+        return(proto_msg);
+      }
+    }
+    
     // suppose you want to parse a message type with a specific type name.
     DescriptorErrorCollector error_collector;
     const google::protobuf::FileDescriptor* file_desc = nullptr;
     for (auto it = 0; it < proto_desc_set_.file_size(); ++it)
     {
       file_desc = m_descriptor_pool.BuildFileCollectingErrors(proto_desc_set_.file(it), &error_collector);
-      if (file_desc == NULL)
+      if (file_desc == nullptr)
       {
         error_s_ = error_collector.Get();
-        return(NULL);
+        return(nullptr);
       }
       if ((file_desc->message_type_count() > 0) &&
         (file_desc->message_type(0)->name() == msg_type_))
@@ -158,29 +196,31 @@ namespace protobuf
         break;
       }
     }
-    if (file_desc == NULL)
+    if (file_desc == nullptr)
     {
       error_s_ = "Cannot get file descriptor of message: " + msg_type_;
-      return(NULL);
+      return(nullptr);
     }
     const google::protobuf::Descriptor* message_desc = file_desc->FindMessageTypeByName(msg_type_);
-    if (message_desc == NULL)
+    if (message_desc == nullptr)
     {
       error_s_ = "Cannot get message descriptor of message: " + msg_type_;
-      return(NULL);
+      return(nullptr);
     }
 
     const google::protobuf::Message* prototype_msg = m_message_factory.GetPrototype(message_desc);
-    if (prototype_msg == NULL)
+    if (prototype_msg == nullptr)
     {
       error_s_ = "Cannot create prototype message from message descriptor";
-      return(NULL);
+      return(nullptr);
     }
+
+    // ownership passed to caller here !
     google::protobuf::Message* proto_msg = prototype_msg->New();
-    if (proto_msg == NULL)
+    if (proto_msg == nullptr)
     {
       error_s_ = "Failed in prototype_msg->New(); to create mutable message";
-      return(NULL);
+      return(nullptr);
     }
     return(proto_msg);
   }
@@ -220,7 +260,7 @@ namespace protobuf
     ss << proto_string_;
     IstreamInputStream proto_string_input_stream(&ss);
 
-    Tokenizer tokenizer(&proto_string_input_stream, NULL);
+    Tokenizer tokenizer(&proto_string_input_stream, nullptr);
     Parser parser;
     ParserErrorCollector error_collector;
     parser.RecordErrorsTo(&error_collector);

@@ -29,6 +29,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <memory>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -58,13 +59,13 @@ namespace eCAL
       CDynamicJSONSubscriberImpl() :
         created(false),
         msg_decoder(nullptr),
-        msg_ptr()
+        msg_string()
       {}
 
       CDynamicJSONSubscriberImpl(const std::string& topic_name_) :
         created(false),
         msg_decoder(nullptr),
-        msg_ptr()
+        msg_string()
       {
         Create(topic_name_);
       }
@@ -119,10 +120,10 @@ namespace eCAL
     protected:
       void OnReceive(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_)
       {
-        if (msg_ptr.empty())
+        if (msg_string.empty())
         {
           // get topic type
-          topic_type_full = eCAL::Util::GetTypeName(topic_name_);
+          topic_type_full = eCAL::Util::GetTopicTypeName(topic_name_);
           topic_type_full = topic_type_full.substr(topic_type_full.find_first_of(':') + 1, topic_type_full.size());
           topic_type = topic_type_full.substr(topic_type_full.find_last_of('.') + 1, topic_type_full.size());
           topic_type_full = "/" + topic_type_full;
@@ -134,7 +135,7 @@ namespace eCAL
           }
 
           // get topic description
-          topic_desc = eCAL::Util::GetDescription(topic_name_);
+          topic_desc = eCAL::Util::GetTopicDescription(topic_name_);
           if (topic_desc.empty())
           {
             std::cout << "could not get description for topic " << topic_name_ << std::endl;
@@ -144,7 +145,7 @@ namespace eCAL
           std::string error_s;
           google::protobuf::FileDescriptorSet proto_desc;
           proto_desc.ParseFromString(topic_desc);
-          msg_decoder->GetProtoMessageFromDescriptorSet(proto_desc, topic_type, error_s);
+          std::shared_ptr<google::protobuf::Message> msg(msg_decoder->GetProtoMessageFromDescriptorSet(proto_desc, topic_type, error_s));
           resolver_.reset(google::protobuf::util::NewTypeResolverForDescriptorPool("", msg_decoder->GetDescriptorPool()));
         }
 
@@ -158,13 +159,13 @@ namespace eCAL
 
           std::string binary_input;
           binary_input.assign((char*)data_->buf, static_cast<size_t>(data_->size));
-          msg_ptr.clear();
-          auto status = google::protobuf::util::BinaryToJsonString(resolver_.get(), topic_type_full, binary_input, &msg_ptr, options);
+          msg_string.clear();
+          auto status = google::protobuf::util::BinaryToJsonString(resolver_.get(), topic_type_full, binary_input, &msg_string, options);
           if (status.ok())
           {
             SReceiveCallbackData cb_data;
-            cb_data.buf = (void*)msg_ptr.c_str();
-            cb_data.size = (long)msg_ptr.size();
+            cb_data.buf = (void*)msg_string.c_str();
+            cb_data.size = (long)msg_string.size();
             cb_data.time = data_->time;
             msg_callback(topic_name_, &cb_data);
           }
@@ -173,7 +174,7 @@ namespace eCAL
 
       bool                              created;
       eCAL::protobuf::CProtoDynDecoder* msg_decoder;
-      std::string                       msg_ptr;
+      std::string                       msg_string;
       eCAL::CSubscriber                 msg_sub;
       ReceiveCallbackT                  msg_callback;
 

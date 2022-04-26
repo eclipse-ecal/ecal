@@ -45,7 +45,7 @@ message Request                       // client request
   bytes            request     =  2;  // request payload
 }
 
-message Response                      // server resonse
+message Response                      // server response
 {
   ServiceHeader    header      =  1;  // common service header
   bytes            response    =  2;  // response payload
@@ -56,7 +56,9 @@ message Method                        // method
 {
   string           mname       =  1;  // method name
   string           req_type    =  2;  // request type
+  bytes            req_desc    =  5;  // request descriptor
   string           resp_type   =  3;  // response type
+  bytes            resp_desc   =  6;  // response descriptor
   int64            call_count  =  4;  // call counter
 }
 

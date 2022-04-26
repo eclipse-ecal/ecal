@@ -46,6 +46,8 @@ public:
   void setActive(const QString& iid, bool loaded);
 
   QList<QPair<PluginWrapper::PluginData, eCAL::mon::PluginWidgetInterface*>> CreatePlugins(QString topic_name, QString topic_type, QWidget* parent);
+  eCAL::mon::PluginWidgetInterface* CreatePlugin(const QString& topic_name, const QString& topic_type, const QString& plugin_iid, QWidget* parent);
+  QList<PluginWrapper::PluginData> getMatchingPluginData(const QString& topic_name, const QString& topic_type) const;
 
 private:
   PluginManager();

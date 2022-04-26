@@ -43,6 +43,9 @@ public slots:
 protected:
   void fillContextMenu(QMenu& menu, const QList<QAbstractTreeItem*>& selected_items) override;
 
+signals:
+  void requestVisualisationDockWidget(const QString& topic_name, const QString& topic_type, const QString& iid);
+
 private:
   bool parse_time_;
   TopicTreeModel* topic_tree_model_;

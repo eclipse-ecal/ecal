@@ -23,6 +23,8 @@
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
+
+#include "ecal_descgate.h"
 #include "ecal_register.h"
 #include "ecal_servicegate.h"
 #include "ecal_global_accessors.h"
@@ -87,8 +89,8 @@ namespace eCAL
 
     // reset method callback map
     {
-      std::lock_guard<std::mutex> lock(m_method_callback_map_sync);
-      m_method_callback_map.clear();
+      std::lock_guard<std::mutex> lock(m_method_map_sync);
+      m_method_map.clear();
     }
 
     // reset event callback map
@@ -106,17 +108,62 @@ namespace eCAL
     return(true);
   }
 
+  bool CServiceServerImpl::AddDescription(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_)
+  {
+    {
+      std::lock_guard<std::mutex> lock(m_method_map_sync);
+      auto iter = m_method_map.find(method_);
+      if (iter != m_method_map.end())
+      {
+        iter->second.method_pb.set_mname(method_);
+        iter->second.method_pb.set_req_type(req_type_);
+        iter->second.method_pb.set_req_desc(req_desc_);
+        iter->second.method_pb.set_resp_type(resp_type_);
+        iter->second.method_pb.set_resp_desc(resp_desc_);
+      }
+      else
+      {
+        SMethod method;
+        method.method_pb.set_mname(method_);
+        method.method_pb.set_req_type(req_type_);
+        method.method_pb.set_req_desc(req_desc_);
+        method.method_pb.set_resp_type(resp_type_);
+        method.method_pb.set_resp_desc(resp_desc_);
+        m_method_map[method_] = method;
+      }
+    }
+
+    if (!g_descgate()) return false;
+    g_descgate()->ApplyServiceDescription(m_service_name, method_, req_type_, req_desc_, resp_type_, resp_desc_);
+
+    return true;
+  }
+
   // add callback function for server method calls
   bool CServiceServerImpl::AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_)
   {
-    SMethodCallback mcallback;
-    mcallback.method.set_mname(method_);
-    mcallback.method.set_req_type(req_type_);
-    mcallback.method.set_resp_type(resp_type_);
-    mcallback.callback = callback_;
-
-    std::lock_guard<std::mutex> lock(m_method_callback_map_sync);
-    m_method_callback_map[method_] = mcallback;
+    {
+      std::lock_guard<std::mutex> lock(m_method_map_sync);
+      auto iter = m_method_map.find(method_);
+      if (iter != m_method_map.end())
+      {
+        // should we overwrite this ?
+        iter->second.method_pb.set_mname(method_);
+        iter->second.method_pb.set_req_type(req_type_);
+        iter->second.method_pb.set_resp_type(resp_type_);
+        // set callback
+        iter->second.callback = callback_;
+      }
+      else
+      {
+        SMethod method;
+        method.method_pb.set_mname(method_);
+        method.method_pb.set_req_type(req_type_);
+        method.method_pb.set_resp_type(resp_type_);
+        method.callback = callback_;
+        m_method_map[method_] = method;
+      }
+    }
 
     return true;
   }
@@ -124,12 +171,12 @@ namespace eCAL
   // remove callback function for server method calls
   bool CServiceServerImpl::RemMethodCallback(const std::string& method_)
   {
-    std::lock_guard<std::mutex> lock(m_method_callback_map_sync);
+    std::lock_guard<std::mutex> lock(m_method_map_sync);
 
-    auto iter = m_method_callback_map.find(method_);
-    if (iter != m_method_callback_map.end())
+    auto iter = m_method_map.find(method_);
+    if (iter != m_method_map.end())
     {
-      m_method_callback_map.erase(iter);
+      m_method_map.erase(iter);
       return true;
     }
     return false;
@@ -202,14 +249,16 @@ namespace eCAL
     service_mutable_service->set_tcp_port(m_tcp_server.GetTcpPort());
 
     {
-      std::lock_guard<std::mutex> lock(m_method_callback_map_sync);
-      for (auto iter : m_method_callback_map)
+      std::lock_guard<std::mutex> lock(m_method_map_sync);
+      for (auto iter : m_method_map)
       {
         auto method = service_mutable_service->add_methods();
         method->set_mname(iter.first);
-        method->set_req_type(iter.second.method.req_type());
-        method->set_resp_type(iter.second.method.resp_type());
-        method->set_call_count(iter.second.method.call_count());
+        method->set_req_type(iter.second.method_pb.req_type());
+        method->set_req_desc(iter.second.method_pb.req_desc());
+        method->set_resp_type(iter.second.method_pb.resp_type());
+        method->set_resp_desc(iter.second.method_pb.resp_desc());
+        method->set_call_count(iter.second.method_pb.call_count());
       }
     }
 
@@ -219,9 +268,9 @@ namespace eCAL
 
   int CServiceServerImpl::RequestCallback(const std::string& request_, std::string& response_)
   {
-    std::lock_guard<std::mutex> lock(m_method_callback_map_sync);
+    std::lock_guard<std::mutex> lock(m_method_map_sync);
 
-    if (m_method_callback_map.empty()) return 0;
+    if (m_method_map.empty()) return 0;
 
     int success(-1);
     eCAL::pb::Response response_pb;
@@ -240,15 +289,15 @@ namespace eCAL
       auto request_pb_header = request_pb.header();
       response_pb_mutable_header->set_mname(request_pb_header.mname());
 
-      auto iter = m_method_callback_map.find(request_pb_header.mname());
-      if (iter != m_method_callback_map.end())
+      auto iter = m_method_map.find(request_pb_header.mname());
+      if (iter != m_method_map.end())
       {
-        auto call_count = iter->second.method.call_count();
-        iter->second.method.set_call_count(++call_count);
+        auto call_count = iter->second.method_pb.call_count();
+        iter->second.method_pb.set_call_count(++call_count);
 
         std::string request_s = request_pb.request();
         std::string response_s;
-        int service_return_state = m_method_callback_map[request_pb_header.mname()].callback(iter->second.method.mname(), iter->second.method.req_type(), iter->second.method.resp_type(), request_s, response_s);
+        int service_return_state = m_method_map[request_pb_header.mname()].callback(iter->second.method_pb.mname(), iter->second.method_pb.req_type(), iter->second.method_pb.resp_type(), request_s, response_s);
 
         response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
         response_pb.set_response(response_s);
