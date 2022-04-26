@@ -21,6 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_pb=_b('\n\x0c\x61nimal.proto\x12\tpb.Animal\"#\n\x03\x44og\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0e\n\x06\x63olour\x18\x02 \x01(\tb\x06proto3')
 )
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
 
@@ -38,14 +39,14 @@ _DOG = _descriptor.Descriptor(
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='colour', full_name='pb.Animal.Dog.colour', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
+      options=None),
   ],
   extensions=[
   ],
@@ -63,7 +64,6 @@ _DOG = _descriptor.Descriptor(
 )
 
 DESCRIPTOR.message_types_by_name['Dog'] = _DOG
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Dog = _reflection.GeneratedProtocolMessageType('Dog', (_message.Message,), dict(
   DESCRIPTOR = _DOG,

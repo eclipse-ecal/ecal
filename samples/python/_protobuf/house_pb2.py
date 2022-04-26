@@ -21,6 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_pb=_b('\n\x0bhouse.proto\x12\x0epb.Environment\"\x16\n\x05House\x12\r\n\x05rooms\x18\x01 \x01(\x05\x62\x06proto3')
 )
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
 
@@ -38,7 +39,7 @@ _HOUSE = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
+      options=None),
   ],
   extensions=[
   ],
@@ -56,7 +57,6 @@ _HOUSE = _descriptor.Descriptor(
 )
 
 DESCRIPTOR.message_types_by_name['House'] = _HOUSE
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 House = _reflection.GeneratedProtocolMessageType('House', (_message.Message,), dict(
   DESCRIPTOR = _HOUSE,
