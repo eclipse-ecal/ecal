@@ -59,6 +59,8 @@ Program Listing for File ecal_server.h
    
        bool Destroy();
    
+       bool AddDescription(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_);
+   
        bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_);
    
        bool RemMethodCallback(const std::string& method_);

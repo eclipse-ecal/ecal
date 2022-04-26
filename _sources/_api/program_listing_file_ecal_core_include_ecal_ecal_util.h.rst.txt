@@ -66,12 +66,28 @@ Program Listing for File ecal_util.h
    
        ECAL_API void PubShareDescription(bool state_);
    
+       ECAL_API bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
+   
+       ECAL_API std::string GetTopicTypeName(const std::string& topic_name_);
+   
+       ECAL_API bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_);
+   
+       ECAL_API std::string GetTopicDescription(const std::string& topic_name_);
+   
+       ECAL_API bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_);
+   
+       ECAL_API bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_desc_, std::string& resp_desc_);
+   
+       [[deprecated]]
        ECAL_API bool GetTypeName(const std::string& topic_name_, std::string& topic_type_);
    
+       [[deprecated]]
        ECAL_API std::string GetTypeName(const std::string& topic_name_);
    
+       [[deprecated]]
        ECAL_API bool GetDescription(const std::string& topic_name_, std::string& topic_desc_);
    
+       [[deprecated]]
        ECAL_API std::string GetDescription(const std::string& topic_name_);
      }
    }
