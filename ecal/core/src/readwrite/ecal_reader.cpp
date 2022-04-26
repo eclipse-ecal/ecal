@@ -801,7 +801,7 @@ namespace eCAL
   const std::string CDataReader::GetDescription() const
   {
     std::string topic_desc;
-    if(g_descgate() && g_descgate()->GetDescription(m_topic_name, topic_desc))
+    if(g_descgate() && g_descgate()->GetTopicDescription(m_topic_name, topic_desc))
     {
       return(topic_desc);
     }

@@ -57,6 +57,8 @@ namespace eCAL
 
     bool Destroy();
 
+    bool AddDescription(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_);
+      
     // add and remove callback function for server method calls
     bool AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_);
     bool RemMethodCallback(const std::string& method_);
@@ -89,14 +91,14 @@ namespace eCAL
     std::string        m_service_name;
     std::string        m_service_id;
 
-    struct SMethodCallback
+    struct SMethod
     {
-      eCAL::pb::Method method;
+      eCAL::pb::Method method_pb;
       MethodCallbackT  callback;
     };
-    std::mutex         m_method_callback_map_sync;
-    typedef std::map<std::string, SMethodCallback> MethodCallbackMapT;
-    MethodCallbackMapT m_method_callback_map;
+    std::mutex         m_method_map_sync;
+    typedef std::map<std::string, SMethod> MethodMapT;
+    MethodMapT m_method_map;
 
     std::mutex         m_event_callback_map_sync;
     typedef std::map<eCAL_Server_Event, ServerEventCallbackT> EventCallbackMapT;

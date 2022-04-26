@@ -30,6 +30,7 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <tuple>
 
 
 namespace eCAL
@@ -43,9 +44,22 @@ namespace eCAL
     void Create();
     void Destroy();
 
-    void ApplyDescription(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
-    bool GetTypeName(const std::string& topic_name_, std::string& topic_type_);
-    bool GetDescription(const std::string& topic_name_, std::string& topic_desc_);
+    void ApplyTopicDescription(const std::string& topic_name_, 
+                               const std::string& topic_type_,
+                               const std::string& topic_desc_);
+
+    bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
+    bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_);
+
+    void ApplyServiceDescription(const std::string& service_name_, 
+                                 const std::string& method_name_, 
+                                 const std::string& req_type_name_, 
+                                 const std::string& req_type_desc_, 
+                                 const std::string& resp_type_name_,
+                                 const std::string& resp_type_desc_);
+
+    bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_name_, std::string& resp_type_name_);
+    bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_type_desc_, std::string& resp_type_desc_);
 
   protected:
     struct STypeDesc
@@ -68,8 +82,14 @@ namespace eCAL
       }
     };
 
+    // key: topic name | value: topic(type/desc)
     typedef std::map<std::string, STypeDesc> TopicNameDescMapT;
     std::shared_timed_mutex  m_topic_name_desc_sync;
     TopicNameDescMapT        m_topic_name_desc_map;
+
+    // key: tup<service name, method name> | value: tup<request (type/desc), response (type/desc)>
+    typedef std::map<std::tuple<std::string, std::string>, std::tuple<STypeDesc, STypeDesc>> ServiceMethodDescMapT;
+    std::shared_timed_mutex  m_service_method_desc_sync;
+    ServiceMethodDescMapT    m_service_method_desc_map;
   };
 };

@@ -152,7 +152,7 @@ ECAL_API void ecal_enable_loopback(const int state_)
 ECAL_API bool ecal_get_type_name(const char* topic_name_, const char** topic_type_, int* topic_type_len_)
 {
   std::string topic_type_s;
-  bool ret = eCAL::Util::GetTypeName(topic_name_, topic_type_s);
+  bool ret = eCAL::Util::GetTopicTypeName(topic_name_, topic_type_s);
   if(ret)
   {
     // this has to be freed by caller (ecal_free_mem)
@@ -171,7 +171,7 @@ ECAL_API bool ecal_get_type_name(const char* topic_name_, const char** topic_typ
 ECAL_API bool ecal_get_description(const char* topic_name_, const char** topic_desc_, int* topic_desc_len_)
 {
   std::string topic_desc_s;
-  bool ret = eCAL::Util::GetDescription(topic_name_, topic_desc_s);
+  bool ret = eCAL::Util::GetTopicDescription(topic_name_, topic_desc_s);
   if(ret)
   {
     // this has to be freed by caller (ecal_free_mem)

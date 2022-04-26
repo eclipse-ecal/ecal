@@ -55,15 +55,14 @@ namespace protobuf
   /**
     * @brief eCAL dynamic protobuf decoder.
     *
-    * The CProtoDynDecoder class is used to decode a protobuf message using protobuf reflection interface.
+    * The CProtoDynDecoder class is used to decode a protobuf message using protobuf reflection interface. The returned
+    * google message objects are owned by CProtoDynDecoder and freed on destruction.
     *
-  **/
-  /**
     * @code
     *            // create dynamic decoder
     *            std::string error_s;
     *            eCAL::CProtoDynDecoder decoder;
-    *            google::protobuf::Message* msg_obj = decoder.GetProtoMessageFromFile("foo.proto", "FooMessage", error_s);
+    *            std::shared_ptr<google::protobuf::Message> msg_obj(decoder.GetProtoMessageFromFile("foo.proto", "FooMessage", error_s));
     *
     *            // receive a message
     *            std::string msg_s = ReceiveMessageFromAnyWhere("foo");
@@ -80,37 +79,66 @@ namespace protobuf
   public:
     /**
       * @brief Create message from proto file.
+      * 
+      * Note: Ownership of the google::protobuf::Message pointer is passed to the caller.
       *
       * @param       proto_filename_  Proto file name.
       * @param       msg_type_        Type name.
       * @param [out] error_s_         Error string.
+      *
+      * @return google message object or nullptr if generation failed (details see error_s_)
     **/
     google::protobuf::Message* GetProtoMessageFromFile(const std::string& proto_filename_, const std::string& msg_type_, std::string& error_s_);
 
     /**
       * @brief Create message from proto string.
       *
+      * Note: Ownership of the google::protobuf::Message pointer is passed to the caller.
+      *
       * @param       proto_string_  Proto string.
       * @param       msg_type_      Type name.
       * @param [out] error_s_       Error string.
+      *
+      * @return google message object or nullptr if generation failed (details see error_s_)
     **/
     google::protobuf::Message* GetProtoMessageFromString(const std::string& proto_string_, const std::string& msg_type_, std::string& error_s_);
 
     /**
       * @brief Create message from proto descriptor.
       *
+      * Note: Ownership of the google::protobuf::Message pointer is passed to the caller.
+      *
       * @param       proto_desc_  Proto descriptor.
       * @param       msg_type_    Type name.
       * @param [out] error_s_     Error string.
+      *
+      * @return google message object or nullptr if generation failed (details see error_s_)
     **/
     google::protobuf::Message* GetProtoMessageFromDescriptor(const google::protobuf::FileDescriptorProto& proto_desc_, const std::string& msg_type_, std::string& error_s_);
 
     /**
+      * @brief Create message from serialized proto descriptor string.
+      *
+      * Note: Ownership of the google::protobuf::Message pointer is passed to the caller.
+      *
+      * @param       msg_desc_    Serialized message descriptor.
+      * @param       msg_type_    Type name.
+      * @param [out] error_s_     Error string.
+      *
+      * @return google message object or nullptr if generation failed (details see error_s_)
+    **/
+    google::protobuf::Message* GetProtoMessageFromDescriptor(const std::string& msg_desc_, const std::string& msg_type_, std::string& error_s_);
+
+    /**
       * @brief Create message from proto descriptor set.
+      *
+      * Note: Ownership of the google::protobuf::Message pointer is passed to the caller.
       *
       * @param       proto_desc_set_  Proto descriptor set.
       * @param       msg_type_        Type name.
       * @param [out] error_s_         Error string.
+      *
+      * @return google message object or nullptr if generation failed (details see error_s_)
     **/
     google::protobuf::Message* GetProtoMessageFromDescriptorSet(const google::protobuf::FileDescriptorSet& proto_desc_set_, const std::string& msg_type_, std::string& error_s_);
 
@@ -125,6 +153,8 @@ namespace protobuf
       * @param       proto_filename_   Proto file name.
       * @param [out] file_desc_proto_  Type name.
       * @param [out] error_s_          Error string.
+      *
+      * @return true if succeeded otherwise false (details see error_s_)
     **/
     static bool GetFileDescriptorFromFile(const std::string& proto_filename_, google::protobuf::FileDescriptorProto* file_desc_proto_, std::string& error_s_);
 
@@ -134,6 +164,8 @@ namespace protobuf
       * @param       proto_string_     Proto string.
       * @param [out] file_desc_proto_  Type name.
       * @param [out] error_s_          Error string.
+      *
+      * @return true if succeeded otherwise false (details see error_s_)
     **/
     static bool GetFileDescriptorFromString(const std::string& proto_string_, google::protobuf::FileDescriptorProto* file_desc_proto_, std::string& error_s_);
 

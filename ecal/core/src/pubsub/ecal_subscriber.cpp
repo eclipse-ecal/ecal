@@ -120,7 +120,7 @@ namespace eCAL
     g_subgate()->Register(topic_name_, m_datareader);
 
     // register to description gateway for type / description checking
-    g_descgate()->ApplyDescription(topic_name_, topic_type_, topic_desc_);
+    g_descgate()->ApplyTopicDescription(topic_name_, topic_type_, topic_desc_);
 
     // we made it :-)
     m_created = true;

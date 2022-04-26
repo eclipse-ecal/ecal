@@ -34,14 +34,12 @@ namespace eCAL
    * @brief Service client implementation class.
   **/
   CServiceClientImpl::CServiceClientImpl() :
-    m_reply{},
     m_response_callback(nullptr),
     m_created(false)
   {
   }
 
   CServiceClientImpl::CServiceClientImpl(const std::string& service_name_) :
-    m_reply{},
     m_response_callback(nullptr),
     m_created(false)
   {

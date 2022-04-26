@@ -25,7 +25,8 @@
 #pragma once
 
 #include <ecal/ecal_server.h>
-#include <ecal/protobuf/ecal_proto_hlp.h>
+#include <ecal/protobuf/ecal_proto_dyn.h>
+#include <ecal/msg/dynamic.h>
 
 // protobuf includes
 #ifdef _MSC_VER
@@ -134,14 +135,30 @@ namespace eCAL
           Create(service_name_);
         }
 
+        std::string error_s;
         for (int i = 0; i < service_descriptor->method_count(); ++i)
         {
+          // get method name and descriptor
           const google::protobuf::MethodDescriptor* method_descriptor = service_descriptor->method(i);
           std::string method_name = method_descriptor->name();
           m_methods[method_name] = method_descriptor;
+
+          // get message type names
+          std::string input_type_name  = method_descriptor->input_type()->name();
+          std::string output_type_name = method_descriptor->output_type()->name();
+
+          // get message type descriptors
+          std::string input_type_desc, output_type_desc;
+          GetServiceMessageDescFromType(service_descriptor, input_type_name, input_type_desc, error_s);
+          GetServiceMessageDescFromType(service_descriptor, output_type_name, output_type_desc, error_s);
+
+          // store descriptions
+          AddDescription(method_name, input_type_name, input_type_desc, output_type_name, output_type_desc);
+
+          // add callback
           AddMethodCallback(method_name,
-            method_descriptor->input_type()->name(),
-            method_descriptor->output_type()->name(),
+            input_type_name,
+            output_type_name,
             std::bind(&CServiceServer::RequestCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5)
           );
         }
@@ -191,6 +208,28 @@ namespace eCAL
 
         return 0;
       };
+
+      bool GetServiceMessageDescFromType(const google::protobuf::ServiceDescriptor* service_desc_, const std::string& type_name_, std::string& type_desc_, std::string& error_s_)
+      {
+        eCAL::protobuf::CProtoDynDecoder msg_decoder;
+
+        const google::protobuf::FileDescriptor* file_desc = service_desc_->file();
+        if (!file_desc) return false;
+
+        std::string file_desc_s = file_desc->DebugString();
+        google::protobuf::FileDescriptorProto file_desc_proto;
+        if (!msg_decoder.GetFileDescriptorFromString(file_desc_s, &file_desc_proto, error_s_)) return false;
+
+        google::protobuf::FileDescriptorSet pset;
+        google::protobuf::FileDescriptorProto* pdesc = pset.add_file();
+        pdesc->CopyFrom(file_desc_proto);
+
+        std::shared_ptr<google::protobuf::Message> req_msg(msg_decoder.GetProtoMessageFromDescriptorSet(pset, type_name_, error_s_));
+        if (!req_msg) return false;
+
+        type_desc_ = pset.SerializeAsString();
+        return true;
+      }
 
       std::shared_ptr<T>                                                m_service;
       std::map<std::string, const google::protobuf::MethodDescriptor*>  m_methods;

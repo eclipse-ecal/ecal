@@ -143,8 +143,10 @@ int main(int argc, char **argv)
         {
           auto method = service.methods(i);
           std::cout << "  mname           : " << method.mname()      << std::endl;   // method name
-          std::cout << "  req_type        : " << method.req_type()   << std::endl;   // input type
-          std::cout << "  resp_type       : " << method.resp_type()  << std::endl;   // output type
+          std::cout << "  req_type        : " << method.req_type()   << std::endl;   // request type
+          //std::cout << "  req_desc        : " << method.req_desc()   << std::endl;   // request descriptor
+          std::cout << "  resp_type       : " << method.resp_type()  << std::endl;   // response type
+          //std::cout << "  resp_desc       : " << method.resp_desc()  << std::endl;   // response descriptor
           std::cout << "  call_count      : " << method.call_count() << std::endl;   // call count
           std::cout << std::endl;
         }
