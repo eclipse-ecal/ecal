@@ -56,7 +56,6 @@ option(ECAL_JOIN_MULTICAST_TWICE               "Specific Multicast Network Bug W
 option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
 
 # Set option regarding third party library builds
-option(ECAL_THIRDPARTY_BUILD_PROTOCFUNCTIONS   "Build ProtocFunctions with eCAL"                                   ON)
 option(ECAL_THIRDPARTY_BUILD_SPDLOG            "Build spdlog with eCAL"                                            ON)
 option(ECAL_THIRDPARTY_BUILD_TINYXML2          "Build tinyxml2 with eCAL"                                          ON)
 option(ECAL_THIRDPARTY_BUILD_FINEFTP           "Build fineFTP with eCAL"                                           ON)
@@ -142,6 +141,8 @@ if(MSVC)
     endif()
   endif()
 endif()
+
+set(ECAL_THIRDPARTY_BUILD_PROTOCFUNCTIONS ON)
 
 # This is a list of subprojects, that might be build with eCAL
 # according to how options ECAL_BUILD_<SUBPROJECT> are set
