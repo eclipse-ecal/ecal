@@ -74,6 +74,7 @@ public slots:
   void resetLayout();
   
 private slots:
+  void createVisualizationDockWidget(const QString& topic_name, const QString& topic_type, const QString& iid, const QString& object_name = QString());
   void updateEcalTime();
 
 signals:

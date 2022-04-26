@@ -113,6 +113,8 @@ set(source_files
     src/widgets/visualisation_widget/visualisation_widget.h
     src/widgets/visualisation_widget/visualisation_window.cpp
     src/widgets/visualisation_widget/visualisation_window.h
+    src/widgets/visualisation_widget/visualisation_dock_widget.cpp
+    src/widgets/visualisation_widget/visualisation_dock_widget.h
 
     src/widgets/system_information_widget/system_information_widget.cpp
     src/widgets/system_information_widget/system_information_widget.h
@@ -143,6 +145,7 @@ set(ui_files
     src/widgets/system_information_widget/system_information_widget.ui
     src/widgets/tree_item_view_widget/tree_item_view_widget.ui
     src/widgets/visualisation_widget/visualisation_widget.ui
+    src/widgets/visualisation_widget/visualisation_dock_widget.ui
 )
 
 if(ECAL_NPCAP_SUPPORT)
