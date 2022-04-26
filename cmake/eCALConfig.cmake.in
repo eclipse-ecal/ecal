@@ -44,6 +44,10 @@ include("@PACKAGE_eCAL_install_cmake_dir@/eCALTargets.cmake")
 #  list(APPEND CMAKE_PREFIX_PATH "${PACKAGE_PREFIX_DIR}/../../../../cmake")
 #endif()
 
-find_package(ProtocFunctions REQUIRED)
+# The ProtocFunctions contain helper functions from CMakeFunctions. Therefore, we must include only one.
+find_package(CMakeFunctions QUIET)
+if (NOT "${CMakeFunctions_FOUND}")
+    find_package(ProtocFunctions REQUIRED)
+endif()
 
 find_package(Threads REQUIRED)
