@@ -24,6 +24,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   serialized_pb=_b('\n\x0cperson.proto\x12\tpb.People\x1a\x0c\x61nimal.proto\x1a\x0bhouse.proto\"\xbb\x01\n\x06Person\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04name\x18\x02 \x01(\t\x12&\n\x05stype\x18\x03 \x01(\x0e\x32\x17.pb.People.Person.SType\x12\r\n\x05\x65mail\x18\x04 \x01(\t\x12\x1b\n\x03\x64og\x18\x05 \x01(\x0b\x32\x0e.pb.Animal.Dog\x12$\n\x05house\x18\x06 \x01(\x0b\x32\x15.pb.Environment.House\"\x1d\n\x05SType\x12\x08\n\x04MALE\x10\x00\x12\n\n\x06\x46\x45MALE\x10\x01\x62\x06proto3')
   ,
   dependencies=[animal__pb2.DESCRIPTOR,house__pb2.DESCRIPTOR,])
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
 
@@ -63,42 +64,42 @@ _PERSON = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='name', full_name='pb.People.Person.name', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='stype', full_name='pb.People.Person.stype', index=2,
       number=3, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='email', full_name='pb.People.Person.email', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='dog', full_name='pb.People.Person.dog', index=4,
       number=5, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='house', full_name='pb.People.Person.house', index=5,
       number=6, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
+      options=None),
   ],
   extensions=[
   ],
@@ -121,7 +122,6 @@ _PERSON.fields_by_name['dog'].message_type = animal__pb2._DOG
 _PERSON.fields_by_name['house'].message_type = house__pb2._HOUSE
 _PERSON_STYPE.containing_type = _PERSON
 DESCRIPTOR.message_types_by_name['Person'] = _PERSON
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Person = _reflection.GeneratedProtocolMessageType('Person', (_message.Message,), dict(
   DESCRIPTOR = _PERSON,
