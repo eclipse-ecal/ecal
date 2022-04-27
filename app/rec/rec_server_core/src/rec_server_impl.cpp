@@ -691,6 +691,19 @@ namespace eCAL
       {
         std::shared_lock<decltype(job_history_mutex_)> job_history_lock(job_history_mutex_);
         status.job_history_ = job_history_;
+        for (auto& job : status.job_history_)
+        {
+          auto result = SimulateUploadMeasurement_NoLock(job);
+          if (result == eCAL::rec::Error(eCAL::rec::Error::OK))
+            job.can_upload_  = true;
+          else
+            job.can_upload_  = false;
+          result = SimulateAddComment_NoLock(job, job.local_evaluated_job_config_.GetJobId());
+          if (result == eCAL::rec::Error(eCAL::rec::Error::OK))
+            job.can_comment_ = true;
+          else
+            job.can_comment_ = false;
+        }
       }
 
       {

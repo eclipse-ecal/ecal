@@ -152,6 +152,12 @@ namespace eCAL
 
         // upload_config
         ToProtobuf(job_history_entry.upload_config_, *measurement_pb.mutable_upload_config());
+
+        // can_upload
+        measurement_pb.set_can_upload(job_history_entry.can_upload_);
+
+        // can_comment
+        measurement_pb.set_can_comment(job_history_entry.can_comment_);
       }
 
       void ToProtobuf(const std::pair<eCAL::rec::RecorderStatus, eCAL::Time::ecal_clock::time_point>& client_status_pair, const std::string& hostname, eCAL::pb::rec_server::ClientStatus& client_status_pb)
@@ -363,6 +369,8 @@ namespace eCAL
 
         job_history_entry.is_uploaded_     = measurement_pb.is_uploaded();
         job_history_entry.is_uploaded_     = measurement_pb.is_uploaded();
+        job_history_entry.can_upload_      = measurement_pb.can_upload();
+        job_history_entry.can_comment_     = measurement_pb.can_comment();
         FromProtobuf(measurement_pb.upload_config(), job_history_entry.upload_config_);
       }
 
