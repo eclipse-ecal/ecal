@@ -33,11 +33,7 @@ int OnMethodCallback(const char* method_, const char* req_type_, const char* res
   if ((unsigned int)request_len_ > sizeof(response_buf)) return 0;
 
   // echo request to response
-  errno_t err = memcpy_s(response_buf, sizeof(response_buf), request_, request_len_);
-  if (0 != err) {
-    // invalid input
-    return 0;
-  }
+  memcpy(response_buf, request_, request_len_);
 
   *response_     = response_buf;
   *response_len_ = request_len_;
