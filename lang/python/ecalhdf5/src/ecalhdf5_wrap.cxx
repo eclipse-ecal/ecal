@@ -21,6 +21,7 @@
 * @brief  eCALHDF5 python interface
 **/
 
+#define PY_SSIZE_T_CLEAN
 #include "Python.h"
 #include "modsupport.h"
 #include "structmember.h"
