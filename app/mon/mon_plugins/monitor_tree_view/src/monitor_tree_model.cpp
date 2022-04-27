@@ -25,7 +25,9 @@ MonitorTreeModel::MonitorTreeModel(QObject *parent)
   : QAbstractTreeModel(parent)
   , display_blobs_(false)
 {
-  setRoot(new MonitorTreeItem(-1, this));
+  // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  MonitorTreeModel::setRoot(new MonitorTreeItem(-1, this));
 }
 
 MonitorTreeModel::~MonitorTreeModel()

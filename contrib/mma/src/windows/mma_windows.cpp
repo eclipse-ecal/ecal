@@ -64,23 +64,24 @@ namespace
 }
 
 MMAWindows::MMAWindows():
-  init_done(false),
-  operating_system(),
-  nr_of_cpu_cores(),
-  total_disks_(),
-  total_network_cards_(),
-  processes_(),
-  memory_(),
-  processor_(),
-  query_manager_(),
+  h_query_(),
   pdhStatus(),
-  h_query_()
+  query_manager_(),
+  processor_(),
+  memory_(),
+  processes_(),
+  total_network_cards_(),
+  total_disks_(),
+  nr_of_cpu_cores(),
+  operating_system(),
+  init_done(false)
 {
   init_done = init();
 }
 
 bool MMAWindows::init()
 {
+  _Out_ LPTSTR lpBuffer = nullptr;
   try 
   {
     pdhStatus = PdhOpenQuery(nullptr, 0, &h_query_);
@@ -103,7 +104,7 @@ bool MMAWindows::init()
 
     processes_ = std::make_shared<Processes>();
     nr_of_cpu_cores = processor_->GetNumbersOfCpuCores(); // the nr. of cores is static show we need to call once this function
-    _Out_ LPTSTR lpBuffer = new char[4026];
+    lpBuffer = new char[4026];
     _In_  UINT   uSize = 0;
     if (GetSystemWow64Directory(lpBuffer, uSize) == 0)
     {
@@ -117,8 +118,14 @@ bool MMAWindows::init()
   catch(...)
   {
     Logger::getLogger()->Log("Initialization failed");
+    if (lpBuffer)
+      delete[] lpBuffer;
     return false;
   }
+
+  if (lpBuffer)
+    delete[] lpBuffer;
+
   return true;
 }
 
@@ -249,7 +256,13 @@ void MMAWindows::SetProcessesData(eCAL::pb::mma::State& state, const bool no_err
 void MMAWindows::AddResource(const std::shared_ptr<Resource>& resource)
 {
   std::shared_ptr<Resource> resource_buffer;
-  std::string object_type = typeid(*resource).name();
+  std::string object_type;
+  if (resource)
+  {
+    // use ref-variable because Resource class is abstract class
+    auto& resource_type = *resource;
+    object_type = typeid(resource_type).name();
+  }
 
   if (object_type == "class Disk")
   {

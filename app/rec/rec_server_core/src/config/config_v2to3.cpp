@@ -546,7 +546,7 @@ namespace eCAL
                   if ((port_element != nullptr) && (port_element->GetText() != nullptr))
                   {
                     std::string port_string(port_element->GetText());
-                    unsigned long port_long = config_output.upload_config_.port_;
+                    unsigned long port_long = 0;
                     try
                     {
                       port_long = std::stoul(port_string);

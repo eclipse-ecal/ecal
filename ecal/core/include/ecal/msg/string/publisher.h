@@ -55,7 +55,10 @@ namespace eCAL
        *
        * @param topic_name_  Unique topic name.
       **/
-      CPublisher(const std::string& topic_name_) : CMsgPublisher<T>(topic_name_, GetTypeName(), GetDescription())
+
+      // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+      // where the vtable is not created yet or it's destructed.
+      CPublisher(const std::string& topic_name_) : CMsgPublisher<T>(topic_name_, CPublisher::GetTypeName(), CPublisher::GetDescription())
       {
       }
 
@@ -107,7 +110,7 @@ namespace eCAL
        *
        * @return  Always returns "base:std::string".
       **/
-      std::string GetTypeName() const
+      std::string GetTypeName() const override
       {
         return("base:std::string");
       }
@@ -118,7 +121,7 @@ namespace eCAL
        *
        * @return  Empty string.
       **/
-      std::string GetDescription() const
+      std::string GetDescription() const override
       {
         return("");
       }
@@ -130,7 +133,7 @@ namespace eCAL
        *
        * @return  String site.
       **/
-      size_t GetSize(const T& msg_) const
+      size_t GetSize(const T& msg_) const override
       {
         return(msg_.size());
       }
@@ -144,7 +147,7 @@ namespace eCAL
        *
        * @return  True if it succeeds, false if it fails.
       **/
-      bool Serialize(const T& msg_, char* buffer_, size_t size_) const
+      bool Serialize(const T& msg_, char* buffer_, size_t size_) const override
       {
         if (msg_.size() <= size_)
         {
