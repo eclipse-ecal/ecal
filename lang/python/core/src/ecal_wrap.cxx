@@ -30,6 +30,7 @@
 #include <unordered_map>
 #include <atomic>
 
+#define PY_SSIZE_T_CLEAN
 #include "Python.h"
 #include "modsupport.h"
 
