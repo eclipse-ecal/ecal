@@ -52,6 +52,8 @@ namespace eCAL
         : local_start_time_(std::chrono::system_clock::duration(0))
         , is_deleted_      (false)
         , is_uploaded_     (false)
+        , can_upload_      (false)
+        , can_comment_     (false)
       {}
 
       std::chrono::system_clock::time_point  local_start_time_;
@@ -63,6 +65,8 @@ namespace eCAL
 
       bool                                   is_uploaded_;
       UploadConfig                           upload_config_;
+      bool                                   can_upload_;
+      bool                                   can_comment_;
     };
 
     struct RecServerStatus
