@@ -30,6 +30,45 @@ project(eCAL)
 set(ECAL_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}")
 
 # --------------------------------------------------------
+# set msvc specific options
+# --------------------------------------------------------
+if(MSVC)
+  message(STATUS "MSVC detected - Adding flags")
+  set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+  add_definitions(-D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /W4")
+  # support Windows 7 and newer
+  add_definitions(-D_WIN32_WINNT=0x0601)
+endif()
+
+# --------------------------------------------------------
+# set mingw specific options
+# --------------------------------------------------------
+if(MINGW)
+  add_definitions(-std=c++14 -DWINVER=0x0601)
+endif()
+
+# --------------------------------------------------------
+# set gcc specific options
+# --------------------------------------------------------
+if(UNIX)
+  message(STATUS "GCC detected - Adding flags")
+  set(CMAKE_CXX_STANDARD 14)
+  add_definitions(-Wall -Wextra -std=c++14)
+
+  set(ATOMIC_TEST_CODE "
+      #include <atomic>
+      int main() { std::atomic<int64_t> i(0); i++; return 0; }
+  ")
+  include(CheckCXXSourceCompiles)
+  check_cxx_source_compiles("${ATOMIC_TEST_CODE}" ATOMIC_IS_BUILTIN)
+  if (NOT ATOMIC_IS_BUILTIN)
+      message(STATUS "Adding -latomic flag, as this plattform does not support 64bit atomic operations out of the box.")
+      set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -latomic")
+  endif ()
+endif()
+
+# --------------------------------------------------------
 # command line build options
 # use it that way cmake .. -DBUILD_APPS=ON -DBUILD_SAMPLES=ON
 # --------------------------------------------------------
@@ -198,44 +237,7 @@ if(MSVC)
   set(eCAL_PLATFORM_TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET})
 endif()
 
-# --------------------------------------------------------
-# set msvc specific options
-# --------------------------------------------------------
-if(MSVC)
-  message(STATUS "MSVC detected - Adding flags")
-  set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-  add_definitions(-D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /W4")
-  # support Windows 7 and newer
-  add_definitions(-D_WIN32_WINNT=0x0601)
-endif()
 
-# --------------------------------------------------------
-# set mingw specific options
-# --------------------------------------------------------
-if(MINGW)
-  add_definitions(-std=c++14 -DWINVER=0x0601)
-endif()
-
-# --------------------------------------------------------
-# set gcc specific options
-# --------------------------------------------------------
-if(UNIX)
-  message(STATUS "GCC detected - Adding flags")
-  set(CMAKE_CXX_STANDARD 14)
-  add_definitions(-Wall -Wextra -std=c++14)
-
-  set(ATOMIC_TEST_CODE "
-      #include <atomic>
-      int main() { std::atomic<int64_t> i(0); i++; return 0; }
-  ")
-  include(CheckCXXSourceCompiles)
-  check_cxx_source_compiles("${ATOMIC_TEST_CODE}" ATOMIC_IS_BUILTIN)
-  if (NOT ATOMIC_IS_BUILTIN)
-      message(STATUS "Adding -latomic flag, as this plattform does not support 64bit atomic operations out of the box.")
-      set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -latomic")
-  endif ()
-endif()
 
 # --------------------------------------------------------
 # offer the user the choice of overriding the installation directories
