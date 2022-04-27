@@ -196,7 +196,7 @@ static PyObject* Meas_GetChannelDescription(Meas *self, PyObject *args)
 
   std::string description = self->hdf5_meas->GetChannelDescription(channel_name);
 
-  return(Py_BuildValue("y#", description.c_str(), description.size()));
+  return(Py_BuildValue("y#", description.c_str(), (Py_ssize_t) description.size()));
 }
 
 /****************************************/
@@ -206,12 +206,12 @@ static PyObject* Meas_SetChannelDescription(Meas *self, PyObject *args)
 {
   char* channel_name = nullptr;
   char* description = nullptr;
-  int size = 0;
+  Py_ssize_t size = 0;
 
   if (!PyArg_ParseTuple(args, "sy#", &channel_name, &description, &size))
     return nullptr;
 
-  self->hdf5_meas->SetChannelDescription(channel_name, std::string(description, size));
+  self->hdf5_meas->SetChannelDescription(channel_name, std::string(description, (int)size));
   Py_RETURN_NONE;
 }
 
@@ -395,7 +395,7 @@ static PyObject* Meas_GetEntryData(Meas *self, PyObject *args)
 
   PyObject* py_data;
 
-  py_data = Py_BuildValue("y#", data, data_size);
+  py_data = Py_BuildValue("y#", data, (Py_ssize_t)data_size);
 
   free(data);
   return py_data;
@@ -421,7 +421,7 @@ static PyObject* Meas_SetFileBaseName(Meas *self, PyObject *args)
 static PyObject* Meas_AddEntryToFile(Meas *self, PyObject *args)
 {
   char*     data(nullptr);
-  int       size(0);
+  Py_ssize_t size(0);
   long long snd_timestamp(0);
   long long rcv_timestamp(0);
   char*     channel_name(nullptr);
@@ -430,7 +430,7 @@ static PyObject* Meas_AddEntryToFile(Meas *self, PyObject *args)
   if (!PyArg_ParseTuple(args, "y#LLs|L", &data, &size, &snd_timestamp, &rcv_timestamp, &channel_name, &counter))
     return nullptr;
 
-  return(Py_BuildValue("i", self->hdf5_meas->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel_name, 0, counter)));
+  return(Py_BuildValue("i", self->hdf5_meas->AddEntryToFile(data, (int)size, snd_timestamp, rcv_timestamp, channel_name, 0, counter)));
 }
 
 /****************************************/
