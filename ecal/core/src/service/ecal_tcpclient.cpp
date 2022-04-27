@@ -329,7 +329,7 @@ namespace eCAL
     m_socket->async_read_some(asio::buffer(tcp_header.get(), sizeof(tcp_header)),
       [this, tcp_header, callback_/*, lock = std::move(lock)*/](auto ec, auto bytes_transferred)
       {
-        if (ec) ExecuteCallback(callback_, "", false);
+        if (ec) this->ExecuteCallback(callback_, "", false);
 
         if (bytes_transferred == sizeof(tcp_header))
         {
@@ -339,7 +339,7 @@ namespace eCAL
         else
         {
           std::cerr << "CTcpClient::ReceiveResponseAsync: Failed to receive response: " << "tcp_header size is invalid." << "\n";
-          ExecuteCallback(callback_, "", false);
+          this->ExecuteCallback(callback_, "", false);
         }
       });
   }
