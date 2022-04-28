@@ -20,6 +20,9 @@
 /**
 * @brief  eCAL python interface
 **/
+#define PY_SSIZE_T_CLEAN
+#include "Python.h"
+#include "modsupport.h"
 
 #include <ecal/ecal.h>
 
@@ -30,8 +33,6 @@
 #include <unordered_map>
 #include <atomic>
 
-#include "Python.h"
-#include "modsupport.h"
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -416,7 +417,7 @@ PyObject* pub_send(PyObject* /*self*/, PyObject* args)
 {
   ECAL_HANDLE  topic_handle = nullptr;
   char*        payload      = nullptr;
-  int          length       = 0;
+  Py_ssize_t   length       = 0;
   PY_LONG_LONG time         = 0;
 
   if (!PyArg_ParseTuple(args, "ny#L", &topic_handle, &payload, &length, &time))
@@ -424,7 +425,7 @@ PyObject* pub_send(PyObject* /*self*/, PyObject* args)
 
   int sent{ 0 };
   //Py_BEGIN_ALLOW_THREADS
-    sent = pub_send(topic_handle, payload, length, time);
+    sent = pub_send(topic_handle, payload, (int)length, time);
   //Py_END_ALLOW_THREADS
 
   return(Py_BuildValue("i", sent));
@@ -532,7 +533,7 @@ PyObject* sub_receive(PyObject* /*self*/, PyObject* args)
     ret = sub_receive_buffer(topic_handle, &rcv_buf, &rcv_buf_len, &rcv_time, timeout);
   Py_END_ALLOW_THREADS
 
-  PyObject* ret_obj = Py_BuildValue("iy#L", ret, rcv_buf, rcv_buf_len, rcv_time);
+  PyObject* ret_obj = Py_BuildValue("iy#L", ret, rcv_buf, (Py_ssize_t)rcv_buf_len, rcv_time);
   ecal_free_mem((void*)rcv_buf);
 
   return(ret_obj);
@@ -554,7 +555,7 @@ static void c_subscriber_callback(const char* topic_name_, const struct eCAL::SR
   PyGILState_STATE state = PyGILState_Ensure();
 
   PyObject* topic_name = Py_BuildValue("s",  topic_name_);
-  PyObject* content    = Py_BuildValue(python_formatter.c_str(), data_->buf, data_->size);
+  PyObject* content    = Py_BuildValue(python_formatter.c_str(), data_->buf, (Py_ssize_t) data_->size);
   PyObject* time       = Py_BuildValue("L",  data_->time);
 
   PyObject* args = PyTuple_New(3);
@@ -846,9 +847,9 @@ static int c_server_method_callback(const std::string& method_name_, const std::
   PyObject* method_name = Py_BuildValue("s", method_name_.c_str());
 
   const std::string fmt("y#");
-  PyObject* req_type  = Py_BuildValue(fmt.data(), req_type_.data(),  req_type_.size());
-  PyObject* resp_type = Py_BuildValue(fmt.data(), resp_type_.data(), resp_type_.size());
-  PyObject* request   = Py_BuildValue(fmt.data(), request_.data(),   request_.size());
+  PyObject* req_type  = Py_BuildValue(fmt.data(), req_type_.data(),  (Py_ssize_t)req_type_.size());
+  PyObject* resp_type = Py_BuildValue(fmt.data(), resp_type_.data(), (Py_ssize_t)resp_type_.size());
+  PyObject* request   = Py_BuildValue(fmt.data(), request_.data(),   (Py_ssize_t)request_.size());
 
   PyObject* args = PyTuple_New(4);
   PyTuple_SetItem(args, 0, method_name);
@@ -869,11 +870,11 @@ static int c_server_method_callback(const std::string& method_name_, const std::
 
     int         cb_ret_state    = 0;
     const char* cb_response     = nullptr;
-    int         cb_response_len = 0;
+    Py_ssize_t  cb_response_len = 0;
     if (PyArg_ParseTuple(result, "iy#", &cb_ret_state, &cb_response, &cb_response_len))
     {
       ret_state = cb_ret_state;
-      response_ = std::string(cb_response, cb_response_len);
+      response_ = std::string(cb_response, (int)cb_response_len);
     }
     else
     {
@@ -1046,13 +1047,13 @@ PyObject* client_call_method(PyObject* /*self*/, PyObject* args)   // (client_ha
   ECAL_HANDLE client_handle = nullptr;
   const char* method_name   = nullptr;
   const char* request       = nullptr;
-  int         request_len   = 0;
+  Py_ssize_t  request_len   = 0;
   int         timeout       = -1;
 
   PyArg_ParseTuple(args, "nsy#i", &client_handle, &method_name, &request, &request_len, &timeout);
 
   bool called_method{ false };
-  called_method = client_call_method(client_handle, method_name, request, request_len, timeout);
+  called_method = client_call_method(client_handle, method_name, request, (int)request_len, timeout);
 
   return(Py_BuildValue("i", called_method));
 }
@@ -1106,7 +1107,7 @@ static void c_client_callback(const struct eCAL::SServiceResponse& service_respo
   PyDict_SetItemString(dict, "call_state", val); Py_DECREF(val);
   PyTuple_SetItem(args, 0, dict);
 
-  val = Py_BuildValue("y#", service_response_.response.c_str(), service_response_.response.size());
+  val = Py_BuildValue("y#", service_response_.response.c_str(), (Py_ssize_t)service_response_.response.size());
   PyTuple_SetItem(args, 1, val);
 
   PyClientCallbackMapT::const_iterator iter = g_client_pycallback_map.find(handle_);
@@ -1440,7 +1441,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
       val = Py_BuildValue("s", topic.ttype().c_str());
       PyDict_SetItemString(topicDict, "ttype", val); Py_DECREF(val);
 
-      val = Py_BuildValue("y#", topic.tdesc().c_str(), topic.tdesc().length());
+      val = Py_BuildValue("y#", topic.tdesc().c_str(), (Py_ssize_t)(topic.tdesc().length()));
       PyDict_SetItemString(topicDict, "tdesc", val); Py_DECREF(val);
 
       val = Py_BuildValue("i", topic.tsize());
