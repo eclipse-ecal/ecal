@@ -806,7 +806,7 @@ sudo apt-get -y update
 <li><p>Compile eCAL with the following options (additional set <cite>BUILD_PY_BINDING</cite> to <cite>ON</cite> if plan to build the python extension):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir _build
 <span class="nb">cd</span> _build
-cmake .. -DCMAKE_BUILD_TYPE<span class="o">=</span>Release -DECAL_THIRDPARTY_BUILD_PROTOBUF<span class="o">=</span>OFF -DECAL_THIRDPARTY_BUILD_CURL<span class="o">=</span>OFF -DECAL_THIRDPARTY_BUILD_HDF5<span class="o">=</span>OFF
+cmake .. -DCMAKE_BUILD_TYPE<span class="o">=</span>Release -DECAL_THIRDPARTY_BUILD_PROTOBUF<span class="o">=</span>OFF -DECAL_THIRDPARTY_BUILD_CURL<span class="o">=</span>OFF -DECAL_THIRDPARTY_BUILD_HDF5<span class="o">=</span>OFF -DECAL_THIRDPARTY_BUILD_QWT<span class="o">=</span>OFF
 make -j4
 </pre></div>
 </div>
