@@ -6,8 +6,6 @@ eCAL 5.10 changes
 
 .. _compatibility_details_5_10_service_api:
 
-
-
 Service API - C
 ===============
 
