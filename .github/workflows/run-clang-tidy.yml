@@ -1,4 +1,4 @@
-name: Run clang-tidy after download
+name: Run clang-tidy
 
 on:
   workflow_call:
@@ -6,6 +6,7 @@ on:
 jobs:
   clang-tidy-scan:
     runs-on: ubuntu-20.04
+    continue-on-error: true
 
     steps:
       - name: Install dependencies
@@ -64,7 +65,6 @@ jobs:
 
       # https://github.com/actions/github-script
       - name: Check clang-tidy warnings
-        continue-on-error: true
         if: ${{ steps.num_warnings.outputs.value > 0 }}
         uses: actions/github-script@v6
         with:
