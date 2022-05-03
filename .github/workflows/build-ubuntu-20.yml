@@ -1,6 +1,6 @@
 name: Build Ubuntu 20.04
 
-on:  
+on:
   push:
   pull_request:
     branches:
@@ -16,7 +16,7 @@ jobs:
         sudo apt update
         sudo apt-get install ninja-build doxygen graphviz libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev qt5-default
 
-    - name: Install Cap’n Proto
+    - name: Install Cap'n Proto
       run: |
         mkdir "${{ runner.workspace }}/capnp"
         cd "${{ runner.workspace }}/capnp"
@@ -28,11 +28,11 @@ jobs:
         sudo make install
 
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules:  'true'
         fetch-depth: 0
-        
+
     - name: Install Python requirements
       shell: bash
       run: |
@@ -45,6 +45,7 @@ jobs:
         mkdir "${{ runner.workspace }}/_build"
         cd "${{ runner.workspace }}/_build"
         cmake $GITHUB_WORKSPACE -G "Ninja" \
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DHAS_HDF5=ON \
         -DHAS_QT5=ON \
         -DHAS_CURL=ON \
@@ -98,13 +99,48 @@ jobs:
       working-directory: ${{ runner.workspace }}/_build
 
     - name: Upload Debian
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: ubuntu-debian
         path: ${{ runner.workspace }}/_build/_deploy/*.deb
 
     - name: Upload Python Wheel
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: ubuntu-python-wheel
         path: ${{ runner.workspace }}/_build/_deploy/*.whl
+
+    #---------------------------------------------------------------------------
+
+    # GNU tar - Excluding Some Files
+    # https://www.gnu.org/software/tar/manual/html_node/exclude.html
+    # the emtpy '.git/' drectory is required, it marks the root directory
+    - name: 'Create a tarball'
+      run: |
+        cd ${{ runner.workspace }}
+        tar --exclude-vcs-ignore \
+            --exclude='bin' \
+            --exclude='doc' \
+            --exclude='_build/_CPack_Packages' \
+            --exclude='_build/_deploy' \
+            --exclude='_build/lib' \
+            --exclude='_build/python' \
+            --exclude='*.deb' \
+            --exclude='*.a' \
+            --exclude='*.o' \
+            --exclude='*.so' \
+            --exclude=ecal/.git/* \
+            -czf ecal.tar.gz ecal/ _build/
+        du -sh ecal.tar.gz
+
+
+    # https://github.com/actions/upload-artifact
+    - name: Upload the whole directory
+      uses: actions/upload-artifact@v3
+      with:
+        name: ecal-dir
+        path: ${{ runner.workspace }}/ecal.tar.gz
+
+  call-clang-tidy:
+    needs: build-ubuntu
+    uses: ./.github/workflows/run-clang-tidy.yml
