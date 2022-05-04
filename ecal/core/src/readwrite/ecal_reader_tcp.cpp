@@ -42,8 +42,6 @@ namespace eCAL
   //////////////////////////////////////////////////////////////////
   // CDataReaderTCP
   //////////////////////////////////////////////////////////////////
-  CDataReaderTCP::CDataReaderTCP() = default;
-
   CTCPReaderLayer::CTCPReaderLayer()
   {
   }
@@ -54,9 +52,9 @@ namespace eCAL
     m_executor = std::make_shared<tcp_pubsub::Executor>(Config::GetTcpPubsubReaderThreadpoolSize(), tcp_pubsub_logger);
   }
 
-  void CTCPReaderLayer::AddSubscription(const std::string& host_name_, const std::string& /*topic_name_*/, const std::string& topic_id_, QOS::SReaderQOS /*qos_*/)
+  void CTCPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
   {
-    std::string map_key(host_name_ + topic_id_);
+    std::string map_key(topic_name_);
 
     std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
     if (m_datareadertcp_map.find(map_key) != m_datareadertcp_map.end()) return;
@@ -67,9 +65,9 @@ namespace eCAL
     m_datareadertcp_map.insert(std::pair<std::string, std::shared_ptr<CDataReaderTCP>>(map_key, reader));
   }
 
-  void CTCPReaderLayer::RemSubscription(const std::string& host_name_, const std::string& /*topic_name_*/, const std::string& topic_id_)
+  void CTCPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
   {
-    std::string map_key(host_name_ + topic_id_);
+    std::string map_key(topic_name_);
 
     std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
     DataReaderTCPMapT::iterator iter = m_datareadertcp_map.find(map_key);
@@ -89,21 +87,18 @@ namespace eCAL
       //////////////////////////////////
       // get parameter from a new writer
       //////////////////////////////////
-      // host name
-      auto host_name = par_.host_name;
-      // topic id
-      auto topic_id  = par_.topic_id;
-      // port
-      auto port = connection_par.layer_par_tcp().port();
 
-      std::string map_key(host_name + topic_id);
+      const auto& remote_hostname = par_.host_name;
+      auto        remote_port     = connection_par.layer_par_tcp().port();
+
+      std::string map_key(par_.topic_name);
 
       std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
       DataReaderTCPMapT::iterator iter = m_datareadertcp_map.find(map_key);
       if (iter == m_datareadertcp_map.end()) return;
 
-      auto reader = iter->second;
-      reader->SetConnection(host_name, static_cast<uint16_t>(port));
+      auto& reader = iter->second;
+      reader->AddConnectionIfNecessary(remote_hostname, static_cast<uint16_t>(remote_port));
     }
     else
     {
@@ -111,6 +106,8 @@ namespace eCAL
       return;
     }
   }
+
+  CDataReaderTCP::CDataReaderTCP() : m_callback_active(false) {}
 
   bool CDataReaderTCP::Create(std::shared_ptr<tcp_pubsub::Executor>& executor_)
   {
@@ -122,11 +119,12 @@ namespace eCAL
   bool CDataReaderTCP::Destroy()
   {
     if (!m_subscriber) return false;
-    m_subscriber = nullptr;
+    m_subscriber      = nullptr;
+    m_callback_active = false;
     return true;
   }
 
-  bool CDataReaderTCP::SetConnection(const std::string& host_name_, uint16_t port_)
+  bool CDataReaderTCP::AddConnectionIfNecessary(const std::string& host_name_, uint16_t port_)
   {
     if (!m_subscriber) return false;
     if (port_ == 0)    return false;
@@ -145,11 +143,15 @@ namespace eCAL
       }
     }
 
-    // add new session
+    // add new session and activate callback if we add the first session
     if (new_session)
     {
       m_subscriber->addSession(host_name_, port_, Config::GetTcpPubsubMaxReconnectionAttemps());
-      m_subscriber->setCallback(std::bind(&CDataReaderTCP::OnTcpMessage, this, std::placeholders::_1));
+      if (!m_callback_active)
+      {
+        m_subscriber->setCallback(std::bind(&CDataReaderTCP::OnTcpMessage, this, std::placeholders::_1));
+        m_callback_active = true;
+      }
     }
 
     return true;
