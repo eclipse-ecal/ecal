@@ -48,7 +48,7 @@ namespace eCAL
     bool Create(std::shared_ptr<tcp_pubsub::Executor>& executor_);
     bool Destroy();
 
-    bool SetConnection(const std::string& host_name_, uint16_t port_);
+    bool AddConnectionIfNecessary(const std::string& host_name_, uint16_t port_);
 
   private:
     void OnTcpMessage(const tcp_pubsub::CallbackData& callback_data);
