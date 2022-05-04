@@ -22,6 +22,7 @@
 **/
 
 #include <iostream>
+#include <functional>
 
 #ifdef _MSC_VER
 #pragma warning(push)
