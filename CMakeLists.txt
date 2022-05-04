@@ -18,6 +18,8 @@
 
 cmake_minimum_required(VERSION 3.13)
 
+include(CMakeDependentOption)
+
 if (POLICY CMP0077)
   cmake_policy(SET CMP0077 NEW) # Prevent HDF5 from overwriting our output paths
 endif (POLICY CMP0077)
@@ -110,12 +112,12 @@ if(WIN32)
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                          ON)
   option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                              ON)
   option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                              ON)
-  option(ECAL_THIRDPARTY_BUILD_QWT             "Build qwt::qwt with eCAL"                                          ON)
+  cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                      ON  "HAS_QT5" OFF)
 else()
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                          OFF)
   option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                              OFF)
   option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                              OFF)
-  option(ECAL_THIRDPARTY_BUILD_QWT             "Build qwt::qwt with eCAL"                                          OFF)
+  cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                      OFF "HAS_QT5" OFF)
 endif()
 
 # This should be ON, unless build ecal hdf5 for Matlab usage
