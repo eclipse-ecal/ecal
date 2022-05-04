@@ -656,7 +656,7 @@ namespace eCAL
   void CDataReader::ApplyExtLayerParameter(const std::string& host_name_, eCAL::pb::eTLayerType type_, const std::string& parameter_)
   {
     SReaderLayerPar par;
-    par.host_name  = m_host_name;
+    par.host_name  = host_name_;
     par.topic_name = m_topic_name;
     par.topic_id   = m_topic_id;
     par.parameter  = parameter_;
