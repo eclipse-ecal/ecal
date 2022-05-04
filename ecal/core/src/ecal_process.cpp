@@ -279,6 +279,7 @@ namespace eCAL
       sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------"               << std::endl;
       sstream << "Layer Mode INPROC        : " << LayerMode(Config::IsInprocRecEnabled())  << std::endl;
       sstream << "Layer Mode SHM           : " << LayerMode(Config::IsShmRecEnabled())     << std::endl;
+      sstream << "Layer Mode TCP           : " << LayerMode(Config::IsTcpRecEnabled())  << std::endl;
       sstream << "Layer Mode UDP MC        : " << LayerMode(Config::IsUdpMulticastRecEnabled())  << std::endl;
       sstream << "Npcap UDP Reciever       : " << LayerMode(Config::IsNpcapEnabled());
 #ifdef ECAL_NPCAP_SUPPORT
