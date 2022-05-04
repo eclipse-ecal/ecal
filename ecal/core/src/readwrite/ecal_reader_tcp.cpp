@@ -42,8 +42,6 @@ namespace eCAL
   //////////////////////////////////////////////////////////////////
   // CDataReaderTCP
   //////////////////////////////////////////////////////////////////
-  CDataReaderTCP::CDataReaderTCP() = default;
-
   CTCPReaderLayer::CTCPReaderLayer()
   {
   }
@@ -109,6 +107,8 @@ namespace eCAL
     }
   }
 
+  CDataReaderTCP::CDataReaderTCP() : m_callback_active(false) {}
+
   bool CDataReaderTCP::Create(std::shared_ptr<tcp_pubsub::Executor>& executor_)
   {
     // create tcp subscriber
@@ -119,7 +119,8 @@ namespace eCAL
   bool CDataReaderTCP::Destroy()
   {
     if (!m_subscriber) return false;
-    m_subscriber = nullptr;
+    m_subscriber      = nullptr;
+    m_callback_active = false;
     return true;
   }
 
@@ -143,11 +144,14 @@ namespace eCAL
     }
 
     // add new session and activate callback if we add the first session
-    bool first_session(sessions.empty());
     if (new_session)
     {
       m_subscriber->addSession(host_name_, port_, Config::GetTcpPubsubMaxReconnectionAttemps());
-      if(first_session) m_subscriber->setCallback(std::bind(&CDataReaderTCP::OnTcpMessage, this, std::placeholders::_1));
+      if (!m_callback_active)
+      {
+        m_subscriber->setCallback(std::bind(&CDataReaderTCP::OnTcpMessage, this, std::placeholders::_1));
+        m_callback_active = true;
+      }
     }
 
     return true;
