@@ -48,12 +48,13 @@ namespace eCAL
     bool Create(std::shared_ptr<tcp_pubsub::Executor>& executor_);
     bool Destroy();
 
-    bool SetConnection(const std::string& host_name_, uint16_t port_);
+    bool AddConnectionIfNecessary(const std::string& host_name_, uint16_t port_);
 
   private:
     void OnTcpMessage(const tcp_pubsub::CallbackData& callback_data);
     std::shared_ptr<tcp_pubsub::Subscriber> m_subscriber;
-    eCAL::pb::Sample                   m_ecal_header;
+    bool                                    m_callback_active;
+    eCAL::pb::Sample                        m_ecal_header;
   };
 
   // ecal tcp reader data layer

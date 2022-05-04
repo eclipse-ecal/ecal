@@ -628,7 +628,8 @@ namespace eCAL
     {
     case eCAL::pb::tl_ecal_udp_mc:
     {
-      CMulticastLayer::Get()->SetConnectionParameter(par);
+      // not used currently
+      //CMulticastLayer::Get()->SetConnectionParameter(par);
       break;
     }
     case eCAL::pb::tl_ecal_shm:
@@ -643,7 +644,8 @@ namespace eCAL
     }
     case eCAL::pb::tl_inproc:
     {
-      CInProcLayer::Get()->SetConnectionParameter(par);
+      // not used currently
+      //CInProcLayer::Get()->SetConnectionParameter(par);
       break;
     }
     default:
@@ -651,8 +653,30 @@ namespace eCAL
     }
   }
 
-  void CDataReader::ApplyExtLayerParameter(const std::string& /*host_name_*/, eCAL::pb::eTLayerType /*type_*/, const std::string& /*parameter_*/)
+  void CDataReader::ApplyExtLayerParameter(const std::string& host_name_, eCAL::pb::eTLayerType type_, const std::string& parameter_)
   {
+    SReaderLayerPar par;
+    par.host_name  = host_name_;
+    par.topic_name = m_topic_name;
+    par.topic_id   = m_topic_id;
+    par.parameter  = parameter_;
+
+    switch (type_)
+    {
+    case eCAL::pb::tl_ecal_udp_mc:
+    {
+      // not used currently
+      //CMulticastLayer::Get()->SetConnectionParameter(par);
+      break;
+    }
+    case eCAL::pb::tl_ecal_tcp:
+    {
+      CTCPReaderLayer::Get()->SetConnectionParameter(par);
+      break;
+    }
+    default:
+      break;
+    }
   }
 
   void CDataReader::SetConnected(bool state_)

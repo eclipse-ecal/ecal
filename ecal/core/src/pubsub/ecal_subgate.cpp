@@ -277,8 +277,6 @@ namespace eCAL
       for (auto tlayer : ecal_sample_.topic().tlayer())
       {
         // layer parameter as protobuf message
-        // this parameter is not used at all currently
-        // for external publisher registrations
         std::string writer_par = tlayer.par_layer().SerializeAsString();
         iter->second->ApplyExtLayerParameter(host_name, tlayer.type(), writer_par);
       }
