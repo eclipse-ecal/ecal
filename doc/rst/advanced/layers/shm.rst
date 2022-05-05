@@ -94,4 +94,28 @@ How does it works
 
 - **Multibuffering**
 
-  To be described.
+  As described in the previous sections eCAL uses one shared memory file per publisher. This can lead to performance reduction if
+    * the memory file is blocked by a subscriber that is copying out it's content
+    * the memory file is blocked by a subscriber that is working on it's content as described
+    * the memory file is blocked because a large number of connected subscribers acquire read access
+    * a combination of all
+
+  To relax this kind of single ressource conflict a new feature was introduced in eCAL 5.10 called `MultiBuffering`. Multi buffering will enable to handle a chain of memory file for the same topic.
+  These files are described in a simple ring buffer logic and the connected subscriber will observe all of them for the specific connection. In performance measures it could be shown that for the specific
+  use case shown in the table above a relaxation of the ressource conflict and so an improvement of the system performance could be achieved.
+
+  Combining the zero copy feature with an increase of the number of memory buffer files to 2 or 3 could be a nice setup to allow the subscriber to work on the memory file content without copying it's content
+  and not blocking the publisher for the next writing (done in the next memory file of the chain). But keep in mind that every additional memory file will allocate extra ressource like events and mutexes.
+
+  Multibuffering can be enabled for a specific publisher using this ``CPublisher`` API function:
+
+  .. code-block:: cpp
+    
+    /**
+    * @brief Set publisher maximum number of used shared memory buffers.
+    *
+    * @param buffering_  Maximum number of used buffers (needs to be greater than 1, default = 1).
+    *
+    * @return  True if it succeeds, false if it fails.
+    **/
+    bool ShmSetBufferCount(long buffering_);
