@@ -21,24 +21,24 @@ How does it works
   By default (standard configuration) the logic is implemented that way:
 
   Initialization phase:
-    #. The publisher creates a memory file fitting to the size of the current payload.
-    #. The publisher creates a named shared mutex and a named event used as synchronization primitives.
-    #. The publisher informs all matching subscribers about the name of the memory file, the matching mutex and the update event.
-    #. The subscriber starts observing the memory file for updates by listening to the update event.
+    * The publisher creates a memory file fitting to the size of the current payload.
+    * The publisher creates a named shared mutex and a named event used as synchronization primitives.
+    * The publisher informs all matching subscribers about the name of the memory file, the matching mutex and the update event.
+    * The subscriber starts observing the memory file for updates by listening to the update event.
       
   Communication phase (default configuration):
-    #. The publisher acquires the memory file access mutex and opens the memory file.
-    #. The publisher writes the payload content and some header information into the memory file.
-    #. The publisher fires the update event, closes the memory file and unlocks the mutex.
-    #. The subscribers is signaled by the update event and acquires the access mutex.
-    #. The subscriber opens the memory file and copies the payload into it's process memory.
-    #. The subscriber closes the memory file and releases the access mutex.
+    * The publisher acquires the memory file access mutex and opens the memory file.
+    * The publisher writes the payload content and some header information into the memory file.
+    * The publisher fires the update event, closes the memory file and unlocks the mutex.
+    * The subscribers is signaled by the update event and acquires the access mutex.
+    * The subscriber opens the memory file and copies the payload into it's process memory.
+    * The subscriber closes the memory file and releases the access mutex.
 
-  .. note::
 
-    To support one to many publisher/subscriber connections the publisher creates in fact one named update event per connection.
+  To support one to many publisher/subscriber connections the publisher creates in fact one named update event per connection.
     
-  In the standard configuration there is no guarantee, no check if all subscriber could make a copy of the payload in time or not. That means if a publisher will send payloads with a frequency that is higher than a connected subscriber can process (copy out) the payload then the content will be overwritten. In this case the subscriber will be informed by a simple counting mechanism that messages where dropped. You can check for dropped messages in the eCAL Monitor application.
+  .. note::
+    In the standard configuration there is no guarantee, no check if all subscriber could make a copy of the payload in time or not. That means if a publisher will send payloads with a frequency that is higher than a connected subscriber can process (copy out) the payload then the content will be overwritten. In this case the subscriber will be informed by a simple counting mechanism that messages where dropped. You can check for dropped messages in the eCAL Monitor application.
 
 - **Using an additional handshake mechanism**
 
@@ -65,12 +65,12 @@ How does it works
   But if it comes to very large messages where copying really matters (high resolution, raw images, pointclouds) then it could make sense to switch eCAL's shared memory layer to a kind of zero copy logic. In fact it's still not real zero copy but it's just one copy instead of the described two. Because eCAL is supporting different transport mechanism in parallel like UDP and TCP there is still one copy needed on the publisher side to decouple the transport layers from each other. But let's look how that single copy mechanism is working in detail. The initialization phase is the same as described in the default configuration. The communication phase looks like this now.
 
   Communication phase (Zero copy configuration):
-    1.-4. Like described in the default configuration.
+    * The publisher side acts like described in the default configuration.
+    * The subscriber opens the memory file and calls the connected user callback function without copying the payload (just forwarding the memory address and size).
+    * The subscriber closes the memory file and releases the access mutex.
 
-    2. The subscriber opens the memory file and calls the connected user callback function without copying the payload.
-    3. Like described in the default configuration.
-
-  Note that the memory file is blocked for new publications as long as the users callback function is processing it's content.
+  .. note::
+    The memory file is blocked for new publications as long as the users callback function is processing it's content.
 
   Zero copy could be activated either per connection or for a complete system using the eCAL configuration file. To activate it for a specific publisher this ``CPublisher`` API function needs to be called.
 
