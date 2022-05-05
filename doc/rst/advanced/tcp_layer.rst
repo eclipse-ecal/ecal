@@ -33,6 +33,7 @@ Let's compare the "normal" UDP Layer with the TCP Layer and assume transferring 
 - **TCP**
   
   TCP is a single-cast protocol that automatically recovers message drops and handles conguestion avoidance.
+  If one of our 11000 Ethernet packets is lost, TCP will automatically take care of that and make sure the whole message is transmitted without errors.
 
   On the downside, TCP will have to transmit the same message n-times for n subscribers.
   Additionally, TCP is often regarded to be too inefficient and have too much latency for realtime publish subscribe applications.
@@ -73,21 +74,21 @@ You can activate TCP in the following ways:
       While this may be fine for testing, you may run into side effects that you didn't expect, mostly from the fact that each additional subscriber will cause more network usage.
       Transmitting small messages is way more efficient using UDP Multicast.
 
-#. **Selectively from your code:**
+#. **Use TCP selectively from your code for a single publisher:**
    
    Usually, you can somewhat estimate the size of your messages when writing your publisher code.
    Therefore, we recommend enabling TCP from the eCAL Publisher API only for those that actually benefit from that:
 
    .. code-block:: cpp
 
-      // create a publisher (topic name "person")
+      // Create a publisher (topic name "person")
       eCAL::protobuf::CPublisher<pb::People::Person> pub("person");
 
-      // switch all layer off
-      pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
+      // Switch UDP Multicast layer off
+      pub.SetLayerMode(eCAL::TLayer::tlayer_udp_mc, eCAL::TLayer::smode_off);
 
-      // switch unicast layer on
-      pub.SetLayerMode(eCAL::TLayer::tlayer_tcp, eCAL::TLayer::smode_on);
+      // Switch TCP layer on for Network connections (-> smode_uto)
+      pub.SetLayerMode(eCAL::TLayer::tlayer_tcp, eCAL::TLayer::smode_auto);
 
 
    .. seealso:: 
