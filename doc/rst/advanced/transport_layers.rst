@@ -17,11 +17,11 @@ Every single builtin transport layer has it's specific communication properties.
 +----------------------------------------------+--------------------------+--------------------+-------------------------------------------------------------------------------------------+
 | Layer                                        | ini parameter            | Physical Layer     | Comment                                                                                   |
 +==============================================+==========================+====================+===========================================================================================+
-| inproc                                       | [publisher/use_inproc]   | inner process      | inner process, zeroy copy communication (pointer forwarding)                              |
+| :ref:`inproc <transport_layer_inproc>`       | [publisher/use_inproc]   | inner process      | inner process, zeroy copy communication (pointer forwarding)                              |
 +----------------------------------------------+--------------------------+--------------------+-------------------------------------------------------------------------------------------+
-| shm                                          | [publisher/use_shm]      | shared memory      | interprocess, shared memory communication, supports N:M connections, 2 memory copies      |
+| :ref:`shm <transport_layer_shm>`             | [publisher/use_shm]      | shared memory      | interprocess, shared memory communication, supports N:M connections, 2 memory copies      |
 +----------------------------------------------+--------------------------+--------------------+-------------------------------------------------------------------------------------------+
-| udp_mc                                       | [publisher/use_udp_mc]   | udp multicast      | interhost, topic name based dynamic multicast grouping to optimize pub/sub socket payload |
+| :ref:`udp_mc <transport_layer_udp_mc>`       | [publisher/use_udp_mc]   | udp multicast      | interhost, topic name based dynamic multicast grouping to optimize pub/sub socket payload |
 +----------------------------------------------+--------------------------+--------------------+-------------------------------------------------------------------------------------------+
 | :ref:`tcp <transport_layer_tcp>`             | [publisher/use_tcp]      | tcp                | Network (interhost), simulates N:M connections. Meant for single large payloads.          |
 +----------------------------------------------+--------------------------+--------------------+-------------------------------------------------------------------------------------------+
@@ -46,8 +46,11 @@ This can be done in the ecal.ini file [network] section.
 
 .. seealso:: 
 
-   .. toctree:: 
+   .. toctree::
 
       :maxdepth: 1
 
-      tcp_layer.rst
+      layers/shm.rst
+      layers/udp_mc.rst
+      layers/tcp.rst
+      layers/inproc.rst
