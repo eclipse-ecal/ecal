@@ -35,6 +35,7 @@ ChartWidget::ChartWidget(SignalPlotting::PLUGIN_STATE plugin_state, QWidget* par
 
   // Plot related logic
   qwt_plot_ = new QwtPlot(this);
+  qwt_plot_->setMinimumSize(QSize(10,10));
   qwt_plot_->setAxisTitle(QwtPlot::xBottom, QString::fromUtf8("Time / seconds"));
   qwt_plot_->setAxisScale(QwtPlot::xBottom, time_interval_.minValue(), time_interval_.maxValue());
   qwt_plot_->setAxisTitle(QwtPlot::yLeft, tab_name);
@@ -86,12 +87,12 @@ ChartWidget::ChartWidget(SignalPlotting::PLUGIN_STATE plugin_state, QWidget* par
 
   chart_settings_button_ = new QPushButton(this);
   chart_settings_button_->setText("Chart settings");
-  chart_settings_button_->setMinimumWidth(90);
+  chart_settings_button_->setMinimumWidth(10);
 
   close_button_ = new QToolButton(this);
   close_button_->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextOnly);
   close_button_->setText("Close");
-  close_button_->setMinimumWidth(90);
+  close_button_->setMinimumWidth(10);
   close_button_->setFixedHeight(chart_settings_button_->sizeHint().height());
 
   button_layout->addWidget(chart_settings_button_);
