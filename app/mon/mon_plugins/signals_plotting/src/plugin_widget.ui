@@ -15,62 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QHBoxLayout" name="button_layout">
-     <item>
-      <widget class="QPushButton" name="expand_button">
-       <property name="minimumSize">
-        <size>
-         <width>10</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Expand</string>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normalon>:/ecalicons/EXPAND</normalon>
-        </iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="collapse_button">
-       <property name="minimumSize">
-        <size>
-         <width>10</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Collapse</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../../../../iconset/ecalicons.qrc">
-         <normaloff>:/ecalicons/COLLAPSE</normaloff>:/ecalicons/COLLAPSE</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="button_spacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="content_layout" stretch="5,5">
-     <item>
-      <layout class="QHBoxLayout" name="logging_layout"/>
-     </item>
+    <layout class="QHBoxLayout" name="content_layout" stretch="5">
      <item>
       <widget class="QSplitter" name="splitter">
        <property name="sizePolicy">
@@ -82,26 +27,109 @@
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <widget class="QWidget" name="treeview_widget" native="true">
-        <layout class="QHBoxLayout" name="treeview_layout">
-         <property name="sizeConstraint">
-          <enum>QLayout::SetMaximumSize</enum>
-         </property>
+       <widget class="QWidget" name="treeview_area" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
          <property name="leftMargin">
           <number>0</number>
          </property>
          <property name="topMargin">
           <number>0</number>
          </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
          <property name="bottomMargin">
           <number>0</number>
          </property>
+         <item>
+          <layout class="QHBoxLayout" name="button_layout">
+           <item>
+            <widget class="QPushButton" name="expand_button">
+             <property name="minimumSize">
+              <size>
+               <width>10</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Expand</string>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normalon>:/ecalicons/EXPAND</normalon>
+              </iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="collapse_button">
+             <property name="minimumSize">
+              <size>
+               <width>10</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Collapse</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../../../../iconset/ecalicons.qrc">
+               <normaloff>:/ecalicons/COLLAPSE</normaloff>:/ecalicons/COLLAPSE</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="button_spacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="treeview_area_content">
+           <item>
+            <widget class="QWidget" name="logging_widget" native="true">
+             <layout class="QHBoxLayout" name="logging_layout">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="treeview_layout"/>
+           </item>
+          </layout>
+         </item>
         </layout>
        </widget>
        <widget class="QWidget" name="plot_widget" native="true">
         <layout class="QHBoxLayout" name="widget_plot_layout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
          <property name="sizeConstraint">
           <enum>QLayout::SetMaximumSize</enum>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
          </property>
          <property name="topMargin">
           <number>0</number>
