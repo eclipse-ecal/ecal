@@ -8,7 +8,7 @@
     <meta name="docsearch:release" content="" />
     <meta name="docsearch:version" content="" />
 
-    <title>eCAL 5.10 changes &mdash; eCAL Documentation  documentation</title>
+    <title>eCAL 5.9 &mdash; eCAL Documentation  documentation</title>
 
     <link rel="shortcut icon" href="../../_static/img/favicon.png" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
@@ -22,6 +22,9 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="top" title="eCAL Documentation  documentation" href="#" />
+    <link rel="up" title="eCAL Versions" href="../ecal_versions.html" />
+    <link rel="next" title="eCAL 5.8" href="../5.8/whats_new.html" />
+    <link rel="prev" title="eCAL 5.10" href="../5.10/whats_new.html" />
 <!-- /linktags -->
 <!-- extrahead --><!-- /extrahead -->
     <script src="../../_static/js/modernizr.min.js"></script>
@@ -478,7 +481,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Advanced</span></p>
-<ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../ecal_versions.html">eCAL Versions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../compatibility.html">eCAL Compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5.10/whats_new.html">eCAL 5.10</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">eCAL 5.9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../5.8/whats_new.html">eCAL 5.8</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../_download_archive/download_archive.html">eCAL Download Archive</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../_download_archive/download_archive_ecal_5_9_6.html">eCAL 5.9.6</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../_download_archive/download_archive_ecal_5_9_5.html">eCAL 5.9.5</a></li>
@@ -528,21 +538,26 @@
 <li class="toctree-l2"><a class="reference internal" href="../../_download_archive/download_archive_ecal_5_3_4_4.html">eCAL 5.3.4+4</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../compatibility.html">eCAL Compatibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../documentation.html">Edit the documentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../ecal_in_docker.html">eCAL in Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced/tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced/documentation.html">Edit the documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced/ecal_in_docker.html">eCAL in Docker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../development/building_ecal_with_conan_dependencies.html">Building eCAL with Conan dependencies</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../ecal_internals.html">eCAL internals</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../performance.html">Performance measurements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../transport_layers.html">Transport Layers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../threading_model.html">Threading model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../measurement_format.html">eCAL Measurement Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced/ecal_internals.html">eCAL internals</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced/performance.html">Performance measurements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced/transport_layers.html">Transport Layers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../advanced/layers/shm.html">eCAL SHM Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../advanced/layers/udp_mc.html">eCAL UDP Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../advanced/layers/tcp.html">eCAL TCP Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../advanced/layers/inproc.html">eCAL Inner-Process Layer</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../ros_comparison.html">How eCAL relates to ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced/threading_model.html">Threading model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced/measurement_format.html">eCAL Measurement Format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced/ros_comparison.html">How eCAL relates to ROS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../license/ecal_license.html">eCAL License</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../license/thirdparty_licenses.html">Thirdparty Licenses</a><ul>
@@ -551,6 +566,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/bsd-3.html">BSD 3</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/convert-utf.html">Convert UTF License</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/creative-commons-3.0.html">Creative Commons 3.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/findqwt-bsd-2.html">Findqwt-style BSD2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/fontawesome-free.html">Fontawesome Free License</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/gpl-2.0.html">GPL 2.0</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/gpl-3.0.html">GPL 3.0</a></li>
@@ -559,9 +575,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/lgpl-3.0.html">LGPL 3.0</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/mit.html">MIT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/npcap.html">Npcap license</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/qwt.html">qwt</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/unlicense.html">Unlicense</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/zlib.html">zlib</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../license/thirdparty_licenses/qwt.html">qwt</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../license/icon_license.html">Icon License</a></li>
@@ -571,13 +587,10 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">eCAL 5.10 changes</a><ul>
-<li><a class="reference internal" href="#service-api-c">Service API - C</a></li>
-<li><a class="reference internal" href="#id1">Service API - C++</a></li>
-<li><a class="reference internal" href="#service-api-c-protobuf">Service API - C++ (Protobuf)</a></li>
-<li><a class="reference internal" href="#service-sample-c">Service Sample - C</a></li>
-<li><a class="reference internal" href="#id2">Service Sample - C++</a></li>
-<li><a class="reference internal" href="#service-sample-c-protobuf">Service Sample - C++ (Protobuf)</a></li>
+<li><a class="reference internal" href="#">eCAL 5.9</a><ul>
+<li><a class="reference internal" href="#new-features">New features</a></li>
+<li><a class="reference internal" href="#compatibility-table">Compatibility table</a></li>
+<li><a class="reference internal" href="#where-to-download">Where to download</a></li>
 </ul>
 </li>
 </ul>
@@ -590,15 +603,18 @@
                     <div class="rst-content">
 <!-- pager-hidden.html -->
 
+        <a class="no-focus" accesskey="p" href="../5.10/whats_new.html" tabindex="-1"></a>
+        <a class="no-focus" accesskey="n" href="../5.8/whats_new.html" tabindex="-1"></a>
 <!-- /pager-hidden.html -->
 <!-- breadcrumbs.html -->
 <div class="breadcrumb-bar" role="navigation" aria-label="breadcrumbs navigation">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../../index.html">Start</a></li>
-        <li class="breadcrumb-item active" aria-current="page">eCAL 5.10 changes</li>
+            <li class="breadcrumb-item"><a href="../ecal_versions.html">eCAL Versions</a></li>
+        <li class="breadcrumb-item active" aria-current="page">eCAL 5.9</li>
     </ol>
     <div class="breadcrumb-additions">
-        <a class="btn btn-sm btn-light" href="../../_sources/advanced/compatibility_details/5_10.rst.txt" rel="nofollow">
+        <a class="btn btn-sm btn-light" href="../../_sources/versions/5.9/whats_new.rst.txt" rel="nofollow">
             <span class="btn-icon"><span class="fas fa-code"></span></span>
             <span class="btn-text">View source</span>
         </a>
@@ -608,7 +624,7 @@
             <span class="btn-icon"><span class="fas fa-info-circle"></span></span>
             <span class="btn-text">How to edit</span>
         </a>
-        <a class="btn btn-sm btn-light" id="btnEditOnGitHub" href="https://github.com/continental/ecal/blob/master/doc/rst/advanced/compatibility_details/5_10.rst">
+        <a class="btn btn-sm btn-light" id="btnEditOnGitHub" href="https://github.com/continental/ecal/blob/master/doc/rst/versions/5.9/whats_new.rst">
             <span class="btn-icon"><span class="fab fa-github"></span></span>
             <span class="btn-text">Edit on GitHub</span>
         </a>
@@ -618,288 +634,67 @@
                         <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
                             <div itemprop="articleBody">
 <!-- body -->
-    <div class="section" id="ecal-5-10-changes">
-<h1>eCAL 5.10 changes<a class="headerlink" href="#ecal-5-10-changes" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="service-api-c">
-<span id="compatibility-details-5-10-service-api"></span><h2>Service API - C<a class="headerlink" href="#service-api-c" title="Permalink to this headline">¶</a></h2>
-<p>The service info struct has been renamed and extended</p>
-<p>Old 5.9.x version:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">SServiceInfoC</span>
-<span class="p">{</span>
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span>      <span class="n">host_name</span><span class="p">;</span>      <span class="c1">//!&lt; service host</span>
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span>      <span class="n">service_name</span><span class="p">;</span>   <span class="c1">//!&lt; service name</span>
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span>      <span class="n">method_name</span><span class="p">;</span>    <span class="c1">//!&lt; method name</span>
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span>      <span class="n">error_msg</span><span class="p">;</span>      <span class="c1">//!&lt; error message in case of failure</span>
-  <span class="kt">int</span>              <span class="n">ret_state</span><span class="p">;</span>      <span class="c1">//!&lt; return state from method callback</span>
-  <span class="k">enum</span> <span class="n">eCallState</span>  <span class="n">call_state</span><span class="p">;</span>     <span class="c1">//!&lt; service call state</span>
-<span class="p">};</span>
-</pre></div>
+    <div class="section" id="ecal-5-9">
+<span id="ecal-version-5-9"></span><h1>eCAL 5.9<a class="headerlink" href="#ecal-5-9" title="Permalink to this headline">¶</a></h1>
+<p>eCAL 5.9 was released in August 2021.
+The release notably contains the eCAL Rec command line Application.</p>
+<ul class="simple">
+<li><p><strong>Release</strong>: August 2021</p></li>
+<li><p><strong>End of life</strong>: November 2022 (planned)</p></li>
+</ul>
+<div class="section" id="new-features">
+<h2>New features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>An awesome <strong>ecal_rec command line</strong> application, that let’s you record data from command line and remote-control other eCAL recorders!</p></li>
+<li><p><strong>Async Services</strong> (Some technical stuff deep inside the core that is needed by rmw_ecal. So this is the version you want to use when combining ROS2 and eCAL)</p></li>
+<li><p><strong>Great improvements</strong> in eCAL Rec GUI, eCAL Sys GUI and eCAL Mon CLI</p></li>
+<li><p>Check out the <a class="reference external" href="https://github.com/continental/ecal/releases/tag/v5.9.0">entire 5.9.0 changelog</a>!.</p></li>
+</ul>
 </div>
-<p>New 5.10.x version (now containing 2 new elements for the service response):</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">SServiceResponseC</span>
-<span class="p">{</span>
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span>      <span class="n">host_name</span><span class="p">;</span>     <span class="c1">//!&lt; service host name</span>
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span>      <span class="n">service_name</span><span class="p">;</span>  <span class="c1">//!&lt; name of the service</span>
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span>      <span class="n">service_id</span><span class="p">;</span>    <span class="c1">//!&lt; id of the service</span>
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span>      <span class="n">method_name</span><span class="p">;</span>   <span class="c1">//!&lt; name of the service method</span>
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span>      <span class="n">error_msg</span><span class="p">;</span>     <span class="c1">//!&lt; human readable error message</span>
-  <span class="kt">int</span>              <span class="n">ret_state</span><span class="p">;</span>     <span class="c1">//!&lt; return state of the called service method</span>
-  <span class="k">enum</span> <span class="n">eCallState</span>  <span class="n">call_state</span><span class="p">;</span>    <span class="c1">//!&lt; call state (see eCallState)</span>
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span>      <span class="n">response</span><span class="p">;</span>      <span class="c1">//!&lt; service response</span>
-  <span class="kt">int</span>              <span class="n">response_len</span><span class="p">;</span>  <span class="c1">//!&lt; service response length (response string could include zeros)</span>
-<span class="p">};</span>
-</pre></div>
+<div class="section" id="compatibility-table">
+<h2>Compatibility table<a class="headerlink" href="#compatibility-table" title="Permalink to this headline">¶</a></h2>
+<table class="colwidths-given docutils align-default" id="id1">
+<caption><span class="caption-text">eCAL 5.9 vs. 5.8</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Wire compatibility</p></td>
+<td><ul class="simple">
+<li><p>eCAL UDP: 100% compatible</p></li>
+<li><p>Services: 100% compatible</p></li>
+<li><p>eCAL Shared Memory: 100% compatible</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>API / ABI</p></td>
+<td><ul class="simple">
+<li><p>API is downward compatible (New functions have been added)</p></li>
+<li><p>ABI is not compatible</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Tools</p></td>
+<td><ul>
+<li><p>Rec: Somewhat compatible.</p>
+<p>Expect some issues when using the new (5.9) ecal_rec_cli with old (5.8) ecal_rec_gui or ecal_rec_client instances.
+It should be possible to mix ecal_rec_gui and ecal_rec_client instances of both versions, though.</p>
+</li>
+<li><p>Sys: 100% compatible</p></li>
+<li><p>Measurements: 100% compatible</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<p>The 2 new elements <code class="docutils literal notranslate"><span class="pre">response</span></code> and <code class="docutils literal notranslate"><span class="pre">response_len</span></code> are used in the new C client response callback type</p>
-<p>Old 5.9.x version:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
-<span class="cm"> * @brief eCAL service response callback function (client side)</span>
-<span class="cm"> *</span>
-<span class="cm"> * @param service_info_       Service info struct.</span>
-<span class="cm"> * @param reponse_            Method response payload.</span>
-<span class="cm"> * @param reponse_len_        Method response payload length.</span>
-<span class="cm"> * @param par_                Forwarded user defined parameter.</span>
-<span class="cm">**/</span>
-<span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">ResponseCallbackCT</span><span class="p">)(</span><span class="k">const</span> <span class="k">struct</span> <span class="n">SServiceInfoC</span><span class="o">*</span> <span class="n">service_info_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">response_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">response_len_</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">par_</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>New 5.10.x version:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
-<span class="cm"> * @brief eCAL service response callback function (client side)</span>
-<span class="cm"> *</span>
-<span class="cm"> * @param service_response_   Service response struct containing the (responding) server informations and the response itself.</span>
-<span class="cm"> * @param par_                Forwarded user defined parameter.</span>
-<span class="cm">**/</span>
-<span class="k">typedef</span> <span class="nf">void</span><span class="p">(</span><span class="o">*</span><span class="n">ResponseCallbackCT</span><span class="p">)(</span><span class="k">const</span> <span class="k">struct</span> <span class="n">SServiceResponseC</span><span class="o">*</span> <span class="n">service_response_</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">par_</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>The signature of the blocking client service call function has been changed.</p>
-<p>Old 5.9.x version:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
-<span class="cm"> * @brief Call method of this service (blocking variant with timeout).</span>
-<span class="cm"> *</span>
-<span class="cm"> * @param       handle_        Client handle.</span>
-<span class="cm"> * @param       host_name_     Host name.</span>
-<span class="cm"> * @param       method_name_   Method name.</span>
-<span class="cm"> * @param       request_       Request message buffer.</span>
-<span class="cm"> * @param       request_len_   Request message length.</span>
-<span class="cm"> * @param [out] service_info_  Service info struct with additional infos like call state and</span>
-<span class="cm"> *                             error message.</span>
-<span class="cm"> * @param [out] response_      Pointer to the allocated buffer for the response message.</span>
-<span class="cm"> * @param       response_len_  Response message buffer length or ECAL_ALLOCATE_4ME if</span>
-<span class="cm"> *                             eCAL should allocate the buffer for you (see eCAL_FreeMem).</span>
-<span class="cm"> *</span>
-<span class="cm"> * @return  Size of response buffer if succeeded, otherwise zero.</span>
-<span class="cm">**/</span>
-<span class="n">ECALC_API</span> <span class="kt">int</span> <span class="nf">eCAL_Client_Call_Wait</span><span class="p">(</span><span class="n">ECAL_HANDLE</span> <span class="n">handle_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">host_name_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">method_name_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">request_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">request_len_</span><span class="p">,</span> <span class="k">struct</span> <span class="n">SServiceInfoC</span><span class="o">*</span> <span class="n">service_info_</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">response_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">response_len_</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>New 5.10.x version:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
-<span class="cm"> * @brief Call a method of this service (blocking variant).</span>
-<span class="cm"> *</span>
-<span class="cm"> * @param       handle_            Client handle.</span>
-<span class="cm"> * @param       method_name_       Method name.</span>
-<span class="cm"> * @param       request_           Request message buffer.</span>
-<span class="cm"> * @param       request_len_       Request message length.</span>
-<span class="cm"> * @param       timeout_           Maximum time before operation returns (in milliseconds, -1 means infinite).</span>
-<span class="cm"> * @param [out] service_response_  Service response struct with additional infos like call state and</span>
-<span class="cm"> *                                 error message.</span>
-<span class="cm"> * @param [out] response_          Pointer to the allocated buffer for the response message.</span>
-<span class="cm"> *                                 In case of more then one connected server, only the reponse of the first</span>
-<span class="cm"> *                                 answering server is returned (use callback variant to get all responses).</span>
-<span class="cm"> * @param       response_len_      Response message buffer length or ECAL_ALLOCATE_4ME if</span>
-<span class="cm"> *                                 eCAL should allocate the buffer for you (see eCAL_FreeMem).</span>
-<span class="cm"> *</span>
-<span class="cm"> * @return  Size of response buffer if succeeded, otherwise zero.</span>
-<span class="cm">**/</span>
-<span class="n">ECALC_API</span> <span class="kt">int</span> <span class="nf">eCAL_Client_Call_Wait</span><span class="p">(</span><span class="n">ECAL_HANDLE</span> <span class="n">handle_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">method_name_</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">request_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">request_len_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">timeout_</span><span class="p">,</span> <span class="k">struct</span> <span class="n">SServiceResponseC</span><span class="o">*</span> <span class="n">service_response_</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">response_</span><span class="p">,</span> <span class="kt">int</span> <span class="n">response_len_</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>The new signature is using the new <code class="docutils literal notranslate"><span class="pre">SServiceResponseC</span></code> struct and an additional <code class="docutils literal notranslate"><span class="pre">timeout_</span></code> parameter. The 5.9 version was blocking infinitely by default.</p>
-</div>
-<div class="section" id="id1">
-<h2>Service API - C++<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<p>The service info struct has been renamed and extended.</p>
-<p>Old 5.9.x version:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">SServiceInfo</span>
-<span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">string</span>  <span class="n">host_name</span><span class="p">;</span>      <span class="c1">//!&lt; service host name</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">string</span>  <span class="n">service_name</span><span class="p">;</span>   <span class="c1">//!&lt; name of the service</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">string</span>  <span class="n">method_name</span><span class="p">;</span>    <span class="c1">//!&lt; name of the service method</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">string</span>  <span class="n">error_msg</span><span class="p">;</span>      <span class="c1">//!&lt; human readable error message</span>
-  <span class="kt">int</span>          <span class="n">ret_state</span><span class="p">;</span>      <span class="c1">//!&lt; return state of the called service method</span>
-  <span class="n">eCallState</span>   <span class="n">call_state</span><span class="p">;</span>     <span class="c1">//!&lt; call state (see eCallState)</span>
-<span class="p">};</span>
-</pre></div>
-</div>
-<p>New 5.10.x version (now containing the service <code class="docutils literal notranslate"><span class="pre">response</span></code>):</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">SServiceResponse</span>
-<span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">string</span>  <span class="n">host_name</span><span class="p">;</span>      <span class="c1">//!&lt; service host name</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">string</span>  <span class="n">service_name</span><span class="p">;</span>   <span class="c1">//!&lt; name of the service</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">string</span>  <span class="n">service_id</span><span class="p">;</span>     <span class="c1">//!&lt; id of the service</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">string</span>  <span class="n">method_name</span><span class="p">;</span>    <span class="c1">//!&lt; name of the service method</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">string</span>  <span class="n">error_msg</span><span class="p">;</span>      <span class="c1">//!&lt; human readable error message</span>
-  <span class="kt">int</span>          <span class="n">ret_state</span><span class="p">;</span>      <span class="c1">//!&lt; return state of the called service method</span>
-  <span class="n">eCallState</span>   <span class="n">call_state</span><span class="p">;</span>     <span class="c1">//!&lt; call state (see eCallState)</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">string</span>  <span class="n">response</span><span class="p">;</span>       <span class="c1">//!&lt; service response</span>
-<span class="p">};</span>
-</pre></div>
-</div>
-<p>Additional to the new <code class="docutils literal notranslate"><span class="pre">SServiceResponse</span></code> struct there is a new <code class="docutils literal notranslate"><span class="pre">ServiceResponseVecT</span></code> type that is used to return multiple services response as a standard vector in all kinds of service calls.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">SServiceResponse</span><span class="o">&gt;</span> <span class="n">ServiceResponseVecT</span><span class="p">;</span> <span class="c1">//!&lt; vector of multiple service responses</span>
-</pre></div>
-</div>
-<p>So the service response callback type been changed too.</p>
-<p>Old 5.9.x version:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="k">const</span> <span class="k">struct</span> <span class="n">SServiceInfo</span><span class="o">&amp;</span> <span class="n">service_info_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">response_</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">ResponseCallbackT</span> <span class="o">-&gt;</span>
-</pre></div>
-</div>
-<p>New 5.10.x version:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="k">const</span> <span class="k">struct</span> <span class="n">SServiceResponse</span><span class="o">&amp;</span> <span class="n">service_response_</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">ResponseCallbackT</span>
-</pre></div>
-</div>
-<p>Calling a client in C++ is fully downward compatible excepting that blocking call variant</p>
-<p>Old 5.9.x version:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
-<span class="cm"> * @brief Call method of this service, for specific host.</span>
-<span class="cm"> *</span>
-<span class="cm"> * @param       host_name_     Host name.</span>
-<span class="cm"> * @param       method_name_   Method name.</span>
-<span class="cm"> * @param       request_       Request string.</span>
-<span class="cm"> * @param [out] service_info_  Service info struct for detailed informations.</span>
-<span class="cm"> * @param [out] response_      Response string.</span>
-<span class="cm"> *</span>
-<span class="cm"> * @return  True if successful.</span>
-<span class="cm">**/</span>
-<span class="kt">bool</span> <span class="nf">Call</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">host_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">method_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">request_</span><span class="p">,</span> <span class="k">struct</span> <span class="n">SServiceInfo</span><span class="o">&amp;</span> <span class="n">service_info_</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">response_</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>New 5.10.x version (this is deprecated, see samples section how to use the new recommended interface):</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
-<span class="cm"> * @brief Call method of this service, for specific host (deprecated).</span>
-<span class="cm"> *</span>
-<span class="cm"> * @param       host_name_         Host name.</span>
-<span class="cm"> * @param       method_name_       Method name.</span>
-<span class="cm"> * @param       request_           Request string.</span>
-<span class="cm"> * @param [out] service_info_      Service response struct for detailed informations.</span>
-<span class="cm"> * @param [out] response_          Response string.</span>
-<span class="cm"> *</span>
-<span class="cm"> * @return  True if successful.</span>
-<span class="cm">**/</span>
-<span class="p">[[</span><span class="n">deprecated</span><span class="p">]]</span>
-<span class="kt">bool</span> <span class="n">Call</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">host_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">method_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">request_</span><span class="p">,</span> <span class="k">struct</span> <span class="n">SServiceResponse</span><span class="o">&amp;</span> <span class="n">service_info_</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">response_</span><span class="p">);</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="service-api-c-protobuf">
-<h2>Service API - C++ (Protobuf)<a class="headerlink" href="#service-api-c-protobuf" title="Permalink to this headline">¶</a></h2>
-<p>Old 5.9.x version:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
-<span class="cm">  * @brief Call method of this service, for specific host.</span>
-<span class="cm">  *</span>
-<span class="cm">  * @param       host_name_     Host name.</span>
-<span class="cm">  * @param       method_name_   Method name.</span>
-<span class="cm">  * @param       request_       Request message.</span>
-<span class="cm">  * @param [out] service_info_  Service info struct for detailed informations.</span>
-<span class="cm">  * @param [out] response_      Response string.</span>
-<span class="cm">  *</span>
-<span class="cm"> * @return  True if successful.</span>
-<span class="cm"> **/</span>
- <span class="kt">bool</span> <span class="n">Call</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">host_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">method_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">google</span><span class="o">::</span><span class="n">protobuf</span><span class="o">::</span><span class="n">Message</span><span class="o">&amp;</span> <span class="n">request_</span><span class="p">,</span> <span class="k">struct</span> <span class="n">SServiceInfo</span><span class="o">&amp;</span> <span class="n">service_info_</span><span class="p">,</span> <span class="n">google</span><span class="o">::</span><span class="n">protobuf</span><span class="o">::</span><span class="n">Message</span><span class="o">&amp;</span> <span class="n">response_</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>New 5.10.x version (this is deprecated, see samples section how to use the new recommended interface):</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
-<span class="cm">  * @brief Call method of this service, for specific host (deprecated).</span>
-<span class="cm">  *</span>
-<span class="cm">  * @param       host_name_         Host name.</span>
-<span class="cm">  * @param       method_name_       Method name.</span>
-<span class="cm">  * @param       request_           Request message.</span>
-<span class="cm">  * @param [out] service_response_  Service response struct for detailed informations.</span>
-<span class="cm">  * @param [out] response_          Response message.</span>
-<span class="cm">  *</span>
-<span class="cm">  * @return  True if successful.</span>
-<span class="cm"> **/</span>
- <span class="p">[[</span><span class="n">deprecated</span><span class="p">]]</span>
- <span class="kt">bool</span> <span class="n">Call</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">host_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">method_name_</span><span class="p">,</span> <span class="k">const</span> <span class="n">google</span><span class="o">::</span><span class="n">protobuf</span><span class="o">::</span><span class="n">Message</span><span class="o">&amp;</span> <span class="n">request_</span><span class="p">,</span> <span class="k">struct</span> <span class="n">SServiceResponse</span><span class="o">&amp;</span> <span class="n">service_response_</span><span class="p">,</span> <span class="n">google</span><span class="o">::</span><span class="n">protobuf</span><span class="o">::</span><span class="n">Message</span><span class="o">&amp;</span> <span class="n">response_</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="service-sample-c">
-<h2>Service Sample - C<a class="headerlink" href="#service-sample-c" title="Permalink to this headline">¶</a></h2>
-<p>A minimal service client implementation can been seen here.</p>
-<p>Old 5.9.x version:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">SServiceInfoC</span> <span class="n">service_info</span><span class="p">;</span>
-<span class="kt">char</span>                 <span class="n">request</span><span class="p">[]</span>                 <span class="o">=</span> <span class="s">&quot;HELLO&quot;</span><span class="p">;</span>
-<span class="kt">char</span>                 <span class="n">response</span><span class="p">[</span><span class="k">sizeof</span><span class="p">(</span><span class="n">request</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
-<span class="c1">// call method &quot;echo&quot;</span>
-<span class="n">eCAL_Client_Call_Wait</span><span class="p">(</span><span class="n">client_handle</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;echo&quot;</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">request</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">service_info</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">response</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">response</span><span class="p">));</span>
-</pre></div>
-</div>
-<p>New 5.10.x version:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">SServiceResponseC</span> <span class="n">service_response</span><span class="p">;</span>
-<span class="kt">char</span>                     <span class="n">request</span><span class="p">[]</span>                 <span class="o">=</span> <span class="s">&quot;HELLO&quot;</span><span class="p">;</span>
-<span class="kt">char</span>                     <span class="n">response</span><span class="p">[</span><span class="k">sizeof</span><span class="p">(</span><span class="n">request</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
-<span class="c1">// call method &quot;echo&quot;</span>
-<span class="n">eCAL_Client_Call_Wait</span><span class="p">(</span><span class="n">client_handle</span><span class="p">,</span> <span class="s">&quot;echo&quot;</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">request</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">service_response</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">response</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">response</span><span class="p">));</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="id2">
-<h2>Service Sample - C++<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<p>Old 5.9.x version:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">eCAL</span><span class="o">::</span><span class="n">SServiceInfo</span> <span class="n">service_info</span><span class="p">;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">method_name</span><span class="p">(</span><span class="s">&quot;echo&quot;</span><span class="p">);</span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">request</span><span class="p">(</span><span class="s">&quot;Hello&quot;</span><span class="p">);</span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">response</span><span class="p">;</span>
-<span class="n">minimal_client</span><span class="p">.</span><span class="n">Call</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">service_info</span><span class="p">,</span> <span class="n">response</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>New 5.10.x version (deprecated):</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">eCAL</span><span class="o">::</span><span class="n">SServiceResponse</span> <span class="n">service_info</span><span class="p">;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">method_name</span><span class="p">(</span><span class="s">&quot;echo&quot;</span><span class="p">);</span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">request</span><span class="p">(</span><span class="s">&quot;Hello&quot;</span><span class="p">);</span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">response</span><span class="p">;</span>
-<span class="n">minimal_client</span><span class="p">.</span><span class="n">Call</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">service_info</span><span class="p">,</span> <span class="n">response</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>New 5.10.x version (new recommended API):</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">eCAL</span><span class="o">::</span><span class="n">SServiceResponse</span> <span class="n">service_info</span><span class="p">;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">method_name</span><span class="p">(</span><span class="s">&quot;echo&quot;</span><span class="p">);</span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">request</span><span class="p">(</span><span class="s">&quot;Hello&quot;</span><span class="p">);</span>
-<span class="n">eCAL</span><span class="o">::</span><span class="n">ServiceResponseVecT</span> <span class="n">service_response_vec</span><span class="p">;</span>
-<span class="n">minimal_client</span><span class="p">.</span><span class="n">Call</span><span class="p">(</span><span class="n">method_name</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="cm">/*timeout_*/</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">service_response_vec</span><span class="p">);</span>
-<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">service_response</span> <span class="p">:</span> <span class="n">service_response_vec</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Received response : &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">service_response</span><span class="p">.</span><span class="n">response</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="service-sample-c-protobuf">
-<h2>Service Sample - C++ (Protobuf)<a class="headerlink" href="#service-sample-c-protobuf" title="Permalink to this headline">¶</a></h2>
-<p>Old 5.9.x version:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">eCAL</span><span class="o">::</span><span class="n">SServiceInfo</span> <span class="n">service_info</span><span class="p">;</span>
-<span class="n">PingRequest</span>        <span class="n">ping_request</span><span class="p">;</span>
-<span class="n">PingResponse</span>       <span class="n">ping_response</span><span class="p">;</span>
-<span class="n">ping_request</span><span class="p">.</span><span class="n">set_message</span><span class="p">(</span><span class="s">&quot;PING&quot;</span><span class="p">);</span>
-<span class="n">ping_service</span><span class="p">.</span><span class="n">Call</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;Ping&quot;</span><span class="p">,</span> <span class="n">ping_request</span><span class="p">,</span> <span class="n">service_info</span><span class="p">,</span> <span class="n">ping_response</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>New 5.10.x version:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">PingRequest</span>               <span class="n">ping_request</span><span class="p">;</span>
-<span class="n">eCAL</span><span class="o">::</span><span class="n">ServiceResponseVecT</span> <span class="n">service_response_vec</span><span class="p">;</span>
-<span class="n">ping_request</span><span class="p">.</span><span class="n">set_message</span><span class="p">(</span><span class="s">&quot;PING&quot;</span><span class="p">);</span>
-<span class="n">ping_service</span><span class="p">.</span><span class="n">Call</span><span class="p">(</span><span class="s">&quot;Ping&quot;</span><span class="p">,</span> <span class="n">ping_request</span><span class="p">,</span> <span class="cm">/*timeout_*/</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">service_response_vec</span><span class="p">);</span>
-<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">service_response</span> <span class="p">:</span> <span class="n">service_response_vec</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="n">PingResponse</span> <span class="n">ping_response</span><span class="p">;</span>
-  <span class="n">ping_response</span><span class="p">.</span><span class="n">ParseFromString</span><span class="p">(</span><span class="n">service_response</span><span class="p">.</span><span class="n">response</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
-</div>
+<div class="section" id="where-to-download">
+<h2>Where to download<a class="headerlink" href="#where-to-download" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><i class="fab fa-windows"></i> Windows: Head to the <a class="reference internal" href="../../_download_archive/download_archive.html#download-archive"><span class="std std-ref">Download Archive</span></a> and pick your version from there!</p></li>
+<li><p><i class="fab fa-ubuntu"></i> Ubuntu: Install eCAL from <a class="reference internal" href="../../getting_started/setup.html#getting-started-setup-ubuntu-ppa"><span class="std std-ref">our PPA</span></a> with <code class="docutils literal notranslate"><span class="pre">apt-get</span></code> <em>(or pick a Version from the download archive as well)</em></p></li>
+</ul>
 </div>
 </div>
 
@@ -907,7 +702,21 @@
                             </div>
                         </div>
 <!-- pager.html -->
-
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item">
+            <a class="page-link" href="../5.10/whats_new.html" title="Accesskey Alt(+Shift)+p">
+                Previous
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="../5.8/whats_new.html" title="Accesskey Alt(+Shift)+n">
+                Next
+            </a>
+        </li>
+        
+    </ul>
+</nav>
 <!-- /pager.html -->
                     </div>
                 </div>
