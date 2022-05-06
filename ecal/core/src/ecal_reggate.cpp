@@ -202,7 +202,7 @@ namespace eCAL
       break;
     default:
       {
-        eCAL::Logging::Log(log_level_warning, "CRegGate::ApplySample : unknown sample type");
+        eCAL::Logging::Log(log_level_debug1, "CRegGate::ApplySample : unknown sample type");
       }
       break;
     }
