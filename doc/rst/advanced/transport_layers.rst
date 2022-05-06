@@ -14,15 +14,17 @@ There are different ways to configure these layers.
 They can be set up for a whole machine using the central configuration file (ecal.ini) or for a single eCAL process passed by command line arguments or finally for a single publish-subscribe connection using the C++ or python publisher API.
 Every single builtin transport layer has it's specific communication properties.
 
-+-----------------+--------------------------+--------------------+-------------------------------------------------------------------------------------------+
-| Layer           | ini parameter            | Physical Layer     | Comment                                                                                   |
-+=================+==========================+====================+===========================================================================================+
-| inproc          | [publisher/use_inproc]   | inner process      | inner process, zeroy copy communication (pointer forwarding)                              |
-+-----------------+--------------------------+--------------------+-------------------------------------------------------------------------------------------+
-| shm             | [publisher/use_shm]      | shared memory      | interprocess, shared memory communication, supports N:M connections, 2 memory copies      |
-+-----------------+--------------------------+--------------------+-------------------------------------------------------------------------------------------+
-| udp_mc          | [publisher/use_udp_mc]   | udp multicast      | interhost, topic name based dynamic multicast grouping to optimize pub/sub socket payload |
-+-----------------+--------------------------+--------------------+-------------------------------------------------------------------------------------------+
++----------------------------------------------+--------------------------+--------------------+-------------------------------------------------------------------------------------------+
+| Layer                                        | ini parameter            | Physical Layer     | Comment                                                                                   |
++==============================================+==========================+====================+===========================================================================================+
+| :ref:`inproc <transport_layer_inproc>`       | [publisher/use_inproc]   | inner process      | inner process, zeroy copy communication (pointer forwarding)                              |
++----------------------------------------------+--------------------------+--------------------+-------------------------------------------------------------------------------------------+
+| :ref:`shm <transport_layer_shm>`             | [publisher/use_shm]      | shared memory      | interprocess, shared memory communication, supports N:M connections, 2 memory copies      |
++----------------------------------------------+--------------------------+--------------------+-------------------------------------------------------------------------------------------+
+| :ref:`udp_mc <transport_layer_udp_mc>`       | [publisher/use_udp_mc]   | udp multicast      | interhost, topic name based dynamic multicast grouping to optimize pub/sub socket payload |
++----------------------------------------------+--------------------------+--------------------+-------------------------------------------------------------------------------------------+
+| :ref:`tcp <transport_layer_tcp>`             | [publisher/use_tcp]      | tcp                | Network (interhost), simulates N:M connections. Meant for single large payloads.          |
++----------------------------------------------+--------------------------+--------------------+-------------------------------------------------------------------------------------------+
 
 Every layer can set up in 3 different activation modes. Every mode can be configured as default in the ecal.ini file and can be overwritten by the C++/Python publisher API. This is the activation logic
 
@@ -41,3 +43,14 @@ This can be done in the ecal.ini file [network] section.
 - inproc_rec_enabled = true / false : enable / disable inner process subscriptions
 - shm_rec_enabled = true / false : enable / disable inter process subscriptions
 - udp_mc_rec_enabled = true / false : enable / disable inter host subscriptions
+
+.. seealso:: 
+
+   .. toctree::
+
+      :maxdepth: 1
+
+      layers/shm.rst
+      layers/udp_mc.rst
+      layers/tcp.rst
+      layers/inproc.rst

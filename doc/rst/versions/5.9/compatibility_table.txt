@@ -1,0 +1,21 @@
+.. list-table:: eCAL 5.9 vs. 5.8
+   :widths: 20 80
+
+   * - Wire compatibility
+     - * eCAL UDP: 100% compatible
+       * Services: 100% compatible
+       * eCAL Shared Memory: 100% compatible
+
+   * - API / ABI
+     - * API is downward compatible (New functions have been added)
+       * ABI is not compatible
+
+   * - Tools
+     - * Rec: Somewhat compatible. 
+  
+         Expect some issues when using the new (5.9) ecal_rec_cli with old (5.8) ecal_rec_gui or ecal_rec_client instances.
+         It should be possible to mix ecal_rec_gui and ecal_rec_client instances of both versions, though.
+
+       * Sys: 100% compatible
+
+       * Measurements: 100% compatible
