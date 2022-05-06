@@ -1,0 +1,24 @@
+.. list-table:: eCAL 5.8 vs. 5.7
+   :widths: 20 80
+
+   * - Wire compatibility
+     - * eCAL UDP: 100% compatible
+       * Services: 100% compatible
+       * eCAL Shared Memory: 100% compatible
+
+   * - API / ABI
+     - * API is downward compatible
+       * ABI is not compatible
+
+   * - Tools
+     - * Rec: Not compatible. Some features may work, but many won't.
+  
+       * Sys: New in 5.8
+
+       * Measurements: 100% compatible
+
+   * - Additional notes
+     - * On Ubuntu, the official builds changes the lib dirs to the proper multiarch lib dirs.
+       * On Ubuntu the location of :file:`ecal.ini` changed to ``/etc/ecal/ecal.ini``
+       * On Windows, the location of :file:`ecal.ini` changed to ``C:\ProgramData\eCAL\ecal.ini``
+  

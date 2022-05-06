@@ -1,0 +1,36 @@
+.. list-table:: eCAL 5.10 vs. 5.9
+   :widths: 20 80
+
+   * - Wire compatibility
+     
+     - * eCAL UDP: 100% compatible
+  
+       * eCAL TCP: New in 5.10.
+
+         Prior versions of eCAL will not be able to receive data from TCP publishers.
+
+       * Services: 100% compatible
+
+       * eCAL Shared Memory: Downwards compatible
+     
+         eCAL 5.10 offers an option to use multi-buffering for increased performance.
+         Prior Versions of eCAL cannot receive data from publishers using that feature.
+
+         By default, the feature is turned off, which makes the Shared memory layer 100% compatible.
+
+   * - API / ABI
+
+     - * API is *mostly* downward compatible.
+
+         When using the raw (non-protobuf) Service API, you may incorporate some incompatibilities.
+         Please check :ref:`this guide <compatibility_details_5_10_service_api>` on how to upgrade.
+         
+       * ABI is not compatible
+
+   * - Tools
+
+     - * Rec: Downwards compatible (Fields have been added to the RPC API)
+
+       * Sys: 100% compatible
+
+       * Measurements: 100% compatible
