@@ -19,6 +19,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 include(CMakeDependentOption)
+include("${CMAKE_CURRENT_LIST_DIR}/thirdparty/cmake_functions/qt/qt_msvc_path.cmake")
 
 if (POLICY CMP0077)
   cmake_policy(SET CMP0077 NEW) # Prevent HDF5 from overwriting our output paths
