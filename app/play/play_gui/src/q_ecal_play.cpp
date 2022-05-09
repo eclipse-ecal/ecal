@@ -333,6 +333,7 @@ bool QEcalPlay::loadMeasurement(const QString& path, bool suppress_blocking_dial
   if (isMeasurementLoaded())
   {
     saveChannelMapping("", suppress_blocking_dialogs);
+    ecal_play_.SetChannelMappingPath("");
   }
 
   QWidget* caller = widgetOf(sender());
@@ -419,8 +420,8 @@ bool QEcalPlay::loadMeasurement(const QString& path, bool suppress_blocking_dial
     {
       channel_mapping_ = channel_mapping;
       channel_mapping_modified_ = false;
-      emit channelMappingLoadedSignal(channel_mapping_);
     }
+    emit channelMappingLoadedSignal(channel_mapping_);
   }
   else 
   {
@@ -947,9 +948,9 @@ void QEcalPlay::setChannelMappingFileAction(ChannelMappingFileAction action)
   emit channelMappingFileActionChangedSignal(action);
 }
 
-void QEcalPlay::setChannelMapping(const std::map<std::string, std::string>& channel_mapping, bool onlyUpdateNoSignalling)
+void QEcalPlay::setChannelMapping(const std::map<std::string, std::string>& channel_mapping, bool onlyUpdate)
 {
-  if (onlyUpdateNoSignalling)
+  if (onlyUpdate)
   {
       channel_mapping_ = channel_mapping;
       return;
