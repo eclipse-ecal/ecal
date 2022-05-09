@@ -33,11 +33,7 @@
 
 struct alignas(8) named_mutex
 {
-  pthread_mutex_t  mtx;
-  pthread_cond_t   cvar;
-  uint8_t          locked;
-  pthread_mutex_t  shared_mtx;
-  uint16_t         shared_counter;
+  pthread_rwlock_t rwlock;
 };
 typedef struct named_mutex  named_mutex_t;
 
@@ -58,34 +54,18 @@ namespace
       return nullptr;
     }
 
-    // create mutex
-    pthread_mutexattr_t shmtx;
-    pthread_mutexattr_init(&shmtx);
-    pthread_mutexattr_setpshared(&shmtx, PTHREAD_PROCESS_SHARED);
-
-    // create condition variable
-    pthread_condattr_t shattr;
-    pthread_condattr_init(&shattr);
-    pthread_condattr_setpshared(&shattr, PTHREAD_PROCESS_SHARED);
-
-#ifndef ECAL_OS_MACOS
-    pthread_condattr_setclock(&shattr, CLOCK_MONOTONIC);
-#endif // ECAL_OS_MACOS
-
+    //create rwlock
+    pthread_rwlockattr_t shrwlock;
+    pthread_rwlockattr_init(&shrwlock);
+    pthread_rwlockattr_setpshared(&shrwlock, PTHREAD_PROCESS_SHARED);
+    pthread_rwlockattr_setkind_np(&shrwlock, PTHREAD_RWLOCK_PREFER_READER_NP);
 
     // map them into shared memory
     named_mutex_t* mtx = static_cast<named_mutex_t*>(mmap(nullptr, sizeof(named_mutex_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
     ::close(fd);
 
-    // initialize mutex and condition
-    pthread_mutex_init(&mtx->mtx, &shmtx);
-    pthread_mutex_init(&mtx->shared_mtx, &shmtx);
-    pthread_cond_init(&mtx->cvar, &shattr);
-
-
-    // start with unlocked mutex
-    mtx->locked = 0;
-    mtx->shared_counter = 0;
+    // initialize rwlock
+    pthread_rwlock_init(&mtx->rwlock, &shrwlock);
 
     // return new mutex
     return mtx;
@@ -118,129 +98,39 @@ namespace
 
   bool named_mutex_lock(named_mutex_t* mtx_, struct timespec* ts_)
   {
-    // lock condition mutex
-    pthread_mutex_lock(&mtx_->mtx);
-    // state is not locked ?, fine !
-    if (mtx_->locked == 0)
-    {
-      // set state to locked
-      mtx_->locked = 1;
-      // unlock condition mutex
-      pthread_mutex_unlock(&mtx_->mtx);
-      // return success
-      return true;
-    }
-    // state is locked by anyone else
-    else
-    {
-      // while condition wait did not return failure (or timeout) and
-      // state is still locked by another one
-      int ret(0);
-      while ((ret == 0) && (mtx_->locked == 1))
-      {
-        // wait with timeout for unlock signal
-        if (ts_)
-        {
-#ifndef ECAL_OS_MACOS
-          ret = pthread_cond_timedwait(&mtx_->cvar, &mtx_->mtx, ts_);
-#else
-          ret = pthread_cond_timedwait_relative_np(&mtx_->cvar, &mtx_->mtx, ts_);
-#endif
-        }
-        // blocking wait for unlock signal
-        else
-        {
-          ret = pthread_cond_wait(&mtx_->cvar, &mtx_->mtx);
-        }
-      }
-      // if wait (with timeout) returned successfully
-      // set state to locked
-      if (ret == 0) mtx_->locked = 1;
-      // unlock condition mutex
-      pthread_mutex_unlock(&mtx_->mtx);
-      // sucess == wait returned 0
-      return (ret == 0);
-    }
+    if (ts_)
+      return (pthread_rwlock_clockwrlock(&mtx_->rwlock, CLOCK_MONOTONIC, ts_) == 0);
+    pthread_rwlock_wrlock(&mtx_->rwlock);
+
+    return true;
   }
 
   bool named_mutex_trylock(named_mutex_t* mtx_)
   {
-    bool locked(false);
-    // lock condition mutex
-    pthread_mutex_lock(&mtx_->mtx);
-    // check state
-    if (mtx_->locked == 0)
-    {
-      // set state to locked
-      mtx_->locked = 1;
-      locked = true;
-    }
-    // unlock condition mutex
-    pthread_mutex_unlock(&mtx_->mtx);
-    // return success
-    return locked;
+    return (pthread_rwlock_trywrlock(&mtx_->rwlock) == 0);
   }
 
   void named_mutex_unlock(named_mutex_t* mtx_)
   {
-    // lock condition mutex
-    pthread_mutex_lock(&mtx_->mtx);
-    // state is locked ?
-    if (mtx_->locked == 1)
-    {
-      // set state to unlocked
-      mtx_->locked = 0;
-      // and signal to one conditional wait
-      // that state can be locked again
-      pthread_cond_signal(&mtx_->cvar);
-    }
-    // unlock condition mutex
-    pthread_mutex_unlock(&mtx_->mtx);
+    pthread_rwlock_unlock(&mtx_->rwlock);
   }
 
   bool named_mutex_lock_shared(named_mutex_t* mtx_, struct timespec* ts_)
   {
-    pthread_mutex_lock(&mtx_->shared_mtx);
-    ++mtx_->shared_counter;
-    bool ret = true;
-    if(mtx_->shared_counter == 1)
-    {
-      if(!named_mutex_lock(mtx_, ts_))
-      {
-        ret = false;
-        --mtx_->shared_counter;
-      }
-    }
-    pthread_mutex_unlock(&mtx_->shared_mtx);
-    return ret;
+    if (ts_)
+      return (pthread_rwlock_clockrdlock(&mtx_->rwlock, CLOCK_MONOTONIC, ts_) == 0);
+    pthread_rwlock_rdlock(&mtx_->rwlock);
+    return true;
   }
 
   void named_mutex_unlock_shared(named_mutex_t* mtx_)
   {
-    pthread_mutex_lock(&mtx_->shared_mtx);
-    --mtx_->shared_counter;
-    if(mtx_->shared_counter == 0)
-    {
-      named_mutex_unlock(mtx_);
-    }
-    pthread_mutex_unlock(&mtx_->shared_mtx);
+    pthread_rwlock_unlock(&mtx_->rwlock);
   }
 
   bool named_mutex_trylock_shared(named_mutex_t* mtx_)
   {
-    pthread_mutex_lock(&mtx_->shared_mtx);
-    ++mtx_->shared_counter;
-    bool ret = false;
-    if(mtx_->shared_counter == 1)
-    {
-      if(named_mutex_trylock(mtx_))
-      {
-        ret = false;
-        --mtx_->shared_counter;
-      }
-    }
-    pthread_mutex_unlock(&mtx_->shared_mtx);
-    return ret;
+    return (pthread_rwlock_tryrdlock(&mtx_->rwlock) == 0);
   }
 
   std::string named_mutex_buildname(const std::string& mutex_name_)
