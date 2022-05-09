@@ -36,6 +36,8 @@ struct alignas(8) named_mutex
   pthread_mutex_t  mtx;
   pthread_cond_t   cvar;
   uint8_t          locked;
+  pthread_mutex_t  shared_mtx;
+  uint16_t         shared_counter;
 };
 typedef struct named_mutex  named_mutex_t;
 
@@ -65,6 +67,7 @@ namespace
     pthread_condattr_t shattr;
     pthread_condattr_init(&shattr);
     pthread_condattr_setpshared(&shattr, PTHREAD_PROCESS_SHARED);
+
 #ifndef ECAL_OS_MACOS
     pthread_condattr_setclock(&shattr, CLOCK_MONOTONIC);
 #endif // ECAL_OS_MACOS
@@ -76,10 +79,13 @@ namespace
 
     // initialize mutex and condition
     pthread_mutex_init(&mtx->mtx, &shmtx);
+    pthread_mutex_init(&mtx->shared_mtx, &shmtx);
     pthread_cond_init(&mtx->cvar, &shattr);
+
 
     // start with unlocked mutex
     mtx->locked = 0;
+    mtx->shared_counter = 0;
 
     // return new mutex
     return mtx;
@@ -105,10 +111,9 @@ namespace
     return mtx;
   }
 
-  void named_mutex_close(named_mutex_t* mtx_)
-  {
+  void named_mutex_close(named_mutex_t* mtx_) {
     // unmap condition mutex from shared memory file
-    munmap(static_cast<void*>(mtx_), sizeof(named_mutex_t));
+    munmap(static_cast<void *>(mtx_), sizeof(named_mutex_t));
   }
 
   bool named_mutex_lock(named_mutex_t* mtx_, struct timespec* ts_)
@@ -191,6 +196,51 @@ namespace
     }
     // unlock condition mutex
     pthread_mutex_unlock(&mtx_->mtx);
+  }
+
+  bool named_mutex_lock_shared(named_mutex_t* mtx_, struct timespec* ts_)
+  {
+    pthread_mutex_lock(&mtx_->shared_mtx);
+    ++mtx_->shared_counter;
+    bool ret = true;
+    if(mtx_->shared_counter == 1)
+    {
+      if(!named_mutex_lock(mtx_, ts_))
+      {
+        ret = false;
+        --mtx_->shared_counter;
+      }
+    }
+    pthread_mutex_unlock(&mtx_->shared_mtx);
+    return ret;
+  }
+
+  void named_mutex_unlock_shared(named_mutex_t* mtx_)
+  {
+    pthread_mutex_lock(&mtx_->shared_mtx);
+    --mtx_->shared_counter;
+    if(mtx_->shared_counter == 0)
+    {
+      named_mutex_unlock(mtx_);
+    }
+    pthread_mutex_unlock(&mtx_->shared_mtx);
+  }
+
+  bool named_mutex_trylock_shared(named_mutex_t* mtx_)
+  {
+    pthread_mutex_lock(&mtx_->shared_mtx);
+    ++mtx_->shared_counter;
+    bool ret = false;
+    if(mtx_->shared_counter == 1)
+    {
+      if(named_mutex_trylock(mtx_))
+      {
+        ret = false;
+        --mtx_->shared_counter;
+      }
+    }
+    pthread_mutex_unlock(&mtx_->shared_mtx);
+    return ret;
   }
 
   std::string named_mutex_buildname(const std::string& mutex_name_)
@@ -290,6 +340,49 @@ namespace eCAL
 
     // unlock the mutex
     named_mutex_unlock(*mutex_handle_);
+
+    return(true);
+  }
+
+  inline bool LockSharedMtx(MutexT* mutex_handle_, const int timeout_)
+  {
+    // check mutex handle
+    if (mutex_handle_ == nullptr) return(false);
+
+    // timeout_ < 0 -> wait infinite
+    if (timeout_ < 0)
+    {
+      return(named_mutex_lock_shared(*mutex_handle_, nullptr));
+    }
+      // timeout_ == 0 -> check lock state only
+    else if (timeout_ == 0)
+    {
+      return(named_mutex_trylock_shared(*mutex_handle_));
+    }
+      // timeout_ > 0 -> wait timeout_ ms
+    else
+    {
+      struct timespec abstime;
+      clock_gettime(CLOCK_MONOTONIC, &abstime);
+
+      abstime.tv_sec = abstime.tv_sec + timeout_ / 1000;
+      abstime.tv_nsec = abstime.tv_nsec + (timeout_ % 1000) * 1000000;
+      while (abstime.tv_nsec >= 1000000000)
+      {
+        abstime.tv_nsec -= 1000000000;
+        abstime.tv_sec++;
+      }
+      return(named_mutex_lock_shared(*mutex_handle_, &abstime));
+    }
+  }
+
+  inline bool UnlockSharedMtx(MutexT* mutex_handle_)
+  {
+    // check mutex handle
+    if(mutex_handle_ == nullptr) return(false);
+
+    // unlock the mutex
+    named_mutex_unlock_shared(*mutex_handle_);
 
     return(true);
   }

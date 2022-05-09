@@ -178,7 +178,7 @@ namespace eCAL
   bool CMemoryFile::GetReadAccess(int timeout_)
   {
     // currently we do not differ between read and write access
-    if (GetAccess(timeout_))
+    if (GetAccess(timeout_, true))
     {
       // mark as opened for read access
       m_access_state = access_state::read_access;
@@ -198,7 +198,7 @@ namespace eCAL
     m_access_state = access_state::closed;
 
     // release read mutex
-    UnlockMtx(&m_memfile_info.mutex);
+    UnlockSharedMtx(&m_memfile_info.mutex);
 
     return(true);
   }
@@ -303,14 +303,14 @@ namespace eCAL
     }
   }
 
-  bool CMemoryFile::GetAccess(int timeout_)
+  bool CMemoryFile::GetAccess(int timeout_, bool read_only)
   {
     if (!m_created)                  return(false);
     if (!m_memfile_info.mem_address) return(false);
     if (!g_memfile_map())            return(false);
 
     // lock mutex
-    if (!LockMtx(&m_memfile_info.mutex, timeout_))
+    if (! (read_only ? LockSharedMtx(&m_memfile_info.mutex, timeout_) : LockMtx(&m_memfile_info.mutex, timeout_)))
     {
 #ifndef NDEBUG
       printf("Could not lock memory file mutex: %s.\n\n", m_name.c_str());
@@ -338,7 +338,10 @@ namespace eCAL
       if (len > m_memfile_info.size)
       {
         // unlock mutex
-        UnlockMtx(&m_memfile_info.mutex);
+        if(read_only)
+          UnlockSharedMtx(&m_memfile_info.mutex);
+        else
+          UnlockMtx(&m_memfile_info.mutex);
         return(false);
       }
     }

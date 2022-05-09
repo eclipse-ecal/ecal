@@ -219,7 +219,7 @@ namespace eCAL
     };
 
   protected:
-    bool GetAccess(int timeout_);
+    bool GetAccess(int timeout_, bool read_only = false);
 
     enum class access_state
     {
