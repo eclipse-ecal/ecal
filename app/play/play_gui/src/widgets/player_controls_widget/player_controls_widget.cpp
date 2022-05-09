@@ -82,6 +82,7 @@ PlayerControlsWidget::PlayerControlsWidget(QWidget* parent)
   connect(QEcalPlay::instance(), &QEcalPlay::repeatEnabledChangedSignal,        this, &PlayerControlsWidget::repeatEnabledChanged);
   connect(QEcalPlay::instance(), &QEcalPlay::stepReferenceChannelChangedSignal, this, &PlayerControlsWidget::stepReferenceChannelChanged);
   connect(QEcalPlay::instance(), &QEcalPlay::channelMappingChangedSignal,       this, &PlayerControlsWidget::channelMappingChanged);
+  connect(QEcalPlay::instance(), &QEcalPlay::channelMappingLoadedSignal,        this, &PlayerControlsWidget::channelMappingChanged);
 
   // connect this -> QEcalPlay
   connect(ui_.open_button,       &QAbstractButton::clicked, QEcalPlay::instance(), &QEcalPlay::loadMeasurementFromFileDialog);
