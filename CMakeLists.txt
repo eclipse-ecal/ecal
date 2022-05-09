@@ -141,6 +141,13 @@ include(build_location)
 # find_project(eCAL calls shall be ignored, eCAL is build as part of the project)
 set(as_subproject eCAL)
 
+if(CMAKE_EXPORT_COMPILE_COMMANDS)
+  message(STATUS "Compilation database will be created")
+else()
+  # to make it visible it is explicitly set to OFF
+  set(CMAKE_EXPORT_COMPILE_COMMANDS OFF)
+endif()
+
 # Normalize backslashes from Windows paths
 file(TO_CMAKE_PATH "${CMAKE_MODULE_PATH}" CMAKE_MODULE_PATH)
 file(TO_CMAKE_PATH "${CMAKE_PREFIX_PATH}" CMAKE_PREFIX_PATH)
@@ -188,7 +195,7 @@ set(possible_subprojects
   qwt
 )
 
-# We should rename the option, but don't know how to do in in a 
+# We should rename the option, but don't know how to do in in a
 # backwards compatible way
 set(ECAL_THIRDPARTY_BUILD_CMAKEFUNCTIONS ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS})
 
@@ -510,3 +517,39 @@ endif()
 # create package
 # --------------------------------------------------------
 include(cpack/cpack_variables.cmake)
+
+message(STATUS "Build Options:")
+message(STATUS "--------------------------------------------------------------------------------")
+message(STATUS "CMAKE_EXPORT_COMPILE_COMMANDS                  : ${CMAKE_EXPORT_COMPILE_COMMANDS}")
+message(STATUS "HAS_HDF5                                       : ${HAS_HDF5}")
+message(STATUS "HAS_QT5                                        : ${HAS_QT5}")
+message(STATUS "HAS_CURL                                       : ${HAS_CURL}")
+message(STATUS "HAS_CAPNPROTO                                  : ${HAS_CAPNPROTO}")
+message(STATUS "BUILD_DOCS                                     : ${BUILD_DOCS}")
+message(STATUS "BUILD_APPS                                     : ${BUILD_APPS}")
+message(STATUS "BUILD_SAMPLES                                  : ${BUILD_SAMPLES}")
+message(STATUS "BUILD_TIME                                     : ${BUILD_TIME}")
+message(STATUS "BUILD_PY_BINDING                               : ${BUILD_PY_BINDING}")
+message(STATUS "BUILD_STANDALONE_PY_WHEEL                      : ${BUILD_STANDALONE_PY_WHEEL}")
+message(STATUS "BUILD_CSHARP_BINDING                           : ${BUILD_CSHARP_BINDING}")
+message(STATUS "BUILD_ECAL_TESTS                               : ${BUILD_ECAL_TESTS}")
+message(STATUS "ECAL_LAYER_ICEORYX                             : ${ECAL_LAYER_ICEORYX}")
+message(STATUS "ECAL_INCLUDE_PY_SAMPLES                        : ${ECAL_INCLUDE_PY_SAMPLES}")
+message(STATUS "ECAL_INSTALL_SAMPLE_SOURCES                    : ${ECAL_INSTALL_SAMPLE_SOURCES}")
+message(STATUS "ECAL_JOIN_MULTICAST_TWICE                      : ${ECAL_JOIN_MULTICAST_TWICE}")
+message(STATUS "ECAL_NPCAP_SUPPORT                             : ${ECAL_NPCAP_SUPPORT}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS          : ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_SPDLOG                   : ${ECAL_THIRDPARTY_BUILD_SPDLOG}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_TINYXML2                 : ${ECAL_THIRDPARTY_BUILD_TINYXML2}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_FINEFTP                  : ${ECAL_THIRDPARTY_BUILD_FINEFTP}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_TERMCOLOR                : ${ECAL_THIRDPARTY_BUILD_TERMCOLOR}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_TCP_PUBSUB               : ${ECAL_THIRDPARTY_BUILD_TCP_PUBSUB}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_RECYCLE                  : ${ECAL_THIRDPARTY_BUILD_RECYCLE}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_GTEST                    : ${ECAL_THIRDPARTY_BUILD_GTEST}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_PROTOBUF                 : ${ECAL_THIRDPARTY_BUILD_PROTOBUF}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_CURL                     : ${ECAL_THIRDPARTY_BUILD_CURL}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_HDF5                     : ${ECAL_THIRDPARTY_BUILD_HDF5}")
+message(STATUS "ECAL_LINK_HDF5_SHARED                          : ${ECAL_LINK_HDF5_SHARED}")
+message(STATUS "CPACK_PACK_WITH_INNOSETUP                      : ${CPACK_PACK_WITH_INNOSETUP}")
+
+message(STATUS "--------------------------------------------------------------------------------")
