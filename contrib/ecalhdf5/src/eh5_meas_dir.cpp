@@ -59,17 +59,23 @@ eCAL::eh5::HDF5MeasDir::HDF5MeasDir(const std::string& path, eAccessType access 
   , max_size_per_file_(kDefaultMaxFileSizeMB * 1024 * 1024)
   , access_(RDONLY) // Temporarily set it to RDONLY, so the leading "Close()" from the Open() function will not operate on the uninitialized variable.
 {
-  Open(path, access);
+  // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  HDF5MeasDir::Open(path, access);
 }
 
 eCAL::eh5::HDF5MeasDir::~HDF5MeasDir()
 {
-  Close();
+  // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  HDF5MeasDir::Close();
 }
 
 bool eCAL::eh5::HDF5MeasDir::Open(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
 {
-  Close();
+  // call the function via its class becase it's a virtual function that is called directly/indirectly in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  HDF5MeasDir::Close();
 
   access_ = access;
 

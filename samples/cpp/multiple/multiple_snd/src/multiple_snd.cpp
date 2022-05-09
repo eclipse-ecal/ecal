@@ -146,7 +146,6 @@ void MultipleSend(int argc, char **argv)
 #else
     // check time and print results every second
     std::chrono::duration<double> diff_time = std::chrono::steady_clock::now() - start_time;
-    int pub_num = 0;
     if (diff_time >= std::chrono::seconds(1))
     {
       printf("\n\n");
@@ -166,8 +165,6 @@ void MultipleSend(int argc, char **argv)
       oversample++;
       if(oversample == 1)
       {
-        pub_num++;
-        pub_num = pub_num%PUBLISHER_NUMBER;
         oversample = 0;
       }
     }

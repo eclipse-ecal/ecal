@@ -46,7 +46,9 @@ namespace eCAL
 
     Hdf5WriterThread::~Hdf5WriterThread()
     {
-      Interrupt();
+      // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+      // where the vtable is not created yet or it's destructed.
+      Hdf5WriterThread::Interrupt();
       Join();
     }
 

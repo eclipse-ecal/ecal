@@ -156,7 +156,9 @@ VisualisationWidget::VisualisationWidget(const QString& topic_name, const QStrin
 VisualisationWidget::~VisualisationWidget()
 {
 #ifndef NDEBUG
-  qDebug().nospace() << "[" << metaObject()->className() << "]: Deleting Widget for topic " << topic_name_;
+  // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  qDebug().nospace() << "[" << VisualisationWidget::metaObject()->className() << "]: Deleting Widget for topic " << topic_name_;
 #endif // NDEBUG
 }
 

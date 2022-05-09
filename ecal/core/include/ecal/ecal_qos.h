@@ -24,6 +24,8 @@
 
 #pragma once
 
+#include "ecal_os.h"
+
 namespace eCAL
 {
   namespace QOS
@@ -75,7 +77,7 @@ namespace eCAL
       }
       eQOSPolicy_HistoryKind  history_kind;              //!< qos history kind mode
       int                     history_kind_depth;        //!< qos history kind mode depth
-      eQOSPolicy_Reliability  reliability;               //!< qos reliability mode
+      QOS::eQOSPolicy_Reliability  reliability;               //!< qos reliability mode
     };
   }
 }
