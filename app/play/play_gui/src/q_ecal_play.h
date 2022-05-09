@@ -129,7 +129,7 @@ public slots:
   void setLimitPlaySpeedEnabled(bool enabled);
   void setFrameDroppingAllowed(bool allowed);
   void setStepReferenceChannel(const QString& step_reference_chanel);
-  void setChannelMapping(const std::map<std::string, std::string>& channel_mapping, bool onlyUpdateNoSignalling = false);
+  void setChannelMapping(const std::map<std::string, std::string>& channel_mapping, bool onlyUpdate = false);
   void setEnforceDelayAccuracyEnabled(bool enabled);
 
   bool setLimitInterval(const std::pair<long long, long long>& limit_interval);

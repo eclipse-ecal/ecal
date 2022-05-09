@@ -266,6 +266,7 @@ bool EcalPlay::LoadScenarios(const std::string& selected_dir, const std::string&
 {
   // Remove old scenarios
   scenarios_.clear();
+  clearScenariosPath();
 
   std::string scenario_line;
 
