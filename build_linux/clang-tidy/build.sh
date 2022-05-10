@@ -244,8 +244,7 @@ filter_compile_commands() {
         cat "$PATH_EXC_CONFIG"
         python3 ${PATH_FILTER} --build "${DIR_BUILD}"
 
-        cp -a "${DIR_SCRIPT}/.clang-tidy" "${DIR_ROOT}"
-        cp -a "${DIR_SCRIPT}/.clang-tidy" "${DIR_BUILD}"
+        cp -a "${DIR_ROOT}/.clang-tidy" "${DIR_BUILD}"
         cd "${DIR_BUILD}"
         ${CLANG_TIDY} --dump-config > ${FILE_CLANG_TIDY_CONFIG}
 
@@ -418,10 +417,6 @@ run_clang_tidy_on_files() {
     fi
 }
 
-tear_down() {
-    rm -f "${DIR_ROOT}/.clang-tidy"
-}
-
 # ------------------------------------------------------------------------------
 
 check_args
@@ -430,7 +425,6 @@ run_make
 filter_compile_commands
 run_clang_tidy_on_database
 run_clang_tidy_on_files
-tear_down
 
 # for GitHub actions
 # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions
