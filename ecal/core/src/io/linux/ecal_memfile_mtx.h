@@ -36,8 +36,13 @@ struct alignas(8) named_mutex
   pthread_mutex_t  mtx;
   pthread_cond_t   cvar;
   uint8_t          locked;
+#ifdef ECAL_USE_RW_LOCK
   pthread_mutex_t  shared_mtx;
   uint16_t         shared_counter;
+#endif
+#ifdef ECAL_USE_RW_LOCK_FAIR
+  pthread_mutex_t  fair_mtx;
+#endif
 };
 typedef struct named_mutex  named_mutex_t;
 
@@ -79,14 +84,20 @@ namespace
 
     // initialize mutex and condition
     pthread_mutex_init(&mtx->mtx, &shmtx);
+#ifdef ECAL_USE_RW_LOCK
     pthread_mutex_init(&mtx->shared_mtx, &shmtx);
+#endif
+#ifdef ECAL_USE_RW_LOCK_FAIR
+    pthread_mutex_init(&mtx->fair_mtx, &shmtx);
+#endif
     pthread_cond_init(&mtx->cvar, &shattr);
 
 
     // start with unlocked mutex
     mtx->locked = 0;
+#ifdef ECAL_USE_RW_LOCK
     mtx->shared_counter = 0;
-
+#endif
     // return new mutex
     return mtx;
   }
@@ -115,9 +126,16 @@ namespace
     // unmap condition mutex from shared memory file
     munmap(static_cast<void *>(mtx_), sizeof(named_mutex_t));
   }
-
+#ifdef ECAL_USE_RW_LOCK_FAIR
+  bool named_mutex_lock(named_mutex_t* mtx_, struct timespec* ts_, bool fair_lock_enabled = true)
+#else
   bool named_mutex_lock(named_mutex_t* mtx_, struct timespec* ts_)
+#endif
   {
+#ifdef ECAL_USE_RW_LOCK_FAIR
+    if (fair_lock_enabled)
+      pthread_mutex_lock(&mtx_->fair_mtx);
+#endif
     // lock condition mutex
     pthread_mutex_lock(&mtx_->mtx);
     // state is not locked ?, fine !
@@ -127,6 +145,10 @@ namespace
       mtx_->locked = 1;
       // unlock condition mutex
       pthread_mutex_unlock(&mtx_->mtx);
+#ifdef ECAL_USE_RW_LOCK_FAIR
+      if(fair_lock_enabled)
+        pthread_mutex_unlock(&mtx_->fair_mtx);
+#endif
       // return success
       return true;
     }
@@ -158,14 +180,26 @@ namespace
       if (ret == 0) mtx_->locked = 1;
       // unlock condition mutex
       pthread_mutex_unlock(&mtx_->mtx);
+#ifdef ECAL_USE_RW_LOCK_FAIR
+      if (fair_lock_enabled)
+        pthread_mutex_unlock(&mtx_->fair_mtx);
+#endif
       // sucess == wait returned 0
       return (ret == 0);
     }
   }
 
+#ifdef ECAL_USE_RW_LOCK_FAIR
+  bool named_mutex_trylock(named_mutex_t* mtx_, bool fair_lock_enabled = true)
+#else
   bool named_mutex_trylock(named_mutex_t* mtx_)
+#endif
   {
     bool locked(false);
+#ifdef ECAL_USE_RW_LOCK_FAIR
+    if (fair_lock_enabled)
+      pthread_mutex_lock(&mtx_->fair_mtx);
+#endif
     // lock condition mutex
     pthread_mutex_lock(&mtx_->mtx);
     // check state
@@ -177,6 +211,10 @@ namespace
     }
     // unlock condition mutex
     pthread_mutex_unlock(&mtx_->mtx);
+#ifdef ECAL_USE_RW_LOCK_FAIR
+    if (fair_lock_enabled)
+      pthread_mutex_unlock(&mtx_->fair_mtx);
+#endif
     // return success
     return locked;
   }
@@ -198,20 +236,31 @@ namespace
     pthread_mutex_unlock(&mtx_->mtx);
   }
 
+#ifdef ECAL_USE_RW_LOCK
   bool named_mutex_lock_shared(named_mutex_t* mtx_, struct timespec* ts_)
   {
+#ifdef ECAL_USE_RW_LOCK_FAIR
+    pthread_mutex_lock(&mtx_->fair_mtx);
+#endif
     pthread_mutex_lock(&mtx_->shared_mtx);
     ++mtx_->shared_counter;
     bool ret = true;
     if(mtx_->shared_counter == 1)
     {
+#ifdef ECAL_USE_RW_LOCK_FAIR
+      if(!named_mutex_lock(mtx_, ts_, false))
+#else
       if(!named_mutex_lock(mtx_, ts_))
+#endif
       {
         ret = false;
         --mtx_->shared_counter;
       }
     }
     pthread_mutex_unlock(&mtx_->shared_mtx);
+#ifdef ECAL_USE_RW_LOCK_FAIR
+    pthread_mutex_unlock(&mtx_->fair_mtx);
+#endif
     return ret;
   }
 
@@ -228,12 +277,19 @@ namespace
 
   bool named_mutex_trylock_shared(named_mutex_t* mtx_)
   {
+#ifdef ECAL_USE_RW_LOCK_FAIR
+    pthread_mutex_lock(&mtx_->fair_mtx);
+#endif
     pthread_mutex_lock(&mtx_->shared_mtx);
     ++mtx_->shared_counter;
     bool ret = false;
     if(mtx_->shared_counter == 1)
     {
+#ifdef ECAL_USE_RW_LOCK_FAIR
+      if(named_mutex_trylock(mtx_, false))
+#else
       if(named_mutex_trylock(mtx_))
+#endif
       {
         ret = false;
         --mtx_->shared_counter;
@@ -242,6 +298,7 @@ namespace
     pthread_mutex_unlock(&mtx_->shared_mtx);
     return ret;
   }
+#endif
 
   std::string named_mutex_buildname(const std::string& mutex_name_)
   {
@@ -344,6 +401,7 @@ namespace eCAL
     return(true);
   }
 
+#ifdef ECAL_USE_RW_LOCK
   inline bool LockSharedMtx(MutexT* mutex_handle_, const int timeout_)
   {
     // check mutex handle
@@ -386,4 +444,5 @@ namespace eCAL
 
     return(true);
   }
+#endif
 }

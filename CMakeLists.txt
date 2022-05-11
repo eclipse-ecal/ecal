@@ -135,6 +135,8 @@ if(${CMAKE_CROSSCOMPILING})
   set(THREADS_PTHREAD_ARG "2" CACHE STRING "Forcibly set by CMakeLists.txt." FORCE)
 endif()
 
+option(ECAL_USE_RW_LOCK "Enable rw-lock support for shared memory transport" OFF)
+option(ECAL_USE_RW_LOCK_FAIR "Enable fair rw-lock support (reader and writer have same priority) for shared memory transport" OFF)
 
 include(build_location)
 
