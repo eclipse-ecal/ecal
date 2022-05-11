@@ -38,3 +38,4 @@ sphinxcontrib-qthelp
 sphinxcontrib-serializinghtml
 urllib3
 WebOb
+sphinxcontrib-youtube

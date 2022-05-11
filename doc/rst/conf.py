@@ -96,6 +96,7 @@ extensions = [
     'sphinx_tabs.tabs',
     'sphinx.ext.githubpages',
     'sphinx.ext.todo',
+    'sphinxcontrib.youtube'
 ]
 
 if is_cmake_build:

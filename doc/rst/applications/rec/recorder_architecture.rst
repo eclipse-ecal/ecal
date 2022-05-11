@@ -40,6 +40,13 @@ The eCAL Recorder has two essential modes for creating recordings:
 
    Of course, mixed configurations are possible (e.g. some machines will only record their own topics, while other machines will also record topics of some external machines).
 
+   .. seealso::
+
+      .. youtube:: h3DUirOMfu8
+         :align: center
+         :height: 300px
+
+
 .. _applications_recorder_host_client_architecture:
 
 Host / Client Architecture
