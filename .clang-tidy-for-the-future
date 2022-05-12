@@ -1,0 +1,45 @@
+---
+# This clang-tidy settings have been taken from here:
+# https://github.com/googleapis/google-cloud-cpp/blob/main/.clang-tidy
+#
+# The first block are the exact google settings.
+# The second block are warnings that I assumed to be irrelevant
+# The third block are warnings that I would actually like to take care of for future projects
+#
+
+Checks: "-*,
+  bugprone-*,
+  google-*,
+  misc-*,
+  modernize-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  -google-readability-braces-around-statements,
+  -google-readability-namespace-comments,
+  -google-runtime-references,
+  -misc-non-private-member-variables-in-classes,
+  -modernize-return-braced-init-list,
+  -modernize-use-trailing-return-type,
+  -modernize-avoid-c-arrays,
+  -performance-move-const-arg,
+  -readability-braces-around-statements,
+  -readability-identifier-length,
+  -readability-magic-numbers,
+  -readability-named-parameter,
+  -readability-redundant-declaration,
+  -readability-function-cognitive-complexity,
+  -bugprone-narrowing-conversions,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-implicit-widening-of-multiplication-result,
+  
+  -readability-else-after-return,
+  -google-readability-todo
+
+  -modernize-use-auto,  
+  -google-runtime-int,
+  -modernize-pass-by-value,
+"
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+FormatStyle:     none

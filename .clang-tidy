@@ -8,37 +8,7 @@
 #
 
 Checks: "-*,
-  bugprone-*,
-  google-*,
-  misc-*,
-  modernize-*,
-  performance-*,
-  portability-*,
-  readability-*,
-  -google-readability-braces-around-statements,
-  -google-readability-namespace-comments,
-  -google-runtime-references,
-  -misc-non-private-member-variables-in-classes,
-  -modernize-return-braced-init-list,
-  -modernize-use-trailing-return-type,
-  -modernize-avoid-c-arrays,
-  -performance-move-const-arg,
-  -readability-braces-around-statements,
-  -readability-identifier-length,
-  -readability-magic-numbers,
-  -readability-named-parameter,
-  -readability-redundant-declaration,
-  -readability-function-cognitive-complexity,
-  -bugprone-narrowing-conversions,
-  -bugprone-easily-swappable-parameters,
-  -bugprone-implicit-widening-of-multiplication-result,
-  
-  -readability-else-after-return,
-  -google-readability-todo
-
-  -modernize-use-auto,  
-  -google-runtime-int,
-  -modernize-pass-by-value,
+  clang-*
 "
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
