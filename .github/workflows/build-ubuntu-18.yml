@@ -40,6 +40,7 @@ jobs:
       run: |
         sudo apt-get -y update
         sudo apt-get -y install cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev python3-setuptools libqwt-qt5-dev
+        sudo apt-get -y install pythonpy
       shell: bash
 
     - name: Install Cap’n Proto
@@ -112,8 +113,69 @@ jobs:
       run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/_build
 
-    - name: Build Python Wheel
-      run: cmake --build . --target create_python_wheel --config Release
+    # Create Python Wheels
+    # The strang-looking double-cmake is an ugly workaround to force CMake to
+    # re-find Python, after we have changed the venv from the outside. The
+    # alternative would be to clean everything, which would cause an unnecessary
+    # rebuild of eCAL and HDF5 for each python Version.
+    - name: Build Python 3.10 Wheel
+      run: |
+        mkdir ".venv_310"
+        python3.10 -m venv ".venv_310"
+        source ".venv_310/bin/activate"
+        pip install wheel
+        cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=FIRST
+        cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=ONLY
+        cmake --build . --target create_python_wheel --config Release
+      shell: bash
+      working-directory: ${{ runner.workspace }}/_build
+
+    - name: Build Python 3.9 Wheel
+      run: |
+        mkdir ".venv_39"
+        python3.9 -m venv ".venv_39"
+        source ".venv_39/bin/activate"
+        pip install wheel
+        cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=FIRST
+        cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=ONLY
+        cmake --build . --target create_python_wheel --config Release
+      shell: bash
+      working-directory: ${{ runner.workspace }}/_build
+
+    - name: Build Python 3.8 Wheel
+      run: |
+        mkdir ".venv_38"
+        python3.8 -m venv ".venv_38"
+        source ".venv_38/bin/activate"
+        pip install wheel
+        cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=FIRST
+        cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=ONLY
+        cmake --build . --target create_python_wheel --config Release
+      shell: bash
+      working-directory: ${{ runner.workspace }}/_build
+
+    - name: Build Python 3.7 Wheel
+      run: |
+        mkdir ".venv_37"
+        python3.7 -m venv ".venv_37"
+        source ".venv_37/bin/activate"
+        pip install wheel
+        cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=FIRST
+        cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=ONLY
+        cmake --build . --target create_python_wheel --config Release
+      shell: bash
+      working-directory: ${{ runner.workspace }}/_build
+
+    - name: Build Python 3.6 Wheel
+      run: |
+        mkdir ".venv_36"
+        python3.6 -m venv ".venv_36"
+        source ".venv_36/bin/activate"
+        pip install wheel
+        cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=FIRST
+        cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=ONLY
+        cmake --build . --target create_python_wheel --config Release
+      shell: bash
       working-directory: ${{ runner.workspace }}/_build
 
     - name: Run Tests
