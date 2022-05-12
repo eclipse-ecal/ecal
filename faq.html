@@ -595,6 +595,7 @@
 <li><a class="reference internal" href="#ecal-is-not-functioning-while-being-connected-to-a-vpn">eCAL is not functioning while being connected to a VPN</a></li>
 <li><a class="reference internal" href="#the-ecal-player-is-crashing-on-ubuntu">The eCAL Player is crashing on Ubuntu</a></li>
 <li><a class="reference internal" href="#ecalrec-cannot-control-the-clients-on-other-hosts">eCALRec cannot control the clients on other hosts</a></li>
+<li><a class="reference internal" href="#ecal-gui-applications-are-having-graphical-issues-on-ubuntu-22-04">eCAL GUI Applications are having graphical issues on Ubuntu 22.04</a></li>
 </ul>
 </li>
 </ul>
@@ -663,6 +664,12 @@ When opening a large measurement, this triggers a limit set by the operating sys
 <li><p>Check the <code class="file docutils literal notranslate"><span class="pre">hosts</span></code> file on all PCs and try to ping them <strong>by name</strong>! You can follow the <a class="reference internal" href="getting_started/services.html#getting-started-services"><span class="std std-ref">getting started tutorial</span></a>!</p></li>
 </ol>
 </div>
+<div class="section" id="ecal-gui-applications-are-having-graphical-issues-on-ubuntu-22-04">
+<span id="faq-ubuntu-22-04-graphical-issues"></span><h2>eCAL GUI Applications are having graphical issues on Ubuntu 22.04<a class="headerlink" href="#ecal-gui-applications-are-having-graphical-issues-on-ubuntu-22-04" title="Permalink to this headline">¶</a></h2>
+<p>Ubunt 22.04 finally switched to Wayland and (kind of) deprecated X11.
+Well, maybe they should have waited a little bit longer, because <em>all</em> Qt5 applications (eCAL Rec/Sys/Mon/Play, Qt Creator etc.) show severe graphical issues on Ubuntu 22.04.
+You can fix it however, by selecting “Ubuntu on XOrg” on your login screen, so Ubuntu will boot with X11.</p>
+<img alt="Ubuntu 22.04 on Xorg" src="_images/ubuntu_22_04_on_xorg_cut.svg" /></div>
 </div>
 
 <!-- /body -->
