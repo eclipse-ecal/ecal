@@ -36,6 +36,10 @@ For Ubuntu, you can either install eCAL from a PPA (Personal Package Archive) or
 For most users, the PPA will provide the easiest way of installing eCAL.
 The PPA also supports more Ubuntu Versions and CPU Architectures (x86, x64, arm64, armhf).
 
+**Ubuntu 22.04 Users**:
+You may experience issues with the GUI Applications (actually all Qt5 Apps) due to Ubuntus switch to wayland.
+But you can :ref:`log in with X11 <faq_ubuntu_22_04_graphical_issues>`, which solves those issues.
+
 .. seealso::
 
    Advanced users can also :ref:`compile eCAL from source <development_building_ecal_from_source>`.

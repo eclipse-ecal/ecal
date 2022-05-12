@@ -32,3 +32,15 @@ Usually, this happens when the OS cannot resolve the hostname to an IPv4 address
 
 1. Make sure you actually started the recorder client
 2. Check the :file:`hosts` file on all PCs and try to ping them **by name**! You can follow the :ref:`getting started tutorial <getting_started_services>`!
+
+.. _faq_ubuntu_22_04_graphical_issues:
+
+eCAL GUI Applications are having graphical issues on Ubuntu 22.04
+=================================================================
+
+Ubunt 22.04 finally switched to Wayland and (kind of) deprecated X11.
+Well, maybe they should have waited a little bit longer, because *all* Qt5 applications (eCAL Rec/Sys/Mon/Play, Qt Creator etc.) show severe graphical issues on Ubuntu 22.04.
+You can fix it however, by selecting "Ubuntu on XOrg" on your login screen, so Ubuntu will boot with X11.
+
+.. image:: img/ubuntu_22_04_on_xorg_cut.svg
+   :alt: Ubuntu 22.04 on Xorg
