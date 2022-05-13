@@ -1,6 +1,6 @@
-name: Build Ubuntu 20.04
+name: Build Ubuntu 22.04
 
-on:  
+on:
   push:
   pull_request:
     branches:
@@ -8,43 +8,52 @@ on:
 
 jobs:
   build-ubuntu:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Install Dependencies
       run: |
         sudo apt update
-        sudo apt-get install ninja-build doxygen graphviz libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev qt5-default
+        sudo apt-get install ninja-build doxygen graphviz libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev qtbase5-dev libqwt-qt5-dev
 
-    - name: Install Cap’n Proto
+
+    - name: Install Cap'n Proto
       run: |
         mkdir "${{ runner.workspace }}/capnp"
         cd "${{ runner.workspace }}/capnp"
-        curl -O https://capnproto.org/capnproto-c++-0.8.0.tar.gz
-        tar zxf capnproto-c++-0.8.0.tar.gz
-        cd capnproto-c++-0.8.0
+        curl -O https://capnproto.org/capnproto-c++-0.9.0.tar.gz
+        tar zxf capnproto-c++-0.9.0.tar.gz
+        cd capnproto-c++-0.9.0
         ./configure
         make -j
         sudo make install
 
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules:  'true'
         fetch-depth: 0
-        
+
     - name: Install Python requirements
       shell: bash
       run: |
-        sudo pip3 install -r "$GITHUB_WORKSPACE/requirements.txt"
+        sudo add-apt-repository ppa:deadsnakes/ppa -y
+        sudo apt-get -y install python3.9-dev python3.9-venv
+        mkdir ".venv_build"
+        python3.9 -m venv ".venv_build"
+        source ".venv_build/bin/activate"
+        pip install -r "$GITHUB_WORKSPACE/requirements.txt"
 
     - name: CMake
       run: |
-        export CC=/usr/bin/gcc-9
-        export CXX=/usr/bin/g++-9
+        source ".venv_build/bin/activate"
+        
+        export CC=/usr/bin/gcc-11
+        export CXX=/usr/bin/g++-11
         mkdir "${{ runner.workspace }}/_build"
         cd "${{ runner.workspace }}/_build"
         cmake $GITHUB_WORKSPACE -G "Ninja" \
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DHAS_HDF5=ON \
         -DHAS_QT5=ON \
         -DHAS_CURL=ON \
@@ -54,6 +63,7 @@ jobs:
         -DBUILD_SAMPLES=ON \
         -DBUILD_TIME=ON \
         -DBUILD_PY_BINDING=ON \
+        -DBUILD_STANDALONE_PY_WHEEL=ON \
         -DBUILD_CSHARP_BINDING=OFF \
         -DBUILD_ECAL_TESTS=ON \
         -DECAL_LAYER_ICEORYX=OFF \
@@ -69,6 +79,9 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_CURL=OFF \
         -DECAL_THIRDPARTY_BUILD_GTEST=ON \
         -DECAL_THIRDPARTY_BUILD_HDF5=OFF \
+        -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
+        -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
+        -DECAL_THIRDPARTY_BUILD_QWT=OFF \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_SYSCONFDIR=/etc \
         -DCMAKE_INSTALL_PREFIX=/usr \
@@ -87,25 +100,12 @@ jobs:
     # re-find Python, after we have changed the venv from the outside. The
     # alternative would be to clean everything, which would cause an unnecessary
     # rebuild of eCAL for each python Version.
-    - name: Build Python 3.9 Wheel
+    - name: Build Python 3.10 Wheel
       run: |
-        sudo apt-get -y install python3.9-dev python3.9-venv
-        mkdir ".venv_39"
-        python3.9 -m venv ".venv_39"
-        source ".venv_39/bin/activate"
-        pip install wheel setuptools
-        cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=FIRST
-        cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=ONLY
-        cmake --build . --target create_python_wheel --config Release
-      shell: bash
-      working-directory: ${{ runner.workspace }}/_build
-
-    - name: Build Python 3.8 Wheel
-      run: |
-        sudo apt-get -y install python3.8-dev python3.8-venv
-        mkdir ".venv_38"
-        python3.8 -m venv ".venv_38"
-        source ".venv_38/bin/activate"
+        sudo apt-get -y install python3.10-dev python3.10-venv
+        mkdir ".venv_310"
+        python3.10 -m venv ".venv_310"
+        source ".venv_310/bin/activate"
         pip install wheel setuptools
         cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=FIRST
         cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=ONLY
@@ -122,13 +122,13 @@ jobs:
       working-directory: ${{ runner.workspace }}/_build
 
     - name: Upload Debian
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: ubuntu-debian
         path: ${{ runner.workspace }}/_build/_deploy/*.deb
 
     - name: Upload Python Wheel
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: ubuntu-python-wheel
         path: ${{ runner.workspace }}/_build/_deploy/*.whl
