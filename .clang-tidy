@@ -1,0 +1,15 @@
+---
+# This clang-tidy settings have been taken from here:
+# https://github.com/googleapis/google-cloud-cpp/blob/main/.clang-tidy
+#
+# The first block are the exact google settings.
+# The second block are warnings that I assumed to be irrelevant
+# The third block are warnings that I would actually like to take care of for future projects
+#
+
+Checks: "-*,
+  clang-*
+"
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+FormatStyle:     none
