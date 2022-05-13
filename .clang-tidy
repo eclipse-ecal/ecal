@@ -1,14 +1,14 @@
 ---
-# This clang-tidy settings have been taken from here:
-# https://github.com/googleapis/google-cloud-cpp/blob/main/.clang-tidy
+# Resons why specific warnings have been turned off:
+# 
+#  -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling
 #
-# The first block are the exact google settings.
-# The second block are warnings that I assumed to be irrelevant
-# The third block are warnings that I would actually like to take care of for future projects
+#    This warns about memcpy and wants us to use memcpy_s, which is not available in our gcc setup.
 #
 
 Checks: "-*,
   clang-*
+  -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling
 "
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
