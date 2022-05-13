@@ -10,6 +10,33 @@ import empy_helpers
 import pathlib
 import semantic_version
 
+ubuntu_default_python_version_dict = \
+{
+    semantic_version.Version("18.4.0"):  semantic_version.Version("3.6.0"),
+    semantic_version.Version("20.4.0"):   semantic_version.Version("3.8.0"),
+    semantic_version.Version("22.4.0"):   semantic_version.Version("3.10.0"),
+}
+
+ubuntu_codename_dict = \
+{
+    "jammy":   semantic_version.Version("22.4.0"),
+    "impish":  semantic_version.Version("21.10.0"),
+    "hirsute": semantic_version.Version("21.4.0"),
+    "groovy":  semantic_version.Version("20.10.0"),
+    "focal":   semantic_version.Version("20.4.0"),
+    "eoan":    semantic_version.Version("19.10.0"),
+    "disco":   semantic_version.Version("19.4.0"),
+    "cosmic":  semantic_version.Version("18.10.0"),
+    "bionic":  semantic_version.Version("18.4.0"),
+    "artful":  semantic_version.Version("17.10.0"),
+    "zesty":   semantic_version.Version("17.4.0"),
+    "yakkety": semantic_version.Version("16.10.0"),
+    "xenial":  semantic_version.Version("16.4.0"),
+    "wily":    semantic_version.Version("15.10.0"),
+    "vivid":   semantic_version.Version("15.4.0"),
+    "utopic":  semantic_version.Version("14.10.0"),
+    "trusty":  semantic_version.Version("14.4.0"),
+}
 
 def group_gh_release_branches(gh_releases):
     gh_release_branches_dict = {}
@@ -56,27 +83,6 @@ def get_asset_properties(asset_name, ecal_version):
     python_version = semantic_version.Version("0.0.0")
 
     ext = os.path.splitext(asset_name)[1].lower()
-
-    ubuntu_codename_dict = \
-    {
-        "jammy":   semantic_version.Version("22.4.0"),
-        "impish":  semantic_version.Version("21.10.0"),
-        "hirsute": semantic_version.Version("21.4.0"),
-        "groovy":  semantic_version.Version("20.10.0"),
-        "focal":   semantic_version.Version("20.4.0"),
-        "eoan":    semantic_version.Version("19.10.0"),
-        "disco":   semantic_version.Version("19.4.0"),
-        "cosmic":  semantic_version.Version("18.10.0"),
-        "bionic":  semantic_version.Version("18.4.0"),
-        "artful":  semantic_version.Version("17.10.0"),
-        "zesty":   semantic_version.Version("17.4.0"),
-        "yakkety": semantic_version.Version("16.10.0"),
-        "xenial":  semantic_version.Version("16.4.0"),
-        "wily":    semantic_version.Version("15.10.0"),
-        "vivid":   semantic_version.Version("15.4.0"),
-        "utopic":  semantic_version.Version("14.10.0"),
-        "trusty":  semantic_version.Version("14.4.0"),
-    }
 
     if asset_name.lower().endswith(".tar.gz"):
         os_group     = "source"
@@ -186,14 +192,21 @@ def get_downloads_list(gh_assets, ecal_version):
 
 
         if is_python:
-            download_dict["python_download_links"].append((python_version, asset.browser_download_url))
+            if (os_group == "ubuntu") \
+                    and (os_version in ubuntu_default_python_version_dict) \
+                    and (python_version == ubuntu_default_python_version_dict[os_version]):
+                is_default_python = True
+            else:
+                is_default_python = False
+
+            download_dict["python_download_links"].append({"version": python_version, "link": asset.browser_download_url, "default": is_default_python})
         else:
             download_dict["ecal_installer_link"].append(asset.browser_download_url)
 
     # Sort python download links
     for download_dict in download_list:
         download_dict["python_download_links"] = sorted(download_dict["python_download_links"], 
-                                                        key= lambda a: a[0])
+                                                        key= lambda a: a["version"])
 
     windows_download_links = list(filter(lambda d: d["os_group"] == "windows", download_list))
     ubuntu_download_links  = list(filter(lambda d: d["os_group"] == "ubuntu", download_list))

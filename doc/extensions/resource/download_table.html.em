@@ -9,11 +9,11 @@ import os
 #        "os_name" :              "Windows",
 #        "ecal_installer_link" :  ["https://github.com/continental/ecal/releases/download/v5.8.3/ecal_5.8.3-win64.exe"],
 #        "python_download_links" : [
-#                ("3.9" , "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg"),
-#                ("3.8" , "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg"),
-#                ("3.7" , "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg"),
-#                ("3.6" , "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg"),
-#                ("3.5" , "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg"),
+#                ("version": "3.9" , "link": "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
+#                ("version": "3.8" , "link": "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
+#                ("version": "3.7" , "link": "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
+#                ("version": "3.6" , "link": "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
+#                ("version": "3.5" , "link": "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
 #            ],
 #    },
 #
@@ -22,7 +22,7 @@ import os
 #        "os_name" :              "Ubuntu 18.04",
 #        "ecal_installer_link" :  ["https://github.com/continental/ecal/releases/download/v5.8.3/ecal_5.8.3-bionic_amd64.deb"],
 #        "python_download_links" : [
-#                ("3.8" , "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg"),
+#                ("version": "3.8" , "link": "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
 #            ],
 #    },
 #
@@ -31,7 +31,7 @@ import os
 #        "os_name" :              "Ubuntu 20.04",
 #        "ecal_installer_link" :  ["https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.8-focal_amd64.egg"],
 #        "python_download_links" : [
-#                ("3.8" , "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg"),
+#                ("version": "3.8" , "link": "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
 #            ],
 #    },
 #]
@@ -86,11 +86,17 @@ else:
 @[end for]@
 @[    if len(download_dict["python_download_links"]) > 0]@
 <ul class="simple">
-@[        for (python_version, python_download_link) in download_dict["python_download_links"]]@
+@[        for python_download_dict in download_dict["python_download_links"]]@
 @{
-python_binding_extension = os.path.splitext(python_download_link)[1]
+python_version           = python_download_dict["version"]
+python_download_link     = python_download_dict["link"]
+python_binding_extension = os.path.splitext(python_download_dict["link"])[1]
+if python_download_dict["default"]:
+    is_default_text = " (Default)"
+else:
+    is_default_text = ""
 }@
-<li><p><a class="reference external" href="@(python_download_link)"><i class="fab fa-python"></i> Python @(python_version.major).@(python_version.minor) integration for eCAL @(str(ecal_version)) on @(os_name) (@(python_binding_extension))</a></p></li>
+<li><p><a class="reference external" href="@(python_download_link)"><i class="fab fa-python"></i> Python @(python_version.major).@(python_version.minor) binding for @(os_name) as @(python_binding_extension)@(is_default_text)</a></p></li>
 @[        end for]@
 </ul>
 @[    end if]@
