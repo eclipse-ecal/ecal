@@ -7,8 +7,8 @@
 #
 
 Checks: "-*,
-  clang-*
-  -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling
+  clang-*,
+  -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,
 "
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
