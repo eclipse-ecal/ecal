@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  * ========================= eCAL LICENSE =================================
-*/
+*/ 
 
 #include "ecalmon.h"
 #include <QtWidgets/QApplication>
