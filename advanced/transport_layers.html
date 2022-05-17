@@ -591,7 +591,12 @@
 
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
-<li><a class="reference internal" href="#">Transport Layers</a></li>
+<li><a class="reference internal" href="#">Transport Layers</a><ul>
+<li><a class="reference internal" href="#available-transport-layers">Available transport layers</a></li>
+<li><a class="reference internal" href="#default-transport-layers">Default transport layers</a></li>
+<li><a class="reference internal" href="#configuration-of-transport-layers">Configuration of transport layers</a></li>
+</ul>
+</li>
 </ul>
 <!-- /menu -->
                             </div>
@@ -635,12 +640,28 @@
 <!-- body -->
     <div class="section" id="transport-layers">
 <span id="id1"></span><h1>Transport Layers<a class="headerlink" href="#transport-layers" title="Permalink to this headline">¶</a></h1>
-<p>eCAL is able to communicate on different so called transport layers, but first of all you have to decide if you want to communicate in a network or in a local host only mode.
-To configure this you need to set the ecal.ini [network/network_enabled] parameter to true (network communication mode) or false (local host only communication mode).</p>
-<p>After this you can fine tune the way of message transport for inner-process, interprocess and the interhost connections.
-There are different ways to configure these layers.
-They can be set up for a whole machine using the central configuration file (ecal.ini) or for a single eCAL process passed by command line arguments or finally for a single publish-subscribe connection using the C++ or python publisher API.
-Every single builtin transport layer has it’s specific communication properties.</p>
+<p>When talking about transport layers, one needs to establish the different scenarios in which data is being exchanged.
+eCAL distinguished between three types of communication:</p>
+<ul class="simple">
+<li><p><strong>Intraprocess Communication</strong>: communication between publishers / subscribers that are located in the same process</p></li>
+<li><p><strong>Interprocess Communication</strong>: communication between publishers / subscribers in different processes, but located on the same host</p></li>
+<li><p><strong>Interhost Communication</strong>: communication between publishers / subscribers that are located on different hosts, inside a network</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Per default, interhost communication is turned off by configuration. To configure this you need to set the ecal.ini [network/network_enabled] parameter to true (network communication mode) or false (local host only communication mode)</p>
+</div>
+<p>In general the latency of the data transport increases depending on the “distance” of the communication participants.
+The “closer” the participants, the “quicker” the transport.
+Interhost communication requires using a network stack to transport said data, which generates an overhead and latency.
+Transport on the same host is significantly faster, as shared memory techniques may be applied.
+Intraprocess communication may be fastest, as it may require as little as sharing a pointer.</p>
+<p>Depending on the communication scenario, eCAL offers different means to transport data between the communication participants, the so called <strong>transport layers</strong>.</p>
+<div class="section" id="available-transport-layers">
+<h2>Available transport layers<a class="headerlink" href="#available-transport-layers" title="Permalink to this headline">¶</a></h2>
+<p>CAL supports four different transport layers.
+Every single builtin transport layer has it’s specific communication properties.
+Most of them can be configured additionally.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 25%" />
@@ -678,6 +699,58 @@ Every single builtin transport layer has it’s specific communication propertie
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="default-transport-layers">
+<h2>Default transport layers<a class="headerlink" href="#default-transport-layers" title="Permalink to this headline">¶</a></h2>
+<p>Not all transport layers may be used for all communication scenarios, e.g. it’s not possible to use shared memory transport on interhost communication.
+eCAL provides sensible default transport methods, depending on the type of communication taking place.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 16%" />
+<col style="width: 14%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Header 1</p></th>
+<th class="head"><p>inproc</p></th>
+<th class="head"><p>shm</p></th>
+<th class="head"><p>udp_mc</p></th>
+<th class="head"><p>tcp</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Intraprocess Communication</p></td>
+<td><p>available</p></td>
+<td><p>default</p></td>
+<td><p>available</p></td>
+<td><p>available</p></td>
+</tr>
+<tr class="row-odd"><td><p>Interprocess Communication</p></td>
+<td></td>
+<td><p>default</p></td>
+<td><p>available</p></td>
+<td><p>available</p></td>
+</tr>
+<tr class="row-even"><td><p>Interhost Communication</p></td>
+<td></td>
+<td></td>
+<td><p>default</p></td>
+<td><p>available</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="configuration-of-transport-layers">
+<h2>Configuration of transport layers<a class="headerlink" href="#configuration-of-transport-layers" title="Permalink to this headline">¶</a></h2>
+<p>In case the default configuration is not sensible enough, the eCAL user can finetune the configuration.
+The layers can be set up</p>
+<ul class="simple">
+<li><p>for a whole machine using the central configuration file (ecal.ini)</p></li>
+<li><p>for a single eCAL process passed by command line arguments</p></li>
+<li><p>for a single publish-subscribe connection using the C++ or python publisher API.</p></li>
+</ul>
 <p>Every layer can set up in 3 different activation modes. Every mode can be configured as default in the ecal.ini file and can be overwritten by the C++/Python publisher API. This is the activation logic</p>
 <ul class="simple">
 <li><p>off: layer is switched off</p></li>
@@ -720,6 +793,7 @@ This can be done in the ecal.ini file [network] section.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="layers/inproc.html">eCAL Inner-Process Layer</a></li>
 </ul>
+</div>
 </div>
 </div>
 </div>
