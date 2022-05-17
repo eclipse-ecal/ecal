@@ -46,3 +46,6 @@
 [submodule "thirdparty/qwt/qwt"]
 	path = thirdparty/qwt/qwt
 	url = https://git.code.sf.net/p/qwt/git
+[submodule "thirdparty/ftxui"]
+	path = thirdparty/ftxui
+	url = https://github.com/ArthurSonzogni/FTXUI.git

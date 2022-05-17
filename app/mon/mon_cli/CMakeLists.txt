@@ -20,9 +20,10 @@ project(mon)
 
 find_package(Protobuf REQUIRED)
 find_package(tclap REQUIRED)
+find_package(ftxui REQUIRED)
 
 set(ecalmon_src
-  src/ecal_mon.cpp
+  src/main.cpp
 )
 
 if(WIN32)
@@ -45,7 +46,10 @@ target_link_libraries(${PROJECT_NAME}
   protobuf::libprotobuf
   tclap::tclap
   eCAL::core
-  eCAL::pb)
+  eCAL::pb
+  ftxui::screen
+  ftxui::dom
+  ftxui::component)
 
 ecal_install_app(${PROJECT_NAME})
 
