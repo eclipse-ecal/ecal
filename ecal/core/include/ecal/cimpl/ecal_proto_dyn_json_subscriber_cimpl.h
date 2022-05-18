@@ -51,6 +51,7 @@ extern "C"
 
   /**
    * @brief Add callback function for incoming receives. 
+   * @since eCAL 5.10.0
    *
    * @param handle_    Subscriber handle. 
    * @param callback_  The callback function to add.
@@ -59,6 +60,18 @@ extern "C"
    * @return  None zero if succeeded.
   **/
   ECALC_API int eCAL_Proto_Dyn_JSON_Sub_AddReceiveCallback(ECAL_HANDLE handle_, ReceiveCallbackCT callback_, void* par_);
+
+  /**
+   * @deprecated Please use eCAL_Proto_Dyn_JSON_Sub_AddReceiveCallback instead
+   * @brief Add callback function for incoming receives.
+   *
+   * @param handle_    Subscriber handle.
+   * @param callback_  The callback function to add.
+   * @param par_       User defined context that will be forwarded to the callback function.
+   *
+   * @return  None zero if succeeded.
+  **/
+  ECALC_API_DEPRECATED int eCAL_Proto_Dyn_JSON_Sub_AddReceiveCallbackC(ECAL_HANDLE handle_, ReceiveCallbackCT callback_, void* par_);
 
   /**
    * @brief Remove callback function for incoming receives. 

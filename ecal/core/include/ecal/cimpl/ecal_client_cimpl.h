@@ -108,6 +108,7 @@ extern "C"
 
  /**
    * @brief Add server response callback. 
+   * @since eCAL 5.10.0
    *
    * @param handle_    Client handle. 
    * @param callback_  Callback function for server response.  
@@ -116,6 +117,18 @@ extern "C"
    * @return  None zero if succeeded.
   **/
   ECALC_API int eCAL_Client_AddResponseCallback(ECAL_HANDLE handle_, ResponseCallbackCT callback_, void* par_);
+
+  /**
+    * @deprecated Please use eCAL_Client_AddResponseCallback instead
+    * @brief Add server response callback.
+    *
+    * @param handle_    Client handle.
+    * @param callback_  Callback function for server response.
+    * @param par_       User defined context that will be forwarded to the callback function.
+    *
+    * @return  None zero if succeeded.
+   **/
+  ECALC_API_DEPRECATED int eCAL_Client_AddResponseCallbackC(ECAL_HANDLE handle_, ResponseCallbackCT callback_, void* par_);
 
   /**
    * @brief Remove server response callback. 
