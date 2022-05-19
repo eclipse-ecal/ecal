@@ -25,6 +25,9 @@
 #ifndef ecal_util_cimpl_h_included
 #define ecal_util_cimpl_h_included
 
+#include <ecal/ecal_os.h>
+#include <ecal/ecalc_types.h>
+
 #ifdef __cplusplus
 extern "C"
 {

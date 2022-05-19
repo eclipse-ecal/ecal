@@ -30,6 +30,8 @@
 #include <fcntl.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <cstdint>
+#include <string>
 
 struct alignas(8) named_mutex
 {

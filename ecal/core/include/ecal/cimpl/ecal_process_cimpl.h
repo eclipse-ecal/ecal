@@ -28,6 +28,8 @@
 #include <ecal/ecal_process_mode.h>
 #include <ecal/ecal_process_severity.h>
 
+#include <ecal/ecal_os.h>
+
 #ifdef __cplusplus
 extern "C"
 {
