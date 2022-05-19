@@ -29,6 +29,7 @@
 #include <ecal/ecalc_types.h>
 
 #include <ecal/cimpl/ecal_service_info_cimpl.h>
+#include <ecal/cimpl/ecal_callback_cimpl.h>
 
 #ifdef __cplusplus
 extern "C"
