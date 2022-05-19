@@ -231,6 +231,7 @@ extern "C"
 
   /**
    * @brief Add callback function for publisher events.
+   * @since eCAL 5.10.0
    *
    * @param handle_    Publisher handle.
    * @param type_      The event type to react on.
@@ -240,6 +241,19 @@ extern "C"
    * @return  None zero if succeeded.
   **/
   ECALC_API int eCAL_Pub_AddEventCallback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, PubEventCallbackCT callback_, void* par_);
+
+  /**
+   * @brief Add callback function for publisher events.
+   * @deprecated Please use eCAL_Pub_AddEventCallback instead
+   *
+   * @param handle_    Publisher handle.
+   * @param type_      The event type to react on.
+   * @param callback_  The callback function to add.
+   * @param par_       User defined context that will be forwarded to the callback function.
+   *
+   * @return  None zero if succeeded.
+  **/
+  ECALC_API_DEPRECATED int eCAL_Pub_AddEventCallbackC(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, PubEventCallbackCT callback_, void* par_);
 
   /**
    * @brief Remove callback function for publisher events.
