@@ -7,7 +7,7 @@
 #
 
 Checks: "-*,
-  clang-*,
+  clang-analyzer-*,
   -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,
 "
 WarningsAsErrors: ''
