@@ -8,7 +8,7 @@
 #
 
 Checks: "-*,
-  clang-*
+  clang-analyzer-*
 "
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
