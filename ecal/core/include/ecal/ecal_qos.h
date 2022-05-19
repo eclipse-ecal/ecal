@@ -77,7 +77,7 @@ namespace eCAL
       }
       eQOSPolicy_HistoryKind  history_kind;              //!< qos history kind mode
       int                     history_kind_depth;        //!< qos history kind mode depth
-      QOS::eQOSPolicy_Reliability  reliability;               //!< qos reliability mode
+      eQOSPolicy_Reliability  reliability;               //!< qos reliability mode
     };
   }
 }
