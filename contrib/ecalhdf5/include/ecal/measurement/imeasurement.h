@@ -28,8 +28,6 @@
 #include <ecalhdf5/eh5_meas.h>
 #include <ecal/measurement/measurement.h>
 
-#include <ecal/msg/subscriber.h>
-
 namespace eCAL
 {
   namespace measurement
