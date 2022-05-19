@@ -265,7 +265,7 @@ namespace eCAL
       sstream << "Layer Mode INPROC        : " << LayerMode(Config::GetPublisherInprocMode())  << std::endl;
       auto zero_copy = Config::IsMemfileZerocopyEnabled();
 
-      if (true == zero_copy)
+      if (zero_copy)
       {
         sstream << "Layer Mode SHM (ZEROCPY) : " << LayerMode(Config::GetPublisherShmMode()) << std::endl;
       }
