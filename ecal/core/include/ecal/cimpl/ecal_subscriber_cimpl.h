@@ -178,6 +178,7 @@ extern "C"
 
   /**
    * @brief Add callback function for incoming receives. 
+   * @since eCAL 5.10.0
    *
    * @param handle_    Subscriber handle. 
    * @param callback_  The callback function to add.
@@ -186,6 +187,17 @@ extern "C"
    * @return  None zero if succeeded.
   **/
   ECALC_API int eCAL_Sub_AddReceiveCallback(ECAL_HANDLE handle_, ReceiveCallbackCT callback_, void* par_);
+
+  /**
+   * @brief Add callback function for incoming receives.
+   *
+   * @param handle_    Subscriber handle.
+   * @param callback_  The callback function to add.
+   * @param par_       User defined context that will be forwarded to the callback function.
+   *
+   * @return  None zero if succeeded.
+  **/
+  ECALC_API int eCAL_Sub_AddReceiveCallbackC(ECAL_HANDLE handle_, ReceiveCallbackCT callback_, void* par_);
 
   /**
    * @brief Remove callback function for incoming receives. 
@@ -198,6 +210,7 @@ extern "C"
 
   /**
    * @brief Add callback function for subscriber events.
+   * @since eCAL 5.10.0   
    *
    * @param handle_    Subscriber handle.
    * @param type_      The event type to react on.
@@ -207,6 +220,18 @@ extern "C"
    * @return  None zero if succeeded.
   **/
   ECALC_API int eCAL_Sub_AddEventCallback(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_, SubEventCallbackCT callback_, void* par_);
+
+  /**
+   * @brief Add callback function for subscriber events.
+   *
+   * @param handle_    Subscriber handle.
+   * @param type_      The event type to react on.
+   * @param callback_  The callback function to add.
+   * @param par_       User defined context that will be forwarded to the callback function.
+   *
+   * @return  None zero if succeeded.
+  **/
+  ECALC_API int eCAL_Sub_AddEventCallbackC(ECAL_HANDLE handle_, enum eCAL_Subscriber_Event type_, SubEventCallbackCT callback_, void* par_);
 
   /**
    * @brief Remove callback function for subscriber events.
