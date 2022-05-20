@@ -1532,7 +1532,6 @@ bool IsRecorderBusy(bool print_status)
     if(print_status)
       std::cout << "Waiting for the following events:" << std::endl;
 
-    // bitwise-or is intended and necessary!
     bool still_busy = false;
     still_busy = still_busy || IsAnyClientFlushing   (print_status);
     still_busy = still_busy || IsAnyClientUploading  (print_status);
