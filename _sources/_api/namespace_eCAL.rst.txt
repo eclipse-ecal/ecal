@@ -103,9 +103,9 @@ Functions
 
 - :ref:`exhale_function_ecal__event_8h_1ab938b3b890db68d3ecb042d0a084aedf`
 
-- :ref:`exhale_function_ecal__core_8h_1a390408819d676df7778dc77934dcd7eb`
-
 - :ref:`exhale_function_ecal__core_8h_1a80530ef61fc0a320348cb17b9b55aa0f`
+
+- :ref:`exhale_function_ecal__core_8h_1a390408819d676df7778dc77934dcd7eb`
 
 - :ref:`exhale_function_ecal__core_8h_1a8dbe319c04fef61bc7a5f6382fbe4c2f`
 
