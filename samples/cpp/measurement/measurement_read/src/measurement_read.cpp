@@ -17,8 +17,8 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/msg/proto/message.h>
-#include <ecal/measurement/imeasurement.h>
+#include <ecal/measurement/proto/imeasurement.h>
+#include <ecal/measurement/string/imeasurement.h>
 
 #include <iostream>
 
@@ -42,6 +42,7 @@ int main(int /*argc*/, char** /*argv*/)
 
   // create a channel (topic name "person")
   eCAL::measurement::IChannel<pb::People::Person> person_channel = meas.Get<pb::People::Person>("person");
+  eCAL::measurement::IStringChannel string_channel = meas.Get<std::string>("string");
 
   // iterate over the messages
   for (const auto& person_entry : person_channel)

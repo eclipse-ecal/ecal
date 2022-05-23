@@ -27,28 +27,35 @@ namespace eCAL
 {
   namespace message
   {
-    // unfortunately, we need an actual object for this :/
-    inline std::string GetTypeName(const std::string& /*message*/)
+    namespace string
     {
-      return("base:std::string");
-    }
+      class MessageProvider
+      {
+      public:
+        // unfortunately, we need an actual object for this :/
+        static std::string GetTypeName(const std::string& /*message*/)
+        {
+          return("base:std::string");
+        }
 
-    // unfortunately, we need an actual object for this :/
-    inline std::string GetDescription(const std::string& /*message*/)
-    {
-      return("");
-    }
+        // unfortunately, we need an actual object for this :/
+        static std::string GetDescription(const std::string& /*message*/)
+        {
+          return("");
+        }
 
-    inline bool Serialize(const std::string& message, std::string& buffer)
-    {
-      buffer = message;
-      return true;
-    }
+        static bool Serialize(const std::string& message, std::string& buffer)
+        {
+          buffer = message;
+          return true;
+        }
 
-    inline bool Deserialize(const std::string& buffer, std::string& message)
-    {
-      message = buffer;
-      return true;
+        static bool Deserialize(const std::string& buffer, std::string& message)
+        {
+          message = buffer;
+          return true;
+        }
+      };
     }
   }
 }

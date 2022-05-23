@@ -17,9 +17,8 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/msg/proto/message.h>
-#include <ecal/msg/string/message.h>
-#include <ecal/measurement/omeasurement.h>
+#include <ecal/measurement/proto/omeasurement.h>
+#include <ecal/measurement/string/omeasurement.h>
 
 #include <iostream>
 
@@ -33,8 +32,8 @@ int main(int /*argc*/, char** /*argv*/)
   eCAL::measurement::OMeasurement meas(".");
 
   // create a channel (topic name "person")
-  eCAL::measurement::OChannel<pb::People::Person> person_channel = meas.Create<pb::People::Person>("person");
-  eCAL::measurement::OStringChannel string_channel = meas.Create<std::string>("string");
+  eCAL::measurement::OChannel<pb::People::Person> person_channel = meas.Create<pb::People::Person, eCAL::message::protobuf::MessageProvider>("person");
+  eCAL::measurement::OStringChannel string_channel = meas.Create<std::string, eCAL::message::string::MessageProvider>("string");
 
   pb::People::Person person;
   person.set_name("Max");

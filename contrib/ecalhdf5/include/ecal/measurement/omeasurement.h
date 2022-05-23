@@ -67,22 +67,27 @@ namespace eCAL
       long long clock;
     };
 
+    template <typename T, typename Enable = void>
+    class OChannelType;
 
-    template <typename T>
-    class OChannel
+    template<typename T>
+    using OChannel = typename OChannelType<T>::type;
+
+    template <typename T, typename C>
+    class OBaseChannel
     {
     public:
-      OChannel(std::shared_ptr<eh5::HDF5Meas> meas_, std::string name_)
+      OBaseChannel(std::shared_ptr<eh5::HDF5Meas> meas_, std::string name_)
         : binary_channel(meas_, name_)
       {
       }
 
-      bool operator==(const OChannel& rhs) const { return  binary_channel == rhs.binary_channel ;}
-      bool operator!=(const OChannel& rhs) const { return !(operator==(rhs)); }
+      bool operator==(const OBaseChannel& rhs) const { return  binary_channel == rhs.binary_channel ;}
+      bool operator!=(const OBaseChannel& rhs) const { return !(operator==(rhs)); }
 
-      OChannel<T>& operator<<(const Frame<T>& entry_)
+      OBaseChannel<T, C>& operator<<(const Frame<T>& entry_)
       {
-        eCAL::message::Serialize(entry_.message, buffer);
+        C::Serialize(entry_.message, buffer);
         BinaryFrame binary_frame{ buffer, entry_.send_timestamp, entry_.receive_timestamp };
         binary_channel << binary_frame;
         return *this;
@@ -90,7 +95,7 @@ namespace eCAL
       
 
       // Streaming operator to change the sender ID
-      OChannel<T>& operator<<(const SenderID& id_)
+      OBaseChannel<T, C>& operator<<(const SenderID& id_)
       {
         binary_channel << id_;
         return *this;
@@ -102,21 +107,17 @@ namespace eCAL
       mutable std::string buffer;
     };
 
-    using OStringChannel = OChannel<std::string>;
-
     class OMeasurement
     {
     public:
       OMeasurement(const std::string& base_path_, const std::string& measurement_name_= "measurement");
 
-      template<typename T>
-      OChannel<T> Create(const std::string& channel) const;
+      template<typename T, typename C>
+      OBaseChannel<T, C> Create(const std::string& channel) const;
 
     private:
       std::shared_ptr<eh5::HDF5Meas> meas;
     };
-
-
 
     OMeasurement::OMeasurement(const std::string& base_path_, const std::string& measurement_name_)
       : meas{ std::make_shared<eh5::HDF5Meas>(base_path_, eh5::CREATE) }
@@ -128,14 +129,14 @@ namespace eCAL
     // This will throw an exception if 
     // a) channel does not exist in the OMeasurement
     // b) the registered type does not match with the descriptor in the chanenel
-    template<typename T>
-    OChannel<T> OMeasurement::Create(const std::string& channel) const
+    template<typename T, typename C>
+    OBaseChannel<T, C> OMeasurement::Create(const std::string& channel) const
     {
       static T msg;
-      meas->SetChannelType(channel, eCAL::message::GetTypeName(msg));
-      meas->SetChannelDescription(channel, eCAL::message::GetDescription(msg));
+      meas->SetChannelType(channel, C::GetTypeName(msg));
+      meas->SetChannelDescription(channel, C::GetDescription(msg));
         // Construct a channel based 
-      return OChannel<T>{meas, channel};
+      return OBaseChannel<T, C>{meas, channel};
     }
 
     

@@ -35,26 +35,34 @@ namespace eCAL
 {
   namespace message
   {
-    // unfortunately, we need an actual object for this :/
-    inline std::string GetTypeName(const google::protobuf::Message& message)
+    namespace protobuf
     {
-      return("proto:" + message.GetTypeName());
-    }
+      class MessageProvider
+      {
+      public:
+        // unfortunately, we need an actual object for this :/
+        static std::string GetTypeName(const google::protobuf::Message& message)
+        {
+          return("proto:" + message.GetTypeName());
+        }
 
-    // unfortunately, we need an actual object for this :/
-    inline std::string GetDescription(const google::protobuf::Message& message)
-    {
-      return eCAL::protobuf::GetProtoMessageDescription(message);
-    }
+        // unfortunately, we need an actual object for this :/
+        static std::string GetDescription(const google::protobuf::Message& message)
+        {
+          return eCAL::protobuf::GetProtoMessageDescription(message);
+        }
 
-    inline bool Serialize(const google::protobuf::Message& message, std::string& buffer)
-    {
-      return message.SerializeToString(&buffer);
-    }
+        static bool Serialize(const google::protobuf::Message& message, std::string& buffer)
+        {
+          return message.SerializeToString(&buffer);
+        }
 
-    inline bool Deserialize(const std::string& buffer, google::protobuf::Message& message)
-    {
-      return message.ParseFromString(buffer);
+        static bool Deserialize(const std::string& buffer, google::protobuf::Message& message)
+        {
+          return message.ParseFromString(buffer);
+        }
+      };
+
     }
   }
 }

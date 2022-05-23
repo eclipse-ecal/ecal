@@ -119,24 +119,29 @@ namespace eCAL
       mutable std::string data;
     };
 
+    template <typename T, typename Enable = void>
+    class IChannelType;
 
-    template <typename T>
-    class IChannel
+    template<typename T>
+    using IChannel = typename IChannelType<T>::type;
+
+    template <typename T, typename C>
+    class IBaseChannel
     {
     public:
-      IChannel(std::shared_ptr<eh5::HDF5Meas> meas_, std::string name_)
+      IBaseChannel(std::shared_ptr<eh5::HDF5Meas> meas_, std::string name_)
         : binary_channel(meas_, name_)
       {
       }
 
-      bool operator==(const IChannel& rhs) const { return  binary_channel == rhs.binary_channel; }
-      bool operator!=(const IChannel& rhs) const { return !(operator==(rhs)); }
+      bool operator==(const IBaseChannel& rhs) const { return  binary_channel == rhs.binary_channel; }
+      bool operator!=(const IBaseChannel& rhs) const { return !(operator==(rhs)); }
 
       //virtual Entry<T> operator[](unsigned long long timestamp);
       virtual Frame<T> operator[](const eh5::SEntryInfo& entry)
       {
         auto binary_entry = binary_channel[entry];
-        eCAL::message::Deserialize(binary_entry.message, message);
+        C::Deserialize(binary_entry.message, message);
         return make_frame( message, binary_entry.send_timestamp, binary_entry.receive_timestamp );
       }
 
@@ -186,7 +191,7 @@ namespace eCAL
         {
           //  return m_owner[*m_entry_iterator];
           BinaryFrame e = *it;
-          eCAL::message::Deserialize(e.message, message);
+          C::Deserialize(e.message, message);
           return make_frame(message, e.receive_timestamp, e.send_timestamp);
         };
         //friend void swap(iterator& lhs, iterator& rhs); //C++11 I think
