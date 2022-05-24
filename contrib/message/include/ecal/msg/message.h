@@ -20,25 +20,27 @@
 #pragma once
 
 /*
-A type needs to implement the following functions in order that a measurement object
-can be constructed for that type (read / write)
+This class is just for convenience 
+A type which supports eCAL messages needs to implement these class functions.
+We'd rather need a contract, but that's C++20
 */
 namespace eCAL
 {
   namespace message
   {
-    //// unfortunately, we need an actual object for this :/
-    //template<typename T>
-    //std::string GetTypeName(const T& message);
-  
-    //// unfortunately, we need an actual object for this :/
-    //template<typename T>
-    //std::string GetDescription(const T& message);
-  
-    //template<typename T>
-    //bool Serialize(const T& message, std::string& buffer);
-  
-    //template<typename T>
-    //bool Deserialize(const std::string& buffer, T& message);
+    template <typename T>
+    class MessageProvider
+    {
+    public:
+      // unfortunately, we need an actual object for this :/
+      static std::string GetTypeName(const T& /*message*/);
+
+      // unfortunately, we need an actual object for this :/
+      static std::string GetDescription(const T& /*message*/);
+
+      static bool Serialize(const T& message, std::string& buffer);
+
+      static bool Deserialize(const std::string& buffer, T& message);
+    };
   }
 }
