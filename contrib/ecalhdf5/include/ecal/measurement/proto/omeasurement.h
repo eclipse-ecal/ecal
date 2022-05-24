@@ -27,7 +27,7 @@ namespace eCAL
   namespace measurement
   {
     template<typename T>
-    struct OChannelType<T, typename std::enable_if_t<std::is_base_of_v<google::protobuf::Message, T>>> { using type = OBaseChannel<T, eCAL::message::protobuf::MessageProvider>; };
+    struct OChannelType<T, typename std::enable_if_t<std::is_base_of<google::protobuf::Message, T>::value>> { using type = OBaseChannel<T, eCAL::message::protobuf::MessageProvider>; };
   }
 }
 

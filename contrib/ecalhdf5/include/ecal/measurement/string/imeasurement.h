@@ -29,7 +29,7 @@ namespace eCAL
   namespace measurement
   {
     template<typename T>
-    struct IChannelType<T, typename std::enable_if_t<std::is_base_of_v<std::string, T>>> { using type = IBaseChannel<T, eCAL::message::string::MessageProvider>; };
+    struct IChannelType<T, typename std::enable_if_t<std::is_base_of<std::string, T>::value>> { using type = IBaseChannel<T, eCAL::message::string::MessageProvider>; };
 
     using IStringChannel = IChannel<std::string>;
   }
