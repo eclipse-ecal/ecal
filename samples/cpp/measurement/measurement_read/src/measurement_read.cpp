@@ -42,7 +42,8 @@ int main(int /*argc*/, char** /*argv*/)
 
   // create a channel (topic name "person")
   eCAL::measurement::IChannel<pb::People::Person> person_channel = meas.Get<pb::People::Person>("person");
-  eCAL::measurement::IStringChannel string_channel = meas.Get<std::string>("string");
+  // current sample measurement does not contain a string channel.
+  //eCAL::measurement::IStringChannel string_channel = meas.Get<std::string>("string");
 
   // iterate over the messages
   for (const auto& person_entry : person_channel)
