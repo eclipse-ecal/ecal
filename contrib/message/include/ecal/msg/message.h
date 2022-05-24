@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <string>
+
 /*
 This class is just for convenience 
 A type which supports eCAL messages needs to implement these class functions.
