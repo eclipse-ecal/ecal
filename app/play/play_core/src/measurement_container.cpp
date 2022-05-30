@@ -19,8 +19,9 @@
 
 #include "measurement_container.h"
 
-#include <stdlib.h>
 #include <algorithm>
+#include <math.h>
+#include <stdlib.h>
 
 MeasurementContainer::MeasurementContainer(std::shared_ptr<eCAL::eh5::HDF5Meas> hdf5_meas, const std::string& meas_dir, bool use_receive_timestamp)
   : hdf5_meas_             (hdf5_meas)

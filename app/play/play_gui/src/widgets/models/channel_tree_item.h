@@ -47,7 +47,7 @@ public:
   };
 
   ChannelTreeItem(const QString& source_name);
-  ChannelTreeItem(const QString& source_name, const QString& channel_type, uint64_t total_channel_size,
+  ChannelTreeItem(const QString& source_name, const QString& channel_type, size_t total_channel_size,
     double min_channel_timestamp, double max_channel_timestamp, long long expected_frames, long long existing_frames, double duration);
 
   ~ChannelTreeItem();
@@ -78,12 +78,12 @@ private:
   QString target_name_;
   QString channel_type_;
 
-  uint64_t total_channel_size_;
+  size_t total_channel_size_;
   double min_channel_timestamp_;
   double max_channel_timestamp_;
-  double duration_;
   long long expected_frames_;
   long long existing_frames_;
+  double duration_;
   
   bool isContinuityValid() const;
 };

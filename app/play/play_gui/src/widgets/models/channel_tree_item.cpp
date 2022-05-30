@@ -40,7 +40,7 @@ ChannelTreeItem::ChannelTreeItem(const QString& source_name)
   , duration_(0)
 {}
 
-ChannelTreeItem::ChannelTreeItem(const QString& source_name, const QString& channel_type, uint64_t total_channel_size,
+ChannelTreeItem::ChannelTreeItem(const QString& source_name, const QString& channel_type, size_t total_channel_size,
   double min_channel_timestamp, double max_channel_timestamp, long long expected_frames, long long existing_frames, double duration)
   : QAbstractTreeItem()
   , enabled_(true)
@@ -79,7 +79,7 @@ QVariant ChannelTreeItem::data(Columns column, Qt::ItemDataRole role) const
     case ChannelTreeItem::Columns::CHANNEL_TYPE:
       return channel_type_;
     case ChannelTreeItem::Columns::TOTAL_CHANNEL_SIZE:
-      return total_channel_size_;
+      return QVariant::fromValue(total_channel_size_);
     case ChannelTreeItem::Columns::MIN_CHANNEL_TIMESTAMP:
       return min_channel_timestamp_;
     case ChannelTreeItem::Columns::MAX_CHANNEL_TIMESTAMP:
