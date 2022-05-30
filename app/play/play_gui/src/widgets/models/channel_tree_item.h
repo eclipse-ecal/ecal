@@ -32,6 +32,14 @@ public:
     SOURCE_CHANNEL_NAME,
     TARGET_CHANNEL_NAME,
 
+    CHANNEL_TYPE,
+    TOTAL_CHANNEL_SIZE,
+
+    MIN_CHANNEL_TIMESTAMP,
+    MAX_CHANNEL_TIMESTAMP,
+
+    FREQUENCY,
+
     EXPECTED_FRAMES,
     EXISTING_FRAMES,
     LOST_FRAMES,
@@ -39,7 +47,8 @@ public:
   };
 
   ChannelTreeItem(const QString& source_name);
-  ChannelTreeItem(const QString& source_name, long long expected_frames, long long existing_frames);
+  ChannelTreeItem(const QString& source_name, const QString& channel_type, uint64_t total_channel_size,
+    double min_channel_timestamp, double max_channel_timestamp, long long expected_frames, long long existing_frames, double duration);
 
   ~ChannelTreeItem();
 
@@ -67,7 +76,12 @@ private:
 
   QString source_name_;
   QString target_name_;
+  QString channel_type_;
 
+  uint64_t total_channel_size_;
+  double min_channel_timestamp_;
+  double max_channel_timestamp_;
+  double duration_;
   long long expected_frames_;
   long long existing_frames_;
   

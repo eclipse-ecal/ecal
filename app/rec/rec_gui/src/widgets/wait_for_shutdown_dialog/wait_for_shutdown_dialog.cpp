@@ -28,7 +28,7 @@
 
 #include "qecalrec.h"
 
-#include <widgets/bytes_to_pretty_string_utils.h>
+#include <CustomQt/QBytesToPrettyStringUtils.h>
 
 ////////////////////////////////////
 // Constructor & Destructor

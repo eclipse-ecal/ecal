@@ -76,7 +76,35 @@ void MeasurementContainer::CreateFrameTable()
   }
 }
 
+void MeasurementContainer::CalculateEstimatedSizeForChannels()
+{
+  total_estimated_channel_size_map_.clear();
+  auto channel_names = hdf5_meas_->GetChannelNames();
+  for (auto& channel_name : channel_names)
+  {
+    eCAL::eh5::EntryInfoSet entry_info_set;
+    if (hdf5_meas_->GetEntriesInfo(channel_name, entry_info_set))
+    {
+      auto size = entry_info_set.size();
+      size_t calculatedStep = size / 5;
+      size_t step = (calculatedStep > 0) ? calculatedStep : 1;
+      size_t sum = 0;
+      uint8_t additions = 0;
 
+      for (size_t i = 0; i < size; i += step)
+      {
+        size_t entry_size = 0;
+        auto id = (*std::next(entry_info_set.begin(), i)).ID;
+        hdf5_meas_->GetEntryDataSize(id, entry_size);
+        ++additions;
+        sum += entry_size;
+      }
+
+      size_t average = (additions == 0) ? 0 : (sum / additions);
+      total_estimated_channel_size_map_[channel_name] = (average * size);
+    }
+  }
+}
 
 void MeasurementContainer::CreatePublishers()
 {
@@ -255,6 +283,38 @@ std::chrono::nanoseconds MeasurementContainer::GetMeasurementLength() const
 std::set<std::string> MeasurementContainer::GetChannelNames() const
 {
   return hdf5_meas_->GetChannelNames();
+}
+
+double MeasurementContainer::GetMinTimestampOfChannel(const std::string& channel_name) const
+{
+  auto minTimestamp = eCAL::Time::ecal_clock::time_point(std::chrono::microseconds(hdf5_meas_->GetMinTimestamp(channel_name)));
+  auto relativeMinTimestamp = std::chrono::duration_cast<std::chrono::duration<double>>(minTimestamp - GetTimestamp(0)).count();
+  double roundedRelativeMinTimestamp = round((relativeMinTimestamp * 1000.0)) / 1000.0;
+
+  return roundedRelativeMinTimestamp;
+}
+
+double MeasurementContainer::GetMaxTimestampOfChannel(const std::string& channel_name) const
+{
+  auto maxTimestamp = eCAL::Time::ecal_clock::time_point(std::chrono::microseconds(hdf5_meas_->GetMaxTimestamp(channel_name)));
+  auto relativeMaxTimestamp = std::chrono::duration_cast<std::chrono::duration<double>>(maxTimestamp - GetTimestamp(0)).count();
+  double roundedRelativeMaxTimestamp = round((relativeMaxTimestamp * 1000.0)) / 1000.0;
+
+  return roundedRelativeMaxTimestamp;
+}
+
+std::string MeasurementContainer::GetChannelType(const std::string& channel_name) const
+{
+  return hdf5_meas_->GetChannelType(channel_name);
+}
+
+size_t MeasurementContainer::GetChannelCumulativeEstimatedSize(const std::string& channel_name) const
+{
+  auto it = total_estimated_channel_size_map_.find(channel_name);
+  if (it != total_estimated_channel_size_map_.end())
+    return it->second;
+
+  return 0;
 }
 
 std::map<std::string, std::string> MeasurementContainer::GetChannelMapping() const

@@ -209,6 +209,31 @@ std::set<std::string> EcalPlay::GetChannelNames() const
   return play_thread_->GetChannelNames();
 }
 
+double EcalPlay::GetMinTimestampOfChannel(const std::string& channel_name) const
+{
+  return play_thread_->GetMinTimestampOfChannel(channel_name);
+}
+
+double EcalPlay::GetMaxTimestampOfChannel(const std::string& channel_name) const
+{
+  return play_thread_->GetMaxTimestampOfChannel(channel_name);
+}
+
+std::string EcalPlay::GetChannelType(const std::string& channel_name) const
+{
+  return play_thread_->GetChannelType(channel_name);
+}
+
+void EcalPlay::CalculateEstimatedSizeForChannels() const
+{
+  play_thread_->CalculateEstimatedSizeForChannels();
+}
+
+size_t EcalPlay::GetChannelCumulativeEstimatedSize(const std::string& channel_name) const
+{
+  return play_thread_->GetChannelCumulativeEstimatedSize(channel_name);
+}
+
 std::map<std::string, ContinuityReport> EcalPlay::CreateContinuityReport() const
 {
   return play_thread_->CreateContinuityReport();

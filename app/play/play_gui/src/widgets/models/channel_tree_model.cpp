@@ -16,6 +16,7 @@
  *
  * ========================= eCAL LICENSE =================================
 */
+#include <chrono>
 
 #include "channel_tree_model.h"
 
@@ -217,6 +218,9 @@ void ChannelTreeModel::reload()
 
   auto continuity_report = QEcalPlay::instance()->createContinuityReport();
 
+  auto measurement_length = QEcalPlay::instance()->measurementLength();
+  auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(measurement_length).count();
+
   QList<QAbstractTreeItem*> new_channel_list;
   for (auto& name : channel_name_set)
   {
@@ -230,7 +234,13 @@ void ChannelTreeModel::reload()
       existing_frames = continuity_it->second.existing_frame_count_;
     }
 
-    ChannelTreeItem* channel_item = new ChannelTreeItem(name.c_str(), expected_frames, existing_frames);
+    double minTimestamp = QEcalPlay::instance()->minTimestampOfChannel(name);
+    double maxTimestamp = QEcalPlay::instance()->maxTimestampOfChannel(name);
+    std::string channel_type = QEcalPlay::instance()->channelType(name);
+    size_t total_channel_size = QEcalPlay::instance()->channelCumulativeEstimatedSize(name);
+
+    ChannelTreeItem* channel_item = new ChannelTreeItem(name.c_str(), channel_type.c_str(), total_channel_size,
+      minTimestamp, maxTimestamp, expected_frames, existing_frames, duration);
     new_channel_list.push_back(channel_item);
   }
   insertItems(new_channel_list);
