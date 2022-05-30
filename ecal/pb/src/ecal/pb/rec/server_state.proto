@@ -47,7 +47,7 @@ message Measurement
   string                            local_meas_path        =  4;                // The measurement path as locally evaluated by the rec server. If the measurement is uploaded to the internal FTP Server, all files will be stored here.
   bool                              is_deleted             =  5;                // Whether the measurement has been deleted
   map<string, ClientJobStatus>      client_job_statuses    =  6;                // The detailed job statuses as reported by the rec client instances that participated in the measurement
-  bool                              is_uploaded            =  7;                // Whether the measurement has been uploaded (does not tell whether the upload has been successful)
+  bool                              is_uploaded            =  7;                // Whether the measurement has been uploaded or is currently uploading (does not tell whether the upload has been successful)
   UploadConfig                      upload_config          =  8;                // The config used for uploading the measurement
   bool                              can_upload             =  9;                // Informs if a measurement can be uploaded or not
   bool                              can_comment            = 10;                // Informs if can add a comment to a measurement
