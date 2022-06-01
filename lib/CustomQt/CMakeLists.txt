@@ -32,6 +32,7 @@ set (custom_qt_includes
   include/CustomQt/QAbstractTreeModel.h
   include/CustomQt/QAdvancedCheckBox.h
   include/CustomQt/QAdvancedTreeView.h
+  include/CustomQt/QBytesToPrettyStringUtils.h
   include/CustomQt/QCheckboxHeaderView.h
   include/CustomQt/QClickableStatusBar.h
   include/CustomQt/QCustomFileSystemModel.h

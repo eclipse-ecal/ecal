@@ -24,7 +24,7 @@
 #include "models/tree_item_types.h"
 #include "models/item_data_roles.h"
 
-#include <widgets/bytes_to_pretty_string_utils.h>
+#include <CustomQt/QBytesToPrettyStringUtils.h>
 
 #include <qecalrec.h>
 

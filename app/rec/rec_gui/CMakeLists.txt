@@ -55,8 +55,6 @@ set(source_files
     src/service/rec_server_service.h
     src/service/rec_server_service.cpp
 
-    src/widgets/bytes_to_pretty_string_utils.h
-
     src/widgets/about_dialog/about_dialog.cpp
     src/widgets/about_dialog/about_dialog.h
 

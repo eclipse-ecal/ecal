@@ -16,9 +16,10 @@
  *
  * ========================= eCAL LICENSE =================================
 */
+#include <math.h>
 
 #include "channel_tree_item.h"
-
+#include <CustomQt/QBytesToPrettyStringUtils.h>
 #include <QColor>
 #include <QFont>
 
@@ -30,17 +31,28 @@ ChannelTreeItem::ChannelTreeItem(const QString& source_name)
   , enabled_(true)
   , source_name_(source_name)
   , target_name_(source_name)
+  , channel_type_("")
+  , total_channel_size_(0)
+  , min_channel_timestamp_(0.0)
+  , max_channel_timestamp_(0.0)
   , expected_frames_(-1)
-  , existing_frames_(0)
+  , existing_frames_(0)\
+  , duration_(0)
 {}
 
-ChannelTreeItem::ChannelTreeItem(const QString& source_name, long long expected_frames, long long existing_frames)
+ChannelTreeItem::ChannelTreeItem(const QString& source_name, const QString& channel_type, size_t total_channel_size,
+  double min_channel_timestamp, double max_channel_timestamp, long long expected_frames, long long existing_frames, double duration)
   : QAbstractTreeItem()
   , enabled_(true)
   , source_name_(source_name)
   , target_name_(source_name)
+  , channel_type_(channel_type)
+  , total_channel_size_(total_channel_size)
+  , min_channel_timestamp_(min_channel_timestamp)
+  , max_channel_timestamp_(max_channel_timestamp)
   , expected_frames_(expected_frames)
   , existing_frames_(existing_frames)
+  , duration_(duration)
 {}
 
 
@@ -64,6 +76,17 @@ QVariant ChannelTreeItem::data(Columns column, Qt::ItemDataRole role) const
       return source_name_;
     case ChannelTreeItem::Columns::TARGET_CHANNEL_NAME:
       return target_name_;
+    case ChannelTreeItem::Columns::CHANNEL_TYPE:
+      return channel_type_;
+    case ChannelTreeItem::Columns::TOTAL_CHANNEL_SIZE:
+      return QVariant::fromValue(total_channel_size_);
+    case ChannelTreeItem::Columns::MIN_CHANNEL_TIMESTAMP:
+      return min_channel_timestamp_;
+    case ChannelTreeItem::Columns::MAX_CHANNEL_TIMESTAMP:
+      return max_channel_timestamp_;
+    case ChannelTreeItem::Columns::FREQUENCY:
+      return (duration_ == 0) ? 0.0 :
+        round((((double)existing_frames_ / (double)duration_) * 1000.0)) / 1000.0;
     case ChannelTreeItem::Columns::EXPECTED_FRAMES:
       return expected_frames_;
     case ChannelTreeItem::Columns::EXISTING_FRAMES:
@@ -113,6 +136,32 @@ QVariant ChannelTreeItem::data(Columns column, Qt::ItemDataRole role) const
         return "Undetectable";
       }
     }
+    else if (column == ChannelTreeItem::Columns::TOTAL_CHANNEL_SIZE)
+    {
+      return bytesToPrettyString(total_channel_size_);
+    }
+    else if (column == ChannelTreeItem::Columns::MIN_CHANNEL_TIMESTAMP)
+    {
+      if (min_channel_timestamp_ < 0)
+      {
+        return "Undetectable";
+      }
+      else
+      {
+        return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
+      }
+    }
+    else if (column == ChannelTreeItem::Columns::MAX_CHANNEL_TIMESTAMP)
+    {
+      if (max_channel_timestamp_ < 0)
+      {
+        return "Undetectable";
+      }
+      else
+      {
+        return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
+      }
+    }
     else
     {
       return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
@@ -155,7 +204,11 @@ QVariant ChannelTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
   else if (role == Qt::ItemDataRole::TextAlignmentRole)
   {
-    if ((column == ChannelTreeItem::Columns::EXPECTED_FRAMES)
+    if ((column == ChannelTreeItem::Columns::TOTAL_CHANNEL_SIZE)
+      || (column == ChannelTreeItem::Columns::MIN_CHANNEL_TIMESTAMP)
+      || (column == ChannelTreeItem::Columns::MAX_CHANNEL_TIMESTAMP)
+      || (column == ChannelTreeItem::Columns::FREQUENCY)
+      || (column == ChannelTreeItem::Columns::EXPECTED_FRAMES)
       || (column == ChannelTreeItem::Columns::EXISTING_FRAMES)
       || (column == ChannelTreeItem::Columns::LOST_FRAMES)
       || (column == ChannelTreeItem::Columns::RELATIVE_LOSS))

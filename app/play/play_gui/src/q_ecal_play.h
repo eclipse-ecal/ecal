@@ -56,6 +56,10 @@ public:
   QString                            description() const;
   std::chrono::nanoseconds           measurementLength() const;
   std::set<std::string>              channelNames() const;
+  double minTimestampOfChannel(const std::string& channel_name) const;
+  double maxTimestampOfChannel(const std::string& channel_name) const;
+  std::string channelType(const std::string& channel_name) const;
+  size_t channelCumulativeEstimatedSize(const std::string& channel_name) const;
   std::map<std::string, ContinuityReport> createContinuityReport() const;
   std::map<std::string, long long>   messageCounters() const;
   std::vector<EcalPlayScenario>      scenarios() const;
@@ -99,6 +103,7 @@ public slots:
   //////////////////////////////////////////////////////////////////////////////
   bool loadMeasurementFromFileDialog();
   bool loadMeasurement(const QString& path, bool suppress_blocking_dialogs = false);
+  void calculateChannelsCumulativeEstimatedSize() const;
   void closeMeasurement(bool omit_blocking_dialogs = false);
 
   bool saveChannelMappingAs();
