@@ -333,7 +333,9 @@ endif(HAS_QT5)
 # --------------------------------------------------------
 # ecal mon plugin sdk
 # --------------------------------------------------------
-add_subdirectory(app/mon/mon_plugin_lib)
+if(HAS_QT5)
+  add_subdirectory(app/mon/mon_plugin_lib)
+endif(HAS_QT5)
 
 # --------------------------------------------------------
 # ecal rec addon sdk
