@@ -26,6 +26,14 @@ Definition (``ecal/core/include/ecal/msg/dynamic.h``)
 
 
 
+Includes
+--------
+
+
+- ``exception``
+
+- ``string``
+
 
 
 

@@ -31,6 +31,8 @@ Program Listing for File ecal_tlayer.h
    
    #pragma once
    
+   #include <ecal/ecal_os.h>
+   
    namespace eCAL
    {
      namespace TLayer

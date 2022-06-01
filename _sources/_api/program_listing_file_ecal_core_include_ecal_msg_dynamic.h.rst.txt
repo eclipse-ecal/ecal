@@ -31,6 +31,9 @@ Program Listing for File dynamic.h
    
    #pragma once
    
+   #include <string>
+   #include <exception>
+   
    namespace eCAL
    {
      

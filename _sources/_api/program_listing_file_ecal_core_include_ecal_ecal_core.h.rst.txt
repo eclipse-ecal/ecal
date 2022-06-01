@@ -37,6 +37,8 @@ Program Listing for File ecal_core.h
    #include <vector>
    #include <utility>
    
+   #include <ecal/ecal_os.h>
+   
    namespace eCAL
    {
      ECAL_API const char* GetVersionString();

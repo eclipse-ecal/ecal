@@ -31,6 +31,8 @@ Program Listing for File ecal_qos.h
    
    #pragma once
    
+   #include "ecal_os.h"
+   
    namespace eCAL
    {
      namespace QOS

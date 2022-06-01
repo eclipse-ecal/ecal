@@ -32,6 +32,8 @@ Includes
 
 - ``ecal/ecal_init.h`` (:ref:`file_ecal_core_include_ecal_ecal_init.h`)
 
+- ``ecal/ecal_os.h`` (:ref:`file_ecal_core_include_ecal_ecal_os.h`)
+
 - ``string``
 
 - ``utility``
