@@ -111,6 +111,7 @@ option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"          
 
 if(WIN32)
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                          ON)
+  option(ECAL_THIRDPARTY_BUILD_YAML_CPP        "Build yaml-cpp with eCAL"                                          ON)
   option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                              ON)
   option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                              ON)
   cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                      ON  "HAS_QT5" OFF)
@@ -119,6 +120,7 @@ else()
   option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                              OFF)
   option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                              OFF)
   cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                      OFF "HAS_QT5" OFF)
+  option(ECAL_THIRDPARTY_BUILD_YAML_CPP        "Build yaml-cpp with eCAL"                                          OFF)
 endif()
 
 # This should be ON, unless build ecal hdf5 for Matlab usage
@@ -193,6 +195,7 @@ set(possible_subprojects
   HDF5
   CMakeFunctions
   qwt
+  yaml_cpp
 )
 
 # We should rename the option, but don't know how to do in in a
@@ -382,6 +385,7 @@ if(BUILD_APPS)
   add_subdirectory(app/mon/mon_cli)
   add_subdirectory(app/util/config)
   add_subdirectory(app/util/stop)
+  add_subdirectory(app/meas_cutter)
   add_subdirectory(app/sys/sys_core)
   add_subdirectory(app/sys/sys_cli)
   add_subdirectory(app/sys/sys_client_cli)
