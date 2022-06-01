@@ -144,8 +144,7 @@ std::map<std::string, eCAL::rec_server::ClientConfig> QEcalRec::enabledRecClient
 
 bool QEcalRec::setHostFilter(const std::string& hostname, const std::set<std::string>& host_filter, bool omit_dialogs)
 {
-  bool success = rec_server_->SetHostFilter(hostname, host_filter);
-  success = executeBlockingMethod<bool>([this, &hostname, &host_filter]() { return rec_server_->SetHostFilter(hostname, host_filter); }, widgetOf(sender()), omit_dialogs);
+  bool success = executeBlockingMethod<bool>([this, &hostname, &host_filter]() { return rec_server_->SetHostFilter(hostname, host_filter); }, widgetOf(sender()), omit_dialogs);
 
   if (success)
   {

@@ -39,8 +39,8 @@ private:
   inline bool IsFirstRun() const { return (m_dwLastRun == 0); }
 
   short         m_nCpuUsage;
-  volatile LONG m_lRunCount;
   ULONGLONG     m_dwLastRun;
+  volatile LONG m_lRunCount;
 
   // system total times
   FILETIME m_ftPrevSysKernel;

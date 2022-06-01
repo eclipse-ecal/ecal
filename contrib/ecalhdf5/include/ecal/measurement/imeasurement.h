@@ -23,6 +23,7 @@
 #include <set>
 #include <string>
 #include <utility>
+#include <stdexcept>
 
 #include <ecalhdf5/eh5_meas.h>
 #include <ecal/measurement/measurement.h>

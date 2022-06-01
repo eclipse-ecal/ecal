@@ -37,7 +37,6 @@
 
 namespace eCAL
 {
-  template<> std::shared_ptr<CTCPReaderLayer> CReaderLayer<CTCPReaderLayer>::layer(nullptr);
 
   //////////////////////////////////////////////////////////////////
   // CDataReaderTCP

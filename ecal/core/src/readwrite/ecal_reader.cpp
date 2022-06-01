@@ -765,7 +765,7 @@ namespace eCAL
       }
 
       // check for clock difference
-      if ((m_clock - m_clock_old) > 0)
+      else if ((m_clock - m_clock_old) > 0)
       {
         // calculate frequency in mHz
         m_freq = static_cast<long>((1000 * 1000 * (m_clock - m_clock_old)) / std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - m_rec_time).count());

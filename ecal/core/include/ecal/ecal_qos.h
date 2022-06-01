@@ -24,6 +24,8 @@
 
 #pragma once
 
+#include "ecal_os.h"
+
 namespace eCAL
 {
   namespace QOS

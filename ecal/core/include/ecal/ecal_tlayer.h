@@ -24,6 +24,8 @@
 
 #pragma once
 
+#include <ecal/ecal_os.h>
+
 namespace eCAL
 {
   namespace TLayer

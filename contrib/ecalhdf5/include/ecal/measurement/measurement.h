@@ -19,6 +19,9 @@
 
 #pragma once
 
+#include <set>
+#include <string>
+
 /*
   Please note, the API of eCAL::measurement is not yet stable. It might be subject to API changes in future eCAL versions.
 */

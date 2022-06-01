@@ -158,12 +158,12 @@ namespace EcalUtils
       }
       FindClose(hFind);
 #else // WIN32
-      DIR *dp;
-      if ((dp = opendir(path_.c_str())) != NULL)
+      DIR *dp = opendir(path_.c_str());
+      if (dp != NULL)
       {
         can_open_dir = true;
+        closedir(dp);
       }
-      closedir(dp);
 #endif // WIN32
 
       return can_open_dir;

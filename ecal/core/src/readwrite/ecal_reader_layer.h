@@ -59,6 +59,7 @@ namespace eCAL
 
     static std::shared_ptr<T> Get()
     {
+      static std::shared_ptr<T> layer = nullptr;
       if (!layer)
       {
         layer = std::make_shared<T>();
@@ -66,7 +67,5 @@ namespace eCAL
       return layer;
     }
 
-  private:
-    static std::shared_ptr<T> layer;
   };
 };

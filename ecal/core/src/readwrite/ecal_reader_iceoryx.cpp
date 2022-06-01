@@ -34,7 +34,6 @@
 
 namespace eCAL
 {
-  template<> std::shared_ptr<CSHMLayer> CReaderLayer<CSHMLayer>::layer(nullptr);
 
   //////////////////////////////////////////////////////////////////
   // CDataReaderIceoryx

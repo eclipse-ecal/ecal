@@ -107,7 +107,7 @@ bool Processes::UpdateProcessMap(void)
           }
           else
           {
-            Logger::getLogger()->Log("ERROR GetModuleFileNameEx(...) : " + GetLastError());
+            Logger::getLogger()->Log("ERROR GetModuleFileNameEx(...) : " + std::to_string(GetLastError()));
           }
 
           static ExtendedProcessInfo_t process_info;
@@ -127,7 +127,7 @@ bool Processes::UpdateProcessMap(void)
           }
           else
           {
-            Logger::getLogger()->Log("ERROR GetExtendedProcessInfo(...): " + GetLastError());
+            Logger::getLogger()->Log("ERROR GetExtendedProcessInfo(...): " + std::to_string(GetLastError()));
           }
         }
 
@@ -140,7 +140,7 @@ bool Processes::UpdateProcessMap(void)
         }
         else
         {
-          Logger::getLogger()->Log("ERROR GetProcessMemoryInfo(...): " + GetLastError());
+          Logger::getLogger()->Log("ERROR GetProcessMemoryInfo(...): " + std::to_string(GetLastError()));
           it->second.not_accessible = true;
         }
 
@@ -175,7 +175,7 @@ bool Processes::UpdateProcessMap(void)
           }
           else
           {
-            Logger::getLogger()->Log("ERROR GetProcessTimes(...): " + GetLastError());
+            Logger::getLogger()->Log("ERROR GetProcessTimes(...): " + std::to_string(GetLastError()));
             it->second.not_accessible = true;
           }
         }
@@ -187,7 +187,7 @@ bool Processes::UpdateProcessMap(void)
         it->second.not_accessible = true;
         if (GetLastError() != 5)    // 5 --> ACCESS DENIED
         {
-          Logger::getLogger()->Log("ERROR OpenProcess(...): " + GetLastError());
+          Logger::getLogger()->Log("ERROR OpenProcess(...): " + std::to_string(GetLastError()));
         }
       }
       CloseHandle(hProcess);
@@ -246,7 +246,7 @@ bool Processes::GetListOfProcessIDs(void)
 bool Processes::EnableTokenPrivilege()
 {
   HANDLE hToken = 0;
-  TOKEN_PRIVILEGES tkp = { 0 };
+  TOKEN_PRIVILEGES tkp {};
 
   // Get a token for this process. 
   if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken))
@@ -308,11 +308,11 @@ bool Processes::GetExtendedProcessInfo(const DWORD _pid, ExtendedProcessInfo_ptr
   HANDLE hHeap = 0;
   WCHAR *pwszBuffer = nullptr;
 
-  ExtendedProcessInfo_t spi = { 0 };
+  ExtendedProcessInfo_t spi {};
 
-  BasicInfoStruct_t peb = { 0 };
-  ProcessLdrData_t peb_ldr = { 0 };
-  UserProcessPar_t peb_upp = { 0 };
+  BasicInfoStruct_t peb {};
+  ProcessLdrData_t peb_ldr {};
+  UserProcessPar_t peb_upp {};
 
   ZeroMemory(&spi, sizeof(spi));
   ZeroMemory(&peb, sizeof(peb));

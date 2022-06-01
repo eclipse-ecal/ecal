@@ -22,7 +22,8 @@
 
 void OnReceive(const char* topic_name_, const struct SReceiveCallbackDataC* data_, void* par_)
 {
-  par_ = par_;
+  // unused param
+  (void)par_;
   printf("Received topic \"%s\" with ", topic_name_);
   printf("\"%.*s\"\n", (int)(data_->size), (char*)(data_->buf));
 }
