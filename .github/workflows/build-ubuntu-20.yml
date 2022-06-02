@@ -170,5 +170,6 @@ jobs:
         path: ${{ runner.workspace }}/ecal.tar.gz
 
   call-clang-tidy:
+    if: github.event_name == 'pull_request'
     needs: build-ubuntu
     uses: ./.github/workflows/run-clang-tidy.yml
