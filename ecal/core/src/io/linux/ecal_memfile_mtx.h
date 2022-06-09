@@ -66,7 +66,9 @@ namespace
     if (robust_mutex_)
     {
       // this should be a robust mutex:
+#ifndef ECAL_OS_MACOS
       pthread_mutexattr_setrobust(&shmtx, PTHREAD_MUTEX_ROBUST);
+#endif // ECAL_OS_MACOS
     }
 
     // create condition variable
