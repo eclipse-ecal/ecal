@@ -63,7 +63,7 @@ namespace eCAL
     Destroy(false);
   }
 
-  bool CMemoryFile::Create(const char* name_, const bool create_, const size_t len_)
+  bool CMemoryFile::Create(const char* name_, const bool create_, const size_t len_, bool robust_mutex_, bool* is_process_crashed_)
   {
     assert((create_ && len_ > 0) || (!create_ && len_ == 0));
 
@@ -99,7 +99,7 @@ namespace eCAL
     }
 
     // create mutex
-    if (!CreateMtx(name_, m_memfile_info.mutex))
+    if (!CreateMtx(name_, m_memfile_info.mutex, robust_mutex_))
     {
 #ifndef NDEBUG
       printf("Could not create memory file mutex: %s.\n\n", name_);
@@ -113,7 +113,7 @@ namespace eCAL
       m_header.max_data_size = (unsigned long)len_;
 
       // lock mutex
-      if (LockMtx(&m_memfile_info.mutex, PUB_MEMFILE_CREATE_TO))
+      if (LockMtx(&m_memfile_info.mutex, PUB_MEMFILE_CREATE_TO, is_process_crashed_))
       {
         if (m_memfile_info.mem_address)
         {
@@ -123,20 +123,20 @@ namespace eCAL
         }
 
         // unlock mutex
-        UnlockMtx(&m_memfile_info.mutex);
+        UnlockMtx(&m_memfile_info.mutex, is_process_crashed_);
       }
     }
     else
     {
       // lock mutex
-      if (LockMtx(&m_memfile_info.mutex, PUB_MEMFILE_CREATE_TO))
+      if (LockMtx(&m_memfile_info.mutex, PUB_MEMFILE_CREATE_TO, is_process_crashed_))
       {
         // read header
         SInternalHeader* pHeader = static_cast<SInternalHeader*>(m_memfile_info.mem_address);
         m_header = *pHeader;
 
         // unlock mutex
-        UnlockMtx(&m_memfile_info.mutex);
+        UnlockMtx(&m_memfile_info.mutex, is_process_crashed_);
       }
     }
 
@@ -147,7 +147,7 @@ namespace eCAL
     return(m_created);
   }
 
-  bool CMemoryFile::Destroy(const bool remove_)
+  bool CMemoryFile::Destroy(const bool remove_, bool* is_process_crashed_)
   {
     if (!m_created) return(false);
 
@@ -158,7 +158,7 @@ namespace eCAL
     ret_state &= DestroyMemFile(m_name, remove_);
 
     // unlock mutex
-    ret_state &= DestroyMtx(&m_memfile_info.mutex);
+    ret_state &= DestroyMtx(&m_memfile_info.mutex, is_process_crashed_);
 
     // cleanup mutex
     ret_state &= CleanupMtx(m_name);
@@ -189,7 +189,7 @@ namespace eCAL
     return(false);
   }
 
-  bool CMemoryFile::ReleaseReadAccess()
+  bool CMemoryFile::ReleaseReadAccess(bool* is_process_crashed_)
   {
     if (!m_created)                                  return(false);
     if (m_access_state != access_state::read_access) return(false);
@@ -198,7 +198,7 @@ namespace eCAL
     m_access_state = access_state::closed;
 
     // release read mutex
-    UnlockMtx(&m_memfile_info.mutex);
+    UnlockMtx(&m_memfile_info.mutex, is_process_crashed_);
 
     return(true);
   }
@@ -250,7 +250,7 @@ namespace eCAL
     return(false);
   }
 
-  bool CMemoryFile::ReleaseWriteAccess()
+  bool CMemoryFile::ReleaseWriteAccess(bool* is_process_crashed_)
   {
     if (!m_created)                                   return(false);
     if (m_access_state != access_state::write_access) return(false);
@@ -259,7 +259,7 @@ namespace eCAL
     m_access_state = access_state::closed;
 
     // unlock mutex
-    UnlockMtx(&m_memfile_info.mutex);
+    UnlockMtx(&m_memfile_info.mutex, is_process_crashed_);
 
     return(true);
   }
@@ -303,14 +303,14 @@ namespace eCAL
     }
   }
 
-  bool CMemoryFile::GetAccess(int timeout_)
+  bool CMemoryFile::GetAccess(int timeout_, bool* is_process_crashed_)
   {
     if (!m_created)                  return(false);
     if (!m_memfile_info.mem_address) return(false);
     if (!g_memfile_map())            return(false);
 
     // lock mutex
-    if (!LockMtx(&m_memfile_info.mutex, timeout_))
+    if (!LockMtx(&m_memfile_info.mutex, timeout_, is_process_crashed_))
     {
 #ifndef NDEBUG
       printf("Could not lock memory file mutex: %s.\n\n", m_name.c_str());
@@ -338,7 +338,7 @@ namespace eCAL
       if (len > m_memfile_info.size)
       {
         // unlock mutex
-        UnlockMtx(&m_memfile_info.mutex);
+        UnlockMtx(&m_memfile_info.mutex, is_process_crashed_);
         return(false);
       }
     }

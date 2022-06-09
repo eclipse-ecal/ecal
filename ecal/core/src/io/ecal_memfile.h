@@ -98,22 +98,26 @@ namespace eCAL
     /**
      * @brief Create a new memory file. 
      *
-     * @param name_    Unique file name. 
-     * @param create_  Add file to system if not exists.
-     * @param len_     Number of bytes to allocate (only if create_ == true). 
+     * @param name_                   Unique file name.
+     * @param create_                 Add file to system if not exists.
+     * @param len_                    Number of bytes to allocate (only if create_ == true).
+     * @param robust_mutex_           optional param that should be passed if you want the mutex to be robust mutex
+     * @param ptr_is_process_crashed_ optional output param that should be used in case of robust mutex is used,
+     *                                it represents if a process crashed while locking the robust mutex.
      *
      * @return  true if it succeeds, false if it fails. 
     **/
-    bool Create(const char* name_, const bool create_, const size_t len_ = 0);
+    bool Create(const char* name_, const bool create_, const size_t len_ = 0, bool robust_mutex_ = false, bool* is_process_crashed_ = nullptr);
 
     /**
      * @brief Delete the associated memory file from system. 
      *
-     * @param remove_  Remove file from system.
+     * @param remove_             Remove file from system.
+     * @param is_process_crashed_ output param that should be passed when robust mutex is used.
      *
      * @return  true if it succeeds, false if it fails. 
     **/
-    bool Destroy(const bool remove_);
+    bool Destroy(const bool remove_, bool* is_process_crashed_ = nullptr);
 
     /**
      * @brief Get memory file read access. 
@@ -127,9 +131,11 @@ namespace eCAL
     /**
      * @brief Release the read access. 
      *
+     * @param is_process_crashed_  output param that should be passed when robust mutex is used.
+     *
      * @return  true if it succeeds, false if it fails. 
     **/
-    bool ReleaseReadAccess();
+    bool ReleaseReadAccess(bool* is_process_crashed_ = nullptr);
 
     /**
      * @brief Get payload buffer pointer from an opened memory file for reading.
@@ -164,9 +170,11 @@ namespace eCAL
     /**
      * @brief Release the write access.
      *
+     * @param is_process_crashed_  output param that should be passed when robust mutex is used.
+     *
      * @return  true if it succeeds, false if it fails.
     **/
-    bool ReleaseWriteAccess();
+    bool ReleaseWriteAccess(bool* is_process_crashed_ = nullptr);
 
     /**
      * @brief Get payload buffer pointer from an opened memory file for writing.
@@ -219,7 +227,7 @@ namespace eCAL
     };
 
   protected:
-    bool GetAccess(int timeout_);
+    bool GetAccess(int timeout_, bool *is_process_crashed_ = nullptr);
 
     enum class access_state
     {

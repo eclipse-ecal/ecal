@@ -43,7 +43,7 @@ typedef struct named_mutex  named_mutex_t;
 
 namespace
 {
-  named_mutex_t* named_mutex_create(const char* mutex_name_)
+  named_mutex_t *named_mutex_create(const char* mutex_name_, bool robust_mutex_ = false)
   {
     // create shared memory file
     int previous_umask = umask(000);  // set umask to nothing, so we can create files with all possible permission bits
@@ -51,7 +51,7 @@ namespace
     umask(previous_umask);            // reset umask to previous permissions
     if (fd < 0) return nullptr;
 
-    // set size to size of named mutex struct 
+    // set size to size of named mutex struct
     if(ftruncate(fd, sizeof(named_mutex_t)) == -1)
     {
       ::close(fd);
@@ -63,14 +63,20 @@ namespace
     pthread_mutexattr_init(&shmtx);
     pthread_mutexattr_setpshared(&shmtx, PTHREAD_PROCESS_SHARED);
 
+    if (robust_mutex_)
+    {
+      // this should be a robust mutex:
+      pthread_mutexattr_setrobust(&shmtx, PTHREAD_MUTEX_ROBUST);
+    }
+
     // create condition variable
     pthread_condattr_t shattr;
     pthread_condattr_init(&shattr);
+
     pthread_condattr_setpshared(&shattr, PTHREAD_PROCESS_SHARED);
 #ifndef ECAL_OS_MACOS
     pthread_condattr_setclock(&shattr, CLOCK_MONOTONIC);
 #endif // ECAL_OS_MACOS
-
 
     // map them into shared memory
     named_mutex_t* mtx = static_cast<named_mutex_t*>(mmap(nullptr, sizeof(named_mutex_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
@@ -113,10 +119,25 @@ namespace
     munmap(static_cast<void*>(mtx_), sizeof(named_mutex_t));
   }
 
-  bool named_mutex_lock(named_mutex_t* mtx_, struct timespec* ts_)
+  bool named_mutex_lock(named_mutex_t* mtx_, struct timespec* ts_, bool* is_process_crashed_)
   {
+    // initialize output param:
+    if(nullptr != is_process_crashed_)
+      *is_process_crashed_ = false;
+
     // lock condition mutex
-    pthread_mutex_lock(&mtx_->mtx);
+    int lock_state = pthread_mutex_lock(&mtx_->mtx);
+    if(EOWNERDEAD == lock_state)
+    {
+      // mutex was locked by another process, but its owner process is crashed.
+      // then this process now is the owner of that mutex.
+      // firstly, make the mutex consistent, to indicate that the shared area that is guarded by the mutex is consistent.
+      pthread_mutex_consistent(&mtx_->mtx);
+      // report process crash:
+      if(nullptr != is_process_crashed_)
+        *is_process_crashed_ = true;
+    }
+
     // state is not locked ?, fine !
     if (mtx_->locked == 0)
     {
@@ -160,11 +181,26 @@ namespace
     }
   }
 
-  bool named_mutex_trylock(named_mutex_t* mtx_)
+  bool named_mutex_trylock(named_mutex_t* mtx_, bool* is_process_crashed_)
   {
+    // initialize output param:
+    if(nullptr != is_process_crashed_)
+        *is_process_crashed_ = false;
+
     bool locked(false);
     // lock condition mutex
-    pthread_mutex_lock(&mtx_->mtx);
+    int lock_state = pthread_mutex_lock(&mtx_->mtx);
+    if(EOWNERDEAD == lock_state)
+    {
+      // mutex was locked by another process, but its owner process is crashed.
+      // then this process now is the owner of that mutex.
+      // firstly, make the mutex consistent, to indicate that the shared area that is guarded by the mutex is consistent.
+      pthread_mutex_consistent(&mtx_->mtx);
+      // report process crash:
+      if(nullptr != is_process_crashed_)
+        *is_process_crashed_ = true;
+    }
+
     // check state
     if (mtx_->locked == 0)
     {
@@ -178,10 +214,25 @@ namespace
     return locked;
   }
 
-  void named_mutex_unlock(named_mutex_t* mtx_)
+  void named_mutex_unlock(named_mutex_t* mtx_, bool* is_process_crashed_)
   {
+    // initialize output param:
+    if(nullptr != is_process_crashed_)
+      *is_process_crashed_ = false;
+
     // lock condition mutex
-    pthread_mutex_lock(&mtx_->mtx);
+    int lock_state = pthread_mutex_lock(&mtx_->mtx);
+    if(EOWNERDEAD == lock_state)
+    {
+      // mutex was locked by another process, but its owner process is crashed.
+      // then this process now is the owner of that mutex.
+      // firstly, make the mutex consistent, to indicate that the shared area that is guarded by the mutex is consistent.
+      pthread_mutex_consistent(&mtx_->mtx);
+      // report process crash:
+      if(nullptr != is_process_crashed_)
+        *is_process_crashed_ = true;
+    }
+
     // state is locked ?
     if (mtx_->locked == 1)
     {
@@ -211,7 +262,7 @@ typedef named_mutex_t*  MutexT;
 
 namespace eCAL
 {
-  inline bool CreateMtx(const std::string& name_, MutexT& mutex_handle_)
+  inline bool CreateMtx(const std::string& name_, MutexT& mutex_handle_, bool robust_mutex_ = false)
   {
     if(name_.empty()) return(false);
 
@@ -224,19 +275,19 @@ namespace eCAL
     // if we could not open it we create a new one
     if(mutex_handle_ == nullptr)
     {
-      mutex_handle_ = named_mutex_create(mutex_name.c_str());
+      mutex_handle_ = named_mutex_create(mutex_name.c_str(), robust_mutex_);
     }
 
     return(mutex_handle_ != nullptr);
   }
 
-  inline bool DestroyMtx(MutexT* mutex_handle_)
+  inline bool DestroyMtx(MutexT* mutex_handle_, bool* is_process_crashed_)
   {
     // check mutex handle
     if(mutex_handle_ == nullptr) return(false);
 
     // unlock mutex
-    named_mutex_unlock(*mutex_handle_);
+    named_mutex_unlock(*mutex_handle_, is_process_crashed_);
 
     // close mutex
     named_mutex_close(*mutex_handle_);
@@ -253,7 +304,7 @@ namespace eCAL
     return(named_mutex_destroy(mutex_name.c_str()) == 0);
   }
 
-  inline bool LockMtx(MutexT* mutex_handle_, const int timeout_)
+  inline bool LockMtx(MutexT* mutex_handle_, const int timeout_, bool* is_process_crashed_)
   {
     // check mutex handle
     if (mutex_handle_ == nullptr) return(false);
@@ -261,12 +312,12 @@ namespace eCAL
     // timeout_ < 0 -> wait infinite
     if (timeout_ < 0)
     {
-      return(named_mutex_lock(*mutex_handle_, nullptr));
+      return(named_mutex_lock(*mutex_handle_, nullptr, is_process_crashed_));
     }
     // timeout_ == 0 -> check lock state only
     else if (timeout_ == 0)
     {
-      return(named_mutex_trylock(*mutex_handle_));
+      return(named_mutex_trylock(*mutex_handle_, is_process_crashed_));
     }
     // timeout_ > 0 -> wait timeout_ ms
     else
@@ -281,17 +332,17 @@ namespace eCAL
         abstime.tv_nsec -= 1000000000;
         abstime.tv_sec++;
       }
-      return(named_mutex_lock(*mutex_handle_, &abstime));
+      return(named_mutex_lock(*mutex_handle_, &abstime, is_process_crashed_));
     }
   }
 
-  inline bool UnlockMtx(MutexT* mutex_handle_)
+  inline bool UnlockMtx(MutexT* mutex_handle_, bool* is_process_crashed_)
   {
     // check mutex handle
     if(mutex_handle_ == nullptr) return(false);
 
     // unlock the mutex
-    named_mutex_unlock(*mutex_handle_);
+    named_mutex_unlock(*mutex_handle_, is_process_crashed_);
 
     return(true);
   }
