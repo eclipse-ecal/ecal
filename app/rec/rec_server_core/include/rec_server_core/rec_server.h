@@ -119,10 +119,11 @@ namespace eCAL
     // Job Settings
     ////////////////////////////////////
     public:
-      void SetMeasRootDir   (std::string  meas_root_dir);
-      void SetMeasName      (std::string  meas_name);
-      void SetMaxFileSizeMib(unsigned int max_file_size_mib);
-      void SetDescription   (std::string  description);
+      void SetMeasRootDir           (std::string  meas_root_dir);
+      void SetMeasName              (std::string  meas_name);
+      void SetMaxFileSizeMib        (unsigned int max_file_size_mib);
+      void SetOneFilePerTopicEnabled(bool enabled);
+      void SetDescription           (std::string  description);
 
       std::string  GetMeasRootDir   () const;
       std::string  GetMeasName      () const;

@@ -46,8 +46,8 @@ set(source_files
     src/config/config.h
     src/config/config_v1.cpp
     src/config/config_v1.h
-    src/config/config_v2to3.cpp
-    src/config/config_v2to3.h
+    src/config/config_v2to4.cpp
+    src/config/config_v2to4.h
 
     src/recorder/abstract_recorder.h
     src/recorder/local_recorder.cpp

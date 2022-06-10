@@ -54,6 +54,7 @@ message Configuration
                                           // meas_name                   [string]                  The name of the measurement (un-evaluated format)
                                           // description                 [string]                  The description that will be saved to the measurement's doc folder (un-evaluated format)
                                           // max_file_size_mib           [uint]                    The maximum HDF5 file size (When exceeding the file size, the measurement will be splitted into multiple files).
+                                          // one_file_per_topic          [bool]                    Whether the recorder shall create 1 hdf5 file per channel
                                           
                                           // ==== Upload measurement config ====
                                           // protocol                    [string]                  The upload type to use (e.g. ftp). More types may be added in the future, if necessary.

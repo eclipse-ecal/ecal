@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1024</width>
-    <height>707</height>
+    <height>731</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -52,7 +52,7 @@
         </sizepolicy>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="get_config_request_tab">
         <attribute name="title">
@@ -283,17 +283,24 @@
            <layout class="QGridLayout" name="gridLayout_5">
             <item row="0" column="0">
              <layout class="QGridLayout" name="gridLayout">
-              <item row="4" column="1">
-               <widget class="QLineEdit" name="command_request_max_file_size_mib_lineedit">
+              <item row="2" column="0">
+               <widget class="QCheckBox" name="command_request_meas_name_checkbox">
+                <property name="text">
+                 <string>meas_name</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="command_request_meas_root_dir_lineedit">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
-               <widget class="QCheckBox" name="command_request_meas_name_checkbox">
+              <item row="1" column="0">
+               <widget class="QCheckBox" name="command_request_meas_root_dir_checkbox">
                 <property name="text">
-                 <string>meas_name</string>
+                 <string>meas_root_dir</string>
                 </property>
                </widget>
               </item>
@@ -304,15 +311,8 @@
                 </property>
                </widget>
               </item>
-              <item row="3" column="0">
-               <widget class="QCheckBox" name="command_request_description_checkbox">
-                <property name="text">
-                 <string>description</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLineEdit" name="command_request_meas_root_dir_lineedit">
+              <item row="4" column="1">
+               <widget class="QLineEdit" name="command_request_max_file_size_mib_lineedit">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
@@ -325,6 +325,13 @@
                 </property>
                </widget>
               </item>
+              <item row="3" column="0">
+               <widget class="QCheckBox" name="command_request_description_checkbox">
+                <property name="text">
+                 <string>description</string>
+                </property>
+               </widget>
+              </item>
               <item row="3" column="1">
                <widget class="QTextEdit" name="command_request_description_textedit">
                 <property name="enabled">
@@ -332,12 +339,15 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QCheckBox" name="command_request_meas_root_dir_checkbox">
+              <item row="5" column="0">
+               <widget class="QCheckBox" name="command_one_file_per_topic_checkbox">
                 <property name="text">
-                 <string>meas_root_dir</string>
+                 <string>one_file_per_topic</string>
                 </property>
                </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QLineEdit" name="command_one_file_per_topic_lineedit"/>
               </item>
              </layout>
             </item>

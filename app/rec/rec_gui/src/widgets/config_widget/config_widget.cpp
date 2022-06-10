@@ -30,10 +30,11 @@ ConfigWidget::ConfigWidget(QWidget *parent)
 {
   ui_.setupUi(this);
 
-  connect(ui_.measurement_directory_lineedit, &QLineEdit::textChanged, QEcalRec::instance(), [this]() {QEcalRec::instance()->setMeasRootDir(ui_.measurement_directory_lineedit->text().toStdString()); });
-  connect(ui_.measurement_name_lineedit,      &QLineEdit::textChanged, QEcalRec::instance(), [this]() {QEcalRec::instance()->setMeasName   (ui_.measurement_name_lineedit->text().toStdString()); });
-  connect(ui_.description_textedit,           &QTextEdit::textChanged, QEcalRec::instance(), [this]() {QEcalRec::instance()->setDescription(ui_.description_textedit->toPlainText().toStdString()); });
+  connect(ui_.measurement_directory_lineedit, &QLineEdit::textChanged,  QEcalRec::instance(), [this]() {QEcalRec::instance()->setMeasRootDir(ui_.measurement_directory_lineedit->text().toStdString()); });
+  connect(ui_.measurement_name_lineedit,      &QLineEdit::textChanged,  QEcalRec::instance(), [this]() {QEcalRec::instance()->setMeasName   (ui_.measurement_name_lineedit->text().toStdString()); });
+  connect(ui_.description_textedit,           &QTextEdit::textChanged,  QEcalRec::instance(), [this]() {QEcalRec::instance()->setDescription(ui_.description_textedit->toPlainText().toStdString()); });
   connect(ui_.max_file_size_spinbox, static_cast<void (QSpinBox:: *)(int)>(&QSpinBox::valueChanged), QEcalRec::instance(), [](int megabytes) {QEcalRec::instance()->setMaxFileSizeMib(megabytes); });
+  connect(ui_.one_file_per_topic_checkbox,    &QCheckBox::stateChanged, QEcalRec::instance(), [this]() {QEcalRec::instance()->setOneFilePerTopicEnabled(ui_.one_file_per_topic_checkbox->isChecked()); });
 
   connect(ui_.refresh_path_preview_button,    &QAbstractButton::clicked,            QEcalRec::instance(), [this]() { updatePathPreviewAndWarningLabel(); });
 
@@ -63,6 +64,15 @@ void ConfigWidget::maxFileSizeChanged(unsigned int megabytes)
   }
 }
 
+void ConfigWidget::oneFilePerTopicEnabledChanged(bool enabled)
+{
+  if (enabled != ui_.one_file_per_topic_checkbox->isChecked())
+  {
+    ui_.one_file_per_topic_checkbox->blockSignals(true);
+    ui_.one_file_per_topic_checkbox->setChecked(enabled);
+    ui_.one_file_per_topic_checkbox->blockSignals(false);
+  }
+}
 void ConfigWidget::measurementRootDirectoryChanged(const std::string& root_dir)
 {
   if (root_dir.c_str() != ui_.measurement_directory_lineedit->text())

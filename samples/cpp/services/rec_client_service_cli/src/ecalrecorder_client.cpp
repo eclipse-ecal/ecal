@@ -131,11 +131,13 @@ int main(int argc, char **argv)
   // state request
   eCAL::pb::rec_client::CommandRequest state_request;
 
-  (*state_request.mutable_command_params()->mutable_items())["meas_id"]           = "1234";                                                                // An ID to identify the measurement later on
-  (*state_request.mutable_command_params()->mutable_items())["meas_root_dir"]     = "$TARGET{OSSELECT WIN \"C:\" LINUX \"$TARGET{ENV HOME}\"}/ecal_meas";  // The root directory to save the measurement to (un-evaluated format)
-  (*state_request.mutable_command_params()->mutable_items())["meas_name"]         = "meas_${TIME}";                                                        // The name of the measurement (un-evaluated format)
-  (*state_request.mutable_command_params()->mutable_items())["description"]       = "This is my description :)";                                           // The description that will be saved to the measurement's doc folder (un-evaluated format).
-  (*state_request.mutable_command_params()->mutable_items())["max_file_size_mib"] = "775";                                                                 // The maximum HDF5 file size (When exceeding the file size, the measurement will be splitted into multiple files).
+  (*state_request.mutable_command_params()->mutable_items())["meas_id"]              = "1234";                                                                // An ID to identify the measurement later on
+  (*state_request.mutable_command_params()->mutable_items())["meas_root_dir"]        = "$TARGET{OSSELECT WIN \"C:\" LINUX \"$TARGET{ENV HOME}\"}/ecal_meas";  // The root directory to save the measurement to (un-evaluated format)
+  (*state_request.mutable_command_params()->mutable_items())["meas_name"]            = "meas_${TIME}";                                                        // The name of the measurement (un-evaluated format)
+  (*state_request.mutable_command_params()->mutable_items())["description"]          = "This is my description :)";                                           // The description that will be saved to the measurement's doc folder (un-evaluated format).
+  (*state_request.mutable_command_params()->mutable_items())["max_file_size_mib"]    = "775";                                                                 // The maximum HDF5 file size (When exceeding the file size, the measurement will be splitted into multiple files).
+  (*state_request.mutable_command_params()->mutable_items())["one_file_per_topic"]   = "false";                                                               // Whether the recorder shall create 1 hdf5 file per channel
+
 
   // "initialize"
   std::cout << "eCAL.pb.rec.EcalRecService:SetCommand()" << std::endl;
