@@ -40,6 +40,10 @@
 #include <ecal_utils/str_convert.h>
 #include <ecal_utils/command_line.h>
 
+#ifdef ECAL_OS_LINUX
+#include <sys/resource.h>
+#endif
+
 int main(int argc, char *argv[])
 {
   //////////////////////////////////////////////////////////////////////////////
@@ -156,6 +160,26 @@ int main(int argc, char *argv[])
 
   // Just make sure that eCAL is initialized
   eCAL::Initialize(0, nullptr, "eCALPlayGUI", eCAL::Init::Default | eCAL::Init::ProcessReg | eCAL::Init::Publisher | eCAL::Init::Service | eCAL::Init::Monitoring);
+
+// For linux big measurements require more file descriptors than the default value
+#ifdef ECAL_OS_LINUX
+  struct rlimit limit;
+  bool readSucceeded = true;
+  if (getrlimit(RLIMIT_NOFILE, &limit) != 0)
+  {
+    std::cerr << "getrlimit() failed with errno " << errno << std::endl;
+    readSucceeded = false;
+  }
+
+  if (readSucceeded)
+  {
+    limit.rlim_cur = limit.rlim_max;
+    if(setrlimit(RLIMIT_NOFILE, &limit) != 0)
+    {
+      std::cerr << "setrlimit() failed with errno " << errno << std::endl;
+    }
+  };
+#endif
 
   EcalplayGui* w = new EcalplayGui();
   w->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose);
