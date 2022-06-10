@@ -134,7 +134,10 @@ namespace
       // mutex was locked by another process, but its owner process is crashed.
       // then this process now is the owner of that mutex.
       // firstly, make the mutex consistent, to indicate that the shared area that is guarded by the mutex is consistent.
+#ifndef ECAL_OS_MACOS
       pthread_mutex_consistent(&mtx_->mtx);
+#endif // ECAL_OS_MACOS
+
       // report process crash:
       if(nullptr != is_process_crashed_)
         *is_process_crashed_ = true;
@@ -197,7 +200,9 @@ namespace
       // mutex was locked by another process, but its owner process is crashed.
       // then this process now is the owner of that mutex.
       // firstly, make the mutex consistent, to indicate that the shared area that is guarded by the mutex is consistent.
+#ifndef ECAL_OS_MACOS
       pthread_mutex_consistent(&mtx_->mtx);
+#endif // ECAL_OS_MACOS
       // report process crash:
       if(nullptr != is_process_crashed_)
         *is_process_crashed_ = true;
@@ -229,7 +234,9 @@ namespace
       // mutex was locked by another process, but its owner process is crashed.
       // then this process now is the owner of that mutex.
       // firstly, make the mutex consistent, to indicate that the shared area that is guarded by the mutex is consistent.
+#ifndef ECAL_OS_MACOS
       pthread_mutex_consistent(&mtx_->mtx);
+#endif // ECAL_OS_MACOS
       // report process crash:
       if(nullptr != is_process_crashed_)
         *is_process_crashed_ = true;
