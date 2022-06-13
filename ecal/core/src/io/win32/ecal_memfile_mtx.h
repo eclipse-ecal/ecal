@@ -29,8 +29,10 @@ typedef void*  MutexT;
 
 namespace eCAL
 {
-  inline bool CreateMtx(const std::string& name_, MutexT& mutex_handle_)
+  inline bool CreateMtx(const std::string& name_, MutexT& mutex_handle_, bool robust_mutex_ = false)
   {
+    // not needed parameter
+    robust_mutex_ = false;
     std::string mutex_name = name_;
     mutex_name += "_mtx";
     mutex_handle_ = ::CreateMutex(
@@ -41,10 +43,14 @@ namespace eCAL
     return(mutex_handle_ != nullptr);
   }
 
-  inline bool DestroyMtx(MutexT* mutex_handle_)
+  inline bool DestroyMtx(MutexT* mutex_handle_, bool* is_process_crashed_ = nullptr)
   {
     // check mutex handle
     if(mutex_handle_ == nullptr) return(false);
+
+    // initialize output param:
+    if (nullptr != is_process_crashed_)
+      *is_process_crashed_ = false;
 
     // release it
     ReleaseMutex(*mutex_handle_);
@@ -61,19 +67,36 @@ namespace eCAL
     return(true);
   }
 
-  inline bool LockMtx(MutexT* mutex_handle_, const int timeout_)
+  inline bool LockMtx(MutexT* mutex_handle_, const int timeout_, bool* is_process_crashed_)
   {
     // check mutex handle
     if(mutex_handle_ == nullptr) return(false);
+
+    // initialize output param:
+    if (nullptr != is_process_crashed_)
+      *is_process_crashed_ = false;
 
     // wait for access
-    return(WaitForSingleObject(*mutex_handle_, timeout_) == WAIT_OBJECT_0);
+    auto wait_result = WaitForSingleObject(*mutex_handle_, timeout_);
+    if (WAIT_ABANDONED == wait_result)
+    {
+      // the process/thread that was locking the mutex was crashed while locking it.
+      if (nullptr != is_process_crashed_)
+        *is_process_crashed_ = true;
+      return true;
+    }
+    else
+      return(wait_result == WAIT_OBJECT_0);
   }
 
-  inline bool UnlockMtx(MutexT* mutex_handle_)
+  inline bool UnlockMtx(MutexT* mutex_handle_, bool* is_process_crashed_ = nullptr)
   {
     // check mutex handle
     if(mutex_handle_ == nullptr) return(false);
+
+    // initialize output param:
+    if (nullptr != is_process_crashed_)
+      *is_process_crashed_ = false;
 
     // release it
     ReleaseMutex(*mutex_handle_);
