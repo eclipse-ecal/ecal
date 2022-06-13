@@ -35,7 +35,11 @@
 
 struct alignas(8) named_mutex
 {
+  // this mutex is used for protecting the locked var while being changed
   pthread_mutex_t  mtx;
+  // this mutex is by the process during the locking,
+  // so that by using the mutex state, we can know if the process is crashed.
+  pthread_mutex_t  prc_mtx;
   pthread_cond_t   cvar;
   uint8_t          locked;
 };
@@ -59,23 +63,26 @@ namespace
     }
 
     // create mutex
-    pthread_mutexattr_t shmtx;
-    pthread_mutexattr_init(&shmtx);
-    pthread_mutexattr_setpshared(&shmtx, PTHREAD_PROCESS_SHARED);
+    pthread_mutexattr_t shmtx1, shmtx2;
+    pthread_mutexattr_init(&shmtx1);
+    pthread_mutexattr_setpshared(&shmtx1, PTHREAD_PROCESS_SHARED);
+    pthread_mutexattr_init(&shmtx2);
+    pthread_mutexattr_setpshared(&shmtx2, PTHREAD_PROCESS_SHARED);
 
     if (robust_mutex_)
     {
       // this should be a robust mutex:
 #ifndef ECAL_OS_MACOS
-      pthread_mutexattr_setrobust(&shmtx, PTHREAD_MUTEX_ROBUST);
+      pthread_mutexattr_setrobust(&shmtx1, PTHREAD_MUTEX_ROBUST);
+      pthread_mutexattr_setrobust(&shmtx2, PTHREAD_MUTEX_ROBUST);
 #endif // ECAL_OS_MACOS
     }
 
     // create condition variable
     pthread_condattr_t shattr;
     pthread_condattr_init(&shattr);
-
     pthread_condattr_setpshared(&shattr, PTHREAD_PROCESS_SHARED);
+
 #ifndef ECAL_OS_MACOS
     pthread_condattr_setclock(&shattr, CLOCK_MONOTONIC);
 #endif // ECAL_OS_MACOS
@@ -85,7 +92,8 @@ namespace
     ::close(fd);
 
     // initialize mutex and condition
-    pthread_mutex_init(&mtx->mtx, &shmtx);
+    pthread_mutex_init(&mtx->mtx, &shmtx1);
+    pthread_mutex_init(&mtx->prc_mtx, &shmtx2);
     pthread_cond_init(&mtx->cvar, &shattr);
 
     // start with unlocked mutex
@@ -146,6 +154,8 @@ namespace
     // state is not locked ?, fine !
     if (mtx_->locked == 0)
     {
+      // lock the mutex that should be locked while the 'locked' var is enabled
+      pthread_mutex_lock(&mtx_->prc_mtx);
       // set state to locked
       mtx_->locked = 1;
       // unlock condition mutex
@@ -169,11 +179,37 @@ namespace
 #else
           ret = pthread_cond_timedwait_relative_np(&mtx_->cvar, &mtx_->mtx, ts_);
 #endif
+          // timeout:
+          if(0 != ret)
+          {
+            // make sure that the process that enabled the locked var is not crashed:
+            int prc_mtx_lk_state = pthread_mutex_trylock(&mtx_->prc_mtx);
+            if(EOWNERDEAD == prc_mtx_lk_state)
+            {
+              // the process that was enabling the locked var is crashed.
+              // make the mutex consistent:
+        #ifndef ECAL_OS_MACOS
+              pthread_mutex_consistent(&mtx_->prc_mtx);
+        #endif // ECAL_OS_MACOS
+
+              // set ret status as success because this process/thread should be the owner now:
+              ret = 0;
+              // report process crash:
+              if(nullptr != is_process_crashed_)
+                *is_process_crashed_ = true;
+            }
+          }
         }
         // blocking wait for unlock signal
         else
         {
           ret = pthread_cond_wait(&mtx_->cvar, &mtx_->mtx);
+          if(ret == 0)
+          {
+            // then we are going to enable the locked var,
+            // then lock the proc_mtx here:
+            pthread_mutex_lock(&mtx_->prc_mtx);
+          }
         }
       }
       // if wait (with timeout) returned successfully
@@ -211,6 +247,8 @@ namespace
     // check state
     if (mtx_->locked == 0)
     {
+      // lock the mutex that should be locked while the 'locked' var is enabled
+      pthread_mutex_lock(&mtx_->prc_mtx);
       // set state to locked
       mtx_->locked = 1;
       locked = true;
@@ -247,6 +285,8 @@ namespace
     {
       // set state to unlocked
       mtx_->locked = 0;
+      // unlock the mutex that should be locked while the 'locked' var is enabled
+      pthread_mutex_unlock(&mtx_->prc_mtx);
       // and signal to one conditional wait
       // that state can be locked again
       pthread_cond_signal(&mtx_->cvar);
