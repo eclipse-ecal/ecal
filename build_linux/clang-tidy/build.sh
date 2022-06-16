@@ -152,7 +152,7 @@ check_args() {
 
     # find the root directory where '.git/' resides
     cd "${DIR_SCRIPT}"
-    root_dir_git=$(find_root_dir "${DIR_SCRIPT}")
+    root_dir_git=$(find_root_dir)
     cd "${root_dir_git}"
     DIR_ROOT=$(pwd)
 
