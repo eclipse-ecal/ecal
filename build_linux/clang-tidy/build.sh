@@ -74,7 +74,7 @@ DCMAKE_CXX_COMPILER=              #'-DCMAKE_CXX_COMPILER=/usr/bin/clang++-14'
 
 # ------------------------------------------------------------------------------
 
-USAGE="$(basename $0) [-h|-help] [-b|--build <build>] [-c|compiler <C> <CXX>] [-m|--make] [-i|--filter <app> <cfg>] [-d|--database] [-a|--already] [-f|--files <files...>]
+USAGE="$(basename "$0") [-h|-help] [-b|--build <build>] [-c|compiler <C> <CXX>] [-m|--make] [-i|--filter <app> <cfg>] [-d|--database] [-a|--already] [-f|--files <files...>]
 run cmake, and then optionally make and/or clang-tidy - where:
     -h | --help                 show this help message and exit
     -b | --build <build>        build path relative to this script, default: '${PATH_BUILD}'
@@ -110,7 +110,7 @@ then
                                 if [[  $# -eq 0 ]];then break ; fi ;;
             -f | --files )      RUN_FILES='ON' ; shift ;
                                 if [[  $# -eq 0 ]];then echo "WARNING - missing file list" ; exit 0 ; fi ;
-                                FILE_LIST=($@) ; break ;;
+                                FILE_LIST=("$@") ; break ;;
             * )                 echo "ERROR - unknown option: '$1'" ; shift ; exit 1 ;;
         esac
     done
@@ -142,21 +142,24 @@ check_args() {
 
     # detect relative path by removing the final '/' and all trailing chars '*'
     local dir_rel=${PATH_BUILD%/*}
-    DIR_BUILD_NAME=${PATH_BUILD#$dir_rel/}
+    local root_dir_git
+    local path_clang_tidy
+
+    DIR_BUILD_NAME=${PATH_BUILD#"${dir_rel}"/}
     cd "${dir_rel}"
     DIR_BUILD_ROOT=$(pwd)
     DIR_BUILD="${DIR_BUILD_ROOT}/${DIR_BUILD_NAME}"
 
     # find the root directory where '.git/' resides
     cd "${DIR_SCRIPT}"
-    local root_dir_git=$(find_root_dir "${DIR_SCRIPT}")
+    root_dir_git=$(find_root_dir "${DIR_SCRIPT}")
     cd "${root_dir_git}"
     DIR_ROOT=$(pwd)
 
     if [[ "${RUN_DATABASE}" == 'ON' || "${RUN_FILES}" == 'ON' ]]
     then
         set +e
-        local path_clang_tidy=$(which ${CLANG_TIDY})
+        path_clang_tidy=$(command -v ${CLANG_TIDY})
         set -e
         if [[ -z ${path_clang_tidy} ]]
         then
@@ -186,14 +189,14 @@ run_cmake() {
         echo "++ build type: ${CMAKE_BUILD_TYPE}"
         echo -e "\n++ running cmake ..."
 
-        rm -rf "${DIR_BUILD}/"
-        mkdir -p ${DIR_BUILD}
+        rm -rf "${DIR_BUILD:?}/"
+        mkdir -p "${DIR_BUILD}"
         cd "${DIR_BUILD}"
 
-        cmake "${DIR_ROOT}" ${DCMAKE_EXPORT_COMPILE_COMMANDS} \
-                            ${DCMAKE_C_COMPILER} \
-                            ${DCMAKE_CXX_COMPILER} \
-                            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} \
+        cmake "${DIR_ROOT}" "${DCMAKE_EXPORT_COMPILE_COMMANDS}" \
+                            "${DCMAKE_C_COMPILER}" \
+                            "${DCMAKE_CXX_COMPILER}" \
+                            "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}" \
                             -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF \
                             -DECAL_THIRDPARTY_BUILD_CURL=OFF  \
                             -DECAL_THIRDPARTY_BUILD_HDF5=OFF
@@ -207,8 +210,8 @@ run_make() {
         cd "${DIR_BUILD}"
         local cmd="cmake --build . -- -j${NUM_INST}"
         echo -e "\n++ ${cmd}\nsee: ${FILE_MAKE_OUTPUT}"
-        echo "${cmd}" >> ${FILE_MAKE_OUTPUT}
-        time ${cmd} |& tee -a ${FILE_MAKE_OUTPUT}
+        echo "${cmd}" >> "${FILE_MAKE_OUTPUT}"
+        time ${cmd} |& tee -a "${FILE_MAKE_OUTPUT}"
     fi
 }
 
@@ -242,7 +245,7 @@ filter_compile_commands() {
         cd "${DIR_SCRIPT}"
         echo "excluded directories:"
         cat "$PATH_EXC_CONFIG"
-        python3 ${PATH_FILTER} --build "${DIR_BUILD}"
+        python3 "${PATH_FILTER}" --build "${DIR_BUILD}"
 
         cp -a "${DIR_ROOT}/.clang-tidy" "${DIR_BUILD}"
         cd "${DIR_BUILD}"
@@ -267,8 +270,8 @@ run_clang_tidy_on_database() {
         # see: run-clang-tidy --help
         local cmd="run-${CLANG_TIDY} -j${NUM_INST}"
         echo -e "\n++ ${cmd}\ncfg: ${FILE_CLANG_TIDY_CONFIG}\nsee: ${FILE_CLANG_TIDY_OUTPUT}"
-        echo "${cmd}" >> ${FILE_CLANG_TIDY_OUTPUT}
-        time ${cmd} |& tee -a ${FILE_CLANG_TIDY_OUTPUT}
+        echo "${cmd}" >> "${FILE_CLANG_TIDY_OUTPUT}"
+        time ${cmd} |& tee -a "${FILE_CLANG_TIDY_OUTPUT}"
     fi
 }
 
@@ -281,10 +284,16 @@ run_clang_tidy_on_database() {
 #         ["c"]
 #     ]
 read_config_basic() {
+    local line_count
+    local line_trim
+    local line_no_quotes
+    local line_no_brackets
+    local subdir
+
     cd "${DIR_SCRIPT}"
     if [[ -f "$PATH_EXC_CONFIG" ]]
     then
-        local line_count=$(wc -l < "$PATH_EXC_CONFIG")
+        line_count=$(wc -l < "$PATH_EXC_CONFIG")
         if [[ "${line_count}" -gt "1" ]]
         then
             declare -a exc_dirs
@@ -293,16 +302,16 @@ read_config_basic() {
                 exc_dirs[${#exc_dirs[@]}]="$line"
             done < "$PATH_EXC_CONFIG"
             # eliminate the first and the last element, '[' and ']' respectively
-            unset exc_dirs[0]
-            unset exc_dirs[-1]
+            unset 'exc_dirs[0]'
+            unset 'exc_dirs[-1]'
             for exc_dir in "${exc_dirs[@]}"
             do
-                local line_trim=$(echo "${exc_dir}" | tr -d '[:space:]')
-                local line_no_quotes=$(echo "${line_trim}" | tr -d '"')
-                local line_no_brackets=$(echo "${line_no_quotes}" | tr -d '[\[\]]')
+                line_trim=$(echo "${exc_dir}" | tr -d '[:space:]')
+                line_no_quotes=$(echo "${line_trim}" | tr -d '"')
+                line_no_brackets=$(echo "${line_no_quotes}" | tr -d '[]')
                 declare -a dirs
-                IFS=',' read -a dirs <<< $line_no_brackets
-                local subdir=$(printf "/%s" "${dirs[@]}")
+                IFS=',' read -ar dirs <<< "${line_no_brackets}"
+                subdir=$(printf "/%s" "${dirs[@]}")
                 EXC_LIST[${#EXC_LIST[@]}]="${subdir}/"
             done
         else
@@ -316,9 +325,12 @@ read_config_basic() {
 
 # jq can parse valid JSONs, pretty-print is not required.
 read_config() {
+    local path_jq
+    local subdir
+
     cd "${DIR_SCRIPT}"
     set +e
-    local path_jq=$(which jq)
+    path_jq=$(command -v jq)
     set -e
     if [[ -z ${path_jq} ]]
     then
@@ -327,9 +339,9 @@ read_config() {
     else
         if [[ -f "$PATH_EXC_CONFIG" ]]
         then
-            for row in $(cat ${PATH_EXC_CONFIG} | jq -c '.[]')
+            for row in $(jq -c '.[]' < "${PATH_EXC_CONFIG}")
             do
-                local subdir=''
+                subdir=''
                 for dir in $(echo "${row}" | jq -r '.[]')
                 do
                     subdir="${subdir}/${dir}"
@@ -360,6 +372,12 @@ is_excluded() {
 run_clang_tidy_on_files() {
     if [[ "${RUN_FILES}" == 'ON' ]]
     then
+        local file_abs
+        local file_char
+        local file_base
+        local file_name
+        local file_ext
+
         read_config
 
         cd "${DIR_BUILD}"
@@ -370,17 +388,17 @@ run_clang_tidy_on_files() {
 
         for file in "${FILE_LIST[@]}"
         do
-            local file_abs="${file}"
-            local file_char="${file_abs:0:1}"
+            file_abs="${file}"
+            file_char="${file_abs:0:1}"
 
             if [[ ${file_char} != '/' ]]
             then
                 file_abs="${DIR_ROOT}/${file}"
             fi
 
-            local file_base=$(basename "${file_abs}")
-            local file_name="${file_base%.*}"
-            local file_ext="${file_base##*.}"
+            file_base=$(basename "${file_abs}")
+            file_name="${file_base%.*}"
+            file_ext="${file_base##*.}"
 
             echo "${SEP_1}"
             echo -e "-- ${file}\n   ${file_name} . ${file_ext}"
@@ -402,9 +420,9 @@ run_clang_tidy_on_files() {
                         local cmd="${CLANG_TIDY} -p . ${file_abs}"
                         echo "## analyzing"
                         echo "${SEP_2}"
-                        echo "${cmd}" |& tee -a ${FILE_CLANG_TIDY_OUTPUT}
-                        ${cmd} |& tee -a ${FILE_CLANG_TIDY_OUTPUT}
-                        echo "${SEP_2}" >> ${FILE_CLANG_TIDY_OUTPUT}
+                        echo "${cmd}" |& tee -a "${FILE_CLANG_TIDY_OUTPUT}"
+                        ${cmd} |& tee -a "${FILE_CLANG_TIDY_OUTPUT}"
+                        echo "${SEP_2}" >> "${FILE_CLANG_TIDY_OUTPUT}"
                     fi
                 else
                     echo "## skipping"
