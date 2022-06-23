@@ -27,6 +27,7 @@
 #include <functional>
 #include <set>
 #include <string>
+#include <memory>
 
 #include "eh5_types.h"
 
@@ -60,6 +61,18 @@ namespace eCAL
        * @brief Destructor
       **/
       ~HDF5Meas();
+
+      /**
+       * @brief Copy operator
+      **/
+      HDF5Meas(const HDF5Meas& other) = delete;
+      HDF5Meas& operator=(const HDF5Meas& other) = delete;
+
+      /**
+      * @brief Move operator
+      **/
+      HDF5Meas(HDF5Meas&&) = default;
+      HDF5Meas& operator=(HDF5Meas&&) = default;
 
       /**
        * @brief Open file
@@ -275,7 +288,7 @@ namespace eCAL
       void DisconnectPreSplitCallback();
 
      private:
-      HDF5MeasImpl* hdf_meas_impl_;
+      std::unique_ptr<HDF5MeasImpl> hdf_meas_impl_;
     };
   }  // namespace eh5
 }  // namespace eCAL
