@@ -34,6 +34,7 @@ Program Listing for File eh5_meas.h
    #include <functional>
    #include <set>
    #include <string>
+   #include <memory>
    
    #include "eh5_types.h"
    
@@ -51,6 +52,12 @@ Program Listing for File eh5_meas.h
          explicit HDF5Meas(const std::string& path, eAccessType access = eAccessType::RDONLY);
    
          ~HDF5Meas();
+   
+         HDF5Meas(const HDF5Meas& other) = delete;
+         HDF5Meas& operator=(const HDF5Meas& other) = delete;
+   
+         HDF5Meas(HDF5Meas&&) = default;
+         HDF5Meas& operator=(HDF5Meas&&) = default;
    
          bool Open(const std::string& path, eAccessType access = eAccessType::RDONLY);
    
@@ -99,7 +106,7 @@ Program Listing for File eh5_meas.h
          void DisconnectPreSplitCallback();
    
         private:
-         HDF5MeasImpl* hdf_meas_impl_;
+         std::unique_ptr<HDF5MeasImpl> hdf_meas_impl_;
        };
      }  // namespace eh5
    }  // namespace eCAL

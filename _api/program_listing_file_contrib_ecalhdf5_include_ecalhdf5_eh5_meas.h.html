@@ -657,6 +657,7 @@
 <span class="cp">#include</span> <span class="cpf">&lt;functional&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;set&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
 
 <span class="cp">#include</span> <span class="cpf">&quot;eh5_types.h&quot;</span><span class="cp"></span>
 
@@ -674,6 +675,12 @@
       <span class="k">explicit</span> <span class="nf">HDF5Meas</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">path</span><span class="p">,</span> <span class="n">eAccessType</span> <span class="n">access</span> <span class="o">=</span> <span class="n">eAccessType</span><span class="o">::</span><span class="n">RDONLY</span><span class="p">);</span>
 
       <span class="o">~</span><span class="n">HDF5Meas</span><span class="p">();</span>
+
+      <span class="n">HDF5Meas</span><span class="p">(</span><span class="k">const</span> <span class="n">HDF5Meas</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+      <span class="n">HDF5Meas</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">HDF5Meas</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+
+      <span class="n">HDF5Meas</span><span class="p">(</span><span class="n">HDF5Meas</span><span class="o">&amp;&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+      <span class="n">HDF5Meas</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">HDF5Meas</span><span class="o">&amp;&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
 
       <span class="kt">bool</span> <span class="nf">Open</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">path</span><span class="p">,</span> <span class="n">eAccessType</span> <span class="n">access</span> <span class="o">=</span> <span class="n">eAccessType</span><span class="o">::</span><span class="n">RDONLY</span><span class="p">);</span>
 
@@ -722,7 +729,7 @@
       <span class="kt">void</span> <span class="nf">DisconnectPreSplitCallback</span><span class="p">();</span>
 
      <span class="k">private</span><span class="o">:</span>
-      <span class="n">HDF5MeasImpl</span><span class="o">*</span> <span class="n">hdf_meas_impl_</span><span class="p">;</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">HDF5MeasImpl</span><span class="o">&gt;</span> <span class="n">hdf_meas_impl_</span><span class="p">;</span>
     <span class="p">};</span>
   <span class="p">}</span>  <span class="c1">// namespace eh5</span>
 <span class="p">}</span>  <span class="c1">// namespace eCAL</span>
