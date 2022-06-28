@@ -28,6 +28,7 @@
 
   #include <ecal_utils/str_convert.h> // ANSI/Wide/UTF8 conversion
 #else // _WIN32
+  #include <cstring>    // strerror()
   #include <dirent.h>
   #include <fcntl.h>    // O_RDONLY
   #ifndef __QNXNTO__
