@@ -26,6 +26,7 @@
   #include <direct.h>
   #include <shellapi.h> // SHFileOperation
 #else // _WIN32
+  #include <cstring>    // strerror()
   #include <dirent.h>
   #include <fcntl.h>    // O_RDONLY
   #ifndef __QNXNTO__
