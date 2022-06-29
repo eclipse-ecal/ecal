@@ -29,6 +29,11 @@ if (ECAL_JOIN_MULTICAST_TWICE)
   add_definitions(-DECAL_JOIN_MULTICAST_TWICE)
 endif(ECAL_JOIN_MULTICAST_TWICE)
 
+if (ECAL_JOIN_MULTICAST_ON_ALL_INTERFACES)
+  message(STATUS "eCAL ${PROJECT_NAME}: Enabling Joining Multicast Groups On All Interfaces")
+  add_definitions(-DECAL_JOIN_MULTICAST_ON_ALL_INTERFACES)
+endif(ECAL_JOIN_MULTICAST_ON_ALL_INTERFACES)
+
 # If we're currently doing a build within a git repository, we will configure the header files.
 # Else, (e.g. for source packages such as debian source packages) we will use a preconfigured file.
 # If there is really no information available, it will generate a dummy version file 0.0.0
