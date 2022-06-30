@@ -461,9 +461,7 @@ PyObject* sub_destroy(PyObject* /*self*/, PyObject* args)
     return nullptr;
 
   bool destroyed{ false };
-  Py_BEGIN_ALLOW_THREADS
-    destroyed = sub_destroy(topic_handle);
-  Py_END_ALLOW_THREADS
+  destroyed = sub_destroy(topic_handle);
   return(Py_BuildValue("i", destroyed));
 }
 
