@@ -24,6 +24,8 @@
 
 #include "person.pb.h"
 
+int y = 0;
+
 int main(int argc, char **argv)
 {
   // initialize eCAL API
@@ -62,10 +64,17 @@ int main(int argc, char **argv)
     std::cout << "house.rooms  : " << person.house().rooms() << std::endl;
     std::cout                                                << std::endl;
 
-    // sleep 500 ms
-    eCAL::Process::SleepMS(500);
-  }
 
+    // sleep 500 ms
+    //eCAL::Process::SleepMS(500);
+    // some kind of busy waiting....
+    for (int i = 0; i < 100000; i++)
+    {
+      y += i;
+    }
+  }
+   
+  std::cout << y << std::endl;
   // finalize eCAL API
   eCAL::Finalize();
 

@@ -152,13 +152,17 @@ namespace eCAL
 
     // reset receive callback
     {
+      std::cout << "Locking callback sync" << std::endl;
       std::lock_guard<std::mutex> lock(m_receive_callback_sync);
+      std::cout << "Unlocking callback sync" << std::endl;
       m_receive_callback = nullptr;
     }
 
     // reset event callback map
     {
+      std::cout << "Locking map sync" << std::endl;
       std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+      std::cout << "Unlocking map sync" << std::endl;
       m_event_callback_map.clear();
     }
 

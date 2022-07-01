@@ -23,26 +23,14 @@
 #include <iostream>
 
 #include "person.pb.h"
+#include <memory>
+
+long long global_clock;
 
 void OnPerson(const char* topic_name_, const pb::People::Person& person_, const long long time_, const long long clock_)
 {
-  std::cout << "------------------------------------------" << std::endl;
-  std::cout << " HEAD "                                     << std::endl;
-  std::cout << "------------------------------------------" << std::endl;
-  std::cout << "topic name   : " << topic_name_             << std::endl;
-  std::cout << "topic time   : " << time_                   << std::endl;
-  std::cout << "topic clock  : " << clock_                  << std::endl;
-  std::cout << "------------------------------------------" << std::endl;
-  std::cout << " CONTENT "                                  << std::endl;
-  std::cout << "------------------------------------------" << std::endl;
-  std::cout << "person id    : " << person_.id()            << std::endl;
-  std::cout << "person name  : " << person_.name()          << std::endl;
-  std::cout << "person stype : " << person_.stype()         << std::endl;
-  std::cout << "person email : " << person_.email()         << std::endl;
-  std::cout << "dog.name     : " << person_.dog().name()    << std::endl;
-  std::cout << "house.rooms  : " << person_.house().rooms() << std::endl;
-  std::cout << "------------------------------------------" << std::endl;
-  std::cout                                                 << std::endl;
+  global_clock += clock_;
+  eCAL::Process::SleepMS(1);
 }
 
 int main(int argc, char **argv)
@@ -54,16 +42,20 @@ int main(int argc, char **argv)
   eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "I feel good !");
 
   // create a subscriber (topic name "person")
-  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person");
+  std::shared_ptr< eCAL::protobuf::CSubscriber<pb::People::Person>> sub;
+
 
   // add receive callback function (_1 = topic_name, _2 = msg, _3 = time, _4 = clock, _5 = id)
   auto callback = std::bind(OnPerson, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
-  sub.AddReceiveCallback(callback);
 
+  int i = 0;
   while(eCAL::Ok())
   {
+    sub = std::make_shared<eCAL::protobuf::CSubscriber<pb::People::Person>>("person");
+    sub->AddReceiveCallback(callback);
     // sleep 100 ms
-    eCAL::Process::SleepMS(100);
+    std::cout << "Created new publisher no " << i << std::endl;
+    eCAL::Process::SleepMS(2000);
   }
 
   // finalize eCAL API

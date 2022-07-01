@@ -51,12 +51,16 @@ namespace eCAL
   {
     InitializeQOS();
 
+    std::cout << "Creating subscriber" << std::endl;
     Create(topic_name_, topic_type_, topic_desc_);
+    std::cout << "Done creating subscriber" << std::endl;
   }
 
   CSubscriber::~CSubscriber()
   {
+    std::cout << "Destroying subscriber" << std::endl;
     Destroy();
+    std::cout << "Done destroying subscriber" << std::endl;
   }
 
   CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept :
@@ -133,19 +137,24 @@ namespace eCAL
     if(!m_created)   return(false);
     if(!g_globals()) return(false);
 
+    std::cout << "RemReceiveCallback" << std::endl;
     // remove receive callback
     RemReceiveCallback();
 
-    // destroy local data reader
-    m_datareader->Destroy();
-    
+    std::cout << "g_subgate()->Unregister" << std::endl;
     // unregister data reader
-    if(g_subgate())         g_subgate()->Unregister(m_datareader->GetTopicName(), m_datareader);
-    if(g_entity_register()) g_entity_register()->UnregisterTopic(m_datareader->GetTopicName(), m_datareader->GetTopicID());
+    if (g_subgate())         g_subgate()->Unregister(m_datareader->GetTopicName(), m_datareader);
+    std::cout << "g_entity_register()->UnregisterTopic" << std::endl;
+    if (g_entity_register()) g_entity_register()->UnregisterTopic(m_datareader->GetTopicName(), m_datareader->GetTopicID());
 #ifndef NDEBUG
     // log it
     if (g_log()) g_log()->Log(log_level_debug1, std::string(m_datareader->GetTopicName() + "::CSubscriber::Destroy"));
 #endif
+
+    std::cout << "m_datareader->Destroy" << std::endl;
+    // destroy local data reader
+    m_datareader->Destroy();
+
 
     // free datareader
     delete m_datareader;
@@ -158,10 +167,12 @@ namespace eCAL
     // here to decrease reference counter
     if (m_initialized)
     {
+      std::cout << "g_globals()->Finalize" << std::endl;
       g_globals()->Finalize(Init::Subscriber);
       m_initialized = false;
     }
 
+    std::cout << "Done Destroying" << std::endl;
     return(true);
   }
 
