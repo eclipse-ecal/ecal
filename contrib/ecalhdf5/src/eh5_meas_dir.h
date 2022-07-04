@@ -235,7 +235,7 @@ namespace eCAL
       *
       * @return               true if succeeds, false if it fails
       **/
-      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) override;
+      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock, unsigned long long entries_counter = 0) override;
 
       typedef std::function<void(void)> CallbackFunction;
       /**
@@ -282,26 +282,21 @@ namespace eCAL
       typedef std::unordered_map<long long, EntryInfo>      EntriesByIdUMap;
       typedef std::unordered_map<std::string, EntryInfoSet> EntriesByChannelUMap;
 
+      // all of these 4 attributes are for reading/playing
       HDF5Files              files_;
       ChannelInfoUMap        channels_info_;
       EntriesByIdUMap        entries_by_id_;
       EntriesByChannelUMap   entries_by_chn_;
 
-      struct Channel
-      {
-        std::string   Description;
-        std::string   Type;
-        EntryInfoVect Entries;
-      };
+      // for writing/recording
 
-      typedef std::map<std::string, Channel> Channels;
+      typedef std::map<std::string, HDF5MeasImpl*> Channels;
 
       std::string              output_dir_;
+      bool                     is_output_dir_created_;
       std::string              file_name_;
       Channels                 channels_;
       CallbackFunction         cb_pre_split_;
-      hid_t                    file_id_;
-      int                      file_split_counter_;
       unsigned long long       entries_counter_;
       size_t                   max_size_per_file_;
       eAccessType              access_;
@@ -318,9 +313,9 @@ namespace eCAL
       /**
       * @brief Creates the actual file
       *
-      * @return       file ID, file was not created if id is negative
+      * @return       bool, true if dir is created, false otherwise
       **/
-      hid_t Create();
+      bool Create();
 
       bool OpenRX(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/);
 
@@ -365,6 +360,15 @@ namespace eCAL
       * @return                    true if succeeds, false if it fails
       **/
       bool CreateEntriesTableOfContentsFor(const std::string& channelName, const std::string& channelType, const std::string& channelDescription, const EntryInfoVect& entries);
+
+      /**
+      * @brief creates a file instance and associate it to the channel
+      *
+      * @param channelName         name for the channel that should be associated with the file
+      *
+      * @return                    true if succeeds, false if it fails
+      **/
+      bool CreateFileInstanceForChannel(std::string channel_name);
 
     };
   }  //  namespace eh5

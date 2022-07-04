@@ -39,6 +39,11 @@ namespace eCAL
     {
     }
 
+    HDF5MeasFileV5::HDF5MeasFileV5(const std::string& path, std::string channel_name, std::string base_file_name, size_t max_size_per_file, eAccessType access)
+      : HDF5MeasFileV2(path, channel_name, base_file_name, max_size_per_file, access)
+    {
+    }
+
     HDF5MeasFileV5::~HDF5MeasFileV5()
     {
     }

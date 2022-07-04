@@ -25,6 +25,7 @@
 
 #include "hdf5.h"
 #include "eh5_meas_impl.h"
+#include "ecalhdf5/eh5_meas.h"
 
 namespace eCAL
 {
@@ -40,10 +41,22 @@ namespace eCAL
 
       /**
       * @brief Constructor
+      * this will be used while playing/reading record file
       *
       * @param path    input file path
       **/
       explicit HDF5MeasFileV2(const std::string& path, eAccessType access = eAccessType::RDONLY);
+
+      /**
+      * @brief Constructor
+      * this will be used while writing/recording
+      *
+      * @param path               input output dir
+      * @param channel_name       input name of the channel that this file will contain its related entries
+      * @param base_file_name     input the base name of the file
+      * @param max_size_per_file  input max size of the file
+      **/
+      explicit HDF5MeasFileV2(const std::string& path, std::string channel_name, std::string base_file_name, size_t max_size_per_file, eAccessType access);
 
       /**
       * @brief Destructor
@@ -227,7 +240,7 @@ namespace eCAL
       *
       * @return               true if succeeds, false if it fails
       **/
-      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) override;
+      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock, unsigned long long entries_counter = 0) override;
 
       typedef std::function<void(void)> CallbackFunction;
       /**
@@ -243,7 +256,59 @@ namespace eCAL
       void DisconnectPreSplitCallback() override;
 
     protected:
-      hid_t file_id_;
+
+      hid_t             file_id_;
+      // all follwing attributes are for writing/recording
+      std::string       channel_name_;
+      std::string       output_dir_;
+      std::string       base_file_name_;
+      int               file_split_counter_;
+      CallbackFunction  cb_pre_split_;
+      size_t            max_size_per_file_;
+      eAccessType       access_;
+      std::string       channel_description_;
+      std::string       channel_type_;
+      EntryInfoVect     entries_;
+
+      /**
+      * @brief Creates the entries "table of contents" (timestamp + entry id)
+      *        (Call it just before closing the file)
+      *
+      * @param channelName         name for the dataset
+      * @param channelType         type for the dataset
+      * @param channelDescription  description for the dataset
+      * @param entries             entries for given channel
+      *
+      * @return                    true if succeeds, false if it fails
+      **/
+      bool CreateEntriesTableOfContentsFor();
+
+      /**
+      * @brief Set attribute to object(file, entry...)
+      *
+      * @param id       ID of the attributes parent
+      * @param name     Name of the attribute
+      * @param value    Value of the attribute
+      *
+      * @return         true if succeeds, false if it fails
+      **/
+      bool SetAttribute(const hid_t& id, const std::string& name, const std::string& value);
+
+      /**
+      * @brief Gets the size of the file
+      *
+      * @param size  Size of the file in bytes
+      *
+      * @return  true if succeeds, false if it fails
+      **/
+      bool GetFileSize(hsize_t& size) const;
+
+      /**
+      * @brief Creates the actual file
+      *
+      * @return       file ID, file was not created if id is negative
+      **/
+      hid_t Create();
 
       /**
       * @brief Gets the value of a string attribute
@@ -255,6 +320,15 @@ namespace eCAL
       * @return  true if succeeds, false if it fails
       **/
       bool GetAttributeValue(hid_t obj_id, const std::string& name, std::string& value) const;
+
+      /**
+      * @brief Checks if current file size + entry size does not exceed the maximum allowed size of the file
+      *
+      * @param size  Size of the entry in bytes
+      *
+      * @return  true if entry can be saved in current file, false if it can not be added to the current file
+      **/
+      bool EntryFitsTheFile(const size_t& size) const;
     };
 
   }  // namespace eh5

@@ -227,7 +227,7 @@ namespace eCAL
       *
       * @return               true if succeeds, false if it fails
       **/
-      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) override;
+      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock, unsigned long long entries_counter = 0) override;
 
       typedef std::function<void(void)> CallbackFunction;
       /**
@@ -245,7 +245,7 @@ namespace eCAL
     protected:
       hid_t        file_id_;
       std::string  channel_name_;
-      EntryInfoSet entries_;
+      EntryInfoSet read_entries_;
 
       /**
       * @brief Gets the value of a string attribute

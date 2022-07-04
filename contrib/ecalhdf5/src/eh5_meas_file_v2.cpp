@@ -22,16 +22,24 @@
 **/
 
 #include "eh5_meas_file_v2.h"
-
 #include "hdf5.h"
+//#include "escape.h"
+
 #include <ecal_utils/string.h>
 
 #include <iostream>
 #include <list>
 #include <set>
+#include <ecal_utils/filesystem.h>
+#include <ecal_utils/str_convert.h>
+
 
 eCAL::eh5::HDF5MeasFileV2::HDF5MeasFileV2()
-  : file_id_(-1)
+  : cb_pre_split_(nullptr)
+  , file_id_(-1)
+  , file_split_counter_(-1)
+  , max_size_per_file_(-1)
+  , access_(RDONLY)
 {
 #ifndef _DEBUG
   H5Eset_auto(0, nullptr, nullptr);
@@ -39,7 +47,30 @@ eCAL::eh5::HDF5MeasFileV2::HDF5MeasFileV2()
 }
 
 eCAL::eh5::HDF5MeasFileV2::HDF5MeasFileV2(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
-  : file_id_(-1)
+  : cb_pre_split_(nullptr)
+  , file_id_(-1)
+  , file_split_counter_(-1)
+  , max_size_per_file_(0)
+  , access_(access)
+{
+#ifndef _DEBUG
+  H5Eset_auto(0, nullptr, nullptr);
+#endif  //  _DEBUG
+
+  // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  HDF5MeasFileV2::Open(path, access);
+}
+
+eCAL::eh5::HDF5MeasFileV2::HDF5MeasFileV2(const std::string& path, std::string channel_name, std::string base_file_name, size_t max_size_per_file, eAccessType access)
+  : cb_pre_split_(nullptr)
+  , file_id_(-1)
+  , file_split_counter_(-1)
+  , output_dir_(path)
+  , channel_name_(channel_name)
+  , base_file_name_(base_file_name + "_" + channel_name)
+  , max_size_per_file_(max_size_per_file)
+  , access_(access)
 {
 #ifndef _DEBUG
   H5Eset_auto(0, nullptr, nullptr);
@@ -57,24 +88,38 @@ eCAL::eh5::HDF5MeasFileV2::~HDF5MeasFileV2()
   HDF5MeasFileV2::Close();
 }
 
-
 bool eCAL::eh5::HDF5MeasFileV2::Open(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
 {
   if (file_id_ > 0) Close();
   if (path.empty()) return false;
-  if (access != eAccessType::RDONLY) return false;
 
-  file_id_ = H5Fopen(path.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+  switch (access)
+  {
+  case eCAL::eh5::RDONLY:
+    file_id_ = H5Fopen(path.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+    return IsOk();
+  default:
+    break;
+  }
 
-  // call the function via its class becase it's a virtual function that is called directly/indirectly in constructor/destructor,-
-  // where the vtable is not created yet or it's destructed.
-  return HDF5MeasFileV2::IsOk();
+  return true;
 }
-
 
 bool eCAL::eh5::HDF5MeasFileV2::Close()
 {
-  if (HDF5MeasFileV2::IsOk() == true && H5Fclose(file_id_) >= 0)
+  if (!this->IsOk())  return false;
+
+  if (access_ == eAccessType::CREATE)
+  {
+    if (CreateEntriesTableOfContentsFor())
+    {
+      SetAttribute(file_id_, kChnAttrTitle, channel_name_);
+    }
+
+    entries_.clear();
+  }
+
+  if(H5Fclose(file_id_) >= 0)
   {
     file_id_ = -1;
     return true;
@@ -84,7 +129,6 @@ bool eCAL::eh5::HDF5MeasFileV2::Close()
     return false;
   }
 }
-
 
 bool eCAL::eh5::HDF5MeasFileV2::IsOk() const
 {
@@ -125,7 +169,6 @@ std::set<std::string> eCAL::eh5::HDF5MeasFileV2::GetChannelNames() const
 
   return channels_set;
 }
-
 
 bool eCAL::eh5::HDF5MeasFileV2::HasChannel(const std::string& channel_name) const
 {
@@ -294,22 +337,179 @@ bool eCAL::eh5::HDF5MeasFileV2::GetEntryData(long long entry_id, void* data) con
 }
 
 
-void eCAL::eh5::HDF5MeasFileV2::SetFileBaseName(const std::string& /*base_name*/)
+void eCAL::eh5::HDF5MeasFileV2::SetFileBaseName(const std::string& base_name)
 {
-
+  base_file_name_ = base_name + "_" + channel_name_;
 }
 
-bool eCAL::eh5::HDF5MeasFileV2::AddEntryToFile(const void* /*data*/, const unsigned long long& /*size*/, const long long& /*snd_timestamp*/, const long long& /*rcv_timestamp*/, const std::string& /*channel_name*/, long long /*id*/, long long /*clock*/)
+bool eCAL::eh5::HDF5MeasFileV2::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock, unsigned long long entries_counter)
 {
-  return false;
+  if (!IsOk()) file_id_ = Create();
+  if (!IsOk())
+  {
+    return false;
+  }
+
+  hsize_t hsSize = static_cast<hsize_t>(size);
+
+  if (EntryFitsTheFile(hsSize) == false)
+  {
+    if (cb_pre_split_ != nullptr)
+    {
+      cb_pre_split_();
+    }
+
+    if (!Create())
+    {
+      return false;
+    }
+  }
+
+  //  Create DataSpace with rank 1 and size dimension
+  auto dataSpace = H5Screate_simple(1, &hsSize, nullptr);
+
+  //  Create creation property for dataSpace
+  auto dsProperty = H5Pcreate(H5P_DATASET_CREATE);
+  H5Pset_obj_track_times(dsProperty, false);
+
+  //  Create dataset in dataSpace
+  auto dataSet = H5Dcreate(file_id_, std::to_string(entries_counter).c_str(), H5T_NATIVE_UCHAR, dataSpace, H5P_DEFAULT, dsProperty, H5P_DEFAULT);
+
+  //  Write buffer to dataset
+  herr_t writeStatus = H5Dwrite(dataSet, H5T_NATIVE_UCHAR, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+
+  //  Close dataset, data space, and data set property
+  H5Dclose(dataSet);
+  H5Pclose(dsProperty);
+  H5Sclose(dataSpace);
+
+  entries_.emplace_back(SEntryInfo(rcv_timestamp, entries_counter, clock, snd_timestamp, id));
+
+  return (writeStatus >= 0);
 }
 
-void eCAL::eh5::HDF5MeasFileV2::ConnectPreSplitCallback(CallbackFunction /*cb*/)
+void eCAL::eh5::HDF5MeasFileV2::ConnectPreSplitCallback(CallbackFunction cb)
 {
+  cb_pre_split_ = cb;
 }
 
 void eCAL::eh5::HDF5MeasFileV2::DisconnectPreSplitCallback()
 {
+  cb_pre_split_ = nullptr;
+}
+
+bool eCAL::eh5::HDF5MeasFileV2::CreateEntriesTableOfContentsFor()
+{
+  if (!IsOk()) return false;
+
+  const size_t dataSetsSize = entries_.size();
+
+  if (dataSetsSize == 0)  return false;
+
+  hsize_t dims[2] = { dataSetsSize, 5 };
+
+  //  Create DataSpace with rank 2 and size dimension
+  auto dataSpace = H5Screate_simple(2, dims, nullptr);
+
+  //  Create creation property for dataSpace
+  auto dsProperty = H5Pcreate(H5P_DATASET_CREATE);
+  H5Pset_obj_track_times(dsProperty, false);
+
+  auto dataSet = H5Dcreate(file_id_, channel_name_.c_str(), H5T_NATIVE_LLONG, dataSpace, H5P_DEFAULT, dsProperty, H5P_DEFAULT);
+
+  if (dataSet < 0) return false;
+
+  SetAttribute(dataSet, kChnTypeAttrTitle, channel_type_);
+  SetAttribute(dataSet, kChnDescAttrTitle, channel_description_);
+
+  //  Write buffer to dataset
+  herr_t writeStatus = H5Dwrite(dataSet, H5T_NATIVE_LLONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, entries_.data());
+  if (writeStatus < 0) return false;
+
+  //  Close dataset, data space, and data set property
+  H5Dclose(dataSet);
+  H5Pclose(dsProperty);
+  H5Sclose(dataSpace);
+
+  return true;
+
+}
+
+bool eCAL::eh5::HDF5MeasFileV2::SetAttribute(const hid_t& id, const std::string& name, const std::string& value)
+{
+  if (id < 0) return false;
+
+  if (H5Aexists(id, name.c_str()) > 0)
+    H5Adelete(id, name.c_str());
+  //  create scalar dataset
+  hid_t scalarDataset = H5Screate(H5S_SCALAR);
+
+  //  create new string data type
+  hid_t stringDataType = H5Tcopy(H5T_C_S1);
+
+  //  if attribute's value length exists, allocate space for it
+  if (value.length() > 0)
+    H5Tset_size(stringDataType, value.length());
+
+  //  create attribute
+  hid_t attribute = H5Acreate(id, name.c_str(), stringDataType, scalarDataset, H5P_DEFAULT, H5P_DEFAULT);
+
+  if (attribute < 0) return false;
+
+  //  write attribute value to attribute
+  herr_t writeStatus = H5Awrite(attribute, stringDataType, value.c_str());
+  if (writeStatus < 0) return false;
+
+  //  close attribute
+  H5Aclose(attribute);
+  //  close scalar dataset
+  H5Sclose(scalarDataset);
+  //  close string data type
+  H5Tclose(stringDataType);
+
+  return true;
+}
+
+bool eCAL::eh5::HDF5MeasFileV2::GetFileSize(hsize_t& size) const
+{
+  size = 0;
+
+  if (!IsOk()) return false;
+
+  return H5Fget_filesize(file_id_, &size) >= 0;
+}
+
+hid_t eCAL::eh5::HDF5MeasFileV2::Create()
+{
+  if (output_dir_.empty()) return -1;
+
+  if (base_file_name_.empty()) return -1;
+
+  if (IsOk() && !Close()) return -1;
+
+  file_split_counter_++;
+
+  std::string filePath = output_dir_ + "/" + base_file_name_;
+
+  if (file_split_counter_ > 0)
+    filePath += "_" + std::to_string(file_split_counter_);
+
+  filePath += ".hdf5";
+
+  //  create file access property
+  hid_t fileAccessPropery = H5Pcreate(H5P_FILE_ACCESS);
+  //  create file create property
+  hid_t fileCreateProperty = H5Pcreate(H5P_FILE_CREATE);
+
+  //  Create hdf file and get file id
+  file_id_ = H5Fcreate(filePath.c_str(), H5F_ACC_TRUNC, fileCreateProperty, fileAccessPropery);
+
+  if (file_id_ >= 0)
+    SetAttribute(file_id_, kFileVerAttrTitle, "5.0");
+  else
+    file_split_counter_--;
+
+  return file_id_;
 }
 
 bool eCAL::eh5::HDF5MeasFileV2::GetAttributeValue(hid_t obj_id, const std::string& name, std::string& value) const
@@ -364,4 +564,13 @@ bool eCAL::eh5::HDF5MeasFileV2::GetAttributeValue(hid_t obj_id, const std::strin
   }
   //  return read status
   return ret_val;
+}
+
+bool eCAL::eh5::HDF5MeasFileV2::EntryFitsTheFile(const size_t& size) const
+{
+  hsize_t fileSize = 0;
+  herr_t status = GetFileSize(fileSize);
+
+  //  check if buffer fits the current file
+  return (status && ((fileSize + size) <= max_size_per_file_));
 }

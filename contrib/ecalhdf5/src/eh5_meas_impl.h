@@ -218,7 +218,7 @@ namespace eCAL
       *
       * @return               true if succeeds, false if it fails
       **/
-      virtual bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) = 0;
+      virtual bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock, unsigned long long entries_counter = 0) = 0;
 
       typedef std::function<void(void)> CallbackFunction;
       /**
@@ -232,6 +232,7 @@ namespace eCAL
       * @brief Disconnect pre file split callback
       **/
       virtual void DisconnectPreSplitCallback() = 0;
+
     };
   }  // namespace eh5
 }  // namespace eCAL

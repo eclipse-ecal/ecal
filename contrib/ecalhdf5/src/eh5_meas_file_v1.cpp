@@ -54,13 +54,13 @@ eCAL::eh5::HDF5MeasFileV1::~HDF5MeasFileV1()
   // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
   // where the vtable is not created yet or it's destructed.
   HDF5MeasFileV1::Close();
-  entries_.clear();
+  read_entries_.clear();
 }
 
 
 bool eCAL::eh5::HDF5MeasFileV1::Open(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
 {
-  entries_.clear();
+  read_entries_.clear();
 
   if (path.empty())
     return false;
@@ -82,7 +82,7 @@ bool eCAL::eh5::HDF5MeasFileV1::Open(const std::string& path, eAccessType access
     if (channels.size() == 1)
     {
       channel_name_ = *channels.begin();
-      HDF5MeasFileV1::GetEntriesInfo(channel_name_, entries_);
+      HDF5MeasFileV1::GetEntriesInfo(channel_name_, read_entries_);
     }
   }
 
@@ -90,7 +90,6 @@ bool eCAL::eh5::HDF5MeasFileV1::Open(const std::string& path, eAccessType access
   // where the vtable is not created yet or it's destructed.
   return HDF5MeasFileV1::IsOk();
 }
-
 
 bool eCAL::eh5::HDF5MeasFileV1::Close()
 {
@@ -187,9 +186,9 @@ long long eCAL::eh5::HDF5MeasFileV1::GetMinTimestamp(const std::string& /*channe
 {
   long long ret_val = 0;
 
-  if (entries_.empty() == false)
+  if (read_entries_.empty() == false)
   {
-    ret_val = entries_.begin()->RcvTimestamp;
+    ret_val = read_entries_.begin()->RcvTimestamp;
   }
 
   return ret_val;
@@ -199,9 +198,9 @@ long long eCAL::eh5::HDF5MeasFileV1::GetMaxTimestamp(const std::string& /*channe
 {
   long long ret_val = 0;
 
-  if (entries_.empty() == false)
+  if (read_entries_.empty() == false)
   {
-    ret_val = entries_.rbegin()->RcvTimestamp;
+    ret_val = read_entries_.rbegin()->RcvTimestamp;
   }
 
   return ret_val;
@@ -247,13 +246,13 @@ bool eCAL::eh5::HDF5MeasFileV1::GetEntriesInfoRange(const std::string& /*channel
 {
   bool ret_val = false;
 
-  if (entries_.empty() == false)
+  if (read_entries_.empty() == false)
   {
     if (begin == 0) begin = entries.begin()->RcvTimestamp;
     if (end == 0) end = entries.rbegin()->RcvTimestamp;
 
-    const auto& lower = entries_.lower_bound(SEntryInfo(begin, 0, 0));
-    const auto& upper = entries_.upper_bound(SEntryInfo(end, 0, 0));
+    const auto& lower = read_entries_.lower_bound(SEntryInfo(begin, 0, 0));
+    const auto& upper = read_entries_.upper_bound(SEntryInfo(end, 0, 0));
 
     entries.insert(lower, upper);
     ret_val = true;
@@ -304,7 +303,7 @@ void eCAL::eh5::HDF5MeasFileV1::SetFileBaseName(const std::string& /*base_name*/
   ReportUnsupportedAction();
 }
 
-bool eCAL::eh5::HDF5MeasFileV1::AddEntryToFile(const void* /*data*/, const unsigned long long& /*size*/, const long long& /*snd_timestamp*/, const long long& /*rcv_timestamp*/, const std::string& /*channel_name*/, long long /*id*/, long long /*clock*/)
+bool eCAL::eh5::HDF5MeasFileV1::AddEntryToFile(const void* /*data*/, const unsigned long long& /*size*/, const long long& /*snd_timestamp*/, const long long& /*rcv_timestamp*/, const std::string& /*channel_name*/, long long /*id*/, long long /*clock*/, unsigned long long /*entries_counter*/)
 {
   ReportUnsupportedAction();
   return false;

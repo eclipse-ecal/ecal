@@ -47,6 +47,17 @@ namespace eCAL
       explicit HDF5MeasFileV5(const std::string& path, eAccessType access = eAccessType::RDONLY);
 
       /**
+      * @brief Constructor
+      * this will be used while writing/recording
+      *
+      * @param path               input output dir
+      * @param channel_name       input name of the channel that this file will contain its related entries
+      * @param base_file_name     input the base name of the file
+      * @param max_size_per_file  input max size of the file
+      **/
+      explicit HDF5MeasFileV5(const std::string& path, std::string channel_name, std::string base_file_name, size_t max_size_per_file, eAccessType access);
+
+      /**
       * @brief Destructor
       **/
       ~HDF5MeasFileV5();
