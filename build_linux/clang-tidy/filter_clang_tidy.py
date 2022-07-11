@@ -5,9 +5,9 @@ Its default configuration file is 'excludes_clang_tidy.json'.
 This script processes the 'compile_commands.json' file which CMake can generate since v2.8.5.
 `JSON Compilation Database Format Specification <https://clang.llvm.org/docs/JSONCompilationDatabase.html>`__
 
-The CPP files which are located in the directories given by 'excludes_clang_tidy.json' are filtered out.
+The CPP files whose paths contain the directories given by 'excludes_clang_tidy.json' are filtered out.
 The filtering results in two JSON files, one for included and one for excluded commands.
-H files located in this directories are included as '-isystem' instead of '-I',
+H files located in this directories may optionally be included as '-isystem' instead of '-I',
 so that they are excluded from static analysis as well.
 """
 
@@ -15,6 +15,7 @@ import argparse
 import json
 import os
 import sys
+import re
 
 # ------------------------------------------------------------------------------
 
@@ -26,7 +27,6 @@ DEF_ISYSTEM = False
 
 path_config = ''
 path_build = ''
-path_root = ''
 isystem = DEF_ISYSTEM
 commands = []
 excludes = []
@@ -44,17 +44,16 @@ def read_args():
     """
     global path_build
     global path_config
-    global path_root
     global isystem
 
     # display default values
     parser = argparse.ArgumentParser(description='Filter compilation database.',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--build',
-                        help='rel/abs path of the build directory',
+                        help='rel to this script/abs path of the build directory',
                         default=DEF_BUILD)
     parser.add_argument('--config',
-                        help='rel/abs path of the config JSON file',
+                        help='rel to this script/abs path of the config JSON file',
                         default=DEF_CONFIG)
     parser.add_argument('--isystem',
                         action='store_true',
@@ -71,7 +70,7 @@ def read_args():
         print(f'arg :: config  = "{config}"')
         print(f'arg :: isystem = {isystem}')
 
-    # change first working directory to script's directory
+    # first change working directory to script's directory
     os.chdir(os.path.dirname(os.path.abspath(sys.argv[0])))
     path_script = os.getcwd()
 
@@ -79,9 +78,6 @@ def read_args():
         path_build = build
     else:
         path_build = os.path.realpath(os.path.join(path_script, build))
-
-    # assumption: CMake build directory is located in the root directory
-    path_root = os.path.realpath(os.path.join(path_build, '../.'))
 
     if os.path.isabs(config):
         path_config = config
@@ -106,14 +102,9 @@ def read_config():
 
     with open(path_config, 'r') as excludes_file:
         excludes_raw = json.load(excludes_file)
-
-    # The excludes_raw list contains each excluded directory name as a list,
-    # so that a proper platform-dependent string can be obtained easily.
-    # The 'directory' string starts artificially with path separator to prevent partial matches.
     for exclude_raw in excludes_raw:
-        exclude = os.path.sep + os.path.sep.join(exclude_raw)
+        exclude = os.path.sep.join(exclude_raw)
         excludes.append(exclude)
-
     if DEBUG:
         print('EXCLUDED DIRECTORIES:')
         print(json.dumps(excludes, indent = 4, ensure_ascii=False, sort_keys=False))
@@ -147,12 +138,11 @@ def filter_sources():
     for command in commands:
         if DEBUG:
             print(command['file'])
-        # use relative path to remove the common part of the path to increase speed & reliability
-        # path string starts artificially with path separator to prevent partial matches
-        path_str = os.path.sep + os.path.relpath(os.path.dirname(command['file']), path_root)
+
+        path_str = os.path.dirname(command['file'])
         include_folder = True
         for exclude in excludes:
-            if exclude in path_str:
+            if f'{os.path.sep}{exclude}{os.path.sep}' in path_str:
                 include_folder = False
                 break
 
@@ -173,33 +163,29 @@ def filter_headers():
     During the static analysis system headers are ignored unless stated otherwise.
     """
     if isystem:
-        # strip the leading path separator
-        for index, value in enumerate(excludes):
-            excludes[index] = value.lstrip(os.path.sep)
         for command in commands_inc:
+            path_str = command['command']
             for exclude in excludes:
-                exclude_path = os.path.join(path_root, exclude)
-                header_include = f'-I{exclude_path}'
-                if header_include in command['command']:
+                path_mod = re.subn(rf'\s?-I(\S*{os.path.sep}{exclude}{os.path.sep}\S*)\s?', r' -isystem \1 ', path_str)
+                if path_mod[1] > 0:
                     if DEBUG:
-                        print(f"-- {command['command']}")
-                    header_isystem = f'-isystem {exclude_path}'
-                    command['command'] = command['command'].replace(header_include, header_isystem)
+                        print(f"-- {path_str}")
+                    command['command'] = path_mod[0]
                     if DEBUG:
-                        print(f"++ {command['command']}")
+                        print(f"++ {path_mod[1]} replacements:\n++ {path_mod[0]}")
 
 def save_commands():
     """
     Save two JSON files, one for included and one for excluded commands.
     Line counts of these files must match the original commands, minus the extra '[' and ']' lines.
     """
-    PATH_COMPILE_COMMANDS_INC = os.path.join(path_build, 'compile_commands_inc.json')
-    PATH_COMPILE_COMMANDS_EXC = os.path.join(path_build, 'compile_commands_exc.json')
+    path_compile_commands_inc = os.path.join(path_build, 'compile_commands_inc.json')
+    path_compile_commands_exc = os.path.join(path_build, 'compile_commands_exc.json')
 
-    with open(PATH_COMPILE_COMMANDS_INC, 'w') as commands_inc_json:
+    with open(path_compile_commands_inc, 'w') as commands_inc_json:
         json.dump(commands_inc, commands_inc_json, indent=4, ensure_ascii=False, sort_keys=False)
 
-    with open(PATH_COMPILE_COMMANDS_EXC, 'w') as commands_exc_json:
+    with open(path_compile_commands_exc, 'w') as commands_exc_json:
         json.dump(commands_exc, commands_exc_json, indent=4, ensure_ascii=False, sort_keys=False)
 
 def main():
