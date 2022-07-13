@@ -79,16 +79,9 @@ namespace eCAL
     **/
     CMsgSubscriber(CMsgSubscriber&& rhs)
       : CSubscriber(std::move(rhs))
+      , m_cb_callback(std::move(rhs.m_cb_callback))
     {
-      bool has_callback(false);
-
-      {
-        std::lock_guard<std::mutex> guard_rhs(rhs.m_cb_callback_mutex);
-        std::lock_guard<std::mutex> guard(m_cb_callback_mutex);
-        m_cb_callback = std::move(rhs.m_cb_callback);
-        has_callback = (m_cb_callback != nullptr);
-      }
-
+      bool has_callback = (m_cb_callback != nullptr);
 
       if (has_callback)
       {
@@ -105,14 +98,9 @@ namespace eCAL
     CMsgSubscriber& operator=(CMsgSubscriber&& rhs)
     {
       CSubscriber::operator=(std::move(rhs));
-      bool has_callback(false);
 
-      {
-        std::lock_guard<std::mutex> guard_rhs(rhs.m_cb_callback_mutex);
-        std::lock_guard<std::mutex> guard(m_cb_callback_mutex);
-        m_cb_callback = std::move(rhs.m_cb_callback);
-        has_callback = (m_cb_callback != nullptr);
-      }
+      m_cb_callback = std::move(rhs.m_cb_callback);
+      bool has_callback(m_cb_callback != nullptr);
 
       if (has_callback)
       {
@@ -193,11 +181,7 @@ namespace eCAL
       assert(IsCreated());
       RemReceiveCallback();
 
-      {
-        std::lock_guard<std::mutex> guard(m_cb_callback_mutex);
-        m_cb_callback = callback_;
-      }
-
+      m_cb_callback = callback_;
       auto callback = std::bind(&CMsgSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
       return(CSubscriber::AddReceiveCallback(callback));
     }
@@ -209,14 +193,9 @@ namespace eCAL
     **/
     bool RemReceiveCallback()
     {
-      {
-        std::lock_guard<std::mutex> guard(m_cb_callback_mutex);
-        if (m_cb_callback == nullptr) return(false);
-        m_cb_callback = nullptr;
-      }
-
-      bool success = CSubscriber::RemReceiveCallback();
-      return(success);
+      if(m_cb_callback == nullptr) return(false);
+      m_cb_callback = nullptr;
+      return(CSubscriber::RemReceiveCallback());
     }
 
   private:
@@ -226,12 +205,7 @@ namespace eCAL
 
     void ReceiveCallback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_)
     {
-      MsgReceiveCallbackT fn_callback;
-
-      {
-        std::lock_guard<std::mutex> guard(m_cb_callback_mutex);
-        fn_callback = m_cb_callback;
-      }
+      MsgReceiveCallbackT fn_callback(m_cb_callback);
 
       if(fn_callback == nullptr) return;
 
@@ -243,6 +217,5 @@ namespace eCAL
     }
 
     MsgReceiveCallbackT m_cb_callback;
-    std::mutex m_cb_callback_mutex;
   };
 }
