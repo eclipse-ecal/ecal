@@ -25,7 +25,9 @@ Includes
 --------
 
 
-- ``assert.h``
+- ``cassert``
+
+- ``cstring``
 
 - ``ecal/ecal_publisher.h`` (:ref:`file_ecal_core_include_ecal_ecal_publisher.h`)
 
@@ -33,9 +35,9 @@ Includes
 
 - ``functional``
 
-- ``string``
+- ``mutex``
 
-- ``string.h``
+- ``string``
 
 - ``vector``
 
