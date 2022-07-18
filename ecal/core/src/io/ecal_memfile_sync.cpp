@@ -58,6 +58,8 @@ namespace eCAL
 
   bool CSyncMemoryFile::Create(const std::string& base_name_, size_t size_)
   {
+    if (m_created) return false;
+
     m_base_name   = base_name_;
     m_timeout_ack = Config::GetMemfileAckTimeoutMs();
 
@@ -91,28 +93,19 @@ namespace eCAL
     m_memfile.Write(&memfile_hdr, memfile_hdr.hdr_size, 0);
     m_memfile.ReleaseWriteAccess();
 
-    // collect all connected process id's
-    std::vector<std::string> process_id_list;
-    {
-      std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-      for (auto iter : m_event_handle_map)
-      {
-        process_id_list.push_back(iter.first);
-      }
-    }
-
-    // and recreate immediately the new events
-    for (auto process_id : process_id_list)
-    {
-      DisconnectProcess(process_id);
-      ConnectProcess(process_id);
-    }
+    // it's created
+    m_created = true;
 
     return true;
   }
 
   bool CSyncMemoryFile::Destroy()
   {
+    if (!m_created) return false;
+
+    // destruction in progress
+    m_created = false;
+
     if (m_timeout_ack != 0)
     {
       // fire acknowledge events, to unlock blocking send function
@@ -127,14 +120,17 @@ namespace eCAL
     // do not clear the map, because we will use
     // the map keys (process id's) to recreate the
     // events in a subsequent CreateMemFile call
-    for (auto iter = m_event_handle_map.begin(); iter != m_event_handle_map.end(); ++iter)
     {
-      gCloseEvent(iter->second.event_snd);
-      gInvalidateEvent(&iter->second.event_snd);
-      if (m_timeout_ack != 0)
+      std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
+      for (auto iter = m_event_handle_map.begin(); iter != m_event_handle_map.end(); ++iter)
       {
-        gCloseEvent(iter->second.event_ack);
-        gInvalidateEvent(&iter->second.event_ack);
+        gCloseEvent(iter->second.event_snd);
+        gInvalidateEvent(&iter->second.event_snd);
+        if (m_timeout_ack != 0)
+        {
+          gCloseEvent(iter->second.event_ack);
+          gInvalidateEvent(&iter->second.event_ack);
+        }
       }
     }
 
@@ -164,6 +160,8 @@ namespace eCAL
 
   bool CSyncMemoryFile::ConnectProcess(const std::string& process_id_)
   {
+    if (!m_created) return false;
+
     // a local subscriber is registering with it's process id
     // so we have to check the sync events for the
     // memory content read / write access
@@ -205,6 +203,8 @@ namespace eCAL
 
   bool CSyncMemoryFile::DisconnectProcess(const std::string& process_id_)
   {
+    if (!m_created) return false;
+
     // a local subscriber connection timed out
     // we close the associated sync events and
     // remove them from the event handle map
@@ -228,6 +228,8 @@ namespace eCAL
 
   bool CSyncMemoryFile::CheckSize(size_t size_)
   {
+    if (!m_created) return false;
+
     // we recreate a memory file if the file size is to small
     bool file_to_small = m_memfile.MaxDataSize() < (sizeof(SMemFileHeader) + size_);
     if (!m_memfile.IsCreated() || file_to_small)
@@ -252,6 +254,8 @@ namespace eCAL
 
   bool CSyncMemoryFile::Write(const CDataWriterBase::SWriterData& data_)
   {
+    if (!m_created) return false;
+
     // write header and payload into the memory file
 
 #ifndef NDEBUG
@@ -347,6 +351,8 @@ namespace eCAL
 
   void CSyncMemoryFile::SignalWritten()
   {
+    if (!m_created) return;
+
     // fire the publisher events
     // connected subscribers will read the content from the memory file
 

@@ -28,6 +28,7 @@
 
 #include <ecal/ecal_eventhandle.h>
 
+#include <atomic>
 #include <mutex>
 #include <string>
 #include <unordered_map>
@@ -55,10 +56,11 @@ namespace eCAL
     void SignalWritten();
     void BuildMemFileName();
       
-    std::string  m_base_name;
-    std::string  m_memfile_name;
-    CMemoryFile  m_memfile;
-    int          m_timeout_ack;
+    std::string       m_base_name;
+    std::string       m_memfile_name;
+    CMemoryFile       m_memfile;
+    int               m_timeout_ack;
+    std::atomic<bool> m_created;
 
     struct SEventHandlePair
     {
