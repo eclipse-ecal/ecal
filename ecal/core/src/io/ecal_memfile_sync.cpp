@@ -116,10 +116,7 @@ namespace eCAL
       }
     }
 
-    // close all events and invalidate them
-    // do not clear the map, because we will use
-    // the map keys (process id's) to recreate the
-    // events in a subsequent CreateMemFile call
+    // close all events, invalidate them and clear the map
     {
       std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
       for (auto iter = m_event_handle_map.begin(); iter != m_event_handle_map.end(); ++iter)
@@ -132,6 +129,7 @@ namespace eCAL
           gInvalidateEvent(&iter->second.event_ack);
         }
       }
+      m_event_handle_map.clear();
     }
 
     // destroy the file
@@ -242,13 +240,7 @@ namespace eCAL
       size_t memfile_reserve = Config::GetMemfileOverprovisioningPercentage();
       size_t memfile_size    = sizeof(SMemFileHeader) + size_ + static_cast<size_t>((static_cast<float>(memfile_reserve) / 100.0f) * static_cast<float>(size_));
 
-      // destroy existing memory file object
-      Destroy();
-
-      // and create a new one
-      Create(m_base_name, memfile_size);
-
-      // collect all current connected process id's
+      // collect id's of the currently connected processes
       std::vector<std::string> process_id_list;
       {
         std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
@@ -258,10 +250,15 @@ namespace eCAL
         }
       }
 
-      // and recreate immediately the new events
+      // destroy existing memory file object
+      Destroy();
+
+      // create a new one
+      Create(m_base_name, memfile_size);
+
+      // reconnect processes
       for (auto process_id : process_id_list)
       {
-        DisconnectProcess(process_id);
         ConnectProcess(process_id);
       }
 
