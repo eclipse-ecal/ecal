@@ -241,10 +241,30 @@ namespace eCAL
       // estimate size of memory file
       size_t memfile_reserve = Config::GetMemfileOverprovisioningPercentage();
       size_t memfile_size    = sizeof(SMemFileHeader) + size_ + static_cast<size_t>((static_cast<float>(memfile_reserve) / 100.0f) * static_cast<float>(size_));
+
       // destroy existing memory file object
       Destroy();
+
       // and create a new one
       Create(m_base_name, memfile_size);
+
+      // collect all current connected process id's
+      std::vector<std::string> process_id_list;
+      {
+        std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
+        for (auto iter : m_event_handle_map)
+        {
+          process_id_list.push_back(iter.first);
+        }
+      }
+
+      // and recreate immediately the new events
+      for (auto process_id : process_id_list)
+      {
+        DisconnectProcess(process_id);
+        ConnectProcess(process_id);
+      }
+
       // return true to trigger registration and immediately inform listening subscribers
       return true;
     }
