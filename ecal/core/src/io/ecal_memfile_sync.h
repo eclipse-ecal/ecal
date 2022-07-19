@@ -53,9 +53,11 @@ namespace eCAL
     std::string GetName();
 
   protected:
+    bool RecreateFile(size_t size_);
     void SignalWritten();
     void BuildMemFileName();
-      
+    void DisconnectAllProcesses();
+
     std::string       m_base_name;
     std::string       m_memfile_name;
     CMemoryFile       m_memfile;

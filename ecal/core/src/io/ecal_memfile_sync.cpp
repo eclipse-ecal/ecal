@@ -63,17 +63,17 @@ namespace eCAL
     m_base_name   = base_name_;
     m_timeout_ack = Config::GetMemfileAckTimeoutMs();
 
-    // build unique memfile name
+    // build unique memory file name
     BuildMemFileName();
 
     // create new memory file object
     // with additional space for SMemFileHeader
     size_t memfile_size = sizeof(SMemFileHeader) + size_;
-    // check for minsize
+    // check for minimal size
     size_t minsize = Config::GetMemfileMinsizeBytes();
     if (memfile_size < minsize) memfile_size = minsize;
 
-    // create it
+    // create the memory file
     if (!m_memfile.Create(m_memfile_name.c_str(), true, memfile_size))
     {
       // log it
@@ -103,34 +103,14 @@ namespace eCAL
   {
     if (!m_created) return false;
 
-    // destruction in progress
+    // state destruction in progress
     m_created = false;
 
-    if (m_timeout_ack != 0)
-    {
-      // fire acknowledge events, to unlock blocking send function
-      std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-      for (auto iter : m_event_handle_map)
-      {
-        gSetEvent(iter.second.event_ack);
-      }
-    }
+    // reset memory file name
+    m_memfile_name.clear();
 
-    // close all events, invalidate them and clear the map
-    {
-      std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-      for (auto iter = m_event_handle_map.begin(); iter != m_event_handle_map.end(); ++iter)
-      {
-        gCloseEvent(iter->second.event_snd);
-        gInvalidateEvent(&iter->second.event_snd);
-        if (m_timeout_ack != 0)
-        {
-          gCloseEvent(iter->second.event_ack);
-          gInvalidateEvent(&iter->second.event_ack);
-        }
-      }
-      m_event_handle_map.clear();
-    }
+    // disconnect all processes
+    DisconnectAllProcesses();
 
     // destroy the file
     if (!m_memfile.Destroy(true))
@@ -139,9 +119,6 @@ namespace eCAL
       // log it
       Logging::Log(log_level_debug2, std::string(m_base_name + "::CSyncMemoryFile::Destroy - FAILED : ") + m_memfile.Name());
 #endif
-      // reset memory file name
-      m_memfile_name.clear();
-
       return false;
     }
 
@@ -149,10 +126,6 @@ namespace eCAL
     // log it
     Logging::Log(log_level_debug2, std::string(m_base_name + "::CSyncMemoryFile::Destroy - SUCCESS : ") + m_memfile.Name());
 #endif
-
-    // reset memory file name
-    m_memfile_name.clear();
-
     return true;
   }
 
@@ -230,7 +203,7 @@ namespace eCAL
 
     // we recreate a memory file if the file size is to small
     bool file_to_small = m_memfile.MaxDataSize() < (sizeof(SMemFileHeader) + size_);
-    if (!m_memfile.IsCreated() || file_to_small)
+    if (file_to_small)
     {
 #ifndef NDEBUG
       // log it
@@ -240,27 +213,8 @@ namespace eCAL
       size_t memfile_reserve = Config::GetMemfileOverprovisioningPercentage();
       size_t memfile_size    = sizeof(SMemFileHeader) + size_ + static_cast<size_t>((static_cast<float>(memfile_reserve) / 100.0f) * static_cast<float>(size_));
 
-      // collect id's of the currently connected processes
-      std::vector<std::string> process_id_list;
-      {
-        std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-        for (auto iter : m_event_handle_map)
-        {
-          process_id_list.push_back(iter.first);
-        }
-      }
-
-      // destroy existing memory file object
-      Destroy();
-
-      // create a new one
-      Create(m_base_name, memfile_size);
-
-      // reconnect processes
-      for (auto process_id : process_id_list)
-      {
-        ConnectProcess(process_id);
-      }
+      // recreate the file
+      if (!RecreateFile(memfile_size)) return false;
 
       // return true to trigger registration and immediately inform listening subscribers
       return true;
@@ -315,12 +269,9 @@ namespace eCAL
       Logging::Log(log_level_debug2, m_base_name + "::CSyncMemoryFile::Write::Open - FAILED");
 #endif
 
-      // store size of the memory file
-      size_t memfile_size = m_memfile.MaxDataSize();
-      // destroy and
-      Destroy();
-      // recreate it with the same size
-      if (!Create(m_base_name, memfile_size)) return false;
+      // try to recreate the memory file
+      if (!RecreateFile(m_memfile.MaxDataSize())) return false;
+
       // then reopen
       opened = m_memfile.GetWriteAccess(PUB_MEMFILE_OPEN_TO);
       // still no chance ? hell .... we give up
@@ -364,6 +315,33 @@ namespace eCAL
   std::string CSyncMemoryFile::GetName()
   {
     return m_memfile_name;
+  }
+
+  bool CSyncMemoryFile::RecreateFile(size_t size_)
+  {
+    // collect id's of the currently connected processes
+    std::vector<std::string> process_id_list;
+    {
+      std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
+      for (auto iter : m_event_handle_map)
+      {
+        process_id_list.push_back(iter.first);
+      }
+    }
+
+    // destroy existing memory file object
+    Destroy();
+
+    // create a new one
+    if (!Create(m_base_name, size_)) return false;
+
+    // reconnect processes
+    for (auto process_id : process_id_list)
+    {
+      ConnectProcess(process_id);
+    }
+
+    return true;
   }
 
   void CSyncMemoryFile::SignalWritten()
@@ -425,7 +403,36 @@ namespace eCAL
     std::replace(m_memfile_name.begin(), m_memfile_name.end(), '\\', '_');
     std::replace(m_memfile_name.begin(), m_memfile_name.end(), '/', '_');
 
-    // append "_shm" for debugging puposes
+    // append "_shm" for debugging purposes
     m_memfile_name += "_shm";
+  }
+
+  void CSyncMemoryFile::DisconnectAllProcesses()
+  {
+    if (m_timeout_ack != 0)
+    {
+      // fire acknowledge events, to unlock blocking send function
+      std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
+      for (auto iter : m_event_handle_map)
+      {
+        gSetEvent(iter.second.event_ack);
+      }
+    }
+
+    // close all events, invalidate them and clear the map
+    {
+      std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
+      for (auto iter = m_event_handle_map.begin(); iter != m_event_handle_map.end(); ++iter)
+      {
+        gCloseEvent(iter->second.event_snd);
+        gInvalidateEvent(&iter->second.event_snd);
+        if (m_timeout_ack != 0)
+        {
+          gCloseEvent(iter->second.event_ack);
+          gInvalidateEvent(&iter->second.event_ack);
+        }
+      }
+      m_event_handle_map.clear();
+    }
   }
 }
