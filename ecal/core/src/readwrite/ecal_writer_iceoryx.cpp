@@ -66,7 +66,7 @@ namespace eCAL
 
     info_.send_size_max        = -1;
     
-    return info;
+    return info_;
   }
 
   bool CDataWriterSHM::Create(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
