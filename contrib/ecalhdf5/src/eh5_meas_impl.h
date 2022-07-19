@@ -87,6 +87,29 @@ namespace eCAL
       virtual void SetMaxSizePerFile(size_t size) = 0;
 
       /**
+      * @brief Whether each Channel shall be writte in its own file
+      * 
+      * When enabled, data is clustered by channel and each channel is written
+      * to its own file. The filenames will consist of the basename and the 
+      * channel name.
+      * 
+      * @return true, if one file per channel is enabled
+      */
+      virtual bool IsOneFilePerChannelEnabled() const = 0;
+
+      /**
+      * @brief Enable / disable the creation of one individual file per channel
+      * 
+      * When enabled, data is clustered by channel and each channel is written
+      * to its own file. The filenames will consist of the basename and the 
+      * channel name.
+      * 
+      * @param enabled   Whether one file shall be created per channel
+      */
+      virtual void SetOneFilePerChannelEnabled(bool enabled) = 0;
+
+
+      /**
       * @brief Get the available channel names of the current opened file / measurement
       *
       * @return       channel names

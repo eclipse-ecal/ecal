@@ -42,6 +42,7 @@ namespace eCAL
       , flushing_                    (false)
     {
       hdf5_writer_ = std::make_unique<eCAL::eh5::HDF5Meas>();
+      hdf5_writer_->SetOneFilePerChannelEnabled(job_config.GetOneFilePerTopicEnabled());
     }
 
     Hdf5WriterThread::~Hdf5WriterThread()

@@ -39,7 +39,6 @@
 #include <ecal_utils/str_convert.h>
 
 constexpr unsigned int kDefaultMaxFileSizeMB = 1000;
-constexpr char*        FILE_VERSION          = "5.0";
 
 eCAL::eh5::HDF5MeasFileWriterV5::HDF5MeasFileWriterV5()
   : cb_pre_split_      (nullptr)
@@ -103,12 +102,8 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::IsOk() const
 
 std::string eCAL::eh5::HDF5MeasFileWriterV5::GetFileVersion() const
 {
-  std::string version;
-  if (files_.empty() == false)
-  {
-    version = files_.front()->GetFileVersion();
-  }
-  return version;
+  // UNSUPPORTED FUNCTION
+  return "";
 }
 
 size_t eCAL::eh5::HDF5MeasFileWriterV5::GetMaxSizePerFile() const
@@ -121,31 +116,31 @@ void eCAL::eh5::HDF5MeasFileWriterV5::SetMaxSizePerFile(size_t size)
   max_size_per_file_ = size * 1024 * 1024;
 }
 
+bool eCAL::eh5::HDF5MeasFileWriterV5::IsOneFilePerChannelEnabled() const
+{
+  return false;
+}
+
+void eCAL::eh5::HDF5MeasFileWriterV5::SetOneFilePerChannelEnabled(bool enabled)
+{
+}
+
 std::set<std::string> eCAL::eh5::HDF5MeasFileWriterV5::GetChannelNames() const
 {
-  std::set<std::string> channels;
-  for (const auto& chn : channels_info_)
-    channels.insert(chn.first);
-
-  return channels;
+  // UNSUPPORTED FUNCTION
+  return {};
 }
 
 bool eCAL::eh5::HDF5MeasFileWriterV5::HasChannel(const std::string& channel_name) const
 {
-  return channels_info_.count(channel_name) != 0;
+  // UNSUPPORTED FUNCTION
+  return false;
 }
 
 std::string eCAL::eh5::HDF5MeasFileWriterV5::GetChannelDescription(const std::string& channel_name) const
 {
-  std::string ret_val;
-
-  const auto& found = channels_info_.find(channel_name);
-
-  if (found != channels_info_.end())
-  {
-    ret_val = found->second.description;
-  }
-  return ret_val;
+  // UNSUPPORTED FUNCTION
+  return "";
 }
 
 void eCAL::eh5::HDF5MeasFileWriterV5::SetChannelDescription(const std::string& channel_name, const std::string& description)
@@ -155,15 +150,8 @@ void eCAL::eh5::HDF5MeasFileWriterV5::SetChannelDescription(const std::string& c
 
 std::string eCAL::eh5::HDF5MeasFileWriterV5::GetChannelType(const std::string& channel_name) const
 {
-  std::string ret_val;
-
-  const auto& found = channels_info_.find(channel_name);
-
-  if (found != channels_info_.end())
-  {
-    ret_val = found->second.type;
-  }
-  return ret_val;
+  // UNSUPPORTED FUNCTION
+  return "";
 }
 
 void eCAL::eh5::HDF5MeasFileWriterV5::SetChannelType(const std::string& channel_name, const std::string& type)
@@ -173,95 +161,38 @@ void eCAL::eh5::HDF5MeasFileWriterV5::SetChannelType(const std::string& channel_
 
 long long eCAL::eh5::HDF5MeasFileWriterV5::GetMinTimestamp(const std::string& channel_name) const
 {
-  long long ret_val = 0;
-
-  const auto& found = entries_by_chn_.find(channel_name);
-
-  if (found != entries_by_chn_.end())
-  {
-    if (found->second.empty() == false)
-    {
-      ret_val = found->second.begin()->RcvTimestamp;
-    }
-  }
-
-  return ret_val;
+  // UNSUPPORTED FUNCTION
+  return -1;
 }
 
 long long eCAL::eh5::HDF5MeasFileWriterV5::GetMaxTimestamp(const std::string& channel_name) const
 {
-  long long ret_val = 0;
-
-  const auto& found = entries_by_chn_.find(channel_name);
-
-  if (found != entries_by_chn_.end())
-  {
-    if (found->second.empty() == false)
-    {
-      ret_val = found->second.rbegin()->RcvTimestamp;
-    }
-  }
-
-  return ret_val;
+  // UNSUPPORTED FUNCTION
+  return -1;
 }
 
 bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const
 {
-  entries.clear();
-
-  const auto& found = entries_by_chn_.find(channel_name);
-
-  if (found != entries_by_chn_.end())
-  {
-    entries = found->second;
-  }
-
-  return entries.empty() == false;
+  // UNSUPPORTED FUNCTION
+  return false;
 }
 
 bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const
 {
-  bool ret_val = false;
-
-  entries.clear();
-
-  const auto& found = entries_by_chn_.find(channel_name);
-
-  if (found != entries_by_chn_.end())
-  {
-    if (begin == 0) begin = entries.begin()->RcvTimestamp;
-    if (end == 0) end = entries.rbegin()->RcvTimestamp;
-
-    const auto& lower = found->second.lower_bound(SEntryInfo(begin, 0, 0));
-    const auto& upper = found->second.upper_bound(SEntryInfo(end, 0, 0));
-
-    entries.insert(lower, upper);
-    ret_val = true;
-  }
-
-  return ret_val;
+  // UNSUPPORTED FUNCTION
+  return false;
 }
 
 bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntryDataSize(long long entry_id, size_t& size) const
 {
-  auto ret_val = false;
-  const auto& found = entries_by_id_.find(entry_id);
-  if (found != entries_by_id_.end())
-  {
-    ret_val = found->second.reader->GetEntryDataSize(found->second.file_id, size);
-  }
-  return ret_val;
+  // UNSUPPORTED FUNCTION
+  return false;
 }
 
 bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntryData(long long entry_id, void* data) const
 {
-  auto ret_val = false;
-  const auto& found = entries_by_id_.find(entry_id);
-  if (found != entries_by_id_.end())
-  {
-    ret_val = found->second.reader->GetEntryData(found->second.file_id, data);
-  }
-  return ret_val;
+  // UNSUPPORTED FUNCTION
+  return false;
 }
 
 void eCAL::eh5::HDF5MeasFileWriterV5::SetFileBaseName(const std::string& base_name)
@@ -321,70 +252,6 @@ void eCAL::eh5::HDF5MeasFileWriterV5::ConnectPreSplitCallback(CallbackFunction c
 void eCAL::eh5::HDF5MeasFileWriterV5::DisconnectPreSplitCallback()
 {
   cb_pre_split_ = nullptr;
-}
-
-std::list<std::string> eCAL::eh5::HDF5MeasFileWriterV5::GetHdfFiles(const std::string& path) const
-{
-  std::list<std::string> paths;
-#ifdef WIN32
-  std::string dpath = path + "/*.*";
-  std::wstring dpath_w = EcalUtils::StrConvert::Utf8ToWide(dpath);
-
-  WIN32_FIND_DATAW fd;
-  HANDLE hFind = ::FindFirstFileW(dpath_w.c_str(), &fd);
-  if (hFind != INVALID_HANDLE_VALUE)
-  {
-    do {
-      std::wstring file_name_w(fd.cFileName);
-      std::string file_name_utf8 = EcalUtils::StrConvert::WideToUtf8(file_name_w);
-
-      if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0)
-      {
-        if (HasHdf5Extension(file_name_utf8) == true)
-        {
-          paths.push_back(path + "/" + std::string(file_name_utf8.begin(), file_name_utf8.end()));
-        }
-      }
-      else
-      {
-        if (file_name_utf8 != "." && file_name_utf8 != "..")
-        {
-          paths.splice(paths.end(), GetHdfFiles(path + "/" + std::string(file_name_utf8.begin(), file_name_utf8.end())));
-        }
-      }
-    } while (::FindNextFileW(hFind, &fd));
-    ::FindClose(hFind);
-  }
-#else
-  struct dirent* de = nullptr;
-  DIR* dir = nullptr;
-
-  dir = opendir(path.c_str());
-
-  if (dir != nullptr)
-  {
-    de = readdir(dir);
-    while (de != nullptr)
-    {
-      std::string d_name = de->d_name;
-      if (d_name != "." && d_name != "..")
-      {
-        if (de->d_type == DT_DIR)
-        {
-          paths.splice(paths.end(), GetHdfFiles(path + "/" + d_name));
-        }
-        else
-        {
-          if (HasHdf5Extension(d_name) == true)
-            paths.push_back(path + "/" + d_name);
-        }
-      }
-      de = readdir(dir);
-    }
-    closedir(dir);
-}
-#endif  //  WIN32
-  return paths;
 }
 
 hid_t eCAL::eh5::HDF5MeasFileWriterV5::Create()

@@ -32,8 +32,6 @@
 
 #include "hdf5.h"
 
-#include "ecalhdf5/eh5_meas.h"
-
 namespace eCAL
 {
   namespace eh5
@@ -95,6 +93,28 @@ namespace eCAL
       * @param size   maximum size in MB
       **/
       void SetMaxSizePerFile(size_t size) override;
+
+      /**
+      * @brief Whether each Channel shall be writte in its own file
+      * 
+      * When enabled, data is clustered by channel and each channel is written
+      * to its own file. The filenames will consist of the basename and the 
+      * channel name.
+      * 
+      * @return true, if one file per channel is enabled
+      */
+      bool IsOneFilePerChannelEnabled() const override;
+
+      /**
+      * @brief Enable / disable the creation of one individual file per channel
+      * 
+      * When enabled, data is clustered by channel and each channel is written
+      * to its own file. The filenames will consist of the basename and the 
+      * channel name.
+      * 
+      * @param enabled   Whether one file shall be created per channel
+      */
+      void SetOneFilePerChannelEnabled(bool enabled) override;
 
       /**
       * @brief Get the available channel names of the current opened file / measurement
@@ -244,42 +264,6 @@ namespace eCAL
       void DisconnectPreSplitCallback() override;
 
     protected:
-      struct ChannelInfo
-      {
-        std::string type;
-        std::string description;
-        std::list<const eCAL::eh5::HDF5Meas*> files;
-
-        ChannelInfo() {}
-        ChannelInfo(const std::string& type_, const std::string& description_)
-          : type(type_)
-          , description(description_)
-        {}
-      };
-
-      struct EntryInfo
-      {
-        long long                     file_id;
-        const eCAL::eh5::HDF5Meas* reader;
-
-        EntryInfo() : file_id(0), reader(nullptr) {}
-
-        EntryInfo(long long file_id_, const eCAL::eh5::HDF5Meas* reader_)
-          : file_id(file_id_)
-          , reader(reader_)
-        {}
-      };
-
-      typedef std::list<eCAL::eh5::HDF5Meas*>               HDF5Files;
-      typedef std::unordered_map<std::string, ChannelInfo>  ChannelInfoUMap;
-      typedef std::unordered_map<long long, EntryInfo>      EntriesByIdUMap;
-      typedef std::unordered_map<std::string, EntryInfoSet> EntriesByChannelUMap;
-
-      HDF5Files              files_;
-      ChannelInfoUMap        channels_info_;
-      EntriesByIdUMap        entries_by_id_;
-      EntriesByChannelUMap   entries_by_chn_;
-
       struct Channel
       {
         std::string   Description;
@@ -297,15 +281,6 @@ namespace eCAL
       int                      file_split_counter_;
       unsigned long long       entries_counter_;
       size_t                   max_size_per_file_;
-
-      std::list<std::string> GetHdfFiles(const std::string& path) const;
-
-      static inline bool HasHdf5Extension(const std::string& str)
-      {
-        std::string end(".hdf5");
-        if (end.size() > str.size()) return false;
-        return std::equal(end.rbegin(), end.rend(), str.rbegin());
-      }
 
       /**
       * @brief Creates the actual file

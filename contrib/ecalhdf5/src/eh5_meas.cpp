@@ -206,6 +206,23 @@ void eCAL::eh5::HDF5Meas::SetMaxSizePerFile(size_t size)
   }
 }
 
+bool eCAL::eh5::HDF5Meas::IsOneFilePerChannelEnabled() const
+{
+  if (hdf_meas_impl_ != nullptr)
+  {
+    return hdf_meas_impl_->IsOneFilePerChannelEnabled();
+  }
+  return false;
+}
+
+void eCAL::eh5::HDF5Meas::SetOneFilePerChannelEnabled(bool enabled)
+{
+  if (hdf_meas_impl_ != nullptr)
+  {
+    hdf_meas_impl_->SetOneFilePerChannelEnabled(enabled);
+  }
+}
+
 std::set<std::string> eCAL::eh5::HDF5Meas::GetChannelNames() const
 {
   std::set<std::string> ret_val;

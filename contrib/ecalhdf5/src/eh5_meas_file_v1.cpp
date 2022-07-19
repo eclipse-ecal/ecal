@@ -132,6 +132,17 @@ void eCAL::eh5::HDF5MeasFileV1::SetMaxSizePerFile(size_t /*size*/)
   ReportUnsupportedAction();
 }
 
+bool eCAL::eh5::HDF5MeasFileV1::IsOneFilePerChannelEnabled() const
+{
+  ReportUnsupportedAction();
+  return false;
+}
+
+void eCAL::eh5::HDF5MeasFileV1::SetOneFilePerChannelEnabled(bool enabled)
+{
+  ReportUnsupportedAction();
+}
+
 std::set<std::string> eCAL::eh5::HDF5MeasFileV1::GetChannelNames() const
 {
   std::set<std::string> channels;
