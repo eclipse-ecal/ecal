@@ -54,8 +54,10 @@ namespace eCAL
     Destroy();
   }
 
-  void CDataWriterTCP::GetInfo(SWriterInfo info_)
+  SWriterInfo CDataWriterTCP::GetInfo()
   {
+    SWriterInfo info_;
+
     info_.name                 = "tcp";
     info_.description          = "tcp data writer";
 
@@ -66,6 +68,8 @@ namespace eCAL
     info_.has_qos_reliability  = false;
 
     info_.send_size_max        = -1;
+
+    return info_;
   }
 
   bool CDataWriterTCP::Create(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_)

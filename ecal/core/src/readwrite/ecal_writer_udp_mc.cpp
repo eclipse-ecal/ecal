@@ -39,8 +39,10 @@ namespace eCAL
     Destroy();
   }
 
-  void CDataWriterUdpMC::GetInfo(SWriterInfo info_)
+  SWriterInfo CDataWriterUdpMC::GetInfo()
   {
+    SWriterInfo info_;
+
     info_.name                 = "udp";
     info_.description          = "UDP multicast data writer";
 
@@ -51,6 +53,8 @@ namespace eCAL
     info_.has_qos_reliability  = false;
 
     info_.send_size_max        = -1;
+
+    return info_;
   }
 
   bool CDataWriterUdpMC::Create(const std::string & host_name_, const std::string & topic_name_, const std::string & topic_id_)

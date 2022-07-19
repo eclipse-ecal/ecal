@@ -51,8 +51,10 @@ namespace eCAL
     Destroy();
   }
 
-  void CDataWriterSHM::GetInfo(SWriterInfo info_)
+  SWriterInfo CDataWriterSHM::GetInfo()
   {
+    SWriterInfo info_;
+    
     info_.name                 = "iceoryx";
     info_.description          = "Iceoryx data writer";
 
@@ -63,6 +65,8 @@ namespace eCAL
     info_.has_qos_reliability  = false;
 
     info_.send_size_max        = -1;
+    
+    return info;
   }
 
   bool CDataWriterSHM::Create(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
