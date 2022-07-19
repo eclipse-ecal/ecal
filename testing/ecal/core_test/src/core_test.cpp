@@ -72,13 +72,14 @@ TEST(Core, LeakedPubSub)
   std::thread pub_t([&]() {
     while (!pub_stop)
     {
-      int y = 0;
       pub.Send("Hello World");
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
       // some kind of busy waiting....
-      for (int i = 0; i < 100000; i++)
-      {
-        y += i;
-      }
+      //int y = 0;
+      //for (int i = 0; i < 100000; i++)
+      //{
+      //  y += i;
+      //}
     }
   });
 
