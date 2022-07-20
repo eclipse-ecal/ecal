@@ -10,7 +10,6 @@ on:
       - '**.hxx'
       - '**.c'
       - '**.hpp'
-      - '**/CMakeLists.txt'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

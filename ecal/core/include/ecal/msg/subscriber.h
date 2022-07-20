@@ -27,11 +27,12 @@
 #include <ecal/ecal_publisher.h>
 #include <ecal/ecal_subscriber.h>
 
+#include <cassert>
+#include <cstring>
+#include <functional>
+#include <mutex>
 #include <string>
 #include <vector>
-#include <functional>
-#include <assert.h>
-#include <string.h>
 
 namespace eCAL
 {
@@ -48,7 +49,7 @@ namespace eCAL
     /**
      * @brief  Constructor. 
     **/
-    CMsgSubscriber() : CSubscriber() , m_cb_active(false)
+    CMsgSubscriber() : CSubscriber()
     {
     }
 
@@ -59,7 +60,7 @@ namespace eCAL
      * @param topic_type_  Type name (optional for type checking). 
      * @param topic_desc_  Type description (optional for description checking).
     **/
-    CMsgSubscriber(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "") : CSubscriber(topic_name_, topic_type_, topic_desc_ ), m_cb_active(false)
+    CMsgSubscriber(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "") : CSubscriber(topic_name_, topic_type_, topic_desc_ )
     {
     }
 
@@ -78,15 +79,13 @@ namespace eCAL
     **/
     CMsgSubscriber(CMsgSubscriber&& rhs)
       : CSubscriber(std::move(rhs))
-      , m_cb_active(rhs.m_cb_active)
       , m_cb_callback(std::move(rhs.m_cb_callback))
     {
-      //m_cb_active = rhs.m_cb_active;
-      rhs.m_cb_active = false;
+      bool has_callback = (m_cb_callback != nullptr);
 
-      if (m_cb_active)
+      if (has_callback)
       {
-        // The callback bound to the CSubscriber belongs to rhs, bind to this callback instead;
+        // the callback bound to the CSubscriber belongs to rhs, bind to this callback instead
         CSubscriber::RemReceiveCallback();
         auto callback = std::bind(&CMsgSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
         CSubscriber::AddReceiveCallback(callback);
@@ -100,14 +99,12 @@ namespace eCAL
     {
       CSubscriber::operator=(std::move(rhs));
 
-      m_cb_active = rhs.m_cb_active;
-      rhs.m_cb_active = false;
-
       m_cb_callback = std::move(rhs.m_cb_callback);
+      bool has_callback(m_cb_callback != nullptr);
 
-      if (m_cb_active)
+      if (has_callback)
       {
-        // The callback bound to the CSubscriber belongs to rhs, bind to this callback instead;
+        // the callback bound to the CSubscriber belongs to rhs, bind to this callback instead;
         CSubscriber::RemReceiveCallback();
         auto callback = std::bind(&CMsgSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
         CSubscriber::AddReceiveCallback(callback);
@@ -183,8 +180,7 @@ namespace eCAL
     {
       assert(IsCreated());
       RemReceiveCallback();
-      if(m_cb_active == true) return(false);
-      m_cb_active   = true;
+
       m_cb_callback = callback_;
       auto callback = std::bind(&CMsgSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2);
       return(CSubscriber::AddReceiveCallback(callback));
@@ -197,8 +193,8 @@ namespace eCAL
     **/
     bool RemReceiveCallback()
     {
-      if(m_cb_active == false) return(false);
-      m_cb_active = false;
+      if(m_cb_callback == nullptr) return(false);
+      m_cb_callback = nullptr;
       return(CSubscriber::RemReceiveCallback());
     }
 
@@ -209,20 +205,17 @@ namespace eCAL
 
     void ReceiveCallback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_)
     {
-      if(m_cb_active == false) return;
-      assert(m_cb_callback != nullptr);
+      MsgReceiveCallbackT fn_callback(m_cb_callback);
+
+      if(fn_callback == nullptr) return;
 
       T msg;
       if(Deserialize(msg, data_->buf, data_->size))
       {
-        if(m_cb_callback != nullptr)
-        {
-          (m_cb_callback)(topic_name_, msg, data_->time, data_->clock, data_->id);
-        }
+        (fn_callback)(topic_name_, msg, data_->time, data_->clock, data_->id);
       }
     }
 
-    bool                 m_cb_active;
-    MsgReceiveCallbackT  m_cb_callback;
+    MsgReceiveCallbackT m_cb_callback;
   };
 }
