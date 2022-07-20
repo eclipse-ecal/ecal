@@ -25,6 +25,8 @@
 
 #include <ecal_utils/filesystem.h>
 
+#include <utility>
+
 #include "eh5_meas_dir.h"
 #include "eh5_meas_file_v1.h"
 #include "eh5_meas_file_v2.h"
@@ -40,8 +42,7 @@ namespace
 }
 
 eCAL::eh5::HDF5Meas::HDF5Meas()
-{
-}
+= default;
 
 eCAL::eh5::HDF5Meas::HDF5Meas(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
 {
@@ -49,8 +50,7 @@ eCAL::eh5::HDF5Meas::HDF5Meas(const std::string& path, eAccessType access /*= eA
 }
 
 eCAL::eh5::HDF5Meas::~HDF5Meas()
-{
-}
+= default;
 
 bool eCAL::eh5::HDF5Meas::Open(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
 {
@@ -77,7 +77,7 @@ bool eCAL::eh5::HDF5Meas::Open(const std::string& path, eAccessType access /*= e
   {
     hdf_meas_impl_ = std::make_unique<HDF5MeasFileV5>(path, access);
 
-    if (hdf_meas_impl_->IsOk() == false)
+    if (!hdf_meas_impl_->IsOk())
     {
       hdf_meas_impl_.reset();
       return false;
@@ -85,7 +85,7 @@ bool eCAL::eh5::HDF5Meas::Open(const std::string& path, eAccessType access /*= e
 
     // no file version at all ?
     auto file_version = GetFileVersion();
-    if (file_version.empty() == true)
+    if (file_version.empty())
     {
       hdf_meas_impl_.reset();
       return false;
@@ -360,7 +360,7 @@ void eCAL::eh5::HDF5Meas::ConnectPreSplitCallback(CallbackFunction cb)
 {
   if (hdf_meas_impl_)
   {
-    return hdf_meas_impl_->ConnectPreSplitCallback(cb);
+    return hdf_meas_impl_->ConnectPreSplitCallback(std::move(cb));
   }
 }
 

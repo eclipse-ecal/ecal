@@ -48,7 +48,7 @@ namespace eCAL
       /**
       * @brief Destructor
       **/
-      ~HDF5MeasFileV1();
+      ~HDF5MeasFileV1() override;
 
       /**
       * @brief Open file
@@ -279,12 +279,12 @@ namespace eCAL
       *
       * @return  true if succeeds, false if it fails
       **/
-      bool GetAttributeValue(hid_t obj_id, const std::string& name, std::string& value) const;
+      static bool GetAttributeValue(hid_t obj_id, const std::string& name, std::string& value) ;
 
       /**
       * @brief Reports the use of an unsupported interface method.
       **/
-      void ReportUnsupportedAction() const;
+      static void ReportUnsupportedAction() ;
     };
 
   }  // namespace eh5

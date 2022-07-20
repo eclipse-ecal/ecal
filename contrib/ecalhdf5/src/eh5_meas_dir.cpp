@@ -30,7 +30,6 @@
 #include <dirent.h>
 #endif //WIN32
 
-#include <string.h>
 #include <string>
 #include <list>
 #include <iostream>
@@ -135,7 +134,7 @@ bool eCAL::eh5::HDF5MeasDir::IsOk() const
   {
   case eCAL::eh5::RDONLY:
   //case eCAL::eh5::RDWR:
-    return file_readers_.empty() == false && entries_by_id_.empty() == false;
+    return !file_readers_.empty() && !entries_by_id_.empty();
   case eCAL::eh5::CREATE:
     // TODO: Return true if output dir exists, false otherwise
     return true;
@@ -147,7 +146,7 @@ bool eCAL::eh5::HDF5MeasDir::IsOk() const
 std::string eCAL::eh5::HDF5MeasDir::GetFileVersion() const
 {
   std::string version;
-  if (file_readers_.empty() == false)
+  if (!file_readers_.empty())
   {
     version = file_readers_.front()->GetFileVersion();
   }
@@ -237,7 +236,7 @@ long long eCAL::eh5::HDF5MeasDir::GetMinTimestamp(const std::string& channel_nam
 
   if (found != entries_by_chn_.end())
   {
-    if (found->second.empty() == false)
+    if (!found->second.empty())
     {
       ret_val = found->second.begin()->RcvTimestamp;
     }
@@ -254,7 +253,7 @@ long long eCAL::eh5::HDF5MeasDir::GetMaxTimestamp(const std::string& channel_nam
 
   if (found != entries_by_chn_.end())
   {
-    if (found->second.empty() == false)
+    if (!found->second.empty())
     {
       ret_val = found->second.rbegin()->RcvTimestamp;
     }
@@ -274,7 +273,7 @@ bool eCAL::eh5::HDF5MeasDir::GetEntriesInfo(const std::string& channel_name, Ent
     entries = found->second;
   }
 
-  return entries.empty() == false;
+  return !entries.empty();
 }
 
 bool eCAL::eh5::HDF5MeasDir::GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const
@@ -420,7 +419,7 @@ std::list<std::string> eCAL::eh5::HDF5MeasDir::GetHdfFiles(const std::string& pa
         }
         else
         {
-          if (HasHdf5Extension(d_name) == true)
+          if (HasHdf5Extension(d_name))
             paths.push_back(path + "/" + d_name);
         }
       }
@@ -444,7 +443,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
   {
     auto reader = new eCAL::eh5::HDF5Meas(file_path);
 
-    if (reader->IsOk() == true)
+    if (reader->IsOk())
     {
       auto channels = reader->GetChannelNames();
       for (const auto& channel : channels)
@@ -458,7 +457,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
         }
         else
         {
-          if (description.empty() == false)
+          if (!description.empty())
           {
             channels_info_[escaped_name].description = description;
           }
@@ -467,7 +466,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
         channels_info_[escaped_name].files.push_back(reader);
 
         EntryInfoSet entries;
-        if (reader->GetEntriesInfo(channel, entries) == true)
+        if (reader->GetEntriesInfo(channel, entries))
         {
           for (auto entry : entries)
           {
@@ -487,7 +486,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
       reader = nullptr;
     }
   }
-  return file_readers_.empty() == false;
+  return !file_readers_.empty();
 }
 
 ::eCAL::eh5::HDF5MeasDir::FileWriterMap::iterator eCAL::eh5::HDF5MeasDir::GetWriter(const std::string& channel_name)

@@ -236,7 +236,7 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::AddEntryToFile(const void* data, const uns
   H5Pclose(dsProperty);
   H5Sclose(dataSpace);
 
-  channels_[channel_name].Entries.emplace_back(SEntryInfo(rcv_timestamp, entries_counter_, clock, snd_timestamp, id));
+  channels_[channel_name].Entries.emplace_back(SEntryInfo(rcv_timestamp, static_cast<long long>(entries_counter_), clock, snd_timestamp, id));
 
   entries_counter_++;
 
@@ -347,7 +347,7 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::GetFileSize(hsize_t& size) const
   }
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::CreateEntriesTableOfContentsFor(const std::string& channelName, const std::string& channelType, const std::string& channelDescription, const EntryInfoVect& entries)
+bool eCAL::eh5::HDF5MeasFileWriterV5::CreateEntriesTableOfContentsFor(const std::string& channelName, const std::string& channelType, const std::string& channelDescription, const EntryInfoVect& entries) const
 {
   if (!IsOk()) return false;
 

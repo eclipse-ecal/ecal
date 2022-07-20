@@ -39,7 +39,7 @@ namespace eCAL
       /**
       * @brief Destructor
       **/
-      virtual ~HDF5MeasImpl() {};
+      virtual ~HDF5MeasImpl() = default;
 
       /**
       * @brief Open file

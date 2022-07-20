@@ -57,7 +57,7 @@ namespace eCAL
       /**
       * @brief Destructor
       **/
-      ~HDF5MeasDir();
+      ~HDF5MeasDir() override;
 
       /**
       * @brief Open file
@@ -284,7 +284,7 @@ namespace eCAL
         std::string description;
         std::list<const eCAL::eh5::HDF5Meas*> files;
 
-        ChannelInfo() {}
+        ChannelInfo() = default;
         ChannelInfo(const std::string& type_, const std::string& description_)
           : type(type_)
           , description(description_)

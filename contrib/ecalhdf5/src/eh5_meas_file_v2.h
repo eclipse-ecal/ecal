@@ -277,7 +277,7 @@ namespace eCAL
       *
       * @return  true if succeeds, false if it fails
       **/
-      bool GetAttributeValue(hid_t obj_id, const std::string& name, std::string& value) const;
+      static bool GetAttributeValue(hid_t obj_id, const std::string& name, std::string& value) ;
     };
 
   }  // namespace eh5

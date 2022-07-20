@@ -44,6 +44,14 @@ namespace eCAL
       **/
       HDF5MeasFileWriterV5();
 
+      // Copy
+      HDF5MeasFileWriterV5(const HDF5MeasFileWriterV5&)            = delete;
+      HDF5MeasFileWriterV5& operator=(const HDF5MeasFileWriterV5&) = delete;
+
+      // Move
+      HDF5MeasFileWriterV5& operator=(HDF5MeasFileWriterV5&&)      = default;
+      HDF5MeasFileWriterV5(HDF5MeasFileWriterV5&&)                 = default;
+
       /**
       * @brief Destructor
       **/
@@ -329,7 +337,7 @@ namespace eCAL
       *
       * @return                    true if succeeds, false if it fails
       **/
-      bool CreateEntriesTableOfContentsFor(const std::string& channelName, const std::string& channelType, const std::string& channelDescription, const EntryInfoVect& entries);
+      bool CreateEntriesTableOfContentsFor(const std::string& channelName, const std::string& channelType, const std::string& channelDescription, const EntryInfoVect& entries) const;
 
     };
   }  //  namespace eh5
