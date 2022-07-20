@@ -47,7 +47,7 @@ namespace eCAL
       /**
       * @brief Destructor
       **/
-      ~HDF5MeasFileWriterV5();
+      ~HDF5MeasFileWriterV5() override;
 
       /**
       * @brief Open file
@@ -57,7 +57,7 @@ namespace eCAL
       *
       * @return            true if succeeds, false if it fails
       **/
-      bool Open(const std::string& output_dir, eAccessType access = eAccessType::RDONLY) override;
+      bool Open(const std::string& output_dir, eAccessType access) override;
 
       /**
       * @brief Close file
@@ -250,7 +250,7 @@ namespace eCAL
       **/
       bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) override;
 
-      typedef std::function<void(void)> CallbackFunction;
+      using CallbackFunction = std::function<void ()>;
       /**
       * @brief Connect callback for pre file split notification
       *
@@ -271,7 +271,7 @@ namespace eCAL
         EntryInfoVect Entries;
       };
 
-      typedef std::map<std::string, Channel> Channels;
+      using Channels = std::map<std::string, Channel>;
 
       std::string              output_dir_;
       std::string              base_name_;
@@ -298,7 +298,7 @@ namespace eCAL
       *
       * @return         true if succeeds, false if it fails
       **/
-      bool SetAttribute(const hid_t& id, const std::string& name, const std::string& value);
+      static bool SetAttribute(const hid_t& id, const std::string& name, const std::string& value);
 
       /**
       * @brief Checks if current file size + entry size does not exceed the maximum allowed size of the file

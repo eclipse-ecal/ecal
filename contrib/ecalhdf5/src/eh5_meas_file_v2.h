@@ -48,7 +48,7 @@ namespace eCAL
       /**
       * @brief Destructor
       **/
-      ~HDF5MeasFileV2();
+      ~HDF5MeasFileV2() override;
 
       /**
       * @brief Open file

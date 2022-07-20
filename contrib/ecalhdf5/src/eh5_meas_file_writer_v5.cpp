@@ -30,7 +30,6 @@
 #include <dirent.h>
 #endif //WIN32
 
-#include <string.h>
 #include <string>
 #include <list>
 #include <iostream>
@@ -76,7 +75,7 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::Close()
     if (CreateEntriesTableOfContentsFor(channel.first, channel.second.Type, channel.second.Description, channel.second.Entries))
       channels_with_entries += channel.first + ",";
 
-  if ((channels_with_entries.size() > 0)  && (channels_with_entries.back() == ','))
+  if ((!channels_with_entries.empty())  && (channels_with_entries.back() == ','))
     channels_with_entries.pop_back();
 
   SetAttribute(file_id_, kChnAttrTitle, channels_with_entries);
@@ -208,7 +207,7 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::AddEntryToFile(const void* data, const uns
 
   hsize_t hsSize = static_cast<hsize_t>(size);
 
-  if (EntryFitsTheFile(hsSize) == false)
+  if (!EntryFitsTheFile(hsSize))
   {
     if (cb_pre_split_ != nullptr)
     {
@@ -329,7 +328,7 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::SetAttribute(const hid_t& id, const std::s
 bool eCAL::eh5::HDF5MeasFileWriterV5::EntryFitsTheFile(const hsize_t& size) const
 {
   hsize_t fileSize = 0;
-  herr_t status = GetFileSize(fileSize);
+  bool status = GetFileSize(fileSize);
 
   //  check if buffer fits the current file
   return (status && ((fileSize + size) <= max_size_per_file_));
