@@ -58,7 +58,7 @@ namespace eCAL
     CDataWriterBase() : m_created(false) {};
     virtual ~CDataWriterBase() {};
 
-    virtual void GetInfo(SWriterInfo info_) = 0;
+    virtual SWriterInfo GetInfo() = 0;
 
     virtual bool Create(const std::string& host_name_, const std::string& topic_name_, const std::string & topic_id_) = 0;
     virtual bool Destroy() = 0;
