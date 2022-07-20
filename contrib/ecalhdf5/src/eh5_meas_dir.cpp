@@ -40,18 +40,21 @@
 
 #include "eh5_meas_file_writer_v5.h"
 
+// TODO: Test the one-file-per-channel setting with gtest
 constexpr unsigned int kDefaultMaxFileSizeMB = 1000;
 // TODO: Check order of member variables in constructor
 eCAL::eh5::HDF5MeasDir::HDF5MeasDir()
-  : cb_pre_split_      (nullptr)
-  , max_size_per_file_ (kDefaultMaxFileSizeMB * 1024 * 1024)
-  , access_            (RDONLY) // Temporarily set it to RDONLY, so the leading "Close()" from the Open() function will not operate on the uninitialized variable.
+  : access_              (RDONLY) // Temporarily set it to RDONLY, so the leading "Close()" from the Open() function will not operate on the uninitialized variable.
+  , one_file_per_channel_(false)
+  , max_size_per_file_   (kDefaultMaxFileSizeMB * 1024 * 1024)
+  , cb_pre_split_        (nullptr)
 {}
 
 eCAL::eh5::HDF5MeasDir::HDF5MeasDir(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
-  : cb_pre_split_      (nullptr)
-  , max_size_per_file_ (kDefaultMaxFileSizeMB * 1024 * 1024)
-  , access_            (access)
+  : access_              (access)
+  , one_file_per_channel_(false)
+  , max_size_per_file_   (kDefaultMaxFileSizeMB * 1024 * 1024)
+  , cb_pre_split_        (nullptr)
 {
   // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
   // where the vtable is not created yet or it's destructed.
