@@ -116,7 +116,7 @@ bool eCAL::eh5::HDF5MeasFileV2::IsOneFilePerChannelEnabled() const
   return false;
 }
 
-void eCAL::eh5::HDF5MeasFileV2::SetOneFilePerChannelEnabled(bool enabled)
+void eCAL::eh5::HDF5MeasFileV2::SetOneFilePerChannelEnabled(bool /*enabled*/)
 {
 }
 

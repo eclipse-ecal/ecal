@@ -55,7 +55,7 @@ eCAL::eh5::HDF5MeasFileWriterV5::~HDF5MeasFileWriterV5()
   HDF5MeasFileWriterV5::Close();
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::Open(const std::string& output_dir, eAccessType access /*= eAccessType::RDONLY*/)
+bool eCAL::eh5::HDF5MeasFileWriterV5::Open(const std::string& output_dir, eAccessType /*access = eAccessType::RDONLY*/)
 {
   Close();
 
@@ -121,7 +121,7 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::IsOneFilePerChannelEnabled() const
   return false;
 }
 
-void eCAL::eh5::HDF5MeasFileWriterV5::SetOneFilePerChannelEnabled(bool enabled)
+void eCAL::eh5::HDF5MeasFileWriterV5::SetOneFilePerChannelEnabled(bool /*enabled*/)
 {
 }
 
@@ -131,13 +131,13 @@ std::set<std::string> eCAL::eh5::HDF5MeasFileWriterV5::GetChannelNames() const
   return {};
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::HasChannel(const std::string& channel_name) const
+bool eCAL::eh5::HDF5MeasFileWriterV5::HasChannel(const std::string& /*channel_name*/) const
 {
   // UNSUPPORTED FUNCTION
   return false;
 }
 
-std::string eCAL::eh5::HDF5MeasFileWriterV5::GetChannelDescription(const std::string& channel_name) const
+std::string eCAL::eh5::HDF5MeasFileWriterV5::GetChannelDescription(const std::string& /*channel_name*/) const
 {
   // UNSUPPORTED FUNCTION
   return "";
@@ -148,7 +148,7 @@ void eCAL::eh5::HDF5MeasFileWriterV5::SetChannelDescription(const std::string& c
   channels_[channel_name].Description = description;
 }
 
-std::string eCAL::eh5::HDF5MeasFileWriterV5::GetChannelType(const std::string& channel_name) const
+std::string eCAL::eh5::HDF5MeasFileWriterV5::GetChannelType(const std::string& /*channel_name*/) const
 {
   // UNSUPPORTED FUNCTION
   return "";
@@ -159,37 +159,37 @@ void eCAL::eh5::HDF5MeasFileWriterV5::SetChannelType(const std::string& channel_
   channels_[channel_name].Type = type;
 }
 
-long long eCAL::eh5::HDF5MeasFileWriterV5::GetMinTimestamp(const std::string& channel_name) const
+long long eCAL::eh5::HDF5MeasFileWriterV5::GetMinTimestamp(const std::string& /*channel_name*/) const
 {
   // UNSUPPORTED FUNCTION
   return -1;
 }
 
-long long eCAL::eh5::HDF5MeasFileWriterV5::GetMaxTimestamp(const std::string& channel_name) const
+long long eCAL::eh5::HDF5MeasFileWriterV5::GetMaxTimestamp(const std::string& /*channel_name*/) const
 {
   // UNSUPPORTED FUNCTION
   return -1;
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const
+bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfo(const std::string& /*channel_name*/, EntryInfoSet& /*entries*/) const
 {
   // UNSUPPORTED FUNCTION
   return false;
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const
+bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntriesInfoRange(const std::string& /*channel_name*/, long long /*begin*/, long long /*end*/, EntryInfoSet& /*entries*/) const
 {
   // UNSUPPORTED FUNCTION
   return false;
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntryDataSize(long long entry_id, size_t& size) const
+bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntryDataSize(long long /*entry_id*/, size_t& /*size*/) const
 {
   // UNSUPPORTED FUNCTION
   return false;
 }
 
-bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntryData(long long entry_id, void* data) const
+bool eCAL::eh5::HDF5MeasFileWriterV5::GetEntryData(long long /*entry_id*/, void* /*data*/) const
 {
   // UNSUPPORTED FUNCTION
   return false;
