@@ -36,6 +36,9 @@
 
 namespace eCAL
 {
+  class CMemFileEventBase;
+  class CMemFileEvent;
+  
   ////////////////////////////////////////
   // CMemFileObserver
   ////////////////////////////////////////
@@ -58,18 +61,17 @@ namespace eCAL
     void Observe(const std::string& topic_name_, const std::string& topic_id_, const int timeout_);
     bool ReadFileHeader(SMemFileHeader& memfile_hdr);
 
-    std::atomic<bool>       m_created;
-    std::atomic<bool>       m_do_stop;
-    std::atomic<bool>       m_is_observing;
+    std::atomic<bool>                   m_created;
+    std::atomic<bool>                   m_do_stop;
+    std::atomic<bool>                   m_is_observing;
 
-    std::atomic<long long>  m_timeout_read;
-    std::atomic<int>        m_timeout_ack;
+    std::atomic<long long>              m_timeout_read;
 
-    std::thread             m_thread;
-    EventHandleT            m_event_snd;
-    EventHandleT            m_event_ack;
-    CMemoryFile             m_memfile;
-    std::vector<char>       m_ecal_buffer;
+    std::thread                         m_thread;
+    std::unique_ptr<CMemFileEvent>      m_event_snd;
+    std::unique_ptr<CMemFileEventBase>  m_event_ack;
+    CMemoryFile                         m_memfile;
+    std::vector<char>                   m_ecal_buffer;
   };
 
   ////////////////////////////////////////

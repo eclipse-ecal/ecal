@@ -34,6 +34,65 @@
 
 namespace eCAL
 {
+  class CMemFileEventBase
+  {
+  public:
+    virtual ~CMemFileEventBase() = default;
+    virtual void Set() = 0;
+    virtual bool Wait(long timeout_) = 0;
+    virtual bool Invalidate() = 0;
+    virtual bool IsValid() = 0;
+  };
+
+  class CMemFileEvent : public CMemFileEventBase
+  {
+  public:
+    CMemFileEvent(const std::string& event_name)
+    {
+      gOpenEvent(&m_handle, event_name);
+    }
+    virtual ~CMemFileEvent()
+    {
+      gCloseEvent(m_handle);
+    }
+
+    void Set() override
+    {
+      gSetEvent(m_handle);
+    }
+
+    bool Wait(long timeout_) override
+    {
+      return gWaitForEvent(m_handle, timeout_);
+    }
+
+    bool Invalidate() override
+    {
+      return gInvalidateEvent(&m_handle);
+    }
+
+    bool IsValid() override
+    {
+      return gEventIsValid(m_handle);
+    }
+
+  private:
+    EventHandleT m_handle;
+  };
+
+  class CMemFileDummyEvent : public CMemFileEventBase
+  {
+  public:
+    CMemFileDummyEvent() : m_valid(true) {}
+    void Set() override {}
+    bool Wait(long /*timeout_*/) override { return true; }
+    bool Invalidate() { m_valid = false; return true; }
+    bool IsValid() { return m_valid; }
+  private:
+    bool m_valid;
+  };
+
+
   ////////////////////////////////////////
   // CMemFileObserver
   ////////////////////////////////////////
@@ -41,8 +100,7 @@ namespace eCAL
     m_created(false),
     m_do_stop(false),
     m_is_observing(false),
-    m_timeout_read(0),
-    m_timeout_ack(Config::GetMemfileAckTimeoutMs())
+    m_timeout_read(0)
   {
   }
 
@@ -60,10 +118,14 @@ namespace eCAL
     if (m_created) return false;
 
     // open memory file events
-    gOpenEvent(&m_event_snd, memfile_event_);
-    if (m_timeout_ack != 0)
+    m_event_snd = std::make_unique<CMemFileEvent>(memfile_event_);
+    if (Config::GetMemfileAckTimeoutMs() != 0)
     {
-      gOpenEvent(&m_event_ack, memfile_event_ + "_ack");
+      m_event_ack = std::make_unique<CMemFileEvent>(memfile_event_ + "_ack");
+    }
+    else
+    {
+      m_event_ack = std::make_unique<CMemFileDummyEvent>();
     }
 
     // create memory file access
@@ -87,11 +149,8 @@ namespace eCAL
     m_memfile.Destroy(false);
 
     // close memory file events
-    gCloseEvent(m_event_snd);
-    if (m_timeout_ack != 0)
-    {
-      gCloseEvent(m_event_ack);
-    }
+    m_event_snd.reset();
+    m_event_ack.reset();
 
     m_created = false;
 
@@ -132,7 +191,7 @@ namespace eCAL
       m_do_stop = true;
 
       // set sync event to unlock loop
-      gSetEvent(m_event_snd);
+      m_event_snd->Set();
     }
 
     // wait for finalization
@@ -162,7 +221,7 @@ namespace eCAL
       auto loop_start = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
 
       // check for memory file update event from shm writer (20 ms)
-      if(gWaitForEvent(m_event_snd, 20))
+      if(m_event_snd->Wait(20))
       {
         // last chance to stop ..
         if(m_do_stop) break;
@@ -236,10 +295,7 @@ namespace eCAL
             m_memfile.ReleaseReadAccess();
 
             // send ack event
-            if (m_timeout_ack != 0)
-            {
-              gSetEvent(m_event_ack);
-            }
+            m_event_ack->Set();
 
             // process receive buffer if buffered mode read some data in
             if (post_process_buffer)
