@@ -31,280 +31,247 @@
 #include "ecal_memfile_pool.h"
 
 #include <chrono>
+#include <cstring>
+#include <mutex>
 
 namespace eCAL
 {
-  ////////////////////////////////////////
-  // CMemFileObserver
-  ////////////////////////////////////////
-  CMemFileObserver::CMemFileObserver() :
-    m_created(false),
-    m_do_stop(false),
-    m_is_observing(false),
-    m_timeout_read(0),
-    m_timeout_ack(Config::GetMemfileAckTimeoutMs())
+  class CAcknowledgeStrategy
   {
-  }
+  public:
+    virtual ~CAcknowledgeStrategy() = default;
+    virtual void Acknowledge() = 0;
+  };
 
-  CMemFileObserver::~CMemFileObserver()
+  class CEventAcknowledgeStrategy : public CAcknowledgeStrategy
   {
-    // stop if still running
-    Stop();
+  public:
+    CEventAcknowledgeStrategy(const std::string& event_name) :
+      m_event(event_name)
+    {}
 
-    // and destroy
-    Destroy();
-  }
-
-  bool CMemFileObserver::Create(const std::string& memfile_name_, const std::string& memfile_event_)
-  {
-    if (m_created) return false;
-
-    // open memory file events
-    gOpenEvent(&m_event_snd, memfile_event_);
-    if (m_timeout_ack != 0)
+    void Acknowledge() override
     {
-      gOpenEvent(&m_event_ack, memfile_event_ + "_ack");
+      m_event.Set();
     }
 
-    // create memory file access
-    m_memfile.Create(memfile_name_.c_str(), false);
+  private:
+    CEvent m_event;
+  };
 
-    m_created = true;
-
-#ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug2, std::string("CMemFileObserver " + m_memfile.Name() + " created"));
-#endif
-
-    return true;
-  }
-
-  bool CMemFileObserver::Destroy()
+  class CDummyAcknowledgeStrategy : public CAcknowledgeStrategy
   {
-    if (!m_created) return false;
-
-    // destroy memory file (access only)
-    m_memfile.Destroy(false);
-
-    // close memory file events
-    gCloseEvent(m_event_snd);
-    if (m_timeout_ack != 0)
+    void Acknowledge() override
     {
-      gCloseEvent(m_event_ack);
+
     }
+  };
 
-    m_created = false;
-
-#ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug2, std::string("CMemFileObserver " + m_memfile.Name() + " destroyed"));
-#endif
-
-    return true;
-  }
-
-  bool CMemFileObserver::Start(const std::string& topic_name_, const std::string& topic_id_, const int timeout_)
+  namespace
   {
-    if (!m_created)     return false;
-    if (m_is_observing) return false;
-
-    // mark as running
-    m_is_observing = true;
-
-    // start observer thread
-    m_thread = std::thread(&CMemFileObserver::Observe, this, topic_name_, topic_id_, timeout_);
-
-#ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug2, std::string("CMemFileObserver started (" + topic_name_ + ", " + topic_id_ + ")"));
-#endif
-
-    return true;
-  }
-
-  bool CMemFileObserver::Stop()
-  {
-    if (!m_created) return false;
-
-    if (m_is_observing)
+    bool ReadFileHeader(CMemoryFile& memfile, SMemFileHeader& mfile_hdr_)
     {
-      // signal observer to stop
-      m_do_stop = true;
+      // retrieve size of received buffer
+      size_t buffer_size = memfile.CurDataSize();
 
-      // set sync event to unlock loop
-      gSetEvent(m_event_snd);
-    }
-
-    // wait for finalization
-    if(m_thread.joinable()) m_thread.join();
-
-    return true;
-  }
-
-  bool CMemFileObserver::ResetTimeout()
-  {
-    if (!m_is_observing) return false;
-
-    m_timeout_read = 0;
-    
-    return true;
-  }
-
-  void CMemFileObserver::Observe(const std::string& topic_name_, const std::string& topic_id_, const int timeout_)
-  {
-    // internal clock sample update checking
-    uint64_t last_sample_clock(0);
-
-    // runs as long as there is no timeout and no external stop request
-    while((m_timeout_read < timeout_) && !m_do_stop)
-    {
-      // loop start in ms
-      auto loop_start = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-
-      // check for memory file update event from shm writer (20 ms)
-      if(gWaitForEvent(m_event_snd, 20))
+      // do we have at least the first two bytes ? (hdr_size)
+      if (buffer_size >= 2)
       {
-        // last chance to stop ..
-        if(m_do_stop) break;
-
-        // try to open memory file (timeout 5 ms)
-        if(m_memfile.GetReadAccess(5))
+        // read received header's size
+        memfile.Read(&mfile_hdr_, 2, 0);
+        uint16_t rcv_hdr_size = mfile_hdr_.hdr_size;
+        // if the header size exceeds current header version size -> limit it to that one
+        uint16_t hdr_bytes2copy = std::min(rcv_hdr_size, static_cast<uint16_t>(sizeof(SMemFileHeader)));
+        if (hdr_bytes2copy <= buffer_size)
         {
-          // read the file header
-          SMemFileHeader mfile_hdr;
-          ReadFileHeader(mfile_hdr);
-
-          // check for new content
-          if (mfile_hdr.clock <= last_sample_clock)
-          {
-            // release access and leave
-            m_memfile.ReleaseReadAccess();
-          }
-          else
-          {
-            // clear receive buffer
-            m_ecal_buffer.clear();
-
-            bool zero_copy_allowed = mfile_hdr.options.zero_copy != 0;
-            bool post_process_buffer(false);
-            // -------------------------------------------------------------------------
-            // zero copy mode
-            // -------------------------------------------------------------------------
-            // That means we call the user callback (ApplySample) from within the opened memory file.
-            // So we do not waste time by copying the payload in an intermediate buffer
-            // but the file keeps opened and blocked until the callback returns.
-            // Other subscriber can not access the content this time !
-            // -------------------------------------------------------------------------
-            if (zero_copy_allowed)
-            {
-              // acquire memory file payload pointer (no copying here)
-              const void* buf(nullptr);
-              if (m_memfile.GetReadAddress(buf, mfile_hdr.data_size) > 0)
-              {
-                // calculate data buffer offset
-                const char* data_buf = static_cast<const char*>(buf) + mfile_hdr.hdr_size;
-                // add sample to data reader (and call user callback function)
-                if (g_subgate()) g_subgate()->ApplySample(topic_name_, topic_id_, data_buf, mfile_hdr.data_size, (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash, eCAL::pb::tl_ecal_shm);
-              }
-            }
-            // -------------------------------------------------------------------------
-            // buffered mode
-            // -------------------------------------------------------------------------
-            // we copy the data into the receive buffer (standard mode for eCAL < 5.10)
-            // and close the file immediately
-            else
-            {
-              // read payload
-              // if data length == 0, there is no need to further read data
-              // we just flag to process the empty buffer
-              if (mfile_hdr.data_size == 0)
-              {
-                post_process_buffer = true;
-              }
-              else
-              {
-                m_ecal_buffer.resize((size_t)mfile_hdr.data_size);
-                m_memfile.Read(m_ecal_buffer.data(), (size_t)mfile_hdr.data_size, mfile_hdr.hdr_size);
-                post_process_buffer = true;
-              }
-            }
-
-            // store clock
-            last_sample_clock = mfile_hdr.clock;
-
-            // release access
-            m_memfile.ReleaseReadAccess();
-
-            // send ack event
-            if (m_timeout_ack != 0)
-            {
-              gSetEvent(m_event_ack);
-            }
-
-            // process receive buffer if buffered mode read some data in
-            if (post_process_buffer)
-            {
-              // add sample to data reader (and call user callback function)
-              if (g_subgate()) g_subgate()->ApplySample(topic_name_, topic_id_, m_ecal_buffer.data(), m_ecal_buffer.size(), (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash, eCAL::pb::tl_ecal_shm);
-            }
-          }
+          // now read all we can get from the received header
+          memfile.Read(&mfile_hdr_, hdr_bytes2copy, 0);
+          return true;
         }
+      }
+      return false;
+    }
 
-        // reset timeout
-        m_timeout_read = 0;
+
+}
+
+  class CMemfileReadAccess
+  {
+  public:
+    static std::unique_ptr< CMemfileReadAccess> getAccess(CMemoryFile& memory_file)
+    {
+      if (memory_file.GetReadAccess(5))
+      {
+        return std::unique_ptr< CMemfileReadAccess>(new CMemfileReadAccess(memory_file));
       }
       else
       {
-        // increase timeout in ms
-        m_timeout_read += std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count() - loop_start;
+        return nullptr;
       }
     }
 
-#ifndef NDEBUG
-    // log it
-    if(m_do_stop)
+    SMemFileHeader FileHeader()
     {
-      Logging::Log(log_level_debug2, std::string("CMemFileObserver " + m_memfile.Name() + " stopped"));
+      return m_header;
+    }
+
+    bool Read(MemoryReadFunction read_function)
+    {
+      const void* buf(nullptr);
+      if (m_memfile.GetReadAddress(buf, m_header.data_size) > 0)
+      {
+        // calculate data buffer offset
+        const char* data_buf = static_cast<const char*>(buf) + m_header.hdr_size;
+        read_function(m_header, data_buf);
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+
+    ~CMemfileReadAccess()
+    {
+      m_memfile.ReleaseReadAccess();
+    }
+
+  private:
+    CMemfileReadAccess(CMemoryFile& memory_file)
+      : m_memfile(memory_file)
+    {
+      ReadFileHeader(m_memfile, m_header);
+    }
+
+    CMemoryFile& m_memfile;
+    SMemFileHeader m_header;
+  };
+
+  class CMemoryCopyingStrategy
+  {
+  public:
+    CMemoryCopyingStrategy(const MemoryReadFunction& read_function) : m_read_function(read_function) {}
+
+    virtual void OnMemoryFileRead(const SMemFileHeader& header, const char* buffer) = 0;
+    virtual void OnPostProcessRead() = 0;
+
+  protected:
+    MemoryReadFunction m_read_function;
+  };
+
+  class CZeroCopyStrategy : public CMemoryCopyingStrategy
+  {
+  public:
+    CZeroCopyStrategy(MemoryReadFunction read_function) : CMemoryCopyingStrategy(read_function) {}
+
+    void OnMemoryFileRead(const SMemFileHeader& header, const char* buffer) override
+    {
+      m_read_function(header, buffer);
+    }
+    // no need for a post_processing
+    void OnPostProcessRead() override
+    {
+    }
+  };
+
+  class COneCopyStrategy : public CMemoryCopyingStrategy
+  {
+  public:
+    COneCopyStrategy(MemoryReadFunction read_function) : CMemoryCopyingStrategy(read_function) {}
+
+    void OnMemoryFileRead(const SMemFileHeader& header, const char* buffer) override
+    {
+      m_header = header;
+      m_ecal_buffer.resize(header.data_size);
+      std::memcpy(m_ecal_buffer.data(), buffer, header.data_size);
+    }
+    void OnPostProcessRead() override
+    {
+      m_read_function(m_header, m_ecal_buffer.data());
+    }
+
+  private:
+    SMemFileHeader m_header;
+    std::vector<char>  m_ecal_buffer;
+
+  };
+
+
+  CMemFileReader::CMemFileReader(const CMemFileReaderOptions& options)
+    : m_reader_state(ReaderState::WAITING_ON_SIGNAL)
+    , m_event_data_sent(std::make_unique<CEvent>(options.event_data_sent_name))
+  {
+    m_memfile.Create(options.memory_file_name.c_str(), false);
+
+    if (options.memfile_acknowledge)
+    {
+      m_acknowledge_strategy = std::make_unique<CEventAcknowledgeStrategy>(options.event_data_sent_name + "_ack");
     }
     else
     {
-      Logging::Log(log_level_debug2, std::string("CMemFileObserver " + m_memfile.Name() + " timeout"));
+      m_acknowledge_strategy = std::make_unique<CDummyAcknowledgeStrategy>();
     }
-#endif
 
-    // mark as stopped
-    m_is_observing = false; //-V1020
+    m_zero_copy_strategy = std::make_shared<CZeroCopyStrategy>(options.memory_processing_function);
+    m_one_copy_strategy = std::make_shared<COneCopyStrategy>(options.memory_processing_function);
   }
 
-  bool CMemFileObserver::ReadFileHeader(SMemFileHeader& mfile_hdr_)
+  void CMemFileReader::ReadMemfile()
   {
-    // retrieve size of received buffer
-    size_t buffer_size = m_memfile.CurDataSize();
-
-    // do we have at least the first two bytes ? (hdr_size)
-    if (buffer_size >= 2)
+    auto read_access = CMemfileReadAccess::getAccess(m_memfile);
+    if (read_access)
     {
-      // read received header's size
-      m_memfile.Read(&mfile_hdr_, 2, 0);
-      uint16_t rcv_hdr_size = mfile_hdr_.hdr_size;
-      // if the header size exceeds current header version size -> limit it to that one
-      uint16_t hdr_bytes2copy = std::min(rcv_hdr_size, static_cast<uint16_t>(sizeof(SMemFileHeader)));
-      if (hdr_bytes2copy <= buffer_size)
+      auto header = read_access->FileHeader();
+      if (!m_header_tracker.IsFileUpdated(header))
       {
-        // now read all we can get from the received header
-        m_memfile.Read(&mfile_hdr_, hdr_bytes2copy, 0);
-        return true;
+        return;
       }
+
+      std::shared_ptr<CMemoryCopyingStrategy> memory_copying_strategy;
+      if (header.options.zero_copy)
+        memory_copying_strategy = m_zero_copy_strategy;
+      else
+        memory_copying_strategy = m_one_copy_strategy;
+
+      // Read from file
+      read_access->Read([memory_copying_strategy](const SMemFileHeader& header, const char* buffer) {memory_copying_strategy->OnMemoryFileRead(header, buffer); });
+      // Release read access
+      read_access.reset();
+      // update with the new header
+      m_header_tracker.Update(header);
+      // Acknowledge the read
+      m_acknowledge_strategy->Acknowledge();
+      // Do post processing (actual callback call, depending on strategy)
+      memory_copying_strategy->OnPostProcessRead();
     }
-    return false;
   }
+
+  void CMemFileReader::operator()()
+  {
+    switch (m_reader_state) {
+    case ReaderState::WAITING_ON_SIGNAL:
+      if (m_event_data_sent->Wait(20))
+      {
+        m_reader_state = ReaderState::READING_MEMFILE;
+      }
+      break;
+    case ReaderState::READING_MEMFILE:
+      ReadMemfile();
+      m_reader_state = ReaderState::WAITING_ON_SIGNAL;
+      break;
+    }
+  }
+
+
 
   ////////////////////////////////////////
   // CMemFileThreadPool
   ////////////////////////////////////////
-  CMemFileThreadPool::CMemFileThreadPool() :
-  m_created(false)
+  CMemFileThreadPool::CMemFileThreadPool()
+    : m_created(false)
+    , m_observer_pool_sync(std::make_shared<std::mutex>())
   {
+    
   }
 
   CMemFileThreadPool::~CMemFileThreadPool() = default;
@@ -320,10 +287,16 @@ namespace eCAL
     if(!m_created) return;
 
     // lock pool
-    std::lock_guard<std::mutex> lock(m_observer_pool_sync);
+    std::lock_guard<std::mutex> lock(*m_observer_pool_sync);
 
     // stop all running observers
-    for (auto & observer : m_observer_pool) observer.second->Stop();
+    for (auto& observer : m_observer_pool) {
+      std::shared_ptr< CThreadedTimerWrapper<CMemFileReader>> observer_ptr(observer.second);
+      if (observer_ptr)
+      {
+        observer_ptr->Stop();
+      }
+    }
 
     // clear pool (and destroy all)
     m_observer_pool.clear();
@@ -331,72 +304,41 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CMemFileThreadPool::ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, const std::string& topic_name_, const std::string& topic_id_)
+  bool CMemFileThreadPool::ObserveFile(const std::chrono::milliseconds& timeout_, const CMemFileReader::CMemFileReaderOptions& memfile_options_)
   {
     if(!m_created)            return(false);
-    if(memfile_name_.empty()) return(false);
-
-    // remove outdated observers
-    //CleanupPool();
+    if(memfile_options_.memory_file_name.empty()) return(false);
 
     // lock pool
-    std::lock_guard<std::mutex> lock(m_observer_pool_sync);
-
+    std::lock_guard<std::mutex> lock(*m_observer_pool_sync);
+    
     // if the observer is existing reset its timeout
     // this should avoid that an observer will timeout in the case that
     // there are no incomming data but the registration layer
     // confirms that there are still existing (sleepy) shm writer on this host
-    auto observer_it = m_observer_pool.find(memfile_name_);
+    auto observer_it = m_observer_pool.find(memfile_options_.memory_file_name);
+    std::shared_ptr< CThreadedTimerWrapper<CMemFileReader>> observer_ptr(nullptr);
     if(observer_it != m_observer_pool.end())
     {
-      auto& observer = observer_it->second;
-      if (observer->IsObserving())
-      {
-        observer->ResetTimeout();
-      }
-      else
-      {
-        observer->Stop();
-        observer->Start(topic_name_, topic_id_, Config::GetRegistrationTimeoutMs());
-      }
+      observer_ptr = observer_it->second.lock();
+    }
 
-      return(true);
+    if (observer_ptr)
+    {
+      observer_ptr->KeepAlive();
     }
     // okay, we need to start a new observer
     else
     {
-      auto observer = std::make_shared<CMemFileObserver>();
-      observer->Create(memfile_name_, memfile_event_);
-      observer->Start(topic_name_, topic_id_, Config::GetRegistrationTimeoutMs());
-      m_observer_pool[memfile_name_] = observer;
+      auto memfile_reader = std::make_shared< CMemFileReader >(memfile_options_);
+      auto observer_weak_ptr = CThreadedTimerWrapper<CMemFileReader>::CreateCThreadedTimerWrapper(timeout_, memfile_reader);
+      m_observer_pool[memfile_options_.memory_file_name] = observer_weak_ptr;
+
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug2, std::string("CMemFileThreadPool::ObserveFile " + memfile_name_ + " added"));
+      Logging::Log(log_level_debug2, std::string("CMemFileThreadPool::ObserveFile " + memfile_options_.memory_file_name + " added"));
 #endif
-      return(true);
     }
-  }
-
-  void CMemFileThreadPool::CleanupPool()
-  {
-    // lock pool
-    std::lock_guard<std::mutex> lock(m_observer_pool_sync);
-
-    // remove outdated / finished observer from the thread pool
-    for(auto observer = m_observer_pool.begin(); observer != m_observer_pool.end();)
-    {
-      if(!observer->second->IsObserving())
-      {
-#ifndef NDEBUG
-        // log it
-        Logging::Log(log_level_debug2, std::string("CMemFileThreadPool::ObserveFile " + observer->first + " removed"));
-#endif
-        observer = m_observer_pool.erase(observer);
-      }
-      else
-      {
-        observer++;
-      }
-    }
+    return true;
   }
 }
