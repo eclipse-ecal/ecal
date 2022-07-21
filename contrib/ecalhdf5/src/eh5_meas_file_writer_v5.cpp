@@ -58,7 +58,9 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::Open(const std::string& output_dir, eAcces
 {
   Close();
 
-  // TODO: Check if the output dir actually is a dir!
+  // Check if the given path points to a directory
+  if (!EcalUtils::Filesystem::IsDir(output_dir, EcalUtils::Filesystem::Current))
+    return false;
 
   output_dir_ = output_dir;
 

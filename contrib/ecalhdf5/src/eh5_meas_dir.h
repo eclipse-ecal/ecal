@@ -346,8 +346,7 @@ namespace eCAL
 
       std::string         output_dir_;                                          //!< The directory where the HDF5 files shall be placed when in CREATE mode
       std::string         base_name_;                                           //!< The filename of HDF5 files when in CREATE mode. Will be postfixed by the channel name when in one_file_per_channel_ mode. Will be further postfixed by a number when the files are splitted.
-      // TODO: add one_file_per_channel_ to constructor and setter
-      bool                one_file_per_channel_ = true;                         //!< If true, one FileWriter will be created for each channel.
+      bool                one_file_per_channel_;                                //!< If true, one FileWriter will be created for each channel.
       FileWriterMap       file_writers_;                                        //!< Map of {ChannelName -> FileWriter}. Grows for each new channel, if one_file_per_channel_ is true. Contains only one "" key otherwise that is used for all channels. 
 
       size_t              max_size_per_file_;                                   //!< Maximum file size after which the File Writer shall split

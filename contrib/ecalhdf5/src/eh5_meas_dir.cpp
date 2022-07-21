@@ -41,7 +41,6 @@
 
 // TODO: Test the one-file-per-channel setting with gtest
 constexpr unsigned int kDefaultMaxFileSizeMB = 1000;
-// TODO: Check order of member variables in constructor
 eCAL::eh5::HDF5MeasDir::HDF5MeasDir()
   : access_              (RDONLY) // Temporarily set it to RDONLY, so the leading "Close()" from the Open() function will not operate on the uninitialized variable.
   , one_file_per_channel_(false)
@@ -69,11 +68,13 @@ eCAL::eh5::HDF5MeasDir::~HDF5MeasDir()
 
 bool eCAL::eh5::HDF5MeasDir::Open(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
 {
-  // TODO: Create output dir in CREATE mode
- 
   // call the function via its class becase it's a virtual function that is called directly/indirectly in constructor/destructor,-
   // where the vtable is not created yet or it's destructed.
   HDF5MeasDir::Close();
+
+  // Check if the given path points to a directory
+  if (!EcalUtils::Filesystem::IsDir(path, EcalUtils::Filesystem::Current))
+    return false;
 
   access_ = access;
 
@@ -136,7 +137,6 @@ bool eCAL::eh5::HDF5MeasDir::IsOk() const
   //case eCAL::eh5::RDWR:
     return !file_readers_.empty() && !entries_by_id_.empty();
   case eCAL::eh5::CREATE:
-    // TODO: Return true if output dir exists, false otherwise
     return true;
   default:
     return false;
@@ -160,8 +160,14 @@ size_t eCAL::eh5::HDF5MeasDir::GetMaxSizePerFile() const
 
 void eCAL::eh5::HDF5MeasDir::SetMaxSizePerFile(size_t size)
 {
-  // TODO: Set to all file writers
+  // Store to internal variable
   max_size_per_file_ = size * 1024 * 1024;
+
+  // Update all file writers (if there are any)
+  for (auto& file_writer : file_writers_)
+  {
+    file_writer.second->SetMaxSizePerFile(size);
+  }
 }
 
 bool eCAL::eh5::HDF5MeasDir::IsOneFilePerChannelEnabled() const
