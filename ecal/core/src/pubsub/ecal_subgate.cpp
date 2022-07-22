@@ -116,6 +116,7 @@ namespace eCAL
       if(iter->second == datareader_)
       {
         m_topic_name_datareader_map.erase(iter);
+        ret_state = true;
         break;
       }
     }
