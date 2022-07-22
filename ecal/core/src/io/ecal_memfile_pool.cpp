@@ -347,7 +347,17 @@ namespace eCAL
     auto observer_it = m_observer_pool.find(memfile_name_);
     if(observer_it != m_observer_pool.end())
     {
-      observer_it->second->ResetTimeout();
+      auto& observer = observer_it->second;
+      if (observer->IsObserving())
+      {
+        observer->ResetTimeout();
+      }
+      else
+      {
+        observer->Stop();
+        observer->Start(topic_name_, topic_id_, Config::GetRegistrationTimeoutMs());
+      }
+
       return(true);
     }
     // okay, we need to start a new observer
