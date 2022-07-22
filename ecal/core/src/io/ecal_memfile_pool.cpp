@@ -31,6 +31,7 @@
 #include "ecal_memfile_pool.h"
 
 #include <chrono>
+#include <mutex>
 
 namespace eCAL
 {
@@ -91,6 +92,178 @@ namespace eCAL
   private:
     bool m_valid;
   };
+
+
+  class CEventObserver
+  {
+  public:
+    using ObserverSignalT = std::function<void()>;
+
+    struct CEventObserverOptionsT
+    {
+      std::string     read_event_name;
+      std::string     read_event_acknowledge_name;
+      bool            do_acknowledge;
+      ObserverSignalT on_memfile_signaled_pre_acknowledge;
+      ObserverSignalT on_memfile_signaled_post_acknowledge;
+    };
+
+    CEventObserver(
+      const CEventObserverOptionsT& observer_options
+    );
+
+    ~CEventObserver();
+
+    void Observe();
+
+  private:
+    ObserverSignalT m_on_memfile_signaled_pre_acknowledge;
+    ObserverSignalT m_on_memfile_signaled_post_acknowledge;
+
+    std::unique_ptr<CMemFileEvent>      m_event_snd;
+    std::unique_ptr<CMemFileEventBase>  m_event_ack;
+
+    std::atomic<bool> m_stopped;
+    std::thread m_thread;
+  };
+
+  CEventObserver::CEventObserver(
+    const CEventObserverOptionsT& observer_options)
+    : m_on_memfile_signaled_pre_acknowledge(observer_options.on_memfile_signaled_pre_acknowledge)
+    , m_on_memfile_signaled_post_acknowledge(observer_options.on_memfile_signaled_post_acknowledge)
+    , m_stopped(false)
+  {
+    m_event_snd = std::make_unique<CMemFileEvent>(observer_options.read_event_name);
+    if (observer_options.do_acknowledge)
+    {
+      m_event_ack = std::make_unique<CMemFileEvent>(observer_options.read_event_acknowledge_name);
+    }
+    else
+    {
+      m_event_ack = std::make_unique<CMemFileDummyEvent>();
+    }
+    m_thread = std::thread(&CEventObserver::Observe, this);
+
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug2, std::string("CEventObserver started for Event " + observer_options.read_event_name));
+#endif
+  }
+
+  CEventObserver::~CEventObserver()
+  {
+    m_stopped = true;
+    m_event_snd->Set();
+
+    // wait for finalization
+    if (m_thread.joinable()) m_thread.join();
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug2, std::string("CEventObserver stopped"));
+#endif
+  }
+
+  void CEventObserver::Observe()
+  {
+    while (!m_stopped)
+    {
+      if (m_event_snd->Wait(20))
+      {
+        m_on_memfile_signaled_pre_acknowledge();
+        m_event_ack->Set();
+        m_on_memfile_signaled_post_acknowledge();
+      }
+    }
+  }
+
+  class CTimeoutMonitor
+  {
+  public:
+    using TimeoutCallbackT = std::function<void()>;
+    
+    struct CTimeoutMonitorOptionsT
+    {
+      std::chrono::milliseconds timeout_interval;
+      TimeoutCallbackT on_timeout;
+    };
+    
+    CTimeoutMonitor(CTimeoutMonitorOptionsT options)
+      : m_timeout_interval(options.timeout_interval)
+      , m_on_timeout()
+      , m_stopped(false)
+      , m_last_accessed(std::chrono::steady_clock::now())
+    {
+      m_thread = std::thread(&CTimeoutMonitor::CheckTimedOut, this);
+    }
+
+    ~CTimeoutMonitor()
+    {
+      m_stopped = true;
+
+      // wait for finalization
+      if (m_thread.joinable()) m_thread.join();
+    }
+
+    void CheckTimedOut()
+    {
+      while (!m_stopped)
+      {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+        std::chrono::time_point<std::chrono::steady_clock> last_accessed_copy;
+        {
+          std::lock_guard<std::mutex> lock(m_mutex);
+          last_accessed_copy = m_last_accessed;
+        }
+
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - last_accessed_copy) > m_timeout_interval)
+        {
+          m_on_timeout();
+          m_stopped = true;
+        }
+      }
+    }
+
+    void KeepAlive()
+    {
+      std::lock_guard<std::mutex> lock(m_mutex);
+      m_last_accessed = std::chrono::steady_clock::now();
+    }
+
+  private:
+    std::chrono::milliseconds m_timeout_interval;
+    TimeoutCallbackT m_on_timeout;
+
+    std::atomic<bool> m_stopped;
+    std::thread m_thread;
+    std::mutex m_mutex;
+    std::chrono::time_point<std::chrono::steady_clock> m_last_accessed;
+
+  };
+
+
+  class CMemFileReader
+  {
+  public:
+    struct CMemFileReaderOptions
+    {
+      std::string memory_file_name;
+      bool use_zero_copy;
+    };
+
+    CMemFileReader(CMemFileReaderOptions)
+    {}
+
+    bool ReadFileHeader(SMemFileHeader& mfile_hdr_);
+
+    void InvokeSubgate();
+
+
+  private:
+    CMemoryFile                         m_memfile;
+    std::vector<char>                   m_ecal_buffer;
+  };
+
 
 
   ////////////////////////////////////////
