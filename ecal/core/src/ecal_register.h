@@ -30,6 +30,9 @@
 #include "io/udp_sender.h"
 #include "io/snd_sample.h"
 
+#include "io/ecal_memfile_broadcast.h"
+#include "io/ecal_memfile_broadcast_writer.h"
+
 #include <mutex>
 #include <string>
 #include <unordered_map>
@@ -66,13 +69,14 @@ namespace eCAL
     bool UnregisterClient(const std::string& client_name_, const std::string& client_id_);
 
   protected:
-    size_t RegisterProcess();
-    size_t RegisterServer();
-    size_t RegisterClient();
-    size_t RegisterTopics();
-    size_t RegisterSample(const std::string& sample_name_, const eCAL::pb::Sample& sample_);
+    bool RegisterProcess();
+    bool RegisterServer();
+    bool RegisterClient();
+    bool RegisterTopics();
+    bool RegisterSample(const std::string& sample_name_, const eCAL::pb::Sample& sample_);
 
     int RegisterSendThread();
+    bool SendSampleList(bool reset_sample_list_ = true);
 
     static std::atomic<bool>  m_created;
     std::string               m_multicast_group;
@@ -93,5 +97,15 @@ namespace eCAL
 
     std::mutex                m_client_map_sync;
     SampleMapT                m_client_map;
+
+    std::mutex                m_sample_list_sync;
+    eCAL::pb::SampleList      m_sample_list;
+    std::string               m_sample_list_buffer;
+
+    eCAL::CMemoryFileBroadcast m_memfile_broadcast;
+    eCAL::CMemoryFileBroadcastWriter m_memfile_broadcast_writer;
+
+    bool m_use_network_monitoring;
+    bool m_use_memfile_monitoring;
   };
 };

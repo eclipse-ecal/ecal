@@ -55,6 +55,58 @@ namespace eCAL
   }
 
   //////////////////////////////////////////////////////////////////
+  // CMemfileRegistrationReceiver
+  //////////////////////////////////////////////////////////////////
+
+  bool CMemfileRegistrationReceiver::Create(eCAL::CMemoryFileBroadcastReader* memfile_broadcast_reader_)
+  {
+    if (m_created) return false;
+    m_memfile_broadcast_reader = memfile_broadcast_reader_;
+    m_created = true;
+    return true;
+  }
+
+  bool CMemfileRegistrationReceiver::Receive()
+  {
+    if (!m_created) return false;
+
+    MemfileBroadcastPayloadMessageListT payload_list;
+    if(!m_memfile_broadcast_reader->Read(payload_list, 0))
+      return false;
+
+    eCAL::pb::SampleList sample_list;
+    bool return_value {true};
+
+    for(const auto& payload: payload_list)
+    {
+      if(sample_list.ParseFromArray(payload.data, payload.size))
+      {
+        for(const auto& sample: sample_list.samples())
+        {
+          return_value &= ApplySample(sample);
+        }
+      }
+      else
+        return_value = false;
+    }
+    return return_value;
+  }
+
+  bool CMemfileRegistrationReceiver::Destroy()
+  {
+    if (!m_created) return false;
+    m_memfile_broadcast_reader = nullptr;
+    m_created = false;
+    return true;
+  }
+
+  bool CMemfileRegistrationReceiver::ApplySample(const eCAL::pb::Sample& ecal_sample_)
+  {
+    if (!g_reggate()) return 0;
+    return (g_reggate()->ApplySample(ecal_sample_) != 0);
+  }
+
+  //////////////////////////////////////////////////////////////////
   // CRegGate
   //////////////////////////////////////////////////////////////////
   std::atomic<bool> CRegGate::m_created;
@@ -66,7 +118,9 @@ namespace eCAL
               m_callback_sub(nullptr),
               m_callback_service(nullptr),
               m_callback_client(nullptr),
-              m_callback_process(nullptr)
+              m_callback_process(nullptr),
+              m_use_network_monitoring(false),
+              m_use_memfile_monitoring(false)
   {
   };
 
@@ -82,26 +136,42 @@ namespace eCAL
     // network mode
     m_network = Config::IsNetworkEnabled();
 
-    // start registration receive thread
-    SReceiverAttr attr;
-    bool local_only = !Config::IsNetworkEnabled();
-    // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
-    if (local_only)
-    {
-      attr.ipaddr    = "127.255.255.255";
-      attr.broadcast = true;
-    }
-    else
-    {
-      attr.ipaddr    = Config::GetUdpMulticastGroup();
-      attr.broadcast = false;
-    }
-    attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
-    attr.loopback = true;
-    attr.rcvbuf   = Config::GetUdpMulticastRcvBufSizeBytes();
+    m_use_memfile_monitoring = Config::Experimental::IsMemfileMonitoringEnabled();
+    m_use_network_monitoring = !Config::Experimental::IsNetworkMonitoringDisabled();
 
-    m_reg_rcv.Create(attr);
-    m_reg_rcv_thread.Start(0, std::bind(&CUdpRegistrationReceiver::Receive, &m_reg_rcv_process, &m_reg_rcv));
+    if (m_use_network_monitoring)
+    {
+      // start registration receive thread
+      SReceiverAttr attr;
+      bool local_only = !Config::IsNetworkEnabled();
+      // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
+      if (local_only)
+      {
+        attr.ipaddr = "127.255.255.255";
+        attr.broadcast = true;
+      }
+      else
+      {
+        attr.ipaddr = Config::GetUdpMulticastGroup();
+        attr.broadcast = false;
+      }
+      attr.port = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
+      attr.loopback = true;
+      attr.rcvbuf = Config::GetUdpMulticastRcvBufSizeBytes();
+
+      m_reg_rcv.Create(attr);
+      m_reg_rcv_thread.Start(0, std::bind(&CUdpRegistrationReceiver::Receive, &m_reg_rcv_process, &m_reg_rcv));
+    }
+
+    if (m_use_memfile_monitoring)
+    {
+      m_memfile_broadcast.Create(EXP_MEMFILE_MONITORING_IDENTIFIER, Config::Experimental::GetMemfileMonitoringQueueSize());
+      m_memfile_broadcast.FlushLocalBroadcastQueue();
+      m_memfile_broadcast_reader.Bind(&m_memfile_broadcast);
+
+      m_memfile_reg_rcv.Create(&m_memfile_broadcast_reader);
+      m_memfile_reg_rcv_thread.Start(Config::GetRegistrationRefreshMs() / 2, std::bind(&CMemfileRegistrationReceiver::Receive, &m_memfile_reg_rcv));
+    }
 
     m_created = true;
   }
@@ -110,8 +180,16 @@ namespace eCAL
   {
     if(!m_created) return;
 
-    // stop registration receive thread
-    m_reg_rcv_thread.Stop();
+    if(m_use_network_monitoring)
+      // stop network registration receive thread
+      m_reg_rcv_thread.Stop();
+
+    if(m_use_memfile_monitoring)
+    {
+      // stop memfile registration receive thread and unbind reader
+      m_memfile_reg_rcv_thread.Stop();
+      m_memfile_broadcast_reader.Unbind();
+    }
 
     // reset callbacks
     m_callback_pub     = nullptr;

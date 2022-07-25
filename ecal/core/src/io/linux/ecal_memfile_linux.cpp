@@ -40,11 +40,11 @@ namespace eCAL
     int oflag = 0;
     if(create_)
     {
-      oflag = O_CREAT | O_RDWR;
+      oflag = O_CREAT | O_RDWR | O_EXCL;
     }
     else
     {
-      oflag = O_RDONLY;
+      oflag = O_RDWR;
     }
     int previous_umask = umask(000);  // set umask to nothing, so we can create files with all possible permission bits
     mem_file_info_.name = name_.size() ? ( (name_[0] != '/') ? "/" + name_ : name_) : name_; // make memory file path compatible for all posix systems
@@ -91,7 +91,7 @@ namespace eCAL
       }
 
       // get address
-      int         prot  = PROT_READ;
+      int         prot  = PROT_READ | PROT_WRITE;
       if(create_) prot |= PROT_WRITE;
 
       mem_file_info_.mem_address = ::mmap(nullptr, mem_file_info_.size, prot, MAP_SHARED, mem_file_info_.memfile, 0);

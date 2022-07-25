@@ -57,6 +57,9 @@ set(ecal_io_cpp_src
 if(NOT ECAL_LAYER_ICEORYX)
   set(ecal_io_mem_cpp_src
       src/io/ecal_memfile.cpp
+      src/io/ecal_memfile_broadcast.cpp
+      src/io/ecal_memfile_broadcast_reader.cpp
+      src/io/ecal_memfile_broadcast_writer.cpp
       src/io/ecal_memfile_pool.cpp
       src/io/ecal_memfile_sync.cpp
   )

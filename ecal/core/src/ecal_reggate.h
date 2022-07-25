@@ -31,6 +31,8 @@
 #include "ecal_thread.h"
 
 #include "io/rcv_sample.h"
+#include "io/ecal_memfile_broadcast.h"
+#include "io/ecal_memfile_broadcast_reader.h"
 
 #include <string>
 #include <atomic>
@@ -42,6 +44,20 @@ namespace eCAL
   {
     bool HasSample(const std::string& sample_name_);
     size_t ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_);
+  };
+
+  class CMemfileRegistrationReceiver
+  {
+  public:
+    bool Create(eCAL::CMemoryFileBroadcastReader* memfile_broadcast_reader_);
+    bool Receive();
+    bool Destroy();
+
+    bool ApplySample(const eCAL::pb::Sample& ecal_sample_);
+
+  private:
+    bool m_created = false;
+    eCAL::CMemoryFileBroadcastReader* m_memfile_broadcast_reader;
   };
 
   class CRegGate
@@ -78,5 +94,13 @@ namespace eCAL
     CUDPReceiver              m_reg_rcv;
     CThread                   m_reg_rcv_thread;
     CUdpRegistrationReceiver  m_reg_rcv_process;
+
+    eCAL::CMemoryFileBroadcast       m_memfile_broadcast;
+    eCAL::CMemoryFileBroadcastReader m_memfile_broadcast_reader;
+    CMemfileRegistrationReceiver     m_memfile_reg_rcv;
+    CThread                          m_memfile_reg_rcv_thread;
+
+    bool m_use_network_monitoring;
+    bool m_use_memfile_monitoring;
   };
 };

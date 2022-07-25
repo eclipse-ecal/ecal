@@ -57,3 +57,8 @@ message Sample                                 // a sample is a topic, it's desc
   Topic        topic                 =  5;     // topic information
   Content      content               =  6;     // topic content
 }
+
+message SampleList
+{
+  repeated Sample samples = 1;
+}

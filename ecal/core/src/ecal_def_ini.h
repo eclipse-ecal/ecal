@@ -115,3 +115,12 @@
 
 #define  PUB_SHARE_TTYPE_S                "share_ttype"
 #define  PUB_SHARE_TDESC_S                "share_tdesc"
+
+/////////////////////////////////////
+// experimental
+/////////////////////////////////////
+#define  EXP_SECTION_S                       "experimental"
+
+#define  EXP_MEMFILE_MONITORING_ENABLED_S    "memfile_monitoring_enabled"
+#define  EXP_NETWORK_MONITORING_DISABLED_S   "network_monitoring_enabled"
+#define  EXP_MEMFILE_MONITORING_QUEUE_SIZE_S "memfile_monitoring_queue_size"

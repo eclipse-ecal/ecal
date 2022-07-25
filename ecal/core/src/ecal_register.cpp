@@ -66,7 +66,10 @@ namespace eCAL
                     m_reg_refresh(CMN_REGISTRATION_REFRESH),
                     m_reg_topics(false),
                     m_reg_services(false),
-                    m_reg_process(false)
+                    m_reg_process(false),
+                    m_use_network_monitoring(false),
+                    m_use_memfile_monitoring(false)
+
   {
   };
 
@@ -79,34 +82,46 @@ namespace eCAL
   {
     if(m_created) return;
 
-    m_multicast_group = Config::GetUdpMulticastGroup();
     m_reg_refresh     = Config::GetRegistrationRefreshMs();
 
     m_reg_topics      = topics_;
     m_reg_services    = services_;
     m_reg_process     = process_;
 
-    SSenderAttr attr;
-    bool local_only = !Config::IsNetworkEnabled();
-    // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
-    if (local_only)
-    {
-      attr.ipaddr    = "127.255.255.255";
-      attr.broadcast = true;
-    }
-    else
-    {
-      attr.ipaddr    = Config::GetUdpMulticastGroup();
-      attr.broadcast = false;
-    }
-    attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
-    attr.loopback = true;
-    attr.ttl      = Config::GetUdpMulticastTtl();
-    attr.sndbuf   = Config::GetUdpMulticastSndBufSizeBytes();
+    m_use_memfile_monitoring = Config::Experimental::IsMemfileMonitoringEnabled();
+    m_use_network_monitoring = !Config::Experimental::IsNetworkMonitoringDisabled();
 
-    m_multicast_group = attr.ipaddr;
+    if (m_use_network_monitoring)
+    {
+      SSenderAttr attr;
+      bool local_only = !Config::IsNetworkEnabled();
+      // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
+      if (local_only)
+      {
+        attr.ipaddr = "127.255.255.255";
+        attr.broadcast = true;
+      }
+      else
+      {
+        attr.ipaddr = Config::GetUdpMulticastGroup();
+        attr.broadcast = false;
+      }
+      attr.port = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
+      attr.loopback = true;
+      attr.ttl = Config::GetUdpMulticastTtl();
+      attr.sndbuf = Config::GetUdpMulticastSndBufSizeBytes();
 
-    m_reg_snd.Create(attr);
+      m_multicast_group = attr.ipaddr;
+
+      m_reg_snd.Create(attr);
+    }
+
+    if (m_use_memfile_monitoring)
+    {
+      m_memfile_broadcast.Create(EXP_MEMFILE_MONITORING_IDENTIFIER, Config::Experimental::GetMemfileMonitoringQueueSize());
+      m_memfile_broadcast_writer.Bind(&m_memfile_broadcast);
+    }
+
     m_reg_snd_thread.Start(Config::GetRegistrationRefreshMs(), std::bind(&CEntityRegister::RegisterSendThread, this));
 
     m_created = true;
@@ -117,6 +132,9 @@ namespace eCAL
     if(!m_created) return;
 
     m_reg_snd_thread.Stop();
+
+    if(m_use_memfile_monitoring)
+      m_memfile_broadcast_writer.Unbind();
 
     m_created = false;
   }
@@ -132,6 +150,7 @@ namespace eCAL
     {
       RegisterProcess();
       RegisterSample(topic_name_, ecal_sample_);
+      SendSampleList(false);
     }
 
     return(true);
@@ -164,6 +183,7 @@ namespace eCAL
     {
       RegisterProcess();
       RegisterSample(service_name_, ecal_sample_);
+      SendSampleList(false);
     }
 
     return(true);
@@ -196,6 +216,7 @@ namespace eCAL
     {
       RegisterProcess();
       RegisterSample(client_name_, ecal_sample_);
+      SendSampleList(false);
     }
 
     return(true);
@@ -217,7 +238,7 @@ namespace eCAL
     return(false);
   }
 
-  size_t CEntityRegister::RegisterProcess()
+  bool CEntityRegister::RegisterProcess()
   {
     if(!m_created)     return(0);
     if(!m_reg_process) return(0);
@@ -281,66 +302,95 @@ namespace eCAL
     process_sample_mutable_process->set_ecal_runtime_version(eCAL::GetVersionString());
 
     // register sample
-    size_t sent_sum = RegisterSample(Process::GetHostName(), process_sample);
+    bool return_value = RegisterSample(Process::GetHostName(), process_sample);
 
-    return(sent_sum);
+    return return_value;
   }
 
-  size_t CEntityRegister::RegisterServer()
+  bool CEntityRegister::RegisterServer()
   {
     if(!m_created)      return(0);
     if(!m_reg_services) return(0);
 
-    size_t sent_sum(0);
+    bool return_value {true};
     std::lock_guard<std::mutex> lock(m_server_map_sync);
     for(SampleMapT::const_iterator iter = m_server_map.begin(); iter != m_server_map.end(); ++iter)
     {
       // register sample
-      sent_sum += RegisterSample(iter->second.service().sname(), iter->second);
+      return_value &= RegisterSample(iter->second.service().sname(), iter->second);
     }
 
-    return(sent_sum);
+    return return_value;
   }
 
-  size_t CEntityRegister::RegisterClient()
+  bool CEntityRegister::RegisterClient()
   {
     if (!m_created)      return(0);
     if (!m_reg_services) return(0);
 
-    size_t sent_sum(0);
+    bool return_value {true};
     std::lock_guard<std::mutex> lock(m_client_map_sync);
     for (SampleMapT::const_iterator iter = m_client_map.begin(); iter != m_client_map.end(); ++iter)
     {
       // register sample
-      sent_sum += RegisterSample(iter->second.client().sname(), iter->second);
+      return_value &= RegisterSample(iter->second.client().sname(), iter->second);
     }
 
-    return(sent_sum);
+    return return_value;
   }
 
-  size_t CEntityRegister::RegisterTopics()
+  bool CEntityRegister::RegisterTopics()
   {
     if(!m_created)    return(0);
     if(!m_reg_topics) return(0);
 
-    size_t sent_sum(0);
+    bool return_value {true};
     std::lock_guard<std::mutex> lock(m_topics_map_sync);
     for(SampleMapT::const_iterator iter = m_topics_map.begin(); iter != m_topics_map.end(); ++iter)
     {
-      sent_sum += RegisterSample(iter->second.topic().tname(), iter->second);
+      return_value &= RegisterSample(iter->second.topic().tname(), iter->second);
     }
 
-    return(sent_sum);
+    return return_value;
   }
 
-  size_t CEntityRegister::RegisterSample(const std::string& sample_name_, const eCAL::pb::Sample& sample_)
+  bool CEntityRegister::RegisterSample(const std::string& sample_name_, const eCAL::pb::Sample& sample_)
   {
     if(!m_created) return(0);
 
-    // send sample
-    size_t sent_size = SendSample(&m_reg_snd, sample_name_, sample_, m_multicast_group, -1);
+    bool return_value {true};
 
-    return(sent_size);
+    if(m_use_network_monitoring)
+      return_value &= (SendSample(&m_reg_snd, sample_name_, sample_, m_multicast_group, -1) != 0);
+
+    if(m_use_memfile_monitoring)
+    {
+      std::lock_guard<std::mutex> lock(m_sample_list_sync);
+      m_sample_list.mutable_samples()->Add()->CopyFrom(sample_);
+    }
+
+    return return_value;
+  }
+
+  bool CEntityRegister::SendSampleList(bool reset_sample_list_)
+  {
+    if(!m_created) return(false);
+    bool return_value {true};
+
+    if(m_use_memfile_monitoring)
+    {
+      {
+        std::lock_guard<std::mutex> lock(m_sample_list_sync);
+        m_sample_list.SerializeToString(&m_sample_list_buffer);
+        if(reset_sample_list_)
+          m_sample_list.clear_samples();
+      }
+
+      if(m_sample_list_buffer.size())
+        return_value &=m_memfile_broadcast_writer.Write(m_sample_list_buffer.data(), m_sample_list_buffer.size());
+    }
+
+    return return_value;
   }
 
   int CEntityRegister::RegisterSendThread()
@@ -367,20 +417,23 @@ namespace eCAL
     // refresh client registration
     if (g_clientgate()) g_clientgate()->RefreshRegistrations();
 
-    // overall registration udp send size for debugging
-    /*size_t sent_sum(0);*/
+    // overall registration send status for debugging
+    /*bool registration_successful {true};*/
 
     // register process
-    /*sent_sum += */RegisterProcess();
+    /*registration_successful &= */RegisterProcess();
 
     // register server
-    /*sent_sum += */RegisterServer();
+    /*registration_successful &= */RegisterServer();
 
     // register clients
-    /*sent_sum += */RegisterClient();
+    /*registration_successful &= */RegisterClient();
 
     // register topics
-    /*sent_sum += */RegisterTopics();
+    /*registration_successful &= */RegisterTopics();
+
+    // write sample list to shared memory
+    /*registration_successful &= */SendSampleList();
 
     return(0);
   };

@@ -167,5 +167,12 @@ namespace eCAL
 
     ECAL_API bool              IsTopicTypeSharingEnabled            () { return (eCALPAR(PUB, SHARE_TTYPE) != 0); }
     ECAL_API bool              IsTopicDescriptionSharingEnabled     () { return (eCALPAR(PUB, SHARE_TDESC) != 0); }
+
+    namespace Experimental
+    {
+      ECAL_API bool              IsMemfileMonitoringEnabled          () { return eCALPAR(EXP, MEMFILE_MONITORING_ENABLED); }
+      ECAL_API bool              IsNetworkMonitoringDisabled         () { return eCALPAR(EXP, NETWORK_MONITORING_DISABLED); }
+      ECAL_API size_t            GetMemfileMonitoringQueueSize       () { return static_cast<size_t>(eCALPAR(EXP, MEMFILE_MONITORING_QUEUE_SIZE)); }
+    }
   }
 }

@@ -164,3 +164,16 @@
 /**********************************************************************************************/
 /* common stop event prefix to shut down a local user process */
 #define EVENT_SHUTDOWN_PROC             "ecal_shutdown_process"
+
+/**********************************************************************************************/
+/*                                     experimental                                           */
+/**********************************************************************************************/
+/* enable monitoring via shared memory */
+#define EXP_MEMFILE_MONITORING_ENABLED                  false
+/* disable monitoring via network (default) */
+#define EXP_NETWORK_MONITORING_DISABLED                 false
+/* set queue size of the memory file based monitoring  */
+#define EXP_MEMFILE_MONITORING_QUEUE_SIZE               1024
+/* identifier for memory file based monitoring */
+#define EXP_MEMFILE_MONITORING_IDENTIFIER               "ecal_monitoring"
+
