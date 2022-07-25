@@ -76,7 +76,7 @@ void ProcProtoType(const std::string& group_, const std::string& name_, bool val
   ProcValue(group_, name_, double(value_), index_);
 }
 
-void ProcProtoType(const std::string& group_, const std::string& name_, google::protobuf::string value_, size_t index_)
+void ProcProtoType(const std::string& group_, const std::string& name_, const std::string& value_, size_t index_)
 {
   ProcString(group_, name_, value_, index_);
 }
