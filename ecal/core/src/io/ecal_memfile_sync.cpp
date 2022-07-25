@@ -234,14 +234,6 @@ namespace eCAL
     Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::Write");
 #endif
 
-    // created ?
-    if (!m_memfile.IsCreated())
-    {
-      // log it
-      Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Write::IsCreated - FAILED");
-      return false;
-    }
-
     // create user file header
     struct SMemFileHeader memfile_hdr;
     // set data size
@@ -264,18 +256,27 @@ namespace eCAL
     // so we try to recreate a new one
     if (!opened)
     {
-#ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug2, m_base_name + "::CSyncMemoryFile::Write::Open - FAILED");
-#endif
+//#ifndef NDEBUG
+//      // log it
+//      Logging::Log(log_level_debug2, m_base_name + "::CSyncMemoryFile::Write::Open - FAILED");
+//#endif
+      Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Write::Open - FAILED");
 
       // try to recreate the memory file
-      if (!RecreateFile(m_memfile.MaxDataSize())) return false;
+      if (!RecreateFile(m_memfile.MaxDataSize()))
+      {
+        Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Write::RecreateFile - FAILED");
+        return false;
+      }
 
       // then reopen
       opened = m_memfile.GetWriteAccess(PUB_MEMFILE_OPEN_TO);
       // still no chance ? hell .... we give up
-      if (!opened) return false;
+      if (!opened)
+      {
+        Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Write::Open - WRITE ACTION FAILED");
+        return false;
+      }
     }
 
     // now write content
