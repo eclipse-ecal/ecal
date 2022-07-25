@@ -25,15 +25,6 @@
 #include <ecal/ecal_config.h>
 #include <ecal/ecal_log.h>
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
-#endif
-#include "ecal/pb/layer.pb.h"
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
 
@@ -47,7 +38,7 @@
 namespace eCAL
 {
   CSyncMemoryFile::CSyncMemoryFile() :
-    m_timeout_ack(PUB_MEMFILE_ACK_TO)
+    m_timeout_ack(Config::GetMemfileAckTimeoutMs())
   {
   }
 
@@ -234,6 +225,14 @@ namespace eCAL
     Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::Write");
 #endif
 
+    // created ?
+    if (!m_memfile.IsCreated())
+    {
+      // log it
+      Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Write::IsCreated - FAILED");
+      return false;
+    }
+
     // create user file header
     struct SMemFileHeader memfile_hdr;
     // set data size
@@ -256,25 +255,20 @@ namespace eCAL
     // so we try to recreate a new one
     if (!opened)
     {
-//#ifndef NDEBUG
-//      // log it
-//      Logging::Log(log_level_debug2, m_base_name + "::CSyncMemoryFile::Write::Open - FAILED");
-//#endif
-      Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Write::Open - FAILED");
+#ifndef NDEBUG
+      // log it
+      Logging::Log(log_level_debug2, m_base_name + "::CSyncMemoryFile::Write::Open - FAILED");
+#endif
 
       // try to recreate the memory file
-      if (!RecreateFile(m_memfile.MaxDataSize()))
-      {
-        Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Write::RecreateFile - FAILED");
-        return false;
-      }
+      if (!RecreateFile(m_memfile.MaxDataSize())) return false;
 
       // then reopen
       opened = m_memfile.GetWriteAccess(PUB_MEMFILE_OPEN_TO);
       // still no chance ? hell .... we give up
       if (!opened)
       {
-        Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Write::Open - WRITE ACTION FAILED");
+        Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Write::Open - FAILED FINALLY");
         return false;
       }
     }

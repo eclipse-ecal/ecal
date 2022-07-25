@@ -24,6 +24,7 @@ find_package(GTest REQUIRED)
 set(memfile_test_src
     src/memfile_test.cpp
     ../../../ecal/core/src/io/ecal_memfile.cpp
+    ../../../ecal/core/src/io/ecal_memfile_map.cpp
 )
 
 if(UNIX)

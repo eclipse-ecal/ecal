@@ -23,13 +23,11 @@
 
 #pragma once
 
-#include <string>
-#include <memory>
-#include <unordered_map>
 #include <mutex>
+#include <string>
+#include <unordered_map>
 
 #include <ecal/ecal_os.h>
-#include <ecal_global_accessors.h>
 #include "ecal_memfile_mtx.h"
 
 #ifdef ECAL_OS_WINDOWS
