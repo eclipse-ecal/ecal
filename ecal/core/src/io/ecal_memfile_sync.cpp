@@ -362,6 +362,7 @@ namespace eCAL
     }
 
     // send new sync
+    std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
     for (auto iter = m_event_handle_map.begin(); iter != m_event_handle_map.end(); ++iter)
     {
       // send sync event
