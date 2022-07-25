@@ -25,7 +25,6 @@
 
 namespace eCAL
 {
-  template<> std::shared_ptr<CInProcLayer> CReaderLayer<CInProcLayer>::layer(nullptr);
 
   CInProcLayer::CInProcLayer()
   {

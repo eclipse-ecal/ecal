@@ -255,8 +255,8 @@ set(ecal_cmn_header_src
     src/ecal_register.h
     src/ecal_thread.h
     src/ecal_timegate.h
-    src/ecal_win_main.h
-    src/ecal_win_socket.h
+    $<$<BOOL:${WIN32}>:src/ecal_win_main.h>
+    $<$<BOOL:${WIN32}>:src/ecal_win_socket.h>
     src/getenvvar.h
     src/sys_usage.h
     src/topic2mcast.h
@@ -303,6 +303,7 @@ set(ecal_header_cmn
     include/ecal/ecal_tlayer.h
     include/ecal/ecal_util.h
     include/ecal/ecalc.h
+    include/ecal/ecalc_types.h
 )
 
 set(ecal_header_cimpl

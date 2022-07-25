@@ -25,7 +25,11 @@
 #ifndef ecal_server_cimpl_h_included
 #define ecal_server_cimpl_h_included
 
+#include <ecal/ecal_os.h>
+#include <ecal/ecalc_types.h>
+
 #include <ecal/cimpl/ecal_service_info_cimpl.h>
+#include <ecal/cimpl/ecal_callback_cimpl.h>
 
 #ifdef __cplusplus
 extern "C"

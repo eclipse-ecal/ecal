@@ -113,6 +113,26 @@ std::set<std::string> QEcalPlay::channelNames() const
   return ecal_play_.GetChannelNames();
 }
 
+double QEcalPlay::minTimestampOfChannel(const std::string& channel_name) const
+{
+  return ecal_play_.GetMinTimestampOfChannel(channel_name);
+}
+
+double QEcalPlay::maxTimestampOfChannel(const std::string& channel_name) const
+{
+  return ecal_play_.GetMaxTimestampOfChannel(channel_name);
+}
+
+std::string QEcalPlay::channelType(const std::string& channel_name) const
+{
+  return ecal_play_.GetChannelType(channel_name);
+}
+
+size_t QEcalPlay::channelCumulativeEstimatedSize(const std::string& channel_name) const
+{
+  return ecal_play_.GetChannelCumulativeEstimatedSize(channel_name);
+}
+
 std::map<std::string, ContinuityReport> QEcalPlay::createContinuityReport() const
 {
   return ecal_play_.CreateContinuityReport();
@@ -550,6 +570,30 @@ bool QEcalPlay::saveChannelMapping(const QString& path, bool omit_blocking_dialo
   }
 }
 
+void QEcalPlay::calculateChannelsCumulativeEstimatedSize() const
+{
+  QWidget* caller = widgetOf(sender());
+  periodic_update_timer_->stop();
+
+  QProgressDialog dlg("Estimating channels sizes...", "cancel", 0, 0, caller);
+  QPixmap icon(":/ecalplay/APP_ICON");
+  dlg.setWindowIcon(icon);
+  dlg.setWindowFlags(dlg.windowFlags() & ~Qt::WindowCloseButtonHint);
+  dlg.setCancelButton(nullptr);
+  dlg.setWindowModality(Qt::WindowModality::ApplicationModal);
+  dlg.setMinimumDuration(500);
+  dlg.setValue(0);
+  dlg.setValue(1);
+
+  QFuture<void> success_future = QtConcurrent::run(&ecal_play_, &EcalPlay::CalculateEstimatedSizeForChannels);
+
+  while (!success_future.isFinished())
+  {
+    QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  }
+  dlg.close();
+}
 
 void QEcalPlay::closeMeasurement(bool omit_blocking_dialogs)
 {

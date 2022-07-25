@@ -39,8 +39,8 @@ namespace eCAL
       FrameBuffer& operator=(const FrameBuffer& other) = delete;
 
       // Move
-      FrameBuffer& operator=(FrameBuffer&&)      = default;
-      FrameBuffer(FrameBuffer&&)                 = default;
+      FrameBuffer& operator=(FrameBuffer&&)      = delete;
+      FrameBuffer(FrameBuffer&&)                 = delete;
 
       ~FrameBuffer();
 

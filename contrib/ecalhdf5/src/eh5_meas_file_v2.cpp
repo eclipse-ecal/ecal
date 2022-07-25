@@ -45,12 +45,16 @@ eCAL::eh5::HDF5MeasFileV2::HDF5MeasFileV2(const std::string& path, eAccessType a
   H5Eset_auto(0, nullptr, nullptr);
 #endif  //  _DEBUG
 
-  Open(path, access);
+  // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  HDF5MeasFileV2::Open(path, access);
 }
 
 eCAL::eh5::HDF5MeasFileV2::~HDF5MeasFileV2()
 {
-  Close();
+  // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  HDF5MeasFileV2::Close();
 }
 
 
@@ -62,13 +66,15 @@ bool eCAL::eh5::HDF5MeasFileV2::Open(const std::string& path, eAccessType access
 
   file_id_ = H5Fopen(path.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
 
-  return this->IsOk();
+  // call the function via its class becase it's a virtual function that is called directly/indirectly in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  return HDF5MeasFileV2::IsOk();
 }
 
 
 bool eCAL::eh5::HDF5MeasFileV2::Close()
 {
-  if (IsOk() == true && H5Fclose(file_id_) >= 0)
+  if (HDF5MeasFileV2::IsOk() == true && H5Fclose(file_id_) >= 0)
   {
     file_id_ = -1;
     return true;

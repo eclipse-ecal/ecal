@@ -34,11 +34,11 @@
 #include <sstream>
 #include <locale>
 
-PipeHandler::PipeHandler(): process_{nullptr}
-  , child_stdin_rd_(nullptr)
+PipeHandler::PipeHandler(): child_stdin_rd_(nullptr)
   , child_stdin_wr_(nullptr)
   , child_stdout_rd_(nullptr)
   , child_stdout_wr_(nullptr)
+  , process_{ nullptr }
 {}
 
 

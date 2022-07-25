@@ -39,7 +39,6 @@
 
 namespace eCAL
 {
-  template<> std::shared_ptr<CSHMLayer> CReaderLayer<eCAL::CSHMLayer>::layer(nullptr);
 
   void CSHMLayer::SetConnectionParameter(SReaderLayerPar& par_)
   {

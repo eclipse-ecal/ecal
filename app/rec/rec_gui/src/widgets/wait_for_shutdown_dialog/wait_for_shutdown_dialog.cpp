@@ -28,7 +28,7 @@
 
 #include "qecalrec.h"
 
-#include <widgets/bytes_to_pretty_string_utils.h>
+#include <CustomQt/QBytesToPrettyStringUtils.h>
 
 ////////////////////////////////////
 // Constructor & Destructor
@@ -372,11 +372,11 @@ bool WaitForShutdownDialog::updateAllFields()
 {
   auto job_history = QEcalRec::instance()->jobHistory();
 
-  // Bitwise-or is intended!
-  bool safe_to_exit = updateWaitForFlushing()
-                    & updateBuiltInRecorderUploading(job_history)
-                    & updateBuiltInFtpServer()
-                    & updateNonUploadedMeasurements();
+  bool safe_to_exit = true;
+  safe_to_exit = safe_to_exit && updateWaitForFlushing();
+  safe_to_exit = safe_to_exit && updateBuiltInRecorderUploading(job_history);
+  safe_to_exit = safe_to_exit && updateBuiltInFtpServer();
+  safe_to_exit = safe_to_exit && updateNonUploadedMeasurements();
 
   updateItIsSafeToExit(safe_to_exit);
 

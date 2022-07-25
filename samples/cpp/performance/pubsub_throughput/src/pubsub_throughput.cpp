@@ -104,11 +104,9 @@ bool test_throughput(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer 
   g_callback_received = 0;
 
   // do some work
-  size_t snd_bytes(0);
   for (auto i = 0; i < snd_loops; ++i)
   {
-    size_t sent = pub->Send(send_s);
-    snd_bytes += sent;
+    pub->Send(send_s);
   }
 
   // end time

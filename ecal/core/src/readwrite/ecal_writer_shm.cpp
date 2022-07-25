@@ -50,8 +50,10 @@ namespace eCAL
     Destroy();
   }
 
-  void CDataWriterSHM::GetInfo(SWriterInfo info_)
+  SWriterInfo CDataWriterSHM::GetInfo()
   {
+    SWriterInfo info_;
+
     info_.name                 = "shm";
     info_.description          = "Local shared memory data writer";
 
@@ -62,6 +64,8 @@ namespace eCAL
     info_.has_qos_reliability  = true;
 
     info_.send_size_max        = -1;
+
+    return info_;
   }
   
   bool CDataWriterSHM::Create(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string & /*topic_id_*/)

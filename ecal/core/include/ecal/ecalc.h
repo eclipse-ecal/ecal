@@ -29,19 +29,10 @@
   #include <string.h>
 #endif
 
-/**
- * @brief Flag to indicate eCAL to allocate/deallocate memory.
-**/
-#define ECAL_ALLOCATE_4ME 0
-
-/**
- * @brief Common handle for eCAL C API function calls.
-**/
-typedef void* ECAL_HANDLE;
-
 // all ecal c includes
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_defs.h>
+#include <ecal/ecalc_types.h>
 #include <ecal/cimpl/ecal_client_cimpl.h>
 #include <ecal/cimpl/ecal_core_cimpl.h>
 #include <ecal/cimpl/ecal_event_cimpl.h>

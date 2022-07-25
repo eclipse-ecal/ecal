@@ -44,12 +44,16 @@ eCAL::eh5::HDF5MeasFileV1::HDF5MeasFileV1(const std::string& path, eAccessType a
   H5Eset_auto(0, nullptr, nullptr);
 #endif  //  _DEBUG
 
-  Open(path, access);
+  // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  HDF5MeasFileV1::Open(path, access);
 }
 
 eCAL::eh5::HDF5MeasFileV1::~HDF5MeasFileV1()
 {
-  Close();
+  // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  HDF5MeasFileV1::Close();
   entries_.clear();
 }
 
@@ -62,7 +66,7 @@ bool eCAL::eh5::HDF5MeasFileV1::Open(const std::string& path, eAccessType access
     return false;
 
   if (file_id_ > 0)
-    Close();
+    HDF5MeasFileV1::Close();
 
   if (access != eAccessType::RDONLY)
   {
@@ -72,23 +76,25 @@ bool eCAL::eh5::HDF5MeasFileV1::Open(const std::string& path, eAccessType access
 
   file_id_ = H5Fopen(path.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
 
-  if (IsOk() == true)
+  if (HDF5MeasFileV1::IsOk() == true)
   {
-    auto channels = GetChannelNames();
+    auto channels = HDF5MeasFileV1::GetChannelNames();
     if (channels.size() == 1)
     {
       channel_name_ = *channels.begin();
-      GetEntriesInfo(channel_name_, entries_);
+      HDF5MeasFileV1::GetEntriesInfo(channel_name_, entries_);
     }
   }
 
-  return IsOk();
+  // call the function via its class becase it's a virtual function that is called directly/indirectly in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  return HDF5MeasFileV1::IsOk();
 }
 
 
 bool eCAL::eh5::HDF5MeasFileV1::Close()
 {
-  if (IsOk() == true && H5Fclose(file_id_) >= 0)
+  if (HDF5MeasFileV1::IsOk() == true && H5Fclose(file_id_) >= 0)
   {
     file_id_ = -1;
     return true;
@@ -207,7 +213,7 @@ bool eCAL::eh5::HDF5MeasFileV1::GetEntriesInfo(const std::string& channel_name, 
 
   if (EcalUtils::String::Icompare(channel_name, channel_name_) == false) return false;
 
-  if (this->IsOk() == false) return false;
+  if (HDF5MeasFileV1::IsOk() == false) return false;
 
   auto dataset_id = H5Dopen(file_id_, kTimestampAttrTitle.c_str(), H5P_DEFAULT);
 

@@ -724,6 +724,71 @@ std::set<std::string> PlayThread::GetChannelNames()
   }
 }
 
+double PlayThread::GetMinTimestampOfChannel(const std::string& channel_name)
+{
+  std::shared_lock<std::shared_timed_mutex> measurement_lock(measurement_mutex_);
+  if (measurement_container_)
+  {
+   return measurement_container_->GetMinTimestampOfChannel(channel_name);
+  }
+  else
+  {
+    return -1;
+  }
+}
+
+double PlayThread::GetMaxTimestampOfChannel(const std::string& channel_name)
+{
+  std::shared_lock<std::shared_timed_mutex> measurement_lock(measurement_mutex_);
+  if (measurement_container_)
+  {
+   return measurement_container_->GetMaxTimestampOfChannel(channel_name);
+  }
+  else
+  {
+    return -1;
+  }
+}
+
+std::string PlayThread::GetChannelType(const std::string& channel_name)
+{
+  std::shared_lock<std::shared_timed_mutex> measurement_lock(measurement_mutex_);
+  if (measurement_container_)
+  {
+   return measurement_container_->GetChannelType(channel_name);
+  }
+  else
+  {
+    return std::string("");
+  }
+}
+
+void PlayThread::CalculateEstimatedSizeForChannels()
+{
+  std::shared_lock<std::shared_timed_mutex> measurement_lock(measurement_mutex_);
+  if (measurement_container_)
+  {
+   measurement_container_->CalculateEstimatedSizeForChannels();
+  }
+  else
+  {
+    return;
+  }
+}
+
+size_t PlayThread::GetChannelCumulativeEstimatedSize(const std::string& channel_name)
+{
+  std::shared_lock<std::shared_timed_mutex> measurement_lock(measurement_mutex_);
+  if (measurement_container_)
+  {
+   return measurement_container_->GetChannelCumulativeEstimatedSize(channel_name);
+  }
+  else
+  {
+    return 0;
+  }
+}
+
 std::map<std::string, ContinuityReport> PlayThread::CreateContinuityReport()
 {
   std::shared_lock<std::shared_timed_mutex> measurement_lock(measurement_mutex_);

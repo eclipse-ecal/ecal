@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <ecalsys/ecal_sys.h>
+
 // protobuf remote control
 #ifdef _MSC_VER
 #pragma warning(push)

@@ -58,6 +58,7 @@ private slots:
   void updateHeader();
   void updateSelectionCountLabel();
   void treeDataChanged(const QModelIndex &top_left, const QModelIndex &bottom_right, const QVector<int> &roles);
+  void headerContextMenu();
 
   void treeContextMenu(const QPoint &pos);
 
@@ -70,6 +71,7 @@ private:
   Ui::ChannelWidget ui_;
 
   bool init_button_state_is_init_;
+  bool channels_total_size_calculated_ = false;
 
   ChannelTreeModel*            channel_model_;
   QStableSortFilterProxyModel* channel_proxy_model_;

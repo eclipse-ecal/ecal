@@ -24,6 +24,7 @@
 #include <condition_variable>
 #include <chrono>
 #include <assert.h>
+#include <functional>
 
 /**
  * @brief A timer that starts a thread and periodically calls a given callack
