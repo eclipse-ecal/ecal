@@ -21,6 +21,8 @@
  * @brief  eCAL memory file broadcast interface
 **/
 
+#pragma once
+
 #include "ecal_memfile_broadcast.h"
 
 #include <cstdint>

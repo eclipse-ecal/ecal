@@ -30,11 +30,12 @@
 #include <cstdint>
 
 #include "relocatable_circular_queue.h"
-#include "ecal_memfile.h"
 
 #include <ecal/ecal.h>
 
 namespace eCAL {
+
+  class CMemoryFile;
 
   typedef std::int64_t TimestampT;
   typedef std::uint64_t UniqueIdT;
@@ -77,6 +78,8 @@ namespace eCAL {
   class CMemoryFileBroadcast
   {
   public:
+    CMemoryFileBroadcast();
+
     bool Create(const std::string& name, std::size_t max_queue_size);
     bool Destroy();
 
@@ -96,13 +99,11 @@ namespace eCAL {
     bool m_created = false;
     std::string m_name;
     std::size_t m_max_queue_size;
-    CMemoryFile m_broadcast_memfile;
+    std::unique_ptr<CMemoryFile> m_broadcast_memfile;
     std::vector<char> m_broadcast_memfile_local_buffer;
 
     RelocatableCircularQueue<SMemfileBroadcastMessage> m_message_queue;
 
     TimestampT m_last_timestamp;
   };
-
-
 }

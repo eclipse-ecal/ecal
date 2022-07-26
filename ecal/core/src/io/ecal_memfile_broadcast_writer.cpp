@@ -22,7 +22,7 @@
 **/
 
 #include "ecal_memfile_broadcast_writer.h"
-#include "ecal_memfile_broadcast.h"
+#include "ecal_memfile.h"
 
 namespace eCAL
 {

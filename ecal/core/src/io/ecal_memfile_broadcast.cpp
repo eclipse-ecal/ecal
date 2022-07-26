@@ -23,6 +23,8 @@
 
 #include "ecal_memfile_broadcast.h"
 
+#include "ecal_memfile.h"
+
 #include <iostream>
 
 namespace eCAL
@@ -50,6 +52,10 @@ namespace eCAL
     return reinterpret_cast<void *>(static_cast<char *>(address) + GetMemfileHeader(address)->message_queue_offset);
   }
 
+  CMemoryFileBroadcast::CMemoryFileBroadcast(): m_broadcast_memfile(std::make_unique<eCAL::CMemoryFile>()) 
+  {
+  }
+
   bool CMemoryFileBroadcast::Create(const std::string &name, std::size_t max_queue_size)
   {
     if (m_created) return false;
@@ -59,11 +65,11 @@ namespace eCAL
     const auto presumably_memfile_size =
       RelocatableCircularQueue<SMemfileBroadcastMessage>::PresumablyOccupiedMemorySize(m_max_queue_size) +
       sizeof(SMemfileBroadcastHeaderV1);
-    if (!m_broadcast_memfile.Create(name.c_str(), true, presumably_memfile_size))
+    if (!m_broadcast_memfile->Create(name.c_str(), true, presumably_memfile_size))
     {
-      if (m_broadcast_memfile.Create(name.c_str(), false, 0))
+      if (m_broadcast_memfile->Create(name.c_str(), false, 0))
       {
-        if (m_broadcast_memfile.MaxDataSize() < presumably_memfile_size)
+        if (m_broadcast_memfile->MaxDataSize() < presumably_memfile_size)
         {
           std::cerr << "Invalid memory file size." << std::endl;
           return false;
@@ -75,11 +81,11 @@ namespace eCAL
     }
     m_broadcast_memfile_local_buffer.resize(presumably_memfile_size);
 
-    if (m_broadcast_memfile.GetWriteAccess(100))
+    if (m_broadcast_memfile->GetWriteAccess(100))
     {
       // Is acquired lock consistent?
       void *memfile_address = nullptr;
-      m_broadcast_memfile.GetWriteAddress(memfile_address, m_broadcast_memfile.MaxDataSize());
+      m_broadcast_memfile->GetWriteAddress(memfile_address, m_broadcast_memfile->MaxDataSize());
       if (!IsMemfileInitialized(memfile_address))
         ResetMemfile(memfile_address);
       if (!IsMemfileVersionCompatible(memfile_address))
@@ -88,7 +94,7 @@ namespace eCAL
         return false;
       }
 
-      m_broadcast_memfile.ReleaseWriteAccess();
+      m_broadcast_memfile->ReleaseWriteAccess();
     }
     else
       return false;
@@ -100,7 +106,7 @@ namespace eCAL
   bool CMemoryFileBroadcast::Destroy()
   {
     if (!m_created) return false;
-    m_broadcast_memfile.Destroy(false);
+    m_broadcast_memfile->Destroy(false);
     m_created = false;
     return true;
   }
@@ -135,14 +141,14 @@ namespace eCAL
   {
     if (!m_created) return false;
 
-    if (m_broadcast_memfile.GetReadAccess(500))
+    if (m_broadcast_memfile->GetReadAccess(500))
     {
       // Is acquired lock consistent?
 
       const void *memfile_address = nullptr;
-      m_broadcast_memfile.GetReadAddress(memfile_address, m_broadcast_memfile.MaxDataSize());
+      m_broadcast_memfile->GetReadAddress(memfile_address, m_broadcast_memfile->MaxDataSize());
       m_last_timestamp = GetMemfileHeader(memfile_address)->timestamp;
-      m_broadcast_memfile.ReleaseReadAccess();
+      m_broadcast_memfile->ReleaseReadAccess();
     }
     else
       return false;
@@ -154,13 +160,13 @@ namespace eCAL
   {
     if (!m_created) return false;
 
-    if (m_broadcast_memfile.GetWriteAccess(500))
+    if (m_broadcast_memfile->GetWriteAccess(500))
     {
       // Is acquired lock consistent?
       void *memfile_address = nullptr;
-      m_broadcast_memfile.GetWriteAddress(memfile_address, m_broadcast_memfile.MaxDataSize());
+      m_broadcast_memfile->GetWriteAddress(memfile_address, m_broadcast_memfile->MaxDataSize());
       ResetMemfile(memfile_address);
-      m_broadcast_memfile.ReleaseReadAccess();
+      m_broadcast_memfile->ReleaseReadAccess();
     }
     else
       return false;
@@ -172,10 +178,10 @@ namespace eCAL
   {
     if (!m_created) return false;
 
-    if (m_broadcast_memfile.GetWriteAccess(500))
+    if (m_broadcast_memfile->GetWriteAccess(500))
     {
       void *memfile_address = nullptr;
-      m_broadcast_memfile.GetWriteAddress(memfile_address, m_broadcast_memfile.MaxDataSize());
+      m_broadcast_memfile->GetWriteAddress(memfile_address, m_broadcast_memfile->MaxDataSize());
       // Is acquired lock consistent?
 
       m_message_queue.SetBaseAddress(GetMessageQueueAddress(memfile_address));
@@ -183,7 +189,7 @@ namespace eCAL
       m_message_queue.Push({g_process_id, timestamp, payload_memfile_id, type});
       GetMemfileHeader(memfile_address)->timestamp = timestamp;
 
-      m_broadcast_memfile.ReleaseWriteAccess();
+      m_broadcast_memfile->ReleaseWriteAccess();
       return true;
     }
     else
@@ -196,12 +202,12 @@ namespace eCAL
 
   bool CMemoryFileBroadcast::ReceiveBroadcast(MemfileBroadcastMessageListT &message_list, TimestampT timeout, bool enable_loopback)
   {
-    if (m_broadcast_memfile.GetReadAccess(500))
+    if (m_broadcast_memfile->GetReadAccess(500))
     {
       // Is acquired lock consistent?
 
-      m_broadcast_memfile.Read(m_broadcast_memfile_local_buffer.data(), m_broadcast_memfile_local_buffer.size(), 0);
-      m_broadcast_memfile.ReleaseReadAccess();
+      m_broadcast_memfile->Read(m_broadcast_memfile_local_buffer.data(), m_broadcast_memfile_local_buffer.size(), 0);
+      m_broadcast_memfile->ReleaseReadAccess();
     }
     else
     {
