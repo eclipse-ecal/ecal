@@ -23,9 +23,9 @@
 
 #include "ecal_global_accessors.h"
 #include "ecal_memfile_os.h"
+#include "ecal_memfile_db.h"
 
 #include <assert.h>
-#include "ecal_memfile_db.h"
 
 namespace eCAL
 {
@@ -37,10 +37,10 @@ namespace eCAL
   void CMemFileMap::Cleanup()
   {
     // lock memory map access
-    std::lock_guard<std::mutex> lock(sync);
+    std::lock_guard<std::mutex> lock(m_memfile_map_mtx);
 
     // erase memory files from memory map
-    for (MemFileMapT::iterator iter = map.begin(); iter != map.end(); ++iter)
+    for (MemFileMapT::iterator iter = m_memfile_map.begin(); iter != m_memfile_map.end(); ++iter)
     {
       auto& memfile_info = iter->second;
 
@@ -55,7 +55,7 @@ namespace eCAL
     }
 
     // clear map
-    map.clear();
+    m_memfile_map.clear();
   }
 
   bool CMemFileMap::AddFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_)
@@ -64,11 +64,11 @@ namespace eCAL
     assert(len_ > 0);
 
     // lock memory map access
-    std::lock_guard<std::mutex> lock(sync);
+    std::lock_guard<std::mutex> lock(m_memfile_map_mtx);
 
     // check for existing memory file
-    MemFileMapT::iterator iter = map.find(name_);
-    if (iter == map.end())
+    MemFileMapT::iterator iter = m_memfile_map.find(name_);
+    if (iter == m_memfile_map.end())
     {
       // create memory file
       if (!memfile::os::AllocFile(name_, create_, mem_file_info_))
@@ -84,7 +84,7 @@ namespace eCAL
 
       // and add to memory file map
       mem_file_info_.refcnt++;
-      map[name_] = mem_file_info_;
+      m_memfile_map[name_] = mem_file_info_;
     }
     else
     {
@@ -105,10 +105,10 @@ namespace eCAL
   bool CMemFileMap::RemoveFile(const std::string& name_, const bool remove_)
   {
     // lock memory map access
-    std::lock_guard<std::mutex> lock(sync);
+    std::lock_guard<std::mutex> lock(m_memfile_map_mtx);
 
     // erase memory file from memory map
-    auto& memfile_map = map;
+    auto& memfile_map = m_memfile_map;
     MemFileMapT::iterator iter = memfile_map.find(name_);
     if (iter != memfile_map.end())
     {
@@ -147,10 +147,10 @@ namespace eCAL
     memfile::os::CheckFileSize(len_, false, mem_file_info_);
 
     // lock memory map access
-    std::lock_guard<std::mutex> lock(sync);
+    std::lock_guard<std::mutex> lock(m_memfile_map_mtx);
 
     // update/set info
-    map[name_] = mem_file_info_;
+    m_memfile_map[name_] = mem_file_info_;
 
     return(true);
   }

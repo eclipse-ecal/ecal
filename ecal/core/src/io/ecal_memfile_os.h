@@ -35,12 +35,12 @@ namespace eCAL
     {
       bool AllocFile(const std::string& name_, const bool create_, SMemFileInfo& mem_file_info_);
       bool DeAllocFile(SMemFileInfo& mem_file_info_);
+      bool RemoveFile(const SMemFileInfo& mem_file_info_);
 
       bool MapFile(const bool create_, SMemFileInfo& mem_file_info_);
       bool UnMapFile(SMemFileInfo& mem_file_info_);
 
       bool CheckFileSize(const size_t len_, const bool create_, SMemFileInfo& mem_file_info_);
-      bool RemoveFile(const SMemFileInfo& mem_file_info_);
     }
   }
 }

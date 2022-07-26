@@ -23,14 +23,14 @@
 
 #pragma once
 
+#include <mutex>
 #include <string>
 #include <unordered_map>
 
-#include "io/ecal_memfile.h"
+#include "ecal_memfile_info.h"
 
 namespace eCAL
 {
-  typedef std::unordered_map<std::string, SMemFileInfo> MemFileMapT;
   class CMemFileMap
   {
   public:
@@ -44,8 +44,9 @@ namespace eCAL
   protected:
     void Cleanup();
 
-    std::mutex  sync;
-    MemFileMapT map;
+    typedef std::unordered_map<std::string, SMemFileInfo> MemFileMapT;
+    std::mutex  m_memfile_map_mtx;
+    MemFileMapT m_memfile_map;
   };
 
   namespace memfile

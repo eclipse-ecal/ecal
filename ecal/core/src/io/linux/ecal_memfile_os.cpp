@@ -82,6 +82,12 @@ namespace eCAL
         return(true);
       }
 
+      bool RemoveFile(const SMemFileInfo& mem_file_info_)
+      {
+        ::shm_unlink(mem_file_info_.name.c_str());
+        return(true);
+      }
+
       bool MapFile(const bool create_, SMemFileInfo& mem_file_info_)
       {
         if (mem_file_info_.mem_address == nullptr)
@@ -163,12 +169,6 @@ namespace eCAL
           }
         }
 
-        return(true);
-      }
-
-      bool RemoveFile(const SMemFileInfo& mem_file_info_)
-      {
-        ::shm_unlink(mem_file_info_.name.c_str());
         return(true);
       }
     }

@@ -23,7 +23,6 @@
 
 #pragma once
 
-#include <mutex>
 #include <string>
 
 #include <ecal/ecal_os.h>
