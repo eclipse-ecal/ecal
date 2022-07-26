@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  eCAL memory file interface
+ * @brief  eCAL base memory file interface
 **/
 
 #pragma once

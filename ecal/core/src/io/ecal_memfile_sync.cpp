@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  synchronized memory file
+ * @brief  synchronized memory file interface
 **/
 
 #include <ecal/ecal.h>

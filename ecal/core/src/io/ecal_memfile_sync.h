@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  synchronized memory file
+ * @brief  synchronized memory file interface
 **/
 
 #pragma once

@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  eCAL memory file map handling
+ * @brief  eCAL global memory file map (database) handling
 **/
 
 #include "ecal_def.h"
@@ -34,7 +34,7 @@ namespace eCAL
   {
     namespace db
     {
-
+#if 0 // THIS IS USED NOWHERE
       void Cleanup()
       {
         if (!g_memfile_map()) return;
@@ -61,8 +61,9 @@ namespace eCAL
         // clear map
         memfile_map.clear();
       }
+#endif
 
-      bool CreateFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_)
+      bool AddFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_)
       {
         if (!g_memfile_map()) return(false);
 
@@ -108,7 +109,7 @@ namespace eCAL
         return(true);
       }
 
-      bool DestroyFile(const std::string& name_, const bool remove_)
+      bool RemoveFile(const std::string& name_, const bool remove_)
       {
         if (!g_memfile_map()) return(false);
 
@@ -149,9 +150,12 @@ namespace eCAL
         return(false);
       }
 
-      bool UpdateFile(const std::string& name_, SMemFileInfo& mem_file_info_)
+      bool CheckFileSize(const std::string& name_, const size_t len_, SMemFileInfo& mem_file_info_)
       {
         if (!g_memfile_map()) return(false);
+
+        // check and correct file size
+        memfile::os::CheckFileSize(len_, false, mem_file_info_);
 
         // lock memory map access
         std::lock_guard<std::mutex> lock(g_memfile_map()->sync);

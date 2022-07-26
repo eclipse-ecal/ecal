@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  eCAL memory file map handling
+ * @brief  eCAL memory file map (database) handling
 **/
 
 #pragma once
@@ -33,10 +33,12 @@ namespace eCAL
   {
     namespace db
     {
-      void Cleanup();
-      bool CreateFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_);
-      bool DestroyFile(const std::string& name_, const bool remove_);
-      bool UpdateFile(const std::string& name_, SMemFileInfo& mem_file_info_);
+      //void Cleanup();
+
+      bool AddFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_);
+      bool RemoveFile(const std::string& name_, const bool remove_);
+
+      bool CheckFileSize(const std::string& name_, const size_t len_, SMemFileInfo& mem_file_info_);
     }
   }
 }

@@ -18,13 +18,12 @@
 */
 
 /**
- * @brief  memory file interface
+ * @brief  base memory file interface
 **/
 
 #include "ecal_def.h"
 #include "ecal_memfile.h"
 #include "ecal_memfile_db.h"
-#include "ecal_memfile_os.h"
 
 #include <assert.h>
 #include <cstring>
@@ -73,7 +72,7 @@ namespace eCAL
       m_memfile_info = SMemFileInfo();
 
       // create memory file
-      if (!memfile::db::CreateFile(name_, create_, len_ + sizeof(SInternalHeader), m_memfile_info))
+      if (!memfile::db::AddFile(name_, create_, len_ + sizeof(SInternalHeader), m_memfile_info))
       {
 #ifndef NDEBUG
         printf("Could not create memory file: %s.\n\n", name_);
@@ -139,7 +138,7 @@ namespace eCAL
     bool ret_state = true;
 
     // destroy memory file
-    ret_state &= memfile::db::DestroyFile(m_name, remove_);
+    ret_state &= memfile::db::RemoveFile(m_name, remove_);
 
     // unlock mutex
     ret_state &= DestroyMtx(&m_memfile_info.mutex);
@@ -308,11 +307,8 @@ namespace eCAL
     size_t len = static_cast<size_t>(m_header.int_hdr_size) + static_cast<size_t>(m_header.max_data_size);
     if (len > m_memfile_info.size)
     {
-      // check memory file size
-      memfile::os::CheckFileSize(len, false, m_memfile_info);
-
-      // update memory file map
-      memfile::db::UpdateFile(m_name, m_memfile_info);
+      // check file size and update memory file map
+      memfile::db::CheckFileSize(m_name, len, m_memfile_info);
 
       // check size again and give up if it is still to small
       if (len > m_memfile_info.size)
