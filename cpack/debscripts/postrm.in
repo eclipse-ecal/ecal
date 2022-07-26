@@ -1,0 +1,17 @@
+# Update the desktop entry
+if hash update-desktop-database 2>/dev/null; then
+	update-desktop-database
+fi
+
+# Update mimetype database for removed workspace mimetype
+if hash update-mime-database 2>/dev/null; then
+	update-mime-database @CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_DATADIR@/mime/
+fi
+
+# Update icon database for removed icon
+if hash update-icon-caches 2>/dev/null; then
+    update-icon-caches @CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_DATADIR@/icons/
+fi
+
+# Due to multiarch install dirs, cmake fails to detect the necessity of ldconfig
+ldconfig

@@ -6,4 +6,5 @@ Exec=@CMAKE_INSTALL_PREFIX@/@eCAL_install_app_dir@/ecal_@TARGET_NAME@ %f
 Terminal=false
 Type=Application
 Icon=ecal_@TARGET_NAME@
+MimeType=application/ecalmeas
 Categories=Development;
