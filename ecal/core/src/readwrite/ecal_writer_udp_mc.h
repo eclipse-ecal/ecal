@@ -46,7 +46,7 @@ namespace eCAL
   public:
     ~CDataWriterUdpMC();
 
-    void GetInfo(SWriterInfo info_) override;
+    SWriterInfo GetInfo() override;
 
     bool Create(const std::string& host_name_, const std::string& topic_name_, const std::string & topic_id_) override;
     // this virtual function is called during construction/destruction,
