@@ -21,9 +21,7 @@
  * @brief  eCAL global memory file map (database) handling
 **/
 
-#include "ecal_def.h"
 #include "ecal_global_accessors.h"
-#include "ecal_memfile_db.h"
 #include "ecal_memfile_os.h"
 
 #include <assert.h>

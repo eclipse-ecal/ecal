@@ -22,7 +22,6 @@
 **/
 
 #include "ecal_def.h"
-#include "ecal_memfile.h"
 #include "ecal_memfile_db.h"
 
 #include <assert.h>
