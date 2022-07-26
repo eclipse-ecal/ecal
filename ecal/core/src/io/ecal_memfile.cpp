@@ -26,7 +26,7 @@
 #include "ecal_memfile_info.h"
 #include "ecal_memfile_db.h"
 
-#include <assert.h>
+#include <cassert>
 #include <cstring>
 
 namespace eCAL
