@@ -132,10 +132,10 @@ namespace eCAL
         memfile::os::DeAllocFile(memfile_info);
 
         memfile_map.erase(iter);
-
-        // we removed the file
-        return(true);
       }
+
+      // we removed the file (or marked it for later removal)
+      return(true);
     }
 
     return(false);
