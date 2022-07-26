@@ -22,7 +22,7 @@ find_package(Threads      REQUIRED)
 find_package(asio         REQUIRED)
 find_package(tclap        REQUIRED)
 find_package(simpleini    REQUIRED)
-find_package(tcp_pubsub        REQUIRED)
+find_package(tcp_pubsub   REQUIRED)
 
 if (ECAL_JOIN_MULTICAST_TWICE)
   message(STATUS "eCAL ${PROJECT_NAME}: Enabling Specific Multicast Network Bug Workaround")
@@ -57,19 +57,19 @@ set(ecal_io_cpp_src
 if(NOT ECAL_LAYER_ICEORYX)
   set(ecal_io_mem_cpp_src
       src/io/ecal_memfile.cpp
-      src/io/ecal_memfile_map.cpp
+      src/io/ecal_memfile_db.cpp
       src/io/ecal_memfile_pool.cpp
       src/io/ecal_memfile_sync.cpp
   )
   if(UNIX)
     set(ecal_io_mem_cpp_linux_src
-        src/io/linux/ecal_memfile_linux.cpp
+        src/io/linux/ecal_memfile_os.cpp
     )
   endif()
 
   if(WIN32)
     set(ecal_io_mem_cpp_win_src
-       src/io/win32/ecal_memfile_win32.cpp
+       src/io/win32/ecal_memfile_os.cpp
     )
   endif()
 endif(NOT ECAL_LAYER_ICEORYX)
@@ -172,8 +172,9 @@ set(ecal_io_header_src
 if(NOT ECAL_LAYER_ICEORYX)
   set(ecal_io_mem_header_src
       src/io/ecal_memfile.h
+      src/io/ecal_memfile_db.h
       src/io/ecal_memfile_mtx.h
-      src/io/ecal_memfile_map.h
+      src/io/ecal_memfile_os.h
       src/io/ecal_memfile_pool.h
       src/io/ecal_memfile_sync.h
   )

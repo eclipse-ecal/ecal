@@ -29,8 +29,14 @@
 
 namespace eCAL
 {
-  //void CleanupMemoryFileMap();
-  bool CreateMemFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_);
-  bool DestroyMemFile(const std::string& name_, const bool remove_);
-  bool UpdateMemFile(const std::string& name_, SMemFileInfo& mem_file_info_);
-};
+  namespace memfile
+  {
+    namespace db
+    {
+      void Cleanup();
+      bool CreateFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_);
+      bool DestroyFile(const std::string& name_, const bool remove_);
+      bool UpdateFile(const std::string& name_, SMemFileInfo& mem_file_info_);
+    }
+  }
+}

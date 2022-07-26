@@ -22,19 +22,14 @@
 **/
 
 #include "ecal_def.h"
-#include "ecal_global_accessors.h"
 #include "ecal_memfile.h"
-#include "ecal_memfile_map.h"
+#include "ecal_memfile_db.h"
+#include "ecal_memfile_os.h"
 
 #include <assert.h>
 
 namespace eCAL
 {
-  /////////////////////////////////////////////////////////////////////////////////
-  // External memory file handling functions (ecal_memfile_win32|linux.cpp)
-  /////////////////////////////////////////////////////////////////////////////////
-  bool CheckMemFile(const size_t len_, const bool create_, SMemFileInfo& mem_file_info_);
-
   /////////////////////////////////////////////////////////////////////////////////
   // Memory file handling class
   /////////////////////////////////////////////////////////////////////////////////
@@ -77,7 +72,7 @@ namespace eCAL
       m_memfile_info = SMemFileInfo();
 
       // create memory file
-      if (!CreateMemFile(name_, create_, len_ + sizeof(SInternalHeader), m_memfile_info))
+      if (!memfile::db::CreateFile(name_, create_, len_ + sizeof(SInternalHeader), m_memfile_info))
       {
 #ifndef NDEBUG
         printf("Could not create memory file: %s.\n\n", name_);
@@ -143,7 +138,7 @@ namespace eCAL
     bool ret_state = true;
 
     // destroy memory file
-    ret_state &= DestroyMemFile(m_name, remove_);
+    ret_state &= memfile::db::DestroyFile(m_name, remove_);
 
     // unlock mutex
     ret_state &= DestroyMtx(&m_memfile_info.mutex);
@@ -295,7 +290,6 @@ namespace eCAL
   {
     if (!m_created)                  return(false);
     if (!m_memfile_info.mem_address) return(false);
-    if (!g_memfile_map())            return(false);
 
     // lock mutex
     if (!LockMtx(&m_memfile_info.mutex, timeout_))
@@ -314,10 +308,10 @@ namespace eCAL
     if (len > m_memfile_info.size)
     {
       // check memory file size
-      CheckMemFile(len, false, m_memfile_info);
+      memfile::os::CheckFileSize(len, false, m_memfile_info);
 
       // update memory file map
-      UpdateMemFile(m_name, m_memfile_info);
+      memfile::db::UpdateFile(m_name, m_memfile_info);
 
       // check size again and give up if it is still to small
       if (len > m_memfile_info.size)
