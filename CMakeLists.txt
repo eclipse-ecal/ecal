@@ -474,6 +474,13 @@ if(BUILD_DOCS)
   add_subdirectory(doc)
 endif()
 
+# --------------------------------------------------------
+# debscripts
+# --------------------------------------------------------
+if (UNIX)
+  add_subdirectory(cpack/debscripts)
+endif()
+
 #install(EXPORT eCALTargets DESTINATION cmake NAMESPACE eCAL::)
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
