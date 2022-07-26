@@ -23,60 +23,12 @@
 
 #pragma once
 
-#include <mutex>
 #include <string>
-#include <unordered_map>
 
-#include <ecal/ecal_os.h>
-#include "ecal_memfile_mtx.h"
-
-#ifdef ECAL_OS_WINDOWS
-
-#include "ecal_win_main.h"
-
-typedef HANDLE  MemFileT;
-typedef HANDLE  MapRegionT;
-
-#endif /* ECAL_OS_WINDOWS */
-
-#ifdef ECAL_OS_LINUX
-
-typedef int  MemFileT;
-typedef int  MapRegionT;
-
-#endif /* ECAL_OS_LINUX */
+#include "ecal_memfile_info.h"
 
 namespace eCAL
 {
-  struct SMemFileInfo
-  {
-    SMemFileInfo()
-    {
-      refcnt          = 0;
-      remove          = false;
-      mutex           = 0;
-      memfile         = 0;
-      map_region      = 0;
-      mem_address     = 0;
-      size            = 0;
-    }
-    int          refcnt;
-    bool         remove;
-    MutexT       mutex;
-    MemFileT     memfile;
-    MapRegionT   map_region;
-    void*        mem_address;
-    std::string  name;
-    size_t       size;
-  };
-
-  typedef std::unordered_map<std::string, SMemFileInfo> MemFileMapT;
-  struct SMemFileMap
-  {
-    std::mutex  sync;
-    MemFileMapT map;
-  };
-
   /**
    * @brief Shared memory file handler class. 
   **/

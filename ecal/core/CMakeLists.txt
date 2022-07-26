@@ -173,6 +173,7 @@ if(NOT ECAL_LAYER_ICEORYX)
   set(ecal_io_mem_header_src
       src/io/ecal_memfile.h
       src/io/ecal_memfile_db.h
+      src/io/ecal_memfile_info.h
       src/io/ecal_memfile_mtx.h
       src/io/ecal_memfile_os.h
       src/io/ecal_memfile_pool.h

@@ -108,7 +108,7 @@ namespace eCAL
     /////////////////////
     if(memfile_map_instance == nullptr) 
     {
-      memfile_map_instance = std::make_unique<SMemFileMap>();
+      memfile_map_instance = std::make_unique<CMemFileMap>();
       new_initialization = true;
     }
 

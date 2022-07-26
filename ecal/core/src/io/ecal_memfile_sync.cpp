@@ -67,14 +67,11 @@ namespace eCAL
     // create the memory file
     if (!m_memfile.Create(m_memfile_name.c_str(), true, memfile_size))
     {
-      // log it
       Logging::Log(log_level_error, std::string(m_base_name + "::CSyncMemoryFile::Create - FAILED : ") + m_memfile_name);
-
       return false;
     }
 
 #ifndef NDEBUG
-    // log it
     Logging::Log(log_level_debug2, std::string(m_base_name + "::CSyncMemoryFile::Create - SUCCESS : ") + m_memfile_name);
 #endif
 
@@ -107,14 +104,12 @@ namespace eCAL
     if (!m_memfile.Destroy(true))
     {
 #ifndef NDEBUG
-      // log it
       Logging::Log(log_level_debug2, std::string(m_base_name + "::CSyncMemoryFile::Destroy - FAILED : ") + m_memfile.Name());
 #endif
       return false;
     }
 
 #ifndef NDEBUG
-    // log it
     Logging::Log(log_level_debug2, std::string(m_base_name + "::CSyncMemoryFile::Destroy - SUCCESS : ") + m_memfile.Name());
 #endif
     return true;
@@ -197,7 +192,6 @@ namespace eCAL
     if (file_to_small)
     {
 #ifndef NDEBUG
-      // log it
       Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::CheckSize - RECREATE");
 #endif
       // estimate size of memory file
@@ -219,19 +213,9 @@ namespace eCAL
     if (!m_created) return false;
 
     // write header and payload into the memory file
-
 #ifndef NDEBUG
-    // log it
     Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::Write");
 #endif
-
-    // created ?
-    if (!m_memfile.IsCreated())
-    {
-      // log it
-      Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Write::IsCreated - FAILED");
-      return false;
-    }
 
     // create user file header
     struct SMemFileHeader memfile_hdr;
@@ -248,27 +232,26 @@ namespace eCAL
     // set zero copy
     memfile_hdr.options.zero_copy = static_cast<unsigned char>(data_.zero_copy);
 
-    // open the memory file
-    bool opened = m_memfile.GetWriteAccess(PUB_MEMFILE_OPEN_TO);
+    // acquire write access
+    bool write_access = m_memfile.GetWriteAccess(PUB_MEMFILE_OPEN_TO);
 
     // maybe it's locked by a zombie or a crashed process
     // so we try to recreate a new one
-    if (!opened)
+    if (!write_access)
     {
 #ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug2, m_base_name + "::CSyncMemoryFile::Write::Open - FAILED");
+      Logging::Log(log_level_debug2, m_base_name + "::CSyncMemoryFile::Write::GetWriteAccess - FAILED");
 #endif
 
       // try to recreate the memory file
       if (!RecreateFile(m_memfile.MaxDataSize())) return false;
 
-      // then reopen
-      opened = m_memfile.GetWriteAccess(PUB_MEMFILE_OPEN_TO);
+      // then try to get access again
+      write_access = m_memfile.GetWriteAccess(PUB_MEMFILE_OPEN_TO);
       // still no chance ? hell .... we give up
-      if (!opened)
+      if (!write_access)
       {
-        Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Write::Open - FAILED FINALLY");
+        Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Write::GetWriteAccess - FAILED FINALLY");
         return false;
       }
     }
@@ -285,14 +268,13 @@ namespace eCAL
     {
       written &= m_memfile.Write(data_.buf, data_.len, wbytes) > 0;
     }
-    // close memory file
+    // release write access
     m_memfile.ReleaseWriteAccess();
 
     // and fire the publish event for local subscriber
-    if (written) SignalWritten();
+    if (written) SendSyncEvents();
 
 #ifndef NDEBUG
-    // log it
     if (written)
     {
       Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::Write::Written (" + std::to_string(data_.len) + " Bytes)");
@@ -312,34 +294,7 @@ namespace eCAL
     return m_memfile_name;
   }
 
-  bool CSyncMemoryFile::RecreateFile(size_t size_)
-  {
-    // collect id's of the currently connected processes
-    std::vector<std::string> process_id_list;
-    {
-      std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-      for (auto iter : m_event_handle_map)
-      {
-        process_id_list.push_back(iter.first);
-      }
-    }
-
-    // destroy existing memory file object
-    Destroy();
-
-    // create a new one
-    if (!Create(m_base_name, size_)) return false;
-
-    // reconnect processes
-    for (auto process_id : process_id_list)
-    {
-      ConnectProcess(process_id);
-    }
-
-    return true;
-  }
-
-  void CSyncMemoryFile::SignalWritten()
+  void CSyncMemoryFile::SendSyncEvents()
   {
     if (!m_created) return;
 
@@ -375,14 +330,12 @@ namespace eCAL
           // invalidate it
           gInvalidateEvent(&iter->second.event_ack);
 #ifndef NDEBUG
-          // log it
           Logging::Log(log_level_debug2, m_base_name + "::CSyncMemoryFile::SignalWritten - ACK event timeout");
 #endif
         }
       }
 
 #ifndef NDEBUG
-      // log it
       Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::SignalWritten");
 #endif
     }
@@ -400,6 +353,33 @@ namespace eCAL
 
     // append "_shm" for debugging purposes
     m_memfile_name += "_shm";
+  }
+
+  bool CSyncMemoryFile::RecreateFile(size_t size_)
+  {
+    // collect id's of the currently connected processes
+    std::vector<std::string> process_id_list;
+    {
+      std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
+      for (auto iter : m_event_handle_map)
+      {
+        process_id_list.push_back(iter.first);
+      }
+    }
+
+    // destroy existing memory file object
+    Destroy();
+
+    // create a new one
+    if (!Create(m_base_name, size_)) return false;
+
+    // reconnect processes
+    for (auto process_id : process_id_list)
+    {
+      ConnectProcess(process_id);
+    }
+
+    return true;
   }
 
   void CSyncMemoryFile::DisconnectAllProcesses()

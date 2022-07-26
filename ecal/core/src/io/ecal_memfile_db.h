@@ -24,17 +24,34 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 
 #include "io/ecal_memfile.h"
 
 namespace eCAL
 {
+  typedef std::unordered_map<std::string, SMemFileInfo> MemFileMapT;
+  class CMemFileMap
+  {
+  public:
+    CMemFileMap() = default;
+    ~CMemFileMap();
+
+    bool AddFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_);
+    bool RemoveFile(const std::string& name_, const bool remove_);
+    bool CheckFileSize(const std::string& name_, const size_t len_, SMemFileInfo& mem_file_info_);
+
+  protected:
+    void Cleanup();
+
+    std::mutex  sync;
+    MemFileMapT map;
+  };
+
   namespace memfile
   {
     namespace db
     {
-      //void Cleanup();
-
       bool AddFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_);
       bool RemoveFile(const std::string& name_, const bool remove_);
 

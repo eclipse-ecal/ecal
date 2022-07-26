@@ -25,143 +25,153 @@
 #include "ecal_memfile_os.h"
 
 #include <assert.h>
+#include "ecal_memfile_db.h"
 
 namespace eCAL
 {
+  CMemFileMap::~CMemFileMap()
+  {
+    Cleanup();
+  }
+
+  void CMemFileMap::Cleanup()
+  {
+    // lock memory map access
+    std::lock_guard<std::mutex> lock(sync);
+
+    // erase memory files from memory map
+    for (MemFileMapT::iterator iter = map.begin(); iter != map.end(); ++iter)
+    {
+      auto& memfile_info = iter->second;
+
+      // unmap memory file
+      memfile::os::UnMapFile(memfile_info);
+
+      // remove memory file from system
+      if (memfile_info.remove) memfile::os::RemoveFile(memfile_info);
+
+      // deallocate memory file
+      memfile::os::DeAllocFile(memfile_info);
+    }
+
+    // clear map
+    map.clear();
+  }
+
+  bool CMemFileMap::AddFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_)
+  {
+    // we need a length != 0
+    assert(len_ > 0);
+
+    // lock memory map access
+    std::lock_guard<std::mutex> lock(sync);
+
+    // check for existing memory file
+    MemFileMapT::iterator iter = map.find(name_);
+    if (iter == map.end())
+    {
+      // create memory file
+      if (!memfile::os::AllocFile(name_, create_, mem_file_info_))
+      {
+#ifndef NDEBUG
+        printf("Could create memory file: %s.\n\n", name_.c_str());
+#endif
+        return(false);
+      }
+
+      // check memory file size
+      memfile::os::CheckFileSize(len_, create_, mem_file_info_);
+
+      // and add to memory file map
+      mem_file_info_.refcnt++;
+      map[name_] = mem_file_info_;
+    }
+    else
+    {
+      // increase reference counter
+      iter->second.refcnt++;
+
+      // check memory file size
+      memfile::os::CheckFileSize(len_, false, iter->second);
+
+      // copy info from memory file map
+      mem_file_info_ = iter->second;
+    }
+
+    // return success
+    return(true);
+  }
+
+  bool CMemFileMap::RemoveFile(const std::string& name_, const bool remove_)
+  {
+    // lock memory map access
+    std::lock_guard<std::mutex> lock(sync);
+
+    // erase memory file from memory map
+    auto& memfile_map = map;
+    MemFileMapT::iterator iter = memfile_map.find(name_);
+    if (iter != memfile_map.end())
+    {
+      auto& memfile_info = iter->second;
+
+      // decrease reference counter
+      memfile_info.refcnt--;
+      // mark for remove
+      memfile_info.remove |= remove_;
+      if (memfile_info.refcnt < 1)
+      {
+        bool remove_from_system = memfile_info.remove;
+
+        // unmap memory file
+        memfile::os::UnMapFile(memfile_info);
+
+        // remove memory file from system
+        if (remove_from_system) memfile::os::RemoveFile(memfile_info);
+
+        // dealloc memory file
+        memfile::os::DeAllocFile(memfile_info);
+
+        memfile_map.erase(iter);
+
+        // we removed the file
+        return(true);
+      }
+    }
+
+    return(false);
+  }
+
+  bool CMemFileMap::CheckFileSize(const std::string& name_, const size_t len_, SMemFileInfo& mem_file_info_)
+  {
+    // check and correct file size
+    memfile::os::CheckFileSize(len_, false, mem_file_info_);
+
+    // lock memory map access
+    std::lock_guard<std::mutex> lock(sync);
+
+    // update/set info
+    map[name_] = mem_file_info_;
+
+    return(true);
+  }
+
   namespace memfile
   {
     namespace db
     {
-#if 0 // THIS IS USED NOWHERE
-      void Cleanup()
-      {
-        if (!g_memfile_map()) return;
-
-        // lock memory map access
-        std::lock_guard<std::mutex> lock(g_memfile_map()->sync);
-
-        // erase memory files from memory map
-        auto& memfile_map = g_memfile_map()->map;
-        for (MemFileMapT::iterator iter = memfile_map.begin(); iter != memfile_map.end(); ++iter)
-        {
-          auto& memfile_info = iter->second;
-
-          // unmap memory file
-          memfile::os::UnMapFile(memfile_info);
-
-          // remove memory file from system
-          if (memfile_info.remove) memfile::os::RemoveFile(memfile_info);
-
-          // deallocate memory file
-          memfile::os::DeAllocFile(memfile_info);
-        }
-
-        // clear map
-        memfile_map.clear();
-      }
-#endif
-
       bool AddFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_)
       {
-        if (!g_memfile_map()) return(false);
-
-        // we need a length != 0
-        assert(len_ > 0);
-
-        // lock memory map access
-        std::lock_guard<std::mutex> lock(g_memfile_map()->sync);
-
-        // check for existing memory file
-        MemFileMapT::iterator iter = g_memfile_map()->map.find(name_);
-        if (iter == g_memfile_map()->map.end())
-        {
-          // create memory file
-          if (!memfile::os::AllocFile(name_, create_, mem_file_info_))
-          {
-#ifndef NDEBUG
-            printf("Could create memory file: %s.\n\n", name_.c_str());
-#endif
-            return(false);
-          }
-
-          // check memory file size
-          memfile::os::CheckFileSize(len_, create_, mem_file_info_);
-
-          // and add to memory file map
-          mem_file_info_.refcnt++;
-          g_memfile_map()->map[name_] = mem_file_info_;
-        }
-        else
-        {
-          // increase reference counter
-          iter->second.refcnt++;
-
-          // check memory file size
-          memfile::os::CheckFileSize(len_, false, iter->second);
-
-          // copy info from memory file map
-          mem_file_info_ = iter->second;
-        }
-
-        // return success
-        return(true);
+        return g_memfile_map()->AddFile(name_, create_, len_, mem_file_info_);
       }
 
       bool RemoveFile(const std::string& name_, const bool remove_)
       {
-        if (!g_memfile_map()) return(false);
-
-        // lock memory map access
-        std::lock_guard<std::mutex> lock(g_memfile_map()->sync);
-
-        // erase memory file from memory map
-        auto& memfile_map = g_memfile_map()->map;
-        MemFileMapT::iterator iter = memfile_map.find(name_);
-        if (iter != memfile_map.end())
-        {
-          auto& memfile_info = iter->second;
-
-          // decrease reference counter
-          memfile_info.refcnt--;
-          // mark for remove
-          memfile_info.remove |= remove_;
-          if (memfile_info.refcnt < 1)
-          {
-            bool remove_from_system = memfile_info.remove;
-
-            // unmap memory file
-            memfile::os::UnMapFile(memfile_info);
-
-            // remove memory file from system
-            if (remove_from_system) memfile::os::RemoveFile(memfile_info);
-
-            // dealloc memory file
-            memfile::os::DeAllocFile(memfile_info);
-
-            memfile_map.erase(iter);
-
-            // we removed the file
-            return(true);
-          }
-        }
-
-        return(false);
+        return g_memfile_map()->RemoveFile(name_, remove_);
       }
 
       bool CheckFileSize(const std::string& name_, const size_t len_, SMemFileInfo& mem_file_info_)
       {
-        if (!g_memfile_map()) return(false);
-
-        // check and correct file size
-        memfile::os::CheckFileSize(len_, false, mem_file_info_);
-
-        // lock memory map access
-        std::lock_guard<std::mutex> lock(g_memfile_map()->sync);
-
-        // update/set info
-        g_memfile_map()->map[name_] = mem_file_info_;
-
-        return(true);
+        return g_memfile_map()->CheckFileSize(name_, len_, mem_file_info_);
       }
     }
   }
