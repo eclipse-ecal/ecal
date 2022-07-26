@@ -139,7 +139,7 @@ namespace eCAL
           mem_file_info_.size = len;
 
           // map memory file
-          MapMemFile(create_, mem_file_info_);
+          MapFile(create_, mem_file_info_);
         }
         else
         {
@@ -147,13 +147,13 @@ namespace eCAL
           if (len > mem_file_info_.size)
           {
             // unmap memory file
-            UnMapMemFile(mem_file_info_);
+            UnMapFile(mem_file_info_);
 
             // set new file size
             mem_file_info_.size = len;
 
             // and map memory file again
-            MapMemFile(create_, mem_file_info_);
+            MapFile(create_, mem_file_info_);
 
             // reset content
             if (create_ && mem_file_info_.mem_address)
