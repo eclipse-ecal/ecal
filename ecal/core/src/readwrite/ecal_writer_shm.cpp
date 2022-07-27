@@ -414,14 +414,17 @@ namespace eCAL
     // do not clear the map, because we will use
     // the map keys (process id's) to recreate the
     // events in a subsequent CreateMemFile call
-    for (auto iter = m_event_handle_map.begin(); iter != m_event_handle_map.end(); ++iter)
     {
-      gCloseEvent(iter->second.event_snd);
-      gInvalidateEvent(&iter->second.event_snd);
-      if (m_timeout_ack != 0)
+      std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
+      for (auto iter = m_event_handle_map.begin(); iter != m_event_handle_map.end(); ++iter)
       {
-        gCloseEvent(iter->second.event_ack);
-        gInvalidateEvent(&iter->second.event_ack);
+        gCloseEvent(iter->second.event_snd);
+        gInvalidateEvent(&iter->second.event_snd);
+        if (m_timeout_ack != 0)
+        {
+          gCloseEvent(iter->second.event_ack);
+          gInvalidateEvent(&iter->second.event_ack);
+        }
       }
     }
 
