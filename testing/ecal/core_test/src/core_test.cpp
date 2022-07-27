@@ -76,13 +76,16 @@ TEST(Core, LeakedPubSub)
     while (!pub_stop)
     {
       pub.Send("Hello World");
-
+#if 0
       // some kind of busy waiting....
       int y = 0;
       for (int i = 0; i < 100000; i++)
       {
         y += i;
       }
+#else
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+#endif
     }
   });
 
@@ -115,13 +118,16 @@ TEST(Core, CallbackDestruction)
     while (!pub_stop)
     {
       pub.Send("Hello World");
-      
+#if 0
       // some kind of busy waiting....
       int y = 0;
       for (int i = 0; i < 100000; i++)
       {
         y += i;
       }
+#else
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+#endif
     }
     });
 
