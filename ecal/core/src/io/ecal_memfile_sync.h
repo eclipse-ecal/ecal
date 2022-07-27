@@ -28,7 +28,6 @@
 
 #include <ecal/ecal_eventhandle.h>
 
-#include <atomic>
 #include <mutex>
 #include <string>
 #include <unordered_map>
@@ -38,14 +37,11 @@ namespace eCAL
   class CSyncMemoryFile
   {
   public:
-    CSyncMemoryFile();
+    CSyncMemoryFile(const std::string& base_name_, size_t size_, int timeout_open_ms, int timeout_ack_ms);
     ~CSyncMemoryFile();
 
-    bool Create(const std::string& base_name_, size_t size_);
-    bool Destroy();
-
-    bool ConnectProcess(const std::string& process_id_);
-    bool DisconnectProcess(const std::string& process_id_);
+    bool Connect(const std::string& process_id_);
+    bool Disconnect(const std::string& process_id_);
 
     bool CheckSize(size_t size_);
     bool Write(const CDataWriterBase::SWriterData& data_);
@@ -53,16 +49,21 @@ namespace eCAL
     std::string GetName();
 
   protected:
-    void SendSyncEvents();
-    void BuildMemFileName();
-    bool RecreateFile(size_t size_);
-    void DisconnectAllProcesses();
+    bool Create(const std::string& base_name_, size_t size_);
+    bool Destroy();
+    bool Recreate(size_t size_);
 
-    std::string       m_base_name;
-    std::string       m_memfile_name;
-    CMemoryFile       m_memfile;
-    int               m_timeout_ack;
-    std::atomic<bool> m_created;
+    void BuildMemFileName();
+
+    void SendSyncEvents();
+    void DisconnectAll();
+
+    std::string      m_base_name;
+    std::string      m_memfile_name;
+    CMemoryFile      m_memfile;
+    int              m_timeout_open;
+    int              m_timeout_ack;
+    bool             m_created;
 
     struct SEventHandlePair
     {
