@@ -37,13 +37,13 @@ namespace eCAL
     CMemFileMap() = default;
     ~CMemFileMap();
 
+    void Destroy();
+
     bool AddFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_);
     bool RemoveFile(const std::string& name_, const bool remove_);
     bool CheckFileSize(const std::string& name_, const size_t len_, SMemFileInfo& mem_file_info_);
 
   protected:
-    void Cleanup();
-
     typedef std::unordered_map<std::string, SMemFileInfo> MemFileMapT;
     std::mutex  m_memfile_map_mtx;
     MemFileMapT m_memfile_map;
