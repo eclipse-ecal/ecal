@@ -30,6 +30,8 @@
 
 #include "ecal_memfile_pool.h"
 
+#include <chrono>
+
 namespace eCAL
 {
   ////////////////////////////////////////
@@ -157,7 +159,7 @@ namespace eCAL
     while((m_timeout_read < timeout_) && !m_do_stop)
     {
       // loop start in ms
-      auto loop_start = eCAL::Time::GetMicroSeconds()/1000;
+      auto loop_start = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
 
       // check for memory file update event from shm writer (20 ms)
       if(gWaitForEvent(m_event_snd, 20))
@@ -254,7 +256,7 @@ namespace eCAL
       else
       {
         // increase timeout in ms
-        m_timeout_read += eCAL::Time::GetMicroSeconds()/1000 - loop_start;
+        m_timeout_read += std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count() - loop_start;
       }
     }
 
