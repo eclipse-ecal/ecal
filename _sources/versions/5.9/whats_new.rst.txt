@@ -22,7 +22,7 @@ New features
 
 - **Great improvements** in eCAL Rec GUI, eCAL Sys GUI and eCAL Mon CLI
 
-- Check out the `entire 5.9.0 changelog <https://github.com/continental/ecal/releases/tag/v5.9.0>`_!.
+- Check out the `entire 5.9.0 changelog <https://github.com/eclipse-ecal/ecal/releases/tag/v5.9.0>`_!.
 
 
 Compatibility table

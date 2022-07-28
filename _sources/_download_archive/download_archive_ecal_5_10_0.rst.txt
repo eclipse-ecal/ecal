@@ -4,7 +4,7 @@ eCAL 5.10.0
 
 - Release Date: 2022-05-09
 
-- GitHub Release Page: https://github.com/continental/ecal/releases/tag/v5.10.0
+- GitHub Release Page: https://github.com/eclipse-ecal/ecal/releases/tag/v5.10.0
 
 
 Changelog

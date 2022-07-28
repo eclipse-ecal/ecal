@@ -42,7 +42,7 @@
     <div class="col-sm-6 col-lg-7">
 
         <div class="logo">
-        <a href="https://continental.github.io/ecal/" title="eCAL Documentation" >
+        <a href="https://eclipse-ecal.github.io/ecal/" title="eCAL Documentation" >
 
             <img src="../../_static/img/ecal-logo.svg" width="484" height="130" alt="eCAL Logo" class="logo-image" />
         </a>
@@ -631,12 +631,12 @@
             <span class="btn-text">View source</span>
         </a>
         <a class="btn btn-sm btn-light" id="btnHowToEdit"
-           href="https://continental.github.io/ecal/advanced/documentation.html"
+           href="https://eclipse-ecal.github.io/ecal/advanced/documentation.html"
            rel="nofollow noopener" target="_blank">
             <span class="btn-icon"><span class="fas fa-info-circle"></span></span>
             <span class="btn-text">How to edit</span>
         </a>
-        <a class="btn btn-sm btn-light" id="btnEditOnGitHub" href="https://github.com/continental/ecal/blob/master/doc/rst/advanced/layers/shm.rst">
+        <a class="btn btn-sm btn-light" id="btnEditOnGitHub" href="https://github.com/eclipse-ecal/ecal/blob/master/doc/rst/advanced/layers/shm.rst">
             <span class="btn-icon"><span class="fab fa-github"></span></span>
             <span class="btn-text">Edit on GitHub</span>
         </a>
@@ -747,7 +747,7 @@ But if this is wanted for reasons it can be done by adapting your <code class="f
 </li>
 <li><p><strong>Use zero-copy for a single publisher (from your code):</strong></p>
 <p>Zero copy could be activated either per connection or for a complete system using the eCAL configuration file.
-To activate it for a specific publisher this <code class="docutils literal notranslate"><span class="pre">CPublisher</span></code> <a class="reference external" href="https://continental.github.io/ecal/_api/classeCAL_1_1CPublisher.html#_CPPv4N4eCAL10CPublisher17ShmEnableZeroCopyEb">API function</a> needs to be called.</p>
+To activate it for a specific publisher this <code class="docutils literal notranslate"><span class="pre">CPublisher</span></code> <a class="reference external" href="https://eclipse-ecal.github.io/ecal/_api/classeCAL_1_1CPublisher.html#_CPPv4N4eCAL10CPublisher17ShmEnableZeroCopyEb">API function</a> needs to be called.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Create a publisher (topic name &quot;person&quot;)</span>
 <span class="n">eCAL</span><span class="o">::</span><span class="n">protobuf</span><span class="o">::</span><span class="n">CPublisher</span><span class="o">&lt;</span><span class="n">pb</span><span class="o">::</span><span class="n">People</span><span class="o">::</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">pub</span><span class="p">(</span><span class="s">&quot;person&quot;</span><span class="p">);</span>
 
@@ -789,7 +789,7 @@ These files work like an SHM-file ring buffer.</p>
 </div>
 </li>
 <li><p><strong>Use multi-buffering for a single publisher (from your code):</strong></p>
-<p>Multibuffering can be enabled for a specific publisher using this <code class="docutils literal notranslate"><span class="pre">CPublisher</span></code> <a class="reference external" href="https://continental.github.io/ecal/_api/classeCAL_1_1CPublisher.html#_CPPv4N4eCAL10CPublisher17ShmSetBufferCountEl">API function</a>:</p>
+<p>Multibuffering can be enabled for a specific publisher using this <code class="docutils literal notranslate"><span class="pre">CPublisher</span></code> <a class="reference external" href="https://eclipse-ecal.github.io/ecal/_api/classeCAL_1_1CPublisher.html#_CPPv4N4eCAL10CPublisher17ShmSetBufferCountEl">API function</a>:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Create a publisher (topic name &quot;person&quot;)</span>
 <span class="n">eCAL</span><span class="o">::</span><span class="n">protobuf</span><span class="o">::</span><span class="n">CPublisher</span><span class="o">&lt;</span><span class="n">pb</span><span class="o">::</span><span class="n">People</span><span class="o">::</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">pub</span><span class="p">(</span><span class="s">&quot;person&quot;</span><span class="p">);</span>
 

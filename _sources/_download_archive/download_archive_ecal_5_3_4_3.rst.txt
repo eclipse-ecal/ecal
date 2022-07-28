@@ -4,7 +4,7 @@ eCAL 5.3.4+3
 
 - Release Date: 2019-07-10
 
-- GitHub Release Page: https://github.com/continental/ecal/releases/tag/v5.3.4.3
+- GitHub Release Page: https://github.com/eclipse-ecal/ecal/releases/tag/v5.3.4.3
 
 
 Changelog

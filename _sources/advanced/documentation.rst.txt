@@ -22,7 +22,7 @@ For that we will use Visual Studio Code with the reStructuredText extension, tha
 
    .. code-block:: console
       
-      git clone https://github.com/continental/ecal.git
+      git clone https://github.com/eclipse-ecal/ecal.git
 
 #. Download and install Visual Studio Code on your PC (it is available for Windows, Linux and macOS).
 

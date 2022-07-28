@@ -20,7 +20,7 @@ New features
 
 - Proper support for **Ubunut Multiarch** directories
 
-- Check out the `entire 5.8.0 changelog <https://github.com/continental/ecal/releases/tag/v5.8.0>`_!.
+- Check out the `entire 5.8.0 changelog <https://github.com/eclipse-ecal/ecal/releases/tag/v5.8.0>`_!.
 
 
 Compatibility table

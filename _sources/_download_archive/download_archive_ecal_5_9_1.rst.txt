@@ -4,7 +4,7 @@ eCAL 5.9.1
 
 - Release Date: 2021-09-17
 
-- GitHub Release Page: https://github.com/continental/ecal/releases/tag/v5.9.1
+- GitHub Release Page: https://github.com/eclipse-ecal/ecal/releases/tag/v5.9.1
 
 
 Changelog

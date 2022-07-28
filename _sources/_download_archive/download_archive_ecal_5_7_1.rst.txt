@@ -4,7 +4,7 @@ eCAL 5.7.1
 
 - Release Date: 2020-09-02
 
-- GitHub Release Page: https://github.com/continental/ecal/releases/tag/v5.7.1
+- GitHub Release Page: https://github.com/eclipse-ecal/ecal/releases/tag/v5.7.1
 
 
 Changelog

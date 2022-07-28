@@ -4,7 +4,7 @@ eCAL 5.6.0
 
 - Release Date: 2020-06-25
 
-- GitHub Release Page: https://github.com/continental/ecal/releases/tag/v5.6.0
+- GitHub Release Page: https://github.com/eclipse-ecal/ecal/releases/tag/v5.6.0
 
 
 Changelog
