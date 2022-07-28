@@ -26,12 +26,100 @@
 import ecal.measurement.hdf5 as ecal_hdf5
 import ecal.proto.helper as pb_helper
 
+from typing import TYPE_CHECKING, Type, NamedTuple
+from enum import Enum
+
+class BinaryChannelInfo(NamedTuple):
+    topic: str
+    encoding: str
+    schema_name: str
+    schema: bytes
+
+class BinaryEntry(NamedTuple):
+    rcv_timestamp: int
+    snd_timestamp: int
+    msg: bytes
+
+class BinaryChannel(object):
+
+  def __init__(self, measurement, channel_name):
+    self._measurement = measurement
+    self._channel_name = channel_name
+    self._entries = self._measurement._reader.get_entries_info(channel_name)
+
+    channel_type = measurement._reader.get_channel_type(channel_name)
+    try:
+      self._protocol, self._type = channel_type.split(":")
+    except:
+      self._type = channel_type
+      self._protocol = ""
+    self._descriptor = measurement._reader.get_channel_description(channel_name)
+
+    #self.info = BinaryChannelInfo(topic = channel_name, encoding = "proto", schema_name = type, schema = descriptor)
+
+  #@property
+  #def info(self):
+  #  return self.info
+  
+  @property 
+  def topic(self) -> str:
+    return self._channel_name
+
+  @property
+  def encoding(self) -> str:
+    return self._protocol
+
+  @property
+  def schema_name(self) -> str:
+    return self._type
+
+  @property
+  def schema(self) -> bytes:
+    return self._descriptor
+  
+
+  class Iterator(object):
+
+    def __init__(self, channel):
+      self._channel = channel
+      self._position = 0
+
+    def __next__(self):
+      if self._position >= len(self._channel):
+        raise StopIteration
+      else:
+        self._position += 1
+      return self._channel[self._position - 1]
+
+    def next(self):
+      return self.__next__()
+
+  def __iter__(self):
+    return BinaryChannel.Iterator(self)
+
+  def __repr__(self):
+    return "< Channel object: name: %s - number of entries: %i >" % (self._channel_name, len(self._entries))
+
+  def __str__(self):
+    return self.__repr__()
+
+  def __len__(self):
+    return len(self._entries)
+
+  def __getitem__(self, entry_position):
+    entry = self._entries[entry_position]
+
+    rcv_timestamp = entry['rcv_timestamp']
+    snd_timestamp = entry['snd_timestamp']
+    id = entry['id']
+
+    data = self._measurement._reader.get_entry_data(id)
+    return BinaryEntry(rcv_timestamp = rcv_timestamp, snd_timestamp = snd_timestamp, msg = data)
+
+
 class Channel(object):
 
   def __init__(self, measurement, channel_name):
-    if channel_name not in measurement.channel_names:
-      raise KeyError("Channel "+ channel_name + " does not exist in measurement.")
-    
     self._measurement = measurement
     self._channel_name = channel_name
     self._entries = self._measurement._reader.get_entries_info(channel_name)
@@ -88,28 +176,40 @@ class Channel(object):
 
 class Measurement(object):
 
+  class ChannelAccessMode(Enum):
+    OBJECT = 1
+    BINARY = 2
+    
+  _channel_access_dict = {
+    ChannelAccessMode.OBJECT : Channel, 
+    ChannelAccessMode.BINARY : BinaryChannel
+  }
+
   class Iterator(object):
 
-    def __init__(self, measurement):
+    def __init__(self, measurement, channel_type):
       self._measurement = measurement
       self._iterator = iter(measurement.channel_names)
-
+      self._channel_type =  channel_type
     def __next__(self):
-      return Channel(self._measurement, self._iterator.next())
+      return self._channel_type(self._measurement, self._iterator.next())
 
     def next(self):
       return self.__next__()
 
-  def __init__(self, path):
+  def __init__(self, path, channel_access_mode : ChannelAccessMode = ChannelAccessMode.OBJECT):
     self._reader = ecal_hdf5.Meas(path)
     self._path = path
+    self._channel_type = self._channel_access_dict[channel_access_mode]
+    
 
   @property
   def channel_names(self):
     return self._reader.get_channel_names()
 
   def __getitem__(self, channel_name):
-    return Channel(self, channel_name)
+    # TODO: check if channel_name exists
+    return self._channel_type(self, channel_name)
 
   def __iter__(self):
     return Measurement.Iterator(self)
@@ -122,3 +222,6 @@ class Measurement(object):
 
   def __del__(self):
     self._reader.close()
+
+  def __len__(self):
+    return len(self._measurement.channel_names)
