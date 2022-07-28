@@ -182,6 +182,8 @@ namespace eCAL
   {
     if(!m_created) return;
 
+    std::lock_guard<std::mutex> lock(m_log_sync);
+
     m_udp_sender->Destroy();
 
     if(m_logfile) fclose(m_logfile);
