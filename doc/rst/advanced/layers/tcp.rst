@@ -95,4 +95,4 @@ You can activate TCP in the following ways:
 
       Also see the ``person_snd_tcp`` sample:
 
-      https://github.com/continental/ecal/tree/master/samples/cpp/person/person_snd_tcp
+      https://github.com/eclipse-ecal/ecal/tree/master/samples/cpp/person/person_snd_tcp
