@@ -26,6 +26,8 @@
 #include <vector>
 #include <gtest/gtest.h>
 
+#define CMN_REGISTRATION_REFRESH   1000
+
 namespace {
   // subscriber callback function
   void OnReceive(long long clock_)
@@ -69,8 +71,13 @@ TEST(Core, LeakedPubSub)
   eCAL::string::CSubscriber<std::string> sub("foo");
   sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_4));
 
-  // start publishing thread
+  // create publisher
   eCAL::string::CPublisher<std::string> pub("foo");
+
+  // let's match them
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+
+  // start publishing thread
   std::atomic<bool> pub_stop(false);
   std::thread pub_t([&]() {
     while (!pub_stop)
@@ -111,8 +118,10 @@ TEST(Core, CallbackDestruction)
   // create subscriber and register a callback
   std::shared_ptr< eCAL::string::CSubscriber<std::string>> sub;
 
-  // start publishing thread
+  // create publisher
   eCAL::string::CPublisher<std::string> pub("foo");
+
+  // start publishing thread
   std::atomic<bool> pub_stop(false);
   std::thread pub_t([&]() {
     while (!pub_stop)
