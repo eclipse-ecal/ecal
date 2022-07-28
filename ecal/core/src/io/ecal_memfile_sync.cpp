@@ -32,9 +32,9 @@
 
 namespace eCAL
 {
-  CSyncMemoryFile::CSyncMemoryFile(const std::string& base_name_, size_t size_, int timeout_open_ms, int timeout_ack_ms) :
-    m_timeout_open(timeout_open_ms),
-    m_timeout_ack(timeout_ack_ms),
+  CSyncMemoryFile::CSyncMemoryFile(const std::string& base_name_, size_t size_, int timeout_open_ms_, int timeout_ack_ms_) :
+    m_timeout_open(timeout_open_ms_),
+    m_timeout_ack(timeout_ack_ms_),
     m_created(false)
   {
     Create(base_name_, size_);
@@ -50,20 +50,21 @@ namespace eCAL
     if (!m_created) return false;
 
     // a local subscriber is registering with it's process id
-    // so we have to check the sync events for the
-    // memory content read / write access
-    // we have ONE memory file per publisher and ONE
-    // memory file read thread per subscriber
+    //   we have to open the send update event and the acknowledge event
+    //   we have ONE memory file per publisher and 1 or 2 events per memory file
 
+    // the event names
+    std::string event_snd_name = m_memfile_name + "_" + process_id_;
+    std::string event_ack_name = m_memfile_name + "_" + process_id_ + "_ack";
+
+    // check for existing process
     std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
     EventHandleMapT::iterator iter = m_event_handle_map.find(process_id_);
-    std::string event_ack_name = m_memfile_name + "_" + process_id_ + "_ack";
 
     // add a new process id and create the sync and acknowledge event
     if (iter == m_event_handle_map.end())
     {
       SEventHandlePair event_pair;
-      std::string event_snd_name = m_memfile_name + "_" + process_id_;
       gOpenEvent(&event_pair.event_snd, event_snd_name);
       if (m_timeout_ack != 0)
       {
@@ -78,7 +79,7 @@ namespace eCAL
       {
         // okay we have registered process events for that process id
         // we have to check the acknowledge event because it's possible that this
-        // event was deactivated by a sync timeout in SignalMemFileWritten
+        // event was deactivated by a sync timeout in SendSyncEvents
         if (!gEventIsValid(iter->second.event_ack))
         {
           gOpenEvent(&iter->second.event_ack, event_ack_name);
@@ -234,7 +235,7 @@ namespace eCAL
 
     // build unique memory file name
     m_base_name = base_name_;
-    BuildMemFileName();
+    m_memfile_name = BuildMemFileName(m_base_name);
 
     // create new memory file object
     // with additional space for SMemFileHeader
@@ -321,18 +322,21 @@ namespace eCAL
     return true;
   }
 
-  void CSyncMemoryFile::BuildMemFileName()
+  std::string CSyncMemoryFile::BuildMemFileName(const std::string base_name_)
   {
+    std::string mfile_name(base_name_);
     std::stringstream out;
-    out << m_base_name << "_" << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-    m_memfile_name = out.str();
+    out << mfile_name << "_" << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+    mfile_name = out.str();
 
     // replace all '\\' and '/' to '_'
-    std::replace(m_memfile_name.begin(), m_memfile_name.end(), '\\', '_');
-    std::replace(m_memfile_name.begin(), m_memfile_name.end(), '/', '_');
+    std::replace(mfile_name.begin(), mfile_name.end(), '\\', '_');
+    std::replace(mfile_name.begin(), mfile_name.end(), '/', '_');
 
     // append "_shm" for debugging purposes
-    m_memfile_name += "_shm";
+    mfile_name += "_shm";
+
+    return mfile_name;
   }
 
   void CSyncMemoryFile::SendSyncEvents()

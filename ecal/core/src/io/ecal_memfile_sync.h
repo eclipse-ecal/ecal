@@ -37,7 +37,7 @@ namespace eCAL
   class CSyncMemoryFile
   {
   public:
-    CSyncMemoryFile(const std::string& base_name_, size_t size_, int timeout_open_ms, int timeout_ack_ms);
+    CSyncMemoryFile(const std::string& base_name_, size_t size_, int timeout_open_ms_, int timeout_ack_ms_);
     ~CSyncMemoryFile();
 
     bool Connect(const std::string& process_id_);
@@ -53,7 +53,7 @@ namespace eCAL
     bool Destroy();
     bool Recreate(size_t size_);
 
-    void BuildMemFileName();
+    std::string BuildMemFileName(const std::string base_name_);
 
     void SendSyncEvents();
     void DisconnectAll();
