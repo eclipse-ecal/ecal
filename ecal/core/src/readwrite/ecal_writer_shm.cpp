@@ -88,10 +88,10 @@ namespace eCAL
   bool CDataWriterSHM::Destroy()
   {
     if (!m_created) return false;
+    m_created = false;
 
     m_memory_file_vec.clear();
 
-    m_created = false;
     return true;
   }
 
