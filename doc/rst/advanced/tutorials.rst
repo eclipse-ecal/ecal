@@ -1,12 +1,8 @@
-=========
-Tutorials
-=========
+===================
+eCAL has been moved
+===================
 
-.. toctree::
-   :maxdepth: 1
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-   documentation.rst
-   ecal_in_docker.rst
-   /development/building_ecal_with_conan_dependencies
-   /tutorials/rec_distributed_recordings
-
+https://eclipse-ecal.github.io/ecal/advanced/tutorials.html

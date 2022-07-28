@@ -1,16 +1,8 @@
-.. include:: /include.txt
+===================
+eCAL has been moved
+===================
 
-.. _advanced:
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-============================
-Configuration
-============================
-
-.. toctree::
-   :maxdepth: 1
-
-   configuration/cloud
-   configuration/local
-   configuration/npcap
-   configuration/player
-   configuration/options
+https://eclipse-ecal.github.io/ecal/configuration.html

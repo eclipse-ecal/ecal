@@ -1,8 +1,8 @@
-.. _qwt_license:
+===================
+eCAL has been moved
+===================
 
-====
-qwt
-====
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-.. literalinclude:: qwt.txt
-   :language: none
+https://eclipse-ecal.github.io/ecal/license/thirdparty_licenses/qwt.html

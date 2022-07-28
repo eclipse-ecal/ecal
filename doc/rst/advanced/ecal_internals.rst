@@ -1,11 +1,8 @@
-==============
-eCAL internals
-==============
+===================
+eCAL has been moved
+===================
 
-.. toctree::
-   :caption: eCAL internals
-   
-   performance
-   transport_layers
-   threading_model
-   measurement_format
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
+
+https://eclipse-ecal.github.io/ecal/advanced/ecal_internals.html

@@ -1,13 +1,8 @@
-:orphan:
+===================
+eCAL has been moved
+===================
 
-.. image:: img/monitor_overview_blank.png
-   :alt: eCAL Monitor
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-.. image:: img/player_overview_blank.png
-   :alt: eCAL Player
-
-.. image:: img/recorder_overview_blank.png
-   :alt: eCAL Recorder
-
-.. image:: img/sys_overview_blank.png
-   :alt: eCAL Sys
+https://eclipse-ecal.github.io/ecal/getting_started/clean_images.html

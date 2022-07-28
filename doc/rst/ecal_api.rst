@@ -1,14 +1,8 @@
-.. _ecal_api:
+===================
+eCAL has been moved
+===================
 
-eCAL API
-========
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-This reference includes all public interfaces of eCAL
-
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Contents:
-   
-   _api/ecal_root
-   _api_python/modules
+https://eclipse-ecal.github.io/ecal/ecal_api.html

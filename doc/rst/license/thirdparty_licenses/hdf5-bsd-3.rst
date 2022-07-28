@@ -1,8 +1,8 @@
-.. _hdf5_bsd_3:
+===================
+eCAL has been moved
+===================
 
-==========
-HDF5 BSD-3
-==========
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-.. literalinclude:: hdf5-bsd-3.txt
-   :language: none
+https://eclipse-ecal.github.io/ecal/license/thirdparty_licenses/hdf5-bsd-3.html

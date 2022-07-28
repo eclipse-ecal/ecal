@@ -1,8 +1,8 @@
-.. _findqwt-bsd-2:
+===================
+eCAL has been moved
+===================
 
-==================
-Findqwt-style BSD2
-==================
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-.. literalinclude:: findqwt-bsd-2.txt
-   :language: none
+https://eclipse-ecal.github.io/ecal/license/thirdparty_licenses/findqwt-bsd-2.html

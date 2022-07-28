@@ -1,13 +1,8 @@
-﻿.. include:: /include.txt
+===================
+eCAL has been moved
+===================
 
-.. _getting_started_hello_world_python_proto:
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-==================================
-Hello World with protobuf (Python)
-==================================
-
-This section is still under construction. But we are working on it! Just be patient.
-
-.. image:: /img/snail.svg
-   :alt: Snail
-   :align: center
+https://eclipse-ecal.github.io/ecal/getting_started/hello_world_python_proto.html

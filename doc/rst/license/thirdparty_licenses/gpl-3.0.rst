@@ -1,8 +1,8 @@
-.. _gpl_3_0:
+===================
+eCAL has been moved
+===================
 
-=======
-GPL 3.0
-=======
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-.. literalinclude:: gpl-3.0.txt
-   :language: none
+https://eclipse-ecal.github.io/ecal/license/thirdparty_licenses/gpl-3.0.html

@@ -1,10 +1,8 @@
-=======
-License
-=======
+===================
+eCAL has been moved
+===================
 
-.. toctree::
-   :maxdepth: 1
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-   license/ecal_license
-   license/thirdparty_licenses
-   license/icon_license
+https://eclipse-ecal.github.io/ecal/license.html

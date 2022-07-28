@@ -1,8 +1,8 @@
-.. _npcap_license:
+===================
+eCAL has been moved
+===================
 
-=============
-Npcap license
-=============
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-.. literalinclude:: npcap.txt
-   :language: none
+https://eclipse-ecal.github.io/ecal/license/thirdparty_licenses/npcap.html

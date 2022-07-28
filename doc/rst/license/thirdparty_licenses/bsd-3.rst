@@ -1,8 +1,8 @@
-.. _bsd_3:
+===================
+eCAL has been moved
+===================
 
-=====
-BSD 3
-=====
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-.. literalinclude:: bsd-3.txt
-   :language: none
+https://eclipse-ecal.github.io/ecal/license/thirdparty_licenses/bsd-3.html

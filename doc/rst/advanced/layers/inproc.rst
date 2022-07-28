@@ -1,13 +1,8 @@
-.. include:: /include.txt
+===================
+eCAL has been moved
+===================
 
-.. _transport_layer_inproc:
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-========================
-eCAL Inner-Process Layer
-========================
-
-This section is still under construction. But we are working on it! Just be patient.
-
-.. image:: /img/snail.svg
-   :alt: Snail
-   :align: center
+https://eclipse-ecal.github.io/ecal/advanced/layers/inproc.html

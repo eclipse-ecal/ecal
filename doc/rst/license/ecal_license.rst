@@ -1,12 +1,8 @@
-============
-eCAL License
-============
+===================
+eCAL has been moved
+===================
 
-.. note::
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-   eCAL is licensed unter Apache 2.0.
-   Parts of eCAL however may have different licenses.
-   Please refer to :ref:`thirdparty_licenses` for that.
-
-.. literalinclude:: thirdparty_licenses/apache-2.0.txt
-   :language: none
+https://eclipse-ecal.github.io/ecal/license/ecal_license.html

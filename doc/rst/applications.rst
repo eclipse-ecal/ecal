@@ -1,15 +1,8 @@
-.. include:: /include.txt
+===================
+eCAL has been moved
+===================
 
-.. _applications:
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-======================
-Applications
-======================
-
-.. toctree::
-   :maxdepth: 2
-
-   applications/rec/recorder
-   applications/sys/sys
-   applications/meas_cutter/meas_cutter
-
+https://eclipse-ecal.github.io/ecal/applications.html

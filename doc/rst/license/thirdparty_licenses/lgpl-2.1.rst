@@ -1,8 +1,8 @@
-.. _lgpl_2_1:
+===================
+eCAL has been moved
+===================
 
-========
-LGPL 2.1
-========
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-.. literalinclude:: lgpl-2.1.txt
-   :language: none
+https://eclipse-ecal.github.io/ecal/license/thirdparty_licenses/lgpl-2.1.html

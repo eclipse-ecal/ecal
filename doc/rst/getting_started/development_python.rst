@@ -1,15 +1,8 @@
-.. _getting_started_development_python:
+===================
+eCAL has been moved
+===================
 
-====================
-Development (Python)
-====================
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-Along with the C++ API, eCAL offers a great pyhton integration.
-You will find this especially usefull if you are more familiar with python than C++ or you just want to quickly develop anything that doesn't require that extreme level of control and performance of C++.
-
-So let's quickly dive into Python and eCAL with some Hello World Examples!
-
-.. toctree::
-
-   hello_world_python
-   hello_world_python_proto
+https://eclipse-ecal.github.io/ecal/getting_started/development_python.html

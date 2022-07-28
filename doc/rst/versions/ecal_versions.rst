@@ -1,14 +1,8 @@
-.. include:: /include.txt
+===================
+eCAL has been moved
+===================
 
-=============
-eCAL Versions
-=============
+eCAL has been moved under the umbrella of the Eclipse Foundation.
+This documentation page can be found in the new Eclise eCAL Documentation:
 
-.. toctree::
-   :maxdepth: 1
-
-   compatibility
-
-   5.10/whats_new
-   5.9/whats_new
-   5.8/whats_new
+https://eclipse-ecal.github.io/ecal/versions/ecal_versions.html
