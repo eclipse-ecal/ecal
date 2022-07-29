@@ -122,5 +122,5 @@
 #define  EXP_SECTION_S                       "experimental"
 
 #define  EXP_MEMFILE_MONITORING_ENABLED_S    "memfile_monitoring_enabled"
-#define  EXP_NETWORK_MONITORING_DISABLED_S   "network_monitoring_enabled"
+#define  EXP_NETWORK_MONITORING_DISABLED_S   "network_monitoring_disabled"
 #define  EXP_MEMFILE_MONITORING_QUEUE_SIZE_S "memfile_monitoring_queue_size"

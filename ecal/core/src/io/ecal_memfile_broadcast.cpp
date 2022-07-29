@@ -69,19 +69,22 @@ namespace eCAL
     {
       if (m_broadcast_memfile->Create(name.c_str(), false, 0))
       {
-        if (m_broadcast_memfile->MaxDataSize() < presumably_memfile_size)
-        {
-          std::cerr << "Invalid memory file size." << std::endl;
-          return false;
-        }
+        
       } else {
-        std::cerr << "Unable to read central memory file." << std::endl;
+        std::cerr << "Unable to read broadcast memory file." << std::endl;
         return false;
       }
     }
+
+    if (m_broadcast_memfile->MaxDataSize() < presumably_memfile_size)
+    {
+      std::cerr << "Invalid broadcast memory file size." << std::endl;
+      return false;
+    }
+
     m_broadcast_memfile_local_buffer.resize(presumably_memfile_size);
 
-    if (m_broadcast_memfile->GetWriteAccess(100))
+    if (m_broadcast_memfile->GetWriteAccess(200))
     {
       // Is acquired lock consistent?
       void *memfile_address = nullptr;
@@ -90,7 +93,7 @@ namespace eCAL
         ResetMemfile(memfile_address);
       if (!IsMemfileVersionCompatible(memfile_address))
       {
-        std::cerr << "Central memory file not compatible" << std::endl;
+        std::cerr << "Broadcast memory file not compatible" << std::endl;
         return false;
       }
 
@@ -141,7 +144,7 @@ namespace eCAL
   {
     if (!m_created) return false;
 
-    if (m_broadcast_memfile->GetReadAccess(500))
+    if (m_broadcast_memfile->GetReadAccess(200))
     {
       // Is acquired lock consistent?
 
@@ -160,7 +163,7 @@ namespace eCAL
   {
     if (!m_created) return false;
 
-    if (m_broadcast_memfile->GetWriteAccess(500))
+    if (m_broadcast_memfile->GetWriteAccess(200))
     {
       // Is acquired lock consistent?
       void *memfile_address = nullptr;
@@ -178,7 +181,7 @@ namespace eCAL
   {
     if (!m_created) return false;
 
-    if (m_broadcast_memfile->GetWriteAccess(500))
+    if (m_broadcast_memfile->GetWriteAccess(200))
     {
       void *memfile_address = nullptr;
       m_broadcast_memfile->GetWriteAddress(memfile_address, m_broadcast_memfile->MaxDataSize());
@@ -194,7 +197,7 @@ namespace eCAL
     }
     else
     {
-      std::cerr << "Unable to acquire write access on central memory file" << std::endl;
+      std::cerr << "Unable to acquire write access on broadcast memory file" << std::endl;
       return false;
     }
   }
@@ -202,7 +205,7 @@ namespace eCAL
 
   bool CMemoryFileBroadcast::ReceiveBroadcast(MemfileBroadcastMessageListT &message_list, TimestampT timeout, bool enable_loopback)
   {
-    if (m_broadcast_memfile->GetReadAccess(500))
+    if (m_broadcast_memfile->GetReadAccess(200))
     {
       // Is acquired lock consistent?
 
@@ -211,7 +214,7 @@ namespace eCAL
     }
     else
     {
-      std::cerr << "Unable to acquire read access on central memory file" << std::endl;
+      std::cerr << "Unable to acquire read access on broadcast memory file" << std::endl;
       return false;
     }
 
