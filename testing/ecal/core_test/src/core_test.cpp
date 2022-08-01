@@ -36,6 +36,7 @@ namespace {
     accumulated_clock += clock_;
   }
 
+#if 0
   // timer callback function
   std::atomic_size_t     g_callback_received{ 0 };
   std::vector<long long> g_timer_vec(100);
@@ -44,6 +45,7 @@ namespace {
     if (g_callback_received < g_timer_vec.size()) g_timer_vec[g_callback_received] = eCAL::Time::GetMicroSeconds();
     g_callback_received += 1;
   }
+#endif
 }
 
 TEST(Core, MultipleInitializeFinalize)
@@ -83,7 +85,7 @@ TEST(Core, LeakedPubSub)
     while (!pub_stop)
     {
       pub.Send("Hello World");
-#if 0
+#if 1
       // some kind of busy waiting....
       int y = 0;
       for (int i = 0; i < 100000; i++)
@@ -127,7 +129,7 @@ TEST(Core, CallbackDestruction)
     while (!pub_stop)
     {
       pub.Send("Hello World");
-#if 0
+#if 1
       // some kind of busy waiting....
       int y = 0;
       for (int i = 0; i < 100000; i++)
