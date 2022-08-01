@@ -33,6 +33,15 @@
 
 #include <ecal/ecal.h>
 
+#ifndef PADDING_DISABLED
+#ifdef __GNUC__
+#define PADDING_DISABLED( __DECLARATION__ ) __DECLARATION__ __attribute__((__packed__))
+#endif
+#ifdef _MSC_VER
+#define PADDING_DISABLED( __DECLARATION__ ) __pragma( pack(push, 1) ) __DECLARATION__ __pragma( pack(pop))
+#endif
+#endif
+
 namespace eCAL {
 
   class CMemoryFile;
@@ -65,13 +74,13 @@ namespace eCAL {
     //PAYLOAD_MEMFILE_HEARTBEAT
   };
 
-  struct SMemfileBroadcastMessage
+  PADDING_DISABLED(struct SMemfileBroadcastMessage
   {
     std::int32_t process_id;
     TimestampT timestamp;
     UniqueIdT payload_memfile_id;
     eMemfileBroadcastMessageType type;
-  };
+  });
 
   typedef std::vector<const SMemfileBroadcastMessage*> MemfileBroadcastMessageListT;
 

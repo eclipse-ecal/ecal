@@ -29,6 +29,15 @@
 #include <iterator>
 #include <cassert>
 
+#ifndef PADDING_DISABLED
+#ifdef __GNUC__
+#define PADDING_DISABLED( __DECLARATION__ ) __DECLARATION__ __attribute__((__packed__))
+#endif
+#ifdef _MSC_VER
+#define PADDING_DISABLED( __DECLARATION__ ) __pragma( pack(push, 1) ) __DECLARATION__ __pragma( pack(pop))
+#endif
+#endif
+
 template<class T>
 class RelocatableCircularQueue{
 public:
@@ -215,12 +224,12 @@ public:
 
 
 private:
-  struct Header{
+  PADDING_DISABLED(struct Header{
     std::uint64_t back_index;
     std::uint64_t front_index;
     std::size_t size;
     std::size_t max_size;
-  };
+  });
 
   void* m_base_address;
   Header* m_header;

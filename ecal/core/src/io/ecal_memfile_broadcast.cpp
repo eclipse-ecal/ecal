@@ -29,13 +29,14 @@
 
 namespace eCAL
 {
-  struct SMemfileBroadcastHeaderV1
+  PADDING_DISABLED(struct SMemfileBroadcastHeaderV1
   {
-    std::uint8_t magic[4] = {'e', 'C', 'A', 'L'};
+    std::uint8_t magic[5] = "eCAL";
+    std::uint8_t __reserved_field;
     std::uint32_t version = 1;
     std::uint64_t message_queue_offset = sizeof(SMemfileBroadcastHeaderV1);
     TimestampT timestamp = CreateTimestamp();
-  };
+  });
 
   static SMemfileBroadcastHeaderV1 *GetMemfileHeader(void *address)
   {
@@ -93,7 +94,7 @@ namespace eCAL
         ResetMemfile(memfile_address);
       if (!IsMemfileVersionCompatible(memfile_address))
       {
-        std::cerr << "Broadcast memory file not compatible" << std::endl;
+        std::cerr << "Broadcast memory file is not compatible" << std::endl;
         return false;
       }
 

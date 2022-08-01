@@ -55,7 +55,7 @@ namespace eCAL
     }
 
     m_memfile_broadcast->ReceiveBroadcast(m_broadcast_message_list, timeout, false);
-    std::set <UniqueIdT> handled_payload_memfile_ids;
+    std::set<UniqueIdT> handled_payload_memfile_ids;
 
     memfile_broadcast_payload_message_list.clear();
     for (const auto &broadcast_message: m_broadcast_message_list) {

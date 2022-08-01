@@ -162,15 +162,21 @@ namespace eCAL
       m_reg_rcv.Create(attr);
       m_reg_rcv_thread.Start(0, std::bind(&CUdpRegistrationReceiver::Receive, &m_reg_rcv_process, &m_reg_rcv));
     }
+    else
+    {
+      std::cout << "Network monitoring is disabled" << std::endl;
+    }
 
     if (m_use_memfile_monitoring)
     {
+      std::cout << "Memfile monitoring is enabled (queue size: " << Config::Experimental::GetMemfileMonitoringQueueSize() << ")" << std::endl;
+
       m_memfile_broadcast.Create(EXP_MEMFILE_MONITORING_IDENTIFIER, Config::Experimental::GetMemfileMonitoringQueueSize());
       m_memfile_broadcast.FlushLocalBroadcastQueue();
       m_memfile_broadcast_reader.Bind(&m_memfile_broadcast);
 
       m_memfile_reg_rcv.Create(&m_memfile_broadcast_reader);
-      m_memfile_reg_rcv_thread.Start(Config::GetRegistrationRefreshMs() / 2, std::bind(&CMemfileRegistrationReceiver::Receive, &m_memfile_reg_rcv));
+      m_memfile_reg_rcv_thread.Start(Config::GetRegistrationRefreshMs() / 2 , std::bind(&CMemfileRegistrationReceiver::Receive, &m_memfile_reg_rcv));
     }
 
     m_created = true;
