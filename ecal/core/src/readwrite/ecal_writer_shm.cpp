@@ -77,11 +77,7 @@ namespace eCAL
     m_write_idx = 0;
     for (size_t num(0); num < m_buffer_count; ++num)
     {
-      auto sync_memfile = std::make_shared<CSyncMemoryFile>();
-      if (!sync_memfile->Create(topic_name_, Config::GetMemfileMinsizeBytes()))
-      {
-        return false;
-      }
+      auto sync_memfile = std::make_shared<CSyncMemoryFile>(topic_name_, Config::GetMemfileMinsizeBytes(), PUB_MEMFILE_OPEN_TO, Config::GetMemfileAckTimeoutMs());
       m_memory_file_vec.push_back(sync_memfile);
     }
 
@@ -92,10 +88,10 @@ namespace eCAL
   bool CDataWriterSHM::Destroy()
   {
     if (!m_created) return false;
+    m_created = false;
 
     m_memory_file_vec.clear();
 
-    m_created = false;
     return true;
   }
 
@@ -142,14 +138,12 @@ namespace eCAL
       // increase buffer count
       while (m_memory_file_vec.size() < m_buffer_count)
       {
-        auto sync_memfile = std::make_shared<CSyncMemoryFile>();
-        sync_memfile->Create(m_topic_name, Config::GetMemfileMinsizeBytes());
+        auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_topic_name, data_.len, PUB_MEMFILE_OPEN_TO, Config::GetMemfileAckTimeoutMs());
         m_memory_file_vec.push_back(sync_memfile);
       }
       // decrease buffer count
       while (m_memory_file_vec.size() > m_buffer_count)
       {
-        m_memory_file_vec.back()->Destroy();
         m_memory_file_vec.pop_back();
       }
     }
@@ -183,7 +177,7 @@ namespace eCAL
 
     for (auto& memory_file : m_memory_file_vec)
     {
-      if (!memory_file->ConnectProcess(process_id_))
+      if (!memory_file->Connect(process_id_))
       {
         return false;
       }
@@ -198,7 +192,7 @@ namespace eCAL
 
     for (auto& memory_file : m_memory_file_vec)
     {
-      if (!memory_file->DisconnectProcess(process_id_))
+      if (!memory_file->Disconnect(process_id_))
       {
         return false;
       }

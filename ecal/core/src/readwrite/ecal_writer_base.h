@@ -25,6 +25,7 @@
 
 #include <ecal/ecal_qos.h>
 
+#include <atomic>
 #include <string>
 
 namespace eCAL
@@ -92,11 +93,11 @@ namespace eCAL
     virtual bool Write(const SWriterData& data_) = 0;
 
   protected:
-    std::string      m_host_name;
-    std::string      m_topic_name;
-    std::string      m_topic_id;
-    QOS::SWriterQOS  m_qos;
+    std::string        m_host_name;
+    std::string        m_topic_name;
+    std::string        m_topic_id;
+    QOS::SWriterQOS    m_qos;
 
-    bool             m_created;
+    std::atomic<bool>  m_created;
   };
 }
