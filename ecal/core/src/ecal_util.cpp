@@ -30,8 +30,6 @@
 #include "pubsub/ecal_pubgate.h"
 #include "mon/ecal_monitoring_def.h"
 
-#include <ecal/ecal_apps.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstdlib>
