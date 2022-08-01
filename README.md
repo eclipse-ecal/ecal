@@ -117,10 +117,10 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 * [golang-ecal](https://github.com/Blutkoete/golang-ecal) - eCAL go language binding
 * [ecal-rs](https://github.com/kopernikusai/ecal-rs) - eCAL rust language binding
 * [rmw_ecal](https://github.com/eclipse-ecal/rmw_ecal) - eCAL / ROS2 middleware layer
-* [gpsd2ecal](https://github.com/ceclipse-ecal/gpsd2ecal) - eCAL gps gateway
-* [ecal_mongraph](https://github.com/ecal-io/ecal_mongraph) - Simple graph visualization for eCAL
-* [ecal2ros](https://github.com/ecal-io/ecal2ros) - Demo gateway eCAL5 to ROS2
-* [ros2ecal](https://github.com/ecal-io/ros2ecal) - Demo gateway ROS2 to eCAL5
+* [gpsd2ecal](https://github.com/eclipse-ecal/gpsd2ecal) - eCAL gps gateway
+* [ecal_mongraph](https://github.com/ecal-io/ecal-mongraph) - Simple graph visualization for eCAL
+* [ecal2ros](https://github.com/ecal-io/ecal-ros2-publisher) - Publishing eCAL topics to ROS2
+* [ros2ecal](https://github.com/ecal-io/ecal-ros2-subscriber) - Subscribing ROS2 topics in eCAL
 
 ## Projects used by eCAL
 * [fine-ftpserver](https://github.com/eclipse-ecal/fineftp-server) - FTP functionality to collect distributed measurement artifacts over network
