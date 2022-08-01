@@ -85,7 +85,7 @@ TEST(Core, LeakedPubSub)
     while (!pub_stop)
     {
       pub.Send("Hello World");
-#if 1
+#if 0
       // some kind of busy waiting....
       int y = 0;
       for (int i = 0; i < 100000; i++)
@@ -129,7 +129,7 @@ TEST(Core, CallbackDestruction)
     while (!pub_stop)
     {
       pub.Send("Hello World");
-#if 1
+#if 0
       // some kind of busy waiting....
       int y = 0;
       for (int i = 0; i < 100000; i++)
