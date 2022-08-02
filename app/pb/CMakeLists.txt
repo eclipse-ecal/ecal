@@ -16,21 +16,26 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(pb)
+project(apppb)
 
 find_package(Protobuf REQUIRED)
 
 set(ProtoFiles
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/ecal.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/host.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/layer.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/monitoring.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/process.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/service.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/topic.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/app/pb/mma/mma.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/app/pb/play/service.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/app/pb/play/state.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/app/pb/rec/client_service.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/app/pb/rec/client_state.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/app/pb/rec/server_config.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/app/pb/rec/server_service.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/app/pb/rec/server_state.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/app/pb/sys/service.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/app/pb/sys/client_service.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/app/pb/sys/state.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/app/pb/sys/process.proto
 )
 
-ecal_add_library(${PROJECT_NAME} src/ecalpb.cpp)
+ecal_add_library(${PROJECT_NAME} src/apppb.cpp)
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 protobuf_target_cpp(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src INSTALL_FOLDER include ${ProtoFiles})
@@ -52,4 +57,4 @@ if(BUILD_PY_BINDING)
   set_source_files_properties(${python_sources} PROPERTIES HEADER_FILE_ONLY TRUE)
 endif()
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ecal/pb)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/pb)

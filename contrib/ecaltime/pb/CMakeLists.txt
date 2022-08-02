@@ -16,21 +16,15 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(pb)
+project(ecaltimepb)
 
 find_package(Protobuf REQUIRED)
 
 set(ProtoFiles
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/ecal.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/host.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/layer.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/monitoring.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/process.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/service.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/topic.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecaltime/pb/sim_time.proto
 )
 
-ecal_add_library(${PROJECT_NAME} src/ecalpb.cpp)
+ecal_add_library(${PROJECT_NAME} src/ecaltimepb.cpp)
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 protobuf_target_cpp(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src INSTALL_FOLDER include ${ProtoFiles})
@@ -52,4 +46,4 @@ if(BUILD_PY_BINDING)
   set_source_files_properties(${python_sources} PROPERTIES HEADER_FILE_ONLY TRUE)
 endif()
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ecal/pb)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER contrib/ecaltime/pb)

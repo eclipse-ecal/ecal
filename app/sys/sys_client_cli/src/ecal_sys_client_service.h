@@ -23,7 +23,7 @@
 #pragma warning(push)
 #pragma warning(disable : 4100 4127 4505 4800)
 #endif
-#include <ecal/pb/sys/client_service.pb.h>
+#include <app/pb/sys/client_service.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif

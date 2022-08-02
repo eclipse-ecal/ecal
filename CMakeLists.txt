@@ -308,6 +308,11 @@ add_subdirectory(contrib/ecalproto)
 add_subdirectory(ecal/pb)
 
 # --------------------------------------------------------
+# ecal app internal protobuf
+# --------------------------------------------------------
+add_subdirectory(app/pb)
+
+# --------------------------------------------------------
 # ecal core
 # --------------------------------------------------------
 add_subdirectory(ecal/core)

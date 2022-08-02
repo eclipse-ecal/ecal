@@ -93,6 +93,7 @@ target_link_libraries(${PROJECT_NAME}
   protobuf::libprotobuf
   eCAL::core
   eCAL::pb
+  eCAL::apppb
   EcalParser
   eCAL::sys_client_core
 )

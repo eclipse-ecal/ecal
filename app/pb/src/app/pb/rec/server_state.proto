@@ -19,8 +19,8 @@
 
 syntax = "proto3";
 
-import "ecal/pb/rec/client_state.proto";
-import "ecal/pb/rec/server_config.proto";
+import "app/pb/rec/client_state.proto";
+import "app/pb/rec/server_config.proto";
 
 package eCAL.pb.rec_server;
 

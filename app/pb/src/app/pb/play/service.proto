@@ -19,7 +19,7 @@
 
 syntax = "proto3";
 
-import "ecal/pb/play/state.proto";
+import "app/pb/play/state.proto";
 
 option cc_generic_services = true;
 

@@ -16,6 +16,8 @@
 #
 # ========================= eCAL LICENSE =================================
 
+add_subdirectory(pb)
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   add_subdirectory(linuxptp)
 endif()

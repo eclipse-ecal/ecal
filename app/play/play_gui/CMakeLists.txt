@@ -130,6 +130,7 @@ target_link_libraries (${PROJECT_NAME}
     eCAL::play_core
     Qt5::Widgets
     CustomQt
+    eCAL::pb
     eCAL::utils
 )
 if (WIN32)
