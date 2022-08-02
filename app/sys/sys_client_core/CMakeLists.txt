@@ -46,6 +46,7 @@ target_link_libraries(${PROJECT_NAME}
   PUBLIC
     protobuf::libprotobuf
     eCAL::core
+    eCAL::pb
     eCAL::apppb
     eCAL::utils
     spdlog::spdlog
