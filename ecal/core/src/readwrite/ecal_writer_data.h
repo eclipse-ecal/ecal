@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <stddef.h>
+
 namespace eCAL
 {
   struct SWriterData
