@@ -48,6 +48,7 @@ namespace eCAL
       // From Protobuf
       ///////////////////////////////
       TaskState                    FromProtobuf(const eCAL::pb::ProcessState&      task_state_pb);
+      TaskState                    FromProtobuf(const eCAL::pb::sys::ProcessState& task_state_pb);
       std::shared_ptr<EcalSysTask> FromProtobuf(const eCAL::pb::sys::State::Task&  task_pb);
       std::shared_ptr<TaskGroup>   FromProtobuf(const eCAL::pb::sys::State::Group& task_group_pb);
 

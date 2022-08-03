@@ -31,11 +31,29 @@ namespace eCAL
       ///////////////////////////////
       // From Protobuf
       ///////////////////////////////
-      void FromProtobuf(const eCAL::pb::ProcessState&      task_state_pb, TaskState&                    task_state);
+      void FromProtobuf(const eCAL::pb::sys::ProcessState& task_state_pb, TaskState&                    task_state);
       void FromProtobuf(const eCAL::pb::sys::State::Task&  task_pb,       std::shared_ptr<EcalSysTask>& task);
       void FromProtobuf(const eCAL::pb::sys::State::Group& task_group_pb, std::shared_ptr<TaskGroup>&   task_group);
 
+      // we have ProcessSate existing in ecal::pb and app::pb namespace
+      // this function is just converting from pb to sys
+      void ConvProtobuf(const eCAL::pb::ProcessState& task_state_pb, eCAL::pb::sys::ProcessState& sys_task_state_pb)
+      {
+        sys_task_state_pb.set_severity((eCAL::pb::sys::eProcessSeverity)task_state_pb.severity());
+        sys_task_state_pb.set_severity_level((eCAL::pb::sys::eProcessSeverityLevel)task_state_pb.severity());
+        sys_task_state_pb.set_info(task_state_pb.info());
+      }
+
       TaskState FromProtobuf(const eCAL::pb::ProcessState& task_state_pb)
+      {
+        TaskState output;
+        eCAL::pb::sys::ProcessState sys_task_state_pb;
+        ConvProtobuf(task_state_pb, sys_task_state_pb);
+        FromProtobuf(sys_task_state_pb, output);
+        return output;
+      }
+
+      TaskState FromProtobuf(const eCAL::pb::sys::ProcessState& task_state_pb)
       {
         TaskState output;
         FromProtobuf(task_state_pb, output);
@@ -56,7 +74,7 @@ namespace eCAL
         return output;
       }
 
-      void FromProtobuf(const eCAL::pb::ProcessState& task_state_pb, TaskState& task_state)
+      void FromProtobuf(const eCAL::pb::sys::ProcessState& task_state_pb, TaskState& task_state)
       {
         switch (task_state_pb.severity())
         {
@@ -110,9 +128,7 @@ namespace eCAL
         task->SetId(task_pb.id());
         task->SetName(task_pb.name());
         task->SetTarget(task_pb.target_host());
-
-        // TODO: FIX ME
-        // task->SetMonitoringTaskState(FromProtobuf(task_pb.state()));
+        task->SetMonitoringTaskState(FromProtobuf(task_pb.state()));
 
         std::vector<int32_t> pids;
         for(int32_t pid : task_pb.pids())
@@ -126,21 +142,18 @@ namespace eCAL
         task->SetVisibility(eCAL::sys_client::proto_helpers::FromProtobuf(task_pb.window_mode()));
         task->SetTimeoutAfterStart(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(task_pb.waiting_time_secs())));
         task->SetMonitoringEnabled(task_pb.monitoring_enabled());
+        task->SetMonitoringTaskState(FromProtobuf(task_pb.state()));
 
-        // TODO: FIX ME
-        //task->SetMonitoringTaskState(FromProtobuf(task_pb.state()));
-
-        // TODO: FIX ME
-        //auto restart_at_severity = FromProtobuf(task_pb.restart_by_severity());
-        //if (restart_at_severity.severity != eCAL_Process_eSeverity::proc_sev_unknown)
-        //{
-        //  task->SetRestartBySeverityEnabled(true);
-        //  task->SetRestartAtSeverity(restart_at_severity);
-        //}
-        //else
-        //{
-        //  task->SetRestartBySeverityEnabled(false);
-        //}
+        auto restart_at_severity = FromProtobuf(task_pb.restart_by_severity());
+        if (restart_at_severity.severity != eCAL_Process_eSeverity::proc_sev_unknown)
+        {
+          task->SetRestartBySeverityEnabled(true);
+          task->SetRestartAtSeverity(restart_at_severity);
+        }
+        else
+        {
+          task->SetRestartBySeverityEnabled(false);
+        }
         
         task->SetHostStartedOn(task_pb.current_host());
       }
