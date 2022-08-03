@@ -52,6 +52,7 @@
 #include "ecal_win_main.h"
 #include <iphlpapi.h>
 #include <ecal_utils/str_convert.h>
+#include <Windows.h>
 #endif /* ECAL_OS_WINDOWS */
 
 #ifdef ECAL_OS_LINUX
@@ -366,7 +367,11 @@ namespace eCAL
 
     void SleepMS(const long time_ms_)
     {
-      std::this_thread::sleep_for(std::chrono::milliseconds(time_ms_));
+      #ifdef ECAL_OS_WINDOWS
+        Sleep(time_ms_);
+      #else
+        std::this_thread::sleep_for(std::chrono::milliseconds(time_ms_));
+      #endif
     }
 
     float GetProcessCpuUsage()
