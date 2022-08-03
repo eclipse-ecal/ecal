@@ -140,7 +140,7 @@ namespace eCAL
     return false;
   }
 
-  bool CSyncMemoryFile::Write(const void* buf_, size_t len_, long long id_, long long clock_, size_t hash_, long long time_, bool zero_copy_)
+  bool CSyncMemoryFile::Write(const SWriterData& data_)
   {
     if (!m_created)
     {
@@ -156,17 +156,17 @@ namespace eCAL
     // create user file header
     struct SMemFileHeader memfile_hdr;
     // set data size
-    memfile_hdr.data_size         = static_cast<unsigned long>(len_);
+    memfile_hdr.data_size         = static_cast<unsigned long>(data_.len);
     // set header id
-    memfile_hdr.id                = static_cast<unsigned long>(id_);
+    memfile_hdr.id                = static_cast<unsigned long>(data_.id);
     // set header clock
-    memfile_hdr.clock             = static_cast<unsigned long>(clock_);
+    memfile_hdr.clock             = static_cast<unsigned long>(data_.clock);
     // set header time
-    memfile_hdr.time              = static_cast<long long>(time_);
+    memfile_hdr.time              = static_cast<long long>(data_.time);
     // set header hash
-    memfile_hdr.hash              = static_cast<size_t>(hash_);
+    memfile_hdr.hash              = static_cast<size_t>(data_.hash);
     // set zero copy
-    memfile_hdr.options.zero_copy = static_cast<unsigned char>(zero_copy_);
+    memfile_hdr.options.zero_copy = static_cast<unsigned char>(data_.zero_copy);
 
     // acquire write access
     bool write_access = m_memfile.GetWriteAccess(m_timeout_open);
@@ -200,9 +200,9 @@ namespace eCAL
     written &= m_memfile.Write(&memfile_hdr, memfile_hdr.hdr_size, wbytes) > 0;
     wbytes += memfile_hdr.hdr_size;
     // write the buffer
-    if (len_ > 0)
+    if (data_.len > 0)
     {
-      written &= m_memfile.Write(buf_, len_, wbytes) > 0;
+      written &= m_memfile.Write(data_.buf, data_.len, wbytes) > 0;
     }
     // release write access
     m_memfile.ReleaseWriteAccess();
@@ -213,7 +213,7 @@ namespace eCAL
     if (written)
     {
 #ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::Write - SUCCESS : " + std::to_string(len_) + " Bytes written");
+      Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::Write - SUCCESS : " + std::to_string(data_.len) + " Bytes written");
 #endif
     }
     else

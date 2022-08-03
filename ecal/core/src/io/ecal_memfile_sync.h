@@ -25,6 +25,7 @@
 
 #include <ecal/ecal_eventhandle.h>
 
+#include "readwrite/ecal_writer_data.h"
 #include "ecal_memfile.h"
 
 #include <mutex>
@@ -43,7 +44,7 @@ namespace eCAL
     bool Disconnect(const std::string& process_id_);
 
     bool CheckSize(size_t size_);
-    bool Write(const void* buf_, size_t len_, long long id_, long long clock_, size_t hash_, long long time_, bool zero_copy_);
+    bool Write(const SWriterData& data_);
 
     std::string GetName();
 

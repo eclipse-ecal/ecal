@@ -470,7 +470,7 @@ namespace eCAL
       bool inproc_sent(false);
       {
         // fill writer data
-        struct CDataWriterBase::SWriterData wdata;
+        struct SWriterData wdata;
         wdata.buf   = buf_;
         wdata.len   = len_;
         wdata.id    = m_id;
@@ -524,7 +524,7 @@ namespace eCAL
       bool shm_sent(false);
       {
         // fill writer data
-        struct CDataWriterBase::SWriterData wdata;
+        struct SWriterData wdata;
         wdata.buf       = buf_;
         wdata.len       = len_;
         wdata.id        = m_id;
@@ -581,7 +581,7 @@ namespace eCAL
         bool loopback = use_shm == TLayer::smode_off;
 
         // fill writer data
-        struct CDataWriterBase::SWriterData wdata;
+        struct SWriterData wdata;
         wdata.buf       = buf_;
         wdata.len       = len_;
         wdata.id        = m_id;
@@ -634,7 +634,7 @@ namespace eCAL
       bool tcp_sent(false);
       {
         // fill writer data
-        struct CDataWriterBase::SWriterData wdata;
+        struct SWriterData wdata;
         wdata.buf       = buf_;
         wdata.len       = len_;
         wdata.id        = m_id;

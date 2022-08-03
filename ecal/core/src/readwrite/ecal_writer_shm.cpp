@@ -162,7 +162,7 @@ namespace eCAL
     if (!m_created) return 0;
 
     // write content
-    bool sent = m_memory_file_vec[m_write_idx]->Write(data_.buf, data_.len, data_.id, data_.clock, data_.hash, data_.time, data_.zero_copy);
+    bool sent = m_memory_file_vec[m_write_idx]->Write(data_);
 
     // and increment file index
     m_write_idx++;
