@@ -34,10 +34,18 @@
 
 namespace eCAL
 {
+  struct SSyncMemoryFileAttr
+  {
+    size_t min_size;           //!< memory file minimum size [Bytes]
+    size_t reserve;            //!< dynamic file size reserve before recreating memory file if payload size changes [%]
+    int    timeout_open_ms;    //!< timeout to open a memory file using mutex lock [ms]
+    int    timeout_ack_ms;     //!< timeout for memory read acknowledge signal from data reader [ms]
+  };
+
   class CSyncMemoryFile
   {
   public:
-    CSyncMemoryFile(const std::string& base_name_, size_t size_, size_t min_size_, size_t reserve_, int timeout_open_ms_, int timeout_ack_ms_);
+    CSyncMemoryFile(const std::string& base_name_, size_t size_, SSyncMemoryFileAttr attr_);
     ~CSyncMemoryFile();
 
     bool Connect(const std::string& process_id_);
@@ -58,14 +66,11 @@ namespace eCAL
     void SendSyncEvents();
     void DisconnectAll();
 
-    std::string      m_base_name;
-    std::string      m_memfile_name;
-    CMemoryFile      m_memfile;
-    size_t           m_min_size;
-    size_t           m_reserve;
-    int              m_timeout_open;
-    int              m_timeout_ack;
-    bool             m_created;
+    std::string         m_base_name;
+    std::string         m_memfile_name;
+    CMemoryFile         m_memfile;
+    SSyncMemoryFileAttr m_attr;
+    bool                m_created;
 
     struct SEventHandlePair
     {
