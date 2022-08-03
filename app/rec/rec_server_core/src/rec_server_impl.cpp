@@ -1864,6 +1864,7 @@ namespace eCAL
       config.root_dir_                  = GetMeasRootDir();
       config.meas_name_                 = GetMeasName();
       config.max_file_size_             = GetMaxFileSizeMib();
+      config.one_file_per_topic_        = GetOneFilePerTopicEnabled();
       config.description_               = GetDescription();
       config.enabled_clients_config_    = GetEnabledRecClients();
       config.pre_buffer_enabled_        = GetPreBufferingEnabled();

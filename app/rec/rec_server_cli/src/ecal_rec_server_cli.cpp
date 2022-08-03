@@ -195,6 +195,7 @@ int main(int argc, char** argv)
   TCLAP::ValueArg<std::string>  meas_name_arg      ("n", "meas-name",       "Name of the measurement, when " + start_recording_arg.toString() + " is set. This will create a folder in the directory provided by " + meas_root_dir_arg.toString() + ". If a configuration file is being loaded, this will override the setting from the config.  Not available in remote-control mode.",     false, "", "Directory");
   TCLAP::ValueArg<std::string>  max_file_size_arg  ("",  "max-file-size",   "Maximum file size of the recording files, when " + start_recording_arg.toString() + " is set. If a configuration file is being loaded, this will override the setting from the config. Not available in remote-control mode.", false, "", "megabytes");
   TCLAP::ValueArg<std::string>  description_arg    ("",  "description",     "Description stored in the measurement folder, when " + start_recording_arg.toString() + " is set. If a configuration file is being loaded, this will override the setting from the config. Not available in remote-control mode.", false, "", "String");
+  CustomTclap::FuzzyValueSwitchArgBool enable_one_file_per_topic_arg   ("", "enable-one-file-per-topic", "Whether to separate each topic in HDF5 file. This helps faster file transfer and less network congestion in case of interest of specific topics only.", false, false, "yes/no");
 
   TCLAP::ValueArg<std::string>         ftp_server_arg            ("", "ftp-server",          "The server where to upload to when uploading a measurement. Use \"internal\" for the integrated FTP Server. When using an external FTP Server, provide it in the following form: ftp://USERNAME:PASSWORD@HOSTNAME:PORT/path/to/root_dir. If a configuration file is being loaded, this will override the setting from the config. Not available in remote-control mode.", false, "", "FTP_Server");
   CustomTclap::FuzzyValueSwitchArgBool delete_after_upload_arg   ("", "delete-after-upload", "Whether to delete the local measurement files after they have been uploaded to an FTP server. If a configuration file is being loaded, this will override the setting from the config. Not available in remote-control mode.", false, false, "yes/no");
@@ -238,6 +239,7 @@ int main(int argc, char** argv)
     &meas_name_arg,
     &max_file_size_arg,
     &description_arg,
+    &enable_one_file_per_topic_arg,
     &ftp_server_arg,
     &delete_after_upload_arg,
 
@@ -764,6 +766,39 @@ int main(int argc, char** argv)
       }
     }
   }
+
+  /************************************************************************/
+  /* Enable one file per topic                                            */
+  /************************************************************************/
+  if (enable_one_file_per_topic_arg.isSet())
+  {
+    bool is_exiting;
+    {
+      std::lock_guard<decltype(ecal_rec_exit_mutex_)> ecal_rec_exit_lock(ecal_rec_exit_mutex_);
+      is_exiting = ctrl_exit_event;
+    }
+
+    if (!is_exiting)
+    {
+      eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
+      if (rec_server_instance)
+      {
+        error = eCAL::rec_cli::command::SetConfig::setOneFilePerTopicEnabled(rec_server_instance, enable_one_file_per_topic_arg.getValue());
+      }
+      else
+      {
+        error = eCAL::rec::Error(eCAL::rec::Error::ErrorCode::COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE, enable_one_file_per_topic_arg.toString());
+      }
+
+      if (error)
+      {
+        std::cerr << "ERROR executing " << enable_one_file_per_topic_arg.toString() << ": " << error.ToString() << std::endl;
+        set_config_error_occured = true;
+      }
+    }
+
+  }
+
 
   /************************************************************************/
   /* Ftp Server                                                           */

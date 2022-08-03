@@ -99,6 +99,7 @@ namespace eCAL
     std::string  RecServer::GetMeasRootDir   () const                   { return rec_server_impl_->GetMeasRootDir(); }
     std::string  RecServer::GetMeasName      () const                   { return rec_server_impl_->GetMeasName(); }
     int64_t      RecServer::GetMaxFileSizeMib() const                   { return rec_server_impl_->GetMaxFileSizeMib(); }
+    bool         RecServer::GetOneFilePerTopicEnabled() const                   { return rec_server_impl_->GetOneFilePerTopicEnabled(); }
     std::string  RecServer::GetDescription   () const                   { return rec_server_impl_->GetDescription(); }
 
     ////////////////////////////////////
