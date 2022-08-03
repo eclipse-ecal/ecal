@@ -645,6 +645,97 @@
 Python API for simplified access to the protobuf content of an eCAL measurement</p>
 <p>You can use the eCALHDF5 measurement API to extract (deserialize) the protobuf content from an eCAL HDF5 file.</p>
 <dl class="py class">
+<dt id="ecal.measurement.measurement.BinaryChannel">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ecal.measurement.measurement.</span></code><code class="sig-name descname"><span class="pre">BinaryChannel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">measurement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ecal.measurement.measurement.BinaryChannel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt id="ecal.measurement.measurement.BinaryChannel.Iterator">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Iterator</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ecal.measurement.measurement.BinaryChannel.Iterator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="ecal.measurement.measurement.BinaryChannel.Iterator.next">
+<code class="sig-name descname"><span class="pre">next</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ecal.measurement.measurement.BinaryChannel.Iterator.next" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt id="ecal.measurement.measurement.BinaryChannel.topic_name">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">topic_name</span></code><a class="headerlink" href="#ecal.measurement.measurement.BinaryChannel.topic_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ecal.measurement.measurement.BinaryChannel.type_descriptor">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">type_descriptor</span></code><a class="headerlink" href="#ecal.measurement.measurement.BinaryChannel.type_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ecal.measurement.measurement.BinaryChannel.type_encoding">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">type_encoding</span></code><a class="headerlink" href="#ecal.measurement.measurement.BinaryChannel.type_encoding" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ecal.measurement.measurement.BinaryChannel.type_name">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">type_name</span></code><a class="headerlink" href="#ecal.measurement.measurement.BinaryChannel.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ecal.measurement.measurement.BinaryChannelInfo">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ecal.measurement.measurement.</span></code><code class="sig-name descname"><span class="pre">BinaryChannelInfo</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_encoding</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_descriptor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ecal.measurement.measurement.BinaryChannelInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<dl class="py attribute">
+<dt id="ecal.measurement.measurement.BinaryChannelInfo.topic_name">
+<code class="sig-name descname"><span class="pre">topic_name</span></code><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#ecal.measurement.measurement.BinaryChannelInfo.topic_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ecal.measurement.measurement.BinaryChannelInfo.type_descriptor">
+<code class="sig-name descname"><span class="pre">type_descriptor</span></code><em class="property"><span class="pre">:</span> <span class="pre">bytes</span></em><a class="headerlink" href="#ecal.measurement.measurement.BinaryChannelInfo.type_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ecal.measurement.measurement.BinaryChannelInfo.type_encoding">
+<code class="sig-name descname"><span class="pre">type_encoding</span></code><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#ecal.measurement.measurement.BinaryChannelInfo.type_encoding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ecal.measurement.measurement.BinaryChannelInfo.type_name">
+<code class="sig-name descname"><span class="pre">type_name</span></code><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#ecal.measurement.measurement.BinaryChannelInfo.type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ecal.measurement.measurement.BinaryEntry">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ecal.measurement.measurement.</span></code><code class="sig-name descname"><span class="pre">BinaryEntry</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rcv_timestamp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snd_timestamp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ecal.measurement.measurement.BinaryEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<dl class="py attribute">
+<dt id="ecal.measurement.measurement.BinaryEntry.msg">
+<code class="sig-name descname"><span class="pre">msg</span></code><em class="property"><span class="pre">:</span> <span class="pre">bytes</span></em><a class="headerlink" href="#ecal.measurement.measurement.BinaryEntry.msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ecal.measurement.measurement.BinaryEntry.rcv_timestamp">
+<code class="sig-name descname"><span class="pre">rcv_timestamp</span></code><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#ecal.measurement.measurement.BinaryEntry.rcv_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ecal.measurement.measurement.BinaryEntry.snd_timestamp">
+<code class="sig-name descname"><span class="pre">snd_timestamp</span></code><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#ecal.measurement.measurement.BinaryEntry.snd_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="ecal.measurement.measurement.Channel">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ecal.measurement.measurement.</span></code><code class="sig-name descname"><span class="pre">Channel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">measurement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ecal.measurement.measurement.Channel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -668,11 +759,28 @@ Python API for simplified access to the protobuf content of an eCAL measurement<
 
 <dl class="py class">
 <dt id="ecal.measurement.measurement.Measurement">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ecal.measurement.measurement.</span></code><code class="sig-name descname"><span class="pre">Measurement</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ecal.measurement.measurement.Measurement" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ecal.measurement.measurement.</span></code><code class="sig-name descname"><span class="pre">Measurement</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">path</span></em>, <em class="sig-param"><span class="pre">channel_access_mode:</span> <span class="pre">ecal.measurement.measurement.Measurement.ChannelAccessMode</span> <span class="pre">=</span> <span class="pre">&lt;ChannelAccessMode.OBJECT:</span> <span class="pre">1&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ecal.measurement.measurement.Measurement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py class">
+<dt id="ecal.measurement.measurement.Measurement.ChannelAccessMode">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">ChannelAccessMode</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ecal.measurement.measurement.Measurement.ChannelAccessMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt id="ecal.measurement.measurement.Measurement.ChannelAccessMode.BINARY">
+<code class="sig-name descname"><span class="pre">BINARY</span></code><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#ecal.measurement.measurement.Measurement.ChannelAccessMode.BINARY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ecal.measurement.measurement.Measurement.ChannelAccessMode.OBJECT">
+<code class="sig-name descname"><span class="pre">OBJECT</span></code><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#ecal.measurement.measurement.Measurement.ChannelAccessMode.OBJECT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="ecal.measurement.measurement.Measurement.Iterator">
-<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Iterator</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">measurement</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ecal.measurement.measurement.Measurement.Iterator" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Iterator</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">measurement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ecal.measurement.measurement.Measurement.Iterator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt id="ecal.measurement.measurement.Measurement.Iterator.next">
