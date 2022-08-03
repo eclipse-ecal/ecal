@@ -213,6 +213,8 @@ set(ecal_readwrite_header_src
     src/readwrite/ecal_reader_udp_mc.h
     src/readwrite/ecal_writer.h
     src/readwrite/ecal_writer_base.h
+    src/readwrite/ecal_writer_data.h
+    src/readwrite/ecal_writer_info.h
     src/readwrite/ecal_writer_inproc.h
     src/readwrite/ecal_writer_tcp.h
     src/readwrite/ecal_writer_udp_mc.h
