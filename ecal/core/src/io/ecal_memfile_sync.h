@@ -23,10 +23,9 @@
 
 #pragma once
 
-#include "readwrite/ecal_writer_base.h"
-#include "io/ecal_memfile.h"
-
 #include <ecal/ecal_eventhandle.h>
+
+#include "ecal_memfile.h"
 
 #include <mutex>
 #include <string>
@@ -37,14 +36,14 @@ namespace eCAL
   class CSyncMemoryFile
   {
   public:
-    CSyncMemoryFile(const std::string& base_name_, size_t size_, int timeout_open_ms_, int timeout_ack_ms_);
+    CSyncMemoryFile(const std::string& base_name_, size_t size_, size_t min_size_, size_t reserve_, int timeout_open_ms_, int timeout_ack_ms_);
     ~CSyncMemoryFile();
 
     bool Connect(const std::string& process_id_);
     bool Disconnect(const std::string& process_id_);
 
     bool CheckSize(size_t size_);
-    bool Write(const CDataWriterBase::SWriterData& data_);
+    bool Write(const void* buf_, size_t len_, long long id_, long long clock_, size_t hash_, long long time_, bool zero_copy_);
 
     std::string GetName();
 
@@ -61,6 +60,8 @@ namespace eCAL
     std::string      m_base_name;
     std::string      m_memfile_name;
     CMemoryFile      m_memfile;
+    size_t           m_min_size;
+    size_t           m_reserve;
     int              m_timeout_open;
     int              m_timeout_ack;
     bool             m_created;

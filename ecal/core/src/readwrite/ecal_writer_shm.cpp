@@ -77,7 +77,7 @@ namespace eCAL
     m_write_idx = 0;
     for (size_t num(0); num < m_buffer_count; ++num)
     {
-      auto sync_memfile = std::make_shared<CSyncMemoryFile>(topic_name_, Config::GetMemfileMinsizeBytes(), PUB_MEMFILE_OPEN_TO, Config::GetMemfileAckTimeoutMs());
+      auto sync_memfile = std::make_shared<CSyncMemoryFile>(topic_name_, 0, Config::GetMemfileMinsizeBytes(), Config::GetMemfileOverprovisioningPercentage(), PUB_MEMFILE_OPEN_TO, Config::GetMemfileAckTimeoutMs());
       m_memory_file_vec.push_back(sync_memfile);
     }
 
@@ -138,7 +138,7 @@ namespace eCAL
       // increase buffer count
       while (m_memory_file_vec.size() < m_buffer_count)
       {
-        auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_topic_name, data_.len, PUB_MEMFILE_OPEN_TO, Config::GetMemfileAckTimeoutMs());
+        auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_topic_name, data_.len, Config::GetMemfileMinsizeBytes(), Config::GetMemfileOverprovisioningPercentage(), PUB_MEMFILE_OPEN_TO, Config::GetMemfileAckTimeoutMs());
         m_memory_file_vec.push_back(sync_memfile);
       }
       // decrease buffer count
@@ -162,7 +162,7 @@ namespace eCAL
     if (!m_created) return 0;
 
     // write content
-    bool sent = m_memory_file_vec[m_write_idx]->Write(data_);
+    bool sent = m_memory_file_vec[m_write_idx]->Write(data_.buf, data_.len, data_.id, data_.clock, data_.hash, data_.time, data_.zero_copy);
 
     // and increment file index
     m_write_idx++;

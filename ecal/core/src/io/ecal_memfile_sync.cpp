@@ -21,18 +21,20 @@
  * @brief  synchronized memory file interface
 **/
 
-#include <ecal/ecal.h>
+#include <ecal/ecal_event.h>
 #include <ecal/ecal_log.h>
 
-#include "io/ecal_memfile_header.h"
-#include "io/ecal_memfile_sync.h"
+#include "ecal_memfile_header.h"
+#include "ecal_memfile_sync.h"
 
 #include <algorithm>
 #include <sstream>
 
 namespace eCAL
 {
-  CSyncMemoryFile::CSyncMemoryFile(const std::string& base_name_, size_t size_, int timeout_open_ms_, int timeout_ack_ms_) :
+  CSyncMemoryFile::CSyncMemoryFile(const std::string& base_name_, size_t size_, size_t min_size_, size_t reserve_, int timeout_open_ms_, int timeout_ack_ms_) :
+    m_min_size(min_size_),
+    m_reserve(reserve_),
     m_timeout_open(timeout_open_ms_),
     m_timeout_ack(timeout_ack_ms_),
     m_created(false)
@@ -126,8 +128,7 @@ namespace eCAL
       Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::CheckSize - RECREATE");
 #endif
       // estimate size of memory file
-      size_t memfile_reserve = Config::GetMemfileOverprovisioningPercentage();
-      size_t memfile_size    = sizeof(SMemFileHeader) + size_ + static_cast<size_t>((static_cast<float>(memfile_reserve) / 100.0f) * static_cast<float>(size_));
+      size_t memfile_size = sizeof(SMemFileHeader) + size_ + static_cast<size_t>((static_cast<float>(m_reserve) / 100.0f) * static_cast<float>(size_));
 
       // recreate the file
       if (!Recreate(memfile_size)) return false;
@@ -139,7 +140,7 @@ namespace eCAL
     return false;
   }
 
-  bool CSyncMemoryFile::Write(const CDataWriterBase::SWriterData& data_)
+  bool CSyncMemoryFile::Write(const void* buf_, size_t len_, long long id_, long long clock_, size_t hash_, long long time_, bool zero_copy_)
   {
     if (!m_created)
     {
@@ -155,17 +156,17 @@ namespace eCAL
     // create user file header
     struct SMemFileHeader memfile_hdr;
     // set data size
-    memfile_hdr.data_size         = static_cast<unsigned long>(data_.len);
+    memfile_hdr.data_size         = static_cast<unsigned long>(len_);
     // set header id
-    memfile_hdr.id                = static_cast<unsigned long>(data_.id);
+    memfile_hdr.id                = static_cast<unsigned long>(id_);
     // set header clock
-    memfile_hdr.clock             = static_cast<unsigned long>(data_.clock);
+    memfile_hdr.clock             = static_cast<unsigned long>(clock_);
     // set header time
-    memfile_hdr.time              = static_cast<long long>(data_.time);
+    memfile_hdr.time              = static_cast<long long>(time_);
     // set header hash
-    memfile_hdr.hash              = static_cast<size_t>(data_.hash);
+    memfile_hdr.hash              = static_cast<size_t>(hash_);
     // set zero copy
-    memfile_hdr.options.zero_copy = static_cast<unsigned char>(data_.zero_copy);
+    memfile_hdr.options.zero_copy = static_cast<unsigned char>(zero_copy_);
 
     // acquire write access
     bool write_access = m_memfile.GetWriteAccess(m_timeout_open);
@@ -199,9 +200,9 @@ namespace eCAL
     written &= m_memfile.Write(&memfile_hdr, memfile_hdr.hdr_size, wbytes) > 0;
     wbytes += memfile_hdr.hdr_size;
     // write the buffer
-    if (data_.len > 0)
+    if (len_ > 0)
     {
-      written &= m_memfile.Write(data_.buf, data_.len, wbytes) > 0;
+      written &= m_memfile.Write(buf_, len_, wbytes) > 0;
     }
     // release write access
     m_memfile.ReleaseWriteAccess();
@@ -212,7 +213,7 @@ namespace eCAL
     if (written)
     {
 #ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::Write - SUCCESS : " + std::to_string(data_.len) + " Bytes written");
+      Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::Write - SUCCESS : " + std::to_string(len_) + " Bytes written");
 #endif
     }
     else
@@ -241,8 +242,7 @@ namespace eCAL
     // with additional space for SMemFileHeader
     size_t memfile_size = sizeof(SMemFileHeader) + size_;
     // check for minimal size
-    size_t minsize = Config::GetMemfileMinsizeBytes();
-    if (memfile_size < minsize) memfile_size = minsize;
+    if (memfile_size < m_min_size) memfile_size = m_min_size;
 
     // create the memory file
     if (!m_memfile.Create(m_memfile_name.c_str(), true, memfile_size))
