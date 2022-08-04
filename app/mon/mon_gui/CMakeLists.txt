@@ -189,13 +189,6 @@ target_link_libraries (${PROJECT_NAME}
     CustomQt
 )
 
-if(ECAL_NPCAP_SUPPORT)
-  add_definitions(-DECAL_NPCAP_SUPPORT)
-  target_link_libraries(${PROJECT_NAME}
-    udpcap
-  )
-endif(ECAL_NPCAP_SUPPORT)
-
 if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:CONSOLE")
