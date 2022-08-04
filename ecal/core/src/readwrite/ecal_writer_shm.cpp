@@ -77,7 +77,12 @@ namespace eCAL
     m_write_idx = 0;
     for (size_t num(0); num < m_buffer_count; ++num)
     {
-      auto sync_memfile = std::make_shared<CSyncMemoryFile>(topic_name_, Config::GetMemfileMinsizeBytes(), PUB_MEMFILE_OPEN_TO, Config::GetMemfileAckTimeoutMs());
+      SSyncMemoryFileAttr attr;
+      attr.min_size        = Config::GetMemfileMinsizeBytes();
+      attr.reserve         = Config::GetMemfileOverprovisioningPercentage();
+      attr.timeout_open_ms = PUB_MEMFILE_OPEN_TO;
+      attr.timeout_ack_ms  = Config::GetMemfileAckTimeoutMs();
+      auto sync_memfile = std::make_shared<CSyncMemoryFile>(topic_name_, 0, attr);
       m_memory_file_vec.push_back(sync_memfile);
     }
 
@@ -138,7 +143,12 @@ namespace eCAL
       // increase buffer count
       while (m_memory_file_vec.size() < m_buffer_count)
       {
-        auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_topic_name, data_.len, PUB_MEMFILE_OPEN_TO, Config::GetMemfileAckTimeoutMs());
+        SSyncMemoryFileAttr attr;
+        attr.min_size        = Config::GetMemfileMinsizeBytes();
+        attr.reserve         = Config::GetMemfileOverprovisioningPercentage();
+        attr.timeout_open_ms = PUB_MEMFILE_OPEN_TO;
+        attr.timeout_ack_ms  = Config::GetMemfileAckTimeoutMs();
+        auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_topic_name, data_.len, attr);
         m_memory_file_vec.push_back(sync_memfile);
       }
       // decrease buffer count

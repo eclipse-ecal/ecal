@@ -111,22 +111,25 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 
 ![eCAL Mon](gfx/app/monitor_imagevisu.png)
 
-## Projects using eCAL
-* [trellis](https://github.com/agtonomy/trellis) - General purpose middleware framework for distributed applications
+## eCAL eco system tools / utilities / interfaces
 * [ecal-toolbox](https://github.com/mathworks/ecal-toolbox) - Mathworks simulink toolbox for eCAL
-* [golang-ecal](https://github.com/Blutkoete/golang-ecal) - eCAL go language binding
-* [ecal-rs](https://github.com/kopernikusai/ecal-rs) - eCAL rust language binding
-* [rmw_ecal](https://github.com/eclipse-ecal/rmw_ecal) - eCAL / ROS2 middleware layer
-* [gpsd2ecal](https://github.com/eclipse-ecal/gpsd2ecal) - eCAL gps gateway
-* [ecal_mongraph](https://github.com/ecal-io/ecal-mongraph) - Simple graph visualization for eCAL
-* [ecal2ros](https://github.com/ecal-io/ecal-ros2-publisher) - Publishing eCAL topics to ROS2
-* [ros2ecal](https://github.com/ecal-io/ecal-ros2-subscriber) - Subscribing ROS2 topics in eCAL
+* [ecal-mongraph](https://github.com/ecal-io/ecal-mongraph) - Simple graph visualization for eCAL
+* [gpsd2ecal](https://github.com/eclipse-ecal/gpsd2ecal) - eCAL gpsd interface
 
-## Projects used by eCAL
+## eCAL & ROS
+* [rmw_ecal](https://github.com/eclipse-ecal/rmw_ecal) - eCAL / ROS2 middleware layer
+* [rosidl_typesupport_protobuf](https://github.com/eclipse-ecal/rosidl_typesupport_protobuf) - Protobuf based rosidl typesupport
+* [ecal-ros2-publisher](https://github.com/ecal-io/ecal-ros2-publisher) - Publishing eCAL topics to ROS2
+* [ecal-ros2-subscriber](https://github.com/ecal-io/ecal-ros2-subscriber) - Subscribing ROS2 topics in eCAL
+
+## Other projects related to eCAL
 * [fine-ftpserver](https://github.com/eclipse-ecal/fineftp-server) - FTP functionality to collect distributed measurement artifacts over network
 * [tcp_pubsub](https://github.com/eclipse-ecal/tcp_pubsub) - Additional TCP transport layer for higher reliability for publication/subscription over network
-* [iceoryx](https://github.com/eclipse/iceoryx) - Alternative shared memory transport layer (needs to be activated via CMake options)
 * [docker-ecal](https://github.com/Blutkoete/docker-ecal) - Inoffical dockerfiles for eCAL
+* [golang-ecal](https://github.com/Blutkoete/golang-ecal) - eCAL go language binding
+* [ecal-rs](https://github.com/kopernikusai/ecal-rs) - eCAL rust language binding
+* [trellis](https://github.com/agtonomy/trellis) - General purpose middleware framework for distributed applications
+* [iceoryx](https://github.com/eclipse/iceoryx) - Alternative shared memory transport layer (needs to be activated via CMake options)
 
 ## License
 

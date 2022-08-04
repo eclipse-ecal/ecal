@@ -27,7 +27,7 @@
 #include "pubsub/ecal_subgate.h"
 
 #include "ecal/ecal_process.h"
-#include "readwrite/ecal_writer_base.h"
+#include "readwrite/ecal_writer_data.h"
 #include "readwrite/ecal_reader_iceoryx.h"
 
 #include <iceoryx_posh/runtime/posh_runtime.hpp>
@@ -83,7 +83,7 @@ namespace eCAL
   {
     subscriber_->take().and_then([subscriber_, self](auto& userPayload) {
       // extract data header
-      auto data_header  = static_cast<const CDataWriterBase::SWriterData*>(iox::mepoo::ChunkHeader::fromUserPayload(userPayload)->userHeader());
+      auto data_header  = static_cast<const SWriterData*>(iox::mepoo::ChunkHeader::fromUserPayload(userPayload)->userHeader());
       // extract data
       auto data_payload = static_cast<const char*>(userPayload);
       // apply data to subscriber gate
