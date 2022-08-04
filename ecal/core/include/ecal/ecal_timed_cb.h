@@ -30,6 +30,8 @@
 #include <thread>
 #include <assert.h>
 
+#include "ecal_process.h"
+
 namespace eCAL
 {
   class CTimedCB;
@@ -109,7 +111,7 @@ namespace eCAL
     {
       assert(callback_ != nullptr);
       if (callback_ == nullptr) return;
-      if (delay_ > 0) std::this_thread::sleep_for(std::chrono::milliseconds(delay_));
+      if (delay_ > 0) SleepMS(delay_);
       while (!m_stop)
       {
         auto start = std::chrono::steady_clock::now();
