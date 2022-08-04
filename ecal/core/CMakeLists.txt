@@ -40,6 +40,10 @@ endif  (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/ecal
 if(ECAL_NPCAP_SUPPORT)
 set(ecal_io_cpp_src_npcap 
    src/io/udp_receiver_npcap.cpp
+   src/io/udpcap/src/host_address.cpp
+   src/io/udpcap/src/ip_reassembly.cpp
+   src/io/udpcap/src/npcap_helpers.cpp
+   src/io/udpcap/src/udpcap_socket.cpp
 )
 endif()
 
@@ -150,6 +154,13 @@ set(ecal_cmn_cpp_src
 if(ECAL_NPCAP_SUPPORT)
 set(ecal_io_header_src_npcap 
    src/io/udp_receiver_npcap.h
+   src/io/udpcap/include/udpcap/host_address.h
+   src/io/udpcap/include/udpcap/npcap_helpers.h
+   src/io/udpcap/include/udpcap/udpcap_socket.h
+   src/io/udpcap/src/ip_reassembly.h
+   src/io/udpcap/src/log_debug.h
+   src/io/udpcap/src/udpcap_socket_private.cpp
+   src/io/udpcap/src/udpcap_socket_private.h  
 )
 endif()
 
@@ -419,15 +430,6 @@ if(ECAL_LAYER_ICEORYX)
   target_link_libraries(${PROJECT_NAME} PRIVATE iceoryx_posh::iceoryx_posh)
   target_compile_definitions(${PROJECT_NAME} PUBLIC ECAL_LAYER_ICEORYX)
 endif()
-
-if(ECAL_NPCAP_SUPPORT)
-  target_compile_definitions(${PROJECT_NAME}
-    PRIVATE ECAL_NPCAP_SUPPORT)
-  target_link_libraries(${PROJECT_NAME}
-    PRIVATE
-      udpcap
-  )
-endif(ECAL_NPCAP_SUPPORT)
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE 
