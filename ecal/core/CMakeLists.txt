@@ -43,6 +43,10 @@ set(ecal_io_cpp_src_npcap
 )
 endif()
 
+set(ecal_custom_tclap_cpp_src
+    src/custom_tclap/advanced_tclap_output.cpp
+)
+
 set(ecal_io_cpp_src
     src/io/rcv_sample.cpp
     src/io/snd_raw_buffer.cpp
@@ -152,6 +156,10 @@ set(ecal_io_header_src_npcap
    src/io/udp_receiver_npcap.h
 )
 endif()
+
+set(ecal_custom_tclap_header_src
+    src/custom_tclap/advanced_tclap_output.h
+)
 
 set(ecal_io_header_src
     src/io/ecal_memfile_header.h
@@ -361,6 +369,7 @@ set(ecal_header_base
 )
 
 ecal_add_ecal_shared_library(${PROJECT_NAME} 
+    ${ecal_custom_tclap_cpp_src}
     ${ecal_io_cpp_src} 
     ${ecal_io_mem_cpp_src} 
     ${ecal_io_mem_cpp_win_src} 
@@ -372,6 +381,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_service_cpp_src}
     ${ecal_cmn_cpp_src}
 
+    ${ecal_custom_tclap_header_src}
     ${ecal_cmn_header_src}
     ${ecal_io_header_src}
     ${ecal_io_mem_header_src} 
@@ -454,7 +464,6 @@ target_link_libraries(${PROJECT_NAME}
     $<$<BOOL:${QNXNTO}>:socket>
     asio::asio
     tclap::tclap
-    CustomTclap
     simpleini::simpleini
     eCAL::pb
     Threads::Threads
@@ -480,6 +489,7 @@ install(DIRECTORY
 
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Source Files" FILES 
+    ${ecal_custom_tclap_cpp_src}
     ${ecal_io_cpp_src}
     ${ecal_io_mem_cpp_src}
     ${ecal_io_mem_cpp_linux_src} 
@@ -497,6 +507,7 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
   )
   
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Header Files\\internal" FILES 
+    ${ecal_custom_tclap_header_src}
     ${ecal_cmn_header_src}
     ${ecal_io_header_src}
     ${ecal_io_mem_header_src}
