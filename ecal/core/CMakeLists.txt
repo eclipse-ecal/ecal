@@ -439,12 +439,20 @@ endif()
 target_include_directories(${PROJECT_NAME}
   PRIVATE 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/io/udpcap/include>
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/>
     $<INSTALL_INTERFACE:include>
 )
+
+if(ECAL_NPCAP_SUPPORT)
+target_include_directories(${PROJECT_NAME}
+  PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/io/udpcap/include>
+    ${Npcap_INCLUDE_DIR}
+    ${PcapPlusPlus_INCLUDE_DIR}
+)
+endif()
 
 target_link_libraries(${PROJECT_NAME} 
   PUBLIC
@@ -475,8 +483,6 @@ target_link_libraries(${PROJECT_NAME}
   PRIVATE
     ${Npcap_LIBS}
     ${PcapPlusPlus_LIBS}
-    wsock32
-    ws2_32
 )
 set_target_properties(${PROJECT_NAME}
   PROPERTIES INTERFACE_LINK_OPTIONS
