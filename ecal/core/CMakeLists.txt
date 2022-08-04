@@ -24,6 +24,11 @@ find_package(tclap        REQUIRED)
 find_package(simpleini    REQUIRED)
 find_package(tcp_pubsub   REQUIRED)
 
+if(ECAL_NPCAP_SUPPORT)
+find_package(Npcap        REQUIRED)
+find_package(PcapPlusPlus REQUIRED)
+endif()
+
 if (ECAL_JOIN_MULTICAST_TWICE)
   message(STATUS "eCAL ${PROJECT_NAME}: Enabling Specific Multicast Network Bug Workaround")
   add_definitions(-DECAL_JOIN_MULTICAST_TWICE)
@@ -37,6 +42,16 @@ if     (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/ecal
 endif  (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/ecal_defs.h")
 
 
+set(ecal_io_cpp_src
+    src/io/rcv_sample.cpp
+    src/io/snd_raw_buffer.cpp
+    src/io/snd_sample.cpp
+    src/io/udp_init.cpp
+    src/io/udp_receiver.cpp
+    src/io/udp_receiver_asio.cpp
+    src/io/udp_sender.cpp
+)
+
 if(ECAL_NPCAP_SUPPORT)
 set(ecal_io_cpp_src_npcap 
    src/io/udp_receiver_npcap.cpp
@@ -46,17 +61,6 @@ set(ecal_io_cpp_src_npcap
    src/io/udpcap/src/udpcap_socket.cpp
 )
 endif()
-
-set(ecal_io_cpp_src
-    src/io/rcv_sample.cpp
-    src/io/snd_raw_buffer.cpp
-    src/io/snd_sample.cpp
-    src/io/udp_init.cpp
-    src/io/udp_receiver.cpp
-    src/io/udp_receiver_asio.cpp
-    src/io/udp_sender.cpp
-    ${ecal_io_cpp_src_npcap}
-)
 
 if(NOT ECAL_LAYER_ICEORYX)
   set(ecal_io_mem_cpp_src
@@ -151,19 +155,6 @@ set(ecal_cmn_cpp_src
     src/sys_usage.cpp
 )
 
-if(ECAL_NPCAP_SUPPORT)
-set(ecal_io_header_src_npcap 
-   src/io/udp_receiver_npcap.h
-   src/io/udpcap/include/udpcap/host_address.h
-   src/io/udpcap/include/udpcap/npcap_helpers.h
-   src/io/udpcap/include/udpcap/udpcap_socket.h
-   src/io/udpcap/src/ip_reassembly.h
-   src/io/udpcap/src/log_debug.h
-   src/io/udpcap/src/udpcap_socket_private.cpp
-   src/io/udpcap/src/udpcap_socket_private.h  
-)
-endif()
-
 set(ecal_io_header_src
     src/io/ecal_memfile_header.h
     src/io/ecal_receiver.h
@@ -177,8 +168,20 @@ set(ecal_io_header_src
     src/io/udp_receiver_base.h
     src/io/udp_receiver_asio.h
     src/io/udp_sender.h
-    ${ecal_io_header_src_npcap}
 )
+
+if(ECAL_NPCAP_SUPPORT)
+set(ecal_io_header_src_npcap 
+   src/io/udp_receiver_npcap.h
+   src/io/udpcap/include/udpcap/host_address.h
+   src/io/udpcap/include/udpcap/npcap_helpers.h
+   src/io/udpcap/include/udpcap/udpcap_socket.h
+   src/io/udpcap/src/ip_reassembly.h
+   src/io/udpcap/src/log_debug.h
+   src/io/udpcap/src/udpcap_socket_private.cpp
+   src/io/udpcap/src/udpcap_socket_private.h  
+)
+endif()
 
 if(NOT ECAL_LAYER_ICEORYX)
   set(ecal_io_mem_header_src
@@ -373,6 +376,7 @@ set(ecal_header_base
 
 ecal_add_ecal_shared_library(${PROJECT_NAME} 
     ${ecal_io_cpp_src} 
+    ${ecal_io_cpp_src_npcap}
     ${ecal_io_mem_cpp_src} 
     ${ecal_io_mem_cpp_win_src} 
     ${ecal_io_mem_cpp_linux_src} 
@@ -383,8 +387,8 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_service_cpp_src}
     ${ecal_cmn_cpp_src}
 
-    ${ecal_cmn_header_src}
     ${ecal_io_header_src}
+    ${ecal_io_header_src_npcap}
     ${ecal_io_mem_header_src} 
     ${ecal_io_mem_header_win_src} 
     ${ecal_io_mem_header_linux_src} 
@@ -393,6 +397,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_readwrite_header_src}
     ${ecal_readwrite_shm_header_src}
     ${ecal_service_header_src}
+    ${ecal_cmn_header_src}
 
     ${ecal_header_base}
     ${ecal_header_cimpl}
@@ -465,6 +470,20 @@ target_link_libraries(${PROJECT_NAME}
     tcp_pubsub::tcp_pubsub
 )
 
+if(ECAL_NPCAP_SUPPORT)
+target_link_libraries(${PROJECT_NAME}
+  PRIVATE
+    ${Npcap_LIBS}
+    ${PcapPlusPlus_LIBS}
+    wsock32
+    ws2_32
+)
+set_target_properties(${PROJECT_NAME}
+  PROPERTIES INTERFACE_LINK_OPTIONS
+  -DELAYLOAD:wpcap.dll
+)
+endif()
+
 set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)
 set_property(TARGET ${PROJECT_NAME}_c PROPERTY FOLDER ecal/core)
 
@@ -484,6 +503,7 @@ install(DIRECTORY
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Source Files" FILES 
     ${ecal_io_cpp_src}
+    ${ecal_io_cpp_src_npcap}
     ${ecal_io_mem_cpp_src}
     ${ecal_io_mem_cpp_linux_src} 
     ${ecal_io_mem_cpp_win_src} 
@@ -502,6 +522,7 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Header Files\\internal" FILES 
     ${ecal_cmn_header_src}
     ${ecal_io_header_src}
+    ${ecal_io_header_src_npcap}
     ${ecal_io_mem_header_src}
     ${ecal_io_mem_header_win_src}
     ${ecal_io_header_linux_src}
