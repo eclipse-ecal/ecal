@@ -16,7 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(ecaltimepb)
+project(ecaltime_pb)
 
 find_package(Protobuf REQUIRED)
 
@@ -24,7 +24,7 @@ set(ProtoFiles
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecaltime/pb/sim_time.proto
 )
 
-ecal_add_library(${PROJECT_NAME} src/ecaltimepb.cpp)
+ecal_add_library(${PROJECT_NAME} src/ecaltime_pb.cpp)
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 protobuf_target_cpp(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src INSTALL_FOLDER include ${ProtoFiles})

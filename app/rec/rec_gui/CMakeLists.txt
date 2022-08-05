@@ -158,7 +158,7 @@ target_link_libraries (${PROJECT_NAME}
     tclap::tclap
     protobuf::libprotobuf
     eCAL::core
-    eCAL::apppb
+    eCAL::app_pb
     eCAL::rec_server_core
     Qt5::Widgets
     CustomQt

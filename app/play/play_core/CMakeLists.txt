@@ -56,8 +56,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   spdlog::spdlog
   protobuf::libprotobuf
   eCAL::core
-  eCAL::apppb
-  eCAL::ecaltimepb
+  eCAL::app_pb
+  eCAL::ecaltime_pb
   eCAL::hdf5
 )
 

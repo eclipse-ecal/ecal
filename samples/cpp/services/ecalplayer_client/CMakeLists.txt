@@ -32,7 +32,7 @@ ecal_add_sample(${PROJECT_NAME} ${ecalplayer_client_src})
 
 target_link_libraries(${PROJECT_NAME} 
     eCAL::core
-    eCAL::apppb
+    eCAL::app_pb
 )
 
 ecal_install_sample(${PROJECT_NAME})

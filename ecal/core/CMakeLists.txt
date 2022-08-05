@@ -456,7 +456,7 @@ target_link_libraries(${PROJECT_NAME}
     tclap::tclap
     CustomTclap
     simpleini::simpleini
-    eCAL::pb
+    eCAL::core_pb
     Threads::Threads
     eCAL::utils
     tcp_pubsub::tcp_pubsub

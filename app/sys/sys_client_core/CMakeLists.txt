@@ -46,8 +46,8 @@ target_link_libraries(${PROJECT_NAME}
   PUBLIC
     protobuf::libprotobuf
     eCAL::core
-    eCAL::pb
-    eCAL::apppb
+    eCAL::core_pb
+    eCAL::app_pb
     eCAL::utils
     spdlog::spdlog
   PRIVATE

@@ -183,7 +183,7 @@ target_link_libraries (${PROJECT_NAME}
     protobuf::libprotobuf
     simpleini::simpleini
     eCAL::core
-    eCAL::pb
+    eCAL::core_pb
     eCAL::mon_plugin_lib
     Qt5::Widgets
     CustomQt

@@ -76,7 +76,7 @@ target_link_libraries(${PROJECT_NAME}
   eCAL::sys_core
   protobuf::libprotobuf
   CustomTclap
-  eCAL::pb
+  eCAL::core_pb
 )
 
 # Create a source tree that mirrors the filesystem
