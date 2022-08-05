@@ -79,11 +79,37 @@ namespace eCAL
     ECAL_API std::string GetTaskParameter(const char* sep_);
 
     /**
-     * @brief  Sleep current thread. 
+     * @brief  Sleep current thread.
+     *
+     * Because of the fact that std::this_thread::sleep_for is vulnerable to system clock changes
+     * on Windows, Sleep function from synchapi.h had to be used for Windows. This insures time
+     * robustness on all platforms from a thread sleep perspective.
      *
      * @param  time_ms_  Time to sleep in ms. 
     **/
-    ECAL_API void SleepMS(long time_ms_);
+    ECAL_API void SleepMS(const long time_ms_);
+
+    /**
+     * @brief  Sleep current thread.
+     *
+     * Because of the fact that std::this_thread::sleep_for is vulnerable to system clock changes
+     * on Windows, Sleep function from synchapi.h had to be used for Windows. This insures time
+     * robustness on all platforms from a thread sleep perspective.
+     *
+     * @param  time_ms_  Time to sleep in us.
+    **/
+    ECAL_API void SleepUS(const long long time_us_);
+
+    /**
+     * @brief  Sleep current thread.
+     *
+     * Because of the fact that std::this_thread::sleep_for is vulnerable to system clock changes
+     * on Windows, Sleep function from synchapi.h had to be used for Windows. This insures time
+     * robustness on all platforms from a thread sleep perspective.
+     *
+     * @param  time_ms_  Time to sleep in ns.
+    **/
+    ECAL_API void SleepNS(const long long time_ns_);
 
     /**
      * @brief  Get current process id. 

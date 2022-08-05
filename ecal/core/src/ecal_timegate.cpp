@@ -26,8 +26,9 @@
 
 #include <ecal/ecal_config.h>
 
-#include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
+#include "ecal_def.h"
+#include "ecal_process.h"
 #include "ecal_timegate.h"
 #include "getenvvar.h"
 
@@ -245,14 +246,14 @@ namespace eCAL
     switch (m_sync_mode)
     {
     case eTimeSyncMode::none:
-      std::this_thread::sleep_for(std::chrono::nanoseconds(duration_nsecs_));
+      eCAL::Process::SleepNS(duration_nsecs_);
       break;
     case eTimeSyncMode::realtime:
       if (m_is_initialized_rt) {
         m_time_sync_rt.etime_sleep_for_nanoseconds_ptr(duration_nsecs_);
       }
       else {
-        std::this_thread::sleep_for(std::chrono::nanoseconds(duration_nsecs_));
+        eCAL::Process::SleepNS(duration_nsecs_);
       }
       break;
     case eTimeSyncMode::replay:
@@ -260,11 +261,11 @@ namespace eCAL
         m_time_sync_replay.etime_sleep_for_nanoseconds_ptr(duration_nsecs_);
       }
       else {
-        std::this_thread::sleep_for(std::chrono::nanoseconds(duration_nsecs_));
+        eCAL::Process::SleepNS(duration_nsecs_);
       }
       break;
     default:
-      std::this_thread::sleep_for(std::chrono::nanoseconds(duration_nsecs_));
+      eCAL::Process::SleepNS(duration_nsecs_);
     }
   }
 

@@ -376,6 +376,30 @@ namespace eCAL
       #endif
     }
 
+    void SleepUS(const long long time_us_)
+    {
+      #ifdef ECAL_OS_WINDOWS
+      {
+        auto milliseconds = time_us_ / 1000;
+        Sleep(milliseconds);
+      }
+      #else
+        std::this_thread::sleep_for(std::chrono::microseconds(time_us_));
+      #endif
+    }
+
+    void SleepNS(const long long time_ns_)
+    {
+      #ifdef ECAL_OS_WINDOWS
+      {
+        auto milliseconds = time_ns_ / 1000000;
+        Sleep(milliseconds);
+      }
+      #else
+        std::this_thread::sleep_for(std::chrono::nanoseconds(time_ns_));
+      #endif
+    }
+
     float GetProcessCpuUsage()
     {
       return(GetCPULoad() * 100.0f);
