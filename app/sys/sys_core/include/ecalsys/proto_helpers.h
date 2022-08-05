@@ -24,7 +24,7 @@
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
 #include <app/pb/sys/state.pb.h>
-#include <ecal/pb/process.pb.h>
+#include <core/pb/process.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif

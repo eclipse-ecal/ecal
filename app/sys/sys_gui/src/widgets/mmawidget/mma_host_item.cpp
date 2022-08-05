@@ -22,7 +22,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/msg/protobuf/subscriber.h>
-#include <ecal/pb/monitoring.pb.h>
+#include <core/pb/monitoring.pb.h>
 #include <app/pb/mma/mma.pb.h>
 
 #include <QApplication>
