@@ -25,6 +25,9 @@
 #ifndef ecal_core_cimpl_h_included
 #define ecal_core_cimpl_h_included
 
+#include <ecal/ecal_os.h>
+#include <ecal/ecalc_types.h>
+
 #include "ecal_init_cimpl.h"
 
 #ifdef __cplusplus

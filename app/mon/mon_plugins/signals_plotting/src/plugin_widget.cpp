@@ -55,6 +55,10 @@ PluginWidget::PluginWidget(const QString& topic_name, const QString& topic_type,
   ui_.splitter->setSizes(QList<int>({ largeWidth , largeWidth }));
   setVisibleSplitterHandle(false);
 
+  auto index_tree_area = ui_.splitter->indexOf(ui_.treeview_area);
+  ui_.splitter->setCollapsible(index_tree_area, false);
+  ui_.treeview_area->setMinimumWidth(1);
+
   // Add context menu
   plotting_tabbed_widget_->tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(plotting_tabbed_widget_->tabBar(), &QTabBar::customContextMenuRequested, this, &PluginWidget::showContextMenu);
@@ -118,7 +122,9 @@ PluginWidget::PluginWidget(const QString& topic_name, const QString& topic_type,
 PluginWidget::~PluginWidget()
 {
 #ifndef NDEBUG
-  qDebug().nospace() << "[" << metaObject()->className() << "]: Deleting Widget for topic " << topic_name_;
+  // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  qDebug().nospace() << "[" << PluginWidget::metaObject()->className() << "]: Deleting Widget for topic " << topic_name_;
 #endif // NDEBUG
 
   subscriber_.RemReceiveCallback();

@@ -32,6 +32,7 @@
 
 #include "ecal_global_accessors.h"
 
+#include <atomic>
 #include <mutex>
 #include <memory>
 #include <chrono>
@@ -122,7 +123,7 @@ namespace eCAL
 
     std::mutex                   m_log_sync;
 
-    bool                         m_created;
+    std::atomic<bool>            m_created;
     std::unique_ptr<CUDPSender>  m_udp_sender;
 
     std::string                  m_hname;

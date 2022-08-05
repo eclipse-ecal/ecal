@@ -126,6 +126,54 @@ public:
   eCAL::Time::ecal_clock::time_point GetTimestampOf(long long frame_index);
 
   /**
+   * @brief Returns timestamp of the channel's first appearance
+   *
+   * The timestamp returned is relative to the measurement's time length and
+   * the measurement unit is seconds.
+   *
+   * @param channel_name channel name
+   *
+   * @return First timestamp of the channel relative to the measurement's length
+   */
+  double GetMinTimestampOfChannel(const std::string& channel_name);
+
+  /**
+   * @brief Returns timestamp of the channel's last appearance
+   *
+   * The timestamp returned is relative to the measurement's time length and
+   * the measurement unit is seconds.
+   *
+   * @param channel_name channel name
+   *
+   * @return Last timestamp of the channel relative to the measurement's length
+   */
+  double GetMaxTimestampOfChannel(const std::string& channel_name);
+
+  /**
+   * @brief Gets the data type of the given channel
+   *
+   * @param channel_name  channel name
+   *
+   * @return channel type
+  **/
+  std::string GetChannelType(const std::string& channel_name);
+
+  void CalculateEstimatedSizeForChannels();
+
+  /**
+   * @brief Gets the estimated total size of all messages for a given channel
+   *
+   * This size is calculated based on 5 samples of the given channel uniformly
+   * distributed over the measurement. For channels that have a dynamic size which
+   * does not follow a liniar pattern, this estimation might offer a considerate error.
+   *
+   * @param channel_name  channel name
+   *
+   * @return estimated total size of all messages of the channel
+  **/
+  size_t GetChannelCumulativeEstimatedSize(const std::string& channel_name);
+
+  /**
    * @brief Returns a list of all channels in the measurment
    *
    * The channel set contains source-channel-names as they are stored in the

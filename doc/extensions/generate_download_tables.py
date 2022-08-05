@@ -232,7 +232,7 @@ def get_ppa_enabled_releases(all_releases):
 def generate_download_tables(gh_api_key, main_page_output_dir, download_archive_output_dir, ppa_tabs_output_file):
     gh = github.Github(gh_api_key)
 
-    gh_ecal_repo = gh.get_repo("continental/ecal")
+    gh_ecal_repo = gh.get_repo("eclipse-ecal/ecal")
     gh_releases  = gh_ecal_repo.get_releases()
 
     gh_release_branches_dict = group_gh_release_branches(gh_releases)

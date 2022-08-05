@@ -32,6 +32,7 @@
 #pragma warning(pop)
 #endif
 
+#include "ecal_global_accessors.h"
 #include "io/ecal_memfile_pool.h"
 #include "readwrite/ecal_reader_shm.h"
 
@@ -39,7 +40,6 @@
 
 namespace eCAL
 {
-  template<> std::shared_ptr<CSHMLayer> CReaderLayer<eCAL::CSHMLayer>::layer(nullptr);
 
   void CSHMLayer::SetConnectionParameter(SReaderLayerPar& par_)
   {

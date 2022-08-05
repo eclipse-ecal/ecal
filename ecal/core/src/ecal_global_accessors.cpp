@@ -133,7 +133,7 @@ namespace eCAL
     return(g_globals()->memfile_pool().get());
   }
 
-  SMemFileMap* g_memfile_map()
+  CMemFileMap* g_memfile_map()
   {
     if (!g_globals()) return(nullptr);
     return(g_globals()->memfile_map().get());

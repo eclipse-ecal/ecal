@@ -49,39 +49,41 @@ DWORD Processor::GetNumbersOfCpuCores( )
 {
   LPFN_GLPI glpi;
   BOOL done = FALSE;
-  PSYSTEM_LOGICAL_PROCESSOR_INFORMATION buffer = NULL;
-  PSYSTEM_LOGICAL_PROCESSOR_INFORMATION ptr = NULL;
-  unsigned long  returnLength = 0;
+  PSYSTEM_LOGICAL_PROCESSOR_INFORMATION buffer = nullptr;
+  PSYSTEM_LOGICAL_PROCESSOR_INFORMATION ptr = nullptr;
+  // the system should have at least one SYSTEM_LOGICAL_PROCESSOR_INFORMATION
+  unsigned long  returnLength = sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
   DWORD processor_core_count = 0;
   DWORD byteOffset = 0;
 
   glpi = (LPFN_GLPI)GetProcAddress(GetModuleHandle(TEXT("kernel32")), "GetLogicalProcessorInformation");
-  if (NULL == glpi)
+  if (nullptr == glpi)
   {
     Logger::getLogger()->Log("GetLogicalProcessorInformation is not supported");
     return (1);
   }
 
-  while (!done)
+  do
   {
+    buffer = (PSYSTEM_LOGICAL_PROCESSOR_INFORMATION)malloc(returnLength);
+    if (nullptr == buffer)
+    {
+      Logger::getLogger()->Log("Error: Allocation failure");
+      return (2);
+    }
+
     DWORD rc = glpi(buffer, &returnLength);
 
     if (FALSE == rc)
     {
-      if (GetLastError( ) == ERROR_INSUFFICIENT_BUFFER)
-      {
-        (buffer) ? (delete buffer) : false;
-        buffer = (PSYSTEM_LOGICAL_PROCESSOR_INFORMATION)malloc(returnLength);
+      // error!, free allocated buffer
+      free(buffer);
+      buffer = nullptr;
 
-        if (NULL == buffer)
-        {
-          Logger::getLogger()->Log("Error: Allocation failure");
-          return (2);
-        }
-      }
-      else
+      if (GetLastError() != ERROR_INSUFFICIENT_BUFFER)
       {
-        Logger::getLogger()->Log("Error: " + GetLastError());
+        // unexpected error
+        Logger::getLogger()->Log("Error: " + std::to_string(GetLastError()));
         return (3);
       }
     }
@@ -89,7 +91,8 @@ DWORD Processor::GetNumbersOfCpuCores( )
     {
       done = TRUE;
     }
-  }
+
+  } while (!done);
 
   ptr = buffer;
 
@@ -106,6 +109,10 @@ DWORD Processor::GetNumbersOfCpuCores( )
     byteOffset += sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
     ptr++;
   }
-  delete buffer;
+
+  free(buffer);
+  buffer = nullptr;
+  ptr = nullptr;
+
   return processor_core_count;
 }

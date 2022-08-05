@@ -35,8 +35,10 @@ namespace eCAL
     Destroy();
   }
 
-  void CDataWriterInProc::GetInfo(SWriterInfo info_)
+  SWriterInfo CDataWriterInProc::GetInfo()
   {
+    SWriterInfo info_;
+
     info_.name                 = "inproc";
     info_.description          = "InProc data writer";
 
@@ -47,6 +49,8 @@ namespace eCAL
     info_.has_qos_reliability  = true;
 
     info_.send_size_max        = -1;
+
+    return info_;
   }
   
   bool CDataWriterInProc::Create(const std::string & host_name_, const std::string & topic_name_, const std::string & topic_id_)
@@ -64,8 +68,8 @@ namespace eCAL
   bool CDataWriterInProc::Destroy()
   {
     if (!m_created) return false;
-
     m_created = false;
+
     return true;
   }
 

@@ -24,15 +24,17 @@
 
 int OnMethodCallback(const char* method_, const char* req_type_, const char* resp_type_, const char* request_, int request_len_, void** response_, int* response_len_, void* par_)
 {
-  par_       = par_;
-  req_type_  = req_type_;
-  resp_type_ = resp_type_;
+  // unused param
+  (void)req_type_;
+  (void)resp_type_;
+  (void)par_;
 
   static char response_buf[1024];
   if ((unsigned int)request_len_ > sizeof(response_buf)) return 0;
 
   // echo request to response
   memcpy(response_buf, request_, request_len_);
+
   *response_     = response_buf;
   *response_len_ = request_len_;
 
@@ -56,7 +58,7 @@ int main(int argc, char **argv)
   hserver = eCAL_Server_Create("service1");
 
   // add method callback for method "echo"
-  eCAL_Server_AddMethodCallbackC(hserver, "echo", "", "", OnMethodCallback, 0);
+  eCAL_Server_AddMethodCallback(hserver, "echo", "", "", OnMethodCallback, 0);
 
   // idle
   while (eCAL_Ok())

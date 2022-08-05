@@ -335,7 +335,9 @@ endif(HAS_QT5)
 # --------------------------------------------------------
 # ecal mon plugin sdk
 # --------------------------------------------------------
-add_subdirectory(app/mon/mon_plugin_lib)
+if(HAS_QT5)
+  add_subdirectory(app/mon/mon_plugin_lib)
+endif(HAS_QT5)
 
 # --------------------------------------------------------
 # ecal rec addon sdk
@@ -472,6 +474,13 @@ add_subdirectory(ecal/core/cfg)
 
 if(BUILD_DOCS)
   add_subdirectory(doc)
+endif()
+
+# --------------------------------------------------------
+# debscripts
+# --------------------------------------------------------
+if (UNIX)
+  add_subdirectory(cpack/debscripts)
 endif()
 
 #install(EXPORT eCALTargets DESTINATION cmake NAMESPACE eCAL::)

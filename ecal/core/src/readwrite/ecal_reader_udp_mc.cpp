@@ -25,5 +25,4 @@
 
 namespace eCAL
 {
-  template<> std::shared_ptr<CMulticastLayer> CReaderLayer<CMulticastLayer>::layer(nullptr);
 };

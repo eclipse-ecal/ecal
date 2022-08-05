@@ -1503,8 +1503,10 @@ void RecorderModel::monitorUpdated(const eCAL::rec_server::TopicInfoMap_T& /*top
 
 void RecorderModel::recordingStateChanged(bool /*recording*/)
 {
-  emit dataChanged(index(0, (int)Columns::ENABLED), index(rowCount(), (int)Columns::ENABLED));
-  emit dataChanged(index(0, (int)Columns::HOST_FILTER), index(rowCount(), (int)Columns::HOST_FILTER));
+  // call the function via its class becase it's a virtual function that is called directly/indirectly in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  emit dataChanged(RecorderModel::index(0, (int)Columns::ENABLED), RecorderModel::index(RecorderModel::rowCount(), (int)Columns::ENABLED));
+  emit dataChanged(RecorderModel::index(0, (int)Columns::HOST_FILTER), RecorderModel::index(RecorderModel::rowCount(), (int)Columns::HOST_FILTER));
 }
 
 //////////////////////////////////////////////////////
@@ -1645,12 +1647,12 @@ void RecorderModel::updateTimeErrorWarnings(bool update_view)
 
 void RecorderModel::emitDataChangedAll(int row)
 {
-  emit dataChanged(index(row, 0), index(row, (int)Columns::COLUMN_COUNT - 1));
+  emit dataChanged(RecorderModel::index(row, 0), RecorderModel::index(row, (int)Columns::COLUMN_COUNT - 1));
 }
 
 void RecorderModel::emitDataChangedColumn(int row, Columns column)
 {
-  emit dataChanged(index(row, (int)column), index(row, (int)column));
+  emit dataChanged(RecorderModel::index(row, (int)column), RecorderModel::index(row, (int)column));
 }
 
 void RecorderModel::emitDataChangedConfig(int row)

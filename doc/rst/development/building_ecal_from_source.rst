@@ -25,7 +25,7 @@ First check out the eCAL repository and all of the submodules:
 
 .. code-block:: batch
 
-   git clone https://github.com/continental/ecal.git
+   git clone https://github.com/eclipse-ecal/ecal.git
    cd ecal
    git submodule init
    git submodule update

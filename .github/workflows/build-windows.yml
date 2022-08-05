@@ -1,6 +1,6 @@
 name: Build Windows Server 2019
 
-on:  
+on:
   push:
   pull_request:
     branches:
@@ -17,14 +17,14 @@ jobs:
         version: '5.15.2'
         target: 'desktop'
         arch: 'win64_msvc2015_64'
-        
+
     # Downgrading nuget is required as of 2021-04-23, as nuget 5.9.1.111 fails installing protobuf
     # https://github.com/actions/virtual-environments/issues/3240
     - name: Downgrade nuget
       uses: nuget/setup-nuget@v1
       with:
         nuget-version: '5.8.x'
-        
+
     - name: Install Dependencies
       # choco install of version 1.9.3 produced a checksum error
       run: choco install doxygen.install --version=1.9.2
@@ -57,30 +57,30 @@ jobs:
         cd %GITHUB_WORKSPACE%
         powershell -Command "& 'build_win\download_npcap.ps1'"
       shell: cmd
-      
+
     - name: Create Python virtualenv
       run: |
         mkdir "${{ runner.workspace }}\_build\complete\.venv\"
-        
+
         # At the moment (2021-10-27) there is no official Python 3.10 lxml package available on pypi. Thus we use python 3.9.
         py -3.9 -m venv "${{ runner.workspace }}\.venv"
         CALL "${{ runner.workspace }}\.venv\Scripts\activate.bat"
-           
+
         echo Upgrading pip
         python -m pip install --upgrade pip
-        
+
         pip install wheel
-        
+
         echo Installing python requirements
         pip install -r "%GITHUB_WORKSPACE%\requirements.txt"
 
       shell: cmd
-        
+
     - name: CMake SDK
       run: |
         mkdir "${{ runner.workspace }}\_build\sdk\"
         cd "${{ runner.workspace }}/_build/sdk"
-        
+
         cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 ^
         -DHAS_HDF5=ON ^
         -DHAS_QT5=ON ^
@@ -114,7 +114,7 @@ jobs:
         -DCMAKE_BUILD_TYPE=Debug ^
         -DCPACK_PACK_WITH_INNOSETUP=OFF
       shell: cmd
-      
+
     - name: CMake Complete
       run: |
         CALL "${{ runner.workspace }}\.venv\Scripts\activate.bat"
@@ -158,7 +158,7 @@ jobs:
     - name: Build SDK
       run: cmake --build . --config Debug
       working-directory: ${{ runner.workspace }}/_build/sdk
-      
+
     - name: Build Release
       run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/_build/complete
@@ -179,7 +179,7 @@ jobs:
         cmake --build . --target create_python_wheel --config Release
       shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
-      
+
     - name: Build Python 3.9 Wheel
       run: |
         mkdir ".venv_39"
@@ -203,7 +203,7 @@ jobs:
         cmake --build . --target create_python_wheel --config Release
       shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
-      
+
     - name: Build Python 3.7 Wheel
       run: |
         mkdir ".venv_37"
@@ -215,7 +215,7 @@ jobs:
         cmake --build . --target create_python_wheel --config Release
       shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
-      
+
     - name: Build Python 3.6 Wheel
       run: |
         mkdir ".venv_36"
@@ -227,7 +227,7 @@ jobs:
         cmake --build . --target create_python_wheel --config Release
       shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
-      
+
     - name: Build Python 3.5 Wheel
       run: |
         mkdir ".venv_35"
@@ -259,6 +259,34 @@ jobs:
     - name: Pack complete setup
       run: cpack -C Release
       working-directory: ${{ runner.workspace }}/_build/complete
+
+    - name: Detect certificate
+      id: cert
+      run: |
+        if [[ -n "${{ secrets.CERT_BODY }}" \
+              && -n "${{ secrets.CERT_PSWD }}" \
+              && -n "${{ secrets.CERT_ALGO }}" \
+              && -n "${{ secrets.CERT_HASH }}" ]]
+        then
+          echo "ATTENTION: a certificate is available"
+          echo "::set-output name=is_available::true"
+        else
+          echo "WARNING: A certificate is not available"
+          echo "::set-output name=is_available::false"
+        fi
+      shell: bash
+
+    # https://github.com/OrhanKupusoglu/code-sign-action
+    - name: Sign the installer
+      if: fromJSON(steps.cert.outputs.is_available)
+      uses: OrhanKupusoglu/code-sign-action@v5.5.1
+      with:
+        cert_body: ${{ secrets.CERT_BODY }}
+        cert_pswd: ${{ secrets.CERT_PSWD }}
+        cert_algo: ${{ secrets.CERT_ALGO }}
+        cert_hash: ${{ secrets.CERT_HASH }}
+        folder: ${{ runner.workspace }}/_build/complete/_deploy
+        debug: true
 
     - name: Upload Windows setup
       uses: actions/upload-artifact@v2

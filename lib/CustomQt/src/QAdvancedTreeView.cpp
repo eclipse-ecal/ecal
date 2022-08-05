@@ -150,7 +150,9 @@ void QAdvancedTreeView::headerContextMenu(const QPoint& pos)
     column_action->setCheckable(true);
     column_action->setChecked(!isColumnHidden(col));
     column_action->setData(col); // As we want to connect everything to one slot, the action itself must carry information about the selected column
-    connect(column_action, &QAction::triggered, [col, this]() { setColumnHidden(col, !isColumnHidden(col)); });
+    connect(column_action, &QAction::triggered, [col, this]() {
+      setColumnHidden(col, !isColumnHidden(col));
+      emit headerContextMenuChanged(); });
     context_menu.addAction(column_action);
   }
   context_menu.exec(header()->mapToGlobal(pos));

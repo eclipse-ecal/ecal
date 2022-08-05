@@ -55,8 +55,6 @@ set(source_files
     src/service/rec_server_service.h
     src/service/rec_server_service.cpp
 
-    src/widgets/bytes_to_pretty_string_utils.h
-
     src/widgets/about_dialog/about_dialog.cpp
     src/widgets/about_dialog/about_dialog.h
 
@@ -258,4 +256,13 @@ install(CODE
     endwhile()
     "
 )
+endif()
+
+# install files required for linux mimetypes and icon
+if (UNIX)
+    INSTALL (FILES "${CMAKE_CURRENT_LIST_DIR}/mimetype/ecal-rec.xml"
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/mime/packages/")
+
+    INSTALL (FILES "${CMAKE_CURRENT_LIST_DIR}/mimetype/application-ecalrec.svg"
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/mimetypes/")
 endif()

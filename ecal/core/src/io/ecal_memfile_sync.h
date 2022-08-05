@@ -18,15 +18,15 @@
 */
 
 /**
- * @brief  synchronized memory file
+ * @brief  synchronized memory file interface
 **/
 
 #pragma once
 
-#include "readwrite/ecal_writer_base.h"
-#include "io/ecal_memfile.h"
-
 #include <ecal/ecal_eventhandle.h>
+
+#include "readwrite/ecal_writer_data.h"
+#include "ecal_memfile.h"
 
 #include <mutex>
 #include <string>
@@ -34,31 +34,43 @@
 
 namespace eCAL
 {
+  struct SSyncMemoryFileAttr
+  {
+    size_t min_size;           //!< memory file minimum size [Bytes]
+    size_t reserve;            //!< dynamic file size reserve before recreating memory file if payload size changes [%]
+    int    timeout_open_ms;    //!< timeout to open a memory file using mutex lock [ms]
+    int    timeout_ack_ms;     //!< timeout for memory read acknowledge signal from data reader [ms]
+  };
+
   class CSyncMemoryFile
   {
   public:
-    CSyncMemoryFile();
+    CSyncMemoryFile(const std::string& base_name_, size_t size_, SSyncMemoryFileAttr attr_);
     ~CSyncMemoryFile();
 
-    bool Create(const std::string& base_name_, size_t size_);
-    bool Destroy();
-
-    bool ConnectProcess(const std::string& process_id_);
-    bool DisconnectProcess(const std::string& process_id_);
+    bool Connect(const std::string& process_id_);
+    bool Disconnect(const std::string& process_id_);
 
     bool CheckSize(size_t size_);
-    bool Write(const CDataWriterBase::SWriterData& data_);
+    bool Write(const SWriterData& data_);
 
     std::string GetName();
 
   protected:
-    void SignalWritten();
-    void BuildMemFileName();
-      
-    std::string  m_base_name;
-    std::string  m_memfile_name;
-    CMemoryFile  m_memfile;
-    int          m_timeout_ack;
+    bool Create(const std::string& base_name_, size_t size_);
+    bool Destroy();
+    bool Recreate(size_t size_);
+
+    std::string BuildMemFileName(const std::string base_name_);
+
+    void SendSyncEvents();
+    void DisconnectAll();
+
+    std::string         m_base_name;
+    std::string         m_memfile_name;
+    CMemoryFile         m_memfile;
+    SSyncMemoryFileAttr m_attr;
+    bool                m_created;
 
     struct SEventHandlePair
     {

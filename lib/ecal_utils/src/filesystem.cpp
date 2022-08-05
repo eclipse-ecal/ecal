@@ -28,6 +28,7 @@
 
   #include <ecal_utils/str_convert.h> // ANSI/Wide/UTF8 conversion
 #else // _WIN32
+  #include <cstring>    // strerror()
   #include <dirent.h>
   #include <fcntl.h>    // O_RDONLY
   #ifndef __QNXNTO__
@@ -158,12 +159,12 @@ namespace EcalUtils
       }
       FindClose(hFind);
 #else // WIN32
-      DIR *dp;
-      if ((dp = opendir(path_.c_str())) != NULL)
+      DIR *dp = opendir(path_.c_str());
+      if (dp != NULL)
       {
         can_open_dir = true;
+        closedir(dp);
       }
-      closedir(dp);
 #endif // WIN32
 
       return can_open_dir;

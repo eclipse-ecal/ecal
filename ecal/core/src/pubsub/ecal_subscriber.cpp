@@ -136,16 +136,16 @@ namespace eCAL
     // remove receive callback
     RemReceiveCallback();
 
-    // destroy local data reader
-    m_datareader->Destroy();
-    
-    // unregister data reader
+    // first unregister data reader
     if(g_subgate())         g_subgate()->Unregister(m_datareader->GetTopicName(), m_datareader);
     if(g_entity_register()) g_entity_register()->UnregisterTopic(m_datareader->GetTopicName(), m_datareader->GetTopicID());
 #ifndef NDEBUG
     // log it
     if (g_log()) g_log()->Log(log_level_debug1, std::string(m_datareader->GetTopicName() + "::CSubscriber::Destroy"));
 #endif
+
+    // destroy local data reader
+    m_datareader->Destroy();
 
     // free datareader
     delete m_datareader;

@@ -26,6 +26,7 @@
 #include <string>
 #include <cstdlib>
 #include <sstream>
+#include <vector>
 
 #include <ecal_utils/str_convert.h>
 

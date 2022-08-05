@@ -221,4 +221,13 @@ source_group( autogen FILES
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/sys)
 
+# install files required for linux mimetypes and icon
+if (UNIX)
+    INSTALL (FILES "${CMAKE_CURRENT_LIST_DIR}/mimetype/ecal-sys.xml"
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/mime/packages/")
+
+    INSTALL (FILES "${CMAKE_CURRENT_LIST_DIR}/mimetype/application-ecalsys.svg"
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/mimetypes/")
+endif()
+
 ecal_install_app(${PROJECT_NAME} START_MENU_NAME "eCAL Sys")

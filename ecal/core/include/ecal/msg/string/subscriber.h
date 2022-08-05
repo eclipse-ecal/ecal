@@ -55,7 +55,10 @@ namespace eCAL
        *
        * @param topic_name_  Unique topic name.
       **/
-      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, GetTypeName(), GetDescription())
+
+      // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+      // where the vtable is not created yet or it's destructed.
+      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, CSubscriber::GetTypeName(), CSubscriber::GetDescription())
       {
       }
 
@@ -96,7 +99,7 @@ namespace eCAL
        *
        * @return  Always returns "base:std::string".
       **/
-      std::string GetTypeName() const
+      std::string GetTypeName() const override
       {
         return("base:std::string");
       }
@@ -107,7 +110,7 @@ namespace eCAL
        *
        * @return  Always returns empty string.
       **/
-      std::string GetDescription() const
+      std::string GetDescription() const override
       {
         return("");
       }
@@ -121,7 +124,7 @@ namespace eCAL
        *
        * @return  True if it succeeds, false if it fails.
       **/
-      bool Deserialize(T& msg_, const void* buffer_, size_t size_) const
+      bool Deserialize(T& msg_, const void* buffer_, size_t size_) const override
       {
         msg_ = std::string(static_cast<const char*>(buffer_), size_);
         return true;

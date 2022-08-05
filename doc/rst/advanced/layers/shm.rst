@@ -137,7 +137,7 @@ Zero-copy can be enabled in the following ways:
 - **Use zero-copy for a single publisher (from your code):**
 
   Zero copy could be activated either per connection or for a complete system using the eCAL configuration file.
-  To activate it for a specific publisher this ``CPublisher`` `API function <https://continental.github.io/ecal/_api/classeCAL_1_1CPublisher.html#_CPPv4N4eCAL10CPublisher17ShmEnableZeroCopyEb>`_ needs to be called.
+  To activate it for a specific publisher this ``CPublisher`` `API function <https://eclipse-ecal.github.io/ecal/_api/classeCAL_1_1CPublisher.html#_CPPv4N4eCAL10CPublisher17ShmEnableZeroCopyEb>`_ needs to be called.
 
   .. code-block:: cpp
 
@@ -186,7 +186,7 @@ You can activate the feature in the following ways.
 
 - **Use multi-buffering for a single publisher (from your code):**
 
-  Multibuffering can be enabled for a specific publisher using this ``CPublisher`` `API function <https://continental.github.io/ecal/_api/classeCAL_1_1CPublisher.html#_CPPv4N4eCAL10CPublisher17ShmSetBufferCountEl>`_:
+  Multibuffering can be enabled for a specific publisher using this ``CPublisher`` `API function <https://eclipse-ecal.github.io/ecal/_api/classeCAL_1_1CPublisher.html#_CPPv4N4eCAL10CPublisher17ShmSetBufferCountEl>`_:
 
   .. code-block:: cpp
       

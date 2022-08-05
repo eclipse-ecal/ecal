@@ -37,6 +37,7 @@
 
 #ifndef ECAL_LAYER_ICEORYX
 #include "io/ecal_memfile_pool.h"
+#include "io/ecal_memfile_db.h"
 #endif /* !ECAL_LAYER_ICEORYX */
 
 #include <memory>
@@ -69,7 +70,7 @@ namespace eCAL
     const std::unique_ptr<CRegGate>&                                      reggate()          { return reggate_instance; };
 #ifndef ECAL_LAYER_ICEORYX
     const std::unique_ptr<CMemFileThreadPool>&                            memfile_pool()     { return memfile_pool_instance; };
-    const std::unique_ptr<SMemFileMap>&                                   memfile_map()      { return memfile_map_instance; };
+    const std::unique_ptr<CMemFileMap>&                                   memfile_map()      { return memfile_map_instance; };
 #endif /* !ECAL_LAYER_ICEORYX */
 
   private:
@@ -88,7 +89,7 @@ namespace eCAL
     std::unique_ptr<CRegGate>                                             reggate_instance;
 #ifndef ECAL_LAYER_ICEORYX
     std::unique_ptr<CMemFileThreadPool>                                   memfile_pool_instance;
-    std::unique_ptr<SMemFileMap>                                          memfile_map_instance;
+    std::unique_ptr<CMemFileMap>                                          memfile_map_instance;
 #endif /* !ECAL_LAYER_ICEORYX */
   };
 }

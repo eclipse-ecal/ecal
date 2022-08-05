@@ -75,9 +75,10 @@ ChannelWidget::ChannelWidget(QWidget *parent)
 
   ui_.channel_tree_view->setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
 
-  connect(tree_header_,          &QCheckboxHeaderView::clicked,          this, &ChannelWidget::headerClicked);
-  connect(channel_model_,        &QAbstractItemModel::dataChanged,       this, &ChannelWidget::treeDataChanged);
-  connect(ui_.channel_tree_view, &QTreeView::customContextMenuRequested, this, &ChannelWidget::treeContextMenu);
+  connect(tree_header_,          &QCheckboxHeaderView::clicked,                this, &ChannelWidget::headerClicked);
+  connect(channel_model_,        &QAbstractItemModel::dataChanged,             this, &ChannelWidget::treeDataChanged);
+  connect(ui_.channel_tree_view, &QTreeView::customContextMenuRequested,       this, &ChannelWidget::treeContextMenu);
+  connect(ui_.channel_tree_view, &QAdvancedTreeView::headerContextMenuChanged, this, &ChannelWidget::headerContextMenu);
 
   // Set initial layout
   autoSizeColumns();
@@ -157,6 +158,7 @@ ChannelWidget::~ChannelWidget()
 
 void ChannelWidget::measurementLoaded(const QString& /*path*/)
 {
+  channels_total_size_calculated_ = false;
   channel_model_->reload();
   ui_.filter_lineedit->clear();
   updateHeader();
@@ -165,6 +167,8 @@ void ChannelWidget::measurementLoaded(const QString& /*path*/)
   QEcalPlay::instance()->setChannelMapping(getChannelMapping(), true);
 
   channel_model_->updateMessageCounters();
+
+  headerContextMenu();
 }
 
 void ChannelWidget::measurementClosed()
@@ -176,6 +180,8 @@ void ChannelWidget::measurementClosed()
   QEcalPlay::instance()->setChannelMapping(getChannelMapping(), true);
 
   channel_model_->updateMessageCounters();
+
+  channels_total_size_calculated_ = false;
 }
 
 void ChannelWidget::publishersInitStateChanged(bool publishers_initialized)
@@ -293,6 +299,22 @@ void ChannelWidget::treeDataChanged(const QModelIndex &top_left, const QModelInd
     && (bottom_right.column() == (int)ChannelTreeModel::Columns::MESSAGE_COUNTER)))
   {
     QEcalPlay::instance()->setChannelMapping(getChannelMapping());
+  }
+}
+
+void ChannelWidget::headerContextMenu()
+{
+  if (channels_total_size_calculated_)
+    return;
+
+  if (QEcalPlay::instance()->isMeasurementLoaded())
+  {
+    if (!ui_.channel_tree_view->isColumnHidden((int)ChannelTreeModel::Columns::TOTAL_CHANNEL_SIZE))
+    {
+      QEcalPlay::instance()->calculateChannelsCumulativeEstimatedSize();
+      channels_total_size_calculated_ = true;
+      channel_model_->reload();
+    }
   }
 }
 
@@ -578,7 +600,7 @@ void ChannelWidget::setInitButtonToDeInit()
 
 void ChannelWidget::autoSizeColumns()
 {
-  ChannelTreeItem* dummy_item = new ChannelTreeItem("CameraSensorMapFusionCAF___", 99999999, 99999999);
+  ChannelTreeItem* dummy_item = new ChannelTreeItem("CameraSensorMapFusionCAF___", "Dummy_type", 99999999, 99999999.0, 99999999.0, 99999999, 99999999, 99999999);
   channel_model_->insertItem(dummy_item);
 
   for (int i = 0; i < channel_model_->columnCount(); i++)

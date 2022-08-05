@@ -46,7 +46,7 @@ namespace eCAL
 
 #ifndef ECAL_LAYER_ICEORYX
   class  CMemFileThreadPool;
-  struct SMemFileMap;
+  class  CMemFileMap;
 #endif /* !ECAL_LAYER_ICEORYX */
 
   // Declaration of getter functions for globally accessible variable instances
@@ -65,7 +65,7 @@ namespace eCAL
 
 #ifndef ECAL_LAYER_ICEORYX
   CMemFileThreadPool*    g_memfile_pool();
-  SMemFileMap*           g_memfile_map();
+  CMemFileMap*           g_memfile_map();
 #endif /* !ECAL_LAYER_ICEORYX */
 
   // declaration of globally accessible variables

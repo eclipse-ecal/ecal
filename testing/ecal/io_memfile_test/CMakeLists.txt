@@ -24,17 +24,18 @@ find_package(GTest REQUIRED)
 set(memfile_test_src
     src/memfile_test.cpp
     ../../../ecal/core/src/io/ecal_memfile.cpp
+    ../../../ecal/core/src/io/ecal_memfile_db.cpp
 )
 
 if(UNIX)
 set(memfile_test_os_src
-    ../../../ecal/core/src/io/linux/ecal_memfile_linux.cpp
+    ../../../ecal/core/src/io/linux/ecal_memfile_os.cpp
 )
 endif()
 
 if(WIN32)
 set(memfile_test_os_src
-    ../../../ecal/core/src/io/win32/ecal_memfile_win32.cpp
+    ../../../ecal/core/src/io/win32/ecal_memfile_os.cpp
 )
 endif()
 
