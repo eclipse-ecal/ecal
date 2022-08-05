@@ -23,8 +23,8 @@
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
-#include <app/pb/sys/state.pb.h>
 #include <core/pb/process.pb.h>
+#include <app/pb/sys/state.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
@@ -36,6 +36,7 @@
 
 #include <ecal/ecal_process_mode.h>
 
+#include <list>
 #include <memory>
 
 namespace eCAL
@@ -47,16 +48,29 @@ namespace eCAL
       ///////////////////////////////
       // From Protobuf
       ///////////////////////////////
-      TaskState                    FromProtobuf(const eCAL::pb::ProcessState&      task_state_pb);
-      TaskState                    FromProtobuf(const eCAL::pb::sys::ProcessState& task_state_pb);
-      std::shared_ptr<EcalSysTask> FromProtobuf(const eCAL::pb::sys::State::Task&  task_pb);
-      std::shared_ptr<TaskGroup>   FromProtobuf(const eCAL::pb::sys::State::Group& task_group_pb);
+
+      void FromProtobuf(const eCAL::pb::sys::ProcessState&    task_state_pb,    TaskState&                    task_state);
+      void FromProtobuf(const eCAL::pb::sys::State::Task&     task_pb,          std::shared_ptr<EcalSysTask>& task);
+      void FromProtobuf(const eCAL::pb::sys::State::Group&    task_group_pb,    std::shared_ptr<TaskGroup>&   task_group);
+
+      TaskState                    FromProtobuf(const eCAL::pb::ProcessState&         task_state_pb);
+      TaskState                    FromProtobuf(const eCAL::pb::sys::ProcessState&    task_state_pb);
+      std::shared_ptr<EcalSysTask> FromProtobuf(const eCAL::pb::sys::State::Task&     task_pb);
+      std::shared_ptr<TaskGroup>   FromProtobuf(const eCAL::pb::sys::State::Group&    task_group_pb);
 
       ///////////////////////////////
       // To Protobuf
       ///////////////////////////////
-      void                 ToProtobuf(eCAL::pb::sys::State& state_pb, const EcalSys& ecalsys);
-      eCAL::pb::sys::State ToProtobuf(const EcalSys&        ecalsys);
+
+      void ToProtobuf(eCAL::pb::sys::ProcessState&    task_state_pb,    const TaskState&                    task_state);
+      void ToProtobuf(eCAL::pb::sys::State::Task&     task_pb,          const std::shared_ptr<EcalSysTask>& task);
+      void ToProtobuf(eCAL::pb::sys::State::Group&    task_group_pb,    const std::shared_ptr<TaskGroup>&   task_group);
+      void ToProtobuf(eCAL::pb::sys::State&           state_pb,         const EcalSys&                      ecalsys);
+
+      eCAL::pb::sys::ProcessState    ToProtobuf(const TaskState&                    task_state);
+      eCAL::pb::sys::State::Task     ToProtobuf(const std::shared_ptr<EcalSysTask>& task);
+      eCAL::pb::sys::State::Group    ToProtobuf(const std::shared_ptr<TaskGroup>&   task_group);
+      eCAL::pb::sys::State           ToProtobuf(const EcalSys&                      ecalsys);
     }
   }
 }

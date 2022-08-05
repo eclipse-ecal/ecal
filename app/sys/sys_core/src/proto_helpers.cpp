@@ -18,9 +18,8 @@
 */
 
 #include <ecalsys/proto_helpers.h>
-#include <sys_client_core/proto_helpers.h>
 
-#include <list>
+#include <sys_client_core/proto_helpers.h>
 
 namespace eCAL
 {
@@ -31,66 +30,24 @@ namespace eCAL
       ///////////////////////////////
       // From Protobuf
       ///////////////////////////////
-      void FromProtobuf(const eCAL::pb::sys::ProcessState& task_state_pb, TaskState&                    task_state);
-      void FromProtobuf(const eCAL::pb::sys::State::Task&  task_pb,       std::shared_ptr<EcalSysTask>& task);
-      void FromProtobuf(const eCAL::pb::sys::State::Group& task_group_pb, std::shared_ptr<TaskGroup>&   task_group);
 
-      // we have ProcessSate existing in ecal::pb and app::pb namespace
-      // this function is just converting from pb to sys
-      void ConvProtobuf(const eCAL::pb::ProcessState& task_state_pb, eCAL::pb::sys::ProcessState& sys_task_state_pb)
-      {
-        sys_task_state_pb.set_severity((eCAL::pb::sys::eProcessSeverity)task_state_pb.severity());
-        sys_task_state_pb.set_severity_level((eCAL::pb::sys::eProcessSeverityLevel)task_state_pb.severity());
-        sys_task_state_pb.set_info(task_state_pb.info());
-      }
-
-      TaskState FromProtobuf(const eCAL::pb::ProcessState& task_state_pb)
-      {
-        TaskState output;
-        eCAL::pb::sys::ProcessState sys_task_state_pb;
-        ConvProtobuf(task_state_pb, sys_task_state_pb);
-        FromProtobuf(sys_task_state_pb, output);
-        return output;
-      }
-
-      TaskState FromProtobuf(const eCAL::pb::sys::ProcessState& task_state_pb)
-      {
-        TaskState output;
-        FromProtobuf(task_state_pb, output);
-        return output;
-      }
-
-      std::shared_ptr<EcalSysTask> FromProtobuf(const eCAL::pb::sys::State::Task& task_pb)
-      {
-        std::shared_ptr<EcalSysTask> output = std::make_shared<EcalSysTask>();
-        FromProtobuf(task_pb, output);
-        return output;
-      }
-
-      std::shared_ptr<TaskGroup> FromProtobuf(const eCAL::pb::sys::State::Group& task_group_pb)
-      {
-        std::shared_ptr<TaskGroup> output = std::make_shared<TaskGroup>();
-        FromProtobuf(task_group_pb, output);
-        return output;
-      }
-
-      void FromProtobuf(const eCAL::pb::sys::ProcessState& task_state_pb, TaskState& task_state)
+      void FromProtobuf(const eCAL::pb::sys::ProcessState&    task_state_pb,    TaskState&                    task_state)
       {
         switch (task_state_pb.severity())
         {
-        case eCAL::pb::eProcessSeverity::proc_sev_unknown:
+        case eCAL::pb::sys::eProcessSeverity::proc_sev_unknown:
           task_state.severity = eCAL_Process_eSeverity::proc_sev_unknown;
           break;
-        case eCAL::pb::eProcessSeverity::proc_sev_healthy:
+        case eCAL::pb::sys::eProcessSeverity::proc_sev_healthy:
           task_state.severity = eCAL_Process_eSeverity::proc_sev_healthy;
           break;
-        case eCAL::pb::eProcessSeverity::proc_sev_warning:
+        case eCAL::pb::sys::eProcessSeverity::proc_sev_warning:
           task_state.severity = eCAL_Process_eSeverity::proc_sev_warning;
           break;
-        case eCAL::pb::eProcessSeverity::proc_sev_critical:
+        case eCAL::pb::sys::eProcessSeverity::proc_sev_critical:
           task_state.severity = eCAL_Process_eSeverity::proc_sev_critical;
           break;
-        case eCAL::pb::eProcessSeverity::proc_sev_failed:
+        case eCAL::pb::sys::eProcessSeverity::proc_sev_failed:
           task_state.severity = eCAL_Process_eSeverity::proc_sev_failed;
           break;
         default:
@@ -100,19 +57,19 @@ namespace eCAL
 
         switch (task_state_pb.severity_level())
         {
-        case eCAL::pb::eProcessSeverityLevel::proc_sev_level1:
+        case eCAL::pb::sys::eProcessSeverityLevel::proc_sev_level1:
           task_state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level1;
           break;
-        case eCAL::pb::eProcessSeverityLevel::proc_sev_level2:
+        case eCAL::pb::sys::eProcessSeverityLevel::proc_sev_level2:
           task_state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level2;
           break;
-        case eCAL::pb::eProcessSeverityLevel::proc_sev_level3:
+        case eCAL::pb::sys::eProcessSeverityLevel::proc_sev_level3:
           task_state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level3;
           break;
-        case eCAL::pb::eProcessSeverityLevel::proc_sev_level4:
+        case eCAL::pb::sys::eProcessSeverityLevel::proc_sev_level4:
           task_state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level4;
           break;
-        case eCAL::pb::eProcessSeverityLevel::proc_sev_level5:
+        case eCAL::pb::sys::eProcessSeverityLevel::proc_sev_level5:
           task_state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level5;
           break;
         default:
@@ -123,7 +80,7 @@ namespace eCAL
         task_state.info = task_state_pb.info();
       }
 
-      void FromProtobuf(const eCAL::pb::sys::State::Task& task_pb, std::shared_ptr<EcalSysTask>& task)
+      void FromProtobuf(const eCAL::pb::sys::State::Task&     task_pb,          std::shared_ptr<EcalSysTask>& task)
       {
         task->SetId(task_pb.id());
         task->SetName(task_pb.name());
@@ -154,11 +111,10 @@ namespace eCAL
         {
           task->SetRestartBySeverityEnabled(false);
         }
-        
         task->SetHostStartedOn(task_pb.current_host());
       }
 
-      void FromProtobuf(const eCAL::pb::sys::State::Group& task_group_pb, std::shared_ptr<TaskGroup>& task_group)
+      void FromProtobuf(const eCAL::pb::sys::State::Group&    task_group_pb,    std::shared_ptr<TaskGroup>&   task_group)
       {
         // TODO: This conversion faked, it does not represent the group is was created from.
 
@@ -191,36 +147,42 @@ namespace eCAL
         task_group->SetName(task_group_pb.name());
       }
 
+      TaskState                    FromProtobuf(const eCAL::pb::ProcessState& task_state_pb)
+      {
+        eCAL::pb::sys::ProcessState sys_task_state_pb;
+        sys_task_state_pb.set_severity((eCAL::pb::sys::eProcessSeverity)task_state_pb.severity());
+        sys_task_state_pb.set_severity_level((eCAL::pb::sys::eProcessSeverityLevel)task_state_pb.severity());
+        sys_task_state_pb.set_info(task_state_pb.info());
+        return FromProtobuf(sys_task_state_pb);
+      }
+
+      TaskState                    FromProtobuf(const eCAL::pb::sys::ProcessState&         task_state_pb)
+      {
+        TaskState output;
+        FromProtobuf(task_state_pb, output);
+        return output;
+      }
+
+      std::shared_ptr<EcalSysTask> FromProtobuf(const eCAL::pb::sys::State::Task&     task_pb)
+      {
+        std::shared_ptr<EcalSysTask> output = std::make_shared<EcalSysTask>();
+        FromProtobuf(task_pb, output);
+        return output;
+      }
+
+      std::shared_ptr<TaskGroup>   FromProtobuf(const eCAL::pb::sys::State::Group&    task_group_pb)
+      {
+        std::shared_ptr<TaskGroup> output = std::make_shared<TaskGroup>();
+        FromProtobuf(task_group_pb, output);
+        return output;
+      }
+
+
       ///////////////////////////////
       // To Protobuf
       ///////////////////////////////
-      void ToProtobuf(eCAL::pb::sys::ProcessState& task_state_pb, const TaskState&                    task_state);
-      void ToProtobuf(eCAL::pb::sys::State::Task&  task_pb,       const std::shared_ptr<EcalSysTask>& task);
-      void ToProtobuf(eCAL::pb::sys::State::Group& task_group_pb, const std::shared_ptr<TaskGroup>&   task_group);
 
-      void ToProtobuf(eCAL::pb::sys::State& state_pb, const EcalSys& ecalsys)
-      {
-        for (const auto& task : ecalsys.GetTaskList())
-        {
-          ToProtobuf(*(state_pb.add_tasks()), task);
-        }
-
-        for (const auto& group : ecalsys.GetGroupList())
-        {
-          ToProtobuf(*(state_pb.add_groups()), group);
-        }
-
-        state_pb.set_host(eCAL::Process::GetHostName());
-      }
-
-      eCAL::pb::sys::State ToProtobuf(const EcalSys& ecalsys)
-      {
-        eCAL::pb::sys::State output_pb;
-        ToProtobuf(output_pb, ecalsys);
-        return output_pb;
-      }
-
-      void ToProtobuf(eCAL::pb::sys::ProcessState& task_state_pb, const TaskState& task_state)
+      void ToProtobuf(eCAL::pb::sys::ProcessState&         task_state_pb,    const TaskState&                    task_state)
       {
         switch (task_state.severity)
         {
@@ -269,7 +231,7 @@ namespace eCAL
         task_state_pb.set_info(task_state.info);
       }
 
-      void ToProtobuf(eCAL::pb::sys::State::Task& task_pb,const std::shared_ptr<EcalSysTask>& task)
+      void ToProtobuf(eCAL::pb::sys::State::Task&     task_pb,          const std::shared_ptr<EcalSysTask>& task)
       {
         task_pb.set_id                 (task->GetId());
         task_pb.set_name               (task->GetName());
@@ -291,7 +253,7 @@ namespace eCAL
         task_pb.set_current_host       (task->GetHostStartedOn());
       }
 
-      void ToProtobuf(eCAL::pb::sys::State::Group& task_group_pb, const std::shared_ptr<TaskGroup>& task_group)
+      void ToProtobuf(eCAL::pb::sys::State::Group&    task_group_pb,    const std::shared_ptr<TaskGroup>&   task_group)
       {
         auto state = task_group->Evaluate();
 
@@ -310,6 +272,51 @@ namespace eCAL
           ToProtobuf(*task_group_pb.add_tasks(), task);
         }
       }
+
+      void ToProtobuf(eCAL::pb::sys::State&           state_pb,         const EcalSys&                      ecalsys)
+      {
+        for (const auto& task : ecalsys.GetTaskList())
+        {
+          ToProtobuf(*(state_pb.add_tasks()), task);
+        }
+
+        for (const auto& group : ecalsys.GetGroupList())
+        {
+          ToProtobuf(*(state_pb.add_groups()), group);
+        }
+
+        state_pb.set_host(eCAL::Process::GetHostName());
+      }
+
+
+      eCAL::pb::sys::ProcessState         ToProtobuf(const TaskState&                    task_state)
+      {
+        eCAL::pb::sys::ProcessState output_pb;
+        ToProtobuf(output_pb, task_state);
+        return output_pb;
+      }
+
+      eCAL::pb::sys::State::Task     ToProtobuf(const std::shared_ptr<EcalSysTask>& task)
+      {
+        eCAL::pb::sys::State::Task output_pb;
+        ToProtobuf(output_pb, task);
+        return output_pb;
+      }
+
+      eCAL::pb::sys::State::Group    ToProtobuf(const std::shared_ptr<TaskGroup>&   task_group)
+      {
+        eCAL::pb::sys::State::Group output_pb;
+        ToProtobuf(output_pb, task_group);
+        return output_pb;
+      }
+
+      eCAL::pb::sys::State           ToProtobuf(const EcalSys&                      ecalsys)
+      {
+        eCAL::pb::sys::State output_pb;
+        ToProtobuf(output_pb, ecalsys);
+        return output_pb;
+      }
+
     }
   }
 }
