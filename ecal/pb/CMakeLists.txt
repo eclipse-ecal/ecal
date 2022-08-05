@@ -21,13 +21,13 @@ project(core_pb)
 find_package(Protobuf REQUIRED)
 
 set(ProtoFiles
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/ecal.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/host.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/layer.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/monitoring.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/process.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/service.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/topic.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/core/pb/ecal.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/core/pb/host.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/core/pb/layer.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/core/pb/monitoring.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/core/pb/process.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/core/pb/service.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/core/pb/topic.proto
 )
 
 ecal_add_library(${PROJECT_NAME} src/core_pb.cpp)
