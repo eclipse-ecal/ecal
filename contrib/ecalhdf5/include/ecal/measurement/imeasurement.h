@@ -228,12 +228,12 @@ namespace eCAL
       std::shared_ptr<eh5::HDF5Meas> meas;
     };
 
-    IMeasurement::IMeasurement(const std::string& path)
+    inline IMeasurement::IMeasurement(const std::string& path)
       : meas{ std::make_shared<eh5::HDF5Meas>(path, eh5::RDONLY) }
     {
     }
 
-    ChannelSet IMeasurement::ChannelNames() const
+    inline ChannelSet IMeasurement::ChannelNames() const
     {
       return meas->GetChannelNames();
     }
@@ -243,7 +243,7 @@ namespace eCAL
     // a) channel does not exist in the IMeasurement
     // b) the registered type does not match with the descriptor in the chanenel
     template<typename T>
-    IChannel<T> IMeasurement::Get(const std::string& channel) const
+    inline IChannel<T> IMeasurement::Get(const std::string& channel) const
     {
       // Assert that the channel is in the IMeasurement
       auto channels = ChannelNames();
