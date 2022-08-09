@@ -29,10 +29,11 @@
 
 namespace eCAL
 {
+  constexpr std::uint32_t ecal_magic_number = 0x4C414356;
+
   PADDING_DISABLED(struct SMemfileBroadcastHeaderV1
   {
-    std::uint8_t magic[5] = "eCAL";
-    std::uint8_t __reserved_field;
+    std::uint32_t magic = ecal_magic_number;
     std::uint32_t version = 1;
     std::uint64_t message_queue_offset = sizeof(SMemfileBroadcastHeaderV1);
     TimestampT timestamp = CreateTimestamp();
@@ -123,8 +124,7 @@ namespace eCAL
   bool CMemoryFileBroadcast::IsMemfileInitialized(const void *memfile_address) const
   {
     const auto *header = GetMemfileHeader(memfile_address);
-    return (std::memcmp(header->magic, SMemfileBroadcastHeaderV1().magic, sizeof(SMemfileBroadcastHeaderV1::magic)) ==
-            0);
+    return (header->magic == ecal_magic_number);
   }
 
   bool CMemoryFileBroadcast::IsMemfileVersionCompatible(const void *memfile_address) const
