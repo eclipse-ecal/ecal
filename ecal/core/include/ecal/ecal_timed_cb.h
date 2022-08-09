@@ -111,7 +111,7 @@ namespace eCAL
     {
       assert(callback_ != nullptr);
       if (callback_ == nullptr) return;
-      if (delay_ > 0) eCAL::Process::SleepMS(delay_);
+      if (delay_ > 0) eCAL::Process::SleepForDuration(std::chrono::milliseconds(delay_));
       while (!m_stop)
       {
         auto start = std::chrono::steady_clock::now();
@@ -121,7 +121,7 @@ namespace eCAL
           auto now = std::chrono::steady_clock::now();
           auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(now - start).count();
           auto sleep_duration = timeout_ - elapsed_time;
-          eCAL::Process::SleepMS(sleep_duration);
+          eCAL::Process::SleepForDuration(std::chrono::milliseconds(sleep_duration));
         }
       }
       m_stop = false;

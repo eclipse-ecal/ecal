@@ -81,7 +81,7 @@ namespace eCAL
     {
       if (!g_timegate() || !g_timegate()->IsValid())
       {
-        eCAL::Process::SleepNS(duration_nsecs_);
+        eCAL::Process::SleepForDuration(std::chrono::nanoseconds(duration_nsecs_));
       }
       else
       {

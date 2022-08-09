@@ -52,7 +52,6 @@
 #include "ecal_win_main.h"
 #include <iphlpapi.h>
 #include <ecal_utils/str_convert.h>
-#include <synchapi.h>
 #endif /* ECAL_OS_WINDOWS */
 
 #ifdef ECAL_OS_LINUX
@@ -376,23 +375,11 @@ namespace eCAL
       #endif
     }
 
-    void SleepUS(const long long time_us_)
-    {
-      #ifdef ECAL_OS_WINDOWS
-      {
-        auto milliseconds = time_us_ / 1000;
-        Sleep(milliseconds);
-      }
-      #else
-        std::this_thread::sleep_for(std::chrono::microseconds(time_us_));
-      #endif
-    }
-
     void SleepNS(const long long time_ns_)
     {
       #ifdef ECAL_OS_WINDOWS
       {
-        auto milliseconds = time_ns_ / 1000000;
+        auto milliseconds = time_ns_ / 1000000 + ((time_ns_ / 1000000) != 0);
         Sleep(milliseconds);
       }
       #else

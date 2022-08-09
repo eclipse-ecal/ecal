@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <string>
 
 #include <ecal/ecal_os.h>
@@ -81,13 +82,18 @@ namespace eCAL
     /**
      * @brief  Sleep current thread.
      *
-     * Because of the fact that std::this_thread::sleep_for is vulnerable to system clock changes
-     * on Windows, Sleep function from synchapi.h had to be used for Windows. This insures time
-     * robustness on all platforms from a thread sleep perspective.
+     * Templated implementation which takes as argument a std::chrono::duration and calls underlying SleepNS function.
+     * By using a std::chrono::duration argument we ensure that conversion to ms would be more precise Windows Sleep method. 
      *
-     * @param  time_ms_  Time to sleep in ms. 
+     * @param  time  Time to sleep expressed in std::chrono::duration.
     **/
-    ECAL_API void SleepMS(const long time_ms_);
+
+    template <typename Rep, typename Period>
+    void SleepForDuration( std::chrono::duration<Rep, Period> time )
+    {
+        auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();
+        SleepNS(ns);
+    }
 
     /**
      * @brief  Sleep current thread.
@@ -96,16 +102,16 @@ namespace eCAL
      * on Windows, Sleep function from synchapi.h had to be used for Windows. This insures time
      * robustness on all platforms from a thread sleep perspective.
      *
-     * @param  time_ms_  Time to sleep in us.
+     * @param  time_ms_  Time to sleep in ms.
     **/
-    ECAL_API void SleepUS(const long long time_us_);
+    ECAL_API void SleepMS(long time_ms_);
 
     /**
      * @brief  Sleep current thread.
      *
      * Because of the fact that std::this_thread::sleep_for is vulnerable to system clock changes
      * on Windows, Sleep function from synchapi.h had to be used for Windows. This insures time
-     * robustness on all platforms from a thread sleep perspective.
+     * robustness on all platforms from a thread sleep perspective. Used with ns unit to obtain bigger precision.
      *
      * @param  time_ms_  Time to sleep in ns.
     **/
