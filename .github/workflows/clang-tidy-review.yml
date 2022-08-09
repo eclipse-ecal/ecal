@@ -33,6 +33,7 @@ jobs:
           apt_packages: "cmake,ninja-build,build-essential,zlib1g-dev,qtbase5-dev,libhdf5-dev,libprotobuf-dev,libprotoc-dev,protobuf-compiler,libcurl4-openssl-dev,libqwt-qt5-dev"
           config_file: ".clang-tidy"
           exclude: "/thirdparty/*,/_build/*,convert_utf.cpp,convert_utf.h"
+          lgtm_comment_body: ""
           cmake_command: |
             cmake . -B _build \
                     -G Ninja \
