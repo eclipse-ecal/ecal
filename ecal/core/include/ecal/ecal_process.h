@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <string>
 
 #include <ecal/ecal_os.h>
@@ -79,11 +80,42 @@ namespace eCAL
     ECAL_API std::string GetTaskParameter(const char* sep_);
 
     /**
-     * @brief  Sleep current thread. 
+     * @brief  Sleep current thread.
      *
-     * @param  time_ms_  Time to sleep in ms. 
+     * Because of the fact that std::this_thread::sleep_for is vulnerable to system clock changes
+     * on Windows, Sleep function from synchapi.h had to be used for Windows. This insures time
+     * robustness on all platforms from a thread sleep perspective.
+     *
+     * @param  time_ms_  Time to sleep in ms.
     **/
     ECAL_API void SleepMS(long time_ms_);
+
+    /**
+     * @brief  Sleep current thread.
+     *
+     * Because of the fact that std::this_thread::sleep_for is vulnerable to system clock changes
+     * on Windows, Sleep function from synchapi.h had to be used for Windows. This insures time
+     * robustness on all platforms from a thread sleep perspective. Used with ns unit to obtain bigger precision.
+     *
+     * @param  time_ms_  Time to sleep in ns.
+    **/
+    ECAL_API void SleepNS(const long long time_ns_);
+
+    /**
+     * @brief  Sleep current thread.
+     *
+     * Templated implementation which takes as argument a std::chrono::duration and calls underlying SleepNS function.
+     * By using a std::chrono::duration argument we ensure that conversion to ms would be more precise for Windows Sleep method. 
+     *
+     * @param  time  Time to sleep expressed in std::chrono::duration.
+    **/
+
+    template <typename Rep, typename Period>
+    void SleepFor( std::chrono::duration<Rep, Period> time )
+    {
+        auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();
+        SleepNS(ns);
+    }
 
     /**
      * @brief  Get current process id. 
