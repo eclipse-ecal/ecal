@@ -230,7 +230,7 @@ namespace eCAL
         // idle operations
         while (!read_done && !read_failed && !time_expired)
         {
-          eCAL::Process::SleepForDuration(std::chrono::milliseconds(1));
+          eCAL::Process::SleepFor(std::chrono::milliseconds(1));
         }
 
         // stop timer

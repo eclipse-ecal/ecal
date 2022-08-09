@@ -169,7 +169,7 @@ namespace eCAL
           sent = transmit_cb_(buf_ + static_cast<size_t>(current_packet_num)*MSG_PAYLOAD_SIZE, sizeof(struct SUDPMessageHead) + current_snd_len);
           if (sent == 0) return(sent);
           if (send_sleep_us)
-            eCAL::Process::SleepForDuration(std::chrono::microseconds(send_sleep_us));
+            eCAL::Process::SleepFor(std::chrono::microseconds(send_sleep_us));
 
 #ifndef NDEBUG
           // log it

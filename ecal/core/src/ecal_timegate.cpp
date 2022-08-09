@@ -246,14 +246,14 @@ namespace eCAL
     switch (m_sync_mode)
     {
     case eTimeSyncMode::none:
-      eCAL::Process::SleepForDuration(std::chrono::nanoseconds(duration_nsecs_));
+      eCAL::Process::SleepFor(std::chrono::nanoseconds(duration_nsecs_));
       break;
     case eTimeSyncMode::realtime:
       if (m_is_initialized_rt) {
         m_time_sync_rt.etime_sleep_for_nanoseconds_ptr(duration_nsecs_);
       }
       else {
-      eCAL::Process::SleepForDuration(std::chrono::nanoseconds(duration_nsecs_));
+      eCAL::Process::SleepFor(std::chrono::nanoseconds(duration_nsecs_));
       }
       break;
     case eTimeSyncMode::replay:
@@ -261,11 +261,11 @@ namespace eCAL
         m_time_sync_replay.etime_sleep_for_nanoseconds_ptr(duration_nsecs_);
       }
       else {
-      eCAL::Process::SleepForDuration(std::chrono::nanoseconds(duration_nsecs_));
+      eCAL::Process::SleepFor(std::chrono::nanoseconds(duration_nsecs_));
       }
       break;
     default:
-      eCAL::Process::SleepForDuration(std::chrono::nanoseconds(duration_nsecs_));
+      eCAL::Process::SleepFor(std::chrono::nanoseconds(duration_nsecs_));
     }
   }
 

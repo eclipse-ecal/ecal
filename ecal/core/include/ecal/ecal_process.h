@@ -83,13 +83,13 @@ namespace eCAL
      * @brief  Sleep current thread.
      *
      * Templated implementation which takes as argument a std::chrono::duration and calls underlying SleepNS function.
-     * By using a std::chrono::duration argument we ensure that conversion to ms would be more precise Windows Sleep method. 
+     * By using a std::chrono::duration argument we ensure that conversion to ms would be more precise for Windows Sleep method. 
      *
      * @param  time  Time to sleep expressed in std::chrono::duration.
     **/
 
     template <typename Rep, typename Period>
-    void SleepForDuration( std::chrono::duration<Rep, Period> time )
+    void SleepFor( std::chrono::duration<Rep, Period> time )
     {
         auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();
         SleepNS(ns);
