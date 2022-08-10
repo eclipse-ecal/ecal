@@ -24,6 +24,7 @@
 #pragma once
 
 #include <string>
+#include <cstdint>
 
 #include "ecal_memfile_info.h"
 
@@ -161,11 +162,23 @@ namespace eCAL
     bool HasReadAccess()     const {return(m_access_state == access_state::read_access);};
     bool HasWriteAccess()    const {return(m_access_state == access_state::write_access);};
 
+    
+    // @deprecate_eCAL6
+    // Use of platform specific aligment to remain compatible with previous struct layout
+    // This should be changed to 8 bytes for all platforms in a later version of eCAL that drops compatibility
     struct SInternalHeader
     {
-      unsigned short int_hdr_size  = sizeof(SInternalHeader);
-      unsigned long  cur_data_size = 0;
-      unsigned long  max_data_size = 0;
+      std::uint16_t int_hdr_size = sizeof(SInternalHeader);
+#if _WIN32 || _WIN64 || (INTPTR_MAX == INT32_MAX) // Use of standard 32 bit data types on windows and other 32 bit platforms to remain compatible with built-in "long" data type
+                                                  // of previous struct layout. For some reason 64-bit msvc uses 4 bytes alignment as well.
+      std::uint32_t  cur_data_size = 0;
+      std::uint32_t  max_data_size = 0;
+#else                                             // use of standard 64 bit data types on all 64 bit platforms to remain compatible with  built-in "long" data type of previous struct layout
+      std::uint64_t  cur_data_size = 0;
+      std::uint64_t  max_data_size = 0;
+#endif
+      // New fields should only declare well definied data types
+      // std::uint8_t   __new_field;
     };
 
   protected:

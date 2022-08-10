@@ -73,7 +73,7 @@ namespace eCAL
       m_memfile_info = SMemFileInfo();
 
       // create memory file
-      if (!memfile::db::AddFile(name_, create_, len_ + sizeof(SInternalHeader), m_memfile_info))
+      if (!memfile::db::AddFile(name_, create_, len_ + m_header.int_hdr_size, m_memfile_info))
       {
 #ifndef NDEBUG
         printf("Could not create memory file: %s.\n\n", name_);
@@ -196,7 +196,7 @@ namespace eCAL
     if (!m_memfile_info.mem_address)                         return(0);
 
     // return read address
-    buf_ = static_cast<char*>(m_memfile_info.mem_address) + sizeof(SInternalHeader);
+    buf_ = static_cast<char*>(m_memfile_info.mem_address) + m_header.int_hdr_size;
 
     return(len_);
   }
@@ -262,7 +262,7 @@ namespace eCAL
     pHeader->cur_data_size = m_header.cur_data_size;
 
     // return write address
-    buf_ = static_cast<char*>(m_memfile_info.mem_address) + sizeof(SInternalHeader);
+    buf_ = static_cast<char*>(m_memfile_info.mem_address) + m_header.int_hdr_size;
 
     return(len_);
   }
