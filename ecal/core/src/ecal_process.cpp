@@ -379,7 +379,7 @@ namespace eCAL
     {
       #ifdef ECAL_OS_WINDOWS
       {
-        auto milliseconds = time_ns_ / 1000000 + ((time_ns_ / 1000000) != 0);
+        auto milliseconds = time_ns_ / 1000000 + ((time_ns_ % 1000000) != 0);
         Sleep(milliseconds);
       }
       #else
