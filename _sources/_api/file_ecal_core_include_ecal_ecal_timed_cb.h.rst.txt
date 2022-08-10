@@ -36,6 +36,8 @@ Includes
 
 - ``chrono``
 
+- ``ecal_process.h`` (:ref:`file_ecal_core_include_ecal_ecal_process.h`)
+
 - ``functional``
 
 - ``thread``

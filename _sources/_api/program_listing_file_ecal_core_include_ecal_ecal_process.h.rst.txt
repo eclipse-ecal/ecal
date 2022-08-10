@@ -31,6 +31,7 @@ Program Listing for File ecal_process.h
    
    #pragma once
    
+   #include <chrono>
    #include <string>
    
    #include <ecal/ecal_os.h>
@@ -56,6 +57,15 @@ Program Listing for File ecal_process.h
        ECAL_API std::string GetTaskParameter(const char* sep_);
    
        ECAL_API void SleepMS(long time_ms_);
+   
+       ECAL_API void SleepNS(const long long time_ns_);
+   
+       template <typename Rep, typename Period>
+       void SleepFor( std::chrono::duration<Rep, Period> time )
+       {
+           auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();
+           SleepNS(ns);
+       }
    
        ECAL_API int GetProcessID();
    
