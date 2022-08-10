@@ -23,6 +23,8 @@
 
 #include <thread>
 
+#include "ecal_process.h"
+
 #include "snd_raw_buffer.h"
 #include "io/msg_type.h"
 
@@ -167,7 +169,7 @@ namespace eCAL
           sent = transmit_cb_(buf_ + static_cast<size_t>(current_packet_num)*MSG_PAYLOAD_SIZE, sizeof(struct SUDPMessageHead) + current_snd_len);
           if (sent == 0) return(sent);
           if (send_sleep_us)
-            std::this_thread::sleep_for(std::chrono::microseconds(send_sleep_us));
+            eCAL::Process::SleepFor(std::chrono::microseconds(send_sleep_us));
 
 #ifndef NDEBUG
           // log it
