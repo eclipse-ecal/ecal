@@ -128,6 +128,7 @@ namespace eCAL
       std::string  GetMeasRootDir   () const;
       std::string  GetMeasName      () const;
       int64_t      GetMaxFileSizeMib() const;
+      bool         GetOneFilePerTopicEnabled() const;
       std::string  GetDescription   () const;
 
     ////////////////////////////////////
