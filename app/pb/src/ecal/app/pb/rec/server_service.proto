@@ -23,8 +23,8 @@ option cc_generic_services = true;
 
 package eCAL.pb.rec_server;
 
-import "app/pb/rec/server_state.proto";
-import "app/pb/rec/server_config.proto";
+import "ecal/app/pb/rec/server_state.proto";
+import "ecal/app/pb/rec/server_config.proto";
 
 ///////////////////////////////////////////////////////
 // Requests

@@ -26,7 +26,7 @@
 #include "ecalsys_gui.h"
 
 // protobuf remote control
-#include "app/pb/sys/service.pb.h"
+#include <ecal/app/pb/sys/service.pb.h>
 
 class eCALSysServiceImpl : public eCAL::pb::sys::Service
 {
