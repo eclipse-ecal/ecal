@@ -10,6 +10,7 @@ USAGE:
              <Seconds>] [--blacklist <List>] [--whitelist <List>] [-d
              <Path>] [-n <Directory>] [--max-file-size <megabytes>]
              [--description <String>] [--ftp-server <FTP_Server>]
+             [--enable-one-file-per-topic <yes/no>]
              [--delete-after-upload <yes/no>] [-i]
              [--interactive-dont-exit] [--] [--version] [-h]
 
@@ -139,6 +140,11 @@ Where:
      Description stored in the measurement folder, when -r (--record) is
      set. If a configuration file is being loaded, this will override the
      setting from the config. Not available in remote-control mode.
+
+   --enable-one-file-per-topic <yes/no>
+     Whether to separate each topic in HDF5 file. This helps faster file
+     transfer and less network congestion in case of interest of specific
+     topics only.
 
    --ftp-server <FTP_Server>
      The server where to upload to when uploading a measurement. Use
