@@ -27,7 +27,7 @@
 #include <ecal/msg/protobuf/publisher.h>
 #include <ecal/ecal.h>
 #include <ecal/app/pb/play/state.pb.h>
-#include <ecaltime/pb/sim_time.pb.h>
+#include <ecal/ecaltime/pb/sim_time.pb.h>
 
 class PlayThread;
 

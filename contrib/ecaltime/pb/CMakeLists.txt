@@ -21,7 +21,7 @@ project(ecaltime_pb)
 find_package(Protobuf REQUIRED)
 
 set(ProtoFiles
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecaltime/pb/sim_time.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/ecaltime/pb/sim_time.proto
 )
 
 ecal_add_library(${PROJECT_NAME} src/ecaltime_pb.cpp)
