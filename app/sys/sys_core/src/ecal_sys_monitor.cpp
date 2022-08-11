@@ -24,9 +24,9 @@
 
 #include <ecal/ecal.h>
 
-#include "core/pb/monitoring.pb.h"
+#include <ecal/core/pb/monitoring.pb.h>
 #include "app/pb/sys/state.pb.h"
-#include "core/pb/process.pb.h"
+#include <ecal/core/pb/process.pb.h>
 
 #include "ecalsys/ecal_sys_logger.h"
 #include <ecalsys/proto_helpers.h>

@@ -26,7 +26,7 @@
 #pragma warning(push)
 #pragma warning(disable: 4146)
 #endif
-#include "core/pb/monitoring.pb.h"
+#include <ecal/core/pb/monitoring.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
