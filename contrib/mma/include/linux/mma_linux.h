@@ -26,7 +26,7 @@
 #include "../include/mma_impl.h"
 #include "../include/linux/ressource.h"
 #include "../include/linux/pipe_refresher.h"
-#include <app/pb/mma/mma.pb.h>
+#include <ecal/app/pb/mma/mma.pb.h>
 
 #pragma once
 
