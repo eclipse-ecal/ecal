@@ -16,15 +16,26 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(ecaltime_pb)
+project(app_pb)
 
 find_package(Protobuf REQUIRED)
 
 set(ProtoFiles
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/ecaltime/pb/sim_time.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/app/pb/mma/mma.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/app/pb/play/service.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/app/pb/play/state.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/app/pb/rec/client_service.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/app/pb/rec/client_state.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/app/pb/rec/server_config.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/app/pb/rec/server_service.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/app/pb/rec/server_state.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/app/pb/sys/service.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/app/pb/sys/client_service.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/app/pb/sys/state.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/app/pb/sys/process.proto
 )
 
-ecal_add_library(${PROJECT_NAME} src/ecaltime_pb.cpp)
+ecal_add_library(${PROJECT_NAME} src/app_pb.cpp)
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 protobuf_target_cpp(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src INSTALL_FOLDER include ${ProtoFiles})
@@ -46,4 +57,4 @@ if(BUILD_PY_BINDING)
   set_source_files_properties(${python_sources} PROPERTIES HEADER_FILE_ONLY TRUE)
 endif()
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER contrib/ecaltime/pb)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/app_pb)

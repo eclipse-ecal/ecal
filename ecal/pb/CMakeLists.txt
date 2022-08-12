@@ -16,40 +16,42 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(core_pb)
+project(pb)
 
-find_package(Protobuf REQUIRED)
-
-set(ProtoFiles
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/ecal.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/host.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/layer.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/monitoring.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/process.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/service.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/topic.proto
+set(pb_includes
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/ecal.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/host.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/layer.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/monitoring.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/process.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/service.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/sim_time.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/topic.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/mma/mma.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/play/service.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/play/state.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/rec/client_service.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/rec/client_state.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/rec/server_config.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/rec/server_service.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/rec/server_state.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/sys/client_service.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/sys/service.pb.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/sys/state.pb.h
 )
 
-ecal_add_library(${PROJECT_NAME} src/core_pb.cpp)
+ecal_add_library(${PROJECT_NAME} src/pb.cpp ${pb_includes})
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-protobuf_target_cpp(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src INSTALL_FOLDER include ${ProtoFiles})
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC
+    eCAL::core_pb
+    eCAL::app_pb
+    eCAL::ecaltime_pb
+    )
 
-target_compile_options(${PROJECT_NAME}
-  PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/wd4505 /wd4592 /wd4189>
-    $<$<CXX_COMPILER_ID:GNU>:-Wno-unused-parameter>)
-
-set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
-
-target_link_libraries(${PROJECT_NAME} protobuf::libprotobuf)
-
-ecal_install_library(${PROJECT_NAME})
-
-if(BUILD_PY_BINDING)
-  protobuf_generate_python_ext(python_sources ${PYTHON_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${ProtoFiles})
-  target_sources(${PROJECT_NAME} PRIVATE ${python_sources})
-  set_source_files_properties(${python_sources} PROPERTIES HEADER_FILE_ONLY TRUE)
-endif()
+install(DIRECTORY
+   "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
+    FILES_MATCHING PATTERN "*.pb.h")
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ecal/pb)
