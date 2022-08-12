@@ -9,7 +9,6 @@ Subpackages
 
    ecal.core
    ecal.measurement
-   ecal.pb
    ecal.proto
 
 Module contents

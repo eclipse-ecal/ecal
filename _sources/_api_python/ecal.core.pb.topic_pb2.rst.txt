@@ -1,7 +1,7 @@
-ecal.pb.monitoring\_pb2 module
+ecal.core.pb.topic\_pb2 module
 ==============================
 
-.. automodule:: ecal.pb.monitoring_pb2
+.. automodule:: ecal.core.pb.topic_pb2
    :members:
    :undoc-members:
    :show-inheritance:

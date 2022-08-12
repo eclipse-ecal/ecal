@@ -1,7 +1,0 @@
-ecal.pb.mma.mma\_pb2 module
-===========================
-
-.. automodule:: ecal.pb.mma.mma_pb2
-   :members:
-   :undoc-members:
-   :show-inheritance:

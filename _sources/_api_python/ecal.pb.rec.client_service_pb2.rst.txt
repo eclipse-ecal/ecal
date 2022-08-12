@@ -1,7 +1,0 @@
-ecal.pb.rec.client\_service\_pb2 module
-=======================================
-
-.. automodule:: ecal.pb.rec.client_service_pb2
-   :members:
-   :undoc-members:
-   :show-inheritance:

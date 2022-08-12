@@ -1,7 +1,0 @@
-ecal.pb.process\_pb2 module
-===========================
-
-.. automodule:: ecal.pb.process_pb2
-   :members:
-   :undoc-members:
-   :show-inheritance:

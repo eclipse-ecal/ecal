@@ -1,7 +1,7 @@
-ecal.pb.sim\_time\_pb2 module
+ecal.core.pb.ecal\_pb2 module
 =============================
 
-.. automodule:: ecal.pb.sim_time_pb2
+.. automodule:: ecal.core.pb.ecal_pb2
    :members:
    :undoc-members:
    :show-inheritance:

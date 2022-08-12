@@ -1,6 +1,14 @@
 ecal.core package
 =================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ecal.core.pb
+
 Submodules
 ----------
 

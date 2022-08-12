@@ -1,7 +1,0 @@
-ecal.pb.rec.server\_state\_pb2 module
-=====================================
-
-.. automodule:: ecal.pb.rec.server_state_pb2
-   :members:
-   :undoc-members:
-   :show-inheritance:

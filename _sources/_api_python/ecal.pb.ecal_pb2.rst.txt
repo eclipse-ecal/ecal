@@ -1,7 +1,0 @@
-ecal.pb.ecal\_pb2 module
-========================
-
-.. automodule:: ecal.pb.ecal_pb2
-   :members:
-   :undoc-members:
-   :show-inheritance:
