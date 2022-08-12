@@ -66,6 +66,10 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
+install(DIRECTORY
+   "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
+    FILES_MATCHING PATTERN "*.pb.h")
+
 ecal_install_library(${PROJECT_NAME})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ecal/pb)
