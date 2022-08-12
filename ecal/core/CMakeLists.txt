@@ -465,7 +465,7 @@ target_link_libraries(${PROJECT_NAME}
     asio::asio
     tclap::tclap
     simpleini::simpleini
-    eCAL::pb
+    eCAL::core_pb
     Threads::Threads
     eCAL::utils
     tcp_pubsub::tcp_pubsub

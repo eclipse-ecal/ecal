@@ -42,7 +42,7 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE
         Python::Python
         eCAL::core
-        eCAL::pb
+        eCAL::core_pb
 )
 
 if (WIN32)

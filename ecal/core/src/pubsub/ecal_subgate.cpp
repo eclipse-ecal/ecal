@@ -239,7 +239,7 @@ namespace eCAL
         std::string writer_par = tlayer.par_layer().SerializeAsString();
 
         // ----------------------------------------------------------------------
-        // REMOVE ME IN VERSION 6
+        // REMOVE ME IN ECAL6
         // ----------------------------------------------------------------------
           // if 'tlayer.par_layer' was not used and
         // 'tlayer.par_shm' is set
@@ -248,7 +248,7 @@ namespace eCAL
           writer_par = "#PAR_SHM#" + tlayer.par_shm();
         }
         // ----------------------------------------------------------------------
-        // REMOVE ME IN VERSION 6
+        // REMOVE ME IN ECAL6
         // ----------------------------------------------------------------------
 
         iter->second->ApplyLocLayerParameter(process_id, tlayer.type(), writer_par);

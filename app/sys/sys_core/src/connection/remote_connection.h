@@ -7,7 +7,7 @@
 #pragma warning(disable : 4100 4505 4800)
 #endif
 #include <ecal/msg/protobuf/client.h>
-#include <ecal/pb/sys/client_service.pb.h>
+#include <ecal/app/pb/sys/client_service.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif

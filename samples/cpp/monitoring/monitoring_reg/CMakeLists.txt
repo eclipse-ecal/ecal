@@ -32,7 +32,7 @@ ecal_add_sample(${PROJECT_NAME} ${monitoring_reg_src})
 
 target_link_libraries(${PROJECT_NAME} eCAL::core)
 
-target_link_libraries(${PROJECT_NAME} eCAL::pb)
+target_link_libraries(${PROJECT_NAME} eCAL::core_pb)
 
 ecal_install_sample(${PROJECT_NAME})
 

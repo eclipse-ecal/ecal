@@ -27,7 +27,7 @@
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
-#include "ecal/pb/layer.pb.h"
+#include <ecal/core/pb/layer.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
@@ -47,7 +47,7 @@ namespace eCAL
     std::vector<std::string> memfile_names;
 
     // ----------------------------------------------------------------------
-    // REMOVE ME IN VERSION 6
+    // REMOVE ME IN ECAL6
     // ----------------------------------------------------------------------
     // check for old behaviour
     bool              par_shm(false);
@@ -63,7 +63,7 @@ namespace eCAL
       }
     }
     // ----------------------------------------------------------------------
-    // REMOVE ME IN VERSION 6
+    // REMOVE ME IN ECAL6
     // ----------------------------------------------------------------------
 
     if (!par_shm)

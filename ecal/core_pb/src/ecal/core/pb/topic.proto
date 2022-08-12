@@ -19,7 +19,7 @@
 
 syntax = "proto3";
 
-import "ecal/pb/layer.proto";
+import "ecal/core/pb/layer.proto";
 
 package eCAL.pb;
 

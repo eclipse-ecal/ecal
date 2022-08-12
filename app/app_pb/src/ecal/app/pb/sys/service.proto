@@ -21,7 +21,7 @@ syntax = "proto3";
 
 option cc_generic_services = true;
 
-import "ecal/pb/sys/state.proto";
+import "ecal/app/pb/sys/state.proto";
 
 package eCAL.pb.sys;
 

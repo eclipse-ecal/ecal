@@ -22,8 +22,8 @@
 
 #include <ecal/ecal.h>
 #include <ecal/msg/protobuf/subscriber.h>
-#include <ecal/pb/monitoring.pb.h>
-#include <ecal/pb/mma/mma.pb.h>
+#include <ecal/core/pb/monitoring.pb.h>
+#include <ecal/app/pb/mma/mma.pb.h>
 
 #include <QApplication>
 #include <QPalette>

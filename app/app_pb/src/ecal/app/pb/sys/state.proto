@@ -19,8 +19,8 @@
 
 syntax = "proto3";
 
-import "ecal/pb/process.proto";
-import "ecal/pb/sys/client_service.proto";
+import "ecal/app/pb/sys/process.proto";
+import "ecal/app/pb/sys/client_service.proto";
 
 package eCAL.pb.sys;
 
