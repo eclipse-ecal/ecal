@@ -90,7 +90,7 @@ TEST(HDF5, WriteReadIntegrity)
   const long long   t2_id            = 2LL;
   const long long   t2_clock         = 12LL;
 
-  const std::string t3_name          = " ASCII and beyond!\a\b\t\n\v\f\r\"#$%&\'()*+,-./0123456789:;<=>\?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~������������������";
+  const std::string t3_name          = " ASCII and beyond!\a\b\t\n\v\f\r\"#$%&\'()*+,-./0123456789:;<=>\?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~üöäÜÖÄâÂôÔûÛáàÁÀúÙ";
   const std::string t3_data          = "o.O";
   const long long   t3_snd_timestamp = 1003LL;
   const long long   t3_rcv_timestamp = 2003LL;
