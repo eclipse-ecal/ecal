@@ -16,31 +16,42 @@
 #
 # ========================= eCAL LICENSE =================================
 
+# installing old, deprecated ecal core, app, time protobuf header for downward compatibility
+# REMOVE ME IN ECAL6
+
 project(pb)
 
-set(pb_includes
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/ecal.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/host.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/layer.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/monitoring.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/process.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/service.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/sim_time.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/topic.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/mma/mma.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/play/service.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/play/state.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/rec/client_service.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/rec/client_state.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/rec/server_config.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/rec/server_service.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/rec/server_state.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/sys/client_service.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/sys/service.pb.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/pb/sys/state.pb.h
+set(ecal_pb_includes
+  include/ecal/pb/ecal.pb.h
+  include/ecal/pb/host.pb.h
+  include/ecal/pb/layer.pb.h
+  include/ecal/pb/monitoring.pb.h
+  include/ecal/pb/process.pb.h
+  include/ecal/pb/service.pb.h
+  include/ecal/pb/sim_time.pb.h
+  include/ecal/pb/topic.pb.h
+  include/ecal/pb/mma/mma.pb.h
+  include/ecal/pb/play/service.pb.h
+  include/ecal/pb/play/state.pb.h
+  include/ecal/pb/rec/client_service.pb.h
+  include/ecal/pb/rec/client_state.pb.h
+  include/ecal/pb/rec/server_config.pb.h
+  include/ecal/pb/rec/server_service.pb.h
+  include/ecal/pb/rec/server_state.pb.h
+  include/ecal/pb/sys/client_service.pb.h
+  include/ecal/pb/sys/service.pb.h
+  include/ecal/pb/sys/state.pb.h
 )
 
-ecal_add_library(${PROJECT_NAME} src/pb.cpp ${pb_includes})
+set(ecal_pb_src
+    src/pb.cpp
+)
+
+ecal_add_static_library(${PROJECT_NAME}
+    ${ecal_pb_includes}
+    ${ecal_pb_src}
+)
+
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_link_libraries(${PROJECT_NAME}
@@ -48,10 +59,13 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::core_pb
     eCAL::app_pb
     eCAL::ecaltime_pb
-    )
+)
 
-install(DIRECTORY
-   "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
-    FILES_MATCHING PATTERN "*.pb.h")
+target_include_directories(${PROJECT_NAME} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+
+ecal_install_library(${PROJECT_NAME})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ecal/pb)
