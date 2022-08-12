@@ -57,9 +57,21 @@ add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
     eCAL::core_pb
+)
+
+if(BUILD_APPS)
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC
     eCAL::app_pb
+)
+endif()
+
+if(BUILD_TIME)
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC
     eCAL::ecaltime_pb
 )
+endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
