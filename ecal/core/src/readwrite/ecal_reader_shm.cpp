@@ -47,7 +47,7 @@ namespace eCAL
     std::vector<std::string> memfile_names;
 
     // ----------------------------------------------------------------------
-    // REMOVE ME IN VERSION 6
+    // REMOVE ME IN ECAL6
     // ----------------------------------------------------------------------
     // check for old behaviour
     bool              par_shm(false);
@@ -63,7 +63,7 @@ namespace eCAL
       }
     }
     // ----------------------------------------------------------------------
-    // REMOVE ME IN VERSION 6
+    // REMOVE ME IN ECAL6
     // ----------------------------------------------------------------------
 
     if (!par_shm)

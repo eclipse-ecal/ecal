@@ -123,7 +123,7 @@ namespace eCAL
       ret_state |= true;
 
       // ----------------------------------------------------------------------
-      // REMOVE ME IN VERSION 6
+      // REMOVE ME IN ECAL6
       // ----------------------------------------------------------------------
       // recreate memory buffer list to stay compatible to older versions
       // for the case that we have ONE existing buffer
@@ -137,7 +137,7 @@ namespace eCAL
         m_memory_file_vec.clear();
       }
       // ----------------------------------------------------------------------
-      // REMOVE ME IN VERSION 6
+      // REMOVE ME IN ECAL6
       // ----------------------------------------------------------------------
 
       // increase buffer count

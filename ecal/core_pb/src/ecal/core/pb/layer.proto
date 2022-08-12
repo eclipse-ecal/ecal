@@ -66,11 +66,11 @@ message TLayer
   bool             confirmed          =   3;    // transport layer used ?
 
   // ----------------------------------------------------------------------
-  // REMOVE ME IN VERSION 6
+  // REMOVE ME IN ECAL6
   // ----------------------------------------------------------------------
   bytes            par_shm            =   4;    // transport layer parameter (shm only, deprecated)
   // ----------------------------------------------------------------------
-  // REMOVE ME IN VERSION 6
+  // REMOVE ME IN ECAL6
   // ----------------------------------------------------------------------
 
   ConnnectionPar   par_layer          =   5;    // transport layer parameter
