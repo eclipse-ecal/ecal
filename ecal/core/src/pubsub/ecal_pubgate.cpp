@@ -25,7 +25,6 @@
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
-#include "ecal_reggate.h"
 #include "ecal_pubgate.h"
 #include "ecal_descgate.h"
 
@@ -108,10 +107,6 @@ namespace eCAL
     }
 
     return(ret_state);
-  }
-
-  void CPubGate::ApplyProcessRegistration(const eCAL::pb::Sample& /*ecal_sample_*/)
-  {
   }
 
   void CPubGate::ApplyLocSubRegistration(const eCAL::pb::Sample& ecal_sample_)

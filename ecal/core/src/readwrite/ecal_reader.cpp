@@ -25,7 +25,7 @@
 #include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
-#include "ecal_register.h"
+#include "ecal_registration_provider.h"
 #include "ecal_descgate.h"
 #include "ecal_reader.h"
 #include "ecal_process.h"
@@ -347,7 +347,7 @@ namespace eCAL
     }
 
     // register subscriber
-    if(g_entity_register()) g_entity_register()->RegisterTopic(m_topic_name, m_topic_id, ecal_reg_sample, force_);
+    if(g_registration_provider()) g_registration_provider()->RegisterTopic(m_topic_name, m_topic_id, ecal_reg_sample, force_);
 #ifndef NDEBUG
     // log it
     Logging::Log(log_level_debug4, m_topic_name + "::CDataReader::DoRegister");

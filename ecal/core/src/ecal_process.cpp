@@ -26,8 +26,8 @@
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
-#include "ecal_register.h"
-#include "ecal_reggate.h"
+#include "ecal_registration_provider.h"
+#include "ecal_registration_receiver.h"
 #include "ecal_globals.h"
 #include "ecal_process.h"
 
@@ -380,7 +380,7 @@ namespace eCAL
       #ifdef ECAL_OS_WINDOWS
       {
         auto milliseconds = time_ns_ / 1000000 + ((time_ns_ % 1000000) != 0);
-        Sleep(milliseconds);
+        Sleep(static_cast<DWORD>(milliseconds));
       }
       #else
         std::this_thread::sleep_for(std::chrono::nanoseconds(time_ns_));
@@ -434,15 +434,15 @@ namespace eCAL
 
     int AddRegistrationCallback(enum eCAL_Registration_Event event_, RegistrationCallbackT callback_)
     {
-      if (!g_reggate()) return -1;
-      if (g_reggate()->AddRegistrationCallback(event_, callback_)) return 0;
+      if (!g_registration_receiver()) return -1;
+      if (g_registration_receiver()->AddRegistrationCallback(event_, callback_)) return 0;
       return -1;
     }
 
     int RemRegistrationCallback(enum eCAL_Registration_Event event_)
     {
-      if (!g_reggate()) return -1;
-      if (g_reggate()->RemRegistrationCallback(event_)) return 0;
+      if (!g_registration_receiver()) return -1;
+      if (g_registration_receiver()->RemRegistrationCallback(event_)) return 0;
       return -1;
     }
   }

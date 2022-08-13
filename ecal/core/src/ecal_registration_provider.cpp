@@ -18,35 +18,21 @@
 */
 
 /**
- * @brief  eCAL common register class
+ * @brief  eCAL registration provider
+ * 
+ * All process internal publisher/subscriber, server/clients register here with all their attributes.
+ * 
+ * These information will be send cyclic (registration refresh) via UDP to external eCAL processes.
+ * 
 **/
 
-#include <ecal/ecal.h>
 #include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
-#include "ecal_config_reader_hlp.h"
 #include "ecal_globals.h"
-#include "ecal_register.h"
-#include "ecal_timegate.h"
-#include "pubsub/ecal_pubgate.h"
-#include "pubsub/ecal_subgate.h"
-#include "service/ecal_servicegate.h"
-#include "service/ecal_clientgate.h"
+#include "ecal_registration_provider.h"
 
-#include <sstream>
-#include <iostream>
-#include <chrono>
-#include <thread>
-
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
-#endif
-#include <ecal/core/pb/ecal.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include "io/snd_sample.h"
 
 namespace eCAL
 {
@@ -59,23 +45,23 @@ namespace eCAL
   extern std::atomic<long long>  g_process_rbytes;
   extern std::atomic<long long>  g_process_rbytes_sum;
 
-  std::atomic<bool> CEntityRegister::m_created;
+  std::atomic<bool> CRegistrationProvider::m_created;
 
-  CEntityRegister::CEntityRegister() :
-                    m_multicast_group(NET_UDP_MULTICAST_GROUP),
-                    m_reg_refresh(CMN_REGISTRATION_REFRESH),
-                    m_reg_topics(false),
-                    m_reg_services(false),
-                    m_reg_process(false)
+  CRegistrationProvider::CRegistrationProvider() :
+                         m_multicast_group(NET_UDP_MULTICAST_GROUP),
+                         m_reg_refresh(CMN_REGISTRATION_REFRESH),
+                         m_reg_topics(false),
+                         m_reg_services(false),
+                         m_reg_process(false)
   {
   };
 
-  CEntityRegister::~CEntityRegister()
+  CRegistrationProvider::~CRegistrationProvider()
   {
     Destroy();
   }
 
-  void CEntityRegister::Create(bool topics_, bool services_, bool process_)
+  void CRegistrationProvider::Create(bool topics_, bool services_, bool process_)
   {
     if(m_created) return;
 
@@ -107,12 +93,12 @@ namespace eCAL
     m_multicast_group = attr.ipaddr;
 
     m_reg_snd.Create(attr);
-    m_reg_snd_thread.Start(Config::GetRegistrationRefreshMs(), std::bind(&CEntityRegister::RegisterSendThread, this));
+    m_reg_snd_thread.Start(Config::GetRegistrationRefreshMs(), std::bind(&CRegistrationProvider::RegisterSendThread, this));
 
     m_created = true;
   }
 
-  void CEntityRegister::Destroy()
+  void CRegistrationProvider::Destroy()
   {
     if(!m_created) return;
 
@@ -121,7 +107,7 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CEntityRegister::RegisterTopic(const std::string& topic_name_, const std::string& topic_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
+  bool CRegistrationProvider::RegisterTopic(const std::string& topic_name_, const std::string& topic_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
   {
     if(!m_created)    return(false);
     if(!m_reg_topics) return (false);
@@ -137,7 +123,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CEntityRegister::UnregisterTopic(const std::string& topic_name_, const std::string& topic_id_)
+  bool CRegistrationProvider::UnregisterTopic(const std::string& topic_name_, const std::string& topic_id_)
   {
     if(!m_created) return(false);
 
@@ -153,7 +139,7 @@ namespace eCAL
     return(false);
   }
 
-  bool CEntityRegister::RegisterServer(const std::string& service_name_, const std::string& service_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
+  bool CRegistrationProvider::RegisterServer(const std::string& service_name_, const std::string& service_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
   {
     if(!m_created)      return(false);
     if(!m_reg_services) return(false);
@@ -169,7 +155,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CEntityRegister::UnregisterServer(const std::string& service_name_, const std::string& service_id_)
+  bool CRegistrationProvider::UnregisterServer(const std::string& service_name_, const std::string& service_id_)
   {
     if(!m_created) return(false);
 
@@ -185,7 +171,7 @@ namespace eCAL
     return(false);
   }
 
-  bool CEntityRegister::RegisterClient(const std::string& client_name_, const std::string& client_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
+  bool CRegistrationProvider::RegisterClient(const std::string& client_name_, const std::string& client_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
   {
     if (!m_created)      return(false);
     if (!m_reg_services) return(false);
@@ -201,7 +187,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CEntityRegister::UnregisterClient(const std::string& client_name_, const std::string& client_id_)
+  bool CRegistrationProvider::UnregisterClient(const std::string& client_name_, const std::string& client_id_)
   {
     if (!m_created) return(false);
 
@@ -217,7 +203,7 @@ namespace eCAL
     return(false);
   }
 
-  size_t CEntityRegister::RegisterProcess()
+  size_t CRegistrationProvider::RegisterProcess()
   {
     if(!m_created)     return(0);
     if(!m_reg_process) return(0);
@@ -286,7 +272,7 @@ namespace eCAL
     return(sent_sum);
   }
 
-  size_t CEntityRegister::RegisterServer()
+  size_t CRegistrationProvider::RegisterServer()
   {
     if(!m_created)      return(0);
     if(!m_reg_services) return(0);
@@ -302,7 +288,7 @@ namespace eCAL
     return(sent_sum);
   }
 
-  size_t CEntityRegister::RegisterClient()
+  size_t CRegistrationProvider::RegisterClient()
   {
     if (!m_created)      return(0);
     if (!m_reg_services) return(0);
@@ -318,7 +304,7 @@ namespace eCAL
     return(sent_sum);
   }
 
-  size_t CEntityRegister::RegisterTopics()
+  size_t CRegistrationProvider::RegisterTopics()
   {
     if(!m_created)    return(0);
     if(!m_reg_topics) return(0);
@@ -333,7 +319,7 @@ namespace eCAL
     return(sent_sum);
   }
 
-  size_t CEntityRegister::RegisterSample(const std::string& sample_name_, const eCAL::pb::Sample& sample_)
+  size_t CRegistrationProvider::RegisterSample(const std::string& sample_name_, const eCAL::pb::Sample& sample_)
   {
     if(!m_created) return(0);
 
@@ -343,7 +329,7 @@ namespace eCAL
     return(sent_size);
   }
 
-  int CEntityRegister::RegisterSendThread()
+  int CRegistrationProvider::RegisterSendThread()
   {
     if(!m_created) return(0);
 
