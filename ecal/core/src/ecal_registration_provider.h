@@ -18,40 +18,42 @@
 */
 
 /**
- * @brief  eCAL common register class
+ * @brief  eCAL registration provider
+ *
+ * All process internal publisher/subscriber, server/clients register here with all their attributes.
+ *
+ * These information will be send cyclic (registration refresh) via UDP to external eCAL processes.
+ *
 **/
 
 #pragma once
 
-#include "ecal_global_accessors.h"
-
 #include "ecal_thread.h"
-
 #include "io/udp_sender.h"
 #include "io/snd_sample.h"
 
+#include <atomic>
 #include <mutex>
 #include <string>
 #include <unordered_map>
-#include <atomic>
 #include <memory>
 
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
-#include <ecal/core/pb/service.pb.h>
+#include <ecal/core/pb/ecal.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 
 namespace eCAL
 {
-  class CEntityRegister
+  class CRegistrationProvider
   {
   public:
-    CEntityRegister();
-    ~CEntityRegister();
+    CRegistrationProvider();
+    ~CRegistrationProvider();
 
     void Create(bool topics_, bool services_, bool process_);
     void Destroy();

@@ -36,7 +36,7 @@ namespace eCAL
   class  CLog;
   class  CMonitoring;
   class  CTimeGate;
-  class  CEntityRegister;
+  class  CRegistrationProvider;
   class  CDescGate;
   class  CSubGate;
   class  CPubGate;
@@ -55,7 +55,7 @@ namespace eCAL
   CLog*                  g_log();
   CMonitoring*           g_monitoring();
   CTimeGate*             g_timegate();
-  CEntityRegister*       g_entity_register();
+  CRegistrationProvider* g_registration_provider();
   CDescGate*             g_descgate();
   CSubGate*              g_subgate();
   CPubGate*              g_pubgate();

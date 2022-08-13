@@ -84,8 +84,8 @@ namespace eCAL
     m_tcp_server.Stop();
     m_tcp_server.Destroy();
 
-    if (g_servicegate())     g_servicegate()->Unregister(this);
-    if (g_entity_register()) g_entity_register()->UnregisterServer(m_service_name, m_service_id);
+    if (g_servicegate())           g_servicegate()->Unregister(this);
+    if (g_registration_provider()) g_registration_provider()->UnregisterServer(m_service_name, m_service_id);
 
     // reset method callback map
     {
@@ -263,7 +263,7 @@ namespace eCAL
     }
 
     // register entity
-    if (g_entity_register()) g_entity_register()->RegisterServer(m_service_name, m_service_id, sample, false);
+    if (g_registration_provider()) g_registration_provider()->RegisterServer(m_service_name, m_service_id, sample, false);
   }
 
   int CServiceServerImpl::RequestCallback(const std::string& request_, std::string& response_)

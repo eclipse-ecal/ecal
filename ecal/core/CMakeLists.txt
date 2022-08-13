@@ -141,7 +141,7 @@ set(ecal_cmn_cpp_src
     src/ecal_log_impl.cpp
     src/ecal_process.cpp
     src/ecal_reggate.cpp
-    src/ecal_register.cpp
+    src/ecal_registration_provider.cpp
     src/ecal_thread.cpp
     src/ecal_time.cpp
     src/ecal_timegate.cpp
@@ -263,7 +263,7 @@ set(ecal_cmn_header_src
     src/ecal_globals.h
     src/ecal_log_impl.h
     src/ecal_reggate.h
-    src/ecal_register.h
+    src/ecal_registration_provider.h
     src/ecal_thread.h
     src/ecal_timegate.h
     $<$<BOOL:${WIN32}>:src/ecal_win_main.h>

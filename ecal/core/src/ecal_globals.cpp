@@ -76,11 +76,11 @@ namespace eCAL
     }
 
     /////////////////////
-    // ENTITY REGISTER
+    // REGISTRATION PROVIDER
     /////////////////////
-    if (entity_register_instance == nullptr)
+    if (registration_provider_instance == nullptr)
     {
-      entity_register_instance = std::make_unique<CEntityRegister>();
+      registration_provider_instance = std::make_unique<CRegistrationProvider>();
       new_initialization = true;
     }
 
@@ -208,7 +208,7 @@ namespace eCAL
     /////////////////////
     //if (config_instance)                                          config_instance->Create();
     if (log_instance && (components_ & Init::Logging))            log_instance->Create();
-    if (entity_register_instance)                                 entity_register_instance->Create(true, true, (components_ & Init::ProcessReg) != 0x0);
+    if (registration_provider_instance)                           registration_provider_instance->Create(true, true, (components_ & Init::ProcessReg) != 0x0);
     if (descgate_instance)                                        descgate_instance->Create();
     if (reggate_instance)                                         reggate_instance->Create();
 #ifndef ECAL_LAYER_ICEORYX
@@ -261,36 +261,36 @@ namespace eCAL
     if (!initialized) return(1);
 
     // start destruction
-    if (monitoring_instance)       monitoring_instance->Destroy();
-    if (timegate_instance)         timegate_instance->Destroy();
-    if (clientgate_instance)       clientgate_instance->Destroy();
-    if (servicegate_instance)      servicegate_instance->Destroy();
-    if (pubgate_instance)          pubgate_instance->Destroy();
-    if (subgate_instance)          subgate_instance->Destroy();
-    if (reggate_instance)          reggate_instance->Destroy();
-    if (descgate_instance)         descgate_instance->Destroy();
-    if (entity_register_instance)  entity_register_instance->Destroy();
+    if (monitoring_instance)             monitoring_instance->Destroy();
+    if (timegate_instance)               timegate_instance->Destroy();
+    if (clientgate_instance)             clientgate_instance->Destroy();
+    if (servicegate_instance)            servicegate_instance->Destroy();
+    if (pubgate_instance)                pubgate_instance->Destroy();
+    if (subgate_instance)                subgate_instance->Destroy();
+    if (reggate_instance)                reggate_instance->Destroy();
+    if (descgate_instance)               descgate_instance->Destroy();
+    if (registration_provider_instance)  registration_provider_instance->Destroy();
 #ifndef ECAL_LAYER_ICEORYX
-    if (memfile_pool_instance)     memfile_pool_instance->Destroy();
-    if (memfile_map_instance)      memfile_map_instance->Destroy();
+    if (memfile_pool_instance)           memfile_pool_instance->Destroy();
+    if (memfile_map_instance)            memfile_map_instance->Destroy();
 #endif /* !ECAL_LAYER_ICEORYX */
-    if (log_instance)              log_instance->Destroy();
-    //if (config_instance)           config_instance->Destroy();
+    if (log_instance)                    log_instance->Destroy();
+    //if (config_instance)                 config_instance->Destroy();
 
-    monitoring_instance       = nullptr;
-    timegate_instance         = nullptr;
-    servicegate_instance      = nullptr;
-    pubgate_instance          = nullptr;
-    subgate_instance          = nullptr;
-    reggate_instance          = nullptr;
-    descgate_instance         = nullptr;
-    entity_register_instance  = nullptr;
+    monitoring_instance             = nullptr;
+    timegate_instance               = nullptr;
+    servicegate_instance            = nullptr;
+    pubgate_instance                = nullptr;
+    subgate_instance                = nullptr;
+    reggate_instance                = nullptr;
+    descgate_instance               = nullptr;
+    registration_provider_instance  = nullptr;
 #ifndef ECAL_LAYER_ICEORYX
-    memfile_pool_instance     = nullptr;
-    memfile_map_instance      = nullptr;
+    memfile_pool_instance           = nullptr;
+    memfile_map_instance            = nullptr;
 #endif /* !ECAL_LAYER_ICEORYX */
-    log_instance              = nullptr;
-    config_instance           = nullptr;
+    log_instance                    = nullptr;
+    config_instance                 = nullptr;
 
     // last not least we close all
     Net::Finalize();

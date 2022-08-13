@@ -31,7 +31,7 @@
 #include "ecal_writer_base.h"
 #include "ecal_process.h"
 
-#include "ecal_register.h"
+#include "ecal_registration_provider.h"
 #include "pubsub/ecal_pubgate.h"
 
 #include <sstream>
@@ -935,7 +935,7 @@ namespace eCAL
     }
 
     // register publisher
-    if (g_entity_register()) g_entity_register()->RegisterTopic(m_topic_name, m_topic_id, ecal_reg_sample, force_);
+    if (g_registration_provider()) g_registration_provider()->RegisterTopic(m_topic_name, m_topic_id, ecal_reg_sample, force_);
 
 #ifndef NDEBUG
     // log it
