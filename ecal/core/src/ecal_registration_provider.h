@@ -30,7 +30,6 @@
 
 #include "ecal_thread.h"
 #include "io/udp_sender.h"
-#include "io/snd_sample.h"
 
 #include <atomic>
 #include <mutex>

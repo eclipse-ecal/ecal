@@ -26,13 +26,14 @@
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
-#include "ecal_reggate.h"
+
+#include "ecal_registration_provider.h"
+#include "ecal_registration_receiver.h"
+#include "pubsub/ecal_pubgate.h"
+
 #include "ecal_writer.h"
 #include "ecal_writer_base.h"
 #include "ecal_process.h"
-
-#include "ecal_registration_provider.h"
-#include "pubsub/ecal_pubgate.h"
 
 #include <sstream>
 #include <chrono>
@@ -414,7 +415,7 @@ namespace eCAL
     // if we do not have loopback
     // enabled we can switch off
     // inner process communication
-    if (g_reggate() && !g_reggate()->LoopBackEnabled())
+    if (g_registration_receiver() && !g_registration_receiver()->LoopBackEnabled())
     {
       use_inproc = TLayer::smode_off;
     }

@@ -94,11 +94,11 @@ namespace eCAL
     }
 
     /////////////////////
-    // REGISTRATION GATE
+    // REGISTRATION RECEIVER
     /////////////////////
-    if(reggate_instance == nullptr) 
+    if(registration_receiver_instance == nullptr) 
     {
-      reggate_instance = std::make_unique<CRegGate>();
+      registration_receiver_instance = std::make_unique<CRegistrationReceiver>();
       new_initialization = true;
     }
 
@@ -210,7 +210,7 @@ namespace eCAL
     if (log_instance && (components_ & Init::Logging))            log_instance->Create();
     if (registration_provider_instance)                           registration_provider_instance->Create(true, true, (components_ & Init::ProcessReg) != 0x0);
     if (descgate_instance)                                        descgate_instance->Create();
-    if (reggate_instance)                                         reggate_instance->Create();
+    if (registration_receiver_instance)                           registration_receiver_instance->Create();
 #ifndef ECAL_LAYER_ICEORYX
     if (memfile_pool_instance)                                    memfile_pool_instance->Create();
 #endif /* !ECAL_LAYER_ICEORYX */
@@ -267,7 +267,7 @@ namespace eCAL
     if (servicegate_instance)            servicegate_instance->Destroy();
     if (pubgate_instance)                pubgate_instance->Destroy();
     if (subgate_instance)                subgate_instance->Destroy();
-    if (reggate_instance)                reggate_instance->Destroy();
+    if (registration_receiver_instance)  registration_receiver_instance->Destroy();
     if (descgate_instance)               descgate_instance->Destroy();
     if (registration_provider_instance)  registration_provider_instance->Destroy();
 #ifndef ECAL_LAYER_ICEORYX
@@ -282,7 +282,7 @@ namespace eCAL
     servicegate_instance            = nullptr;
     pubgate_instance                = nullptr;
     subgate_instance                = nullptr;
-    reggate_instance                = nullptr;
+    registration_receiver_instance  = nullptr;
     descgate_instance               = nullptr;
     registration_provider_instance  = nullptr;
 #ifndef ECAL_LAYER_ICEORYX

@@ -24,10 +24,10 @@
 #pragma once
 
 #include "ecal_global_accessors.h"
-#include "ecal_reggate.h"
+#include "ecal_registration_provider.h"
+#include "ecal_registration_receiver.h"
 #include "ecal_descgate.h"
 #include "ecal_timegate.h"
-#include "ecal_registration_provider.h"
 #include "ecal_log_impl.h"
 #include "mon/ecal_monitoring_def.h"
 #include "pubsub/ecal_pubgate.h"
@@ -67,7 +67,7 @@ namespace eCAL
     const std::unique_ptr<CClientGate>&                                   clientgate()             { return clientgate_instance; };
     const std::unique_ptr<CRegistrationProvider>&                         registration_provider()  { return registration_provider_instance; };
     const std::unique_ptr<CDescGate>&                                     descgate()               { return descgate_instance; };
-    const std::unique_ptr<CRegGate>&                                      reggate()                { return reggate_instance; };
+    const std::unique_ptr<CRegistrationReceiver>&                         registration_receiver()  { return registration_receiver_instance; };
 #ifndef ECAL_LAYER_ICEORYX
     const std::unique_ptr<CMemFileThreadPool>&                            memfile_pool()           { return memfile_pool_instance; };
     const std::unique_ptr<CMemFileMap>&                                   memfile_map()            { return memfile_map_instance; };
@@ -86,7 +86,7 @@ namespace eCAL
     std::unique_ptr<CClientGate>                                          clientgate_instance;
     std::unique_ptr<CRegistrationProvider>                                registration_provider_instance;
     std::unique_ptr<CDescGate>                                            descgate_instance;
-    std::unique_ptr<CRegGate>                                             reggate_instance;
+    std::unique_ptr<CRegistrationReceiver>                                registration_receiver_instance;
 #ifndef ECAL_LAYER_ICEORYX
     std::unique_ptr<CMemFileThreadPool>                                   memfile_pool_instance;
     std::unique_ptr<CMemFileMap>                                          memfile_map_instance;

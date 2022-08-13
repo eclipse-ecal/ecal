@@ -32,6 +32,8 @@
 #include "ecal_globals.h"
 #include "ecal_registration_provider.h"
 
+#include "io/snd_sample.h"
+
 namespace eCAL
 {
   extern eCAL_Process_eSeverity  g_process_severity;

@@ -18,12 +18,14 @@
 */
 
 /**
- * @brief  eCAL registration gateway class
+ * @brief  eCAL registration receiver
+ *
+ * Receives registration information from external eCAL processes and forwards them to 
+ * the internal publisher/subscriber, server/clients.
+ *
 **/
 
 #pragma once
-
-#include "ecal_global_accessors.h"
 
 #include <ecal/ecal.h>
 
@@ -35,20 +37,28 @@
 #include <string>
 #include <atomic>
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
+#endif
+#include <ecal/core/pb/ecal.pb.h>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 namespace eCAL
 {
   class CUdpRegistrationReceiver : public CSampleReceiver
   {
-    bool HasSample(const std::string& sample_name_);
+    bool HasSample(const std::string& /*sample_name_*/) { return(true); };
     size_t ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_);
   };
 
-  class CRegGate
+  class CRegistrationReceiver
   {
   public:
-    CRegGate();
-    ~CRegGate();
+    CRegistrationReceiver();
+    ~CRegistrationReceiver();
 
     void Create();
     void Destroy();
@@ -56,7 +66,6 @@ namespace eCAL
     void EnableLoopback(bool state_);
     bool LoopBackEnabled() { return m_loopback; };
 
-    bool HasSample(const std::string& /* sample_name_ */) {return(true);};
     size_t ApplySample(const eCAL::pb::Sample& ecal_sample_);
 
     bool AddRegistrationCallback(enum eCAL_Registration_Event event_, RegistrationCallbackT callback_);

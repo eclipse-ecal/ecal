@@ -42,7 +42,7 @@ namespace eCAL
   class  CPubGate;
   class  CServiceGate;
   class  CClientGate;
-  class  CRegGate;
+  class  CRegistrationReceiver;
 
 #ifndef ECAL_LAYER_ICEORYX
   class  CMemFileThreadPool;
@@ -50,22 +50,22 @@ namespace eCAL
 #endif /* !ECAL_LAYER_ICEORYX */
 
   // Declaration of getter functions for globally accessible variable instances
-  CGlobals*              g_globals();
-  CConfig*               g_config();
-  CLog*                  g_log();
-  CMonitoring*           g_monitoring();
-  CTimeGate*             g_timegate();
-  CRegistrationProvider* g_registration_provider();
-  CDescGate*             g_descgate();
-  CSubGate*              g_subgate();
-  CPubGate*              g_pubgate();
-  CServiceGate*          g_servicegate();
-  CClientGate*           g_clientgate();
-  CRegGate*              g_reggate();
+  CGlobals*               g_globals();
+  CConfig*                g_config();
+  CLog*                   g_log();
+  CMonitoring*            g_monitoring();
+  CTimeGate*              g_timegate();
+  CRegistrationProvider*  g_registration_provider();
+  CDescGate*              g_descgate();
+  CSubGate*               g_subgate();
+  CPubGate*               g_pubgate();
+  CServiceGate*           g_servicegate();
+  CClientGate*            g_clientgate();
+  CRegistrationReceiver*  g_registration_receiver();
 
 #ifndef ECAL_LAYER_ICEORYX
-  CMemFileThreadPool*    g_memfile_pool();
-  CMemFileMap*           g_memfile_map();
+  CMemFileThreadPool*     g_memfile_pool();
+  CMemFileMap*            g_memfile_map();
 #endif /* !ECAL_LAYER_ICEORYX */
 
   // declaration of globally accessible variables

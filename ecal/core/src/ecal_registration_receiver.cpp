@@ -18,64 +18,47 @@
 */
 
 /**
- * @brief  eCAL registration gateway class
+ * @brief  eCAL registration receiver
+ *
+ * Receives registration information from external eCAL processes and forwards them to
+ * the internal publisher/subscriber, server/clients.
+ *
 **/
 
-#include <ecal/ecal.h>
-#include <ecal/ecal_config.h>
+#include "ecal_registration_receiver.h"
 
-#include "ecal_def.h"
-#include <ecal/ecal_core.h>
-
-#include "ecal_config_reader_hlp.h"
-#include "ecal_reggate.h"
-#include "pubsub/ecal_pubgate.h"
 #include "pubsub/ecal_subgate.h"
-#include "service/ecal_servicegate.h"
+#include "pubsub/ecal_pubgate.h"
 #include "service/ecal_clientgate.h"
-
-#include <iterator>
-
+#include "service/ecal_servicegate.h"
 
 namespace eCAL
 {
-  //////////////////////////////////////////////////////////////////
-  // CUdpRegistrationReceiver
-  //////////////////////////////////////////////////////////////////
-  bool CUdpRegistrationReceiver::HasSample(const std::string& sample_name_)
-  {
-    if (!g_reggate()) return(false);
-    return(g_reggate()->HasSample(sample_name_));
-  }
-
   size_t CUdpRegistrationReceiver::ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/)
   {
-    if (!g_reggate()) return 0;
-    return g_reggate()->ApplySample(ecal_sample_);
-  }
+    if (!g_registration_receiver()) return 0;
+    return g_registration_receiver()->ApplySample(ecal_sample_);
+  };
 
-  //////////////////////////////////////////////////////////////////
-  // CRegGate
-  //////////////////////////////////////////////////////////////////
-  std::atomic<bool> CRegGate::m_created;
+  std::atomic<bool> CRegistrationReceiver::m_created;
 
-  CRegGate::CRegGate() :
-              m_network(NET_ENABLED),
-              m_loopback(false),
-              m_callback_pub(nullptr),
-              m_callback_sub(nullptr),
-              m_callback_service(nullptr),
-              m_callback_client(nullptr),
-              m_callback_process(nullptr)
+  CRegistrationReceiver::CRegistrationReceiver() :
+                         m_network(NET_ENABLED),
+                         m_loopback(false),
+                         m_callback_pub(nullptr),
+                         m_callback_sub(nullptr),
+                         m_callback_service(nullptr),
+                         m_callback_client(nullptr),
+                         m_callback_process(nullptr)
   {
   };
 
-  CRegGate::~CRegGate()
+  CRegistrationReceiver::~CRegistrationReceiver()
   {
     Destroy();
   }
 
-  void CRegGate::Create()
+  void CRegistrationReceiver::Create()
   {
     if(m_created) return;
 
@@ -106,7 +89,7 @@ namespace eCAL
     m_created = true;
   }
 
-  void CRegGate::Destroy()
+  void CRegistrationReceiver::Destroy()
   {
     if(!m_created) return;
 
@@ -124,12 +107,12 @@ namespace eCAL
     m_created          = false;
   }
 
-  void CRegGate::EnableLoopback(bool state_)
+  void CRegistrationReceiver::EnableLoopback(bool state_)
   {
     m_loopback = state_;
   }
 
-  size_t CRegGate::ApplySample(const eCAL::pb::Sample& ecal_sample_)
+  size_t CRegistrationReceiver::ApplySample(const eCAL::pb::Sample& ecal_sample_)
   {
     if(!m_created) return 0;
 
@@ -148,11 +131,8 @@ namespace eCAL
     {
     case eCAL::pb::bct_none:
     case eCAL::pb::bct_set_sample:
+      break;
     case eCAL::pb::bct_reg_process:
-      if (m_loopback || (ecal_sample_.process().pid() != Process::GetProcessID()))
-      {
-        if (g_pubgate()) g_pubgate()->ApplyProcessRegistration(ecal_sample_);
-      }
       if (m_callback_process) m_callback_process(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
     case eCAL::pb::bct_reg_service:
@@ -188,8 +168,7 @@ namespace eCAL
       break;
     case eCAL::pb::bct_reg_publisher:
       {
-        // we only process publisher registrations from that hosts
-        // to get memory file names from local publishers
+        // process local publisher registrations
         if(IsLocalHost(ecal_sample_))
         {
           // do not register publisher of the same process
@@ -219,7 +198,7 @@ namespace eCAL
     return 0;
   }
 
-  bool CRegGate::AddRegistrationCallback(enum eCAL_Registration_Event event_, RegistrationCallbackT callback_)
+  bool CRegistrationReceiver::AddRegistrationCallback(enum eCAL_Registration_Event event_, RegistrationCallbackT callback_)
   {
     if (!m_created) return false;
     switch (event_)
@@ -244,7 +223,7 @@ namespace eCAL
     }
   }
 
-  bool CRegGate::RemRegistrationCallback(enum eCAL_Registration_Event event_)
+  bool CRegistrationReceiver::RemRegistrationCallback(enum eCAL_Registration_Event event_)
   {
     if (!m_created) return false;
     switch (event_)
@@ -269,11 +248,11 @@ namespace eCAL
     }
   }
 
-  bool CRegGate::IsLocalHost(const eCAL::pb::Sample& ecal_sample_)
+  bool CRegistrationReceiver::IsLocalHost(const eCAL::pb::Sample& ecal_sample_)
   {
     const std::string host_name = ecal_sample_.topic().hname();
     if (host_name.empty()) return false;
-    if (host_name != Process::GetHostName()) return false;
+    if (host_name != eCAL::Process::GetHostName()) return false;
     return true;
   }
 };
