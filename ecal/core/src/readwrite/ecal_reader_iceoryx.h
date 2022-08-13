@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  shared memory (iceoryx) reader
+ * @brief  shared memory reader and layer (iceoryx)
 **/
 
 #pragma once
@@ -36,7 +36,9 @@
 
 namespace eCAL
 {
-  // ecal shared memory (Iceoryx) reader
+  ////////////////
+  // READER
+  ////////////////
   class CDataReaderSHM
   {
   public:
@@ -53,50 +55,19 @@ namespace eCAL
     std::string m_topic_name;
   };
 
-  // ecal Iceoryx data layer
-  class CSHMLayer : public CReaderLayer<CSHMLayer>
+  ////////////////
+  // LAYER
+  ////////////////
+  class CSHMReaderLayer : public CReaderLayer<CSHMReaderLayer>
   {
   public:
-    CSHMLayer() {}
+    CSHMReaderLayer() {}
 
-    void Initialize()
-    {
-      // create the runtime for registering with the RouDi daemon
-      std::string runtime_name = eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID());
-      // replace whitespace characters
-      std::regex re("[ \t\r\n\f]");
-      runtime_name = std::regex_replace(runtime_name, re, "_");
-      // initialize runtime
-      const iox::capro::IdString_t runtime(iox::cxx::TruncateToCapacity, runtime_name);
-      iox::runtime::PoshRuntime::initRuntime(runtime);
-    }
+    void Initialize();
+    void AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& topic_id_, QOS::SReaderQOS /*qos_*/);
+    void RemSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const std::string& topic_id_);
 
-    void AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& topic_id_, QOS::SReaderQOS /*qos_*/)
-    {
-      std::lock_guard<std::mutex> lock(m_datareadershm_sync);
-      if(m_datareadershm_map.find(topic_id_) != m_datareadershm_map.end()) return;
-
-      std::shared_ptr<CDataReaderSHM> reader = std::make_shared<CDataReaderSHM>();
-      reader->Create(topic_name_);
-
-      m_datareadershm_map.insert(std::pair<std::string, std::shared_ptr<CDataReaderSHM>>(topic_id_, reader));
-    }
-
-    void RemSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const std::string& topic_id_)
-    {
-      std::lock_guard<std::mutex> lock(m_datareadershm_sync);
-      DataReaderSHMMapT::iterator iter = m_datareadershm_map.find(topic_id_);
-      if(iter == m_datareadershm_map.end()) return;
-
-      auto reader = iter->second;
-      reader->Destroy();
-
-      m_datareadershm_map.erase(iter);
-    }
-
-    void SetConnectionParameter(SReaderLayerPar& /*par_*/)
-    {
-    }
+    void SetConnectionParameter(SReaderLayerPar& /*par_*/) {}
 
   private:
     typedef std::unordered_map<std::string, std::shared_ptr<CDataReaderSHM>> DataReaderSHMMapT;
