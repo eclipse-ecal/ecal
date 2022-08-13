@@ -185,7 +185,7 @@ namespace eCAL
     // initialize udp multicast layer
     if (Config::IsUdpMulticastRecEnabled())
     {
-      CMulticastLayer::Get()->Initialize();
+      CUDPReaderLayer::Get()->Initialize();
     }
 
     // initialize tcp layer
@@ -200,7 +200,7 @@ namespace eCAL
     // subscribe topic to udp multicast layer
     if (Config::IsUdpMulticastRecEnabled())
     {
-      CMulticastLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
+      CUDPReaderLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
 
     // subscribe topic to tcp layer
@@ -215,7 +215,7 @@ namespace eCAL
     // unsubscribe topic from udp multicast layer
     if (Config::IsUdpMulticastRecEnabled())
     {
-      CMulticastLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
+      CUDPReaderLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
 
     // unsubscribe topic from tcp multicast layer
@@ -601,7 +601,7 @@ namespace eCAL
     switch (type_)
     {
     case eCAL::pb::tl_ecal_shm:
-      CSHMLayer::Get()->SetConnectionParameter(par);
+      CSHMReaderLayer::Get()->SetConnectionParameter(par);
       break;
     case eCAL::pb::tl_ecal_tcp:
       CTCPReaderLayer::Get()->SetConnectionParameter(par);

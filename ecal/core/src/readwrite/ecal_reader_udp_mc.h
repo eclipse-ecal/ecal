@@ -46,11 +46,11 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  class CMulticastLayer : public CReaderLayer<CMulticastLayer>
+  class CUDPReaderLayer : public CReaderLayer<CUDPReaderLayer>
   {
   public:
-    CMulticastLayer();
-    ~CMulticastLayer();
+    CUDPReaderLayer();
+    ~CUDPReaderLayer();
 
     void Initialize();
 

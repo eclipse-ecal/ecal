@@ -58,10 +58,10 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  class CSHMLayer : public CReaderLayer<CSHMLayer>
+  class CSHMReaderLayer : public CReaderLayer<CSHMReaderLayer>
   {
   public:
-    CSHMLayer() {}
+    CSHMReaderLayer() {}
 
     void Initialize();
     void AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& topic_id_, QOS::SReaderQOS /*qos_*/);

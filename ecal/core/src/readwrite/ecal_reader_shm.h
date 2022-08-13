@@ -31,23 +31,13 @@
 namespace eCAL
 {
   ////////////////
-  // READER
-  ////////////////
-  // class CDataReaderSHM
-  // {
-  // public:
-    // CDataReaderSHM() = default;
-    // ~CDataReaderSHM() = default;
-  // };
-
-  ////////////////
   // LAYER
   ////////////////
-  class CSHMLayer : public CReaderLayer<CSHMLayer>
+  class CSHMReaderLayer : public CReaderLayer<CSHMReaderLayer>
   {
   public:
-    CSHMLayer() {}
-    ~CSHMLayer() {}
+    CSHMReaderLayer() {}
+    ~CSHMReaderLayer() {}
 
     void Initialize() {}
     void AddSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/) {}

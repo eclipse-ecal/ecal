@@ -43,7 +43,7 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  void CSHMLayer::SetConnectionParameter(SReaderLayerPar& par_)
+  void CSHMReaderLayer::SetConnectionParameter(SReaderLayerPar& par_)
   {
     // list of memory file to register
     std::vector<std::string> memfile_names;

@@ -48,16 +48,16 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  CMulticastLayer::CMulticastLayer() : 
+  CUDPReaderLayer::CUDPReaderLayer() : 
                    started(false)
   {};
 
-  CMulticastLayer::~CMulticastLayer()
+  CUDPReaderLayer::~CUDPReaderLayer()
   {
     thread.Stop();
   };
 
-  void CMulticastLayer::Initialize()
+  void CUDPReaderLayer::Initialize()
   {
     SReceiverAttr attr;
     attr.ipaddr = Config::GetUdpMulticastGroup();
@@ -68,7 +68,7 @@ namespace eCAL
     rcv.Create(attr);
   }
 
-  void CMulticastLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
+  void CUDPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
   {
     if (!started)
     {
@@ -85,7 +85,7 @@ namespace eCAL
     topic_name_mcast_map[mcast_address]++;
   }
 
-  void CMulticastLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
+  void CUDPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
   {
     std::string mcast_address = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
     if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())

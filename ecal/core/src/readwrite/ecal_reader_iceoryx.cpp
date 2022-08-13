@@ -95,7 +95,7 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  void CSHMLayer::Initialize()
+  void CSHMReaderLayer::Initialize()
   {
     // create the runtime for registering with the RouDi daemon
     std::string runtime_name = eCAL::Process::GetUnitName() + std::string("_") + std::to_string(eCAL::Process::GetProcessID());
@@ -107,7 +107,7 @@ namespace eCAL
     iox::runtime::PoshRuntime::initRuntime(runtime);
   }
 
-  void CSHMLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& topic_id_, QOS::SReaderQOS /*qos_*/)
+  void CSHMReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& topic_id_, QOS::SReaderQOS /*qos_*/)
   {
     std::lock_guard<std::mutex> lock(m_datareadershm_sync);
     if(m_datareadershm_map.find(topic_id_) != m_datareadershm_map.end()) return;
@@ -118,7 +118,7 @@ namespace eCAL
     m_datareadershm_map.insert(std::pair<std::string, std::shared_ptr<CDataReaderSHM>>(topic_id_, reader));
   }
 
-  void CSHMLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const std::string& topic_id_)
+  void CSHMReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const std::string& topic_id_)
   {
     std::lock_guard<std::mutex> lock(m_datareadershm_sync);
     DataReaderSHMMapT::iterator iter = m_datareadershm_map.find(topic_id_);
@@ -128,9 +128,5 @@ namespace eCAL
     reader->Destroy();
 
     m_datareadershm_map.erase(iter);
-  }
-
-  void CSHMLayer::SetConnectionParameter(SReaderLayerPar& /*par_*/)
-  {
   }
 }
