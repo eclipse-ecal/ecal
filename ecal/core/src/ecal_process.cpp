@@ -380,7 +380,7 @@ namespace eCAL
       #ifdef ECAL_OS_WINDOWS
       {
         auto milliseconds = time_ns_ / 1000000 + ((time_ns_ % 1000000) != 0);
-        Sleep(milliseconds);
+        Sleep(static_cast<DWORD>(milliseconds));
       }
       #else
         std::this_thread::sleep_for(std::chrono::nanoseconds(time_ns_));
