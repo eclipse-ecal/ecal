@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  tcp reader
+ * @brief  tcp reader and layer
 **/
 
 #pragma once
@@ -39,7 +39,9 @@
 
 namespace eCAL
 {
-  // ecal tcp reader
+  ////////////////
+  // READER
+  ////////////////
   class CDataReaderTCP
   {
   public:
@@ -57,7 +59,9 @@ namespace eCAL
     eCAL::pb::Sample                        m_ecal_header;
   };
 
-  // ecal tcp reader data layer
+  ////////////////
+  // LAYER
+  ////////////////
   class CTCPReaderLayer : public CReaderLayer<CTCPReaderLayer>
   {
   public:

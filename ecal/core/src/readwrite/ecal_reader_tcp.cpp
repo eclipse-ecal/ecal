@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  tcp reader
+ * @brief  tcp reader and layer
 **/
 
 #include "ecal_def.h"
@@ -37,75 +37,9 @@
 
 namespace eCAL
 {
-
-  //////////////////////////////////////////////////////////////////
-  // CDataReaderTCP
-  //////////////////////////////////////////////////////////////////
-  CTCPReaderLayer::CTCPReaderLayer()
-  {
-  }
-
-  void CTCPReaderLayer::Initialize()
-  {
-    tcp_pubsub::logger::logger_t tcp_pubsub_logger = std::bind(TcpPubsubLogger, std::placeholders::_1, std::placeholders::_2);
-    m_executor = std::make_shared<tcp_pubsub::Executor>(Config::GetTcpPubsubReaderThreadpoolSize(), tcp_pubsub_logger);
-  }
-
-  void CTCPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
-  {
-    std::string map_key(topic_name_);
-
-    std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
-    if (m_datareadertcp_map.find(map_key) != m_datareadertcp_map.end()) return;
-
-    std::shared_ptr<CDataReaderTCP> reader = std::make_shared<CDataReaderTCP>();
-    reader->Create(m_executor);
-
-    m_datareadertcp_map.insert(std::pair<std::string, std::shared_ptr<CDataReaderTCP>>(map_key, reader));
-  }
-
-  void CTCPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
-  {
-    std::string map_key(topic_name_);
-
-    std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
-    DataReaderTCPMapT::iterator iter = m_datareadertcp_map.find(map_key);
-    if (iter == m_datareadertcp_map.end()) return;
-
-    auto reader = iter->second;
-    reader->Destroy();
-
-    m_datareadertcp_map.erase(iter);
-  }
-
-  void CTCPReaderLayer::SetConnectionParameter(SReaderLayerPar& par_)
-  {
-    eCAL::pb::ConnnectionPar connection_par;
-    if (connection_par.ParseFromString(par_.parameter))
-    {
-      //////////////////////////////////
-      // get parameter from a new writer
-      //////////////////////////////////
-
-      const auto& remote_hostname = par_.host_name;
-      auto        remote_port     = connection_par.layer_par_tcp().port();
-
-      std::string map_key(par_.topic_name);
-
-      std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
-      DataReaderTCPMapT::iterator iter = m_datareadertcp_map.find(map_key);
-      if (iter == m_datareadertcp_map.end()) return;
-
-      auto& reader = iter->second;
-      reader->AddConnectionIfNecessary(remote_hostname, static_cast<uint16_t>(remote_port));
-    }
-    else
-    {
-      std::cout << "FATAL ERROR: Could not parse layer connection parameter ! Did you mix up different eCAL versions on the same host ?" << std::endl;
-      return;
-    }
-  }
-
+  ////////////////
+  // READER
+  ////////////////
   CDataReaderTCP::CDataReaderTCP() : m_callback_active(false) {}
 
   bool CDataReaderTCP::Create(std::shared_ptr<tcp_pubsub::Executor>& executor_)
@@ -191,4 +125,72 @@ namespace eCAL
       }
     }
   };
+  
+  ////////////////
+  // LAYER
+  ////////////////
+  CTCPReaderLayer::CTCPReaderLayer()
+  {
+  }
+
+  void CTCPReaderLayer::Initialize()
+  {
+    tcp_pubsub::logger::logger_t tcp_pubsub_logger = std::bind(TcpPubsubLogger, std::placeholders::_1, std::placeholders::_2);
+    m_executor = std::make_shared<tcp_pubsub::Executor>(Config::GetTcpPubsubReaderThreadpoolSize(), tcp_pubsub_logger);
+  }
+
+  void CTCPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
+  {
+    std::string map_key(topic_name_);
+
+    std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
+    if (m_datareadertcp_map.find(map_key) != m_datareadertcp_map.end()) return;
+
+    std::shared_ptr<CDataReaderTCP> reader = std::make_shared<CDataReaderTCP>();
+    reader->Create(m_executor);
+
+    m_datareadertcp_map.insert(std::pair<std::string, std::shared_ptr<CDataReaderTCP>>(map_key, reader));
+  }
+
+  void CTCPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
+  {
+    std::string map_key(topic_name_);
+
+    std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
+    DataReaderTCPMapT::iterator iter = m_datareadertcp_map.find(map_key);
+    if (iter == m_datareadertcp_map.end()) return;
+
+    auto reader = iter->second;
+    reader->Destroy();
+
+    m_datareadertcp_map.erase(iter);
+  }
+
+  void CTCPReaderLayer::SetConnectionParameter(SReaderLayerPar& par_)
+  {
+    eCAL::pb::ConnnectionPar connection_par;
+    if (connection_par.ParseFromString(par_.parameter))
+    {
+      //////////////////////////////////
+      // get parameter from a new writer
+      //////////////////////////////////
+
+      const auto& remote_hostname = par_.host_name;
+      auto        remote_port     = connection_par.layer_par_tcp().port();
+
+      std::string map_key(par_.topic_name);
+
+      std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
+      DataReaderTCPMapT::iterator iter = m_datareadertcp_map.find(map_key);
+      if (iter == m_datareadertcp_map.end()) return;
+
+      auto& reader = iter->second;
+      reader->AddConnectionIfNecessary(remote_hostname, static_cast<uint16_t>(remote_port));
+    }
+    else
+    {
+      std::cout << "FATAL ERROR: Could not parse layer connection parameter ! Did you mix up different eCAL versions on the same host ?" << std::endl;
+      return;
+    }
+  }
 }

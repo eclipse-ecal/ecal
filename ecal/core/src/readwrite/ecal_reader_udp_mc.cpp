@@ -18,11 +18,88 @@
 */
 
 /**
- * @brief  eCAL udp multicast reader
+ * @brief  udp multicast reader and layer
 **/
 
 #include "readwrite/ecal_reader_udp_mc.h"
 
+#include "ecal_global_accessors.h"
+#include "pubsub/ecal_subgate.h"
+
+#include "topic2mcast.h"
+
 namespace eCAL
 {
+  ////////////////
+  // READER
+  ////////////////
+  bool CDataReaderUDP::HasSample(const std::string& sample_name_)
+  {
+    if (!g_subgate()) return(false);
+    return(g_subgate()->HasSample(sample_name_));
+  }
+
+  size_t CDataReaderUDP::ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_)
+  {
+    if (!g_subgate()) return 0;
+    return g_subgate()->ApplySample(ecal_sample_, layer_);
+  }
+
+  ////////////////
+  // LAYER
+  ////////////////
+  CMulticastLayer::CMulticastLayer() : 
+                   started(false)
+  {};
+
+  CMulticastLayer::~CMulticastLayer()
+  {
+    thread.Stop();
+  };
+
+  void CMulticastLayer::Initialize()
+  {
+    SReceiverAttr attr;
+    attr.ipaddr = Config::GetUdpMulticastGroup();
+    attr.port = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
+    attr.unicast = false;
+    attr.loopback = true;
+    attr.rcvbuf = Config::GetUdpMulticastRcvBufSizeBytes();
+    rcv.Create(attr);
+  }
+
+  void CMulticastLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
+  {
+    if (!started)
+    {
+      thread.Start(0, std::bind(&CDataReaderUDP::Receive, &reader, &rcv));
+      started = true;
+    }
+    // add topic name based multicast address
+    std::string mcast_address = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
+    if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
+    {
+      topic_name_mcast_map.emplace(std::pair<std::string, int>(mcast_address, 0));
+      rcv.AddMultiCastGroup(mcast_address.c_str());
+    }
+    topic_name_mcast_map[mcast_address]++;
+  }
+
+  void CMulticastLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
+  {
+    std::string mcast_address = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
+    if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
+    {
+      // this should never happen
+    }
+    else
+    {
+      topic_name_mcast_map[mcast_address]--;
+      if (topic_name_mcast_map[mcast_address] == 0)
+      {
+        rcv.RemMultiCastGroup(mcast_address.c_str());
+        topic_name_mcast_map.erase(mcast_address);
+      }
+    }
+  }
 };

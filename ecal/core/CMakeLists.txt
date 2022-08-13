@@ -94,8 +94,6 @@ set(ecal_pubsub_cpp_src
 
 set(ecal_readwrite_cpp_src
     src/readwrite/ecal_reader.cpp
-    src/readwrite/ecal_reader_inproc.cpp
-    src/readwrite/ecal_reader_udp.cpp
     src/readwrite/ecal_reader_udp_mc.cpp
     src/readwrite/ecal_reader_tcp.cpp
     src/readwrite/ecal_writer.cpp
@@ -214,10 +212,8 @@ set(ecal_pubsub_header_src
 
 set(ecal_readwrite_header_src
     src/readwrite/ecal_reader.h
-    src/readwrite/ecal_reader_inproc.h
     src/readwrite/ecal_reader_layer.h
     src/readwrite/ecal_reader_tcp.h
-    src/readwrite/ecal_reader_udp.h
     src/readwrite/ecal_reader_udp_mc.h
     src/readwrite/ecal_writer.h
     src/readwrite/ecal_writer_base.h

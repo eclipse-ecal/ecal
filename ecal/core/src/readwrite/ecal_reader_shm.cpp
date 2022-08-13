@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  memory file data reader
+ * @brief  shared memory layer
 **/
 
 #include <ecal/ecal.h>
@@ -40,7 +40,9 @@
 
 namespace eCAL
 {
-
+  ////////////////
+  // LAYER
+  ////////////////
   void CSHMLayer::SetConnectionParameter(SReaderLayerPar& par_)
   {
     // list of memory file to register
@@ -49,7 +51,7 @@ namespace eCAL
     // ----------------------------------------------------------------------
     // REMOVE ME IN ECAL6
     // ----------------------------------------------------------------------
-    // check for old behaviour
+    // check for old behavior
     bool              par_shm(false);
     const std::string par_shm_prefix("#PAR_SHM#");
     if (par_.parameter.size() > par_shm_prefix.size())
@@ -68,7 +70,7 @@ namespace eCAL
 
     if (!par_shm)
     {
-      // new behaviour (eCAL version > 5.8.13/5.9.0)
+      // new behavior (eCAL version > 5.8.13/5.9.0)
       // layer parameter google protobuf message
       eCAL::pb::ConnnectionPar connection_par;
       if (connection_par.ParseFromString(par_.parameter))
