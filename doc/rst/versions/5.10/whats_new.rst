@@ -49,7 +49,7 @@ Other notable changes
 
 - Improved eCAL Service API and internals
 
-- Check out the `entire 5.10.0 changelog <https://github.com/continental/ecal/releases/tag/v5.10.0>`_!.
+- Check out the `entire 5.10.0 changelog <https://github.com/eclipse-ecal/ecal/releases/tag/v5.10.0>`_!.
 
 Compatibility table
 ===================

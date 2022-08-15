@@ -108,7 +108,7 @@ namespace eCAL
     /////////////////////
     if(memfile_map_instance == nullptr) 
     {
-      memfile_map_instance = std::make_unique<SMemFileMap>();
+      memfile_map_instance = std::make_unique<CMemFileMap>();
       new_initialization = true;
     }
 
@@ -216,7 +216,7 @@ namespace eCAL
 #endif /* !ECAL_LAYER_ICEORYX */
     if (subgate_instance && (components_ & Init::Subscriber))     subgate_instance->Create();
     if (pubgate_instance && (components_ & Init::Publisher))      pubgate_instance->Create();
-    if (servicegate_instance && (components_ & Init::Service))     servicegate_instance->Create();
+    if (servicegate_instance && (components_ & Init::Service))    servicegate_instance->Create();
     if (clientgate_instance && (components_ & Init::Service))     clientgate_instance->Create();
     if (timegate_instance && (components_ & Init::TimeSync))      timegate_instance->Create(CTimeGate::eTimeSyncMode::realtime);
     if (monitoring_instance && (components_ & Init::Monitoring))  monitoring_instance->Create();
@@ -264,7 +264,7 @@ namespace eCAL
     if (monitoring_instance)       monitoring_instance->Destroy();
     if (timegate_instance)         timegate_instance->Destroy();
     if (clientgate_instance)       clientgate_instance->Destroy();
-    if (servicegate_instance)       servicegate_instance->Destroy();
+    if (servicegate_instance)      servicegate_instance->Destroy();
     if (pubgate_instance)          pubgate_instance->Destroy();
     if (subgate_instance)          subgate_instance->Destroy();
     if (reggate_instance)          reggate_instance->Destroy();
@@ -272,13 +272,14 @@ namespace eCAL
     if (entity_register_instance)  entity_register_instance->Destroy();
 #ifndef ECAL_LAYER_ICEORYX
     if (memfile_pool_instance)     memfile_pool_instance->Destroy();
+    if (memfile_map_instance)      memfile_map_instance->Destroy();
 #endif /* !ECAL_LAYER_ICEORYX */
     if (log_instance)              log_instance->Destroy();
     //if (config_instance)           config_instance->Destroy();
 
     monitoring_instance       = nullptr;
     timegate_instance         = nullptr;
-    servicegate_instance         = nullptr;
+    servicegate_instance      = nullptr;
     pubgate_instance          = nullptr;
     subgate_instance          = nullptr;
     reggate_instance          = nullptr;

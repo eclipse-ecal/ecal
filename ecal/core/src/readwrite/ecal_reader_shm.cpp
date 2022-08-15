@@ -32,6 +32,7 @@
 #pragma warning(pop)
 #endif
 
+#include "ecal_global_accessors.h"
 #include "io/ecal_memfile_pool.h"
 #include "readwrite/ecal_reader_shm.h"
 

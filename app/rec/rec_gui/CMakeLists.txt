@@ -257,3 +257,12 @@ install(CODE
     "
 )
 endif()
+
+# install files required for linux mimetypes and icon
+if (UNIX)
+    INSTALL (FILES "${CMAKE_CURRENT_LIST_DIR}/mimetype/ecal-rec.xml"
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/mime/packages/")
+
+    INSTALL (FILES "${CMAKE_CURRENT_LIST_DIR}/mimetype/application-ecalrec.svg"
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/mimetypes/")
+endif()

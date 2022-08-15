@@ -25,6 +25,7 @@
 
 #include <ecal/ecal_qos.h>
 
+#include <atomic>
 #include <string>
 
 namespace eCAL
@@ -58,7 +59,7 @@ namespace eCAL
     CDataWriterBase() : m_created(false) {};
     virtual ~CDataWriterBase() {};
 
-    virtual void GetInfo(SWriterInfo info_) = 0;
+    virtual SWriterInfo GetInfo() = 0;
 
     virtual bool Create(const std::string& host_name_, const std::string& topic_name_, const std::string & topic_id_) = 0;
     virtual bool Destroy() = 0;
@@ -92,11 +93,11 @@ namespace eCAL
     virtual bool Write(const SWriterData& data_) = 0;
 
   protected:
-    std::string      m_host_name;
-    std::string      m_topic_name;
-    std::string      m_topic_id;
-    QOS::SWriterQOS  m_qos;
+    std::string        m_host_name;
+    std::string        m_topic_name;
+    std::string        m_topic_id;
+    QOS::SWriterQOS    m_qos;
 
-    bool             m_created;
+    std::atomic<bool>  m_created;
   };
 }

@@ -22,7 +22,6 @@ find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
 set(core_test_src
-  src/callback_destruction_test.cpp
   src/core_test.cpp
 )
 

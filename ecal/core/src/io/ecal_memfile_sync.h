@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  synchronized memory file
+ * @brief  synchronized memory file interface
 **/
 
 #pragma once
@@ -37,14 +37,11 @@ namespace eCAL
   class CSyncMemoryFile
   {
   public:
-    CSyncMemoryFile();
+    CSyncMemoryFile(const std::string& base_name_, size_t size_, int timeout_open_ms_, int timeout_ack_ms_);
     ~CSyncMemoryFile();
 
-    bool Create(const std::string& base_name_, size_t size_);
-    bool Destroy();
-
-    bool ConnectProcess(const std::string& process_id_);
-    bool DisconnectProcess(const std::string& process_id_);
+    bool Connect(const std::string& process_id_);
+    bool Disconnect(const std::string& process_id_);
 
     bool CheckSize(size_t size_);
     bool Write(const CDataWriterBase::SWriterData& data_);
@@ -52,13 +49,21 @@ namespace eCAL
     std::string GetName();
 
   protected:
-    void SignalWritten();
-    void BuildMemFileName();
-      
-    std::string  m_base_name;
-    std::string  m_memfile_name;
-    CMemoryFile  m_memfile;
-    int          m_timeout_ack;
+    bool Create(const std::string& base_name_, size_t size_);
+    bool Destroy();
+    bool Recreate(size_t size_);
+
+    std::string BuildMemFileName(const std::string base_name_);
+
+    void SendSyncEvents();
+    void DisconnectAll();
+
+    std::string      m_base_name;
+    std::string      m_memfile_name;
+    CMemoryFile      m_memfile;
+    int              m_timeout_open;
+    int              m_timeout_ack;
+    bool             m_created;
 
     struct SEventHandlePair
     {
