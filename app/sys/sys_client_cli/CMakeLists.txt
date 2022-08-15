@@ -44,7 +44,8 @@ target_link_libraries(${PROJECT_NAME}
   tclap::tclap
   protobuf::libprotobuf
   eCAL::core
-  eCAL::pb
+  eCAL::core_pb
+  eCAL::app_pb
   eCAL::sys_client_core
   CustomTclap
   eCAL::utils

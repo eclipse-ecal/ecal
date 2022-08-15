@@ -26,13 +26,14 @@
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
-#include "ecal_reggate.h"
+
+#include "ecal_registration_provider.h"
+#include "ecal_registration_receiver.h"
+#include "pubsub/ecal_pubgate.h"
+
 #include "ecal_writer.h"
 #include "ecal_writer_base.h"
 #include "ecal_process.h"
-
-#include "ecal_register.h"
-#include "pubsub/ecal_pubgate.h"
 
 #include <sstream>
 #include <chrono>
@@ -414,7 +415,7 @@ namespace eCAL
     // if we do not have loopback
     // enabled we can switch off
     // inner process communication
-    if (g_reggate() && !g_reggate()->LoopBackEnabled())
+    if (g_registration_receiver() && !g_registration_receiver()->LoopBackEnabled())
     {
       use_inproc = TLayer::smode_off;
     }
@@ -470,7 +471,7 @@ namespace eCAL
       bool inproc_sent(false);
       {
         // fill writer data
-        struct CDataWriterBase::SWriterData wdata;
+        struct SWriterData wdata;
         wdata.buf   = buf_;
         wdata.len   = len_;
         wdata.id    = m_id;
@@ -524,7 +525,7 @@ namespace eCAL
       bool shm_sent(false);
       {
         // fill writer data
-        struct CDataWriterBase::SWriterData wdata;
+        struct SWriterData wdata;
         wdata.buf       = buf_;
         wdata.len       = len_;
         wdata.id        = m_id;
@@ -581,7 +582,7 @@ namespace eCAL
         bool loopback = use_shm == TLayer::smode_off;
 
         // fill writer data
-        struct CDataWriterBase::SWriterData wdata;
+        struct SWriterData wdata;
         wdata.buf       = buf_;
         wdata.len       = len_;
         wdata.id        = m_id;
@@ -634,7 +635,7 @@ namespace eCAL
       bool tcp_sent(false);
       {
         // fill writer data
-        struct CDataWriterBase::SWriterData wdata;
+        struct SWriterData wdata;
         wdata.buf       = buf_;
         wdata.len       = len_;
         wdata.id        = m_id;
@@ -857,7 +858,7 @@ namespace eCAL
       shm_tlayer->mutable_par_layer()->ParseFromString(par_layer_s);
 
       // ----------------------------------------------------------------------
-      // REMOVE ME IN VERSION 6
+      // REMOVE ME IN ECAL6
       // ----------------------------------------------------------------------
       shm_tlayer->set_par_shm("");
       {
@@ -871,7 +872,7 @@ namespace eCAL
         }
       }
       // ----------------------------------------------------------------------
-      // REMOVE ME IN VERSION 6
+      // REMOVE ME IN ECAL6
       // ----------------------------------------------------------------------
 
     }
@@ -935,7 +936,7 @@ namespace eCAL
     }
 
     // register publisher
-    if (g_entity_register()) g_entity_register()->RegisterTopic(m_topic_name, m_topic_id, ecal_reg_sample, force_);
+    if (g_registration_provider()) g_registration_provider()->RegisterTopic(m_topic_name, m_topic_id, ecal_reg_sample, force_);
 
 #ifndef NDEBUG
     // log it

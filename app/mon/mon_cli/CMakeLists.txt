@@ -45,7 +45,7 @@ target_link_libraries(${PROJECT_NAME}
   protobuf::libprotobuf
   tclap::tclap
   eCAL::core
-  eCAL::pb)
+  eCAL::core_pb)
 
 ecal_install_app(${PROJECT_NAME})
 

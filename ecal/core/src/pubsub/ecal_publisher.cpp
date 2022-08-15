@@ -29,7 +29,7 @@
 #include "ecal_config_reader_hlp.h"
 #include "ecal_globals.h"
 #include "ecal_pubgate.h"
-#include "ecal_register.h"
+#include "ecal_registration_provider.h"
 
 #include "readwrite/ecal_writer.h"
 
@@ -168,8 +168,8 @@ namespace eCAL
     m_datawriter->Destroy();
 
     // unregister data writer
-    if(g_pubgate())         g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
-    if(g_entity_register()) g_entity_register()->UnregisterTopic(m_datawriter->GetTopicName(), m_datawriter->GetTopicID());
+    if(g_pubgate())               g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
+    if(g_registration_provider()) g_registration_provider()->UnregisterTopic(m_datawriter->GetTopicName(), m_datawriter->GetTopicID());
 #ifndef NDEBUG
     // log it
     if (g_log()) g_log()->Log(log_level_debug1, std::string(m_datawriter->GetTopicName() + "::CPublisher::Destroy"));
@@ -309,7 +309,7 @@ namespace eCAL
     }
 
     // send content via data writer layer
-    bool sent = 0;
+    bool sent(false);
     if (time_ == -1) sent = m_datawriter->Write(buf_, len_, eCAL::Time::GetMicroSeconds(), m_id);
     else             sent = m_datawriter->Write(buf_, len_, time_, m_id);
 

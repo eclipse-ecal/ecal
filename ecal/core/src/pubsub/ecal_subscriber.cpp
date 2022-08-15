@@ -25,7 +25,7 @@
 
 #include "ecal_def.h"
 #include "ecal_globals.h"
-#include "ecal_register.h"
+#include "ecal_registration_provider.h"
 #include "ecal_subgate.h"
 
 #include "readwrite/ecal_reader.h"
@@ -137,8 +137,8 @@ namespace eCAL
     RemReceiveCallback();
 
     // first unregister data reader
-    if(g_subgate())         g_subgate()->Unregister(m_datareader->GetTopicName(), m_datareader);
-    if(g_entity_register()) g_entity_register()->UnregisterTopic(m_datareader->GetTopicName(), m_datareader->GetTopicID());
+    if(g_subgate())               g_subgate()->Unregister(m_datareader->GetTopicName(), m_datareader);
+    if(g_registration_provider()) g_registration_provider()->UnregisterTopic(m_datareader->GetTopicName(), m_datareader->GetTopicID());
 #ifndef NDEBUG
     // log it
     if (g_log()) g_log()->Log(log_level_debug1, std::string(m_datareader->GetTopicName() + "::CSubscriber::Destroy"));

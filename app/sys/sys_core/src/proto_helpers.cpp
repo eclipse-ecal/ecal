@@ -31,23 +31,23 @@ namespace eCAL
       // From Protobuf
       ///////////////////////////////
 
-      void FromProtobuf(const eCAL::pb::ProcessState&         task_state_pb,    TaskState&                    task_state)
+      void FromProtobuf(const eCAL::pb::sys::ProcessState&    task_state_pb,    TaskState&                    task_state)
       {
         switch (task_state_pb.severity())
         {
-        case eCAL::pb::eProcessSeverity::proc_sev_unknown:
+        case eCAL::pb::sys::eProcessSeverity::proc_sev_unknown:
           task_state.severity = eCAL_Process_eSeverity::proc_sev_unknown;
           break;
-        case eCAL::pb::eProcessSeverity::proc_sev_healthy:
+        case eCAL::pb::sys::eProcessSeverity::proc_sev_healthy:
           task_state.severity = eCAL_Process_eSeverity::proc_sev_healthy;
           break;
-        case eCAL::pb::eProcessSeverity::proc_sev_warning:
+        case eCAL::pb::sys::eProcessSeverity::proc_sev_warning:
           task_state.severity = eCAL_Process_eSeverity::proc_sev_warning;
           break;
-        case eCAL::pb::eProcessSeverity::proc_sev_critical:
+        case eCAL::pb::sys::eProcessSeverity::proc_sev_critical:
           task_state.severity = eCAL_Process_eSeverity::proc_sev_critical;
           break;
-        case eCAL::pb::eProcessSeverity::proc_sev_failed:
+        case eCAL::pb::sys::eProcessSeverity::proc_sev_failed:
           task_state.severity = eCAL_Process_eSeverity::proc_sev_failed;
           break;
         default:
@@ -57,19 +57,19 @@ namespace eCAL
 
         switch (task_state_pb.severity_level())
         {
-        case eCAL::pb::eProcessSeverityLevel::proc_sev_level1:
+        case eCAL::pb::sys::eProcessSeverityLevel::proc_sev_level1:
           task_state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level1;
           break;
-        case eCAL::pb::eProcessSeverityLevel::proc_sev_level2:
+        case eCAL::pb::sys::eProcessSeverityLevel::proc_sev_level2:
           task_state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level2;
           break;
-        case eCAL::pb::eProcessSeverityLevel::proc_sev_level3:
+        case eCAL::pb::sys::eProcessSeverityLevel::proc_sev_level3:
           task_state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level3;
           break;
-        case eCAL::pb::eProcessSeverityLevel::proc_sev_level4:
+        case eCAL::pb::sys::eProcessSeverityLevel::proc_sev_level4:
           task_state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level4;
           break;
-        case eCAL::pb::eProcessSeverityLevel::proc_sev_level5:
+        case eCAL::pb::sys::eProcessSeverityLevel::proc_sev_level5:
           task_state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level5;
           break;
         default:
@@ -147,8 +147,16 @@ namespace eCAL
         task_group->SetName(task_group_pb.name());
       }
 
+      TaskState                    FromProtobuf(const eCAL::pb::ProcessState& task_state_pb)
+      {
+        eCAL::pb::sys::ProcessState sys_task_state_pb;
+        sys_task_state_pb.set_severity((eCAL::pb::sys::eProcessSeverity)task_state_pb.severity());
+        sys_task_state_pb.set_severity_level((eCAL::pb::sys::eProcessSeverityLevel)task_state_pb.severity());
+        sys_task_state_pb.set_info(task_state_pb.info());
+        return FromProtobuf(sys_task_state_pb);
+      }
 
-      TaskState                    FromProtobuf(const eCAL::pb::ProcessState&         task_state_pb)
+      TaskState                    FromProtobuf(const eCAL::pb::sys::ProcessState&         task_state_pb)
       {
         TaskState output;
         FromProtobuf(task_state_pb, output);
@@ -174,49 +182,49 @@ namespace eCAL
       // To Protobuf
       ///////////////////////////////
 
-      void ToProtobuf(eCAL::pb::ProcessState&         task_state_pb,    const TaskState&                    task_state)
+      void ToProtobuf(eCAL::pb::sys::ProcessState&         task_state_pb,    const TaskState&                    task_state)
       {
         switch (task_state.severity)
         {
         case eCAL_Process_eSeverity::proc_sev_unknown:
-          task_state_pb.set_severity(eCAL::pb::eProcessSeverity::proc_sev_unknown);
+          task_state_pb.set_severity(eCAL::pb::sys::eProcessSeverity::proc_sev_unknown);
           break;
         case eCAL_Process_eSeverity::proc_sev_healthy:
-          task_state_pb.set_severity(eCAL::pb::eProcessSeverity::proc_sev_healthy);
+          task_state_pb.set_severity(eCAL::pb::sys::eProcessSeverity::proc_sev_healthy);
           break;
         case eCAL_Process_eSeverity::proc_sev_warning:
-          task_state_pb.set_severity(eCAL::pb::eProcessSeverity::proc_sev_warning);
+          task_state_pb.set_severity(eCAL::pb::sys::eProcessSeverity::proc_sev_warning);
           break;
         case eCAL_Process_eSeverity::proc_sev_critical:
-          task_state_pb.set_severity(eCAL::pb::eProcessSeverity::proc_sev_critical);
+          task_state_pb.set_severity(eCAL::pb::sys::eProcessSeverity::proc_sev_critical);
           break;
         case eCAL_Process_eSeverity::proc_sev_failed:
-          task_state_pb.set_severity(eCAL::pb::eProcessSeverity::proc_sev_failed);
+          task_state_pb.set_severity(eCAL::pb::sys::eProcessSeverity::proc_sev_failed);
           break;
         default:
-          task_state_pb.set_severity(eCAL::pb::eProcessSeverity::proc_sev_unknown);
+          task_state_pb.set_severity(eCAL::pb::sys::eProcessSeverity::proc_sev_unknown);
           break;
         }
 
         switch (task_state.severity_level)
         {
         case eCAL_Process_eSeverity_Level::proc_sev_level1:
-          task_state_pb.set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level1);
+          task_state_pb.set_severity_level(eCAL::pb::sys::eProcessSeverityLevel::proc_sev_level1);
           break;
         case eCAL_Process_eSeverity_Level::proc_sev_level2:
-          task_state_pb.set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level2);
+          task_state_pb.set_severity_level(eCAL::pb::sys::eProcessSeverityLevel::proc_sev_level2);
           break;
         case eCAL_Process_eSeverity_Level::proc_sev_level3:
-          task_state_pb.set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level3);
+          task_state_pb.set_severity_level(eCAL::pb::sys::eProcessSeverityLevel::proc_sev_level3);
           break;
         case eCAL_Process_eSeverity_Level::proc_sev_level4:
-          task_state_pb.set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level4);
+          task_state_pb.set_severity_level(eCAL::pb::sys::eProcessSeverityLevel::proc_sev_level4);
           break;
         case eCAL_Process_eSeverity_Level::proc_sev_level5:
-          task_state_pb.set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level5);
+          task_state_pb.set_severity_level(eCAL::pb::sys::eProcessSeverityLevel::proc_sev_level5);
           break;
         default:
-          task_state_pb.set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level_unknown);
+          task_state_pb.set_severity_level(eCAL::pb::sys::eProcessSeverityLevel::proc_sev_level_unknown);
           break;
         }
 
@@ -281,9 +289,9 @@ namespace eCAL
       }
 
 
-      eCAL::pb::ProcessState         ToProtobuf(const TaskState&                    task_state)
+      eCAL::pb::sys::ProcessState         ToProtobuf(const TaskState&                    task_state)
       {
-        eCAL::pb::ProcessState output_pb;
+        eCAL::pb::sys::ProcessState output_pb;
         ToProtobuf(output_pb, task_state);
         return output_pb;
       }

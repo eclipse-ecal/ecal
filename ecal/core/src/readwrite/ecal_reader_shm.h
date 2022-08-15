@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  memory file data reader
+ * @brief  shared memory layer
 **/
 
 #pragma once
@@ -30,34 +30,18 @@
 
 namespace eCAL
 {
-  // ecal shared memory reader
-  class CDataReaderSHM
+  ////////////////
+  // LAYER
+  ////////////////
+  class CSHMReaderLayer : public CReaderLayer<CSHMReaderLayer>
   {
   public:
-    CDataReaderSHM() = default;
-    ~CDataReaderSHM() = default;
-  };
+    CSHMReaderLayer() {}
+    ~CSHMReaderLayer() {}
 
-  // ecal shared memory layer
-  class CSHMLayer : public CReaderLayer<CSHMLayer>
-  {
-  public:
-    CSHMLayer() {};
-    ~CSHMLayer()
-    {
-    };
-
-    void Initialize()
-    {
-    }
-
-    void AddSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
-    {
-    }
-
-    void RemSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const std::string& /*topic_id_*/)
-    {
-    }
+    void Initialize() {}
+    void AddSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/) {}
+    void RemSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const std::string& /*topic_id_*/) {}
 
     void SetConnectionParameter(SReaderLayerPar& par_);
   };

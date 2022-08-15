@@ -95,7 +95,8 @@ target_link_libraries(${PROJECT_NAME}
   PUBLIC
     protobuf::libprotobuf
     eCAL::core
-    eCAL::pb
+    eCAL::core_pb
+    eCAL::app_pb
   PRIVATE
     eCAL::hdf5
     ThreadingUtils

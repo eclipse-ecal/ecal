@@ -1,0 +1,72 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2019 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+syntax = "proto3";
+
+import "ecal/core/pb/layer.proto";
+
+package eCAL.pb;
+
+message QOS                                     // quality of service
+{
+  enum eQOSPolicy_Reliability
+  {
+    best_effort_reliability_qos = 0;            // best effort reliability (default for Subscribers)
+    reliable_reliability_qos    = 1;            // reliable reliability (default for Publishers)
+  }
+
+  enum eQOSPolicy_HistoryKind
+  {
+    keep_last_history_qos = 0;                  // keep only a number of samples, default value
+    keep_all_history_qos  = 1;                  // keep all samples until the ResourceLimitsQosPolicy are exhausted
+  }
+
+  eQOSPolicy_Reliability  reliability    =  1;  // qos reliability (reliable / best effort)
+  eQOSPolicy_HistoryKind  history        =  2;  // qos history kind (keep last / all)
+  int32                   history_depth  =  3;  // number of samples for history kind "keep last"
+}
+
+message Topic                                   // eCAL topic
+{
+  int32              rclock                =  1;  // registration clock (heart beat)
+  int32              hid                   = 26;  // host id
+  string             hname                 =  2;  // host name
+  int32              pid                   =  3;  // process id
+  string             pname                 =  4;  // process name
+  string             uname                 =  5;  // unit name
+  string             tid                   =  6;  // topic id
+  string             tname                 =  7;  // topic name
+  string             direction             =  8;  // direction (publisher, subscriber)
+  string             ttype                 =  9;  // topic type (protocol)
+  bytes              tdesc                 = 10;  // topic description (protocol descriptor)
+
+  QOS                tqos                  = 11;  // topic quality of service
+  repeated TLayer    tlayer                = 12;  // active topic transport layers and it's specific parameter
+  int32              tsize                 = 13;  // topic size
+
+  int32              connections_loc       = 16;  // number of local connected entities
+  int32              connections_ext       = 17;  // number of external connected entities
+  int32              message_drops         = 18;  // dropped messages
+
+  int64              did                   = 19;  // data send id (publisher setid)
+  int64              dclock                = 20;  // data clock (send / receive action)
+  int32              dfreq                 = 21;  // data frequency (send / receive samples per second) [mHz]
+
+  map<string, string> attr                 = 27;  // generic topic description
+}

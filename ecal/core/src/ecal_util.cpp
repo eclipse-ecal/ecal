@@ -25,8 +25,9 @@
 #include <ecal/ecal_core.h>
 
 #include "ecal_def.h"
-#include "ecal_reggate.h"
 #include "ecal_descgate.h"
+#include "ecal_process.h"
+#include "ecal_registration_receiver.h"
 #include "pubsub/ecal_pubgate.h"
 #include "mon/ecal_monitoring_def.h"
 
@@ -61,7 +62,7 @@ namespace eCAL
       if (!eCAL::IsInitialized(eCAL::Init::Monitoring))
       {
         eCAL::Initialize(0, nullptr, "", eCAL::Init::Monitoring);
-        Process::SleepMS(1000);
+        eCAL::Process::SleepMS(1000);
       }
 
       eCAL::pb::Monitoring monitoring;
@@ -78,7 +79,7 @@ namespace eCAL
     void ShutdownProcess(const std::string& process_name_)
     {
       eCAL::pb::Monitoring monitoring = GetMonitoring();
-      std::string        host_name = Process::GetHostName();
+      std::string          host_name  = eCAL::Process::GetHostName();
 
       std::vector<int> proc_id_list;
       for (int i = 0; i < monitoring.processes().size(); i++)
@@ -122,7 +123,7 @@ namespace eCAL
     void ShutdownProcesses()
     {
       eCAL::pb::Monitoring monitoring = GetMonitoring();
-      std::string        host_name = Process::GetHostName();
+      std::string          host_name  = eCAL::Process::GetHostName();
 
       std::vector<int> proc_id_list;
       for (int i = 0; i < monitoring.processes().size(); i++)
@@ -158,7 +159,7 @@ namespace eCAL
     void ShutdownCore()
     {
       eCAL::pb::Monitoring monitoring = GetMonitoring();
-      std::string        host_name = Process::GetHostName();
+      std::string          host_name  = eCAL::Process::GetHostName();
 
       std::vector<int> proc_id_list;
       for (int i = 0; i < monitoring.processes().size(); i++)
@@ -197,7 +198,7 @@ namespace eCAL
     **/
     void EnableLoopback(bool state_)
     {
-      if (g_reggate()) g_reggate()->EnableLoopback(state_);
+      if (g_registration_receiver()) g_registration_receiver()->EnableLoopback(state_);
     }
 
     /**
