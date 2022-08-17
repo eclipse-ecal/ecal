@@ -28,6 +28,8 @@ set(SETUP_PY    "${PYTHON_BINARY_DIR}/setup.py")
 string(REPLACE "." ";" Protobuf_VERSION_components "${Protobuf_VERSION}")
 list(LENGTH Protobuf_VERSION_components Protobuf_VERSION_components_length)
 
+message(STATUS "EAB: protobuf version: ${Protobuf_VERSION}")
+
 if ("${Protobuf_VERSION_components_length}" LESS "2")
   message(FATAL_ERROR "Unable to determine protobuf version for python binding")
 endif()
