@@ -929,7 +929,7 @@ bool QEcalRec::loadConfigFromFile(const std::string& path, bool omit_dialogs)
     emit measNameChangedSignal      (rec_server_->GetMeasName());
     emit maxFileSizeMibChangedSignal(rec_server_->GetMaxFileSizeMib());
     emit descriptionChangedSignal   (rec_server_->GetDescription());
-    
+    emit oneFilePerTopicEnabledChangedSignal(rec_server_->GetOneFilePerTopicEnabled());
 
     emit usingBuiltInRecorderEnabledChangedSignal(rec_server_->IsUsingBuiltInRecorderEnabled());
 

@@ -47,13 +47,14 @@ namespace eCAL
         }
 
         // Set settings that cannot fail
-        rec_server.SetMeasRootDir        (config.root_dir_);
-        rec_server.SetMeasName           (config.meas_name_);
-        rec_server.SetMaxFileSizeMib     (config.max_file_size_);
-        rec_server.SetDescription        (config.description_);
-        rec_server.SetPreBufferingEnabled(config.pre_buffer_enabled_);
-        rec_server.SetMaxPreBufferLength (config.pre_buffer_length_);
-        rec_server.SetUploadConfig       (config.upload_config_);
+        rec_server.SetMeasRootDir             (config.root_dir_);
+        rec_server.SetMeasName                (config.meas_name_);
+        rec_server.SetMaxFileSizeMib          (config.max_file_size_);
+        rec_server.SetDescription             (config.description_);
+        rec_server.SetOneFilePerTopicEnabled  (config.one_file_per_topic_);
+        rec_server.SetPreBufferingEnabled     (config.pre_buffer_enabled_);
+        rec_server.SetMaxPreBufferLength      (config.pre_buffer_length_);
+        rec_server.SetUploadConfig            (config.upload_config_);
 
         return true;
       }
