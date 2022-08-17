@@ -16,6 +16,7 @@ Checks: "-*,
   -bugprone-narrowing-conversions,
   
   cppcoreguidelines-*,
+  -cppcoreguidelines-avoid-magic-numbers,
   -cppcoreguidelines-macro-usage,
   -cppcoreguidelines-narrowing-conversions,
   -cppcoreguidelines-non-private-member-variables-in-classes,
