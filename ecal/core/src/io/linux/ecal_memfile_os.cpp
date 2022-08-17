@@ -106,6 +106,7 @@ namespace eCAL
           if (create_) prot |= PROT_WRITE;
 
           mem_file_info_.mem_address = ::mmap(nullptr, mem_file_info_.size, prot, MAP_SHARED, mem_file_info_.memfile, 0);
+          ::close(mem_file_info_.memfile);
           if (mem_file_info_.mem_address == MAP_FAILED)
           {
             mem_file_info_.mem_address = nullptr;
