@@ -28,8 +28,6 @@ set(SETUP_PY    "${PYTHON_BINARY_DIR}/setup.py")
 string(REPLACE "." ";" Protobuf_VERSION_components "${Protobuf_VERSION}")
 list(LENGTH Protobuf_VERSION_components Protobuf_VERSION_components_length)
 
-message(STATUS "EAB: protobuf version: ${Protobuf_VERSION}")
-
 if ("${Protobuf_VERSION_components_length}" LESS "2")
   message(FATAL_ERROR "Unable to determine protobuf version for python binding")
 endif()
@@ -37,7 +35,12 @@ list(GET Protobuf_VERSION_components 0 Protobuf_VERSION_major)
 list(GET Protobuf_VERSION_components 1 Protobuf_VERSION_minor)
 MATH(EXPR Protobuf_Version_minor_inc "${Protobuf_VERSION_minor}+1")
 
-set(Protobuf_required_versions ">=${Protobuf_VERSION_major}.${Protobuf_VERSION_minor}.0,<${Protobuf_VERSION_major}.${Protobuf_Version_minor_inc}")
+if (Protobuf_VERSION VERSION_LESS "3.19")
+  set(Protobuf_required_versions ">=${Protobuf_VERSION},<=3.20")
+else()
+  set(Protobuf_required_versions ">=${Protobuf_VERSION}")
+endif()
+
 
 configure_file(${SETUP_PY_IN} ${SETUP_PY} @ONLY)
 
