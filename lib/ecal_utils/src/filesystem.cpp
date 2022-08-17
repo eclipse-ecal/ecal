@@ -340,7 +340,6 @@ namespace EcalUtils
 #else
       FileStatus file_status(source_clean, OsStyle::Current);
       void *mem = mmap(NULL, file_status.FileSize(), PROT_READ, MAP_SHARED, input_fd, 0);
-      ::close(input_fd);
       if(mem != MAP_FAILED)
       {
         ssize_t written_bytes = write(output_fd, mem, file_status.FileSize());
