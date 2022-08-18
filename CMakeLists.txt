@@ -95,6 +95,7 @@ option(ECAL_INCLUDE_PY_SAMPLES                 "Include python language sample p
 option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samples"                               ON)
 
 option(ECAL_JOIN_MULTICAST_TWICE               "Specific Multicast Network Bug Workaround"                        OFF)
+option(ECAL_JOIN_MULTICAST_ON_ALL_INTERFACES   "Enabling Joining Multicast Groups On All Interfaces"              OFF)
 option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
 
 # Set option regarding third party library builds
@@ -556,6 +557,7 @@ message(STATUS "ECAL_LAYER_ICEORYX                             : ${ECAL_LAYER_IC
 message(STATUS "ECAL_INCLUDE_PY_SAMPLES                        : ${ECAL_INCLUDE_PY_SAMPLES}")
 message(STATUS "ECAL_INSTALL_SAMPLE_SOURCES                    : ${ECAL_INSTALL_SAMPLE_SOURCES}")
 message(STATUS "ECAL_JOIN_MULTICAST_TWICE                      : ${ECAL_JOIN_MULTICAST_TWICE}")
+message(STATUS "ECAL_JOIN_MULTICAST_ON_ALL_INTERFACES          : ${ECAL_JOIN_MULTICAST_ON_ALL_INTERFACES}")
 message(STATUS "ECAL_NPCAP_SUPPORT                             : ${ECAL_NPCAP_SUPPORT}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS          : ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_SPDLOG                   : ${ECAL_THIRDPARTY_BUILD_SPDLOG}")

@@ -20,6 +20,10 @@
 
 #include <io/udp_receiver_asio.h>
 
+#ifdef ECAL_JOIN_MULTICAST_ON_ALL_INTERFACES
+#include "linux/ecal_socket_option_linux.h"
+#endif
+
 namespace eCAL
 {
   ////////////////////////////////////////////////////////
@@ -108,6 +112,7 @@ namespace eCAL
     if (!m_broadcast && !m_unicast)
     {
       // join multicast group
+#ifndef ECAL_JOIN_MULTICAST_ON_ALL_INTERFACES
       {
         asio::error_code ec;
         m_socket.set_option(asio::ip::multicast::join_group(asio::ip::make_address(ipaddr_)), ec);
@@ -117,6 +122,12 @@ namespace eCAL
           return(false);
         }
       }
+#else
+      if (!set_socket_mcast_group_option(m_socket.native_handle(), ipaddr_, MCAST_JOIN_GROUP))
+      {
+        return(false);
+      }
+#endif
 
 #ifdef ECAL_JOIN_MULTICAST_TWICE
       // this is a very bad workaround because of an identified bug on a specific embedded device
@@ -134,6 +145,7 @@ namespace eCAL
     if (!m_broadcast && !m_unicast)
     {
       // Leave multicast group
+#ifndef ECAL_JOIN_MULTICAST_ON_ALL_INTERFACES
       {
         asio::error_code ec;
         m_socket.set_option(asio::ip::multicast::leave_group(asio::ip::make_address(ipaddr_)), ec);
@@ -143,6 +155,12 @@ namespace eCAL
           return(false);
         }
       }
+#else
+      if (!set_socket_mcast_group_option(m_socket.native_handle(), ipaddr_, MCAST_LEAVE_GROUP))
+      {
+        return(false);
+      }
+#endif
     }
     return(true);
   }
