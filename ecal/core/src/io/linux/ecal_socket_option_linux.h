@@ -11,7 +11,7 @@ namespace eCAL
   inline static std::vector<int> get_interface_index_list()
   {
     std::vector<int> interface_index_list;
-    ifaddrs* ifa;
+    ifaddrs* ifa = nullptr;
     ifaddrs* ifap;
 
     // get a list of network interfaces
