@@ -12,7 +12,7 @@ namespace eCAL
   {
     std::vector<int> interface_index_list;
     ifaddrs* ifa = nullptr;
-    ifaddrs* ifap;
+    ifaddrs* ifap = nullptr;
 
     // get a list of network interfaces
     getifaddrs(&ifap);
