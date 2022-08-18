@@ -22,6 +22,7 @@ Checks: "-*,
   -cppcoreguidelines-non-private-member-variables-in-classes,
   -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
   -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-type-reinterpret-cast,
   
   misc-*,
   -misc-non-private-member-variables-in-classes,
