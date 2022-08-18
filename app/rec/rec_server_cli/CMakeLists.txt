@@ -88,7 +88,7 @@ target_link_libraries(${PROJECT_NAME}
   termcolor::termcolor
   eCAL::rec_server_core
   eCAL::core
-  eCAL::utils
+  eCAL::ecal-utils
   CustomTclap
   ThreadingUtils
 )

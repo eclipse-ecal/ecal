@@ -48,7 +48,7 @@ target_link_libraries(${PROJECT_NAME}
   eCAL::app_pb
   eCAL::sys_client_core
   CustomTclap
-  eCAL::utils
+  eCAL::ecal-utils
 )
 
 ecal_install_app(${PROJECT_NAME})

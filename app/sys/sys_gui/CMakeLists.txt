@@ -176,7 +176,7 @@ target_link_libraries (${PROJECT_NAME}
     simpleini::simpleini
     EcalParser
     QEcalParser
-    eCAL::utils
+    eCAL::ecal-utils
 )
 
 if(WIN32)

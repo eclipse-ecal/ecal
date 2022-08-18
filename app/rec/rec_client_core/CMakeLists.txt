@@ -101,7 +101,7 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::hdf5
     ThreadingUtils
     Threads::Threads
-    eCAL::utils
+    eCAL::ecal-utils
     EcalParser
 )
 

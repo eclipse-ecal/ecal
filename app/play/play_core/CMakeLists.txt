@@ -63,7 +63,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
   ThreadingUtils
-  eCAL::utils
+  eCAL::ecal-utils
 )
 
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"

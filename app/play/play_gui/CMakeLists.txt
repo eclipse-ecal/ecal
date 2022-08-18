@@ -131,7 +131,7 @@ target_link_libraries (${PROJECT_NAME}
     Qt5::Widgets
     CustomQt
     eCAL::core_pb
-    eCAL::utils
+    eCAL::ecal-utils
 )
 if (WIN32)
     target_link_libraries (${PROJECT_NAME}
