@@ -163,7 +163,7 @@ target_link_libraries (${PROJECT_NAME}
     Qt5::Widgets
     CustomQt
     CustomTclap
-    eCAL::utils
+    eCAL::ecal-utils
     EcalParser
     QEcalParser
     ThreadingUtils

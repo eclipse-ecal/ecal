@@ -463,7 +463,7 @@ target_link_libraries(${PROJECT_NAME}
     simpleini::simpleini
     eCAL::core_pb
     Threads::Threads
-    eCAL::utils
+    eCAL::ecal-utils
     tcp_pubsub::tcp_pubsub
 )
 

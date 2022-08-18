@@ -78,7 +78,7 @@ target_link_libraries(${PROJECT_NAME}
   PUBLIC 
     eCAL::message
   PRIVATE  
-    eCAL::utils
+    eCAL::ecal-utils
 )
 
 if (${ECAL_LINK_HDF5_SHARED})

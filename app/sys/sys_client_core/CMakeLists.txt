@@ -48,7 +48,7 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::core
     eCAL::core_pb
     eCAL::app_pb
-    eCAL::utils
+    eCAL::ecal-utils
     spdlog::spdlog
   PRIVATE
     Threads::Threads  
