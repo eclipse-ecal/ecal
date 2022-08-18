@@ -2,6 +2,7 @@
 
 #include <ifaddrs.h>
 #include <net/if.h>
+#include <netinet/in.h>
 #include <vector>
 #include <iostream>
 
@@ -11,13 +12,13 @@ namespace eCAL
   inline static std::vector<int> get_interface_index_list()
   {
     std::vector<int> interface_index_list;
-    ifaddrs* ifa = nullptr;
+    ifaddrs* ifa  = nullptr;
     ifaddrs* ifap = nullptr;
 
     // get a list of network interfaces
     getifaddrs(&ifap);
 
-    // create a list of network interaces indexes
+    // create a list of network interfaces indexes
     for (ifa = ifap; ifa; ifa = ifa->ifa_next)
     {
       if (ifa->ifa_addr && ifa->ifa_addr->sa_family == AF_PACKET)
@@ -40,8 +41,8 @@ namespace eCAL
     // set the multicast socket option on all interfaces
     for (int iface : get_interface_index_list())
     {
-      group_req group_req;
-      sockaddr_in *group;
+      group_req group_req = {};
+      sockaddr_in *group  = nullptr;
 
       memset(&group_req, 0, sizeof(group_req));
       group_req.gr_interface = iface;
