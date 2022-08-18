@@ -1,5 +1,5 @@
 ---
-name: Clang-Tidy-Review: Post comments
+name: Clang-Tidy-Review Post comments
 
 on:
   workflow_run:
