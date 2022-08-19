@@ -573,7 +573,6 @@
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <tabstops>
-  <tabstop>tabWidget</tabstop>
   <tabstop>get_config_request_button</tabstop>
   <tabstop>set_config_max_pre_buffer_length_secs_checkbox</tabstop>
   <tabstop>set_config_max_pre_buffer_length_secs_lineedit</tabstop>
@@ -599,6 +598,9 @@
   <tabstop>command_request_description_textedit</tabstop>
   <tabstop>command_request_max_file_size_mib_checkbox</tabstop>
   <tabstop>command_request_max_file_size_mib_lineedit</tabstop>
+  <tabstop>get_state_request_button</tabstop>
+  <tabstop>command_one_file_per_topic_checkbox</tabstop>
+  <tabstop>command_one_file_per_topic_lineedit</tabstop>
   <tabstop>command_request_protocol_checkbox</tabstop>
   <tabstop>command_request_protocol_lineedit</tabstop>
   <tabstop>command_request_username_checkbox</tabstop>
@@ -618,9 +620,9 @@
   <tabstop>command_request_comment_checkbox</tabstop>
   <tabstop>command_request_comment_textedit</tabstop>
   <tabstop>command_request_button</tabstop>
-  <tabstop>response_texteedit</tabstop>
   <tabstop>response_clear_button</tabstop>
-  <tabstop>get_state_request_button</tabstop>
+  <tabstop>response_texteedit</tabstop>
+  <tabstop>tabWidget</tabstop>
   <tabstop>hostname_lineedit</tabstop>
  </tabstops>
  <resources/>
