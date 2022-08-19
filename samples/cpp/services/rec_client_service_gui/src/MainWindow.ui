@@ -347,7 +347,11 @@
                </widget>
               </item>
               <item row="5" column="1">
-               <widget class="QLineEdit" name="command_one_file_per_topic_lineedit"/>
+               <widget class="QLineEdit" name="command_one_file_per_topic_lineedit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -932,8 +936,24 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>122</x>
-     <y>515</y>
+     <x>148</x>
+     <y>668</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>405</x>
+     <y>670</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>command_one_file_per_topic_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>command_one_file_per_topic_lineedit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>102</x>
+     <y>371</y>
     </hint>
     <hint type="destinationlabel">
      <x>216</x>
