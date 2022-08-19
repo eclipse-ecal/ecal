@@ -67,7 +67,7 @@
       m_last_accessed = std::chrono::steady_clock::now();
     }
 
-    void Destroy()
+    void Stop()
     {
       m_stop = true;
     }

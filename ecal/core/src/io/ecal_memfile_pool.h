@@ -34,44 +34,73 @@
 #include <memory>
 #include <thread>
 
+#include <ecal_threaded_timer_wrapper.h>
+
 namespace eCAL
 {
-  class CMemFileEventBase;
-  class CMemFileEvent;
-  
-  ////////////////////////////////////////
-  // CMemFileObserver
-  ////////////////////////////////////////
-  class CMemFileObserver
+  using MemoryReadFunction = std::function<void(const SMemFileHeader& header, const char* buffer)>;
+
+  class CEvent;
+  class CAcknowledgeStrategy;
+  class CZeroCopyStrategy;
+  class COneCopyStrategy;
+  class CMemfileReadAccess;
+
+  class CMemfileHeaderUpdated
   {
   public:
-    CMemFileObserver();
-    ~CMemFileObserver();
+    CMemfileHeaderUpdated() : m_last_sample_clock(0) {}
 
-    bool Create(const std::string& memfile_name_, const std::string& memfile_event_);
-    bool Destroy();
+    bool IsFileUpdated(const SMemFileHeader& header) const
+    {
+      return header.clock > m_last_sample_clock;
+    }
 
-    bool Start(const std::string& topic_name_, const std::string& topic_id_, const int timeout_);
-    bool Stop();
-    bool IsObserving() {return(m_is_observing);};
+    void Update(const SMemFileHeader& header)
+    {
+      m_last_sample_clock = header.clock;
+    }
 
-    bool ResetTimeout();
+  private:
+    uint64_t m_last_sample_clock;
+  };
 
-  protected:
-    void Observe(const std::string& topic_name_, const std::string& topic_id_, const int timeout_);
-    bool ReadFileHeader(SMemFileHeader& memfile_hdr);
+  class CMemFileReader
+  {
+  public:
+    enum class ReaderState
+    {
+      WAITING_ON_SIGNAL = 0,
+      READING_MEMFILE = 1
+    };
 
-    std::atomic<bool>                   m_created;
-    std::atomic<bool>                   m_do_stop;
-    std::atomic<bool>                   m_is_observing;
+    struct CMemFileReaderOptions
+    {
+      std::string memory_file_name;
+      std::string event_data_sent_name;
+      MemoryReadFunction memory_processing_function;
+      bool memfile_acknowledge;
+    };
 
-    std::atomic<long long>              m_timeout_read;
+    CMemFileReader(const CMemFileReaderOptions& options);
+    void ReadMemfile();
+    void operator()();
 
-    std::thread                         m_thread;
-    std::unique_ptr<CMemFileEvent>      m_event_snd;
-    std::unique_ptr<CMemFileEventBase>  m_event_ack;
-    CMemoryFile                         m_memfile;
-    std::vector<char>                   m_ecal_buffer;
+
+  private:
+    CMemFileReader::ReaderState            m_reader_state;
+
+    CMemoryFile                            m_memfile;
+
+
+    std::unique_ptr<CEvent>                m_event_data_sent;
+    std::unique_ptr<CAcknowledgeStrategy>  m_acknowledge_strategy;
+    std::shared_ptr<CZeroCopyStrategy>     m_zero_copy_strategy;
+    std::shared_ptr<COneCopyStrategy>      m_one_copy_strategy;
+
+    std::unique_ptr<CMemfileReadAccess>    m_read_access;
+
+    CMemfileHeaderUpdated                  m_header_tracker;
   };
 
   ////////////////////////////////////////
@@ -86,13 +115,11 @@ namespace eCAL
     void Create();
     void Destroy();
 
-    bool ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, const std::string& topic_name_, const std::string& topic_id_);
+    bool ObserveFile(const std::chrono::milliseconds& timeout_, const CMemFileReader::CMemFileReaderOptions& memfile_options);
 
-  protected:
-    void CleanupPool();
-
-    std::atomic<bool>                                         m_created;
-    std::mutex                                                m_observer_pool_sync;
-    std::map<std::string, std::shared_ptr<CMemFileObserver>>  m_observer_pool;
+  private:
+    std::atomic<bool>                                                             m_created;
+    std::shared_ptr<std::mutex>                                                   m_observer_pool_sync;
+    std::map<std::string, std::weak_ptr<CThreadedTimerWrapper<CMemFileReader>>>   m_observer_pool;
   };
 }

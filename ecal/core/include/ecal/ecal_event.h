@@ -81,4 +81,46 @@ namespace eCAL
    * @return  True if event is valid.
   **/
   ECAL_API bool gEventIsValid(const EventHandleT& event_);
+
+  /**
+  * @brief Class wrapper around event global functions
+  **/
+  class CEvent
+  {
+  public:
+    CEvent(const std::string& event_name)
+    {
+      gOpenEvent(&m_handle, event_name);
+    }
+
+    virtual ~CEvent()
+    {
+      gCloseEvent(m_handle);
+    }
+
+    void Set()
+    {
+      gSetEvent(m_handle);
+    }
+
+    bool Wait(long timeout_)
+    {
+      return gWaitForEvent(m_handle, timeout_);
+    }
+
+    bool Invalidate()
+    {
+      return gInvalidateEvent(&m_handle);
+    }
+
+    bool IsValid()
+    {
+      return gEventIsValid(m_handle);
+    }
+
+  private:
+    EventHandleT m_handle;
+  };
+
+
 }

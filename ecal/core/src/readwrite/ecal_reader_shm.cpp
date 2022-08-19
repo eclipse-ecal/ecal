@@ -36,6 +36,8 @@
 #include "io/ecal_memfile_pool.h"
 #include "readwrite/ecal_reader_shm.h"
 
+#include "pubsub/ecal_subgate.h"
+
 #include <iostream>
 
 namespace eCAL
@@ -92,7 +94,20 @@ namespace eCAL
       {
         std::string process_id = std::to_string(Process::GetProcessID());
         std::string memfile_event = memfile_name + "_" + process_id;
-        g_memfile_pool()->ObserveFile(memfile_name, memfile_event, par_.topic_name, par_.topic_id);
+
+        CMemFileReader::CMemFileReaderOptions reader_options;
+        reader_options.event_data_sent_name = memfile_event;
+        reader_options.memfile_acknowledge = Config::GetMemfileAckTimeoutMs() != 0;
+        reader_options.memory_file_name = memfile_name;
+        reader_options.memory_processing_function = [topic_name = par_.topic_name, topic_id = par_.topic_id](const SMemFileHeader& header, const char* buffer)
+        {
+          if (g_subgate())
+          {
+            g_subgate()->ApplySample(topic_name, topic_id, buffer, header.data_size, (long long)header.id, (long long)header.clock, (long long)header.time, (size_t)header.hash, eCAL::pb::tl_ecal_shm);
+          }
+        };
+
+        g_memfile_pool()->ObserveFile(std::chrono::milliseconds(Config::GetRegistrationTimeoutMs()), reader_options);
       }
     }
   }
