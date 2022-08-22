@@ -14,7 +14,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt update
-        sudo apt-get install ninja-build doxygen graphviz libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev qt5-default libqwt-qt5-dev
+        sudo apt-get install ninja-build doxygen graphviz libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev qt5-default libqwt-qt5-dev libyaml-cpp-dev
 
     - name: Install Cap'n Proto
       run: |
@@ -74,6 +74,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
         -DECAL_THIRDPARTY_BUILD_QWT=OFF \
+        -DECAL_THIRDPARTY_BUILD_YAML_CPP=OFF \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_SYSCONFDIR=/etc \
         -DCMAKE_INSTALL_PREFIX=/usr \
