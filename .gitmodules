@@ -46,3 +46,6 @@
 [submodule "thirdparty/qwt/qwt"]
 	path = thirdparty/qwt/qwt
 	url = https://git.code.sf.net/p/qwt/git
+[submodule "thirdparty/yaml-cpp"]
+	path = thirdparty/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git
