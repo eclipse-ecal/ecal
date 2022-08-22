@@ -73,7 +73,7 @@ namespace eCAL
       m_memfile_info = SMemFileInfo();
 
       // create memory file
-      if (!memfile::db::AddFile(name_, create_, len_ + m_header.int_hdr_size, m_memfile_info))
+      if (!memfile::db::AddFile(name_, create_, create_ ? len_ + m_header.int_hdr_size : sizeof(SInternalHeader::int_hdr_size), m_memfile_info))
       {
 #ifndef NDEBUG
         printf("Could not create memory file: %s.\n\n", name_);
@@ -115,9 +115,13 @@ namespace eCAL
       // lock mutex
       if (LockMtx(&m_memfile_info.mutex, PUB_MEMFILE_CREATE_TO))
       {
-        // read header
-        SInternalHeader* pHeader = static_cast<SInternalHeader*>(m_memfile_info.mem_address);
-        m_header = *pHeader;
+        // read internal header size of memory file
+        const auto header_size = *static_cast<decltype(SInternalHeader::int_hdr_size)*>(m_memfile_info.mem_address);
+        memfile::db::CheckFileSize(name_, header_size, m_memfile_info);
+
+        // copy compatible header part into m_header
+        const auto compatible_header_size = sizeof(SInternalHeader) > header_size ? header_size : sizeof(SInternalHeader);
+        memcpy(&m_header, m_memfile_info.mem_address, compatible_header_size);
 
         // unlock mutex
         UnlockMtx(&m_memfile_info.mutex);
@@ -256,7 +260,7 @@ namespace eCAL
     if (len_ > static_cast<size_t>(m_header.max_data_size))  return(0);
     if (!m_memfile_info.mem_address)                         return(0);
 
-    // update m_header and write to memory file header
+    // update m_header and write into memory file header
     m_header.cur_data_size = (unsigned long)(len_);
     SInternalHeader* pHeader = static_cast<SInternalHeader*>(m_memfile_info.mem_address);
     pHeader->cur_data_size = m_header.cur_data_size;
@@ -301,8 +305,9 @@ namespace eCAL
       return(false);
     }
 
-    // update header
-    m_header = *static_cast<SInternalHeader*>(m_memfile_info.mem_address);
+    // update compatible header part of m_header
+    const auto compatible_header_size = sizeof(SInternalHeader) > m_header.int_hdr_size ? m_header.int_hdr_size : sizeof(SInternalHeader);
+    memcpy(&m_header, m_memfile_info.mem_address, compatible_header_size);
 
     // check size again
     size_t len = static_cast<size_t>(m_header.int_hdr_size) + static_cast<size_t>(m_header.max_data_size);
