@@ -183,7 +183,7 @@ namespace eCAL
       std::uint64_t               cur_data_size = 0;
       std::uint64_t               max_data_size = 0;
 #endif
-      // New fields should only declare well definied data types and be aligend to 8 bytes
+      // New fields should only declare well defined data types and be aligned to 8 bytes
       // std::uint8_t                 _new_field = 0;
       // std::array<std::uint8_t, 7>  _reserved_1;
     };
