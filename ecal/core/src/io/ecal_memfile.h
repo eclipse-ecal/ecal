@@ -172,17 +172,17 @@ namespace eCAL
       std::uint16_t int_hdr_size = sizeof(SInternalHeader);
 #if _WIN32 || _WIN64 || (INTPTR_MAX == INT32_MAX) // Use of standard 32 bit data types on windows and other 32 bit platforms to remain compatible with built-in "long" data type
                                                   // of previous struct layout. For some reason 64-bit msvc uses 4 bytes alignment as well.
-      std::uint8_t   __reserved_0[2];             // Add 2 bytes padding for 4 bytes alignment on Windows  
+      std::uint8_t   _reserved_0[2];              // Add 2 bytes padding for 4 bytes alignment on Windows  
       std::uint32_t  cur_data_size = 0;
       std::uint32_t  max_data_size = 0;
 #else                                             // Use of standard 64 bit data types on all 64 bit platforms to remain compatible with built-in "long" data type of previous struct layout
-      std::uint8_t  __reserved_0[6];              // Add 6 bytes padding for 8 bytes alignment on 64-bit Linux
+      std::uint8_t   _reserved_0[6];              // Add 6 bytes padding for 8 bytes alignment on 64-bit Linux
       std::uint64_t  cur_data_size = 0;
       std::uint64_t  max_data_size = 0;
 #endif
       // New fields should only declare well definied data types and be aligend to 8 bytes
-      // std::uint8_t   __new_field;
-      // std::uint8_t   __reserved_1[7]
+      // std::uint8_t   _new_field = 0;
+      // std::uint8_t   _reserved_1[7]
     };
 #pragma pack(pop)
 
