@@ -29,8 +29,9 @@
 #include <cassert>
 #include <cstdint>
 #include <cstring>
+#include <algorithm>
 
-#define SIZEOF_PARTIAL_STRUCT(_STRUCT_NAME_, _FIELD_NAME_) reinterpret_cast<std::size_t>(&(reinterpret_cast<_STRUCT_NAME_*>(0)->_FIELD_NAME_)) + sizeof(_STRUCT_NAME_::_FIELD_NAME_)
+#define SIZEOF_PARTIAL_STRUCT(_STRUCT_NAME_, _FIELD_NAME_) (reinterpret_cast<std::size_t>(&(reinterpret_cast<_STRUCT_NAME_*>(0)->_FIELD_NAME_)) + sizeof(_STRUCT_NAME_::_FIELD_NAME_))
 
 namespace eCAL
 {
@@ -123,8 +124,7 @@ namespace eCAL
         memfile::db::CheckFileSize(name_, header_size, m_memfile_info);
 
         // copy compatible header part into m_header
-        const auto compatible_header_size = sizeof(SInternalHeader) > header_size ? header_size : sizeof(SInternalHeader);
-        memcpy(&m_header, m_memfile_info.mem_address, compatible_header_size);
+        memcpy(&m_header, m_memfile_info.mem_address, std::min(sizeof(SInternalHeader), static_cast<std::size_t>(header_size)));
 
         // unlock mutex
         UnlockMtx(&m_memfile_info.mutex);
@@ -309,8 +309,7 @@ namespace eCAL
     }
 
     // update compatible header part of m_header
-    const auto compatible_header_size = sizeof(SInternalHeader) > m_header.int_hdr_size ? m_header.int_hdr_size : sizeof(SInternalHeader);
-    memcpy(&m_header, m_memfile_info.mem_address, compatible_header_size);
+    memcpy(&m_header, m_memfile_info.mem_address, std::min(sizeof(SInternalHeader), static_cast<std::size_t>(m_header.int_hdr_size)));
 
     // check size again
     size_t len = static_cast<size_t>(m_header.int_hdr_size) + static_cast<size_t>(m_header.max_data_size);
