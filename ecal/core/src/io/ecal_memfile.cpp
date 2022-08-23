@@ -27,7 +27,10 @@
 #include "ecal_memfile_db.h"
 
 #include <cassert>
+#include <cstdint>
 #include <cstring>
+
+#define SIZEOF_PARTIAL_STRUCT(_STRUCT_NAME_, _FIELD_NAME_) reinterpret_cast<std::size_t>(&(reinterpret_cast<_STRUCT_NAME_*>(0)->_FIELD_NAME_)) + sizeof(_STRUCT_NAME_::_FIELD_NAME_)
 
 namespace eCAL
 {
@@ -73,7 +76,7 @@ namespace eCAL
       m_memfile_info = SMemFileInfo();
 
       // create memory file
-      if (!memfile::db::AddFile(name_, create_, create_ ? len_ + m_header.int_hdr_size : sizeof(SInternalHeader::int_hdr_size), m_memfile_info))
+      if (!memfile::db::AddFile(name_, create_, create_ ? len_ + m_header.int_hdr_size : SIZEOF_PARTIAL_STRUCT(SInternalHeader, int_hdr_size), m_memfile_info))
       {
 #ifndef NDEBUG
         printf("Could not create memory file: %s.\n\n", name_);
@@ -116,7 +119,7 @@ namespace eCAL
       if (LockMtx(&m_memfile_info.mutex, PUB_MEMFILE_CREATE_TO))
       {
         // read internal header size of memory file
-        const auto header_size = *static_cast<decltype(SInternalHeader::int_hdr_size)*>(m_memfile_info.mem_address);
+        const auto header_size = static_cast<SInternalHeader*>(m_memfile_info.mem_address)->int_hdr_size;
         memfile::db::CheckFileSize(name_, header_size, m_memfile_info);
 
         // copy compatible header part into m_header
