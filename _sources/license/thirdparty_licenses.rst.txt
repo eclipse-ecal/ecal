@@ -197,6 +197,12 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
+   * - `yaml-cpp <https://github.com/jbeder/yaml-cpp/>`_
+     - :ref:`mit_license`
+     - 	Copyright (c) 2008-2015 Jesse Beder
+     - - |fa-github| Git submodule ``/thirdparty/yaml-cpp``
+       - |fa-windows| Binary distributions for Windows
+       - |fa-ubuntu| Binary distributions for Linux
 
 License texts
 =============
