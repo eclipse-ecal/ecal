@@ -87,4 +87,16 @@ bool ThreadPool::areThreadsInitialized()
   return true;
 }
 
-
+void ThreadPool::processJobs()
+{
+  while (true)
+  {
+    {
+      std::lock_guard<std::mutex> buffer_lock(_mutex_job);
+      if (_measurements_to_work_on.empty() && !areThreadsBusy())
+      {
+        break;
+      }
+    }
+  }
+}

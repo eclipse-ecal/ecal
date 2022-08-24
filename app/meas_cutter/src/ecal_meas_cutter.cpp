@@ -274,16 +274,7 @@ int eCALMeasCutter::run()
     _thread_pool.Enque(measurement_job);
   }
 
-  while(true)
-  {
-    {
-      std::lock_guard<std::mutex> buffer_lock(_thread_pool._mutex_job);
-      if (_thread_pool._measurements_to_work_on.empty() && !_thread_pool.areThreadsBusy()) 
-      {
-        break;
-      }
-    }
-  }
+  _thread_pool.processJobs();
 
   Logger::close();
   return 0;

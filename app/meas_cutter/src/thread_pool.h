@@ -44,13 +44,13 @@ public:
 
   bool                                               areThreadsBusy();
   bool                                               areThreadsInitialized();
+  void                                               processJobs();
 
+private:
   std::atomic_bool                                   _is_running;
   std::deque<eCALMeasCutterUtils::MeasurementJob>    _measurements_to_work_on;
   std::condition_variable                            _buffer_cv;
   mutable std::mutex                                 _mutex_job;
-
-private:
   int                                                _maximum_worker_number;
   friend class MeasurementWorker;
   std::vector<std::unique_ptr<MeasurementWorker>>    _worker_list;
