@@ -5,6 +5,9 @@
  eCAL Measurement Cutter
 =============================================
 
+.. seealso::
+   To learn more about the measurement format used by eCAL please check out the :ref:`measurement_format` chapter.
+
 | eCAL Measurement Cutter is a Command Line Application used to manipulate eCAL measurements. 
 | The executable is :file:`ecal_meas_cutter /.exe`.
 | It can trim measurements by time, exclude / include channels, modify base file names and split the measurement files by size.
@@ -12,6 +15,9 @@
 .. seealso::
    To learn more about the measurement format used by eCAL please check out the :ref:`measurement_format` chapter.
 
+.. note::
+   eCAL Measurement Cutter is available since eCAL 5.11.
+   
 Usage
 =====
 
