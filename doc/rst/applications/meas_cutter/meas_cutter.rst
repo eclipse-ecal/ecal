@@ -76,11 +76,11 @@ The path where the converted measurement will be saved.
 .. note::
    When trying to include/ exclude channels using regex, use :file:`- re:`. Use one list item for one expression.
 
-4. Save log ( -s, --save_log)
+4. Save log ( -s, \--save_log)
 -----------------------------------
 When this flag is enabled, the application will also write its output in a log file. This file can be found in the folder :file:`log`, next to the executable.
 
-5. Disable verbose ( -q, --quiet)
+5. Disable verbose ( -q, \--quiet)
 -----------------------------------
 When this flag is enabled, console output is disabled except for error messages.
 
