@@ -30,7 +30,7 @@ jobs:
         id: review
         with:
           build_dir: _build
-          apt_packages: "cmake,ninja-build,build-essential,zlib1g-dev,qtbase5-dev,libhdf5-dev,libprotobuf-dev,libprotoc-dev,protobuf-compiler,libcurl4-openssl-dev,libqwt-qt5-dev"
+          apt_packages: "cmake,ninja-build,build-essential,zlib1g-dev,qtbase5-dev,libhdf5-dev,libprotobuf-dev,libprotoc-dev,protobuf-compiler,libcurl4-openssl-dev,libqwt-qt5-dev,libyaml-cpp-dev"
           config_file: ".clang-tidy"
           exclude: "/thirdparty/*,/_build/*,convert_utf.cpp,convert_utf.h"
           post_comments: false
@@ -67,6 +67,7 @@ jobs:
                     -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
                     -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
                     -DECAL_THIRDPARTY_BUILD_QWT=OFF \
+                    -DECAL_THIRDPARTY_BUILD_YAML_CPP=OFF \
                     -DCMAKE_BUILD_TYPE=Release \
                     -DCMAKE_INSTALL_SYSCONFDIR=/etc \
                     -DCMAKE_INSTALL_PREFIX=/usr \
