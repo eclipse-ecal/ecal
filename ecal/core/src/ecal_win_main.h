@@ -27,6 +27,10 @@
 #define CINTERFACE
 #endif
 
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
 #include <windows.h>
 #include <direct.h>
 #include <psapi.h>

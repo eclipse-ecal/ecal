@@ -27,6 +27,8 @@
 #include <memory>
 #include <unordered_map>
 #include <mutex>
+#include <array>
+#include <cstdint>
 
 #include <ecal/ecal_os.h>
 #include <ecal_global_accessors.h>
@@ -172,24 +174,36 @@ namespace eCAL
     bool IsOpened()    const {return(m_opened);};
     std::string Name() const {return(m_name);};
 
-    struct SMemFileHeader
+    // @deprecate_eCAL6
+    // Use of platform specific aligment to remain compatible with previous struct layout
+    // This can be harmonized for all platforms in a later version of eCAL that drops compatibility
+#pragma pack(push, 1)
+    struct SInternalHeader
     {
-      SMemFileHeader()
-      {
-        hdr_size      = sizeof(SMemFileHeader);
-        cur_data_size = 0;
-        max_data_size = 0;
-      };
-      unsigned short hdr_size;
-      unsigned long  cur_data_size;
-      unsigned long  max_data_size;
+      static_assert(sizeof(std::array<std::uint8_t, 1>) == 1, "Memory layout of std::array is different from C-style array.");
+
+      std::uint16_t int_hdr_size = sizeof(SInternalHeader);
+#if _WIN32 || _WIN64 || (INTPTR_MAX == INT32_MAX)     // Use of standard 32 bit data types on windows and other 32 bit platforms to remain compatible with built-in "long" data type
+                                                      // of previous struct layout. For some reason 64-bit msvc uses 4 bytes alignment as well.
+      std::array<std::uint8_t, 2> _reserved_0   = {}; // Add 2 bytes padding for 4 bytes alignment on Windows  
+      std::uint32_t               cur_data_size = 0;
+      std::uint32_t               max_data_size = 0;
+#else                                                 // Use of standard 64 bit data types on all 64 bit platforms to remain compatible with built-in "long" data type of previous struct layout
+      std::array<std::uint8_t, 6> _reserved_0   = {}; // Add 6 bytes padding for 8 bytes alignment on 64-bit Linux
+      std::uint64_t               cur_data_size = 0;
+      std::uint64_t               max_data_size = 0;
+#endif
+      // New fields should only declare well defined data types and be aligned to 8 bytes
+      // std::uint8_t                 _new_field  = 0;
+      // std::array<std::uint8_t, 7>  _reserved_1 = {};
     };
+#pragma pack(pop)
 
   protected:
     bool            m_created;
     bool            m_opened;
     std::string     m_name;
-    SMemFileHeader  m_header;
+    SInternalHeader m_header;
     SMemFileInfo*   m_memfile_info;
 
   private:
