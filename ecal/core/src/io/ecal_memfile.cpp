@@ -26,10 +26,13 @@
 #include "ecal_def.h"
 #include "ecal_memfile.h"
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 #include <iostream>
-#include <assert.h>
+#include <algorithm>
+#include <cassert>
+
+#define SIZEOF_PARTIAL_STRUCT(_STRUCT_NAME_, _FIELD_NAME_) (reinterpret_cast<std::size_t>(&(reinterpret_cast<_STRUCT_NAME_*>(0)->_FIELD_NAME_)) + sizeof(_STRUCT_NAME_::_FIELD_NAME_)) //NOLINT
 
 namespace eCAL
 {
@@ -90,9 +93,10 @@ namespace eCAL
       m_memfile_info->mutex  = nullptr;
       m_header.max_data_size = 0;
       m_header.cur_data_size = 0;
+      m_header.int_hdr_size  = sizeof(SInternalHeader);
 
       // create memory file
-      if(!CreateMemFile(name_, create_, len_ + sizeof(SMemFileHeader), *m_memfile_info))
+      if(!CreateMemFile(name_, create_, create_ ? len_ + m_header.int_hdr_size : SIZEOF_PARTIAL_STRUCT(SInternalHeader, int_hdr_size), *m_memfile_info))
       {
 #ifndef NDEBUG
         printf("Could not create memory file: %s.\n\n", name_);
@@ -121,7 +125,7 @@ namespace eCAL
         if(m_memfile_info->mem_address)
         {
           // write header
-          SMemFileHeader* pHeader = new (m_memfile_info->mem_address) SMemFileHeader;
+          SInternalHeader* pHeader = new (m_memfile_info->mem_address) SInternalHeader;
           if(pHeader) *pHeader = m_header;
         }
 
@@ -134,9 +138,12 @@ namespace eCAL
       // lock mutex
       if(LockMtx(&m_memfile_info->mutex, PUB_MEMFILE_CREATE_TO))
       {
-        // read header
-        SMemFileHeader* pHeader = static_cast<SMemFileHeader*>(m_memfile_info->mem_address);
-        m_header = *pHeader;
+        // read internal header size of memory file
+        const auto header_size = static_cast<SInternalHeader*>(m_memfile_info->mem_address)->int_hdr_size;
+        CheckMemFile(header_size, false, *m_memfile_info);
+
+        // copy compatible header part into m_header
+        memcpy(&m_header, m_memfile_info->mem_address, std::min(sizeof(SInternalHeader), static_cast<std::size_t>(header_size)));
 
         // unlock mutex
         UnlockMtx(&m_memfile_info->mutex);
@@ -173,6 +180,7 @@ namespace eCAL
     m_name.clear();
     m_header.max_data_size      = 0;
     m_header.cur_data_size      = 0;
+    m_header.int_hdr_size       = sizeof(SInternalHeader);
 
     m_memfile_info->mutex       = nullptr;
     m_memfile_info->memfile     = 0;
@@ -198,12 +206,11 @@ namespace eCAL
       return(false);
     }
 
-    // update header
-    SMemFileHeader* pHeader = static_cast<SMemFileHeader*>(m_memfile_info->mem_address);
-    m_header = *pHeader;
+    // update compatible header part of m_header
+    memcpy(&m_header, m_memfile_info->mem_address, std::min(sizeof(SInternalHeader), static_cast<std::size_t>(m_header.int_hdr_size)));
 
     // check size again
-    size_t len = static_cast<size_t>(m_header.hdr_size) + static_cast<size_t>(m_header.max_data_size);
+    size_t len = static_cast<size_t>(m_header.int_hdr_size) + static_cast<size_t>(m_header.max_data_size);
     if(len > m_memfile_info->size)
     {
       // check memory file size
@@ -250,10 +257,10 @@ namespace eCAL
     if(!buf_)                                                             return(0);
     if(len_ == 0)                                                         return(0);
     if(!m_memfile_info->mem_address)                                      return(0);
-    if((len_ + offset_ + sizeof(SMemFileHeader)) > m_memfile_info->size)  return(0);
+    if((len_ + offset_ + m_header.int_hdr_size) > m_memfile_info->size)   return(0);
 
     // read content
-    memcpy(buf_, static_cast<char*>(m_memfile_info->mem_address) + offset_ + sizeof(SMemFileHeader), len_);
+    memcpy(buf_, static_cast<char*>(m_memfile_info->mem_address) + offset_ + m_header.int_hdr_size, len_);
 
     return(len_);
   }
@@ -264,15 +271,15 @@ namespace eCAL
     if(!buf_)                                                             return(0);
     if((len_ + offset_) > static_cast<size_t>(m_header.max_data_size))    return(0);
     if(!m_memfile_info->mem_address)                                      return(0);
-    if((len_ + offset_ + sizeof(SMemFileHeader)) > m_memfile_info->size)  return(0);
+    if((len_ + offset_ + m_header.int_hdr_size) > m_memfile_info->size)  return(0);
 
     // update header
     m_header.cur_data_size = (unsigned long)(len_ + offset_);
-    SMemFileHeader* pHeader = static_cast<SMemFileHeader*>(m_memfile_info->mem_address);
+    SInternalHeader* pHeader = static_cast<SInternalHeader*>(m_memfile_info->mem_address);
     pHeader->cur_data_size = m_header.cur_data_size;
 
     // write content
-    memcpy(static_cast<char*>(m_memfile_info->mem_address) + offset_ + sizeof(SMemFileHeader), buf_, len_);
+    memcpy(static_cast<char*>(m_memfile_info->mem_address) + offset_ + m_header.int_hdr_size, buf_, len_);
 
     return(len_);
   }
