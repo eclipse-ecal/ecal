@@ -5,6 +5,9 @@
  eCAL Measurement Cutter
 =============================================
 
+.. seealso::
+   To learn more about the measurement format used by eCAL please check out the :ref:`measurement_format` chapter.
+
 | eCAL Measurement Cutter is a Command Line Application used to manipulate eCAL measurements. 
 | The executable is :file:`ecal_meas_cutter /.exe`.
 | It can trim measurements by time, exclude / include channels, modify base file names and split the measurement files by size.
@@ -12,6 +15,9 @@
 .. seealso::
    To learn more about the measurement format used by eCAL please check out the :ref:`measurement_format` chapter.
 
+.. note::
+   eCAL Measurement Cutter is available since eCAL 5.11.
+   
 Usage
 =====
 
@@ -76,11 +82,11 @@ The path where the converted measurement will be saved.
 .. note::
    When trying to include/ exclude channels using regex, use :file:`- re:`. Use one list item for one expression.
 
-4. Save log ( -s, --save_log)
+4. Save log ( -s, \--save_log)
 -----------------------------------
 When this flag is enabled, the application will also write its output in a log file. This file can be found in the folder :file:`log`, next to the executable.
 
-5. Disable verbose ( -q, --quiet)
+5. Disable verbose ( -q, \--quiet)
 -----------------------------------
 When this flag is enabled, console output is disabled except for error messages.
 
