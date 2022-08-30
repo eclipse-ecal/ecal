@@ -257,14 +257,11 @@ namespace
     // return success
     return set;
   }
-}
 
-namespace eCAL
-{
-  class CEvent
+  class CUnnamedEvent
   {
   public:
-    CEvent() : m_sigcount(0) { }
+    CUnnamedEvent() : m_sigcount(0) { }
 
     void set()
     {
@@ -373,6 +370,10 @@ namespace eCAL
     named_event_t*  m_event;
   };
 
+}
+
+namespace eCAL
+{
   bool gOpenEvent(EventHandleT* event_, const std::string& event_name_)
   {
     if(event_ == nullptr) return(false);
@@ -382,7 +383,7 @@ namespace eCAL
 
     if(event.name.empty())
     {
-      event.handle = new CEvent();
+      event.handle = new CUnnamedEvent();
     }
     else
     {
@@ -402,7 +403,7 @@ namespace eCAL
     if(!event_.handle) return false;
     if(event_.name.empty())
     {
-      delete static_cast<CEvent*>(event_.handle);
+      delete static_cast<CUnnamedEvent*>(event_.handle);
     }
     else
     {
@@ -416,7 +417,7 @@ namespace eCAL
     if(!event_.handle) return false;
     if(event_.name.empty())
     {
-      static_cast<CEvent*>(event_.handle)->set();
+      static_cast<CUnnamedEvent*>(event_.handle)->set();
     }
     else
     {
@@ -432,11 +433,11 @@ namespace eCAL
     {
       if(timeout_ < 0)
       {
-        return(static_cast<CEvent*>(event_.handle)->wait());
+        return(static_cast<CUnnamedEvent*>(event_.handle)->wait());
       }
       else
       {
-        return(static_cast<CEvent*>(event_.handle)->wait(std::chrono::milliseconds(timeout_)));
+        return(static_cast<CUnnamedEvent*>(event_.handle)->wait(std::chrono::milliseconds(timeout_)));
       }
     }
     else
