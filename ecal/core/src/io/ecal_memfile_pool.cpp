@@ -31,6 +31,7 @@
 #include "ecal_memfile_pool.h"
 
 #include <chrono>
+#include <cstring>
 #include <mutex>
 
 namespace eCAL
