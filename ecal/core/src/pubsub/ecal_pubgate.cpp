@@ -113,11 +113,11 @@ namespace eCAL
   {
     if(!m_created) return;
 
-    auto ecal_sample_topic = ecal_sample_.topic();
-    std::string topic_name = ecal_sample_topic.tname();
+    const auto& ecal_sample_topic = ecal_sample_.topic();
+    const std::string& topic_name = ecal_sample_topic.tname();
     std::string process_id = std::to_string(ecal_sample_topic.pid());
     std::string reader_par;
-    for (auto layer : ecal_sample_topic.tlayer())
+    for (const auto& layer : ecal_sample_topic.tlayer())
     {
       // layer parameter as protobuf message
       // this parameter is not used at all currently
@@ -128,9 +128,18 @@ namespace eCAL
     // store description
     if (g_descgate())
     {
-      std::string topic_type = ecal_sample_topic.ttype();
-      std::string topic_desc = ecal_sample_topic.tdesc();
-      g_descgate()->ApplyTopicDescription(topic_name, topic_type, topic_desc);
+      const std::string& topic_type = ecal_sample_topic.ttype();
+      const std::string& topic_desc = ecal_sample_topic.tdesc();
+
+      // Calculate the quality of the current info
+      ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
+      if (!topic_type.empty())
+        quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
+      if (!topic_desc.empty())
+        quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
+      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
+
+      g_descgate()->ApplyTopicDescription(topic_name, topic_type, topic_desc, quality);
     }
 
     // register local subscriber
@@ -146,12 +155,12 @@ namespace eCAL
   {
     if(!m_created) return;
 
-    auto ecal_sample_topic = ecal_sample_.topic();
-    std::string host_name  = ecal_sample_topic.hname();
-    std::string topic_name = ecal_sample_topic.tname();
+    const auto& ecal_sample_topic = ecal_sample_.topic();
+    const std::string& host_name  = ecal_sample_topic.hname();
+    const std::string& topic_name = ecal_sample_topic.tname();
     std::string process_id = std::to_string(ecal_sample_topic.pid());
     std::string reader_par;
-    for (auto layer : ecal_sample_topic.tlayer())
+    for (const auto& layer : ecal_sample_topic.tlayer())
     {
       // layer parameter as protobuf message
       // this parameter is not used at all currently
@@ -162,9 +171,18 @@ namespace eCAL
     // store description
     if (g_descgate())
     {
-      std::string topic_type = ecal_sample_topic.ttype();
-      std::string topic_desc = ecal_sample_topic.tdesc();
-      g_descgate()->ApplyTopicDescription(topic_name, topic_type, topic_desc);
+      const std::string& topic_type = ecal_sample_topic.ttype();
+      const std::string& topic_desc = ecal_sample_topic.tdesc();
+
+      // Calculate the quality of the current info
+      ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
+      if (!topic_type.empty())
+        quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
+      if (!topic_desc.empty())
+        quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
+      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
+
+      g_descgate()->ApplyTopicDescription(topic_name, topic_type, topic_desc, quality);
     }
 
     // register external subscriber

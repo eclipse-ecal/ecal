@@ -126,6 +126,119 @@ TEST(IO, CreateDestroy)
   eCAL::Finalize();
 }
 
+TEST(IO, TypeDescriptionStatic)
+{
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "pubsub_test");
+
+  // create publisher without type and description
+  eCAL::CPublisher pub("A");
+
+  // check type name
+  std::string ttype = pub.GetTypeName();
+  EXPECT_EQ("", ttype);
+
+  // check description
+  std::string tdesc = pub.GetDescription();
+  EXPECT_EQ("", tdesc);
+
+  // check type name
+  eCAL::Util::GetTopicTypeName("A", ttype);
+  EXPECT_EQ("", ttype);
+
+  // check description
+  eCAL::Util::GetTopicDescription("A", tdesc);
+  EXPECT_EQ("", tdesc);
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+TEST(IO, TypeDescriptionDynamic)
+{
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "pubsub_test");
+
+  {
+    std::string ttype("type_A");
+    std::string tdesc("desc_A");
+
+    // create publisher without type and description
+    eCAL::CPublisher pub("A", ttype, tdesc);
+
+    // check type name
+    std::string desc_type = pub.GetTypeName();
+    EXPECT_EQ(ttype, desc_type);
+
+    // check description
+    std::string desc_a = pub.GetDescription();
+    EXPECT_EQ(tdesc, desc_a);
+
+    // check type name
+    eCAL::Util::GetTopicTypeName("A", desc_type);
+    EXPECT_EQ(ttype, desc_type);
+
+    // check description
+    eCAL::Util::GetTopicDescription("A", desc_a);
+    EXPECT_EQ(tdesc, desc_a);
+
+    // set topic description
+    std::string ttdesc_new("desc_A_new");
+    pub.SetDescription(ttdesc_new);  // Already set descriptions are not overwritten in the database
+
+    // check type name (should not be influenced by SetDescription)
+    EXPECT_EQ(eCAL::Util::GetTopicTypeName("A"), ttype);
+
+    // check description of publiher
+    EXPECT_EQ(pub.GetDescription(), ttdesc_new);
+
+    // check description of general database
+    EXPECT_EQ(eCAL::Util::GetTopicDescription("A"), tdesc);
+  }
+
+  // Test replace empty description
+  {
+    auto pub2 = eCAL::CPublisher("B", "my_type", "");
+
+    EXPECT_EQ(eCAL::Util::GetTopicTypeName("B"), "my_type");
+    EXPECT_EQ(eCAL::Util::GetTopicDescription("B"), "");
+
+    pub2.SetDescription("my_description");
+
+    EXPECT_EQ(eCAL::Util::GetTopicTypeName("B"), "my_type");
+    EXPECT_EQ(eCAL::Util::GetTopicDescription("B"), "my_description");
+
+    // A new publisher cannot change the description any more
+    auto pub3 = eCAL::CPublisher("B", "my_type", "my_description_2");
+
+    EXPECT_EQ(eCAL::Util::GetTopicTypeName("B"), "my_type");
+    EXPECT_EQ(eCAL::Util::GetTopicDescription("B"), "my_description");
+  }
+
+  // Test Publisher replaces subscriber's description
+  {
+    auto sub = eCAL::CSubscriber("C", "type", "desc");
+
+    EXPECT_EQ(eCAL::Util::GetTopicTypeName("C"), "type");
+    EXPECT_EQ(eCAL::Util::GetTopicDescription("C"), "desc");
+
+    // A publisher without a description will NOT replace the subscribers data
+    auto pub1 = eCAL::CPublisher("C", "type2", "");
+    
+    EXPECT_EQ(eCAL::Util::GetTopicTypeName("C"), "type");
+    EXPECT_EQ(eCAL::Util::GetTopicDescription("C"), "desc");
+
+    // A publisher with a description will replace the subscribers data
+    auto pub2 = eCAL::CPublisher("C", "type3", "desc3");
+
+    EXPECT_EQ(eCAL::Util::GetTopicTypeName("C"), "type3");
+    EXPECT_EQ(eCAL::Util::GetTopicDescription("C"), "desc3");
+  }
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
 TEST(IO, SimpleMessage1)
 { 
   // default send / receive strings
