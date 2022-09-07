@@ -42,7 +42,6 @@ namespace eCAL
       , flushing_                    (false)
     {
       hdf5_writer_ = std::make_unique<eCAL::eh5::HDF5Meas>();
-      hdf5_writer_->SetOneFilePerChannelEnabled(job_config.GetOneFilePerTopicEnabled());
     }
 
     Hdf5WriterThread::~Hdf5WriterThread()
@@ -273,6 +272,7 @@ namespace eCAL
 
         hdf5_writer_->SetFileBaseName(host_name);
         hdf5_writer_->SetMaxSizePerFile(job_config_.GetMaxFileSize());
+        hdf5_writer_->SetOneFilePerChannelEnabled(job_config_.GetOneFilePerTopicEnabled());
       }
       else
       {
