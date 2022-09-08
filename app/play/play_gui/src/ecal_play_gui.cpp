@@ -334,7 +334,6 @@ void EcalplayGui::closeEvent(QCloseEvent* event)
   {
     QEcalPlay::instance()->saveChannelMapping();
   }
-// added this just for actions to run
   saveLayout();
   QMainWindow::closeEvent(event);
 }
