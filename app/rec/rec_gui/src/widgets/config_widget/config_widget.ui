@@ -28,26 +28,57 @@
    </property>
    <item row="0" column="0">
     <widget class="QLabel" name="measurement_directory_label">
+     <property name="minimumSize">
+      <size>
+       <width>10</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="text">
       <string>Meas dir:</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
+   <item row="0" column="2">
     <widget class="QEcalParserLineEdit" name="measurement_directory_lineedit">
+     <property name="minimumSize">
+      <size>
+       <width>10</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string>Measurement root directory</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="measurement_name_label">
+   <item row="3" column="0">
+    <widget class="QLabel" name="max_file_size_label">
+     <property name="minimumSize">
+      <size>
+       <width>10</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="text">
-      <string>Meas name:</string>
+      <string>Max file size:</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
+   <item row="6" column="0" colspan="3">
+    <widget class="QLabel" name="description_label">
+     <property name="minimumSize">
+      <size>
+       <width>10</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Description:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QLabel" name="measurement_name_warning">
@@ -61,6 +92,12 @@
      </item>
      <item>
       <widget class="QEcalParserLineEdit" name="measurement_name_lineedit">
+       <property name="minimumSize">
+        <size>
+         <width>10</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>Measurement name (will create a directory inside the measurement root directory)</string>
        </property>
@@ -68,7 +105,7 @@
      </item>
     </layout>
    </item>
-   <item row="2" column="1">
+   <item row="2" column="2">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="spacing">
       <number>1</number>
@@ -114,44 +151,27 @@
      </item>
     </layout>
    </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="max_file_size_label">
+   <item row="1" column="0">
+    <widget class="QLabel" name="measurement_name_label">
+     <property name="minimumSize">
+      <size>
+       <width>10</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="text">
-      <string>Max file size:</string>
+      <string>Meas name:</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="QSpinBox" name="max_file_size_spinbox">
-     <property name="toolTip">
-      <string>Maximum HDF-5 file size (will cause the recorder to split the measurement into multiple files)</string>
-     </property>
-     <property name="keyboardTracking">
-      <bool>false</bool>
-     </property>
-     <property name="suffix">
-      <string> MiB</string>
-     </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>2147483647</number>
-     </property>
-     <property name="singleStep">
-      <number>10</number>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0" colspan="2">
-    <widget class="QLabel" name="description_label">
-     <property name="text">
-      <string>Description:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0" colspan="2">
+   <item row="7" column="0" colspan="3">
     <widget class="QEcalParserTextEdit" name="description_textedit">
+     <property name="minimumSize">
+      <size>
+       <width>10</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string>Description saved to the doc/description.txt file</string>
      </property>
@@ -159,6 +179,60 @@
       <bool>false</bool>
      </property>
     </widget>
+   </item>
+   <item row="3" column="2">
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QSpinBox" name="max_file_size_spinbox">
+       <property name="minimumSize">
+        <size>
+         <width>10</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Maximum HDF-5 file size (will cause the recorder to split the measurement into multiple files)</string>
+       </property>
+       <property name="keyboardTracking">
+        <bool>false</bool>
+       </property>
+       <property name="suffix">
+        <string> MiB</string>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>2147483647</number>
+       </property>
+       <property name="singleStep">
+        <number>10</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="one_file_per_topic_checkbox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>10</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Create a separate HDF5 file for each eCAL topic</string>
+       </property>
+       <property name="text">
+        <string>1 File per topic</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
@@ -179,7 +253,6 @@
   <tabstop>measurement_directory_lineedit</tabstop>
   <tabstop>measurement_name_lineedit</tabstop>
   <tabstop>refresh_path_preview_button</tabstop>
-  <tabstop>max_file_size_spinbox</tabstop>
   <tabstop>description_textedit</tabstop>
  </tabstops>
  <resources>

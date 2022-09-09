@@ -29,15 +29,16 @@ namespace eCAL
 {
   namespace rec_server
   {
-    namespace config_v2to3
+    namespace config_v2to4
     {
-      constexpr const int NATIVE_CONFIG_VERSION = 3;
+      constexpr const int NATIVE_CONFIG_VERSION = 4;
 
       constexpr const char* ELEMENT_NAME_MAIN_CONFIG                                = "ecalRecServerConfig";
       constexpr const char* ATTRIBUTE_NAME_MAIN_CONFIG_VERSION                      = "config_version";
       constexpr const char* ELEMENT_NAME_ROOT_DIR                                   = "rootDirectory";
       constexpr const char* ELEMENT_NAME_MEAS_NAME                                  = "measurementName";
       constexpr const char* ELEMENT_NAME_MAX_FILE_SIZE_MIB                          = "maxFileSizeMib";
+      constexpr const char* ELEMENT_NAME_ONE_FILE_PER_TOPIC                         = "oneFilePerTopic";         // Added in v4
       constexpr const char* ELEMENT_NAME_DESCRIPTION                                = "description";
       constexpr const char* ELEMENT_NAME_ENABLED_RECORDERS                          = "recorders";
       constexpr const char* ELEMENT_NAME_ENABLED_RECORDER_ENTRY                     = "client";

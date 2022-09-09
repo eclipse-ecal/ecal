@@ -35,6 +35,7 @@ private slots:
   void measurementNameChanged          (const std::string& name);
   void updatePathPreviewAndWarningLabel();
   void maxFileSizeChanged              (unsigned int megabytes);
+  void oneFilePerTopicEnabledChanged   (bool enabled);
   void descriptionChanged              (const std::string& description);
 
 protected:

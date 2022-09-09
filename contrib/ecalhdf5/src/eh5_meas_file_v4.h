@@ -49,7 +49,7 @@ namespace eCAL
       /**
       * @brief Destructor
       **/
-      ~HDF5MeasFileV4();
+      ~HDF5MeasFileV4() override;
 
       /**
       * @brief Gets the header info for all data entries for the given channel
@@ -60,7 +60,7 @@ namespace eCAL
       *
       * @return                    true if succeeds, false if it fails
       **/
-      bool GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const;
+      bool GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const override;
     };
   }  //  namespace eh5
 }  //  namespace eCAL

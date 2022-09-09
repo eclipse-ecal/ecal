@@ -21,6 +21,7 @@ setconfig [--set-client <Hostname:Hosts,To,Record>] ...
   | [--meas-name <String>] 
   | [--max-file-size <Megabytes>]
   | [--description <String>]
+  | [--enable-one-file-per-topic <yes/no>] 
   | [--ftp-server <FTP_Server>]
   | [--delete-after-upload <yes/no>]
   | [--enable-built-in-client <yes/no>]

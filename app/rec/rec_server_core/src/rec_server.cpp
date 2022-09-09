@@ -90,14 +90,16 @@ namespace eCAL
     ////////////////////////////////////
     // Job Settings
     ////////////////////////////////////
-    void RecServer::SetMeasRootDir    (std::string meas_root_dir)       { rec_server_impl_->SetMeasRootDir(meas_root_dir); }
-    void RecServer::SetMeasName       (std::string meas_name)           { rec_server_impl_->SetMeasName(meas_name); }
-    void RecServer::SetMaxFileSizeMib (unsigned int max_file_size_mib)  { rec_server_impl_->SetMaxFileSizeMib(max_file_size_mib); }
-    void RecServer::SetDescription    (std::string description)         { rec_server_impl_->SetDescription(description); }
+    void RecServer::SetMeasRootDir           (std::string meas_root_dir)       { rec_server_impl_->SetMeasRootDir(meas_root_dir); }
+    void RecServer::SetMeasName              (std::string meas_name)           { rec_server_impl_->SetMeasName(meas_name); }
+    void RecServer::SetMaxFileSizeMib        (unsigned int max_file_size_mib)  { rec_server_impl_->SetMaxFileSizeMib(max_file_size_mib); }
+    void RecServer::SetOneFilePerTopicEnabled(bool enabled)                    { rec_server_impl_->SetOneFilePerTopicEnabled(enabled); }
+    void RecServer::SetDescription           (std::string description)         { rec_server_impl_->SetDescription(description); }
 
-    std::string  RecServer::GetMeasRootDir   () const                   { return rec_server_impl_->GetMeasRootDir(); }
+    std::string  RecServer::GetMeasRootDir   () const                   { return rec_server_impl_->GetMeasRootDir(); } 
     std::string  RecServer::GetMeasName      () const                   { return rec_server_impl_->GetMeasName(); }
     int64_t      RecServer::GetMaxFileSizeMib() const                   { return rec_server_impl_->GetMaxFileSizeMib(); }
+    bool         RecServer::GetOneFilePerTopicEnabled() const                   { return rec_server_impl_->GetOneFilePerTopicEnabled(); }
     std::string  RecServer::GetDescription   () const                   { return rec_server_impl_->GetDescription(); }
 
     ////////////////////////////////////
