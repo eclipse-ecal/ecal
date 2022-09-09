@@ -71,6 +71,10 @@ Program Listing for File eh5_meas.h
    
          void SetMaxSizePerFile(size_t size);
    
+         bool IsOneFilePerChannelEnabled() const;
+   
+         void SetOneFilePerChannelEnabled(bool enabled);
+   
          std::set<std::string> GetChannelNames() const;
    
          bool HasChannel(const std::string& channel_name) const;
