@@ -61,6 +61,7 @@ namespace eCAL
             , meas_name_arg           ("", "meas-name",     "Name of the measurement",                                                                           false, "", "String")
             , max_file_size_mib_arg   ("", "max-file-size", "Maximum file size of the recording files",                                                          false, "", "Megabytes")
             , description_arg         ("", "description",   "Description stored in the measurement folder.",                                                     false, "", "String")
+            , enable_one_file_per_topic_arg ("", "enable-one-file-per-topic", "Whether to separate each topic in HDF5 file.", false, false, "yes/no")
             , ftp_server_arg          ("", "ftp-server",    "The server where to upload to when uploading a measurement. Use \"internal\" for the integrated FTP Server. When using an external FTP Server, provide it in the following form: ftp://USERNAME:PASSWORD@HOSTNAME:PORT/path/to/root_dir", false, "", "FTP_Server")
             , delete_after_upload_arg ("", "delete-after-upload", "Whether to delete the local measurement files after they have been uploaded to an FTP server.", false, false, "yes/no")
             , enable_built_in_client_arg("", "enable-built-in-client", "Whether the built-in recorder client of the host-application shall be used for recording. If turned off, the host application will rely on the presence of a separate rec-client for localhost recording.", false, false, "yes/no")
@@ -81,6 +82,7 @@ namespace eCAL
               &description_arg,
               &ftp_server_arg,
               &delete_after_upload_arg,
+              &enable_one_file_per_topic_arg,
               &enable_built_in_client_arg,
               &help_arg,
               &unlabled_arg,
@@ -127,6 +129,7 @@ namespace eCAL
           TCLAP::ValueArg<std::string>          meas_name_arg;
           TCLAP::ValueArg<std::string>          max_file_size_mib_arg; // => unsigned int!
           TCLAP::ValueArg<std::string>          description_arg;
+          CustomTclap::FuzzyValueSwitchArgBool  enable_one_file_per_topic_arg;
           TCLAP::ValueArg<std::string>          ftp_server_arg;
           CustomTclap::FuzzyValueSwitchArgBool  delete_after_upload_arg;
           CustomTclap::FuzzyValueSwitchArgBool  enable_built_in_client_arg;
@@ -161,6 +164,7 @@ namespace eCAL
         static eCAL::rec::Error setMeasName         (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
         static eCAL::rec::Error setMaxFileSize      (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
         static eCAL::rec::Error setDescription      (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
+        static eCAL::rec::Error setOneFilePerTopicEnabled(const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, bool param);
       };
     }
   }

@@ -52,6 +52,9 @@ namespace eCAL
       void SetMaxFileSize(int64_t max_file_size_mb);
       int64_t GetMaxFileSize() const;
 
+      void SetOneFilePerTopicEnabled(bool enabled);
+      bool GetOneFilePerTopicEnabled() const;
+
       void SetDescription(const std::string& description);
       std::string GetDescription() const;
 
@@ -72,6 +75,7 @@ namespace eCAL
       std::string  meas_root_dir_;
       std::string  meas_name_;
       int64_t      max_file_size_mb_;
+      bool         one_file_per_topic_;
       std::string  description_;
     };
   }

@@ -101,7 +101,16 @@ namespace eCAL
     {
       for (auto method : ecal_sample_service.methods())
       {
-        g_descgate()->ApplyServiceDescription(ecal_sample_service.sname(), method.mname(), method.req_type(), method.req_desc(), method.resp_type(), method.resp_desc());
+        // Calculate the quality of the current info
+        ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
+        if (!(method.req_type().empty() && method.resp_type().empty()))
+          quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
+        if (!(method.req_desc().empty() && method.resp_desc().empty()))
+          quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
+        quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
+        quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PUBLISHER;
+
+        g_descgate()->ApplyServiceDescription(ecal_sample_service.sname(), method.mname(), method.req_type(), method.req_desc(), method.resp_type(), method.resp_desc(), quality);
       }
     }
 

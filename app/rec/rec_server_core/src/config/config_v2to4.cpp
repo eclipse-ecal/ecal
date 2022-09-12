@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <config/config_v2to3.h>
+#include <config/config_v2to4.h>
 
 #include <algorithm>
 #include <limits>
@@ -33,7 +33,7 @@ namespace eCAL
 {
   namespace rec_server
   {
-    namespace config_v2to3
+    namespace config_v2to4
     {
       bool writeConfigFile(const eCAL::rec_server::RecServerImpl& rec_server, const std::string& path)
       {
@@ -64,6 +64,12 @@ namespace eCAL
             auto max_file_size_element = document.NewElement(ELEMENT_NAME_MAX_FILE_SIZE_MIB);
             max_file_size_element->SetText(std::to_string(rec_server.GetMaxFileSizeMib()).c_str());
             main_config_element->InsertEndChild(max_file_size_element);
+          }
+          {
+            // one file per topic
+            auto one_file_per_topic_element = document.NewElement(ELEMENT_NAME_ONE_FILE_PER_TOPIC);
+            one_file_per_topic_element->SetText(rec_server.GetOneFilePerTopicEnabled() ? "true" : "false");
+            main_config_element->InsertEndChild(one_file_per_topic_element);
           }
           {
             // description
@@ -288,6 +294,32 @@ namespace eCAL
           else
           {
             eCAL::rec::EcalRecLogger::Instance()->warn("Max file size element is missing");
+          }
+        }
+
+        // one_file_per_topic
+        {
+          auto one_file_per_topic_element = main_config_element->FirstChildElement(ELEMENT_NAME_ONE_FILE_PER_TOPIC);
+          if ((one_file_per_topic_element != nullptr)
+            && (one_file_per_topic_element->GetText() != nullptr))
+          {
+            std::string one_file_per_topic_string = one_file_per_topic_element->GetText();
+            if (one_file_per_topic_string == "true")
+            {
+              config_output.one_file_per_topic_ = true;
+            }
+            else if (one_file_per_topic_string == "false")
+            {
+              config_output.one_file_per_topic_ = false;
+            }
+            else
+            {
+              eCAL::rec::EcalRecLogger::Instance()->warn("Error parsing one-file-per-topic setting");
+            }
+          }
+          else
+          {
+            eCAL::rec::EcalRecLogger::Instance()->warn("One-file-per-topic element is missing");
           }
         }
         

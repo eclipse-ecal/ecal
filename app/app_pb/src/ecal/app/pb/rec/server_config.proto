@@ -57,6 +57,7 @@ message RecServerConfig
   string                         root_dir                   =  1;               // The root directory where to save the measurements to
   string                         meas_name                  =  2;               // The name for new measurements. This name will be used for the name of a sub-directory in the root dir.
   int64                          max_file_size_mib          =  3;               // Max file size in MiB for HDF5 files
+  bool                           one_file_per_topic         =  11;              // Whether to create 1 HDF5 file per eCAL Topic
   string                         description                =  4;               // The description for new measurements. Will be stored in the /doc/direction.txt file.
   map<string, RecClientConfig>   enabled_clients_config     =  5;               // All enabled rec clients along with their specific configuration
   bool                           pre_buffer_enabled         =  6;               // Whether pre-buffering is enabled

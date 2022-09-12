@@ -950,6 +950,11 @@ namespace eCAL
       job_config_.SetMaxFileSize(max_file_size_mib);
     }
 
+    void RecServerImpl::SetOneFilePerTopicEnabled(bool enabled)
+    {
+      job_config_.SetOneFilePerTopicEnabled(enabled);
+    }
+
     void RecServerImpl::SetDescription(const std::string& description)
     {
       job_config_.SetDescription(description);
@@ -969,6 +974,11 @@ namespace eCAL
     int64_t RecServerImpl::GetMaxFileSizeMib() const
     {
       return job_config_.GetMaxFileSize();
+    }
+
+    bool RecServerImpl::GetOneFilePerTopicEnabled() const
+    {
+      return job_config_.GetOneFilePerTopicEnabled();
     }
 
     std::string RecServerImpl::GetDescription() const
@@ -1854,6 +1864,7 @@ namespace eCAL
       config.root_dir_                  = GetMeasRootDir();
       config.meas_name_                 = GetMeasName();
       config.max_file_size_             = GetMaxFileSizeMib();
+      config.one_file_per_topic_        = GetOneFilePerTopicEnabled();
       config.description_               = GetDescription();
       config.enabled_clients_config_    = GetEnabledRecClients();
       config.pre_buffer_enabled_        = GetPreBufferingEnabled();

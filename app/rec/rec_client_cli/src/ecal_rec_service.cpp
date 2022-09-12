@@ -621,6 +621,22 @@ bool EcalRecService::strToBool(const std::string& str)
   }
 
   //////////////////////////////////////
+  // one_file_per_topic             //
+  //////////////////////////////////////
+  {
+    auto it = config.items().find("one_file_per_topic");
+    if (it != config.items().end())
+    {
+      std::string one_file_per_topic = it->second;
+      job_config.SetOneFilePerTopicEnabled(strToBool(one_file_per_topic));
+    }
+    else
+    {
+      job_config.SetOneFilePerTopicEnabled(false);
+    }
+  }
+
+  //////////////////////////////////////
   // description                      //
   //////////////////////////////////////
   {
