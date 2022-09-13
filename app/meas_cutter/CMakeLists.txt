@@ -20,6 +20,7 @@ project(meas_cutter)
 
 find_package(Threads REQUIRED)
 find_package(tclap REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 set(meas_cutter_src
     src/main.cpp
