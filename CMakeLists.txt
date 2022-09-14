@@ -111,7 +111,7 @@ option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"          
 
 if(WIN32)
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                          ON)
-  option(ECAL_THIRDPARTY_BUILD_YAML_CPP        "Build yaml-cpp with eCAL"                                          ON)
+  option(ECAL_THIRDPARTY_BUILD_YAML-CPP        "Build yaml-cpp with eCAL"                                          ON)
   option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                              ON)
   option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                              ON)
   cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                      ON  "HAS_QT5" OFF)
@@ -120,7 +120,7 @@ else()
   option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                              OFF)
   option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                              OFF)
   cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                      OFF "HAS_QT5" OFF)
-  option(ECAL_THIRDPARTY_BUILD_YAML_CPP        "Build yaml-cpp with eCAL"                                          OFF)
+  option(ECAL_THIRDPARTY_BUILD_YAML-CPP        "Build yaml-cpp with eCAL"                                          OFF)
 endif()
 
 # This should be ON, unless build ecal hdf5 for Matlab usage
@@ -195,7 +195,7 @@ set(possible_subprojects
   HDF5
   CMakeFunctions
   qwt
-  yaml_cpp
+  yaml-cpp
 )
 
 # We should rename the option, but don't know how to do in in a
@@ -572,7 +572,7 @@ message(STATUS "ECAL_THIRDPARTY_BUILD_GTEST                    : ${ECAL_THIRDPAR
 message(STATUS "ECAL_THIRDPARTY_BUILD_PROTOBUF                 : ${ECAL_THIRDPARTY_BUILD_PROTOBUF}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_CURL                     : ${ECAL_THIRDPARTY_BUILD_CURL}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_HDF5                     : ${ECAL_THIRDPARTY_BUILD_HDF5}")
-message(STATUS "ECAL_THIRDPARTY_BUILD_YAML_CPP                 : ${ECAL_THIRDPARTY_BUILD_YAML_CPP}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_YAML-CPP                 : ${ECAL_THIRDPARTY_BUILD_YAML-CPP}")
 message(STATUS "ECAL_LINK_HDF5_SHARED                          : ${ECAL_LINK_HDF5_SHARED}")
 message(STATUS "CPACK_PACK_WITH_INNOSETUP                      : ${CPACK_PACK_WITH_INNOSETUP}")
 
