@@ -16,7 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(stepper)
+project(play_stepper)
 find_package(tclap REQUIRED)
 
 
