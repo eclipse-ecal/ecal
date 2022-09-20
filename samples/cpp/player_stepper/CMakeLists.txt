@@ -34,6 +34,6 @@ target_compile_definitions(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME} eCAL::core eCAL::pb tclap::tclap)
 
-ecal_install_app(${PROJECT_NAME})
+ecal_install_sample(${PROJECT_NAME})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/util)
