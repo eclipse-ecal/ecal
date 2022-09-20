@@ -24,7 +24,7 @@ set(ecalstepper_src
   src/ecal_stepper.cpp
 )
 
-ecal_add_app_console(${PROJECT_NAME} ${ecalstepper_src})
+ecal_add_sample(${PROJECT_NAME} ${ecalstepper_src})
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
