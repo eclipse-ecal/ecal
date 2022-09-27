@@ -94,8 +94,6 @@ set(ecal_pubsub_cpp_src
 
 set(ecal_readwrite_cpp_src
     src/readwrite/ecal_reader.cpp
-    src/readwrite/ecal_reader_inproc.cpp
-    src/readwrite/ecal_reader_udp.cpp
     src/readwrite/ecal_reader_udp_mc.cpp
     src/readwrite/ecal_reader_tcp.cpp
     src/readwrite/ecal_writer.cpp
@@ -140,8 +138,8 @@ set(ecal_cmn_cpp_src
     src/ecal_log.cpp
     src/ecal_log_impl.cpp
     src/ecal_process.cpp
-    src/ecal_reggate.cpp
-    src/ecal_register.cpp
+    src/ecal_registration_provider.cpp
+    src/ecal_registration_receiver.cpp
     src/ecal_thread.cpp
     src/ecal_time.cpp
     src/ecal_timegate.cpp
@@ -214,10 +212,8 @@ set(ecal_pubsub_header_src
 
 set(ecal_readwrite_header_src
     src/readwrite/ecal_reader.h
-    src/readwrite/ecal_reader_inproc.h
     src/readwrite/ecal_reader_layer.h
     src/readwrite/ecal_reader_tcp.h
-    src/readwrite/ecal_reader_udp.h
     src/readwrite/ecal_reader_udp_mc.h
     src/readwrite/ecal_writer.h
     src/readwrite/ecal_writer_base.h
@@ -262,8 +258,8 @@ set(ecal_cmn_header_src
     src/ecal_global_accessors.h
     src/ecal_globals.h
     src/ecal_log_impl.h
-    src/ecal_reggate.h
-    src/ecal_register.h
+    src/ecal_registration_provider.h
+    src/ecal_registration_receiver.h
     src/ecal_thread.h
     src/ecal_timegate.h
     $<$<BOOL:${WIN32}>:src/ecal_win_main.h>
@@ -465,9 +461,9 @@ target_link_libraries(${PROJECT_NAME}
     asio::asio
     tclap::tclap
     simpleini::simpleini
-    eCAL::pb
+    eCAL::core_pb
     Threads::Threads
-    eCAL::utils
+    eCAL::ecal-utils
     tcp_pubsub::tcp_pubsub
 )
 

@@ -76,7 +76,7 @@ bool eCAL::eh5::HDF5MeasFileV1::Open(const std::string& path, eAccessType access
 
   file_id_ = H5Fopen(path.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
 
-  if (HDF5MeasFileV1::IsOk() == true)
+  if (HDF5MeasFileV1::IsOk())
   {
     auto channels = HDF5MeasFileV1::GetChannelNames();
     if (channels.size() == 1)
@@ -94,7 +94,7 @@ bool eCAL::eh5::HDF5MeasFileV1::Open(const std::string& path, eAccessType access
 
 bool eCAL::eh5::HDF5MeasFileV1::Close()
 {
-  if (HDF5MeasFileV1::IsOk() == true && H5Fclose(file_id_) >= 0)
+  if (HDF5MeasFileV1::IsOk() && H5Fclose(file_id_) >= 0)
   {
     file_id_ = -1;
     return true;
@@ -132,6 +132,17 @@ void eCAL::eh5::HDF5MeasFileV1::SetMaxSizePerFile(size_t /*size*/)
   ReportUnsupportedAction();
 }
 
+bool eCAL::eh5::HDF5MeasFileV1::IsOneFilePerChannelEnabled() const
+{
+  ReportUnsupportedAction();
+  return false;
+}
+
+void eCAL::eh5::HDF5MeasFileV1::SetOneFilePerChannelEnabled(bool /*enabled*/)
+{
+  ReportUnsupportedAction();
+}
+
 std::set<std::string> eCAL::eh5::HDF5MeasFileV1::GetChannelNames() const
 {
   std::set<std::string> channels;
@@ -139,7 +150,7 @@ std::set<std::string> eCAL::eh5::HDF5MeasFileV1::GetChannelNames() const
   std::string channel_name;
   GetAttributeValue(file_id_, kChnNameAttribTitle, channel_name);
 
-  if (channel_name.empty() == false)
+  if (!channel_name.empty())
     channels.insert(channel_name);
 
   return channels;
@@ -157,7 +168,7 @@ std::string eCAL::eh5::HDF5MeasFileV1::GetChannelDescription(const std::string& 
 {
   std::string description;
 
-  if (EcalUtils::String::Icompare(channel_name, channel_name_) == true)
+  if (EcalUtils::String::Icompare(channel_name, channel_name_))
     GetAttributeValue(file_id_, kChnDescAttrTitle, description);
 
   return  description;
@@ -172,7 +183,7 @@ std::string eCAL::eh5::HDF5MeasFileV1::GetChannelType(const std::string& channel
 {
   std::string type;
 
-  if (EcalUtils::String::Icompare(channel_name, channel_name_) == true)
+  if (EcalUtils::String::Icompare(channel_name, channel_name_))
     GetAttributeValue(file_id_, kChnTypeAttrTitle, type);
 
   return type;
@@ -187,7 +198,7 @@ long long eCAL::eh5::HDF5MeasFileV1::GetMinTimestamp(const std::string& /*channe
 {
   long long ret_val = 0;
 
-  if (entries_.empty() == false)
+  if (!entries_.empty())
   {
     ret_val = entries_.begin()->RcvTimestamp;
   }
@@ -199,7 +210,7 @@ long long eCAL::eh5::HDF5MeasFileV1::GetMaxTimestamp(const std::string& /*channe
 {
   long long ret_val = 0;
 
-  if (entries_.empty() == false)
+  if (!entries_.empty())
   {
     ret_val = entries_.rbegin()->RcvTimestamp;
   }
@@ -211,9 +222,9 @@ bool eCAL::eh5::HDF5MeasFileV1::GetEntriesInfo(const std::string& channel_name, 
 {
   entries.clear();
 
-  if (EcalUtils::String::Icompare(channel_name, channel_name_) == false) return false;
+  if (!EcalUtils::String::Icompare(channel_name, channel_name_)) return false;
 
-  if (HDF5MeasFileV1::IsOk() == false) return false;
+  if (!HDF5MeasFileV1::IsOk()) return false;
 
   auto dataset_id = H5Dopen(file_id_, kTimestampAttrTitle.c_str(), H5P_DEFAULT);
 
@@ -247,7 +258,7 @@ bool eCAL::eh5::HDF5MeasFileV1::GetEntriesInfoRange(const std::string& /*channel
 {
   bool ret_val = false;
 
-  if (entries_.empty() == false)
+  if (!entries_.empty())
   {
     if (begin == 0) begin = entries.begin()->RcvTimestamp;
     if (end == 0) end = entries.rbegin()->RcvTimestamp;
@@ -281,7 +292,7 @@ bool eCAL::eh5::HDF5MeasFileV1::GetEntryData(long long entry_id, void* data) con
 {
   if (data == nullptr) return false;
 
-  if (this->IsOk() == false) return false;
+  if (!this->IsOk()) return false;
 
   auto dataset_id = H5Dopen(file_id_, std::to_string(entry_id).c_str(), H5P_DEFAULT);
 
@@ -320,7 +331,7 @@ void eCAL::eh5::HDF5MeasFileV1::DisconnectPreSplitCallback()
   ReportUnsupportedAction();
 }
 
-bool eCAL::eh5::HDF5MeasFileV1::GetAttributeValue(hid_t obj_id, const std::string& name, std::string& value) const
+bool eCAL::eh5::HDF5MeasFileV1::GetAttributeValue(hid_t obj_id, const std::string& name, std::string& value) 
 {
   bool ret_val = false;
   //  empty attribute value
@@ -328,7 +339,7 @@ bool eCAL::eh5::HDF5MeasFileV1::GetAttributeValue(hid_t obj_id, const std::strin
   if (obj_id < 0) return false;
 
   //  check if attribute exists
-  if (H5Aexists(obj_id, name.c_str()))
+  if (H5Aexists(obj_id, name.c_str()) != 0)
   {
     //  open attribute by name, getting the attribute index
     hid_t attr_id = H5Aopen_name(obj_id, name.c_str());
@@ -374,7 +385,7 @@ bool eCAL::eh5::HDF5MeasFileV1::GetAttributeValue(hid_t obj_id, const std::strin
   return ret_val;
 }
 
-void eCAL::eh5::HDF5MeasFileV1::ReportUnsupportedAction() const
+void eCAL::eh5::HDF5MeasFileV1::ReportUnsupportedAction() 
 {
   std::cout << "eCALHDF5 file version bellow 2.0 support only readonly access type. Desired action not supported.\n";
 }

@@ -25,7 +25,7 @@
 
 #include "ecal_def.h"
 #include "ecal_globals.h"
-#include "ecal_register.h"
+#include "ecal_registration_provider.h"
 #include "ecal_subgate.h"
 
 #include "readwrite/ecal_reader.h"
@@ -119,8 +119,17 @@ namespace eCAL
     // register to subscriber gateway for publisher memory file receive thread
     g_subgate()->Register(topic_name_, m_datareader);
 
+    // Calculate the quality of the current info
+    ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
+    if (!topic_type_.empty())
+      quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
+    if (!topic_desc_.empty())
+      quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
+    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
+    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
+
     // register to description gateway for type / description checking
-    g_descgate()->ApplyTopicDescription(topic_name_, topic_type_, topic_desc_);
+    g_descgate()->ApplyTopicDescription(topic_name_, topic_type_, topic_desc_, quality);
 
     // we made it :-)
     m_created = true;
@@ -137,8 +146,8 @@ namespace eCAL
     RemReceiveCallback();
 
     // first unregister data reader
-    if(g_subgate())         g_subgate()->Unregister(m_datareader->GetTopicName(), m_datareader);
-    if(g_entity_register()) g_entity_register()->UnregisterTopic(m_datareader->GetTopicName(), m_datareader->GetTopicID());
+    if(g_subgate())               g_subgate()->Unregister(m_datareader->GetTopicName(), m_datareader);
+    if(g_registration_provider()) g_registration_provider()->UnregisterTopic(m_datareader->GetTopicName(), m_datareader->GetTopicID());
 #ifndef NDEBUG
     // log it
     if (g_log()) g_log()->Log(log_level_debug1, std::string(m_datareader->GetTopicName() + "::CSubscriber::Destroy"));

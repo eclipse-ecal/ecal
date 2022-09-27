@@ -114,7 +114,7 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 ## eCAL eco system tools / utilities / interfaces
 * [ecal-toolbox](https://github.com/mathworks/ecal-toolbox) - Mathworks simulink toolbox for eCAL
 * [ecal-mongraph](https://github.com/ecal-io/ecal-mongraph) - Simple graph visualization for eCAL
-* [gpsd2ecal](https://github.com/eclipse-ecal/gpsd2ecal) - eCAL gpsd interface
+* [ecal-gpsd-client](https://github.com/eclipse-ecal/ecal-gpsd-client) - eCAL gpsd client
 
 ## eCAL & ROS
 * [rmw_ecal](https://github.com/eclipse-ecal/rmw_ecal) - eCAL / ROS2 middleware layer

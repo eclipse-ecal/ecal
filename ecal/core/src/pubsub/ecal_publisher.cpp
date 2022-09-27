@@ -29,7 +29,7 @@
 #include "ecal_config_reader_hlp.h"
 #include "ecal_globals.h"
 #include "ecal_pubgate.h"
-#include "ecal_register.h"
+#include "ecal_registration_provider.h"
 
 #include "readwrite/ecal_writer.h"
 
@@ -150,8 +150,18 @@ namespace eCAL
     // register publisher gateway (for publisher memory file and event name)
     g_pubgate()->Register(topic_name_, m_datawriter);
 
+    // Calculate the quality of the current info
+    ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
+    if (!topic_type_.empty())
+      quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
+    if (!topic_desc_.empty())
+      quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
+    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
+    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
+    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PUBLISHER;
+
     // register to description gateway for type / description checking
-    g_descgate()->ApplyTopicDescription(topic_name_, topic_type_, topic_desc_);
+    g_descgate()->ApplyTopicDescription(topic_name_, topic_type_, topic_desc_, quality);
 
     // we made it :-)
     m_created = true;
@@ -168,8 +178,8 @@ namespace eCAL
     m_datawriter->Destroy();
 
     // unregister data writer
-    if(g_pubgate())         g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
-    if(g_entity_register()) g_entity_register()->UnregisterTopic(m_datawriter->GetTopicName(), m_datawriter->GetTopicID());
+    if(g_pubgate())               g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
+    if(g_registration_provider()) g_registration_provider()->UnregisterTopic(m_datawriter->GetTopicName(), m_datawriter->GetTopicID());
 #ifndef NDEBUG
     // log it
     if (g_log()) g_log()->Log(log_level_debug1, std::string(m_datawriter->GetTopicName() + "::CPublisher::Destroy"));
@@ -196,6 +206,24 @@ namespace eCAL
   bool CPublisher::SetDescription(const std::string& topic_desc_)
   {
     if(!m_datawriter) return false;
+
+    if (g_descgate())
+    {
+      const std::string topic_type = m_datawriter->GetTypeName();
+
+      // Calculate the quality of the current info
+      ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
+      if (!topic_type.empty())
+        quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
+      if (!topic_desc_.empty())
+        quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
+      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
+      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
+      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PUBLISHER;
+
+      g_descgate()->ApplyTopicDescription(m_datawriter->GetTopicName(), topic_type, topic_desc_, quality);
+    }
+
     return m_datawriter->SetDescription(topic_desc_);
   }
 
@@ -309,7 +337,7 @@ namespace eCAL
     }
 
     // send content via data writer layer
-    bool sent = 0;
+    bool sent(false);
     if (time_ == -1) sent = m_datawriter->Write(buf_, len_, eCAL::Time::GetMicroSeconds(), m_id);
     else             sent = m_datawriter->Write(buf_, len_, time_, m_id);
 

@@ -56,13 +56,14 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   spdlog::spdlog
   protobuf::libprotobuf
   eCAL::core
-  eCAL::pb
+  eCAL::app_pb
+  eCAL::ecaltime_pb
   eCAL::hdf5
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
   ThreadingUtils
-  eCAL::utils
+  eCAL::ecal-utils
 )
 
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"

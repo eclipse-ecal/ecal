@@ -18,19 +18,14 @@
 */
 
 /**
- * @brief  eCAL udp multicast reader
+ * @brief  udp multicast reader and layer
 **/
 
 #pragma once
 
-#include <ecal/ecal_config.h>
-
-#include "readwrite/ecal_reader_udp.h"
 #include "readwrite/ecal_reader_layer.h"
 
-#include "ecal_config_reader_hlp.h"
-#include "ecal_thread.h"
-#include "topic2mcast.h"
+#include "io/rcv_sample.h"
 
 #include <map>
 #include <memory>
@@ -38,65 +33,31 @@
 
 namespace eCAL
 {
-  // ecal udp multicast data layer
-  class CMulticastLayer : public CReaderLayer<CMulticastLayer>
+  ////////////////
+  // READER
+  ////////////////
+  class CDataReaderUDP : public CSampleReceiver
   {
   public:
-    CMulticastLayer() : started(false) {};
-    ~CMulticastLayer()
-    {
-      thread.Stop();
-    };
+    bool HasSample(const std::string& sample_name_);
+    size_t ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_);
+  };
 
-    void Initialize()
-    {
-      SReceiverAttr attr;
-      attr.ipaddr = Config::GetUdpMulticastGroup();
-      attr.port = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
-      attr.unicast = false;
-      attr.loopback = true;
-      attr.rcvbuf = Config::GetUdpMulticastRcvBufSizeBytes();
-      rcv.Create(attr);
-    }
+  ////////////////
+  // LAYER
+  ////////////////
+  class CUDPReaderLayer : public CReaderLayer<CUDPReaderLayer>
+  {
+  public:
+    CUDPReaderLayer();
+    ~CUDPReaderLayer();
 
-    void AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
-    {
-      if (!started)
-      {
-        thread.Start(0, std::bind(&CDataReaderUDP::Receive, &reader, &rcv));
-        started = true;
-      }
-      // add topic name based multicast address
-      std::string mcast_address = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
-      if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
-      {
-        topic_name_mcast_map.emplace(std::pair<std::string, int>(mcast_address, 0));
-        rcv.AddMultiCastGroup(mcast_address.c_str());
-      }
-      topic_name_mcast_map[mcast_address]++;
-    }
+    void Initialize();
 
-    void RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
-    {
-      std::string mcast_address = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
-      if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
-      {
-        // this should never happen
-      }
-      else
-      {
-        topic_name_mcast_map[mcast_address]--;
-        if (topic_name_mcast_map[mcast_address] == 0)
-        {
-          rcv.RemMultiCastGroup(mcast_address.c_str());
-          topic_name_mcast_map.erase(mcast_address);
-        }
-      }
-    }
+    void AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/);
+    void RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/);
 
-    void SetConnectionParameter(SReaderLayerPar& /*par_*/)
-    {
-    }
+    void SetConnectionParameter(SReaderLayerPar& /*par_*/) {}
 
   private:
     bool                       started;

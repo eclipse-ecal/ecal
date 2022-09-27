@@ -27,7 +27,7 @@
 #include <rec_client_core/ecal_rec_logger.h>
 
 #include "config_v1.h"
-#include "config_v2to3.h"
+#include "config_v2to4.h"
 
 
 namespace eCAL
@@ -47,20 +47,21 @@ namespace eCAL
         }
 
         // Set settings that cannot fail
-        rec_server.SetMeasRootDir        (config.root_dir_);
-        rec_server.SetMeasName           (config.meas_name_);
-        rec_server.SetMaxFileSizeMib     (config.max_file_size_);
-        rec_server.SetDescription        (config.description_);
-        rec_server.SetPreBufferingEnabled(config.pre_buffer_enabled_);
-        rec_server.SetMaxPreBufferLength (config.pre_buffer_length_);
-        rec_server.SetUploadConfig       (config.upload_config_);
+        rec_server.SetMeasRootDir             (config.root_dir_);
+        rec_server.SetMeasName                (config.meas_name_);
+        rec_server.SetMaxFileSizeMib          (config.max_file_size_);
+        rec_server.SetDescription             (config.description_);
+        rec_server.SetOneFilePerTopicEnabled  (config.one_file_per_topic_);
+        rec_server.SetPreBufferingEnabled     (config.pre_buffer_enabled_);
+        rec_server.SetMaxPreBufferLength      (config.pre_buffer_length_);
+        rec_server.SetUploadConfig            (config.upload_config_);
 
         return true;
       }
 
       bool writeConfigToFile(const eCAL::rec_server::RecServerImpl& rec_server, const std::string& path)
       {
-        return config_v2to3::writeConfigFile(rec_server, path);
+        return config_v2to4::writeConfigFile(rec_server, path);
       }
 
       bool readConfigFromFile(eCAL::rec_server::RecServerImpl& rec_server, const std::string& path, int* version)
@@ -99,11 +100,11 @@ namespace eCAL
 
         for(auto main_config_element = document.FirstChildElement(); main_config_element != nullptr; main_config_element = main_config_element->NextSiblingElement())
         {
-          if (std::string(main_config_element->Name()) == config_v2to3::ELEMENT_NAME_MAIN_CONFIG)
+          if (std::string(main_config_element->Name()) == config_v2to4::ELEMENT_NAME_MAIN_CONFIG)
           {
-            if (main_config_element->Attribute(config_v2to3::ATTRIBUTE_NAME_MAIN_CONFIG_VERSION) != nullptr)
+            if (main_config_element->Attribute(config_v2to4::ATTRIBUTE_NAME_MAIN_CONFIG_VERSION) != nullptr)
             {
-              std::string config_version_number_string = main_config_element->Attribute(config_v2to3::ATTRIBUTE_NAME_MAIN_CONFIG_VERSION);
+              std::string config_version_number_string = main_config_element->Attribute(config_v2to4::ATTRIBUTE_NAME_MAIN_CONFIG_VERSION);
               int config_version_number = 0;
               try
               {
@@ -125,44 +126,28 @@ namespace eCAL
           }
         }
 
-        if (config_elements.find(NATIVE_CONFIG_VERSION) != config_elements.end())
+        // Read a v2 and updwarts config, starting with the latest native version.
+        for (int v = NATIVE_CONFIG_VERSION; v >= 2; v--)
         {
-          // Load a v2 config
-          bool success = applyConfig(config_v2to3::readConfig(config_elements[NATIVE_CONFIG_VERSION]), rec_server);
-          if (success && (version != nullptr))
+          if (config_elements.find(v) != config_elements.end())
           {
-            (*version) = NATIVE_CONFIG_VERSION;
+            // Load config
+            bool success = applyConfig(config_v2to4::readConfig(config_elements[v]), rec_server);
+            if (success && (version != nullptr))
+            {
+              (*version) = v;
+            }
+            return success;
           }
-          return success;
         }
-        else if (config_elements.find(2) != config_elements.end())
-        {
-          // Load a v2 config
-          bool success = applyConfig(config_v2to3::readConfig(config_elements[2]), rec_server);
-          if (success && (version != nullptr))
-          {
-            (*version) = 2;
-          }
-          return success;
-        }
-        else if (config_elements.find(1) != config_elements.end())
-        {
-          // Load a v1 config
-          bool success = applyConfig(config_v1::readConfig(config_elements[1]), rec_server);
-          if (success && (version != nullptr))
-          {
-            (*version) = 1;
-          }
-          return success;
-        }
-        else
+
         {
           // Load some other config, although the version is not known
           for (const auto& version_config_pair : config_elements)
           {
             if (version_config_pair.first > NATIVE_CONFIG_VERSION)
             {
-              bool success = applyConfig(config_v2to3::readConfig(version_config_pair.second), rec_server);
+              bool success = applyConfig(config_v2to4::readConfig(version_config_pair.second), rec_server);
               if (success && (version != nullptr))
               {
                 (*version) = version_config_pair.first;
@@ -174,7 +159,7 @@ namespace eCAL
           // Load an un-versioned config
           if (config_elements.find(0) != config_elements.end())
           {
-            bool success = applyConfig(config_v2to3::readConfig(config_elements[0]), rec_server);
+            bool success = applyConfig(config_v2to4::readConfig(config_elements[0]), rec_server);
             if (success && (version != nullptr))
             {
               (*version) = 0;

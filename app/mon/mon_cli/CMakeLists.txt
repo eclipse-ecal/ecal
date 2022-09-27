@@ -46,7 +46,7 @@ target_link_libraries(${PROJECT_NAME}
   protobuf::libprotobuf
   tclap::tclap
   eCAL::core
-  eCAL::pb
+  eCAL::core_pb
   ftxui::screen
   ftxui::dom
   ftxui::component)

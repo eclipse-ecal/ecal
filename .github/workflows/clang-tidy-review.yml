@@ -26,13 +26,15 @@ jobs:
           fetch-depth: 0
 
       - name: Run clang-tidy
-        uses: ZedThree/clang-tidy-review@v0.9.0
+        uses: FlorianReimold/clang-tidy-review@feat/split-up-review-and-post-workflows
         id: review
         with:
           build_dir: _build
-          apt_packages: "cmake,ninja-build,build-essential,zlib1g-dev,qtbase5-dev,libhdf5-dev,libprotobuf-dev,libprotoc-dev,protobuf-compiler,libcurl4-openssl-dev,libqwt-qt5-dev"
+          apt_packages: "cmake,ninja-build,build-essential,zlib1g-dev,qtbase5-dev,libhdf5-dev,libprotobuf-dev,libprotoc-dev,protobuf-compiler,libcurl4-openssl-dev,libqwt-qt5-dev,libyaml-cpp-dev"
           config_file: ".clang-tidy"
-          exclude: "/thirdparty/*,/_build/*,convert_utf.cpp,convert_utf.h"
+          exclude: "/thirdparty/*,/_build/*,convert_utf.cpp,convert_utf.h,/testing/*"
+          post_comments: false
+          lgtm_comment_body: ""
           cmake_command: |
             cmake . -B _build \
                     -G Ninja \
@@ -65,16 +67,17 @@ jobs:
                     -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
                     -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
                     -DECAL_THIRDPARTY_BUILD_QWT=OFF \
+                    -DECAL_THIRDPARTY_BUILD_YAML-CPP=OFF \
                     -DCMAKE_BUILD_TYPE=Release \
                     -DCMAKE_INSTALL_SYSCONFDIR=/etc \
                     -DCMAKE_INSTALL_PREFIX=/usr \
                     -DCMAKE_INSTALL_LOCALSTATEDIR=/var \
                     -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu
             cmake --build _build
-
-      - name: Passed clang-tidy checks
-        if: steps.review.outputs.total_comments > 0
-        shell: bash
-        run: |
-          echo "Clang Tidy found ${{ steps.review.outputs.total_comments }} issues"
-          exit 1
+            
+      - uses: actions/upload-artifact@v3
+        with:
+          name: clang-tidy-review
+          path: |
+            clang-tidy-review-output.json
+            clang-tidy-review-metadata.json

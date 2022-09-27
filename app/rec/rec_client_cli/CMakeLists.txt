@@ -45,7 +45,7 @@ target_link_libraries(${PROJECT_NAME}
   eCAL::rec_client_core
   eCAL::core
   tclap::tclap
-  eCAL::utils
+  eCAL::ecal-utils
   EcalParser
 )
 

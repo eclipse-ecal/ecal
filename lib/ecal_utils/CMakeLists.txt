@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 # ========================= eCAL LICENSE =================================
-project(utils)
+project(ecal-utils)
 
 find_package(Threads REQUIRED)
 

@@ -1,0 +1,18 @@
+basename: measurement
+splitsize: 1024
+
+trim:
+  start:
+    time:  10
+    base:  start
+    scale: s
+    
+  end:
+    time: 20
+    base: start
+    scale: s
+
+exclude:
+   - re : .*Image.*
+   - re : .*V2X.*
+   - TrafficParticipantListPb

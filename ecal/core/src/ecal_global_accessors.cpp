@@ -84,10 +84,10 @@ namespace eCAL
     return(g_globals()->timegate().get());
   }
 
-  CEntityRegister* g_entity_register()
+  CRegistrationProvider* g_registration_provider()
   {
     if (!g_globals()) return(nullptr);
-    return(g_globals()->entity_register().get());
+    return(g_globals()->registration_provider().get());
   }
 
   CDescGate* g_descgate()
@@ -120,10 +120,10 @@ namespace eCAL
     return(g_globals()->clientgate().get());
   }
 
-  CRegGate* g_reggate()
+  CRegistrationReceiver* g_registration_receiver()
   {
     if (!g_globals()) return(nullptr);
-    return(g_globals()->reggate().get());
+    return(g_globals()->registration_receiver().get());
   }
 
 #ifndef ECAL_LAYER_ICEORYX

@@ -35,7 +35,12 @@ list(GET Protobuf_VERSION_components 0 Protobuf_VERSION_major)
 list(GET Protobuf_VERSION_components 1 Protobuf_VERSION_minor)
 MATH(EXPR Protobuf_Version_minor_inc "${Protobuf_VERSION_minor}+1")
 
-set(Protobuf_required_versions ">=${Protobuf_VERSION_major}.${Protobuf_VERSION_minor}.0,<${Protobuf_VERSION_major}.${Protobuf_Version_minor_inc}")
+if (Protobuf_VERSION VERSION_LESS "3.19")
+  set(Protobuf_required_versions ">=${Protobuf_VERSION},<=3.20")
+else()
+  set(Protobuf_required_versions ">=${Protobuf_VERSION}")
+endif()
+
 
 configure_file(${SETUP_PY_IN} ${SETUP_PY} @ONLY)
 

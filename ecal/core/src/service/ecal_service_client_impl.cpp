@@ -21,7 +21,9 @@
  * @brief  eCAL service client implementation
 **/
 
-#include "ecal_register.h"
+#include "ecal_global_accessors.h"
+
+#include "ecal_registration_provider.h"
 #include "ecal_clientgate.h"
 #include "ecal_service_client_impl.h"
 
@@ -74,8 +76,8 @@ namespace eCAL
   {
     if (!m_created) return(false);
 
-    if (g_clientgate())      g_clientgate()->Unregister(this);
-    if (g_entity_register()) g_entity_register()->UnregisterClient(m_service_name, m_service_id);
+    if (g_clientgate())            g_clientgate()->Unregister(this);
+    if (g_registration_provider()) g_registration_provider()->UnregisterClient(m_service_name, m_service_id);
 
     // reset client map
     {
@@ -351,7 +353,7 @@ namespace eCAL
     service_mutable_client->set_sid(m_service_id);
 
     // register entity
-    if (g_entity_register()) g_entity_register()->RegisterClient(m_service_name, m_service_id, sample, false);
+    if (g_registration_provider()) g_registration_provider()->RegisterClient(m_service_name, m_service_id, sample, false);
 
     // refresh connected services map
     CheckForNewServices();

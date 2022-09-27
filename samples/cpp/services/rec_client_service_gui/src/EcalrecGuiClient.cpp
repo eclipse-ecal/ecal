@@ -159,6 +159,11 @@ void EcalrecGuiClient::commandRequest()
     (*command_params)["max_file_size_mib"] = ui_.command_request_max_file_size_mib_lineedit->text().toStdString();
   }
 
+  if (ui_.command_one_file_per_topic_checkbox->isChecked())
+  {
+    (*command_params)["one_file_per_topic"] = ui_.command_one_file_per_topic_lineedit->text().toStdString();
+  }
+
   if (ui_.command_request_protocol_checkbox->isChecked())
   {
     (*command_params)["protocol"] = ui_.command_request_protocol_lineedit->text().toStdString();

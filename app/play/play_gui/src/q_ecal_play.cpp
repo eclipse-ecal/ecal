@@ -647,7 +647,38 @@ bool QEcalPlay::initializePublishers(bool suppress_error_dialog)
   dlg.setValue(0);
   dlg.setValue(1);
 
-  QFuture<bool> success_future = QtConcurrent::run(&ecal_play_, &EcalPlay::InitializePublishers, channel_mapping_);
+  std::pair<bool, std::string> success {false, "An unknown error occured while initializing eCAL publishers."};
+  QFuture<void> success_future
+      = QtConcurrent::run([this, &success]() -> void
+                          {
+                            std::string error_msg("An unknown error occured while initializing eCAL publishers.");
+
+                            try
+                            {
+                              success.first = this->ecal_play_.InitializePublishers(this->channel_mapping_);
+                              if (success.first)
+                                error_msg = "";
+                            }
+                            catch (std::runtime_error& e)
+                            {
+                              std::cout << e.what() << std::endl;
+                              success.second = std::string("The Operating system reported the following issue:\n\n") + e.what();
+                            }
+                            catch (std::exception& e)
+                            {
+                              std::cout << e.what() << std::endl;
+                              success.second = std::string("The Operating system reported the following issue:\n\n") + e.what();
+                            }
+                            catch (...)
+                            {
+                              std::cout << "An unknown error occured while initializing eCAL publishers." << std::endl;
+                            }
+
+#ifndef WIN32
+                            if (!success.first)
+                              success.second += "\n\nTip: If you are on a Linux-like OS and receive a \"too many ope files\" error, you may want to increase the limit of open file descriptors for eCAL Play!";
+#endif //!WIN32
+                          });
 
   while (!success_future.isFinished())
   {
@@ -655,15 +686,28 @@ bool QEcalPlay::initializePublishers(bool suppress_error_dialog)
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
   dlg.close();
-  bool success = success_future.result();
 
-  if (success)
+  if (success.first)
   {
     emit publishersInitStateChangedSignal(true);
   }
+  else
+  {
+    ecal_play_.DeInitializePublishers();
+
+    QMessageBox error_message(
+      QMessageBox::Icon::Critical
+      , tr("Error")
+      , QString::fromStdString(success.second)
+      , QMessageBox::Button::Ok
+      , 0);
+
+    error_message.setWindowIcon(QIcon(":/ecalplay/APP_ICON"));
+    error_message.exec();
+  }
 
   periodic_update_timer_->start();
-  return success;
+  return success.first;
 }
 
 bool QEcalPlay::deInitializePublishers()

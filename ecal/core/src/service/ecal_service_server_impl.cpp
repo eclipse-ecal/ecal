@@ -25,7 +25,7 @@
 #include "ecal_config_reader_hlp.h"
 
 #include "ecal_descgate.h"
-#include "ecal_register.h"
+#include "ecal_registration_provider.h"
 #include "ecal_servicegate.h"
 #include "ecal_global_accessors.h"
 #include "ecal_service_server_impl.h"
@@ -84,8 +84,8 @@ namespace eCAL
     m_tcp_server.Stop();
     m_tcp_server.Destroy();
 
-    if (g_servicegate())     g_servicegate()->Unregister(this);
-    if (g_entity_register()) g_entity_register()->UnregisterServer(m_service_name, m_service_id);
+    if (g_servicegate())           g_servicegate()->Unregister(this);
+    if (g_registration_provider()) g_registration_provider()->UnregisterServer(m_service_name, m_service_id);
 
     // reset method callback map
     {
@@ -134,7 +134,18 @@ namespace eCAL
     }
 
     if (!g_descgate()) return false;
-    g_descgate()->ApplyServiceDescription(m_service_name, method_, req_type_, req_desc_, resp_type_, resp_desc_);
+
+    // Calculate the quality of the current info
+    ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
+    if (!(req_type_.empty() && resp_type_.empty()))
+      quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
+    if (!(req_desc_.empty() && resp_desc_.empty()))
+      quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
+    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
+    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PUBLISHER;
+    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
+
+    g_descgate()->ApplyServiceDescription(m_service_name, method_, req_type_, req_desc_, resp_type_, resp_desc_, quality);
 
     return true;
   }
@@ -263,7 +274,7 @@ namespace eCAL
     }
 
     // register entity
-    if (g_entity_register()) g_entity_register()->RegisterServer(m_service_name, m_service_id, sample, false);
+    if (g_registration_provider()) g_registration_provider()->RegisterServer(m_service_name, m_service_id, sample, false);
   }
 
   int CServiceServerImpl::RequestCallback(const std::string& request_, std::string& response_)

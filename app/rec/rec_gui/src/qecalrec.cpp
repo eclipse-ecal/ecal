@@ -560,6 +560,13 @@ void QEcalRec::setMaxFileSizeMib(unsigned int max_file_size_mib)
   emit maxFileSizeMibChangedSignal(max_file_size_mib);
 }
 
+void QEcalRec::setOneFilePerTopicEnabled(bool enabled)
+{
+  updateConfigModified(true);
+  rec_server_->SetOneFilePerTopicEnabled(enabled);
+  emit oneFilePerTopicEnabledChangedSignal(enabled);
+}
+
 void QEcalRec::setDescription(const std::string& description)
 {
   updateConfigModified(true);
@@ -922,7 +929,7 @@ bool QEcalRec::loadConfigFromFile(const std::string& path, bool omit_dialogs)
     emit measNameChangedSignal      (rec_server_->GetMeasName());
     emit maxFileSizeMibChangedSignal(rec_server_->GetMaxFileSizeMib());
     emit descriptionChangedSignal   (rec_server_->GetDescription());
-    
+    emit oneFilePerTopicEnabledChangedSignal(rec_server_->GetOneFilePerTopicEnabled());
 
     emit usingBuiltInRecorderEnabledChangedSignal(rec_server_->IsUsingBuiltInRecorderEnabled());
 

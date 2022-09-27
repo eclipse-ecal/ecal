@@ -27,7 +27,7 @@ namespace eCAL
   {
     namespace config
     {
-      static constexpr int NATIVE_CONFIG_VERSION = 3;
+      static constexpr int NATIVE_CONFIG_VERSION = 4;
 
       bool writeConfigToFile(const eCAL::rec_server::RecServerImpl& rec_server, const std::string& path);
 

@@ -49,6 +49,7 @@ CMake option                               Default   Description
 ``ECAL_THIRDPARTY_BUILD_PROTOBUF``         ``ON``    Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.11.4 or newer (tested with 3.11.4).
 ``ECAL_THIRDPARTY_BUILD_CURL``             ``ON``    Build CURL with eCAL, included as a submodule in the thirdparty folder.
 ``ECAL_THIRDPARTY_BUILD_HDF5``             ``ON``    Build HDF5 with eCAL, included as a submodule in the thirdparty folder.
+``ECAL_THIRDPARTY_BUILD_YAML-CPP``         ``ON``    Build yaml-cpp with eCAL, included as a submodule in the thirdparty folder.
 ``CPACK_PACK_WITH_INNOSETUP``              ``ON``    Use Innosetup to create a Windows installer with cpack.
 ========================================= ========= ============
 
