@@ -20,6 +20,7 @@
 
 #include <string>
 #include <vector>
+#include <cctype>
 
 #include "model/data/topic.hpp"
 #include "model/data/process.hpp"
