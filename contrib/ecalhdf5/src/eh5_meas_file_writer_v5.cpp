@@ -112,9 +112,9 @@ size_t eCAL::eh5::HDF5MeasFileWriterV5::GetMaxSizePerFile() const
   return max_size_per_file_ / 1024 / 1024;
 }
 
-void eCAL::eh5::HDF5MeasFileWriterV5::SetMaxSizePerFile(size_t size)
+void eCAL::eh5::HDF5MeasFileWriterV5::SetMaxSizePerFile(size_t max_file_size_mib)
 {
-  max_size_per_file_ = size * 1024 * 1024;
+  max_size_per_file_ = max_file_size_mib * 1024 * 1024;
 }
 
 bool eCAL::eh5::HDF5MeasFileWriterV5::IsOneFilePerChannelEnabled() const

@@ -158,15 +158,15 @@ size_t eCAL::eh5::HDF5MeasDir::GetMaxSizePerFile() const
   return max_size_per_file_ / 1024 / 1024;
 }
 
-void eCAL::eh5::HDF5MeasDir::SetMaxSizePerFile(size_t size)
+void eCAL::eh5::HDF5MeasDir::SetMaxSizePerFile(size_t max_file_size_mib)
 {
   // Store to internal variable
-  max_size_per_file_ = size * 1024 * 1024;
+  max_size_per_file_ = max_file_size_mib * 1024 * 1024;
 
   // Update all file writers (if there are any)
   for (auto& file_writer : file_writers_)
   {
-    file_writer.second->SetMaxSizePerFile(size);
+    file_writer.second->SetMaxSizePerFile(max_file_size_mib);
   }
 }
 
@@ -507,7 +507,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
     file_writer_it = file_writers_.emplace(one_file_per_channel_ ? channel_name : "", std::make_unique<::eCAL::eh5::HDF5MeasFileWriterV5>()).first;
 
     // Set the current parameters to the new file writer
-    file_writer_it->second->SetMaxSizePerFile(max_size_per_file_);
+    file_writer_it->second->SetMaxSizePerFile(GetMaxSizePerFile());
     file_writer_it->second->SetOneFilePerChannelEnabled(one_file_per_channel_);
     file_writer_it->second->SetFileBaseName(one_file_per_channel_ ? (base_name_ + "_" + channel_name) : (base_name_));
     if (cb_pre_split_)
