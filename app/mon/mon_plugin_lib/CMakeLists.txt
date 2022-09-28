@@ -18,10 +18,10 @@
 
 project(mon_plugin_lib)
 
-#find_package(Qt5 COMPONENTS
-#    Core
-#    Widgets
-#REQUIRED)
+find_package(Qt5 COMPONENTS
+    Core
+    Widgets
+REQUIRED)
 
 set(ecalmonpluginlib_src
   src/dummy.cpp
@@ -41,11 +41,11 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-#target_link_libraries(${PROJECT_NAME}
-#  PRIVATE
-#    Qt5::Core
-#    Qt5::Widgets
-#)
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC
+    Qt5::Core
+    Qt5::Widgets
+)
 
 ecal_install_library(${PROJECT_NAME})
 install(DIRECTORY
