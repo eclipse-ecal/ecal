@@ -46,7 +46,9 @@ namespace eCAL
 
     Hdf5WriterThread::~Hdf5WriterThread()
     {
-      Interrupt();
+      // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+      // where the vtable is not created yet or it's destructed.
+      Hdf5WriterThread::Interrupt();
       Join();
     }
 
@@ -270,6 +272,7 @@ namespace eCAL
 
         hdf5_writer_->SetFileBaseName(host_name);
         hdf5_writer_->SetMaxSizePerFile(job_config_.GetMaxFileSize());
+        hdf5_writer_->SetOneFilePerChannelEnabled(job_config_.GetOneFilePerTopicEnabled());
       }
       else
       {

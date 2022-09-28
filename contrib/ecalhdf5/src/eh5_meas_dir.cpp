@@ -30,7 +30,6 @@
 #include <dirent.h>
 #endif //WIN32
 
-#include <string.h>
 #include <string>
 #include <list>
 #include <iostream>
@@ -38,38 +37,44 @@
 #include <ecal_utils/filesystem.h>
 #include <ecal_utils/str_convert.h>
 
-unsigned int kDefaultMaxFileSizeMB = 50;
+#include "eh5_meas_file_writer_v5.h"
 
+// TODO: Test the one-file-per-channel setting with gtest
+constexpr unsigned int kDefaultMaxFileSizeMB = 1000;
 eCAL::eh5::HDF5MeasDir::HDF5MeasDir()
-  : cb_pre_split_(nullptr)
-  , file_id_(-1)
-  , file_split_counter_(-1)
-  , entries_counter_(0)
-  , max_size_per_file_(kDefaultMaxFileSizeMB * 1024 * 1024)
-  , access_(RDONLY)
-{
-
-}
+  : access_              (RDONLY) // Temporarily set it to RDONLY, so the leading "Close()" from the Open() function will not operate on the uninitialized variable.
+  , one_file_per_channel_(false)
+  , max_size_per_file_   (kDefaultMaxFileSizeMB * 1024 * 1024)
+  , cb_pre_split_        (nullptr)
+{}
 
 eCAL::eh5::HDF5MeasDir::HDF5MeasDir(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
-  : cb_pre_split_(nullptr)
-  , file_id_(-1)
-  , file_split_counter_(-1)
-  , entries_counter_(0)
-  , max_size_per_file_(kDefaultMaxFileSizeMB * 1024 * 1024)
-  , access_(RDONLY) // Temporarily set it to RDONLY, so the leading "Close()" from the Open() function will not operate on the uninitialized variable.
+  : access_              (access)
+  , one_file_per_channel_(false)
+  , max_size_per_file_   (kDefaultMaxFileSizeMB * 1024 * 1024)
+  , cb_pre_split_        (nullptr)
 {
-  Open(path, access);
+  // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  HDF5MeasDir::Open(path, access_);
 }
 
 eCAL::eh5::HDF5MeasDir::~HDF5MeasDir()
 {
-  Close();
+  // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  HDF5MeasDir::Close();
 }
 
 bool eCAL::eh5::HDF5MeasDir::Open(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
 {
-  Close();
+  // call the function via its class becase it's a virtual function that is called directly/indirectly in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  HDF5MeasDir::Close();
+
+  // Check if the given path points to a directory
+  if (!EcalUtils::Filesystem::IsDir(path, EcalUtils::Filesystem::Current))
+    return false;
 
   access_ = access;
 
@@ -92,35 +97,20 @@ bool eCAL::eh5::HDF5MeasDir::Close()
 {
   if (access_ == eAccessType::CREATE)
   {
-    if (!this->IsOk())  return false;
-
-    std::string channels_with_entries;
-
-    for (const auto& channel : channels_)
-      if (CreateEntriesTableOfContentsFor(channel.first, channel.second.Type, channel.second.Description, channel.second.Entries))
-        channels_with_entries += channel.first + ",";
-
-    if ((channels_with_entries.size() > 0)  && (channels_with_entries.back() == ','))
-      channels_with_entries.pop_back();
-
-    SetAttribute(file_id_, kChnAttrTitle, channels_with_entries);
-
-    for (auto& channel : channels_)
-      channel.second.Entries.clear();
-
-    if (H5Fclose(file_id_) >= 0)
+    // Close all existing file writers
+    for (auto& file_writer : file_writers_)
     {
-      file_id_ = -1;
-      return true;
+      file_writer.second->Close();
     }
-    else
-    {
-      return false;
-    }
+
+    // Clear the list of all file writers, which will delete them
+    file_writers_.clear();
+
+    return true;
   }
   else
   {
-    for (auto file : files_)
+    for (auto file : file_readers_)
     {
       if (file != nullptr)
       {
@@ -130,7 +120,7 @@ bool eCAL::eh5::HDF5MeasDir::Close()
       }
     }
 
-    files_.clear();
+    file_readers_.clear();
     channels_info_.clear();
     entries_by_id_.clear();
     entries_by_chn_.clear();
@@ -145,9 +135,9 @@ bool eCAL::eh5::HDF5MeasDir::IsOk() const
   {
   case eCAL::eh5::RDONLY:
   //case eCAL::eh5::RDWR:
-    return files_.empty() == false && entries_by_id_.empty() == false;
+    return !file_readers_.empty() && !entries_by_id_.empty();
   case eCAL::eh5::CREATE:
-    return (file_id_ >= 0);
+    return true;
   default:
     return false;
   }
@@ -156,9 +146,9 @@ bool eCAL::eh5::HDF5MeasDir::IsOk() const
 std::string eCAL::eh5::HDF5MeasDir::GetFileVersion() const
 {
   std::string version;
-  if (files_.empty() == false)
+  if (!file_readers_.empty())
   {
-    version = files_.front()->GetFileVersion();
+    version = file_readers_.front()->GetFileVersion();
   }
   return version;
 }
@@ -170,7 +160,24 @@ size_t eCAL::eh5::HDF5MeasDir::GetMaxSizePerFile() const
 
 void eCAL::eh5::HDF5MeasDir::SetMaxSizePerFile(size_t size)
 {
+  // Store to internal variable
   max_size_per_file_ = size * 1024 * 1024;
+
+  // Update all file writers (if there are any)
+  for (auto& file_writer : file_writers_)
+  {
+    file_writer.second->SetMaxSizePerFile(size);
+  }
+}
+
+bool eCAL::eh5::HDF5MeasDir::IsOneFilePerChannelEnabled() const
+{
+  return one_file_per_channel_;
+}
+
+void eCAL::eh5::HDF5MeasDir::SetOneFilePerChannelEnabled(bool enabled)
+{
+  one_file_per_channel_ = enabled;
 }
 
 std::set<std::string> eCAL::eh5::HDF5MeasDir::GetChannelNames() const
@@ -202,7 +209,9 @@ std::string eCAL::eh5::HDF5MeasDir::GetChannelDescription(const std::string& cha
 
 void eCAL::eh5::HDF5MeasDir::SetChannelDescription(const std::string& channel_name, const std::string& description)
 {
-  channels_[channel_name].Description = description;
+  // Get an existing writer or create a new one
+  auto file_writer_it = GetWriter(channel_name);
+  file_writer_it->second->SetChannelDescription(channel_name, description);
 }
 
 std::string eCAL::eh5::HDF5MeasDir::GetChannelType(const std::string& channel_name) const
@@ -220,7 +229,9 @@ std::string eCAL::eh5::HDF5MeasDir::GetChannelType(const std::string& channel_na
 
 void eCAL::eh5::HDF5MeasDir::SetChannelType(const std::string& channel_name, const std::string& type)
 {
-  channels_[channel_name].Type = type;
+  // Get an existing writer or create a new one
+  auto file_writer_it = GetWriter(channel_name);
+  file_writer_it->second->SetChannelType(channel_name, type);
 }
 
 long long eCAL::eh5::HDF5MeasDir::GetMinTimestamp(const std::string& channel_name) const
@@ -231,7 +242,7 @@ long long eCAL::eh5::HDF5MeasDir::GetMinTimestamp(const std::string& channel_nam
 
   if (found != entries_by_chn_.end())
   {
-    if (found->second.empty() == false)
+    if (!found->second.empty())
     {
       ret_val = found->second.begin()->RcvTimestamp;
     }
@@ -248,7 +259,7 @@ long long eCAL::eh5::HDF5MeasDir::GetMaxTimestamp(const std::string& channel_nam
 
   if (found != entries_by_chn_.end())
   {
-    if (found->second.empty() == false)
+    if (!found->second.empty())
     {
       ret_val = found->second.rbegin()->RcvTimestamp;
     }
@@ -268,7 +279,7 @@ bool eCAL::eh5::HDF5MeasDir::GetEntriesInfo(const std::string& channel_name, Ent
     entries = found->second;
   }
 
-  return entries.empty() == false;
+  return !entries.empty();
 }
 
 bool eCAL::eh5::HDF5MeasDir::GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const
@@ -318,61 +329,48 @@ bool eCAL::eh5::HDF5MeasDir::GetEntryData(long long entry_id, void* data) const
 
 void eCAL::eh5::HDF5MeasDir::SetFileBaseName(const std::string& base_name)
 {
-  file_name_ = base_name;
+  base_name_ = base_name;
 }
 
 bool eCAL::eh5::HDF5MeasDir::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock)
 {
-  if (!IsOk()) file_id_ = Create();
-  if (!IsOk())
-    return false;
-
-  hsize_t hsSize = static_cast<hsize_t>(size);
-
-  if (EntryFitsTheFile(hsSize) == false)
+  if ((access_ != CREATE)
+    || (output_dir_.empty())
+    || (base_name_.empty()))
   {
-    if (cb_pre_split_ != nullptr)
-    {
-      cb_pre_split_();
-    }
-
-    if (Create() < 0)
-      return false;
+    return false;
   }
 
-  //  Create DataSpace with rank 1 and size dimension
-  auto dataSpace = H5Screate_simple(1, &hsSize, nullptr);
-
-  //  Create creation property for dataSpace
-  auto dsProperty = H5Pcreate(H5P_DATASET_CREATE);
-  H5Pset_obj_track_times(dsProperty, false);
-
-  //  Create dataset in dataSpace
-  auto dataSet = H5Dcreate(file_id_, std::to_string(entries_counter_).c_str(), H5T_NATIVE_UCHAR, dataSpace, H5P_DEFAULT, dsProperty, H5P_DEFAULT);
-
-  //  Write buffer to dataset
-  herr_t writeStatus = H5Dwrite(dataSet, H5T_NATIVE_UCHAR, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
-
-  //  Close dataset, data space, and data set property
-  H5Dclose(dataSet);
-  H5Pclose(dsProperty);
-  H5Sclose(dataSpace);
-
-  channels_[channel_name].Entries.emplace_back(SEntryInfo(rcv_timestamp, entries_counter_, clock, snd_timestamp, id));
-
-  entries_counter_++;
-
-  return (writeStatus >= 0);
+  // Get an existing writer or create a new one
+  auto file_writer_it = GetWriter(channel_name);
+  
+  // Use the writer that was either found or created to actually write the data
+  return file_writer_it->second->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel_name, id, clock);
 }
 
 void eCAL::eh5::HDF5MeasDir::ConnectPreSplitCallback(CallbackFunction cb)
 {
+  // Store the callback function internally
   cb_pre_split_ = cb;
+
+  // If there are any existing file_writers, add the Callback to all of them.
+  // They will effectively call the callback, as they are handling the splitting.
+  for (const auto& file_writer : file_writers_)
+  {
+    file_writer.second->ConnectPreSplitCallback(cb_pre_split_);
+  }
 }
 
 void eCAL::eh5::HDF5MeasDir::DisconnectPreSplitCallback()
 {
+  // Clear internal copy of the callback
   cb_pre_split_ = nullptr;
+
+  // If there are any existing file_writers, remove the Callback from all of them.
+  for (const auto& file_writer : file_writers_)
+  {
+    file_writer.second->DisconnectPreSplitCallback();
+  }
 }
 
 std::list<std::string> eCAL::eh5::HDF5MeasDir::GetHdfFiles(const std::string& path) const
@@ -427,7 +425,7 @@ std::list<std::string> eCAL::eh5::HDF5MeasDir::GetHdfFiles(const std::string& pa
         }
         else
         {
-          if (HasHdf5Extension(d_name) == true)
+          if (HasHdf5Extension(d_name))
             paths.push_back(path + "/" + d_name);
         }
       }
@@ -437,43 +435,6 @@ std::list<std::string> eCAL::eh5::HDF5MeasDir::GetHdfFiles(const std::string& pa
 }
 #endif  //  WIN32
   return paths;
-}
-
-hid_t eCAL::eh5::HDF5MeasDir::Create()
-{
-  if (output_dir_.empty()) return -1;
-
-  if (!EcalUtils::Filesystem::IsDir(output_dir_, EcalUtils::Filesystem::OsStyle::Current)
-      && !EcalUtils::Filesystem::MkPath(output_dir_, EcalUtils::Filesystem::OsStyle::Current))
-    return -1;
-
-  if (file_name_.empty()) return -1;
-
-  if (IsOk() && !Close()) return -1;
-
-  file_split_counter_++;
-
-  std::string filePath = output_dir_ + "/" + file_name_;
-
-  if (file_split_counter_ > 0)
-    filePath += "_" + std::to_string(file_split_counter_);
-
-  filePath += ".hdf5";
-
-  //  create file access property
-  hid_t fileAccessPropery = H5Pcreate(H5P_FILE_ACCESS);
-  //  create file create property
-  hid_t fileCreateProperty = H5Pcreate(H5P_FILE_CREATE);
-
-  //  Create hdf file and get file id
-  file_id_ = H5Fcreate(filePath.c_str(), H5F_ACC_TRUNC, fileCreateProperty, fileAccessPropery);
-
-  if (file_id_ >= 0)
-    SetAttribute(file_id_, kFileVerAttrTitle, "5.0");
-  else
-    file_split_counter_--;
-
-  return file_id_;
 }
 
 bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
@@ -488,7 +449,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
   {
     auto reader = new eCAL::eh5::HDF5Meas(file_path);
 
-    if (reader->IsOk() == true)
+    if (reader->IsOk())
     {
       auto channels = reader->GetChannelNames();
       for (const auto& channel : channels)
@@ -502,7 +463,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
         }
         else
         {
-          if (description.empty() == false)
+          if (!description.empty())
           {
             channels_info_[escaped_name].description = description;
           }
@@ -511,7 +472,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
         channels_info_[escaped_name].files.push_back(reader);
 
         EntryInfoSet entries;
-        if (reader->GetEntriesInfo(channel, entries) == true)
+        if (reader->GetEntriesInfo(channel, entries))
         {
           for (auto entry : entries)
           {
@@ -522,7 +483,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
           }
         }
       }
-      files_.push_back(reader);
+      file_readers_.push_back(reader);
     }
     else
     {
@@ -531,95 +492,32 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
       reader = nullptr;
     }
   }
-  return files_.empty() == false;
+  return !file_readers_.empty();
 }
 
-bool eCAL::eh5::HDF5MeasDir::SetAttribute(const hid_t& id, const std::string& name, const std::string& value)
+::eCAL::eh5::HDF5MeasDir::FileWriterMap::iterator eCAL::eh5::HDF5MeasDir::GetWriter(const std::string& channel_name)
 {
-  if (id < 0) return false;
+  // Look for an existing writer. When creating 1 file per channel, the channel
+  // name is used as key. Otherwise, emptystring is used as "generic" key and
+  // the same writer is used for all channels.
+  FileWriterMap::iterator file_writer_it = file_writers_.find(one_file_per_channel_ ? channel_name : "");
+  if (file_writer_it == file_writers_.end())
+  {
+    // No appropriate file writer was found. Let's create a new one!
+    file_writer_it = file_writers_.emplace(one_file_per_channel_ ? channel_name : "", std::make_unique<::eCAL::eh5::HDF5MeasFileWriterV5>()).first;
 
-  if (H5Aexists(id, name.c_str()) > 0)
-    H5Adelete(id, name.c_str());
-  //  create scalar dataset
-  hid_t scalarDataset = H5Screate(H5S_SCALAR);
+    // Set the current parameters to the new file writer
+    file_writer_it->second->SetMaxSizePerFile(max_size_per_file_);
+    file_writer_it->second->SetOneFilePerChannelEnabled(one_file_per_channel_);
+    file_writer_it->second->SetFileBaseName(one_file_per_channel_ ? (base_name_ + "_" + channel_name) : (base_name_));
+    if (cb_pre_split_)
+      file_writer_it->second->ConnectPreSplitCallback(cb_pre_split_);
 
-  //  create new string data type
-  hid_t stringDataType = H5Tcopy(H5T_C_S1);
+    // Open the writer
+    file_writer_it->second->Open(output_dir_);
+  }
 
-  //  if attribute's value length exists, allocate space for it
-  if (value.length() > 0)
-    H5Tset_size(stringDataType, value.length());
-
-  //  create attribute
-  hid_t attribute = H5Acreate(id, name.c_str(), stringDataType, scalarDataset, H5P_DEFAULT, H5P_DEFAULT);
-
-  if (attribute < 0) return false;
-
-  //  write attribute value to attribute
-  herr_t writeStatus = H5Awrite(attribute, stringDataType, value.c_str());
-  if (writeStatus < 0) return false;
-
-  //  close attribute
-  H5Aclose(attribute);
-  //  close scalar dataset
-  H5Sclose(scalarDataset);
-  //  close string data type
-  H5Tclose(stringDataType);
-
-  return true;
+  // The iterator is either what we found or what we created. In either way it
+  // will be valid and can be returned.
+  return file_writer_it;
 }
-
-bool eCAL::eh5::HDF5MeasDir::EntryFitsTheFile(const hsize_t& size) const
-{
-  hsize_t fileSize = 0;
-  herr_t status = GetFileSize(fileSize);
-
-  //  check if buffer fits the current file
-  return (status && ((fileSize + size) <= max_size_per_file_));
-}
-
-bool eCAL::eh5::HDF5MeasDir::GetFileSize(hsize_t& size) const
-{
-  size = 0;
-
-  if (!IsOk()) return false;
-
-  return H5Fget_filesize(file_id_, &size) >= 0;
-}
-
-bool eCAL::eh5::HDF5MeasDir::CreateEntriesTableOfContentsFor(const std::string& channelName, const std::string& channelType, const std::string& channelDescription, const EntryInfoVect& entries)
-{
-  if (!IsOk()) return false;
-
-  const size_t dataSetsSize = entries.size();
-
-  if (dataSetsSize == 0)  return false;
-
-  hsize_t dims[2] = { dataSetsSize, 5 };
-
-  //  Create DataSpace with rank 2 and size dimension
-  auto dataSpace = H5Screate_simple(2, dims, nullptr);
-
-  //  Create creation property for dataSpace
-  auto dsProperty = H5Pcreate(H5P_DATASET_CREATE);
-  H5Pset_obj_track_times(dsProperty, false);
-
-  auto dataSet = H5Dcreate(file_id_, channelName.c_str(), H5T_NATIVE_LLONG, dataSpace, H5P_DEFAULT, dsProperty, H5P_DEFAULT);
-
-  if (dataSet < 0) return false;
-
-  SetAttribute(dataSet, kChnTypeAttrTitle, channelType);
-  SetAttribute(dataSet, kChnDescAttrTitle, channelDescription);
-
-  //  Write buffer to dataset
-  herr_t writeStatus = H5Dwrite(dataSet, H5T_NATIVE_LLONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, entries.data());
-  if (writeStatus < 0) return false;
-
-  //  Close dataset, data space, and data set property
-  H5Dclose(dataSet);
-  H5Pclose(dsProperty);
-  H5Sclose(dataSpace);
-
-  return true;
-}
-

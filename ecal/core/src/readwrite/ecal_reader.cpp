@@ -25,7 +25,7 @@
 #include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
-#include "ecal_register.h"
+#include "ecal_registration_provider.h"
 #include "ecal_descgate.h"
 #include "ecal_reader.h"
 #include "ecal_process.h"
@@ -39,7 +39,6 @@
 #endif /* ECAL_LAYER_ICEORYX */
 
 #include "readwrite/ecal_reader_tcp.h"
-#include "readwrite/ecal_reader_inproc.h"
 
 #include <algorithm>
 #include <iterator>
@@ -127,7 +126,7 @@ namespace eCAL
     m_use_tdesc = Config::IsTopicDescriptionSharingEnabled();
 
     // start transport layers
-    StartDataLayers();
+    SubscribeToLayers();
 
     // register
     DoRegister(false);
@@ -148,7 +147,7 @@ namespace eCAL
 #endif
 
     // stop transport layers
-    StopDataLayers();
+    UnsubscribeFromLayers();
 
     // reset receive callback
     {
@@ -183,82 +182,46 @@ namespace eCAL
     
   void CDataReader::InitializeLayers()
   {
-    // start ecal udp multicast layer
+    // initialize udp multicast layer
     if (Config::IsUdpMulticastRecEnabled())
     {
-      CMulticastLayer::Get()->Initialize();
+      CUDPReaderLayer::Get()->Initialize();
     }
 
-    // start ecal shared memory layer
-    if (Config::IsShmRecEnabled())
-    {
-      CSHMLayer::Get()->Initialize();
-    }
-
-    // start ecal tcp layer
+    // initialize tcp layer
     if (Config::IsTcpRecEnabled())
     {
       CTCPReaderLayer::Get()->Initialize();
     }
-
-    // start inproc layer
-    if (Config::IsInprocRecEnabled())
-    {
-      CInProcLayer::Get()->Initialize();
-    }
   }
 
-  void CDataReader::StartDataLayers()
+  void CDataReader::SubscribeToLayers()
   {
-    // start ecal udp multicast layer
+    // subscribe topic to udp multicast layer
     if (Config::IsUdpMulticastRecEnabled())
     {
-      CMulticastLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
+      CUDPReaderLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
 
-    // start ecal shared memory layer
-    if (Config::IsShmRecEnabled())
-    {
-      CSHMLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
-    }
-
-    // start ecal tcp layer
+    // subscribe topic to tcp layer
     if (Config::IsTcpRecEnabled())
     {
       CTCPReaderLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
     }
-
-    // start inproc layer
-    if (Config::IsInprocRecEnabled())
-    {
-      CInProcLayer::Get()->AddSubscription(m_host_name, m_topic_name, m_topic_id, m_qos);
-    }
   }
   
-  void CDataReader::StopDataLayers()
+  void CDataReader::UnsubscribeFromLayers()
   {
-    // stop ecal udp multicast layer
-    if (eCALPAR(NET, UDP_MC_REC_ENABLED))
+    // unsubscribe topic from udp multicast layer
+    if (Config::IsUdpMulticastRecEnabled())
     {
-      CMulticastLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
+      CUDPReaderLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
 
-    // stop ecal shared memory layer
-    if (Config::IsShmRecEnabled())
-    {
-      CSHMLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
-    }
-
-    // stop ecal tcp layer
+    // unsubscribe topic from tcp multicast layer
     if (Config::IsTcpRecEnabled())
     {
       CTCPReaderLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
-    }
-
-    // stop inproc layer
-    if (Config::IsInprocRecEnabled())
-    {
-      CInProcLayer::Get()->RemSubscription(m_host_name, m_topic_name, m_topic_id);
     }
   }
 
@@ -347,7 +310,7 @@ namespace eCAL
     }
 
     // register subscriber
-    if(g_entity_register()) g_entity_register()->RegisterTopic(m_topic_name, m_topic_id, ecal_reg_sample, force_);
+    if(g_registration_provider()) g_registration_provider()->RegisterTopic(m_topic_name, m_topic_id, ecal_reg_sample, force_);
 #ifndef NDEBUG
     // log it
     Logging::Log(log_level_debug4, m_topic_name + "::CDataReader::DoRegister");
@@ -617,6 +580,17 @@ namespace eCAL
 
   void CDataReader::ApplyLocLayerParameter(const std::string& process_id_, eCAL::pb::eTLayerType type_, const std::string& parameter_)
   {
+    // process only for shm and tcp layer
+    switch (type_)
+    {
+    case eCAL::pb::tl_ecal_shm:
+      break;
+    case eCAL::pb::tl_ecal_tcp:
+      break;
+    default:
+      return;
+    }
+
     SReaderLayerPar par;
     par.host_name  = m_host_name;
     par.process_id = process_id_;
@@ -626,28 +600,12 @@ namespace eCAL
 
     switch (type_)
     {
-    case eCAL::pb::tl_ecal_udp_mc:
-    {
-      // not used currently
-      //CMulticastLayer::Get()->SetConnectionParameter(par);
-      break;
-    }
     case eCAL::pb::tl_ecal_shm:
-    {
-      CSHMLayer::Get()->SetConnectionParameter(par);
+      CSHMReaderLayer::Get()->SetConnectionParameter(par);
       break;
-    }
     case eCAL::pb::tl_ecal_tcp:
-    {
       CTCPReaderLayer::Get()->SetConnectionParameter(par);
       break;
-    }
-    case eCAL::pb::tl_inproc:
-    {
-      // not used currently
-      //CInProcLayer::Get()->SetConnectionParameter(par);
-      break;
-    }
     default:
       break;
     }
@@ -655,6 +613,15 @@ namespace eCAL
 
   void CDataReader::ApplyExtLayerParameter(const std::string& host_name_, eCAL::pb::eTLayerType type_, const std::string& parameter_)
   {
+    // process only for tcp layer
+    switch (type_)
+    {
+    case eCAL::pb::tl_ecal_tcp:
+      break;
+    default:
+      return;
+    }
+
     SReaderLayerPar par;
     par.host_name  = host_name_;
     par.topic_name = m_topic_name;
@@ -663,17 +630,9 @@ namespace eCAL
 
     switch (type_)
     {
-    case eCAL::pb::tl_ecal_udp_mc:
-    {
-      // not used currently
-      //CMulticastLayer::Get()->SetConnectionParameter(par);
-      break;
-    }
     case eCAL::pb::tl_ecal_tcp:
-    {
       CTCPReaderLayer::Get()->SetConnectionParameter(par);
       break;
-    }
     default:
       break;
     }
@@ -765,7 +724,7 @@ namespace eCAL
       }
 
       // check for clock difference
-      if ((m_clock - m_clock_old) > 0)
+      else if ((m_clock - m_clock_old) > 0)
       {
         // calculate frequency in mHz
         m_freq = static_cast<long>((1000 * 1000 * (m_clock - m_clock_old)) / std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - m_rec_time).count());

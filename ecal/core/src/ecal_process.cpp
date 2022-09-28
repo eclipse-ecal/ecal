@@ -26,8 +26,8 @@
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
-#include "ecal_register.h"
-#include "ecal_reggate.h"
+#include "ecal_registration_provider.h"
+#include "ecal_registration_receiver.h"
 #include "ecal_globals.h"
 #include "ecal_process.h"
 
@@ -264,6 +264,7 @@ namespace eCAL
       sstream << "------------------------- PUBLISHER LAYER DEFAULTS ---------------"       << std::endl;
       sstream << "Layer Mode INPROC        : " << LayerMode(Config::GetPublisherInprocMode())  << std::endl;
       auto zero_copy = Config::IsMemfileZerocopyEnabled();
+
       if (zero_copy)
       {
         sstream << "Layer Mode SHM (ZEROCPY) : " << LayerMode(Config::GetPublisherShmMode()) << std::endl;
@@ -365,7 +366,25 @@ namespace eCAL
 
     void SleepMS(const long time_ms_)
     {
-      std::this_thread::sleep_for(std::chrono::milliseconds(time_ms_));
+      #ifdef ECAL_OS_WINDOWS
+      {
+        Sleep(time_ms_);
+      }
+      #else
+        std::this_thread::sleep_for(std::chrono::milliseconds(time_ms_));
+      #endif
+    }
+
+    void SleepNS(const long long time_ns_)
+    {
+      #ifdef ECAL_OS_WINDOWS
+      {
+        auto milliseconds = time_ns_ / 1000000 + ((time_ns_ % 1000000) != 0);
+        Sleep(static_cast<DWORD>(milliseconds));
+      }
+      #else
+        std::this_thread::sleep_for(std::chrono::nanoseconds(time_ns_));
+      #endif
     }
 
     float GetProcessCpuUsage()
@@ -415,15 +434,15 @@ namespace eCAL
 
     int AddRegistrationCallback(enum eCAL_Registration_Event event_, RegistrationCallbackT callback_)
     {
-      if (!g_reggate()) return -1;
-      if (g_reggate()->AddRegistrationCallback(event_, callback_)) return 0;
+      if (!g_registration_receiver()) return -1;
+      if (g_registration_receiver()->AddRegistrationCallback(event_, callback_)) return 0;
       return -1;
     }
 
     int RemRegistrationCallback(enum eCAL_Registration_Event event_)
     {
-      if (!g_reggate()) return -1;
-      if (g_reggate()->RemRegistrationCallback(event_)) return 0;
+      if (!g_registration_receiver()) return -1;
+      if (g_registration_receiver()->RemRegistrationCallback(event_)) return 0;
       return -1;
     }
   }
@@ -551,7 +570,7 @@ namespace eCAL
         }
       }
 
-      PROCESS_INFORMATION pi = { 0 };
+      PROCESS_INFORMATION pi{};
       STARTUPINFOW si =
       {
         sizeof(STARTUPINFO),          //DWORD   cb;
@@ -621,7 +640,7 @@ namespace eCAL
       commandline += full_proc_name;
       commandline += " /t";
 
-      PROCESS_INFORMATION pi = { 0 };
+      PROCESS_INFORMATION pi{};
       STARTUPINFOW si =
       {
         sizeof(STARTUPINFO),          //DWORD   cb;
@@ -674,7 +693,7 @@ namespace eCAL
       commandline += std::to_string(proc_id_);
       commandline += " /t";
 
-      PROCESS_INFORMATION pi = { 0 };
+      PROCESS_INFORMATION pi{};
       STARTUPINFOW si =
       {
         sizeof(STARTUPINFO),          //DWORD   cb;

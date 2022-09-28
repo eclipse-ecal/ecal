@@ -287,7 +287,7 @@
  * example shows how to catch the connect and disconnect events of an eCAL publisher. First we define the event callback function ..
  * 
  * \code
- *  void OnEvent(const char* topic_name_, const struct eCAL::SEventCallbackData* data_)
+ *  void OnEvent(const char* topic_name_, const struct eCAL::SPubEventCallbackData* data_)
  *  {
  *    std::cout << "topic name   : " << topic_name_ << std::endl;
  *    switch (data_->type)

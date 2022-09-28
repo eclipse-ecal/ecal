@@ -45,12 +45,16 @@ eCAL::eh5::HDF5MeasFileV2::HDF5MeasFileV2(const std::string& path, eAccessType a
   H5Eset_auto(0, nullptr, nullptr);
 #endif  //  _DEBUG
 
-  Open(path, access);
+  // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  HDF5MeasFileV2::Open(path, access);
 }
 
 eCAL::eh5::HDF5MeasFileV2::~HDF5MeasFileV2()
 {
-  Close();
+  // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  HDF5MeasFileV2::Close();
 }
 
 
@@ -62,13 +66,15 @@ bool eCAL::eh5::HDF5MeasFileV2::Open(const std::string& path, eAccessType access
 
   file_id_ = H5Fopen(path.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
 
-  return this->IsOk();
+  // call the function via its class becase it's a virtual function that is called directly/indirectly in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  return HDF5MeasFileV2::IsOk();
 }
 
 
 bool eCAL::eh5::HDF5MeasFileV2::Close()
 {
-  if (IsOk() == true && H5Fclose(file_id_) >= 0)
+  if (HDF5MeasFileV2::IsOk() && H5Fclose(file_id_) >= 0)
   {
     file_id_ = -1;
     return true;
@@ -104,6 +110,16 @@ void eCAL::eh5::HDF5MeasFileV2::SetMaxSizePerFile(size_t /*size*/)
 {
 }
 
+
+bool eCAL::eh5::HDF5MeasFileV2::IsOneFilePerChannelEnabled() const
+{
+  return false;
+}
+
+void eCAL::eh5::HDF5MeasFileV2::SetOneFilePerChannelEnabled(bool /*enabled*/)
+{
+}
+
 std::set<std::string> eCAL::eh5::HDF5MeasFileV2::GetChannelNames() const
 {
   std::set<std::string> channels_set;
@@ -132,7 +148,7 @@ std::string eCAL::eh5::HDF5MeasFileV2::GetChannelDescription(const std::string& 
 {
   std::string description;
 
-  if (this->IsOk() == true)
+  if (this->IsOk())
   {
     auto dataset_id = H5Dopen(file_id_, channel_name.c_str(), H5P_DEFAULT);
     if (dataset_id >= 0)
@@ -153,7 +169,7 @@ std::string eCAL::eh5::HDF5MeasFileV2::GetChannelType(const std::string& channel
 {
   std::string type;
 
-  if (this->IsOk() == true)
+  if (this->IsOk())
   {
     auto dataset_id = H5Dopen(file_id_, channel_name.c_str(), H5P_DEFAULT);
     if (dataset_id >= 0)
@@ -175,7 +191,7 @@ long long eCAL::eh5::HDF5MeasFileV2::GetMinTimestamp(const std::string& channel_
   long long ret_val = 0;
   EntryInfoSet entries;
 
-  if (GetEntriesInfo(channel_name, entries) == true && entries.empty() == false)
+  if (GetEntriesInfo(channel_name, entries) && !entries.empty())
   {
     ret_val = entries.begin()->RcvTimestamp;
   }
@@ -188,7 +204,7 @@ long long eCAL::eh5::HDF5MeasFileV2::GetMaxTimestamp(const std::string& channel_
   long long ret_val = 0;
   EntryInfoSet entries;
 
-  if (GetEntriesInfo(channel_name, entries) == true && entries.empty() == false)
+  if (GetEntriesInfo(channel_name, entries) && !entries.empty())
   {
     ret_val = entries.rbegin()->RcvTimestamp;
   }
@@ -236,7 +252,7 @@ bool eCAL::eh5::HDF5MeasFileV2::GetEntriesInfoRange(const std::string& channel_n
   EntryInfoSet all_entries;
   entries.clear();
 
-  if (GetEntriesInfo(channel_name, all_entries) == true && all_entries.empty() == false)
+  if (GetEntriesInfo(channel_name, all_entries) && !all_entries.empty())
   {
     if (begin == 0) begin = entries.begin()->RcvTimestamp;
     if (end == 0) end = entries.rbegin()->RcvTimestamp;
@@ -270,7 +286,7 @@ bool eCAL::eh5::HDF5MeasFileV2::GetEntryData(long long entry_id, void* data) con
 {
   if (data == nullptr) return false;
 
-  if (this->IsOk() == false) return false;
+  if (!this->IsOk()) return false;
 
   auto dataset_id = H5Dopen(file_id_, std::to_string(entry_id).c_str(), H5P_DEFAULT);
 
@@ -306,7 +322,7 @@ void eCAL::eh5::HDF5MeasFileV2::DisconnectPreSplitCallback()
 {
 }
 
-bool eCAL::eh5::HDF5MeasFileV2::GetAttributeValue(hid_t obj_id, const std::string& name, std::string& value) const
+bool eCAL::eh5::HDF5MeasFileV2::GetAttributeValue(hid_t obj_id, const std::string& name, std::string& value) 
 {
   bool ret_val = false;
   //  empty attribute value
@@ -314,7 +330,7 @@ bool eCAL::eh5::HDF5MeasFileV2::GetAttributeValue(hid_t obj_id, const std::strin
   if (obj_id < 0) return false;
 
   //  check if attribute exists
-  if (H5Aexists(obj_id, name.c_str()))
+  if (H5Aexists(obj_id, name.c_str()) != 0)
   {
     //  open attribute by name, getting the attribute index
     hid_t attr_id = H5Aopen_name(obj_id, name.c_str());

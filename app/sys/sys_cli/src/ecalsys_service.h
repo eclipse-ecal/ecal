@@ -23,13 +23,15 @@
 
 #pragma once
 
+#include <ecalsys/ecal_sys.h>
+
 // protobuf remote control
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
-#include "ecal/pb/sys/service.pb.h"
-#include "ecal/pb/sys/state.pb.h"
+#include <ecal/app/pb/sys/service.pb.h>
+#include <ecal/app/pb/sys/state.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif

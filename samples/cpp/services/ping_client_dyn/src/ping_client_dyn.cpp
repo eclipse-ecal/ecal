@@ -61,15 +61,16 @@ int main(int argc, char **argv)
   }
 
   // create dynamic protobuf message decoder to create request and response message objects
-  eCAL::protobuf::CProtoDynDecoder dyn_decoder;
   std::string error_s;
 
   // create the request message object
-  std::shared_ptr<google::protobuf::Message> req_msg(dyn_decoder.GetProtoMessageFromDescriptor(req_desc, req_type, error_s));
+  eCAL::protobuf::CProtoDynDecoder req_decoder;
+  std::shared_ptr<google::protobuf::Message> req_msg(req_decoder.GetProtoMessageFromDescriptor(req_desc, req_type, error_s));
   if (!req_msg) throw std::runtime_error("Could not create request message object: " + error_s);
 
   // create the response message object
-  std::shared_ptr<google::protobuf::Message> resp_msg(dyn_decoder.GetProtoMessageFromDescriptor(resp_desc, resp_type, error_s));
+  eCAL::protobuf::CProtoDynDecoder resp_decoder;
+  std::shared_ptr<google::protobuf::Message> resp_msg(resp_decoder.GetProtoMessageFromDescriptor(resp_desc, resp_type, error_s));
   if (!resp_msg) throw std::runtime_error("Could not create response message object: " + error_s);
 
   int cnt(0);

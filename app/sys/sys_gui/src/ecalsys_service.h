@@ -26,7 +26,7 @@
 #include "ecalsys_gui.h"
 
 // protobuf remote control
-#include "ecal/pb/sys/service.pb.h"
+#include <ecal/app/pb/sys/service.pb.h>
 
 class eCALSysServiceImpl : public eCAL::pb::sys::Service
 {
@@ -36,15 +36,15 @@ public:
   void StartTasks(::google::protobuf::RpcController* controller,
     const ::eCAL::pb::sys::TaskRequest* request,
     ::eCAL::pb::sys::Response* response,
-    ::google::protobuf::Closure* done);
+    ::google::protobuf::Closure* done) override;
   void StopTasks(::google::protobuf::RpcController* controller,
     const ::eCAL::pb::sys::TaskRequest* request,
     ::eCAL::pb::sys::Response* response,
-    ::google::protobuf::Closure* done);
+    ::google::protobuf::Closure* done) override;
   void RestartTasks(::google::protobuf::RpcController* controller,
     const ::eCAL::pb::sys::TaskRequest* request,
     ::eCAL::pb::sys::Response* response,
-    ::google::protobuf::Closure* done);
+    ::google::protobuf::Closure* done) override;
   void GetStatus(::google::protobuf::RpcController* controller,
     const ::eCAL::pb::sys::GenericRequest* request,
     ::eCAL::pb::sys::State* response,

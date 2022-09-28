@@ -164,6 +164,7 @@ signals:
   void keySequenceDeletePressed();
   void keySequenceCopyPressed();
   void keyEnterPressed();
+  void headerContextMenuChanged();
 
 private slots:
  void headerContextMenu(const QPoint& pos);

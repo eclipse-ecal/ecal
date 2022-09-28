@@ -33,6 +33,11 @@ public:
   {
     ENABLED,
     CHANNEL_NAME,
+    CHANNEL_TYPE,
+    TOTAL_CHANNEL_SIZE,
+
+    MIN_CHANNEL_TIMESTAMP,
+    MAX_CHANNEL_TIMESTAMP,
 
     EXPECTED_FRAMES,
     EXISTING_FRAMES,
@@ -40,6 +45,7 @@ public:
     RELATIVE_LOSS,
 
     MESSAGE_COUNTER,
+    FREQUENCY,
 
     COLUMN_COUNT
   };
@@ -74,24 +80,34 @@ protected:
 private:
   std::map<Columns, QString> columnLabels =
   { 
-    { Columns::ENABLED,         ""} ,
-    { Columns::CHANNEL_NAME,    "Channel" } ,
-    { Columns::MESSAGE_COUNTER, "Published messages" } ,
-    { Columns::EXPECTED_FRAMES, "Expected frames" } ,
-    { Columns::EXISTING_FRAMES, "Total frames" } ,
-    { Columns::LOST_FRAMES,     "Missing frames" } ,
-    { Columns::RELATIVE_LOSS,   "Rel. missing" } ,
+    { Columns::ENABLED,               ""} ,
+    { Columns::CHANNEL_NAME,          "Channel" } ,
+    { Columns::CHANNEL_TYPE,          "Channel type"},
+    { Columns::MESSAGE_COUNTER,       "Published messages" } ,
+    { Columns::TOTAL_CHANNEL_SIZE,    "Total estimated channel size" } ,
+    { Columns::MIN_CHANNEL_TIMESTAMP, "Min timestamp"},
+    { Columns::MAX_CHANNEL_TIMESTAMP, "Max timestamp"},
+    { Columns::FREQUENCY,             "Frequency"},
+    { Columns::EXPECTED_FRAMES,       "Expected frames" } ,
+    { Columns::EXISTING_FRAMES,       "Total frames" } ,
+    { Columns::LOST_FRAMES,           "Missing frames" } ,
+    { Columns::RELATIVE_LOSS,         "Rel. missing" } ,
   };
 
   std::map<Columns, int> task_tree_item_column_mapping =
   {
-    { Columns::ENABLED,         (int)ChannelTreeItem::Columns::ENABLED },
-    { Columns::CHANNEL_NAME,    (int)ChannelTreeItem::Columns::SOURCE_CHANNEL_NAME },
-    { Columns::MESSAGE_COUNTER, -1 },
-    { Columns::EXPECTED_FRAMES, (int)ChannelTreeItem::Columns::EXPECTED_FRAMES },
-    { Columns::EXISTING_FRAMES, (int)ChannelTreeItem::Columns::EXISTING_FRAMES },
-    { Columns::LOST_FRAMES,     (int)ChannelTreeItem::Columns::LOST_FRAMES },
-    { Columns::RELATIVE_LOSS,   (int)ChannelTreeItem::Columns::RELATIVE_LOSS },
+    { Columns::ENABLED,               (int)ChannelTreeItem::Columns::ENABLED },
+    { Columns::CHANNEL_NAME,          (int)ChannelTreeItem::Columns::SOURCE_CHANNEL_NAME },
+    { Columns::CHANNEL_TYPE,          (int)ChannelTreeItem::Columns::CHANNEL_TYPE},
+    { Columns::TOTAL_CHANNEL_SIZE,    (int)ChannelTreeItem::Columns::TOTAL_CHANNEL_SIZE},
+    { Columns::MESSAGE_COUNTER,       -1 },
+    { Columns::MIN_CHANNEL_TIMESTAMP, (int)ChannelTreeItem::Columns::MIN_CHANNEL_TIMESTAMP },
+    { Columns::MAX_CHANNEL_TIMESTAMP, (int)ChannelTreeItem::Columns::MAX_CHANNEL_TIMESTAMP },
+    { Columns::FREQUENCY,             (int)ChannelTreeItem::Columns::FREQUENCY },
+    { Columns::EXPECTED_FRAMES,       (int)ChannelTreeItem::Columns::EXPECTED_FRAMES },
+    { Columns::EXISTING_FRAMES,       (int)ChannelTreeItem::Columns::EXISTING_FRAMES },
+    { Columns::LOST_FRAMES,           (int)ChannelTreeItem::Columns::LOST_FRAMES },
+    { Columns::RELATIVE_LOSS,         (int)ChannelTreeItem::Columns::RELATIVE_LOSS },
 
   };
 

@@ -37,7 +37,9 @@ namespace eCAL
   public:
     CUDPReceiverAsio(const SReceiverAttr& attr_);
 
-    bool AddMultiCastGroup(const char* ipaddr_) override;
+    // this virtual function is called during construction/destruction,
+    // so, mark it as final to ensure that no derived classes override it.
+    bool AddMultiCastGroup(const char* ipaddr_) final override;
     bool RemMultiCastGroup(const char* ipaddr_) override;
 
     size_t Receive(char* buf_, size_t len_, int timeout_, ::sockaddr_in* address_ = nullptr) override;

@@ -25,7 +25,7 @@ First check out the eCAL repository and all of the submodules:
 
 .. code-block:: batch
 
-   git clone https://github.com/continental/ecal.git
+   git clone https://github.com/eclipse-ecal/ecal.git
    cd ecal
    git submodule init
    git submodule update
@@ -125,7 +125,7 @@ First check out the eCAL repository and all of the submodules:
 
          .. code-block:: bash
 
-            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qtbase5-dev libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
+            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qtbase5-dev libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev libyaml-cpp-dev
 
       #. If you plan to create the eCAL python language extension:
 
@@ -140,7 +140,7 @@ First check out the eCAL repository and all of the submodules:
 
          .. code-block:: bash
 
-            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qtbase5-dev libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
+            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qtbase5-dev libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev libyaml-cpp-dev
 
       #. If you plan to create the eCAL python language extension:
 
@@ -165,7 +165,7 @@ First check out the eCAL repository and all of the submodules:
 
          .. code-block:: bash
 
-            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qtbase5-dev libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
+            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qtbase5-dev libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev libyaml-cpp-dev
 
       #. If you plan to create the eCAL python language extension:
 
@@ -197,7 +197,7 @@ First check out the eCAL repository and all of the submodules:
 
          .. code-block:: bash
 
-            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev
+            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev libyaml-cpp-dev
 
 |fa-ubuntu| Ubuntu 16/18/20/22 build
 ------------------------------------

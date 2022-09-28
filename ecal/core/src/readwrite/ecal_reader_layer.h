@@ -31,7 +31,7 @@
 namespace eCAL
 {
   // ecal data layer specific parameters
-  // will be transmitted between writer and reader
+  // transmitted from a writer to a reader
   struct SReaderLayerPar
   {
     std::string host_name;
@@ -50,15 +50,22 @@ namespace eCAL
 
     virtual ~CReaderLayer() = default;
 
+    // initialize layer
+    // will be called one time on eCAL initialization
     virtual void Initialize() = 0;
 
+    // activate / create a specific subscription
     virtual void AddSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, QOS::SReaderQOS qos_) = 0;
+
+    // deactivate / destroy a specific subscription
     virtual void RemSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_) = 0;
 
+    // connection paramter from writer side
     virtual void SetConnectionParameter(SReaderLayerPar& par_) = 0;
 
     static std::shared_ptr<T> Get()
     {
+      static std::shared_ptr<T> layer = nullptr;
       if (!layer)
       {
         layer = std::make_shared<T>();
@@ -66,7 +73,5 @@ namespace eCAL
       return layer;
     }
 
-  private:
-    static std::shared_ptr<T> layer;
   };
 };

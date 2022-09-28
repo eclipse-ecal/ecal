@@ -42,6 +42,8 @@ public:
 
   bool PublishFrame(long long index);
 
+  void CalculateEstimatedSizeForChannels();
+
 
   //////////////////////////////////////////////////////////////////////////////
   //// Getters                                                              ////
@@ -55,6 +57,10 @@ public:
 
   std::chrono::nanoseconds GetMeasurementLength() const;
   std::set<std::string> GetChannelNames() const;
+  double GetMinTimestampOfChannel(const std::string& channel_name) const;
+  double GetMaxTimestampOfChannel(const std::string& channel_name) const;
+  std::string GetChannelType(const std::string& channel_name) const;
+  size_t GetChannelCumulativeEstimatedSize(const std::string& channel_name) const;
   std::map<std::string, std::string> GetChannelMapping() const;
 
   std::map<std::string, long long> GetMessageCounters() const;
@@ -107,6 +113,7 @@ private:
   bool                                    use_receive_timestamp_;
 
   std::vector<MeasurementFrame>           frame_table_;
+  std::map<std::string, size_t>           total_estimated_channel_size_map_;
   std::map<std::string, PublisherInfo>    publisher_map_;
   bool                                    publishers_initialized_;
 

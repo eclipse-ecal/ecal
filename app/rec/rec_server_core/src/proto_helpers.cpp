@@ -90,6 +90,7 @@ namespace eCAL
         rec_server_config_pb.set_root_dir(rec_server_config.root_dir_);
         rec_server_config_pb.set_meas_name(rec_server_config.meas_name_);
         rec_server_config_pb.set_max_file_size_mib(rec_server_config.max_file_size_);
+        rec_server_config_pb.set_one_file_per_topic(rec_server_config.one_file_per_topic_);
         rec_server_config_pb.set_description(rec_server_config.description_);
 
         rec_server_config_pb.clear_enabled_clients_config();
@@ -323,10 +324,11 @@ namespace eCAL
 
       void FromProtobuf(const eCAL::pb::rec_server::RecServerConfig& rec_server_config_pb, eCAL::rec_server::RecServerConfig& rec_server_config)
       {
-        rec_server_config.root_dir_      = rec_server_config_pb.root_dir();
-        rec_server_config.meas_name_     = rec_server_config_pb.meas_name();
-        rec_server_config.max_file_size_ = rec_server_config_pb.max_file_size_mib();
-        rec_server_config.description_   = rec_server_config_pb.description();
+        rec_server_config.root_dir_           = rec_server_config_pb.root_dir();
+        rec_server_config.meas_name_          = rec_server_config_pb.meas_name();
+        rec_server_config.max_file_size_      = rec_server_config_pb.max_file_size_mib();
+        rec_server_config.one_file_per_topic_ = rec_server_config_pb.one_file_per_topic();
+        rec_server_config.description_        = rec_server_config_pb.description();
 
         rec_server_config.enabled_clients_config_.clear();
         for (const auto& rec_client_config_pair : rec_server_config_pb.enabled_clients_config())

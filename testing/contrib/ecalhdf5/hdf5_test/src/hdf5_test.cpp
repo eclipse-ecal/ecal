@@ -90,7 +90,7 @@ TEST(HDF5, WriteReadIntegrity)
   const long long   t2_id            = 2LL;
   const long long   t2_clock         = 12LL;
 
-  const std::string t3_name          = " ASCII and beyond!\a\b\t\n\v\f\r\"#$%&\'()*+,-./0123456789:;<=>\?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~¸ˆ‰‹÷ƒ‚¬Ù‘˚€·‡¡¿˙Ÿ";
+  const std::string t3_name          = " ASCII and beyond!\a\b\t\n\v\f\r\"#$%&\'()*+,-./0123456789:;<=>\?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~√º√∂√§√ú√ñ√Ñ√¢√Ç√¥√î√ª√õ√°√†√Å√Ä√∫√ô";
   const std::string t3_data          = "o.O";
   const long long   t3_snd_timestamp = 1003LL;
   const long long   t3_rcv_timestamp = 2003LL;
@@ -386,3 +386,139 @@ TEST(HDF5, Performance_4096kb)
   MeasPerf("meas_4096_pkg", DATA_SET_SIZE_4, DATA_SET_NUMBER_4);
 }
 #endif // TEST_SIZE_4
+
+TEST(HDF5, IsOneFilePerChannelEnabled)
+{
+  eCAL::eh5::HDF5Meas hdf5_writer;
+  std::string base_name = "output";
+
+  if (hdf5_writer.Open(output_dir, eCAL::eh5::eAccessType::CREATE))
+  {
+    hdf5_writer.SetFileBaseName(base_name);
+    hdf5_writer.SetMaxSizePerFile(max_size_per_file);
+    hdf5_writer.SetOneFilePerChannelEnabled(true);
+  }
+  else
+  {
+    FAIL() << "Failed to open HDF5 Writer";
+  }
+
+  EXPECT_TRUE(hdf5_writer.IsOneFilePerChannelEnabled());
+
+  hdf5_writer.SetOneFilePerChannelEnabled(false);
+  EXPECT_TRUE(!hdf5_writer.IsOneFilePerChannelEnabled());
+}
+
+TEST(HDF5, SetOneFilePerChannelEnabled)
+{
+  // Define data that will be written to the file
+  const std::string t1_name          = "topic_1";
+  const std::string t1_data          = "topic1: test data";
+  const long long   t1_snd_timestamp = 1001LL;
+  const long long   t1_rcv_timestamp = 2001LL;
+  const long long   t1_id            = 1LL;
+  const long long   t1_clock         = 11LL;
+
+  const std::string t2_name          = "topic_2";
+  const std::string t2_data          = "topic2: test data";
+  const long long   t2_snd_timestamp = 1002LL;
+  const long long   t2_rcv_timestamp = 2002LL;
+  const long long   t2_id            = 2LL;
+  const long long   t2_clock         = 12LL;
+
+  std::string base_name = "output";
+
+  // Write HDF5 file
+  {
+    eCAL::eh5::HDF5Meas hdf5_writer;
+
+    if (hdf5_writer.Open(output_dir, eCAL::eh5::eAccessType::CREATE))
+    {
+      hdf5_writer.SetFileBaseName(base_name);
+      hdf5_writer.SetMaxSizePerFile(max_size_per_file);
+      hdf5_writer.SetOneFilePerChannelEnabled(true);
+    }
+    else
+    {
+      FAIL() << "Failed to open HDF5 Writer";
+    }
+
+    EXPECT_TRUE(hdf5_writer.AddEntryToFile(
+      t1_data.data(),           // data
+      t1_data.size(),           // data size
+      t1_snd_timestamp,         // snd_timestamp
+      t1_rcv_timestamp,         // rcv_timestamp
+      t1_name,                  // channel name
+      t1_id,                    // id
+      t1_clock                  // clock
+    ));
+
+    EXPECT_TRUE(hdf5_writer.AddEntryToFile(
+      t2_data.data(),           // data
+      t2_data.size(),           // data size
+      t2_snd_timestamp,         // snd_timestamp
+      t2_rcv_timestamp,         // rcv_timestamp
+      t2_name,                  // channel name
+      t2_id,                    // id
+      t2_clock                  // clock
+    ));
+
+    EXPECT_TRUE(hdf5_writer.IsOneFilePerChannelEnabled());
+
+    EXPECT_TRUE(hdf5_writer.Close());
+  }
+
+  //  Read HDF5 topic 1 file
+  {
+    eCAL::eh5::HDF5Meas hdf5_reader;
+
+    EXPECT_TRUE(hdf5_reader.Open(output_dir + "/" + base_name + "_" + t1_name + ".hdf5"));
+
+    std::set<std::string> expected_channel_names {t1_name};
+    EXPECT_EQ(hdf5_reader.GetChannelNames(), expected_channel_names);
+
+    eCAL::eh5::EntryInfoSet entries_info_set_t1;
+    EXPECT_TRUE(hdf5_reader.GetEntriesInfo(t1_name, entries_info_set_t1));
+    EXPECT_EQ(entries_info_set_t1.size(), 1);
+
+    EXPECT_EQ(entries_info_set_t1.begin()->SndTimestamp, t1_snd_timestamp);
+    EXPECT_EQ(entries_info_set_t1.begin()->RcvTimestamp, t1_rcv_timestamp);
+    EXPECT_EQ(entries_info_set_t1.begin()->SndID,        t1_id);
+    EXPECT_EQ(entries_info_set_t1.begin()->SndClock,     t1_clock);
+
+    size_t t1_data_size;
+    EXPECT_TRUE(hdf5_reader.GetEntryDataSize(entries_info_set_t1.begin()->ID, t1_data_size));
+
+    std::string t1_data_read(t1_data_size, ' ');
+    EXPECT_TRUE(hdf5_reader.GetEntryData(entries_info_set_t1.begin()->ID, const_cast<char*>(t1_data_read.data())));
+    EXPECT_EQ(t1_data_read, t1_data);
+  }
+
+  //  Read HDF5 topic 2 file
+  {
+    eCAL::eh5::HDF5Meas hdf5_reader;
+
+    EXPECT_TRUE(hdf5_reader.Open(output_dir + "/" + base_name + "_" + t2_name + ".hdf5"));
+
+    std::set<std::string> expected_channel_names {t2_name};
+    EXPECT_EQ(hdf5_reader.GetChannelNames(), expected_channel_names);
+
+    eCAL::eh5::EntryInfoSet entries_info_set_t2;
+    EXPECT_TRUE(hdf5_reader.GetEntriesInfo(t2_name, entries_info_set_t2));
+    EXPECT_EQ(entries_info_set_t2.size(), 1);
+
+    EXPECT_EQ(entries_info_set_t2.begin()->SndTimestamp, t2_snd_timestamp);
+    EXPECT_EQ(entries_info_set_t2.begin()->RcvTimestamp, t2_rcv_timestamp);
+    EXPECT_EQ(entries_info_set_t2.begin()->SndID,        t2_id);
+    EXPECT_EQ(entries_info_set_t2.begin()->SndClock,     t2_clock);
+
+    size_t t2_data_size;
+    EXPECT_TRUE(hdf5_reader.GetEntryDataSize(entries_info_set_t2.begin()->ID, t2_data_size));
+
+    std::string t2_data_read(t2_data_size, ' ');
+    EXPECT_TRUE(hdf5_reader.GetEntryData(entries_info_set_t2.begin()->ID, const_cast<char*>(t2_data_read.data())));
+    EXPECT_EQ(t2_data_read, t2_data);
+  }
+
+}
+

@@ -98,7 +98,7 @@ QByteArray asByteArrayBlob(const QByteArray& bytes)
 QString asChecksum(const QByteArray& bytes)
 {
   quint16 crc16 = qChecksum(bytes.data(), (uint)bytes.length());
-  return QString("%1").arg(QString::number(crc16, 16).toUpper(), 4, '0');
+  return QString("%1 bytes (CRC16: %2)").arg(QString::number(bytes.length())).arg(QString::number(crc16, 16).toUpper(), 4, '0');
 }
 
 QVariant MonitorTreeItem::data(Columns column, Qt::ItemDataRole role) const

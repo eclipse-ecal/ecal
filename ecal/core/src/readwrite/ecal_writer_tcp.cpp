@@ -25,7 +25,7 @@
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
-#include "ecal/pb/layer.pb.h"
+#include <ecal/core/pb/layer.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
@@ -54,8 +54,10 @@ namespace eCAL
     Destroy();
   }
 
-  void CDataWriterTCP::GetInfo(SWriterInfo info_)
+  SWriterInfo CDataWriterTCP::GetInfo()
   {
+    SWriterInfo info_;
+
     info_.name                 = "tcp";
     info_.description          = "tcp data writer";
 
@@ -66,6 +68,8 @@ namespace eCAL
     info_.has_qos_reliability  = false;
 
     info_.send_size_max        = -1;
+
+    return info_;
   }
 
   bool CDataWriterTCP::Create(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_)

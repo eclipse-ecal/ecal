@@ -30,7 +30,7 @@
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
-#include "ecal/pb/ecal.pb.h"
+#include <ecal/core/pb/ecal.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
@@ -101,8 +101,8 @@ namespace eCAL
     size_t AddSample(const std::string& tid_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eCAL::pb::eTLayerType layer_);
 
   protected:
-    void StartDataLayers();
-    void StopDataLayers();
+    void SubscribeToLayers();
+    void UnsubscribeFromLayers();
 
     bool DoRegister(const bool force_);
     void SetConnected(bool state_);

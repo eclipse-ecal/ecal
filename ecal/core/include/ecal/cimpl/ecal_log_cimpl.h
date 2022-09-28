@@ -25,6 +25,8 @@
 #ifndef ecal_log_cimpl_h_included
 #define ecal_log_cimpl_h_included
 
+#include <ecal/ecal_os.h>
+
 #include <ecal/ecal_log_level.h>
 
 #ifdef __cplusplus

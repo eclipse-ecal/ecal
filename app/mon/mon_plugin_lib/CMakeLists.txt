@@ -18,6 +18,11 @@
 
 project(mon_plugin_lib)
 
+find_package(Qt5 COMPONENTS
+    Core
+    Widgets
+REQUIRED)
+
 set(ecalmonpluginlib_src
   src/dummy.cpp
 )
@@ -34,6 +39,12 @@ add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} PUBLIC 
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC
+    Qt5::Core
+    Qt5::Widgets
 )
 
 ecal_install_library(${PROJECT_NAME})

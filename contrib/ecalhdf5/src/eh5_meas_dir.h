@@ -27,6 +27,7 @@
 #include <map>
 #include <string>
 #include <unordered_map>
+#include <memory>
 
 #include "eh5_meas_impl.h"
 
@@ -56,7 +57,7 @@ namespace eCAL
       /**
       * @brief Destructor
       **/
-      ~HDF5MeasDir();
+      ~HDF5MeasDir() override;
 
       /**
       * @brief Open file
@@ -66,49 +67,71 @@ namespace eCAL
       *
       * @return         true if succeeds, false if it fails
       **/
-      bool Open(const std::string& path, eAccessType access = eAccessType::RDONLY);
+      bool Open(const std::string& path, eAccessType access = eAccessType::RDONLY) override;
 
       /**
       * @brief Close file
       *
       * @return         true if succeeds, false if it fails
       **/
-      bool Close();
+      bool Close() override;
 
       /**
       * @brief Checks if file/measurement is ok
       *
       * @return  true if meas can be opened(read) or location is accessible(write), false otherwise
       **/
-      bool IsOk() const;
+      bool IsOk() const override;
 
       /**
       * @brief Get the File Type Version of the current opened file
       *
       * @return       file version
       **/
-      std::string GetFileVersion() const;
+      std::string GetFileVersion() const override;
 
       /**
       * @brief Gets maximum allowed size for an individual file
       *
       * @return       maximum size in MB
       **/
-      size_t GetMaxSizePerFile() const;
+      size_t GetMaxSizePerFile() const override;
 
       /**
       * @brief Sets maximum allowed size for an individual file
       *
       * @param size   maximum size in MB
       **/
-      void SetMaxSizePerFile(size_t size);
+      void SetMaxSizePerFile(size_t size) override;
+
+      /**
+      * @brief Whether each Channel shall be writte in its own file
+      * 
+      * When enabled, data is clustered by channel and each channel is written
+      * to its own file. The filenames will consist of the basename and the 
+      * channel name.
+      * 
+      * @return true, if one file per channel is enabled
+      */
+      bool IsOneFilePerChannelEnabled() const override;
+
+      /**
+      * @brief Enable / disable the creation of one individual file per channel
+      * 
+      * When enabled, data is clustered by channel and each channel is written
+      * to its own file. The filenames will consist of the basename and the 
+      * channel name.
+      * 
+      * @param enabled   Whether one file shall be created per channel
+      */
+      void SetOneFilePerChannelEnabled(bool enabled) override;
 
       /**
       * @brief Get the available channel names of the current opened file / measurement
       *
       * @return       channel names
       **/
-      std::set<std::string> GetChannelNames() const;
+      std::set<std::string> GetChannelNames() const override;
 
       /**
       * @brief Check if channel exists in measurement
@@ -117,7 +140,7 @@ namespace eCAL
       *
       * @return       true if exists, false otherwise
       **/
-      bool HasChannel(const std::string& channel_name) const;
+      bool HasChannel(const std::string& channel_name) const override;
 
       /**
       * @brief Get the channel description for the given channel
@@ -126,7 +149,7 @@ namespace eCAL
       *
       * @return              channel description
       **/
-      std::string GetChannelDescription(const std::string& channel_name) const;
+      std::string GetChannelDescription(const std::string& channel_name) const override;
 
       /**
       * @brief Set description of the given channel
@@ -134,7 +157,7 @@ namespace eCAL
       * @param channel_name    channel name
       * @param description     description of the channel
       **/
-      void SetChannelDescription(const std::string& channel_name, const std::string& description);
+      void SetChannelDescription(const std::string& channel_name, const std::string& description) override;
 
       /**
       * @brief Gets the channel type of the given channel
@@ -143,7 +166,7 @@ namespace eCAL
       *
       * @return              channel type
       **/
-      std::string GetChannelType(const std::string& channel_name) const;
+      std::string GetChannelType(const std::string& channel_name) const override;
 
       /**
       * @brief Set type of the given channel
@@ -151,7 +174,7 @@ namespace eCAL
       * @param channel_name  channel name
       * @param type          type of the channel
       **/
-      void SetChannelType(const std::string& channel_name, const std::string& type);
+      void SetChannelType(const std::string& channel_name, const std::string& type) override;
 
       /**
       * @brief Gets minimum timestamp for specified channel
@@ -160,7 +183,7 @@ namespace eCAL
       *
       * @return                minimum timestamp value
       **/
-      long long GetMinTimestamp(const std::string& channel_name) const;
+      long long GetMinTimestamp(const std::string& channel_name) const override;
 
       /**
       * @brief Gets maximum timestamp for specified channel
@@ -169,7 +192,7 @@ namespace eCAL
       *
       * @return                maximum timestamp value
       **/
-      long long GetMaxTimestamp(const std::string& channel_name) const;
+      long long GetMaxTimestamp(const std::string& channel_name) const override;
 
       /**
       * @brief Gets the header info for all data entries for the given channel
@@ -180,7 +203,7 @@ namespace eCAL
       *
       * @return                    true if succeeds, false if it fails
       **/
-      bool GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const;
+      bool GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const override;
 
       /**
       * @brief Gets the header info for data entries for the given channel included in given time range (begin->end)
@@ -193,7 +216,7 @@ namespace eCAL
       *
       * @return                   true if succeeds, false if it fails
       **/
-      bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const;
+      bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const override;
 
       /**
       * @brief Gets data size of a specific entry
@@ -203,7 +226,7 @@ namespace eCAL
       *
       * @return                 true if succeeds, false if it fails
       **/
-      bool GetEntryDataSize(long long entry_id, size_t& size) const;
+      bool GetEntryDataSize(long long entry_id, size_t& size) const override;
 
       /**
       * @brief Gets data from a specific entry
@@ -213,14 +236,14 @@ namespace eCAL
       *
       * @return                 true if succeeds, false if it fails
       **/
-      bool GetEntryData(long long entry_id, void* data) const;
+      bool GetEntryData(long long entry_id, void* data) const override;
 
       /**
       * @brief Set measurement file base name
       *
       * @param base_name        File base name.
       **/
-      void SetFileBaseName(const std::string& base_name);
+      void SetFileBaseName(const std::string& base_name) override;
 
       /**
       * @brief Add entry to file
@@ -235,7 +258,7 @@ namespace eCAL
       *
       * @return               true if succeeds, false if it fails
       **/
-      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock);
+      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) override;
 
       typedef std::function<void(void)> CallbackFunction;
       /**
@@ -243,13 +266,17 @@ namespace eCAL
       *
       * @param cb   callback function
       **/
-      void ConnectPreSplitCallback(CallbackFunction cb);
+      void ConnectPreSplitCallback(CallbackFunction cb) override;
 
       /**
       * @brief Disconnect pre file split callback
       **/
-      void DisconnectPreSplitCallback();
+      void DisconnectPreSplitCallback() override;
 
+
+    // =====================================================================
+    // ==== Reading Files
+    // =====================================================================
     protected:
       struct ChannelInfo
       {
@@ -257,7 +284,7 @@ namespace eCAL
         std::string description;
         std::list<const eCAL::eh5::HDF5Meas*> files;
 
-        ChannelInfo() {}
+        ChannelInfo() = default;
         ChannelInfo(const std::string& type_, const std::string& description_)
           : type(type_)
           , description(description_)
@@ -266,7 +293,7 @@ namespace eCAL
 
       struct EntryInfo
       {
-        long long                     file_id;
+        long long                   file_id;
         const eCAL::eh5::HDF5Meas* reader;
 
         EntryInfo() : file_id(0), reader(nullptr) {}
@@ -282,7 +309,7 @@ namespace eCAL
       typedef std::unordered_map<long long, EntryInfo>      EntriesByIdUMap;
       typedef std::unordered_map<std::string, EntryInfoSet> EntriesByChannelUMap;
 
-      HDF5Files              files_;
+      HDF5Files              file_readers_;
       ChannelInfoUMap        channels_info_;
       EntriesByIdUMap        entries_by_id_;
       EntriesByChannelUMap   entries_by_chn_;
@@ -296,14 +323,7 @@ namespace eCAL
 
       typedef std::map<std::string, Channel> Channels;
 
-      std::string              output_dir_;
-      std::string              file_name_;
       Channels                 channels_;
-      CallbackFunction         cb_pre_split_;
-      hid_t                    file_id_;
-      int                      file_split_counter_;
-      unsigned long long       entries_counter_;
-      size_t                   max_size_per_file_;
       eAccessType              access_;
 
       std::list<std::string> GetHdfFiles(const std::string& path) const;
@@ -315,57 +335,39 @@ namespace eCAL
         return std::equal(end.rbegin(), end.rend(), str.rbegin());
       }
 
-      /**
-      * @brief Creates the actual file
-      *
-      * @return       file ID, file was not created if id is negative
-      **/
-      hid_t Create();
-
       bool OpenRX(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/);
 
-      /**
-      * @brief Set attribute to object(file, entry...)
-      *
-      * @param id       ID of the attributes parent
-      * @param name     Name of the attribute
-      * @param value    Value of the attribute
-      *
-      * @return         true if succeeds, false if it fails
-      **/
-      bool SetAttribute(const hid_t& id, const std::string& name, const std::string& value);
 
-      /**
-      * @brief Checks if current file size + entry size does not exceed the maximum allowed size of the file
-      *
-      * @param size  Size of the entry in bytes
-      *
-      * @return  true if entry can be saved in current file, false if it can not be added to the current file
-      **/
-      bool EntryFitsTheFile(const hsize_t& size) const;
+      // =====================================================================
+      // ==== Writing files
+      // =====================================================================
+    protected:
+      typedef std::unordered_map<std::string, std::unique_ptr<::eCAL::eh5::HDF5MeasImpl>> FileWriterMap;
 
-      /**
-      * @brief Gets the size of the file
-      *
-      * @param size  Size of the file in bytes
-      *
-      * @return  true if succeeds, false if it fails
-      **/
-      bool GetFileSize(hsize_t& size) const;
+      std::string         output_dir_;                                          //!< The directory where the HDF5 files shall be placed when in CREATE mode
+      std::string         base_name_;                                           //!< The filename of HDF5 files when in CREATE mode. Will be postfixed by the channel name when in one_file_per_channel_ mode. Will be further postfixed by a number when the files are splitted.
+      bool                one_file_per_channel_;                                //!< If true, one FileWriter will be created for each channel.
+      FileWriterMap       file_writers_;                                        //!< Map of {ChannelName -> FileWriter}. Grows for each new channel, if one_file_per_channel_ is true. Contains only one "" key otherwise that is used for all channels. 
 
-      /**
-      * @brief Creates the entries "table of contents" (timestamp + entry id)
-      *        (Call it just before closing the file)
-      *
-      * @param channelName         name for the dataset
-      * @param channelType         type for the dataset
-      * @param channelDescription  description for the dataset
-      * @param entries             entries for given channel
-      *
-      * @return                    true if succeeds, false if it fails
-      **/
-      bool CreateEntriesTableOfContentsFor(const std::string& channelName, const std::string& channelType, const std::string& channelDescription, const EntryInfoVect& entries);
+      size_t              max_size_per_file_;                                   //!< Maximum file size after which the File Writer shall split
+      CallbackFunction    cb_pre_split_;                                        //!< Callback that is executed before a new hdf5 file is created during splitting. Will be executed by each file writer individually.
 
+    protected:
+      /**
+       * @brief Returns a writer for the given channel name
+       * 
+       * If one_file_per_channel_ is true, one writer for each channel will be
+       * create and / or returned. Otherwise, only one writer will exist and
+       * be reused for all channels.
+       * 
+       * New writers will be initialized with the split size and callback that
+       * were set in this class.
+       * 
+       * @param channel_name  The channel name to return a writer for
+       * 
+       * @return an iterator to the writer
+       */
+      FileWriterMap::iterator GetWriter(const std::string& channel_name);
     };
   }  //  namespace eh5
 }  //  namespace eCAL

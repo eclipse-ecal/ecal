@@ -25,6 +25,8 @@
 #ifndef ecal_time_cimpl_h_included
 #define ecal_time_cimpl_h_included
 
+#include <ecal/ecal_os.h>
+
 #ifdef __cplusplus
 extern "C"
 {

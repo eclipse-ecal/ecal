@@ -54,7 +54,7 @@ ecal_add_mon_plugin(${PROJECT_NAME}
 )
 
 create_targets_protobuf()
-target_link_libraries (${PROJECT_NAME} Qt5::Widgets eCAL::core eCAL::pb protobuf::libprotobuf MonitorTreeView eCAL::mon_plugin_lib)
+target_link_libraries (${PROJECT_NAME} Qt5::Widgets eCAL::core eCAL::app_pb protobuf::libprotobuf MonitorTreeView eCAL::mon_plugin_lib)
 
 if(MSVC)
   set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127 /wd4714")

@@ -22,7 +22,9 @@
 SignalTreeModel::SignalTreeModel(QObject* parent)
   : QAbstractTreeModel(parent)
 {
-  setRoot(new SignalTreeItem(-1, this));
+  // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+  // where the vtable is not created yet or it's destructed.
+  SignalTreeModel::setRoot(new SignalTreeItem(-1, this));
 }
 
 SignalTreeModel::~SignalTreeModel()

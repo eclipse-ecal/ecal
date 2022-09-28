@@ -19,6 +19,7 @@
 
 #include <ecal/ecal.h>
 #include "io/ecal_memfile.h"
+#include "io/ecal_memfile_db.h"
 
 #include <atomic>
 #include <chrono>
@@ -30,9 +31,9 @@
 
 namespace eCAL
 {
-  SMemFileMap* g_memfile_map()
+  CMemFileMap* g_memfile_map()
   {
-    static std::shared_ptr<SMemFileMap> m(new SMemFileMap);
+    static std::shared_ptr<CMemFileMap> m(new CMemFileMap);
     return(m.get());
   }
 }

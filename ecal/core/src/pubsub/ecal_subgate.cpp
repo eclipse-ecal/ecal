@@ -116,6 +116,7 @@ namespace eCAL
       if(iter->second == datareader_)
       {
         m_topic_name_datareader_map.erase(iter);
+        ret_state = true;
         break;
       }
     }
@@ -203,12 +204,25 @@ namespace eCAL
     if(!m_created) return;
 
     // check topic name
-    auto ecal_sample_topic = ecal_sample_.topic();
-    std::string topic_name = ecal_sample_topic.tname();
+    const auto& ecal_sample_topic = ecal_sample_.topic();
+    const std::string& topic_name = ecal_sample_topic.tname();
     if (topic_name.empty()) return;
 
+    const std::string& topic_type = ecal_sample_topic.ttype();
+    const std::string& topic_desc = ecal_sample_topic.tdesc();
+
+    // Calculate the quality of the current info
+    ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
+    if (!topic_type.empty())
+      quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
+    if (!topic_desc.empty())
+      quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
+    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
+    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PUBLISHER;
+    
     // store description
-    if (g_descgate()) g_descgate()->ApplyTopicDescription(topic_name, ecal_sample_topic.ttype(), ecal_sample_topic.tdesc());
+    if (g_descgate())
+      g_descgate()->ApplyTopicDescription(topic_name, topic_type, topic_desc, quality);
 
     // get process id
     std::string process_id = std::to_string(ecal_sample_.topic().pid());
@@ -238,7 +252,7 @@ namespace eCAL
         std::string writer_par = tlayer.par_layer().SerializeAsString();
 
         // ----------------------------------------------------------------------
-        // REMOVE ME IN VERSION 6
+        // REMOVE ME IN ECAL6
         // ----------------------------------------------------------------------
           // if 'tlayer.par_layer' was not used and
         // 'tlayer.par_shm' is set
@@ -247,7 +261,7 @@ namespace eCAL
           writer_par = "#PAR_SHM#" + tlayer.par_shm();
         }
         // ----------------------------------------------------------------------
-        // REMOVE ME IN VERSION 6
+        // REMOVE ME IN ECAL6
         // ----------------------------------------------------------------------
 
         iter->second->ApplyLocLayerParameter(process_id, tlayer.type(), writer_par);
@@ -261,12 +275,23 @@ namespace eCAL
   {
     if(!m_created) return;
 
-    auto sample_topic = ecal_sample_.topic();
-    std::string host_name  = sample_topic.hname();
-    std::string topic_name = sample_topic.tname();
+    const auto& sample_topic = ecal_sample_.topic();
+    const std::string& host_name  = sample_topic.hname();
+    const std::string& topic_name = sample_topic.tname();
+    const std::string& topic_type = sample_topic.ttype();
+    const std::string& topic_desc = sample_topic.tdesc();
+
+    // Calculate the quality of the current info
+    ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
+    if (!topic_type.empty())
+      quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
+    if (!topic_desc.empty())
+      quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
+    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
+    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PUBLISHER;
 
     // store description
-    if (g_descgate()) g_descgate()->ApplyTopicDescription(topic_name, sample_topic.ttype(), sample_topic.tdesc());
+    if (g_descgate()) g_descgate()->ApplyTopicDescription(topic_name, topic_type, topic_desc, quality);
 
     // handle external publisher connection
     std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);

@@ -25,10 +25,10 @@
 #include "../include/windows/network.h"
 
 Network::Network():
-  first_time_function_call(true),
-  old_timestamp(),
+  receive_net_speed(),
   send_net_speed(),
-  receive_net_speed()
+  old_timestamp(),
+  first_time_function_call(true)
 {
   pipe_command_ = "wmic nicconfig list brief/format:list";
 }
@@ -47,7 +47,7 @@ const std::string Network::ConvertBSTRToStdString(const BSTR &bstr)
   return dblstr;
 }
 
-std::list<std::shared_ptr<Resource>> Network::GetResourceInfo(const HQUERY& /*h_query_*/, PDH_STATUS& /*pdhStatus*/, QueryManager& /*query_manager*/, std::string type /*= "2|3"*/)
+std::list<std::shared_ptr<Resource>> Network::GetResourceInfo(const HQUERY& /*h_query_*/, PDH_STATUS& /*pdhStatus*/, QueryManager& /*query_manager*/, std::string /*type*/ /*= "2|3"*/)
 {
   std::list<std::shared_ptr<Resource>> network_info_list;
   std::vector <std::string>            networks_ip;
@@ -98,17 +98,17 @@ std::list<std::shared_ptr<Resource>> Network::GetResourceInfo(const HQUERY& /*h_
       WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
       nullptr,
       &pointer_enumerator);
-    while (pointer_enumerator != nullptr)
+    while ((SUCCEEDED(hres)) && pointer_enumerator != nullptr)
     {
       HRESULT hr = pointer_enumerator->Next(WBEM_INFINITE, 1, &pointer_class_object, &uReturn);
-      if (0 == uReturn)
+      if ((FAILED(hr)) || 0 == uReturn)
       {
         break;
       }
       VARIANT variant_properties;
       VariantInit(&variant_properties);
       hr = pointer_class_object->Get(L"IPAddress", 0, &variant_properties, 0, 0);
-      if (variant_properties.vt != VT_NULL)
+      if ((SUCCEEDED(hr)) && variant_properties.vt != VT_NULL)
       {
         BSTR first_ip_address;
         static long index = 0;

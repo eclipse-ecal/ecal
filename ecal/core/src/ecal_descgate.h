@@ -38,6 +38,19 @@ namespace eCAL
   class CDescGate
   {
   public:
+    // Enumeration of qulity bits used for detecting how good a topic information is.
+    enum class QualityFlags : int
+    {
+      NO_QUALITY                    = 0,         //!< Special value for initialization
+
+      DESCRIPTION_AVAILABLE         = 0x1 << 4,  //!< Having a descriptor at all is the most important thing
+      INFO_COMES_FROM_CORRECT_TOPIC = 0x1 << 3,  //!< The information comes from the current topic (and has not been borrowed from another topic)
+      INFO_COMES_FROM_PUBLISHER     = 0x1 << 2,  //!< A descriptor coming from the publisher is better than one from a subsriber, as we assume that the publisher knows best what he is publishing
+      INFO_COMES_FROM_THIS_PROCESS  = 0x1 << 1,  //!< We prefer descriptors from the current process
+      TYPE_AVAILABLE                = 0x1 << 0,  //!< Having information about the type's name available is nice but not that important to us.
+    };
+
+  public:
     CDescGate();
     ~CDescGate();
 
@@ -46,7 +59,8 @@ namespace eCAL
 
     void ApplyTopicDescription(const std::string& topic_name_, 
                                const std::string& topic_type_,
-                               const std::string& topic_desc_);
+                               const std::string& topic_desc_,
+                               const QualityFlags description_quality_);
 
     bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
     bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_);
@@ -56,40 +70,50 @@ namespace eCAL
                                  const std::string& req_type_name_, 
                                  const std::string& req_type_desc_, 
                                  const std::string& resp_type_name_,
-                                 const std::string& resp_type_desc_);
+                                 const std::string& resp_type_desc_,
+                                 const QualityFlags info_quality_);
 
     bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_name_, std::string& resp_type_name_);
     bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_type_desc_, std::string& resp_type_desc_);
 
+
   protected:
-    struct STypeDesc
+    struct STopicInfo
     {
-      STypeDesc() : match_fail(false) {};
-      std::string type;
-      std::string desc;
-      bool        match_fail;
+      std::string type_name;                                         //!< Type name of the current topic
+      std::string type_description;                                  //!< Descriptor String of the current topic. Used e.g. for dynamic deserialization
 
-      void set_type(const std::string& topic_type_)
-      {
-        if (topic_type_.empty()) return;
-        type = topic_type_;
-      }
+      QualityFlags description_quality   = QualityFlags::NO_QUALITY; //!< QualityFlags to determine whether we may overwrite the current data with better one. E.g. we prefer the description sent by a publisher over one sent by a subscriber. 
+      bool        type_missmatch_logged = false;                     //!< Whether we have already logged a type-missmatch
+    };
 
-      void set_desc(const std::string& topic_desc_)
-      {
-        if (topic_desc_.empty()) return;
-        desc = topic_desc_;
-      }
+    struct SServiceMethodInfo
+    {
+      std::string request_type_name;                                 //!< Type name of the request message
+      std::string request_type_description;                          //!< Descriptor String of the request description
+      std::string response_type_name;                                //!< Type name of the response message
+      std::string response_type_description;                         //!< Descriptor String of the response message
+
+      QualityFlags info_quality = QualityFlags::NO_QUALITY;          //!< The Quality of the Info
     };
 
     // key: topic name | value: topic(type/desc)
-    typedef std::map<std::string, STypeDesc> TopicNameDescMapT;
-    std::shared_timed_mutex  m_topic_name_desc_sync;
-    TopicNameDescMapT        m_topic_name_desc_map;
+    using TopicInfoMap = std::map<std::string, STopicInfo>;                 //!< Map containing { TopicName -> (Type, Description) } mapping of all topics that are currently known
+    mutable std::shared_timed_mutex  m_topic_info_map_mutex;                //!< Mutex protecting the m_topic_info_map
+    TopicInfoMap                     m_topic_info_map;                      //!< Map containing information about each known topic
 
     // key: tup<service name, method name> | value: tup<request (type/desc), response (type/desc)>
-    typedef std::map<std::tuple<std::string, std::string>, std::tuple<STypeDesc, STypeDesc>> ServiceMethodDescMapT;
-    std::shared_timed_mutex  m_service_method_desc_sync;
-    ServiceMethodDescMapT    m_service_method_desc_map;
+    using ServiceMethodInfoMap 
+      = std::map<std::tuple<std::string, std::string>, SServiceMethodInfo>; //! Map { (ServiceName, MethodName) -> ( (ReqType, ReqDescription), (RespType, RespDescription) ) } mapping of all currently known services
+    mutable std::shared_timed_mutex  m_service_info_map_mutex;              //!< Mutex protecting the m_service_info_map
+    ServiceMethodInfoMap             m_service_info_map;                    //!< Map containing information about each known service method
   };
+
+  constexpr inline CDescGate::QualityFlags  operator~  (CDescGate::QualityFlags  a)                            { return static_cast<CDescGate::QualityFlags>( ~static_cast<std::underlying_type<CDescGate::QualityFlags>::type>(a) ); }
+  constexpr inline CDescGate::QualityFlags  operator|  (CDescGate::QualityFlags  a, CDescGate::QualityFlags b) { return static_cast<CDescGate::QualityFlags>( static_cast<std::underlying_type<CDescGate::QualityFlags>::type>(a) | static_cast<std::underlying_type<CDescGate::QualityFlags>::type>(b) ); }
+  constexpr inline CDescGate::QualityFlags  operator&  (CDescGate::QualityFlags  a, CDescGate::QualityFlags b) { return static_cast<CDescGate::QualityFlags>( static_cast<std::underlying_type<CDescGate::QualityFlags>::type>(a) & static_cast<std::underlying_type<CDescGate::QualityFlags>::type>(b) ); }
+  constexpr inline CDescGate::QualityFlags  operator^  (CDescGate::QualityFlags  a, CDescGate::QualityFlags b) { return static_cast<CDescGate::QualityFlags>( static_cast<std::underlying_type<CDescGate::QualityFlags>::type>(a) ^ static_cast<std::underlying_type<CDescGate::QualityFlags>::type>(b) ); }
+  inline           CDescGate::QualityFlags& operator|= (CDescGate::QualityFlags& a, CDescGate::QualityFlags b) { return reinterpret_cast<CDescGate::QualityFlags&>( reinterpret_cast<std::underlying_type<CDescGate::QualityFlags>::type&>(a) |= static_cast<std::underlying_type<CDescGate::QualityFlags>::type>(b) ); }
+  inline           CDescGate::QualityFlags& operator&= (CDescGate::QualityFlags& a, CDescGate::QualityFlags b) { return reinterpret_cast<CDescGate::QualityFlags&>( reinterpret_cast<std::underlying_type<CDescGate::QualityFlags>::type&>(a) &= static_cast<std::underlying_type<CDescGate::QualityFlags>::type>(b) ); }
+  inline           CDescGate::QualityFlags& operator^= (CDescGate::QualityFlags& a, CDescGate::QualityFlags b) { return reinterpret_cast<CDescGate::QualityFlags&>( reinterpret_cast<std::underlying_type<CDescGate::QualityFlags>::type&>(a) ^= static_cast<std::underlying_type<CDescGate::QualityFlags>::type>(b) ); }
 };

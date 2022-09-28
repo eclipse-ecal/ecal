@@ -68,7 +68,10 @@ namespace eCAL
        *
        * @param topic_name_  Unique topic name.
       **/
-      CPublisher(const std::string& topic_name_) : CMsgPublisher<T>(topic_name_, GetTypeName(), GetDescription())
+
+      // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
+      // where the vtable is not created yet or it's destructed.
+      CPublisher(const std::string& topic_name_) : CMsgPublisher<T>(topic_name_, CPublisher::GetTypeName(), CPublisher::GetDescription())
       {
       }
 
@@ -109,7 +112,7 @@ namespace eCAL
        *
        * @return  Type name.
       **/
-      std::string GetTypeName() const
+      std::string GetTypeName() const override
       {
         static T msg;
         return("proto:" + msg.GetTypeName());
@@ -121,7 +124,7 @@ namespace eCAL
        *
        * @return  Description string.
       **/
-      std::string GetDescription() const
+      std::string GetDescription() const override
       {
         static T msg;
         return(protobuf::GetProtoMessageDescription(msg));
@@ -134,7 +137,7 @@ namespace eCAL
        *
        * @return  Message size.
       **/
-      size_t GetSize(const T& msg_) const
+      size_t GetSize(const T& msg_) const override
       {
         size_t size(0);
 #if GOOGLE_PROTOBUF_VERSION >= 3001000
@@ -154,7 +157,7 @@ namespace eCAL
        *
        * @return  True if it succeeds, false if it fails.
       **/
-      bool Serialize(const T& msg_, char* buffer_, size_t size_) const
+      bool Serialize(const T& msg_, char* buffer_, size_t size_) const override
       {
         return(msg_.SerializeToArray((void*)buffer_, (int)size_));
       }

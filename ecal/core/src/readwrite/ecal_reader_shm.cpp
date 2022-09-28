@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  memory file data reader
+ * @brief  shared memory layer
 **/
 
 #include <ecal/ecal.h>
@@ -27,11 +27,12 @@
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
-#include "ecal/pb/layer.pb.h"
+#include <ecal/core/pb/layer.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 
+#include "ecal_global_accessors.h"
 #include "io/ecal_memfile_pool.h"
 #include "readwrite/ecal_reader_shm.h"
 
@@ -39,17 +40,18 @@
 
 namespace eCAL
 {
-  template<> std::shared_ptr<CSHMLayer> CReaderLayer<eCAL::CSHMLayer>::layer(nullptr);
-
-  void CSHMLayer::SetConnectionParameter(SReaderLayerPar& par_)
+  ////////////////
+  // LAYER
+  ////////////////
+  void CSHMReaderLayer::SetConnectionParameter(SReaderLayerPar& par_)
   {
     // list of memory file to register
     std::vector<std::string> memfile_names;
 
     // ----------------------------------------------------------------------
-    // REMOVE ME IN VERSION 6
+    // REMOVE ME IN ECAL6
     // ----------------------------------------------------------------------
-    // check for old behaviour
+    // check for old behavior
     bool              par_shm(false);
     const std::string par_shm_prefix("#PAR_SHM#");
     if (par_.parameter.size() > par_shm_prefix.size())
@@ -63,12 +65,12 @@ namespace eCAL
       }
     }
     // ----------------------------------------------------------------------
-    // REMOVE ME IN VERSION 6
+    // REMOVE ME IN ECAL6
     // ----------------------------------------------------------------------
 
     if (!par_shm)
     {
-      // new behaviour (eCAL version > 5.8.13/5.9.0)
+      // new behavior (eCAL version > 5.8.13/5.9.0)
       // layer parameter google protobuf message
       eCAL::pb::ConnnectionPar connection_par;
       if (connection_par.ParseFromString(par_.parameter))

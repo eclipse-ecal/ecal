@@ -27,6 +27,7 @@
 #include <functional>
 #include <set>
 #include <string>
+#include <memory>
 
 #include "eh5_types.h"
 
@@ -60,6 +61,18 @@ namespace eCAL
        * @brief Destructor
       **/
       ~HDF5Meas();
+
+      /**
+       * @brief Copy operator
+      **/
+      HDF5Meas(const HDF5Meas& other) = delete;
+      HDF5Meas& operator=(const HDF5Meas& other) = delete;
+
+      /**
+      * @brief Move operator
+      **/
+      HDF5Meas(HDF5Meas&&) = default;
+      HDF5Meas& operator=(HDF5Meas&&) = default;
 
       /**
        * @brief Open file
@@ -122,6 +135,28 @@ namespace eCAL
        * @param size   maximum size in MB
       **/
       void SetMaxSizePerFile(size_t size);
+
+      /**
+      * @brief Whether each Channel shall be writte in its own file
+      * 
+      * When enabled, data is clustered by channel and each channel is written
+      * to its own file. The filenames will consist of the basename and the 
+      * channel name.
+      * 
+      * @return true, if one file per channel is enabled
+      */
+      bool IsOneFilePerChannelEnabled() const;
+
+      /**
+      * @brief Enable / disable the creation of one individual file per channel
+      * 
+      * When enabled, data is clustered by channel and each channel is written
+      * to its own file. The filenames will consist of the basename and the 
+      * channel name.
+      * 
+      * @param enabled   Whether one file shall be created per channel
+      */
+      void SetOneFilePerChannelEnabled(bool enabled);
 
       /**
        * @brief Get the available channel names of the current opened file / measurement
@@ -275,7 +310,7 @@ namespace eCAL
       void DisconnectPreSplitCallback();
 
      private:
-      HDF5MeasImpl* hdf_meas_impl_;
+      std::unique_ptr<HDF5MeasImpl> hdf_meas_impl_;
     };
   }  // namespace eh5
 }  // namespace eCAL

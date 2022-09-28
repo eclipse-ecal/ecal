@@ -30,6 +30,8 @@
 #include <vector>
 #include <utility>
 
+#include <ecal/ecal_os.h>
+
 namespace eCAL
 {
   /**

@@ -70,7 +70,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE src)
 
 target_link_libraries(${PROJECT_NAME}
     eCAL::core
-    eCAL::pb
+    eCAL::core_pb
+    eCAL::app_pb
     Qt5::Widgets
 )
 create_targets_protobuf()

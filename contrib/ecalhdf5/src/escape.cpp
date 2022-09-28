@@ -292,16 +292,16 @@ namespace eCAL
       std::string output;
       output.reserve(input.size() * 3 + 1); // Reserve enough so we never have to re-allocate + trailing zero (snprintf)
 
-      for  (size_t i = 0; i < input.size(); i++)
+      for  (char i : input)
       {
-        if (is_reserved_[static_cast<unsigned char>(input[i])])
+        if (is_reserved_[static_cast<unsigned char>(i)])
         {
           output += "%xx";
-          snprintf(&output[output.size() - 2], 3, "%02X", static_cast<unsigned char>(input[i]));
+          std::snprintf(&output[output.size() - 2], 3, "%02X", static_cast<unsigned char>(i));
         }
         else
         {
-          output += input[i];
+          output += i;
         }
       }
 
@@ -320,8 +320,8 @@ namespace eCAL
           if (i + 2 < input.size())
           {
             std::string hex_string = input.substr(i + 1, 2);
-            unsigned int char_num;
-            if (sscanf(hex_string.c_str(), "%X", &char_num))
+            unsigned int char_num = 0;
+            if (std::sscanf(hex_string.c_str(), "%X", &char_num) != 0)
             {
               output += static_cast<char>(char_num);
               i += 2;
