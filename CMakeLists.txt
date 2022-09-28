@@ -397,7 +397,6 @@ if(BUILD_APPS)
   add_subdirectory(app/mon/mon_cli)
   add_subdirectory(app/util/config)
   add_subdirectory(app/util/stop)
-  add_subdirectory(app/meas_cutter)
   add_subdirectory(app/sys/sys_core)
   add_subdirectory(app/sys/sys_cli)
   add_subdirectory(app/sys/sys_client_cli)
@@ -418,6 +417,8 @@ if(BUILD_APPS AND HAS_HDF5)
   add_subdirectory(app/rec/rec_server_core)
   add_subdirectory(app/rec/rec_client_cli)
   add_subdirectory(app/rec/rec_server_cli)
+  
+  add_subdirectory(app/meas_cutter)
 endif()
 
 # --------------------------------------------------------
