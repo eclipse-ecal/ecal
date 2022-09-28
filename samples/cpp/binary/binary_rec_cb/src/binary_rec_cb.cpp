@@ -29,7 +29,7 @@ void OnReceive(const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackD
 {
   if (data_->size < 1) return;
 
-  int content(static_cast<int>(static_cast<char*>(data_->buf)[0]));
+  int content(static_cast<int>(static_cast<unsigned char*>(data_->buf)[0]));
   std::cout << "----------------------------------------------" << std::endl;
   std::cout << " Received binary buffer " << content            << std::endl;
   std::cout << "----------------------------------------------" << std::endl;
@@ -42,10 +42,6 @@ void OnReceive(const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackD
 
 int main(int argc, char** argv)
 {
-  std::cout << "-------------------------------" << std::endl;
-  std::cout << " BINARY RECEIVER               " << std::endl;
-  std::cout << "-------------------------------" << std::endl;
-
   // initialize eCAL API
   eCAL::Initialize(argc, argv, "binary_rec_cb");
 

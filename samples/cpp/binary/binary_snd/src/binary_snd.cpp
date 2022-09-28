@@ -24,10 +24,6 @@
 
 int main(int argc, char **argv)
 {
-  std::cout << "-------------------------------" << std::endl;
-  std::cout << " BINARY SENDER                 " << std::endl;
-  std::cout << "-------------------------------" << std::endl;
-
   // initialize eCAL API
   eCAL::Initialize(argc, argv, "binary_snd");
 
@@ -35,16 +31,14 @@ int main(int argc, char **argv)
   eCAL::CPublisher pub("blob");
 
   // create binary buffer
-  std::vector<char> bin_buffer;
-  bin_buffer.resize(1024);
+  std::vector<unsigned char> bin_buffer(1024);
 
   // send updates
-  char cnt = 0;
+  unsigned char cnt = 0;
   while (eCAL::Ok())
   {
     // fill buffer
-    std::fill(bin_buffer.begin(), bin_buffer.end(), cnt);
-    cnt++;
+    std::fill(bin_buffer.begin(), bin_buffer.end(), cnt++);
 
     // send buffer
     pub.Send(bin_buffer.data(), bin_buffer.size());
