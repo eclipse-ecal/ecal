@@ -37,6 +37,9 @@ add_subdirectory(c/services/minimal_server_c)
 # cpp samples
 # --------------------------------------------------------
 add_subdirectory(cpp/benchmarks/many_connections)
+add_subdirectory(cpp/binary/binary_rec)
+add_subdirectory(cpp/binary/binary_rec_cb)
+add_subdirectory(cpp/binary/binary_snd)
 if(HAS_CAPNPROTO)
 add_subdirectory(cpp/capnp/addressbook_snd)
 add_subdirectory(cpp/capnp/addressbook_rec)
