@@ -47,6 +47,7 @@ namespace eCALMeasCutterUtils
   
   extern bool quiet;
   extern bool save_log;
+  extern bool enable_one_file_per_topic;
 
   static std::fstream log_file_output_stream;
   static std::string getLogTime()

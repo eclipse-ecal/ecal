@@ -36,6 +36,7 @@ void MeasurementExporter::setPath(const std::string& path, const std::string& ba
   {
     _writer->SetMaxSizePerFile(max_size_per_file);
     _writer->SetFileBaseName(base_name);
+    _writer->SetOneFilePerChannelEnabled(eCALMeasCutterUtils::enable_one_file_per_topic);
   }
   catch (const std::invalid_argument&)
   {
