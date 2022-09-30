@@ -28,6 +28,10 @@
 #include <QToolButton>
 #include <QScrollBar>
 #include <QStyle>
+#include <QEvent>
+
+// TODO: REmove
+#include <iostream>
 
 QEcalParserTextEdit::QEcalParserTextEdit(QWidget *parent)
   : QEcalParserTextEdit("", parent)
@@ -40,7 +44,6 @@ QEcalParserTextEdit::QEcalParserTextEdit(const QString &contents, QWidget *paren
   Q_INIT_RESOURCE(qecalparser);
 
   open_dialog_action_ = new QAction(this);
-  open_dialog_action_->setIcon(QIcon(":/qecalparser/SHOW_DIALOG"));
   addAction(open_dialog_action_);
   open_dialog_action_->setToolTip(tr("Advanced editor..."));
   open_dialog_action_->setText(tr("Advanced editor..."));
@@ -48,17 +51,10 @@ QEcalParserTextEdit::QEcalParserTextEdit(const QString &contents, QWidget *paren
   connect(open_dialog_action_, &QAction::triggered, this, &QEcalParserTextEdit::openDialog);
 
   overlay_button_ = new QToolButton(this);
-  overlay_button_->setStyleSheet(
-    R"(
-QToolButton
-{
-  background-color: rgba(255, 255, 255, 80%);
-  border: none;
-}
-)"
-  );
   overlay_button_->setDefaultAction(open_dialog_action_);
   overlay_button_->raise();
+
+  adaptIconsToTheme();
 }
 
 QEcalParserTextEdit::~QEcalParserTextEdit()
@@ -96,6 +92,17 @@ void QEcalParserTextEdit::showEvent(QShowEvent *event)
   moveOverlayButton();
 }
 
+void QEcalParserTextEdit::changeEvent(QEvent* event)
+{
+  QTextEdit::changeEvent(event);
+
+  if (event->type() == QEvent::Type::PaletteChange)
+  {
+    adaptIconsToTheme();
+    event->accept();
+  }
+}
+
 void QEcalParserTextEdit::moveOverlayButton()
 {
   int scrollbar_width = 0;
@@ -105,4 +112,27 @@ void QEcalParserTextEdit::moveOverlayButton()
   int frame_width = style()->pixelMetric(QStyle::PixelMetric::PM_DefaultFrameWidth, nullptr, this);
 
   overlay_button_->move(QPoint(width() - overlay_button_->width() - scrollbar_width - frame_width, frame_width));
+}
+
+void QEcalParserTextEdit::adaptIconsToTheme()
+{
+  // Get background of input fields
+  const QColor background = palette().color(QPalette::ColorRole::Base);
+
+  // Set background of button to the background color
+  const QString stylesheet = QString("QToolButton { background-color: rgba(%1, %2, %3, 80%); border: none; }")
+                              .arg(background.red())
+                              .arg(background.green())
+                              .arg(background.blue());
+  overlay_button_->setStyleSheet(stylesheet);
+
+  // Check if the bg color is dark or light
+  const bool dark_mode = (background.toHsl().lightness() < 128);
+
+  // Select icon of button based on the background
+
+  if (dark_mode)
+    open_dialog_action_->setIcon(QIcon(":/qecalparser/dark/SHOW_DIALOG"));
+  else
+    open_dialog_action_->setIcon(QIcon(":/qecalparser/light/SHOW_DIALOG"));
 }

@@ -725,6 +725,11 @@ void EcalplayGui::restoreLayout()
     if (theme_variant.toInt() == static_cast<int>(Theme::Dark))
       setTheme(Theme::Dark);
   }
+  else
+  {
+    // Default to Dark Theme, if nothing has been set
+    setTheme(Theme::Dark);
+  }
 
   QVariant geometry_variant = settings.value("geometry");
   QVariant state_variant = settings.value("state");
@@ -750,7 +755,7 @@ void EcalplayGui::saveInitialLayout()
 
 void EcalplayGui::resetLayout()
 {
-  setTheme(Theme::Default);
+  setTheme(Theme::Dark);
 
   player_control_widget_->resetLayout();
   channel_widget_       ->resetLayout();
