@@ -239,6 +239,11 @@ void EcalsysGui::loadGuiSettings()
     if (theme_variant.toInt() == static_cast<int>(Theme::Dark))
       setTheme(Theme::Dark);
   }
+  else
+  {
+    // Default to Dark Theme, if nothing has been set
+    setTheme(Theme::Dark);
+  }
 
   restoreGeometry(settings.value("geometry").toByteArray());
   restoreState(settings.value("window_state").toByteArray(), Globals::ecalSysVersion());
