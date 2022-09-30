@@ -22,7 +22,7 @@ find_package(Threads      REQUIRED)
 find_package(asio         REQUIRED)
 find_package(tclap        REQUIRED)
 find_package(simpleini    REQUIRED)
-find_package(tcp_pubsub        REQUIRED)
+find_package(tcp_pubsub   REQUIRED)
 
 if (ECAL_JOIN_MULTICAST_TWICE)
   message(STATUS "eCAL ${PROJECT_NAME}: Enabling Specific Multicast Network Bug Workaround")
@@ -43,6 +43,10 @@ set(ecal_io_cpp_src_npcap
 )
 endif()
 
+set(ecal_custom_tclap_cpp_src
+    src/custom_tclap/advanced_tclap_output.cpp
+)
+
 set(ecal_io_cpp_src
     src/io/rcv_sample.cpp
     src/io/snd_raw_buffer.cpp
@@ -57,6 +61,7 @@ set(ecal_io_cpp_src
 if(NOT ECAL_LAYER_ICEORYX)
   set(ecal_io_mem_cpp_src
       src/io/ecal_memfile.cpp
+      src/io/ecal_memfile_db.cpp
       src/io/ecal_memfile_broadcast.cpp
       src/io/ecal_memfile_broadcast_reader.cpp
       src/io/ecal_memfile_broadcast_writer.cpp
@@ -65,13 +70,13 @@ if(NOT ECAL_LAYER_ICEORYX)
   )
   if(UNIX)
     set(ecal_io_mem_cpp_linux_src
-        src/io/linux/ecal_memfile_linux.cpp
+        src/io/linux/ecal_memfile_os.cpp
     )
   endif()
 
   if(WIN32)
     set(ecal_io_mem_cpp_win_src
-       src/io/win32/ecal_memfile_win32.cpp
+       src/io/win32/ecal_memfile_os.cpp
     )
   endif()
 endif(NOT ECAL_LAYER_ICEORYX)
@@ -92,8 +97,6 @@ set(ecal_pubsub_cpp_src
 
 set(ecal_readwrite_cpp_src
     src/readwrite/ecal_reader.cpp
-    src/readwrite/ecal_reader_inproc.cpp
-    src/readwrite/ecal_reader_udp.cpp
     src/readwrite/ecal_reader_udp_mc.cpp
     src/readwrite/ecal_reader_tcp.cpp
     src/readwrite/ecal_writer.cpp
@@ -138,8 +141,8 @@ set(ecal_cmn_cpp_src
     src/ecal_log.cpp
     src/ecal_log_impl.cpp
     src/ecal_process.cpp
-    src/ecal_reggate.cpp
-    src/ecal_register.cpp
+    src/ecal_registration_provider.cpp
+    src/ecal_registration_receiver.cpp
     src/ecal_thread.cpp
     src/ecal_time.cpp
     src/ecal_timegate.cpp
@@ -154,6 +157,10 @@ set(ecal_io_header_src_npcap
    src/io/udp_receiver_npcap.h
 )
 endif()
+
+set(ecal_custom_tclap_header_src
+    src/custom_tclap/advanced_tclap_output.h
+)
 
 set(ecal_io_header_src
     src/io/ecal_memfile_header.h
@@ -174,7 +181,10 @@ set(ecal_io_header_src
 if(NOT ECAL_LAYER_ICEORYX)
   set(ecal_io_mem_header_src
       src/io/ecal_memfile.h
+      src/io/ecal_memfile_db.h
+      src/io/ecal_memfile_info.h
       src/io/ecal_memfile_mtx.h
+      src/io/ecal_memfile_os.h
       src/io/ecal_memfile_pool.h
       src/io/ecal_memfile_sync.h
   )
@@ -205,13 +215,13 @@ set(ecal_pubsub_header_src
 
 set(ecal_readwrite_header_src
     src/readwrite/ecal_reader.h
-    src/readwrite/ecal_reader_inproc.h
     src/readwrite/ecal_reader_layer.h
     src/readwrite/ecal_reader_tcp.h
-    src/readwrite/ecal_reader_udp.h
     src/readwrite/ecal_reader_udp_mc.h
     src/readwrite/ecal_writer.h
     src/readwrite/ecal_writer_base.h
+    src/readwrite/ecal_writer_data.h
+    src/readwrite/ecal_writer_info.h
     src/readwrite/ecal_writer_inproc.h
     src/readwrite/ecal_writer_tcp.h
     src/readwrite/ecal_writer_udp_mc.h
@@ -251,8 +261,8 @@ set(ecal_cmn_header_src
     src/ecal_global_accessors.h
     src/ecal_globals.h
     src/ecal_log_impl.h
-    src/ecal_reggate.h
-    src/ecal_register.h
+    src/ecal_registration_provider.h
+    src/ecal_registration_receiver.h
     src/ecal_thread.h
     src/ecal_timegate.h
     $<$<BOOL:${WIN32}>:src/ecal_win_main.h>
@@ -358,6 +368,7 @@ set(ecal_header_base
 )
 
 ecal_add_ecal_shared_library(${PROJECT_NAME} 
+    ${ecal_custom_tclap_cpp_src}
     ${ecal_io_cpp_src} 
     ${ecal_io_mem_cpp_src} 
     ${ecal_io_mem_cpp_win_src} 
@@ -369,6 +380,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_service_cpp_src}
     ${ecal_cmn_cpp_src}
 
+    ${ecal_custom_tclap_header_src}
     ${ecal_cmn_header_src}
     ${ecal_io_header_src}
     ${ecal_io_mem_header_src} 
@@ -451,12 +463,10 @@ target_link_libraries(${PROJECT_NAME}
     $<$<BOOL:${QNXNTO}>:socket>
     asio::asio
     tclap::tclap
-    CustomTclap
     simpleini::simpleini
-    eCAL::pb
+    eCAL::core_pb
     Threads::Threads
-    eCAL::apps
-    eCAL::utils
+    eCAL::ecal-utils
     tcp_pubsub::tcp_pubsub
 )
 
@@ -478,6 +488,7 @@ install(DIRECTORY
 
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Source Files" FILES 
+    ${ecal_custom_tclap_cpp_src}
     ${ecal_io_cpp_src}
     ${ecal_io_mem_cpp_src}
     ${ecal_io_mem_cpp_linux_src} 
@@ -495,6 +506,7 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
   )
   
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Header Files\\internal" FILES 
+    ${ecal_custom_tclap_header_src}
     ${ecal_cmn_header_src}
     ${ecal_io_header_src}
     ${ecal_io_mem_header_src}

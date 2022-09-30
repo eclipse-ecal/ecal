@@ -22,8 +22,8 @@
 **/
 
 #include "ecal_memfile_broadcast.h"
-
 #include "ecal_memfile.h"
+#include "ecal_global_accessors.h"
 
 #include <iostream>
 

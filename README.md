@@ -2,7 +2,7 @@
 # eCAL - enhanced Communication Abstraction Layer
 
 
-[![Build Windows Server 2019](https://github.com/continental/ecal/workflows/Build%20Windows%20Server%202019/badge.svg)](https://github.com/continental/ecal/actions?workflow=Build+Windows+Server+2019) [![Build Ubuntu 18.04](https://github.com/continental/ecal/workflows/Build%20Ubuntu%2018.04/badge.svg)](https://github.com/continental/ecal/actions?workflow=Build+Ubuntu+18.04) [![Build Ubuntu 20.04](https://github.com/continental/ecal/workflows/Build%20Ubuntu%2020.04/badge.svg)](https://github.com/continental/ecal/actions?workflow=Build+Ubuntu+20.04) [![Build Ubuntu 20.04 (Iceoryx)](https://github.com/continental/ecal/workflows/Build%20Ubuntu%2020.04%20(Iceoryx)/badge.svg)](https://github.com/continental/ecal/actions?workflow=Build+Ubuntu+20.04+(Iceoryx)) [![Build macOS](https://github.com/continental/ecal/actions/workflows/build-macos.yml/badge.svg)](https://github.com/continental/ecal/actions/workflows/build-macos.yml)
+[![Build Windows Server 2019](https://github.com/eclipse-ecal/ecal/workflows/Build%20Windows%20Server%202019/badge.svg)](https://github.com/eclipse-ecal/ecal/actions?workflow=Build+Windows+Server+2019) [![Build Ubuntu 18.04](https://github.com/eclipse-ecal/ecal/workflows/Build%20Ubuntu%2018.04/badge.svg)](https://github.com/eclipse-ecal/ecal/actions?workflow=Build+Ubuntu+18.04) [![Build Ubuntu 20.04](https://github.com/eclipse-ecal/ecal/workflows/Build%20Ubuntu%2020.04/badge.svg)](https://github.com/eclipse-ecal/ecal/actions?workflow=Build+Ubuntu+20.04) [![Build Ubuntu 20.04 (Iceoryx)](https://github.com/eclipse-ecal/ecal/workflows/Build%20Ubuntu%2020.04%20(Iceoryx)/badge.svg)](https://github.com/eclipse-ecal/ecal/actions?workflow=Build+Ubuntu+20.04+(Iceoryx)) [![Build macOS](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml)
 
 [![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE.txt)
 
@@ -19,12 +19,12 @@ Visit the eCAL Documentation at 🌐 http://ecal.io for more information.
 
 ## Facts about eCAL
 
-* eCAL is fast (1 - 10 GB/s, depends on payload size. Check the measured performance [here](https://continental.github.io/ecal/advanced/performance.html))
+* eCAL is fast (1 - 10 GB/s, depends on payload size. Check the measured performance [here](https://eclipse-ecal.github.io/ecal/advanced/performance.html))
 * eCAL provides both publish-subscribe and server-client patterns
 * eCAL is brokerless
 * eCAL provides a C++ and C interface for easy integration into other languages (like python, csharp or [rust](https://github.com/kopernikusai/ecal-rs))
 * eCAL can be used in conjunction with Matlab Simulink as [eCAL Simulink Toolbox](https://de.mathworks.com/matlabcentral/fileexchange/92825-ecal-toolbox) for simulation and prototyping
-* eCAL has powerful tools for [recording](https://continental.github.io/ecal/getting_started/recorder.html), [replay](https://continental.github.io/ecal/getting_started/player.html) and [monitoring](https://continental.github.io/ecal/getting_started/monitor.html) all your data flows - decentralized
+* eCAL has powerful tools for [recording](https://eclipse-ecal.github.io/ecal/getting_started/recorder.html), [replay](https://eclipse-ecal.github.io/ecal/getting_started/player.html) and [monitoring](https://eclipse-ecal.github.io/ecal/getting_started/monitor.html) all your data flows - decentralized
 * eCAL is simple and zero-conf. No complex configuration for communication details and QOS settings are needed
 * eCAL is message protocol agnostic. You choose the message protocol that fits to your needs like [Google Protobuf](https://developers.google.com/protocol-buffers), [CapnProto](https://capnproto.org/), [Flatbuffers](https://google.github.io/flatbuffers/)...
 * eCAL uses the standardized recording format [HDF5](https://www.hdfgroup.org/solutions/hdf5/)
@@ -40,11 +40,11 @@ Visit the eCAL Documentation at 🌐 http://ecal.io for more information.
 
 ## Installation
 
-We provide binary installers for Windows and Ubuntu. If you need further help installing and configuring eCAL, please refer to the [documentation](https://continental.github.io/ecal/getting_started/setup.html).
+We provide binary installers for Windows and Ubuntu. If you need further help installing and configuring eCAL, please refer to the [documentation](https://eclipse-ecal.github.io/ecal/getting_started/setup.html).
 
 ### Windows
 
-[Download](https://continental.github.io/ecal/_download_archive/download_archive.html) the latest eCAL Installer and follow the Setup Wizard
+[Download](https://eclipse-ecal.github.io/ecal/_download_archive/download_archive.html) the latest eCAL Installer and follow the Setup Wizard
 
 ![eCAL Setup](doc/rst/getting_started/img/setup.png)
     
@@ -59,7 +59,7 @@ sudo add-apt-repository ppa:ecal/ecal-latest
 sudo apt-get update
 sudo apt-get install ecal
 ```
-This PPA will always upgrade you to the latest eCAL Release (-> Rolling Release PPA). If you intend to stay on an specific release, check out other PPAs [here](https://continental.github.io/ecal/getting_started/setup.html#fa-ubuntu-automatically-install-ecal-from-a-ppa).
+This PPA will always upgrade you to the latest eCAL Release (-> Rolling Release PPA). If you intend to stay on an specific release, check out other PPAs [here](https://eclipse-ecal.github.io/ecal/getting_started/setup.html#fa-ubuntu-automatically-install-ecal-from-a-ppa).
 
 *Ubuntu 16.04, 18.04, 20.04, 20.10, 21.04 for CPU architectures i386, x64, armhf, arm64 are supported at the time of writing.*
 
@@ -67,7 +67,7 @@ This PPA will always upgrade you to the latest eCAL Release (-> Rolling Release 
 
 Using eCAL in your project to exchange data is simple. After you have [downloaded eCAL](http://ecal.io) and installed CMake, you are good to go.
 
-Check out the [Hello World](https://continental.github.io/ecal/getting_started/hello_world.html) example from the eCAL documentation for further details.
+Check out the [Hello World](https://eclipse-ecal.github.io/ecal/getting_started/hello_world.html) example from the eCAL documentation for further details.
 
 ``` cpp
 #include <ecal/ecal.h>
@@ -111,22 +111,25 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 
 ![eCAL Mon](gfx/app/monitor_imagevisu.png)
 
-## Projects using eCAL
-* [trellis](https://github.com/agtonomy/trellis) - General purpose middleware framework for distributed applications
+## eCAL eco system tools / utilities / interfaces
 * [ecal-toolbox](https://github.com/mathworks/ecal-toolbox) - Mathworks simulink toolbox for eCAL
+* [ecal-mongraph](https://github.com/ecal-io/ecal-mongraph) - Simple graph visualization for eCAL
+* [ecal-gpsd-client](https://github.com/eclipse-ecal/ecal-gpsd-client) - eCAL gpsd client
+
+## eCAL & ROS
+* [rmw_ecal](https://github.com/eclipse-ecal/rmw_ecal) - eCAL / ROS2 middleware layer
+* [rosidl_typesupport_protobuf](https://github.com/eclipse-ecal/rosidl_typesupport_protobuf) - Protobuf based rosidl typesupport
+* [ecal-ros2-publisher](https://github.com/ecal-io/ecal-ros2-publisher) - Publishing eCAL topics to ROS2
+* [ecal-ros2-subscriber](https://github.com/ecal-io/ecal-ros2-subscriber) - Subscribing ROS2 topics in eCAL
+
+## Other projects related to eCAL
+* [fine-ftpserver](https://github.com/eclipse-ecal/fineftp-server) - FTP functionality to collect distributed measurement artifacts over network
+* [tcp_pubsub](https://github.com/eclipse-ecal/tcp_pubsub) - Additional TCP transport layer for higher reliability for publication/subscription over network
+* [docker-ecal](https://github.com/Blutkoete/docker-ecal) - Inoffical dockerfiles for eCAL
 * [golang-ecal](https://github.com/Blutkoete/golang-ecal) - eCAL go language binding
 * [ecal-rs](https://github.com/kopernikusai/ecal-rs) - eCAL rust language binding
-* [rmw_ecal](https://github.com/continental/rmw_ecal) - eCAL / ROS2 middleware layer
-* [gpsd2ecal](https://github.com/continental/gpsd2ecal) - eCAL gps gateway
-* [ecal_mongraph](https://github.com/ecal-io/ecal_mongraph) - Simple graph visualization for eCAL
-* [ecal2ros](https://github.com/ecal-io/ecal2ros) - Demo gateway eCAL5 to ROS2
-* [ros2ecal](https://github.com/ecal-io/ros2ecal) - Demo gateway ROS2 to eCAL5
-
-## Projects used by eCAL
-* [fine-ftpserver](https://github.com/continental/fineftp-server) - FTP functionality to collect distributed measurement artifacts over network
-* [tcp_pubsub](https://github.com/continental/tcp_pubsub) - Additional TCP transport layer for higher reliability for publication/subscription over network
+* [trellis](https://github.com/agtonomy/trellis) - General purpose middleware framework for distributed applications
 * [iceoryx](https://github.com/eclipse/iceoryx) - Alternative shared memory transport layer (needs to be activated via CMake options)
-* [docker-ecal](https://github.com/Blutkoete/docker-ecal) - Inoffical dockerfiles for eCAL
 
 ## License
 

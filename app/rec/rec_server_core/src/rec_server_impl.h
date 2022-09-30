@@ -145,15 +145,17 @@ namespace eCAL
     // Job Settings                   //
     ////////////////////////////////////
     public:
-      void SetMeasRootDir   (const std::string& meas_root_dir);
-      void SetMeasName      (const std::string& meas_name);
-      void SetMaxFileSizeMib(int64_t max_file_size_mib);
-      void SetDescription   (const std::string& description);
+      void SetMeasRootDir           (const std::string& meas_root_dir);
+      void SetMeasName              (const std::string& meas_name);
+      void SetMaxFileSizeMib        (int64_t max_file_size_mib);
+      void SetOneFilePerTopicEnabled(bool enabled);
+      void SetDescription           (const std::string& description);
 
-      std::string  GetMeasRootDir   () const;
-      std::string  GetMeasName      () const;
-      int64_t      GetMaxFileSizeMib() const;
-      std::string  GetDescription   () const;
+      std::string  GetMeasRootDir           () const;
+      std::string  GetMeasName              () const;
+      int64_t      GetMaxFileSizeMib        () const;
+      bool         GetOneFilePerTopicEnabled() const;
+      std::string  GetDescription           () const;
 
     ////////////////////////////////////
     // Server Settings                //

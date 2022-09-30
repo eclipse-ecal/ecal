@@ -33,6 +33,7 @@ namespace eCAL
     JobConfig::JobConfig()
       : job_id_(0)
       , max_file_size_mb_(50)
+      , one_file_per_topic_(false)
     {}
 
     JobConfig::~JobConfig()
@@ -62,17 +63,20 @@ namespace eCAL
       job_id_ = (((int64_t)counter) << 32) | (int64_t(0xFFFFF000) & system_clock_nsecs) | (int64_t(0x00000FFF) & steady_clock_nsecs);
     }
 
-    void            JobConfig::SetMeasRootDir   (const std::string& meas_root_dir) { meas_root_dir_ = meas_root_dir; }
-    std::string     JobConfig::GetMeasRootDir   () const                           { return meas_root_dir_; }
+    void            JobConfig::SetMeasRootDir           (const std::string& meas_root_dir) { meas_root_dir_ = meas_root_dir; }
+    std::string     JobConfig::GetMeasRootDir           () const                           { return meas_root_dir_; }
 
-    void            JobConfig::SetMeasName      (const std::string& meas_name)     { meas_name_ = meas_name; }
-    std::string     JobConfig::GetMeasName      () const                           { return meas_name_; }
+    void            JobConfig::SetMeasName              (const std::string& meas_name)     { meas_name_ = meas_name; }
+    std::string     JobConfig::GetMeasName              () const                           { return meas_name_; }
 
-    void            JobConfig::SetMaxFileSize   (int64_t max_file_size_mb)         { max_file_size_mb_ = max_file_size_mb; }
-    int64_t         JobConfig::GetMaxFileSize   () const                           { return max_file_size_mb_; }
+    void            JobConfig::SetMaxFileSize           (int64_t max_file_size_mb)         { max_file_size_mb_ = max_file_size_mb; }
+    int64_t         JobConfig::GetMaxFileSize           () const                           { return max_file_size_mb_; }
 
-    void            JobConfig::SetDescription   (const std::string& description)   { description_ = description; }
-    std::string     JobConfig::GetDescription   () const                           { return description_; }
+    void            JobConfig::SetOneFilePerTopicEnabled(bool enabled)                     { one_file_per_topic_ = enabled; }
+    bool            JobConfig::GetOneFilePerTopicEnabled() const                           { return one_file_per_topic_; }
+
+    void            JobConfig::SetDescription           (const std::string& description)   { description_ = description; }
+    std::string     JobConfig::GetDescription           () const                           { return description_; }
 
     //////////////////////////////
     // Evaluation

@@ -42,6 +42,8 @@ set(ecalhdf5_src
     src/eh5_meas_file_v4.h
     src/eh5_meas_file_v5.cpp
     src/eh5_meas_file_v5.h
+    src/eh5_meas_file_writer_v5.cpp
+    src/eh5_meas_file_writer_v5.h
     src/eh5_meas_impl.h
     src/escape.cpp
     src/escape.h
@@ -78,7 +80,7 @@ target_link_libraries(${PROJECT_NAME}
   PUBLIC 
     eCAL::message
   PRIVATE  
-    eCAL::utils
+    eCAL::ecal-utils
 )
 
 if (${ECAL_LINK_HDF5_SHARED})

@@ -16,52 +16,72 @@
 #
 # ========================= eCAL LICENSE =================================
 
+# installing old, deprecated ecal core, app, time protobuf header for downward compatibility
+# REMOVE ME IN ECAL6
+
 project(pb)
 
-find_package(Protobuf REQUIRED)
-
-set(ProtoFiles
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/ecal.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/host.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/layer.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/mma/mma.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/monitoring.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/play/service.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/play/state.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/process.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/client_service.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/client_state.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/server_config.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/server_service.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/rec/server_state.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/service.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/sim_time.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/sys/service.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/sys/client_service.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/sys/state.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/pb/topic.proto
+set(ecal_pb_includes
+  include/ecal/pb/ecal.pb.h
+  include/ecal/pb/host.pb.h
+  include/ecal/pb/layer.pb.h
+  include/ecal/pb/monitoring.pb.h
+  include/ecal/pb/process.pb.h
+  include/ecal/pb/service.pb.h
+  include/ecal/pb/sim_time.pb.h
+  include/ecal/pb/topic.pb.h
+  include/ecal/pb/mma/mma.pb.h
+  include/ecal/pb/play/service.pb.h
+  include/ecal/pb/play/state.pb.h
+  include/ecal/pb/rec/client_service.pb.h
+  include/ecal/pb/rec/client_state.pb.h
+  include/ecal/pb/rec/server_config.pb.h
+  include/ecal/pb/rec/server_service.pb.h
+  include/ecal/pb/rec/server_state.pb.h
+  include/ecal/pb/sys/client_service.pb.h
+  include/ecal/pb/sys/service.pb.h
+  include/ecal/pb/sys/state.pb.h
 )
 
-ecal_add_library(${PROJECT_NAME} src/ecalpb.cpp)
+set(ecal_pb_src
+    src/pb.cpp
+)
+
+ecal_add_static_library(${PROJECT_NAME}
+    ${ecal_pb_includes}
+    ${ecal_pb_src}
+)
+
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-protobuf_target_cpp(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src INSTALL_FOLDER include ${ProtoFiles})
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC
+    eCAL::core_pb
+)
 
-target_compile_options(${PROJECT_NAME}
-  PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/wd4505 /wd4592 /wd4189>
-    $<$<CXX_COMPILER_ID:GNU>:-Wno-unused-parameter>)
+if(BUILD_APPS)
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC
+    eCAL::app_pb
+)
+endif()
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
+if(BUILD_TIME)
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC
+    eCAL::ecaltime_pb
+)
+endif()
 
-target_link_libraries(${PROJECT_NAME} protobuf::libprotobuf)
+target_include_directories(${PROJECT_NAME} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+
+install(DIRECTORY
+   "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
+    FILES_MATCHING PATTERN "*.pb.h")
 
 ecal_install_library(${PROJECT_NAME})
-
-if(BUILD_PY_BINDING)
-  protobuf_generate_python_ext(python_sources ${PYTHON_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${ProtoFiles})
-  target_sources(${PROJECT_NAME} PRIVATE ${python_sources})
-  set_source_files_properties(${python_sources} PROPERTIES HEADER_FILE_ONLY TRUE)
-endif()
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ecal/pb)

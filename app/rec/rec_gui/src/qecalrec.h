@@ -45,7 +45,7 @@
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
-#include <ecal/pb/rec/server_service.pb.h>
+#include <ecal/app/pb/rec/server_service.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
@@ -155,10 +155,11 @@ signals:
 // Job Settings
 ////////////////////////////////////
 public slots:
-  void setMeasRootDir        (const std::string& meas_root_dir);
-  void setMeasName           (const std::string& meas_name);
-  void setMaxFileSizeMib     (unsigned int max_file_size_mib);
-  void setDescription        (const std::string& description);
+  void setMeasRootDir           (const std::string& meas_root_dir);
+  void setMeasName              (const std::string& meas_name);
+  void setMaxFileSizeMib        (unsigned int max_file_size_mib);
+  void setOneFilePerTopicEnabled(bool enabled);
+  void setDescription           (const std::string& description);
 
   std::string  measRootDir()    const;
   std::string  measName()       const;
@@ -166,10 +167,11 @@ public slots:
   std::string  description()    const;
 
 signals:
-  void measRootDirChangedSignal   (std::string  meas_root_dir);
-  void measNameChangedSignal      (std::string  meas_name);
-  void maxFileSizeMibChangedSignal(unsigned int max_file_size_mib);
-  void descriptionChangedSignal   (std::string  description);
+  void measRootDirChangedSignal           (std::string  meas_root_dir);
+  void measNameChangedSignal              (std::string  meas_name);
+  void maxFileSizeMibChangedSignal        (unsigned int max_file_size_mib);
+  void oneFilePerTopicEnabledChangedSignal(bool enabled);
+  void descriptionChangedSignal           (std::string  description);
 
 ////////////////////////////////////
 // Server Settings

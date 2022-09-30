@@ -40,37 +40,37 @@ namespace eCAL
   {
   }
 
-  void CDescGate::ApplyTopicDescription(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_)
+  void CDescGate::ApplyTopicDescription(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_, const QualityFlags description_quality_)
   {
-    std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_desc_sync);
-    TopicNameDescMapT::iterator iter = m_topic_name_desc_map.find(topic_name_);
+    std::unique_lock<std::shared_timed_mutex> lock(m_topic_info_map_mutex);
+    const auto topic_info_it = m_topic_info_map.find(topic_name_);
     
     // new element (no need to check anything, just add it)
-    if(iter == m_topic_name_desc_map.end())
+    if(topic_info_it == m_topic_info_map.end())
     {
-      STypeDesc type_desc;
-      type_desc.set_type(topic_type_);
-      type_desc.set_desc(topic_desc_);
-      m_topic_name_desc_map[topic_name_] = type_desc;
+      // TODO: Maybe we should copy the description from another topic with the same type, if it is empty?
+      STopicInfo topic_info;
+      topic_info.type_name           = topic_type_;
+      topic_info.type_description    = topic_desc_;
+      topic_info.description_quality = description_quality_;
+      m_topic_info_map.emplace(topic_name_, std::move(topic_info));
     }
     else
     {
       // existing type for the same topic name should be equal !!
       // we log the error only one time
-      auto& type_desc = iter->second;
-      if(  !type_desc.match_fail
-        && !topic_type_.empty()
-        && !type_desc.type.empty()
-        && (type_desc.type != topic_type_)
+      if(  !topic_info_it->second.type_missmatch_logged
+            && !topic_type_.empty()
+            && !topic_info_it->second.type_name.empty()
+            && (topic_info_it->second.type_name != topic_type_)
         )
       {
-        std::string ttype1 = type_desc.type;
+        std::string ttype1 =  topic_info_it->second.type_name;
         std::string ttype2 = topic_type_;
         std::replace(ttype1.begin(), ttype1.end(), '\0', '?');
         std::replace(ttype1.begin(), ttype1.end(), '\t', '?');
         std::replace(ttype2.begin(), ttype2.end(), '\0', '?');
         std::replace(ttype2.begin(), ttype2.end(), '\t', '?');
-        type_desc.match_fail = true;
         std::string msg = "eCAL Pub/Sub type mismatch for topic ";
         msg += topic_name_;
         msg += " (\'";
@@ -79,24 +79,33 @@ namespace eCAL
         msg += ttype2;
         msg += "\')";
         eCAL::Logging::Log(log_level_warning, msg);
+
+        topic_info_it->second.type_missmatch_logged = true;
       }
 
       // existing description for the same topic name should be equal !!
       // we log the warning only one time
-      if ( !type_desc.match_fail
-        && !topic_desc_.empty()
-        && !type_desc.desc.empty()
-        && (type_desc.desc != topic_desc_)
+      if ( !topic_info_it->second.type_missmatch_logged
+            && !topic_desc_.empty()
+            && !topic_info_it->second.type_description.empty()
+            && (topic_info_it->second.type_description != topic_desc_)
         )
       {
-        type_desc.match_fail = true;
         std::string msg = "eCAL Pub/Sub description mismatch for topic ";
         msg += topic_name_;
         eCAL::Logging::Log(log_level_warning, msg);
+
+        topic_info_it->second.type_missmatch_logged = true;
       }
 
-      type_desc.set_type(topic_type_);
-      type_desc.set_desc(topic_desc_);
+      // Now let's check whether the current information has a higher quality.
+      // If it has a higher quality, we overwrite it.
+      if (description_quality_ > topic_info_it->second.description_quality)
+      {
+        topic_info_it->second.type_name           = topic_type_;
+        topic_info_it->second.type_description         = topic_desc_;
+        topic_info_it->second.description_quality = description_quality_;
+      }
     }
   }
 
@@ -104,11 +113,11 @@ namespace eCAL
   {
     if(topic_name_.empty()) return(false);
 
-    std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_desc_sync);
-    TopicNameDescMapT::iterator iter = m_topic_name_desc_map.find(topic_name_);
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map_mutex);
+    const auto topic_info_it = m_topic_info_map.find(topic_name_);
 
-    if(iter == m_topic_name_desc_map.end()) return(false);
-    topic_type_ = iter->second.type;
+    if(topic_info_it == m_topic_info_map.end()) return(false);
+    topic_type_ = topic_info_it->second.type_name;
     return(true);
   }
 
@@ -116,35 +125,48 @@ namespace eCAL
   {
     if(topic_name_.empty()) return(false);
 
-    std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_desc_sync);
-    TopicNameDescMapT::iterator iter = m_topic_name_desc_map.find(topic_name_);
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map_mutex);
+    const auto topic_info_it = m_topic_info_map.find(topic_name_);
 
-    if(iter == m_topic_name_desc_map.end()) return(false);
-    topic_desc_ = iter->second.desc;
+    if(topic_info_it == m_topic_info_map.end()) return(false);
+    topic_desc_ = topic_info_it->second.type_description;
     return(true);
   }
   
-  void CDescGate::ApplyServiceDescription(const std::string& service_name_, const std::string& method_name_, const std::string& req_type_name_, const std::string& req_type_desc_, const std::string& resp_type_name_, const std::string& resp_type_desc_)
+  void CDescGate::ApplyServiceDescription(const std::string& service_name_
+                                        , const std::string& method_name_
+                                        , const std::string& req_type_name_
+                                        , const std::string& req_type_desc_
+                                        , const std::string& resp_type_name_
+                                        , const std::string& resp_type_desc_
+                                        , const QualityFlags  info_quality_)
   {
     std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
 
-    std::shared_lock<std::shared_timed_mutex> lock(m_service_method_desc_sync);
-    ServiceMethodDescMapT::iterator iter = m_service_method_desc_map.find(service_method_tuple);
-    if (iter == m_service_method_desc_map.end())
+    std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map_mutex);
+    auto service_info_map_it = m_service_info_map.find(service_method_tuple);
+    if (service_info_map_it == m_service_info_map.end())
     {
-      STypeDesc req_typedesc;
-      req_typedesc.set_type(req_type_name_);
-      req_typedesc.set_desc(req_type_desc_);
+      SServiceMethodInfo service_info;
+      service_info.request_type_name         = req_type_name_;
+      service_info.request_type_description  = req_type_desc_;
+      service_info.response_type_name        = resp_type_name_;
+      service_info.response_type_description = resp_type_desc_;
+      service_info.info_quality              = info_quality_;
 
-      STypeDesc resp_typedesc;
-      resp_typedesc.set_type(resp_type_name_);
-      resp_typedesc.set_desc(resp_type_desc_);
-
-      m_service_method_desc_map[service_method_tuple] = std::make_tuple(req_typedesc, resp_typedesc);;
+      m_service_info_map[service_method_tuple] = std::move(service_info);
     }
     else
     {
       // do we need to check consistency ?
+      if (info_quality_ > service_info_map_it->second.info_quality)
+      {
+        service_info_map_it->second.request_type_name         = req_type_name_;
+        service_info_map_it->second.request_type_description  = req_type_desc_;
+        service_info_map_it->second.response_type_name        = resp_type_name_;
+        service_info_map_it->second.response_type_description = resp_type_desc_;
+        service_info_map_it->second.info_quality              = info_quality_;
+      }
     }
   }
 
@@ -152,13 +174,13 @@ namespace eCAL
   {
     std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
 
-    std::shared_lock<std::shared_timed_mutex> lock(m_service_method_desc_sync);
-    ServiceMethodDescMapT::iterator iter = m_service_method_desc_map.find(service_method_tuple);
+    std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map_mutex);
+    auto service_info_map_it = m_service_info_map.find(service_method_tuple);
 
-    if (iter == m_service_method_desc_map.end()) return false;
-    auto req_typedesc_tuple = *iter;
-    req_type_name_  = std::get<0>(req_typedesc_tuple.second).type;
-    resp_type_name_ = std::get<1>(req_typedesc_tuple.second).type;
+    if (service_info_map_it == m_service_info_map.end()) return false;
+
+    req_type_name_  = service_info_map_it->second.request_type_name;
+    resp_type_name_ = service_info_map_it->second.response_type_name;
 
     return true;
   }
@@ -167,13 +189,13 @@ namespace eCAL
   {
     std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
 
-    std::shared_lock<std::shared_timed_mutex> lock(m_service_method_desc_sync);
-    ServiceMethodDescMapT::iterator iter = m_service_method_desc_map.find(service_method_tuple);
+    std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map_mutex);
+    auto service_info_map_it = m_service_info_map.find(service_method_tuple);
 
-    if (iter == m_service_method_desc_map.end()) return false;
-    auto req_typedesc_tuple = *iter;
-    req_type_desc_  = std::get<0>(req_typedesc_tuple.second).desc;
-    resp_type_desc_ = std::get<1>(req_typedesc_tuple.second).desc;
+    if (service_info_map_it == m_service_info_map.end()) return false;
+    
+    req_type_desc_  = service_info_map_it->second.request_type_description;
+    resp_type_desc_ = service_info_map_it->second.response_type_description;
 
     return true;
   }

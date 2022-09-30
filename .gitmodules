@@ -18,7 +18,7 @@
 	url = https://github.com/google/googletest.git
 [submodule "thirdparty/fineftp-server"]
 	path = thirdparty/fineftp-server
-	url = https://github.com/continental/fineftp-server.git
+	url = https://github.com/eclipse-ecal/fineftp-server.git
 [submodule "thirdparty/tinyxml2"]
 	path = thirdparty/tinyxml2
 	url = https://github.com/leethomason/tinyxml2
@@ -42,7 +42,10 @@
 	url = https://github.com/steinwurf/recycle.git
 [submodule "thirdparty/tcp_pubsub"]
 	path = thirdparty/tcp_pubsub
-	url = https://github.com/continental/tcp_pubsub.git
+	url = https://github.com/eclipse-ecal/tcp_pubsub.git
 [submodule "thirdparty/qwt/qwt"]
 	path = thirdparty/qwt/qwt
 	url = https://git.code.sf.net/p/qwt/git
+[submodule "thirdparty/yaml-cpp"]
+	path = thirdparty/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git

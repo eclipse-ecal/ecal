@@ -56,7 +56,7 @@ target_link_libraries(${PROJECT_NAME}
     termcolor::termcolor
     tclap::tclap
     eCAL::play_core
-    eCAL::utils
+    eCAL::ecal-utils
 )
 
 # Create a source tree that mirrors the filesystem

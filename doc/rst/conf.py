@@ -72,8 +72,8 @@ if not os.path.exists(download_tables_main_page_dir) or not os.path.exists(downl
 
 # -- Project information -----------------------------------------------------
 
-project = u'eCAL Documentation'
-copyright = u'2021, Continental'
+project = u'Eclipse eCAL™'
+copyright = u'2022, Continental'
 author = u'Continental'
 
 # The short X.Y version
@@ -199,7 +199,7 @@ html_theme_options = {
     'logo'                : 'img/ecal-logo.svg',
     'logo_alt'            : 'eCAL Logo',
     'logo_title'          : 'eCAL Documentation',
-    'logo_url'            : 'https://continental.github.io/ecal/',
+    'logo_url'            : 'https://eclipse-ecal.github.io/ecal/',
 
     # Clear deprecated variables to make the "Edit On Github" button work
     'github_branch'       : '',
@@ -210,17 +210,17 @@ html_theme_options = {
 
     # Footer
     #'docstypo3org'       : 'True',
-    'project_repository' : 'https://github.com/continental/ecal',
+    'project_repository' : 'https://github.com/eclipse-ecal/ecal',
 
     # How-to-edit
-    'h2edit_url'          : 'https://continental.github.io/ecal/advanced/documentation.html'
+    'h2edit_url'          : 'https://eclipse-ecal.github.io/ecal/advanced/documentation.html'
 }
 
 new_html_context = {
     # "Edit on github" button
     'display_github' : True,
     'github_host'    : 'github.com',
-    'github_user'    : 'continental',
+    'github_user'    : 'eclipse-ecal',
     'github_repo'    : 'ecal',
     'github_version' : 'master/',
     'conf_py_path'   : 'doc/rst/',

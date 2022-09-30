@@ -255,6 +255,8 @@ namespace eCAL
 
         if (ecalmeas_file.is_open())
         {
+          // For mimetypes to work, ecalmeas file should not be empty
+          ecalmeas_file << std::string(" ");
           ecalmeas_file.close();
           files_with_metadata_.push_back(ecalmeas_file_name);
         }

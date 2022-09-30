@@ -21,6 +21,7 @@
  * @brief  eCAL tcp server based on asio c++
 **/
 
+#include "ecal_process.h"
 #include "ecal_tcpclient.h"
 #include "ecal_tcpheader.h"
 
@@ -229,7 +230,7 @@ namespace eCAL
         // idle operations
         while (!read_done && !read_failed && !time_expired)
         {
-          std::this_thread::sleep_for(std::chrono::milliseconds(1));
+          eCAL::Process::SleepFor(std::chrono::milliseconds(1));
         }
 
         // stop timer

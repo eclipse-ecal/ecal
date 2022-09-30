@@ -111,6 +111,7 @@ option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"          
 
 if(WIN32)
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                          ON)
+  option(ECAL_THIRDPARTY_BUILD_YAML-CPP        "Build yaml-cpp with eCAL"                                          ON)
   option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                              ON)
   option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                              ON)
   cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                      ON  "HAS_QT5" OFF)
@@ -119,6 +120,7 @@ else()
   option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                              OFF)
   option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                              OFF)
   cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                      OFF "HAS_QT5" OFF)
+  option(ECAL_THIRDPARTY_BUILD_YAML-CPP        "Build yaml-cpp with eCAL"                                          OFF)
 endif()
 
 # This should be ON, unless build ecal hdf5 for Matlab usage
@@ -193,6 +195,7 @@ set(possible_subprojects
   HDF5
   CMakeFunctions
   qwt
+  yaml-cpp
 )
 
 # We should rename the option, but don't know how to do in in a
@@ -303,9 +306,19 @@ endif()
 add_subdirectory(contrib/ecalproto)
 
 # --------------------------------------------------------
-# ecal core internal protobuf
+# old ecal core protobuf interface (for compatibility)
 # --------------------------------------------------------
 add_subdirectory(ecal/pb)
+
+# --------------------------------------------------------
+# ecal core protobuf interface
+# --------------------------------------------------------
+add_subdirectory(ecal/core_pb)
+
+# --------------------------------------------------------
+# ecal app protobuf interface
+# --------------------------------------------------------
+add_subdirectory(app/app_pb)
 
 # --------------------------------------------------------
 # ecal core
@@ -404,6 +417,8 @@ if(BUILD_APPS AND HAS_HDF5)
   add_subdirectory(app/rec/rec_server_core)
   add_subdirectory(app/rec/rec_client_cli)
   add_subdirectory(app/rec/rec_server_cli)
+  
+  add_subdirectory(app/meas_cutter)
 endif()
 
 # --------------------------------------------------------
@@ -472,6 +487,13 @@ add_subdirectory(ecal/core/cfg)
 
 if(BUILD_DOCS)
   add_subdirectory(doc)
+endif()
+
+# --------------------------------------------------------
+# debscripts
+# --------------------------------------------------------
+if (UNIX)
+  add_subdirectory(cpack/debscripts)
 endif()
 
 #install(EXPORT eCALTargets DESTINATION cmake NAMESPACE eCAL::)
@@ -551,6 +573,7 @@ message(STATUS "ECAL_THIRDPARTY_BUILD_GTEST                    : ${ECAL_THIRDPAR
 message(STATUS "ECAL_THIRDPARTY_BUILD_PROTOBUF                 : ${ECAL_THIRDPARTY_BUILD_PROTOBUF}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_CURL                     : ${ECAL_THIRDPARTY_BUILD_CURL}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_HDF5                     : ${ECAL_THIRDPARTY_BUILD_HDF5}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_YAML-CPP                 : ${ECAL_THIRDPARTY_BUILD_YAML-CPP}")
 message(STATUS "ECAL_LINK_HDF5_SHARED                          : ${ECAL_LINK_HDF5_SHARED}")
 message(STATUS "CPACK_PACK_WITH_INNOSETUP                      : ${CPACK_PACK_WITH_INNOSETUP}")
 

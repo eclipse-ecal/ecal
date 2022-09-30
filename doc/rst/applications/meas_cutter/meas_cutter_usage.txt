@@ -1,0 +1,41 @@
+USAGE:
+
+   ecal_meas_cutter.exe  [-s] [-q] -o <string> ... -i <string> ... -c
+                         <string> [--] [--version] [-h]
+
+
+Where:
+
+   --enable-one-file-per-topic
+     Whether to separate each topic in single HDF5 file.
+
+   -s,  --save_log
+     Enables log file creation in a folder called "log" next to the
+     executable.
+
+   -q,  --quiet
+     Disables logging to console output.
+
+   -o <string>,  --output <string>  (accepted multiple times)
+     (required)  Path of the output measurement (Tip: one input measurement
+     has to have a corresponding output).
+
+   -i <string>,  --input <string>  (accepted multiple times)
+     (required)  Path of the input measurement (Tip: one input measurement
+     has to have a corresponding output).
+
+   -c <string>,  --config <string>
+     (required)  Path to the configuration file that contains operations to
+     be done on the measurements.
+
+   --,  --ignore_rest
+     Ignores the rest of the labeled arguments following this flag.
+
+   --version
+     Displays version information and exits.
+
+   -h,  --help
+     Displays usage information and exits.
+
+
+   eCAL Measurement Cutter

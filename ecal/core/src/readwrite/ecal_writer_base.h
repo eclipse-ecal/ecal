@@ -25,33 +25,14 @@
 
 #include <ecal/ecal_qos.h>
 
+#include "ecal_writer_data.h"
+#include "ecal_writer_info.h"
+
+#include <atomic>
 #include <string>
 
 namespace eCAL
 {
-  struct SWriterInfo
-  {
-    SWriterInfo() :
-      has_mode_local(false),
-      has_mode_cloud(false),
-      has_qos_history_kind(false),
-      has_qos_reliability(false),
-      send_size_max(-1)
-    {
-    };
-
-    std::string name;
-    std::string description;
-
-    bool has_mode_local;
-    bool has_mode_cloud;
-
-    bool has_qos_history_kind;
-    bool has_qos_reliability;
-
-    int  send_size_max;
-  };
-  
   class CDataWriterBase
   {
   public:
@@ -74,29 +55,15 @@ namespace eCAL
 
     virtual std::string GetConnectionParameter() { return ""; };
 
-    struct SWriterData
-    {
-      const void*  buf       = nullptr;
-      size_t       len       = 0;
-      long long    id        = 0;
-      long long    clock     = 0;
-      size_t       hash      = 0;
-      long long    time      = 0;
-      size_t       buffering = 1;
-      long         bandwidth = 0;
-      bool         loopback  = false;
-      bool         zero_copy = false;
-    };
-
     virtual bool PrepareWrite(const SWriterData& /*data_*/) { return false; };
     virtual bool Write(const SWriterData& data_) = 0;
 
   protected:
-    std::string      m_host_name;
-    std::string      m_topic_name;
-    std::string      m_topic_id;
-    QOS::SWriterQOS  m_qos;
+    std::string        m_host_name;
+    std::string        m_topic_name;
+    std::string        m_topic_id;
+    QOS::SWriterQOS    m_qos;
 
-    bool             m_created;
+    std::atomic<bool>  m_created;
   };
 }

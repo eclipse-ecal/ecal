@@ -118,7 +118,7 @@ namespace eCAL
 
 
 
-    OMeasurement::OMeasurement(const std::string& base_path_, const std::string& measurement_name_)
+    inline OMeasurement::OMeasurement(const std::string& base_path_, const std::string& measurement_name_)
       : meas{ std::make_shared<eh5::HDF5Meas>(base_path_, eh5::CREATE) }
     {
       meas->SetFileBaseName(measurement_name_);
@@ -129,7 +129,7 @@ namespace eCAL
     // a) channel does not exist in the OMeasurement
     // b) the registered type does not match with the descriptor in the chanenel
     template<typename T>
-    OChannel<T> OMeasurement::Create(const std::string& channel) const
+    inline OChannel<T> OMeasurement::Create(const std::string& channel) const
     {
       static T msg;
       meas->SetChannelType(channel, eCAL::message::GetTypeName(msg));

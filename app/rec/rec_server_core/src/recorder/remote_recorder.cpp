@@ -613,11 +613,12 @@ namespace eCAL
 
     void RemoteRecorder::SetJobConfig(google::protobuf::Map<std::string, std::string>* job_config_pb, const eCAL::rec::JobConfig& job_config)
     {
-      (*job_config_pb)["meas_id"]           = std::to_string(job_config.GetJobId());
-      (*job_config_pb)["meas_root_dir"]     = job_config.GetMeasRootDir();
-      (*job_config_pb)["meas_name"]         = job_config.GetMeasName();
-      (*job_config_pb)["description"]       = job_config.GetDescription();
-      (*job_config_pb)["max_file_size_mib"] = std::to_string(job_config.GetMaxFileSize());
+      (*job_config_pb)["meas_id"]              = std::to_string(job_config.GetJobId());
+      (*job_config_pb)["meas_root_dir"]        = job_config.GetMeasRootDir();
+      (*job_config_pb)["meas_name"]            = job_config.GetMeasName();
+      (*job_config_pb)["description"]          = job_config.GetDescription();
+      (*job_config_pb)["max_file_size_mib"]    = std::to_string(job_config.GetMaxFileSize());
+      (*job_config_pb)["one_file_per_topic"]   = job_config.GetOneFilePerTopicEnabled() ? "true" : "false";
     }
 
     void RemoteRecorder::SetUploadConfig(google::protobuf::Map<std::string, std::string>* upload_config_pb, const eCAL::rec::UploadConfig& upload_config)

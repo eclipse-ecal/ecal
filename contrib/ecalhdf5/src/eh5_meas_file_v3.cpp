@@ -36,12 +36,10 @@ namespace eCAL
     }
 
     HDF5MeasFileV3::HDF5MeasFileV3()
-    {
-    }
+    = default;
 
     HDF5MeasFileV3::~HDF5MeasFileV3()
-    {
-    }
+    = default;
 
     bool HDF5MeasFileV3::GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const
     {

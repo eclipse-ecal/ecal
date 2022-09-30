@@ -1,0 +1,1 @@
+// dummy file to force VS to create a library

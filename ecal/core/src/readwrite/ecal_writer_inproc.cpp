@@ -68,8 +68,8 @@ namespace eCAL
   bool CDataWriterInProc::Destroy()
   {
     if (!m_created) return false;
-
     m_created = false;
+
     return true;
   }
 

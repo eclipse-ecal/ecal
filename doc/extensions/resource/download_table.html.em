@@ -7,31 +7,31 @@ import os
 #    {
 #        "os_group" :             "windows",
 #        "os_name" :              "Windows",
-#        "ecal_installer_link" :  ["https://github.com/continental/ecal/releases/download/v5.8.3/ecal_5.8.3-win64.exe"],
+#        "ecal_installer_link" :  ["https://github.com/eclipse-ecal/ecal/releases/download/v5.8.3/ecal_5.8.3-win64.exe"],
 #        "python_download_links" : [
-#                ("version": "3.9" , "link": "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
-#                ("version": "3.8" , "link": "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
-#                ("version": "3.7" , "link": "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
-#                ("version": "3.6" , "link": "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
-#                ("version": "3.5" , "link": "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
+#                ("version": "3.9" , "link": "https://github.com/eclipse-ecal/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
+#                ("version": "3.8" , "link": "https://github.com/eclipse-ecal/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
+#                ("version": "3.7" , "link": "https://github.com/eclipse-ecal/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
+#                ("version": "3.6" , "link": "https://github.com/eclipse-ecal/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
+#                ("version": "3.5" , "link": "https://github.com/eclipse-ecal/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
 #            ],
 #    },
 #
 #    {
 #        "os_group" :             "ubuntu",
 #        "os_name" :              "Ubuntu 18.04",
-#        "ecal_installer_link" :  ["https://github.com/continental/ecal/releases/download/v5.8.3/ecal_5.8.3-bionic_amd64.deb"],
+#        "ecal_installer_link" :  ["https://github.com/eclipse-ecal/ecal/releases/download/v5.8.3/ecal_5.8.3-bionic_amd64.deb"],
 #        "python_download_links" : [
-#                ("version": "3.8" , "link": "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
+#                ("version": "3.8" , "link": "https://github.com/eclipse-ecal/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
 #            ],
 #    },
 #
 #    {
 #        "os_group" :             "ubuntu",
 #        "os_name" :              "Ubuntu 20.04",
-#        "ecal_installer_link" :  ["https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.8-focal_amd64.egg"],
+#        "ecal_installer_link" :  ["https://github.com/eclipse-ecal/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.8-focal_amd64.egg"],
 #        "python_download_links" : [
-#                ("version": "3.8" , "link": "https://github.com/continental/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
+#                ("version": "3.8" , "link": "https://github.com/eclipse-ecal/ecal/releases/download/v5.8.3/ecal-5.8.3_py3.9-win64.egg", "default": False),
 #            ],
 #    },
 #]

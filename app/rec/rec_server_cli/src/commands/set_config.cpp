@@ -52,6 +52,7 @@ namespace eCAL
           &cmdline.meas_name_arg,
           &cmdline.max_file_size_mib_arg,
           &cmdline.description_arg,
+          &cmdline.enable_one_file_per_topic_arg,
           &cmdline.ftp_server_arg,
           &cmdline.delete_after_upload_arg,
           &cmdline.enable_built_in_client_arg,
@@ -218,6 +219,14 @@ namespace eCAL
           if (cmdline.description_arg.isSet())
           {
             auto error = setDescription(rec_server_instance, cmdline.description_arg.getValue());
+            if (error)
+              return error;
+          }
+
+          // Enable one file per topic
+          if (cmdline.enable_one_file_per_topic_arg.isSet())
+          {
+            auto error = setOneFilePerTopicEnabled(rec_server_instance, cmdline.enable_one_file_per_topic_arg.getValue());
             if (error)
               return error;
           }
@@ -562,6 +571,12 @@ namespace eCAL
       eCAL::rec::Error SetConfig::setDescription      (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
       {
         rec_server_instance->SetDescription(param);
+        return eCAL::rec::Error::OK;
+      }
+
+      eCAL::rec::Error SetConfig::setOneFilePerTopicEnabled (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, bool param)
+      {
+        rec_server_instance->SetOneFilePerTopicEnabled(param);
         return eCAL::rec::Error::OK;
       }
     }

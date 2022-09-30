@@ -68,7 +68,8 @@ namespace eCAL
       RecServerConfig()
         : root_dir_                 ("")
         , meas_name_                ("")
-        , max_file_size_            (100)
+        , max_file_size_            (1000)
+        , one_file_per_topic_       (false)
         , description_              ("")
         , enabled_clients_config_   ()
         , pre_buffer_enabled_       (false)
@@ -82,6 +83,7 @@ namespace eCAL
       std::string                         root_dir_;
       std::string                         meas_name_;
       int64_t                             max_file_size_;
+      bool                                one_file_per_topic_;
       std::string                         description_;
       std::map<std::string, ClientConfig> enabled_clients_config_;
       bool                                pre_buffer_enabled_;
