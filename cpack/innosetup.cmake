@@ -19,8 +19,6 @@ find_program(ISSC_PATH
   PATHS
     "C:/Program Files (x86)/Inno Setup 6"
     "C:/Program Files/Inno Setup 6"
-    "C:/Program Files (x86)/Inno Setup 5"
-    "C:/Program Files/Inno Setup 5"
 )
 
 if (ISSC_PATH STREQUAL "ISSC_PATH-NOTFOUND")
