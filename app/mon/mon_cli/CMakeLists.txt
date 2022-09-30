@@ -41,11 +41,15 @@ target_compile_definitions(${PROJECT_NAME}
   PRIVATE $<$<BOOL:${MSVC}>:PCRE_STATIC;_UNICODE>)
 
 # Upgrade Visual studio toolset version if necessary. Minimum working version is v142
+# TODO: Remove this code block as soon as possible
 if (MSVC AND (MSVC_TOOLSET_VERSION LESS 142))
   set_target_properties(${PROJECT_NAME} 
     PROPERTIES
       VS_PLATFORM_TOOLSET v142
   )
+  
+  list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS "C:/Windows/system32/vcruntime140_1.dll")
+  include(InstallRequiredSystemLibraries)
 endif()
 
 create_targets_protobuf()
@@ -59,6 +63,5 @@ target_link_libraries(${PROJECT_NAME}
   ftxui::dom
   ftxui::component)
 
-ecal_install_app(${PROJECT_NAME})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/mon)
