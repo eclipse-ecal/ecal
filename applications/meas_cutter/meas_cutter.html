@@ -582,6 +582,7 @@
 <li><a class="reference internal" href="#configuration-file-c-config">3. Configuration file ( -c, --config)</a></li>
 <li><a class="reference internal" href="#save-log-s-save-log">4. Save log ( -s, --save_log)</a></li>
 <li><a class="reference internal" href="#disable-verbose-q-quiet">5. Disable verbose ( -q, --quiet)</a></li>
+<li><a class="reference internal" href="#enable-one-file-per-topic-enable-one-file-per-topic">6. Enable one file per topic (--enable-one-file-per-topic)</a></li>
 </ul>
 </li>
 </ul>
@@ -651,6 +652,9 @@
 
 
 Where:
+
+   --enable-one-file-per-topic
+     Whether to separate each topic in single HDF5 file.
 
    -s,  --save_log
      Enables log file creation in a folder called &quot;log&quot; next to the
@@ -789,6 +793,10 @@ excluding at the same time any channel containg the characters sequence <code cl
 <div class="section" id="disable-verbose-q-quiet">
 <h3>5. Disable verbose ( -q, --quiet)<a class="headerlink" href="#disable-verbose-q-quiet" title="Permalink to this headline">¶</a></h3>
 <p>When this flag is enabled, console output is disabled except for error messages.</p>
+</div>
+<div class="section" id="enable-one-file-per-topic-enable-one-file-per-topic">
+<h3>6. Enable one file per topic (--enable-one-file-per-topic)<a class="headerlink" href="#enable-one-file-per-topic-enable-one-file-per-topic" title="Permalink to this headline">¶</a></h3>
+<p>When this flag is enabled, each topic will be written in its own HDF5 file.</p>
 </div>
 </div>
 </div>
