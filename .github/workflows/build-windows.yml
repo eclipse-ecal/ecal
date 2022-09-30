@@ -83,7 +83,7 @@ jobs:
 
         cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v140 ^
         -DHAS_HDF5=ON ^
-        -DHAS_QT5=OFF ^
+        -DHAS_QT5=ON ^
         -DHAS_CURL=OFF ^
         -DHAS_CAPNPROTO=OFF ^
         -DHAS_FTXUI=ON ^

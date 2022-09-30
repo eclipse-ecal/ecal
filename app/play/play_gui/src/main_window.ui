@@ -41,7 +41,7 @@
     </property>
     <widget class="QToolTipMenu" name="menu_recent_measurement">
      <property name="title">
-      <string>&amp;Recent mesurements</string>
+      <string>&amp;Recent measurements</string>
      </property>
      <addaction name="actiondummy"/>
     </widget>

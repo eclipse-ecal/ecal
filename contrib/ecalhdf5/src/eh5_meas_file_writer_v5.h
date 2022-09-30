@@ -98,9 +98,9 @@ namespace eCAL
       /**
       * @brief Sets maximum allowed size for an individual file
       *
-      * @param size   maximum size in MB
+      * @param max_file_size_mib   maximum size in MB
       **/
-      void SetMaxSizePerFile(size_t size) override;
+      void SetMaxSizePerFile(size_t max_file_size_mib) override;
 
       /**
       * @brief Whether each Channel shall be writte in its own file

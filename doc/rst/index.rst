@@ -5,9 +5,9 @@
 
 .. include:: include.txt
 
-================================
-Welcome to eCAL's documentation!
-================================
+========================
+Welcome to Eclipse eCAL™
+========================
 
 eCAL (**e**\ nhanced **C**\ ommunication **A**\ bstraction **L**\ ayer) is a fast publish-subscribe middleware that can manage inter-process data exchange, as well as inter-host communication.
 
@@ -48,6 +48,11 @@ eCAL is licensed under `Apache License 2.0 <http://www.apache.org/licenses/LICEN
 * Distribute eCAL
 
 eCAL is provided on an "as is" basis without warranties or conditions of any kind.
+
+Trademark
+=========
+
+Eclipse eCAL™ is a trademark of the Eclipse Foundation, Inc. and is used with permission.
 
 .. toctree::
    :hidden:

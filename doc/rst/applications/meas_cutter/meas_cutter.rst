@@ -87,3 +87,7 @@ When this flag is enabled, the application will also write its output in a log f
 -----------------------------------
 When this flag is enabled, console output is disabled except for error messages.
 
+6. Enable one file per topic (\--enable-one-file-per-topic)
+-------------------------------------------------------------
+When this flag is enabled, each topic will be written in its own HDF5 file.
+
