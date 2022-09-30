@@ -10,7 +10,7 @@ The **e**nhanced **C**ommunication **A**bstraction **L**ayer (eCAL) is a middlew
 eCAL uses a **publish - subscribe** pattern to automatically connect different nodes in the network.
 
 eCAL automatically chooses the best available data transport mechanism for each link:
-- **Shared memory** for local communication _(incredible fast!)_
+- **Shared memory** for local communication _(incredibly fast!)_
 - **UDP** for network communication
 
 Visit the eCAL Documentation at 🌐 http://ecal.io for more information.
