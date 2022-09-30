@@ -1,7 +1,7 @@
 How to contribute
 =================
 
-This repository is maintained by the Continental Organization.
+This repository is maintained by the Eclipse Foundation, Inc.
 
 Contributions via pull requests are very welcome!
 Please discuss a change you wish to make via issue (preferred), email,
@@ -44,14 +44,13 @@ besides a technical review:
   included into the documentation (both docstrings and the docs sources).
 - The new code and included third party libraries **do not infringe
   any trademark, patent, copyright, or open source compliance**.
-- Please make sure to sign the **Contributor License Agreement**
-  provided to you by the maintainers upon request.
+- Please make sure to sign the [Eclipse Contributor Agreement](https://www.eclipse.org/legal/ECA.php)
+  and link your GitHub Account to your Eclipse Account.
 
 Once we received your pull request, you will get feedback from the maintainers
 within 10 working days.
-Once you have the sign-off of at least one maintainer from the Continental
-organization, you may request the second reviewer to merge the Pull Request for
-you.
+Once you have the sign-off of at least one maintainer you may request the
+second reviewer to merge the Pull Request for you.
 
 *We are looking forward to your contributions.*
 
