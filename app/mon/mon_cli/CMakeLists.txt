@@ -41,14 +41,11 @@ target_compile_definitions(${PROJECT_NAME}
   PRIVATE $<$<BOOL:${MSVC}>:PCRE_STATIC;_UNICODE>)
 
 # Upgrade Visual studio toolset version if necessary. Minimum working version is v142
-if(MSVC AND NOT CMAKE_VS_PLATFORM_TOOLSET STREQUAL "")
-  string(SUBSTRING "${CMAKE_VS_PLATFORM_TOOLSET}" 1 -1 VS_TOOLSET_NUMBER)
-  if ("${VS_TOOLSET_NUMBER}" LESS "142")
-    set_target_properties(${PROJECT_NAME} 
-      PROPERTIES
-        VS_PLATFORM_TOOLSET v142
-    )
-  endif()
+if (MSVC AND (MSVC_TOOLSET_VERSION LESS 142))
+  set_target_properties(${PROJECT_NAME} 
+    PROPERTIES
+      VS_PLATFORM_TOOLSET v142
+  )
 endif()
 
 create_targets_protobuf()
