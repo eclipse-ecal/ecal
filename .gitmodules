@@ -49,3 +49,6 @@
 [submodule "thirdparty/yaml-cpp"]
 	path = thirdparty/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "thirdparty/ftxui"]
+	path = thirdparty/ftxui
+	url = https://github.com/ArthurSonzogni/FTXUI.git

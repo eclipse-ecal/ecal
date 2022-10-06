@@ -20,9 +20,10 @@ project(mon)
 
 find_package(Protobuf REQUIRED)
 find_package(tclap REQUIRED)
+find_package(ftxui REQUIRED)
 
 set(ecalmon_src
-  src/ecal_mon.cpp
+  src/main.cpp
 )
 
 if(WIN32)
@@ -39,14 +40,28 @@ target_include_directories(${PROJECT_NAME}
 target_compile_definitions(${PROJECT_NAME}
   PRIVATE $<$<BOOL:${MSVC}>:PCRE_STATIC;_UNICODE>)
 
+# Upgrade Visual studio toolset version if necessary. Minimum working version is v142
+# TODO: Remove this code block as soon as possible
+if (MSVC AND (MSVC_TOOLSET_VERSION LESS 142))
+  set_target_properties(${PROJECT_NAME} 
+    PROPERTIES
+      VS_PLATFORM_TOOLSET v142
+  )
+  
+  list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS "C:/Windows/system32/vcruntime140_1.dll")
+  include(InstallRequiredSystemLibraries)
+endif()
+
 create_targets_protobuf()
 
 target_link_libraries(${PROJECT_NAME}
   protobuf::libprotobuf
   tclap::tclap
   eCAL::core
-  eCAL::core_pb)
+  eCAL::core_pb
+  ftxui::screen
+  ftxui::dom
+  ftxui::component)
 
-ecal_install_app(${PROJECT_NAME})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/mon)

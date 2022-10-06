@@ -79,6 +79,7 @@ option(HAS_HDF5                                "Platform supports HDF5 library" 
 option(HAS_QT5                                 "Platform supports Qt 5 library"                                    ON)
 option(HAS_CURL                                "Build with CURL (i.e. upload support in the recorder app)"         ON)
 option(HAS_CAPNPROTO                           "Platform supports Cap'n Proto library"                            OFF)
+option(HAS_FTXUI                               "Platform supports FTXUI library. Requires C++17 and up."           ON)
 
 option(BUILD_DOCS                              "Build the eCAL documentation"                                     OFF)
 option(BUILD_APPS                              "Build the eCAL applications"                                       ON)
@@ -105,6 +106,7 @@ option(ECAL_THIRDPARTY_BUILD_FINEFTP           "Build fineFTP with eCAL"        
 option(ECAL_THIRDPARTY_BUILD_TERMCOLOR         "Build termcolor with eCAL"                                         ON)
 option(ECAL_THIRDPARTY_BUILD_TCP_PUBSUB        "Build tcp_pubsub library with eCAL"                                ON)
 option(ECAL_THIRDPARTY_BUILD_RECYCLE           "Build steinwurf::recylce with eCAL"                                ON)
+option(ECAL_THIRDPARTY_BUILD_FTXUI             "Build ftxui with eCAL"                                             ON)
 # option(ECAL_THIRDPARTY_BUILD_ZLIB              "Build zlib with eCAL"                                              ON)
 # option(ECAL_THIRDPARTY_BUILD_LIBSSH2           "Build libssh2 with eCAL"                                           ON)
 option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"                                            OFF)
@@ -196,6 +198,7 @@ set(possible_subprojects
   CMakeFunctions
   qwt
   yaml-cpp
+  ftxui
 )
 
 # We should rename the option, but don't know how to do in in a
@@ -394,7 +397,9 @@ endif()
 # --------------------------------------------------------
 add_subdirectory(app/apps)
 if(BUILD_APPS)
-  add_subdirectory(app/mon/mon_cli)
+  if (HAS_FTXUI)
+    add_subdirectory(app/mon/mon_cli)
+  endif()
   add_subdirectory(app/util/config)
   add_subdirectory(app/util/stop)
   add_subdirectory(app/sys/sys_core)
@@ -549,6 +554,7 @@ message(STATUS "HAS_HDF5                                       : ${HAS_HDF5}")
 message(STATUS "HAS_QT5                                        : ${HAS_QT5}")
 message(STATUS "HAS_CURL                                       : ${HAS_CURL}")
 message(STATUS "HAS_CAPNPROTO                                  : ${HAS_CAPNPROTO}")
+message(STATUS "HAS_FTXUI                                      : ${HAS_FTXUI}")
 message(STATUS "BUILD_DOCS                                     : ${BUILD_DOCS}")
 message(STATUS "BUILD_APPS                                     : ${BUILD_APPS}")
 message(STATUS "BUILD_SAMPLES                                  : ${BUILD_SAMPLES}")

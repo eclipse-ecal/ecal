@@ -24,12 +24,12 @@
 #pragma once
 
 ;/* version parsed out into numeric values */
-#define ECAL_MON_VERSION_MAJOR              1
+#define ECAL_MON_VERSION_MAJOR              2
 #define ECAL_MON_VERSION_MINOR              0
-#define ECAL_MON_VERSION_PATCH              2
+#define ECAL_MON_VERSION_PATCH              0
 
 ;/* version as string */
-#define ECAL_MON_VERSION                    "v.1.0.2.20200313"
+#define ECAL_MON_VERSION                    "2.0.0"
 #define ECAL_MON_DATE                       "13.03.2020"
 
 ;/* name as string */

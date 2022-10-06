@@ -43,6 +43,7 @@ jobs:
                     -DHAS_QT5=ON \
                     -DHAS_CURL=ON \
                     -DHAS_CAPNPROTO=OFF \
+                    -DHAS_FTXUI=ON \
                     -DBUILD_DOCS=OFF \
                     -DBUILD_APPS=ON \
                     -DBUILD_SAMPLES=ONS \
