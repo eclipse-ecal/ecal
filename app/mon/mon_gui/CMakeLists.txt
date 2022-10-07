@@ -31,8 +31,8 @@ set(CMAKE_AUTORCC OFF) # Reason for being turned off: AutoRCC will create an ent
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(source_files
-    src/convert_utf.cpp
-    src/convert_utf.h
+    #src/convert_utf.cpp
+    #src/convert_utf.h
     src/ecalmon.cpp
     src/ecalmon.h
     src/ecalmon_globals.h
@@ -159,9 +159,6 @@ if(ECAL_NPCAP_SUPPORT)
     )
 endif(ECAL_NPCAP_SUPPORT)
 
-if(UNIX)
-  set_source_files_properties(src/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
-endif()
 
 # compile qt resource files and ui files
 qt5_add_resources(autogen_resources ${qt_resource_files})

@@ -22,8 +22,6 @@ find_package(tclap REQUIRED)
 find_package(termcolor REQUIRED)
 
 set(source_files
-  src/convert_utf.cpp
-  src/convert_utf.h
   src/ecal_play_cli.cpp
   src/ecal_play_service.cpp
   src/ecal_play_service.h
@@ -34,10 +32,6 @@ if(WIN32)
       resources/resource.h
       resources/win32_resources.rc
   )
-endif()
-
-if(UNIX)
-  set_source_files_properties(src/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
 ecal_add_app_console(${PROJECT_NAME}
