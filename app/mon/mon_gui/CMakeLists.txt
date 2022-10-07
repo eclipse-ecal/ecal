@@ -24,7 +24,6 @@ find_package(Qt5 COMPONENTS
 REQUIRED)
 
 find_package(Protobuf REQUIRED)
-find_package(simpleini REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC OFF) # Reason for being turned off: AutoUIC will prevent VS from detecting changes in .ui files
@@ -32,8 +31,8 @@ set(CMAKE_AUTORCC OFF) # Reason for being turned off: AutoRCC will create an ent
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(source_files
-    src/convert_utf.cpp
-    src/convert_utf.h
+    #src/convert_utf.cpp
+    #src/convert_utf.h
     src/ecalmon.cpp
     src/ecalmon.h
     src/ecalmon_globals.h
@@ -160,9 +159,6 @@ if(ECAL_NPCAP_SUPPORT)
     )
 endif(ECAL_NPCAP_SUPPORT)
 
-if(UNIX)
-  set_source_files_properties(src/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
-endif()
 
 # compile qt resource files and ui files
 qt5_add_resources(autogen_resources ${qt_resource_files})
@@ -181,7 +177,6 @@ ecal_add_app_qt(${PROJECT_NAME}
 
 target_link_libraries (${PROJECT_NAME}
     protobuf::libprotobuf
-    simpleini::simpleini
     eCAL::core
     eCAL::core_pb
     eCAL::mon_plugin_lib

@@ -89,7 +89,7 @@ namespace eCAL
     // sys
     /////////////////////////////////////
 
-    //ECAL_API std::string       GetEcalSysFilterExcludeList          ();
+    ECAL_API std::string         GetEcalSysFilterExcludeList          ();
 
     /////////////////////////////////////
     // publisher

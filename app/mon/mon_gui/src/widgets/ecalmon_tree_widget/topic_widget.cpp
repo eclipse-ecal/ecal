@@ -27,8 +27,6 @@
 #include "ecalmon.h"
 
 #include <ecal/ecal_util.h>
-#include <ecal_def_ini.h>
-#include <SimpleIni.h>
 
 #include <iostream>
 
@@ -178,28 +176,9 @@ void TopicWidget::loadRegExpLists()
 
   QString exclude_string;
   QString include_string;
+  exclude_string = QString::fromStdString(eCAL::Config::GetMonitoringFilterExcludeList()); //ini.GetValue(MON_SECTION_S, MON_FILTER_EXCL_S);
 
-  // We are manually loading the ecal.ini here and thus bypass the "actual"
-  // eCAL core API. Using the eCAL Core API would lead to an unresponsive GUI,
-  // as we then had to use the eCAL Mon API from the eCAL Core that filters
-  // the topics and takes a LOT of time to do that. By manually loading the
-  // filter we can manually filter the topic list and thereby instantaneously
-  // update the GUI.
-  std::string default_ini_path = eCAL::Util::GeteCALActiveIniFile();
-
-  CSimpleIniA ini;
-  SI_Error rc = ini.LoadFile(default_ini_path.c_str());
-  if (rc < 0)
-  {
-    // When we cannot load the ecal.ini, we use a fallback regexp.
-    exclude_string = "__.*";
-    std::cerr << "Error loading ecal.ini from \"" << default_ini_path << "\"" << std::endl;
-  }
-  else
-  {
-    exclude_string = ini.GetValue(MON_SECTION_S, MON_FILTER_EXCL_S);
-    include_string = ini.GetValue(MON_SECTION_S, MON_FILTER_INCL_S);
-  }
+  include_string = QString::fromStdString(eCAL::Config::GetMonitoringFilterIncludeList()); //ini.GetValue(MON_SECTION_S, MON_FILTER_INCL_S);
 
 
   // The ecal.ini defines a very strange regex format: A filter consists of
