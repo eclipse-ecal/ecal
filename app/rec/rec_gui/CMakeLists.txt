@@ -29,7 +29,6 @@ if(WIN32)
     REQUIRED)
 endif(WIN32)
 
-find_package(simpleini REQUIRED)
 find_package(tclap REQUIRED)
 find_package(Protobuf REQUIRED)
 
@@ -154,7 +153,6 @@ ecal_add_app_qt(${PROJECT_NAME}
 
 create_targets_protobuf()
 target_link_libraries (${PROJECT_NAME}
-    simpleini::simpleini
     tclap::tclap
     protobuf::libprotobuf
     eCAL::core

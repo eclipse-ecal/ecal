@@ -25,7 +25,6 @@ REQUIRED)
 
 find_package(tclap REQUIRED)
 find_package(Protobuf REQUIRED)
-find_package(simpleini REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC OFF) # Reason for being turned off: AutoUIC will prevent VS from detecting changes in .ui files
@@ -39,8 +38,6 @@ set(source_files
     src/ecalsys_gui.h
     src/ecalsys_service.cpp
     src/ecalsys_service.h
-    src/ecalsys_settings.cpp
-    src/ecalsys_settings.h
     src/globals.h
     src/help_window.cpp
     src/help_window.h
@@ -171,9 +168,9 @@ target_link_libraries (${PROJECT_NAME}
     CustomQt
     CustomTclap
     tclap::tclap
+    eCAL::core
     eCAL::sys_core
     protobuf::libprotobuf
-    simpleini::simpleini
     EcalParser
     QEcalParser
     eCAL::ecal-utils

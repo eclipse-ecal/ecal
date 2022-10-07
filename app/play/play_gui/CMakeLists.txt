@@ -29,7 +29,6 @@ if(WIN32)
   REQUIRED)
 endif()
 
-find_package(simpleini REQUIRED)
 find_package(tclap REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
@@ -124,7 +123,6 @@ ecal_add_app_qt(${PROJECT_NAME}
 
 create_targets_protobuf()
 target_link_libraries (${PROJECT_NAME}
-    simpleini::simpleini
     tclap::tclap
     CustomTclap
     eCAL::play_core

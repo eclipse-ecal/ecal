@@ -24,7 +24,6 @@ find_package(Qt5 COMPONENTS
 REQUIRED)
 
 find_package(Protobuf REQUIRED)
-find_package(simpleini REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC OFF) # Reason for being turned off: AutoUIC will prevent VS from detecting changes in .ui files
@@ -181,7 +180,6 @@ ecal_add_app_qt(${PROJECT_NAME}
 
 target_link_libraries (${PROJECT_NAME}
     protobuf::libprotobuf
-    simpleini::simpleini
     eCAL::core
     eCAL::core_pb
     eCAL::mon_plugin_lib

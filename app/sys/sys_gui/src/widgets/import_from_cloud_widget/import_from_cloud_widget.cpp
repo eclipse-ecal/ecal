@@ -927,11 +927,8 @@ void ImportFromCloudWidget::loadExcludeTasksFilter()
   QFile default_cfg_file(default_cfg_file_path.c_str());
   if (default_cfg_file.exists())
   {
-    EcalsysSettings settings;
-    settings.Create(default_cfg_file_path);
-
-    std::regex reg(settings.AppsFilterDenied(), std::regex::icase);
-    exclude_tasks_regex_valid_ = !settings.AppsFilterDenied().empty();
+    std::regex reg(eCAL::Config::GetEcalSysFilterExcludeList(), std::regex::icase);
+    exclude_tasks_regex_valid_ = !eCAL::Config::GetEcalSysFilterExcludeList().empty();
     exclude_tasks_regex_ = reg;
   }
 }

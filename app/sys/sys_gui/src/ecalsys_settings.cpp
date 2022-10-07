@@ -22,6 +22,7 @@
 **/
 
 #include "ecalsys_settings.h"
+#include <ecal/ecal_config.h>
 
 #include <memory>
 
@@ -76,6 +77,6 @@ void EcalsysSettings::LoadIniFile(const std::string& path)
     if (rc < 0) return;
 
     // Filter list for import from cloud
-    apps_filter_denied_   = iniConf->GetValue(SYS_SECTION_S, SYS_FILTER_EXCL_S, "");
+    apps_filter_denied_ = eCAL::Config::GetEcalSysFilterExcludeList();
   }
 }

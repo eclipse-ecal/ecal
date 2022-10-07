@@ -18,7 +18,6 @@
 
 project(play)
 
-find_package(simpleini REQUIRED)
 find_package(tclap REQUIRED)
 find_package(termcolor REQUIRED)
 
@@ -52,7 +51,6 @@ target_compile_definitions(${PROJECT_NAME}
   PRIVATE $<$<BOOL:${MSVC}>:PCRE_STATIC;_UNICODE>)
 
 target_link_libraries(${PROJECT_NAME}
-    simpleini::simpleini
     termcolor::termcolor
     tclap::tclap
     eCAL::play_core

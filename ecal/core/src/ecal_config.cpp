@@ -148,7 +148,7 @@ namespace eCAL
     // sys
     /////////////////////////////////////
     
-    //ECAL_API std::string       GetEcalSysFilterExcludeList          () { return eCALPAR(SYS, FILTER_EXCL); }
+    ECAL_API std::string       GetEcalSysFilterExcludeList            () { return eCALPAR(SYS, FILTER_EXCL); }
 
     /////////////////////////////////////
     // publisher
