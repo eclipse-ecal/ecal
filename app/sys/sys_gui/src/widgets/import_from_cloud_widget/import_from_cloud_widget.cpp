@@ -28,7 +28,6 @@
 
 #include "globals.h"
 
-#include "ecalsys_settings.h"
 #include "widgets/treemodels/tree_data_roles.h"
 #include "widgets/treemodels/tree_item_types.h"
 #include "widgets/treemodels/task_tree_item.h"
