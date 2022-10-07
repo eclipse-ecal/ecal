@@ -89,7 +89,7 @@ Program Listing for File ecal_config.h
    
        // sys
    
-       //ECAL_API std::string       GetEcalSysFilterExcludeList          ();
+       ECAL_API std::string         GetEcalSysFilterExcludeList          ();
    
        // publisher
        ECAL_API TLayer::eSendMode GetPublisherInprocMode               ();

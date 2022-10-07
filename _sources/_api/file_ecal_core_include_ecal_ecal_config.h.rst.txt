@@ -59,6 +59,8 @@ Functions
 
 - :ref:`exhale_function_ecal__config_8h_1a5192f32d6157255d0d5d9295f38e02cb`
 
+- :ref:`exhale_function_ecal__config_8h_1a2021665a60dc38ea96ec53dfeeabb2ac`
+
 - :ref:`exhale_function_ecal__config_8h_1acfc8c09605825c36ae84ed2c38216112`
 
 - :ref:`exhale_function_ecal__config_8h_1a0e61706ed81e23d251be210649974bba`
