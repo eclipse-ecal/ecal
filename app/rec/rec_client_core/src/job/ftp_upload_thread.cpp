@@ -26,6 +26,7 @@
 #include <chrono>
 #include <cstdlib>
 #include <array>
+#include <ctime>
 
 #ifdef ECAL_OS_LINUX
 #include <unistd.h>
@@ -656,7 +657,7 @@ namespace eCAL
       auto now = std::chrono::system_clock::now();
       time_t time_t_now = std::chrono::system_clock::to_time_t(now);
       std::array<char, 64> time_char_array{};
-      int bytes_written = std::strftime(&time_char_array.front(), time_char_array.size(), "%F_%H-%M-%S", localtime(&time_t_now));
+      size_t bytes_written = std::strftime(&time_char_array.front(), time_char_array.size(), "%F_%H-%M-%S", localtime(&time_t_now));
 
       // On error, 0 is returned. Should never happen.
       if (bytes_written == 0)
@@ -679,7 +680,7 @@ namespace eCAL
 #endif // WIN32
 
       std::array<char, 1024> hostname_char_array{};
-      gethostname(&hostname_char_array.front(), hostname_char_array.size());
+      gethostname(&hostname_char_array.front(), static_cast<int>(hostname_char_array.size()));
       hostname_char_array.back() = 0;    // When the hostname was too long, there may be no terminating null-byte.
 
       return std::string(".") + &hostname_char_array.front() + "_" + &time_char_array.front() + ".tmp";
