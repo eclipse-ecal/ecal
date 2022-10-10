@@ -52,12 +52,22 @@ namespace eCAL
       // InterruptibleThread overrides
       /////////////////////////////////////////////
     public:
+      // Constructor
       FtpUploadThread(const std::string&                local_root_dir
                     , const std::string&                ftp_server
                     , const std::string&                ftp_root_dir
                     , const std::vector<std::string>&   skip_files
                     , const std::function<Error(void)>& post_upload_function = [](){ return Error::OK; });
-      ~FtpUploadThread();
+
+      // Copy
+      FtpUploadThread(const FtpUploadThread&)            = delete;
+      FtpUploadThread& operator=(const FtpUploadThread&) = delete;
+
+      // Move
+      FtpUploadThread& operator=(FtpUploadThread&&)      = delete;
+      FtpUploadThread(FtpUploadThread&&)                 = delete;
+
+      ~FtpUploadThread() override;
 
       void Run() override;
 

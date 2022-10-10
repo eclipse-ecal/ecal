@@ -25,6 +25,7 @@
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
+#include <array>
 
 #ifdef ECAL_OS_LINUX
 #include <unistd.h>
@@ -56,7 +57,7 @@ namespace eCAL
       // Lookup table to tell us which character we must escape for a proper curl URI
       // Information on URI are here: https://www.ietf.org/rfc/rfc3986.txt
       // We don't escape codepage characters, as this would break UTF-8
-      constexpr bool is_reserved_[]
+      constexpr std::array<bool, 256> is_reserved_
       {
         true,   //  NUL     (0x00)
         true,   //  SOH     (0x01)
@@ -331,6 +332,7 @@ namespace eCAL
       , ftp_server_                       (ftp_server)
       , ftp_root_dir_                     (ftp_root_dir)
       , skip_files_                       (skip_files)
+      , finished_files_progress_          {}
       , current_file_size_bytes_          (0)
       , current_file_uploaded_bytes_      (0)
       , info_                             { true, "" }
@@ -459,7 +461,7 @@ namespace eCAL
         else
         {
           // Use our own read function (mandatory on Windows)
-          ReadCallbackParams read_callback_params;
+          ReadCallbackParams read_callback_params{};
           read_callback_params.this_ = this;
           read_callback_params.file_ = &file;
           curl_easy_setopt(curl_handle, CURLOPT_READFUNCTION, FtpUploadThread::ReadCallback);
@@ -475,8 +477,7 @@ namespace eCAL
           target_path += ftp_root_dir_;
           for (char c : temporary_file_path)
           {
-            // Escape according to https://www.ietf.org/rfc/rfc3986.txt
-            if (is_reserved_[static_cast<unsigned char>(c)])
+            if (is_reserved_.at(static_cast<unsigned char>(c)))
             {
               target_path += "%xx";
               std::snprintf(&target_path[target_path.size() - 2], 3, "%02X", c);
@@ -654,8 +655,15 @@ namespace eCAL
     {
       auto now = std::chrono::system_clock::now();
       time_t time_t_now = std::chrono::system_clock::to_time_t(now);
-      char time_char[64];
-      strftime(time_char, 64, "%F_%H-%M-%S", localtime(&time_t_now));
+      std::array<char, 64> time_char_array{};
+      int bytes_written = std::strftime(&time_char_array.front(), time_char_array.size(), "%F_%H-%M-%S", localtime(&time_t_now));
+
+      // On error, 0 is returned. Should never happen.
+      if (bytes_written == 0)
+      {
+        time_char_array.front() = 0;
+      }
+
 
 #ifdef WIN32
       WORD wVersionRequested = MAKEWORD(2, 2);
@@ -670,10 +678,11 @@ namespace eCAL
       }
 #endif // WIN32
 
-      char hostname_char[1024] = { 0 };
-      gethostname(hostname_char, 1024);
+      std::array<char, 1024> hostname_char_array{};
+      gethostname(&hostname_char_array.front(), hostname_char_array.size());
+      hostname_char_array.back() = 0;    // When the hostname was too long, there may be no terminating null-byte.
 
-      return std::string(".") + hostname_char + "_" + time_char + ".tmp";
+      return std::string(".") + &hostname_char_array.front() + "_" + &time_char_array.front() + ".tmp";
     }
 
     void FtpUploadThread::logError(const std::string& error_message)
