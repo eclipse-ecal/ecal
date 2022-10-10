@@ -1,5 +1,5 @@
 if(WIN32)
-  set(CMAKE_USE_WINSSL ON CACHE BOOL "Use native SSL on Windows" FORCE)
+  set(CURL_USE_SCHANNEL ON CACHE BOOL "Use native SSL on Windows" FORCE)
 endif()
 
 set(BUILD_CURL_EXE OFF CACHE BOOL "Don't build the curl executable" FORCE)
