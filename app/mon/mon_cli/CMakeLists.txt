@@ -63,5 +63,6 @@ target_link_libraries(${PROJECT_NAME}
   ftxui::dom
   ftxui::component)
 
+ecal_install_app(${PROJECT_NAME})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/mon)
