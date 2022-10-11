@@ -93,7 +93,7 @@ public:
     auto keybinds = GenerateKeybinds();
     view = Scroller(Renderer([commands, keybinds]{
       return vbox(
-        text(ECAL_MON_NAME " v" ECAL_MON_VERSION),
+        text(ECAL_MON_TUI_NAME " v" ECAL_MON_TUI_VERSION),
         separatorEmpty(),
         commands,
         separatorEmpty(),

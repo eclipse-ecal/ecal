@@ -99,8 +99,8 @@ int main(int argc, char** argv)
     /* Create & Parse the command line                                      */
     /************************************************************************/
     // Define the command line object.
-    std::string version_str = std::string(ECAL_MON_VERSION) + " (" + std::string(ECAL_MON_DATE) + ")";
-    TCLAP::CmdLine cmd(ECAL_MON_NAME, ' ' , version_str);
+    std::string version_str = std::string(ECAL_MON_CLI_VERSION) + " (" + std::string(ECAL_MON_CLI_DATE) + ")";
+    TCLAP::CmdLine cmd(ECAL_MON_CLI_NAME, ' ' , version_str);
 
     // Define the values from argument and add them to the command line.
     TCLAP::ValueArg<std::string> bandwidth_arg("b", "bandwidth", "display bandwidth used by topic", false, "", "string");

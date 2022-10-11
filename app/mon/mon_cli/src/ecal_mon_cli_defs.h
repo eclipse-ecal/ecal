@@ -18,19 +18,19 @@
 ;*/
 
 ;/**
-; * eCALMon version definition
+; * eCALMon CLI version definition
 ;**/
 
 #pragma once
 
 ;/* version parsed out into numeric values */
-#define ECAL_MON_VERSION_MAJOR              1
-#define ECAL_MON_VERSION_MINOR              0
-#define ECAL_MON_VERSION_PATCH              2
+#define ECAL_MON_CLI_VERSION_MAJOR              1
+#define ECAL_MON_CLI_VERSION_MINOR              0
+#define ECAL_MON_CLI_VERSION_PATCH              2
 
 ;/* version as string */
-#define ECAL_MON_VERSION                    "v.1.0.2.20200313"
-#define ECAL_MON_DATE                       "13.03.2020"
+#define ECAL_MON_CLI_VERSION                    "1.0.2"
+#define ECAL_MON_CLI_DATE                       "13.03.2020"
 
 ;/* name as string */
-#define ECAL_MON_NAME                       "eCALMon"
+#define ECAL_MON_CLI_NAME                       "eCALMon CLI"

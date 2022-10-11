@@ -56,7 +56,7 @@ Args::Color ColorArgsFromString(const std::string &val)
 
 Args ParseArgs(int argc, char** argv)
 {
-  TCLAP::CmdLine cmd(ECAL_MON_NAME, ' ', ECAL_MON_VERSION);
+  TCLAP::CmdLine cmd(ECAL_MON_TUI_NAME, ' ', ECAL_MON_TUI_VERSION);
   ColorArgConstraint color_arg_constraint{};
 
   auto color = TCLAP::ValueArg<std::string>("", "color",
