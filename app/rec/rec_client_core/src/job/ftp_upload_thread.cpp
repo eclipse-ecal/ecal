@@ -347,7 +347,7 @@ namespace eCAL
 
       for(size_t i = 0; i < skip_files_.size(); i++)
       {
-        skip_files_[i] = EcalUtils::Filesystem::CleanPath(local_root_dir_ + "/" + skip_files_[i]);
+        skip_files_[i] = EcalUtils::Filesystem::CleanPath(local_root_dir_ + "/" + skip_files_[i], EcalUtils::Filesystem::OsStyle::Current);
 #ifdef WIN32
         // On windows we lower-case-compare files
         std::transform(skip_files_[i].begin(), skip_files_[i].end(), skip_files_[i].begin(), [](unsigned char c) { return static_cast<unsigned char>(std::tolower(c)); });
@@ -363,7 +363,7 @@ namespace eCAL
       // Create a list of all files to upload
       EcalRecLogger::Instance()->info("Scanning directory for upload: " + local_root_dir_);
 
-      auto root_dir_status = EcalUtils::Filesystem::FileStatus(local_root_dir_);
+      auto root_dir_status = EcalUtils::Filesystem::FileStatus(local_root_dir_, EcalUtils::Filesystem::OsStyle::Current);
       if (!root_dir_status.IsOk() || (root_dir_status.GetType() != EcalUtils::Filesystem::Type::Dir))
       {
         info_ = { false, "Resource unavailable (" + local_root_dir_ + ")"};
@@ -379,7 +379,7 @@ namespace eCAL
         // Remove files that should not be uploaded
         files_to_upload.remove_if([this](const std::pair<std::string, uint64_t>& file_pair_to_upload) -> bool
         {
-          std::string normalized_file_to_upload = EcalUtils::Filesystem::CleanPath(local_root_dir_ + "/" + file_pair_to_upload.first);
+          std::string normalized_file_to_upload = EcalUtils::Filesystem::CleanPath(local_root_dir_ + "/" + file_pair_to_upload.first, EcalUtils::Filesystem::OsStyle::Current);
 #ifdef WIN32
           // On windows we lower-case-compare files
           std::transform(normalized_file_to_upload.begin(), normalized_file_to_upload.end(), normalized_file_to_upload.begin(), [](unsigned char c) { return static_cast<unsigned char>(std::tolower(c)); });
@@ -434,10 +434,10 @@ namespace eCAL
 
         std::string temporary_file_path = file_path + temp_suffix;
 
-        std::string local_complete_file_path = EcalUtils::Filesystem::CleanPath(EcalUtils::Filesystem::ToNativeSeperators(local_root_dir_ + "/" + file_path));
+        std::string local_complete_file_path = EcalUtils::Filesystem::CleanPath(EcalUtils::Filesystem::ToNativeSeperators(local_root_dir_ + "/" + file_path, EcalUtils::Filesystem::OsStyle::Current), EcalUtils::Filesystem::OsStyle::Current);
         
-        std::string file_name_only = EcalUtils::Filesystem::CleanPathComponentList(file_path).back();
-        std::string temporary_file_name_only = EcalUtils::Filesystem::CleanPathComponentList(temporary_file_path).back();
+        std::string file_name_only = EcalUtils::Filesystem::CleanPathComponentList(file_path, EcalUtils::Filesystem::OsStyle::Current).back();
+        std::string temporary_file_name_only = EcalUtils::Filesystem::CleanPathComponentList(temporary_file_path, EcalUtils::Filesystem::OsStyle::Current).back();
 
 #ifndef _NDEBUG
         EcalRecLogger::Instance()->debug("Uploading File: " + local_complete_file_path);
@@ -446,10 +446,10 @@ namespace eCAL
         // Open the local file
         std::ifstream file;
 #ifdef WIN32
-        std::wstring w_native_path = EcalUtils::StrConvert::Utf8ToWide(EcalUtils::Filesystem::ToNativeSeperators(local_complete_file_path));
+        std::wstring w_native_path = EcalUtils::StrConvert::Utf8ToWide(EcalUtils::Filesystem::ToNativeSeperators(local_complete_file_path, EcalUtils::Filesystem::OsStyle::Current));
         file.open(w_native_path, std::ios::binary);
 #else
-        file.open(EcalUtils::Filesystem::ToNativeSeperators(local_complete_file_path), std::ios::binary);
+        file.open(EcalUtils::Filesystem::ToNativeSeperators(local_complete_file_path, EcalUtils::Filesystem::OsStyle::Current), std::ios::binary);
 #endif // WIN32
 
         bool abort_uploading = false;
@@ -626,7 +626,7 @@ namespace eCAL
     {
       std::list<std::pair<std::string, unsigned long long>> files;
 
-      auto dir_content = EcalUtils::Filesystem::DirContent(root_dir);
+      auto dir_content = EcalUtils::Filesystem::DirContent(root_dir, EcalUtils::Filesystem::OsStyle::Current);
 
       for (const auto& entry : dir_content)
       {
