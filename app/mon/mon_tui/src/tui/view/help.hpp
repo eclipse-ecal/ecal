@@ -31,7 +31,7 @@
 
 #include "tui/viewmodel/help.hpp"
 
-#include "ecal_mon_defs.h"
+#include "ecal_mon_tui_defs.h"
 
 class HelpView : public View
 {

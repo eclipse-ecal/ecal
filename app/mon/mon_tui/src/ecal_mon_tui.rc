@@ -1,7 +1,7 @@
 // Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
-#include "ecal_mon_defs.h"
+#include "ecal_mon_tui_defs.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
@@ -42,11 +42,11 @@ BEGIN
         BLOCK "040004b0"
         BEGIN
             VALUE "CompanyName", "Continental Automotive Systems"
-            VALUE "FileDescription", "eCAL Monitor CLI"
+            VALUE "FileDescription", "eCAL Monitor TUI"
             VALUE "FileVersion", ECAL_MON_VERSION
-            VALUE "InternalName", "ecal_mon.exe"
+            VALUE "InternalName", "ecal_mon_tui.exe"
             VALUE "LegalCopyright", "Continental Automotive Systems. All Rights Reserved."
-            VALUE "OriginalFilename", "ecal_mon.exe"
+            VALUE "OriginalFilename", "ecal_mon_tui.exe"
             VALUE "ProductName", ECAL_MON_NAME
             VALUE "ProductVersion", ECAL_MON_VERSION
         END

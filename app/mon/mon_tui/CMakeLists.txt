@@ -16,23 +16,23 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(mon)
+project(mon_tui)
 
 find_package(Protobuf REQUIRED)
 find_package(tclap REQUIRED)
 find_package(ftxui REQUIRED)
 
-set(ecalmon_src
+set(ecalmon_tui_src
   src/main.cpp
 )
 
 if(WIN32)
-  set(ecalmon_win_src
-    src/ecal_mon.rc
+  set(ecalmon_tui_win_src
+    src/ecal_mon_tui.rc
   )
 endif()
 
-ecal_add_app_console(${PROJECT_NAME} ${ecalmon_src} ${ecalmon_win_src})
+ecal_add_app_console(${PROJECT_NAME} ${ecalmon_tui_src} ${ecalmon_tui_win_src})
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
