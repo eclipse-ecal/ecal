@@ -146,7 +146,6 @@ public:
         return true;
       default: return ComponentBase::OnEvent(event);
     }
-    return ComponentBase::OnEvent(event);
   }
 
   ftxui::Element Render() override

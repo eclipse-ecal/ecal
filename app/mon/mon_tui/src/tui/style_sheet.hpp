@@ -86,6 +86,7 @@ struct StyleSheet
       {
         case ftxui::TableModelBase::SortDirection::DESC: return "▼";
         case ftxui::TableModelBase::SortDirection::ASC: return "▲";
+        default: return "?";
       }
     };
     sheet.table.group_row = bold | color(Color::Palette16::Blue);
@@ -187,6 +188,7 @@ struct StyleSheet
       {
         case ftxui::TableModelBase::SortDirection::DESC: return " (desc)";
         case ftxui::TableModelBase::SortDirection::ASC: return " (asc)";
+        default: return " (desc)";
       }
     };
     sheet.table.group_row = inverted;
@@ -267,6 +269,8 @@ struct StyleSheet
         return Default();
       case StyleSheetType::MONOCHROME:
         return Monochrome();
+      default:
+        return Default();
     }
   }
 };

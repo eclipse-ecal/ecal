@@ -63,6 +63,8 @@ protected:
         return SortDirection::DESC;
       case SortDirection::DESC:
         return SortDirection::ASC;
+      default:
+        return SortDirection::DESC;
     }
   }
 
@@ -126,7 +128,7 @@ public:
     {
       if(columns[i] == name)
       {
-        return i;
+        return static_cast<int>(i);
       }
     }
 
@@ -377,8 +379,8 @@ public:
   {
     if(group_column == NO_COLUMN) return false;
 
-    auto selected_index = SelectedIndex();
-    auto current_index = 0;
+    size_t selected_index = SelectedIndex();
+    size_t current_index = 0;
     for(auto &group: visible_data)
     {
        if(selected_index == current_index)
@@ -514,11 +516,11 @@ public:
     auto loop_back_index = -1;
     auto current_index = RowCount();
     auto current_found = false;
-    for(int i = visible_data.size() - 1; i >= 0; i--)
+    for(size_t i = visible_data.size() - 1; i >= 0; i--)
     {
       current_index--;
       auto &rows = visible_data[i].rows;
-      for(int j = rows.size() - 1; j >= 0; j--)
+      for(size_t j = rows.size() - 1; j >= 0; j--)
       {
         auto &row = rows[j];
         if(current_index == selected_index)
@@ -528,11 +530,11 @@ public:
           continue;
         }
         if(!current_found && loop_back_index == -1 && find_predicate(row))
-          loop_back_index = current_index;
+          loop_back_index = static_cast<int>(current_index);
 
         if(current_found && find_predicate(row))
         {
-          selected = current_index;
+          selected = static_cast<int>(current_index);
           return;
         }
         current_index--;
@@ -569,6 +571,8 @@ public:
         return text(" ▴");
       case TableModelBase::SortDirection::DESC:
         return text(" ▾");
+      default:
+        return text(" ?");
     }
   }
 
@@ -602,7 +606,7 @@ class TypedTableRendererBase : public TableRendererBase
   {
     Elements column_elements;
     auto columns_size = model->Columns().size();
-    for(size_t i = 0; i < columns_size; i++)
+    for(int i = 0; i < columns_size; i++)
     {
       auto column = RenderColumn(i);
       if(IsSortedByColumn(i))
@@ -637,7 +641,7 @@ class TypedTableRendererBase : public TableRendererBase
           auto &cells = rows.emplace_back();
           for(size_t column_i = 0; column_i < model->Columns().size(); column_i++)
           {
-            auto cell = RenderCell(row.get().data, column_i);
+            auto cell = RenderCell(row.get().data, static_cast<int>(column_i));
             cells.push_back(cell);
 
             cell->ComputeRequirement();

@@ -121,7 +121,7 @@ class LogModel
         return;
       }
       auto new_size = data.size() + new_entries_count;
-      int overflow_size = new_size - capacity;
+      size_t overflow_size = new_size - capacity;
 
       if(overflow_size > 0)
       {

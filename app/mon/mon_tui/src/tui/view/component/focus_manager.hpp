@@ -54,7 +54,7 @@ class ContainerBase : public ComponentBase {
   void SetActiveChild(ComponentBase* child) override {
     for (size_t i = 0; i < children_.size(); ++i) {
       if (children_[i].get() == child) {
-        *selector_ = i;
+        *selector_ = static_cast<int>(i);
         return;
       }
     }
@@ -82,9 +82,9 @@ class ContainerBase : public ComponentBase {
   }
   void MoveSelectorWrap(int dir) {
     for (size_t offset = 1; offset < children_.size(); ++offset) {
-      int i = (*selector_ + offset * dir + children_.size()) % children_.size();
+      size_t i = (*selector_ + offset * dir + children_.size()) % children_.size();
       if (children_[i]->Focusable()) {
-        *selector_ = i;
+        *selector_ = static_cast<int>(i);
         return;
       }
     }

@@ -45,10 +45,10 @@ public:
     this->SetColumns(columns);
   }
 
-  virtual void UpdateData(std::vector<T> &&data) override
+  virtual void UpdateData(std::vector<T> &&data_in) override
   {
-    if(data.empty()) HideDetails();
-    ftxui::TypedTableModelBase<T>::UpdateData(std::move(data));
+    if(data_in.empty()) HideDetails();
+    ftxui::TypedTableModelBase<T>::UpdateData(std::move(data_in));
     ViewModel::NotifyDataUpdated();
   }
 
@@ -77,15 +77,15 @@ public:
     this->SelectPrev(find);
   }
 
-  void FilterDataBy(const std::string &column_name, const std::string &filter)
+  void FilterDataBy(const std::string &column_name, const std::string &filter_in)
   {
     auto column = this->FindColumnByName(column_name);
     if(column > -1)
     {
-      if(filter == "") this->Filter(filter);
+      if(filter_in == "") this->Filter(filter_in);
       else
       {
-        this->Filter(filter, column);
+        this->Filter(filter_in, column);
       }
     }
     else

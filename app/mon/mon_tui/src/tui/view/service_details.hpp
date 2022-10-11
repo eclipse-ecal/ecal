@@ -41,20 +41,20 @@ class ServiceDetailsView : public View
     auto details = view_model->SelectedItem();
     if(details == nullptr) return emptyElement();
 
-    std::vector<std::vector<std::string>> methods;
-    methods.emplace_back(std::initializer_list<std::string>
+    std::vector<std::vector<std::string>> methods_vec;
+    methods_vec.emplace_back(std::initializer_list<std::string>
       {"Name", "Request", "Response", "CallCount"}
     );
     for(auto &m: details->methods)
     {
-      auto &method = methods.emplace_back();
+      auto &method = methods_vec.emplace_back();
       method.push_back(m.name);
       method.push_back(m.request_type);
       method.push_back(m.response_type);
       method.push_back(std::to_string(m.call_count));
     }
 
-    auto tbl = Table(methods);
+    auto tbl = Table(methods_vec);
     tbl.SelectAll().SeparatorVertical(ftxui::EMPTY);
     tbl.SelectRow(0).Decorate(style->table.header);
     return tbl.Render();
