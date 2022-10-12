@@ -500,7 +500,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
   // Look for an existing writer. When creating 1 file per channel, the channel
   // name is used as key. Otherwise, emptystring is used as "generic" key and
   // the same writer is used for all channels.
-  FileWriterMap::iterator file_writer_it = file_writers_.find(channel_name);
+  FileWriterMap::iterator file_writer_it = file_writers_.find(one_file_per_channel_ ? channel_name : "");
   if (file_writer_it == file_writers_.end())
   {
     // No appropriate file writer was found. Let's create a new one!
