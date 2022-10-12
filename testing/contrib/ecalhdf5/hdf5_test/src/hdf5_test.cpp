@@ -62,7 +62,7 @@ TEST(HDF5, EscapeUnescape)
   std::string test_string             = "This string contains commata,slashes/ spaces, a percent sign (%), a bell\a, nasty line endings\r\n and a german letter oe from the Latin-1 codepage: \xF8";
   std::string expected_escaped_string = "This string contains commata%2Cslashes%2F spaces%2C a percent sign (%25)%2C a bell%07%2C nasty line endings%0D%0A and a german letter oe from the Latin-1 codepage: %F8";
 
-  std::string escaped_string = eCAL::eh5::GetEscapedString(test_string);
+  std::string escaped_string = eCAL::eh5::GetEscapedTopicname(test_string);
 
   EXPECT_EQ(escaped_string, expected_escaped_string);
   EXPECT_EQ(eCAL::eh5::GetUnescapedString(escaped_string), test_string);
