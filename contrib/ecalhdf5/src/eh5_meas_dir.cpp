@@ -454,7 +454,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
       auto channels = reader->GetChannelNames();
       for (const auto& channel : channels)
       {
-        auto escaped_name = GetEscapedString(channel);
+        auto escaped_name = GetEscapedTopicname(channel);
         auto description = reader->GetChannelDescription(channel);
 
         if (channels_info_.find(escaped_name) == channels_info_.end())
@@ -500,7 +500,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
   // Look for an existing writer. When creating 1 file per channel, the channel
   // name is used as key. Otherwise, emptystring is used as "generic" key and
   // the same writer is used for all channels.
-  FileWriterMap::iterator file_writer_it = file_writers_.find(one_file_per_channel_ ? channel_name : "");
+  FileWriterMap::iterator file_writer_it = file_writers_.find(channel_name);
   if (file_writer_it == file_writers_.end())
   {
     // No appropriate file writer was found. Let's create a new one!
@@ -509,7 +509,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
     // Set the current parameters to the new file writer
     file_writer_it->second->SetMaxSizePerFile(GetMaxSizePerFile());
     file_writer_it->second->SetOneFilePerChannelEnabled(one_file_per_channel_);
-    file_writer_it->second->SetFileBaseName(one_file_per_channel_ ? (base_name_ + "_" + channel_name) : (base_name_));
+    file_writer_it->second->SetFileBaseName(one_file_per_channel_ ? (base_name_ + "_" + GetEscapedFilename(GetUnescapedString(channel_name))) : (base_name_));
     if (cb_pre_split_)
       file_writer_it->second->ConnectPreSplitCallback(cb_pre_split_);
 
