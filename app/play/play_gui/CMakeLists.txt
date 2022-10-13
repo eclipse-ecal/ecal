@@ -227,5 +227,5 @@ if (UNIX)
             DESTINATION "${CMAKE_INSTALL_DATADIR}/mime/packages/")
 
     INSTALL (FILES "${CMAKE_CURRENT_LIST_DIR}/mimetype/application-ecalmeas.svg"
-            DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/mimetypes/")
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/Humanity/scalable/mimetypes/")
 endif()
