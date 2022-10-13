@@ -45,19 +45,11 @@ if(MSVC)
 endif()
 
 # --------------------------------------------------------
-# set mingw specific options
-# --------------------------------------------------------
-if(MINGW)
-  add_definitions(-std=c++14 -DWINVER=0x0601)
-endif()
-
-# --------------------------------------------------------
 # set gcc specific options
 # --------------------------------------------------------
 if(UNIX)
   message(STATUS "GCC detected - Adding flags")
-  set(CMAKE_CXX_STANDARD 14)
-  add_definitions(-Wall -Wextra -std=c++14)
+  add_definitions(-Wall -Wextra)
 
   set(ATOMIC_TEST_CODE "
       #include <atomic>
