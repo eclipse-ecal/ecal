@@ -20,7 +20,7 @@
 
 #include <io/udp_receiver_asio.h>
 
-#ifdef ECAL_OS_LINUX
+#ifdef __linux__
 #include "linux/ecal_socket_option_linux.h"
 #endif
 
@@ -112,7 +112,7 @@ namespace eCAL
     if (!m_broadcast && !m_unicast)
     {
       // join multicast group
-#ifdef ECAL_OS_LINUX
+#ifdef __linux__
       if (eCAL::Config::GetUdpMulticastJoinAllIfEnabled())
       {
         if (!set_socket_mcast_group_option(m_socket.native_handle(), ipaddr_, MCAST_JOIN_GROUP))
@@ -148,7 +148,7 @@ namespace eCAL
     if (!m_broadcast && !m_unicast)
     {
       // Leave multicast group
-#ifdef ECAL_OS_LINUX
+#ifdef __linux__
       if (eCAL::Config::GetUdpMulticastJoinAllIfEnabled())
       {
         if (!set_socket_mcast_group_option(m_socket.native_handle(), ipaddr_, MCAST_LEAVE_GROUP))
