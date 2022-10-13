@@ -107,6 +107,8 @@ namespace eCAL
 
     ECAL_API int               GetUdpMulticastSndBufSizeBytes       () { return eCALPAR(NET, UDP_MULTICAST_SNDBUF); }
     ECAL_API int               GetUdpMulticastRcvBufSizeBytes       () { return eCALPAR(NET, UDP_MULTICAST_RCVBUF); }
+    ECAL_API bool              GetUdpMulticastJoinAllIfEnabled      () { return eCALPAR(NET, UDP_MULTICAST_JOIN_ALL_IF_ENABLED); }
+
 
     ECAL_API int               GetMaxUdpBandwidthBytesPerSecond     () { return eCALPAR(NET, BANDWIDTH_MAX_UDP); }
 

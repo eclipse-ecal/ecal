@@ -45,6 +45,8 @@
 #define  NET_UDP_MULTICAST_SNDBUF_S       "multicast_sndbuf"
 #define  NET_UDP_MULTICAST_RCVBUF_S       "multicast_rcvbuf"
 
+#define  NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED_S  "multicast_join_all_if"
+
 #define  NET_BANDWIDTH_MAX_UDP_S          "bandwidth_max_udp"
 
 #define  NET_UDP_MC_REC_ENABLED_S         "udp_mc_rec_enabled"
