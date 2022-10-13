@@ -230,7 +230,7 @@ namespace EcalUtils
       {
         std::string file_name(dirp->d_name);
         if ((file_name != ".") && (file_name != ".."))
-          content.emplace(file_name, FileStatus(clean_path + "/" + std::string(dirp->d_name)));
+          content.emplace(file_name, FileStatus(clean_path + "/" + std::string(dirp->d_name), input_path_style));
       }
       closedir(dp);
 
