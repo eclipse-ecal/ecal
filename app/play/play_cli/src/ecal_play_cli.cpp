@@ -48,6 +48,9 @@
 #pragma warning(pop)
 #endif //_MSC_VER
 
+#ifdef ECAL_OS_LINUX
+#include <sys/resource.h>
+#endif
 
 #ifdef ECAL_OS_WINDOWS
 #include <conio.h>
@@ -217,6 +220,26 @@ int main()
 int main(int argc, char *argv[])
 #endif // WIN32
 {
+// For linux big measurements require more file descriptors than the default value
+#ifdef ECAL_OS_LINUX
+  struct rlimit limit;
+  bool readSucceeded = true;
+  if (getrlimit(RLIMIT_NOFILE, &limit) != 0)
+  {
+    std::cerr << "getrlimit() failed with errno " << errno << std::endl;
+    readSucceeded = false;
+  }
+
+  if (readSucceeded)
+  {
+    limit.rlim_cur = limit.rlim_max;
+    if(setrlimit(RLIMIT_NOFILE, &limit) != 0)
+    {
+      std::cerr << "setrlimit() failed with errno " << errno << std::endl;
+    }
+  };
+#endif
+
   TCLAP::CmdLine cmd("eCAL Player", ' ', EcalPlayGlobals::VERSION_STRING);
   
   assert(cmd.getArgList().size() == 3);
