@@ -21,7 +21,11 @@
 #include <ecal/msg/string/publisher.h>
 #include <ecal/msg/string/subscriber.h>
 
+#include <atomic>
+#include <string>
 #include <sstream>
+#include <thread>
+
 #include <gtest/gtest.h>
 
 #define CMN_REGISTRATION_REFRESH 1000
@@ -62,7 +66,7 @@ TEST(SUBSCRIBER, SPORADIC_EMPTY_RECEIVES)
       bool got_data = sub.Receive(received);
       if (got_data && received.empty())
       {
-        FAIL("received empty string");
+        FAIL() << "received empty string";
       }
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
