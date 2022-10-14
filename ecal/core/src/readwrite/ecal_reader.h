@@ -59,7 +59,7 @@ namespace eCAL
 
     bool SetQOS(const QOS::SReaderQOS& qos_);
 
-    bool Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0);
+    bool Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ms_ = 0);
 
     bool AddReceiveCallback(ReceiveCallbackT callback_);
     bool RemReceiveCallback();
@@ -127,9 +127,9 @@ namespace eCAL
     ConnectedMapT                             m_loc_pub_map;
     ConnectedMapT                             m_ext_pub_map;
 
-    EventHandleT                              m_receive_event;
-
-    std::mutex                                m_read_buf_sync;
+    mutable std::mutex                        m_read_buf_mutex;
+    std::condition_variable                   m_read_buf_cv;
+    bool                                      m_read_buf_received;
     std::string                               m_read_buf;
     long long                                 m_read_time;
 
