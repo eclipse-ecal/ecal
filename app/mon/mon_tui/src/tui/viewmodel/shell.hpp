@@ -141,7 +141,7 @@ public:
   {
     if(index < tabs.size())
     {
-      tab_selected = index;
+      tab_selected = static_cast<int>(index);
     }
   }
 

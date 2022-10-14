@@ -23,7 +23,7 @@
 #include <tclap/CmdLine.h>
 #include <tclap/Constraint.h>
 
-#include "ecal_mon_defs.h"
+#include "ecal_mon_tui_defs.h"
 
 struct Args
 {
@@ -56,7 +56,7 @@ Args::Color ColorArgsFromString(const std::string &val)
 
 Args ParseArgs(int argc, char** argv)
 {
-  TCLAP::CmdLine cmd(ECAL_MON_NAME, ' ', ECAL_MON_VERSION);
+  TCLAP::CmdLine cmd(ECAL_MON_TUI_NAME, ' ', ECAL_MON_TUI_VERSION);
   ColorArgConstraint color_arg_constraint{};
 
   auto color = TCLAP::ValueArg<std::string>("", "color",

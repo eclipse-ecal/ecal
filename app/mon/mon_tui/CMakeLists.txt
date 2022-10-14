@@ -16,22 +16,23 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(mon_cli)
+project(mon_tui)
 
 find_package(Protobuf REQUIRED)
 find_package(tclap REQUIRED)
+find_package(ftxui REQUIRED)
 
-set(ecalmon_cli_src
-  src/ecal_mon_cli.cpp
+set(ecalmon_tui_src
+  src/main.cpp
 )
 
 if(WIN32)
-  set(ecalmon_cli_win_src
-    src/ecal_mon_cli.rc
+  set(ecalmon_tui_win_src
+    src/ecal_mon_tui.rc
   )
 endif()
 
-ecal_add_app_console(${PROJECT_NAME} ${ecalmon_cli_src} ${ecalmon_cli_win_src})
+ecal_add_app_console(${PROJECT_NAME} ${ecalmon_tui_src} ${ecalmon_tui_win_src})
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
@@ -39,13 +40,28 @@ target_include_directories(${PROJECT_NAME}
 target_compile_definitions(${PROJECT_NAME}
   PRIVATE $<$<BOOL:${MSVC}>:PCRE_STATIC;_UNICODE>)
 
+# Upgrade Visual studio toolset version if necessary. Minimum working version is v142
+# TODO: Remove this code block as soon as possible
+if (MSVC AND (MSVC_TOOLSET_VERSION LESS 142))
+  set_target_properties(${PROJECT_NAME} 
+    PROPERTIES
+      VS_PLATFORM_TOOLSET v142
+  )
+  
+  list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS "C:/Windows/system32/vcruntime140_1.dll")
+  include(InstallRequiredSystemLibraries)
+endif()
+
 create_targets_protobuf()
 
 target_link_libraries(${PROJECT_NAME}
   protobuf::libprotobuf
   tclap::tclap
   eCAL::core
-  eCAL::pb)
+  eCAL::core_pb
+  ftxui::screen
+  ftxui::dom
+  ftxui::component)
 
 ecal_install_app(${PROJECT_NAME})
 

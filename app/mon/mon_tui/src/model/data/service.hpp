@@ -16,28 +16,29 @@
  *
  * ========================= eCAL LICENSE =================================
 */
+#pragma once
 
-/**
- * @brief eCALMon Console Application
-**/
+#include <string>
+#include <vector>
+#include <cstdint>
 
-#include <iostream>
-
-#include <ecal/ecal.h>
-
-#include "args.hpp"
-#include "tui/tui.hpp"
-
-int main(int argc, char** argv)
+struct Service
 {
-  auto args = ParseArgs(argc, argv);
+  struct Method
+  {
+    std::string name;
+    std::string request_type;
+    std::string response_type;
+    int64_t call_count;
+  };
 
-  auto status = eCAL::Initialize(0, nullptr, "eCALMon", eCAL::Init::Default | eCAL::Init::Monitoring);
-  if (status == -1) std::cerr << "Failed to init" << std::endl;
-  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
-  eCAL::Monitoring::SetFilterState(false);
-
-  TUI::Start(args);
-
-  eCAL::Finalize();
-}
+  std::string name;
+  std::string id;
+  std::string host_name;
+  std::string process_name;
+  int32_t pid;
+  std::string unit_name;
+  int32_t registration_clock;
+  uint32_t tcp_port;
+  std::vector<Method> methods;
+};
