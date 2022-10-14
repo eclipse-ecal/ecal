@@ -18,7 +18,6 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(eCAL_samples VERSION "${ECAL_VERSION_STRING}")
-set (CMAKE_CXX_STANDARD 14)
 
 if(HAS_HDF5)
 set(SAMPLE_PERSON_MEASUREMENT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/data/person)
