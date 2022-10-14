@@ -25,7 +25,8 @@ namespace eCAL
 {
   namespace eh5
   {
-    std::string GetEscapedString(const std::string& input);
+    std::string GetEscapedTopicname(const std::string& input);
+    std::string GetEscapedFilename(const std::string& input);
     std::string GetUnescapedString(const std::string& input);
   }
 }
