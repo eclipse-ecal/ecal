@@ -33,6 +33,22 @@
 
 using namespace std::chrono_literals;
 
+// define std::chrono::abs for < c++17
+#if (__cpp_lib_chrono < 201510L)
+namespace std
+{
+  namespace chrono
+  {
+    template <class Rep, class Period, class = std::enable_if_t<
+      std::chrono::duration<Rep, Period>::min() < std::chrono::duration<Rep, Period>::zero()>>
+      constexpr std::chrono::duration<Rep, Period> abs(std::chrono::duration<Rep, Period> d)
+    {
+      return d >= d.zero() ? d : -d;
+    }
+  }
+}
+#endif
+
 void measure_execution_within_range(const std::string& description, std::function<void()> func, std::chrono::milliseconds expected_runtime, std::chrono::microseconds epsilon)
 {
   auto start = std::chrono::steady_clock::now();
