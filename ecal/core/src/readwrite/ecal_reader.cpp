@@ -356,17 +356,21 @@ namespace eCAL
 
   bool CDataReader::Receive(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ms_ /* = 0 */)
   {
-    if(!m_created) return(false);
+    if (!m_created) return(false);
 
     std::unique_lock<std::mutex> read_buffer_lock(m_read_buf_mutex);
 
-    if (rcv_timeout_ms_ < 0)
+    // No need to wait (for whatever time) if something has been received)
+    if (!m_read_buf_received)
     {
-      m_read_buf_cv.wait(read_buffer_lock, [this]() { return this->m_read_buf_received; });
-    }
-    else if (rcv_timeout_ms_ > 0)
-    {
-      m_read_buf_cv.wait_for(read_buffer_lock, std::chrono::milliseconds(rcv_timeout_ms_), [this]() { return this->m_read_buf_received; });
+      if (rcv_timeout_ms_ < 0)
+      {
+        m_read_buf_cv.wait(read_buffer_lock, [this]() { return this->m_read_buf_received; });
+      }
+      else if (rcv_timeout_ms_ > 0)
+      {
+        m_read_buf_cv.wait_for(read_buffer_lock, std::chrono::milliseconds(rcv_timeout_ms_), [this]() { return this->m_read_buf_received; });
+      }
     }
 
     // did we receive new samples ?
