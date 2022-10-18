@@ -25,20 +25,10 @@ set(pubsub_test_src
   src/pubsub_test.cpp
 )
 
-ecal_add_gtest(${PROJECT_NAME}_cpp ${pubsub_test_src})
-target_link_libraries(${PROJECT_NAME}_cpp
+ecal_add_gtest(${PROJECT_NAME} ${pubsub_test_src})
+target_link_libraries(${PROJECT_NAME}
   PRIVATE
     eCAL::core
     Threads::Threads)
-ecal_install_gtest(${PROJECT_NAME}_cpp)
-set_property(TARGET ${PROJECT_NAME}_cpp PROPERTY FOLDER testing/ecal/pubsub)
-
-if(WIN32)
-  ecal_add_gtest(${PROJECT_NAME}_c   ${pubsub_test_src})
-  target_link_libraries(${PROJECT_NAME}_c
-    PRIVATE
-      eCAL::core_c
-      Threads::Threads)
-  ecal_install_gtest(${PROJECT_NAME}_c)
-  set_property(TARGET ${PROJECT_NAME}_c PROPERTY FOLDER testing/ecal/pubsub)
-endif()
+ecal_install_gtest(${PROJECT_NAME})
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER testing/ecal/pubsub)
