@@ -34,7 +34,7 @@ Visit the eCAL Documentation at 🌐 http://ecal.io for more information.
 * eCAL runs on a wide variety of operating systems:
   * Windows (stable)
   * Linux (stable)
-  * QNX (stable)
+  * QNX (experimental)
   * MacOS (experimental)
   * FreeBSD (experimental)
 
