@@ -45,6 +45,8 @@ target_link_libraries(${PROJECT_NAME}
         eCAL::hdf5
 )
 
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+
 if (WIN32)
     if (TARGET hdf5::hdf5-shared)
         add_dependencies(${PROJECT_NAME} copy_hdf5_dll)

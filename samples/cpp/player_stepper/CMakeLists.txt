@@ -33,6 +33,7 @@ target_compile_definitions(${PROJECT_NAME}
   PRIVATE $<$<BOOL:${MSVC}>:PCRE_STATIC;_UNICODE>)
 
 target_link_libraries(${PROJECT_NAME} eCAL::core eCAL::pb tclap::tclap)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_sample(${PROJECT_NAME})
 

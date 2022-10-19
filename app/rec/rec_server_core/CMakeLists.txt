@@ -82,6 +82,8 @@ target_link_libraries(${PROJECT_NAME}
     fineftp::server
 )
 
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
+
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
     FILES
         ${source_files}
