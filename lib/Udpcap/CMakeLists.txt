@@ -59,6 +59,8 @@ target_link_libraries(${PROJECT_NAME}
     asio::asio
 )
 
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
+
 target_compile_definitions(${PROJECT_NAME}
   PUBLIC ASIO_STANDALONE
 )

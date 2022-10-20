@@ -112,6 +112,8 @@ if(HAS_CURL)
     )
 endif()
 
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
+
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}" FILES ${source_files})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/rec)

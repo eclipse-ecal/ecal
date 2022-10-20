@@ -43,6 +43,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC src)
 target_link_libraries(${PROJECT_NAME}
   Qt5::Widgets CustomQt
 )
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14) 
 
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
     FILES
