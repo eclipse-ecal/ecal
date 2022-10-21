@@ -253,8 +253,9 @@ namespace eCAL
     return(named_mutex_destroy(mutex_name.c_str()) == 0);
   }
 
-  inline bool LockMtx(MutexT* mutex_handle_, const int timeout_, bool* /*consistent = nullptr*/)
+  inline bool LockMtx(MutexT* mutex_handle_, const int timeout_, bool* consistent = nullptr)
   {
+    (void)consistent;
     // check mutex handle
     if (mutex_handle_ == nullptr) return(false);
 
