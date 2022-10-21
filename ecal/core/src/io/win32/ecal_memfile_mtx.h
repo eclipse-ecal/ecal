@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <cassert>
+
 #include "ecal_win_main.h"
 
 typedef void*  MutexT;
@@ -61,13 +63,26 @@ namespace eCAL
     return(true);
   }
 
-  inline bool LockMtx(MutexT* mutex_handle_, const int timeout_)
+  inline bool LockMtx(MutexT* mutex_handle_, const int timeout_, bool *consistent_ = nullptr)
   {
     // check mutex handle
     if(mutex_handle_ == nullptr) return(false);
 
     // wait for access
-    return(WaitForSingleObject(*mutex_handle_, timeout_) == WAIT_OBJECT_0);
+    DWORD result = WaitForSingleObject(*mutex_handle_, timeout_);
+    if (result == WAIT_OBJECT_0)
+      return (true);
+    else if (result == WAIT_ABANDONED)
+    {
+      if (consistent_)
+      {
+        *consistent_ = false;
+        return (true);
+      }
+      return (false);
+    }
+    else
+      return(false);
   }
 
   inline bool UnlockMtx(MutexT* mutex_handle_)

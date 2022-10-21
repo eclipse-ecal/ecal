@@ -56,7 +56,7 @@ namespace eCAL
      *
      * @return  true if it succeeds, false if it fails. 
     **/
-    bool Create(const char* name_, const bool create_, const size_t len_ = 0);
+    bool Create(const char* name_, const bool create_, const size_t len_ = 0, const bool auto_sanitizing_ = false);
 
     /**
      * @brief Delete the associated memory file from system. 
@@ -183,9 +183,11 @@ namespace eCAL
       std::uint64_t               cur_data_size = 0;
       std::uint64_t               max_data_size = 0;
 #endif
+      std::uint16_t               version        = 1; 
+      std::array<std::uint8_t, 6> _reserved_1    = {};
       // New fields should only declare well defined data types and be aligned to 8 bytes
       // std::uint8_t                 _new_field  = 0;
-      // std::array<std::uint8_t, 7>  _reserved_1 = {};
+      // std::array<std::uint8_t, 7>  _reserved_2 = {};
     };
 #pragma pack(pop)
 
@@ -199,6 +201,7 @@ namespace eCAL
       write_access
     };
     bool            m_created;
+    bool            m_auto_sanitizing;
     access_state    m_access_state;
     std::string     m_name;
     SInternalHeader m_header;

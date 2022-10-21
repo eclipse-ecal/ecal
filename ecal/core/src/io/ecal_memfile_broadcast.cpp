@@ -67,15 +67,10 @@ namespace eCAL
     const auto presumably_memfile_size =
       RelocatableCircularQueue<SMemfileBroadcastMessage>::PresumablyOccupiedMemorySize(m_max_queue_size) +
       sizeof(SMemfileBroadcastHeaderV1);
-    if (!m_broadcast_memfile->Create(name.c_str(), true, presumably_memfile_size))
+    if (!m_broadcast_memfile->Create(name.c_str(), true, presumably_memfile_size, true))
     {
-      if (m_broadcast_memfile->Create(name.c_str(), false, 0))
-      {
-        
-      } else {
-        std::cerr << "Unable to read broadcast memory file." << std::endl;
-        return false;
-      }
+      std::cerr << "Unable to access broadcast memory file." << std::endl;
+      return false;
     }
 
     if (m_broadcast_memfile->MaxDataSize() < presumably_memfile_size)
@@ -88,21 +83,31 @@ namespace eCAL
 
     if (m_broadcast_memfile->GetWriteAccess(200))
     {
-      // Is acquired lock consistent?
-      void *memfile_address = nullptr;
+      // Check if memfile is initialized
+      bool is_memfile_initialized{ m_broadcast_memfile->CurDataSize() != 0 };
+
+      void* memfile_address = nullptr;
       m_broadcast_memfile->GetWriteAddress(memfile_address, m_broadcast_memfile->MaxDataSize());
-      if (!IsMemfileInitialized(memfile_address))
+
+      if (!is_memfile_initialized)
         ResetMemfile(memfile_address);
-      if (!IsMemfileVersionCompatible(memfile_address))
+      else
       {
-        std::cerr << "Broadcast memory file is not compatible" << std::endl;
-        return false;
+        if (!IsMemfileVersionCompatible(memfile_address))
+        {
+          std::cerr << "Broadcast memory file is not compatible" << std::endl;
+          m_broadcast_memfile->ReleaseWriteAccess();
+          return false;
+        }
       }
 
       m_broadcast_memfile->ReleaseWriteAccess();
     }
     else
+    {
+      std::cerr << "Unable to acquire write access on broadcast memory file" << std::endl;
       return false;
+    }
 
     m_created = true;
     return true;
@@ -139,6 +144,7 @@ namespace eCAL
     *header = SMemfileBroadcastHeaderV1();
     m_message_queue.SetBaseAddress(GetMessageQueueAddress(memfile_address));
     m_message_queue.Reset(m_max_queue_size);
+    std::cout << "Broadcast memory file has been resetted" << std::endl;
   }
 
   bool CMemoryFileBroadcast::FlushLocalBroadcastQueue()
@@ -147,17 +153,28 @@ namespace eCAL
 
     if (m_broadcast_memfile->GetReadAccess(200))
     {
-      // Is acquired lock consistent?
+      // Check if memfile is initialized
+      if (m_broadcast_memfile->CurDataSize())
+      {
+        const void* memfile_address = nullptr;
+        m_broadcast_memfile->GetReadAddress(memfile_address, m_broadcast_memfile->MaxDataSize());
+        m_last_timestamp = GetMemfileHeader(memfile_address)->timestamp;
+        m_broadcast_memfile->ReleaseReadAccess();
+        return true;
+      }
+      else
+      {
+        std::cerr << "Broadcast memory file is not initialized" << std::endl;
+        m_broadcast_memfile->ReleaseReadAccess();
+        return false;
+      }
 
-      const void *memfile_address = nullptr;
-      m_broadcast_memfile->GetReadAddress(memfile_address, m_broadcast_memfile->MaxDataSize());
-      m_last_timestamp = GetMemfileHeader(memfile_address)->timestamp;
-      m_broadcast_memfile->ReleaseReadAccess();
     }
     else
+    {
+      std::cerr << "Unable to acquire read access on broadcast memory file" << std::endl;
       return false;
-
-    return true;
+    }
   }
 
   bool CMemoryFileBroadcast::FlushGlobalBroadcastQueue()
@@ -166,14 +183,17 @@ namespace eCAL
 
     if (m_broadcast_memfile->GetWriteAccess(200))
     {
-      // Is acquired lock consistent?
+      // Don't need to check consistency since memfile will be resetted anyways
       void *memfile_address = nullptr;
       m_broadcast_memfile->GetWriteAddress(memfile_address, m_broadcast_memfile->MaxDataSize());
       ResetMemfile(memfile_address);
-      m_broadcast_memfile->ReleaseReadAccess();
+      m_broadcast_memfile->ReleaseWriteAccess();
     }
     else
+    {
+      std::cerr << "Unable to acquire read access on broadcast memory file" << std::endl;
       return false;
+    }
 
     return true;
   }
@@ -184,12 +204,18 @@ namespace eCAL
 
     if (m_broadcast_memfile->GetWriteAccess(200))
     {
-      void *memfile_address = nullptr;
+      // Check if memfile is initialized
+      bool is_memfile_initialized{ m_broadcast_memfile->CurDataSize() != 0 };
+
+      void* memfile_address = nullptr;
       m_broadcast_memfile->GetWriteAddress(memfile_address, m_broadcast_memfile->MaxDataSize());
-      // Is acquired lock consistent?
+
+      if (!is_memfile_initialized)
+        ResetMemfile(memfile_address);
 
       m_message_queue.SetBaseAddress(GetMessageQueueAddress(memfile_address));
       const auto timestamp = CreateTimestamp();
+
       m_message_queue.Push({g_process_id, timestamp, payload_memfile_id, type});
       GetMemfileHeader(memfile_address)->timestamp = timestamp;
 
@@ -208,10 +234,19 @@ namespace eCAL
   {
     if (m_broadcast_memfile->GetReadAccess(200))
     {
-      // Is acquired lock consistent?
-
-      m_broadcast_memfile->Read(m_broadcast_memfile_local_buffer.data(), m_broadcast_memfile_local_buffer.size(), 0);
-      m_broadcast_memfile->ReleaseReadAccess();
+      // Check if memfile is initialized
+      if (m_broadcast_memfile->CurDataSize())
+      {
+        m_broadcast_memfile->Read(m_broadcast_memfile_local_buffer.data(), m_broadcast_memfile_local_buffer.size(), 0);
+        m_broadcast_memfile->ReleaseReadAccess();
+      }
+      else
+      {
+        std::cerr << "Broadcast memory file is not initialized" << std::endl;
+        m_broadcast_memfile->ReleaseReadAccess();
+        return false;
+      }
+      
     }
     else
     {

@@ -30,6 +30,7 @@
 #include <cstdint>
 #include <cstring>
 #include <algorithm>
+#include <random>
 
 #define SIZEOF_PARTIAL_STRUCT(_STRUCT_NAME_, _FIELD_NAME_) (reinterpret_cast<std::size_t>(&(reinterpret_cast<_STRUCT_NAME_*>(0)->_FIELD_NAME_)) + sizeof(_STRUCT_NAME_::_FIELD_NAME_)) //NOLINT
 
@@ -51,9 +52,12 @@ namespace eCAL
     Destroy(false);
   }
 
-  bool CMemoryFile::Create(const char* name_, const bool create_, const size_t len_)
+  bool CMemoryFile::Create(const char* name_, const bool create_, const size_t len_, bool auto_sanitizing_)
   {
     assert((create_ && len_ > 0) || (!create_ && len_ == 0));
+    assert((auto_sanitizing_ && create_) || !auto_sanitizing_);
+
+    m_auto_sanitizing = auto_sanitizing_;
 
     // do we have to recreate the file ?
     if ((m_name != name_)
@@ -101,22 +105,37 @@ namespace eCAL
       m_header.max_data_size = (unsigned long)len_;
 
       // lock mutex
-      if (LockMtx(&m_memfile_info.mutex, PUB_MEMFILE_CREATE_TO))
+      // for performance reasons only apply consistency check if it is explicitly set
+      bool lock_is_consistent{ true };
+      if (LockMtx(&m_memfile_info.mutex, PUB_MEMFILE_CREATE_TO, m_auto_sanitizing ? &lock_is_consistent : nullptr))
       {
         if (m_memfile_info.mem_address)
         {
-          // write header
-          SInternalHeader* pHeader = new (m_memfile_info.mem_address) SInternalHeader;
-          if (pHeader) *pHeader = m_header;
+          SInternalHeader* header = reinterpret_cast<SInternalHeader*>(m_memfile_info.mem_address);
+
+          // reset header if memfile does not exist or rather is not initialized as well as if lock state is inconsistent
+          if (!m_memfile_info.exists || header->int_hdr_size == 0 || (m_auto_sanitizing && !lock_is_consistent))
+            *header = m_header;
+          else
+          {
+            // read compatible header part if magic number already exists
+            memcpy(&m_header, header, std::min(sizeof(SInternalHeader), static_cast<std::size_t>(header->int_hdr_size)));
+
+            // set version number manually if version field is not available
+            if (SIZEOF_PARTIAL_STRUCT(SInternalHeader, max_data_size) == m_header.int_hdr_size)
+              m_header.version = 0;
+          }
         }
 
         // unlock mutex
         UnlockMtx(&m_memfile_info.mutex);
+
       }
     }
     else
     {
       // lock mutex
+      // consistency check cannot be performed on read-only memfiles
       if (LockMtx(&m_memfile_info.mutex, PUB_MEMFILE_CREATE_TO))
       {
         // read internal header size of memory file
@@ -125,6 +144,10 @@ namespace eCAL
 
         // copy compatible header part into m_header
         memcpy(&m_header, m_memfile_info.mem_address, std::min(sizeof(SInternalHeader), static_cast<std::size_t>(header_size)));
+
+        // set version number manually if version field is not available
+        if (SIZEOF_PARTIAL_STRUCT(SInternalHeader, max_data_size) == header_size)
+          m_header.version = 0;
 
         // unlock mutex
         UnlockMtx(&m_memfile_info.mutex);
@@ -300,12 +323,20 @@ namespace eCAL
     if (!m_memfile_info.mem_address) return(false);
 
     // lock mutex
-    if (!LockMtx(&m_memfile_info.mutex, timeout_))
+    bool lock_is_consistent {true};
+    if (!LockMtx(&m_memfile_info.mutex, timeout_, m_auto_sanitizing ? &lock_is_consistent : nullptr))
     {
 #ifndef NDEBUG
       printf("Could not lock memory file mutex: %s.\n\n", m_name.c_str());
 #endif
       return(false);
+    }
+
+    // reset current data size field of memfile header if lock is inconsistent 
+    if ((m_auto_sanitizing && !lock_is_consistent) && m_header.version > 0)
+    {
+      m_header.cur_data_size = 0;
+      *reinterpret_cast<SInternalHeader*>(m_memfile_info.mem_address) = m_header;
     }
 
     // update compatible header part of m_header

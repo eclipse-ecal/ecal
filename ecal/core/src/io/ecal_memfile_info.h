@@ -57,6 +57,7 @@ namespace eCAL
       map_region  = 0;
       mem_address = 0;
       size        = 0;
+      exists      = false;
     }
     int          refcnt;
     bool         remove;
@@ -66,5 +67,6 @@ namespace eCAL
     void*        mem_address;
     std::string  name;
     size_t       size;
+    bool         exists;
   };
 }

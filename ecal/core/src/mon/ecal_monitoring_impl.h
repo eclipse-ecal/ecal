@@ -297,8 +297,9 @@ namespace eCAL
     LogMessageListT                              m_log_msglist;
 
     // worker threads
-    std::shared_ptr<CRegistrationReceiveThread>  m_reg_rcv_threadcaller;
-    std::shared_ptr<CLoggingReceiveThread>       m_log_rcv_threadcaller;
-    std::shared_ptr<CMonLogPublishingThread>     m_pub_threadcaller;
+    std::shared_ptr<CRegistrationReceiveThread>         m_reg_rcv_threadcaller;
+    std::shared_ptr<CMemfileRegistrationReceiveThread>  m_memfile_reg_rcv_threadcaller;
+    std::shared_ptr<CLoggingReceiveThread>              m_log_rcv_threadcaller;
+    std::shared_ptr<CMonLogPublishingThread>            m_pub_threadcaller;
   };
 }

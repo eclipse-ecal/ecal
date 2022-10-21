@@ -77,6 +77,45 @@ namespace eCAL
     return 0;
   }
 
+  CMemfileRegistrationReceiveThread::CMemfileRegistrationReceiveThread(RegMessageCallbackT reg_cb_) :
+    m_reg_cb(reg_cb_)
+  {
+    m_memfile_broadcast.Create(EXP_MEMFILE_MONITORING_IDENTIFIER, Config::Experimental::GetMemfileMonitoringQueueSize());
+    m_memfile_broadcast.FlushLocalBroadcastQueue();
+    m_memfile_broadcast_reader.Bind(&m_memfile_broadcast);
+
+    m_reg_rcv_thread.Start(Config::GetRegistrationRefreshMs() / 2, std::bind(&CMemfileRegistrationReceiveThread::ThreadFun, this));
+  }
+
+  CMemfileRegistrationReceiveThread::~CMemfileRegistrationReceiveThread()
+  {
+    m_reg_rcv_thread.Stop();
+    m_memfile_broadcast_reader.Unbind();
+    m_memfile_broadcast.Destroy();
+  }
+
+  int CMemfileRegistrationReceiveThread::ThreadFun()
+  {
+    MemfileBroadcastPayloadMessageListT payload_list;
+    if (!m_memfile_broadcast_reader.Read(payload_list, 0))
+      return false;
+
+    eCAL::pb::SampleList sample_list;
+    bool return_value{ true };
+
+    for (const auto& payload : payload_list)
+    {
+      if (sample_list.ParseFromArray(payload.data, static_cast<int>(payload.size)))
+      {
+        for (const auto& sample : sample_list.samples())
+          m_reg_cb(sample);
+      }
+      else
+        return_value = false;
+    }
+    return return_value;
+  }
+
   CLoggingReceiveThread::CLoggingReceiveThread(LogMessageCallbackT log_cb_) :
     m_network_mode(false), m_log_cb(log_cb_)
   {

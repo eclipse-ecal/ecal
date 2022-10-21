@@ -29,11 +29,16 @@
 #include "ecal_thread.h"
 #include "io/udp_receiver.h"
 
+#include "io/ecal_memfile.h"
+#include "io/ecal_memfile_broadcast.h"
+#include "io/ecal_memfile_broadcast_reader.h"
+
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
 #include <ecal/core/pb/monitoring.pb.h>
+#include <ecal/core/pb/ecal.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
@@ -57,6 +62,23 @@ namespace eCAL
     CUDPReceiver         m_reg_rcv;
     class CThread        m_reg_rcv_thread;
     RegMessageCallbackT  m_reg_cb;
+  };
+
+  class CMemfileRegistrationReceiveThread
+  {
+  public:
+    using RegMessageCallbackT = std::function<size_t(const eCAL::pb::Sample& ecal_sample_)>;
+
+    CMemfileRegistrationReceiveThread(RegMessageCallbackT reg_cb_);
+    virtual ~CMemfileRegistrationReceiveThread();
+
+  protected:
+    int ThreadFun();
+
+    CThread        m_reg_rcv_thread;
+    RegMessageCallbackT  m_reg_cb;
+    CMemoryFileBroadcast       m_memfile_broadcast;
+    CMemoryFileBroadcastReader m_memfile_broadcast_reader;
   };
 
   class CLoggingReceiveThread
