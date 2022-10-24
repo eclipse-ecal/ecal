@@ -123,6 +123,7 @@ jobs:
         mkdir ".venv_38"
         python3.8 -m venv ".venv_38"
         source ".venv_38/bin/activate"
+        pip install --upgrade pip
         pip install wheel setuptools
         cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=FIRST
         cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=ONLY
@@ -136,6 +137,7 @@ jobs:
         mkdir ".venv_37"
         python3.7 -m venv ".venv_37"
         source ".venv_37/bin/activate"
+        pip install --upgrade pip
         pip install wheel setuptools
         cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=FIRST
         cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=ONLY
@@ -149,6 +151,7 @@ jobs:
         mkdir ".venv_36"
         python3.6 -m venv ".venv_36"
         source ".venv_36/bin/activate"
+        pip install --upgrade pip
         pip install wheel setuptools
         cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=FIRST
         cmake $GITHUB_WORKSPACE -DPython_FIND_VIRTUALENV=ONLY
