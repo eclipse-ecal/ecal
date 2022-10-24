@@ -57,6 +57,8 @@ Program Listing for File ecal_config.h
        ECAL_API int               GetUdpMulticastSndBufSizeBytes       ();
        ECAL_API int               GetUdpMulticastRcvBufSizeBytes       ();
    
+       ECAL_API bool              IsUdpMulticastJoinAllIfEnabled       ();
+   
        ECAL_API int               GetMaxUdpBandwidthBytesPerSecond     ();
    
        ECAL_API bool              IsUdpMulticastRecEnabled             ();

@@ -133,5 +133,7 @@ Functions
 
 - :ref:`exhale_function_ecal__config_8h_1a52d7c8d986007ec10687d7fae7e3e4fe`
 
+- :ref:`exhale_function_ecal__config_8h_1abda92e1cc50e7f3c3b65acf8765e344d`
+
 - :ref:`exhale_function_ecal__config_8h_1a159d41c9cf64a883becf2b2c5a8a099e`
 
