@@ -87,6 +87,8 @@ target_link_libraries(${PROJECT_NAME}
   $<$<BOOL:${WIN32}>:Pdh>
   $<$<BOOL:${WIN32}>:wbemuuid.lib>)
 
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+
 ecal_install_app(${PROJECT_NAME})
 
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"

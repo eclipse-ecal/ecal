@@ -46,6 +46,7 @@ target_link_libraries(${PROJECT_NAME}
   tclap::tclap
   eCAL::core
   eCAL::pb)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14) 
 
 ecal_install_app(${PROJECT_NAME})
 

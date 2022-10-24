@@ -63,6 +63,8 @@ target_link_libraries(${PROJECT_NAME}
   ftxui::dom
   ftxui::component)
 
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17) 
+
 ecal_install_app(${PROJECT_NAME})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/mon)
