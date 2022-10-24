@@ -32,6 +32,7 @@
 #include <unistd.h>
 #include <cstdint>
 #include <string>
+#include <iostream>
 
 #if defined(ECAL_MONOTONIC_CLOCK_MUTEX) && !defined(__linux__)
 #error Monotonic clock mutexes are not supported for this platform.
