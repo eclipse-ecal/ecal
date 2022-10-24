@@ -128,6 +128,7 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 * [docker-ecal](https://github.com/Blutkoete/docker-ecal) - Inoffical dockerfiles for eCAL
 * [golang-ecal](https://github.com/Blutkoete/golang-ecal) - eCAL go language binding
 * [ecal-rs](https://github.com/kopernikusai/ecal-rs) - eCAL rust language binding
+* [nodejs-ecal](https://www.npmjs.com/package/nodejs-ecal) - eCAL wrapped for Nodejs
 * [trellis](https://github.com/agtonomy/trellis) - General purpose middleware framework for distributed applications
 * [iceoryx](https://github.com/eclipse/iceoryx) - Alternative shared memory transport layer (needs to be activated via CMake options)
 
