@@ -175,6 +175,12 @@ set(ecal_io_header_src
     ${ecal_io_header_src_npcap}
 )
 
+if (UNIX)
+  list (APPEND
+        ecal_io_header_src
+        "src/io/linux/ecal_socket_option_linux.h")
+endif()
+
 if(NOT ECAL_LAYER_ICEORYX)
   set(ecal_io_mem_header_src
       src/io/ecal_memfile.h

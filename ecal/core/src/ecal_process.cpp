@@ -235,6 +235,7 @@ namespace eCAL
       sstream << "Multicast mask           : " << Config::GetUdpMulticastMask() << std::endl;
       int port = Config::GetUdpMulticastPort();
       sstream << "Multicast ports          : " << port << " - " << port + 10 << std::endl;
+      sstream << "Multicast join all IFs   : " << (Config::IsUdpMulticastJoinAllIfEnabled() ? "on" : "off") << std::endl;
       auto bandwidth = Config::GetMaxUdpBandwidthBytesPerSecond();
       if (bandwidth < 0)
       {
