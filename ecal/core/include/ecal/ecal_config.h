@@ -49,7 +49,7 @@ namespace eCAL
     ECAL_API int               GetUdpMulticastSndBufSizeBytes       ();
     ECAL_API int               GetUdpMulticastRcvBufSizeBytes       ();
 
-    ECAL_API bool              GetUdpMulticastJoinAllIfEnabled      ();
+    ECAL_API bool              IsUdpMulticastJoinAllIfEnabled       ();
 
     ECAL_API int               GetMaxUdpBandwidthBytesPerSecond     ();
 
