@@ -33,6 +33,92 @@
 #include <cstdint>
 #include <string>
 
+#if defined(ECAL_MONOTONIC_CLOCK_MUTEX) && !defined(__linux__)
+#error Monotonic clock mutexes are not supported for this platform.
+#elif defined(ECAL_MONOTONIC_CLOCK_MUTEX) && defined(__linux__) && (__GLIBC__ >= 2 && __GLIBC_MINOR__ >= 30)
+struct alignas(8) named_mutex
+{
+  pthread_mutex_t  mtx;
+};
+
+typedef struct named_mutex  named_mutex_t;
+
+namespace
+{
+  named_mutex_t* named_mutex_create(const char* mutex_name_, bool robust_ = false)
+  {
+    // create shared memory file
+    int previous_umask = umask(000);  // set umask to nothing, so we can create files with all possible permission bits
+    int fd = ::shm_open(mutex_name_, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+    umask(previous_umask);            // reset umask to previous permissions
+    if (fd < 0) return nullptr;
+
+    // set size to size of named mutex struct
+    if(ftruncate(fd, sizeof(named_mutex_t)) == -1)
+    {
+      ::close(fd);
+      return nullptr;
+    }
+
+    // create mutex attribute
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_setpshared(&attr, PTHREAD_PROCESS_SHARED);
+
+    if(robust_)
+      pthread_mutexattr_setrobust(&attr, PTHREAD_MUTEX_ROBUST);
+
+    // map them into shared memory
+    named_mutex_t* mtx = static_cast<named_mutex_t*>(mmap(nullptr, sizeof(named_mutex_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
+    ::close(fd);
+
+    // initialize mutex
+    pthread_mutex_init(&mtx->mtx, &attr);
+
+    // return new mutex
+    return mtx;
+  }
+
+  bool named_mutex_lock(named_mutex_t* mtx_, struct timespec* ts_, bool *recovered_ = nullptr)
+  {
+    // wait with monotonic clock
+    int lock_result = pthread_mutex_clocklock(&mtx_->mtx, CLOCK_MONOTONIC, ts_);
+    if (lock_result == 0)
+      return true;
+      // check if previous mutex owner is dead
+    else if (lock_result == EOWNERDEAD)
+    {
+      if (recovered_)
+        *recovered_ = true;
+      return true;
+    }
+
+    return false;
+  }
+
+  bool named_mutex_trylock(named_mutex_t* mtx_, bool *recovered_ = nullptr)
+  {
+    // wait with monotonic clock
+    int lock_result = pthread_mutex_trylock(&mtx_->mtx);
+    if (lock_result == 0)
+      return true;
+      // check if previous mutex owner is dead
+    else if (lock_result == EOWNERDEAD)
+    {
+      if (recovered_)
+        *recovered_ = true;
+      return true;
+    }
+
+    return false;
+  }
+
+  void named_mutex_unlock(named_mutex_t* mtx_)
+  {
+    // unlock the mutex
+    pthread_mutex_unlock(&mtx_->mtx);
+  }
+#else
 struct alignas(8) named_mutex
 {
   pthread_mutex_t  mtx;
@@ -43,8 +129,12 @@ typedef struct named_mutex  named_mutex_t;
 
 namespace
 {
-  named_mutex_t* named_mutex_create(const char* mutex_name_)
+  named_mutex_t* named_mutex_create(const char* mutex_name_, bool robust_ = false)
   {
+    // print a warning when someone wants to use robust mutexes without ECAL_USE_MONOTONIC_MUTEX
+    if(robust_)
+      std::cerr << "Warning: This build does not support robust mutexes on POSIX which can lead to dead locks in particular cases. Try to recompile with ECAL_MONOTONIC_CLOCK_MUTEX" << std::endl;
+
     // create shared memory file
     int previous_umask = umask(000);  // set umask to nothing, so we can create files with all possible permission bits
     int fd = ::shm_open(mutex_name_, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
@@ -87,34 +177,10 @@ namespace
     return mtx;
   }
 
-  int named_mutex_destroy(const char* mutex_name_)
+  bool named_mutex_lock(named_mutex_t* mtx_, struct timespec* ts_, bool *recovered = nullptr)
   {
-    // destroy (unlink) shared memory file
-    return(::shm_unlink(mutex_name_));
-  }
+    (void)recovered;
 
-  named_mutex_t* named_mutex_open(const char* mutex_name_)
-  {
-    // try to open existing shared memory file
-    int fd = ::shm_open(mutex_name_, O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-    if (fd < 0) return nullptr;
-
-    // map file content to mutex
-    named_mutex_t* mtx = static_cast<named_mutex_t*>(mmap(nullptr, sizeof(named_mutex_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
-    ::close(fd);
-
-    // return opened mutex
-    return mtx;
-  }
-
-  void named_mutex_close(named_mutex_t* mtx_)
-  {
-    // unmap condition mutex from shared memory file
-    munmap(static_cast<void*>(mtx_), sizeof(named_mutex_t));
-  }
-
-  bool named_mutex_lock(named_mutex_t* mtx_, struct timespec* ts_)
-  {
     // lock condition mutex
     pthread_mutex_lock(&mtx_->mtx);
     // state is not locked ?, fine !
@@ -160,8 +226,10 @@ namespace
     }
   }
 
-  bool named_mutex_trylock(named_mutex_t* mtx_)
+  bool named_mutex_trylock(named_mutex_t* mtx_, bool *recovered_ = nullptr)
   {
+    (void)recovered_;
+
     bool locked(false);
     // lock condition mutex
     pthread_mutex_lock(&mtx_->mtx);
@@ -194,6 +262,32 @@ namespace
     // unlock condition mutex
     pthread_mutex_unlock(&mtx_->mtx);
   }
+#endif
+  int named_mutex_destroy(const char* mutex_name_)
+  {
+    // destroy (unlink) shared memory file
+    return(::shm_unlink(mutex_name_));
+  }
+
+  named_mutex_t* named_mutex_open(const char* mutex_name_)
+  {
+    // try to open existing shared memory file
+    int fd = ::shm_open(mutex_name_, O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+    if (fd < 0) return nullptr;
+
+    // map file content to mutex
+    named_mutex_t* mtx = static_cast<named_mutex_t*>(mmap(nullptr, sizeof(named_mutex_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
+    ::close(fd);
+
+    // return opened mutex
+    return mtx;
+  }
+
+  void named_mutex_close(named_mutex_t* mtx_)
+  {
+    // unmap condition mutex from shared memory file
+    munmap(static_cast<void*>(mtx_), sizeof(named_mutex_t));
+  }
 
   std::string named_mutex_buildname(const std::string& mutex_name_)
   {
@@ -211,7 +305,7 @@ typedef named_mutex_t*  MutexT;
 
 namespace eCAL
 {
-  inline bool CreateMtx(const std::string& name_, MutexT& mutex_handle_)
+  inline bool CreateMtx(const std::string& name_, MutexT& mutex_handle_, bool robust_ = false)
   {
     if(name_.empty()) return(false);
 
@@ -224,7 +318,7 @@ namespace eCAL
     // if we could not open it we create a new one
     if(mutex_handle_ == nullptr)
     {
-      mutex_handle_ = named_mutex_create(mutex_name.c_str());
+      mutex_handle_ = named_mutex_create(mutex_name.c_str(), robust_);
     }
 
     return(mutex_handle_ != nullptr);
@@ -253,21 +347,20 @@ namespace eCAL
     return(named_mutex_destroy(mutex_name.c_str()) == 0);
   }
 
-  inline bool LockMtx(MutexT* mutex_handle_, const int timeout_, bool* consistent = nullptr)
+  inline bool LockMtx(MutexT* mutex_handle_, const int timeout_, bool* recovered_ = nullptr)
   {
-    (void)consistent;
     // check mutex handle
     if (mutex_handle_ == nullptr) return(false);
 
     // timeout_ < 0 -> wait infinite
     if (timeout_ < 0)
     {
-      return(named_mutex_lock(*mutex_handle_, nullptr));
+      return(named_mutex_lock(*mutex_handle_, nullptr, recovered_));
     }
     // timeout_ == 0 -> check lock state only
     else if (timeout_ == 0)
     {
-      return(named_mutex_trylock(*mutex_handle_));
+      return(named_mutex_trylock(*mutex_handle_, recovered_));
     }
     // timeout_ > 0 -> wait timeout_ ms
     else
@@ -282,7 +375,7 @@ namespace eCAL
         abstime.tv_nsec -= 1000000000;
         abstime.tv_sec++;
       }
-      return(named_mutex_lock(*mutex_handle_, &abstime));
+      return(named_mutex_lock(*mutex_handle_, &abstime, recovered_));
     }
   }
 

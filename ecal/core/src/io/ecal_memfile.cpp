@@ -91,7 +91,7 @@ namespace eCAL
     }
 
     // create mutex
-    if (!CreateMtx(name_, m_memfile_info.mutex))
+    if (!CreateMtx(name_, m_memfile_info.mutex, m_auto_sanitizing))
     {
 #ifndef NDEBUG
       printf("Could not create memory file mutex: %s.\n\n", name_);

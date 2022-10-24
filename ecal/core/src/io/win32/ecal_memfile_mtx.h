@@ -31,8 +31,10 @@ typedef void*  MutexT;
 
 namespace eCAL
 {
-  inline bool CreateMtx(const std::string& name_, MutexT& mutex_handle_)
+  inline bool CreateMtx(const std::string& name_, MutexT& mutex_handle_, bool robust_ = false)
   {
+    (void)robust_;
+
     std::string mutex_name = name_;
     mutex_name += "_mtx";
     mutex_handle_ = ::CreateMutex(
@@ -63,7 +65,7 @@ namespace eCAL
     return(true);
   }
 
-  inline bool LockMtx(MutexT* mutex_handle_, const int timeout_, bool *consistent_ = nullptr)
+  inline bool LockMtx(MutexT* mutex_handle_, const int timeout_, bool *recovered_ = nullptr)
   {
     // check mutex handle
     if(mutex_handle_ == nullptr) return(false);
@@ -74,9 +76,9 @@ namespace eCAL
       return (true);
     else if (result == WAIT_ABANDONED)
     {
-      if (consistent_)
+      if (recovered_)
       {
-        *consistent_ = false;
+        *recovered_ = false;
         return (true);
       }
       return (false);
