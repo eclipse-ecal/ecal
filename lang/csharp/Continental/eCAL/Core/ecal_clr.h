@@ -374,6 +374,63 @@ namespace Continental
         typedef void(__stdcall * stdcall_eCAL_ReceiveCallbackT)(const char*, const ::eCAL::SReceiveCallbackData*);
       };
 
+
+      /**
+       * @brief eCAL service client class.
+       *
+       * The CServiceClient class is used to call a matching eCAL server.
+       *
+      **/
+      public ref class ServiceClient
+      {
+      public:
+          /**
+           * @brief Constructor.
+          **/
+          ServiceClient();
+
+          /**
+           * @brief Constructor.
+           *
+           * @param service_name_   Unique service name.
+          **/
+          ServiceClient(System::String^ service_name_);
+
+          /**
+           * @brief Destructor.
+          **/
+          ~ServiceClient();
+
+          /**
+           * @brief structure which contains the data for callback functions
+          **/
+          ref struct ServiceClientCallbackData
+          {
+              String^  host_name;      //!< service host name
+              String^  service_name;   //!< name of the service
+              String^  service_id;     //!< id of the service
+              String^  method_name;    //!< name of the service method
+              String^  error_msg;      //!< human readable error message
+              int          ret_state;      //!< return state of the called service method
+              eCallState   call_state;     //!< call state (see eCallState)
+              String^ response;       //!< service response
+          };
+
+          /**
+           * @brief Call a server.
+           *
+           * @param method_name_
+           * @param request
+           * @param rcv_timeout_  Maximum time before receive operation returns (in milliseconds, -1 means infinite).
+           *
+           * @return  List<ServiceClientCallbackData> or null (if timed out)
+          **/
+          List<ServiceClientCallbackData^>^ Call(System::String^ method_name_, System::String^ request, const int rcv_timeout_);
+
+      private:
+          ::eCAL::CServiceClient* m_client;
+      };
+
       /**
        * @brief eCAL protobuf json subscriber class.
        *

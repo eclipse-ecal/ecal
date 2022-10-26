@@ -322,6 +322,55 @@ void Subscriber::OnReceive(const char* topic_name_, const ::eCAL::SReceiveCallba
 
 
 
+/////////////////////////////////////////////////////////////////////////////
+// ServiceClient
+/////////////////////////////////////////////////////////////////////////////
+ServiceClient::ServiceClient() : m_client(new ::eCAL::CServiceClient())
+{
+}
+
+ServiceClient::ServiceClient(System::String^ service_name_)
+{
+    m_client = new ::eCAL::CServiceClient(StringToStlString(service_name_));
+}
+
+ServiceClient::~ServiceClient()
+{
+    if (m_client == nullptr) return;
+    delete m_client;
+}
+
+List<ServiceClient::ServiceClientCallbackData^>^ ServiceClient::Call(System::String^ method_name_, System::String^ request, const int rcv_timeout_)
+{
+    if (m_client == nullptr) return(nullptr);
+    ::eCAL::ServiceResponseVecT responseVecT;
+
+    if (m_client->Call(StringToStlString(method_name_), StringToStlString(request), rcv_timeout_, &responseVecT))
+    {
+        List<ServiceClientCallbackData^>^ rcv_Datas = gcnew List<ServiceClientCallbackData^>();
+
+        for each (::eCAL::SServiceResponse response in responseVecT)
+        {
+            ServiceClientCallbackData^ rcv_data = gcnew ServiceClientCallbackData;
+            rcv_data->call_state = response.call_state;
+            rcv_data->error_msg = StlStringToString(response.error_msg);
+            rcv_data->host_name = StlStringToString(response.host_name);
+            rcv_data->method_name = StlStringToString(response.method_name);
+            rcv_data->ret_state = response.ret_state;
+            rcv_data->service_id = StlStringToString(response.service_id);
+            rcv_data->service_name = StlStringToString(response.service_name);
+            rcv_data->ret_state = response.ret_state;
+            rcv_data->response = StlStringToString(response.response);
+            rcv_Datas->Add(rcv_data);
+        }
+        return rcv_Datas;
+    }
+    else
+    {
+        return nullptr;
+    }
+}
+
 
 
 /////////////////////////////////////////////////////////////////////////////
