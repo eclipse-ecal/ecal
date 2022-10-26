@@ -168,6 +168,16 @@ size_t Publisher::Send(System::String^ s_, long long time_)
   return(m_pub->Send(buf, len, time_));
 }
 
+size_t Publisher::Send(array<Byte>^ buffer, long long time_)
+{
+  if(m_pub == nullptr) return(0); 
+  GCHandle handle = GCHandle::Alloc(buffer, GCHandleType::Pinned);
+  size_t len = buffer->Length;
+  size_t ret = m_pub->Send((void*)handle.AddrOfPinnedObject(), len, time_);
+  handle.Free();
+  return(ret);
+}
+
 bool Publisher::IsCreated()
 {
   if(m_pub == nullptr) return(false);

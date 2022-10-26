@@ -191,6 +191,16 @@ namespace Continental
         size_t Send(System::String^ s_, const long long time_);
 
         /**
+         * @brief Send a message to all subscribers.
+         *
+         * @param buffer_ byte[] that contains the message content.
+         * @param time_   Send time (-1 = use eCAL system time in us, default = -1).
+         *
+         * @return  number of bytes sent.
+        **/
+        size_t Send(array<Byte>^ buffer_, long long time_);
+
+        /**
          * @brief Query if this object is created.
          *
          * @return  true if created, false if not.
