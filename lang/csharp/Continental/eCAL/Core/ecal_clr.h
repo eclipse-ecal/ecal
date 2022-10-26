@@ -492,12 +492,17 @@ namespace Continental
         /**
          * @brief Get host, process and topic protobuf string.
         **/
-        static System::String^ GetMonitoring();
+        static String^ GetMonitoring();
 
         /**
          * @brief Get global log message protobuf string.
         **/
-        static System::String^ GetLogging();
+        static String^ GetLogging();
+
+        /*
+        * @brief Get eCAL time
+        */
+        static DateTime GetTime();
       };
     }
   }

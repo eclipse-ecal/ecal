@@ -408,16 +408,21 @@ void Monitoring::Terminate()
   ::eCAL::Finalize();
 }
 
-System::String^ Monitoring::GetMonitoring()
+String^ Monitoring::GetMonitoring()
 {
-  std::string monitoring;
-  ::eCAL::Monitoring::GetMonitoring(monitoring);
-  return(StlStringToString(monitoring));
+    std::string monitoring;
+    ::eCAL::Monitoring::GetMonitoring(monitoring);
+    return StlStringToString(monitoring);
 }
 
-System::String^ Monitoring::GetLogging()
+String^ Monitoring::GetLogging()
 {
-  std::string logging;
-  ::eCAL::Monitoring::GetLogging(logging);
-  return(StlStringToString(logging));
+    std::string logging;
+    ::eCAL::Monitoring::GetLogging(logging);
+    return StlStringToString(logging);
+}
+
+DateTime Continental::eCAL::Core::Monitoring::GetTime()
+{
+    return DateTime(::eCAL::Time::GetMicroSeconds());
 }
