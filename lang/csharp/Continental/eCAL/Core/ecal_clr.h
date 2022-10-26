@@ -376,6 +376,88 @@ namespace Continental
 
 
       /**
+       * @brief eCAL server class.
+       *
+       * The CServiceServer class is used to answer calls from matching eCAL clients.
+       *
+      **/
+      public ref class ServiceServer
+      {
+      public:
+          /**
+           * @brief Constructor.
+          **/
+          ServiceServer();
+
+          /**
+           * @brief Constructor.
+           *
+           * @param topic_name_   Unique server name.
+          **/
+          ServiceServer(System::String^ server_name_);
+
+          /**
+           * @brief Destructor.
+          **/
+          ~ServiceServer();
+
+        /**
+         * @brief delegate definition for callback functions
+        **/
+        delegate String^ MethodCallback(String^ methodName, String^ reqType, String^ responseType, String^ request);
+
+        /**
+         * @brief Destroys this object.
+         *
+         * @return  true if it succeeds, false if it fails.
+        **/
+        bool Destroy();
+
+        /**
+         * @brief Add callback function for incoming calls.
+         *
+         * @param callback_  The callback function set to connect.
+         *
+         * @return  True if succeeded, false if not.
+        **/
+        bool AddMethodCallback(String^ methodName, String^ reqType, String^ responseType, MethodCallback^ callback_);
+
+        /**
+         * @brief Remove callback function for incoming calls.
+         *
+         * @param callback_  The callback function set to disconnect.
+         *
+         * @return  True if succeeded, false if not.
+        **/
+        bool RemMethodCallback(String^ methodName, MethodCallback^ callback_);
+
+      private:
+        ::eCAL::CServiceServer* m_serv;
+        /**
+         * @brief managed callbacks that will get executed during the eCAL method callback
+        **/
+        MethodCallback^ m_callbacks;
+
+        /**
+         * @brief private member which holds the pointer to OnMethodCall, to avoid function relocation
+        **/
+        GCHandle m_gch;
+
+        /**
+         * @brief The callback of the subscriber, that is registered with the unmanaged code
+        **/
+        delegate int servCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_);
+        servCallback^ m_sub_callback;
+        int OnMethodCall(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_);
+
+        /**
+         * @brief stdcall function pointer definition of eCAL::ReceiveCallbackT
+        **/
+        typedef int(__stdcall * stdcall_eCAL_MethodCallbackT)(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_);
+      };
+
+
+      /**
        * @brief eCAL service client class.
        *
        * The CServiceClient class is used to call a matching eCAL server.

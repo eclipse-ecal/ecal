@@ -321,6 +321,66 @@ void Subscriber::OnReceive(const char* topic_name_, const ::eCAL::SReceiveCallba
 }
 
 
+/////////////////////////////////////////////////////////////////////////////
+// ServiceServer
+/////////////////////////////////////////////////////////////////////////////
+ServiceServer::ServiceServer() : m_serv(new ::eCAL::CServiceServer())
+{
+}
+
+ServiceServer::ServiceServer(System::String^ server_name_)
+{
+  m_serv = new ::eCAL::CServiceServer(StringToStlString(server_name_));
+}
+
+ServiceServer::~ServiceServer()
+{
+  if(m_serv == nullptr) return;
+  delete m_serv;
+}
+
+bool ServiceServer::Destroy()
+{
+  if(m_serv == nullptr) return(false);
+  return(m_serv->Destroy());
+}
+
+bool ServiceServer::AddMethodCallback(String^ methodName, String^ reqType, String^ responseType, MethodCallback^ callback_)
+{
+  if(m_serv == nullptr) return(false);
+
+  if (m_callbacks == nullptr)
+  {
+    m_sub_callback = gcnew servCallback(this, &ServiceServer::OnMethodCall);
+    m_gch = GCHandle::Alloc(m_sub_callback);
+    IntPtr ip = Marshal::GetFunctionPointerForDelegate(m_sub_callback);
+    m_serv->AddMethodCallback(StringToStlString(methodName), StringToStlString(reqType), StringToStlString(responseType), static_cast<stdcall_eCAL_MethodCallbackT>(ip.ToPointer()));
+  }
+  m_callbacks += callback_;
+  return(true);
+}
+
+bool ServiceServer::RemMethodCallback(String^ methodName, MethodCallback^ callback_)
+{
+  if(m_serv == nullptr) return(false);
+
+  if (m_callbacks == callback_)
+  {
+    m_serv->RemMethodCallback(StringToStlString(methodName));
+    m_gch.Free();
+  }
+  m_callbacks -= callback_;
+
+  return(false);
+}
+
+int ServiceServer::OnMethodCall(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_)
+{
+    String^ result = m_callbacks(StlStringToString(method_), StlStringToString(method_), StlStringToString(method_), StlStringToString(request_));
+    response_ = StringToStlString(result);
+    return 42;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // ServiceClient
