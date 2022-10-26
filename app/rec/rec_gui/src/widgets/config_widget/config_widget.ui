@@ -26,161 +26,7 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item row="0" column="0">
-    <widget class="QLabel" name="measurement_directory_label">
-     <property name="minimumSize">
-      <size>
-       <width>10</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Meas dir:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="2">
-    <widget class="QEcalParserLineEdit" name="measurement_directory_lineedit">
-     <property name="minimumSize">
-      <size>
-       <width>10</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Measurement root directory</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="max_file_size_label">
-     <property name="minimumSize">
-      <size>
-       <width>10</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Max file size:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0" colspan="3">
-    <widget class="QLabel" name="description_label">
-     <property name="minimumSize">
-      <size>
-       <width>10</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Description:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QLabel" name="measurement_name_warning">
-       <property name="toolTip">
-        <string>The measurement name on this PC is empty. This will cause measurements to not be uploadable.</string>
-       </property>
-       <property name="text">
-        <string>Warning label</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QEcalParserLineEdit" name="measurement_name_lineedit">
-       <property name="minimumSize">
-        <size>
-         <width>10</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>Measurement name (will create a directory inside the measurement root directory)</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="2" column="2">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <property name="spacing">
-      <number>1</number>
-     </property>
-     <item>
-      <widget class="QLabel" name="path_preview_label">
-       <property name="minimumSize">
-        <size>
-         <width>40</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="textInteractionFlags">
-        <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="refresh_path_preview_button">
-       <property name="toolTip">
-        <string>Refresh Preview</string>
-       </property>
-       <property name="text">
-        <string>Refresh Preview</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../../../../../iconset/ecalicons.qrc">
-         <normaloff>:/ecalicons/UPDATE</normaloff>:/ecalicons/UPDATE</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>12</width>
-         <height>12</height>
-        </size>
-       </property>
-       <property name="autoRaise">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="measurement_name_label">
-     <property name="minimumSize">
-      <size>
-       <width>10</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Meas name:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="0" colspan="3">
-    <widget class="QEcalParserTextEdit" name="description_textedit">
-     <property name="minimumSize">
-      <size>
-       <width>10</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Description saved to the doc/description.txt file</string>
-     </property>
-     <property name="acceptRichText">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="2">
+   <item row="4" column="3">
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QSpinBox" name="max_file_size_spinbox">
@@ -234,6 +80,186 @@
      </item>
     </layout>
    </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="measurement_directory_label">
+     <property name="minimumSize">
+      <size>
+       <width>10</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Meas dir:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0" colspan="4">
+    <widget class="QEcalParserTextEdit" name="description_textedit">
+     <property name="minimumSize">
+      <size>
+       <width>10</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Description saved to the doc/description.txt file</string>
+     </property>
+     <property name="acceptRichText">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="measurement_name_label">
+     <property name="minimumSize">
+      <size>
+       <width>10</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Meas name:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0" colspan="4">
+    <widget class="QLabel" name="description_label">
+     <property name="minimumSize">
+      <size>
+       <width>10</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Description:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>1</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="path_preview_label">
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="textInteractionFlags">
+        <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="refresh_path_preview_button">
+       <property name="toolTip">
+        <string>Refresh Preview</string>
+       </property>
+       <property name="text">
+        <string>Refresh Preview</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../iconset/ecalicons.qrc">
+         <normaloff>:/ecalicons/UPDATE</normaloff>:/ecalicons/UPDATE</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>12</width>
+         <height>12</height>
+        </size>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="2" column="3">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="measurement_name_warning">
+       <property name="toolTip">
+        <string>The measurement name on this PC is empty. This will cause measurements to not be uploadable.</string>
+       </property>
+       <property name="text">
+        <string>Warning label</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QEcalParserLineEdit" name="measurement_name_lineedit">
+       <property name="minimumSize">
+        <size>
+         <width>10</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Measurement name (will create a directory inside the measurement root directory)</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="max_file_size_label">
+     <property name="minimumSize">
+      <size>
+       <width>10</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Max file size:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,0">
+     <property name="spacing">
+      <number>6</number>
+     </property>
+     <item>
+      <widget class="QEcalParserLineEdit" name="measurement_directory_lineedit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>10</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Measurement root directory</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="user_meass_rec_path_toolButton">
+       <property name="minimumSize">
+        <size>
+         <width>10</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
@@ -250,7 +276,6 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>measurement_directory_lineedit</tabstop>
   <tabstop>measurement_name_lineedit</tabstop>
   <tabstop>refresh_path_preview_button</tabstop>
   <tabstop>description_textedit</tabstop>

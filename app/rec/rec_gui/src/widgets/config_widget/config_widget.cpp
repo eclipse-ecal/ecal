@@ -20,6 +20,7 @@
 #include "config_widget.h"
 
 #include <QDir>
+#include <QFileDialog>
 #include "qecalrec.h"
 
 #include <EcalParser/EcalParser.h>
@@ -35,6 +36,7 @@ ConfigWidget::ConfigWidget(QWidget *parent)
   connect(ui_.description_textedit,           &QTextEdit::textChanged,  QEcalRec::instance(), [this]() {QEcalRec::instance()->setDescription(ui_.description_textedit->toPlainText().toStdString()); });
   connect(ui_.max_file_size_spinbox, static_cast<void (QSpinBox:: *)(int)>(&QSpinBox::valueChanged), QEcalRec::instance(), [](int megabytes) {QEcalRec::instance()->setMaxFileSizeMib(megabytes); });
   connect(ui_.one_file_per_topic_checkbox,    &QCheckBox::stateChanged, QEcalRec::instance(), [this]() {QEcalRec::instance()->setOneFilePerTopicEnabled(ui_.one_file_per_topic_checkbox->isChecked()); });
+  connect(ui_.user_meass_rec_path_toolButton, &QToolButton::clicked, this, &ConfigWidget::userRecPathButtonPressed);
 
   connect(ui_.refresh_path_preview_button,    &QAbstractButton::clicked,            QEcalRec::instance(), [this]() { updatePathPreviewAndWarningLabel(); });
 
@@ -43,6 +45,7 @@ ConfigWidget::ConfigWidget(QWidget *parent)
   connect(QEcalRec::instance(), &QEcalRec::maxFileSizeMibChangedSignal, this, &ConfigWidget::maxFileSizeChanged);
   connect(QEcalRec::instance(), &QEcalRec::descriptionChangedSignal,    this, &ConfigWidget::descriptionChanged);
   connect(QEcalRec::instance(), &QEcalRec::oneFilePerTopicEnabledChangedSignal,    this, &ConfigWidget::oneFilePerTopicEnabledChanged);
+
 
   measurementRootDirectoryChanged (QEcalRec::instance()->measRootDir());
   measurementNameChanged          (QEcalRec::instance()->measName());
@@ -130,6 +133,16 @@ void ConfigWidget::descriptionChanged(const std::string& description)
     ui_.description_textedit->blockSignals(true);
     ui_.description_textedit->setPlainText(q_description);
     ui_.description_textedit->blockSignals(false);
+  }
+}
+
+void ConfigWidget::userRecPathButtonPressed()
+{
+  QString user_path = QFileDialog::getExistingDirectory(this,"Choose root recording folder...","", QFileDialog::DontUseNativeDialog | QFileDialog::ShowDirsOnly);
+  if (!user_path.isEmpty())
+  {
+    ui_.measurement_directory_lineedit->setText(user_path);
+    measurementRootDirectoryChanged(user_path.toStdString());
   }
 }
 
