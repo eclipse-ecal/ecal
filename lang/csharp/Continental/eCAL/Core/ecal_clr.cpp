@@ -528,18 +528,22 @@ void Monitoring::Terminate()
   ::eCAL::Finalize();
 }
 
-String^ Monitoring::GetMonitoring()
+array<Byte>^ Monitoring::GetMonitoring()
 {
     std::string monitoring;
     ::eCAL::Monitoring::GetMonitoring(monitoring);
-    return StlStringToString(monitoring);
+    array<Byte>^ data = gcnew array<Byte>(monitoring.size());
+    System::Runtime::InteropServices::Marshal::Copy(IntPtr(&monitoring[0]), data, 0, monitoring.size());
+    return data;
 }
 
-String^ Monitoring::GetLogging()
+array<Byte>^ Monitoring::GetLogging()
 {
     std::string logging;
     ::eCAL::Monitoring::GetLogging(logging);
-    return StlStringToString(logging);
+    array<Byte>^ data = gcnew array<Byte>(logging.size());
+    System::Runtime::InteropServices::Marshal::Copy(IntPtr(&logging[0]), data, 0, logging.size());
+    return data;
 }
 
 DateTime Continental::eCAL::Core::Monitoring::GetTime()

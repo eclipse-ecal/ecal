@@ -642,12 +642,12 @@ namespace Continental
         /**
          * @brief Get host, process and topic protobuf string.
         **/
-        static String^ GetMonitoring();
+        static array<Byte>^ GetMonitoring();
 
         /**
          * @brief Get global log message protobuf string.
         **/
-        static String^ GetLogging();
+        static array<Byte>^ GetLogging();
 
         /*
         * @brief Get eCAL time
