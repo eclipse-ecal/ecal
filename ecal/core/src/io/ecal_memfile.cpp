@@ -78,6 +78,7 @@ namespace eCAL
 
       // reset header and info
       m_header       = SInternalHeader();
+
       m_memfile_info = SMemFileInfo();
 
       // create memory file
@@ -91,7 +92,8 @@ namespace eCAL
     }
 
     // create mutex
-    if (!CreateMtx(name_, m_memfile_info.mutex, m_auto_sanitizing))
+    // for performance reasons only apply consistency check if it is explicitly set
+    if(m_memfile_info.mutex->Create(name_, m_auto_sanitizing))
     {
 #ifndef NDEBUG
       printf("Could not create memory file mutex: %s.\n\n", name_);
@@ -106,15 +108,14 @@ namespace eCAL
 
       // lock mutex
       // for performance reasons only apply consistency check if it is explicitly set
-      bool lock_is_consistent{ true };
-      if (LockMtx(&m_memfile_info.mutex, PUB_MEMFILE_CREATE_TO, m_auto_sanitizing ? &lock_is_consistent : nullptr))
+      if(m_memfile_info.mutex->Lock(PUB_MEMFILE_CREATE_TO))
       {
         if (m_memfile_info.mem_address)
         {
           SInternalHeader* header = reinterpret_cast<SInternalHeader*>(m_memfile_info.mem_address);
 
           // reset header if memfile does not exist or rather is not initialized as well as if lock state is inconsistent
-          if (!m_memfile_info.exists || header->int_hdr_size == 0 || (m_auto_sanitizing && !lock_is_consistent))
+          if (!m_memfile_info.exists || header->int_hdr_size == 0 || (m_auto_sanitizing && m_memfile_info.mutex->WasRecovered()))
             *header = m_header;
           else
           {
@@ -128,7 +129,7 @@ namespace eCAL
         }
 
         // unlock mutex
-        UnlockMtx(&m_memfile_info.mutex);
+        m_memfile_info.mutex->Unlock();
 
       }
     }
@@ -136,7 +137,7 @@ namespace eCAL
     {
       // lock mutex
       // consistency check cannot be performed on read-only memfiles
-      if (LockMtx(&m_memfile_info.mutex, PUB_MEMFILE_CREATE_TO))
+      if(m_memfile_info.mutex->Lock(PUB_MEMFILE_CREATE_TO))
       {
         // read internal header size of memory file
         const auto header_size = static_cast<SInternalHeader*>(m_memfile_info.mem_address)->int_hdr_size;
@@ -150,7 +151,7 @@ namespace eCAL
           m_header.version = 0;
 
         // unlock mutex
-        UnlockMtx(&m_memfile_info.mutex);
+        m_memfile_info.mutex->Unlock();
       }
     }
 
@@ -171,11 +172,8 @@ namespace eCAL
     // destroy memory file
     ret_state &= memfile::db::RemoveFile(m_name, remove_);
 
-    // unlock mutex
-    ret_state &= DestroyMtx(&m_memfile_info.mutex);
-
-    // cleanup mutex
-    ret_state &= CleanupMtx(m_name);
+    // Destroy mutex
+    m_memfile_info.mutex->Destroy();
 
     // reset states
     m_created      = false;
@@ -184,6 +182,7 @@ namespace eCAL
 
     // reset header and info
     m_header       = SInternalHeader();
+
     m_memfile_info = SMemFileInfo();
 
     return(ret_state);
@@ -212,7 +211,7 @@ namespace eCAL
     m_access_state = access_state::closed;
 
     // release read mutex
-    UnlockMtx(&m_memfile_info.mutex);
+    m_memfile_info.mutex->Unlock();
 
     return(true);
   }
@@ -273,7 +272,7 @@ namespace eCAL
     m_access_state = access_state::closed;
 
     // unlock mutex
-    UnlockMtx(&m_memfile_info.mutex);
+    m_memfile_info.mutex->Unlock();
 
     return(true);
   }
@@ -323,8 +322,7 @@ namespace eCAL
     if (!m_memfile_info.mem_address) return(false);
 
     // lock mutex
-    bool lock_is_consistent {true};
-    if (!LockMtx(&m_memfile_info.mutex, timeout_, m_auto_sanitizing ? &lock_is_consistent : nullptr))
+    if(!m_memfile_info.mutex->Lock(timeout_))
     {
 #ifndef NDEBUG
       printf("Could not lock memory file mutex: %s.\n\n", m_name.c_str());
@@ -333,7 +331,7 @@ namespace eCAL
     }
 
     // reset current data size field of memfile header if lock is inconsistent 
-    if ((m_auto_sanitizing && !lock_is_consistent) && m_header.version > 0)
+    if ((m_auto_sanitizing && m_memfile_info.mutex->WasRecovered()) && m_header.version > 0)
     {
       m_header.cur_data_size = 0;
       *reinterpret_cast<SInternalHeader*>(m_memfile_info.mem_address) = m_header;
@@ -353,7 +351,7 @@ namespace eCAL
       if (len > m_memfile_info.size)
       {
         // unlock mutex
-        UnlockMtx(&m_memfile_info.mutex);
+        m_memfile_info.mutex->Unlock();
         return(false);
       }
     }
