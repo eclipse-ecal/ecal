@@ -145,7 +145,9 @@ namespace eCAL
     {
       RegisterProcess();
       RegisterSample(topic_name_, ecal_sample_);
+#ifndef ECAL_LAYER_ICEORYX
       SendSampleList(false);
+#endif
     }
 
     return(true);
