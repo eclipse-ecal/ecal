@@ -27,7 +27,6 @@
 #include <memory>
 
 #include <ecal/ecal_os.h>
-#include "ecal_memfile_mtx.h"
 #include "ecal_named_mutex.h"
 
 #ifdef ECAL_OS_WINDOWS

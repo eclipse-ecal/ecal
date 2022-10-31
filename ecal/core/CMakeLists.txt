@@ -214,7 +214,6 @@ if(NOT ECAL_LAYER_ICEORYX)
       src/io/ecal_memfile_broadcast_writer.h
       src/io/ecal_memfile_db.h
       src/io/ecal_memfile_info.h
-      src/io/ecal_memfile_mtx.h
       src/io/ecal_memfile_os.h
       src/io/ecal_memfile_pool.h
       src/io/ecal_memfile_sync.h
@@ -224,14 +223,12 @@ if(NOT ECAL_LAYER_ICEORYX)
 
   if(WIN32)
     set(ecal_io_mem_header_win_src
-        src/io/win32/ecal_memfile_mtx.h
         src/io/win32/ecal_named_mutex_impl.h
     )
   endif()
 
   if(UNIX)
     set(ecal_io_mem_header_linux_src
-        src/io/linux/ecal_memfile_mtx.h
         src/io/linux/ecal_named_mutex_impl.h
         $<$<OR:$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>,$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>>:src/io/linux/ecal_named_mutex_robust_clocklock_impl.h>
   )

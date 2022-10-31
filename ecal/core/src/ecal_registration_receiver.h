@@ -71,7 +71,7 @@ namespace eCAL
 
   private:
     bool m_created = false;
-    eCAL::CMemoryFileBroadcastReader* m_memfile_broadcast_reader;
+    eCAL::CMemoryFileBroadcastReader* m_memfile_broadcast_reader = nullptr;
   };
 #endif
 

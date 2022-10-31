@@ -33,12 +33,15 @@ namespace eCAL
     CNamedMutexImpl(const std::string &name_, bool recoverable_);
     ~CNamedMutexImpl();
 
-    bool IsCreated() const;
-    bool IsRecoverable() const;
-    bool WasRecovered() const;
+    CNamedMutexImpl(const CNamedMutexImpl&) = delete;
+    CNamedMutexImpl& operator=(const CNamedMutexImpl&) = delete;
 
-    bool Lock(int64_t timeout_);
-    void Unlock();
+    bool IsCreated() const final;
+    bool IsRecoverable() const final;
+    bool WasRecovered() const final;
+
+    bool Lock(int64_t timeout_) final;
+    void Unlock() final;
 
   private:
     void* m_mutex_handle;

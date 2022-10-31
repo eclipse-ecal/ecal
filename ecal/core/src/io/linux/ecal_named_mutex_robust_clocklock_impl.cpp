@@ -41,7 +41,8 @@ typedef struct named_mutex named_mutex_t;
 
 namespace
 {
-  named_mutex_t *named_mutex_create(const char *mutex_name_, bool recoverable_ = false) {
+  named_mutex_t *named_mutex_create(const char *mutex_name_, bool recoverable_ = false) 
+  {
     // create shared memory file
     int previous_umask = umask(000);  // set umask to nothing, so we can create files with all possible permission bits
     int fd = ::shm_open(mutex_name_, O_RDWR | O_CREAT | O_EXCL,
@@ -77,13 +78,32 @@ namespace
     return mtx;
   }
 
-  bool named_mutex_lock(named_mutex_t *mtx_, struct timespec *ts_, bool *recovered_ = nullptr) {
-    // wait with monotonic clock
+  bool named_mutex_timedlock(named_mutex_t *mtx_, struct timespec *ts_, bool *recovered_ = nullptr) 
+  {
 #ifdef ECAL_HAS_CLOCKLOCK_MUTEX
+    // wait with monotonic clock
     int lock_result = pthread_mutex_clocklock(&mtx_->mtx, CLOCK_MONOTONIC, ts_);
 #else
+    // fallback if monotonic clock is not available
     int lock_result = pthread_mutex_timedlock(&mtx_->mtx, ts_);
 #endif
+    if (lock_result == 0)
+      return true;
+      // check if previous mutex owner is dead
+    else if (lock_result == EOWNERDEAD) {
+      if (recovered_)
+        *recovered_ = true;
+      return true;
+    }
+
+    return false;
+  }
+  
+  bool named_mutex_lock(named_mutex_t *mtx_, bool *recovered_ = nullptr) 
+  {
+    // wait blocking
+    int lock_result = pthread_mutex_lock(&mtx_->mtx, ts_);
+    
     if (lock_result == 0)
       return true;
       // check if previous mutex owner is dead
@@ -111,7 +131,8 @@ namespace
     return false;
   }
 
-  void named_mutex_unlock(named_mutex_t *mtx_) {
+  void named_mutex_unlock(named_mutex_t *mtx_) 
+  {
     // unlock the mutex
     pthread_mutex_unlock(&mtx_->mtx);
   }
@@ -219,7 +240,7 @@ namespace eCAL
     // timeout_ < 0 -> wait infinite
     if (timeout_ < 0)
     {
-      return(named_mutex_lock(m_mutex_handle, nullptr, &m_was_recovered));
+      return(named_mutex_lock(m_mutex_handle, &m_was_recovered));
     }
       // timeout_ == 0 -> check lock state only
     else if (timeout_ == 0)
@@ -229,7 +250,7 @@ namespace eCAL
       // timeout_ > 0 -> wait timeout_ ms
     else
     {
-      struct timespec abstime;
+      struct timespec abstime {};
       clock_gettime(CLOCK_MONOTONIC, &abstime);
 
       abstime.tv_sec = abstime.tv_sec + timeout_ / 1000;
@@ -239,7 +260,7 @@ namespace eCAL
         abstime.tv_nsec -= 1000000000;
         abstime.tv_sec++;
       }
-      return(named_mutex_lock(m_mutex_handle, &abstime, &m_was_recovered));
+      return(named_mutex_timedlock(m_mutex_handle, &abstime, &m_was_recovered));
     }
   }
 

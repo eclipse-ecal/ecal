@@ -36,7 +36,7 @@ namespace eCAL
     std::uint32_t version = 1;
     std::uint64_t message_queue_offset = sizeof(SMemfileBroadcastHeaderV1);
     TimestampT timestamp = CreateTimestamp();
-    std::array<uint8_t, 4> _reseverd_0;
+    std::array<uint8_t, 4> _reseverd_0 = {};
   };
 #pragma pack(pop)
 
@@ -55,7 +55,7 @@ namespace eCAL
     return reinterpret_cast<void *>(static_cast<char *>(address) + GetMemfileHeader(address)->message_queue_offset);
   }
 
-  CMemoryFileBroadcast::CMemoryFileBroadcast(): m_broadcast_memfile(std::make_unique<eCAL::CMemoryFile>()) 
+  CMemoryFileBroadcast::CMemoryFileBroadcast(): m_max_queue_size(0), m_broadcast_memfile(std::make_unique<eCAL::CMemoryFile>()), m_message_queue(), m_last_timestamp(0)
   {
   }
 

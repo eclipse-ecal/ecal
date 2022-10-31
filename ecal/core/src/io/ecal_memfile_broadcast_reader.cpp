@@ -63,7 +63,7 @@ namespace eCAL
       if (!handled_payload_memfile_ids.insert(payload_memfile_id).second) continue;
 
       decltype(m_payload_memfiles)::iterator iterator;
-      bool is_new_payload_memfile;
+      bool is_new_payload_memfile {false};
       std::tie(iterator, is_new_payload_memfile) = m_payload_memfiles.insert(
         {payload_memfile_id, {std::make_shared<CMemoryFile>(), std::vector<char>(), 0}});
 

@@ -278,7 +278,7 @@ namespace eCAL
       // timeout_ > 0 -> wait timeout_ ms
     else
     {
-      struct timespec abstime;
+      struct timespec abstime {};
       clock_gettime(CLOCK_MONOTONIC, &abstime);
 
       abstime.tv_sec = abstime.tv_sec + timeout_ / 1000;
