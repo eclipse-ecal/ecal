@@ -102,7 +102,7 @@ namespace
   bool named_mutex_lock(named_mutex_t *mtx_, bool *recovered_ = nullptr) 
   {
     // wait blocking
-    int lock_result = pthread_mutex_lock(&mtx_->mtx, ts_);
+    int lock_result = pthread_mutex_lock(&mtx_->mtx);
     
     if (lock_result == 0)
       return true;
