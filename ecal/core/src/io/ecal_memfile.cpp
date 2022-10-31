@@ -93,7 +93,7 @@ namespace eCAL
 
     // create mutex
     // for performance reasons only apply consistency check if it is explicitly set
-    if(m_memfile_info.mutex->Create(name_, m_auto_sanitizing))
+    if(!m_memfile_info.mutex->Create(name_, m_auto_sanitizing))
     {
 #ifndef NDEBUG
       printf("Could not create memory file mutex: %s.\n\n", name_);
