@@ -42,7 +42,7 @@
 	url = https://github.com/steinwurf/recycle.git
 [submodule "thirdparty/tcp_pubsub"]
 	path = thirdparty/tcp_pubsub
-	url = https://github.com/continental/tcp_pubsub.git
+	url = https://github.com/eclipse-ecal/tcp_pubsub.git
 [submodule "thirdparty/qwt/qwt"]
 	path = thirdparty/qwt/qwt
 	url = https://git.code.sf.net/p/qwt/git
