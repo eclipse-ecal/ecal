@@ -26,18 +26,19 @@
 #include "ecal_global_accessors.h"
 
 #include <iostream>
+#include <array>
 
 namespace eCAL
 {
-  constexpr std::uint32_t ecal_magic_number = 0x4C414356;
-
-  PADDING_DISABLED(struct SMemfileBroadcastHeaderV1
+#pragma pack(push, 1)
+  struct SMemfileBroadcastHeaderV1
   {
-    std::uint32_t magic = ecal_magic_number;
     std::uint32_t version = 1;
     std::uint64_t message_queue_offset = sizeof(SMemfileBroadcastHeaderV1);
     TimestampT timestamp = CreateTimestamp();
-  });
+    std::array<uint8_t, 4> _reseverd_0;
+  };
+#pragma pack(pop)
 
   static SMemfileBroadcastHeaderV1 *GetMemfileHeader(void *address)
   {
@@ -69,13 +70,17 @@ namespace eCAL
       sizeof(SMemfileBroadcastHeaderV1);
     if (!m_broadcast_memfile->Create(name.c_str(), true, presumably_memfile_size, true))
     {
+#ifndef NDEBUG
       std::cerr << "Unable to access broadcast memory file." << std::endl;
+#endif
       return false;
     }
 
     if (m_broadcast_memfile->MaxDataSize() < presumably_memfile_size)
     {
+#ifndef NDEBUG
       std::cerr << "Invalid broadcast memory file size." << std::endl;
+#endif
       return false;
     }
 
@@ -95,7 +100,9 @@ namespace eCAL
       {
         if (!IsMemfileVersionCompatible(memfile_address))
         {
+#ifndef NDEBUG
           std::cerr << "Broadcast memory file is not compatible" << std::endl;
+#endif
           m_broadcast_memfile->ReleaseWriteAccess();
           return false;
         }
@@ -105,7 +112,9 @@ namespace eCAL
     }
     else
     {
+#ifndef NDEBUG
       std::cerr << "Unable to acquire write access on broadcast memory file" << std::endl;
+#endif
       return false;
     }
 
@@ -126,12 +135,6 @@ namespace eCAL
     return m_name;
   }
 
-  bool CMemoryFileBroadcast::IsMemfileInitialized(const void *memfile_address) const
-  {
-    const auto *header = GetMemfileHeader(memfile_address);
-    return (header->magic == ecal_magic_number);
-  }
-
   bool CMemoryFileBroadcast::IsMemfileVersionCompatible(const void *memfile_address) const
   {
     const auto *header = GetMemfileHeader(memfile_address);
@@ -144,7 +147,9 @@ namespace eCAL
     *header = SMemfileBroadcastHeaderV1();
     m_message_queue.SetBaseAddress(GetMessageQueueAddress(memfile_address));
     m_message_queue.Reset(m_max_queue_size);
+#ifndef NDEBUG
     std::cout << "Broadcast memory file has been resetted" << std::endl;
+#endif
   }
 
   bool CMemoryFileBroadcast::FlushLocalBroadcastQueue()
@@ -164,7 +169,9 @@ namespace eCAL
       }
       else
       {
+#ifndef NDEBUG
         std::cerr << "Broadcast memory file is not initialized" << std::endl;
+#endif
         m_broadcast_memfile->ReleaseReadAccess();
         return false;
       }
@@ -172,7 +179,9 @@ namespace eCAL
     }
     else
     {
+#ifndef NDEBUG
       std::cerr << "Unable to acquire read access on broadcast memory file" << std::endl;
+#endif
       return false;
     }
   }
@@ -191,7 +200,9 @@ namespace eCAL
     }
     else
     {
+#ifndef NDEBUG
       std::cerr << "Unable to acquire read access on broadcast memory file" << std::endl;
+#endif
       return false;
     }
 
@@ -224,7 +235,9 @@ namespace eCAL
     }
     else
     {
+#ifndef NDEBUG
       std::cerr << "Unable to acquire write access on broadcast memory file" << std::endl;
+#endif
       return false;
     }
   }
@@ -242,7 +255,9 @@ namespace eCAL
       }
       else
       {
+#ifndef NDEBUG
         std::cerr << "Broadcast memory file is not initialized" << std::endl;
+#endif
         m_broadcast_memfile->ReleaseReadAccess();
         return false;
       }
@@ -250,7 +265,9 @@ namespace eCAL
     }
     else
     {
+#ifndef NDEBUG
       std::cerr << "Unable to acquire read access on broadcast memory file" << std::endl;
+#endif
       return false;
     }
 

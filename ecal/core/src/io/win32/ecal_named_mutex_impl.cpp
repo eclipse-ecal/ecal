@@ -56,11 +56,11 @@ namespace eCAL
 
   bool CNamedMutexImpl::IsRecoverable() const
   {
-    return m_was_recovered;
+    return m_recoverable;
   }
   bool CNamedMutexImpl::WasRecovered() const
   {
-    return m_recoverable;
+    return m_was_recovered;
   }
 
   bool CNamedMutexImpl::Lock(int64_t timeout_)
@@ -72,7 +72,7 @@ namespace eCAL
     m_was_recovered = false;
 
     // wait for access
-    DWORD result = WaitForSingleObject(m_mutex_handle, timeout_);
+    DWORD result = WaitForSingleObject(m_mutex_handle, static_cast<DWORD>(timeout_));
     if (result == WAIT_OBJECT_0)
       return true;
     else if (result == WAIT_ABANDONED)

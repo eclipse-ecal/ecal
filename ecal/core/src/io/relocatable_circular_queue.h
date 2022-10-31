@@ -29,15 +29,6 @@
 #include <iterator>
 #include <cassert>
 
-#ifndef PADDING_DISABLED
-#ifdef __GNUC__
-#define PADDING_DISABLED( __DECLARATION__ ) __DECLARATION__ __attribute__((__packed__))
-#endif
-#ifdef _MSC_VER
-#define PADDING_DISABLED( __DECLARATION__ ) __pragma( pack(push, 1) ) __DECLARATION__ __pragma( pack(pop))
-#endif
-#endif
-
 template<class T>
 class RelocatableCircularQueue{
 public:
@@ -47,15 +38,6 @@ public:
   public:
     explicit iterator(RelocatableCircularQueue<T>& relocatable_circular_queue, std::uint64_t index): m_relocatable_circular_queue(relocatable_circular_queue), m_index(index){
     }
-
-    /*iterator(const iterator& iter): m_relocatable_linked_list(iter.m_relocatable_linked_list), m_node_index(iter.m_node_index){
-    }
-
-    iterator& operator=(const iterator& iter){
-      m_relocatable_linked_list = iter.m_relocatable_linked_list;
-      m_node_index = iter.m_node_index;
-      return *this;
-    }*/
 
     iterator& operator++()
     {
@@ -224,12 +206,15 @@ public:
 
 
 private:
-  PADDING_DISABLED(struct Header{
+#pragma pack(push, 1)
+  struct Header
+  {
     std::uint64_t back_index;
     std::uint64_t front_index;
     std::size_t size;
     std::size_t max_size;
-  });
+  };
+#pragma pack(pop)
 
   void* m_base_address;
   Header* m_header;

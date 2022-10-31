@@ -107,14 +107,13 @@ namespace eCAL
       CRegistrationReceiveThread::RegMessageCallbackT regmsg_cb = std::bind(&CSampleReceiver::Receive, this, std::placeholders::_1);
       m_reg_rcv_threadcaller = std::make_shared<CRegistrationReceiveThread>(regmsg_cb);
     }
-    else
-      std::cout << "Network monitoring is disabled (monitoring module)" << std::endl;
 
+#ifndef ECAL_LAYER_ICEORYX
     if (Config::Experimental::IsMemfileMonitoringEnabled())
     {
       m_memfile_reg_rcv_threadcaller = std::make_shared<CMemfileRegistrationReceiveThread>(std::bind(&CMonitoringImpl::ApplySample, this, std::placeholders::_1, eCAL::pb::tl_none));
-      std::cout << "Memfile monitoring is enabled (monitoring module) (queue size: " << Config::Experimental::GetMemfileMonitoringQueueSize() << ")" << std::endl;
     }
+#endif
 
     // start logging receive thread
     CLoggingReceiveThread::LogMessageCallbackT logmsg_cb = std::bind(&CMonitoringImpl::RegisterLogMessage, this, std::placeholders::_1);

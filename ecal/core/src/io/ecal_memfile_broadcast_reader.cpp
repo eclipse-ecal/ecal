@@ -93,7 +93,9 @@ namespace eCAL
           }
           else
           {
+#ifndef NDEBUG
             std::cerr << "Error acquiring read access on payload file" << std::endl;
+#endif
             return false;
           }
           break;

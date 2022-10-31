@@ -32,9 +32,11 @@ namespace eCAL
     m_memfile_broadcast = memfile_broadcast;
     m_payload_memfile_id = CreateUniqueId();
     m_payload_memfile = std::make_unique<CMemoryFile>();
-    if (!m_payload_memfile->Create(
-      BuildPayloadMemfileName(m_memfile_broadcast->GetName(), m_payload_memfile_id).c_str(), true, 1024)) {
+    if (!m_payload_memfile->Create(BuildPayloadMemfileName(m_memfile_broadcast->GetName(), m_payload_memfile_id).c_str(), true, 1024)) 
+    {
+#ifndef NDEBUG
       std::cerr << "Unable to create payload memfile" << std::endl;
+#endif
       return false;
     }
 
@@ -51,9 +53,11 @@ namespace eCAL
     if (m_payload_memfile->MaxDataSize() < size) {
       auto payload_memfile = std::make_unique<CMemoryFile>();
       const auto payload_memfile_id = CreateUniqueId();
-      if (!payload_memfile->Create(
-        BuildPayloadMemfileName(m_memfile_broadcast->GetName(), payload_memfile_id).c_str(), true, size * 2)) {
+      if (!payload_memfile->Create(BuildPayloadMemfileName(m_memfile_broadcast->GetName(), payload_memfile_id).c_str(), true, size * 2)) 
+      {
+#ifndef NDEBUG
         std::cerr << "Unable to create new payload memory file" << std::endl;
+#endif
         return false;
       }
       m_memfile_broadcast->Broadcast(m_payload_memfile_id, eMemfileBroadcastMessageType::PAYLOAD_MEMFILE_REMOVED);
@@ -70,7 +74,11 @@ namespace eCAL
       return true;
     }
     else
+    {
+#ifndef NDEBUG
       std::cerr << "Error acquiring write access on payload file" << std::endl;
+#endif
+    }
 
     return false;
   }
