@@ -29,11 +29,11 @@ typedef struct named_mutex named_mutex_t;
 
 namespace eCAL
 {
-  class CNamedMutexClockLockImpl : public CNamedMutexImplBase
+  class CNamedMutexRobustClockLockImpl : public CNamedMutexImplBase
   {
   public:
-    CNamedMutexClockLockImpl(const std::string &name_, bool recoverable_);
-    ~CNamedMutexClockLockImpl();
+    CNamedMutexRobustClockLockImpl(const std::string &name_, bool recoverable_);
+    ~CNamedMutexRobustClockLockImpl();
 
     bool IsCreated() const;
     bool IsRecoverable() const;

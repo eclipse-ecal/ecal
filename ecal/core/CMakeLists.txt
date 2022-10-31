@@ -45,8 +45,12 @@ if(UNIX)
   check_symbol_exists(pthread_mutexattr_setrobust "pthread.h" ECAL_HAS_ROBUST_MUTEX)
   unset(CMAKE_REQUIRED_DEFINITIONS)
   unset(CMAKE_REQUIRED_LIBRARIES)
-  if(NOT ECAL_HAS_CLOCKLOCK_MUTEX OR NOT ECAL_HAS_CLOCKLOCK_MUTEX)
-    message(WARNING "This os does not support robust mutexes which can lead to dead locks in eCAL under certain circumstances.")
+  if(NOT ECAL_HAS_CLOCKLOCK_MUTEX)
+    if(NOT ECAL_HAS_ROBUST_MUTEX)
+      message(WARNING "This OS does not support robust mutexes with monotonic clock which can cause dead locks under certain circumstances.")
+    else()
+      message(WARNING "This OS does not support robust mutexes which can cause dead locks under certain circumstances.")
+    endif()
   endif()
 endif()
 
@@ -87,7 +91,7 @@ if(NOT ECAL_LAYER_ICEORYX)
     set(ecal_io_mem_cpp_linux_src
         src/io/linux/ecal_memfile_os.cpp
         src/io/linux/ecal_named_mutex_impl.cpp
-        $<$<BOOL:ECAL_HAS_CLOCKLOCK_MUTEX>:src/io/linux/ecal_named_mutex_clocklock_impl.cpp>
+        $<$<OR:$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>,$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>>:src/io/linux/ecal_named_mutex_robust_clocklock_impl.cpp>
     )
   endif()
 
@@ -223,7 +227,7 @@ if(NOT ECAL_LAYER_ICEORYX)
     set(ecal_io_mem_header_linux_src
         src/io/linux/ecal_memfile_mtx.h
         src/io/linux/ecal_named_mutex_impl.h
-        $<$<BOOL:ECAL_HAS_CLOCKLOCK_MUTEX>:src/io/linux/ecal_named_mutex_clocklock_impl.cpp>
+        $<$<OR:$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>,$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>>:src/io/linux/ecal_named_mutex_robust_clocklock_impl.h>
   )
   endif()
 endif(NOT ECAL_LAYER_ICEORYX)
@@ -449,9 +453,9 @@ target_compile_definitions(${PROJECT_NAME}
     ASIO_DISABLE_VISIBILITY
   PRIVATE
     eCAL_EXPORTS
-    $<$<BOOL:ECAL_HAS_CLOCKLOCK_MUTEX>:ECAL_HAS_CLOCKLOCK_MUTEX>
-    $<$<BOOL:ECAL_HAS_ROBUST_MUTEX>:ECAL_HAS_ROBUST_MUTEX>
-    $<$<BOOL:ECAL_USE_CLOCKLOCK_MUTEX>:ECAL_USE_CLOCKLOCK_MUTEX>)
+    $<$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>:ECAL_HAS_CLOCKLOCK_MUTEX>
+    $<$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>:ECAL_HAS_ROBUST_MUTEX>
+    $<$<BOOL:${ECAL_USE_CLOCKLOCK_MUTEX}>:ECAL_USE_CLOCKLOCK_MUTEX>)
 
 if(ECAL_LAYER_ICEORYX)
   find_package(iceoryx_posh REQUIRED)

@@ -27,8 +27,8 @@
 
 #ifdef ECAL_OS_LINUX
 #include "linux/ecal_named_mutex_impl.h"
-#ifdef ECAL_HAS_CLOCKLOCK_MUTEX
-#include "linux/ecal_named_mutex_clocklock_impl.h"
+#if defined(ECAL_HAS_ROBUST_MUTEX) || defined(ECAL_HAS_CLOCKLOCK_MUTEX)
+#include "linux/ecal_named_mutex_robust_clocklock_impl.h"
 #endif
 #endif
 
@@ -57,13 +57,13 @@ namespace eCAL
   bool CNamedMutex::Create(const std::string& name_, bool recoverable_)
   {
 #ifdef ECAL_OS_LINUX
-#if !defined(ECAL_USE_CLOCKLOCK_MUTEX) && defined(ECAL_HAS_CLOCKLOCK_MUTEX) && defined(ECAL_HAS_ROBUST_MUTEX)
+#if !defined(ECAL_USE_CLOCKLOCK_MUTEX) && defined(ECAL_HAS_ROBUST_MUTEX)
     if(recoverable_)
-      m_impl = std::make_unique<CNamedMutexClockLockImpl>(name_, true);
+      m_impl = std::make_unique<CNamedMutexRobustClockLockImpl>(name_, true);
     else
       m_impl = std::make_unique<CNamedMutexImpl>(name_, false);
 #elif defined(ECAL_USE_CLOCKLOCK_MUTEX) && defined(ECAL_HAS_CLOCKLOCK_MUTEX)
-    m_impl = std::make_unique<CNamedMutexClockLockImpl>(name_, recoverable_);
+    m_impl = std::make_unique<CNamedMutexRobustClockLockImpl>(name_, recoverable_);
 #else
     m_impl = std::make_unique<CNamedMutexImpl>(name_, recoverable_);
 #endif

@@ -25,17 +25,20 @@ set(memfile_test_src
     src/memfile_test.cpp
     ../../../ecal/core/src/io/ecal_memfile.cpp
     ../../../ecal/core/src/io/ecal_memfile_db.cpp
+    ../../../ecal/core/src/io/ecal_named_mutex.cpp
 )
 
 if(UNIX)
 set(memfile_test_os_src
     ../../../ecal/core/src/io/linux/ecal_memfile_os.cpp
+    ../../../ecal/core/src/io/linux/ecal_named_mutex_impl.cpp
 )
 endif()
 
 if(WIN32)
 set(memfile_test_os_src
     ../../../ecal/core/src/io/win32/ecal_memfile_os.cpp
+    ../../../ecal/core/src/io/win32/ecal_named_mutex_impl.cpp
 )
 endif()
 

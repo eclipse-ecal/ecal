@@ -21,7 +21,7 @@
  * @brief  eCAL named mutex
 **/
 
-#include "ecal_named_mutex_clocklock_impl.h"
+#include "ecal_named_mutex_robust_clocklock_impl.h"
 
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -79,7 +79,11 @@ namespace
 
   bool named_mutex_lock(named_mutex_t *mtx_, struct timespec *ts_, bool *recovered_ = nullptr) {
     // wait with monotonic clock
+#ifdef ECAL_HAS_CLOCKLOCK_MUTEX
     int lock_result = pthread_mutex_clocklock(&mtx_->mtx, CLOCK_MONOTONIC, ts_);
+#else
+    int lock_result = pthread_mutex_timedlock(&mtx_->mtx, ts_);
+#endif
     if (lock_result == 0)
       return true;
       // check if previous mutex owner is dead
@@ -152,7 +156,7 @@ namespace
 
 namespace eCAL
 {
-  CNamedMutexClockLockImpl::CNamedMutexClockLockImpl(const std::string &name_, bool recoverable_) : m_mutex_handle(nullptr), m_named(name_), m_recoverable(false), m_was_recovered(false)
+  CNamedMutexRobustClockLockImpl::CNamedMutexRobustClockLockImpl(const std::string &name_, bool recoverable_) : m_mutex_handle(nullptr), m_named(name_), m_recoverable(false), m_was_recovered(false)
   {
     if(name_.empty())
       return;
@@ -174,7 +178,7 @@ namespace eCAL
     }
   }
 
-  CNamedMutexClockLockImpl::~CNamedMutexClockLockImpl()
+  CNamedMutexRobustClockLockImpl::~CNamedMutexRobustClockLockImpl()
   {
     // check mutex handle
     if(m_mutex_handle == nullptr) return;
@@ -189,21 +193,21 @@ namespace eCAL
     named_mutex_destroy(named_mutex_buildname(m_named).c_str());
   }
 
-  bool CNamedMutexClockLockImpl::IsCreated() const
+  bool CNamedMutexRobustClockLockImpl::IsCreated() const
   {
     return m_mutex_handle != nullptr;
   }
 
-  bool CNamedMutexClockLockImpl::IsRecoverable() const
+  bool CNamedMutexRobustClockLockImpl::IsRecoverable() const
   {
     return m_recoverable;
   }
-  bool CNamedMutexClockLockImpl::WasRecovered() const
+  bool CNamedMutexRobustClockLockImpl::WasRecovered() const
   {
     return m_was_recovered;
   }
 
-  bool CNamedMutexClockLockImpl::Lock(int64_t timeout_)
+  bool CNamedMutexRobustClockLockImpl::Lock(int64_t timeout_)
   {
     // check mutex handle
     if (m_mutex_handle == nullptr)
@@ -239,7 +243,7 @@ namespace eCAL
     }
   }
 
-  void CNamedMutexClockLockImpl::Unlock()
+  void CNamedMutexRobustClockLockImpl::Unlock()
   {
     // check mutex handle
     if(m_mutex_handle == nullptr)
