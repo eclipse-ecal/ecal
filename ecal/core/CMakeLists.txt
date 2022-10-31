@@ -36,6 +36,24 @@ if     (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/ecal
   configure_file(src/ecal_defs.h.in "${CMAKE_CURRENT_BINARY_DIR}/include/ecal/ecal_defs.h" @ONLY)
 endif  (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/ecal_defs.h")
 
+if(UNIX)
+ include (CheckSymbolExists)
+ set(CMAKE_REQUIRED_DEFINITIONS "-D__USE_GNU"
+                                "-D_GNU_SOURCE")
+  set(CMAKE_REQUIRED_LIBRARIES "pthread")
+  check_symbol_exists(pthread_mutex_clocklock "pthread.h" ECAL_HAS_CLOCKLOCK_MUTEX)
+  check_symbol_exists(pthread_mutexattr_setrobust "pthread.h" ECAL_HAS_ROBUST_MUTEX)
+  unset(CMAKE_REQUIRED_DEFINITIONS)
+  unset(CMAKE_REQUIRED_LIBRARIES)
+  if(NOT ECAL_HAS_ROBUST_MUTEX)
+    if(NOT ECAL_HAS_CLOCKLOCK_MUTEX)
+      message(WARNING "This OS does not support robust mutexes with monotonic clock which can cause dead locks under certain circumstances. (e.g. memfile monitoring).")
+    else()
+      message(WARNING "This OS does not support robust mutexes which can cause dead locks under certain circumstances (e.g. memfile monitoring).")
+    endif()
+  endif()
+endif()
+
 
 if(ECAL_NPCAP_SUPPORT)
 set(ecal_io_cpp_src_npcap 
@@ -67,16 +85,20 @@ if(NOT ECAL_LAYER_ICEORYX)
       src/io/ecal_memfile_broadcast_writer.cpp
       src/io/ecal_memfile_pool.cpp
       src/io/ecal_memfile_sync.cpp
+      src/io/ecal_named_mutex.cpp
   )
   if(UNIX)
     set(ecal_io_mem_cpp_linux_src
         src/io/linux/ecal_memfile_os.cpp
+        src/io/linux/ecal_named_mutex_impl.cpp
+        $<$<OR:$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>,$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>>:src/io/linux/ecal_named_mutex_robust_clocklock_impl.cpp>
     )
   endif()
 
   if(WIN32)
     set(ecal_io_mem_cpp_win_src
        src/io/win32/ecal_memfile_os.cpp
+       src/io/win32/ecal_named_mutex_impl.cpp
     )
   endif()
 endif(NOT ECAL_LAYER_ICEORYX)
@@ -181,23 +203,31 @@ set(ecal_io_header_src
 if(NOT ECAL_LAYER_ICEORYX)
   set(ecal_io_mem_header_src
       src/io/ecal_memfile.h
+      src/io/ecal_memfile_broadcast.h
+      src/io/ecal_memfile_broadcast_reader.h
+      src/io/ecal_memfile_broadcast_writer.h
       src/io/ecal_memfile_db.h
       src/io/ecal_memfile_info.h
       src/io/ecal_memfile_mtx.h
       src/io/ecal_memfile_os.h
       src/io/ecal_memfile_pool.h
       src/io/ecal_memfile_sync.h
+      src/io/ecal_named_mutex.h
+      src/io/ecal_named_mutex_base.h
   )
 
   if(WIN32)
     set(ecal_io_mem_header_win_src
         src/io/win32/ecal_memfile_mtx.h
+        src/io/win32/ecal_named_mutex_impl.h
     )
   endif()
 
   if(UNIX)
     set(ecal_io_mem_header_linux_src
         src/io/linux/ecal_memfile_mtx.h
+        src/io/linux/ecal_named_mutex_impl.h
+        $<$<OR:$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>,$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>>:src/io/linux/ecal_named_mutex_robust_clocklock_impl.h>
   )
   endif()
 endif(NOT ECAL_LAYER_ICEORYX)
@@ -421,7 +451,11 @@ target_compile_definitions(${PROJECT_NAME}
   PUBLIC
     ASIO_STANDALONE
     ASIO_DISABLE_VISIBILITY
-  PRIVATE eCAL_EXPORTS)
+  PRIVATE
+    eCAL_EXPORTS
+    $<$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>:ECAL_HAS_CLOCKLOCK_MUTEX>
+    $<$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>:ECAL_HAS_ROBUST_MUTEX>
+    $<$<BOOL:${ECAL_USE_CLOCKLOCK_MUTEX}>:ECAL_USE_CLOCKLOCK_MUTEX>)
 
 if(ECAL_LAYER_ICEORYX)
   find_package(iceoryx_posh REQUIRED)
@@ -437,10 +471,6 @@ if(ECAL_NPCAP_SUPPORT)
       udpcap
   )
 endif(ECAL_NPCAP_SUPPORT)
-
-if(ECAL_MONOTONIC_CLOCK_MUTEX)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE ECAL_MONOTONIC_CLOCK_MUTEX)
-endif()
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE 

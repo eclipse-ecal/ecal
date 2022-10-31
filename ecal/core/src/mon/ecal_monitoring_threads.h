@@ -29,9 +29,11 @@
 #include "ecal_thread.h"
 #include "io/udp_receiver.h"
 
+#ifndef ECAL_LAYER_ICEORYX
 #include "io/ecal_memfile.h"
 #include "io/ecal_memfile_broadcast.h"
 #include "io/ecal_memfile_broadcast_reader.h"
+#endif
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -64,6 +66,7 @@ namespace eCAL
     RegMessageCallbackT  m_reg_cb;
   };
 
+#ifndef ECAL_LAYER_ICEORYX
   class CMemfileRegistrationReceiveThread
   {
   public:
@@ -75,11 +78,12 @@ namespace eCAL
   protected:
     int ThreadFun();
 
-    CThread        m_reg_rcv_thread;
-    RegMessageCallbackT  m_reg_cb;
+    CThread                    m_reg_rcv_thread;
+    RegMessageCallbackT        m_reg_cb;
     CMemoryFileBroadcast       m_memfile_broadcast;
     CMemoryFileBroadcastReader m_memfile_broadcast_reader;
   };
+#endif
 
   class CLoggingReceiveThread
   {

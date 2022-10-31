@@ -24,9 +24,11 @@
 #pragma once
 
 #include <string>
+#include <memory>
 
 #include <ecal/ecal_os.h>
 #include "ecal_memfile_mtx.h"
+#include "ecal_named_mutex.h"
 
 #ifdef ECAL_OS_WINDOWS
 
@@ -52,16 +54,16 @@ namespace eCAL
     {
       refcnt      = 0;
       remove      = false;
-      mutex       = 0;
       memfile     = 0;
       map_region  = 0;
       mem_address = 0;
       size        = 0;
       exists      = false;
+      mutex       = std::make_shared<CNamedMutex>();
     }
     int          refcnt;
     bool         remove;
-    MutexT       mutex;
+    std::shared_ptr<CNamedMutex>  mutex;
     MemFileT     memfile;
     MapRegionT   map_region;
     void*        mem_address;

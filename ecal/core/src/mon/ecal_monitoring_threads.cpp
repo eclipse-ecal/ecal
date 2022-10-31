@@ -77,6 +77,7 @@ namespace eCAL
     return 0;
   }
 
+#ifndef ECAL_LAYER_ICEORYX
   CMemfileRegistrationReceiveThread::CMemfileRegistrationReceiveThread(RegMessageCallbackT reg_cb_) :
     m_reg_cb(reg_cb_)
   {
@@ -115,6 +116,7 @@ namespace eCAL
     }
     return return_value;
   }
+#endif
 
   CLoggingReceiveThread::CLoggingReceiveThread(LogMessageCallbackT log_cb_) :
     m_network_mode(false), m_log_cb(log_cb_)

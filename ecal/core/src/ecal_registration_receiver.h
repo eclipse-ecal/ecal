@@ -33,8 +33,11 @@
 #include "ecal_thread.h"
 
 #include "io/rcv_sample.h"
+
+#ifndef ECAL_LAYER_ICEORYX
 #include "io/ecal_memfile_broadcast.h"
 #include "io/ecal_memfile_broadcast_reader.h"
+#endif
 
 #include <string>
 #include <atomic>
@@ -56,6 +59,7 @@ namespace eCAL
     size_t ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_);
   };
 
+#ifndef ECAL_LAYER_ICEORYX
   class CMemfileRegistrationReceiver
   {
   public:
@@ -69,6 +73,7 @@ namespace eCAL
     bool m_created = false;
     eCAL::CMemoryFileBroadcastReader* m_memfile_broadcast_reader;
   };
+#endif
 
   class CRegistrationReceiver
   {
@@ -104,10 +109,12 @@ namespace eCAL
     CThread                   m_reg_rcv_thread;
     CUdpRegistrationReceiver  m_reg_rcv_process;
 
+#ifndef ECAL_LAYER_ICEORYX
     eCAL::CMemoryFileBroadcast       m_memfile_broadcast;
     eCAL::CMemoryFileBroadcastReader m_memfile_broadcast_reader;
     CMemfileRegistrationReceiver     m_memfile_reg_rcv;
     CThread                          m_memfile_reg_rcv_thread;
+#endif
 
     bool m_use_network_monitoring;
     bool m_use_memfile_monitoring;

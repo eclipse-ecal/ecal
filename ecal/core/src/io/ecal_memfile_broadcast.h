@@ -33,16 +33,8 @@
 
 #include <ecal/ecal.h>
 
-#ifndef PADDING_DISABLED
-#ifdef __GNUC__
-#define PADDING_DISABLED( __DECLARATION__ ) __DECLARATION__ __attribute__((__packed__))
-#endif
-#ifdef _MSC_VER
-#define PADDING_DISABLED( __DECLARATION__ ) __pragma( pack(push, 1) ) __DECLARATION__ __pragma( pack(pop))
-#endif
-#endif
-
-namespace eCAL {
+namespace eCAL 
+{
 
   class CMemoryFile;
 
@@ -65,7 +57,7 @@ namespace eCAL {
     return name + "_" + std::to_string(memfile_id);
   }
 
-  enum class eMemfileBroadcastMessageType
+  enum class eMemfileBroadcastMessageType : std::int32_t
   {
     INVALID,
     PAYLOAD_MEMFILE_CREATED,
@@ -74,13 +66,15 @@ namespace eCAL {
     //PAYLOAD_MEMFILE_HEARTBEAT
   };
 
-  PADDING_DISABLED(struct SMemfileBroadcastMessage
+#pragma pack(push, 1)
+  struct SMemfileBroadcastMessage
   {
     std::int32_t process_id;
     TimestampT timestamp;
     UniqueIdT payload_memfile_id;
     eMemfileBroadcastMessageType type;
-  });
+  };
+#pragma pack(pop)
 
   typedef std::vector<const SMemfileBroadcastMessage*> MemfileBroadcastMessageListT;
 
@@ -101,7 +95,6 @@ namespace eCAL {
     bool ReceiveBroadcast(MemfileBroadcastMessageListT& message_list, TimestampT timeout, bool enable_loopback = false);
 
   private:
-    bool IsMemfileInitialized(const void * memfile_address) const;
     bool IsMemfileVersionCompatible(const void * memfile_address) const;
     void ResetMemfile(void * memfile_address);
 
