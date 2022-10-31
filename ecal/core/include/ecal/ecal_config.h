@@ -49,6 +49,8 @@ namespace eCAL
     ECAL_API int               GetUdpMulticastSndBufSizeBytes       ();
     ECAL_API int               GetUdpMulticastRcvBufSizeBytes       ();
 
+    ECAL_API bool              IsUdpMulticastJoinAllIfEnabled       ();
+
     ECAL_API int               GetMaxUdpBandwidthBytesPerSecond     ();
 
     ECAL_API bool              IsUdpMulticastRecEnabled             ();
@@ -89,7 +91,7 @@ namespace eCAL
     // sys
     /////////////////////////////////////
 
-    //ECAL_API std::string       GetEcalSysFilterExcludeList          ();
+    ECAL_API std::string         GetEcalSysFilterExcludeList          ();
 
     /////////////////////////////////////
     // publisher

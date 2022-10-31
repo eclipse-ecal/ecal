@@ -25,7 +25,6 @@ REQUIRED)
 
 find_package(tclap REQUIRED)
 find_package(Protobuf REQUIRED)
-find_package(simpleini REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC OFF) # Reason for being turned off: AutoUIC will prevent VS from detecting changes in .ui files
@@ -33,14 +32,10 @@ set(CMAKE_AUTORCC OFF) # Reason for being turned off: AutoRCC will create an ent
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(source_files
-    src/convert_utf.cpp
-    src/convert_utf.h
     src/ecalsys_gui.cpp
     src/ecalsys_gui.h
     src/ecalsys_service.cpp
     src/ecalsys_service.h
-    src/ecalsys_settings.cpp
-    src/ecalsys_settings.h
     src/globals.h
     src/help_window.cpp
     src/help_window.h
@@ -146,7 +141,7 @@ set(ui_files
 )
 
 if(UNIX)
-  set_source_files_properties(src/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
+  #set_source_files_properties(src/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
 # compile qt resource files and ui files
@@ -171,13 +166,15 @@ target_link_libraries (${PROJECT_NAME}
     CustomQt
     CustomTclap
     tclap::tclap
+    eCAL::core
     eCAL::sys_core
     protobuf::libprotobuf
-    simpleini::simpleini
     EcalParser
     QEcalParser
     eCAL::ecal-utils
 )
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -227,7 +224,7 @@ if (UNIX)
             DESTINATION "${CMAKE_INSTALL_DATADIR}/mime/packages/")
 
     INSTALL (FILES "${CMAKE_CURRENT_LIST_DIR}/mimetype/application-ecalsys.svg"
-            DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/mimetypes/")
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/Humanity/scalable/mimetypes/")
 endif()
 
 ecal_install_app(${PROJECT_NAME} START_MENU_NAME "eCAL Sys")

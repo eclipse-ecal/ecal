@@ -79,6 +79,8 @@ target_link_libraries(${PROJECT_NAME}
   eCAL::core_pb
 )
 
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+
 # Create a source tree that mirrors the filesystem
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
     FILES

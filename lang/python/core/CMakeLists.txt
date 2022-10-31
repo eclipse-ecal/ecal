@@ -45,6 +45,8 @@ target_link_libraries(${PROJECT_NAME}
         eCAL::core_pb
 )
 
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+
 if (WIN32)
     add_dependencies(${PROJECT_NAME} copy_ecal_core_dll)
 endif()

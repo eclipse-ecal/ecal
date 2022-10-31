@@ -33,10 +33,13 @@ public:
 
 protected:
   void contextMenuEvent(QContextMenuEvent *event) override;
+  void changeEvent(QEvent *event) override;
 
 private slots:
   void openDialog();
 
+private:
+  void adaptIconsToTheme();
 
 private:
   QAction* open_dialog_action_;

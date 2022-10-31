@@ -1,7 +1,7 @@
 // Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
-#include "ecal_mon_defs.h"
+#include "ecal_mon_cli_defs.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
@@ -25,8 +25,8 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_DEFAULT
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION ECAL_MON_VERSION_MAJOR, ECAL_MON_VERSION_MINOR, ECAL_MON_VERSION_PATCH, 0
- PRODUCTVERSION ECAL_MON_VERSION_MAJOR, ECAL_MON_VERSION_MINOR, ECAL_MON_VERSION_PATCH, 0
+ FILEVERSION ECAL_MON_CLI_VERSION_MAJOR, ECAL_MON_CLI_VERSION_MINOR, ECAL_MON_CLI_VERSION_PATCH, 0
+ PRODUCTVERSION ECAL_MON_CLI_VERSION_MAJOR, ECAL_MON_CLI_VERSION_MINOR, ECAL_MON_CLI_VERSION_PATCH, 0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -43,12 +43,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Continental Automotive Systems"
             VALUE "FileDescription", "eCAL Monitor CLI"
-            VALUE "FileVersion", ECAL_MON_VERSION
-            VALUE "InternalName", "ecal_mon.exe"
+            VALUE "FileVersion", ECAL_MON_CLI_VERSION
+            VALUE "InternalName", "ecal_mon_cli.exe"
             VALUE "LegalCopyright", "Continental Automotive Systems. All Rights Reserved."
-            VALUE "OriginalFilename", "ecal_mon.exe"
-            VALUE "ProductName", ECAL_MON_NAME
-            VALUE "ProductVersion", ECAL_MON_VERSION
+            VALUE "OriginalFilename", "ecal_mon_cli.exe"
+            VALUE "ProductName", ECAL_MON_CLI_NAME
+            VALUE "ProductVersion", ECAL_MON_CLI_VERSION
         END
     END
     BLOCK "VarFileInfo"

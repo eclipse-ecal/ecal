@@ -47,6 +47,8 @@ target_link_libraries(${PROJECT_NAME} eCAL::hdf5 eCAL::proto)
 
 target_link_libraries(${PROJECT_NAME} protobuf::libprotobuf)
 
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+
 ecal_install_sample(${PROJECT_NAME})
 
 if(MSVC)

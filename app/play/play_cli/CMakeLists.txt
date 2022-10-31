@@ -18,13 +18,10 @@
 
 project(play)
 
-find_package(simpleini REQUIRED)
 find_package(tclap REQUIRED)
 find_package(termcolor REQUIRED)
 
 set(source_files
-  src/convert_utf.cpp
-  src/convert_utf.h
   src/ecal_play_cli.cpp
   src/ecal_play_service.cpp
   src/ecal_play_service.h
@@ -35,10 +32,6 @@ if(WIN32)
       resources/resource.h
       resources/win32_resources.rc
   )
-endif()
-
-if(UNIX)
-  set_source_files_properties(src/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
 ecal_add_app_console(${PROJECT_NAME}
@@ -52,12 +45,13 @@ target_compile_definitions(${PROJECT_NAME}
   PRIVATE $<$<BOOL:${MSVC}>:PCRE_STATIC;_UNICODE>)
 
 target_link_libraries(${PROJECT_NAME}
-    simpleini::simpleini
     termcolor::termcolor
     tclap::tclap
     eCAL::play_core
     eCAL::ecal-utils
 )
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14) 
 
 # Create a source tree that mirrors the filesystem
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"

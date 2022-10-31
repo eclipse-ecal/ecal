@@ -60,6 +60,7 @@ namespace eCAL
                  m_topic_type(""),
                  m_topic_size(0),
                  m_connected(false),
+                 m_read_buf_received(false),
                  m_read_time(0),
                  m_receive_timeout(0),
                  m_receive_time(0),
@@ -107,9 +108,6 @@ namespace eCAL
     std::stringstream counter;
     counter << std::chrono::steady_clock::now().time_since_epoch().count();
     m_topic_id = counter.str();
-
-    // create receive event
-    gOpenEvent(&m_receive_event);
 
     // set registration expiration
     std::chrono::milliseconds registration_timeout(Config::GetRegistrationTimeoutMs());
@@ -160,9 +158,6 @@ namespace eCAL
       std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
       m_event_callback_map.clear();
     }
-
-    // destroy receive event
-    gCloseEvent(m_receive_event);
 
     // reset defaults
     m_created                 = false;
@@ -359,21 +354,36 @@ namespace eCAL
     return(true);
   }
 
-  bool CDataReader::Receive(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */)
+  bool CDataReader::Receive(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ms_ /* = 0 */)
   {
-    if(!m_created) return(false);
+    if (!m_created) return(false);
+
+    std::unique_lock<std::mutex> read_buffer_lock(m_read_buf_mutex);
+
+    // No need to wait (for whatever time) if something has been received)
+    if (!m_read_buf_received)
+    {
+      if (rcv_timeout_ms_ < 0)
+      {
+        m_read_buf_cv.wait(read_buffer_lock, [this]() { return this->m_read_buf_received; });
+      }
+      else if (rcv_timeout_ms_ > 0)
+      {
+        m_read_buf_cv.wait_for(read_buffer_lock, std::chrono::milliseconds(rcv_timeout_ms_), [this]() { return this->m_read_buf_received; });
+      }
+    }
 
     // did we receive new samples ?
-    if(gWaitForEvent(m_receive_event, rcv_timeout_))
+    if (m_read_buf_received)
     {
 #ifndef NDEBUG
       // log it
       Logging::Log(log_level_debug3, m_topic_name + "::CDataReader::Receive");
 #endif
       // copy content to target string
-      std::lock_guard<std::mutex> lock(m_read_buf_sync);
       buf_.clear();
       buf_.swap(m_read_buf);
+      m_read_buf_received = false;
 
       // apply time
       if(time_) *time_ = m_read_time;
@@ -381,6 +391,7 @@ namespace eCAL
       // return success
       return(true);
     }
+
     return(false);
   }
 
@@ -463,13 +474,14 @@ namespace eCAL
     if(!processed)
     {
       // push sample into read buffer
-      std::lock_guard<std::mutex> lock1(m_read_buf_sync);
+      std::lock_guard<std::mutex> read_buffer_lock(m_read_buf_mutex);
       m_read_buf.clear();
       m_read_buf.assign(payload_, payload_ + size_);
       m_read_time = time_;
+      m_read_buf_received = true;
 
       // inform receive
-      gSetEvent(m_receive_event);
+      m_read_buf_cv.notify_one();
 #ifndef NDEBUG
       // log it
       Logging::Log(log_level_debug3, m_topic_name + "::CDataReader::AddSample::Receive::Buffered");

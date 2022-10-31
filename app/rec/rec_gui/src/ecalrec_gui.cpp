@@ -431,6 +431,11 @@ void EcalRecGui::restoreLayout()
     if (theme_variant.toInt() == static_cast<int>(Theme::Dark))
       setTheme(Theme::Dark);
   }
+  else
+  {
+    // Default to Dark Theme, if nothing has been set
+    setTheme(Theme::Dark);
+  }
 
   if (geometry_variant.isValid() && state_variant.isValid())
   {
@@ -469,7 +474,7 @@ void EcalRecGui::saveInitialLayout()
 
 void EcalRecGui::resetLayout()
 {
-  setTheme(Theme::Default);
+  setTheme(Theme::Dark);
 
   topic_widget_           ->resetLayout();
   recorder_manager_widget_->resetLayout();

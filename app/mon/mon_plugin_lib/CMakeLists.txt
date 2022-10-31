@@ -47,6 +47,8 @@ target_link_libraries(${PROJECT_NAME}
     Qt5::Widgets
 )
 
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14) 
+
 ecal_install_library(${PROJECT_NAME})
 install(DIRECTORY
   "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk

@@ -9,7 +9,7 @@
         <file alias="CLEAR">flaticon/Freepik/broom.svg</file>
         <file alias="EXPAND">flaticon/Freepik/expand.svg</file>
         <file alias="COLLAPSE">flaticon/Freepik/collapse.svg</file>
-        <file alias="COMMAND_WINDOW">flaticon/Freepik/command_window.svg</file>
+        <file alias="COMMAND_WINDOW">lightmode/console.svg</file>
         <file alias="EYE">flaticon/Freepik/eye.svg</file>
         <file alias="FILTER_CANCEL">flaticon/Freepik/filter_cancel.svg</file>
         <file alias="FIND">flaticon/Freepik/loupe.svg</file>
@@ -95,5 +95,8 @@
         <file alias="ADD_FILE">FlorianReimold/add_file.svg</file>
         <file alias="SHOW">MuraruMihai/show.svg</file>
         <file alias="HIDE">MuraruMihai/hide.svg</file>
+    </qresource>
+    <qresource prefix="/ecalicons/darkmode">
+        <file alias="COMMAND_WINDOW">darkmode/console.svg</file>
     </qresource>
 </RCC>

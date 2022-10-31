@@ -37,10 +37,14 @@ protected:
   void contextMenuEvent(QContextMenuEvent* event) override;
   void resizeEvent(QResizeEvent* event) override;
   void showEvent(QShowEvent *event) override;
+  void changeEvent(QEvent *event) override;
 
 private slots:
   void openDialog();
   void moveOverlayButton();
+
+private:
+  void adaptIconsToTheme();
 
 private:
   QAction* open_dialog_action_;

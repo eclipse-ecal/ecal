@@ -16,22 +16,22 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(mon)
+project(mon_cli)
 
 find_package(Protobuf REQUIRED)
 find_package(tclap REQUIRED)
 
-set(ecalmon_src
-  src/ecal_mon.cpp
+set(ecalmon_cli_src
+  src/ecal_mon_cli.cpp
 )
 
 if(WIN32)
-  set(ecalmon_win_src
-    src/ecal_mon.rc
+  set(ecalmon_cli_win_src
+    src/ecal_mon_cli.rc
   )
 endif()
 
-ecal_add_app_console(${PROJECT_NAME} ${ecalmon_src} ${ecalmon_win_src})
+ecal_add_app_console(${PROJECT_NAME} ${ecalmon_cli_src} ${ecalmon_cli_win_src})
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
@@ -45,7 +45,8 @@ target_link_libraries(${PROJECT_NAME}
   protobuf::libprotobuf
   tclap::tclap
   eCAL::core
-  eCAL::core_pb)
+  eCAL::pb)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14) 
 
 ecal_install_app(${PROJECT_NAME})
 

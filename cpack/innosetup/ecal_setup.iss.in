@@ -46,7 +46,9 @@ OutputBaseFilename={#OutputName}
 Compression=lzma2
 SolidCompression=yes
 ChangesAssociations=yes
-PrivilegesRequired=admin
+; PrivilegesRequired=admin
+; Only available in Version 6 and above:
+PrivilegesRequiredOverridesAllowed=dialog
 ArchitecturesInstallIn64BitMode=x64
 ChangesEnvironment=true
 VersionInfoVersion={#AppVersion}
@@ -137,29 +139,54 @@ Name: "{group}\{cm:UninstallProgram,{#AppName}}";     Filename: "{uninstallexe}"
 Name: "{commondesktop}\eCAL Launcher";                Filename: "{app}\bin\ecal_launcher.exe"; Tasks: desktopicon; Components: applications
 
 [Registry]
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "ECAL_HOME"; ValueData: "{app}";                                     Flags: uninsdeletevalue;  Components: applications
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "ECAL_DATA"; ValueData: "{commonappdata}\eCAL";                                 Flags: uninsdeletevalue;  Components: applications
+; Root key HKA is only available in Version 6 and above
+; In Case of Non-Admin install mode, HKA will be resolved to HKCU, otherwise HKLM - see https://jrsoftware.org/ishelp/index.php?topic=setup_privilegesrequiredoverridesallowed
+Root: HKA; Subkey: {code:GetEnvironmentSubkey};                         ValueType: string; ValueName: "ECAL_HOME"; ValueData: "{app}";                                  Flags: uninsdeletevalue; Components: applications
+Root: HKA; Subkey: {code:GetEnvironmentSubkey};                         ValueType: string; ValueName: "ECAL_DATA"; ValueData: "{commonappdata}\eCAL";                   Flags: uninsdeletevalue; Components: applications
 
-Root: HKCR; Subkey: ".ecalrec";                                                     ValueType: string; ValueName: "";          ValueData: "ecal_rec_gui";                              Flags: uninsdeletevalue;  Components: applications
-Root: HKCR; Subkey: "ecal_rec_gui";                                                 ValueType: string; ValueName: "";          ValueData: "eCAL Recorder Configuration";               Flags: uninsdeletekey;    Components: applications
-Root: HKCR; Subkey: "ecal_rec_gui\DefaultIcon";                                     ValueType: string; ValueName: "";          ValueData: "{app}\bin\ecal_rec_gui.exe,0";                                        Components: applications
-Root: HKCR; Subkey: "ecal_rec_gui\shell\open\command";                              ValueType: string; ValueName: "";          ValueData: """{app}\bin\ecal_rec_gui.exe"" ""%1""";                               Components: applications
+Root: HKA; Subkey: "SOFTWARE\Classes\.ecalrec";                         ValueType: string; ValueName: "";          ValueData: "ecal_rec_gui";                           Flags: uninsdeletevalue; Components: applications
+Root: HKA; Subkey: "SOFTWARE\Classes\ecal_rec_gui";                     ValueType: string; ValueName: "";          ValueData: "eCAL Recorder Configuration";            Flags: uninsdeletekey;   Components: applications
+Root: HKA; Subkey: "SOFTWARE\Classes\ecal_rec_gui\DefaultIcon";         ValueType: string; ValueName: "";          ValueData: "{app}\bin\ecal_rec_gui.exe,0";                                    Components: applications
+Root: HKA; Subkey: "SOFTWARE\Classes\ecal_rec_gui\shell\open\command";  ValueType: string; ValueName: "";          ValueData: """{app}\bin\ecal_rec_gui.exe"" ""%1""";                           Components: applications
 
-Root: HKCR; Subkey: ".ecalmeas";                                                    ValueType: string; ValueName: "";          ValueData: "ecal_play_gui";                             Flags: uninsdeletevalue;  Components: applications
-Root: HKCR; Subkey: "ecal_play_gui";                                                ValueType: string; ValueName: "";          ValueData: "eCAL Player Configuration";                 Flags: uninsdeletekey;    Components: applications
-Root: HKCR; Subkey: "ecal_play_gui\DefaultIcon";                                    ValueType: string; ValueName: "";          ValueData: "{app}\bin\ecal_play_gui.exe,0";                                       Components: applications
-Root: HKCR; Subkey: "ecal_play_gui\shell\open\command";                             ValueType: string; ValueName: "";          ValueData: """{app}\bin\ecal_play_gui.exe"" ""%1""";                              Components: applications
+Root: HKA; Subkey: "SOFTWARE\Classes\.ecalmeas";                        ValueType: string; ValueName: "";          ValueData: "ecal_play_gui";                          Flags: uninsdeletevalue; Components: applications
+Root: HKA; Subkey: "SOFTWARE\Classes\ecal_play_gui";                    ValueType: string; ValueName: "";          ValueData: "eCAL Player Configuration";              Flags: uninsdeletekey;   Components: applications
+Root: HKA; Subkey: "SOFTWARE\Classes\ecal_play_gui\DefaultIcon";        ValueType: string; ValueName: "";          ValueData: "{app}\bin\ecal_play_gui.exe,0";                                   Components: applications
+Root: HKA; Subkey: "SOFTWARE\Classes\ecal_play_gui\shell\open\command"; ValueType: string; ValueName: "";          ValueData: """{app}\bin\ecal_play_gui.exe"" ""%1""";                          Components: applications
 
-Root: HKCR; Subkey: ".ecalsys";                                                     ValueType: string; ValueName: "";          ValueData: "ecal_sys_gui";                              Flags: uninsdeletevalue;  Components: applications
-Root: HKCR; Subkey: "ecal_sys_gui";                                                 ValueType: string; ValueName: "";          ValueData: "eCAL Sys Configuration";                    Flags: uninsdeletekey;    Components: applications
-Root: HKCR; Subkey: "ecal_sys_gui\DefaultIcon";                                     ValueType: string; ValueName: "";          ValueData: "{app}\bin\ecal_sys_gui.exe,0";                                       Components: applications
-Root: HKCR; Subkey: "ecal_sys_gui\shell\open\command";                              ValueType: string; ValueName: "";          ValueData: """{app}\bin\ecal_sys_gui.exe"" ""%1""";                              Components: applications
+Root: HKA; Subkey: "SOFTWARE\Classes\.ecalsys";                         ValueType: string; ValueName: "";          ValueData: "ecal_sys_gui";                           Flags: uninsdeletevalue; Components: applications
+Root: HKA; Subkey: "SOFTWARE\Classes\ecal_sys_gui";                     ValueType: string; ValueName: "";          ValueData: "eCAL Sys Configuration";                 Flags: uninsdeletekey;   Components: applications
+Root: HKA; Subkey: "SOFTWARE\Classes\ecal_sys_gui\DefaultIcon";         ValueType: string; ValueName: "";          ValueData: "{app}\bin\ecal_sys_gui.exe,0";                                    Components: applications
+Root: HKA; Subkey: "SOFTWARE\Classes\ecal_sys_gui\shell\open\command";  ValueType: string; ValueName: "";          ValueData: """{app}\bin\ecal_sys_gui.exe"" ""%1""";                           Components: applications
 
 [Code]
 // add eCAL to system path
 const
   ModPathName = 'modifypath';
-  ModPathType = 'system';
+var
+  ModPathType: String;
+
+// Settings for modpath.iss weather PATH should be extented for user only or system wide
+function PrepareToInstall(var NeedsRestart: Boolean) : String;
+begin
+	if (IsAdminInstallMode() = true) then begin
+	  ModPathType := 'system';
+	end else begin
+	  ModPathType := 'user';
+	end;
+	NeedsRestart := false;
+	Result := '';
+end;
+
+// Get reg key for environment variables depending on install mode
+function GetEnvironmentSubkey(Param: String) : String;
+begin
+	if (IsAdminInstallMode() = true) then begin
+	  Result := 'SYSTEM\CurrentControlSet\Control\Session Manager\Environment';
+	end else begin
+	  Result := 'Environment';
+	end;
+end;
 
 function ModPathDir(): TArrayOfString;
   begin

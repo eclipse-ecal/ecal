@@ -37,7 +37,7 @@ QEcalParserLineEdit::QEcalParserLineEdit(const QString &contents, QWidget *paren
   : QLineEdit(contents, parent)
 {
   open_dialog_action_ = new QAction(this);
-  open_dialog_action_->setIcon(QIcon(":/qecalparser/SHOW_DIALOG"));
+  open_dialog_action_->setIcon(QIcon(":/qecalparser/light/SHOW_DIALOG"));
   addAction(open_dialog_action_, QLineEdit::ActionPosition::TrailingPosition);
   open_dialog_action_->setToolTip(tr("Advanced editor..."));
   open_dialog_action_->setText(tr("Advanced editor..."));
@@ -66,4 +66,30 @@ void QEcalParserLineEdit::contextMenuEvent(QContextMenuEvent *event)
   menu->exec(event->globalPos());
 
   delete menu;
+}
+
+void QEcalParserLineEdit::changeEvent(QEvent* event)
+{
+  QLineEdit::changeEvent(event);
+
+  if (event->type() == QEvent::Type::PaletteChange)
+  {
+    adaptIconsToTheme();
+    event->accept();
+  }
+}
+
+void QEcalParserLineEdit::adaptIconsToTheme()
+{
+  // Get background of input fields
+  const QColor background = palette().color(QPalette::ColorRole::Base);
+
+  // Check if the bg color is dark or light
+  const bool dark_mode = (background.toHsl().lightness() < 128);
+
+  // Select icon of button based on the background
+  if (dark_mode)
+    open_dialog_action_->setIcon(QIcon(":/qecalparser/dark/SHOW_DIALOG"));
+  else
+    open_dialog_action_->setIcon(QIcon(":/qecalparser/light/SHOW_DIALOG"));
 }

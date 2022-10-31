@@ -46,12 +46,12 @@
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
-#include <ecal/core/pb/monitoring.pb.h>
+#include "ecal/core/pb/monitoring.pb.h"
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 
-#include "ecal_mon_defs.h"
+#include "ecal_mon_cli_defs.h"
 
 #define GetMessageA GetMessage
 
@@ -99,8 +99,8 @@ int main(int argc, char** argv)
     /* Create & Parse the command line                                      */
     /************************************************************************/
     // Define the command line object.
-    std::string version_str = std::string(ECAL_MON_VERSION) + " (" + std::string(ECAL_MON_DATE) + ")";
-    TCLAP::CmdLine cmd(ECAL_MON_NAME, ' ' , version_str);
+    std::string version_str = std::string(ECAL_MON_CLI_VERSION) + " (" + std::string(ECAL_MON_CLI_DATE) + ")";
+    TCLAP::CmdLine cmd(ECAL_MON_CLI_NAME, ' ' , version_str);
 
     // Define the values from argument and add them to the command line.
     TCLAP::ValueArg<std::string> bandwidth_arg("b", "bandwidth", "display bandwidth used by topic", false, "", "string");
@@ -209,7 +209,7 @@ int main(int argc, char** argv)
     }
 
     // initialize eCAL API
-    eCAL::Initialize(0, nullptr, "eCALTopic", eCAL::Init::All);
+    eCAL::Initialize(0, nullptr, "eCALMon CLI", eCAL::Init::All);
 
     // set process state
     eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");

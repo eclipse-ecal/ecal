@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2019 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,32 +16,29 @@
  *
  * ========================= eCAL LICENSE =================================
 */
-
-/**
- * eCALSys configuration file
-**/
-
 #pragma once
 
 #include <string>
+#include <vector>
+#include <cstdint>
 
-class EcalsysSettings
+struct Service
 {
- public:
-  EcalsysSettings(void);
-  ~EcalsysSettings(void);
+  struct Method
+  {
+    std::string name;
+    std::string request_type;
+    std::string response_type;
+    int64_t call_count;
+  };
 
-  void Create(const std::string& configFile);
-  void Destroy();
-
-  // config
-  std::string   AppsFilterDenied()  { return (apps_filter_denied_); }
-
- protected:
-  void LoadIniFile(const std::string& configFile);
-
-  bool          is_init_;
-  std::string   file_name_;
-
-  std::string   apps_filter_denied_;
+  std::string name;
+  std::string id;
+  std::string host_name;
+  std::string process_name;
+  int32_t pid;
+  std::string unit_name;
+  int32_t registration_clock;
+  uint32_t tcp_port;
+  std::vector<Method> methods;
 };

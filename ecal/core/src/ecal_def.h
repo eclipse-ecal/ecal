@@ -52,6 +52,13 @@
 #define MON_LOG_FILTER_FILE                        ""
 #define MON_LOG_FILTER_UDP                         "info,warning,error,fatal"
 
+
+/**********************************************************************************************/
+/*                                     sys settings                                       */
+/**********************************************************************************************/
+/* sys app witch will not be imported from cloud */
+#define SYS_FILTER_EXCL                            "^eCALSysClient$|^eCALSysGUI$|^eCALSys$*"
+
 /**********************************************************************************************/
 /*                                     network settings                                       */
 /**********************************************************************************************/
@@ -68,6 +75,7 @@
 #define NET_UDP_MULTICAST_PORT_SAMPLE_OFF              2
 #define NET_UDP_MULTICAST_SNDBUF            (5*1024*1024)  /* 5 MByte */
 #define NET_UDP_MULTICAST_RCVBUF            (5*1024*1024)  /* 5 MByte */
+#define NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED      false
 
 #define NET_UDP_RECBUFFER_TIMEOUT                   1000   /* ms */
 #define NET_UDP_RECBUFFER_CLEANUP                     10   /* ms */

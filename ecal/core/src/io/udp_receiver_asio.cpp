@@ -20,6 +20,10 @@
 
 #include <io/udp_receiver_asio.h>
 
+#ifdef __linux__
+#include "linux/ecal_socket_option_linux.h"
+#endif
+
 namespace eCAL
 {
   ////////////////////////////////////////////////////////
@@ -108,6 +112,16 @@ namespace eCAL
     if (!m_broadcast && !m_unicast)
     {
       // join multicast group
+#ifdef __linux__
+      if (eCAL::Config::IsUdpMulticastJoinAllIfEnabled())
+      {
+        if (!set_socket_mcast_group_option(m_socket.native_handle(), ipaddr_, MCAST_JOIN_GROUP))
+        {
+          return(false);
+        }
+      }
+      else
+#endif
       {
         asio::error_code ec;
         m_socket.set_option(asio::ip::multicast::join_group(asio::ip::make_address(ipaddr_)), ec);
@@ -134,6 +148,16 @@ namespace eCAL
     if (!m_broadcast && !m_unicast)
     {
       // Leave multicast group
+#ifdef __linux__
+      if (eCAL::Config::IsUdpMulticastJoinAllIfEnabled())
+      {
+        if (!set_socket_mcast_group_option(m_socket.native_handle(), ipaddr_, MCAST_LEAVE_GROUP))
+        {
+          return(false);
+        }
+      }
+      else
+#endif
       {
         asio::error_code ec;
         m_socket.set_option(asio::ip::multicast::leave_group(asio::ip::make_address(ipaddr_)), ec);
