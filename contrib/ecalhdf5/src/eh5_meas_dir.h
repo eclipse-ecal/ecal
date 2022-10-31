@@ -37,337 +37,390 @@
 
 namespace eCAL
 {
-  namespace eh5
-  {
-    class HDF5MeasDir : virtual public HDF5MeasImpl
+    namespace eh5
     {
-    public:
-      /**
-      * @brief Constructor
-      **/
-      HDF5MeasDir();
+        class HDF5MeasDir : virtual public HDF5MeasImpl
+        {
+        public:
+            /**
+            * @brief Constructor
+            **/
+            HDF5MeasDir();
 
-      /**
-      * @brief Constructor
-      *
-      * @param path    input file path
-      **/
-      explicit HDF5MeasDir(const std::string& path, eAccessType access = eAccessType::RDONLY);
+            /**
+            * @brief Constructor
+            *
+            * @param path    input file path
+            **/
+            explicit HDF5MeasDir(const std::string& path, eAccessType access = eAccessType::RDONLY);
 
-      /**
-      * @brief Destructor
-      **/
-      ~HDF5MeasDir() override;
+            /**
+            * @brief Destructor
+            **/
+            ~HDF5MeasDir() override;
 
-      /**
-      * @brief Open file
-      *
-      * @param path     Input file path / measurement directory path
-      * @param access   Access type
-      *
-      * @return         true if succeeds, false if it fails
-      **/
-      bool Open(const std::string& path, eAccessType access = eAccessType::RDONLY) override;
+            /**
+            * @brief Open file
+            *
+            * @param path     Input file path / measurement directory path
+            * @param access   Access type
+            *
+            * @return         true if succeeds, false if it fails
+            **/
+            bool Open(const std::string& path, eAccessType access = eAccessType::RDONLY) override;
 
-      /**
-      * @brief Close file
-      *
-      * @return         true if succeeds, false if it fails
-      **/
-      bool Close() override;
+            /**
+            * @brief Close file
+            *
+            * @return         true if succeeds, false if it fails
+            **/
+            bool Close() override;
 
-      /**
-      * @brief Checks if file/measurement is ok
-      *
-      * @return  true if meas can be opened(read) or location is accessible(write), false otherwise
-      **/
-      bool IsOk() const override;
+            /**
+            * @brief Checks if file/measurement is ok
+            *
+            * @return  true if meas can be opened(read) or location is accessible(write), false otherwise
+            **/
+            bool IsOk() const override;
 
-      /**
-      * @brief Get the File Type Version of the current opened file
-      *
-      * @return       file version
-      **/
-      std::string GetFileVersion() const override;
+            /**
+            * @brief Get the File Type Version of the current opened file
+            *
+            * @return       file version
+            **/
+            std::string GetFileVersion() const override;
 
-      /**
-      * @brief Gets maximum allowed size for an individual file
-      *
-      * @return       maximum size in MB
-      **/
-      size_t GetMaxSizePerFile() const override;
+            /**
+            * @brief Gets maximum allowed size for an individual file
+            *
+            * @return       maximum size in MB
+            **/
+            size_t GetMaxSizePerFile() const override;
 
-      /**
-      * @brief Sets maximum allowed size for an individual file
-      *
-      * @param size   maximum size in MB
-      **/
-      void SetMaxSizePerFile(size_t size) override;
+            /**
+            * @brief Sets maximum allowed size for an individual file
+            *
+            * @param size   maximum size in MB
+            **/
+            void SetMaxSizePerFile(size_t size) override;
 
-      /**
-      * @brief Whether each Channel shall be writte in its own file
-      * 
-      * When enabled, data is clustered by channel and each channel is written
-      * to its own file. The filenames will consist of the basename and the 
-      * channel name.
-      * 
-      * @return true, if one file per channel is enabled
-      */
-      bool IsOneFilePerChannelEnabled() const override;
+            /**
+            * @brief Whether each Channel shall be writte in its own file
+            *
+            * When enabled, data is clustered by channel and each channel is written
+            * to its own file. The filenames will consist of the basename and the
+            * channel name.
+            *
+            * @return true, if one file per channel is enabled
+            */
+            bool IsOneFilePerChannelEnabled() const override;
 
-      /**
-      * @brief Enable / disable the creation of one individual file per channel
-      * 
-      * When enabled, data is clustered by channel and each channel is written
-      * to its own file. The filenames will consist of the basename and the 
-      * channel name.
-      * 
-      * @param enabled   Whether one file shall be created per channel
-      */
-      void SetOneFilePerChannelEnabled(bool enabled) override;
+            /**
+            * @brief Enable / disable the creation of one individual file per channel
+            *
+            * When enabled, data is clustered by channel and each channel is written
+            * to its own file. The filenames will consist of the basename and the
+            * channel name.
+            *
+            * @param enabled   Whether one file shall be created per channel
+            */
+            void SetOneFilePerChannelEnabled(bool enabled) override;
 
-      /**
-      * @brief Get the available channel names of the current opened file / measurement
-      *
-      * @return       channel names
-      **/
-      std::set<std::string> GetChannelNames() const override;
+            /**
+            * @brief Get the available channel names of the current opened file / measurement
+            *
+            * @return       channel names
+            **/
+            std::set<std::string> GetChannelNames() const override;
 
-      /**
-      * @brief Check if channel exists in measurement
-      *
-      * @param channel_name   name of the channel
-      *
-      * @return       true if exists, false otherwise
-      **/
-      bool HasChannel(const std::string& channel_name) const override;
+            /**
+            * @brief Check if channel exists in measurement
+            *
+            * @param channel_name   name of the channel
+            *
+            * @return       true if exists, false otherwise
+            **/
+            bool HasChannel(const std::string& channel_name) const override;
 
-      /**
-      * @brief Get the channel description for the given channel
-      *
-      * @param channel_name  channel name
-      *
-      * @return              channel description
-      **/
-      std::string GetChannelDescription(const std::string& channel_name) const override;
+            /**
+            * @brief Get the channel description for the given channel
+            *
+            * @param channel_name  channel name
+            *
+            * @return              channel description
+            **/
+            std::string GetChannelDescription(const std::string& channel_name) const override;
 
-      /**
-      * @brief Set description of the given channel
-      *
-      * @param channel_name    channel name
-      * @param description     description of the channel
-      **/
-      void SetChannelDescription(const std::string& channel_name, const std::string& description) override;
+            /**
+            * @brief Set description of the given channel
+            *
+            * @param channel_name    channel name
+            * @param description     description of the channel
+            **/
+            void SetChannelDescription(const std::string& channel_name, const std::string& description) override;
 
-      /**
-      * @brief Gets the channel type of the given channel
-      *
-      * @param channel_name  channel name
-      *
-      * @return              channel type
-      **/
-      std::string GetChannelType(const std::string& channel_name) const override;
+            /**
+            * @brief Gets the channel type of the given channel
+            *
+            * @param channel_name  channel name
+            *
+            * @return              channel type
+            **/
+            std::string GetChannelType(const std::string& channel_name) const override;
 
-      /**
-      * @brief Set type of the given channel
-      *
-      * @param channel_name  channel name
-      * @param type          type of the channel
-      **/
-      void SetChannelType(const std::string& channel_name, const std::string& type) override;
+            /**
+            * @brief Set type of the given channel
+            *
+            * @param channel_name  channel name
+            * @param type          type of the channel
+            **/
+            void SetChannelType(const std::string& channel_name, const std::string& type) override;
 
-      /**
-      * @brief Gets minimum timestamp for specified channel
-      *
-      * @param channel_name    channel name
-      *
-      * @return                minimum timestamp value
-      **/
-      long long GetMinTimestamp(const std::string& channel_name) const override;
+            /**
+            * @brief Gets minimum timestamp for specified channel
+            *
+            * @param channel_name    channel name
+            *
+            * @return                minimum timestamp value
+            **/
+            long long GetMinTimestamp(const std::string& channel_name) const override;
 
-      /**
-      * @brief Gets maximum timestamp for specified channel
-      *
-      * @param channel_name    channel name
-      *
-      * @return                maximum timestamp value
-      **/
-      long long GetMaxTimestamp(const std::string& channel_name) const override;
+            /**
+            * @brief Gets maximum timestamp for specified channel
+            *
+            * @param channel_name    channel name
+            *
+            * @return                maximum timestamp value
+            **/
+            long long GetMaxTimestamp(const std::string& channel_name) const override;
 
-      /**
-      * @brief Gets the header info for all data entries for the given channel
-      *        Header = timestamp + entry id
-      *
-      * @param [in]  channel_name  channel name
-      * @param [out] entries       header info for all data entries
-      *
-      * @return                    true if succeeds, false if it fails
-      **/
-      bool GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const override;
+            /**
+            * @brief Gets the header info for all data entries for the given channel
+            *        Header = timestamp + entry id
+            *
+            * @param [in]  channel_name  channel name
+            * @param [out] entries       header info for all data entries
+            *
+            * @return                    true if succeeds, false if it fails
+            **/
+            bool GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const override;
 
-      /**
-      * @brief Gets the header info for data entries for the given channel included in given time range (begin->end)
-      *        Header = timestamp + entry id
-      *
-      * @param [in]  channel_name channel name
-      * @param [in]  begin        time range begin timestamp
-      * @param [in]  end          time range end timestamp
-      * @param [out] entries      header info for data entries in given range
-      *
-      * @return                   true if succeeds, false if it fails
-      **/
-      bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const override;
+            /**
+            * @brief Gets the header info for data entries for the given channel included in given time range (begin->end)
+            *        Header = timestamp + entry id
+            *
+            * @param [in]  channel_name channel name
+            * @param [in]  begin        time range begin timestamp
+            * @param [in]  end          time range end timestamp
+            * @param [out] entries      header info for data entries in given range
+            *
+            * @return                   true if succeeds, false if it fails
+            **/
+            bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const override;
 
-      /**
-      * @brief Gets data size of a specific entry
-      *
-      * @param [in]  entry_id   Entry ID
-      * @param [out] size       Entry data size
-      *
-      * @return                 true if succeeds, false if it fails
-      **/
-      bool GetEntryDataSize(long long entry_id, size_t& size) const override;
+            /**
+            * @brief Gets data size of a specific entry
+            *
+            * @param [in]  entry_id   Entry ID
+            * @param [out] size       Entry data size
+            *
+            * @return                 true if succeeds, false if it fails
+            **/
+            bool GetEntryDataSize(long long entry_id, size_t& size) const override;
 
-      /**
-      * @brief Gets data from a specific entry
-      *
-      * @param [in]  entry_id   Entry ID
-      * @param [out] data       Entry data
-      *
-      * @return                 true if succeeds, false if it fails
-      **/
-      bool GetEntryData(long long entry_id, void* data) const override;
+            /**
+            * @brief Gets data from a specific entry
+            *
+            * @param [in]  entry_id   Entry ID
+            * @param [out] data       Entry data
+            *
+            * @return                 true if succeeds, false if it fails
+            **/
+            bool GetEntryData(long long entry_id, void* data) const override;
 
-      /**
-      * @brief Set measurement file base name
-      *
-      * @param base_name        File base name.
-      **/
-      void SetFileBaseName(const std::string& base_name) override;
+            /**
+            * @brief Set measurement file base name
+            *
+            * @param base_name        File base name.
+            **/
+            void SetFileBaseName(const std::string& base_name) override;
 
-      /**
-      * @brief Add entry to file
-      *
-      * @param data           data to be added
-      * @param size           size of the data
-      * @param snd_timestamp  send timestamp
-      * @param rcv_timestamp  receive timestamp
-      * @param channel_name   channel name
-      * @param id             message id
-      * @param clock          message clock
-      *
-      * @return               true if succeeds, false if it fails
-      **/
-      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) override;
+            /**
+            * @brief Add entry to file
+            *
+            * @param data           data to be added
+            * @param size           size of the data
+            * @param snd_timestamp  send timestamp
+            * @param rcv_timestamp  receive timestamp
+            * @param channel_name   channel name
+            * @param id             message id
+            * @param clock          message clock
+            *
+            * @return               true if succeeds, false if it fails
+            **/
+            bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) override;
 
-      typedef std::function<void(void)> CallbackFunction;
-      /**
-      * @brief Connect callback for pre file split notification
-      *
-      * @param cb   callback function
-      **/
-      void ConnectPreSplitCallback(CallbackFunction cb) override;
+            typedef std::function<void(void)> CallbackFunction;
+            /**
+            * @brief Connect callback for pre file split notification
+            *
+            * @param cb   callback function
+            **/
+            void ConnectPreSplitCallback(CallbackFunction cb) override;
 
-      /**
-      * @brief Disconnect pre file split callback
-      **/
-      void DisconnectPreSplitCallback() override;
+            /**
+            * @brief Disconnect pre file split callback
+            **/
+            void DisconnectPreSplitCallback() override;
+
+            /**
+            * @brief Enable GNU gzip compression filter and defines compression level
+            *
+            * @param level   compression level ranges from 0 which means no compression and 9 which highest compression
+            **/
+            virtual bool SetGZipCompressionFilter(unsigned level) override;
+
+            /**
+            * @brief Check if GNU Gzip filter is enabled or not
+            *
+            * @return               true if GNU Gzip filter is enabled with level between 1 - 9
+            **/
+            virtual bool IsGZipCompressionFilterEnabled() override;
+
+            /**
+            * @brief Enable szip compression filter
+            *
+            * @param options_mask     A bit-mask conveying the desired SZIP options; Valid values are H5_SZIP_EC_OPTION_MASK and H5_SZIP_NN_OPTION_MASK
+            *
+            * @param pixels_per_block The number of pixels or data elements in each data block
+            **/
+            virtual bool SetSZipCompressionFilter(unsigned options_mask, unsigned pixels_per_block) override;
+
+            /**
+            * @brief Check if szip filter is enabled or not
+            *
+            * @return               true if szip filter is enabled
+            **/
+            virtual bool IsSZipCompressionFilterEnabled() override;
+
+            /**
+            * @brief Sets the size of the chunks used to store a chunked layout dataset
+            *
+            * @param ndims     The number of dimensions of each chunk
+            *
+            * @param dim       An array defining the dividing factor to message length, in dataset elements, of each chunk
+            **/
+            virtual bool SetChunkDimensions(int ndims, unsigned long long dim[/*ndims*/]) override;
+
+            /**
+            * @brief Check if chunking is enabled or not
+            *
+            * @return               true if chunking is enabled
+            **/
+            virtual bool IsChunkingEnabled() override;
+
+            // =====================================================================
+            // ==== Reading Files
+            // =====================================================================
+        protected:
+            struct ChannelInfo
+            {
+                std::string type;
+                std::string description;
+                std::list<const eCAL::eh5::HDF5Meas*> files;
+
+                ChannelInfo() = default;
+                ChannelInfo(const std::string& type_, const std::string& description_)
+                        : type(type_)
+                        , description(description_)
+                {}
+            };
+
+            struct EntryInfo
+            {
+                long long                   file_id;
+                const eCAL::eh5::HDF5Meas* reader;
+
+                EntryInfo() : file_id(0), reader(nullptr) {}
+
+                EntryInfo(long long file_id_, const eCAL::eh5::HDF5Meas* reader_)
+                        : file_id(file_id_)
+                        , reader(reader_)
+                {}
+            };
+
+            typedef std::list<eCAL::eh5::HDF5Meas*>               HDF5Files;
+            typedef std::unordered_map<std::string, ChannelInfo>  ChannelInfoUMap;
+            typedef std::unordered_map<long long, EntryInfo>      EntriesByIdUMap;
+            typedef std::unordered_map<std::string, EntryInfoSet> EntriesByChannelUMap;
+
+            HDF5Files              file_readers_;
+            ChannelInfoUMap        channels_info_;
+            EntriesByIdUMap        entries_by_id_;
+            EntriesByChannelUMap   entries_by_chn_;
+
+            struct Channel
+            {
+                std::string   Description;
+                std::string   Type;
+                EntryInfoVect Entries;
+            };
+
+            typedef std::map<std::string, Channel> Channels;
+
+            Channels                 channels_;
+            eAccessType              access_;
+
+            std::list<std::string> GetHdfFiles(const std::string& path) const;
+
+            static inline bool HasHdf5Extension(const std::string& str)
+            {
+                std::string end(".hdf5");
+                if (end.size() > str.size()) return false;
+                return std::equal(end.rbegin(), end.rend(), str.rbegin());
+            }
+
+            bool OpenRX(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/);
 
 
-    // =====================================================================
-    // ==== Reading Files
-    // =====================================================================
-    protected:
-      struct ChannelInfo
-      {
-        std::string type;
-        std::string description;
-        std::list<const eCAL::eh5::HDF5Meas*> files;
+            // =====================================================================
+            // ==== Writing files
+            // =====================================================================
+        protected:
+            typedef std::unordered_map<std::string, std::unique_ptr<::eCAL::eh5::HDF5MeasImpl>> FileWriterMap;
 
-        ChannelInfo() = default;
-        ChannelInfo(const std::string& type_, const std::string& description_)
-          : type(type_)
-          , description(description_)
-        {}
-      };
+            std::string               output_dir_;                                          //!< The directory where the HDF5 files shall be placed when in CREATE mode
+            std::string               base_name_;                                           //!< The filename of HDF5 files when in CREATE mode. Will be postfixed by the channel name when in one_file_per_channel_ mode. Will be further postfixed by a number when the files are splitted.
+            bool                      one_file_per_channel_;                                //!< If true, one FileWriter will be created for each channel.
+            FileWriterMap             file_writers_;                                        //!< Map of {ChannelName -> FileWriter}. Grows for each new channel, if one_file_per_channel_ is true. Contains only one "" key otherwise that is used for all channels.
 
-      struct EntryInfo
-      {
-        long long                   file_id;
-        const eCAL::eh5::HDF5Meas* reader;
-
-        EntryInfo() : file_id(0), reader(nullptr) {}
-
-        EntryInfo(long long file_id_, const eCAL::eh5::HDF5Meas* reader_)
-          : file_id(file_id_)
-          , reader(reader_)
-        {}
-      };
-
-      typedef std::list<eCAL::eh5::HDF5Meas*>               HDF5Files;
-      typedef std::unordered_map<std::string, ChannelInfo>  ChannelInfoUMap;
-      typedef std::unordered_map<long long, EntryInfo>      EntriesByIdUMap;
-      typedef std::unordered_map<std::string, EntryInfoSet> EntriesByChannelUMap;
-
-      HDF5Files              file_readers_;
-      ChannelInfoUMap        channels_info_;
-      EntriesByIdUMap        entries_by_id_;
-      EntriesByChannelUMap   entries_by_chn_;
-
-      struct Channel
-      {
-        std::string   Description;
-        std::string   Type;
-        EntryInfoVect Entries;
-      };
-
-      typedef std::map<std::string, Channel> Channels;
-
-      Channels                 channels_;
-      eAccessType              access_;
-
-      std::list<std::string> GetHdfFiles(const std::string& path) const;
-
-      static inline bool HasHdf5Extension(const std::string& str)
-      {
-        std::string end(".hdf5");
-        if (end.size() > str.size()) return false;
-        return std::equal(end.rbegin(), end.rend(), str.rbegin());
-      }
-
-      bool OpenRX(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/);
+            size_t                     max_size_per_file_;                                   //!< Maximum file size after which the File Writer shall split
+            CallbackFunction           cb_pre_split_;                                        //!< Callback that is executed before a new hdf5 file is created during splitting. Will be executed by each file writer individually.
+            unsigned                   gzip_compression_level_;                              //!< Compression level for GNU Gzip filter
+            bool                       szip_compression_enabled_;                            //!< If true, this means that szip options are correctly set, and filter is enabled
+            unsigned                   options_mask_;                                        //!< A bit-mask conveying the desired SZIP options; Valid values are H5_SZIP_EC_OPTION_MASK and H5_SZIP_NN_OPTION_MASK.
+            unsigned                   pixels_per_block_;                                    //!< The number of pixels or data elements in each data block
+            int                        ndims_;                                               //!< The number of dimensions of each chunk
+            // TODO: may need to use smart pointer instead
+            unsigned long long         *dim_;                                                //!< An array defining the dividing factor to message length, in dataset elements, of each chunk
 
 
-      // =====================================================================
-      // ==== Writing files
-      // =====================================================================
-    protected:
-      typedef std::unordered_map<std::string, std::unique_ptr<::eCAL::eh5::HDF5MeasImpl>> FileWriterMap;
-
-      std::string         output_dir_;                                          //!< The directory where the HDF5 files shall be placed when in CREATE mode
-      std::string         base_name_;                                           //!< The filename of HDF5 files when in CREATE mode. Will be postfixed by the channel name when in one_file_per_channel_ mode. Will be further postfixed by a number when the files are splitted.
-      bool                one_file_per_channel_;                                //!< If true, one FileWriter will be created for each channel.
-      FileWriterMap       file_writers_;                                        //!< Map of {ChannelName -> FileWriter}. Grows for each new channel, if one_file_per_channel_ is true. Contains only one "" key otherwise that is used for all channels. 
-
-      size_t              max_size_per_file_;                                   //!< Maximum file size after which the File Writer shall split
-      CallbackFunction    cb_pre_split_;                                        //!< Callback that is executed before a new hdf5 file is created during splitting. Will be executed by each file writer individually.
-
-    protected:
-      /**
-       * @brief Returns a writer for the given channel name
-       * 
-       * If one_file_per_channel_ is true, one writer for each channel will be
-       * create and / or returned. Otherwise, only one writer will exist and
-       * be reused for all channels.
-       * 
-       * New writers will be initialized with the split size and callback that
-       * were set in this class.
-       * 
-       * @param channel_name  The channel name to return a writer for
-       * 
-       * @return an iterator to the writer
-       */
-      FileWriterMap::iterator GetWriter(const std::string& channel_name);
-    };
-  }  //  namespace eh5
+        protected:
+            /**
+             * @brief Returns a writer for the given channel name
+             *
+             * If one_file_per_channel_ is true, one writer for each channel will be
+             * create and / or returned. Otherwise, only one writer will exist and
+             * be reused for all channels.
+             *
+             * New writers will be initialized with the split size and callback that
+             * were set in this class.
+             *
+             * @param channel_name  The channel name to return a writer for
+             *
+             * @return an iterator to the writer
+             */
+            FileWriterMap::iterator GetWriter(const std::string& channel_name);
+        };
+    }  //  namespace eh5
 }  //  namespace eCAL
