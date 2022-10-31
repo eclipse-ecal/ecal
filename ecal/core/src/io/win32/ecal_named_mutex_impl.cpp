@@ -40,7 +40,7 @@ namespace eCAL
   {
     // check mutex handle
     if(m_mutex_handle == nullptr)
-      return false;
+      return;
 
     // release it
     ReleaseMutex(m_mutex_handle);
@@ -85,18 +85,16 @@ namespace eCAL
       return false;
     }
     else
-      return(false);
+      return false;
   }
 
   void CNamedMutexImpl::Unlock()
   {
     // check mutex handle
     if(m_mutex_handle == nullptr)
-      return false;
+      return;
 
     // release it
     ReleaseMutex(m_mutex_handle);
-
-    return true;
   }
 }
