@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2022 Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -235,17 +236,17 @@ namespace eCAL
             // release access
             m_memfile.ReleaseReadAccess();
 
-            // send ack event
-            if (m_timeout_ack != 0)
-            {
-              gSetEvent(m_event_ack);
-            }
-
             // process receive buffer if buffered mode read some data in
             if (post_process_buffer)
             {
               // add sample to data reader (and call user callback function)
               if (g_subgate()) g_subgate()->ApplySample(topic_name_, topic_id_, m_ecal_buffer.data(), m_ecal_buffer.size(), (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash, eCAL::pb::tl_ecal_shm);
+            }
+
+            // send acknowledge event
+            if (m_timeout_ack != 0)
+            {
+              gSetEvent(m_event_ack);
             }
           }
         }
