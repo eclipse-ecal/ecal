@@ -25,18 +25,19 @@
 #include "component.pb.h"
 
 #include <iostream>
-#include <thread>
-#include <chrono>
 
+// component service class implementation
 class ComponentServiceImpl final : public orchestrator::ComponentService
 {
 public:
   ComponentServiceImpl()
   {
+    // create 2 publisher for sending messages 'foo' and 'vec'
     publisher_foo = eCAL::protobuf::CPublisher<component::foo>("foo");
     publisher_vec = eCAL::protobuf::CPublisher<component::vec>("vec");
   }
 
+  // the component execute method
   void execute(google::protobuf::RpcController* /* controller */, const orchestrator::request* request,
     orchestrator::response* /*response*/, ::google::protobuf::Closure* /* done */) override
   {
@@ -70,17 +71,22 @@ private:
 
 int main(int argc, char** argv)
 {
+  // initialize eCAL API
   const std::string component("component1");
-
   eCAL::Initialize(argc, argv, component.c_str());
 
+  // start the component service
   std::shared_ptr<ComponentServiceImpl> component_service_impl = std::make_shared<ComponentServiceImpl>();
   eCAL::protobuf::CServiceServer<orchestrator::ComponentService> component1_service(component_service_impl, component);
 
   while (eCAL::Ok())
   {
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    // sleep 100 ms
+    eCAL::Process::SleepMS(100);
   }
 
+  // finalize eCAL API
   eCAL::Finalize();
+
+  return(0);
 }

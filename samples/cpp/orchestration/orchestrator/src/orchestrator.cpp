@@ -23,34 +23,39 @@
 #include "orchestrator.pb.h"
 
 #include <iostream>
-#include <thread>
-#include <chrono>
 
-void main(int argc, char** argv)
+int main(int argc, char** argv)
 {
+  // initialize eCAL API
   eCAL::Initialize(argc, argv, "orchestrator");
 
   eCAL::protobuf::CServiceClient<orchestrator::ComponentService> component1("component1");
   eCAL::protobuf::CServiceClient<orchestrator::ComponentService> component2("component2");
 
-  std::this_thread::sleep_for(std::chrono::seconds(2));
+  // sleep 2 seconds
+  eCAL::Process::SleepMS(2000);
 
+  // prepare service request and response vector
+  orchestrator::request     srv_request;
   eCAL::ServiceResponseVecT srv_response_vec;
-  orchestrator::request     request;
 
+  // call components 1 and 2
   uint64_t cycle = 0;
   while (eCAL::Ok())
   {
-    request.set_id(cycle);
+    srv_request.set_id(cycle);
 
     std::cout << "call component 1" << std::endl;
-    component1.Call("execute", request, -1, &srv_response_vec);
+    component1.Call("execute", srv_request, -1, &srv_response_vec);
 
     std::cout << "call component 2" << std::endl << std::endl;
-    component2.Call("execute", request, -1, &srv_response_vec);
+    component2.Call("execute", srv_request, -1, &srv_response_vec);
 
     ++cycle;
   }
 
+  // finalize eCAL API
   eCAL::Finalize();
+
+  return(0);
 }
