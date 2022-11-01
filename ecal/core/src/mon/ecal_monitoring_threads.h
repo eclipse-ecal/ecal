@@ -75,6 +75,11 @@ namespace eCAL
     CMemfileRegistrationReceiveThread(RegMessageCallbackT reg_cb_);
     virtual ~CMemfileRegistrationReceiveThread();
 
+    CMemfileRegistrationReceiveThread(CMemfileRegistrationReceiveThread&) = default;
+    CMemfileRegistrationReceiveThread& operator=(CMemfileRegistrationReceiveThread&) = default;
+    CMemfileRegistrationReceiveThread(CMemfileRegistrationReceiveThread&&) = default;
+    CMemfileRegistrationReceiveThread& operator=(CMemfileRegistrationReceiveThread&&) = default;
+
   protected:
     int ThreadFun();
 

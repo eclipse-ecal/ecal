@@ -40,6 +40,8 @@ namespace eCAL
 
     CNamedMutex(const CNamedMutex&) = delete;
     CNamedMutex& operator=(const CNamedMutex&) = delete;
+    CNamedMutex(const CNamedMutex&&) = delete;
+    CNamedMutex& operator=(const CNamedMutex&&) = delete;
 
     bool Create(const std::string& name_, bool recoverable_ = false);
     void Destroy();

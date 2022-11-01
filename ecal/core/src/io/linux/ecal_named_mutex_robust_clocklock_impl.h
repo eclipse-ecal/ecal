@@ -37,6 +37,8 @@ namespace eCAL
     
     CNamedMutexRobustClockLockImpl(const CNamedMutexRobustClockLockImpl&) = delete;
     CNamedMutexRobustClockLockImpl& operator=(const CNamedMutexRobustClockLockImpl&) = delete;
+    CNamedMutexRobustClockLockImpl(const CNamedMutexRobustClockLockImpl&&) = delete;
+    CNamedMutexRobustClockLockImpl& operator=(const CNamedMutexRobustClockLockImpl&&) = delete;
 
 
     bool IsCreated() const final;

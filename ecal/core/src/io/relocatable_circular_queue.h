@@ -108,7 +108,8 @@ public:
     return iterator(*this, invalid_index);
   }
 
-  RelocatableCircularQueue() = default;
+  RelocatableCircularQueue(): m_base_address(nullptr), m_header(nullptr)
+  {}
 
   void Push(const T& value)
   {

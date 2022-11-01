@@ -37,6 +37,8 @@ namespace eCAL
     
     CNamedMutexImpl(const CNamedMutexImpl&) = delete;
     CNamedMutexImpl& operator=(const CNamedMutexImpl&) = delete;
+    CNamedMutexImpl(const CNamedMutexImpl&&) = delete;
+    CNamedMutexImpl& operator=(const CNamedMutexImpl&&) = delete;
 
     bool IsCreated() const final;
     bool IsRecoverable() const final;

@@ -79,7 +79,7 @@ namespace eCAL
 
 #ifndef ECAL_LAYER_ICEORYX
   CMemfileRegistrationReceiveThread::CMemfileRegistrationReceiveThread(RegMessageCallbackT reg_cb_) :
-    m_reg_cb(reg_cb_)
+    m_reg_cb(std::move(reg_cb_))
   {
     m_memfile_broadcast.Create(EXP_MEMFILE_MONITORING_IDENTIFIER, Config::Experimental::GetMemfileMonitoringQueueSize());
     m_memfile_broadcast.FlushLocalBroadcastQueue();
