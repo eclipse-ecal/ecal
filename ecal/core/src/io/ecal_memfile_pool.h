@@ -23,19 +23,23 @@
 
 #pragma once
 
-#include <ecal/ecal.h>
+#include <ecal/ecal_event.h>
+#include <ecal/ecal_log.h>
 
 #include "ecal_memfile.h"
 #include "ecal_memfile_header.h"
 
-#include <mutex>
 #include <atomic>
+#include <functional>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <thread>
 
 namespace eCAL
 {
+  typedef std::function<size_t(const std::string& topic_name_, const std::string& topic_id_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_)> MemFileDataCallbackT;
+
   ////////////////////////////////////////
   // CMemFileObserver
   ////////////////////////////////////////
@@ -45,10 +49,10 @@ namespace eCAL
     CMemFileObserver();
     ~CMemFileObserver();
 
-    bool Create(const std::string& memfile_name_, const std::string& memfile_event_);
+    bool Create(const std::string& memfile_name_, const std::string& memfile_event_, int timeout_ack_ms);
     bool Destroy();
 
-    bool Start(const std::string& topic_name_, const std::string& topic_id_, const int timeout_);
+    bool Start(const std::string& topic_name_, const std::string& topic_id_, const int timeout_, MemFileDataCallbackT callback_);
     bool Stop();
     bool IsObserving() {return(m_is_observing);};
 
@@ -64,6 +68,8 @@ namespace eCAL
 
     std::atomic<long long>  m_timeout_read;
     std::atomic<int>        m_timeout_ack;
+
+    MemFileDataCallbackT    m_data_callback;
 
     std::thread             m_thread;
     EventHandleT            m_event_snd;
@@ -84,7 +90,7 @@ namespace eCAL
     void Create();
     void Destroy();
 
-    bool ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, const std::string& topic_name_, const std::string& topic_id_);
+    bool ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, const std::string& topic_name_, const std::string& topic_id_, int timeout_observation_ms, int timeout_ack_ms, MemFileDataCallbackT callback_);
 
   protected:
     void CleanupPool();
