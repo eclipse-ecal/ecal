@@ -371,12 +371,10 @@ void eCAL::eh5::HDF5Meas::DisconnectPreSplitCallback()
         return hdf_meas_impl_->DisconnectPreSplitCallback();
     }
 }
-// TODO: clean up this include and others
-#include <iostream>
+
 bool eCAL::eh5::HDF5Meas::SetGZipCompressionFilter(unsigned level) {
     if (hdf_meas_impl_ != nullptr)
     {
-        std::cout << "eh5Meas level = " << level << std::endl;
         return hdf_meas_impl_->SetGZipCompressionFilter(level);
     }
     return false;
@@ -393,7 +391,6 @@ bool eCAL::eh5::HDF5Meas::IsGZipCompressionFilterEnabled() {
 bool eCAL::eh5::HDF5Meas::SetSZipCompressionFilter(unsigned options_mask, unsigned pixels_per_block) {
     if (hdf_meas_impl_ != nullptr)
     {
-        std::cout << "eh5Meas options mask = " << options_mask << " pixel per block = " << pixels_per_block << std::endl;
         return hdf_meas_impl_->SetSZipCompressionFilter(options_mask, pixels_per_block);
     }
     return false;

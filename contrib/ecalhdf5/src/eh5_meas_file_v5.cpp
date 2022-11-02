@@ -79,9 +79,8 @@ namespace eCAL
     }  //  namespace eh5
 }  //  namespace eCAL
 
-#include <iostream>
+
 bool eCAL::eh5::HDF5MeasFileV5::SetGZipCompressionFilter(unsigned level) {
-    std::cout << "HDF5 Meas File V5 = " << level << std::endl;
     bool correct_level = false;
     if(level <= 9) {
         gzip_compression_level_ = level;

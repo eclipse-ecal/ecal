@@ -232,28 +232,22 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::AddEntryToFile(const void* data, const uns
 
     //  Create creation property for dataSpace
     auto dsProperty = H5Pcreate(H5P_DATASET_CREATE);
-    std::cout << "gzip_compression_level = " << gzip_compression_level_ << std::endl;
+
     unsigned long long size_threshold = 10000;
     if((gzip_compression_level_ > 0 || szip_compression_enabled_ == true || ndims_ > 0) && (size >= size_threshold) ) {
-        std::cout << "Apply chunking" << std::endl;
-//      H5Pset_chunk(dsProperty, 1, &hsSize);
         // TODO: find smarter way to implement temp_dim
         unsigned long long *temp_dim = new unsigned long long[ndims_];
         for(int i =0; i < ndims_; ++i) {
             temp_dim[i] = hsSize/dim_[i];
-            std::cout << "Older dim = " << dim_[i] << " new dim = " << temp_dim[i] << std::endl;
         }
         H5Pset_chunk(dsProperty, ndims_, temp_dim);
-//      H5Pset_chunk(dsProperty, ndims_, temp_dim);
     }
 
     if(gzip_compression_level_ > 0 && (size >= size_threshold) ) {
-        std::cout << "Apply Gzip compression" << std::endl;
         H5Pset_deflate( dsProperty, gzip_compression_level_);
     }
 
     if(szip_compression_enabled_ && (size >= size_threshold) ) {
-        std::cout << "Apply Szip compression" << " - options mask = " << options_mask_ << " - pixel per block = " << pixels_per_block_ << std::endl;
         H5Pset_szip(dsProperty, options_mask_, pixels_per_block_);
     }
 
@@ -264,7 +258,6 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::AddEntryToFile(const void* data, const uns
 
     //  Write buffer to dataset
     herr_t writeStatus = H5Dwrite(dataSet, H5T_NATIVE_UCHAR, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
-    std::cout << "Write status = " << writeStatus << std::endl;
 
     //  Close dataset, data space, and data set property
     H5Dclose(dataSet);
@@ -430,7 +423,7 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::SetGZipCompressionFilter(unsigned level) {
             dim_[0] = 1;
         }
     }
-    std::cout << "HDF5Meas File Writer V5 - Correct level = " << correct_level << std::endl;
+
     return correct_level;
 }
 

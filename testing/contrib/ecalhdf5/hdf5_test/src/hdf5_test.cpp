@@ -522,8 +522,6 @@ TEST(HDF5, SetOneFilePerChannelEnabled)
 
 }
 
-#include <iostream>
-
 TEST(HDF5, TestGzipCompression)
 {
     std::string base_name = "output";
@@ -531,7 +529,6 @@ TEST(HDF5, TestGzipCompression)
     // Write HDF5 file
     {
         eCAL::eh5::HDF5Meas hdf5_writer;
-        //    int x; std::cin >> x;
         if (hdf5_writer.Open(output_dir, eCAL::eh5::eAccessType::CREATE))
         {
             hdf5_writer.SetFileBaseName(base_name);
@@ -621,6 +618,8 @@ TEST(HDF5, TegraAGzipCompression)
     {
         // Create reader
         eCAL::eh5::HDF5Meas hdf5_reader;
+        // TODO: I need a testcase for reading the compressed file back, to make sure reading is working fine
+        // TODO: find a better way to provide the testcase file, may be add it as a part of the testcase
         EXPECT_TRUE(hdf5_reader.Open("/home/beshoy/Desktop/Beshoy/repos/eCAL/eCAL_fork/ecal_fork/build_release/tegra-a.hdf5"));
 
         // Create writer
@@ -676,6 +675,7 @@ TEST(HDF5, XavierAGzipCompression)
     {
         // Create reader
         eCAL::eh5::HDF5Meas hdf5_reader;
+        // TODO: find a better way to provide the testcase file, may be add it as a part of the testcase
         EXPECT_TRUE(hdf5_reader.Open("/home/beshoy/Desktop/Beshoy/repos/eCAL/eCAL_fork/ecal_fork/build_release/xavier-a.hdf5"));
 
         // Create writer
@@ -741,6 +741,7 @@ TEST(HDF5, ChunkAPI)
     {
         // Create reader
         eCAL::eh5::HDF5Meas hdf5_reader;
+        // TODO: find a better way to provide the testcase file, may be add it as a part of the testcase
         EXPECT_TRUE(hdf5_reader.Open("/home/beshoy/Desktop/Beshoy/repos/eCAL/eCAL_fork/ecal_fork/build_release/tegra-a.hdf5"));
 
         // Create writer

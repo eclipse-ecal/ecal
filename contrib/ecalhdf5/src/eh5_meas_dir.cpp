@@ -538,7 +538,6 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
     return file_writer_it;
 }
 
-#include <iostream>
 bool eCAL::eh5::HDF5MeasDir::SetGZipCompressionFilter(unsigned level) {
     bool correct_level = false;
     if(level <= 9) {
@@ -547,11 +546,11 @@ bool eCAL::eh5::HDF5MeasDir::SetGZipCompressionFilter(unsigned level) {
         if(ndims_ == 0) {
             ndims_ = 1;
             // TODO: use smart pointers instead, because current code leaks memory
-            dim_ = new unsigned long long[1] ;
+            dim_ = new unsigned long long[1];
             dim_[0] = 1;
         }
     }
-    std::cout << "HDF5Meas File Writer V5 - Correct level = " << correct_level << std::endl;
+
     return correct_level;
 }
 
@@ -563,7 +562,7 @@ bool eCAL::eh5::HDF5MeasDir::IsGZipCompressionFilterEnabled() {
 
 bool eCAL::eh5::HDF5MeasDir::SetSZipCompressionFilter(unsigned options_mask, unsigned pixels_per_block) {
     bool correct_params = false;
-    std::cout << "szip compression enabled - 1 = " << szip_compression_enabled_ << std::endl;
+
     if((options_mask == H5_SZIP_EC_OPTION_MASK || options_mask == H5_SZIP_NN_OPTION_MASK) &&
        ((pixels_per_block % 2 == 0) && pixels_per_block <= 32 && pixels_per_block > 0)
             ) {
@@ -580,8 +579,6 @@ bool eCAL::eh5::HDF5MeasDir::SetSZipCompressionFilter(unsigned options_mask, uns
     } else {
         szip_compression_enabled_ = false;
     }
-
-    std::cout << "szip compression enabled - 2 = " << szip_compression_enabled_ << std::endl;
 
     return correct_params;
 }
