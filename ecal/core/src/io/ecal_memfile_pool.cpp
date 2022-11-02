@@ -107,7 +107,7 @@ namespace eCAL
     if (m_is_observing) return false;
 
     // assign callback
-    m_data_callback = callback_;
+    m_data_callback = std::move(callback_);
 
     // mark as running
     m_is_observing = true;
