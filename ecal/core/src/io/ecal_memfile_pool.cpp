@@ -101,7 +101,7 @@ namespace eCAL
     return true;
   }
 
-  bool CMemFileObserver::Start(const std::string& topic_name_, const std::string& topic_id_, const int timeout_, MemFileDataCallbackT callback_)
+  bool CMemFileObserver::Start(const std::string& topic_name_, const std::string& topic_id_, const int timeout_, const MemFileDataCallbackT& callback_)
   {
     if (!m_created)     return false;
     if (m_is_observing) return false;
@@ -122,6 +122,7 @@ namespace eCAL
 
     return true;
   }
+
 
   bool CMemFileObserver::Stop()
   {
