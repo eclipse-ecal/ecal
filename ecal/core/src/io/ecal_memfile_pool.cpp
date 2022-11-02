@@ -332,7 +332,7 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CMemFileThreadPool::ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, const std::string& topic_name_, const std::string& topic_id_, int timeout_observation_ms, int timeout_ack_ms, MemFileDataCallbackT callback_)
+  bool CMemFileThreadPool::ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, const std::string& topic_name_, const std::string& topic_id_, int timeout_observation_ms, int timeout_ack_ms, const MemFileDataCallbackT& callback_)
   {
     if(!m_created)            return(false);
     if(memfile_name_.empty()) return(false);
