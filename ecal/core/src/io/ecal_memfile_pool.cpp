@@ -22,12 +22,7 @@
  * @brief  memory file pool handler
 **/
 
-//#include <ecal/ecal.h>
-//#include <ecal/ecal_config.h>
-
 #include "ecal_def.h"
-//#include "ecal_config_reader_hlp.h"
-
 #include "ecal_memfile_pool.h"
 
 #include <chrono>
