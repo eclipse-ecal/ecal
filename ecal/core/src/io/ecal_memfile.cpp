@@ -148,11 +148,19 @@ namespace eCAL
     // destroy memory file
     ret_state &= memfile::db::RemoveFile(m_name, remove_);
 
-    // unlock mutex
-    ret_state &= DestroyMtx(&m_memfile_info.mutex);
+    if (remove_)
+    {
+      // destroy mutex
+      ret_state &= DestroyMtx(&m_memfile_info.mutex);
 
-    // cleanup mutex
-    ret_state &= CleanupMtx(m_name);
+      // cleanup mutex
+      ret_state &= CleanupMtx(m_name);
+    }
+    else
+    {
+      // unlock mutex
+      ret_state &= UnlockMtx(&m_memfile_info.mutex);
+    }
 
     // reset states
     m_created      = false;
