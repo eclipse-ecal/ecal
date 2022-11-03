@@ -138,7 +138,26 @@ void ConfigWidget::descriptionChanged(const std::string& description)
 
 void ConfigWidget::userRecPathButtonPressed()
 {
-  QString user_path = QFileDialog::getExistingDirectory(this,"Choose root recording folder...","", QFileDialog::DontUseNativeDialog | QFileDialog::ShowDirsOnly);
+  auto parsed_meas_root = QString::fromStdString(EcalParser::Evaluate(ui_.measurement_directory_lineedit->text().toStdString(), true, std::chrono::system_clock::now()));
+  QString root_path;
+  QDir root(parsed_meas_root);
+
+  if (root.exists() && !parsed_meas_root.isEmpty())
+  {
+    if (parsed_meas_root[parsed_meas_root.size() - 1] != "\\" || parsed_meas_root[parsed_meas_root.size() - 1] != "/")
+      root_path = parsed_meas_root + "/";
+    else
+      root_path = parsed_meas_root;
+  }
+  else
+  {
+    root_path = QDir::currentPath().split("/")[0].append("/");
+#ifdef WIN32
+
+#endif // WIN32
+
+  }
+  QString user_path = QFileDialog::getExistingDirectory(this,"Choose root recording folder...", root_path, QFileDialog::ShowDirsOnly);
   if (!user_path.isEmpty())
   {
     ui_.measurement_directory_lineedit->setText(user_path);

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>515</width>
-    <height>305</height>
+    <width>810</width>
+    <height>501</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -279,8 +279,12 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>measurement_directory_lineedit</tabstop>
+  <tabstop>user_meass_rec_path_toolButton</tabstop>
   <tabstop>measurement_name_lineedit</tabstop>
   <tabstop>refresh_path_preview_button</tabstop>
+  <tabstop>max_file_size_spinbox</tabstop>
+  <tabstop>one_file_per_topic_checkbox</tabstop>
   <tabstop>description_textedit</tabstop>
  </tabstops>
  <resources>
