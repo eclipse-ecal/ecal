@@ -57,16 +57,16 @@ namespace eCAL
   {
     if (!m_created) return false;
 
-    MemfileBroadcastPayloadMessageListT payload_list;
-    if(!m_memfile_broadcast_reader->Read(payload_list, 0))
+    MemfileBroadcastMessageListT message_list;
+    if(!m_memfile_broadcast_reader->Read(message_list, 0))
       return false;
 
     eCAL::pb::SampleList sample_list;
     bool return_value {true};
 
-    for(const auto& payload: payload_list)
+    for(const auto& message: message_list)
     {
-      if(sample_list.ParseFromArray(payload.data, static_cast<int>(payload.size)))
+      if(sample_list.ParseFromArray(message.data, static_cast<int>(message.size)))
       {
         for(const auto& sample: sample_list.samples())
         {
@@ -108,7 +108,7 @@ namespace eCAL
                          m_callback_client(nullptr),
                          m_callback_process(nullptr),
                          m_use_network_monitoring(false),
-                         m_use_memfile_monitoring(false)
+                         m_use_shm_monitoring(false)
   {
   };
 
@@ -124,7 +124,7 @@ namespace eCAL
     // network mode
     m_network = Config::IsNetworkEnabled();
 
-    m_use_memfile_monitoring = Config::Experimental::IsMemfileMonitoringEnabled();
+    m_use_shm_monitoring = Config::Experimental::IsShmMonitoringEnabled();
     m_use_network_monitoring = !Config::Experimental::IsNetworkMonitoringDisabled();
 
     if (m_use_network_monitoring)
@@ -152,10 +152,10 @@ namespace eCAL
     }
 
 #ifndef ECAL_LAYER_ICEORYX
-    if (m_use_memfile_monitoring)
+    if (m_use_shm_monitoring)
     {
-      m_memfile_broadcast.Create(EXP_MEMFILE_MONITORING_IDENTIFIER, Config::Experimental::GetMemfileMonitoringQueueSize());
-      m_memfile_broadcast.FlushLocalBroadcastQueue();
+      m_memfile_broadcast.Create(Config::Experimental::GetShmMonitoringDomain(), Config::Experimental::GetShmMonitoringQueueSize());
+      m_memfile_broadcast.FlushLocalEventQueue();
       m_memfile_broadcast_reader.Bind(&m_memfile_broadcast);
 
       m_memfile_reg_rcv.Create(&m_memfile_broadcast_reader);
@@ -175,7 +175,7 @@ namespace eCAL
       m_reg_rcv_thread.Stop();
 
 #ifndef ECAL_LAYER_ICEORYX
-    if(m_use_memfile_monitoring)
+    if(m_use_shm_monitoring)
     {
       // stop memfile registration receive thread and unbind reader
       m_memfile_reg_rcv_thread.Stop();

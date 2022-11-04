@@ -176,12 +176,14 @@
 /**********************************************************************************************/
 /*                                     experimental                                           */
 /**********************************************************************************************/
-/* enable monitoring via shared memory */
-#define EXP_MEMFILE_MONITORING_ENABLED                  false
-/* disable monitoring via network (default) */
-#define EXP_NETWORK_MONITORING_DISABLED                 false
-/* set queue size of the memory file based monitoring  */
-#define EXP_MEMFILE_MONITORING_QUEUE_SIZE               1024
-/* identifier for memory file based monitoring */
-#define EXP_MEMFILE_MONITORING_IDENTIFIER               "ecal_monitoring"
+/* enable distribution of monitoring/registration information via shared memory */
+#define EXP_SHM_MONITORING_ENABLED                  false
+/* disable distribution of monitoring/registration information via network (default) */
+#define EXP_NETWORK_MONITORING_DISABLED             false
+/* queue size of monitoring/registration events  */
+#define EXP_SHM_MONITORING_QUEUE_SIZE               1024
+/* domain name for shared memory based monitoring/registration */
+#define EXP_SHM_MONITORING_DOMAIN                   "ecal_monitoring"
+/* memory file access timeout */
+#define EXP_MEMFILE_ACCESS_TIMEOUT                  100
 

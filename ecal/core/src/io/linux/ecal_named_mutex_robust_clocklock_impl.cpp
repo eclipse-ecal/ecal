@@ -90,11 +90,15 @@ namespace
     if (lock_result == 0)
       return true;
       // check if previous mutex owner is dead
-    else if (lock_result == EOWNERDEAD) {
+#ifdef ECAL_HAS_ROBUST_MUTEX
+    else if (lock_result == EOWNERDEAD)
+    {
+      pthread_mutex_consistent(&mtx_->mtx);
       if (recovered_)
         *recovered_ = true;
       return true;
     }
+#endif
 
     return false;
   }
@@ -107,11 +111,15 @@ namespace
     if (lock_result == 0)
       return true;
       // check if previous mutex owner is dead
-    else if (lock_result == EOWNERDEAD) {
+#ifdef ECAL_HAS_ROBUST_MUTEX
+    else if (lock_result == EOWNERDEAD)
+    {
+      pthread_mutex_consistent(&mtx_->mtx);
       if (recovered_)
         *recovered_ = true;
       return true;
     }
+#endif
 
     return false;
   }
@@ -122,11 +130,15 @@ namespace
     if (lock_result == 0)
       return true;
       // check if previous mutex owner is dead
-    else if (lock_result == EOWNERDEAD) {
+#ifdef ECAL_HAS_ROBUST_MUTEX
+    else if (lock_result == EOWNERDEAD)
+    {
+      pthread_mutex_consistent(&mtx_->mtx);
       if (recovered_)
         *recovered_ = true;
       return true;
     }
+#endif
 
     return false;
   }

@@ -67,18 +67,18 @@ namespace eCAL
   };
 
 #ifndef ECAL_LAYER_ICEORYX
-  class CMemfileRegistrationReceiveThread
+  class CShmRegistrationReceiveThread
   {
   public:
     using RegMessageCallbackT = std::function<size_t(const eCAL::pb::Sample& ecal_sample_)>;
 
-    CMemfileRegistrationReceiveThread(RegMessageCallbackT reg_cb_);
-    virtual ~CMemfileRegistrationReceiveThread();
+    CShmRegistrationReceiveThread(RegMessageCallbackT reg_cb_);
+    virtual ~CShmRegistrationReceiveThread();
 
-    CMemfileRegistrationReceiveThread(CMemfileRegistrationReceiveThread&) = default;
-    CMemfileRegistrationReceiveThread& operator=(CMemfileRegistrationReceiveThread&) = default;
-    CMemfileRegistrationReceiveThread(CMemfileRegistrationReceiveThread&&) = default;
-    CMemfileRegistrationReceiveThread& operator=(CMemfileRegistrationReceiveThread&&) = default;
+    CShmRegistrationReceiveThread(CShmRegistrationReceiveThread&) = default;
+    CShmRegistrationReceiveThread& operator=(CShmRegistrationReceiveThread&) = default;
+    CShmRegistrationReceiveThread(CShmRegistrationReceiveThread&&) = default;
+    CShmRegistrationReceiveThread& operator=(CShmRegistrationReceiveThread&&) = default;
 
   protected:
     int ThreadFun();

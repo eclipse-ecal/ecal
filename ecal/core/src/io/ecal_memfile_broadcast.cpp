@@ -21,6 +21,8 @@
  * @brief  eCAL memory file broadcast interface
 **/
 
+#include "ecal_def.h"
+
 #include "ecal_memfile_broadcast.h"
 #include "ecal_memfile.h"
 #include "ecal_global_accessors.h"
@@ -31,31 +33,31 @@
 namespace eCAL
 {
 #pragma pack(push, 1)
-  struct SMemfileBroadcastHeaderV1
+  struct SMemfileBroadcastHeader
   {
     std::uint32_t version = 1;
-    std::uint64_t message_queue_offset = sizeof(SMemfileBroadcastHeaderV1);
-    TimestampT timestamp = CreateTimestamp();
-    std::array<uint8_t, 4> _reseverd_0 = {};
+    std::uint64_t message_queue_offset = sizeof(SMemfileBroadcastHeader);
+    std::int64_t timestamp = CreateTimestamp();
+    std::array<uint8_t, 4> _reserved_0 = {};
   };
 #pragma pack(pop)
 
-  static SMemfileBroadcastHeaderV1 *GetMemfileHeader(void *address)
+  static SMemfileBroadcastHeader *GetMemfileHeader(void *address)
   {
-    return reinterpret_cast<SMemfileBroadcastHeaderV1 *>(address);
+    return reinterpret_cast<SMemfileBroadcastHeader *>(address);
   }
 
-  static const SMemfileBroadcastHeaderV1 *GetMemfileHeader(const void *address)
+  static const SMemfileBroadcastHeader *GetMemfileHeader(const void *address)
   {
-    return reinterpret_cast<const SMemfileBroadcastHeaderV1 *>(address);
+    return reinterpret_cast<const SMemfileBroadcastHeader *>(address);
   }
 
-  static void *GetMessageQueueAddress(void *address)
+  static void *GetEventQueueAddress(void *address)
   {
     return reinterpret_cast<void *>(static_cast<char *>(address) + GetMemfileHeader(address)->message_queue_offset);
   }
 
-  CMemoryFileBroadcast::CMemoryFileBroadcast(): m_max_queue_size(0), m_broadcast_memfile(std::make_unique<eCAL::CMemoryFile>()), m_message_queue(), m_last_timestamp(0)
+  CMemoryFileBroadcast::CMemoryFileBroadcast(): m_created(false), m_max_queue_size(0), m_broadcast_memfile(std::make_unique<eCAL::CMemoryFile>()), m_event_queue(), m_last_timestamp(0)
   {
   }
 
@@ -66,8 +68,8 @@ namespace eCAL
     m_max_queue_size = max_queue_size;
     m_name = name;
     const auto presumably_memfile_size =
-      RelocatableCircularQueue<SMemfileBroadcastMessage>::PresumablyOccupiedMemorySize(m_max_queue_size) +
-      sizeof(SMemfileBroadcastHeaderV1);
+      RelocatableCircularQueue<SMemfileBroadcastEvent>::PresumablyOccupiedMemorySize(m_max_queue_size) +
+      sizeof(SMemfileBroadcastHeader);
     if (!m_broadcast_memfile->Create(name.c_str(), true, presumably_memfile_size, true))
     {
 #ifndef NDEBUG
@@ -86,7 +88,7 @@ namespace eCAL
 
     m_broadcast_memfile_local_buffer.resize(presumably_memfile_size);
 
-    if (m_broadcast_memfile->GetWriteAccess(200))
+    if (m_broadcast_memfile->GetWriteAccess(EXP_MEMFILE_ACCESS_TIMEOUT))
     {
       // Check if memfile is initialized
       bool is_memfile_initialized{ m_broadcast_memfile->CurDataSize() != 0 };
@@ -138,25 +140,25 @@ namespace eCAL
   bool CMemoryFileBroadcast::IsMemfileVersionCompatible(const void *memfile_address) const
   {
     const auto *header = GetMemfileHeader(memfile_address);
-    return (header->version == SMemfileBroadcastHeaderV1().version);
+    return (header->version == SMemfileBroadcastHeader().version);
   }
 
   void CMemoryFileBroadcast::ResetMemfile(void *memfile_address)
   {
     auto *header = GetMemfileHeader(memfile_address);
-    *header = SMemfileBroadcastHeaderV1();
-    m_message_queue.SetBaseAddress(GetMessageQueueAddress(memfile_address));
-    m_message_queue.Reset(m_max_queue_size);
+    *header = SMemfileBroadcastHeader();
+    m_event_queue.SetBaseAddress(GetEventQueueAddress(memfile_address));
+    m_event_queue.Reset(m_max_queue_size);
 #ifndef NDEBUG
     std::cout << "Broadcast memory file has been resetted" << std::endl;
 #endif
   }
 
-  bool CMemoryFileBroadcast::FlushLocalBroadcastQueue()
+  bool CMemoryFileBroadcast::FlushLocalEventQueue()
   {
     if (!m_created) return false;
 
-    if (m_broadcast_memfile->GetReadAccess(200))
+    if (m_broadcast_memfile->GetReadAccess(EXP_MEMFILE_ACCESS_TIMEOUT))
     {
       // Check if memfile is initialized
       if (m_broadcast_memfile->CurDataSize())
@@ -186,11 +188,11 @@ namespace eCAL
     }
   }
 
-  bool CMemoryFileBroadcast::FlushGlobalBroadcastQueue()
+  bool CMemoryFileBroadcast::FlushGlobalEventQueue()
   {
     if (!m_created) return false;
 
-    if (m_broadcast_memfile->GetWriteAccess(200))
+    if (m_broadcast_memfile->GetWriteAccess(EXP_MEMFILE_ACCESS_TIMEOUT))
     {
       // Don't need to check consistency since memfile will be resetted anyways
       void *memfile_address = nullptr;
@@ -209,11 +211,11 @@ namespace eCAL
     return true;
   }
 
-  bool CMemoryFileBroadcast::Broadcast(UniqueIdT payload_memfile_id, eMemfileBroadcastMessageType type)
+  bool CMemoryFileBroadcast::SendEvent(std::uint64_t event_id, eMemfileBroadcastEventType type)
   {
     if (!m_created) return false;
 
-    if (m_broadcast_memfile->GetWriteAccess(200))
+    if (m_broadcast_memfile->GetWriteAccess(EXP_MEMFILE_ACCESS_TIMEOUT))
     {
       // Check if memfile is initialized
       bool is_memfile_initialized{ m_broadcast_memfile->CurDataSize() != 0 };
@@ -224,10 +226,10 @@ namespace eCAL
       if (!is_memfile_initialized)
         ResetMemfile(memfile_address);
 
-      m_message_queue.SetBaseAddress(GetMessageQueueAddress(memfile_address));
+      m_event_queue.SetBaseAddress(GetEventQueueAddress(memfile_address));
       const auto timestamp = CreateTimestamp();
 
-      m_message_queue.Push({g_process_id, timestamp, payload_memfile_id, type});
+      m_event_queue.Push({g_process_id, timestamp, event_id, type});
       GetMemfileHeader(memfile_address)->timestamp = timestamp;
 
       m_broadcast_memfile->ReleaseWriteAccess();
@@ -243,9 +245,9 @@ namespace eCAL
   }
 
 
-  bool CMemoryFileBroadcast::ReceiveBroadcast(MemfileBroadcastMessageListT &message_list, TimestampT timeout, bool enable_loopback)
+  bool CMemoryFileBroadcast::ReceiveEvents(MemfileBroadcastEventListT &event_list, std::int64_t timeout, bool enable_loopback)
   {
-    if (m_broadcast_memfile->GetReadAccess(200))
+    if (m_broadcast_memfile->GetReadAccess(EXP_MEMFILE_ACCESS_TIMEOUT))
     {
       // Check if memfile is initialized
       if (m_broadcast_memfile->CurDataSize())
@@ -271,20 +273,20 @@ namespace eCAL
       return false;
     }
 
-    message_list.clear();
+    event_list.clear();
 
     const auto *header = GetMemfileHeader(m_broadcast_memfile_local_buffer.data());
-    m_message_queue.SetBaseAddress(GetMessageQueueAddress(m_broadcast_memfile_local_buffer.data()));
+    m_event_queue.SetBaseAddress(GetEventQueueAddress(m_broadcast_memfile_local_buffer.data()));
 
     const auto timeout_threshold = CreateTimestamp() - (timeout * 1000);
-    for (const auto &broadcast_message: m_message_queue)
+    for (const auto &broadcast_message: m_event_queue)
     {
       const auto timestamp = broadcast_message.timestamp;
       if ((timeout && (timestamp <= timeout_threshold)) || (timestamp <= m_last_timestamp))
         break;
       if ((broadcast_message.process_id == g_process_id) && !enable_loopback)
         continue;
-      message_list.push_back(&broadcast_message);
+      event_list.push_back(&broadcast_message);
     }
 
     m_last_timestamp = header->timestamp;

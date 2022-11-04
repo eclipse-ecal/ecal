@@ -23,16 +23,17 @@
 
 #include "ecal_memfile_broadcast_writer.h"
 #include "ecal_memfile.h"
+#include "ecal_def.h"
 
 namespace eCAL
 {
   bool CMemoryFileBroadcastWriter::Bind(CMemoryFileBroadcast *memfile_broadcast)
   {
-    if (m_created) return false;
+    if (m_bound) return false;
     m_memfile_broadcast = memfile_broadcast;
-    m_payload_memfile_id = CreateUniqueId();
+    m_event_id = CreateEventId();
     m_payload_memfile = std::make_unique<CMemoryFile>();
-    if (!m_payload_memfile->Create(BuildPayloadMemfileName(m_memfile_broadcast->GetName(), m_payload_memfile_id).c_str(), true, 1024)) 
+    if (!m_payload_memfile->Create(BuildPayloadMemfileName(m_memfile_broadcast->GetName(), m_event_id).c_str(), true, 1024))
     {
 #ifndef NDEBUG
       std::cerr << "Unable to create payload memfile" << std::endl;
@@ -40,36 +41,39 @@ namespace eCAL
       return false;
     }
 
-    m_memfile_broadcast->Broadcast(m_payload_memfile_id, eMemfileBroadcastMessageType::PAYLOAD_MEMFILE_CREATED);
+    m_memfile_broadcast->SendEvent(m_event_id, eMemfileBroadcastEventType::EVENT_CREATED);
 
-    m_created = true;
+    m_bound = true;
     return true;
   }
 
   bool CMemoryFileBroadcastWriter::Write(const void *data, std::size_t size)
   {
-    if (!m_created) return false;
+    if (!m_bound) return false;
 
-    if (m_payload_memfile->MaxDataSize() < size) {
+    if (m_payload_memfile->MaxDataSize() < size)
+    {
       auto payload_memfile = std::make_unique<CMemoryFile>();
-      const auto payload_memfile_id = CreateUniqueId();
-      if (!payload_memfile->Create(BuildPayloadMemfileName(m_memfile_broadcast->GetName(), payload_memfile_id).c_str(), true, size * 2)) 
+      const auto event_id = CreateEventId();
+      if (!payload_memfile->Create(BuildPayloadMemfileName(m_memfile_broadcast->GetName(), event_id).c_str(), true, size * 2))
       {
 #ifndef NDEBUG
         std::cerr << "Unable to create new payload memory file" << std::endl;
 #endif
         return false;
       }
-      m_memfile_broadcast->Broadcast(m_payload_memfile_id, eMemfileBroadcastMessageType::PAYLOAD_MEMFILE_REMOVED);
+      m_memfile_broadcast->SendEvent(m_event_id, eMemfileBroadcastEventType::EVENT_REMOVED);
+      m_payload_memfile->Destroy(true);
       m_payload_memfile = std::move(payload_memfile);
-      m_payload_memfile_id = payload_memfile_id;
-      m_memfile_broadcast->Broadcast(m_payload_memfile_id, eMemfileBroadcastMessageType::PAYLOAD_MEMFILE_CREATED);
+      m_event_id = event_id;
+      m_memfile_broadcast->SendEvent(m_event_id, eMemfileBroadcastEventType::EVENT_CREATED);
     }
 
-    if (m_payload_memfile->GetWriteAccess(100)) {
+    if (m_payload_memfile->GetWriteAccess(EXP_MEMFILE_ACCESS_TIMEOUT))
+    {
       m_payload_memfile->Write(data, size, 0);
       m_payload_memfile->ReleaseWriteAccess();
-      m_memfile_broadcast->Broadcast(m_payload_memfile_id, eMemfileBroadcastMessageType::PAYLOAD_MEMFILE_UPDATED);
+      m_memfile_broadcast->SendEvent(m_event_id, eMemfileBroadcastEventType::EVENT_UPDATED);
 
       return true;
     }
@@ -85,11 +89,12 @@ namespace eCAL
 
   void CMemoryFileBroadcastWriter::Unbind()
   {
-    if (!m_created) return;
+    if (!m_bound) return;
 
-    m_memfile_broadcast->Broadcast(m_payload_memfile_id, eMemfileBroadcastMessageType::PAYLOAD_MEMFILE_REMOVED);
+    m_memfile_broadcast->SendEvent(m_event_id, eMemfileBroadcastEventType::EVENT_REMOVED);
     m_memfile_broadcast = nullptr;
+    m_payload_memfile->Destroy(true);
     m_payload_memfile.reset();
-    m_created = false;
+    m_bound = false;
   }
 }

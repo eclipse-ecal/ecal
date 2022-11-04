@@ -123,6 +123,7 @@
 /////////////////////////////////////
 #define  EXP_SECTION_S                       "experimental"
 
-#define  EXP_MEMFILE_MONITORING_ENABLED_S    "memfile_monitoring_enabled"
+#define  EXP_SHM_MONITORING_ENABLED_S        "shm_monitoring_enabled"
 #define  EXP_NETWORK_MONITORING_DISABLED_S   "network_monitoring_disabled"
-#define  EXP_MEMFILE_MONITORING_QUEUE_SIZE_S "memfile_monitoring_queue_size"
+#define  EXP_SHM_MONITORING_QUEUE_SIZE_S     "shm_monitoring_queue_size"
+#define  EXP_SHM_MONITORING_DOMAIN_S         "shm_monitoring_domain"

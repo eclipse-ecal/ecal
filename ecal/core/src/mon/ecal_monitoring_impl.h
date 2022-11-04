@@ -299,7 +299,7 @@ namespace eCAL
     // worker threads
     std::shared_ptr<CRegistrationReceiveThread>         m_reg_rcv_threadcaller;
 #ifndef ECAL_LAYER_ICEORYX
-    std::shared_ptr<CMemfileRegistrationReceiveThread>  m_memfile_reg_rcv_threadcaller;
+    std::shared_ptr<CShmRegistrationReceiveThread>      m_shm_reg_rcv_threadcaller;
 #endif
     std::shared_ptr<CLoggingReceiveThread>              m_log_rcv_threadcaller;
     std::shared_ptr<CMonLogPublishingThread>            m_pub_threadcaller;

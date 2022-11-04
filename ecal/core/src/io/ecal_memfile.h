@@ -183,11 +183,9 @@ namespace eCAL
       std::uint64_t               cur_data_size = 0;
       std::uint64_t               max_data_size = 0;
 #endif
-      std::uint16_t               version        = 1; 
-      std::array<std::uint8_t, 6> _reserved_1    = {};
       // New fields should only declare well defined data types and be aligned to 8 bytes
       // std::uint8_t                 _new_field  = 0;
-      // std::array<std::uint8_t, 7>  _reserved_2 = {};
+      // std::array<std::uint8_t, 7>  _reserved_1 = {};
     };
 #pragma pack(pop)
 

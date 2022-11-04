@@ -115,9 +115,10 @@ namespace eCAL
     /////////////////////////////////////
     namespace Experimental
     {
-      ECAL_API bool              IsMemfileMonitoringEnabled           ();
-      ECAL_API bool              IsNetworkMonitoringDisabled          ();
-      ECAL_API size_t            GetMemfileMonitoringQueueSize        ();
+      ECAL_API bool              IsShmMonitoringEnabled             ();
+      ECAL_API bool              IsNetworkMonitoringDisabled        ();
+      ECAL_API size_t            GetShmMonitoringQueueSize          ();
+      ECAL_API std::string       GetShmMonitoringDomain             ();
     }
   }
 }

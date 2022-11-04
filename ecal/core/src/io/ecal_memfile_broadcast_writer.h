@@ -30,16 +30,17 @@
 
 namespace eCAL
 {
-  class CMemoryFileBroadcastWriter {
+  class CMemoryFileBroadcastWriter
+  {
   public:
     bool Bind(CMemoryFileBroadcast *memfile_broadcast);
     void Unbind();
 
     bool Write(const void *data, std::size_t size);
   private:
-    CMemoryFileBroadcast *m_memfile_broadcast;
+    CMemoryFileBroadcast *m_memfile_broadcast = nullptr;
     std::unique_ptr<CMemoryFile> m_payload_memfile;
-    UniqueIdT m_payload_memfile_id;
-    bool m_created = false;
+    std::uint64_t m_event_id = 0;
+    bool m_bound = false;
   };
 }

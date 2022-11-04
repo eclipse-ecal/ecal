@@ -35,48 +35,44 @@
 
 namespace eCAL 
 {
-
   class CMemoryFile;
 
-  typedef std::int64_t TimestampT;
-  typedef std::uint64_t UniqueIdT;
-  typedef UniqueIdT GroupIdT;
-
-  static inline TimestampT CreateTimestamp()
+  static inline std::int64_t CreateTimestamp()
   {
-    return static_cast<uint64_t>(eCAL::Time::GetMicroSeconds());
+    const auto time_point = std::chrono::steady_clock::now();
+    return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(time_point.time_since_epoch()).count());
   }
 
-  static inline UniqueIdT CreateUniqueId()
+  static inline std::uint64_t CreateEventId()
   {
-    return static_cast<UniqueIdT>(CreateTimestamp());
+    return static_cast<std::uint64_t>(CreateTimestamp());
   }
 
-  static inline std::string BuildPayloadMemfileName(const std::string& name, UniqueIdT memfile_id)
+  static inline std::string BuildPayloadMemfileName(const std::string& name, std::uint64_t memfile_id)
   {
     return name + "_" + std::to_string(memfile_id);
   }
 
-  enum class eMemfileBroadcastMessageType : std::int32_t
+  enum class eMemfileBroadcastEventType : std::int32_t
   {
     INVALID,
-    PAYLOAD_MEMFILE_CREATED,
-    PAYLOAD_MEMFILE_REMOVED,
-    PAYLOAD_MEMFILE_UPDATED,
+    EVENT_CREATED,
+    EVENT_REMOVED,
+    EVENT_UPDATED,
     //PAYLOAD_MEMFILE_HEARTBEAT
   };
 
 #pragma pack(push, 1)
-  struct SMemfileBroadcastMessage
+  struct SMemfileBroadcastEvent
   {
     std::int32_t process_id;
-    TimestampT timestamp;
-    UniqueIdT payload_memfile_id;
-    eMemfileBroadcastMessageType type;
+    std::int64_t timestamp;
+    std::uint64_t event_id;
+    eMemfileBroadcastEventType type;
   };
 #pragma pack(pop)
 
-  typedef std::vector<const SMemfileBroadcastMessage*> MemfileBroadcastMessageListT;
+  typedef std::vector<const SMemfileBroadcastEvent*> MemfileBroadcastEventListT;
 
   class CMemoryFileBroadcast
   {
@@ -88,24 +84,24 @@ namespace eCAL
 
     std::string GetName() const;
 
-    bool FlushLocalBroadcastQueue();
-    bool FlushGlobalBroadcastQueue();
+    bool FlushLocalEventQueue();
+    bool FlushGlobalEventQueue();
 
-    bool Broadcast(UniqueIdT payload_memfile_id, eMemfileBroadcastMessageType type);
-    bool ReceiveBroadcast(MemfileBroadcastMessageListT& message_list, TimestampT timeout, bool enable_loopback = false);
+    bool SendEvent(std::uint64_t event_id, eMemfileBroadcastEventType type);
+    bool ReceiveEvents(MemfileBroadcastEventListT& event_list, std::int64_t timeout, bool enable_loopback = false);
 
   private:
     bool IsMemfileVersionCompatible(const void * memfile_address) const;
     void ResetMemfile(void * memfile_address);
 
-    bool m_created = false;
+    bool m_created;
     std::string m_name;
     std::size_t m_max_queue_size;
     std::unique_ptr<CMemoryFile> m_broadcast_memfile;
     std::vector<char> m_broadcast_memfile_local_buffer;
 
-    RelocatableCircularQueue<SMemfileBroadcastMessage> m_message_queue;
+    RelocatableCircularQueue<SMemfileBroadcastEvent> m_event_queue;
 
-    TimestampT m_last_timestamp;
+    std::int64_t m_last_timestamp;
   };
 }

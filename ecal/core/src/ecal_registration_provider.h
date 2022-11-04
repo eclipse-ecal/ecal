@@ -114,6 +114,6 @@ namespace eCAL
 #endif
 
     bool m_use_network_monitoring;
-    bool m_use_memfile_monitoring;
+    bool m_use_shm_monitoring;
   };
 };

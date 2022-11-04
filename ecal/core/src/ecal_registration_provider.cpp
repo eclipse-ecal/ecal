@@ -54,7 +54,7 @@ namespace eCAL
                     m_reg_services(false),
                     m_reg_process(false),
                     m_use_network_monitoring(false),
-                    m_use_memfile_monitoring(false)
+                    m_use_shm_monitoring(false)
 
   {
   };
@@ -74,7 +74,7 @@ namespace eCAL
     m_reg_services    = services_;
     m_reg_process     = process_;
 
-    m_use_memfile_monitoring = Config::Experimental::IsMemfileMonitoringEnabled();
+    m_use_shm_monitoring = Config::Experimental::IsShmMonitoringEnabled();
     m_use_network_monitoring = !Config::Experimental::IsNetworkMonitoringDisabled();
 
     if (m_use_network_monitoring)
@@ -107,10 +107,10 @@ namespace eCAL
     }
 
 #ifndef ECAL_LAYER_ICEORYX
-    if (m_use_memfile_monitoring)
+    if (m_use_shm_monitoring)
     {
-      std::cout << "Memfile monitoring is enabled (queue size: " << Config::Experimental::GetMemfileMonitoringQueueSize() << ")" << std::endl;
-      m_memfile_broadcast.Create(EXP_MEMFILE_MONITORING_IDENTIFIER, Config::Experimental::GetMemfileMonitoringQueueSize());
+      std::cout << "Shared memory monitoring is enabled (domain: " << Config::Experimental::GetShmMonitoringDomain() << " - queue size: " << Config::Experimental::GetShmMonitoringQueueSize() << ")" << std::endl;
+      m_memfile_broadcast.Create(Config::Experimental::GetShmMonitoringDomain(), Config::Experimental::GetShmMonitoringQueueSize());
       m_memfile_broadcast_writer.Bind(&m_memfile_broadcast);
     }
 #endif
@@ -127,7 +127,7 @@ namespace eCAL
     m_reg_snd_thread.Stop();
 
 #ifndef ECAL_LAYER_ICEORYX
-    if(m_use_memfile_monitoring)
+    if(m_use_shm_monitoring)
       m_memfile_broadcast_writer.Unbind();
 #endif
 
@@ -365,7 +365,7 @@ namespace eCAL
       return_value &= (SendSample(&m_reg_snd, sample_name_, sample_, m_multicast_group, -1) != 0);
 
 #ifndef ECAL_LAYER_ICEORYX
-    if(m_use_memfile_monitoring)
+    if(m_use_shm_monitoring)
     {
       std::lock_guard<std::mutex> lock(m_sample_list_sync);
       m_sample_list.mutable_samples()->Add()->CopyFrom(sample_);
@@ -381,7 +381,7 @@ namespace eCAL
     if(!m_created) return(false);
     bool return_value {true};
 
-    if(m_use_memfile_monitoring)
+    if(m_use_shm_monitoring)
     {
       {
         std::lock_guard<std::mutex> lock(m_sample_list_sync);

@@ -121,10 +121,6 @@ namespace eCAL
           {
             // read compatible header part if magic number already exists
             memcpy(&m_header, header, std::min(sizeof(SInternalHeader), static_cast<std::size_t>(header->int_hdr_size)));
-
-            // set version number manually if version field is not available
-            if (SIZEOF_PARTIAL_STRUCT(SInternalHeader, max_data_size) == m_header.int_hdr_size)
-              m_header.version = 0;
           }
         }
 
@@ -145,10 +141,6 @@ namespace eCAL
 
         // copy compatible header part into m_header
         memcpy(&m_header, m_memfile_info.mem_address, std::min(sizeof(SInternalHeader), static_cast<std::size_t>(header_size)));
-
-        // set version number manually if version field is not available
-        if (SIZEOF_PARTIAL_STRUCT(SInternalHeader, max_data_size) == header_size)
-          m_header.version = 0;
 
         // unlock mutex
         m_memfile_info.mutex->Unlock();
@@ -331,7 +323,7 @@ namespace eCAL
     }
 
     // reset current data size field of memfile header if lock is inconsistent 
-    if ((m_auto_sanitizing && m_memfile_info.mutex->WasRecovered()) && m_header.version > 0)
+    if (m_auto_sanitizing && m_memfile_info.mutex->WasRecovered())
     {
       m_header.cur_data_size = 0;
       *reinterpret_cast<SInternalHeader*>(m_memfile_info.mem_address) = m_header;

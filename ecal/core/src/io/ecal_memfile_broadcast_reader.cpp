@@ -23,6 +23,7 @@
 
 #include "ecal_memfile_broadcast_reader.h"
 #include "ecal_memfile.h"
+#include "ecal_def.h"
 
 namespace eCAL
 {
@@ -43,51 +44,56 @@ namespace eCAL
     return true;
   }
 
-  bool CMemoryFileBroadcastReader::Read(MemfileBroadcastPayloadMessageListT &memfile_broadcast_payload_message_list, TimestampT timeout)
+  bool CMemoryFileBroadcastReader::Read(MemfileBroadcastMessageListT &memfile_broadcast_message_list, std::int64_t timeout)
   {
     if (!m_bound) return false;
 
-    if (timeout != 0) {
-      /*const auto timeout_threshold = CreateTimestamp() - (timeout * 1000);
-      std::remove_if(m_payload_memfiles.begin(), m_payload_memfiles.end(),[timeout_threshold](const auto& pair){
-        return pair.second.timestamp < timeout_threshold;
-      });*/
-    }
+    bool return_result {true};
 
-    m_memfile_broadcast->ReceiveBroadcast(m_broadcast_message_list, timeout, false);
-    std::set<UniqueIdT> handled_payload_memfile_ids;
+    m_memfile_broadcast->ReceiveEvents(m_broadcast_event_list, timeout, false);
+    std::set<std::uint64_t> handled_event_ids;
 
-    memfile_broadcast_payload_message_list.clear();
-    for (const auto &broadcast_message: m_broadcast_message_list) {
-      const auto payload_memfile_id = broadcast_message->payload_memfile_id;
-      if (!handled_payload_memfile_ids.insert(payload_memfile_id).second) continue;
+    memfile_broadcast_message_list.clear();
+    for (const auto &broadcast_event: m_broadcast_event_list)
+    {
+      const auto event_id = broadcast_event->event_id;
+      if (!handled_event_ids.insert(event_id).second) continue;
 
       decltype(m_payload_memfiles)::iterator iterator;
       bool is_new_payload_memfile {false};
       std::tie(iterator, is_new_payload_memfile) = m_payload_memfiles.insert(
-        {payload_memfile_id, {std::make_shared<CMemoryFile>(), std::vector<char>(), 0}});
+        {event_id, {std::make_shared<CMemoryFile>(), std::vector<char>(), 0}});
 
       auto &memfile_broadcast_payload = iterator->second;
-      if (is_new_payload_memfile &&
-          broadcast_message->type != eMemfileBroadcastMessageType::PAYLOAD_MEMFILE_REMOVED) {
-        memfile_broadcast_payload.payload_memfile->Create(
-          BuildPayloadMemfileName(m_memfile_broadcast->GetName(), payload_memfile_id).c_str(), false, 0);
+      if (is_new_payload_memfile && broadcast_event->type != eMemfileBroadcastEventType::EVENT_REMOVED)
+      {
+        if(!memfile_broadcast_payload.payload_memfile->Create(
+          BuildPayloadMemfileName(m_memfile_broadcast->GetName(), event_id).c_str(), false, 0))
+        {
+#ifndef NDEBUG
+          std::cerr << "Error opening payload memory file" << std::endl;
+#endif
+          return_result = false;
+          continue;
+        }
         memfile_broadcast_payload.payload_memfile_buffer.reserve(
           memfile_broadcast_payload.payload_memfile->MaxDataSize());
       }
 
-      switch (broadcast_message->type) {
-        case eMemfileBroadcastMessageType::PAYLOAD_MEMFILE_UPDATED: {
-          if (memfile_broadcast_payload.payload_memfile->GetReadAccess(100)) {
+      switch (broadcast_event->type)
+      {
+        case eMemfileBroadcastEventType::EVENT_UPDATED:
+        {
+          if (memfile_broadcast_payload.payload_memfile->GetReadAccess(EXP_MEMFILE_ACCESS_TIMEOUT)) {
             memfile_broadcast_payload.payload_memfile_buffer.resize(
               memfile_broadcast_payload.payload_memfile->CurDataSize());
             memfile_broadcast_payload.payload_memfile->Read(memfile_broadcast_payload.payload_memfile_buffer.data(),
                                                             memfile_broadcast_payload.payload_memfile_buffer.size(),
                                                             0);
             memfile_broadcast_payload.payload_memfile->ReleaseReadAccess();
-            memfile_broadcast_payload.timestamp = broadcast_message->timestamp;
+            memfile_broadcast_payload.timestamp = broadcast_event->timestamp;
 
-            memfile_broadcast_payload_message_list.push_back({memfile_broadcast_payload.payload_memfile_buffer.data(),
+            memfile_broadcast_message_list.push_back({memfile_broadcast_payload.payload_memfile_buffer.data(),
                                                               memfile_broadcast_payload.payload_memfile_buffer.size(),
                                                               memfile_broadcast_payload.timestamp});
           }
@@ -96,20 +102,20 @@ namespace eCAL
 #ifndef NDEBUG
             std::cerr << "Error acquiring read access on payload file" << std::endl;
 #endif
-            return false;
+            return_result = false;
+            continue;
           }
           break;
         }
-        case eMemfileBroadcastMessageType::PAYLOAD_MEMFILE_REMOVED:
-          m_payload_memfiles.erase(payload_memfile_id);
+        case eMemfileBroadcastEventType::EVENT_REMOVED:
+          m_payload_memfiles.erase(event_id);
           break;
-        case eMemfileBroadcastMessageType::PAYLOAD_MEMFILE_CREATED:
-          break;
+        case eMemfileBroadcastEventType::EVENT_CREATED:
         default:
           break;
       }
 
     }
-    return true;
+    return return_result;
   }
 }

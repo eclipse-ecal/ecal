@@ -109,9 +109,9 @@ namespace eCAL
     }
 
 #ifndef ECAL_LAYER_ICEORYX
-    if (Config::Experimental::IsMemfileMonitoringEnabled())
+    if (Config::Experimental::IsShmMonitoringEnabled())
     {
-      m_memfile_reg_rcv_threadcaller = std::make_shared<CMemfileRegistrationReceiveThread>(std::bind(&CMonitoringImpl::ApplySample, this, std::placeholders::_1, eCAL::pb::tl_none));
+      m_shm_reg_rcv_threadcaller = std::make_shared<CShmRegistrationReceiveThread>(std::bind(&CMonitoringImpl::ApplySample, this, std::placeholders::_1, eCAL::pb::tl_none));
     }
 #endif
 
