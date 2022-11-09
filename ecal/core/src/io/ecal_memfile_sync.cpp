@@ -354,33 +354,36 @@ namespace eCAL
       }
     }
 
-    // send new sync
-    for (auto iter = m_event_handle_map.begin(); iter != m_event_handle_map.end(); ++iter)
+    // send sync (memory file update) event
+    for (auto iter : m_event_handle_map)
     {
       // send sync event
-      gSetEvent(iter->second.event_snd);
+      gSetEvent(iter.second.event_snd);
+    }
 
-      // sync on acknowledge event
-      if (m_attr.timeout_ack_ms != 0)
+    // wait for acknowledgment event from receiver side
+    if (m_attr.timeout_ack_ms != 0)
+    {
+      for (auto iter : m_event_handle_map)
       {
-        if (!gWaitForEvent(iter->second.event_ack, m_attr.timeout_ack_ms))
+        if (!gWaitForEvent(iter.second.event_ack, m_attr.timeout_ack_ms))
         {
           // we close the event immediately to not waste time in the next
           // write call, the event will be reopened later
           // in ApplyLocSubscription if the connection still exists
-          gCloseEvent(iter->second.event_ack);
+          gCloseEvent(iter.second.event_ack);
           // invalidate it
-          gInvalidateEvent(&iter->second.event_ack);
+          gInvalidateEvent(&iter.second.event_ack);
 #ifndef NDEBUG
           Logging::Log(log_level_debug2, m_base_name + "::CSyncMemoryFile::SignalWritten - ACK event timeout");
 #endif
         }
       }
+    }
 
 #ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::SignalWritten");
+    Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::SignalWritten");
 #endif
-    }
   }
 
   void CSyncMemoryFile::DisconnectAll()
