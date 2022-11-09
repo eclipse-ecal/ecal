@@ -197,12 +197,15 @@ void SystemInformationWidget::openEcalIni(const QUrl& url)
     }
 
     // 5) Check the xdg-mime output. Fallback to plain opening for anything else than gedit
-    if (xdg_mime_query_output.isEmpty() || (xdg_mime_query_output != "org.gnome.gedit.desktop"))
+    if (xdg_mime_query_output.isEmpty()
+         || ((xdg_mime_query_output != "org.gnome.gedit.desktop")
+             && (xdg_mime_query_output != "org.gnome.TextEditor.desktop"))
+       )
     {
       return false;
     }
 
-    // 5) If it is gedit launch it via "gtk-launch"
+    // 5) If it is gedit / gnome-text-editor launch it via "gtk-launch"
     {
       QProcess gtk_launch_process;
       gtk_launch_process.start("gtk-launch", {xdg_mime_query_output, "admin://" + url.toLocalFile()});
