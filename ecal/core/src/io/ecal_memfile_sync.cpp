@@ -355,7 +355,7 @@ namespace eCAL
     }
 
     // send sync (memory file update) event
-    for (auto iter : m_event_handle_map)
+    for (const auto& iter : m_event_handle_map)
     {
       // send sync event
       gSetEvent(iter.second.event_snd);
