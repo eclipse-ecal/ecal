@@ -48,6 +48,21 @@ namespace eCAL
     }
   };
 
+  inline uint32_t parse_ipv4(const std::string& ipv4_str_)
+  {
+    uint32_t ipv4 = 0;
+    std::stringstream ss(ipv4_str_);
+    std::string token;
+    int i = 0;
+    while(std::getline(ss, token, '.') && (i < 4)) //-V112
+    {
+      unsigned char mask = static_cast<unsigned char>(atoi(token.c_str()));
+      ipv4 = ipv4 << 8 | mask;
+      i++;
+    }
+    return ipv4;
+  }
+
   /**
    * @brief Get multicast address based on the topic_name.
    *
@@ -60,31 +75,18 @@ namespace eCAL
   inline std::string topic2mcast(const std::string& tname_, const std::string& mcast_base_, const std::string& mcast_mask_)
   {
     struct fnv_hash thash;
-    size_t hash_v = thash(tname_);
+    uint32_t hash_v = thash(tname_);
 
-    unsigned char address_mask[4] = {0, 0xFF, 0xFF, 0xFF}; //-V112
-    std::stringstream ss(mcast_mask_);
-    std::string token;
-    int i = 0;
-    while(std::getline(ss, token, '.') && (i < 4)) //-V112
-    {
-      unsigned char mask = static_cast<unsigned char>(atoi(token.c_str()));
-      address_mask[i] = mask;
-      i++;
-    }
+    uint32_t address_mask = parse_ipv4(mcast_mask_);
+    uint32_t address_ip = parse_ipv4(mcast_base_) & (~address_mask);
+    if ((hash_v & address_mask) < 2)
+      address_ip += 2; // avoid .0 or .1 for masked part
+    else
+      address_ip |= (hash_v & address_mask);
 
-    unsigned char address_ip[4] = {0}; //-V112
-    address_ip[1] = static_cast<unsigned char>((hash_v >> 16) & address_mask[1]);
-    address_ip[2] = static_cast<unsigned char>((hash_v >>  8) & address_mask[2]);
-    address_ip[3] = static_cast<unsigned char>((hash_v      ) & address_mask[3]);
-    if(address_ip[3] < 2) address_ip[3] = 2; // avoid 0.0.0 and 0.0.1
-
-    std::string address = mcast_base_.substr(0, 3);
-    for(auto t = 1; t < 4; ++t) //-V112
-    {
-      address += ".";
-      address += std::to_string(address_ip[t]);
-    }
-    return(address);
+    std::ostringstream address;
+    address << (address_ip >> 24) << '.' << ((address_ip & 0x00ffffff) >> 16) << '.'
+            << ((address_ip & 0x0000ffff) >> 8) << '.' << (address_ip & 0x000000ff);
+    return (address.str());
   }
 }
