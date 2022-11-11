@@ -28,6 +28,7 @@
 #include "ecal_memfile_sync.h"
 
 #include <algorithm>
+#include <chrono>
 #include <sstream>
 
 namespace eCAL
@@ -354,33 +355,44 @@ namespace eCAL
       }
     }
 
-    // send new sync
-    for (auto iter = m_event_handle_map.begin(); iter != m_event_handle_map.end(); ++iter)
+    // send sync (memory file update) event
+    for (const auto& iter : m_event_handle_map)
     {
       // send sync event
-      gSetEvent(iter->second.event_snd);
+      gSetEvent(iter.second.event_snd);
+    }
 
-      // sync on acknowledge event
-      if (m_attr.timeout_ack_ms != 0)
+    // wait for acknowledgment event from receiver side
+    if (m_attr.timeout_ack_ms != 0)
+    {
+      // take start time for all acknowledge timeouts
+      const auto start_time = std::chrono::steady_clock::now();
+
+      for (auto event_handle : m_event_handle_map)
       {
-        if (!gWaitForEvent(iter->second.event_ack, m_attr.timeout_ack_ms))
+        const auto time_since_start = std::chrono::steady_clock::now() - start_time;
+        const auto time_to_wait     = std::chrono::milliseconds(m_attr.timeout_ack_ms)- time_since_start;
+        long       time_to_wait_ms  = std::chrono::duration_cast<std::chrono::milliseconds>(time_to_wait).count();
+        if (time_to_wait_ms <= 0) time_to_wait_ms = 0;
+
+        if (!gWaitForEvent(event_handle.second.event_ack, time_to_wait_ms))
         {
           // we close the event immediately to not waste time in the next
           // write call, the event will be reopened later
           // in ApplyLocSubscription if the connection still exists
-          gCloseEvent(iter->second.event_ack);
+          gCloseEvent(event_handle.second.event_ack);
           // invalidate it
-          gInvalidateEvent(&iter->second.event_ack);
+          gInvalidateEvent(&event_handle.second.event_ack);
 #ifndef NDEBUG
           Logging::Log(log_level_debug2, m_base_name + "::CSyncMemoryFile::SignalWritten - ACK event timeout");
 #endif
         }
       }
+    }
 
 #ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::SignalWritten");
+    Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::SignalWritten");
 #endif
-    }
   }
 
   void CSyncMemoryFile::DisconnectAll()
