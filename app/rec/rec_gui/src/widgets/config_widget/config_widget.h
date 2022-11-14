@@ -37,6 +37,7 @@ private slots:
   void maxFileSizeChanged              (unsigned int megabytes);
   void oneFilePerTopicEnabledChanged   (bool enabled);
   void descriptionChanged              (const std::string& description);
+  void userRecPathButtonPressed        ();
 
 protected:
   void showEvent(QShowEvent *event) override;
