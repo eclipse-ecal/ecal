@@ -70,7 +70,7 @@ namespace eCAL
     m_topic_size(0),
     m_buffering_shm(PUB_MEMFILE_BUF_COUNT),
     m_zero_copy(PUB_MEMFILE_ZERO_COPY),
-    m_acknowledge_timeout(PUB_MEMFILE_ACK_TO),
+    m_acknowledge_timeout_ms(PUB_MEMFILE_ACK_TO),
     m_connected(false),
     m_id(0),
     m_clock(0),
@@ -118,7 +118,7 @@ namespace eCAL
     m_bandwidth_max_udp   = Config::GetMaxUdpBandwidthBytesPerSecond();
     m_buffering_shm       = Config::GetMemfileBufferCount();
     m_zero_copy           = Config::IsMemfileZerocopyEnabled();
-    m_acknowledge_timeout = Config::GetMemfileAckTimeoutMs();
+    m_acknowledge_timeout_ms = Config::GetMemfileAckTimeoutMs();
     m_connected           = false;
     m_ext_subscribed      = false;
     m_created             = false;
@@ -192,7 +192,7 @@ namespace eCAL
     m_bandwidth_max_udp   = Config::GetMaxUdpBandwidthBytesPerSecond();
     m_buffering_shm       = Config::GetMemfileBufferCount();
     m_zero_copy           = Config::IsMemfileZerocopyEnabled();
-    m_acknowledge_timeout = Config::GetMemfileAckTimeoutMs();
+    m_acknowledge_timeout_ms = Config::GetMemfileAckTimeoutMs();
     m_connected           = false;
 
     // reset subscriber maps
@@ -345,7 +345,7 @@ namespace eCAL
 
   bool CDataWriter::ShmSetAcknowledgeTimeout(int acknowledge_timeout_ms_)
   {
-    m_acknowledge_timeout = acknowledge_timeout_ms_;
+    m_acknowledge_timeout_ms = acknowledge_timeout_ms_;
     return true;
   }
 
@@ -543,7 +543,7 @@ namespace eCAL
         wdata.time                = time_;
         wdata.buffering           = m_buffering_shm;
         wdata.zero_copy           = m_zero_copy;
-        wdata.acknowledge_timeout = m_acknowledge_timeout;
+        wdata.acknowledge_timeout_ms = m_acknowledge_timeout_ms;
 
         // prepare send
         if (m_writer_shm.PrepareWrite(wdata))

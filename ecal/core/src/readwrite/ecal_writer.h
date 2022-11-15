@@ -133,7 +133,7 @@ namespace eCAL
 
     size_t             m_buffering_shm;
     bool               m_zero_copy;
-    long               m_acknowledge_timeout;
+    int                m_acknowledge_timeout_ms;
 
     std::atomic<bool>  m_connected;
     typedef Util::CExpMap<std::string, bool> ConnectedMapT;

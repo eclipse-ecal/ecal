@@ -138,7 +138,7 @@ namespace eCAL
     }
 
     // store acknowledge timeout parameter
-    m_attr.timeout_ack_ms = data_.acknowledge_timeout;
+    m_attr.timeout_ack_ms = data_.acknowledge_timeout_ms;
     if (m_attr.timeout_ack_ms < 0) m_attr.timeout_ack_ms = 0;
 
     // write header and payload into the memory file
@@ -149,19 +149,19 @@ namespace eCAL
     // create user file header
     struct SMemFileHeader memfile_hdr;
     // set data size
-    memfile_hdr.data_size         = static_cast<unsigned long>(data_.len);
+    memfile_hdr.data_size         = static_cast<uint64_t>(data_.len);
     // set header id
-    memfile_hdr.id                = static_cast<unsigned long>(data_.id);
+    memfile_hdr.id                = static_cast<uint64_t>(data_.id);
     // set header clock
-    memfile_hdr.clock             = static_cast<unsigned long>(data_.clock);
+    memfile_hdr.clock             = static_cast<uint64_t>(data_.clock);
     // set header time
-    memfile_hdr.time              = static_cast<long long>(data_.time);
+    memfile_hdr.time              = static_cast<int64_t>(data_.time);
     // set header hash
-    memfile_hdr.hash              = static_cast<size_t>(data_.hash);
+    memfile_hdr.hash              = static_cast<uint64_t>(data_.hash);
     // set zero copy
     memfile_hdr.options.zero_copy = static_cast<unsigned char>(data_.zero_copy);
     // set acknowledge timeout
-    memfile_hdr.ack_timout        = static_cast<unsigned long>(data_.acknowledge_timeout);
+    memfile_hdr.ack_timout_ms        = static_cast<int64_t>(data_.acknowledge_timeout_ms);
 
     // acquire write access
     bool write_access = m_memfile.GetWriteAccess(m_attr.timeout_open_ms);

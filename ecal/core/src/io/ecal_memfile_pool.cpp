@@ -235,7 +235,7 @@ namespace eCAL
             }
 
             // send acknowledge event
-            if (mfile_hdr.ack_timout != 0)
+            if (mfile_hdr.ack_timout_ms != 0)
             {
               gSetEvent(m_event_ack);
             }

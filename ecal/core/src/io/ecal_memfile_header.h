@@ -43,7 +43,7 @@ namespace eCAL
     };
     optflags   options = { 0, 0 };
     // ----- > 5.11 ----
-    uint64_t   ack_timout = 0;
+    int64_t    ack_timout_ms = 0;
   };
 }
  
