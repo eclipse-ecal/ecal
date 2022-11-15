@@ -296,9 +296,9 @@ namespace eCAL
     std::vector<std::string> process_id_list;
     {
       std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-      for (auto iter : m_event_handle_map)
+      for (const auto& event_handle : m_event_handle_map)
       {
-        process_id_list.push_back(iter.first);
+        process_id_list.push_back(event_handle.first);
       }
     }
 
@@ -309,7 +309,7 @@ namespace eCAL
     if (!Create(m_base_name, size_)) return false;
 
     // reconnect processes
-    for (auto process_id : process_id_list)
+    for (const auto& process_id : process_id_list)
     {
       Connect(process_id);
     }
@@ -346,17 +346,17 @@ namespace eCAL
     // "eat" old acknowledge events :)
     if (m_attr.timeout_ack_ms != 0)
     {
-      for (auto iter : m_event_handle_map)
+      for (const auto& event_handle : m_event_handle_map)
       {
-        while (gWaitForEvent(iter.second.event_ack, 0)) {}
+        while (gWaitForEvent(event_handle.second.event_ack, 0)) {}
       }
     }
 
     // send sync (memory file update) event
-    for (const auto& iter : m_event_handle_map)
+    for (const auto& event_handle : m_event_handle_map)
     {
       // send sync event
-      gSetEvent(iter.second.event_snd);
+      gSetEvent(event_handle.second.event_snd);
     }
 
     // wait for acknowledgment event from receiver side
@@ -397,18 +397,23 @@ namespace eCAL
     std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
 
     // fire acknowledge events, to unlock blocking send function
-    for (auto iter : m_event_handle_map)
+    for (const auto& event_handle : m_event_handle_map)
     {
-      gSetEvent(iter.second.event_ack);
+      gSetEvent(event_handle.second.event_ack);
     }
 
-    // close all events and invalidate them
-    for (auto iter = m_event_handle_map.begin(); iter != m_event_handle_map.end(); ++iter)
+    // close all events
+    for (const auto& event_handle : m_event_handle_map)
     {
-      gCloseEvent(iter->second.event_snd);
-      gInvalidateEvent(&iter->second.event_snd);
-      gCloseEvent(iter->second.event_ack);
-      gInvalidateEvent(&iter->second.event_ack);
+      gCloseEvent(event_handle.second.event_snd);
+      gCloseEvent(event_handle.second.event_ack);
+    }
+
+    // invalidate all events
+    for (auto& event_handle : m_event_handle_map)
+    {
+      gInvalidateEvent(&event_handle.second.event_snd);
+      gInvalidateEvent(&event_handle.second.event_ack);
     }
 
     // clear event map
