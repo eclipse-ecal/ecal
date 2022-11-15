@@ -63,7 +63,7 @@ namespace eCAL
 
     std::string BuildMemFileName(const std::string base_name_);
 
-    void SendSyncEvents();
+    void SyncContent();
     void DisconnectAll();
 
     std::string         m_base_name;

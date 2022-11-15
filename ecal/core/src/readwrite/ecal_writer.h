@@ -71,6 +71,7 @@ namespace eCAL
 
     bool ShmSetBufferCount(long buffering_);
     bool ShmEnableZeroCopy(bool state_);
+    bool ShmSetAcknowledgeTimeout(int acknowledge_timeout_ms_);
 
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
     bool RemEventCallback(eCAL_Publisher_Event type_);
@@ -132,6 +133,7 @@ namespace eCAL
 
     size_t             m_buffering_shm;
     bool               m_zero_copy;
+    long               m_acknowledge_timeout;
 
     std::atomic<bool>  m_connected;
     typedef Util::CExpMap<std::string, bool> ConnectedMapT;

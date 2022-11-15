@@ -70,6 +70,7 @@ namespace eCAL
     m_topic_size(0),
     m_buffering_shm(PUB_MEMFILE_BUF_COUNT),
     m_zero_copy(PUB_MEMFILE_ZERO_COPY),
+    m_acknowledge_timeout(PUB_MEMFILE_ACK_TO),
     m_connected(false),
     m_id(0),
     m_clock(0),
@@ -105,21 +106,22 @@ namespace eCAL
     if (m_created) return(false);
 
     // set defaults
-    m_topic_name        = topic_name_;
+    m_topic_name          = topic_name_;
     m_topic_id.clear();
-    m_topic_type        = topic_type_;
-    m_topic_desc        = topic_desc_;
-    m_id                = 0;
-    m_clock             = 0;
-    m_clock_old         = 0;
-    m_snd_time          = std::chrono::steady_clock::time_point();
-    m_freq              = 0;
-    m_bandwidth_max_udp = Config::GetMaxUdpBandwidthBytesPerSecond();
-    m_buffering_shm     = Config::GetMemfileBufferCount();
-    m_zero_copy         = Config::IsMemfileZerocopyEnabled();
-    m_connected         = false;
-    m_ext_subscribed    = false;
-    m_created           = false;
+    m_topic_type          = topic_type_;
+    m_topic_desc          = topic_desc_;
+    m_id                  = 0;
+    m_clock               = 0;
+    m_clock_old           = 0;
+    m_snd_time            = std::chrono::steady_clock::time_point();
+    m_freq                = 0;
+    m_bandwidth_max_udp   = Config::GetMaxUdpBandwidthBytesPerSecond();
+    m_buffering_shm       = Config::GetMemfileBufferCount();
+    m_zero_copy           = Config::IsMemfileZerocopyEnabled();
+    m_acknowledge_timeout = Config::GetMemfileAckTimeoutMs();
+    m_connected           = false;
+    m_ext_subscribed      = false;
+    m_created             = false;
 
     // build topic id
     std::stringstream counter;
@@ -182,15 +184,16 @@ namespace eCAL
     m_writer_inproc.Destroy();
 
     // reset defaults
-    m_id                = 0;
-    m_clock             = 0;
-    m_clock_old         = 0;
-    m_snd_time          = std::chrono::steady_clock::time_point();
-    m_freq              = 0;
-    m_bandwidth_max_udp = Config::GetMaxUdpBandwidthBytesPerSecond();
-    m_buffering_shm     = Config::GetMemfileBufferCount();
-    m_zero_copy         = Config::IsMemfileZerocopyEnabled();
-    m_connected         = false;
+    m_id                  = 0;
+    m_clock               = 0;
+    m_clock_old           = 0;
+    m_snd_time            = std::chrono::steady_clock::time_point();
+    m_freq                = 0;
+    m_bandwidth_max_udp   = Config::GetMaxUdpBandwidthBytesPerSecond();
+    m_buffering_shm       = Config::GetMemfileBufferCount();
+    m_zero_copy           = Config::IsMemfileZerocopyEnabled();
+    m_acknowledge_timeout = Config::GetMemfileAckTimeoutMs();
+    m_connected           = false;
 
     // reset subscriber maps
     {
@@ -337,6 +340,12 @@ namespace eCAL
   bool CDataWriter::ShmEnableZeroCopy(bool state_)
   {
     m_zero_copy = state_;
+    return true;
+  }
+
+  bool CDataWriter::ShmSetAcknowledgeTimeout(int acknowledge_timeout_ms_)
+  {
+    m_acknowledge_timeout = acknowledge_timeout_ms_;
     return true;
   }
 
@@ -526,14 +535,15 @@ namespace eCAL
       {
         // fill writer data
         struct SWriterData wdata;
-        wdata.buf       = buf_;
-        wdata.len       = len_;
-        wdata.id        = m_id;
-        wdata.clock     = m_clock;
-        wdata.hash      = snd_hash;
-        wdata.time      = time_;
-        wdata.buffering = m_buffering_shm;
-        wdata.zero_copy = m_zero_copy;
+        wdata.buf                 = buf_;
+        wdata.len                 = len_;
+        wdata.id                  = m_id;
+        wdata.clock               = m_clock;
+        wdata.hash                = snd_hash;
+        wdata.time                = time_;
+        wdata.buffering           = m_buffering_shm;
+        wdata.zero_copy           = m_zero_copy;
+        wdata.acknowledge_timeout = m_acknowledge_timeout;
 
         // prepare send
         if (m_writer_shm.PrepareWrite(wdata))

@@ -215,9 +215,9 @@ namespace eCAL
     bool ShmSetBufferCount(long buffering_);
 
     /**
-     * @brief Enable zero copy shared memory trasnport mode.
+     * @brief Enable zero copy shared memory transport mode.
      *
-     * By default, the builtin shared memory layer is configured to make one memory copy
+     * By default, the built-in shared memory layer is configured to make one memory copy
      * on the receiver side. That means the payload is copied by the internal eCAL memory pool manager
      * out of the memory file and the file is closed immediately after this.
      * The intention of this implementation is to free the file as fast as possible after reading
@@ -242,6 +242,28 @@ namespace eCAL
      * @return  True if it succeeds, false if it fails.
     **/
     bool ShmEnableZeroCopy(bool state_);
+
+    /**
+     * @brief Force connected subscribers to send acknowledge event after processing the message and 
+     *        block publisher send call on this event with a timeout.
+     *
+     * Most applications perform very well with the default behavior. If subscribers are too slow 
+     * to process incoming messages then the overall software architecture needs to be checked, software components 
+     * need to be optimized or parallelized.
+     * 
+     * There may still be cases where it could make sense to synchronize the transfer of the payload from a publisher 
+     * to a subscriber by using an additional handshake event. This event is signaled by a subscriber back to the 
+     * sending publisher to confirm the complete payload transmission and the processed subscriber callback.
+     * 
+     * The publisher will wait up to the specified timeout for the acknowledge signals of all connected subscribers 
+     * before sending new content. Finally that means the publishers CPublisher::Send API function call is now blocked 
+     * and will not return until all subscriber have read and processed their content or the timeout has been reached.
+     * 
+     * @param acknowledge_timeout_ms_ timeout to wait for acknowledge signal from connected subscriber in ms (0 == no handshake).
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool ShmSetAcknowledgeTimeout(int acknowledge_timeout_ms_);
 
     /**
      * @brief Set the the specific topic id.

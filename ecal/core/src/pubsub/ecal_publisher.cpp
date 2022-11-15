@@ -315,6 +315,12 @@ namespace eCAL
     return m_datawriter->ShmEnableZeroCopy(state_);
   }
 
+  bool CPublisher::ShmSetAcknowledgeTimeout(int acknowledge_timeout_ms_)
+  {
+    if (!m_created) return(false);
+    return m_datawriter->ShmSetAcknowledgeTimeout(acknowledge_timeout_ms_);
+  }
+
   bool CPublisher::SetID(long long id_)
   {
     m_id = id_;
