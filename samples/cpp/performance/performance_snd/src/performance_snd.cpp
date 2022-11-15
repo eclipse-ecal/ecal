@@ -42,6 +42,8 @@ int main(int argc, char **argv)
   int                 msgs (0);
   unsigned long long  bytes(0);
   size_t              slen (0);
+  int                 trigger(1);
+  bool                handshake(false);
 
   // default send string
   std::string send_s = "Hello World ";
@@ -86,6 +88,8 @@ int main(int argc, char **argv)
       std::chrono::duration<double> diff_time = std::chrono::steady_clock::now() - start_time;
       if(diff_time >= std::chrono::seconds(1))
       {
+        trigger++;
+
         start_time = std::chrono::steady_clock::now();
         std::stringstream out;
         out << "Message size (kByte):  " << int(slen / 1024)                             << std::endl;
@@ -98,6 +102,28 @@ int main(int argc, char **argv)
 
         eCAL::Logging::Log(out.str());
       }
+    }
+
+    if ((trigger % 10) == 0)
+    {
+      std::cout << std::endl;
+      std::cout << "------------------------------" << std::endl;
+      if (handshake)
+      {
+        std::cout << "Switch handshake off" << std::endl;
+        pub.ShmSetAcknowledgeTimeout(0);
+      }
+      else
+      {
+        std::cout << "Switch handshake on" << std::endl;
+        pub.ShmSetAcknowledgeTimeout(1000);
+      }
+      std::cout << "------------------------------" << std::endl;
+      std::cout << std::endl;
+      std::cout << std::endl;
+
+      handshake = !handshake;
+      trigger++;
     }
 
     eCAL::Logging::StopCoreTimer();
