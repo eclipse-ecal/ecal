@@ -164,7 +164,7 @@ namespace eCAL
     memfile_hdr.ack_timout_ms        = static_cast<int64_t>(data_.acknowledge_timeout_ms);
 
     // acquire write access
-    bool write_access = m_memfile.GetWriteAccess(m_attr.timeout_open_ms);
+    bool write_access = m_memfile.GetWriteAccess(static_cast<int>(m_attr.timeout_open_ms));
 
     // maybe it's locked by a zombie or a crashed process
     // so we try to recreate a new one
@@ -178,7 +178,7 @@ namespace eCAL
       if (!Recreate(m_memfile.MaxDataSize())) return false;
 
       // then try to get access again
-      write_access = m_memfile.GetWriteAccess(m_attr.timeout_open_ms);
+      write_access = m_memfile.GetWriteAccess(static_cast<int>(m_attr.timeout_open_ms));
       // still no chance ? hell .... we give up
       if (!write_access)
       {
@@ -252,7 +252,7 @@ namespace eCAL
 
     // initialize memory file with empty header
     struct SMemFileHeader memfile_hdr;
-    m_memfile.GetWriteAccess(m_attr.timeout_open_ms);
+    m_memfile.GetWriteAccess(static_cast<int>(m_attr.timeout_open_ms));
     m_memfile.Write(&memfile_hdr, memfile_hdr.hdr_size, 0);
     m_memfile.ReleaseWriteAccess();
 
