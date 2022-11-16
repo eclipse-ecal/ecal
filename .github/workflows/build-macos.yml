@@ -12,7 +12,8 @@ jobs:
 
     steps:
     - name: Downgrade Python version
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
+      id: cp39
       with:
         python-version: '3.9'
 
@@ -79,7 +80,10 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_CURL=OFF \
         -DECAL_THIRDPARTY_BUILD_GTEST=ON \
         -DECAL_THIRDPARTY_BUILD_HDF5=OFF \
-        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_CXX_STANDARD=14 \
+        -DPython_FIND_STRATEGY=LOCATION \
+        -DPython_FIND_REGISTRY=NEVER
         sudo mkdir /etc/ecal
         sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.ini" /etc/ecal
       shell: bash
