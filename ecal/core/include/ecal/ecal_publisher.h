@@ -238,7 +238,7 @@ namespace eCAL
      * can increase the performance remarkable. But please keep in mind to return from the message callback function
      * as fast as possible to not delay subsequent read/write access operations.
      *
-     * @param state_  Set type zero copy mode for shared memory trasnport layer (true == zero copy enabled).
+     * @param state_  Set type zero copy mode for shared memory transport layer (true == zero copy enabled).
      *
      * @return  True if it succeeds, false if it fails.
     **/
@@ -280,11 +280,11 @@ namespace eCAL
     bool ShmSetAcknowledgeTimeout(std::chrono::duration<Rep, Period> acknowledge_timeout_)
     {
       auto acknowledge_timeout_ms = std::chrono::duration_cast<std::chrono::milliseconds>(acknowledge_timeout_).count();
-      return ShmSetAcknowledgeTimeout(acknowledge_timeout_ms);
+      return ShmSetAcknowledgeTimeout(static_cast<int>(acknowledge_timeout_ms));
     }
 
     /**
-     * @brief Set the the specific topic id.
+     * @brief Set the specific topic id.
      *
      * @param id_     The topic id for subscriber side filtering (0 == no id).
      *
@@ -312,6 +312,18 @@ namespace eCAL
      * @return  Number of bytes sent. 
     **/
     size_t Send(const std::string& s_, long long time_ = -1) const;
+
+    /**
+     * @brief Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout).
+     *
+     * @param buf_                     Pointer to content buffer.
+     * @param len_                     Length of buffer.
+     * @param time_                    Send time (-1 = use eCAL system time in us, default = -1).
+     * @param acknowledge_timeout_ms_  Maximum time to wait for subscriber receive and process acknowledge feedback in ms.
+     *
+     * @return  Number of bytes sent.
+    **/
+    size_t SendSynchronized(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const;
 
     /**
      * @brief Add callback function for publisher events.

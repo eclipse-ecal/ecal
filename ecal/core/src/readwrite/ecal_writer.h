@@ -71,7 +71,9 @@ namespace eCAL
 
     bool ShmSetBufferCount(long buffering_);
     bool ShmEnableZeroCopy(bool state_);
+
     bool ShmSetAcknowledgeTimeout(int acknowledge_timeout_ms_);
+    int  ShmGetAcknowledgeTimeout();
 
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
     bool RemEventCallback(eCAL_Publisher_Event type_);

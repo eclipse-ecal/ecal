@@ -357,6 +357,23 @@ namespace eCAL
     return(Send(s_.data(), s_.size(), time_));
   }
 
+  size_t CPublisher::SendSynchronized(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
+  {
+    if (!m_created) return(0);
+
+    // set new acknowledge timeout
+    int current_acknowledge_timeout_ms(m_datawriter->ShmGetAcknowledgeTimeout());
+    m_datawriter->ShmSetAcknowledgeTimeout(acknowledge_timeout_ms_);
+    
+    // send buffer
+    size_t len = Send(buf_, len_, time_);
+
+    // reset acknowledge timeout
+    m_datawriter->ShmSetAcknowledgeTimeout(current_acknowledge_timeout_ms);
+
+    return len;
+  }
+
   bool CPublisher::AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_)
   {
     if (!m_datawriter) return(false);
