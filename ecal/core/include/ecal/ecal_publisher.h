@@ -315,6 +315,8 @@ namespace eCAL
 
     /**
      * @brief Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout).
+     * 
+     * This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.
      *
      * @param buf_                     Pointer to content buffer.
      * @param len_                     Length of buffer.
