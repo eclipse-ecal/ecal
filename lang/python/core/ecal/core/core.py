@@ -252,6 +252,20 @@ def pub_send(topic_handle, msg_payload, msg_time=-1):
   return _ecal.pub_send(topic_handle, msg_payload, msg_time)
 
 
+def pub_send_sync(topic_handle, msg_payload, msg_time, ack_timeout_ms):
+  """ send publisher content synchronized to connected local subscribers with acknowledge timeout
+
+  :param topic_handle:    the topic handle
+  :param msg_payload:     message python string (can contain zeros)
+  :type msg_payload:      bytes
+  :param msg_time:        message time in us (-1 == eCAL system time)
+  :type msg_time:         int
+  :param ack_timeout_ms:  Maximum time to wait for all subscribers acknowledge feedback in ms (message received and processed)
+  :type ack_timeout_ms:   int
+
+  """
+  return _ecal.pub_send_sync(topic_handle, msg_payload, msg_time, ack_timeout_ms)
+
 def sub_create(topic_name, topic_type):
   """ create subscriber
 
@@ -630,6 +644,19 @@ class publisher(object):
 
     """
     return pub_send(self.thandle, msg_payload, msg_time)
+
+  def send_sync(self, msg_payload, msg_time, ack_timeout_ms):
+    """ send publisher content synchronized to connected local subscribers with acknowledge timeout
+
+    :param msg_payload:     message python string (can contain zeros)
+    :type msg_payload:      bytes
+    :param msg_time:        message time in us (-1 == eCAL system time)
+    :type msg_time:         int
+    :param ack_timeout_ms:  Maximum time to wait for subscriber receive and process acknowledge feedback in ms
+    :type ack_timeout_ms:   int
+
+    """
+    return pub_send_sync(self.thandle, msg_payload, msg_time, ack_timeout_ms)
 
 
 class subscriber(object):

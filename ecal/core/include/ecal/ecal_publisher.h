@@ -320,8 +320,8 @@ namespace eCAL
      *
      * @param buf_                     Pointer to content buffer.
      * @param len_                     Length of buffer.
-     * @param time_                    Send time (-1 = use eCAL system time in us, default = -1).
-     * @param acknowledge_timeout_ms_  Maximum time to wait for subscriber receive and process acknowledge feedback in ms.
+     * @param time_                    Send time (-1 = use eCAL system time in us).
+     * @param acknowledge_timeout_ms_  Maximum time to wait for all subscribers acknowledge feedback in ms (buffer received and processed).
      *
      * @return  Number of bytes sent.
     **/

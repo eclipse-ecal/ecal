@@ -94,6 +94,9 @@ class ProtoPublisher(MessagePublisher):
   def send(self, msg, time=-1):
     return self.c_publisher.send(msg.SerializeToString(), time)
 
+  def send_sync(self, msg, time, ack_timeout_ms):
+    return self.c_publisher.send_sync(msg.SerializeToString(), time, ack_timeout_ms)
+
 
 class StringPublisher(MessagePublisher):
   """Spezialized publisher that sends out plain strings
@@ -105,6 +108,9 @@ class StringPublisher(MessagePublisher):
 
   def send(self, msg, time=-1):
     return self.c_publisher.send(msg.encode(), time)
+
+  def send_sync(self, msg, time, ack_timeout_ms):
+    return self.c_publisher.send_sync(msg.encode(), time, ack_timeout_ms)
 
 
 if __name__ == '__main__':

@@ -363,7 +363,7 @@ namespace eCAL
 
     // set new acknowledge timeout
     int current_acknowledge_timeout_ms(m_datawriter->ShmGetAcknowledgeTimeout());
-    m_datawriter->ShmSetAcknowledgeTimeout(acknowledge_timeout_ms_);
+    m_datawriter->ShmSetAcknowledgeTimeout(static_cast<int>(acknowledge_timeout_ms_));
     
     // send buffer
     size_t len = Send(buf_, len_, time_);

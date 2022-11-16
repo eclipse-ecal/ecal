@@ -332,6 +332,23 @@ ECAL_API int pub_send(ECAL_HANDLE handle_, const char* payload_, const int lengt
 }
 
 /****************************************/
+/*      pub_send_sync                   */
+/****************************************/
+ECAL_API int pub_send_sync(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_, const long long acknowledge_timeout_ms_)
+{
+  eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
+  if (pub)
+  {
+    size_t ret = pub->SendSynchronized(payload_, static_cast<size_t>(length_), time_, acknowledge_timeout_ms_);
+    if (static_cast<int>(ret) == length_)
+    {
+      return(length_);
+    }
+  }
+  return(0);
+}
+
+/****************************************/
 /*      pub_add_event_callback          */
 /****************************************/
 static std::mutex g_pub_event_callback_mtx;
