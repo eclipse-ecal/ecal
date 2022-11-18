@@ -28,7 +28,7 @@ Visit the eCAL Documentation at 🌐 http://ecal.io for more information.
 * eCAL is simple and zero-conf. No complex configuration for communication details and QOS settings are needed
 * eCAL is message protocol agnostic. You choose the message protocol that fits to your needs like [Google Protobuf](https://developers.google.com/protocol-buffers), [CapnProto](https://capnproto.org/), [Flatbuffers](https://google.github.io/flatbuffers/)...
 * eCAL uses the standardized recording format [HDF5](https://www.hdfgroup.org/solutions/hdf5/)
-* eCAL integrates gently into your ROS2 environment with the [eCAL RMW](https://github.com/continental/rmw_ecal)  
+* eCAL integrates gently into your ROS2 environment with the [eCAL RMW](https://github.com/eclipse-ecal/rmw_ecal)
 * eCAL supports Intel and arm platforms
 
 * eCAL runs on a wide variety of operating systems:
