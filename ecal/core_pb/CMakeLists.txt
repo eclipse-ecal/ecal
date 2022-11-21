@@ -30,7 +30,7 @@ set(ProtoFiles
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/topic.proto
 )
 
-ecal_add_library(${PROJECT_NAME} src/core_pb.cpp)
+ecal_add_shared_library(${PROJECT_NAME} src/core_pb.cpp)
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 protobuf_target_cpp(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src INSTALL_FOLDER include ${ProtoFiles})
