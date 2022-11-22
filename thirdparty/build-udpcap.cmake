@@ -1,7 +1,14 @@
+# Check if Npcap / Pcap++ are available as pre-downloaded .zip files
+if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/npcap/npcap-sdk.zip")
+  set(NPCAP_SDK_ARCHIVE_URL "${CMAKE_CURRENT_LIST_DIR}/npcap/npcap-sdk.zip")
+endif()
+if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/npcap/pcapplusplus.zip")
+  set(PCAPPLUSPLUS_ARCHIVE_URL "${CMAKE_CURRENT_LIST_DIR}/npcap/pcapplusplus.zip")
+endif()
+
 # Build as static library
 set(CMAKE_BUILD_SHARED_LIBS_OLD ${CMAKE_BUILD_SHARED_LIBS})
 set(CMAKE_BUILD_SHARED_LIBS OFF)
-
 
 # Let udpcap pull the dependencies
 set(UDPCAP_BUILD_SAMPLES               OFF)
