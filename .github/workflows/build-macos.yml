@@ -18,7 +18,7 @@ jobs:
         python-version: '3.9'
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v3
       with:
         setup-python: false
         version: '5.15.2'
@@ -39,7 +39,7 @@ jobs:
         sudo make install
 
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules:  'true'
         fetch-depth: 0
@@ -119,13 +119,13 @@ jobs:
       working-directory: ${{ runner.workspace }}/_build
 
     - name: Upload DMG
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: macos-dmg
         path: ${{ runner.workspace }}/_build/_deploy/*.dmg
 
     - name: Upload Python Wheel
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: macos-python-wheel
         path: ${{ runner.workspace }}/_build/_deploy/*.whl
