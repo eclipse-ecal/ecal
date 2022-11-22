@@ -189,7 +189,7 @@ namespace
 
 namespace eCAL
 {
-  CNamedMutexRobustClockLockImpl::CNamedMutexRobustClockLockImpl(const std::string &name_, bool recoverable_) : m_mutex_handle(nullptr), m_named(name_), m_recoverable(false), m_was_recovered(false)
+  CNamedMutexRobustClockLockImpl::CNamedMutexRobustClockLockImpl(const std::string &name_, bool recoverable_) : m_mutex_handle(nullptr), m_named(name_), m_recoverable(false), m_was_recovered(false), m_has_ownership(false)
   {
     if(name_.empty())
       return;
@@ -208,6 +208,7 @@ namespace eCAL
     if(m_mutex_handle == nullptr)
     {
       m_mutex_handle = named_mutex_create(mutex_name.c_str(), m_recoverable);
+      m_has_ownership = true;
     }
   }
 
@@ -222,8 +223,9 @@ namespace eCAL
     // close mutex
     named_mutex_close(m_mutex_handle);
 
-    // clean-up mutex
-    named_mutex_destroy(named_mutex_buildname(m_named).c_str());
+    // clean-up if mutex instance has ownership
+    if(m_has_ownership)
+      named_mutex_destroy(named_mutex_buildname(m_named).c_str());
   }
 
   bool CNamedMutexRobustClockLockImpl::IsCreated() const
@@ -238,6 +240,16 @@ namespace eCAL
   bool CNamedMutexRobustClockLockImpl::WasRecovered() const
   {
     return m_was_recovered;
+  }
+
+  bool CNamedMutexRobustClockLockImpl::HasOwnership() const
+  {
+    return m_has_ownership;
+  }
+
+  void CNamedMutexRobustClockLockImpl::DropOwnership()
+  {
+    m_has_ownership = false;
   }
 
   bool CNamedMutexRobustClockLockImpl::Lock(int64_t timeout_)

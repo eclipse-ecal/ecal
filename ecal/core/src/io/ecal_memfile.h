@@ -28,6 +28,7 @@
 #include <cstdint>
 
 #include "ecal_memfile_info.h"
+#include "ecal_named_mutex.h"
 
 namespace eCAL
 {
@@ -204,6 +205,7 @@ namespace eCAL
     std::string     m_name;
     SInternalHeader m_header;
     SMemFileInfo    m_memfile_info;
+    CNamedMutex     m_memfile_mutex;
 
   private:
     CMemoryFile(const CMemoryFile&);                 // prevent copy-construction

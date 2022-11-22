@@ -63,6 +63,15 @@ namespace eCAL
     return m_was_recovered;
   }
 
+  bool CNamedMutexImpl::HasOwnership() const
+  {
+    return false;
+  }
+
+  void CNamedMutexImpl::DropOwnership()
+  {
+  }
+
   bool CNamedMutexImpl::Lock(int64_t timeout_)
   {
     // check mutex handle

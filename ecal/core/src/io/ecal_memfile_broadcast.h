@@ -59,7 +59,7 @@ namespace eCAL
     EVENT_CREATED,
     EVENT_REMOVED,
     EVENT_UPDATED,
-    //PAYLOAD_MEMFILE_HEARTBEAT
+    //EVENT_HEARTBEAT
   };
 
 #pragma pack(push, 1)

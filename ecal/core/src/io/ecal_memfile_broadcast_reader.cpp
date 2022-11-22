@@ -50,7 +50,7 @@ namespace eCAL
 
     bool return_result {true};
 
-    m_memfile_broadcast->ReceiveEvents(m_broadcast_event_list, timeout, false);
+    m_memfile_broadcast->ReceiveEvents(m_broadcast_event_list, timeout, true);
     std::set<std::uint64_t> handled_event_ids;
 
     memfile_broadcast_message_list.clear();

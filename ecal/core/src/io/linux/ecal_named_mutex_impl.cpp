@@ -212,7 +212,7 @@ namespace
 namespace eCAL
 {
 
-  CNamedMutexImpl::CNamedMutexImpl(const std::string &name_, bool /*recoverable_*/) : m_mutex_handle(nullptr), m_named(name_)
+  CNamedMutexImpl::CNamedMutexImpl(const std::string &name_, bool /*recoverable_*/) : m_mutex_handle(nullptr), m_named(name_), m_has_ownership(false)
   {
     if(name_.empty())
       return;
@@ -227,6 +227,8 @@ namespace eCAL
     if(m_mutex_handle == nullptr)
     {
       m_mutex_handle = named_mutex_create(mutex_name.c_str());
+      if(m_mutex_handle)
+        m_has_ownership = true;
     }
   }
 
@@ -241,8 +243,9 @@ namespace eCAL
     // close mutex
     named_mutex_close(m_mutex_handle);
 
-    // clean-up mutex
-    named_mutex_destroy(named_mutex_buildname(m_named).c_str());
+    // clean-up if mutex instance has ownership
+    if(m_has_ownership)
+      named_mutex_destroy(named_mutex_buildname(m_named).c_str());
   }
 
   bool CNamedMutexImpl::IsCreated() const
@@ -257,6 +260,16 @@ namespace eCAL
   bool CNamedMutexImpl::WasRecovered() const
   {
     return false;
+  }
+
+  bool CNamedMutexImpl::HasOwnership() const
+  {
+    return m_has_ownership;
+  }
+
+  void CNamedMutexImpl::DropOwnership()
+  {
+    m_has_ownership = false;
   }
 
   bool CNamedMutexImpl::Lock(int64_t timeout_)

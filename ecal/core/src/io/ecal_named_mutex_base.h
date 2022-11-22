@@ -31,9 +31,14 @@ namespace eCAL
   class CNamedMutexImplBase
   {
   public:
+    virtual ~CNamedMutexImplBase(){}
+
     virtual bool IsCreated() const = 0;
     virtual bool IsRecoverable() const = 0;
     virtual bool WasRecovered() const = 0;
+    virtual bool HasOwnership() const = 0;
+
+    virtual void DropOwnership() = 0;
 
     virtual bool Lock(int64_t timeout_) = 0;
     virtual void Unlock() = 0;
@@ -42,6 +47,10 @@ namespace eCAL
   class CNamedMutexStubImpl : public CNamedMutexImplBase
   {
   public:
+    ~CNamedMutexStubImpl()
+    {
+    }
+
     bool IsCreated() const final
     {
       return false;
@@ -54,6 +63,15 @@ namespace eCAL
     bool WasRecovered() const final
     {
       return false;
+    }
+
+    bool HasOwnership() const final
+    {
+      return false;
+    }
+
+    void DropOwnership() final
+    {
     }
 
     bool Lock(int64_t /*timeout_*/) final

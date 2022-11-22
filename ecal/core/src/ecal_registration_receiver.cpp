@@ -180,6 +180,7 @@ namespace eCAL
       // stop memfile registration receive thread and unbind reader
       m_memfile_reg_rcv_thread.Stop();
       m_memfile_broadcast_reader.Unbind();
+      m_memfile_broadcast.Destroy();
     }
 #endif
 

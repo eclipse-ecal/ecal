@@ -37,13 +37,16 @@ namespace eCAL
     
     CNamedMutexRobustClockLockImpl(const CNamedMutexRobustClockLockImpl&) = delete;
     CNamedMutexRobustClockLockImpl& operator=(const CNamedMutexRobustClockLockImpl&) = delete;
-    CNamedMutexRobustClockLockImpl(const CNamedMutexRobustClockLockImpl&&) = delete;
-    CNamedMutexRobustClockLockImpl& operator=(const CNamedMutexRobustClockLockImpl&&) = delete;
+    CNamedMutexRobustClockLockImpl(CNamedMutexRobustClockLockImpl&&) = delete;
+    CNamedMutexRobustClockLockImpl& operator=(CNamedMutexRobustClockLockImpl&&) = delete;
 
 
     bool IsCreated() const final;
     bool IsRecoverable() const final;
     bool WasRecovered() const final;
+    bool HasOwnership() const final;
+
+    void DropOwnership() final;
 
     bool Lock(int64_t timeout_) final;
     void Unlock() final;
@@ -53,5 +56,6 @@ namespace eCAL
     std::string m_named;
     bool m_recoverable;
     bool m_was_recovered;
+    bool m_has_ownership;
   };
 }

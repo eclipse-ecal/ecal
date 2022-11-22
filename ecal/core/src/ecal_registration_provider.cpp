@@ -128,7 +128,10 @@ namespace eCAL
 
 #ifndef ECAL_LAYER_ICEORYX
     if(m_use_shm_monitoring)
+    {
       m_memfile_broadcast_writer.Unbind();
+      m_memfile_broadcast.Destroy();
+    }
 #endif
 
     m_created = false;

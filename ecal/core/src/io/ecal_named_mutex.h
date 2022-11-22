@@ -40,8 +40,8 @@ namespace eCAL
 
     CNamedMutex(const CNamedMutex&) = delete;
     CNamedMutex& operator=(const CNamedMutex&) = delete;
-    CNamedMutex(const CNamedMutex&&) = delete;
-    CNamedMutex& operator=(const CNamedMutex&&) = delete;
+    CNamedMutex(CNamedMutex&& named_mutex);
+    CNamedMutex& operator=(CNamedMutex&& named_mutex) ;
 
     bool Create(const std::string& name_, bool recoverable_ = false);
     void Destroy();
@@ -49,6 +49,9 @@ namespace eCAL
     bool IsCreated() const;
     bool IsRecoverable() const;
     bool WasRecovered() const;
+    bool HasOwnership() const;
+
+    void DropOwnership();
 
     bool Lock(int64_t timeout_);
     void Unlock();

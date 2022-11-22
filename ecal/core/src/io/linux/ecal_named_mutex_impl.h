@@ -37,17 +37,21 @@ namespace eCAL
     
     CNamedMutexImpl(const CNamedMutexImpl&) = delete;
     CNamedMutexImpl& operator=(const CNamedMutexImpl&) = delete;
-    CNamedMutexImpl(const CNamedMutexImpl&&) = delete;
-    CNamedMutexImpl& operator=(const CNamedMutexImpl&&) = delete;
+    CNamedMutexImpl(CNamedMutexImpl&&) = delete;
+    CNamedMutexImpl& operator=(CNamedMutexImpl&&) = delete;
 
     bool IsCreated() const final;
     bool IsRecoverable() const final;
     bool WasRecovered() const final;
+    bool HasOwnership() const final;
+
+    void DropOwnership() final;
 
     bool Lock(int64_t timeout_) final;
     void Unlock() final;
   private:
     named_mutex_t* m_mutex_handle;
     std::string m_named;
+    bool m_has_ownership;
   };
 }

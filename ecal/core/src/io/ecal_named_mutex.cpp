@@ -54,6 +54,18 @@ namespace eCAL
   {
   }
 
+  CNamedMutex::CNamedMutex(CNamedMutex&& named_mutex)
+  {
+    m_impl.swap(named_mutex.m_impl);
+  }
+
+  CNamedMutex& CNamedMutex::operator=(CNamedMutex&& named_mutex)
+  {
+    m_impl.swap(named_mutex.m_impl);
+    named_mutex.m_impl.reset();
+    return *this;
+  }
+
   bool CNamedMutex::Create(const std::string& name_, bool recoverable_)
   {
 #ifdef ECAL_OS_LINUX
@@ -93,6 +105,16 @@ namespace eCAL
   bool CNamedMutex::WasRecovered() const
   {
     return m_impl->WasRecovered();
+  }
+
+  bool CNamedMutex::HasOwnership() const
+  {
+    return m_impl->HasOwnership();
+  }
+
+  void CNamedMutex::DropOwnership()
+  {
+    m_impl->DropOwnership();
   }
 
   bool CNamedMutex::Lock(int64_t timeout_)

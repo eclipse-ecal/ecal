@@ -27,7 +27,6 @@
 #include <memory>
 
 #include <ecal/ecal_os.h>
-#include "ecal_named_mutex.h"
 
 #ifdef ECAL_OS_WINDOWS
 
@@ -58,11 +57,9 @@ namespace eCAL
       mem_address = 0;
       size        = 0;
       exists      = false;
-      mutex       = std::make_shared<CNamedMutex>();
     }
     int          refcnt;
     bool         remove;
-    std::shared_ptr<CNamedMutex>  mutex;
     MemFileT     memfile;
     MapRegionT   map_region;
     void*        mem_address;
