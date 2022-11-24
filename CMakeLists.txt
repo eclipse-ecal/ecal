@@ -102,7 +102,7 @@ option(ECAL_THIRDPARTY_BUILD_FTXUI             "Build ftxui with eCAL"          
 # option(ECAL_THIRDPARTY_BUILD_ZLIB              "Build zlib with eCAL"                                              ON)
 # option(ECAL_THIRDPARTY_BUILD_LIBSSH2           "Build libssh2 with eCAL"                                           ON)
 option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"                                            OFF)
-option(ECAL_THIRDPARTY_BUILD_UDPCAP            "Build udpap library with eCAL"                                    OFF)
+option(ECAL_THIRDPARTY_BUILD_UDPCAP            "Build udpcap library with eCAL"                                    OFF)
 
 if(WIN32)
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                          ON)
