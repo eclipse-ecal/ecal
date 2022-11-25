@@ -23,6 +23,9 @@ find_package(asio         REQUIRED)
 find_package(tclap        REQUIRED)
 find_package(simpleini    REQUIRED)
 find_package(tcp_pubsub   REQUIRED)
+if (ECAL_NPCAP_SUPPORT)
+  find_package(udpcap REQUIRED)
+endif()
 
 if (ECAL_JOIN_MULTICAST_TWICE)
   message(STATUS "eCAL ${PROJECT_NAME}: Enabling Specific Multicast Network Bug Workaround")
@@ -437,7 +440,7 @@ if(ECAL_NPCAP_SUPPORT)
     PRIVATE ECAL_NPCAP_SUPPORT)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE
-      udpcap
+      udpcap::udpcap
   )
 endif(ECAL_NPCAP_SUPPORT)
 
