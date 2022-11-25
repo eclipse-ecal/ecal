@@ -17,15 +17,15 @@ New features
 
 - New Apps:
 
-  - **Mon TUI** (`ecal_mon_tui`) - An htop-like eCAL Monitor running in a terminal
+  - **Mon TUI** (``ecal_mon_tui``) - An htop-like eCAL Monitor running in a terminal
 
     .. image:: img/mon_tui_combined.png
         :alt: eCAL Rec dark mode
         :width: 400px
 
-  - **Measurement Cutter** (`ecal_meas_cutter`) for trimming and cutting eCAL Measurements (:ref:`-> Documentation<applications_meas_cutter>`)
+  - **Measurement Cutter** (``ecal_meas_cutter``) for trimming and cutting eCAL Measurements (:ref:`-> Documentation<applications_meas_cutter>`)
 
-- Added **Shared-Memory-Monitoring-Layer** (enable via `ecal.ini`!). This new monitoring layer can locally match publishers and subscribers and distribute monitoring information without the need for UDP Multicast.
+- Added **Shared-Memory-Monitoring-Layer** (enable via ``ecal.ini``!). This new monitoring layer can locally match publishers and subscribers and distribute monitoring information without the need for UDP Multicast.
 
 - GUI Apps now start in **dark-mode** by default
 

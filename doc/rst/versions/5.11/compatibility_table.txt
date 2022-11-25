@@ -9,7 +9,7 @@
 
        * Services: 100% compatible
 
-       * eCAL Shared Memory: Downwards compatible to eCAL 5.10 and eCAL 5.10
+       * eCAL Shared Memory: Downwards compatible to eCAL 5.10 and eCAL 5.9
 
          The eCAL **header of the eCAL SHM file** has been expanded.
          Old eCAL versions contain a bug that will prevent them to read the new memfile header.
