@@ -19,7 +19,7 @@ New features
 
   - **Mon TUI** (`ecal_mon_tui`) - An htop-like eCAL Monitor running in a terminal
 
-    .. image:: img/meas_cutter_combined.png
+    .. image:: img/mon_tui_combined.png
         :alt: eCAL Rec dark mode
         :width: 400px
 
