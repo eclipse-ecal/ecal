@@ -175,16 +175,27 @@ def pub_destroy(topic_handle):
   return _ecal.pub_destroy(topic_handle)
 
 
-def pub_set_description(topic_handle, description):
-  """ set publisher description
+def pub_set_type(topic_handle, topic_type):
+  """ set publisher topic type name
 
   :param topic_handle: the topic handle
   :type topic_handle: string
-  :param description:  the topic description
-  :type description: bytes
+  :param topic_type: the topic type name
+  :type topic_type: bytes
 
   """
-  return _ecal.pub_set_description(topic_handle, description)
+  return _ecal.pub_set_type(topic_handle, topic_type)
+
+def pub_set_description(topic_handle, topic_desc):
+  """ set publisher topic type description
+
+  :param topic_handle: the topic handle
+  :type topic_handle: string
+  :param topic_desc:  the topic type description
+  :type topic_desc: bytes
+
+  """
+  return _ecal.pub_set_description(topic_handle, topic_desc)
 
 
 def pub_set_qos_historykind(topic_handle, qpolicy, depth):
@@ -560,9 +571,9 @@ class publisher(object):
 
     :param topic_name: the unique topic name
     :type topic_name:  string
-    :param topic_type: optional type name
+    :param topic_type: optional topic type name
     :type topic_type:  string
-    :param topic_desc: optional type description
+    :param topic_desc: optional topic type description
     :type topic_desc:  bytes
 
     """
@@ -579,6 +590,26 @@ class publisher(object):
     """ destroy publisher
     """
     return pub_destroy(self.thandle)
+
+  def set_topic_type(self, topic_type):
+    """ set topic type name
+
+    :param topic_type: the topic type name
+    :type topic_type: bytes
+
+    """
+
+    return pub_set_type(self.thandle, topic_type)
+
+  def set_topic_description(self, topic_desc):
+    """ set topic description
+
+    :param topic_desc: the topic type description
+    :type topic_desc: bytes
+
+    """
+
+    return pub_set_description(self.thandle, topic_desc)
 
   def set_qos_historykind(self, qpolicy, depth):
     """ set quality of service historykind mode and depth
@@ -641,7 +672,7 @@ class subscriber(object):
 
     :param topic_name: the unique topic name
     :type topic_name:  string
-    :param topic_type: optional topic type
+    :param topic_type: optional topic type name
     :type topic_type:  string
 
     """

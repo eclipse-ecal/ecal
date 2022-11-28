@@ -67,6 +67,17 @@ extern "C"
   ECALC_API int eCAL_Pub_Destroy(ECAL_HANDLE handle_);
 
   /**
+   * @brief Setup topic type name.
+   *
+   * @param handle_          Publisher handle.
+   * @param topic_type_      Topic type name.
+   * @param topic_type_len_  Topic type name length.
+   *
+   * @return  None zero if succeeded.
+  **/
+  ECALC_API int eCAL_Pub_SetType(ECAL_HANDLE handle_, const char* topic_type_, int topic_type_len_);
+
+  /**
    * @brief Setup topic type description. 
    *
    * @param handle_          Publisher handle. 

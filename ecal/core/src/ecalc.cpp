@@ -551,6 +551,14 @@ extern "C"
     return(1);
   }
 
+  ECALC_API int eCAL_Pub_SetType(ECAL_HANDLE handle_, const char* topic_type_, int topic_type_len_)
+  {
+    if (handle_ == NULL) return(0);
+    eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
+    if (pub->SetType(std::string(topic_type_, static_cast<size_t>(topic_type_len_)))) return(1);
+    return(0);
+  }
+
   ECALC_API int eCAL_Pub_SetDescription(ECAL_HANDLE handle_, const char* topic_desc_, int topic_desc_len_)
   {
     if (handle_ == NULL) return(0);
