@@ -24,9 +24,9 @@
 #pragma once
 
 #include <string>
+#include <memory>
 
 #include <ecal/ecal_os.h>
-#include "ecal_memfile_mtx.h"
 
 #ifdef ECAL_OS_WINDOWS
 
@@ -52,19 +52,19 @@ namespace eCAL
     {
       refcnt      = 0;
       remove      = false;
-      mutex       = 0;
       memfile     = 0;
       map_region  = 0;
       mem_address = 0;
       size        = 0;
+      exists      = false;
     }
     int          refcnt;
     bool         remove;
-    MutexT       mutex;
     MemFileT     memfile;
     MapRegionT   map_region;
     void*        mem_address;
     std::string  name;
     size_t       size;
+    bool         exists;
   };
 }

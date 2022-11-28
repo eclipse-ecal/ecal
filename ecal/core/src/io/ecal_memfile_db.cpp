@@ -88,6 +88,9 @@ namespace eCAL
     }
     else
     {
+      // tag memory file as existing
+      iter->second.exists = true;
+
       // increase reference counter
       iter->second.refcnt++;
 

@@ -1,13 +1,13 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2022 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,10 +18,12 @@
 */
 
 /**
- * @brief  eCAL memory file mutex
+ * @brief  eCAL named mutex
 **/
 
-#pragma once
+#include <ecal/ecal_os.h>
+
+#include "ecal_named_mutex_impl.h"
 
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -39,7 +41,7 @@ struct alignas(8) named_mutex
   pthread_cond_t   cvar;
   uint8_t          locked;
 };
-typedef struct named_mutex  named_mutex_t;
+typedef struct named_mutex named_mutex_t;
 
 namespace
 {
@@ -51,7 +53,7 @@ namespace
     umask(previous_umask);            // reset umask to previous permissions
     if (fd < 0) return nullptr;
 
-    // set size to size of named mutex struct 
+    // set size to size of named mutex struct
     if(ftruncate(fd, sizeof(named_mutex_t)) == -1)
     {
       ::close(fd);
@@ -87,32 +89,6 @@ namespace
     return mtx;
   }
 
-  int named_mutex_destroy(const char* mutex_name_)
-  {
-    // destroy (unlink) shared memory file
-    return(::shm_unlink(mutex_name_));
-  }
-
-  named_mutex_t* named_mutex_open(const char* mutex_name_)
-  {
-    // try to open existing shared memory file
-    int fd = ::shm_open(mutex_name_, O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-    if (fd < 0) return nullptr;
-
-    // map file content to mutex
-    named_mutex_t* mtx = static_cast<named_mutex_t*>(mmap(nullptr, sizeof(named_mutex_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
-    ::close(fd);
-
-    // return opened mutex
-    return mtx;
-  }
-
-  void named_mutex_close(named_mutex_t* mtx_)
-  {
-    // unmap condition mutex from shared memory file
-    munmap(static_cast<void*>(mtx_), sizeof(named_mutex_t));
-  }
-
   bool named_mutex_lock(named_mutex_t* mtx_, struct timespec* ts_)
   {
     // lock condition mutex
@@ -127,7 +103,7 @@ namespace
       // return success
       return true;
     }
-    // state is locked by anyone else
+      // state is locked by anyone else
     else
     {
       // while condition wait did not return failure (or timeout) and
@@ -144,7 +120,7 @@ namespace
           ret = pthread_cond_timedwait_relative_np(&mtx_->cvar, &mtx_->mtx, ts_);
 #endif
         }
-        // blocking wait for unlock signal
+          // blocking wait for unlock signal
         else
         {
           ret = pthread_cond_wait(&mtx_->cvar, &mtx_->mtx);
@@ -195,6 +171,32 @@ namespace
     pthread_mutex_unlock(&mtx_->mtx);
   }
 
+  int named_mutex_destroy(const char* mutex_name_)
+  {
+    // destroy (unlink) shared memory file
+    return(::shm_unlink(mutex_name_));
+  }
+
+  named_mutex_t* named_mutex_open(const char* mutex_name_)
+  {
+    // try to open existing shared memory file
+    int fd = ::shm_open(mutex_name_, O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+    if (fd < 0) return nullptr;
+
+    // map file content to mutex
+    named_mutex_t* mtx = static_cast<named_mutex_t*>(mmap(nullptr, sizeof(named_mutex_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
+    ::close(fd);
+
+    // return opened mutex
+    return mtx;
+  }
+
+  void named_mutex_close(named_mutex_t* mtx_)
+  {
+    // unmap condition mutex from shared memory file
+    munmap(static_cast<void*>(mtx_), sizeof(named_mutex_t));
+  }
+
   std::string named_mutex_buildname(const std::string& mutex_name_)
   {
     // build shm file name
@@ -207,71 +209,89 @@ namespace
   }
 }
 
-typedef named_mutex_t*  MutexT;
-
 namespace eCAL
 {
-  inline bool CreateMtx(const std::string& name_, MutexT& mutex_handle_)
+
+  CNamedMutexImpl::CNamedMutexImpl(const std::string &name_, bool /*recoverable_*/) : m_mutex_handle(nullptr), m_named(name_), m_has_ownership(false)
   {
-    if(name_.empty()) return(false);
+    if(name_.empty())
+      return;
 
     // build shm file name
-    std::string mutex_name = named_mutex_buildname(name_);
+    const std::string mutex_name = named_mutex_buildname(m_named);
 
     // we try to open an existing mutex first
-    mutex_handle_ = named_mutex_open(mutex_name.c_str());
+    m_mutex_handle = named_mutex_open(mutex_name.c_str());
 
     // if we could not open it we create a new one
-    if(mutex_handle_ == nullptr)
+    if(m_mutex_handle == nullptr)
     {
-      mutex_handle_ = named_mutex_create(mutex_name.c_str());
+      m_mutex_handle = named_mutex_create(mutex_name.c_str());
+      if(m_mutex_handle)
+        m_has_ownership = true;
     }
-
-    return(mutex_handle_ != nullptr);
   }
 
-  inline bool DestroyMtx(MutexT* mutex_handle_)
+  CNamedMutexImpl::~CNamedMutexImpl()
   {
     // check mutex handle
-    if(mutex_handle_ == nullptr) return(false);
+    if(m_mutex_handle == nullptr) return;
 
     // unlock mutex
-    named_mutex_unlock(*mutex_handle_);
+    named_mutex_unlock(m_mutex_handle);
 
     // close mutex
-    named_mutex_close(*mutex_handle_);
+    named_mutex_close(m_mutex_handle);
 
-    return(true);
+    // clean-up if mutex instance has ownership
+    if(m_has_ownership)
+      named_mutex_destroy(named_mutex_buildname(m_named).c_str());
   }
 
-  inline bool CleanupMtx(const std::string& name_)
+  bool CNamedMutexImpl::IsCreated() const
   {
-    // build shm file name
-    std::string mutex_name = named_mutex_buildname(name_);
-
-    // destroy aka unlink shm file from process
-    return(named_mutex_destroy(mutex_name.c_str()) == 0);
+    return m_mutex_handle != nullptr;
   }
 
-  inline bool LockMtx(MutexT* mutex_handle_, const int timeout_)
+  bool CNamedMutexImpl::IsRecoverable() const
+  {
+    return false;
+  }
+  bool CNamedMutexImpl::WasRecovered() const
+  {
+    return false;
+  }
+
+  bool CNamedMutexImpl::HasOwnership() const
+  {
+    return m_has_ownership;
+  }
+
+  void CNamedMutexImpl::DropOwnership()
+  {
+    m_has_ownership = false;
+  }
+
+  bool CNamedMutexImpl::Lock(int64_t timeout_)
   {
     // check mutex handle
-    if (mutex_handle_ == nullptr) return(false);
+    if (m_mutex_handle == nullptr)
+      return false;
 
     // timeout_ < 0 -> wait infinite
     if (timeout_ < 0)
     {
-      return(named_mutex_lock(*mutex_handle_, nullptr));
+      return(named_mutex_lock(m_mutex_handle, nullptr));
     }
-    // timeout_ == 0 -> check lock state only
+      // timeout_ == 0 -> check lock state only
     else if (timeout_ == 0)
     {
-      return(named_mutex_trylock(*mutex_handle_));
+      return(named_mutex_trylock(m_mutex_handle));
     }
-    // timeout_ > 0 -> wait timeout_ ms
+      // timeout_ > 0 -> wait timeout_ ms
     else
     {
-      struct timespec abstime;
+      struct timespec abstime {};
       clock_gettime(CLOCK_MONOTONIC, &abstime);
 
       abstime.tv_sec = abstime.tv_sec + timeout_ / 1000;
@@ -281,18 +301,17 @@ namespace eCAL
         abstime.tv_nsec -= 1000000000;
         abstime.tv_sec++;
       }
-      return(named_mutex_lock(*mutex_handle_, &abstime));
+      return(named_mutex_lock(m_mutex_handle, &abstime));
     }
   }
 
-  inline bool UnlockMtx(MutexT* mutex_handle_)
+  void CNamedMutexImpl::Unlock()
   {
     // check mutex handle
-    if(mutex_handle_ == nullptr) return(false);
+    if(m_mutex_handle == nullptr)
+      return;
 
     // unlock the mutex
-    named_mutex_unlock(*mutex_handle_);
-
-    return(true);
+    named_mutex_unlock(m_mutex_handle);
   }
 }

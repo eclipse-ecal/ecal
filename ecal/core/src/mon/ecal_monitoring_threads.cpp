@@ -77,6 +77,47 @@ namespace eCAL
     return 0;
   }
 
+#ifndef ECAL_LAYER_ICEORYX
+  CShmRegistrationReceiveThread::CShmRegistrationReceiveThread(RegMessageCallbackT reg_cb_) :
+    m_reg_cb(std::move(reg_cb_))
+  {
+    m_memfile_broadcast.Create(Config::Experimental::GetShmMonitoringDomain(), Config::Experimental::GetShmMonitoringQueueSize());
+    m_memfile_broadcast.FlushLocalEventQueue();
+    m_memfile_broadcast_reader.Bind(&m_memfile_broadcast);
+
+    m_reg_rcv_thread.Start(Config::GetRegistrationRefreshMs() / 2, std::bind(&CShmRegistrationReceiveThread::ThreadFun, this));
+  }
+
+  CShmRegistrationReceiveThread::~CShmRegistrationReceiveThread()
+  {
+    m_reg_rcv_thread.Stop();
+    m_memfile_broadcast_reader.Unbind();
+    m_memfile_broadcast.Destroy();
+  }
+
+  int CShmRegistrationReceiveThread::ThreadFun()
+  {
+    MemfileBroadcastMessageListT message_list;
+    if (!m_memfile_broadcast_reader.Read(message_list, 0))
+      return false;
+
+    eCAL::pb::SampleList sample_list;
+    bool return_value{ true };
+
+    for (const auto& message : message_list)
+    {
+      if (sample_list.ParseFromArray(message.data, static_cast<int>(message.size)))
+      {
+        for (const auto& sample : sample_list.samples())
+          m_reg_cb(sample);
+      }
+      else
+        return_value = false;
+    }
+    return return_value;
+  }
+#endif
+
   CLoggingReceiveThread::CLoggingReceiveThread(LogMessageCallbackT log_cb_) :
     m_network_mode(false), m_log_cb(log_cb_)
   {
