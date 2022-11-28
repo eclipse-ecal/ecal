@@ -1,6 +1,6 @@
 option(FTXUI_BUILD_EXAMPLES "Set to ON to build examples" OFF)
 
-add_subdirectory(thirdparty/ftxui)
+add_subdirectory(thirdparty/ftxui EXCLUDE_FROM_ALL)
 
 # Upgrade Visual studio toolset version if necessary. Minimum working version is v142
 # TODO: Remove this code block as soon as possible
