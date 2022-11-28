@@ -49,6 +49,26 @@ class MessagePublisher(object):
     """
     raise NotImplementedError("Please Implement this method")
 
+  def set_topic_type(self, topic_type):
+    """ set topic type name
+
+    :param topic_type: the topic type name
+    :type topic_type: bytes
+
+    """
+
+    return self.c_publisher.set_topic_type(topic_type)
+
+  def set_topic_description(self, topic_desc):
+    """ set topic description
+
+    :param topic_desc: the topic type description
+    :type topic_desc: bytes
+
+    """
+
+    return self.c_publisher.set_topic_description(topic_desc)
+
   def set_qos(self, qos):
     """ set publisher quality of service
 

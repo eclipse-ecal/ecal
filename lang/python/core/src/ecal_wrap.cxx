@@ -329,9 +329,9 @@ PyObject* pub_destroy(PyObject* /*self*/, PyObject* args)
 }
 
 /****************************************/
-/*      pub_set_type                    */
+/*      pub_set_topic_type              */
 /****************************************/
-PyObject* pub_set_type(PyObject* /*self*/, PyObject* args)
+PyObject* pub_set_topic_type(PyObject* /*self*/, PyObject* args)
 {
   ECAL_HANDLE topic_handle = nullptr;
   char* topic_type = nullptr;
@@ -340,13 +340,13 @@ PyObject* pub_set_type(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "ny#", &topic_handle, &topic_type, &topic_type_len))
     return nullptr;
 
-  return(Py_BuildValue("i", pub_set_type(topic_handle, topic_type, (int)topic_type_len)));
+  return(Py_BuildValue("i", pub_set_topic_type(topic_handle, topic_type, (int)topic_type_len)));
 }
 
 /****************************************/
-/*      pub_set_description             */
+/*      pub_set_topic_description       */
 /****************************************/
-PyObject* pub_set_description(PyObject* /*self*/, PyObject* args)
+PyObject* pub_set_topic_description(PyObject* /*self*/, PyObject* args)
 {
   ECAL_HANDLE topic_handle   = nullptr;
   char*       topic_desc     = nullptr;
@@ -355,7 +355,7 @@ PyObject* pub_set_description(PyObject* /*self*/, PyObject* args)
   if (!PyArg_ParseTuple(args, "ny#", &topic_handle, &topic_desc, &topic_desc_len)) 
     return nullptr;
 
-  return(Py_BuildValue("i", pub_set_description(topic_handle, topic_desc, (int)topic_desc_len)));
+  return(Py_BuildValue("i", pub_set_topic_description(topic_handle, topic_desc, (int)topic_desc_len)));
 }
 
 /****************************************/
@@ -1574,8 +1574,8 @@ static PyMethodDef _ecal_methods[] =
   {"pub_create",                    pub_create,                    METH_VARARGS,  "pub_create(topic_name, topic_type)"},
   {"pub_destroy",                   pub_destroy,                   METH_VARARGS,  "pub_destroy(topic_handle)"},
 
-  {"pub_set_type",                  pub_set_type,                  METH_VARARGS,  "pub_set_type(topic_handle, topic_type)"},
-  {"pub_set_description",           pub_set_description,           METH_VARARGS,  "pub_set_description(topic_handle, topic_description)"},
+  {"pub_set_topic_type",            pub_set_topic_type,            METH_VARARGS,  "pub_set_topic_type(topic_handle, topic_type)"},
+  {"pub_set_topic_description",     pub_set_topic_description,     METH_VARARGS,  "pub_set_topic_description(topic_handle, topic_description)"},
 
   {"pub_set_qos_historykind",       pub_set_qos_historykind,       METH_VARARGS,  "pub_set_qos_historykind(topic_handle, qpolicy, depth)"},
   {"pub_set_qos_reliability",       pub_set_qos_reliability,       METH_VARARGS,  "pub_set_qos_reliability(topic_handle, qpolicy)"},

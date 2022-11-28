@@ -162,7 +162,7 @@ def pub_create(topic_name, topic_type, topic_desc):
 
   """
   topic_handle = _ecal.pub_create(topic_name, topic_type)
-  pub_set_description(topic_handle, topic_desc)
+  pub_set_topic_description(topic_handle, topic_desc)
   return topic_handle
 
 
@@ -175,7 +175,7 @@ def pub_destroy(topic_handle):
   return _ecal.pub_destroy(topic_handle)
 
 
-def pub_set_type(topic_handle, topic_type):
+def pub_set_topic_type(topic_handle, topic_type):
   """ set publisher topic type name
 
   :param topic_handle: the topic handle
@@ -184,9 +184,9 @@ def pub_set_type(topic_handle, topic_type):
   :type topic_type: bytes
 
   """
-  return _ecal.pub_set_type(topic_handle, topic_type)
+  return _ecal.pub_set_topic_type(topic_handle, topic_type)
 
-def pub_set_description(topic_handle, topic_desc):
+def pub_set_topic_description(topic_handle, topic_desc):
   """ set publisher topic type description
 
   :param topic_handle: the topic handle
@@ -195,7 +195,7 @@ def pub_set_description(topic_handle, topic_desc):
   :type topic_desc: bytes
 
   """
-  return _ecal.pub_set_description(topic_handle, topic_desc)
+  return _ecal.pub_set_topic_description(topic_handle, topic_desc)
 
 
 def pub_set_qos_historykind(topic_handle, qpolicy, depth):
@@ -599,7 +599,7 @@ class publisher(object):
 
     """
 
-    return pub_set_type(self.thandle, topic_type)
+    return pub_set_topic_type(self.thandle, topic_type)
 
   def set_topic_description(self, topic_desc):
     """ set topic description
@@ -609,7 +609,7 @@ class publisher(object):
 
     """
 
-    return pub_set_description(self.thandle, topic_desc)
+    return pub_set_topic_description(self.thandle, topic_desc)
 
   def set_qos_historykind(self, qpolicy, depth):
     """ set quality of service historykind mode and depth

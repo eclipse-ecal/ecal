@@ -258,9 +258,9 @@ ECAL_API bool pub_destroy(ECAL_HANDLE handle_)
 }
 
 /****************************************/
-/*      pub_settype                     */
+/*      pub_set_topic_type              */
 /****************************************/
-ECAL_API bool pub_set_type(ECAL_HANDLE handle_, const char* topic_type_, const int topic_type_length_)
+ECAL_API bool pub_set_topic_type(ECAL_HANDLE handle_, const char* topic_type_, const int topic_type_length_)
 {
   eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
   if (pub)
@@ -271,9 +271,9 @@ ECAL_API bool pub_set_type(ECAL_HANDLE handle_, const char* topic_type_, const i
 }
 
 /****************************************/
-/*      pub_setdescription              */
+/*      pub_set_topic_description       */
 /****************************************/
-ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_)
+ECAL_API bool pub_set_topic_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_)
 {
   eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
   if(pub)
