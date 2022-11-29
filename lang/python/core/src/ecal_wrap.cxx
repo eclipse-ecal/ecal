@@ -344,7 +344,7 @@ PyObject* pub_set_topic_type(PyObject* /*self*/, PyObject* args)
 }
 
 /****************************************/
-/*      pub_set_description       */
+/*      pub_set_description             */
 /****************************************/
 PyObject* pub_set_description(PyObject* /*self*/, PyObject* args)
 {

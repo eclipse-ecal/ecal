@@ -271,7 +271,7 @@ ECAL_API bool pub_set_topic_type(ECAL_HANDLE handle_, const char* topic_type_, c
 }
 
 /****************************************/
-/*      pub_set_description       */
+/*      pub_set_description             */
 /****************************************/
 ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_)
 {
