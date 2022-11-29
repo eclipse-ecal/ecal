@@ -265,15 +265,15 @@ ECAL_API bool pub_set_topic_type(ECAL_HANDLE handle_, const char* topic_type_, c
   eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
   if (pub)
   {
-    return(pub->SetType(std::string(topic_type_, static_cast<size_t>(topic_type_length_))));
+    return(pub->SetTypeName(std::string(topic_type_, static_cast<size_t>(topic_type_length_))));
   }
   return(false);
 }
 
 /****************************************/
-/*      pub_set_topic_description       */
+/*      pub_set_description       */
 /****************************************/
-ECAL_API bool pub_set_topic_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_)
+ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_)
 {
   eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
   if(pub)

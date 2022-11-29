@@ -210,14 +210,14 @@ namespace eCAL
     return(true);
   }
 
-  bool CDataWriter::SetType(const std::string& topic_type_)
+  bool CDataWriter::SetTypeName(const std::string& topic_type_)
   {
     bool force = m_topic_type != topic_type_;
     m_topic_type = topic_type_;
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::SetType");
+    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::SetTypeName");
 #endif
 
     // register it

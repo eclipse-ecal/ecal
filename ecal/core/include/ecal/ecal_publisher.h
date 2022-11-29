@@ -129,7 +129,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool SetType(const std::string& topic_type_);
+    bool SetTypeName(const std::string& topic_type_);
 
     /**
      * @brief Setup topic description. 

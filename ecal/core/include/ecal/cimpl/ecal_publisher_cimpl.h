@@ -75,7 +75,7 @@ extern "C"
    *
    * @return  None zero if succeeded.
   **/
-  ECALC_API int eCAL_Pub_SetType(ECAL_HANDLE handle_, const char* topic_type_, int topic_type_len_);
+  ECALC_API int eCAL_Pub_SetTypeName(ECAL_HANDLE handle_, const char* topic_type_, int topic_type_len_);
 
   /**
    * @brief Setup topic type description. 

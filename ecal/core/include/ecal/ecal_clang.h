@@ -235,7 +235,7 @@ ECAL_API bool pub_set_topic_type(ECAL_HANDLE handle_, const char* topic_type_, c
  *
  * @return  True if succeeded.
 **/
-ECAL_API bool pub_set_topic_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_);
+ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_);
 
 /**
  * @brief Set publisher quality of service attributes.

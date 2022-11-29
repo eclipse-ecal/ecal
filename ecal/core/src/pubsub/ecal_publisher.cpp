@@ -203,7 +203,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CPublisher::SetType(const std::string& topic_type_)
+  bool CPublisher::SetTypeName(const std::string& topic_type_)
   {
     if (!m_datawriter) return false;
 
@@ -224,7 +224,7 @@ namespace eCAL
       g_descgate()->ApplyTopicDescription(m_datawriter->GetTopicName(), topic_type_, topic_desc, quality);
     }
 
-    return m_datawriter->SetType(topic_type_);
+    return m_datawriter->SetTypeName(topic_type_);
   }
 
   bool CPublisher::SetDescription(const std::string& topic_desc_)
