@@ -1575,7 +1575,7 @@ static PyMethodDef _ecal_methods[] =
   {"pub_destroy",                   pub_destroy,                   METH_VARARGS,  "pub_destroy(topic_handle)"},
 
   {"pub_set_topic_type",            pub_set_topic_type,            METH_VARARGS,  "pub_set_topic_type(topic_handle, topic_type)"},
-  {"pub_set_description",     pub_set_description,     METH_VARARGS,  "pub_set_description(topic_handle, topic_description)"},
+  {"pub_set_description",           pub_set_description,           METH_VARARGS,  "pub_set_description(topic_handle, topic_description)"},
 
   {"pub_set_qos_historykind",       pub_set_qos_historykind,       METH_VARARGS,  "pub_set_qos_historykind(topic_handle, qpolicy, depth)"},
   {"pub_set_qos_reliability",       pub_set_qos_reliability,       METH_VARARGS,  "pub_set_qos_reliability(topic_handle, qpolicy)"},
