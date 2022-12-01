@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="159.99985mm"
+   height="33.681686mm"
+   viewBox="0 0 159.99985 33.681686"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
+   sodipodi:docname="ecal_text.svg"
+   inkscape:export-filename="C:\Users\uid38621\Desktop\eCAL Logos\ecal_square.png"
+   inkscape:export-xdpi="23.09091"
+   inkscape:export-ydpi="23.09091">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="-1.7733477"
+     inkscape:cy="-292.4697"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1137"
+     inkscape:window-x="1272"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid917"
+       units="cm"
+       spacingx="9.9999997"
+       spacingy="9.9999997"
+       empspacing="8"
+       originx="-30.001292"
+       originy="-178.15914" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-30.001291,-178.15915)"
+     style="display:inline">
+    <g
+       aria-label="eCAL"
+       id="text921"
+       style="font-size:48.3238px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#ffa500;fill-opacity:1;stroke-width:0.354691">
+      <path
+         d="m 37.201537,201.40289 v 1.2081 q 0,1.20809 0.193295,1.93295 0.193295,0.72486 0.676533,1.15977 0.531562,0.38659 1.353067,0.53156 0.869828,0.14498 2.126247,0.14498 h 8.504988 v 5.46059 h -8.504988 q -6.23377,0 -8.891579,-2.36787 -2.657809,-2.36787 -2.657809,-7.58684 v -6.04047 q 0,-2.85111 0.531562,-4.78406 0.579885,-1.98127 1.932952,-3.14104 1.40139,-1.2081 3.672608,-1.73966 2.271219,-0.53156 5.750532,-0.53156 h 12.660836 q 2.80278,0 4.639084,0.53156 1.884629,0.53156 2.947752,1.49804 1.111448,0.91815 1.546362,2.27121 0.434914,1.30475 0.434914,2.85111 v 8.60163 z m 19.71611,-8.02175 q 0,-1.30474 -0.676533,-1.73965 -0.62821,-0.43492 -2.271219,-0.43492 H 41.985593 q -1.353066,0 -2.271219,0.14497 -0.918152,0.0967 -1.498037,0.53157 -0.531562,0.43491 -0.773181,1.25642 -0.241619,0.8215 -0.241619,2.22289 v 1.40139 h 19.71611 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:48.3238px;font-family:Neuropolitical;-inkscape-font-specification:Neuropolitical;fill:#ffa500;fill-opacity:1;stroke-width:0.354691"
+         id="path833" />
+      <path
+         d="m 81.659339,211.84084 q -3.624285,0 -6.040475,-0.57989 -2.41619,-0.62821 -3.865904,-1.93295 -1.449714,-1.35307 -2.077923,-3.47932 -0.579886,-2.17457 -0.579886,-5.31561 v -10.3413 q 0,-3.09272 0.579886,-5.26729 0.628209,-2.17457 2.077923,-3.47931 1.449714,-1.35307 3.865904,-1.93296 2.41619,-0.62821 6.040475,-0.62821 H 104.5165 v 6.33042 H 81.997606 q -1.691333,0 -2.802781,0.28995 -1.063123,0.24161 -1.691333,0.86982 -0.628209,0.62821 -0.869828,1.69134 -0.241619,1.0148 -0.241619,2.51283 v 9.66476 q 0,1.54637 0.241619,2.56117 0.241619,1.01479 0.869828,1.643 0.62821,0.62821 1.739657,0.86983 1.111448,0.24162 2.802781,0.24162 h 22.47057 v 6.2821 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:48.3238px;font-family:Neuropolitical;-inkscape-font-specification:Neuropolitical;fill:#ffa500;fill-opacity:1;stroke-width:0.354691"
+         id="path835" />
+      <path
+         d="M 142.74053,204.254 H 119.9317 l -4.68741,7.58684 h -8.45666 l 19.13622,-30.444 q 0.86983,-1.40139 2.07793,-2.31954 1.20809,-0.91815 3.47931,-0.91815 2.22289,0 3.43099,0.91815 1.20809,0.91815 2.07792,2.31954 l 19.03958,30.444 h -8.50499 z m -19.37784,-5.65389 h 15.94685 l -7.97342,-12.9991 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:48.3238px;font-family:Neuropolitical;-inkscape-font-specification:Neuropolitical;fill:#ffa500;fill-opacity:1;stroke-width:0.354691"
+         id="path837" />
+      <path
+         d="m 169.80179,211.84084 q -3.62429,0 -6.04048,-0.57989 -2.41618,-0.62821 -3.8659,-1.93295 -1.44971,-1.35307 -2.07792,-3.47932 -0.57989,-2.17457 -0.57989,-5.31561 V 178.884 h 7.2969 v 21.35912 q 0,1.44972 0.24161,2.46452 0.28995,0.96647 0.96648,1.64301 0.67653,0.62821 1.78798,0.91815 1.15977,0.28994 2.89943,0.28994 h 19.57114 v 6.2821 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:48.3238px;font-family:Neuropolitical;-inkscape-font-specification:Neuropolitical;fill:#ffa500;fill-opacity:1;stroke-width:0.354691"
+         id="path839" />
+    </g>
+  </g>
+</svg>

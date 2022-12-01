@@ -52,3 +52,6 @@
 [submodule "thirdparty/ftxui"]
 	path = thirdparty/ftxui
 	url = https://github.com/ArthurSonzogni/FTXUI.git
+[submodule "thirdparty/udpcap"]
+	path = thirdparty/udpcap
+	url = https://github.com/eclipse-ecal/udpcap.git

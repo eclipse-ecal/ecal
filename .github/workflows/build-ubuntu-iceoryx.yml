@@ -42,7 +42,7 @@ jobs:
         ./RouDi &
 
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules:  'true'
         fetch-depth: 0
@@ -123,13 +123,13 @@ jobs:
       working-directory: ${{ runner.workspace }}/_build
 
     - name: Upload Debian
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: ubuntu-debian-iceoryx
         path: ${{ runner.workspace }}/_build/_deploy/*.deb
 
     - name: Upload Python Wheel
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: ubuntu-python-wheel-iceoryx
         path: ${{ runner.workspace }}/_build/_deploy/*.whl

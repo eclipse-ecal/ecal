@@ -102,8 +102,18 @@ namespace eCAL
     m_host_name = Process::GetHostName();
 
     // start registration receive thread
-    CRegistrationReceiveThread::RegMessageCallbackT regmsg_cb = std::bind(&CSampleReceiver::Receive, this, std::placeholders::_1);
-    m_reg_rcv_threadcaller = std::make_shared<CRegistrationReceiveThread>(regmsg_cb);
+    if (!Config::Experimental::IsNetworkMonitoringDisabled())
+    {
+      CRegistrationReceiveThread::RegMessageCallbackT regmsg_cb = std::bind(&CSampleReceiver::Receive, this, std::placeholders::_1);
+      m_reg_rcv_threadcaller = std::make_shared<CRegistrationReceiveThread>(regmsg_cb);
+    }
+
+#ifndef ECAL_LAYER_ICEORYX
+    if (Config::Experimental::IsShmMonitoringEnabled())
+    {
+      m_shm_reg_rcv_threadcaller = std::make_shared<CShmRegistrationReceiveThread>(std::bind(&CMonitoringImpl::ApplySample, this, std::placeholders::_1, eCAL::pb::tl_none));
+    }
+#endif
 
     // start logging receive thread
     CLoggingReceiveThread::LogMessageCallbackT logmsg_cb = std::bind(&CMonitoringImpl::RegisterLogMessage, this, std::placeholders::_1);

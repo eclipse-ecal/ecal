@@ -42,24 +42,28 @@ namespace eCAL
 
       bool AllocFile(const std::string& name_, const bool create_, SMemFileInfo& mem_file_info_)
       {
-        int oflag = 0;
-        if (create_)
-        {
-          oflag = O_CREAT | O_RDWR;
-        }
-        else
-        {
-          oflag = O_RDONLY;
-        }
         int previous_umask = umask(000);  // set umask to nothing, so we can create files with all possible permission bits
         mem_file_info_.name = name_.size() ? ((name_[0] != '/') ? "/" + name_ : name_) : name_; // make memory file path compatible for all posix systems
-        mem_file_info_.memfile = ::shm_open(mem_file_info_.name.c_str(), oflag, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+        if(create_)
+        {
+          mem_file_info_.memfile = ::shm_open(mem_file_info_.name.c_str(), O_CREAT | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+          if(mem_file_info_.memfile == -1 && errno == EEXIST)
+          {
+            mem_file_info_.exists = true;
+            mem_file_info_.memfile = ::shm_open(mem_file_info_.name.c_str(), O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+          }
+        }
+        else {
+          mem_file_info_.memfile = ::shm_open(mem_file_info_.name.c_str(), O_RDONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+          mem_file_info_.exists = true;
+        }
         umask(previous_umask);            // reset umask to previous permissions
         if (mem_file_info_.memfile == -1)
         {
           std::cout << "shm_open failed : " << mem_file_info_.name << " errno: " << strerror(errno) << std::endl;
           mem_file_info_.memfile = 0;
           mem_file_info_.name = "";
+          mem_file_info_.exists = false;
           return(false);
         }
 

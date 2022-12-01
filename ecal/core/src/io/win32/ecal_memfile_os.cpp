@@ -63,6 +63,7 @@ namespace eCAL
           }
           mem_file_info_.map_region = CreateFileMapping(INVALID_HANDLE_VALUE, nullptr, flProtect, 0, (DWORD)mem_file_info_.size, mem_file_info_.name.c_str());
           if (mem_file_info_.map_region == NULL) return(false);
+          if (GetLastError() == ERROR_ALREADY_EXISTS) mem_file_info_.exists = true;
         }
 
         if (mem_file_info_.mem_address == nullptr)
@@ -120,10 +121,10 @@ namespace eCAL
           MapFile(create_, mem_file_info_);
 
           // reset content
-          if (create_ && mem_file_info_.mem_address)
-          {
-            memset(mem_file_info_.mem_address, 0, len_);
-          }
+          //if (create_ && mem_file_info_.mem_address)
+          //{
+          //  memset(mem_file_info_.mem_address, 0, len_);
+          //}
         }
 
         return(mem_file_info_.mem_address != nullptr);

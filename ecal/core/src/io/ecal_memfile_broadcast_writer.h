@@ -15,29 +15,32 @@
  * limitations under the License.
  *
  * ========================= eCAL LICENSE =================================
- */
+*/
+
+/**
+ * @brief  eCAL memory file broadcast interface
+**/
 
 #pragma once
 
-#include <string>
+#include "ecal_memfile_broadcast.h"
 
-namespace Udpcap
+#include <cstdint>
+#include <memory>
+
+namespace eCAL
 {
-  inline static void LOG_DEBUG(const std::string& message)
+  class CMemoryFileBroadcastWriter
   {
-#ifndef NDEBUG
-    printf("%s", (message + "\n").c_str());
-#else  // !NDEBUG
-    (void)message;
-#endif // !NDEBUG
-  }
+  public:
+    bool Bind(CMemoryFileBroadcast *memfile_broadcast);
+    void Unbind();
 
-  inline static void LOG_DEBUG(char* message)
-  {
-#ifndef NDEBUG
-    LOG_DEBUG(std::string(message));
-#else  // !NDEBUG
-    (void)message;
-#endif // !NDEBUG
-  }
+    bool Write(const void *data, std::size_t size);
+  private:
+    CMemoryFileBroadcast *m_memfile_broadcast = nullptr;
+    std::unique_ptr<CMemoryFile> m_payload_memfile;
+    std::uint64_t m_event_id = 0;
+    bool m_bound = false;
+  };
 }
