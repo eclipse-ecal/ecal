@@ -49,15 +49,15 @@ class MessagePublisher(object):
     """
     raise NotImplementedError("Please Implement this method")
 
-  def set_topic_type_name(self, topic_type):
+  def set_topic_type_name(self, topic_type_name):
     """ set topic type name
 
-    :param topic_type: the topic type name
-    :type topic_type: bytes
+    :param topic_type_name: the topic type name
+    :type topic_type_name:  string
 
     """
 
-    return self.c_publisher.set_topic_type_name(topic_type)
+    return self.c_publisher.set_topic_type_name(topic_type_name)
 
   def set_topic_description(self, topic_desc):
     """ set topic description

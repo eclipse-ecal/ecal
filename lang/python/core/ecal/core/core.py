@@ -175,16 +175,16 @@ def pub_destroy(topic_handle):
   return _ecal.pub_destroy(topic_handle)
 
 
-def pub_set_topic_type_name(topic_handle, topic_type):
+def pub_set_topic_type_name(topic_handle, topic_type_name):
   """ set publisher topic type name
 
-  :param topic_handle: the topic handle
-  :type topic_handle: string
-  :param topic_type: the topic type name
-  :type topic_type: bytes
+  :param topic_handle:    the topic handle
+  :type topic_handle:     string
+  :param topic_type_name: the topic type name
+  :type topic_type_name:  string
 
   """
-  return _ecal.pub_set_topic_type_name(topic_handle, topic_type)
+  return _ecal.pub_set_topic_type_name(topic_handle, topic_type_name)
 
 def pub_set_description(topic_handle, topic_desc):
   """ set publisher topic type description
@@ -591,15 +591,15 @@ class publisher(object):
     """
     return pub_destroy(self.thandle)
 
-  def set_topic_type_name(self, topic_type):
+  def set_topic_type_name(self, topic_type_name):
     """ set topic type name
 
-    :param topic_type: the topic type name
-    :type topic_type: bytes
+    :param topic_type_name: the topic type name
+    :type topic_type_name:  string
 
     """
 
-    return pub_set_topic_type_name(self.thandle, topic_type)
+    return pub_set_topic_type_name(self.thandle, topic_type_name)
 
   def set_topic_description(self, topic_desc):
     """ set topic description
