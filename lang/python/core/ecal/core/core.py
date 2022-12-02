@@ -186,16 +186,16 @@ def pub_set_topic_type_name(topic_handle, topic_type_name):
   """
   return _ecal.pub_set_topic_type_name(topic_handle, topic_type_name)
 
-def pub_set_description(topic_handle, topic_desc):
+def pub_set_description(topic_handle, description):
   """ set publisher topic type description
 
   :param topic_handle: the topic handle
   :type topic_handle: string
-  :param topic_desc:  the topic type description
-  :type topic_desc: bytes
+  :param description:  the topic type description
+  :type description: bytes
 
   """
-  return _ecal.pub_set_description(topic_handle, topic_desc)
+  return _ecal.pub_set_description(topic_handle, description)
 
 
 def pub_set_qos_historykind(topic_handle, qpolicy, depth):
