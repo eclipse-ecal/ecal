@@ -601,15 +601,15 @@ class publisher(object):
 
     return pub_set_topic_type_name(self.thandle, topic_type_name)
 
-  def set_topic_description(self, topic_desc):
+  def set_topic_description(self, description):
     """ set topic description
 
-    :param topic_desc: the topic type description
-    :type topic_desc: bytes
+    :param description: the topic type description
+    :type description: bytes
 
     """
 
-    return pub_set_description(self.thandle, topic_desc)
+    return pub_set_description(self.thandle, description)
 
   def set_qos_historykind(self, qpolicy, depth):
     """ set quality of service historykind mode and depth
