@@ -203,7 +203,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CPublisher::SetTypeName(const std::string& topic_type_)
+  bool CPublisher::SetTypeName(const std::string& topic_type_name_)
   {
     if (!m_datawriter) return false;
 
@@ -213,7 +213,7 @@ namespace eCAL
 
       // Calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_type_.empty())
+      if (!topic_type_name_.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
       if (!topic_desc.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
@@ -221,10 +221,10 @@ namespace eCAL
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PUBLISHER;
 
-      g_descgate()->ApplyTopicDescription(m_datawriter->GetTopicName(), topic_type_, topic_desc, quality);
+      g_descgate()->ApplyTopicDescription(m_datawriter->GetTopicName(), topic_type_name_, topic_desc, quality);
     }
 
-    return m_datawriter->SetTypeName(topic_type_);
+    return m_datawriter->SetTypeName(topic_type_name_);
   }
 
   bool CPublisher::SetDescription(const std::string& topic_desc_)

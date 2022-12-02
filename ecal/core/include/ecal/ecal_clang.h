@@ -218,13 +218,13 @@ ECAL_API bool pub_destroy(ECAL_HANDLE handle_);
 /**
  * @brief Setup topic type name.
  *
- * @param handle_             Publisher handle.
- * @param topic_type_         Topic type name.
- * @param topic_type_length_  Topic type name length.
+ * @param handle_                  Publisher handle.
+ * @param topic_type_name_         Topic type name.
+ * @param topic_type_name_length_  Topic type name length.
  *
  * @return  True if succeeded.
 **/
-ECAL_API bool pub_set_type_name(ECAL_HANDLE handle_, const char* topic_type_, const int topic_type_length_);
+ECAL_API bool pub_set_type_name(ECAL_HANDLE handle_, const char* topic_type_name_, const int topic_type_name_length_);
 
 /**
  * @brief Setup topic type description.
