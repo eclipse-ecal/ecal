@@ -343,13 +343,13 @@ namespace eCAL
     return true;
   }
 
-  bool CDataWriter::ShmSetAcknowledgeTimeout(int acknowledge_timeout_ms_)
+  bool CDataWriter::ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_)
   {
     m_acknowledge_timeout_ms = acknowledge_timeout_ms_;
     return true;
   }
 
-  int CDataWriter::ShmGetAcknowledgeTimeout()
+  long long CDataWriter::ShmGetAcknowledgeTimeout()
   {
     return m_acknowledge_timeout_ms;
   }

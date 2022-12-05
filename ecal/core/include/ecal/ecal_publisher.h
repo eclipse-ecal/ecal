@@ -264,15 +264,15 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool ShmSetAcknowledgeTimeout(int acknowledge_timeout_ms_);
+    bool ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_);
 
     /**
      * @brief Force connected subscribers to send acknowledge event after processing the message and
      *        block publisher send call on this event with a timeout.
      *
-     * See ShmSetAcknowledgeTimeout(int acknowledge_timeout_ms_)
+     * See ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_)
      * 
-     * @param acknowledge_timeout_ms_ timeout to wait for acknowledge signal from connected subscriber (0 == no handshake).
+     * @param acknowledge_timeout_ timeout to wait for acknowledge signal from connected subscriber (0 == no handshake).
      *
      * @return  True if it succeeds, false if it fails.
     **/
@@ -280,7 +280,7 @@ namespace eCAL
     bool ShmSetAcknowledgeTimeout(std::chrono::duration<Rep, Period> acknowledge_timeout_)
     {
       auto acknowledge_timeout_ms = std::chrono::duration_cast<std::chrono::milliseconds>(acknowledge_timeout_).count();
-      return ShmSetAcknowledgeTimeout(static_cast<int>(acknowledge_timeout_ms));
+      return ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms));
     }
 
     /**

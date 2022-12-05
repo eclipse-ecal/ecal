@@ -315,7 +315,7 @@ namespace eCAL
     return m_datawriter->ShmEnableZeroCopy(state_);
   }
 
-  bool CPublisher::ShmSetAcknowledgeTimeout(int acknowledge_timeout_ms_)
+  bool CPublisher::ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_)
   {
     if (!m_created) return(false);
     return m_datawriter->ShmSetAcknowledgeTimeout(acknowledge_timeout_ms_);
@@ -362,8 +362,8 @@ namespace eCAL
     if (!m_created) return(0);
 
     // set new acknowledge timeout
-    int current_acknowledge_timeout_ms(m_datawriter->ShmGetAcknowledgeTimeout());
-    m_datawriter->ShmSetAcknowledgeTimeout(static_cast<int>(acknowledge_timeout_ms_));
+    long long current_acknowledge_timeout_ms(m_datawriter->ShmGetAcknowledgeTimeout());
+    m_datawriter->ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms_));
     
     // send buffer
     size_t len = Send(buf_, len_, time_);
