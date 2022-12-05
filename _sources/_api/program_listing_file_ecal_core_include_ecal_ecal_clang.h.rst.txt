@@ -119,6 +119,8 @@ Program Listing for File ecal_clang.h
    
    ECAL_API int pub_send(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_);
    
+   ECAL_API int pub_send_sync(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_, const long long acknowledge_timeout_ms_);
+   
    ECAL_API bool pub_add_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, const PubEventCallbackCT callback_, void* par_);
    
    ECAL_API bool pub_rem_event_callback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_);

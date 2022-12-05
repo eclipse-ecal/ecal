@@ -36,6 +36,7 @@ Program Listing for File ecal_publisher.h
    #include <ecal/ecal_qos.h>
    #include <ecal/ecal_tlayer.h>
    
+   #include <chrono>
    #include <string>
    
    namespace eCAL
@@ -85,11 +86,22 @@ Program Listing for File ecal_publisher.h
    
        bool ShmEnableZeroCopy(bool state_);
    
+       bool ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_);
+   
+       template <typename Rep, typename Period>
+       bool ShmSetAcknowledgeTimeout(std::chrono::duration<Rep, Period> acknowledge_timeout_)
+       {
+         auto acknowledge_timeout_ms = std::chrono::duration_cast<std::chrono::milliseconds>(acknowledge_timeout_).count();
+         return ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms));
+       }
+   
        bool SetID(long long id_);
    
        size_t Send(const void* const buf_, size_t len_, long long time_ = -1) const;
    
        size_t Send(const std::string& s_, long long time_ = -1) const;
+   
+       size_t SendSynchronized(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const;
    
        bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
    

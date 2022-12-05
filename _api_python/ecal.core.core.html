@@ -345,6 +345,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../_api/function_ecal__clang_8h_1a29c50810681e482f364404cf93366e58.html">Function pub_get_qos</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../_api/function_ecal__clang_8h_1a3c4548baa30604c6f790adb4cc2c3438.html">Function pub_rem_event_callback</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../_api/function_ecal__clang_8h_1a0e2c1a29a1336083f2d19db5a1a2d4d1.html">Function pub_send</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../_api/function_ecal__clang_8h_1a771d86ab58f9ccfe0152329f93238da7.html">Function pub_send_sync</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../_api/function_ecal__clang_8h_1aaacbcd254d94c68c9a61fae235101c5c.html">Function pub_set_description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../_api/function_ecal__clang_8h_1a8cb6f20f940c0e54231c78e47c5bc920.html">Function pub_set_layer_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../_api/function_ecal__clang_8h_1ad7cad459dd949ef83ec948ce20d8da1d.html">Function pub_set_max_bandwidth_udp</a></li>
@@ -976,6 +977,22 @@ Python wrapper for eCAL the enhanced communication abstraction layer.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="ecal.core.core.pub_send_sync">
+<code class="sig-prename descclassname"><span class="pre">ecal.core.core.</span></code><code class="sig-name descname"><span class="pre">pub_send_sync</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_handle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg_payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ack_timeout_ms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ecal.core.core.pub_send_sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>send publisher content synchronized to connected local subscribers with acknowledge timeout</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topic_handle</strong> – the topic handle</p></li>
+<li><p><strong>msg_payload</strong> (<em>bytes</em>) – message python string (can contain zeros)</p></li>
+<li><p><strong>msg_time</strong> (<em>int</em>) – message time in us (-1 == eCAL system time)</p></li>
+<li><p><strong>ack_timeout_ms</strong> (<em>int</em>) – Maximum time to wait for all subscribers acknowledge feedback in ms (message received and processed)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="ecal.core.core.pub_set_description">
 <code class="sig-prename descclassname"><span class="pre">ecal.core.core.</span></code><code class="sig-name descname"><span class="pre">pub_set_description</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_handle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ecal.core.core.pub_set_description" title="Permalink to this definition">¶</a></dt>
 <dd><p>set publisher description</p>
@@ -1068,6 +1085,21 @@ Python wrapper for eCAL the enhanced communication abstraction layer.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>msg_payload</strong> (<em>bytes</em>) – message python string (can contain zeros)</p></li>
 <li><p><strong>msg_time</strong> (<em>int</em>) – optional message time in us (default -1 == eCAL system time)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ecal.core.core.publisher.send_sync">
+<code class="sig-name descname"><span class="pre">send_sync</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg_payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ack_timeout_ms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ecal.core.core.publisher.send_sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>send publisher content synchronized to connected local subscribers with acknowledge timeout</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msg_payload</strong> (<em>bytes</em>) – message python string (can contain zeros)</p></li>
+<li><p><strong>msg_time</strong> (<em>int</em>) – message time in us (-1 == eCAL system time)</p></li>
+<li><p><strong>ack_timeout_ms</strong> (<em>int</em>) – Maximum time to wait for subscriber receive and process acknowledge feedback in ms</p></li>
 </ul>
 </dd>
 </dl>

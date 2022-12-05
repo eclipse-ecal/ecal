@@ -342,6 +342,7 @@
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__clang_8h_1a29c50810681e482f364404cf93366e58.html">Function pub_get_qos</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__clang_8h_1a3c4548baa30604c6f790adb4cc2c3438.html">Function pub_rem_event_callback</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__clang_8h_1a0e2c1a29a1336083f2d19db5a1a2d4d1.html">Function pub_send</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__clang_8h_1a771d86ab58f9ccfe0152329f93238da7.html">Function pub_send_sync</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__clang_8h_1aaacbcd254d94c68c9a61fae235101c5c.html">Function pub_set_description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__clang_8h_1a8cb6f20f940c0e54231c78e47c5bc920.html">Function pub_set_layer_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_api/function_ecal__clang_8h_1ad7cad459dd949ef83ec948ce20d8da1d.html">Function pub_set_max_bandwidth_udp</a></li>
@@ -1435,6 +1436,9 @@
                                     <a href="_api/classeCAL_1_1CPublisher.html#_CPPv4NK4eCAL10CPublisher4SendEPCKv6size_tx">eCAL::CPublisher::Send (C++ function)</a>, <a href="_api/classeCAL_1_1CPublisher.html#_CPPv4NK4eCAL10CPublisher4SendERKNSt6stringEx">[1]</a>
 </li>
                                 <li>
+                                    <a href="_api/classeCAL_1_1CPublisher.html#_CPPv4NK4eCAL10CPublisher16SendSynchronizedEPCKv6size_txx">eCAL::CPublisher::SendSynchronized (C++ function)</a>
+</li>
+                                <li>
                                     <a href="_api/classeCAL_1_1CPublisher.html#_CPPv4N4eCAL10CPublisher12SetAttributeERKNSt6stringERKNSt6stringE">eCAL::CPublisher::SetAttribute (C++ function)</a>
 </li>
                                 <li>
@@ -1460,6 +1464,9 @@
 </li>
                                 <li>
                                     <a href="_api/classeCAL_1_1CPublisher.html#_CPPv4N4eCAL10CPublisher17ShmEnableZeroCopyEb">eCAL::CPublisher::ShmEnableZeroCopy (C++ function)</a>
+</li>
+                                <li>
+                                    <a href="_api/classeCAL_1_1CPublisher.html#_CPPv4I00EN4eCAL10CPublisher24ShmSetAcknowledgeTimeoutEbNSt6chrono8durationI3Rep6PeriodEE">eCAL::CPublisher::ShmSetAcknowledgeTimeout (C++ function)</a>, <a href="_api/classeCAL_1_1CPublisher.html#_CPPv4N4eCAL10CPublisher24ShmSetAcknowledgeTimeoutEx">[1]</a>
 </li>
                                 <li>
                                     <a href="_api/classeCAL_1_1CPublisher.html#_CPPv4N4eCAL10CPublisher17ShmSetBufferCountEl">eCAL::CPublisher::ShmSetBufferCount (C++ function)</a>
@@ -1815,13 +1822,13 @@
                                 <li>
                                     <a href="_api/variable_ecal__init_8h_1aa32d3dce6b6237764db6f9547331f2f2.html#_CPPv4N4eCAL4Init10MonitoringE">eCAL::Init::Monitoring (C++ member)</a>
 </li>
-                                <li>
-                                    <a href="_api/variable_ecal__init_8h_1a1c65619950fd101e27ae92d79221968a.html#_CPPv4N4eCAL4Init4NoneE">eCAL::Init::None (C++ member)</a>
-</li>
                         </ul>
                     </td>
                     <td>
                         <ul>
+                                <li>
+                                    <a href="_api/variable_ecal__init_8h_1a1c65619950fd101e27ae92d79221968a.html#_CPPv4N4eCAL4Init4NoneE">eCAL::Init::None (C++ member)</a>
+</li>
                                 <li>
                                     <a href="_api/variable_ecal__init_8h_1a282eab5a6da0731a6644086d1fe94393.html#_CPPv4N4eCAL4Init10ProcessRegE">eCAL::Init::ProcessReg (C++ member)</a>
 </li>
@@ -3242,13 +3249,13 @@
                                 <li>
                                     <a href="_api_python/ecal.core.pb.process_pb2.html#ecal.core.pb.process_pb2.ProcessState">ProcessState (class in ecal.core.pb.process_pb2)</a>
 </li>
+                                <li>
+                                    <a href="_api_python/ecal.measurement.measurement.html#ecal.measurement.measurement.Channel.proto_msg_class">proto_msg_class() (ecal.measurement.measurement.Channel property)</a>
+</li>
                         </ul>
                     </td>
                     <td>
                         <ul>
-                                <li>
-                                    <a href="_api_python/ecal.measurement.measurement.html#ecal.measurement.measurement.Channel.proto_msg_class">proto_msg_class() (ecal.measurement.measurement.Channel property)</a>
-</li>
                                 <li>
                                     <a href="_api_python/ecal.core.publisher.html#ecal.core.publisher.ProtoPublisher">ProtoPublisher (class in ecal.core.publisher)</a>
 </li>
@@ -3281,6 +3288,12 @@
 </li>
                                 <li>
                                     <a href="_api_python/ecal.core.core.html#ecal.core.core.pub_send">pub_send() (in module ecal.core.core)</a>
+</li>
+                                <li>
+                                    <a href="_api/function_ecal__clang_8h_1a771d86ab58f9ccfe0152329f93238da7.html#_CPPv413pub_send_sync11ECAL_HANDLEPKcKiKxKx">pub_send_sync (C++ function)</a>
+</li>
+                                <li>
+                                    <a href="_api_python/ecal.core.core.html#ecal.core.core.pub_send_sync">pub_send_sync() (in module ecal.core.core)</a>
 </li>
                                 <li>
                                     <a href="_api/function_ecal__clang_8h_1aaacbcd254d94c68c9a61fae235101c5c.html#_CPPv419pub_set_description11ECAL_HANDLEPKcKi">pub_set_description (C++ function)</a>
@@ -3460,6 +3473,15 @@
                                                 <li><a href="_api_python/ecal.core.publisher.html#ecal.core.publisher.ProtoPublisher.send">(ecal.core.publisher.ProtoPublisher method)</a>
 </li>
                                                 <li><a href="_api_python/ecal.core.publisher.html#ecal.core.publisher.StringPublisher.send">(ecal.core.publisher.StringPublisher method)</a>
+</li>
+                                        </ul></li>
+                                <li>
+                                    <a href="_api_python/ecal.core.core.html#ecal.core.core.publisher.send_sync">send_sync() (ecal.core.core.publisher method)</a>
+
+                                        <ul>
+                                                <li><a href="_api_python/ecal.core.publisher.html#ecal.core.publisher.ProtoPublisher.send_sync">(ecal.core.publisher.ProtoPublisher method)</a>
+</li>
+                                                <li><a href="_api_python/ecal.core.publisher.html#ecal.core.publisher.StringPublisher.send_sync">(ecal.core.publisher.StringPublisher method)</a>
 </li>
                                         </ul></li>
                                 <li>

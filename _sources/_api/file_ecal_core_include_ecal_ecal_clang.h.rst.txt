@@ -121,6 +121,8 @@ Functions
 
 - :ref:`exhale_function_ecal__clang_8h_1a0e2c1a29a1336083f2d19db5a1a2d4d1`
 
+- :ref:`exhale_function_ecal__clang_8h_1a771d86ab58f9ccfe0152329f93238da7`
+
 - :ref:`exhale_function_ecal__clang_8h_1aaacbcd254d94c68c9a61fae235101c5c`
 
 - :ref:`exhale_function_ecal__clang_8h_1a8cb6f20f940c0e54231c78e47c5bc920`
