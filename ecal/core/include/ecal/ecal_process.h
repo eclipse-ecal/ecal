@@ -97,7 +97,7 @@ namespace eCAL
      * on Windows, Sleep function from synchapi.h had to be used for Windows. This insures time
      * robustness on all platforms from a thread sleep perspective. Used with ns unit to obtain bigger precision.
      *
-     * @param  time_ms_  Time to sleep in ns.
+     * @param  time_ns_  Time to sleep in ns.
     **/
     ECAL_API void SleepNS(const long long time_ns_);
 

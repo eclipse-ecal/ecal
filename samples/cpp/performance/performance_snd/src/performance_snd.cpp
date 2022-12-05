@@ -42,6 +42,8 @@ int main(int argc, char **argv)
   int                 msgs (0);
   unsigned long long  bytes(0);
   size_t              slen (0);
+  int                 trigger(1);
+  bool                handshake(false);
 
   // default send string
   std::string send_s = "Hello World ";
@@ -86,18 +88,41 @@ int main(int argc, char **argv)
       std::chrono::duration<double> diff_time = std::chrono::steady_clock::now() - start_time;
       if(diff_time >= std::chrono::seconds(1))
       {
+        trigger++;
+
         start_time = std::chrono::steady_clock::now();
         std::stringstream out;
-        out << "Message size (kByte):  " << int(slen / 1024)                             << std::endl;
-        out << "kByte/s:               " << int(bytes / 1024 / diff_time.count())        << std::endl;
-        out << "MByte/s:               " << int(bytes / 1024 / 1024 / diff_time.count()) << std::endl;
-        out << "Messages/s:            " << int(msgs / diff_time.count())                << std::endl;
+        out << "Message size (kByte):  " << (unsigned int)(slen  / 1024)                            << std::endl;
+        out << "kByte/s:               " << (unsigned int)(bytes / 1024 /        diff_time.count()) << std::endl;
+        out << "MByte/s:               " << (unsigned int)(bytes / 1024 / 1024 / diff_time.count()) << std::endl;
+        out << "Messages/s:            " << (unsigned int)(msgs  /               diff_time.count()) << std::endl;
         std::cout << out.str() << std::endl;
         msgs  = 0;
         bytes = 0;
 
         eCAL::Logging::Log(out.str());
       }
+    }
+
+    if ((trigger % 10) == 0)
+    {
+      std::cout << std::endl;
+      std::cout << "------------------------------" << std::endl;
+      if (handshake)
+      {
+        std::cout << "Switch handshake off" << std::endl;
+        pub.ShmSetAcknowledgeTimeout(0);
+      }
+      else
+      {
+        std::cout << "Switch handshake on" << std::endl;
+        pub.ShmSetAcknowledgeTimeout(std::chrono::milliseconds(1000));
+      }
+      std::cout << "------------------------------" << std::endl;
+      std::cout << std::endl;
+
+      handshake = !handshake;
+      trigger++;
     }
 
     eCAL::Logging::StopCoreTimer();

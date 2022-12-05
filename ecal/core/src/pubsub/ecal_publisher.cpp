@@ -315,6 +315,12 @@ namespace eCAL
     return m_datawriter->ShmEnableZeroCopy(state_);
   }
 
+  bool CPublisher::ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_)
+  {
+    if (!m_created) return(false);
+    return m_datawriter->ShmSetAcknowledgeTimeout(acknowledge_timeout_ms_);
+  }
+
   bool CPublisher::SetID(long long id_)
   {
     m_id = id_;
@@ -349,6 +355,23 @@ namespace eCAL
   size_t CPublisher::Send(const std::string& s_, const long long time_ /* = -1 */) const
   {
     return(Send(s_.data(), s_.size(), time_));
+  }
+
+  size_t CPublisher::SendSynchronized(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
+  {
+    if (!m_created) return(0);
+
+    // set new acknowledge timeout
+    long long current_acknowledge_timeout_ms(m_datawriter->ShmGetAcknowledgeTimeout());
+    m_datawriter->ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms_));
+    
+    // send buffer
+    size_t len = Send(buf_, len_, time_);
+
+    // reset acknowledge timeout
+    m_datawriter->ShmSetAcknowledgeTimeout(current_acknowledge_timeout_ms);
+
+    return len;
   }
 
   bool CPublisher::AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_)

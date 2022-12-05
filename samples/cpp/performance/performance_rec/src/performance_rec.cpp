@@ -66,10 +66,10 @@ int main(int argc, char **argv)
     {
       start_time = std::chrono::steady_clock::now();
       std::stringstream out;
-      out << "Message size (kByte):  " << int(slen / 1024)                             << std::endl;
-      out << "kByte/s:               " << int(bytes / 1024 / diff_time.count())        << std::endl;
-      out << "MByte/s:               " << int(bytes / 1024 / 1024 / diff_time.count()) << std::endl;
-      out << "Messages/s:            " << int(msgs / diff_time.count())                << std::endl;
+      out << "Message size (kByte):  " << (unsigned int)(slen  / 1024)                            << std::endl;
+      out << "kByte/s:               " << (unsigned int)(bytes / 1024 /        diff_time.count()) << std::endl;
+      out << "MByte/s:               " << (unsigned int)(bytes / 1024 / 1024 / diff_time.count()) << std::endl;
+      out << "Messages/s:            " << (unsigned int)(msgs  /               diff_time.count()) << std::endl;
       std::cout << out.str() << std::endl;
       msgs  = 0;
       bytes = 0;

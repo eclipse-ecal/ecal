@@ -431,6 +431,25 @@ PyObject* pub_send(PyObject* /*self*/, PyObject* args)
   return(Py_BuildValue("i", sent));
 }
 
+/****************************************/
+/*      pub_send_sync                   */
+/****************************************/
+PyObject* pub_send_sync(PyObject* /*self*/, PyObject* args)
+{
+  ECAL_HANDLE  topic_handle = nullptr;
+  char* payload = nullptr;
+  Py_ssize_t   length      = 0;
+  PY_LONG_LONG time        = 0;
+  PY_LONG_LONG ack_timeout = 0;
+
+  if (!PyArg_ParseTuple(args, "ny#LL", &topic_handle, &payload, &length, &time, &ack_timeout))
+    return nullptr;
+
+  int sent{ 0 };
+  sent = pub_send_sync(topic_handle, payload, (int)length, time, ack_timeout);
+
+  return(Py_BuildValue("i", sent));
+}
 
 /****************************************/
 /*      sub_create                      */
@@ -1567,6 +1586,7 @@ static PyMethodDef _ecal_methods[] =
   {"pub_set_max_bandwidth_udp",     pub_set_max_bandwidth_udp,     METH_VARARGS,  "pub_set_max_bandwidth_udp(topic_handle, bandwidth)"},
 
   {"pub_send",                      pub_send,                      METH_VARARGS,  "pub_send(topic_handle, payload, time)"},
+  {"pub_send_sync",                 pub_send_sync,                 METH_VARARGS,  "pub_send_sync(topic_handle, payload, time, ack_timeout)"},
 
   {"sub_create",                    sub_create,                    METH_VARARGS,  "sub_create(topic_name, topuic_type)"},
   {"sub_destroy",                   sub_destroy,                   METH_VARARGS,  "sub_destroy(topic_handle)"},
