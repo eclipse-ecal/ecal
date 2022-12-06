@@ -279,49 +279,71 @@ namespace eCAL
 
   int CServiceServerImpl::RequestCallback(const std::string& request_, std::string& response_)
   {
-    std::lock_guard<std::mutex> lock(m_method_map_sync);
+    // get method callback
+    {
+      std::lock_guard<std::mutex> lock(m_method_map_sync);
+      if (m_method_map.empty()) return 0;
+    }
 
-    if (m_method_map.empty()) return 0;
+    // try to parse request
+    eCAL::pb::Request  request_pb;
+    if (!request_pb.ParseFromString(request_))
+    {
+      Logging::Log(log_level_error, m_service_name + "::CServiceServerImpl::RequestCallback failed to parse request message");
+      // return value == -1 -> try to read more bytes from the socket
+      return -1;
+    }
 
-    int success(-1);
+    // return value == 0 -> we could deserialize, no need to try to read more bytes for the server socket
+    int success(0);
+
+    // prepare response
     eCAL::pb::Response response_pb;
     auto response_pb_mutable_header = response_pb.mutable_header();
     response_pb_mutable_header->set_hname(eCAL::Process::GetHostName());
     response_pb_mutable_header->set_sname(m_service_name);
     response_pb_mutable_header->set_sid(m_service_id);
 
-    eCAL::pb::Request request_pb;
-    if (request_pb.ParseFromString(request_))
+    // get method
+    SMethod method;
+    auto& request_pb_header = request_pb.header();
     {
-      // success == 0 means we could deserialize and
-      // no need to try to read more bytes for the server
-      // socket
-      success = 0;
-      auto request_pb_header = request_pb.header();
-      response_pb_mutable_header->set_mname(request_pb_header.mname());
+      std::lock_guard<std::mutex> lock(m_method_map_sync);
 
       auto iter = m_method_map.find(request_pb_header.mname());
-      if (iter != m_method_map.end())
+      if (iter == m_method_map.end())
       {
-        auto call_count = iter->second.method_pb.call_count();
-        iter->second.method_pb.set_call_count(++call_count);
-
-        std::string request_s = request_pb.request();
-        std::string response_s;
-        int service_return_state = m_method_map[request_pb_header.mname()].callback(iter->second.method_pb.mname(), iter->second.method_pb.req_type(), iter->second.method_pb.resp_type(), request_s, response_s);
-
-        response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
-        response_pb.set_response(response_s);
-        response_pb.set_ret_state(service_return_state);
-      }
-      else
-      {
+        // set error message
         response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
         std::string emsg = "Service " + m_service_name + " has no method " + request_pb_header.mname();
         response_pb_mutable_header->set_error(emsg);
+
+        // serialize response and return "method not found"
+        response_ = response_pb.SerializeAsString();
+        return success;
       }
-      response_ = response_pb.SerializeAsString();
+      else
+      {
+        // increase call count
+        auto call_count = iter->second.method_pb.call_count();
+        iter->second.method_pb.set_call_count(++call_count);
+        // store (copy) method element
+        method = m_method_map[request_pb_header.mname()];
+      }
     }
+
+    // execute method (outside lock guard)
+    std::string request_s = request_pb.request();
+    std::string response_s;
+    int service_return_state = method.callback(method.method_pb.mname(), method.method_pb.req_type(), method.method_pb.resp_type(), request_s, response_s);
+
+    // fill response
+    response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
+    response_pb.set_response(response_s);
+    response_pb.set_ret_state(service_return_state);
+
+    // serialize response and return
+    response_ = response_pb.SerializeAsString();
     return success;
   }
 
