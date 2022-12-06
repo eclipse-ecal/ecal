@@ -315,7 +315,7 @@ namespace eCAL
       {
         // set error message
         response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
-        std::string emsg = "Service " + m_service_name + " has no method " + request_pb_header.mname();
+        std::string emsg = "Service '" + m_service_name + "' has no method named '" + request_pb_header.mname() + "'";
         response_pb_mutable_header->set_error(emsg);
 
         // serialize response and return "method not found"
@@ -338,7 +338,20 @@ namespace eCAL
     int service_return_state = method.callback(method.method_pb.mname(), method.method_pb.req_type(), method.method_pb.resp_type(), request_s, response_s);
 
     // fill response
-    response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
+    switch (service_return_state)
+    {
+    case -1:
+    {
+      response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
+      std::string emsg = "Service '" + m_service_name + "' call of method '" + method.method_pb.mname() + "' failed.";
+      response_pb.mutable_header()->set_error(emsg);
+    }
+      break;
+    case 0:
+    default:
+      response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
+      break;
+    }
     response_pb.set_response(response_s);
     response_pb.set_ret_state(service_return_state);
 
