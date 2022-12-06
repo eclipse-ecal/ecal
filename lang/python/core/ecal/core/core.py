@@ -175,12 +175,23 @@ def pub_destroy(topic_handle):
   return _ecal.pub_destroy(topic_handle)
 
 
+def pub_set_topic_type_name(topic_handle, topic_type_name):
+  """ set publisher topic type name
+
+  :param topic_handle:    the topic handle
+  :type topic_handle:     string
+  :param topic_type_name: the topic type name
+  :type topic_type_name:  string
+
+  """
+  return _ecal.pub_set_topic_type_name(topic_handle, topic_type_name)
+
 def pub_set_description(topic_handle, description):
-  """ set publisher description
+  """ set publisher topic type description
 
   :param topic_handle: the topic handle
   :type topic_handle: string
-  :param description:  the topic description
+  :param description:  the topic type description
   :type description: bytes
 
   """
@@ -251,6 +262,20 @@ def pub_send(topic_handle, msg_payload, msg_time=-1):
   """
   return _ecal.pub_send(topic_handle, msg_payload, msg_time)
 
+
+def pub_send_sync(topic_handle, msg_payload, msg_time, ack_timeout_ms):
+  """ send publisher content synchronized to connected local subscribers with acknowledge timeout
+
+  :param topic_handle:    the topic handle
+  :param msg_payload:     message python string (can contain zeros)
+  :type msg_payload:      bytes
+  :param msg_time:        message time in us (-1 == eCAL system time)
+  :type msg_time:         int
+  :param ack_timeout_ms:  Maximum time to wait for all subscribers acknowledge feedback in ms (message received and processed)
+  :type ack_timeout_ms:   int
+
+  """
+  return _ecal.pub_send_sync(topic_handle, msg_payload, msg_time, ack_timeout_ms)
 
 def sub_create(topic_name, topic_type):
   """ create subscriber
@@ -560,9 +585,9 @@ class publisher(object):
 
     :param topic_name: the unique topic name
     :type topic_name:  string
-    :param topic_type: optional type name
+    :param topic_type: optional topic type name
     :type topic_type:  string
-    :param topic_desc: optional type description
+    :param topic_desc: optional topic type description
     :type topic_desc:  bytes
 
     """
@@ -579,6 +604,26 @@ class publisher(object):
     """ destroy publisher
     """
     return pub_destroy(self.thandle)
+
+  def set_topic_type_name(self, topic_type_name):
+    """ set topic type name
+
+    :param topic_type_name: the topic type name
+    :type topic_type_name:  string
+
+    """
+
+    return pub_set_topic_type_name(self.thandle, topic_type_name)
+
+  def set_topic_description(self, description):
+    """ set topic description
+
+    :param description: the topic type description
+    :type description: bytes
+
+    """
+
+    return pub_set_description(self.thandle, description)
 
   def set_qos_historykind(self, qpolicy, depth):
     """ set quality of service historykind mode and depth
@@ -631,6 +676,19 @@ class publisher(object):
     """
     return pub_send(self.thandle, msg_payload, msg_time)
 
+  def send_sync(self, msg_payload, msg_time, ack_timeout_ms):
+    """ send publisher content synchronized to connected local subscribers with acknowledge timeout
+
+    :param msg_payload:     message python string (can contain zeros)
+    :type msg_payload:      bytes
+    :param msg_time:        message time in us (-1 == eCAL system time)
+    :type msg_time:         int
+    :param ack_timeout_ms:  Maximum time to wait for subscriber receive and process acknowledge feedback in ms
+    :type ack_timeout_ms:   int
+
+    """
+    return pub_send_sync(self.thandle, msg_payload, msg_time, ack_timeout_ms)
+
 
 class subscriber(object):
   """ eCAL subscriber
@@ -641,7 +699,7 @@ class subscriber(object):
 
     :param topic_name: the unique topic name
     :type topic_name:  string
-    :param topic_type: optional topic type
+    :param topic_type: optional topic type name
     :type topic_type:  string
 
     """

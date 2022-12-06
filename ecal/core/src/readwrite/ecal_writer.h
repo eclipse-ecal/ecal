@@ -56,6 +56,7 @@ namespace eCAL
     bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
     bool Destroy();
 
+    bool SetTypeName(const std::string& topic_type_name_);
     bool SetDescription(const std::string& topic_desc_);
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
@@ -71,6 +72,9 @@ namespace eCAL
 
     bool ShmSetBufferCount(long buffering_);
     bool ShmEnableZeroCopy(bool state_);
+
+    bool ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_);
+    long long  ShmGetAcknowledgeTimeout();
 
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
     bool RemEventCallback(eCAL_Publisher_Event type_);
@@ -132,6 +136,7 @@ namespace eCAL
 
     size_t             m_buffering_shm;
     bool               m_zero_copy;
+    long long          m_acknowledge_timeout_ms;
 
     std::atomic<bool>  m_connected;
     typedef Util::CExpMap<std::string, bool> ConnectedMapT;

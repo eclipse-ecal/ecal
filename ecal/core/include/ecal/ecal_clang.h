@@ -216,6 +216,17 @@ ECAL_API ECAL_HANDLE pub_create(const char* topic_name_, const char* topic_type_
 ECAL_API bool pub_destroy(ECAL_HANDLE handle_);
 
 /**
+ * @brief Setup topic type name.
+ *
+ * @param handle_                  Publisher handle.
+ * @param topic_type_name_         Topic type name.
+ * @param topic_type_name_length_  Topic type name length.
+ *
+ * @return  True if succeeded.
+**/
+ECAL_API bool pub_set_type_name(ECAL_HANDLE handle_, const char* topic_type_name_, const int topic_type_name_length_);
+
+/**
  * @brief Setup topic type description.
  *
  * @param handle_             Publisher handle.
@@ -278,6 +289,21 @@ ECAL_API bool pub_set_max_bandwidth_udp(ECAL_HANDLE handle_, long bandwidth_);
  * @return  Number of bytes sent.
 **/
 ECAL_API int pub_send(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_);
+
+/**
+ * @brief Send a message to all subscribers synchronized with acknowledge timeout.
+ *
+ * This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.
+ *
+ * @param handle_                  Publisher handle.
+ * @param payload_                 Buffer that contains content to send.
+ * @param length_                  Length of buffer.
+ * @param time_                    Send time (-1 = use eCAL system time in us).
+ * @param acknowledge_timeout_ms_  Maximum time to wait for all subscribers acknowledge feedback in ms (content received and processed).
+ *
+ * @return  Number of bytes sent.
+**/
+ECAL_API int pub_send_sync(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_, const long long acknowledge_timeout_ms_);
 
 /**
  * @brief Add callback function for publisher events.

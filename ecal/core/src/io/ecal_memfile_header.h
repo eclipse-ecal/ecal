@@ -29,12 +29,12 @@ namespace eCAL
 {
   struct SMemFileHeader
   { //-V802
-    uint16_t   hdr_size  = sizeof(SMemFileHeader);
-    uint64_t   data_size = 0;
-    uint64_t   id        = 0;
-    uint64_t   clock     = 0;
-    int64_t    time      = 0;
-    uint64_t   hash      = 0;
+    uint16_t   hdr_size   = sizeof(SMemFileHeader);
+    uint64_t   data_size  = 0;
+    uint64_t   id         = 0;
+    uint64_t   clock      = 0;
+    int64_t    time       = 0;
+    uint64_t   hash       = 0;
     // ----- > 5.8 -----
     struct optflags
     {
@@ -42,6 +42,8 @@ namespace eCAL
       unsigned char unused    : 7;
     };
     optflags   options = { 0, 0 };
+    // ----- > 5.11 ----
+    int64_t    ack_timout_ms = 0;
   };
 }
  

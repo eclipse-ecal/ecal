@@ -109,5 +109,16 @@ namespace eCAL
 
     ECAL_API bool              IsTopicTypeSharingEnabled            ();
     ECAL_API bool              IsTopicDescriptionSharingEnabled     ();
+
+    /////////////////////////////////////
+    // experimental
+    /////////////////////////////////////
+    namespace Experimental
+    {
+      ECAL_API bool              IsShmMonitoringEnabled             ();
+      ECAL_API bool              IsNetworkMonitoringDisabled        ();
+      ECAL_API size_t            GetShmMonitoringQueueSize          ();
+      ECAL_API std::string       GetShmMonitoringDomain             ();
+    }
   }
 }

@@ -258,7 +258,20 @@ ECAL_API bool pub_destroy(ECAL_HANDLE handle_)
 }
 
 /****************************************/
-/*      pub_setdescription              */
+/*      pub_set_type_name              */
+/****************************************/
+ECAL_API bool pub_set_type_name(ECAL_HANDLE handle_, const char* topic_type_name_, const int topic_type_name_length_)
+{
+  eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
+  if (pub)
+  {
+    return(pub->SetTypeName(std::string(topic_type_name_, static_cast<size_t>(topic_type_name_length_))));
+  }
+  return(false);
+}
+
+/****************************************/
+/*      pub_set_description             */
 /****************************************/
 ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_)
 {
@@ -324,6 +337,23 @@ ECAL_API int pub_send(ECAL_HANDLE handle_, const char* payload_, const int lengt
   {
     size_t ret = pub->Send(payload_, static_cast<size_t>(length_), time_);
     if(static_cast<int>(ret) == length_)
+    {
+      return(length_);
+    }
+  }
+  return(0);
+}
+
+/****************************************/
+/*      pub_send_sync                   */
+/****************************************/
+ECAL_API int pub_send_sync(ECAL_HANDLE handle_, const char* payload_, const int length_, const long long time_, const long long acknowledge_timeout_ms_)
+{
+  eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
+  if (pub)
+  {
+    size_t ret = pub->SendSynchronized(payload_, static_cast<size_t>(length_), time_, acknowledge_timeout_ms_);
+    if (static_cast<int>(ret) == length_)
     {
       return(length_);
     }

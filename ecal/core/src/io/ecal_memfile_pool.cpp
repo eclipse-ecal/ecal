@@ -36,8 +36,7 @@ namespace eCAL
     m_created(false),
     m_do_stop(false),
     m_is_observing(false),
-    m_timeout_read(0),
-    m_timeout_ack(0)
+    m_timeout_read(0)
   {
   }
 
@@ -50,19 +49,13 @@ namespace eCAL
     Destroy();
   }
 
-  bool CMemFileObserver::Create(const std::string& memfile_name_, const std::string& memfile_event_, int timeout_ack_ms)
+  bool CMemFileObserver::Create(const std::string& memfile_name_, const std::string& memfile_event_)
   {
     if (m_created) return false;
 
-    // store acknowledgment timeout
-    m_timeout_ack = timeout_ack_ms;
-
     // open memory file events
     gOpenEvent(&m_event_snd, memfile_event_);
-    if (m_timeout_ack != 0)
-    {
-      gOpenEvent(&m_event_ack, memfile_event_ + "_ack");
-    }
+    gOpenEvent(&m_event_ack, memfile_event_ + "_ack");
 
     // create memory file access
     m_memfile.Create(memfile_name_.c_str(), false);
@@ -86,10 +79,7 @@ namespace eCAL
 
     // close memory file events
     gCloseEvent(m_event_snd);
-    if (m_timeout_ack != 0)
-    {
-      gCloseEvent(m_event_ack);
-    }
+    gCloseEvent(m_event_ack);
 
     m_created = false;
 
@@ -245,7 +235,7 @@ namespace eCAL
             }
 
             // send acknowledge event
-            if (m_timeout_ack != 0)
+            if (mfile_hdr.ack_timout_ms != 0)
             {
               gSetEvent(m_event_ack);
             }
@@ -333,7 +323,7 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CMemFileThreadPool::ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, const std::string& topic_name_, const std::string& topic_id_, int timeout_observation_ms, int timeout_ack_ms, const MemFileDataCallbackT& callback_)
+  bool CMemFileThreadPool::ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, const std::string& topic_name_, const std::string& topic_id_, int timeout_observation_ms, const MemFileDataCallbackT& callback_)
   {
     if(!m_created)            return(false);
     if(memfile_name_.empty()) return(false);
@@ -346,7 +336,7 @@ namespace eCAL
 
     // if the observer is existing reset its timeout
     // this should avoid that an observer will timeout in the case that
-    // there are no incomming data but the registration layer
+    // there are no incoming data but the registration layer
     // confirms that there are still existing (sleepy) shm writer on this host
     auto observer_it = m_observer_pool.find(memfile_name_);
     if(observer_it != m_observer_pool.end())
@@ -368,7 +358,7 @@ namespace eCAL
     else
     {
       auto observer = std::make_shared<CMemFileObserver>();
-      observer->Create(memfile_name_, memfile_event_, timeout_ack_ms);
+      observer->Create(memfile_name_, memfile_event_);
       observer->Start(topic_name_, topic_id_, timeout_observation_ms, callback_);
       m_observer_pool[memfile_name_] = observer;
 #ifndef NDEBUG

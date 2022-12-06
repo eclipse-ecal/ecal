@@ -14,6 +14,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
+        setup-python: 'false'
         version: '5.15.2'
         target: 'desktop'
         arch: 'win64_msvc2015_64'
@@ -111,6 +112,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON ^
         -DECAL_THIRDPARTY_BUILD_QWT=OFF ^
         -DECAL_THIRDPARTY_BUILD_YAML-CPP=OFF ^
+        -DECAL_THIRDPARTY_BUILD_UDPCAP=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Debug ^
@@ -151,6 +153,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON ^
         -DECAL_THIRDPARTY_BUILD_QWT=ON ^
         -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON ^
+        -DECAL_THIRDPARTY_BUILD_UDPCAP=ON ^
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Release ^

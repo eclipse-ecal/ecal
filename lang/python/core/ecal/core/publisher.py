@@ -49,6 +49,26 @@ class MessagePublisher(object):
     """
     raise NotImplementedError("Please Implement this method")
 
+  def set_topic_type_name(self, topic_type_name):
+    """ set topic type name
+
+    :param topic_type_name: the topic type name
+    :type topic_type_name:  string
+
+    """
+
+    return self.c_publisher.set_topic_type_name(topic_type_name)
+
+  def set_topic_description(self, topic_desc):
+    """ set topic description
+
+    :param topic_desc: the topic type description
+    :type topic_desc: bytes
+
+    """
+
+    return self.c_publisher.set_topic_description(topic_desc)
+
   def set_qos(self, qos):
     """ set publisher quality of service
 
@@ -94,6 +114,9 @@ class ProtoPublisher(MessagePublisher):
   def send(self, msg, time=-1):
     return self.c_publisher.send(msg.SerializeToString(), time)
 
+  def send_sync(self, msg, time, ack_timeout_ms):
+    return self.c_publisher.send_sync(msg.SerializeToString(), time, ack_timeout_ms)
+
 
 class StringPublisher(MessagePublisher):
   """Spezialized publisher that sends out plain strings
@@ -105,6 +128,9 @@ class StringPublisher(MessagePublisher):
 
   def send(self, msg, time=-1):
     return self.c_publisher.send(msg.encode(), time)
+
+  def send_sync(self, msg, time, ack_timeout_ms):
+    return self.c_publisher.send_sync(msg.encode(), time, ack_timeout_ms)
 
 
 if __name__ == '__main__':

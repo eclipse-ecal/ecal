@@ -28,6 +28,7 @@
 #include <cstdint>
 
 #include "ecal_memfile_info.h"
+#include "ecal_named_mutex.h"
 
 namespace eCAL
 {
@@ -56,7 +57,7 @@ namespace eCAL
      *
      * @return  true if it succeeds, false if it fails. 
     **/
-    bool Create(const char* name_, const bool create_, const size_t len_ = 0);
+    bool Create(const char* name_, const bool create_, const size_t len_ = 0, const bool auto_sanitizing_ = false);
 
     /**
      * @brief Delete the associated memory file from system. 
@@ -199,10 +200,12 @@ namespace eCAL
       write_access
     };
     bool            m_created;
+    bool            m_auto_sanitizing;
     access_state    m_access_state;
     std::string     m_name;
     SInternalHeader m_header;
     SMemFileInfo    m_memfile_info;
+    CNamedMutex     m_memfile_mutex;
 
   private:
     CMemoryFile(const CMemoryFile&);                 // prevent copy-construction

@@ -29,11 +29,18 @@
 #include "ecal_thread.h"
 #include "io/udp_receiver.h"
 
+#ifndef ECAL_LAYER_ICEORYX
+#include "io/ecal_memfile.h"
+#include "io/ecal_memfile_broadcast.h"
+#include "io/ecal_memfile_broadcast_reader.h"
+#endif
+
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
 #include <ecal/core/pb/monitoring.pb.h>
+#include <ecal/core/pb/ecal.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
@@ -58,6 +65,30 @@ namespace eCAL
     class CThread        m_reg_rcv_thread;
     RegMessageCallbackT  m_reg_cb;
   };
+
+#ifndef ECAL_LAYER_ICEORYX
+  class CShmRegistrationReceiveThread
+  {
+  public:
+    using RegMessageCallbackT = std::function<size_t(const eCAL::pb::Sample& ecal_sample_)>;
+
+    CShmRegistrationReceiveThread(RegMessageCallbackT reg_cb_);
+    virtual ~CShmRegistrationReceiveThread();
+
+    CShmRegistrationReceiveThread(CShmRegistrationReceiveThread&) = default;
+    CShmRegistrationReceiveThread& operator=(CShmRegistrationReceiveThread&) = default;
+    CShmRegistrationReceiveThread(CShmRegistrationReceiveThread&&) = default;
+    CShmRegistrationReceiveThread& operator=(CShmRegistrationReceiveThread&&) = default;
+
+  protected:
+    int ThreadFun();
+
+    CThread                    m_reg_rcv_thread;
+    RegMessageCallbackT        m_reg_cb;
+    CMemoryFileBroadcast       m_memfile_broadcast;
+    CMemoryFileBroadcastReader m_memfile_broadcast_reader;
+  };
+#endif
 
   class CLoggingReceiveThread
   {
