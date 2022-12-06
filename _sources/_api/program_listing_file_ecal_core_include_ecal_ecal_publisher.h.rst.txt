@@ -64,6 +64,8 @@ Program Listing for File ecal_publisher.h
    
        bool Destroy();
    
+       bool SetTypeName(const std::string& topic_type_name_);
+   
        bool SetDescription(const std::string& topic_desc_);
    
        bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);

@@ -107,6 +107,8 @@ Program Listing for File ecal_clang.h
    
    ECAL_API bool pub_destroy(ECAL_HANDLE handle_);
    
+   ECAL_API bool pub_set_type_name(ECAL_HANDLE handle_, const char* topic_type_name_, const int topic_type_name_length_);
+   
    ECAL_API bool pub_set_description(ECAL_HANDLE handle_, const char* topic_desc_, const int topic_desc_length_);
    
    ECAL_API bool pub_set_qos(ECAL_HANDLE handle_, struct SWriterQOSC qos_);
