@@ -203,6 +203,30 @@ namespace eCAL
     return(true);
   }
 
+  bool CPublisher::SetTypeName(const std::string& topic_type_name_)
+  {
+    if (!m_datawriter) return false;
+
+    if (g_descgate())
+    {
+      const std::string topic_desc = m_datawriter->GetDescription();
+
+      // Calculate the quality of the current info
+      ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
+      if (!topic_type_name_.empty())
+        quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
+      if (!topic_desc.empty())
+        quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
+      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
+      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
+      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PUBLISHER;
+
+      g_descgate()->ApplyTopicDescription(m_datawriter->GetTopicName(), topic_type_name_, topic_desc, quality);
+    }
+
+    return m_datawriter->SetTypeName(topic_type_name_);
+  }
+
   bool CPublisher::SetDescription(const std::string& topic_desc_)
   {
     if(!m_datawriter) return false;

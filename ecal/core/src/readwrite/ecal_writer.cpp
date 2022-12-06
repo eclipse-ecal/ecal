@@ -213,6 +213,22 @@ namespace eCAL
     return(true);
   }
 
+  bool CDataWriter::SetTypeName(const std::string& topic_type_name_)
+  {
+    bool force = m_topic_type != topic_type_name_;
+    m_topic_type = topic_type_name_;
+
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::SetTypeName");
+#endif
+
+    // register it
+    DoRegister(force);
+
+    return(true);
+  }
+
   bool CDataWriter::SetDescription(const std::string& topic_desc_)
   {
     bool force = m_topic_desc != topic_desc_;

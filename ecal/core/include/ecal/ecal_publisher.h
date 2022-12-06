@@ -124,6 +124,15 @@ namespace eCAL
     bool Destroy();
 
     /**
+     * @brief Setup topic type name.
+     *
+     * @param topic_type_name_   Topic type name.
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool SetTypeName(const std::string& topic_type_name_);
+
+    /**
      * @brief Setup topic description. 
      *
      * @param topic_desc_   Description string. 

@@ -329,6 +329,21 @@ PyObject* pub_destroy(PyObject* /*self*/, PyObject* args)
 }
 
 /****************************************/
+/*      pub_set_topic_type_name         */
+/****************************************/
+PyObject* pub_set_topic_type_name(PyObject* /*self*/, PyObject* args)
+{
+  ECAL_HANDLE topic_handle = nullptr;
+  char* topic_type_name = nullptr;
+  Py_ssize_t  topic_type_name_len = 0;
+
+  if (!PyArg_ParseTuple(args, "ns#", &topic_handle, &topic_type_name, &topic_type_name_len))
+    return nullptr;
+
+  return(Py_BuildValue("i", pub_set_type_name(topic_handle, topic_type_name, (int)topic_type_name_len)));
+}
+
+/****************************************/
 /*      pub_set_description             */
 /****************************************/
 PyObject* pub_set_description(PyObject* /*self*/, PyObject* args)
@@ -1575,10 +1590,12 @@ static PyMethodDef _ecal_methods[] =
   {"log_message",                   log_message,                   METH_VARARGS,  "log_message(message)"},
   {"log_setcoretime",               log_setcoretime,               METH_VARARGS,  "log_setcoretime(time)"},
 
-  {"pub_create",                    pub_create,                    METH_VARARGS,  "pub_create(topic_name, topuic_type)"},
+  {"pub_create",                    pub_create,                    METH_VARARGS,  "pub_create(topic_name, topic_type)"},
   {"pub_destroy",                   pub_destroy,                   METH_VARARGS,  "pub_destroy(topic_handle)"},
 
+  {"pub_set_topic_type_name",       pub_set_topic_type_name,       METH_VARARGS,  "pub_set_topic_type_name(topic_handle, topic_type_name)"},
   {"pub_set_description",           pub_set_description,           METH_VARARGS,  "pub_set_description(topic_handle, topic_description)"},
+
   {"pub_set_qos_historykind",       pub_set_qos_historykind,       METH_VARARGS,  "pub_set_qos_historykind(topic_handle, qpolicy, depth)"},
   {"pub_set_qos_reliability",       pub_set_qos_reliability,       METH_VARARGS,  "pub_set_qos_reliability(topic_handle, qpolicy)"},
   {"pub_set_layer_mode",            pub_set_layer_mode,            METH_VARARGS,  "pub_set_layer_mode(topic_handle, layer, mode)"},

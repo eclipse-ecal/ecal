@@ -175,12 +175,23 @@ def pub_destroy(topic_handle):
   return _ecal.pub_destroy(topic_handle)
 
 
+def pub_set_topic_type_name(topic_handle, topic_type_name):
+  """ set publisher topic type name
+
+  :param topic_handle:    the topic handle
+  :type topic_handle:     string
+  :param topic_type_name: the topic type name
+  :type topic_type_name:  string
+
+  """
+  return _ecal.pub_set_topic_type_name(topic_handle, topic_type_name)
+
 def pub_set_description(topic_handle, description):
-  """ set publisher description
+  """ set publisher topic type description
 
   :param topic_handle: the topic handle
   :type topic_handle: string
-  :param description:  the topic description
+  :param description:  the topic type description
   :type description: bytes
 
   """
@@ -574,9 +585,9 @@ class publisher(object):
 
     :param topic_name: the unique topic name
     :type topic_name:  string
-    :param topic_type: optional type name
+    :param topic_type: optional topic type name
     :type topic_type:  string
-    :param topic_desc: optional type description
+    :param topic_desc: optional topic type description
     :type topic_desc:  bytes
 
     """
@@ -593,6 +604,26 @@ class publisher(object):
     """ destroy publisher
     """
     return pub_destroy(self.thandle)
+
+  def set_topic_type_name(self, topic_type_name):
+    """ set topic type name
+
+    :param topic_type_name: the topic type name
+    :type topic_type_name:  string
+
+    """
+
+    return pub_set_topic_type_name(self.thandle, topic_type_name)
+
+  def set_topic_description(self, description):
+    """ set topic description
+
+    :param description: the topic type description
+    :type description: bytes
+
+    """
+
+    return pub_set_description(self.thandle, description)
 
   def set_qos_historykind(self, qpolicy, depth):
     """ set quality of service historykind mode and depth
@@ -668,7 +699,7 @@ class subscriber(object):
 
     :param topic_name: the unique topic name
     :type topic_name:  string
-    :param topic_type: optional topic type
+    :param topic_type: optional topic type name
     :type topic_type:  string
 
     """
