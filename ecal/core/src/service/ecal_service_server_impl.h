@@ -83,6 +83,14 @@ namespace eCAL
     CServiceServerImpl& operator=(const CServiceServerImpl&) = delete;
 
   protected:
+    /**
+     * @brief Calls the requrest callback based on the request and fills the response
+     * 
+     * @param[in]  request_   The service request in serialized protobuf form
+     * @param[out] response_  A serialialized protobuf response. My not be set at all.
+     * 
+     * @return An errorcode. 0 if success and -1 if failed.
+     */
     int RequestCallback(const std::string& request_, std::string& response_);
     void EventCallback(eCAL_Server_Event event_, const std::string& message_);
 

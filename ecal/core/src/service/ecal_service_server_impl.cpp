@@ -279,23 +279,38 @@ namespace eCAL
 
   int CServiceServerImpl::RequestCallback(const std::string& request_, std::string& response_)
   {
-    // get method callback
+    // Check if there are any methods. If there are no methods, we return Success (Errorcode 0)
+    // 
+    // TODO: Check why we don't return an error to tell the call that this  operation failed
+    // TODO: Why are we not setting the response to an error? Nobody will know that the call failed!
+    // TODO: Why do we need to have this check after all? locking the mutex can be very expensive.
     {
       std::lock_guard<std::mutex> lock(m_method_map_sync);
       if (m_method_map.empty()) return 0;
     }
 
-    // try to parse request
+    // Try to parse request
     eCAL::pb::Request  request_pb;
     if (!request_pb.ParseFromString(request_))
     {
       Logging::Log(log_level_error, m_service_name + "::CServiceServerImpl::RequestCallback failed to parse request message");
+      
       // return value == -1 -> try to read more bytes from the socket
+      //
+      // TODO: I don't think the comment above is true. At least currently
+      //       (2022-12-08), the return value of this method is not checked (at
+      //       least not in asio_server.h) and the data is (furtunatelly!!!!!)
+      //       not appended forever.
+      // 
+      //       Also see the following GitHub issue, where I tried to analyze the
+      //       current code:
+      //       https://github.com/eclipse-ecal/ecal/issues/905
+      //
+      // TODO: If the request could not be parsed, why are we not telling the caller via the response protobuf message?
       return -1;
     }
 
-    // return value == 0 -> we could deserialize, no need to try to read more bytes for the server socket
-    int success(0);
+    // return value == 0 -> We could deserialize, no need to try to read more bytes for the server socket
 
     // prepare response
     eCAL::pb::Response response_pb;
@@ -310,8 +325,8 @@ namespace eCAL
     {
       std::lock_guard<std::mutex> lock(m_method_map_sync);
 
-      auto iter = m_method_map.find(request_pb_header.mname());
-      if (iter == m_method_map.end())
+      auto requested_method_iterator = m_method_map.find(request_pb_header.mname());
+      if (requested_method_iterator == m_method_map.end())
       {
         // set error message
         response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
@@ -320,44 +335,47 @@ namespace eCAL
 
         // serialize response and return "method not found"
         response_ = response_pb.SerializeAsString();
-        return success;
+
+        // Return Success (error_code = 0), as parsing the request worked. The
+        // return value is not propagated to the remote caller.
+        return 0;
       }
       else
       {
         // increase call count
-        auto call_count = iter->second.method_pb.call_count();
-        iter->second.method_pb.set_call_count(++call_count);
-        // store (copy) method element
-        method = m_method_map[request_pb_header.mname()];
+        auto call_count = requested_method_iterator->second.method_pb.call_count();
+        requested_method_iterator->second.method_pb.set_call_count(++call_count);
+
+        // store (copy) the method object, so we can release the mutex before calling the function
+        method = requested_method_iterator->second;
       }
     }
 
     // execute method (outside lock guard)
-    std::string request_s = request_pb.request();
+    const std::string& request_s = request_pb.request();
     std::string response_s;
     int service_return_state = method.callback(method.method_pb.mname(), method.method_pb.req_type(), method.method_pb.resp_type(), request_s, response_s);
 
     // fill response
-    switch (service_return_state)
-    {
-    case -1:
+    if (service_return_state == -1) // TODO: is it really a good idea to check for this specific value (-1)? I think it would be a better idea to check for != 0
     {
       response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
       std::string emsg = "Service '" + m_service_name + "' call of method '" + method.method_pb.mname() + "' failed.";
       response_pb.mutable_header()->set_error(emsg);
     }
-      break;
-    case 0:
-    default:
+    else
+    {
       response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
-      break;
     }
+
     response_pb.set_response(response_s);
     response_pb.set_ret_state(service_return_state);
 
     // serialize response and return
     response_ = response_pb.SerializeAsString();
-    return success;
+
+    // Return success (error code 0)
+    return 0;
   }
 
   void CServiceServerImpl::EventCallback(eCAL_Server_Event event_, const std::string& /*message_*/)
