@@ -279,45 +279,29 @@ namespace eCAL
 
   int CServiceServerImpl::RequestCallback(const std::string& request_, std::string& response_)
   {
-    // Check if there are any methods. If there are no methods, we return Success (Errorcode 0)
-    // 
-    // TODO: Check why we don't return an error to tell the call that this  operation failed
-    // TODO: Why are we not setting the response to an error? Nobody will know that the call failed!
-    // TODO: Why do we need to have this check after all? locking the mutex can be very expensive.
-    {
-      std::lock_guard<std::mutex> lock(m_method_map_sync);
-      if (m_method_map.empty()) return 0;
-    }
-
-    // Try to parse request
-    eCAL::pb::Request  request_pb;
-    if (!request_pb.ParseFromString(request_))
-    {
-      Logging::Log(log_level_error, m_service_name + "::CServiceServerImpl::RequestCallback failed to parse request message");
-      
-      // return value == -1 -> try to read more bytes from the socket
-      //
-      // TODO: I don't think the comment above is true. At least currently
-      //       (2022-12-08), the return value of this method is not checked (at
-      //       least not in asio_server.h) and the data is (furtunatelly!!!!!)
-      //       not appended forever.
-      // 
-      //       Also see the following GitHub issue, where I tried to analyze the
-      //       current code:
-      //       https://github.com/eclipse-ecal/ecal/issues/905
-      //
-      // TODO: If the request could not be parsed, why are we not telling the caller via the response protobuf message?
-      return -1;
-    }
-
-    // return value == 0 -> We could deserialize, no need to try to read more bytes for the server socket
-
     // prepare response
     eCAL::pb::Response response_pb;
     auto response_pb_mutable_header = response_pb.mutable_header();
     response_pb_mutable_header->set_hname(eCAL::Process::GetHostName());
     response_pb_mutable_header->set_sname(m_service_name);
     response_pb_mutable_header->set_sid(m_service_id);
+
+    // try to parse request
+    eCAL::pb::Request  request_pb;
+    if (!request_pb.ParseFromString(request_))
+    {
+      Logging::Log(log_level_error, m_service_name + "::CServiceServerImpl::RequestCallback failed to parse request message");
+
+      response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
+      std::string emsg = "Service '" + m_service_name + "' request message could not be parsed.";
+      response_pb.mutable_header()->set_error(emsg);
+
+      // serialize response and return "request message could not be parsed"
+      response_ = response_pb.SerializeAsString();
+      
+      // return value is not propagated to the remote caller.
+      return 0;
+    }
 
     // get method
     SMethod method;
@@ -357,15 +341,15 @@ namespace eCAL
     int service_return_state = method.callback(method.method_pb.mname(), method.method_pb.req_type(), method.method_pb.resp_type(), request_s, response_s);
 
     // fill response
-    if (service_return_state == -1) // TODO: is it really a good idea to check for this specific value (-1)? I think it would be a better idea to check for != 0
+    if (service_return_state == 0)
+    {
+      response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
+    }
+    else
     {
       response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
       std::string emsg = "Service '" + m_service_name + "' call of method '" + method.method_pb.mname() + "' failed.";
       response_pb.mutable_header()->set_error(emsg);
-    }
-    else
-    {
-      response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
     }
 
     response_pb.set_response(response_s);
