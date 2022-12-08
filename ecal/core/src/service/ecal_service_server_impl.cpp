@@ -312,8 +312,9 @@ namespace eCAL
       auto requested_method_iterator = m_method_map.find(request_pb_header.mname());
       if (requested_method_iterator == m_method_map.end())
       {
-        // set error message
+        // set method call state 'failed'
         response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
+        // set error message
         std::string emsg = "Service '" + m_service_name + "' has no method named '" + request_pb_header.mname() + "'";
         response_pb_mutable_header->set_error(emsg);
 
@@ -340,25 +341,16 @@ namespace eCAL
     std::string response_s;
     int service_return_state = method.callback(method.method_pb.mname(), method.method_pb.req_type(), method.method_pb.resp_type(), request_s, response_s);
 
-    // fill response
-    if (service_return_state == 0)
-    {
-      response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
-    }
-    else
-    {
-      response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
-      std::string emsg = "Service '" + m_service_name + "' call of method '" + method.method_pb.mname() + "' failed.";
-      response_pb.mutable_header()->set_error(emsg);
-    }
-
+    // set method call state 'executed'
+    response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
+    // set method response and return state
     response_pb.set_response(response_s);
     response_pb.set_ret_state(service_return_state);
 
     // serialize response and return
     response_ = response_pb.SerializeAsString();
 
-    // Return success (error code 0)
+    // return success (error code 0)
     return 0;
   }
 
