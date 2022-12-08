@@ -281,7 +281,7 @@ namespace eCAL
   {
     // prepare response
     eCAL::pb::Response response_pb;
-    auto response_pb_mutable_header = response_pb.mutable_header();
+    auto* response_pb_mutable_header = response_pb.mutable_header();
     response_pb_mutable_header->set_hname(eCAL::Process::GetHostName());
     response_pb_mutable_header->set_sname(m_service_name);
     response_pb_mutable_header->set_sid(m_service_id);
@@ -294,7 +294,7 @@ namespace eCAL
 
       response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
       std::string emsg = "Service '" + m_service_name + "' request message could not be parsed.";
-      response_pb.mutable_header()->set_error(emsg);
+      response_pb_mutable_header->set_error(emsg);
 
       // serialize response and return "request message could not be parsed"
       response_ = response_pb.SerializeAsString();
