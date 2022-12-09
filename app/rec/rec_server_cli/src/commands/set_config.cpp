@@ -579,6 +579,23 @@ namespace eCAL
         rec_server_instance->SetOneFilePerTopicEnabled(param);
         return eCAL::rec::Error::OK;
       }
+
+      eCAL::rec::Error SetConfig::setGzipCompressionLevel (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
+      {
+          int gzip_compression_level;
+
+          try
+          {
+              gzip_compression_level = std::stoi(param);
+          }
+          catch (const std::exception& e)
+          {
+              return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::PARAMETER_ERROR, "Failed parsing value \"" + param + "\": " + e.what());
+          }
+
+          rec_server_instance->SetGzipCompressionLevel(gzip_compression_level);
+          return eCAL::rec::Error::OK;
+      }
     }
   }
 }

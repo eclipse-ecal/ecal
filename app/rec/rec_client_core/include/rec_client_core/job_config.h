@@ -55,6 +55,9 @@ namespace eCAL
       void SetOneFilePerTopicEnabled(bool enabled);
       bool GetOneFilePerTopicEnabled() const;
 
+      void SetGzipCompressionLevel(int level);
+      int  GetGzipCompressionLevel() const;
+
       void SetDescription(const std::string& description);
       std::string GetDescription() const;
 
@@ -76,6 +79,7 @@ namespace eCAL
       std::string  meas_name_;
       int64_t      max_file_size_mb_;
       bool         one_file_per_topic_;
+      int          gzip_compression_level_; // compression level range 1 - 9, where 0 means no compression
       std::string  description_;
     };
   }

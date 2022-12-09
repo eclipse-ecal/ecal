@@ -955,6 +955,11 @@ namespace eCAL
       job_config_.SetOneFilePerTopicEnabled(enabled);
     }
 
+    void RecServerImpl::SetGzipCompressionLevel(int level)
+    {
+        job_config_.SetGzipCompressionLevel(level);
+    }
+
     void RecServerImpl::SetDescription(const std::string& description)
     {
       job_config_.SetDescription(description);
@@ -979,6 +984,11 @@ namespace eCAL
     bool RecServerImpl::GetOneFilePerTopicEnabled() const
     {
       return job_config_.GetOneFilePerTopicEnabled();
+    }
+
+    int RecServerImpl::GetGzipCompressionLevel() const
+    {
+        return job_config_.GetGzipCompressionLevel();
     }
 
     std::string RecServerImpl::GetDescription() const
