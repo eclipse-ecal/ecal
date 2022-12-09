@@ -101,6 +101,48 @@ The command is the same for both Windows and Linux.
    cd proto_messages
    protoc --python_out=. hello_world.proto
 
+If you check the content of the ``proto_messages`` directory, you will now find a file :file:`hello_world_pb2.py`.
+This is the file we are going to use in python in the next step.
+
+Protobuf sender
+===============
+
+Now let's start implementing the actual python code, that sends some protobuf-serialized data to an eCAL topic.
+For that, create a file :file:`protobuf_snd.py` next to your proto_messages directory and paste the following content:
+
+.. parsed-literal::
+
+   |fa-folder-open|
+   ├─ |fa-folder-open| proto_messages
+   │  └─ |fa-file-alt| hello_world.proto
+   └─ |fa-python| :download:`protobuf_snd.py <src/hello_world_python_protobuf/protobuf_snd.py>`
+
+.. literalinclude:: src/hello_world_python_protobuf/protobuf_snd.py
+   :language: python
+   :linenos:
+
+.. note::
+   **What is happening here?**
+
+   **Line 5** Imports the Protobuf Publisher from eCAL
+   
+   **Line 9** Imports the :file:`hello_world_pb2.py` that we just have created.
+
+   **Line 14** Initializes eCAL.
+   The name of the node is "Python Protobuf Publisher".
+
+   By also providing ``sys.argv`` you get the ability to pass command line arguments to eCAL, e.g. for loading an :file:`ecal.ini` configuration file from a non-standard path.
+   In practice this is not often used and you could also pass ``[]`` as arguments.
+
+   **Line 20** creates an eCAL Publisher for the topic "hello_world_python_protobuf_topic".
+   The second parameter is the type from our converted "hello_world.proto" message description.
+   By providing the type, eCAL knows how to dynamically deserialize the message.
+
+   If you would omit passing the type here, you would still be able to receive the messages, but eCAL Mon would only display a boring hexadecimal representation of the content.
+
+   **Line 35-38** instanciate the protobuf message and fill it with content.
+
+   **Line 43** sends the entire protobuf message out to all subscribers on the topic.
 
 
 
@@ -118,32 +160,8 @@ The command is the same for both Windows and Linux.
 
 
 
-Now start implementing the actual sender application. Just as in the :ref:`last section <getting_started_hello_world>` create the :file:`CMakeLists.txt` and :file:`main.cpp` in the :file:`protobuf_snd` directory and paste the following content:
 
-* |fa-file-alt| :file:`CMakeLists.txt`:
 
-  .. literalinclude:: src/hello_world_protobuf/protobuf_snd/CMakeLists.txt
-     :language: cmake
-     :linenos:
-
-  .. note::
-     **What is happening here?**
-
-     **Line 10** adds Protobuf as dependency
-     
-     **Line 16-18** Creates a list of .proto files. We only have one.
-
-     **Line 22** Compiles the .proto file to a C++ header file (:file:`hello_world.pb.h`).
-     The ``PROTOBUF_TARGET_CPP`` function is a convenience function from eCAL.
-     If you have already worked with Protobuf and CMake, you may be more familiar with the following code, which basically does the same thing:
-
-     .. code-block:: cmake
-        
-       include_directories(${CMAKE_CURRENT_BINARY_DIR})
-       protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${protobuf_files})
-       add_executable(${PROJECT_NAME} ${source_files} ${PROTO_SRCS} ${PROTO_HDRS}) 
-
-     **Line 26** links the executable against protobuf
 
 * |fa-file-alt| :file:`main.cpp`:
 
