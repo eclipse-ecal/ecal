@@ -147,12 +147,6 @@ TEST(IO, ClientConnectEvent)
   // informed about disconnection without calling a service method
   client.Call("foo", "");
   eCAL::Process::SleepMS(1000);
-  EXPECT_EQ(1, event_disconnected_fired);
-  client.Call("foo", "");
-  eCAL::Process::SleepMS(1000);
-  EXPECT_EQ(2, event_disconnected_fired);
-  client.Call("foo", "");
-  eCAL::Process::SleepMS(1000);
   EXPECT_EQ(2, event_disconnected_fired);
 
   // finalize eCAL API

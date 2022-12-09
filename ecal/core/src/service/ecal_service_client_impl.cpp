@@ -424,12 +424,12 @@ namespace eCAL
         {
           // execute request
           SServiceResponse service_response;
-          bool ret = SendRequest(client.second, method_name_, request_, timeout_, service_response);
-          if (ret == false)
+          ret_state = SendRequest(client.second, method_name_, request_, timeout_, service_response);
+          if (ret_state == false)
           {
             std::cerr << "CServiceClientImpl::SendRequests failed." << std::endl;
-            return false;
           }
+          
           // call response callback
           if (service_response.call_state != call_state_none)
           {
