@@ -170,26 +170,7 @@ namespace eCAL
 #undef CopyFile
 #endif // CopyFile
         {
-          // Parse ouptut of dump config to get the path to the default.ini
-          std::string config_dump;
-          eCAL::Process::DumpConfig(config_dump);
-          std::istringstream config_dump_iss(config_dump);
-
-          std::string ecal_ini_original_path; 
-
-          for (std::string line; std::getline(config_dump_iss, line); )
-          {
-            // Split at first ':'
-            size_t sep_pos = line.find_first_of(':');
-            if (sep_pos != std::string::npos)
-            {
-              if (EcalUtils::String::Trim(line.substr(0, sep_pos)) == "Default INI")
-              {
-                ecal_ini_original_path = EcalUtils::String::Trim(line.substr(sep_pos + 1));
-                break;
-              }
-            }
-          }
+          std::string ecal_ini_original_path = eCAL::Config::GetLoadedEcalIniPath();
 
           if (ecal_ini_original_path.empty())
           {

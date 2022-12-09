@@ -49,6 +49,8 @@ namespace eCAL
     ECAL_API int               GetUdpMulticastSndBufSizeBytes       ();
     ECAL_API int               GetUdpMulticastRcvBufSizeBytes       ();
 
+    ECAL_API bool              IsUdpMulticastJoinAllIfEnabled       ();
+
     ECAL_API int               GetMaxUdpBandwidthBytesPerSecond     ();
 
     ECAL_API bool              IsUdpMulticastRecEnabled             ();
@@ -89,7 +91,7 @@ namespace eCAL
     // sys
     /////////////////////////////////////
 
-    //ECAL_API std::string       GetEcalSysFilterExcludeList          ();
+    ECAL_API std::string         GetEcalSysFilterExcludeList          ();
 
     /////////////////////////////////////
     // publisher
@@ -107,5 +109,16 @@ namespace eCAL
 
     ECAL_API bool              IsTopicTypeSharingEnabled            ();
     ECAL_API bool              IsTopicDescriptionSharingEnabled     ();
+
+    /////////////////////////////////////
+    // experimental
+    /////////////////////////////////////
+    namespace Experimental
+    {
+      ECAL_API bool              IsShmMonitoringEnabled             ();
+      ECAL_API bool              IsNetworkMonitoringDisabled        ();
+      ECAL_API size_t            GetShmMonitoringQueueSize          ();
+      ECAL_API std::string       GetShmMonitoringDomain             ();
+    }
   }
 }

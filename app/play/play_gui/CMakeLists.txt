@@ -29,7 +29,6 @@ if(WIN32)
   REQUIRED)
 endif()
 
-find_package(simpleini REQUIRED)
 find_package(tclap REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
@@ -124,7 +123,6 @@ ecal_add_app_qt(${PROJECT_NAME}
 
 create_targets_protobuf()
 target_link_libraries (${PROJECT_NAME}
-    simpleini::simpleini
     tclap::tclap
     CustomTclap
     eCAL::play_core
@@ -138,6 +136,8 @@ if (WIN32)
         Qt5::WinExtras
     )
 endif()
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
@@ -229,5 +229,5 @@ if (UNIX)
             DESTINATION "${CMAKE_INSTALL_DATADIR}/mime/packages/")
 
     INSTALL (FILES "${CMAKE_CURRENT_LIST_DIR}/mimetype/application-ecalmeas.svg"
-            DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/mimetypes/")
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/Humanity/scalable/mimetypes/")
 endif()

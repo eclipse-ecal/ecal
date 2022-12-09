@@ -36,10 +36,10 @@ namespace eCAL
 {
   struct SSyncMemoryFileAttr
   {
-    size_t min_size;           //!< memory file minimum size [Bytes]
-    size_t reserve;            //!< dynamic file size reserve before recreating memory file if payload size changes [%]
-    int    timeout_open_ms;    //!< timeout to open a memory file using mutex lock [ms]
-    int    timeout_ack_ms;     //!< timeout for memory read acknowledge signal from data reader [ms]
+    size_t  min_size;           //!< memory file minimum size [Bytes]
+    size_t  reserve;            //!< dynamic file size reserve before recreating memory file if payload size changes [%]
+    int64_t timeout_open_ms;    //!< timeout to open a memory file using mutex lock [ms]
+    int64_t timeout_ack_ms;     //!< timeout for memory read acknowledge signal from data reader [ms]
   };
 
   class CSyncMemoryFile
@@ -63,7 +63,7 @@ namespace eCAL
 
     std::string BuildMemFileName(const std::string base_name_);
 
-    void SendSyncEvents();
+    void SyncContent();
     void DisconnectAll();
 
     std::string         m_base_name;

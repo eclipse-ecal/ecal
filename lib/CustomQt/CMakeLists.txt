@@ -79,6 +79,8 @@ target_link_libraries(${PROJECT_NAME}
     Qt5::Widgets
 )
 
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
+
 # Create a source tree that mirrors the filesystem
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
     FILES

@@ -52,6 +52,13 @@
 #define MON_LOG_FILTER_FILE                        ""
 #define MON_LOG_FILTER_UDP                         "info,warning,error,fatal"
 
+
+/**********************************************************************************************/
+/*                                     sys settings                                       */
+/**********************************************************************************************/
+/* sys app witch will not be imported from cloud */
+#define SYS_FILTER_EXCL                            "^eCALSysClient$|^eCALSysGUI$|^eCALSys$*"
+
 /**********************************************************************************************/
 /*                                     network settings                                       */
 /**********************************************************************************************/
@@ -68,6 +75,7 @@
 #define NET_UDP_MULTICAST_PORT_SAMPLE_OFF              2
 #define NET_UDP_MULTICAST_SNDBUF            (5*1024*1024)  /* 5 MByte */
 #define NET_UDP_MULTICAST_RCVBUF            (5*1024*1024)  /* 5 MByte */
+#define NET_UDP_MULTICAST_JOIN_ALL_IF_ENABLED      false
 
 #define NET_UDP_RECBUFFER_TIMEOUT                   1000   /* ms */
 #define NET_UDP_RECBUFFER_CLEANUP                     10   /* ms */
@@ -164,3 +172,18 @@
 /**********************************************************************************************/
 /* common stop event prefix to shut down a local user process */
 #define EVENT_SHUTDOWN_PROC             "ecal_shutdown_process"
+
+/**********************************************************************************************/
+/*                                     experimental                                           */
+/**********************************************************************************************/
+/* enable distribution of monitoring/registration information via shared memory */
+#define EXP_SHM_MONITORING_ENABLED                  false
+/* disable distribution of monitoring/registration information via network (default) */
+#define EXP_NETWORK_MONITORING_DISABLED             false
+/* queue size of monitoring/registration events  */
+#define EXP_SHM_MONITORING_QUEUE_SIZE               1024
+/* domain name for shared memory based monitoring/registration */
+#define EXP_SHM_MONITORING_DOMAIN                   "ecal_monitoring"
+/* memory file access timeout */
+#define EXP_MEMFILE_ACCESS_TIMEOUT                  100
+

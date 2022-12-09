@@ -109,7 +109,7 @@ void MeasurementImporter::getData(eCALMeasCutterUtils::Timestamp timestamp, eCAL
   _reader->GetEntryDataSize(data_id, size);
 
    std::vector<char> buffer(size);
-  _reader->GetEntryData(data_id, &buffer[0]);
+   _reader->GetEntryData(data_id, buffer.data());
 
   data.assign(buffer.data(), size);
 

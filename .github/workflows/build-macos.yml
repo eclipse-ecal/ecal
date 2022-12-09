@@ -12,12 +12,13 @@ jobs:
 
     steps:
     - name: Downgrade Python version
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
+      id: cp39
       with:
         python-version: '3.9'
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v3
       with:
         setup-python: false
         version: '5.15.2'
@@ -38,7 +39,7 @@ jobs:
         sudo make install
 
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules:  'true'
         fetch-depth: 0
@@ -59,6 +60,7 @@ jobs:
         -DHAS_QT5=ON \
         -DHAS_CURL=ON \
         -DHAS_CAPNPROTO=ON \
+        -DHAS_FTXUI=ON \
         -DBUILD_DOCS=ON \
         -DBUILD_APPS=ON \
         -DBUILD_SAMPLES=ON \
@@ -82,9 +84,11 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
         -DECAL_THIRDPARTY_BUILD_QWT=ON \
-        -DECAL_THIRDPARTY_BUILD_YAML_CPP=ON \
+        -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_CXX_STANDARD=14
+        -DCMAKE_CXX_STANDARD=14 \
+        -DPython_FIND_STRATEGY=LOCATION \
+        -DPython_FIND_REGISTRY=NEVER
         sudo mkdir /etc/ecal
         sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.ini" /etc/ecal
       shell: bash
@@ -115,13 +119,13 @@ jobs:
       working-directory: ${{ runner.workspace }}/_build
 
     - name: Upload DMG
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: macos-dmg
         path: ${{ runner.workspace }}/_build/_deploy/*.dmg
 
     - name: Upload Python Wheel
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: macos-python-wheel
         path: ${{ runner.workspace }}/_build/_deploy/*.whl

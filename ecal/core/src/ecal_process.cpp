@@ -214,7 +214,7 @@ namespace eCAL
       }
 
       sstream << "------------------------- CONFIGURATION --------------------------" << std::endl;
-      sstream << "Default INI              : " << g_default_ini_file << std::endl; // WARNING: The eCAL Recorder relies on the identifier "Default INI" to obtain the ecal.ini path (It parses the output of this function)
+      sstream << "Default INI              : " << Config::GetLoadedEcalIniPath() << std::endl; 
       sstream << std::endl;
 
       sstream << "------------------------- NETWORK --------------------------------" << std::endl;
@@ -235,6 +235,7 @@ namespace eCAL
       sstream << "Multicast mask           : " << Config::GetUdpMulticastMask() << std::endl;
       int port = Config::GetUdpMulticastPort();
       sstream << "Multicast ports          : " << port << " - " << port + 10 << std::endl;
+      sstream << "Multicast join all IFs   : " << (Config::IsUdpMulticastJoinAllIfEnabled() ? "on" : "off") << std::endl;
       auto bandwidth = Config::GetMaxUdpBandwidthBytesPerSecond();
       if (bandwidth < 0)
       {

@@ -36,10 +36,10 @@ void PrintStatistic(const std::string& topic_name_, const std::chrono::duration<
 {
     std::stringstream out;
     out << "Topic Name:            " << topic_name_                                    << std::endl;
-    out << "Message size (kByte):  " << int(size_  / 1024                            ) << std::endl;
-    out << "kByte/s:               " << int(bytes_ / 1024        / diff_time_.count()) << std::endl;
-    out << "MByte/s:               " << int(bytes_ / 1024 / 1024 / diff_time_.count()) << std::endl;
-    out << "Messages/s:            " << int(msgs_                / diff_time_.count()) << std::endl;
+    out << "Message size (kByte):  " << (unsigned int)(size_  / 1024                            ) << std::endl;
+    out << "kByte/s:               " << (unsigned int)(bytes_ / 1024        / diff_time_.count()) << std::endl;
+    out << "MByte/s:               " << (unsigned int)(bytes_ / 1024 / 1024 / diff_time_.count()) << std::endl;
+    out << "Messages/s:            " << (unsigned int)(msgs_                / diff_time_.count()) << std::endl;
     std::cout << out.str() << std::endl;
     msgs_  = 0;
     bytes_ = 0;

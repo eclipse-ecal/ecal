@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2022 Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +22,7 @@
  * @brief  memory file pool handler
 **/
 
-#include <ecal/ecal.h>
-#include <ecal/ecal_config.h>
-
 #include "ecal_def.h"
-#include "ecal_config_reader_hlp.h"
-#include "pubsub/ecal_subgate.h"
-
 #include "ecal_memfile_pool.h"
 
 #include <chrono>
@@ -41,8 +36,7 @@ namespace eCAL
     m_created(false),
     m_do_stop(false),
     m_is_observing(false),
-    m_timeout_read(0),
-    m_timeout_ack(Config::GetMemfileAckTimeoutMs())
+    m_timeout_read(0)
   {
   }
 
@@ -61,10 +55,7 @@ namespace eCAL
 
     // open memory file events
     gOpenEvent(&m_event_snd, memfile_event_);
-    if (m_timeout_ack != 0)
-    {
-      gOpenEvent(&m_event_ack, memfile_event_ + "_ack");
-    }
+    gOpenEvent(&m_event_ack, memfile_event_ + "_ack");
 
     // create memory file access
     m_memfile.Create(memfile_name_.c_str(), false);
@@ -88,10 +79,7 @@ namespace eCAL
 
     // close memory file events
     gCloseEvent(m_event_snd);
-    if (m_timeout_ack != 0)
-    {
-      gCloseEvent(m_event_ack);
-    }
+    gCloseEvent(m_event_ack);
 
     m_created = false;
 
@@ -103,10 +91,13 @@ namespace eCAL
     return true;
   }
 
-  bool CMemFileObserver::Start(const std::string& topic_name_, const std::string& topic_id_, const int timeout_)
+  bool CMemFileObserver::Start(const std::string& topic_name_, const std::string& topic_id_, const int timeout_, const MemFileDataCallbackT& callback_)
   {
     if (!m_created)     return false;
     if (m_is_observing) return false;
+
+    // assign callback
+    m_data_callback = std::move(callback_);
 
     // mark as running
     m_is_observing = true;
@@ -121,6 +112,7 @@ namespace eCAL
 
     return true;
   }
+
 
   bool CMemFileObserver::Stop()
   {
@@ -204,7 +196,7 @@ namespace eCAL
                 // calculate data buffer offset
                 const char* data_buf = static_cast<const char*>(buf) + mfile_hdr.hdr_size;
                 // add sample to data reader (and call user callback function)
-                if (g_subgate()) g_subgate()->ApplySample(topic_name_, topic_id_, data_buf, mfile_hdr.data_size, (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash, eCAL::pb::tl_ecal_shm);
+                if (m_data_callback) m_data_callback(topic_name_, topic_id_, data_buf, mfile_hdr.data_size, (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash);
               }
             }
             // -------------------------------------------------------------------------
@@ -235,17 +227,17 @@ namespace eCAL
             // release access
             m_memfile.ReleaseReadAccess();
 
-            // send ack event
-            if (m_timeout_ack != 0)
-            {
-              gSetEvent(m_event_ack);
-            }
-
             // process receive buffer if buffered mode read some data in
             if (post_process_buffer)
             {
               // add sample to data reader (and call user callback function)
-              if (g_subgate()) g_subgate()->ApplySample(topic_name_, topic_id_, m_ecal_buffer.data(), m_ecal_buffer.size(), (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash, eCAL::pb::tl_ecal_shm);
+              if (m_data_callback) m_data_callback(topic_name_, topic_id_, m_ecal_buffer.data(), m_ecal_buffer.size(), (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash);
+            }
+
+            // send acknowledge event
+            if (mfile_hdr.ack_timout_ms != 0)
+            {
+              gSetEvent(m_event_ack);
             }
           }
         }
@@ -331,7 +323,7 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CMemFileThreadPool::ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, const std::string& topic_name_, const std::string& topic_id_)
+  bool CMemFileThreadPool::ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, const std::string& topic_name_, const std::string& topic_id_, int timeout_observation_ms, const MemFileDataCallbackT& callback_)
   {
     if(!m_created)            return(false);
     if(memfile_name_.empty()) return(false);
@@ -344,7 +336,7 @@ namespace eCAL
 
     // if the observer is existing reset its timeout
     // this should avoid that an observer will timeout in the case that
-    // there are no incomming data but the registration layer
+    // there are no incoming data but the registration layer
     // confirms that there are still existing (sleepy) shm writer on this host
     auto observer_it = m_observer_pool.find(memfile_name_);
     if(observer_it != m_observer_pool.end())
@@ -357,7 +349,7 @@ namespace eCAL
       else
       {
         observer->Stop();
-        observer->Start(topic_name_, topic_id_, Config::GetRegistrationTimeoutMs());
+        observer->Start(topic_name_, topic_id_, timeout_observation_ms, callback_);
       }
 
       return(true);
@@ -367,7 +359,7 @@ namespace eCAL
     {
       auto observer = std::make_shared<CMemFileObserver>();
       observer->Create(memfile_name_, memfile_event_);
-      observer->Start(topic_name_, topic_id_, Config::GetRegistrationTimeoutMs());
+      observer->Start(topic_name_, topic_id_, timeout_observation_ms, callback_);
       m_observer_pool[memfile_name_] = observer;
 #ifndef NDEBUG
       // log it

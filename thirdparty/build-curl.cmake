@@ -1,11 +1,11 @@
 if(WIN32)
-  set(CMAKE_USE_WINSSL ON CACHE BOOL "Use native SSL on Windows" FORCE)
+  set(CURL_USE_SCHANNEL ON CACHE BOOL "Use native SSL on Windows" FORCE)
 endif()
 
 set(BUILD_CURL_EXE OFF CACHE BOOL "Don't build the curl executable" FORCE)
 set(ENABLE_MANUAL  OFF CACHE BOOL "Disable built-in manual" FORCE)
 
-add_subdirectory(thirdparty/curl)
+add_subdirectory(thirdparty/curl EXCLUDE_FROM_ALL)
 
 if (NOT TARGET CURL::libcurl)
   add_library(CURL::libcurl ALIAS libcurl)

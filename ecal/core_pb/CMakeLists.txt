@@ -30,7 +30,28 @@ set(ProtoFiles
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/topic.proto
 )
 
-ecal_add_library(${PROJECT_NAME} src/core_pb.cpp)
+# Compile statically on Windows and shared for all other systems. 
+# 
+# We compile shared on Linux etc., as we must only load the proto descriptors 
+# once; otherwise, protobuf would throw an exception on runtime. A shared object
+# achieves that, as it is only loaded into memory once, even when being linked 
+# against from different libraries.
+# We don't have to do that on Windows, as we compile against protobuf statically 
+# and therefore each .dll has it's own descriptor pool. Having a static lib here 
+# also has the advantage that we need to export the symbols, which is default 
+# disabled on Windows.
+# 
+# TODO: Having code like that probably isn't the best solution ever. We should 
+# maybe always link against protobuf statically. Currently the reason why we 
+# don't do that is, that the default Ubuntu libprotobuf.a doesn't contain 
+# position independent code and can therefore not be statically compiled into a 
+# shared object library.
+if (WIN32)
+  ecal_add_static_library(${PROJECT_NAME} src/core_pb.cpp)
+else()
+  ecal_add_shared_library(${PROJECT_NAME} src/core_pb.cpp)
+endif()
+
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 protobuf_target_cpp(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src INSTALL_FOLDER include ${ProtoFiles})
@@ -43,6 +64,7 @@ target_compile_options(${PROJECT_NAME}
 set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 target_link_libraries(${PROJECT_NAME} protobuf::libprotobuf)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
 
 ecal_install_library(${PROJECT_NAME})
 

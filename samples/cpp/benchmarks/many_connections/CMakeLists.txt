@@ -35,6 +35,9 @@ ecal_add_sample(many_connections_rec
 target_link_libraries(many_connections_snd PRIVATE eCAL::core)
 target_link_libraries(many_connections_rec PRIVATE eCAL::core)
 
+target_compile_features(many_connections_snd PRIVATE cxx_std_14)
+target_compile_features(many_connections_rec PRIVATE cxx_std_14)
+
 ecal_install_sample(many_connections_snd)
 ecal_install_sample(many_connections_rec)
 

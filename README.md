@@ -10,7 +10,7 @@ The **e**nhanced **C**ommunication **A**bstraction **L**ayer (eCAL) is a middlew
 eCAL uses a **publish - subscribe** pattern to automatically connect different nodes in the network.
 
 eCAL automatically chooses the best available data transport mechanism for each link:
-- **Shared memory** for local communication _(incredible fast!)_
+- **Shared memory** for local communication _(incredibly fast!)_
 - **UDP** for network communication
 
 Visit the eCAL Documentation at 🌐 http://ecal.io for more information.
@@ -28,13 +28,13 @@ Visit the eCAL Documentation at 🌐 http://ecal.io for more information.
 * eCAL is simple and zero-conf. No complex configuration for communication details and QOS settings are needed
 * eCAL is message protocol agnostic. You choose the message protocol that fits to your needs like [Google Protobuf](https://developers.google.com/protocol-buffers), [CapnProto](https://capnproto.org/), [Flatbuffers](https://google.github.io/flatbuffers/)...
 * eCAL uses the standardized recording format [HDF5](https://www.hdfgroup.org/solutions/hdf5/)
-* eCAL integrates gently into your ROS2 environment with the [eCAL RMW](https://github.com/continental/rmw_ecal)  
+* eCAL integrates gently into your ROS2 environment with the [eCAL RMW](https://github.com/eclipse-ecal/rmw_ecal)
 * eCAL supports Intel and arm platforms
 
 * eCAL runs on a wide variety of operating systems:
   * Windows (stable)
   * Linux (stable)
-  * QNX (stable)
+  * QNX (experimental)
   * MacOS (experimental)
   * FreeBSD (experimental)
 
@@ -128,6 +128,7 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 * [docker-ecal](https://github.com/Blutkoete/docker-ecal) - Inoffical dockerfiles for eCAL
 * [golang-ecal](https://github.com/Blutkoete/golang-ecal) - eCAL go language binding
 * [ecal-rs](https://github.com/kopernikusai/ecal-rs) - eCAL rust language binding
+* [nodejs-ecal](https://www.npmjs.com/package/nodejs-ecal) - eCAL wrapped for Nodejs
 * [trellis](https://github.com/agtonomy/trellis) - General purpose middleware framework for distributed applications
 * [iceoryx](https://github.com/eclipse/iceoryx) - Alternative shared memory transport layer (needs to be activated via CMake options)
 

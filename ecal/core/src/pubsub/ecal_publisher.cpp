@@ -203,6 +203,30 @@ namespace eCAL
     return(true);
   }
 
+  bool CPublisher::SetTypeName(const std::string& topic_type_name_)
+  {
+    if (!m_datawriter) return false;
+
+    if (g_descgate())
+    {
+      const std::string topic_desc = m_datawriter->GetDescription();
+
+      // Calculate the quality of the current info
+      ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
+      if (!topic_type_name_.empty())
+        quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
+      if (!topic_desc.empty())
+        quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
+      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
+      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
+      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PUBLISHER;
+
+      g_descgate()->ApplyTopicDescription(m_datawriter->GetTopicName(), topic_type_name_, topic_desc, quality);
+    }
+
+    return m_datawriter->SetTypeName(topic_type_name_);
+  }
+
   bool CPublisher::SetDescription(const std::string& topic_desc_)
   {
     if(!m_datawriter) return false;
@@ -315,6 +339,12 @@ namespace eCAL
     return m_datawriter->ShmEnableZeroCopy(state_);
   }
 
+  bool CPublisher::ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_)
+  {
+    if (!m_created) return(false);
+    return m_datawriter->ShmSetAcknowledgeTimeout(acknowledge_timeout_ms_);
+  }
+
   bool CPublisher::SetID(long long id_)
   {
     m_id = id_;
@@ -349,6 +379,23 @@ namespace eCAL
   size_t CPublisher::Send(const std::string& s_, const long long time_ /* = -1 */) const
   {
     return(Send(s_.data(), s_.size(), time_));
+  }
+
+  size_t CPublisher::SendSynchronized(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
+  {
+    if (!m_created) return(0);
+
+    // set new acknowledge timeout
+    long long current_acknowledge_timeout_ms(m_datawriter->ShmGetAcknowledgeTimeout());
+    m_datawriter->ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms_));
+    
+    // send buffer
+    size_t len = Send(buf_, len_, time_);
+
+    // reset acknowledge timeout
+    m_datawriter->ShmSetAcknowledgeTimeout(current_acknowledge_timeout_ms);
+
+    return len;
   }
 
   bool CPublisher::AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_)

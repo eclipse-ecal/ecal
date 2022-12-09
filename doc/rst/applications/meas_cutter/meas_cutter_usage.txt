@@ -6,6 +6,9 @@ USAGE:
 
 Where:
 
+   --enable-one-file-per-topic
+     Whether to separate each topic in single HDF5 file.
+
    -s,  --save_log
      Enables log file creation in a folder called "log" next to the
      executable.

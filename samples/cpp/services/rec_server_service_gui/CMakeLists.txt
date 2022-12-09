@@ -74,6 +74,9 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::app_pb
     Qt5::Widgets
 )
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+
 create_targets_protobuf()
 
 if(WIN32)

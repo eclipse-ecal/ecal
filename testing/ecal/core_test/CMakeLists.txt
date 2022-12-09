@@ -25,17 +25,10 @@ set(core_test_src
   src/core_test.cpp
 )
 
-ecal_add_gtest(${PROJECT_NAME}_cpp ${core_test_src})
-target_include_directories(${PROJECT_NAME}_cpp PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
-target_link_libraries(${PROJECT_NAME}_cpp
+ecal_add_gtest(${PROJECT_NAME} ${core_test_src})
+target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
+target_link_libraries(${PROJECT_NAME}
   PRIVATE eCAL::core Threads::Threads)
-ecal_install_gtest(${PROJECT_NAME}_cpp)
-set_property(TARGET ${PROJECT_NAME}_cpp PROPERTY FOLDER testing/ecal/core)
-
-if(WIN32)
-  ecal_add_gtest(${PROJECT_NAME}_c   ${core_test_src})
-  target_include_directories(${PROJECT_NAME}_c   PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
-  target_link_libraries(${PROJECT_NAME}_c PRIVATE eCAL::core_c Threads::Threads)
-  ecal_install_gtest(${PROJECT_NAME}_c)
-  set_property(TARGET ${PROJECT_NAME}_c   PROPERTY FOLDER testing/ecal/core)
-endif()
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+ecal_install_gtest(${PROJECT_NAME})
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER testing/ecal/core)

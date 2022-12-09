@@ -29,7 +29,6 @@ if(WIN32)
     REQUIRED)
 endif(WIN32)
 
-find_package(simpleini REQUIRED)
 find_package(tclap REQUIRED)
 find_package(Protobuf REQUIRED)
 
@@ -154,7 +153,6 @@ ecal_add_app_qt(${PROJECT_NAME}
 
 create_targets_protobuf()
 target_link_libraries (${PROJECT_NAME}
-    simpleini::simpleini
     tclap::tclap
     protobuf::libprotobuf
     eCAL::core
@@ -173,6 +171,8 @@ if (WIN32)
         Qt5::WinExtras
     )
 endif(WIN32)
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
@@ -264,5 +264,5 @@ if (UNIX)
             DESTINATION "${CMAKE_INSTALL_DATADIR}/mime/packages/")
 
     INSTALL (FILES "${CMAKE_CURRENT_LIST_DIR}/mimetype/application-ecalrec.svg"
-            DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/mimetypes/")
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/Humanity/scalable/mimetypes/")
 endif()

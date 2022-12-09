@@ -33,6 +33,7 @@
 #endif
 
 #include "ecal_global_accessors.h"
+#include "pubsub/ecal_subgate.h"
 #include "io/ecal_memfile_pool.h"
 #include "readwrite/ecal_reader_shm.h"
 
@@ -94,8 +95,17 @@ namespace eCAL
       {
         std::string process_id = std::to_string(Process::GetProcessID());
         std::string memfile_event = memfile_name + "_" + process_id;
-        g_memfile_pool()->ObserveFile(memfile_name, memfile_event, par_.topic_name, par_.topic_id);
+        MemFileDataCallbackT memfile_data_callback = std::bind(&CSHMReaderLayer::OnNewShmFileContent, this,
+          std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, std::placeholders::_7, std::placeholders::_8);
+        g_memfile_pool()->ObserveFile(memfile_name, memfile_event, par_.topic_name, par_.topic_id, Config::GetRegistrationTimeoutMs(), memfile_data_callback);
       }
     }
+  }
+
+  size_t CSHMReaderLayer::OnNewShmFileContent(const std::string& topic_name_, const std::string& topic_id_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_)
+  {
+    size_t ret_size(0);
+    if (g_subgate()) ret_size = g_subgate()->ApplySample(topic_name_, topic_id_, buf_, len_, id_, clock_, time_, hash_, eCAL::pb::tl_ecal_shm);
+    return ret_size;
   }
 }

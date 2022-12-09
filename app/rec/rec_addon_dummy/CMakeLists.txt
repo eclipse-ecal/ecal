@@ -25,5 +25,6 @@ ecal_add_rec_addon(${PROJECT_NAME} ${source_files})
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::rec_addon_core)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER app/rec)

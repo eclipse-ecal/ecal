@@ -27,7 +27,11 @@
 #define CINTERFACE
 #endif
 
-#include <winsock2.h>
-#include <Ws2tcpip.h>
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
+#include <winsock2.h> //NOLINT
+#include <Ws2tcpip.h> //NOLINT
 
 #undef CINTERFACE

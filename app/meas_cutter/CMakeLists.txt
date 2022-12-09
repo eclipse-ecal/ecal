@@ -20,6 +20,7 @@ project(meas_cutter)
 
 find_package(Threads REQUIRED)
 find_package(tclap REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 set(meas_cutter_src
     src/main.cpp
@@ -53,6 +54,8 @@ target_link_libraries(${PROJECT_NAME}   yaml-cpp
                                         eCAL::ecal-utils
                                         eCAL::hdf5
                                         Threads::Threads)
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14) 
 
 ecal_install_app(${PROJECT_NAME})
 

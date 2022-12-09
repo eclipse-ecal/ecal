@@ -45,19 +45,11 @@ if(MSVC)
 endif()
 
 # --------------------------------------------------------
-# set mingw specific options
-# --------------------------------------------------------
-if(MINGW)
-  add_definitions(-std=c++14 -DWINVER=0x0601)
-endif()
-
-# --------------------------------------------------------
 # set gcc specific options
 # --------------------------------------------------------
 if(UNIX)
   message(STATUS "GCC detected - Adding flags")
-  set(CMAKE_CXX_STANDARD 14)
-  add_definitions(-Wall -Wextra -std=c++14)
+  add_definitions(-Wall -Wextra)
 
   set(ATOMIC_TEST_CODE "
       #include <atomic>
@@ -79,6 +71,7 @@ option(HAS_HDF5                                "Platform supports HDF5 library" 
 option(HAS_QT5                                 "Platform supports Qt 5 library"                                    ON)
 option(HAS_CURL                                "Build with CURL (i.e. upload support in the recorder app)"         ON)
 option(HAS_CAPNPROTO                           "Platform supports Cap'n Proto library"                            OFF)
+option(HAS_FTXUI                               "Platform supports FTXUI library. Requires C++17 and up."           ON)
 
 option(BUILD_DOCS                              "Build the eCAL documentation"                                     OFF)
 option(BUILD_APPS                              "Build the eCAL applications"                                       ON)
@@ -96,6 +89,7 @@ option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samp
 
 option(ECAL_JOIN_MULTICAST_TWICE               "Specific Multicast Network Bug Workaround"                        OFF)
 option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
+option(ECAL_USE_CLOCKLOCK_MUTEX                "Use native mutex with monotonic clock (requires glibc >= 2.30)"   OFF)
 
 # Set option regarding third party library builds
 option(ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS   "Build CMakeFunctions with eCAL"                                    ON)
@@ -105,22 +99,24 @@ option(ECAL_THIRDPARTY_BUILD_FINEFTP           "Build fineFTP with eCAL"        
 option(ECAL_THIRDPARTY_BUILD_TERMCOLOR         "Build termcolor with eCAL"                                         ON)
 option(ECAL_THIRDPARTY_BUILD_TCP_PUBSUB        "Build tcp_pubsub library with eCAL"                                ON)
 option(ECAL_THIRDPARTY_BUILD_RECYCLE           "Build steinwurf::recylce with eCAL"                                ON)
+option(ECAL_THIRDPARTY_BUILD_FTXUI             "Build ftxui with eCAL"                                             ON)
 # option(ECAL_THIRDPARTY_BUILD_ZLIB              "Build zlib with eCAL"                                              ON)
 # option(ECAL_THIRDPARTY_BUILD_LIBSSH2           "Build libssh2 with eCAL"                                           ON)
 option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"                                            OFF)
+option(ECAL_THIRDPARTY_BUILD_UDPCAP            "Build udpcap library with eCAL"                                   OFF)
 
 if(WIN32)
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                          ON)
-  option(ECAL_THIRDPARTY_BUILD_YAML_CPP        "Build yaml-cpp with eCAL"                                          ON)
+  option(ECAL_THIRDPARTY_BUILD_YAML-CPP        "Build yaml-cpp with eCAL"                                          ON)
   option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                              ON)
   option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                              ON)
   cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                      ON  "HAS_QT5" OFF)
 else()
-  option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                          OFF)
-  option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                              OFF)
-  option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                              OFF)
-  cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                      OFF "HAS_QT5" OFF)
-  option(ECAL_THIRDPARTY_BUILD_YAML_CPP        "Build yaml-cpp with eCAL"                                          OFF)
+  option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                         OFF)
+  option(ECAL_THIRDPARTY_BUILD_CURL            "Build CURL with eCAL"                                             OFF)
+  option(ECAL_THIRDPARTY_BUILD_HDF5            "Build HDF5 with eCAL"                                             OFF)
+  cmake_dependent_option(ECAL_THIRDPARTY_BUILD_QWT "Build qwt::qwt with eCAL"                                     OFF "HAS_QT5" OFF)
+  option(ECAL_THIRDPARTY_BUILD_YAML-CPP        "Build yaml-cpp with eCAL"                                         OFF)
 endif()
 
 # This should be ON, unless build ecal hdf5 for Matlab usage
@@ -195,7 +191,9 @@ set(possible_subprojects
   HDF5
   CMakeFunctions
   qwt
-  yaml_cpp
+  yaml-cpp
+  ftxui
+  udpcap
 )
 
 # We should rename the option, but don't know how to do in in a
@@ -335,9 +333,6 @@ add_subdirectory(lib/ecal_utils)
 if(HAS_QT5)
   add_subdirectory(lib/CustomQt)
 endif()
-if(ECAL_NPCAP_SUPPORT)
-  add_subdirectory(lib/Udpcap)
-endif()
 add_subdirectory(lib/EcalParser)
 if(HAS_QT5)
   add_subdirectory(lib/QEcalParser)
@@ -394,10 +389,12 @@ endif()
 # --------------------------------------------------------
 add_subdirectory(app/apps)
 if(BUILD_APPS)
+  if (HAS_FTXUI)
+    add_subdirectory(app/mon/mon_tui)
+  endif()
   add_subdirectory(app/mon/mon_cli)
   add_subdirectory(app/util/config)
   add_subdirectory(app/util/stop)
-  add_subdirectory(app/meas_cutter)
   add_subdirectory(app/sys/sys_core)
   add_subdirectory(app/sys/sys_cli)
   add_subdirectory(app/sys/sys_client_cli)
@@ -418,6 +415,8 @@ if(BUILD_APPS AND HAS_HDF5)
   add_subdirectory(app/rec/rec_server_core)
   add_subdirectory(app/rec/rec_client_cli)
   add_subdirectory(app/rec/rec_server_cli)
+  
+  add_subdirectory(app/meas_cutter)
 endif()
 
 # --------------------------------------------------------
@@ -548,6 +547,7 @@ message(STATUS "HAS_HDF5                                       : ${HAS_HDF5}")
 message(STATUS "HAS_QT5                                        : ${HAS_QT5}")
 message(STATUS "HAS_CURL                                       : ${HAS_CURL}")
 message(STATUS "HAS_CAPNPROTO                                  : ${HAS_CAPNPROTO}")
+message(STATUS "HAS_FTXUI                                      : ${HAS_FTXUI}")
 message(STATUS "BUILD_DOCS                                     : ${BUILD_DOCS}")
 message(STATUS "BUILD_APPS                                     : ${BUILD_APPS}")
 message(STATUS "BUILD_SAMPLES                                  : ${BUILD_SAMPLES}")
@@ -568,11 +568,13 @@ message(STATUS "ECAL_THIRDPARTY_BUILD_FINEFTP                  : ${ECAL_THIRDPAR
 message(STATUS "ECAL_THIRDPARTY_BUILD_TERMCOLOR                : ${ECAL_THIRDPARTY_BUILD_TERMCOLOR}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_TCP_PUBSUB               : ${ECAL_THIRDPARTY_BUILD_TCP_PUBSUB}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_RECYCLE                  : ${ECAL_THIRDPARTY_BUILD_RECYCLE}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_FTXUI                    : ${ECAL_THIRDPARTY_BUILD_FTXUI}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_GTEST                    : ${ECAL_THIRDPARTY_BUILD_GTEST}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_PROTOBUF                 : ${ECAL_THIRDPARTY_BUILD_PROTOBUF}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_CURL                     : ${ECAL_THIRDPARTY_BUILD_CURL}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_HDF5                     : ${ECAL_THIRDPARTY_BUILD_HDF5}")
-message(STATUS "ECAL_THIRDPARTY_BUILD_YAML_CPP                 : ${ECAL_THIRDPARTY_BUILD_YAML_CPP}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_YAML-CPP                 : ${ECAL_THIRDPARTY_BUILD_YAML-CPP}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_UDPCAP                   : ${ECAL_THIRDPARTY_BUILD_UDPCAP}")
 message(STATUS "ECAL_LINK_HDF5_SHARED                          : ${ECAL_LINK_HDF5_SHARED}")
 message(STATUS "CPACK_PACK_WITH_INNOSETUP                      : ${CPACK_PACK_WITH_INNOSETUP}")
 

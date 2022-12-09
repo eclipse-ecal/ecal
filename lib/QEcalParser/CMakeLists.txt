@@ -82,6 +82,8 @@ target_link_libraries(${PROJECT_NAME}
     EcalParser
 )
 
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
+
 if(MSVC)
     # Disable Compiler warning "Conditional expression is constant"
     set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4127 /wd4714")

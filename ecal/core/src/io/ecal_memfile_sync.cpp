@@ -28,6 +28,7 @@
 #include "ecal_memfile_sync.h"
 
 #include <algorithm>
+#include <chrono>
 #include <sstream>
 
 namespace eCAL
@@ -65,24 +66,18 @@ namespace eCAL
     {
       SEventHandlePair event_pair;
       gOpenEvent(&event_pair.event_snd, event_snd_name);
-      if (m_attr.timeout_ack_ms != 0)
-      {
-        gOpenEvent(&event_pair.event_ack, event_ack_name);
-      }
+      gOpenEvent(&event_pair.event_ack, event_ack_name);
       m_event_handle_map.insert(std::pair<std::string, SEventHandlePair>(process_id_, event_pair));
       return true;
     }
     else
     {
-      if (m_attr.timeout_ack_ms != 0)
+      // okay we have registered process events for that process id
+      // we have to check the acknowledge event because it's possible that this
+      // event was deactivated by a sync timeout in SendSyncEvents
+      if (!gEventIsValid(iter->second.event_ack))
       {
-        // okay we have registered process events for that process id
-        // we have to check the acknowledge event because it's possible that this
-        // event was deactivated by a sync timeout in SendSyncEvents
-        if (!gEventIsValid(iter->second.event_ack))
-        {
-          gOpenEvent(&iter->second.event_ack, event_ack_name);
-        }
+        gOpenEvent(&iter->second.event_ack, event_ack_name);
       }
       return true;
     }
@@ -102,10 +97,7 @@ namespace eCAL
     {
       SEventHandlePair event_pair = iter->second;
       gCloseEvent(event_pair.event_snd);
-      if (m_attr.timeout_ack_ms != 0)
-      {
-        gCloseEvent(event_pair.event_ack);
-      }
+      gCloseEvent(event_pair.event_ack);
       m_event_handle_map.erase(iter);
       return true;
     }
@@ -145,6 +137,10 @@ namespace eCAL
       return false;
     }
 
+    // store acknowledge timeout parameter
+    m_attr.timeout_ack_ms = data_.acknowledge_timeout_ms;
+    if (m_attr.timeout_ack_ms < 0) m_attr.timeout_ack_ms = 0;
+
     // write header and payload into the memory file
 #ifndef NDEBUG
     Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::Write");
@@ -153,20 +149,22 @@ namespace eCAL
     // create user file header
     struct SMemFileHeader memfile_hdr;
     // set data size
-    memfile_hdr.data_size         = static_cast<unsigned long>(data_.len);
+    memfile_hdr.data_size         = static_cast<uint64_t>(data_.len);
     // set header id
-    memfile_hdr.id                = static_cast<unsigned long>(data_.id);
+    memfile_hdr.id                = static_cast<uint64_t>(data_.id);
     // set header clock
-    memfile_hdr.clock             = static_cast<unsigned long>(data_.clock);
+    memfile_hdr.clock             = static_cast<uint64_t>(data_.clock);
     // set header time
-    memfile_hdr.time              = static_cast<long long>(data_.time);
+    memfile_hdr.time              = static_cast<int64_t>(data_.time);
     // set header hash
-    memfile_hdr.hash              = static_cast<size_t>(data_.hash);
+    memfile_hdr.hash              = static_cast<uint64_t>(data_.hash);
     // set zero copy
     memfile_hdr.options.zero_copy = static_cast<unsigned char>(data_.zero_copy);
+    // set acknowledge timeout
+    memfile_hdr.ack_timout_ms        = static_cast<int64_t>(data_.acknowledge_timeout_ms);
 
     // acquire write access
-    bool write_access = m_memfile.GetWriteAccess(m_attr.timeout_open_ms);
+    bool write_access = m_memfile.GetWriteAccess(static_cast<int>(m_attr.timeout_open_ms));
 
     // maybe it's locked by a zombie or a crashed process
     // so we try to recreate a new one
@@ -180,7 +178,7 @@ namespace eCAL
       if (!Recreate(m_memfile.MaxDataSize())) return false;
 
       // then try to get access again
-      write_access = m_memfile.GetWriteAccess(m_attr.timeout_open_ms);
+      write_access = m_memfile.GetWriteAccess(static_cast<int>(m_attr.timeout_open_ms));
       // still no chance ? hell .... we give up
       if (!write_access)
       {
@@ -205,7 +203,7 @@ namespace eCAL
     m_memfile.ReleaseWriteAccess();
 
     // and fire the publish event for local subscriber
-    if (written) SendSyncEvents();
+    if (written) SyncContent();
 
     if (written)
     {
@@ -254,7 +252,7 @@ namespace eCAL
 
     // initialize memory file with empty header
     struct SMemFileHeader memfile_hdr;
-    m_memfile.GetWriteAccess(m_attr.timeout_open_ms);
+    m_memfile.GetWriteAccess(static_cast<int>(m_attr.timeout_open_ms));
     m_memfile.Write(&memfile_hdr, memfile_hdr.hdr_size, 0);
     m_memfile.ReleaseWriteAccess();
 
@@ -298,9 +296,9 @@ namespace eCAL
     std::vector<std::string> process_id_list;
     {
       std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-      for (auto iter : m_event_handle_map)
+      for (const auto& event_handle : m_event_handle_map)
       {
-        process_id_list.push_back(iter.first);
+        process_id_list.push_back(event_handle.first);
       }
     }
 
@@ -311,7 +309,7 @@ namespace eCAL
     if (!Create(m_base_name, size_)) return false;
 
     // reconnect processes
-    for (auto process_id : process_id_list)
+    for (const auto& process_id : process_id_list)
     {
       Connect(process_id);
     }
@@ -336,7 +334,7 @@ namespace eCAL
     return mfile_name;
   }
 
-  void CSyncMemoryFile::SendSyncEvents()
+  void CSyncMemoryFile::SyncContent()
   {
     if (!m_created) return;
 
@@ -348,67 +346,77 @@ namespace eCAL
     // "eat" old acknowledge events :)
     if (m_attr.timeout_ack_ms != 0)
     {
-      for (auto iter : m_event_handle_map)
+      for (const auto& event_handle : m_event_handle_map)
       {
-        while (gWaitForEvent(iter.second.event_ack, 0)) {}
+        while (gWaitForEvent(event_handle.second.event_ack, 0)) {}
       }
     }
 
-    // send new sync
-    for (auto iter = m_event_handle_map.begin(); iter != m_event_handle_map.end(); ++iter)
+    // send sync (memory file update) event
+    for (const auto& event_handle : m_event_handle_map)
     {
       // send sync event
-      gSetEvent(iter->second.event_snd);
+      gSetEvent(event_handle.second.event_snd);
+    }
 
-      // sync on acknowledge event
-      if (m_attr.timeout_ack_ms != 0)
+    // wait for acknowledgment event from receiver side
+    if (m_attr.timeout_ack_ms != 0)
+    {
+      // take start time for all acknowledge timeouts
+      const auto start_time = std::chrono::steady_clock::now();
+
+      for (auto event_handle : m_event_handle_map)
       {
-        if (!gWaitForEvent(iter->second.event_ack, m_attr.timeout_ack_ms))
+        const auto time_since_start = std::chrono::steady_clock::now() - start_time;
+        const auto time_to_wait     = std::chrono::milliseconds(m_attr.timeout_ack_ms)- time_since_start;
+        long       time_to_wait_ms  = static_cast<long>(std::chrono::duration_cast<std::chrono::milliseconds>(time_to_wait).count());
+        if (time_to_wait_ms <= 0) time_to_wait_ms = 0;
+
+        if (!gWaitForEvent(event_handle.second.event_ack, time_to_wait_ms))
         {
           // we close the event immediately to not waste time in the next
           // write call, the event will be reopened later
           // in ApplyLocSubscription if the connection still exists
-          gCloseEvent(iter->second.event_ack);
+          gCloseEvent(event_handle.second.event_ack);
           // invalidate it
-          gInvalidateEvent(&iter->second.event_ack);
+          gInvalidateEvent(&event_handle.second.event_ack);
 #ifndef NDEBUG
           Logging::Log(log_level_debug2, m_base_name + "::CSyncMemoryFile::SignalWritten - ACK event timeout");
 #endif
         }
       }
+    }
 
 #ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::SignalWritten");
+    Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::SignalWritten");
 #endif
-    }
   }
 
   void CSyncMemoryFile::DisconnectAll()
   {
-    if (m_attr.timeout_ack_ms != 0)
+    std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
+
+    // fire acknowledge events, to unlock blocking send function
+    for (const auto& event_handle : m_event_handle_map)
     {
-      // fire acknowledge events, to unlock blocking send function
-      std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-      for (auto iter : m_event_handle_map)
-      {
-        gSetEvent(iter.second.event_ack);
-      }
+      gSetEvent(event_handle.second.event_ack);
     }
 
-    // close all events, invalidate them and clear the map
+    // close all events
+    for (const auto& event_handle : m_event_handle_map)
     {
-      std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-      for (auto iter = m_event_handle_map.begin(); iter != m_event_handle_map.end(); ++iter)
-      {
-        gCloseEvent(iter->second.event_snd);
-        gInvalidateEvent(&iter->second.event_snd);
-        if (m_attr.timeout_ack_ms != 0)
-        {
-          gCloseEvent(iter->second.event_ack);
-          gInvalidateEvent(&iter->second.event_ack);
-        }
-      }
-      m_event_handle_map.clear();
+      gCloseEvent(event_handle.second.event_snd);
+      gCloseEvent(event_handle.second.event_ack);
     }
+
+    // invalidate all events
+    for (auto& event_handle : m_event_handle_map)
+    {
+      gInvalidateEvent(&event_handle.second.event_snd);
+      gInvalidateEvent(&event_handle.second.event_ack);
+    }
+
+    // clear event map
+    m_event_handle_map.clear();
   }
 }

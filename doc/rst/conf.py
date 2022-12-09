@@ -72,8 +72,8 @@ if not os.path.exists(download_tables_main_page_dir) or not os.path.exists(downl
 
 # -- Project information -----------------------------------------------------
 
-project = u'eCAL Documentation'
-copyright = u'2021, Continental'
+project = u'Eclipse eCAL™'
+copyright = u'2022, Continental'
 author = u'Continental'
 
 # The short X.Y version

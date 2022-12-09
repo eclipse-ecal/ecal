@@ -32,7 +32,7 @@ jobs:
           build_dir: _build
           apt_packages: "cmake,ninja-build,build-essential,zlib1g-dev,qtbase5-dev,libhdf5-dev,libprotobuf-dev,libprotoc-dev,protobuf-compiler,libcurl4-openssl-dev,libqwt-qt5-dev,libyaml-cpp-dev"
           config_file: ".clang-tidy"
-          exclude: "/thirdparty/*,/_build/*,convert_utf.cpp,convert_utf.h,/testing/*"
+          exclude: "thirdparty/*,_build/*,convert_utf.cpp,convert_utf.h,testing/*"
           post_comments: false
           lgtm_comment_body: ""
           cmake_command: |
@@ -43,6 +43,7 @@ jobs:
                     -DHAS_QT5=ON \
                     -DHAS_CURL=ON \
                     -DHAS_CAPNPROTO=OFF \
+                    -DHAS_FTXUI=ON \
                     -DBUILD_DOCS=OFF \
                     -DBUILD_APPS=ON \
                     -DBUILD_SAMPLES=ONS \
@@ -67,7 +68,7 @@ jobs:
                     -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
                     -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
                     -DECAL_THIRDPARTY_BUILD_QWT=OFF \
-                    -DECAL_THIRDPARTY_BUILD_YAML_CPP=OFF \
+                    -DECAL_THIRDPARTY_BUILD_YAML-CPP=OFF \
                     -DCMAKE_BUILD_TYPE=Release \
                     -DCMAKE_INSTALL_SYSCONFDIR=/etc \
                     -DCMAKE_INSTALL_PREFIX=/usr \

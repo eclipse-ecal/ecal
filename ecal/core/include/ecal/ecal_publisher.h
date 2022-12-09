@@ -29,6 +29,7 @@
 #include <ecal/ecal_qos.h>
 #include <ecal/ecal_tlayer.h>
 
+#include <chrono>
 #include <string>
 
 namespace eCAL
@@ -123,6 +124,15 @@ namespace eCAL
     bool Destroy();
 
     /**
+     * @brief Setup topic type name.
+     *
+     * @param topic_type_name_   Topic type name.
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool SetTypeName(const std::string& topic_type_name_);
+
+    /**
      * @brief Setup topic description. 
      *
      * @param topic_desc_   Description string. 
@@ -215,9 +225,9 @@ namespace eCAL
     bool ShmSetBufferCount(long buffering_);
 
     /**
-     * @brief Enable zero copy shared memory trasnport mode.
+     * @brief Enable zero copy shared memory transport mode.
      *
-     * By default, the builtin shared memory layer is configured to make one memory copy
+     * By default, the built-in shared memory layer is configured to make one memory copy
      * on the receiver side. That means the payload is copied by the internal eCAL memory pool manager
      * out of the memory file and the file is closed immediately after this.
      * The intention of this implementation is to free the file as fast as possible after reading
@@ -237,14 +247,53 @@ namespace eCAL
      * can increase the performance remarkable. But please keep in mind to return from the message callback function
      * as fast as possible to not delay subsequent read/write access operations.
      *
-     * @param state_  Set type zero copy mode for shared memory trasnport layer (true == zero copy enabled).
+     * @param state_  Set type zero copy mode for shared memory transport layer (true == zero copy enabled).
      *
      * @return  True if it succeeds, false if it fails.
     **/
     bool ShmEnableZeroCopy(bool state_);
 
     /**
-     * @brief Set the the specific topic id.
+     * @brief Force connected subscribers to send acknowledge event after processing the message and 
+     *        block publisher send call on this event with a timeout.
+     *
+     * Most applications perform very well with the default behavior. If subscribers are too slow 
+     * to process incoming messages then the overall software architecture needs to be checked, software components 
+     * need to be optimized or parallelized.
+     * 
+     * There may still be cases where it could make sense to synchronize the transfer of the payload from a publisher 
+     * to a subscriber by using an additional handshake event. This event is signaled by a subscriber back to the 
+     * sending publisher to confirm the complete payload transmission and the processed subscriber callback.
+     * 
+     * The publisher will wait up to the specified timeout for the acknowledge signals of all connected subscribers 
+     * before sending new content. Finally that means the publishers CPublisher::Send API function call is now blocked 
+     * and will not return until all subscriber have read and processed their content or the timeout has been reached.
+     * 
+     * @param acknowledge_timeout_ms_ timeout to wait for acknowledge signal from connected subscriber in ms (0 == no handshake).
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_);
+
+    /**
+     * @brief Force connected subscribers to send acknowledge event after processing the message and
+     *        block publisher send call on this event with a timeout.
+     *
+     * See ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_)
+     * 
+     * @param acknowledge_timeout_ timeout to wait for acknowledge signal from connected subscriber (0 == no handshake).
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    template <typename Rep, typename Period>
+    bool ShmSetAcknowledgeTimeout(std::chrono::duration<Rep, Period> acknowledge_timeout_)
+    {
+      auto acknowledge_timeout_ms = std::chrono::duration_cast<std::chrono::milliseconds>(acknowledge_timeout_).count();
+      return ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms));
+    }
+
+    /**
+     * @brief Set the specific topic id.
      *
      * @param id_     The topic id for subscriber side filtering (0 == no id).
      *
@@ -272,6 +321,20 @@ namespace eCAL
      * @return  Number of bytes sent. 
     **/
     size_t Send(const std::string& s_, long long time_ = -1) const;
+
+    /**
+     * @brief Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout).
+     * 
+     * This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.
+     *
+     * @param buf_                     Pointer to content buffer.
+     * @param len_                     Length of buffer.
+     * @param time_                    Send time (-1 = use eCAL system time in us).
+     * @param acknowledge_timeout_ms_  Maximum time to wait for all subscribers acknowledge feedback in ms (buffer received and processed).
+     *
+     * @return  Number of bytes sent.
+    **/
+    size_t SendSynchronized(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const;
 
     /**
      * @brief Add callback function for publisher events.

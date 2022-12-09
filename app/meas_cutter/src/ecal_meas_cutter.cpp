@@ -19,8 +19,10 @@
 
 #include "ecal_meas_cutter.h"
 
-bool eCALMeasCutterUtils::quiet    = false;
-bool eCALMeasCutterUtils::save_log = false;
+bool eCALMeasCutterUtils::quiet                     = false;
+bool eCALMeasCutterUtils::save_log                  = false;
+bool eCALMeasCutterUtils::enable_one_file_per_topic = false;
+
 eCALMeasCutter::eCALMeasCutter(std::vector<std::string>& arguments):
   _max_size_per_file(0),
   _is_base_name_mention_in_config(false),
@@ -38,6 +40,7 @@ void eCALMeasCutter::parseCmdLine(std::vector<std::string>& arguments)
   TCLAP::MultiArg<std::string> output_measurement_arg("o", "output", "Path of the output measurement (Tip: one input measurement has to have a corresponding output).", true, "string", cmd);
   TCLAP::SwitchArg quiet_arg("q", "quiet", "Disables logging to console output.", cmd, false);
   TCLAP::SwitchArg save_log_arg("s", "save_log", "Enables log file creation in a folder called \"log\" next to the executable.", cmd, false);
+  TCLAP::SwitchArg one_file_per_topic_arg("", "enable-one-file-per-topic", "Whether to separate each topic in single HDF5 file.", cmd, false);
 
   try
   {
@@ -55,8 +58,9 @@ void eCALMeasCutter::parseCmdLine(std::vector<std::string>& arguments)
 
   _config_file_path = config_file_path_arg.getValue();
 
-  eCALMeasCutterUtils::quiet    = quiet_arg.getValue();
-  eCALMeasCutterUtils::save_log = save_log_arg.getValue();
+  eCALMeasCutterUtils::quiet                     = quiet_arg.getValue();
+  eCALMeasCutterUtils::save_log                  = save_log_arg.getValue();
+  eCALMeasCutterUtils::enable_one_file_per_topic = one_file_per_topic_arg.getValue();
 
   if (eCALMeasCutterUtils::save_log)
   {

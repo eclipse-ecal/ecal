@@ -24,7 +24,7 @@ find_package(Protobuf REQUIRED)
 
 create_targets_protobuf()
 
-set(clientserver_test_src
+set(${PROJECT_NAME}_src
   src/clientserver_test.cpp
 )
 
@@ -33,22 +33,17 @@ set(clientserver_test_proto
   ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/ping.proto
 )
 
-ecal_add_static_library(clientserver_proto src/dummy.cpp)
-PROTOBUF_TARGET_CPP(clientserver_proto ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${clientserver_test_proto})
-target_link_libraries(clientserver_proto PRIVATE protobuf::libprotobuf)
-set_property(TARGET clientserver_proto PROPERTY FOLDER testing/ecal/service)
+ecal_add_gtest(${PROJECT_NAME} ${${PROJECT_NAME}_src})
+PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${clientserver_test_proto})
 
-ecal_add_gtest(${PROJECT_NAME}_cpp ${clientserver_test_src})
-target_link_libraries(${PROJECT_NAME}_cpp
-  PRIVATE eCAL::core clientserver_proto Threads::Threads)
+target_link_libraries(${PROJECT_NAME}
+  PRIVATE
+    eCAL::core
+    protobuf::libprotobuf
+    Threads::Threads)
 
-  ecal_install_gtest(${PROJECT_NAME}_cpp)
-set_property(TARGET ${PROJECT_NAME}_cpp PROPERTY FOLDER testing/ecal/service)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
-if(WIN32)
-  ecal_add_gtest(${PROJECT_NAME}_c   ${clientserver_test_src})
-  target_link_libraries(${PROJECT_NAME}_c PRIVATE
-    eCAL::core_c clientserver_proto Threads::Threads)
-  ecal_install_gtest(${PROJECT_NAME}_c)
-  set_property(TARGET ${PROJECT_NAME}_c   PROPERTY FOLDER testing/ecal/service)
-endif()
+ecal_install_gtest(${PROJECT_NAME})
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER testing/ecal/service)

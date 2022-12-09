@@ -197,6 +197,12 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
+   * - `Udpcap <https://github.com/eclipse-ecal/udpcap>`_
+     - :ref:`apache_2_0`
+     - 2022, Continental
+     - - |fa-github| Git submodule ``/tirdparty/udpcap``
+       - |fa-windows| Binary distributions for Windows
+
    * - `yaml-cpp <https://github.com/jbeder/yaml-cpp/>`_
      - :ref:`mit_license`
      - 	Copyright (c) 2008-2015 Jesse Beder
