@@ -246,8 +246,7 @@ Subscriber::ReceiveCallbackData^ Subscriber::Receive(const int rcv_timeout_)
     rcv_data->id = 0;
     rcv_data->clock = 0;
     rcv_data->time = rcv_time;
-    rcv_data->data = (void*)rcv_buf.data();
-    rcv_data->size = size;
+    rcv_data->data = StlStringToString(rcv_buf);
     return rcv_data;
   }
   else
@@ -311,9 +310,9 @@ System::String^ Subscriber::Dump()
 
 void Subscriber::OnReceive(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_)
 {
+  std::string received_bytes = std::string(static_cast<const char*>(data_->buf), static_cast<size_t>(data_->size));
   ReceiveCallbackData^ data = gcnew ReceiveCallbackData();
-  data->data    = data_->buf;
-  data->size    = data_->size;
+  data->data    = StlStringToString(received_bytes);
   data->id      = data_->id;
   data->time    = data_->time;
   data->clock   = data_->clock;

@@ -267,11 +267,10 @@ namespace Continental
         **/
         ref struct ReceiveCallbackData
         {
-          void* data;           /*!< Message payload     */
-          unsigned long long size;   /*!< Message payload length*/
-          long long id;         /*!< Message id          */
-          long long time;       /*!< Message time stamp  */
-          long long clock;      /*!< Message write clock */
+          System::String^ data;  /*!< Message payload     */
+          long long id;          /*!< Message id          */
+          long long time;        /*!< Message time stamp  */
+          long long clock;       /*!< Message write clock */
         };
 
         /**
