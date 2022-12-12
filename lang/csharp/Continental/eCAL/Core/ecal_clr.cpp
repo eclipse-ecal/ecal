@@ -528,7 +528,21 @@ void Monitoring::Terminate()
   ::eCAL::Finalize();
 }
 
-array<Byte>^ Monitoring::GetMonitoring()
+String^ Monitoring::GetMonitoring()
+{
+    std::string monitoring;
+    ::eCAL::Monitoring::GetMonitoring(monitoring);
+    return StlStringToString(monitoring);
+}
+
+String^ Monitoring::GetLogging()
+{
+    std::string logging;
+    ::eCAL::Monitoring::GetLogging(logging);
+    return StlStringToString(logging);
+}
+
+array<Byte>^ Monitoring::GetMonitoringBytes()
 {
     std::string monitoring;
     ::eCAL::Monitoring::GetMonitoring(monitoring);
@@ -537,7 +551,7 @@ array<Byte>^ Monitoring::GetMonitoring()
     return data;
 }
 
-array<Byte>^ Monitoring::GetLogging()
+array<Byte>^ Monitoring::GetLoggingBytes()
 {
     std::string logging;
     ::eCAL::Monitoring::GetLogging(logging);

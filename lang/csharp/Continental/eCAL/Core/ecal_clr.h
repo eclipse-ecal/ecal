@@ -27,6 +27,7 @@
 #include <ecal/msg/protobuf/dynamic_json_subscriber.h>
 
 using namespace System;
+using namespace System::Collections::Generic;
 using namespace System::Runtime::InteropServices;
 
 namespace Continental
@@ -642,12 +643,22 @@ namespace Continental
         /**
          * @brief Get host, process and topic protobuf string.
         **/
-        static array<Byte>^ GetMonitoring();
+        static String^ GetMonitoring();
 
         /**
          * @brief Get global log message protobuf string.
         **/
-        static array<Byte>^ GetLogging();
+        static String^ GetLogging();
+
+        /**
+         * @brief Get host, process and topic protobuf message bytes.
+        **/
+        static array<Byte>^ GetMonitoringBytes();
+
+        /**
+         * @brief Get global log message protobuf message bytes.
+        **/
+        static array<Byte>^ GetLoggingBytes();
 
         /*
         * @brief Get eCAL time
