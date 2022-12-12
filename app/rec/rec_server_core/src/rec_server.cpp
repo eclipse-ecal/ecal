@@ -94,12 +94,14 @@ namespace eCAL
     void RecServer::SetMeasName              (std::string meas_name)           { rec_server_impl_->SetMeasName(meas_name); }
     void RecServer::SetMaxFileSizeMib        (unsigned int max_file_size_mib)  { rec_server_impl_->SetMaxFileSizeMib(max_file_size_mib); }
     void RecServer::SetOneFilePerTopicEnabled(bool enabled)                    { rec_server_impl_->SetOneFilePerTopicEnabled(enabled); }
+    void RecServer::SetGzipCompressionLevel  (int level)                       { rec_server_impl_->SetGzipCompressionLevel(level); }
     void RecServer::SetDescription           (std::string description)         { rec_server_impl_->SetDescription(description); }
 
     std::string  RecServer::GetMeasRootDir   () const                   { return rec_server_impl_->GetMeasRootDir(); } 
     std::string  RecServer::GetMeasName      () const                   { return rec_server_impl_->GetMeasName(); }
     int64_t      RecServer::GetMaxFileSizeMib() const                   { return rec_server_impl_->GetMaxFileSizeMib(); }
-    bool         RecServer::GetOneFilePerTopicEnabled() const                   { return rec_server_impl_->GetOneFilePerTopicEnabled(); }
+    bool         RecServer::GetOneFilePerTopicEnabled() const           { return rec_server_impl_->GetOneFilePerTopicEnabled(); }
+    int          RecServer::GetGzipCompressionLevel()   const           { return rec_server_impl_->GetGzipCompressionLevel(); }
     std::string  RecServer::GetDescription   () const                   { return rec_server_impl_->GetDescription(); }
 
     ////////////////////////////////////

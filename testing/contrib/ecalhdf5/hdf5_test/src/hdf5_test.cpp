@@ -753,3 +753,273 @@ TEST(HDF5, EscapeFilenamesForOneFilePerChannel)
     EXPECT_EQ(t3_data_read, t3_data);
   }
 }
+
+TEST(HDF5, TestGzipCompression)
+{
+    std::string base_name = "output";
+
+    // Write HDF5 file
+    {
+        eCAL::eh5::HDF5Meas hdf5_writer;
+        if (hdf5_writer.Open(output_dir, eCAL::eh5::eAccessType::CREATE))
+        {
+            hdf5_writer.SetFileBaseName(base_name);
+            hdf5_writer.SetMaxSizePerFile(max_size_per_file);
+            if(hdf5_writer.SetGZipCompressionFilter(1)) {
+                std::cout << " Compression succeeded" << std::endl;
+            }
+        }
+        else
+        {
+            FAIL() << "Failed to open HDF5 Writer";
+        }
+        data.resize(DATA_SET_SIZE_4);
+        EXPECT_TRUE(hdf5_writer.AddEntryToFile(static_cast<void*>(data.data()), data.size(), 0, 0, "myChannel", 0, 0));
+
+        EXPECT_TRUE(hdf5_writer.Close());
+    }
+
+}
+
+// TODO: find a better way to include the file with definition
+#define H5_SZIP_NN_OPTION_MASK          32
+#define H5_SZIP_EC_OPTION_MASK          4
+TEST(HDF5, TestSzipCompression)
+{
+    std::string base_name = "output";
+
+    // Write HDF5 file
+    {
+        eCAL::eh5::HDF5Meas hdf5_writer;
+        if (hdf5_writer.Open(output_dir, eCAL::eh5::eAccessType::CREATE))
+        {
+            hdf5_writer.SetFileBaseName(base_name);
+            hdf5_writer.SetMaxSizePerFile(max_size_per_file);
+            if(hdf5_writer.SetSZipCompressionFilter(H5_SZIP_NN_OPTION_MASK, 16)) { // Error: floating point exception
+                std::cout << " Compression succeeded" << std::endl;
+            }
+        }
+        else
+        {
+            FAIL() << "Failed to open HDF5 Writer";
+        }
+        data.resize(DATA_SET_SIZE_4);
+        EXPECT_TRUE(hdf5_writer.AddEntryToFile(static_cast<void*>(data.data()), data.size(), 0, 0, "myChannel", 0, 0));
+
+        EXPECT_TRUE(hdf5_writer.Close());
+    }
+}
+
+TEST(HDF5, TestGzipAndSzipCompression)
+{
+    std::string base_name = "output";
+
+    // Write HDF5 file
+    {
+        eCAL::eh5::HDF5Meas hdf5_writer;
+        if (hdf5_writer.Open(output_dir, eCAL::eh5::eAccessType::CREATE))
+        {
+            hdf5_writer.SetFileBaseName(base_name);
+            hdf5_writer.SetMaxSizePerFile(max_size_per_file);
+            if(hdf5_writer.SetSZipCompressionFilter(H5_SZIP_NN_OPTION_MASK, 32)) { // Error: floating point exception
+                std::cout << " Compression succeeded" << std::endl;
+            }
+
+            if(hdf5_writer.SetGZipCompressionFilter(9)) {
+                std::cout << " Compression succeeded" << std::endl;
+            }
+
+        }
+        else
+        {
+            FAIL() << "Failed to open HDF5 Writer";
+        }
+        data.resize(DATA_SET_SIZE_4);
+        EXPECT_TRUE(hdf5_writer.AddEntryToFile(static_cast<void*>(data.data()), data.size(), 0, 0, "myChannel", 0, 0));
+
+        EXPECT_TRUE(hdf5_writer.Close());
+    }
+
+}
+
+TEST(HDF5, TegraAGzipCompression)
+{
+    std::string base_name = "tegraA_compressed";
+
+    //  Read tegra-a HDF5 file and write it again compressed
+    {
+        // Create reader
+        eCAL::eh5::HDF5Meas hdf5_reader;
+        // TODO: I need a testcase for reading the compressed file back, to make sure reading is working fine
+        // TODO: find a better way to provide the testcase file, may be add it as a part of the testcase
+        EXPECT_TRUE(hdf5_reader.Open("/home/beshoy/Desktop/Beshoy/repos/eCAL/eCAL_fork/ecal_fork/build_release/tegra-a.hdf5"));
+
+        // Create writer
+        eCAL::eh5::HDF5Meas hdf5_writer;
+        if (hdf5_writer.Open(output_dir, eCAL::eh5::eAccessType::CREATE))
+        {
+            hdf5_writer.SetFileBaseName(base_name);
+            hdf5_writer.SetMaxSizePerFile(max_size_per_file);
+            if(hdf5_writer.SetGZipCompressionFilter(1)) {
+            std::cout << " Compression succeeded" << std::endl;
+        }
+
+        //            if(hdf5_writer.SetSZipCompressionFilter(H5_SZIP_EC_OPTION_MASK, 32)) {
+        //                std::cout << " Compression succeeded" << std::endl;
+        //            }
+
+        }
+        else
+        {
+            FAIL() << "Failed to open HDF5 Writer";
+        }
+
+        // Read and write channel by channel messagees
+        auto channel_names = hdf5_reader.GetChannelNames();
+        for(auto channel_name : channel_names) {
+            eCAL::eh5::EntryInfoSet entries_info_set;
+            hdf5_reader.GetEntriesInfo(channel_name, entries_info_set);
+            for(auto entry_info : entries_info_set) {
+                size_t t1_data_size;
+                hdf5_reader.GetEntryDataSize(entry_info.ID, t1_data_size);
+
+                std::string t1_data_read(t1_data_size, ' ');
+                hdf5_reader.GetEntryData(entry_info.ID, const_cast<char*>(t1_data_read.data()));
+
+                // Write
+                EXPECT_TRUE(hdf5_writer.AddEntryToFile(static_cast<const void*>(t1_data_read.data()),
+                t1_data_read.size(),
+                    entry_info.SndTimestamp,
+                    entry_info.RcvTimestamp,
+                    channel_name,
+                    entry_info.ID,
+                    entry_info.SndClock));
+            }
+        }
+    }
+}
+
+TEST(HDF5, XavierAGzipCompression)
+{
+    std::string base_name = "xavierA_compressed";
+
+    //  Read xavier-a HDF5 file and write it again compressed
+    {
+        // Create reader
+        eCAL::eh5::HDF5Meas hdf5_reader;
+        // TODO: find a better way to provide the testcase file, may be add it as a part of the testcase
+        EXPECT_TRUE(hdf5_reader.Open("/home/beshoy/Desktop/Beshoy/repos/eCAL/eCAL_fork/ecal_fork/build_release/xavier-a.hdf5"));
+
+        // Create writer
+        eCAL::eh5::HDF5Meas hdf5_writer;
+        if (hdf5_writer.Open(output_dir, eCAL::eh5::eAccessType::CREATE))
+        {
+            hdf5_writer.SetFileBaseName(base_name);
+            hdf5_writer.SetMaxSizePerFile(max_size_per_file);
+
+            int ndim = 1;
+            unsigned long long * dim = new unsigned long long[1];
+            dim[0] = 1;
+            if(hdf5_writer.SetChunkDimensions(ndim, dim)) {
+                std::cout << "Set chunking succeeded" << std::endl;
+            }
+
+            if(hdf5_writer.SetGZipCompressionFilter(9)) {
+                std::cout << " Compression succeeded" << std::endl;
+            }
+
+            //            if(hdf5_writer.SetSZipCompressionFilter(H5_SZIP_NN_OPTION_MASK, 16)) {
+            //                std::cout << " Compression succeeded" << std::endl;
+            //            }
+
+        }
+        else
+        {
+            FAIL() << "Failed to open HDF5 Writer";
+        }
+
+
+        // Read and write channel by channel messages
+        auto channel_names = hdf5_reader.GetChannelNames();
+        for(auto channel_name : channel_names) {
+            eCAL::eh5::EntryInfoSet entries_info_set;
+            hdf5_reader.GetEntriesInfo(channel_name, entries_info_set);
+            for(auto entry_info : entries_info_set) {
+                size_t t1_data_size;
+                hdf5_reader.GetEntryDataSize(entry_info.ID, t1_data_size);
+
+                std::string t1_data_read(t1_data_size, ' ');
+                hdf5_reader.GetEntryData(entry_info.ID, const_cast<char*>(t1_data_read.data()));
+
+                // Write
+                EXPECT_TRUE(hdf5_writer.AddEntryToFile(static_cast<const void*>(t1_data_read.data()),
+                t1_data_read.size(),
+                    entry_info.SndTimestamp,
+                    entry_info.RcvTimestamp,
+                    channel_name,
+                    entry_info.ID,
+                    entry_info.SndClock));
+            }
+        }
+    }
+}
+
+TEST(HDF5, ChunkAPI)
+{
+    //    int x; std::cin >> x;
+    std::string base_name = "chunck_api";
+
+    //  Read xavier-a HDF5 file and write it again compressed
+    {
+        // Create reader
+        eCAL::eh5::HDF5Meas hdf5_reader;
+        // TODO: find a better way to provide the testcase file, may be add it as a part of the testcase
+        EXPECT_TRUE(hdf5_reader.Open("/home/beshoy/Desktop/Beshoy/repos/eCAL/eCAL_fork/ecal_fork/build_release/tegra-a.hdf5"));
+
+        // Create writer
+        eCAL::eh5::HDF5Meas hdf5_writer;
+        if (hdf5_writer.Open(output_dir, eCAL::eh5::eAccessType::CREATE))
+        {
+            hdf5_writer.SetFileBaseName(base_name);
+            hdf5_writer.SetMaxSizePerFile(max_size_per_file);
+            unsigned long long *dim = new unsigned long long[1];
+            dim[0] = 32;
+            hdf5_writer.SetChunkDimensions(1, dim);
+            if(hdf5_writer.SetGZipCompressionFilter(9)) {
+                std::cout << " Compression succeeded" << std::endl;
+            }
+
+            //            if(hdf5_writer.SetSZipCompressionFilter(H5_SZIP_NN_OPTION_MASK, 16)) {
+            //                std::cout << " Compression succeeded" << std::endl;
+            //            }
+        }
+        else
+        {
+            FAIL() << "Failed to open HDF5 Writer";
+        }
+
+
+        // Read and write channel by channel messages
+        auto channel_names = hdf5_reader.GetChannelNames();
+        for(auto channel_name : channel_names) {
+            eCAL::eh5::EntryInfoSet entries_info_set;
+            hdf5_reader.GetEntriesInfo(channel_name, entries_info_set);
+            for(auto entry_info : entries_info_set) {
+                size_t t1_data_size;
+                hdf5_reader.GetEntryDataSize(entry_info.ID, t1_data_size);
+
+                std::string t1_data_read(t1_data_size, ' ');
+                hdf5_reader.GetEntryData(entry_info.ID, const_cast<char*>(t1_data_read.data()));
+
+                // Write
+                EXPECT_TRUE(hdf5_writer.AddEntryToFile(static_cast<const void*>(t1_data_read.data()),
+                t1_data_read.size(),
+                        entry_info.SndTimestamp,
+                entry_info.RcvTimestamp,
+                channel_name,
+                entry_info.ID,
+                entry_info.SndClock));
+            }
+        }
+    }
+}

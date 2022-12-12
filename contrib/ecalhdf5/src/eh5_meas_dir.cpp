@@ -42,17 +42,29 @@
 // TODO: Test the one-file-per-channel setting with gtest
 constexpr unsigned int kDefaultMaxFileSizeMB = 1000;
 eCAL::eh5::HDF5MeasDir::HDF5MeasDir()
-  : access_              (RDONLY) // Temporarily set it to RDONLY, so the leading "Close()" from the Open() function will not operate on the uninitialized variable.
-  , one_file_per_channel_(false)
-  , max_size_per_file_   (kDefaultMaxFileSizeMB * 1024 * 1024)
-  , cb_pre_split_        (nullptr)
+        : access_                  (RDONLY) // Temporarily set it to RDONLY, so the leading "Close()" from the Open() function will not operate on the uninitialized variable.
+        , one_file_per_channel_    (false)
+        , max_size_per_file_       (kDefaultMaxFileSizeMB * 1024 * 1024)
+        , cb_pre_split_            (nullptr)
+        , gzip_compression_level_  (0)
+        , szip_compression_enabled_(false)
+        , options_mask_            (0)
+        , pixels_per_block_        (0)
+        , ndims_                   (0)
+        , dim_                     (nullptr)
 {}
 
 eCAL::eh5::HDF5MeasDir::HDF5MeasDir(const std::string& path, eAccessType access /*= eAccessType::RDONLY*/)
-  : access_              (access)
-  , one_file_per_channel_(false)
-  , max_size_per_file_   (kDefaultMaxFileSizeMB * 1024 * 1024)
-  , cb_pre_split_        (nullptr)
+        : access_                  (access)
+        , one_file_per_channel_    (false)
+        , max_size_per_file_       (kDefaultMaxFileSizeMB * 1024 * 1024)
+        , cb_pre_split_            (nullptr)
+        , gzip_compression_level_  (0)
+        , szip_compression_enabled_(false)
+        , options_mask_            (0)
+        , pixels_per_block_        (0)
+        , ndims_                   (0)
+        , dim_                     (nullptr)
 {
   // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
   // where the vtable is not created yet or it's destructed.
@@ -510,8 +522,13 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
     file_writer_it->second->SetMaxSizePerFile(GetMaxSizePerFile());
     file_writer_it->second->SetOneFilePerChannelEnabled(one_file_per_channel_);
     file_writer_it->second->SetFileBaseName(one_file_per_channel_ ? (base_name_ + "_" + GetEscapedFilename(GetUnescapedString(channel_name))) : (base_name_));
+    file_writer_it->second->SetGZipCompressionFilter(gzip_compression_level_);
+    if(szip_compression_enabled_) {
+        file_writer_it->second->SetSZipCompressionFilter(options_mask_, pixels_per_block_);
+     }
+    file_writer_it->second->SetChunkDimensions(ndims_, dim_);
     if (cb_pre_split_)
-      file_writer_it->second->ConnectPreSplitCallback(cb_pre_split_);
+        file_writer_it->second->ConnectPreSplitCallback(cb_pre_split_);
 
     // Open the writer
     file_writer_it->second->Open(output_dir_);
@@ -520,4 +537,67 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, eAccessType access 
   // The iterator is either what we found or what we created. In either way it
   // will be valid and can be returned.
   return file_writer_it;
+}
+
+bool eCAL::eh5::HDF5MeasDir::SetGZipCompressionFilter(unsigned level) {
+    bool correct_level = false;
+    if(level <= 9) {
+        gzip_compression_level_ = level;
+        correct_level = true;
+        if(ndims_ == 0) {
+            ndims_ = 1;
+            // TODO: use smart pointers instead, because current code leaks memory
+            dim_ = new unsigned long long[1];
+            dim_[0] = 1;
+        }
+    }
+
+    return correct_level;
+}
+
+bool eCAL::eh5::HDF5MeasDir::IsGZipCompressionFilterEnabled() {
+    if(gzip_compression_level_ > 0) return true;
+
+    return false;
+}
+
+bool eCAL::eh5::HDF5MeasDir::SetSZipCompressionFilter(unsigned options_mask, unsigned pixels_per_block) {
+    bool correct_params = false;
+
+    if((options_mask == H5_SZIP_EC_OPTION_MASK || options_mask == H5_SZIP_NN_OPTION_MASK) &&
+       ((pixels_per_block % 2 == 0) && pixels_per_block <= 32 && pixels_per_block > 0)
+            ) {
+        options_mask_ = options_mask;
+        pixels_per_block_ = pixels_per_block;
+        szip_compression_enabled_ = true;
+        correct_params = true;
+        if(ndims_ == 0) {
+            ndims_ = 1;
+            // TODO: use smart pointers instead, because current code leaks memory
+            dim_ = new unsigned long long[1] ;
+            dim_[0] = 1;
+        }
+    } else {
+        szip_compression_enabled_ = false;
+    }
+
+    return correct_params;
+}
+
+bool eCAL::eh5::HDF5MeasDir::IsSZipCompressionFilterEnabled() {
+    return szip_compression_enabled_;
+}
+
+bool eCAL::eh5::HDF5MeasDir::SetChunkDimensions(int ndims, unsigned long long dim[/*ndims*/]) {
+    bool valid_dims = false;
+    if(ndims >= 0) {
+        ndims_ = ndims;
+        dim_ = dim;
+        valid_dims = true;
+    }
+    return valid_dims;
+}
+
+bool eCAL::eh5::HDF5MeasDir::IsChunkingEnabled() {
+    return (ndims_ > 0);
 }

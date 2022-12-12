@@ -271,24 +271,77 @@ namespace eCAL
       **/
       void DisconnectPreSplitCallback() override;
 
-    protected:
-      struct Channel
-      {
-        std::string   Description;
-        std::string   Type;
-        EntryInfoVect Entries;
-      };
+            /**
+            * @brief Enable GNU gzip compression filter and defines compression level
+            *
+            * @param level   compression level ranges from 0 which means no compression and 9 which highest compression
+            **/
+            virtual bool SetGZipCompressionFilter(unsigned level) override;
+
+            /**
+            * @brief Check if GNU Gzip filter is enabled or not
+            *
+            * @return               true if GNU Gzip filter is enabled with level between 1 - 9
+            **/
+            virtual bool IsGZipCompressionFilterEnabled() override;
+            /**
+            * @brief Enable szip compression filter
+            *
+            * @param options_mask     A bit-mask conveying the desired SZIP options; Valid values are H5_SZIP_EC_OPTION_MASK and H5_SZIP_NN_OPTION_MASK
+            *
+            * @param pixels_per_block The number of pixels or data elements in each data block
+            **/
+            virtual bool SetSZipCompressionFilter(unsigned options_mask, unsigned pixels_per_block) override;
+
+            /**
+            * @brief Check if szip filter is enabled or not
+            *
+            * @return               true if szip filter is enabled
+            **/
+            virtual bool IsSZipCompressionFilterEnabled() override;
+
+            /**
+            * @brief Sets the size of the chunks used to store a chunked layout dataset
+            *
+            * @param ndims     The number of dimensions of each chunk
+            *
+            * @param dim       An array defining the dividing factor to message length, in dataset elements, of each chunk
+            **/
+            virtual bool SetChunkDimensions(int ndims, unsigned long long dim[/*ndims*/]) override;
+
+            /**
+            * @brief Check if chunking is enabled or not
+            *
+            * @return               true if chunking is enabled
+            **/
+            virtual bool IsChunkingEnabled() override;
+
+        protected:
+            struct Channel
+            {
+                std::string   Description;
+                std::string   Type;
+                EntryInfoVect Entries;
+            };
 
       using Channels = std::map<std::string, Channel>;
 
-      std::string              output_dir_;
-      std::string              base_name_;
-      Channels                 channels_;
-      CallbackFunction         cb_pre_split_;
-      hid_t                    file_id_;
-      int                      file_split_counter_;
-      unsigned long long       entries_counter_;
-      size_t                   max_size_per_file_;
+            std::string              output_dir_;
+            std::string              base_name_;
+            Channels                 channels_;
+            CallbackFunction         cb_pre_split_;
+            hid_t                    file_id_;
+            int                      file_split_counter_;
+            unsigned long long       entries_counter_;
+            size_t                   max_size_per_file_;
+            unsigned                 gzip_compression_level_;
+            bool                     szip_compression_enabled_;
+            unsigned                 options_mask_;
+            unsigned                 pixels_per_block_;
+            int                      ndims_;
+            unsigned long long       *dim_;
+
+
 
       /**
       * @brief Creates the actual file

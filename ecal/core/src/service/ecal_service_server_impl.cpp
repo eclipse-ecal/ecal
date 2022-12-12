@@ -279,50 +279,79 @@ namespace eCAL
 
   int CServiceServerImpl::RequestCallback(const std::string& request_, std::string& response_)
   {
-    std::lock_guard<std::mutex> lock(m_method_map_sync);
-
-    if (m_method_map.empty()) return 0;
-
-    int success(-1);
+    // prepare response
     eCAL::pb::Response response_pb;
-    auto response_pb_mutable_header = response_pb.mutable_header();
+    auto* response_pb_mutable_header = response_pb.mutable_header();
     response_pb_mutable_header->set_hname(eCAL::Process::GetHostName());
     response_pb_mutable_header->set_sname(m_service_name);
     response_pb_mutable_header->set_sid(m_service_id);
 
-    eCAL::pb::Request request_pb;
-    if (request_pb.ParseFromString(request_))
+    // try to parse request
+    eCAL::pb::Request  request_pb;
+    if (!request_pb.ParseFromString(request_))
     {
-      // success == 0 means we could deserialize and
-      // no need to try to read more bytes for the server
-      // socket
-      success = 0;
-      auto request_pb_header = request_pb.header();
-      response_pb_mutable_header->set_mname(request_pb_header.mname());
+      Logging::Log(log_level_error, m_service_name + "::CServiceServerImpl::RequestCallback failed to parse request message");
 
-      auto iter = m_method_map.find(request_pb_header.mname());
-      if (iter != m_method_map.end())
+      response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
+      std::string emsg = "Service '" + m_service_name + "' request message could not be parsed.";
+      response_pb_mutable_header->set_error(emsg);
+
+      // serialize response and return "request message could not be parsed"
+      response_ = response_pb.SerializeAsString();
+      
+      // return value is not propagated to the remote caller.
+      return 0;
+    }
+
+    // get method
+    SMethod method;
+    auto& request_pb_header = request_pb.header();
+    {
+      std::lock_guard<std::mutex> lock(m_method_map_sync);
+
+      auto requested_method_iterator = m_method_map.find(request_pb_header.mname());
+      if (requested_method_iterator == m_method_map.end())
       {
-        auto call_count = iter->second.method_pb.call_count();
-        iter->second.method_pb.set_call_count(++call_count);
+        // set method call state 'failed'
+        response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
+        // set error message
+        std::string emsg = "Service '" + m_service_name + "' has no method named '" + request_pb_header.mname() + "'";
+        response_pb_mutable_header->set_error(emsg);
 
-        std::string request_s = request_pb.request();
-        std::string response_s;
-        int service_return_state = m_method_map[request_pb_header.mname()].callback(iter->second.method_pb.mname(), iter->second.method_pb.req_type(), iter->second.method_pb.resp_type(), request_s, response_s);
+        // serialize response and return "method not found"
+        response_ = response_pb.SerializeAsString();
 
-        response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
-        response_pb.set_response(response_s);
-        response_pb.set_ret_state(service_return_state);
+        // Return Success (error_code = 0), as parsing the request worked. The
+        // return value is not propagated to the remote caller.
+        return 0;
       }
       else
       {
-        response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
-        std::string emsg = "Service " + m_service_name + " has no method " + request_pb_header.mname();
-        response_pb_mutable_header->set_error(emsg);
+        // increase call count
+        auto call_count = requested_method_iterator->second.method_pb.call_count();
+        requested_method_iterator->second.method_pb.set_call_count(++call_count);
+
+        // store (copy) the method object, so we can release the mutex before calling the function
+        method = requested_method_iterator->second;
       }
-      response_ = response_pb.SerializeAsString();
     }
-    return success;
+
+    // execute method (outside lock guard)
+    const std::string& request_s = request_pb.request();
+    std::string response_s;
+    int service_return_state = method.callback(method.method_pb.mname(), method.method_pb.req_type(), method.method_pb.resp_type(), request_s, response_s);
+
+    // set method call state 'executed'
+    response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
+    // set method response and return state
+    response_pb.set_response(response_s);
+    response_pb.set_ret_state(service_return_state);
+
+    // serialize response and return
+    response_ = response_pb.SerializeAsString();
+
+    // return success (error code 0)
+    return 0;
   }
 
   void CServiceServerImpl::EventCallback(eCAL_Server_Event event_, const std::string& /*message_*/)

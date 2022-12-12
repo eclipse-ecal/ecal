@@ -34,6 +34,7 @@ namespace eCAL
       : job_id_(0)
       , max_file_size_mb_(50)
       , one_file_per_topic_(false)
+      , gzip_compression_level_(0)
     {}
 
     JobConfig::~JobConfig()
@@ -74,6 +75,9 @@ namespace eCAL
 
     void            JobConfig::SetOneFilePerTopicEnabled(bool enabled)                     { one_file_per_topic_ = enabled; }
     bool            JobConfig::GetOneFilePerTopicEnabled() const                           { return one_file_per_topic_; }
+
+    void            JobConfig::SetGzipCompressionLevel  (int level)                        { gzip_compression_level_ = level; }
+    int             JobConfig::GetGzipCompressionLevel  () const                           { return gzip_compression_level_; }
 
     void            JobConfig::SetDescription           (const std::string& description)   { description_ = description; }
     std::string     JobConfig::GetDescription           () const                           { return description_; }

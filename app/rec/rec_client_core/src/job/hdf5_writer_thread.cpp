@@ -273,6 +273,19 @@ namespace eCAL
         hdf5_writer_->SetFileBaseName(host_name);
         hdf5_writer_->SetMaxSizePerFile(job_config_.GetMaxFileSize());
         hdf5_writer_->SetOneFilePerChannelEnabled(job_config_.GetOneFilePerTopicEnabled());
+        // Set compression filter
+        // Set the chunking dimensions by this default value, if needed in the future we can allow the user to control it via API
+        int ndim = 1;
+        unsigned long long * dim = new unsigned long long[1];
+        dim[0] = 1;
+        if(hdf5_writer_->SetChunkDimensions(ndim, dim)) {
+            std::cout << "Set chunking succeeded" << std::endl;
+        }
+
+        if(hdf5_writer_->SetGZipCompressionFilter(job_config_.GetGzipCompressionLevel())) {
+            std::cout << " Compression succeeded" << std::endl;
+        }
+
       }
       else
       {

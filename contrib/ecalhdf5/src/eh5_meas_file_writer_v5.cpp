@@ -40,11 +40,18 @@
 constexpr unsigned int kDefaultMaxFileSizeMB = 1000;
 
 eCAL::eh5::HDF5MeasFileWriterV5::HDF5MeasFileWriterV5()
-  : cb_pre_split_      (nullptr)
-  , file_id_           (-1)
-  , file_split_counter_(-1)
-  , entries_counter_   (0)
-  , max_size_per_file_ (kDefaultMaxFileSizeMB * 1024 * 1024)
+        : cb_pre_split_            (nullptr)
+        , file_id_                 (-1)
+        , file_split_counter_      (-1)
+        , entries_counter_         (0)
+        , max_size_per_file_       (kDefaultMaxFileSizeMB * 1024 * 1024)
+        , gzip_compression_level_  (0)
+        , szip_compression_enabled_(false)
+        , options_mask_            (0)
+        , pixels_per_block_        (0)
+        , ndims_                   (0)
+        , dim_                     (nullptr)
+
 {}
 
 eCAL::eh5::HDF5MeasFileWriterV5::~HDF5MeasFileWriterV5()
@@ -223,9 +230,28 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::AddEntryToFile(const void* data, const uns
   //  Create DataSpace with rank 1 and size dimension
   auto dataSpace = H5Screate_simple(1, &hsSize, nullptr);
 
-  //  Create creation property for dataSpace
-  auto dsProperty = H5Pcreate(H5P_DATASET_CREATE);
-  H5Pset_obj_track_times(dsProperty, false);
+    //  Create creation property for dataSpace
+    auto dsProperty = H5Pcreate(H5P_DATASET_CREATE);
+
+    unsigned long long size_threshold = 10000;
+    if((gzip_compression_level_ > 0 || szip_compression_enabled_ == true || ndims_ > 0) && (size >= size_threshold) ) {
+        // TODO: find smarter way to implement temp_dim
+        unsigned long long *temp_dim = new unsigned long long[ndims_];
+        for(int i =0; i < ndims_; ++i) {
+            temp_dim[i] = hsSize/dim_[i];
+        }
+        H5Pset_chunk(dsProperty, ndims_, temp_dim);
+    }
+
+    if(gzip_compression_level_ > 0 && (size >= size_threshold) ) {
+        H5Pset_deflate( dsProperty, gzip_compression_level_);
+    }
+
+    if(szip_compression_enabled_ && (size >= size_threshold) ) {
+        H5Pset_szip(dsProperty, options_mask_, pixels_per_block_);
+    }
+
+    H5Pset_obj_track_times(dsProperty, false);
 
   //  Create dataset in dataSpace
   auto dataSet = H5Dcreate(file_id_, std::to_string(entries_counter_).c_str(), H5T_NATIVE_UCHAR, dataSpace, H5P_DEFAULT, dsProperty, H5P_DEFAULT);
@@ -385,3 +411,64 @@ bool eCAL::eh5::HDF5MeasFileWriterV5::CreateEntriesTableOfContentsFor(const std:
   return true;
 }
 
+bool eCAL::eh5::HDF5MeasFileWriterV5::SetGZipCompressionFilter(unsigned level) {
+    bool correct_level = false;
+    if(level <= 9) {
+        gzip_compression_level_ = level;
+        correct_level = true;
+        if(ndims_ == 0) {
+            ndims_ = 1;
+            // TODO: use smart pointers instead, because current code leaks memory
+            dim_ = new unsigned long long[1] ;
+            dim_[0] = 1;
+        }
+    }
+
+    return correct_level;
+}
+
+bool eCAL::eh5::HDF5MeasFileWriterV5::IsGZipCompressionFilterEnabled() {
+    if(gzip_compression_level_ > 0) return true;
+
+    return false;
+}
+
+bool eCAL::eh5::HDF5MeasFileWriterV5::SetSZipCompressionFilter(unsigned options_mask, unsigned pixels_per_block) {
+    bool correct_params = false;
+    if((options_mask == H5_SZIP_EC_OPTION_MASK || options_mask == H5_SZIP_NN_OPTION_MASK) &&
+       ((pixels_per_block % 2 == 0) && pixels_per_block <= 32 && pixels_per_block > 0)
+            ) {
+        options_mask_ = options_mask;
+        pixels_per_block_ = pixels_per_block;
+        szip_compression_enabled_ = true;
+        correct_params = true;
+        if(ndims_ == 0) {
+            ndims_ = 1;
+            // TODO: use smart pointers instead, because current code leaks memory
+            dim_ = new unsigned long long[1] ;
+            dim_[0] = 1;
+        }
+    } else {
+        szip_compression_enabled_ = false;
+    }
+
+    return correct_params;
+}
+
+bool eCAL::eh5::HDF5MeasFileWriterV5::IsSZipCompressionFilterEnabled() {
+    return szip_compression_enabled_;
+}
+
+bool eCAL::eh5::HDF5MeasFileWriterV5::SetChunkDimensions(int ndims, unsigned long long dim[/*ndims*/]) {
+    bool valid_dims = false;
+    if(ndims >= 0) {
+        ndims_ = ndims;
+        dim_ = dim;
+        valid_dims = true;
+    }
+    return valid_dims;
+}
+
+bool eCAL::eh5::HDF5MeasFileWriterV5::IsChunkingEnabled() {
+    return (ndims_ > 0);
+}

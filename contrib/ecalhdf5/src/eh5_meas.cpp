@@ -287,7 +287,7 @@ long long eCAL::eh5::HDF5Meas::GetMaxTimestamp(const std::string& channel_name) 
   long long ret_val = 0;
   if (hdf_meas_impl_)
   {
-    ret_val = hdf_meas_impl_->GetMaxTimestamp(GetEscapedTopicname(channel_name));
+    ret_val = hdf_meas_impl_->GetMaxTimestamp(GetEscapedString(channel_name));
   }
 
   return ret_val;
@@ -370,4 +370,50 @@ void eCAL::eh5::HDF5Meas::DisconnectPreSplitCallback()
   {
     return hdf_meas_impl_->DisconnectPreSplitCallback();
   }
+}
+
+bool eCAL::eh5::HDF5Meas::SetGZipCompressionFilter(unsigned level) {
+    if (hdf_meas_impl_ != nullptr)
+    {
+        return hdf_meas_impl_->SetGZipCompressionFilter(level);
+    }
+    return false;
+}
+
+bool eCAL::eh5::HDF5Meas::IsGZipCompressionFilterEnabled() {
+    if (hdf_meas_impl_ != nullptr)
+    {
+        return hdf_meas_impl_->IsGZipCompressionFilterEnabled();
+    }
+    return false;
+}
+
+bool eCAL::eh5::HDF5Meas::SetSZipCompressionFilter(unsigned options_mask, unsigned pixels_per_block) {
+    if (hdf_meas_impl_ != nullptr)
+    {
+        return hdf_meas_impl_->SetSZipCompressionFilter(options_mask, pixels_per_block);
+    }
+    return false;
+}
+
+bool eCAL::eh5::HDF5Meas::IsSZipCompressionFilterEnabled() {
+    if (hdf_meas_impl_ != nullptr)
+    {
+        return hdf_meas_impl_->IsSZipCompressionFilterEnabled();
+    }
+    return false;
+}
+
+bool eCAL::eh5::HDF5Meas::SetChunkDimensions(int ndims, unsigned long long dim[/*ndims*/]) {
+    if(hdf_meas_impl_ != nullptr) {
+        return hdf_meas_impl_->SetChunkDimensions(ndims, dim);
+    }
+    return false;
+}
+
+bool eCAL::eh5::HDF5Meas::IsChunkingEnabled() {
+    if(hdf_meas_impl_ != nullptr) {
+        return hdf_meas_impl_->IsChunkingEnabled();
+    }
+    return false;
 }
