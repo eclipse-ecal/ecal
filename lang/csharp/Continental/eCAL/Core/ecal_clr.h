@@ -273,11 +273,20 @@ namespace Continental
           long long clock;       /*!< Message write clock */
         };
 
+				ref struct ReceiveCallbackDataUnsafe
+				{
+					void* data;           /*!< Message payload     */
+					unsigned long long size;   /*!< Message payload length*/
+					long long id;         /*!< Message id          */
+					long long time;       /*!< Message time stamp  */
+					long long clock;      /*!< Message write clock */
+				};
         /**
          * @brief delegate definition for callback functions
         **/
         delegate void ReceiverCallback(String^ str, ReceiveCallbackData^ data);
 
+				delegate void ReceiverCallbackUnsafe(String^ str, ReceiveCallbackDataUnsafe^ data);
         /**
          * @brief Creates this object.
          *
@@ -304,6 +313,7 @@ namespace Continental
         **/
         ReceiveCallbackData^ Receive(const int rcv_timeout_);
 
+				ReceiveCallbackDataUnsafe^ ReceiveUnsafe(const int rcv_timeout_);
         /**
          * @brief Add callback function for incoming receives.
          *
@@ -313,6 +323,7 @@ namespace Continental
         **/
         bool AddReceiveCallback(ReceiverCallback^ callback_);
 
+				bool AddReceiveCallback(ReceiverCallbackUnsafe^ callback_);
         /**
          * @brief Remove callback function for incoming receives.
          *
@@ -322,6 +333,7 @@ namespace Continental
         **/
         bool RemReceiveCallback(ReceiverCallback^ callback_);
 
+				bool RemReceiveCallback(ReceiverCallbackUnsafe^ callback_);
         /**
          * @brief Query if this object is created.
          *
@@ -357,18 +369,20 @@ namespace Continental
         **/
         ReceiverCallback^ m_callbacks;
 
+				ReceiverCallbackUnsafe^ m_callbacks_unsafe;
         /**
          * @brief private member which holds the the pointer to OnReceive, to avoid function relocation
         **/
         GCHandle m_gch;
 
+				GCHandle m_gch_unsafe;
         /**
          * @brief The callback of the subscriber, that is registered with the unmanaged code
         **/
         delegate void subCallback(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_);
         subCallback^ m_sub_callback;
         void OnReceive(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_);
-
+				void OnReceiveUnsafe(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_);
         /**
          * @brief stdcall function pointer definition of eCAL::ReceiveCallbackT
         **/

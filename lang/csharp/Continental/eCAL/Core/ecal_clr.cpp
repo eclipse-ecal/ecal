@@ -255,6 +255,27 @@ Subscriber::ReceiveCallbackData^ Subscriber::Receive(const int rcv_timeout_)
   }
 }
 
+Subscriber::ReceiveCallbackDataUnsafe^ Subscriber::ReceiveUnsafe(const int rcv_timeout_)
+{
+  if(m_sub == nullptr) return(nullptr);
+  long long rcv_time = 0;
+  std::string rcv_buf;
+  auto size = m_sub->Receive(rcv_buf, &rcv_time, rcv_timeout_);
+  if (size > 0)
+  {
+    ReceiveCallbackDataUnsafe^ rcv_data = gcnew ReceiveCallbackDataUnsafe();
+    rcv_data->id = 0;
+    rcv_data->clock = 0;
+    rcv_data->time = rcv_time;
+    rcv_data->data = (void*)rcv_buf.data();
+    rcv_data->size = size;
+    return rcv_data;
+  }
+  else
+  {
+    return nullptr;
+  }
+}
 bool Subscriber::AddReceiveCallback(ReceiverCallback^ callback_)
 {
   if(m_sub == nullptr) return(false);
@@ -270,6 +291,19 @@ bool Subscriber::AddReceiveCallback(ReceiverCallback^ callback_)
   return(true);
 }
 
+bool Continental::eCAL::Core::Subscriber::AddReceiveCallback(ReceiverCallbackUnsafe^ callback_)
+{
+    if (m_sub == nullptr) return(false);
+    if (m_callbacks_unsafe == nullptr)
+    {
+        m_sub_callback = gcnew subCallback(this, &Subscriber::OnReceiveUnsafe);
+        m_gch_unsafe = GCHandle::Alloc(m_sub_callback);
+        IntPtr ip = Marshal::GetFunctionPointerForDelegate(m_sub_callback);
+        m_sub->AddReceiveCallback(static_cast<stdcall_eCAL_ReceiveCallbackT>(ip.ToPointer()));
+    }
+    m_callbacks_unsafe += callback_;
+    return(true);
+}
 bool Subscriber::RemReceiveCallback(ReceiverCallback^ callback_)
 {
   if(m_sub == nullptr) return(false);
@@ -280,6 +314,17 @@ bool Subscriber::RemReceiveCallback(ReceiverCallback^ callback_)
     m_gch.Free();
   }
   m_callbacks -= callback_;
+  return(false);
+}
+bool Continental::eCAL::Core::Subscriber::RemReceiveCallback(ReceiverCallbackUnsafe^ callback_)
+{
+    if (m_sub == nullptr) return(false);
+    if (m_callbacks_unsafe == callback_)
+    {
+        m_sub->RemReceiveCallback();
+        m_gch_unsafe.Free();
+    }
+    m_callbacks_unsafe -= callback_;
 
   return(false);
 }
@@ -318,6 +363,17 @@ void Subscriber::OnReceive(const char* topic_name_, const ::eCAL::SReceiveCallba
   data->clock   = data_->clock;
   std::string topic_name = std::string(topic_name_);
   m_callbacks(StlStringToString(topic_name), data);
+}
+void Subscriber::OnReceiveUnsafe(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_)
+{
+  ReceiveCallbackDataUnsafe^ data = gcnew ReceiveCallbackDataUnsafe();
+  data->data    = data_->buf;
+  data->size    = data_->size;
+  data->id      = data_->id;
+  data->time    = data_->time;
+  data->clock   = data_->clock;
+  std::string topic_name = std::string(topic_name_);
+  m_callbacks_unsafe(StlStringToString(topic_name), data);
 }
 
 
