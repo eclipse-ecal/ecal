@@ -12,7 +12,7 @@ To build eCAL, you will need a C++14 compliant compiler, such as Visual Studio 2
 Currently, we support:
 
 * Windows 10 / 11
-* Ubuntu 18.04 / 20.04 / 22.04
+* Ubuntu 22.04 / 20.04 / 18.04
 
 .. seealso::
 
@@ -109,10 +109,17 @@ First check out the eCAL repository and all of the submodules:
 |fa-ubuntu| Building eCAL on Ubuntu
 ===================================
 
-.. note:: 
+We support building on currently supported Ubuntu LTS releases.
 
-   Building on Ubuntu 16.04 is only supported up to eCAL 5.9.
-   eCAL 5.10 will still build though if you disable building the GUI applications.
+.. seealso:: 
+
+   The build described here is a very simple (yet complete and fully functional) build that differs from our "official" binaries, e.g. in regards of the library install directory and the :file:`ecal.ini` location-.
+   If your goal is to replicate the official build, you should apply the CMake Options exactly as we do.
+   You can grab those from our GitHub Action build scripts:
+
+   - `Ubuntu 22.04 <https://github.com/eclipse-ecal/ecal/blob/master/.github/workflows/build-ubuntu-22.yml>`_
+   - `Ubuntu 20.04 <https://github.com/eclipse-ecal/ecal/blob/master/.github/workflows/build-ubuntu-20.yml>`_
+   - `Ubuntu 18.04 <https://github.com/eclipse-ecal/ecal/blob/master/.github/workflows/build-ubuntu-18.yml>`_
 
 |fa-ubuntu| Build dependencies
 ------------------------------
@@ -151,7 +158,7 @@ First check out the eCAL repository and all of the submodules:
 
    .. tab:: Ubuntu 18.04
 
-      #. Add the `official CMake repository <https://apt.kitware.com/>`_, as eCAL needs CMake >= 3.13:
+      #. Add the `official CMake repository <https://apt.kitware.com/>`_, as eCAL needs CMake >= 3.15:
 
          .. code-block:: bash
 
@@ -174,33 +181,8 @@ First check out the eCAL repository and all of the submodules:
             sudo apt-get install python3.6-dev python3-pip
             python3 -m pip install setuptools
 
-   .. tab:: Ubuntu 16.04
-
-      #. Add the `official cmake repository <https://apt.kitware.com/>`_, as eCAL needs cmake >= 3.13:
-
-         .. code-block:: bash
-
-            wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
-            echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ xenial main' | sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null
-            sudo apt-get -y update
-            sudo rm /usr/share/keyrings/kitware-archive-keyring.gpg
-            sudo apt-get install kitware-archive-keyring
-
-      #. Add a ppa for protobuf >= 3.0. The following (unofficial) ppa will be sufficient:
-
-         .. code-block:: bash
-
-            sudo add-apt-repository -y ppa:maarten-fonville/protobuf
-            sudo apt-get -y update
-
-      #. Install the dependencies from the ordinary Ubuntu 16.04 repositories and the ppa we just added:
-
-         .. code-block:: bash
-
-            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev libyaml-cpp-dev
-
-|fa-ubuntu| Ubuntu 16/18/20/22 build
-------------------------------------
+|fa-ubuntu| Ubuntu 22/20/18 build
+---------------------------------
 
 #. Compile eCAL with the following options (additional set `BUILD_PY_BINDING` to `ON` if plan to build the python extension):
 
@@ -224,4 +206,4 @@ First check out the eCAL repository and all of the submodules:
    .. code-block:: bash
 
       cmake --build . --target create_python_wheel --config Release
-      sudo pip3 install _deploy/ecal5-*  
+      sudo pip3 install _deploy/ecal5-*
