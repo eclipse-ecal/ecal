@@ -148,6 +148,15 @@ def get_asset_properties(asset_name, ecal_version):
     else:
         sys.stderr.write("Warning: Cannot classify file: \"" + asset_name + "\" (from eCAL " + str(ecal_version) + ")\n")
 
+    # TODO: This workaround may be removed in a later version.
+    # Workaround to make the comparision function work in Python 3.8.
+    # If this is not done, the internal version will stay at 0.0.0 and the "<" operator
+    # will always report "False" for all comparisons.
+    # This causes the download tables to not be sorted and the operating
+    # systems and the python versions are in a strange order (Python 3.10, 3,11, 3,6, 3,7...)
+    os_version     = semantic_version.Version(str(os_version))
+    python_version = semantic_version.Version(str(python_version))
+    
     return (os_group, os_version, is_python, python_version)
 
 def get_downloads_list(gh_assets, ecal_version):
