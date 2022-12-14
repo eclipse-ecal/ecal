@@ -51,7 +51,7 @@ namespace eCAL
   {
     if (!m_bound) return false;
 
-    if (m_payload_memfile->MaxDataSize() < size)
+    if ((m_payload_memfile->MaxDataSize() < size) || m_reset)
     {
       auto payload_memfile = std::make_unique<CMemoryFile>();
       const auto event_id = CreateEventId();
@@ -67,6 +67,7 @@ namespace eCAL
       m_payload_memfile = std::move(payload_memfile);
       m_event_id = event_id;
       m_memfile_broadcast->SendEvent(m_event_id, eMemfileBroadcastEventType::EVENT_CREATED);
+      m_reset = false;
     }
 
     if (m_payload_memfile->GetWriteAccess(EXP_MEMFILE_ACCESS_TIMEOUT))
@@ -82,6 +83,7 @@ namespace eCAL
 #ifndef NDEBUG
       std::cerr << "Error acquiring write access on payload file" << std::endl;
 #endif
+      m_reset = true;
     }
 
     return false;
@@ -96,5 +98,6 @@ namespace eCAL
     m_payload_memfile->Destroy(true);
     m_payload_memfile.reset();
     m_bound = false;
+    m_reset = false;
   }
 }
