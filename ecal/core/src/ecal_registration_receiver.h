@@ -75,6 +75,8 @@ namespace eCAL
   };
 #endif
 
+  typedef std::function<void(const eCAL::pb::Sample&)> ApplySampleCallbackT;
+
   class CRegistrationReceiver
   {
   public:
@@ -91,6 +93,10 @@ namespace eCAL
 
     bool AddRegistrationCallback(enum eCAL_Registration_Event event_, RegistrationCallbackT callback_);
     bool RemRegistrationCallback(enum eCAL_Registration_Event event_);
+
+    void SetCustomApplySampleCallback(const ApplySampleCallbackT& callback_);
+    void RemCustomApplySampleCallback();
+
 
   protected:
     bool IsLocalHost(const eCAL::pb::Sample & ecal_sample_);
@@ -118,5 +124,7 @@ namespace eCAL
 
     bool m_use_network_monitoring;
     bool m_use_shm_monitoring;
+
+    ApplySampleCallbackT m_callback_custom_apply_sample;
   };
 };
