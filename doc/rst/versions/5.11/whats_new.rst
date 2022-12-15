@@ -25,6 +25,8 @@ New features
 
   - **Measurement Cutter** (``ecal_meas_cutter``) for trimming and cutting eCAL Measurements (:ref:`-> Documentation<applications_meas_cutter>`)
 
+- eCAL Rec can now **record each topic to its own file**
+
 - Added **Shared-Memory-Monitoring-Layer** (enable via ``ecal.ini``!). This new monitoring layer can locally match publishers and subscribers and distribute monitoring information without the need for UDP Multicast.
 
 - GUI Apps now start in **dark-mode** by default
