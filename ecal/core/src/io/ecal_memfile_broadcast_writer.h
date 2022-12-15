@@ -42,5 +42,6 @@ namespace eCAL
     std::unique_ptr<CMemoryFile> m_payload_memfile;
     std::uint64_t m_event_id = 0;
     bool m_bound = false;
+    bool m_reset = false;
   };
 }
