@@ -20,21 +20,9 @@ ubuntu_default_python_version_dict = \
 ubuntu_codename_dict = \
 {
     "jammy":   semantic_version.Version("22.4.0"),
-    "impish":  semantic_version.Version("21.10.0"),
-    "hirsute": semantic_version.Version("21.4.0"),
-    "groovy":  semantic_version.Version("20.10.0"),
     "focal":   semantic_version.Version("20.4.0"),
-    "eoan":    semantic_version.Version("19.10.0"),
-    "disco":   semantic_version.Version("19.4.0"),
-    "cosmic":  semantic_version.Version("18.10.0"),
     "bionic":  semantic_version.Version("18.4.0"),
-    "artful":  semantic_version.Version("17.10.0"),
-    "zesty":   semantic_version.Version("17.4.0"),
-    "yakkety": semantic_version.Version("16.10.0"),
     "xenial":  semantic_version.Version("16.4.0"),
-    "wily":    semantic_version.Version("15.10.0"),
-    "vivid":   semantic_version.Version("15.4.0"),
-    "utopic":  semantic_version.Version("14.10.0"),
     "trusty":  semantic_version.Version("14.4.0"),
 }
 
@@ -160,6 +148,15 @@ def get_asset_properties(asset_name, ecal_version):
     else:
         sys.stderr.write("Warning: Cannot classify file: \"" + asset_name + "\" (from eCAL " + str(ecal_version) + ")\n")
 
+    # TODO: This workaround may be removed in a later version.
+    # Workaround to make the comparision function work in Python 3.8.
+    # If this is not done, the internal version will stay at 0.0.0 and the "<" operator
+    # will always report "False" for all comparisons.
+    # This causes the download tables to not be sorted and the operating
+    # systems and the python versions are in a strange order (Python 3.10, 3,11, 3,6, 3,7...)
+    os_version     = semantic_version.Version(str(os_version))
+    python_version = semantic_version.Version(str(python_version))
+    
     return (os_group, os_version, is_python, python_version)
 
 def get_downloads_list(gh_assets, ecal_version):
@@ -205,8 +202,7 @@ def get_downloads_list(gh_assets, ecal_version):
 
     # Sort python download links
     for download_dict in download_list:
-        download_dict["python_download_links"] = sorted(download_dict["python_download_links"], 
-                                                        key= lambda a: a["version"])
+        download_dict["python_download_links"].sort(key= lambda a: a["version"], reverse = True)
 
     windows_download_links = list(filter(lambda d: d["os_group"] == "windows", download_list))
     ubuntu_download_links  = list(filter(lambda d: d["os_group"] == "ubuntu", download_list))
@@ -214,7 +210,7 @@ def get_downloads_list(gh_assets, ecal_version):
 
     other_download_links   = list(filter(lambda d: d["os_group"] != "windows" and d["os_group"] != "ubuntu" and d["os_group"] != "macos", download_list))
 
-    ubuntu_download_links = sorted(ubuntu_download_links, key= lambda a: a["os_version"])
+    ubuntu_download_links.sort(key= lambda a: a["os_version"], reverse = True)
 
     return windows_download_links + ubuntu_download_links + macos_download_links + other_download_links
 

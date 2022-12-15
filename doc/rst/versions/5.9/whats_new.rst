@@ -10,8 +10,7 @@ eCAL 5.9 was released in August 2021.
 The release notably contains the eCAL Rec command line Application.
 
 - **Release**: August 2021
-- **End of life**: November 2022 (planned)
-
+- **End of life**: December 2022
 
 New features
 ============

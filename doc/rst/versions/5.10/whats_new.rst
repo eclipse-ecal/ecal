@@ -10,7 +10,7 @@ eCAL 5.10 was released in May 2022.
 The release notably brings eCAL Core improvements (TCP and Shared Memory)
 
 - **Release**: May 2022
-- **End of life**: May 2023 (planned)
+- **End of life**: June 2023 (planned)
 
 New features
 ============

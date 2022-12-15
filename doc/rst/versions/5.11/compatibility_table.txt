@@ -1,0 +1,38 @@
+.. list-table:: eCAL 5.11 vs. 5.10
+   :widths: 20 80
+
+   * - Wire compatibility
+     
+     - * eCAL UDP: 100% compatible
+  
+       * eCAL TCP: 100% compatible
+
+       * Services: 100% compatible
+
+       * eCAL Shared Memory: Downwards compatible to eCAL 5.10 and eCAL 5.9
+
+         The eCAL **header of the eCAL SHM file** has been expanded.
+         Old eCAL versions contain a bug that will prevent them to read the new memfile header.
+         This bug has been **fixed in eCAL 5.10.2 and 5.9.10**; those versions will just ignore the new settings and communicate nevertheless.
+
+         *eCAL versions 5.8 and earlier will unfortunatelly fail to receive SHM data from eCAL 5.11 publishers.*
+
+         The **SHM Monitoring layer** has been added in eCAL 5.11 and can therefore not be used with any older eCAL version.
+
+   * - API / ABI
+
+     - * API is downward compatible.
+         
+       * ABI is not compatible
+
+   * - Tools
+
+     - * Rec: Downwards compatible (The new one-file-per-channel option has been added)
+         
+         - :file:`.ecalrec` files now contain the new setting and will be upgraded
+
+         - Old ecal_rec_clients will ignore the setting
+
+       * Sys: 100% compatible
+
+       * Measurements: 100% compatible

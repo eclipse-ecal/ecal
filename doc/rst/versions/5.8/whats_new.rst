@@ -16,9 +16,9 @@ The release notably contains the new application eCAL Sys.
 New features
 ============
 
-- Added **eCAL Sys**, an Application for managing startups and montioring your applications
+- Added **eCAL Sys**, an application for managing startups and montioring your applications
 
-- Proper support for **Ubunut Multiarch** directories
+- Proper support for **Ubuntu Multiarch** directories
 
 - Check out the `entire 5.8.0 changelog <https://github.com/eclipse-ecal/ecal/releases/tag/v5.8.0>`_!.
 
