@@ -597,7 +597,7 @@
 </li>
 <li><a class="reference internal" href="#fa-ubuntu-building-ecal-on-ubuntu"><i class="fab fa-ubuntu"></i> Building eCAL on Ubuntu</a><ul>
 <li><a class="reference internal" href="#fa-ubuntu-build-dependencies"><i class="fab fa-ubuntu"></i> Build dependencies</a></li>
-<li><a class="reference internal" href="#fa-ubuntu-ubuntu-16-18-20-22-build"><i class="fab fa-ubuntu"></i> Ubuntu 16/18/20/22 build</a></li>
+<li><a class="reference internal" href="#fa-ubuntu-ubuntu-22-20-18-build"><i class="fab fa-ubuntu"></i> Ubuntu 22/20/18 build</a></li>
 </ul>
 </li>
 </ul>
@@ -650,7 +650,7 @@ To build eCAL, you will need a C++14 compliant compiler, such as Visual Studio 2
 <p>Currently, we support:</p>
 <ul class="simple">
 <li><p>Windows 10 / 11</p></li>
-<li><p>Ubuntu 18.04 / 20.04 / 22.04</p></li>
+<li><p>Ubuntu 22.04 / 20.04 / 18.04</p></li>
 </ul>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -741,15 +741,22 @@ Install the extension by</p>
 </div>
 <div class="section" id="fa-ubuntu-building-ecal-on-ubuntu">
 <h2><i class="fab fa-ubuntu"></i> Building eCAL on Ubuntu<a class="headerlink" href="#fa-ubuntu-building-ecal-on-ubuntu" title="Permalink to this headline">¶</a></h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Building on Ubuntu 16.04 is only supported up to eCAL 5.9.
-eCAL 5.10 will still build though if you disable building the GUI applications.</p>
+<p>We support building on currently supported Ubuntu LTS releases.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>The build described here is a very simple (yet complete and fully functional) build that differs from our “official” binaries, e.g. in regards of the library install directory and the <code class="file docutils literal notranslate"><span class="pre">ecal.ini</span></code> location-.
+If your goal is to replicate the official build, you should apply the CMake Options exactly as we do.
+You can grab those from our GitHub Action build scripts:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/blob/master/.github/workflows/build-ubuntu-22.yml">Ubuntu 22.04</a></p></li>
+<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/blob/master/.github/workflows/build-ubuntu-20.yml">Ubuntu 20.04</a></p></li>
+<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/blob/master/.github/workflows/build-ubuntu-18.yml">Ubuntu 18.04</a></p></li>
+</ul>
 </div>
 <div class="section" id="fa-ubuntu-build-dependencies">
 <h3><i class="fab fa-ubuntu"></i> Build dependencies<a class="headerlink" href="#fa-ubuntu-build-dependencies" title="Permalink to this headline">¶</a></h3>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Ubuntu 22.04</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Ubuntu 20.04</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">Ubuntu 18.04</button><button aria-controls="panel-0-0-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-3" name="0-3" role="tab" tabindex="-1">Ubuntu 16.04</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><ol class="arabic">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Ubuntu 22.04</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Ubuntu 20.04</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">Ubuntu 18.04</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><ol class="arabic">
 <li><p>Install the dependencies from the ordinary Ubuntu 22.04 repositories:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qtbase5-dev libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev libyaml-cpp-dev
 </pre></div>
@@ -776,7 +783,7 @@ python3 -m pip install setuptools
 </li>
 </ol>
 </div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><ol class="arabic">
-<li><p>Add the <a class="reference external" href="https://apt.kitware.com/">official CMake repository</a>, as eCAL needs CMake &gt;= 3.13:</p>
+<li><p>Add the <a class="reference external" href="https://apt.kitware.com/">official CMake repository</a>, as eCAL needs CMake &gt;= 3.15:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc <span class="m">2</span>&gt;/dev/null <span class="p">|</span> gpg --dearmor - <span class="p">|</span> sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg &gt;/dev/null
 <span class="nb">echo</span> <span class="s1">&#39;deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ bionic main&#39;</span> <span class="p">|</span> sudo tee /etc/apt/sources.list.d/kitware.list &gt;/dev/null
 sudo apt-get -y update
@@ -797,32 +804,10 @@ python3 -m pip install setuptools
 </div>
 </li>
 </ol>
-</div><div aria-labelledby="tab-0-0-3" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-3" name="0-3" role="tabpanel" tabindex="0"><ol class="arabic">
-<li><p>Add the <a class="reference external" href="https://apt.kitware.com/">official cmake repository</a>, as eCAL needs cmake &gt;= 3.13:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc <span class="m">2</span>&gt;/dev/null <span class="p">|</span> gpg --dearmor - <span class="p">|</span> sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg &gt;/dev/null
-<span class="nb">echo</span> <span class="s1">&#39;deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ xenial main&#39;</span> <span class="p">|</span> sudo tee /etc/apt/sources.list.d/kitware.list &gt;/dev/null
-sudo apt-get -y update
-sudo rm /usr/share/keyrings/kitware-archive-keyring.gpg
-sudo apt-get install kitware-archive-keyring
-</pre></div>
-</div>
-</li>
-<li><p>Add a ppa for protobuf &gt;= 3.0. The following (unofficial) ppa will be sufficient:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo add-apt-repository -y ppa:maarten-fonville/protobuf
-sudo apt-get -y update
-</pre></div>
-</div>
-</li>
-<li><p>Install the dependencies from the ordinary Ubuntu 16.04 repositories and the ppa we just added:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt5-default libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev libyaml-cpp-dev
-</pre></div>
-</div>
-</li>
-</ol>
 </div></div>
 </div>
-<div class="section" id="fa-ubuntu-ubuntu-16-18-20-22-build">
-<h3><i class="fab fa-ubuntu"></i> Ubuntu 16/18/20/22 build<a class="headerlink" href="#fa-ubuntu-ubuntu-16-18-20-22-build" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="fa-ubuntu-ubuntu-22-20-18-build">
+<h3><i class="fab fa-ubuntu"></i> Ubuntu 22/20/18 build<a class="headerlink" href="#fa-ubuntu-ubuntu-22-20-18-build" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
 <li><p>Compile eCAL with the following options (additional set <cite>BUILD_PY_BINDING</cite> to <cite>ON</cite> if plan to build the python extension):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir _build

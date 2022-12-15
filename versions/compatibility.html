@@ -589,6 +589,7 @@
                                     <p class="caption"><span class="caption-text">PAGE CONTENTS</span></p>
                                     <ul>
 <li><a class="reference internal" href="#">eCAL Compatibility</a><ul>
+<li><a class="reference internal" href="#ecal-5-11-vs-5-10">eCAL 5.11 vs. 5.10</a></li>
 <li><a class="reference internal" href="#ecal-5-10-vs-5-9">eCAL 5.10 vs. 5.9</a></li>
 <li><a class="reference internal" href="#ecal-5-9-vs-5-8">eCAL 5.9 vs. 5.8</a></li>
 <li><a class="reference internal" href="#ecal-5-8-vs-5-7">eCAL 5.8 vs. 5.7</a></li>
@@ -663,11 +664,59 @@ We increment the minor version, if:</p>
 You can upgrade through patch versions without having to expect any problems.
 Usually, you just want the latest release to profit from all bugfixes.</p></li>
 </ul>
+<div class="section" id="ecal-5-11-vs-5-10">
+<h2>eCAL 5.11 vs. 5.10<a class="headerlink" href="#ecal-5-11-vs-5-10" title="Permalink to this headline">¶</a></h2>
+<p>Compatibility table when upgrading from eCAL 5.10:</p>
+<table class="colwidths-given docutils align-default" id="id2">
+<caption><span class="caption-text">eCAL 5.11 vs. 5.10</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Wire compatibility</p></td>
+<td><ul>
+<li><p>eCAL UDP: 100% compatible</p></li>
+<li><p>eCAL TCP: 100% compatible</p></li>
+<li><p>Services: 100% compatible</p></li>
+<li><p>eCAL Shared Memory: Downwards compatible to eCAL 5.10 and eCAL 5.9</p>
+<p>The eCAL <strong>header of the eCAL SHM file</strong> has been expanded.
+Old eCAL versions contain a bug that will prevent them to read the new memfile header.
+This bug has been <strong>fixed in eCAL 5.10.2 and 5.9.10</strong>; those versions will just ignore the new settings and communicate nevertheless.</p>
+<p><em>eCAL versions 5.8 and earlier will unfortunatelly fail to receive SHM data from eCAL 5.11 publishers.</em></p>
+<p>The <strong>SHM Monitoring layer</strong> has been added in eCAL 5.11 and can therefore not be used with any older eCAL version.</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>API / ABI</p></td>
+<td><ul class="simple">
+<li><p>API is downward compatible.</p></li>
+<li><p>ABI is not compatible</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Tools</p></td>
+<td><ul class="simple">
+<li><p>Rec: Downwards compatible (The new one-file-per-channel option has been added)</p>
+<ul>
+<li><p><code class="file docutils literal notranslate"><span class="pre">.ecalrec</span></code> files now contain the new setting and will be upgraded</p></li>
+<li><p>Old ecal_rec_clients will ignore the setting</p></li>
+</ul>
+</li>
+<li><p>Sys: 100% compatible</p></li>
+<li><p>Measurements: 100% compatible</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="ecal-5-10-vs-5-9">
 <h2>eCAL 5.10 vs. 5.9<a class="headerlink" href="#ecal-5-10-vs-5-9" title="Permalink to this headline">¶</a></h2>
 <p>Compatibility table when upgrading from eCAL 5.9:</p>
-<table class="colwidths-given docutils align-default" id="id2">
-<caption><span class="caption-text">eCAL 5.10 vs. 5.9</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<table class="colwidths-given docutils align-default" id="id3">
+<caption><span class="caption-text">eCAL 5.10 vs. 5.9</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 80%" />
@@ -712,8 +761,8 @@ Please check <a class="reference internal" href="5.10/api_incompatibilities.html
 <div class="section" id="ecal-5-9-vs-5-8">
 <h2>eCAL 5.9 vs. 5.8<a class="headerlink" href="#ecal-5-9-vs-5-8" title="Permalink to this headline">¶</a></h2>
 <p>Compatibility table when upgrading from eCAL 5.8:</p>
-<table class="colwidths-given docutils align-default" id="id3">
-<caption><span class="caption-text">eCAL 5.9 vs. 5.8</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<table class="colwidths-given docutils align-default" id="id4">
+<caption><span class="caption-text">eCAL 5.9 vs. 5.8</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 80%" />
@@ -751,8 +800,8 @@ It should be possible to mix ecal_rec_gui and ecal_rec_client instances of both 
 <div class="section" id="ecal-5-8-vs-5-7">
 <h2>eCAL 5.8 vs. 5.7<a class="headerlink" href="#ecal-5-8-vs-5-7" title="Permalink to this headline">¶</a></h2>
 <p>Compatibility table when upgrading from eCAL 5.7:</p>
-<table class="colwidths-given docutils align-default" id="id4">
-<caption><span class="caption-text">eCAL 5.8 vs. 5.7</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
+<table class="colwidths-given docutils align-default" id="id5">
+<caption><span class="caption-text">eCAL 5.8 vs. 5.7</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 80%" />
