@@ -8,6 +8,16 @@ eCAL Download Archive
 
 Here you can find a list of all eCAL Versions ever released on GitHub.
 
+eCAL 5.11
+============
+
+.. toctree::
+   :maxdepth: 0
+   :titlesonly:
+
+   download_archive_ecal_5_11_0.rst
+
+
 eCAL 5.10
 ============
 
