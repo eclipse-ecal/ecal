@@ -65,6 +65,9 @@ namespace eCAL
     eCAL_Publisher_Event type;    //!< publisher event type
     long long            time;    //!< publisher event time in µs
     long long            clock;   //!< publisher event clock
+    std::string          tid;     //!< topic id of the of the connected subscriber              (for pub_event_update_connection only)
+    std::string          ttype;   //!< topic type information of the connected subscriber       (for pub_event_update_connection only)
+    std::string          tdesc;   //!< topic descriptor information of the connected subscriber (for pub_event_update_connection only)
   };
 
   /**
@@ -81,6 +84,9 @@ namespace eCAL
     eCAL_Subscriber_Event type;   //!< subscriber event type
     long long             time;   //!< subscriber event time in µs
     long long             clock;  //!< subscriber event clock
+    std::string           tid;    //!< topic id of the of the connected publisher              (for sub_event_update_connection only)
+    std::string           ttype;  //!< topic type information of the connected publisher       (for sub_event_update_connection only)
+    std::string           tdesc;  //!< topic descriptor information of the connected publisher (for sub_event_update_connection only)
   };
 
   /**

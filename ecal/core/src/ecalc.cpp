@@ -520,9 +520,12 @@ static void g_pub_event_callback(const char* topic_name_, const struct eCAL::SPu
 {
   std::lock_guard<std::recursive_mutex> lock(g_pub_callback_mtx);
   SPubEventCallbackDataC data;
-  data.time  = data_->time;
   data.type  = data_->type;
+  data.time  = data_->time;
   data.clock = data_->clock;
+  data.tid   = data_->tid.c_str();
+  data.ttype = data_->ttype.c_str();
+  data.tdesc = data_->tdesc.c_str();
   callback_(topic_name_, &data, par_);
 }
 
@@ -738,9 +741,12 @@ static void g_sub_event_callback(const char* topic_name_, const struct eCAL::SSu
 {
   std::lock_guard<std::recursive_mutex> lock(g_sub_callback_mtx);
   SSubEventCallbackDataC data;
-  data.time  = data_->time;
   data.type  = data_->type;
+  data.time  = data_->time;
   data.clock = data_->clock;
+  data.tid   = data_->tid.c_str();
+  data.ttype = data_->ttype.c_str();
+  data.tdesc = data_->tdesc.c_str();
   callback_(topic_name_, &data, par_);
 }
 

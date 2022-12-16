@@ -208,6 +208,7 @@ namespace eCAL
     const std::string& topic_name = ecal_sample_topic.tname();
     if (topic_name.empty()) return;
 
+    const std::string& topic_id   = ecal_sample_topic.tid();
     const std::string& topic_type = ecal_sample_topic.ttype();
     const std::string& topic_desc = ecal_sample_topic.tdesc();
 
@@ -267,7 +268,7 @@ namespace eCAL
         iter->second->ApplyLocLayerParameter(process_id, tlayer.type(), writer_par);
       }
       // inform for local publisher connection
-      iter->second->ApplyLocPublication(process_id);
+      iter->second->ApplyLocPublication(process_id, topic_id, topic_type, topic_desc);
     }
   }
 
@@ -278,6 +279,7 @@ namespace eCAL
     const auto& sample_topic = ecal_sample_.topic();
     const std::string& host_name  = sample_topic.hname();
     const std::string& topic_name = sample_topic.tname();
+    const std::string& topic_id   = sample_topic.tid();
     const std::string& topic_type = sample_topic.ttype();
     const std::string& topic_desc = sample_topic.tdesc();
 
@@ -306,7 +308,7 @@ namespace eCAL
         iter->second->ApplyExtLayerParameter(host_name, tlayer.type(), writer_par);
       }
       // inform for external publisher connection
-      iter->second->ApplyExtPublication(host_name);
+      iter->second->ApplyExtPublication(host_name, topic_id, topic_type, topic_desc);
     }
   }
 
