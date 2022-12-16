@@ -311,3 +311,32 @@ jobs:
       with:
         name: windows-python-wheels
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.whl
+
+    - name: Sign the installer on Eclipse CI
+      run: |
+        $ARTIFACT_EXE = Get-ChildItem *.exe
+        $ARTIFACT_NAME = $ARTIFACT_EXE.Name
+        $ARTIFACT_NAME_OLD = "$ARTIFACT_NAME.old"
+        $ARTIFACT_NAME_NEW = "$ARTIFACT_NAME"
+        $JENKINS_JOB = 'gh_auto'
+        $TOKEN = $env:JENKINS_TOKEN
+        $JENKINS_TRIGGER_URL = "https://ci.eclipse.org/ecal/job/$JENKINS_JOB/build?token=$TOKEN"
+        $JENKINS_DOWNLOAD_URL = "https://ci.eclipse.org/ecal/job/$JENKINS_JOB/lastSuccessfulBuild/artifact/$ARTIFACT_NAME"
+        $WAIT_FOR_JENKINS = 24
+
+        Rename-Item -Path $ARTIFACT_NAME -NewName $ARTIFACT_NAME_OLD
+
+        $ProgressReference = 'SilentlyContinue'
+        Invoke-WebRequest -Uri "$JENKINS_TRIGGER_URL"
+        Sleep $WAIT_FOR_JENKINS
+        Invoke-WebRequest -Uri "$JENKINS_DOWNLOAD_URL" -OutFile "$ARTIFACT_NAME_NEW"
+      shell: pwsh
+      working-directory: ${{ runner.workspace }}/_build/complete/_deploy
+      env:
+        JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN_GH_AUTO }}
+        
+    - name: Upload Windows setup signed on Eclipse CI
+      uses: actions/upload-artifact@v3
+      with:
+        name: windows-setup-eclipse
+        path: ${{ runner.workspace }}/_build/complete/_deploy/*.exe
