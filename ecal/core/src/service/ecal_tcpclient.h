@@ -89,6 +89,7 @@ namespace eCAL
     std::atomic<bool>                       m_async_request_in_progress;
 
   private:
+    std::vector<char> PackRequest(const std::string &request);
     bool SendRequest(const std::string &request_);
     size_t ReceiveResponse(std::string &response_, int timeout_);
     void ReceiveResponseAsync(AsyncCallbackT callback_, int timeout_);

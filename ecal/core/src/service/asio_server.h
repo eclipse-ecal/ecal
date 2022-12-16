@@ -77,34 +77,57 @@ private:
     {
       if (request_callback_)
       {
-        // collect request
-        //std::cout << "CAsioSession::handle_read read bytes " << bytes_transferred << std::endl;
-        request_ += std::string(data_, bytes_transferred);
-        // are there some more data on the socket ?
-        if (socket_.available())
+        size_t bytes_used = 0;
+        std::string data = std::string(data_, bytes_transferred);
+
+        // collect header
+        if (data.size() < sizeof(eCAL::STcpHeader) && header_.size() < sizeof(eCAL::STcpHeader))
         {
-          // read some more bytes
-          socket_.async_read_some(asio::buffer(data_, max_length),
-            std::bind(&CAsioSession::handle_read, this,
-              std::placeholders::_1,
-              std::placeholders::_2));
+          header_ += data;
         }
-        // no more data
-        else
+        else if (data.size() >= sizeof(eCAL::STcpHeader) && header_.size() < sizeof(eCAL::STcpHeader))
         {
-          // execute service callback
-          //std::cout << "CAsioSession::handle_read final request size " << request_.size() << std::endl;
+          bytes_used += sizeof(eCAL::STcpHeader) - header_.size();
+          header_ += data.substr(0, bytes_used);
+        }
+
+        // decode header and get request size
+        if (header_.size() == sizeof(eCAL::STcpHeader) && header_request_size_ == 0)
+        {
+          eCAL::STcpHeader tcp_header;
+          memcpy(&tcp_header, header_.data(), sizeof(eCAL::STcpHeader));
+          header_request_size_ = static_cast<size_t>(ntohl(tcp_header.psize_n));
+        }
+
+        // collect request_
+        if (header_request_size_ != 0 && request_.size() < header_request_size_)
+        {
+          request_ += data.substr(bytes_used, bytes_transferred - bytes_used);
+        }
+
+        // execute callback
+        if (header_request_size_ != 0 && request_.size() == header_request_size_)
+        {
           response_.clear();
           request_callback_(request_, response_);
+          header_.clear();
           request_.clear();
-          //std::cout << "CAsioSession::handle_read server callback executed - reponse size " << response_.size() << std::endl;
+          header_request_size_ = 0;
 
-          // write response back
+          // write response
           packed_response_.clear();
           packed_response_ = pack_write(response_);
           asio::async_write(socket_,
             asio::buffer(packed_response_.data(), packed_response_.size()),
             bind(&CAsioSession::handle_write, this,
+              std::placeholders::_1,
+              std::placeholders::_2));
+        }
+        else
+        {
+          // read some more bytes until all of request data has been received
+          socket_.async_read_some(asio::buffer(data_, max_length),
+            std::bind(&CAsioSession::handle_read, this,
               std::placeholders::_1,
               std::placeholders::_2));
         }
@@ -118,7 +141,7 @@ private:
         // handle the disconnect
         if (event_callback_)
         {
-          event_callback_(server_event_disconnected, "CAsioSession disconnected on read");
+          event_callback_(server_event_disconnected, "CAsioSession disconnected on read: " + ec.message());
         }
       }
       delete this;
@@ -167,6 +190,8 @@ private:
   asio::ip::tcp::socket  socket_;
   RequestCallbackT       request_callback_;
   EventCallbackT         event_callback_;
+  std::string            header_;
+  size_t                 header_request_size_ = 0;
   std::string            request_;
   std::string            response_;
   std::vector<char>      packed_response_;

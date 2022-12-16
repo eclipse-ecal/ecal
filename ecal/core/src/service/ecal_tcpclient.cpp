@@ -164,6 +164,20 @@ namespace eCAL
     }
   }
 
+  std::vector<char> CTcpClient::PackRequest(const std::string& request)
+  {
+    // create header
+    eCAL::STcpHeader tcp_header;
+    // set up package size
+    const size_t psize = request.size();
+    tcp_header.psize_n = htonl(static_cast<uint32_t>(psize));
+    // repack
+    std::vector<char> packed_request(sizeof(tcp_header) + psize);
+    memcpy(packed_request.data(), &tcp_header, sizeof(tcp_header));
+    memcpy(packed_request.data() + sizeof(tcp_header), request.data(), psize);
+    return packed_request;
+  }
+
   bool CTcpClient::SendRequest(const std::string& request_)
   {
     size_t written(0);
@@ -177,10 +191,13 @@ namespace eCAL
         m_socket->read_some(asio::buffer(resp_buffer));
       }
 
+      std::vector<char> packed_request = PackRequest(request_);
+      std::string packed_request_str(packed_request.begin(), packed_request.end());
+
       // send payload to server
-      while (written != request_.size())
+      while (written != packed_request.size())
       {
-        auto bytes_written = m_socket->write_some(asio::buffer(request_.c_str() + written, request_.size() - written));
+        auto bytes_written = m_socket->write_some(asio::buffer(packed_request_str.c_str() + written, packed_request_str.size() - written));
         written += bytes_written;
       }
     }
