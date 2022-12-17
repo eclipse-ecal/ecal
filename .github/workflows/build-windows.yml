@@ -5,6 +5,8 @@ on:
   pull_request:
     branches:
       - master
+env:
+  IS_GH_SIGNING_ALLOWED: true
 
 jobs:
   build-windows:
@@ -276,10 +278,10 @@ jobs:
            && -n "${CERT_HASH}" ]]
         then
           echo "ATTENTION: a certificate is available"
-          echo "::set-output name=is_available::true"
+          echo "is_cert_available=true" >> $GITHUB_ENV
         else
-          echo "WARNING: A certificate is not available"
-          echo "::set-output name=is_available::false"
+          echo "WARNING: a certificate is not available"
+          echo "is_cert_available=false" >> $GITHUB_ENV
         fi
       shell: bash
       env:
@@ -290,7 +292,7 @@ jobs:
 
     # https://github.com/OrhanKupusoglu/code-sign-action
     - name: Sign the installer
-      if: fromJSON(steps.cert.outputs.is_available)
+      if: fromJSON("${{ env.is_cert_available }}")
       uses: OrhanKupusoglu/code-sign-action@v5.5.1
       with:
         cert_body: ${{ secrets.CERT_BODY }}
