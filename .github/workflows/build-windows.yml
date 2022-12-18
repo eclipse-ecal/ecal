@@ -6,7 +6,8 @@ on:
     branches:
       - master
 env:
-  IS_GH_SIGNING_ALLOWED: true
+  IS_GITHUB_SIGNING_ALLOWED: true
+  IS_JENKINS_SIGNING_ALLOWED: true
 
 jobs:
   build-windows:
@@ -271,6 +272,7 @@ jobs:
 
     - name: Detect certificate
       id: cert
+      if: env.IS_GITHUB_SIGNING_ALLOWED == 'true'
       run: |
         if [[ -n "${CERT_BODY}" \
            && -n "${CERT_PSWD}" \
@@ -292,7 +294,7 @@ jobs:
 
     # https://github.com/OrhanKupusoglu/code-sign-action
     - name: Sign the installer
-      if: fromJSON("${{ env.is_cert_available }}")
+      if: env.IS_GITHUB_SIGNING_ALLOWED == 'true' && env.is_cert_available == 'true'
       uses: OrhanKupusoglu/code-sign-action@v5.5.1
       with:
         cert_body: ${{ secrets.CERT_BODY }}
@@ -315,7 +317,10 @@ jobs:
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.whl
 
     - name: Sign the installer on Eclipse CI
+      if: env.IS_JENKINS_SIGNING_ALLOWED == 'true'
       run: |
+        Write-Host "-- sign the new Windows Installer on Jenkins CI of Eclipse Foundation"
+
         $ARTIFACT_EXE = Get-ChildItem *.exe
         $ARTIFACT_NAME = $ARTIFACT_EXE.Name
         $ARTIFACT_NAME_OLD = "$ARTIFACT_NAME.old"
@@ -338,6 +343,7 @@ jobs:
         JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN_GH_AUTO }}
         
     - name: Upload Windows setup signed on Eclipse CI
+      if: env.IS_JENKINS_SIGNING_ALLOWED == 'true'
       uses: actions/upload-artifact@v3
       with:
         name: windows-setup-eclipse
