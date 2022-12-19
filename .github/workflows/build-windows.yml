@@ -317,33 +317,109 @@ jobs:
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.whl
 
     - name: Sign the installer on Eclipse CI
-      if: env.IS_JENKINS_SIGNING_ALLOWED == 'true'
+      if: env.IS_JENKINS_SIGNING_ALLOWED == 'true' && env.JENKINS_TOKEN != ''
       run: |
-        Write-Host "-- sign the new Windows Installer on Jenkins CI of Eclipse Foundation"
+        export LC_CTYPE=en_US.utf8
 
-        $ARTIFACT_EXE = Get-ChildItem *.exe
-        $ARTIFACT_NAME = $ARTIFACT_EXE.Name
-        $ARTIFACT_NAME_OLD = "$ARTIFACT_NAME.old"
-        $ARTIFACT_NAME_NEW = "$ARTIFACT_NAME"
-        $JENKINS_JOB = 'gh_auto'
-        $TOKEN = $env:JENKINS_TOKEN
-        $JENKINS_TRIGGER_URL = "https://ci.eclipse.org/ecal/job/$JENKINS_JOB/build?token=$TOKEN"
-        $JENKINS_DOWNLOAD_URL = "https://ci.eclipse.org/ecal/job/$JENKINS_JOB/lastSuccessfulBuild/artifact/$ARTIFACT_NAME"
-        $WAIT_FOR_JENKINS = 24
+        ARTIFACT_EXE=$(ls *.exe)
+        ARTIFACT_NAME="${ARTIFACT_EXE}"
+        ARTIFACT_NAME_OLD="${ARTIFACT_NAME}.old"
+        ARTIFACT_NAME_NEW="${ARTIFACT_NAME}"
+        JENKINS_JOB='gh_auto'
+        TOKEN="${JENKINS_TOKEN}"
+        JENKINS_LAST_BUILD_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}/lastBuild/buildNumber"
+        JENKINS_TRIGGER_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}/build?token=${TOKEN}"
+        JENKINS_STATUS_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}/lastBuild/api/json"
+        JENKINS_DOWNLOAD_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}/lastSuccessfulBuild/artifact/${ARTIFACT_NAME}"
+        WAIT_FOR_JENKINS_SEC=5
+        STATUS_JSON=status.json
+        NEW_BUILD=0
 
-        Rename-Item -Path $ARTIFACT_NAME -NewName $ARTIFACT_NAME_OLD
+        mv "${ARTIFACT_NAME}" "${ARTIFACT_NAME_OLD}"
 
-        $ProgressReference = 'SilentlyContinue'
-        Invoke-WebRequest -Uri "$JENKINS_TRIGGER_URL"
-        Sleep $WAIT_FOR_JENKINS
-        Invoke-WebRequest -Uri "$JENKINS_DOWNLOAD_URL" -OutFile "$ARTIFACT_NAME_NEW"
-      shell: pwsh
+        printf -- "-- get last build number\n"
+        RESPONSES=($(curl -s -S -L -w " %{response_code}" "${JENKINS_LAST_BUILD_URL}"))
+        LAST_BUILD="${RESPONSES[0]}"
+        RESPONSE_CODE="${RESPONSES[1]}"
+        ((NEW_BUILD = LAST_BUILD + 1))
+        printf -- "    ++ last build - HTTP status code: %s\n" "${RESPONSE_CODE}" 
+        printf -- "    ++ last build#: ${LAST_BUILD}, new build#: ${NEW_BUILD}\n" 
+        if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
+        then
+          true
+        else
+          printf -- "    ** last build number failure\n"
+          exit 1
+        fi
+
+        printf -- "-- trigger a new build\n"
+        RESPONSE_CODE=$(curl -s -S -L -w "%{response_code}" "${JENKINS_TRIGGER_URL}")
+        printf -- "    ++ trigger - HTTP status code: %s\n" "${RESPONSE_CODE}" 
+        if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
+        then
+          true
+        else
+          printf -- "    ** trigger failure\n"
+          exit 1
+        fi
+
+        printf -- "-- check build status\n"
+        while true
+        do
+          RESPONSE_CODE=$(curl -s -S -w "%{response_code}" -o "${STATUS_JSON}" "${JENKINS_STATUS_URL}")
+          printf -- "    ++ status check - HTTP status code: %s\n" "${RESPONSE_CODE}" 
+          if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
+          then
+            true
+          else
+            printf -- "    ** status failure\n"
+            exit 1
+          fi
+
+          NUMBER=$(grep -oP "(?<=\"number\":)(\w*)(?=,)" -- "${STATUS_JSON}")
+          if [[ ${NUMBER} -eq ${NEW_BUILD} ]]
+          then
+            BUILDING=$(grep -oP "(?<=\"building\":)(\w*)(?=,)" -- "${STATUS_JSON}")
+            if [[ "${BUILDING}" == 'true' ]]
+            then
+                printf -- "    ++ building ..., wait for ${WAIT_FOR_JENKINS_SEC}s\n"
+                sleep ${WAIT_FOR_JENKINS_SEC}
+            else
+                RESULT=$(grep -oP '(?<=\"result\":\")(\w*)(?=\",)' -- "${STATUS_JSON}")
+                if [[ "${RESULT}" == 'SUCCESS' ]]
+                then
+                    printf -- "    ++ build success\n"
+                    break
+                else
+                    printf -- "    ** build failure\n"
+                    exit 1        
+                fi
+            fi
+          else
+            printf -- "    ++ ... pending, wait for ${WAIT_FOR_JENKINS_SEC}s\n"
+            sleep ${WAIT_FOR_JENKINS_SEC}
+          fi
+        done
+
+        printf -- "-- download the newly-signed Windows installer\n"
+        RESPONSE_CODE=$(curl -s -S -w "%{response_code}" -o "${ARTIFACT_NAME_NEW}" "${JENKINS_DOWNLOAD_URL}")
+        printf -- "    ++ download - HTTP status code: %s\n" "${RESPONSE_CODE}" 
+        if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
+        then
+          echo "is_download_available=true" >> $GITHUB_ENV
+          printf -- "    ++ downloaded: '${ARTIFACT_NAME_NEW}'\n"
+        else
+          echo "is_download_available=false" >> $GITHUB_ENV
+          printf -- "    ** download failure\n"
+          exit 1
+        fi
+      shell: bash
       working-directory: ${{ runner.workspace }}/_build/complete/_deploy
       env:
         JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN_GH_AUTO }}
         
     - name: Upload Windows setup signed on Eclipse CI
-      if: env.IS_JENKINS_SIGNING_ALLOWED == 'true'
+      if: env.IS_JENKINS_SIGNING_ALLOWED == 'true' && env.is_download_available == 'true'
       uses: actions/upload-artifact@v3
       with:
         name: windows-setup-eclipse
