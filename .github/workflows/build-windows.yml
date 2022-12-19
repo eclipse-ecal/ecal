@@ -270,10 +270,10 @@ jobs:
     - name: Detect certificate
       id: cert
       run: |
-        if [[ -n "${{ secrets.CERT_BODY }}" \
-              && -n "${{ secrets.CERT_PSWD }}" \
-              && -n "${{ secrets.CERT_ALGO }}" \
-              && -n "${{ secrets.CERT_HASH }}" ]]
+        if [[ -n "${CERT_BODY}" \
+           && -n "${CERT_PSWD}" \
+           && -n "${CERT_ALGO}" \
+           && -n "${CERT_HASH}" ]]
         then
           echo "ATTENTION: a certificate is available"
           echo "::set-output name=is_available::true"
@@ -282,6 +282,11 @@ jobs:
           echo "::set-output name=is_available::false"
         fi
       shell: bash
+      env:
+        CERT_BODY: ${{ secrets.CERT_BODY }}
+        CERT_PSWD: ${{ secrets.CERT_PSWD }}
+        CERT_ALGO: ${{ secrets.CERT_ALGO }}
+        CERT_HASH: ${{ secrets.CERT_HASH }}
 
     # https://github.com/OrhanKupusoglu/code-sign-action
     - name: Sign the installer
@@ -293,7 +298,7 @@ jobs:
         cert_algo: ${{ secrets.CERT_ALGO }}
         cert_hash: ${{ secrets.CERT_HASH }}
         folder: ${{ runner.workspace }}/_build/complete/_deploy
-        debug: true
+        debug: false
 
     - name: Upload Windows setup
       uses: actions/upload-artifact@v3
