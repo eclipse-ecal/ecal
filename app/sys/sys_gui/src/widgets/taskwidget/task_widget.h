@@ -77,6 +77,7 @@ public slots:
   void stopAllTasks              (bool shutdown_request = true, bool kill_tasks = true);
   void restartAllTasks           (bool shutdown_request = true, bool kill_tasks = true, const std::string& target_override = "");
   void updateFromCloud           ();
+  void activateWindow();
 
   // Edit Area Slots
   void toggleEditControlsVisibility();
