@@ -48,6 +48,11 @@
 #include <sys_client_core/task.h>
 #include <ecalsys/task/ecal_sys_task_helper.h>
 
+#ifdef WIN32
+#include "Windows.h"
+#include "WinUser.h"
+#endif
+
 TaskWidget::TaskWidget(QWidget *parent)
   : QFrame(parent)
 {
@@ -580,6 +585,8 @@ void TaskWidget::taskTableContextMenu(const QPoint &pos)
   QAction edit_action          (tr("Edit"),            this);
   QAction duplicate_action     (tr("Duplicate"),       this);
   QAction remove_action        (tr("Remove"),          this);
+  QAction activate_action      (tr("Bring window to front"), this);
+
 
   start_action    .setIcon(Globals::Icons::startSelected());
   stop_action     .setIcon(Globals::Icons::stopSelected());
@@ -603,6 +610,7 @@ void TaskWidget::taskTableContextMenu(const QPoint &pos)
     edit_action         .setEnabled(false);
     duplicate_action    .setEnabled(false);
     remove_action       .setEnabled(false);
+    activate_action     .setEnabled(false);
   }
   else {
     for (auto& task : selected_tasks)
@@ -657,6 +665,9 @@ void TaskWidget::taskTableContextMenu(const QPoint &pos)
   context_menu.addAction   (&edit_action);
   context_menu.addAction   (&duplicate_action);
   context_menu.addAction   (&remove_action);
+  context_menu.addSeparator();
+  context_menu.addAction   (&activate_action);
+
 
   connect(&start_action,         SIGNAL(triggered()),         this, SLOT(startSelectedTasks()));
   connect(&stop_action,          SIGNAL(triggered()),         this, SLOT(stopSelectedTasks()));
@@ -667,6 +678,7 @@ void TaskWidget::taskTableContextMenu(const QPoint &pos)
   connect(&edit_action,          SIGNAL(triggered()),         this, SLOT(setEditControlsVisibility(/*true*/)));
   connect(&duplicate_action,     SIGNAL(triggered()),         this, SLOT(duplicateSelectedTasks()));
   connect(&remove_action,        SIGNAL(triggered()),         this, SLOT(removeSelectedTasks()));
+  connect(&activate_action,        SIGNAL(triggered()),         this, SLOT(activateWindow()));
 
   connect(&fast_kill_action,    &QAction::triggered, [this]() {stopSelectedTasks(false, true); });
   connect(&fast_restart_action, &QAction::triggered, [this]() {restartSelectedTasks(false, true); });
@@ -868,6 +880,58 @@ void TaskWidget::removeSelectedTasks()
     }
     emit groupsModifiedSignal(modified_groups_vector);
   }
+}
+
+void TaskWidget::activateWindow()
+{
+  auto selected_tasks = getSelectedTasks();
+#ifdef __linux__
+  for (auto& task : selected_tasks)
+  {
+    for (auto id : task->GetPids())
+    {
+      std::string command = "xdotool search --desktop 0 --pid ";
+      command += std::to_string(id);
+      command += " | xargs xdotool windowactivate";
+      std::cout << command << std::endl;
+      system(command.c_str());
+    }
+  }
+#elif defined WIN32
+  std::vector<HWND> vhWnds;
+  for (auto& task : selected_tasks)
+  {
+    for (auto id : task->GetPids())
+    {
+      DWORD pId = static_cast<DWORD>(id);
+
+      HWND hCurWnd = NULL;
+
+      do
+      {
+          hCurWnd = FindWindowEx(NULL, hCurWnd, NULL, NULL);
+          DWORD dwProcID = 0;
+          GetWindowThreadProcessId(hCurWnd, &dwProcID);
+          if (dwProcID == pId)
+          {
+              vhWnds.push_back(hCurWnd);  // add the found hCurWnd to the vector
+              wprintf(L"Found hWnd %d\n", hCurWnd);
+          }
+      }
+      while (hCurWnd != NULL);
+
+      for (const auto hwnd : vhWnds)
+      {
+          BOOL bVisible = IsWindowVisible(hwnd);
+          SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0,
+                      SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW |
+                      (bVisible ? SWP_NOACTIVATE : 0));
+
+          SetForegroundWindow(hwnd);
+      }
+    }
+  }
+#endif
 }
 
 void TaskWidget::startSelectedTasks(const std::string& target_override)
