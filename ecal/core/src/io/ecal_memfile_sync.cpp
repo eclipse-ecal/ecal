@@ -365,7 +365,7 @@ namespace eCAL
       // take start time for all acknowledge timeouts
       const auto start_time = std::chrono::steady_clock::now();
 
-      for (auto event_handle : m_event_handle_map)
+      for (auto& event_handle : m_event_handle_map)
       {
         const auto time_since_start = std::chrono::steady_clock::now() - start_time;
         const auto time_to_wait     = std::chrono::milliseconds(m_attr.timeout_ack_ms)- time_since_start;
