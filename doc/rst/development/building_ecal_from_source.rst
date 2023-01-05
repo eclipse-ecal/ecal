@@ -49,7 +49,7 @@ First check out the eCAL repository and all of the submodules:
       
 #. Optional: Install additional dependendencies
 
-   * `Python for Windows <https://www.python.org/downloads/>`_ (64 Bit, Version 3.x): To build the python extensions and the documentation
+   * `Python for Windows <https://www.python.org/downloads/>`_ (64 Bit, Version 3.9): To build the python extensions and the documentation
    * `Doxygen <https://www.doxygen.nl/download.html#srcbin>`_: To build the documentation
    * `Innosetup <https://jrsoftware.org/isdl.php>`_: To create an executable Installer
 

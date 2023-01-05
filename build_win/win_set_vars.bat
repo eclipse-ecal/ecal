@@ -1,11 +1,5 @@
 @echo off
 
-if ["%~1"]==[""] (
-  set VERSION=v142
-  ) else (
-  set VERSION=%1
-  )
-
 rem - base folder
 set "WORKSPACE=%~dp0\..\"
 
