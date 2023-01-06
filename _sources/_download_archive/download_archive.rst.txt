@@ -15,6 +15,7 @@ eCAL 5.11
    :maxdepth: 0
    :titlesonly:
 
+   download_archive_ecal_5_11_1.rst
    download_archive_ecal_5_11_0.rst
 
 
