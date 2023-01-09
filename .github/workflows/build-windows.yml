@@ -11,6 +11,9 @@ env:
 
 jobs:
   build-windows:
+    concurrency:
+      group: ${{ format('{0}-{1}', github.workflow, github.job) }}
+      cancel-in-progress: false
     runs-on: windows-2019
 
     steps:
