@@ -316,7 +316,7 @@ jobs:
         name: windows-python-wheels
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.whl
 
-  deploy-windows:
+  sign-windows:
     needs: build-windows
     concurrency:
       group: ${{ format('{0}-{1}', github.workflow, github.job) }}
