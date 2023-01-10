@@ -316,13 +316,6 @@ jobs:
         name: windows-python-wheels
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.whl
 
-  sign-windows:
-    needs: build-windows
-    concurrency:
-      group: ${{ format('{0}-{1}', github.workflow, github.job) }}
-      cancel-in-progress: false
-    runs-on: windows-2019
-    steps:
     - name: Sign the installer on Eclipse CI
       if: env.IS_JENKINS_SIGNING_ALLOWED == 'true' && env.JENKINS_TOKEN != ''
       run: |
@@ -332,10 +325,11 @@ jobs:
         ARTIFACT_NAME="${ARTIFACT_EXE}"
         ARTIFACT_NAME_OLD="${ARTIFACT_NAME}.old"
         ARTIFACT_NAME_NEW="${ARTIFACT_NAME}"
-        JENKINS_JOB='gh_auto'
+        JENKINS_JOB='gh_auto_run_id'
         TOKEN="${JENKINS_TOKEN}"
+        RUN_ID="${GH_RUN_ID}"
         JENKINS_LAST_BUILD_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}/lastBuild/buildNumber"
-        JENKINS_TRIGGER_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}/build?token=${TOKEN}"
+        JENKINS_TRIGGER_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}/buildWithParameters?token=${TOKEN}&GH_RUN_ID=${RUN_ID}"
         JENKINS_STATUS_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}/lastBuild/api/json"
         JENKINS_DOWNLOAD_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}/lastSuccessfulBuild/artifact/${ARTIFACT_NAME}"
         WAIT_FOR_JENKINS_SEC=5
@@ -424,7 +418,8 @@ jobs:
       working-directory: ${{ runner.workspace }}/_build/complete/_deploy
       env:
         JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN_GH_AUTO }}
-        
+        GH_RUN_ID: ${{ github.run_id }}
+
     - name: Upload Windows setup signed on Eclipse CI
       if: env.IS_JENKINS_SIGNING_ALLOWED == 'true' && env.is_download_available == 'true'
       uses: actions/upload-artifact@v3
