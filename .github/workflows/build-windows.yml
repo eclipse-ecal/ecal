@@ -399,6 +399,7 @@ jobs:
                     break
                 fi
             done
+            printf -- "    ++ build number retrieval - HTTP status code: %s\n" "${RESPONSE_CODE}"
             if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
             then
                 if $FOUND
@@ -406,6 +407,7 @@ jobs:
                     printf -- "    ++ #build number: %d\n" ${NEW_BUILD}
                     break
                 else
+                    printf -- "    ++ ... pending, wait for ${WAIT_FOR_JENKINS_SEC}s\n"
                     sleep ${WAIT_FOR_JENKINS_SEC}
                 fi
             else
@@ -423,7 +425,7 @@ jobs:
           then
             true
           else
-            printf -- "    ** status failure\n"
+            printf -- "    ** status check failure\n"
             exit 1
           fi
 
