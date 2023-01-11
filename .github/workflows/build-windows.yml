@@ -328,7 +328,6 @@ jobs:
         JENKINS_JOB='gh_auto_run_id'
         TOKEN="${JENKINS_TOKEN}"
         RUN_ID="${GH_RUN_ID}"
-        JENKINS_LAST_BUILD_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}/lastBuild/buildNumber"
         JENKINS_TRIGGER_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}/buildWithParameters?token=${TOKEN}&GH_RUN_ID=${RUN_ID}"
         JENKINS_STATUS_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}/lastBuild/api/json"
         JENKINS_DOWNLOAD_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}/lastSuccessfulBuild/artifact/${ARTIFACT_NAME}"
@@ -339,7 +338,7 @@ jobs:
 
         mv "${ARTIFACT_NAME}" "${ARTIFACT_NAME_OLD}"
 
-        printf -- "-- trigger a new build\n"
+        printf -- "-- trigger a new build with run_id: %d\n" ${RUN_ID}
         RESPONSE_CODE=0
         QUEUE_URL=''
 
@@ -411,8 +410,8 @@ jobs:
                     sleep ${WAIT_FOR_JENKINS_SEC}
                 fi
             else
-                printf -- "    ** determination of the build number failed, trying again\n"
-                sleep ${WAIT_FOR_JENKINS_SEC}
+              printf -- "    ** determination of the build number failed, trying again\n"
+              sleep ${WAIT_FOR_JENKINS_SEC}
             fi
         done
 
@@ -435,17 +434,17 @@ jobs:
             BUILDING=$(grep -Po "(?<=\"building\":)(\w*)(?=,)" -- "${STATUS_JSON}")
             if [[ "${BUILDING}" == 'true' ]]
             then
-                printf -- "    ++ building ..., wait for ${WAIT_FOR_JENKINS_SEC}s\n"
-                sleep ${WAIT_FOR_JENKINS_SEC}
+              printf -- "    ++ building ..., wait for ${WAIT_FOR_JENKINS_SEC}s\n"
+              sleep ${WAIT_FOR_JENKINS_SEC}
             else
                 RESULT=$(grep -Po '(?<=\"result\":\")(\w*)(?=\",)' -- "${STATUS_JSON}")
                 if [[ "${RESULT}" == 'SUCCESS' ]]
                 then
-                    printf -- "    ++ build success\n"
-                    break
+                  printf -- "    ++ build success\n"
+                  break
                 else
-                    printf -- "    ** build failure\n"
-                    exit 1        
+                  printf -- "    ** build failure\n"
+                  exit 1        
                 fi
             fi
           else
