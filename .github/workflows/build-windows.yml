@@ -316,6 +316,13 @@ jobs:
         name: windows-python-wheels
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.whl
 
+  sign-on-jenkins:
+    needs: build-windows
+    concurrency:
+      group: ${{ format('{0}-{1}', github.workflow, github.job) }}
+      cancel-in-progress: false
+    runs-on: windows-2019
+    steps:
     - name: Sign the installer on Eclipse CI
       if: env.IS_JENKINS_SIGNING_ALLOWED == 'true' && env.JENKINS_TOKEN != ''
       run: |
