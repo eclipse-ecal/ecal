@@ -335,6 +335,7 @@ jobs:
         WAIT_FOR_JENKINS_SEC=5
         STATUS_JSON=status.json
         NEW_BUILD=0
+        COUNTER_LIMIT=20
 
         mv "${ARTIFACT_NAME}" "${ARTIFACT_NAME_OLD}"
 
@@ -354,6 +355,10 @@ jobs:
           then
             LOCATION=(${HEADER})
             QUEUE_URL=${LOCATION[1]}
+            # delete the hidden \r
+            QUEUE_URL=$(echo "${QUEUE_URL}" | tr -d '\r')
+            API_SUFFIX='api/json/'
+            QUEUE_URL="${QUEUE_URL}${API_SUFFIX}"
             break
           fi
         done
@@ -366,29 +371,48 @@ jobs:
         fi
 
         printf -- "-- get the new build number\n"
-        REGEX_NUMBER='\s*"number":\s*(.*),'
+        REGEX_NUMBER=',"number":\s*(.*),'
 
-        mapfile -t RESPONSE_DATA < <(curl -i -H "Accept: application/json" "${QUEUE_URL}")
-        for LINE in "${RESPONSE_DATA[@]}"
+        COUNTER=0
+        while true
         do
-          # first line
-          if [[ "${LINE}" =~ HTTP* ]] 
-          then
-            HTTP=(${LINE})
-            RESPONSE_CODE=${HTTP[1]}
-          elif [[ "${LINE}" =~ ${REGEX_NUMBER} ]] 
-          then
-            NEW_BUILD=$(echo "${LINE}" | grep -Eo [0-9]*)
-            break
-          fi
+            ((COUNTER=COUNTER+1))
+            if [[ $COUNTER -gt $COUNTER_LIMIT ]]
+            then
+                printf -- "    ** determination of the new build number failed after %d tries\n" $COUNTER_LIMIT
+                exit 1
+            fi
+
+            FOUND=false
+            mapfile -t RESPONSE_DATA < <(curl -i -s -S -H "Accept: application/json" "${QUEUE_URL}")
+            for LINE in "${RESPONSE_DATA[@]}"
+            do
+                # first line
+                if [[ "${LINE}" =~ HTTP* ]] 
+                then
+                    HTTP=(${LINE})
+                    RESPONSE_CODE=${HTTP[1]}
+                elif [[ "${LINE}" =~ ${REGEX_NUMBER} ]] 
+                then
+                    NEW_BUILD=$(echo "${LINE}" | grep -Po ${REGEX_NUMBER} | grep -Eo [0-9]*)
+                    FOUND=true
+                    break
+                fi
+            done
+            if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
+            then
+                if $FOUND
+                then
+                    printf -- "    ++ #build number: %d\n" ${NEW_BUILD}
+                    break
+                else
+                    sleep ${WAIT_FOR_JENKINS_SEC}
+                fi
+            else
+                printf -- "    ** determination of the build number failed, trying again\n"
+                sleep ${WAIT_FOR_JENKINS_SEC}
+            fi
         done
-        if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
-        then
-          printf -- "    ++ #build number: %d\n" ${NEW_BUILD}
-        else
-          printf -- "    ** build number failure\n"
-          exit 1
-        fi
 
         printf -- "-- check build status\n"
         while true
