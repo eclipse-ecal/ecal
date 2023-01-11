@@ -359,14 +359,14 @@ jobs:
         done
         if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
         then
-          printf -- "-- queue URL: %s\n" "${QUEUE_URL}"
+          printf -- "    ++ queue URL: %s\n" "${QUEUE_URL}"
         else
           printf -- "    ** trigger failure\n"
           exit 1
         fi
 
         printf -- "-- get the new build number\n"
-        REGEX_NUMBER=^\s*\"number\":\s*(.*),$
+        REGEX_NUMBER='\s*"number":\s*(.*),'
 
         mapfile -t RESPONSE_DATA < <(curl -i -H "Accept: application/json" "${QUEUE_URL}")
         for LINE in "${RESPONSE_DATA[@]}"
@@ -384,7 +384,7 @@ jobs:
         done
         if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
         then
-          printf -- "-- #build: %d\n" ${NEW_BUILD}
+          printf -- "    ++ #build number: %d\n" ${NEW_BUILD}
         else
           printf -- "    ** build number failure\n"
           exit 1
@@ -403,16 +403,16 @@ jobs:
             exit 1
           fi
 
-          NUMBER=$(grep -oP "(?<=\"number\":)(\w*)(?=,)" -- "${STATUS_JSON}")
+          NUMBER=$(grep -Po "(?<=\"number\":)(\w*)(?=,)" -- "${STATUS_JSON}")
           if [[ ${NUMBER} -eq ${NEW_BUILD} ]]
           then
-            BUILDING=$(grep -oP "(?<=\"building\":)(\w*)(?=,)" -- "${STATUS_JSON}")
+            BUILDING=$(grep -Po "(?<=\"building\":)(\w*)(?=,)" -- "${STATUS_JSON}")
             if [[ "${BUILDING}" == 'true' ]]
             then
                 printf -- "    ++ building ..., wait for ${WAIT_FOR_JENKINS_SEC}s\n"
                 sleep ${WAIT_FOR_JENKINS_SEC}
             else
-                RESULT=$(grep -oP '(?<=\"result\":\")(\w*)(?=\",)' -- "${STATUS_JSON}")
+                RESULT=$(grep -Po '(?<=\"result\":\")(\w*)(?=\",)' -- "${STATUS_JSON}")
                 if [[ "${RESULT}" == 'SUCCESS' ]]
                 then
                     printf -- "    ++ build success\n"
