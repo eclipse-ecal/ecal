@@ -10,8 +10,7 @@ In the last section you learned how to send strings to an eCAL Topic.
 Using strings is great for simple data that has a textual representation.
 Quite often however your data will be more complex, so you need some kind of protocol that defines how your data is structured.
 
-Of course, you can define your own protocol and pass the raw memory to eCAL (you would use the raw `eCAL::CPublisher()` to do that).
-Our recommended way however is to use Google protobuf, because:
+Our recommended way is to use Google protobuf to do that, because:
 
 * It solves the problem of how to serialize and de-serialize data for you
 * You get downward compatibility out of the box (if you follow the guidelines)
@@ -20,42 +19,22 @@ Our recommended way however is to use Google protobuf, because:
 
 .. important::
    It is important to remember, that all your applications must agree on the data format.
-   As protobuf messages are defined in :file:`.proto` files, all of your applications should be compiled with the same files.
-
-Protobuf sender
-===============
-
-Let's implement a small application, that lets the user input his name and send a message to an eCAL topic.
-As the sender and receiver need the same .proto files, we place them in a separate directory next to the source directories for the sender and the receiver:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   As protobuf messages are defined in :file:`.proto` files, all of your applications should share the same files.
 
 
 Protobuf in Python
 ==================
 
 Let's start with creating the protobuf file.
-Somewhere on your hard drive, create a directory "proto_messages" with a file "hello_world.proto".
+As the sender and receiver need the same .proto files, we place them in a separate directory that will be accessible both for the sender and receiver script.
+
+So, somewhere on your hard drive, create a directory :file:`proto_messages` with a file :file:`hello_world.proto` and paste the following content into that file.
 
 .. parsed-literal::
 
    |fa-folder-open|
    └─ |fa-folder-open| proto_messages
       └─ |fa-file-alt| :download:`hello_world.proto <src/hello_world_python_protobuf/proto_messages/hello_world.proto>`
-
-Now paste the following content into :file:`proto_messages/hello_world.proto`:
 
 .. literalinclude:: src/hello_world_python_protobuf/proto_messages/hello_world.proto
    :language: protobuf
@@ -72,7 +51,7 @@ Now paste the following content into :file:`proto_messages/hello_world.proto`:
 
 .. tip::
 
-   1. Specify a package name, even though pyhton doesn't use it.
+   1. Specify a package name, even though python doesn't use it.
 
    2. Keep the package name in sync to the directory structure.
 
@@ -80,16 +59,15 @@ Now paste the following content into :file:`proto_messages/hello_world.proto`:
    It also makes it easier to create nested messages (i.e. Protobuf messages that contain other Protobuf messages by importing them based on their package name and message name)
 
 Now you have the description of your message structure.
-However to make it available in python, we need to translate it to a python file.
+However, to make it available in python, we need to translate it to a python file.
 This is done by the **Protobuf Compiler** (``protoc``).
 
 - |fa-windows| On Windows this tool is shipped with eCAL, so if you have eCAL installed, you already got it.
   If you don't, please :ref:`install eCAL<getting_started_setup_windows>`.
 
-  For running your python script you don't need to have eCAL installed, even though it may be beneficial e.g. to use eCAL Mon for introspection of your topics.
+  For running your python script, you don't need to have eCAL installed, even though it may be beneficial e.g. to use eCAL Mon for introspection of your topics.
 
-- |fa-ubuntu| On Ubuntu you can easily obtain it standalone from the apt repository.
-  But if you have eCAL installed, you will also already have it installed as a dependency.
+- |fa-ubuntu| On Ubuntu you can easily obtain it standalone from the apt repository:
 
   .. code-block:: bash
 
@@ -110,7 +88,7 @@ Protobuf Sender
 ===============
 
 Now let's start implementing the actual python code, that sends some protobuf-serialized data to an eCAL topic.
-For that, create a file :file:`protobuf_snd.py` next to your proto_messages directory and paste the following content:
+For that, create a file :file:`protobuf_snd.py` next to your :file:`proto_messages` directory and paste the following content:
 
 .. parsed-literal::
 
@@ -126,11 +104,11 @@ For that, create a file :file:`protobuf_snd.py` next to your proto_messages dire
 .. note::
    **What is happening here?**
 
-   **Line 5** Imports the Protobuf Publisher from eCAL
+   **Line 5** imports the Protobuf Publisher from eCAL
    
-   **Line 9** Imports the :file:`hello_world_pb2.py` that we just have created.
+   **Line 9** imports the :file:`hello_world_pb2.py` that we just have created.
 
-   **Line 14** Initializes eCAL.
+   **Line 14** initializes eCAL.
    The name of the node is "Python Protobuf Publisher".
 
    By also providing ``sys.argv`` you get the ability to pass command line arguments to eCAL, e.g. for loading an :file:`ecal.ini` configuration file from a non-standard path.
@@ -142,7 +120,7 @@ For that, create a file :file:`protobuf_snd.py` next to your proto_messages dire
 
    If you would omit passing the type here, you would still be able to receive the messages, but eCAL Mon would only display a boring hexadecimal representation of the content.
 
-   **Line 35-38** instanciate the protobuf message and fill it with content.
+   **Line 35-38** instantiate the protobuf message and fill it with content.
 
    **Line 43** sends the entire protobuf message out to all subscribers on the topic.
 
@@ -155,9 +133,9 @@ Protobuf Receiver
 =================
 
 We know that the sender already works.
-So let's implement a python script that can receive the serialized protobuf data, deserialize it and display the content of the message!
+So, let's implement a python script that can receive the serialized protobuf data, deserialize it and display the content of the message!
 
-Creatge a file :file:`protobuf_rec.py` next to the sender and paste the following content:
+Create a file :file:`protobuf_rec.py` next to the sender and paste the following content:
 
 .. parsed-literal::
 
@@ -183,7 +161,7 @@ Creatge a file :file:`protobuf_rec.py` next to the sender and paste the followin
 
    **Line 25** creates an eCAL Publisher for the topic "hello_world_python_protobuf_topic".
    The second parameter is the type from our converted "hello_world.proto" message description.
-   Providing the correct datatype here is crucial for eCAL automatically de-serializing the data and providing it to the callback as the correct type.
+   Providing the correct datatype here is crucial for eCAL to automatically de-serialize the data and to provide it to the callback as the correct type.
 
    **Line 29** sets our callback as callback method for the eCAL Subscriber.
 
