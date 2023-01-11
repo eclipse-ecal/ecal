@@ -15,6 +15,7 @@
 # limitations under the License.
 #
 # ========================= eCAL LICENSE =================================
+find_package(Threads REQUIRED)
 
 project(rec_addon_dummy)
 
@@ -24,6 +25,10 @@ set(source_files src/recorder_impl.cpp
 ecal_add_rec_addon(${PROJECT_NAME} ${source_files})
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
-target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::rec_addon_core)
+target_link_libraries(${PROJECT_NAME} 
+  PRIVATE 
+    eCAL::rec_addon_core 
+    Threads::Threads
+)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER app/rec)
