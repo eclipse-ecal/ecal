@@ -16,6 +16,8 @@ So, let's get started!
 .. seealso::
    If you are looking for a tutorial on how to build eCAL from source (e.g. to get it working on a non-supported OS) please refer to :ref:`development_building_ecal_from_source` .
 
+.. _getting_started_setup_windows:
+
 |fa-windows| Installing eCAL on Windows
 =======================================
 
