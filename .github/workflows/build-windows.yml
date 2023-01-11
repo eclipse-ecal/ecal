@@ -338,29 +338,55 @@ jobs:
 
         mv "${ARTIFACT_NAME}" "${ARTIFACT_NAME_OLD}"
 
-        printf -- "-- get last build number\n"
-        RESPONSES=($(curl -s -S -L -w " %{response_code}" "${JENKINS_LAST_BUILD_URL}"))
-        LAST_BUILD="${RESPONSES[0]}"
-        RESPONSE_CODE="${RESPONSES[1]}"
-        ((NEW_BUILD = LAST_BUILD + 1))
-        printf -- "    ++ last build - HTTP status code: %s\n" "${RESPONSE_CODE}" 
-        printf -- "    ++ last build#: ${LAST_BUILD}, new build#: ${NEW_BUILD}\n" 
+        printf -- "-- trigger a new build\n"
+        RESPONSE_CODE=0
+        QUEUE_URL=''
+
+        mapfile -t RESPONSE_HEADERS < <(curl -i -s -S -L "${JENKINS_TRIGGER_URL}")
+        for HEADER in "${RESPONSE_HEADERS[@]}"
+        do
+          # first line
+          if [[ "${HEADER}" =~ HTTP* ]] 
+          then
+            HTTP=(${HEADER})
+            RESPONSE_CODE=${HTTP[1]}
+          elif [[ "${HEADER}" =~ location* ]] 
+          then
+            LOCATION=(${HEADER})
+            QUEUE_URL=${LOCATION[1]}
+            break
+          fi
+        done
         if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
         then
-          true
+          printf -- "-- queue URL: %s\n" "${QUEUE_URL}"
         else
-          printf -- "    ** last build number failure\n"
+          printf -- "    ** trigger failure\n"
           exit 1
         fi
 
-        printf -- "-- trigger a new build\n"
-        RESPONSE_CODE=$(curl -s -S -L -w "%{response_code}" "${JENKINS_TRIGGER_URL}")
-        printf -- "    ++ trigger - HTTP status code: %s\n" "${RESPONSE_CODE}" 
+        printf -- "-- get the new build number\n"
+        REGEX_NUMBER=^\s*\"number\":\s*(.*),$
+
+        mapfile -t RESPONSE_DATA < <(curl -i -H "Accept: application/json" "${QUEUE_URL}")
+        for LINE in "${RESPONSE_DATA[@]}"
+        do
+          # first line
+          if [[ "${LINE}" =~ HTTP* ]] 
+          then
+            HTTP=(${LINE})
+            RESPONSE_CODE=${HTTP[1]}
+          elif [[ "${LINE}" =~ ${REGEX_NUMBER} ]] 
+          then
+            NEW_BUILD=$(echo "${LINE}" | grep -Eo [0-9]*)
+            break
+          fi
+        done
         if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
         then
-          true
+          printf -- "-- #build: %d\n" ${NEW_BUILD}
         else
-          printf -- "    ** trigger failure\n"
+          printf -- "    ** build number failure\n"
           exit 1
         fi
 
