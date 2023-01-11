@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package proto_messages;
+
+message HelloWorld
+{
+  string name      = 1;
+  uint32 id        = 2;
+  string msg       = 3;
+}

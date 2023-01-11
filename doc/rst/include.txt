@@ -43,6 +43,10 @@
    
    <i class="fas fa-copy"></i>
 
+.. |fa-python| raw:: html
+   
+   <i class="fab fa-python"></i>
+
 .. |ecalini-path-windows| replace:: :file:`C:\\ProgramData\\eCAL\\ecal.ini`
 .. |ecalini-path-ubuntu|  replace:: :file:`/etc/ecal/ecal.ini`
 
