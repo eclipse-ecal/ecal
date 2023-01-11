@@ -330,7 +330,7 @@ jobs:
 
         ARTIFACT_EXE=$(ls *.exe)
         ARTIFACT_NAME="${ARTIFACT_EXE}"
-        ARTIFACT_NAME_OLD="${ARTIFACT_NAME}.old"
+        #ARTIFACT_NAME_OLD="${ARTIFACT_NAME}.old"
         ARTIFACT_NAME_NEW="${ARTIFACT_NAME}"
         JENKINS_JOB='gh_auto_run_id'
         TOKEN="${JENKINS_TOKEN}"
@@ -343,7 +343,8 @@ jobs:
         NEW_BUILD=0
         COUNTER_LIMIT=20
 
-        mv "${ARTIFACT_NAME}" "${ARTIFACT_NAME_OLD}"
+        #mv "${ARTIFACT_NAME}" "${ARTIFACT_NAME_OLD}"
+        mkdir -p _build/complete/_deploy && cd $_
 
         printf -- "-- trigger a new build with run_id: %d\n" ${RUN_ID}
         RESPONSE_CODE=0
@@ -473,7 +474,7 @@ jobs:
           exit 1
         fi
       shell: bash
-      working-directory: ${{ runner.workspace }}/_build/complete/_deploy
+      #working-directory: ${{ runner.workspace }}/_build/complete/_deploy
       env:
         JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN_GH_AUTO }}
         GH_RUN_ID: ${{ github.run_id }}
