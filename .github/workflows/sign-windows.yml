@@ -8,7 +8,7 @@ on:
         required: true  
     inputs:
       run_id:
-        description: 'Caller workflow's run_id'
+        description: 'Caller workflow''s run_id'
         required: true
         type: string
 concurrency:
