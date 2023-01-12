@@ -306,6 +306,7 @@ namespace eCAL
     // get method
     SMethod method;
     auto& request_pb_header = request_pb.header();
+    response_pb_mutable_header->set_mname(request_pb_header.mname());
     {
       std::lock_guard<std::mutex> lock(m_method_map_sync);
 
