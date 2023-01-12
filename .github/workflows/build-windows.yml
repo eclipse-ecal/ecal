@@ -315,3 +315,10 @@ jobs:
         name: windows-python-wheels
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.whl
 
+  call-sign-windows:
+    needs: build-windows
+    uses: ./.github/workflows/sign-windows.yml
+    secrets:
+      token: ${{ secrets.JENKINS_TOKEN_GH_AUTO }}    
+    with:
+      run_id: ${{ github.run_id }}

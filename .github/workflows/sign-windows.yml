@@ -1,9 +1,16 @@
 name: Sign Windows installer on Jenkins
 
 on:
-  workflow_run:
-    workflows: [Build Windows Server 2019]
-    types: [completed]
+  workflow_call:
+    secrets:
+      token:
+        description: 'Token for the Jenkins job'
+        required: true  
+    inputs:
+      run_id:
+        description: 'Caller workflow's run_id'
+        required: true
+        type: string
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false
@@ -13,7 +20,6 @@ env:
 jobs:
   sign-on-jenkins:
     runs-on: windows-2019
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
     - name: Sign the installer on Eclipse CI
       if: env.IS_JENKINS_SIGNING_ALLOWED == 'true' && env.JENKINS_TOKEN != ''
@@ -166,8 +172,8 @@ jobs:
         fi
       shell: bash
       env:
-        JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN_GH_AUTO }}
-        GH_RUN_ID: ${{ context.payload.workflow_run.id }}
+        JENKINS_TOKEN: ${{ secrets.token }}
+        GH_RUN_ID: ${{ inputs.run_id }}
 
     - name: Upload Windows setup signed on Eclipse CI
       if: env.IS_JENKINS_SIGNING_ALLOWED == 'true' && env.IS_DOWNLOAD_AVAILABLE == 'true'
