@@ -280,10 +280,10 @@ jobs:
            && -n "${CERT_HASH}" ]]
         then
           echo "ATTENTION: a certificate is available"
-          echo "is_cert_available=true" >> $GITHUB_ENV
+          echo "IS_CERT_AVAILABLE=true" >> $GITHUB_ENV
         else
           echo "WARNING: a certificate is not available"
-          echo "is_cert_available=false" >> $GITHUB_ENV
+          echo "IS_CERT_AVAILABLE=false" >> $GITHUB_ENV
         fi
       shell: bash
       env:
@@ -294,7 +294,7 @@ jobs:
 
     # https://github.com/OrhanKupusoglu/code-sign-action
     - name: Sign the installer
-      if: env.IS_GITHUB_SIGNING_ALLOWED == 'true' && env.is_cert_available == 'true'
+      if: env.IS_GITHUB_SIGNING_ALLOWED == 'true' && env.IS_CERT_AVAILABLE == 'true'
       uses: OrhanKupusoglu/code-sign-action@v5.5.1
       with:
         cert_body: ${{ secrets.CERT_BODY }}
@@ -328,22 +328,19 @@ jobs:
       run: |
         export LC_CTYPE=en_US.utf8
 
-        ARTIFACT_EXE=$(ls *.exe)
-        ARTIFACT_NAME="${ARTIFACT_EXE}"
-        #ARTIFACT_NAME_OLD="${ARTIFACT_NAME}.old"
-        ARTIFACT_NAME_NEW="${ARTIFACT_NAME}"
         JENKINS_JOB='gh_auto_run_id'
         TOKEN="${JENKINS_TOKEN}"
         RUN_ID="${GH_RUN_ID}"
-        JENKINS_TRIGGER_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}/buildWithParameters?token=${TOKEN}&GH_RUN_ID=${RUN_ID}"
-        JENKINS_STATUS_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}/lastBuild/api/json"
-        JENKINS_DOWNLOAD_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}/lastSuccessfulBuild/artifact/${ARTIFACT_NAME}"
+        JENKINS_BASE_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}"
+        JENKINS_TRIGGER_URL="${JENKINS_BASE_URL}/buildWithParameters?token=${TOKEN}&GH_RUN_ID=${RUN_ID}"
+        JENKINS_STATUS_URL="${JENKINS_BASE_URL}/lastBuild/api/json"
+        JENKINS_DOWNLOAD_URL="${JENKINS_BASE_URL}/lastSuccessfulBuild/artifact"
         WAIT_FOR_JENKINS_SEC=5
         STATUS_JSON=status.json
         NEW_BUILD=0
         COUNTER_LIMIT=20
+        ARTIFACT_NAME=''
 
-        #mv "${ARTIFACT_NAME}" "${ARTIFACT_NAME_OLD}"
         mkdir -p _build/complete/_deploy && cd $_
 
         printf -- "-- trigger a new build with run_id: %d\n" ${RUN_ID}
@@ -448,7 +445,8 @@ jobs:
                 RESULT=$(grep -Po '(?<=\"result\":\")(\w*)(?=\",)' -- "${STATUS_JSON}")
                 if [[ "${RESULT}" == 'SUCCESS' ]]
                 then
-                  printf -- "    ++ build success\n"
+                  ARTIFACT_NAME=$(grep -Po '(?<=\"fileName\":\")([^"]*)(?=\",)' -- "${STATUS_JSON}")
+                  printf -- "    ++ build success, artifact name: '%s'\n" "${ARTIFACT_NAME}"
                   break
                 else
                   printf -- "    ** build failure\n"
@@ -462,14 +460,15 @@ jobs:
         done
 
         printf -- "-- download the newly-signed Windows installer\n"
-        RESPONSE_CODE=$(curl -s -S -w "%{response_code}" -o "${ARTIFACT_NAME_NEW}" "${JENKINS_DOWNLOAD_URL}")
+        JENKINS_DOWNLOAD_URL="${JENKINS_DOWNLOAD_URL}/${ARTIFACT_NAME}"
+        RESPONSE_CODE=$(curl -s -S -O -w "%{response_code}" "${JENKINS_DOWNLOAD_URL}")
         printf -- "    ++ download - HTTP status code: %s\n" "${RESPONSE_CODE}" 
         if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
         then
-          echo "is_download_available=true" >> $GITHUB_ENV
-          printf -- "    ++ downloaded: '${ARTIFACT_NAME_NEW}'\n"
+          echo "IS_DOWNLOAD_AVAILABLE=true" >> $GITHUB_ENV
+          printf -- "    ++ downloaded: '${ARTIFACT_NAME}'\n"
         else
-          echo "is_download_available=false" >> $GITHUB_ENV
+          echo "IS_DOWNLOAD_AVAILABLE=false" >> $GITHUB_ENV
           printf -- "    ** download failure\n"
           exit 1
         fi
@@ -480,7 +479,7 @@ jobs:
         GH_RUN_ID: ${{ github.run_id }}
 
     - name: Upload Windows setup signed on Eclipse CI
-      if: env.IS_JENKINS_SIGNING_ALLOWED == 'true' && env.is_download_available == 'true'
+      if: env.IS_JENKINS_SIGNING_ALLOWED == 'true' && env.IS_DOWNLOAD_AVAILABLE == 'true'
       uses: actions/upload-artifact@v3
       with:
         name: windows-setup-eclipse
