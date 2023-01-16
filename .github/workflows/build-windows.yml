@@ -346,7 +346,7 @@ jobs:
         target_commitish: ${{ env.GITHUB_SHA }}
         name: ${{ env.TEMP_RELEASE_NAME }}
         tag_name: ${{ env.TEMP_RELEASE_TAG }}
-        files: _build/complete/_deploy/${{ env.ASSET_NAME }}
+        files: _build\complete\_deploy\${{ env.ASSET_NAME }}
 
     - name: Collect data about the temporary release
       if: env.IS_JENKINS_SIGNING_ENABLED == 'true'
