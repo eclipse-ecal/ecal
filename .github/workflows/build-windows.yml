@@ -7,6 +7,7 @@ on:
       - master
 env:
   IS_GITHUB_SIGNING_ALLOWED: true
+  IS_JENKINS_SIGNING_ALLOWED: true
 
 jobs:
   build-windows:
@@ -315,10 +316,229 @@ jobs:
         name: windows-python-wheels
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.whl
 
-  call-sign-windows:
-    needs: build-windows
-    uses: ./.github/workflows/sign-windows.yml
-    secrets:
-      token: ${{ secrets.JENKINS_TOKEN_GH_AUTO }}    
-    with:
-      run_id: ${{ github.run_id }}
+  # --------------------------------------------------------------------------------------------------
+
+    - name: Set var names for the temporary release
+      if: env.IS_JENKINS_SIGNING_ALLOWED == 'true' && env.JENKINS_TOKEN != ''
+      run: |
+        DATE_TIME=$(date +"%Y-%m-%dT%T.%3N")
+        TAG_SUFFIX=${DATE_TIME//:/_}
+        TAG_SUFFIX=${TAG_SUFFIX//-/_}
+        echo "TEMP_RELEASE_NAME=Temporary_Release_${DATE_TIME}" >> $GITHUB_ENV
+        echo "TEMP_RELEASE_TAG=temp_rel_${TAG_SUFFIX}" >> $GITHUB_ENV
+        echo "ASSET_NAME=$(ls *.exe)" >> $GITHUB_ENV
+        echo "IS_JENKINS_SIGNING_ENABLED=true" >> $GITHUB_ENV
+      shell: bash
+      working-directory: _build/complete/_deploy
+      env:
+        JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN_GH_RELEASE }}
+    
+    # https://github.com/softprops/action-gh-release
+    - name: Create a temporary release
+      if: env.IS_JENKINS_SIGNING_ENABLED == 'true'
+      id: temp_rel
+      uses: softprops/action-gh-release@v0.1.15
+      with:
+        draft: false
+        prerelease: true
+        generate_release_notes: false
+        append_body: false
+        target_commitish: ${{ env.GITHUB_SHA }}
+        name: ${{ env.TEMP_RELEASE_NAME }}
+        tag_name: ${{ env.TEMP_RELEASE_TAG }}
+        files: _build/complete/_deploy/${{ env.ASSET_NAME }}
+
+    - name: Collect data about the temporary release
+      if: env.IS_JENKINS_SIGNING_ENABLED == 'true'
+      run: |
+        TEMP_RELEASE_URL="${{ steps.temp_rel.outputs.url }}"
+        TEMP_RELEASE_ID="${{ steps.temp_rel.outputs.id }}"
+        TEMP_RELEASE_UPLOAD_URL="${{ steps.temp_rel.outputs.upload_url }}"
+        TEMP_RELEASE_ASSETS="${{ steps.temp_rel.outputs.assets }}"
+        TEMP_ASSET_DOWNLOAD_URL="${{ fromJSON(steps.temp_rel.outputs.assets)[0].browser_download_url }}"
+
+        echo "TEMP_RELEASE_ID=${TEMP_RELEASE_ID}" >> $GITHUB_ENV
+        echo "TEMP_ASSET_DOWNLOAD_URL=${TEMP_ASSET_DOWNLOAD_URL}" >> $GITHUB_ENV
+
+        echo "-- Repository         : ${GITHUB_REPOSITORY}"
+        echo "-- Branch             : ${GITHUB_REF}"
+        echo "-- HEAD               : ${GITHUB_SHA}"
+        echo "-- Release ID         : ${TEMP_RELEASE_ID}"
+        echo "-- Release name       : ${TEMP_RELEASE_NAME}"
+        echo "-- Release tag        : ${TEMP_RELEASE_TAG}"
+        echo "-- Release URL        : ${TEMP_RELEASE_URL}"
+        echo "-- Release upload URL : ${TEMP_RELEASE_UPLOAD_URL}"
+        echo "-- Release assets     : ${TEMP_RELEASE_ASSETS}"
+        echo "-- Asset name         : ${ASSET_NAME}"
+        echo "-- Asset download URL : ${TEMP_ASSET_DOWNLOAD_URL}"
+      shell: bash
+
+    - name: Sign the installer on Eclipse CI
+      if: env.IS_JENKINS_SIGNING_ENABLED == 'true'
+      run: |
+        export LC_CTYPE=en_US.utf8
+
+        ASSET_NAME_OLD="${ASSET_NAME}.old"
+        JENKINS_JOB='gh_auto_release'
+        TOKEN="${{ secrets.JENKINS_TOKEN_GH_RELEASE }}"
+        RELEASE_ID="${TEMP_RELEASE_ID}"
+        ASSET_URL=$(echo "${TEMP_ASSET_DOWNLOAD_URL}" | base64 --wrap 0)
+        JENKINS_BASE_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}"
+        JENKINS_TRIGGER_URL="${JENKINS_BASE_URL}/buildWithParameters?token=${TOKEN}&GH_RELEASE_ID=${RELEASE_ID}&GH_ASSET_URL=${ASSET_URL}"
+        JENKINS_STATUS_URL="${JENKINS_BASE_URL}/lastBuild/api/json"
+        WAIT_FOR_JENKINS_SEC=5
+        STATUS_JSON=status.json
+        NEW_BUILD=0
+        COUNTER_LIMIT=20
+        RESPONSE_CODE=0
+        QUEUE_URL=''
+        REGEX_NUMBER=',"number":\s*(.*),'
+        COUNTER=0
+
+        mv "${ASSET_NAME}" "${ASSET_NAME_OLD}"
+        printf -- "-- trigger a new build with\n   release id     : %d\n   download asset : %s\n   BASE64         : %s\n" \
+          ${RELEASE_ID} "${TEMP_ASSET_DOWNLOAD_URL}" "${ASSET_URL}" 
+
+        mapfile -t RESPONSE_HEADERS < <(curl -i -s -S -L "${JENKINS_TRIGGER_URL}")
+        for HEADER in "${RESPONSE_HEADERS[@]}"
+        do
+          # first line
+          if [[ "${HEADER}" =~ HTTP* ]] 
+          then
+            HTTP=(${HEADER})
+            RESPONSE_CODE=${HTTP[1]}
+          elif [[ "${HEADER}" =~ location* ]] 
+          then
+            LOCATION=(${HEADER})
+            QUEUE_URL=${LOCATION[1]}
+            # delete the hidden \r
+            QUEUE_URL=$(echo "${QUEUE_URL}" | tr -d '\r')
+            API_SUFFIX='api/json/'
+            QUEUE_URL="${QUEUE_URL}${API_SUFFIX}"
+            break
+          fi
+        done
+        if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
+        then
+          printf -- "    ++ queue URL: %s\n" "${QUEUE_URL}"
+        else
+          printf -- "    ** trigger failure\n"
+          exit 1
+        fi
+
+        printf -- "-- get the new build number\n"
+        while true
+        do
+            ((COUNTER=COUNTER+1))
+            if [[ $COUNTER -gt $COUNTER_LIMIT ]]
+            then
+                printf -- "    ** determination of the new build number failed after %d tries\n" $COUNTER_LIMIT
+                exit 1
+            fi
+
+            FOUND=false
+            mapfile -t RESPONSE_DATA < <(curl -i -s -S -H "Accept: application/json" "${QUEUE_URL}")
+            for LINE in "${RESPONSE_DATA[@]}"
+            do
+                # first line
+                if [[ "${LINE}" =~ HTTP* ]] 
+                then
+                    HTTP=(${LINE})
+                    RESPONSE_CODE=${HTTP[1]}
+                elif [[ "${LINE}" =~ ${REGEX_NUMBER} ]] 
+                then
+                    NEW_BUILD=$(echo "${LINE}" | grep -Po ${REGEX_NUMBER} | grep -Eo [0-9]*)
+                    FOUND=true
+                    break
+                fi
+            done
+            printf -- "    ++ build number retrieval - HTTP status code: %s\n" "${RESPONSE_CODE}"
+            if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
+            then
+                if $FOUND
+                then
+                    printf -- "    ++ #build number: %d\n" ${NEW_BUILD}
+                    break
+                else
+                    printf -- "    ++ ... pending, wait for ${WAIT_FOR_JENKINS_SEC}s\n"
+                    sleep ${WAIT_FOR_JENKINS_SEC}
+                fi
+            else
+              printf -- "    ** determination of the build number failed, trying again\n"
+              sleep ${WAIT_FOR_JENKINS_SEC}
+            fi
+        done
+
+        printf -- "-- check build status\n"
+        while true
+        do
+          RESPONSE_CODE=$(curl -s -S -w "%{response_code}" -o "${STATUS_JSON}" "${JENKINS_STATUS_URL}")
+          printf -- "    ++ status check - HTTP status code: %s\n" "${RESPONSE_CODE}" 
+          if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
+          then
+            true
+          else
+            printf -- "    ** status check failure\n"
+            exit 1
+          fi
+
+          NUMBER=$(grep -Po "(?<=\"number\":)(\w*)(?=,)" -- "${STATUS_JSON}")
+          if [[ ${NUMBER} -eq ${NEW_BUILD} ]]
+          then
+            BUILDING=$(grep -Po "(?<=\"building\":)(\w*)(?=,)" -- "${STATUS_JSON}")
+            if [[ "${BUILDING}" == 'true' ]]
+            then
+              printf -- "    ++ building ..., wait for ${WAIT_FOR_JENKINS_SEC}s\n"
+              sleep ${WAIT_FOR_JENKINS_SEC}
+            else
+                RESULT=$(grep -Po '(?<=\"result\":\")(\w*)(?=\",)' -- "${STATUS_JSON}")
+                if [[ "${RESULT}" == 'SUCCESS' ]]
+                then
+                  #ASSET_NAME=$(grep -Po '(?<=\"fileName\":\")([^"]*)(?=\",)' -- "${STATUS_JSON}")
+                  printf -- "    ++ build success, asset name: '%s'\n" "${ASSET_NAME}"
+                  break
+                else
+                  printf -- "    ** build failure\n"
+                  exit 1        
+                fi
+            fi
+          else
+            printf -- "    ++ ... pending, wait for ${WAIT_FOR_JENKINS_SEC}s\n"
+            sleep ${WAIT_FOR_JENKINS_SEC}
+          fi
+        done
+
+        printf -- "-- download the newly-signed Windows installer\n"
+        JENKINS_DOWNLOAD_URL="${JENKINS_BASE_URL}/${NEW_BUILD}/artifact/${ASSET_NAME}"
+        RESPONSE_CODE=$(curl -s -S -O -w "%{response_code}" "${JENKINS_DOWNLOAD_URL}")
+        printf -- "    ++ download - HTTP status code: %s\n" "${RESPONSE_CODE}" 
+        if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
+        then
+          echo "IS_DOWNLOAD_AVAILABLE=true" >> $GITHUB_ENV
+          printf -- "    ++ downloaded signed installer: '${ASSET_NAME}'\n"
+        else
+          echo "IS_DOWNLOAD_AVAILABLE=false" >> $GITHUB_ENV
+          printf -- "    ** download failure\n"
+          exit 1
+        fi
+      shell: bash
+      working-directory: _build/complete/_deploy
+
+    # https://github.com/dev-drprasad/delete-tag-and-release
+    # last release v0.2.0 gives Node v12 warnings 
+    # the commit below uses Node v16 and suppresses these warnings
+    - name: Delete the temporary release
+      # always() calls the step even when action is cancelled
+      if: (success() || failure()) && env.IS_JENKINS_SIGNING_ENABLED == 'true'
+      uses: dev-drprasad/delete-tag-and-release@92d94d77429cb0436597047a92369526a5824f50
+      with:
+        tag_name: ${{ env.TEMP_RELEASE_TAG }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Windows setup signed on Eclipse CI
+      if: env.IS_DOWNLOAD_AVAILABLE == 'true'
+      uses: actions/upload-artifact@v3
+      with:
+        name: windows-setup-eclipse
+        path: _build/complete/_deploy/${{ env.ASSET_NAME }}
