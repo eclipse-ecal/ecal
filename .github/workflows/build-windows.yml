@@ -329,7 +329,7 @@ jobs:
         echo "ASSET_NAME=$(ls *.exe)" >> $GITHUB_ENV
         echo "IS_JENKINS_SIGNING_ENABLED=true" >> $GITHUB_ENV
       shell: bash
-      working-directory: _build/complete/_deploy
+      working-directory: " ${{ runner.workspace }}/_build/complete/_deploy"
       env:
         JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN_GH_RELEASE }}
     
@@ -522,7 +522,7 @@ jobs:
           exit 1
         fi
       shell: bash
-      working-directory: _build/complete/_deploy
+      working-directory: " ${{ runner.workspace }}/_build/complete/_deploy"
 
     # https://github.com/dev-drprasad/delete-tag-and-release
     # last release v0.2.0 gives Node v12 warnings 
