@@ -270,31 +270,36 @@ jobs:
       run: cpack -C Release
       working-directory: ${{ runner.workspace }}/_build/complete
 
+    # the release action can only reach to the root directory
+    - name: Copy Windows installer to the root directory
+      run: |
+        Copy-Item -Path "*.exe" -Destination "$Env:ROOT_DIR/ecal"
+      working-directory: ${{ runner.workspace }}/_build/complete/_deploy
+      env:
+        ROOT_DIR: ${{ runner.workspace }}
+
     - name: Detect certificate
       id: cert
       if: env.IS_GITHUB_SIGNING_ALLOWED == 'true'
       run: |
-        if [[ -n "${CERT_BODY}" \
-           && -n "${CERT_PSWD}" \
-           && -n "${CERT_ALGO}" \
-           && -n "${CERT_HASH}" ]]
-        then
-          echo "ATTENTION: a certificate is available"
-          echo "IS_CERT_AVAILABLE=true" >> $GITHUB_ENV
-        else
-          echo "WARNING: a certificate is not available"
-          echo "IS_CERT_AVAILABLE=false" >> $GITHUB_ENV
-        fi
-      shell: bash
+        if ($Env:CERT_BODY -and $Env:CERT_PSWD -and $Env:CERT_ALGO -and $Env:CERT_HASH) {
+          Write-Output "ATTENTION: a certificate is available"
+          Write-Output "IS_GITHUB_SIGNING_ENABLED=true" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+        } else {
+          Write-Output "WARNING: a certificate is not available"
+        }
+        $LS_OUT = ls *.exe
+        Write-Output "ASSET_NAME=$($LS_OUT.Name)" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
       env:
         CERT_BODY: ${{ secrets.CERT_BODY }}
         CERT_PSWD: ${{ secrets.CERT_PSWD }}
         CERT_ALGO: ${{ secrets.CERT_ALGO }}
         CERT_HASH: ${{ secrets.CERT_HASH }}
+      working-directory: ${{ runner.workspace }}/_build/complete/_deploy
 
     # https://github.com/OrhanKupusoglu/code-sign-action
     - name: Sign the installer
-      if: env.IS_GITHUB_SIGNING_ALLOWED == 'true' && env.IS_CERT_AVAILABLE == 'true'
+      if: env.IS_GITHUB_SIGNING_ENABLED == 'true'
       uses: OrhanKupusoglu/code-sign-action@v5.5.1
       with:
         cert_body: ${{ secrets.CERT_BODY }}
@@ -305,34 +310,30 @@ jobs:
         debug: false
 
     - name: Upload Windows setup
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3.1.2
       with:
         name: windows-setup
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.exe
 
     - name: Upload Python Wheels
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3.1.2
       with:
         name: windows-python-wheels
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.whl
 
-  # --------------------------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------------------
 
     - name: Set var names for the temporary release
       if: env.IS_JENKINS_SIGNING_ALLOWED == 'true' && env.JENKINS_TOKEN != ''
       run: |
-        DATE_TIME=$(date +"%Y-%m-%dT%T.%3N")
-        TAG_SUFFIX=${DATE_TIME//:/_}
-        TAG_SUFFIX=${TAG_SUFFIX//-/_}
-        echo "TEMP_RELEASE_NAME=Temporary_Release_${DATE_TIME}" >> $GITHUB_ENV
-        echo "TEMP_RELEASE_TAG=temp_rel_${TAG_SUFFIX}" >> $GITHUB_ENV
-        echo "ASSET_NAME=$(ls *.exe)" >> $GITHUB_ENV
-        echo "IS_JENKINS_SIGNING_ENABLED=true" >> $GITHUB_ENV
-      shell: bash
-      working-directory: ${{ runner.workspace }}\_build\complete\_deploy
+        $DATE_TIME = Get-Date -Format "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff"
+        $TAG_SUFFIX = $DATE_TIME -replace '-','_' -replace ':','_'
+        Write-Output "TEMP_RELEASE_NAME=Temporary_Release_$DATE_TIME" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+        Write-Output "TEMP_RELEASE_TAG=temp_rel_$TAG_SUFFIX" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+        Write-Output "IS_JENKINS_SIGNING_ENABLED=true" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
       env:
         JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN_GH_RELEASE }}
-    
+ 
     # https://github.com/softprops/action-gh-release
     - name: Create a temporary release
       if: env.IS_JENKINS_SIGNING_ENABLED == 'true'
@@ -346,183 +347,162 @@ jobs:
         target_commitish: ${{ env.GITHUB_SHA }}
         name: ${{ env.TEMP_RELEASE_NAME }}
         tag_name: ${{ env.TEMP_RELEASE_TAG }}
-        files: _build\complete\_deploy\${{ env.ASSET_NAME }}
+        files: ${{ env.ASSET_NAME }}
 
     - name: Collect data about the temporary release
       if: env.IS_JENKINS_SIGNING_ENABLED == 'true'
       run: |
-        TEMP_RELEASE_URL="${{ steps.temp_rel.outputs.url }}"
-        TEMP_RELEASE_ID="${{ steps.temp_rel.outputs.id }}"
-        TEMP_RELEASE_UPLOAD_URL="${{ steps.temp_rel.outputs.upload_url }}"
-        TEMP_RELEASE_ASSETS="${{ steps.temp_rel.outputs.assets }}"
-        TEMP_ASSET_DOWNLOAD_URL="${{ fromJSON(steps.temp_rel.outputs.assets)[0].browser_download_url }}"
+        $TEMP_RELEASE_URL = "${{ steps.temp_rel.outputs.url }}"
+        $TEMP_RELEASE_ID = "${{ steps.temp_rel.outputs.id }}"
+        $TEMP_RELEASE_UPLOAD_URL = "${{ steps.temp_rel.outputs.upload_url }}"
+        $TEMP_RELEASE_ASSETS = '${{ steps.temp_rel.outputs.assets }}'
+        $PRETTY_JSON = Write-Output "$TEMP_RELEASE_ASSETS" | ConvertFrom-Json | ConvertTo-Json
+        $TEMP_ASSET_DOWNLOAD_URL = "${{ fromJSON(steps.temp_rel.outputs.assets)[0].browser_download_url }}"
 
-        echo "TEMP_RELEASE_ID=${TEMP_RELEASE_ID}" >> $GITHUB_ENV
-        echo "TEMP_ASSET_DOWNLOAD_URL=${TEMP_ASSET_DOWNLOAD_URL}" >> $GITHUB_ENV
+        Write-Output "TEMP_RELEASE_ID=$TEMP_RELEASE_ID" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+        Write-Output "TEMP_ASSET_DOWNLOAD_URL=$TEMP_ASSET_DOWNLOAD_URL" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
 
-        echo "-- Repository         : ${GITHUB_REPOSITORY}"
-        echo "-- Branch             : ${GITHUB_REF}"
-        echo "-- HEAD               : ${GITHUB_SHA}"
-        echo "-- Release ID         : ${TEMP_RELEASE_ID}"
-        echo "-- Release name       : ${TEMP_RELEASE_NAME}"
-        echo "-- Release tag        : ${TEMP_RELEASE_TAG}"
-        echo "-- Release URL        : ${TEMP_RELEASE_URL}"
-        echo "-- Release upload URL : ${TEMP_RELEASE_UPLOAD_URL}"
-        echo "-- Release assets     : ${TEMP_RELEASE_ASSETS}"
-        echo "-- Asset name         : ${ASSET_NAME}"
-        echo "-- Asset download URL : ${TEMP_ASSET_DOWNLOAD_URL}"
-      shell: bash
+        Write-Output "-- Repository         : $Env:GITHUB_REPOSITORY"
+        Write-Output "-- Branch             : $Env:GITHUB_REF"
+        Write-Output "-- HEAD               : $Env:GITHUB_SHA" 
+        Write-Output "-- Release ID         : $TEMP_RELEASE_ID"
+        Write-Output "-- Release name       : $Env:TEMP_RELEASE_NAME"
+        Write-Output "-- Release tag        : $Env:TEMP_RELEASE_TAG"
+        Write-Output "-- Release URL        : $TEMP_RELEASE_URL"
+        Write-Output "-- Release upload URL : $TEMP_RELEASE_UPLOAD_URL"
+        Write-Output "-- Release assets     :`r`n$PRETTY_JSON" 
+        Write-Output "-- Asset name         : $Env:ASSET_NAME"
+        Write-Output "-- Asset download URL : $TEMP_ASSET_DOWNLOAD_URL"
 
     - name: Sign the installer on Eclipse CI
       if: env.IS_JENKINS_SIGNING_ENABLED == 'true'
       run: |
-        export LC_CTYPE=en_US.utf8
+        $ASSET_NAME_OLD = "$($Env:ASSET_NAME).old"
+        $ASSET_NAME_NEW = "$Env:ASSET_NAME"
+        $JENKINS_JOB = 'gh_auto_release'
+        $TOKEN = "$Env:JENKINS_TOKEN"
+        $RELEASE_ID = "$Env:TEMP_RELEASE_ID"
+        $ENCODED_BYTES = [System.Text.Encoding]::UTF8.GetBytes($Env:TEMP_ASSET_DOWNLOAD_URL)
+        $ASSET_URL = [System.Convert]::ToBase64String($ENCODED_BYTES)
+        $JENKINS_BASE_URL = "https://ci.eclipse.org/ecal/job/$JENKINS_JOB"
+        $JENKINS_TRIGGER_URL = "$JENKINS_BASE_URL/buildWithParameters?token=$TOKEN&GH_RELEASE_ID=$RELEASE_ID&GH_ASSET_URL=$ASSET_URL"
+        $WAIT_FOR_JENKINS_SEC = 5
+        $COUNTER_LIMIT = 20
+        $RESPONSE_CODE = 0
+        $QUEUE_URL = ''
+        $KEY_EXECUTABLE = 'executable'
+        $KEY_NUMBER = 'number'
+        $KEY_URL = 'url'
+        $KEY_BUILDING = 'building'
+        $KEY_RESULT = 'result'
+        $COUNTER = 0
 
-        ASSET_NAME_OLD="${ASSET_NAME}.old"
-        JENKINS_JOB='gh_auto_release'
-        TOKEN="${{ secrets.JENKINS_TOKEN_GH_RELEASE }}"
-        RELEASE_ID="${TEMP_RELEASE_ID}"
-        ASSET_URL=$(echo "${TEMP_ASSET_DOWNLOAD_URL}" | base64 --wrap 0)
-        JENKINS_BASE_URL="https://ci.eclipse.org/ecal/job/${JENKINS_JOB}"
-        JENKINS_TRIGGER_URL="${JENKINS_BASE_URL}/buildWithParameters?token=${TOKEN}&GH_RELEASE_ID=${RELEASE_ID}&GH_ASSET_URL=${ASSET_URL}"
-        JENKINS_STATUS_URL="${JENKINS_BASE_URL}/lastBuild/api/json"
-        WAIT_FOR_JENKINS_SEC=5
-        STATUS_JSON=status.json
-        NEW_BUILD=0
-        COUNTER_LIMIT=20
-        RESPONSE_CODE=0
-        QUEUE_URL=''
-        REGEX_NUMBER=',"number":\s*(.*),'
-        COUNTER=0
+        Rename-Item -Path "$Env:ASSET_NAME" -NewName "$ASSET_NAME_OLD" 
 
-        mv "${ASSET_NAME}" "${ASSET_NAME_OLD}"
-        printf -- "-- trigger a new build with\n   release id     : %d\n   download asset : %s\n   BASE64         : %s\n" \
-          ${RELEASE_ID} "${TEMP_ASSET_DOWNLOAD_URL}" "${ASSET_URL}" 
+        Write-Output "-- trigger a new build with`r`n   release id     : $RELEASE_ID`r`n   download asset : $Env:TEMP_ASSET_DOWNLOAD_URL`r`n   BASE64         : $ASSET_URL"
 
-        mapfile -t RESPONSE_HEADERS < <(curl -i -s -S -L "${JENKINS_TRIGGER_URL}")
-        for HEADER in "${RESPONSE_HEADERS[@]}"
-        do
-          # first line
-          if [[ "${HEADER}" =~ HTTP* ]] 
-          then
-            HTTP=(${HEADER})
-            RESPONSE_CODE=${HTTP[1]}
-          elif [[ "${HEADER}" =~ location* ]] 
-          then
-            LOCATION=(${HEADER})
-            QUEUE_URL=${LOCATION[1]}
-            # delete the hidden \r
-            QUEUE_URL=$(echo "${QUEUE_URL}" | tr -d '\r')
-            API_SUFFIX='api/json/'
-            QUEUE_URL="${QUEUE_URL}${API_SUFFIX}"
-            break
-          fi
-        done
-        if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
-        then
-          printf -- "    ++ queue URL: %s\n" "${QUEUE_URL}"
-        else
-          printf -- "    ** trigger failure\n"
-          exit 1
-        fi
+        $RESPONSE = Invoke-WebRequest -Method HEAD -Uri $JENKINS_TRIGGER_URL -UseBasicParsing
+        $RES_CODE = $RESPONSE.StatusCode
+        Write-Output "    ++ trigger build - HTTP status code: $RES_CODE"
+        $QUEUE_URL = ''
 
-        printf -- "-- get the new build number\n"
-        while true
-        do
-            ((COUNTER=COUNTER+1))
-            if [[ $COUNTER -gt $COUNTER_LIMIT ]]
-            then
-                printf -- "    ** determination of the new build number failed after %d tries\n" $COUNTER_LIMIT
-                exit 1
-            fi
+        if ($RES_CODE -ge 200 -and $RES_CODE -lt 300) {
+          $QUEUE_URL = $RESPONSE.Headers.location
+          $QUEUE_URL = "$($QUEUE_URL)api/json/" 
+          Write-Output "    ++ queue URL: $QUEUE_URL"
+        } else {
+          Write-Output "    ** trigger failure"
+          Exit 1
+        }
 
-            FOUND=false
-            mapfile -t RESPONSE_DATA < <(curl -i -s -S -H "Accept: application/json" "${QUEUE_URL}")
-            for LINE in "${RESPONSE_DATA[@]}"
-            do
-                # first line
-                if [[ "${LINE}" =~ HTTP* ]] 
-                then
-                    HTTP=(${LINE})
-                    RESPONSE_CODE=${HTTP[1]}
-                elif [[ "${LINE}" =~ ${REGEX_NUMBER} ]] 
-                then
-                    NEW_BUILD=$(echo "${LINE}" | grep -Po ${REGEX_NUMBER} | grep -Eo [0-9]*)
-                    FOUND=true
-                    break
-                fi
-            done
-            printf -- "    ++ build number retrieval - HTTP status code: %s\n" "${RESPONSE_CODE}"
-            if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
-            then
-                if $FOUND
-                then
-                    printf -- "    ++ #build number: %d\n" ${NEW_BUILD}
-                    break
-                else
-                    printf -- "    ++ ... pending, wait for ${WAIT_FOR_JENKINS_SEC}s\n"
-                    sleep ${WAIT_FOR_JENKINS_SEC}
-                fi
-            else
-              printf -- "    ** determination of the build number failed, trying again\n"
-              sleep ${WAIT_FOR_JENKINS_SEC}
-            fi
-        done
+        Write-Output "-- get the new build number"
+        $BUILD_NUM = 0
+        $BUILD_URL = ''
 
-        printf -- "-- check build status\n"
-        while true
-        do
-          RESPONSE_CODE=$(curl -s -S -w "%{response_code}" -o "${STATUS_JSON}" "${JENKINS_STATUS_URL}")
-          printf -- "    ++ status check - HTTP status code: %s\n" "${RESPONSE_CODE}" 
-          if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
-          then
-            true
-          else
-            printf -- "    ** status check failure\n"
-            exit 1
-          fi
+        while ($true) {
+          $COUNTER++
 
-          NUMBER=$(grep -Po "(?<=\"number\":)(\w*)(?=,)" -- "${STATUS_JSON}")
-          if [[ ${NUMBER} -eq ${NEW_BUILD} ]]
-          then
-            BUILDING=$(grep -Po "(?<=\"building\":)(\w*)(?=,)" -- "${STATUS_JSON}")
-            if [[ "${BUILDING}" == 'true' ]]
-            then
-              printf -- "    ++ building ..., wait for ${WAIT_FOR_JENKINS_SEC}s\n"
-              sleep ${WAIT_FOR_JENKINS_SEC}
-            else
-                RESULT=$(grep -Po '(?<=\"result\":\")(\w*)(?=\",)' -- "${STATUS_JSON}")
-                if [[ "${RESULT}" == 'SUCCESS' ]]
-                then
-                  #ASSET_NAME=$(grep -Po '(?<=\"fileName\":\")([^"]*)(?=\",)' -- "${STATUS_JSON}")
-                  printf -- "    ++ build success, asset name: '%s'\n" "${ASSET_NAME}"
-                  break
-                else
-                  printf -- "    ** build failure\n"
-                  exit 1        
-                fi
-            fi
-          else
-            printf -- "    ++ ... pending, wait for ${WAIT_FOR_JENKINS_SEC}s\n"
-            sleep ${WAIT_FOR_JENKINS_SEC}
-          fi
-        done
+          if ($COUNTER -gt $COUNTER_LIMIT) {
+              Write-Output "    ** determination of the new build number failed after $COUNTER_LIMIT tries" 
+              Exit 1
+          }
+          
+          $RESPONSE = Invoke-WebRequest -Uri $QUEUE_URL
+          $RES_CODE = $RESPONSE.StatusCode
+          Write-Output "    ++ build number retrieval - HTTP status code: $RES_CODE"
 
-        printf -- "-- download the newly-signed Windows installer\n"
-        JENKINS_DOWNLOAD_URL="${JENKINS_BASE_URL}/${NEW_BUILD}/artifact/${ASSET_NAME}"
-        RESPONSE_CODE=$(curl -s -S -O -w "%{response_code}" "${JENKINS_DOWNLOAD_URL}")
-        printf -- "    ++ download - HTTP status code: %s\n" "${RESPONSE_CODE}" 
-        if [[ ${RESPONSE_CODE} -ge 200 && ${RESPONSE_CODE} -lt 300 ]]
-        then
-          echo "IS_DOWNLOAD_AVAILABLE=true" >> $GITHUB_ENV
-          printf -- "    ++ downloaded signed installer: '${ASSET_NAME}'\n"
-        else
-          echo "IS_DOWNLOAD_AVAILABLE=false" >> $GITHUB_ENV
-          printf -- "    ** download failure\n"
-          exit 1
-        fi
-      shell: bash
-      working-directory: ${{ runner.workspace }}\_build\complete\_deploy
+          if ($RES_CODE -ge 200 -and $RES_CODE -lt 300) {
+            $JSON_CONTENT = $RESPONSE.Content | ConvertFrom-Json
+            $EXECUTABLE = $JSON_CONTENT.$KEY_EXECUTABLE
+            $BUILD_NUM = $EXECUTABLE.$KEY_NUMBER
+
+            if ($BUILD_NUM) {
+              Write-Output "    ++ #build number: $BUILD_NUM"
+              $BUILD_URL = $EXECUTABLE.$KEY_URL
+              Break
+            } else {
+              Write-Output "    ++ ... pending, wait for $WAIT_FOR_JENKINS_SEC s"
+              Start-Sleep -s $WAIT_FOR_JENKINS_SEC
+            }
+          } else {
+            Write-Output "    ** determination of the build number failed, trying again after $WAIT_FOR_JENKINS_SEC s"
+            Start-Sleep -s $WAIT_FOR_JENKINS_SEC
+          }
+        }
+
+        $JENKINS_STATUS_URL = "$($BUILD_URL)api/json"
+        Write-Output "-- check build status of #Build $BUILD_NUM with $JENKINS_STATUS_URL"
+
+        while ($true) {
+          $RESPONSE = Invoke-WebRequest -Uri $JENKINS_STATUS_URL
+          $RES_CODE = $RESPONSE.StatusCode
+          Write-Output "    ++ status check - HTTP status code: $RES_CODE"
+
+          if ($RES_CODE -ge 200 -and $RES_CODE -lt 300) {
+            $CONTENT = ConvertFrom-Json $RESPONSE.Content
+            $NUMBER = $CONTENT | Select-Object -expand $KEY_NUMBER
+            if ($NUMBER -eq $BUILD_NUM) {
+              $BUILDING = $CONTENT | Select-Object -expand $KEY_BUILDING
+              if ($BUILDING) {
+                Write-Output "    ++ building ..., wait for $WAIT_FOR_JENKINS_SEC s"
+                Start-Sleep -s $WAIT_FOR_JENKINS_SEC
+              } else {
+                $RESULT = $CONTENT | Select-Object -expand $KEY_RESULT
+                if ($RESULT -eq 'SUCCESS') {
+                  Write-Output "    ++ build success, asset name: '$ASSET_NAME'"
+                  Break
+                } else {
+                  Write-Output "    ** build failure"
+                  Exit 1        
+                }
+              }
+            } else {
+              Write-Output "    ++ ... pending, wait for $WAIT_FOR_JENKINS_SEC s"
+              Start-Sleep -s $WAIT_FOR_JENKINS_SEC
+            }
+          } else {
+            Write-Output "    ** status check failure"
+            Exit 1
+          }
+        }
+
+        $JENKINS_DOWNLOAD_URL = "$JENKINS_BASE_URL/$BUILD_NUM/artifact/$Env:ASSET_NAME"
+        Write-Output "-- download the newly-signed Windows installer from #Build $BUILD_NUM with $JENKINS_DOWNLOAD_URL"
+
+        $RESPONSE = Invoke-WebRequest -Uri $JENKINS_DOWNLOAD_URL -OutFile $ASSET_NAME_NEW -PassThru
+        $RES_CODE = $RESPONSE.StatusCode
+        Write-Output "    ++ download installer - HTTP status code: $RES_CODE"
+
+        if ($RES_CODE -ge 200 -and $RES_CODE -lt 300) {
+          Write-Output "IS_DOWNLOAD_AVAILABLE=true" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+          Write-Output "    ++ downloaded signed installer: '$Env:ASSET_NAME'"
+        } else {
+          Write-Output "    ** download failure"
+          Exit 1
+        }
+      env:
+        JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN_GH_RELEASE }}  
+      working-directory: ${{ runner.workspace }}/_build/complete/_deploy
 
     # https://github.com/dev-drprasad/delete-tag-and-release
     # last release v0.2.0 gives Node v12 warnings 
@@ -538,7 +518,7 @@ jobs:
 
     - name: Upload Windows setup signed on Eclipse CI
       if: env.IS_DOWNLOAD_AVAILABLE == 'true'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3.1.2
       with:
         name: windows-setup-eclipse
-        path: _build/complete/_deploy/${{ env.ASSET_NAME }}
+        path: ${{ runner.workspace }}/_build/complete/_deploy/${{ env.ASSET_NAME }}
