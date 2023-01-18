@@ -270,14 +270,6 @@ jobs:
       run: cpack -C Release
       working-directory: ${{ runner.workspace }}/_build/complete
 
-    # the release action can only reach to the root directory
-    - name: Copy Windows installer to the root directory
-      run: |
-        Copy-Item -Path "*.exe" -Destination "$Env:ROOT_DIR/ecal"
-      working-directory: ${{ runner.workspace }}/_build/complete/_deploy
-      env:
-        ROOT_DIR: ${{ runner.workspace }}
-
     - name: Detect certificate
       id: cert
       if: env.IS_GITHUB_SIGNING_ALLOWED == 'true'
@@ -288,14 +280,11 @@ jobs:
         } else {
           Write-Output "WARNING: a certificate is not available"
         }
-        $LS_OUT = ls *.exe
-        Write-Output "ASSET_NAME=$($LS_OUT.Name)" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
       env:
         CERT_BODY: ${{ secrets.CERT_BODY }}
         CERT_PSWD: ${{ secrets.CERT_PSWD }}
         CERT_ALGO: ${{ secrets.CERT_ALGO }}
         CERT_HASH: ${{ secrets.CERT_HASH }}
-      working-directory: ${{ runner.workspace }}/_build/complete/_deploy
 
     # https://github.com/OrhanKupusoglu/code-sign-action
     - name: Sign the installer
@@ -331,8 +320,14 @@ jobs:
         Write-Output "TEMP_RELEASE_NAME=Temporary_Release_$DATE_TIME" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
         Write-Output "TEMP_RELEASE_TAG=temp_rel_$TAG_SUFFIX" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
         Write-Output "IS_JENKINS_SIGNING_ENABLED=true" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+        $LS_OUT = ls *.exe
+        Write-Output "ASSET_NAME=$($LS_OUT.Name)" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+        # the release action can only reach to the root directory
+        Copy-Item -Path "*.exe" -Destination "$Env:ROOT_DIR/ecal"
       env:
         JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN_GH_RELEASE }}
+        ROOT_DIR: ${{ runner.workspace }}
+      working-directory: ${{ runner.workspace }}/_build/complete/_deploy
  
     # https://github.com/softprops/action-gh-release
     - name: Create a temporary release
