@@ -312,94 +312,74 @@ jobs:
 
     # --------------------------------------------------------------------------------------------------
 
-    - name: Set var names for the temporary release
-      if: env.IS_JENKINS_SIGNING_ALLOWED == 'true' && env.JENKINS_TOKEN != ''
-      run: |
-        $DATE_TIME = Get-Date -Format "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff"
-        $TAG_SUFFIX = $DATE_TIME -replace '-','_' -replace ':','_'
-        Write-Output "TEMP_RELEASE_NAME=Temporary_Release_$DATE_TIME" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-        Write-Output "TEMP_RELEASE_TAG=temp_rel_$TAG_SUFFIX" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-        Write-Output "IS_JENKINS_SIGNING_ENABLED=true" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-        $LS_OUT = ls *.exe
-        Write-Output "ASSET_NAME=$($LS_OUT.Name)" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-        # the release action can only reach to the root directory
-        Copy-Item -Path "*.exe" -Destination "$Env:ROOT_DIR/ecal"
-      env:
-        JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN_GH_RELEASE }}
-        ROOT_DIR: ${{ runner.workspace }}
-      working-directory: ${{ runner.workspace }}/_build/complete/_deploy
- 
-    # https://github.com/softprops/action-gh-release
-    - name: Create a temporary release
-      if: env.IS_JENKINS_SIGNING_ENABLED == 'true'
-      id: temp_rel
-      uses: softprops/action-gh-release@v0.1.15
-      with:
-        draft: false
-        prerelease: true
-        generate_release_notes: false
-        append_body: false
-        target_commitish: ${{ env.GITHUB_SHA }}
-        name: ${{ env.TEMP_RELEASE_NAME }}
-        tag_name: ${{ env.TEMP_RELEASE_TAG }}
-        files: ${{ env.ASSET_NAME }}
-
-    - name: Collect data about the temporary release
-      if: env.IS_JENKINS_SIGNING_ENABLED == 'true'
-      run: |
-        $TEMP_RELEASE_URL = "${{ steps.temp_rel.outputs.url }}"
-        $TEMP_RELEASE_ID = "${{ steps.temp_rel.outputs.id }}"
-        $TEMP_RELEASE_UPLOAD_URL = "${{ steps.temp_rel.outputs.upload_url }}"
-        $TEMP_RELEASE_ASSETS = '${{ steps.temp_rel.outputs.assets }}'
-        $PRETTY_JSON = Write-Output "$TEMP_RELEASE_ASSETS" | ConvertFrom-Json | ConvertTo-Json
-        $TEMP_ASSET_DOWNLOAD_URL = "${{ fromJSON(steps.temp_rel.outputs.assets)[0].browser_download_url }}"
-
-        Write-Output "TEMP_RELEASE_ID=$TEMP_RELEASE_ID" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-        Write-Output "TEMP_ASSET_DOWNLOAD_URL=$TEMP_ASSET_DOWNLOAD_URL" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-
-        Write-Output "-- Repository         : $Env:GITHUB_REPOSITORY"
-        Write-Output "-- Branch             : $Env:GITHUB_REF"
-        Write-Output "-- HEAD               : $Env:GITHUB_SHA" 
-        Write-Output "-- Release ID         : $TEMP_RELEASE_ID"
-        Write-Output "-- Release name       : $Env:TEMP_RELEASE_NAME"
-        Write-Output "-- Release tag        : $Env:TEMP_RELEASE_TAG"
-        Write-Output "-- Release URL        : $TEMP_RELEASE_URL"
-        Write-Output "-- Release upload URL : $TEMP_RELEASE_UPLOAD_URL"
-        Write-Output "-- Release assets     :`r`n$PRETTY_JSON" 
-        Write-Output "-- Asset name         : $Env:ASSET_NAME"
-        Write-Output "-- Asset download URL : $TEMP_ASSET_DOWNLOAD_URL"
-
     - name: Sign the installer on Eclipse CI
-      if: env.IS_JENKINS_SIGNING_ENABLED == 'true'
+      if: env.IS_JENKINS_SIGNING_ALLOWED == 'true' && env.JENKINS_USERNAME != '' && env.JENKINS_API_TOKEN != '' && env.JENKINS_JOB_TOKEN != ''
       run: |
-        $ASSET_NAME_OLD = "$($Env:ASSET_NAME).old"
-        $ASSET_NAME_NEW = "$Env:ASSET_NAME"
-        $JENKINS_JOB = 'gh_auto_release'
-        $TOKEN = "$Env:JENKINS_TOKEN"
-        $RELEASE_ID = "$Env:TEMP_RELEASE_ID"
-        $ENCODED_BYTES = [System.Text.Encoding]::UTF8.GetBytes($Env:TEMP_ASSET_DOWNLOAD_URL)
-        $ASSET_URL = [System.Convert]::ToBase64String($ENCODED_BYTES)
-        $JENKINS_BASE_URL = "https://ci.eclipse.org/ecal/job/$JENKINS_JOB"
-        $JENKINS_TRIGGER_URL = "$JENKINS_BASE_URL/buildWithParameters?token=$TOKEN&GH_RELEASE_ID=$RELEASE_ID&GH_ASSET_URL=$ASSET_URL"
+        $LS_OUT = ls *.exe
+        $ASSET_NAME = "$($LS_OUT.Name)"
+        $ASSET_NAME_OLD = "$($ASSET_NAME).old"
+        $ASSET_NAME_NEW = "$ASSET_NAME"
+        $JENKINS_JOB = 'gh_auto_file'
+        $JENKINS_BASE_URL = "https://ci.eclipse.org/ecal"
+        $JENKINS_CRUMB_URL = "$JENKINS_BASE_URL/crumbIssuer/api/json"
+        $TOKEN_NAME_NEW = 'eCAL-Token'
+        $JENKINS_TOKEN_URL = "$JENKINS_BASE_URL/user/admin/descriptorByName/jenkins.security.ApiTokenProperty/generateNewToken?token=$Env:JENKINS_API_TOKEN&newTokenName=$TOKEN_NAME_NEW"
+        $JENKINS_JOB_URL = "$JENKINS_BASE_URL/job/$JENKINS_JOB"
+        $JENKINS_TRIGGER_URL = "$JENKINS_JOB_URL/buildWithParameters?token=$Env:JENKINS_JOB_TOKEN"
         $WAIT_FOR_JENKINS_SEC = 5
         $COUNTER_LIMIT = 20
         $RESPONSE_CODE = 0
         $QUEUE_URL = ''
-        $KEY_EXECUTABLE = 'executable'
-        $KEY_NUMBER = 'number'
-        $KEY_URL = 'url'
-        $KEY_BUILDING = 'building'
-        $KEY_RESULT = 'result'
+        $CRUMB_ID = ''
+        $CRUMB_FIELD = ''
+        $CRUMB_COOKIE = ''
         $COUNTER = 0
+        $QUEUE_URL = ''
+        $BUILD_NUM = 0
+        $BUILD_URL = ''
 
-        Rename-Item -Path "$Env:ASSET_NAME" -NewName "$ASSET_NAME_OLD" 
+        Write-Output "-- get a Jenkins crumb & cookie"
 
-        Write-Output "-- trigger a new build with`r`n   release id     : $RELEASE_ID`r`n   download asset : $Env:TEMP_ASSET_DOWNLOAD_URL`r`n   BASE64         : $ASSET_URL"
+        $AUTH_CREDENTIAL = $Env:JENKINS_USERNAME + ':' + $Env:JENKINS_API_TOKEN
+        $AUTH_ENCODED = [System.Text.Encoding]::UTF8.GetBytes($AUTH_CREDENTIAL)
+        $AUTH_INFO = [System.Convert]::ToBase64String($AUTH_ENCODED)
+        
+        $CRUMB_HEADERS = @{
+          'Authorization'="Basic $($AUTH_INFO)"
+        }
 
-        $RESPONSE = Invoke-WebRequest -Method HEAD -Uri $JENKINS_TRIGGER_URL -UseBasicParsing
+        $RESPONSE = Invoke-WebRequest -Uri $JENKINS_CRUMB_URL -Method GET -Headers $CRUMB_HEADERS
+
+        $RES_CODE = $RESPONSE.StatusCode
+        Write-Output "    ++ Jenkins crumb retrieval - HTTP status code: $RES_CODE"
+
+        if ($RES_CODE -ge 200 -and $RES_CODE -lt 300) {
+          $JSON_CONTENT = $RESPONSE.Content | ConvertFrom-Json
+          $CRUMB_ID = $JSON_CONTENT.crumb
+          $CRUMB_FIELD = $JSON_CONTENT.crumbRequestField
+          $CRUMB_COOKIE = $RESPONSE.Headers['Set-Cookie']
+          Write-Output "    ++ Jenkins crumb: '$CRUMB_ID'"
+          Write-Output "    ++ Jenkins cookie: '$CRUMB_COOKIE'"
+        } else {
+          Write-Output "    ** determination of the Jenkins crumb failed"
+          Exit 1
+        }
+
+        Write-Output "-- trigger a new build of '$JENKINS_JOB' with installer '$ASSET_NAME'"
+
+        $TRIGGER_HEADERS = @{
+          'Authorization'="Basic $($AUTH_INFO)"
+          'Cookie'=$CRUMB_COOKIE
+          $CRUMB_FIELD=$CRUMB_ID
+        }
+        $FORM = @{
+          'GH_FILE_NAME'= $ASSET_NAME
+          'GH_EXECUTABLE'= Get-Item -Path $ASSET_NAME
+        }
+
+        $RESPONSE = Invoke-WebRequest -Uri $JENKINS_TRIGGER_URL -Method POST -Headers $TRIGGER_HEADERS -Form $FORM
         $RES_CODE = $RESPONSE.StatusCode
         Write-Output "    ++ trigger build - HTTP status code: $RES_CODE"
-        $QUEUE_URL = ''
 
         if ($RES_CODE -ge 200 -and $RES_CODE -lt 300) {
           $QUEUE_URL = $RESPONSE.Headers.location
@@ -411,8 +391,6 @@ jobs:
         }
 
         Write-Output "-- get the new build number"
-        $BUILD_NUM = 0
-        $BUILD_URL = ''
 
         while ($true) {
           $COUNTER++
@@ -428,12 +406,12 @@ jobs:
 
           if ($RES_CODE -ge 200 -and $RES_CODE -lt 300) {
             $JSON_CONTENT = $RESPONSE.Content | ConvertFrom-Json
-            $EXECUTABLE = $JSON_CONTENT.$KEY_EXECUTABLE
-            $BUILD_NUM = $EXECUTABLE.$KEY_NUMBER
+            $EXECUTABLE = $JSON_CONTENT.executable
+            $BUILD_NUM = $EXECUTABLE.number
 
             if ($BUILD_NUM) {
               Write-Output "    ++ #build number: $BUILD_NUM"
-              $BUILD_URL = $EXECUTABLE.$KEY_URL
+              $BUILD_URL = $EXECUTABLE.url
               Break
             } else {
               Write-Output "    ++ ... pending, wait for $WAIT_FOR_JENKINS_SEC s"
@@ -455,14 +433,14 @@ jobs:
 
           if ($RES_CODE -ge 200 -and $RES_CODE -lt 300) {
             $CONTENT = ConvertFrom-Json $RESPONSE.Content
-            $NUMBER = $CONTENT | Select-Object -expand $KEY_NUMBER
+            $NUMBER = $CONTENT | Select-Object -expand 'number'
             if ($NUMBER -eq $BUILD_NUM) {
-              $BUILDING = $CONTENT | Select-Object -expand $KEY_BUILDING
+              $BUILDING = $CONTENT | Select-Object -expand 'building'
               if ($BUILDING) {
-                Write-Output "    ++ building ..., wait for $WAIT_FOR_JENKINS_SEC s"
+                Write-Output "    ++ ... building, wait for $WAIT_FOR_JENKINS_SEC s"
                 Start-Sleep -s $WAIT_FOR_JENKINS_SEC
               } else {
-                $RESULT = $CONTENT | Select-Object -expand $KEY_RESULT
+                $RESULT = $CONTENT | Select-Object -expand 'result'
                 if ($RESULT -eq 'SUCCESS') {
                   Write-Output "    ++ build success, asset name: '$ASSET_NAME'"
                   Break
@@ -481,8 +459,10 @@ jobs:
           }
         }
 
-        $JENKINS_DOWNLOAD_URL = "$JENKINS_BASE_URL/$BUILD_NUM/artifact/$Env:ASSET_NAME"
+        $JENKINS_DOWNLOAD_URL = "$JENKINS_JOB_URL/$BUILD_NUM/artifact/$ASSET_NAME"
         Write-Output "-- download the newly-signed Windows installer from #Build $BUILD_NUM with $JENKINS_DOWNLOAD_URL"
+
+        Rename-Item -Path "$ASSET_NAME" -NewName "$ASSET_NAME_OLD" 
 
         $RESPONSE = Invoke-WebRequest -Uri $JENKINS_DOWNLOAD_URL -OutFile $ASSET_NAME_NEW -PassThru
         $RES_CODE = $RESPONSE.StatusCode
@@ -490,26 +470,17 @@ jobs:
 
         if ($RES_CODE -ge 200 -and $RES_CODE -lt 300) {
           Write-Output "IS_DOWNLOAD_AVAILABLE=true" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-          Write-Output "    ++ downloaded signed installer: '$Env:ASSET_NAME'"
+          Write-Output "ASSET_NAME=$ASSET_NAME" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+          Write-Output "    ++ downloaded signed installer: '$ASSET_NAME'"
         } else {
           Write-Output "    ** download failure"
           Exit 1
         }
       env:
-        JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN_GH_RELEASE }}  
+        JENKINS_USERNAME: ${{ secrets.JENKINS_USERNAME }}
+        JENKINS_API_TOKEN: ${{ secrets.JENKINS_API_TOKEN }}  
+        JENKINS_JOB_TOKEN: ${{ secrets.JENKINS_TOKEN_GH_FILE }} 
       working-directory: ${{ runner.workspace }}/_build/complete/_deploy
-
-    # https://github.com/dev-drprasad/delete-tag-and-release
-    # last release v0.2.0 gives Node v12 warnings 
-    # the commit below uses Node v16 and suppresses these warnings
-    - name: Delete the temporary release
-      # always() calls the step even when action is cancelled
-      if: (success() || failure()) && env.IS_JENKINS_SIGNING_ENABLED == 'true'
-      uses: dev-drprasad/delete-tag-and-release@92d94d77429cb0436597047a92369526a5824f50
-      with:
-        tag_name: ${{ env.TEMP_RELEASE_TAG }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload Windows setup signed on Eclipse CI
       if: env.IS_DOWNLOAD_AVAILABLE == 'true'
