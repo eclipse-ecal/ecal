@@ -15,6 +15,7 @@ std::string eCAL::UDP::GetRegistrationMulticastAdress()
   }
   else
   {
+    // both in v1 and v2, the mulicast group is returned as the adress for the registration layer
     return Config::GetUdpMulticastGroup();
   }
 }
@@ -28,5 +29,8 @@ std::string eCAL::UDP::GetLoggingMulticastAdress()
 
 std::string eCAL::UDP::GetTopicMulticastAdress(const std::string& topic_name)
 {
-  return topic2mcast(topic_name, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
+  if (Config::GetUdpMulticastConfigVersion() == Config::UDPConfigVersion::V1)
+    return UDP::V1::topic2mcast(topic_name, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
+  // v2
+  return  UDP::V2::topic2mcast(topic_name, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
 }

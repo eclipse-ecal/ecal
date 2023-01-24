@@ -37,6 +37,7 @@
 
 #define  NET_ENABLED_S                    "network_enabled"
 
+#define  NET_UDP_MULTICAST_CONFIG_VERSION_S "multicast_config_version"
 #define  NET_UDP_MULTICAST_GROUP_S        "multicast_group"
 #define  NET_UDP_MULTICAST_MASK_S         "multicast_mask"
 #define  NET_UDP_MULTICAST_PORT_S         "multicast_port"
