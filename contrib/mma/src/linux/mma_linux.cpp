@@ -264,7 +264,7 @@ ResourceLinux::ProcessStatsList MMALinux::GetProcesses()
       std::vector<std::string> process_data = SplitLine(*iterator);
       process_stats.id=std::stoi(process_data[1]);
       process_stats.user=process_data[0];
-      process_stats.memory.current_used_memory=stoi(process_data[5]);
+      process_stats.memory.current_used_memory=stoull(process_data[5]) * 1024LL;
       process_stats.commandline=process_data[10];
       process_stats.cpu_load.cpu_load=std::stof(process_data[2]);
       processes.push_back(process_stats);
