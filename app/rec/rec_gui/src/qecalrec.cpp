@@ -859,6 +859,7 @@ bool QEcalRec::clearConfig()
     emit measRootDirChangedSignal        (rec_server_->GetMeasRootDir());
     emit measNameChangedSignal           (rec_server_->GetMeasName());
     emit maxFileSizeMibChangedSignal     (rec_server_->GetMaxFileSizeMib());
+    emit oneFilePerTopicEnabledChangedSignal(rec_server_->GetOneFilePerTopicEnabled());
     emit descriptionChangedSignal        (rec_server_->GetDescription());
 
     emit loadedConfigChangedSignal(rec_server_->GetLoadedConfigPath(), rec_server_->GetLoadedConfigVersion());
