@@ -63,6 +63,12 @@ namespace eCAL
       std::set<std::string> enabled_addons_;
     };
 
+    inline bool operator==(const ClientConfig& lhs, const ClientConfig& rhs)
+    {
+      return (lhs.host_filter_ == rhs.host_filter_)
+        && (lhs.enabled_addons_ == rhs.enabled_addons_);
+    }
+
     struct RecServerConfig
     {
       RecServerConfig()
@@ -94,4 +100,5 @@ namespace eCAL
       UploadConfig                        upload_config_;
     };
   }
+
 }

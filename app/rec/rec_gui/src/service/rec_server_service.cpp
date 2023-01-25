@@ -365,3 +365,15 @@ void RecServerService::GetConfig(::google::protobuf::RpcController*             
 
   eCAL::rec_server::proto_helpers::ToProtobuf(config, *response);
 }
+
+void RecServerService::SetConfig(::google::protobuf::RpcController*                /*controller*/
+                                  , const ::eCAL::pb::rec_server::RecServerConfig* request
+                                  , ::eCAL::pb::rec_server::ServiceResult*         response
+                                  , ::google::protobuf::Closure*                   /*done*/)
+{
+  //eCAL::rec_server::RecServerConfig config = eCAL::rec_server::proto_helpers::FromProtobuf(*request);
+  //sdf
+  //QMetaObject::invokeMethod(QEcalRec::instance(), "setConfig", Qt::BlockingQueuedConnection, Q_RETURN_ARG(eCAL::rec_server::RecServerConfig, config));
+
+  //eCAL::rec_server::proto_helpers::ToProtobuf(config, *response);
+}
