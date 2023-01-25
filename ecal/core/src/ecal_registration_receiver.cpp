@@ -145,7 +145,7 @@ namespace eCAL
       {
         attr.broadcast = false;
       }
-      attr.ipaddr = UDP::GetRegistrationMulticastAdress();
+      attr.ipaddr = UDP::GetRegistrationMulticastAddress();
       attr.port = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
       attr.loopback = true;
       attr.rcvbuf = Config::GetUdpMulticastRcvBufSizeBytes();

@@ -65,7 +65,7 @@ namespace eCAL
     m_topic_name  = topic_name_;
     m_topic_id    = topic_id_;
 
-    m_udp_ipaddr = UDP::GetTopicMulticastAdress(topic_name_);
+    m_udp_ipaddr = UDP::GetTopicMulticastAddress(topic_name_);
 
     SSenderAttr attr;
     attr.ipaddr     = m_udp_ipaddr;

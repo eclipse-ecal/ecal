@@ -6,7 +6,7 @@
 const std::string localhost_udp_address{ "127.255.255.255" };
 
 
-std::string eCAL::UDP::GetRegistrationMulticastAdress()
+std::string eCAL::UDP::GetRegistrationMulticastAddress()
 {
   bool local_only = !Config::IsNetworkEnabled();
   if (local_only)
@@ -20,16 +20,16 @@ std::string eCAL::UDP::GetRegistrationMulticastAdress()
   }
 }
 
-std::string eCAL::UDP::GetLoggingMulticastAdress()
+std::string eCAL::UDP::GetLoggingMulticastAddress()
 {
   //TODO: At the moment, both logging and monitoring addresses seem to be the same
   // Should it be kept or changed?
-  return GetRegistrationMulticastAdress();
+  return GetRegistrationMulticastAddress();
 }
 
-std::string eCAL::UDP::GetTopicMulticastAdress(const std::string& topic_name)
+std::string eCAL::UDP::GetTopicMulticastAddress(const std::string& topic_name)
 {
-  if (Config::GetUdpMulticastConfigVersion() == Config::UDPConfigVersion::V1)
+  if (Config::GetUdpMulticastConfigVersion() == Config::UdpConfigVersion::V1)
     return UDP::V1::topic2mcast(topic_name, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
   // v2
   return  UDP::V2::topic2mcast(topic_name, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());

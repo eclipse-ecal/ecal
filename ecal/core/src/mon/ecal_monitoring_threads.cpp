@@ -56,7 +56,7 @@ namespace eCAL
     {
       attr.broadcast = false;
     }
-    attr.ipaddr   = UDP::GetLoggingMulticastAdress();
+    attr.ipaddr   = UDP::GetLoggingMulticastAddress();
     attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
     attr.loopback = true;
     attr.rcvbuf   = Config::GetUdpMulticastRcvBufSizeBytes();

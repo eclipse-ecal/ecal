@@ -30,11 +30,11 @@ namespace eCAL
   namespace UDP
   {
     // Return the Multicast Adress used for sending Registration information
-    std::string GetRegistrationMulticastAdress();
+    std::string GetRegistrationMulticastAddress();
 
-    std::string GetLoggingMulticastAdress();
+    std::string GetLoggingMulticastAddress();
 
-    std::string GetTopicMulticastAdress(const std::string& topic_name);
+    std::string GetTopicMulticastAddress(const std::string& topic_name);
   }
 
 }

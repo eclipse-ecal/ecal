@@ -29,7 +29,7 @@ namespace eCAL
 {
   namespace Config
   {
-    enum class UDPConfigVersion
+    enum class UdpConfigVersion
     {
       V1 = 1, // Legacy
       V2 = 2
@@ -48,7 +48,7 @@ namespace eCAL
     /////////////////////////////////////
 
     ECAL_API bool              IsNetworkEnabled                     ();
-    ECAL_API UDPConfigVersion  GetUdpMulticastConfigVersion         ();
+    ECAL_API UdpConfigVersion  GetUdpMulticastConfigVersion         ();
     ECAL_API std::string       GetUdpMulticastGroup                 ();
     ECAL_API std::string       GetUdpMulticastMask                  ();
     ECAL_API int               GetUdpMulticastPort                  ();
