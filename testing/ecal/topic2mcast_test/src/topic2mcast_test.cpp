@@ -23,12 +23,20 @@
 #include <string>
 #include <chrono>
 #include <thread>
+#include <cstdint>
 
 #include <gtest/gtest.h>
 
 #include <iostream>
 
-std::vector<std::pair<uint32_t, std::string>> ipv4_int_string_vector
+
+struct IP
+{
+  uint32_t int_ip;
+  std::string string_ip;
+};
+
+std::vector<IP> ipv4_int_string_vector
 {
   {0, "0.0.0.0"},
   {0xFFFFFFFF,  "255.255.255.255"},
@@ -120,17 +128,17 @@ std::vector<std::tuple<Topic2McastInput, std::string, std::string>> test;
 
 TEST(Topic2Mcast, ParseIPV4)
 { 
-   for (const auto& [ipv4_int, ipv4_string] : ipv4_int_string_vector)
+   for (const auto& ip : ipv4_int_string_vector)
    {
-     EXPECT_EQ(eCAL::UDP::V2::parse_ipv4(ipv4_string), ipv4_int);
+     EXPECT_EQ(eCAL::UDP::V2::parse_ipv4(ip.string_ip), ip.int_ip);
    }
 }
 
 TEST(Topic2Mcast, SerializeIPV4)
 {
-  for (const auto& [ipv4_int, ipv4_string] : ipv4_int_string_vector)
+  for (const auto& ip : ipv4_int_string_vector)
   {
-    EXPECT_EQ(eCAL::UDP::V2::serialize_ipv4(ipv4_int), ipv4_string);
+    EXPECT_EQ(eCAL::UDP::V2::serialize_ipv4(ip.int_ip), ip.string_ip);
   }
 }
 
