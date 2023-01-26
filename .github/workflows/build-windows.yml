@@ -322,8 +322,6 @@ jobs:
         $JENKINS_JOB = 'gh_auto_file'
         $JENKINS_BASE_URL = "https://ci.eclipse.org/ecal"
         $JENKINS_CRUMB_URL = "$JENKINS_BASE_URL/crumbIssuer/api/json"
-        $TOKEN_NAME_NEW = 'eCAL-Token'
-        $JENKINS_TOKEN_URL = "$JENKINS_BASE_URL/user/admin/descriptorByName/jenkins.security.ApiTokenProperty/generateNewToken?token=$Env:JENKINS_API_TOKEN&newTokenName=$TOKEN_NAME_NEW"
         $JENKINS_JOB_URL = "$JENKINS_BASE_URL/job/$JENKINS_JOB"
         $JENKINS_TRIGGER_URL = "$JENKINS_JOB_URL/buildWithParameters?token=$Env:JENKINS_JOB_TOKEN"
         $WAIT_FOR_JENKINS_SEC = 5
