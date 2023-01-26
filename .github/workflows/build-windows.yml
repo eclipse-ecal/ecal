@@ -299,13 +299,13 @@ jobs:
         debug: false
 
     - name: Upload Windows setup
-      uses: actions/upload-artifact@v3.1.2
+      uses: actions/upload-artifact@v3
       with:
         name: windows-setup
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.exe
 
     - name: Upload Python Wheels
-      uses: actions/upload-artifact@v3.1.2
+      uses: actions/upload-artifact@v3
       with:
         name: windows-python-wheels
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.whl
@@ -484,7 +484,7 @@ jobs:
 
     - name: Upload Windows setup signed on Eclipse CI
       if: env.IS_DOWNLOAD_AVAILABLE == 'true'
-      uses: actions/upload-artifact@v3.1.2
+      uses: actions/upload-artifact@v3
       with:
         name: windows-setup-eclipse
         path: ${{ runner.workspace }}/_build/complete/_deploy/${{ env.ASSET_NAME }}
