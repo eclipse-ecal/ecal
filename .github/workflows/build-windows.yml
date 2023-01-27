@@ -327,7 +327,6 @@ jobs:
         $WAIT_FOR_JENKINS_SEC = 5
         $COUNTER_LIMIT = 20
         $RESPONSE_CODE = 0
-        $QUEUE_URL = ''
         $CRUMB_ID = ''
         $CRUMB_FIELD = ''
         $CRUMB_COOKIE = ''
