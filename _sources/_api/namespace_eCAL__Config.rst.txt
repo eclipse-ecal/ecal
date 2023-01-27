@@ -20,6 +20,13 @@ Namespaces
 - :ref:`namespace_eCAL__Config__Experimental`
 
 
+Enums
+-----
+
+
+- :ref:`exhale_enum_ecal__config_8h_1ad5d30f75fb2c2de1253f805e812ab3b0`
+
+
 Functions
 ---------
 
@@ -71,6 +78,8 @@ Functions
 - :ref:`exhale_function_ecal__config_8h_1a633d1b1b9214f6b1ce56c919bcd43eaa`
 
 - :ref:`exhale_function_ecal__config_8h_1a785f3d90dc6b68ea1700f63d4f236f62`
+
+- :ref:`exhale_function_ecal__config_8h_1ac5df2eda843892fe59f8162c49c9ee99`
 
 - :ref:`exhale_function_ecal__config_8h_1a1c69db24e82f221aefb2995f47d48d59`
 
