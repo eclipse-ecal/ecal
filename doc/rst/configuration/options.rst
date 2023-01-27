@@ -84,7 +84,7 @@ The network setting drive how and which ...
    
    Mask for the multicast group. Topic traffic may be set on any of the unmasked addresses.
    
-   With ``multicast_group``: ``239.0.0.1`` and ``multicast_mask``: ``255.255.255.255``, topic traffic will be sent on addresses ``239.0.0.0``-``239.0.0.255``.
+   With ``multicast_group``: ``239.0.0.1`` and ``multicast_mask``: ``255.255.255.0``, topic traffic will be sent on addresses ``239.0.0.0``-``239.0.0.255``.
    
 .. option:: multicast_port     
    
