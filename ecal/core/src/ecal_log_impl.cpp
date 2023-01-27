@@ -32,6 +32,8 @@
 
 #include "ecal_log_impl.h"
 
+#include "io/udp_configurations.h"
+
 #include <mutex>
 #include <stdio.h>
 
@@ -159,14 +161,13 @@ namespace eCAL
       // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
       if (local_only)
       {
-        attr.ipaddr    = "127.255.255.255";
         attr.broadcast = true;
       }
       else
       {
-        attr.ipaddr    = Config::GetUdpMulticastGroup();
         attr.broadcast = false;
       }
+      attr.ipaddr   = UDP::GetLoggingMulticastAddress();
       attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
       attr.loopback = true;
       attr.ttl      = Config::GetUdpMulticastTtl();

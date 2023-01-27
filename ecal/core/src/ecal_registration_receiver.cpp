@@ -32,6 +32,8 @@
 #include "service/ecal_clientgate.h"
 #include "service/ecal_servicegate.h"
 
+#include "io/udp_configurations.h"
+
 namespace eCAL
 {
   size_t CUdpRegistrationReceiver::ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/)
@@ -137,14 +139,13 @@ namespace eCAL
       // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
       if (local_only)
       {
-        attr.ipaddr = "127.255.255.255";
         attr.broadcast = true;
       }
       else
       {
-        attr.ipaddr = Config::GetUdpMulticastGroup();
         attr.broadcast = false;
       }
+      attr.ipaddr = UDP::GetRegistrationMulticastAddress();
       attr.port = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
       attr.loopback = true;
       attr.rcvbuf = Config::GetUdpMulticastRcvBufSizeBytes();

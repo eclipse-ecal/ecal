@@ -54,18 +54,38 @@ The network setting drive how and which ...
    
    ``false`` = local host only communication
    
+.. option:: multicast_config_version
+
+   ``v1`` / ``v2``, default: ``v1`` 
+
+   UDP configuration version (Since eCAL 5.12.)
+   
+   ``v1`` = default behavior
+
+   ``v2`` = new behavior, comes with a bit more intuitive handling regarding masking of the groups
+
 .. option:: multicast_group
 
    IPV4 Adress, default ``239.0.0.1``
 
-   UDP multicast group base. 
+   UDP multicast group base. All registration and logging information is sent on this address.
 
 .. option:: multicast_mask
 
+   ``v1`` **behavior:** 
+   
    ``0.0.0.1``-``0.0.0.255``
 
    Mask maximum number of dynamic multicast group
 
+   ``v2`` **behavior:** 
+   
+   ``255.0.0.0``-``255.255.255.255`` 
+   
+   Mask for the multicast group. Topic traffic may be set on any of the unmasked addresses.
+   
+   With ``multicast_group``: ``239.0.0.1`` and ``multicast_mask``: ``255.255.255.0``, topic traffic will be sent on addresses ``239.0.0.0``-``239.0.0.255``.
+   
 .. option:: multicast_port     
    
    ``14000 + x``

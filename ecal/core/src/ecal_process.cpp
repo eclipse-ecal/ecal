@@ -231,6 +231,7 @@ namespace eCAL
       sstream << "Network ttl              : " << Config::GetUdpMulticastTtl() << std::endl;
       sstream << "Network sndbuf           : " << GetBufferStr(Config::GetUdpMulticastSndBufSizeBytes()) << std::endl;
       sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetUdpMulticastRcvBufSizeBytes()) << std::endl;
+      sstream << "Multicast cfg version    : v" << static_cast<uint32_t>(Config::GetUdpMulticastConfigVersion()) << std::endl;
       sstream << "Multicast group          : " << Config::GetUdpMulticastGroup() << std::endl;
       sstream << "Multicast mask           : " << Config::GetUdpMulticastMask() << std::endl;
       int port = Config::GetUdpMulticastPort();

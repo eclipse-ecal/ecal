@@ -26,7 +26,7 @@
 #include "ecal_global_accessors.h"
 #include "pubsub/ecal_subgate.h"
 
-#include "topic2mcast.h"
+#include "io/udp_configurations.h"
 
 namespace eCAL
 {
@@ -76,7 +76,7 @@ namespace eCAL
       started = true;
     }
     // add topic name based multicast address
-    std::string mcast_address = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
+    std::string mcast_address = UDP::GetTopicMulticastAddress(topic_name_);
     if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
     {
       topic_name_mcast_map.emplace(std::pair<std::string, int>(mcast_address, 0));
@@ -87,7 +87,7 @@ namespace eCAL
 
   void CUDPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
   {
-    std::string mcast_address = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
+    std::string mcast_address = UDP::GetTopicMulticastAddress(topic_name_);
     if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
     {
       // this should never happen

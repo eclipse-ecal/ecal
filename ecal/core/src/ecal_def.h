@@ -66,6 +66,7 @@
 #define NET_ENABLED                                 false
 
 /* eCAL udp multicast defines */
+#define NET_UDP_MULTICAST_CONFIG_VERSION           "v1"
 #define NET_UDP_MULTICAST_GROUP                    "239.0.0.1"
 #define NET_UDP_MULTICAST_MASK                     "0.0.0.15"
 #define NET_UDP_MULTICAST_PORT                     14000
