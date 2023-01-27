@@ -65,4 +65,5 @@ message RecServerConfig
   bool                           built_in_recorder_enabled  =  8;               // Whether the built-in recorder is enabled. If false, the rec server application will look for a separate ecal_rec_client for recording on localhost.
   RecordMode                     record_mode                =  9;               // Whether to record all topics or just a subset (Whitelisted or blacklisted).
   repeated string                listed_topics              = 10;               // Only relevant when not recording all topics. If a whitelist or blacklist is used, this holds the according list.
+  UploadConfig                   upload_config              = 12;               // The configuration used for uploading any new measurement.
 }

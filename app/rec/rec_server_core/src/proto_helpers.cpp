@@ -108,6 +108,8 @@ namespace eCAL
         {
           rec_server_config_pb.add_listed_topics(topic_name);
         }
+
+        ToProtobuf(rec_server_config.upload_config_, *rec_server_config_pb.mutable_upload_config());
       }
 
       void ToProtobuf(const eCAL::rec_server::ClientJobStatus& client_job_status, eCAL::pb::rec_server::ClientJobStatus& client_job_status_pb)
@@ -346,6 +348,8 @@ namespace eCAL
         {
           rec_server_config.listed_topics_.emplace(topic_name);
         }
+
+        FromProtobuf(rec_server_config_pb.upload_config(), rec_server_config.upload_config_);
       }
 
       void FromProtobuf(const eCAL::pb::rec_server::ClientJobStatus& client_job_status_pb, eCAL::rec_server::ClientJobStatus& client_job_status)
