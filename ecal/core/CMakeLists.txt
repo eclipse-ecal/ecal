@@ -72,6 +72,7 @@ set(ecal_io_cpp_src
     src/io/rcv_sample.cpp
     src/io/snd_raw_buffer.cpp
     src/io/snd_sample.cpp
+    src/io/udp_configurations.cpp
     src/io/udp_init.cpp
     src/io/udp_receiver.cpp
     src/io/udp_receiver_asio.cpp
@@ -195,6 +196,7 @@ set(ecal_io_header_src
     src/io/rcv_sample.h
     src/io/snd_raw_buffer.h
     src/io/snd_sample.h
+    src/io/udp_configurations.h
     src/io/udp_init.h
     src/io/udp_receiver.h
     src/io/udp_receiver_base.h

@@ -1949,6 +1949,7 @@ namespace eCAL
       SetMeasRootDir        ("");
       SetMeasName           ("");
       SetMaxFileSizeMib     (100);
+      SetOneFilePerTopicEnabled(false);
       SetDescription        ("");
       
       loaded_config_path_    = "";

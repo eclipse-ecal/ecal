@@ -32,6 +32,7 @@
 #include "ecal_globals.h"
 #include "ecal_registration_provider.h"
 
+#include "io/udp_configurations.h"
 #include "io/snd_sample.h"
 
 namespace eCAL
@@ -84,14 +85,13 @@ namespace eCAL
       // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
       if (local_only)
       {
-        attr.ipaddr = "127.255.255.255";
         attr.broadcast = true;
       }
       else
       {
-        attr.ipaddr = Config::GetUdpMulticastGroup();
         attr.broadcast = false;
       }
+      attr.ipaddr = UDP::GetRegistrationMulticastAddress();
       attr.port = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
       attr.loopback = true;
       attr.ttl = Config::GetUdpMulticastTtl();

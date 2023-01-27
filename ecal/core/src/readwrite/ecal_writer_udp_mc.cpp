@@ -29,7 +29,7 @@
 #include "ecal_config_reader_hlp.h"
 #include "ecal_writer_udp_mc.h"
 
-#include "topic2mcast.h"
+#include "io/udp_configurations.h"
 #include "io/snd_sample.h"
 
 namespace eCAL
@@ -65,7 +65,7 @@ namespace eCAL
     m_topic_name  = topic_name_;
     m_topic_id    = topic_id_;
 
-    m_udp_ipaddr  = topic2mcast(topic_name_, Config::GetUdpMulticastGroup(), Config::GetUdpMulticastMask());
+    m_udp_ipaddr = UDP::GetTopicMulticastAddress(topic_name_);
 
     SSenderAttr attr;
     attr.ipaddr     = m_udp_ipaddr;

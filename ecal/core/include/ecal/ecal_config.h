@@ -17,6 +17,8 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#pragma once
+
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_tlayer.h>
 #include <ecal/ecal_log_level.h>
@@ -27,6 +29,12 @@ namespace eCAL
 {
   namespace Config
   {
+    enum class UdpConfigVersion
+    {
+      V1 = 1, // Legacy
+      V2 = 2
+    };
+
     /////////////////////////////////////
     // common
     /////////////////////////////////////
@@ -40,7 +48,7 @@ namespace eCAL
     /////////////////////////////////////
 
     ECAL_API bool              IsNetworkEnabled                     ();
-
+    ECAL_API UdpConfigVersion  GetUdpMulticastConfigVersion         ();
     ECAL_API std::string       GetUdpMulticastGroup                 ();
     ECAL_API std::string       GetUdpMulticastMask                  ();
     ECAL_API int               GetUdpMulticastPort                  ();

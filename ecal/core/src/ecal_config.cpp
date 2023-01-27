@@ -100,6 +100,17 @@ namespace eCAL
 
     ECAL_API bool              IsNetworkEnabled                     () { return eCALPAR(NET, ENABLED); }
 
+    ECAL_API UdpConfigVersion  GetUdpMulticastConfigVersion()
+    {
+      std::string udp_config_version_string = eCALPAR(NET, UDP_MULTICAST_CONFIG_VERSION);
+      if (udp_config_version_string == "v1")
+        return UdpConfigVersion::V1;
+      if (udp_config_version_string == "v2")
+        return UdpConfigVersion::V2;
+      // TODO: Log error. However not sure if logging is initialized at this place.
+      return UdpConfigVersion::V1;
+    }
+
     ECAL_API std::string       GetUdpMulticastGroup                 () { return eCALPAR(NET, UDP_MULTICAST_GROUP); }
     ECAL_API std::string       GetUdpMulticastMask                  () { return eCALPAR(NET, UDP_MULTICAST_MASK); }
     ECAL_API int               GetUdpMulticastPort                  () { return eCALPAR(NET, UDP_MULTICAST_PORT); }
