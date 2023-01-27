@@ -90,6 +90,11 @@ namespace eCAL
           ss << "Max hdf5 file size:  "  << config.max_file_size_ << " MiB" << std::endl;
         }
 
+        // One-file-per-topic
+        {
+          ss << "One file per topic:  "  << (config.one_file_per_topic_ ? "Yes" : "No") << std::endl;
+        }
+
         // Description
         {
           ss << "Description:" << std::endl;
