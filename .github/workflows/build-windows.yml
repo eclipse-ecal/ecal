@@ -5,6 +5,9 @@ on:
   pull_request:
     branches:
       - master
+env:
+  IS_GITHUB_SIGNING_ALLOWED: true
+  IS_JENKINS_SIGNING_ALLOWED: true
 
 jobs:
   build-windows:
@@ -269,23 +272,23 @@ jobs:
 
     - name: Detect certificate
       id: cert
+      if: env.IS_GITHUB_SIGNING_ALLOWED == 'true'
       run: |
-        if [[ -n "${{ secrets.CERT_BODY }}" \
-              && -n "${{ secrets.CERT_PSWD }}" \
-              && -n "${{ secrets.CERT_ALGO }}" \
-              && -n "${{ secrets.CERT_HASH }}" ]]
-        then
-          echo "ATTENTION: a certificate is available"
-          echo "::set-output name=is_available::true"
-        else
-          echo "WARNING: A certificate is not available"
-          echo "::set-output name=is_available::false"
-        fi
-      shell: bash
+        if ($Env:CERT_BODY -and $Env:CERT_PSWD -and $Env:CERT_ALGO -and $Env:CERT_HASH) {
+          Write-Output "ATTENTION: a certificate is available"
+          Write-Output "IS_GITHUB_SIGNING_ENABLED=true" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+        } else {
+          Write-Output "WARNING: a certificate is not available"
+        }
+      env:
+        CERT_BODY: ${{ secrets.CERT_BODY }}
+        CERT_PSWD: ${{ secrets.CERT_PSWD }}
+        CERT_ALGO: ${{ secrets.CERT_ALGO }}
+        CERT_HASH: ${{ secrets.CERT_HASH }}
 
     # https://github.com/OrhanKupusoglu/code-sign-action
     - name: Sign the installer
-      if: fromJSON(steps.cert.outputs.is_available)
+      if: env.IS_GITHUB_SIGNING_ENABLED == 'true'
       uses: OrhanKupusoglu/code-sign-action@v5.5.1
       with:
         cert_body: ${{ secrets.CERT_BODY }}
@@ -293,7 +296,7 @@ jobs:
         cert_algo: ${{ secrets.CERT_ALGO }}
         cert_hash: ${{ secrets.CERT_HASH }}
         folder: ${{ runner.workspace }}/_build/complete/_deploy
-        debug: true
+        debug: false
 
     - name: Upload Windows setup
       uses: actions/upload-artifact@v3
@@ -306,3 +309,179 @@ jobs:
       with:
         name: windows-python-wheels
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.whl
+
+    # --------------------------------------------------------------------------------------------------
+
+    - name: Sign the installer on Eclipse CI
+      if: env.IS_JENKINS_SIGNING_ALLOWED == 'true' && env.JENKINS_USERNAME != '' && env.JENKINS_API_TOKEN != '' && env.JENKINS_JOB_TOKEN != ''
+      run: |
+        $LS_OUT = ls *.exe
+        $ASSET_NAME = "$($LS_OUT.Name)"
+        $ASSET_NAME_OLD = "$($ASSET_NAME).old"
+        $ASSET_NAME_NEW = "$ASSET_NAME"
+        $JENKINS_JOB = 'gh_auto_file'
+        $JENKINS_BASE_URL = "https://ci.eclipse.org/ecal"
+        $JENKINS_CRUMB_URL = "$JENKINS_BASE_URL/crumbIssuer/api/json"
+        $JENKINS_JOB_URL = "$JENKINS_BASE_URL/job/$JENKINS_JOB"
+        $JENKINS_TRIGGER_URL = "$JENKINS_JOB_URL/buildWithParameters?token=$Env:JENKINS_JOB_TOKEN"
+        $WAIT_FOR_JENKINS_SEC = 5
+        $COUNTER_LIMIT = 20
+        $RESPONSE_CODE = 0
+        $CRUMB_ID = ''
+        $CRUMB_FIELD = ''
+        $CRUMB_COOKIE = ''
+        $COUNTER = 0
+        $QUEUE_URL = ''
+        $BUILD_NUM = 0
+        $BUILD_URL = ''
+
+        Write-Output "-- get a Jenkins crumb & cookie"
+
+        $AUTH_CREDENTIAL = $Env:JENKINS_USERNAME + ':' + $Env:JENKINS_API_TOKEN
+        $AUTH_ENCODED = [System.Text.Encoding]::UTF8.GetBytes($AUTH_CREDENTIAL)
+        $AUTH_INFO = [System.Convert]::ToBase64String($AUTH_ENCODED)
+        
+        $CRUMB_HEADERS = @{
+          'Authorization'="Basic $($AUTH_INFO)"
+        }
+
+        $RESPONSE = Invoke-WebRequest -Uri $JENKINS_CRUMB_URL -Method GET -Headers $CRUMB_HEADERS
+
+        $RES_CODE = $RESPONSE.StatusCode
+        Write-Output "    ++ Jenkins crumb retrieval - HTTP status code: $RES_CODE"
+
+        if ($RES_CODE -ge 200 -and $RES_CODE -lt 300) {
+          $JSON_CONTENT = $RESPONSE.Content | ConvertFrom-Json
+          $CRUMB_ID = $JSON_CONTENT.crumb
+          $CRUMB_FIELD = $JSON_CONTENT.crumbRequestField
+          $CRUMB_COOKIE = $RESPONSE.Headers['Set-Cookie']
+          #Write-Output "    ++ Jenkins crumb: '$CRUMB_ID'"
+          #Write-Output "    ++ Jenkins cookie: '$CRUMB_COOKIE'"
+        } else {
+          Write-Output "    ** determination of the Jenkins crumb failed"
+          Exit 1
+        }
+
+        Write-Output "-- trigger a new build of '$JENKINS_JOB' with installer '$ASSET_NAME'"
+
+        $TRIGGER_HEADERS = @{
+          'Authorization'="Basic $($AUTH_INFO)"
+          'Cookie'=$CRUMB_COOKIE
+          $CRUMB_FIELD=$CRUMB_ID
+        }
+        $FORM = @{
+          'GH_FILE_NAME'= $ASSET_NAME
+          'GH_EXECUTABLE'= Get-Item -Path $ASSET_NAME
+        }
+
+        $RESPONSE = Invoke-WebRequest -Uri $JENKINS_TRIGGER_URL -Method POST -Headers $TRIGGER_HEADERS -Form $FORM
+        $RES_CODE = $RESPONSE.StatusCode
+        Write-Output "    ++ trigger build - HTTP status code: $RES_CODE"
+
+        if ($RES_CODE -ge 200 -and $RES_CODE -lt 300) {
+          $QUEUE_URL = $RESPONSE.Headers.location
+          $QUEUE_URL = "$($QUEUE_URL)api/json/" 
+          Write-Output "    ++ queue URL: $QUEUE_URL"
+        } else {
+          Write-Output "    ** trigger failure"
+          Exit 1
+        }
+
+        Write-Output "-- get the new build number"
+
+        while ($true) {
+          $COUNTER++
+
+          if ($COUNTER -gt $COUNTER_LIMIT) {
+              Write-Output "    ** determination of the new build number failed after $COUNTER_LIMIT tries" 
+              Exit 1
+          }
+          
+          $RESPONSE = Invoke-WebRequest -Uri $QUEUE_URL
+          $RES_CODE = $RESPONSE.StatusCode
+          Write-Output "    ++ build number retrieval - HTTP status code: $RES_CODE"
+
+          if ($RES_CODE -ge 200 -and $RES_CODE -lt 300) {
+            $JSON_CONTENT = $RESPONSE.Content | ConvertFrom-Json
+            $EXECUTABLE = $JSON_CONTENT.executable
+            $BUILD_NUM = $EXECUTABLE.number
+
+            if ($BUILD_NUM) {
+              Write-Output "    ++ #build number: $BUILD_NUM"
+              $BUILD_URL = $EXECUTABLE.url
+              Break
+            } else {
+              Write-Output "    ++ ... pending, wait for $WAIT_FOR_JENKINS_SEC s"
+              Start-Sleep -s $WAIT_FOR_JENKINS_SEC
+            }
+          } else {
+            Write-Output "    ** determination of the build number failed, trying again after $WAIT_FOR_JENKINS_SEC s"
+            Start-Sleep -s $WAIT_FOR_JENKINS_SEC
+          }
+        }
+
+        $JENKINS_STATUS_URL = "$($BUILD_URL)api/json"
+        Write-Output "-- check build status of #Build $BUILD_NUM with $JENKINS_STATUS_URL"
+
+        while ($true) {
+          $RESPONSE = Invoke-WebRequest -Uri $JENKINS_STATUS_URL
+          $RES_CODE = $RESPONSE.StatusCode
+          Write-Output "    ++ status check - HTTP status code: $RES_CODE"
+
+          if ($RES_CODE -ge 200 -and $RES_CODE -lt 300) {
+            $CONTENT = ConvertFrom-Json $RESPONSE.Content
+            $NUMBER = $CONTENT | Select-Object -expand 'number'
+            if ($NUMBER -eq $BUILD_NUM) {
+              $BUILDING = $CONTENT | Select-Object -expand 'building'
+              if ($BUILDING) {
+                Write-Output "    ++ ... building, wait for $WAIT_FOR_JENKINS_SEC s"
+                Start-Sleep -s $WAIT_FOR_JENKINS_SEC
+              } else {
+                $RESULT = $CONTENT | Select-Object -expand 'result'
+                if ($RESULT -eq 'SUCCESS') {
+                  Write-Output "    ++ build success, asset name: '$ASSET_NAME'"
+                  Break
+                } else {
+                  Write-Output "    ** build failure"
+                  Exit 1        
+                }
+              }
+            } else {
+              Write-Output "    ++ ... pending, wait for $WAIT_FOR_JENKINS_SEC s"
+              Start-Sleep -s $WAIT_FOR_JENKINS_SEC
+            }
+          } else {
+            Write-Output "    ** status check failure"
+            Exit 1
+          }
+        }
+
+        $JENKINS_DOWNLOAD_URL = "$JENKINS_JOB_URL/$BUILD_NUM/artifact/$ASSET_NAME"
+        Write-Output "-- download the newly-signed Windows installer from #Build $BUILD_NUM with $JENKINS_DOWNLOAD_URL"
+
+        Rename-Item -Path "$ASSET_NAME" -NewName "$ASSET_NAME_OLD" 
+
+        $RESPONSE = Invoke-WebRequest -Uri $JENKINS_DOWNLOAD_URL -OutFile $ASSET_NAME_NEW -PassThru
+        $RES_CODE = $RESPONSE.StatusCode
+        Write-Output "    ++ download installer - HTTP status code: $RES_CODE"
+
+        if ($RES_CODE -ge 200 -and $RES_CODE -lt 300) {
+          Write-Output "IS_DOWNLOAD_AVAILABLE=true" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+          Write-Output "ASSET_NAME=$ASSET_NAME" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+          Write-Output "    ++ downloaded signed installer: '$ASSET_NAME'"
+        } else {
+          Write-Output "    ** download failure"
+          Exit 1
+        }
+      env:
+        JENKINS_USERNAME: ${{ secrets.JENKINS_USERNAME }}
+        JENKINS_API_TOKEN: ${{ secrets.JENKINS_API_TOKEN }}  
+        JENKINS_JOB_TOKEN: ${{ secrets.JENKINS_TOKEN_GH_FILE }} 
+      working-directory: ${{ runner.workspace }}/_build/complete/_deploy
+
+    - name: Upload Windows setup signed on Eclipse CI
+      if: env.IS_DOWNLOAD_AVAILABLE == 'true'
+      uses: actions/upload-artifact@v3
+      with:
+        name: windows-setup-eclipse
+        path: ${{ runner.workspace }}/_build/complete/_deploy/${{ env.ASSET_NAME }}
