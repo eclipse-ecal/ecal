@@ -25,6 +25,7 @@
 #include <rec_server_core/proto_helpers.h>
 
 #include <clocale> // localeconv
+#include <functional>
 
 #include <regex>
 
@@ -277,7 +278,6 @@ namespace eCAL
           // Instead, we are going to work on the original config_pb, that still
           // contains all unknown values, and change only what we need to.
 
-          // TODO: Set-config in Remote mode needs to also work from command line!!!!
 
           // Set clients
           if (cmdline.set_client_arg.isSet())
@@ -606,7 +606,7 @@ namespace eCAL
 
       }
 
-      eCAL::rec::Error SetConfig::ParseParam_TopicList          (const std::string& param,              std::set<std::string>&                                 topic_list_out)
+      eCAL::rec::Error SetConfig::ParseParams_TopicList          (const std::string& param,              std::set<std::string>&                                 topic_list_out)
       {
         topic_list_out.clear();
         std::vector<std::string> topic_list_tmp;
@@ -615,14 +615,15 @@ namespace eCAL
 
         for (const std::string& topic : topic_list_tmp)
         {
-          // TODO: strip out empty strings?
-          topic_list_out.insert(EcalUtils::String::Trim(topic));
+          std::string trimmed_topic = EcalUtils::String::Trim(topic);
+          if (!trimmed_topic.empty())
+            topic_list_out.insert(trimmed_topic);
         }
 
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::ParseParam_SetMaxFileSize     (const std::string& param,              unsigned int&                                          max_file_size_mib_out)
+      eCAL::rec::Error SetConfig::ParseParams_SetMaxFileSize     (const std::string& param,              unsigned int&                                          max_file_size_mib_out)
       {
         if (param.empty())
           return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::PARAMETER_ERROR, "Value for max HDF5 file size must not  be empty");
@@ -637,6 +638,135 @@ namespace eCAL
         }
         
         return eCAL::rec::Error::OK;
+      }
+
+      //////////////////////////////////////////////
+      /// SetConfig functions (remote directly)
+      //////////////////////////////////////////////
+      eCAL::rec::Error SetConfig::SetClient                 (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& param)
+      {
+        // Select the correct overload of the function and bind it to an std::function object
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::vector<std::string>&)>(SetClient);
+
+        // Call the wrapper function that will set the according setting
+        return SetConfigDirectly<const std::vector<std::string>&>(hostname, remote_rec_server_service, param, f);
+      }
+
+      eCAL::rec::Error SetConfig::SetAddons                 (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& param)
+      {
+        // Select the correct overload of the function and bind it to an std::function object
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::vector<std::string>&)>(SetAddons);
+
+        // Call the wrapper function that will set the according setting
+        return SetConfigDirectly<const std::vector<std::string>&>(hostname, remote_rec_server_service, param, f);
+      }
+
+      eCAL::rec::Error SetConfig::RemoveClient              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& param)
+      {
+        // Select the correct overload of the function and bind it to an std::function object
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::vector<std::string>&)>(RemoveClient);
+
+        // Call the wrapper function that will set the according setting
+        return SetConfigDirectly<const std::vector<std::string>&>(hostname, remote_rec_server_service, param, f);
+      }
+
+      eCAL::rec::Error SetConfig::setFtpServer              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      {
+        // Select the correct overload of the function and bind it to an std::function object
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(setFtpServer);
+
+        // Call the wrapper function that will set the according setting
+        return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
+      }
+
+      eCAL::rec::Error SetConfig::setDeleteAfterUpload      (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param)
+      {
+        // Select the correct overload of the function and bind it to an std::function object
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, bool)>(setDeleteAfterUpload);
+
+        // Call the wrapper function that will set the according setting
+        return SetConfigDirectly<bool>(hostname, remote_rec_server_service, param, f);
+      }
+
+      eCAL::rec::Error SetConfig::setBuiltInClientEnabled   (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param)
+      {
+        // Select the correct overload of the function and bind it to an std::function object
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, bool)>(setBuiltInClientEnabled);
+
+        // Call the wrapper function that will set the according setting
+        return SetConfigDirectly<bool>(hostname, remote_rec_server_service, param, f);
+      }
+
+      eCAL::rec::Error SetConfig::setPreBuffer              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      {
+        // Select the correct overload of the function and bind it to an std::function object
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(setPreBuffer);
+
+        // Call the wrapper function that will set the according setting
+        return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
+      }
+
+      eCAL::rec::Error SetConfig::setBlacklist              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      {
+        // Select the correct overload of the function and bind it to an std::function object
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(setBlacklist);
+
+        // Call the wrapper function that will set the according setting
+        return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
+      }
+
+      eCAL::rec::Error SetConfig::setWhitelist              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      {
+        // Select the correct overload of the function and bind it to an std::function object
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(setWhitelist);
+
+        // Call the wrapper function that will set the according setting
+        return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
+      }
+
+      eCAL::rec::Error SetConfig::setMeasRootDir            (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      {
+        // Select the correct overload of the function and bind it to an std::function object
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(setMeasRootDir);
+
+        // Call the wrapper function that will set the according setting
+        return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
+      }
+
+      eCAL::rec::Error SetConfig::setMeasName               (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      {
+        // Select the correct overload of the function and bind it to an std::function object
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(setMeasName);
+
+        // Call the wrapper function that will set the according setting
+        return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
+      }
+
+      eCAL::rec::Error SetConfig::setMaxFileSize            (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      {
+        // Select the correct overload of the function and bind it to an std::function object
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(setMaxFileSize);
+
+        // Call the wrapper function that will set the according setting
+        return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
+      }
+
+      eCAL::rec::Error SetConfig::setDescription            (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      {
+        // Select the correct overload of the function and bind it to an std::function object
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(setDescription);
+
+        // Call the wrapper function that will set the according setting
+        return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
+      }
+
+      eCAL::rec::Error SetConfig::setOneFilePerTopicEnabled (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param)
+      {
+        // Select the correct overload of the function and bind it to an std::function object
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, bool)>(setOneFilePerTopicEnabled);
+
+        // Call the wrapper function that will set the according setting
+        return SetConfigDirectly<bool>(hostname, remote_rec_server_service, param, f);
       }
 
       //////////////////////////////////////////////
@@ -802,7 +932,7 @@ namespace eCAL
 
         // Parse param
         {
-          auto error = ParseParam_TopicList(param, topic_list);
+          auto error = ParseParams_TopicList(param, topic_list);
           if (error)
             return error;
         }
@@ -834,7 +964,7 @@ namespace eCAL
 
         // Parse param
         {
-          auto error = ParseParam_TopicList(param, topic_list);
+          auto error = ParseParams_TopicList(param, topic_list);
           if (error)
             return error;
         }
@@ -871,7 +1001,7 @@ namespace eCAL
 
         // Parse Parameter
         {
-          auto error = ParseParam_SetMaxFileSize(param, max_file_size_mib);
+          auto error = ParseParams_SetMaxFileSize(param, max_file_size_mib);
           if (error)
             return error;
         }

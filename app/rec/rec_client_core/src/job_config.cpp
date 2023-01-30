@@ -32,7 +32,7 @@ namespace eCAL
 
     JobConfig::JobConfig()
       : job_id_(0)
-      , max_file_size_mb_(50)
+      , max_file_size_mb_(1000)
       , one_file_per_topic_(false)
     {}
 

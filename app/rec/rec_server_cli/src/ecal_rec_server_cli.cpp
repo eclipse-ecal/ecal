@@ -181,25 +181,25 @@ int main(int argc, char** argv)
   /////////////////////////////////////////////////
   
   // Client management
-  TCLAP::MultiArg<std::string>  set_client_arg     ("", "set-client",    "Sets which hosts shall be recorded by the given client. Use the syntax \"Hostname:Host,To,Record\". For instance, to let PC1 record itself and PC2, use \"PC1:PC1,PC2\". If no tailing list is provided, the client will record topcis from all hosts by default. If a configuration file is being loaded, this will override the setting from the config. Not available in remote-control mode.", false, "Hostname:Hosts,To,Record");
-  TCLAP::MultiArg<std::string>  set_addons_arg     ("", "set-addons",    "Sets the addons that the given client shall enable. Use the syntax \"Hostname:List,Of,Addon,IDs\". You can only set enabled addons for clients that have already been added; i.e. the client will not be added automatically. If no tailing list of addon IDs is provided, all addons will be disabled. If a configuration file is being loaded, this will override the setting from the config. Not available in remote-control mode.",        false, "Hostname:List,Of,Addon,IDs");
+  TCLAP::MultiArg<std::string>  set_client_arg     ("", "set-client",    "Sets which hosts shall be recorded by the given client. Use the syntax \"Hostname:Host,To,Record\". For instance, to let PC1 record itself and PC2, use \"PC1:PC1,PC2\". If no tailing list is provided, the client will record topcis from all hosts by default. If a configuration file is being loaded, this will override the setting from the config.", false, "Hostname:Hosts,To,Record");
+  TCLAP::MultiArg<std::string>  set_addons_arg     ("", "set-addons",    "Sets the addons that the given client shall enable. Use the syntax \"Hostname:List,Of,Addon,IDs\". You can only set enabled addons for clients that have already been added; i.e. the client will not be added automatically. If no tailing list of addon IDs is provided, all addons will be disabled. If a configuration file is being loaded, this will override the setting from the config.",        false, "Hostname:List,Of,Addon,IDs");
   TCLAP::MultiArg<std::string>  remove_client_arg  ("", "remove-client", "Removes the given client. If the client had any addons enabled, those are removed as well. Not available in remote-control mode.",        false, "Hostname");
 
   // Settings args
-  TCLAP::ValueArg<std::string>  pre_buffer_arg     ("b", "pre-buffer",      "Pre-buffer data for some seconds. To turn off pre-buffering, provide a value <= 0.0. If a configuration file is being loaded, this will override the setting from the config. Not available in remote-control mode.", false, "-1.0", "Seconds");
-  TCLAP::ValueArg<std::string>  blacklist_arg      ("",  "blacklist",       "Record all topics except the listed ones (Comma separated list, e.g.: \"Topic1,Topic2\"). If a configuration file is being loaded, this will override the setting from the config. Not available in remote-control mode.", false, "", "List");
-  TCLAP::ValueArg<std::string>  whitelist_arg      ("",  "whitelist",       "Only record these topics (Comma separated list, e.g.: \"Topic1,Topic2\"). If a configuration file is being loaded, this will override the setting from the config. Not available in remote-control mode.", false, "", "List");
+  TCLAP::ValueArg<std::string>  pre_buffer_arg     ("b", "pre-buffer",      "Pre-buffer data for some seconds. To turn off pre-buffering, provide a value <= 0.0. If a configuration file is being loaded, this will override the setting from the config.", false, "-1.0", "Seconds");
+  TCLAP::ValueArg<std::string>  blacklist_arg      ("",  "blacklist",       "Record all topics except the listed ones (Comma separated list, e.g.: \"Topic1,Topic2\"). If a configuration file is being loaded, this will override the setting from the config.", false, "", "List");
+  TCLAP::ValueArg<std::string>  whitelist_arg      ("",  "whitelist",       "Only record these topics (Comma separated list, e.g.: \"Topic1,Topic2\"). If a configuration file is being loaded, this will override the setting from the config.", false, "", "List");
 
   // Job-config args
-  TCLAP::ValueArg<std::string>  meas_root_dir_arg  ("d", "meas-root-dir",   "Root dir used for recording when " + start_recording_arg.toString() + " is set. If a configuration file is being loaded, this will override the setting from the config. Not available in remote-control mode.", false, "", "Path");
-  TCLAP::ValueArg<std::string>  meas_name_arg      ("n", "meas-name",       "Name of the measurement, when " + start_recording_arg.toString() + " is set. This will create a folder in the directory provided by " + meas_root_dir_arg.toString() + ". If a configuration file is being loaded, this will override the setting from the config.  Not available in remote-control mode.",     false, "", "Directory");
-  TCLAP::ValueArg<std::string>  max_file_size_arg  ("",  "max-file-size",   "Maximum file size of the recording files, when " + start_recording_arg.toString() + " is set. If a configuration file is being loaded, this will override the setting from the config. Not available in remote-control mode.", false, "", "megabytes");
-  TCLAP::ValueArg<std::string>  description_arg    ("",  "description",     "Description stored in the measurement folder, when " + start_recording_arg.toString() + " is set. If a configuration file is being loaded, this will override the setting from the config. Not available in remote-control mode.", false, "", "String");
+  TCLAP::ValueArg<std::string>  meas_root_dir_arg  ("d", "meas-root-dir",   "Root dir used for recording when " + start_recording_arg.toString() + " is set. If a configuration file is being loaded, this will override the setting from the config.", false, "", "Path");
+  TCLAP::ValueArg<std::string>  meas_name_arg      ("n", "meas-name",       "Name of the measurement, when " + start_recording_arg.toString() + " is set. This will create a folder in the directory provided by " + meas_root_dir_arg.toString() + ". If a configuration file is being loaded, this will override the setting from the config.",     false, "", "Directory");
+  TCLAP::ValueArg<std::string>  max_file_size_arg  ("",  "max-file-size",   "Maximum file size of the recording files, when " + start_recording_arg.toString() + " is set. If a configuration file is being loaded, this will override the setting from the config.", false, "", "megabytes");
+  TCLAP::ValueArg<std::string>  description_arg    ("",  "description",     "Description stored in the measurement folder, when " + start_recording_arg.toString() + " is set. If a configuration file is being loaded, this will override the setting from the config.", false, "", "String");
   CustomTclap::FuzzyValueSwitchArgBool enable_one_file_per_topic_arg   ("", "enable-one-file-per-topic", "Whether to separate each topic in HDF5 file. This helps faster file transfer and less network congestion in case of interest of specific topics only.", false, false, "yes/no");
 
-  TCLAP::ValueArg<std::string>         ftp_server_arg            ("", "ftp-server",          "The server where to upload to when uploading a measurement. Use \"internal\" for the integrated FTP Server. When using an external FTP Server, provide it in the following form: ftp://USERNAME:PASSWORD@HOSTNAME:PORT/path/to/root_dir. If a configuration file is being loaded, this will override the setting from the config. Not available in remote-control mode.", false, "", "FTP_Server");
-  CustomTclap::FuzzyValueSwitchArgBool delete_after_upload_arg   ("", "delete-after-upload", "Whether to delete the local measurement files after they have been uploaded to an FTP server. If a configuration file is being loaded, this will override the setting from the config. Not available in remote-control mode.", false, false, "yes/no");
-  CustomTclap::FuzzyValueSwitchArgBool enable_built_in_client_arg("", "enable-built-in-client", "Whether the built-in recorder client of the host-application shall be used for recording. If turned off, the host application will rely on the presence of a separate rec-client for localhost recording. If a configuration file is being loaded, this will override the setting from the config. Not available in remote-control mode.", false, false, "yes/no");
+  TCLAP::ValueArg<std::string>         ftp_server_arg            ("", "ftp-server",          "The server where to upload to when uploading a measurement. Use \"internal\" for the integrated FTP Server. When using an external FTP Server, provide it in the following form: ftp://USERNAME:PASSWORD@HOSTNAME:PORT/path/to/root_dir. If a configuration file is being loaded, this will override the setting from the config.", false, "", "FTP_Server");
+  CustomTclap::FuzzyValueSwitchArgBool delete_after_upload_arg   ("", "delete-after-upload", "Whether to delete the local measurement files after they have been uploaded to an FTP server. If a configuration file is being loaded, this will override the setting from the config.", false, false, "yes/no");
+  CustomTclap::FuzzyValueSwitchArgBool enable_built_in_client_arg("", "enable-built-in-client", "Whether the built-in recorder client of the host-application shall be used for recording. If turned off, the host application will rely on the presence of a separate rec-client for localhost recording. If a configuration file is being loaded, this will override the setting from the config.", false, false, "yes/no");
 
   /////////////////////////////////////////////////
   /// Interactive mode
@@ -477,7 +477,7 @@ int main(int argc, char** argv)
       }
       else
       {
-        error = eCAL::rec::Error(eCAL::rec::Error::ErrorCode::COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE, set_client_arg.toString());
+        error = eCAL::rec_cli::command::SetConfig::SetClient(remote_control_host_arg.getValue(), remote_rec_server_service, set_client_arg.getValue());
       }
 
       if (error)
@@ -508,7 +508,7 @@ int main(int argc, char** argv)
       }
       else
       {
-        error = eCAL::rec::Error(eCAL::rec::Error::ErrorCode::COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE, set_addons_arg.toString());
+        error = eCAL::rec_cli::command::SetConfig::SetAddons(remote_control_host_arg.getValue(), remote_rec_server_service, set_addons_arg.getValue());
       }
 
       if (error)
@@ -539,7 +539,7 @@ int main(int argc, char** argv)
       }
       else
       {
-        error = eCAL::rec::Error(eCAL::rec::Error::ErrorCode::COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE, remove_client_arg.toString());
+        error = eCAL::rec_cli::command::SetConfig::RemoveClient(remote_control_host_arg.getValue(), remote_rec_server_service, remove_client_arg.getValue());
       }
 
       if (error)
@@ -570,7 +570,7 @@ int main(int argc, char** argv)
       }
       else
       {
-        error = eCAL::rec::Error(eCAL::rec::Error::ErrorCode::COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE, pre_buffer_arg.toString());
+        error = eCAL::rec_cli::command::SetConfig::setPreBuffer(remote_control_host_arg.getValue(), remote_rec_server_service, pre_buffer_arg.getValue());
       }
 
       if (error)
@@ -601,7 +601,7 @@ int main(int argc, char** argv)
       }
       else
       {
-        error = eCAL::rec::Error(eCAL::rec::Error::ErrorCode::COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE, blacklist_arg.toString());
+        error = eCAL::rec_cli::command::SetConfig::setBlacklist(remote_control_host_arg.getValue(), remote_rec_server_service, blacklist_arg.getValue());
       }
 
       if (error)
@@ -632,7 +632,7 @@ int main(int argc, char** argv)
       }
       else
       {
-        error = eCAL::rec::Error(eCAL::rec::Error::ErrorCode::COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE, whitelist_arg.toString());
+        error = eCAL::rec_cli::command::SetConfig::setWhitelist(remote_control_host_arg.getValue(), remote_rec_server_service, whitelist_arg.getValue());
       }
 
       if (error)
@@ -663,7 +663,7 @@ int main(int argc, char** argv)
       }
       else
       {
-        error = eCAL::rec::Error(eCAL::rec::Error::ErrorCode::COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE, meas_root_dir_arg.toString());
+        error = eCAL::rec_cli::command::SetConfig::setMeasRootDir(remote_control_host_arg.getValue(), remote_rec_server_service, meas_root_dir_arg.getValue());
       }
 
       if (error)
@@ -694,7 +694,7 @@ int main(int argc, char** argv)
       }
       else
       {
-        error = eCAL::rec::Error(eCAL::rec::Error::ErrorCode::COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE, meas_name_arg.toString());
+        error = eCAL::rec_cli::command::SetConfig::setMeasName(remote_control_host_arg.getValue(), remote_rec_server_service, meas_name_arg.getValue());
       }
 
       if (error)
@@ -725,7 +725,7 @@ int main(int argc, char** argv)
       }
       else
       {
-        error = eCAL::rec::Error(eCAL::rec::Error::ErrorCode::COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE, max_file_size_arg.toString());
+        error = eCAL::rec_cli::command::SetConfig::setMaxFileSize(remote_control_host_arg.getValue(), remote_rec_server_service, max_file_size_arg.getValue());
       }
 
       if (error)
@@ -756,7 +756,7 @@ int main(int argc, char** argv)
       }
       else
       {
-        error = eCAL::rec::Error(eCAL::rec::Error::ErrorCode::COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE, description_arg.toString());
+        error = eCAL::rec_cli::command::SetConfig::setDescription(remote_control_host_arg.getValue(), remote_rec_server_service, description_arg.getValue());
       }
 
       if (error)
@@ -787,7 +787,7 @@ int main(int argc, char** argv)
       }
       else
       {
-        error = eCAL::rec::Error(eCAL::rec::Error::ErrorCode::COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE, enable_one_file_per_topic_arg.toString());
+        error = eCAL::rec_cli::command::SetConfig::setOneFilePerTopicEnabled(remote_control_host_arg.getValue(), remote_rec_server_service, enable_one_file_per_topic_arg.getValue());
       }
 
       if (error)
@@ -820,7 +820,7 @@ int main(int argc, char** argv)
       }
       else
       {
-        error = eCAL::rec::Error(eCAL::rec::Error::ErrorCode::COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE, ftp_server_arg.toString());
+        error = eCAL::rec_cli::command::SetConfig::setFtpServer(remote_control_host_arg.getValue(), remote_rec_server_service, ftp_server_arg.getValue());
       }
 
       if (error)
@@ -851,7 +851,7 @@ int main(int argc, char** argv)
       }
       else
       {
-        error = eCAL::rec::Error(eCAL::rec::Error::ErrorCode::COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE, delete_after_upload_arg.toString());
+        error = eCAL::rec_cli::command::SetConfig::setDeleteAfterUpload(remote_control_host_arg.getValue(), remote_rec_server_service, delete_after_upload_arg.getValue());
       }
 
       if (error)

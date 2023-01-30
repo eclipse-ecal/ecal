@@ -74,7 +74,14 @@ namespace eCAL
     public:
       Error(ErrorCode error_code, const std::string& message) : error_code_(error_code), message_(message) {}
       Error(ErrorCode error_code) : error_code_(error_code) {}
-      Error(const Error& error) : error_code_(error.error_code_), message_(error.message_) {}
+
+      // Copy
+      Error(const Error&)            = default;
+      Error& operator=(const Error&) = default;
+
+      // Move
+      Error& operator=(Error&&)      = default;
+      Error(Error&&)                 = default;
 
       ~Error() {}
 
@@ -139,14 +146,9 @@ namespace eCAL
     //////////////////////////////////////////
       inline operator bool() const { return error_code_ != ErrorCode::OK; }
       inline bool operator== (const Error& other) const { return error_code_ == other.error_code_; }
+      inline bool operator== (const ErrorCode other) const { return error_code_ == other; }
       inline bool operator!= (const Error& other) const { return error_code_ != other.error_code_; }
-
-      Error& operator=(const Error& other)
-      {
-        error_code_ = other.error_code_;
-        message_    = other.message_;
-        return *this;
-      }
+      inline bool operator!= (const ErrorCode other) const { return error_code_ != other; }
 
       Error& operator=(ErrorCode error_code)
       {

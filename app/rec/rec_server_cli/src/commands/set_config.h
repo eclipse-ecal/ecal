@@ -148,41 +148,80 @@ namespace eCAL
         eCAL::rec::Error Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& argv) const override;
 
       //////////////////////////////////////////////
-      /// SetConfig functions           
-      //////////////////////////////////////////////
-      //private:
-      //  static eCAL::rec::Error SetClient           (eCAL::rec_server::RecServerConfig& config, const std::vector<std::string>& param);
-      //  //static eCAL::rec::Error SetAddons           (eCAL::rec_server::RecServerConfig& config, const std::vector<std::string>& param);
-      //  static eCAL::rec::Error RemoveClient        (eCAL::rec_server::RecServerConfig& config, const std::vector<std::string>& param);
-      //  //static eCAL::rec::Error setFtpServer        (eCAL::rec_server::RecServerConfig& config, const std::string& param);
-      //  //static eCAL::rec::Error setDeleteAfterUpload(eCAL::rec_server::RecServerConfig& config, bool param);
-      //  //static eCAL::rec::Error setBuiltInClientEnabled(eCAL::rec_server::RecServerConfig& config, bool param);
-      //  //static eCAL::rec::Error setPreBuffer        (eCAL::rec_server::RecServerConfig& config, const std::string& param);
-      //  //static eCAL::rec::Error setBlacklist        (eCAL::rec_server::RecServerConfig& config, const std::string& param);
-      //  //static eCAL::rec::Error setWhitelist        (eCAL::rec_server::RecServerConfig& config, const std::string& param);
-      //  //static eCAL::rec::Error setMeasRootDir      (eCAL::rec_server::RecServerConfig& config, const std::string& param);
-      //  //static eCAL::rec::Error setMeasName         (eCAL::rec_server::RecServerConfig& config, const std::string& param);
-      //  //static eCAL::rec::Error setMaxFileSize      (eCAL::rec_server::RecServerConfig& config, const std::string& param);
-      //  static eCAL::rec::Error setDescription      (eCAL::rec_server::RecServerConfig& config, const std::string& param);
-        //static eCAL::rec::Error setOneFilePerTopicEnabled(eCAL::rec_server::RecServerConfig& config, bool param);
-
-      //////////////////////////////////////////////
       /// Parse Param Functions
       //////////////////////////////////////////////
       
       private:
-        // TODO: either plural or singular, but currently I have both ParseParam and ParseParams
-        static eCAL::rec::Error ParseParams_SetClient    (const std::vector<std::string>& param, std::map<std::string, eCAL::rec_server::ClientConfig>& client_configs_out);
-        static eCAL::rec::Error ParseParams_SetAddons    (const std::vector<std::string>& param, std::map<std::string, eCAL::rec_server::ClientConfig>& client_configs_out);
-        static eCAL::rec::Error ParseParams_SetFtpServer (const std::string& param,              eCAL::rec_server::UploadConfig&                        upload_config_out);
-        static eCAL::rec::Error ParseParams_SetPreBuffer (const std::string& param,              std::chrono::duration<double>&                         pre_buffer_length_out);
-        static eCAL::rec::Error ParseParam_TopicList     (const std::string& param,              std::set<std::string>&                                 topic_list_out);
-        static eCAL::rec::Error ParseParam_SetMaxFileSize(const std::string& param,              unsigned int&                                          max_file_size_mib_out);
+        static eCAL::rec::Error ParseParams_SetClient     (const std::vector<std::string>& param, std::map<std::string, eCAL::rec_server::ClientConfig>& client_configs_out);
+        static eCAL::rec::Error ParseParams_SetAddons     (const std::vector<std::string>& param, std::map<std::string, eCAL::rec_server::ClientConfig>& client_configs_out);
+        static eCAL::rec::Error ParseParams_SetFtpServer  (const std::string& param,              eCAL::rec_server::UploadConfig&                        upload_config_out);
+        static eCAL::rec::Error ParseParams_SetPreBuffer  (const std::string& param,              std::chrono::duration<double>&                         pre_buffer_length_out);
+        static eCAL::rec::Error ParseParams_TopicList     (const std::string& param,              std::set<std::string>&                                 topic_list_out);
+        static eCAL::rec::Error ParseParams_SetMaxFileSize(const std::string& param,              unsigned int&                                          max_file_size_mib_out);
 
       //////////////////////////////////////////////
       /// SetConfig functions (remote directly)
       //////////////////////////////////////////////
-      
+      private:
+        template <typename param_t>
+        static eCAL::rec::Error SetConfigDirectly(const std::string& hostname
+                                                , const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service
+                                                , param_t param
+                                                , const std::function<eCAL::rec::Error(eCAL::pb::rec_server::RecServerConfig&, param_t)> set_config_function)
+        {
+          eCAL::pb::rec_server::GenericRequest            request_pb;
+          eCAL::pb::rec_server::RecServerConfig           rec_server_config_pb;
+
+          // Get current config
+          {
+            eCAL::rec::Error service_call_error = CallRemoteEcalrecService(remote_rec_server_service, hostname, "GetConfig", request_pb, rec_server_config_pb);
+            if (service_call_error)
+              return service_call_error;
+          }
+          
+          // Apply the given changes
+          {
+            eCAL::rec::Error error = set_config_function(rec_server_config_pb, param);
+            if (error)
+              return error;
+          }
+          
+          // Send changes to remote server
+          {
+            eCAL::pb::rec_server::ServiceResult service_call_response_pb;
+            eCAL::rec::Error service_call_error = CallRemoteEcalrecService(remote_rec_server_service, hostname, "SetConfig", rec_server_config_pb, service_call_response_pb);
+
+            // Service call failed
+            if (service_call_error)
+              return service_call_error;
+
+            // Service call reported error
+            {
+              eCAL::rec::Error error = eCAL::rec_server::proto_helpers::FromProtobuf(service_call_response_pb);
+              if (error)
+                return error;
+            }
+          }
+
+          return eCAL::rec::Error::OK;
+        }
+
+      public:
+        static eCAL::rec::Error SetClient                (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& param);
+        static eCAL::rec::Error SetAddons                (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& param);
+        static eCAL::rec::Error RemoveClient             (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& param);
+        static eCAL::rec::Error setFtpServer             (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
+        static eCAL::rec::Error setDeleteAfterUpload     (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param);
+        static eCAL::rec::Error setBuiltInClientEnabled  (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param);
+        static eCAL::rec::Error setPreBuffer             (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
+        static eCAL::rec::Error setBlacklist             (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
+        static eCAL::rec::Error setWhitelist             (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
+        static eCAL::rec::Error setMeasRootDir           (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
+        static eCAL::rec::Error setMeasName              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
+        static eCAL::rec::Error setMaxFileSize           (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
+        static eCAL::rec::Error setDescription           (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
+        static eCAL::rec::Error setOneFilePerTopicEnabled(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param);
+
       //////////////////////////////////////////////
       /// SetConfig functions (Protobuf config)
       //////////////////////////////////////////////
