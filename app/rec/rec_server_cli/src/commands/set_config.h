@@ -33,6 +33,8 @@
 #include <custom_tclap/advanced_tclap_output.h>
 #include <custom_tclap/fuzzy_value_switch_arg_bool.h>
 
+#include <rec_server_core/proto_helpers.h>
+
 namespace eCAL
 {
   namespace rec_cli
