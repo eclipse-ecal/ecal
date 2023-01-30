@@ -210,17 +210,17 @@ namespace eCAL
         static eCAL::rec::Error SetClient                (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& param);
         static eCAL::rec::Error SetAddons                (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& param);
         static eCAL::rec::Error RemoveClient             (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& param);
-        static eCAL::rec::Error setFtpServer             (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
-        static eCAL::rec::Error setDeleteAfterUpload     (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param);
-        static eCAL::rec::Error setBuiltInClientEnabled  (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param);
-        static eCAL::rec::Error setPreBuffer             (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
-        static eCAL::rec::Error setBlacklist             (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
-        static eCAL::rec::Error setWhitelist             (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
-        static eCAL::rec::Error setMeasRootDir           (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
-        static eCAL::rec::Error setMeasName              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
-        static eCAL::rec::Error setMaxFileSize           (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
-        static eCAL::rec::Error setDescription           (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
-        static eCAL::rec::Error setOneFilePerTopicEnabled(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param);
+        static eCAL::rec::Error SetFtpServer             (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
+        static eCAL::rec::Error SetDeleteAfterUpload     (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param);
+        static eCAL::rec::Error SetBuiltInClientEnabled  (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param);
+        static eCAL::rec::Error SetPreBuffer             (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
+        static eCAL::rec::Error SetBlacklist             (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
+        static eCAL::rec::Error SetWhitelist             (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
+        static eCAL::rec::Error SetMeasRootDir           (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
+        static eCAL::rec::Error SetMeasName              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
+        static eCAL::rec::Error SetMaxFileSize           (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
+        static eCAL::rec::Error SetDescription           (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param);
+        static eCAL::rec::Error SetOneFilePerTopicEnabled(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param);
 
       //////////////////////////////////////////////
       /// SetConfig functions (Protobuf config)
@@ -229,17 +229,17 @@ namespace eCAL
         static eCAL::rec::Error SetClient                (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::vector<std::string>& param);
         static eCAL::rec::Error SetAddons                (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::vector<std::string>& param);
         static eCAL::rec::Error RemoveClient             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::vector<std::string>& param);
-        static eCAL::rec::Error setFtpServer             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param);
-        static eCAL::rec::Error setDeleteAfterUpload     (eCAL::pb::rec_server::RecServerConfig& config_pb, bool param);
-        static eCAL::rec::Error setBuiltInClientEnabled  (eCAL::pb::rec_server::RecServerConfig& config_pb, bool param);
-        static eCAL::rec::Error setPreBuffer             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param);
-        static eCAL::rec::Error setBlacklist             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param);
-        static eCAL::rec::Error setWhitelist             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param);
-        static eCAL::rec::Error setMeasRootDir           (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param);
-        static eCAL::rec::Error setMeasName              (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param);
-        static eCAL::rec::Error setMaxFileSize           (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param);
-        static eCAL::rec::Error setDescription           (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param);
-        static eCAL::rec::Error setOneFilePerTopicEnabled(eCAL::pb::rec_server::RecServerConfig& config_pb, bool param);
+        static eCAL::rec::Error SetFtpServer             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param);
+        static eCAL::rec::Error SetDeleteAfterUpload     (eCAL::pb::rec_server::RecServerConfig& config_pb, bool param);
+        static eCAL::rec::Error SetBuiltInClientEnabled  (eCAL::pb::rec_server::RecServerConfig& config_pb, bool param);
+        static eCAL::rec::Error SetPreBuffer             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param);
+        static eCAL::rec::Error SetBlacklist             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param);
+        static eCAL::rec::Error SetWhitelist             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param);
+        static eCAL::rec::Error SetMeasRootDir           (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param);
+        static eCAL::rec::Error SetMeasName              (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param);
+        static eCAL::rec::Error SetMaxFileSize           (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param);
+        static eCAL::rec::Error SetDescription           (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param);
+        static eCAL::rec::Error SetOneFilePerTopicEnabled(eCAL::pb::rec_server::RecServerConfig& config_pb, bool param);
 
       //////////////////////////////////////////////
       /// SetConfig functions (local)
@@ -249,17 +249,17 @@ namespace eCAL
         static eCAL::rec::Error SetClient           (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::vector<std::string>& param);
         static eCAL::rec::Error SetAddons           (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::vector<std::string>& param);
         static eCAL::rec::Error RemoveClient        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::vector<std::string>& param);
-        static eCAL::rec::Error setFtpServer        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
-        static eCAL::rec::Error setDeleteAfterUpload(const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, bool param);
-        static eCAL::rec::Error setBuiltInClientEnabled(const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, bool param);
-        static eCAL::rec::Error setPreBuffer        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
-        static eCAL::rec::Error setBlacklist        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
-        static eCAL::rec::Error setWhitelist        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
-        static eCAL::rec::Error setMeasRootDir      (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
-        static eCAL::rec::Error setMeasName         (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
-        static eCAL::rec::Error setMaxFileSize      (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
-        static eCAL::rec::Error setDescription      (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
-        static eCAL::rec::Error setOneFilePerTopicEnabled(const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, bool param);
+        static eCAL::rec::Error SetFtpServer        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
+        static eCAL::rec::Error SetDeleteAfterUpload(const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, bool param);
+        static eCAL::rec::Error SetBuiltInClientEnabled(const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, bool param);
+        static eCAL::rec::Error SetPreBuffer        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
+        static eCAL::rec::Error SetBlacklist        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
+        static eCAL::rec::Error SetWhitelist        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
+        static eCAL::rec::Error SetMeasRootDir      (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
+        static eCAL::rec::Error SetMeasName         (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
+        static eCAL::rec::Error SetMaxFileSize      (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
+        static eCAL::rec::Error SetDescription      (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param);
+        static eCAL::rec::Error SetOneFilePerTopicEnabled(const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, bool param);
       };
     }
   }

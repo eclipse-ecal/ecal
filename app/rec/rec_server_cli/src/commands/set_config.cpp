@@ -148,7 +148,7 @@ namespace eCAL
           // Ftp Server
           if (cmdline.ftp_server_arg.isSet())
           {
-            auto error = setFtpServer(rec_server_instance, cmdline.ftp_server_arg.getValue());
+            auto error = SetFtpServer(rec_server_instance, cmdline.ftp_server_arg.getValue());
             if (error)
               return error;
           }
@@ -156,7 +156,7 @@ namespace eCAL
           // Delete after upload
           if (cmdline.delete_after_upload_arg.isSet())
           {
-            auto error = setDeleteAfterUpload(rec_server_instance, cmdline.delete_after_upload_arg.getValue());
+            auto error = SetDeleteAfterUpload(rec_server_instance, cmdline.delete_after_upload_arg.getValue());
             if (error)
               return error;
           }
@@ -164,7 +164,7 @@ namespace eCAL
           // Set built-in client enabled
           if (cmdline.enable_built_in_client_arg.isSet())
           {
-            auto error = setBuiltInClientEnabled(rec_server_instance, cmdline.enable_built_in_client_arg.getValue());
+            auto error = SetBuiltInClientEnabled(rec_server_instance, cmdline.enable_built_in_client_arg.getValue());
             if (error)
               return error;
           }
@@ -172,7 +172,7 @@ namespace eCAL
           // Pre-buffer
           if (cmdline.pre_buffer_secs_arg.isSet())
           {
-            auto error = setPreBuffer(rec_server_instance, cmdline.pre_buffer_secs_arg.getValue());
+            auto error = SetPreBuffer(rec_server_instance, cmdline.pre_buffer_secs_arg.getValue());
             if (error)
               return error;
           }
@@ -180,7 +180,7 @@ namespace eCAL
           // blacklist
           if (cmdline.blacklist_arg.isSet())
           {
-            auto error = setBlacklist(rec_server_instance, cmdline.blacklist_arg.getValue());
+            auto error = SetBlacklist(rec_server_instance, cmdline.blacklist_arg.getValue());
             if (error)
               return error;
           }
@@ -188,7 +188,7 @@ namespace eCAL
           // whitelist
           if (cmdline.whitelist_arg.isSet())
           {
-            auto error = setWhitelist(rec_server_instance, cmdline.whitelist_arg.getValue());
+            auto error = SetWhitelist(rec_server_instance, cmdline.whitelist_arg.getValue());
             if (error)
               return error;
           }
@@ -196,7 +196,7 @@ namespace eCAL
           // meas-root-dir
           if (cmdline.meas_root_dir_arg.isSet())
           {
-            auto error = setMeasRootDir(rec_server_instance, cmdline.meas_root_dir_arg.getValue());
+            auto error = SetMeasRootDir(rec_server_instance, cmdline.meas_root_dir_arg.getValue());
             if (error)
               return error;
           }
@@ -204,7 +204,7 @@ namespace eCAL
           // meas-name
           if (cmdline.meas_name_arg.isSet())
           {
-            auto error = setMeasName(rec_server_instance, cmdline.meas_name_arg.getValue());
+            auto error = SetMeasName(rec_server_instance, cmdline.meas_name_arg.getValue());
             if (error)
               return error;
           }
@@ -212,7 +212,7 @@ namespace eCAL
           // max-file-size
           if (cmdline.max_file_size_mib_arg.isSet())
           {
-            auto error = setMaxFileSize(rec_server_instance, cmdline.max_file_size_mib_arg.getValue());
+            auto error = SetMaxFileSize(rec_server_instance, cmdline.max_file_size_mib_arg.getValue());
             if (error)
               return error;
           }
@@ -220,7 +220,7 @@ namespace eCAL
           // description
           if (cmdline.description_arg.isSet())
           {
-            auto error = setDescription(rec_server_instance, cmdline.description_arg.getValue());
+            auto error = SetDescription(rec_server_instance, cmdline.description_arg.getValue());
             if (error)
               return error;
           }
@@ -228,7 +228,7 @@ namespace eCAL
           // Enable one file per topic
           if (cmdline.enable_one_file_per_topic_arg.isSet())
           {
-            auto error = setOneFilePerTopicEnabled(rec_server_instance, cmdline.enable_one_file_per_topic_arg.getValue());
+            auto error = SetOneFilePerTopicEnabled(rec_server_instance, cmdline.enable_one_file_per_topic_arg.getValue());
             if (error)
               return error;
           }
@@ -306,7 +306,7 @@ namespace eCAL
           // Set FTP Server
           if (cmdline.ftp_server_arg.isSet())
           {
-            auto error = setFtpServer(rec_server_config_pb, cmdline.ftp_server_arg.getValue());
+            auto error = SetFtpServer(rec_server_config_pb, cmdline.ftp_server_arg.getValue());
             if (error)
               return error;
           }
@@ -314,7 +314,7 @@ namespace eCAL
           // Set Delete-after-upload
           if (cmdline.delete_after_upload_arg.isSet())
           {
-            auto error = setDeleteAfterUpload(rec_server_config_pb, cmdline.delete_after_upload_arg.getValue());
+            auto error = SetDeleteAfterUpload(rec_server_config_pb, cmdline.delete_after_upload_arg.getValue());
             if (error)
               return error;
           }
@@ -322,71 +322,71 @@ namespace eCAL
           // Build-in client
           if (cmdline.enable_built_in_client_arg.isSet())
           {
-            auto error = setBuiltInClientEnabled(rec_server_config_pb, cmdline.enable_built_in_client_arg.getValue());
+            auto error = SetBuiltInClientEnabled(rec_server_config_pb, cmdline.enable_built_in_client_arg.getValue());
             if (error)
               return error;
           }
 
-          // setPreBuffer
+          // SetPreBuffer
           if (cmdline.pre_buffer_secs_arg.isSet())
           {
-            auto error = setPreBuffer(rec_server_config_pb, cmdline.pre_buffer_secs_arg.getValue());
+            auto error = SetPreBuffer(rec_server_config_pb, cmdline.pre_buffer_secs_arg.getValue());
             if (error)
               return error;
           }
 
-          // setBlacklist
+          // SetBlacklist
           if (cmdline.blacklist_arg.isSet())
           {
-            auto error = setBlacklist(rec_server_config_pb, cmdline.blacklist_arg.getValue());
+            auto error = SetBlacklist(rec_server_config_pb, cmdline.blacklist_arg.getValue());
             if (error)
               return error;
           }
 
-          // setWhitelist
+          // SetWhitelist
           if (cmdline.whitelist_arg.isSet())
           {
-            auto error = setWhitelist(rec_server_config_pb, cmdline.whitelist_arg.getValue());
+            auto error = SetWhitelist(rec_server_config_pb, cmdline.whitelist_arg.getValue());
             if (error)
               return error;
           }
 
-          // setMeasRootDir
+          // SetMeasRootDir
           if (cmdline.meas_root_dir_arg.isSet())
           {
-            auto error = setMeasRootDir(rec_server_config_pb, cmdline.meas_root_dir_arg.getValue());
+            auto error = SetMeasRootDir(rec_server_config_pb, cmdline.meas_root_dir_arg.getValue());
             if (error)
               return error;
           }
 
-          // setMeasName
+          // SetMeasName
           if (cmdline.meas_name_arg.isSet())
           {
-            auto error = setMeasName(rec_server_config_pb, cmdline.meas_name_arg.getValue());
+            auto error = SetMeasName(rec_server_config_pb, cmdline.meas_name_arg.getValue());
             if (error)
               return error;
           }
 
-          // setMaxFileSize
+          // SetMaxFileSize
           if (cmdline.max_file_size_mib_arg.isSet())
           {
-            auto error = setMaxFileSize(rec_server_config_pb, cmdline.max_file_size_mib_arg.getValue());
+            auto error = SetMaxFileSize(rec_server_config_pb, cmdline.max_file_size_mib_arg.getValue());
             if (error)
               return error;
           }
 
-          // setDescription
+          // SetDescription
           if (cmdline.description_arg.isSet())
           {
-            auto error = setDescription(rec_server_config_pb, cmdline.description_arg.getValue());
+            auto error = SetDescription(rec_server_config_pb, cmdline.description_arg.getValue());
             if (error)
               return error;
           }
 
-          // setOneFilePerTopicEnabled
+          // SetOneFilePerTopicEnabled
           if (cmdline.enable_one_file_per_topic_arg.isSet())
           {
-            auto error = setOneFilePerTopicEnabled(rec_server_config_pb, cmdline.enable_one_file_per_topic_arg.getValue());
+            auto error = SetOneFilePerTopicEnabled(rec_server_config_pb, cmdline.enable_one_file_per_topic_arg.getValue());
             if (error)
               return error;
           }
@@ -670,100 +670,100 @@ namespace eCAL
         return SetConfigDirectly<const std::vector<std::string>&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::setFtpServer              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      eCAL::rec::Error SetConfig::SetFtpServer              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
-        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(setFtpServer);
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(SetFtpServer);
 
         // Call the wrapper function that will set the according setting
         return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::setDeleteAfterUpload      (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param)
+      eCAL::rec::Error SetConfig::SetDeleteAfterUpload      (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param)
       {
         // Select the correct overload of the function and bind it to an std::function object
-        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, bool)>(setDeleteAfterUpload);
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, bool)>(SetDeleteAfterUpload);
 
         // Call the wrapper function that will set the according setting
         return SetConfigDirectly<bool>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::setBuiltInClientEnabled   (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param)
+      eCAL::rec::Error SetConfig::SetBuiltInClientEnabled   (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param)
       {
         // Select the correct overload of the function and bind it to an std::function object
-        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, bool)>(setBuiltInClientEnabled);
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, bool)>(SetBuiltInClientEnabled);
 
         // Call the wrapper function that will set the according setting
         return SetConfigDirectly<bool>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::setPreBuffer              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      eCAL::rec::Error SetConfig::SetPreBuffer              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
-        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(setPreBuffer);
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(SetPreBuffer);
 
         // Call the wrapper function that will set the according setting
         return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::setBlacklist              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      eCAL::rec::Error SetConfig::SetBlacklist              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
-        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(setBlacklist);
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(SetBlacklist);
 
         // Call the wrapper function that will set the according setting
         return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::setWhitelist              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      eCAL::rec::Error SetConfig::SetWhitelist              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
-        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(setWhitelist);
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(SetWhitelist);
 
         // Call the wrapper function that will set the according setting
         return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::setMeasRootDir            (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      eCAL::rec::Error SetConfig::SetMeasRootDir            (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
-        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(setMeasRootDir);
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(SetMeasRootDir);
 
         // Call the wrapper function that will set the according setting
         return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::setMeasName               (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      eCAL::rec::Error SetConfig::SetMeasName               (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
-        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(setMeasName);
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(SetMeasName);
 
         // Call the wrapper function that will set the according setting
         return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::setMaxFileSize            (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      eCAL::rec::Error SetConfig::SetMaxFileSize            (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
-        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(setMaxFileSize);
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(SetMaxFileSize);
 
         // Call the wrapper function that will set the according setting
         return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::setDescription            (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      eCAL::rec::Error SetConfig::SetDescription            (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
-        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(setDescription);
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(SetDescription);
 
         // Call the wrapper function that will set the according setting
         return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::setOneFilePerTopicEnabled (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param)
+      eCAL::rec::Error SetConfig::SetOneFilePerTopicEnabled (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param)
       {
         // Select the correct overload of the function and bind it to an std::function object
-        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, bool)>(setOneFilePerTopicEnabled);
+        auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, bool)>(SetOneFilePerTopicEnabled);
 
         // Call the wrapper function that will set the according setting
         return SetConfigDirectly<bool>(hostname, remote_rec_server_service, param, f);
@@ -857,7 +857,7 @@ namespace eCAL
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setFtpServer             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
+      eCAL::rec::Error SetConfig::SetFtpServer             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
       {
         eCAL::rec_server::UploadConfig upload_config;
 
@@ -890,19 +890,19 @@ namespace eCAL
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setDeleteAfterUpload     (eCAL::pb::rec_server::RecServerConfig& config_pb, bool param)
+      eCAL::rec::Error SetConfig::SetDeleteAfterUpload     (eCAL::pb::rec_server::RecServerConfig& config_pb, bool param)
       {
         config_pb.mutable_upload_config()->set_delete_after_upload(param);
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setBuiltInClientEnabled  (eCAL::pb::rec_server::RecServerConfig& config_pb, bool param)
+      eCAL::rec::Error SetConfig::SetBuiltInClientEnabled  (eCAL::pb::rec_server::RecServerConfig& config_pb, bool param)
       {
         config_pb.set_built_in_recorder_enabled(param);
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setPreBuffer             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
+      eCAL::rec::Error SetConfig::SetPreBuffer             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
       {
         std::chrono::duration<double> pre_buffer_length;
 
@@ -926,7 +926,7 @@ namespace eCAL
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setBlacklist             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
+      eCAL::rec::Error SetConfig::SetBlacklist             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
       {
         std::set<std::string> topic_list;
 
@@ -958,7 +958,7 @@ namespace eCAL
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setWhitelist             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
+      eCAL::rec::Error SetConfig::SetWhitelist             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
       {
         std::set<std::string> topic_list;
 
@@ -983,19 +983,19 @@ namespace eCAL
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setMeasRootDir           (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
+      eCAL::rec::Error SetConfig::SetMeasRootDir           (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
       {
         config_pb.set_root_dir(param);
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setMeasName              (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
+      eCAL::rec::Error SetConfig::SetMeasName              (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
       {
         config_pb.set_meas_name(param);
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setMaxFileSize           (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
+      eCAL::rec::Error SetConfig::SetMaxFileSize           (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
       {
         unsigned int max_file_size_mib{0};
 
@@ -1012,13 +1012,13 @@ namespace eCAL
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setDescription           (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
+      eCAL::rec::Error SetConfig::SetDescription           (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
       {
         config_pb.set_description(param);
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setOneFilePerTopicEnabled(eCAL::pb::rec_server::RecServerConfig& config_pb, bool param)
+      eCAL::rec::Error SetConfig::SetOneFilePerTopicEnabled(eCAL::pb::rec_server::RecServerConfig& config_pb, bool param)
       {
         config_pb.set_one_file_per_topic(param);
         return eCAL::rec::Error::OK;
@@ -1151,7 +1151,7 @@ namespace eCAL
           return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR, "Failed to set rec clients");
       }
 
-      eCAL::rec::Error SetConfig::setFtpServer        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
+      eCAL::rec::Error SetConfig::SetFtpServer        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
       {
         if (param.empty())
           return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::PARAMETER_ERROR, "Parameter for FTP Server must not be empty");
@@ -1221,7 +1221,7 @@ namespace eCAL
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setDeleteAfterUpload(const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, bool param)
+      eCAL::rec::Error SetConfig::SetDeleteAfterUpload(const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, bool param)
       {
         auto new_upload_config = rec_server_instance->GetUploadConfig();
         new_upload_config.delete_after_upload_ = param;
@@ -1229,7 +1229,7 @@ namespace eCAL
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setBuiltInClientEnabled(const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, bool param)
+      eCAL::rec::Error SetConfig::SetBuiltInClientEnabled(const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, bool param)
       {
         if (rec_server_instance->IsRecording())
           return eCAL::rec::Error::ErrorCode::CURRENTLY_RECORDING;
@@ -1242,7 +1242,7 @@ namespace eCAL
           return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR, std::string("Failed to set built-in client enabled to ") + (param ? "true" : "false"));
       }
 
-      eCAL::rec::Error SetConfig::setPreBuffer        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
+      eCAL::rec::Error SetConfig::SetPreBuffer        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
       {
         char decimal_point = std::localeconv()->decimal_point[0]; // decimal point for std::stod()
 
@@ -1277,7 +1277,7 @@ namespace eCAL
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setBlacklist        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
+      eCAL::rec::Error SetConfig::SetBlacklist        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
       {
         std::set<std::string> blacklist;
         EcalUtils::String::Split(param, ",", blacklist);
@@ -1304,7 +1304,7 @@ namespace eCAL
           return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setWhitelist        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
+      eCAL::rec::Error SetConfig::SetWhitelist        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
       {
         std::set<std::string> whitelist;
         EcalUtils::String::Split(param, ",", whitelist);
@@ -1322,19 +1322,19 @@ namespace eCAL
           return eCAL::rec::Error::ErrorCode::OK;
       }
 
-      eCAL::rec::Error SetConfig::setMeasRootDir      (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
+      eCAL::rec::Error SetConfig::SetMeasRootDir      (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
       {
         rec_server_instance->SetMeasRootDir(param);
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setMeasName         (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
+      eCAL::rec::Error SetConfig::SetMeasName         (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
       {
         rec_server_instance->SetMeasName(param);
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setMaxFileSize      (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
+      eCAL::rec::Error SetConfig::SetMaxFileSize      (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
       {
         if (param.empty())
           return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::PARAMETER_ERROR, "Value for max HDF5 file size must not  be empty");
@@ -1354,13 +1354,13 @@ namespace eCAL
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setDescription      (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
+      eCAL::rec::Error SetConfig::SetDescription      (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
       {
         rec_server_instance->SetDescription(param);
         return eCAL::rec::Error::OK;
       }
 
-      eCAL::rec::Error SetConfig::setOneFilePerTopicEnabled (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, bool param)
+      eCAL::rec::Error SetConfig::SetOneFilePerTopicEnabled (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, bool param)
       {
         rec_server_instance->SetOneFilePerTopicEnabled(param);
         return eCAL::rec::Error::OK;

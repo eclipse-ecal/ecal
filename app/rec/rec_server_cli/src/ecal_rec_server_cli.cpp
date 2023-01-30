@@ -566,11 +566,11 @@ int main(int argc, char** argv)
       eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
       if (rec_server_instance)
       {
-        error = eCAL::rec_cli::command::SetConfig::setPreBuffer(rec_server_instance, pre_buffer_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetPreBuffer(rec_server_instance, pre_buffer_arg.getValue());
       }
       else
       {
-        error = eCAL::rec_cli::command::SetConfig::setPreBuffer(remote_control_host_arg.getValue(), remote_rec_server_service, pre_buffer_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetPreBuffer(remote_control_host_arg.getValue(), remote_rec_server_service, pre_buffer_arg.getValue());
       }
 
       if (error)
@@ -597,11 +597,11 @@ int main(int argc, char** argv)
       eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
       if (rec_server_instance)
       {
-        error = eCAL::rec_cli::command::SetConfig::setBlacklist(rec_server_instance, blacklist_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetBlacklist(rec_server_instance, blacklist_arg.getValue());
       }
       else
       {
-        error = eCAL::rec_cli::command::SetConfig::setBlacklist(remote_control_host_arg.getValue(), remote_rec_server_service, blacklist_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetBlacklist(remote_control_host_arg.getValue(), remote_rec_server_service, blacklist_arg.getValue());
       }
 
       if (error)
@@ -628,11 +628,11 @@ int main(int argc, char** argv)
       eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
       if (rec_server_instance)
       {
-        error = eCAL::rec_cli::command::SetConfig::setWhitelist(rec_server_instance, whitelist_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetWhitelist(rec_server_instance, whitelist_arg.getValue());
       }
       else
       {
-        error = eCAL::rec_cli::command::SetConfig::setWhitelist(remote_control_host_arg.getValue(), remote_rec_server_service, whitelist_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetWhitelist(remote_control_host_arg.getValue(), remote_rec_server_service, whitelist_arg.getValue());
       }
 
       if (error)
@@ -659,11 +659,11 @@ int main(int argc, char** argv)
       eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
       if (rec_server_instance)
       {
-        error = eCAL::rec_cli::command::SetConfig::setMeasRootDir(rec_server_instance, meas_root_dir_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetMeasRootDir(rec_server_instance, meas_root_dir_arg.getValue());
       }
       else
       {
-        error = eCAL::rec_cli::command::SetConfig::setMeasRootDir(remote_control_host_arg.getValue(), remote_rec_server_service, meas_root_dir_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetMeasRootDir(remote_control_host_arg.getValue(), remote_rec_server_service, meas_root_dir_arg.getValue());
       }
 
       if (error)
@@ -690,11 +690,11 @@ int main(int argc, char** argv)
       eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
       if (rec_server_instance)
       {
-        error = eCAL::rec_cli::command::SetConfig::setMeasName(rec_server_instance, meas_name_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetMeasName(rec_server_instance, meas_name_arg.getValue());
       }
       else
       {
-        error = eCAL::rec_cli::command::SetConfig::setMeasName(remote_control_host_arg.getValue(), remote_rec_server_service, meas_name_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetMeasName(remote_control_host_arg.getValue(), remote_rec_server_service, meas_name_arg.getValue());
       }
 
       if (error)
@@ -721,11 +721,11 @@ int main(int argc, char** argv)
       eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
       if (rec_server_instance)
       {
-        error = eCAL::rec_cli::command::SetConfig::setMaxFileSize(rec_server_instance, max_file_size_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetMaxFileSize(rec_server_instance, max_file_size_arg.getValue());
       }
       else
       {
-        error = eCAL::rec_cli::command::SetConfig::setMaxFileSize(remote_control_host_arg.getValue(), remote_rec_server_service, max_file_size_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetMaxFileSize(remote_control_host_arg.getValue(), remote_rec_server_service, max_file_size_arg.getValue());
       }
 
       if (error)
@@ -752,11 +752,11 @@ int main(int argc, char** argv)
       eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
       if (rec_server_instance)
       {
-        error = eCAL::rec_cli::command::SetConfig::setDescription(rec_server_instance, description_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetDescription(rec_server_instance, description_arg.getValue());
       }
       else
       {
-        error = eCAL::rec_cli::command::SetConfig::setDescription(remote_control_host_arg.getValue(), remote_rec_server_service, description_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetDescription(remote_control_host_arg.getValue(), remote_rec_server_service, description_arg.getValue());
       }
 
       if (error)
@@ -783,11 +783,11 @@ int main(int argc, char** argv)
       eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
       if (rec_server_instance)
       {
-        error = eCAL::rec_cli::command::SetConfig::setOneFilePerTopicEnabled(rec_server_instance, enable_one_file_per_topic_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetOneFilePerTopicEnabled(rec_server_instance, enable_one_file_per_topic_arg.getValue());
       }
       else
       {
-        error = eCAL::rec_cli::command::SetConfig::setOneFilePerTopicEnabled(remote_control_host_arg.getValue(), remote_rec_server_service, enable_one_file_per_topic_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetOneFilePerTopicEnabled(remote_control_host_arg.getValue(), remote_rec_server_service, enable_one_file_per_topic_arg.getValue());
       }
 
       if (error)
@@ -816,11 +816,11 @@ int main(int argc, char** argv)
       eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
       if (rec_server_instance)
       {
-        error = eCAL::rec_cli::command::SetConfig::setFtpServer(rec_server_instance, ftp_server_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetFtpServer(rec_server_instance, ftp_server_arg.getValue());
       }
       else
       {
-        error = eCAL::rec_cli::command::SetConfig::setFtpServer(remote_control_host_arg.getValue(), remote_rec_server_service, ftp_server_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetFtpServer(remote_control_host_arg.getValue(), remote_rec_server_service, ftp_server_arg.getValue());
       }
 
       if (error)
@@ -847,11 +847,11 @@ int main(int argc, char** argv)
       eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
       if (rec_server_instance)
       {
-        error = eCAL::rec_cli::command::SetConfig::setDeleteAfterUpload(rec_server_instance, delete_after_upload_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetDeleteAfterUpload(rec_server_instance, delete_after_upload_arg.getValue());
       }
       else
       {
-        error = eCAL::rec_cli::command::SetConfig::setDeleteAfterUpload(remote_control_host_arg.getValue(), remote_rec_server_service, delete_after_upload_arg.getValue());
+        error = eCAL::rec_cli::command::SetConfig::SetDeleteAfterUpload(remote_control_host_arg.getValue(), remote_rec_server_service, delete_after_upload_arg.getValue());
       }
 
       if (error)
