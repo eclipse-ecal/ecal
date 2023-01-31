@@ -94,12 +94,15 @@ public:
     }
   }
 
+  // Enable the Original GroupBy(int) function before hiding it with the GroupBy(string) function
+  using ftxui::TypedTableModelBase<T>::GroupBy;
+
   void GroupBy(const std::string &column_name)
   {
     auto column = this->FindColumnByName(column_name);
     if(column > -1)
     {
-      ftxui::TypedTableModelBase<T>::GroupBy(column);
+      GroupBy(column);
     }
     else
     {
