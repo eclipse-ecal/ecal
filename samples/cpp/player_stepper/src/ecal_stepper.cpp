@@ -44,7 +44,7 @@ std::string pauseName;   // receiving on this channel should pause playback
 std::string triggerName; // receiving on this channel should start playback
 bool received = false;
 
-void callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_)
+void callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* /*data_*/)
 {
     std::string topicName = topic_name_;
     if (topicName == triggerName || topicName == pauseName)

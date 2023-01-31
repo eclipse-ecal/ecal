@@ -120,8 +120,9 @@ public:
       case Command::CANCEL:
         view_model->HideDetails();
         return true;
+      default:
+        return false;
     }
-    return false;
   }
 
   virtual class ViewModel& ViewModel() override
