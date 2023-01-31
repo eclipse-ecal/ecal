@@ -64,6 +64,8 @@ class ShellView : public View
         return CreateSubView<SystemInformationView>(std::dynamic_pointer_cast<SystemInformationViewModel>(tab.view_model));
       case ShellViewModel::TabType::HELP:
         return CreateSubView<HelpView>(std::dynamic_pointer_cast<HelpViewModel>(tab.view_model));
+      default:
+        return nullptr;
     }
   }
 
