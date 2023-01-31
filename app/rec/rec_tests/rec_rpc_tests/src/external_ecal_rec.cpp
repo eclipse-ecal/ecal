@@ -27,6 +27,7 @@
 
 #include <string>
 #include <iostream>
+#include <thread>
 
 ///////////////////////////////////////////////
 // Constructor, destructor etc.
