@@ -109,7 +109,7 @@ namespace eCAL
           if (config_elements.find(v) != config_elements.end())
           {
             // Load config
-            auto error = rec_server.SetConfig(config_v2to4::readConfig(config_elements[v]));
+            const auto error = rec_server.SetConfig(config_v2to4::readConfig(config_elements[v]));
             if (!error && (version != nullptr))
             {
               (*version) = v;
