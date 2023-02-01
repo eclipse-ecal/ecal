@@ -374,10 +374,9 @@ namespace eCAL
                                       , ::eCAL::pb::rec_server::ServiceResult*         response
                                       , ::google::protobuf::Closure*                   /*done*/)
     {
-      eCAL::rec_server::RecServerConfig config = eCAL::rec_server::proto_helpers::FromProtobuf(*request);
+      const eCAL::rec_server::RecServerConfig config = eCAL::rec_server::proto_helpers::FromProtobuf(*request);
       
-      eCAL::rec::Error error = eCAL::rec::Error::GENERIC_ERROR;
-      error = rec_server_instance_->SetConfig(config);
+      const eCAL::rec::Error error = rec_server_instance_->SetConfig(config);
 
       if (!error)
       {

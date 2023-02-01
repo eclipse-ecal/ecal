@@ -124,7 +124,7 @@ namespace eCAL
           {
             if (version_config_pair.first > NATIVE_CONFIG_VERSION)
             {
-              auto error = rec_server.SetConfig(config_v2to4::readConfig(version_config_pair.second));
+              const auto error = rec_server.SetConfig(config_v2to4::readConfig(version_config_pair.second));
               if (!error && (version != nullptr))
               {
                 (*version) = version_config_pair.first;
@@ -136,7 +136,7 @@ namespace eCAL
           // Load an un-versioned config
           if (config_elements.find(0) != config_elements.end())
           {
-            auto error = rec_server.SetConfig(config_v2to4::readConfig(config_elements[0]));
+            const auto error = rec_server.SetConfig(config_v2to4::readConfig(config_elements[0]));
             if (!error && (version != nullptr))
             {
               (*version) = 0;

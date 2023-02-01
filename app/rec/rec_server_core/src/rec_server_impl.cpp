@@ -1883,7 +1883,7 @@ namespace eCAL
     {
       // Set settings that can fail
       {
-        auto current_enabled_clients_config = GetEnabledRecClients();
+        const auto current_enabled_clients_config = GetEnabledRecClients();
         if (current_enabled_clients_config != config.enabled_clients_config_)
         {
           if (recording_)
@@ -1895,7 +1895,7 @@ namespace eCAL
       }
 
       {
-        auto current_built_in_recorder_enabled_ = IsUsingBuiltInRecorderEnabled();
+        const auto current_built_in_recorder_enabled_ = IsUsingBuiltInRecorderEnabled();
         if (current_built_in_recorder_enabled_ != config.built_in_recorder_enabled_)
         {
           if (recording_)
@@ -1907,8 +1907,8 @@ namespace eCAL
       }
 
       {
-        auto current_record_mode   = GetRecordMode();
-        auto current_listed_topics = GetListedTopics();
+        const auto current_record_mode   = GetRecordMode();
+        const auto current_listed_topics = GetListedTopics();
 
         if ((current_record_mode != config.record_mode_)
           || (current_listed_topics != config.listed_topics_))

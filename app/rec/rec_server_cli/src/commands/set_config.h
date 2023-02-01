@@ -171,7 +171,7 @@ namespace eCAL
                                                 , param_t param
                                                 , const std::function<eCAL::rec::Error(eCAL::pb::rec_server::RecServerConfig&, param_t)> set_config_function)
         {
-          eCAL::pb::rec_server::GenericRequest            request_pb;
+          const eCAL::pb::rec_server::GenericRequest      request_pb;
           eCAL::pb::rec_server::RecServerConfig           rec_server_config_pb;
 
           // Get current config

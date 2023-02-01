@@ -256,7 +256,7 @@ namespace eCAL
           }
 
           // Get current config
-          eCAL::pb::rec_server::GenericRequest            request_pb;
+          const eCAL::pb::rec_server::GenericRequest      request_pb;
           eCAL::pb::rec_server::RecServerConfig           rec_server_config_pb;
 
           {
@@ -426,7 +426,7 @@ namespace eCAL
           std::set<std::string> client_host_filter;
 
           // 1. Parse the input (Hostname:List,of,hosts)
-          size_t colon_pos = client.find_first_of(":");
+          const size_t colon_pos = client.find_first_of(':');
           if (colon_pos == std::string::npos)
           {
             client_hostname = EcalUtils::String::Trim(client);
@@ -438,7 +438,7 @@ namespace eCAL
             EcalUtils::String::Split(client.substr(colon_pos + 1), ",", tmp_client_host_filter);
             for(auto& host : tmp_client_host_filter)
             {
-              std::string trimmed_host = EcalUtils::String::Trim(host);
+              const std::string trimmed_host = EcalUtils::String::Trim(host);
               if (trimmed_host.empty())
                 continue;
 
@@ -470,7 +470,7 @@ namespace eCAL
           std::set<std::string> enabled_addons;
 
           // 1. Parse the input (Hostname:List,of,addon_ids)
-          size_t colon_pos = client.find_first_of(":");
+          const size_t colon_pos = client.find_first_of(':');
           if (colon_pos == std::string::npos)
           {
             client_hostname = EcalUtils::String::Trim(client);
@@ -482,7 +482,7 @@ namespace eCAL
             EcalUtils::String::Split(client.substr(colon_pos + 1), ",", tmp_enabled_addon_ids);
             for (auto& host : tmp_enabled_addon_ids)
             {
-              std::string trimmed_addon_id = EcalUtils::String::Trim(host);
+              const std::string trimmed_addon_id = EcalUtils::String::Trim(host);
               if (trimmed_addon_id.empty())
                 continue;
 
@@ -538,7 +538,7 @@ namespace eCAL
             upload_config_out.password_ = ftp_path_match[3].str();
             upload_config_out.host_     = ftp_path_match[4].str();
 
-            std::string port_string     = ftp_path_match[6].str();
+            const std::string port_string     = ftp_path_match[6].str();
             if (port_string.empty())
             {
               upload_config_out.port_ = 21;
@@ -547,7 +547,7 @@ namespace eCAL
             {
               try
               {
-                unsigned long port_long = std::stoul(port_string);
+                const unsigned long port_long = std::stoul(port_string);
                 if ((port_long > std::numeric_limits<uint16_t>::max()) || (port_long <= 0))
                   return eCAL::rec::Error(eCAL::rec::Error::PARAMETER_ERROR, "Invalid port: " + port_string);
 
@@ -573,9 +573,9 @@ namespace eCAL
 
       eCAL::rec::Error SetConfig::ParseParams_SetPreBuffer      (const std::string& param,              std::chrono::duration<double>&                         pre_buffer_length_out)
       {
-        char decimal_point = std::localeconv()->decimal_point[0]; // decimal point for std::stod()
+        const char decimal_point = std::localeconv()->decimal_point[0]; // decimal point for std::stod()
 
-        double pre_buffer_secs;
+        double pre_buffer_secs{0};
         std::string pre_buffer_secs_string = param;
         std::replace(pre_buffer_secs_string.begin(), pre_buffer_secs_string.end(), '.', decimal_point);
 
@@ -615,7 +615,7 @@ namespace eCAL
 
         for (const std::string& topic : topic_list_tmp)
         {
-          std::string trimmed_topic = EcalUtils::String::Trim(topic);
+          const std::string trimmed_topic = EcalUtils::String::Trim(topic);
           if (!trimmed_topic.empty())
             topic_list_out.insert(trimmed_topic);
         }
@@ -904,7 +904,7 @@ namespace eCAL
 
       eCAL::rec::Error SetConfig::SetPreBuffer             (eCAL::pb::rec_server::RecServerConfig& config_pb, const std::string& param)
       {
-        std::chrono::duration<double> pre_buffer_length;
+        std::chrono::duration<double> pre_buffer_length{0};
 
         // Parse Parameter
         {
@@ -1038,7 +1038,7 @@ namespace eCAL
           std::set<std::string> client_host_filter;
 
           // 1. Parse the input (Hostname:List,of,hosts)
-          size_t colon_pos = client.find_first_of(":");
+          const size_t colon_pos = client.find_first_of(':');
           if (colon_pos == std::string::npos)
           {
             client_hostname = EcalUtils::String::Trim(client);
@@ -1050,7 +1050,7 @@ namespace eCAL
             EcalUtils::String::Split(client.substr(colon_pos + 1), ",", tmp_client_host_filter);
             for (auto& host : tmp_client_host_filter)
             {
-              std::string trimmed_host = EcalUtils::String::Trim(host);
+              const std::string trimmed_host = EcalUtils::String::Trim(host);
               if (trimmed_host.empty())
                 continue;
 
@@ -1073,7 +1073,7 @@ namespace eCAL
           existing_rec_client_it->second.host_filter_ = client_host_filter;
         }
 
-        bool success = rec_server_instance->SetEnabledRecClients(enabled_rec_clients);
+        const bool success = rec_server_instance->SetEnabledRecClients(enabled_rec_clients);
         if (success)
           return eCAL::rec::Error::ErrorCode::OK;
         else
@@ -1090,7 +1090,7 @@ namespace eCAL
           std::set<std::string> enabled_addons;
 
           // 1. Parse the input (Hostname:List,of,addon_ids)
-          size_t colon_pos = client.find_first_of(":");
+          const size_t colon_pos = client.find_first_of(':');
           if (colon_pos == std::string::npos)
           {
             client_hostname = EcalUtils::String::Trim(client);
@@ -1102,7 +1102,7 @@ namespace eCAL
             EcalUtils::String::Split(client.substr(colon_pos + 1), ",", tmp_enabled_addon_ids);
             for (auto& host : tmp_enabled_addon_ids)
             {
-              std::string trimmed_addon_id = EcalUtils::String::Trim(host);
+              const std::string trimmed_addon_id = EcalUtils::String::Trim(host);
               if (trimmed_addon_id.empty())
                 continue;
 
@@ -1123,7 +1123,7 @@ namespace eCAL
           existing_rec_client_it->second.enabled_addons_ = enabled_addons;
         }
 
-        bool success = rec_server_instance->SetEnabledRecClients(enabled_rec_clients);
+        const bool success = rec_server_instance->SetEnabledRecClients(enabled_rec_clients);
         if (success)
           return eCAL::rec::Error::ErrorCode::OK;
         else
@@ -1144,7 +1144,7 @@ namespace eCAL
           enabled_rec_clients.erase(existing_rec_client_it);
         }
 
-        bool success = rec_server_instance->SetEnabledRecClients(enabled_rec_clients);
+        const bool success = rec_server_instance->SetEnabledRecClients(enabled_rec_clients);
         if (success)
           return eCAL::rec::Error::ErrorCode::OK;
         else
@@ -1187,7 +1187,7 @@ namespace eCAL
             new_upload_config.password_ = ftp_path_match[3].str();
             new_upload_config.host_     = ftp_path_match[4].str();
 
-            std::string port_string     = ftp_path_match[6].str();
+            const std::string port_string     = ftp_path_match[6].str();
             if (port_string.empty())
             {
               new_upload_config.port_ = 21;
@@ -1196,7 +1196,7 @@ namespace eCAL
             {
               try
               {
-                unsigned long port_long = std::stoul(port_string);
+                const unsigned long port_long = std::stoul(port_string);
                 if ((port_long > std::numeric_limits<uint16_t>::max()) || (port_long <= 0))
                   return eCAL::rec::Error(eCAL::rec::Error::PARAMETER_ERROR, "Invalid port: " + port_string);
 
@@ -1234,7 +1234,7 @@ namespace eCAL
         if (rec_server_instance->IsRecording())
           return eCAL::rec::Error::ErrorCode::CURRENTLY_RECORDING;
 
-        bool success = rec_server_instance->SetUsingBuiltInRecorderEnabled(param);
+        const bool success = rec_server_instance->SetUsingBuiltInRecorderEnabled(param);
 
         if (success)
           return eCAL::rec::Error::OK;
@@ -1244,9 +1244,9 @@ namespace eCAL
 
       eCAL::rec::Error SetConfig::SetPreBuffer        (const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& param)
       {
-        char decimal_point = std::localeconv()->decimal_point[0]; // decimal point for std::stod()
+        const char decimal_point = std::localeconv()->decimal_point[0]; // decimal point for std::stod()
 
-        double pre_buffer_secs;
+        double pre_buffer_secs{0};
         std::string pre_buffer_secs_string = param;
         std::replace(pre_buffer_secs_string.begin(), pre_buffer_secs_string.end(), '.', decimal_point);
 
@@ -1314,7 +1314,7 @@ namespace eCAL
           topic = EcalUtils::String::Trim(topic);
         }
 
-        bool success = rec_server_instance->SetRecordMode(eCAL::rec::RecordMode::Whitelist, whitelist);
+        const bool success = rec_server_instance->SetRecordMode(eCAL::rec::RecordMode::Whitelist, whitelist);
 
         if (!success)
           return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR, "Failed to set whitelist");
@@ -1339,7 +1339,7 @@ namespace eCAL
         if (param.empty())
           return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::PARAMETER_ERROR, "Value for max HDF5 file size must not  be empty");
 
-        unsigned int max_file_size_mib;
+        unsigned int max_file_size_mib{0};
 
         try
         {

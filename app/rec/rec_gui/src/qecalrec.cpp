@@ -842,7 +842,7 @@ eCAL::rec_server::RecServerConfig QEcalRec::config() const
 
 eCAL::rec::Error QEcalRec::setConfig(const eCAL::rec_server::RecServerConfig& config, bool omit_dialogs)
 {
-  auto error = rec_server_->SetConfig(config);
+  const auto error = rec_server_->SetConfig(config);
 
   if (error && !omit_dialogs)
   {
