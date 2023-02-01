@@ -75,16 +75,6 @@ namespace eCAL
       Error(ErrorCode error_code, const std::string& message) : error_code_(error_code), message_(message) {}
       Error(ErrorCode error_code) : error_code_(error_code) {}
 
-      // Copy
-      Error(const Error&)            = default;
-      Error& operator=(const Error&) = default;
-
-      // Move
-      Error& operator=(Error&&)      = default;
-      Error(Error&&)                 = default;
-
-      ~Error() {}
-
     //////////////////////////////////////////
     // Public API
     //////////////////////////////////////////
