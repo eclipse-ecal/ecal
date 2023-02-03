@@ -36,29 +36,6 @@ namespace eCAL
   {
     namespace config
     {
-      bool applyConfig(const eCAL::rec_server::RecServerConfig& config, eCAL::rec_server::RecServerImpl& rec_server)
-      {
-        // Set settings that can fail
-        if (!rec_server.SetEnabledRecClients            (config.enabled_clients_config_)
-           || !rec_server.SetUsingBuiltInRecorderEnabled(config.built_in_recorder_enabled_)
-           || !rec_server.SetRecordMode                 (config.record_mode_, config.listed_topics_))
-        {
-          return false;
-        }
-
-        // Set settings that cannot fail
-        rec_server.SetMeasRootDir             (config.root_dir_);
-        rec_server.SetMeasName                (config.meas_name_);
-        rec_server.SetMaxFileSizeMib          (config.max_file_size_);
-        rec_server.SetDescription             (config.description_);
-        rec_server.SetOneFilePerTopicEnabled  (config.one_file_per_topic_);
-        rec_server.SetPreBufferingEnabled     (config.pre_buffer_enabled_);
-        rec_server.SetMaxPreBufferLength      (config.pre_buffer_length_);
-        rec_server.SetUploadConfig            (config.upload_config_);
-
-        return true;
-      }
-
       bool writeConfigToFile(const eCAL::rec_server::RecServerImpl& rec_server, const std::string& path)
       {
         return config_v2to4::writeConfigFile(rec_server, path);
@@ -132,12 +109,12 @@ namespace eCAL
           if (config_elements.find(v) != config_elements.end())
           {
             // Load config
-            bool success = applyConfig(config_v2to4::readConfig(config_elements[v]), rec_server);
-            if (success && (version != nullptr))
+            const auto error = rec_server.SetConfig(config_v2to4::readConfig(config_elements[v]));
+            if (!error && (version != nullptr))
             {
               (*version) = v;
             }
-            return success;
+            return !error;
           }
         }
 
@@ -147,24 +124,24 @@ namespace eCAL
           {
             if (version_config_pair.first > NATIVE_CONFIG_VERSION)
             {
-              bool success = applyConfig(config_v2to4::readConfig(version_config_pair.second), rec_server);
-              if (success && (version != nullptr))
+              const auto error = rec_server.SetConfig(config_v2to4::readConfig(version_config_pair.second));
+              if (!error && (version != nullptr))
               {
                 (*version) = version_config_pair.first;
               }
-              return success;
+              return !error;
             }
           }
 
           // Load an un-versioned config
           if (config_elements.find(0) != config_elements.end())
           {
-            bool success = applyConfig(config_v2to4::readConfig(config_elements[0]), rec_server);
-            if (success && (version != nullptr))
+            const auto error = rec_server.SetConfig(config_v2to4::readConfig(config_elements[0]));
+            if (!error && (version != nullptr))
             {
               (*version) = 0;
             }
-            return success;
+            return !error;
           }
         }
 

@@ -840,6 +840,27 @@ eCAL::rec_server::RecServerConfig QEcalRec::config() const
   return rec_server_->GetConfig();
 }
 
+eCAL::rec::Error QEcalRec::setConfig(const eCAL::rec_server::RecServerConfig& config, bool omit_dialogs)
+{
+  const auto error = rec_server_->SetConfig(config);
+
+  if (error && !omit_dialogs)
+  {
+    QMessageBox error_message;
+    error_message.setWindowIcon(QIcon(":/ecalrec/APP_ICON"));
+    error_message.setIcon(QMessageBox::Icon::Critical);
+    error_message.setWindowTitle("Error");
+    error_message.setText(tr("Error Setting config: \n") + QString::fromStdString(error.ToString()));
+    error_message.exec();
+  }
+
+  emitAndUpdateEntirelyNewConfig();
+
+  updateConfigModified(true);
+
+  return error;
+}
+
 bool QEcalRec::clearConfig()
 {
   bool success = rec_server_->ClearConfig();
@@ -899,40 +920,7 @@ bool QEcalRec::loadConfigFromFile(const std::string& path, bool omit_dialogs)
 
   if (success)
   {
-    emit connectedToEcalStateChangedSignal     (rec_server_->IsConnectedToEcal());
-    emit connectionToClientsActiveChangedSignal(rec_server_->IsConnectionToClientsActive());
-    emit enabledRecClientsChangedSignal        (rec_server_->GetEnabledRecClients());
-    emit maxPreBufferLengthChangedSignal       (rec_server_->GetMaxPreBufferLength());
-    emit preBufferingEnabledChangedSignal      (rec_server_->GetPreBufferingEnabled());
-    emit recordModeChangedSignal               (rec_server_->GetRecordMode());
-
-    if (rec_server_->GetRecordMode() == eCAL::rec::RecordMode::Blacklist)
-    {
-      topic_blacklist_ = rec_server_->GetListedTopics();
-      topic_whitelist_.clear();
-      emit topicBlacklistChangedSignal(rec_server_->GetListedTopics());
-    }
-    else if (rec_server_->GetRecordMode() == eCAL::rec::RecordMode::Whitelist)
-    {
-      topic_blacklist_.clear();
-      topic_whitelist_ = rec_server_->GetListedTopics();
-      emit topicWhitelistChangedSignal(rec_server_->GetListedTopics());
-    }
-    else if (rec_server_->GetRecordMode() == eCAL::rec::RecordMode::All)
-    {
-      topic_blacklist_.clear();
-      topic_whitelist_.clear();
-    }
-    emit topicBlacklistChangedSignal(topic_blacklist_);
-    emit topicWhitelistChangedSignal(topic_whitelist_);
-
-    emit measRootDirChangedSignal   (rec_server_->GetMeasRootDir());
-    emit measNameChangedSignal      (rec_server_->GetMeasName());
-    emit maxFileSizeMibChangedSignal(rec_server_->GetMaxFileSizeMib());
-    emit descriptionChangedSignal   (rec_server_->GetDescription());
-    emit oneFilePerTopicEnabledChangedSignal(rec_server_->GetOneFilePerTopicEnabled());
-
-    emit usingBuiltInRecorderEnabledChangedSignal(rec_server_->IsUsingBuiltInRecorderEnabled());
+    emitAndUpdateEntirelyNewConfig();
 
     emit loadedConfigChangedSignal(rec_server_->GetLoadedConfigPath(), rec_server_->GetLoadedConfigVersion());
 
@@ -988,6 +976,44 @@ void QEcalRec::updateConfigModified(bool modified)
     config_has_been_modified_ = modified;
     emit configHasBeenModifiedChangedSignal(config_has_been_modified_);
   }
+}
+
+void QEcalRec::emitAndUpdateEntirelyNewConfig()
+{
+  emit connectedToEcalStateChangedSignal     (rec_server_->IsConnectedToEcal());
+  emit connectionToClientsActiveChangedSignal(rec_server_->IsConnectionToClientsActive());
+  emit enabledRecClientsChangedSignal        (rec_server_->GetEnabledRecClients());
+  emit maxPreBufferLengthChangedSignal       (rec_server_->GetMaxPreBufferLength());
+  emit preBufferingEnabledChangedSignal      (rec_server_->GetPreBufferingEnabled());
+  emit recordModeChangedSignal               (rec_server_->GetRecordMode());
+
+  if (rec_server_->GetRecordMode() == eCAL::rec::RecordMode::Blacklist)
+  {
+    topic_blacklist_ = rec_server_->GetListedTopics();
+    topic_whitelist_.clear();
+    emit topicBlacklistChangedSignal(rec_server_->GetListedTopics());
+  }
+  else if (rec_server_->GetRecordMode() == eCAL::rec::RecordMode::Whitelist)
+  {
+    topic_blacklist_.clear();
+    topic_whitelist_ = rec_server_->GetListedTopics();
+    emit topicWhitelistChangedSignal(rec_server_->GetListedTopics());
+  }
+  else if (rec_server_->GetRecordMode() == eCAL::rec::RecordMode::All)
+  {
+    topic_blacklist_.clear();
+    topic_whitelist_.clear();
+  }
+  emit topicBlacklistChangedSignal(topic_blacklist_);
+  emit topicWhitelistChangedSignal(topic_whitelist_);
+
+  emit measRootDirChangedSignal   (rec_server_->GetMeasRootDir());
+  emit measNameChangedSignal      (rec_server_->GetMeasName());
+  emit maxFileSizeMibChangedSignal(rec_server_->GetMaxFileSizeMib());
+  emit descriptionChangedSignal   (rec_server_->GetDescription());
+  emit oneFilePerTopicEnabledChangedSignal(rec_server_->GetOneFilePerTopicEnabled());
+
+  emit usingBuiltInRecorderEnabledChangedSignal(rec_server_->IsUsingBuiltInRecorderEnabled());
 }
 
 ////////////////////////////////////

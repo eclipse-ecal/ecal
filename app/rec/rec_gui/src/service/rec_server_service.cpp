@@ -365,3 +365,25 @@ void RecServerService::GetConfig(::google::protobuf::RpcController*             
 
   eCAL::rec_server::proto_helpers::ToProtobuf(config, *response);
 }
+
+void RecServerService::SetConfig(::google::protobuf::RpcController*                /*controller*/
+                                  , const ::eCAL::pb::rec_server::RecServerConfig* request
+                                  , ::eCAL::pb::rec_server::ServiceResult*         response
+                                  , ::google::protobuf::Closure*                   /*done*/)
+{
+  eCAL::rec_server::RecServerConfig config = eCAL::rec_server::proto_helpers::FromProtobuf(*request);
+  eCAL::rec::Error error = eCAL::rec::Error::GENERIC_ERROR;
+  
+  QMetaObject::invokeMethod(QEcalRec::instance(), "setConfig", Qt::BlockingQueuedConnection, Q_RETURN_ARG(eCAL::rec::Error, error), Q_ARG(eCAL::rec_server::RecServerConfig, config), Q_ARG(bool, true));
+
+  if (!error)
+  {
+    response->set_error_code(eCAL::pb::rec_server::ServiceResult::ErrorCode::ServiceResult_ErrorCode_no_error);
+    response->set_info_message("Successfully set config");
+  }
+  else
+  {
+    response->set_error_code(eCAL::pb::rec_server::ServiceResult::ErrorCode::ServiceResult_ErrorCode_error_internal);
+    response->set_info_message(error.ToString());
+  }
+}
