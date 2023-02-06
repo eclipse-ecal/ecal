@@ -1879,6 +1879,61 @@ namespace eCAL
       return config;
     }
 
+    eCAL::rec::Error RecServerImpl::SetConfig(const RecServerConfig& config)
+    {
+      // Set settings that can fail
+      {
+        const auto current_enabled_clients_config = GetEnabledRecClients();
+        if (current_enabled_clients_config != config.enabled_clients_config_)
+        {
+          if (recording_)
+            return eCAL::rec::Error(eCAL::rec::Error::CURRENTLY_RECORDING, "Cannot enable / disable rec clients while recording");
+
+          if (!SetEnabledRecClients(config.enabled_clients_config_))
+            return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR, "Failed enabling / disabling rec clients");
+        }
+      }
+
+      {
+        const auto current_built_in_recorder_enabled_ = IsUsingBuiltInRecorderEnabled();
+        if (current_built_in_recorder_enabled_ != config.built_in_recorder_enabled_)
+        {
+          if (recording_)
+            return eCAL::rec::Error(eCAL::rec::Error::CURRENTLY_RECORDING, "Cannot switch between built-in and external local recorder while recording");
+
+          if (!SetUsingBuiltInRecorderEnabled(config.built_in_recorder_enabled_))
+            return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR, "Failed switch between built-in and external local recorder while recording");
+        }
+      }
+
+      {
+        const auto current_record_mode   = GetRecordMode();
+        const auto current_listed_topics = GetListedTopics();
+
+        if ((current_record_mode != config.record_mode_)
+          || (current_listed_topics != config.listed_topics_))
+        {
+          if (recording_)
+            return eCAL::rec::Error(eCAL::rec::Error::CURRENTLY_RECORDING, "Cannot set the record mode while recording");
+
+          if (!SetRecordMode(config.record_mode_, config.listed_topics_))
+            return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR, "Failed setting the record mode");
+        }
+      }
+
+      // Set settings that cannot fail
+      SetMeasRootDir             (config.root_dir_);
+      SetMeasName                (config.meas_name_);
+      SetMaxFileSizeMib          (config.max_file_size_);
+      SetDescription             (config.description_);
+      SetOneFilePerTopicEnabled  (config.one_file_per_topic_);
+      SetPreBufferingEnabled     (config.pre_buffer_enabled_);
+      SetMaxPreBufferLength      (config.pre_buffer_length_);
+      SetUploadConfig            (config.upload_config_);
+
+      return eCAL::rec::Error::OK;
+    }
+
     bool RecServerImpl::ClearConfig()
     {
       if (recording_)

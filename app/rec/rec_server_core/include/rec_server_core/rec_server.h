@@ -178,6 +178,7 @@ namespace eCAL
     public:
 
       RecServerConfig GetConfig() const;
+      eCAL::rec::Error SetConfig(const RecServerConfig& config);
 
       bool ClearConfig();
       bool SaveConfigToFile(const std::string& path) const;

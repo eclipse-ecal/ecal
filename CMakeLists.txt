@@ -477,6 +477,13 @@ endif(NOT ECAL_LAYER_ICEORYX)
   add_subdirectory(testing/ecal/pubsub_proto_test)
   add_subdirectory(testing/ecal/pubsub_test)
   add_subdirectory(testing/ecal/topic2mcast_test)
+  
+  # ------------------------------------------------------
+  # test apps
+  # ------------------------------------------------------
+  if (HAS_HDF5 AND HAS_QT5)
+    add_subdirectory(app/rec/rec_tests/rec_rpc_tests)
+  endif()
 endif()
 
 # --------------------------------------------------------

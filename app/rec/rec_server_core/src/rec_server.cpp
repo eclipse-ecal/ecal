@@ -99,7 +99,7 @@ namespace eCAL
     std::string  RecServer::GetMeasRootDir   () const                   { return rec_server_impl_->GetMeasRootDir(); } 
     std::string  RecServer::GetMeasName      () const                   { return rec_server_impl_->GetMeasName(); }
     int64_t      RecServer::GetMaxFileSizeMib() const                   { return rec_server_impl_->GetMaxFileSizeMib(); }
-    bool         RecServer::GetOneFilePerTopicEnabled() const                   { return rec_server_impl_->GetOneFilePerTopicEnabled(); }
+    bool         RecServer::GetOneFilePerTopicEnabled() const           { return rec_server_impl_->GetOneFilePerTopicEnabled(); }
     std::string  RecServer::GetDescription   () const                   { return rec_server_impl_->GetDescription(); }
 
     ////////////////////////////////////
@@ -144,14 +144,16 @@ namespace eCAL
     // Config Save / Load / Get
     ////////////////////////////////////
     
-    RecServerConfig RecServer::GetConfig() const                      { return rec_server_impl_->GetConfig(); }
+    RecServerConfig RecServer::GetConfig() const                         { return rec_server_impl_->GetConfig(); }
+    eCAL::rec::Error RecServer::SetConfig(const RecServerConfig& config) { return rec_server_impl_->SetConfig(config); }
 
-    bool RecServer::ClearConfig       ()                              { return rec_server_impl_->ClearConfig(); }
-    bool RecServer::SaveConfigToFile  (const std::string& path) const { return rec_server_impl_->SaveConfigToFile(path); }
-    bool RecServer::LoadConfigFromFile(const std::string& path)       { return rec_server_impl_->LoadConfigFromFile(path); }
 
-    std::string RecServer::GetLoadedConfigPath() const                { return rec_server_impl_->GetLoadedConfigPath(); }
-    int RecServer::GetLoadedConfigVersion() const                     { return rec_server_impl_->GetLoadedConfigVersion(); }
-    int RecServer::GetNativeConfigVersion() const                     { return rec_server_impl_->GetNativeConfigVersion(); }
+    bool RecServer::ClearConfig       ()                                 { return rec_server_impl_->ClearConfig(); }
+    bool RecServer::SaveConfigToFile  (const std::string& path) const    { return rec_server_impl_->SaveConfigToFile(path); }
+    bool RecServer::LoadConfigFromFile(const std::string& path)          { return rec_server_impl_->LoadConfigFromFile(path); }
+    
+    std::string RecServer::GetLoadedConfigPath() const                   { return rec_server_impl_->GetLoadedConfigPath(); }
+    int RecServer::GetLoadedConfigVersion() const                        { return rec_server_impl_->GetLoadedConfigVersion(); }
+    int RecServer::GetNativeConfigVersion() const                        { return rec_server_impl_->GetNativeConfigVersion(); }
   }
 }

@@ -98,6 +98,11 @@ namespace eCAL
                                 , ::eCAL::pb::rec_server::RecServerConfig*      response
                                 , ::google::protobuf::Closure*                  done) override;
 
+      virtual void SetConfig(::google::protobuf::RpcController*                  controller
+                                , const ::eCAL::pb::rec_server::RecServerConfig* request
+                                , ::eCAL::pb::rec_server::ServiceResult*         response
+                                , ::google::protobuf::Closure*                   done) override;
+
     private:
       const std::shared_ptr<eCAL::rec_server::RecServer> rec_server_instance_;
     };

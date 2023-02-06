@@ -230,6 +230,7 @@ signals:
 ////////////////////////////////////
 public slots:
   eCAL::rec_server::RecServerConfig config() const;
+  eCAL::rec::Error setConfig(const eCAL::rec_server::RecServerConfig& config, bool omit_dialogs = false);
 
   bool clearConfig();
   bool saveConfigToFile  (const std::string& path);
@@ -243,6 +244,7 @@ public slots:
 
 private:
   void updateConfigModified(bool modified);
+  void emitAndUpdateEntirelyNewConfig();
 
 signals:
   void loadedConfigChangedSignal(const std::string& path, int version);

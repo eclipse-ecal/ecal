@@ -9,7 +9,11 @@ on:
 jobs:
   build-ubuntu:
     runs-on: ubuntu-20.04
-
+    
+    env:
+      # enable starting Qt GUI Applications
+      QT_QPA_PLATFORM: offscreen
+      
     steps:
     - name: Install Dependencies
       run: |

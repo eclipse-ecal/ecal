@@ -93,5 +93,58 @@ namespace eCAL
       std::set<std::string>               listed_topics_;
       UploadConfig                        upload_config_;
     };
+
+    ////////////////////////////////////
+    // Operators
+    ////////////////////////////////////
+
+    inline bool operator==(const UploadConfig& lhs, const UploadConfig& rhs)
+    {
+      return  (lhs.type_                == rhs.type_) &&
+              (lhs.host_                == rhs.host_) &&
+              (lhs.port_                == rhs.port_) &&
+              (lhs.username_            == rhs.username_) &&
+              (lhs.password_            == rhs.password_) &&
+              (lhs.root_path_           == rhs.root_path_) &&
+              (lhs.delete_after_upload_ == rhs.delete_after_upload_);
+    }
+
+    inline bool operator==(const ClientConfig& lhs, const ClientConfig& rhs)
+    {
+      return (lhs.host_filter_  == rhs.host_filter_)
+        && (lhs.enabled_addons_ == rhs.enabled_addons_);
+    }
+
+    inline bool operator==(const RecServerConfig& lhs, const RecServerConfig& rhs)
+    {
+      return  (lhs.root_dir_                  == rhs.root_dir_) &&
+              (lhs.meas_name_                 == rhs.meas_name_) &&
+              (lhs.max_file_size_             == rhs.max_file_size_) &&
+              (lhs.one_file_per_topic_        == rhs.one_file_per_topic_) &&
+              (lhs.description_               == rhs.description_) &&
+              (lhs.enabled_clients_config_    == rhs.enabled_clients_config_) &&
+              (lhs.pre_buffer_enabled_        == rhs.pre_buffer_enabled_) &&
+              (lhs.pre_buffer_length_         == rhs.pre_buffer_length_) &&
+              (lhs.built_in_recorder_enabled_ == rhs.built_in_recorder_enabled_) &&
+              (lhs.record_mode_               == rhs.record_mode_) &&
+              (lhs.listed_topics_             == rhs.listed_topics_) &&
+              (lhs.upload_config_             == rhs.upload_config_);
+    }
+
+    inline bool operator!=(const UploadConfig& lhs, const UploadConfig& rhs)
+    {
+      return !(lhs == rhs);
+    }
+
+    inline bool operator!=(const ClientConfig& lhs, const ClientConfig& rhs)
+    {
+      return !(lhs == rhs);
+    }
+
+    inline bool operator!=(const RecServerConfig& lhs, const RecServerConfig& rhs)
+    {
+      return !(lhs == rhs);
+    }
   }
+
 }

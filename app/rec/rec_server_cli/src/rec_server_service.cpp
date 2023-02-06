@@ -368,5 +368,26 @@ namespace eCAL
 
       eCAL::rec_server::proto_helpers::ToProtobuf(config, *response);
     }
+
+    void RecServerService::SetConfig(::google::protobuf::RpcController*                /*controller*/
+                                      , const ::eCAL::pb::rec_server::RecServerConfig* request
+                                      , ::eCAL::pb::rec_server::ServiceResult*         response
+                                      , ::google::protobuf::Closure*                   /*done*/)
+    {
+      const eCAL::rec_server::RecServerConfig config = eCAL::rec_server::proto_helpers::FromProtobuf(*request);
+      
+      const eCAL::rec::Error error = rec_server_instance_->SetConfig(config);
+
+      if (!error)
+      {
+        response->set_error_code(eCAL::pb::rec_server::ServiceResult::ErrorCode::ServiceResult_ErrorCode_no_error);
+        response->set_info_message("Successfully set config");
+      }
+      else
+      {
+        response->set_error_code(eCAL::pb::rec_server::ServiceResult::ErrorCode::ServiceResult_ErrorCode_error_internal);
+        response->set_info_message(error.ToString());
+      }
+    }
   }
 }
