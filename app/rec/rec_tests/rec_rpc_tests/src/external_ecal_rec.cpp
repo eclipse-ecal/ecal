@@ -54,7 +54,7 @@ ExternalEcalRecInstance::ExternalEcalRecInstance(bool gui)
     pid = eCAL::Process::StartProcess(ECAL_REC_CLI_PATH, "--interactive-dont-exit --no-default", "", false, eCAL_Process_eStartMode::proc_smode_hidden, false);
   }
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+  std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 
   if (gui)
   {
