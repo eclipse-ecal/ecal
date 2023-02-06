@@ -54,11 +54,23 @@ ExternalEcalRecInstance::ExternalEcalRecInstance(bool gui)
     pid = eCAL::Process::StartProcess(ECAL_REC_CLI_PATH, "--interactive-dont-exit --no-default", "", false, eCAL_Process_eStartMode::proc_smode_hidden, false);
   }
 
+  if (pid != 0)
+  {
+    std::cout << "Successfully started eCAL Rec " << (gui ? "GUI" : "CLI") << " with PID " << pid << std::endl;
+  }
+  else
+  {
+    std::cerr << "Error starting eCAL Rec " << (gui ? "GUI" : "CLI") << std::endl;
+    return;
+  }
+
   std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 
   if (gui)
   {
-    SetConfigViaRpc(eCAL::rec_server::RecServerConfig());
+    auto error = SetConfigViaRpc(eCAL::rec_server::RecServerConfig());
+    if (error)
+      std::cerr << "Error initializing empty config in rec GUI: " << error.ToString() << std::endl;
   }
 }
 
