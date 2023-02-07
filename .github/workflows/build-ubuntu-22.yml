@@ -46,7 +46,7 @@ jobs:
         mkdir ".venv_build"
         python3.9 -m venv ".venv_build"
         source ".venv_build/bin/activate"
-        pip install -r "$GITHUB_WORKSPACE/requirements.txt"
+        pip install -r "$GITHUB_WORKSPACE/doc/requirements.txt"
 
     - name: CMake
       run: |

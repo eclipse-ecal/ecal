@@ -1,0 +1,4 @@
+html[data-theme=dark],
+html[data-theme=light] {
+    --pst-color-primary: rgb(255, 165, 0);
+}

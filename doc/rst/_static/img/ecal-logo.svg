@@ -7,13 +7,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="540.02936mm"
+   width="317.45078mm"
    height="120mm"
-   viewBox="0 0 540.02938 120"
+   viewBox="0 0 317.45079 120"
    version="1.1"
    id="svg8"
    inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
-   sodipodi:docname="logo_before_text.svg">
+   sodipodi:docname="ecal_after_logo.svg">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -23,22 +23,22 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49497475"
-     inkscape:cx="983.40789"
-     inkscape:cy="136.87856"
+     inkscape:zoom="0.24748738"
+     inkscape:cx="267.79706"
+     inkscape:cy="409.37906"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="text921"
      inkscape:document-rotation="0"
      showgrid="true"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1254"
-     inkscape:window-height="967"
-     inkscape:window-x="1552"
-     inkscape:window-y="78"
-     inkscape:window-maximized="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1137"
+     inkscape:window-x="1272"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
      inkscape:snap-page="false">
     <inkscape:grid
        type="xygrid"
@@ -47,8 +47,8 @@
        spacingx="9.9999997"
        spacingy="9.9999997"
        empspacing="8"
-       originx="-1.9560625e-07"
-       originy="2.9458236e-07" />
+       originx="-5.8681875e-07"
+       originy="8.8374708e-07" />
   </sodipodi:namedview>
   <metadata
      id="metadata5">
@@ -58,7 +58,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -188,22 +188,27 @@
        id="text921"
        style="font-size:114.778px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#ffa500;fill-opacity:1;stroke-width:0.842456"
        transform="translate(10.000005)">
-      <path
-         d="m 77.916744,175.20821 v 2.86945 q 0,2.86945 0.459112,4.59112 0.459112,1.72167 1.606892,2.75467 1.262558,0.91823 3.213784,1.26256 2.066004,0.34434 5.050232,0.34434 h 20.200926 v 12.96991 H 88.246764 q -14.806362,0 -21.119152,-5.62412 -6.31279,-5.62412 -6.31279,-18.02015 v -14.34725 q 0,-6.7719 1.262558,-11.36302 1.377336,-4.7059 4.59112,-7.46057 3.328562,-2.86945 8.723128,-4.13201 5.394566,-1.26256 13.658582,-1.26256 h 30.07184 q 6.65712,0 11.01868,1.26256 4.47635,1.26256 7.00146,3.55812 2.6399,2.18078 3.6729,5.39457 1.033,3.099 1.033,6.7719 v 20.43048 z m 46.829426,-19.05315 q 0,-3.099 -1.60689,-4.132 -1.49212,-1.03301 -5.39457,-1.03301 H 89.279766 q -3.213784,0 -5.394566,0.34434 -2.180782,0.22955 -3.558118,1.26256 -1.262558,1.033 -1.836448,2.98422 -0.57389,1.95123 -0.57389,5.27979 v 3.32856 h 46.829426 z"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:114.778px;font-family:Neuropolitical;-inkscape-font-specification:Neuropolitical;fill:#ffa500;fill-opacity:1;stroke-width:0.842456"
-         id="path853" />
-      <path
-         d="m 183.51229,200.00026 q -8.60835,0 -14.34725,-1.37734 -5.7389,-1.49211 -9.18224,-4.59112 -3.44334,-3.21378 -4.93546,-8.26401 -1.37733,-5.16501 -1.37733,-12.62558 v -24.56249 q 0,-7.3458 1.37733,-12.51081 1.49212,-5.16501 4.93546,-8.26401 3.44334,-3.21379 9.18224,-4.59112 5.7389,-1.49212 14.34725,-1.49212 h 54.28999 v 15.03592 h -53.48655 q -4.01723,0 -6.65712,0.68867 -2.52512,0.57389 -4.01723,2.066 -1.49211,1.49212 -2.066,4.01723 -0.57389,2.41034 -0.57389,5.96846 v 22.9556 q 0,3.6729 0.57389,6.08323 0.57389,2.41034 2.066,3.90246 1.49211,1.49211 4.13201,2.066 2.63989,0.57389 6.65712,0.57389 h 53.37177 v 14.92114 z"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:114.778px;font-family:Neuropolitical;-inkscape-font-specification:Neuropolitical;fill:#ffa500;fill-opacity:1;stroke-width:0.842456"
-         id="path855" />
-      <path
-         d="m 328.59149,181.98011 h -54.17522 l -11.13347,18.02015 h -20.08615 l 45.45209,-72.31014 q 2.06601,-3.32856 4.93546,-5.50934 2.86945,-2.18079 8.26401,-2.18079 5.27979,0 8.14924,2.18079 2.86945,2.18078 4.93545,5.50934 l 45.22254,72.31014 h -20.20093 z m -46.02598,-13.42902 h 37.87674 l -18.93837,-30.87528 z"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:114.778px;font-family:Neuropolitical;-inkscape-font-specification:Neuropolitical;fill:#ffa500;fill-opacity:1;stroke-width:0.842456"
-         id="path857" />
-      <path
-         d="m 392.86697,200.00026 q -8.60835,0 -14.34725,-1.37734 -5.7389,-1.49211 -9.18224,-4.59112 -3.44334,-3.21378 -4.93545,-8.26401 -1.37734,-5.16501 -1.37734,-12.62558 v -51.42055 h 17.33148 v 50.73188 q 0,3.44334 0.57389,5.85368 0.68867,2.29556 2.29556,3.90245 1.60689,1.49211 4.24679,2.18078 2.75467,0.68867 6.88668,0.68867 h 46.48509 v 14.92114 z"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:114.778px;font-family:Neuropolitical;-inkscape-font-specification:Neuropolitical;fill:#ffa500;fill-opacity:1;stroke-width:0.842456"
-         id="path859" />
+      <g
+         aria-label="eCAL"
+         id="text858"
+         style="font-size:52.9167px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;stroke-width:0.2229">
+        <path
+           d="m 50.943269,167.67291 v 1.32292 q 0,1.32292 0.211667,2.11667 0.211667,0.79375 0.740834,1.27 0.582084,0.42333 1.481667,0.58208 0.952501,0.15875 2.328335,0.15875 h 9.313339 v 5.97959 h -9.313339 q -6.826254,0 -9.736672,-2.59292 -2.910419,-2.59292 -2.910419,-8.30792 v -6.61459 q 0,-3.12208 0.582084,-5.23875 0.635,-2.16958 2.116668,-3.43959 1.534584,-1.32291 4.021669,-1.905 2.487085,-0.58208 6.297087,-0.58208 h 13.864175 q 3.069169,0 5.080003,0.58208 2.063751,0.58209 3.227919,1.64042 1.217084,1.00542 1.693334,2.48709 0.47625,1.42875 0.47625,3.12208 v 9.41917 z m 21.590013,-8.78417 q 0,-1.42875 -0.740834,-1.905 -0.687917,-0.47625 -2.487084,-0.47625 H 56.182022 q -1.481667,0 -2.487084,0.15875 -1.005418,0.10583 -1.640418,0.58208 -0.582084,0.47625 -0.846667,1.37584 -0.264584,0.89958 -0.264584,2.43417 v 1.53458 h 21.590013 z"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:52.9167px;font-family:Neuropolitical;-inkscape-font-specification:Neuropolitical;stroke-width:0.2229"
+           id="path854" />
+        <path
+           d="m 99.626532,179.10292 q -3.968752,0 -6.614587,-0.635 -2.645835,-0.68792 -4.233336,-2.11667 -1.587501,-1.48167 -2.275418,-3.81 Q 85.86819,170.16 85.86819,166.72041 v -11.32417 q 0,-3.38667 0.635001,-5.76792 0.687917,-2.38125 2.275418,-3.81 1.587501,-1.48167 4.233336,-2.11667 2.645835,-0.68792 6.614587,-0.68792 h 25.029598 v 6.93209 H 99.996949 q -1.852084,0 -3.069169,0.3175 -1.164167,0.26458 -1.852084,0.9525 -0.687917,0.68792 -0.952501,1.85208 -0.264583,1.11126 -0.264583,2.75167 v 10.58334 q 0,1.69334 0.264583,2.80459 0.264584,1.11125 0.952501,1.79917 0.687917,0.68791 1.905001,0.9525 1.217084,0.26458 3.069173,0.26458 h 24.60626 v 6.87917 z"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:52.9167px;font-family:Neuropolitical;-inkscape-font-specification:Neuropolitical;stroke-width:0.2229"
+           id="path856" />
+        <path
+           d="m 166.51315,170.795 h -24.97668 l -5.13292,8.30792 h -9.26042 l 20.95501,-33.33752 q 0.9525,-1.53458 2.27542,-2.54 1.32292,-1.00542 3.81,-1.00542 2.43417,0 3.75709,1.00542 1.32291,1.00542 2.27542,2.54 l 20.84917,33.33752 h -9.31333 z m -21.21959,-6.19125 h 17.46251 l -8.73126,-14.2346 z"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:52.9167px;font-family:Neuropolitical;-inkscape-font-specification:Neuropolitical;stroke-width:0.2229"
+           id="path858" />
+        <path
+           d="m 196.14641,179.10292 q -3.96875,0 -6.61458,-0.635 -2.64584,-0.68792 -4.23334,-2.11667 -1.5875,-1.48167 -2.27542,-3.81 -0.635,-2.38125 -0.635,-5.82084 v -23.70668 h 7.99042 v 23.38918 q 0,1.5875 0.26459,2.69875 0.3175,1.05834 1.05833,1.79917 0.74083,0.68792 1.95792,1.00542 1.27,0.3175 3.175,0.3175 h 21.43126 v 6.87917 z"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:52.9167px;font-family:Neuropolitical;-inkscape-font-specification:Neuropolitical;stroke-width:0.2229"
+           id="path860" />
+      </g>
     </g>
   </g>
 </svg>

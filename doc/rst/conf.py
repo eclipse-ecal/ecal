@@ -92,7 +92,7 @@ release = u''
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx_typo3_theme',
+    'sphinx_book_theme',
     'sphinx_tabs.tabs',
     'sphinx.ext.githubpages',
     'sphinx.ext.todo',
@@ -156,8 +156,8 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
+#source_suffix = '.rst'
 
 # The master toctree document.
 master_doc = 'index'
@@ -181,7 +181,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinx_typo3_theme'
+html_theme = 'sphinx_book_theme'
 
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -190,50 +190,66 @@ html_theme = 'sphinx_typo3_theme'
 html_static_path = ['_static']
 
 html_css_files = [
-    'css/theme_addon.css',
+    'css/ecal.css',
 ]
 
-#https://github.com/TYPO3-Documentation/sphinx_typo3_theme/tree/master/sphinx_typo3_theme
+html_title = "Eclipse eCAL™"
+html_logo = "_static/img/ecal-logo.svg"
+html_favicon = "_static/img/favicon.png"
+
 html_theme_options = {
-    # Banner
-    'logo'                : 'img/ecal-logo.svg',
-    'logo_alt'            : 'eCAL Logo',
-    'logo_title'          : 'eCAL Documentation',
-    'logo_url'            : 'https://eclipse-ecal.github.io/ecal/',
-
-    # Clear deprecated variables to make the "Edit On Github" button work
-    'github_branch'       : '',
-    'github_commit_hash'  : '',
-    'github_repository'   : '',
-    'github_revision_msg' : '',
-    'github_sphinx_locale': '',
-
-    # Footer
-    #'docstypo3org'       : 'True',
-    'project_repository' : 'https://github.com/eclipse-ecal/ecal',
-
-    # How-to-edit
-    'h2edit_url'          : 'https://eclipse-ecal.github.io/ecal/advanced/documentation.html'
+    "logo_only": True,
+    "show_navbar_depth": 1,
+    "show_toc_level": 2,
+    "repository_url": "https://github.com/eclipse-ecal/ecal/",
+    "use_repository_button": True,
+    "use_issues_button": True,
+    "use_edit_page_button": True,
+    "repository_branch": "master",
+    "path_to_docs": "doc/rst/",
 }
 
-new_html_context = {
-    # "Edit on github" button
-    'display_github' : True,
-    'github_host'    : 'github.com',
-    'github_user'    : 'eclipse-ecal',
-    'github_repo'    : 'ecal',
-    'github_version' : 'master/',
-    'conf_py_path'   : 'doc/rst/',
-    'source_suffix'  : '.rst',
+#https://github.com/TYPO3-Documentation/sphinx_typo3_theme/tree/master/sphinx_typo3_theme
+# html_theme_options = {
+#     # Banner
+#     'logo'                : 'img/ecal-logo.svg',
+#     'logo_alt'            : 'eCAL Logo',
+#     'logo_title'          : 'eCAL Documentation',
+#     'logo_url'            : 'https://eclipse-ecal.github.io/ecal/',
 
-    # Misc
-    'favicon'        : 'img/favicon.png',
-}
+#     # Clear deprecated variables to make the "Edit On Github" button work
+#     'github_branch'       : '',
+#     'github_commit_hash'  : '',
+#     'github_repository'   : '',
+#     'github_revision_msg' : '',
+#     'github_sphinx_locale': '',
 
-if 'html_context' in globals():
-    html_context.update(new_html_context)
-else:
-    html_context = new_html_context
+#     # Footer
+#     #'docstypo3org'       : 'True',
+#     'project_repository' : 'https://github.com/eclipse-ecal/ecal',
+
+#     # How-to-edit
+#     'h2edit_url'          : 'https://eclipse-ecal.github.io/ecal/advanced/documentation.html'
+# }
+
+# new_html_context = {
+#     # "Edit on github" button
+#     'display_github' : True,
+#     'github_host'    : 'github.com',
+#     'github_user'    : 'eclipse-ecal',
+#     'github_repo'    : 'ecal',
+#     'github_version' : 'master/',
+#     'conf_py_path'   : 'doc/rst/',
+#     'source_suffix'  : '.rst',
+
+#     # Misc
+#     'favicon'        : 'img/favicon.png',
+# }
+
+# if 'html_context' in globals():
+#     html_context.update(new_html_context)
+# else:
+#     html_context = new_html_context
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
