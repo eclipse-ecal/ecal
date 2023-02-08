@@ -36,7 +36,7 @@ import os
 #    },
 #]
 }@
-<div class="table-responsive"><table class="colwidths-given docutils align-default" id="ecal-@(str(ecal_version).replace('.', '-'))-download">
+<div class="table-responsive"><table class="colwidths-given table" id="ecal-@(str(ecal_version).replace('.', '-'))-download">
 <colgroup>
 <col style="width: 20%">
 <col style="width: 80%">
@@ -104,5 +104,5 @@ else:
 </tr>
 @[end for]@
 </tbody>
-</table></div>
+</table>
 </div>
