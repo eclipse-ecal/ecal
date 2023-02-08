@@ -73,8 +73,8 @@ if not os.path.exists(download_tables_main_page_dir) or not os.path.exists(downl
 # -- Project information -----------------------------------------------------
 
 project = u'Eclipse eCAL™'
-copyright = u'2022, Continental'
-author = u'Continental'
+copyright = u'2023, Continental'
+#author = u'Continental'
 
 # The short X.Y version
 version = u''
@@ -96,7 +96,7 @@ extensions = [
     'sphinx_tabs.tabs',
     'sphinx.ext.githubpages',
     'sphinx.ext.todo',
-    'sphinxcontrib.youtube'
+    'sphinxcontrib.youtube',
 ]
 
 if is_cmake_build:
@@ -191,6 +191,8 @@ html_static_path = ['_static']
 
 html_css_files = [
     'css/ecal.css',
+    'css/bignums.css',
+    'css/tabs.css',
 ]
 
 html_title = "Eclipse eCAL™"
@@ -207,6 +209,25 @@ html_theme_options = {
     "use_edit_page_button": True,
     "repository_branch": "master",
     "path_to_docs": "doc/rst/",
+    "extra_navbar": "", # => Remove the default text
+    "extra_footer":     '<h5>Eclipse Foundation</h5>'
+                        '<ul>'
+                            '<li>'
+                                '<p><a href="http://www.eclipse.org">Website</a></p>'
+                            '</li>'
+                            '<li>'
+                                '<p><a href="http://www.eclipse.org/legal/privacy.php">Privacy policy</a></p>'
+                            '</li>'
+                            '<li>'
+                                '<p><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></p>'
+                            '</li>'
+                            '<li>'
+                                '<p><a href="http://www.eclipse.org/legal/copyright.php">Copyright agent</a></p>'
+                            '</li>'
+                            '<li>'
+                                '<p><a href="http://www.eclipse.org/legal">Legal</a></p>'
+                            '</li>'
+                        '</ul>',
 }
 
 #https://github.com/TYPO3-Documentation/sphinx_typo3_theme/tree/master/sphinx_typo3_theme
@@ -255,9 +276,6 @@ html_theme_options = {
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'eCALdoc'
-
-
-
 
 # C++ defines used in function definitions
 cpp_id_attributes = ['ECAL_API', 'ECALTIME_API']
