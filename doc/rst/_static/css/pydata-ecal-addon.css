@@ -1,0 +1,4 @@
+.admonition,
+div.admonition {
+    box-shadow: 2px 2px .4rem rgba(0, 0, 0, .3), 0 0 .0625rem rgba(0, 0, 0, .2);
+}

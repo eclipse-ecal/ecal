@@ -175,7 +175,7 @@ language = None
 exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+# pygments_style = 'sphinx'
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -190,9 +190,12 @@ html_theme = 'sphinx_book_theme'
 html_static_path = ['_static']
 
 html_css_files = [
-    'css/ecal.css',
+    'css/pydata-ecal.css',
+    'css/pydata-ecal-addon.css',
+    'css/book-ecal-addon.css',
     'css/bignums.css',
     'css/tabs.css',
+    'css/pygments-ecal-addon.css',
 ]
 
 html_title = "Eclipse eCAL™"
