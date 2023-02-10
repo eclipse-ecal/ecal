@@ -44,10 +44,20 @@ jobs:
 
     - name: CMake
       run: |
+        # Create Python venv, as we need at least 3.7 for building the documentation
+        sudo apt-get -y install python3.8-dev python3.8-venv
+        mkdir "build_venv_38"
+        python3.8 -m venv "build_venv_38"
+        source "build_venv_38/bin/activate"
+        pip install --upgrade pip
+        pip install wheel setuptools
+        pip install -r "$GITHUB_WORKSPACE/doc/requirements.txt"
+        
         export CC=/usr/bin/gcc-9
         export CXX=/usr/bin/g++-9
         mkdir "${{ runner.workspace }}/_build"
         cd "${{ runner.workspace }}/_build"
+        
         cmake $GITHUB_WORKSPACE -G "Ninja" \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DHAS_HDF5=ON \
@@ -84,7 +94,9 @@ jobs:
         -DCMAKE_INSTALL_SYSCONFDIR=/etc \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LOCALSTATEDIR=/var \
-        -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu
+        -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu \
+        -DPython_FIND_VIRTUALENV=ONLY
+        
         sudo mkdir /etc/ecal
         sudo cp "$GITHUB_WORKSPACE/ecal/core/cfg/ecal.ini" /etc/ecal
       shell: bash
