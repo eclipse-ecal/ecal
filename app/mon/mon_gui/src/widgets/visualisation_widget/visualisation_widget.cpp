@@ -192,6 +192,15 @@ void VisualisationWidget::checkForMorePublishersWithSameTopic(const eCAL::pb::Mo
   }
   switch (publishers.size())
   {
+  case 0:
+  {
+    ui_.nr_of_publisers_label->setText("0");
+    ui_.nr_of_publisers_label->setStyleSheet("color: red;");
+    ui_.label_publishers->setStyleSheet("color: red;");
+    ui_.label_publishers->setText("Publishers");
+    ui_.warning_label->setVisible(true);
+    break;
+  }
   case 1:
   {
     ui_.nr_of_publisers_label->setText("1");
@@ -203,12 +212,11 @@ void VisualisationWidget::checkForMorePublishersWithSameTopic(const eCAL::pb::Mo
   }
   default:
   {
-    ui_.warning_label->setVisible(true);
     ui_.nr_of_publisers_label->setText(QString::number(publishers.size()));
-    ui_.nr_of_publisers_label->setStyleSheet("color: red;");
-    ui_.label_publishers->setStyleSheet("color: red;");
+    ui_.nr_of_publisers_label->setStyleSheet("");
+    ui_.label_publishers->setStyleSheet("");
     ui_.label_publishers->setText("Publishers");
-    ui_.textEdit->clear();
+    ui_.warning_label->setVisible(false);
     break;
   }
   }
