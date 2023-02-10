@@ -92,7 +92,6 @@ This can be done in the ecal.ini file [network] section.
 .. seealso:: 
 
    .. toctree::
-
       :maxdepth: 1
 
       layers/shm.rst

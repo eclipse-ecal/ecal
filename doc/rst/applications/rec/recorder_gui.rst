@@ -64,7 +64,7 @@ These settings are used for all new recordings.
   The recorder will create a directory for individual measurements inside this directory.
 
   If you are using different operating systems, you must make sure the path works for all clients.
-  Click the |qecalparser_SHOW_DIALOG| button to open an improved editor to help you with the replacement syntax.
+  Click the |qecalparser/light_SHOW_DIALOG| button to open an improved editor to help you with the replacement syntax.
 
   The default is:
   

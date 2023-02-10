@@ -60,7 +60,7 @@ For that we will use Visual Studio Code with the reStructuredText extension, tha
 
    - |fa-ubuntu| Ubuntu:
 
-     .. code-block:: bash.
+     .. code-block:: bash
      
         sudo pip3 install -r requirements.txt
         sudo pip3 install esbonio
