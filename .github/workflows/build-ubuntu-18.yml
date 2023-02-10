@@ -63,16 +63,20 @@ jobs:
         submodules:  'true'
         fetch-depth: 0
 
-    - name: CMake
+    - name: Install Python requirements
+      shell: bash
       run: |
-        # Create Python venv, as we need at least 3.7 for building the documentation
         sudo apt-get -y install python3.8-dev python3.8-venv
-        mkdir "build_venv_38"
-        python3.8 -m venv "build_venv_38"
-        source "build_venv_38/bin/activate"
+        mkdir ".venv_build"
+        python3.8 -m venv ".venv_build"
+        source ".venv_build/bin/activate"
         pip install --upgrade pip
         pip install wheel setuptools
         pip install -r "$GITHUB_WORKSPACE/doc/requirements.txt"
+
+    - name: CMake
+      run: |
+        source ".venv_build/bin/activate"
         
         export CC=/usr/bin/gcc-7
         export CXX=/usr/bin/g++-7
