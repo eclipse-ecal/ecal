@@ -123,8 +123,9 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 * [ecal-ros2-subscriber](https://github.com/ecal-io/ecal-ros2-subscriber) - Subscribing ROS2 topics in eCAL
 
 ## Other projects related to eCAL
-* [fine-ftpserver](https://github.com/eclipse-ecal/fineftp-server) - FTP functionality to collect distributed measurement artifacts over network
+* [fineftp-server](https://github.com/eclipse-ecal/fineftp-server) - FTP functionality to collect distributed measurement artifacts over network
 * [tcp_pubsub](https://github.com/eclipse-ecal/tcp_pubsub) - Additional TCP transport layer for higher reliability for publication/subscription over network
+* [udpcap](https://github.com/eclipse-ecal/udpcap) - Npcap based UDP-socket emulation to increase the eCAL performance on MS Windows
 * [docker-ecal](https://github.com/Blutkoete/docker-ecal) - Inoffical dockerfiles for eCAL
 * [golang-ecal](https://github.com/Blutkoete/golang-ecal) - eCAL go language binding
 * [ecal-rs](https://github.com/kopernikusai/ecal-rs) - eCAL rust language binding
