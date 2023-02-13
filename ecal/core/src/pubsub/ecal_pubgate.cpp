@@ -118,7 +118,7 @@ namespace eCAL
     const std::string& topic_id   = ecal_sample_topic.tid();
     const std::string& topic_type = ecal_sample_topic.ttype();
     const std::string& topic_desc = ecal_sample_topic.tdesc();
-    const std::string& process_id = std::to_string(ecal_sample_topic.pid());
+    const std::string  process_id = std::to_string(ecal_sample_topic.pid());
 
     std::string reader_par;
     for (const auto& layer : ecal_sample_topic.tlayer())
@@ -162,7 +162,7 @@ namespace eCAL
     const std::string& topic_id   = ecal_sample_topic.tid();
     const std::string& topic_type = ecal_sample_topic.ttype();
     const std::string& topic_desc = ecal_sample_topic.tdesc();
-    const std::string& process_id = std::to_string(ecal_sample_topic.pid());
+    const std::string  process_id = std::to_string(ecal_sample_topic.pid());
 
     std::string reader_par;
     for (const auto& layer : ecal_sample_topic.tlayer())
