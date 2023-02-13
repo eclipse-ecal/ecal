@@ -13,7 +13,7 @@ In this tutorial we will teach you how to edit the documentation locally on your
 For that we will use Visual Studio Code with the reStructuredText extension, that will give you a (somewhat) live preview.
 
 .. hint::  
-   For small changes you can click the :guilabel:`Edit on GitHub` button in the top right corner.
+   For small changes you can click |fa-github|/|fa-pencil-alt|:guilabel:`suggest edit` button in the top right corner.
    GitHub however will only render the files as plain RST and miss all features that Sphinx adds.
 
 .. rst-class:: bignums-xxl
@@ -28,11 +28,7 @@ For that we will use Visual Studio Code with the reStructuredText extension, tha
 
    https://code.visualstudio.com/
 
-#. Download and install any Python between 3.6 and 3.9 and make sure it is added to the ``PATH``
-
-   .. important::
-
-      Python 3.10 and up will not work at the moment, as we are still using Sphinx 3.5.
+#. Download and install any Python (3.7 and up) and make sure it is added to the ``PATH``
 
    - |fa-windows| Windows:
 
@@ -47,23 +43,25 @@ For that we will use Visual Studio Code with the reStructuredText extension, tha
 
 #. Navigate to the eCAL directory and install the python requirements with pip:
 
-   .. note::
-      
-      Python virtual environments are not supported
-
    - |fa-windows| Windows:
 
      .. code-block:: batch
 
         pip install wheel esbonio
-        pip install -r requirements.txt
+        pip install -r doc/requirements.txt
 
    - |fa-ubuntu| Ubuntu:
 
-     .. code-block:: bash.
+     .. code-block:: bash
      
-        sudo pip3 install -r requirements.txt
+        sudo pip3 install -r doc/requirements.txt
         sudo pip3 install esbonio
+
+     .. tip::
+
+        You can use a python ``venv`` if you like.
+        Just (later) make sure to launch VS Code from the ``venv`` and set your python interpreter to the interpreter from the ``venv``.
+        To check that, press :kbd:`Ctrl` + :kbd:`Shift` + :kbd:`P`, search for ``Python Interpreter`` and select the proper one.
 
 #. Install the VS Code Extensions:
 

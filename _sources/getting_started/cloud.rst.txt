@@ -138,8 +138,9 @@ Jump to your section of choice below:
          YAML uses spaces (``' '``) as indentation and does not work with tabs (``'\t'``).
          When using gedit, it is recommended to configure it to use spaces instead of tabs.
 
-         .. image:: img/gedit_space_indentation.png
+         .. figure:: img/gedit_space_indentation.png
             :alt: Space indentation in gedit
+            :align: center
 
 
       #. Configure the **loopback multicast** route (this will become active, if you disconnect from all networks).
@@ -175,8 +176,9 @@ Jump to your section of choice below:
 
             In Ubuntu 20.04 and up you may also have to *activate* the netplan setting in the network configuration GUI!
 
-            .. image:: img/gnome_netplan_gui.svg
+            .. figure:: img/gnome_netplan_gui.svg
                :alt: Activate the netplan settings from the Gnome GUI
+               :align: center
 
    .. tab:: GUI (easiest)
 

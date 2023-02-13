@@ -34,7 +34,7 @@ Depending on what we changed in eCAL, we increment the appropriate number:
   Usually, you just want the latest release to profit from all bugfixes.
 
 eCAL 5.11 vs. 5.10
-=================
+==================
 
 Compatibility table when upgrading from eCAL 5.10:
 

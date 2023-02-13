@@ -69,9 +69,9 @@ Functions
 
 - :ref:`exhale_function_ecal__clang_8h_1a223cd64b3c0fe18b5a7f4084fb3e56cc`
 
-- :ref:`exhale_function_ecal__clang_8h_1a2150a5a2615529a3cde5c7d9d224b678`
+- :ref:`exhale_function_ecal__clang_8h_1ad2b025124cfe6b21dfa19a1d85cf9bb7`
 
-- :ref:`exhale_function_ecal__clang_8h_1aabeedfbd5cbbc1905d87587d810daa98`
+- :ref:`exhale_function_ecal__clang_8h_1a85b5ba3548d6163d0719f0cef2cd33e6`
 
 - :ref:`exhale_function_ecal__clang_8h_1a29db94388ec381748e074a9df967909f`
 

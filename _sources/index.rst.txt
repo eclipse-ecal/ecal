@@ -32,7 +32,7 @@ To contribute, please visit our github repository:
 .. raw:: html
 
    <p>
-      <a class="btn btn-sm btn-primary" href="https://github.com/eclipse-ecal/ecal" target="_blank">
+      <a class="btn btn-sm btn-primary" href="https://github.com/eclipse-ecal/ecal" target="_blank" style="color: #fff;">
          <span class="btn-icon"><span class="fab fa-github"></span></span>
          <span class="btn-text">eCAL on Github</span>
       </a>

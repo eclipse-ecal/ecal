@@ -78,4 +78,4 @@ The command line application (eCAL Sys CLI) can only load .ecalsys files, but no
    
       $TARGET{ENV my_root_dir}/task
 
-   Click one of the |qecalparser_SHOW_DIALOG| :guilabel:`Advanced Editor...` buttons for further information.
+   Click one of the |qecalparser/light_SHOW_DIALOG| :guilabel:`Advanced Editor...` buttons for further information.

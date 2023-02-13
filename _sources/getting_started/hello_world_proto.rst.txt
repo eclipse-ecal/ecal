@@ -6,13 +6,6 @@
 Hello World with protobuf
 =========================
 
-.. important::
-
-   |fa-windows| This tutorial will **only work with eCAL 5.7.3** and upwards if you are using Windows.
-   It will **not** work with older versions that were published as .msi installer (it missed some libraries).
-
-   Please switch to Ubuntu, if you are using an old eCAL Version.
-
 In the last section you learned how to send strings to an eCAL Topic.
 Using strings is great for simple data that has a textual representation.
 Quite often however your data will be more complex, so you need some kind of protocol that defines how your data is structured.

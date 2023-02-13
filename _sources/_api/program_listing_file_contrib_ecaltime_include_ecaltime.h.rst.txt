@@ -46,7 +46,6 @@ Program Listing for File ecaltime.h
    extern "C"
    {
    #endif /*__cplusplus*/
-   
      ECALTIME_API int etime_initialize(void);
    
      ECALTIME_API int etime_finalize(void);

@@ -11,7 +11,7 @@ Changelog
 =========
 
 .. literalinclude:: changelog_ecal_5_8_18.txt
-   :language: txt
+   :language: text
 
 Downloads
 =========
