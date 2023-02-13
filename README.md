@@ -131,6 +131,7 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 * [nodejs-ecal](https://www.npmjs.com/package/nodejs-ecal) - eCAL wrapped for Nodejs
 * [trellis](https://github.com/agtonomy/trellis) - General purpose middleware framework for distributed applications
 * [iceoryx](https://github.com/eclipse/iceoryx) - Alternative shared memory transport layer (needs to be activated via CMake options)
+* [ADMA2eCAL](https://github.com/GeneSysElektronik/ADMA2eCAL) - Software gateway for connection to ADMA hardware from GeneSys Elekronik GmbH 
 
 ## License
 
