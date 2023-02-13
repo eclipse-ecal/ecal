@@ -1,0 +1,12 @@
+wheel
+sphinx-book-theme==0.3.3
+sphinx-tabs==3.3.1
+PyGithub
+autodoc
+empy
+semantic-version 
+exhale
+Jinja2
+sphinxcontrib-youtube
+sphinxcontrib-apidoc
+

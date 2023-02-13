@@ -73,8 +73,8 @@ if not os.path.exists(download_tables_main_page_dir) or not os.path.exists(downl
 # -- Project information -----------------------------------------------------
 
 project = u'Eclipse eCAL™'
-copyright = u'2022, Continental'
-author = u'Continental'
+copyright = u'2023, Continental'
+#author = u'Continental'
 
 # The short X.Y version
 version = u''
@@ -92,11 +92,11 @@ release = u''
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx_typo3_theme',
+    'sphinx_book_theme',
     'sphinx_tabs.tabs',
     'sphinx.ext.githubpages',
     'sphinx.ext.todo',
-    'sphinxcontrib.youtube'
+    'sphinxcontrib.youtube',
 ]
 
 if is_cmake_build:
@@ -155,8 +155,6 @@ templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
-#
-# source_suffix = ['.rst', '.md']
 source_suffix = '.rst'
 
 # The master toctree document.
@@ -175,13 +173,13 @@ language = None
 exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+# pygments_style = 'sphinx'
 
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinx_typo3_theme'
+html_theme = 'sphinx_book_theme'
 
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -190,58 +188,53 @@ html_theme = 'sphinx_typo3_theme'
 html_static_path = ['_static']
 
 html_css_files = [
-    'css/theme_addon.css',
+    'css/pydata-ecal.css',
+    'css/pydata-ecal-addon.css',
+    'css/book-ecal-addon.css',
+    'css/bignums.css',
+    'css/tabs.css',
+    'css/pygments-ecal-addon.css',
 ]
 
-#https://github.com/TYPO3-Documentation/sphinx_typo3_theme/tree/master/sphinx_typo3_theme
+html_title = "Eclipse eCAL™"
+html_logo = "_static/img/ecal-logo.svg"
+html_favicon = "_static/img/favicon.png"
+
 html_theme_options = {
-    # Banner
-    'logo'                : 'img/ecal-logo.svg',
-    'logo_alt'            : 'eCAL Logo',
-    'logo_title'          : 'eCAL Documentation',
-    'logo_url'            : 'https://eclipse-ecal.github.io/ecal/',
-
-    # Clear deprecated variables to make the "Edit On Github" button work
-    'github_branch'       : '',
-    'github_commit_hash'  : '',
-    'github_repository'   : '',
-    'github_revision_msg' : '',
-    'github_sphinx_locale': '',
-
-    # Footer
-    #'docstypo3org'       : 'True',
-    'project_repository' : 'https://github.com/eclipse-ecal/ecal',
-
-    # How-to-edit
-    'h2edit_url'          : 'https://eclipse-ecal.github.io/ecal/advanced/documentation.html'
+    "logo_only": True,
+    "show_navbar_depth": 1,
+    "show_toc_level": 2,
+    "repository_url": "https://github.com/eclipse-ecal/ecal/",
+    "use_repository_button": True,
+    "use_issues_button": True,
+    "use_edit_page_button": True,
+    "repository_branch": "master",
+    "path_to_docs": "doc/rst/",
+    "extra_navbar": "", # => Remove the default text
+    "extra_footer":     '<h5>Eclipse Foundation</h5>'
+                        '<ul>'
+                            '<li>'
+                                '<p><a href="http://www.eclipse.org">Website</a></p>'
+                            '</li>'
+                            '<li>'
+                                '<p><a href="http://www.eclipse.org/legal/privacy.php">Privacy policy</a></p>'
+                            '</li>'
+                            '<li>'
+                                '<p><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></p>'
+                            '</li>'
+                            '<li>'
+                                '<p><a href="http://www.eclipse.org/legal/copyright.php">Copyright agent</a></p>'
+                            '</li>'
+                            '<li>'
+                                '<p><a href="http://www.eclipse.org/legal">Legal</a></p>'
+                            '</li>'
+                        '</ul>',
 }
-
-new_html_context = {
-    # "Edit on github" button
-    'display_github' : True,
-    'github_host'    : 'github.com',
-    'github_user'    : 'eclipse-ecal',
-    'github_repo'    : 'ecal',
-    'github_version' : 'master/',
-    'conf_py_path'   : 'doc/rst/',
-    'source_suffix'  : '.rst',
-
-    # Misc
-    'favicon'        : 'img/favicon.png',
-}
-
-if 'html_context' in globals():
-    html_context.update(new_html_context)
-else:
-    html_context = new_html_context
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'eCALdoc'
-
-
-
 
 # C++ defines used in function definitions
 cpp_id_attributes = ['ECAL_API', 'ECALTIME_API']

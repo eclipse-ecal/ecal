@@ -49,7 +49,7 @@ jobs:
         
     - name: Install Python requirements
       run: |
-        sudo pip3 install -r "$GITHUB_WORKSPACE/requirements.txt"
+        sudo pip3 install -r "$GITHUB_WORKSPACE/doc/requirements.txt"
 
     - name: CMake
       run: |

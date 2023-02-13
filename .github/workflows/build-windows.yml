@@ -80,7 +80,7 @@ jobs:
         pip install wheel
 
         echo Installing python requirements
-        pip install -r "%GITHUB_WORKSPACE%\requirements.txt"
+        pip install -r "%GITHUB_WORKSPACE%\doc\requirements.txt"
 
       shell: cmd
 

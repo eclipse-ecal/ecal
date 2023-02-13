@@ -47,6 +47,11 @@
    
    <i class="fab fa-python"></i>
 
+.. |fa-pencil-alt| raw:: html
+   
+   <i class="fas fa-pencil-alt"></i>
+
+
 .. |ecalini-path-windows| replace:: :file:`C:\\ProgramData\\eCAL\\ecal.ini`
 .. |ecalini-path-ubuntu|  replace:: :file:`/etc/ecal/ecal.ini`
 

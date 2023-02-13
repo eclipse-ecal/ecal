@@ -16,7 +16,7 @@ Changelog
 =========
 
 .. literalinclude:: @(changelog_file)
-   :language: txt
+   :language: text
 
 @[end if]@
 Downloads
