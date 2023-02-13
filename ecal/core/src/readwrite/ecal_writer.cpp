@@ -982,7 +982,7 @@ namespace eCAL
     data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
     data.clock = 0;
 
-    if (m_connected == false)
+    if (!m_connected)
     {
       m_connected = true;
 
@@ -1009,7 +1009,7 @@ namespace eCAL
 
   void CDataWriter::Disconnect()
   {
-    if (m_connected == true)
+    if (m_connected)
     {
       m_connected = false;
       
