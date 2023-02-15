@@ -8,17 +8,17 @@ body:
     value: |
       # Welcome
       
-      Thank you very much for reporting your bug to us, we appreciate that! 🙏
+      Thank you very much for reporting an issue to us, we appreciate that! 🙏
       Please fill out the form below, so we can obtain all required information and fix the issue as fast as possible!
       
 - type: markdown
   attributes:
     value: |
-      # Bug Report  
+      # Problem Report  
 - type: textarea
   id: describe
   attributes:
-    label: Bug Description
+    label: Problem Description
     description: |
       Provide a short description (one or two sentences) about the problem.
 
@@ -61,6 +61,19 @@ body:
       2. Click on '....'
       3. Scroll down to '....'
       4. See error
+  validations:
+    required: true
+    
+body:
+- type: dropdown
+  id: download
+  attributes:
+    label: How did you get eCAL?
+    options:
+      - Download from our release page
+      - Ubuntu PPA (apt-get)
+      - Custom build from source
+      - I don't know
   validations:
     required: true
 
