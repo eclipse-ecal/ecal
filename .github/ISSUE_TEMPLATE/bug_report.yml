@@ -65,16 +65,6 @@ body:
       - Python Version.
       - Versions of any other relevant tools you're using.
       
-      List the environment needed to reproduce the error.
-      Here are a few ideas:
-
-      - The output of:      
-        ```bash
-        jupyter-book --version
-        ```
-      - The version of Python you're using.
-      - Your operating system
-      - Versions of any other relevant tools you're using.
     value: |
       - eCAL 5.___
       - OS: 
@@ -95,7 +85,6 @@ body:
     
     render: text
     placeholder: |
-      ```
       ------------------------- SYSTEM ---------------------------------
       Version                  : v5.10.4 (13.12.2022)
       Platform                 : x64
@@ -133,7 +122,5 @@ body:
       Layer Mode TCP           : on
       Layer Mode UDP MC        : on
       Npcap UDP Reciever       : off
-
-      ```
   validations:
     required: false
