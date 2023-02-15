@@ -1,0 +1,124 @@
+# This template is inspired by:
+# https://github.com/executablebooks/.github/blob/master/.github/ISSUE_TEMPLATE/bug_report.yml
+name: 🐛 Report a problem
+description: Problem reports are for when something behaves incorrectly, or differently from how you'd expect.
+labels: [bug]
+body:
+- type: textarea
+  id: describe
+  attributes:
+    label: Describe the bug
+    description: |
+      Provide a short description (one or two sentences) about the problem. What did you expect to happen, and what is actually happening?
+
+      If possible, provide screenshots or error messages that you've encountered.
+    value: |
+      **Context**
+      When I do ___.
+      
+      **Expectation**
+      I expected ___ to occur.
+      
+      **Bug**
+      But instead ___ happens
+      Here's an error message I ran into...
+
+      ```console
+      $ jupyter-book build mybook
+      ERROR ...
+      ```
+
+      **problem**
+      This is a problem for people doing ___ because ___.
+      
+  validations:
+    required: true
+
+- type: textarea
+  id: reproduce
+  attributes:
+    label: Reproduce the bug
+    description: |
+      Provide information that others may use to re-produce this behavior.
+      For example:
+      
+      - Step-by-step instructions that others can follow.
+      - (Minimal) source-code that shows the bug.
+      - Information about certain conditions that trigger the bug.
+
+    placeholder: |
+      1. Go to '...'
+      2. Click on '....'
+      3. Scroll down to '....'
+      4. See error
+  validations:
+    required: true
+
+- type: textarea
+  id: environment
+  attributes:
+    label: eCAL Mon System Information
+    description: |
+      If available, paste the eCAL Mon System information here.
+      
+    placeholder: |
+      ```
+      ------------------------- SYSTEM ---------------------------------
+      Version                  : v5.10.4 (13.12.2022)
+      Platform                 : x64
+      
+      ------------------------- CONFIGURATION --------------------------
+      Default INI              : C:\ProgramData\eCAL\ecal.ini
+      
+      ------------------------- NETWORK --------------------------------
+      Host name                : FRLBJRXW
+      Network mode             : cloud
+      
+      ...
+      ```
+  validations:
+    required: false
+
+- type: textarea
+  id: environment
+  attributes:
+    label: List your environment
+    description: |
+      List your 
+      
+      - eCAL Version.
+      - Operating System.
+      - Python Version.
+      - System Information from the eCAL Monitor.
+      - Versions of any other relevant tools you're using.
+      
+      List the environment needed to reproduce the error.
+      Here are a few ideas:
+
+      - The output of:      
+        ```bash
+        jupyter-book --version
+        ```
+      - The version of Python you're using.
+      - Your operating system
+      - Versions of any other relevant tools you're using.
+    placeholder: |
+      eCAL 5.11.2
+      OS: Windows 10 x64
+      
+      ```
+      ------------------------- SYSTEM ---------------------------------
+      Version                  : v5.10.4 (13.12.2022)
+      Platform                 : x64
+      
+      ------------------------- CONFIGURATION --------------------------
+      Default INI              : C:\ProgramData\eCAL\ecal.ini
+      
+      ------------------------- NETWORK --------------------------------
+      Host name                : FRLBJRXW
+      Network mode             : cloud
+      
+      ...
+      ```
+  validations:
+    required: false
