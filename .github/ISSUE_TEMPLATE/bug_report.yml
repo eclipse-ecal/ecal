@@ -70,10 +70,11 @@ body:
   attributes:
     label: How did you get eCAL?
     options:
-      - Download from our release page
-      - Ubuntu PPA (apt-get)
-      - Custom build from source
       - I don't know
+      - Download from Release Page
+      - Ubuntu PPA (apt-get)
+      - Custom Build / Built from source
+      - Other
   validations:
     required: true
 
