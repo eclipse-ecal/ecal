@@ -2,7 +2,6 @@
 # https://github.com/executablebooks/.github/blob/master/.github/ISSUE_TEMPLATE/bug_report.yml
 name: 🐛 Report a problem
 description: Problem reports are for when something behaves incorrectly, or differently from how you'd expect.
-labels:
 body:
 - type: textarea
   id: describe
