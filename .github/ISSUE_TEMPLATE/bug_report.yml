@@ -25,22 +25,16 @@ body:
 
       If possible, provide screenshots or error messages that you've encountered.
     placeholder: |
-      **Context**
-      When I do ___.
-      
-      **Expectation**
-      I expected ___ to occur.
-      
-      **Bug**
-      But instead ___ happens
-      Here's an error message I ran into...
-
-      ```console
-      My error message
-      ```
-
-      **problem**
+      When I do ___, I expect that ___ would occur.
+      However, instead ___ happens.
       This is a problem for people doing ___ because ___.
+      
+      ---
+      
+      When compiling an eCAL Application on my ___ device, I encounter the following build issues:
+      ```
+      my build issues
+      ```
       
   validations:
     required: true
