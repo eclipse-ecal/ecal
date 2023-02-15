@@ -66,6 +66,9 @@ Program Listing for File ecal_callback.h
        eCAL_Publisher_Event type;    
        long long            time;    
        long long            clock;   
+       std::string          tid;     
+       std::string          ttype;   
+       std::string          tdesc;   
      };
    
      struct SSubEventCallbackData
@@ -79,6 +82,9 @@ Program Listing for File ecal_callback.h
        eCAL_Subscriber_Event type;   
        long long             time;   
        long long             clock;  
+       std::string           tid;    
+       std::string           ttype;  
+       std::string           tdesc;  
      };
    
      struct SServiceAttr
