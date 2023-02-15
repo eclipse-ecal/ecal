@@ -65,7 +65,6 @@ body:
   validations:
     required: true
     
-body:
 - type: dropdown
   id: download
   attributes:
