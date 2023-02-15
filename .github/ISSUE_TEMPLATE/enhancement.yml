@@ -4,7 +4,6 @@
 # - https://wiredcraft.com/blog/how-we-write-our-github-issues/
 name: 💡 Request an enhancement
 description: Suggest an idea for this project.
-labels: [enhancement]
 body:
 - type: textarea
   id: context
