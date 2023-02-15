@@ -54,8 +54,13 @@ body:
     placeholder: |
       1. Go to '...'
       2. Click on '....'
-      3. Scroll down to '....'
-      4. See error
+      
+      Here is the source code triggering the issue:
+      ```cpp
+      my { code }
+      ```
+      
+      This is my CMake command line: `cmake .. -DMY_VAR=ON`
   validations:
     required: true
     
