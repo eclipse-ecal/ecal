@@ -6,6 +6,8 @@ body:
 - type: markdown
   attributes:
     value: |
+      # Welcome
+      
       Thank you very much for reporting your bug to us, we appreciate that! 🙏
       
       Please fill out the form below, so we can obtain all required information and fix the issue as fast as possible!
