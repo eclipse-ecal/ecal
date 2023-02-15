@@ -81,10 +81,10 @@ namespace eCAL
 
     bool Write(const void* const buf_, size_t len_, long long time_, long long id_);
 
-    void ApplyLocSubscription(const std::string& process_id_, const std::string& reader_par_);
+    void ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_);
     void RemoveLocSubscription(const std::string & process_id_);
 
-    void ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& reader_par_);
+    void ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_);
     void RemoveExtSubscription(const std::string & host_name_, const std::string & process_id_);
 
     void RefreshRegistration();
@@ -110,7 +110,8 @@ namespace eCAL
 
   protected:
     bool DoRegister(bool force_);
-    void SetConnected(bool state_);
+    void Connect(const std::string& tid_, const std::string& ttype_, const std::string& tdesc_);
+    void Disconnect();
 
     bool SetUseUdpMC(TLayer::eSendMode mode_);
     bool SetUseShm(TLayer::eSendMode mode_);

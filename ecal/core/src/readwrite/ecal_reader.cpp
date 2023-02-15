@@ -570,9 +570,9 @@ namespace eCAL
     m_id_set = id_set_;
   }
 
-  void CDataReader::ApplyLocPublication(const std::string& process_id_)
+  void CDataReader::ApplyLocPublication(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_)
   {
-    SetConnected(true);
+    Connect(tid_, ttype_, tdesc_);
     {
       std::lock_guard<std::mutex> lock(m_pub_map_sync);
       m_loc_pub_map[process_id_] = true;
@@ -580,9 +580,9 @@ namespace eCAL
     m_loc_published = true;
   }
 
-  void CDataReader::ApplyExtPublication(const std::string& host_name_)
+  void CDataReader::ApplyExtPublication(const std::string& host_name_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_)
   {
-    SetConnected(true);
+    Connect(tid_, ttype_, tdesc_);
     {
       std::lock_guard<std::mutex> lock(m_pub_map_sync);
       m_ext_pub_map[host_name_] = true;
@@ -650,26 +650,48 @@ namespace eCAL
     }
   }
 
-  void CDataReader::SetConnected(bool state_)
+  void CDataReader::Connect(const std::string& tid_, const std::string& ttype_, const std::string& tdesc_)
   {
-    if(m_connected == state_) return;
-    m_connected = state_;
-    if(m_connected)
+    SSubEventCallbackData data;
+    data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+    data.clock = 0;
+
+    if (!m_connected)
     {
-      auto iter = m_event_callback_map.find(sub_event_connected);
-      if(iter != m_event_callback_map.end())
+      m_connected = true;
+
+      // fire sub_event_connected
       {
-        SSubEventCallbackData data;
-        data.type  = sub_event_connected;
-        data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-        data.clock = 0;
-        (iter->second)(m_topic_name.c_str(), &data);
+        auto iter = m_event_callback_map.find(sub_event_connected);
+        if (iter != m_event_callback_map.end())
+        {
+          data.type = sub_event_connected;
+          (iter->second)(m_topic_name.c_str(), &data);
+        }
       }
     }
-    else
+
+    // fire sub_event_update_connection
+    auto iter = m_event_callback_map.find(sub_event_update_connection);
+    if (iter != m_event_callback_map.end())
     {
+      data.type  = sub_event_update_connection;
+      data.tid   = tid_;
+      data.ttype = ttype_;
+      data.tdesc = tdesc_;
+      (iter->second)(m_topic_name.c_str(), &data);
+    }
+  }
+
+  void CDataReader::Disconnect()
+  {
+    if (m_connected)
+    {
+      m_connected = false;
+
+      // fire sub_event_disconnected
       auto iter = m_event_callback_map.find(sub_event_disconnected);
-      if(iter != m_event_callback_map.end())
+      if (iter != m_event_callback_map.end())
       {
         SSubEventCallbackData data;
         data.type  = sub_event_disconnected;
@@ -766,7 +788,7 @@ namespace eCAL
 
     if (!m_loc_published && !m_ext_published)
     {
-      SetConnected(false);
+      Disconnect();
     }
   }
 

@@ -30,12 +30,13 @@
 **/
 enum eCAL_Subscriber_Event
 {
-  sub_event_none            = 0,
-  sub_event_connected       = 1,
-  sub_event_disconnected    = 2,
-  sub_event_dropped         = 3,
-  sub_event_timeout         = 4,
-  sub_event_corrupted       = 5,
+  sub_event_none              = 0,
+  sub_event_connected         = 1,
+  sub_event_disconnected      = 2,
+  sub_event_dropped           = 3,
+  sub_event_timeout           = 4,
+  sub_event_corrupted         = 5,
+  sub_event_update_connection = 6,
 };
 
 /**
@@ -43,10 +44,11 @@ enum eCAL_Subscriber_Event
 **/
 enum eCAL_Publisher_Event
 {
-  pub_event_none            = 0,
-  pub_event_connected       = 1,
-  pub_event_disconnected    = 2,
-  pub_event_dropped         = 3,
+  pub_event_none              = 0,
+  pub_event_connected         = 1,
+  pub_event_disconnected      = 2,
+  pub_event_dropped           = 3,
+  pub_event_update_connection = 4,
 };
 
 /**
@@ -107,6 +109,9 @@ struct SPubEventCallbackDataC
   enum eCAL_Publisher_Event  type;  //!< event type
   long long                  time;  //!< event time stamp
   long long                  clock; //!< event clock
+  const char*                tid;   //!< topic id of the connected subscriber                     (for pub_event_update_connection only)
+  const char*                ttype; //!< topic type information of the connected subscriber       (for pub_event_update_connection only)
+  const char*                tdesc; //!< topic descriptor information of the connected subscriber (for pub_event_update_connection only)
 };
 
 /**
@@ -117,6 +122,9 @@ struct SSubEventCallbackDataC
   enum eCAL_Subscriber_Event type;  //!< event type
   long long                  time;  //!< event time stamp
   long long                  clock; //!< event clock
+  const char*                tid;   //!< topic id of the connected publisher                     (for sub_event_update_connection only)
+  const char*                ttype; //!< topic type information of the connected publisher       (for sub_event_update_connection only)
+  const char*                tdesc; //!< topic descriptor information of the connected publisher (for sub_event_update_connection only)
 };
 
 /**

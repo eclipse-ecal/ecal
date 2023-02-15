@@ -75,8 +75,8 @@ namespace eCAL
 
     void SetID(const std::set<long long>& id_set_);
 
-    void ApplyLocPublication(const std::string& process_id_);
-    void ApplyExtPublication(const std::string& host_name_);
+    void ApplyLocPublication(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_);
+    void ApplyExtPublication(const std::string& host_name_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_);
 
     void ApplyLocLayerParameter(const std::string& process_id_, eCAL::pb::eTLayerType type_, const std::string& parameter_);
     void ApplyExtLayerParameter(const std::string& host_name_,  eCAL::pb::eTLayerType type_, const std::string& parameter_);
@@ -106,7 +106,8 @@ namespace eCAL
     void UnsubscribeFromLayers();
 
     bool DoRegister(const bool force_);
-    void SetConnected(bool state_);
+    void Connect(const std::string& tid_, const std::string& ttype_, const std::string& tdesc_);
+    void Disconnect();
     void CheckCounter(const std::string& tid_, long long counter_);
 
     std::string                               m_host_name;

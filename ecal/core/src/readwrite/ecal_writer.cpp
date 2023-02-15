@@ -698,9 +698,9 @@ namespace eCAL
     return(written);
   }
 
-  void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& reader_par_)
+  void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_)
   {
-    SetConnected(true);
+    Connect(tid_, ttype_, tdesc_);
     {
       std::lock_guard<std::mutex> lock(m_sub_map_sync);
       m_loc_sub_map[process_id_] = true;
@@ -729,9 +729,9 @@ namespace eCAL
 #endif
   }
 
-  void CDataWriter::ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& reader_par_)
+  void CDataWriter::ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_)
   {
-    SetConnected(true);
+    Connect(tid_, ttype_, tdesc_);
     {
       std::lock_guard<std::mutex> lock(m_sub_map_sync);
       m_ext_sub_map[host_name_] = true;
@@ -806,7 +806,7 @@ namespace eCAL
 
     if (!m_loc_subscribed && !m_ext_subscribed)
     {
-      SetConnected(false);
+      Disconnect();
     }
   }
 
@@ -976,24 +976,44 @@ namespace eCAL
     return(true);
   }
 
-  void CDataWriter::SetConnected(bool state_)
+  void CDataWriter::Connect(const std::string& tid_, const std::string& ttype_, const std::string& tdesc_)
   {
-    if (m_connected == state_) return;
-    m_connected = state_;
-    if (m_connected)
+    SPubEventCallbackData data;
+    data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+    data.clock = 0;
+
+    if (!m_connected)
     {
+      m_connected = true;
+
+      // fire pub_event_connected
       auto iter = m_event_callback_map.find(pub_event_connected);
       if (iter != m_event_callback_map.end())
       {
-        SPubEventCallbackData data;
-        data.type  = pub_event_connected;
-        data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-        data.clock = 0;
+        data.type = pub_event_connected;
         (iter->second)(m_topic_name.c_str(), &data);
       }
     }
-    else
+
+    // fire pub_event_update_connection
+    auto iter = m_event_callback_map.find(pub_event_update_connection);
+    if (iter != m_event_callback_map.end())
     {
+      data.type  = pub_event_update_connection;
+      data.tid   = tid_;
+      data.ttype = ttype_;
+      data.tdesc = tdesc_;
+      (iter->second)(m_topic_name.c_str(), &data);
+    }
+  }
+
+  void CDataWriter::Disconnect()
+  {
+    if (m_connected)
+    {
+      m_connected = false;
+      
+      // fire pub_event_disconnected
       auto iter = m_event_callback_map.find(pub_event_disconnected);
       if (iter != m_event_callback_map.end())
       {

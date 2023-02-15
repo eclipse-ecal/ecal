@@ -39,6 +39,12 @@ void OnEvent(const char* topic_name_, const struct eCAL::SPubEventCallbackData* 
   case pub_event_dropped:
     std::cout << "event        : " << "pub_event_dropped" << std::endl;
     break;
+  case pub_event_update_connection:
+    std::cout << "event        : " << "pub_event_update_connection" << std::endl;
+    std::cout << "  topic_id   : " << data_->tid << std::endl;
+    std::cout << "  topic_type : " << data_->ttype << std::endl;
+    //std::cout << "  topic_desc : " << data_->tdesc << std::endl;
+    break;
   default:
     std::cout << "event        : " << "unknown" << std::endl;
     break;
@@ -59,11 +65,15 @@ int main(int argc, char **argv)
 
   // add event callback function (_1 = topic_name, _2 = event data struct)
   auto evt_callback = std::bind(OnEvent, std::placeholders::_1, std::placeholders::_2);
-  pub.AddEventCallback(pub_event_connected,    evt_callback);
-  pub.AddEventCallback(pub_event_disconnected, evt_callback);
+  pub.AddEventCallback(pub_event_connected,         evt_callback);
+  pub.AddEventCallback(pub_event_disconnected,      evt_callback);
+  pub.AddEventCallback(pub_event_update_connection, evt_callback);
 
   // generate a class instance of Person
   pb::People::Person person;
+
+  // start application and wait for events
+  std::cout << "Please start 'person_rec_events sample." << std::endl << std::endl;
 
   // enter main loop
   auto cnt(0);
@@ -79,15 +89,6 @@ int main(int argc, char **argv)
 
     // send the person object
     pub.Send(person);
-
-    // print content
-    std::cout << "person id    : " << person.id()            << std::endl;
-    std::cout << "person name  : " << person.name()          << std::endl;
-    std::cout << "person stype : " << person.stype()         << std::endl;
-    std::cout << "person email : " << person.email()         << std::endl;
-    std::cout << "dog.name     : " << person.dog().name()    << std::endl;
-    std::cout << "house.rooms  : " << person.house().rooms() << std::endl;
-    std::cout                                                << std::endl;
 
     // sleep 500 ms
     eCAL::Process::SleepMS(500);
