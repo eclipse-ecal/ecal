@@ -1,3 +1,7 @@
+:orphan:
+
+.. _@(download_archive_page_rst_label):
+
 ====================
 eCAL @(ecal_version)
 ====================
