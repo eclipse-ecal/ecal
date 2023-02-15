@@ -6,12 +6,12 @@ body:
 - type: textarea
   id: describe
   attributes:
-    label: Describe the bug
+    label: Bug Description
     description: |
-      Provide a short description (one or two sentences) about the problem. What did you expect to happen, and what is actually happening?
+      Provide a short description (one or two sentences) about the problem.
 
       If possible, provide screenshots or error messages that you've encountered.
-    value: |
+    placeholder: |
       **Context**
       When I do ___.
       
@@ -23,8 +23,7 @@ body:
       Here's an error message I ran into...
 
       ```console
-      $ jupyter-book build mybook
-      ERROR ...
+      My error message
       ```
 
       **problem**
@@ -36,7 +35,7 @@ body:
 - type: textarea
   id: reproduce
   attributes:
-    label: Reproduce the bug
+    label: How to reproduce
     description: |
       Provide information that others may use to re-produce this behavior.
       For example:
@@ -56,7 +55,7 @@ body:
 - type: textarea
   id: environment
   attributes:
-    label: List your environment
+    label: Environment
     description: |
       List your 
       
@@ -75,7 +74,7 @@ body:
 - type: textarea
   id: ecal_system_information
   attributes:
-    label: eCAL Mon System Information
+    label: eCAL System Information
     description: |
       If available, paste the eCAL Mon System information here.
       
