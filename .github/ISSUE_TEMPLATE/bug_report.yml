@@ -11,8 +11,11 @@ body:
       Thank you very much for reporting your bug to us, we appreciate that! 🙏
       Please fill out the form below, so we can obtain all required information and fix the issue as fast as possible!
       
-      ---
-      
+      ----
+- type: markdown
+  attributes:
+    value: |
+      # Bug Report  
 - type: textarea
   id: describe
   attributes:
@@ -69,14 +72,19 @@ body:
     description: |
       List your 
       
-      - eCAL Version.
-      - Operating System.
-      - Python Version.
+      - eCAL Version
+      - Operating System
+      - Python Version _(for python related issues)_
+      - CMake and compiler version _(for build related issues)_
       - Versions of any other relevant tools you're using.
       
     placeholder: |
-      - eCAL 5.___
+      - eCAL:
       - OS: 
+      - Python: 
+      - CMake:
+      - gcc: 
+      - ...
       
   validations:
     required: true
@@ -87,7 +95,6 @@ body:
     label: eCAL System Information
     description: |
       If available, paste the eCAL Mon System information here.
-      
       You can obtain it from the eCAL Monitor, or by calling `ecal_config` from a terminal.
       
       _If your problem is e.g. build related, just leave this box empty._
