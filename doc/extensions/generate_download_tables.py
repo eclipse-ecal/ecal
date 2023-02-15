@@ -278,14 +278,21 @@ def generate_download_tables(gh_api_key, main_page_output_dir, download_archive_
 
         sorted_releases = sorted(gh_release_branches_dict[ecal_branch].keys())
         for ecal_version in sorted_releases:
-            gh_release                     = gh_release_branches_dict[ecal_branch][ecal_version]
-            download_list                  = get_downloads_list(gh_release.get_assets(), ecal_version)
-            ecal_version_string            = str(ecal_version).replace('.', '_').replace('-', '_').replace('+', '_')
-            download_table_html_file_name  = "download_archive_table_ecal_" + ecal_version_string + ".html"
-            download_archive_rst_file_name = "download_archive_ecal_" + ecal_version_string + ".rst"
-            changelog_file                 = "changelog_ecal_" + ecal_version_string + ".txt"
+            gh_release                      = gh_release_branches_dict[ecal_branch][ecal_version]
+            download_list                   = get_downloads_list(gh_release.get_assets(), ecal_version)
+            ecal_version_string             = str(ecal_version).replace('.', '_').replace('-', '_').replace('+', '_')
+            download_table_html_file_name   = "download_archive_table_ecal_" + ecal_version_string + ".html"
+            download_archive_rst_file_name  = "download_archive_ecal_" + ecal_version_string + ".rst"
+            changelog_file                  = "changelog_ecal_" + ecal_version_string + ".txt"
 
-            current_branch_download_archive_pages[ecal_version] = download_archive_rst_file_name
+            download_archive_page_rst_label = "download_archive_ecal_" + gh_release.tag_name
+            download_archive_page_rst_label = re.sub(r"[^0-9a-zA-Z_+]{1}", "_", download_archive_page_rst_label)
+
+            current_branch_download_archive_pages[ecal_version] = { 
+                                                                    "download_archive_page_rst_file_name": download_archive_rst_file_name,
+                                                                    "download_archive_page_rst_label":     download_archive_page_rst_label,
+                                                                    "gh_release":                          gh_release,
+                                                                  }
 
             # Generate download table as html rst code
             data = {
@@ -305,10 +312,11 @@ def generate_download_tables(gh_api_key, main_page_output_dir, download_archive_
 
             # Generate surrounding rst code
             data = {
-                "ecal_version" :            ecal_version,
-                "download_table_html_file": download_table_html_file_name, 
-                "gh_release":               gh_release,
-                "changelog_file":           changelog_file,
+                "ecal_version" :                    ecal_version,
+                "download_table_html_file":         download_table_html_file_name, 
+                "gh_release":                       gh_release,
+                "changelog_file":                   changelog_file,
+                "download_archive_page_rst_label":  download_archive_page_rst_label
             }
             empy_helpers.expand_template(os.path.join(root_dir, "resource/download_archive_page.rst.em"), data, pathlib.Path(os.path.join(download_archive_output_dir, download_archive_rst_file_name)))
 
