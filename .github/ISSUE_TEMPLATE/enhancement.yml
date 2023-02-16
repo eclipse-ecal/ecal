@@ -5,6 +5,19 @@
 name: 💡 Request an enhancement
 description: Suggest an idea for this project.
 body:
+- type: markdown
+  attributes:
+    value: |
+      # Welcome
+      
+      Thank you very much for providing your enhancement idea, we appreciate that! 🙏
+      Please describe your idea to us, so we can have a qualified discussion together and make eCAL better!
+      
+- type: markdown
+  attributes:
+    value: |
+      # Enhancement suggestion
+      
 - type: textarea
   id: context
   attributes:
