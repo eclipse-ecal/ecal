@@ -1,0 +1,154 @@
+# This template is inspired by:
+# https://github.com/executablebooks/.github/blob/master/.github/ISSUE_TEMPLATE/bug_report.yml
+name: 🐛 Report a problem
+description: Problem reports are for when something behaves incorrectly, or differently from how you'd expect.
+body:
+- type: markdown
+  attributes:
+    value: |
+      # Welcome
+      
+      Thank you very much for reporting an issue to us, we appreciate that! 🙏
+      Please fill out the form below, so we can obtain all required information and fix the issue as fast as possible!
+      
+- type: markdown
+  attributes:
+    value: |
+      # Problem Report  
+
+- type: textarea
+  id: describe
+  attributes:
+    label: Problem Description
+    description: |
+      Provide a short description (one or two sentences) about the problem.
+
+      If possible, provide screenshots or error messages that you've encountered.
+    placeholder: |
+      When I do ___, I expect that ___ would occur.
+      However, instead ___ happens.
+      This is a problem for people doing ___ because ___.
+      
+      ---
+      
+      When compiling an eCAL Application on my ___ device, I encounter the following build issues:
+      ```
+      my build issues
+      ```
+      
+  validations:
+    required: true
+
+- type: textarea
+  id: reproduce
+  attributes:
+    label: How to reproduce
+    description: |
+      Provide information that others may use to re-produce this behavior.
+      For example:
+      
+      - Step-by-step instructions that others can follow.
+      - (Minimal) source-code that shows the bug.
+      - Information about certain conditions that trigger the bug.
+
+    placeholder: |
+      1. Go to '...'
+      2. Click on '....'
+      
+      Here is the source code triggering the issue:
+      ```cpp
+      my { code }
+      ```
+      
+      This is my CMake command line: `cmake .. -DMY_VAR=ON`
+  validations:
+    required: true
+    
+- type: dropdown
+  id: download
+  attributes:
+    label: How did you get eCAL?
+    options:
+      - I don't know
+      - Download from Release Page
+      - Ubuntu PPA (apt-get)
+      - Custom Build / Built from source
+      - Other
+  validations:
+    required: true
+
+- type: textarea
+  id: environment
+  attributes:
+    label: Environment
+    description: |
+      List your 
+      
+      - eCAL Version
+      - Operating System
+      - Python Version _(for python related issues)_
+      - CMake and compiler version _(for build related issues)_
+      - Versions of any other relevant tools you're using.
+      
+    placeholder: |
+      - eCAL:
+      - OS: 
+      - Python: 
+      - CMake:
+      - gcc: 
+      - ...
+      
+  validations:
+    required: true
+    
+- type: textarea
+  id: ecal_system_information
+  attributes:
+    label: eCAL System Information
+    description: |
+      If available, paste the eCAL Mon System information here.
+      You can obtain it from the eCAL Monitor, or by calling `ecal_config` from a terminal.
+      
+      _If your problem is e.g. build related, just leave this box empty._
+    
+    render: text
+    placeholder: |
+      ------------------------- SYSTEM ---------------------------------
+      Version                  : v5.10.4 (13.12.2022)
+      Platform                 : x64
+
+      ------------------------- CONFIGURATION --------------------------
+      Default INI              : C:\ProgramData\eCAL\ecal.ini
+
+      ------------------------- NETWORK --------------------------------
+      Host name                : FRLBJRXW
+      Network mode             : cloud
+      Network ttl              : 2
+      Network sndbuf           : 5 MByte
+      Network rcvbuf           : 5 MByte
+      Multicast group          : 239.0.0.1
+      Multicast mask           : 0.0.0.15
+      Multicast ports          : 14000 - 14010
+      Bandwidth limit (udp)    : not limited
+
+      ------------------------- TIME -----------------------------------
+      Synchronization realtime : "ecaltime-localtime"
+      Synchronization replay   :
+      State                    :  synchronized
+      Master / Slave           :  Master
+      Status (Code)            : "everything is fine." (0)
+
+      ------------------------- PUBLISHER LAYER DEFAULTS ---------------
+      Layer Mode INPROC        : off
+      Layer Mode SHM           : auto
+      Layer Mode TCP           : off
+      Layer Mode UDP MC        : auto
+
+      ------------------------- SUBSCRIPTION LAYER DEFAULTS ------------
+      Layer Mode INPROC        : on
+      Layer Mode SHM           : on
+      Layer Mode TCP           : on
+      Layer Mode UDP MC        : on
+      Npcap UDP Reciever       : off
+  validations:
+    required: false
