@@ -1,0 +1,8 @@
+ add_subdirectory(minimal/minimal_rec)
+ add_subdirectory(minimal/minimal_rec_cb)
+ add_subdirectory(minimal/minimal_snd)
+ add_subdirectory(person/protobuf)
+ add_subdirectory(person/person_rec)
+ add_subdirectory(person/person_rec_cb)
+ add_subdirectory(person/person_rec_json_cb)
+ add_subdirectory(person/person_snd)

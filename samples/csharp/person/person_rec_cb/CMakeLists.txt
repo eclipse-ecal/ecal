@@ -32,8 +32,10 @@ target_link_libraries(${PROJECT_NAME} Continental.eCAL.Protobuf person_protobufs
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_ROOTNAMESPACE ${PROJECT_NAME}
     VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1"
-    VS_DOTNET_REFERENCES
-    "Google.Protobuf"
+)
+
+set_property(TARGET ${PROJECT_NAME}  PROPERTY
+  VS_PACKAGE_REFERENCES "Google.Protobuf_${ECAL_CSHARP_PROTOBUF_VERSION}"
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/csharp/person)
