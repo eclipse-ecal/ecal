@@ -136,21 +136,3 @@ if(BUILD_PY_BINDING)
   endif(WIN32)
 endif(BUILD_PY_BINDING)
 
-# --------------------------------------------------------
-# csharp samples
-# --------------------------------------------------------
-if(BUILD_CSHARP_BINDING)
-  if(WIN32)
-  # --------------------------------------------------------
-  # samples csharp (not working curently, they should be create "AnyCPU" platform but they dont ..
-  # --------------------------------------------------------
-  add_subdirectory(csharp/minimal/minimal_rec)
-  add_subdirectory(csharp/minimal/minimal_rec_cb)
-  add_subdirectory(csharp/minimal/minimal_snd)
-  add_subdirectory(csharp/person/protobuf)
-  add_subdirectory(csharp/person/person_rec)
-  add_subdirectory(csharp/person/person_rec_cb)
-  add_subdirectory(csharp/person/person_rec_json_cb)
-  add_subdirectory(csharp/person/person_snd)
-  endif()
-endif()

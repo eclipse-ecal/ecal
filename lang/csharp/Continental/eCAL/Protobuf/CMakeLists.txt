@@ -30,32 +30,13 @@ add_library(${PROJECT_NAME} SHARED ${core_cs_src})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC Continental.eCAL.Core)
 
-# version of the nuget Google.Protobuf package
-set(google_protobuf_version 3.11.4)
-
-# find nuget (install the latest CLI here: https://www.nuget.org/downloads).
-find_program(NUGET nuget HINTS $ENV{NUGET_DIR})
-if(NOT NUGET)
-  message(FATAL_ERROR "CMake could not find the nuget command line tool. Please install it! (https://www.nuget.org/downloads)")
-else()
-  message(STATUS "Found nuget in ${NUGET}")
-  # install google protobuf nuget package
-  add_custom_command(TARGET ${PROJECT_NAME}
-    PRE_BUILD
-    COMMAND ${NUGET} install Google.Protobuf -Version ${google_protobuf_version}
-  )
-endif()
-
-set(nuget_package_path
-  "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}"
-)
-set(nuget_package_google
-  "${nuget_package_path}/Google.Protobuf.${google_protobuf_version}/lib/net45/Google.Protobuf.dll"
-)
 set_target_properties(${PROJECT_NAME} PROPERTIES
   VS_GLOBAL_ROOTNAMESPACE ${PROJECT_NAME}
   VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1"
-  VS_DOTNET_REFERENCE_Google.Protobuf ${nuget_package_google}
+)
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY
+  VS_PACKAGE_REFERENCES "Google.Protobuf_${ECAL_CSHARP_PROTOBUF_VERSION}"
 )
 
 install(TARGETS ${PROJECT_NAME}
