@@ -12,11 +12,11 @@ eCAL is using different transport layers for intraprocess, interprocess or inter
 - udp registration send thread
 - udp registration receive thread
 - udp logging receive thread
-- udp message (payload) receive thread
 
 For the eCAL user interface entities ``eCAL::CTimer``, ``eCAL::CSubscriber``, ``eCAL::CServiceServer``, ``eCAL::CServiceClient`` additional threads are utilized:
 
 - shared memory synchronization event thread (1 thread per handled memory file)
+- udp message (payload) receive thread
 - timer callback (1 thread per callback)
 - tcp client/server implementation (2 threads per instance)
 
