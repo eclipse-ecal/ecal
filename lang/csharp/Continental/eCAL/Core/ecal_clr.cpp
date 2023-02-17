@@ -41,6 +41,14 @@ std::string StringToStlString(System::String^ s_)
   return(s);
 }
 
+std::string ByteArrayToStlString(array<Byte>^ array_)
+{
+  GCHandle handle = GCHandle::Alloc(array_, GCHandleType::Pinned);
+  size_t len = array_->Length;
+  std::string ret((const char*)(void*)handle.AddrOfPinnedObject(), len);
+  handle.Free();
+  return(ret);
+}
 
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -142,6 +150,11 @@ Publisher::Publisher(System::String^ topic_name_, System::String^ topic_type_, S
   m_pub = new ::eCAL::CPublisher(StringToStlString(topic_name_), StringToStlString(topic_type_), StringToStlString(topic_desc_));
 }
 
+Publisher::Publisher(System::String^ topic_name_, System::String^ topic_type_, array<Byte>^ topic_desc_)
+{
+  m_pub = new ::eCAL::CPublisher(StringToStlString(topic_name_), StringToStlString(topic_type_), ByteArrayToStlString(topic_desc_));
+}
+
 Publisher::~Publisher()
 {
   if(m_pub == nullptr) return;
@@ -213,6 +226,11 @@ Subscriber::Subscriber() : m_sub(new ::eCAL::CSubscriber())
 Subscriber::Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_desc_)
 {
   m_sub = new ::eCAL::CSubscriber(StringToStlString(topic_name_), StringToStlString(topic_type_), StringToStlString(topic_desc_));
+}
+
+Subscriber::Subscriber(System::String^ topic_name_, System::String^ topic_type_, array<Byte>^ topic_desc_)
+{
+  m_sub = new ::eCAL::CSubscriber(StringToStlString(topic_name_), StringToStlString(topic_type_), ByteArrayToStlString(topic_desc_));
 }
 
 Subscriber::~Subscriber()
@@ -291,7 +309,7 @@ bool Subscriber::AddReceiveCallback(ReceiverCallback^ callback_)
   return(true);
 }
 
-bool Continental::eCAL::Core::Subscriber::AddReceiveCallback(ReceiverCallbackUnsafe^ callback_)
+bool Subscriber::AddReceiveCallback(ReceiverCallbackUnsafe^ callback_)
 {
     if (m_sub == nullptr) return(false);
     if (m_callbacks_unsafe == nullptr)
@@ -316,7 +334,7 @@ bool Subscriber::RemReceiveCallback(ReceiverCallback^ callback_)
   m_callbacks -= callback_;
   return(false);
 }
-bool Continental::eCAL::Core::Subscriber::RemReceiveCallback(ReceiverCallbackUnsafe^ callback_)
+bool Subscriber::RemReceiveCallback(ReceiverCallbackUnsafe^ callback_)
 {
     if (m_sub == nullptr) return(false);
     if (m_callbacks_unsafe == callback_)

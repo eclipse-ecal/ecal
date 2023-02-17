@@ -35,6 +35,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1"
 )
 
+if (ECAL_CSHARP_PROTOBUF_VERSION VERSION_GREATER "3.16.0")
+target_compile_definitions(${PROJECT_NAME} PRIVATE "ProtobufReflectionSupport")
+endif()
+
 set_property(TARGET ${PROJECT_NAME} PROPERTY
   VS_PACKAGE_REFERENCES "Google.Protobuf_${ECAL_CSHARP_PROTOBUF_VERSION}"
 )
