@@ -160,6 +160,15 @@ namespace Continental
         Publisher(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_desc_);
 
         /**
+         * @brief Constructor.
+         *
+         * @param topic_name_   Unique topic name.
+         * @param topic_type_   Type name (optional.
+         * @param topic_desc_   Type description (optional.
+        **/
+        Publisher(System::String^ topic_name_, System::String^ topic_type_, array<Byte>^ topic_desc_);
+
+        /**
          * @brief Destructor.
         **/
         ~Publisher();
@@ -256,6 +265,15 @@ namespace Continental
          * @param topic_desc_   Descriptor (optional for dynamic reflection by monitoring app).
         **/
         Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_desc_);
+
+        /**
+         * @brief Constructor.
+         *
+         * @param topic_name_   Unique topic name.
+         * @param topic_type_   Type name (optional for type checking by monitoring app).
+         * @param topic_desc_   Descriptor (optional for dynamic reflection by monitoring app).
+        **/
+        Subscriber(System::String^ topic_name_, System::String^ topic_type_, array<Byte>^ topic_desc_);
 
         /**
          * @brief Destructor.

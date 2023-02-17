@@ -35,7 +35,7 @@ namespace Continental
         public bool Send(T message)
         {
           var serialized = message.ToByteArray();
-          return (binaryPublisher.Send(Encoding.Default.GetString(serialized), -1) > 0);
+          return (binaryPublisher.Send(serialized, -1) > 0);
         }
       }
     }
