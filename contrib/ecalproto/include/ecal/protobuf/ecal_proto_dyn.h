@@ -26,8 +26,7 @@
 #include <string>
 
 #ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
+#pragma warning(push, 0) // disable proto warnings
 #endif
 #if defined(__GNUC__)
 #pragma GCC diagnostic push

@@ -24,6 +24,76 @@ find_package(ftxui REQUIRED)
 
 set(ecalmon_tui_src
   src/main.cpp
+
+  src/args.hpp
+  src/ecal_mon_tui_defs.h
+  src/resource.h
+  src/model/log.hpp
+  src/model/monitor.hpp
+  src/model/data/host.hpp
+  src/model/data/process.hpp
+  src/model/data/service.hpp
+  src/model/data/topic.hpp
+  src/tui/command_manager.hpp
+  src/tui/event_loop.hpp
+  src/tui/keybinds_manager.hpp
+  src/tui/notification_manager.hpp
+  src/tui/style_sheet.hpp
+  src/tui/tui.hpp
+  src/tui/view/command_line.hpp
+  src/tui/view/factory.hpp
+  src/tui/view/help.hpp
+  src/tui/view/hosts.hpp
+  src/tui/view/logs.hpp
+  src/tui/view/log_details.hpp
+  src/tui/view/processes.hpp
+  src/tui/view/process_details.hpp
+  src/tui/view/services.hpp
+  src/tui/view/service_details.hpp
+  src/tui/view/shell.hpp
+  src/tui/view/system_information.hpp
+  src/tui/view/table.hpp
+  src/tui/view/topics.hpp
+  src/tui/view/topic_details.hpp
+  src/tui/view/view.hpp
+  src/tui/view/component/bytes.hpp
+  src/tui/view/component/data_table.hpp
+  src/tui/view/component/decorator.hpp
+  src/tui/view/component/focus_manager.hpp
+  src/tui/view/component/non_wrapping_parameter.hpp
+  src/tui/view/component/scroller.hpp
+  src/tui/view/component/tree.hpp
+  src/tui/view/message_visualization/factory.hpp
+  src/tui/view/message_visualization/messaage_vizualization.hpp
+  src/tui/view/message_visualization/proto.hpp
+  src/tui/view/message_visualization/proto_tree.hpp
+  src/tui/view/message_visualization/raw.hpp
+  src/tui/view/message_visualization/string.hpp
+  src/tui/viewmodel/command_line.hpp
+  src/tui/viewmodel/factory.hpp
+  src/tui/viewmodel/help.hpp
+  src/tui/viewmodel/hosts.hpp
+  src/tui/viewmodel/logs.hpp
+  src/tui/viewmodel/processes.hpp
+  src/tui/viewmodel/services.hpp
+  src/tui/viewmodel/shell.hpp
+  src/tui/viewmodel/system_information.hpp
+  src/tui/viewmodel/table.hpp
+  src/tui/viewmodel/topics.hpp
+  src/tui/viewmodel/viewmodel.hpp
+  src/tui/viewmodel/message_visualization/message_visualization.hpp
+  src/tui/viewmodel/message_visualization/proto.hpp
+  src/tui/viewmodel/message_visualization/raw.hpp
+  src/tui/viewmodel/message_visualization/string.hpp
+  src/utils/container.hpp
+  src/utils/string.hpp
+)
+
+source_group(
+    TREE
+        ${CMAKE_CURRENT_LIST_DIR}
+    FILES
+        ${ecalmon_tui_src}
 )
 
 if(WIN32)

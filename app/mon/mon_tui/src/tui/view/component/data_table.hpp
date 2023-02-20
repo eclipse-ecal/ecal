@@ -189,11 +189,11 @@ class TypedTableModelBase : public TableModelBase
 
   void GenerateStringReperesentations()
   {
-    for(int row_i = 0; row_i < data.size(); row_i++)
+    for(int row_i = 0; row_i < static_cast<int>(data.size()); row_i++)
     {
       auto &d = data[row_i];
       d.printable_values.resize(columns.size());
-      for(int column_i = 0; column_i < columns.size(); column_i++)
+      for(int column_i = 0; column_i < static_cast<int>(columns.size()); column_i++)
       {
         d.printable_values[column_i] = StringRepresentation(column_i, row_i);
       }
@@ -214,7 +214,7 @@ class TypedTableModelBase : public TableModelBase
       }
     }
 
-    auto is_expanded = [&non_expanded_groups, new_group](const std::string &val) {
+    auto is_expanded = [&non_expanded_groups](const std::string &val) {
       return non_expanded_groups.find(val) == non_expanded_groups.end();
     };
 
@@ -308,7 +308,7 @@ class TypedTableModelBase : public TableModelBase
 
   void SortGroups()
   {
-    std::function<bool(Group&, Group&)> sort_fun = [sorted_column=sorted_column](auto &l, auto &r) {
+    std::function<bool(Group&, Group&)> sort_fun = [](auto &l, auto &r) {
       return l.value < r.value;
     };
 
@@ -375,7 +375,7 @@ public:
     return nullptr;
   }
 
-  virtual bool ToggleGroupExpanded()
+  virtual bool ToggleGroupExpanded() override
   {
     if(group_column == NO_COLUMN) return false;
 
@@ -514,7 +514,7 @@ public:
     auto find_predicate = FindPredicate(find);
     auto selected_index = SelectedIndex();
     auto loop_back_index = -1;
-    auto current_index = RowCount();
+    int  current_index = static_cast<int>(RowCount());
     auto current_found = false;
     for(size_t i = visible_data.size() - 1; i >= 0; i--)
     {
@@ -530,11 +530,11 @@ public:
           continue;
         }
         if(!current_found && loop_back_index == -1 && find_predicate(row))
-          loop_back_index = static_cast<int>(current_index);
+          loop_back_index = current_index;
 
         if(current_found && find_predicate(row))
         {
-          selected = static_cast<int>(current_index);
+          selected = current_index;
           return;
         }
         current_index--;
@@ -605,7 +605,7 @@ class TypedTableRendererBase : public TableRendererBase
   Elements AcumulateColumns(std::vector<int> &column_sizes)
   {
     Elements column_elements;
-    auto columns_size = model->Columns().size();
+    const int columns_size = static_cast<int>(model->Columns().size());
     for(int i = 0; i < columns_size; i++)
     {
       auto column = RenderColumn(i);

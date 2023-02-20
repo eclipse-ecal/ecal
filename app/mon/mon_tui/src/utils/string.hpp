@@ -21,6 +21,8 @@
 #include <string>
 #include <vector>
 #include <cctype>
+#include <sstream>
+#include <iomanip>
 
 #include "model/data/topic.hpp"
 #include "model/data/process.hpp"
