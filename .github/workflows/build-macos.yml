@@ -25,7 +25,7 @@ jobs:
         target: 'desktop'
 
     - name: Install Dependencies
-      run: brew install ninja doxygen graphviz protobuf hdf5
+      run: brew install ninja doxygen graphviz protobuf hdf5 pkg-config
 
     - name: Install Cap’n Proto
       run: |
