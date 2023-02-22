@@ -189,7 +189,7 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 if(ECAL_NPCAP_SUPPORT)
   add_definitions(-DECAL_NPCAP_SUPPORT)
   target_link_libraries(${PROJECT_NAME}
-    udpcap
+    udpcap::udpcap
   )
 endif(ECAL_NPCAP_SUPPORT)
 
