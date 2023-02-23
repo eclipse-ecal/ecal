@@ -25,6 +25,10 @@ REQUIRED)
 
 find_package(Protobuf REQUIRED)
 
+if(ECAL_NPCAP_SUPPORT)
+  find_package(udpcap REQUIRED)
+endif(ECAL_NPCAP_SUPPORT)
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC OFF) # Reason for being turned off: AutoUIC will prevent VS from detecting changes in .ui files
 set(CMAKE_AUTORCC OFF) # Reason for being turned off: AutoRCC will create an entirely new project in VS which clutters the solution appearance. Additionally, we cannot assign a source group to the generated .cpp files which will clutter the project.
@@ -189,7 +193,7 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 if(ECAL_NPCAP_SUPPORT)
   add_definitions(-DECAL_NPCAP_SUPPORT)
   target_link_libraries(${PROJECT_NAME}
-    udpcap
+    udpcap::udpcap
   )
 endif(ECAL_NPCAP_SUPPORT)
 
