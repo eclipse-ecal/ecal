@@ -45,7 +45,7 @@ target_link_libraries(${PROJECT_NAME}
   protobuf::libprotobuf
   tclap::tclap
   eCAL::core
-  eCAL::pb)
+  eCAL::core_pb)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14) 
 
 ecal_install_app(${PROJECT_NAME})
