@@ -90,7 +90,7 @@ python -m pip install --upgrade pip
 
 echo Installing python requirements
 pip install wheel
-pip install -r requirements.txt
+pip install -r doc\requirements.txt
 
 cd /d "%WORKSPACE%\%BUILD_DIR_COMPLETE%"
 cmake ../.. -A x64 %CMAKE_OPTIONS_COMPLETE% %*
