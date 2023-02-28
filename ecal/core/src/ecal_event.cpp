@@ -25,6 +25,8 @@
 #include <ecal/ecal_os.h>
 
 #include <ecal/ecal_event.h>
+#include "ecal_global_accessors.h"
+#include "ecal_log_impl.h"
 
 #include <sstream>
 #include <memory>
@@ -122,7 +124,15 @@ namespace
     int previous_umask = umask(000);  // set umask to nothing, so we can create files with all possible permission bits
     int fd = ::shm_open(event_name_, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     umask(previous_umask);            // reset umask to previous permissions
-    if (fd < 0) return nullptr;
+    if (fd < 0)
+    {
+#ifndef NDEBUG
+      // log it
+      if (eCAL::g_log())
+        eCAL::g_log()->Log(log_level_debug1, event_name_ + std::string("::named_event_create - FAILED :") + strerror(errno));
+#endif
+      return nullptr;
+    }
 
     // set size to size of named mutex struct 
     if(ftruncate(fd, sizeof(named_event_t)) == -1)
@@ -166,7 +176,15 @@ namespace
   {
     // try to open existing shared memory file
     int fd = ::shm_open(event_name_, O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-    if (fd < 0) return nullptr;
+    if (fd < 0)
+    {
+#ifndef NDEBUG
+      // log it
+      if (eCAL::g_log())
+        eCAL::g_log()->Log(log_level_debug1, event_name_ + std::string("::named_event_open - FAILED :") + strerror(errno));
+#endif
+      return nullptr;
+    }
 
     // map file content to mutex
     named_event_t* evt = static_cast<named_event_t*>(mmap(nullptr, sizeof(named_event_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
