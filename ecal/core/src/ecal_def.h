@@ -172,7 +172,7 @@
 /*                                     events                                                 */
 /**********************************************************************************************/
 /* common stop event prefix to shut down a local user process */
-#define EVENT_SHUTDOWN_PROC             "ecal_shutdown_process"
+#define EVENT_SHUTDOWN_PROC             "ecal_shutdown_proc"
 
 /**********************************************************************************************/
 /*                                     experimental                                           */

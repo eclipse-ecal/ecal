@@ -31,6 +31,8 @@
 #include <chrono>
 #include <sstream>
 
+#include "nanoid/nanoid.h"
+
 namespace eCAL
 {
   CSyncMemoryFile::CSyncMemoryFile(const std::string& base_name_, size_t size_, SSyncMemoryFileAttr attr_) :
@@ -320,9 +322,8 @@ namespace eCAL
   std::string CSyncMemoryFile::BuildMemFileName(const std::string base_name_)
   {
     std::string mfile_name(base_name_);
-    std::stringstream out;
-    out << mfile_name << "_" << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-    mfile_name = out.str();
+    mfile_name += "_";
+    mfile_name += NANOID_NAMESPACE::generate("`1234567890-=~!@#$%^&*()+qwer?tyuiop[]QWERTYUIOP{}asdfghjkl;\'ASDFGHJKL:\"zxcvbnm,.ZXCVBNM<>", 4);
 
     // replace all '\\' and '/' to '_'
     std::replace(mfile_name.begin(), mfile_name.end(), '\\', '_');
