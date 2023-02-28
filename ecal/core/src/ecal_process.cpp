@@ -907,7 +907,7 @@ namespace eCAL
         }
 #endif
         // Copy the binary name to a std::string
-        g_process_name = std::string(buf, length);
+        g_process_name = std::string(buf);
 
       }
       return g_process_name;
