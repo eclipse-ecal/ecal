@@ -23,6 +23,7 @@ find_package(asio         REQUIRED)
 find_package(tclap        REQUIRED)
 find_package(simpleini    REQUIRED)
 find_package(tcp_pubsub   REQUIRED)
+find_package(nanoid_cpp   REQUIRED)
 if (ECAL_NPCAP_SUPPORT)
   find_package(udpcap REQUIRED)
 endif()
@@ -510,6 +511,7 @@ target_link_libraries(${PROJECT_NAME}
     Threads::Threads
     eCAL::ecal-utils
     tcp_pubsub::tcp_pubsub
+    nanoid_cpp
 )
 
 set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)

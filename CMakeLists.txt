@@ -104,6 +104,8 @@ option(ECAL_THIRDPARTY_BUILD_FTXUI             "Build ftxui with eCAL"          
 # option(ECAL_THIRDPARTY_BUILD_LIBSSH2           "Build libssh2 with eCAL"                                           ON)
 option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"                                            OFF)
 option(ECAL_THIRDPARTY_BUILD_UDPCAP            "Build udpcap library with eCAL"                                   OFF)
+option(ECAL_THIRDPARTY_BUILD_NANOID_CPP        "Build nanoid_cpp with eCAL"                                        ON)
+
 
 if(WIN32)
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                          ON)
@@ -194,6 +196,7 @@ set(possible_subprojects
   yaml-cpp
   ftxui
   udpcap
+  nanoid_cpp
 )
 
 # We should rename the option, but don't know how to do in in a
@@ -583,6 +586,7 @@ message(STATUS "ECAL_THIRDPARTY_BUILD_CURL                     : ${ECAL_THIRDPAR
 message(STATUS "ECAL_THIRDPARTY_BUILD_HDF5                     : ${ECAL_THIRDPARTY_BUILD_HDF5}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_YAML-CPP                 : ${ECAL_THIRDPARTY_BUILD_YAML-CPP}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_UDPCAP                   : ${ECAL_THIRDPARTY_BUILD_UDPCAP}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_NANOID_CPP               : ${ECAL_THIRDPARTY_BUILD_NANOID_CPP}")
 message(STATUS "ECAL_LINK_HDF5_SHARED                          : ${ECAL_LINK_HDF5_SHARED}")
 message(STATUS "CPACK_PACK_WITH_INNOSETUP                      : ${CPACK_PACK_WITH_INNOSETUP}")
 
