@@ -23,8 +23,9 @@
 
 #pragma once
 
-#include "ecal_monitoring_threads.h"
+#include <ecal/ecal_monitoring_entity.h>
 
+#include "ecal_monitoring_threads.h"
 #include "ecal_expmap.h"
 #include "io/rcv_sample.h"
 
@@ -50,7 +51,7 @@ namespace eCAL
     void SetInclFilter(const std::string& filter_);
     void SetFilterState(bool state_);
 
-    void GetMonitoringMsg(eCAL::pb::Monitoring& monitoring_);
+    void GetMonitoringMsg(eCAL::pb::Monitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
     void GetLoggingMsg(eCAL::pb::Logging& logging_);
 
     int PubMonitoring(bool state_, std::string& name_);
@@ -264,7 +265,6 @@ namespace eCAL
 
     STopicMonMap* GetMap(enum ePubSub pubsub_type_);
 
-
     void MonitorProcs(eCAL::pb::Monitoring& monitoring_);
     void MonitorServer(eCAL::pb::Monitoring& monitoring_);
     void MonitorClients(eCAL::pb::Monitoring& monitoring_);
@@ -297,7 +297,7 @@ namespace eCAL
     LogMessageListT                              m_log_msglist;
 
     // worker threads
-    std::shared_ptr<CLoggingReceiveThread>              m_log_rcv_threadcaller;
-    std::shared_ptr<CMonLogPublishingThread>            m_pub_threadcaller;
+    std::shared_ptr<CLoggingReceiveThread>       m_log_rcv_threadcaller;
+    std::shared_ptr<CMonLogPublishingThread>     m_pub_threadcaller;
   };
 }

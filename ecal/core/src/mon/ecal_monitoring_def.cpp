@@ -63,9 +63,9 @@ namespace eCAL
     m_monitoring_impl->SetFilterState(state_);
   }
 
-  void CMonitoring::Monitor(eCAL::pb::Monitoring& monitoring_)
+  void CMonitoring::Monitor(eCAL::pb::Monitoring& monitoring_, unsigned int entities_)
   {
-    m_monitoring_impl->GetMonitoringMsg(monitoring_);
+    m_monitoring_impl->GetMonitoringMsg(monitoring_, entities_);
   }
 
   void CMonitoring::Monitor(eCAL::pb::Logging& logging_)
@@ -119,6 +119,12 @@ namespace eCAL
 
       mon_ = monitoring.SerializeAsString();
       return((int)mon_.size());
+    }
+
+    int GetMonitoring(eCAL::pb::Monitoring& mon_, unsigned int entities_)
+    {
+      if (g_monitoring()) g_monitoring()->Monitor(mon_, entities_);
+      return(0);
     }
 
     int GetLogging(std::string& log_)

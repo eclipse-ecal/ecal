@@ -189,7 +189,7 @@ TEST(IO, TypeDescriptionDynamic)
     // check type name (should not be influenced by SetDescription)
     EXPECT_EQ(eCAL::Util::GetTopicTypeName("A"), ttype);
 
-    // check description of publiher
+    // check description of publisher
     EXPECT_EQ(pub.GetDescription(), ttdesc_new);
 
     // check description of general database

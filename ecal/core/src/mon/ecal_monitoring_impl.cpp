@@ -112,7 +112,8 @@ namespace eCAL
     m_log_rcv_threadcaller->SetNetworkMode(Config::IsNetworkEnabled());
 
     // start monitoring and logging publishing thread
-    CMonLogPublishingThread::MonitoringCallbackT mon_cb = std::bind(&CMonitoringImpl::GetMonitoringMsg, this, std::placeholders::_1);
+    // we really need to remove this feature !
+    CMonLogPublishingThread::MonitoringCallbackT mon_cb = std::bind(&CMonitoringImpl::GetMonitoringMsg, this, std::placeholders::_1, Monitoring::Entity::All);
     CMonLogPublishingThread::LoggingCallbackT    log_cb = std::bind(&CMonitoringImpl::GetLoggingMsg, this, std::placeholders::_1);
     m_pub_threadcaller = std::make_shared<CMonLogPublishingThread>(mon_cb, log_cb);
 
@@ -486,17 +487,36 @@ namespace eCAL
     return(pHostMap);
   };
 
-  void CMonitoringImpl::GetMonitoringMsg(eCAL::pb::Monitoring& monitoring_)
+  void CMonitoringImpl::GetMonitoringMsg(eCAL::pb::Monitoring& monitoring_, unsigned int entities_)
   {
     // clear protobuf object
     monitoring_.Clear();
 
-    // write all registrations to monitoring message object
-    MonitorProcs(monitoring_);
-    MonitorServer(monitoring_);
-    MonitorClients(monitoring_);
-    MonitorTopics(m_publisher_map, monitoring_, "publisher");
-    MonitorTopics(m_subscriber_map, monitoring_, "subscriber");
+    // write entities to monitoring message object
+    if (entities_ & Monitoring::Entity::Publisher)
+    {
+      MonitorTopics(m_publisher_map, monitoring_, "publisher");
+    }
+
+    if (entities_ & Monitoring::Entity::Subscriber)
+    {
+      MonitorTopics(m_subscriber_map, monitoring_, "subscriber");
+    }
+
+    if (entities_ & Monitoring::Entity::Server)
+    {
+      MonitorServer(monitoring_);
+    }
+
+    if (entities_ & Monitoring::Entity::Client)
+    {
+      MonitorClients(monitoring_);
+    }
+
+    if (entities_ & Monitoring::Entity::Process)
+    {
+      MonitorProcs(monitoring_);
+    }
   }
 
   void CMonitoringImpl::GetLoggingMsg(eCAL::pb::Logging& logging_)
@@ -696,6 +716,98 @@ namespace eCAL
     }
   }
 
+#if 1
+  void CMonitoringImpl::MonitorTopics(STopicMonMap& map_, eCAL::pb::Monitoring& monitoring_, const std::string& direction_)
+  {
+    for (auto topic_it = map_.map->begin(); topic_it != map_.map->end(); ++topic_it)
+    {
+      auto topic_ptr = &(*topic_it).second;
+
+      // add topic
+      eCAL::pb::Topic* pMonTopic = monitoring_.add_topics();
+
+      // registration clock
+      pMonTopic->set_rclock(topic_ptr->rclock);
+
+      // host name
+      pMonTopic->set_hname(topic_ptr->hname);
+
+      // process id
+      pMonTopic->set_pid(topic_ptr->pid);
+
+      // process name
+      pMonTopic->set_pname(topic_ptr->pname);
+
+      // unit name
+      pMonTopic->set_uname(topic_ptr->uname);
+
+      // topic id
+      pMonTopic->set_tid(topic_ptr->tid);
+
+      // topic name
+      pMonTopic->set_tname(topic_ptr->tname);
+
+      // direction
+      pMonTopic->set_direction(direction_);
+
+      // topic type
+      pMonTopic->set_ttype(topic_ptr->ttype);
+
+      // topic transport layers
+      if (topic_ptr->tlayer_ecal_udp_mc)
+      {
+        auto tlayer = pMonTopic->add_tlayer();
+        tlayer->set_type(eCAL::pb::tl_ecal_udp_mc);
+        tlayer->set_confirmed(true);
+      }
+      if (topic_ptr->tlayer_ecal_shm)
+      {
+        auto tlayer = pMonTopic->add_tlayer();
+        tlayer->set_type(eCAL::pb::tl_ecal_shm);
+        tlayer->set_confirmed(true);
+      }
+      if (topic_ptr->tlayer_ecal_tcp)
+      {
+        auto tlayer = pMonTopic->add_tlayer();
+        tlayer->set_type(eCAL::pb::tl_ecal_tcp);
+        tlayer->set_confirmed(true);
+      }
+      if (topic_ptr->tlayer_inproc)
+      {
+        auto tlayer = pMonTopic->add_tlayer();
+        tlayer->set_type(eCAL::pb::tl_inproc);
+        tlayer->set_confirmed(true);
+      }
+
+      // topic description
+      pMonTopic->set_tdesc(topic_ptr->tdesc);
+
+      // topic attributes
+      *pMonTopic->mutable_attr() = google::protobuf::Map<std::string, std::string>{ topic_ptr->attr.begin(), topic_ptr->attr.end() };
+
+      // topic size
+      pMonTopic->set_tsize(topic_ptr->tsize);
+
+      // local connections
+      pMonTopic->set_connections_loc(topic_ptr->connections_loc);
+
+      // external connections
+      pMonTopic->set_connections_ext(topic_ptr->connections_ext);
+
+      // data id (publisher setid)
+      pMonTopic->set_did(topic_ptr->did);
+
+      // data clock
+      pMonTopic->set_dclock(topic_ptr->dclock);
+
+      // data dropped
+      pMonTopic->set_message_drops(google::protobuf::int32(topic_ptr->ddropped));
+
+      // data frequency
+      pMonTopic->set_dfreq(topic_ptr->dfreq);
+    }
+  }
+#else
   void CMonitoringImpl::MonitorTopics(STopicMonMap& map_, eCAL::pb::Monitoring& monitoring_, const std::string& direction_)
   {
     // acquire access
@@ -703,6 +815,7 @@ namespace eCAL
 
     // iterate map
     map_.map->remove_deprecated();
+
     for (auto topic : (*map_.map))
     {
       // add topic
@@ -789,6 +902,7 @@ namespace eCAL
       pMonTopic->set_dfreq(topic.second.dfreq);
     }
   }
+#endif
 
   void CMonitoringImpl::Tokenize(const std::string& str, StrICaseSetT& tokens, const std::string& delimiters, bool trimEmpty)
   {

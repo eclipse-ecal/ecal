@@ -25,7 +25,16 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_monitoring_entity.h>
 #include <string>
+
+#ifdef _MSC_VER
+#pragma warning(push, 0) // disable proto warnings
+#endif
+#include <ecal/core/pb/monitoring.pb.h>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 namespace eCAL
 {
@@ -59,13 +68,23 @@ namespace eCAL
     ECAL_API int SetFilterState(bool state_);
 
     /**
-     * @brief Get monitoring protobuf string. 
+     * @brief Get monitoring as serialized protobuf string. 
      *
      * @param [out] mon_  String to store the monitoring information. 
      *
      * @return  Monitoring buffer length or zero if failed. 
     **/
     ECAL_API int GetMonitoring(std::string& mon_);
+
+    /**
+     * @brief Get monitoring as protobuf message.
+     *
+     * @param [out] mon_       Protobuf message to store the monitoring information.
+     * @param       entities_  Entities definition.
+     *
+     * @return Zero if succeeded.
+    **/
+    ECAL_API int GetMonitoring(eCAL::pb::Monitoring& mon_, unsigned int entities_ = Entity::All);
 
     /**
      * @brief Get logging protobuf string. 
@@ -77,23 +96,25 @@ namespace eCAL
     ECAL_API int GetLogging(std::string& log_);
 
     /**
-     * @brief Publish monitoring protobuf message.
+     * @brief Publish monitoring protobuf message (deprecated).
      *
      * @param state_  Switch publishing on/off.
      * @param name_   Monitoring topic name.
      *
      * @return Zero if succeeded.
     **/
+    [[deprecated("use GetMonitoring and publish yourself")]]
     ECAL_API int PubMonitoring(bool state_, std::string name_ = "ecal.monitoring");
 
     /**
-     * @brief Publish logging protobuf message.
+     * @brief Publish logging protobuf message (deprecated).
      *
      * @param state_  Switch publishing on/off.
      * @param name_   Logging topic name.
      *
      * @return Zero if succeeded.
     **/
+    [[deprecated("use GetLogging and publish yourself")]]
     ECAL_API int PubLogging(bool state_, std::string name_ = "ecal.logging");
   }
   /** @example monitoring_rec.cpp
