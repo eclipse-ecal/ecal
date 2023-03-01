@@ -25,6 +25,8 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+
+#include <map>
 #include <string>
 
 namespace eCAL
@@ -135,6 +137,19 @@ namespace eCAL
     **/
     ECAL_API void PubShareDescription(bool state_);
 
+    struct STopicInfo
+    {
+      std::string type_name;        //!< Type name of the current topic
+      std::string type_description; //!< Descriptor string of the current topic.
+    };
+    /**
+     * @brief Get complete topic map (including types and descriptions).
+     *
+     * @param topic_info_map_  Map to store the topic informations.
+     *                         Map containing { TopicName -> (Type, Description) } mapping of all topics that are currently known.
+    **/
+    ECAL_API void GetTopics(std::map<std::string, STopicInfo>& topic_info_map_);
+
     /**
      * @brief Gets type name of the specified topic.
      *
@@ -172,6 +187,21 @@ namespace eCAL
      * @return  Topic description.
     **/
     ECAL_API std::string GetTopicDescription(const std::string& topic_name_);
+
+    struct SServiceMethodInfo
+    {
+      std::string request_type_name;         //!< Type name of the request message
+      std::string request_type_description;  //!< Descriptor string of the request description
+      std::string response_type_name;        //!< Type name of the response message
+      std::string response_type_description; //!< Descriptor string of the response message
+    };
+    /**
+     * @brief Get complete service map (including request and response types and descriptions).
+     *
+     * @param service_info_map_  Map to store the topic informations.
+     *                           Map { (ServiceName, MethodName) -> ( (ReqType, ReqDescription), (RespType, RespDescription) ) } mapping of all currently known services.
+    **/
+    ECAL_API void GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_);
 
     /**
      * @brief Gets service method request and response type names.
