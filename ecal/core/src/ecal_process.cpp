@@ -885,6 +885,7 @@ namespace eCAL
           // Buffer size is too small.
           return "";
         }
+        length = strlen(buf);
 #elif defined(ECAL_OS_QNX)
         size_t length {0};
         // TODO: Find a suitable method on QNX to retrieve current process name

@@ -49,10 +49,10 @@ namespace eCAL
     if(topic_info_it == m_topic_info_map.end())
     {
       // TODO: Maybe we should copy the description from another topic with the same type, if it is empty?
-      STopicInfo topic_info;
-      topic_info.type_name           = topic_type_;
-      topic_info.type_description    = topic_desc_;
-      topic_info.description_quality = description_quality_;
+      STopicInfoQuality topic_info;
+      topic_info.info.type_name        = topic_type_;
+      topic_info.info.type_description = topic_desc_;
+      topic_info.description_quality   = description_quality_;
       m_topic_info_map.emplace(topic_name_, std::move(topic_info));
     }
     else
@@ -61,11 +61,11 @@ namespace eCAL
       // we log the error only one time
       if(  !topic_info_it->second.type_missmatch_logged
             && !topic_type_.empty()
-            && !topic_info_it->second.type_name.empty()
-            && (topic_info_it->second.type_name != topic_type_)
+            && !topic_info_it->second.info.type_name.empty()
+            && (topic_info_it->second.info.type_name != topic_type_)
         )
       {
-        std::string ttype1 =  topic_info_it->second.type_name;
+        std::string ttype1 =  topic_info_it->second.info.type_name;
         std::string ttype2 = topic_type_;
         std::replace(ttype1.begin(), ttype1.end(), '\0', '?');
         std::replace(ttype1.begin(), ttype1.end(), '\t', '?');
@@ -87,8 +87,8 @@ namespace eCAL
       // we log the warning only one time
       if ( !topic_info_it->second.type_missmatch_logged
             && !topic_desc_.empty()
-            && !topic_info_it->second.type_description.empty()
-            && (topic_info_it->second.type_description != topic_desc_)
+            && !topic_info_it->second.info.type_description.empty()
+            && (topic_info_it->second.info.type_description != topic_desc_)
         )
       {
         std::string msg = "eCAL Pub/Sub description mismatch for topic ";
@@ -102,10 +102,20 @@ namespace eCAL
       // If it has a higher quality, we overwrite it.
       if (description_quality_ > topic_info_it->second.description_quality)
       {
-        topic_info_it->second.type_name           = topic_type_;
-        topic_info_it->second.type_description         = topic_desc_;
-        topic_info_it->second.description_quality = description_quality_;
+        topic_info_it->second.info.type_name        = topic_type_;
+        topic_info_it->second.info.type_description = topic_desc_;
+        topic_info_it->second.description_quality   = description_quality_;
       }
+    }
+  }
+
+  void CDescGate::GetTopics(std::map<std::string, Util::STopicInfo>& topic_info_map_)
+  {
+    topic_info_map_.clear();
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map_mutex);
+    for (auto& topic_info : m_topic_info_map)
+    {
+      topic_info_map_[topic_info.first] = topic_info.second.info;
     }
   }
 
@@ -117,7 +127,7 @@ namespace eCAL
     const auto topic_info_it = m_topic_info_map.find(topic_name_);
 
     if(topic_info_it == m_topic_info_map.end()) return(false);
-    topic_type_ = topic_info_it->second.type_name;
+    topic_type_ = topic_info_it->second.info.type_name;
     return(true);
   }
 
@@ -129,7 +139,7 @@ namespace eCAL
     const auto topic_info_it = m_topic_info_map.find(topic_name_);
 
     if(topic_info_it == m_topic_info_map.end()) return(false);
-    topic_desc_ = topic_info_it->second.type_description;
+    topic_desc_ = topic_info_it->second.info.type_description;
     return(true);
   }
   
@@ -147,12 +157,12 @@ namespace eCAL
     auto service_info_map_it = m_service_info_map.find(service_method_tuple);
     if (service_info_map_it == m_service_info_map.end())
     {
-      SServiceMethodInfo service_info;
-      service_info.request_type_name         = req_type_name_;
-      service_info.request_type_description  = req_type_desc_;
-      service_info.response_type_name        = resp_type_name_;
-      service_info.response_type_description = resp_type_desc_;
-      service_info.info_quality              = info_quality_;
+      SServiceMethodInfoQuality service_info;
+      service_info.info.request_type_name         = req_type_name_;
+      service_info.info.request_type_description  = req_type_desc_;
+      service_info.info.response_type_name        = resp_type_name_;
+      service_info.info.response_type_description = resp_type_desc_;
+      service_info.info_quality                   = info_quality_;
 
       m_service_info_map[service_method_tuple] = std::move(service_info);
     }
@@ -161,12 +171,22 @@ namespace eCAL
       // do we need to check consistency ?
       if (info_quality_ > service_info_map_it->second.info_quality)
       {
-        service_info_map_it->second.request_type_name         = req_type_name_;
-        service_info_map_it->second.request_type_description  = req_type_desc_;
-        service_info_map_it->second.response_type_name        = resp_type_name_;
-        service_info_map_it->second.response_type_description = resp_type_desc_;
-        service_info_map_it->second.info_quality              = info_quality_;
+        service_info_map_it->second.info.request_type_name         = req_type_name_;
+        service_info_map_it->second.info.request_type_description  = req_type_desc_;
+        service_info_map_it->second.info.response_type_name        = resp_type_name_;
+        service_info_map_it->second.info.response_type_description = resp_type_desc_;
+        service_info_map_it->second.info_quality                   = info_quality_;
       }
+    }
+  }
+
+  void CDescGate::GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_)
+  {
+    service_info_map_.clear();
+    std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map_mutex);
+    for (auto& service_info : m_service_info_map)
+    {
+      service_info_map_[service_info.first] = service_info.second.info;
     }
   }
 
@@ -179,8 +199,8 @@ namespace eCAL
 
     if (service_info_map_it == m_service_info_map.end()) return false;
 
-    req_type_name_  = service_info_map_it->second.request_type_name;
-    resp_type_name_ = service_info_map_it->second.response_type_name;
+    req_type_name_  = service_info_map_it->second.info.request_type_name;
+    resp_type_name_ = service_info_map_it->second.info.response_type_name;
 
     return true;
   }
@@ -194,8 +214,8 @@ namespace eCAL
 
     if (service_info_map_it == m_service_info_map.end()) return false;
     
-    req_type_desc_  = service_info_map_it->second.request_type_description;
-    resp_type_desc_ = service_info_map_it->second.response_type_description;
+    req_type_desc_  = service_info_map_it->second.info.request_type_description;
+    resp_type_desc_ = service_info_map_it->second.info.response_type_description;
 
     return true;
   }

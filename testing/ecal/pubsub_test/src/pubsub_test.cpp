@@ -239,6 +239,45 @@ TEST(IO, TypeDescriptionDynamic)
   eCAL::Finalize();
 }
 
+TEST(IO, GetTopics)
+{
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "pubsub_test");
+
+  std::map<std::string, eCAL::Util::STopicInfo> topic_info_map;
+
+  std::string ttype("type");
+  std::string tdesc("desc");
+
+  // create 3 publisher
+  eCAL::CPublisher pub1("A1", ttype + "A1", tdesc + "A1");
+  eCAL::CPublisher pub2("A2", ttype + "A2", tdesc + "A2");
+  eCAL::CPublisher pub3("A3", ttype + "A3", tdesc + "A3");
+
+  // create 2 subscriber
+  eCAL::CSubscriber sub1("B1", ttype + "B1", tdesc + "B1");
+  eCAL::CSubscriber sub2("B2", ttype + "B2", tdesc + "B2");
+
+  // let's register them
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
+
+  // get all topics
+  eCAL::Util::GetTopics(topic_info_map);
+
+  // check size
+  EXPECT_EQ(topic_info_map.size(), 5);
+
+  // check types and descriptions
+  for (auto& topic_info : topic_info_map)
+  {
+    EXPECT_EQ(eCAL::Util::GetTopicTypeName(topic_info.first), ttype + topic_info.first);
+    EXPECT_EQ(eCAL::Util::GetTopicDescription(topic_info.first), tdesc + topic_info.first);
+  }
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
 TEST(IO, SimpleMessage1)
 { 
   // default send / receive strings
