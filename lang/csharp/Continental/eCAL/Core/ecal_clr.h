@@ -23,8 +23,12 @@
 **/
 
 #pragma once
-#include <ecal/ecal.h>
 #include <ecal/msg/protobuf/dynamic_json_subscriber.h>
+#include <ecal/ecal_callback.h>
+#include <ecal/ecal_core.h>
+#include <ecal/ecal_publisher.h>
+#include <ecal/ecal_subscriber.h>
+
 
 using namespace System;
 using namespace System::Runtime::InteropServices;

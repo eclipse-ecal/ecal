@@ -28,14 +28,6 @@
 #include <ecal/ecal_monitoring_entity.h>
 #include <string>
 
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/monitoring.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
 namespace eCAL
 {
   namespace Monitoring
@@ -77,16 +69,6 @@ namespace eCAL
     ECAL_API int GetMonitoring(std::string& mon_);
 
     /**
-     * @brief Get monitoring as protobuf message.
-     *
-     * @param [out] mon_       Protobuf message to store the monitoring information.
-     * @param       entities_  Entities definition.
-     *
-     * @return Zero if succeeded.
-    **/
-    ECAL_API int GetMonitoring(eCAL::pb::Monitoring& mon_, unsigned int entities_ = Entity::All);
-
-    /**
      * @brief Get logging as serialized protobuf string. 
      *
      * @param [out] log_  String to store the logging information. 
@@ -94,15 +76,6 @@ namespace eCAL
      * @return  Monitoring buffer length or zero if failed. 
     **/
     ECAL_API int GetLogging(std::string& log_);
-
-    /**
-     * @brief Get logging as protobuf message.
-     *
-     * @param [out] log_  Protobuf message to store the logging information.
-     *
-     * @return Zero if succeeded.
-    **/
-    ECAL_API int GetLogging(eCAL::pb::Logging log_);
 
     /**
      * @brief Publish monitoring protobuf message (deprecated).

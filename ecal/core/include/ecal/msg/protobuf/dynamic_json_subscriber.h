@@ -24,7 +24,9 @@
 
 #pragma once
 
-#include <ecal/ecal.h>
+#include <ecal/ecal_os.h>
+#include <ecal/ecal_callback.h>
+#include <string>
 
 namespace eCAL
 {

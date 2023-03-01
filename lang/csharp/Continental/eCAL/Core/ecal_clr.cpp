@@ -23,8 +23,12 @@
 
 #include "ecal_clr.h"
 
-using namespace Continental::eCAL::Core;
+#include <ecal/ecal_defs.h>
+#include <ecal/ecal_log.h>
+#include <ecal/ecal_monitoring.h>
+#include <ecal/ecal_util.h>
 
+using namespace Continental::eCAL::Core;
 
 /////////////////////////////////////////////////////////////////////////////
 // Help
