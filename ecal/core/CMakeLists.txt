@@ -493,6 +493,7 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} 
   PUBLIC
     eCAL::proto
+    eCAL::core_pb
   PRIVATE
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:rt>
@@ -507,7 +508,6 @@ target_link_libraries(${PROJECT_NAME}
     asio::asio
     tclap::tclap
     simpleini::simpleini
-    eCAL::core_pb
     Threads::Threads
     eCAL::ecal-utils
     tcp_pubsub::tcp_pubsub
