@@ -1,0 +1,17 @@
+.. _exhale_struct_structeCAL_1_1Util_1_1STopicInfo:
+
+Struct STopicInfo
+=================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_util.h`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: eCAL::Util::STopicInfo
+   :project: eCAL
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -32,6 +32,8 @@ Program Listing for File ecal_util.h
    #pragma once
    
    #include <ecal/ecal_os.h>
+   
+   #include <map>
    #include <string>
    
    namespace eCAL
@@ -66,6 +68,13 @@ Program Listing for File ecal_util.h
    
        ECAL_API void PubShareDescription(bool state_);
    
+       struct STopicInfo
+       {
+         std::string type_name;        
+         std::string type_description; 
+       };
+       ECAL_API void GetTopics(std::map<std::string, STopicInfo>& topic_info_map_);
+   
        ECAL_API bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
    
        ECAL_API std::string GetTopicTypeName(const std::string& topic_name_);
@@ -73,6 +82,15 @@ Program Listing for File ecal_util.h
        ECAL_API bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_);
    
        ECAL_API std::string GetTopicDescription(const std::string& topic_name_);
+   
+       struct SServiceMethodInfo
+       {
+         std::string request_type_name;         
+         std::string request_type_description;  
+         std::string response_type_name;        
+         std::string response_type_description; 
+       };
+       ECAL_API void GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_);
    
        ECAL_API bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_);
    
