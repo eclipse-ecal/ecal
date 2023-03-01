@@ -136,6 +136,12 @@ namespace eCAL
       return((int)log_.size());
     }
 
+    int GetLogging(eCAL::pb::Logging log_)
+    {
+      if (g_monitoring()) g_monitoring()->GetLogging(log_);
+      return(0);
+    }
+
     int PubMonitoring(bool state_, std::string name_ /* = "ecal.monitoring"*/)
     {
       if (g_monitoring()) return(g_monitoring()->PubMonitoring(state_, name_));

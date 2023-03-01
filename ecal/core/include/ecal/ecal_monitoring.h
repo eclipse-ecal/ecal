@@ -87,13 +87,22 @@ namespace eCAL
     ECAL_API int GetMonitoring(eCAL::pb::Monitoring& mon_, unsigned int entities_ = Entity::All);
 
     /**
-     * @brief Get logging protobuf string. 
+     * @brief Get logging as serialized protobuf string. 
      *
      * @param [out] log_  String to store the logging information. 
      *
      * @return  Monitoring buffer length or zero if failed. 
     **/
     ECAL_API int GetLogging(std::string& log_);
+
+    /**
+     * @brief Get logging as protobuf message.
+     *
+     * @param [out] log_  Protobuf message to store the logging information.
+     *
+     * @return Zero if succeeded.
+    **/
+    ECAL_API int GetLogging(eCAL::pb::Logging log_);
 
     /**
      * @brief Publish monitoring protobuf message (deprecated).
