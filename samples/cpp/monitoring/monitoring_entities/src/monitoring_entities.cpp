@@ -70,7 +70,7 @@ int main(int argc, char **argv)
       std::cout << "-------- HOSTS ----------" << std::endl;
 
       // for all hosts
-      for(auto host : monitoring.hosts())
+      for(const auto& host : monitoring.hosts())
       {
         // check filtering
         if(!g_host_filt_string.empty() && (g_host_filt_string != host.hname())) continue;
@@ -92,7 +92,7 @@ int main(int argc, char **argv)
       std::cout << "------- PROCESSES -------" << std::endl;
 
       // for all processes
-      for(auto process : monitoring.processes())
+      for(const auto& process : monitoring.processes())
       {
         // check filtering
         if(!g_procs_filt_string.empty() && (g_procs_filt_string != process.uname())) continue;
@@ -126,7 +126,7 @@ int main(int argc, char **argv)
       std::cout << "------- SERVICES -------" << std::endl;
 
       // for all processes
-      for(auto service : monitoring.services())
+      for(const auto& service : monitoring.services())
       {
         // check filtering
         if(!g_services_filt_string.empty() && (g_services_filt_string != service.sname())) continue;
@@ -139,7 +139,7 @@ int main(int argc, char **argv)
 
         for(int i = 0; i < service.methods_size(); ++i)
         {
-          auto method = service.methods(i);
+          const auto& method = service.methods(i);
           std::cout << "  mname           : " << method.mname()      << std::endl;   // method name
           std::cout << "  req_type        : " << method.req_type()   << std::endl;   // request type
           //std::cout << "  req_desc        : " << method.req_desc()   << std::endl;   // request descriptor
@@ -162,7 +162,7 @@ int main(int argc, char **argv)
       std::cout << "-------- TOPICS ---------" << std::endl;
 
       // for all topics
-      for(auto topic : monitoring.topics())
+      for(const auto& topic : monitoring.topics())
       {
         // check filtering
         if(!g_topics_filt_string.empty() && (g_topics_filt_string != topic.tname())) continue;
@@ -179,7 +179,7 @@ int main(int argc, char **argv)
         std::cout << "ttype           : " << topic.ttype()           << std::endl;   // topic type
 //        std::cout << "tdesc           : " << topic.tdesc()           << std::endl;   // topic description
 //        std::cout << "tqos            : " << topic.tqos()            << std::endl;   // topic quality of service
-        for (auto layer : topic.tlayer())
+        for (const auto& layer : topic.tlayer())
         {
           std::string layer_type("unknown");
           switch (layer.type())
