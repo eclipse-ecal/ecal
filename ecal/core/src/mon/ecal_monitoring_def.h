@@ -54,8 +54,8 @@ namespace eCAL
     void SetInclFilter(const std::string& filter_);
     void SetFilterState(bool state_);
 
-    void Monitor(eCAL::pb::Monitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
-    void Monitor(eCAL::pb::Logging& logging_);
+    void GetMonitoring(eCAL::pb::Monitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
+    void GetLogging(eCAL::pb::Logging& logging_);
 
     int PubMonitoring(bool state_, std::string& name_);
     int PubLogging(bool state_, std::string& name_);

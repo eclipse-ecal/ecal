@@ -63,14 +63,14 @@ namespace eCAL
     m_monitoring_impl->SetFilterState(state_);
   }
 
-  void CMonitoring::Monitor(eCAL::pb::Monitoring& monitoring_, unsigned int entities_)
+  void CMonitoring::GetMonitoring(eCAL::pb::Monitoring& monitoring_, unsigned int entities_)
   {
-    m_monitoring_impl->GetMonitoringMsg(monitoring_, entities_);
+    m_monitoring_impl->GetMonitoring(monitoring_, entities_);
   }
 
-  void CMonitoring::Monitor(eCAL::pb::Logging& logging_)
+  void CMonitoring::GetLogging(eCAL::pb::Logging& logging_)
   {
-    m_monitoring_impl->GetLoggingMsg(logging_);
+    m_monitoring_impl->GetLogging(logging_);
   }
 
   int CMonitoring::PubMonitoring(bool state_, std::string& name_)
@@ -115,7 +115,7 @@ namespace eCAL
     int GetMonitoring(std::string& mon_)
     {
       eCAL::pb::Monitoring monitoring;
-      if (g_monitoring()) g_monitoring()->Monitor(monitoring);
+      if (g_monitoring()) g_monitoring()->GetMonitoring(monitoring);
 
       mon_ = monitoring.SerializeAsString();
       return((int)mon_.size());
@@ -123,14 +123,14 @@ namespace eCAL
 
     int GetMonitoring(eCAL::pb::Monitoring& mon_, unsigned int entities_)
     {
-      if (g_monitoring()) g_monitoring()->Monitor(mon_, entities_);
+      if (g_monitoring()) g_monitoring()->GetMonitoring(mon_, entities_);
       return(0);
     }
 
     int GetLogging(std::string& log_)
     {
       eCAL::pb::Logging logging;
-      if (g_monitoring()) g_monitoring()->Monitor(logging);
+      if (g_monitoring()) g_monitoring()->GetLogging(logging);
 
       log_ = logging.SerializeAsString();
       return((int)log_.size());

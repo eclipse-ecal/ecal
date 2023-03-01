@@ -113,8 +113,8 @@ namespace eCAL
 
     // start monitoring and logging publishing thread
     // we really need to remove this feature !
-    CMonLogPublishingThread::MonitoringCallbackT mon_cb = std::bind(&CMonitoringImpl::GetMonitoringMsg, this, std::placeholders::_1, Monitoring::Entity::All);
-    CMonLogPublishingThread::LoggingCallbackT    log_cb = std::bind(&CMonitoringImpl::GetLoggingMsg, this, std::placeholders::_1);
+    CMonLogPublishingThread::MonitoringCallbackT mon_cb = std::bind(&CMonitoringImpl::GetMonitoring, this, std::placeholders::_1, Monitoring::Entity::All);
+    CMonLogPublishingThread::LoggingCallbackT    log_cb = std::bind(&CMonitoringImpl::GetLogging, this, std::placeholders::_1);
     m_pub_threadcaller = std::make_shared<CMonLogPublishingThread>(mon_cb, log_cb);
 
     // setup blacklist and whitelist filter strings#
@@ -487,7 +487,7 @@ namespace eCAL
     return(pHostMap);
   };
 
-  void CMonitoringImpl::GetMonitoringMsg(eCAL::pb::Monitoring& monitoring_, unsigned int entities_)
+  void CMonitoringImpl::GetMonitoring(eCAL::pb::Monitoring& monitoring_, unsigned int entities_)
   {
     // clear protobuf object
     monitoring_.Clear();
@@ -519,7 +519,7 @@ namespace eCAL
     }
   }
 
-  void CMonitoringImpl::GetLoggingMsg(eCAL::pb::Logging& logging_)
+  void CMonitoringImpl::GetLogging(eCAL::pb::Logging& logging_)
   {
     // clear protobuf object
     logging_.Clear();
