@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_monitoring_entity.h>
 #include <string>
 
 namespace eCAL
@@ -59,7 +60,7 @@ namespace eCAL
     ECAL_API int SetFilterState(bool state_);
 
     /**
-     * @brief Get monitoring protobuf string. 
+     * @brief Get monitoring as serialized protobuf string. 
      *
      * @param [out] mon_  String to store the monitoring information. 
      *
@@ -68,7 +69,17 @@ namespace eCAL
     ECAL_API int GetMonitoring(std::string& mon_);
 
     /**
-     * @brief Get logging protobuf string. 
+     * @brief Get monitoring subset as serialized protobuf string.
+     *
+     * @param [out] mon_       String to store the monitoring information. 
+     * @param       entities_  Entities to get.
+     *
+     * @return Zero if succeeded.
+    **/
+    ECAL_API int GetMonitoring(std::string& mon_, unsigned int entities_);
+
+    /**
+     * @brief Get logging as serialized protobuf string. 
      *
      * @param [out] log_  String to store the logging information. 
      *
@@ -77,23 +88,25 @@ namespace eCAL
     ECAL_API int GetLogging(std::string& log_);
 
     /**
-     * @brief Publish monitoring protobuf message.
+     * @brief Publish monitoring protobuf message (deprecated).
      *
      * @param state_  Switch publishing on/off.
      * @param name_   Monitoring topic name.
      *
      * @return Zero if succeeded.
     **/
+    [[deprecated("use GetMonitoring and publish yourself")]]
     ECAL_API int PubMonitoring(bool state_, std::string name_ = "ecal.monitoring");
 
     /**
-     * @brief Publish logging protobuf message.
+     * @brief Publish logging protobuf message (deprecated).
      *
      * @param state_  Switch publishing on/off.
      * @param name_   Logging topic name.
      *
      * @return Zero if succeeded.
     **/
+    [[deprecated("use GetLogging and publish yourself")]]
     ECAL_API int PubLogging(bool state_, std::string name_ = "ecal.logging");
   }
   /** @example monitoring_rec.cpp

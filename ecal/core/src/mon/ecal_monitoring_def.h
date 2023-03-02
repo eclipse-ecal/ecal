@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <ecal/ecal_monitoring_entity.h>
+#include <ecal/ecal_monitoring_struct.h>
 #include <string>
 
 #ifdef _MSC_VER
@@ -53,8 +55,9 @@ namespace eCAL
     void SetInclFilter(const std::string& filter_);
     void SetFilterState(bool state_);
 
-    void Monitor(eCAL::pb::Monitoring& monitoring_);
-    void Monitor(eCAL::pb::Logging& logging_);
+    void GetMonitoring(eCAL::pb::Monitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
+    void GetMonitoring(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_ = Monitoring::Entity::All);
+    void GetLogging(eCAL::pb::Logging& logging_);
 
     int PubMonitoring(bool state_, std::string& name_);
     int PubLogging(bool state_, std::string& name_);
