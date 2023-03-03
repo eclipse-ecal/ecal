@@ -27,6 +27,7 @@
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
+#include "ecal_expmap.h"
 
 #include <shared_mutex>
 #include <string>
@@ -94,16 +95,31 @@ namespace eCAL
       QualityFlags             info_quality = QualityFlags::NO_QUALITY;            //!< The Quality of the Info
     };
 
-    // key: topic name | value: topic(type/desc)
-    using TopicInfoMap = std::map<std::string, STopicInfoQuality>;                 //!< Map containing { TopicName -> (Type, Description) } mapping of all topics that are currently known
-    mutable std::shared_timed_mutex  m_topic_info_map_mutex;                       //!< Mutex protecting the m_topic_info_map
-    TopicInfoMap                     m_topic_info_map;                             //!< Map containing information about each known topic
+    // key: topic name | value: topic (type/desc), quality
+    using TopicInfoMap = eCAL::Util::CExpMap<std::string, STopicInfoQuality>;      //!< Map containing { TopicName -> (Type, Description, Quality) } mapping of all topics that are currently known
+    struct STopicInfoMap
+    {
+      explicit STopicInfoMap(const std::chrono::milliseconds& timeout_) :
+        map(new TopicInfoMap(timeout_))
+      {
+      };
+      std::mutex                    sync;                                          //!< Mutex protecting the map
+      std::unique_ptr<TopicInfoMap> map;                                           //!< Map containing information about each known topic
+    };
+    STopicInfoMap m_topic_info_map;
 
-    // key: tup<service name, method name> | value: tup<request (type/desc), response (type/desc)>
-    using ServiceMethodInfoMap 
-      = std::map<std::tuple<std::string, std::string>, SServiceMethodInfoQuality>; //!< Map { (ServiceName, MethodName) -> ( (ReqType, ReqDescription), (RespType, RespDescription) ) } mapping of all currently known services
-    mutable std::shared_timed_mutex  m_service_info_map_mutex;                     //!< Mutex protecting the m_service_info_map
-    ServiceMethodInfoMap             m_service_info_map;                           //!< Map containing information about each known service method
+    // key: tup<service name, method name> | value: request (type/desc), response (type/desc), quality
+    using ServiceMethodInfoMap = eCAL::Util::CExpMap<std::tuple<std::string, std::string>, SServiceMethodInfoQuality>; //!< Map { (ServiceName, MethodName) -> ( (ReqType, ReqDescription), (RespType, RespDescription), Quality ) } mapping of all currently known services
+    struct SServiceMethodInfoMap
+    {
+      explicit SServiceMethodInfoMap(const std::chrono::milliseconds& timeout_) :
+        map(new ServiceMethodInfoMap(timeout_))
+      {
+      };
+      std::mutex                            sync;                                  //!< Mutex protecting the map
+      std::unique_ptr<ServiceMethodInfoMap> map;                                   //!< Map containing information about each known service
+    };
+    SServiceMethodInfoMap m_service_info_map;
   };
 
   constexpr inline CDescGate::QualityFlags  operator~  (CDescGate::QualityFlags  a)                            { return static_cast<CDescGate::QualityFlags>( ~static_cast<std::underlying_type<CDescGate::QualityFlags>::type>(a) ); }

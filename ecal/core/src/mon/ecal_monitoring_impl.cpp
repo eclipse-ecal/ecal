@@ -544,7 +544,7 @@ namespace eCAL
 
     // iterate map
     m_process_map.map->remove_deprecated();
-    for (auto process : (*m_process_map.map))
+    for (const auto& process : (*m_process_map.map))
     {
       // add host
       eCAL::pb::Process* pMonProcs = monitoring_.add_processes();
@@ -618,7 +618,7 @@ namespace eCAL
 
     // iterate map
     m_server_map.map->remove_deprecated();
-    for (auto service : (*m_server_map.map))
+    for (const auto& service : (*m_server_map.map))
     {
       // add host
       eCAL::pb::Service* pMonService = monitoring_.add_services();
@@ -668,7 +668,7 @@ namespace eCAL
 
     // iterate map
     m_client_map.map->remove_deprecated();
-    for (auto service : (*m_client_map.map))
+    for (const auto& service : (*m_client_map.map))
     {
       // add host
       eCAL::pb::Client* pMonClient = monitoring_.add_clients();
@@ -703,7 +703,7 @@ namespace eCAL
 
     // iterate map
     map_.map->remove_deprecated();
-    for (auto topic : (*map_.map))
+    for (const auto& topic : (*map_.map))
     {
       // add topic
       eCAL::pb::Topic* pMonTopic = monitoring_.add_topics();
