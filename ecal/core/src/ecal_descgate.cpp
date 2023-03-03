@@ -48,7 +48,7 @@ namespace eCAL
 
   void CDescGate::ApplyTopicDescription(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_, const QualityFlags description_quality_)
   {
-    std::unique_lock<std::shared_mutex> lock(m_topic_info_map.sync);
+    std::unique_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     m_topic_info_map.map->remove_deprecated();
 
     const auto topic_info_it = m_topic_info_map.map->find(topic_name_);
@@ -122,7 +122,7 @@ namespace eCAL
   {
     std::unordered_map<std::string, Util::STopicInfo> map;
 
-    std::shared_lock<std::shared_mutex> lock(m_topic_info_map.sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     m_topic_info_map.map->remove_deprecated();
     map.reserve(m_topic_info_map.map->size());
 
@@ -137,7 +137,7 @@ namespace eCAL
   {
     if(topic_name_.empty()) return(false);
 
-    std::shared_lock<std::shared_mutex> lock(m_topic_info_map.sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     const auto topic_info_it = m_topic_info_map.map->find(topic_name_);
 
     if(topic_info_it == m_topic_info_map.map->end()) return(false);
@@ -149,7 +149,7 @@ namespace eCAL
   {
     if (topic_name_.empty()) return(false);
 
-    std::shared_lock<std::shared_mutex> lock(m_topic_info_map.sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     const auto topic_info_it = m_topic_info_map.map->find(topic_name_);
 
     if (topic_info_it == m_topic_info_map.map->end()) return(false);
@@ -167,7 +167,7 @@ namespace eCAL
   {
     std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
 
-    std::unique_lock<std::shared_mutex> lock(m_service_info_map.sync);
+    std::unique_lock<std::shared_timed_mutex> lock(m_service_info_map.sync);
     m_service_info_map.map->remove_deprecated();
 
     auto service_info_map_it = m_service_info_map.map->find(service_method_tuple);
@@ -199,7 +199,7 @@ namespace eCAL
   {
     std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo> map;
 
-    std::shared_lock<std::shared_mutex> lock(m_service_info_map.sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map.sync);
     m_service_info_map.map->remove_deprecated();
 
     for (const auto& service_info : (*m_service_info_map.map))
@@ -213,7 +213,7 @@ namespace eCAL
   {
     std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
 
-    std::shared_lock<std::shared_mutex> lock(m_service_info_map.sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map.sync);
     auto service_info_map_it = m_service_info_map.map->find(service_method_tuple);
 
     if (service_info_map_it == m_service_info_map.map->end()) return false;
@@ -226,7 +226,7 @@ namespace eCAL
   {
     std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
 
-    std::shared_lock<std::shared_mutex> lock(m_service_info_map.sync);
+    std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map.sync);
     auto service_info_map_it = m_service_info_map.map->find(service_method_tuple);
 
     if (service_info_map_it == m_service_info_map.map->end()) return false;
