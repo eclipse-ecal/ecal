@@ -20,6 +20,8 @@
 #include <ecal/ecal.h>
 
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 #include <thread>
 #include <vector>
 
@@ -32,9 +34,11 @@ public:
     std::string tdesc("THIS IS THE LONG TOPIC DESCRIPTOR ");
     for (auto rep = 0; rep < 4; ++rep) tdesc = tdesc + tdesc;
 
-    for (int i = 0; i < publisher_count; ++i)
+    for (int i = 1; i <= publisher_count; ++i)
     {
-      publishers.emplace_back("Publisher" + std::to_string(i), ttype, tdesc);
+      std::ostringstream tname;
+      tname << std::setw(5) << std::setfill('0') << i;
+      publishers.emplace_back("Topic" + tname.str(), ttype, tdesc);
     }
   }
 
@@ -57,7 +61,7 @@ int main(int argc, char** argv)
   eCAL::Initialize(argc, argv, "many_connections_snd");
 
   // create many publisher
-  PublisherCreator publishers(1000);
+  PublisherCreator publishers(10000);
   std::cout << "Done Initializing" << std::endl;
 
   while (eCAL::Ok())

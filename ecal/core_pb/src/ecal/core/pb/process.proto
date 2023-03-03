@@ -68,9 +68,9 @@ message Process                                           // process
   int64                     datawrite            = 10;    // data write bytes per sec
   int64                     dataread             = 11;    // data read bytes per sec
   ProcessState              state                = 12;    // process state info
-  eTSyncState               tsync_state          = 13;    // time sychronisation state
-  string                    tsync_mod_name       = 14;    // time sychronisation module name
-  int32                     component_init_state = 15;    // eCAL component initilization state (eCAL::Initialize(..))
+  eTSyncState               tsync_state          = 13;    // time synchronization state
+  string                    tsync_mod_name       = 14;    // time synchronization module name
+  int32                     component_init_state = 15;    // eCAL component initialization state (eCAL::Initialize(..))
   string                    component_init_info  = 16;    // like comp_init_state as human readable string (pub|sub|srv|mon|log|time|proc)
   string                    ecal_runtime_version = 17;    // loaded / runtime eCAL version of a component
 }
