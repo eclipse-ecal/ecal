@@ -32,6 +32,7 @@
 #include <shared_mutex>
 #include <string>
 #include <map>
+#include <unordered_map>
 #include <memory>
 #include <tuple>
 
@@ -65,7 +66,7 @@ namespace eCAL
                                const std::string& topic_desc_,
                                const QualityFlags description_quality_);
 
-    void GetTopics(std::map<std::string, Util::STopicInfo>& topic_info_map_);
+    void GetTopics(std::unordered_map<std::string, Util::STopicInfo>& topic_info_map_);
     bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
     bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_);
 
@@ -103,7 +104,7 @@ namespace eCAL
         map(new TopicInfoMap(timeout_))
       {
       };
-      std::shared_timed_mutex       sync;                                          //!< Mutex protecting the map
+      std::shared_mutex             sync;                                          //!< Mutex protecting the map
       std::unique_ptr<TopicInfoMap> map;                                           //!< Map containing information about each known topic
     };
     STopicInfoMap m_topic_info_map;
@@ -116,7 +117,7 @@ namespace eCAL
         map(new ServiceMethodInfoMap(timeout_))
       {
       };
-      std::shared_timed_mutex               sync;                                  //!< Mutex protecting the map
+      std::shared_mutex                     sync;                                  //!< Mutex protecting the map
       std::unique_ptr<ServiceMethodInfoMap> map;                                   //!< Map containing information about each known service
     };
     SServiceMethodInfoMap m_service_info_map;

@@ -22,6 +22,7 @@
 #include <chrono>
 #include <iostream>
 #include <string>
+#include <unordered_map>
 
 int main(int argc, char **argv)
 {
@@ -34,7 +35,7 @@ int main(int argc, char **argv)
   // monitor for ever
   while(eCAL::Ok())
   {
-    std::map<std::string, eCAL::Util::STopicInfo> topic_info_map;
+    std::unordered_map<std::string, eCAL::Util::STopicInfo> topic_info_map;
 
     start_time = std::chrono::steady_clock::now();
     for (run = 0; run < runs; ++run)

@@ -27,6 +27,7 @@
 #include <ecal/ecal_os.h>
 
 #include <map>
+#include <unordered_map>
 #include <string>
 
 namespace eCAL
@@ -148,7 +149,7 @@ namespace eCAL
      * @param topic_info_map_  Map to store the topic informations.
      *                         Map containing { TopicName -> (Type, Description) } mapping of all topics that are currently known.
     **/
-    ECAL_API void GetTopics(std::map<std::string, STopicInfo>& topic_info_map_);
+    ECAL_API void GetTopics(std::unordered_map<std::string, STopicInfo>& topic_info_map_);
 
     /**
      * @brief Gets type name of the specified topic.
