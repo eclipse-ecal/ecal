@@ -750,37 +750,37 @@ namespace eCAL
 
     // iterate map
     m_server_map.map->remove_deprecated();
-    for (const auto& service : (*m_server_map.map))
+    for (const auto& server : (*m_server_map.map))
     {
       // add host
       eCAL::pb::Service* pMonService = monitoring_.add_services();
 
       // registration clock
-      pMonService->set_rclock(service.second.rclock);
+      pMonService->set_rclock(server.second.rclock);
 
       // host name
-      pMonService->set_hname(service.second.hname);
+      pMonService->set_hname(server.second.hname);
 
       // process name
-      pMonService->set_pname(service.second.pname);
+      pMonService->set_pname(server.second.pname);
 
       // unit name
-      pMonService->set_uname(service.second.uname);
+      pMonService->set_uname(server.second.uname);
 
       // process id
-      pMonService->set_pid(service.second.pid);
+      pMonService->set_pid(server.second.pid);
 
       // service name
-      pMonService->set_sname(service.second.sname);
+      pMonService->set_sname(server.second.sname);
 
       // service id
-      pMonService->set_sid(service.second.sid);
+      pMonService->set_sid(server.second.sid);
 
       // tcp port
-      pMonService->set_tcp_port(service.second.tcp_port);
+      pMonService->set_tcp_port(server.second.tcp_port);
 
       // methods
-      for (auto method : service.second.methods)
+      for (auto method : server.second.methods)
       {
         eCAL::pb::Method* pMonMethod = pMonService->add_methods();
         pMonMethod->set_mname(method.mname);
@@ -799,32 +799,32 @@ namespace eCAL
     std::lock_guard<std::mutex> lock(m_clients_map.sync);
 
     // iterate map
-    m_client_map.map->remove_deprecated();
-    for (const auto& service : (*m_client_map.map))
+    m_clients_map.map->remove_deprecated();
+    for (const auto& client : (*m_clients_map.map))
     {
       // add host
       eCAL::pb::Client* pMonClient = monitoring_.add_clients();
 
       // registration clock
-      pMonClient->set_rclock(service.second.rclock);
+      pMonClient->set_rclock(client.second.rclock);
 
       // host name
-      pMonClient->set_hname(service.second.hname);
+      pMonClient->set_hname(client.second.hname);
 
       // process name
-      pMonClient->set_pname(service.second.pname);
+      pMonClient->set_pname(client.second.pname);
 
       // unit name
-      pMonClient->set_uname(service.second.uname);
+      pMonClient->set_uname(client.second.uname);
 
       // process id
-      pMonClient->set_pid(service.second.pid);
+      pMonClient->set_pid(client.second.pid);
 
       // service name
-      pMonClient->set_sname(service.second.sname);
+      pMonClient->set_sname(client.second.sname);
 
       // service id
-      pMonClient->set_sid(service.second.sid);
+      pMonClient->set_sid(client.second.sid);
     }
   }
 
