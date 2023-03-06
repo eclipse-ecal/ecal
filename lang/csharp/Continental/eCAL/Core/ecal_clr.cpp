@@ -50,6 +50,12 @@ std::string ByteArrayToStlString(array<Byte>^ array_)
   return(ret);
 }
 
+array<Byte>^ StlStringToByteArray(const std::string& string_)
+{
+  array<Byte>^ array_ = gcnew array<Byte>(string_.size());
+  System::Runtime::InteropServices::Marshal::Copy(IntPtr((void*)(string_.data())), array_, 0, string_.size());
+  return(array_);
+}
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 // Using the eCAL static library interface
@@ -395,6 +401,117 @@ void Subscriber::OnReceiveUnsafe(const char* topic_name_, const ::eCAL::SReceive
 }
 
 
+/////////////////////////////////////////////////////////////////////////////
+// ServiceServer
+/////////////////////////////////////////////////////////////////////////////
+ServiceServer::ServiceServer() : m_serv(new ::eCAL::CServiceServer())
+{
+}
+
+ServiceServer::ServiceServer(System::String^ server_name_)
+{
+  m_serv = new ::eCAL::CServiceServer(StringToStlString(server_name_));
+}
+
+ServiceServer::~ServiceServer()
+{
+  if(m_serv == nullptr) return;
+  delete m_serv;
+}
+
+bool ServiceServer::Destroy()
+{
+  if(m_serv == nullptr) return(false);
+  return(m_serv->Destroy());
+}
+
+bool ServiceServer::AddMethodCallback(String^ methodName, String^ reqType, String^ responseType, MethodCallback^ callback_)
+{
+  if(m_serv == nullptr) return(false);
+
+  if (m_callbacks == nullptr)
+  {
+    m_sub_callback = gcnew servCallback(this, &ServiceServer::OnMethodCall);
+    m_gch = GCHandle::Alloc(m_sub_callback);
+    IntPtr ip = Marshal::GetFunctionPointerForDelegate(m_sub_callback);
+    m_serv->AddMethodCallback(StringToStlString(methodName), StringToStlString(reqType), StringToStlString(responseType), static_cast<stdcall_eCAL_MethodCallbackT>(ip.ToPointer()));
+  }
+  m_callbacks += callback_;
+  return(true);
+}
+
+bool ServiceServer::RemMethodCallback(String^ methodName, MethodCallback^ callback_)
+{
+  if(m_serv == nullptr) return(false);
+
+  if (m_callbacks == callback_)
+  {
+    m_serv->RemMethodCallback(StringToStlString(methodName));
+    m_gch.Free();
+  }
+  m_callbacks -= callback_;
+
+  return(false);
+}
+
+int ServiceServer::OnMethodCall(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_)
+{
+    array<Byte>^ result = m_callbacks(StlStringToString(method_), StlStringToString(method_), StlStringToString(method_), StlStringToByteArray(request_));
+    response_ = ByteArrayToStlString(result);
+    return 42;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// ServiceClient
+/////////////////////////////////////////////////////////////////////////////
+ServiceClient::ServiceClient() : m_client(new ::eCAL::CServiceClient())
+{
+}
+
+ServiceClient::ServiceClient(System::String^ service_name_)
+{
+    m_client = new ::eCAL::CServiceClient(StringToStlString(service_name_));
+}
+
+ServiceClient::~ServiceClient()
+{
+    if (m_client == nullptr) return;
+    delete m_client;
+}
+
+// What behavior is expected here
+// should we throw an exception? is that more C# like?
+List<ServiceClient::ServiceClientCallbackData^>^ ServiceClient::Call(System::String^ method_name_, array<Byte>^ request, const int rcv_timeout_)
+{
+    if (m_client == nullptr) return(nullptr);
+    ::eCAL::ServiceResponseVecT responseVecT;
+
+    if (m_client->Call(StringToStlString(method_name_), ByteArrayToStlString(request), rcv_timeout_, &responseVecT))
+    {
+        List<ServiceClientCallbackData^>^ rcv_Datas = gcnew List<ServiceClientCallbackData^>();
+
+        for each (::eCAL::SServiceResponse response in responseVecT)
+        {
+            ServiceClientCallbackData^ rcv_data = gcnew ServiceClientCallbackData;
+            rcv_data->call_state = static_cast<CallState>(response.call_state);
+            rcv_data->error_msg = StlStringToString(response.error_msg);
+            rcv_data->host_name = StlStringToString(response.host_name);
+            rcv_data->method_name = StlStringToString(response.method_name);
+            rcv_data->ret_state = response.ret_state;
+            rcv_data->service_id = StlStringToString(response.service_id);
+            rcv_data->service_name = StlStringToString(response.service_name);
+            rcv_data->ret_state = response.ret_state;
+            rcv_data->response = StlStringToByteArray(response.response);
+            rcv_Datas->Add(rcv_data);
+        }
+        return rcv_Datas;
+    }
+    else
+    {
+        return nullptr;
+    }
+}
 
 
 
