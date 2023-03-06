@@ -34,7 +34,9 @@ Program Listing for File ecal_util.h
    #include <ecal/ecal_os.h>
    
    #include <map>
+   #include <unordered_map>
    #include <string>
+   #include <vector>
    
    namespace eCAL
    {
@@ -73,7 +75,9 @@ Program Listing for File ecal_util.h
          std::string type_name;        
          std::string type_description; 
        };
-       ECAL_API void GetTopics(std::map<std::string, STopicInfo>& topic_info_map_);
+       ECAL_API void GetTopics(std::unordered_map<std::string, STopicInfo>& topic_info_map_);
+   
+       ECAL_API void GetTopicNames(std::vector<std::string>& topic_names_);
    
        ECAL_API bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
    
@@ -91,6 +95,8 @@ Program Listing for File ecal_util.h
          std::string response_type_description; 
        };
        ECAL_API void GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_);
+   
+       ECAL_API void GetServiceNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_);
    
        ECAL_API bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_);
    

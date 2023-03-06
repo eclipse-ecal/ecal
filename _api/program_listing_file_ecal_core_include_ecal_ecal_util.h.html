@@ -1140,6 +1140,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="function_ecal__util_8h_1adb8e571b1bfda142b925901b7fe9bfc2.html">
+       Function eCAL::Util::GetServiceNames
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="function_ecal__util_8h_1ad5d78c2093246aac19408f44203276e7.html">
        Function eCAL::Util::GetServices
       </a>
@@ -1160,7 +1165,12 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="function_ecal__util_8h_1a2a1aa5eece105ec4fde376feca616f12.html">
+      <a class="reference internal" href="function_ecal__util_8h_1adbfa8491ed2de9f7848ecf9652304b30.html">
+       Function eCAL::Util::GetTopicNames
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="function_ecal__util_8h_1ac3fae71c6922075f30ab535364ff0353.html">
        Function eCAL::Util::GetTopics
       </a>
      </li>
@@ -2354,7 +2364,9 @@ title="Print to PDF"
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_os.h&gt;</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;map&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;unordered_map&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
 
 <span class="k">namespace</span><span class="w"> </span><span class="nn">eCAL</span>
 <span class="p">{</span>
@@ -2393,7 +2405,9 @@ title="Print to PDF"
 <span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">type_name</span><span class="p">;</span>
 <span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">type_description</span><span class="p">;</span>
 <span class="w">    </span><span class="p">};</span>
-<span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">GetTopics</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">STopicInfo</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">topic_info_map_</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">GetTopics</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">STopicInfo</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">topic_info_map_</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">GetTopicNames</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">topic_names_</span><span class="p">);</span>
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">GetTopicTypeName</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="p">);</span>
 
@@ -2411,6 +2425,8 @@ title="Print to PDF"
 <span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">response_type_description</span><span class="p">;</span>
 <span class="w">    </span><span class="p">};</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">GetServices</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">Util</span><span class="o">::</span><span class="n">SServiceMethodInfo</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">service_info_map_</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">GetServiceNames</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">service_method_names_</span><span class="p">);</span>
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">GetServiceTypeNames</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">service_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">method_name_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">req_type_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">resp_type_</span><span class="p">);</span>
 
