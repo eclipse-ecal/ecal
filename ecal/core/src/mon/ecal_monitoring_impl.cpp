@@ -799,8 +799,8 @@ namespace eCAL
     std::lock_guard<std::mutex> lock(m_clients_map.sync);
 
     // iterate map
-    m_clients_map.map->remove_deprecated();
-    for (const auto& service : (*m_clients_map.map))
+    m_client_map.map->remove_deprecated();
+    for (const auto& service : (*m_client_map.map))
     {
       // add host
       eCAL::pb::Client* pMonClient = monitoring_.add_clients();
@@ -835,7 +835,6 @@ namespace eCAL
 
     // iterate map
     map_.map->remove_deprecated();
-
     for (const auto& topic : (*map_.map))
     {
       // add topic

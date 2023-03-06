@@ -229,10 +229,21 @@ namespace eCAL
      * @param topic_info_map_  Map to store the topic informations.
      *                         Map containing { TopicName -> (Type, Description) } mapping of all topics that are currently known.
     **/
-    void GetTopics(std::map<std::string, STopicInfo>& topic_info_map_)
+    void GetTopics(std::unordered_map<std::string, STopicInfo>& topic_info_map_)
     {
       if (!g_descgate()) return;
       g_descgate()->GetTopics(topic_info_map_);
+    }
+
+    /**
+     * @brief Get all topic names.
+     *
+     * @param topic_names_ Vector to store the topic names.
+    **/
+    void GetTopicNames(std::vector<std::string>& topic_names_)
+    {
+      if (!g_descgate()) return;
+      g_descgate()->GetTopicNames(topic_names_);
     }
 
     /**
@@ -331,6 +342,17 @@ namespace eCAL
     {
       if (!g_descgate()) return;
       g_descgate()->GetServices(service_info_map_);
+    }
+
+    /**
+     * @brief Get all service/method names.
+     *
+     * @param service_names_ Vector to store the service/method tuples (Vector { (ServiceName, MethodName) }).
+    **/
+    void GetServiceNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_)
+    {
+      if (!g_descgate()) return;
+      g_descgate()->GetServiceNames(service_method_names_);
     }
 
     /**
