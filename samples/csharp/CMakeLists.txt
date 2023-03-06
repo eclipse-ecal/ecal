@@ -1,5 +1,7 @@
+ add_subdirectory(minimal/minimal_client)
  add_subdirectory(minimal/minimal_rec)
  add_subdirectory(minimal/minimal_rec_cb)
+ add_subdirectory(minimal/minimal_server)
  add_subdirectory(minimal/minimal_snd)
  add_subdirectory(person/protobuf)
  add_subdirectory(person/person_rec)
