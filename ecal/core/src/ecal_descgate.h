@@ -32,9 +32,10 @@
 #include <shared_mutex>
 #include <string>
 #include <map>
-  #include <unordered_map>
+#include <unordered_map>
 #include <memory>
 #include <tuple>
+#include <vector>
 
 
 namespace eCAL
@@ -67,6 +68,7 @@ namespace eCAL
                                const QualityFlags description_quality_);
 
     void GetTopics(std::unordered_map<std::string, Util::STopicInfo>& topic_info_map_);
+    void GetTopicNames(std::vector<std::string>& topic_names_);
     bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
     bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_);
 
@@ -79,6 +81,7 @@ namespace eCAL
                                  const QualityFlags info_quality_);
 
     void GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_);
+    void GetServiceNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_);
     bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_name_, std::string& resp_type_name_);
     bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_type_desc_, std::string& resp_type_desc_);
 

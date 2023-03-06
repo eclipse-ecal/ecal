@@ -22,48 +22,49 @@
 #include <chrono>
 #include <iostream>
 #include <string>
-#include <unordered_map>
+#include <map>
+#include <vector>
 
 int main(int argc, char **argv)
 {
-  int                                   run(0), runs(1000);
+  int                                   run(0), runs(100000);
   std::chrono::steady_clock::time_point start_time;
 
   // initialize eCAL core API
-  eCAL::Initialize(argc, argv, "monitoring get topics");
+  eCAL::Initialize(argc, argv, "monitoring get services");
 
   // monitor for ever
   while(eCAL::Ok())
   {
-    // GetTopics
+    // GetServices
     {
-      std::unordered_map<std::string, eCAL::Util::STopicInfo> topic_info_map;
+      std::map<std::tuple<std::string, std::string>, eCAL::Util::SServiceMethodInfo> service_info_map;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        eCAL::Util::GetTopics(topic_info_map);
+        eCAL::Util::GetServices(service_info_map);
       }
 
-      auto num_topics = topic_info_map.size();
+      auto num_services = service_info_map.size();
       auto diff_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
-      std::cout << "GetTopics      : " << static_cast<double>(diff_time.count()) / runs << " ms" << " (" << num_topics << " topics)" << std::endl;
+      std::cout << "GetServices      : " << static_cast<double>(diff_time.count()) / runs << " ms" << " (" << num_services << " services)" << std::endl;
       std::cout << std::endl;
     }
 
-    // GetTopicNames
+    // GetServiceNames
     {
-      std::vector<std::string> topic_names;
+      std::vector<std::tuple<std::string, std::string>> service_method_names;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        eCAL::Util::GetTopicNames(topic_names);
+        eCAL::Util::GetServiceNames(service_method_names);
       }
 
-      auto num_topics = topic_names.size();
+      auto num_services = service_method_names.size();
       auto diff_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
-      std::cout << "GetTopicsNames : " << static_cast<double>(diff_time.count()) / runs << " ms" << " (" << num_topics << " topics)" << std::endl;
+      std::cout << "GetServicesNames : " << static_cast<double>(diff_time.count()) / runs << " ms" << " (" << num_services << " services)" << std::endl;
       std::cout << std::endl;
     }
   }

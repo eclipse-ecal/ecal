@@ -152,6 +152,13 @@ namespace eCAL
     ECAL_API void GetTopics(std::unordered_map<std::string, STopicInfo>& topic_info_map_);
 
     /**
+     * @brief Get all topic names.
+     *
+     * @param topic_names_ Vector to store the topic names.
+    **/
+    ECAL_API void GetTopicNames(std::vector<std::string>& topic_names_);
+
+    /**
      * @brief Gets type name of the specified topic.
      *
      * @param topic_name_   Topic name.
@@ -203,6 +210,13 @@ namespace eCAL
      *                           Map { (ServiceName, MethodName) -> ( (ReqType, ReqDescription), (RespType, RespDescription) ) } mapping of all currently known services.
     **/
     ECAL_API void GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_);
+
+    /**
+     * @brief Get all service/method names.
+     *
+     * @param service_method_names_ Vector to store the service/method tuples (Vector { (ServiceName, MethodName) }).
+    **/
+    ECAL_API void GetServiceNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_);
 
     /**
      * @brief Gets service method request and response type names.

@@ -236,6 +236,17 @@ namespace eCAL
     }
 
     /**
+     * @brief Get all topic names.
+     *
+     * @param topic_names_ Vector to store the topic names.
+    **/
+    void GetTopicNames(std::vector<std::string>& topic_names_)
+    {
+      if (!g_descgate()) return;
+      g_descgate()->GetTopicNames(topic_names_);
+    }
+
+    /**
      * @brief Gets type name of the specified topic.
      *
      * @param topic_name_   Topic name.
@@ -331,6 +342,17 @@ namespace eCAL
     {
       if (!g_descgate()) return;
       g_descgate()->GetServices(service_info_map_);
+    }
+
+    /**
+     * @brief Get all service/method names.
+     *
+     * @param service_names_ Vector to store the service/method tuples (Vector { (ServiceName, MethodName) }).
+    **/
+    void GetServiceNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_)
+    {
+      if (!g_descgate()) return;
+      g_descgate()->GetServiceNames(service_method_names_);
     }
 
     /**

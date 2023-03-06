@@ -133,6 +133,20 @@ namespace eCAL
     topic_info_map_.swap(map);
   }
 
+  void CDescGate::GetTopicNames(std::vector<std::string>& topic_names_)
+  {
+    topic_names_.clear();
+
+    std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
+    m_topic_info_map.map->remove_deprecated();
+    topic_names_.reserve(m_topic_info_map.map->size());
+
+    for (const auto& topic_info : (*m_topic_info_map.map))
+    {
+      topic_names_.emplace_back(topic_info.first);
+    }
+  }
+
   bool CDescGate::GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_)
   {
     if(topic_name_.empty()) return(false);
@@ -207,6 +221,20 @@ namespace eCAL
       map.emplace(service_info.first, service_info.second.info);
     }
     service_info_map_.swap(map);
+  }
+
+  void CDescGate::GetServiceNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_)
+  {
+    service_method_names_.clear();
+
+    std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map.sync);
+    m_service_info_map.map->remove_deprecated();
+    service_method_names_.reserve(m_service_info_map.map->size());
+
+    for (const auto& service_info : (*m_service_info_map.map))
+    {
+      service_method_names_.emplace_back(service_info.first);
+    }
   }
 
   bool CDescGate::GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_name_, std::string& resp_type_name_)
