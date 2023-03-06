@@ -780,7 +780,7 @@ namespace eCAL
       pMonService->set_tcp_port(server.second.tcp_port);
 
       // methods
-      for (auto method : server.second.methods)
+      for (const auto& method : server.second.methods)
       {
         eCAL::pb::Method* pMonMethod = pMonService->add_methods();
         pMonMethod->set_mname(method.mname);

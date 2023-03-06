@@ -75,7 +75,7 @@ namespace eCAL
     void RegisterLogMessage(const eCAL::pb::LogMessage& log_msg_);
 
   protected:
-    typedef eCAL::Util::CExpMap<std::string, eCAL::Monitoring::STopicMon> TopicMonMapT;
+    using TopicMonMapT = eCAL::Util::CExpMap<std::string, eCAL::Monitoring::STopicMon>;
     struct STopicMonMap
     {
       explicit STopicMonMap(const std::chrono::milliseconds& timeout_) :
@@ -86,7 +86,7 @@ namespace eCAL
       std::unique_ptr<TopicMonMapT>  map;
     };
 
-    typedef eCAL::Util::CExpMap<std::string, eCAL::Monitoring::SProcessMon> ProcessMonMapT;
+    using ProcessMonMapT = eCAL::Util::CExpMap<std::string, eCAL::Monitoring::SProcessMon>;
     struct SProcessMonMap
     {
       explicit SProcessMonMap(const std::chrono::milliseconds& timeout_) :
@@ -97,7 +97,7 @@ namespace eCAL
       std::unique_ptr<ProcessMonMapT>  map;
     };
 
-    typedef eCAL::Util::CExpMap<std::string, eCAL::Monitoring::SServerMon> ServerMonMapT;
+    using ServerMonMapT = eCAL::Util::CExpMap<std::string, eCAL::Monitoring::SServerMon>;
     struct SServerMonMap
     {
       explicit SServerMonMap(const std::chrono::milliseconds& timeout_) :
@@ -108,7 +108,7 @@ namespace eCAL
       std::unique_ptr<ServerMonMapT>  map;
     };
 
-    typedef eCAL::Util::CExpMap<std::string, eCAL::Monitoring::SClientMon> ClientMonMapT;
+    using ClientMonMapT = eCAL::Util::CExpMap<std::string, eCAL::Monitoring::SClientMon>;
     struct SClientMonMap
     {
       explicit SClientMonMap(const std::chrono::milliseconds& timeout_) :
