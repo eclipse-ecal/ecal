@@ -2012,6 +2012,11 @@
     </ul>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../message_drops.html">
+     Message Drops
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../threading_model.html">
      Threading model
     </a>
@@ -2464,7 +2469,7 @@ This means, that it is used automatically for all messages that need to be trans
 <p>There are a few options for tweaking the communication.
 Those options are explained below.</p>
 <section id="handshake-mechanism-optional">
-<h3>Handshake mechanism (optional)<a class="headerlink" href="#handshake-mechanism-optional" title="Permalink to this headline">#</a></h3>
+<span id="transport-layer-shm-memfile-ack"></span><h3>Handshake mechanism (optional)<a class="headerlink" href="#handshake-mechanism-optional" title="Permalink to this headline">#</a></h3>
 <p>Most applications perform very well with the default behavior.
 If subscribers are too slow to process incoming messages then the overall software architecture needs to be checked, software components need to be optimized or parallelized.</p>
 <p>There may still be cases where it could make sense to synchronize the transfer of the payload from a publisher to a subscriber by using an additional handshake event.

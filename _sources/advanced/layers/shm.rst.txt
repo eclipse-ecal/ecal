@@ -65,6 +65,8 @@ The system-configuration-parameters in the :file:`ecal.ini` are:
 There are a few options for tweaking the communication.
 Those options are explained below.
 
+.. _transport_layer_shm_memfile_ack:
+
 Handshake mechanism (optional)
 ------------------------------
 
