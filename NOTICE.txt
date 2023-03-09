@@ -94,6 +94,11 @@ This project has dependencies - list with dependency name and license follows.
   - URL: http://www.legroom.net/software
   - License: LGPL 3
 
+2.3.7 xxHASH
+  - Copyright (c) 2018 Stephan Brumme
+  - URL: https://github.com/stbrumme/xxhash/
+  - License: MIT License - https://github.com/stbrumme/xxhash/blob/master/LICENSE
+
 2.4 GUI
 
 2.4.1 QT
