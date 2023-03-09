@@ -16,22 +16,20 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(test_pubsub)
+project(message_out_of_order)
 
 find_package(Threads REQUIRED)
-find_package(GTest REQUIRED)
 
-set(pubsub_test_src
-  src/pubsub_test.cpp
-  src/pubsub_receive_test.cpp
-  src/out_of_order_messages_test.cpp
-)
+add_executable(message_out_of_order_publisher publisher.cpp)
+add_executable(message_out_of_order_lazy_subscriber lazy_subscriber.cpp)
+add_executable(message_out_of_order_crazy_subscriber crazy_subscriber.cpp)
 
-ecal_add_gtest(${PROJECT_NAME} ${pubsub_test_src})
-target_link_libraries(${PROJECT_NAME}
-  PRIVATE
-    eCAL::core
-    Threads::Threads)
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
-ecal_install_gtest(${PROJECT_NAME})
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER testing/ecal/pubsub)
+foreach(executable message_out_of_order_publisher message_out_of_order_lazy_subscriber message_out_of_order_crazy_subscriber)
+  target_link_libraries(${executable}
+    PRIVATE
+      eCAL::core
+      Threads::Threads)
+  target_compile_features(${executable} PRIVATE cxx_std_14)
+  set_property(TARGET ${executable} PROPERTY FOLDER testing/distributed)
+endforeach()
+
