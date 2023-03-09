@@ -31,6 +31,8 @@
 #include <chrono>
 #include <thread>
 
+#include "xxhash64.h"
+
 #ifdef ECAL_OS_WINDOWS
 
 #include "ecal_win_main.h"
@@ -40,9 +42,10 @@ namespace eCAL
   bool gOpenEvent(EventHandleT* event_, const std::string& event_name_)
   {
     if(event_ == nullptr) return(false);
+    const std::string event_name_hash = std::to_string(XXHash64::hash(event_name_.c_str(), event_name_.size(), 0));
     EventHandleT event;
     event.name   = event_name_;
-    event.handle = ::CreateEvent(nullptr, false, false, event_name_.c_str());
+    event.handle = ::CreateEvent(nullptr, false, false, event_name_hash.c_str());
     if(event.handle != nullptr)
     {
       *event_ = event;
@@ -306,11 +309,12 @@ namespace eCAL
       m_name(name_ + "_evt"),
       m_event(nullptr)
     {
-      m_name = (m_name[0] != '/') ? "/" + m_name : m_name; // make memory file path compatible for all posix systems
-      m_event = named_event_open(m_name.c_str());
+      m_name_hash = std::to_string(XXHash64::hash(m_name.c_str(), m_name.size(), 0));
+      m_name_hash = "/" + m_name_hash; // make memory file path compatible for all posix systems
+      m_event = named_event_open(m_name_hash.c_str());
       if(m_event == nullptr)
       {
-        m_event = named_event_create(m_name.c_str());
+        m_event = named_event_create(m_name_hash.c_str());
       }
     }
 
@@ -318,7 +322,7 @@ namespace eCAL
     {
       if(m_event == nullptr) return;
       named_event_close(m_event);
-      named_event_destroy(m_name.c_str());
+      named_event_destroy(m_name_hash.c_str());
     }
 
     void set()
@@ -370,6 +374,7 @@ namespace eCAL
     CNamedEvent& operator=(const CNamedEvent&);  // prevent assignment
 
     std::string     m_name;
+    std::string     m_name_hash;
     named_event_t*  m_event;
   };
 
