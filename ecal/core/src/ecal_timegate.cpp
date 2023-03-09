@@ -47,9 +47,9 @@
 
 #define ecal_time_plugin_dir             "ecaltime_plugins"
 
-#ifdef ECAL_OS_LINUX
+#if defined(__linux__) || defined(__APPLE__)
 #include <dlfcn.h>
-#endif // ECAL_OS_LINUX
+#endif // defined(__linux__) || defined(__APPLE__)
 
 namespace eCAL
 {
@@ -404,7 +404,7 @@ namespace eCAL
         interface_.module_handle = LoadLibrary(module_path.c_str());
       }
 #endif // _WIN32
-#ifdef ECAL_OS_LINUX
+#if defined(__linux__) || defined(__APPLE__)
       // try to load plugin from paths that are specified in the time plugin environment variable
       for (const auto& ecal_time_plugin_path : ecal_time_plugin_paths)
       {
@@ -419,7 +419,7 @@ namespace eCAL
         const auto module_path = module_name;
         interface_.module_handle = dlopen(module_path.c_str(), RTLD_NOW);
       }
-#endif // ECAL_OS_LINUX
+#endif // defined(__linux__) || defined(__APPLE__)
 
       if (!interface_.module_handle)
       {
@@ -439,7 +439,7 @@ namespace eCAL
         interface_.etime_sleep_for_nanoseconds_ptr = (etime_sleep_for_nanoseconds) GetProcAddress(interface_.module_handle, etime_sleep_for_nanoseconds_name);
         interface_.etime_get_status_ptr       = (etime_get_status)                 GetProcAddress(interface_.module_handle, etime_get_status_name);
 #endif // _WIN32
-#ifdef ECAL_OS_LINUX
+#if defined(__linux__) || defined(__APPLE__)
         interface_.module_name               = module_name;
         interface_.etime_initialize_ptr      = (etime_initialize)                  dlsym(interface_.module_handle, etime_initialize_name);
         interface_.etime_finalize_ptr        = (etime_finalize)                    dlsym(interface_.module_handle, etime_finalize_name);
@@ -449,7 +449,7 @@ namespace eCAL
         interface_.etime_is_master_ptr       = (etime_is_master)                   dlsym(interface_.module_handle, etime_is_master_name);
         interface_.etime_sleep_for_nanoseconds_ptr = (etime_sleep_for_nanoseconds) dlsym(interface_.module_handle, etime_sleep_for_nanoseconds_name);
         interface_.etime_get_status_ptr      = (etime_get_status)                  dlsym(interface_.module_handle, etime_get_status_name);
-#endif // ECAL_OS_LINUX
+#endif // defined(__linux__) || defined(__APPLE__)
 
         if (  (interface_.etime_initialize_ptr            == nullptr)
            || (interface_.etime_finalize_ptr              == nullptr)
