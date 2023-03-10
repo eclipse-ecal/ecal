@@ -128,6 +128,10 @@ set(ECAL_INSTALL_PYTHON_DIR "bin" CACHE PATH "Location to install the Python ext
 
 set(ECAL_BUILD_VERSION "0.0.0" CACHE STRING "Inject a build version if not building from a git repository")
 
+
+set(ECAL_CSHARP_BUILD_SAMPLES  ${BUILD_SAMPLES})
+
+
 # there is a CMake issue with testing threading availibility via TEST_RUN
 if(${CMAKE_CROSSCOMPILING})
   set(THREADS_PTHREAD_ARG "2" CACHE STRING "Forcibly set by CMakeLists.txt." FORCE)
@@ -380,8 +384,7 @@ endif()
 # ecal core csharp binding
 # --------------------------------------------------------
 if(BUILD_CSHARP_BINDING AND WIN32)
-  add_subdirectory(lang/csharp/Continental/eCAL/Core/)
-  add_subdirectory(lang/csharp/Continental/eCAL/Protobuf/)
+  add_subdirectory(lang/csharp)
 endif()
 
 # --------------------------------------------------------

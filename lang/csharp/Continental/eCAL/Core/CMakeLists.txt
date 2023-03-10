@@ -18,6 +18,8 @@
 
 project(Continental.eCAL.Core)
 
+find_package(eCAL REQUIRED)
+
 set(ecal_clr_src
     AssemblyInfo.cpp
     ecal_clr.h
