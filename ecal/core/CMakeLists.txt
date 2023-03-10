@@ -87,6 +87,7 @@ if(NOT ECAL_LAYER_ICEORYX)
       src/io/ecal_memfile_broadcast.cpp
       src/io/ecal_memfile_broadcast_reader.cpp
       src/io/ecal_memfile_broadcast_writer.cpp
+      src/io/ecal_memfile_naming.cpp      
       src/io/ecal_memfile_pool.cpp
       src/io/ecal_memfile_sync.cpp
       src/io/ecal_named_mutex.cpp
@@ -219,6 +220,7 @@ if(NOT ECAL_LAYER_ICEORYX)
       src/io/ecal_memfile_broadcast_writer.h
       src/io/ecal_memfile_db.h
       src/io/ecal_memfile_info.h
+      src/io/ecal_memfile_naming.h
       src/io/ecal_memfile_os.h
       src/io/ecal_memfile_pool.h
       src/io/ecal_memfile_sync.h

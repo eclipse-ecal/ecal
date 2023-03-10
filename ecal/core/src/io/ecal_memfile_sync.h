@@ -61,8 +61,6 @@ namespace eCAL
     bool Destroy();
     bool Recreate(size_t size_);
 
-    std::string BuildMemFileName(const std::string base_name_);
-
     void SyncContent();
     void DisconnectAll();
 
