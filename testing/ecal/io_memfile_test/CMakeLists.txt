@@ -23,9 +23,11 @@ find_package(GTest REQUIRED)
 
 set(memfile_test_src
     src/memfile_test.cpp
+    src/memfile_naming_test.cpp
     ../../../ecal/core/src/io/ecal_memfile.cpp
     ../../../ecal/core/src/io/ecal_memfile_db.cpp
     ../../../ecal/core/src/io/ecal_named_mutex.cpp
+    ../../../ecal/core/src/io/ecal_memfile_naming.cpp
 )
 
 if(UNIX)
