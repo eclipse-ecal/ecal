@@ -14,8 +14,8 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 Components by Eclipse eCAL™
 ===========================
 
-The following external components are developed by the Eclipse eCAL team.
-They have been developed as independent components and may have a different license than eCAL, even though they are developed for eCAL.
+The following external components are developed and maintained by the Eclipse eCAL team.
+They have been developed as independent components and may have a different license than eCAL.
 
 .. list-table:: Components by Eclipse eCAL™
    :widths: 10 15 30 45
