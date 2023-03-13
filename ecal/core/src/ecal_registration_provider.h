@@ -76,8 +76,20 @@ namespace eCAL
     bool RegisterClient();
     bool RegisterTopics();
     bool RegisterSample(const std::string& sample_name_, const eCAL::pb::Sample& sample_);
-
+      
     int RegisterSendThread();
+
+    bool ApplyTopicToDescGate(const std::string& topic_name_
+      , const std::string& topic_type_
+      , const std::string& topic_desc_
+      , bool topic_is_a_publisher_);
+
+    bool ApplyServiceToDescGate(const std::string& service_name_
+      , const std::string& method_name_
+      , const std::string& req_type_name_
+      , const std::string& req_type_desc_
+      , const std::string& resp_type_name_
+      , const std::string& resp_type_desc_);
 
 #ifndef ECAL_LAYER_ICEORYX
     bool SendSampleList(bool reset_sample_list_ = true);

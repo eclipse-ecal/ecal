@@ -62,7 +62,7 @@ namespace eCAL
     void Create();
     void Destroy();
 
-    void ApplyTopicDescription(const std::string& topic_name_, 
+    bool ApplyTopicDescription(const std::string& topic_name_, 
                                const std::string& topic_type_,
                                const std::string& topic_desc_,
                                const QualityFlags description_quality_);
@@ -72,7 +72,7 @@ namespace eCAL
     bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
     bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_);
 
-    void ApplyServiceDescription(const std::string& service_name_, 
+    bool ApplyServiceDescription(const std::string& service_name_, 
                                  const std::string& method_name_, 
                                  const std::string& req_type_name_, 
                                  const std::string& req_type_desc_, 

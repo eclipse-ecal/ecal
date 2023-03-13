@@ -93,6 +93,12 @@ namespace eCAL
     int RequestCallback(const std::string& request_, std::string& response_);
     void EventCallback(eCAL_Server_Event event_, const std::string& message_);
 
+    bool ApplyServiceToDescGate(const std::string& method_name_
+      , const std::string& req_type_name_
+      , const std::string& req_type_desc_
+      , const std::string& resp_type_name_
+      , const std::string& resp_type_desc_);
+
     CTcpServer         m_tcp_server;
 
     std::string        m_service_name;
