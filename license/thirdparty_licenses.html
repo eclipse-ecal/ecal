@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Thirdparty Licenses &#8212; Eclipse eCAL™</title>
+    <title>External components &#8212; Eclipse eCAL™</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -2050,7 +2050,7 @@
    </li>
    <li class="toctree-l2 current active has-children">
     <a class="current reference internal" href="#">
-     Thirdparty Licenses
+     External components
     </a>
     <input checked="" class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
     <label for="toctree-checkbox-18">
@@ -2343,6 +2343,16 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#components-by-eclipse-ecal">
+   Components by Eclipse eCAL™
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#thirdparty-components">
+   Thirdparty components
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#license-texts">
    License texts
   </a>
@@ -2356,7 +2366,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Thirdparty Licenses</h1>
+                <h1>External components</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -2366,6 +2376,16 @@ title="Print to PDF"
                         </div>
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#components-by-eclipse-ecal">
+   Components by Eclipse eCAL™
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#thirdparty-components">
+   Thirdparty components
+  </a>
+ </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#license-texts">
    License texts
@@ -2381,14 +2401,70 @@ title="Print to PDF"
                 
               <div>
                 
-  <section id="thirdparty-licenses">
-<span id="id1"></span><h1>Thirdparty Licenses<a class="headerlink" href="#thirdparty-licenses" title="Permalink to this headline">#</a></h1>
+  <section id="external-components">
+<span id="thirdparty-licenses"></span><h1>External components<a class="headerlink" href="#external-components" title="Permalink to this headline">#</a></h1>
 <p>Parts of eCAL have a different license than the main project.
 These components may either be shipped with the repository as source code, or along with / included in the eCAL binaries.
 The information in this list may not be exhaustive.
 Some dependencies, like GoogleTest, are not used in our officially distributed builds, even though they can be used with eCAL and therefore appear in this list.</p>
+<section id="components-by-eclipse-ecal">
+<h2>Components by Eclipse eCAL™<a class="headerlink" href="#components-by-eclipse-ecal" title="Permalink to this headline">#</a></h2>
+<p>The following external components are developed and maintained by the Eclipse eCAL team.
+They may have a different license than eCAL.</p>
+<table class="colwidths-given table" id="id1">
+<caption><span class="caption-text">Components by Eclipse eCAL™</span><a class="headerlink" href="#id1" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 15%" />
+<col style="width: 30%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Component</p></th>
+<th class="head"><p>License</p></th>
+<th class="head"><p>Copyright</p></th>
+<th class="head"><p>Included in…</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/continental/fineftp-server">fineFTP Server</a></p></td>
+<td><p><a class="reference internal" href="thirdparty_licenses/mit.html#mit-license"><span class="std std-ref">MIT</span></a></p></td>
+<td><p>2020 Continental Corporation</p></td>
+<td><ul class="simple">
+<li><p><i class="fab fa-github"></i> Git submodule <code class="docutils literal notranslate"><span class="pre">/tirdparty/fineftp-server</span></code></p></li>
+<li><p><i class="fab fa-windows"></i> Binary distributions for Windows</p></li>
+<li><p><i class="fab fa-ubuntu"></i> Binary distributions for Linux</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/continental/tcp_pubsub">tcp_pubsub</a></p></td>
+<td><p><a class="reference internal" href="thirdparty_licenses/mit.html#mit-license"><span class="std std-ref">MIT</span></a></p></td>
+<td><p>Copyright (c) 2021 Continental</p></td>
+<td><ul class="simple">
+<li><p><i class="fab fa-github"></i> Git submodule <code class="docutils literal notranslate"><span class="pre">/tirdparty/tcp_pubsub</span></code></p></li>
+<li><p><i class="fab fa-windows"></i> Binary distributions for Windows</p></li>
+<li><p><i class="fab fa-ubuntu"></i> Binary distributions for Linux</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-ecal/udpcap">Udpcap</a></p></td>
+<td><p><a class="reference internal" href="thirdparty_licenses/apache-2.0.html#apache-2-0"><span class="std std-ref">Apache 2.0</span></a></p></td>
+<td><p>2022, Continental</p></td>
+<td><ul class="simple">
+<li><p><i class="fab fa-github"></i> Git submodule <code class="docutils literal notranslate"><span class="pre">/tirdparty/udpcap</span></code></p></li>
+<li><p><i class="fab fa-windows"></i> Binary distributions for Windows</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="thirdparty-components">
+<h2>Thirdparty components<a class="headerlink" href="#thirdparty-components" title="Permalink to this headline">#</a></h2>
+<p>The following components are developed by third parties.
+They are used by Eclipse eCAL, but not associated to it in any way.</p>
 <table class="colwidths-given table" id="id2">
-<caption><span class="caption-text">Thirdparty licenses</span><a class="headerlink" href="#id2" title="Permalink to this table">#</a></caption>
+<caption><span class="caption-text">Thirdparty components</span><a class="headerlink" href="#id2" title="Permalink to this table">#</a></caption>
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 15%" />
@@ -2461,17 +2537,7 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://github.com/continental/fineftp-server">fineFTP Server</a></p></td>
-<td><p><a class="reference internal" href="thirdparty_licenses/mit.html#mit-license"><span class="std std-ref">MIT</span></a></p></td>
-<td><p>2020 Continental Corporation</p></td>
-<td><ul class="simple">
-<li><p><i class="fab fa-github"></i> Git submodule <code class="docutils literal notranslate"><span class="pre">/tirdparty/fineftp-server</span></code></p></li>
-<li><p><i class="fab fa-windows"></i> Binary distributions for Windows</p></li>
-<li><p><i class="fab fa-ubuntu"></i> Binary distributions for Linux</p></li>
-</ul>
-</td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://www.flaticon.com/">Flaticons</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.flaticon.com/">Flaticons</a></p></td>
 <td><p><a class="reference internal" href="thirdparty_licenses/creative-commons-3.0.html#creative-commons-3-0"><span class="std std-ref">Creative Commons 3.0</span></a></p></td>
 <td><p>see <a class="reference internal" href="icon_license.html#icon-licenses"><span class="std std-ref">Icon License</span></a></p></td>
 <td><ul class="simple">
@@ -2482,7 +2548,7 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://fontawesome.com">Font Awesome</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://fontawesome.com">Font Awesome</a></p></td>
 <td><p><a class="reference internal" href="thirdparty_licenses/fontawesome-free.html#fontawesome-free-license"><span class="std std-ref">Fontawesome Free License</span></a></p></td>
 <td><p>Fonticons, Inc.</p></td>
 <td><ul class="simple">
@@ -2492,7 +2558,7 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 </ul>
 </td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://developers.google.com/protocol-buffers">Google Protobuf</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://developers.google.com/protocol-buffers">Google Protobuf</a></p></td>
 <td><p><a class="reference internal" href="thirdparty_licenses/bsd-3.html#bsd-3"><span class="std std-ref">BSD 3</span></a></p></td>
 <td><p>Copyright 2008 Google Inc.</p></td>
 <td><ul class="simple">
@@ -2501,7 +2567,7 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://github.com/google/googletest">Google Test</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/google/googletest">Google Test</a></p></td>
 <td><p><a class="reference internal" href="thirdparty_licenses/bsd-3.html#bsd-3"><span class="std std-ref">BSD 3</span></a></p></td>
 <td><p>Copyright 2008 Google Inc.</p></td>
 <td><ul class="simple">
@@ -2509,7 +2575,7 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 </ul>
 </td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://www.hdfgroup.org/solutions/hdf5">HDF5</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.hdfgroup.org/solutions/hdf5">HDF5</a></p></td>
 <td><p><a class="reference internal" href="thirdparty_licenses/hdf5-bsd-3.html#hdf5-bsd-3"><span class="std std-ref">HDF5 BSD-3</span></a></p></td>
 <td><p>1998-2006 by The Board of Trustees of the University of Illinois</p>
 <p>2006 by The HDF Group</p>
@@ -2520,7 +2586,7 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://curl.se/libcurl/">libcurl</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://curl.se/libcurl/">libcurl</a></p></td>
 <td><p><a class="reference internal" href="thirdparty_licenses/mit.html#mit-license"><span class="std std-ref">MIT</span></a></p></td>
 <td><p>1996 - 2021, Daniel Stenberg, <a class="reference external" href="mailto:daniel&#37;&#52;&#48;haxx&#46;se">daniel<span>&#64;</span>haxx<span>&#46;</span>se</a>, and many contributors, see the THANKS file</p></td>
 <td><ul class="simple">
@@ -2529,7 +2595,7 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 </ul>
 </td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="http://www.legroom.net/software">modpath.iss</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.legroom.net/software">modpath.iss</a></p></td>
 <td><p><a class="reference internal" href="thirdparty_licenses/lgpl-3.0.html#lgpl-3-0"><span class="std std-ref">LGPL 3.0</span></a></p></td>
 <td><p>Jared Breland</p></td>
 <td><ul class="simple">
@@ -2538,14 +2604,14 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://nmap.org/npcap/">npcap</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://nmap.org/npcap/">npcap</a></p></td>
 <td><p><a class="reference internal" href="thirdparty_licenses/npcap.html#npcap-license"><span class="std std-ref">Npcap license</span></a></p></td>
 <td><p>2013-2021 by Insecure.Com LLC</p></td>
 <td><p>Not included due to licensing issues.
 Please check out the <a class="reference internal" href="../configuration/npcap.html#configuration-npcap"><span class="std std-ref">npcap chapter</span></a>.
 eCAL for Windows links against the npcap SDK.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://pcapplusplus.github.io/">PcapPlusPlus</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://pcapplusplus.github.io/">PcapPlusPlus</a></p></td>
 <td><p><a class="reference internal" href="thirdparty_licenses/unlicense.html#unlicense-license"><span class="std std-ref">Unlicense</span></a></p></td>
 <td><p>2021 seladb</p></td>
 <td><ul class="simple">
@@ -2553,7 +2619,7 @@ eCAL for Windows links against the npcap SDK.</p></td>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://www.qt.io/">Qt</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.qt.io/">Qt</a></p></td>
 <td><p><a class="reference internal" href="thirdparty_licenses/lgpl-3.0.html#lgpl-3-0"><span class="std std-ref">LGPL 3.0</span></a></p></td>
 <td><p>The Qt Company Ltd.</p></td>
 <td><ul class="simple">
@@ -2561,7 +2627,7 @@ eCAL for Windows links against the npcap SDK.</p></td>
 </ul>
 </td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://sourceforge.net/projects/qwt/">qwt</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://sourceforge.net/projects/qwt/">qwt</a></p></td>
 <td><p><a class="reference internal" href="thirdparty_licenses/qwt.html#qwt-license"><span class="std std-ref">qwt</span></a></p></td>
 <td><p>Uwe Rathmann</p></td>
 <td><ul class="simple">
@@ -2571,7 +2637,7 @@ eCAL for Windows links against the npcap SDK.</p></td>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://github.com/steinwurf/recycle">recycle</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/steinwurf/recycle">recycle</a></p></td>
 <td><p><a class="reference internal" href="thirdparty_licenses/bsd-3.html#bsd-3"><span class="std std-ref">BSD 3</span></a></p></td>
 <td><p>Copyright (c) 2014, Steinwurf ApS</p></td>
 <td><ul class="simple">
@@ -2581,7 +2647,7 @@ eCAL for Windows links against the npcap SDK.</p></td>
 </ul>
 </td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/brofield/simpleini">SimpleIni</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/brofield/simpleini">SimpleIni</a></p></td>
 <td><p><a class="reference internal" href="thirdparty_licenses/mit.html#mit-license"><span class="std std-ref">MIT</span></a></p></td>
 <td><p>2006-2013 Brodie Thiesfield</p></td>
 <td><ul class="simple">
@@ -2591,7 +2657,7 @@ eCAL for Windows links against the npcap SDK.</p></td>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://github.com/gabime/spdlog">spdlog</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/gabime/spdlog">spdlog</a></p></td>
 <td><p><a class="reference internal" href="thirdparty_licenses/mit.html#mit-license"><span class="std std-ref">MIT</span></a></p></td>
 <td><p>2016 Gabi Melman</p></td>
 <td><ul class="simple">
@@ -2601,9 +2667,9 @@ eCAL for Windows links against the npcap SDK.</p></td>
 </ul>
 </td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/TYPO3-Documentation/sphinx_typo3_theme">Sphinx TYPO3 theme</a></p></td>
-<td><p><a class="reference internal" href="thirdparty_licenses/mit.html#mit-license"><span class="std std-ref">MIT</span></a></p></td>
-<td><p>2020 Martin Bless</p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/executablebooks/sphinx-book-theme">Sphinx Book Theme</a></p></td>
+<td><p><a class="reference internal" href="thirdparty_licenses/bsd-3.html#bsd-3"><span class="std std-ref">BSD 3</span></a></p></td>
+<td><p>2020 Chris Holdgraf</p></td>
 <td><ul class="simple">
 <li><p><i class="fas fa-book"></i> Documentation</p></li>
 <li><p><i class="fab fa-windows"></i> Binary distributions for Windows</p></li>
@@ -2611,7 +2677,7 @@ eCAL for Windows links against the npcap SDK.</p></td>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="http://tclap.sourceforge.net">tclap</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="http://tclap.sourceforge.net">tclap</a></p></td>
 <td><p><a class="reference internal" href="thirdparty_licenses/mit.html#mit-license"><span class="std std-ref">MIT</span></a></p></td>
 <td><p>Copyright (c) 2003 Michael E. Smoot</p>
 <p>Copyright (c) 2004 Daniel Aarno</p>
@@ -2619,16 +2685,6 @@ eCAL for Windows links against the npcap SDK.</p></td>
 </td>
 <td><ul class="simple">
 <li><p><i class="fab fa-github"></i> Git submodule <code class="docutils literal notranslate"><span class="pre">/tirdparty/tclap</span></code></p></li>
-<li><p><i class="fab fa-windows"></i> Binary distributions for Windows</p></li>
-<li><p><i class="fab fa-ubuntu"></i> Binary distributions for Linux</p></li>
-</ul>
-</td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/continental/tcp_pubsub">tcp_pubsub</a></p></td>
-<td><p><a class="reference internal" href="thirdparty_licenses/mit.html#mit-license"><span class="std std-ref">MIT</span></a></p></td>
-<td><p>Copyright (c) 2021 Continental</p></td>
-<td><ul class="simple">
-<li><p><i class="fab fa-github"></i> Git submodule <code class="docutils literal notranslate"><span class="pre">/tirdparty/tcp_pubsub</span></code></p></li>
 <li><p><i class="fab fa-windows"></i> Binary distributions for Windows</p></li>
 <li><p><i class="fab fa-ubuntu"></i> Binary distributions for Linux</p></li>
 </ul>
@@ -2654,16 +2710,7 @@ eCAL for Windows links against the npcap SDK.</p></td>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-ecal/udpcap">Udpcap</a></p></td>
-<td><p><a class="reference internal" href="thirdparty_licenses/apache-2.0.html#apache-2-0"><span class="std std-ref">Apache 2.0</span></a></p></td>
-<td><p>2022, Continental</p></td>
-<td><ul class="simple">
-<li><p><i class="fab fa-github"></i> Git submodule <code class="docutils literal notranslate"><span class="pre">/tirdparty/udpcap</span></code></p></li>
-<li><p><i class="fab fa-windows"></i> Binary distributions for Windows</p></li>
-</ul>
-</td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/jbeder/yaml-cpp/">yaml-cpp</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/jbeder/yaml-cpp/">yaml-cpp</a></p></td>
 <td><p><a class="reference internal" href="thirdparty_licenses/mit.html#mit-license"><span class="std std-ref">MIT</span></a></p></td>
 <td><p>Copyright (c) 2008-2015 Jesse Beder</p></td>
 <td><ul class="simple">
@@ -2675,6 +2722,7 @@ eCAL for Windows links against the npcap SDK.</p></td>
 </tr>
 </tbody>
 </table>
+</section>
 <section id="license-texts">
 <h2>License texts<a class="headerlink" href="#license-texts" title="Permalink to this headline">#</a></h2>
 <div class="admonition note">
