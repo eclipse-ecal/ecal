@@ -46,13 +46,15 @@ namespace eCAL
     // Enumeration of quality bits used for detecting how good a topic information is.
     enum class QualityFlags : int
     {
-      NO_QUALITY                    = 0,         //!< Special value for initialization
+      NO_QUALITY                     = 0,         //!< Special value for initialization
 
-      DESCRIPTION_AVAILABLE         = 0x1 << 4,  //!< Having a descriptor at all is the most important thing
-      INFO_COMES_FROM_CORRECT_TOPIC = 0x1 << 3,  //!< The information comes from the current topic (and has not been borrowed from another topic)
-      INFO_COMES_FROM_PUBLISHER     = 0x1 << 2,  //!< A descriptor coming from the publisher is better than one from a subscriber, as we assume that the publisher knows best what he is publishing
-      INFO_COMES_FROM_THIS_PROCESS  = 0x1 << 1,  //!< We prefer descriptors from the current process
-      TYPE_AVAILABLE                = 0x1 << 0,  //!< Having information about the type's name available is nice but not that important to us.
+      DESCRIPTION_AVAILABLE          = 0x1 << 4,  //!< Having a descriptor at all is the most important thing
+      INFO_COMES_FROM_CORRECT_ENTITY = 0x1 << 3,  //!< The information comes from the current topic/service 
+                                                  //!< and has not been borrowed from another emtity, like read by a subscriber from a publisher
+      INFO_COMES_FROM_PRODUCER       = 0x1 << 2,  //!< A descriptor coming from the producer (like a publisher) is better than one from a 
+                                                  //!< consumer (like a subscriber), as we assume that the publisher knows best what he is publishing
+      INFO_COMES_FROM_THIS_PROCESS   = 0x1 << 1,  //!< We prefer descriptors from the current process
+      TYPE_AVAILABLE                 = 0x1 << 0,  //!< Having information about the type's name available is nice but not that important to us
     };
 
   public:
@@ -78,7 +80,7 @@ namespace eCAL
                                  const std::string& req_type_desc_, 
                                  const std::string& resp_type_name_,
                                  const std::string& resp_type_desc_,
-                                 const QualityFlags info_quality_);
+                                 const QualityFlags description_quality_);
 
     void GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_);
     void GetServiceNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_);

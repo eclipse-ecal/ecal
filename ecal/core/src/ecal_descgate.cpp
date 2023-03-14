@@ -221,7 +221,7 @@ namespace eCAL
                                         , const std::string& req_type_desc_
                                         , const std::string& resp_type_name_
                                         , const std::string& resp_type_desc_
-                                        , const QualityFlags info_quality_)
+                                        , const QualityFlags description_quality_)
   {
     std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
 
@@ -237,7 +237,7 @@ namespace eCAL
       service_info.info.request_type_description  = req_type_desc_;
       service_info.info.response_type_name        = resp_type_name_;
       service_info.info.response_type_description = resp_type_desc_;
-      service_info.info_quality                   = info_quality_;
+      service_info.info_quality                   = description_quality_;
       return true;
     }
 
@@ -245,13 +245,13 @@ namespace eCAL
     // if it has a higher quality, we overwrite it
     bool ret_value(false);
     SServiceMethodInfoQuality service_info = (*service_info_map_it).second;
-    if (info_quality_ > service_info.info_quality)
+    if (description_quality_ > service_info.info_quality)
     {
       service_info.info.request_type_name         = req_type_name_;
       service_info.info.request_type_description  = req_type_desc_;
       service_info.info.response_type_name        = resp_type_name_;
       service_info.info.response_type_description = resp_type_desc_;
-      service_info.info_quality                   = info_quality_;
+      service_info.info_quality                   = description_quality_;
       ret_value = true;
     }
 

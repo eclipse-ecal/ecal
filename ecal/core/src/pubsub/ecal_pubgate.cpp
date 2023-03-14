@@ -130,18 +130,7 @@ namespace eCAL
     }
 
     // store description
-    if (g_descgate())
-    {
-      // Calculate the quality of the current info
-      ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_type.empty())
-        quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_desc.empty())
-        quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
-      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
-
-      g_descgate()->ApplyTopicDescription(topic_name, topic_type, topic_desc, quality);
-    }
+    ApplyTopicToDescGate(topic_name, topic_type, topic_desc);
 
     // register local subscriber
     std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
@@ -174,18 +163,7 @@ namespace eCAL
     }
 
     // store description
-    if (g_descgate())
-    {
-      // Calculate the quality of the current info
-      ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_type.empty())
-        quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_desc.empty())
-        quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
-      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
-
-      g_descgate()->ApplyTopicDescription(topic_name, topic_type, topic_desc, quality);
-    }
+    ApplyTopicToDescGate(topic_name, topic_type, topic_desc);
 
     // register external subscriber
     std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
@@ -206,5 +184,22 @@ namespace eCAL
     {
       iter.second->RefreshRegistration();
     }
+  }
+
+  bool CPubGate::ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_)
+  {
+    if (g_descgate())
+    {
+      // Calculate the quality of the current info
+      ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
+      if (!topic_type_.empty())
+        quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
+      if (!topic_desc_.empty())
+        quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
+      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
+
+      return g_descgate()->ApplyTopicDescription(topic_name_, topic_type_, topic_desc_, quality);
+    }
+    return false;
   }
 };

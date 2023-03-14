@@ -487,9 +487,9 @@ namespace eCAL
       if (!topic_desc_.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
       if (topic_is_a_publisher_)
-        quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PUBLISHER;
+        quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PRODUCER;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
-      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
+      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
       // update description
       return g_descgate()->ApplyTopicDescription(topic_name_, topic_type_, topic_desc_, quality);
     }
