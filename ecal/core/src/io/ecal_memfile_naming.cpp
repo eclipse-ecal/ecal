@@ -1,20 +1,20 @@
 #include <io/ecal_memfile_naming.h>
 
 #include <sstream>
-#include <algorithm>
+#include <random>
 
 namespace eCAL
 {
   namespace memfile
   {
-    std::string BuildMemFileName(const std::string& base_name_, const std::chrono::time_point<std::chrono::steady_clock>& time_point)
+
+    std::string BuildRandomMemFileName()
     {
+      static std::random_device rd;
+      static std::uniform_int_distribution<uint32_t> dist(0, UINT32_MAX);
+
       std::stringstream out;
-
-      size_t hash = std::hash<std::string>()(base_name_ + std::to_string(time_point.time_since_epoch().count()));
-      uint32_t compressed_hash = static_cast<uint32_t>(hash);
-
-      out << "ecal_" << std::hex << compressed_hash;
+      out << "ecal_" << std::hex << dist(rd);
 
       return out.str();
     }

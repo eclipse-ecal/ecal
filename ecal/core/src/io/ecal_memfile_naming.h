@@ -29,8 +29,6 @@ namespace eCAL
 {
   namespace memfile
   {
-
-    std::string BuildMemFileName(const std::string& base_name_, const std::chrono::time_point<std::chrono::steady_clock>& time_point);
-
+    std::string BuildRandomMemFileName();
   }
 }

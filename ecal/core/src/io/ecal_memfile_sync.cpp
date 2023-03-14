@@ -232,7 +232,7 @@ namespace eCAL
 
     // build unique memory file name
     m_base_name = base_name_;
-    m_memfile_name = eCAL::memfile::BuildMemFileName(m_base_name, std::chrono::steady_clock::now());
+    m_memfile_name = eCAL::memfile::BuildRandomMemFileName();
 
     // create new memory file object
     // with additional space for SMemFileHeader
