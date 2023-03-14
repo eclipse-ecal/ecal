@@ -15,7 +15,7 @@ Components by Eclipse eCAL™
 ===========================
 
 The following external components are developed and maintained by the Eclipse eCAL team.
-They have been developed as independent components and may have a different license than eCAL.
+They may have a different license than eCAL.
 
 .. list-table:: Components by Eclipse eCAL™
    :widths: 10 15 30 45
@@ -49,8 +49,8 @@ They have been developed as independent components and may have a different lice
 Thirdparty components
 =====================
 
-The following components are developed by actual third parties.
-They are only used by Eclipse eCAL, but not associated to it in any way.
+The following components are developed by third parties.
+They are used by Eclipse eCAL, but not associated to it in any way.
 
 .. list-table:: Thirdparty components
    :widths: 10 15 30 45
