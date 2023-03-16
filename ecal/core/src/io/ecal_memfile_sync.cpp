@@ -221,7 +221,7 @@ namespace eCAL
     return written;
   }
 
-  std::string CSyncMemoryFile::GetName()
+  std::string CSyncMemoryFile::GetName() const
   {
     return m_memfile_name;
   }

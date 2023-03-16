@@ -54,7 +54,7 @@ namespace eCAL
     bool CheckSize(size_t size_);
     bool Write(const SWriterData& data_);
 
-    std::string GetName();
+    std::string GetName() const;
 
   protected:
     bool Create(const std::string& base_name_, size_t size_);
