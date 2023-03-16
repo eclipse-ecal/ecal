@@ -29,6 +29,6 @@ namespace eCAL
 {
   namespace memfile
   {
-    std::string BuildRandomMemFileName();
+    std::string BuildRandomMemFileName(const std::string& base_name);
   }
 }

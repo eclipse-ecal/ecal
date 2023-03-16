@@ -32,9 +32,10 @@ TEST(IO, MemfileNaming)
 {
   std::chrono::steady_clock::time_point timepoint{};
 
-  std::string memfile_name_1{ eCAL::memfile::BuildRandomMemFileName() };
-  std::string memfile_name_2{ eCAL::memfile::BuildRandomMemFileName() };
+  std::string memfile_name_1{ eCAL::memfile::BuildRandomMemFileName("test_")};
+  std::string memfile_name_2{ eCAL::memfile::BuildRandomMemFileName("test_")};
 
+  EXPECT_EQ(memfile_name_1.size(), 13);
   EXPECT_NE(memfile_name_1, memfile_name_2);
 
 }
