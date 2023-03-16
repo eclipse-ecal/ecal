@@ -91,14 +91,14 @@ namespace eCAL
     struct STopicInfoQuality
     {
       Util::STopicInfo info;                                                       //!< Topic info struct with type name and descriptor.
-      QualityFlags     description_quality   = QualityFlags::NO_QUALITY;           //!< QualityFlags to determine whether we may overwrite the current data with better one. E.g. we prefer the description sent by a publisher over one sent by a subscriber. 
+      QualityFlags     quality               = QualityFlags::NO_QUALITY;           //!< QualityFlags to determine whether we may overwrite the current data with better one. E.g. we prefer the description sent by a publisher over one sent by a subscriber. 
       bool             type_missmatch_logged = false;                              //!< Whether we have already logged a type-missmatch
     };
 
     struct SServiceMethodInfoQuality
     {
       Util::SServiceMethodInfo info;                                               //!< Service info struct with type names and descriptors for request and response.
-      QualityFlags             info_quality = QualityFlags::NO_QUALITY;            //!< The Quality of the Info
+      QualityFlags             quality = QualityFlags::NO_QUALITY;                 //!< The Quality of the Info
     };
 
     // key: topic name | value: topic (type/desc), quality

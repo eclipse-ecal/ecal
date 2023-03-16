@@ -60,7 +60,7 @@ namespace eCAL
       STopicInfoQuality& topic_info = (*m_topic_info_map.map)[topic_name_];
       topic_info.info.type_name        = topic_type_;
       topic_info.info.type_description = topic_desc_;
-      topic_info.description_quality   = description_quality_;
+      topic_info.quality               = description_quality_;
       return true;
     }
 
@@ -76,12 +76,12 @@ namespace eCAL
 
     // first let's check whether the current information has a higher quality
     // if it has a higher quality, we overwrite it
-    if (description_quality_ > topic_info.description_quality)
+    if (description_quality_ > topic_info.quality)
     {
       // overwrite attributes
       topic_info.info.type_name        = topic_type_;
       topic_info.info.type_description = topic_desc_;
-      topic_info.description_quality   = description_quality_;
+      topic_info.quality               = description_quality_;
 
       // update attributes and return
       (*m_topic_info_map.map)[topic_name_] = topic_info;
@@ -237,7 +237,7 @@ namespace eCAL
       service_info.info.request_type_description  = req_type_desc_;
       service_info.info.response_type_name        = resp_type_name_;
       service_info.info.response_type_description = resp_type_desc_;
-      service_info.info_quality                   = description_quality_;
+      service_info.quality                        = description_quality_;
       return true;
     }
 
@@ -245,13 +245,13 @@ namespace eCAL
     // if it has a higher quality, we overwrite it
     bool ret_value(false);
     SServiceMethodInfoQuality service_info = (*service_info_map_it).second;
-    if (description_quality_ > service_info.info_quality)
+    if (description_quality_ > service_info.quality)
     {
       service_info.info.request_type_name         = req_type_name_;
       service_info.info.request_type_description  = req_type_desc_;
       service_info.info.response_type_name        = resp_type_name_;
       service_info.info.response_type_description = resp_type_desc_;
-      service_info.info_quality                   = description_quality_;
+      service_info.quality                        = description_quality_;
       ret_value = true;
     }
 
