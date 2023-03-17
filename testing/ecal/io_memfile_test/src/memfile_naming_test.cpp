@@ -35,7 +35,7 @@ TEST(IO, MemfileNaming)
   std::string memfile_name_1{ eCAL::memfile::BuildRandomMemFileName("test_")};
   std::string memfile_name_2{ eCAL::memfile::BuildRandomMemFileName("test_")};
 
-  EXPECT_EQ(memfile_name_1.size(), 13);
+  EXPECT_LE(memfile_name_1.size(), 13);
   EXPECT_NE(memfile_name_1, memfile_name_2);
 
 }

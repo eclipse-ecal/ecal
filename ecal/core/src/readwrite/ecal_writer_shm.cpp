@@ -40,7 +40,7 @@
 
 namespace eCAL
 {
-  std::string CDataWriterSHM::m_memfile_base_name = "ecal_";
+  const std::string CDataWriterSHM::m_memfile_base_name = "ecal_";
 
   CDataWriterSHM::CDataWriterSHM()
   {
