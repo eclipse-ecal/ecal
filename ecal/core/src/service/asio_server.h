@@ -183,6 +183,7 @@ public:
     acceptor_(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port)),
     connect_cnt_(0)
   {
+    acceptor_.listen();
     start_accept();
   }
 
