@@ -430,8 +430,16 @@ namespace eCAL
       if (m_id_set.find(id_) == m_id_set.end()) return(0);
     }
 
-    // check message dropping
-    CheckCounter(tid_, clock_);
+    // check the current message clock
+    // if the function returns false we detected
+    //  - a dropped message
+    //  - an out of order message
+    //  - a multiple sent message
+    if (CheckMessageClock(tid_, clock_) == false)
+    {
+      // we will not process that message
+      return(0);
+    }
 
 #ifndef NDEBUG
     // log it
@@ -702,14 +710,42 @@ namespace eCAL
     }
   }
 
-  void CDataReader::CheckCounter(const std::string& tid_, long long counter_)
+  bool CDataReader::CheckMessageClock(const std::string& tid_, long long current_clock_)
   {
     auto iter = m_writer_counter_map.find(tid_);
     if (iter != m_writer_counter_map.end())
     {
-      long long counter_last = iter->second;
-      long long drops = counter_ - counter_last;
-      if (drops > 1)
+      long long last_clock = iter->second;
+      long long clock_difference = current_clock_ - last_clock;
+      // that should never happen, maybe there is a publisher
+      // sending parallel on multiple layers
+      // we ignore this second message
+      if (clock_difference == 0)
+      {
+        return false;
+      }
+
+      // a negative clock difference may happen if a publisher
+      // is using a ringbuffer and messages arrive in the
+      // wrong order
+      // we log this and ignore the message
+      if (clock_difference < 0)
+      {
+        std::string msg = "Message received in wrong order ! ";
+        msg += "(Unit: \'";
+        msg += Process::GetUnitName();
+        msg += "@";
+        msg += Process::GetHostName();
+        msg += "\' | Subscriber: \'";
+        msg += m_topic_name;
+        msg += "\')";
+        Logging::Log(log_level_warning, msg);
+      
+        return false;
+      }
+
+      // that means we miss at least on message (we have a "message drop")
+      if (clock_difference > 1)
       {
 #if 0
         std::string msg = std::to_string(counter_-counter_last) + " Messages lost ! ";
@@ -728,17 +764,19 @@ namespace eCAL
           SSubEventCallbackData data;
           data.type  = sub_event_dropped;
           data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-          data.clock = drops;
+          data.clock = current_clock_;
           (citer->second)(m_topic_name.c_str(), &data);
         }
-        m_message_drops += drops;
+        m_message_drops += clock_difference;
       }
-      iter->second = counter_;
+      iter->second = current_clock_;
     }
     else
     {
-      m_writer_counter_map[tid_] = counter_;
+      m_writer_counter_map[tid_] = current_clock_;
     }
+
+    return true;
   }
     
   void CDataReader::RefreshRegistration()

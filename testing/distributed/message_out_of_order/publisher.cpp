@@ -7,6 +7,7 @@ int main()
   eCAL::Initialize(0, nullptr, "Quick Publisher");
 
   eCAL::string::CPublisher<std::string> pub("foo");
+  pub.ShmSetBufferCount(2);
 
   while (eCAL::Ok())
   {
