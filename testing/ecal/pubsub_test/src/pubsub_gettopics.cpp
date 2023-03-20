@@ -23,7 +23,8 @@
 
 #include <gtest/gtest.h>
 
-#define CMN_MONITORING_TIMEOUT 5000
+#define CMN_REGISTRATION_REFRESH   1000
+#define CMN_MONITORING_TIMEOUT     5000
 
 TEST(IO, GetTopics)
 {
@@ -88,8 +89,8 @@ TEST(IO, GetTopics)
     EXPECT_EQ(eCAL::Util::GetTopicTypeName("B1"), "typeB1");
     EXPECT_EQ(eCAL::Util::GetTopicDescription("B1"), "descB1");
 
-    // wait a monitoring timeout long,
-    eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT);
+    // wait a monitoring timeout long, and let pub1.2 and sub1.2 register
+    eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT + CMN_REGISTRATION_REFRESH);
 
     // update map
     eCAL::Util::GetTopics(topic_info_map);
