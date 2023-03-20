@@ -435,7 +435,7 @@ namespace eCAL
     //  - a dropped message
     //  - an out of order message
     //  - a multiple sent message
-    if (CheckMessageClock(tid_, clock_) == false)
+    if (!CheckMessageClock(tid_, clock_))
     {
       // we will not process that message
       return(0);
