@@ -30,6 +30,7 @@
 #include "ecal_memfile_header.h"
 
 #include <atomic>
+#include <condition_variable>
 #include <functional>
 #include <map>
 #include <memory>
@@ -99,6 +100,8 @@ namespace eCAL
     std::map<std::string, std::shared_ptr<CMemFileObserver>>  m_observer_pool;
 
     std::atomic<bool>                                         m_do_cleanup;
+    std::condition_variable                                   m_do_cleanup_cv;
+    std::mutex                                                m_do_cleanup_mtx;
     std::thread                                               m_cleanup_thread;
   };
 }

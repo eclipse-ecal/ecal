@@ -25,8 +25,6 @@
 #include "ecal_def.h"
 #include "ecal_memfile_pool.h"
 
-#include <ecal/ecal_process.h>
-
 #include <chrono>
 
 namespace eCAL
@@ -323,7 +321,11 @@ namespace eCAL
     if(!m_created) return;
 
     // stop cleanup thread
-    m_do_cleanup = false;
+    {
+      std::lock_guard<std::mutex> lock(m_do_cleanup_mtx);
+      m_do_cleanup = false;
+      m_do_cleanup_cv.notify_one();
+    }
     if (m_cleanup_thread.joinable()) m_cleanup_thread.join();
 
     // lock pool
@@ -383,11 +385,20 @@ namespace eCAL
 
   void CMemFileThreadPool::CleanupPoolThread()
   {
-    while (m_do_cleanup)
+    for (;;)
     {
-      // cleanup outdated observers every 100 ms
+      {
+        // cycling with 1 second timeout
+        std::unique_lock<std::mutex> lock(m_do_cleanup_mtx);
+        m_do_cleanup_cv.wait_for(lock, std::chrono::milliseconds(1000), [&]() -> bool {return !m_do_cleanup; });
+        if (!m_do_cleanup)
+        {
+          // cleanup thread stopped
+          return;
+        }
+      }
+      // do your job
       CleanupPool();
-      Process::SleepMS(100);
     }
   }
 
