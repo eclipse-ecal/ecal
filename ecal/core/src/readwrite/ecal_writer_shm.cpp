@@ -40,6 +40,8 @@
 
 namespace eCAL
 {
+  const std::string CDataWriterSHM::m_memfile_base_name = "ecal_";
+
   CDataWriterSHM::CDataWriterSHM()
   {
   }
@@ -84,7 +86,7 @@ namespace eCAL
     // create the files
     for (size_t num(0); num < m_buffer_count; ++num)
     {
-      auto sync_memfile = std::make_shared<CSyncMemoryFile>(topic_name_, 0, m_memory_file_attr);
+      auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, 0, m_memory_file_attr);
       m_memory_file_vec.push_back(sync_memfile);
     }
 
@@ -145,7 +147,7 @@ namespace eCAL
       // increase buffer count
       while (m_memory_file_vec.size() < m_buffer_count)
       {
-        auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_topic_name, data_.len, m_memory_file_attr);
+        auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, data_.len, m_memory_file_attr);
         m_memory_file_vec.push_back(sync_memfile);
       }
       // decrease buffer count
