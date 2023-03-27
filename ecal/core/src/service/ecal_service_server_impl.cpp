@@ -72,7 +72,7 @@ namespace eCAL
 
     // we wait for a valid port for a second
     auto waitingforportnumber_100ms(10);
-    while ((m_tcp_server.GetTcpPort() == 0) && --waitingforportnumber_100ms)
+    while ((m_tcp_server.GetTcpPort() == 0) && (--waitingforportnumber_100ms != 0))
     {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
