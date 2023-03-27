@@ -70,6 +70,17 @@ namespace eCAL
     m_tcp_server.Start(std::bind(&CServiceServerImpl::RequestCallback, this, std::placeholders::_1, std::placeholders::_2),
                        std::bind(&CServiceServerImpl::EventCallback,   this, std::placeholders::_1, std::placeholders::_2));
 
+    // we wait for a valid port for a second
+    auto waitingforportnumber_100ms(10);
+    while ((m_tcp_server.GetTcpPort() == 0) && --waitingforportnumber_100ms)
+    {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+    if (m_tcp_server.GetTcpPort() == 0)
+    {
+      Logging::Log(log_level_error, m_service_name + "::CServiceServerImpl::Couldn't aquire server port.");
+    }
+
     if (g_servicegate()) g_servicegate()->Register(this);
 
     m_created = true;
@@ -248,10 +259,6 @@ namespace eCAL
     if (!m_created)             return;
     if (m_service_name.empty()) return;
 
-    // don't register the service if we didn't get a port number
-    unsigned short server_port_number(m_tcp_server.GetTcpPort());
-    if (server_port_number == 0) return;
-
     eCAL::pb::Sample sample;
     sample.set_cmd_type(eCAL::pb::bct_reg_service);
     auto service_mutable_service = sample.mutable_service();
@@ -261,7 +268,7 @@ namespace eCAL
     service_mutable_service->set_pid(Process::GetProcessID());
     service_mutable_service->set_sname(m_service_name);
     service_mutable_service->set_sid(m_service_id);
-    service_mutable_service->set_tcp_port(server_port_number);
+    service_mutable_service->set_tcp_port(m_tcp_server.GetTcpPort());
 
     {
       std::lock_guard<std::mutex> lock(m_method_map_sync);

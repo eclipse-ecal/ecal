@@ -82,7 +82,7 @@ namespace eCAL
       }
     }
 
-    std::cout << "CTcpClient: Successfully resolved " << host_name_ << ":" << port_ << std::endl;
+    //std::cout << "CTcpClient: Successfully resolved " << host_name_ << ":" << port_ << std::endl;
 
     // Choose the endpoint to connect to
     auto endpoint_to_connect_to = resolved_endpoints_it->endpoint(); // Default to first endpoint
@@ -93,7 +93,7 @@ namespace eCAL
         // If we find a loopback endpoint we use that one.
         endpoint_to_connect_to = it->endpoint();
 
-        std::cout << "CTcpClient: Found loopback endpoint for " << host_name_ << ":" << port_ << std::endl;
+        //std::cout << "CTcpClient: Found loopback endpoint for " << host_name_ << ":" << port_ << std::endl;
         break;
       }
     }
