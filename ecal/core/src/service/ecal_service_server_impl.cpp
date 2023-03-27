@@ -248,6 +248,10 @@ namespace eCAL
     if (!m_created)             return;
     if (m_service_name.empty()) return;
 
+    // don't register the service if we didn't get a port number
+    unsigned short server_port_number(m_tcp_server.GetTcpPort());
+    if (server_port_number == 0) return;
+
     eCAL::pb::Sample sample;
     sample.set_cmd_type(eCAL::pb::bct_reg_service);
     auto service_mutable_service = sample.mutable_service();
@@ -257,7 +261,7 @@ namespace eCAL
     service_mutable_service->set_pid(Process::GetProcessID());
     service_mutable_service->set_sname(m_service_name);
     service_mutable_service->set_sid(m_service_id);
-    service_mutable_service->set_tcp_port(m_tcp_server.GetTcpPort());
+    service_mutable_service->set_tcp_port(server_port_number);
 
     {
       std::lock_guard<std::mutex> lock(m_method_map_sync);
