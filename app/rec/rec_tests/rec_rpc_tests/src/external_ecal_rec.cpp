@@ -64,7 +64,12 @@ ExternalEcalRecInstance::ExternalEcalRecInstance(bool gui)
     return;
   }
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+  // wait up to 5 seconds for server startup and connection
+  auto retry(5);
+  while (!remote_rec_server_service->IsConnected() && (--retry > 0))
+  {
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  }
 
   if (gui)
   {
