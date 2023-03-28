@@ -179,8 +179,8 @@ namespace eCAL
       }
       else
       {
-        // see CMsgPublisher::Send
-        return(CPublisher::Send(nullptr, 0));
+        // send a zero payload length message to trigger the subscriber side
+        return(CPublisher::SendSynchronized(nullptr, 0));
       }
       return(0);
     }
