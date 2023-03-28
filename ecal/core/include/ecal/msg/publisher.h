@@ -142,7 +142,7 @@ namespace eCAL
       }
       else
       {
-        // see !IsSubscribed()
+        // send a zero payload length message to trigger the subscriber side
         return(CPublisher::Send(nullptr, 0));
       }
       return(0);
