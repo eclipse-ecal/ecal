@@ -18,4 +18,4 @@ jobs:
           # adjust options as necessary
           lgtm_comment_body: ''
           annotations: false
-          max_comments: 10
+          max_comments: 20
