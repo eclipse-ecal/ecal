@@ -143,7 +143,7 @@ namespace eCAL
       else
       {
         // send a zero payload length message to trigger the subscriber side
-        return(CPublisher::Send(nullptr, 0));
+        return(CPublisher::Send(nullptr, 0, time_));
       }
       return(0);
     }
@@ -180,7 +180,7 @@ namespace eCAL
       else
       {
         // send a zero payload length message to trigger the subscriber side
-        return(CPublisher::SendSynchronized(nullptr, 0));
+        return(CPublisher::SendSynchronized(nullptr, 0, time_, acknowledge_timeout_ms_));
       }
       return(0);
     }
