@@ -26,14 +26,14 @@ jobs:
           fetch-depth: 0
 
       - name: Run clang-tidy
-        uses: FlorianReimold/clang-tidy-review@feat/split-up-review-and-post-workflows
+        uses: ZedThree/clang-tidy-review@v0.12.2
         id: review
         with:
           build_dir: _build
           apt_packages: "cmake,ninja-build,build-essential,zlib1g-dev,qtbase5-dev,libhdf5-dev,libprotobuf-dev,libprotoc-dev,protobuf-compiler,libcurl4-openssl-dev,libqwt-qt5-dev,libyaml-cpp-dev"
           config_file: ".clang-tidy"
           exclude: "thirdparty/*,_build/*,convert_utf.cpp,convert_utf.h,testing/*"
-          post_comments: false
+          split_workflow: true
           lgtm_comment_body: ""
           cmake_command: |
             cmake . -B _build \
@@ -76,9 +76,4 @@ jobs:
                     -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu
             cmake --build _build
             
-      - uses: actions/upload-artifact@v3
-        with:
-          name: clang-tidy-review
-          path: |
-            clang-tidy-review-output.json
-            clang-tidy-review-metadata.json
+      - uses: ZedThree/clang-tidy-review/upload@v0.12.2
