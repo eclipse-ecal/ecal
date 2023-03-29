@@ -57,43 +57,86 @@ namespace eCAL
     m_socket     = std::make_shared<asio::ip::tcp::socket>(*m_io_service);
     asio::ip::tcp::resolver resolver(*m_io_service);
 
-    try
-    {
-      m_idle_work = std::make_shared<asio::io_service::work>(*m_io_service);
-      // NOTE: might want to lazy load this in future
-      m_async_worker = std::thread(
-        [this]
-        {
-          m_io_service->run();
-        });
+    // Create idle work object, so the io_service doesn't shut down
+    m_idle_work = std::make_shared<asio::io_service::work>(*m_io_service);
 
-      asio::connect(*m_socket, resolver.resolve({ host_name_, std::to_string(port_) }));
-      // set TCP no delay, so Nagle's algorithm will not stuff multiple messages in one TCP segment
+    // Execute the io_sevice in 1 thread
+    m_async_worker = std::thread(
+    [this]
+    {
+      m_io_service->run();
+    });
+
+    // Resolve Hostname and port
+    const asio::ip::tcp::resolver::query query(host_name_, std::to_string(port_));
+    asio::ip::tcp::resolver::iterator resolved_endpoints_it;
+    {
+      asio::error_code ec;
+
+      resolved_endpoints_it = resolver.resolve(query, ec);
+      
+      if (ec)
+      {
+        std::cerr << "CTcpClient: Error resolving " << host_name_ << ":" << port_ << ": " << ec.message() << std::endl;
+        return;
+      }
+    }
+
+    //std::cout << "CTcpClient: Successfully resolved " << host_name_ << ":" << port_ << std::endl;
+
+    // Choose the endpoint to connect to
+    auto endpoint_to_connect_to = resolved_endpoints_it->endpoint(); // Default to first endpoint
+    for (auto it = resolved_endpoints_it; it != asio::ip::tcp::resolver::iterator(); it++)
+    {
+      if (it->endpoint().address().is_loopback())
+      {
+        // If we find a loopback endpoint we use that one.
+        endpoint_to_connect_to = it->endpoint();
+
+        //std::cout << "CTcpClient: Found loopback endpoint for " << host_name_ << ":" << port_ << std::endl;
+        break;
+      }
+    }
+
+    // Connect to the chose endpoint
+    {
+      asio::error_code ec;
+      m_socket->connect(endpoint_to_connect_to, ec);
+
+      if (ec)
+      {
+        std::cerr << "CTcpClient: Error connecting to endpoint for " << host_name_ << ":" << port_ << ": " << ec.message() << std::endl;
+        return;
+      }
+    }
+
+    // set TCP no delay, so Nagle's algorithm will not stuff multiple messages in one TCP segment
+    {
+      asio::error_code ec;
+      
       asio::ip::tcp::no_delay no_delay_option(true);
-      m_socket->set_option(no_delay_option);
+      m_socket->set_option(no_delay_option, ec);
 
-      m_connected = true;
-
-      // fire event
-      if (m_event_callback)
+      if (ec)
       {
-        m_event_callback(client_event_connected, "CTcpClient connected");
+        std::cerr << "CTcpClient: Error setting TCP_NODELAY option " << host_name_ << ":" << port_ << ": " << ec.message() << std::endl;
+        return;
       }
     }
-    catch (std::exception& /*e*/)
+
+    // We are successfully connected!
+    m_connected = true;
+
+    // fire event
+    if (m_event_callback)
     {
-      //std::cerr << "CTcpClient::Connect conect exception: " << e.what() << "\n";
-      m_connected = false;
-
-      // fire event
-      if (m_event_callback)
-      {
-        m_event_callback(client_event_disconnected, "CTcpClient disconnected");
-      }
+      m_event_callback(client_event_connected, "CTcpClient connected");
     }
 
+    // We have successfully created the CTcpClient!
     m_created = true;
   }
+
 
   void CTcpClient::Destroy()
   {
