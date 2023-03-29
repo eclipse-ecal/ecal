@@ -116,6 +116,10 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 * [ecal-mongraph](https://github.com/ecal-io/ecal-mongraph) - Simple graph visualization for eCAL
 * [ecal-gpsd-client](https://github.com/eclipse-ecal/ecal-gpsd-client) - eCAL gpsd client
 
+## eCAL & Foxglove
+* [ecal-foxglove-bridge](https://github.com/eclipse-ecal/ecal-foxglove-bridge) - Visualize eCAL messages with Foxglove Studio
+* [ecal-mcap-tools](https://github.com/eclipse-ecal/ecal-mcap-tools) - Interoperability tools between eCAL HDF5 and MCAP measurement format
+
 ## eCAL & ROS
 * [rmw_ecal](https://github.com/eclipse-ecal/rmw_ecal) - eCAL / ROS2 middleware layer
 * [rosidl_typesupport_protobuf](https://github.com/eclipse-ecal/rosidl_typesupport_protobuf) - Protobuf based rosidl typesupport
