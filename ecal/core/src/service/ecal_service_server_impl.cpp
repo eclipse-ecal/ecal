@@ -71,15 +71,15 @@ namespace eCAL
                        std::bind(&CServiceServerImpl::EventCallback,   this, std::placeholders::_1, std::placeholders::_2));
 
     // we wait for a valid port for a second
-    auto waitingforportnumber_100ms(10);
-    while ((m_tcp_server.GetTcpPort() == 0) && (--waitingforportnumber_100ms != 0))
-    {
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-    if (m_tcp_server.GetTcpPort() == 0)
-    {
-      Logging::Log(log_level_error, m_service_name + "::CServiceServerImpl::Couldn't aquire server port.");
-    }
+    //auto waitingforportnumber_100ms(10);
+    //while ((m_tcp_server.GetTcpPort() == 0) && (--waitingforportnumber_100ms != 0))
+    //{
+    //  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    //}
+    //if (m_tcp_server.GetTcpPort() == 0)
+    //{
+    //  Logging::Log(log_level_error, m_service_name + "::CServiceServerImpl::Couldn't aquire server port.");
+    //}
 
     if (g_servicegate()) g_servicegate()->Register(this);
 

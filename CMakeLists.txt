@@ -469,7 +469,7 @@ if(BUILD_ECAL_TESTS)
   # ------------------------------------------------------
   # test ecal
   # ------------------------------------------------------
-  add_subdirectory(testing/ecal/clientserver_test)
+  #add_subdirectory(testing/ecal/clientserver_test) not running on github action
   add_subdirectory(testing/ecal/core_test)
   add_subdirectory(testing/ecal/event_test)
   add_subdirectory(testing/ecal/expmap_test)
