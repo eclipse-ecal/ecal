@@ -142,8 +142,45 @@ namespace eCAL
       }
       else
       {
-        // see !IsSubscribed()
+        // send a zero payload length message to trigger the subscriber side
+        return(CPublisher::Send(nullptr, 0, time_));
+      }
+      return(0);
+    }
+
+    /**
+     * @brief Send a serialized message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout).
+     *
+     * This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.
+     *
+     * @param msg_                     The message object.
+     * @param time_                    Time stamp.
+     * @param acknowledge_timeout_ms_  Maximum time to wait for all subscribers acknowledge feedback in ms (buffer received and processed).
+     *
+     * @return  Number of bytes sent.
+    **/
+    size_t SendSynchronized(const T& msg_, long long time_, long long acknowledge_timeout_ms_)
+    {
+      // see CMsgPublisher::Send
+      if (!IsSubscribed())
+      {
         return(CPublisher::Send(nullptr, 0));
+      }
+
+      // see CMsgPublisher::Send
+      size_t size = GetSize(msg_);
+      if (size > 0)
+      {
+        m_buffer.resize(size);
+        if (Serialize(msg_, &m_buffer[0], m_buffer.size()))
+        {
+          return(CPublisher::SendSynchronized(&m_buffer[0], size, time_, acknowledge_timeout_ms_));
+        }
+      }
+      else
+      {
+        // send a zero payload length message to trigger the subscriber side
+        return(CPublisher::SendSynchronized(nullptr, 0, time_, acknowledge_timeout_ms_));
       }
       return(0);
     }
