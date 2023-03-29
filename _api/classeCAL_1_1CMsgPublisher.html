@@ -2524,6 +2524,25 @@ title="Print to PDF"
 </dl>
 </dd></dl>
 
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL13CMsgPublisher16SendSynchronizedERK1Txx">
+<span id="_CPPv3N4eCAL13CMsgPublisher16SendSynchronizedERK1Txx"></span><span id="_CPPv2N4eCAL13CMsgPublisher16SendSynchronizedERK1Txx"></span><span id="eCAL::CMsgPublisher::SendSynchronized__TCR.l-l.l-l"></span><span class="target" id="classeCAL_1_1CMsgPublisher_1a7ba9ec05541a906e47ae01771f8a32e2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SendSynchronized</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN4eCAL13CMsgPublisherE" title="eCAL::CMsgPublisher::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">msg_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">acknowledge_timeout_ms_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL13CMsgPublisher16SendSynchronizedERK1Txx" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Send a serialized message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout). </p>
+<p>This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msg_</strong> – The message object. </p></li>
+<li><p><strong>time_</strong> – Time stamp. </p></li>
+<li><p><strong>acknowledge_timeout_ms_</strong> – Maximum time to wait for all subscribers acknowledge feedback in ms (buffer received and processed).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of bytes sent. </p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 </dd></dl>
 
