@@ -107,7 +107,7 @@ namespace eCAL
     bool DoRegister(const bool force_);
     void Connect(const std::string& tid_, const std::string& ttype_, const std::string& tdesc_);
     void Disconnect();
-    void CheckCounter(const std::string& tid_, long long counter_);
+    bool CheckMessageClock(const std::string& tid_, long long current_clock_);
 
     std::string                               m_host_name;
     int                                       m_host_id;
