@@ -43,7 +43,9 @@ int main(int argc, char **argv)
   unsigned long long  bytes(0);
   size_t              slen (0);
   int                 trigger(1);
-  bool                handshake(false);
+  bool                zero_copy(true);
+  int                 buffer_count(1);
+  bool                handshake(true);
 
   // default send string
   std::string send_s = "Hello World ";
@@ -56,12 +58,31 @@ int main(int argc, char **argv)
   std::cout << "Message size  =  " << int(send_s.size()) << " Byte = " << int(send_s.size()/1024) << " kByte = " << int(send_s.size()/1024/1024) << " MByte" << std::endl << std::endl;
   slen = send_s.size();
 
-  // set buffering
-  pub.ShmSetBufferCount(2);
-
   // set zero copy
-  pub.ShmEnableZeroCopy(true);
+  if (zero_copy)
+  {
+    std::cout << "Switch zero copy mode on" << std::endl << std::endl;
+  }
+  pub.ShmEnableZeroCopy(zero_copy);
+
+  // set write buffer count
+  if (buffer_count > 1)
+  {
+    std::cout << "Set number of write buffer to " << buffer_count << std::endl << std::endl;
+  }
+  pub.ShmSetBufferCount(buffer_count);
   
+  // set handshake
+  if (handshake)
+  {
+    std::cout << "Switch handshake on" << std::endl << std::endl;
+    pub.ShmSetAcknowledgeTimeout(std::chrono::milliseconds(1000));
+  }
+  else
+  {
+    pub.ShmSetAcknowledgeTimeout(0);
+  }
+
   // safe the start time
   auto start_time = std::chrono::steady_clock::now();
 
@@ -96,33 +117,13 @@ int main(int argc, char **argv)
         out << "kByte/s:               " << (unsigned int)(bytes / 1024 /        diff_time.count()) << std::endl;
         out << "MByte/s:               " << (unsigned int)(bytes / 1024 / 1024 / diff_time.count()) << std::endl;
         out << "Messages/s:            " << (unsigned int)(msgs  /               diff_time.count()) << std::endl;
+        out << "Latency (us):          " << (diff_time.count() / msgs) * 1000 * 1000                << std::endl;
         std::cout << out.str() << std::endl;
         msgs  = 0;
         bytes = 0;
 
         eCAL::Logging::Log(out.str());
       }
-    }
-
-    if ((trigger % 10) == 0)
-    {
-      std::cout << std::endl;
-      std::cout << "------------------------------" << std::endl;
-      if (handshake)
-      {
-        std::cout << "Switch handshake off" << std::endl;
-        pub.ShmSetAcknowledgeTimeout(0);
-      }
-      else
-      {
-        std::cout << "Switch handshake on" << std::endl;
-        pub.ShmSetAcknowledgeTimeout(std::chrono::milliseconds(1000));
-      }
-      std::cout << "------------------------------" << std::endl;
-      std::cout << std::endl;
-
-      handshake = !handshake;
-      trigger++;
     }
 
     eCAL::Logging::StopCoreTimer();

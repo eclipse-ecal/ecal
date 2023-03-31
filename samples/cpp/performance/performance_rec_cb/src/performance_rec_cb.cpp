@@ -35,11 +35,12 @@ long long                             g_bytes(0);
 void PrintStatistic(const std::string& topic_name_, const std::chrono::duration<double>& diff_time_, const size_t size_, long long& bytes_, long long& msgs_)
 {
     std::stringstream out;
-    out << "Topic Name:            " << topic_name_                                    << std::endl;
+    out << "Topic Name:            " << topic_name_                                               << std::endl;
     out << "Message size (kByte):  " << (unsigned int)(size_  / 1024                            ) << std::endl;
     out << "kByte/s:               " << (unsigned int)(bytes_ / 1024        / diff_time_.count()) << std::endl;
     out << "MByte/s:               " << (unsigned int)(bytes_ / 1024 / 1024 / diff_time_.count()) << std::endl;
     out << "Messages/s:            " << (unsigned int)(msgs_                / diff_time_.count()) << std::endl;
+    out << "Latency (us):          " << (diff_time_.count() / msgs_) * 1000 * 1000                << std::endl;
     std::cout << out.str() << std::endl;
     msgs_  = 0;
     bytes_ = 0;
