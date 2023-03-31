@@ -66,6 +66,8 @@ Functions
 ---------
 
 
+- :ref:`exhale_function_ecal__config_8h_1af8e917b3c4963762f5d75c5f7326444a`
+
 - :ref:`exhale_function_ecal__config_8h_1a04d9c3b9b98ca0505968a01f87bc3425`
 
 - :ref:`exhale_function_ecal__config_8h_1a2916e95b188d7b7fceb5335056c43b90`
