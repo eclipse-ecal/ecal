@@ -788,17 +788,6 @@ namespace eCAL
       // is using a shm ringbuffer and messages arrive in the wrong order
       if (clock_difference < 0)
       {
-        // we log this first
-        std::string msg = "Message received in wrong order ! ";
-        msg += "(Unit: \'";
-        msg += Process::GetUnitName();
-        msg += "@";
-        msg += Process::GetHostName();
-        msg += "\' | Subscriber: \'";
-        msg += m_topic_name;
-        msg += "\')";
-        Logging::Log(log_level_warning, msg);
-
         // -----------------------------------
         // drop messages in the wrong order
         // -----------------------------------
@@ -818,6 +807,13 @@ namespace eCAL
         else
         {
           // do not update the internal clock counter
+
+          // but we log this
+          std::string msg = "Subscriber: \'";
+          msg += m_topic_name;
+          msg += "\'";
+          msg += " received a message in the wrong order";
+          Logging::Log(log_level_warning, msg);
 
           // process it
           return true;
