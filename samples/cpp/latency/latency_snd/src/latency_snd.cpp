@@ -69,7 +69,7 @@ void do_run(const int runs, int snd_size /*kB*/, int mem_buffer, bool zero_copy)
     // get microseconds
     auto snd_time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     // send message (with receive timeout 100 ms)
-    pub.SendSynchronized(snd_array.data(), snd_array.size(), snd_time, 100 /*ms*/);
+    pub.Send(snd_array.data(), snd_array.size(), snd_time, 100 /*ms*/);
   }
 
   // log test

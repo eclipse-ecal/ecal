@@ -313,16 +313,6 @@ namespace eCAL
     size_t Send(const void* const buf_, size_t len_, long long time_ = -1) const;
 
     /**
-     * @brief Send a message to all subscribers. 
-     *
-     * @param s_      String that contains content to send. 
-     * @param time_   Send time (-1 = use eCAL system time in us, default = -1).
-     *
-     * @return  Number of bytes sent. 
-    **/
-    size_t Send(const std::string& s_, long long time_ = -1) const;
-
-    /**
      * @brief Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout).
      * 
      * This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.
@@ -334,7 +324,34 @@ namespace eCAL
      *
      * @return  Number of bytes sent.
     **/
-    size_t SendSynchronized(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const;
+    size_t Send(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const;
+
+    /**
+     * @brief Send a message to all subscribers.
+     *
+     * @param s_      String that contains content to send.
+     * @param time_   Send time (-1 = use eCAL system time in us, default = -1).
+     *
+     * @return  Number of bytes sent.
+    **/
+    size_t Send(const std::string& s_, long long time_ = -1) const
+    {
+      return(Send(s_.data(), s_.size(), time_));
+    }
+
+    /**
+     * @brief Send a message to all subscribers synchronized.
+     *
+     * @param s_                       String that contains content to send.
+     * @param time_                    Send time (-1 = use eCAL system time in us).
+     * @param acknowledge_timeout_ms_  Maximum time to wait for all subscribers acknowledge feedback in ms (buffer received and processed).
+     *
+     * @return  Number of bytes sent.
+    **/
+    size_t Send(const std::string& s_, long long time_, long long acknowledge_timeout_ms_) const
+    {
+      return(Send(s_.data(), s_.size(), time_, acknowledge_timeout_ms_));
+    }
 
     /**
      * @brief Add callback function for publisher events.
