@@ -28,7 +28,7 @@
 #include "latency_log.h"
 
 // warmup runs not to measure
-const int warmups(10);
+const int warmups(100);
 
 // data structure for later evaluation
 struct SCallbackPar
