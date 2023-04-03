@@ -265,7 +265,7 @@ namespace eCAL
         // REMOVE ME IN ECAL6
         // ----------------------------------------------------------------------
 
-        iter->second->ApplyLocLayerParameter(process_id, tlayer.type(), writer_par);
+        iter->second->ApplyLocLayerParameter(process_id, topic_id, tlayer.type(), writer_par);
       }
       // inform for local publisher connection
       iter->second->ApplyLocPublication(process_id, topic_id, topic_type, topic_desc);
