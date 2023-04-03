@@ -598,7 +598,7 @@ namespace eCAL
     m_ext_published = true;
   }
 
-  void CDataReader::ApplyLocLayerParameter(const std::string& process_id_, eCAL::pb::eTLayerType type_, const std::string& parameter_)
+  void CDataReader::ApplyLocLayerParameter(const std::string& process_id_, const std::string& topic_id_, eCAL::pb::eTLayerType type_, const std::string& parameter_)
   {
     // process only for shm and tcp layer
     switch (type_)
@@ -615,7 +615,7 @@ namespace eCAL
     par.host_name  = m_host_name;
     par.process_id = process_id_;
     par.topic_name = m_topic_name;
-    par.topic_id   = m_topic_id;
+    par.topic_id   = topic_id_;
     par.parameter  = parameter_;
 
     switch (type_)
