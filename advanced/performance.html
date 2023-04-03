@@ -2351,16 +2351,30 @@ title="Print to PDF"
                 
   <section id="performance-measurements">
 <span id="performance"></span><h1>Performance measurements<a class="headerlink" href="#performance-measurements" title="Permalink to this headline">#</a></h1>
-<p>The following table shows the latency in µs between a single publisher / subscriber connection for different payload sizes (two different processes running on the same host).
-You can simply measure the latency on your own machine by running the ecal_sample_latency_snd and ecal_sample_latency_rec_cb sample applications.
-The first two columns are showing the performance for the eCAL builtin shared memory layer and the last column for the iceoryx shared memory layer (configured by cmake option ECAL_LAYER_ICEORYX).</p>
-<p>First start ecal_sample_latency_rec_cb.
-This application will receive the published payloads, send them back to the sender and print out the average receive time, the message frequency and the data throughput over all received messages.
-The sending application ecal_sample_latency_snd can be configured that way:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecal_sample_latency_snd  -s &lt;payload_size [kB]&gt; -r &lt;send loops&gt;</span>
+<p>The following table shows latencies for a 1:1 publish/subscribe connection for different payload sizes (the processes are running on the same host).
+You can measure those latencies on your own computer by running the ecal_sample_latency_snd and ecal_sample_latency_rec sample applications.</p>
+<ol class="arabic simple">
+<li><p>Start <code class="docutils literal notranslate"><span class="pre">ecal_sample_latency_rec</span></code> . This application will receive the published payloads, print out the number of the received messages, the latencies and the data throughputs.</p></li>
+<li><p>Start <code class="docutils literal notranslate"><span class="pre">ecal_sample_latency_snd</span></code> . This application will publish the payloads and can be configured via command line parameter:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecal_sample_latency_snd [-z] [-s &lt;int&gt;] [-r &lt;int&gt;] [-b &lt;int&gt;] [--]</span>
+
+<span class="go">Where:</span>
+<span class="go">   -z,  --zero_copy</span>
+<span class="go">     Switch zero copy mode on.</span>
+
+<span class="go">   -s &lt;int&gt;,  --size &lt;int&gt;</span>
+<span class="go">     Messages size in kB.</span>
+
+<span class="go">   -r &lt;int&gt;,  --runs &lt;int&gt;</span>
+<span class="go">     Number of messages to send.</span>
+
+<span class="go">   -b &lt;int&gt;,  --mem_buffer &lt;int&gt;</span>
+<span class="go">     Number of memory files per connection.</span>
 </pre></div>
 </div>
-<p>The table shows the results for a Windows and a Linux platform (200000 samples 1kB - 512kB / 10000 samples &gt; 512 kB, zero drops).</p>
+<p>A message size -1 will run the tests over different message sizes in a range from 1kB to 32 MB.</p>
+<p>The table shows the results for the Windows 10 and the Ubuntu 22.04 platform with and without zero copy mode (message size = -1 (1kB - 32MB), runs = 5000, message buffer = 1).</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>-------------------------------
  Platform
 -------------------------------
@@ -2374,35 +2388,54 @@ Total Physical Memory:   32.614 MB
 </div>
 <style> .line {text-align:right;} </style><table class="table">
 <colgroup>
-<col style="width: 24%" />
-<col style="width: 23%" />
-<col style="width: 27%" />
-<col style="width: 27%" />
+<col style="width: 19%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><div class="line-block">
-<div class="line">Payload Size (kB)</div>
+<div class="line">Payload Size</div>
+<div class="line"><br /></div>
 <div class="line"><br /></div>
 </div>
 </th>
 <th class="head"><div class="line-block">
-<div class="line">Win10 AMD64 (µs)</div>
+<div class="line">Win10 AMD64</div>
 <div class="line-block">
-<div class="line">eCAL SHM</div>
+<div class="line-block">
+<div class="line">SHM</div>
+</div>
+<div class="line">(µs)</div>
 </div>
 </div>
 </th>
 <th class="head"><div class="line-block">
-<div class="line">Ubuntu18 AMD64 (µs)</div>
+<div class="line">Win10 AMD64</div>
 <div class="line-block">
-<div class="line">eCAL SHM</div>
+<div class="line">SHM ZC</div>
+<div class="line-block">
+<div class="line">(µs)</div>
+</div>
 </div>
 </div>
 </th>
 <th class="head"><div class="line-block">
-<div class="line">Ubuntu18 AMD64 (µs)</div>
+<div class="line">Ubuntu22 AMD64</div>
 <div class="line-block">
-<div class="line">Iceoryx SHM</div>
+<div class="line">SHM</div>
+<div class="line">(µs)</div>
+</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">Ubuntu22 AMD64</div>
+<div class="line-block">
+<div class="line">SHM ZC</div>
+<div class="line-block">
+<div class="line">(µs)</div>
+</div>
 </div>
 </div>
 </th>
@@ -2410,7 +2443,7 @@ Total Physical Memory:   32.614 MB
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="line-block">
-<div class="line">1</div>
+<div class="line">1 kB</div>
 </div>
 </td>
 <td><div class="line-block">
@@ -2418,16 +2451,20 @@ Total Physical Memory:   32.614 MB
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">4</div>
+<div class="line">9</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">6</div>
+<div class="line">8</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">9</div>
 </div>
 </td>
 </tr>
 <tr class="row-odd"><td><div class="line-block">
-<div class="line">2</div>
+<div class="line">2 kB</div>
 </div>
 </td>
 <td><div class="line-block">
@@ -2435,16 +2472,20 @@ Total Physical Memory:   32.614 MB
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">4</div>
+<div class="line">9</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">6</div>
+<div class="line">8</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">9</div>
 </div>
 </td>
 </tr>
 <tr class="row-even"><td><div class="line-block">
-<div class="line">4</div>
+<div class="line">4 kB</div>
 </div>
 </td>
 <td><div class="line-block">
@@ -2452,16 +2493,20 @@ Total Physical Memory:   32.614 MB
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">5</div>
+<div class="line">9</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">6</div>
+<div class="line">8</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">9</div>
 </div>
 </td>
 </tr>
 <tr class="row-odd"><td><div class="line-block">
-<div class="line">8</div>
+<div class="line">8 kB</div>
 </div>
 </td>
 <td><div class="line-block">
@@ -2469,16 +2514,28 @@ Total Physical Memory:   32.614 MB
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">5</div>
+<div class="line">9</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">6</div>
+<div class="line">10</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">9</div>
 </div>
 </td>
 </tr>
 <tr class="row-even"><td><div class="line-block">
-<div class="line">16</div>
+<div class="line">16 kB</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">13</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">10</div>
 </div>
 </td>
 <td><div class="line-block">
@@ -2486,16 +2543,12 @@ Total Physical Memory:   32.614 MB
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">6</div>
-</div>
-</td>
-<td><div class="line-block">
-<div class="line">6</div>
+<div class="line">10</div>
 </div>
 </td>
 </tr>
 <tr class="row-odd"><td><div class="line-block">
-<div class="line">32</div>
+<div class="line">32 kB</div>
 </div>
 </td>
 <td><div class="line-block">
@@ -2503,16 +2556,28 @@ Total Physical Memory:   32.614 MB
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">7</div>
+<div class="line">10</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">8</div>
+<div class="line">14</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">10</div>
 </div>
 </td>
 </tr>
 <tr class="row-even"><td><div class="line-block">
-<div class="line">64</div>
+<div class="line">64 kB</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">17</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">11</div>
 </div>
 </td>
 <td><div class="line-block">
@@ -2523,144 +2588,193 @@ Total Physical Memory:   32.614 MB
 <div class="line">10</div>
 </div>
 </td>
-<td><div class="line-block">
-<div class="line">10</div>
-</div>
-</td>
 </tr>
 <tr class="row-odd"><td><div class="line-block">
-<div class="line">128</div>
+<div class="line">128 kB</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">21</div>
+<div class="line">23</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">15</div>
-</div>
-</td>
-<td><div class="line-block">
-<div class="line">13</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><div class="line-block">
-<div class="line">256</div>
-</div>
-</td>
-<td><div class="line-block">
-<div class="line">32</div>
-</div>
-</td>
-<td><div class="line-block">
-<div class="line">33</div>
-</div>
-</td>
-<td><div class="line-block">
-<div class="line">19</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><div class="line-block">
-<div class="line">512</div>
-</div>
-</td>
-<td><div class="line-block">
-<div class="line">56</div>
-</div>
-</td>
-<td><div class="line-block">
-<div class="line">50</div>
+<div class="line">14</div>
 </div>
 </td>
 <td><div class="line-block">
 <div class="line">28</div>
 </div>
 </td>
+<td><div class="line-block">
+<div class="line">12</div>
+</div>
+</td>
 </tr>
 <tr class="row-even"><td><div class="line-block">
-<div class="line">1024</div>
+<div class="line">256 kB</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">103</div>
+<div class="line">37</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">154</div>
+<div class="line">18</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">82</div>
+<div class="line">135</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">12</div>
 </div>
 </td>
 </tr>
 <tr class="row-odd"><td><div class="line-block">
-<div class="line">2048</div>
+<div class="line">512 kB</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">363</div>
+<div class="line">64</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">392</div>
+<div class="line">26</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">177</div>
+<div class="line">158</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">21</div>
 </div>
 </td>
 </tr>
 <tr class="row-even"><td><div class="line-block">
-<div class="line">4096</div>
+<div class="line">1 MB</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">867</div>
+<div class="line">112</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">877</div>
+<div class="line">42</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">420</div>
+<div class="line">182</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">40</div>
 </div>
 </td>
 </tr>
 <tr class="row-odd"><td><div class="line-block">
-<div class="line">8192</div>
+<div class="line">2 MB</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">1814</div>
+<div class="line">344</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">1119</div>
+<div class="line">76</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">534</div>
+<div class="line">316</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">67</div>
 </div>
 </td>
 </tr>
 <tr class="row-even"><td><div class="line-block">
-<div class="line">16384</div>
+<div class="line">4 MB</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">3956</div>
+<div class="line">773</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">2252</div>
+<div class="line">149</div>
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">1060</div>
+<div class="line">692</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">146</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">8 MB</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">1762</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">491</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">1542</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">389</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">16 MB</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">3458</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">1127</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">2998</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">926</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">32 MB</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">6642</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">2471</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">5880</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">2078</div>
 </div>
 </td>
 </tr>

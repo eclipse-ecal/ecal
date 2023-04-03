@@ -2778,8 +2778,48 @@ title="Print to PDF"
 </dd></dl>
 
 <dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher4SendEPCKv6size_txx">
+<span id="_CPPv3NK4eCAL10CPublisher4SendEPCKv6size_txx"></span><span id="_CPPv2NK4eCAL10CPublisher4SendEPCKv6size_txx"></span><span id="eCAL::CPublisher::Send__voidCPC.s.l-l.l-lC"></span><span class="target" id="classeCAL_1_1CPublisher_1acec2cc7c89814fe89971862175c1ec96"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Send</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">buf_</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">acknowledge_timeout_ms_</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher4SendEPCKv6size_txx" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout). </p>
+<p>This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buf_</strong> – Pointer to content buffer. </p></li>
+<li><p><strong>len_</strong> – Length of buffer. </p></li>
+<li><p><strong>time_</strong> – Send time (-1 = use eCAL system time in us). </p></li>
+<li><p><strong>acknowledge_timeout_ms_</strong> – Maximum time to wait for all subscribers acknowledge feedback in ms (buffer received and processed).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of bytes sent. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher16SendSynchronizedEPCKv6size_txx">
+<span id="_CPPv3NK4eCAL10CPublisher16SendSynchronizedEPCKv6size_txx"></span><span id="_CPPv2NK4eCAL10CPublisher16SendSynchronizedEPCKv6size_txx"></span><span id="eCAL::CPublisher::SendSynchronized__voidCPC.s.l-l.l-lC"></span><span class="target" id="classeCAL_1_1CPublisher_1a3e35a436bd3c80e9dfa1811c3c8c1078"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SendSynchronized</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">buf_</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">acknowledge_timeout_ms_</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher16SendSynchronizedEPCKv6size_txx" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout). </p>
+<p>This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buf_</strong> – Pointer to content buffer. </p></li>
+<li><p><strong>len_</strong> – Length of buffer. </p></li>
+<li><p><strong>time_</strong> – Send time (-1 = use eCAL system time in us). </p></li>
+<li><p><strong>acknowledge_timeout_ms_</strong> – Maximum time to wait for all subscribers acknowledge feedback in ms (buffer received and processed).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of bytes sent. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher4SendERKNSt6stringEx">
-<span id="_CPPv3NK4eCAL10CPublisher4SendERKNSt6stringEx"></span><span id="_CPPv2NK4eCAL10CPublisher4SendERKNSt6stringEx"></span><span id="eCAL::CPublisher::Send__ssCR.l-lC"></span><span class="target" id="classeCAL_1_1CPublisher_1a400b411a9a104212cd159dddf2e08ce2"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Send</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">s_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="o"><span class="pre">-</span></span><span class="m"><span class="pre">1</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher4SendERKNSt6stringEx" title="Permalink to this definition">#</a><br /></dt>
+<span id="_CPPv3NK4eCAL10CPublisher4SendERKNSt6stringEx"></span><span id="_CPPv2NK4eCAL10CPublisher4SendERKNSt6stringEx"></span><span id="eCAL::CPublisher::Send__ssCR.l-lC"></span><span class="target" id="classeCAL_1_1CPublisher_1a400b411a9a104212cd159dddf2e08ce2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Send</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">s_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="o"><span class="pre">-</span></span><span class="m"><span class="pre">1</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher4SendERKNSt6stringEx" title="Permalink to this definition">#</a><br /></dt>
 <dd><p>Send a message to all subscribers. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2795,15 +2835,13 @@ title="Print to PDF"
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher16SendSynchronizedEPCKv6size_txx">
-<span id="_CPPv3NK4eCAL10CPublisher16SendSynchronizedEPCKv6size_txx"></span><span id="_CPPv2NK4eCAL10CPublisher16SendSynchronizedEPCKv6size_txx"></span><span id="eCAL::CPublisher::SendSynchronized__voidCPC.s.l-l.l-lC"></span><span class="target" id="classeCAL_1_1CPublisher_1a3e35a436bd3c80e9dfa1811c3c8c1078"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SendSynchronized</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">buf_</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">acknowledge_timeout_ms_</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher16SendSynchronizedEPCKv6size_txx" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout). </p>
-<p>This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.</p>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher4SendERKNSt6stringExx">
+<span id="_CPPv3NK4eCAL10CPublisher4SendERKNSt6stringExx"></span><span id="_CPPv2NK4eCAL10CPublisher4SendERKNSt6stringExx"></span><span id="eCAL::CPublisher::Send__ssCR.l-l.l-lC"></span><span class="target" id="classeCAL_1_1CPublisher_1aed868f53f49095292f00450b6e887389"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Send</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">s_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">acknowledge_timeout_ms_</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher4SendERKNSt6stringExx" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Send a message to all subscribers synchronized. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>buf_</strong> – Pointer to content buffer. </p></li>
-<li><p><strong>len_</strong> – Length of buffer. </p></li>
+<li><p><strong>s_</strong> – String that contains content to send. </p></li>
 <li><p><strong>time_</strong> – Send time (-1 = use eCAL system time in us). </p></li>
 <li><p><strong>acknowledge_timeout_ms_</strong> – Maximum time to wait for all subscribers acknowledge feedback in ms (buffer received and processed).</p></li>
 </ul>

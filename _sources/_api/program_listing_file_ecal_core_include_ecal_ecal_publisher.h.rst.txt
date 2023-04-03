@@ -101,9 +101,23 @@ Program Listing for File ecal_publisher.h
    
        size_t Send(const void* const buf_, size_t len_, long long time_ = -1) const;
    
-       size_t Send(const std::string& s_, long long time_ = -1) const;
+       size_t Send(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const;
    
-       size_t SendSynchronized(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const;
+       [[deprecated]]
+       size_t SendSynchronized(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
+       {
+         return Send(buf_, len_, time_, acknowledge_timeout_ms_);
+       }
+   
+       size_t Send(const std::string& s_, long long time_ = -1) const
+       {
+         return(Send(s_.data(), s_.size(), time_));
+       }
+   
+       size_t Send(const std::string& s_, long long time_, long long acknowledge_timeout_ms_) const
+       {
+         return(Send(s_.data(), s_.size(), time_, acknowledge_timeout_ms_));
+       }
    
        bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
    
