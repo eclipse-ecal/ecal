@@ -324,8 +324,8 @@ namespace eCAL
       //////////////////////////////////////////////
       // update description
       //////////////////////////////////////////////
-      auto& ecal_sample_service = iter->second.service();
-      for (auto method : ecal_sample_service.methods())
+      const auto& ecal_sample_service = iter->second.service();
+      for (const auto method : ecal_sample_service.methods())
       {
         ApplyServiceToDescGate(ecal_sample_service.sname(), method.mname(), method.req_type(), method.req_desc(), method.resp_type(), method.resp_desc());
       }
@@ -368,10 +368,10 @@ namespace eCAL
       // update description
       //////////////////////////////////////////////
       // read attributes
-      std::string topic_name(iter->second.topic().tname());
-      std::string topic_type(iter->second.topic().ttype());
-      std::string topic_desc(iter->second.topic().tdesc());
-      bool        topic_is_a_publisher(iter->second.cmd_type() == eCAL::pb::eCmdType::bct_reg_publisher);
+      const std::string topic_name(iter->second.topic().tname());
+      const std::string topic_type(iter->second.topic().ttype());
+      const std::string topic_desc(iter->second.topic().tdesc());
+      const bool        topic_is_a_publisher(iter->second.cmd_type() == eCAL::pb::eCmdType::bct_reg_publisher);
       ApplyTopicToDescGate(topic_name, topic_type, topic_desc, topic_is_a_publisher);
 
       //////////////////////////////////////////////

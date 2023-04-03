@@ -97,7 +97,7 @@ namespace eCAL
     service.tcp_port = static_cast<unsigned short>(ecal_sample_service.tcp_port());
 
     // store description
-    for (auto method : ecal_sample_service.methods())
+    for (const auto& method : ecal_sample_service.methods())
     {
       ApplyServiceToDescGate(ecal_sample_service.sname(), method.mname(), method.req_type(), method.req_desc(), method.resp_type(), method.resp_desc());
     }
@@ -134,7 +134,7 @@ namespace eCAL
     std::vector<SServiceAttr> ret_vec;
     std::shared_lock<std::shared_timed_mutex> lock(m_service_register_map_sync);
 
-    // Look for requested services
+    // look for requested services
     for (auto service : m_service_register_map)
     {
       if (service.second.sname == service_name_)
@@ -166,7 +166,7 @@ namespace eCAL
   {
     if (g_descgate())
     {
-      // Calculate the quality of the current info
+      // calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
       if (!(req_type_name_.empty() && resp_type_name_.empty()))
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
