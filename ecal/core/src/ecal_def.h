@@ -188,3 +188,5 @@
 /* memory file access timeout */
 #define EXP_MEMFILE_ACCESS_TIMEOUT                  100
 
+/* enable dropping of payload messages that arrive out of order */
+#define EXP_DROP_OUT_OF_ORDER_MESSAGES              false

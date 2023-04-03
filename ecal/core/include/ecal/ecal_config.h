@@ -127,6 +127,7 @@ namespace eCAL
       ECAL_API bool              IsNetworkMonitoringDisabled        ();
       ECAL_API size_t            GetShmMonitoringQueueSize          ();
       ECAL_API std::string       GetShmMonitoringDomain             ();
+      ECAL_API bool              GetDropOutOfOrderMessages          ();
     }
   }
 }

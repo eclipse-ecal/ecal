@@ -6,19 +6,34 @@
 Performance measurements
 ========================
 
-The following table shows the latency in µs between a single publisher / subscriber connection for different payload sizes (two different processes running on the same host).
-You can simply measure the latency on your own machine by running the ecal_sample_latency_snd and ecal_sample_latency_rec_cb sample applications.
-The first two columns are showing the performance for the eCAL builtin shared memory layer and the last column for the iceoryx shared memory layer (configured by cmake option ECAL_LAYER_ICEORYX).
+The following table shows latencies for a 1:1 publish/subscribe connection for different payload sizes (the processes are running on the same host).
+You can measure those latencies on your own computer by running the ecal_sample_latency_snd and ecal_sample_latency_rec sample applications.
 
-First start ecal_sample_latency_rec_cb.
-This application will receive the published payloads, send them back to the sender and print out the average receive time, the message frequency and the data throughput over all received messages.
-The sending application ecal_sample_latency_snd can be configured that way:
+#. Start ``ecal_sample_latency_rec`` . This application will receive the published payloads, print out the number of the received messages, the latencies and the data throughputs.
+
+#. Start ``ecal_sample_latency_snd`` . This application will publish the payloads and can be configured via command line parameter:
 
 .. code-block:: console
-   
-   ecal_sample_latency_snd  -s <payload_size [kB]> -r <send loops>
 
-The table shows the results for a Windows and a Linux platform (200000 samples 1kB - 512kB / 10000 samples > 512 kB, zero drops).
+   ecal_sample_latency_snd [-z] [-s <int>] [-r <int>] [-b <int>] [--]
+
+   Where:
+      -z,  --zero_copy
+        Switch zero copy mode on.
+
+      -s <int>,  --size <int>
+        Messages size in kB.
+
+      -r <int>,  --runs <int>
+        Number of messages to send.
+
+      -b <int>,  --mem_buffer <int>
+        Number of memory files per connection.
+
+
+A message size -1 will run the tests over different message sizes in a range from 1kB to 32 MB.
+
+The table shows the results for the Windows 10 and the Ubuntu 22.04 platform with and without zero copy mode (message size = -1 (1kB - 32MB), runs = 5000, message buffer = 1).
 
 .. code-block:: none
 
@@ -37,37 +52,40 @@ The table shows the results for a Windows and a Linux platform (200000 samples 1
 
   <style> .line {text-align:right;} </style>
 
-+--------------------+-------------------+----------------------+----------------------+
-|| Payload Size (kB) || Win10 AMD64 (µs) || Ubuntu18 AMD64 (µs) || Ubuntu18 AMD64 (µs) |
-||                   ||        eCAL SHM  ||           eCAL SHM  ||        Iceoryx SHM  |
-+====================+===================+======================+======================+
-||                1  ||              10  ||                  4  ||                  6  |
-+--------------------+-------------------+----------------------+----------------------+
-||                2  ||              10  ||                  4  ||                  6  |
-+--------------------+-------------------+----------------------+----------------------+
-||                4  ||              10  ||                  5  ||                  6  |
-+--------------------+-------------------+----------------------+----------------------+
-||                8  ||              11  ||                  5  ||                  6  |
-+--------------------+-------------------+----------------------+----------------------+
-||               16  ||              12  ||                  6  ||                  6  |
-+--------------------+-------------------+----------------------+----------------------+
-||               32  ||              13  ||                  7  ||                  8  |
-+--------------------+-------------------+----------------------+----------------------+
-||               64  ||              16  ||                 10  ||                 10  |
-+--------------------+-------------------+----------------------+----------------------+
-||              128  ||              21  ||                 15  ||                 13  |
-+--------------------+-------------------+----------------------+----------------------+
-||              256  ||              32  ||                 33  ||                 19  |
-+--------------------+-------------------+----------------------+----------------------+
-||              512  ||              56  ||                 50  ||                 28  |
-+--------------------+-------------------+----------------------+----------------------+
-||             1024  ||             103  ||                154  ||                 82  |
-+--------------------+-------------------+----------------------+----------------------+
-||             2048  ||             363  ||                392  ||                177  |
-+--------------------+-------------------+----------------------+----------------------+
-||             4096  ||             867  ||                877  ||                420  |
-+--------------------+-------------------+----------------------+----------------------+
-||             8192  ||            1814  ||               1119  ||                534  |
-+--------------------+-------------------+----------------------+----------------------+
-||            16384  ||            3956  ||               2252  ||               1060  |
-+--------------------+-------------------+----------------------+----------------------+
++---------------+--------------+--------------+-----------------+-----------------+
+|| Payload Size || Win10 AMD64 || Win10 AMD64 || Ubuntu22 AMD64 || Ubuntu22 AMD64 |
+||              ||         SHM ||      SHM ZC ||           SHM  ||         SHM ZC |
+||              ||        (µs) ||        (µs) ||           (µs) ||           (µs) |
++===============+==============+==============+=================+=================+
+||         1 kB ||          10 ||           9 ||              8 ||              9 |
++---------------+--------------+--------------+-----------------+-----------------+
+||         2 kB ||          10 ||           9 ||              8 ||              9 |
++---------------+--------------+--------------+-----------------+-----------------+
+||         4 kB ||          10 ||           9 ||              8 ||              9 |
++---------------+--------------+--------------+-----------------+-----------------+
+||         8 kB ||          11 ||           9 ||             10 ||              9 |
++---------------+--------------+--------------+-----------------+-----------------+
+||        16 kB ||          13 ||          10 ||             12 ||             10 |
++---------------+--------------+--------------+-----------------+-----------------+
+||        32 kB ||          13 ||          10 ||             14 ||             10 |
++---------------+--------------+--------------+-----------------+-----------------+
+||        64 kB ||          17 ||          11 ||             16 ||             10 |
++---------------+--------------+--------------+-----------------+-----------------+
+||       128 kB ||          23 ||          14 ||             28 ||             12 |
++---------------+--------------+--------------+-----------------+-----------------+
+||       256 kB ||          37 ||          18 ||            135 ||             12 |
++---------------+--------------+--------------+-----------------+-----------------+
+||       512 kB ||          64 ||          26 ||            158 ||             21 |
++---------------+--------------+--------------+-----------------+-----------------+
+||         1 MB ||         112 ||          42 ||            182 ||             40 |
++---------------+--------------+--------------+-----------------+-----------------+
+||         2 MB ||         344 ||          76 ||            316 ||             67 |
++---------------+--------------+--------------+-----------------+-----------------+
+||         4 MB ||         773 ||         149 ||            692 ||            146 |
++---------------+--------------+--------------+-----------------+-----------------+
+||         8 MB ||        1762 ||         491 ||           1542 ||            389 |
++---------------+--------------+--------------+-----------------+-----------------+
+||        16 MB ||        3458 ||        1127 ||           2998 ||            926 |
++---------------+--------------+--------------+-----------------+-----------------+
+||        32 MB ||        6642 ||        2471 ||           5880 ||           2078 |
++---------------+--------------+--------------+-----------------+-----------------+

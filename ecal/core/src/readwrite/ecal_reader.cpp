@@ -430,8 +430,16 @@ namespace eCAL
       if (m_id_set.find(id_) == m_id_set.end()) return(0);
     }
 
-    // check message dropping
-    CheckCounter(tid_, clock_);
+    // check the current message clock
+    // if the function returns false we detected
+    //  - a dropped message
+    //  - an out of order message
+    //  - a multiple sent message
+    if (!CheckMessageClock(tid_, clock_))
+    {
+      // we will not process that message
+      return(0);
+    }
 
 #ifndef NDEBUG
     // log it
@@ -590,7 +598,7 @@ namespace eCAL
     m_ext_published = true;
   }
 
-  void CDataReader::ApplyLocLayerParameter(const std::string& process_id_, eCAL::pb::eTLayerType type_, const std::string& parameter_)
+  void CDataReader::ApplyLocLayerParameter(const std::string& process_id_, const std::string& topic_id_, eCAL::pb::eTLayerType type_, const std::string& parameter_)
   {
     // process only for shm and tcp layer
     switch (type_)
@@ -607,7 +615,7 @@ namespace eCAL
     par.host_name  = m_host_name;
     par.process_id = process_id_;
     par.topic_name = m_topic_name;
-    par.topic_id   = m_topic_id;
+    par.topic_id   = topic_id_;
     par.parameter  = parameter_;
 
     switch (type_)
@@ -702,17 +710,51 @@ namespace eCAL
     }
   }
 
-  void CDataReader::CheckCounter(const std::string& tid_, long long counter_)
+  bool CDataReader::CheckMessageClock(const std::string& tid_, long long current_clock_)
   {
     auto iter = m_writer_counter_map.find(tid_);
-    if (iter != m_writer_counter_map.end())
+    
+    // initial entry
+    if (iter == m_writer_counter_map.end())
     {
-      long long counter_last = iter->second;
-      long long drops = counter_ - counter_last;
-      if (drops > 1)
+      m_writer_counter_map[tid_] = current_clock_;
+      return true;
+    }
+    // clock entry exists
+    else
+    {
+      // calculate difference
+      long long last_clock = iter->second;
+      long long clock_difference = current_clock_ - last_clock;
+
+      // this is perfect, the next message arrived
+      if (clock_difference == 1)
+      {
+        // update the internal clock counter
+        iter->second = current_clock_;
+
+        // process it
+        return true;
+      }
+
+      // that should never happen, maybe there is a publisher
+      // sending parallel on multiple layers ?
+      // we ignore this message duplicate
+      if (clock_difference == 0)
+      {
+        // do not update the internal clock counter
+
+        // do not process it
+        return false;
+      }
+
+      // that means we miss at least one message
+      // -> we have a "message drop"
+      if (clock_difference > 1)
       {
 #if 0
-        std::string msg = std::to_string(counter_-counter_last) + " Messages lost ! ";
+        // we log this
+        std::string msg = std::to_string(counter_ - counter_last) + " Messages lost ! ";
         msg += "(Unit: \'";
         msg += Process::GetUnitName();
         msg += "@";
@@ -722,23 +764,65 @@ namespace eCAL
         msg += "\')";
         Logging::Log(log_level_warning, msg);
 #endif
+        // we fire the message drop event
         auto citer = m_event_callback_map.find(sub_event_dropped);
         if (citer != m_event_callback_map.end())
         {
           SSubEventCallbackData data;
-          data.type  = sub_event_dropped;
-          data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-          data.clock = drops;
+          data.type = sub_event_dropped;
+          data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+          data.clock = current_clock_;
           (citer->second)(m_topic_name.c_str(), &data);
         }
-        m_message_drops += drops;
+        // increase the drop counter
+        m_message_drops += clock_difference;
+
+        // update the internal clock counter
+        iter->second = current_clock_;
+
+        // process it
+        return true;
       }
-      iter->second = counter_;
+
+      // a negative clock difference may happen if a publisher
+      // is using a shm ringbuffer and messages arrive in the wrong order
+      if (clock_difference < 0)
+      {
+        // -----------------------------------
+        // drop messages in the wrong order
+        // -----------------------------------
+        if (eCAL::Config::Experimental::GetDropOutOfOrderMessages())
+        {
+          // do not update the internal clock counter
+
+          // there is no need to fire the drop event, because
+          // this event has been fired with the message before
+
+          // do not process it
+          return false;
+        }
+        // -----------------------------------
+        // process messages in the wrong order
+        // -----------------------------------
+        else
+        {
+          // do not update the internal clock counter
+
+          // but we log this
+          std::string msg = "Subscriber: \'";
+          msg += m_topic_name;
+          msg += "\'";
+          msg += " received a message in the wrong order";
+          Logging::Log(log_level_warning, msg);
+
+          // process it
+          return true;
+        }
+      }
     }
-    else
-    {
-      m_writer_counter_map[tid_] = counter_;
-    }
+
+    // should never be reached
+    return false;
   }
     
   void CDataReader::RefreshRegistration()

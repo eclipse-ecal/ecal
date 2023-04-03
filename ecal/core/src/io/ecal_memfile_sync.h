@@ -54,14 +54,12 @@ namespace eCAL
     bool CheckSize(size_t size_);
     bool Write(const SWriterData& data_);
 
-    std::string GetName();
+    std::string GetName() const;
 
   protected:
     bool Create(const std::string& base_name_, size_t size_);
     bool Destroy();
     bool Recreate(size_t size_);
-
-    std::string BuildMemFileName(const std::string base_name_);
 
     void SyncContent();
     void DisconnectAll();

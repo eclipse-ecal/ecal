@@ -27,6 +27,7 @@
 #include <ecal/msg/protobuf/dynamic_json_subscriber.h>
 
 using namespace System;
+using namespace System::Collections::Generic;
 using namespace System::Runtime::InteropServices;
 
 namespace Continental
@@ -159,6 +160,15 @@ namespace Continental
         Publisher(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_desc_);
 
         /**
+         * @brief Constructor.
+         *
+         * @param topic_name_   Unique topic name.
+         * @param topic_type_   Type name (optional.
+         * @param topic_desc_   Type description (optional.
+        **/
+        Publisher(System::String^ topic_name_, System::String^ topic_type_, array<Byte>^ topic_desc_);
+
+        /**
          * @brief Destructor.
         **/
         ~Publisher();
@@ -189,6 +199,16 @@ namespace Continental
          * @return  number of bytes sent.
         **/
         size_t Send(System::String^ s_, const long long time_);
+
+        /**
+         * @brief Send a message to all subscribers.
+         *
+         * @param buffer_ byte[] that contains the message content.
+         * @param time_   Send time (-1 = use eCAL system time in us, default = -1).
+         *
+         * @return  number of bytes sent.
+        **/
+        size_t Send(array<Byte>^ buffer_, long long time_);
 
         /**
          * @brief Query if this object is created.
@@ -247,6 +267,15 @@ namespace Continental
         Subscriber(System::String^ topic_name_, System::String^ topic_type_, System::String^ topic_desc_);
 
         /**
+         * @brief Constructor.
+         *
+         * @param topic_name_   Unique topic name.
+         * @param topic_type_   Type name (optional for type checking by monitoring app).
+         * @param topic_desc_   Descriptor (optional for dynamic reflection by monitoring app).
+        **/
+        Subscriber(System::String^ topic_name_, System::String^ topic_type_, array<Byte>^ topic_desc_);
+
+        /**
          * @brief Destructor.
         **/
         ~Subscriber();
@@ -262,11 +291,20 @@ namespace Continental
           long long clock;       /*!< Message write clock */
         };
 
+        ref struct ReceiveCallbackDataUnsafe
+        {
+          void* data;           /*!< Message payload     */
+          unsigned long long size;   /*!< Message payload length*/
+          long long id;         /*!< Message id          */
+          long long time;       /*!< Message time stamp  */
+          long long clock;      /*!< Message write clock */
+      };
         /**
          * @brief delegate definition for callback functions
         **/
         delegate void ReceiverCallback(String^ str, ReceiveCallbackData^ data);
 
+         delegate void ReceiverCallbackUnsafe(String^ str, ReceiveCallbackDataUnsafe^ data);
         /**
          * @brief Creates this object.
          *
@@ -293,6 +331,7 @@ namespace Continental
         **/
         ReceiveCallbackData^ Receive(const int rcv_timeout_);
 
+        ReceiveCallbackDataUnsafe^ ReceiveUnsafe(const int rcv_timeout_);
         /**
          * @brief Add callback function for incoming receives.
          *
@@ -302,6 +341,7 @@ namespace Continental
         **/
         bool AddReceiveCallback(ReceiverCallback^ callback_);
 
+        bool AddReceiveCallback(ReceiverCallbackUnsafe^ callback_);
         /**
          * @brief Remove callback function for incoming receives.
          *
@@ -311,6 +351,7 @@ namespace Continental
         **/
         bool RemReceiveCallback(ReceiverCallback^ callback_);
 
+        bool RemReceiveCallback(ReceiverCallbackUnsafe^ callback_);
         /**
          * @brief Query if this object is created.
          *
@@ -346,18 +387,20 @@ namespace Continental
         **/
         ReceiverCallback^ m_callbacks;
 
+        ReceiverCallbackUnsafe^ m_callbacks_unsafe;
         /**
          * @brief private member which holds the the pointer to OnReceive, to avoid function relocation
         **/
         GCHandle m_gch;
 
+        GCHandle m_gch_unsafe;
         /**
          * @brief The callback of the subscriber, that is registered with the unmanaged code
         **/
         delegate void subCallback(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_);
         subCallback^ m_sub_callback;
         void OnReceive(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_);
-
+        void OnReceiveUnsafe(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_);
         /**
          * @brief stdcall function pointer definition of eCAL::ReceiveCallbackT
         **/
@@ -492,12 +535,27 @@ namespace Continental
         /**
          * @brief Get host, process and topic protobuf string.
         **/
-        static System::String^ GetMonitoring();
+        static String^ GetMonitoring();
 
         /**
          * @brief Get global log message protobuf string.
         **/
-        static System::String^ GetLogging();
+        static String^ GetLogging();
+
+        /**
+         * @brief Get host, process and topic protobuf message bytes.
+        **/
+        static array<Byte>^ GetMonitoringBytes();
+
+        /**
+         * @brief Get global log message protobuf message bytes.
+        **/
+        static array<Byte>^ GetLoggingBytes();
+
+        /*
+        * @brief Get eCAL time
+        */
+        static DateTime GetTime();
       };
     }
   }

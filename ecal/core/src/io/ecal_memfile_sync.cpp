@@ -25,6 +25,7 @@
 #include <ecal/ecal_log.h>
 
 #include "ecal_memfile_header.h"
+#include "ecal_memfile_naming.h"
 #include "ecal_memfile_sync.h"
 
 #include <algorithm>
@@ -220,7 +221,7 @@ namespace eCAL
     return written;
   }
 
-  std::string CSyncMemoryFile::GetName()
+  std::string CSyncMemoryFile::GetName() const
   {
     return m_memfile_name;
   }
@@ -231,7 +232,7 @@ namespace eCAL
 
     // build unique memory file name
     m_base_name = base_name_;
-    m_memfile_name = BuildMemFileName(m_base_name);
+    m_memfile_name = eCAL::memfile::BuildRandomMemFileName(base_name_);
 
     // create new memory file object
     // with additional space for SMemFileHeader
@@ -315,23 +316,6 @@ namespace eCAL
     }
 
     return true;
-  }
-
-  std::string CSyncMemoryFile::BuildMemFileName(const std::string base_name_)
-  {
-    std::string mfile_name(base_name_);
-    std::stringstream out;
-    out << mfile_name << "_" << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-    mfile_name = out.str();
-
-    // replace all '\\' and '/' to '_'
-    std::replace(mfile_name.begin(), mfile_name.end(), '\\', '_');
-    std::replace(mfile_name.begin(), mfile_name.end(), '/', '_');
-
-    // append "_shm" for debugging purposes
-    mfile_name += "_shm";
-
-    return mfile_name;
   }
 
   void CSyncMemoryFile::SyncContent()

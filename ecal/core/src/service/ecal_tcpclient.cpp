@@ -59,39 +59,41 @@ namespace eCAL
 
     try
     {
+      // create idle work object, so the io_service doesn't shut down
       m_idle_work = std::make_shared<asio::io_service::work>(*m_io_service);
-      // NOTE: might want to lazy load this in future
+
+      // execute the io_sevice in 1 thread
       m_async_worker = std::thread(
         [this]
         {
           m_io_service->run();
         });
 
+      // resolve and connect
       asio::connect(*m_socket, resolver.resolve({ host_name_, std::to_string(port_) }));
+      
       // set TCP no delay, so Nagle's algorithm will not stuff multiple messages in one TCP segment
       asio::ip::tcp::no_delay no_delay_option(true);
       m_socket->set_option(no_delay_option);
 
+      // mark as connected
       m_connected = true;
 
-      // fire event
+      // fire connect event
       if (m_event_callback)
       {
         m_event_callback(client_event_connected, "CTcpClient connected");
       }
     }
-    catch (std::exception& /*e*/)
+    catch (std::exception& e)
     {
-      //std::cerr << "CTcpClient::Connect conect exception: " << e.what() << "\n";
+      // log error message
+      std::cerr << "CTcpClient::Connect exception: " << e.what() << "\n";
+      // mark as not connected
       m_connected = false;
-
-      // fire event
-      if (m_event_callback)
-      {
-        m_event_callback(client_event_disconnected, "CTcpClient disconnected");
-      }
     }
 
+    // return success
     m_created = true;
   }
 

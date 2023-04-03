@@ -3,7 +3,7 @@
 .. _thirdparty_licenses:
 
 ===================
-Thirdparty Licenses
+External components
 ===================
 
 Parts of eCAL have a different license than the main project.
@@ -11,7 +11,48 @@ These components may either be shipped with the repository as source code, or al
 The information in this list may not be exhaustive.
 Some dependencies, like GoogleTest, are not used in our officially distributed builds, even though they can be used with eCAL and therefore appear in this list.
 
-.. list-table:: Thirdparty licenses
+Components by Eclipse eCAL™
+===========================
+
+The following external components are developed and maintained by the Eclipse eCAL team.
+They may have a different license than eCAL.
+
+.. list-table:: Components by Eclipse eCAL™
+   :widths: 10 15 30 45
+   :header-rows: 1
+
+   * - Component
+     - License
+     - Copyright
+     - Included in...
+
+   * - `fineFTP Server <https://github.com/continental/fineftp-server>`_
+     - :ref:`mit_license`
+     - 2020 Continental Corporation
+     - - |fa-github| Git submodule ``/tirdparty/fineftp-server``
+       - |fa-windows| Binary distributions for Windows
+       - |fa-ubuntu| Binary distributions for Linux
+
+   * - `tcp_pubsub <https://github.com/continental/tcp_pubsub>`_
+     - :ref:`mit_license`
+     - Copyright (c) 2021 Continental
+     - - |fa-github| Git submodule ``/tirdparty/tcp_pubsub``
+       - |fa-windows| Binary distributions for Windows
+       - |fa-ubuntu| Binary distributions for Linux
+
+   * - `Udpcap <https://github.com/eclipse-ecal/udpcap>`_
+     - :ref:`apache_2_0`
+     - 2022, Continental
+     - - |fa-github| Git submodule ``/tirdparty/udpcap``
+       - |fa-windows| Binary distributions for Windows
+
+Thirdparty components
+=====================
+
+The following components are developed by third parties.
+They are used by Eclipse eCAL, but not associated to it in any way.
+
+.. list-table:: Thirdparty components
    :widths: 10 15 30 45
    :header-rows: 1
 
@@ -59,13 +100,6 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
        Copyright 2018-2020, Rolf Eike Beer
      - - |fa-file-alt| Copy in repository (modified): ``cmake/Modules/Findqwt.cmake``
-
-   * - `fineFTP Server <https://github.com/continental/fineftp-server>`_
-     - :ref:`mit_license`
-     - 2020 Continental Corporation
-     - - |fa-github| Git submodule ``/tirdparty/fineftp-server``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
 
    * - `Flaticons <https://www.flaticon.com/>`_
      - :ref:`creative_commons_3_0`
@@ -158,9 +192,9 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
-   * - `Sphinx TYPO3 theme <https://github.com/TYPO3-Documentation/sphinx_typo3_theme>`_
-     - :ref:`mit_license`
-     - 2020 Martin Bless
+   * - `Sphinx Book Theme <https://github.com/executablebooks/sphinx-book-theme>`_
+     - :ref:`bsd_3`
+     - 2020 Chris Holdgraf
      - - |fa-book| Documentation
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
@@ -173,13 +207,6 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
        Copyright (c) 2017 Google Inc.
      - - |fa-github| Git submodule ``/tirdparty/tclap``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
-
-   * - `tcp_pubsub <https://github.com/continental/tcp_pubsub>`_
-     - :ref:`mit_license`
-     - Copyright (c) 2021 Continental
-     - - |fa-github| Git submodule ``/tirdparty/tcp_pubsub``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
@@ -196,12 +223,6 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
      - - |fa-github| Git submodule ``/tirdparty/tinyxml``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
-
-   * - `Udpcap <https://github.com/eclipse-ecal/udpcap>`_
-     - :ref:`apache_2_0`
-     - 2022, Continental
-     - - |fa-github| Git submodule ``/tirdparty/udpcap``
-       - |fa-windows| Binary distributions for Windows
 
    * - `yaml-cpp <https://github.com/jbeder/yaml-cpp/>`_
      - :ref:`mit_license`
