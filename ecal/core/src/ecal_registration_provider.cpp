@@ -325,7 +325,7 @@ namespace eCAL
       // update description
       //////////////////////////////////////////////
       const auto& ecal_sample_service = iter->second.service();
-      for (const auto method : ecal_sample_service.methods())
+      for (const auto& method : ecal_sample_service.methods())
       {
         ApplyServiceToDescGate(ecal_sample_service.sname(), method.mname(), method.req_type(), method.req_desc(), method.resp_type(), method.resp_desc());
       }
