@@ -352,7 +352,7 @@ ECAL_API int pub_send_sync(ECAL_HANDLE handle_, const char* payload_, const int 
   eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
   if (pub)
   {
-    size_t ret = pub->SendSynchronized(payload_, static_cast<size_t>(length_), time_, acknowledge_timeout_ms_);
+    size_t ret = pub->Send(payload_, static_cast<size_t>(length_), time_, acknowledge_timeout_ms_);
     if (static_cast<int>(ret) == length_)
     {
       return(length_);

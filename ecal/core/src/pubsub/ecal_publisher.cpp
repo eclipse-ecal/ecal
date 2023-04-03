@@ -376,12 +376,7 @@ namespace eCAL
     else      return(0);
   }
 
-  size_t CPublisher::Send(const std::string& s_, const long long time_ /* = -1 */) const
-  {
-    return(Send(s_.data(), s_.size(), time_));
-  }
-
-  size_t CPublisher::SendSynchronized(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
+  size_t CPublisher::Send(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
   {
     if (!m_created) return(0);
 

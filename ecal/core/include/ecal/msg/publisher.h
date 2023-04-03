@@ -159,7 +159,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent.
     **/
-    size_t SendSynchronized(const T& msg_, long long time_, long long acknowledge_timeout_ms_)
+    size_t Send(const T& msg_, long long time_, long long acknowledge_timeout_ms_)
     {
       // see CMsgPublisher::Send
       if (!IsSubscribed())
@@ -174,13 +174,13 @@ namespace eCAL
         m_buffer.resize(size);
         if (Serialize(msg_, &m_buffer[0], m_buffer.size()))
         {
-          return(CPublisher::SendSynchronized(&m_buffer[0], size, time_, acknowledge_timeout_ms_));
+          return(CPublisher::Send(&m_buffer[0], size, time_, acknowledge_timeout_ms_));
         }
       }
       else
       {
         // send a zero payload length message to trigger the subscriber side
-        return(CPublisher::SendSynchronized(nullptr, 0, time_, acknowledge_timeout_ms_));
+        return(CPublisher::Send(nullptr, 0, time_, acknowledge_timeout_ms_));
       }
       return(0);
     }
