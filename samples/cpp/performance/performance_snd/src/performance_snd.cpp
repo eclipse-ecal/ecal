@@ -57,7 +57,7 @@ public:
     // write partial content
     if (len_ > 0)
     {
-      static_cast<char*>(buf_)[(++clock%1024)%len_] = clock % 10 + 48;
+      static_cast<char*>(buf_)[((clock++)%1024)%len_] = clock%10+48;
     }
   };
 
