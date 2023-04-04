@@ -25,7 +25,6 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
-
 #include <string>
 
 namespace eCAL
@@ -136,12 +135,6 @@ namespace eCAL
     **/
     ECAL_API void PubShareDescription(bool state_);
 
-    struct STopicInfo
-    {
-      std::string type_name;        //!< Type name of the current topic
-      std::string type_description; //!< Descriptor string of the current topic.
-    };
-
     /**
      * @brief Gets type name of the specified topic.
      *
@@ -179,14 +172,6 @@ namespace eCAL
      * @return  Topic description.
     **/
     ECAL_API std::string GetTopicDescription(const std::string& topic_name_);
-
-    struct SServiceMethodInfo
-    {
-      std::string request_type_name;         //!< Type name of the request message
-      std::string request_type_description;  //!< Descriptor string of the request description
-      std::string response_type_name;        //!< Type name of the response message
-      std::string response_type_description; //!< Descriptor string of the response message
-    };
 
     /**
      * @brief Gets service method request and response type names.

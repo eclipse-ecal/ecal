@@ -79,16 +79,30 @@ namespace eCAL
     bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_type_desc_, std::string& resp_type_desc_);
 
   protected:
+
+    struct STopicInfo
+    {
+      std::string type_name;        //!< Type name of the current topic
+      std::string type_description; //!< Descriptor string of the current topic.
+    };
     struct STopicInfoQuality
     {
-      Util::STopicInfo info;                                                       //!< Topic info struct with type name and descriptor.
+      STopicInfo info;                                                       //!< Topic info struct with type name and descriptor.
       QualityFlags     description_quality   = QualityFlags::NO_QUALITY;           //!< QualityFlags to determine whether we may overwrite the current data with better one. E.g. we prefer the description sent by a publisher over one sent by a subscriber. 
       bool             type_missmatch_logged = false;                              //!< Whether we have already logged a type-missmatch
     };
 
+
+    struct SServiceMethodInfo
+    {
+      std::string request_type_name;         //!< Type name of the request message
+      std::string request_type_description;  //!< Descriptor string of the request description
+      std::string response_type_name;        //!< Type name of the response message
+      std::string response_type_description; //!< Descriptor string of the response message
+    };
     struct SServiceMethodInfoQuality
     {
-      Util::SServiceMethodInfo info;                                               //!< Service info struct with type names and descriptors for request and response.
+      SServiceMethodInfo info;                                               //!< Service info struct with type names and descriptors for request and response.
       QualityFlags             info_quality = QualityFlags::NO_QUALITY;            //!< The Quality of the Info
     };
 
