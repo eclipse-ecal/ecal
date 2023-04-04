@@ -52,7 +52,7 @@ namespace eCAL
       STopicInfoQuality topic_info;
       topic_info.info.type_name        = topic_type_;
       topic_info.info.type_description = topic_desc_;
-      topic_info.description_quality   = description_quality_;
+      topic_info.description_quality = description_quality_;
       m_topic_info_map.emplace(topic_name_, std::move(topic_info));
     }
     else
@@ -104,7 +104,7 @@ namespace eCAL
       {
         topic_info_it->second.info.type_name        = topic_type_;
         topic_info_it->second.info.type_description = topic_desc_;
-        topic_info_it->second.description_quality   = description_quality_;
+        topic_info_it->second.description_quality = description_quality_;
       }
     }
   }
@@ -152,7 +152,7 @@ namespace eCAL
       service_info.info.request_type_description  = req_type_desc_;
       service_info.info.response_type_name        = resp_type_name_;
       service_info.info.response_type_description = resp_type_desc_;
-      service_info.info_quality                   = info_quality_;
+      service_info.info_quality              = info_quality_;
 
       m_service_info_map[service_method_tuple] = std::move(service_info);
     }
@@ -165,7 +165,7 @@ namespace eCAL
         service_info_map_it->second.info.request_type_description  = req_type_desc_;
         service_info_map_it->second.info.response_type_name        = resp_type_name_;
         service_info_map_it->second.info.response_type_description = resp_type_desc_;
-        service_info_map_it->second.info_quality                   = info_quality_;
+        service_info_map_it->second.info_quality              = info_quality_;
       }
     }
   }

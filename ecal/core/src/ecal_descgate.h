@@ -40,14 +40,14 @@ namespace eCAL
   class CDescGate
   {
   public:
-    // Enumeration of quality bits used for detecting how good a topic information is.
+    // Enumeration of qulity bits used for detecting how good a topic information is.
     enum class QualityFlags : int
     {
       NO_QUALITY                    = 0,         //!< Special value for initialization
 
       DESCRIPTION_AVAILABLE         = 0x1 << 4,  //!< Having a descriptor at all is the most important thing
       INFO_COMES_FROM_CORRECT_TOPIC = 0x1 << 3,  //!< The information comes from the current topic (and has not been borrowed from another topic)
-      INFO_COMES_FROM_PUBLISHER     = 0x1 << 2,  //!< A descriptor coming from the publisher is better than one from a subscriber, as we assume that the publisher knows best what he is publishing
+      INFO_COMES_FROM_PUBLISHER     = 0x1 << 2,  //!< A descriptor coming from the publisher is better than one from a subsriber, as we assume that the publisher knows best what he is publishing
       INFO_COMES_FROM_THIS_PROCESS  = 0x1 << 1,  //!< We prefer descriptors from the current process
       TYPE_AVAILABLE                = 0x1 << 0,  //!< Having information about the type's name available is nice but not that important to us.
     };
@@ -94,14 +94,14 @@ namespace eCAL
 
     // key: topic name | value: topic(type/desc)
     using TopicInfoMap = std::map<std::string, STopicInfoQuality>;                 //!< Map containing { TopicName -> (Type, Description) } mapping of all topics that are currently known
-    mutable std::shared_timed_mutex  m_topic_info_map_mutex;                       //!< Mutex protecting the m_topic_info_map
-    TopicInfoMap                     m_topic_info_map;                             //!< Map containing information about each known topic
+    mutable std::shared_timed_mutex  m_topic_info_map_mutex;                //!< Mutex protecting the m_topic_info_map
+    TopicInfoMap                     m_topic_info_map;                      //!< Map containing information about each known topic
 
     // key: tup<service name, method name> | value: tup<request (type/desc), response (type/desc)>
     using ServiceMethodInfoMap 
       = std::map<std::tuple<std::string, std::string>, SServiceMethodInfoQuality>; //!< Map { (ServiceName, MethodName) -> ( (ReqType, ReqDescription), (RespType, RespDescription) ) } mapping of all currently known services
-    mutable std::shared_timed_mutex  m_service_info_map_mutex;                     //!< Mutex protecting the m_service_info_map
-    ServiceMethodInfoMap             m_service_info_map;                           //!< Map containing information about each known service method
+    mutable std::shared_timed_mutex  m_service_info_map_mutex;              //!< Mutex protecting the m_service_info_map
+    ServiceMethodInfoMap             m_service_info_map;                    //!< Map containing information about each known service method
   };
 
   constexpr inline CDescGate::QualityFlags  operator~  (CDescGate::QualityFlags  a)                            { return static_cast<CDescGate::QualityFlags>( ~static_cast<std::underlying_type<CDescGate::QualityFlags>::type>(a) ); }

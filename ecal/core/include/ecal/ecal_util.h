@@ -26,7 +26,6 @@
 
 #include <ecal/ecal_os.h>
 
-#include <map>
 #include <string>
 
 namespace eCAL

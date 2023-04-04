@@ -130,7 +130,7 @@ namespace eCAL
       {
         const eCAL::pb::Process& process = monitoring.processes(i);
         std::string uname = process.uname();
-        if  ((uname != "eCALMon")
+        if ((uname != "eCALMon")
           && (uname != "eCALRPCService")
           && (uname != "eCALParam")
           && (uname != "eCALPlay")
