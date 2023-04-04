@@ -23,8 +23,6 @@
 
 #pragma once
 
-#include <ecal/ecal_util.h>
-
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
 
@@ -78,8 +76,8 @@ namespace eCAL
     bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_name_, std::string& resp_type_name_);
     bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_type_desc_, std::string& resp_type_desc_);
 
-  protected:
 
+  protected:
     struct STopicInfo
     {
       std::string type_name;        //!< Type name of the current topic
