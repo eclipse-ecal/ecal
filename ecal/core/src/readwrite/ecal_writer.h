@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ecal/ecal_callback.h>
+#include <ecal/ecal_payload.h>
 #include <ecal/ecal_tlayer.h>
 
 #include "ecal_def.h"
@@ -38,6 +39,7 @@
 #include <string>
 #include <atomic>
 #include <map>
+#include <vector>
 
 namespace eCAL
 {
@@ -74,6 +76,7 @@ namespace eCAL
     bool RemEventCallback(eCAL_Publisher_Event type_);
 
     bool Write(const void* const buf_, size_t len_, long long time_, long long id_);
+    bool Write(payload& payload_, long long time_, long long id_);
 
     void ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_);
     void RemoveLocSubscription(const std::string & process_id_);
@@ -111,6 +114,8 @@ namespace eCAL
     bool SetUseShm(TLayer::eSendMode mode_);
     bool SetUseTcp(TLayer::eSendMode mode_);
     bool SetUseInProc(TLayer::eSendMode mode_);
+    bool CheckSendModes(TLayer::eSendMode& use_udp_mc, TLayer::eSendMode& use_shm, TLayer::eSendMode& use_tcp, TLayer::eSendMode& use_inproc);
+    size_t PrepareWrite(long long id_, size_t len_);
 
     bool IsInternalSubscribedOnly();
 
@@ -133,9 +138,11 @@ namespace eCAL
     bool               m_zero_copy;
     long long          m_acknowledge_timeout_ms;
 
+    std::vector<char>  m_none_zero_copy_buffer;
+
     std::atomic<bool>  m_connected;
     typedef Util::CExpMap<std::string, bool> ConnectedMapT;
-    mutable std::mutex  m_sub_map_sync;
+    mutable std::mutex m_sub_map_sync;
     ConnectedMapT      m_loc_sub_map;
     ConnectedMapT      m_ext_sub_map;
 

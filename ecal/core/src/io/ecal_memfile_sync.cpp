@@ -130,7 +130,7 @@ namespace eCAL
     return false;
   }
 
-  bool CSyncMemoryFile::Write(const SWriterData& data_)
+  bool CSyncMemoryFile::Write(const SWriterData& data_, payload* payload_)
   {
     if (!m_created)
     {
@@ -162,7 +162,7 @@ namespace eCAL
     // set zero copy
     memfile_hdr.options.zero_copy = static_cast<unsigned char>(data_.zero_copy);
     // set acknowledge timeout
-    memfile_hdr.ack_timout_ms        = static_cast<int64_t>(data_.acknowledge_timeout_ms);
+    memfile_hdr.ack_timout_ms     = static_cast<int64_t>(data_.acknowledge_timeout_ms);
 
     // acquire write access
     bool write_access = m_memfile.GetWriteAccess(static_cast<int>(m_attr.timeout_open_ms));
@@ -198,7 +198,14 @@ namespace eCAL
     // write the buffer
     if (data_.len > 0)
     {
-      written &= m_memfile.Write(data_.buf, data_.len, wbytes) > 0;
+      if (payload_)
+      {
+        written &= m_memfile.Apply(*payload_, data_.len, wbytes) > 0;
+      }
+      else
+      {
+        written &= m_memfile.Write(data_.buf, data_.len, wbytes) > 0;
+      }
     }
     // release write access
     m_memfile.ReleaseWriteAccess();

@@ -376,6 +376,35 @@ namespace eCAL
     else      return(0);
   }
 
+  size_t CPublisher::Send(payload& payload_, long long time_) const
+  {
+    if (!m_created) return(0);
+
+    // get payload's length
+    const size_t len(payload_.size());
+
+    // in an optimization case the
+    // publisher can send an empty package
+    // or we do not have any subscription at all
+    // then the data writer will only do some statistics
+    // for the monitoring layer and return
+    if (!IsSubscribed())
+    {
+      m_datawriter->RefreshSendCounter();
+      return(len);
+    }
+
+    // send content via data writer layer
+    bool sent(false);
+    if (time_ == -1) sent = m_datawriter->Write(payload_, eCAL::Time::GetMicroSeconds(), m_id);
+    else             sent = m_datawriter->Write(payload_, time_, m_id);
+
+    // return success
+    if (sent) return(len);
+    else      return(0);
+  }
+
+
   size_t CPublisher::Send(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
   {
     if (!m_created) return(0);
@@ -386,6 +415,23 @@ namespace eCAL
     
     // send buffer
     size_t len = Send(buf_, len_, time_);
+
+    // reset acknowledge timeout
+    m_datawriter->ShmSetAcknowledgeTimeout(current_acknowledge_timeout_ms);
+
+    return len;
+  }
+
+  size_t CPublisher::Send(payload& payload_, long long time_, long long acknowledge_timeout_ms_) const
+  {
+    if (!m_created) return(0);
+
+    // set new acknowledge timeout
+    long long current_acknowledge_timeout_ms(m_datawriter->ShmGetAcknowledgeTimeout());
+    m_datawriter->ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms_));
+
+    // send buffer
+    size_t len = Send(payload_, time_);
 
     // reset acknowledge timeout
     m_datawriter->ShmSetAcknowledgeTimeout(current_acknowledge_timeout_ms);

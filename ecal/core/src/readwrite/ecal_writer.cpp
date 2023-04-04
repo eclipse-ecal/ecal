@@ -406,84 +406,22 @@ namespace eCAL
 
   bool CDataWriter::Write(const void* const buf_, size_t len_, long long time_, long long id_)
   {
-    // store id
-    m_id = id_;
+    // check send modes
+    TLayer::eSendMode use_udp_mc;
+    TLayer::eSendMode use_shm;
+    TLayer::eSendMode use_tcp;
+    TLayer::eSendMode use_inproc;
+    if (!CheckSendModes(use_udp_mc, use_shm, use_tcp, use_inproc))
+    {
+      // incompatible settings
+      return false;
+    }
 
-    // handle write counters
-    RefreshSendCounter();
-
-    // calculate unique send hash
-    std::hash<SSndHash> hf;
-    size_t snd_hash = hf(SSndHash(m_topic_id, m_clock));
-
-    // increase overall sum send
-    g_process_wbytes_sum += len_;
-
-    // store size for monitoring
-    m_topic_size = len_;
+    // prepare counter and internal states
+    size_t snd_hash = PrepareWrite(id_, len_);
 
     // did we write anything
     bool written(false);
-
-    // check send modes
-    TLayer::eSendMode use_udp_mc(m_use_udp_mc);
-    TLayer::eSendMode use_shm(m_use_shm);
-    TLayer::eSendMode use_tcp(m_use_tcp);
-    TLayer::eSendMode use_inproc(m_use_inproc);
-    if ( (use_udp_mc == TLayer::smode_off)
-      && (use_shm    == TLayer::smode_off)
-      && (use_tcp    == TLayer::smode_off)
-      && (use_inproc == TLayer::smode_off)
-      )
-    {
-      // failsafe default mode if
-      // nothing is activated
-      use_udp_mc = TLayer::smode_auto;
-      use_shm    = TLayer::smode_auto;
-    }
-
-    // if we do not have loopback
-    // enabled we can switch off
-    // inner process communication
-    if (g_registration_receiver() && !g_registration_receiver()->LoopBackEnabled())
-    {
-      use_inproc = TLayer::smode_off;
-    }
-    
-    // shared memory transport is on and
-    // inner process transport is on
-    // let's check if there is a need for
-    // shared memory because of external
-    // process subscription, if not
-    // let's switch it off
-    if  ((use_shm    != TLayer::smode_off)
-      && (use_inproc != TLayer::smode_off)
-      )
-    {
-      if (!IsExtSubscribed())
-      {
-        // we have no external subscriptions,
-        // but we have local ones (otherwise we would have
-        // no subscriptions and this is checked with !IsSubscribed())
-        // so let's check if all local subscriptions are 
-        // "inner process only", that means
-        // they have all our process id
-        if (IsInternalSubscribedOnly())
-        {
-          // we can switch shared memory layer off
-          // it's all subscribed in our process
-          use_shm = TLayer::smode_off;
-        }
-      }
-    }
-
-    if ( (use_tcp    == TLayer::smode_auto)
-      && (use_udp_mc == TLayer::smode_auto)
-      )
-    {
-      Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send: TCP layer and UDP layer are both set to auto mode - Publication failed !");
-      return 0;
-    }
 
     ////////////////////////////////////////////////////////////////////////////
     // LAYER 1 : INPROC
@@ -696,6 +634,117 @@ namespace eCAL
 
     // return success
     return(written);
+  }
+
+  bool CDataWriter::Write(payload& payload_, long long time_, long long id_)
+  {
+    // check send modes
+    TLayer::eSendMode use_udp_mc;
+    TLayer::eSendMode use_shm;
+    TLayer::eSendMode use_tcp;
+    TLayer::eSendMode use_inproc;
+    if (!CheckSendModes(use_udp_mc, use_shm, use_tcp, use_inproc))
+    {
+      // incompatible settings
+      return false;
+    }
+
+    // can we use zero copy write mode ?
+    bool zero_copy_write(true);
+
+    // user / config disabled zero copy
+    if (!m_zero_copy)
+    {
+      zero_copy_write = false;
+    }
+    // check if we are shm layer only
+    else
+    {
+      // inproc layer is active
+      if ( (use_inproc == TLayer::smode_auto)
+        || (use_inproc == TLayer::smode_on)
+        )
+      {
+        zero_copy_write = false;
+      }
+
+      // udp layer is active
+      if (((use_udp_mc == TLayer::smode_auto) && m_ext_subscribed)
+        || (use_udp_mc == TLayer::smode_on)
+        )
+      {
+        zero_copy_write = false;
+      }
+
+      // tcp layer is active
+      if (((use_tcp == TLayer::smode_auto) && m_ext_subscribed)
+        || (use_tcp == TLayer::smode_on)
+        )
+      {
+        zero_copy_write = false;
+      }
+    }
+
+    // zero copy write mode enabled, here we go !
+    if (zero_copy_write)
+    {
+      // get buffer address and buffer size
+      const void*  buf(payload_.data());
+      const size_t len(payload_.size());
+
+      // prepare counter and internal states
+      size_t snd_hash = PrepareWrite(id_, len);
+
+      // send it
+      bool shm_sent(false);
+
+      // fill writer data
+      struct SWriterData wdata;
+      wdata.buf                    = buf;
+      wdata.len                    = len;
+      wdata.id                     = m_id;
+      wdata.clock                  = m_clock;
+      wdata.hash                   = snd_hash;
+      wdata.time                   = time_;
+      wdata.buffering              = m_buffering_shm;
+      wdata.zero_copy              = m_zero_copy;
+      wdata.acknowledge_timeout_ms = m_acknowledge_timeout_ms;
+
+      // prepare send
+      if (m_writer_shm.PrepareWrite(wdata))
+      {
+        // register new to update listening subscribers and rematch
+        DoRegister(true);
+        Process::SleepMS(5);
+      }
+
+      // send
+      shm_sent = m_writer_shm.Write(wdata, payload_);
+      m_use_shm_confirmed = true;
+
+      // return sucess
+      return shm_sent;
+    }
+    // this is bad, we have to take the classic way and
+    // finally we need one more memcopy copy here
+    // this needs to be optimized
+    //
+    // the new payload write API should be used carefully
+    // with expert know how and system configuration
+    // assumptions (like there are no external subscriptions)
+    else
+    {
+      //eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_warning, "Publisher: '" + m_topic_name + "' Performance warning: You are using the new CPublisher::Send(payload) API, but this publisher has external connections or you did not switch on 'zero copy' mode for this connection.This will decrease local performance.");
+      
+      // we need to prepare a memory buffer :-(
+      m_none_zero_copy_buffer.resize(payload_.size());
+      // initialize buffer with complete write
+      payload_.write_complete(m_none_zero_copy_buffer.data(), m_none_zero_copy_buffer.size());
+      // write additional partial data
+      payload_.write_partial(m_none_zero_copy_buffer.data(), m_none_zero_copy_buffer.size());
+      // forward this to the classic Write call with (buffer pointer, buffer length)
+      return Write(m_none_zero_copy_buffer.data(), m_none_zero_copy_buffer.size(), time_, id_);
+    }
   }
 
   void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_)
@@ -1127,6 +1176,93 @@ namespace eCAL
     }
 
     return(true);
+  }
+
+  bool CDataWriter::CheckSendModes(TLayer::eSendMode& use_udp_mc_, TLayer::eSendMode& use_shm_, TLayer::eSendMode& use_tcp_, TLayer::eSendMode& use_inproc_)
+  {
+    // check send modes
+    use_udp_mc_ = m_use_udp_mc;
+    use_shm_    = m_use_shm;
+    use_tcp_    = m_use_tcp;
+    use_inproc_ = m_use_inproc;
+    if ( (use_udp_mc_ == TLayer::smode_off)
+      && (use_shm_    == TLayer::smode_off)
+      && (use_tcp_    == TLayer::smode_off)
+      && (use_inproc_ == TLayer::smode_off)
+      )
+    {
+      // failsafe default mode if
+      // nothing is activated
+      use_udp_mc_ = TLayer::smode_auto;
+      use_shm_ = TLayer::smode_auto;
+    }
+
+    // if we do not have loopback
+    // enabled we can switch off
+    // inner process communication
+    if (g_registration_receiver() && !g_registration_receiver()->LoopBackEnabled())
+    {
+      use_inproc_ = TLayer::smode_off;
+    }
+
+    // shared memory transport is on and
+    // inner process transport is on
+    // let's check if there is a need for
+    // shared memory because of external
+    // process subscription, if not
+    // let's switch it off
+    if ((use_shm_ != TLayer::smode_off)
+      && (use_inproc_ != TLayer::smode_off)
+      )
+    {
+      if (!IsExtSubscribed())
+      {
+        // we have no external subscriptions,
+        // but we have local ones (otherwise we would have
+        // no subscriptions and this is checked with !IsSubscribed())
+        // so let's check if all local subscriptions are 
+        // "inner process only", that means
+        // they have all our process id
+        if (IsInternalSubscribedOnly())
+        {
+          // we can switch shared memory layer off
+          // it's all subscribed in our process
+          use_shm_ = TLayer::smode_off;
+        }
+      }
+    }
+
+    if ((use_tcp_     == TLayer::smode_auto)
+      && (use_udp_mc_ == TLayer::smode_auto)
+      )
+    {
+      Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send: TCP layer and UDP layer are both set to auto mode - Publication failed !");
+      return false;
+    }
+
+    return true;
+  }
+
+  size_t CDataWriter::PrepareWrite(long long id_, size_t len_)
+  {
+    // store id
+    m_id = id_;
+
+    // handle write counters
+    RefreshSendCounter();
+
+    // calculate unique send hash
+    std::hash<SSndHash> hf;
+    size_t snd_hash = hf(SSndHash(m_topic_id, m_clock));
+
+    // increase overall sum send
+    g_process_wbytes_sum += len_;
+
+    // store size for monitoring
+    m_topic_size = len_;
+
+    // return the hash for the write action
+    return snd_hash;
   }
 
   bool CDataWriter::IsInternalSubscribedOnly()
