@@ -224,18 +224,6 @@ namespace eCAL
     }
 
     /**
-     * @brief Get complete topic map (including types and descriptions).
-     *
-     * @param topic_info_map_  Map to store the topic informations.
-     *                         Map containing { TopicName -> (Type, Description) } mapping of all topics that are currently known.
-    **/
-    void GetTopics(std::map<std::string, STopicInfo>& topic_info_map_)
-    {
-      if (!g_descgate()) return;
-      g_descgate()->GetTopics(topic_info_map_);
-    }
-
-    /**
      * @brief Gets type name of the specified topic.
      *
      * @param topic_name_   Topic name.
@@ -319,18 +307,6 @@ namespace eCAL
     std::string GetDescription(const std::string& topic_name_)
     {
       return GetTopicDescription(topic_name_);
-    }
-
-    /**
-     * @brief Get complete service map (including request and response types and descriptions).
-     *
-     * @param service_info_map_  Map to store the topic informations.
-     *                           Map { (ServiceName, MethodName) -> ( (ReqType, ReqDescription), (RespType, RespDescription) ) } mapping of all currently known services.
-    **/
-    void GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_)
-    {
-      if (!g_descgate()) return;
-      g_descgate()->GetServices(service_info_map_);
     }
 
     /**
