@@ -80,33 +80,31 @@ set(ecal_io_cpp_src
     ${ecal_io_cpp_src_npcap}
 )
 
-if(NOT ECAL_LAYER_ICEORYX)
-  set(ecal_io_mem_cpp_src
-      src/io/ecal_memfile.cpp
-      src/io/ecal_memfile_db.cpp
-      src/io/ecal_memfile_broadcast.cpp
-      src/io/ecal_memfile_broadcast_reader.cpp
-      src/io/ecal_memfile_broadcast_writer.cpp
-      src/io/ecal_memfile_naming.cpp      
-      src/io/ecal_memfile_pool.cpp
-      src/io/ecal_memfile_sync.cpp
-      src/io/ecal_named_mutex.cpp
+set(ecal_io_mem_cpp_src
+    src/io/ecal_memfile.cpp
+    src/io/ecal_memfile_db.cpp
+    src/io/ecal_memfile_broadcast.cpp
+    src/io/ecal_memfile_broadcast_reader.cpp
+    src/io/ecal_memfile_broadcast_writer.cpp
+    src/io/ecal_memfile_naming.cpp      
+    src/io/ecal_memfile_pool.cpp
+    src/io/ecal_memfile_sync.cpp
+    src/io/ecal_named_mutex.cpp
+)
+if(UNIX)
+  set(ecal_io_mem_cpp_linux_src
+      src/io/linux/ecal_memfile_os.cpp
+      src/io/linux/ecal_named_mutex_impl.cpp
+      $<$<OR:$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>,$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>>:src/io/linux/ecal_named_mutex_robust_clocklock_impl.cpp>
   )
-  if(UNIX)
-    set(ecal_io_mem_cpp_linux_src
-        src/io/linux/ecal_memfile_os.cpp
-        src/io/linux/ecal_named_mutex_impl.cpp
-        $<$<OR:$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>,$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>>:src/io/linux/ecal_named_mutex_robust_clocklock_impl.cpp>
-    )
-  endif()
+endif()
 
-  if(WIN32)
-    set(ecal_io_mem_cpp_win_src
-       src/io/win32/ecal_memfile_os.cpp
-       src/io/win32/ecal_named_mutex_impl.cpp
-    )
-  endif()
-endif(NOT ECAL_LAYER_ICEORYX)
+if(WIN32)
+  set(ecal_io_mem_cpp_win_src
+     src/io/win32/ecal_memfile_os.cpp
+     src/io/win32/ecal_named_mutex_impl.cpp
+  )
+endif()
 
 set(ecal_mon_cpp_src
     src/mon/ecal_monitoring_def.cpp
@@ -132,17 +130,10 @@ set(ecal_readwrite_cpp_src
     src/readwrite/ecal_writer_tcp.cpp
 )
 
-if(ECAL_LAYER_ICEORYX)
-  set(ecal_readwrite_shm_cpp_src
-    src/readwrite/ecal_reader_iceoryx.cpp
-    src/readwrite/ecal_writer_iceoryx.cpp
-  )
-else(ECAL_LAYER_ICEORYX)
-  set(ecal_readwrite_shm_cpp_src
-    src/readwrite/ecal_reader_shm.cpp
-    src/readwrite/ecal_writer_shm.cpp
-  )
-endif(ECAL_LAYER_ICEORYX)
+set(ecal_readwrite_shm_cpp_src
+  src/readwrite/ecal_reader_shm.cpp
+  src/readwrite/ecal_writer_shm.cpp
+)
 
 set(ecal_service_cpp_src
     src/service/ecal_clientgate.cpp
@@ -212,35 +203,33 @@ if (UNIX)
         "src/io/linux/ecal_socket_option_linux.h")
 endif()
 
-if(NOT ECAL_LAYER_ICEORYX)
-  set(ecal_io_mem_header_src
-      src/io/ecal_memfile.h
-      src/io/ecal_memfile_broadcast.h
-      src/io/ecal_memfile_broadcast_reader.h
-      src/io/ecal_memfile_broadcast_writer.h
-      src/io/ecal_memfile_db.h
-      src/io/ecal_memfile_info.h
-      src/io/ecal_memfile_naming.h
-      src/io/ecal_memfile_os.h
-      src/io/ecal_memfile_pool.h
-      src/io/ecal_memfile_sync.h
-      src/io/ecal_named_mutex.h
-      src/io/ecal_named_mutex_base.h
-  )
+set(ecal_io_mem_header_src
+    src/io/ecal_memfile.h
+    src/io/ecal_memfile_broadcast.h
+    src/io/ecal_memfile_broadcast_reader.h
+    src/io/ecal_memfile_broadcast_writer.h
+    src/io/ecal_memfile_db.h
+    src/io/ecal_memfile_info.h
+    src/io/ecal_memfile_naming.h
+    src/io/ecal_memfile_os.h
+    src/io/ecal_memfile_pool.h
+    src/io/ecal_memfile_sync.h
+    src/io/ecal_named_mutex.h
+    src/io/ecal_named_mutex_base.h
+)
 
-  if(WIN32)
-    set(ecal_io_mem_header_win_src
-        src/io/win32/ecal_named_mutex_impl.h
-    )
-  endif()
-
-  if(UNIX)
-    set(ecal_io_mem_header_linux_src
-        src/io/linux/ecal_named_mutex_impl.h
-        $<$<OR:$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>,$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>>:src/io/linux/ecal_named_mutex_robust_clocklock_impl.h>
+if(WIN32)
+  set(ecal_io_mem_header_win_src
+      src/io/win32/ecal_named_mutex_impl.h
   )
-  endif()
-endif(NOT ECAL_LAYER_ICEORYX)
+endif()
+
+if(UNIX)
+  set(ecal_io_mem_header_linux_src
+      src/io/linux/ecal_named_mutex_impl.h
+      $<$<OR:$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>,$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>>:src/io/linux/ecal_named_mutex_robust_clocklock_impl.h>
+)
+endif()
 
 set(ecal_mon_header_src
     src/mon/ecal_monitoring_def.h
@@ -268,17 +257,10 @@ set(ecal_readwrite_header_src
     src/readwrite/ecal_tcp_pubsub_logger.h
 )
 
-if(ECAL_LAYER_ICEORYX)
-  set(ecal_readwrite_shm_header_src
-      src/readwrite/ecal_reader_iceoryx.h
-      src/readwrite/ecal_writer_iceoryx.h
-  )
-else(ECAL_LAYER_ICEORYX)
-  set(ecal_readwrite_shm_header_src
-      src/readwrite/ecal_reader_shm.h
-      src/readwrite/ecal_writer_shm.h
-  )
-endif(ECAL_LAYER_ICEORYX)
+set(ecal_readwrite_shm_header_src
+    src/readwrite/ecal_reader_shm.h
+    src/readwrite/ecal_writer_shm.h
+)
 
 set(ecal_service_header_src
     src/service/asio_server.h
@@ -466,12 +448,6 @@ target_compile_definitions(${PROJECT_NAME}
     $<$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>:ECAL_HAS_CLOCKLOCK_MUTEX>
     $<$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>:ECAL_HAS_ROBUST_MUTEX>
     $<$<BOOL:${ECAL_USE_CLOCKLOCK_MUTEX}>:ECAL_USE_CLOCKLOCK_MUTEX>)
-
-if(ECAL_LAYER_ICEORYX)
-  find_package(iceoryx_posh REQUIRED)
-  target_link_libraries(${PROJECT_NAME} PRIVATE iceoryx_posh::iceoryx_posh)
-  target_compile_definitions(${PROJECT_NAME} PUBLIC ECAL_LAYER_ICEORYX)
-endif()
 
 if(ECAL_NPCAP_SUPPORT)
   target_compile_definitions(${PROJECT_NAME}

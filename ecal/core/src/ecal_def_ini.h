@@ -94,13 +94,6 @@
 #define  SYS_FILTER_EXCL_S                "filter_excl"
 
 /////////////////////////////////////
-// iceoryx
-/////////////////////////////////////
-#define  ICEORYX_SECTION_S                "iceoryx"
-#define  ICEORYX_SERVICE_S                "service"
-#define  ICEORYX_INSTANCE_S               "instance"
-
-/////////////////////////////////////
 // publisher
 /////////////////////////////////////
 #define  PUB_SECTION_S                    "publisher"
