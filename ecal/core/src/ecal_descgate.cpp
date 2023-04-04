@@ -109,16 +109,6 @@ namespace eCAL
     }
   }
 
-  void CDescGate::GetTopics(std::map<std::string, Util::STopicInfo>& topic_info_map_)
-  {
-    topic_info_map_.clear();
-    std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map_mutex);
-    for (auto& topic_info : m_topic_info_map)
-    {
-      topic_info_map_[topic_info.first] = topic_info.second.info;
-    }
-  }
-
   bool CDescGate::GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_)
   {
     if(topic_name_.empty()) return(false);
@@ -177,16 +167,6 @@ namespace eCAL
         service_info_map_it->second.info.response_type_description = resp_type_desc_;
         service_info_map_it->second.info_quality                   = info_quality_;
       }
-    }
-  }
-
-  void CDescGate::GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_)
-  {
-    service_info_map_.clear();
-    std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map_mutex);
-    for (auto& service_info : m_service_info_map)
-    {
-      service_info_map_[service_info.first] = service_info.second.info;
     }
   }
 

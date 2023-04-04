@@ -64,7 +64,6 @@ namespace eCAL
                                const std::string& topic_desc_,
                                const QualityFlags description_quality_);
 
-    void GetTopics(std::map<std::string, Util::STopicInfo>& topic_info_map_);
     bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
     bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_);
 
@@ -76,7 +75,6 @@ namespace eCAL
                                  const std::string& resp_type_desc_,
                                  const QualityFlags info_quality_);
 
-    void GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_);
     bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_name_, std::string& resp_type_name_);
     bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_type_desc_, std::string& resp_type_desc_);
 
