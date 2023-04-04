@@ -29,10 +29,10 @@
 #include <vector>
 
 // performance settings
-bool   zero_copy              (true);
-int    buffer_count           (1);
-int    acknowledge_timeout_ms (50);
-size_t payload_size           (8* 1024 * 1024);
+const bool   zero_copy              (true);
+const int    buffer_count           (1);
+const int    acknowledge_timeout_ms (50);
+size_t       payload_size           (8* 1024 * 1024);
 
 // binary payload (std::vector<char>)
 class CVectorPayload : public eCAL::payload
@@ -45,17 +45,19 @@ public:
     std::cout << "Message size  =  " << int(payload.size()) << " Byte = " << int(payload.size() / 1024) << " kByte = " << int(payload.size() / 1024 / 1024) << " MByte" << std::endl;
   }
 
-  void write_complete(void* buf_, size_t len_)
+  void write_complete(void* buf_, size_t len_) final
   {
     assert(len_ == size());
+    if (len_ < size()) return;
 
     // write complete content to shared memory
     memcpy(buf_, payload.data(), payload.size());
   };
 
-  void write_partial(void* buf_, size_t len_)
+  void write_partial(void* buf_, size_t len_) final
   {
     assert(len_==size());
+    if (len_ < size()) return;
 
     size_t write_idx((clock % 1024) % len_);
     char   write_chr(clock % 10 + 48);
@@ -66,8 +68,8 @@ public:
     clock++;
   };
 
-  const void* data() { return payload.data(); };
-  size_t      size() { return payload.size(); };
+  const void* data() final { return payload.data(); };
+  size_t      size() final { return payload.size(); };
 
 private:
   std::vector<char> payload;

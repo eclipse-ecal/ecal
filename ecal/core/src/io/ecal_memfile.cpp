@@ -317,7 +317,7 @@ namespace eCAL
     if (!m_created) return(0);
 
     void* wbuf(nullptr);
-    if (GetWriteAddress(wbuf, len_ + offset_))
+    if (GetWriteAddress(wbuf, len_ + offset_) != 0u)
     {
       // (re)write complete buffer
       if (m_payload_initialized == false)

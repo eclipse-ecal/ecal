@@ -182,7 +182,7 @@ namespace eCAL
 
   bool CDataWriterSHM::Write(const SWriterData& data_, payload& payload_)
   {
-    if (!m_created) return 0;
+    if (!m_created) return false;
 
     // write content
     bool sent = m_memory_file_vec[m_write_idx]->Write(data_, &payload_);

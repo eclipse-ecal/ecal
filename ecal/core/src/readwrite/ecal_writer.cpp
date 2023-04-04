@@ -407,10 +407,10 @@ namespace eCAL
   bool CDataWriter::Write(const void* const buf_, size_t len_, long long time_, long long id_)
   {
     // check send modes
-    TLayer::eSendMode use_udp_mc;
-    TLayer::eSendMode use_shm;
-    TLayer::eSendMode use_tcp;
-    TLayer::eSendMode use_inproc;
+    TLayer::eSendMode use_udp_mc (TLayer::smode_off);
+    TLayer::eSendMode use_shm    (TLayer::smode_off);
+    TLayer::eSendMode use_tcp    (TLayer::smode_off);
+    TLayer::eSendMode use_inproc (TLayer::smode_off);
     if (!CheckSendModes(use_udp_mc, use_shm, use_tcp, use_inproc))
     {
       // incompatible settings
@@ -639,10 +639,10 @@ namespace eCAL
   bool CDataWriter::Write(payload& payload_, long long time_, long long id_)
   {
     // check send modes
-    TLayer::eSendMode use_udp_mc;
-    TLayer::eSendMode use_shm;
-    TLayer::eSendMode use_tcp;
-    TLayer::eSendMode use_inproc;
+    TLayer::eSendMode use_udp_mc (TLayer::smode_off);
+    TLayer::eSendMode use_shm    (TLayer::smode_off);
+    TLayer::eSendMode use_tcp    (TLayer::smode_off);
+    TLayer::eSendMode use_inproc (TLayer::smode_off);
     if (!CheckSendModes(use_udp_mc, use_shm, use_tcp, use_inproc))
     {
       // incompatible settings
@@ -1194,13 +1194,13 @@ namespace eCAL
       // failsafe default mode if
       // nothing is activated
       use_udp_mc_ = TLayer::smode_auto;
-      use_shm_ = TLayer::smode_auto;
+      use_shm_    = TLayer::smode_auto;
     }
 
     // if we do not have loopback
     // enabled we can switch off
     // inner process communication
-    if (g_registration_receiver() && !g_registration_receiver()->LoopBackEnabled())
+    if ((g_registration_receiver() != nullptr) && !g_registration_receiver()->LoopBackEnabled())
     {
       use_inproc_ = TLayer::smode_off;
     }
@@ -1211,7 +1211,7 @@ namespace eCAL
     // shared memory because of external
     // process subscription, if not
     // let's switch it off
-    if ((use_shm_ != TLayer::smode_off)
+    if ( (use_shm_    != TLayer::smode_off)
       && (use_inproc_ != TLayer::smode_off)
       )
     {
@@ -1232,7 +1232,7 @@ namespace eCAL
       }
     }
 
-    if ((use_tcp_     == TLayer::smode_auto)
+    if ( (use_tcp_    == TLayer::smode_auto)
       && (use_udp_mc_ == TLayer::smode_auto)
       )
     {
