@@ -56,6 +56,7 @@ Checks: "-*,
   -readability-redundant-access-specifiers,
   -readability-function-cognitive-complexity,
   -readability-else-after-return,
+  -readability-uppercase-literal-suffix,
 "
 WarningsAsErrors: ''
 HeaderFilterRegex: '^((?!/thirdparty/|/_deps/).)*$'
