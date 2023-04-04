@@ -80,28 +80,29 @@ namespace eCAL
   protected:
     struct STopicInfo
     {
-      std::string type_name;        //!< Type name of the current topic
-      std::string type_description; //!< Descriptor string of the current topic.
+      std::string type_name;                                         //!< Type name of the current topic
+      std::string type_description;                                  //!< Descriptor String of the current topic. Used e.g. for dynamic deserialization
     };
     struct STopicInfoQuality
     {
       STopicInfo info;                                                       //!< Topic info struct with type name and descriptor.
-      QualityFlags     description_quality   = QualityFlags::NO_QUALITY;           //!< QualityFlags to determine whether we may overwrite the current data with better one. E.g. we prefer the description sent by a publisher over one sent by a subscriber. 
-      bool             type_missmatch_logged = false;                              //!< Whether we have already logged a type-missmatch
+
+      QualityFlags description_quality   = QualityFlags::NO_QUALITY; //!< QualityFlags to determine whether we may overwrite the current data with better one. E.g. we prefer the description sent by a publisher over one sent by a subscriber. 
+      bool        type_missmatch_logged = false;                     //!< Whether we have already logged a type-missmatch
     };
 
 
     struct SServiceMethodInfo
     {
-      std::string request_type_name;         //!< Type name of the request message
-      std::string request_type_description;  //!< Descriptor string of the request description
-      std::string response_type_name;        //!< Type name of the response message
-      std::string response_type_description; //!< Descriptor string of the response message
+      std::string request_type_name;                                 //!< Type name of the request message
+      std::string request_type_description;                          //!< Descriptor String of the request description
+      std::string response_type_name;                                //!< Type name of the response message
+      std::string response_type_description;                         //!< Descriptor String of the response message
     };
     struct SServiceMethodInfoQuality
     {
       SServiceMethodInfo info;                                               //!< Service info struct with type names and descriptors for request and response.
-      QualityFlags             info_quality = QualityFlags::NO_QUALITY;            //!< The Quality of the Info
+      QualityFlags info_quality = QualityFlags::NO_QUALITY;          //!< The Quality of the Info
     };
 
     // key: topic name | value: topic(type/desc)
