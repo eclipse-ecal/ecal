@@ -31,10 +31,8 @@
 #include "ecal_thread.h"
 #include "io/udp_sender.h"
 
-#ifndef ECAL_LAYER_ICEORYX
 #include "io/ecal_memfile_broadcast.h"
 #include "io/ecal_memfile_broadcast_writer.h"
-#endif
 
 #include <atomic>
 #include <mutex>
@@ -79,9 +77,7 @@ namespace eCAL
 
     int RegisterSendThread();
 
-#ifndef ECAL_LAYER_ICEORYX
     bool SendSampleList(bool reset_sample_list_ = true);
-#endif
 
     static std::atomic<bool>  m_created;
     std::string               m_multicast_group;
@@ -103,14 +99,12 @@ namespace eCAL
     std::mutex                m_client_map_sync;
     SampleMapT                m_client_map;
 
-#ifndef ECAL_LAYER_ICEORYX
     std::mutex                m_sample_list_sync;
     eCAL::pb::SampleList      m_sample_list;
     std::string               m_sample_list_buffer;
 
     eCAL::CMemoryFileBroadcast m_memfile_broadcast;
     eCAL::CMemoryFileBroadcastWriter m_memfile_broadcast_writer;
-#endif
 
     bool m_use_network_monitoring;
     bool m_use_shm_monitoring;

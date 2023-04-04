@@ -82,8 +82,6 @@ option(BUILD_STANDALONE_PY_WHEEL               "Build eCAL python binding as sta
 option(BUILD_CSHARP_BINDING                    "Build eCAL C# binding"                                            OFF)
 option(BUILD_ECAL_TESTS                        "Build the eCAL google tests"                                      OFF)
 
-option(ECAL_LAYER_ICEORYX                      "Use iceoryx shared memory as local communication layer"           OFF)
-
 option(ECAL_INCLUDE_PY_SAMPLES                 "Include python language sample projects into CMake"               OFF)
 option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samples"                               ON)
 
@@ -473,9 +471,7 @@ if(BUILD_ECAL_TESTS)
   add_subdirectory(testing/ecal/core_test)
   add_subdirectory(testing/ecal/event_test)
   add_subdirectory(testing/ecal/expmap_test)
-if(NOT ECAL_LAYER_ICEORYX)
   add_subdirectory(testing/ecal/io_memfile_test)
-endif(NOT ECAL_LAYER_ICEORYX)
   add_subdirectory(testing/ecal/pubsub_inproc_test)
   add_subdirectory(testing/ecal/pubsub_proto_test)
   add_subdirectory(testing/ecal/pubsub_test)
@@ -567,7 +563,6 @@ message(STATUS "BUILD_PY_BINDING                               : ${BUILD_PY_BIND
 message(STATUS "BUILD_STANDALONE_PY_WHEEL                      : ${BUILD_STANDALONE_PY_WHEEL}")
 message(STATUS "BUILD_CSHARP_BINDING                           : ${BUILD_CSHARP_BINDING}")
 message(STATUS "BUILD_ECAL_TESTS                               : ${BUILD_ECAL_TESTS}")
-message(STATUS "ECAL_LAYER_ICEORYX                             : ${ECAL_LAYER_ICEORYX}")
 message(STATUS "ECAL_INCLUDE_PY_SAMPLES                        : ${ECAL_INCLUDE_PY_SAMPLES}")
 message(STATUS "ECAL_INSTALL_SAMPLE_SOURCES                    : ${ECAL_INSTALL_SAMPLE_SOURCES}")
 message(STATUS "ECAL_JOIN_MULTICAST_TWICE                      : ${ECAL_JOIN_MULTICAST_TWICE}")

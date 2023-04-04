@@ -33,7 +33,6 @@ CMake option                               Default   Description
 ``BUILD_STANDALONE_PY_WHEEL``              ``OFF``   Build eCAL python binding as standalone wheel
 ``BUILD_CSHARP_BINDING``                   ``OFF``   Build the eCAL C# language binding
 ``BUILD_ECAL_TESTS``                       ``OFF``   Build the eCAL google tests
-``ECAL_LAYER_ICEORYX``                     ``OFF``   Use iceoryx shared memory as local communication layer, requires `eclipse/iceoryx <https://github.com/eclipse/iceoryx>`_ installation
 ``ECAL_INCLUDE_PY_SAMPLES``                ``OFF``   Include python language sample projects into CMake
 ``ECAL_INSTALL_SAMPLE_SOURCES``            ``ON``    Install the sources of eCAL samples
 ``ECAL_JOIN_MULTICAST_TWICE``              ``OFF``   Specific multicast network bug workaround
