@@ -21,7 +21,9 @@
 #include <ecal/ecal_publisher.h>
 
 #include <algorithm>
+#include <cassert>
 #include <chrono>
+#include <cstring>
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -32,11 +34,11 @@ int    buffer_count           (1);
 int    acknowledge_timeout_ms (50);
 size_t payload_size           (8* 1024 * 1024);
 
-// hello world payload
-class CHelloWorldPayload : public eCAL::payload
+// binary payload (std::vector<char>)
+class CVectorPayload : public eCAL::payload
 {
 public:
-  CHelloWorldPayload(size_t size_)
+  CVectorPayload(size_t size_)
   {
     payload.resize(size_);
     std::fill(payload.begin(), payload.end(), (char)(42));
@@ -45,20 +47,23 @@ public:
 
   void write_complete(void* buf_, size_t len_)
   {
-    // write complete content
-    if (len_ >= payload.size())
-    {
-      memcpy(buf_, payload.data(), payload.size());
-    }
+    assert(len_ == size());
+
+    // write complete content to shared memory
+    memcpy(buf_, payload.data(), payload.size());
   };
 
   void write_partial(void* buf_, size_t len_)
   {
-    // write partial content
-    if (len_ > 0)
-    {
-      static_cast<char*>(buf_)[((clock++)%1024)%len_] = clock%10+48;
-    }
+    assert(len_==size());
+
+    size_t write_idx((clock % 1024) % len_);
+    char   write_chr(clock % 10 + 48);
+
+    // write partial content to shared memory
+    static_cast<char*>(buf_)[write_idx] = write_chr;
+
+    clock++;
   };
 
   const void* data() { return payload.data(); };
@@ -79,7 +84,7 @@ int main(int argc, char **argv)
   eCAL::Initialize(argc, argv, "performance_snd");
 
   // create payload
-  CHelloWorldPayload send_p(payload_size);
+  CVectorPayload binary_payload(payload_size);
 
   // create publisher
   eCAL::CPublisher pub("Performance");
@@ -119,17 +124,17 @@ int main(int argc, char **argv)
   {
     // send content
     size_t snd_len(0);
-    snd_len = pub.Send(send_p);
+    snd_len = pub.Send(binary_payload);
 
-    if((snd_len > 0) && (snd_len != send_p.size()))
+    if((snd_len > 0) && (snd_len != binary_payload.size()))
     {
-      std::cerr <<  std::endl << "Send failed !" << " sent : " << send_p.size() << " returned : " << snd_len <<  std::endl;
+      std::cerr <<  std::endl << "Send failed !" << " sent : " << binary_payload.size() << " returned : " << snd_len <<  std::endl;
     }
 
     // manage counters
     clock++;
     msgs++;
-    bytes += send_p.size();
+    bytes += binary_payload.size();
 
     // check timer and print results every second
     if(clock%2000 == 0)
@@ -139,7 +144,7 @@ int main(int argc, char **argv)
       {
         // log results
         std::stringstream out;
-        out << "Message size (kByte):  " << (unsigned int)(send_p.size() / 1024)                           << std::endl;
+        out << "Message size (kByte):  " << (unsigned int)(binary_payload.size() / 1024)                           << std::endl;
         out << "kByte/s:               " << (unsigned int)(bytes / 1024 /               diff_time.count()) << std::endl;
         out << "MByte/s:               " << (unsigned int)(bytes / 1024 / 1024 /        diff_time.count()) << std::endl;
         out << "GByte/s:               " << (unsigned int)(bytes / 1024 / 1024 / 1024 / diff_time.count()) << std::endl;
