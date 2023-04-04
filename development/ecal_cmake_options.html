@@ -2422,75 +2422,71 @@ The options are grouped by their prefix:</p>
 <td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
 <td><p>Build the eCAL google tests</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_LAYER_ICEORYX</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
-<td><p>Use iceoryx shared memory as local communication layer, requires <a class="reference external" href="https://github.com/eclipse/iceoryx">eclipse/iceoryx</a> installation</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_INCLUDE_PY_SAMPLES</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_INCLUDE_PY_SAMPLES</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
 <td><p>Include python language sample projects into CMake</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_INSTALL_SAMPLE_SOURCES</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_INSTALL_SAMPLE_SOURCES</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
 <td><p>Install the sources of eCAL samples</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_JOIN_MULTICAST_TWICE</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_JOIN_MULTICAST_TWICE</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
 <td><p>Specific multicast network bug workaround</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_NPCAP_SUPPORT</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_NPCAP_SUPPORT</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
 <td><p>Enable the eCAL to use Npcap for udp socket communication (i.e. the Win10 performance fix)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
 <td><p>Build CMakeFunctions with eCAL</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_SPDLOG</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_SPDLOG</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
 <td><p>Build Spdlog with eCAL, included as a submodule in the thirdparty folder. You can always use your custom spdlog installation, this is only for convenience.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_TINYXML2</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_TINYXML2</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
 <td><p>Build tinyxml2 with eCAL, included as a submodule in the thirdparty directory.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_FINEFTP</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_FINEFTP</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
 <td><p>Build fineFTP with eCAL, included as a submodule in the thirdparty directory.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_TERMCOLOR</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_TERMCOLOR</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
 <td><p>Build termcolor with eCAL, included as a submodule in the thirdparty directory.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_TCP_PUBSUB</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_TCP_PUBSUB</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
 <td><p>Build tcp_pubsub library with eCAL, included as a submodule in the thirdparty directory.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_RECYCLE</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_RECYCLE</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
 <td><p>Build steinwurf::recylce with eCAL, included as a submodule in the thirdparty directory.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_GTEST</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_GTEST</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
 <td><p>Build GoogleTest with eCAL, included as a submodule in the thirdparty folder. You can always use your custom gtest installation, this is only for convenience.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_PROTOBUF</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_PROTOBUF</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
 <td><p>Build Protobuf with eCAL, included as a submodule in the thirdparty folder. You can always use your custom protobuf installation, this is only for convenience. Note, at least protobuf 3.0 is required to compile eCAL, we recommend using 3.11.4 or newer (tested with 3.11.4).</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_CURL</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_CURL</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
 <td><p>Build CURL with eCAL, included as a submodule in the thirdparty folder.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_HDF5</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_HDF5</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
 <td><p>Build HDF5 with eCAL, included as a submodule in the thirdparty folder.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_YAML-CPP</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_YAML-CPP</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
 <td><p>Build yaml-cpp with eCAL, included as a submodule in the thirdparty folder.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CPACK_PACK_WITH_INNOSETUP</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CPACK_PACK_WITH_INNOSETUP</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
 <td><p>Use Innosetup to create a Windows installer with cpack.</p></td>
 </tr>
