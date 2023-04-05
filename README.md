@@ -2,7 +2,7 @@
 # eCAL - enhanced Communication Abstraction Layer
 
 
-[![Build Windows Server 2019](https://github.com/eclipse-ecal/ecal/workflows/Build%20Windows%20Server%202019/badge.svg)](https://github.com/eclipse-ecal/ecal/actions?workflow=Build+Windows+Server+2019) [![Build Ubuntu 20.04](https://github.com/eclipse-ecal/ecal/workflows/Build%20Ubuntu%2020.04/badge.svg)](https://github.com/eclipse-ecal/ecal/actions?workflow=Build+Ubuntu+20.04) [![Build Ubuntu 20.04 (Iceoryx)](https://github.com/eclipse-ecal/ecal/workflows/Build%20Ubuntu%2020.04%20(Iceoryx)/badge.svg)](https://github.com/eclipse-ecal/ecal/actions?workflow=Build+Ubuntu+20.04+(Iceoryx)) [![Build Ubuntu 22.04](https://github.com/eclipse-ecal/ecal/actions/workflows/build-ubuntu-22.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-ubuntu-22.yml) [![Build macOS](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml)
+[![Build Windows Server 2019](https://github.com/eclipse-ecal/ecal/workflows/Build%20Windows%20Server%202019/badge.svg)](https://github.com/eclipse-ecal/ecal/actions?workflow=Build+Windows+Server+2019) [![Build Ubuntu 20.04](https://github.com/eclipse-ecal/ecal/workflows/Build%20Ubuntu%2020.04/badge.svg)](https://github.com/eclipse-ecal/ecal/actions?workflow=Build+Ubuntu+20.04) [![Build Ubuntu 22.04](https://github.com/eclipse-ecal/ecal/actions/workflows/build-ubuntu-22.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-ubuntu-22.yml) [![Build macOS](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml)
 
 [![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE.txt)
 
@@ -135,7 +135,6 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 * [ecal-rs](https://github.com/kopernikusai/ecal-rs) - eCAL rust language binding
 * [nodejs-ecal](https://www.npmjs.com/package/nodejs-ecal) - eCAL wrapped for Nodejs
 * [trellis](https://github.com/agtonomy/trellis) - General purpose middleware framework for distributed applications
-* [iceoryx](https://github.com/eclipse/iceoryx) - Alternative shared memory transport layer (needs to be activated via CMake options)
 * [ADMA2eCAL](https://github.com/GeneSysElektronik/ADMA2eCAL) - Software gateway for connection to ADMA hardware from GeneSys Elekronik GmbH 
 
 ## License

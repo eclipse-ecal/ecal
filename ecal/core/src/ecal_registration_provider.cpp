@@ -107,14 +107,12 @@ namespace eCAL
       std::cout << "Network monitoring is disabled" << std::endl;
     }
 
-#ifndef ECAL_LAYER_ICEORYX
     if (m_use_shm_monitoring)
     {
       std::cout << "Shared memory monitoring is enabled (domain: " << Config::Experimental::GetShmMonitoringDomain() << " - queue size: " << Config::Experimental::GetShmMonitoringQueueSize() << ")" << std::endl;
       m_memfile_broadcast.Create(Config::Experimental::GetShmMonitoringDomain(), Config::Experimental::GetShmMonitoringQueueSize());
       m_memfile_broadcast_writer.Bind(&m_memfile_broadcast);
     }
-#endif
 
     m_reg_snd_thread.Start(Config::GetRegistrationRefreshMs(), std::bind(&CRegistrationProvider::RegisterSendThread, this));
 
@@ -127,13 +125,11 @@ namespace eCAL
 
     m_reg_snd_thread.Stop();
 
-#ifndef ECAL_LAYER_ICEORYX
     if(m_use_shm_monitoring)
     {
       m_memfile_broadcast_writer.Unbind();
       m_memfile_broadcast.Destroy();
     }
-#endif
 
     m_created = false;
   }
@@ -149,9 +145,7 @@ namespace eCAL
     {
       RegisterProcess();
       RegisterSample(topic_name_, ecal_sample_);
-#ifndef ECAL_LAYER_ICEORYX
       SendSampleList(false);
-#endif
     }
 
     return(true);
@@ -184,9 +178,7 @@ namespace eCAL
     {
       RegisterProcess();
       RegisterSample(service_name_, ecal_sample_);
-#ifndef ECAL_LAYER_ICEORYX
       SendSampleList(false);
-#endif
     }
 
     return(true);
@@ -219,9 +211,7 @@ namespace eCAL
     {
       RegisterProcess();
       RegisterSample(client_name_, ecal_sample_);
-#ifndef ECAL_LAYER_ICEORYX
       SendSampleList(false);
-#endif
     }
 
     return(true);
@@ -392,18 +382,15 @@ namespace eCAL
     if(m_use_network_monitoring)
       return_value &= (SendSample(&m_reg_snd, sample_name_, sample_, m_multicast_group, -1) != 0);
 
-#ifndef ECAL_LAYER_ICEORYX
     if(m_use_shm_monitoring)
     {
       std::lock_guard<std::mutex> lock(m_sample_list_sync);
       m_sample_list.mutable_samples()->Add()->CopyFrom(sample_);
     }
-#endif
 
     return return_value;
   }
 
-#ifndef ECAL_LAYER_ICEORYX
   bool CRegistrationProvider::SendSampleList(bool reset_sample_list_)
   {
     if(!m_created) return(false);
@@ -424,7 +411,6 @@ namespace eCAL
 
     return return_value;
   }
-#endif
 
   int CRegistrationProvider::RegisterSendThread()
   {
@@ -465,10 +451,8 @@ namespace eCAL
     // register topics
     /*registration_successful &= */RegisterTopics();
 
-#ifndef ECAL_LAYER_ICEORYX
     // write sample list to shared memory
     /*registration_successful &= */SendSampleList();
-#endif
 
     return(0);
   };
