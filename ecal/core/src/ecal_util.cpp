@@ -66,7 +66,7 @@ namespace eCAL
       }
 
       eCAL::pb::Monitoring monitoring;
-      if (eCAL::g_monitoring()) eCAL::g_monitoring()->Monitor(monitoring);
+      if (eCAL::g_monitoring()) eCAL::g_monitoring()->GetMonitoring(monitoring);
 
       return(monitoring);
     }

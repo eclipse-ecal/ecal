@@ -23,8 +23,10 @@
 
 #pragma once
 
-#include "ecal_monitoring_threads.h"
+#include <ecal/ecal_monitoring_entity.h>
+#include <ecal/ecal_monitoring_struct.h>
 
+#include "ecal_monitoring_threads.h"
 #include "ecal_expmap.h"
 #include "io/rcv_sample.h"
 
@@ -50,8 +52,9 @@ namespace eCAL
     void SetInclFilter(const std::string& filter_);
     void SetFilterState(bool state_);
 
-    void GetMonitoringMsg(eCAL::pb::Monitoring& monitoring_);
-    void GetLoggingMsg(eCAL::pb::Logging& logging_);
+    void GetMonitoringPb(eCAL::pb::Monitoring& monitoring_, unsigned int entities_);
+    void GetMonitoringStructs(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_);
+    void GetLogging(eCAL::pb::Logging& logging_);
 
     int PubMonitoring(bool state_, std::string& name_);
     int PubLogging(bool state_, std::string& name_);
@@ -72,50 +75,7 @@ namespace eCAL
     void RegisterLogMessage(const eCAL::pb::LogMessage& log_msg_);
 
   protected:
-    struct STopicMon
-    {
-      STopicMon()
-      {
-        rclock                = 0;
-        pid                   = 0;
-        tlayer_ecal_udp_mc    = false;
-        tlayer_ecal_shm       = false;
-        tlayer_ecal_tcp       = false;
-        tlayer_inproc         = false;
-        tsize                 = 0;
-        connections_loc       = 0;
-        connections_ext       = 0;
-        did                   = 0;
-        dclock                = 0;
-        ddropped              = 0;
-        dfreq                 = 0;
-      };
-
-      int                                rclock;
-      std::string                        hname;
-      int                                pid;
-      std::string                        pname;
-      std::string                        uname;
-      std::string                        domain;
-      std::string                        tname;
-      std::string                        tid;
-      std::string                        ttype;
-      std::string                        tdesc;
-      std::map<std::string, std::string> attr;
-      bool                               tlayer_ecal_udp_mc;
-      bool                               tlayer_ecal_shm;
-      bool                               tlayer_ecal_tcp;
-      bool                               tlayer_inproc;
-      int                                tsize;
-      int                                connections_loc;
-      int                                connections_ext;
-      long long                          did;
-      long long                          dclock;
-      long long                          ddropped;
-      long                               dfreq;
-    };
-    typedef eCAL::Util::CExpMap<std::string, STopicMon> TopicMonMapT;
-
+    using TopicMonMapT = eCAL::Util::CExpMap<std::string, eCAL::Monitoring::STopicMon>;
     struct STopicMonMap
     {
       explicit STopicMonMap(const std::chrono::milliseconds& timeout_) :
@@ -126,45 +86,7 @@ namespace eCAL
       std::unique_ptr<TopicMonMapT>  map;
     };
 
-    struct SProcessMon
-    {
-      SProcessMon()
-      {
-        rclock = 0;
-        pid = 0;
-        pmemory = 0;
-        pcpu = 0.0f;
-        usrptime = 0.0f;
-        datawrite = 0;
-        dataread = 0;
-        state_severity = 0;
-        state_severity_level = 0;
-        tsync_state = 0;
-        component_init_state = 0;
-      };
-
-      int            rclock;
-      std::string    hname;
-      std::string    pname;
-      std::string    uname;
-      int            pid;
-      std::string    pparam;
-      long long      pmemory;
-      float          pcpu;
-      float          usrptime;
-      long long      datawrite;
-      long long      dataread;
-      int            state_severity;
-      int            state_severity_level;
-      std::string    state_info;
-      int            tsync_state;
-      std::string    tsync_mod_name;
-      int            component_init_state;
-      std::string    component_init_info;
-      std::string    ecal_runtime_version;
-    };
-    typedef eCAL::Util::CExpMap<std::string, SProcessMon> ProcessMonMapT;
-
+    using ProcessMonMapT = eCAL::Util::CExpMap<std::string, eCAL::Monitoring::SProcessMon>;
     struct SProcessMonMap
     {
       explicit SProcessMonMap(const std::chrono::milliseconds& timeout_) :
@@ -175,41 +97,7 @@ namespace eCAL
       std::unique_ptr<ProcessMonMapT>  map;
     };
 
-    struct SMethodMon
-    {
-      SMethodMon()
-      {
-        call_count = 0;
-      };
-      std::string  mname;
-      std::string  req_type;
-      std::string  req_desc;
-      std::string  resp_type;
-      std::string  resp_desc;
-      long long    call_count;
-    };
-
-    struct SServerMon
-    {
-      SServerMon()
-      {
-        rclock   = 0;
-        pid      = 0;
-        tcp_port = 0;
-      };
-
-      int                      rclock;
-      std::string              hname;
-      std::string              sname;
-      std::string              sid;
-      std::string              pname;
-      std::string              uname;
-      int                      pid;
-      int                      tcp_port;
-      std::vector<SMethodMon>  methods;
-    };
-    typedef eCAL::Util::CExpMap<std::string, SServerMon> ServerMonMapT;
-
+    using ServerMonMapT = eCAL::Util::CExpMap<std::string, eCAL::Monitoring::SServerMon>;
     struct SServerMonMap
     {
       explicit SServerMonMap(const std::chrono::milliseconds& timeout_) :
@@ -220,24 +108,7 @@ namespace eCAL
       std::unique_ptr<ServerMonMapT>  map;
     };
 
-    struct SClientMon
-    {
-      SClientMon()
-      {
-        rclock = 0;
-        pid = 0;
-      };
-
-      int          rclock;
-      std::string  hname;
-      std::string  sname;
-      std::string  sid;
-      std::string  pname;
-      std::string  uname;
-      int          pid;
-    };
-    typedef eCAL::Util::CExpMap<std::string, SClientMon> ClientMonMapT;
-
+    using ClientMonMapT = eCAL::Util::CExpMap<std::string, eCAL::Monitoring::SClientMon>;
     struct SClientMonMap
     {
       explicit SClientMonMap(const std::chrono::milliseconds& timeout_) :
@@ -264,7 +135,6 @@ namespace eCAL
 
     STopicMonMap* GetMap(enum ePubSub pubsub_type_);
 
-
     void MonitorProcs(eCAL::pb::Monitoring& monitoring_);
     void MonitorServer(eCAL::pb::Monitoring& monitoring_);
     void MonitorClients(eCAL::pb::Monitoring& monitoring_);
@@ -285,11 +155,11 @@ namespace eCAL
     StrICaseSetT                                 m_topic_filter_incl;
 
     // database
+    SProcessMonMap                               m_process_map;
     STopicMonMap                                 m_publisher_map;
     STopicMonMap                                 m_subscriber_map;
-    SProcessMonMap                               m_process_map;
     SServerMonMap                                m_server_map;
-    SClientMonMap                                m_client_map;
+    SClientMonMap                                m_clients_map;
 
     // logging
     typedef std::list<eCAL::pb::LogMessage> LogMessageListT;
@@ -297,7 +167,7 @@ namespace eCAL
     LogMessageListT                              m_log_msglist;
 
     // worker threads
-    std::shared_ptr<CLoggingReceiveThread>              m_log_rcv_threadcaller;
-    std::shared_ptr<CMonLogPublishingThread>            m_pub_threadcaller;
+    std::shared_ptr<CLoggingReceiveThread>       m_log_rcv_threadcaller;
+    std::shared_ptr<CMonLogPublishingThread>     m_pub_threadcaller;
   };
 }

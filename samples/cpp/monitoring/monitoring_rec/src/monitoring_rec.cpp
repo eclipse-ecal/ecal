@@ -22,8 +22,7 @@
 #include <iostream>
 
 #ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4800 4505) // disable proto warnings
+#pragma warning(push, 0)
 #endif
 #include <ecal/core/pb/monitoring.pb.h>
 #ifdef _MSC_VER
@@ -45,35 +44,20 @@ int main(int argc, char **argv)
   // initialize eCAL core API
   eCAL::Initialize(argc, argv, "monitoring", eCAL::Init::All);
 
-  // set filtering exclusive regex
-  eCAL::Monitoring::SetExclFilter("ecal.*");
-
-  // set filtering inclusive regex
-  eCAL::Monitoring::SetInclFilter("");
-
-  // set filtering on
-  eCAL::Monitoring::SetFilterState(true);
-
-  // activate monitoring publisher
-  eCAL::Monitoring::PubMonitoring(true);
-
-  // activate logging publisher
-  eCAL::Monitoring::PubLogging(true);
-
-  // monitoring instance to store complete snapshot
+  // monitoring instance to store snapshot
   eCAL::pb::Monitoring monitoring;
   std::string          monitoring_s;
 
   // monitor for ever
   while(eCAL::Ok())
   {
-    // take snapshot :-)
-    eCAL::Monitoring::GetMonitoring(monitoring_s);
-    monitoring.ParseFromString(monitoring_s);
-
     // monitor hosts ?
     if(g_do_monitor_hosts)
     {
+      // take snapshot :-)
+      eCAL::Monitoring::GetMonitoring(monitoring_s, eCAL::Monitoring::Entity::Host);
+      monitoring.ParseFromString(monitoring_s);
+
       // collect host infos
       std::cout << "-------- HOSTS ----------" << std::endl;
 
@@ -93,6 +77,10 @@ int main(int argc, char **argv)
     // monitor processes ?
     if(g_do_monitor_procs)
     {
+      // take snapshot :-)
+      eCAL::Monitoring::GetMonitoring(monitoring_s, eCAL::Monitoring::Entity::Process);
+      monitoring.ParseFromString(monitoring_s);
+
       // collect process infos
       std::cout << "------- PROCESSES -------" << std::endl;
 
@@ -124,6 +112,10 @@ int main(int argc, char **argv)
     // monitor services ?
     if(g_do_monitor_services)
     {
+      // take snapshot :-)
+      eCAL::Monitoring::GetMonitoring(monitoring_s, eCAL::Monitoring::Entity::Server | eCAL::Monitoring::Entity::Client);
+      monitoring.ParseFromString(monitoring_s);
+
       // collect process infos
       std::cout << "------- SERVICES -------" << std::endl;
 
@@ -157,6 +149,10 @@ int main(int argc, char **argv)
     // monitor topics ?
     if(g_do_monitor_topics)
     {
+      // take snapshot :-)
+      eCAL::Monitoring::GetMonitoring(monitoring_s, eCAL::Monitoring::Entity::Publisher | eCAL::Monitoring::Entity::Subscriber);
+      monitoring.ParseFromString(monitoring_s);
+
       // collect topic infos
       std::cout << "-------- TOPICS ---------" << std::endl;
 
