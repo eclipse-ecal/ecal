@@ -45,7 +45,7 @@ public:
     std::cout << "Message size  =  " << int(payload.size()) << " Byte = " << int(payload.size() / 1024) << " kByte = " << int(payload.size() / 1024 / 1024) << " MByte" << std::endl;
   }
 
-  void write_complete(void* buf_, size_t len_) final
+  void write_complete(void* buf_, size_t len_) override
   {
     assert(len_ == size());
     if (len_ < size()) return;
@@ -54,7 +54,7 @@ public:
     memcpy(buf_, payload.data(), payload.size());
   };
 
-  void write_partial(void* buf_, size_t len_) final
+  void write_partial(void* buf_, size_t len_) override
   {
     assert(len_==size());
     if (len_ < size()) return;
@@ -68,8 +68,8 @@ public:
     clock++;
   };
 
-  const void* data() final { return payload.data(); };
-  size_t      size() final { return payload.size(); };
+  const void* data() override { return payload.data(); };
+  size_t      size() override { return payload.size(); };
 
 private:
   std::vector<char> payload;
@@ -99,17 +99,11 @@ int main(int argc, char **argv)
   pub.ShmEnableZeroCopy(zero_copy);
 
   // set write buffer count
-  if (buffer_count > 1)
-  {
-    std::cout << "Set number of write buffer to " << buffer_count << std::endl;
-  }
+  std::cout << "Set number of write buffer to " << buffer_count << std::endl;
   pub.ShmSetBufferCount(buffer_count);
   
   // enable handshake mode
-  if (acknowledge_timeout_ms > 0)
-  {
-    std::cout << "Activate acknowledge with " << acknowledge_timeout_ms << " ms" << std::endl;
-  }
+  std::cout << "Set acknowledge timeout to " << acknowledge_timeout_ms << " ms" << std::endl;
   pub.ShmSetAcknowledgeTimeout(acknowledge_timeout_ms);
   std::cout << std::endl;
 
@@ -146,12 +140,12 @@ int main(int argc, char **argv)
       {
         // log results
         std::stringstream out;
-        out << "Message size (kByte):  " << (unsigned int)(binary_payload.size() / 1024)                           << std::endl;
+        out << "Message size (kByte):  " << (unsigned int)(binary_payload.size() / 1024)                   << std::endl;
         out << "kByte/s:               " << (unsigned int)(bytes / 1024 /               diff_time.count()) << std::endl;
         out << "MByte/s:               " << (unsigned int)(bytes / 1024 / 1024 /        diff_time.count()) << std::endl;
         out << "GByte/s:               " << (unsigned int)(bytes / 1024 / 1024 / 1024 / diff_time.count()) << std::endl;
         out << "Messages/s:            " << (unsigned int)(msgs  /                      diff_time.count()) << std::endl;
-        out << "Latency (us):          " << (diff_time.count() / msgs) * 1000 * 1000                       << std::endl;
+        out << "Latency (us):          " << (unsigned int)(diff_time.count() / msgs) * 1000 * 1000         << std::endl;
         std::cout << out.str() << std::endl;
         eCAL::Logging::Log(out.str());
 
