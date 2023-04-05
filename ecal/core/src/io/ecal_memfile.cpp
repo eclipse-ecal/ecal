@@ -320,7 +320,7 @@ namespace eCAL
     if (GetWriteAddress(wbuf, len_ + offset_) != 0u)
     {
       // (re)write complete buffer
-      if (m_payload_initialized == false)
+      if (!m_payload_initialized)
       {
         payload_.write_complete(static_cast<char*>(wbuf) + offset_, len_);
         m_payload_initialized = true;

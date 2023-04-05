@@ -24,14 +24,14 @@
 
 #pragma once
 
-#include <stddef.h>
+#include <cstddef>
 
 namespace eCAL
 {
   class payload
   {
   public:
-    virtual ~payload() {};
+    virtual ~payload() = default;;
 
     virtual void write_complete(void* buf_, size_t len_) = 0;
     virtual void write_partial (void* buf_, size_t len_) = 0;

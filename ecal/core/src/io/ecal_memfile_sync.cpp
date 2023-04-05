@@ -198,7 +198,7 @@ namespace eCAL
     // write the buffer
     if (data_.len > 0)
     {
-      if (payload_)
+      if (payload_ != nullptr)
       {
         written &= m_memfile.Apply(*payload_, data_.len, wbytes) > 0;
       }
