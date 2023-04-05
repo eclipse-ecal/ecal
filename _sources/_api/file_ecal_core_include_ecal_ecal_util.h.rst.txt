@@ -36,6 +36,8 @@ Includes
 
 - ``string``
 
+- ``tuple``
+
 - ``unordered_map``
 
 - ``vector``

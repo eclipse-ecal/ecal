@@ -36,6 +36,7 @@ Program Listing for File ecal_util.h
    #include <map>
    #include <unordered_map>
    #include <string>
+   #include <tuple>
    #include <vector>
    
    namespace eCAL
