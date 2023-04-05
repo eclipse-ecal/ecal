@@ -16,7 +16,6 @@ jobs:
         sudo apt update
         sudo apt-get install ninja-build doxygen graphviz libcurl4-openssl-dev libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev qtbase5-dev libqwt-qt5-dev libyaml-cpp-dev
 
-
     - name: Install Cap'n Proto
       run: |
         mkdir "${{ runner.workspace }}/capnp"
