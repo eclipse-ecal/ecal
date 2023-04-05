@@ -97,6 +97,7 @@ namespace eCAL
       std::string request_type_description;                          //!< Descriptor String of the request description
       std::string response_type_name;                                //!< Type name of the response message
       std::string response_type_description;                         //!< Descriptor String of the response message
+
       QualityFlags info_quality = QualityFlags::NO_QUALITY;          //!< The Quality of the Info
     };
 
