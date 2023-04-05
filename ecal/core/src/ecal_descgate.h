@@ -78,7 +78,7 @@ namespace eCAL
 
 
   protected:
-    struct STopicInfo
+    struct STopicInfoQuality
     {
       std::string type_name;                                         //!< Type name of the current topic
       std::string type_description;                                  //!< Descriptor String of the current topic. Used e.g. for dynamic deserialization
@@ -98,7 +98,7 @@ namespace eCAL
     };
 
     // key: topic name | value: topic(type/desc)
-    using TopicInfoMap = std::map<std::string, STopicInfo>;                 //!< Map containing { TopicName -> (Type, Description) } mapping of all topics that are currently known
+    using TopicInfoMap = std::map<std::string, STopicInfoQuality>;                 //!< Map containing { TopicName -> (Type, Description) } mapping of all topics that are currently known
     mutable std::shared_timed_mutex  m_topic_info_map_mutex;                //!< Mutex protecting the m_topic_info_map
     TopicInfoMap                     m_topic_info_map;                      //!< Map containing information about each known topic
 
