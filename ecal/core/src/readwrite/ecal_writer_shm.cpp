@@ -180,7 +180,7 @@ namespace eCAL
     return sent;
   }
 
-  bool CDataWriterSHM::Write(const SWriterData& data_, payload& payload_)
+  bool CDataWriterSHM::Write(const SWriterData& data_, CPayload& payload_)
   {
     if (!m_created) return false;
 

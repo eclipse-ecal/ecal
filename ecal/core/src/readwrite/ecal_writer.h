@@ -76,7 +76,7 @@ namespace eCAL
     bool RemEventCallback(eCAL_Publisher_Event type_);
 
     bool Write(const void* const buf_, size_t len_, long long time_, long long id_);
-    bool Write(payload& payload_, long long time_, long long id_);
+    bool Write(CPayload& payload_, long long time_, long long id_);
 
     void ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_);
     void RemoveLocSubscription(const std::string & process_id_);

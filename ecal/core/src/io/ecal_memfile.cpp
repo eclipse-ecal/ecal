@@ -312,7 +312,7 @@ namespace eCAL
     }
   }
 
-  size_t CMemoryFile::Apply(payload& payload_, const size_t len_, const size_t offset_)
+  size_t CMemoryFile::Apply(CPayload& payload_, const size_t len_, const size_t offset_)
   {
     if (!m_created) return(0);
 
@@ -322,13 +322,13 @@ namespace eCAL
       // (re)write complete buffer
       if (!m_payload_initialized)
       {
-        payload_.write_complete(static_cast<char*>(wbuf) + offset_, len_);
+        payload_.WriteComplete(static_cast<char*>(wbuf) + offset_, len_);
         m_payload_initialized = true;
       }
       else
       {
         // apply update to write buffer
-        payload_.write_partial(static_cast<char*>(wbuf) + offset_, len_);
+        payload_.WritePartial(static_cast<char*>(wbuf) + offset_, len_);
       }
 
       // return number of written bytes

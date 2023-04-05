@@ -321,7 +321,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent.
     **/
-    size_t Send(payload& payload_, long long time_ = -1) const;
+    size_t Send(CPayload& payload_, long long time_ = -1) const;
 
     /**
      * @brief Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout).
@@ -366,7 +366,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent.
     **/
-    size_t Send(payload& payload_, long long time_, long long acknowledge_timeout_ms_) const;
+    size_t Send(CPayload& payload_, long long time_, long long acknowledge_timeout_ms_) const;
 
     /**
      * @brief Send a message to all subscribers.

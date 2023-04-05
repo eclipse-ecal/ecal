@@ -636,7 +636,7 @@ namespace eCAL
     return(written);
   }
 
-  bool CDataWriter::Write(payload& payload_, long long time_, long long id_)
+  bool CDataWriter::Write(CPayload& payload_, long long time_, long long id_)
   {
     // check send modes
     TLayer::eSendMode use_udp_mc (TLayer::smode_off);
@@ -689,8 +689,8 @@ namespace eCAL
     if (zero_copy_write)
     {
       // get buffer address and buffer size
-      const void*  buf(payload_.data());
-      const size_t len(payload_.size());
+      const void*  buf(payload_.GetBuffer());
+      const size_t len(payload_.GetBufferSize());
 
       // prepare counter and internal states
       size_t snd_hash = PrepareWrite(id_, len);
@@ -737,11 +737,11 @@ namespace eCAL
       //eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_warning, "Publisher: '" + m_topic_name + "' Performance warning: You are using the new CPublisher::Send(payload) API, but this publisher has external connections or you did not switch on 'zero copy' mode for this connection.This will decrease local performance.");
       
       // we need to prepare a memory buffer :-(
-      m_none_zero_copy_buffer.resize(payload_.size());
+      m_none_zero_copy_buffer.resize(payload_.GetBufferSize());
       // initialize buffer with complete write
-      payload_.write_complete(m_none_zero_copy_buffer.data(), m_none_zero_copy_buffer.size());
+      payload_.WriteComplete(m_none_zero_copy_buffer.data(), m_none_zero_copy_buffer.size());
       // write additional partial data
-      payload_.write_partial(m_none_zero_copy_buffer.data(), m_none_zero_copy_buffer.size());
+      payload_.WritePartial(m_none_zero_copy_buffer.data(), m_none_zero_copy_buffer.size());
       // forward this to the classic Write call with (buffer pointer, buffer length)
       return Write(m_none_zero_copy_buffer.data(), m_none_zero_copy_buffer.size(), time_, id_);
     }

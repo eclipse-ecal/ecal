@@ -130,7 +130,7 @@ namespace eCAL
     return false;
   }
 
-  bool CSyncMemoryFile::Write(const SWriterData& data_, payload* payload_)
+  bool CSyncMemoryFile::Write(const SWriterData& data_, CPayload* payload_)
   {
     if (!m_created)
     {

@@ -28,15 +28,15 @@
 
 namespace eCAL
 {
-  class payload
+  class CPayload
   {
   public:
-    virtual ~payload() = default;;
+    virtual ~CPayload() = default;;
 
-    virtual void write_complete(void* buf_, size_t len_) = 0;
-    virtual void write_partial (void* buf_, size_t len_) = 0;
+    virtual void WriteComplete (void* buf_, size_t len_) = 0;
+    virtual void WritePartial  (void* buf_, size_t len_) = 0;
 
-    virtual const void* data() = 0;
-    virtual size_t      size() = 0;
+    virtual const void* GetBuffer()     = 0;
+    virtual size_t      GetBufferSize() = 0;
   };
 };

@@ -153,7 +153,7 @@ namespace eCAL
      *
      * @return          Number of bytes access (len if succeeded otherwise zero).
     **/
-    size_t Apply(payload& payload_, size_t len_, const size_t offset_);
+    size_t Apply(CPayload& payload_, size_t len_, const size_t offset_);
 
     /**
      * @brief Maximum data size of the whole memory file.

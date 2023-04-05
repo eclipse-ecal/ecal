@@ -376,12 +376,12 @@ namespace eCAL
     else      return(0);
   }
 
-  size_t CPublisher::Send(payload& payload_, long long time_) const
+  size_t CPublisher::Send(CPayload& payload_, long long time_) const
   {
     if (!m_created) return(0);
 
     // get payload's length
-    const size_t len(payload_.size());
+    const size_t len(payload_.GetBufferSize());
 
     // in an optimization case the
     // publisher can send an empty package
@@ -422,7 +422,7 @@ namespace eCAL
     return len;
   }
 
-  size_t CPublisher::Send(payload& payload_, long long time_, long long acknowledge_timeout_ms_) const
+  size_t CPublisher::Send(CPayload& payload_, long long time_, long long acknowledge_timeout_ms_) const
   {
     if (!m_created) return(0);
 
