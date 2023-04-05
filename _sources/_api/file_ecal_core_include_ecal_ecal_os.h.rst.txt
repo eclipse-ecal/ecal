@@ -46,6 +46,8 @@ Included By
 
 - :ref:`file_ecal_core_include_ecal_ecal_monitoring.h`
 
+- :ref:`file_ecal_core_include_ecal_ecal_monitoring_struct.h`
+
 - :ref:`file_ecal_core_include_ecal_ecal_process.h`
 
 - :ref:`file_ecal_core_include_ecal_ecal_publisher.h`

@@ -32,6 +32,7 @@ Program Listing for File ecal_monitoring.h
    #pragma once
    
    #include <ecal/ecal_os.h>
+   #include <ecal/ecal_monitoring_entity.h>
    #include <string>
    
    namespace eCAL
@@ -46,10 +47,14 @@ Program Listing for File ecal_monitoring.h
    
        ECAL_API int GetMonitoring(std::string& mon_);
    
+       ECAL_API int GetMonitoring(std::string& mon_, unsigned int entities_);
+   
        ECAL_API int GetLogging(std::string& log_);
    
+       [[deprecated("use GetMonitoring and publish yourself")]]
        ECAL_API int PubMonitoring(bool state_, std::string name_ = "ecal.monitoring");
    
+       [[deprecated("use GetLogging and publish yourself")]]
        ECAL_API int PubLogging(bool state_, std::string name_ = "ecal.logging");
      }
    }

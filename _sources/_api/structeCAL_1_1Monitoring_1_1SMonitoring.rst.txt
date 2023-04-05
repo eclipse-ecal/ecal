@@ -1,0 +1,17 @@
+.. _exhale_struct_structeCAL_1_1Monitoring_1_1SMonitoring:
+
+Struct SMonitoring
+==================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_monitoring_struct.h`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: eCAL::Monitoring::SMonitoring
+   :project: eCAL
+   :members:
+   :protected-members:
+   :undoc-members:

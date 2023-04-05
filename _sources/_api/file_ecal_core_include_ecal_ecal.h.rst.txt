@@ -46,6 +46,8 @@ Includes
 
 - ``ecal/ecal_monitoring.h`` (:ref:`file_ecal_core_include_ecal_ecal_monitoring.h`)
 
+- ``ecal/ecal_monitoring_struct.h`` (:ref:`file_ecal_core_include_ecal_ecal_monitoring_struct.h`)
+
 - ``ecal/ecal_os.h`` (:ref:`file_ecal_core_include_ecal_ecal_os.h`)
 
 - ``ecal/ecal_process.h`` (:ref:`file_ecal_core_include_ecal_ecal_process.h`)

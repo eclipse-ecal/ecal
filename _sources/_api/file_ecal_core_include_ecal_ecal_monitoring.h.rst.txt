@@ -30,6 +30,8 @@ Includes
 --------
 
 
+- ``ecal/ecal_monitoring_entity.h`` (:ref:`file_ecal_core_include_ecal_ecal_monitoring_entity.h`)
+
 - ``ecal/ecal_os.h`` (:ref:`file_ecal_core_include_ecal_ecal_os.h`)
 
 - ``string``
@@ -59,6 +61,8 @@ Functions
 
 
 - :ref:`exhale_function_ecal__monitoring_8h_1acd887762353250aa95666405429f6374`
+
+- :ref:`exhale_function_ecal__monitoring_8h_1aa83af5b57590229e655179bb665097f8`
 
 - :ref:`exhale_function_ecal__monitoring_8h_1a3f27326ec1c3aefa80251c32f02a785d`
 

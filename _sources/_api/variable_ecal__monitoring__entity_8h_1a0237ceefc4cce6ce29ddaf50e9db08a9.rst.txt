@@ -1,0 +1,14 @@
+.. _exhale_variable_ecal__monitoring__entity_8h_1a0237ceefc4cce6ce29ddaf50e9db08a9:
+
+Variable eCAL::Monitoring::Entity::Subscriber
+=============================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_ecal_monitoring_entity.h`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: eCAL::Monitoring::Entity::Subscriber
+   :project: eCAL

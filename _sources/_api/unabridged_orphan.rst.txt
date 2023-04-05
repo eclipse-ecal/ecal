@@ -145,6 +145,16 @@ Files
 .. toctree::
    :maxdepth: 5
 
+   file_ecal_core_include_ecal_ecal_monitoring_entity.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_ecal_core_include_ecal_ecal_monitoring_struct.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
    file_ecal_core_include_ecal_ecal_os.h.rst
 
 .. toctree::
