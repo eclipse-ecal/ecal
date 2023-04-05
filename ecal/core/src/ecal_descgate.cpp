@@ -50,8 +50,8 @@ namespace eCAL
     {
       // TODO: Maybe we should copy the description from another topic with the same type, if it is empty?
       STopicInfoQuality topic_info;
-      topic_info.type_name        = topic_type_;
-      topic_info.type_description = topic_desc_;
+      topic_info.type_name           = topic_type_;
+      topic_info.type_description    = topic_desc_;
       topic_info.description_quality = description_quality_;
       m_topic_info_map.emplace(topic_name_, std::move(topic_info));
     }
@@ -102,8 +102,8 @@ namespace eCAL
       // If it has a higher quality, we overwrite it.
       if (description_quality_ > topic_info_it->second.description_quality)
       {
-        topic_info_it->second.type_name        = topic_type_;
-        topic_info_it->second.type_description = topic_desc_;
+        topic_info_it->second.type_name           = topic_type_;
+        topic_info_it->second.type_description         = topic_desc_;
         topic_info_it->second.description_quality = description_quality_;
       }
     }
