@@ -49,7 +49,7 @@ namespace eCAL
     if(topic_info_it == m_topic_info_map.end())
     {
       // TODO: Maybe we should copy the description from another topic with the same type, if it is empty?
-      STopicInfo topic_info;
+      STopicInfoQuality topic_info;
       topic_info.type_name           = topic_type_;
       topic_info.type_description    = topic_desc_;
       topic_info.description_quality = description_quality_;
