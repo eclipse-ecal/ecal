@@ -381,7 +381,7 @@ namespace eCAL
     if (!m_created) return(0);
 
     // get payload's length
-    const size_t len(payload_.GetBufferSize());
+    const size_t len(payload_.GetSize());
 
     // in an optimization case the
     // publisher can send an empty package

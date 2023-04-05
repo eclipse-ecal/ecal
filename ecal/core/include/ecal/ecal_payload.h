@@ -33,10 +33,9 @@ namespace eCAL
   public:
     virtual ~CPayload() = default;;
 
-    virtual void WriteComplete (void* buf_, size_t len_) = 0;
-    virtual void WritePartial  (void* buf_, size_t len_) = 0;
-
-    virtual const void* GetBuffer()     = 0;
-    virtual size_t      GetBufferSize() = 0;
+    virtual bool WriteComplete (void* buf_, size_t len_) = 0;
+    virtual bool WritePartial  (void* buf_, size_t len_) = 0;
+    
+    virtual size_t GetSize() = 0;
   };
 };

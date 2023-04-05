@@ -689,8 +689,7 @@ namespace eCAL
     if (zero_copy_write)
     {
       // get buffer address and buffer size
-      const void*  buf(payload_.GetBuffer());
-      const size_t len(payload_.GetBufferSize());
+      const size_t len(payload_.GetSize());
 
       // prepare counter and internal states
       size_t snd_hash = PrepareWrite(id_, len);
@@ -700,7 +699,7 @@ namespace eCAL
 
       // fill writer data
       struct SWriterData wdata;
-      wdata.buf                    = buf;
+      wdata.buf                    = nullptr;
       wdata.len                    = len;
       wdata.id                     = m_id;
       wdata.clock                  = m_clock;
@@ -737,7 +736,7 @@ namespace eCAL
       //eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_warning, "Publisher: '" + m_topic_name + "' Performance warning: You are using the new CPublisher::Send(payload) API, but this publisher has external connections or you did not switch on 'zero copy' mode for this connection.This will decrease local performance.");
       
       // we need to prepare a memory buffer :-(
-      m_none_zero_copy_buffer.resize(payload_.GetBufferSize());
+      m_none_zero_copy_buffer.resize(payload_.GetSize());
       // initialize buffer with complete write
       payload_.WriteComplete(m_none_zero_copy_buffer.data(), m_none_zero_copy_buffer.size());
       // write additional partial data
