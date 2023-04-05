@@ -22,7 +22,6 @@
 #include <iostream>
 #include <sstream>
 #include <chrono>
-#include <thread>
 
 int main(int argc, char **argv)
 {
@@ -66,11 +65,18 @@ int main(int argc, char **argv)
     {
       start_time = std::chrono::steady_clock::now();
       std::stringstream out;
-      out << "Message size (kByte):  " << (unsigned int)(slen  / 1024)                            << std::endl;
-      out << "kByte/s:               " << (unsigned int)(bytes / 1024 /        diff_time.count()) << std::endl;
-      out << "MByte/s:               " << (unsigned int)(bytes / 1024 / 1024 / diff_time.count()) << std::endl;
-      out << "Messages/s:            " << (unsigned int)(msgs  /               diff_time.count()) << std::endl;
-      out << "Latency (us):          " << (diff_time.count() / msgs) * 1000 * 1000                << std::endl;
+      if (rcv_buf.size() > 15)
+      {
+        out << "Message [0 - 15]:      ";
+        for (auto i = 0; i < 16; ++i) out << rcv_buf[i] << " ";
+        out << std::endl;
+      }
+      out << "Message size (kByte):  " << (unsigned int)(slen  / 1024)                                   << std::endl;
+      out << "kByte/s:               " << (unsigned int)(bytes / 1024 /               diff_time.count()) << std::endl;
+      out << "MByte/s:               " << (unsigned int)(bytes / 1024 / 1024 /        diff_time.count()) << std::endl;
+      out << "GByte/s:               " << (unsigned int)(bytes / 1024 / 1024 / 1024 / diff_time.count()) << std::endl;
+      out << "Messages/s:            " << (unsigned int)(msgs  /                      diff_time.count()) << std::endl;
+      out << "Latency (us):          " << (unsigned int)(diff_time.count() / msgs) * 1000 * 1000         << std::endl;
       std::cout << out.str() << std::endl;
       msgs  = 0;
       bytes = 0;

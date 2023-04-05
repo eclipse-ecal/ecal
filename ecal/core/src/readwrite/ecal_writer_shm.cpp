@@ -180,6 +180,20 @@ namespace eCAL
     return sent;
   }
 
+  bool CDataWriterSHM::Write(const SWriterData& data_, payload& payload_)
+  {
+    if (!m_created) return false;
+
+    // write content
+    bool sent = m_memory_file_vec[m_write_idx]->Write(data_, &payload_);
+
+    // and increment file index
+    m_write_idx++;
+    m_write_idx %= m_memory_file_vec.size();
+
+    return sent;
+  }
+
   bool CDataWriterSHM::AddLocConnection(const std::string& process_id_, const std::string& /*conn_par_*/)
   {
     if (!m_created) return false;
