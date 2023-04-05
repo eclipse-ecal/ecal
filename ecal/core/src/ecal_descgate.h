@@ -91,7 +91,6 @@ namespace eCAL
       bool        type_missmatch_logged = false;                     //!< Whether we have already logged a type-missmatch
     };
 
-
     struct SServiceMethodInfo
     {
       std::string request_type_name;                                 //!< Type name of the request message
