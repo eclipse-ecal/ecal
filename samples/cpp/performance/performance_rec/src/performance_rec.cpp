@@ -76,7 +76,7 @@ int main(int argc, char **argv)
       out << "MByte/s:               " << (unsigned int)(bytes / 1024 / 1024 /        diff_time.count()) << std::endl;
       out << "GByte/s:               " << (unsigned int)(bytes / 1024 / 1024 / 1024 / diff_time.count()) << std::endl;
       out << "Messages/s:            " << (unsigned int)(msgs  /                      diff_time.count()) << std::endl;
-      out << "Latency (us):          " << (unsigned int)(diff_time.count() / msgs) * 1000 * 1000         << std::endl;
+      out << "Latency (us):          " << (diff_time.count() * 1e6) / (double)msgs                       << std::endl;
       std::cout << out.str() << std::endl;
       msgs  = 0;
       bytes = 0;

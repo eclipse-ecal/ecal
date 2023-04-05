@@ -46,7 +46,7 @@ void PrintStatistic(const std::string& topic_name_, const std::chrono::duration<
     out << "MByte/s:               " << (unsigned int)(bytes_ / 1024 / 1024 /        diff_time_.count()) << std::endl;
     out << "GByte/s:               " << (unsigned int)(bytes_ / 1024 / 1024 / 1024 / diff_time_.count()) << std::endl;
     out << "Messages/s:            " << (unsigned int)(msgs_  /                      diff_time_.count()) << std::endl;
-    out << "Latency (us):          " << (unsigned int)(diff_time_.count() / msgs_) * 1000 * 1000         << std::endl;
+    out << "Latency (us):          " << (diff_time_.count() * 1e6) / (double)msgs_                       << std::endl;
     std::cout << out.str() << std::endl;
     msgs_  = 0;
     bytes_ = 0;
