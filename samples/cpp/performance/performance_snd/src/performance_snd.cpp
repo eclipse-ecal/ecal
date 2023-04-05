@@ -32,7 +32,7 @@
 const bool   zero_copy              (true);
 const int    buffer_count           (1);
 const int    acknowledge_timeout_ms (50);
-size_t       payload_size           (8* 1024 * 1024);
+const size_t payload_size_default   (8* 1024 * 1024);
 
 // binary payload (std::vector<char>)
 class CVectorPayload : public eCAL::payload
@@ -79,6 +79,7 @@ private:
 // main entry
 int main(int argc, char **argv)
 {
+  size_t payload_size(payload_size_default);
   if(argc > 1) payload_size = atoi(argv[1]);
   if(payload_size < 1) payload_size = 1;
 
