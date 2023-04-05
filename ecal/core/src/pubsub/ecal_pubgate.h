@@ -57,6 +57,8 @@ namespace eCAL
 
     void RefreshRegistrations();
 
+    bool ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
+
   protected:
     static std::atomic<bool>  m_created;
     bool                      m_share_type;

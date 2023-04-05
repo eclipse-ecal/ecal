@@ -119,17 +119,8 @@ namespace eCAL
     // register to subscriber gateway for publisher memory file receive thread
     g_subgate()->Register(topic_name_, m_datareader);
 
-    // Calculate the quality of the current info
-    ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-    if (!topic_type_.empty())
-      quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-    if (!topic_desc_.empty())
-      quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
-    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
-    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
-
     // register to description gateway for type / description checking
-    g_descgate()->ApplyTopicDescription(topic_name_, topic_type_, topic_desc_, quality);
+    ApplyTopicToDescGate(topic_name_, topic_type_, topic_desc_);
 
     // we made it :-)
     m_created = true;
@@ -281,6 +272,24 @@ namespace eCAL
   {
     m_qos = QOS::SReaderQOS();
     m_qos.reliability = QOS::best_effort_reliability_qos;
+  }
+
+  bool CSubscriber::ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_)
+  {
+    if (g_descgate())
+    {
+      // Calculate the quality of the current info
+      ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
+      if (!topic_type_.empty())
+        quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
+      if (!topic_desc_.empty())
+        quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
+      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
+      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
+
+      return g_descgate()->ApplyTopicDescription(topic_name_, topic_type_, topic_desc_, quality);
+    }
+    return false;
   }
 
   std::string CSubscriber::Dump(const std::string& indent_ /* = "" */) const

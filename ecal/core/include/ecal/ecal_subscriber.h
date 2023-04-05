@@ -298,6 +298,7 @@ namespace eCAL
 
   protected:
     void InitializeQOS();
+    bool ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
 
     // class members
     CDataReader*                     m_datareader;

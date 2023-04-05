@@ -46,7 +46,7 @@ namespace eCAL
   {
   }
 
-  void CDescGate::ApplyTopicDescription(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_, const QualityFlags description_quality_)
+  bool CDescGate::ApplyTopicDescription(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_, const QualityFlags description_quality_)
   {
     std::unique_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     m_topic_info_map.map->remove_deprecated();
@@ -56,66 +56,110 @@ namespace eCAL
     // new element (no need to check anything, just add it)
     if(topic_info_it == m_topic_info_map.map->end())
     {
-      // TODO: Maybe we should copy the description from another topic with the same type, if it is empty?
+      // create a new topic entry
       STopicInfoQuality& topic_info = (*m_topic_info_map.map)[topic_name_];
       topic_info.info.type_name        = topic_type_;
       topic_info.info.type_description = topic_desc_;
-      topic_info.description_quality   = description_quality_;
+      topic_info.quality               = description_quality_;
+      return true;
     }
-    else
+
+    // we do not use the [] operator here to not update the timestamp
+    // by accessing the map entry
+    // 
+    // a topic with the same name but different type name or different description
+    // should NOT update the timestamp of an existing entry
+    // 
+    // otherwise there could be a scenario where a "lower quality topic" would keep a 
+    // "higher quality topic" alive (even it is no more existing)
+    STopicInfoQuality topic_info = (*topic_info_it).second;
+
+    // first let's check whether the current information has a higher quality
+    // if it has a higher quality, we overwrite it
+    if (description_quality_ > topic_info.quality)
     {
-      // existing type for the same topic name should be equal !!
-      // we log the error only one time
-      STopicInfoQuality& topic_info = (*m_topic_info_map.map)[topic_name_];
+      // overwrite attributes
+      topic_info.info.type_name        = topic_type_;
+      topic_info.info.type_description = topic_desc_;
+      topic_info.quality               = description_quality_;
 
-      if(  !topic_info.type_missmatch_logged
-            && !topic_type_.empty()
-            && !topic_info.info.type_name.empty()
-            && (topic_info.info.type_name != topic_type_)
-        )
-      {
-        std::string ttype1 = topic_info.info.type_name;
-        std::string ttype2 = topic_type_;
-        std::replace(ttype1.begin(), ttype1.end(), '\0', '?');
-        std::replace(ttype1.begin(), ttype1.end(), '\t', '?');
-        std::replace(ttype2.begin(), ttype2.end(), '\0', '?');
-        std::replace(ttype2.begin(), ttype2.end(), '\t', '?');
-        std::string msg = "eCAL Pub/Sub type mismatch for topic ";
-        msg += topic_name_;
-        msg += " (\'";
-        msg += ttype1;
-        msg += "\' <> \'";
-        msg += ttype2;
-        msg += "\')";
-        eCAL::Logging::Log(log_level_warning, msg);
-
-        topic_info.type_missmatch_logged = true;
-      }
-
-      // existing description for the same topic name should be equal !!
-      // we log the warning only one time
-      if(   !topic_info.type_missmatch_logged
-            && !topic_desc_.empty()
-            && !topic_info.info.type_description.empty()
-            && (topic_info.info.type_description != topic_desc_)
-        )
-      {
-        std::string msg = "eCAL Pub/Sub description mismatch for topic ";
-        msg += topic_name_;
-        eCAL::Logging::Log(log_level_warning, msg);
-
-        topic_info.type_missmatch_logged = true;
-      }
-
-      // Now let's check whether the current information has a higher quality.
-      // If it has a higher quality, we overwrite it.
-      if (description_quality_ > topic_info.description_quality)
-      {
-        topic_info.info.type_name        = topic_type_;
-        topic_info.info.type_description = topic_desc_;
-        topic_info.description_quality   = description_quality_;
-      }
+      // update attributes and return
+      (*m_topic_info_map.map)[topic_name_] = topic_info;
+      return true;
     }
+
+    // this is the same topic (topic name, topic type name, topic type description)
+    if ( (topic_info.info.type_name        == topic_type_)
+      && (topic_info.info.type_description == topic_desc_)
+      )
+    {
+      // update timestamp (by just accessing the entry) and return
+      (*m_topic_info_map.map)[topic_name_] = topic_info;
+      return false;
+    }
+
+    // topic type name or topic description differ but we logged this before
+    if (topic_info.type_missmatch_logged)
+    {
+      return false;
+    }
+
+    // topic type name or topic description differ and this is not logged yet
+    // so we log the error and update the entry one time
+    bool update_topic_info(false);
+
+    // topic type name differs
+    // we log the error and update the entry one time
+    if ( !topic_type_.empty()
+      && !topic_info.info.type_name.empty()
+      && (topic_info.info.type_name != topic_type_)
+      )
+    {
+      std::string ttype1 = topic_info.info.type_name;
+      std::string ttype2 = topic_type_;
+      std::replace(ttype1.begin(), ttype1.end(), '\0', '?');
+      std::replace(ttype1.begin(), ttype1.end(), '\t', '?');
+      std::replace(ttype2.begin(), ttype2.end(), '\0', '?');
+      std::replace(ttype2.begin(), ttype2.end(), '\t', '?');
+      std::string msg = "eCAL Pub/Sub type mismatch for topic ";
+      msg += topic_name_;
+      msg += " (\'";
+      msg += ttype1;
+      msg += "\' <> \'";
+      msg += ttype2;
+      msg += "\')";
+      eCAL::Logging::Log(log_level_warning, msg);
+
+      // mark as logged
+      topic_info.type_missmatch_logged = true;
+      // and update its attributes
+      update_topic_info = true;
+    }
+
+    // topic type description differs
+    // we log the error and update the entry one time
+    if ( !topic_desc_.empty()
+      && !topic_info.info.type_description.empty()
+      && (topic_info.info.type_description != topic_desc_)
+      )
+    {
+      std::string msg = "eCAL Pub/Sub description mismatch for topic ";
+      msg += topic_name_;
+      eCAL::Logging::Log(log_level_warning, msg);
+
+      // mark as logged
+      topic_info.type_missmatch_logged = true;
+      // and update its attributes
+      update_topic_info = true;
+    }
+
+    // update topic info attributes
+    if (update_topic_info)
+    {
+      (*m_topic_info_map.map)[topic_name_] = topic_info;
+    }
+
+    return false;
   }
 
   void CDescGate::GetTopics(std::unordered_map<std::string, Util::STopicInfo>& topic_info_map_)
@@ -171,13 +215,13 @@ namespace eCAL
     return(true);
   }
   
-  void CDescGate::ApplyServiceDescription(const std::string& service_name_
+  bool CDescGate::ApplyServiceDescription(const std::string& service_name_
                                         , const std::string& method_name_
                                         , const std::string& req_type_name_
                                         , const std::string& req_type_desc_
                                         , const std::string& resp_type_name_
                                         , const std::string& resp_type_desc_
-                                        , const QualityFlags  info_quality_)
+                                        , const QualityFlags description_quality_)
   {
     std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
 
@@ -187,26 +231,34 @@ namespace eCAL
     auto service_info_map_it = m_service_info_map.map->find(service_method_tuple);
     if (service_info_map_it == m_service_info_map.map->end())
     {
+      // create a new service entry
       SServiceMethodInfoQuality& service_info = (*m_service_info_map.map)[service_method_tuple];
       service_info.info.request_type_name         = req_type_name_;
       service_info.info.request_type_description  = req_type_desc_;
       service_info.info.response_type_name        = resp_type_name_;
       service_info.info.response_type_description = resp_type_desc_;
-      service_info.info_quality                   = info_quality_;
+      service_info.quality                        = description_quality_;
+      return true;
     }
-    else
+
+    // let's check whether the current information has a higher quality
+    // if it has a higher quality, we overwrite it
+    bool ret_value(false);
+    SServiceMethodInfoQuality service_info = (*service_info_map_it).second;
+    if (description_quality_ > service_info.quality)
     {
-      // do we need to check consistency ?
-      SServiceMethodInfoQuality& service_info = (*m_service_info_map.map)[service_method_tuple];
-      if (info_quality_ > service_info.info_quality)
-      {
-        service_info.info.request_type_name         = req_type_name_;
-        service_info.info.request_type_description  = req_type_desc_;
-        service_info.info.response_type_name        = resp_type_name_;
-        service_info.info.response_type_description = resp_type_desc_;
-        service_info.info_quality                   = info_quality_;
-      }
+      service_info.info.request_type_name         = req_type_name_;
+      service_info.info.request_type_description  = req_type_desc_;
+      service_info.info.response_type_name        = resp_type_name_;
+      service_info.info.response_type_description = resp_type_desc_;
+      service_info.quality                        = description_quality_;
+      ret_value = true;
     }
+
+    // update service entry (and its timestamp)
+    (*m_service_info_map.map)[service_method_tuple] = service_info;
+
+    return ret_value;
   }
 
   void CDescGate::GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_)

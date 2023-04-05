@@ -444,6 +444,7 @@ namespace eCAL
   protected:
     void InitializeQOS();
     void InitializeTLayer();
+    bool ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
 
     // class members
     CDataWriter*                     m_datawriter;

@@ -133,26 +133,15 @@ namespace eCAL
       }
     }
 
-    if (!g_descgate()) return false;
-
-    // Calculate the quality of the current info
-    ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-    if (!(req_type_.empty() && resp_type_.empty()))
-      quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-    if (!(req_desc_.empty() && resp_desc_.empty()))
-      quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
-    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
-    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PUBLISHER;
-    quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
-
-    g_descgate()->ApplyServiceDescription(m_service_name, method_, req_type_, req_desc_, resp_type_, resp_desc_, quality);
-
-    return true;
+    // update descgate infos
+    return ApplyServiceToDescGate(method_, req_type_, req_desc_, resp_type_, resp_desc_);
   }
 
   // add callback function for server method calls
   bool CServiceServerImpl::AddMethodCallback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const MethodCallbackT& callback_)
   {
+    std::string req_desc;
+    std::string resp_desc;
     {
       std::lock_guard<std::mutex> lock(m_method_map_sync);
       auto iter = m_method_map.find(method_);
@@ -164,6 +153,10 @@ namespace eCAL
         iter->second.method_pb.set_resp_type(resp_type_);
         // set callback
         iter->second.callback = callback_;
+
+        // read descriptors back from existing service method
+        req_desc = iter->second.method_pb.req_desc();
+        resp_desc = iter->second.method_pb.resp_desc();
       }
       else
       {
@@ -175,6 +168,9 @@ namespace eCAL
         m_method_map[method_] = method;
       }
     }
+
+    // update descgate infos
+    ApplyServiceToDescGate(method_, req_type_, req_desc, resp_type_, resp_desc);
 
     return true;
   }
@@ -394,5 +390,26 @@ namespace eCAL
         (e_iter->second)(m_service_name.c_str(), &sdata);
       }
     }
+  }
+
+  bool CServiceServerImpl::ApplyServiceToDescGate(const std::string& method_name_
+    , const std::string& req_type_name_
+    , const std::string& req_type_desc_
+    , const std::string& resp_type_name_
+    , const std::string& resp_type_desc_)
+  {
+    if (g_descgate())
+    {
+      // Calculate the quality of the current info
+      ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
+      if (!(req_type_name_.empty() && resp_type_name_.empty()))
+        quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
+      if (!(req_type_desc_.empty() && resp_type_desc_.empty()))
+        quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
+      quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
+
+      return g_descgate()->ApplyServiceDescription(m_service_name, method_name_, req_type_name_, req_type_desc_, resp_type_name_, resp_type_desc_, quality);
+    }
+    return false;
   }
 };

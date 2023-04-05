@@ -27,7 +27,7 @@
 
 int main(int argc, char **argv)
 {
-  int                                   run(0), runs(100000);
+  int                                   run(0), runs(1000);
   std::chrono::steady_clock::time_point start_time;
 
   // initialize eCAL core API

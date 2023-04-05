@@ -62,6 +62,13 @@ namespace eCAL
 
     void RefreshRegistrations();
 
+    bool ApplyServiceToDescGate(const std::string& service_name_
+      , const std::string& method_name_
+      , const std::string& req_type_name_
+      , const std::string& req_type_desc_
+      , const std::string& resp_type_name_
+      , const std::string& resp_type_desc_);
+
   protected:
     static std::atomic<bool>    m_created;
 

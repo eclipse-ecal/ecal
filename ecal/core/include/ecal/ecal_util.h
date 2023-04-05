@@ -29,6 +29,7 @@
 #include <map>
 #include <unordered_map>
 #include <string>
+#include <tuple>
 #include <vector>
 
 namespace eCAL
