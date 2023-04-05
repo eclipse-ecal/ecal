@@ -50,8 +50,8 @@ namespace eCAL
     {
       // TODO: Maybe we should copy the description from another topic with the same type, if it is empty?
       STopicInfoQuality topic_info;
-      topic_info.info.type_name        = topic_type_;
-      topic_info.info.type_description = topic_desc_;
+      topic_info.type_name        = topic_type_;
+      topic_info.type_description = topic_desc_;
       topic_info.description_quality = description_quality_;
       m_topic_info_map.emplace(topic_name_, std::move(topic_info));
     }
@@ -61,11 +61,11 @@ namespace eCAL
       // we log the error only one time
       if(  !topic_info_it->second.type_missmatch_logged
             && !topic_type_.empty()
-            && !topic_info_it->second.info.type_name.empty()
-            && (topic_info_it->second.info.type_name != topic_type_)
+            && !topic_info_it->second.type_name.empty()
+            && (topic_info_it->second.type_name != topic_type_)
         )
       {
-        std::string ttype1 =  topic_info_it->second.info.type_name;
+        std::string ttype1 =  topic_info_it->second.type_name;
         std::string ttype2 = topic_type_;
         std::replace(ttype1.begin(), ttype1.end(), '\0', '?');
         std::replace(ttype1.begin(), ttype1.end(), '\t', '?');
@@ -87,8 +87,8 @@ namespace eCAL
       // we log the warning only one time
       if ( !topic_info_it->second.type_missmatch_logged
             && !topic_desc_.empty()
-            && !topic_info_it->second.info.type_description.empty()
-            && (topic_info_it->second.info.type_description != topic_desc_)
+            && !topic_info_it->second.type_description.empty()
+            && (topic_info_it->second.type_description != topic_desc_)
         )
       {
         std::string msg = "eCAL Pub/Sub description mismatch for topic ";
@@ -102,8 +102,8 @@ namespace eCAL
       // If it has a higher quality, we overwrite it.
       if (description_quality_ > topic_info_it->second.description_quality)
       {
-        topic_info_it->second.info.type_name        = topic_type_;
-        topic_info_it->second.info.type_description = topic_desc_;
+        topic_info_it->second.type_name        = topic_type_;
+        topic_info_it->second.type_description = topic_desc_;
         topic_info_it->second.description_quality = description_quality_;
       }
     }
@@ -117,7 +117,7 @@ namespace eCAL
     const auto topic_info_it = m_topic_info_map.find(topic_name_);
 
     if(topic_info_it == m_topic_info_map.end()) return(false);
-    topic_type_ = topic_info_it->second.info.type_name;
+    topic_type_ = topic_info_it->second.type_name;
     return(true);
   }
 
@@ -129,7 +129,7 @@ namespace eCAL
     const auto topic_info_it = m_topic_info_map.find(topic_name_);
 
     if(topic_info_it == m_topic_info_map.end()) return(false);
-    topic_desc_ = topic_info_it->second.info.type_description;
+    topic_desc_ = topic_info_it->second.type_description;
     return(true);
   }
   

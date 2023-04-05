@@ -78,14 +78,10 @@ namespace eCAL
 
 
   protected:
-    struct STopicInfo
+    struct STopicInfoQuality
     {
       std::string type_name;                                         //!< Type name of the current topic
       std::string type_description;                                  //!< Descriptor String of the current topic. Used e.g. for dynamic deserialization
-    };
-    struct STopicInfoQuality
-    {
-      STopicInfo info;                                                       //!< Topic info struct with type name and descriptor.
 
       QualityFlags description_quality   = QualityFlags::NO_QUALITY; //!< QualityFlags to determine whether we may overwrite the current data with better one. E.g. we prefer the description sent by a publisher over one sent by a subscriber. 
       bool        type_missmatch_logged = false;                     //!< Whether we have already logged a type-missmatch
