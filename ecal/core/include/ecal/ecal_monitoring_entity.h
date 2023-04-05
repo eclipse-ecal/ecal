@@ -30,21 +30,21 @@ namespace eCAL
   {
     namespace Entity
     {
-      static const unsigned int Publisher  = 0x001;
-      static const unsigned int Subscriber = 0x002;
-      static const unsigned int Server     = 0x004;
-      static const unsigned int Client     = 0x008;
-      static const unsigned int Process    = 0x010;
-      static const unsigned int Host       = 0x020;
+      constexpr unsigned int Publisher  = 0x001;
+      constexpr unsigned int Subscriber = 0x002;
+      constexpr unsigned int Server     = 0x004;
+      constexpr unsigned int Client     = 0x008;
+      constexpr unsigned int Process    = 0x010;
+      constexpr unsigned int Host       = 0x020;
 
-      static const unsigned int All = Publisher
+      constexpr unsigned int All = Publisher
         | Subscriber
         | Server
         | Client
         | Process
         | Host;
 
-      static const unsigned int None = 0x000;
+      constexpr unsigned int None = 0x000;
     }
   }
 }
