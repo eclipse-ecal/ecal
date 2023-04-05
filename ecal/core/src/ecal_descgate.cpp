@@ -147,11 +147,11 @@ namespace eCAL
     auto service_info_map_it = m_service_info_map.find(service_method_tuple);
     if (service_info_map_it == m_service_info_map.end())
     {
-      SServiceMethodInfoQuality service_info;
-      service_info.info.request_type_name         = req_type_name_;
-      service_info.info.request_type_description  = req_type_desc_;
-      service_info.info.response_type_name        = resp_type_name_;
-      service_info.info.response_type_description = resp_type_desc_;
+      SServiceMethodInfo service_info;
+      service_info.request_type_name         = req_type_name_;
+      service_info.request_type_description  = req_type_desc_;
+      service_info.response_type_name        = resp_type_name_;
+      service_info.response_type_description = resp_type_desc_;
       service_info.info_quality              = info_quality_;
 
       m_service_info_map[service_method_tuple] = std::move(service_info);
@@ -161,10 +161,10 @@ namespace eCAL
       // do we need to check consistency ?
       if (info_quality_ > service_info_map_it->second.info_quality)
       {
-        service_info_map_it->second.info.request_type_name         = req_type_name_;
-        service_info_map_it->second.info.request_type_description  = req_type_desc_;
-        service_info_map_it->second.info.response_type_name        = resp_type_name_;
-        service_info_map_it->second.info.response_type_description = resp_type_desc_;
+        service_info_map_it->second.request_type_name         = req_type_name_;
+        service_info_map_it->second.request_type_description  = req_type_desc_;
+        service_info_map_it->second.response_type_name        = resp_type_name_;
+        service_info_map_it->second.response_type_description = resp_type_desc_;
         service_info_map_it->second.info_quality              = info_quality_;
       }
     }
@@ -179,8 +179,8 @@ namespace eCAL
 
     if (service_info_map_it == m_service_info_map.end()) return false;
 
-    req_type_name_  = service_info_map_it->second.info.request_type_name;
-    resp_type_name_ = service_info_map_it->second.info.response_type_name;
+    req_type_name_  = service_info_map_it->second.request_type_name;
+    resp_type_name_ = service_info_map_it->second.response_type_name;
 
     return true;
   }
@@ -194,8 +194,8 @@ namespace eCAL
 
     if (service_info_map_it == m_service_info_map.end()) return false;
     
-    req_type_desc_  = service_info_map_it->second.info.request_type_description;
-    resp_type_desc_ = service_info_map_it->second.info.response_type_description;
+    req_type_desc_  = service_info_map_it->second.request_type_description;
+    resp_type_desc_ = service_info_map_it->second.response_type_description;
 
     return true;
   }

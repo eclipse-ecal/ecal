@@ -98,10 +98,6 @@ namespace eCAL
       std::string request_type_description;                          //!< Descriptor String of the request description
       std::string response_type_name;                                //!< Type name of the response message
       std::string response_type_description;                         //!< Descriptor String of the response message
-    };
-    struct SServiceMethodInfoQuality
-    {
-      SServiceMethodInfo info;                                               //!< Service info struct with type names and descriptors for request and response.
       QualityFlags info_quality = QualityFlags::NO_QUALITY;          //!< The Quality of the Info
     };
 
@@ -112,7 +108,7 @@ namespace eCAL
 
     // key: tup<service name, method name> | value: tup<request (type/desc), response (type/desc)>
     using ServiceMethodInfoMap 
-      = std::map<std::tuple<std::string, std::string>, SServiceMethodInfoQuality>; //!< Map { (ServiceName, MethodName) -> ( (ReqType, ReqDescription), (RespType, RespDescription) ) } mapping of all currently known services
+      = std::map<std::tuple<std::string, std::string>, SServiceMethodInfo>; //! Map { (ServiceName, MethodName) -> ( (ReqType, ReqDescription), (RespType, RespDescription) ) } mapping of all currently known services
     mutable std::shared_timed_mutex  m_service_info_map_mutex;              //!< Mutex protecting the m_service_info_map
     ServiceMethodInfoMap             m_service_info_map;                    //!< Map containing information about each known service method
   };
