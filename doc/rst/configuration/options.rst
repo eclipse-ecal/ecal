@@ -191,22 +191,6 @@ The network setting drive how and which ...
    - ``/usr/bin/gnome-terminal -x``
    - ``/usr/bin/xterm -e``
 
-
-[iceoryx]
----------
-
-.. option:: service  
-   
-   ``eCAL``
-
-   Default Iceoryx service name
-
-.. option:: instance       
-   
-   ``""``                
-   
-   Default Iceoryx service instance name
-
 [publisher]
 -----------
 
