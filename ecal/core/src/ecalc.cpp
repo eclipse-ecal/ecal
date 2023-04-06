@@ -75,7 +75,7 @@ extern "C"
 
   ECALC_API int eCAL_GetVersion(int* major_, int* minor_, int* patch_)
   {
-    if((major_ == nullptr) && (minor_ == nullptr) && (patch_ == nullptr)) return(-1);
+    if((major_ == nullptr) || (minor_ == nullptr) || (patch_ == nullptr)) return(-1); 
     if(major_) *major_ = ECAL_VERSION_MAJOR;
     if(minor_) *minor_ = ECAL_VERSION_MINOR;
     if(patch_) *patch_ = ECAL_VERSION_PATCH;
