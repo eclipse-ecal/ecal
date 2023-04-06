@@ -38,14 +38,16 @@ namespace eCAL
     CBufferPayload(const void* const buf_, size_t len_) : m_buf(buf_), m_buf_len(len_) {};
 
     // make a dump memory copy
-    bool WriteComplete (void* buf_, size_t len_) {
+    bool WriteComplete override (void* buf_, size_t len_) {
       if (len_ < m_buf_len) return false;
+      if (m_buf == nullptr) return false;
+      if (m_buf_len == 0)   return false;
       memcpy(buf_, m_buf, m_buf_len);
       return true;
     }
 
     // size of the memory that needs to be copied
-    size_t GetSize() { return m_buf_len; };
+    size_t GetSize() override { return m_buf_len; };
   
   private:
     const void* const m_buf     = nullptr;
