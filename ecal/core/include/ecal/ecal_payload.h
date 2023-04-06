@@ -55,7 +55,7 @@ namespace eCAL
   class CBufferPayload : public CPayload
   {
   public:
-    CBufferPayload(void* buf_, size_t len_) : m_buf(buf_), m_buf_len(len_) {};
+    CBufferPayload(const void* const buf_, size_t len_) : m_buf(buf_), m_buf_len(len_) {};
 
     // make a dump memory copy
     bool WriteComplete (void* buf_, size_t len_) {
@@ -68,7 +68,7 @@ namespace eCAL
     size_t GetSize() { return m_buf_len; };
   
   private:
-    void*  m_buf     = nullptr;
-    size_t m_buf_len = 0;
+    const void* const m_buf     = nullptr;
+    size_t            m_buf_len = 0;
   };
 };

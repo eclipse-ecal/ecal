@@ -366,10 +366,13 @@ namespace eCAL
       return(len_);
     }
 
+    // create payload buffer object
+    CBufferPayload payload(buf_, len_);
+
     // send content via data writer layer
     bool sent(false);
-    if (time_ == -1) sent = m_datawriter->Write(buf_, len_, eCAL::Time::GetMicroSeconds(), m_id);
-    else             sent = m_datawriter->Write(buf_, len_, time_, m_id);
+    if (time_ == -1) sent = m_datawriter->Write(payload, eCAL::Time::GetMicroSeconds(), m_id);
+    else             sent = m_datawriter->Write(payload, time_, m_id);
 
     // return success
     if (sent) return(len_);
@@ -413,8 +416,11 @@ namespace eCAL
     long long current_acknowledge_timeout_ms(m_datawriter->ShmGetAcknowledgeTimeout());
     m_datawriter->ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms_));
     
+    // create payload buffer object
+    CBufferPayload payload(buf_, len_);
+
     // send buffer
-    size_t len = Send(buf_, len_, time_);
+    size_t len = Send(payload, time_);
 
     // reset acknowledge timeout
     m_datawriter->ShmSetAcknowledgeTimeout(current_acknowledge_timeout_ms);
