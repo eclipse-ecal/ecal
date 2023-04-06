@@ -238,6 +238,7 @@ set(ecal_mon_header_src
 )
 
 set(ecal_pubsub_header_src
+    src/pubsub/ecal_buffer_payload.h
     src/pubsub/ecal_pubgate.h
     src/pubsub/ecal_subgate.h
 )
