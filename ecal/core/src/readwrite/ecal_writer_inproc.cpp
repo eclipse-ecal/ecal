@@ -76,7 +76,7 @@ namespace eCAL
   /////////////////////////////////////////////////////////////////
   // apply the data straight to the subscriber gate
   /////////////////////////////////////////////////////////////////
-  bool CDataWriterInProc::Write(const SWriterData& data_)
+  bool CDataWriterInProc::Write(const void* const buf_, const SWriterAttr& attr_)
   {
     if (!m_created)   return(false);
     if (!g_subgate()) return(false);
@@ -89,7 +89,7 @@ namespace eCAL
     // send it
     // no need to interpret return value 0 as error
     // maybe no one is subscribing in the current process
-    size_t sent = g_subgate()->ApplySample(m_topic_name, m_topic_id, static_cast<const char*>(data_.buf), data_.len, data_.id, data_.clock, data_.time, data_.hash, eCAL::pb::tl_inproc);
+    size_t sent = g_subgate()->ApplySample(m_topic_name, m_topic_id, static_cast<const char*>(buf_), attr_.len, attr_.id, attr_.clock, attr_.time, attr_.hash, eCAL::pb::tl_inproc);
 
     return (sent != 0);
   }

@@ -53,7 +53,7 @@ namespace eCAL
     // so, mark it as final to ensure that no derived classes override it.
     bool Destroy() final override;
 
-    bool Write(const SWriterData& data_) override;
+    bool Write(const void* const buf_, const SWriterAttr& attr_) override;
 
   protected:
   };

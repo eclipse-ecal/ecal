@@ -404,7 +404,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CDataWriter::Write(const void* const buf_, size_t len_, long long time_, long long id_)
+  bool CDataWriter::Write(CPayload& payload_, long long time_, long long id_)
   {
     // check send modes
     TLayer::eSendMode use_udp_mc (TLayer::smode_off);
@@ -413,18 +413,89 @@ namespace eCAL
     TLayer::eSendMode use_inproc (TLayer::smode_off);
     if (!CheckSendModes(use_udp_mc, use_shm, use_tcp, use_inproc))
     {
-      // incompatible settings
+      // incompatible layer configurations
       return false;
     }
 
+    // get payload buffer size (one time, to avoid multiple computations)
+    const size_t payload_buf_size(payload_.GetSize());
+
+    // reset internal payload buffer
+    // this buffer is needed for transport layer without zero copy support
+    m_payload_buffer.resize(0);
+
+    // local function to write payload data to the internal payload buffer
+    // first call will do a complete write operation
+    // subsequent calls will just return a pointer to the allocated buffer
+    auto get_payload_buf = [](CPayload& p, size_t s, std::vector<char>& v) -> const void* const
+    {
+      if (v.size() == s) return v.data();
+      v.resize(s);
+      p.WriteComplete(v.data(), v.size());
+      return v.data();
+    };
+
     // prepare counter and internal states
-    size_t snd_hash = PrepareWrite(id_, len_);
+    size_t snd_hash = PrepareWrite(id_, payload_buf_size);
 
     // did we write anything
     bool written(false);
 
     ////////////////////////////////////////////////////////////////////////////
-    // LAYER 1 : INPROC
+    // LAYER 1 : SHM
+    ////////////////////////////////////////////////////////////////////////////
+    if (((use_shm == TLayer::smode_auto) && m_loc_subscribed)
+      || (use_shm == TLayer::smode_on)
+      )
+    {
+#ifndef NDEBUG
+      // log it
+      Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::SHM");
+#endif
+     
+      // send it
+      bool shm_sent(false);
+      {
+        // fill writer data
+        struct SWriterAttr wattr;
+        wattr.len                    = payload_buf_size;
+        wattr.id                     = m_id;
+        wattr.clock                  = m_clock;
+        wattr.hash                   = snd_hash;
+        wattr.time                   = time_;
+        wattr.buffering              = m_buffering_shm;
+        wattr.zero_copy              = m_zero_copy;
+        wattr.acknowledge_timeout_ms = m_acknowledge_timeout_ms;
+
+        // prepare send
+        if (m_writer_shm.PrepareWrite(wattr))
+        {
+          // register new to update listening subscribers and rematch
+          DoRegister(true);
+          Process::SleepMS(5);
+        }
+
+        // write to shm layer do a zero copy operation if 'm_zero_copy' is set
+        shm_sent = m_writer_shm.Write(payload_, wattr);
+        m_use_shm_confirmed = true;
+      }
+      written |= shm_sent;
+
+#ifndef NDEBUG
+      // log it
+      if (shm_sent)
+      {
+        Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::SHM - SUCCESS");
+      }
+      else
+      {
+        Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send::SHM - FAILED");
+      }
+#endif
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // LAYER 2 : INPROC
     ////////////////////////////////////////////////////////////////////////////
     if  ((use_inproc == TLayer::smode_auto)
       || (use_inproc == TLayer::smode_on)
@@ -439,9 +510,8 @@ namespace eCAL
       bool inproc_sent(false);
       {
         // fill writer data
-        struct SWriterData wdata;
-        wdata.buf   = buf_;
-        wdata.len   = len_;
+        struct SWriterAttr wdata;
+        wdata.len   = payload_buf_size;
         wdata.id    = m_id;
         wdata.clock = m_clock;
         wdata.hash  = snd_hash;
@@ -455,8 +525,8 @@ namespace eCAL
           Process::SleepMS(5);
         }
 
-        // send
-        inproc_sent = m_writer_inproc.Write(wdata);
+        // write to inproc layer
+        inproc_sent = m_writer_inproc.Write(get_payload_buf(payload_, payload_buf_size, m_payload_buffer), wdata);
         m_use_inproc_confirmed = true;
       }
       written |= inproc_sent;
@@ -473,60 +543,6 @@ namespace eCAL
         // subscription and so it will return 0 written bytes
         // the other layers will write their bytes in any case on the specific layer
         // so we will not handle this as an error
-      }
-#endif
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-    // LAYER 2 : SHM
-    ////////////////////////////////////////////////////////////////////////////
-    if (((use_shm == TLayer::smode_auto) && m_loc_subscribed)
-      || (use_shm == TLayer::smode_on)
-      )
-    {
-#ifndef NDEBUG
-      // log it
-      Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::SHM");
-#endif
-     
-      // send it
-      bool shm_sent(false);
-      {
-        // fill writer data
-        struct SWriterData wdata;
-        wdata.buf                    = buf_;
-        wdata.len                    = len_;
-        wdata.id                     = m_id;
-        wdata.clock                  = m_clock;
-        wdata.hash                   = snd_hash;
-        wdata.time                   = time_;
-        wdata.buffering              = m_buffering_shm;
-        wdata.zero_copy              = m_zero_copy;
-        wdata.acknowledge_timeout_ms = m_acknowledge_timeout_ms;
-
-        // prepare send
-        if (m_writer_shm.PrepareWrite(wdata))
-        {
-          // register new to update listening subscribers and rematch
-          DoRegister(true);
-          Process::SleepMS(5);
-        }
-
-        // send
-        shm_sent = m_writer_shm.Write(wdata);
-        m_use_shm_confirmed = true;
-      }
-      written |= shm_sent;
-
-#ifndef NDEBUG
-      // log it
-      if (shm_sent)
-      {
-        Logging::Log(log_level_debug3, m_topic_name + "::CDataWriter::Send::SHM - SUCCESS");
-      }
-      else
-      {
-        Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send::SHM - FAILED");
       }
 #endif
     }
@@ -551,26 +567,25 @@ namespace eCAL
         bool loopback = use_shm == TLayer::smode_off;
 
         // fill writer data
-        struct SWriterData wdata;
-        wdata.buf       = buf_;
-        wdata.len       = len_;
-        wdata.id        = m_id;
-        wdata.clock     = m_clock;
-        wdata.hash      = snd_hash;
-        wdata.time      = time_;
-        wdata.bandwidth = m_bandwidth_max_udp;
-        wdata.loopback  = loopback;
+        struct SWriterAttr wattr;
+        wattr.len       = payload_buf_size;
+        wattr.id        = m_id;
+        wattr.clock     = m_clock;
+        wattr.hash      = snd_hash;
+        wattr.time      = time_;
+        wattr.bandwidth = m_bandwidth_max_udp;
+        wattr.loopback  = loopback;
 
         // prepare send
-        if (m_writer_udp_mc.PrepareWrite(wdata))
+        if (m_writer_udp_mc.PrepareWrite(wattr))
         {
           // register new to update listening subscribers and rematch
           DoRegister(true);
           Process::SleepMS(5);
         }
 
-        // send
-        udp_mc_sent = m_writer_udp_mc.Write(wdata);
+        // write to udp multicast layer
+        udp_mc_sent = m_writer_udp_mc.Write(get_payload_buf(payload_, payload_buf_size, m_payload_buffer), wattr);
         m_use_udp_mc_confirmed = true;
       }
       written |= udp_mc_sent;
@@ -604,17 +619,16 @@ namespace eCAL
       bool tcp_sent(false);
       {
         // fill writer data
-        struct SWriterData wdata;
-        wdata.buf       = buf_;
-        wdata.len       = len_;
-        wdata.id        = m_id;
-        wdata.clock     = m_clock;
-        wdata.hash      = snd_hash;
-        wdata.time      = time_;
-        wdata.buffering = 0;
+        struct SWriterAttr wattr;
+        wattr.len       = payload_buf_size;
+        wattr.id        = m_id;
+        wattr.clock     = m_clock;
+        wattr.hash      = snd_hash;
+        wattr.time      = time_;
+        wattr.buffering = 0;
 
-        // send
-        tcp_sent = m_writer_tcp.Write(wdata);
+        // write to tcp layer
+        tcp_sent = m_writer_tcp.Write(get_payload_buf(payload_, payload_buf_size, m_payload_buffer), wattr);
         m_use_tcp_confirmed = true;
   }
       written |= tcp_sent;
@@ -634,114 +648,6 @@ namespace eCAL
 
     // return success
     return(written);
-  }
-
-  bool CDataWriter::Write(CPayload& payload_, long long time_, long long id_)
-  {
-    // check send modes
-    TLayer::eSendMode use_udp_mc (TLayer::smode_off);
-    TLayer::eSendMode use_shm    (TLayer::smode_off);
-    TLayer::eSendMode use_tcp    (TLayer::smode_off);
-    TLayer::eSendMode use_inproc (TLayer::smode_off);
-    if (!CheckSendModes(use_udp_mc, use_shm, use_tcp, use_inproc))
-    {
-      // incompatible settings
-      return false;
-    }
-
-    // can we use zero copy write mode ?
-    bool zero_copy_write(true);
-
-    // user / config disabled zero copy
-    if (!m_zero_copy)
-    {
-      zero_copy_write = false;
-    }
-    // check if we are shm layer only
-    else
-    {
-      // inproc layer is active
-      if ( (use_inproc == TLayer::smode_auto)
-        || (use_inproc == TLayer::smode_on)
-        )
-      {
-        zero_copy_write = false;
-      }
-
-      // udp layer is active
-      if (((use_udp_mc == TLayer::smode_auto) && m_ext_subscribed)
-        || (use_udp_mc == TLayer::smode_on)
-        )
-      {
-        zero_copy_write = false;
-      }
-
-      // tcp layer is active
-      if (((use_tcp == TLayer::smode_auto) && m_ext_subscribed)
-        || (use_tcp == TLayer::smode_on)
-        )
-      {
-        zero_copy_write = false;
-      }
-    }
-
-    // zero copy write mode enabled, here we go !
-    if (zero_copy_write)
-    {
-      // get buffer address and buffer size
-      const size_t len(payload_.GetSize());
-
-      // prepare counter and internal states
-      size_t snd_hash = PrepareWrite(id_, len);
-
-      // send it
-      bool shm_sent(false);
-
-      // fill writer data
-      struct SWriterData wdata;
-      wdata.buf                    = nullptr;
-      wdata.len                    = len;
-      wdata.id                     = m_id;
-      wdata.clock                  = m_clock;
-      wdata.hash                   = snd_hash;
-      wdata.time                   = time_;
-      wdata.buffering              = m_buffering_shm;
-      wdata.zero_copy              = m_zero_copy;
-      wdata.acknowledge_timeout_ms = m_acknowledge_timeout_ms;
-
-      // prepare send
-      if (m_writer_shm.PrepareWrite(wdata))
-      {
-        // register new to update listening subscribers and rematch
-        DoRegister(true);
-        Process::SleepMS(5);
-      }
-
-      // send
-      shm_sent = m_writer_shm.Write(wdata, payload_);
-      m_use_shm_confirmed = true;
-
-      // return sucess
-      return shm_sent;
-    }
-    // this is bad, we have to take the classic way and
-    // finally we need one more memcopy copy here
-    // this needs to be optimized
-    //
-    // the new payload write API should be used carefully
-    // with expert know how and system configuration
-    // assumptions (like there are no external subscriptions)
-    else
-    {
-      //eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_warning, "Publisher: '" + m_topic_name + "' Performance warning: You are using the new CPublisher::Send(payload) API, but this publisher has external connections or you did not switch on 'zero copy' mode for this connection.This will decrease local performance.");
-      
-      // we need to prepare a memory buffer :-(
-      m_none_zero_copy_buffer.resize(payload_.GetSize());
-      // initialize buffer with complete write
-      payload_.WriteComplete(m_none_zero_copy_buffer.data(), m_none_zero_copy_buffer.size());
-      // forward this to the classic Write call with (buffer pointer, buffer length)
-      return Write(m_none_zero_copy_buffer.data(), m_none_zero_copy_buffer.size(), time_, id_);
-    }
   }
 
   void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_)

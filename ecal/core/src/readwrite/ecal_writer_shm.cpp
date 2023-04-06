@@ -110,7 +110,7 @@ namespace eCAL
     return true;
   }
 
-  bool CDataWriterSHM::PrepareWrite(const SWriterData& data_)
+  bool CDataWriterSHM::PrepareWrite(const SWriterAttr& data_)
   {
     if (!m_created)     return false;
     if (data_.len == 0) return false;
@@ -166,26 +166,12 @@ namespace eCAL
     return ret_state;
   }
 
-  bool CDataWriterSHM::Write(const SWriterData& data_)
-  {
-    if (!m_created) return 0;
-
-    // write content
-    bool sent = m_memory_file_vec[m_write_idx]->Write(data_);
-
-    // and increment file index
-    m_write_idx++;
-    m_write_idx %= m_memory_file_vec.size();
-
-    return sent;
-  }
-
-  bool CDataWriterSHM::Write(const SWriterData& data_, CPayload& payload_)
+  bool CDataWriterSHM::Write(CPayload& payload_, const SWriterAttr& attr_)
   {
     if (!m_created) return false;
 
     // write content
-    bool sent = m_memory_file_vec[m_write_idx]->Write(data_, &payload_);
+    bool sent = m_memory_file_vec[m_write_idx]->Write(payload_, attr_);
 
     // and increment file index
     m_write_idx++;

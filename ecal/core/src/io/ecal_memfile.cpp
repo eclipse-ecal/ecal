@@ -292,7 +292,7 @@ namespace eCAL
     return(len_);
   }
 
-  size_t CMemoryFile::Write(const void* buf_, const size_t len_, const size_t offset_)
+  size_t CMemoryFile::WriteBuffer(const void* buf_, const size_t len_, const size_t offset_)
   {
     if (!m_created) return(0);
     if (!buf_)      return(0);
@@ -312,7 +312,7 @@ namespace eCAL
     }
   }
 
-  size_t CMemoryFile::Apply(CPayload& payload_, const size_t len_, const size_t offset_)
+  size_t CMemoryFile::WritePayload(CPayload& payload_, const size_t len_, const size_t offset_)
   {
     if (!m_created) return(0);
 

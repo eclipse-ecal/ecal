@@ -75,7 +75,6 @@ namespace eCAL
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
     bool RemEventCallback(eCAL_Publisher_Event type_);
 
-    bool Write(const void* const buf_, size_t len_, long long time_, long long id_);
     bool Write(CPayload& payload_, long long time_, long long id_);
 
     void ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_);
@@ -138,7 +137,7 @@ namespace eCAL
     bool               m_zero_copy;
     long long          m_acknowledge_timeout_ms;
 
-    std::vector<char>  m_none_zero_copy_buffer;
+    std::vector<char>  m_payload_buffer;
 
     std::atomic<bool>  m_connected;
     typedef Util::CExpMap<std::string, bool> ConnectedMapT;
