@@ -68,7 +68,7 @@ TEST(IO, MemfileReadWrite)
   EXPECT_EQ(false, mem_file.IsOpened());
 
   // write content to memory file before open
-  EXPECT_EQ(0, mem_file.Write((void*)send_s.c_str(), slen, 0));
+  EXPECT_EQ(0, mem_file.WriteBuffer((void*)send_s.c_str(), slen, 0));
 
   // open memory file with write access (timeout 100 ms)
   EXPECT_EQ(true, mem_file.GetWriteAccess(100));
@@ -83,19 +83,19 @@ TEST(IO, MemfileReadWrite)
   EXPECT_EQ(false, mem_file.HasReadAccess());
 
   // write half content to memory file
-  EXPECT_EQ(slen/2, mem_file.Write((void*)send_s.c_str(), slen/2, 0));
+  EXPECT_EQ(slen/2, mem_file.WriteBuffer((void*)send_s.c_str(), slen/2, 0));
 
   // write full content to memory file
-  EXPECT_EQ(slen, mem_file.Write((void*)send_s.c_str(), slen, 0));
+  EXPECT_EQ(slen, mem_file.WriteBuffer((void*)send_s.c_str(), slen, 0));
 
   // write double sized content to memory file
   std::string double_send_s = send_s + send_s;
-  EXPECT_EQ(0, mem_file.Write((void*)double_send_s.c_str(), double_send_s.size(), 0));
+  EXPECT_EQ(0, mem_file.WriteBuffer((void*)double_send_s.c_str(), double_send_s.size(), 0));
 
   // finally write half content to memory file again for later reader test
   slen /= 2;
   send_s.resize(slen);
-  EXPECT_EQ(slen, mem_file.Write((void*)send_s.c_str(), slen, 0));
+  EXPECT_EQ(slen, mem_file.WriteBuffer((void*)send_s.c_str(), slen, 0));
 
   // close memory file
   EXPECT_EQ(true, mem_file.ReleaseWriteAccess());
@@ -110,7 +110,7 @@ TEST(IO, MemfileReadWrite)
   EXPECT_EQ(false, mem_file.HasReadAccess());
 
   // write content to closed memory file
-  EXPECT_EQ(0, mem_file.Write((void*)send_s.c_str(), slen, 0));
+  EXPECT_EQ(0, mem_file.WriteBuffer((void*)send_s.c_str(), slen, 0));
 
   // open memory file with timeout 100 ms
   EXPECT_EQ(true, mem_file.GetReadAccess(100));
@@ -171,7 +171,7 @@ TEST(IO, MemfilePerf)
     EXPECT_EQ(true, mem_file.GetWriteAccess(10));
 
     // write content to memory file
-    EXPECT_EQ(slen, mem_file.Write((void*)send_s.c_str(), slen, 0));
+    EXPECT_EQ(slen, mem_file.WriteBuffer((void*)send_s.c_str(), slen, 0));
 
     // release write access
     EXPECT_EQ(true, mem_file.ReleaseWriteAccess());
@@ -227,7 +227,7 @@ TEST(IO, MemfileConcurrency)
         if (mem_file.HasWriteAccess())
         {
           write_buf[0] = num_writes;
-          auto written = mem_file.Write((void*)write_buf.data(), write_buf.size(), 0);
+          auto written = mem_file.WriteBuffer((void*)write_buf.data(), write_buf.size(), 0);
           EXPECT_EQ(buflen, written);
           std::cout << std::endl;
           std::cout << "producer write access  : " << num_writes << std::endl;
