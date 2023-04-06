@@ -30,6 +30,7 @@
 #include "ecal_memfile_header.h"
 
 #include <atomic>
+#include <condition_variable>
 #include <functional>
 #include <map>
 #include <memory>
@@ -74,7 +75,6 @@ namespace eCAL
     EventHandleT            m_event_snd;
     EventHandleT            m_event_ack;
     CMemoryFile             m_memfile;
-    std::vector<char>       m_ecal_buffer;
   };
 
   ////////////////////////////////////////
@@ -92,10 +92,16 @@ namespace eCAL
     bool ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, const std::string& topic_name_, const std::string& topic_id_, int timeout_observation_ms, const MemFileDataCallbackT& callback_);
 
   protected:
+    void CleanupPoolThread();
     void CleanupPool();
 
     std::atomic<bool>                                         m_created;
     std::mutex                                                m_observer_pool_sync;
     std::map<std::string, std::shared_ptr<CMemFileObserver>>  m_observer_pool;
+
+    std::atomic<bool>                                         m_do_cleanup;
+    std::condition_variable                                   m_do_cleanup_cv;
+    std::mutex                                                m_do_cleanup_mtx;
+    std::thread                                               m_cleanup_thread;
   };
 }
