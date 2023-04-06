@@ -20,12 +20,10 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_publisher.h>
 
-#include <algorithm>
 #include <chrono>
 #include <cstring>
 #include <iostream>
 #include <sstream>
-#include <vector>
 
 // performance settings
 const bool   zero_copy              (true);

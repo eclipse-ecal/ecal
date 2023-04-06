@@ -739,8 +739,6 @@ namespace eCAL
       m_none_zero_copy_buffer.resize(payload_.GetSize());
       // initialize buffer with complete write
       payload_.WriteComplete(m_none_zero_copy_buffer.data(), m_none_zero_copy_buffer.size());
-      // write additional partial data
-      payload_.WritePartial(m_none_zero_copy_buffer.data(), m_none_zero_copy_buffer.size());
       // forward this to the classic Write call with (buffer pointer, buffer length)
       return Write(m_none_zero_copy_buffer.data(), m_none_zero_copy_buffer.size(), time_, id_);
     }
