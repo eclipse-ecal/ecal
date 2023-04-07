@@ -35,6 +35,12 @@ namespace eCAL
   class CPayload
   {
   public:
+    //CPayload(const CPayload &) = delete;
+    //CPayload(CPayload &&) noexcept = default;
+
+    //CPayload& operator=(const CPayload &) = delete;
+    //CPayload& operator=(CPayload &&) noexcept = default;
+
     virtual ~CPayload() = default;
 
     // the provisioned memory is uninitialized ->
@@ -50,4 +56,4 @@ namespace eCAL
     // provide the size of the required memory (eCAL needs to allocate for you).
     virtual size_t GetSize() = 0;
   };
-};
+}

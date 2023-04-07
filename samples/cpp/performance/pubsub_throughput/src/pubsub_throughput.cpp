@@ -25,8 +25,8 @@
 
 #include "binary_payload.h"
 
-auto g_snd_size (8* 1024 * 1024);
-auto g_snd_loops(1000);
+const auto g_snd_size (8* 1024 * 1024);
+const auto g_snd_loops(1000);
 
 // subscriber callback function
 std::atomic<size_t> g_callback_received;
@@ -74,11 +74,11 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer 
 
   // end time
   auto finish = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double> elapsed = finish - start;
+  const std::chrono::duration<double> elapsed = finish - start;
   std::cout << "Elapsed time : " << elapsed.count() << " s" << std::endl;
 
-  size_t sum_snd_bytes = payload.GetSize() * snd_loops;
-  size_t sum_rcv_bytes = g_callback_received;
+  const size_t sum_snd_bytes = payload.GetSize() * snd_loops;
+  const size_t sum_rcv_bytes = g_callback_received;
   std::cout << "Sent         : " << sum_snd_bytes / (1024 * 1024) << " MB" << std::endl;
   std::cout << "Received     : " << sum_rcv_bytes / (1024 * 1024) << " MB" << std::endl;
   std::cout << "Lost         : " << sum_snd_bytes - sum_rcv_bytes << " bytes";
