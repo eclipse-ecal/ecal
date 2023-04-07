@@ -21,47 +21,16 @@
 #include <ecal/ecal_publisher.h>
 
 #include <chrono>
-#include <cstring>
 #include <iostream>
 #include <sstream>
+
+#include "binary_payload.h"
 
 // performance settings
 const bool   zero_copy              (true);
 const int    buffer_count           (1);
 const int    acknowledge_timeout_ms (50);
 const size_t payload_size_default   (8* 1024 * 1024);
-
-// a binary payload
-class CBinaryPayload : public eCAL::CPayload
-{
-public:
-  CBinaryPayload(size_t size_) : size(size_) {}
-
-  bool WriteComplete(void* buf_, size_t len_) override
-  {
-    // write complete content to shared memory
-    if (len_ < size) return false;
-    memset(buf_, 42, size);
-    return true;
-  };
-
-  bool WritePartial(void* buf_, size_t len_) override
-  {
-    // write partial content to shared memory
-    if (len_ < size) return false;
-    size_t write_idx((clock % 1024) % len_);
-    char   write_chr(clock % 10 + 48);
-    static_cast<char*>(buf_)[write_idx] = write_chr;
-    clock++;
-    return true;
-  };
-
-  size_t GetSize() override { return size; };
-
-private:
-  size_t size  = 0;
-  int    clock = 0;
-};
 
 // main entry
 int main(int argc, char **argv)

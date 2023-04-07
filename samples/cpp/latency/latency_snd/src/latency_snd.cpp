@@ -24,6 +24,8 @@
 #include <thread>
 #include <tclap/CmdLine.h>
 
+#include "binary_payload.h"
+
 // warmup runs not to measure
 const int warmups(100);
 
@@ -57,7 +59,7 @@ void do_run(const int runs, int snd_size /*kB*/, int mem_buffer, bool zero_copy)
   pub.ShmEnableZeroCopy(zero_copy);
 
   // prepare send buffer
-  std::vector<char> snd_array(snd_size * 1024);
+  CBinaryPayload payload(snd_size * 1024);
 
   // let them match
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
@@ -69,7 +71,7 @@ void do_run(const int runs, int snd_size /*kB*/, int mem_buffer, bool zero_copy)
     // get microseconds
     auto snd_time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     // send message (with receive timeout 100 ms)
-    pub.Send(snd_array.data(), snd_array.size(), snd_time, 100 /*ms*/);
+    pub.Send(payload, snd_time, 100 /*ms*/);
   }
 
   // log test

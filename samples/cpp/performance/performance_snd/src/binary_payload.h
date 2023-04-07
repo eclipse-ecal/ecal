@@ -17,40 +17,39 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @file   ecal_buffer_payload.h
- * @brief  eCAL payload for primitive binary data
-**/
-
 #pragma once
 
 #include <ecal/ecal_payload.h>
-
-#include <cstddef>
 #include <cstring>
 
-namespace eCAL
+// a binary payload
+class CBinaryPayload : public eCAL::CPayload
 {
-  // specific payload class to wrap classic (void*, size_t) interface
-  class CBufferPayload : public CPayload
+public:
+  CBinaryPayload(size_t size_) : size(size_) {}
+
+  bool WriteComplete(void* buf_, size_t len_) override
   {
-  public:
-    CBufferPayload(const void* const buf_, size_t len_) : m_buf(buf_), m_buf_len(len_) {};
-
-    // make a dump memory copy
-    bool WriteComplete (void* buf_, size_t len_) override {
-      if (len_ < m_buf_len) return false;
-      if (m_buf == nullptr) return false;
-      if (m_buf_len == 0)   return false;
-      memcpy(buf_, m_buf, m_buf_len);
-      return true;
-    }
-
-    // size of the memory that needs to be copied
-    size_t GetSize() override { return m_buf_len; };
-  
-  private:
-    const void* const m_buf     = nullptr;
-    size_t            m_buf_len = 0;
+    // write complete content to shared memory
+    if (len_ < size) return false;
+    memset(buf_, 42, size);
+    return true;
   };
+
+  bool WritePartial(void* buf_, size_t len_) override
+  {
+    // write partial content to shared memory
+    if (len_ < size) return false;
+    size_t write_idx((clock % 1024) % len_);
+    char   write_chr(clock % 10 + 48);
+    static_cast<char*>(buf_)[write_idx] = write_chr;
+    clock++;
+    return true;
+  };
+
+  size_t GetSize() override { return size; };
+
+private:
+  size_t size  = 0;
+  int    clock = 0;
 };
