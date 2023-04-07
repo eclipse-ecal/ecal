@@ -49,18 +49,15 @@ int main(int argc, char **argv)
   eCAL::CPublisher pub("Performance");
  
   // enable zero copy mode
-  if (zero_copy)
-  {
-    std::cout << "Switch zero copy mode on" << std::endl;
-  }
+  std::cout << "Zero copy mode: " << zero_copy << std::endl;
   pub.ShmEnableZeroCopy(zero_copy);
 
   // set write buffer count
-  std::cout << "Set number of write buffer to " << buffer_count << std::endl;
+  std::cout << "Number of write buffers: " << buffer_count << std::endl;
   pub.ShmSetBufferCount(buffer_count);
   
   // enable handshake mode
-  std::cout << "Set acknowledge timeout to " << acknowledge_timeout_ms << " ms" << std::endl;
+  std::cout << "Acknowledge timeout: " << acknowledge_timeout_ms << " ms" << std::endl;
   pub.ShmSetAcknowledgeTimeout(acknowledge_timeout_ms);
   std::cout << std::endl;
 
@@ -76,8 +73,7 @@ int main(int argc, char **argv)
   while(eCAL::Ok())
   {
     // send content
-    size_t snd_len(0);
-    snd_len = pub.Send(binary_payload);
+    const size_t snd_len = pub.Send(binary_payload);
 
     if((snd_len > 0) && (snd_len != binary_payload.GetSize()))
     {
@@ -92,17 +88,17 @@ int main(int argc, char **argv)
     // check timer and print results every second
     if(clock%2000 == 0)
     {
-      std::chrono::duration<double> diff_time = std::chrono::steady_clock::now() - start_time;
+      const std::chrono::duration<double> diff_time = std::chrono::steady_clock::now() - start_time;
       if(diff_time >= std::chrono::seconds(1))
       {
         // log results
         std::stringstream out;
-        out << "Message size (kByte):  " << (unsigned int)(binary_payload.GetSize() / 1024)          << std::endl;
-        out << "kByte/s:               " << (unsigned int)(bytes / 1024 /               diff_time.count()) << std::endl;
-        out << "MByte/s:               " << (unsigned int)(bytes / 1024 / 1024 /        diff_time.count()) << std::endl;
-        out << "GByte/s:               " << (unsigned int)(bytes / 1024 / 1024 / 1024 / diff_time.count()) << std::endl;
-        out << "Messages/s:            " << (unsigned int)(msgs  /                      diff_time.count()) << std::endl;
-        out << "Latency (us):          " << (diff_time.count() * 1e6) / (double)msgs                       << std::endl;
+        out << "Message size (kByte):  " << (unsigned int)(binary_payload.GetSize() / 1024)                      << std::endl;
+        out << "kByte/s:               " << (unsigned int)(bytes / 1024.0 /                   diff_time.count()) << std::endl;
+        out << "MByte/s:               " << (unsigned int)(bytes / 1024.0 / 1024.0 /          diff_time.count()) << std::endl;
+        out << "GByte/s:               " << (unsigned int)(bytes / 1024.0 / 1024.0 / 1024.0 / diff_time.count()) << std::endl;
+        out << "Messages/s:            " << (unsigned int)(msgs  /                            diff_time.count()) << std::endl;
+        out << "Latency (us):          " << (diff_time.count() * 1e6) / (double)msgs                             << std::endl;
         std::cout << out.str() << std::endl;
         eCAL::Logging::Log(out.str());
 

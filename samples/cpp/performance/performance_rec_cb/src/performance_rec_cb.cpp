@@ -41,12 +41,12 @@ void PrintStatistic(const std::string& topic_name_, const std::chrono::duration<
       for (auto i = 0; i < 16; ++i) out << (static_cast<char*>(data_->buf))[i] << " ";
       out << std::endl;
     }
-    out << "Message size (kByte):  " << (unsigned int)(size_  / 1024)                                    << std::endl;
-    out << "kByte/s:               " << (unsigned int)(bytes_ / 1024 /               diff_time_.count()) << std::endl;
-    out << "MByte/s:               " << (unsigned int)(bytes_ / 1024 / 1024 /        diff_time_.count()) << std::endl;
-    out << "GByte/s:               " << (unsigned int)(bytes_ / 1024 / 1024 / 1024 / diff_time_.count()) << std::endl;
-    out << "Messages/s:            " << (unsigned int)(msgs_  /                      diff_time_.count()) << std::endl;
-    out << "Latency (us):          " << (diff_time_.count() * 1e6) / (double)msgs_                       << std::endl;
+    out << "Message size (kByte):  " << (unsigned int)(size_  / 1024.0)                                        << std::endl;
+    out << "kByte/s:               " << (unsigned int)(bytes_ / 1024.0 /                   diff_time_.count()) << std::endl;
+    out << "MByte/s:               " << (unsigned int)(bytes_ / 1024.0 / 1024.0 /          diff_time_.count()) << std::endl;
+    out << "GByte/s:               " << (unsigned int)(bytes_ / 1024.0 / 1024.0 / 1024.0 / diff_time_.count()) << std::endl;
+    out << "Messages/s:            " << (unsigned int)(msgs_  /                            diff_time_.count()) << std::endl;
+    out << "Latency (us):          " << (diff_time_.count() * 1e6) / (double)msgs_                             << std::endl;
     std::cout << out.str() << std::endl;
     msgs_  = 0;
     bytes_ = 0;
@@ -55,13 +55,13 @@ void PrintStatistic(const std::string& topic_name_, const std::chrono::duration<
 // subscriber callback function
 void OnReceive(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_)
 {
-  size_t size = data_->size;
+  const size_t size = data_->size;
 
   g_msgs++;
   g_bytes += size;
 
   // check time and print results every second
-  std::chrono::duration<double> diff_time = std::chrono::steady_clock::now() - start_time;
+  const std::chrono::duration<double> diff_time = std::chrono::steady_clock::now() - start_time;
   if (diff_time >= std::chrono::seconds(1))
   {
     PrintStatistic(topic_name_, diff_time, size, g_bytes, g_msgs, data_);

@@ -70,7 +70,7 @@ namespace eCAL
     bool ShmEnableZeroCopy(bool state_);
 
     bool ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_);
-    long long  ShmGetAcknowledgeTimeout();
+    long long  ShmGetAcknowledgeTimeout() const;
 
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
     bool RemEventCallback(eCAL_Publisher_Event type_);

@@ -53,8 +53,8 @@ namespace std
   public:
     size_t operator()(const SSndHash &h) const
     {
-      size_t h1 = std::hash<std::string>()(h.topic_id);
-      size_t h2 = std::hash<long long>()(h.snd_clock);
+      const size_t h1 = std::hash<std::string>()(h.topic_id);
+      const size_t h2 = std::hash<long long>()(h.snd_clock);
       return h1 ^ (h2 << 1);
     }
   };
@@ -129,7 +129,7 @@ namespace eCAL
     m_topic_id = counter.str();
 
     // set registration expiration
-    std::chrono::milliseconds registration_timeout(Config::GetRegistrationTimeoutMs());
+    const std::chrono::milliseconds registration_timeout(Config::GetRegistrationTimeoutMs());
     m_loc_sub_map.set_expiration(registration_timeout);
     m_ext_sub_map.set_expiration(registration_timeout);
 
@@ -197,14 +197,14 @@ namespace eCAL
 
     // reset subscriber maps
     {
-      std::lock_guard<std::mutex> lock(m_sub_map_sync);
+      const std::lock_guard<std::mutex> lock(m_sub_map_sync);
       m_loc_sub_map.clear();
       m_ext_sub_map.clear();
     }
 
     // reset event callback map
     {
-      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+      const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
       m_event_callback_map.clear();
     }
 
@@ -215,7 +215,7 @@ namespace eCAL
 
   bool CDataWriter::SetTypeName(const std::string& topic_type_name_)
   {
-    bool force = m_topic_type != topic_type_name_;
+    const bool force = m_topic_type != topic_type_name_;
     m_topic_type = topic_type_name_;
 
 #ifndef NDEBUG
@@ -231,7 +231,7 @@ namespace eCAL
 
   bool CDataWriter::SetDescription(const std::string& topic_desc_)
   {
-    bool force = m_topic_desc != topic_desc_;
+    const bool force = m_topic_desc != topic_desc_;
     m_topic_desc = topic_desc_;
 
 #ifndef NDEBUG
@@ -249,7 +249,7 @@ namespace eCAL
   {
     auto current_val = m_attr.find(attr_name_);
 
-    bool force = current_val == m_attr.end() || current_val->second != attr_value_;
+    const bool force = current_val == m_attr.end() || current_val->second != attr_value_;
     m_attr[attr_name_] = attr_value_;
 
 #ifndef NDEBUG
@@ -365,7 +365,7 @@ namespace eCAL
     return true;
   }
 
-  long long CDataWriter::ShmGetAcknowledgeTimeout()
+  long long CDataWriter::ShmGetAcknowledgeTimeout() const
   {
     return m_acknowledge_timeout_ms;
   }
@@ -376,7 +376,7 @@ namespace eCAL
 
     // store event callback
     {
-      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+      const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
 #ifndef NDEBUG
       // log it
       Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::AddEventCallback");
@@ -393,7 +393,7 @@ namespace eCAL
 
     // reset event callback
     {
-      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+      const std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
 #ifndef NDEBUG
       // log it
       Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::RemEventCallback");
@@ -427,7 +427,7 @@ namespace eCAL
     // local function to write payload data to the internal payload buffer
     // first call will do a complete write operation
     // subsequent calls will just return a pointer to the allocated buffer
-    auto get_payload_buf = [](CPayload& p, size_t s, std::vector<char>& v) -> const void* const
+    auto get_payload_buf = [](CPayload& p, size_t s, std::vector<char>& v) -> const void*
     {
       if (v.size() == s) return v.data();
       v.resize(s);
@@ -436,7 +436,7 @@ namespace eCAL
     };
 
     // prepare counter and internal states
-    size_t snd_hash = PrepareWrite(id_, payload_buf_size);
+    const size_t snd_hash = PrepareWrite(id_, payload_buf_size);
 
     // did we write anything
     bool written(false);
@@ -564,7 +564,7 @@ namespace eCAL
       {
         // if shared memory layer for local communication is switched off
         // we activate udp message loopback to communicate with local processes too
-        bool loopback = use_shm == TLayer::smode_off;
+        const bool loopback = use_shm == TLayer::smode_off;
 
         // fill writer data
         struct SWriterAttr wattr;
@@ -654,7 +654,7 @@ namespace eCAL
   {
     Connect(tid_, ttype_, tdesc_);
     {
-      std::lock_guard<std::mutex> lock(m_sub_map_sync);
+      const std::lock_guard<std::mutex> lock(m_sub_map_sync);
       m_loc_sub_map[process_id_] = true;
     }
     m_loc_subscribed = true;
@@ -685,7 +685,7 @@ namespace eCAL
   {
     Connect(tid_, ttype_, tdesc_);
     {
-      std::lock_guard<std::mutex> lock(m_sub_map_sync);
+      const std::lock_guard<std::mutex> lock(m_sub_map_sync);
       m_ext_sub_map[host_name_] = true;
     }
     m_ext_subscribed = true;
@@ -741,9 +741,9 @@ namespace eCAL
     DoRegister(false);
 
     // check connection timeouts
-    std::shared_ptr<std::list<std::string>> loc_timeouts = std::make_shared<std::list<std::string>>();
+    const std::shared_ptr<std::list<std::string>> loc_timeouts = std::make_shared<std::list<std::string>>();
     {
-      std::lock_guard<std::mutex> lock(m_sub_map_sync);
+      const std::lock_guard<std::mutex> lock(m_sub_map_sync);
       m_loc_sub_map.remove_deprecated(loc_timeouts.get());
       m_ext_sub_map.remove_deprecated();
 
@@ -751,7 +751,7 @@ namespace eCAL
       m_ext_subscribed = !m_ext_sub_map.empty();
     }
 
-    for(auto loc_sub : *loc_timeouts)
+    for(const auto& loc_sub : *loc_timeouts)
     {
       m_writer_shm.RemLocConnection(loc_sub);
     }
@@ -800,12 +800,12 @@ namespace eCAL
     if (m_topic_name.empty()) return(false);
 
     // check share modes
-    bool share_ttype(m_use_ttype && g_pubgate() && g_pubgate()->TypeShared());
+    bool share_ttype(m_use_ttype && (g_pubgate() != nullptr) && g_pubgate()->TypeShared());
     if (m_share_ttype != -1)
     {
       share_ttype = m_share_ttype == 1;
     }
-    bool share_tdesc(m_use_tdesc && g_pubgate() && g_pubgate()->DescriptionShared());
+    bool share_tdesc(m_use_tdesc && (g_pubgate() != nullptr) && g_pubgate()->DescriptionShared());
     if (m_share_tdesc != -1)
     {
       share_tdesc = m_share_tdesc == 1;
@@ -814,7 +814,7 @@ namespace eCAL
     // create command parameter
     eCAL::pb::Sample ecal_reg_sample;
     ecal_reg_sample.set_cmd_type(eCAL::pb::bct_reg_publisher);
-    auto ecal_reg_sample_mutable_topic = ecal_reg_sample.mutable_topic();
+    auto *ecal_reg_sample_mutable_topic = ecal_reg_sample.mutable_topic();
     ecal_reg_sample_mutable_topic->set_hname(m_host_name);
     ecal_reg_sample_mutable_topic->set_hid(m_host_id);
     ecal_reg_sample_mutable_topic->set_tname(m_topic_name);
@@ -825,7 +825,7 @@ namespace eCAL
     ecal_reg_sample_mutable_topic->set_tsize(google::protobuf::int32(m_topic_size));
     // udp multicast layer
     {
-      auto udp_tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
+      auto *udp_tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
       udp_tlayer->set_type(eCAL::pb::tl_ecal_udp_mc);
       udp_tlayer->set_version(1);
       udp_tlayer->set_confirmed(m_use_udp_mc_confirmed);
@@ -833,11 +833,11 @@ namespace eCAL
     }
     // shm layer
     {
-      auto shm_tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
+      auto *shm_tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
       shm_tlayer->set_type(eCAL::pb::tl_ecal_shm);
       shm_tlayer->set_version(1);
       shm_tlayer->set_confirmed(m_use_shm_confirmed);
-      std::string par_layer_s = m_writer_shm.GetConnectionParameter();
+      const std::string par_layer_s = m_writer_shm.GetConnectionParameter();
       shm_tlayer->mutable_par_layer()->ParseFromString(par_layer_s);
 
       // ----------------------------------------------------------------------
@@ -861,7 +861,7 @@ namespace eCAL
     }
     // tcp layer
     {
-      auto tcp_tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
+      auto *tcp_tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
       tcp_tlayer->set_type(eCAL::pb::tl_ecal_tcp);
       tcp_tlayer->set_version(1);
       tcp_tlayer->set_confirmed(m_use_tcp_confirmed);
@@ -869,7 +869,7 @@ namespace eCAL
     }
     // inproc layer
     {
-      auto inproc_tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
+      auto *inproc_tlayer = ecal_reg_sample_mutable_topic->add_tlayer();
       inproc_tlayer->set_type(eCAL::pb::tl_inproc);
       inproc_tlayer->set_version(1);
       inproc_tlayer->set_confirmed(m_use_inproc_confirmed);
@@ -885,7 +885,7 @@ namespace eCAL
     size_t loc_connections(0);
     size_t ext_connections(0);
     {
-      std::lock_guard<std::mutex> lock(m_sub_map_sync);
+      const std::lock_guard<std::mutex> lock(m_sub_map_sync);
       loc_connections = m_loc_sub_map.size();
       ext_connections = m_ext_sub_map.size();
     }
@@ -919,7 +919,7 @@ namespace eCAL
     }
 
     // register publisher
-    if (g_registration_provider()) g_registration_provider()->RegisterTopic(m_topic_name, m_topic_id, ecal_reg_sample, force_);
+    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterTopic(m_topic_name, m_topic_id, ecal_reg_sample, force_);
 
 #ifndef NDEBUG
     // log it
@@ -1156,7 +1156,7 @@ namespace eCAL
 
     // calculate unique send hash
     std::hash<SSndHash> hf;
-    size_t snd_hash = hf(SSndHash(m_topic_id, m_clock));
+    const size_t snd_hash = hf(SSndHash(m_topic_id, m_clock));
 
     // increase overall sum send
     g_process_wbytes_sum += len_;
@@ -1170,9 +1170,9 @@ namespace eCAL
 
   bool CDataWriter::IsInternalSubscribedOnly()
   {
-    std::string process_id = Process::GetProcessIDAsString();
+    const std::string process_id = Process::GetProcessIDAsString();
     bool is_internal_only(true);
-    std::lock_guard<std::mutex> lock(m_sub_map_sync);
+    const std::lock_guard<std::mutex> lock(m_sub_map_sync);
     for (auto sub : m_loc_sub_map)
     {
       if (sub.first != process_id)
