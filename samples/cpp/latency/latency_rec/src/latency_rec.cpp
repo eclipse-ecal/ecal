@@ -108,7 +108,10 @@ int main(int argc, char** argv)
     cmd.parse(argc, argv);
 
     // run tests
-    do do_run(delay.getValue(), log_file.getValue()); while (eCAL::Ok());
+    while(eCAL::Ok())
+    {
+      do_run(delay.getValue(), log_file.getValue());
+    }
   }
   catch (TCLAP::ArgException& e)  // catch any exceptions
   {
