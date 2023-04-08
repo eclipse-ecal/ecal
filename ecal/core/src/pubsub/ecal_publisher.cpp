@@ -30,6 +30,7 @@
 #include "ecal_globals.h"
 #include "ecal_pubgate.h"
 #include "ecal_registration_provider.h"
+#include "ecal_buffer_payload.h" //@Rex should this be public API?
 
 #include "readwrite/ecal_writer.h"
 
@@ -322,38 +323,51 @@ namespace eCAL
 
   size_t CPublisher::Send(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
   {
-    if (!m_created) return(0);
+    CBufferPayload payload{ buf_, len_ };
+    return Send(payload, time_, acknowledge_timeout_ms_);
+  }
 
-    // in an optimization case the
-    // publisher can send an empty package
-    // or we do not have any subscription at all
-    // then the data writer will only do some statistics
-    // for the monitoring layer and return
-    if (!IsSubscribed())
-    {
-      m_datawriter->RefreshSendCounter();
-      return(len_);
-    }
+  // @Rex, do we even need this function? I guess so for convenience...
+  size_t CPublisher::Send(CPayload& payload_, long long time_) const
+  {
+    return Send(payload_, time_, DEFAULT_ACKNOWLEDGE_ARGUMENT);
+  }
+  
+  size_t CPublisher::Send(CPayload& payload_, long long time_, long long acknowledge_timeout_ms_) const
+  {
+     if (!m_created) return(0);
 
-    long long current_acknowledge_timeout_ms{ 0 };
-    // set new acknowledge timeout
-    if (acknowledge_timeout_ms_ != DEFAULT_ACKNOWLEDGE_ARGUMENT)
-    {
-      current_acknowledge_timeout_ms = m_datawriter->ShmGetAcknowledgeTimeout();
-      m_datawriter->ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms_));
-    }
+     // in an optimization case the
+     // publisher can send an empty package
+     // or we do not have any subscription at all
+     // then the data writer will only do some statistics
+     // for the monitoring layer and return
+     if (!IsSubscribed())
+     {
+       m_datawriter->RefreshSendCounter();
+       return(payload_.GetSize());
+     }
 
-    // send content via data writer layer
-    long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
-    bool sent = m_datawriter->Write(buf_, len_, write_time, m_id);
+     long long current_acknowledge_timeout_ms{ 0 };
+     // set new acknowledge timeout
+     if (acknowledge_timeout_ms_ != DEFAULT_ACKNOWLEDGE_ARGUMENT)
+     {
+       current_acknowledge_timeout_ms = m_datawriter->ShmGetAcknowledgeTimeout();
+       m_datawriter->ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms_));
+     }
 
-    if (acknowledge_timeout_ms_ != DEFAULT_ACKNOWLEDGE_ARGUMENT)
-    {
-      // reset acknowledge timeout
-      m_datawriter->ShmSetAcknowledgeTimeout(current_acknowledge_timeout_ms);
-    }
+     // send content via data writer layer
+     long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
+     bool sent = m_datawriter->Write(payload_, write_time, m_id);
 
-    return sent ? len_ : 0;
+     if (acknowledge_timeout_ms_ != DEFAULT_ACKNOWLEDGE_ARGUMENT)
+     {
+       // reset acknowledge timeout
+       m_datawriter->ShmSetAcknowledgeTimeout(current_acknowledge_timeout_ms);
+     }
+
+     //@Rex we have to call GetSize() again. Can't we return this from the Write call?
+     return sent ? payload_.GetSize() : 0;
   }
 
   bool CPublisher::AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_)

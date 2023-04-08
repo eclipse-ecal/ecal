@@ -72,8 +72,9 @@ namespace eCAL
       Destroy(create_);
 
       // reset states
-      m_created      = false;
-      m_access_state = access_state::closed;
+      m_created             = false;
+      m_payload_initialized = false;
+      m_access_state        = access_state::closed;
       m_name.clear();
 
       // reset header and info
@@ -291,7 +292,7 @@ namespace eCAL
     return(len_);
   }
 
-  size_t CMemoryFile::Write(const void* buf_, const size_t len_, const size_t offset_)
+  size_t CMemoryFile::WriteBuffer(const void* buf_, const size_t len_, const size_t offset_)
   {
     if (!m_created) return(0);
     if (!buf_)      return(0);
@@ -301,6 +302,34 @@ namespace eCAL
     {
       // copy to write buffer
       memcpy(static_cast<char*>(wbuf) + offset_, buf_, len_);
+
+      // return number of written bytes
+      return(len_);
+    }
+    else
+    {
+      return(0);
+    }
+  }
+
+  size_t CMemoryFile::WritePayload(CPayload& payload_, const size_t len_, const size_t offset_)
+  {
+    if (!m_created) return(0);
+
+    void* wbuf(nullptr);
+    if (GetWriteAddress(wbuf, len_ + offset_) != 0u)
+    {
+      // (re)write complete buffer
+      if (!m_payload_initialized)
+      {
+        payload_.WriteComplete(static_cast<char*>(wbuf) + offset_, len_);
+        m_payload_initialized = true;
+      }
+      else
+      {
+        // apply update to write buffer
+        payload_.WritePartial(static_cast<char*>(wbuf) + offset_, len_);
+      }
 
       // return number of written bytes
       return(len_);

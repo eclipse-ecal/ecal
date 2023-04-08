@@ -104,7 +104,7 @@ namespace eCAL
     return true;
   }
 
-  bool CDataWriterTCP::Write(const SWriterData& data_)
+  bool CDataWriterTCP::Write(const void* const buf_, const SWriterAttr& attr_)
   {
     if (!m_publisher) return false;
 
@@ -116,11 +116,11 @@ namespace eCAL
 
     // append payload header (without payload)
     auto ecal_sample_mutable_content = m_ecal_header.mutable_content();
-    ecal_sample_mutable_content->set_id(data_.id);
-    ecal_sample_mutable_content->set_clock(data_.clock);
-    ecal_sample_mutable_content->set_time(data_.time);
-    ecal_sample_mutable_content->set_hash(data_.hash);
-    ecal_sample_mutable_content->set_size((google::protobuf::int32)data_.len);
+    ecal_sample_mutable_content->set_id(attr_.id);
+    ecal_sample_mutable_content->set_clock(attr_.clock);
+    ecal_sample_mutable_content->set_time(attr_.time);
+    ecal_sample_mutable_content->set_hash(attr_.hash);
+    ecal_sample_mutable_content->set_size((google::protobuf::int32)attr_.len);
 
     // Initialize the padding with 1 element. It just must not be empty right now.
     m_ecal_header.set_padding(std::string("a"));
@@ -176,7 +176,7 @@ namespace eCAL
     // push header data
     send_vec.emplace_back(std::pair<const char* const, const size_t>(m_header_buffer.data(), m_header_buffer.size()));
     // push payload data
-    send_vec.emplace_back(std::pair<const char* const, const size_t>(static_cast<const char*>(data_.buf), data_.len));
+    send_vec.emplace_back(std::pair<const char* const, const size_t>(static_cast<const char*>(buf_), attr_.len));
 
     // send it
     bool success = m_publisher->send(send_vec);

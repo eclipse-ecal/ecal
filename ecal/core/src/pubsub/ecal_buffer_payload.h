@@ -18,26 +18,39 @@
 */
 
 /**
- * @brief  data writer struct
+ * @file   ecal_buffer_payload.h
+ * @brief  eCAL payload for primitive binary data
 **/
 
 #pragma once
 
+#include <ecal/ecal_payload.h>
+
 #include <cstddef>
+#include <cstring>
 
 namespace eCAL
 {
-  struct SWriterAttr
+  // specific payload class to wrap classic (void*, size_t) interface
+  class CBufferPayload : public CPayload
   {
-    size_t       len                    = 0;
-    long long    id                     = 0;
-    long long    clock                  = 0;
-    size_t       hash                   = 0;
-    long long    time                   = 0;
-    size_t       buffering              = 1;
-    long         bandwidth              = 0;
-    bool         loopback               = false;
-    bool         zero_copy              = false;
-    long long    acknowledge_timeout_ms = 0;
+  public:
+    CBufferPayload(const void* const buf_, size_t len_) : m_buf(buf_), m_buf_len(len_) {};
+
+    // make a dump memory copy
+    bool WriteComplete (void* buf_, size_t len_) override {
+      if (len_ < m_buf_len) return false;
+      if (m_buf == nullptr) return false;
+      if (m_buf_len == 0)   return false;
+      memcpy(buf_, m_buf, m_buf_len);
+      return true;
+    }
+
+    // size of the memory that needs to be copied
+    size_t GetSize() override { return m_buf_len; };
+  
+  private:
+    const void* const m_buf     = nullptr;
+    size_t            m_buf_len = 0;
   };
-}
+};

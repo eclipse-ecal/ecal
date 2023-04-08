@@ -52,13 +52,13 @@ namespace eCAL
     // so, mark it as final to ensure that no derived classes override it.
     bool Destroy() final override;
 
-    bool Write(const SWriterData& data_) override;
+    bool Write(const void* buf_, const SWriterAttr& attr_) override;
 
   protected:
-    std::string     m_udp_ipaddr;
+    std::string       m_udp_ipaddr;
     eCAL::pb::Sample  m_ecal_sample;
 
-    CUDPSender      m_sample_snd_loopback;
-    CUDPSender      m_sample_snd_no_loopback;
+    CUDPSender        m_sample_snd_loopback;
+    CUDPSender        m_sample_snd_no_loopback;
   };
 }
