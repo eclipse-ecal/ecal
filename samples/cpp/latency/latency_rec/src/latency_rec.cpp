@@ -47,7 +47,7 @@ void on_receive(const struct eCAL::SReceiveCallbackData* data_, SCallbackPar* pa
   auto rec_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
   // update latency, size and msg number
-  std::lock_guard<std::mutex> lock(par_->mtx);
+  const std::lock_guard<std::mutex> lock(par_->mtx);
   par_->latency_array.push_back(rec_time - data_->time);
   par_->rec_size = data_->size;
   par_->msg_num++;
@@ -75,7 +75,7 @@ void do_run(int delay_, std::string& log_file_)
     // check once a second if we still receive new messages
     // if not, we stop and evaluate this run
     {
-      std::lock_guard<std::mutex> lock(cb_par.mtx);
+      const std::lock_guard<std::mutex> lock(cb_par.mtx);
       if ((cb_par.msg_num > 0) && (msg_last == cb_par.msg_num)) break;
       else msg_last = cb_par.msg_num;
     }
@@ -108,7 +108,10 @@ int main(int argc, char** argv)
     cmd.parse(argc, argv);
 
     // run tests
-    do { do_run(delay.getValue(), log_file.getValue()); } while (eCAL::Ok());
+    while(eCAL::Ok())
+    {
+      do_run(delay.getValue(), log_file.getValue());
+    }
   }
   catch (TCLAP::ArgException& e)  // catch any exceptions
   {

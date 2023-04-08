@@ -238,6 +238,7 @@ set(ecal_mon_header_src
 )
 
 set(ecal_pubsub_header_src
+    src/pubsub/ecal_buffer_payload.h
     src/pubsub/ecal_pubgate.h
     src/pubsub/ecal_subgate.h
 )
@@ -322,6 +323,7 @@ set(ecal_header_cmn
     include/ecal/ecal_monitoring_entity.h
     include/ecal/ecal_monitoring_struct.h
     include/ecal/ecal_os.h
+    include/ecal/ecal_payload.h
     include/ecal/ecal_process.h
     include/ecal/ecal_process_mode.h
     include/ecal/ecal_process_severity.h

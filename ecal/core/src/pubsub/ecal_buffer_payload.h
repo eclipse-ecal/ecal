@@ -18,43 +18,39 @@
 */
 
 /**
- * @brief  inproc data writer
+ * @file   ecal_buffer_payload.h
+ * @brief  eCAL payload for primitive binary data
 **/
 
 #pragma once
 
-#include "ecal_def.h"
+#include <ecal/ecal_payload.h>
 
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <ecal/core/pb/ecal.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
-//#include "io/ecal_inproc.h"
-#include "readwrite/ecal_writer_base.h"
-
-#include <string>
-#include <vector>
+#include <cstddef>
+#include <cstring>
 
 namespace eCAL
 {
-  class CDataWriterInProc : public CDataWriterBase
+  // specific payload class to wrap classic (void*, size_t) interface
+  class CBufferPayload : public CPayload
   {
   public:
-    ~CDataWriterInProc();
+    CBufferPayload(const void* const buf_, size_t len_) : m_buf(buf_), m_buf_len(len_) {};
 
-    SWriterInfo GetInfo() override;
+    // make a dump memory copy
+    bool WriteComplete (void* buf_, size_t len_) override {
+      if (len_ < m_buf_len) return false;
+      if (m_buf == nullptr) return false;
+      if (m_buf_len == 0)   return false;
+      memcpy(buf_, m_buf, m_buf_len);
+      return true;
+    }
 
-    bool Create(const std::string& host_name_, const std::string& topic_name_, const std::string & topic_id_) override;
-    // this virtual function is called during construction/destruction,
-    // so, mark it as final to ensure that no derived classes override it.
-    bool Destroy() final override;
-
-    bool Write(const void* const buf_, const SWriterAttr& attr_) override;
-
-  protected:
+    // size of the memory that needs to be copied
+    size_t GetSize() override { return m_buf_len; };
+  
+  private:
+    const void* const m_buf     = nullptr;
+    size_t            m_buf_len = 0;
   };
-}
+};

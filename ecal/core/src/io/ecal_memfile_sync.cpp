@@ -130,7 +130,7 @@ namespace eCAL
     return false;
   }
 
-  bool CSyncMemoryFile::Write(const SWriterData& data_)
+  bool CSyncMemoryFile::Write(CPayload& payload_, const SWriterAttr& data_)
   {
     if (!m_created)
     {
@@ -162,7 +162,7 @@ namespace eCAL
     // set zero copy
     memfile_hdr.options.zero_copy = static_cast<unsigned char>(data_.zero_copy);
     // set acknowledge timeout
-    memfile_hdr.ack_timout_ms        = static_cast<int64_t>(data_.acknowledge_timeout_ms);
+    memfile_hdr.ack_timout_ms     = static_cast<int64_t>(data_.acknowledge_timeout_ms);
 
     // acquire write access
     bool write_access = m_memfile.GetWriteAccess(static_cast<int>(m_attr.timeout_open_ms));
@@ -193,12 +193,12 @@ namespace eCAL
     size_t wbytes(0);
 
     // write the user file header
-    written &= m_memfile.Write(&memfile_hdr, memfile_hdr.hdr_size, wbytes) > 0;
+    written &= m_memfile.WriteBuffer(&memfile_hdr, memfile_hdr.hdr_size, wbytes) > 0;
     wbytes += memfile_hdr.hdr_size;
     // write the buffer
     if (data_.len > 0)
     {
-      written &= m_memfile.Write(data_.buf, data_.len, wbytes) > 0;
+      written &= m_memfile.WritePayload(payload_, data_.len, wbytes) > 0;
     }
     // release write access
     m_memfile.ReleaseWriteAccess();
@@ -254,7 +254,7 @@ namespace eCAL
     // initialize memory file with empty header
     struct SMemFileHeader memfile_hdr;
     m_memfile.GetWriteAccess(static_cast<int>(m_attr.timeout_open_ms));
-    m_memfile.Write(&memfile_hdr, memfile_hdr.hdr_size, 0);
+    m_memfile.WriteBuffer(&memfile_hdr, memfile_hdr.hdr_size, 0);
     m_memfile.ReleaseWriteAccess();
 
     // it's created

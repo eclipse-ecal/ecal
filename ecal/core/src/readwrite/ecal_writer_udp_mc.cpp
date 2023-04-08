@@ -97,7 +97,7 @@ namespace eCAL
     return true;
   }
 
-  bool CDataWriterUdpMC::Write(const SWriterData& data_)
+  bool CDataWriterUdpMC::Write(const void* const buf_, const SWriterAttr& attr_)
   {
     if (!m_created) return false;
 
@@ -116,22 +116,22 @@ namespace eCAL
 
     // append content
     auto ecal_sample_mutable_content = m_ecal_sample.mutable_content();
-    ecal_sample_mutable_content->set_id(data_.id);
-    ecal_sample_mutable_content->set_clock(data_.clock);
-    ecal_sample_mutable_content->set_time(data_.time);
-    ecal_sample_mutable_content->set_hash(data_.hash);
-    ecal_sample_mutable_content->set_size((google::protobuf::int32)data_.len);
-    ecal_sample_mutable_content->set_payload(data_.buf, data_.len);
+    ecal_sample_mutable_content->set_id(attr_.id);
+    ecal_sample_mutable_content->set_clock(attr_.clock);
+    ecal_sample_mutable_content->set_time(attr_.time);
+    ecal_sample_mutable_content->set_hash(attr_.hash);
+    ecal_sample_mutable_content->set_size((google::protobuf::int32)attr_.len);
+    ecal_sample_mutable_content->set_payload(buf_, attr_.len);
 
     // send it
     size_t sent = 0;
-    if (data_.loopback)
+    if (attr_.loopback)
     {
-      sent = eCAL::SendSample(&m_sample_snd_loopback, m_ecal_sample.topic().tname(), m_ecal_sample, m_udp_ipaddr, data_.bandwidth);
+      sent = eCAL::SendSample(&m_sample_snd_loopback, m_ecal_sample.topic().tname(), m_ecal_sample, m_udp_ipaddr, attr_.bandwidth);
     }
     else
     {
-      sent = eCAL::SendSample(&m_sample_snd_no_loopback, m_ecal_sample.topic().tname(), m_ecal_sample, m_udp_ipaddr, data_.bandwidth);
+      sent = eCAL::SendSample(&m_sample_snd_no_loopback, m_ecal_sample.topic().tname(), m_ecal_sample, m_udp_ipaddr, attr_.bandwidth);
     }
 
     // log it

@@ -26,6 +26,7 @@
 #include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
+#include "ecal_buffer_payload.h"
 #include "ecal_config_reader_hlp.h"
 #include "ecal_globals.h"
 #include "ecal_pubgate.h"
@@ -330,15 +331,47 @@ namespace eCAL
       return(len_);
     }
 
+    // create payload buffer object
+    CBufferPayload payload(buf_, len_);
+
     // send content via data writer layer
     bool sent(false);
-    if (time_ == -1) sent = m_datawriter->Write(buf_, len_, eCAL::Time::GetMicroSeconds(), m_id);
-    else             sent = m_datawriter->Write(buf_, len_, time_, m_id);
+    if (time_ == -1) sent = m_datawriter->Write(payload, eCAL::Time::GetMicroSeconds(), m_id);
+    else             sent = m_datawriter->Write(payload, time_, m_id);
 
     // return success
     if (sent) return(len_);
     else      return(0);
   }
+
+  size_t CPublisher::Send(CPayload& payload_, long long time_) const
+  {
+    if (!m_created) return(0);
+
+    // get payload's length
+    const size_t len(payload_.GetSize());
+
+    // in an optimization case the
+    // publisher can send an empty package
+    // or we do not have any subscription at all
+    // then the data writer will only do some statistics
+    // for the monitoring layer and return
+    if (!IsSubscribed())
+    {
+      m_datawriter->RefreshSendCounter();
+      return(len);
+    }
+
+    // send content via data writer layer
+    bool sent(false);
+    if (time_ == -1) sent = m_datawriter->Write(payload_, eCAL::Time::GetMicroSeconds(), m_id);
+    else             sent = m_datawriter->Write(payload_, time_, m_id);
+
+    // return success
+    if (sent) return(len);
+    else      return(0);
+  }
+
 
   size_t CPublisher::Send(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
   {
@@ -348,8 +381,28 @@ namespace eCAL
     long long current_acknowledge_timeout_ms(m_datawriter->ShmGetAcknowledgeTimeout());
     m_datawriter->ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms_));
     
+    // create payload buffer object
+    CBufferPayload payload(buf_, len_);
+
     // send buffer
-    size_t len = Send(buf_, len_, time_);
+    size_t len = Send(payload, time_);
+
+    // reset acknowledge timeout
+    m_datawriter->ShmSetAcknowledgeTimeout(current_acknowledge_timeout_ms);
+
+    return len;
+  }
+
+  size_t CPublisher::Send(CPayload& payload_, long long time_, long long acknowledge_timeout_ms_) const
+  {
+    if (!m_created) return(0);
+
+    // set new acknowledge timeout
+    long long current_acknowledge_timeout_ms(m_datawriter->ShmGetAcknowledgeTimeout());
+    m_datawriter->ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms_));
+
+    // send buffer
+    size_t len = Send(payload_, time_);
 
     // reset acknowledge timeout
     m_datawriter->ShmSetAcknowledgeTimeout(current_acknowledge_timeout_ms);
