@@ -97,21 +97,9 @@ namespace eCAL
     service.tcp_port = static_cast<unsigned short>(ecal_sample_service.tcp_port());
 
     // store description
-    if (g_descgate())
+    for (const auto& method : ecal_sample_service.methods())
     {
-      for (auto method : ecal_sample_service.methods())
-      {
-        // Calculate the quality of the current info
-        ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-        if (!(method.req_type().empty() && method.resp_type().empty()))
-          quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-        if (!(method.req_desc().empty() && method.resp_desc().empty()))
-          quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
-        quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_TOPIC;
-        quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PUBLISHER;
-
-        g_descgate()->ApplyServiceDescription(ecal_sample_service.sname(), method.mname(), method.req_type(), method.req_desc(), method.resp_type(), method.resp_desc(), quality);
-      }
+      ApplyServiceToDescGate(ecal_sample_service.sname(), method.mname(), method.req_type(), method.req_desc(), method.resp_type(), method.resp_desc());
     }
 
     // create service key
@@ -146,7 +134,7 @@ namespace eCAL
     std::vector<SServiceAttr> ret_vec;
     std::shared_lock<std::shared_timed_mutex> lock(m_service_register_map_sync);
 
-    // Look for requested services
+    // look for requested services
     for (auto service : m_service_register_map)
     {
       if (service.second.sname == service_name_)
@@ -167,5 +155,26 @@ namespace eCAL
     {
       iter->RefreshRegistration();
     }
+  }
+
+  bool CClientGate::ApplyServiceToDescGate(const std::string& service_name_
+    , const std::string& method_name_
+    , const std::string& req_type_name_
+    , const std::string& req_type_desc_
+    , const std::string& resp_type_name_
+    , const std::string& resp_type_desc_)
+  {
+    if (g_descgate())
+    {
+      // calculate the quality of the current info
+      ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
+      if (!(req_type_name_.empty() && resp_type_name_.empty()))
+        quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
+      if (!(req_type_desc_.empty() && resp_type_desc_.empty()))
+        quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
+
+      return g_descgate()->ApplyServiceDescription(service_name_, method_name_, req_type_name_, req_type_desc_, resp_type_name_, resp_type_desc_, quality);
+    }
+    return false;
   }
 };

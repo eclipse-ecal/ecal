@@ -20,6 +20,8 @@
 #include <ecal/ecal.h>
 
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 #include <thread>
 #include <vector>
 
@@ -34,7 +36,9 @@ public:
 
     for (int i = 0; i < publisher_count; ++i)
     {
-      subscribers.emplace_back("Publisher" + std::to_string(i), ttype, tdesc);
+      std::ostringstream tname;
+      tname << std::setw(5) << std::setfill('0') << i;
+      subscribers.emplace_back("Topic" + tname.str(), ttype, tdesc);
       subscribers.at(i).AddReceiveCallback(std::bind(&SubscriberCreator::Receive, this));
     }
   }
@@ -54,7 +58,7 @@ int main(int argc, char** argv)
   eCAL::Initialize(argc, argv, "many_connections_rec");
 
   // create many subscriber
-  SubscriberCreator subscribers(1000);
+  SubscriberCreator subscribers(10000);
   std::cout << "Done Initializing" << std::endl;
 
   while (eCAL::Ok())

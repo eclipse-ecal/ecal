@@ -16,35 +16,26 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(test_clientserver)
+cmake_minimum_required(VERSION 3.10)
 
-find_package(Threads REQUIRED)
-find_package(GTest REQUIRED)
-find_package(Protobuf REQUIRED)
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
-create_targets_protobuf()
+project(monitoring_performance)
 
-set(${PROJECT_NAME}_src
-  src/clientserver_getservices.cpp
-  src/clientserver_test.cpp
+find_package(eCAL REQUIRED)
+
+set(monitoring_performance_src
+    src/monitoring_performance.cpp
 )
 
-set(clientserver_test_proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/math.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/ping.proto
-)
+ecal_add_sample(${PROJECT_NAME} ${monitoring_performance_src})
 
-ecal_add_gtest(${PROJECT_NAME} ${${PROJECT_NAME}_src})
-PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${clientserver_test_proto})
+target_link_libraries(${PROJECT_NAME} eCAL::core)
 
-target_link_libraries(${PROJECT_NAME}
-  PRIVATE
-    eCAL::core
-    protobuf::libprotobuf
-    Threads::Threads)
+target_link_libraries(${PROJECT_NAME} eCAL::core_pb)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
-ecal_install_gtest(${PROJECT_NAME})
+ecal_install_sample(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER testing/ecal/service)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/monitoring)

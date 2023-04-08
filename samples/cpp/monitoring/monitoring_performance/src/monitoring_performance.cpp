@@ -22,51 +22,66 @@
 #include <chrono>
 #include <iostream>
 #include <string>
-#include <map>
-#include <vector>
+
+#ifdef _MSC_VER
+#pragma warning(push, 0) // disable protobuf warnings
+#endif
+#include <ecal/core/pb/monitoring.pb.h>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
+#define MEASURE_VARIANT_STRING 1
+#define MEASURE_VARIANT_STRUCT 1
 
 int main(int argc, char **argv)
 {
-  int                                   run(0), runs(1000);
-  std::chrono::steady_clock::time_point start_time;
-
   // initialize eCAL core API
-  eCAL::Initialize(argc, argv, "monitoring get services");
+  eCAL::Initialize(argc, argv, "monitoring performance", eCAL::Init::All);
+
+  int                                   runs(100);
+  int                                   run(0);
+  std::chrono::steady_clock::time_point start_time;
 
   // monitor for ever
   while(eCAL::Ok())
   {
-    // GetServices
+#if MEASURE_VARIANT_STRING
+    // take snapshots as string (and parse it afterwards to protobuf)
     {
-      std::map<std::tuple<std::string, std::string>, eCAL::Util::SServiceMethodInfo> service_info_map;
-
+      int num_topics(0);
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        eCAL::Util::GetServices(service_info_map);
+        std::string          monitoring_s;
+        eCAL::pb::Monitoring monitoring;
+        eCAL::Monitoring::GetMonitoring(monitoring_s);
+        monitoring.ParseFromString(monitoring_s);
+        num_topics = monitoring.topics_size();
       }
 
-      auto num_services = service_info_map.size();
       auto diff_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
-      std::cout << "GetServices      : " << static_cast<double>(diff_time.count()) / runs << " ms" << " (" << num_services << " services)" << std::endl;
-      std::cout << std::endl;
+      std::cout << "Monitoring time to string  : " << static_cast<double>(diff_time.count()) / runs << " ms"  << " (" << num_topics << " topics)" << std::endl;
     }
+#endif // MEASURE_VARIANT_STRING
 
-    // GetServiceNames
+#if MEASURE_VARIANT_STRUCT
+    // take snapshots as monitoring struct
     {
-      std::vector<std::tuple<std::string, std::string>> service_method_names;
-
+      size_t num_topics(0);
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        eCAL::Util::GetServiceNames(service_method_names);
+        eCAL::Monitoring::SMonitoring monitoring;
+        eCAL::Monitoring::GetMonitoring(monitoring);
+        num_topics = monitoring.publisher.size() + monitoring.subscriber.size();
       }
-
-      auto num_services = service_method_names.size();
       auto diff_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
-      std::cout << "GetServicesNames : " << static_cast<double>(diff_time.count()) / runs << " ms" << " (" << num_services << " services)" << std::endl;
-      std::cout << std::endl;
+      std::cout << "Monitoring time to structs : " << static_cast<double>(diff_time.count()) / runs << " ms" << " (" << num_topics << " topics)" << std::endl;
     }
+#endif // MEASURE_VARIANT_STRUCT
+
+    std::cout << std::endl;
   }
 
   // finalize eCAL API

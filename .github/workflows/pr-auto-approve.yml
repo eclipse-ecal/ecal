@@ -1,0 +1,19 @@
+name: Auto approve
+
+on:
+  pull_request:
+    types: [ labeled, opened, synchronize, reopened ]
+
+jobs:
+
+  auto-approve:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Auto Approve') }}
+    
+    steps:
+      - uses: hmarr/auto-approve-action@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

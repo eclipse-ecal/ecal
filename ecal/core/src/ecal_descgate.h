@@ -46,13 +46,15 @@ namespace eCAL
     // Enumeration of quality bits used for detecting how good a topic information is.
     enum class QualityFlags : int
     {
-      NO_QUALITY                    = 0,         //!< Special value for initialization
+      NO_QUALITY                     = 0,         //!< Special value for initialization
 
-      DESCRIPTION_AVAILABLE         = 0x1 << 4,  //!< Having a descriptor at all is the most important thing
-      INFO_COMES_FROM_CORRECT_TOPIC = 0x1 << 3,  //!< The information comes from the current topic (and has not been borrowed from another topic)
-      INFO_COMES_FROM_PUBLISHER     = 0x1 << 2,  //!< A descriptor coming from the publisher is better than one from a subscriber, as we assume that the publisher knows best what he is publishing
-      INFO_COMES_FROM_THIS_PROCESS  = 0x1 << 1,  //!< We prefer descriptors from the current process
-      TYPE_AVAILABLE                = 0x1 << 0,  //!< Having information about the type's name available is nice but not that important to us.
+      DESCRIPTION_AVAILABLE          = 0x1 << 4,  //!< Having a descriptor at all is the most important thing
+      INFO_COMES_FROM_CORRECT_ENTITY = 0x1 << 3,  //!< The information comes from the current topic/service 
+                                                  //!< and has not been borrowed from another emtity, like read by a subscriber from a publisher
+      INFO_COMES_FROM_PRODUCER       = 0x1 << 2,  //!< A descriptor coming from the producer (like a publisher) is better than one from a 
+                                                  //!< consumer (like a subscriber), as we assume that the publisher knows best what he is publishing
+      INFO_COMES_FROM_THIS_PROCESS   = 0x1 << 1,  //!< We prefer descriptors from the current process
+      TYPE_AVAILABLE                 = 0x1 << 0,  //!< Having information about the type's name available is nice but not that important to us
     };
 
   public:
@@ -62,7 +64,7 @@ namespace eCAL
     void Create();
     void Destroy();
 
-    void ApplyTopicDescription(const std::string& topic_name_, 
+    bool ApplyTopicDescription(const std::string& topic_name_, 
                                const std::string& topic_type_,
                                const std::string& topic_desc_,
                                const QualityFlags description_quality_);
@@ -72,13 +74,13 @@ namespace eCAL
     bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
     bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_);
 
-    void ApplyServiceDescription(const std::string& service_name_, 
+    bool ApplyServiceDescription(const std::string& service_name_, 
                                  const std::string& method_name_, 
                                  const std::string& req_type_name_, 
                                  const std::string& req_type_desc_, 
                                  const std::string& resp_type_name_,
                                  const std::string& resp_type_desc_,
-                                 const QualityFlags info_quality_);
+                                 const QualityFlags description_quality_);
 
     void GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_);
     void GetServiceNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_);
@@ -89,14 +91,14 @@ namespace eCAL
     struct STopicInfoQuality
     {
       Util::STopicInfo info;                                                       //!< Topic info struct with type name and descriptor.
-      QualityFlags     description_quality   = QualityFlags::NO_QUALITY;           //!< QualityFlags to determine whether we may overwrite the current data with better one. E.g. we prefer the description sent by a publisher over one sent by a subscriber. 
+      QualityFlags     quality               = QualityFlags::NO_QUALITY;           //!< QualityFlags to determine whether we may overwrite the current data with better one. E.g. we prefer the description sent by a publisher over one sent by a subscriber. 
       bool             type_missmatch_logged = false;                              //!< Whether we have already logged a type-missmatch
     };
 
     struct SServiceMethodInfoQuality
     {
       Util::SServiceMethodInfo info;                                               //!< Service info struct with type names and descriptors for request and response.
-      QualityFlags             info_quality = QualityFlags::NO_QUALITY;            //!< The Quality of the Info
+      QualityFlags             quality = QualityFlags::NO_QUALITY;                 //!< The Quality of the Info
     };
 
     // key: topic name | value: topic (type/desc), quality

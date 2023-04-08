@@ -120,7 +120,7 @@
 
 /* timeout for create / open a memory file using mutex lock in ms */
 #define PUB_MEMFILE_CREATE_TO                        200
-#define PUB_MEMFILE_OPEN_TO                           50
+#define PUB_MEMFILE_OPEN_TO                          200
 
 /* timeout for memory read acknowledge signal from data reader in ms */
 #define PUB_MEMFILE_ACK_TO                            0   /* ms */

@@ -56,6 +56,7 @@ message Sample                                 // a sample is a topic, it's desc
   Client       client                =  7;     // client information
   Topic        topic                 =  5;     // topic information
   Content      content               =  6;     // topic content
+  bytes        padding               =  8;     // padding to artificially increase the size of the message. This is a workaround for TCP topics, to get the actual user-payload 8-byte-aligned. REMOVE ME IN ECAL6
 }
 
 message SampleList

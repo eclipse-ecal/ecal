@@ -147,6 +147,9 @@ namespace eCAL
     // internal clock sample update checking
     uint64_t last_sample_clock(0);
 
+    // buffer to store memory file content
+    std::vector<char> receive_buffer;
+
     // runs as long as there is no timeout and no external stop request
     while((m_timeout_read < timeout_) && !m_do_stop)
     {
@@ -175,7 +178,7 @@ namespace eCAL
           else
           {
             // clear receive buffer
-            m_ecal_buffer.clear();
+            receive_buffer.clear();
 
             bool zero_copy_allowed = mfile_hdr.options.zero_copy != 0;
             bool post_process_buffer(false);
@@ -215,8 +218,8 @@ namespace eCAL
               }
               else
               {
-                m_ecal_buffer.resize((size_t)mfile_hdr.data_size);
-                m_memfile.Read(m_ecal_buffer.data(), (size_t)mfile_hdr.data_size, mfile_hdr.hdr_size);
+                receive_buffer.resize((size_t)mfile_hdr.data_size);
+                m_memfile.Read(receive_buffer.data(), (size_t)mfile_hdr.data_size, mfile_hdr.hdr_size);
                 post_process_buffer = true;
               }
             }
@@ -231,7 +234,7 @@ namespace eCAL
             if (post_process_buffer)
             {
               // add sample to data reader (and call user callback function)
-              if (m_data_callback) m_data_callback(topic_name_, topic_id_, m_ecal_buffer.data(), m_ecal_buffer.size(), (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash);
+              if (m_data_callback) m_data_callback(topic_name_, topic_id_, receive_buffer.data(), receive_buffer.size(), (long long)mfile_hdr.id, (long long)mfile_hdr.clock, (long long)mfile_hdr.time, (size_t)mfile_hdr.hash);
             }
 
             // send acknowledge event
@@ -295,7 +298,8 @@ namespace eCAL
   // CMemFileThreadPool
   ////////////////////////////////////////
   CMemFileThreadPool::CMemFileThreadPool() :
-  m_created(false)
+  m_created(false),
+  m_do_cleanup(false)
   {
   }
 
@@ -304,12 +308,25 @@ namespace eCAL
   void CMemFileThreadPool::Create()
   {
     if(m_created) return;
+
+    // start cleanup thread
+    m_do_cleanup = true;
+    m_cleanup_thread = std::thread(&CMemFileThreadPool::CleanupPoolThread, this);
+
     m_created = true;
   }
 
   void CMemFileThreadPool::Destroy()
   {
     if(!m_created) return;
+
+    // stop cleanup thread
+    {
+      std::lock_guard<std::mutex> lock(m_do_cleanup_mtx);
+      m_do_cleanup = false;
+      m_do_cleanup_cv.notify_one();
+    }
+    if (m_cleanup_thread.joinable()) m_cleanup_thread.join();
 
     // lock pool
     std::lock_guard<std::mutex> lock(m_observer_pool_sync);
@@ -327,9 +344,6 @@ namespace eCAL
   {
     if(!m_created)            return(false);
     if(memfile_name_.empty()) return(false);
-
-    // remove outdated observers
-    //CleanupPool();
 
     // lock pool
     std::lock_guard<std::mutex> lock(m_observer_pool_sync);
@@ -366,6 +380,25 @@ namespace eCAL
       Logging::Log(log_level_debug2, std::string("CMemFileThreadPool::ObserveFile " + memfile_name_ + " added"));
 #endif
       return(true);
+    }
+  }
+
+  void CMemFileThreadPool::CleanupPoolThread()
+  {
+    for (;;)
+    {
+      {
+        // cycling with 1 second timeout
+        std::unique_lock<std::mutex> lock(m_do_cleanup_mtx);
+        m_do_cleanup_cv.wait_for(lock, std::chrono::milliseconds(1000), [&]() -> bool {return !m_do_cleanup; });
+        if (!m_do_cleanup)
+        {
+          // cleanup thread stopped
+          return;
+        }
+      }
+      // do your job
+      CleanupPool();
     }
   }
 

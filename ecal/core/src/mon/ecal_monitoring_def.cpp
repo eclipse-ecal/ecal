@@ -63,14 +63,19 @@ namespace eCAL
     m_monitoring_impl->SetFilterState(state_);
   }
 
-  void CMonitoring::Monitor(eCAL::pb::Monitoring& monitoring_)
+  void CMonitoring::GetMonitoring(eCAL::pb::Monitoring& monitoring_, unsigned int entities_)
   {
-    m_monitoring_impl->GetMonitoringMsg(monitoring_);
+    m_monitoring_impl->GetMonitoringPb(monitoring_, entities_);
   }
 
-  void CMonitoring::Monitor(eCAL::pb::Logging& logging_)
+  void CMonitoring::GetMonitoring(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_)
   {
-    m_monitoring_impl->GetLoggingMsg(logging_);
+    m_monitoring_impl->GetMonitoringStructs(monitoring_, entities_);
+  }
+
+  void CMonitoring::GetLogging(eCAL::pb::Logging& logging_)
+  {
+    m_monitoring_impl->GetLogging(logging_);
   }
 
   int CMonitoring::PubMonitoring(bool state_, std::string& name_)
@@ -115,16 +120,35 @@ namespace eCAL
     int GetMonitoring(std::string& mon_)
     {
       eCAL::pb::Monitoring monitoring;
-      if (g_monitoring()) g_monitoring()->Monitor(monitoring);
+      if (g_monitoring()) g_monitoring()->GetMonitoring(monitoring);
 
       mon_ = monitoring.SerializeAsString();
       return((int)mon_.size());
     }
 
+    int GetMonitoring(std::string& mon_, unsigned int entities_)
+    {
+      eCAL::pb::Monitoring monitoring;
+      if (g_monitoring()) g_monitoring()->GetMonitoring(monitoring, entities_);
+
+      mon_ = monitoring.SerializeAsString();
+      return((int)mon_.size());
+    }
+
+    int GetMonitoring(eCAL::Monitoring::SMonitoring& mon_, unsigned int entities_)
+    {
+      if (g_monitoring())
+      {
+        g_monitoring()->GetMonitoring(mon_, entities_);
+        return(static_cast<int>(mon_.process.size() + mon_.publisher.size() + mon_.subscriber.size() + mon_.server.size() + mon_.clients.size()));
+      }
+      return(0);
+    }
+
     int GetLogging(std::string& log_)
     {
       eCAL::pb::Logging logging;
-      if (g_monitoring()) g_monitoring()->Monitor(logging);
+      if (g_monitoring()) g_monitoring()->GetLogging(logging);
 
       log_ = logging.SerializeAsString();
       return((int)log_.size());
