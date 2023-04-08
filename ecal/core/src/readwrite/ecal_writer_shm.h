@@ -48,7 +48,7 @@ namespace eCAL
 
     bool PrepareWrite(const SWriterAttr& attr_) override;
 
-    bool Write(CPayload& payload_, const SWriterAttr& attr_);
+    bool Write(CPayload& payload_, const SWriterAttr& attr_) override;
 
     bool AddLocConnection(const std::string& process_id_, const std::string& conn_par_) override;
     bool RemLocConnection(const std::string& process_id_) override;
