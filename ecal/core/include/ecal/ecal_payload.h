@@ -35,13 +35,14 @@ namespace eCAL
   class CPayload
   {
   public:
-    //CPayload(const CPayload &) = delete;
-    //CPayload(CPayload &&) noexcept = default;
-
-    //CPayload& operator=(const CPayload &) = delete;
-    //CPayload& operator=(CPayload &&) noexcept = default;
-
+    CPayload() = default;
     virtual ~CPayload() = default;
+
+    CPayload(const CPayload &) = delete;
+    CPayload(CPayload &&) noexcept = default;
+
+    CPayload& operator=(const CPayload &) = delete;
+    CPayload& operator=(CPayload &&) noexcept = default;
 
     // the provisioned memory is uninitialized ->
     // perform a full write operation
