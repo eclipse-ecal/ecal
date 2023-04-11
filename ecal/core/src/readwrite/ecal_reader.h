@@ -40,6 +40,7 @@
 #include <mutex>
 #include <atomic>
 #include <set>
+#include <queue>
 
 #include <string>
 #include <unordered_map>
@@ -139,8 +140,7 @@ namespace eCAL
     std::atomic<int>                          m_receive_timeout;
     std::atomic<int>                          m_receive_time;
 
-    typedef Util::CExpMap<size_t, size_t>     SampleHashMapT;
-    SampleHashMapT                            m_sample_hash;
+    std::deque<size_t>                        m_sample_hash_queue;
 
     std::mutex                                m_event_callback_map_sync;
     typedef std::map<eCAL_Subscriber_Event, SubEventCallbackT> EventCallbackMapT;
