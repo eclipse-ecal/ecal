@@ -113,7 +113,7 @@ namespace eCAL
     bool SetUseShm(TLayer::eSendMode mode_);
     bool SetUseTcp(TLayer::eSendMode mode_);
     bool SetUseInProc(TLayer::eSendMode mode_);
-    bool CheckSendModes(TLayer::eSendMode& use_udp_mc, TLayer::eSendMode& use_shm, TLayer::eSendMode& use_tcp, TLayer::eSendMode& use_inproc);
+    bool CheckSendModes(bool& use_udp_mc_, bool& use_shm_, bool& use_tcp_, bool& use_inproc_);
     size_t PrepareWrite(long long id_, size_t len_);
 
     bool IsInternalSubscribedOnly();

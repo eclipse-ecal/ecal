@@ -407,10 +407,10 @@ namespace eCAL
   bool CDataWriter::Write(CPayload& payload_, long long time_, long long id_)
   {
     // check send modes
-    TLayer::eSendMode use_udp_mc (TLayer::smode_off);
-    TLayer::eSendMode use_shm    (TLayer::smode_off);
-    TLayer::eSendMode use_tcp    (TLayer::smode_off);
-    TLayer::eSendMode use_inproc (TLayer::smode_off);
+    bool use_udp_mc (false);
+    bool use_shm    (false);
+    bool use_tcp    (false);
+    bool use_inproc (false);
     if (!CheckSendModes(use_udp_mc, use_shm, use_tcp, use_inproc))
     {
       // incompatible layer configurations
@@ -444,9 +444,7 @@ namespace eCAL
     ////////////////////////////////////////////////////////////////////////////
     // LAYER 1 : SHM
     ////////////////////////////////////////////////////////////////////////////
-    if (((use_shm == TLayer::smode_auto) && m_loc_subscribed)
-      || (use_shm == TLayer::smode_on)
-      )
+    if (use_shm)
     {
 #ifndef NDEBUG
       // log it
@@ -497,9 +495,7 @@ namespace eCAL
     ////////////////////////////////////////////////////////////////////////////
     // LAYER 2 : INPROC
     ////////////////////////////////////////////////////////////////////////////
-    if  ((use_inproc == TLayer::smode_auto)
-      || (use_inproc == TLayer::smode_on)
-      )
+    if (use_inproc)
     {
 #ifndef NDEBUG
       // log it
@@ -550,9 +546,7 @@ namespace eCAL
     ////////////////////////////////////////////////////////////////////////////
     // LAYER 3 : UDP (MC)
     ////////////////////////////////////////////////////////////////////////////
-    if (((use_udp_mc == TLayer::smode_auto) && m_ext_subscribed)
-      || (use_udp_mc == TLayer::smode_on)
-      )
+    if (use_udp_mc)
     {
 #ifndef NDEBUG
       // log it
@@ -606,9 +600,7 @@ namespace eCAL
     ////////////////////////////////////////////////////////////////////////////
     // LAYER 4 : TCP
     ////////////////////////////////////////////////////////////////////////////
-    if (((use_tcp == TLayer::smode_auto) && m_ext_subscribed)
-      || (use_tcp == TLayer::smode_on)
-      )
+    if (use_tcp)
     {
 #ifndef NDEBUG
       // log it
@@ -1081,23 +1073,30 @@ namespace eCAL
     return(true);
   }
 
-  bool CDataWriter::CheckSendModes(TLayer::eSendMode& use_udp_mc_, TLayer::eSendMode& use_shm_, TLayer::eSendMode& use_tcp_, TLayer::eSendMode& use_inproc_)
+  bool CDataWriter::CheckSendModes(bool& use_udp_mc_, bool& use_shm_, bool& use_tcp_, bool& use_inproc_)
   {
-    // check send modes
-    use_udp_mc_ = m_use_udp_mc;
-    use_shm_    = m_use_shm;
-    use_tcp_    = m_use_tcp;
-    use_inproc_ = m_use_inproc;
-    if ( (use_udp_mc_ == TLayer::smode_off)
-      && (use_shm_    == TLayer::smode_off)
-      && (use_tcp_    == TLayer::smode_off)
-      && (use_inproc_ == TLayer::smode_off)
+    // reset send flags
+    use_udp_mc_ = false;
+    use_shm_    = false;
+    use_tcp_    = false;
+    use_inproc_ = false;
+    
+    // initialize send modes with config settings
+    TLayer::eSendMode use_udp_mc (m_use_udp_mc);
+    TLayer::eSendMode use_shm    (m_use_shm);
+    TLayer::eSendMode use_tcp    (m_use_tcp);
+    TLayer::eSendMode use_inproc (m_use_inproc);
+
+    if ( (use_udp_mc == TLayer::smode_off)
+      && (use_shm    == TLayer::smode_off)
+      && (use_tcp    == TLayer::smode_off)
+      && (use_inproc == TLayer::smode_off)
       )
     {
       // failsafe default mode if
       // nothing is activated
-      use_udp_mc_ = TLayer::smode_auto;
-      use_shm_    = TLayer::smode_auto;
+      use_udp_mc = TLayer::smode_auto;
+      use_shm    = TLayer::smode_auto;
     }
 
     // if we do not have loopback
@@ -1105,7 +1104,7 @@ namespace eCAL
     // inner process communication
     if ((g_registration_receiver() != nullptr) && !g_registration_receiver()->LoopBackEnabled())
     {
-      use_inproc_ = TLayer::smode_off;
+      use_inproc = TLayer::smode_off;
     }
 
     // shared memory transport is on and
@@ -1114,8 +1113,8 @@ namespace eCAL
     // shared memory because of external
     // process subscription, if not
     // let's switch it off
-    if ( (use_shm_    != TLayer::smode_off)
-      && (use_inproc_ != TLayer::smode_off)
+    if ( (use_shm    != TLayer::smode_off)
+      && (use_inproc != TLayer::smode_off)
       )
     {
       if (!IsExtSubscribed())
@@ -1130,17 +1129,57 @@ namespace eCAL
         {
           // we can switch shared memory layer off
           // it's all subscribed in our process
-          use_shm_ = TLayer::smode_off;
+          use_shm = TLayer::smode_off;
         }
       }
     }
 
-    if ( (use_tcp_    == TLayer::smode_auto)
-      && (use_udp_mc_ == TLayer::smode_auto)
+    if ( (use_tcp    == TLayer::smode_auto)
+      && (use_udp_mc == TLayer::smode_auto)
       )
     {
       Logging::Log(log_level_error, m_topic_name + "::CDataWriter::Send: TCP layer and UDP layer are both set to auto mode - Publication failed !");
       return false;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // UDP (MC)
+    ////////////////////////////////////////////////////////////////////////////
+    if (((use_udp_mc == TLayer::smode_auto) && m_ext_subscribed)
+      || (use_udp_mc == TLayer::smode_on)
+      )
+    {
+      use_udp_mc_ = true;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // SHM
+    ////////////////////////////////////////////////////////////////////////////
+    if (((use_shm == TLayer::smode_auto) && m_loc_subscribed)
+      || (use_shm == TLayer::smode_on)
+      )
+    {
+      use_shm_ = true;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // TCP
+    ////////////////////////////////////////////////////////////////////////////
+    if (((use_tcp == TLayer::smode_auto) && m_ext_subscribed)
+      || (use_tcp == TLayer::smode_on)
+      )
+    {
+      use_tcp_ = true;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // INPROC
+    ////////////////////////////////////////////////////////////////////////////
+    if ( (use_inproc == TLayer::smode_auto)
+      || (use_inproc == TLayer::smode_on)
+      )
+    {
+      use_inproc_ = true;
     }
 
     return true;
