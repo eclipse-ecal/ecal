@@ -15,11 +15,11 @@ eCAL automatically chooses the best available data transport mechanism for each 
 
 Visit the eCAL Documentation at 🌐 http://ecal.io for more information.
 
-![](doc/rst/getting_started/img/ecal_concept_notebooks.svg)
+![eCAL Architecture](doc/rst/getting_started/img/ecal_architecture.png)
 
 ## Facts about eCAL
 
-* eCAL is fast (1 - 10 GB/s, depends on payload size. Check the measured performance [here](https://eclipse-ecal.github.io/ecal/advanced/performance.html))
+* eCAL is fast (1 - 20 GB/s, depends on payload size. Check the measured performance [here](https://eclipse-ecal.github.io/ecal/advanced/performance.html))
 * eCAL provides both publish-subscribe and server-client patterns
 * eCAL is brokerless
 * eCAL provides a C++ and C interface for easy integration into other languages (like python, csharp or [rust](https://github.com/kopernikusai/ecal-rs))
