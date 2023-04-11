@@ -15,7 +15,7 @@ eCAL automatically chooses the best available data transport mechanism for each 
 
 Visit the eCAL Documentation at 🌐 http://ecal.io for more information.
 
-![eCAL Architecture](doc/rst/getting_started/img/ecal_architecture.png)
+![eCAL Architecture](doc/rst/getting_started/img/ecal_architecture.svg)
 
 ## Facts about eCAL
 
