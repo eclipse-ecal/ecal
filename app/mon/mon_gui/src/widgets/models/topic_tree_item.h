@@ -57,10 +57,10 @@ public:
     DFREQ,
   };
 
-  TopicTreeItem();
+  TopicTreeItem() = default;
   TopicTreeItem(const eCAL::pb::Topic& topic);
 
-  ~TopicTreeItem();
+  ~TopicTreeItem() = default;
 
   QVariant data(int column, Qt::ItemDataRole role = Qt::ItemDataRole::DisplayRole) const;
 
