@@ -113,11 +113,10 @@ namespace eCAL
     bool SetUseShm(TLayer::eSendMode mode_);
     bool SetUseTcp(TLayer::eSendMode mode_);
     bool SetUseInProc(TLayer::eSendMode mode_);
-    bool CheckSendModes(bool& use_udp_mc_, bool& use_shm_, bool& use_tcp_, bool& use_inproc_);
+
+    bool CheckWriterModes();
     size_t PrepareWrite(long long id_, size_t len_);
-
     bool IsInternalSubscribedOnly();
-
     void LogSendMode(TLayer::eSendMode smode_, const std::string & base_msg_);
 
     std::string                        m_host_name;
@@ -160,21 +159,28 @@ namespace eCAL
     std::atomic<bool>  m_loc_subscribed;
     std::atomic<bool>  m_ext_subscribed;
 
-    TLayer::eSendMode  m_use_udp_mc;
-    CDataWriterUdpMC   m_writer_udp_mc;
-    bool               m_use_udp_mc_confirmed;
+    struct SWriter
+    {
+      struct SWriterMode
+      {
+        TLayer::eSendMode requested = TLayer::smode_off;
+        bool              activated = false;
+        bool              confirmed = false;
+      };
 
-    TLayer::eSendMode  m_use_shm;
-    CDataWriterSHM     m_writer_shm;
-    bool               m_use_shm_confirmed;
+      SWriterMode        udp_mc_mode;
+      CDataWriterUdpMC   udp_mc;
 
-    TLayer::eSendMode  m_use_tcp;
-    CDataWriterTCP     m_writer_tcp;
-    bool               m_use_tcp_confirmed;
+      SWriterMode        shm_mode;
+      CDataWriterSHM     shm;
 
-    TLayer::eSendMode  m_use_inproc;
-    CDataWriterInProc  m_writer_inproc;
-    bool               m_use_inproc_confirmed;
+      SWriterMode        tcp_mode;
+      CDataWriterTCP     tcp;
+
+      SWriterMode        inproc_mode;
+      CDataWriterInProc  inproc;
+    };
+    SWriter            m_writer;
 
     bool               m_use_ttype;
     bool               m_use_tdesc;
