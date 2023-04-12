@@ -314,7 +314,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent. 
     **/
-    size_t Send(const void* const buf_, size_t len_, long long time_ = DEFAULT_TIME_ARGUMENT) const;
+    size_t Send(const void* buf_, size_t len_, long long time_ = DEFAULT_TIME_ARGUMENT) const;
 
     /**
      * @brief Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout).
