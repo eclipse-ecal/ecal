@@ -187,13 +187,22 @@ html_theme = 'sphinx_book_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+
+# Original hirarchy:
+#  1. theme.css
+#  2. pydata-sphinx-theme.css
+#  3. all.min.css
+#  4. pygments.css
+#  5. sphinx-book-theme.css
+#  6. tabs.css
 html_css_files = [
-    'css/pydata-ecal.css',
-    'css/pydata-ecal-addon.css',
-    'css/book-ecal-addon.css',
-    'css/bignums.css',
-    'css/tabs.css',
-    'css/pygments-ecal-addon.css',
+    'css/theme-ecal-addon.css',         # Override some colors of theme.css (-> Addon)
+    'css/pydata-ecal.css',              # Replace entire pydata-sphinx-theme.css with custom one (created by python script)
+    'css/pydata-ecal-addon.css',        # Override some colors of the custom pydata-ecal.css again (-> Addon)
+    'css/book-ecal-addon.css',          # Override some size values of sphinx-book-theme.css (-> Addon)
+    'css/bignums.css',                  # Enable th bignum feature from the sphinx-typo3-theme
+    'css/tabs.css',                     # Custom styling for sphinx-tabs
+    'css/pygments-ecal-addon.css',      # Override some sizes of pygments.css (-> Addon)
 ]
 
 html_title = "Eclipse eCAL™"
