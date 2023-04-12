@@ -227,7 +227,8 @@ namespace eCAL
     **/
     void GetTopics(std::unordered_map<std::string, STopicInfo>& topic_info_map_)
     {
-      if (g_descgate() == nullptr) return;
+      if (g_descgate() == nullptr)
+        return;
       g_descgate()->GetTopics(topic_info_map_);
     }
 
@@ -238,7 +239,8 @@ namespace eCAL
     **/
     void GetTopicNames(std::vector<std::string>& topic_names_)
     {
-      if (g_descgate() == nullptr) return;
+      if (g_descgate() == nullptr)
+        return;
       g_descgate()->GetTopicNames(topic_names_);
     }
 
@@ -252,7 +254,8 @@ namespace eCAL
     **/
     bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_)
     {
-      if (g_descgate() == nullptr) return(false);
+      if (g_descgate() == nullptr)
+        return(false);
       return(g_descgate()->GetTopicTypeName(topic_name_, topic_type_));
     }
 
