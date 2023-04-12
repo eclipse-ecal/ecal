@@ -315,9 +315,14 @@ namespace eCAL
     return(true);
   }
 
-  size_t CPublisher::Send(const void* const buf_, const size_t len_, const long long time_ /* = -1 */) const
+  size_t CPublisher::Send(const void* const buf_, const size_t len_, const long long time_ /* = DEFAULT_TIME_ARGUMENT */) const
   {
-    if(!m_created) return(0);
+    return Send(buf_, len_, time_, DEFAULT_ACKNOWLEDGE_ARGUMENT);
+  }
+
+  size_t CPublisher::Send(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
+  {
+    if (!m_created) return(0);
 
     // in an optimization case the
     // publisher can send an empty package
@@ -330,31 +335,25 @@ namespace eCAL
       return(len_);
     }
 
-    // send content via data writer layer
-    bool sent(false);
-    if (time_ == -1) sent = m_datawriter->Write(buf_, len_, eCAL::Time::GetMicroSeconds(), m_id);
-    else             sent = m_datawriter->Write(buf_, len_, time_, m_id);
-
-    // return success
-    if (sent) return(len_);
-    else      return(0);
-  }
-
-  size_t CPublisher::Send(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
-  {
-    if (!m_created) return(0);
-
+    long long current_acknowledge_timeout_ms{ 0 };
     // set new acknowledge timeout
-    long long current_acknowledge_timeout_ms(m_datawriter->ShmGetAcknowledgeTimeout());
-    m_datawriter->ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms_));
-    
-    // send buffer
-    size_t len = Send(buf_, len_, time_);
+    if (acknowledge_timeout_ms_ != DEFAULT_ACKNOWLEDGE_ARGUMENT)
+    {
+      current_acknowledge_timeout_ms = m_datawriter->ShmGetAcknowledgeTimeout();
+      m_datawriter->ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms_));
+    }
 
-    // reset acknowledge timeout
-    m_datawriter->ShmSetAcknowledgeTimeout(current_acknowledge_timeout_ms);
+    // send content via data writer layer
+    long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
+    bool sent = m_datawriter->Write(buf_, len_, write_time, m_id);
 
-    return len;
+    if (acknowledge_timeout_ms_ != DEFAULT_ACKNOWLEDGE_ARGUMENT)
+    {
+      // reset acknowledge timeout
+      m_datawriter->ShmSetAcknowledgeTimeout(current_acknowledge_timeout_ms);
+    }
+
+    return sent ? len_ : 0;
   }
 
   bool CPublisher::AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_)

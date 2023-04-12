@@ -116,36 +116,9 @@ namespace eCAL
      *
      * @return  Number of bytes sent. 
     **/
-    size_t Send(const T& msg_, long long time_ = -1)
+    size_t Send(const T& msg_, long long time_ = eCAL::CPublisher::DEFAULT_TIME_ARGUMENT)
     {
-      // this is an optimization ...
-      // if there is no subscription we do not waste time for
-      // serialization but we send an empty payload
-      // to still do some statistics like message clock
-      // counting and frequency calculation for the monitoring layer
-      if (!IsSubscribed())
-      {
-        return(CPublisher::Send(nullptr, 0));
-      }
-
-      // if we have a subscription allocate memory for the
-      // binary stream, serialize the message into the
-      // buffer and finally send it with a binary publisher
-      size_t size = GetSize(msg_);
-      if(size > 0)
-      {
-        m_buffer.resize(size);
-        if(Serialize(msg_, &m_buffer[0], m_buffer.size()))
-        {
-          return(CPublisher::Send(&m_buffer[0], size, time_));
-        }
-      }
-      else
-      {
-        // send a zero payload length message to trigger the subscriber side
-        return(CPublisher::Send(nullptr, 0, time_));
-      }
-      return(0);
+      return Send(msg_, time_, eCAL::CPublisher::DEFAULT_ACKNOWLEDGE_ARGUMENT);
     }
 
     /**
@@ -161,13 +134,19 @@ namespace eCAL
     **/
     size_t Send(const T& msg_, long long time_, long long acknowledge_timeout_ms_)
     {
-      // see CMsgPublisher::Send
+      // this is an optimization ...
+      // if there is no subscription we do not waste time for
+      // serialization but we send an empty payload
+      // to still do some statistics like message clock
+      // counting and frequency calculation for the monitoring layer
       if (!IsSubscribed())
       {
-        return(CPublisher::Send(nullptr, 0));
+        return(CPublisher::Send(nullptr, 0, time_, acknowledge_timeout_ms_));
       }
 
-      // see CMsgPublisher::Send
+      // if we have a subscription allocate memory for the
+      // binary stream, serialize the message into the
+      // buffer and finally send it with a binary publisher
       size_t size = GetSize(msg_);
       if (size > 0)
       {
