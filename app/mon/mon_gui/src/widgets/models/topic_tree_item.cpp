@@ -186,7 +186,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
       if (!raw_data.empty())
       {
-        const quint16 crc16 = qChecksum(raw_data.data(), raw_data.length());
+        const quint16 crc16 = qChecksum(raw_data.data(), static_cast<uint>(raw_data.length()));
       
         const QString crc16_string = QString("%1").arg(QString::number(crc16, 16).toUpper(), 4, '0');
         const QString size_text    = QString::number(raw_data.size()) + " bytes (CRC16: " + crc16_string + ")";
