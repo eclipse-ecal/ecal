@@ -255,7 +255,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     if (column == Columns::TDESC)
     {
       const std::string& raw_data = topic_.tdesc();
-      return raw_data.size();
+      return static_cast<int>(raw_data.size());
     }
 
     return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
