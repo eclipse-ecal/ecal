@@ -60,7 +60,7 @@ public:
   TopicTreeItem() = default;
   TopicTreeItem(const eCAL::pb::Topic& topic);
 
-  ~TopicTreeItem() = default;
+  ~TopicTreeItem() override = default;
 
   QVariant data(int column, Qt::ItemDataRole role = Qt::ItemDataRole::DisplayRole) const;
 
