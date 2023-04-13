@@ -77,7 +77,7 @@ int main(int argc, char **argv)
   alice.setData(aliceData);
 
   auto bob = people[1];
-  bob.setId(456);
+  int bobid = 456;
   bob.setName("Bob");
   bob.setEmail("bob@example.com");
 
@@ -92,6 +92,7 @@ int main(int argc, char **argv)
   // enter main loop
   while (eCAL::Ok())
   {
+    bob.setId(++bobid);
     // send content
     pub.Send();
 
