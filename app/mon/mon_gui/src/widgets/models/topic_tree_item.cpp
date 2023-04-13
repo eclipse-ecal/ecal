@@ -189,13 +189,14 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         const quint16 crc16 = qChecksum(raw_data.data(), static_cast<uint>(raw_data.length()));
       
         const QString crc16_string = QString("%1").arg(QString::number(crc16, 16).toUpper(), 4, '0');
-        const QString size_text    = QString::number(raw_data.size()) + " bytes (CRC16: " + crc16_string + ")";
+        const QString size_text    = QString::number(raw_data.size()) + " byte" + (raw_data.size() != 1 ? "s" : "")
+                                     + " (CRC16: " + crc16_string + ")";
 
         return size_text;
       }
       else
       {
-        return "Empty";
+        return "None";
       }
     }
     else if (column == Columns::TLAYER)
