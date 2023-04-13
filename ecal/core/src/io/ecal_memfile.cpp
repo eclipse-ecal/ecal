@@ -42,8 +42,9 @@ namespace eCAL
 
   CMemoryFile::CMemoryFile() :
     m_created(false),
-    m_access_state(access_state::closed),
-    m_name("")
+    m_auto_sanitizing(false),
+    m_payload_initialized(false),
+    m_access_state(access_state::closed)
   {
   }
 
@@ -111,7 +112,7 @@ namespace eCAL
       // for performance reasons only apply consistency check if it is explicitly set
       if(m_memfile_mutex.Lock(PUB_MEMFILE_CREATE_TO))
       {
-        if (m_memfile_info.mem_address)
+        if (m_memfile_info.mem_address != nullptr)
         {
           SInternalHeader* header = reinterpret_cast<SInternalHeader*>(m_memfile_info.mem_address);
 
@@ -218,7 +219,7 @@ namespace eCAL
     if (m_access_state != access_state::read_access)         return(0);
     if (len_ == 0)                                           return(0);
     if (len_ > static_cast<size_t>(m_header.cur_data_size))  return(0);
-    if (!m_memfile_info.mem_address)                         return(0);
+    if (m_memfile_info.mem_address == nullptr)               return(0);
 
     // return read address
     buf_ = static_cast<char*>(m_memfile_info.mem_address) + m_header.int_hdr_size;
@@ -228,10 +229,10 @@ namespace eCAL
 
   size_t CMemoryFile::Read(void* buf_, const size_t len_, const size_t offset_)
   {
-    if (!buf_) return(0);
+    if (buf_ == nullptr) return(0);
 
     const void* rbuf(nullptr);
-    if (GetReadAddress(rbuf, len_ + offset_))
+    if (GetReadAddress(rbuf, len_ + offset_) != 0u)
     {
       // copy from read buffer with offset
       memcpy(buf_, static_cast<const char*>(rbuf) + offset_, len_);
@@ -279,7 +280,7 @@ namespace eCAL
     if (m_access_state != access_state::write_access)        return(0);
     if (len_ == 0)                                           return(0);
     if (len_ > static_cast<size_t>(m_header.max_data_size))  return(0);
-    if (!m_memfile_info.mem_address)                         return(0);
+    if (m_memfile_info.mem_address == nullptr)               return(0);
 
     // update m_header and write into memory file header
     m_header.cur_data_size = (unsigned long)(len_);
@@ -294,11 +295,11 @@ namespace eCAL
 
   size_t CMemoryFile::WriteBuffer(const void* buf_, const size_t len_, const size_t offset_)
   {
-    if (!m_created) return(0);
-    if (!buf_)      return(0);
+    if (!m_created)      return(0);
+    if (buf_ == nullptr) return(0);
 
     void* wbuf(nullptr);
-    if (GetWriteAddress(wbuf, len_ + offset_))
+    if (GetWriteAddress(wbuf, len_ + offset_) != 0u)
     {
       // copy to write buffer
       memcpy(static_cast<char*>(wbuf) + offset_, buf_, len_);
@@ -322,13 +323,24 @@ namespace eCAL
       // (re)write complete buffer
       if (!m_payload_initialized)
       {
-        payload_.WriteComplete(static_cast<char*>(wbuf) + offset_, len_);
-        m_payload_initialized = true;
+        bool const success = payload_.WriteComplete(static_cast<char*>(wbuf) + offset_, len_);
+        if (!success)
+        {
+          printf("Could not write payload content to the memory file (CPayload::WriteComplete returned false): %s.\n\n", m_name.c_str());
+        }
+        else
+        {
+          m_payload_initialized = true;
+        }
       }
       else
       {
         // apply update to write buffer
-        payload_.WritePartial(static_cast<char*>(wbuf) + offset_, len_);
+        bool const success = payload_.WritePartial(static_cast<char*>(wbuf) + offset_, len_);
+        if (!success)
+        {
+          printf("Could not write payload content to the memory file (CPayload::WritePartial returned false): %s.\n\n", m_name.c_str());
+        }
       }
 
       // return number of written bytes
@@ -342,8 +354,8 @@ namespace eCAL
 
   bool CMemoryFile::GetAccess(int timeout_)
   {
-    if (!m_created)                  return(false);
-    if (!m_memfile_info.mem_address) return(false);
+    if (!m_created)                            return(false);
+    if (m_memfile_info.mem_address == nullptr) return(false);
 
     // lock mutex
     if(!m_memfile_mutex.Lock(timeout_))
@@ -365,13 +377,13 @@ namespace eCAL
     memcpy(&m_header, m_memfile_info.mem_address, std::min(sizeof(SInternalHeader), static_cast<std::size_t>(m_header.int_hdr_size)));
 
     // check size again
-    size_t len = static_cast<size_t>(m_header.int_hdr_size) + static_cast<size_t>(m_header.max_data_size);
+    size_t const len = static_cast<size_t>(m_header.int_hdr_size) + static_cast<size_t>(m_header.max_data_size);
     if (len > m_memfile_info.size)
     {
       // check file size and update memory file map
       memfile::db::CheckFileSize(m_name, len, m_memfile_info);
 
-      // check size again and give up if it is still to small
+      // check size again and give up if it is still too small
       if (len > m_memfile_info.size)
       {
         // unlock mutex

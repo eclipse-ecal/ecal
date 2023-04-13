@@ -30,6 +30,7 @@
 #include "ecal_registration_provider.h"
 #include "ecal_registration_receiver.h"
 #include "pubsub/ecal_pubgate.h"
+#include "pubsub/ecal_buffer_payload.h"
 
 #include "ecal_writer.h"
 #include "ecal_writer_base.h"
@@ -75,7 +76,6 @@ namespace eCAL
     m_id(0),
     m_clock(0),
     m_clock_old(0),
-    m_snd_time(),
     m_freq(0),
     m_bandwidth_max_udp(NET_BANDWIDTH_MAX_UDP),
     m_loc_subscribed(false),
@@ -378,7 +378,7 @@ namespace eCAL
       // log it
       Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::AddEventCallback");
 #endif
-      m_event_callback_map[type_] = callback_;
+      m_event_callback_map[type_] = std::move(callback_);
     }
 
     return(true);
@@ -413,20 +413,20 @@ namespace eCAL
     // get payload buffer size (one time, to avoid multiple computations)
     const size_t payload_buf_size(payload_.GetSize());
 
-    // reset internal payload buffer
-    // this buffer is needed for transport layer without zero copy support
-    m_payload_buffer.resize(0);
+    // can we do a zero copy write ?
+    bool const allow_zero_copy =
+          m_writer.shm_mode.activated
+      && !m_writer.inproc_mode.activated
+      && !m_writer.udp_mc_mode.activated
+      && !m_writer.tcp_mode.activated;
 
-    // local function to write payload data to the internal payload buffer
-    // first call will do a complete write operation
-    // subsequent calls will just return a pointer to the allocated buffer
-    auto get_payload_buf = [](CPayload& p, size_t s, std::vector<char>& v) -> const void*
+    // create a payload copy for all layer
+    m_payload_buffer.clear();
+    if (!allow_zero_copy)
     {
-      if (v.size() == s) return v.data();
-      v.resize(s);
-      p.WriteComplete(v.data(), v.size());
-      return v.data();
-    };
+      m_payload_buffer.resize(payload_buf_size);
+      payload_.WriteComplete(m_payload_buffer.data(), m_payload_buffer.size());
+    }
 
     // prepare counter and internal states
     const size_t snd_hash = PrepareWrite(id_, payload_buf_size);
@@ -466,8 +466,21 @@ namespace eCAL
           Process::SleepMS(5);
         }
 
-        // write to shm layer do a zero copy operation if 'm_zero_copy' is set
-        shm_sent = m_writer.shm.Write(payload_, wattr);
+        // we are the only active layer, and we support zero copy -> we do a zero copy write via payload
+        if (allow_zero_copy)
+        {
+          // write to shm layer (write content into the opened memory file without additional copy)
+          shm_sent = m_writer.shm.Write(payload_, wattr);
+        }
+        // multiple layer are active -> we make a copy and use that one
+        else
+        {
+          // wrap the buffer into a payload object
+          CBufferPayload payload_buf(m_payload_buffer.data(), m_payload_buffer.size());
+          // write to shm layer (write content into the opened memory file without additional copy)
+          shm_sent = m_writer.shm.Write(payload_buf, wattr);
+        }
+
         m_writer.shm_mode.confirmed = true;
       }
       written |= shm_sent;
@@ -515,7 +528,7 @@ namespace eCAL
         }
 
         // write to inproc layer
-        inproc_sent = m_writer.inproc.Write(get_payload_buf(payload_, payload_buf_size, m_payload_buffer), wdata);
+        inproc_sent = m_writer.inproc.Write(m_payload_buffer.data(), wdata);
         m_writer.inproc_mode.confirmed = true;
       }
       written |= inproc_sent;
@@ -530,7 +543,7 @@ namespace eCAL
       {
         // if "m_m_writer.inproc.Send" returns 0 it's not a fault, the inner process writer may have no
         // subscription and so it will return 0 written bytes
-        // the other layers will write their bytes in any case on the specific layer
+        // the other layers will write their bytes in any case on the specific layer,
         // so we will not handle this as an error
       }
 #endif
@@ -572,7 +585,7 @@ namespace eCAL
         }
 
         // write to udp multicast layer
-        udp_mc_sent = m_writer.udp_mc.Write(get_payload_buf(payload_, payload_buf_size, m_payload_buffer), wattr);
+        udp_mc_sent = m_writer.udp_mc.Write(m_payload_buffer.data(), wattr);
         m_writer.udp_mc_mode.confirmed = true;
       }
       written |= udp_mc_sent;
@@ -613,7 +626,7 @@ namespace eCAL
         wattr.buffering = 0;
 
         // write to tcp layer
-        tcp_sent = m_writer.tcp.Write(get_payload_buf(payload_, payload_buf_size, m_payload_buffer), wattr);
+        tcp_sent = m_writer.tcp.Write(m_payload_buffer.data(), wattr);
         m_writer.tcp_mode.confirmed = true;
   }
       written |= tcp_sent;
@@ -1175,7 +1188,7 @@ namespace eCAL
     RefreshSendCounter();
 
     // calculate unique send hash
-    std::hash<SSndHash> hf;
+    std::hash<SSndHash> const hf;
     const size_t snd_hash = hf(SSndHash(m_topic_id, m_clock));
 
     // increase overall sum send
