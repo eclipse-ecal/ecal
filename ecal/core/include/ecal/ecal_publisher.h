@@ -66,6 +66,10 @@ namespace eCAL
   class ECAL_API CPublisher
   {
   public:
+
+    static constexpr long long DEFAULT_TIME_ARGUMENT        = -1;
+    static constexpr long long DEFAULT_ACKNOWLEDGE_ARGUMENT = -1;
+
     /**
      * @brief Constructor. 
     **/
@@ -310,7 +314,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent. 
     **/
-    size_t Send(const void* const buf_, size_t len_, long long time_ = -1) const;
+    size_t Send(const void* buf_, size_t len_, long long time_ = DEFAULT_TIME_ARGUMENT) const;
 
     /**
      * @brief Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout).
@@ -352,9 +356,9 @@ namespace eCAL
      *
      * @return  Number of bytes sent.
     **/
-    size_t Send(const std::string& s_, long long time_ = -1) const
+    size_t Send(const std::string& s_, long long time_ = DEFAULT_TIME_ARGUMENT) const
     {
-      return(Send(s_.data(), s_.size(), time_));
+      return(Send(s_.data(), s_.size(), time_, DEFAULT_ACKNOWLEDGE_ARGUMENT));
     }
 
     /**
