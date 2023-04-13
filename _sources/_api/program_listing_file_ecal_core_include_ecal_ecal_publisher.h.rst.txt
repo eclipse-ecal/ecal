@@ -46,6 +46,10 @@ Program Listing for File ecal_publisher.h
      class ECAL_API CPublisher
      {
      public:
+   
+       static constexpr long long DEFAULT_TIME_ARGUMENT        = -1;
+       static constexpr long long DEFAULT_ACKNOWLEDGE_ARGUMENT = -1;
+   
        CPublisher();
    
        CPublisher(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
@@ -99,7 +103,7 @@ Program Listing for File ecal_publisher.h
    
        bool SetID(long long id_);
    
-       size_t Send(const void* const buf_, size_t len_, long long time_ = -1) const;
+       size_t Send(const void* buf_, size_t len_, long long time_ = DEFAULT_TIME_ARGUMENT) const;
    
        size_t Send(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const;
    
@@ -109,9 +113,9 @@ Program Listing for File ecal_publisher.h
          return Send(buf_, len_, time_, acknowledge_timeout_ms_);
        }
    
-       size_t Send(const std::string& s_, long long time_ = -1) const
+       size_t Send(const std::string& s_, long long time_ = DEFAULT_TIME_ARGUMENT) const
        {
-         return(Send(s_.data(), s_.size(), time_));
+         return(Send(s_.data(), s_.size(), time_, DEFAULT_ACKNOWLEDGE_ARGUMENT));
        }
    
        size_t Send(const std::string& s_, long long time_, long long acknowledge_timeout_ms_) const
