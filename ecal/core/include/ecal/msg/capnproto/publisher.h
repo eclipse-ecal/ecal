@@ -37,6 +37,7 @@
 #pragma warning(pop)
 #endif /*_MSC_VER*/
 
+#include <memory>
 
 namespace eCAL
 {
