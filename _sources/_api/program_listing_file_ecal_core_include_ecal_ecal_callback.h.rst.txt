@@ -40,82 +40,110 @@ Program Listing for File ecal_callback.h
    {
      struct SReceiveCallbackData
      {
-       void*     buf   = nullptr;  
-       long      size  = 0;        
-       long long id    = 0;        
-       long long time  = 0;        
-       long long clock = 0;        
+       SReceiveCallbackData()
+       {
+         buf   = nullptr;
+         size  = 0;
+         id    = 0;
+         time  = 0;
+         clock = 0;
+       };
+       void*     buf;    
+       long      size;   
+       long long id;     
+       long long time;   
+       long long clock;  
      };
    
      struct SPubEventCallbackData
      {
-       eCAL_Publisher_Event type  = pub_event_none;  
-       long long            time  = 0;               
-       long long            clock = 0;               
-       std::string          tid;                     
-       std::string          ttype;                   
-       std::string          tdesc;                   
+       SPubEventCallbackData()
+       {
+         type  = pub_event_none;
+         time  = 0;
+         clock = 0;
+       };
+       eCAL_Publisher_Event type;    
+       long long            time;    
+       long long            clock;   
+       std::string          tid;     
+       std::string          ttype;   
+       std::string          tdesc;   
      };
    
      struct SSubEventCallbackData
      {
-       eCAL_Subscriber_Event type  = sub_event_none;  
-       long long             time  = 0;               
-       long long             clock = 0;               
-       std::string           tid;                     
-       std::string           ttype;                   
-       std::string           tdesc;                   
+       SSubEventCallbackData()
+       {
+         type  = sub_event_none;
+         time  = 0;
+         clock = 0;
+       };
+       eCAL_Subscriber_Event type;   
+       long long             time;   
+       long long             clock;  
+       std::string           tid;    
+       std::string           ttype;  
+       std::string           tdesc;  
      };
    
      struct SServiceAttr
      {
-       unsigned int   version  = 0;  
        std::string    key;           
        std::string    hname;         
        std::string    pname;         
        std::string    uname;         
        std::string    sname;         
        std::string    sid;           
-       int            pid      = 0;  
+       int            pid = 0;       
        unsigned short tcp_port = 0;  
      };
    
      struct SClientEventCallbackData
      {
-       eCAL_Client_Event type = client_event_none;  
-       long long         time = 0;                  
-       SServiceAttr      attr;                      
+       SClientEventCallbackData()
+       {
+         type = client_event_none;
+         time = 0;
+       };
+       eCAL_Client_Event type;  
+       long long         time;  
+       SServiceAttr      attr;  
      };
    
      struct SClientAttr
      {
-       unsigned int   version = 0;  
-       std::string    key;          
-       std::string    hname;        
-       std::string    pname;        
-       std::string    uname;        
-       std::string    sname;        
-       std::string    sid;          
-       int            pid     = 0;  
+       std::string    key;           
+       std::string    hname;         
+       std::string    pname;         
+       std::string    uname;         
+       std::string    sname;         
+       std::string    sid;           
+       int            pid = 0;       
      };
    
      struct SServerEventCallbackData
      {
-       eCAL_Server_Event type = server_event_none;  
-       long long         time = 0;                  
+       SServerEventCallbackData()
+       {
+         type = server_event_none;
+         time = 0;
+       };
+       eCAL_Server_Event type;  
+       long long         time;  
      };
    
-     using ReceiveCallbackT = std::function<void (const char *, const struct SReceiveCallbackData *)>;
+     typedef std::function<void(const char* topic_name_, const struct SReceiveCallbackData* data_)> ReceiveCallbackT;
    
-     using TimerCallbackT = std::function<void ()>;
+     typedef std::function<void(void)> TimerCallbackT;
    
-     using RegistrationCallbackT = std::function<void (const char *, int)>;
+     typedef std::function<void(const char* sample_, int sample_size_)> RegistrationCallbackT;
    
-     using PubEventCallbackT = std::function<void (const char *, const struct SPubEventCallbackData *)>;
+     typedef std::function<void(const char* topic_name_, const struct SPubEventCallbackData* data_)> PubEventCallbackT;
    
-     using SubEventCallbackT = std::function<void (const char *, const struct SSubEventCallbackData *)>;
+     typedef std::function<void(const char* topic_name_, const struct SSubEventCallbackData* data_)> SubEventCallbackT;
    
-     using ClientEventCallbackT = std::function<void (const char *, const struct SClientEventCallbackData *)>;
+     typedef std::function<void(const char* name_, const struct SClientEventCallbackData* data_)> ClientEventCallbackT;
    
-     using ServerEventCallbackT = std::function<void (const char *, const struct SServerEventCallbackData *)>;
+     typedef std::function<void(const char* name_, const struct SServerEventCallbackData* data_)> ServerEventCallbackT;
    };
