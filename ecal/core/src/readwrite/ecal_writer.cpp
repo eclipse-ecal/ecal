@@ -863,7 +863,6 @@ namespace eCAL
     eCAL::pb::Sample ecal_reg_sample;
     ecal_reg_sample.set_cmd_type(eCAL::pb::bct_reg_publisher);
     auto ecal_reg_sample_mutable_topic = ecal_reg_sample.mutable_topic();
-    ecal_reg_sample_mutable_topic->set_version(m_version);
     ecal_reg_sample_mutable_topic->set_hname(m_host_name);
     ecal_reg_sample_mutable_topic->set_hid(m_host_id);
     ecal_reg_sample_mutable_topic->set_tname(m_topic_name);

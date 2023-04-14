@@ -44,7 +44,6 @@ message QOS                                       // quality of service
 
 message Topic                                     // eCAL topic
 {
-  uint32             version               = 42;  // publisher/subscriber version (for internal use)
   int32              rclock                =  1;  // registration clock (heart beat)
   int32              hid                   = 26;  // host id
   string             hname                 =  2;  // host name

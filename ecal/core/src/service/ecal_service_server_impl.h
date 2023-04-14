@@ -70,7 +70,7 @@ namespace eCAL
     bool IsConnected();
 
     // called by the eCAL::CServiceGate to register a client
-    void RegisterClient(const std::string& key_, const SClientAttr& client_);
+    void RegisterClient(const std::string& key_, unsigned int version_, const SClientAttr& client_);
 
     // called by eCAL:CServiceGate every second to update registration layer
     void RefreshRegistration();
@@ -103,7 +103,7 @@ namespace eCAL
 
     CTcpServer            m_tcp_server;
 
-    static constexpr int  m_version = 1;
+    static constexpr int  m_version = 0;
     std::string           m_service_name;
     std::string           m_service_id;
 

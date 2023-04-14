@@ -73,7 +73,7 @@ namespace eCAL
     bool IsConnected();
 
     // called by the eCAL::CClientGate to register a service
-    void RegisterService(const std::string& key_, const SServiceAttr& service_);
+    void RegisterService(const std::string& key_, unsigned int version_, const SServiceAttr& service_);
 
     // called by eCAL:CClientGate every second to update registration layer
     void RefreshRegistration();
@@ -111,7 +111,7 @@ namespace eCAL
     using ServiceAttrMapT = std::map<std::string, SServiceAttr>;
     ServiceAttrMapT       m_connected_services_map;
 
-    static constexpr int  m_version = 1;
+    static constexpr int  m_version = 0;
     std::string           m_service_name;
     std::string           m_service_id;
     std::string           m_host_name;
