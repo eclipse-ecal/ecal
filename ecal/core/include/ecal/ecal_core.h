@@ -16,7 +16,7 @@
  *
  * ========================= eCAL LICENSE =================================
 */
-
+ 
 /**
  * @file   ecal_core.h
  * @brief  eCAL core function interface
