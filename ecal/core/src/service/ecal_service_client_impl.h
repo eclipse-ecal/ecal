@@ -111,7 +111,7 @@ namespace eCAL
     using ServiceAttrMapT = std::map<std::string, SServiceAttr>;
     ServiceAttrMapT       m_connected_services_map;
 
-    static constexpr int  m_version = 1;
+    static constexpr int  m_version = 0;
     std::string           m_service_name;
     std::string           m_service_id;
     std::string           m_host_name;

@@ -103,7 +103,7 @@ namespace eCAL
 
     CTcpServer            m_tcp_server;
 
-    static constexpr int  m_version = 1;
+    static constexpr int  m_version = 0;
     std::string           m_service_name;
     std::string           m_service_id;
 
