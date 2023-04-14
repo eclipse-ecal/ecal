@@ -64,6 +64,7 @@ message Method                        // method
 
 message Service                       // service
 {
+  uint32           version     = 42;  // service version (for internal use)
   int32            rclock      =  1;  // registration clock
   string           hname       =  2;  // host name
   string           pname       =  3;  // process name
@@ -77,6 +78,7 @@ message Service                       // service
 
 message Client                        // client
 {
+  uint32           version     = 42;  // client version (for internal use)
   int32            rclock      =  1;  // registration clock
   string           hname       =  2;  // host name
   string           pname       =  3;  // process name
