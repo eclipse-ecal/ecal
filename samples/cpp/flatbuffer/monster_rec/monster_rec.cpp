@@ -29,7 +29,7 @@
 #include <flatbuffers/flatbuffers.h>
 
 // flatbuffers generated includes
-#include "monster_generated.h"
+#include <monster/monster_generated.h>
 
 void OnMonster(const char* topic_name_, const flatbuffers::FlatBufferBuilder& msg_, const long long time_)
 {

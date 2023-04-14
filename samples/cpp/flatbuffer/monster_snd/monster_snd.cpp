@@ -28,7 +28,7 @@
 #include <flatbuffers/flatbuffers.h>
 
 // flatbuffers generated includes
-#include "monster_generated.h"
+#include <monster/monster_generated.h>
 
 
 int main(int argc, char **argv)
@@ -41,53 +41,47 @@ int main(int argc, char **argv)
 
   // create a publisher (topic name "monster")
   eCAL::flatbuffers::CPublisher<flatbuffers::FlatBufferBuilder> pub("monster");
-
-  // the generic builder instance
-  flatbuffers::FlatBufferBuilder builder;
-
-  // generate a class instance of Monster
-  auto vec = Game::Sample::Vec3(1, 2, 3);
-
-  auto name = builder.CreateString("Monster");
-
-  unsigned char inv_data[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-  auto inventory = builder.CreateVector(inv_data, 10);
-
-  // shortcut for creating monster with all fields set:
-  auto mloc = Game::Sample::CreateMonster(builder, &vec, 150, 80, name, inventory, Game::Sample::Color_Blue);
-
-  builder.Finish(mloc);
+  
+  Game::Sample::MonsterT my_monster;
+  my_monster.name = "Monster";
+  my_monster.pos = std::make_unique<Game::Sample::Vec3>( 1.0f, 2.0f, 3.0f );
 
   // enter main loop
-  auto cnt = 0;
+  uint8_t cnt = 0;
   while(eCAL::Ok())
   {
-    // mutate elements
-    auto monster(Game::Sample::GetMutableMonster(builder.GetBufferPointer()));
-    monster->mutate_hp(static_cast<int16_t>(++cnt));   // set table field.
-    monster->mutable_pos()->mutate_z(42);              // set struct field.
-    monster->mutable_inventory()->Mutate(0, 42);       // set vector element.
+    if (cnt == 0)
+    {
+      my_monster.inventory.clear();
+    }
+    my_monster.inventory.push_back(cnt);
+    ++cnt;
+
+    // Serialize into new flatbuffer.
+    // the generic builder instance
+    flatbuffers::FlatBufferBuilder builder;
+    builder.Finish(Game::Sample::Monster::Pack(builder, &my_monster));
 
     // send the monster object
     pub.Send(builder, -1);
 
     // print content
-    std::cout << "monster pos x     : " << monster->pos()->x()       << std::endl;
-    std::cout << "monster pos y     : " << monster->pos()->y()       << std::endl;
-    std::cout << "monster pos z     : " << monster->pos()->z()       << std::endl;
-    std::cout << "monster mana      : " << monster->mana()           << std::endl;
-    std::cout << "monster hp        : " << monster->hp()             << std::endl;
-    std::cout << "monster name      : " << monster->name()->c_str()  << std::endl;
+    std::cout << "monster pos x     : " << my_monster.pos->x()         << std::endl;
+    std::cout << "monster pos y     : " << my_monster.pos->y()         << std::endl;
+    std::cout << "monster pos z     : " << my_monster.pos->z()         << std::endl;
+    std::cout << "monster mana      : " << my_monster.mana             << std::endl;
+    std::cout << "monster hp        : " << my_monster.hp               << std::endl;
+    std::cout << "monster name      : " << my_monster.name             << std::endl;
 
     std::cout << "monster inventory : ";
-    for(auto iter = monster->inventory()->begin(); iter != monster->inventory()->end(); ++iter)
+    for(auto inventory : my_monster.inventory)
     {
-      std::cout << static_cast<int>(*iter) << " ";
+      std::cout << (int)inventory << " ";
     }
     std::cout << std::endl;
 
     std::cout << "monster color     : ";
-    switch (monster->color())
+    switch (my_monster.color)
     {
     case Game::Sample::Color_Red:
       std::cout << "Red";
