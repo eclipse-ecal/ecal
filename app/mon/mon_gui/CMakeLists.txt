@@ -112,6 +112,9 @@ set(source_files
     src/widgets/plugin_settings_dialog/plugin_settings_dialog.cpp
     src/widgets/plugin_settings_dialog/plugin_settings_dialog.h
 
+    src/widgets/raw_monitoring_data_widget/raw_monitoring_data_widget.cpp
+    src/widgets/raw_monitoring_data_widget/raw_monitoring_data_widget.h
+
     src/widgets/visualisation_widget/visualisation_widget.cpp
     src/widgets/visualisation_widget/visualisation_widget.h
     src/widgets/visualisation_widget/visualisation_window.cpp
@@ -145,6 +148,7 @@ set(ui_files
     src/widgets/license_dialog/license_dialog.ui
     src/widgets/log_widget/log_widget.ui
     src/widgets/plugin_settings_dialog/plugin_settings_dialog.ui
+    src/widgets/raw_monitoring_data_widget/raw_monitoring_data_widget.ui
     src/widgets/system_information_widget/system_information_widget.ui
     src/widgets/tree_item_view_widget/tree_item_view_widget.ui
     src/widgets/visualisation_widget/visualisation_widget.ui

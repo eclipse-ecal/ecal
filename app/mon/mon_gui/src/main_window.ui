@@ -332,6 +332,41 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="raw_monitoring_data_dockwidget">
+   <property name="windowTitle">
+    <string>Raw</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="raw_monitoring_data_dockwidget_content">
+    <layout class="QVBoxLayout" name="raw_monitoring_data_dockwidget_content_layout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="raw_monitoring_data_dockwidget_content_frame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <layout class="QVBoxLayout" name="raw_monitoring_data_dockwidget_content_frame_layout"/>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="action_exit">
    <property name="icon">
     <iconset resource="../../../iconset/ecalicons.qrc">
@@ -541,7 +576,7 @@
   </action>
   <action name="action_plugin_settings">
    <property name="text">
-    <string>Plugin settings...</string>
+    <string>Pl&amp;ugin settings...</string>
    </property>
   </action>
   <action name="action_npcap_status">
@@ -566,6 +601,11 @@
    </property>
    <property name="text">
     <string>Dark</string>
+   </property>
+  </action>
+  <action name="action_export_snapshot">
+   <property name="text">
+    <string>Show raw monitoring &amp;data...</string>
    </property>
   </action>
  </widget>

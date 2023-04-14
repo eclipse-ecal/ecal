@@ -30,6 +30,7 @@
 #include "widgets/ecalmon_tree_widget/process_widget.h"
 #include "widgets/ecalmon_tree_widget/host_widget.h"
 #include "widgets/ecalmon_tree_widget/service_widget.h"
+#include "widgets/raw_monitoring_data_widget/raw_monitoring_data_widget.h"
 #include "widgets/system_information_widget/system_information_widget.h"
 
 #ifdef _MSC_VER
@@ -90,6 +91,7 @@ private:
   ProcessWidget*           process_widget_;
   HostWidget*              host_widget_;
   ServiceWidget*           service_widget_;
+  RawMonitoringDataWidget* raw_monitoring_data_widget_;
   LogWidget*               log_widget_;
   SystemInformationWidget* syste_information_widget_;
 
