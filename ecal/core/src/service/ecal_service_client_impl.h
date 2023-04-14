@@ -73,7 +73,7 @@ namespace eCAL
     bool IsConnected();
 
     // called by the eCAL::CClientGate to register a service
-    void RegisterService(const std::string& key_, const SServiceAttr& service_);
+    void RegisterService(const std::string& key_, unsigned int version_, const SServiceAttr& service_);
 
     // called by eCAL:CClientGate every second to update registration layer
     void RefreshRegistration();

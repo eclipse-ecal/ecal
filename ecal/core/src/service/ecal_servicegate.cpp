@@ -87,13 +87,15 @@ namespace eCAL
   {
     SClientAttr client;
     const auto& ecal_sample_client = ecal_sample_.client();
-    client.version = ecal_sample_client.version();
     client.hname   = ecal_sample_client.hname();
     client.pname   = ecal_sample_client.pname();
     client.uname   = ecal_sample_client.uname();
     client.sname   = ecal_sample_client.sname();
     client.sid     = ecal_sample_client.sid();
     client.pid     = static_cast<int>(ecal_sample_client.pid());
+
+    // client protocol version
+    unsigned int client_version = ecal_sample_client.version();
 
     // create unique client key
     client.key = client.sname + ":" + client.sid + "@" + std::to_string(client.pid) + "@" + client.hname;
@@ -105,7 +107,7 @@ namespace eCAL
       {
         if (iter->GetServiceName() == client.sname)
         {
-          iter->RegisterClient(client.key, client);
+          iter->RegisterClient(client.key, client_version, client);
         }
       }
     }

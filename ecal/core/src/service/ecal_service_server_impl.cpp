@@ -231,7 +231,7 @@ namespace eCAL
   }
 
   // called by the eCAL::CServiceGate to register a client
-  void CServiceServerImpl::RegisterClient(const std::string& /*key_*/, const SClientAttr& /*client_*/)
+  void CServiceServerImpl::RegisterClient(const std::string& /*key_*/, unsigned int /*version_*/, const SClientAttr& /*client_*/)
   {
     // TODO: CHECK COMPATIBILITY HERE
   }
