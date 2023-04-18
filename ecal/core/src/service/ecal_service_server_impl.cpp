@@ -28,6 +28,7 @@
 #include "ecal_service_server_impl.h"
 
 #include <chrono>
+#include <iostream>
 #include <sstream>
 #include <utility>
 
@@ -37,12 +38,12 @@ namespace eCAL
    * @brief Service server implementation class.
   **/
   CServiceServerImpl::CServiceServerImpl() :
-    m_connected(false), m_created(false)
+    m_created(false), m_connected(false), m_started(false)
   {
   }
 
   CServiceServerImpl::CServiceServerImpl(const std::string& service_name_) :
-    m_connected(false), m_created(false)
+    m_created(false), m_connected(false), m_started(false)
   {
     Create(service_name_);
   }
@@ -64,10 +65,6 @@ namespace eCAL
     counter << std::chrono::steady_clock::now().time_since_epoch().count();
     m_service_id = counter.str();
 
-    m_tcp_server.Create();
-    m_tcp_server.Start(std::bind(&CServiceServerImpl::RequestCallback, this, std::placeholders::_1, std::placeholders::_2),
-                       std::bind(&CServiceServerImpl::EventCallback,   this, std::placeholders::_1, std::placeholders::_2));
-
     if (g_servicegate() != nullptr) g_servicegate()->Register(this);
 
     m_created = true;
@@ -80,7 +77,6 @@ namespace eCAL
     if (!m_created) return(false);
 
     m_tcp_server.Stop();
-    m_tcp_server.Destroy();
 
     if (g_servicegate() != nullptr)           g_servicegate()->Unregister(this);
     if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterServer(m_service_name, m_service_id);
@@ -100,6 +96,7 @@ namespace eCAL
     m_service_name.clear();
     m_service_id.clear();
 
+    m_started   = false;
     m_connected = false;
     m_created   = false;
 
@@ -231,9 +228,25 @@ namespace eCAL
   }
 
   // called by the eCAL::CServiceGate to register a client
-  void CServiceServerImpl::RegisterClient(const std::string& /*key_*/, unsigned int /*version_*/, const SClientAttr& /*client_*/)
+  void CServiceServerImpl::RegisterClient(const std::string& /*key_*/, const SClientAttr& client_)
   {
-    // TODO: CHECK COMPATIBILITY HERE
+    if (m_started)
+    {
+      if (m_tcp_server.GetVersion() != client_.version)
+      {
+        std::cerr << "Incompatible client registration with version: " << client_.version << std::endl << std::endl;
+      }
+    }
+    else
+    {
+      m_tcp_server.Start(client_.version,
+        std::bind(&CServiceServerImpl::RequestCallback, this, std::placeholders::_1, std::placeholders::_2),
+        std::bind(&CServiceServerImpl::EventCallback, this, std::placeholders::_1, std::placeholders::_2));
+
+      std::cout << "Server started with protocol version: " << client_.version << std::endl << std::endl;
+
+      m_started = true;
+    }
   }
 
   // called by eCAL:CServiceGate every second to update registration layer
@@ -250,7 +263,7 @@ namespace eCAL
     eCAL::pb::Sample sample;
     sample.set_cmd_type(eCAL::pb::bct_reg_service);
     auto *service_mutable_service = sample.mutable_service();
-    service_mutable_service->set_version(m_version);
+    service_mutable_service->set_version(m_server_version);
     service_mutable_service->set_hname(Process::GetHostName());
     service_mutable_service->set_pname(Process::GetProcessName());
     service_mutable_service->set_uname(Process::GetUnitName());

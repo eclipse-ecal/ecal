@@ -47,21 +47,20 @@ namespace eCAL
     CTcpServer();
     ~CTcpServer();
 
-    void Create();
-    void Destroy();
-
-    void Start(RequestCallbackT request_callback_, EventCallbackT event_callback_);
+    void Start(unsigned int version_, RequestCallbackT request_callback_, EventCallbackT event_callback_);
     void Stop();
 
     bool IsConnected();
 
     std::shared_ptr<asio::io_service> GetIOService() { return m_io_service; };
     unsigned short GetTcpPort() { return (m_server ? m_server->get_port() : 0); }
+    unsigned int   GetVersion() { return (m_server ? m_version            : 0); }
 
   protected:
     void ServerThread(std::uint32_t port_, RequestCallbackT request_callback_, EventCallbackT event_callback_);
 
     bool                               m_started;
+    unsigned int                       m_version;
 
     std::shared_ptr<asio::io_service>  m_io_service;
     std::shared_ptr<CAsioServer>       m_server;

@@ -94,8 +94,7 @@ namespace eCAL
     client.sid     = ecal_sample_client.sid();
     client.pid     = static_cast<int>(ecal_sample_client.pid());
 
-    // client protocol version
-    unsigned int client_version = ecal_sample_client.version();
+    client.version = static_cast<unsigned int>(ecal_sample_client.version());
 
     // create unique client key
     client.key = client.sname + ":" + client.sid + "@" + std::to_string(client.pid) + "@" + client.hname;
@@ -107,7 +106,7 @@ namespace eCAL
       {
         if (iter->GetServiceName() == client.sname)
         {
-          iter->RegisterClient(client.key, client_version, client);
+          iter->RegisterClient(client.key, client);
         }
       }
     }

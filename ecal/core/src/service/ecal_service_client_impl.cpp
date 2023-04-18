@@ -313,10 +313,8 @@ namespace eCAL
   }
 
   // called by the eCAL::CClientGate to register a service
-  void CServiceClientImpl::RegisterService(const std::string& key_, unsigned int /*version_*/, const SServiceAttr& service_)
+  void CServiceClientImpl::RegisterService(const std::string& key_, const SServiceAttr& service_)
   {
-    // TODO: CHECK COMPATIBILITY HERE
-
     // check connections
     std::lock_guard<std::mutex> const lock(m_connected_services_map_sync);
 
@@ -348,7 +346,7 @@ namespace eCAL
     eCAL::pb::Sample sample;
     sample.set_cmd_type(eCAL::pb::bct_reg_client);
     auto *service_mutable_client = sample.mutable_client();
-    service_mutable_client->set_version(m_version);
+    service_mutable_client->set_version(m_client_version);
     service_mutable_client->set_hname(Process::GetHostName());
     service_mutable_client->set_pname(Process::GetProcessName());
     service_mutable_client->set_uname(Process::GetUnitName());
@@ -407,7 +405,7 @@ namespace eCAL
       if (client == m_client_map.end())
       {
         // create new client for that service
-        std::shared_ptr<CTcpClient> const new_client = std::make_shared<CTcpClient>(iter.hname, iter.tcp_port);
+        std::shared_ptr<CTcpClient> const new_client = std::make_shared<CTcpClient>(iter.hname, iter.tcp_port, iter.version);
         m_client_map[iter.key] = new_client;
       }
     }

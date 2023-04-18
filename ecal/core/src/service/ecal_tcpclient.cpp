@@ -29,18 +29,24 @@
 #include <iostream>
 #include <thread>
 
+namespace
+{
+  constexpr int PROTOCOL_VERSION_0 = 0;
+  constexpr int PROTOCOL_VERSION_1 = 1;
+}
+
 namespace eCAL
 {
   //////////////////////////////////////////////////////////////////
   // CTcpClient
   //////////////////////////////////////////////////////////////////
-  CTcpClient::CTcpClient() : m_created(false), m_connected(false), m_async_request_in_progress(false)
+  CTcpClient::CTcpClient() : m_created(false), m_connected(false), m_version(0), m_async_request_in_progress(false)
   {
   }
 
-  CTcpClient::CTcpClient(const std::string& host_name_, unsigned short port_) : m_created(false), m_connected(false), m_async_request_in_progress(false)
+  CTcpClient::CTcpClient(const std::string& host_name_, unsigned short port_, unsigned int version_) : m_created(false), m_connected(false), m_version(version_), m_async_request_in_progress(false)
   {
-    Create(host_name_, port_);
+    Create(host_name_, port_, version_);
   }
 
   CTcpClient::~CTcpClient()
@@ -48,11 +54,12 @@ namespace eCAL
     Destroy();
   }
 
-  void CTcpClient::Create(const std::string& host_name_, unsigned short port_)
+  void CTcpClient::Create(const std::string& host_name_, unsigned short port_, unsigned int version_)
   {
     if (m_created) return;
 
     m_host_name  = host_name_;
+    m_version    = version_;
     m_io_service = std::make_shared<asio::io_service>();
     m_socket     = std::make_shared<asio::ip::tcp::socket>(*m_io_service);
     asio::ip::tcp::resolver resolver(*m_io_service);
@@ -91,7 +98,7 @@ namespace eCAL
       std::cerr << "CTcpClient::Connect exception: " << e.what() << "\n";
       // mark as not connected
       m_connected = false;
-    }
+      }
 
     // return success
     m_created = true;
@@ -138,7 +145,18 @@ namespace eCAL
 
     if (!m_created) return 0;
 
-    if (!SendRequest(request_)) return 0;
+    if (m_version == PROTOCOL_VERSION_0)
+    {
+      if (!SendRequestV0(request_)) return 0;
+    }
+    else if (m_version == PROTOCOL_VERSION_1)
+    {
+      if (!SendRequestV1(request_)) return 0;
+    }
+    else
+    {
+      std::cerr << "CTcpClient 'ExecuteRequest' called with unknown protocol version: " << m_version << std::endl;
+    }
 
     return ReceiveResponse(response_, timeout_);
   }
@@ -156,8 +174,21 @@ namespace eCAL
       // start waiting for response
       ReceiveResponseAsync(callback, timeout_);
 
-      if (!SendRequest(request_))
-        ExecuteCallback(callback, "", false);
+      if (m_version == PROTOCOL_VERSION_0)
+      {
+        if (!SendRequestV0(request_))
+          ExecuteCallback(callback, "", false);
+      }
+      else if (m_version == PROTOCOL_VERSION_1)
+      {
+        if (!SendRequestV1(request_))
+          ExecuteCallback(callback, "", false);
+      }
+      else
+      {
+        std::cerr << "CTcpClient 'ExecuteRequestAsync' called with unknown protocol version: " << m_version << std::endl;
+      }
+
     }
     else
     {
@@ -166,7 +197,7 @@ namespace eCAL
     }
   }
 
-  bool CTcpClient::SendRequest(const std::string& request_)
+  bool CTcpClient::SendRequestV0(const std::string& request_)
   {
     size_t written(0);
     try
@@ -194,6 +225,53 @@ namespace eCAL
     }
 
     return true;
+  }
+
+  bool CTcpClient::SendRequestV1(const std::string& request_)
+  {
+    size_t written(0);
+    try
+    {
+      // check for old (timeouted ?) reponses
+      const size_t resp_size = m_socket->available();
+      if (resp_size > 0)
+      {
+        std::vector<char> resp_buffer(resp_size);
+        m_socket->read_some(asio::buffer(resp_buffer));
+      }
+
+      std::vector<char> packed_request = PackRequest(request_);
+      std::string packed_request_str(packed_request.begin(), packed_request.end());
+
+      // send payload to server
+      while (written != packed_request.size())
+      {
+        auto bytes_written = m_socket->write_some(asio::buffer(packed_request_str.c_str() + written, packed_request_str.size() - written));
+        written += bytes_written;
+      }
+    }
+    catch (std::exception& e)
+    {
+      std::cerr << "CTcpClient::SendRequest: Failed to send request: " << e.what() << "\n";
+      m_connected = false;
+      return false;
+    }
+
+    return true;
+  }
+
+  std::vector<char> CTcpClient::PackRequest(const std::string& request)
+  {
+    // create header
+    eCAL::STcpHeader tcp_header;
+    // set up package size
+    const size_t psize = request.size();
+    tcp_header.psize_n = htonl(static_cast<uint32_t>(psize));
+    // repack
+    std::vector<char> packed_request(sizeof(tcp_header) + psize);
+    memcpy(packed_request.data(), &tcp_header, sizeof(tcp_header));
+    memcpy(packed_request.data() + sizeof(tcp_header), request.data(), psize);
+    return packed_request;
   }
 
   size_t CTcpClient::ReceiveResponse(std::string& response_, int timeout_)

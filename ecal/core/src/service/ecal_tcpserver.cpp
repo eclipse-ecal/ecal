@@ -28,29 +28,21 @@ namespace eCAL
   //////////////////////////////////////////////////////////////////
   // CTcpServer
   //////////////////////////////////////////////////////////////////
-  CTcpServer::CTcpServer() : m_started(false)
+  CTcpServer::CTcpServer() : m_started(false), m_version(0)
   {
   }
 
   CTcpServer::~CTcpServer()
   {
-    Destroy();
-  }
-
-  void CTcpServer::Create()
-  {
-  }
-
-  void CTcpServer::Destroy()
-  {
     Stop();
   }
 
-  void CTcpServer::Start(RequestCallbackT request_callback_, EventCallbackT event_callback_)
+  void CTcpServer::Start(unsigned int version_, RequestCallbackT request_callback_, EventCallbackT event_callback_)
   {
     if (m_started)           return;
     if (m_server != nullptr) return;
 
+    m_version       = version_;
     m_server_thread = std::thread(&CTcpServer::ServerThread, this, 0, request_callback_, event_callback_);
 
     m_started = true;
@@ -79,7 +71,7 @@ namespace eCAL
   void CTcpServer::ServerThread(std::uint32_t port_, RequestCallbackT request_callback_, EventCallbackT event_callback_)
   {
     m_io_service = std::make_shared<asio::io_service>();
-    m_server     = std::make_shared<CAsioServer>(*m_io_service, static_cast<unsigned short>(port_));
+    m_server     = std::make_shared<CAsioServer>(*m_io_service, m_version, static_cast<unsigned short>(port_));
     
     m_server->add_request_callback1(request_callback_);
     m_server->add_event_callback(event_callback_);

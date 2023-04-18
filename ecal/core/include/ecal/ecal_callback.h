@@ -101,6 +101,8 @@ namespace eCAL
     std::string    sname;         //!< service name
     std::string    sid;           //!< service id
     int            pid = 0;       //!< process id
+
+    unsigned int   version  = 0;  //!< service version
     unsigned short tcp_port = 0;  //!< service tcp port
   };
 
@@ -131,6 +133,8 @@ namespace eCAL
     std::string    sname;         //!< service name
     std::string    sid;           //!< service id
     int            pid = 0;       //!< process id
+
+    unsigned int   version = 0;  //!< client version
   };
 
   /**

@@ -58,11 +58,11 @@ namespace eCAL
     typedef std::function<void(eCAL_Client_Event event, const std::string& message)> EventCallbackT;
 
     CTcpClient();
-    CTcpClient(const std::string& host_name_, unsigned short port_);
+    CTcpClient(const std::string& host_name_, unsigned short port_, unsigned int version_);
 
     ~CTcpClient();
 
-    void Create(const std::string& host_name_, unsigned short port_);
+    void Create(const std::string& host_name_, unsigned short port_, unsigned int version_);
     void Destroy();
 
     bool IsConnected();
@@ -86,13 +86,19 @@ namespace eCAL
     EventCallbackT                          m_event_callback;
     bool                                    m_created;
     bool                                    m_connected;
+    unsigned int                            m_version;
     std::atomic<bool>                       m_async_request_in_progress;
 
   private:
-    bool SendRequest(const std::string &request_);
+    bool SendRequestV0(const std::string &request_);
+    bool SendRequestV1(const std::string& request_);
+
     size_t ReceiveResponse(std::string &response_, int timeout_);
     void ReceiveResponseAsync(AsyncCallbackT callback_, int timeout_);
     void ReceiveResponseData(const size_t size, AsyncCallbackT callback_);
+
     void ExecuteCallback(AsyncCallbackT callback_, const std::string &data_, bool success_);
+
+    std::vector<char> PackRequest(const std::string &request);
   };
 };
