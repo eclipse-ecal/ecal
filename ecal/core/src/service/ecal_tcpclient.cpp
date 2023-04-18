@@ -28,6 +28,7 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
+#include <utility>
 
 namespace
 {
@@ -40,11 +41,7 @@ namespace eCAL
   //////////////////////////////////////////////////////////////////
   // CTcpClient
   //////////////////////////////////////////////////////////////////
-  CTcpClient::CTcpClient() : m_created(false), m_connected(false), m_version(0), m_async_request_in_progress(false)
-  {
-  }
-
-  CTcpClient::CTcpClient(const std::string& host_name_, unsigned short port_, unsigned int version_) : m_created(false), m_connected(false), m_version(version_), m_async_request_in_progress(false)
+  CTcpClient::CTcpClient(const std::string& host_name_, unsigned short port_, unsigned int version_) : m_version(version_), m_async_request_in_progress(false)
   {
     Create(host_name_, port_, version_);
   }
@@ -80,7 +77,7 @@ namespace eCAL
       asio::connect(*m_socket, resolver.resolve({ host_name_, std::to_string(port_) }));
       
       // set TCP no delay, so Nagle's algorithm will not stuff multiple messages in one TCP segment
-      asio::ip::tcp::no_delay no_delay_option(true);
+      asio::ip::tcp::no_delay const no_delay_option(true);
       m_socket->set_option(no_delay_option);
 
       // mark as connected
@@ -122,14 +119,14 @@ namespace eCAL
     m_created                   = false;
   }
 
-  bool CTcpClient::IsConnected()
+  bool CTcpClient::IsConnected() const
   {
     return m_connected;
   }
 
   bool CTcpClient::AddEventCallback(EventCallbackT callback_)
   {
-    m_event_callback = callback_;
+    m_event_callback = std::move(callback_);
     return true;
   }
 
@@ -141,7 +138,7 @@ namespace eCAL
 
   size_t CTcpClient::ExecuteRequest(const std::string& request_, int timeout_, std::string& response_)
   {
-    std::lock_guard<std::mutex> lock(m_socket_write_mutex);
+    std::lock_guard<std::mutex> const lock(m_socket_write_mutex);
 
     if (!m_created) return 0;
 
@@ -161,9 +158,9 @@ namespace eCAL
     return ReceiveResponse(response_, timeout_);
   }
 
-  void CTcpClient::ExecuteRequestAsync(const std::string& request_, int timeout_, AsyncCallbackT callback)
+  void CTcpClient::ExecuteRequestAsync(const std::string& request_, int timeout_, const AsyncCallbackT& callback)
   {
-    std::unique_lock<std::mutex> lock(m_socket_write_mutex);
+    std::unique_lock<std::mutex> const lock(m_socket_write_mutex);
     if (!m_async_request_in_progress)
     {
       m_async_request_in_progress.store(true);
@@ -241,7 +238,7 @@ namespace eCAL
       }
 
       std::vector<char> packed_request = PackRequest(request_);
-      std::string packed_request_str(packed_request.begin(), packed_request.end());
+      std::string const packed_request_str(packed_request.begin(), packed_request.end());
 
       // send payload to server
       while (written != packed_request.size())
@@ -319,7 +316,7 @@ namespace eCAL
       // read stream header (sync)
       else
       {
-        size_t bytes_read = m_socket->read_some(asio::buffer(&tcp_header, sizeof(tcp_header)));
+        size_t const bytes_read = m_socket->read_some(asio::buffer(&tcp_header, sizeof(tcp_header)));
         if (bytes_read != sizeof(tcp_header)) read_failed = true;
         else                                  read_done   = true;
       }
@@ -358,9 +355,9 @@ namespace eCAL
       {
         const size_t buffer_size(1024);
         char buffer[buffer_size];
-        size_t bytes_left    = rsize - response_.size();
-        size_t bytes_to_read = std::min(buffer_size, bytes_left);
-        size_t bytes_read    = m_socket->read_some(asio::buffer(buffer, bytes_to_read));
+        size_t const bytes_left    = rsize - response_.size();
+        size_t const bytes_to_read = std::min(buffer_size, bytes_left);
+        size_t const bytes_read    = m_socket->read_some(asio::buffer(buffer, bytes_to_read));
         response_ += std::string(buffer, bytes_read);
 
         //std::cout << "CTcpClient::ReceiveResponse read response bytes " << bytes_read << " to " << response_.size() << std::endl;
@@ -377,7 +374,7 @@ namespace eCAL
     }
   }
 
-  void CTcpClient::ReceiveResponseAsync(AsyncCallbackT callback_, int /*timeout_*/)
+  void CTcpClient::ReceiveResponseAsync(const AsyncCallbackT& callback_, int /*timeout_*/)
   {
     // TODO: Actually implement this function
     
@@ -404,7 +401,7 @@ namespace eCAL
     //  }
     //);
 
-    std::shared_ptr<STcpHeader> tcp_header = std::make_shared<STcpHeader>();
+    std::shared_ptr<STcpHeader> const tcp_header = std::make_shared<STcpHeader>();
     //std::unique_lock<std::mutex> lock(m_socket_read_mutex);
 
     m_socket->async_read_some(asio::buffer(tcp_header.get(), sizeof(tcp_header)),
@@ -425,7 +422,7 @@ namespace eCAL
       });
   }
 
-  void CTcpClient::ReceiveResponseData(const size_t size_, AsyncCallbackT callback_)
+  void CTcpClient::ReceiveResponseData(const size_t size_, const AsyncCallbackT& callback_)
   {
     std::string data(size_, ' ');
     asio::error_code ec;
@@ -437,7 +434,7 @@ namespace eCAL
     else ExecuteCallback(callback_, data, true);
   }
 
-  void CTcpClient::ExecuteCallback(AsyncCallbackT callback_, const std::string &data_, bool success_)
+  void CTcpClient::ExecuteCallback(const AsyncCallbackT& callback_, const std::string &data_, bool success_)
   {
     m_async_request_in_progress = false;
     callback_(data_, success_);

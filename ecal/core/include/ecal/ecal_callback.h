@@ -36,19 +36,11 @@ namespace eCAL
   **/
   struct SReceiveCallbackData
   {
-    SReceiveCallbackData()
-    {
-      buf   = nullptr;
-      size  = 0;
-      id    = 0;
-      time  = 0;
-      clock = 0;
-    };
-    void*     buf;    //!< payload buffer
-    long      size;   //!< payload buffer size
-    long long id;     //!< publisher id (SetId())
-    long long time;   //!< publisher send time in µs
-    long long clock;  //!< publisher send clock
+    void*     buf   = nullptr;  //!< payload buffer
+    long      size  = 0;        //!< payload buffer size
+    long long id    = 0;        //!< publisher id (SetId())
+    long long time  = 0;        //!< publisher send time in µs
+    long long clock = 0;        //!< publisher send clock
   };
 
   /**
@@ -56,18 +48,12 @@ namespace eCAL
   **/
   struct SPubEventCallbackData
   {
-    SPubEventCallbackData()
-    {
-      type  = pub_event_none;
-      time  = 0;
-      clock = 0;
-    };
-    eCAL_Publisher_Event type;    //!< publisher event type
-    long long            time;    //!< publisher event time in µs
-    long long            clock;   //!< publisher event clock
-    std::string          tid;     //!< topic id of the of the connected subscriber              (for pub_event_update_connection only)
-    std::string          ttype;   //!< topic type information of the connected subscriber       (for pub_event_update_connection only)
-    std::string          tdesc;   //!< topic descriptor information of the connected subscriber (for pub_event_update_connection only)
+    eCAL_Publisher_Event type  = pub_event_none;  //!< publisher event type
+    long long            time  = 0;               //!< publisher event time in µs
+    long long            clock = 0;               //!< publisher event clock
+    std::string          tid;                     //!< topic id of the of the connected subscriber              (for pub_event_update_connection only)
+    std::string          ttype;                   //!< topic type information of the connected subscriber       (for pub_event_update_connection only)
+    std::string          tdesc;                   //!< topic descriptor information of the connected subscriber (for pub_event_update_connection only)
   };
 
   /**
@@ -75,18 +61,12 @@ namespace eCAL
   **/
   struct SSubEventCallbackData
   {
-    SSubEventCallbackData()
-    {
-      type  = sub_event_none;
-      time  = 0;
-      clock = 0;
-    };
-    eCAL_Subscriber_Event type;   //!< subscriber event type
-    long long             time;   //!< subscriber event time in µs
-    long long             clock;  //!< subscriber event clock
-    std::string           tid;    //!< topic id of the of the connected publisher              (for sub_event_update_connection only)
-    std::string           ttype;  //!< topic type information of the connected publisher       (for sub_event_update_connection only)
-    std::string           tdesc;  //!< topic descriptor information of the connected publisher (for sub_event_update_connection only)
+    eCAL_Subscriber_Event type  = sub_event_none;  //!< subscriber event type
+    long long             time  = 0;               //!< subscriber event time in µs
+    long long             clock = 0;               //!< subscriber event clock
+    std::string           tid;                     //!< topic id of the of the connected publisher              (for sub_event_update_connection only)
+    std::string           ttype;                   //!< topic type information of the connected publisher       (for sub_event_update_connection only)
+    std::string           tdesc;                   //!< topic descriptor information of the connected publisher (for sub_event_update_connection only)
   };
 
   /**
@@ -111,14 +91,9 @@ namespace eCAL
   **/
   struct SClientEventCallbackData
   {
-    SClientEventCallbackData()
-    {
-      type = client_event_none;
-      time = 0;
-    };
-    eCAL_Client_Event type;  //!< event type
-    long long         time;  //!< event time in µs
-    SServiceAttr      attr;  //!< event related service attributes
+    eCAL_Client_Event type = client_event_none;  //!< event type
+    long long         time = 0;                  //!< event time in µs
+    SServiceAttr      attr;                      //!< event related service attributes
   };
 
   /**
@@ -134,7 +109,7 @@ namespace eCAL
     std::string    sid;           //!< service id
     int            pid = 0;       //!< process id
 
-    unsigned int   version = 0;  //!< client version
+    unsigned int   version = 0;   //!< client version
   };
 
   /**
@@ -142,13 +117,8 @@ namespace eCAL
   **/
   struct SServerEventCallbackData
   {
-    SServerEventCallbackData()
-    {
-      type = server_event_none;
-      time = 0;
-    };
-    eCAL_Server_Event type;  //!< event type
-    long long         time;  //!< event time in µs
+    eCAL_Server_Event type = server_event_none;  //!< event type
+    long long         time = 0;                  //!< event time in µs
   };
 
   /**
@@ -157,12 +127,12 @@ namespace eCAL
    * @param topic_name_  The topic name of the received message.
    * @param data_        Data struct containing payload, timestamp and publication clock.
   **/
-  typedef std::function<void(const char* topic_name_, const struct SReceiveCallbackData* data_)> ReceiveCallbackT;
+  using ReceiveCallbackT = std::function<void (const char *, const struct SReceiveCallbackData *)>;
 
   /**
    * @brief Timer callback function type.
   **/
-  typedef std::function<void(void)> TimerCallbackT;
+  using TimerCallbackT = std::function<void ()>;
 
   /**
    * @brief Registration callback type.
@@ -170,37 +140,37 @@ namespace eCAL
    * @param sample_       The sample protocol buffer registration payload buffer.
    * @param sample_size_  The payload buffer size.
   **/
-  typedef std::function<void(const char* sample_, int sample_size_)> RegistrationCallbackT;
+  using RegistrationCallbackT = std::function<void (const char *, int)>;
 
   /**
    * @brief Publisher event callback function type.
    *
    * @param topic_name_  The topic name of the publisher that triggered the event.
-   * @param data_        Event callback data structure with the event specific informations.
+   * @param data_        Event callback data structure with the event specific information.
   **/
-  typedef std::function<void(const char* topic_name_, const struct SPubEventCallbackData* data_)> PubEventCallbackT;
+  using PubEventCallbackT = std::function<void (const char *, const struct SPubEventCallbackData *)>;
 
   /**
    * @brief Subscriber event callback function type.
    *
    * @param topic_name_  The topic name of the subscriber that triggered the event.
-   * @param data_        Event callback data structure with the event specific informations.
+   * @param data_        Event callback data structure with the event specific information.
   **/
-  typedef std::function<void(const char* topic_name_, const struct SSubEventCallbackData* data_)> SubEventCallbackT;
+  using SubEventCallbackT = std::function<void (const char *, const struct SSubEventCallbackData *)>;
 
   /**
    * @brief Client event callback function type.
    *
    * @param name_  The name of the connection that triggered the event.
-   * @param data_  Event callback data structure with the event specific informations.
+   * @param data_  Event callback data structure with the event specific information.
   **/
-  typedef std::function<void(const char* name_, const struct SClientEventCallbackData* data_)> ClientEventCallbackT;
+  using ClientEventCallbackT = std::function<void (const char *, const struct SClientEventCallbackData *)>;
 
   /**
    * @brief Server event callback function type.
    *
    * @param name_  The name of the connection that triggered the event.
-   * @param data_  Event callback data structure with the event specific informations.
+   * @param data_  Event callback data structure with the event specific information.
   **/
-  typedef std::function<void(const char* name_, const struct SServerEventCallbackData* data_)> ServerEventCallbackT;
+  using ServerEventCallbackT = std::function<void (const char *, const struct SServerEventCallbackData *)>;
 };

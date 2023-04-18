@@ -54,18 +54,23 @@ namespace eCAL
   class CTcpClient
   {
   public:
-    typedef std::function<void(const std::string& data_, bool successful_)> AsyncCallbackT;
-    typedef std::function<void(eCAL_Client_Event event, const std::string& message)> EventCallbackT;
+    using AsyncCallbackT = std::function<void (const std::string &, bool)>;
+    using EventCallbackT = std::function<void (eCAL_Client_Event, const std::string &)>;
 
-    CTcpClient();
+    CTcpClient() = default;
     CTcpClient(const std::string& host_name_, unsigned short port_, unsigned int version_);
-
     ~CTcpClient();
+
+    CTcpClient(const CTcpClient &) = delete;
+    CTcpClient(CTcpClient &&) noexcept = delete;
+
+    CTcpClient& operator=(const CTcpClient &) = delete;
+    CTcpClient& operator=(CTcpClient &&) noexcept = delete;
 
     void Create(const std::string& host_name_, unsigned short port_, unsigned int version_);
     void Destroy();
 
-    bool IsConnected();
+    bool IsConnected() const;
 
     std::string GetHostName() { return m_host_name; }
 
@@ -73,7 +78,7 @@ namespace eCAL
     bool RemEventCallback();
 
     size_t ExecuteRequest(const std::string& request_, int timeout_, std::string& response_);
-    void ExecuteRequestAsync(const std::string& request_, int timeout_, AsyncCallbackT callback);
+    void ExecuteRequestAsync(const std::string& request_, int timeout_, const AsyncCallbackT& callback);
 
   protected:
     std::string                             m_host_name;
@@ -84,9 +89,9 @@ namespace eCAL
     std::shared_ptr<asio::io_service::work> m_idle_work;
     std::shared_ptr<asio::ip::tcp::socket>  m_socket;
     EventCallbackT                          m_event_callback;
-    bool                                    m_created;
-    bool                                    m_connected;
-    unsigned int                            m_version;
+    bool                                    m_created = false;
+    bool                                    m_connected = false;
+    unsigned int                            m_version = 0;
     std::atomic<bool>                       m_async_request_in_progress;
 
   private:
@@ -94,10 +99,10 @@ namespace eCAL
     bool SendRequestV1(const std::string& request_);
 
     size_t ReceiveResponse(std::string &response_, int timeout_);
-    void ReceiveResponseAsync(AsyncCallbackT callback_, int timeout_);
-    void ReceiveResponseData(const size_t size, AsyncCallbackT callback_);
+    void ReceiveResponseAsync(const AsyncCallbackT& callback_, int timeout_);
+    void ReceiveResponseData(size_t size, const AsyncCallbackT& callback_);
 
-    void ExecuteCallback(AsyncCallbackT callback_, const std::string &data_, bool success_);
+    void ExecuteCallback(const AsyncCallbackT& callback_, const std::string &data_, bool success_);
 
     std::vector<char> PackRequest(const std::string &request);
   };

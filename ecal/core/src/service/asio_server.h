@@ -300,10 +300,9 @@ private:
 class CAsioServer
 {
 public:
-  CAsioServer(asio::io_service& io_service, unsigned int version, unsigned short port)
-    : io_service_(io_service),
-    acceptor_(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port)),
-    connect_cnt_(0)
+  CAsioServer(asio::io_service& io_service, unsigned int version, unsigned short port) :
+    io_service_(io_service),
+    acceptor_(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
   {
     start_accept(version);
   }
@@ -394,5 +393,5 @@ private:
   asio::ip::tcp::acceptor  acceptor_;
   RequestCallbackT         request_cb_;
   EventCallbackT           event_cb_;
-  int                      connect_cnt_;
+  int                      connect_cnt_ = 0;
 };
