@@ -93,18 +93,18 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CSubGate::Register(const std::string& topic_name_, CDataReader* datareader_)
+  bool CSubGate::Register(const std::string& topic_name_, std::shared_ptr<CDataReader> datareader_)
   {
     if(!m_created) return(false);
 
     // register reader
     std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    m_topic_name_datareader_map.emplace(std::pair<std::string, CDataReader*>(topic_name_, datareader_));
+    m_topic_name_datareader_map.emplace(std::pair<std::string, std::shared_ptr<CDataReader>>(topic_name_, datareader_));
 
     return(true);
   }
 
-  bool CSubGate::Unregister(const std::string& topic_name_, CDataReader* datareader_)
+  bool CSubGate::Unregister(const std::string& topic_name_, std::shared_ptr<CDataReader> datareader_)
   {
     if(!m_created) return(false);
     bool ret_state = false;

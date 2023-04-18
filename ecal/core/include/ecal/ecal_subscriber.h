@@ -28,6 +28,7 @@
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_qos.h>
 
+#include <memory>
 #include <set>
 #include <string>
 
@@ -78,13 +79,13 @@ namespace eCAL
    * @endcode
   **/
 
-  class ECAL_API CSubscriber
+  class CSubscriber
   {
   public:
     /**
      * @brief Constructor. 
     **/
-    CSubscriber();
+    ECAL_API CSubscriber();
 
     /**
      * @brief Constructor. 
@@ -93,32 +94,32 @@ namespace eCAL
      * @param topic_type_   Type name (optional for type checking).
      * @param topic_desc_   Type description (optional for description checking).
      **/
-    CSubscriber(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+    ECAL_API CSubscriber(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
 
     /**
      * @brief Destructor. 
     **/
-    virtual ~CSubscriber();
+    ECAL_API virtual ~CSubscriber();
 
     /**
      * @brief CSubscribers are non-copyable
     **/
-    CSubscriber(const CSubscriber&) = delete;
+    ECAL_API CSubscriber(const CSubscriber&) = delete;
 
     /**
      * @brief CSubscribers are non-copyable
     **/
-    CSubscriber& operator=(const CSubscriber&) = delete;
+    ECAL_API CSubscriber& operator=(const CSubscriber&) = delete;
 
     /**
      * @brief CSubscribers are move-enabled
     **/
-    CSubscriber(CSubscriber&& rhs) noexcept;
+    ECAL_API CSubscriber(CSubscriber&& rhs) noexcept;
 
     /**
      * @brief CSubscribers are move-enabled
     **/
-    CSubscriber& operator=(CSubscriber&& rhs) noexcept;
+    ECAL_API CSubscriber& operator=(CSubscriber&& rhs) noexcept;
 
     /**
      * @brief Creates this object. 
@@ -129,14 +130,14 @@ namespace eCAL
      *
      * @return  true if it succeeds, false if it fails. 
     **/
-    bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+    ECAL_API bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
 
     /**
      * @brief Destroys this object. 
      *
      * @return  true if it succeeds, false if it fails. 
     **/
-    bool Destroy();
+    ECAL_API bool Destroy();
 
     /**
      * @brief Set subscriber quality of service attributes.
@@ -145,14 +146,14 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool SetQOS(const QOS::SReaderQOS& qos_);
+    ECAL_API bool SetQOS(const QOS::SReaderQOS& qos_);
 
     /**
      * @brief Get current subscriber quality of service attributes.
      *
      * @return  Quality of service attributes.
     **/
-    QOS::SReaderQOS GetQOS();
+    ECAL_API QOS::SReaderQOS GetQOS();
 
     /**
      * @brief Set a set of id's to prefiltering topics (see CPublisher::SetID).
@@ -161,7 +162,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool SetID(const std::set<long long>& id_set_);
+    ECAL_API bool SetID(const std::set<long long>& id_set_);
 
     /**
      * @brief Sets subscriber attribute. 
@@ -172,7 +173,7 @@ namespace eCAL
      * @return  True if it succeeds, false if it fails. 
      * @experimental
     **/
-    bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
+    ECAL_API bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
 
     /**
      * @brief Removes subscriber attribute. 
@@ -182,7 +183,7 @@ namespace eCAL
      * @return  True if it succeeds, false if it fails.
      * @experimental
     **/
-    bool ClearAttribute(const std::string& attr_name_);
+    ECAL_API bool ClearAttribute(const std::string& attr_name_);
 
     /**
      * @brief Receive a message from the publisher. 
@@ -194,7 +195,7 @@ namespace eCAL
      * @return  Length of received buffer. 
     **/
     [[deprecated]]
-    size_t Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const;
+    ECAL_API size_t Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const;
 
     /**
      * @brief Receive a message from the publisher (able to process zero length buffer).
@@ -205,7 +206,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool ReceiveBuffer(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const;
+    ECAL_API bool ReceiveBuffer(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const;
 
     /**
      * @brief Add callback function for incoming receives. 
@@ -214,14 +215,14 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not. 
     **/
-    bool AddReceiveCallback(ReceiveCallbackT callback_);
+    ECAL_API bool AddReceiveCallback(ReceiveCallbackT callback_);
 
     /**
      * @brief Remove callback function for incoming receives. 
      *
      * @return  True if succeeded, false if not. 
     **/
-    bool RemReceiveCallback();
+    ECAL_API bool RemReceiveCallback();
 
     /**
      * @brief Add callback function for subscriber events.
@@ -231,7 +232,7 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not.
     **/
-    bool AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_);
+    ECAL_API bool AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_);
 
     /**
      * @brief Remove callback function for subscriber events.
@@ -240,42 +241,42 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not.
     **/
-    bool RemEventCallback(eCAL_Subscriber_Event type_);
+    ECAL_API bool RemEventCallback(eCAL_Subscriber_Event type_);
 
     /**
      * @brief Query if this object is created. 
      *
      * @return  true if created, false if not. 
     **/
-    bool IsCreated() const {return(m_created);}
+    ECAL_API bool IsCreated() const {return(m_created);}
 
     /**
      * @brief Query the number of publishers. 
      *
      * @return  Number of publishers. 
     **/
-    size_t GetPublisherCount() const;
+    ECAL_API size_t GetPublisherCount() const;
 
     /**
      * @brief Gets name of the connected topic. 
      *
      * @return  The topic name. 
     **/
-    std::string GetTopicName() const;
+    ECAL_API std::string GetTopicName() const;
 
     /**
      * @brief Gets type of the connected topic. 
      *
      * @return  The type name. 
     **/
-    std::string GetTypeName() const;
+    ECAL_API std::string GetTypeName() const;
 
     /**
      * @brief Gets description of the connected topic. 
      *
      * @return  The description. 
     **/
-    std::string GetDescription() const;
+    ECAL_API std::string GetDescription() const;
 
     /**
      * @brief Set the timeout parameter for triggering
@@ -285,7 +286,7 @@ namespace eCAL
      *
      * @return  True if succeeded, false if not.
     **/
-    bool SetTimeout(int timeout_);
+    ECAL_API bool SetTimeout(int timeout_);
 
     /**
      * @brief Dump the whole class state into a string. 
@@ -294,14 +295,14 @@ namespace eCAL
      *
      * @return  The dump sting. 
     **/
-    std::string Dump(const std::string& indent_ = "") const;
+    ECAL_API std::string Dump(const std::string& indent_ = "") const;
 
   protected:
     void InitializeQOS();
     bool ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
 
     // class members
-    CDataReader*                     m_datareader;
+    std::shared_ptr<CDataReader>     m_datareader;
     struct ECAL_API QOS::SReaderQOS  m_qos;
     bool                             m_created;
     bool                             m_initialized;

@@ -43,8 +43,8 @@ namespace eCAL
     void Create();
     void Destroy();
 
-    bool Register(const std::string& topic_name_, CDataReader* datareader_);
-    bool Unregister(const std::string& topic_name_, CDataReader* datareader_);
+    bool Register(const std::string& topic_name_, std::shared_ptr<CDataReader> datareader_);
+    bool Unregister(const std::string& topic_name_, std::shared_ptr<CDataReader> datareader_);
 
     bool HasSample(const std::string& sample_name_);
     size_t ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_);
@@ -62,7 +62,7 @@ namespace eCAL
     static std::atomic<bool> m_created;
 
     // database data reader
-    typedef std::unordered_multimap<std::string, CDataReader*> TopicNameDataReaderMapT;
+    typedef std::unordered_multimap<std::string, std::shared_ptr<CDataReader>> TopicNameDataReaderMapT;
     std::shared_timed_mutex  m_topic_name_datareader_sync;
     TopicNameDataReaderMapT  m_topic_name_datareader_map;
 
