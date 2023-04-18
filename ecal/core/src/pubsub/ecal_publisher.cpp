@@ -126,7 +126,7 @@ namespace eCAL
     if (m_tlayer.sm_inproc  == TLayer::smode_none) m_tlayer.sm_inproc = Config::GetPublisherInprocMode();
 
     // create data writer
-    m_datawriter = new CDataWriter();
+    m_datawriter = std::make_shared<CDataWriter>();
     // set qos
     m_datawriter->SetQOS(m_qos);
     // set transport layer
@@ -176,8 +176,7 @@ namespace eCAL
 #endif
 
     // free datawriter
-    delete m_datawriter;
-    m_datawriter = nullptr;
+    m_datawriter.reset();
 
     // we made it :-)
     m_created = false;
