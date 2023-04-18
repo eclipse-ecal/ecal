@@ -154,12 +154,22 @@ namespace eCAL
       auto& ecal_sample_content_payload = ecal_sample_content.payload();
       g_process_rbytes_sum += ecal_sample_.content().payload().size();
 
-      // apply sample to data reader
-      std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-      auto res = m_topic_name_datareader_map.equal_range(ecal_sample_.topic().tname());
-      for (auto it = res.first; it != res.second; ++it)
+      std::vector<std::shared_ptr<CDataReader>> readers_to_apply;
+
+      // Lock the sync map only while extracting the relevant shared pointers to the Datareaders.
+      // Apply the samples to the readers afterwards.
       {
-        sent = it->second->AddSample(
+        // apply sample to data reader
+        std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
+        auto res = m_topic_name_datareader_map.equal_range(ecal_sample_.topic().tname());
+        std::transform(
+          res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second; }
+        );
+      }
+
+      for (const auto& reader : readers_to_apply)
+      {
+        sent = reader->AddSample(
           ecal_sample_.topic().tid(),
           ecal_sample_content_payload.data(),
           ecal_sample_content_payload.size(),
@@ -181,7 +191,7 @@ namespace eCAL
 
   size_t CSubGate::ApplySample(const std::string& topic_name_, const std::string& topic_id_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_, eCAL::pb::eTLayerType layer_)
   {
-    if(!m_created) return 0;
+    if (!m_created) return 0;
 
     // update globals
     g_process_rclock++;
@@ -189,11 +199,22 @@ namespace eCAL
 
     // apply sample to data reader
     size_t sent(0);
-    std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    auto res = m_topic_name_datareader_map.equal_range(topic_name_);
-    for (auto it = res.first; it != res.second; ++it)
+    std::vector<std::shared_ptr<CDataReader>> readers_to_apply;
+
+    // Lock the sync map only while extracting the relevant shared pointers to the Datareaders.
+    // Apply the samples to the readers afterwards.
     {
-      sent = it->second->AddSample(topic_id_, buf_, len_, id_, clock_, time_, hash_, layer_);
+      std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
+      auto res = m_topic_name_datareader_map.equal_range(topic_name_);
+      std::transform(
+        res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second; }
+      );
+    }
+
+
+    for (const auto& reader : readers_to_apply)
+    {
+      sent = reader->AddSample(topic_id_, buf_, len_, id_, clock_, time_, hash_, layer_);
     }
 
     return sent;
