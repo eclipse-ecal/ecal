@@ -42,7 +42,7 @@ namespace eCAL
         meas->GetEntriesInfo(channel_name, entry_infos);
       }
 
-      virtual BinaryFrame operator[](const base::SEntryInfo& entry)
+      virtual BinaryFrame operator[](const base::EntryInfo& entry)
       {
         size_t message_size;
         meas->GetEntryDataSize(entry.ID, message_size);
@@ -134,7 +134,7 @@ namespace eCAL
       bool operator!=(const IChannel& rhs) const { return !(operator==(rhs)); }
 
       //virtual Entry<T> operator[](unsigned long long timestamp);
-      virtual Frame<T> operator[](const base::SEntryInfo& entry)
+      virtual Frame<T> operator[](const base::EntryInfo& entry)
       {
         auto binary_entry = binary_channel[entry];
         eCAL::message::Deserialize(binary_entry.message, message);

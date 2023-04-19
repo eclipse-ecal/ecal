@@ -44,10 +44,10 @@ namespace eCAL
     //!< @endcond
 
     // Remove @eCAL6 -> backwards compatibility with old interface!
-    using SEntryInfo = eCAL::measurement::base::SEntryInfo;
+    using SEntryInfo = eCAL::measurement::base::EntryInfo;
     using EntryInfoSet = eCAL::measurement::base::EntryInfoSet;
     using EntryInfoVect = eCAL::measurement::base::EntryInfoVect;
-    using eAccessType = eCAL::measurement::base::eAccessType;
+    using eAccessType = eCAL::measurement::base::AccessType;
     using eCAL::measurement::base::RDONLY;
     using eCAL::measurement::base::CREATE;
   }  // namespace eh5

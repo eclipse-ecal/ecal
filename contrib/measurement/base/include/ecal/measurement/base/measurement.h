@@ -38,7 +38,7 @@ namespace eCAL
     namespace base
     {
     /**
-     * @brief eCAL HDF5 measurement API
+     * @brief eCAL measurement API
     **/
     class Measurement
     {
@@ -47,15 +47,6 @@ namespace eCAL
        * @brief Constructor
       **/
       Measurement() = default;
-
-      /**
-       * @brief Constructor
-       *
-       * @param path     Input file path / measurement directory path (see meas directory structure description bellow, in Open method).
-       * @param access   Access type
-       *
-      **/
-      //explicit Measurement(const std::string& path, eAccessType access = eAccessType::RDONLY);
 
       /**
        * @brief Destructor
@@ -85,21 +76,21 @@ namespace eCAL
        *                  - hosts directories:                                  |_Host1 (e.g.: CARPC01)
        *                                                                        |_Host2 (e.g.: CARPC02)
        *
-       *                 File path as input (eAccessType::RDONLY):
+       *                 File path as input (AccessType::RDONLY):
        *                  - root directory (e.g.: M:\measurement_directory\measurement01) in this case all hosts subdirectories will be iterated,
        *                  - host directory (e.g.: M:\measurement_directory\measurement01\CARPC01),
        *                  - file path, path to file from measurement (e.g.: M:\measurement_directory\measurement01\CARPC01\meas01_05.hdf5).
        *
-       *                 File path as output (eAccessType::CREATE):
+       *                 File path as output (AccessType::CREATE):
        *                  - full path to  measurement directory (recommended with host name) (e.g.: M:\measurement_directory\measurement01\CARPC01),
        *                  - to set the name of the actual hdf5 file use SetFileBaseName method.
        *
        * @param access   Access type
        *
-       * @return         true if output (eAccessType::CREATE) measurement directory structure can be accessed/created, false otherwise.
-       *                 true if input (eAccessType::RDONLY) measurement/file path was opened, false otherwise.
+       * @return         true if output (AccessType::CREATE) measurement directory structure can be accessed/created, false otherwise.
+       *                 true if input (AccessType::RDONLY) measurement/file path was opened, false otherwise.
       **/
-      virtual bool Open(const std::string& path, eAccessType access = eAccessType::RDONLY)  = 0;
+      virtual bool Open(const std::string& path, AccessType access = AccessType::RDONLY)  = 0;
 
       /**
        * @brief Close file

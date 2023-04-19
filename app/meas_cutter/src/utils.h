@@ -339,6 +339,6 @@ namespace eCALMeasCutterUtils
   {
     ChannelInfo _channel_info;
     TimestampSet _timestamps;
-    std::unordered_map<Timestamp, eCAL::measurement::base::SEntryInfo> _timestamp_entry_info_map;
+    std::unordered_map<Timestamp, eCAL::measurement::base::EntryInfo> _timestamp_entry_info_map;
   };
 }

@@ -33,7 +33,7 @@ namespace eCAL
       /**
        * @brief Info struct for a single measurement entry
       **/
-      struct SEntryInfo
+      struct EntryInfo
       {
         long long RcvTimestamp;   //!< Receive time stamp
         long long ID;             //!< Channel ID
@@ -42,22 +42,22 @@ namespace eCAL
         long long SndID;          //!< Send ID
 
         //!< @cond
-        SEntryInfo() : RcvTimestamp(0), ID(0), SndClock(0), SndTimestamp(0), SndID(0) {}
+        EntryInfo() : RcvTimestamp(0), ID(0), SndClock(0), SndTimestamp(0), SndID(0) {}
 
-        SEntryInfo(long long rcv_timestamp, long long id) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(0), SndTimestamp(0), SndID(0) {}
+        EntryInfo(long long rcv_timestamp, long long id) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(0), SndTimestamp(0), SndID(0) {}
 
-        SEntryInfo(long long rcv_timestamp, long long id, long long snd_clock) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(snd_clock), SndTimestamp(0), SndID(0) {}
+        EntryInfo(long long rcv_timestamp, long long id, long long snd_clock) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(snd_clock), SndTimestamp(0), SndID(0) {}
 
-        SEntryInfo(long long rcv_timestamp, long long id, long long snd_clock, long long snd_timestamp) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(snd_clock), SndTimestamp(snd_timestamp), SndID(0) {}
+        EntryInfo(long long rcv_timestamp, long long id, long long snd_clock, long long snd_timestamp) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(snd_clock), SndTimestamp(snd_timestamp), SndID(0) {}
 
-        SEntryInfo(long long rcv_timestamp, long long id, long long snd_clock, long long snd_timestamp, long long snd_id) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(snd_clock), SndTimestamp(snd_timestamp), SndID(snd_id) {}
+        EntryInfo(long long rcv_timestamp, long long id, long long snd_clock, long long snd_timestamp, long long snd_id) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(snd_clock), SndTimestamp(snd_timestamp), SndID(snd_id) {}
 
-        bool operator==(const SEntryInfo& other) const
+        bool operator==(const EntryInfo& other) const
         {
           return (ID == other.ID && SndTimestamp == other.SndTimestamp && RcvTimestamp == other.RcvTimestamp && SndClock == other.SndClock && SndID == other.SndID);
         }
 
-        bool operator<(const SEntryInfo& other) const
+        bool operator<(const EntryInfo& other) const
         {
           return (RcvTimestamp < other.RcvTimestamp);
         }
@@ -67,17 +67,17 @@ namespace eCAL
       /**
        * @brief eCAL HDF5 entries (as set container)
       **/
-      typedef std::set<SEntryInfo>    EntryInfoSet;
+      typedef std::set<EntryInfo>    EntryInfoSet;
 
       /**
        * @brief eCAL HDF5 entries (as vector container)
       **/
-      typedef std::vector<SEntryInfo> EntryInfoVect;
+      typedef std::vector<EntryInfo> EntryInfoVect;
 
       /**
        * @brief eCAL Measurement Access types
       **/
-      enum eAccessType
+      enum AccessType
       {
         RDONLY,
         CREATE
