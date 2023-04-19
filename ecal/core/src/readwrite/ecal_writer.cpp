@@ -415,8 +415,9 @@ namespace eCAL
 
     // can we do a zero copy write ?
     bool const allow_zero_copy =
-          m_writer.shm_mode.activated
-      && !m_writer.inproc_mode.activated
+          m_zero_copy                       // zero copy mode activated by user
+      &&  m_writer.shm_mode.activated       // shm layer active
+      && !m_writer.inproc_mode.activated    // all other layers not active
       && !m_writer.udp_mc_mode.activated
       && !m_writer.tcp_mode.activated;
 
