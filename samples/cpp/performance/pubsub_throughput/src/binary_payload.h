@@ -23,25 +23,25 @@
 #include <cstring>
 
 // a binary payload
-class CBinaryPayload : public eCAL::CPayload
+class CBinaryPayload : public eCAL::CPayloadWriter
 {
 public:
   CBinaryPayload(size_t size_) : size(size_) {}
 
-  bool WriteComplete(void* buf_, size_t len_) override
+  bool Write(void* buf_, size_t len_) override
   {
-    // write complete content to shared memory
+    // write complete content to the shared memory file
     if (len_ < size) return false;
     memset(buf_, 42, size);
     return true;
   };
 
-  bool WritePartial(void* buf_, size_t len_) override
+  bool Update(void* buf_, size_t len_) override
   {
-    // write partial content to shared memory
+    // update content of the shared memory file
     if (len_ < size) return false;
-    size_t write_idx((clock % 1024) % len_);
-    char   write_chr(clock % 10 + 48);
+    size_t const write_idx((clock % 1024) % len_);
+    char   const write_chr(clock % 10 + 48);
     static_cast<char*>(buf_)[write_idx] = write_chr;
     clock++;
     return true;

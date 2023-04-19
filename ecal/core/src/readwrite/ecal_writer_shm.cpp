@@ -42,10 +42,6 @@ namespace eCAL
 {
   const std::string CDataWriterSHM::m_memfile_base_name = "ecal_";
 
-  CDataWriterSHM::CDataWriterSHM()
-  {
-  }
-  
   CDataWriterSHM::~CDataWriterSHM()
   {
     Destroy();
@@ -166,12 +162,12 @@ namespace eCAL
     return ret_state;
   }
 
-  bool CDataWriterSHM::Write(CPayload& payload_, const SWriterAttr& attr_)
+  bool CDataWriterSHM::Write(CPayloadWriter& payload_, const SWriterAttr& attr_)
   {
     if (!m_created) return false;
 
     // write content
-    bool sent = m_memory_file_vec[m_write_idx]->Write(payload_, attr_);
+    bool const sent = m_memory_file_vec[m_write_idx]->Write(payload_, attr_);
 
     // and increment file index
     m_write_idx++;

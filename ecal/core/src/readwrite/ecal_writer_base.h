@@ -57,7 +57,7 @@ namespace eCAL
     virtual std::string GetConnectionParameter() { return ""; };
 
     virtual bool PrepareWrite(const SWriterAttr& /*attr_*/) { return false; };
-    virtual bool Write(CPayload& /*payload_*/, const SWriterAttr& /*attr_*/) { return false; };
+    virtual bool Write(CPayloadWriter& /*payload_*/, const SWriterAttr& /*attr_*/) { return false; };
     virtual bool Write(const void* const /*buf_*/, const SWriterAttr& /*attr_*/) { return false; };
 
   protected:

@@ -401,7 +401,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CDataWriter::Write(CPayload& payload_, long long time_, long long id_)
+  bool CDataWriter::Write(CPayloadWriter& payload_, long long time_, long long id_)
   {
     // check writer modes
     if (!CheckWriterModes())
@@ -426,7 +426,7 @@ namespace eCAL
     if (!allow_zero_copy)
     {
       m_payload_buffer.resize(payload_buf_size);
-      payload_.WriteComplete(m_payload_buffer.data(), m_payload_buffer.size());
+      payload_.Write(m_payload_buffer.data(), m_payload_buffer.size());
     }
 
     // prepare counter and internal states

@@ -32,13 +32,13 @@
 namespace eCAL
 {
   // specific payload class to wrap classic (void*, size_t) interface
-  class CBufferPayload : public CPayload
+  class CBufferPayload : public CPayloadWriter
   {
   public:
     CBufferPayload(const void* const buf_, size_t len_) : m_buf(buf_), m_buf_len(len_) {};
 
     // make a dump memory copy
-    bool WriteComplete (void* buf_, size_t len_) override {
+    bool Write (void* buf_, size_t len_) override {
       if (len_ < m_buf_len) return false;
       if (m_buf == nullptr) return false;
       if (m_buf_len == 0)   return false;

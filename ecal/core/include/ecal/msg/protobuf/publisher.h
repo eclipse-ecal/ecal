@@ -54,7 +54,7 @@ namespace eCAL
     template <typename T>
     class CPublisher : public eCAL::CPublisher
     {
-      class CPayload : public eCAL::CPayload
+      class CPayload : public eCAL::CPayloadWriter
       {
       public:
         CPayload(const google::protobuf::Message& message_) :
@@ -68,7 +68,7 @@ namespace eCAL
         CPayload& operator=(const CPayload&) = delete;
         CPayload& operator=(CPayload&&) noexcept = delete;
 
-        bool WriteComplete(void* buf_, size_t len_) override
+        bool Write(void* buf_, size_t len_) override
         {
           return message.SerializeToArray(buf_, (int)len_);
         }

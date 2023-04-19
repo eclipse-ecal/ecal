@@ -52,7 +52,7 @@ namespace eCAL
     template <typename message_type>
     class CPublisher : eCAL::CPublisher
     {
-      class CPayload : public eCAL::CPayload
+      class CPayload : public eCAL::CPayloadWriter
       {
       public:
         CPayload(const capnp::MallocMessageBuilder& message_builder_) :
@@ -66,7 +66,7 @@ namespace eCAL
         CPayload& operator=(const CPayload&) = delete;
         CPayload& operator=(CPayload&&) noexcept = delete;
 
-        bool WriteComplete(void* buf_, size_t len_) override
+        bool Write(void* buf_, size_t len_) override
         {
           kj::Array<capnp::word> words = capnp::messageToFlatArray(const_cast<capnp::MallocMessageBuilder&>(message_builder));
           kj::ArrayPtr<kj::byte> bytes = words.asBytes();

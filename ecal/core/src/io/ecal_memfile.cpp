@@ -313,7 +313,7 @@ namespace eCAL
     }
   }
 
-  size_t CMemoryFile::WritePayload(CPayload& payload_, const size_t len_, const size_t offset_)
+  size_t CMemoryFile::WritePayload(CPayloadWriter& payload_, const size_t len_, const size_t offset_)
   {
     if (!m_created) return(0);
 
@@ -323,10 +323,10 @@ namespace eCAL
       // (re)write complete buffer
       if (!m_payload_initialized)
       {
-        bool const success = payload_.WriteComplete(static_cast<char*>(wbuf) + offset_, len_);
+        bool const success = payload_.Write(static_cast<char*>(wbuf) + offset_, len_);
         if (!success)
         {
-          printf("Could not write payload content to the memory file (CPayload::WriteComplete returned false): %s.\n\n", m_name.c_str());
+          printf("Could not write payload content to the memory file (CPayload::Write returned false): %s.\n\n", m_name.c_str());
         }
         else
         {
@@ -336,10 +336,10 @@ namespace eCAL
       else
       {
         // apply update to write buffer
-        bool const success = payload_.WritePartial(static_cast<char*>(wbuf) + offset_, len_);
+        bool const success = payload_.Update(static_cast<char*>(wbuf) + offset_, len_);
         if (!success)
         {
-          printf("Could not write payload content to the memory file (CPayload::WritePartial returned false): %s.\n\n", m_name.c_str());
+          printf("Could not write payload content to the memory file (CPayload::Update returned false): %s.\n\n", m_name.c_str());
         }
       }
 

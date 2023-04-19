@@ -53,7 +53,7 @@ namespace eCAL
     bool Disconnect(const std::string& process_id_);
 
     bool CheckSize(size_t size_);
-    bool Write(CPayload& payload_, const SWriterAttr& data_);
+    bool Write(CPayloadWriter& payload_, const SWriterAttr& data_);
 
     std::string GetName() const;
 

@@ -28,31 +28,30 @@
 
 namespace eCAL
 {
-  // base payload class to allow zero memory operation
+  // base payload class to allow zero memory operations
   // 
-  // the `WriteComplete`and `WritePartial` calls perform 
-  // write/copy operations on the target memory directly
-  class CPayload
+  // the `Write`and `Update` calls may operate on the target memory file directly (zero copy mode)
+  class CPayloadWriter
   {
   public:
-    CPayload() = default;
-    virtual ~CPayload() = default;
+    CPayloadWriter() = default;
+    virtual ~CPayloadWriter() = default;
 
-    CPayload(const CPayload &) = delete;
-    CPayload(CPayload &&) noexcept = default;
+    CPayloadWriter(const CPayloadWriter &) = delete;
+    CPayloadWriter(CPayloadWriter &&) = default;
 
-    CPayload& operator=(const CPayload &) = delete;
-    CPayload& operator=(CPayload &&) noexcept = default;
+    CPayloadWriter& operator=(const CPayloadWriter &) = delete;
+    CPayloadWriter& operator=(CPayloadWriter &&) = default;
 
     // the provisioned memory is uninitialized ->
     // perform a full write operation
-    virtual bool WriteComplete (void* buf_, size_t len_) = 0;
+    virtual bool Write(void* buffer_, size_t size_) = 0;
 
     // the provisioned memory is initialized and contains the data from the last write operation ->
     // perform a partial write operation or just modify a few bytes here
     //
-    // by default this operation will just call `WriteComplete`
-    virtual bool WritePartial  (void* buf_, size_t len_) { return WriteComplete(buf_, len_); };
+    // by default this operation will just call `Write`
+    virtual bool Update(void* buffer_, size_t size_) { return Write(buffer_, size_); };
 
     // provide the size of the required memory (eCAL needs to allocate for you).
     virtual size_t GetSize() = 0;

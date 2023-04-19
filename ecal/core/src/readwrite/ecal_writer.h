@@ -75,7 +75,7 @@ namespace eCAL
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
     bool RemEventCallback(eCAL_Publisher_Event type_);
 
-    bool Write(CPayload& payload_, long long time_, long long id_);
+    bool Write(CPayloadWriter& payload_, long long time_, long long id_);
 
     void ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_);
     void RemoveLocSubscription(const std::string & process_id_);
@@ -93,7 +93,7 @@ namespace eCAL
     bool IsExtSubscribed() const {return(m_ext_subscribed);}
     size_t GetSubscriberCount() const
     {
-      std::lock_guard<std::mutex> lock(m_sub_map_sync);
+      std::lock_guard<std::mutex> const lock(m_sub_map_sync);
       return(m_loc_sub_map.size() + m_ext_sub_map.size());
     }
 
@@ -139,13 +139,13 @@ namespace eCAL
     std::vector<char>  m_payload_buffer;
 
     std::atomic<bool>  m_connected;
-    typedef Util::CExpMap<std::string, bool> ConnectedMapT;
+    using ConnectedMapT = Util::CExpMap<std::string, bool>;
     mutable std::mutex m_sub_map_sync;
     ConnectedMapT      m_loc_sub_map;
     ConnectedMapT      m_ext_sub_map;
 
     std::mutex         m_event_callback_map_sync;
-    typedef std::map<eCAL_Publisher_Event, PubEventCallbackT> EventCallbackMapT;
+    using EventCallbackMapT = std::map<eCAL_Publisher_Event, PubEventCallbackT>;
     EventCallbackMapT  m_event_callback_map;
 
     long long          m_id;
