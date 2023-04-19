@@ -24,6 +24,9 @@
 
 #pragma once 
 
+#include <set>
+#include <vector>
+
 namespace eCAL
 {
   namespace measurement
@@ -67,12 +70,12 @@ namespace eCAL
       /**
        * @brief eCAL HDF5 entries (as set container)
       **/
-      typedef std::set<EntryInfo>    EntryInfoSet;
+      using EntryInfoSet = std::set<EntryInfo>;
 
       /**
        * @brief eCAL HDF5 entries (as vector container)
       **/
-      typedef std::vector<EntryInfo> EntryInfoVect;
+      using EntryInfoVect = std::vector<EntryInfo>;
 
       /**
        * @brief eCAL Measurement Access types
