@@ -88,15 +88,17 @@ namespace eCAL
   {
     SServiceAttr service;
     const auto& ecal_sample_service = ecal_sample_.service();
-    service.hname    = ecal_sample_service.hname();
-    service.pname    = ecal_sample_service.pname();
-    service.uname    = ecal_sample_service.uname();
-    service.sname    = ecal_sample_service.sname();
-    service.sid      = ecal_sample_service.sid();
-    service.pid      = static_cast<int>(ecal_sample_service.pid());
+    service.hname       = ecal_sample_service.hname();
+    service.pname       = ecal_sample_service.pname();
+    service.uname       = ecal_sample_service.uname();
+    service.sname       = ecal_sample_service.sname();
+    service.sid         = ecal_sample_service.sid();
+    service.pid         = static_cast<int>(ecal_sample_service.pid());
 
-    service.version  = static_cast<unsigned int>(ecal_sample_service.version());
-    service.tcp_port = static_cast<unsigned short>(ecal_sample_service.tcp_port());
+    // internal protocol specifics
+    service.version     = static_cast<unsigned int>(ecal_sample_service.version());
+    service.tcp_port_v0 = static_cast<unsigned short>(ecal_sample_service.tcp_port_v0());
+    service.tcp_port_v1 = static_cast<unsigned short>(ecal_sample_service.tcp_port_v1());
 
     // store description
     for (const auto& method : ecal_sample_service.methods())

@@ -47,7 +47,7 @@ namespace eCAL
   class CServiceServerImpl
   {
   public:
-    CServiceServerImpl();
+    CServiceServerImpl() = default;
     CServiceServerImpl(const std::string& service_name_);
 
     ~CServiceServerImpl();
@@ -101,7 +101,8 @@ namespace eCAL
       , const std::string& resp_type_name_
       , const std::string& resp_type_desc_);
 
-    CTcpServer            m_tcp_server;
+    CTcpServer            m_tcp_server_v0;
+    CTcpServer            m_tcp_server_v1;
 
     static constexpr int  m_server_version = 1;
     
@@ -121,8 +122,8 @@ namespace eCAL
     using EventCallbackMapT = std::map<eCAL_Server_Event, ServerEventCallbackT>;
     EventCallbackMapT     m_event_callback_map;
     
-    bool                  m_created;
-    bool                  m_connected;
-    bool                  m_started;
+    bool                  m_created      = false;
+    bool                  m_connected_v0 = false;
+    bool                  m_connected_v1 = false;
   };
 }

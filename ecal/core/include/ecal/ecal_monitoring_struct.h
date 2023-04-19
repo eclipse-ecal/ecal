@@ -156,14 +156,7 @@ namespace eCAL
 
     struct SServerMon                                           //<! eCAL Server struct
     {
-      SServerMon()
-      {
-        rclock   = 0;
-        pid      = 0;
-        tcp_port = 0;
-      };
-
-      int                      rclock;                          //<! registration clock    
+      int                      rclock = 0;                      //<! registration clock    
       std::string              hname;                           //<! host name
       std::string              pname;                           //<! process name
       std::string              uname;                           //<! unit name
@@ -172,7 +165,8 @@ namespace eCAL
       std::string              sname;                           //<! service name
       std::string              sid;                             //<! service id
 
-      int                      tcp_port;                        //<! the tcp port used for that service
+      int                      tcp_port_v0 = 0;                 //<! the tcp port protocol version 0 used for that service
+      int                      tcp_port_v1 = 0;                 //<! the tcp port protocol version 1 used for that service
 
       std::vector<SMethodMon>  methods;                         //<! list of methods
     };

@@ -405,8 +405,18 @@ namespace eCAL
       if (client == m_client_map.end())
       {
         // create new client for that service
-        std::shared_ptr<CTcpClient> const new_client = std::make_shared<CTcpClient>(iter.hname, iter.tcp_port, iter.version);
-        m_client_map[iter.key] = new_client;
+        // we check if we have a port v1, so we have a server running protocol v1
+        if (iter.tcp_port_v1 != 0)
+        {
+          std::shared_ptr<CTcpClient> const new_client = std::make_shared<CTcpClient>(iter.hname, iter.tcp_port_v1, iter.version);
+          m_client_map[iter.key] = new_client;
+        }
+        // fallback to protocol v0
+        else
+        {
+          std::shared_ptr<CTcpClient> const new_client = std::make_shared<CTcpClient>(iter.hname, iter.tcp_port_v0, iter.version);
+          m_client_map[iter.key] = new_client;
+        }
       }
     }
   }

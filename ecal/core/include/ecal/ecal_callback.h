@@ -74,16 +74,18 @@ namespace eCAL
   **/
   struct SServiceAttr
   {
-    std::string    key;           //!< unique service key (internal)
-    std::string    hname;         //!< host name
-    std::string    pname;         //!< process name
-    std::string    uname;         //!< process unit name
-    std::string    sname;         //!< service name
-    std::string    sid;           //!< service id
-    int            pid = 0;       //!< process id
+    std::string    key;              //!< unique service key (internal)
+    std::string    hname;            //!< host name
+    std::string    pname;            //!< process name
+    std::string    uname;            //!< process unit name
+    std::string    sname;            //!< service name
+    std::string    sid;              //!< service id
+    int            pid         = 0;  //!< process id
 
-    unsigned int   version  = 0;  //!< service version
-    unsigned short tcp_port = 0;  //!< service tcp port
+    // internal protocol specifics
+    unsigned int   version     = 0;  //!< service protocol version
+    unsigned short tcp_port_v0 = 0;  //!< service tcp port protocol version 0
+    unsigned short tcp_port_v1 = 0;  //!< service tcp port protocol version 1
   };
 
   /**
