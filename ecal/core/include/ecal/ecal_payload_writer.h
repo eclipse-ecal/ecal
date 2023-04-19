@@ -25,6 +25,7 @@
 #pragma once
 
 #include <cstddef>
+#include <cstring>
 
 namespace eCAL
 {
@@ -61,7 +62,7 @@ namespace eCAL
   class CBufferPayloadWriter : public CPayloadWriter
   {
   public:
-    CBufferPayload(const void* const buffer_, size_t size_) : m_buffer(buffer_), m_size(size_) {};
+    CBufferPayloadWriter(const void* const buffer_, size_t size_) : m_buffer(buffer_), m_size(size_) {};
 
     // make a dump memory copy
     bool Write (void* buffer_, size_t size_) override {
