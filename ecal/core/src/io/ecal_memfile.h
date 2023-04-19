@@ -27,7 +27,7 @@
 #include <array>
 #include <cstdint>
 
-#include <ecal/ecal_payload.h>
+#include <ecal/ecal_payload_writer.h>
 
 #include "ecal_memfile_info.h"
 #include "ecal_named_mutex.h"

@@ -24,7 +24,7 @@
 #include <thread>
 #include <tclap/CmdLine.h>
 
-#include "binary_payload.h"
+#include "binary_payload_writer.h"
 
 // warmup runs not to measure
 const int warmups(100);

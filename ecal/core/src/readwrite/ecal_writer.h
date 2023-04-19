@@ -24,7 +24,7 @@
 #pragma once
 
 #include <ecal/ecal_callback.h>
-#include <ecal/ecal_payload.h>
+#include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_tlayer.h>
 
 #include "ecal_def.h"

@@ -18,8 +18,8 @@
 */
 
 /**
- * @file   ecal_payload.h
- * @brief  eCAL payload
+ * @file   ecal_payload_writer.h
+ * @brief  eCAL payload writer base class
 **/
 
 #pragma once
@@ -37,10 +37,10 @@ namespace eCAL
     CPayloadWriter() = default;
     virtual ~CPayloadWriter() = default;
 
-    CPayloadWriter(const CPayloadWriter &) = delete;
+    CPayloadWriter(const CPayloadWriter &) = default;
     CPayloadWriter(CPayloadWriter &&) = default;
 
-    CPayloadWriter& operator=(const CPayloadWriter &) = delete;
+    CPayloadWriter& operator=(const CPayloadWriter &) = default;
     CPayloadWriter& operator=(CPayloadWriter &&) = default;
 
     // the provisioned memory is uninitialized ->

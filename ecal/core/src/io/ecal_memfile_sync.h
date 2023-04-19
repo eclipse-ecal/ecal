@@ -24,7 +24,7 @@
 #pragma once
 
 #include <ecal/ecal_eventhandle.h>
-#include <ecal/ecal_payload.h>
+#include <ecal/ecal_payload_writer.h>
 
 #include "readwrite/ecal_writer_data.h"
 #include "ecal_memfile.h"

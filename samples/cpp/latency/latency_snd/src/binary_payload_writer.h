@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <ecal/ecal_payload.h>
+#include <ecal/ecal_payload_writer.h>
 #include <cstring>
 
 // a binary payload

@@ -26,7 +26,7 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_callback.h>
-#include <ecal/ecal_payload.h>
+#include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_qos.h>
 #include <ecal/ecal_tlayer.h>
 

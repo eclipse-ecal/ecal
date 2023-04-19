@@ -24,7 +24,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "binary_payload.h"
+#include "binary_payload_writer.h"
 
 // performance settings
 const bool   zero_copy              (true);
