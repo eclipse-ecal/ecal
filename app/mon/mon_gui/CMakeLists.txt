@@ -112,6 +112,8 @@ set(source_files
     src/widgets/plugin_settings_dialog/plugin_settings_dialog.cpp
     src/widgets/plugin_settings_dialog/plugin_settings_dialog.h
 
+    src/widgets/raw_monitoring_data_widget/protobuf_highlighter.cpp
+    src/widgets/raw_monitoring_data_widget/protobuf_highlighter.h
     src/widgets/raw_monitoring_data_widget/raw_monitoring_data_widget.cpp
     src/widgets/raw_monitoring_data_widget/raw_monitoring_data_widget.h
 

@@ -22,6 +22,8 @@
 #include <QWidget>
 #include "ui_raw_monitoring_data_widget.h"
 
+#include "protobuf_highlighter.h"
+
 // Include the monitoring pb header
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -47,7 +49,20 @@ public slots:
 
 private slots:
   void saveToFile();
+  void searchForString(const QString& search_string);
+
+protected:
+  void changeEvent(QEvent* event) override;
+
+private:
+  void chooseCorrectHighlighting();
 
 private:
   Ui::RawMonitoringDataWidget ui_;
+
+  ProtobufHighlighter* protobuf_highlighter_;
+
+  QAction* search_clear_action_;
+  QAction* search_down_action_;
+  QAction* search_up_action_;
 };

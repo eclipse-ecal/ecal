@@ -59,6 +59,23 @@
        </widget>
       </item>
       <item>
+       <widget class="QLineEdit" name="search_lineedit">
+        <property name="placeholderText">
+         <string>Search</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="occurences_label">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>0 occurences</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -99,6 +116,7 @@
      <property name="font">
       <font>
        <family>Courier New</family>
+       <pointsize>12</pointsize>
       </font>
      </property>
      <property name="placeholderText">

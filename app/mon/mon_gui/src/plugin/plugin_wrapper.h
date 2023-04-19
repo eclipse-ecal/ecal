@@ -39,7 +39,7 @@ public:
       {
         QString name;
         QString type;
-        QString format;
+        QString format_;
       };
 
       QVector<Topic> topics;

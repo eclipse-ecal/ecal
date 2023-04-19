@@ -48,9 +48,9 @@ static QString GetTopicDisplayString(const PluginWrapper::PluginData::MetaData::
 {
   auto name = (!topic.name.isEmpty()) ? topic.name : QString("*");
   auto type = (!topic.type.isEmpty()) ? topic.type : QString("*");
-  auto format = (!topic.format.isEmpty()) ? topic.format : QString("*");
+  auto format_ = (!topic.format_.isEmpty()) ? topic.format_ : QString("*");
 
-  return name + "(" + format + ":" + type + ")";
+  return name + "(" + format_ + ":" + type + ")";
 }
 
 QVariant PluginTableModel::data(const QModelIndex &index, int role) const// override

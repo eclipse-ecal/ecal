@@ -181,7 +181,7 @@ void TopicWidget::loadRegExpLists()
   include_string = QString::fromStdString(eCAL::Config::GetMonitoringFilterIncludeList()); //ini.GetValue(MON_SECTION_S, MON_FILTER_INCL_S);
 
 
-  // The ecal.ini defines a very strange regex format: A filter consists of
+  // The ecal.ini defines a very strange regex format_: A filter consists of
   // several regular expressions divided by "," or ";". Thus we have to
   // split the string into 'actual' regular expressions. This will break every
   // regular expression that properly uses a ",". We cannot do anything about

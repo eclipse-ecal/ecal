@@ -37,10 +37,10 @@ QPair<QString, QString> splitTopicType(const QString& topic_type)
   if (position == std::string::npos)
     return qMakePair(QString(), topic_type);
 
-  auto format = std_topic_type.substr(0, position);
+  auto format_ = std_topic_type.substr(0, position);
   std_topic_type.erase(0, position + 1);
 
-  return qMakePair(QString(format.c_str()), QString(std_topic_type.c_str()));
+  return qMakePair(QString(format_.c_str()), QString(std_topic_type.c_str()));
 }
 
 PluginWrapper::PluginData::MetaData jsonToMetaStruct(const QJsonObject& json)
@@ -60,7 +60,7 @@ PluginWrapper::PluginData::MetaData jsonToMetaStruct(const QJsonObject& json)
     auto json_topic_toObject = json_topic.toObject();
     topic.name = json_topic_toObject.contains("Name") ? json_topic_toObject["Name"].toString() : QString();
     topic.type = json_topic_toObject.contains("Type") ? json_topic_toObject["Type"].toString() : QString();
-    topic.format = json_topic_toObject.contains("Format") ? json_topic_toObject["Format"].toString() : QString();
+    topic.format_ = json_topic_toObject.contains("Format") ? json_topic_toObject["Format"].toString() : QString();
 
     meta_data.topics.push_back(topic);
   }
@@ -167,7 +167,7 @@ bool AcceptsTopic(const PluginWrapper & wrapper, QString topic_name, QString top
     if (
       (topic.name.isEmpty() || (topic.name == topic_name)) &&
       (topic.type.isEmpty() || (topic.type == splitTopicType(topic_type).second)) &&
-      (topic.format.isEmpty() || (topic.format == splitTopicType(topic_type).first))
+      (topic.format_.isEmpty() || (topic.format_ == splitTopicType(topic_type).first))
       )
     {
       return true;
