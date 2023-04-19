@@ -27,7 +27,6 @@
 
 #include "ecal_config_reader_hlp.h"
 #include "ecal_globals.h"
-#include "ecal_buffer_payload.h" //@Rex should this be public API?
 
 #include "readwrite/ecal_writer.h"
 
@@ -322,7 +321,7 @@ namespace eCAL
 
   size_t CPublisher::Send(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
   {
-    CBufferPayload payload{ buf_, len_ };
+    CBufferPayloadWriter payload{ buf_, len_ };
     return Send(payload, time_, acknowledge_timeout_ms_);
   }
 

@@ -56,4 +56,27 @@ namespace eCAL
     // provide the size of the required memory (eCAL needs to allocate for you).
     virtual size_t GetSize() = 0;
   };
+
+  // specific payload writer class to wrap classic (void*, size_t) interface
+  class CBufferPayloadWriter : public CPayloadWriter
+  {
+  public:
+    CBufferPayload(const void* const buffer_, size_t size_) : m_buffer(buffer_), m_size(size_) {};
+
+    // make a dump memory copy
+    bool Write (void* buffer_, size_t size_) override {
+      if (size_ < m_size)      return false;
+      if (m_buffer == nullptr) return false;
+      if (m_size == 0)         return false;
+      memcpy(buffer_, m_buffer, m_size);
+      return true;
+    }
+
+    // size of the memory that needs to be copied
+    size_t GetSize() override { return m_size; };
+  
+  private:
+    const void* const m_buffer = nullptr;
+    size_t            m_size   = 0;
+  };
 }
