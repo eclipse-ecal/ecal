@@ -24,24 +24,20 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_config.h>
 
-#include <ecal/ecal_core.h>
-
 #include "ecal_config_reader_hlp.h"
 #include "ecal_monitoring_impl.h"
-
-#include "ecal_def.h"
 
 #include <regex>
 #include <sstream>
 
 #include "../ecal_registration_receiver.h"
 
-namespace eCAL
+namespace
 {
   ////////////////////////////////////////////////////////
   // local helper
   ////////////////////////////////////////////////////////
-  static void GetSampleHost(const eCAL::pb::Sample& ecal_sample_, std::string& host_name_)
+  void GetSampleHost(const eCAL::pb::Sample& ecal_sample_, std::string& host_name_)
   {
     if (ecal_sample_.has_host())
     {
@@ -65,16 +61,18 @@ namespace eCAL
     }
   }
 
-  static bool IsLocalHost(const eCAL::pb::Sample& ecal_sample_)
+  bool IsLocalHost(const eCAL::pb::Sample& ecal_sample_)
   {
     std::string host_name;
     GetSampleHost(ecal_sample_, host_name);
     if (host_name.empty())                   return(false);
-    if (host_name == Process::GetHostName()) return(true);
+    if (host_name == eCAL::Process::GetHostName()) return(true);
     return(false);
   }
+}
 
-
+namespace eCAL
+{
   ////////////////////////////////////////
   // Monitoring Implementation
   ////////////////////////////////////////
@@ -86,10 +84,6 @@ namespace eCAL
     m_subscriber_map(std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
     m_server_map    (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
     m_clients_map   (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs()))
-  {
-  }
-
-  CMonitoringImpl::~CMonitoringImpl()
   {
   }
 
@@ -107,14 +101,14 @@ namespace eCAL
     g_registration_receiver()->SetCustomApplySampleCallback([this](const auto& ecal_sample_){ApplySample(ecal_sample_, eCAL::pb::tl_none);});
 
     // start logging receive thread
-    CLoggingReceiveThread::LogMessageCallbackT logmsg_cb = std::bind(&CMonitoringImpl::RegisterLogMessage, this, std::placeholders::_1);
+    CLoggingReceiveThread::LogMessageCallbackT const logmsg_cb = std::bind(&CMonitoringImpl::RegisterLogMessage, this, std::placeholders::_1);
     m_log_rcv_threadcaller = std::make_shared<CLoggingReceiveThread>(logmsg_cb);
     m_log_rcv_threadcaller->SetNetworkMode(Config::IsNetworkEnabled());
 
     // start monitoring and logging publishing thread
     // we really need to remove this feature !
-    CMonLogPublishingThread::MonitoringCallbackT mon_cb = std::bind(&CMonitoringImpl::GetMonitoringPb, this, std::placeholders::_1, Monitoring::Entity::All);
-    CMonLogPublishingThread::LoggingCallbackT    log_cb = std::bind(&CMonitoringImpl::GetLogging, this, std::placeholders::_1);
+    CMonLogPublishingThread::MonitoringCallbackT const mon_cb = std::bind(&CMonitoringImpl::GetMonitoringPb, this, std::placeholders::_1, Monitoring::Entity::All);
+    CMonLogPublishingThread::LoggingCallbackT    const log_cb = std::bind(&CMonitoringImpl::GetLogging, this, std::placeholders::_1);
     m_pub_threadcaller = std::make_shared<CMonLogPublishingThread>(mon_cb, log_cb);
 
     // setup blacklist and whitelist filter strings#
@@ -149,24 +143,24 @@ namespace eCAL
     {
       // create excluding filter list
       {
-        std::lock_guard<std::mutex> lock(m_topic_filter_excl_mtx);
+        std::lock_guard<std::mutex> const lock(m_topic_filter_excl_mtx);
         Tokenize(m_topic_filter_excl_s, m_topic_filter_excl, ",;", true);
       }
 
       // create including filter list
       {
-        std::lock_guard<std::mutex> lock(m_topic_filter_incl_mtx);
+        std::lock_guard<std::mutex> const lock(m_topic_filter_incl_mtx);
         Tokenize(m_topic_filter_incl_s, m_topic_filter_incl, ",;", true);
       }
     }
     else
     {
       {
-        std::lock_guard<std::mutex> lock(m_topic_filter_excl_mtx);
+        std::lock_guard<std::mutex> const lock(m_topic_filter_excl_mtx);
         m_topic_filter_excl.clear();
       }
       {
-        std::lock_guard<std::mutex> lock(m_topic_filter_incl_mtx);
+        std::lock_guard<std::mutex> const lock(m_topic_filter_incl_mtx);
         m_topic_filter_incl.clear();
       }
     }
@@ -174,7 +168,7 @@ namespace eCAL
 
   size_t CMonitoringImpl::ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/)
   {
-    // if sample is from outside and we are in local network mode
+    // if sample is from outside, and we are in local network mode
     // do not process sample
     if (!IsLocalHost(ecal_sample_) && !m_network) return 0;
 
@@ -224,31 +218,31 @@ namespace eCAL
 
   bool CMonitoringImpl::RegisterTopic(const eCAL::pb::Sample& sample_, enum ePubSub pubsub_type_)
   {
-    auto sample_topic = sample_.topic();
-    int          process_id      = sample_topic.pid();
-    std::string  topic_name      = sample_topic.tname();
-    size_t       topic_size      = static_cast<size_t>(sample_topic.tsize());
+    const auto& sample_topic = sample_.topic();
+    int          const process_id  = sample_topic.pid();
+    std::string  topic_name        = sample_topic.tname();
+    size_t       const topic_size  = static_cast<size_t>(sample_topic.tsize());
     bool         topic_tlayer_ecal_udp_mc(false);
     bool         topic_tlayer_ecal_shm(false);
     bool         topic_tlayer_ecal_tcp(false);
     bool         topic_tlayer_inproc(false);
-    for (auto layer : sample_topic.tlayer())
+    for (const auto& layer : sample_topic.tlayer())
     {
       topic_tlayer_ecal_udp_mc    |= (layer.type() == eCAL::pb::tl_ecal_udp_mc)    && layer.confirmed();
       topic_tlayer_ecal_shm       |= (layer.type() == eCAL::pb::tl_ecal_shm)       && layer.confirmed();
       topic_tlayer_ecal_tcp       |= (layer.type() == eCAL::pb::tl_ecal_tcp)       && layer.confirmed();
       topic_tlayer_inproc         |= (layer.type() == eCAL::pb::tl_inproc)         && layer.confirmed();
     }
-    size_t       connections_loc = static_cast<size_t>(sample_topic.connections_loc());
-    size_t       connections_ext = static_cast<size_t>(sample_topic.connections_ext());
-    long long    did             = sample_topic.did();
-    long long    dclock          = sample_topic.dclock();
-    long long    message_drops   = sample_topic.message_drops();
-    long         dfreq           = sample_topic.dfreq();
+    size_t       const connections_loc = static_cast<size_t>(sample_topic.connections_loc());
+    size_t       const connections_ext = static_cast<size_t>(sample_topic.connections_ext());
+    long long    const did             = sample_topic.did();
+    long long    const dclock          = sample_topic.dclock();
+    long long    const message_drops   = sample_topic.message_drops();
+    long         const dfreq           = sample_topic.dfreq();
 
     // check blacklist topic filter
     {
-      std::lock_guard<std::mutex> lock(m_topic_filter_excl_mtx);
+      std::lock_guard<std::mutex> const lock(m_topic_filter_excl_mtx);
       for (const auto& it : m_topic_filter_excl)
       {
         if (std::regex_match(topic_name, std::regex(it, std::regex::icase)))
@@ -259,7 +253,7 @@ namespace eCAL
     // check whitelist topic filter
     bool is_topic_in_filter(false);
     {
-      std::lock_guard<std::mutex> lock(m_topic_filter_incl_mtx);
+      std::lock_guard<std::mutex> const lock(m_topic_filter_incl_mtx);
       is_topic_in_filter = m_topic_filter_incl.empty();
       for (const auto& it : m_topic_filter_incl)
       {
@@ -271,19 +265,19 @@ namespace eCAL
       }
     }
 
-    if (is_topic_in_filter == false) return (false);
+    if (!is_topic_in_filter) return (false);
 
     /////////////////////////////////
     // register in topic map
     /////////////////////////////////
     STopicMonMap* pTopicMap = GetMap(pubsub_type_);
-    if (pTopicMap)
+    if (pTopicMap != nullptr)
     {
       // acquire access
-      std::lock_guard<std::mutex> lock(pTopicMap->sync);
+      std::lock_guard<std::mutex> const lock(pTopicMap->sync);
 
       // common infos
-      int         host_id              = sample_topic.hid();
+      int         const host_id        = sample_topic.hid();
       std::string host_name            = sample_topic.hname();
       std::string process_name         = sample_topic.pname();
       std::string unit_name            = sample_topic.uname();
@@ -305,7 +299,7 @@ namespace eCAL
       auto attr                        = sample_topic.attr();
 
       // try to get topic info
-      std::string topic_name_id = topic_name + topic_id;
+      std::string const topic_name_id = topic_name + topic_id;
       Monitoring::STopicMon& TopicInfo = (*pTopicMap->map)[topic_name_id];
 
       // set static content
@@ -341,33 +335,33 @@ namespace eCAL
 
   bool CMonitoringImpl::RegisterProcess(const eCAL::pb::Sample& sample_)
   {
-    auto sample_process = sample_.process();
-    std::string     host_name                    = sample_process.hname();
-    std::string     process_name                 = sample_process.pname();
-    int             process_id                   = sample_process.pid();
-    std::string     process_param                = sample_process.pparam();
-    std::string     unit_name                    = sample_process.uname();
-    long long       process_memory               = sample_process.pmemory();
-    float           process_cpu                  = sample_process.pcpu();
-    float           process_usrptime             = sample_process.usrptime();
-    long long       process_datawrite            = sample_process.datawrite();
-    long long       process_dataread             = sample_process.dataread();
-    auto            sample_process_state         = sample_process.state();
-    int             process_state_severity       = sample_process_state.severity();
-    int             process_state_severity_level = sample_process_state.severity_level();
-    std::string     process_state_info           = sample_process_state.info();
-    int             process_tsync_state          = sample_process.tsync_state();
-    std::string     process_tsync_mod_name       = sample_process.tsync_mod_name();
-    int             component_init_state         = sample_process.component_init_state();
-    std::string     component_init_info          = sample_process.component_init_info();
-    std::string     ecal_runtime_version         = sample_process.ecal_runtime_version();
+    const auto& sample_process = sample_.process();
+    std::string     host_name                          = sample_process.hname();
+    std::string     process_name                       = sample_process.pname();
+    int             const process_id                   = sample_process.pid();
+    std::string     process_param                      = sample_process.pparam();
+    std::string     unit_name                          = sample_process.uname();
+    long long       const process_memory               = sample_process.pmemory();
+    float           const process_cpu                  = sample_process.pcpu();
+    float           const process_usrptime             = sample_process.usrptime();
+    long long       const process_datawrite            = sample_process.datawrite();
+    long long       const process_dataread             = sample_process.dataread();
+    const auto&     sample_process_state               = sample_process.state();
+    int             const process_state_severity       = sample_process_state.severity();
+    int             const process_state_severity_level = sample_process_state.severity_level();
+    std::string     process_state_info                 = sample_process_state.info();
+    int             const process_tsync_state          = sample_process.tsync_state();
+    std::string     process_tsync_mod_name             = sample_process.tsync_mod_name();
+    int             const component_init_state         = sample_process.component_init_state();
+    std::string     component_init_info                = sample_process.component_init_info();
+    std::string     ecal_runtime_version               = sample_process.ecal_runtime_version();
 
     std::stringstream process_id_ss;
     process_id_ss << process_id;
-    std::string process_name_id = process_name + process_id_ss.str();
+    std::string const process_name_id = process_name + process_id_ss.str();
 
     // acquire access
-    std::lock_guard<std::mutex> lock(m_process_map.sync);
+    std::lock_guard<std::mutex> const lock(m_process_map.sync);
 
     // try to get process info
     Monitoring::SProcessMon& ProcessInfo = (*m_process_map.map)[process_name_id];
@@ -400,22 +394,22 @@ namespace eCAL
 
   bool CMonitoringImpl::RegisterServer(const eCAL::pb::Sample& sample_)
   {
-    auto sample_service = sample_.service();
-    std::string  host_name    = sample_service.hname();
-    std::string  service_name = sample_service.sname();
-    std::string  service_id   = sample_service.sid();
-    std::string  process_name = sample_service.pname();
-    std::string  unit_name    = sample_service.uname();
-    int          process_id   = sample_service.pid();
-    int          tcp_port_v0  = sample_service.tcp_port_v0();
-    int          tcp_port_v1  = sample_service.tcp_port_v1();
+    const auto& sample_service = sample_.service();
+    std::string  host_name          = sample_service.hname();
+    std::string  service_name       = sample_service.sname();
+    std::string  service_id         = sample_service.sid();
+    std::string  process_name       = sample_service.pname();
+    std::string  unit_name          = sample_service.uname();
+    int          const process_id   = sample_service.pid();
+    int          const tcp_port_v0  = sample_service.tcp_port_v0();
+    int          const tcp_port_v1  = sample_service.tcp_port_v1();
 
     std::stringstream process_id_ss;
     process_id_ss << process_id;
-    std::string service_name_id = service_name + service_id + process_id_ss.str();
+    std::string const service_name_id = service_name + service_id + process_id_ss.str();
 
     // acquire access
-    std::lock_guard<std::mutex> lock(m_server_map.sync);
+    std::lock_guard<std::mutex> const lock(m_server_map.sync);
 
     // try to get service info
     Monitoring::SServerMon& ServerInfo = (*m_server_map.map)[service_name_id];
@@ -451,20 +445,20 @@ namespace eCAL
 
   bool CMonitoringImpl::RegisterClient(const eCAL::pb::Sample& sample_)
   {
-    auto sample_client = sample_.client();
-    std::string  host_name    = sample_client.hname();
-    std::string  service_name = sample_client.sname();
-    std::string  service_id   = sample_client.sid();
-    std::string  process_name = sample_client.pname();
-    std::string  unit_name    = sample_client.uname();
-    int          process_id   = sample_client.pid();
+    const auto& sample_client       = sample_.client();
+    std::string  host_name          = sample_client.hname();
+    std::string  service_name       = sample_client.sname();
+    std::string  service_id         = sample_client.sid();
+    std::string  process_name       = sample_client.pname();
+    std::string  unit_name          = sample_client.uname();
+    int          const process_id   = sample_client.pid();
 
     std::stringstream process_id_ss;
     process_id_ss << process_id;
-    std::string service_name_id = service_name + service_id + process_id_ss.str();
+    std::string const service_name_id = service_name + service_id + process_id_ss.str();
 
     // acquire access
-    std::lock_guard<std::mutex> lock(m_clients_map.sync);
+    std::lock_guard<std::mutex> const lock(m_clients_map.sync);
 
     // try to get service info
     Monitoring::SClientMon& ClientInfo = (*m_clients_map.map)[service_name_id];
@@ -485,7 +479,7 @@ namespace eCAL
 
   void CMonitoringImpl::RegisterLogMessage(const eCAL::pb::LogMessage& log_msg_)
   {
-    std::lock_guard<std::mutex> lock(m_log_msglist_sync);
+    std::lock_guard<std::mutex> const lock(m_log_msglist_sync);
     m_log_msglist.emplace_back(log_msg_);
   }
 
@@ -509,27 +503,27 @@ namespace eCAL
     // clear protobuf object
     monitoring_.Clear();
 
-    if (entities_ & Monitoring::Entity::Process)
+    if ((entities_ & Monitoring::Entity::Process) != 0u)
     {
       MonitorProcs(monitoring_);
     }
 
-    if (entities_ & Monitoring::Entity::Publisher)
+    if ((entities_ & Monitoring::Entity::Publisher) != 0u)
     {
       MonitorTopics(m_publisher_map, monitoring_, "publisher");
     }
 
-    if (entities_ & Monitoring::Entity::Subscriber)
+    if ((entities_ & Monitoring::Entity::Subscriber) != 0u)
     {
       MonitorTopics(m_subscriber_map, monitoring_, "subscriber");
     }
 
-    if (entities_ & Monitoring::Entity::Server)
+    if ((entities_ & Monitoring::Entity::Server) != 0u)
     {
       MonitorServer(monitoring_);
     }
 
-    if (entities_ & Monitoring::Entity::Client)
+    if ((entities_ & Monitoring::Entity::Client) != 0u)
     {
       MonitorClients(monitoring_);
     }
@@ -537,13 +531,13 @@ namespace eCAL
 
   void CMonitoringImpl::GetMonitoringStructs(eCAL::Monitoring::SMonitoring& monitoring_, unsigned int entities_)
   {
-    if (entities_ & Monitoring::Entity::Process)
+    if ((entities_ & Monitoring::Entity::Process) != 0u)
     {
       // clear target
       monitoring_.process.clear();
 
       // lock map
-      std::lock_guard<std::mutex> lock(m_process_map.sync);
+      std::lock_guard<std::mutex> const lock(m_process_map.sync);
 
       // reserve target
       monitoring_.process.reserve(m_process_map.map->size());
@@ -556,13 +550,13 @@ namespace eCAL
       }
     }
 
-    if (entities_ & Monitoring::Entity::Publisher)
+    if ((entities_ & Monitoring::Entity::Publisher) != 0u)
     {
       // clear target
       monitoring_.publisher.clear();
 
       // lock map
-      std::lock_guard<std::mutex> lock(m_publisher_map.sync);
+      std::lock_guard<std::mutex> const lock(m_publisher_map.sync);
 
       // reserve target
       monitoring_.publisher.reserve(m_publisher_map.map->size());
@@ -575,13 +569,13 @@ namespace eCAL
       }
     }
 
-    if (entities_ & Monitoring::Entity::Subscriber)
+    if ((entities_ & Monitoring::Entity::Subscriber) != 0u)
     {
       // clear target
       monitoring_.subscriber.clear();
 
       // lock map
-      std::lock_guard<std::mutex> lock(m_subscriber_map.sync);
+      std::lock_guard<std::mutex> const lock(m_subscriber_map.sync);
 
       // reserve target
       monitoring_.subscriber.reserve(m_subscriber_map.map->size());
@@ -594,13 +588,13 @@ namespace eCAL
       }
     }
 
-    if (entities_ & Monitoring::Entity::Server)
+    if ((entities_ & Monitoring::Entity::Server) != 0u)
     {
       // clear target
       monitoring_.server.clear();
 
       // lock map
-      std::lock_guard<std::mutex> lock(m_server_map.sync);
+      std::lock_guard<std::mutex> const lock(m_server_map.sync);
 
       // reserve target
       monitoring_.server.reserve(m_server_map.map->size());
@@ -613,13 +607,13 @@ namespace eCAL
       }
     }
 
-    if (entities_ & Monitoring::Entity::Client)
+    if ((entities_ & Monitoring::Entity::Client) != 0u)
     {
       // clear target
       monitoring_.clients.clear();
 
       // lock map
-      std::lock_guard<std::mutex> lock(m_clients_map.sync);
+      std::lock_guard<std::mutex> const lock(m_clients_map.sync);
 
       // reserve target
       monitoring_.clients.reserve(m_clients_map.map->size());
@@ -639,7 +633,7 @@ namespace eCAL
     logging_.Clear();
 
     // acquire access
-    std::lock_guard<std::mutex> lock(m_log_msglist_sync);
+    std::lock_guard<std::mutex> const lock(m_log_msglist_sync);
 
     LogMessageListT::const_iterator siter = m_log_msglist.begin();
     while (siter != m_log_msglist.end())
@@ -674,7 +668,7 @@ namespace eCAL
   void CMonitoringImpl::MonitorProcs(eCAL::pb::Monitoring& monitoring_)
   {
     // acquire access
-    std::lock_guard<std::mutex> lock(m_process_map.sync);
+    std::lock_guard<std::mutex> const lock(m_process_map.sync);
 
     // iterate map
     m_process_map.map->remove_deprecated();
@@ -717,7 +711,7 @@ namespace eCAL
       pMonProcs->set_dataread(process.second.dataread);
 
       // state
-      auto state = pMonProcs->mutable_state();
+      auto *state = pMonProcs->mutable_state();
 
       // severity state
       state->set_severity(eCAL::pb::eProcessSeverity(process.second.state_severity));
@@ -748,7 +742,7 @@ namespace eCAL
   void CMonitoringImpl::MonitorServer(eCAL::pb::Monitoring& monitoring_)
   {
     // acquire access
-    std::lock_guard<std::mutex> lock(m_server_map.sync);
+    std::lock_guard<std::mutex> const lock(m_server_map.sync);
 
     // iterate map
     m_server_map.map->remove_deprecated();
@@ -799,7 +793,7 @@ namespace eCAL
   void CMonitoringImpl::MonitorClients(eCAL::pb::Monitoring& monitoring_)
   {
     // acquire access
-    std::lock_guard<std::mutex> lock(m_clients_map.sync);
+    std::lock_guard<std::mutex> const lock(m_clients_map.sync);
 
     // iterate map
     m_clients_map.map->remove_deprecated();
@@ -834,7 +828,7 @@ namespace eCAL
   void CMonitoringImpl::MonitorTopics(STopicMonMap& map_, eCAL::pb::Monitoring& monitoring_, const std::string& direction_)
   {
     // acquire access
-    std::lock_guard<std::mutex> lock(map_.sync);
+    std::lock_guard<std::mutex> const lock(map_.sync);
 
     // iterate map
     map_.map->remove_deprecated();
@@ -873,25 +867,25 @@ namespace eCAL
       // topic transport layers
       if (topic.second.tlayer_ecal_udp_mc)
       {
-        auto tlayer = pMonTopic->add_tlayer();
+        auto *tlayer = pMonTopic->add_tlayer();
         tlayer->set_type(eCAL::pb::tl_ecal_udp_mc);
         tlayer->set_confirmed(true);
       }
       if (topic.second.tlayer_ecal_shm)
       {
-        auto tlayer = pMonTopic->add_tlayer();
+        auto *tlayer = pMonTopic->add_tlayer();
         tlayer->set_type(eCAL::pb::tl_ecal_shm);
         tlayer->set_confirmed(true);
       }
       if (topic.second.tlayer_ecal_tcp)
       {
-        auto tlayer = pMonTopic->add_tlayer();
+        auto *tlayer = pMonTopic->add_tlayer();
         tlayer->set_type(eCAL::pb::tl_ecal_tcp);
         tlayer->set_confirmed(true);
       }
       if (topic.second.tlayer_inproc)
       {
-        auto tlayer = pMonTopic->add_tlayer();
+        auto *tlayer = pMonTopic->add_tlayer();
         tlayer->set_type(eCAL::pb::tl_inproc);
         tlayer->set_confirmed(true);
       }
@@ -927,7 +921,8 @@ namespace eCAL
 
   void CMonitoringImpl::Tokenize(const std::string& str, StrICaseSetT& tokens, const std::string& delimiters, bool trimEmpty)
   {
-    std::string::size_type pos, lastPos = 0;
+    std::string::size_type pos     = 0;
+    std::string::size_type lastPos = 0;
 
     for (;;)
     {

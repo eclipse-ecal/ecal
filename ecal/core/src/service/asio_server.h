@@ -28,6 +28,7 @@
 #pragma warning(disable: 4834)
 #endif
 #include <asio.hpp>
+#include <utility>
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
@@ -35,8 +36,8 @@
 #include "ecal_tcpheader.h"
 #include "ecal/cimpl/ecal_callback_cimpl.h"
 
-typedef std::function<int(const std::string& request, std::string& response)>    RequestCallbackT;
-typedef std::function<void(eCAL_Server_Event event, const std::string& message)> EventCallbackT;
+using RequestCallbackT = std::function<int (const std::string &, std::string &)>;
+using EventCallbackT = std::function<void (eCAL_Server_Event, const std::string &)>;
 
 class CAsioSession
 {
@@ -75,12 +76,12 @@ public:
 
   void add_request_callback1(RequestCallbackT callback_)
   {
-    request_callback_ = callback_;
+    request_callback_ = std::move(callback_);
   }
 
   void add_event_callback(EventCallbackT callback_)
   {
-    event_callback_ = callback_;
+    event_callback_ = std::move(callback_);
   }
 
 private:
@@ -95,7 +96,7 @@ private:
         //std::cout << "CAsioSession::handle_read read bytes " << bytes_transferred << std::endl;
         request_ += std::string(data_, bytes_transferred);
         // are there some more data on the socket ?
-        if (socket_.available())
+        if (socket_.available() != 0u)
         {
           // read some more bytes
           socket_.async_read_some(asio::buffer(data_, max_length),
@@ -147,7 +148,7 @@ private:
       if (request_callback_)
       {
         size_t bytes_used = 0;
-        std::string data = std::string(data_, bytes_transferred);
+        std::string const data = std::string(data_, bytes_transferred);
 
         // collect header
         if (data.size() < sizeof(eCAL::STcpHeader) && header_.size() < sizeof(eCAL::STcpHeader))
@@ -307,19 +308,19 @@ public:
     start_accept(version);
   }
 
-  bool is_connected()
+  bool is_connected() const
   {
     return (connect_cnt_ > 0);
   }
 
   void add_request_callback1(RequestCallbackT callback)
   {
-    request_cb_ = callback;
+    request_cb_ = std::move(callback);
   }
 
   void add_event_callback(EventCallbackT callback)
   {
-    event_cb_ = callback;
+    event_cb_ = std::move(callback);
   }
 
   uint16_t get_port()
@@ -341,7 +342,7 @@ private:
   {
     if (!ec)
     {
-      // handle the connect
+      // handle the connection
       connect_cnt_++;
       if (event_cb_)
       {

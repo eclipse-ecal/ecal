@@ -43,7 +43,7 @@ namespace eCAL
   {
   public:
     CMonitoringImpl();
-    ~CMonitoringImpl();
+    ~CMonitoringImpl() = default;
 
     void Create();
     void Destroy();
