@@ -34,7 +34,7 @@ namespace eCAL
     class OBinaryChannel
     {
     public:
-      OBinaryChannel(std::shared_ptr<eh5::HDF5Meas> meas_, const std::string& name_)
+      OBinaryChannel(std::shared_ptr<base::Measurement> meas_, const std::string& name_)
         : channel_name(name_)
         , meas(meas_)
         , SenderID(0)
@@ -61,7 +61,7 @@ namespace eCAL
 
     private:
       const std::string channel_name;
-      std::shared_ptr<eh5::HDF5Meas> meas;
+      std::shared_ptr<base::Measurement> meas;
 
       long long SenderID;
       long long clock;
@@ -72,7 +72,7 @@ namespace eCAL
     class OChannel
     {
     public:
-      OChannel(std::shared_ptr<eh5::HDF5Meas> meas_, std::string name_)
+      OChannel(std::shared_ptr<base::Measurement> meas_, std::string name_)
         : binary_channel(meas_, name_)
       {
       }
@@ -113,13 +113,13 @@ namespace eCAL
       OChannel<T> Create(const std::string& channel) const;
 
     private:
-      std::shared_ptr<eh5::HDF5Meas> meas;
+      std::shared_ptr<base::Measurement> meas;
     };
 
 
 
     inline OMeasurement::OMeasurement(const std::string& base_path_, const std::string& measurement_name_)
-      : meas{ std::make_shared<eh5::HDF5Meas>(base_path_, eh5::CREATE) }
+      : meas{ std::make_shared<eh5::HDF5Meas>(base_path_, base::CREATE) }
     {
       meas->SetFileBaseName(measurement_name_);
     }
