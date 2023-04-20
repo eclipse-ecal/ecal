@@ -29,7 +29,7 @@
 
 namespace eCAL
 {
-  // base payload class to allow zero memory operations
+  // base payload writer class to allow zero copy memory operations
   // 
   // the `Write`and `Update` calls may operate on the target memory file directly (zero copy mode)
   class CPayloadWriter
@@ -58,7 +58,7 @@ namespace eCAL
     virtual size_t GetSize() = 0;
   };
 
-  // specific payload writer class to wrap classic (void*, size_t) interface
+  // payload writer class that wraps classic (void*, size_t) interface
   class CBufferPayloadWriter : public CPayloadWriter
   {
   public:
@@ -77,7 +77,7 @@ namespace eCAL
     size_t GetSize() override { return m_size; };
   
   private:
-    const void* const m_buffer = nullptr;
-    size_t            m_size   = 0;
+    const void* m_buffer = nullptr;
+    size_t      m_size   = 0;
   };
 }
