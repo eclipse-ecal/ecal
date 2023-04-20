@@ -23,7 +23,7 @@
 #include <chrono>
 #include <iostream>
 
-#include "binary_payload.h"
+#include "binary_payload_writer.h"
 
 const auto g_snd_size (8* 1024 * 1024);
 const auto g_snd_loops(1000);

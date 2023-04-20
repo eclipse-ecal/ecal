@@ -23,18 +23,19 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_config.h>
+#include <ecal/ecal_payload_writer.h>
 
 #include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
 
 #include "ecal_registration_provider.h"
 #include "ecal_registration_receiver.h"
-#include "pubsub/ecal_pubgate.h"
-#include "pubsub/ecal_buffer_payload.h"
 
 #include "ecal_writer.h"
 #include "ecal_writer_base.h"
 #include "ecal_process.h"
+
+#include "pubsub/ecal_pubgate.h"
 
 #include <sstream>
 #include <chrono>
@@ -477,7 +478,7 @@ namespace eCAL
         else
         {
           // wrap the buffer into a payload object
-          CBufferPayload payload_buf(m_payload_buffer.data(), m_payload_buffer.size());
+          CBufferPayloadWriter payload_buf(m_payload_buffer.data(), m_payload_buffer.size());
           // write to shm layer (write content into the opened memory file without additional copy)
           shm_sent = m_writer.shm.Write(payload_buf, wattr);
         }

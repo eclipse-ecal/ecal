@@ -43,16 +43,16 @@ namespace eCAL
   class CDataWriterUdpMC : public CDataWriterBase
   {
   public:
-    ~CDataWriterUdpMC();
+    ~CDataWriterUdpMC() override;
 
     SWriterInfo GetInfo() override;
 
     bool Create(const std::string& host_name_, const std::string& topic_name_, const std::string & topic_id_) override;
     // this virtual function is called during construction/destruction,
     // so, mark it as final to ensure that no derived classes override it.
-    bool Destroy() final override;
+    bool Destroy() final;
 
-    bool Write(const void* buf_, const SWriterAttr& attr_) override;
+    bool Write(const void* const buf_, const SWriterAttr& attr_) override;
 
   protected:
     std::string       m_udp_ipaddr;
