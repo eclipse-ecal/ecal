@@ -100,7 +100,7 @@ namespace eCAL
        * @return         true if output (eAccessType::CREATE) measurement directory structure can be accessed/created, false otherwise.
        *                 true if input (eAccessType::RDONLY) measurement/file path was opened, false otherwise.
       **/
-      bool Open(const std::string& path, measurement::base::AccessType access = measurement::base::AccessType::RDONLY);
+      bool Open(const std::string& path, measurement::base::AccessType access = measurement::base::AccessType::RDONLY) override;
 
       /**
        * @brief Close file
