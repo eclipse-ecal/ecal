@@ -20,6 +20,7 @@
 #include <ecal/ecal.h>
 
 #include <atomic>
+#include <thread>
 
 #include <gtest/gtest.h>
 
@@ -763,7 +764,7 @@ TEST(IO, DestroyInCallback)
   eCAL::string::CSubscriber<std::string> sub_destroy("destroy");
   std::atomic<bool> destroyed(false);
 
-  auto destroy_lambda = [&sub_foo, &destroyed](const char* /*topic_*/, const std::string& msg, long long /*time_*/, long long /*clock_*/, long long /*id_*/) {
+  auto destroy_lambda = [&sub_foo, &destroyed](const char* /*topic_*/, const std::string& /*msg*/, long long /*time_*/, long long /*clock_*/, long long /*id_*/) {
     std::cout << "Receive destroy command" << std::endl;
     sub_foo.Destroy();
     destroyed = true;
@@ -771,7 +772,7 @@ TEST(IO, DestroyInCallback)
   };
   sub_destroy.AddReceiveCallback(destroy_lambda);
 
-  auto receive_lambda = [](const char* /*topic_*/, const std::string& msg, long long /*time_*/, long long /*clock_*/, long long /*id_*/) {
+  auto receive_lambda = [](const char* /*topic_*/, const std::string& /*msg*/, long long /*time_*/, long long /*clock_*/, long long /*id_*/) {
     std::cout << "Hello" << std::endl;
   };
   sub_foo.AddReceiveCallback(receive_lambda);
