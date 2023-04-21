@@ -6,6 +6,15 @@ Class HDF5Meas
 - Defined in :ref:`file_contrib_ecalhdf5_include_ecalhdf5_eh5_meas.h`
 
 
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public eCAL::measurement::base::Measurement``
+
+
 Class Documentation
 -------------------
 

@@ -281,6 +281,16 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="namespace_eCAL__measurement.html">
+       Namespace eCAL::measurement
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="namespace_eCAL__measurement__base.html">
+       Namespace eCAL::measurement::base
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="namespace_eCAL__Monitoring.html">
        Namespace eCAL::Monitoring
       </a>
@@ -318,11 +328,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="namespace_eCAL__Util.html">
        Namespace eCAL::Util
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="structeCAL_1_1eh5_1_1SEntryInfo.html">
-       Struct SEntryInfo
       </a>
      </li>
      <li class="toctree-l3">
@@ -478,11 +483,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="enum_ecal__config_8h_1ad5d30f75fb2c2de1253f805e812ab3b0.html">
        Enum UdpConfigVersion
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html">
-       Enum eAccessType
       </a>
      </li>
      <li class="toctree-l3">
@@ -1726,13 +1726,23 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1a753fcaffdfc6a8ee1681c1099adde028.html">
+      <a class="reference internal" href="typedef_eh5__types_8h_1a41e92bccaac7256e3878bd20ff1ee9ee.html">
+       Typedef eCAL::eh5::eAccessType
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="typedef_eh5__types_8h_1aa8a709e7af8ce8d85946c5ab3ec9d77a.html">
        Typedef eCAL::eh5::EntryInfoSet
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1af075e29570c5ae5b8947a5c47c48c30a.html">
+      <a class="reference internal" href="typedef_eh5__types_8h_1a214de80d6d32407f447aa9df41708e87.html">
        Typedef eCAL::eh5::EntryInfoVect
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="typedef_eh5__types_8h_1a8d748bf8fa9b852ee9ba1d7e544099bf.html">
+       Typedef eCAL::eh5::SEntryInfo
       </a>
      </li>
      <li class="toctree-l3">
@@ -2461,6 +2471,8 @@ title="Print to PDF"
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
 
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/measurement/base/types.h&gt;</span>
+
 <span class="k">namespace</span><span class="w"> </span><span class="nn">eCAL</span>
 <span class="p">{</span>
 <span class="w">  </span><span class="k">namespace</span><span class="w"> </span><span class="nn">eh5</span>
@@ -2472,44 +2484,13 @@ title="Print to PDF"
 <span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">kTimestampAttrTitle</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Timestamps&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">kChnAttrTitle</span><span class="w">       </span><span class="p">(</span><span class="s">&quot;Channels&quot;</span><span class="p">);</span>
 
-<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">SEntryInfo</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">RcvTimestamp</span><span class="p">;</span>
-<span class="w">      </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">ID</span><span class="p">;</span>
-<span class="w">      </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">SndClock</span><span class="p">;</span>
-<span class="w">      </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">SndTimestamp</span><span class="p">;</span>
-<span class="w">      </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">SndID</span><span class="p">;</span>
-
-<span class="w">      </span><span class="n">SEntryInfo</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">RcvTimestamp</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">ID</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">SndClock</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">SndTimestamp</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">SndID</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
-
-<span class="w">      </span><span class="n">SEntryInfo</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">rcv_timestamp</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">RcvTimestamp</span><span class="p">(</span><span class="n">rcv_timestamp</span><span class="p">),</span><span class="w"> </span><span class="n">ID</span><span class="p">(</span><span class="n">id</span><span class="p">),</span><span class="w"> </span><span class="n">SndClock</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">SndTimestamp</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">SndID</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
-
-<span class="w">      </span><span class="n">SEntryInfo</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">rcv_timestamp</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">snd_clock</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">RcvTimestamp</span><span class="p">(</span><span class="n">rcv_timestamp</span><span class="p">),</span><span class="w"> </span><span class="n">ID</span><span class="p">(</span><span class="n">id</span><span class="p">),</span><span class="w"> </span><span class="n">SndClock</span><span class="p">(</span><span class="n">snd_clock</span><span class="p">),</span><span class="w"> </span><span class="n">SndTimestamp</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">SndID</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
-
-<span class="w">      </span><span class="n">SEntryInfo</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">rcv_timestamp</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">snd_clock</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">snd_timestamp</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">RcvTimestamp</span><span class="p">(</span><span class="n">rcv_timestamp</span><span class="p">),</span><span class="w"> </span><span class="n">ID</span><span class="p">(</span><span class="n">id</span><span class="p">),</span><span class="w"> </span><span class="n">SndClock</span><span class="p">(</span><span class="n">snd_clock</span><span class="p">),</span><span class="w"> </span><span class="n">SndTimestamp</span><span class="p">(</span><span class="n">snd_timestamp</span><span class="p">),</span><span class="w"> </span><span class="n">SndID</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
-
-<span class="w">      </span><span class="n">SEntryInfo</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">rcv_timestamp</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">snd_clock</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">snd_timestamp</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">snd_id</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">RcvTimestamp</span><span class="p">(</span><span class="n">rcv_timestamp</span><span class="p">),</span><span class="w"> </span><span class="n">ID</span><span class="p">(</span><span class="n">id</span><span class="p">),</span><span class="w"> </span><span class="n">SndClock</span><span class="p">(</span><span class="n">snd_clock</span><span class="p">),</span><span class="w"> </span><span class="n">SndTimestamp</span><span class="p">(</span><span class="n">snd_timestamp</span><span class="p">),</span><span class="w"> </span><span class="n">SndID</span><span class="p">(</span><span class="n">snd_id</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
-
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">SEntryInfo</span><span class="o">&amp;</span><span class="w"> </span><span class="n">other</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">ID</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">other</span><span class="p">.</span><span class="n">ID</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">SndTimestamp</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">other</span><span class="p">.</span><span class="n">SndTimestamp</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">RcvTimestamp</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">other</span><span class="p">.</span><span class="n">RcvTimestamp</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">SndClock</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">other</span><span class="p">.</span><span class="n">SndClock</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">SndID</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">other</span><span class="p">.</span><span class="n">SndID</span><span class="p">);</span>
-<span class="w">      </span><span class="p">}</span>
-
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">SEntryInfo</span><span class="o">&amp;</span><span class="w"> </span><span class="n">other</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">RcvTimestamp</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">other</span><span class="p">.</span><span class="n">RcvTimestamp</span><span class="p">);</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">};</span>
-
-<span class="w">    </span><span class="k">typedef</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">SEntryInfo</span><span class="o">&gt;</span><span class="w">    </span><span class="n">EntryInfoSet</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">typedef</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">SEntryInfo</span><span class="o">&gt;</span><span class="w"> </span><span class="n">EntryInfoVect</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">eAccessType</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="n">RDONLY</span><span class="p">,</span>
-<span class="w">      </span><span class="n">CREATE</span>
-<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="c1">// Remove @eCAL6 -&gt; backwards compatibility with old interface!</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">SEntryInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">measurement</span><span class="o">::</span><span class="n">base</span><span class="o">::</span><span class="n">EntryInfo</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">EntryInfoSet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">measurement</span><span class="o">::</span><span class="n">base</span><span class="o">::</span><span class="n">EntryInfoSet</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">EntryInfoVect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">measurement</span><span class="o">::</span><span class="n">base</span><span class="o">::</span><span class="n">EntryInfoVect</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">eAccessType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">measurement</span><span class="o">::</span><span class="n">base</span><span class="o">::</span><span class="n">AccessType</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">measurement</span><span class="o">::</span><span class="n">base</span><span class="o">::</span><span class="n">RDONLY</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">measurement</span><span class="o">::</span><span class="n">base</span><span class="o">::</span><span class="n">CREATE</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span><span class="w">  </span><span class="c1">// namespace eh5</span>
 <span class="p">}</span><span class="w">  </span><span class="c1">// namespace eCAL</span>
 </pre></div>

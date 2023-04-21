@@ -35,6 +35,8 @@ Program Listing for File eh5_types.h
    #include <string>
    #include <vector>
    
+   #include <ecal/measurement/base/types.h>
+   
    namespace eCAL
    {
      namespace eh5
@@ -46,43 +48,12 @@ Program Listing for File eh5_types.h
        const std::string kTimestampAttrTitle ("Timestamps");
        const std::string kChnAttrTitle       ("Channels");
    
-       struct SEntryInfo
-       {
-         long long RcvTimestamp;   
-         long long ID;             
-         long long SndClock;       
-         long long SndTimestamp;   
-         long long SndID;          
-   
-         SEntryInfo() : RcvTimestamp(0), ID(0), SndClock(0), SndTimestamp(0), SndID(0) {}
-   
-         SEntryInfo(long long rcv_timestamp, long long id) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(0), SndTimestamp(0), SndID(0) {}
-   
-         SEntryInfo(long long rcv_timestamp, long long id, long long snd_clock) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(snd_clock), SndTimestamp(0), SndID(0) {}
-   
-         SEntryInfo(long long rcv_timestamp, long long id, long long snd_clock, long long snd_timestamp) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(snd_clock), SndTimestamp(snd_timestamp), SndID(0) {}
-   
-         SEntryInfo(long long rcv_timestamp, long long id, long long snd_clock, long long snd_timestamp, long long snd_id) : RcvTimestamp(rcv_timestamp), ID(id), SndClock(snd_clock), SndTimestamp(snd_timestamp), SndID(snd_id) {}
-   
-         bool operator==(const SEntryInfo& other) const
-         {
-           return (ID == other.ID && SndTimestamp == other.SndTimestamp && RcvTimestamp == other.RcvTimestamp && SndClock == other.SndClock && SndID == other.SndID);
-         }
-   
-         bool operator<(const SEntryInfo& other) const
-         {
-           return (RcvTimestamp < other.RcvTimestamp);
-         }
-       };
-   
-       typedef std::set<SEntryInfo>    EntryInfoSet;
-   
-       typedef std::vector<SEntryInfo> EntryInfoVect;
-   
-       enum eAccessType
-       {
-         RDONLY,
-         CREATE
-       };
+       // Remove @eCAL6 -> backwards compatibility with old interface!
+       using SEntryInfo = eCAL::measurement::base::EntryInfo;
+       using EntryInfoSet = eCAL::measurement::base::EntryInfoSet;
+       using EntryInfoVect = eCAL::measurement::base::EntryInfoVect;
+       using eAccessType = eCAL::measurement::base::AccessType;
+       using eCAL::measurement::base::RDONLY;
+       using eCAL::measurement::base::CREATE;
      }  // namespace eh5
    }  // namespace eCAL

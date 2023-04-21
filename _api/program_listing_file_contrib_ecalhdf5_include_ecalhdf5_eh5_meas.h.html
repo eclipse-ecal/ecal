@@ -281,6 +281,16 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="namespace_eCAL__measurement.html">
+       Namespace eCAL::measurement
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="namespace_eCAL__measurement__base.html">
+       Namespace eCAL::measurement::base
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="namespace_eCAL__Monitoring.html">
        Namespace eCAL::Monitoring
       </a>
@@ -318,11 +328,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="namespace_eCAL__Util.html">
        Namespace eCAL::Util
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="structeCAL_1_1eh5_1_1SEntryInfo.html">
-       Struct SEntryInfo
       </a>
      </li>
      <li class="toctree-l3">
@@ -478,11 +483,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="enum_ecal__config_8h_1ad5d30f75fb2c2de1253f805e812ab3b0.html">
        Enum UdpConfigVersion
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html">
-       Enum eAccessType
       </a>
      </li>
      <li class="toctree-l3">
@@ -1726,13 +1726,23 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1a753fcaffdfc6a8ee1681c1099adde028.html">
+      <a class="reference internal" href="typedef_eh5__types_8h_1a41e92bccaac7256e3878bd20ff1ee9ee.html">
+       Typedef eCAL::eh5::eAccessType
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="typedef_eh5__types_8h_1aa8a709e7af8ce8d85946c5ab3ec9d77a.html">
        Typedef eCAL::eh5::EntryInfoSet
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1af075e29570c5ae5b8947a5c47c48c30a.html">
+      <a class="reference internal" href="typedef_eh5__types_8h_1a214de80d6d32407f447aa9df41708e87.html">
        Typedef eCAL::eh5::EntryInfoVect
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="typedef_eh5__types_8h_1a8d748bf8fa9b852ee9ba1d7e544099bf.html">
+       Typedef eCAL::eh5::SEntryInfo
       </a>
      </li>
      <li class="toctree-l3">
@@ -2463,6 +2473,7 @@ title="Print to PDF"
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;memory&gt;</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;eh5_types.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/measurement/base/measurement.h&gt;</span>
 
 <span class="k">namespace</span><span class="w"> </span><span class="nn">eCAL</span>
 <span class="p">{</span>
@@ -2470,14 +2481,14 @@ title="Print to PDF"
 <span class="w">  </span><span class="p">{</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">HDF5MeasImpl</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">HDF5Meas</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">HDF5Meas</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">measurement</span><span class="o">::</span><span class="n">base</span><span class="o">::</span><span class="n">Measurement</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
 <span class="w">      </span><span class="n">HDF5Meas</span><span class="p">();</span>
 
-<span class="w">      </span><span class="k">explicit</span><span class="w"> </span><span class="n">HDF5Meas</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="n">eAccessType</span><span class="w"> </span><span class="n">access</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eAccessType</span><span class="o">::</span><span class="n">RDONLY</span><span class="p">);</span>
+<span class="w">      </span><span class="k">explicit</span><span class="w"> </span><span class="n">HDF5Meas</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="n">measurement</span><span class="o">::</span><span class="n">base</span><span class="o">::</span><span class="n">AccessType</span><span class="w"> </span><span class="n">access</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">measurement</span><span class="o">::</span><span class="n">base</span><span class="o">::</span><span class="n">AccessType</span><span class="o">::</span><span class="n">RDONLY</span><span class="p">);</span>
 
-<span class="w">      </span><span class="o">~</span><span class="n">HDF5Meas</span><span class="p">();</span>
+<span class="w">      </span><span class="o">~</span><span class="n">HDF5Meas</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
 <span class="w">      </span><span class="n">HDF5Meas</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">HDF5Meas</span><span class="o">&amp;</span><span class="w"> </span><span class="n">other</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">delete</span><span class="p">;</span>
 <span class="w">      </span><span class="n">HDF5Meas</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">HDF5Meas</span><span class="o">&amp;</span><span class="w"> </span><span class="n">other</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">delete</span><span class="p">;</span>
@@ -2485,55 +2496,53 @@ title="Print to PDF"
 <span class="w">      </span><span class="n">HDF5Meas</span><span class="p">(</span><span class="n">HDF5Meas</span><span class="o">&amp;&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
 <span class="w">      </span><span class="n">HDF5Meas</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">HDF5Meas</span><span class="o">&amp;&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">Open</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="n">eAccessType</span><span class="w"> </span><span class="n">access</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eAccessType</span><span class="o">::</span><span class="n">RDONLY</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">Open</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="n">measurement</span><span class="o">::</span><span class="n">base</span><span class="o">::</span><span class="n">AccessType</span><span class="w"> </span><span class="n">access</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">measurement</span><span class="o">::</span><span class="n">base</span><span class="o">::</span><span class="n">AccessType</span><span class="o">::</span><span class="n">RDONLY</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">Close</span><span class="p">();</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">Close</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">IsOk</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">IsOk</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetFileVersion</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetFileVersion</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">size_t</span><span class="w"> </span><span class="nf">GetMaxSizePerFile</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="w">      </span><span class="kt">size_t</span><span class="w"> </span><span class="nf">GetMaxSizePerFile</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">SetMaxSizePerFile</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">size</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">SetMaxSizePerFile</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">size</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">IsOneFilePerChannelEnabled</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">IsOneFilePerChannelEnabled</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">SetOneFilePerChannelEnabled</span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">enabled</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">SetOneFilePerChannelEnabled</span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">enabled</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetChannelNames</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetChannelNames</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">HasChannel</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">HasChannel</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetChannelDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetChannelDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">SetChannelDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">description</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">SetChannelDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">description</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetChannelType</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetChannelType</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">SetChannelType</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">type</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">SetChannelType</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">GetMinTimestamp</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="w">      </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">GetMinTimestamp</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">GetMaxTimestamp</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="w">      </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">GetMaxTimestamp</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">GetEntriesInfo</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">,</span><span class="w"> </span><span class="n">EntryInfoSet</span><span class="o">&amp;</span><span class="w"> </span><span class="n">entries</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">GetEntriesInfo</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">,</span><span class="w"> </span><span class="n">measurement</span><span class="o">::</span><span class="n">base</span><span class="o">::</span><span class="n">EntryInfoSet</span><span class="o">&amp;</span><span class="w"> </span><span class="n">entries</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">GetEntriesInfoRange</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">begin</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">end</span><span class="p">,</span><span class="w"> </span><span class="n">EntryInfoSet</span><span class="o">&amp;</span><span class="w"> </span><span class="n">entries</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">GetEntriesInfoRange</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">begin</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">end</span><span class="p">,</span><span class="w"> </span><span class="n">measurement</span><span class="o">::</span><span class="n">base</span><span class="o">::</span><span class="n">EntryInfoSet</span><span class="o">&amp;</span><span class="w"> </span><span class="n">entries</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">GetEntryDataSize</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">entry_id</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="o">&amp;</span><span class="w"> </span><span class="n">size</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">GetEntryDataSize</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">entry_id</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="o">&amp;</span><span class="w"> </span><span class="n">size</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">GetEntryData</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">entry_id</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">GetEntryData</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">entry_id</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">SetFileBaseName</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">base_name</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">SetFileBaseName</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">base_name</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">AddEntryToFile</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="o">&amp;</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="o">&amp;</span><span class="w"> </span><span class="n">snd_timestamp</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="o">&amp;</span><span class="w"> </span><span class="n">rcv_timestamp</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">clock</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">AddEntryToFile</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="o">&amp;</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="o">&amp;</span><span class="w"> </span><span class="n">snd_timestamp</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="o">&amp;</span><span class="w"> </span><span class="n">rcv_timestamp</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">channel_name</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">clock</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="k">typedef</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CallbackFunction</span><span class="p">;</span>
+<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">ConnectPreSplitCallback</span><span class="p">(</span><span class="n">CallbackFunction</span><span class="w"> </span><span class="n">cb</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">ConnectPreSplitCallback</span><span class="p">(</span><span class="n">CallbackFunction</span><span class="w"> </span><span class="n">cb</span><span class="p">);</span>
-
-<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">DisconnectPreSplitCallback</span><span class="p">();</span>
+<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">DisconnectPreSplitCallback</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
 <span class="w">     </span><span class="k">private</span><span class="o">:</span>
 <span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">HDF5MeasImpl</span><span class="o">&gt;</span><span class="w"> </span><span class="n">hdf_meas_impl_</span><span class="p">;</span>

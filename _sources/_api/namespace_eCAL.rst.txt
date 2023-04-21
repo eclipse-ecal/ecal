@@ -25,6 +25,8 @@ Namespaces
 
 - :ref:`namespace_eCAL__Logging`
 
+- :ref:`namespace_eCAL__measurement`
+
 - :ref:`namespace_eCAL__Monitoring`
 
 - :ref:`namespace_eCAL__pb`

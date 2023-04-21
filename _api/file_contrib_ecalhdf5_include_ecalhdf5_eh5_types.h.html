@@ -281,6 +281,16 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="namespace_eCAL__measurement.html">
+       Namespace eCAL::measurement
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="namespace_eCAL__measurement__base.html">
+       Namespace eCAL::measurement::base
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="namespace_eCAL__Monitoring.html">
        Namespace eCAL::Monitoring
       </a>
@@ -318,11 +328,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="namespace_eCAL__Util.html">
        Namespace eCAL::Util
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="structeCAL_1_1eh5_1_1SEntryInfo.html">
-       Struct SEntryInfo
       </a>
      </li>
      <li class="toctree-l3">
@@ -478,11 +483,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="enum_ecal__config_8h_1ad5d30f75fb2c2de1253f805e812ab3b0.html">
        Enum UdpConfigVersion
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html">
-       Enum eAccessType
       </a>
      </li>
      <li class="toctree-l3">
@@ -1726,13 +1726,23 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1a753fcaffdfc6a8ee1681c1099adde028.html">
+      <a class="reference internal" href="typedef_eh5__types_8h_1a41e92bccaac7256e3878bd20ff1ee9ee.html">
+       Typedef eCAL::eh5::eAccessType
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="typedef_eh5__types_8h_1aa8a709e7af8ce8d85946c5ab3ec9d77a.html">
        Typedef eCAL::eh5::EntryInfoSet
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1af075e29570c5ae5b8947a5c47c48c30a.html">
+      <a class="reference internal" href="typedef_eh5__types_8h_1a214de80d6d32407f447aa9df41708e87.html">
        Typedef eCAL::eh5::EntryInfoVect
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="typedef_eh5__types_8h_1a8d748bf8fa9b852ee9ba1d7e544099bf.html">
+       Typedef eCAL::eh5::SEntryInfo
       </a>
      </li>
      <li class="toctree-l3">
@@ -2458,16 +2468,6 @@ title="Print to PDF"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#classes">
-   Classes
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#enums">
-   Enums
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#typedefs">
    Typedefs
   </a>
@@ -2518,16 +2518,6 @@ title="Print to PDF"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#classes">
-   Classes
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#enums">
-   Enums
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#typedefs">
    Typedefs
   </a>
@@ -2552,9 +2542,7 @@ title="Print to PDF"
 <li><p><a class="reference internal" href="#includes" id="id2">Includes</a></p></li>
 <li><p><a class="reference internal" href="#included-by" id="id3">Included By</a></p></li>
 <li><p><a class="reference internal" href="#namespaces" id="id4">Namespaces</a></p></li>
-<li><p><a class="reference internal" href="#classes" id="id5">Classes</a></p></li>
-<li><p><a class="reference internal" href="#enums" id="id6">Enums</a></p></li>
-<li><p><a class="reference internal" href="#typedefs" id="id7">Typedefs</a></p></li>
+<li><p><a class="reference internal" href="#typedefs" id="id5">Typedefs</a></p></li>
 </ul>
 </div>
 <section id="definition-contrib-ecalhdf5-include-ecalhdf5-eh5-types-h">
@@ -2568,6 +2556,7 @@ title="Print to PDF"
 <section id="includes">
 <h2>Includes<a class="headerlink" href="#includes" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ecal/measurement/base/types.h</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">set</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">vector</span></code></p></li>
@@ -2586,23 +2575,13 @@ title="Print to PDF"
 <li><p><a class="reference internal" href="namespace_eCAL__eh5.html#namespace-ecal-eh5"><span class="std std-ref">Namespace eCAL::eh5</span></a></p></li>
 </ul>
 </section>
-<section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">#</a></h2>
-<ul class="simple">
-<li><p><a class="reference internal" href="structeCAL_1_1eh5_1_1SEntryInfo.html#exhale-struct-structecal-1-1eh5-1-1sentryinfo"><span class="std std-ref">Struct SEntryInfo</span></a></p></li>
-</ul>
-</section>
-<section id="enums">
-<h2>Enums<a class="headerlink" href="#enums" title="Permalink to this headline">#</a></h2>
-<ul class="simple">
-<li><p><a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html#exhale-enum-eh5-types-8h-1aac3d57df24f812206eb42a256b9cf7e8"><span class="std std-ref">Enum eAccessType</span></a></p></li>
-</ul>
-</section>
 <section id="typedefs">
 <h2>Typedefs<a class="headerlink" href="#typedefs" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="typedef_eh5__types_8h_1a753fcaffdfc6a8ee1681c1099adde028.html#exhale-typedef-eh5-types-8h-1a753fcaffdfc6a8ee1681c1099adde028"><span class="std std-ref">Typedef eCAL::eh5::EntryInfoSet</span></a></p></li>
-<li><p><a class="reference internal" href="typedef_eh5__types_8h_1af075e29570c5ae5b8947a5c47c48c30a.html#exhale-typedef-eh5-types-8h-1af075e29570c5ae5b8947a5c47c48c30a"><span class="std std-ref">Typedef eCAL::eh5::EntryInfoVect</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_eh5__types_8h_1a41e92bccaac7256e3878bd20ff1ee9ee.html#exhale-typedef-eh5-types-8h-1a41e92bccaac7256e3878bd20ff1ee9ee"><span class="std std-ref">Typedef eCAL::eh5::eAccessType</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_eh5__types_8h_1aa8a709e7af8ce8d85946c5ab3ec9d77a.html#exhale-typedef-eh5-types-8h-1aa8a709e7af8ce8d85946c5ab3ec9d77a"><span class="std std-ref">Typedef eCAL::eh5::EntryInfoSet</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_eh5__types_8h_1a214de80d6d32407f447aa9df41708e87.html#exhale-typedef-eh5-types-8h-1a214de80d6d32407f447aa9df41708e87"><span class="std std-ref">Typedef eCAL::eh5::EntryInfoVect</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_eh5__types_8h_1a8d748bf8fa9b852ee9ba1d7e544099bf.html#exhale-typedef-eh5-types-8h-1a8d748bf8fa9b852ee9ba1d7e544099bf"><span class="std std-ref">Typedef eCAL::eh5::SEntryInfo</span></a></p></li>
 </ul>
 </section>
 </section>

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Struct SEntryInfo &#8212; Eclipse eCAL™</title>
+    <title>Namespace eCAL::measurement::base &#8212; Eclipse eCAL™</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -45,8 +45,8 @@
     <link rel="shortcut icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Struct SClientMon" href="structeCAL_1_1Monitoring_1_1SClientMon.html" />
-    <link rel="prev" title="Namespace eCAL::Util" href="namespace_eCAL__Util.html" />
+    <link rel="next" title="Namespace eCAL::Monitoring" href="namespace_eCAL__Monitoring.html" />
+    <link rel="prev" title="Namespace eCAL::measurement" href="namespace_eCAL__measurement.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -283,6 +283,16 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="namespace_eCAL__measurement.html">
+       Namespace eCAL::measurement
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       Namespace eCAL::measurement::base
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="namespace_eCAL__Monitoring.html">
        Namespace eCAL::Monitoring
       </a>
@@ -320,11 +330,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="namespace_eCAL__Util.html">
        Namespace eCAL::Util
-      </a>
-     </li>
-     <li class="toctree-l3 current active">
-      <a class="current reference internal" href="#">
-       Struct SEntryInfo
       </a>
      </li>
      <li class="toctree-l3">
@@ -480,11 +485,6 @@
      <li class="toctree-l3">
       <a class="reference internal" href="enum_ecal__config_8h_1ad5d30f75fb2c2de1253f805e812ab3b0.html">
        Enum UdpConfigVersion
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="enum_eh5__types_8h_1aac3d57df24f812206eb42a256b9cf7e8.html">
-       Enum eAccessType
       </a>
      </li>
      <li class="toctree-l3">
@@ -1728,13 +1728,23 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1a753fcaffdfc6a8ee1681c1099adde028.html">
+      <a class="reference internal" href="typedef_eh5__types_8h_1a41e92bccaac7256e3878bd20ff1ee9ee.html">
+       Typedef eCAL::eh5::eAccessType
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="typedef_eh5__types_8h_1aa8a709e7af8ce8d85946c5ab3ec9d77a.html">
        Typedef eCAL::eh5::EntryInfoSet
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="typedef_eh5__types_8h_1af075e29570c5ae5b8947a5c47c48c30a.html">
+      <a class="reference internal" href="typedef_eh5__types_8h_1a214de80d6d32407f447aa9df41708e87.html">
        Typedef eCAL::eh5::EntryInfoVect
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="typedef_eh5__types_8h_1a8d748bf8fa9b852ee9ba1d7e544099bf.html">
+       Typedef eCAL::eh5::SEntryInfo
       </a>
      </li>
      <li class="toctree-l3">
@@ -2329,7 +2339,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/eclipse-ecal/ecal//issues/new?title=Issue%20on%20page%20%2F_api/structeCAL_1_1eh5_1_1SEntryInfo.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/eclipse-ecal/ecal//issues/new?title=Issue%20on%20page%20%2F_api/namespace_eCAL__measurement__base.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -2346,7 +2356,7 @@ title="Open an issue"
       </li>
       
       <li>
-        <a href="https://github.com/eclipse-ecal/ecal/edit/master/doc/rst/_api/structeCAL_1_1eh5_1_1SEntryInfo.rst"
+        <a href="https://github.com/eclipse-ecal/ecal/edit/master/doc/rst/_api/namespace_eCAL__measurement__base.rst"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -2374,7 +2384,7 @@ title="Edit this page"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="../_sources/_api/structeCAL_1_1eh5_1_1SEntryInfo.rst.txt"
+        <a href="../_sources/_api/namespace_eCAL__measurement__base.rst.txt"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -2411,60 +2421,23 @@ title="Print to PDF"
     </ul>
   </div>
 </div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
-</label>
 
     </div>
 </div>
 
 <!-- Table of contents -->
 <div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#struct-documentation">
-   Struct Documentation
-  </a>
- </li>
-</ul>
-
-    </nav>
 </div>
     </div>
     <div class="article row">
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Struct SEntryInfo</h1>
+                <h1>Namespace eCAL::measurement::base</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#struct-documentation">
-   Struct Documentation
-  </a>
- </li>
-</ul>
-
-                        </nav>
                     </div>
                 </div>
             </div>
@@ -2472,54 +2445,8 @@ title="Print to PDF"
                 
               <div>
                 
-  <section id="struct-sentryinfo">
-<span id="exhale-struct-structecal-1-1eh5-1-1sentryinfo"></span><h1>Struct SEntryInfo<a class="headerlink" href="#struct-sentryinfo" title="Permalink to this headline">#</a></h1>
-<ul class="simple">
-<li><p>Defined in <a class="reference internal" href="file_contrib_ecalhdf5_include_ecalhdf5_eh5_types.h.html#file-contrib-ecalhdf5-include-ecalhdf5-eh5-types-h"><span class="std std-ref">File eh5_types.h</span></a></p></li>
-</ul>
-<section id="struct-documentation">
-<h2>Struct Documentation<a class="headerlink" href="#struct-documentation" title="Permalink to this headline">#</a></h2>
-<dl class="cpp struct">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh510SEntryInfoE">
-<span id="_CPPv3N4eCAL3eh510SEntryInfoE"></span><span id="_CPPv2N4eCAL3eh510SEntryInfoE"></span><span id="eCAL::eh5::SEntryInfo"></span><span class="target" id="structeCAL_1_1eh5_1_1SEntryInfo"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SEntryInfo</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL3eh510SEntryInfoE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>&lt; </p>
-<p>Info struct for a single measurement entry </p>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh510SEntryInfo12RcvTimestampE">
-<span id="_CPPv3N4eCAL3eh510SEntryInfo12RcvTimestampE"></span><span id="_CPPv2N4eCAL3eh510SEntryInfo12RcvTimestampE"></span><span id="eCAL::eh5::SEntryInfo::RcvTimestamp__l-l"></span><span class="target" id="structeCAL_1_1eh5_1_1SEntryInfo_1ab7a6f4943443f305ddded0593d071e12"></span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RcvTimestamp</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL3eh510SEntryInfo12RcvTimestampE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Receive time stamp. </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh510SEntryInfo2IDE">
-<span id="_CPPv3N4eCAL3eh510SEntryInfo2IDE"></span><span id="_CPPv2N4eCAL3eh510SEntryInfo2IDE"></span><span id="eCAL::eh5::SEntryInfo::ID__l-l"></span><span class="target" id="structeCAL_1_1eh5_1_1SEntryInfo_1a3a5612a21c26350ee604e6a6d4c8a504"></span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ID</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL3eh510SEntryInfo2IDE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Channel ID. </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh510SEntryInfo8SndClockE">
-<span id="_CPPv3N4eCAL3eh510SEntryInfo8SndClockE"></span><span id="_CPPv2N4eCAL3eh510SEntryInfo8SndClockE"></span><span id="eCAL::eh5::SEntryInfo::SndClock__l-l"></span><span class="target" id="structeCAL_1_1eh5_1_1SEntryInfo_1ad16b9cff4b3593253bd4876a634ec8b7"></span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SndClock</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL3eh510SEntryInfo8SndClockE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Send clock. </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh510SEntryInfo12SndTimestampE">
-<span id="_CPPv3N4eCAL3eh510SEntryInfo12SndTimestampE"></span><span id="_CPPv2N4eCAL3eh510SEntryInfo12SndTimestampE"></span><span id="eCAL::eh5::SEntryInfo::SndTimestamp__l-l"></span><span class="target" id="structeCAL_1_1eh5_1_1SEntryInfo_1a326a1f0977aa7b7f09a70469e449ecf8"></span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SndTimestamp</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL3eh510SEntryInfo12SndTimestampE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Send time stamp. </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh510SEntryInfo5SndIDE">
-<span id="_CPPv3N4eCAL3eh510SEntryInfo5SndIDE"></span><span id="_CPPv2N4eCAL3eh510SEntryInfo5SndIDE"></span><span id="eCAL::eh5::SEntryInfo::SndID__l-l"></span><span class="target" id="structeCAL_1_1eh5_1_1SEntryInfo_1ae597a3063fc33468595150fc83ed14bc"></span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SndID</span></span></span><a class="headerlink" href="#_CPPv4N4eCAL3eh510SEntryInfo5SndIDE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Send ID. </p>
-</dd></dl>
-
-</div>
-</dd></dl>
-
-</section>
+  <section id="namespace-ecal-measurement-base">
+<span id="id1"></span><h1>Namespace eCAL::measurement::base<a class="headerlink" href="#namespace-ecal-measurement-base" title="Permalink to this headline">#</a></h1>
 </section>
 
 
@@ -2530,17 +2457,17 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="namespace_eCAL__Util.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="namespace_eCAL__measurement.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Namespace eCAL::Util</p>
+            <p class="prev-next-title">Namespace eCAL::measurement</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="structeCAL_1_1Monitoring_1_1SClientMon.html" title="next page">
+    <a class='right-next' id="next-link" href="namespace_eCAL__Monitoring.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Struct SClientMon</p>
+        <p class="prev-next-title">Namespace eCAL::Monitoring</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
