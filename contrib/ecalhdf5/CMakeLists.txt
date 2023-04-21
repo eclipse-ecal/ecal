@@ -55,7 +55,8 @@ set(ecalhdf5_header_base
     include/ecal/measurement/omeasurement.h
     include/ecalhdf5/eh5_defs.h
     include/ecalhdf5/eh5_meas.h
-    include/ecalhdf5/eh5_types.h   
+    include/ecalhdf5/eh5_reader.h
+    include/ecalhdf5/eh5_types.h
 )
 
 ecal_add_library(${PROJECT_NAME} ${ecalhdf5_src} ${ecalhdf5_header_base})

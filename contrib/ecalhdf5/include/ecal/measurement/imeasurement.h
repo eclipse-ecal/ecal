@@ -25,7 +25,7 @@
 #include <utility>
 #include <stdexcept>
 
-#include <ecalhdf5/eh5_meas.h>
+#include <ecalhdf5/eh5_reader.h>
 #include <ecal/measurement/measurement.h>
 
 namespace eCAL
@@ -35,7 +35,7 @@ namespace eCAL
     class IBinaryChannel
     {
     public:
-      IBinaryChannel(std::shared_ptr<base::Measurement> meas_, std::string name_)
+      IBinaryChannel(std::shared_ptr<base::Reader> meas_, std::string name_)
         : channel_name(name_)
         , meas(meas_)
       {
@@ -115,7 +115,7 @@ namespace eCAL
 
     private:
       const std::string channel_name;
-      std::shared_ptr<base::Measurement> meas;
+      std::shared_ptr<base::Reader> meas;
       mutable base::EntryInfoSet entry_infos;
       mutable std::string data;
     };
@@ -125,7 +125,7 @@ namespace eCAL
     class IChannel
     {
     public:
-      IChannel(std::shared_ptr<base::Measurement> meas_, std::string name_)
+      IChannel(std::shared_ptr<base::Reader> meas_, std::string name_)
         : binary_channel(meas_, name_)
       {
       }
@@ -225,11 +225,11 @@ namespace eCAL
       IChannel<T> Get(const std::string& channel) const;
 
     private:
-      std::shared_ptr<base::Measurement> meas;
+      std::shared_ptr<base::Reader> meas;
     };
 
     inline IMeasurement::IMeasurement(const std::string& path)
-      : meas{ std::make_shared<eh5::HDF5Meas>(path, eCAL::measurement::base::RDONLY) }
+      : meas{ std::make_shared<eh5::Reader>(path) }
     {
     }
 

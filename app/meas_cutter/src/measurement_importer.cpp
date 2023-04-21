@@ -20,7 +20,7 @@
 #include "measurement_importer.h"
 
 MeasurementImporter::MeasurementImporter() :
-  _reader(new eCAL::eh5::HDF5Meas),
+  _reader(new eCAL::eh5::Reader),
   _current_opened_channel_data()
 {
 }
