@@ -85,6 +85,7 @@ target_link_libraries(${PROJECT_NAME}
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
 
+target_link_libraries(${PROJECT_NAME} PUBLIC eCAL::measurement_base)
 if (${ECAL_LINK_HDF5_SHARED})
   if (TARGET hdf5::hdf5-shared)
     target_link_libraries(${PROJECT_NAME} PRIVATE

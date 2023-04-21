@@ -79,7 +79,7 @@ void MeasurementImporter::openChannel(const std::string& channel_name)
   _current_opened_channel_data._channel_info.description = _reader->GetChannelDescription(channel_name);
   _current_opened_channel_data._channel_info.name = channel_name;
 
-  eCAL::eh5::EntryInfoSet entry_info_set;
+  eCAL::measurement::base::EntryInfoSet entry_info_set;
   _reader->GetEntriesInfo(channel_name, entry_info_set);
 
   for (const auto& entry_info : entry_info_set)
