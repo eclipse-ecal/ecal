@@ -21,6 +21,8 @@
  * @brief  eCAL service server implementation
 **/
 
+#include <ecal/ecal_config.h>
+
 #include "ecal_descgate.h"
 #include "ecal_registration_provider.h"
 #include "ecal_servicegate.h"
@@ -59,13 +61,21 @@ namespace eCAL
     counter << std::chrono::steady_clock::now().time_since_epoch().count();
     m_service_id = counter.str();
 
-    m_tcp_server_v0.Start(0,
-      std::bind(&CServiceServerImpl::RequestCallback, this, std::placeholders::_1, std::placeholders::_2),
-      std::bind(&CServiceServerImpl::EventCallback, this, std::placeholders::_1, std::placeholders::_2));
+    // start service protocol version 0
+    if (Config::IsServiceProtocolV0Enabled())
+    {
+        m_tcp_server_v0.Start(0,
+            std::bind(&CServiceServerImpl::RequestCallback, this, std::placeholders::_1, std::placeholders::_2),
+            std::bind(&CServiceServerImpl::EventCallback, this, std::placeholders::_1, std::placeholders::_2));
+    }
 
-    m_tcp_server_v1.Start(1,
-      std::bind(&CServiceServerImpl::RequestCallback, this, std::placeholders::_1, std::placeholders::_2),
-      std::bind(&CServiceServerImpl::EventCallback, this, std::placeholders::_1, std::placeholders::_2));
+    // start service protocol version 1
+    if (Config::IsServiceProtocolV1Enabled())
+    {
+        m_tcp_server_v1.Start(1,
+            std::bind(&CServiceServerImpl::RequestCallback, this, std::placeholders::_1, std::placeholders::_2),
+            std::bind(&CServiceServerImpl::EventCallback, this, std::placeholders::_1, std::placeholders::_2));
+    }
 
     if (g_servicegate() != nullptr) g_servicegate()->Register(this);
 
@@ -243,8 +253,10 @@ namespace eCAL
 
     // might be zero in contruction phase
     unsigned short const server_tcp_port_v0(m_tcp_server_v0.GetTcpPort());
+    if ((Config::IsServiceProtocolV0Enabled()) && (server_tcp_port_v0 == 0)) return;
+
     unsigned short const server_tcp_port_v1(m_tcp_server_v1.GetTcpPort());
-    if ((server_tcp_port_v0 == 0) || (server_tcp_port_v1 == 0)) return;
+    if ((Config::IsServiceProtocolV1Enabled()) && (server_tcp_port_v1 == 0)) return;
 
     // create service registration sample
     eCAL::pb::Sample sample;
