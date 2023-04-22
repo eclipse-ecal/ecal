@@ -82,7 +82,7 @@
 #define NET_UDP_RECBUFFER_CLEANUP                  10    /* ms */
 
 /* overall udp multicast bandwidth limitation in bytes/s, -1 == no limitation*/
-#define NET_BANDWIDTH_MAX_UDP                      -1
+#define NET_BANDWIDTH_MAX_UDP                      (-1)
 
 #define NET_INPROC_REC_ENABLED                     true
 #define NET_TCP_REC_ENABLED                        true
