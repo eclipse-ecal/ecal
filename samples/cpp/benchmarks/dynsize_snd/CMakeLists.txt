@@ -20,15 +20,15 @@ cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
-project(many_connections_rec)
+project(dynsize_snd)
 
 find_package(eCAL REQUIRED)
 
-set(many_connections_rec_src
-    src/many_connections_rec.cpp
+set(dynsize_snd_src
+    src/dynsize_snd.cpp
 )
 
-ecal_add_sample(${PROJECT_NAME} ${many_connections_rec_src})
+ecal_add_sample(${PROJECT_NAME} ${dynsize_snd_src})
 
 target_link_libraries(${PROJECT_NAME} eCAL::core)
 
@@ -36,4 +36,4 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_sample(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/benchmarks/many_connections)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/benchmarks/performance)

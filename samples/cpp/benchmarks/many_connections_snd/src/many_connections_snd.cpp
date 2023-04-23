@@ -30,9 +30,9 @@ class PublisherCreator
 public:
   PublisherCreator(int publisher_count)
   {
-    std::string ttype("THIS IS THE TOPIC TYPE NAME");
-    std::string tdesc("THIS IS THE LONG TOPIC DESCRIPTOR ");
-    for (auto rep = 0; rep < 4; ++rep) tdesc = tdesc + tdesc;
+    std::string const ttype("THIS IS THE TOPIC TYPE NAME");
+    std::string       tdesc("THIS IS THE LONG TOPIC DESCRIPTOR ");
+    for (auto rep = 0; rep < 4; ++rep) tdesc = tdesc.append(tdesc);
 
     for (int i = 1; i <= publisher_count; ++i)
     {

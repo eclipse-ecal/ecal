@@ -30,9 +30,9 @@ class SubscriberCreator
 public:
   SubscriberCreator(int publisher_count)
   {
-    std::string ttype("THIS IS THE TOPIC TYPE NAME");
-    std::string tdesc("THIS IS THE LONG TOPIC DESCRIPTOR ");
-    for (auto rep = 0; rep < 4; ++rep) tdesc = tdesc + tdesc;
+    std::string const ttype("THIS IS THE TOPIC TYPE NAME");
+    std::string       tdesc("THIS IS THE LONG TOPIC DESCRIPTOR ");
+    for (auto rep = 0; rep < 4; ++rep) tdesc = tdesc.append(tdesc);
 
     for (int i = 0; i < publisher_count; ++i)
     {
@@ -58,7 +58,7 @@ int main(int argc, char** argv)
   eCAL::Initialize(argc, argv, "many_connections_rec");
 
   // create many subscriber
-  SubscriberCreator subscribers(10000);
+  SubscriberCreator const subscribers(10000);
   std::cout << "Done Initializing" << std::endl;
 
   while (eCAL::Ok())
