@@ -37,20 +37,17 @@ int main(int argc, char **argv)
   eCAL::CPublisher pub("Counter", "long long");
 
   // timer
-  std::chrono::steady_clock::time_point start_time(std::chrono::nanoseconds(0));
-  long long                             clock (0);
-  int                                   msgs  (0);
-  unsigned long long                    bytes (0);
-  size_t                                slen  (0);
+  long long  clock(0);
+  long long  msgs (0);
+  long long  bytes(0);
 
   // default send string
   std::vector<char> send_a(payload_size);
 
   std::cout << "Message size  =  " << int(payload_size) << " Byte = " << int(payload_size/1024) << " kByte = " << int(payload_size/1024/1024) << " MByte" << std::endl << std::endl;
-  slen = payload_size;
 
   // send updates
-  start_time = std::chrono::steady_clock::now();
+  std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock::now();
   while(eCAL::Ok())
   {
     // send content
@@ -59,24 +56,24 @@ int main(int argc, char **argv)
     // collect data
     clock++;
     msgs++;
-    bytes += slen;
+    bytes += payload_size;
 
     // put the clock into the send buffer
-    ((long long*)send_a.data())[0] = clock;
+    reinterpret_cast<long long*>(send_a.data())[0] = clock;
 
     // check timer and print results every second
     if(clock%10000 == 0)
     {
-      std::chrono::duration<double> diff_time = std::chrono::steady_clock::now() - start_time;
+      std::chrono::duration<double> const diff_time = std::chrono::steady_clock::now() - start_time;
       if (diff_time >= std::chrono::duration<double>(1.0))
       {
         start_time = std::chrono::steady_clock::now();
         std::stringstream out;
-        out << "Message size (kByte):  " << int(slen / 1024)                             << std::endl;
-        out << "kByte/s:               " << int(bytes / 1024 / diff_time.count())        << std::endl;
-        out << "MByte/s:               " << int(bytes / 1024 / 1024 / diff_time.count()) << std::endl;
-        out << "Messages/s:            " << int(msgs / diff_time.count())                << std::endl;
-        out << "Clock:                 " << clock                                        << std::endl;
+        out << "Message size (kByte):  " << (unsigned int)(payload_size / 1024.0)                       << std::endl;
+        out << "kByte/s:               " << (unsigned int)(bytes / 1024.0          / diff_time.count()) << std::endl;
+        out << "MByte/s:               " << (unsigned int)(bytes / 1024.0 / 1024.0 / diff_time.count()) << std::endl;
+        out << "Messages/s:            " << (unsigned int)(msgs /                    diff_time.count()) << std::endl;
+        out << "Clock:                 " << clock                                                       << std::endl;
         std::cout << out.str() << std::endl;
         msgs  = 0;
         bytes = 0;

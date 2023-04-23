@@ -27,16 +27,6 @@
 #include <ecal/ecal.h>
 #include <ecal/msg/string/subscriber.h>
 
-std::vector<char> rec_buffer;
-
-// subscriber callback function
-void OnReceive(const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_)
-{
-  // make a memcpy to emulate user action
-  rec_buffer.reserve(data_->size);
-  std::memcpy(rec_buffer.data(), data_->buf, data_->size);
-}
-
 // main entry
 int main(int argc, char** argv)
 {
@@ -47,7 +37,7 @@ int main(int argc, char** argv)
   cmd.parse(argc, argv);
 
   // get parameters
-  std::string topic_name(arg_topic_name.getValue());
+  std::string const topic_name(arg_topic_name.getValue());
 
   // log parameter
   std::cout << "Topic name = " << topic_name << std::endl;
@@ -59,7 +49,13 @@ int main(int argc, char** argv)
   eCAL::CSubscriber sub(topic_name);
 
   // add callback
-  sub.AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2));
+  std::vector<char> rec_buffer;
+  auto on_receive = [&](const struct eCAL::SReceiveCallbackData* data_) {
+    // make a memory copy to emulate user action
+    rec_buffer.reserve(data_->size);
+    std::memcpy(rec_buffer.data(), data_->buf, data_->size);
+  };
+  sub.AddReceiveCallback(std::bind(on_receive, std::placeholders::_2));
 
   // idle main thread
   while (eCAL::Ok())

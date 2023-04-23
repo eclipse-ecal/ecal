@@ -20,26 +20,20 @@ cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
-project(many_connections)
+project(many_connections_rec)
 
 find_package(eCAL REQUIRED)
 
-ecal_add_sample(many_connections_snd
-  many_connections_snd.cpp
+set(many_connections_rec_src
+    src/many_connections_rec.cpp
 )
 
-ecal_add_sample(many_connections_rec
-  many_connections_rec.cpp
-)
+ecal_add_sample(${PROJECT_NAME} ${many_connections_rec_src})
 
-target_link_libraries(many_connections_snd PRIVATE eCAL::core)
-target_link_libraries(many_connections_rec PRIVATE eCAL::core)
+target_link_libraries(${PROJECT_NAME} eCAL::core)
 
-target_compile_features(many_connections_snd PRIVATE cxx_std_14)
-target_compile_features(many_connections_rec PRIVATE cxx_std_14)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
-ecal_install_sample(many_connections_snd)
-ecal_install_sample(many_connections_rec)
+ecal_install_sample(${PROJECT_NAME})
 
-set_property(TARGET many_connections_snd PROPERTY FOLDER samples/cpp/benchmarks)
-set_property(TARGET many_connections_rec PROPERTY FOLDER samples/cpp/benchmarks)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/many_connections)

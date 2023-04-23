@@ -21,31 +21,6 @@
 
 #include <iostream>
 
-// globals
-long long  g_clock(0);
-long long  g_first_clock(-1);
-
-// subscriber callback function
-void OnReceive(const char* /* topic_name_ */, const struct eCAL::SReceiveCallbackData* data_)
-{
-  long long clock = ((long long*)data_->buf)[0];
-  if(g_first_clock < 0)
-  {
-    g_first_clock = clock;
-  }
-
-  if(g_clock != clock - g_first_clock)
-  {
-    std::cout << "Out of sync : " << (clock - g_first_clock) - g_clock << std::endl;
-    g_first_clock = -1;
-    g_clock = 0;
-  }
-  else
-  {
-    g_clock++;
-  }
-}
-
 int main(int argc, char **argv)
 {
   // initialize eCAL API
@@ -54,8 +29,30 @@ int main(int argc, char **argv)
   // create subscriber for topic "Counter"
   eCAL::CSubscriber sub("Counter", "long long");
 
-  // setup receive callback function
-  sub.AddReceiveCallback(OnReceive);
+  // counter
+  long long  g_clock(0);
+  long long  g_first_clock(-1);
+
+  // add callback
+  auto on_receive = [&](const struct eCAL::SReceiveCallbackData* data_) {
+    long long const clock = reinterpret_cast<long long*>(data_->buf)[0];
+    if(g_first_clock < 0)
+    {
+      g_first_clock = clock;
+    }
+
+    if(g_clock != clock - g_first_clock)
+    {
+      std::cout << "Out of sync : " << (clock - g_first_clock) - g_clock << std::endl;
+      g_first_clock = -1;
+      g_clock = 0;
+    }
+    else
+    {
+      g_clock++;
+    }
+  };
+  sub.AddReceiveCallback(std::bind(on_receive, std::placeholders::_2));
 
   // idle main thread
   while(eCAL::Ok())

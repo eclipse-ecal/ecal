@@ -25,22 +25,14 @@
 
 int main(int argc, char **argv)
 {
-  long long msgs  = 0;
-  long long bytes = 0;
-  long long slen  = 0;
+  long long msgs (0);
+  long long bytes(0);
 
   // initialize eCAL API
   eCAL::Initialize(argc, argv, "performance_rec");
 
   // create subscriber for topic "Performance"
   eCAL::CSubscriber sub("Performance", "base:std::string");
-
-  // dump instance state if creation failed
-  if(!sub.IsCreated())
-  {
-    std::cout << "Could not create subscriber !" << std::endl;
-    return(0);
-  }
 
   // safe the start time
   auto start_time(std::chrono::steady_clock::now());
@@ -50,17 +42,16 @@ int main(int argc, char **argv)
   while(eCAL::Ok())
   {
     // receive content with infinite timeout
-    const bool success = sub.ReceiveBuffer(rcv_buf, nullptr, -1);
+    bool const success = sub.ReceiveBuffer(rcv_buf, nullptr, -1);
     // collect data
     if(success)
     {
       msgs++;
-      slen = rcv_buf.size();
       bytes += rcv_buf.size();
     }
 
     // check time and print results every second
-    const std::chrono::duration<double> diff_time = std::chrono::steady_clock::now() - start_time;
+    std::chrono::duration<double> const diff_time = std::chrono::steady_clock::now() - start_time;
     if (diff_time >= std::chrono::seconds(1))
     {
       start_time = std::chrono::steady_clock::now();
@@ -71,7 +62,7 @@ int main(int argc, char **argv)
         for (auto i = 0; i < 16; ++i) out << rcv_buf[i] << " ";
         out << std::endl;
       }
-      out << "Message size (kByte):  " << (unsigned int)(slen  / 1024.0)                                       << std::endl;
+      out << "Message size (kByte):  " << (unsigned int)(rcv_buf.size()  / 1024.0)                             << std::endl;
       out << "kByte/s:               " << (unsigned int)(bytes / 1024.0 /                   diff_time.count()) << std::endl;
       out << "MByte/s:               " << (unsigned int)(bytes / 1024.0 / 1024.0 /          diff_time.count()) << std::endl;
       out << "GByte/s:               " << (unsigned int)(bytes / 1024.0 / 1024.0 / 1024.0 / diff_time.count()) << std::endl;

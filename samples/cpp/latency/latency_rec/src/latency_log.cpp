@@ -19,7 +19,6 @@
 
 #include "latency_log.h"
 
-#include <algorithm>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -68,9 +67,9 @@ void evaluate(std::vector<long long>& lat_arr_, size_t rec_size_, size_t warmups
   // log into logfile (append)
   if (!log_file_.empty())
   {
-    std::ofstream ofile;
-    ofile.open(log_file_, std::ios::out | std::ios::app);
-    ofile << ss.str();
+    std::ofstream ostream;
+    ostream.open(log_file_, std::ios::out | std::ios::app);
+    ostream << ss.str();
   }
 }
 
@@ -82,8 +81,8 @@ void log2file(std::vector<long long>& lat_arr_, size_t rec_size_, std::string& l
     ss << std::setw(6) << std::setfill('0') << rec_size_ / 1024;
     const std::string rec_size_s = ss.str();
 
-    std::ofstream ofile(rec_size_s + "-" + log_file_);
-    const std::ostream_iterator<long long>output_iterator(ofile, "\n");
+    std::ofstream ostream(rec_size_s + "-" + log_file_);
+    const std::ostream_iterator<long long>output_iterator(ostream, "\n");
     std::copy(lat_arr_.begin(), lat_arr_.end(), output_iterator);
   }
 }

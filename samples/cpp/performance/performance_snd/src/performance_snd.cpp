@@ -62,9 +62,9 @@ int main(int argc, char **argv)
   std::cout << std::endl;
 
   // counter
-  int                clock(0);
-  int                msgs (0);
-  unsigned long long bytes(0);
+  long long msgs (0);
+  long long bytes(0);
+  long long clock(0);
 
   // set start time
   auto start_time = std::chrono::steady_clock::now();
@@ -73,17 +73,12 @@ int main(int argc, char **argv)
   while(eCAL::Ok())
   {
     // send content
-    const size_t snd_len = pub.Send(binary_payload);
-
-    if((snd_len > 0) && (snd_len != binary_payload.GetSize()))
-    {
-      std::cerr <<  std::endl << "Send failed !" << " sent : " << binary_payload.GetSize() << " returned : " << snd_len <<  std::endl;
-    }
+    pub.Send(binary_payload);
 
     // manage counters
     clock++;
     msgs++;
-    bytes += binary_payload.GetSize();
+    bytes += payload_size;
 
     // check timer and print results every second
     if(clock%2000 == 0)

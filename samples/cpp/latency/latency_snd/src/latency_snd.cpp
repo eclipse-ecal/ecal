@@ -66,7 +66,7 @@ void do_run(const int runs, int snd_size /*kB*/, int mem_buffer, bool zero_copy)
 
   // add some extra loops for warmup :-)
   int run(0);
-  for (run = 0; run < runs+warmups; ++run)
+  for (; run < runs+warmups; ++run)
   {
     // get microseconds
     auto snd_time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
