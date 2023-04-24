@@ -19,6 +19,7 @@
 
 #include "latency_log.h"
 
+#include <algorithm>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
