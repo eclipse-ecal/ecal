@@ -49,6 +49,11 @@ PluginWidget::PluginWidget(const QString& topic_name, const QString&, QWidget* p
   subscriber_.AddReceiveCallback(std::bind(&PluginWidget::ecalMessageReceivedCallback, this, std::placeholders::_2, std::placeholders::_3));
 }
 
+PluginWidget::~PluginWidget()
+{
+  subscriber_.RemReceiveCallback();
+}
+
 void PluginWidget::ecalMessageReceivedCallback(const std::string& message, long long publish_timestamp_usecs)
 {
   std::lock_guard<std::mutex> message_lock(message_mutex_);
@@ -96,10 +101,6 @@ void PluginWidget::updatePublishTimeLabel()
   }
 
   ui_.publish_timestamp_label->setText(time_string);
-}
-
-PluginWidget::~PluginWidget()
-{
 }
 
 void PluginWidget::onUpdate()
