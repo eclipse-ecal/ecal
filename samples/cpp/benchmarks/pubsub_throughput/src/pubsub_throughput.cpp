@@ -22,122 +22,67 @@
 #include <atomic>
 #include <chrono>
 #include <iostream>
-#include <memory>
 
-#define TEST_RELIABLE    0
-#define TEST_BEST_EFFORT 1
+#include "binary_payload_writer.h"
 
-#define TEST_UDP         0
-#define TEST_SHM         1
-#define TEST_TCP         0
-#define TEST_INPROC      0
+const auto g_snd_size (8* 1024 * 1024);
+const auto g_snd_loops(1000);
 
-auto g_snd_size (1000 * 1024);
-auto g_pre_loops(100);
-auto g_snd_loops( 1000 * 1000);
-
-// subscriber callback function
-std::atomic<size_t> g_callback_received;
-void OnReceive(const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_)
+void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer layer, bool zero_copy = false)
 {
-  g_callback_received += data_->size;
-}
+  // create payload
+  CBinaryPayload payload(snd_size);
 
-static std::string CreatePayLoad(size_t payload_size_)
-{
-  std::string s = "Hello World ";
-  while (s.size() < payload_size_) s += s;
-  s.resize(payload_size_);
-  return(s);
-}
-
-bool test_throughput(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer layer, bool reliable)
-{
-  // internal timings for registration and data flow delay
-  const int reg_time (2000);
-  const int data_time(200);
-
-  // create publisher for topic "ThroughPut"
-  std::shared_ptr<eCAL::CPublisher> pub = std::make_shared<eCAL::CPublisher>();
-  // set qos
-  eCAL::QOS::SWriterQOS wqos;
-  if (reliable) wqos.reliability = eCAL::QOS::reliable_reliability_qos;
-  else          wqos.reliability = eCAL::QOS::best_effort_reliability_qos;
-  pub->SetQOS(wqos);
+  // create publisher
+  eCAL::CPublisher pub("throughput");
   // set transport layer
-  pub->SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
-  pub->SetLayerMode(layer, eCAL::TLayer::smode_on);
-  // create it
-  pub->Create("ThroughPut");
+  pub.SetLayerMode(eCAL::TLayer::tlayer_all, eCAL::TLayer::smode_off);
+  pub.SetLayerMode(layer, eCAL::TLayer::smode_on);
+  // set attributes
+  pub.ShmEnableZeroCopy(zero_copy);
+  pub.ShmSetAcknowledgeTimeout(100);
 
-  // create subscriber for topic "ThroughPut"
-  std::shared_ptr<eCAL::CSubscriber> sub = std::make_shared<eCAL::CSubscriber>();
-  // set qos
-  eCAL::QOS::SReaderQOS rqos;
-  if (reliable) rqos.reliability = eCAL::QOS::reliable_reliability_qos;
-  else          rqos.reliability = eCAL::QOS::best_effort_reliability_qos;
-  sub->SetQOS(rqos);
-  // create it
-  sub->Create("ThroughPut");
+  // create subscriber
+  eCAL::CSubscriber sub("throughput");
   // add callback
-  sub->AddReceiveCallback(std::bind(OnReceive, std::placeholders::_1, std::placeholders::_2));
+  std::atomic<size_t> received_bytes;
+  auto on_receive = [&](const struct eCAL::SReceiveCallbackData* data_) {
+    received_bytes += data_->size;
+  };
+  sub.AddReceiveCallback(std::bind(on_receive, std::placeholders::_2));
 
   // let's match them
-  eCAL::Process::SleepMS(reg_time);
+  eCAL::Process::SleepMS(2000);
 
-  // default send string
-  std::string send_s = CreatePayLoad(snd_size);
+  // initial call to allocate memory file
+  pub.Send(payload);
+
+  // reset received bytes counter
+  received_bytes = 0;
 
   // start time
   auto start = std::chrono::high_resolution_clock::now();
 
-  // we send a few dummy loops to establish all connections
-  for (auto i = 0; i < g_pre_loops; ++i)
-  {
-    pub->Send(send_s);
-  }
-
-  // let's finalize receive
-  eCAL::Process::SleepMS(data_time);
-
-  // reset received bytes counter
-  g_callback_received = 0;
-
   // do some work
   for (auto i = 0; i < snd_loops; ++i)
   {
-    pub->Send(send_s);
+    pub.Send(payload);
   }
 
   // end time
   auto finish = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double> elapsed = finish - start;
+  const std::chrono::duration<double> elapsed = finish - start;
   std::cout << "Elapsed time : " << elapsed.count() << " s" << std::endl;
 
-  // let's match them
-  eCAL::Process::SleepMS(data_time);
-
-  size_t sum_snd_bytes = send_s.size() * snd_loops;
-  size_t sum_rcv_bytes = g_callback_received;
-  std::cout << "Sent         : " << sum_snd_bytes << " bytes";
-  std::cout << " (" << sum_snd_bytes / (1024 * 1024) << " MB)" << std::endl;
-  std::cout << "Received     : " << sum_rcv_bytes << " bytes";
-  std::cout << " (" << sum_rcv_bytes / (1024 * 1024) << " MB)" << std::endl;
+  const size_t sum_snd_bytes = payload.GetSize() * snd_loops;
+  const size_t sum_rcv_bytes = received_bytes;
+  std::cout << "Sent         : " << sum_snd_bytes / (1024 * 1024) << " MB" << std::endl;
+  std::cout << "Received     : " << sum_rcv_bytes / (1024 * 1024) << " MB" << std::endl;
   std::cout << "Lost         : " << sum_snd_bytes - sum_rcv_bytes << " bytes";
   std::cout << " (" << (sum_snd_bytes - sum_rcv_bytes) / (1024 * 1024) << " MB, ";
   std::cout << (sum_snd_bytes - sum_rcv_bytes) * 100.0f / sum_snd_bytes << " %)" << std::endl;
   std::cout << "Throughput   : " << int((sum_snd_bytes / (1024.0 * 1024.0)) / elapsed.count()) << " MB/s " << std::endl;
-
-  // check receive and send bytes
-  bool ret_state(false);
-  if (reliable) ret_state = sum_snd_bytes         == sum_rcv_bytes;
-  else          ret_state = (sum_snd_bytes * 3/4) <= sum_rcv_bytes;
-
-  // destroy pub/sub
-  pub->Destroy();
-  sub->Destroy();
-
-  return(ret_state);
+  std::cout << "Throughput   : " << int((sum_snd_bytes / (1024.0 * 1024.0 * 1024.0)) / elapsed.count()) << " GB/s " << std::endl;
 }
 
 // main entry
@@ -149,63 +94,17 @@ int main(int argc, char **argv)
   // publish / subscribe match in the same process
   eCAL::Util::EnableLoopback(true);
 
-  bool success(false);
+  std::cout << "---------------------------" << std::endl;
+  std::cout << "LAYER: SHM"                  << std::endl;
+  std::cout << "---------------------------" << std::endl;
+  throughput_test(g_snd_size, g_snd_loops, eCAL::TLayer::tlayer_shm, false);
+  std::cout << std::endl << std::endl;
 
-#if TEST_RELIABLE
-
-#if TEST_UDP
-  std::cout << "RELIABLE     : UDP" << std::endl;
-  success = test_throughput(g_snd_size, g_snd_loops, eCAL::TLayer::tlayer_udp_mc, true);
-  std::cout << "RESULT       : " << success << std::endl << std::endl;
-#endif
-
-#if TEST_SHM
-  std::cout << "RELIABLE     : SHM" << std::endl;
-  success = test_throughput(g_snd_size, g_snd_loops, eCAL::TLayer::tlayer_shm, true);
-  std::cout << "RESULT       : " << success << std::endl << std::endl;
-#endif
-
-#if TEST_TCP
-  std::cout << "RELIABLE     : TCP" << std::endl;
-  success = test_throughput(4000, g_snd_loops, eCAL::TLayer::tlayer_tcp, true);
-  std::cout << "RESULT       : " << success << std::endl << std::endl;
-#endif
-
-#if TEST_INPROC
-  std::cout << "RELIABLE     : INPROC" << std::endl;
-  success = test_throughput(4000, g_snd_loops, eCAL::TLayer::tlayer_inproc, true);
-  std::cout << "RESULT       : " << success << std::endl << std::endl;
-#endif
-
-#endif // TEST_RELIABLE
-
-#if TEST_BEST_EFFORT
-
-#if TEST_UDP
-  std::cout << "BEST EFFORT : UDP" << std::endl;
-  success = test_throughput(g_snd_size, g_snd_loops, eCAL::TLayer::tlayer_udp_mc, false);
-  std::cout << "RESULT       : " << success << std::endl << std::endl;
-#endif
-
-#if TEST_SHM
-  std::cout << "BEST EFFORT : SHM" << std::endl;
-  success = test_throughput(g_snd_size, g_snd_loops, eCAL::TLayer::tlayer_shm, false);
-  std::cout << "RESULT       : " << success << std::endl << std::endl;
-#endif
-
-#if TEST_TCP
-  std::cout << "BEST EFFORT : TCP" << std::endl;
-  success = test_throughput(g_snd_size, g_snd_loops, eCAL::TLayer::tlayer_tcp, false);
-  std::cout << "RESULT       : " << success << std::endl << std::endl;
-#endif
-
-#if TEST_INPROC
-  std::cout << "BEST EFFORT : INPROC" << std::endl;
-  success = test_throughput(4000, g_snd_loops, eCAL::TLayer::tlayer_inproc, false);
-  std::cout << "RESULT       : " << success << std::endl << std::endl;
-#endif
-
-#endif // TEST_BEST_EFFORT
+  std::cout << "---------------------------" << std::endl;
+  std::cout << "LAYER: SHM ZERO-COPY"        << std::endl;
+  std::cout << "---------------------------" << std::endl;
+  throughput_test(g_snd_size, g_snd_loops, eCAL::TLayer::tlayer_shm, true);
+  std::cout << std::endl << std::endl;
 
   // finalize eCAL API
   eCAL::Finalize();
