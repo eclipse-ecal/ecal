@@ -55,7 +55,7 @@ namespace eCAL
     if (!m_created) return(false);
 
     // register internal client
-    std::unique_lock<std::shared_timed_mutex> lock(m_client_set_sync);
+    std::unique_lock<std::shared_timed_mutex> const lock(m_client_set_sync);
     m_client_set.insert(client_);
 
     return(true);
@@ -67,7 +67,7 @@ namespace eCAL
     bool ret_state(false);
 
     // unregister internal service
-    std::unique_lock<std::shared_timed_mutex> lock(m_client_set_sync);
+    std::unique_lock<std::shared_timed_mutex> const lock(m_client_set_sync);
     for (auto iter = m_client_set.begin(); iter != m_client_set.end();)
     {
       if (*iter == client_)
@@ -86,8 +86,9 @@ namespace eCAL
 
   void CClientGate::ApplyServiceRegistration(const eCAL::pb::Sample& ecal_sample_)
   {
+
     SServiceAttr service;
-    auto& ecal_sample_service = ecal_sample_.service();
+    const auto& ecal_sample_service = ecal_sample_.service();
     service.hname    = ecal_sample_service.hname();
     service.pname    = ecal_sample_service.pname();
     service.uname    = ecal_sample_service.uname();
@@ -95,6 +96,9 @@ namespace eCAL
     service.sid      = ecal_sample_service.sid();
     service.pid      = static_cast<int>(ecal_sample_service.pid());
     service.tcp_port = static_cast<unsigned short>(ecal_sample_service.tcp_port());
+
+    // service protocol version
+    unsigned int service_version = ecal_sample_service.version();
 
     // store description
     for (const auto& method : ecal_sample_service.methods())
@@ -107,7 +111,7 @@ namespace eCAL
 
     // add or remove (timeouted) services
     {
-      std::unique_lock<std::shared_timed_mutex> lock(m_service_register_map_sync);
+      std::unique_lock<std::shared_timed_mutex> const lock(m_service_register_map_sync);
 
       // add / update service
       m_service_register_map[service.key] = service;
@@ -118,12 +122,12 @@ namespace eCAL
 
     // inform matching clients
     {
-      std::shared_lock<std::shared_timed_mutex> lock(m_client_set_sync);
-      for (auto& iter : m_client_set)
+      std::shared_lock<std::shared_timed_mutex> const lock(m_client_set_sync);
+      for (const auto& iter : m_client_set)
       {
         if (iter->GetServiceName() == service.sname)
         {
-          iter->RegisterService(service.key, service);
+          iter->RegisterService(service.key, service_version, service);
         }
       }
     }
@@ -132,7 +136,7 @@ namespace eCAL
   std::vector<SServiceAttr> CClientGate::GetServiceAttr(const std::string& service_name_)
   {
     std::vector<SServiceAttr> ret_vec;
-    std::shared_lock<std::shared_timed_mutex> lock(m_service_register_map_sync);
+    std::shared_lock<std::shared_timed_mutex> const lock(m_service_register_map_sync);
 
     // look for requested services
     for (auto service : m_service_register_map)
@@ -150,8 +154,8 @@ namespace eCAL
     if (!m_created) return;
 
     // refresh service registrations
-    std::shared_lock<std::shared_timed_mutex> lock(m_client_set_sync);
-    for (auto iter : m_client_set)
+    std::shared_lock<std::shared_timed_mutex> const lock(m_client_set_sync);
+    for (auto *iter : m_client_set)
     {
       iter->RefreshRegistration();
     }
@@ -164,7 +168,7 @@ namespace eCAL
     , const std::string& resp_type_name_
     , const std::string& resp_type_desc_)
   {
-    if (g_descgate())
+    if (g_descgate() != nullptr)
     {
       // calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;

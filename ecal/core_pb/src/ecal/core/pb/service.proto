@@ -71,8 +71,11 @@ message Service                       // service
   int32            pid         =  5;  // process id
   string           sname       =  6;  // service name
   string           sid         =  9;  // service id
-  uint32           tcp_port    =  7;  // the tcp port used for that service
   repeated Method  methods     =  8;  // list of methods
+
+  // transport specific parameter
+  uint32           version     = 10;  // service version (for internal use)
+  uint32           tcp_port    =  7;  // the tcp port used for that service
 }
 
 message Client                        // client
@@ -84,4 +87,7 @@ message Client                        // client
   int32            pid         =  5;  // process id
   string           sname       =  6;  // service name
   string           sid         =  7;  // service id
+
+  // transport specific parameter
+  uint32           version     =  8;  // client version (for internal use)
 }

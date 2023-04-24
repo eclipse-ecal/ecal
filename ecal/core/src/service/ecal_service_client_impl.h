@@ -73,47 +73,49 @@ namespace eCAL
     bool IsConnected();
 
     // called by the eCAL::CClientGate to register a service
-    void RegisterService(const std::string& key_, const SServiceAttr& service_);
+    void RegisterService(const std::string& key_, unsigned int version_, const SServiceAttr& service_);
 
     // called by eCAL:CClientGate every second to update registration layer
     void RefreshRegistration();
 
     std::string GetServiceName() { return m_service_name; };
 
-    // this object must not be copied.
+    // this object must not be copied and moved
     CServiceClientImpl(const CServiceClientImpl&) = delete;
     CServiceClientImpl& operator=(const CServiceClientImpl&) = delete;
+    CServiceClientImpl(CServiceClientImpl&&) = delete;
+    CServiceClientImpl& operator=(CServiceClientImpl&&) = delete;
 
   protected:
     void CheckForNewServices();
 
     bool SendRequests(const std::string& host_name_, const std::string& method_name_, const std::string& request_, int timeout_);
-    bool SendRequest(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, int timeout_, struct SServiceResponse& service_response_);
+    bool SendRequest(const std::shared_ptr<CTcpClient>& client_, const std::string& method_name_, const std::string& request_, int timeout_, struct SServiceResponse& service_response_);
 
-    void SendRequestsAsync(const std::string& host_name_, const std::string& method_name_, const std::string& request_, int timeout_);
-    void SendRequestAsync(std::shared_ptr<CTcpClient> client_, const std::string& method_name_, const std::string& request_, int timeout_);
+    void SendRequestAsync(const std::shared_ptr<CTcpClient>& client_, const std::string& method_name_, const std::string& request_, int timeout_);
 
     void ErrorCallback(const std::string &method_name_, const std::string &error_message_);
 
-    typedef std::map<std::string, std::shared_ptr<CTcpClient>> ClientMapT;
-    std::mutex         m_client_map_sync;
-    ClientMapT         m_client_map;
+    using ClientMapT = std::map<std::string, std::shared_ptr<CTcpClient>>;
+    std::mutex            m_client_map_sync;
+    ClientMapT            m_client_map;
 
-    std::mutex         m_response_callback_sync;
-    ResponseCallbackT  m_response_callback;
+    std::mutex            m_response_callback_sync;
+    ResponseCallbackT     m_response_callback;
 
-    std::mutex         m_event_callback_map_sync;
-    typedef std::map<eCAL_Client_Event, ClientEventCallbackT> EventCallbackMapT;
-    EventCallbackMapT  m_event_callback_map;
+    std::mutex            m_event_callback_map_sync;
+    using EventCallbackMapT = std::map<eCAL_Client_Event, ClientEventCallbackT>;
+    EventCallbackMapT     m_event_callback_map;
 
-    std::mutex         m_connected_services_map_sync;
-    typedef std::map<std::string, SServiceAttr> ServiceAttrMapT;
-    ServiceAttrMapT    m_connected_services_map;
+    std::mutex            m_connected_services_map_sync;
+    using ServiceAttrMapT = std::map<std::string, SServiceAttr>;
+    ServiceAttrMapT       m_connected_services_map;
 
-    std::string        m_service_name;
-    std::string        m_service_id;
-    std::string        m_host_name;
+    static constexpr int  m_version = 0;
+    std::string           m_service_name;
+    std::string           m_service_id;
+    std::string           m_host_name;
 
-    bool               m_created;
+    bool                  m_created;
   };
 }

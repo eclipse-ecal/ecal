@@ -23,26 +23,26 @@ import "ecal/core/pb/layer.proto";
 
 package eCAL.pb;
 
-message QOS                                     // quality of service
+message QOS                                       // quality of service
 {
   enum eQOSPolicy_Reliability
   {
-    best_effort_reliability_qos = 0;            // best effort reliability (default for Subscribers)
-    reliable_reliability_qos    = 1;            // reliable reliability (default for Publishers)
+    best_effort_reliability_qos = 0;              // best effort reliability (default for Subscribers)
+    reliable_reliability_qos    = 1;              // reliable reliability (default for Publishers)
   }
 
   enum eQOSPolicy_HistoryKind
   {
-    keep_last_history_qos = 0;                  // keep only a number of samples, default value
-    keep_all_history_qos  = 1;                  // keep all samples until the ResourceLimitsQosPolicy are exhausted
+    keep_last_history_qos = 0;                    // keep only a number of samples, default value
+    keep_all_history_qos  = 1;                    // keep all samples until the ResourceLimitsQosPolicy are exhausted
   }
 
-  eQOSPolicy_Reliability  reliability    =  1;  // qos reliability (reliable / best effort)
-  eQOSPolicy_HistoryKind  history        =  2;  // qos history kind (keep last / all)
-  int32                   history_depth  =  3;  // number of samples for history kind "keep last"
+  eQOSPolicy_Reliability  reliability    =  1;    // qos reliability (reliable / best effort)
+  eQOSPolicy_HistoryKind  history        =  2;    // qos history kind (keep last / all)
+  int32                   history_depth  =  3;    // number of samples for history kind "keep last"
 }
 
-message Topic                                   // eCAL topic
+message Topic                                     // eCAL topic
 {
   int32              rclock                =  1;  // registration clock (heart beat)
   int32              hid                   = 26;  // host id

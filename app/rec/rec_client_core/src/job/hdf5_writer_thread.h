@@ -93,8 +93,8 @@ namespace eCAL
       bool                                  new_topic_info_map_available_;      /**< Telling that a new topic info map has been set from the outside. */
       mutable RecHdf5JobStatus              last_status_;
 
-      mutable std::mutex                   hdf5_writer_mutex_;
-      std::unique_ptr<eCAL::eh5::HDF5Meas> hdf5_writer_;
+      mutable std::mutex                                    hdf5_writer_mutex_;
+      std::unique_ptr<eCAL::measurement::base::Measurement> hdf5_writer_;
 
 
       std::atomic<bool> flushing_;

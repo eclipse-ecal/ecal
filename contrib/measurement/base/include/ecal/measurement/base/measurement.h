@@ -18,8 +18,8 @@
 */
 
 /**
- * @file   eh5_meas.h
- * @brief  eCALHDF5 measurement class
+ * @file   measurement.h
+ * @brief  Base class for low level measurement oprations
 **/
 
 #pragma once
@@ -29,51 +29,41 @@
 #include <string>
 #include <memory>
 
-#include "eh5_types.h"
-#include <ecal/measurement/base/measurement.h>
+#include <ecal/measurement/base/types.h>
 
 namespace eCAL
 {
-  namespace eh5
+  namespace measurement
   {
-    class HDF5MeasImpl;
-
+    namespace base
+    {
     /**
-     * @brief eCAL HDF5 measurement API
+     * @brief eCAL measurement API
     **/
-    class HDF5Meas : public eCAL::measurement::base::Measurement
+    class Measurement
     {
     public:
       /**
        * @brief Constructor
       **/
-      HDF5Meas();
-
-      /**
-       * @brief Constructor
-       *
-       * @param path     Input file path / measurement directory path (see meas directory structure description bellow, in Open method).
-       * @param access   Access type
-       *
-      **/
-      explicit HDF5Meas(const std::string& path, measurement::base::AccessType access = measurement::base::AccessType::RDONLY);
+      Measurement() = default;
 
       /**
        * @brief Destructor
       **/
-      ~HDF5Meas() override;
+      virtual ~Measurement() = default;
 
       /**
        * @brief Copy operator
       **/
-      HDF5Meas(const HDF5Meas& other) = delete;
-      HDF5Meas& operator=(const HDF5Meas& other) = delete;
+      Measurement(const Measurement& other) = delete;
+      Measurement& operator=(const Measurement& other) = delete;
 
       /**
       * @brief Move operator
       **/
-      HDF5Meas(HDF5Meas&&) = default;
-      HDF5Meas& operator=(HDF5Meas&&) = default;
+      Measurement(Measurement&&) = default;
+      Measurement& operator=(Measurement&&) = default;
 
       /**
        * @brief Open file
@@ -86,56 +76,56 @@ namespace eCAL
        *                  - hosts directories:                                  |_Host1 (e.g.: CARPC01)
        *                                                                        |_Host2 (e.g.: CARPC02)
        *
-       *                 File path as input (eAccessType::RDONLY):
+       *                 File path as input (AccessType::RDONLY):
        *                  - root directory (e.g.: M:\measurement_directory\measurement01) in this case all hosts subdirectories will be iterated,
        *                  - host directory (e.g.: M:\measurement_directory\measurement01\CARPC01),
        *                  - file path, path to file from measurement (e.g.: M:\measurement_directory\measurement01\CARPC01\meas01_05.hdf5).
        *
-       *                 File path as output (eAccessType::CREATE):
+       *                 File path as output (AccessType::CREATE):
        *                  - full path to  measurement directory (recommended with host name) (e.g.: M:\measurement_directory\measurement01\CARPC01),
        *                  - to set the name of the actual hdf5 file use SetFileBaseName method.
        *
        * @param access   Access type
        *
-       * @return         true if output (eAccessType::CREATE) measurement directory structure can be accessed/created, false otherwise.
-       *                 true if input (eAccessType::RDONLY) measurement/file path was opened, false otherwise.
+       * @return         true if output (AccessType::CREATE) measurement directory structure can be accessed/created, false otherwise.
+       *                 true if input (AccessType::RDONLY) measurement/file path was opened, false otherwise.
       **/
-      bool Open(const std::string& path, measurement::base::AccessType access = measurement::base::AccessType::RDONLY) override;
+      virtual bool Open(const std::string& path, AccessType access = AccessType::RDONLY)  = 0;
 
       /**
        * @brief Close file
        *
        * @return         true if succeeds, false if it fails
       **/
-      bool Close() override;
+      virtual bool Close()  = 0;
 
       /**
        * @brief Checks if file/measurement is ok
        *
        * @return  true if meas can be opened(read) or location is accessible(write), false otherwise
       **/
-      bool IsOk() const override;
+      virtual bool IsOk() const  = 0;
 
       /**
        * @brief Get the File Type Version of the current opened file
        *
        * @return       file version
       **/
-      std::string GetFileVersion() const override;
+      virtual std::string GetFileVersion() const = 0;
 
       /**
        * @brief Gets maximum allowed size for an individual file
        *
        * @return       maximum size in MB
       **/
-      size_t GetMaxSizePerFile() const override;
+      virtual size_t GetMaxSizePerFile() const = 0;
 
       /**
        * @brief Sets maximum allowed size for an individual file
        *
        * @param size   maximum size in MB
       **/
-      void SetMaxSizePerFile(size_t size) override;
+      virtual void SetMaxSizePerFile(size_t size) = 0;
 
       /**
       * @brief Whether each Channel shall be writte in its own file
@@ -146,7 +136,7 @@ namespace eCAL
       * 
       * @return true, if one file per channel is enabled
       */
-      bool IsOneFilePerChannelEnabled() const override;
+      virtual bool IsOneFilePerChannelEnabled() const = 0;
 
       /**
       * @brief Enable / disable the creation of one individual file per channel
@@ -157,14 +147,14 @@ namespace eCAL
       * 
       * @param enabled   Whether one file shall be created per channel
       */
-      void SetOneFilePerChannelEnabled(bool enabled) override;
+      virtual void SetOneFilePerChannelEnabled(bool enabled) = 0;
 
       /**
        * @brief Get the available channel names of the current opened file / measurement
        *
        * @return       channel names
       **/
-      std::set<std::string> GetChannelNames() const override;
+      virtual std::set<std::string> GetChannelNames() const = 0;
 
       /**
        * @brief Check if channel exists in measurement
@@ -173,7 +163,7 @@ namespace eCAL
        *
        * @return       true if exists, false otherwise
       **/
-      bool HasChannel(const std::string& channel_name) const override;
+      virtual bool HasChannel(const std::string& channel_name) const = 0;
 
       /**
        * @brief Get the channel description for the given channel
@@ -182,7 +172,7 @@ namespace eCAL
        *
        * @return              channel description
       **/
-      std::string GetChannelDescription(const std::string& channel_name) const override;
+      virtual std::string GetChannelDescription(const std::string& channel_name) const = 0;
 
       /**
        * @brief Set description of the given channel
@@ -190,7 +180,7 @@ namespace eCAL
        * @param channel_name    channel name
        * @param description     description of the channel
       **/
-      void SetChannelDescription(const std::string& channel_name, const std::string& description) override;
+      virtual void SetChannelDescription(const std::string& channel_name, const std::string& description) = 0;
 
       /**
        * @brief Gets the channel type of the given channel
@@ -199,7 +189,7 @@ namespace eCAL
        *
        * @return              channel type
       **/
-      std::string GetChannelType(const std::string& channel_name) const override;
+      virtual std::string GetChannelType(const std::string& channel_name) const = 0;
 
       /**
        * @brief Set type of the given channel
@@ -207,7 +197,7 @@ namespace eCAL
        * @param channel_name  channel name
        * @param type          type of the channel
       **/
-      void SetChannelType(const std::string& channel_name, const std::string& type) override;
+      virtual void SetChannelType(const std::string& channel_name, const std::string& type) = 0;
 
       /**
        * @brief Gets minimum timestamp for specified channel
@@ -216,7 +206,7 @@ namespace eCAL
        *
        * @return                minimum timestamp value
       **/
-      long long GetMinTimestamp(const std::string& channel_name) const override;
+      virtual long long GetMinTimestamp(const std::string& channel_name) const = 0;
 
       /**
        * @brief Gets maximum timestamp for specified channel
@@ -225,7 +215,7 @@ namespace eCAL
        *
        * @return                maximum timestamp value
       **/
-      long long GetMaxTimestamp(const std::string& channel_name) const override;
+      virtual long long GetMaxTimestamp(const std::string& channel_name) const = 0;
 
       /**
        * @brief Gets the header info for all data entries for the given channel
@@ -236,7 +226,7 @@ namespace eCAL
        *
        * @return                    true if succeeds, false if it fails
       **/
-      bool GetEntriesInfo(const std::string& channel_name, measurement::base::EntryInfoSet& entries) const override;
+      virtual bool GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const = 0;
 
       /**
        * @brief Gets the header info for data entries for the given channel included in given time range (begin->end)
@@ -249,7 +239,7 @@ namespace eCAL
        *
        * @return                   true if succeeds, false if it fails
       **/
-      bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, measurement::base::EntryInfoSet& entries) const override;
+      virtual bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const = 0;
 
       /**
        * @brief Gets data size of a specific entry
@@ -259,7 +249,7 @@ namespace eCAL
        *
        * @return                 true if succeeds, false if it fails
       **/
-      bool GetEntryDataSize(long long entry_id, size_t& size) const override;
+      virtual bool GetEntryDataSize(long long entry_id, size_t& size) const = 0;
 
       /**
        * @brief Gets data from a specific entry
@@ -269,14 +259,14 @@ namespace eCAL
        *
        * @return                 true if succeeds, false if it fails
       **/
-      bool GetEntryData(long long entry_id, void* data) const override;
+      virtual bool GetEntryData(long long entry_id, void* data) const = 0;
 
       /**
        * @brief Set measurement file base name (desired name for the actual hdf5 files that will be created)
        *
        * @param base_name        Name of the hdf5 files that will be created.
       **/
-      void SetFileBaseName(const std::string& base_name) override;
+      virtual void SetFileBaseName(const std::string& base_name) = 0;
 
       /**
        * @brief Add entry to file
@@ -291,22 +281,25 @@ namespace eCAL
        *
        * @return              true if succeeds, false if it fails
       **/
-      bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) override;
+      virtual bool AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) = 0;
+
+      /**
+       * @brief Callback function type for pre file split notification
+      **/
+      typedef std::function<void(void)> CallbackFunction;
 
       /**
        * @brief Connect callback for pre file split notification
        *
        * @param cb   callback function
       **/
-      void ConnectPreSplitCallback(CallbackFunction cb) override;
+      virtual void ConnectPreSplitCallback(CallbackFunction cb) = 0;
 
       /**
        * @brief Disconnect pre file split callback
       **/
-      void DisconnectPreSplitCallback() override;
-
-     private:
-      std::unique_ptr<HDF5MeasImpl> hdf_meas_impl_;
+      virtual void DisconnectPreSplitCallback() = 0;
     };
+    }
   }  // namespace eh5
 }  // namespace eCAL

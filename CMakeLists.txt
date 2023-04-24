@@ -71,6 +71,7 @@ option(HAS_HDF5                                "Platform supports HDF5 library" 
 option(HAS_QT5                                 "Platform supports Qt 5 library"                                    ON)
 option(HAS_CURL                                "Build with CURL (i.e. upload support in the recorder app)"         ON)
 option(HAS_CAPNPROTO                           "Platform supports Cap'n Proto library"                            OFF)
+option(HAS_FLATBUFFERS                         "Platform supports flatbuffers library"                            OFF)
 option(HAS_FTXUI                               "Platform supports FTXUI library. Requires C++17 and up."           ON)
 
 option(BUILD_DOCS                              "Build the eCAL documentation"                                     OFF)
@@ -370,6 +371,7 @@ if(HAS_HDF5)
   add_subdirectory(contrib/ecalhdf5)
   add_subdirectory(contrib/message)
 endif()
+add_subdirectory(contrib/measurement/base)
 
 # --------------------------------------------------------
 # ecal core python binding

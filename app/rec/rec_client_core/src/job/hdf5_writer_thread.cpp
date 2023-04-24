@@ -264,7 +264,7 @@ namespace eCAL
 #endif // NDEBUG
       std::unique_lock<decltype(hdf5_writer_mutex_)> hdf5_writer_lock(hdf5_writer_mutex_);
 
-      if (hdf5_writer_->Open(hdf5_dir, eCAL::eh5::eAccessType::CREATE))
+      if (hdf5_writer_->Open(hdf5_dir, eCAL::measurement::base::AccessType::CREATE))
       {
 #ifndef NDEBUG
         EcalRecLogger::Instance()->debug("Hdf5WriterThread::Open(): Successfully opened HDF5-Writer with path \"" + hdf5_dir + "\"");

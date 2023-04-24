@@ -22,10 +22,10 @@
 namespace EcalmonGlobals
 {
   static const int VERSION_MAJOR = 2;
-  static const int VERSION_MINOR = 2;
+  static const int VERSION_MINOR = 3;
   static const int VERSION_PATCH = 0;
 
-  static const char* const VERSION_STRING = "2.2.0";
+  static const char* const VERSION_STRING = "2.3.0";
 
   static constexpr int Version()
   {

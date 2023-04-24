@@ -21,9 +21,6 @@
  * @brief  eCAL service server implementation
 **/
 
-#include "ecal_def.h"
-#include "ecal_config_reader_hlp.h"
-
 #include "ecal_descgate.h"
 #include "ecal_registration_provider.h"
 #include "ecal_servicegate.h"
@@ -32,6 +29,7 @@
 
 #include <chrono>
 #include <sstream>
+#include <utility>
 
 namespace eCAL
 {
@@ -70,7 +68,7 @@ namespace eCAL
     m_tcp_server.Start(std::bind(&CServiceServerImpl::RequestCallback, this, std::placeholders::_1, std::placeholders::_2),
                        std::bind(&CServiceServerImpl::EventCallback,   this, std::placeholders::_1, std::placeholders::_2));
 
-    if (g_servicegate()) g_servicegate()->Register(this);
+    if (g_servicegate() != nullptr) g_servicegate()->Register(this);
 
     m_created = true;
 
@@ -84,18 +82,18 @@ namespace eCAL
     m_tcp_server.Stop();
     m_tcp_server.Destroy();
 
-    if (g_servicegate())           g_servicegate()->Unregister(this);
-    if (g_registration_provider()) g_registration_provider()->UnregisterServer(m_service_name, m_service_id);
+    if (g_servicegate() != nullptr)           g_servicegate()->Unregister(this);
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterServer(m_service_name, m_service_id);
 
     // reset method callback map
     {
-      std::lock_guard<std::mutex> lock(m_method_map_sync);
+      std::lock_guard<std::mutex> const lock(m_method_map_sync);
       m_method_map.clear();
     }
 
     // reset event callback map
     {
-      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+      std::lock_guard<std::mutex> const lock(m_event_callback_map_sync);
       m_event_callback_map.clear();
     }
 
@@ -111,7 +109,7 @@ namespace eCAL
   bool CServiceServerImpl::AddDescription(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_)
   {
     {
-      std::lock_guard<std::mutex> lock(m_method_map_sync);
+      std::lock_guard<std::mutex> const lock(m_method_map_sync);
       auto iter = m_method_map.find(method_);
       if (iter != m_method_map.end())
       {
@@ -143,7 +141,7 @@ namespace eCAL
     std::string req_desc;
     std::string resp_desc;
     {
-      std::lock_guard<std::mutex> lock(m_method_map_sync);
+      std::lock_guard<std::mutex> const lock(m_method_map_sync);
       auto iter = m_method_map.find(method_);
       if (iter != m_method_map.end())
       {
@@ -178,7 +176,7 @@ namespace eCAL
   // remove callback function for server method calls
   bool CServiceServerImpl::RemMethodCallback(const std::string& method_)
   {
-    std::lock_guard<std::mutex> lock(m_method_map_sync);
+    std::lock_guard<std::mutex> const lock(m_method_map_sync);
 
     auto iter = m_method_map.find(method_);
     if (iter != m_method_map.end())
@@ -196,12 +194,12 @@ namespace eCAL
 
     // store event callback
     {
-      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+      std::lock_guard<std::mutex> const lock(m_event_callback_map_sync);
 #ifndef NDEBUG
       // log it
       Logging::Log(log_level_debug2, m_service_name + "::CServiceServerImpl::AddEventCallback");
 #endif
-      m_event_callback_map[type_] = callback_;
+      m_event_callback_map[type_] = std::move(callback_);
     }
 
     return true;
@@ -214,7 +212,7 @@ namespace eCAL
 
     // reset event callback
     {
-      std::lock_guard<std::mutex> lock(m_event_callback_map_sync);
+      std::lock_guard<std::mutex> const lock(m_event_callback_map_sync);
 #ifndef NDEBUG
       // log it
       Logging::Log(log_level_debug2, m_service_name + "::CServiceServerImpl::RemEventCallback");
@@ -233,9 +231,9 @@ namespace eCAL
   }
 
   // called by the eCAL::CServiceGate to register a client
-  void CServiceServerImpl::RegisterClient(const std::string& /*key_*/, const SClientAttr& /*client_*/)
+  void CServiceServerImpl::RegisterClient(const std::string& /*key_*/, unsigned int /*version_*/, const SClientAttr& /*client_*/)
   {
-    // not used yet
+    // TODO: CHECK COMPATIBILITY HERE
   }
 
   // called by eCAL:CServiceGate every second to update registration layer
@@ -245,13 +243,14 @@ namespace eCAL
     if (m_service_name.empty()) return;
 
     // might be zero in contruction phase
-    unsigned short server_tcp_port(m_tcp_server.GetTcpPort());
+    unsigned short const server_tcp_port(m_tcp_server.GetTcpPort());
     if (server_tcp_port == 0) return;
 
     // create service registration sample
     eCAL::pb::Sample sample;
     sample.set_cmd_type(eCAL::pb::bct_reg_service);
-    auto service_mutable_service = sample.mutable_service();
+    auto *service_mutable_service = sample.mutable_service();
+    service_mutable_service->set_version(m_version);
     service_mutable_service->set_hname(Process::GetHostName());
     service_mutable_service->set_pname(Process::GetProcessName());
     service_mutable_service->set_uname(Process::GetUnitName());
@@ -262,10 +261,10 @@ namespace eCAL
 
     // add methods
     {
-      std::lock_guard<std::mutex> lock(m_method_map_sync);
-      for (auto iter : m_method_map)
+      std::lock_guard<std::mutex> const lock(m_method_map_sync);
+      for (const auto& iter : m_method_map)
       {
-        auto method = service_mutable_service->add_methods();
+        auto *method = service_mutable_service->add_methods();
         method->set_mname(iter.first);
         method->set_req_type(iter.second.method_pb.req_type());
         method->set_req_desc(iter.second.method_pb.req_desc());
@@ -276,7 +275,7 @@ namespace eCAL
     }
 
     // register entity
-    if (g_registration_provider()) g_registration_provider()->RegisterServer(m_service_name, m_service_id, sample, false);
+    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterServer(m_service_name, m_service_id, sample, false);
   }
 
   int CServiceServerImpl::RequestCallback(const std::string& request_, std::string& response_)
@@ -295,22 +294,23 @@ namespace eCAL
       Logging::Log(log_level_error, m_service_name + "::CServiceServerImpl::RequestCallback failed to parse request message");
 
       response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
-      std::string emsg = "Service '" + m_service_name + "' request message could not be parsed.";
+      std::string const emsg = "Service '" + m_service_name + "' request message could not be parsed.";
       response_pb_mutable_header->set_error(emsg);
 
       // serialize response and return "request message could not be parsed"
       response_ = response_pb.SerializeAsString();
-      
+
+      // Return Failed (error_code = -1), as parsing the request failed. The
       // return value is not propagated to the remote caller.
-      return 0;
+      return -1;
     }
 
     // get method
     SMethod method;
-    auto& request_pb_header = request_pb.header();
+    const auto& request_pb_header = request_pb.header();
     response_pb_mutable_header->set_mname(request_pb_header.mname());
     {
-      std::lock_guard<std::mutex> lock(m_method_map_sync);
+      std::lock_guard<std::mutex> const lock(m_method_map_sync);
 
       auto requested_method_iterator = m_method_map.find(request_pb_header.mname());
       if (requested_method_iterator == m_method_map.end())
@@ -318,7 +318,7 @@ namespace eCAL
         // set method call state 'failed'
         response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_failed);
         // set error message
-        std::string emsg = "Service '" + m_service_name + "' has no method named '" + request_pb_header.mname() + "'";
+        std::string const emsg = "Service '" + m_service_name + "' has no method named '" + request_pb_header.mname() + "'";
         response_pb_mutable_header->set_error(emsg);
 
         // serialize response and return "method not found"
@@ -342,7 +342,7 @@ namespace eCAL
     // execute method (outside lock guard)
     const std::string& request_s = request_pb.request();
     std::string response_s;
-    int service_return_state = method.callback(method.method_pb.mname(), method.method_pb.req_type(), method.method_pb.resp_type(), request_s, response_s);
+    int const service_return_state = method.callback(method.method_pb.mname(), method.method_pb.req_type(), method.method_pb.resp_type(), request_s, response_s);
 
     // set method call state 'executed'
     response_pb_mutable_header->set_state(eCAL::pb::ServiceHeader_eCallState_executed);
@@ -380,7 +380,7 @@ namespace eCAL
     if (mode_changed)
     {
       // call event
-      std::lock_guard<std::mutex> lock_cb(m_event_callback_map_sync);
+      std::lock_guard<std::mutex> const lock_cb(m_event_callback_map_sync);
       auto e_iter = m_event_callback_map.find(event_);
       if (e_iter != m_event_callback_map.end())
       {
@@ -398,7 +398,7 @@ namespace eCAL
     , const std::string& resp_type_name_
     , const std::string& resp_type_desc_)
   {
-    if (g_descgate())
+    if (g_descgate() != nullptr)
     {
       // Calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;

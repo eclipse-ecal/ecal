@@ -54,7 +54,7 @@ namespace eCAL
     if(!m_created) return(false);
 
     // register internal service
-    std::unique_lock<std::shared_timed_mutex> lock(m_service_set_sync);
+    std::unique_lock<std::shared_timed_mutex> const lock(m_service_set_sync);
     m_service_set.insert(service_);
 
     return(true);
@@ -66,7 +66,7 @@ namespace eCAL
     bool ret_state(false);
 
     // unregister internal service
-    std::unique_lock<std::shared_timed_mutex> lock(m_service_set_sync);
+    std::unique_lock<std::shared_timed_mutex> const lock(m_service_set_sync);
     for (auto iter = m_service_set.begin(); iter != m_service_set.end();)
     {
       if (*iter == service_)
@@ -86,25 +86,28 @@ namespace eCAL
   void CServiceGate::ApplyClientRegistration(const eCAL::pb::Sample& ecal_sample_)
   {
     SClientAttr client;
-    auto& ecal_sample_client = ecal_sample_.client();
-    client.hname = ecal_sample_client.hname();
-    client.pname = ecal_sample_client.pname();
-    client.uname = ecal_sample_client.uname();
-    client.sname = ecal_sample_client.sname();
-    client.sid   = ecal_sample_client.sid();
-    client.pid   = static_cast<int>(ecal_sample_client.pid());
+    const auto& ecal_sample_client = ecal_sample_.client();
+    client.hname   = ecal_sample_client.hname();
+    client.pname   = ecal_sample_client.pname();
+    client.uname   = ecal_sample_client.uname();
+    client.sname   = ecal_sample_client.sname();
+    client.sid     = ecal_sample_client.sid();
+    client.pid     = static_cast<int>(ecal_sample_client.pid());
+
+    // client protocol version
+    unsigned int client_version = ecal_sample_client.version();
 
     // create unique client key
     client.key = client.sname + ":" + client.sid + "@" + std::to_string(client.pid) + "@" + client.hname;
 
     // inform matching services
     {
-      std::shared_lock<std::shared_timed_mutex> lock(m_service_set_sync);
-      for (auto& iter : m_service_set)
+      std::shared_lock<std::shared_timed_mutex> const lock(m_service_set_sync);
+      for (const auto& iter : m_service_set)
       {
         if (iter->GetServiceName() == client.sname)
         {
-          iter->RegisterClient(client.key, client);
+          iter->RegisterClient(client.key, client_version, client);
         }
       }
     }
@@ -115,8 +118,8 @@ namespace eCAL
     if (!m_created) return;
 
     // refresh service registrations
-    std::shared_lock<std::shared_timed_mutex> lock(m_service_set_sync);
-    for (auto& iter : m_service_set)
+    std::shared_lock<std::shared_timed_mutex> const lock(m_service_set_sync);
+    for (const auto& iter : m_service_set)
     {
       iter->RefreshRegistration();
     }
