@@ -60,7 +60,7 @@ namespace eCAL
         CPayload(const google::protobuf::Message& message_) :
           message(message_) {};
 
-        ~CPayload() = default;
+        ~CPayload() override = default;
 
         CPayload(const CPayload&) = default;
         CPayload(CPayload&&) noexcept = default;

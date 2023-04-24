@@ -58,7 +58,7 @@ namespace eCAL
         CPayload(const capnp::MallocMessageBuilder& message_builder_) :
           message_builder(message_builder_) {};
 
-        ~CPayload() = default;
+        ~CPayload() override = default;
 
         CPayload(const CPayload&) = default;
         CPayload(CPayload&&) noexcept = default;
