@@ -20,29 +20,20 @@ cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
-project(math_client)
+project(minimal_snd)
 
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
 
-set(math_client_src
-    src/math_client.cpp
+set(minimal_snd_src
+    src/minimal_snd.cpp
 )
 
-set(math_client_proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/math.proto
-)
+ecal_add_sample(${PROJECT_NAME} ${minimal_snd_src})
 
-ecal_add_sample(${PROJECT_NAME} ${math_client_src})
-PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${math_client_proto})
-
-target_link_libraries(${PROJECT_NAME}
-    eCAL::core
-    protobuf::libprotobuf
-)
+target_link_libraries(${PROJECT_NAME} eCAL::core)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_sample(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/services/math)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/pubsub/string)

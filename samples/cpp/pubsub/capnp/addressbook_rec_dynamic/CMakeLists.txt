@@ -20,29 +20,18 @@ cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
-project(math_client)
+project(addressbook_rec_dynamic)
 
+find_package(CapnProto REQUIRED)
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
 
-set(math_client_src
-    src/math_client.cpp
-)
+ecal_add_sample(${PROJECT_NAME} src/addressbook_rec_dynamic.cpp)
 
-set(math_client_proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/math.proto
-)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/capnp)
 
-ecal_add_sample(${PROJECT_NAME} ${math_client_src})
-PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${math_client_proto})
-
-target_link_libraries(${PROJECT_NAME}
-    eCAL::core
-    protobuf::libprotobuf
-)
-
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+target_link_libraries(${PROJECT_NAME} PRIVATE CapnProto::capnp eCAL::core)
+target_link_options(${PROJECT_NAME} PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/ignore:4099>)
 
 ecal_install_sample(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/services/math)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/pubsub/capnp/addressbook)
