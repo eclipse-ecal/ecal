@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ecal/ecal_eventhandle.h>
+#include <ecal/ecal_payload_writer.h>
 
 #include "readwrite/ecal_writer_data.h"
 #include "ecal_memfile.h"
@@ -52,7 +53,7 @@ namespace eCAL
     bool Disconnect(const std::string& process_id_);
 
     bool CheckSize(size_t size_);
-    bool Write(const SWriterData& data_);
+    bool Write(CPayloadWriter& payload_, const SWriterAttr& data_);
 
     std::string GetName() const;
 
