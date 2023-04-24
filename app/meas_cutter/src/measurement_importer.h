@@ -25,8 +25,7 @@
 #include <array>
 
 #include <ecal_utils/filesystem.h>
-#include <ecalhdf5/eh5_meas.h>
-#include <ecalhdf5/eh5_reader.h>
+#include <ecal/measurement/base/reader.h>
 
 #include "utils.h"
 

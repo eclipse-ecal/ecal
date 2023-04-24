@@ -110,13 +110,6 @@ namespace eCAL
         virtual std::string GetFileVersion() const = 0;
 
         /**
-         * @brief Gets maximum allowed size for an individual file
-         *
-         * @return       maximum size in MB
-        **/
-        /*virtual size_t GetMaxSizePerFile() const = 0;*/
-
-        /**
          * @brief Get the available channel names of the current opened file / Reader
          *
          * @return       channel names

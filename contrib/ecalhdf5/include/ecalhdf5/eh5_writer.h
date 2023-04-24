@@ -53,23 +53,6 @@ namespace eCAL
         Writer(const std::string& path) : measurement(path, eAccessType::CREATE) {}
 
         /**
-         * @brief Destructor
-        **/
-        virtual ~Writer() = default;
-
-        /**
-         * @brief Copy operator
-        **/
-        Writer(const Writer& other) = delete;
-        Writer& operator=(const Writer& other) = delete;
-
-        /**
-        * @brief Move operator
-        **/
-        Writer(Writer&&) = default;
-        Writer& operator=(Writer&&) = default;
-
-        /**
          * @brief Open file
          *
          * @param path     Input file path / measurement directory path.
@@ -167,7 +150,7 @@ namespace eCAL
          *
          * @param base_name        Name of the hdf5 files that will be created.
         **/
-        void SetFileBaseName(const std::string& base_name) { return measurement.SetFileBaseName(base_name); }
+        void SetFileBaseName(const std::string& base_name) override { return measurement.SetFileBaseName(base_name); }
 
         /**
          * @brief Add entry to file

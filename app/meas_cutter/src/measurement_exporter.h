@@ -22,7 +22,7 @@
 #include <unordered_map>
 #include <map>
 
-#include <ecalhdf5/eh5_writer.h>
+#include <ecal/measurement/base/writer.h>
 #include <ecal_utils/filesystem.h>
 #include "utils.h"
 
