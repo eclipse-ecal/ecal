@@ -18,8 +18,8 @@
 */
 
 /**
- * @file   Reader.h
- * @brief  Base class for low level Reader oprations
+ * @file   reader.h
+ * @brief  Base class for low level measurement reading operations
 **/
 
 #pragma once
@@ -38,7 +38,7 @@ namespace eCAL
     namespace base
     {
       /**
-       * @brief eCAL Reader API
+       * @brief eCAL Measurement Reader API
       **/
       class Reader
       {
@@ -76,15 +76,13 @@ namespace eCAL
          *                  - hosts directories:                                  |_Host1 (e.g.: CARPC01)
          *                                                                        |_Host2 (e.g.: CARPC02)
          *
-         *                 File path as input (AccessType::RDONLY):
+         *                 File path as input
          *                  - root directory (e.g.: M:\Reader_directory\Reader01) in this case all hosts subdirectories will be iterated,
          *                  - host directory (e.g.: M:\Reader_directory\Reader01\CARPC01),
          *                  - file path, path to file from Reader (e.g.: M:\Reader_directory\Reader01\CARPC01\meas01_05.hdf5).
          *
          *
-         * @param access   Access type
-         *
-         * @return         true if input (AccessType::RDONLY) Reader/file path was opened, false otherwise.
+         * @return         true if input measurement/file path was opened, false otherwise.
         **/
         virtual bool Open(const std::string& path) = 0;
 
@@ -96,7 +94,7 @@ namespace eCAL
         virtual bool Close() = 0;
 
         /**
-         * @brief Checks if file/Reader is ok
+         * @brief Checks if file/measurement is ok
          *
          * @return  true if meas can be opened(read) false otherwise
         **/
@@ -110,14 +108,14 @@ namespace eCAL
         virtual std::string GetFileVersion() const = 0;
 
         /**
-         * @brief Get the available channel names of the current opened file / Reader
+         * @brief Get the available channel names of the current opened file / measurement
          *
          * @return       channel names
         **/
         virtual std::set<std::string> GetChannelNames() const = 0;
 
         /**
-         * @brief Check if channel exists in Reader
+         * @brief Check if channel exists in measurement
          *
          * @param channel_name   name of the channel
          *
@@ -207,5 +205,5 @@ namespace eCAL
 
       };
     }
-  }  // namespace eh5
-}  // namespace eCAL
+  }
+}

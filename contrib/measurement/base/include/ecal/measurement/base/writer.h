@@ -18,8 +18,8 @@
 */
 
 /**
- * @file   measurement.h
- * @brief  Base class for low level measurement oprations
+ * @file   writer.h
+ * @brief  Base class for low level measurement writing operations
 **/
 
 #pragma once
@@ -38,7 +38,7 @@ namespace eCAL
     namespace base
     {
       /**
-       * @brief eCAL measurement API
+       * @brief eCAL Measurement Writer API
       **/
       class Writer
       {
@@ -76,19 +76,13 @@ namespace eCAL
          *                  - hosts directories:                                  |_Host1 (e.g.: CARPC01)
          *                                                                        |_Host2 (e.g.: CARPC02)
          *
-         *                 File path as input (AccessType::RDONLY):
-         *                  - root directory (e.g.: M:\measurement_directory\measurement01) in this case all hosts subdirectories will be iterated,
-         *                  - host directory (e.g.: M:\measurement_directory\measurement01\CARPC01),
-         *                  - file path, path to file from measurement (e.g.: M:\measurement_directory\measurement01\CARPC01\meas01_05.hdf5).
-         *
-         *                 File path as output (AccessType::CREATE):
+         *                 File path as output
          *                  - full path to  measurement directory (recommended with host name) (e.g.: M:\measurement_directory\measurement01\CARPC01),
          *                  - to set the name of the actual hdf5 file use SetFileBaseName method.
          *
          * @param access   Access type
          *
-         * @return         true if output (AccessType::CREATE) measurement directory structure can be accessed/created, false otherwise.
-         *                 true if input (AccessType::RDONLY) measurement/file path was opened, false otherwise.
+         * @return         true if output measurement directory structure can be accessed/created, false otherwise.
         **/
         virtual bool Open(const std::string& path) = 0;
 
@@ -102,7 +96,7 @@ namespace eCAL
         /**
          * @brief Checks if file/measurement is ok
          *
-         * @return  true if meas can be opened(read) or location is accessible(write), false otherwise
+         * @return  true if location is accessible, false otherwise
         **/
         virtual bool IsOk() const = 0;
 
@@ -182,5 +176,5 @@ namespace eCAL
         
       };
     }
-  }  // namespace eh5
-}  // namespace eCAL
+  }
+}

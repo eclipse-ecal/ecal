@@ -18,8 +18,8 @@
 */
 
 /**
- * @file   eh5_meas.h
- * @brief  eCALHDF5 measurement class
+ * @file   eh5_reader.h
+ * @brief  Hdf5 based Reader implementation
 **/
 
 #pragma once
@@ -33,8 +33,8 @@ namespace eCAL
   {
  
     /**
- * @brief eCAL Reader API
-**/
+     * @brief Hdf5 based Reader Implementation
+    **/
     class Reader : public measurement::base::Reader
     {
     public:
@@ -47,7 +47,6 @@ namespace eCAL
        * @brief Constructor
        * 
        * @param path     Input file path / measurement directory path (see meas directory structure description bellow, in Open method).
-       * @param access   Access type
        *
       **/
       explicit Reader(const std::string& path) : measurement(path, eAccessType::RDONLY){};
@@ -63,15 +62,13 @@ namespace eCAL
        *                  - hosts directories:                                  |_Host1 (e.g.: CARPC01)
        *                                                                        |_Host2 (e.g.: CARPC02)
        *
-       *                 File path as input (AccessType::RDONLY):
+       *                 File path as input
        *                  - root directory (e.g.: M:\Reader_directory\Reader01) in this case all hosts subdirectories will be iterated,
        *                  - host directory (e.g.: M:\Reader_directory\Reader01\CARPC01),
        *                  - file path, path to file from Reader (e.g.: M:\Reader_directory\Reader01\CARPC01\meas01_05.hdf5).
        *
        *
-       * @param access   Access type
-       *
-       * @return         true if input (AccessType::RDONLY) Reader/file path was opened, false otherwise.
+       * @return         true if input measurement/file path was opened, false otherwise.
       **/
        bool Open(const std::string& path) override {
          return measurement.Open(path, eAccessType::RDONLY);
@@ -85,7 +82,7 @@ namespace eCAL
        bool Close() override { return measurement.Close(); }
 
       /**
-       * @brief Checks if file/Reader is ok
+       * @brief Checks if file/measurement is ok
        *
        * @return  true if meas can be opened(read) false otherwise
       **/
@@ -99,21 +96,14 @@ namespace eCAL
        std::string GetFileVersion() const override { return measurement.GetFileVersion(); }
 
       /**
-       * @brief Gets maximum allowed size for an individual file
-       *
-       * @return       maximum size in MB
-      **/
-      /* size_t GetMaxSizePerFile() const override {}*/
-
-      /**
-       * @brief Get the available channel names of the current opened file / Reader
+       * @brief Get the available channel names of the current opened file / measurement
        *
        * @return       channel names
       **/
        std::set<std::string> GetChannelNames() const override { return measurement.GetChannelNames(); }
 
       /**
-       * @brief Check if channel exists in Reader
+       * @brief Check if channel exists in measurement
        *
        * @param channel_name   name of the channel
        *
