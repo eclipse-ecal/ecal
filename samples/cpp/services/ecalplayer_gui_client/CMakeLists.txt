@@ -108,4 +108,4 @@ source_group( autogen FILES
 
 ecal_install_sample(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/services)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/services/ecalplay)
