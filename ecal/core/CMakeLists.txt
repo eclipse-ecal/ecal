@@ -322,6 +322,7 @@ set(ecal_header_cmn
     include/ecal/ecal_monitoring_entity.h
     include/ecal/ecal_monitoring_struct.h
     include/ecal/ecal_os.h
+    include/ecal/ecal_payload_writer.h
     include/ecal/ecal_process.h
     include/ecal/ecal_process_mode.h
     include/ecal/ecal_process_severity.h

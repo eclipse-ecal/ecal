@@ -72,7 +72,7 @@ namespace eCAL
 
     if (m_payload_memfile->GetWriteAccess(EXP_MEMFILE_ACCESS_TIMEOUT))
     {
-      m_payload_memfile->Write(data, size, 0);
+      m_payload_memfile->WriteBuffer(data, size, 0);
       m_payload_memfile->ReleaseWriteAccess();
       m_memfile_broadcast->SendEvent(m_event_id, eMemfileBroadcastEventType::EVENT_UPDATED);
 
