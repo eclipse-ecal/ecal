@@ -27,7 +27,7 @@ int main(int argc, char **argv)
   eCAL::Initialize(argc, argv, "dynsize_snd");
 
   // publisher for topic "Performance"
-  eCAL::CPublisher const pub("Performance");
+  const eCAL::CPublisher pub("Performance");
 
   // prepare snd_buf
   const int MAX_BUFSIZE(10*1024*1024);
@@ -52,7 +52,7 @@ int main(int argc, char **argv)
   }
 
   // send updates
-  size_t const max_size(MAX_BUFSIZE);
+  const size_t max_size(MAX_BUFSIZE);
   for(int cnt = 1; cnt < MAX_BUFSIZE; cnt += 1 + cnt/10000)
   {
     // first we increase send size byte wise
@@ -68,7 +68,7 @@ int main(int argc, char **argv)
     }
 
     // send content
-    size_t const snd_len = pub.Send(snd_buf.data(), send_size, cnt);
+    const size_t snd_len = pub.Send(snd_buf.data(), send_size, cnt);
     if((snd_len > 0) && (snd_len != send_size))
     {
       std::cout << std::endl << "Sending failed !" << std::endl;

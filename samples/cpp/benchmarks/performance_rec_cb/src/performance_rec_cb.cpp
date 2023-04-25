@@ -69,7 +69,7 @@ int main(int argc, char **argv)
     bytes += size;
 
     // check time and print results every second
-    std::chrono::duration<double> const diff_time = std::chrono::steady_clock::now() - start_time;
+    const std::chrono::duration<double> diff_time = std::chrono::steady_clock::now() - start_time;
     if (diff_time >= std::chrono::seconds(1))
     {
       PrintStatistic(topic_name_, diff_time, size, bytes, msgs, data_);

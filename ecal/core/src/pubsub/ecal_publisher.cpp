@@ -355,7 +355,7 @@ namespace eCAL
      }
 
      // send content via data writer layer
-     long long const write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
+     const long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
      const size_t written_bytes = m_datawriter->Write(payload_, write_time, m_id);
 
      if (acknowledge_timeout_ms_ != DEFAULT_ACKNOWLEDGE_ARGUMENT)

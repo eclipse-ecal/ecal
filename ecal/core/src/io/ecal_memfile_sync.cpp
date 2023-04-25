@@ -54,12 +54,12 @@ namespace eCAL
     //   we have ONE memory file per publisher and 1 or 2 events per memory file
 
     // the event names
-    std::string const event_snd_name = m_memfile_name + "_" + process_id_;
-    std::string const event_ack_name = m_memfile_name + "_" + process_id_ + "_ack";
+    const std::string event_snd_name = m_memfile_name + "_" + process_id_;
+    const std::string event_ack_name = m_memfile_name + "_" + process_id_ + "_ack";
 
     // check for existing process
-    std::lock_guard<std::mutex> const lock(m_event_handle_map_sync);
-    EventHandleMapT::iterator const iter = m_event_handle_map.find(process_id_);
+    const std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
+    const EventHandleMapT::iterator iter = m_event_handle_map.find(process_id_);
 
     // add a new process id and create the sync and acknowledge event
     if (iter == m_event_handle_map.end())
@@ -91,11 +91,11 @@ namespace eCAL
     // we close the associated sync events and
     // remove them from the event handle map
 
-    std::lock_guard<std::mutex> const lock(m_event_handle_map_sync);
-    EventHandleMapT::const_iterator const iter = m_event_handle_map.find(process_id_);
+    const std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
+    const EventHandleMapT::const_iterator iter = m_event_handle_map.find(process_id_);
     if (iter != m_event_handle_map.end())
     {
-      SEventHandlePair const event_pair = iter->second;
+      const SEventHandlePair event_pair = iter->second;
       gCloseEvent(event_pair.event_snd);
       gCloseEvent(event_pair.event_ack);
       m_event_handle_map.erase(iter);
@@ -110,14 +110,14 @@ namespace eCAL
     if (!m_created) return false;
 
     // we recreate a memory file if the file size is too small
-    bool const file_to_small = m_memfile.MaxDataSize() < (sizeof(SMemFileHeader) + size_);
+    const bool file_to_small = m_memfile.MaxDataSize() < (sizeof(SMemFileHeader) + size_);
     if (file_to_small)
     {
 #ifndef NDEBUG
       Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::CheckSize - RECREATE");
 #endif
       // estimate size of memory file
-      size_t const memfile_size = sizeof(SMemFileHeader) + size_ + static_cast<size_t>((static_cast<float>(m_attr.reserve) / 100.0f) * static_cast<float>(size_));
+      const size_t memfile_size = sizeof(SMemFileHeader) + size_ + static_cast<size_t>((static_cast<float>(m_attr.reserve) / 100.0f) * static_cast<float>(size_));
 
       // recreate the file
       if (!Recreate(memfile_size)) return false;
@@ -295,7 +295,7 @@ namespace eCAL
     // collect id's of the currently connected processes
     std::vector<std::string> process_id_list;
     {
-      std::lock_guard<std::mutex> const lock(m_event_handle_map_sync);
+      const std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
       for (const auto& event_handle : m_event_handle_map)
       {
         process_id_list.push_back(event_handle.first);
@@ -324,7 +324,7 @@ namespace eCAL
     // fire the publisher events
     // connected subscribers will read the content from the memory file
 
-    std::lock_guard<std::mutex> const lock(m_event_handle_map_sync);
+    const std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
 
     // "eat" old acknowledge events :)
     if (m_attr.timeout_ack_ms != 0)
@@ -377,7 +377,7 @@ namespace eCAL
 
   void CSyncMemoryFile::DisconnectAll()
   {
-    std::lock_guard<std::mutex> const lock(m_event_handle_map_sync);
+    const std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
 
     // fire acknowledge events, to unlock blocking send function
     for (const auto& event_handle : m_event_handle_map)

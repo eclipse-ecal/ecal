@@ -37,7 +37,7 @@ int main(int argc, char** argv)
   cmd.parse(argc, argv);
 
   // get parameters
-  std::string const topic_name(arg_topic_name.getValue());
+  const std::string topic_name(arg_topic_name.getValue());
 
   // log parameter
   std::cout << "Topic name = " << topic_name << std::endl;

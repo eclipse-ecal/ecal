@@ -42,7 +42,7 @@ int main(int argc, char **argv)
   while(eCAL::Ok())
   {
     // receive content with infinite timeout
-    bool const success = sub.ReceiveBuffer(rcv_buf, nullptr, -1);
+    const bool success = sub.ReceiveBuffer(rcv_buf, nullptr, -1);
     // collect data
     if(success)
     {
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
     }
 
     // check time and print results every second
-    std::chrono::duration<double> const diff_time = std::chrono::steady_clock::now() - start_time;
+    const std::chrono::duration<double> diff_time = std::chrono::steady_clock::now() - start_time;
     if (diff_time >= std::chrono::seconds(1))
     {
       start_time = std::chrono::steady_clock::now();
