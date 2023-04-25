@@ -64,7 +64,7 @@ int main(int argc, char **argv)
     // check timer and print results every second
     if(clock%10000 == 0)
     {
-      std::chrono::duration<double> const diff_time = std::chrono::steady_clock::now() - start_time;
+      const std::chrono::duration<double> diff_time = std::chrono::steady_clock::now() - start_time;
       if (diff_time >= std::chrono::duration<double>(1.0))
       {
         start_time = std::chrono::steady_clock::now();

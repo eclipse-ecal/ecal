@@ -40,8 +40,8 @@ public:
   {
     // update content of the shared memory file
     if (len_ < size) return false;
-    size_t const write_idx((clock % 1024) % len_);
-    char   const write_chr(clock % 10 + 48);
+    const size_t write_idx((clock % 1024) % len_);
+    const char write_chr(clock % 10 + 48);
     static_cast<char*>(buf_)[write_idx] = write_chr;
     clock++;
     return true;

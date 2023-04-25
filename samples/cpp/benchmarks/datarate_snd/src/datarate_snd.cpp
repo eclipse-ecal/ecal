@@ -46,12 +46,12 @@ int main(int argc, char **argv)
   cmd.parse(argc, argv);
   
   // get parameters
-  std::string const topic_name(arg_topic_name.getValue());
+  const std::string topic_name(arg_topic_name.getValue());
   size_t            size(arg_size.getValue());
-  int         const sleep(arg_sleep.getValue());
-  bool        const zero_copy(arg_zero_copy.getValue());
-  int         const buffer_count(arg_buffer_count.getValue());
-  int         const acknowledge_time(arg_acknowledge_time.getValue());
+  const int         sleep(arg_sleep.getValue());
+  const bool        zero_copy(arg_zero_copy.getValue());
+  const int         buffer_count(arg_buffer_count.getValue());
+  const int         acknowledge_time(arg_acknowledge_time.getValue());
 
   // log parameter
   std::cout << "Topic name           = " << topic_name                   << std::endl;

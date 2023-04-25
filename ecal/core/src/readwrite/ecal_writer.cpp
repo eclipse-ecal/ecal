@@ -415,7 +415,7 @@ namespace eCAL
     const size_t payload_buf_size(payload_.GetSize());
 
     // can we do a zero copy write ?
-    bool const allow_zero_copy =
+    const bool allow_zero_copy =
           m_zero_copy                       // zero copy mode activated by user
       &&  m_writer.shm_mode.activated       // shm layer active
       && !m_writer.inproc_mode.activated    // all other layers not active
@@ -1191,7 +1191,7 @@ namespace eCAL
     RefreshSendCounter();
 
     // calculate unique send hash
-    std::hash<SSndHash> const hf;
+    const std::hash<SSndHash> hf;
     const size_t snd_hash = hf(SSndHash(m_topic_id, m_clock));
 
     // increase overall sum send

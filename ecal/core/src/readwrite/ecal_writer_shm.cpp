@@ -167,7 +167,7 @@ namespace eCAL
     if (!m_created) return false;
 
     // write content
-    bool const sent = m_memory_file_vec[m_write_idx]->Write(payload_, attr_);
+    const bool sent = m_memory_file_vec[m_write_idx]->Write(payload_, attr_);
 
     // and increment file index
     m_write_idx++;
