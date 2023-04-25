@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_qos.h>
 
 #include "ecal_writer_data.h"
@@ -37,7 +38,7 @@ namespace eCAL
   {
   public:
     CDataWriterBase() : m_created(false) {};
-    virtual ~CDataWriterBase() {};
+    virtual ~CDataWriterBase() = default;
 
     virtual SWriterInfo GetInfo() = 0;
 
@@ -55,8 +56,9 @@ namespace eCAL
 
     virtual std::string GetConnectionParameter() { return ""; };
 
-    virtual bool PrepareWrite(const SWriterData& /*data_*/) { return false; };
-    virtual bool Write(const SWriterData& data_) = 0;
+    virtual bool PrepareWrite(const SWriterAttr& /*attr_*/) { return false; };
+    virtual bool Write(CPayloadWriter& /*payload_*/, const SWriterAttr& /*attr_*/) { return false; };
+    virtual bool Write(const void* /*buf_*/, const SWriterAttr& /*attr_*/) { return false; };
 
   protected:
     std::string        m_host_name;

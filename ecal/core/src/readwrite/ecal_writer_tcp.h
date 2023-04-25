@@ -47,27 +47,27 @@ namespace eCAL
   {
   public:
     CDataWriterTCP();
-    ~CDataWriterTCP();
+    ~CDataWriterTCP() override;
 
     SWriterInfo GetInfo() override;
 
     bool Create(const std::string& host_name_, const std::string& topic_name_, const std::string & topic_id_) override;
     // this virtual function is called during construction/destruction,
     // so, mark it as final to ensure that no derived classes override it.
-    bool Destroy() final override;
+    bool Destroy() final;
 
-    bool Write(const SWriterData& data_) override;
+    bool Write(const void* buf_, const SWriterAttr& attr_) override;
 
     std::string GetConnectionParameter() override;
 
   private:
-    static std::mutex                       g_tcp_writer_executor_mtx;
+    static std::mutex                            g_tcp_writer_executor_mtx;
     static std::shared_ptr<tcp_pubsub::Executor> g_tcp_writer_executor;
 
     std::shared_ptr<tcp_pubsub::Publisher>       m_publisher;
-    uint16_t                                m_port;
+    uint16_t                                     m_port;
 
-    eCAL::pb::Sample                        m_ecal_header;
-    std::vector<char>                       m_header_buffer;
+    eCAL::pb::Sample                             m_ecal_header;
+    std::vector<char>                            m_header_buffer;
   };
 }

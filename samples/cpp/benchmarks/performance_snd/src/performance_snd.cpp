@@ -22,111 +22,89 @@
 
 #include <chrono>
 #include <iostream>
-#include <memory>
 #include <sstream>
+
+#include "binary_payload_writer.h"
+
+// performance settings
+const bool   zero_copy              (true);
+const int    buffer_count           (1);
+const int    acknowledge_timeout_ms (50);
+const size_t payload_size_default   (8* 1024 * 1024);
 
 // main entry
 int main(int argc, char **argv)
 {
-  size_t payload_size(1024*1024);
+  size_t payload_size(payload_size_default);
   if(argc > 1) payload_size = atoi(argv[1]);
   if(payload_size < 1) payload_size = 1;
 
   // initialize eCAL API
   eCAL::Initialize(argc, argv, "performance_snd");
 
-  // new publisher
+  // create payload
+  CBinaryPayload binary_payload(payload_size);
+
+  // create publisher
   eCAL::CPublisher pub("Performance");
-
-  int                 clock(0);
-  int                 msgs (0);
-  unsigned long long  bytes(0);
-  size_t              slen (0);
-  int                 trigger(1);
-  bool                zero_copy(true);
-  int                 buffer_count(1);
-  bool                handshake(true);
-
-  // default send string
-  std::string send_s = "Hello World ";
-  while(send_s.size() < payload_size)
-  {
-    send_s += send_s;
-  }
-  send_s.resize(payload_size);
-
-  std::cout << "Message size  =  " << int(send_s.size()) << " Byte = " << int(send_s.size()/1024) << " kByte = " << int(send_s.size()/1024/1024) << " MByte" << std::endl << std::endl;
-  slen = send_s.size();
-
-  // set zero copy
-  if (zero_copy)
-  {
-    std::cout << "Switch zero copy mode on" << std::endl << std::endl;
-  }
+ 
+  // enable zero copy mode
+  std::cout << "Zero copy mode: " << zero_copy << std::endl;
   pub.ShmEnableZeroCopy(zero_copy);
 
   // set write buffer count
-  if (buffer_count > 1)
-  {
-    std::cout << "Set number of write buffer to " << buffer_count << std::endl << std::endl;
-  }
+  std::cout << "Number of write buffers: " << buffer_count << std::endl;
   pub.ShmSetBufferCount(buffer_count);
   
-  // set handshake
-  if (handshake)
-  {
-    std::cout << "Switch handshake on" << std::endl << std::endl;
-    pub.ShmSetAcknowledgeTimeout(std::chrono::milliseconds(1000));
-  }
-  else
-  {
-    pub.ShmSetAcknowledgeTimeout(0);
-  }
+  // enable handshake mode
+  std::cout << "Acknowledge timeout: " << acknowledge_timeout_ms << " ms" << std::endl;
+  pub.ShmSetAcknowledgeTimeout(acknowledge_timeout_ms);
+  std::cout << std::endl;
 
-  // safe the start time
+  // counter
+  long long msgs (0);
+  long long bytes(0);
+  long long clock(0);
+
+  // set start time
   auto start_time = std::chrono::steady_clock::now();
 
   // send updates
   while(eCAL::Ok())
   {
-    eCAL::Logging::StartCoreTimer();
-
     // send content
-    size_t snd_len = pub.Send(send_s);
-    if((snd_len > 0) && (snd_len != slen))
-    {
-      std::cerr <<  std::endl << "Send failed !" << " sent : " << slen << " returned : " << snd_len <<  std::endl;
-    }
+    pub.Send(binary_payload);
 
-    // collect data
+    // manage counters
     clock++;
     msgs++;
-    bytes += slen;
+    bytes += payload_size;
 
     // check timer and print results every second
-    if(clock%10011 == 0)
+    if(clock%2000 == 0)
     {
-      std::chrono::duration<double> diff_time = std::chrono::steady_clock::now() - start_time;
+      const std::chrono::duration<double> diff_time = std::chrono::steady_clock::now() - start_time;
       if(diff_time >= std::chrono::seconds(1))
       {
-        trigger++;
-
-        start_time = std::chrono::steady_clock::now();
+        // log results
         std::stringstream out;
-        out << "Message size (kByte):  " << (unsigned int)(slen  / 1024)                            << std::endl;
-        out << "kByte/s:               " << (unsigned int)(bytes / 1024 /        diff_time.count()) << std::endl;
-        out << "MByte/s:               " << (unsigned int)(bytes / 1024 / 1024 / diff_time.count()) << std::endl;
-        out << "Messages/s:            " << (unsigned int)(msgs  /               diff_time.count()) << std::endl;
-        out << "Latency (us):          " << (diff_time.count() / msgs) * 1000 * 1000                << std::endl;
+        out << "Message size (kByte):  " << (unsigned int)(binary_payload.GetSize() / 1024)                      << std::endl;
+        out << "kByte/s:               " << (unsigned int)(bytes / 1024.0 /                   diff_time.count()) << std::endl;
+        out << "MByte/s:               " << (unsigned int)(bytes / 1024.0 / 1024.0 /          diff_time.count()) << std::endl;
+        out << "GByte/s:               " << (unsigned int)(bytes / 1024.0 / 1024.0 / 1024.0 / diff_time.count()) << std::endl;
+        out << "Messages/s:            " << (unsigned int)(msgs  /                            diff_time.count()) << std::endl;
+        out << "Latency (us):          " << (diff_time.count() * 1e6) / (double)msgs                             << std::endl;
         std::cout << out.str() << std::endl;
+        eCAL::Logging::Log(out.str());
+
+        // reset counter
         msgs  = 0;
         bytes = 0;
 
-        eCAL::Logging::Log(out.str());
+        // reset start time
+        start_time = std::chrono::steady_clock::now();
       }
     }
-
-    eCAL::Logging::StopCoreTimer();
   }
 
   // destroy publisher

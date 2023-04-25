@@ -26,6 +26,7 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_callback.h>
+#include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_qos.h>
 #include <ecal/ecal_tlayer.h>
 
@@ -317,6 +318,16 @@ namespace eCAL
     size_t Send(const void* buf_, size_t len_, long long time_ = DEFAULT_TIME_ARGUMENT) const;
 
     /**
+     * @brief Send a message to all subscribers.
+     *
+     * @param payload_  Payload.
+     * @param time_     Send time (-1 = use eCAL system time in us, default = -1).
+     *
+     * @return  Number of bytes sent.
+    **/
+    size_t Send(CPayloadWriter& payload_, long long time_ = DEFAULT_TIME_ARGUMENT) const;
+
+    /**
      * @brief Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout).
      * 
      * This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.
@@ -328,7 +339,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent.
     **/
-    size_t Send(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const;
+    size_t Send(const void* buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const;
 
     /**
      * @brief Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout).
@@ -347,6 +358,19 @@ namespace eCAL
     {
       return Send(buf_, len_, time_, acknowledge_timeout_ms_);
     }
+
+    /**
+     * @brief Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout).
+     *
+     * This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.
+     *
+     * @param payload_                 Payload.
+     * @param time_                    Send time (-1 = use eCAL system time in us).
+     * @param acknowledge_timeout_ms_  Maximum time to wait for all subscribers acknowledge feedback in ms (buffer received and processed).
+     *
+     * @return  Number of bytes sent.
+    **/
+    size_t Send(CPayloadWriter& payload_, long long time_, long long acknowledge_timeout_ms_) const;
 
     /**
      * @brief Send a message to all subscribers.

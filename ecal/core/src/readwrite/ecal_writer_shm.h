@@ -34,20 +34,21 @@ namespace eCAL
   class CDataWriterSHM : public CDataWriterBase
   {
   public:
-    CDataWriterSHM();
-    ~CDataWriterSHM();
+    CDataWriterSHM() = default;
+    ~CDataWriterSHM() override;
 
     SWriterInfo GetInfo() override;
 
     bool Create(const std::string& host_name_, const std::string& topic_name_, const std::string & topic_id_) override;
     // this virtual function is called during construction/destruction,
     // so, mark it as final to ensure that no derived classes override it.
-    bool Destroy() final override;
+    bool Destroy() final;
 
     bool SetQOS(const QOS::SWriterQOS& qos_) override;
 
-    bool PrepareWrite(const SWriterData& data_) override;
-    bool Write(const SWriterData& data_) override;
+    bool PrepareWrite(const SWriterAttr& attr_) override;
+
+    bool Write(CPayloadWriter& payload_, const SWriterAttr& attr_) override;
 
     bool AddLocConnection(const std::string& process_id_, const std::string& conn_par_) override;
     bool RemLocConnection(const std::string& process_id_) override;

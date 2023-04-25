@@ -17,27 +17,39 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  data writer struct
-**/
-
 #pragma once
 
-#include <cstddef>
+#include <ecal/ecal_payload_writer.h>
+#include <cstring>
 
-namespace eCAL
+// a binary payload
+class CBinaryPayload : public eCAL::CPayloadWriter
 {
-  struct SWriterAttr
+public:
+  CBinaryPayload(size_t size_) : size(size_) {}
+
+  bool Write(void* buf_, size_t len_) override
   {
-    size_t       len                    = 0;
-    long long    id                     = 0;
-    long long    clock                  = 0;
-    size_t       hash                   = 0;
-    long long    time                   = 0;
-    size_t       buffering              = 1;
-    long         bandwidth              = 0;
-    bool         loopback               = false;
-    bool         zero_copy              = false;
-    long long    acknowledge_timeout_ms = 0;
+    // write complete content to the shared memory file
+    if (len_ < size) return false;
+    memset(buf_, 42, size);
+    return true;
   };
-}
+
+  bool Update(void* buf_, size_t len_) override
+  {
+    // update content of the shared memory file
+    if (len_ < size) return false;
+    size_t const write_idx((clock % 1024) % len_);
+    char   const write_chr(clock % 10 + 48);
+    static_cast<char*>(buf_)[write_idx] = write_chr;
+    clock++;
+    return true;
+  };
+
+  size_t GetSize() override { return size; };
+
+private:
+  size_t size  = 0;
+  int    clock = 0;
+};
