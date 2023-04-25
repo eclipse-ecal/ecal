@@ -74,8 +74,8 @@ Functions
 
 - :ref:`exhale_function_ecal__util_8h_1aba63144455de7691434fd2aa6080d214`
 
-- :ref:`exhale_function_ecal__util_8h_1a26640bb79b62d9caf0c99352aa7105e0`
-
 - :ref:`exhale_function_ecal__util_8h_1ad1b49f4aa10627b97ef9ab8db2e3c5e9`
+
+- :ref:`exhale_function_ecal__util_8h_1a26640bb79b62d9caf0c99352aa7105e0`
 
 - :ref:`exhale_function_ecal__util_8h_1a2c04e3730ba3cf15dcd0da57e785aa1d`

@@ -46,7 +46,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Class CServiceClient" href="classeCAL_1_1CServiceClient.html" />
-    <link rel="prev" title="Template Class CMsgSubscriber" href="classeCAL_1_1CMsgSubscriber.html" />
+    <link rel="prev" title="Class CPayloadWriter" href="classeCAL_1_1CPayloadWriter.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -448,6 +448,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="classeCAL_1_1CBufferPayloadWriter.html">
+       Class CBufferPayloadWriter
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="classeCAL_1_1CMsgPublisher.html">
        Template Class CMsgPublisher
       </a>
@@ -455,6 +460,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="classeCAL_1_1CMsgSubscriber.html">
        Template Class CMsgSubscriber
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="classeCAL_1_1CPayloadWriter.html">
+       Class CPayloadWriter
       </a>
      </li>
      <li class="toctree-l3 current active">
@@ -2894,8 +2904,25 @@ title="Print to PDF"
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher4SendEPCKv6size_txx">
-<span id="_CPPv3NK4eCAL10CPublisher4SendEPCKv6size_txx"></span><span id="_CPPv2NK4eCAL10CPublisher4SendEPCKv6size_txx"></span><span id="eCAL::CPublisher::Send__voidCPC.s.l-l.l-lC"></span><span class="target" id="classeCAL_1_1CPublisher_1acec2cc7c89814fe89971862175c1ec96"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Send</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">buf_</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">acknowledge_timeout_ms_</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher4SendEPCKv6size_txx" title="Permalink to this definition">#</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher4SendER14CPayloadWriterx">
+<span id="_CPPv3NK4eCAL10CPublisher4SendER14CPayloadWriterx"></span><span id="_CPPv2NK4eCAL10CPublisher4SendER14CPayloadWriterx"></span><span id="eCAL::CPublisher::Send__CPayloadWriterR.l-lC"></span><span class="target" id="classeCAL_1_1CPublisher_1af9b2f147665214d00033c282a3878676"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Send</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="classeCAL_1_1CPayloadWriter.html#_CPPv4N4eCAL14CPayloadWriterE" title="eCAL::CPayloadWriter"><span class="n"><span class="pre">CPayloadWriter</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">payload_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4eCAL10CPublisher21DEFAULT_TIME_ARGUMENTE" title="eCAL::CPublisher::DEFAULT_TIME_ARGUMENT"><span class="n"><span class="pre">DEFAULT_TIME_ARGUMENT</span></span></a><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher4SendER14CPayloadWriterx" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Send a message to all subscribers. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>payload_</strong> – Payload. </p></li>
+<li><p><strong>time_</strong> – Send time (-1 = use eCAL system time in us, default = -1).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of bytes sent. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher4SendEPKv6size_txx">
+<span id="_CPPv3NK4eCAL10CPublisher4SendEPKv6size_txx"></span><span id="_CPPv2NK4eCAL10CPublisher4SendEPKv6size_txx"></span><span id="eCAL::CPublisher::Send__voidCP.s.l-l.l-lC"></span><span class="target" id="classeCAL_1_1CPublisher_1ae838617e3cf0d20c53cea0cd0bb00fae"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Send</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">buf_</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">len_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">acknowledge_timeout_ms_</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher4SendEPKv6size_txx" title="Permalink to this definition">#</a><br /></dt>
 <dd><p>Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout). </p>
 <p>This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.</p>
 <dl class="field-list simple">
@@ -2923,6 +2950,25 @@ title="Print to PDF"
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>buf_</strong> – Pointer to content buffer. </p></li>
 <li><p><strong>len_</strong> – Length of buffer. </p></li>
+<li><p><strong>time_</strong> – Send time (-1 = use eCAL system time in us). </p></li>
+<li><p><strong>acknowledge_timeout_ms_</strong> – Maximum time to wait for all subscribers acknowledge feedback in ms (buffer received and processed).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of bytes sent. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher4SendER14CPayloadWriterxx">
+<span id="_CPPv3NK4eCAL10CPublisher4SendER14CPayloadWriterxx"></span><span id="_CPPv2NK4eCAL10CPublisher4SendER14CPayloadWriterxx"></span><span id="eCAL::CPublisher::Send__CPayloadWriterR.l-l.l-lC"></span><span class="target" id="classeCAL_1_1CPublisher_1a8d4677062859c79050d2d9e25b6daef3"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Send</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="classeCAL_1_1CPayloadWriter.html#_CPPv4N4eCAL14CPayloadWriterE" title="eCAL::CPayloadWriter"><span class="n"><span class="pre">CPayloadWriter</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">payload_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time_</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">acknowledge_timeout_ms_</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher4SendER14CPayloadWriterxx" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Send a message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout). </p>
+<p>This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>payload_</strong> – Payload. </p></li>
 <li><p><strong>time_</strong> – Send time (-1 = use eCAL system time in us). </p></li>
 <li><p><strong>acknowledge_timeout_ms_</strong> – Maximum time to wait for all subscribers acknowledge feedback in ms (buffer received and processed).</p></li>
 </ul>
@@ -3106,11 +3152,11 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="classeCAL_1_1CMsgSubscriber.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="classeCAL_1_1CPayloadWriter.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Template Class CMsgSubscriber</p>
+            <p class="prev-next-title">Class CPayloadWriter</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="classeCAL_1_1CServiceClient.html" title="next page">

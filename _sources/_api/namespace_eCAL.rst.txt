@@ -64,9 +64,13 @@ Classes
 
 - :ref:`exhale_struct_structeCAL_1_1SSubEventCallbackData`
 
+- :ref:`exhale_class_classeCAL_1_1CBufferPayloadWriter`
+
 - :ref:`exhale_class_classeCAL_1_1CMsgPublisher`
 
 - :ref:`exhale_class_classeCAL_1_1CMsgSubscriber`
+
+- :ref:`exhale_class_classeCAL_1_1CPayloadWriter`
 
 - :ref:`exhale_class_classeCAL_1_1CPublisher`
 

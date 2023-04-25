@@ -446,6 +446,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="classeCAL_1_1CBufferPayloadWriter.html">
+       Class CBufferPayloadWriter
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="classeCAL_1_1CMsgPublisher.html">
        Template Class CMsgPublisher
       </a>
@@ -453,6 +458,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="classeCAL_1_1CMsgSubscriber.html">
        Template Class CMsgSubscriber
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="classeCAL_1_1CPayloadWriter.html">
+       Class CPayloadWriter
       </a>
      </li>
      <li class="toctree-l3">
@@ -2489,6 +2499,7 @@ title="Print to PDF"
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_os.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_callback.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_payload_writer.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_qos.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_tlayer.h&gt;</span>
 
@@ -2561,7 +2572,9 @@ title="Print to PDF"
 
 <span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="nf">Send</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">buf_</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">time_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEFAULT_TIME_ARGUMENT</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
 
-<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="nf">Send</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">buf_</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">time_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">acknowledge_timeout_ms_</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="nf">Send</span><span class="p">(</span><span class="n">CPayloadWriter</span><span class="o">&amp;</span><span class="w"> </span><span class="n">payload_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">time_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEFAULT_TIME_ARGUMENT</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="nf">Send</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">buf_</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">time_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">acknowledge_timeout_ms_</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
 
 <span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">]]</span>
 <span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">SendSynchronized</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">buf_</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">time_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">acknowledge_timeout_ms_</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
@@ -2569,17 +2582,19 @@ title="Print to PDF"
 <span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">Send</span><span class="p">(</span><span class="n">buf_</span><span class="p">,</span><span class="w"> </span><span class="n">len_</span><span class="p">,</span><span class="w"> </span><span class="n">time_</span><span class="p">,</span><span class="w"> </span><span class="n">acknowledge_timeout_ms_</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">Send</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">time_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEFAULT_TIME_ARGUMENT</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
+<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">Send</span><span class="p">(</span><span class="n">CPayloadWriter</span><span class="o">&amp;</span><span class="w"> </span><span class="n">payload_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">time_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">acknowledge_timeout_ms_</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="nf">Send</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">time_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEFAULT_TIME_ARGUMENT</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="k">return</span><span class="p">(</span><span class="n">Send</span><span class="p">(</span><span class="n">s_</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">s_</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="n">time_</span><span class="p">,</span><span class="w"> </span><span class="n">DEFAULT_ACKNOWLEDGE_ARGUMENT</span><span class="p">));</span>
 <span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">Send</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">time_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">acknowledge_timeout_ms_</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
+<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="nf">Send</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">time_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">acknowledge_timeout_ms_</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="k">return</span><span class="p">(</span><span class="n">Send</span><span class="p">(</span><span class="n">s_</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">s_</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="n">time_</span><span class="p">,</span><span class="w"> </span><span class="n">acknowledge_timeout_ms_</span><span class="p">));</span>
 <span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">AddEventCallback</span><span class="p">(</span><span class="n">eCAL_Publisher_Event</span><span class="w"> </span><span class="n">type_</span><span class="p">,</span><span class="w"> </span><span class="n">PubEventCallbackT</span><span class="w"> </span><span class="n">callback_</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">AddEventCallback</span><span class="p">(</span><span class="n">eCAL_Publisher_Event</span><span class="w"> </span><span class="n">type_</span><span class="p">,</span><span class="w"> </span><span class="n">PubEventCallbackT</span><span class="w"> </span><span class="n">callback_</span><span class="p">);</span>
 
 <span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">RemEventCallback</span><span class="p">(</span><span class="n">eCAL_Publisher_Event</span><span class="w"> </span><span class="n">type_</span><span class="p">);</span>
 

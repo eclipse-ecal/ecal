@@ -33,6 +33,7 @@ Program Listing for File ecal_publisher.h
    
    #include <ecal/ecal_os.h>
    #include <ecal/ecal_callback.h>
+   #include <ecal/ecal_payload_writer.h>
    #include <ecal/ecal_qos.h>
    #include <ecal/ecal_tlayer.h>
    
@@ -105,13 +106,17 @@ Program Listing for File ecal_publisher.h
    
        size_t Send(const void* buf_, size_t len_, long long time_ = DEFAULT_TIME_ARGUMENT) const;
    
-       size_t Send(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const;
+       size_t Send(CPayloadWriter& payload_, long long time_ = DEFAULT_TIME_ARGUMENT) const;
+   
+       size_t Send(const void* buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const;
    
        [[deprecated]]
        size_t SendSynchronized(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
        {
          return Send(buf_, len_, time_, acknowledge_timeout_ms_);
        }
+   
+       size_t Send(CPayloadWriter& payload_, long long time_, long long acknowledge_timeout_ms_) const;
    
        size_t Send(const std::string& s_, long long time_ = DEFAULT_TIME_ARGUMENT) const
        {
