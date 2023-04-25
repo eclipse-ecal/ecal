@@ -27,7 +27,7 @@
 
 #include "ecal_play_logger.h"
 #include "play_thread.h"
-#include "ecalhdf5/eh5_meas.h"
+#include "ecalhdf5/eh5_reader.h"
 
 #include <ecal_utils/string.h>
 #include <ecal_utils/filesystem.h>
@@ -58,7 +58,7 @@ bool EcalPlay::LoadMeasurement(const std::string& path)
 {
   EcalPlayLogger::Instance()->info("Loading measurement...");
 
-  std::shared_ptr<eCAL::measurement::base::Measurement> measurement(std::make_shared<eCAL::eh5::HDF5Meas>());
+  std::shared_ptr<eCAL::measurement::base::Reader> measurement(std::make_shared<eCAL::eh5::Reader>());
 
   std::string meas_dir;               // The directory of the measurement
   std::string path_to_load;           // The actual path we load the measurement from. May be a directory or a .hdf5 file
@@ -129,7 +129,7 @@ bool EcalPlay::LoadMeasurement(const std::string& path)
 void EcalPlay::CloseMeasurement()
 {
   description_ = "";
-  play_thread_->SetMeasurement(std::shared_ptr<eCAL::measurement::base::Measurement>(nullptr));
+  play_thread_->SetMeasurement(std::shared_ptr<eCAL::measurement::base::Reader>(nullptr));
   measurement_path_ = "";
   clearScenariosPath();
   channel_mapping_path_ = "";

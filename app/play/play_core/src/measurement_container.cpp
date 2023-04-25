@@ -18,12 +18,13 @@
 */
 
 #include "measurement_container.h"
+#include <ecalhdf5/eh5_meas.h>
 
 #include <algorithm>
 #include <math.h>
 #include <stdlib.h>
 
-MeasurementContainer::MeasurementContainer(std::shared_ptr<eCAL::measurement::base::Measurement> hdf5_meas, const std::string& meas_dir, bool use_receive_timestamp)
+MeasurementContainer::MeasurementContainer(std::shared_ptr<eCAL::measurement::base::Reader> hdf5_meas, const std::string& meas_dir, bool use_receive_timestamp)
   : hdf5_meas_             (hdf5_meas)
   , meas_dir_              (meas_dir)
   , use_receive_timestamp_ (use_receive_timestamp)

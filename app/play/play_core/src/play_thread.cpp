@@ -576,7 +576,7 @@ void PlayThread::LogChannelMapping(const std::map<std::string, std::string>& cha
 //// Measurement                                                            ////
 ////////////////////////////////////////////////////////////////////////////////
 
-void PlayThread::SetMeasurement(const std::shared_ptr<eCAL::measurement::base::Measurement>& measurement, const std::string& path)
+void PlayThread::SetMeasurement(const std::shared_ptr<eCAL::measurement::base::Reader>& measurement, const std::string& path)
 {
   std::unique_ptr<MeasurementContainer> new_measurment_container;
 
