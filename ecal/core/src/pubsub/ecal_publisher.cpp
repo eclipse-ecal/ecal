@@ -356,7 +356,7 @@ namespace eCAL
 
      // send content via data writer layer
      long long const write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
-     bool const sent = m_datawriter->Write(payload_, write_time, m_id);
+     const size_t written_bytes = m_datawriter->Write(payload_, write_time, m_id);
 
      if (acknowledge_timeout_ms_ != DEFAULT_ACKNOWLEDGE_ARGUMENT)
      {
@@ -364,8 +364,8 @@ namespace eCAL
        m_datawriter->ShmSetAcknowledgeTimeout(current_acknowledge_timeout_ms);
      }
 
-     //@Rex we have to call GetSize() again. Can't we return this from the Write call?
-     return sent ? payload_.GetSize() : 0;
+     // return number of bytes written
+     return written_bytes;
   }
 
   bool CPublisher::AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_)

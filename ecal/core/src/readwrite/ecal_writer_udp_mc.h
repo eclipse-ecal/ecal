@@ -52,7 +52,7 @@ namespace eCAL
     // so, mark it as final to ensure that no derived classes override it.
     bool Destroy() final;
 
-    bool Write(const void* const buf_, const SWriterAttr& attr_) override;
+    bool Write(const void* buf_, const SWriterAttr& attr_) override;
 
   protected:
     std::string       m_udp_ipaddr;

@@ -402,7 +402,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CDataWriter::Write(CPayloadWriter& payload_, long long time_, long long id_)
+  size_t CDataWriter::Write(CPayloadWriter& payload_, long long time_, long long id_)
   {
     // check writer modes
     if (!CheckWriterModes())
@@ -647,7 +647,8 @@ namespace eCAL
     }
 
     // return success
-    return(written);
+    if (written) return payload_buf_size;
+    else         return 0;
   }
 
   void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_)

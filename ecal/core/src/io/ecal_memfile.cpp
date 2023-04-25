@@ -173,8 +173,9 @@ namespace eCAL
     m_memfile_mutex.Destroy();
 
     // reset states
-    m_created      = false;
-    m_access_state = access_state::closed;
+    m_created             = false;
+    m_payload_initialized = false;
+    m_access_state        = access_state::closed;
     m_name.clear();
 
     // reset header and info

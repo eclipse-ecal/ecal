@@ -70,15 +70,15 @@ namespace eCAL
 
         bool Write(void* buf_, size_t len_) override
         {
-          return message.SerializeToArray(buf_, (int)len_);
+          return message.SerializeToArray(buf_, static_cast<int>(len_));
         }
 
         size_t GetSize() override {
           size_t size(0);
 #if GOOGLE_PROTOBUF_VERSION >= 3001000
-          size = (size_t)message.ByteSizeLong();
+          size = static_cast<size_t>(message.ByteSizeLong());
 #else
-          size = (size_t)message.ByteSize();
+          size = static_cast<size_t>(message.ByteSize());
 #endif
           return(size);
           };
@@ -113,14 +113,19 @@ namespace eCAL
       CPublisher(const CPublisher&) = delete;
 
       /**
-      * @brief  Copy Constructor is not available.
-      **/
-      CPublisher& operator=(const CPublisher&) = delete;
-
-      /**
       * @brief  Move Constructor
       **/
       CPublisher(CPublisher&&) = default;
+
+      /**
+      * @brief  Destructor.
+      **/
+      ~CPublisher() override = default;
+
+      /**
+      * @brief  Copy assignment is not available.
+      **/
+      CPublisher& operator=(const CPublisher&) = delete;
 
       /**
       * @brief  Move assignment

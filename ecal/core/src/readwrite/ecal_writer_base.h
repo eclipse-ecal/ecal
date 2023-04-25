@@ -38,7 +38,7 @@ namespace eCAL
   {
   public:
     CDataWriterBase() : m_created(false) {};
-    virtual ~CDataWriterBase() {};
+    virtual ~CDataWriterBase() = default;
 
     virtual SWriterInfo GetInfo() = 0;
 
@@ -58,7 +58,7 @@ namespace eCAL
 
     virtual bool PrepareWrite(const SWriterAttr& /*attr_*/) { return false; };
     virtual bool Write(CPayloadWriter& /*payload_*/, const SWriterAttr& /*attr_*/) { return false; };
-    virtual bool Write(const void* const /*buf_*/, const SWriterAttr& /*attr_*/) { return false; };
+    virtual bool Write(const void* /*buf_*/, const SWriterAttr& /*attr_*/) { return false; };
 
   protected:
     std::string        m_host_name;

@@ -66,6 +66,7 @@ namespace eCAL
 
     // make a dump memory copy
     bool Write (void* buffer_, size_t size_) override {
+      if (buffer_ == nullptr)  return false;
       if (size_ < m_size)      return false;
       if (m_buffer == nullptr) return false;
       if (m_size == 0)         return false;
