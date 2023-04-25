@@ -1,0 +1,86 @@
+
+.. _program_listing_file_contrib_ecalhdf5_include_ecalhdf5_eh5_reader.h:
+
+Program Listing for File eh5_reader.h
+=====================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_contrib_ecalhdf5_include_ecalhdf5_eh5_reader.h>` (``contrib/ecalhdf5/include/ecalhdf5/eh5_reader.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /* ========================= eCAL LICENSE =================================
+    *
+    * Copyright (C) 2016 - 2019 Continental Corporation
+    *
+    * Licensed under the Apache License, Version 2.0 (the "License");
+    * you may not use this file except in compliance with the License.
+    * You may obtain a copy of the License at
+    * 
+    *      http://www.apache.org/licenses/LICENSE-2.0
+    * 
+    * Unless required by applicable law or agreed to in writing, software
+    * distributed under the License is distributed on an "AS IS" BASIS,
+    * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    * See the License for the specific language governing permissions and
+    * limitations under the License.
+    *
+    * ========================= eCAL LICENSE =================================
+   */
+   
+   #pragma once
+   
+   #include "eh5_meas.h"
+   #include <ecal/measurement/base/reader.h>
+   
+   namespace eCAL
+   {
+     namespace eh5
+     {
+    
+       class Reader : public measurement::base::Reader
+       {
+       public:
+         Reader() = default;
+   
+         explicit Reader(const std::string& path) : measurement(path, eAccessType::RDONLY){};
+         
+          bool Open(const std::string& path) override {
+            return measurement.Open(path, eAccessType::RDONLY);
+          }
+   
+          bool Close() override { return measurement.Close(); }
+   
+          bool IsOk() const override { return measurement.IsOk(); }
+   
+          std::string GetFileVersion() const override { return measurement.GetFileVersion(); }
+   
+          std::set<std::string> GetChannelNames() const override { return measurement.GetChannelNames(); }
+   
+          bool HasChannel(const std::string& channel_name) const override { return measurement.HasChannel(channel_name);  }
+   
+          std::string GetChannelDescription(const std::string& channel_name) const override { return measurement.GetChannelDescription(channel_name); }
+   
+          std::string GetChannelType(const std::string& channel_name) const override { return measurement.GetChannelType(channel_name); }
+   
+          long long GetMinTimestamp(const std::string& channel_name) const override { return measurement.GetMinTimestamp(channel_name); }
+   
+          long long GetMaxTimestamp(const std::string& channel_name) const override { return measurement.GetMaxTimestamp(channel_name); }
+   
+          bool GetEntriesInfo(const std::string& channel_name, EntryInfoSet& entries) const override { return measurement.GetEntriesInfo(channel_name, entries); }
+   
+          bool GetEntriesInfoRange(const std::string& channel_name, long long begin, long long end, EntryInfoSet& entries) const override { return measurement.GetEntriesInfoRange(channel_name, begin, end, entries); }
+   
+          bool GetEntryDataSize(long long entry_id, size_t& size) const override { return measurement.GetEntryDataSize(entry_id, size); }
+   
+          bool GetEntryData(long long entry_id, void* data) const override { return measurement.GetEntryData(entry_id, data); }
+   
+       private:
+         HDF5Meas measurement;
+   
+       };
+   
+   
+     }  // namespace eh5
+   }  // namespace eCAL

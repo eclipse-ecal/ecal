@@ -19,6 +19,10 @@ Classes
 
 - :ref:`exhale_class_classeCAL_1_1eh5_1_1HDF5Meas`
 
+- :ref:`exhale_class_classeCAL_1_1eh5_1_1Reader`
+
+- :ref:`exhale_class_classeCAL_1_1eh5_1_1Writer`
+
 
 Typedefs
 --------
