@@ -52,8 +52,8 @@ namespace eCAL
 {
   class CUdpRegistrationReceiver : public CSampleReceiver
   {
-    bool HasSample(const std::string& /*sample_name_*/) { return(true); };
-    size_t ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_);
+    bool HasSample(const std::string& /*sample_name_*/) override { return(true); };
+    size_t ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_) override;
   };
 
   class CMemfileRegistrationReceiver
@@ -82,11 +82,11 @@ namespace eCAL
     void Destroy();
 
     void EnableLoopback(bool state_);
-    bool LoopBackEnabled() { return m_loopback; };
+    bool LoopBackEnabled() const { return m_loopback; };
 
     size_t ApplySample(const eCAL::pb::Sample& ecal_sample_);
 
-    bool AddRegistrationCallback(enum eCAL_Registration_Event event_, RegistrationCallbackT callback_);
+    bool AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_);
     bool RemRegistrationCallback(enum eCAL_Registration_Event event_);
 
     void SetCustomApplySampleCallback(const ApplySampleCallbackT& callback_);

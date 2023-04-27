@@ -105,7 +105,9 @@ namespace eCAL
     long GetFrequency() const {return(m_freq);}
 
   protected:
-    bool DoRegister(bool force_);
+    bool Register(bool force_);
+    bool Unregister(bool force_);
+
     void Connect(const std::string& tid_, const std::string& ttype_, const std::string& tdesc_);
     void Disconnect();
 

@@ -212,6 +212,19 @@ namespace eCAL
         }
       };
 
+      // Remove specific element from the cache
+      // @Kerstin, pretty sure that this is not well implemented, please take a look
+      bool remove(const Key& k)
+      {
+        auto it = _key_to_value.find(k);
+        if (it != _key_to_value.end())
+        {
+          _key_to_value.erase(k);
+          return true;
+        }
+        return false;
+      };
+
       // Remove all elements from the cache 
       void clear()
       {

@@ -66,8 +66,11 @@ namespace eCAL
     counter << std::chrono::steady_clock::now().time_since_epoch().count();
     m_service_id = counter.str();
 
+    // register this client
     if (g_clientgate() != nullptr) g_clientgate()->Register(this);
+    Register(false);
 
+    // mark as created
     m_created = true;
 
     return(true);
@@ -77,8 +80,7 @@ namespace eCAL
   {
     if (!m_created) return(false);
 
-    if (g_clientgate() != nullptr)            g_clientgate()->Unregister(this);
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterClient(m_service_name, m_service_id);
+    if (g_clientgate() != nullptr) g_clientgate()->Unregister(this);
 
     // reset client map
     {
@@ -102,6 +104,10 @@ namespace eCAL
     m_service_id.clear();
     m_host_name.clear();
 
+    // unregister this client
+    Unregister(true);
+
+    // mark as not created
     m_created = false;
 
     return(true);
@@ -312,11 +318,9 @@ namespace eCAL
     return !m_connected_services_map.empty();
   }
 
-  // called by the eCAL::CClientGate to register a service
+  // called by eCAL::CClientGate to register a service
   void CServiceClientImpl::RegisterService(const std::string& key_, unsigned int /*version_*/, const SServiceAttr& service_)
   {
-    // TODO: CHECK COMPATIBILITY HERE
-
     // check connections
     std::lock_guard<std::mutex> const lock(m_connected_services_map_sync);
 
@@ -342,7 +346,13 @@ namespace eCAL
   // called by eCAL:CClientGate every second to update registration layer
   void CServiceClientImpl::RefreshRegistration()
   {
-    if (!m_created)             return;
+    if (!m_created) return;
+    Register(false);
+  }
+
+
+  void CServiceClientImpl::Register(const bool force_)
+  {
     if (m_service_name.empty()) return;
 
     eCAL::pb::Sample sample;
@@ -357,7 +367,7 @@ namespace eCAL
     service_mutable_client->set_sid(m_service_id);
 
     // register entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterClient(m_service_name, m_service_id, sample, false);
+    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterClient(m_service_name, m_service_id, sample, force_);
 
     // refresh connected services map
     CheckForNewServices();
@@ -392,6 +402,25 @@ namespace eCAL
         }
       }
     }
+  }
+
+  void CServiceClientImpl::Unregister(const bool force_)
+  {
+    if (m_service_name.empty()) return;
+
+    eCAL::pb::Sample sample;
+    sample.set_cmd_type(eCAL::pb::bct_unreg_client);
+    auto* service_mutable_client = sample.mutable_client();
+    service_mutable_client->set_version(m_version);
+    service_mutable_client->set_hname(Process::GetHostName());
+    service_mutable_client->set_pname(Process::GetProcessName());
+    service_mutable_client->set_uname(Process::GetUnitName());
+    service_mutable_client->set_pid(Process::GetProcessID());
+    service_mutable_client->set_sname(m_service_name);
+    service_mutable_client->set_sid(m_service_id);
+
+    // unregister entity
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterClient(m_service_name, m_service_id, sample, force_);
   }
 
   void CServiceClientImpl::CheckForNewServices()

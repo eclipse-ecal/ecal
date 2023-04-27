@@ -137,8 +137,7 @@ namespace eCAL
     RemReceiveCallback();
 
     // first unregister data reader
-    if(g_subgate())               g_subgate()->Unregister(m_datareader->GetTopicName(), m_datareader);
-    if(g_registration_provider()) g_registration_provider()->UnregisterTopic(m_datareader->GetTopicName(), m_datareader->GetTopicID());
+    if(g_subgate()) g_subgate()->Unregister(m_datareader->GetTopicName(), m_datareader);
 #ifndef NDEBUG
     // log it
     if (g_log()) g_log()->Log(log_level_debug1, std::string(m_datareader->GetTopicName() + "::CSubscriber::Destroy"));

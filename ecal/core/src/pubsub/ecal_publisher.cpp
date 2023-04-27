@@ -167,8 +167,7 @@ namespace eCAL
     m_datawriter->Destroy();
 
     // unregister data writer
-    if(g_pubgate() != nullptr)               g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
-    if(g_registration_provider() != nullptr) g_registration_provider()->UnregisterTopic(m_datawriter->GetTopicName(), m_datawriter->GetTopicID());
+    if(g_pubgate() != nullptr) g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
 #ifndef NDEBUG
     // log it
     if (g_log()) g_log()->Log(log_level_debug1, std::string(m_datawriter->GetTopicName() + "::CPublisher::Destroy"));

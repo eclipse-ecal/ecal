@@ -38,13 +38,19 @@ message Content                                // topic content
 
 enum eCmdType                                  // command type
 {
-  bct_none           = 0;                      // undefined command
-  bct_set_sample     = 1;                      // set sample content
-  bct_reg_publisher  = 2;                      // register publisher
-  bct_reg_subscriber = 3;                      // register subscriber
-  bct_reg_process    = 4;                      // register process
-  bct_reg_service    = 5;                      // register service
-  bct_reg_client     = 6;                      // register client
+  bct_none             =  0;                   // undefined command
+  bct_set_sample       =  1;                   // set sample content
+  bct_reg_publisher    =  2;                   // register publisher
+  bct_reg_subscriber   =  3;                   // register subscriber
+  bct_reg_process      =  4;                   // register process
+  bct_reg_service      =  5;                   // register service
+  bct_reg_client       =  6;                   // register client
+
+  bct_unreg_publisher  = 12;                   // unregister publisher
+  bct_unreg_subscriber = 13;                   // unregister subscriber
+  bct_unreg_process    = 14;                   // unregister process
+  bct_unreg_service    = 15;                   // unregister service
+  bct_unreg_client     = 16;                   // unregister client
 }
 
 message Sample                                 // a sample is a topic, it's descriptions and it's content

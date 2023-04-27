@@ -138,7 +138,7 @@ namespace eCAL
     m_use_tdesc = Config::IsTopicDescriptionSharingEnabled();
 
     // register
-    DoRegister(false);
+    Register(false);
 
     // mark as created
     m_created = true;
@@ -206,7 +206,10 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
-    m_created           = false;
+    // unregister
+    Unregister(true);
+
+    m_created = false;
 
     return(true);
   }
@@ -222,7 +225,7 @@ namespace eCAL
 #endif
 
     // register it
-    DoRegister(force);
+    Register(force);
 
     return(true);
   }
@@ -238,7 +241,7 @@ namespace eCAL
 #endif
 
     // register it
-    DoRegister(force);
+    Register(force);
 
     return(true);
   }
@@ -256,7 +259,7 @@ namespace eCAL
 #endif
 
     // register it
-    DoRegister(force);
+    Register(force);
 
     return(true);
   }
@@ -273,7 +276,7 @@ namespace eCAL
 #endif
 
     // register it
-    DoRegister(force);
+    Register(force);
 
     return(true);
   }
@@ -408,7 +411,7 @@ namespace eCAL
     if (!CheckWriterModes())
     {
       // incompatible writer configurations
-      return false;
+      return 0;
     }
 
     // get payload buffer size (one time, to avoid multiple computations)
@@ -464,7 +467,7 @@ namespace eCAL
         if (m_writer.shm.PrepareWrite(wattr))
         {
           // register new to update listening subscribers and rematch
-          DoRegister(true);
+          Register(true);
           Process::SleepMS(5);
         }
 
@@ -525,7 +528,7 @@ namespace eCAL
         if (m_writer.inproc.PrepareWrite(wdata))
         {
           // register new to update listening subscribers and rematch
-          DoRegister(true);
+          Register(true);
           Process::SleepMS(5);
         }
 
@@ -582,7 +585,7 @@ namespace eCAL
         if (m_writer.udp_mc.PrepareWrite(wattr))
         {
           // register new to update listening subscribers and rematch
-          DoRegister(true);
+          Register(true);
           Process::SleepMS(5);
         }
 
@@ -739,7 +742,7 @@ namespace eCAL
     }
 
     // register without send
-    DoRegister(false);
+    Register(false);
 
     // check connection timeouts
     const std::shared_ptr<std::list<std::string>> loc_timeouts = std::make_shared<std::list<std::string>>();
@@ -796,7 +799,7 @@ namespace eCAL
     return(out.str());
   }
 
-  bool CDataWriter::DoRegister(bool force_)
+  bool CDataWriter::Register(bool force_)
   {
     if (m_topic_name.empty()) return(false);
 
@@ -924,7 +927,30 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::DoRegister");
+    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Register");
+#endif
+    return(true);
+  }
+
+  bool CDataWriter::Unregister(bool force_)
+  {
+    if (m_topic_name.empty()) return(false);
+
+    // create command parameter
+    eCAL::pb::Sample ecal_unreg_sample;
+    ecal_unreg_sample.set_cmd_type(eCAL::pb::bct_unreg_publisher);
+    auto* ecal_reg_sample_mutable_topic = ecal_unreg_sample.mutable_topic();
+    ecal_reg_sample_mutable_topic->set_hname(m_host_name);
+    ecal_reg_sample_mutable_topic->set_hid(m_host_id);
+    ecal_reg_sample_mutable_topic->set_tname(m_topic_name);
+    ecal_reg_sample_mutable_topic->set_tid(m_topic_id);
+
+    // unregister publisher
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterTopic(m_topic_name, m_topic_id, ecal_unreg_sample, force_);
+
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::UnRegister");
 #endif
     return(true);
   }

@@ -38,9 +38,9 @@ namespace eCAL
 {
   size_t CUdpRegistrationReceiver::ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/)
   {
-    if (!g_registration_receiver()) return 0;
+    if (g_registration_receiver() == nullptr) return 0;
     return g_registration_receiver()->ApplySample(ecal_sample_);
-  };
+  }
 
   //////////////////////////////////////////////////////////////////
   // CMemfileRegistrationReceiver
@@ -90,7 +90,7 @@ namespace eCAL
 
   bool CMemfileRegistrationReceiver::ApplySample(const eCAL::pb::Sample& ecal_sample_)
   {
-    if (!g_registration_receiver()) return 0;
+    if (g_registration_receiver() == nullptr) return false;
     return (g_registration_receiver()->ApplySample(ecal_sample_) != 0);
   }
 
@@ -112,7 +112,7 @@ namespace eCAL
                          m_callback_custom_apply_sample([](const auto&){})
 
   {
-  };
+  }
 
   CRegistrationReceiver::~CRegistrationReceiver()
   {
@@ -133,16 +133,8 @@ namespace eCAL
     {
       // start registration receive thread
       SReceiverAttr attr;
-      bool local_only = !Config::IsNetworkEnabled();
       // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
-      if (local_only)
-      {
-        attr.broadcast = true;
-      }
-      else
-      {
-        attr.broadcast = false;
-      }
+      attr.broadcast = !Config::IsNetworkEnabled();
       attr.ipaddr = UDP::GetRegistrationMulticastAddress();
       attr.port = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
       attr.loopback = true;
@@ -222,70 +214,79 @@ namespace eCAL
     case eCAL::pb::bct_reg_process:
       if (m_callback_process) m_callback_process(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
+    case eCAL::pb::bct_unreg_process:
+      //if (m_callback_process) m_callback_process(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
+      break;
     case eCAL::pb::bct_reg_service:
+      if (g_clientgate() != nullptr)  g_clientgate()->ApplyServiceRegistration(ecal_sample_);
       if (m_callback_service) m_callback_service(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
-      if (g_clientgate())  g_clientgate()->ApplyServiceRegistration(ecal_sample_);
+      break;
+    case eCAL::pb::bct_unreg_service:
+      //if (m_callback_service) m_callback_service(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
     case eCAL::pb::bct_reg_client:
+      if (g_servicegate() != nullptr) g_servicegate()->ApplyClientRegistration(ecal_sample_);
       if (m_callback_client) m_callback_client(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
-      if (g_servicegate()) g_servicegate()->ApplyClientRegistration(ecal_sample_);
+      break;
+    case eCAL::pb::bct_unreg_client:
+      //if (m_callback_client) m_callback_client(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
     case eCAL::pb::bct_reg_subscriber:
+      // process local subscriber registrations
+      if(IsLocalHost(ecal_sample_))
       {
-        // process local subscriber registrations
-        if(IsLocalHost(ecal_sample_))
+        // do not register subscriber of the same process
+        // only if loop back flag is set true
+        if(m_loopback || (ecal_sample_.topic().pid() != Process::GetProcessID()))
         {
-          // do not register subscriber of the same process
-          // only if loop back flag is set true
-          if(m_loopback || (ecal_sample_.topic().pid() != Process::GetProcessID()))
-          {
-            if (g_pubgate()) g_pubgate()->ApplyLocSubRegistration(ecal_sample_);
-          }
+          if (g_pubgate() != nullptr) g_pubgate()->ApplyLocSubRegistration(ecal_sample_);
         }
-        // process external subscriber registrations
-        else
-        {
-          if(m_network)
-          {
-            if (g_pubgate()) g_pubgate()->ApplyExtSubRegistration(ecal_sample_);
-          }
-        }
-        if (m_callback_sub) m_callback_sub(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       }
+      // process external subscriber registrations
+      else
+      {
+        if(m_network)
+        {
+          if (g_pubgate() != nullptr) g_pubgate()->ApplyExtSubRegistration(ecal_sample_);
+        }
+      }
+      if (m_callback_sub) m_callback_sub(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
+      break;
+    case eCAL::pb::bct_unreg_subscriber:
+      //if (m_callback_sub) m_callback_sub(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
     case eCAL::pb::bct_reg_publisher:
+      // process local publisher registrations
+      if(IsLocalHost(ecal_sample_))
       {
-        // process local publisher registrations
-        if(IsLocalHost(ecal_sample_))
+        // do not register publisher of the same process
+        // only if loop back flag is set true
+        if(m_loopback || (ecal_sample_.topic().pid() != Process::GetProcessID()))
         {
-          // do not register publisher of the same process
-          // only if loop back flag is set true
-          if(m_loopback || (ecal_sample_.topic().pid() != Process::GetProcessID()))
-          {
-            if (g_subgate()) g_subgate()->ApplyLocPubRegistration(ecal_sample_);
-          }
+          if (g_subgate() != nullptr) g_subgate()->ApplyLocPubRegistration(ecal_sample_);
         }
-        else
-        {
-          if(m_network)
-          {
-            if (g_subgate()) g_subgate()->ApplyExtPubRegistration(ecal_sample_);
-          }
-        }
-        if (m_callback_pub) m_callback_pub(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       }
+      else
+      {
+        if(m_network)
+        {
+          if (g_subgate() != nullptr) g_subgate()->ApplyExtPubRegistration(ecal_sample_);
+        }
+      }
+      if (m_callback_pub) m_callback_pub(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
+      break;
+    case eCAL::pb::bct_unreg_publisher:
+      //if (m_callback_pub) m_callback_pub(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
     default:
-      {
-        eCAL::Logging::Log(log_level_debug1, "CRegGate::ApplySample : unknown sample type");
-      }
+      eCAL::Logging::Log(log_level_debug1, "CRegGate::ApplySample : unknown sample type");
       break;
     }
 
     return 0;
   }
 
-  bool CRegistrationReceiver::AddRegistrationCallback(enum eCAL_Registration_Event event_, RegistrationCallbackT callback_)
+  bool CRegistrationReceiver::AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_)
   {
     if (!m_created) return false;
     switch (event_)

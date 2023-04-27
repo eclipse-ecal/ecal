@@ -84,6 +84,9 @@ namespace eCAL
     CServiceServerImpl& operator=(CServiceServerImpl&&) = delete;
 
   protected:
+    void Register(bool force_);
+    void Unregister(bool force_);
+
     /**
      * @brief Calls the request callback based on the request and fills the response
      * 
