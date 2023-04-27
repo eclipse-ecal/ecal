@@ -29,21 +29,21 @@ They may have a different license than eCAL.
    * - `fineFTP Server <https://github.com/continental/fineftp-server>`_
      - :ref:`mit_license`
      - 2020 Continental Corporation
-     - - |fa-github| Git submodule ``/tirdparty/fineftp-server``
+     - - |fa-github| Git submodule ``/thirdparty/fineftp-server``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
    * - `tcp_pubsub <https://github.com/continental/tcp_pubsub>`_
      - :ref:`mit_license`
      - Copyright (c) 2021 Continental
-     - - |fa-github| Git submodule ``/tirdparty/tcp_pubsub``
+     - - |fa-github| Git submodule ``/thirdparty/tcp_pubsub``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
    * - `Udpcap <https://github.com/eclipse-ecal/udpcap>`_
      - :ref:`apache_2_0`
      - 2022, Continental
-     - - |fa-github| Git submodule ``/tirdparty/udpcap``
+     - - |fa-github| Git submodule ``/thirdparty/udpcap``
        - |fa-windows| Binary distributions for Windows
 
 Thirdparty components
@@ -64,7 +64,7 @@ They are used by Eclipse eCAL, but not associated to it in any way.
    * - `Asio <https://think-async.com>`_
      - :ref:`boost_1_0`
      - 2003-2018 Christopher M. Kohlhoff
-     - - |fa-github| Git submodule ``/tirdparty/asio``
+     - - |fa-github| Git submodule ``/thirdparty/asio``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
@@ -119,27 +119,37 @@ They are used by Eclipse eCAL, but not associated to it in any way.
    * - `Google Protobuf <https://developers.google.com/protocol-buffers>`_
      - :ref:`bsd_3`
      - Copyright 2008 Google Inc.
-     - - |fa-github| Git submodule ``/tirdparty/protobuf``
+     - - |fa-github| Git submodule ``/thirdparty/protobuf``
        - |fa-windows| Binary distributions for Windows
 
    * - `Google Test <https://github.com/google/googletest>`_
      - :ref:`bsd_3`
      - Copyright 2008 Google Inc.
-     - - |fa-github| Git submodule ``/tirdparty/googletest``
+     - - |fa-github| Git submodule ``/thirdparty/googletest``
 
    * - `HDF5 <https://www.hdfgroup.org/solutions/hdf5>`_
      - :ref:`hdf5_bsd_3`
      - 1998-2006 by The Board of Trustees of the University of Illinois
        
        2006 by The HDF Group
-     - - |fa-github| Git submodule ``/tirdparty/hdf5``
+     - - |fa-github| Git submodule ``/thirdparty/hdf5``
        - |fa-windows| Binary distributions for Windows
 
    * - `libcurl <https://curl.se/libcurl/>`_
      - :ref:`mit_license`
      - 1996 - 2021, Daniel Stenberg, daniel@haxx.se, and many contributors, see the THANKS file
-     - - |fa-github| Git submodule ``/tirdparty/curl``
+     - - |fa-github| Git submodule ``/thirdparty/curl``
        - |fa-windows| Binary distributions for Windows
+
+   * - `lz4 <https://github.com/lz4/lz4>`_
+     - `Dual license <https://github.com/lz4/lz4/blob/dev/LICENSE>`_
+     - Copyright (C) 2011-2020, Yann Collet
+     - - |fa-github| Git submodule ``/thirdparty/lz4``
+
+   * - `mcap <https://github.com/foxglove/mcap>`_
+     - :ref:`mit_license`
+     - Foxglove Technologies Inc.
+     - - |fa-github| Git submodule ``/thirdparty/mcap``
 
    * - `modpath.iss <http://www.legroom.net/software>`_
      - :ref:`lgpl_3_0`
@@ -167,28 +177,28 @@ They are used by Eclipse eCAL, but not associated to it in any way.
    * - `qwt <https://sourceforge.net/projects/qwt/>`_
      - :ref:`qwt_license`
      - 	Uwe Rathmann
-     - - |fa-github| Git submodule ``/tirdparty/qwt/qwt``
+     - - |fa-github| Git submodule ``/thirdparty/qwt/qwt``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
    * - `recycle <https://github.com/steinwurf/recycle>`_
      - :ref:`bsd_3`
      - Copyright (c) 2014, Steinwurf ApS
-     - - |fa-github| Git submodule ``/tirdparty/recycle``
+     - - |fa-github| Git submodule ``/thirdparty/recycle``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
    * - `SimpleIni <https://github.com/brofield/simpleini>`_
      - :ref:`mit_license`
      - 2006-2013 Brodie Thiesfield
-     - - |fa-github| Git submodule ``/tirdparty/simpleini``
+     - - |fa-github| Git submodule ``/thirdparty/simpleini``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
    * - `spdlog <https://github.com/gabime/spdlog>`_
      - :ref:`mit_license`
      - 2016 Gabi Melman
-     - - |fa-github| Git submodule ``/tirdparty/spdlog``
+     - - |fa-github| Git submodule ``/thirdparty/spdlog``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
@@ -206,21 +216,21 @@ They are used by Eclipse eCAL, but not associated to it in any way.
        Copyright (c) 2004 Daniel Aarno
 
        Copyright (c) 2017 Google Inc.
-     - - |fa-github| Git submodule ``/tirdparty/tclap``
+     - - |fa-github| Git submodule ``/thirdparty/tclap``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
    * - `termcolor <https://github.com/ikalnytskyi/termcolor>`_
      - :ref:`bsd_3`
      - 2013, Ihor Kalnytskyi
-     - - |fa-github| Git submodule ``/tirdparty/termcolor``
+     - - |fa-github| Git submodule ``/thirdparty/termcolor``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
    * - `TinyXML-2 <http://www.grinninglizard.com/tinyxml2/>`_
      - :ref:`zlib_license`
      - 	Lee Thomason
-     - - |fa-github| Git submodule ``/tirdparty/tinyxml``
+     - - |fa-github| Git submodule ``/thirdparty/tinyxml``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
@@ -230,6 +240,14 @@ They are used by Eclipse eCAL, but not associated to it in any way.
      - - |fa-github| Git submodule ``/thirdparty/yaml-cpp``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
+
+   * - `zstd <https://github.com/facebook/zstd>`_
+     - :ref:`bsd_3`
+     - Copyright (c) Meta Platforms, Inc. and affiliates.
+     - - |fa-github| Git submodule ``/thirdparty/zstd``
+
+
+
 
 License texts
 =============

@@ -103,6 +103,10 @@ option(ECAL_THIRDPARTY_BUILD_FTXUI             "Build ftxui with eCAL"          
 # option(ECAL_THIRDPARTY_BUILD_LIBSSH2           "Build libssh2 with eCAL"                                           ON)
 option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"                                            OFF)
 option(ECAL_THIRDPARTY_BUILD_UDPCAP            "Build udpcap library with eCAL"                                   OFF)
+option(ECAL_THIRDPARTY_BUILD_ZSTD              "Build zstd library with eCAL"                                     ON)
+option(ECAL_THIRDPARTY_BUILD_LZ4               "Build lz4 library with eCAL"                                      ON)
+option(ECAL_THIRDPARTY_BUILD_MCAP              "Build mcap library with eCAL"                                     ON)
+
 
 if(WIN32)
   option(ECAL_THIRDPARTY_BUILD_PROTOBUF        "Build protobuf with eCAL"                                          ON)
@@ -197,6 +201,9 @@ set(possible_subprojects
   yaml-cpp
   ftxui
   udpcap
+  lz4
+  zstd
+  mcap
 )
 
 # We should rename the option, but don't know how to do in in a

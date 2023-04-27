@@ -62,79 +62,101 @@ This project has dependencies - list with dependency name and license follows.
   - License: Apache License - https://github.com/google/flatbuffers/blob/master/LICENSE.txt
 
 
-2.3 Utilities
+2.3 Recording & Compression
 
-2.3.1 SimpleIni
+2.3.1 HDF5
+  - Copyright by The HDF Group
+  - URL: https://github.com/HDFGroup/hdf5
+  - License: https://github.com/HDFGroup/hdf5/blob/develop/COPYING
+  
+2.3.2 MCAP
+  - URL: https://github.com/foxglove/mcap
+  - License: MIT License - https://github.com/foxglove/mcap/blob/main/LICENSE
+  
+2.3.3 LZ4
+  - Copyright (C) 2011-2020, Yann Collet
+  - URL: https://github.com/lz4/lz4
+  - License: 2 different licenses, relevant part BSD 2-Clause license - https://github.com/lz4/lz4/blob/dev/LICENSE
+  
+2.3.4 ZSTD
+  - Copyright (c) Meta Platforms, Inc. and affiliates
+  - URL: https://github.com/facebook/zstd
+  - License: BSD License - https://github.com/facebook/zstd/blob/dev/LICENSE
+
+
+2.4 Utilities
+
+2.4.1 SimpleIni
   - Copyright (c) 2006-2013 Brodie Thiesfield
   - URL: https://github.com/brofield/simpleini
   - License: MIT License - https://github.com/brofield/simpleini/blob/master/LICENCE.txt
 
-2.3.2 TCLAP
+2.4.2 TCLAP
   - Copyright (c) 2003 Michael E. Smoot 
   - Copyright (c) 2004 Daniel Aarno
   - Copyright (c) 2017 Google Inc.
   - URL: http://tclap.sourceforge.net
   - License: MIT License - https://opensource.org/licenses/mit-license.php
   
-2.3.3 convert_utf.cpp/.h
+2.4.3 convert_utf.cpp/.h
  - Copyright 2001-2004 Unicode, Inc.
 
-2.3.4 Spdlog
+2.4.4 Spdlog
   - Copyright (c) 2016 Gabi Melman
   - URL: https://github.com/gabime/spdlog
   - License: MIT License - https://github.com/gabime/spdlog/blob/v1.x/LICENSE
 
-2.3.5 Termcolor
+2.4.5 Termcolor
   - Copyright (c) 2013, Ihor Kalnytskyi
   - URL: https://github.com/ikalnytskyi/termcolor
   - License: BSD License - https://github.com/ikalnytskyi/termcolor/blob/master/LICENSE
 
-2.3.6 modpath.iss
+2.4.6 modpath.iss
   - Copyright (c) Jared Breland
   - URL: http://www.legroom.net/software
   - License: LGPL 3
 
-2.4 GUI
+2.5 GUI
 
-2.4.1 QT
+2.5.1 QT
   - Copyright 2019 The Qt Company
   - URL: https://www1.qt.io/developers/
   - License: LGPLv3 - https://www1.qt.io/licensing (Applicaton Development only without none LGPL submodules)
 
-2.4.2 Flaticons
+2.5.2 Flaticons
   - Copyright 2013-2019 Freepik Company S.L. All rights reserved.
   - URL: https://www.flaticon.com/
   - License: Creative Commons 3.0 - https://creativecommons.org/licenses/by/3.0
   
-2.4.3 Qwt
+2.5.3 Qwt
   - Uwe Rathmann, Josef Wilgen ( <= Qwt 0.2 )
   - URL: https://sourceforge.net/p/qwt/git/ci/develop/tree
   - License: Qwt License Version 1.0, January 1, 2003
 
-2.5 Testing
+2.6 Testing
 
-2.5.1 GoogleTest
+2.6.1 GoogleTest
   - Copyright 2008 Google Inc.
   - URL: https://github.com/google/googletest
   - License: BSD 3-Clause License - https://github.com/google/googletest/blob/master/LICENSE.txt
   
-2.5 Documentation
+2.7 Documentation
 
-2.5.1 Typo 3 Theme
+2.7.1 Typo 3 Theme
   - URL: https://github.com/TYPO3-Documentation/sphinx_typo3_theme
   - License: MIT License - https://github.com/TYPO3-Documentation/sphinx_typo3_theme/blob/master/LICENSE
   
-2.5.2 Bootstrap
+2.7.2 Bootstrap
   - Copyright 2011-2019 The Bootstrap Authors
   - Copyright 2011-2019 Twitter, Inc.
   - URL: https://getbootstrap.com/
   - License: MIT License - https://github.com/twbs/bootstrap/blob/master/LICENSE
 
-2.5.3 Font Awesome
+2.7.3 Font Awesome
   - URL: https://fontawesome.com
   - License: Font Awesome Free License - https://fontawesome.com/license/free
   
-2.5.4 empy_helpers
+2.7.4 empy_helpers
   - Copyright 2018 Open Source Robotics Foundation, Inc.
   - URL: https://github.com/ros2/rosidl/blob/master/rosidl_adapter/rosidl_adapter/resource/__init__.py
   - License: Apache License
