@@ -61,3 +61,6 @@
 [submodule "thirdparty/lz4"]
 	path = thirdparty/lz4
 	url = https://github.com/lz4/lz4.git
+[submodule "thirdparty/zstd"]
+	path = thirdparty/zstd
+	url = https://github.com/facebook/zstd.git
