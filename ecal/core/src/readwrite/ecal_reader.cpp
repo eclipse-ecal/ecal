@@ -648,7 +648,6 @@ namespace eCAL
     switch (type_)
     {
     case eCAL::pb::tl_ecal_shm:
-      break;
     case eCAL::pb::tl_ecal_tcp:
       break;
     default:
@@ -692,14 +691,8 @@ namespace eCAL
     par.topic_id   = m_topic_id;
     par.parameter  = parameter_;
 
-    switch (type_)
-    {
-    case eCAL::pb::tl_ecal_tcp:
-      CTCPReaderLayer::Get()->SetConnectionParameter(par);
-      break;
-    default:
-      break;
-    }
+    // process only for tcp layer
+    CTCPReaderLayer::Get()->SetConnectionParameter(par);
   }
 
   void CDataReader::Connect(const std::string& tid_, const std::string& ttype_, const std::string& tdesc_)

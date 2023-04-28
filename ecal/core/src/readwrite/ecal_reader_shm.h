@@ -36,14 +36,14 @@ namespace eCAL
   class CSHMReaderLayer : public CReaderLayer<CSHMReaderLayer>
   {
   public:
-    CSHMReaderLayer() {}
-    ~CSHMReaderLayer() {}
+    CSHMReaderLayer() = default;
+    ~CSHMReaderLayer() override = default;
 
-    void Initialize() {}
-    void AddSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/) {}
-    void RemSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const std::string& /*topic_id_*/) {}
+    void Initialize() override {}
+    void AddSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/) override {}
+    void RemSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const std::string& /*topic_id_*/) override {}
 
-    void SetConnectionParameter(SReaderLayerPar& par_);
+    void SetConnectionParameter(SReaderLayerPar& par_) override;
 
   private:
     size_t OnNewShmFileContent(const std::string& topic_name_, const std::string& topic_id_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_);

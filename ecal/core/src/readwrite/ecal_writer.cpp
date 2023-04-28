@@ -1029,10 +1029,10 @@ namespace eCAL
     }
   }
 
-  bool CDataWriter::SetUseUdpMC(TLayer::eSendMode mode_)
+  void CDataWriter::SetUseUdpMC(TLayer::eSendMode mode_)
   {
     m_writer.udp_mc_mode.requested = mode_;
-    if (!m_created) return true;
+    if (!m_created) return;
 
     // log send mode
     LogSendMode(mode_, m_topic_name + "::CDataWriter::Create::UDP_MC_SENDMODE::");
@@ -1051,14 +1051,12 @@ namespace eCAL
       m_writer.udp_mc.Destroy();
       break;
     }
-
-    return(true);
   }
 
-  bool CDataWriter::SetUseShm(TLayer::eSendMode mode_)
+  void CDataWriter::SetUseShm(TLayer::eSendMode mode_)
   {
     m_writer.shm_mode.requested = mode_;
-    if (!m_created) return true;
+    if (!m_created) return;
 
     // log send mode
     LogSendMode(mode_, m_topic_name + "::CDataWriter::Create::SHM_SENDMODE::");
@@ -1077,14 +1075,12 @@ namespace eCAL
       m_writer.shm.Destroy();
       break;
     }
-
-    return(true);
   }
 
-  bool CDataWriter::SetUseTcp(TLayer::eSendMode mode_)
+  void CDataWriter::SetUseTcp(TLayer::eSendMode mode_)
   {
     m_writer.tcp_mode.requested = mode_;
-    if (!m_created) return true;
+    if (!m_created) return;
 
     // log send mode
     LogSendMode(mode_, m_topic_name + "::CDataWriter::Create::TCP_SENDMODE::");
@@ -1103,14 +1099,12 @@ namespace eCAL
       m_writer.tcp.Destroy();
       break;
     }
-
-    return(true);
   }
 
-  bool CDataWriter::SetUseInProc(TLayer::eSendMode mode_)
+  void CDataWriter::SetUseInProc(TLayer::eSendMode mode_)
   {
     m_writer.inproc_mode.requested = mode_;
-    if (!m_created) return true;
+    if (!m_created) return;
 
     // log send mode
     LogSendMode(mode_, m_topic_name + "::CDataWriter::Create::INPROC_SENDMODE::");
@@ -1128,8 +1122,6 @@ namespace eCAL
       m_writer.inproc.Destroy();
       break;
     }
-
-    return(true);
   }
 
   bool CDataWriter::CheckWriterModes()

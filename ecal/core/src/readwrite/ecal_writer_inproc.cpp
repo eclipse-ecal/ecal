@@ -78,8 +78,8 @@ namespace eCAL
   /////////////////////////////////////////////////////////////////
   bool CDataWriterInProc::Write(const void* const buf_, const SWriterAttr& attr_)
   {
-    if (!m_created)   return(false);
-    if (!g_subgate()) return(false);
+    if (!m_created)             return(false);
+    if (g_subgate() == nullptr) return(false);
 
 #ifndef NDEBUG
     // log it
