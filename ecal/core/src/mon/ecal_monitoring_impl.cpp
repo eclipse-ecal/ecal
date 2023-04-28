@@ -163,11 +163,11 @@ namespace eCAL
     }
   }
 
-  size_t CMonitoringImpl::ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/)
+  bool CMonitoringImpl::ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/)
   {
     // if sample is from outside, and we are in local network mode
     // do not process sample
-    if (!IsLocalHost(ecal_sample_) && !m_network) return 0;
+    if (!IsLocalHost(ecal_sample_) && !m_network) return false;
 
     switch (ecal_sample_.cmd_type())
     {
@@ -240,7 +240,8 @@ namespace eCAL
     }
     break;
     }
-    return 0;
+
+    return true;
   }
 
   bool CMonitoringImpl::RegisterTopic(const eCAL::pb::Sample& sample_, enum ePubSub pubsub_type_)
@@ -375,7 +376,7 @@ namespace eCAL
 
       // remove topic info
       const std::string topic_name_id = topic_name + topic_id;
-      pTopicMap->map->remove(topic_name_id);
+      pTopicMap->map->erase(topic_name_id);
     }
 
     return(true);
@@ -454,7 +455,7 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_process_map.sync);
 
     // remove process info
-    m_process_map.map->remove(process_name_id);
+    m_process_map.map->erase(process_name_id);
 
     return(true);
   }
@@ -523,7 +524,7 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_server_map.sync);
 
     // remove service info
-    m_server_map.map->remove(service_name_id);
+    m_server_map.map->erase(service_name_id);
 
     return(true);
   }
@@ -577,7 +578,7 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_clients_map.sync);
 
     // remove service info
-    m_clients_map.map->remove(service_name_id);
+    m_clients_map.map->erase(service_name_id);
 
     return(true);
   }

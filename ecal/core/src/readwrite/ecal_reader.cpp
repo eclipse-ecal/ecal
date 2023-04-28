@@ -312,6 +312,8 @@ namespace eCAL
     auto *ecal_reg_sample_mutable_topic = ecal_unreg_sample.mutable_topic();
     ecal_reg_sample_mutable_topic->set_hname(m_host_name);
     ecal_reg_sample_mutable_topic->set_hid(m_host_id);
+    ecal_reg_sample_mutable_topic->set_pname(m_pname);
+    ecal_reg_sample_mutable_topic->set_pid(m_pid);
     ecal_reg_sample_mutable_topic->set_tname(m_topic_name);
     ecal_reg_sample_mutable_topic->set_tid(m_topic_id);
 
@@ -595,23 +597,51 @@ namespace eCAL
   void CDataReader::ApplyLocPublication(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_)
   {
     Connect(tid_, ttype_, tdesc_);
+
+    // add key to local publisher map
+    const std::string topic_key = process_id_ + tid_;
     {
       const std::lock_guard<std::mutex> lock(m_pub_map_sync);
-      m_loc_pub_map[process_id_] = true;
+      m_loc_pub_map[topic_key] = true;
     }
+
     m_loc_published = true;
   }
 
-  void CDataReader::ApplyExtPublication(const std::string& host_name_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_)
+  void CDataReader::RemoveLocPublication(const std::string& process_id_, const std::string& tid_)
   {
-    Connect(tid_, ttype_, tdesc_);
+    // remove key from local publisher map
+    const std::string topic_key = process_id_ + tid_;
     {
       const std::lock_guard<std::mutex> lock(m_pub_map_sync);
-      m_ext_pub_map[host_name_] = true;
+      m_loc_pub_map.erase(topic_key);
     }
+  }
+
+  void CDataReader::ApplyExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_)
+  {
+    Connect(tid_, ttype_, tdesc_);
+
+    // add key to external publisher map
+    const std::string topic_key = host_name_ + process_id_ + tid_;
+    {
+      const std::lock_guard<std::mutex> lock(m_pub_map_sync);
+      m_ext_pub_map[topic_key] = true;
+    }
+
     m_ext_published = true;
   }
 
+  void CDataReader::RemoveExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_)
+  {
+    // remove key from external publisher map
+    const std::string topic_key = host_name_ + process_id_ + tid_;
+    {
+      const std::lock_guard<std::mutex> lock(m_pub_map_sync);
+      m_ext_pub_map.erase(topic_key);
+    }
+  }
+  
   void CDataReader::ApplyLocLayerParameter(const std::string& process_id_, const std::string& topic_id_, eCAL::pb::eTLayerType type_, const std::string& parameter_)
   {
     // process only for shm and tcp layer
@@ -687,7 +717,10 @@ namespace eCAL
         auto iter = m_event_callback_map.find(sub_event_connected);
         if (iter != m_event_callback_map.end())
         {
-          data.type = sub_event_connected;
+          data.type  = sub_event_connected;
+          data.tid   = tid_;
+          data.ttype = ttype_;
+          data.tdesc = tdesc_;
           (iter->second)(m_topic_name.c_str(), &data);
         }
       }

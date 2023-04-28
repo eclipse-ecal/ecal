@@ -39,9 +39,9 @@ namespace eCAL
     return(g_subgate()->HasSample(sample_name_));
   }
 
-  size_t CDataReaderUDP::ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_)
+  bool CDataReaderUDP::ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_)
   {
-    if (!g_subgate()) return 0;
+    if (!g_subgate()) return false;
     return g_subgate()->ApplySample(ecal_sample_, layer_);
   }
 

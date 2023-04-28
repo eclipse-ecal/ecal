@@ -214,12 +214,13 @@ namespace eCAL
 
       // Remove specific element from the cache
       // @Kerstin, pretty sure that this is not well implemented, please take a look
-      bool remove(const Key& k)
+      bool erase(const Key& k)
       {
         auto it = _key_to_value.find(k);
         if (it != _key_to_value.end())
         {
-          _key_to_value.erase(k);
+          _key_tracker.erase(it->second.second); // erase the element from the list
+          _key_to_value.erase(k);                // erase the element from the map
           return true;
         }
         return false;

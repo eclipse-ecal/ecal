@@ -103,8 +103,13 @@ namespace eCAL
 
   size_t CSHMReaderLayer::OnNewShmFileContent(const std::string& topic_name_, const std::string& topic_id_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_)
   {
-    size_t ret_size(0);
-    if (g_subgate()) ret_size = g_subgate()->ApplySample(topic_name_, topic_id_, buf_, len_, id_, clock_, time_, hash_, eCAL::pb::tl_ecal_shm);
-    return ret_size;
+    if (g_subgate())
+    {
+      if (g_subgate()->ApplySample(topic_name_, topic_id_, buf_, len_, id_, clock_, time_, hash_, eCAL::pb::tl_ecal_shm))
+      {
+        return len_;
+      }
+    }
+    return 0;
   }
 }

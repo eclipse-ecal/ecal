@@ -44,16 +44,19 @@ namespace eCAL
     void Destroy();
 
     void ShareType(bool state_);
-    bool TypeShared() { return m_share_type; };
+    bool TypeShared() const { return m_share_type; };
 
     void ShareDescription(bool state_);
-    bool DescriptionShared() { return m_share_desc; };
+    bool DescriptionShared() const { return m_share_desc; };
 
     bool Register(const std::string& topic_name_, CDataWriter* datawriter_);
     bool Unregister(const std::string& topic_name_, CDataWriter* datawriter_);
 
     void ApplyLocSubRegistration(const eCAL::pb::Sample& ecal_sample_);
+    void ApplyLocSubUnregistration(const eCAL::pb::Sample& ecal_sample_);
+
     void ApplyExtSubRegistration(const eCAL::pb::Sample& ecal_sample_);
+    void ApplyExtSubUnregistration(const eCAL::pb::Sample& ecal_sample_);
 
     void RefreshRegistrations();
 
@@ -64,8 +67,8 @@ namespace eCAL
     bool                      m_share_type;
     bool                      m_share_desc;
 
-    typedef std::multimap<std::string, CDataWriter*> TopicNameDataWriterMapT;
+    using TopicNameDataWriterMapT = std::multimap<std::string, CDataWriter *>;
     std::shared_timed_mutex   m_topic_name_datawriter_sync;
     TopicNameDataWriterMapT   m_topic_name_datawriter_map;
   };
-};
+}

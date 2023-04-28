@@ -60,7 +60,7 @@ namespace eCAL
     int PubLogging(bool state_, std::string& name_);
 
     bool HasSample(const std::string& /* sample_name_ */) override { return(true); };
-    size_t ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/) override;
+    bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/) override;
 
   protected:
     bool RegisterProcess(const eCAL::pb::Sample& sample_);

@@ -40,7 +40,7 @@ namespace eCAL
   {
   public:
     bool HasSample(const std::string& sample_name_);
-    size_t ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_);
+    bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_);
   };
 
   ////////////////

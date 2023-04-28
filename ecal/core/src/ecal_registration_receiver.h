@@ -53,7 +53,7 @@ namespace eCAL
   class CUdpRegistrationReceiver : public CSampleReceiver
   {
     bool HasSample(const std::string& /*sample_name_*/) override { return(true); };
-    size_t ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_) override;
+    bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_) override;
   };
 
   class CMemfileRegistrationReceiver
@@ -70,7 +70,7 @@ namespace eCAL
     eCAL::CMemoryFileBroadcastReader* m_memfile_broadcast_reader = nullptr;
   };
 
-  typedef std::function<void(const eCAL::pb::Sample&)> ApplySampleCallbackT;
+  using ApplySampleCallbackT = std::function<void (const eCAL::pb::Sample &)>;
 
   class CRegistrationReceiver
   {
@@ -84,7 +84,7 @@ namespace eCAL
     void EnableLoopback(bool state_);
     bool LoopBackEnabled() const { return m_loopback; };
 
-    size_t ApplySample(const eCAL::pb::Sample& ecal_sample_);
+    bool ApplySample(const eCAL::pb::Sample& ecal_sample_);
 
     bool AddRegistrationCallback(enum eCAL_Registration_Event event_, const RegistrationCallbackT& callback_);
     bool RemRegistrationCallback(enum eCAL_Registration_Event event_);
@@ -94,6 +94,9 @@ namespace eCAL
 
 
   protected:
+    void ApplySubscriberRegistration(const eCAL::pb::Sample& ecal_sample_);
+    void ApplyPublisherRegistration(const eCAL::pb::Sample& ecal_sample_);
+
     bool IsLocalHost(const eCAL::pb::Sample & ecal_sample_);
 
     static std::atomic<bool>  m_created;

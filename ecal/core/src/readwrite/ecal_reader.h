@@ -76,7 +76,10 @@ namespace eCAL
     void SetID(const std::set<long long>& id_set_);
 
     void ApplyLocPublication(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_);
-    void ApplyExtPublication(const std::string& host_name_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_);
+    void RemoveLocPublication(const std::string& process_id_, const std::string& tid_);
+
+    void ApplyExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_);
+    void RemoveExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_);
 
     void ApplyLocLayerParameter(const std::string& process_id_, const std::string& topic_id_, eCAL::pb::eTLayerType type_, const std::string& parameter_);
     void ApplyExtLayerParameter(const std::string& host_name_, eCAL::pb::eTLayerType type_, const std::string& parameter_);

@@ -657,10 +657,14 @@ namespace eCAL
   void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_)
   {
     Connect(tid_, ttype_, tdesc_);
+
+    // add key to local subscriber map
+    const std::string topic_key = process_id_ + tid_;
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_loc_sub_map[process_id_] = true;
+      m_loc_sub_map[topic_key] = true;
     }
+
     m_loc_subscribed = true;
 
     // add a new local subscription
@@ -673,8 +677,15 @@ namespace eCAL
 #endif
   }
 
-  void CDataWriter::RemoveLocSubscription(const std::string& process_id_)
+  void CDataWriter::RemoveLocSubscription(const std::string& process_id_, const std::string& tid_)
   {
+    // remove key from local subscriber map
+    const std::string topic_key = process_id_ + tid_;
+    {
+      const std::lock_guard<std::mutex> lock(m_sub_map_sync);
+      m_loc_sub_map.erase(topic_key);
+    }
+
     // remove a local subscription
     m_writer.udp_mc.RemLocConnection (process_id_);
     m_writer.shm.RemLocConnection    (process_id_);
@@ -688,10 +699,14 @@ namespace eCAL
   void CDataWriter::ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_)
   {
     Connect(tid_, ttype_, tdesc_);
+
+    // add key to external subscriber map
+    const std::string topic_key = host_name_ + process_id_ + tid_;
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_ext_sub_map[host_name_] = true;
+      m_ext_sub_map[topic_key] = true;
     }
+
     m_ext_subscribed = true;
 
     // add a new external subscription
@@ -704,8 +719,15 @@ namespace eCAL
 #endif
   }
 
-  void CDataWriter::RemoveExtSubscription(const std::string& host_name_, const std::string& process_id_)
+  void CDataWriter::RemoveExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_)
   {
+    // remove key from external subscriber map
+    const std::string topic_key = host_name_ + process_id_ + tid_;
+    {
+      const std::lock_guard<std::mutex> lock(m_sub_map_sync);
+      m_ext_sub_map.erase(topic_key);
+    }
+
     // remove external subscription
     m_writer.udp_mc.RemExtConnection (host_name_, process_id_);
     m_writer.shm.RemExtConnection    (host_name_, process_id_);
@@ -942,6 +964,8 @@ namespace eCAL
     auto* ecal_reg_sample_mutable_topic = ecal_unreg_sample.mutable_topic();
     ecal_reg_sample_mutable_topic->set_hname(m_host_name);
     ecal_reg_sample_mutable_topic->set_hid(m_host_id);
+    ecal_reg_sample_mutable_topic->set_pname(m_pname);
+    ecal_reg_sample_mutable_topic->set_pid(m_pid);
     ecal_reg_sample_mutable_topic->set_tname(m_topic_name);
     ecal_reg_sample_mutable_topic->set_tid(m_topic_id);
 

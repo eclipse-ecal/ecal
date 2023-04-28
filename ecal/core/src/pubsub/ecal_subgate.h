@@ -47,11 +47,14 @@ namespace eCAL
     bool Unregister(const std::string& topic_name_, CDataReader* datareader_);
 
     bool HasSample(const std::string& sample_name_);
-    size_t ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_);
-    size_t ApplySample(const std::string& topic_name_, const std::string& topic_id_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_, eCAL::pb::eTLayerType layer_);
+    bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_);
+    bool ApplySample(const std::string& topic_name_, const std::string& topic_id_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_, eCAL::pb::eTLayerType layer_);
 
     void ApplyLocPubRegistration(const eCAL::pb::Sample& ecal_sample_);
+    void ApplyLocPubUnregistration(const eCAL::pb::Sample& ecal_sample_);
+
     void ApplyExtPubRegistration(const eCAL::pb::Sample& ecal_sample_);
+    void ApplyExtPubUnregistration(const eCAL::pb::Sample& ecal_sample_);
 
     void RefreshRegistrations();
 
@@ -62,7 +65,7 @@ namespace eCAL
     static std::atomic<bool> m_created;
 
     // database data reader
-    typedef std::unordered_multimap<std::string, CDataReader*> TopicNameDataReaderMapT;
+    using TopicNameDataReaderMapT = std::unordered_multimap<std::string, CDataReader *>;
     std::shared_timed_mutex  m_topic_name_datareader_sync;
     TopicNameDataReaderMapT  m_topic_name_datareader_map;
 

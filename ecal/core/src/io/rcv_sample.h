@@ -101,7 +101,7 @@ public:
   virtual ~CSampleReceiver();
 
   virtual bool HasSample(const std::string& sample_name_)                                        = 0;
-  virtual size_t ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_) = 0;
+  virtual bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_) = 0;
 
   int Receive(eCAL::CUDPReceiver* sample_receiver_);
   int Process(const char* sample_buffer_, size_t sample_buffer_len_);

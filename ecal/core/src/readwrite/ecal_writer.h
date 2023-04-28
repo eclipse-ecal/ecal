@@ -78,10 +78,10 @@ namespace eCAL
     size_t Write(CPayloadWriter& payload_, long long time_, long long id_);
 
     void ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_);
-    void RemoveLocSubscription(const std::string & process_id_);
+    void RemoveLocSubscription(const std::string & process_id_, const std::string& tid_);
 
     void ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_);
-    void RemoveExtSubscription(const std::string & host_name_, const std::string & process_id_);
+    void RemoveExtSubscription(const std::string & host_name_, const std::string & process_id_, const std::string& tid_);
 
     void RefreshRegistration();
     void RefreshSendCounter();
