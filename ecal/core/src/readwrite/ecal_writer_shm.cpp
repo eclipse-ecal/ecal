@@ -183,7 +183,7 @@ namespace eCAL
 
     for (auto& memory_file : m_memory_file_vec)
     {
-      ret_state != memory_file->Connect(process_id_);
+      ret_state &= memory_file->Connect(process_id_);
     }
 
     return ret_state;
