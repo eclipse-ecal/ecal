@@ -214,9 +214,8 @@ namespace eCAL
     case eCAL::pb::bct_set_sample:
       break;
     case eCAL::pb::bct_reg_process:
-      if (m_callback_process) m_callback_process(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
-      break;
     case eCAL::pb::bct_unreg_process:
+      // unregistration event not implemented currently
       if (m_callback_process) m_callback_process(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
     case eCAL::pb::bct_reg_service:

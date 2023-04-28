@@ -39,8 +39,8 @@ namespace eCAL
   class CDataReaderUDP : public CSampleReceiver
   {
   public:
-    bool HasSample(const std::string& sample_name_);
-    bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_);
+    bool HasSample(const std::string& sample_name_) override;
+    bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_) override;
   };
 
   ////////////////
