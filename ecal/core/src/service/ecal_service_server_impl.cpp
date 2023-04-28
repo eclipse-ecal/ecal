@@ -69,7 +69,6 @@ namespace eCAL
                        std::bind(&CServiceServerImpl::EventCallback,   this, std::placeholders::_1, std::placeholders::_2));
 
     // register this service
-    if (g_servicegate() != nullptr) g_servicegate()->Register(this);
     Register(false);
 
     // mark as created
@@ -85,8 +84,6 @@ namespace eCAL
     m_tcp_server.Stop();
     m_tcp_server.Destroy();
 
-    if (g_servicegate() != nullptr) g_servicegate()->Unregister(this);
-
     // reset method callback map
     {
       std::lock_guard<std::mutex> const lock(m_method_map_sync);
@@ -99,11 +96,12 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
-    m_service_name.clear();
-    m_service_id.clear();
-
     // unregister this service
     Unregister(true);
+
+    // reset internals
+    m_service_name.clear();
+    m_service_id.clear();
 
     // mark as unconnected and not created
     m_connected = false;
@@ -253,7 +251,7 @@ namespace eCAL
   {
     if (m_service_name.empty()) return;
 
-    // might be zero in contruction phase
+    // might be zero in construction phase
     unsigned short const server_tcp_port(m_tcp_server.GetTcpPort());
     if (server_tcp_port == 0) return;
 

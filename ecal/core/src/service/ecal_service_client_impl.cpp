@@ -67,7 +67,6 @@ namespace eCAL
     m_service_id = counter.str();
 
     // register this client
-    if (g_clientgate() != nullptr) g_clientgate()->Register(this);
     Register(false);
 
     // mark as created
@@ -79,8 +78,6 @@ namespace eCAL
   bool CServiceClientImpl::Destroy()
   {
     if (!m_created) return(false);
-
-    if (g_clientgate() != nullptr) g_clientgate()->Unregister(this);
 
     // reset client map
     {
@@ -100,12 +97,13 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
+    // unregister this client
+    Unregister(true);
+
+    // reset internals
     m_service_name.clear();
     m_service_id.clear();
     m_host_name.clear();
-
-    // unregister this client
-    Unregister(true);
 
     // mark as not created
     m_created = false;

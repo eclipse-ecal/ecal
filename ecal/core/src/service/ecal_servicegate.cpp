@@ -46,6 +46,14 @@ namespace eCAL
   void CServiceGate::Destroy()
   {
     if(!m_created) return;
+
+    // destroy all remaining server
+    std::shared_lock<std::shared_timed_mutex> const lock(m_service_set_sync);
+    for (const auto& service : m_service_set)
+    {
+      service->Destroy();
+    }
+
     m_created = false;
   }
 
@@ -95,7 +103,7 @@ namespace eCAL
     client.pid     = static_cast<int>(ecal_sample_client.pid());
 
     // client protocol version
-    unsigned int client_version = ecal_sample_client.version();
+    const unsigned int client_version = ecal_sample_client.version();
 
     // create unique client key
     client.key = client.sname + ":" + client.sid + "@" + std::to_string(client.pid) + "@" + client.hname;
@@ -124,4 +132,4 @@ namespace eCAL
       iter->RefreshRegistration();
     }
   }
-};
+}

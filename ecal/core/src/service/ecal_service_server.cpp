@@ -23,6 +23,8 @@
 
 #include <ecal/ecal.h>
 
+#include "ecal_servicegate.h"
+#include "ecal_global_accessors.h"
 #include "ecal_service_server_impl.h"
 
 namespace eCAL
@@ -73,6 +75,9 @@ namespace eCAL
 
     m_service_server_impl = new CServiceServerImpl(service_name_);
 
+    // register this service
+    if (g_servicegate() != nullptr) g_servicegate()->Register(m_service_server_impl);
+
     m_created = true;
     return(true);
   }
@@ -86,6 +91,9 @@ namespace eCAL
   {
     if(!m_created) return(false);
     m_created = false;
+
+    // unregister this service
+    if (g_servicegate() != nullptr) g_servicegate()->Unregister(m_service_server_impl);
 
     m_service_server_impl->Destroy();
     delete m_service_server_impl;
