@@ -70,6 +70,8 @@ namespace eCAL
 
   protected:
     bool RegisterProcess();
+    bool UnregisterProcess();
+      
     bool RegisterServer();
     bool RegisterClient();
     bool RegisterTopics();

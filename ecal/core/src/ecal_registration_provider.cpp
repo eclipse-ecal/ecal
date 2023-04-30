@@ -76,7 +76,7 @@ namespace eCAL
     m_reg_services    = services_;
     m_reg_process     = process_;
 
-    m_use_shm_monitoring = Config::Experimental::IsShmMonitoringEnabled();
+    m_use_shm_monitoring     = Config::Experimental::IsShmMonitoringEnabled();
     m_use_network_monitoring = !Config::Experimental::IsNetworkMonitoringDisabled();
 
     if (m_use_network_monitoring)
@@ -84,11 +84,11 @@ namespace eCAL
       SSenderAttr attr;
       // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
       attr.broadcast = !Config::IsNetworkEnabled();
-      attr.ipaddr = UDP::GetRegistrationMulticastAddress();
-      attr.port = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
-      attr.loopback = true;
-      attr.ttl = Config::GetUdpMulticastTtl();
-      attr.sndbuf = Config::GetUdpMulticastSndBufSizeBytes();
+      attr.ipaddr    = UDP::GetRegistrationMulticastAddress();
+      attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
+      attr.loopback  = true;
+      attr.ttl       = Config::GetUdpMulticastTtl();
+      attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
       m_multicast_group = attr.ipaddr;
 
@@ -114,6 +114,10 @@ namespace eCAL
   void CRegistrationProvider::Destroy()
   {
     if(!m_created) return;
+
+    // this is our last (un)registration message to the world
+    // thank you and goodbye :-)
+    UnregisterProcess();
 
     m_reg_snd_thread.Stop();
 
@@ -312,10 +316,29 @@ namespace eCAL
 
     process_sample_mutable_process->set_ecal_runtime_version(eCAL::GetVersionString());
 
-    // register sample
+    // apply registration sample
     const bool return_value = ApplySample(Process::GetHostName(), process_sample);
 
     return return_value;
+  }
+
+  bool CRegistrationProvider::UnregisterProcess()
+  {
+	  if (!m_created)     return(false);
+	  if (!m_reg_process) return(false);
+
+	  eCAL::pb::Sample process_sample;
+	  process_sample.set_cmd_type(eCAL::pb::bct_unreg_process);
+	  auto* process_sample_mutable_process = process_sample.mutable_process();
+	  process_sample_mutable_process->set_hname(Process::GetHostName());
+	  process_sample_mutable_process->set_pid(Process::GetProcessID());
+	  process_sample_mutable_process->set_pname(Process::GetProcessName());
+	  process_sample_mutable_process->set_uname(Process::GetUnitName());
+
+    // apply unregistration sample
+    const bool return_value = ApplySample(Process::GetHostName(), process_sample);
+
+	  return return_value;
   }
 
   bool CRegistrationProvider::RegisterServer()
@@ -354,7 +377,7 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_client_map_sync);
     for (SampleMapT::const_iterator iter = m_client_map.begin(); iter != m_client_map.end(); ++iter)
     {
-      // register sample
+      // apply registration sample
       return_value &= ApplySample(iter->second.client().sname(), iter->second);
     }
 
