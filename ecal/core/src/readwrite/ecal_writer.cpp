@@ -968,6 +968,7 @@ namespace eCAL
     ecal_reg_sample_mutable_topic->set_pid(m_pid);
     ecal_reg_sample_mutable_topic->set_tname(m_topic_name);
     ecal_reg_sample_mutable_topic->set_tid(m_topic_id);
+    ecal_reg_sample_mutable_topic->set_uname(Process::GetUnitName());
 
     // unregister publisher
     if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterTopic(m_topic_name, m_topic_id, ecal_unreg_sample, force_);

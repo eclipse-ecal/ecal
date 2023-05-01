@@ -356,13 +356,13 @@ namespace eCAL
     eCAL::pb::Sample sample;
     sample.set_cmd_type(eCAL::pb::bct_reg_client);
     auto *service_mutable_client = sample.mutable_client();
-    service_mutable_client->set_version(m_version);
     service_mutable_client->set_hname(Process::GetHostName());
     service_mutable_client->set_pname(Process::GetProcessName());
     service_mutable_client->set_uname(Process::GetUnitName());
     service_mutable_client->set_pid(Process::GetProcessID());
     service_mutable_client->set_sname(m_service_name);
     service_mutable_client->set_sid(m_service_id);
+    service_mutable_client->set_version(m_version);
 
     // register entity
     if (g_registration_provider() != nullptr) g_registration_provider()->RegisterClient(m_service_name, m_service_id, sample, force_);
@@ -409,13 +409,13 @@ namespace eCAL
     eCAL::pb::Sample sample;
     sample.set_cmd_type(eCAL::pb::bct_unreg_client);
     auto* service_mutable_client = sample.mutable_client();
-    service_mutable_client->set_version(m_version);
     service_mutable_client->set_hname(Process::GetHostName());
     service_mutable_client->set_pname(Process::GetProcessName());
     service_mutable_client->set_uname(Process::GetUnitName());
     service_mutable_client->set_pid(Process::GetProcessID());
     service_mutable_client->set_sname(m_service_name);
     service_mutable_client->set_sid(m_service_id);
+    service_mutable_client->set_version(m_version);
 
     // unregister entity
     if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterClient(m_service_name, m_service_id, sample, force_);
