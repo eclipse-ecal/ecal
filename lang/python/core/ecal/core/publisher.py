@@ -101,7 +101,7 @@ class MessagePublisher(object):
 
 
 class ProtoPublisher(MessagePublisher):
-  """Spezialized publisher that sends out protobuf messages
+  """Specialized publisher that sends out protobuf messages
   """
   def __init__(self, name, type_=None):
     if type_ is not None:
@@ -117,9 +117,25 @@ class ProtoPublisher(MessagePublisher):
   def send_sync(self, msg, time, ack_timeout_ms):
     return self.c_publisher.send_sync(msg.SerializeToString(), time, ack_timeout_ms)
 
+class CapnPublisher(MessagePublisher):
+  """Specialized publisher that sends out capnproto messages
+  """
+  def __init__(self, name, type_=None):
+    if type_ is not None:
+      topic_type = type_._nodeProto.displayName
+      topic_desc = b"" 
+      super(CapnPublisher, self).__init__(name, topic_type, topic_desc)
+    else:
+      super(CapnPublisher, self).__init__(name)
+
+  def send(self, msg, time=-1):
+    return self.c_publisher.send(msg.to_bytes(), time)
+
+  def send_sync(self, msg, time, ack_timeout_ms):
+    return self.c_publisher.send_sync(msg.to_bytes(), time, ack_timeout_ms)
 
 class StringPublisher(MessagePublisher):
-  """Spezialized publisher that sends out plain strings
+  """Specialized publisher that sends out plain strings
   """
   def __init__(self, name):
     topic_type = "base:std::string"
@@ -131,7 +147,6 @@ class StringPublisher(MessagePublisher):
 
   def send_sync(self, msg, time, ack_timeout_ms):
     return self.c_publisher.send_sync(msg.encode(), time, ack_timeout_ms)
-
 
 if __name__ == '__main__':
   """Test the publisher API
