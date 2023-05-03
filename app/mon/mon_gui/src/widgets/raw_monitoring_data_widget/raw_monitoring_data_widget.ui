@@ -153,7 +153,7 @@
   <customwidget>
    <class>SearchLineedit</class>
    <extends>QLineEdit</extends>
-   <header>search_lineedit.h</header>
+   <header location="global">widgets/raw_monitoring_data_widget/search_lineedit.h</header>
   </customwidget>
  </customwidgets>
  <resources>
