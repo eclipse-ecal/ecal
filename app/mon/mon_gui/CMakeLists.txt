@@ -35,8 +35,6 @@ set(CMAKE_AUTORCC OFF) # Reason for being turned off: AutoRCC will create an ent
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(source_files
-    #src/convert_utf.cpp
-    #src/convert_utf.h
     src/ecalmon.cpp
     src/ecalmon.h
     src/ecalmon_globals.h
@@ -116,6 +114,8 @@ set(source_files
     src/widgets/raw_monitoring_data_widget/protobuf_highlighter.h
     src/widgets/raw_monitoring_data_widget/raw_monitoring_data_widget.cpp
     src/widgets/raw_monitoring_data_widget/raw_monitoring_data_widget.h
+    src/widgets/raw_monitoring_data_widget/search_lineedit.cpp
+    src/widgets/raw_monitoring_data_widget/search_lineedit.h
 
     src/widgets/visualisation_widget/visualisation_widget.cpp
     src/widgets/visualisation_widget/visualisation_widget.h

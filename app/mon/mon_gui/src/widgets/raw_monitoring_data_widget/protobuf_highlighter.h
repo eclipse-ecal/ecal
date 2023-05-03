@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2022 Continental Corporation
+ * Copyright (C) 2016 - 2023 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,18 +29,29 @@ QT_BEGIN_NAMESPACE
 class QTextDocument;
 QT_END_NAMESPACE
 
+/**
+ * @brief A QSyntaxHighlighter that can highlight the DebugString Protobuf Syntax
+ */
 class ProtobufHighlighter : public QSyntaxHighlighter
 {
   Q_OBJECT
 
+////////////////////////////////////////////
+// Constructor & Destructor
+////////////////////////////////////////////
 public:
   ProtobufHighlighter(QTextDocument* parent = nullptr);
-
   ProtobufHighlighter(bool darkmode_optimized = false, QTextDocument *parent = nullptr);
 
+////////////////////////////////////////////
+// QSyntaxHighlighter overrides
+////////////////////////////////////////////
 protected:
   void highlightBlock(const QString &text) override;
 
+////////////////////////////////////////////
+// Member Variables
+////////////////////////////////////////////
 private:
   struct HighlightingRule
   {
@@ -48,5 +59,5 @@ private:
     QTextCharFormat    format_;
   };
 
-  std::vector<HighlightingRule> highlighting_rules_;
+  std::vector<HighlightingRule> highlighting_rules_;                            //!< A list of highlighting rules. They are evaluated one after another and may ovewrite each other.
 };

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2023 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,35 +34,51 @@
 #pragma warning(pop)
 #endif
 
-
 class RawMonitoringDataWidget : public QWidget
 {
   Q_OBJECT
 
+////////////////////////////////////////////
+// Constructor & Destructor
+////////////////////////////////////////////
 public:
   RawMonitoringDataWidget(QWidget *parent = Q_NULLPTR);
   ~RawMonitoringDataWidget();
 
+////////////////////////////////////////////
+// Plaintext handling
+////////////////////////////////////////////
 public slots:
-  void setRawMonitoringData(const eCAL::pb::Monitoring& monitoring_data);
+  void setRawMonitoringData(const eCAL::pb::Monitoring& monitoring_data_pb);
   void updateRawMonitoringData();
 
 private slots:
   void saveToFile();
-  void searchForString(const QString& search_string);
-
-protected:
-  void changeEvent(QEvent* event) override;
 
 private:
   void chooseCorrectHighlighting();
 
+////////////////////////////////////////////
+// Search handling
+////////////////////////////////////////////
+private slots:
+  void updateSearchHighlighting(const QString& search_string);
+  void searchForward           (const QString& search_string);
+  void searchBackward          (const QString& search_string);
+
+  void flashSearchBar();
+
+////////////////////////////////////////////
+// QWidget overrides (events)
+////////////////////////////////////////////
+protected:
+  void keyPressEvent(QKeyEvent* key_event) override;
+  void changeEvent(QEvent* event) override;
+
+////////////////////////////////////////////
+// Member variables
+////////////////////////////////////////////
 private:
   Ui::RawMonitoringDataWidget ui_;
-
-  ProtobufHighlighter* protobuf_highlighter_;
-
-  QAction* search_clear_action_;
-  QAction* search_down_action_;
-  QAction* search_up_action_;
+  ProtobufHighlighter*        protobuf_highlighter_;      //!< Syntax highlighter for protobuf that will be changed for dark / light mode
 };
