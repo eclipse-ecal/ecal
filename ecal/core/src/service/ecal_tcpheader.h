@@ -23,11 +23,14 @@
 
 namespace eCAL
 {
+#pragma pack(push, 1)
   struct STcpHeader
   {
-    uint32_t psize_n   = 0;              // package size in network byte order
-    uint32_t reserved1 = 0;              // reserved
-    uint32_t reserved2 = 0;              // reserved
-    uint32_t reserved3 = 0;              // reserved
+    uint32_t package_size_n = 0;   // package size in network byte order
+    uint8_t  version        = 1;   // version (checked in future versions)
+    uint8_t  reserved1      = 0;   // reserved
+    uint16_t header_size_n  = 0;   // header size in network byte order (checked in future versions)
+    uint64_t reserved       = 0;   // reserved
   };
+#pragma pack(pop)
 }

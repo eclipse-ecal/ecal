@@ -263,7 +263,8 @@ namespace eCAL
     eCAL::STcpHeader tcp_header;
     // set up package size
     const size_t psize = request.size();
-    tcp_header.psize_n = htonl(static_cast<uint32_t>(psize));
+    tcp_header.package_size_n = htonl(static_cast<uint32_t>(psize));
+    tcp_header.header_size_n  = htons(static_cast<uint32_t>(sizeof(eCAL::STcpHeader)));
     // repack
     std::vector<char> packed_request(sizeof(tcp_header) + psize);
     memcpy(packed_request.data(), &tcp_header, sizeof(tcp_header));
@@ -344,7 +345,7 @@ namespace eCAL
       }
 
       // extract data size
-      const size_t rsize = static_cast<size_t>(ntohl(tcp_header.psize_n));
+      const size_t rsize = static_cast<size_t>(ntohl(tcp_header.package_size_n));
 
       // prepare response buffer
       response_.clear();
@@ -411,7 +412,7 @@ namespace eCAL
 
         if (bytes_transferred == sizeof(tcp_header))
         {
-          const auto resp_size = static_cast<size_t>(ntohl(tcp_header->psize_n));
+          const auto resp_size = static_cast<size_t>(ntohl(tcp_header->package_size_n));
           this->ReceiveResponseData(resp_size, callback_);
         }
         else

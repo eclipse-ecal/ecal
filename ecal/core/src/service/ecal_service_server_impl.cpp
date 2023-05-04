@@ -381,7 +381,7 @@ namespace eCAL
       {
         mode_changed   = true;
         m_connected_v0 = false;
-        Logging::Log(log_level_info, m_service_name + ": " + "client with protocol version 0 disconnected");
+        Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 0 disconnected");
       }
     }
     else
@@ -390,7 +390,7 @@ namespace eCAL
       {
         mode_changed   = true;
         m_connected_v0 = true;
-        Logging::Log(log_level_info, m_service_name + ": " + "client with protocol version 0 connected");
+        Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 0 connected");
       }
     }
 
@@ -401,7 +401,7 @@ namespace eCAL
       {
         mode_changed   = true;
         m_connected_v1 = false;
-        Logging::Log(log_level_info, m_service_name + ": " + "client with protocol version 1 disconnected");
+        Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 1 disconnected");
       }
     }
     else
@@ -410,7 +410,7 @@ namespace eCAL
       {
         mode_changed   = true;
         m_connected_v1 = true;
-        Logging::Log(log_level_info, m_service_name + ": " + "client with protocol version 1 connected");
+        Logging::Log(log_level_debug2, m_service_name + ": " + "client with protocol version 1 connected");
       }
     }
 

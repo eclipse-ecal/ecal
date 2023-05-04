@@ -43,7 +43,7 @@ class CAsioSession
 {
 public:
   CAsioSession(asio::io_service& io_service)
-    : socket_(io_service), data_{}
+    : socket_(io_service)
   {
   }
 
@@ -166,7 +166,7 @@ private:
         {
           eCAL::STcpHeader tcp_header;
           memcpy(&tcp_header, header_.data(), sizeof(eCAL::STcpHeader));
-          header_request_size_ = static_cast<size_t>(ntohl(tcp_header.psize_n));
+          header_request_size_ = static_cast<size_t>(ntohl(tcp_header.package_size_n));
         }
 
         // collect request_
@@ -224,7 +224,8 @@ private:
     eCAL::STcpHeader tcp_header;
     // set up package size
     const size_t psize = response.size();
-    tcp_header.psize_n = htonl(static_cast<uint32_t>(psize));
+    tcp_header.package_size_n = htonl(static_cast<uint32_t>(psize));
+    tcp_header.header_size_n  = htons(static_cast<uint32_t>(sizeof(eCAL::STcpHeader)));
     // repack
     std::vector<char> packed_response(sizeof(tcp_header) + psize);
     memcpy(packed_response.data(), &tcp_header, sizeof(tcp_header));
@@ -292,7 +293,7 @@ private:
   std::vector<char>      packed_response_;
 
   enum { max_length = 64 * 1024 };
-  char                   data_[max_length];
+  char                   data_[max_length]{};
 
   const unsigned int     PROTOCOL_VERSION_0 = 0;
   const unsigned int     PROTOCOL_VERSION_1 = 1;
