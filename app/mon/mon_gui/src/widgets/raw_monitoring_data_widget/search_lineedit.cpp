@@ -42,7 +42,7 @@ SearchLineedit::SearchLineedit(const QString &contents, QWidget *parent)
   clear_lineedit_action_ = new QAction(tr("Clear"), this);
   addAction(clear_lineedit_action_, QLineEdit::ActionPosition::TrailingPosition);
   clear_lineedit_action_->setIcon(QIcon(QApplication::style()->standardIcon(QStyle::StandardPixmap::SP_LineEditClearButton)));
-  connect(clear_lineedit_action_, &QAction::triggered, [this]() {clear(); });
+  connect(clear_lineedit_action_, &QAction::triggered, this, [this]() {clear(); });
   clear_lineedit_action_->setEnabled(!contents.isEmpty());
 
   connect(this, &QLineEdit::textChanged
@@ -64,16 +64,14 @@ SearchLineedit::SearchLineedit(const QString &contents, QWidget *parent)
   search_next_action     = new QAction(tr("Find next"), this);
   search_previous_action = new QAction(tr("Find previous"), this);
 
-  connect(search_next_action,     &QAction::triggered, [this]() { searchNext(); });
-  connect(search_previous_action, &QAction::triggered, [this]() { searchPrevious(); });
+  connect(search_next_action,     &QAction::triggered, this, [this]() { searchNext(); });
+  connect(search_previous_action, &QAction::triggered, this, [this]() { searchPrevious(); });
 
   addAction(search_previous_action, QLineEdit::TrailingPosition);
   addAction(search_next_action,     QLineEdit::TrailingPosition);
 
   chooseThemeIcons();
 }
-
-SearchLineedit::~SearchLineedit() = default;
 
 /////////////////////////////////////////
 // Icons

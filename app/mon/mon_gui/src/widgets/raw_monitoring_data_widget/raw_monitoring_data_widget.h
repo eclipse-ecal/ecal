@@ -43,7 +43,6 @@ class RawMonitoringDataWidget : public QWidget
 ////////////////////////////////////////////
 public:
   RawMonitoringDataWidget(QWidget *parent = Q_NULLPTR);
-  ~RawMonitoringDataWidget();
 
 ////////////////////////////////////////////
 // Plaintext handling

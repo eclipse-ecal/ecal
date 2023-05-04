@@ -54,8 +54,6 @@ RawMonitoringDataWidget::RawMonitoringDataWidget(QWidget *parent)
   connect(ui_.search_lineedit, &SearchLineedit::newSearchTriggered,      this, &RawMonitoringDataWidget::updateSearchHighlighting);
 }
 
-RawMonitoringDataWidget::~RawMonitoringDataWidget() = default;
-
 ////////////////////////////////////////////
 // Plaintext handling
 ////////////////////////////////////////////

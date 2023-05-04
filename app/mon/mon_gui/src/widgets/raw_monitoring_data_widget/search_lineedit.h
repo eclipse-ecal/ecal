@@ -40,8 +40,6 @@ public:
   SearchLineedit(QWidget *parent = Q_NULLPTR);
   SearchLineedit(const QString &contents, QWidget *parent = Q_NULLPTR);
 
-  ~SearchLineedit();
-
 /////////////////////////////////////////
 // Icons
 /////////////////////////////////////////
