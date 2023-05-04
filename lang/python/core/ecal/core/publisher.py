@@ -122,7 +122,7 @@ class CapnPublisher(MessagePublisher):
   """
   def __init__(self, name, type_=None):
     if type_ is not None:
-      topic_type = type_._nodeProto.displayName
+      topic_type = type_._nodeProto.displayName.split("_")[1]
       topic_desc = b"" 
       super(CapnPublisher, self).__init__(name, topic_type, topic_desc)
     else:
