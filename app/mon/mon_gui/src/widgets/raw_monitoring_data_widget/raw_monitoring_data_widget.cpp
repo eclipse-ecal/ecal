@@ -36,6 +36,7 @@
 
 RawMonitoringDataWidget::RawMonitoringDataWidget(QWidget *parent)
   : QWidget(parent)
+  , ui_{}
   , protobuf_highlighter_(nullptr)
 {
   ui_.setupUi(this);
