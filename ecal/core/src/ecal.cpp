@@ -121,18 +121,6 @@ namespace eCAL
       }
     }
 
-    // be nice and gently to our customers :-)
-    static bool ecal_welcome_msg(false);
-    if (!ecal_welcome_msg)
-    {
-      std::cout << std::endl;
-      std::cout << "----------------------------------------" << std::endl;
-      std::cout << "        THANK YOU FOR USING eCAL        " << std::endl;
-      std::cout << "----------------------------------------" << std::endl;
-      std::cout << std::endl;
-      ecal_welcome_msg = true;
-    }
-
     // first call
     if (g_globals_ctx == nullptr)
     {
@@ -248,19 +236,6 @@ namespace eCAL
     int const ret = g_globals()->Finalize(components_);
     delete g_globals_ctx;
     g_globals_ctx = nullptr;
-
-    // be nice and gently to our customers :-)
-    static bool ecal_goodbye_msg(false);
-    if (!ecal_goodbye_msg)
-    {
-      std::cout << std::endl;
-      std::cout << "----------------------------------------" << std::endl;
-      std::cout << " THANK YOU FOR SHUTDOWN eCAL GRACEFULLY " << std::endl;
-      std::cout << "----------------------------------------" << std::endl;
-      std::cout << std::endl;
-      ecal_goodbye_msg = true;
-    }
-
     return(ret);
   }
 }
