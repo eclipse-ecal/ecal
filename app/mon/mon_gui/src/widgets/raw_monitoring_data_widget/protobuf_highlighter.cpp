@@ -82,7 +82,7 @@ ProtobufHighlighter::ProtobufHighlighter(bool darkmode_optimized, QTextDocument*
 
 void ProtobufHighlighter::highlightBlock(const QString &text)
 {
-  for (const HighlightingRule& rule : std::as_const(highlighting_rules_))
+  for (const HighlightingRule& rule : highlighting_rules_)
   {
     QRegularExpressionMatchIterator matchIterator = rule.pattern_.globalMatch(text);
     while (matchIterator.hasNext())
