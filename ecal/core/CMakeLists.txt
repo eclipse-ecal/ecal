@@ -287,12 +287,17 @@ set(ecal_cmn_header_src
     src/ecal_registration_receiver.h
     src/ecal_thread.h
     src/ecal_timegate.h
-    $<$<BOOL:${WIN32}>:src/ecal_win_main.h>
-    $<$<BOOL:${WIN32}>:src/ecal_win_socket.h>
     src/getenvvar.h
     src/sys_usage.h
     src/topic2mcast.h
 )
+if (WIN32)
+    list (APPEND
+        ecal_cmn_header_src
+        src/ecal_win_main.h
+        src/ecal_win_socket.h
+    )
+endif()
 
 set(ecal_c_src
     src/ecalc.cpp
@@ -510,7 +515,7 @@ install(DIRECTORY
     
 
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
-  source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Source Files" FILES 
+  source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
     ${ecal_custom_tclap_cpp_src}
     ${ecal_io_cpp_src}
     ${ecal_io_mem_cpp_src}
@@ -526,9 +531,7 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_cmn_cpp_src}
     ${ecal_c_src}
     ${ecal_c_win_src}
-  )
-  
-  source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Header Files\\internal" FILES 
+
     ${ecal_custom_tclap_header_src}
     ${ecal_cmn_header_src}
     ${ecal_io_header_src}
@@ -541,9 +544,7 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_readwrite_header_src}
     ${ecal_readwrite_shm_header_src}
     ${ecal_service_header_src}
-  )
-  
-  source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/include" PREFIX "Header Files\\public" FILES 
+
     ${ecal_header_cmn}
     ${ecal_header_cimpl}
     ${ecal_header_msg}
