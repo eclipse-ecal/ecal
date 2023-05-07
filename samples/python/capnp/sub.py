@@ -3,7 +3,7 @@ import time
 import capnp
 import messages_capnp as msgs
 import ecal.core.core as ecal_core
-from ecal.core.subscriber import  MessageSubscriber, CapnSubscriber
+from ecal.core.subscriber import CapnSubscriber
 
 # callback function for the subscriber 
 def callback(topic_name, msg, time):

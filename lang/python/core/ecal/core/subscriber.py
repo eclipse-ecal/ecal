@@ -197,7 +197,7 @@ class CapnSubscriber(MessageSubscriber):
     :param capn_message_type:  type of the protobuf object, which the subscriber will receive
 
     """
-    topic_type = capn_message_type._nodeProto.displayName("_")[0]
+    topic_type = capn_message_type._nodeProto.displayName.split("_")[1]
     super(CapnSubscriber, self).__init__(name, topic_type)
     self.message_type = capn_message_type
     self.callback = None

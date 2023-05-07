@@ -1,10 +1,14 @@
 ## Capnp Publisher and Subscriber Example
 
 Minimal Publisher - publishes an example Imu message
-`python3 pub.py`
+```
+python3 pub.py
+```
 
 Minimal Subscriber - subscribes to the Imu message
-`python3 sub.py`
+```
+python3 sub.py
+```
 
 Capnp Message Struct
 

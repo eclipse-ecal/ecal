@@ -95,8 +95,16 @@
         <file alias="ADD_FILE">FlorianReimold/add_file.svg</file>
         <file alias="SHOW">MuraruMihai/show.svg</file>
         <file alias="HIDE">MuraruMihai/hide.svg</file>
+        <file alias="ARROW_LEFT">FlorianReimold/arrow_left.svg</file>
+        <file alias="ARROW_RIGHT">FlorianReimold/arrow_right.svg</file>
+        <file alias="ARROW_DOWN">FlorianReimold/arrow_down.svg</file>
+        <file alias="ARROW_UP">FlorianReimold/arrow_up.svg</file>
     </qresource>
     <qresource prefix="/ecalicons/darkmode">
         <file alias="COMMAND_WINDOW">darkmode/console.svg</file>
+        <file alias="ARROW_DOWN">lightmode/arrow_down.svg</file>
+        <file alias="ARROW_LEFT">lightmode/arrow_left.svg</file>
+        <file alias="ARROW_RIGHT">lightmode/arrow_right.svg</file>
+        <file alias="ARROW_UP">lightmode/arrow_up.svg</file>
     </qresource>
 </RCC>

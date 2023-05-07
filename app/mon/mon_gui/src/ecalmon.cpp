@@ -145,21 +145,24 @@ Ecalmon::Ecalmon(QWidget *parent)
   tabifyDockWidget(ui_.topics_dockwidget, ui_.processes_dockwidget);
   tabifyDockWidget(ui_.topics_dockwidget, ui_.host_dockwidget);
   tabifyDockWidget(ui_.topics_dockwidget, ui_.service_dockwidget);
+  tabifyDockWidget(ui_.topics_dockwidget, ui_.raw_monitoring_data_dockwidget);
   ui_.topics_dockwidget->raise();
 
-  log_widget_               = new LogWidget(this);
-  topic_widget_             = new TopicWidget(this);
-  process_widget_           = new ProcessWidget(this);
-  host_widget_              = new HostWidget(this);
-  service_widget_           = new ServiceWidget(this);
-  syste_information_widget_ = new SystemInformationWidget(this);
+  log_widget_                 = new LogWidget(this);
+  topic_widget_               = new TopicWidget(this);
+  process_widget_             = new ProcessWidget(this);
+  host_widget_                = new HostWidget(this);
+  service_widget_             = new ServiceWidget(this);
+  raw_monitoring_data_widget_ = new RawMonitoringDataWidget(this);
+  syste_information_widget_   = new SystemInformationWidget(this);
 
-  ui_.logging_dockwidget_content_frame_layout           ->addWidget(log_widget_);
-  ui_.topics_dockwidget_content_frame_layout            ->addWidget(topic_widget_);
-  ui_.processes_dockwidget_content_frame_layout         ->addWidget(process_widget_);
-  ui_.host_dockwidget_content_frame_layout              ->addWidget(host_widget_);
-  ui_.service_dockwidget_content_frame_layout           ->addWidget(service_widget_);
-  ui_.system_information_dockwidget_content_frame_layout->addWidget(syste_information_widget_);
+  ui_.logging_dockwidget_content_frame_layout            ->addWidget(log_widget_);
+  ui_.topics_dockwidget_content_frame_layout             ->addWidget(topic_widget_);
+  ui_.processes_dockwidget_content_frame_layout          ->addWidget(process_widget_);
+  ui_.host_dockwidget_content_frame_layout               ->addWidget(host_widget_);
+  ui_.service_dockwidget_content_frame_layout            ->addWidget(service_widget_);
+  ui_.raw_monitoring_data_dockwidget_content_frame_layout->addWidget(raw_monitoring_data_widget_);
+  ui_.system_information_dockwidget_content_frame_layout ->addWidget(syste_information_widget_);
 
   monitor_update_timer_ = new QTimer(this);
   connect(monitor_update_timer_, &QTimer::timeout, [this](){updateMonitor();});

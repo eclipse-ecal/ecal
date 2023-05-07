@@ -1,0 +1,8 @@
+---
+# This disables the owning-memory check (warn about the usage of "new").
+# The architecture of Qt requires the massive usage of raw pointers.
+
+Checks: "-cppcoreguidelines-owning-memory,
+"
+
+InheritParentConfig: true
