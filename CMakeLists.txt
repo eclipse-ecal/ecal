@@ -18,6 +18,10 @@
 
 cmake_minimum_required(VERSION 3.13)
 
+if (UNIX)
+    set(Python_EXECUTABLE /usr/bin/python3)
+endif (UNIX)	   
+
 include(CMakeDependentOption)
 include("${CMAKE_CURRENT_LIST_DIR}/thirdparty/cmake_functions/qt/qt_msvc_path.cmake")
 
