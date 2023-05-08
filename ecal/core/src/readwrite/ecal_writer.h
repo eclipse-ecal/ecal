@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ecal/ecal_callback.h>
+#include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_tlayer.h>
 
 #include "ecal_def.h"
@@ -38,6 +39,7 @@
 #include <string>
 #include <atomic>
 #include <map>
+#include <vector>
 
 namespace eCAL
 {
@@ -68,12 +70,12 @@ namespace eCAL
     bool ShmEnableZeroCopy(bool state_);
 
     bool ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_);
-    long long  ShmGetAcknowledgeTimeout();
+    long long  ShmGetAcknowledgeTimeout() const;
 
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
     bool RemEventCallback(eCAL_Publisher_Event type_);
 
-    bool Write(const void* const buf_, size_t len_, long long time_, long long id_);
+    size_t Write(CPayloadWriter& payload_, long long time_, long long id_);
 
     void ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_);
     void RemoveLocSubscription(const std::string & process_id_);
@@ -91,7 +93,7 @@ namespace eCAL
     bool IsExtSubscribed() const {return(m_ext_subscribed);}
     size_t GetSubscriberCount() const
     {
-      std::lock_guard<std::mutex> lock(m_sub_map_sync);
+      std::lock_guard<std::mutex> const lock(m_sub_map_sync);
       return(m_loc_sub_map.size() + m_ext_sub_map.size());
     }
 
@@ -112,8 +114,9 @@ namespace eCAL
     bool SetUseTcp(TLayer::eSendMode mode_);
     bool SetUseInProc(TLayer::eSendMode mode_);
 
+    bool CheckWriterModes();
+    size_t PrepareWrite(long long id_, size_t len_);
     bool IsInternalSubscribedOnly();
-
     void LogSendMode(TLayer::eSendMode smode_, const std::string & base_msg_);
 
     std::string                        m_host_name;
@@ -133,14 +136,16 @@ namespace eCAL
     bool               m_zero_copy;
     long long          m_acknowledge_timeout_ms;
 
+    std::vector<char>  m_payload_buffer;
+
     std::atomic<bool>  m_connected;
-    typedef Util::CExpMap<std::string, bool> ConnectedMapT;
-    mutable std::mutex  m_sub_map_sync;
+    using ConnectedMapT = Util::CExpMap<std::string, bool>;
+    mutable std::mutex m_sub_map_sync;
     ConnectedMapT      m_loc_sub_map;
     ConnectedMapT      m_ext_sub_map;
 
     std::mutex         m_event_callback_map_sync;
-    typedef std::map<eCAL_Publisher_Event, PubEventCallbackT> EventCallbackMapT;
+    using EventCallbackMapT = std::map<eCAL_Publisher_Event, PubEventCallbackT>;
     EventCallbackMapT  m_event_callback_map;
 
     long long          m_id;
@@ -154,21 +159,28 @@ namespace eCAL
     std::atomic<bool>  m_loc_subscribed;
     std::atomic<bool>  m_ext_subscribed;
 
-    TLayer::eSendMode  m_use_udp_mc;
-    CDataWriterUdpMC   m_writer_udp_mc;
-    bool               m_use_udp_mc_confirmed;
+    struct SWriter
+    {
+      struct SWriterMode
+      {
+        TLayer::eSendMode requested = TLayer::smode_off;
+        bool              activated = false;
+        bool              confirmed = false;
+      };
 
-    TLayer::eSendMode  m_use_shm;
-    CDataWriterSHM     m_writer_shm;
-    bool               m_use_shm_confirmed;
+      SWriterMode        udp_mc_mode;
+      CDataWriterUdpMC   udp_mc;
 
-    TLayer::eSendMode  m_use_tcp;
-    CDataWriterTCP     m_writer_tcp;
-    bool               m_use_tcp_confirmed;
+      SWriterMode        shm_mode;
+      CDataWriterSHM     shm;
 
-    TLayer::eSendMode  m_use_inproc;
-    CDataWriterInProc  m_writer_inproc;
-    bool               m_use_inproc_confirmed;
+      SWriterMode        tcp_mode;
+      CDataWriterTCP     tcp;
+
+      SWriterMode        inproc_mode;
+      CDataWriterInProc  inproc;
+    };
+    SWriter            m_writer;
 
     bool               m_use_ttype;
     bool               m_use_tdesc;

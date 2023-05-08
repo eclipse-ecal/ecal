@@ -52,13 +52,46 @@ namespace eCAL
      *
     **/
     template <typename T>
-    class CPublisher : public CMsgPublisher<T>
+    class CPublisher : public eCAL::CPublisher
     {
+      class CPayload : public eCAL::CPayloadWriter
+      {
+      public:
+        CPayload(const google::protobuf::Message& message_) :
+          message(message_) {};
+
+        ~CPayload() override = default;
+
+        CPayload(const CPayload&) = default;
+        CPayload(CPayload&&) noexcept = default;
+
+        CPayload& operator=(const CPayload&) = delete;
+        CPayload& operator=(CPayload&&) noexcept = delete;
+
+        bool Write(void* buf_, size_t len_) override
+        {
+          return message.SerializeToArray(buf_, static_cast<int>(len_));
+        }
+
+        size_t GetSize() override {
+          size_t size(0);
+#if GOOGLE_PROTOBUF_VERSION >= 3001000
+          size = static_cast<size_t>(message.ByteSizeLong());
+#else
+          size = static_cast<size_t>(message.ByteSize());
+#endif
+          return(size);
+          };
+
+      private:
+        const google::protobuf::Message& message;
+      };
+
     public:
       /**
        * @brief  Constructor.
       **/
-      CPublisher() : CMsgPublisher<T>()
+      CPublisher() : eCAL::CPublisher()
       {
       }
 
@@ -70,7 +103,7 @@ namespace eCAL
 
       // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
       // where the vtable is not created yet or it's destructed.
-      CPublisher(const std::string& topic_name_) : CMsgPublisher<T>(topic_name_, CPublisher::GetTypeName(), CPublisher::GetDescription())
+      CPublisher(const std::string& topic_name_) : eCAL::CPublisher(topic_name_, CPublisher::GetTypeName(), CPublisher::GetDescription())
       {
       }
 
@@ -80,14 +113,19 @@ namespace eCAL
       CPublisher(const CPublisher&) = delete;
 
       /**
-      * @brief  Copy Constructor is not available.
-      **/
-      CPublisher& operator=(const CPublisher&) = delete;
-
-      /**
       * @brief  Move Constructor
       **/
       CPublisher(CPublisher&&) = default;
+
+      /**
+      * @brief  Destructor.
+      **/
+      ~CPublisher() override = default;
+
+      /**
+      * @brief  Copy assignment is not available.
+      **/
+      CPublisher& operator=(const CPublisher&) = delete;
 
       /**
       * @brief  Move assignment
@@ -103,15 +141,39 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(CMsgPublisher<T>::Create(topic_name_, GetTypeName(), GetDescription()));
+        return(eCAL::CPublisher::Create(topic_name_, GetTypeName(), GetDescription()));
       }
+
+      size_t Send(const T& msg_, long long time_ = -1)
+      {
+        return Send(msg_, time_, -1);
+      }
+
+      /**
+       * @brief Send a serialized message to all subscribers synchronized with acknowledge timeout (see also ShmSetAcknowledgeTimeout).
+       *
+       * This synchronized mode is currently implemented for local interprocess communication (shm-ecal layer) only.
+       *
+       * @param msg_                     The message object.
+       * @param time_                    Time stamp.
+       * @param acknowledge_timeout_ms_  Maximum time to wait for all subscribers acknowledge feedback in ms (buffer received and processed).
+       *
+       * @return  Number of bytes sent.
+      **/
+      size_t Send(const T& msg_, long long time_, long long acknowledge_timeout_ms_)
+      {
+        CPayload payload{ msg_ };
+        eCAL::CPublisher::Send(payload, time_, acknowledge_timeout_ms_);
+        return(0);
+      }
+
 
       /**
        * @brief  Get type name of the protobuf message.
        *
        * @return  Type name.
       **/
-      std::string GetTypeName() const override
+      std::string GetTypeName() const
       {
         static T msg;
         return("proto:" + msg.GetTypeName());
@@ -123,42 +185,10 @@ namespace eCAL
        *
        * @return  Description string.
       **/
-      std::string GetDescription() const override
+      std::string GetDescription() const
       {
         static T msg;
         return(protobuf::GetProtoMessageDescription(msg));
-      }
-
-      /**
-       * @brief  Get size for serialized message object.
-       *
-       * @param msg_  The message object.
-       *
-       * @return  Message size.
-      **/
-      size_t GetSize(const T& msg_) const override
-      {
-        size_t size(0);
-#if GOOGLE_PROTOBUF_VERSION >= 3001000
-        size = (size_t)msg_.ByteSizeLong();
-#else
-        size = (size_t)msg_.ByteSize();
-#endif
-        return(size);
-      }
-
-      /**
-       * @brief  Serialize the message object into a preallocated char buffer.
-       *
-       * @param       msg_     The message object.
-       * @param [out] buffer_  Target buffer.
-       * @param       size_    Target buffer size.
-       *
-       * @return  True if it succeeds, false if it fails.
-      **/
-      bool Serialize(const T& msg_, char* buffer_, size_t size_) const override
-      {
-        return(msg_.SerializeToArray((void*)buffer_, (int)size_));
       }
 
     };

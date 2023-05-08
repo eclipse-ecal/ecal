@@ -25,7 +25,7 @@
 #include <array>
 
 #include <ecal_utils/filesystem.h>
-#include <ecalhdf5/eh5_meas.h>
+#include <ecal/measurement/base/reader.h>
 
 #include "utils.h"
 
@@ -53,10 +53,10 @@ public:
 private:
   bool                                 isEcalMeasFile(const std::string& path);
   bool                                 isProtoChannel(const std::string& channel_type);
-  std::unique_ptr<eCAL::eh5::HDF5Meas> _reader;
-  eCALMeasCutterUtils::ChannelData     _current_opened_channel_data;
-  std::string                          _loaded_path;
-  eCALMeasCutterUtils::ChannelNameSet  _channel_names;
+  std::unique_ptr<eCAL::measurement::base::Reader>      _reader;
+  eCALMeasCutterUtils::ChannelData                      _current_opened_channel_data;
+  std::string                                           _loaded_path;
+  eCALMeasCutterUtils::ChannelNameSet                   _channel_names;
 };
 
 class ImporterException : public std::exception

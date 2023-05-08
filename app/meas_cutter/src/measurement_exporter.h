@@ -22,7 +22,7 @@
 #include <unordered_map>
 #include <map>
 
-#include <ecalhdf5/eh5_meas.h>
+#include <ecal/measurement/base/writer.h>
 #include <ecal_utils/filesystem.h>
 #include "utils.h"
 
@@ -42,9 +42,9 @@ public:
   std::string getOutputPath();
 
 private:
-  std::unique_ptr<eCAL::eh5::HDF5Meas> _writer;
-  std::string                          _current_channel_name;
-  std::string                          _output_path;
+  std::unique_ptr<eCAL::measurement::base::Writer>      _writer;
+  std::string                                           _current_channel_name;
+  std::string                                           _output_path;
 };
 
 class ExporterException : public std::exception

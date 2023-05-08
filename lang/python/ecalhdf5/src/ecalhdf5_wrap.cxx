@@ -39,7 +39,7 @@
 typedef struct
 {
   PyObject_HEAD
-  eCAL::eh5::HDF5Meas *hdf5_meas;
+  eCAL::measurement::base::Measurement *hdf5_meas;
 } Meas;
 
 /****************************************/
@@ -107,11 +107,11 @@ static PyObject* Meas_Open(Meas *self, PyObject *args)
   switch (access)
   {
   case 0:
-    open_meas = self->hdf5_meas->Open(path, eCAL::eh5::eAccessType::RDONLY);
+    open_meas = self->hdf5_meas->Open(path, eCAL::measurement::base::AccessType::RDONLY);
     break;
 
   case 1:
-    open_meas = self->hdf5_meas->Open(path, eCAL::eh5::eAccessType::CREATE);
+    open_meas = self->hdf5_meas->Open(path, eCAL::measurement::base::AccessType::CREATE);
     break;
 
   default:
@@ -279,7 +279,7 @@ static PyObject* Meas_GetEntriesInfo(Meas *self, PyObject *args)
   if (!PyArg_ParseTuple(args, "s", &channel_name))
     return nullptr;
 
-  eCAL::eh5::EntryInfoSet entries;
+  eCAL::measurement::base::EntryInfoSet entries;
   self->hdf5_meas->GetEntriesInfo(channel_name, entries);
   PyObject* entries_info = PyList_New(0);
 
@@ -327,7 +327,7 @@ static PyObject* Meas_GetEntriesInfoRange(Meas *self, PyObject *args)
   if (!PyArg_ParseTuple(args, "sLL", &channel_name, &begin, &end))
     return nullptr;
 
-  eCAL::eh5::EntryInfoSet entries;
+  eCAL::measurement::base::EntryInfoSet entries;
   self->hdf5_meas->GetEntriesInfoRange(channel_name, begin, end, entries);
   PyObject* entries_info = PyList_New(0);
 

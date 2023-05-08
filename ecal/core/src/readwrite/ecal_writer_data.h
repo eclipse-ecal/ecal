@@ -27,9 +27,8 @@
 
 namespace eCAL
 {
-  struct SWriterData
+  struct SWriterAttr
   {
-    const void*  buf                    = nullptr;
     size_t       len                    = 0;
     long long    id                     = 0;
     long long    clock                  = 0;

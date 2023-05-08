@@ -25,16 +25,14 @@
 #include <ecal/ecal_tlayer.h>
 #include <ecal/ecal_config.h>
 
-#include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
 #include "ecal_globals.h"
-#include "ecal_pubgate.h"
-#include "ecal_registration_provider.h"
 
 #include "readwrite/ecal_writer.h"
 
 #include <sstream>
 #include <iostream>
+#include <utility>
 
 namespace eCAL
 {
@@ -50,6 +48,7 @@ namespace eCAL
 
   CPublisher::CPublisher(const std::string& topic_name_, const std::string& topic_type_ /* = "" */, const std::string& topic_desc_ /* = "" */) :
                 m_datawriter(nullptr),
+                m_id(0),
                 m_created(false),
                 m_initialized(false)
   {
@@ -68,7 +67,7 @@ namespace eCAL
    * @brief CPublisher are move-enabled
   **/
   CPublisher::CPublisher(CPublisher&& rhs) noexcept :
-                m_datawriter(std::move(rhs.m_datawriter)),
+                m_datawriter(rhs.m_datawriter),
                 m_qos(rhs.m_qos),
                 m_id(rhs.m_id),
                 m_created(rhs.m_created),
@@ -86,7 +85,7 @@ namespace eCAL
   **/
   CPublisher& CPublisher::operator=(CPublisher&& rhs) noexcept
   {
-    m_datawriter = std::move(rhs.m_datawriter);
+    m_datawriter = rhs.m_datawriter;
 
     m_qos             = rhs.m_qos;
     m_id              = rhs.m_id;
@@ -103,12 +102,12 @@ namespace eCAL
 
   bool CPublisher::Create(const std::string& topic_name_, const std::string& topic_type_ /* = "" */, const std::string& topic_desc_ /* = "" */)
   {
-    if(m_created)               return(false);
-    if(topic_name_.size() == 0) return(false);
-    if(!g_globals())            return(false);
+    if(m_created)              return(false);
+    if(topic_name_.empty())    return(false);
+    if(g_globals() == nullptr) return(false);
 
     // initialize globals
-    if (!g_globals()->IsInitialized(Init::Publisher))
+    if (g_globals()->IsInitialized(Init::Publisher) == 0)
     {
       g_globals()->Initialize(Init::Publisher);
       m_initialized = true;
@@ -118,7 +117,7 @@ namespace eCAL
     // if layer API was not accessed before creation of this class
     // the layer mode will be initialized by the global config
     // this can not be done in the constructor because a publisher is allowed
-    // to construct befor eCAL::Initialize and so global config is not
+    // to construct before eCAL::Initialize and so global config is not
     // existing while construction
     if (m_tlayer.sm_udp_mc  == TLayer::smode_none) m_tlayer.sm_udp_mc = Config::GetPublisherUdpMulticastMode();
     if (m_tlayer.sm_shm     == TLayer::smode_none) m_tlayer.sm_shm    = Config::GetPublisherShmMode();
@@ -161,15 +160,15 @@ namespace eCAL
 
   bool CPublisher::Destroy()
   {
-    if(!m_created)   return(false);
-    if(!g_globals()) return(false);
+    if(!m_created)             return(false);
+    if(g_globals() == nullptr) return(false);
 
     // destroy data writer
     m_datawriter->Destroy();
 
     // unregister data writer
-    if(g_pubgate())               g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
-    if(g_registration_provider()) g_registration_provider()->UnregisterTopic(m_datawriter->GetTopicName(), m_datawriter->GetTopicID());
+    if(g_pubgate() != nullptr)               g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
+    if(g_registration_provider() != nullptr) g_registration_provider()->UnregisterTopic(m_datawriter->GetTopicName(), m_datawriter->GetTopicID());
 #ifndef NDEBUG
     // log it
     if (g_log()) g_log()->Log(log_level_debug1, std::string(m_datawriter->GetTopicName() + "::CPublisher::Destroy"));
@@ -195,7 +194,7 @@ namespace eCAL
 
   bool CPublisher::SetTypeName(const std::string& topic_type_name_)
   {
-    if (!m_datawriter) return false;
+    if (m_datawriter == nullptr) return false;
 
     // register to description gateway for type / description checking
     const std::string topic_desc = m_datawriter->GetDescription();
@@ -206,7 +205,7 @@ namespace eCAL
 
   bool CPublisher::SetDescription(const std::string& topic_desc_)
   {
-    if(!m_datawriter) return false;
+    if(m_datawriter == nullptr) return false;
 
     // register to description gateway for type / description checking
     const std::string topic_type = m_datawriter->GetTypeName();
@@ -217,26 +216,26 @@ namespace eCAL
 
   bool CPublisher::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
   {
-    if(!m_datawriter) return false;
+    if(m_datawriter == nullptr) return false;
     return m_datawriter->SetAttribute(attr_name_, attr_value_);
   }
 
   bool CPublisher::ClearAttribute(const std::string& attr_name_)
   {
-    if(!m_datawriter) return false;
+    if(m_datawriter == nullptr) return false;
     return m_datawriter->ClearAttribute(attr_name_);
   }
 
   bool CPublisher::ShareType(bool state_ /*= true*/)
   {
-    if (!m_datawriter) return false;
+    if (m_datawriter == nullptr) return false;
     m_datawriter->ShareType(state_);
     return true;
   }
 
   bool CPublisher::ShareDescription(bool state_ /*= true*/)
   {
-    if (!m_datawriter) return false;
+    if (m_datawriter == nullptr) return false;
     m_datawriter->ShareDescription(state_);
     return true;
   }
@@ -322,80 +321,93 @@ namespace eCAL
 
   size_t CPublisher::Send(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
   {
-    if (!m_created) return(0);
+    CBufferPayloadWriter payload{ buf_, len_ };
+    return Send(payload, time_, acknowledge_timeout_ms_);
+  }
 
-    // in an optimization case the
-    // publisher can send an empty package
-    // or we do not have any subscription at all
-    // then the data writer will only do some statistics
-    // for the monitoring layer and return
-    if (!IsSubscribed())
-    {
-      m_datawriter->RefreshSendCounter();
-      return(len_);
-    }
+  // @Rex, do we even need this function? I guess so for convenience...
+  size_t CPublisher::Send(CPayloadWriter& payload_, long long time_) const
+  {
+    return Send(payload_, time_, DEFAULT_ACKNOWLEDGE_ARGUMENT);
+  }
+  
+  size_t CPublisher::Send(CPayloadWriter& payload_, long long time_, long long acknowledge_timeout_ms_) const
+  {
+     if (!m_created) return(0);
 
-    long long current_acknowledge_timeout_ms{ 0 };
-    // set new acknowledge timeout
-    if (acknowledge_timeout_ms_ != DEFAULT_ACKNOWLEDGE_ARGUMENT)
-    {
-      current_acknowledge_timeout_ms = m_datawriter->ShmGetAcknowledgeTimeout();
-      m_datawriter->ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms_));
-    }
+     // in an optimization case the
+     // publisher can send an empty package
+     // or we do not have any subscription at all
+     // then the data writer will only do some statistics
+     // for the monitoring layer and return
+     if (!IsSubscribed())
+     {
+       m_datawriter->RefreshSendCounter();
+       return(payload_.GetSize());
+     }
 
-    // send content via data writer layer
-    long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
-    bool sent = m_datawriter->Write(buf_, len_, write_time, m_id);
+     long long current_acknowledge_timeout_ms{ 0 };
+     // set new acknowledge timeout
+     if (acknowledge_timeout_ms_ != DEFAULT_ACKNOWLEDGE_ARGUMENT)
+     {
+       current_acknowledge_timeout_ms = m_datawriter->ShmGetAcknowledgeTimeout();
+       m_datawriter->ShmSetAcknowledgeTimeout(static_cast<long long>(acknowledge_timeout_ms_));
+     }
 
-    if (acknowledge_timeout_ms_ != DEFAULT_ACKNOWLEDGE_ARGUMENT)
-    {
-      // reset acknowledge timeout
-      m_datawriter->ShmSetAcknowledgeTimeout(current_acknowledge_timeout_ms);
-    }
+     // send content via data writer layer
+     const long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
+     const size_t written_bytes = m_datawriter->Write(payload_, write_time, m_id);
 
-    return sent ? len_ : 0;
+     if (acknowledge_timeout_ms_ != DEFAULT_ACKNOWLEDGE_ARGUMENT)
+     {
+       // reset acknowledge timeout
+       m_datawriter->ShmSetAcknowledgeTimeout(current_acknowledge_timeout_ms);
+     }
+
+     // return number of bytes written
+     return written_bytes;
   }
 
   bool CPublisher::AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_)
   {
-    if (!m_datawriter) return(false);
+    if (m_datawriter == nullptr) return(false);
     RemEventCallback(type_);
-    return(m_datawriter->AddEventCallback(type_, callback_));
+    return(m_datawriter->AddEventCallback(type_, std::move(callback_)));
   }
 
   bool CPublisher::RemEventCallback(eCAL_Publisher_Event type_)
   {
-    if (!m_datawriter) return(false);
+    if (m_datawriter == nullptr) return(false);
     return(m_datawriter->RemEventCallback(type_));
   }
 
   bool CPublisher::IsSubscribed() const
   {
-    if(!m_datawriter) return(false);
+    if(m_datawriter == nullptr) return(false);
     return(m_datawriter->IsSubscribed());
   }
 
   size_t CPublisher::GetSubscriberCount() const
   {
-    if(!m_datawriter) return(0);
+    if(m_datawriter == nullptr) return(0);
     return(m_datawriter->GetSubscriberCount());
   }
 
   std::string CPublisher::GetTopicName() const
   {
-    if(!m_datawriter) return("");
+    if(m_datawriter == nullptr) return("");
     return(m_datawriter->GetTopicName());
   }
 
   std::string CPublisher::GetTypeName() const
   {
-    if(!m_datawriter) return("");
+    if(m_datawriter == nullptr) return("");
     return(m_datawriter->GetTypeName());
   }
 
   std::string CPublisher::GetDescription() const
   {
-    if(!m_datawriter) return("");
+    if(m_datawriter == nullptr) return("");
     return(m_datawriter->GetDescription());
   }
 
@@ -411,7 +423,7 @@ namespace eCAL
 
   bool CPublisher::ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_)
   {
-    if (g_descgate())
+    if (g_descgate() != nullptr)
     {
       // Calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
@@ -436,7 +448,7 @@ namespace eCAL
     out << indent_ << " class CPublisher"      << std::endl;
     out << indent_ << "----------------------" << std::endl;
     out << indent_ << "m_created:            " << m_created << std::endl;
-    if(m_datawriter && m_datawriter->IsCreated()) out << indent_ << m_datawriter->Dump("    ");
+    if((m_datawriter != nullptr) && m_datawriter->IsCreated()) out << indent_ << m_datawriter->Dump("    ");
     out << std::endl;
 
     return(out.str());

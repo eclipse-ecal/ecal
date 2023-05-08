@@ -42,10 +42,6 @@ namespace eCAL
 {
   const std::string CDataWriterSHM::m_memfile_base_name = "ecal_";
 
-  CDataWriterSHM::CDataWriterSHM()
-  {
-  }
-  
   CDataWriterSHM::~CDataWriterSHM()
   {
     Destroy();
@@ -110,20 +106,20 @@ namespace eCAL
     return true;
   }
 
-  bool CDataWriterSHM::PrepareWrite(const SWriterData& data_)
+  bool CDataWriterSHM::PrepareWrite(const SWriterAttr& attr_)
   {
     if (!m_created)     return false;
-    if (data_.len == 0) return false;
+    if (attr_.len == 0) return false;
 
     // false signals no rematching / exchanging of
     // connection parameters needed
     bool ret_state(false);
 
     // check number of requested memory file buffer
-    if (data_.buffering != m_buffer_count)
+    if (attr_.buffering != m_buffer_count)
     {
       // store new size and flag change
-      m_buffer_count = data_.buffering;
+      m_buffer_count = attr_.buffering;
       ret_state |= true;
 
       // ----------------------------------------------------------------------
@@ -147,7 +143,7 @@ namespace eCAL
       // increase buffer count
       while (m_memory_file_vec.size() < m_buffer_count)
       {
-        auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, data_.len, m_memory_file_attr);
+        auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, attr_.len, m_memory_file_attr);
         m_memory_file_vec.push_back(sync_memfile);
       }
       // decrease buffer count
@@ -161,17 +157,17 @@ namespace eCAL
     m_write_idx %= m_memory_file_vec.size();
       
     // check size and reserve new if needed
-    ret_state |= m_memory_file_vec[m_write_idx]->CheckSize(data_.len);
+    ret_state |= m_memory_file_vec[m_write_idx]->CheckSize(attr_.len);
 
     return ret_state;
   }
 
-  bool CDataWriterSHM::Write(const SWriterData& data_)
+  bool CDataWriterSHM::Write(CPayloadWriter& payload_, const SWriterAttr& attr_)
   {
-    if (!m_created) return 0;
+    if (!m_created) return false;
 
     // write content
-    bool sent = m_memory_file_vec[m_write_idx]->Write(data_);
+    const bool sent = m_memory_file_vec[m_write_idx]->Write(payload_, attr_);
 
     // and increment file index
     m_write_idx++;

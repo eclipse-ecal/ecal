@@ -55,7 +55,9 @@ set(ecalhdf5_header_base
     include/ecal/measurement/omeasurement.h
     include/ecalhdf5/eh5_defs.h
     include/ecalhdf5/eh5_meas.h
-    include/ecalhdf5/eh5_types.h   
+    include/ecalhdf5/eh5_reader.h
+    include/ecalhdf5/eh5_types.h
+    include/ecalhdf5/eh5_writer.h
 )
 
 ecal_add_library(${PROJECT_NAME} ${ecalhdf5_src} ${ecalhdf5_header_base})
@@ -85,6 +87,7 @@ target_link_libraries(${PROJECT_NAME}
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
 
+target_link_libraries(${PROJECT_NAME} PUBLIC eCAL::measurement_base)
 if (${ECAL_LINK_HDF5_SHARED})
   if (TARGET hdf5::hdf5-shared)
     target_link_libraries(${PROJECT_NAME} PRIVATE

@@ -24,14 +24,14 @@
 #include <memory>
 
 #include <ecal/ecal.h>
-#include <ecalhdf5/eh5_meas.h>
+#include <ecal/measurement/base/reader.h>
 
 #include "continuity_report.h"
 
 class MeasurementContainer
 {
 public:
-  MeasurementContainer(std::shared_ptr<eCAL::eh5::HDF5Meas> hdf5_meas, const std::string& meas_dir = "", bool use_receive_timestamp = true);
+  MeasurementContainer(std::shared_ptr<eCAL::measurement::base::Reader> hdf5_meas, const std::string& meas_dir = "", bool use_receive_timestamp = true);
   ~MeasurementContainer();
 
   void CreatePublishers();
@@ -108,9 +108,9 @@ private:
     PublisherInfo*                     publisher_info_;
   };
 
-  std::shared_ptr<eCAL::eh5::HDF5Meas>    hdf5_meas_;
-  std::string                             meas_dir_;
-  bool                                    use_receive_timestamp_;
+  std::shared_ptr<eCAL::measurement::base::Reader>      hdf5_meas_;
+  std::string                                           meas_dir_;
+  bool                                                  use_receive_timestamp_;
 
   std::vector<MeasurementFrame>           frame_table_;
   std::map<std::string, size_t>           total_estimated_channel_size_map_;

@@ -109,7 +109,7 @@ namespace eCAL
     m_ext_pub_map.set_expiration(registration_timeout);
 
     // set sample hash map expiration
-    m_sample_hash.set_expiration(std::chrono::milliseconds(500));
+    //m_sample_hash.set_expiration(std::chrono::milliseconds(500));
 
     // allow to share topic type
     m_use_ttype = Config::IsTopicTypeSharingEnabled();
@@ -401,13 +401,13 @@ namespace eCAL
     m_use_tcp_confirmed    |= layer_ == eCAL::pb::tl_ecal_tcp;
     m_use_inproc_confirmed |= layer_ == eCAL::pb::tl_inproc;
 
+    // number of hash values to track for duplicates
+    constexpr int hash_queue_size(64);
+
     // use hash to discard multiple receives of the same payload
-    //   first we remove outdated hashes
-    m_sample_hash.remove_deprecated();
-    //   if this hash is still in the map
-    //   we received it recently (on another transport layer ?)
+    //   if a hash is in the queue we received this message recently (on another transport layer ?)
     //   so we return and do not process this sample again
-    if (m_sample_hash.find(hash_) != m_sample_hash.end())
+    if(std::find(m_sample_hash_queue.begin(), m_sample_hash_queue.end(), hash_) != m_sample_hash_queue.end())
     {
 #ifndef NDEBUG
       // log it
@@ -416,7 +416,10 @@ namespace eCAL
       return(size_);
     }
     //   this is a new sample -> store it's hash
-    m_sample_hash[hash_] = 0;
+    m_sample_hash_queue.push_back(hash_);
+
+    // limit size of hash queue to the last 64 messages
+    while (m_sample_hash_queue.size() > hash_queue_size) m_sample_hash_queue.pop_front();
 
     // check id
     if (!m_id_set.empty())

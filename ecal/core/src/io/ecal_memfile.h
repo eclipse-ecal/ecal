@@ -27,6 +27,8 @@
 #include <array>
 #include <cstdint>
 
+#include <ecal/ecal_payload_writer.h>
+
 #include "ecal_memfile_info.h"
 #include "ecal_named_mutex.h"
 
@@ -140,7 +142,18 @@ namespace eCAL
      *
      * @return         Number of bytes copied to the memory file.
     **/
-    size_t Write(const void* buf_, const size_t len_, const size_t offset_);
+    size_t WriteBuffer(const void* buf_, size_t len_, size_t offset_);
+
+    /**
+     * @brief Apply payload on the memory file.
+     *
+     * @param payload_  The payload.
+     * @param len_      The number of bytes to write.
+     * @param offset_   The offset for writing the data.
+     *
+     * @return          Number of bytes access (len if succeeded otherwise zero).
+    **/
+    size_t WritePayload(CPayloadWriter& payload_, size_t len_, size_t offset_);
 
     /**
      * @brief Maximum data size of the whole memory file.
@@ -201,6 +214,7 @@ namespace eCAL
     };
     bool            m_created;
     bool            m_auto_sanitizing;
+    bool            m_payload_initialized;
     access_state    m_access_state;
     std::string     m_name;
     SInternalHeader m_header;

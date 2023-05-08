@@ -21,6 +21,8 @@
 
 #include <QColor>
 #include <QFont>
+#include <QString>
+#include <QByteArray>
 
 #include "item_data_roles.h"
 
@@ -28,19 +30,9 @@
 
 #include <ecal/ecal.h>
 
-TopicTreeItem::TopicTreeItem()
-  : QAbstractTreeItem()
-{
-}
-
 TopicTreeItem::TopicTreeItem(const eCAL::pb::Topic& topic)
-  : QAbstractTreeItem()
 {
   update(topic);
-}
-
-TopicTreeItem::~TopicTreeItem()
-{
 }
 
 QVariant TopicTreeItem::data(int column, Qt::ItemDataRole role) const
@@ -87,14 +79,14 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     else if (column == Columns::TTYPE)
     {
       // When the monitor didn't tell us the topic type, we ask eCAL::Util instead
-      std::string monitor_topic_type = topic_.ttype();
+      const std::string monitor_topic_type = topic_.ttype();
       if (!monitor_topic_type.empty())
       {
         return monitor_topic_type.c_str();
       }
       else
       {
-        std::string monitor_topic_name = topic_.tname();
+        const std::string monitor_topic_name = topic_.tname();
         if (!monitor_topic_name.empty())
         {
           return eCAL::Util::GetTopicTypeName(monitor_topic_name).c_str();
@@ -140,9 +132,9 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       QList<QVariant> layers;
       auto layer_pb = topic_.tlayer();
-      for (auto layer = layer_pb.begin(); layer != layer_pb.end(); layer++)
+      for (const auto& layer : layer_pb)
       {
-        layers.push_back((*layer).type());
+        layers.push_back(layer.type());
       }
       return layers;
     }
@@ -185,8 +177,27 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       || (column == Columns::DIRECTION)
       || (column == Columns::TTYPE))
     {
-      QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
+      const QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
       return (!raw_data.isEmpty() ? raw_data : "- ? -");
+    }
+    else if (column == Columns::TDESC)
+    {
+      const std::string& raw_data = topic_.tdesc();
+
+      if (!raw_data.empty())
+      {
+        const quint16 crc16 = qChecksum(raw_data.data(), static_cast<uint>(raw_data.length()));
+      
+        const QString crc16_string = QString("%1").arg(QString::number(crc16, 16).toUpper(), 4, '0');
+        const QString size_text    = QString::number(raw_data.size()) + " byte" + (raw_data.size() != 1 ? "s" : "")
+                                     + " (CRC16: " + crc16_string + ")";
+
+        return size_text;
+      }
+      else
+      {
+        return "None";
+      }
     }
     else if (column == Columns::TLAYER)
     {
@@ -194,10 +205,10 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
       auto layer_pb = topic_.tlayer();
 
-      for (auto layer = layer_pb.begin(); layer != layer_pb.end(); layer++)
+      for (const auto& layer : layer_pb)
       {
         QString this_layer_string;
-        switch ((*layer).type())
+        switch (layer.type())
         {
         case eCAL::pb::eTLayerType::tl_ecal_tcp:
           this_layer_string = "tcp";
@@ -215,7 +226,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
           this_layer_string = "all";
           break;
         default:
-          this_layer_string = ("Unknown (" + QString::number((int)(*layer).type()) + ")");
+          this_layer_string = ("Unknown (" + QString::number((int)layer.type()) + ")");
         }
 
         if (!layer_string.isEmpty() && !this_layer_string.isEmpty())
@@ -231,7 +242,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
     else if (column == Columns::DFREQ)
     {
-      long long raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toLongLong(); //-V1016
+      const long long raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toLongLong(); //-V1016
       return toFrequencyString(raw_data);
     }
     else
@@ -242,6 +253,12 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
   else if (role == (Qt::ItemDataRole)ItemDataRoles::SortRole) //-V1016 //-V547
   {
+    if (column == Columns::TDESC)
+    {
+      const std::string& raw_data = topic_.tdesc();
+      return static_cast<int>(raw_data.size());
+    }
+
     return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
   }
 
@@ -288,17 +305,17 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if (column == Columns::PID)
     {
-      QStringList list{ topic_.hname().c_str(), QString::number(topic_.pid()) };
+      const QStringList list{ topic_.hname().c_str(), QString::number(topic_.pid()) };
       return list;
     }
     else if (column == Columns::PNAME)
     {
-      QStringList list{topic_.hname().c_str(), topic_.pname().c_str()};
+      const QStringList list{topic_.hname().c_str(), topic_.pname().c_str()};
       return list;
     }
     else if (column == Columns::UNAME)
     {
-      QStringList list{ topic_.hname().c_str(), topic_.uname().c_str(), QString::number(topic_.pid()) };
+      const QStringList list{ topic_.hname().c_str(), topic_.uname().c_str(), QString::number(topic_.pid()) };
       return list;
     }
     else
@@ -317,7 +334,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       || (column == Columns::DIRECTION)
       || (column == Columns::TTYPE))
     {
-      QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
+      const QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
       if (raw_data.isEmpty())
       {
         QFont font;
@@ -325,6 +342,17 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         return font;
       }
     }
+    else if (column == Columns::TDESC)
+    {
+      const std::string& raw_data = topic_.tdesc();
+      if (raw_data.empty())
+      {
+        QFont font;
+        font.setItalic(true);
+        return font;
+      }
+    }
+
     return QVariant::Invalid;
   }
 
