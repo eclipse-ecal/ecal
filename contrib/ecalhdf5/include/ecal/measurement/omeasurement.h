@@ -132,9 +132,8 @@ namespace eCAL
     inline OChannel<T> OMeasurement::Create(const std::string& channel) const
     {
       static T msg;
-      meas->SetChannelType(channel, eCAL::message::GetTypeName(msg));
-      meas->SetChannelDescription(channel, eCAL::message::GetDescription(msg));
-        // Construct a channel based 
+      meas->SetChannelMetaInformation(channel, eCAL::message::GetTypeName(msg), eCAL::message::GetDescription(msg));
+      // Construct a channel based 
       return OChannel<T>{meas, channel};
     }
 

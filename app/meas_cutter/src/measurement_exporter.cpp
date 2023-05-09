@@ -53,15 +53,8 @@ MeasurementExporter::~MeasurementExporter()
 void MeasurementExporter::createChannel(const std::string& channel_name, const eCALMeasCutterUtils::ChannelInfo& channel_info)
 {
   _current_channel_name = channel_name;
-  if (channel_info.format == eCALMeasCutterUtils::SerializationFormat::PROTOBUF)
-  {
-    _writer->SetChannelType(channel_name, "proto:" + channel_info.type);
-  }
-  else
-  {
-    _writer->SetChannelType(channel_name, channel_info.type);
-  }
-  _writer->SetChannelDescription(channel_name, channel_info.description);
+  std::string channel_type = channel_info.format == eCALMeasCutterUtils::SerializationFormat::PROTOBUF ? "proto:" + channel_info.type : channel_info.type;
+  _writer->SetChannelMetaInformation(channel_name, channel_type, channel_info.description);
 }
 
 void MeasurementExporter::setData(eCALMeasCutterUtils::Timestamp timestamp, const eCALMeasCutterUtils::MetaData& meta_data, const std::string& payload)

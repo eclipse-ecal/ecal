@@ -123,21 +123,18 @@ namespace eCAL
         */
         void SetOneFilePerChannelEnabled(bool enabled) override { return measurement.SetOneFilePerChannelEnabled(enabled); }
 
-        /**
-         * @brief Set description of the given channel
-         *
-         * @param channel_name    channel name
-         * @param description     description of the channel
-        **/
-        void SetChannelDescription(const std::string& channel_name, const std::string& description) override { return measurement.SetChannelDescription(channel_name, description); }
 
         /**
-         * @brief Set type of the given channel
+         * @brief Set the meta information of the given channel
          *
-         * @param channel_name  channel name
-         * @param type          type of the channel
+         * @param channel_name        channel name
+         * @param channel_type        type of the channel
+         * @param channel_descriptor  descriptor (schema) of channel
         **/
-        void SetChannelType(const std::string& channel_name, const std::string& type) override { return measurement.SetChannelType(channel_name, type); }
+        void SetChannelMetaInformation(const std::string& channel_name, const std::string& channel_type, const std::string& channel_descriptor) override {
+          measurement.SetChannelType(channel_name, channel_type);
+          measurement.SetChannelDescription(channel_name, channel_descriptor);
+        };
 
         /**
          * @brief Set measurement file base name (desired name for the actual hdf5 files that will be created)

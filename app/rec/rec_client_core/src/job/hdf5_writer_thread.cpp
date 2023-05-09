@@ -169,8 +169,7 @@ namespace eCAL
 
           for (const auto& topic : topic_info_map_to_set)
           {
-            hdf5_writer_->SetChannelType(topic.first, topic.second.type_);
-            hdf5_writer_->SetChannelDescription(topic.first, topic.second.description_);
+            hdf5_writer_->SetChannelMetaInformation(topic.first, topic.second.type_, topic.second.description_);
           }
         }
         else if (frame)
