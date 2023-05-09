@@ -21,6 +21,7 @@
 
 #include <time.h>
 #include <mutex>
+#include <string>
 
 #define CLOCKFD 3
 #define FD_TO_CLOCKID(fd)   ((~(clockid_t) (fd) << 3) | CLOCKFD)
