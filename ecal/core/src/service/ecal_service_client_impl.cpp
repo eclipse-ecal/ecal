@@ -98,7 +98,7 @@ namespace eCAL
     }
 
     // unregister this client
-    Unregister(true);
+    Unregister();
 
     // reset internals
     m_service_name.clear();
@@ -402,7 +402,7 @@ namespace eCAL
     }
   }
 
-  void CServiceClientImpl::Unregister(const bool force_)
+  void CServiceClientImpl::Unregister()
   {
     if (m_service_name.empty()) return;
 
@@ -418,7 +418,7 @@ namespace eCAL
     service_mutable_client->set_version(m_version);
 
     // unregister entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterClient(m_service_name, m_service_id, sample, force_);
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterClient(m_service_name, m_service_id, sample, true);
   }
 
   void CServiceClientImpl::CheckForNewServices()

@@ -82,7 +82,7 @@ namespace eCAL
 
   protected:
     void Register(bool force_);
-    void Unregister(bool force_);
+    void Unregister();
 
     /**
      * @brief Calls the request callback based on the request and fills the response

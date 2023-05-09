@@ -147,7 +147,7 @@ namespace eCAL
     }
 
     // unregister
-    Unregister(true);
+    Unregister();
 
     // reset defaults
     m_created                 = false;
@@ -302,7 +302,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CDataReader::Unregister(const bool force_)
+  bool CDataReader::Unregister()
   {
     if (m_topic_name.empty()) return(false);
 
@@ -319,7 +319,7 @@ namespace eCAL
     ecal_reg_sample_mutable_topic->set_uname(Process::GetUnitName());
 
     // unregister subscriber
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterTopic(m_topic_name, m_topic_id, ecal_unreg_sample, force_);
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterTopic(m_topic_name, m_topic_id, ecal_unreg_sample, true);
 #ifndef NDEBUG
     // log it
     Logging::Log(log_level_debug4, m_topic_name + "::CDataReader::Unregister");
@@ -681,19 +681,20 @@ namespace eCAL
     switch (type_)
     {
     case eCAL::pb::tl_ecal_tcp:
+      {
+        SReaderLayerPar par;
+        par.host_name  = host_name_;
+        par.topic_name = m_topic_name;
+        par.topic_id   = m_topic_id;
+        par.parameter  = parameter_;
+
+        // process only for tcp layer
+        CTCPReaderLayer::Get()->SetConnectionParameter(par);
+      }
       break;
     default:
       return;
     }
-
-    SReaderLayerPar par;
-    par.host_name  = host_name_;
-    par.topic_name = m_topic_name;
-    par.topic_id   = m_topic_id;
-    par.parameter  = parameter_;
-
-    // process only for tcp layer
-    CTCPReaderLayer::Get()->SetConnectionParameter(par);
   }
 
   void CDataReader::Connect(const std::string& tid_, const std::string& ttype_, const std::string& tdesc_)

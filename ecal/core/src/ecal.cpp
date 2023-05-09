@@ -26,8 +26,6 @@
 #include <tclap/CmdLine.h>
 #include <custom_tclap/advanced_tclap_output.h>
 
-#include <iostream>
-
 namespace eCAL
 {
  /**
@@ -167,7 +165,7 @@ namespace eCAL
     g_globals_ctx_ref_cnt++;
 
     // (post)initialize single components
-    int const success = g_globals()->Initialize(components_, &config_keys);
+    const int success = g_globals()->Initialize(components_, &config_keys);
 
     // print out configuration
     if (dump_config)

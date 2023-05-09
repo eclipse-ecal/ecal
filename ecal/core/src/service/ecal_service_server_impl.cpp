@@ -97,7 +97,7 @@ namespace eCAL
     }
 
     // unregister this service
-    Unregister(true);
+    Unregister();
 
     // reset internals
     m_service_name.clear();
@@ -281,7 +281,7 @@ namespace eCAL
     if (g_registration_provider() != nullptr) g_registration_provider()->RegisterServer(m_service_name, m_service_id, sample, force_);
   }
 
-  void CServiceServerImpl::Unregister(const bool force_)
+  void CServiceServerImpl::Unregister()
   {
     if (m_service_name.empty()) return;
 
@@ -298,7 +298,7 @@ namespace eCAL
     service_mutable_service->set_version(m_version);
 
     // register entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterServer(m_service_name, m_service_id, sample, force_);
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterServer(m_service_name, m_service_id, sample, true);
   }
 
   int CServiceServerImpl::RequestCallback(const std::string& request_, std::string& response_)

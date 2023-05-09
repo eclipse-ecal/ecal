@@ -207,7 +207,7 @@ namespace eCAL
     }
 
     // unregister
-    Unregister(true);
+    Unregister();
 
     m_created = false;
 
@@ -954,7 +954,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CDataWriter::Unregister(bool force_)
+  bool CDataWriter::Unregister()
   {
     if (m_topic_name.empty()) return(false);
 
@@ -971,7 +971,7 @@ namespace eCAL
     ecal_reg_sample_mutable_topic->set_uname(Process::GetUnitName());
 
     // unregister publisher
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterTopic(m_topic_name, m_topic_id, ecal_unreg_sample, force_);
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterTopic(m_topic_name, m_topic_id, ecal_unreg_sample, true);
 
 #ifndef NDEBUG
     // log it

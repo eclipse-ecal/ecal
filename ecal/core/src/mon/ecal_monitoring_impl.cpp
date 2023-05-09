@@ -28,7 +28,6 @@
 #include "ecal_monitoring_impl.h"
 
 #include <regex>
-#include <sstream>
 
 #include "../ecal_registration_receiver.h"
 
@@ -405,9 +404,8 @@ namespace eCAL
     const std::string&    component_init_info          = sample_process.component_init_info();
     const std::string&    ecal_runtime_version         = sample_process.ecal_runtime_version();
 
-    std::stringstream process_id_ss;
-    process_id_ss << process_id;
-    const std::string process_name_id = process_name + process_id_ss.str();
+    // create map key
+    const std::string process_name_id = process_name + std::to_string(process_id);
 
     // acquire access
     const std::lock_guard<std::mutex> lock(m_process_map.sync);
@@ -447,9 +445,8 @@ namespace eCAL
     const std::string& process_name = sample_process.pname();
     const int          process_id   = sample_process.pid();
 
-    std::stringstream process_id_ss;
-    process_id_ss << process_id;
-    const std::string process_name_id = process_name + process_id_ss.str();
+    // create map key
+    const std::string process_name_id = process_name + std::to_string(process_id);
 
     // acquire access
     const std::lock_guard<std::mutex> lock(m_process_map.sync);
@@ -471,9 +468,8 @@ namespace eCAL
     const int          process_id   = sample_service.pid();
     const int          tcp_port     = sample_service.tcp_port();
 
-    std::stringstream process_id_ss;
-    process_id_ss << process_id;
-    const std::string service_name_id = service_name + service_id + process_id_ss.str();
+    // create map key
+    const std::string service_name_id = service_name + service_id + std::to_string(process_id);
 
     // acquire access
     const std::lock_guard<std::mutex> lock(m_server_map.sync);
@@ -516,9 +512,8 @@ namespace eCAL
     const std::string& service_id   = sample_service.sid();
     const int          process_id   = sample_service.pid();
 
-    std::stringstream process_id_ss;
-    process_id_ss << process_id;
-    const std::string service_name_id = service_name + service_id + process_id_ss.str();
+    // create map key
+    const std::string service_name_id = service_name + service_id + std::to_string(process_id);
 
     // acquire access
     const std::lock_guard<std::mutex> lock(m_server_map.sync);
@@ -539,9 +534,8 @@ namespace eCAL
     const std::string& unit_name    = sample_client.uname();
     const int          process_id   = sample_client.pid();
 
-    std::stringstream process_id_ss;
-    process_id_ss << process_id;
-    const std::string service_name_id = service_name + service_id + process_id_ss.str();
+    // create map key
+    const std::string service_name_id = service_name + service_id + std::to_string(process_id);
 
     // acquire access
     const std::lock_guard<std::mutex> lock(m_clients_map.sync);
@@ -570,9 +564,8 @@ namespace eCAL
     const std::string& service_id   = sample_client.sid();
     const int          process_id   = sample_client.pid();
 
-    std::stringstream process_id_ss;
-    process_id_ss << process_id;
-    const std::string service_name_id = service_name + service_id + process_id_ss.str();
+    // create map key
+    const std::string service_name_id = service_name + service_id + std::to_string(process_id);
 
     // acquire access
     const std::lock_guard<std::mutex> lock(m_clients_map.sync);

@@ -88,7 +88,7 @@ namespace eCAL
 
   protected:
     void Register(bool force_);
-    void Unregister(bool force_);
+    void Unregister();
 
     void CheckForNewServices();
 

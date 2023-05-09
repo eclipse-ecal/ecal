@@ -109,7 +109,7 @@ namespace eCAL
     void UnsubscribeFromLayers();
 
     bool Register(bool force_);
-    bool Unregister(bool force_);
+    bool Unregister();
 
     void Connect(const std::string& tid_, const std::string& ttype_, const std::string& tdesc_);
     void Disconnect();
