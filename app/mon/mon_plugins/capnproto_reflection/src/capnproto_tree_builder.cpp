@@ -201,11 +201,11 @@ QVariant DynamicValueToVariant(capnp::DynamicValue::Reader reader)
   auto cpp_type = reader.getType();
   if (cpp_type == DynamicValue::INT)
   {
-    return { static_cast<qlonglong>(reader.as<int64_t>()) };
+    return { static_cast<qlonglong>(reader.as<std::int64_t>()) };
   }
   else if (cpp_type == DynamicValue::UINT)
   {
-    return { static_cast<qulonglong>(reader.as<uint64_t>()) };
+    return { static_cast<qulonglong>(reader.as<std::uint64_t>()) };
   }
   else if (cpp_type == DynamicValue::FLOAT)
   {

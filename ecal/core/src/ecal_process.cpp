@@ -231,7 +231,7 @@ namespace eCAL
       sstream << "Network ttl              : " << Config::GetUdpMulticastTtl() << std::endl;
       sstream << "Network sndbuf           : " << GetBufferStr(Config::GetUdpMulticastSndBufSizeBytes()) << std::endl;
       sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetUdpMulticastRcvBufSizeBytes()) << std::endl;
-      sstream << "Multicast cfg version    : v" << static_cast<uint32_t>(Config::GetUdpMulticastConfigVersion()) << std::endl;
+      sstream << "Multicast cfg version    : v" << static_cast<std::uint32_t>(Config::GetUdpMulticastConfigVersion()) << std::endl;
       sstream << "Multicast group          : " << Config::GetUdpMulticastGroup() << std::endl;
       sstream << "Multicast mask           : " << Config::GetUdpMulticastMask() << std::endl;
       int port = Config::GetUdpMulticastPort();
@@ -879,7 +879,7 @@ namespace eCAL
         // Read the link to our own executable
         char buf[PATH_MAX] = { 0 };
 #if defined(ECAL_OS_MACOS)
-        uint32_t length = PATH_MAX;
+        std::uint32_t length = PATH_MAX;
         if (_NSGetExecutablePath(buf, &length) != 0)
         {
           // Buffer size is too small.

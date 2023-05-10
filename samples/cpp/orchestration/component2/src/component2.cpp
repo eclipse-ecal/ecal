@@ -47,7 +47,7 @@ public:
     orchestrator::response* /*response*/, ::google::protobuf::Closure* /*done*/) override
   {
     std::lock_guard<std::mutex> lock(callback_mtx);
-    uint64_t id_component = request->id();
+    std::uint64_t id_component = request->id();
 
     // component call id and the id's of 'foo' and 'vec' should be equal
     bool consistency = (id_component == id_foo) && (id_foo == id_vec);
@@ -85,8 +85,8 @@ private:
   std::mutex callback_mtx;
   eCAL::protobuf::CSubscriber<component::foo> subscriber_foo;
   eCAL::protobuf::CSubscriber<component::vec> subscriber_vec;
-  uint64_t                                    id_foo  = 0;
-  uint64_t                                    id_vec  = 0;
+  std::uint64_t                               id_foo  = 0;
+  std::uint64_t                               id_vec  = 0;
   int                                         err_cnt = 0;
 };
 

@@ -40,7 +40,7 @@ namespace eCAL
 
     virtual void DropOwnership() = 0;
 
-    virtual bool Lock(int64_t timeout_) = 0;
+    virtual bool Lock(std::int64_t timeout_) = 0;
     virtual void Unlock() = 0;
   };
 
@@ -74,7 +74,7 @@ namespace eCAL
     {
     }
 
-    bool Lock(int64_t /*timeout_*/) final
+    bool Lock(std::int64_t /*timeout_*/) final
     {
       return false;
     }

@@ -168,11 +168,11 @@ int main(int argc, char** argv)
   TCLAP::SwitchArg                      activate_arg                   ("",  "activate",              "Activate the recorder and all clients.", false);
   TCLAP::SwitchArg                      deactivate_arg                 ("",  "deactivate",            "Deactivates the recorder and all clients.", false);
   CustomTclap::FuzzyDuoValueArgUnsignedLongLongString add_comment_arg  ("",  "comment",               "Adds a comment to a measurement. If no ID is given, the comment is added to the last measurement. When your intention is to comment a measurement started with " + start_recording_arg.toString() + ", you should leave out the MeasID or set it to 0.", false, 0, "", "MeasID", "Comment");
-  TCLAP::ValueArg<uint64_t>             delete_meas_arg                ("",  "delete",                "Delete a measurement from the host and all clients.", false, 0, "MeasID");
+  TCLAP::ValueArg<std::uint64_t>        delete_meas_arg                ("",  "delete",                "Delete a measurement from the host and all clients.", false, 0, "MeasID");
   CustomTclap::FuzzyValueSwitchArgUnsignedLongLong upload_meas_arg     ("",  "upload",                "Upload the given measurement. If no measurement ID is provided, all measurements will be uploaded. When " + start_recording_arg.toString() + " is provided with a duration, the mesasurement will be uploaded after the recorder has finished the measurement. As a recorder may still be flushing, a small delay (1s) is introduced before uploading in this case. Use interactive mode, if this is not sufficient." , false, 0, "MeasID");
 
   TCLAP::SwitchArg                      status_arg                     ("s", "status",                "Print the status of a remote-controlled recorder.", false);
-  TCLAP::ValueArg<uint64_t>             meas_status_arg                ("",  "meas-status",           "Print the status of the given measurement. Only available in remote-control mode.", false, 0, "MeasID");
+  TCLAP::ValueArg<std::uint64_t>        meas_status_arg                ("",  "meas-status",           "Print the status of the given measurement. Only available in remote-control mode.", false, 0, "MeasID");
   TCLAP::ValueArg<std::string>          client_status_arg              ("",  "client-status",         "Print the status of the given recorder client. Only available in remote-control mode.", false, "", "Hostname");
   TCLAP::SwitchArg                      get_config_arg                 ("",  "get-config",            "Print the configuration of the recorder to the console.", false);
 
@@ -1587,8 +1587,8 @@ bool IsRecorderBusy(bool print_status)
 
 bool IsAnyClientFlushing   (bool print_status)
 {
-  int64_t unflushed_frames = 0;
-  std::set<uint64_t> job_ids_flushing;
+  std::int64_t unflushed_frames = 0;
+  std::set<std::uint64_t> job_ids_flushing;
 
   for (const auto& rec_status : rec_server_instance->GetRecorderStatuses())
   {
@@ -1683,8 +1683,8 @@ bool IsAnyClientUploading  (bool print_status)
   }
 
   // Lets accumulate all data!
-  uint64_t num_total_bytes   (0);
-  uint64_t num_uploaded_bytes(0);
+  std::uint64_t num_total_bytes   (0);
+  std::uint64_t num_uploaded_bytes(0);
 
   for (const auto& job : uploading_jobs_)
   {
@@ -1698,7 +1698,7 @@ bool IsAnyClientUploading  (bool print_status)
     }
   }
 
-  uint64_t num_bytes_left = 0;
+  std::uint64_t num_bytes_left = 0;
   if (num_total_bytes > num_uploaded_bytes)
     num_bytes_left = num_total_bytes - num_uploaded_bytes;
 

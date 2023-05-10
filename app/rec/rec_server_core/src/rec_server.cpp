@@ -54,7 +54,7 @@ namespace eCAL
 
     bool RecServer::IsConnectedToEcal             () const               { return rec_server_impl_->IsConnectedToEcal(); }
     bool RecServer::IsRecording                   () const               { return rec_server_impl_->IsRecording(); }
-    int64_t RecServer::GetCurrentlyRecordingMeasId() const               { return rec_server_impl_->GetCurrentlyRecordingMeasId(); }
+    std::int64_t RecServer::GetCurrentlyRecordingMeasId() const          { return rec_server_impl_->GetCurrentlyRecordingMeasId(); }
 
     bool                  RecServer::IsAnyRequestPending        () const { return rec_server_impl_->IsAnyRequestPending(); }
     std::set<std::string> RecServer::GetHostsWithPendingRequests() const { return rec_server_impl_->GetHostsWithPendingRequests(); }
@@ -98,7 +98,7 @@ namespace eCAL
 
     std::string  RecServer::GetMeasRootDir   () const                   { return rec_server_impl_->GetMeasRootDir(); } 
     std::string  RecServer::GetMeasName      () const                   { return rec_server_impl_->GetMeasName(); }
-    int64_t      RecServer::GetMaxFileSizeMib() const                   { return rec_server_impl_->GetMaxFileSizeMib(); }
+    std::int64_t RecServer::GetMaxFileSizeMib() const                   { return rec_server_impl_->GetMaxFileSizeMib(); }
     bool         RecServer::GetOneFilePerTopicEnabled() const           { return rec_server_impl_->GetOneFilePerTopicEnabled(); }
     std::string  RecServer::GetDescription   () const                   { return rec_server_impl_->GetDescription(); }
 
@@ -113,32 +113,32 @@ namespace eCAL
     ////////////////////////////////////
     // Measurement Upload
     ////////////////////////////////////
-    void RecServer::SetUploadConfig(const UploadConfig& upload_config)           { rec_server_impl_->SetUploadConfig(upload_config); }
-    UploadConfig RecServer::GetUploadConfig()  const                             { return rec_server_impl_->GetUploadConfig(); }
-    int RecServer::GetInternalFtpServerOpenConnectionCount() const               { return rec_server_impl_->GetInternalFtpServerOpenConnectionCount(); }
-    uint16_t RecServer::GetInternalFtpServerPort() const                         { return rec_server_impl_->GetInternalFtpServerPort(); }
+    void RecServer::SetUploadConfig(const UploadConfig& upload_config)                { rec_server_impl_->SetUploadConfig(upload_config); }
+    UploadConfig RecServer::GetUploadConfig()  const                                  { return rec_server_impl_->GetUploadConfig(); }
+    int RecServer::GetInternalFtpServerOpenConnectionCount() const                    { return rec_server_impl_->GetInternalFtpServerOpenConnectionCount(); }
+    std::uint16_t RecServer::GetInternalFtpServerPort() const                         { return rec_server_impl_->GetInternalFtpServerPort(); }
 
-    eCAL::rec::Error RecServer::UploadMeasurement(int64_t meas_id)               { return rec_server_impl_->UploadMeasurement(meas_id); }
-    bool RecServer::CanUploadMeasurement(int64_t meas_id) const                  { return rec_server_impl_->CanUploadMeasurement(meas_id); };
-    eCAL::rec::Error RecServer::SimulateUploadMeasurement(int64_t meas_id) const { return rec_server_impl_->SimulateUploadMeasurement(meas_id); };
+    eCAL::rec::Error RecServer::UploadMeasurement(std::int64_t meas_id)               { return rec_server_impl_->UploadMeasurement(meas_id); }
+    bool RecServer::CanUploadMeasurement(std::int64_t meas_id) const                  { return rec_server_impl_->CanUploadMeasurement(meas_id); };
+    eCAL::rec::Error RecServer::SimulateUploadMeasurement(std::int64_t meas_id) const { return rec_server_impl_->SimulateUploadMeasurement(meas_id); };
 
-    int RecServer::UploadNonUploadedMeasurements()                               { return rec_server_impl_->UploadNonUploadedMeasurements(); };
+    int RecServer::UploadNonUploadedMeasurements()                                    { return rec_server_impl_->UploadNonUploadedMeasurements(); };
 
-    bool RecServer::HasAnyUploadError(int64_t meas_id) const                     { return rec_server_impl_->HasAnyUploadError(meas_id); }
+    bool RecServer::HasAnyUploadError(std::int64_t meas_id) const                     { return rec_server_impl_->HasAnyUploadError(meas_id); }
 
     ////////////////////////////////////
     // Comments
     ////////////////////////////////////
-    eCAL::rec::Error RecServer::AddComment(int64_t meas_id, const std::string& comment) { return rec_server_impl_->AddComment(meas_id, comment); }
-    bool RecServer::CanAddComment(int64_t meas_id) const                                { return rec_server_impl_->CanAddComment(meas_id); }
-    eCAL::rec::Error RecServer::SimulateAddComment(int64_t meas_id) const               { return rec_server_impl_->SimulateAddComment(meas_id); }
+    eCAL::rec::Error RecServer::AddComment(std::int64_t meas_id, const std::string& comment) { return rec_server_impl_->AddComment(meas_id, comment); }
+    bool RecServer::CanAddComment(std::int64_t meas_id) const                                { return rec_server_impl_->CanAddComment(meas_id); }
+    eCAL::rec::Error RecServer::SimulateAddComment(std::int64_t meas_id) const               { return rec_server_impl_->SimulateAddComment(meas_id); }
 
     ////////////////////////////////////
     // Delete measurement
     ////////////////////////////////////
-    bool RecServer::CanDeleteMeasurement(int64_t meas_id) const                   { return rec_server_impl_->CanDeleteMeasurement(meas_id); }
-    eCAL::rec::Error RecServer::SimulateDeleteMeasurement(int64_t meas_id) const  { return rec_server_impl_->SimulateDeleteMeasurement(meas_id); }
-    eCAL::rec::Error RecServer::DeleteMeasurement(int64_t meas_id)                { return rec_server_impl_->DeleteMeasurement(meas_id); }
+    bool RecServer::CanDeleteMeasurement(std::int64_t meas_id) const                   { return rec_server_impl_->CanDeleteMeasurement(meas_id); }
+    eCAL::rec::Error RecServer::SimulateDeleteMeasurement(std::int64_t meas_id) const  { return rec_server_impl_->SimulateDeleteMeasurement(meas_id); }
+    eCAL::rec::Error RecServer::DeleteMeasurement(std::int64_t meas_id)                { return rec_server_impl_->DeleteMeasurement(meas_id); }
 
     ////////////////////////////////////
     // Config Save / Load / Get

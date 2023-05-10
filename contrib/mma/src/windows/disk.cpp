@@ -71,21 +71,21 @@ std::list<std::shared_ptr<Resource>> Disk::GetResourceInfo(const HQUERY& h_query
 
       try
       {
-        disk_buffer->SetAvailable_space(static_cast<uint64_t>(stoull(match.str(3))));
+        disk_buffer->SetAvailable_space(static_cast<std::uint64_t>(stoull(match.str(3))));
       }
       catch (...)
       {
-        disk_buffer->SetAvailable_space(static_cast<uint64_t>(-1));
+        disk_buffer->SetAvailable_space(static_cast<std::uint64_t>(-1));
         Logger::getLogger()->Log("Disk available space conversion failed.");
       }
 
       try
       {
-        disk_buffer->SetTotal_space(static_cast<uint64_t>(stoull(match.str(4))));
+        disk_buffer->SetTotal_space(static_cast<std::uint64_t>(stoull(match.str(4))));
       }
       catch (...)
       {
-        disk_buffer->SetTotal_space(static_cast<uint64_t>(-1));
+        disk_buffer->SetTotal_space(static_cast<std::uint64_t>(-1));
         Logger::getLogger()->Log("Disk total space conversion failed.");
       }
 

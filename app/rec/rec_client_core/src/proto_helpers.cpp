@@ -357,7 +357,7 @@ namespace eCAL
         rec_status.initialized_ = rec_status_pb.initialized();
 
         // pre_buffer_length_
-        int64_t                             pre_buffer_length_frames = rec_status_pb.pre_buffer_length_frames_count();
+        std::int64_t                        pre_buffer_length_frames = rec_status_pb.pre_buffer_length_frames_count();
         std::chrono::steady_clock::duration pre_buffer_length = std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(rec_status_pb.pre_buffer_length_secs()));
         rec_status.pre_buffer_length_ = std::make_pair(pre_buffer_length_frames, pre_buffer_length);
 

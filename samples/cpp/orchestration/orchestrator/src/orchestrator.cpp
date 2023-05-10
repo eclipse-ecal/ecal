@@ -40,7 +40,7 @@ int main(int argc, char** argv)
   eCAL::ServiceResponseVecT srv_response_vec;
 
   // call components 1 and 2
-  uint64_t cycle = 0;
+  std::uint64_t cycle = 0;
   while (eCAL::Ok())
   {
     srv_request.set_id(cycle);

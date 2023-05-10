@@ -20,7 +20,7 @@ namespace eCAL
     // API
     //////////////////////////////////
 
-    std::vector<int32_t> ConnectionManager::StartTasks(const std::string& hostname, const std::vector<eCAL::sys_client::StartTaskParameters>& task_list)
+    std::vector<std::int32_t> ConnectionManager::StartTasks(const std::string& hostname, const std::vector<eCAL::sys_client::StartTaskParameters>& task_list)
     {
       return GetConnection(hostname)->StartTasks(task_list);
     }
@@ -30,7 +30,7 @@ namespace eCAL
       return GetConnection(hostname)->StopTasks(task_list);
     }
 
-    std::vector<std::vector<int32_t>> ConnectionManager::MatchTasks(const std::string& hostname, const std::vector<eCAL::sys_client::Task>& task_list)
+    std::vector<std::vector<std::int32_t>> ConnectionManager::MatchTasks(const std::string& hostname, const std::vector<eCAL::sys_client::Task>& task_list)
     {
       return GetConnection(hostname)->MatchTasks(task_list);
     }

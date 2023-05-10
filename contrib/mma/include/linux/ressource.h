@@ -30,8 +30,8 @@ namespace ResourceLinux
 {
 struct Memory
 {
-  uint64_t total;       // Total memory
-  uint64_t available;   // Available memory
+  std::uint64_t total;       // Total memory
+  std::uint64_t available;   // Available memory
 };
 
 struct Temperature
@@ -52,8 +52,8 @@ struct Temperature
 struct DiskStats
 {
   std::string name;       // Removable drive name
-  uint64_t    capacity;   // Removable drive total space
-  uint64_t    available;  // Removable drive available space
+  std::uint64_t    capacity;   // Removable drive total space
+  std::uint64_t    available;  // Removable drive available space
   double      read;       // Removable drive read/sec
   double      write;      // Removable drive write/sec
   std::string mount_point;
@@ -69,7 +69,7 @@ struct Network
 
 struct ProcessesMemory
 {
-    uint64_t  current_used_memory;   /// The current used memory in bytes
+    std::uint64_t  current_used_memory;   /// The current used memory in bytes
 };
 
 struct ProcessesCPU
@@ -79,7 +79,7 @@ struct ProcessesCPU
 struct Process
 {
     std::string       name;    //  name of the process
-    uint32_t          id;
+    std::uint32_t          id;
     std::string       commandline;
     std::string       user;
     ProcessesMemory   memory;

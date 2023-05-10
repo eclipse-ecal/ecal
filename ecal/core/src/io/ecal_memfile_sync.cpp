@@ -149,15 +149,15 @@ namespace eCAL
     // create user file header
     struct SMemFileHeader memfile_hdr;
     // set data size
-    memfile_hdr.data_size         = static_cast<uint64_t>(data_.len);
+    memfile_hdr.data_size         = static_cast<std::uint64_t>(data_.len);
     // set header id
-    memfile_hdr.id                = static_cast<uint64_t>(data_.id);
+    memfile_hdr.id                = static_cast<std::uint64_t>(data_.id);
     // set header clock
-    memfile_hdr.clock             = static_cast<uint64_t>(data_.clock);
+    memfile_hdr.clock             = static_cast<std::uint64_t>(data_.clock);
     // set header time
-    memfile_hdr.time              = static_cast<int64_t>(data_.time);
+    memfile_hdr.time              = static_cast<std::int64_t>(data_.time);
     // set header hash
-    memfile_hdr.hash              = static_cast<uint64_t>(data_.hash);
+    memfile_hdr.hash              = static_cast<std::uint64_t>(data_.hash);
     // set zero copy
     memfile_hdr.options.zero_copy = static_cast<unsigned char>(data_.zero_copy);
     // set acknowledge timeout

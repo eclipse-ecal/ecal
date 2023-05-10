@@ -37,9 +37,9 @@ void EcalSysClientService::StartTasks(::google::protobuf::RpcController*        
 {
   response->Clear();
 
-  std::vector<int32_t> pids = eCAL::sys_client::StartTasks(eCAL::sys_client::proto_helpers::FromProtobuf(*request));
+  std::vector<std::int32_t> pids = eCAL::sys_client::StartTasks(eCAL::sys_client::proto_helpers::FromProtobuf(*request));
 
-  for (int32_t pid : pids)
+  for (std::int32_t pid : pids)
   {
     auto task_response = response->mutable_responses()->Add();
     task_response->set_pid(pid);
@@ -71,6 +71,6 @@ void EcalSysClientService::MatchTasks(::google::protobuf::RpcController*        
                                    , ::google::protobuf::Closure*               /*done*/)
 {
   std::vector<eCAL::sys_client::Task> task_list = eCAL::sys_client::proto_helpers::FromProtobuf(*request);
-  std::vector<std::vector<int32_t>> list_of_pid_lists = eCAL::sys_client::MatchTasks(task_list);  
+  std::vector<std::vector<std::int32_t>> list_of_pid_lists = eCAL::sys_client::MatchTasks(task_list);  
   eCAL::sys_client::proto_helpers::ToProtobuf(*response, list_of_pid_lists);
 }

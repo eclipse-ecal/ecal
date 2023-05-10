@@ -50,8 +50,8 @@ public:
   int ApplyMessage(const struct SUDPMessage& ecal_message_);
   bool HasFinished() {return((m_recv_mode == rcm_aborted) || (m_recv_mode == rcm_completed));};
   bool HasTimedOut(const std::chrono::duration<double>& diff_time_) {m_timeout += diff_time_; return(m_timeout >= std::chrono::milliseconds(NET_UDP_RECBUFFER_TIMEOUT));};
-  int32_t GetMessageTotalLength() {return(m_message_total_len);};
-  int32_t GetMessageCurrentLength() {return(m_message_curr_len);};
+  std::int32_t GetMessageTotalLength() {return(m_message_total_len);};
+  std::int32_t GetMessageCurrentLength() {return(m_message_curr_len);};
 
   virtual int OnMessageCompleted(std::vector<char> &&msg_buffer_) = 0;
 
@@ -71,12 +71,12 @@ protected:
   std::vector<char> m_recv_buffer;
   eReceiveMode      m_recv_mode;
 
-  int32_t           m_message_id;
-  int32_t           m_message_total_num;
-  int32_t           m_message_total_len;
+  std::int32_t           m_message_id;
+  std::int32_t           m_message_total_num;
+  std::int32_t           m_message_total_len;
 
-  int32_t           m_message_curr_num;
-  int32_t           m_message_curr_len;
+  std::int32_t           m_message_curr_num;
+  std::int32_t           m_message_curr_len;
 
   eCAL::pb::Sample    m_ecal_sample;
 };
@@ -107,7 +107,7 @@ public:
   int Process(const char* sample_buffer_, size_t sample_buffer_len_);
 
 protected:
-  typedef std::unordered_map<int32_t, std::shared_ptr<CSampleReceiveSlot>> ReceiveSlotMapT;
+  typedef std::unordered_map<std::int32_t, std::shared_ptr<CSampleReceiveSlot>> ReceiveSlotMapT;
   ReceiveSlotMapT    m_receive_slot_map;
   std::vector<char>  m_msg_buffer;
   eCAL::pb::Sample     m_ecal_sample;

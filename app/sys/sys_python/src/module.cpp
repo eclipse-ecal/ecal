@@ -107,7 +107,7 @@ PYBIND11_MODULE(ecal_sys_python, Sys) {
     .value("Stopped", EcalSysTask::StartStopState::Stopped);
 
   ecal_sys_runner
-    .def(py::init<uint32_t, const std::string&, const std::string&, const std::string&, const std::string&>(),
+    .def(py::init<std::uint32_t, const std::string&, const std::string&, const std::string&, const std::string&>(),
       "\n"
       "\n  Crates a new eCAL Sys Runner with the given values"
       "\n Args:"

@@ -61,7 +61,7 @@ public:
   //////////////////////////////////////////////////////////////////////////////
 
   /** @return The ID of this Task*/
-  uint32_t                       GetId();
+  std::uint32_t                  GetId();
   
   /** @return The configured name of this task*/
   std::string                    GetName();
@@ -101,7 +101,7 @@ public:
 
 
   /** @brief Sets the Task ID. You should propably not set the ID manually, as it is already set when adding a task to an EcalSys instance. */
-  void SetId                         (uint32_t id);
+  void SetId                         (std::uint32_t id);
 
   /** @brief Sets the name of the task. The name is only relevant for logging and displaying it in the console or GUI*/
   void SetName                       (const std::string& name);
@@ -281,7 +281,7 @@ public:
 
 private:
   // Config
-  uint32_t                              m_id;                                   /**< The ID of this task when saving it to a file */
+  std::uint32_t                         m_id;                                   /**< The ID of this task when saving it to a file */
   std::string                           m_name;                                 /**< The name of this task */
   std::string                           m_target;                               /**< The configured target for this task.*/
   std::shared_ptr<EcalSysRunner>        m_runner;                               /**< The Runner of the current Task (might be null!)*/

@@ -84,7 +84,7 @@ namespace eCAL
     size_t sent(0);
     size_t sent_sum(0);
 
-    int32_t total_packet_num = int32_t(buf_len_ / MSG_PAYLOAD_SIZE);
+    std::int32_t total_packet_num = std::int32_t(buf_len_ / MSG_PAYLOAD_SIZE);
     if (buf_len_%MSG_PAYLOAD_SIZE) total_packet_num++;
 
     // create message header
@@ -98,7 +98,7 @@ namespace eCAL
       msg_header.type = msg_type_header_with_content;
       msg_header.id = -1;  // not needed for combined header / data message
       msg_header.num = 1;
-      msg_header.len = int32_t(buf_len_);
+      msg_header.len = std::int32_t(buf_len_);
 
       // copy msg_header in send buffer
       memcpy(buf_, &msg_header, sizeof(struct SUDPMessageHead));
@@ -133,7 +133,7 @@ namespace eCAL
         msg_header.id = xorshf96(x, y, z);
       }
       msg_header.num = total_packet_num;
-      msg_header.len = int32_t(buf_len_);
+      msg_header.len = std::int32_t(buf_len_);
 
       // send start package
       sent = transmit_cb_(&msg_header, sizeof(struct SUDPMessageHead));
@@ -147,7 +147,7 @@ namespace eCAL
 
       // send data packages
       msg_header.type = msg_type_content;
-      for (int32_t current_packet_num = 0; current_packet_num < total_packet_num; current_packet_num++)
+      for (std::int32_t current_packet_num = 0; current_packet_num < total_packet_num; current_packet_num++)
       {
         // calculate current payload
         size_t current_snd_len = buf_len_;
@@ -160,7 +160,7 @@ namespace eCAL
 
           // create data packet numbering
           msg_header.num = current_packet_num;
-          msg_header.len = int32_t(current_snd_len);
+          msg_header.len = std::int32_t(current_snd_len);
 
           // copy msg_header in send buffer
           memcpy(buf_ + static_cast<size_t>(current_packet_num)*MSG_PAYLOAD_SIZE, &msg_header, sizeof(struct SUDPMessageHead));

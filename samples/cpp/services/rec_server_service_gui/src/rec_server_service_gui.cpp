@@ -21,7 +21,7 @@
 
 #include <QTextStream>
 #include <QMessageBox>
-#include <stdint.h>
+#include <cstdint>
 
 RecServerServiceGui::RecServerServiceGui(QWidget *parent)
   : QMainWindow(parent)
@@ -145,7 +145,7 @@ void RecServerServiceGui::uploadMeasurement()
   {
     try
     {
-      int64_t meas_id = std::stoll(ui_.request_upload_measurement_param_meas_id_lineedit->text().toStdString());
+      std::int64_t meas_id = std::stoll(ui_.request_upload_measurement_param_meas_id_lineedit->text().toStdString());
       request.set_meas_id(meas_id);      
     }
     catch(...)
@@ -174,7 +174,7 @@ void RecServerServiceGui::deleteMeasurement()
   {
     try
     {
-      int64_t meas_id = std::stoll(ui_.request_delete_measurement_lineedit->text().toStdString());
+      std::int64_t meas_id = std::stoll(ui_.request_delete_measurement_lineedit->text().toStdString());
       request.set_meas_id(meas_id);      
     }
     catch(...)
@@ -203,7 +203,7 @@ void RecServerServiceGui::addComment()
   {
     try
     {
-      int64_t meas_id = std::stoll(ui_.request_add_comment_param_meas_id_lineedit->text().toStdString());
+      std::int64_t meas_id = std::stoll(ui_.request_add_comment_param_meas_id_lineedit->text().toStdString());
       request.set_meas_id(meas_id);      
     }
     catch(...)

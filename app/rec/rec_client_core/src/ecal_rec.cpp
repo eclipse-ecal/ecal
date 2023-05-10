@@ -111,12 +111,12 @@ namespace eCAL
       return recorder_->GetEnabledAddons();
     }
 
-    eCAL::rec::Error EcalRec::AddComment(int64_t job_id, const std::string& comment)
+    eCAL::rec::Error EcalRec::AddComment(std::int64_t job_id, const std::string& comment)
     {
       return recorder_->AddComment(job_id, comment);
     }
 
-    Error EcalRec::DeleteMeasurement(int64_t job_id)
+    Error EcalRec::DeleteMeasurement(std::int64_t job_id)
     {
       return recorder_->DeleteMeasurement(job_id);
     }

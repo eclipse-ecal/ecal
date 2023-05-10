@@ -63,7 +63,7 @@ namespace eCAL
 
       // Retrieve id information and save as big endian / network order
       // then save it to the descriptor string as first 8 bytes
-      uint64_t id = capnp::typeId<T>();
+      std::uint64_t id = capnp::typeId<T>();
 
       std::string descriptor_string;
 
@@ -100,7 +100,7 @@ namespace eCAL
       capnp::MallocMessageBuilder value_builder;
       schema_words = capnp::initMessageBuilderFromFlatArrayCopy(schema_words, value_builder);
       auto value_reader = value_builder.getRoot<capnp::schema::Value>();
-      uint64_t id = value_reader.getUint64();
+      std::uint64_t id = value_reader.getUint64();
 
       // Read all messages into a builder, and load that into the loader
       while (schema_words.begin() != schema_words.end())

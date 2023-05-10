@@ -252,7 +252,7 @@ namespace eCAL
     m_has_ownership = false;
   }
 
-  bool CNamedMutexRobustClockLockImpl::Lock(int64_t timeout_)
+  bool CNamedMutexRobustClockLockImpl::Lock(std::int64_t timeout_)
   {
     // check mutex handle
     if (m_mutex_handle == nullptr)

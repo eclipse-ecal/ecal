@@ -272,21 +272,21 @@ int JobHistoryRecorderItem::type() const
 // Lazy Getters & Setters
 ///////////////////////////////////////////
 
-const QString&                                          JobHistoryRecorderItem::hostname()                const { return hostname_; }
-const QString&                                          JobHistoryRecorderItem::addonId()                 const { return addon_id_; }
-const QString&                                          JobHistoryRecorderItem::addonName()               const { return addon_name_; }
-bool                                                    JobHistoryRecorderItem::isAddonItem()             const { return !addon_id_.isEmpty(); }
-
-int                                                     JobHistoryRecorderItem::pid()                     const { return pid_; }
-bool                                                    JobHistoryRecorderItem::stillOnline()             const { return still_online_; }
-std::pair<bool, std::string>                            JobHistoryRecorderItem::infoLastCommandResponse() const { return info_last_command_response_; }
-std::pair<std::chrono::steady_clock::duration, int64_t> JobHistoryRecorderItem::length()                  const { return length_; }
-int64_t                                                 JobHistoryRecorderItem::unflushedFrameCount()     const { return unflushed_frame_count_; }
-eCAL::rec::JobState                                     JobHistoryRecorderItem::state()                   const { return state_; }
-eCAL::rec::UploadStatus                                 JobHistoryRecorderItem::uploadStatus()            const { return upload_status_; }
-std::pair<bool, std::string>                            JobHistoryRecorderItem::info()                    const { return info_; }
-bool                                                    JobHistoryRecorderItem::isDeleted()               const { return is_deleted_; }
-const std::pair<bool, std::string>&                     JobHistoryRecorderItem::displayedInfo()           const
+const QString&                                               JobHistoryRecorderItem::hostname()                const { return hostname_; }
+const QString&                                               JobHistoryRecorderItem::addonId()                 const { return addon_id_; }
+const QString&                                               JobHistoryRecorderItem::addonName()               const { return addon_name_; }
+bool                                                         JobHistoryRecorderItem::isAddonItem()             const { return !addon_id_.isEmpty(); }
+                                                             
+int                                                          JobHistoryRecorderItem::pid()                     const { return pid_; }
+bool                                                         JobHistoryRecorderItem::stillOnline()             const { return still_online_; }
+std::pair<bool, std::string>                                 JobHistoryRecorderItem::infoLastCommandResponse() const { return info_last_command_response_; }
+std::pair<std::chrono::steady_clock::duration, std::int64_t> JobHistoryRecorderItem::length()                  const { return length_; }
+std::int64_t                                                 JobHistoryRecorderItem::unflushedFrameCount()     const { return unflushed_frame_count_; }
+eCAL::rec::JobState                                          JobHistoryRecorderItem::state()                   const { return state_; }
+eCAL::rec::UploadStatus                                      JobHistoryRecorderItem::uploadStatus()            const { return upload_status_; }
+std::pair<bool, std::string>                                 JobHistoryRecorderItem::info()                    const { return info_; }
+bool                                                         JobHistoryRecorderItem::isDeleted()               const { return is_deleted_; }
+const std::pair<bool, std::string>&                          JobHistoryRecorderItem::displayedInfo()           const
 {
   // Error case
   if (!info_.first)
@@ -309,7 +309,7 @@ void JobHistoryRecorderItem::setPid                    (int pid)                
 void JobHistoryRecorderItem::setStillOnline            (bool still_online)                                                     { still_online_ = still_online; }
 void JobHistoryRecorderItem::setInfoLastCommandResponse(const std::pair<bool, std::string>& info_last_command_response)        { info_last_command_response_ = info_last_command_response; }
 void JobHistoryRecorderItem::setLength                 (const std::pair<std::chrono::steady_clock::duration, int64_t>& length) { length_ = length; }
-void JobHistoryRecorderItem::setUnflushedFrameCount    (int64_t unflushed_frame_count)                                         { unflushed_frame_count_ = unflushed_frame_count; }
+void JobHistoryRecorderItem::setUnflushedFrameCount    (std::int64_t unflushed_frame_count)                                    { unflushed_frame_count_ = unflushed_frame_count; }
 void JobHistoryRecorderItem::setState                  (eCAL::rec::JobState state)                                             { state_ = state; }
 void JobHistoryRecorderItem::setUploadStatus           (const eCAL::rec::UploadStatus& upload_status)                          { upload_status_ = upload_status; }
 void JobHistoryRecorderItem::setInfo                   (const std::pair<bool, std::string>& info)                              { info_ = info; }
@@ -345,7 +345,7 @@ bool JobHistoryRecorderItem::updateInfoLastCommandResponse(const std::pair<bool,
   return false;
 }
 
-bool JobHistoryRecorderItem::updateLength(const std::pair<std::chrono::steady_clock::duration, int64_t>& length)
+bool JobHistoryRecorderItem::updateLength(const std::pair<std::chrono::steady_clock::duration, std::int64_t>& length)
 {
   if (length_ != length)
   {
@@ -355,7 +355,7 @@ bool JobHistoryRecorderItem::updateLength(const std::pair<std::chrono::steady_cl
   return false;
 }
 
-bool JobHistoryRecorderItem::updateUnflushedFrameCount(int64_t unflushed_frame_count)
+bool JobHistoryRecorderItem::updateUnflushedFrameCount(std::int64_t unflushed_frame_count)
 {
   if (unflushed_frame_count_ != unflushed_frame_count)
   {

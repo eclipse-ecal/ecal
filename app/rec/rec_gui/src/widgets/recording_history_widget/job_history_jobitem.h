@@ -50,7 +50,7 @@ public:
 // Lazy Getters, Setters & Update methods
 ///////////////////////////////////////////
 public:
-  int64_t jobId() const;
+  std::int64_t jobId() const;
   const eCAL::rec::JobConfig& localEvaluatedJobConfig() const;
   std::chrono::system_clock::time_point timestamp() const;
   bool isDeleted() const;
@@ -59,11 +59,11 @@ public:
 
   bool updateIsDeleted(bool is_deleted);
 
-  eCAL::rec::JobState                                     combinedJobState()         const;
-  std::pair<std::chrono::steady_clock::duration, int64_t> combinedLength()          const;
-  int64_t                                                 combinedUnflushedFrames() const;
-  eCAL::rec::UploadStatus                                 combinedUploadStatus()    const;
-  std::pair<bool, QString>                                combinedInfo()            const;
+  eCAL::rec::JobState                                          combinedJobState()        const;
+  std::pair<std::chrono::steady_clock::duration, std::int64_t> combinedLength()          const;
+  std::int64_t                                                 combinedUnflushedFrames() const;
+  eCAL::rec::UploadStatus                                      combinedUploadStatus()    const;
+  std::pair<bool, QString>                                     combinedInfo()            const;
 
 ///////////////////////////////////////////
 // Column Management

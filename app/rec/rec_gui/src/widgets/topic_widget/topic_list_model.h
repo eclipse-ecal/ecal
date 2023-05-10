@@ -48,8 +48,8 @@ public:
   {
     QString name_;
     QString type_;
-    std::map<std::string, std::set<std::string>>      publishers_;
-    std::map<std::pair<std::string, int32_t>, double> rec_subscribers_;
+    std::map<std::string, std::set<std::string>>           publishers_;
+    std::map<std::pair<std::string, std::int32_t>, double> rec_subscribers_;
     bool listed_ = false;
     bool in_topic_info_map_ = false;
   };

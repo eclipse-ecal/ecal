@@ -54,7 +54,7 @@ namespace eCAL
       void push_back(const std::shared_ptr<Frame>& frame);
       //std::shared_ptr<Frame> pop_front();
 
-      std::pair<int64_t, std::chrono::steady_clock::duration> length() const;
+      std::pair<std::int64_t, std::chrono::steady_clock::duration> length() const;
 
       void remove_old_frames();
       void clear();

@@ -437,8 +437,8 @@ int CSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_le
       if (finished || timeouted)
       {
 #ifndef NDEBUG
-        int32_t total_len = riter->second->GetMessageTotalLength();
-        int32_t current_len = riter->second->GetMessageCurrentLength();
+        std::int32_t total_len = riter->second->GetMessageTotalLength();
+        std::int32_t current_len = riter->second->GetMessageCurrentLength();
 #endif
         riter = m_receive_slot_map.erase(riter);
 #ifndef NDEBUG

@@ -99,7 +99,7 @@ public slots:
 
   bool connectedToEcal()             const;
   bool recording()                   const;
-  int64_t currentlyRecordingMeasId() const;
+  std::int64_t currentlyRecordingMeasId() const;
 
   bool                  anyRequestPending()        const;
   std::set<std::string> hostsWithPendingRequests() const;
@@ -190,14 +190,14 @@ public slots:
   void setUploadConfig(const eCAL::rec_server::UploadConfig& upload_config);
   eCAL::rec_server::UploadConfig uploadConfig() const;
   int internalFtpServerOpenConnectionsCount() const;
-  uint16_t internalFtpServerPort() const;
+  std::uint16_t internalFtpServerPort() const;
 
-  eCAL::rec::Error uploadMeasurement(int64_t meas_id);
-  bool canUploadMeasurement(int64_t meas_id) const;
-  eCAL::rec::Error simulateUploadMeasurement(int64_t meas_id) const;
+  eCAL::rec::Error uploadMeasurement(std::int64_t meas_id);
+  bool canUploadMeasurement(std::int64_t meas_id) const;
+  eCAL::rec::Error simulateUploadMeasurement(std::int64_t meas_id) const;
   int uploadNonUploadedMeasurements(bool omit_dialogs = false);
 
-  bool hasAnyUploadError(int64_t meas_id) const;
+  bool hasAnyUploadError(std::int64_t meas_id) const;
 
 signals:
   void uploadConfigChanged(const eCAL::rec_server::UploadConfig& upload_config);
@@ -206,24 +206,24 @@ signals:
 // Comments
 ////////////////////////////////////
 public slots:
-  eCAL::rec::Error addCommentWithDialog(int64_t job_id);
-  eCAL::rec::Error addComment(int64_t meas_id, const std::string& comment, bool omit_dialogs = false);
-  bool canAddComment(int64_t meas_id) const;
-  eCAL::rec::Error simulateAddComment(int64_t meas_id) const;
+  eCAL::rec::Error addCommentWithDialog(std::int64_t job_id);
+  eCAL::rec::Error addComment(std::int64_t meas_id, const std::string& comment, bool omit_dialogs = false);
+  bool canAddComment(std::int64_t meas_id) const;
+  eCAL::rec::Error simulateAddComment(std::int64_t meas_id) const;
 
 ////////////////////////////////////
 // Delete measurement
 ////////////////////////////////////
 public slots:
-  eCAL::rec::Error deleteMeasurement(int64_t meas_id, bool omit_dialogs = false);
-  eCAL::rec::Error deleteMeasurement(std::set<int64_t> meas_ids, bool omit_dialogs = false);
+  eCAL::rec::Error deleteMeasurement(std::int64_t meas_id, bool omit_dialogs = false);
+  eCAL::rec::Error deleteMeasurement(std::set<std::int64_t> meas_ids, bool omit_dialogs = false);
 
-  bool canDeleteMeasurement(int64_t meas_id) const;
-  eCAL::rec::Error simulateDeleteMeasurement(int64_t meas_id) const;
+  bool canDeleteMeasurement(std::int64_t meas_id) const;
+  eCAL::rec::Error simulateDeleteMeasurement(std::int64_t meas_id) const;
 
 
 signals:
-  void measurementDeletedSignal(int64_t measid);
+  void measurementDeletedSignal(std::int64_t measid);
 
 ////////////////////////////////////
 // Config Save / Load / Get

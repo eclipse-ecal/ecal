@@ -37,8 +37,8 @@ namespace eCAL
       RecHdf5JobStatus() : total_length_(0), total_frame_count_(0), unflushed_frame_count_(0), info_{ true, "" } {}
 
       std::chrono::steady_clock::duration total_length_;
-      int64_t                             total_frame_count_;
-      int64_t                             unflushed_frame_count_;
+      std::int64_t                        total_frame_count_;
+      std::int64_t                        unflushed_frame_count_;
       std::pair<bool, std::string>        info_;
 
       bool operator==(const RecHdf5JobStatus& other) const { return (total_length_ == other.total_length_) && (total_frame_count_ == other.total_frame_count_) && (unflushed_frame_count_ == other.unflushed_frame_count_) && (info_ == other.info_); }
@@ -58,8 +58,8 @@ namespace eCAL
       RecAddonJobStatus() : state_(State::NotStarted), total_frame_count_(0), unflushed_frame_count_(0), info_{ true, "" } {}
 
       State                        state_;
-      int64_t                      total_frame_count_;
-      int64_t                      unflushed_frame_count_;
+      std::int64_t                 total_frame_count_;
+      std::int64_t                 unflushed_frame_count_;
       std::pair<bool, std::string> info_;
 
       bool operator==(const RecAddonJobStatus& other) const
@@ -76,8 +76,8 @@ namespace eCAL
     {
       UploadStatus() : bytes_total_size_(0), bytes_uploaded_(0), info_{ true, "" } {}
 
-      uint64_t                     bytes_total_size_;
-      uint64_t                     bytes_uploaded_;
+      std::uint64_t                     bytes_total_size_;
+      std::uint64_t                     bytes_uploaded_;
       std::pair<bool, std::string> info_;
 
       bool operator==(const UploadStatus& other) const { return (bytes_total_size_ == other.bytes_total_size_) && (bytes_uploaded_ == other.bytes_uploaded_) && (info_ == other.info_); }
@@ -100,7 +100,7 @@ namespace eCAL
     {
       JobStatus() : job_id_(0), state_(JobState::NotStarted), is_deleted_(false) {}
 
-      int64_t                                  job_id_;
+      std::int64_t                             job_id_;
       JobState                                 state_;
       RecHdf5JobStatus                         rec_hdf5_status_;
       std::map<std::string, RecAddonJobStatus> rec_addon_statuses_;
@@ -127,7 +127,7 @@ namespace eCAL
       std::string                  addon_executable_path_;
       std::string                  addon_id_;
       bool                         initialized_;
-      int64_t                      pre_buffer_length_frame_count_;
+      std::int64_t                 pre_buffer_length_frame_count_;
       std::string                  name_;
       std::pair<bool, std::string> info_;
 
@@ -146,14 +146,14 @@ namespace eCAL
     struct RecorderStatus
     {
       RecorderStatus() : pid_(-1), timestamp_(eCAL::Time::ecal_clock::duration(0)), initialized_(false), pre_buffer_length_{ 0, std::chrono::steady_clock::duration(0) }, info_{ true, "" } {}
-      int                                                     pid_;
-      eCAL::Time::ecal_clock::time_point                      timestamp_;
-      bool                                                    initialized_;
-      std::pair<int64_t, std::chrono::steady_clock::duration> pre_buffer_length_;
-      std::set<std::string>                                   subscribed_topics_;
-      std::vector<RecorderAddonStatus>                        addon_statuses_;
-      std::vector<JobStatus>                                  job_statuses_;
-      std::pair<bool, std::string>                            info_;
+      int                                                          pid_;
+      eCAL::Time::ecal_clock::time_point                           timestamp_;
+      bool                                                         initialized_;
+      std::pair<std::int64_t, std::chrono::steady_clock::duration> pre_buffer_length_;
+      std::set<std::string>                                        subscribed_topics_;
+      std::vector<RecorderAddonStatus>                             addon_statuses_;
+      std::vector<JobStatus>                                       job_statuses_;
+      std::pair<bool, std::string>                                 info_;
 
 
       bool operator==(const RecorderStatus& other) const

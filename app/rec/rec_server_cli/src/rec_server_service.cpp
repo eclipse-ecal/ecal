@@ -130,7 +130,7 @@ namespace eCAL
         std::list<eCAL::rec_server::JobHistoryEntry> job_history;
         job_history = rec_server_instance_->GetJobHistory();
 
-        int64_t meas_id = 0;
+        std::int64_t meas_id = 0;
         if (job_history.size() > 0)
         {
           meas_id = job_history.back().local_evaluated_job_config_.GetJobId();
@@ -183,7 +183,7 @@ namespace eCAL
         std::list<eCAL::rec_server::JobHistoryEntry> job_history;
         job_history = rec_server_instance_->GetJobHistory();
 
-        int64_t meas_id = 0;
+        std::int64_t meas_id = 0;
         if (job_history.size() > 0)
         {
           meas_id = job_history.back().local_evaluated_job_config_.GetJobId();
@@ -265,7 +265,7 @@ namespace eCAL
 
         if (job_history.size() > 0)
         {
-          int64_t last_meas_id = job_history.back().local_evaluated_job_config_.GetJobId();
+          std::int64_t last_meas_id = job_history.back().local_evaluated_job_config_.GetJobId();
 
           eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
           error = rec_server_instance_->AddComment(last_meas_id, request->comment());
@@ -321,7 +321,7 @@ namespace eCAL
 
         if (job_history.size() > 0)
         {
-          int64_t last_meas_id = job_history.back().local_evaluated_job_config_.GetJobId();
+          std::int64_t last_meas_id = job_history.back().local_evaluated_job_config_.GetJobId();
 
           eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
           error = rec_server_instance_->DeleteMeasurement(last_meas_id);

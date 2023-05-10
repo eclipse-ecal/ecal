@@ -58,9 +58,9 @@ namespace eCAL
         , ecal_shutdown(false)
       {}
 
-      int32_t pid;
-      Task    task;
-      bool    ecal_shutdown;
+      std::int32_t pid;
+      Task         task;
+      bool         ecal_shutdown;
     };
 
     void EvaluateEcalParserFunctions(eCAL::sys_client::Task& task, bool eval_target_functions, std::chrono::system_clock::time_point now);

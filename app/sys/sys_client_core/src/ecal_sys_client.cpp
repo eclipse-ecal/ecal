@@ -42,11 +42,11 @@ namespace eCAL
 {
   namespace sys_client
   {
-    std::vector<int32_t> StartTasks(const std::vector<StartTaskParameters>& task_list)
+    std::vector<std::int32_t> StartTasks(const std::vector<StartTaskParameters>& task_list)
     {
       auto now = std::chrono::system_clock::now();
 
-      std::vector<int32_t> pid_list;
+      std::vector<std::int32_t> pid_list;
       pid_list.reserve(task_list.size());
 
       for (const auto& task_param : task_list)
@@ -62,7 +62,7 @@ namespace eCAL
                                             , task_param.window_mode
                                             , false);
 
-        pid_list.push_back(static_cast<int32_t>(pid));
+        pid_list.push_back(static_cast<std::int32_t>(pid));
 
         if (pid != 0)
           EcalSysClientLogger::Instance()->info("Successfully started process (PID " + std::to_string(pid) + "): " + task.path + " " + task.arguments);
@@ -128,9 +128,9 @@ namespace eCAL
       return success_list;
     }
 
-    std::vector<std::vector<int32_t>> MatchTasks(const std::vector<Task>& task_list)
+    std::vector<std::vector<std::int32_t>> MatchTasks(const std::vector<Task>& task_list)
     {
-      std::vector<std::vector<int32_t>> list_of_pid_lists;
+      std::vector<std::vector<std::int32_t>> list_of_pid_lists;
 
       // 1. Create a list of all evaluated Tasks. Just how we would start them.
       std::vector<Task> evaluated_task_list = task_list;
@@ -158,7 +158,7 @@ namespace eCAL
         std::vector<std::string> sys_task_argv = EcalUtils::CommandLine::ToArgv("\"" + evaluated_task.path + "\" " + evaluated_task.arguments);
 #endif // !_WIN32
 
-        std::vector<int32_t> pid_list;
+        std::vector<std::int32_t> pid_list;
         for (const auto& process : monitoring_pb.processes())
         {
           if (process.hname() == eCAL::Process::GetHostName()) // Only handle local tasks!

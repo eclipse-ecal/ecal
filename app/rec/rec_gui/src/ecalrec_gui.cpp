@@ -1078,7 +1078,7 @@ void EcalRecGui::addCommentToLastMeas()
   }
   else
   {
-    int64_t last_meas_id = job_history.back().local_evaluated_job_config_.GetJobId();
+    std::int64_t last_meas_id = job_history.back().local_evaluated_job_config_.GetJobId();
 
     auto simulated_error = QEcalRec::instance()->simulateAddComment(last_meas_id);
     if(!simulated_error)

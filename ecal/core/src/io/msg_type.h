@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 enum eUDPMessageType
 {
@@ -49,11 +49,11 @@ struct alignas(4) SUDPMessageHead
   }
 
   char     head[4];   //-V112
-  int32_t  version;
-  int32_t  type;
-  int32_t  id;        // unique id for all message parts
-  int32_t  num;       // header: number of all parts,      data: current number of that part
-  int32_t  len;       // header: complete size of message, data: current size of that part
+  std::int32_t  version;
+  std::int32_t  type;
+  std::int32_t  id;        // unique id for all message parts
+  std::int32_t  num;       // header: number of all parts,      data: current number of that part
+  std::int32_t  len;       // header: complete size of message, data: current size of that part
 };
 
 #define MSG_BUFFER_SIZE   (64*1024 - 20 /* IP header */ - 8 /* UDP header */ - 1 /* don't ask */)

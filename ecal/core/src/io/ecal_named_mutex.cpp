@@ -117,7 +117,7 @@ namespace eCAL
     m_impl->DropOwnership();
   }
 
-  bool CNamedMutex::Lock(int64_t timeout_)
+  bool CNamedMutex::Lock(std::int64_t timeout_)
   {
     return m_impl->Lock(timeout_);
   }

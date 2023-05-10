@@ -39,7 +39,7 @@ namespace eCAL
     // Constructor and destructor
     /////////////////////////////////////////
     public:
-      MonitoringThread(const std::function<std::map<std::string, int32_t>(void)>& get_running_enabled_rec_clients_function);
+      MonitoringThread(const std::function<std::map<std::string, std::int32_t>(void)>& get_running_enabled_rec_clients_function);
       ~MonitoringThread();
 
     /////////////////////////////////////////
@@ -66,7 +66,7 @@ namespace eCAL
       TopicInfoMap_T                    topic_info_map_;                        ///< Result from monitoring: Evaluated topic information (the PIDs are filted using the get_running_enabled_rec_clients_function_)
       HostsRunningEcalRec_T             hosts_running_ecal_rec_;                ///< Result from monitoring: A list of all hosts and whether the monitor found a running eCAL Rec client on it
 
-      const std::function<std::map<std::string, int32_t>(void)> get_running_enabled_rec_clients_function_; ///< Function that is called to determine which recorders are currently running. The output is used to filter the monitoring result
+      const std::function<std::map<std::string, std::int32_t>(void)> get_running_enabled_rec_clients_function_; ///< Function that is called to determine which recorders are currently running. The output is used to filter the monitoring result
       std::vector<PostUpdateCallback_T> post_update_callbacks_;                 ///< List of callback functions executed after a monitoring loop (executed in the monitoring thread!)
     };
   }

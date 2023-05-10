@@ -42,9 +42,9 @@ namespace eCAL
         : type_(type)
       {}
 
-      std::string                                        type_;                 ///< Type of the topic (e.g. the protobuf-type)
-      std::map<std::string, std::set<std::string>>       publishers_;           ///< {hostname: [publisher_names]}
-      std::map<std::pair<std::string, int32_t>, double>  rec_subscribers_;      ///< {(hostname, pid): data_frequency}
+      std::string                                             type_;                 ///< Type of the topic (e.g. the protobuf-type)
+      std::map<std::string, std::set<std::string>>            publishers_;           ///< {hostname: [publisher_names]}
+      std::map<std::pair<std::string, std::int32_t>, double>  rec_subscribers_;      ///< {(hostname, pid): data_frequency}
     };
 
     typedef std::map<std::string, eCAL::rec_server::TopicInfo>                       TopicInfoMap_T;

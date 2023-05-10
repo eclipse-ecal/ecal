@@ -56,7 +56,7 @@ public:
     {
       component::vec msg;
       msg.set_id(request->id());
-      for (uint64_t i = 0U; i < 8192; ++i) msg.add_uvec(i);
+      for (std::uint64_t i = 0U; i < 8192; ++i) msg.add_uvec(i);
       publisher_vec.Send(msg);
       std::cout << "Topic 'vec' sent with ID: " << request->id() << std::endl;
     }

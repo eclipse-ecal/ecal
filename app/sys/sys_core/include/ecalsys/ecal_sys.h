@@ -215,10 +215,10 @@ public:
   std::list<std::shared_ptr<TaskGroup>>     GetGroupList() const;
 
   /** @brief Gets Task by providing it's ID. If no runner with that ID exists, a shared nullpointer is returned. */
-  std::shared_ptr<EcalSysTask>   GetTask(uint32_t task_id);
+  std::shared_ptr<EcalSysTask>   GetTask(std::uint32_t task_id);
 
   /** @brief Gets a Runner by providing it's ID. If no runner with that ID exists, a shared nullpointer is returned. */
-  std::shared_ptr<EcalSysRunner> GetRunner(uint32_t runner_id);
+  std::shared_ptr<EcalSysRunner> GetRunner(std::uint32_t runner_id);
 
   /**
    * @brief Adds an existing Task to EcalSys.

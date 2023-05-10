@@ -53,7 +53,7 @@ namespace eCAL
             try
             {
               unsigned long id = std::stoul(arg);
-              auto task_ptr = ecalsys_instance->GetTask(static_cast<uint32_t>(id));
+              auto task_ptr = ecalsys_instance->GetTask(static_cast<std::uint32_t>(id));
               if (task_ptr)
               {
                 output_tasklist.push_back(task_ptr);
@@ -107,7 +107,7 @@ namespace eCAL
             try
             {
               unsigned long id = std::stoul(arg);
-              auto runner_ptr = ecalsys_instance->GetRunner(static_cast<uint32_t>(id));
+              auto runner_ptr = ecalsys_instance->GetRunner(static_cast<std::uint32_t>(id));
               if (runner_ptr)
               {
                 output_runnerlist.push_back(runner_ptr);
@@ -162,7 +162,7 @@ namespace eCAL
               unsigned long id = std::stoul(arg);
               for (const auto& group_ptr : complete_group_list)
               {
-                if (group_ptr->GetId() == static_cast<uint32_t>(id))
+                if (group_ptr->GetId() == static_cast<std::uint32_t>(id))
                 {
                   output_grouplist.push_back(group_ptr);
                   match_found = true;

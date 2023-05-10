@@ -43,24 +43,24 @@ namespace eCAL
     // Getter & Setter
     //////////////////////////////
 
-    void            JobConfig::SetJobId         (int64_t job_id)                   { job_id_ = job_id; }
-    int64_t         JobConfig::GetJobId         () const                           { return job_id_; }
+    void            JobConfig::SetJobId         (std::int64_t job_id)                   { job_id_ = job_id; }
+    std::int64_t    JobConfig::GetJobId         () const                                { return job_id_; }
 
     void JobConfig::GenerateNewJobId()
     {
       // The system clock gives us a nice timestamp that may however lack precision on some systems
       auto system_clock_now = std::chrono::system_clock::now();
-      int64_t system_clock_nsecs = std::chrono::duration_cast<std::chrono::nanoseconds>(system_clock_now.time_since_epoch()).count();
+      std::int64_t system_clock_nsecs = std::chrono::duration_cast<std::chrono::nanoseconds>(system_clock_now.time_since_epoch()).count();
 
       // The steady clock gives us a (hopefully) monotonic timestamp. But it will start over when rebooting.
       auto steady_clock_now = std::chrono::steady_clock::now();
-      int64_t steady_clock_nsecs = std::chrono::duration_cast<std::chrono::nanoseconds>(steady_clock_now.time_since_epoch()).count();
+      std::int64_t steady_clock_nsecs = std::chrono::duration_cast<std::chrono::nanoseconds>(steady_clock_now.time_since_epoch()).count();
 
       // A static counter will just increase when creating new IDs
-      static uint32_t counter = 0;
+      static std::uint32_t counter = 0;
       counter++;
 
-      job_id_ = (((int64_t)counter) << 32) | (int64_t(0xFFFFF000) & system_clock_nsecs) | (int64_t(0x00000FFF) & steady_clock_nsecs);
+      job_id_ = (((std::int64_t)counter) << 32) | (std::int64_t(0xFFFFF000) & system_clock_nsecs) | (std::int64_t(0x00000FFF) & steady_clock_nsecs);
     }
 
     void            JobConfig::SetMeasRootDir           (const std::string& meas_root_dir) { meas_root_dir_ = meas_root_dir; }
@@ -69,8 +69,8 @@ namespace eCAL
     void            JobConfig::SetMeasName              (const std::string& meas_name)     { meas_name_ = meas_name; }
     std::string     JobConfig::GetMeasName              () const                           { return meas_name_; }
 
-    void            JobConfig::SetMaxFileSize           (int64_t max_file_size_mb)         { max_file_size_mb_ = max_file_size_mb; }
-    int64_t         JobConfig::GetMaxFileSize           () const                           { return max_file_size_mb_; }
+    void            JobConfig::SetMaxFileSize           (std::int64_t max_file_size_mb)    { max_file_size_mb_ = max_file_size_mb; }
+    std::int64_t    JobConfig::GetMaxFileSize           () const                           { return max_file_size_mb_; }
 
     void            JobConfig::SetOneFilePerTopicEnabled(bool enabled)                     { one_file_per_topic_ = enabled; }
     bool            JobConfig::GetOneFilePerTopicEnabled() const                           { return one_file_per_topic_; }

@@ -78,7 +78,7 @@ void UpdateFromCloudTaskListThread::Run()
   // Match the tasks!!!
 
   // Iterate over all hosts (get a list of all tasks for each host)
-  std::map<std::string, std::future<std::vector<std::vector<int32_t>>>> future_map;
+  std::map<std::string, std::future<std::vector<std::vector<std::int32_t>>>> future_map;
   for (const auto& host_tasklist_pair : host_tasklist_map)
   {
     if (IsInterrupted()) return;

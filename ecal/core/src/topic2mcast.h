@@ -53,9 +53,9 @@ namespace eCAL
 
     namespace V2 {
 
-      inline uint32_t parse_ipv4(const std::string& ipv4_str_)
+      inline std::uint32_t parse_ipv4(const std::string& ipv4_str_)
       {
-        uint32_t ipv4 = 0;
+        std::uint32_t ipv4 = 0;
         std::stringstream ss(ipv4_str_);
         std::string token;
         int i = 0;
@@ -68,7 +68,7 @@ namespace eCAL
         return ipv4;
       }
 
-      inline std::string serialize_ipv4(uint32_t ipv4)
+      inline std::string serialize_ipv4(std::uint32_t ipv4)
       {
         std::ostringstream address;
         address << (ipv4 >> 24) << '.' << ((ipv4 & 0x00ffffff) >> 16) << '.'
@@ -84,20 +84,20 @@ namespace eCAL
       *              expected result:  0xFF89ABCD
       *
       **/
-      inline uint32_t combine_ip_and_hash_with_mask(uint32_t address, uint32_t hash, uint32_t mask)
+      inline std::uint32_t combine_ip_and_hash_with_mask(std::uint32_t address, std::uint32_t hash, std::uint32_t mask)
       {
         return (address & mask) | (hash & ~mask);
       }
 
-      inline uint32_t increase_adress_by_one(uint32_t address, uint32_t mask)
+      inline std::uint32_t increase_adress_by_one(std::uint32_t address, std::uint32_t mask)
       {
         return (address & mask) | ((address + 1) & ~mask);
       }
 
-      inline std::string topic2mcast_hash(uint32_t hash_v, const std::string& mcast_base_, const std::string& mcast_mask_)
+      inline std::string topic2mcast_hash(std::uint32_t hash_v, const std::string& mcast_base_, const std::string& mcast_mask_)
       {
-        uint32_t address_mask = parse_ipv4(mcast_mask_);
-        uint32_t address_ip = parse_ipv4(mcast_base_);
+        std::uint32_t address_mask = parse_ipv4(mcast_mask_);
+        std::uint32_t address_ip = parse_ipv4(mcast_base_);
 
         auto mcast{ combine_ip_and_hash_with_mask(address_ip, hash_v, address_mask) };
 
@@ -122,7 +122,7 @@ namespace eCAL
       inline std::string topic2mcast(const std::string& tname_, const std::string& mcast_base_, const std::string& mcast_mask_)
       {
         struct fnv_hash thash;
-        uint32_t hash_v = static_cast<uint32_t>(thash(tname_));
+        std::uint32_t hash_v = static_cast<std::uint32_t>(thash(tname_));
 
         return topic2mcast_hash(hash_v, mcast_base_, mcast_mask_);
       }

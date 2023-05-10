@@ -45,7 +45,7 @@ namespace eCAL
   namespace rec
   {
     EcalRecImpl::EcalRecImpl()
-      : addon_manager_(std::make_unique<AddonManager>([this](int64_t job_id, const std::string& addon_id, const RecAddonJobStatus& job_status)
+      : addon_manager_(std::make_unique<AddonManager>([this](std::int64_t job_id, const std::string& addon_id, const RecAddonJobStatus& job_status)
                                                       {
                                                         std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
 
@@ -131,7 +131,7 @@ namespace eCAL
       return pre_buffer_.is_enabled();
     }
 
-    std::pair<int64_t, std::chrono::steady_clock::duration> EcalRecImpl::GetCurrentPreBufferLength() const
+    std::pair<std::int64_t, std::chrono::steady_clock::duration> EcalRecImpl::GetCurrentPreBufferLength() const
     {
       return pre_buffer_.length();
     }
@@ -439,7 +439,7 @@ namespace eCAL
       return addon_manager_->GetEnabledAddons();
     }
 
-    eCAL::rec::Error EcalRecImpl::AddComment(int64_t job_id, const std::string& comment)
+    eCAL::rec::Error EcalRecImpl::AddComment(std::int64_t job_id, const std::string& comment)
     {
       eCAL::rec::Error error (eCAL::rec::Error::ErrorCode::OK);
 
@@ -469,7 +469,7 @@ namespace eCAL
       return error;
     }
 
-    eCAL::rec::Error EcalRecImpl::DeleteMeasurement(int64_t job_id)
+    eCAL::rec::Error EcalRecImpl::DeleteMeasurement(std::int64_t job_id)
     {
       Error error(Error::OK);
 

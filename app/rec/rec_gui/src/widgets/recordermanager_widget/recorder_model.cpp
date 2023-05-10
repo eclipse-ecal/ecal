@@ -1334,9 +1334,9 @@ void RecorderModel::recorderStatusUpdate(const eCAL::rec_server::RecorderStatusM
         }
 
         // pre_buffer_length_
-        if (recorder_list_[i].pre_buffer_length_ != std::make_pair(int64_t(0), std::chrono::steady_clock::duration(0)))
+        if (recorder_list_[i].pre_buffer_length_ != std::make_pair(std::int64_t(0), std::chrono::steady_clock::duration(0)))
         {
-          recorder_list_[i].pre_buffer_length_ = std::make_pair(int64_t(0), std::chrono::steady_clock::duration(0));
+          recorder_list_[i].pre_buffer_length_ = std::make_pair(std::int64_t(0), std::chrono::steady_clock::duration(0));
           update_view = true;
         }
 

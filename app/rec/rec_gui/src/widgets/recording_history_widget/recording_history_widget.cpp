@@ -97,7 +97,7 @@ RecordingHistoryWidget::RecordingHistoryWidget(QWidget *parent)
                                                 , "Comment..."
                                                 , [](const QModelIndex& index)
                                                       {
-                                                        int64_t job_id = index.model()->data(index.model()->index(index.row(), (int)JobHistoryModel::Columns::ID)).toLongLong();
+                                                        std::int64_t job_id = index.model()->data(index.model()->index(index.row(), (int)JobHistoryModel::Columns::ID)).toLongLong();
                                                         return QEcalRec::instance()->canAddComment(job_id);
                                                       }
                                                 , ui_.job_history_treeview);
@@ -108,7 +108,7 @@ RecordingHistoryWidget::RecordingHistoryWidget(QWidget *parent)
   upload_button_delegate_ = new PushButtonDelegate(QIcon(":/ecalicons/MERGE")
                                                   , [](const QModelIndex& index)
                                                         {
-                                                          int64_t job_id = index.model()->data(index.model()->index(index.row(), (int)JobHistoryModel::Columns::ID)).toLongLong();
+                                                          std::int64_t job_id = index.model()->data(index.model()->index(index.row(), (int)JobHistoryModel::Columns::ID)).toLongLong();
                                                           if (QEcalRec::instance()->hasAnyUploadError(job_id))
                                                             return "Retry failed uploads";
                                                           else
@@ -116,7 +116,7 @@ RecordingHistoryWidget::RecordingHistoryWidget(QWidget *parent)
                                                         }
                                                   , [](const QModelIndex& index)
                                                         {
-                                                          int64_t job_id = index.model()->data(index.model()->index(index.row(), (int)JobHistoryModel::Columns::ID)).toLongLong();
+                                                          std::int64_t job_id = index.model()->data(index.model()->index(index.row(), (int)JobHistoryModel::Columns::ID)).toLongLong();
                                                           return QEcalRec::instance()->canUploadMeasurement(job_id);
                                                         }
                                                   , ui_.job_history_treeview);
@@ -164,7 +164,7 @@ void RecordingHistoryWidget::contextMenu(const QPoint &pos)
   if (selected_job_item_indexes.size() == 1)
   {
     const JobHistoryJobItem* job_item = static_cast<JobHistoryJobItem*>(job_history_model_->item(selected_job_item_indexes.front()));
-    int64_t job_id = job_item->jobId();
+    std::int64_t job_id = job_item->jobId();
 
     if (QEcalRec::instance()->canAddComment(job_id))
     {
@@ -185,7 +185,7 @@ void RecordingHistoryWidget::contextMenu(const QPoint &pos)
   for (const auto& job_item_index : selected_job_item_indexes)
   {
     const JobHistoryJobItem* job_item = static_cast<JobHistoryJobItem*>(job_history_model_->item(job_item_index));
-    int64_t job_id = job_item->jobId();
+    std::int64_t job_id = job_item->jobId();
     if (QEcalRec::instance()->canUploadMeasurement(job_id))
     {
       can_upload_any = true;
@@ -234,7 +234,7 @@ void RecordingHistoryWidget::contextMenu(const QPoint &pos)
   for (const auto& job_item_index : selected_job_item_indexes)
   {
     const JobHistoryJobItem* job_item = static_cast<JobHistoryJobItem*>(job_history_model_->item(job_item_index));
-    int64_t job_id = job_item->jobId();
+    std::int64_t job_id = job_item->jobId();
     if (QEcalRec::instance()->canDeleteMeasurement(job_id))
     {
       can_delete_any = true;
@@ -412,7 +412,7 @@ void RecordingHistoryWidget::deleteSelectedMeasurements()
 {
   auto selected_jobs = selectedJobItems();
 
-  std::set<int64_t> jobs_to_delete;
+  std::set<std::int64_t> jobs_to_delete;
   for (JobHistoryJobItem* job_item : selected_jobs)
   {
 

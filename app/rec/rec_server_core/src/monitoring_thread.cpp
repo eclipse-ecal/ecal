@@ -45,7 +45,7 @@ namespace eCAL
     // Constructor and destructor
     /////////////////////////////////////////
 
-    MonitoringThread::MonitoringThread(const std::function<std::map<std::string, int32_t>(void)>& get_running_enabled_rec_clients_function)
+    MonitoringThread::MonitoringThread(const std::function<std::map<std::string, std::int32_t>(void)>& get_running_enabled_rec_clients_function)
       : InterruptibleLoopThread(std::chrono::seconds(1))
       , get_running_enabled_rec_clients_function_(get_running_enabled_rec_clients_function)
     {}

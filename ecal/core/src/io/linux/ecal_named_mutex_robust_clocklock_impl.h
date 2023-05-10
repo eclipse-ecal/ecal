@@ -48,7 +48,7 @@ namespace eCAL
 
     void DropOwnership() final;
 
-    bool Lock(int64_t timeout_) final;
+    bool Lock(std::int64_t timeout_) final;
     void Unlock() final;
 
   private:

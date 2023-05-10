@@ -31,7 +31,7 @@ EcalSysRunner::EcalSysRunner()
 {}
 
 
-EcalSysRunner::EcalSysRunner(uint32_t id, const std::string& name, const std::string& path, const std::string& default_algo_dir, const std::string& load_cmd_argument)
+EcalSysRunner::EcalSysRunner(std::uint32_t id, const std::string& name, const std::string& path, const std::string& default_algo_dir, const std::string& load_cmd_argument)
   : m_id               (id)
   , m_name             (name)
   , m_path             (path)
@@ -39,7 +39,7 @@ EcalSysRunner::EcalSysRunner(uint32_t id, const std::string& name, const std::st
   , m_load_cmd_argument(load_cmd_argument)
 {}
 
-void EcalSysRunner::SetId(uint32_t id) {
+void EcalSysRunner::SetId(std::uint32_t id) {
   std::lock_guard<std::mutex> runner_lock(m_mutex);
   m_id = id;
 }
@@ -64,7 +64,7 @@ void EcalSysRunner::SetLoadCmdArgument(const std::string& load_cmd_argument) {
   m_load_cmd_argument = load_cmd_argument;
 }
 
-uint32_t EcalSysRunner::GetId() {
+std::uint32_t EcalSysRunner::GetId() {
   std::lock_guard<std::mutex> runner_lock(m_mutex);
   return m_id;
 }

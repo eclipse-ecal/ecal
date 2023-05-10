@@ -129,16 +129,16 @@ namespace eCAL
     constexpr size_t ecal_magic_size(4 * sizeof(char));
 
     // Get size of un-altered proto header size
-    uint16_t proto_header_size(0);
+    std::uint16_t proto_header_size(0);
 #if GOOGLE_PROTOBUF_VERSION >= 3001000
-    proto_header_size = (uint16_t)m_ecal_header.ByteSizeLong();
+    proto_header_size = (std::uint16_t)m_ecal_header.ByteSizeLong();
 #else
-    proto_header_size = (uint16_t)m_ecal_header.ByteSize();
+    proto_header_size = (std::uint16_t)m_ecal_header.ByteSize();
 #endif
 
     // Compute needed padding for aligning the payload
     constexpr size_t alignment_bytes     = 8;
-    const     size_t minimal_header_size = ecal_magic_size +  sizeof(uint16_t)    +  proto_header_size;
+    const     size_t minimal_header_size = ecal_magic_size +  sizeof(std::uint16_t)    +  proto_header_size;
     const     size_t padding_size        = (alignment_bytes - (minimal_header_size % alignment_bytes)) % alignment_bytes;
 
     // Add more bytes to the protobuf message to blow it up to the alignment
@@ -149,19 +149,19 @@ namespace eCAL
     // TODO: REMOVE ME FOR ECAL6
     m_ecal_header.set_padding(std::string(padding_size + 1, 'a'));
 #if GOOGLE_PROTOBUF_VERSION >= 3001000
-    proto_header_size = (uint16_t)m_ecal_header.ByteSizeLong();
+    proto_header_size = (std::uint16_t)m_ecal_header.ByteSizeLong();
 #else
-    proto_header_size = (uint16_t)m_ecal_header.ByteSize();
+    proto_header_size = (std::uint16_t)m_ecal_header.ByteSize();
 #endif
 
     //                     ECAL            +  header size field +  proto header
-    m_header_buffer.resize(ecal_magic_size + sizeof(uint16_t)   +  proto_header_size);
+    m_header_buffer.resize(ecal_magic_size + sizeof(std::uint16_t)   +  proto_header_size);
 
     // add size
-    *reinterpret_cast<uint16_t*>(&m_header_buffer[ecal_magic_size]) = htole16(proto_header_size);
+    *reinterpret_cast<std::uint16_t*>(&m_header_buffer[ecal_magic_size]) = htole16(proto_header_size);
 
     // serialize header message right after size field
-    m_ecal_header.SerializeToArray((void*)(m_header_buffer.data() + ecal_magic_size + sizeof(uint16_t)), (int)proto_header_size);
+    m_ecal_header.SerializeToArray((void*)(m_header_buffer.data() + ecal_magic_size + sizeof(std::uint16_t)), (int)proto_header_size);
 
     // add magic ecal header :-)
     m_header_buffer[0] = 'E';

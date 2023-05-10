@@ -65,7 +65,7 @@ namespace eCAL
     static std::shared_ptr<tcp_pubsub::Executor> g_tcp_writer_executor;
 
     std::shared_ptr<tcp_pubsub::Publisher>       m_publisher;
-    uint16_t                                     m_port;
+    std::uint16_t                                m_port;
 
     eCAL::pb::Sample                             m_ecal_header;
     std::vector<char>                            m_header_buffer;

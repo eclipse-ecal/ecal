@@ -76,9 +76,9 @@ namespace eCAL
       bool SetEnabledAddons(const std::set<std::string>& addon_ids);
       std::set<std::string> GetEnabledAddons() const;
 
-      eCAL::rec::Error AddComment(int64_t job_id, const std::string& comment);
+      eCAL::rec::Error AddComment(std::int64_t job_id, const std::string& comment);
 
-      eCAL::rec::Error DeleteMeasurement(int64_t job_id);
+      eCAL::rec::Error DeleteMeasurement(std::int64_t job_id);
 
       //////////////////////////////////////
       /// Only record certain messages  ////

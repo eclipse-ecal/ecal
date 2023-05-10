@@ -86,12 +86,12 @@ bool eCAL::CSimTime::isSynchronized()
   return is_synchronized;
 }
 
-bool eCAL::CSimTime::getMasterTime(uint64_t & time_)
+bool eCAL::CSimTime::getMasterTime(std::uint64_t & time_)
 {
   std::unique_lock<std::mutex> lk(time_mutex);
 
   double elapsed_sim_time = (double)((long long)getCurrentNanos() - time_of_last_measurement_time) * play_speed;
-  time_ = (uint64_t)((unsigned long long) last_measurement_time + (unsigned long long)elapsed_sim_time);
+  time_ = (std::uint64_t)((unsigned long long) last_measurement_time + (unsigned long long)elapsed_sim_time);
 
   return true;
 }

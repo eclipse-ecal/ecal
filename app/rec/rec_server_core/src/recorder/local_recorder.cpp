@@ -32,7 +32,7 @@ namespace eCAL
     LocalRecorder::LocalRecorder(const std::string& hostname
                                 , const std::shared_ptr<eCAL::rec::EcalRec>& ecal_rec_instance
                                 , const std::function<void(const std::string& hostname, const eCAL::rec::RecorderStatus& recorder_status)>& update_jobstatus_function
-                                , const std::function<void(int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& info_command_response)>& report_job_command_response_callback
+                                , const std::function<void(std::int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& info_command_response)>& report_job_command_response_callback
                                 , const RecorderSettings& initial_settings)
       : AbstractRecorder                    (hostname, update_jobstatus_function, report_job_command_response_callback)
       , InterruptibleLoopThread             (std::chrono::milliseconds(100))

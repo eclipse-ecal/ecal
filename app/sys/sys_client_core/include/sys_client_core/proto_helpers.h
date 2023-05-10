@@ -45,53 +45,53 @@ namespace eCAL
       // From Protobuf
       ///////////////////////////////
 
-      void FromProtobuf(const eCAL::pb::sys_client::Task&                task_pb,              eCAL::sys_client::Task&            task);
-      void FromProtobuf(const eCAL::pb::sys_client::Runner&              runner_pb,            eCAL::sys_client::Runner&          runner);
-      void FromProtobuf(const eCAL::pb::sys_client::WindowMode&          window_mode_pb,       eCAL_Process_eStartMode&           window_mode);
-      void FromProtobuf(const eCAL::pb::sys_client::StartTaskParameters& start_task_param_pb,  StartTaskParameters&               start_task_param);
-      void FromProtobuf(const eCAL::pb::sys_client::StartTaskRequest&    start_task_list_pb,   std::vector<StartTaskParameters>&  start_task_list);
-      void FromProtobuf(const eCAL::pb::sys_client::StopTaskParameters&  stop_task_param_pb,   StopTaskParameters&                stop_task_param);
-      void FromProtobuf(const eCAL::pb::sys_client::StopTaskRequest&     stop_task_list_pb,    std::vector<StopTaskParameters>&   stop_task_list);
-      void FromProtobuf(const eCAL::pb::sys_client::TaskList&            task_list_pb,         std::vector<Task>&                 task_list);
-      void FromProtobuf(const eCAL::pb::sys_client::PidList&             pid_list_pb,          std::vector<int32_t>&              pid_list);
-      void FromProtobuf(const eCAL::pb::sys_client::MatchTaskResponse&   map_task_response_pb, std::vector<std::vector<int32_t>>& map_task_response);
+      void FromProtobuf(const eCAL::pb::sys_client::Task&                task_pb,              eCAL::sys_client::Task&                 task);
+      void FromProtobuf(const eCAL::pb::sys_client::Runner&              runner_pb,            eCAL::sys_client::Runner&               runner);
+      void FromProtobuf(const eCAL::pb::sys_client::WindowMode&          window_mode_pb,       eCAL_Process_eStartMode&                window_mode);
+      void FromProtobuf(const eCAL::pb::sys_client::StartTaskParameters& start_task_param_pb,  StartTaskParameters&                    start_task_param);
+      void FromProtobuf(const eCAL::pb::sys_client::StartTaskRequest&    start_task_list_pb,   std::vector<StartTaskParameters>&       start_task_list);
+      void FromProtobuf(const eCAL::pb::sys_client::StopTaskParameters&  stop_task_param_pb,   StopTaskParameters&                     stop_task_param);
+      void FromProtobuf(const eCAL::pb::sys_client::StopTaskRequest&     stop_task_list_pb,    std::vector<StopTaskParameters>&        stop_task_list);
+      void FromProtobuf(const eCAL::pb::sys_client::TaskList&            task_list_pb,         std::vector<Task>&                      task_list);
+      void FromProtobuf(const eCAL::pb::sys_client::PidList&             pid_list_pb,          std::vector<std::int32_t>&              pid_list);
+      void FromProtobuf(const eCAL::pb::sys_client::MatchTaskResponse&   map_task_response_pb, std::vector<std::vector<std::int32_t>>& map_task_response);
 
-      eCAL::sys_client::Task            FromProtobuf(const eCAL::pb::sys_client::Task&                task_pb);
-      eCAL::sys_client::Runner          FromProtobuf(const eCAL::pb::sys_client::Runner&              runner_pb);
-      eCAL_Process_eStartMode           FromProtobuf(const eCAL::pb::sys_client::WindowMode&          window_mode_pb);
-      StartTaskParameters               FromProtobuf(const eCAL::pb::sys_client::StartTaskParameters& start_task_param_pb);
-      std::vector<StartTaskParameters>  FromProtobuf(const eCAL::pb::sys_client::StartTaskRequest&    start_task_list_pb);
-      StopTaskParameters                FromProtobuf(const eCAL::pb::sys_client::StopTaskParameters&  stop_task_param_pb);
-      std::vector<StopTaskParameters>   FromProtobuf(const eCAL::pb::sys_client::StopTaskRequest&     stop_task_list_pb);
-      std::vector<Task>                 FromProtobuf(const eCAL::pb::sys_client::TaskList&            task_list_pb);
-      std::vector<int32_t>              FromProtobuf(const eCAL::pb::sys_client::PidList&             pid_list_pb);
-      std::vector<std::vector<int32_t>> FromProtobuf(const eCAL::pb::sys_client::MatchTaskResponse&   map_task_response_pb);
+      eCAL::sys_client::Task                 FromProtobuf(const eCAL::pb::sys_client::Task&                task_pb);
+      eCAL::sys_client::Runner               FromProtobuf(const eCAL::pb::sys_client::Runner&              runner_pb);
+      eCAL_Process_eStartMode                FromProtobuf(const eCAL::pb::sys_client::WindowMode&          window_mode_pb);
+      StartTaskParameters                    FromProtobuf(const eCAL::pb::sys_client::StartTaskParameters& start_task_param_pb);
+      std::vector<StartTaskParameters>       FromProtobuf(const eCAL::pb::sys_client::StartTaskRequest&    start_task_list_pb);
+      StopTaskParameters                     FromProtobuf(const eCAL::pb::sys_client::StopTaskParameters&  stop_task_param_pb);
+      std::vector<StopTaskParameters>        FromProtobuf(const eCAL::pb::sys_client::StopTaskRequest&     stop_task_list_pb);
+      std::vector<Task>                      FromProtobuf(const eCAL::pb::sys_client::TaskList&            task_list_pb);
+      std::vector<std::int32_t>              FromProtobuf(const eCAL::pb::sys_client::PidList&             pid_list_pb);
+      std::vector<std::vector<std::int32_t>> FromProtobuf(const eCAL::pb::sys_client::MatchTaskResponse&   map_task_response_pb);
 
       ///////////////////////////////
       // To Protobuf
       ///////////////////////////////
 
-      void ToProtobuf(eCAL::pb::sys_client::Task&                task_pb,              const eCAL::sys_client::Task&            task);
-      void ToProtobuf(eCAL::pb::sys_client::Runner&              runner_pb,            const eCAL::sys_client::Runner&          runner);
-      void ToProtobuf(eCAL::pb::sys_client::WindowMode&          window_mode_pb,       const eCAL_Process_eStartMode            window_mode);
-      void ToProtobuf(eCAL::pb::sys_client::StartTaskParameters& start_task_param_pb,  const StartTaskParameters&               start_task_param);
-      void ToProtobuf(eCAL::pb::sys_client::StartTaskRequest&    start_task_list_pb,   const std::vector<StartTaskParameters>&  start_task_list);
-      void ToProtobuf(eCAL::pb::sys_client::StopTaskParameters&  stop_task_param_pb,   const StopTaskParameters&                stop_task_param);
-      void ToProtobuf(eCAL::pb::sys_client::StopTaskRequest&     stop_task_list_pb,    const std::vector<StopTaskParameters>&   stop_task_list);
-      void ToProtobuf(eCAL::pb::sys_client::TaskList&            task_list_pb,         const std::vector<Task>&                 task_list);
-      void ToProtobuf(eCAL::pb::sys_client::PidList&             pid_list_pb,          const std::vector<int32_t>&              pid_list);
-      void ToProtobuf(eCAL::pb::sys_client::MatchTaskResponse&   map_task_response_pb, const std::vector<std::vector<int32_t>>& map_task_response);
+      void ToProtobuf(eCAL::pb::sys_client::Task&                task_pb,              const eCAL::sys_client::Task&                 task);
+      void ToProtobuf(eCAL::pb::sys_client::Runner&              runner_pb,            const eCAL::sys_client::Runner&               runner);
+      void ToProtobuf(eCAL::pb::sys_client::WindowMode&          window_mode_pb,       const eCAL_Process_eStartMode                 window_mode);
+      void ToProtobuf(eCAL::pb::sys_client::StartTaskParameters& start_task_param_pb,  const StartTaskParameters&                    start_task_param);
+      void ToProtobuf(eCAL::pb::sys_client::StartTaskRequest&    start_task_list_pb,   const std::vector<StartTaskParameters>&       start_task_list);
+      void ToProtobuf(eCAL::pb::sys_client::StopTaskParameters&  stop_task_param_pb,   const StopTaskParameters&                     stop_task_param);
+      void ToProtobuf(eCAL::pb::sys_client::StopTaskRequest&     stop_task_list_pb,    const std::vector<StopTaskParameters>&        stop_task_list);
+      void ToProtobuf(eCAL::pb::sys_client::TaskList&            task_list_pb,         const std::vector<Task>&                      task_list);
+      void ToProtobuf(eCAL::pb::sys_client::PidList&             pid_list_pb,          const std::vector<std::int32_t>&              pid_list);
+      void ToProtobuf(eCAL::pb::sys_client::MatchTaskResponse&   map_task_response_pb, const std::vector<std::vector<std::int32_t>>& map_task_response);
 
-      eCAL::pb::sys_client::Task                ToProtobuf(const eCAL::sys_client::Task&                task);
-      eCAL::pb::sys_client::Runner              ToProtobuf(const eCAL::sys_client::Runner&              runner);
-      eCAL::pb::sys_client::WindowMode          ToProtobuf(const eCAL_Process_eStartMode                window_mode);
-      eCAL::pb::sys_client::StartTaskParameters ToProtobuf(const StartTaskParameters&                   start_task_param);
-      eCAL::pb::sys_client::StartTaskRequest    ToProtobuf(const std::vector<StartTaskParameters>&      start_task_list);
-      eCAL::pb::sys_client::StopTaskParameters  ToProtobuf(const StopTaskParameters&                    stop_task_param);
-      eCAL::pb::sys_client::StopTaskRequest     ToProtobuf(const std::vector<StopTaskParameters>&       stop_task_list);
-      eCAL::pb::sys_client::TaskList            ToProtobuf(const std::vector<Task>&                     task_list_pb);
-      eCAL::pb::sys_client::PidList             ToProtobuf(const std::vector<int32_t>&                  pid_list_pb);
-      eCAL::pb::sys_client::MatchTaskResponse   ToProtobuf(const std::vector<std::vector<int32_t>>&     map_task_response_pb);
+      eCAL::pb::sys_client::Task                ToProtobuf(const eCAL::sys_client::Task&                 task);
+      eCAL::pb::sys_client::Runner              ToProtobuf(const eCAL::sys_client::Runner&               runner);
+      eCAL::pb::sys_client::WindowMode          ToProtobuf(const eCAL_Process_eStartMode                 window_mode);
+      eCAL::pb::sys_client::StartTaskParameters ToProtobuf(const StartTaskParameters&                    start_task_param);
+      eCAL::pb::sys_client::StartTaskRequest    ToProtobuf(const std::vector<StartTaskParameters>&       start_task_list);
+      eCAL::pb::sys_client::StopTaskParameters  ToProtobuf(const StopTaskParameters&                     stop_task_param);
+      eCAL::pb::sys_client::StopTaskRequest     ToProtobuf(const std::vector<StopTaskParameters>&        stop_task_list);
+      eCAL::pb::sys_client::TaskList            ToProtobuf(const std::vector<Task>&                      task_list_pb);
+      eCAL::pb::sys_client::PidList             ToProtobuf(const std::vector<std::int32_t>&              pid_list_pb);
+      eCAL::pb::sys_client::MatchTaskResponse   ToProtobuf(const std::vector<std::vector<std::int32_t>>& map_task_response_pb);
     }
   }
 }

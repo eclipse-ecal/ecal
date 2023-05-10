@@ -40,7 +40,7 @@ namespace eCAL
     }
 
     // bind socket
-    if (!m_socket.bind(Udpcap::HostAddress::Any(), static_cast<uint16_t>(attr_.port)))
+    if (!m_socket.bind(Udpcap::HostAddress::Any(), static_cast<std::uint16_t>(attr_.port)))
     {
       std::cerr << "CUDPReceiverPcap: Unable to bind socket." << std::endl;
       return;
@@ -95,7 +95,7 @@ namespace eCAL
     if (address_)
     {
       Udpcap::HostAddress source_address;
-      uint16_t source_port;
+      std::uint16_t source_port;
       bytes_received = m_socket.receiveDatagram(buf_, len_, static_cast<unsigned long>(timeout_), &source_address, &source_port);
 
       if (bytes_received && source_address.isValid())

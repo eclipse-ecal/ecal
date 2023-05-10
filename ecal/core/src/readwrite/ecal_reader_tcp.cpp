@@ -57,7 +57,7 @@ namespace eCAL
     return true;
   }
 
-  bool CDataReaderTCP::AddConnectionIfNecessary(const std::string& host_name_, uint16_t port_)
+  bool CDataReaderTCP::AddConnectionIfNecessary(const std::string& host_name_, std::uint16_t port_)
   {
     if (!m_subscriber) return false;
     if (port_ == 0)    return false;
@@ -95,8 +95,8 @@ namespace eCAL
     // extract header size
     const size_t ecal_magic(4 * sizeof(char));
     //                           ECAL        +  header size field
-    const size_t header_length = ecal_magic  +  sizeof(uint16_t);
-    uint16_t     header_size   = le16toh(*reinterpret_cast<uint16_t*>(data_.buffer_->data() + ecal_magic));
+    const size_t header_length = ecal_magic  +  sizeof(std::uint16_t);
+    std::uint16_t     header_size   = le16toh(*reinterpret_cast<std::uint16_t*>(data_.buffer_->data() + ecal_magic));
 
     // extract header
     const char* header_payload = data_.buffer_->data() + header_length;
@@ -185,7 +185,7 @@ namespace eCAL
       if (iter == m_datareadertcp_map.end()) return;
 
       auto& reader = iter->second;
-      reader->AddConnectionIfNecessary(remote_hostname, static_cast<uint16_t>(remote_port));
+      reader->AddConnectionIfNecessary(remote_hostname, static_cast<std::uint16_t>(remote_port));
     }
     else
     {

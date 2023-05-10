@@ -25,9 +25,9 @@ namespace eCAL
 {
   struct STcpHeader
   {
-    uint32_t psize_n   = 0;              // package size in network byte order
-    uint32_t reserved1 = 0;              // reserved
-    uint32_t reserved2 = 0;              // reserved
-    uint32_t reserved3 = 0;              // reserved
+    std::uint32_t psize_n   = 0;              // package size in network byte order
+    std::uint32_t reserved1 = 0;              // reserved
+    std::uint32_t reserved2 = 0;              // reserved
+    std::uint32_t reserved3 = 0;              // reserved
   };
 }

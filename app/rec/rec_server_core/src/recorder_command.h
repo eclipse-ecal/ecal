@@ -51,7 +51,7 @@ namespace eCAL
       eCAL::rec::JobConfig    job_config_;
       eCAL::rec::UploadConfig upload_config_;
 
-      int64_t                 meas_id_add_delete;
+      std::int64_t            meas_id_add_delete;
       std::string             comment_;
     };
   }

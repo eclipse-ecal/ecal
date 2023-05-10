@@ -50,7 +50,7 @@ ECALTIME_API int etime_finalize(void)
 
 ECALTIME_API long long etime_get_nanoseconds()
 {
-  uint64_t master_ns = 0;
+  std::uint64_t master_ns = 0;
   if (replaytime_adapter.getMasterTime(master_ns))
   {
     return (long long) master_ns;

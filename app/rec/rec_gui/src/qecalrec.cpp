@@ -370,7 +370,7 @@ bool QEcalRec::connectedToEcal() const { return rec_server_->IsConnectedToEcal()
 
 bool QEcalRec::recording() const { return rec_server_->IsRecording(); };
 
-int64_t QEcalRec::currentlyRecordingMeasId() const { return rec_server_->GetCurrentlyRecordingMeasId(); }
+std::int64_t QEcalRec::currentlyRecordingMeasId() const { return rec_server_->GetCurrentlyRecordingMeasId(); }
 
 bool QEcalRec::anyRequestPending() const { return rec_server_->IsAnyRequestPending(); }
 
@@ -626,13 +626,13 @@ void QEcalRec::setUploadConfig                       (const eCAL::rec_server::Up
   emit uploadConfigChanged(upload_config);
 }
 
-eCAL::rec_server::UploadConfig QEcalRec::uploadConfig() const                { return rec_server_->GetUploadConfig(); }
-int QEcalRec::internalFtpServerOpenConnectionsCount  () const                { return rec_server_->GetInternalFtpServerOpenConnectionCount(); }
-uint16_t QEcalRec::internalFtpServerPort             () const                { return rec_server_->GetInternalFtpServerPort(); }
+eCAL::rec_server::UploadConfig QEcalRec::uploadConfig() const                     { return rec_server_->GetUploadConfig(); }
+int QEcalRec::internalFtpServerOpenConnectionsCount  () const                     { return rec_server_->GetInternalFtpServerOpenConnectionCount(); }
+std::uint16_t QEcalRec::internalFtpServerPort        () const                     { return rec_server_->GetInternalFtpServerPort(); }
 
-eCAL::rec::Error QEcalRec::uploadMeasurement         (int64_t meas_id)       { return rec_server_->UploadMeasurement(meas_id); }
-bool QEcalRec::canUploadMeasurement                  (int64_t meas_id) const { return rec_server_->CanUploadMeasurement(meas_id); }
-eCAL::rec::Error QEcalRec::simulateUploadMeasurement (int64_t meas_id) const { return rec_server_->SimulateUploadMeasurement(meas_id); }
+eCAL::rec::Error QEcalRec::uploadMeasurement         (std::int64_t meas_id)       { return rec_server_->UploadMeasurement(meas_id); }
+bool QEcalRec::canUploadMeasurement                  (std::int64_t meas_id) const { return rec_server_->CanUploadMeasurement(meas_id); }
+eCAL::rec::Error QEcalRec::simulateUploadMeasurement (std::int64_t meas_id) const { return rec_server_->SimulateUploadMeasurement(meas_id); }
 int QEcalRec::uploadNonUploadedMeasurements          (bool omit_dialogs)
 {
   int num_uploads_triggered = rec_server_->UploadNonUploadedMeasurements();
@@ -662,12 +662,12 @@ int QEcalRec::uploadNonUploadedMeasurements          (bool omit_dialogs)
   return num_uploads_triggered;
 }
 
-bool QEcalRec::hasAnyUploadError                     (int64_t meas_id) const { return rec_server_->HasAnyUploadError(meas_id); }
+bool QEcalRec::hasAnyUploadError                     (std::int64_t meas_id) const { return rec_server_->HasAnyUploadError(meas_id); }
 
 ////////////////////////////////////
 // Comments
 ////////////////////////////////////
-eCAL::rec::Error QEcalRec::addCommentWithDialog(int64_t job_id)
+eCAL::rec::Error QEcalRec::addCommentWithDialog(std::int64_t job_id)
 {
   QInputDialog add_comment_dialog;
   add_comment_dialog.setWindowTitle("Add comment");
@@ -690,7 +690,7 @@ eCAL::rec::Error QEcalRec::addCommentWithDialog(int64_t job_id)
   }
 }
 
-eCAL::rec::Error QEcalRec::addComment(int64_t meas_id, const std::string& comment, bool omit_dialogs)
+eCAL::rec::Error QEcalRec::addComment(std::int64_t meas_id, const std::string& comment, bool omit_dialogs)
 {
   eCAL::rec::Error error = rec_server_->AddComment(meas_id, comment);
 
@@ -707,18 +707,18 @@ eCAL::rec::Error QEcalRec::addComment(int64_t meas_id, const std::string& commen
   
   return error;
 }
-bool QEcalRec::canAddComment                 (int64_t meas_id) const { return rec_server_->CanAddComment(meas_id); }
-eCAL::rec::Error QEcalRec::simulateAddComment(int64_t meas_id) const { return rec_server_->SimulateAddComment(meas_id); }
+bool QEcalRec::canAddComment                 (std::int64_t meas_id) const { return rec_server_->CanAddComment(meas_id); }
+eCAL::rec::Error QEcalRec::simulateAddComment(std::int64_t meas_id) const { return rec_server_->SimulateAddComment(meas_id); }
 
 ////////////////////////////////////
 // Delete measurement
 ////////////////////////////////////
-eCAL::rec::Error QEcalRec::deleteMeasurement(int64_t meas_id, bool omit_dialogs)
+eCAL::rec::Error QEcalRec::deleteMeasurement(std::int64_t meas_id, bool omit_dialogs)
 {
-  return deleteMeasurement(std::set<int64_t> {meas_id}, omit_dialogs);
+  return deleteMeasurement(std::set<std::int64_t> {meas_id}, omit_dialogs);
 }
 
-eCAL::rec::Error QEcalRec::deleteMeasurement(std::set<int64_t> meas_ids, bool omit_dialogs)
+eCAL::rec::Error QEcalRec::deleteMeasurement(std::set<std::int64_t> meas_ids, bool omit_dialogs)
 {
   if (meas_ids.empty())
     return eCAL::rec::Error::ErrorCode::PARAMETER_ERROR;
@@ -763,8 +763,8 @@ eCAL::rec::Error QEcalRec::deleteMeasurement(std::set<int64_t> meas_ids, bool om
   }
 
   // Delete measurements and collect errors
-  std::map<int64_t, eCAL::rec::Error> errors;
-  for (int64_t meas_id : meas_ids)
+  std::map<std::int64_t, eCAL::rec::Error> errors;
+  for (std::int64_t meas_id : meas_ids)
   {
     auto error = rec_server_->DeleteMeasurement(meas_id);
     if (error)
@@ -827,8 +827,8 @@ eCAL::rec::Error QEcalRec::deleteMeasurement(std::set<int64_t> meas_ids, bool om
     return eCAL::rec::Error::ErrorCode::OK;
 }
 
-bool QEcalRec::canDeleteMeasurement                 (int64_t meas_id) const { return rec_server_->CanDeleteMeasurement(meas_id); }
-eCAL::rec::Error QEcalRec::simulateDeleteMeasurement(int64_t meas_id) const { return rec_server_->SimulateDeleteMeasurement(meas_id); }
+bool QEcalRec::canDeleteMeasurement                 (std::int64_t meas_id) const { return rec_server_->CanDeleteMeasurement(meas_id); }
+eCAL::rec::Error QEcalRec::simulateDeleteMeasurement(std::int64_t meas_id) const { return rec_server_->SimulateDeleteMeasurement(meas_id); }
 
 
 ////////////////////////////////////

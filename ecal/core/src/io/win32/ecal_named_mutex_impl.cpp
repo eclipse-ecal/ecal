@@ -72,7 +72,7 @@ namespace eCAL
   {
   }
 
-  bool CNamedMutexImpl::Lock(int64_t timeout_)
+  bool CNamedMutexImpl::Lock(std::int64_t timeout_)
   {
     // check mutex handle
     if(m_mutex_handle == nullptr)

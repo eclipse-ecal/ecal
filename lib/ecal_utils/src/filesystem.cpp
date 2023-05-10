@@ -105,7 +105,7 @@ namespace EcalUtils
 
     }
 
-    int64_t FileStatus::FileSize() const
+    std::int64_t FileStatus::FileSize() const
     {
       if (!is_ok_)
         return 0;

@@ -73,7 +73,7 @@ namespace eCAL
      * @param[out] time_ the current simulation time
      * @return true if getting the time was successful and time_ containing a valid time.
      */
-    bool getMasterTime(uint64_t& time_);
+    bool getMasterTime(std::uint64_t& time_);
 
     /**
      * @brief Gets the current status of this adapter

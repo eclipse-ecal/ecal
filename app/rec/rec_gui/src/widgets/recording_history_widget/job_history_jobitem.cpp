@@ -268,7 +268,7 @@ int JobHistoryJobItem::type() const
 // Lazy Getters, Setters & Update methods
 ///////////////////////////////////////////
 
-int64_t                               JobHistoryJobItem::jobId()     const { return local_evaluated_job_config_.GetJobId(); }
+std::int64_t                          JobHistoryJobItem::jobId()     const { return local_evaluated_job_config_.GetJobId(); }
 const eCAL::rec::JobConfig&           JobHistoryJobItem::localEvaluatedJobConfig() const { return local_evaluated_job_config_; }
 std::chrono::system_clock::time_point JobHistoryJobItem::timestamp() const { return local_start_timestamp_; };
 bool                                  JobHistoryJobItem::isDeleted() const { return is_deleted_; }
@@ -338,10 +338,10 @@ eCAL::rec::JobState                   JobHistoryJobItem::combinedJobState() cons
   }
 }
 
-std::pair<std::chrono::steady_clock::duration, int64_t> JobHistoryJobItem::combinedLength() const
+std::pair<std::chrono::steady_clock::duration, std::int64_t> JobHistoryJobItem::combinedLength() const
 {
   std::chrono::steady_clock::duration duration(0);
-  int64_t frame_count(0);
+  std::int64_t frame_count(0);
 
   for (int i = 0; i < childCount(); i++)
   {
@@ -359,9 +359,9 @@ std::pair<std::chrono::steady_clock::duration, int64_t> JobHistoryJobItem::combi
   return { duration, frame_count };
 }
 
-int64_t JobHistoryJobItem::combinedUnflushedFrames() const
+std::int64_t JobHistoryJobItem::combinedUnflushedFrames() const
 {
-  int64_t frame_count(0);
+  std::int64_t frame_count(0);
 
   for (int i = 0; i < childCount(); i++)
   {

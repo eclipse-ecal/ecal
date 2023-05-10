@@ -112,7 +112,7 @@ namespace
   {
     pthread_mutex_t mtx;
     pthread_cond_t  cvar;
-    uint8_t         set;
+    std::uint8_t    set;
   };
   typedef struct named_event named_event_t;
 

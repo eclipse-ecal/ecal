@@ -78,7 +78,7 @@ namespace eCAL
 
       std::string                config_path_;
       bool                       activated_;
-      int64_t                    recording_meas_id_;
+      std::int64_t               recording_meas_id_;
       std::list<JobHistoryEntry> job_history_;
       RecorderStatusMap_T        client_statuses_;
     };

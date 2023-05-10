@@ -65,18 +65,18 @@ public:
 public slots :
   void setRecorderStatuses(const eCAL::rec_server::RecorderStatusMap_T& recorder_statuses, const std::list<eCAL::rec_server::JobHistoryEntry>& job_history);
   void recordJobCreated(const eCAL::rec_server::JobHistoryEntry& job_history_entry);
-  void setDeleted(int64_t meas_id);
+  void setDeleted(std::int64_t meas_id);
 
 ///////////////////////////////////////////
 // Helper methods
 ///////////////////////////////////////////
 private:
-  JobHistoryJobItem* findJobItemById(int64_t job_id);
+  JobHistoryJobItem* findJobItemById(std::int64_t job_id);
 
-  JobHistoryRecorderItem* findRecorderItem(int64_t job_id, const QString& hostname);
+  JobHistoryRecorderItem* findRecorderItem(std::int64_t job_id, const QString& hostname);
   JobHistoryRecorderItem* findRecorderItem(JobHistoryJobItem* job_item, const QString& hostname);
 
-  JobHistoryRecorderItem* findAddonItem(int64_t job_id, const QString& hostname, const QString& addon_id);
+  JobHistoryRecorderItem* findAddonItem(std::int64_t job_id, const QString& hostname, const QString& addon_id);
   JobHistoryRecorderItem* findAddonItem(JobHistoryJobItem* job_item, const QString& hostname, const QString& addon_id);
 
 

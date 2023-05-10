@@ -382,7 +382,7 @@ void EcalRecService::SetCommand(::google::protobuf::RpcController*       /*contr
   //////////////////////////////////////
   else if (command == eCAL::pb::rec_client::CommandRequest::add_comment)
   {
-    int64_t meas_id = 0;
+    std::int64_t meas_id = 0;
     std::string comment;
 
     // Parse meas_id
@@ -435,7 +435,7 @@ void EcalRecService::SetCommand(::google::protobuf::RpcController*       /*contr
 
   else if (command == eCAL::pb::rec_client::CommandRequest::delete_measurement)
   {
-    int64_t meas_id;
+    std::int64_t meas_id;
 
     // Parse meas_id
     {
@@ -541,7 +541,7 @@ bool EcalRecService::strToBool(const std::string& str)
     if (it != config.items().end())
     {
       std::string meas_id_string = it->second;
-      int64_t meas_id = 0;
+      std::int64_t meas_id = 0;
 
       try
       {
@@ -691,7 +691,7 @@ bool EcalRecService::strToBool(const std::string& str)
     if (it != config.items().end())
     {
       std::string meas_id_string = it->second;
-      int64_t meas_id = 0;
+      std::int64_t meas_id = 0;
 
       try
       {
@@ -780,11 +780,11 @@ bool EcalRecService::strToBool(const std::string& str)
     if (it != config.items().end())
     {
       std::string port_string = it->second;
-      int16_t port = 21; // = default FTP port
+      std::int16_t port = 21; // = default FTP port
 
       try
       {
-        port = static_cast<uint16_t>(std::stoul(port_string));
+        port = static_cast<std::uint16_t>(std::stoul(port_string));
       }
       catch (const std::exception& e)
       {

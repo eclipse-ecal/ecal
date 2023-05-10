@@ -78,9 +78,9 @@ namespace eCAL
       bool StartRecording     ();
       bool StopRecording      ();
 
-      bool IsConnectedToEcal             () const;
-      bool IsRecording                   () const;
-      int64_t GetCurrentlyRecordingMeasId() const;
+      bool IsConnectedToEcal                  () const;
+      bool IsRecording                        () const;
+      std::int64_t GetCurrentlyRecordingMeasId() const;
 
       bool                  IsAnyRequestPending        () const;
       std::set<std::string> GetHostsWithPendingRequests() const;
@@ -127,7 +127,7 @@ namespace eCAL
 
       std::string  GetMeasRootDir   () const;
       std::string  GetMeasName      () const;
-      int64_t      GetMaxFileSizeMib() const;
+      std::int64_t GetMaxFileSizeMib() const;
       bool         GetOneFilePerTopicEnabled() const;
       std::string  GetDescription   () const;
 
@@ -147,30 +147,30 @@ namespace eCAL
       void SetUploadConfig(const UploadConfig& upload_config);
       UploadConfig GetUploadConfig() const;
       int GetInternalFtpServerOpenConnectionCount() const;
-      uint16_t GetInternalFtpServerPort() const;
+      std::uint16_t GetInternalFtpServerPort() const;
 
-      eCAL::rec::Error UploadMeasurement(int64_t meas_id);
-      bool CanUploadMeasurement(int64_t meas_id) const;
-      eCAL::rec::Error SimulateUploadMeasurement(int64_t meas_id) const;
+      eCAL::rec::Error UploadMeasurement(std::int64_t meas_id);
+      bool CanUploadMeasurement(std::int64_t meas_id) const;
+      eCAL::rec::Error SimulateUploadMeasurement(std::int64_t meas_id) const;
       int UploadNonUploadedMeasurements();
 
-      bool HasAnyUploadError(int64_t meas_id) const;
+      bool HasAnyUploadError(std::int64_t meas_id) const;
 
     ////////////////////////////////////
     // Comments
     ////////////////////////////////////
     public:
-      eCAL::rec::Error AddComment(int64_t meas_id, const std::string& comment);
-      bool CanAddComment(int64_t meas_id) const;
-      eCAL::rec::Error SimulateAddComment(int64_t meas_id) const;
+      eCAL::rec::Error AddComment(std::int64_t meas_id, const std::string& comment);
+      bool CanAddComment(std::int64_t meas_id) const;
+      eCAL::rec::Error SimulateAddComment(std::int64_t meas_id) const;
 
     ////////////////////////////////////
     // Delete measurement
     ////////////////////////////////////
     public:
-      bool CanDeleteMeasurement(int64_t meas_id) const;
-      eCAL::rec::Error SimulateDeleteMeasurement(int64_t meas_id) const;
-      eCAL::rec::Error DeleteMeasurement(int64_t meas_id);
+      bool CanDeleteMeasurement(std::int64_t meas_id) const;
+      eCAL::rec::Error SimulateDeleteMeasurement(std::int64_t meas_id) const;
+      eCAL::rec::Error DeleteMeasurement(std::int64_t meas_id);
 
     ////////////////////////////////////
     // Config Save / Load

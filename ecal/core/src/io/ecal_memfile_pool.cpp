@@ -145,7 +145,7 @@ namespace eCAL
   void CMemFileObserver::Observe(const std::string& topic_name_, const std::string& topic_id_, const int timeout_)
   {
     // internal clock sample update checking
-    uint64_t last_sample_clock(0);
+    std::uint64_t last_sample_clock(0);
 
     // buffer to store memory file content
     std::vector<char> receive_buffer;
@@ -281,9 +281,9 @@ namespace eCAL
     {
       // read received header's size
       m_memfile.Read(&mfile_hdr_, 2, 0);
-      uint16_t rcv_hdr_size = mfile_hdr_.hdr_size;
+      std::uint16_t rcv_hdr_size = mfile_hdr_.hdr_size;
       // if the header size exceeds current header version size -> limit it to that one
-      uint16_t hdr_bytes2copy = std::min(rcv_hdr_size, static_cast<uint16_t>(sizeof(SMemFileHeader)));
+      std::uint16_t hdr_bytes2copy = std::min(rcv_hdr_size, static_cast<std::uint16_t>(sizeof(SMemFileHeader)));
       if (hdr_bytes2copy <= buffer_size)
       {
         // now read all we can get from the received header

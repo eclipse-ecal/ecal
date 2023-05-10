@@ -221,7 +221,7 @@ std::list<std::shared_ptr<TaskGroup>> EcalSys::GetGroupList() const
   return m_group_list;
 }
 
-std::shared_ptr<EcalSysTask> EcalSys::GetTask(uint32_t id) {
+std::shared_ptr<EcalSysTask> EcalSys::GetTask(std::uint32_t id) {
   std::lock_guard<std::recursive_mutex> task_list_lock(m_task_list_mutex);
   for (auto& task : m_task_list) {
     if (task->GetId() == id) {
@@ -231,7 +231,7 @@ std::shared_ptr<EcalSysTask> EcalSys::GetTask(uint32_t id) {
   return std::shared_ptr<EcalSysTask>();
 }
 
-std::shared_ptr<EcalSysRunner> EcalSys::GetRunner(uint32_t id) {
+std::shared_ptr<EcalSysRunner> EcalSys::GetRunner(std::uint32_t id) {
   std::lock_guard<std::recursive_mutex> runner_list_lock(m_runner_list_mutex);
   for (auto& runner : m_runner_list) {
     if (runner->GetId() == id) {
@@ -248,8 +248,8 @@ void EcalSys::AddTask(std::shared_ptr<EcalSysTask> task, bool keep_id)
   if (!keep_id)
   {
     // find the maximum ID
-    uint32_t max_id = 0;
-    uint32_t new_id = 1;
+    std::uint32_t max_id = 0;
+    std::uint32_t new_id = 1;
     for (auto& existing_task : m_task_list)
     {
       // Whoever though that it might be a good idea to clutter ALL namespaces with a #define max should be punished.
@@ -259,7 +259,7 @@ void EcalSys::AddTask(std::shared_ptr<EcalSysTask> task, bool keep_id)
 #endif //max
 
       max_id = (std::max(max_id, existing_task->GetId()));
-      if (max_id != std::numeric_limits<uint32_t>::max())
+      if (max_id != std::numeric_limits<std::uint32_t>::max())
       {
         // increase the max found ID by 1 to obtain the next free ID
         new_id = max_id + 1;
@@ -306,8 +306,8 @@ void EcalSys::AddRunner(std::shared_ptr<EcalSysRunner> runner, bool keep_id)
   if (!keep_id)
   {
     // find the maximum ID
-    uint32_t max_id = 0;
-    uint32_t new_id = 1;
+    std::uint32_t max_id = 0;
+    std::uint32_t new_id = 1;
     for (auto& existing_runner : m_runner_list)
     {
       // Whoever though that it might be a good idea to clutter ALL namespaces with a #define max should be punished.
@@ -317,7 +317,7 @@ void EcalSys::AddRunner(std::shared_ptr<EcalSysRunner> runner, bool keep_id)
 #endif //max
 
       max_id = (std::max(max_id, existing_runner->GetId()));
-      if (max_id != std::numeric_limits<uint32_t>::max())
+      if (max_id != std::numeric_limits<std::uint32_t>::max())
       {
         // increase the max found ID by 1 to obtain the next free ID
         new_id = max_id + 1;
@@ -364,8 +364,8 @@ void EcalSys::AddTaskGroup(std::shared_ptr<TaskGroup> task_group, bool keep_id)
   if (!keep_id)
   {
     // find the maximum ID
-    uint32_t max_id = 0;
-    uint32_t new_id = 1;
+    std::uint32_t max_id = 0;
+    std::uint32_t new_id = 1;
     for (auto& existing_group : m_group_list)
     {
       // Whoever though that it might be a good idea to clutter ALL namespaces with a #define max should be punished.
@@ -375,7 +375,7 @@ void EcalSys::AddTaskGroup(std::shared_ptr<TaskGroup> task_group, bool keep_id)
 #endif //max
 
       max_id = (std::max(max_id, existing_group->GetId()));
-      if (max_id != std::numeric_limits<uint32_t>::max())
+      if (max_id != std::numeric_limits<std::uint32_t>::max())
       {
         // increase the max found ID by 1 to obtain the next free ID
         new_id = max_id + 1;

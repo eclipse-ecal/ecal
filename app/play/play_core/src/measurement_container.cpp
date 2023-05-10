@@ -91,7 +91,7 @@ void MeasurementContainer::CalculateEstimatedSizeForChannels()
       size_t calculatedStep = size / 5;
       size_t step = (calculatedStep > 0) ? calculatedStep : 1;
       size_t sum = 0;
-      uint8_t additions = 0;
+      std::uint8_t additions = 0;
 
       for (size_t i = 0; i < size; i += step)
       {

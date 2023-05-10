@@ -377,7 +377,7 @@ namespace eCAL
         finished_files_progress_.num_total_files_ = files_to_upload.size();
 
         // Remove files that should not be uploaded
-        files_to_upload.remove_if([this](const std::pair<std::string, uint64_t>& file_pair_to_upload) -> bool
+        files_to_upload.remove_if([this](const std::pair<std::string, std::uint64_t>& file_pair_to_upload) -> bool
         {
           std::string normalized_file_to_upload = EcalUtils::Filesystem::CleanPath(local_root_dir_ + "/" + file_pair_to_upload.first, EcalUtils::Filesystem::OsStyle::Current);
 #ifdef WIN32

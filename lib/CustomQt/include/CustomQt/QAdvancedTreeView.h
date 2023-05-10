@@ -139,7 +139,7 @@ public:
    *
    * @return The Tree State as QByteArray
    */
-  QByteArray saveState(int32_t version = 0);
+  QByteArray saveState(std::int32_t version = 0);
 
   /**
    * @brief restores the tree state (visible columns, column size and order) from a given QByteArray.
@@ -153,7 +153,7 @@ public:
    *
    * @return True, if the state could be restored
    */
-  bool restoreState(const QByteArray& state, int32_t version = 0);
+  bool restoreState(const QByteArray& state, std::int32_t version = 0);
 
   QStyleOptionViewItem viewOptions() const override;
 
@@ -189,8 +189,8 @@ private:
   struct ColumnState
   {
     bool     visible  = false;
-    uint32_t size     = 0;
-    uint32_t position = 0;
+    std::uint32_t size     = 0;
+    std::uint32_t position = 0;
 
     friend QDataStream& operator<< (QDataStream &stream, const QAdvancedTreeView::ColumnState& state)
     {

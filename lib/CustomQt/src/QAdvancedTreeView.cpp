@@ -195,14 +195,14 @@ void QAdvancedTreeView::expandNodeToDepth(const QModelIndex& node, int remaining
   }
 }
 
-QByteArray QAdvancedTreeView::saveState(int32_t version)
+QByteArray QAdvancedTreeView::saveState(std::int32_t version)
 {
   QByteArray state;
   QDataStream state_stream(&state, QIODevice::WriteOnly);
 
   // Save the column count, so we can make sure to not run out of data, later
   state_stream << version;
-  state_stream << (int32_t)model()->columnCount();
+  state_stream << static_cast<std::int32_t>(model()->columnCount());
 
   for (int i = 0; i < model()->columnCount(); i++)
   {
@@ -220,24 +220,24 @@ QByteArray QAdvancedTreeView::saveState(int32_t version)
   return state;
 }
 
-bool QAdvancedTreeView::restoreState(const QByteArray& state, int32_t version)
+bool QAdvancedTreeView::restoreState(const QByteArray& state, std::int32_t version)
 {
   QDataStream state_stream(state);
 
   // The state must at least contain the version and number of columns
-  if (state.size() < (int)(2 * sizeof(int32_t)))
+  if (state.size() < static_cast<int>(2 * sizeof(std::int32_t)))
   {
     return false;
   }
 
-  int32_t state_version;
+  std::int32_t state_version;
   state_stream >> state_version;
   if (state_version != version)
   {
     return false;
   }
 
-  int32_t column_count;
+  std::int32_t column_count;
   state_stream >> column_count;
 
   // Abort when the state binary aparently does not describe the column count of the current treeview
@@ -254,7 +254,7 @@ bool QAdvancedTreeView::restoreState(const QByteArray& state, int32_t version)
   int size_of_column_state = temp_array.size();
 
   // Abort when the state binary data contains too few / too much elements to describe all columns
-  if (state.size() != (2 * (int)sizeof(int32_t) + (column_count * size_of_column_state)))
+  if (state.size() != (2 * static_cast<int>(sizeof(int32_t)) + (column_count * size_of_column_state)))
   {
     return false;
   }

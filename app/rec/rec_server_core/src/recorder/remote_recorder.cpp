@@ -39,7 +39,7 @@ namespace eCAL
 
     RemoteRecorder::RemoteRecorder(const std::string& hostname
                                   , const std::function<void(const std::string& hostname, const eCAL::rec::RecorderStatus& recorder_status)>& update_jobstatus_function
-                                  , const std::function<void(int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& info_command_response)>& report_job_command_response_callback
+                                  , const std::function<void(std::int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& info_command_response)>& report_job_command_response_callback
                                   , const RecorderSettings& initial_settings)
       : AbstractRecorder(hostname, update_jobstatus_function, report_job_command_response_callback)
       , InterruptibleThread()
@@ -390,7 +390,7 @@ namespace eCAL
 
             eCAL::rec::proto_helpers::FromProtobuf(state_response_pb, hostname, last_status);
 
-            int32_t                   client_pid  = state_response_pb.pid();
+            std::int32_t              client_pid  = state_response_pb.pid();
 
             {
               std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);

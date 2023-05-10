@@ -72,10 +72,10 @@ void MeasurementExporter::setData(eCALMeasCutterUtils::Timestamp timestamp, cons
   const auto sender_timestamp = (iter != meta_data.end()) ? iter->second.sender_timestamp : static_cast<eCALMeasCutterUtils::Timestamp>(0);
 
   iter = meta_data.find(eCALMeasCutterUtils::MetaDatumKey::SENDER_ID);
-  const auto sender_id = (iter != meta_data.end()) ? iter->second.sender_id : static_cast<uint64_t>(0);
+  const auto sender_id = (iter != meta_data.end()) ? iter->second.sender_id : static_cast<std::uint64_t>(0);
 
   iter = meta_data.find(eCALMeasCutterUtils::MetaDatumKey::SENDER_CLOCK);
-  const auto sender_clock = (iter != meta_data.end()) ? iter->second.sender_clock : static_cast<uint64_t>(0);
+  const auto sender_clock = (iter != meta_data.end()) ? iter->second.sender_clock : static_cast<std::uint64_t>(0);
 
   if (!_writer->AddEntryToFile(payload.data(), payload.size(), sender_timestamp, timestamp, _current_channel_name, sender_id, sender_clock))
   {

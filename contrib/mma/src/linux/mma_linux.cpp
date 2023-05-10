@@ -133,14 +133,14 @@ ResourceLinux::Memory MMALinux::GetMemory()
   ResourceLinux::Memory memory;
 
   std::string memfile_str = FileToString("/proc/meminfo");
-  std::unordered_map<std::string, uint64_t> memory_map;
+  std::unordered_map<std::string, std::uint64_t> memory_map;
 
   std::stringstream stream(memfile_str);
 
   for (int i = 0; i < 5; i++)
   {
     std::string title;
-    uint64_t title_data;
+    std::uint64_t title_data;
     std::string size_type;
     stream >> title >> title_data >> size_type;
     memory_map[title] = title_data;
@@ -390,7 +390,7 @@ bool MMALinux::SetDiskInformation(ResourceLinux::DiskStatsList& disks)
   {
     ResourceLinux::DiskStats disk_stats;
     disk_stats.name = partition.second[0];
-    uint64_t used = stoll(partition.second[1]);
+    std::uint64_t used = stoll(partition.second[1]);
     disk_stats.available = stoll(partition.second[2]);
     disk_stats.capacity = disk_stats.available + used;
     disk_stats.mount_point = partition.second[3];

@@ -57,13 +57,13 @@ std::set<std::shared_ptr<EcalSysTask>> TaskGroup::GetAllTasks()
   return task_set;
 }
 
-void TaskGroup::SetId(uint32_t id)
+void TaskGroup::SetId(std::uint32_t id)
 {
   std::lock_guard<std::mutex> group_lock(m_mutex);
   m_id = id;
 }
 
-uint32_t TaskGroup::GetId()
+std::uint32_t TaskGroup::GetId()
 {
   std::lock_guard<std::mutex> group_lock(m_mutex);
   return m_id;

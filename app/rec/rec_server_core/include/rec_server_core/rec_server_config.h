@@ -50,7 +50,7 @@ namespace eCAL
 
       Type        type_;
       std::string host_;
-      uint16_t    port_;
+      std::uint16_t    port_;
       std::string username_;
       std::string password_;
       std::string root_path_;
@@ -82,7 +82,7 @@ namespace eCAL
 
       std::string                         root_dir_;
       std::string                         meas_name_;
-      int64_t                             max_file_size_;
+      std::int64_t                        max_file_size_;
       bool                                one_file_per_topic_;
       std::string                         description_;
       std::map<std::string, ClientConfig> enabled_clients_config_;

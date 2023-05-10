@@ -154,20 +154,20 @@ private:
     std::string                  addon_id_;
     std::string                  addon_name_;
     std::string                  addon_execuable_path_;
-    int32_t                      pid_;
+    std::int32_t                 pid_;
     std::set<std::string>        host_filter_;
     bool                         double_host_filter_warning_;
     bool                         request_pending_;
 
     // Status
-    bool                                                    initialized_;
-    eCAL::Time::ecal_clock::time_point                      timestamp_;
-    eCAL::Time::ecal_clock::duration                        time_error_;
-    bool                                                    time_error_warning_;
-    std::pair<int64_t, std::chrono::steady_clock::duration> pre_buffer_length_;
-    std::set<std::string>                                   subscribed_topics_;
-    bool                                                    recording_;
-    std::pair<bool, std::string>                            info_;
+    bool                                                         initialized_;
+    eCAL::Time::ecal_clock::time_point                           timestamp_;
+    eCAL::Time::ecal_clock::duration                             time_error_;
+    bool                                                         time_error_warning_;
+    std::pair<std::int64_t, std::chrono::steady_clock::duration> pre_buffer_length_;
+    std::set<std::string>                                        subscribed_topics_;
+    bool                                                         recording_;
+    std::pair<bool, std::string>                                 info_;
   };
 
 //////////////////////////////////////////////////////

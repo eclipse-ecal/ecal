@@ -30,7 +30,7 @@
 class PipeRefresher
 {
  public:
-  explicit PipeRefresher(const std::string& command, uint32_t frequency = 1);
+  explicit PipeRefresher(const std::string& command, std::uint32_t frequency = 1);
   ~PipeRefresher();
 
   typedef std::function<void(const std::string&, const std::string&)> MethodCallback;
@@ -42,7 +42,7 @@ class PipeRefresher
   std::string command_;
 
   std::atomic<bool> can_send_;
-  uint32_t frequency_;
+  std::uint32_t frequency_;
 
   std::thread thread_;
 

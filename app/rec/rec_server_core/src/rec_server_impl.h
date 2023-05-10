@@ -95,9 +95,9 @@ namespace eCAL
       bool StartRecording     ();
       bool StopRecording      ();
 
-      bool IsConnectedToEcal             () const;
-      bool IsRecording                   () const;
-      int64_t GetCurrentlyRecordingMeasId() const;
+      bool IsConnectedToEcal                  () const;
+      bool IsRecording                        () const;
+      std::int64_t GetCurrentlyRecordingMeasId() const;
 
       bool                  IsAnyRequestPending        () const;
       std::set<std::string> GetHostsWithPendingRequests() const;
@@ -122,9 +122,9 @@ namespace eCAL
 
     private:
       void UpdateJobstatusCallback(const std::string& hostname, const eCAL::rec::RecorderStatus& recorder_status);
-      void ReportJobCommandResponseCallback(int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& response_info);
+      void ReportJobCommandResponseCallback(std::int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& response_info);
 
-      std::map<std::string, int32_t> GetRunningEnabledRecClients() const;
+      std::map<std::string, std::int32_t> GetRunningEnabledRecClients() const;
 
     ////////////////////////////////////
     // General Client Settings        //
@@ -147,13 +147,13 @@ namespace eCAL
     public:
       void SetMeasRootDir           (const std::string& meas_root_dir);
       void SetMeasName              (const std::string& meas_name);
-      void SetMaxFileSizeMib        (int64_t max_file_size_mib);
+      void SetMaxFileSizeMib        (std::int64_t max_file_size_mib);
       void SetOneFilePerTopicEnabled(bool enabled);
       void SetDescription           (const std::string& description);
 
       std::string  GetMeasRootDir           () const;
       std::string  GetMeasName              () const;
-      int64_t      GetMaxFileSizeMib        () const;
+      std::int64_t GetMaxFileSizeMib        () const;
       bool         GetOneFilePerTopicEnabled() const;
       std::string  GetDescription           () const;
 
@@ -173,18 +173,18 @@ namespace eCAL
       void SetUploadConfig(const UploadConfig& upload_config);
       UploadConfig GetUploadConfig() const;
       int GetInternalFtpServerOpenConnectionCount() const;
-      uint16_t GetInternalFtpServerPort() const;
+      std::uint16_t GetInternalFtpServerPort() const;
 
-      eCAL::rec::Error UploadMeasurement(int64_t meas_id);
-      bool CanUploadMeasurement(int64_t meas_id) const;
-      eCAL::rec::Error SimulateUploadMeasurement(int64_t meas_id) const;
+      eCAL::rec::Error UploadMeasurement(std::int64_t meas_id);
+      bool CanUploadMeasurement(std::int64_t meas_id) const;
+      eCAL::rec::Error SimulateUploadMeasurement(std::int64_t meas_id) const;
       int  UploadNonUploadedMeasurements();
 
-      bool HasAnyUploadError(int64_t meas_id) const;
+      bool HasAnyUploadError(std::int64_t meas_id) const;
 
     private:
       eCAL::rec::Error UploadMeasurement(const JobHistoryEntry& job_history_entry);
-      eCAL::rec::Error SimulateUploadMeasurement_NoLock(int64_t meas_id) const;
+      eCAL::rec::Error SimulateUploadMeasurement_NoLock(std::int64_t meas_id) const;
       eCAL::rec::Error SimulateUploadMeasurement_NoLock(const JobHistoryEntry& job_history_entry) const;
 
       std::map<std::string, std::pair<AbstractRecorder*, bool>> GetClientsThatNeedToUpload_NoLock(const JobHistoryEntry& job_history_entry) const;
@@ -193,25 +193,25 @@ namespace eCAL
     // Comments
     ////////////////////////////////////
     public:
-      eCAL::rec::Error AddComment(int64_t meas_id, const std::string& comment);
-      bool CanAddComment(int64_t meas_id) const;
-      eCAL::rec::Error SimulateAddComment(int64_t meas_id) const;
+      eCAL::rec::Error AddComment(std::int64_t meas_id, const std::string& comment);
+      bool CanAddComment(std::int64_t meas_id) const;
+      eCAL::rec::Error SimulateAddComment(std::int64_t meas_id) const;
 
     private:
       int GetLocalRecConnectionPid_NoLock() const;
-      eCAL::rec::Error SimulateAddComment_NoLock(int64_t meas_id, int local_rec_connection_pid) const;
+      eCAL::rec::Error SimulateAddComment_NoLock(std::int64_t meas_id, int local_rec_connection_pid) const;
       eCAL::rec::Error SimulateAddComment_NoLock(const JobHistoryEntry& job_history_entry, int local_rec_connection_pid) const;
 
     ////////////////////////////////////
     // Delete measurement
     ////////////////////////////////////
     public:
-      bool CanDeleteMeasurement(int64_t meas_id) const;
-      eCAL::rec::Error SimulateDeleteMeasurement(int64_t meas_id) const;
-      eCAL::rec::Error DeleteMeasurement(int64_t meas_id);
+      bool CanDeleteMeasurement(std::int64_t meas_id) const;
+      eCAL::rec::Error SimulateDeleteMeasurement(std::int64_t meas_id) const;
+      eCAL::rec::Error DeleteMeasurement(std::int64_t meas_id);
 
     private:
-      eCAL::rec::Error SimulateDeleteMeasurement_NoLock(int64_t meas_id) const;
+      eCAL::rec::Error SimulateDeleteMeasurement_NoLock(std::int64_t meas_id) const;
       eCAL::rec::Error SimulateDeleteMeasurement_NoLock(const JobHistoryEntry& job_history_entry) const;
       
       static bool anyAddonStateIs_NoLock(eCAL::rec::RecAddonJobStatus::State state, const eCAL::rec::JobStatus& job_status);
@@ -246,9 +246,9 @@ namespace eCAL
       RecorderSettings settings_;
       eCAL::rec::JobConfig job_config_;
 
-      bool      connected_to_ecal_;
-      bool      recording_;
-      int64_t   currently_recording_meas_id_;
+      bool           connected_to_ecal_;
+      bool           recording_;
+      std::int64_t   currently_recording_meas_id_;
 
       mutable std::shared_timed_mutex job_history_mutex_;
       std::list<JobHistoryEntry>      job_history_;

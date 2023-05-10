@@ -64,7 +64,7 @@ namespace EcalUtils
       bool IsOk() const;
       Type GetType() const;
 
-      int64_t FileSize() const;
+      std::int64_t FileSize() const;
 
       bool PermissionRootRead()     const;
       bool PermissionRootWrite()    const;

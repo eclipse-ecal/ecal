@@ -120,7 +120,7 @@ namespace eCAL
       **/
       bool Deserialize(T& msg_, const void* buffer_, size_t size_) const
       {
-        msg_.PushFlatBuffer(static_cast<const uint8_t*>(buffer_), static_cast<int>(size_));
+        msg_.PushFlatBuffer(static_cast<const std::uint8_t*>(buffer_), static_cast<int>(size_));
         return(true);
       }
     };

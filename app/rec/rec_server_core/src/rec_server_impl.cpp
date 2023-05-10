@@ -52,7 +52,7 @@ namespace eCAL
       , currently_recording_meas_id_(0)
       , use_built_in_recorder_      (true)
       , ecal_rec_instance_          (std::make_shared<eCAL::rec::EcalRec>())
-      , ftp_server_                 (std::make_unique<fineftp::FtpServer>(static_cast<uint16_t>(0)))
+      , ftp_server_                 (std::make_unique<fineftp::FtpServer>(static_cast<std::uint16_t>(0)))
       , loaded_config_version_      (-1)
     {
       // Initialize Recorder Settings
@@ -579,7 +579,7 @@ namespace eCAL
       return recording_;
     }
 
-    int64_t RecServerImpl::GetCurrentlyRecordingMeasId() const
+    std::int64_t RecServerImpl::GetCurrentlyRecordingMeasId() const
     {
       return currently_recording_meas_id_;
     }
@@ -782,7 +782,7 @@ namespace eCAL
       }
     }
     
-    void RecServerImpl::ReportJobCommandResponseCallback(int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& response_info)
+    void RecServerImpl::ReportJobCommandResponseCallback(std::int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& response_info)
     {
       std::unique_lock<decltype(job_history_mutex_)> job_history_lock(job_history_mutex_);
 
@@ -796,17 +796,17 @@ namespace eCAL
       client_status_it->second.info_last_command_response_ = response_info;
     }
 
-    std::map<std::string, int32_t> RecServerImpl::GetRunningEnabledRecClients() const
+    std::map<std::string, std::int32_t> RecServerImpl::GetRunningEnabledRecClients() const
     {
       std::shared_lock<decltype (connected_enabled_rec_clients_mutex_)>rec_clients_lock(connected_enabled_rec_clients_mutex_);
 
-      std::map<std::string, int32_t> running_enabled_rec_clients;
+      std::map<std::string, std::int32_t> running_enabled_rec_clients;
       for (const auto& enabled_rec_client : enabled_rec_clients_)
       {
         auto connected_rec_client_it = connected_rec_clients_.find(enabled_rec_client.first);
         if (connected_rec_client_it != connected_rec_clients_.end())
         {
-          int32_t pid = connected_rec_client_it->second->GetStatus().first.pid_;
+          std::int32_t pid = connected_rec_client_it->second->GetStatus().first.pid_;
           if (pid >= 0)
           {
             running_enabled_rec_clients[enabled_rec_client.first] = pid;
@@ -945,7 +945,7 @@ namespace eCAL
       job_config_.SetMeasName(meas_name);
     }
 
-    void RecServerImpl::SetMaxFileSizeMib(int64_t max_file_size_mib)
+    void RecServerImpl::SetMaxFileSizeMib(std::int64_t max_file_size_mib)
     {
       job_config_.SetMaxFileSize(max_file_size_mib);
     }
@@ -971,7 +971,7 @@ namespace eCAL
       return job_config_.GetMeasName();
     }
 
-    int64_t RecServerImpl::GetMaxFileSizeMib() const
+    std::int64_t RecServerImpl::GetMaxFileSizeMib() const
     {
       return job_config_.GetMaxFileSize();
     }
@@ -1109,12 +1109,12 @@ namespace eCAL
       return ftp_server_->getOpenConnectionCount();
     }
 
-    uint16_t RecServerImpl::GetInternalFtpServerPort() const
+    std::uint16_t RecServerImpl::GetInternalFtpServerPort() const
     {
       return ftp_server_->getPort();
     }
 
-    eCAL::rec::Error RecServerImpl::UploadMeasurement(int64_t meas_id)
+    eCAL::rec::Error RecServerImpl::UploadMeasurement(std::int64_t meas_id)
     {
       JobHistoryEntry job_history_entry;
 
@@ -1161,12 +1161,12 @@ namespace eCAL
       return error;
     }
 
-    bool RecServerImpl::CanUploadMeasurement(int64_t meas_id) const
+    bool RecServerImpl::CanUploadMeasurement(std::int64_t meas_id) const
     {
       return !SimulateUploadMeasurement(meas_id);
     }
 
-    eCAL::rec::Error RecServerImpl::SimulateUploadMeasurement(int64_t meas_id) const
+    eCAL::rec::Error RecServerImpl::SimulateUploadMeasurement(std::int64_t meas_id) const
     {
       std::shared_lock<decltype (job_history_mutex_)>job_history_lock(job_history_mutex_);
       return SimulateUploadMeasurement_NoLock(meas_id);
@@ -1193,7 +1193,7 @@ namespace eCAL
       return static_cast<int>(job_history_copy.size());
     }
 
-    bool RecServerImpl::HasAnyUploadError(int64_t meas_id) const
+    bool RecServerImpl::HasAnyUploadError(std::int64_t meas_id) const
     {
       std::shared_lock<decltype (job_history_mutex_)>job_history_lock(job_history_mutex_);
       auto job_it = std::find_if(job_history_.begin(), job_history_.end(), [meas_id](const JobHistoryEntry& job_history_entry) { return job_history_entry.local_evaluated_job_config_.GetJobId() == meas_id; });
@@ -1375,7 +1375,7 @@ namespace eCAL
       }
     }
 
-    eCAL::rec::Error RecServerImpl::SimulateUploadMeasurement_NoLock(int64_t meas_id) const
+    eCAL::rec::Error RecServerImpl::SimulateUploadMeasurement_NoLock(std::int64_t meas_id) const
     {
       eCAL::rec::Error error(eCAL::rec::Error::OK);
 
@@ -1527,7 +1527,7 @@ namespace eCAL
     ////////////////////////////////////
     // Comments
     ////////////////////////////////////
-    eCAL::rec::Error RecServerImpl::AddComment(int64_t meas_id, const std::string& comment)
+    eCAL::rec::Error RecServerImpl::AddComment(std::int64_t meas_id, const std::string& comment)
     {
       std::set<std::string> hosts_to_send_command_to;
 
@@ -1609,12 +1609,12 @@ namespace eCAL
       return error;
     }
 
-    bool RecServerImpl::CanAddComment(int64_t meas_id) const
+    bool RecServerImpl::CanAddComment(std::int64_t meas_id) const
     {
       return !SimulateAddComment(meas_id);
     }
 
-    eCAL::rec::Error RecServerImpl::SimulateAddComment(int64_t meas_id) const
+    eCAL::rec::Error RecServerImpl::SimulateAddComment(std::int64_t meas_id) const
     {
       int local_rec_connection_pid = -1;
 
@@ -1643,7 +1643,7 @@ namespace eCAL
       }
     }
 
-    eCAL::rec::Error RecServerImpl::SimulateAddComment_NoLock(int64_t meas_id, int local_rec_connection_pid) const
+    eCAL::rec::Error RecServerImpl::SimulateAddComment_NoLock(std::int64_t meas_id, int local_rec_connection_pid) const
     {
       eCAL::rec::Error error(eCAL::rec::Error::OK);
 
@@ -1721,18 +1721,18 @@ namespace eCAL
     ////////////////////////////////////
     // Delete measurement
     ////////////////////////////////////
-    bool RecServerImpl::CanDeleteMeasurement(int64_t meas_id) const
+    bool RecServerImpl::CanDeleteMeasurement(std::int64_t meas_id) const
     {
       return !SimulateDeleteMeasurement(meas_id);
     }
 
-    eCAL::rec::Error RecServerImpl::SimulateDeleteMeasurement(int64_t meas_id) const
+    eCAL::rec::Error RecServerImpl::SimulateDeleteMeasurement(std::int64_t meas_id) const
     {
       std::shared_lock<decltype (job_history_mutex_)>job_history_lock(job_history_mutex_);
       return SimulateDeleteMeasurement_NoLock(meas_id);
     }
 
-    eCAL::rec::Error RecServerImpl::DeleteMeasurement(int64_t meas_id)
+    eCAL::rec::Error RecServerImpl::DeleteMeasurement(std::int64_t meas_id)
     {
       std::set<std::string> hosts_to_delete_on;
 
@@ -1789,7 +1789,7 @@ namespace eCAL
       return error;
     }
 
-    eCAL::rec::Error RecServerImpl::SimulateDeleteMeasurement_NoLock(int64_t meas_id) const
+    eCAL::rec::Error RecServerImpl::SimulateDeleteMeasurement_NoLock(std::int64_t meas_id) const
     {
       eCAL::rec::Error error(eCAL::rec::Error::OK);
 

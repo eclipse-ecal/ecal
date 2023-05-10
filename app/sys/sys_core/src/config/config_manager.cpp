@@ -60,7 +60,7 @@ bool ConfigManager::LoadConfig(EcalSys& ecalsys, const std::string& path, bool a
     }
 
     // In the case of appending configs, there might be ID conflicts. Thus we keep a map of ID in the case we have to assign a new ID.
-    std::map<uint32_t, uint32_t> runner_id_map;
+    std::map<std::uint32_t, std::uint32_t> runner_id_map;
 
     // Add Runners
     for (const auto& runner_config : config.runners_) {
@@ -74,9 +74,9 @@ bool ConfigManager::LoadConfig(EcalSys& ecalsys, const std::string& path, bool a
         continue;
       }
 
-      std::shared_ptr<EcalSysRunner> runner(new EcalSysRunner((uint32_t)runner_config.GetId(), runner_config.name_, runner_config.path_, runner_config.default_algo_dir_, runner_config.load_cmd_argument_));
+      std::shared_ptr<EcalSysRunner> runner(new EcalSysRunner(static_cast<std::uint32_t>(runner_config.GetId()), runner_config.name_, runner_config.path_, runner_config.default_algo_dir_, runner_config.load_cmd_argument_));
 
-      if (ecalsys.GetRunner((uint32_t)runner_config.GetId()))
+      if (ecalsys.GetRunner(static_cast<std::uint32_t>(runner_config.GetId())))
       {
         // A Runner with that ID already exists. Thus, we let ecalsys assign a new one
         ecalsys.AddRunner(runner, false);
@@ -115,20 +115,20 @@ bool ConfigManager::LoadConfig(EcalSys& ecalsys, const std::string& path, bool a
       std::shared_ptr<EcalSysRunner> runner(nullptr);
       for (auto id_pair : runner_id_map)
       {
-        if (id_pair.first == (uint32_t)task_config.start_stop_.runner_id_)
+        if (id_pair.first == static_cast<std::uint32_t>(task_config.start_stop_.runner_id_))
         {
           runner = ecalsys.GetRunner(id_pair.second);
         }
       }
 
       // Set all values
-      new_task->SetId                         ((uint32_t)task_config.GetId());
+      new_task->SetId                         (static_cast<std::uint32_t>(task_config.GetId()));
       new_task->SetName                       (task_config.name_);
       new_task->SetTarget                     (task_config.start_stop_.target_);
       new_task->SetAlgoPath                   (task_config.start_stop_.algo_);
       new_task->SetWorkingDir                 (task_config.start_stop_.working_dir_);
       new_task->SetRunner                     (runner);
-      new_task->SetLaunchOrder                ((unsigned int)task_config.start_stop_.launch_order_);
+      new_task->SetLaunchOrder                (static_cast<unsigned int>(task_config.start_stop_.launch_order_));
       new_task->SetTimeoutAfterStart          (task_config.start_stop_.timeout_);
       new_task->SetVisibility                 (visibility);
       new_task->SetCommandLineArguments       (task_config.start_stop_.additional_cmd_line_args_);
@@ -136,7 +136,7 @@ bool ConfigManager::LoadConfig(EcalSys& ecalsys, const std::string& path, bool a
       new_task->SetRestartBySeverityEnabled   (task_config.monitoring_.restart_by_severity_);
       new_task->SetRestartAtSeverity          (restart_at_severity);
 
-      if (ecalsys.GetTask((uint32_t)task_config.GetId()))
+      if (ecalsys.GetTask(static_cast<std::uint32_t>(task_config.GetId())))
       {
         //The ID is already in use
         ecalsys.AddTask(new_task, false);
@@ -183,7 +183,7 @@ bool ConfigManager::LoadConfig(EcalSys& ecalsys, const std::string& path, bool a
         for (auto config_function_task : config_function_state.tasks_)
         {
           unsigned int task_id = config_function_task.GetId();
-          auto task = ecalsys.GetTask((uint32_t)task_id);
+          auto task = ecalsys.GetTask(static_cast<std::uint32_t>(task_id));
           TaskState minimal_severity;
           minimal_severity.FromString(config_function_task.severity_, config_function_task.severity_level_);
 
@@ -283,8 +283,8 @@ bool ConfigManager::SaveConfig(EcalSys& ecalsys, const std::string& path, Config
     // as the exe runner. Yes, it also does nothing :-)
     // Of course we have to look for a free ID for that runner. For this, we 
     // simply scan all IDs from 1 -> infinity until we find an unused ID.
-    uint32_t free_id = 1;
-    for (free_id = 1; free_id < std::numeric_limits<uint32_t>::max(); free_id++)
+    std::uint32_t free_id = 1;
+    for (free_id = 1; free_id < std::numeric_limits<std::uint32_t>::max(); free_id++)
     {
       auto it = std::find_if(runner_list.begin(), runner_list.end(),
         [free_id](const std::shared_ptr<EcalSysRunner> r) {return r->GetId() == free_id; });
@@ -312,13 +312,13 @@ bool ConfigManager::SaveConfig(EcalSys& ecalsys, const std::string& path, Config
     // save tasks
     for (auto& task : task_list)
     {
-      eCAL::Sys::Config::CConfiguration::Task task_config((unsigned int)task->GetId());
+      eCAL::Sys::Config::CConfiguration::Task task_config(static_cast<unsigned int>(task->GetId()));
 
       task_config.name_                                 = task->GetName();
       task_config.start_stop_.target_                   = task->GetTarget();
 
       auto runner = task->GetRunner();
-      uint32_t runner_id;
+      std::uint32_t runner_id;
       if (runner)
       {
         // The runner exists => we use it's ID

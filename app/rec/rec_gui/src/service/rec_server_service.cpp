@@ -126,7 +126,7 @@ void RecServerService::StartRecording(::google::protobuf::RpcController*        
     std::list<eCAL::rec_server::JobHistoryEntry> job_history;
     QMetaObject::invokeMethod(QEcalRec::instance(), "jobHistory", Qt::BlockingQueuedConnection, Q_RETURN_ARG(std::list<eCAL::rec_server::JobHistoryEntry>, job_history));
 
-    int64_t meas_id = 0;
+    std::int64_t meas_id = 0;
     if (job_history.size() > 0)
     {
       meas_id = job_history.back().local_evaluated_job_config_.GetJobId();
@@ -179,7 +179,7 @@ void RecServerService::SaveBuffer(::google::protobuf::RpcController*            
     std::list<eCAL::rec_server::JobHistoryEntry> job_history;
     QMetaObject::invokeMethod(QEcalRec::instance(), "jobHistory", Qt::BlockingQueuedConnection, Q_RETURN_ARG(std::list<eCAL::rec_server::JobHistoryEntry>, job_history));
 
-    int64_t meas_id = 0;
+    std::int64_t meas_id = 0;
     if (job_history.size() > 0)
     {
       meas_id = job_history.back().local_evaluated_job_config_.GetJobId();
@@ -204,7 +204,7 @@ void RecServerService::UploadMeasurement(::google::protobuf::RpcController*     
   {
     // Upload specific measurement
     eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
-    QMetaObject::invokeMethod(QEcalRec::instance(), "uploadMeasurement", Qt::BlockingQueuedConnection, Q_RETURN_ARG(eCAL::rec::Error, error), Q_ARG(int64_t, request->meas_id()));
+    QMetaObject::invokeMethod(QEcalRec::instance(), "uploadMeasurement", Qt::BlockingQueuedConnection, Q_RETURN_ARG(eCAL::rec::Error, error), Q_ARG(std::int64_t, request->meas_id()));
     
     if (!error)
     {
@@ -237,7 +237,7 @@ void RecServerService::AddComment(::google::protobuf::RpcController*            
   {
     // Add comment to specific measurement
     eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
-    QMetaObject::invokeMethod(QEcalRec::instance(), "addComment", Qt::BlockingQueuedConnection, Q_RETURN_ARG(eCAL::rec::Error, error), Q_ARG(int64_t, request->meas_id()), Q_ARG(std::string, request->comment()), Q_ARG(bool, true));
+    QMetaObject::invokeMethod(QEcalRec::instance(), "addComment", Qt::BlockingQueuedConnection, Q_RETURN_ARG(eCAL::rec::Error, error), Q_ARG(std::int64_t, request->meas_id()), Q_ARG(std::string, request->comment()), Q_ARG(bool, true));
 
     if (!error)
     {
@@ -261,10 +261,10 @@ void RecServerService::AddComment(::google::protobuf::RpcController*            
 
     if (job_history.size() > 0)
     {
-      int64_t last_meas_id = job_history.back().local_evaluated_job_config_.GetJobId();
+      std::int64_t last_meas_id = job_history.back().local_evaluated_job_config_.GetJobId();
 
       eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
-      QMetaObject::invokeMethod(QEcalRec::instance(), "addComment", Qt::BlockingQueuedConnection, Q_RETURN_ARG(eCAL::rec::Error, error), Q_ARG(int64_t, last_meas_id), Q_ARG(std::string, request->comment()), Q_ARG(bool, true));
+      QMetaObject::invokeMethod(QEcalRec::instance(), "addComment", Qt::BlockingQueuedConnection, Q_RETURN_ARG(eCAL::rec::Error, error), Q_ARG(std::int64_t, last_meas_id), Q_ARG(std::string, request->comment()), Q_ARG(bool, true));
 
       if (!error)
       {
@@ -297,7 +297,7 @@ void RecServerService::DeleteMeasurement(::google::protobuf::RpcController*     
   {
     // Upload delete specific measurement
     eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
-    QMetaObject::invokeMethod(QEcalRec::instance(), "deleteMeasurement", Qt::BlockingQueuedConnection, Q_RETURN_ARG(eCAL::rec::Error, error), Q_ARG(int64_t, request->meas_id()), Q_ARG(bool, true));
+    QMetaObject::invokeMethod(QEcalRec::instance(), "deleteMeasurement", Qt::BlockingQueuedConnection, Q_RETURN_ARG(eCAL::rec::Error, error), Q_ARG(std::int64_t, request->meas_id()), Q_ARG(bool, true));
     
     if (!error)
     {
@@ -317,10 +317,10 @@ void RecServerService::DeleteMeasurement(::google::protobuf::RpcController*     
 
     if (job_history.size() > 0)
     {
-      int64_t last_meas_id = job_history.back().local_evaluated_job_config_.GetJobId();
+      std::int64_t last_meas_id = job_history.back().local_evaluated_job_config_.GetJobId();
 
       eCAL::rec::Error error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR);
-      QMetaObject::invokeMethod(QEcalRec::instance(), "deleteMeasurement", Qt::BlockingQueuedConnection, Q_RETURN_ARG(eCAL::rec::Error, error), Q_ARG(int64_t, last_meas_id), Q_ARG(bool, true));
+      QMetaObject::invokeMethod(QEcalRec::instance(), "deleteMeasurement", Qt::BlockingQueuedConnection, Q_RETURN_ARG(eCAL::rec::Error, error), Q_ARG(std::int64_t, last_meas_id), Q_ARG(bool, true));
 
       if (!error)
       {

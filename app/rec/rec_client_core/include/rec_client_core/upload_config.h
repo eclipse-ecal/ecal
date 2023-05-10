@@ -42,15 +42,15 @@ namespace eCAL
 
       Type protocol_;
 
-      int64_t     meas_id_;
+      std::int64_t   meas_id_;
 
-      std::string host_;
-      uint16_t    port_;
-      std::string username_;
-      std::string password_;
-      std::string upload_path_;
-      bool        upload_metadata_files_;
-      bool        delete_after_upload_;
+      std::string    host_;
+      std::uint16_t  port_;
+      std::string    username_;
+      std::string    password_;
+      std::string    upload_path_;
+      bool           upload_metadata_files_;
+      bool           delete_after_upload_;
     };
   }
 }

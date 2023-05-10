@@ -39,8 +39,8 @@ namespace eCAL
     // Getter & Setter
     //////////////////////////////
     public:
-      void SetJobId(int64_t job_id);
-      int64_t GetJobId() const;
+      void SetJobId(std::int64_t job_id);
+      std::int64_t GetJobId() const;
       void GenerateNewJobId();
 
       void SetMeasRootDir(const std::string& meas_root_dir);
@@ -49,8 +49,8 @@ namespace eCAL
       void SetMeasName(const std::string& meas_name);
       std::string GetMeasName() const;
 
-      void SetMaxFileSize(int64_t max_file_size_mb);
-      int64_t GetMaxFileSize() const;
+      void SetMaxFileSize(std::int64_t max_file_size_mb);
+      std::int64_t GetMaxFileSize() const;
 
       void SetOneFilePerTopicEnabled(bool enabled);
       bool GetOneFilePerTopicEnabled() const;
@@ -70,11 +70,11 @@ namespace eCAL
     // Member Variables
     //////////////////////////////
     private:
-      int64_t      job_id_;
+      std::int64_t job_id_;
 
       std::string  meas_root_dir_;
       std::string  meas_name_;
-      int64_t      max_file_size_mb_;
+      std::int64_t max_file_size_mb_;
       bool         one_file_per_topic_;
       std::string  description_;
     };

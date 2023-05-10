@@ -48,7 +48,7 @@ public:
    * @param default_algo_dir    Default path where the .dll / .so files are located
    * @param load_cmd_argument   Command line argument for loading files
    */
-  EcalSysRunner(uint32_t id, const std::string& name, const std::string& path, const std::string& default_algo_dir, const std::string& load_cmd_argument);
+  EcalSysRunner(std::uint32_t id, const std::string& name, const std::string& path, const std::string& default_algo_dir, const std::string& load_cmd_argument);
 
   ~EcalSysRunner();
 
@@ -56,7 +56,7 @@ public:
    * @brief Sets the ID of the runner
    * @param id The new ID of the runner
    */
-  void SetId(uint32_t id);
+  void SetId(std::uint32_t id);
 
   /**
    * @brief Sets the name of the runner, that is displayed in the GUI
@@ -86,39 +86,39 @@ public:
    * @brief Gets the ID of this runner
    * @return the ID of this runner
    */
-  uint32_t     GetId();
+  std::uint32_t GetId();
 
   /**
    * @brief Gets the name of this runner that is displayed in the GUI
    * @return the name of this runner
    */
-  std::string  GetName();
+  std::string   GetName();
 
   /**
    * @brief Gets the path to the runner's executable
    * @return the path to the runner's executable
    */
-  std::string  GetPath();
+  std::string   GetPath();
 
   /**
    * @brief Gets the default path to the directory where the .dll / .so / etc. files are located
    * @return the default algorithm directory
    */
-  std::string  GetDefaultAlgoDir();
+  std::string   GetDefaultAlgoDir();
 
   /**
    * @brief Gets the command line argument for loading files
    * @return the command line argument for loading files
    */
-  std::string  GetLoadCmdArgument();
+  std::string   GetLoadCmdArgument();
 
 private:
-  std::mutex   m_mutex;                   /**< Mutex for thread-safe getting and setting of all values */
+  std::mutex    m_mutex;                   /**< Mutex for thread-safe getting and setting of all values */
 
-  uint32_t     m_id;                      /**< ID of this runner when saving it to a file */
-  std::string  m_name;                    /**< Name of this runner that is displayed in the GUI */
-  std::string  m_path;                    /**< Path to the runner's executable */
-  std::string  m_default_algo_dir;        /**< Default path to the directory where the .dll / .so / etc. files are located */
-  std::string  m_load_cmd_argument;       /**< command line argument for loading a file */
+  std::uint32_t m_id;                      /**< ID of this runner when saving it to a file */
+  std::string   m_name;                    /**< Name of this runner that is displayed in the GUI */
+  std::string   m_path;                    /**< Path to the runner's executable */
+  std::string   m_default_algo_dir;        /**< Default path to the directory where the .dll / .so / etc. files are located */
+  std::string   m_load_cmd_argument;       /**< command line argument for loading a file */
 };
 

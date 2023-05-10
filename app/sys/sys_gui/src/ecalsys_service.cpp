@@ -48,7 +48,7 @@ namespace
   std::list<std::shared_ptr<EcalSysTask>> GetRequestedTasks(const ::eCAL::pb::sys::TaskRequest* request)
   {
     std::set<std::shared_ptr<EcalSysTask>> tasks;
-    for (int32_t id : request->tids())
+    for (std::int32_t id : request->tids())
     {
       tasks.emplace(Globals::EcalSysInstance()->GetTask(id));
     }

@@ -131,7 +131,7 @@ private:
     eCAL::STcpHeader tcp_header;
     // set up package size
     const size_t psize = response.size();
-    tcp_header.psize_n = htonl(static_cast<uint32_t>(psize));
+    tcp_header.psize_n = htonl(static_cast<std::uint32_t>(psize));
     // repack
     std::vector<char> packed_response(sizeof(tcp_header) + psize);
     memcpy(packed_response.data(), &tcp_header, sizeof(tcp_header));
@@ -201,7 +201,7 @@ public:
     event_cb_ = callback;
   }
 
-  uint16_t get_port()
+  std::uint16_t get_port()
   {
     return acceptor_.local_endpoint().port();
   }

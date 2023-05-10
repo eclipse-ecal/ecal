@@ -24,7 +24,7 @@
 
 #include "../include/linux/pipe_refresher.h"
 
-PipeRefresher::PipeRefresher(const std::string& command, uint32_t frequency /*= 1*/)
+PipeRefresher::PipeRefresher(const std::string& command, std::uint32_t frequency /*= 1*/)
   : command_(command)
   , frequency_(frequency)
 {

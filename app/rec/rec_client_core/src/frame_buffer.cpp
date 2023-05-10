@@ -77,14 +77,14 @@ namespace eCAL
       }
     }
 
-    std::pair<int64_t, std::chrono::steady_clock::duration> FrameBuffer::length() const
+    std::pair<std::int64_t, std::chrono::steady_clock::duration> FrameBuffer::length() const
     {
       std::shared_lock<decltype(frame_buffer_mutex_)> frame_buffer_lock(frame_buffer_mutex_);
 
       if (!is_enabled_)
         return {0, std::chrono::steady_clock::duration(0)};
 
-      int64_t frame_count = frame_buffer_deque_.size();
+      std::int64_t frame_count = frame_buffer_deque_.size();
       std::chrono::steady_clock::duration buffer_length;
       if (frame_count > 0)
       {

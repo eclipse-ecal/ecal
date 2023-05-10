@@ -47,7 +47,7 @@ int main(int argc, char **argv)
   my_monster.pos = std::make_unique<Game::Sample::Vec3>( 1.0f, 2.0f, 3.0f );
 
   // enter main loop
-  uint8_t cnt = 0;
+  std::uint8_t cnt = 0;
   while(eCAL::Ok())
   {
     if (cnt == 0)

@@ -548,10 +548,10 @@ namespace eCAL
               try
               {
                 const unsigned long port_long = std::stoul(port_string);
-                if ((port_long > std::numeric_limits<uint16_t>::max()) || (port_long <= 0))
+                if ((port_long > std::numeric_limits<std::uint16_t>::max()) || (port_long <= 0))
                   return eCAL::rec::Error(eCAL::rec::Error::PARAMETER_ERROR, "Invalid port: " + port_string);
 
-                upload_config_out.port_ = static_cast<uint16_t>(port_long);
+                upload_config_out.port_ = static_cast<std::uint16_t>(port_long);
               }
               catch (const std::exception& /*e*/)
               {
@@ -1197,10 +1197,10 @@ namespace eCAL
               try
               {
                 const unsigned long port_long = std::stoul(port_string);
-                if ((port_long > std::numeric_limits<uint16_t>::max()) || (port_long <= 0))
+                if ((port_long > std::numeric_limits<std::uint16_t>::max()) || (port_long <= 0))
                   return eCAL::rec::Error(eCAL::rec::Error::PARAMETER_ERROR, "Invalid port: " + port_string);
 
-                new_upload_config.port_ = static_cast<uint16_t>(port_long);
+                new_upload_config.port_ = static_cast<std::uint16_t>(port_long);
               }
               catch (const std::exception& /*e*/)
               {

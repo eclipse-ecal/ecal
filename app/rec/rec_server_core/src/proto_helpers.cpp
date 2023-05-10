@@ -286,7 +286,7 @@ namespace eCAL
 
         // port
         if (upload_config_pb.port() != 0)
-          upload_config.port_ = static_cast<uint16_t>(upload_config_pb.port());
+          upload_config.port_ = static_cast<std::uint16_t>(upload_config_pb.port());
 
         // username
         if (upload_config_pb.username() != "")

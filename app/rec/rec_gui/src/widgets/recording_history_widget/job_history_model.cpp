@@ -325,7 +325,7 @@ void JobHistoryModel::recordJobCreated(const eCAL::rec_server::JobHistoryEntry& 
   }
 }
 
-void JobHistoryModel::setDeleted(int64_t meas_id)
+void JobHistoryModel::setDeleted(std::int64_t meas_id)
 {
   JobHistoryJobItem* job_item = findJobItemById(meas_id);
   if (job_item == nullptr) return;
@@ -337,7 +337,7 @@ void JobHistoryModel::setDeleted(int64_t meas_id)
 ///////////////////////////////////////////
 // Helper methods
 ///////////////////////////////////////////
-JobHistoryJobItem* JobHistoryModel::findJobItemById(int64_t job_id)
+JobHistoryJobItem* JobHistoryModel::findJobItemById(std::int64_t job_id)
 {
   for (int i = 0; i < rowCount(); i++)
   {
@@ -353,7 +353,7 @@ JobHistoryJobItem* JobHistoryModel::findJobItemById(int64_t job_id)
   return nullptr;
 }
 
-JobHistoryRecorderItem* JobHistoryModel::findRecorderItem(int64_t job_id, const QString& hostname)
+JobHistoryRecorderItem* JobHistoryModel::findRecorderItem(std::int64_t job_id, const QString& hostname)
 {
   JobHistoryJobItem* job_item = findJobItemById(job_id);
   if (job_item != nullptr)
@@ -383,7 +383,7 @@ JobHistoryRecorderItem* JobHistoryModel::findRecorderItem(JobHistoryJobItem* job
   return nullptr;
 }
 
-JobHistoryRecorderItem* JobHistoryModel::findAddonItem(int64_t job_id, const QString& hostname, const QString& addon_id)
+JobHistoryRecorderItem* JobHistoryModel::findAddonItem(std::int64_t job_id, const QString& hostname, const QString& addon_id)
 {
   JobHistoryJobItem* job_item = findJobItemById(job_id);
   if (job_item != nullptr)

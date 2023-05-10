@@ -52,7 +52,7 @@ namespace eCAL
           return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::TOO_MANY_PARAMETERS, EcalUtils::String::Join(" ", std::vector<std::string>(std::next(argv.begin()), argv.end())));
 
         // (Try to) parse measurement ID
-        int64_t meas_id = 0;
+        std::int64_t meas_id = 0;
         if (argv.size() == 1)
         {
           try
@@ -83,7 +83,7 @@ namespace eCAL
           return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::TOO_MANY_PARAMETERS, EcalUtils::String::Join(" ", std::vector<std::string>(std::next(argv.begin()), argv.end())));
 
         // (Try to) parse measurement ID
-        int64_t meas_id = 0;
+        std::int64_t meas_id = 0;
         if (argv.size() == 1)
         {
           try

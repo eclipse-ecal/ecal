@@ -52,35 +52,35 @@ public:
   const QString& addonName() const;
   bool isAddonItem() const;
 
-  int                                                     pid()                     const;
-  bool                                                    stillOnline()             const;
-  std::pair<bool, std::string>                            infoLastCommandResponse() const;
-  std::pair<std::chrono::steady_clock::duration, int64_t> length()                  const;
-  int64_t                                                 unflushedFrameCount()     const;
-  eCAL::rec::JobState                                     state()                   const;
-  eCAL::rec::UploadStatus                                 uploadStatus()            const;
-  std::pair<bool, std::string>                            info()                    const;
-  bool                                                    isDeleted()               const;
-  const std::pair<bool, std::string>&                     displayedInfo()           const;
+  int                                                          pid()                     const;
+  bool                                                         stillOnline()             const;
+  std::pair<bool, std::string>                                 infoLastCommandResponse() const;
+  std::pair<std::chrono::steady_clock::duration, std::int64_t> length()                  const;
+  std::int64_t                                                 unflushedFrameCount()     const;
+  eCAL::rec::JobState                                          state()                   const;
+  eCAL::rec::UploadStatus                                      uploadStatus()            const;
+  std::pair<bool, std::string>                                 info()                    const;
+  bool                                                         isDeleted()               const;
+  const std::pair<bool, std::string>&                          displayedInfo()           const;
 
-  void setPid                    (int                                   pid);
-  void setStillOnline            (bool                                  still_online);
-  void setInfoLastCommandResponse(const std::pair<bool, std::string>&   info_last_command_response);
-  void setLength                 (const std::pair<std::chrono::steady_clock::duration, int64_t>& length);
-  void setUnflushedFrameCount    (int64_t                               unflushed_frame_count);
-  void setState                  (eCAL::rec::JobState                   state);
-  void setUploadStatus           (const eCAL::rec::UploadStatus&        upload_status);
-  void setInfo                   (const std::pair<bool, std::string>&   info);
-  void setIsDeleted              (bool is_deleted);
+  void setPid                    (int                                                                 pid);
+  void setStillOnline            (bool                                                                still_online);
+  void setInfoLastCommandResponse(const std::pair<bool, std::string>&                                 info_last_command_response);
+  void setLength                 (const std::pair<std::chrono::steady_clock::duration, std::int64_t>& length);
+  void setUnflushedFrameCount    (std::int64_t                                                        unflushed_frame_count);
+  void setState                  (eCAL::rec::JobState                                                 state);
+  void setUploadStatus           (const eCAL::rec::UploadStatus&                                      upload_status);
+  void setInfo                   (const std::pair<bool, std::string>&                                 info);
+  void setIsDeleted              (bool                                                                is_deleted);
 
-  bool updatePid                    (int                                 pid);
-  bool updateStillOnline            (bool                                still_online);
-  bool updateInfoLastCommandResponse(const std::pair<bool, std::string>& info_last_command_response);
-  bool updateLength                 (const std::pair<std::chrono::steady_clock::duration, int64_t>& length);
-  bool updateUnflushedFrameCount    (int64_t                             unflushed_frame_count);
-  bool updateState                  (eCAL::rec::JobState                 state);
-  bool updateUploadStatus           (const eCAL::rec::UploadStatus&      upload_status);
-  bool updateInfo                   (const std::pair<bool, std::string>& info);
+  bool updatePid                    (int                                                                 pid);
+  bool updateStillOnline            (bool                                                                still_online);
+  bool updateInfoLastCommandResponse(const std::pair<bool, std::string>&                                 info_last_command_response);
+  bool updateLength                 (const std::pair<std::chrono::steady_clock::duration, std::int64_t>& length);
+  bool updateUnflushedFrameCount    (std::int64_t                                                        unflushed_frame_count);
+  bool updateState                  (eCAL::rec::JobState                                                 state);
+  bool updateUploadStatus           (const eCAL::rec::UploadStatus&                                      upload_status);
+  bool updateInfo                   (const std::pair<bool, std::string>&                                 info);
   bool updateIsDeleted              (bool is_deleted);
 
 
@@ -118,18 +118,18 @@ private:
   const QIcon icon_uploading_;
 
   // Element Status
-  const QString                                           hostname_;
-  const QString                                           addon_id_;
-  const QString                                           addon_name_;
-  
-  int                                                     pid_;
-  bool                                                    still_online_;
-  std::pair<bool, std::string>                            info_last_command_response_;
+  const QString                                                hostname_;
+  const QString                                                addon_id_;
+  const QString                                                addon_name_;
+                                                               
+  int                                                          pid_;
+  bool                                                         still_online_;
+  std::pair<bool, std::string>                                 info_last_command_response_;
 
-  std::pair<std::chrono::steady_clock::duration, int64_t> length_;
-  int64_t                                                 unflushed_frame_count_;
-  eCAL::rec::JobState                                     state_;
-  eCAL::rec::UploadStatus                                 upload_status_;
-  std::pair<bool, std::string>                            info_;
-  bool                                                    is_deleted_;
+  std::pair<std::chrono::steady_clock::duration, std::int64_t> length_;
+  std::int64_t                                                 unflushed_frame_count_;
+  eCAL::rec::JobState                                          state_;
+  eCAL::rec::UploadStatus                                      upload_status_;
+  std::pair<bool, std::string>                                 info_;
+  bool                                                         is_deleted_;
 };

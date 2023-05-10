@@ -118,7 +118,7 @@ namespace eCAL
       public:
         eCAL::rec::Error printStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service) const;
 
-        eCAL::rec::Error printJobState(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, int64_t meas_id) const;
+        eCAL::rec::Error printJobState(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, std::int64_t meas_id) const;
 
         eCAL::rec::Error printClientInformation(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& client_hostname) const;
 
@@ -130,7 +130,7 @@ namespace eCAL
         void printClientList(const eCAL::rec_server::RecServerStatus& status, const eCAL::rec_server::RecServerConfig& config, std::ostream& ostream) const;
 
         eCAL::rec::Error printJobState(const std::string& job_id_string,                           const eCAL::rec_server::RecServerStatus& status, std::ostream& ostream) const;
-        eCAL::rec::Error printJobState(int64_t job_id,                                             const eCAL::rec_server::RecServerStatus& status, std::ostream& ostream) const;
+        eCAL::rec::Error printJobState(std::int64_t job_id,                                        const eCAL::rec_server::RecServerStatus& status, std::ostream& ostream) const;
         eCAL::rec::Error printJobState(const eCAL::rec_server::JobHistoryEntry& job_history_entry, const eCAL::rec_server::RecServerStatus& status, std::ostream& ostream) const;
 
         eCAL::rec::Error printClientInformation(const std::string& hostname, const eCAL::rec_server::RecServerStatus& status, std::ostream& ostream) const;
@@ -142,9 +142,9 @@ namespace eCAL
 
         eCAL::rec::JobState combinedJobState(const eCAL::rec_server::JobHistoryEntry& job_history_entry) const;
 
-        std::pair<std::chrono::steady_clock::duration, int64_t> combinedLength(const eCAL::rec_server::JobHistoryEntry& job_history_entry) const;
+        std::pair<std::chrono::steady_clock::duration, std::int64_t> combinedLength(const eCAL::rec_server::JobHistoryEntry& job_history_entry) const;
 
-        int64_t combinedUnflushedFrames(const eCAL::rec_server::JobHistoryEntry& job_history_entry) const;
+        std::int64_t combinedUnflushedFrames(const eCAL::rec_server::JobHistoryEntry& job_history_entry) const;
 
         eCAL::rec::UploadStatus combinedUploadStatus(const eCAL::rec_server::JobHistoryEntry& job_history_entry) const;
 

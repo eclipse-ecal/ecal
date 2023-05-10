@@ -57,7 +57,7 @@ EcalSysTask::~EcalSysTask()
 //// Configuration Setters & Getters                                        ////
 ////////////////////////////////////////////////////////////////////////////////
 
-uint32_t EcalSysTask::GetId()
+std::uint32_t EcalSysTask::GetId()
 {
   std::lock_guard<std::recursive_mutex> task_lock(mutex);
   return m_id;
@@ -136,7 +136,7 @@ TaskState EcalSysTask::GetRestartAtSeverity()
 }
 
 
-void EcalSysTask::SetId(uint32_t id)
+void EcalSysTask::SetId(std::uint32_t id)
 {
   std::lock_guard<std::recursive_mutex> task_lock(mutex);
   m_id = id;

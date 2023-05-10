@@ -62,11 +62,11 @@ public:
     ////////////////////////////////////////////////////////////////////////////
     struct Color
     {
-      uint8_t red;
-      uint8_t green;
-      uint8_t blue;
-      Color(uint8_t r, uint8_t g, uint8_t b) : red(r), green(g), blue(b) {}
-      Color(int r, int g, int b) : Color((uint8_t)r, (uint8_t)g, (uint8_t)b) {}
+      std::uint8_t red;
+      std::uint8_t green;
+      std::uint8_t blue;
+      Color(std::uint8_t r, std::uint8_t g, std::uint8_t b) : red(r), green(g), blue(b) {}
+      Color(int r, int g, int b) : Color((std::uint8_t)r, (std::uint8_t)g, (std::uint8_t)b) {}
       Color() : Color(0, 0, 0) {}
       bool operator ==(const Color &c) const { return (c.red == red) && (c.green == green) && (c.blue == blue); }
       bool operator !=(const Color &c) const { return !(operator ==(c)); }
@@ -186,7 +186,7 @@ public:
    *
    * @param id the new ID
    */
-  void SetId(uint32_t id);
+  void SetId(std::uint32_t id);
 
   /**
    * @brief Gets the ID of the TaskGroup.
@@ -196,7 +196,7 @@ public:
    *
    * @return the ID of the TaskGroup
    */
-  uint32_t GetId();
+  std::uint32_t GetId();
 
   /**
    * @brief Returns the list of possible states as copy.
@@ -221,7 +221,7 @@ public:
   void SetGroupStateList(const std::list<std::shared_ptr<GroupState>>& group_state_list);
 
 private:
-  uint32_t m_id;                                                                /**< The ID of this TaskGroup when saving it to a file*/
+  std::uint32_t m_id;                                                           /**< The ID of this TaskGroup when saving it to a file*/
 
   std::mutex m_mutex;                                                           /**< A mutex for thread safe operation on the name, group_state_list etc.*/
   std::string m_name;                                                           /**< The name of this TaskGroup*/

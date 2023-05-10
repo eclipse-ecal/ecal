@@ -87,8 +87,8 @@ namespace eCAL
         task->SetTarget(task_pb.target_host());
         task->SetMonitoringTaskState(FromProtobuf(task_pb.state()));
 
-        std::vector<int32_t> pids;
-        for(int32_t pid : task_pb.pids())
+        std::vector<std::int32_t> pids;
+        for(std::int32_t pid : task_pb.pids())
           pids.push_back(pid);
         task->SetPids(pids);
 
@@ -125,13 +125,13 @@ namespace eCAL
         dummy_state1->SetName(task_group_pb.state());
         dummy_state2->SetName(task_group_pb.state());
         dummy_state1->SetColor(TaskGroup::GroupState::Color(
-                static_cast<uint8_t>(task_group_pb.colour().r())
-                , static_cast<uint8_t>(task_group_pb.colour().g())
-                , static_cast<uint8_t>(task_group_pb.colour().b())));
+                static_cast<std::uint8_t>(task_group_pb.colour().r())
+                , static_cast<std::uint8_t>(task_group_pb.colour().g())
+                , static_cast<std::uint8_t>(task_group_pb.colour().b())));
         dummy_state2->SetColor(TaskGroup::GroupState::Color(
-                static_cast<uint8_t>(task_group_pb.colour().r())
-                , static_cast<uint8_t>(task_group_pb.colour().g())
-                , static_cast<uint8_t>(task_group_pb.colour().b())));
+                static_cast<std::uint8_t>(task_group_pb.colour().r())
+                , static_cast<std::uint8_t>(task_group_pb.colour().g())
+                , static_cast<std::uint8_t>(task_group_pb.colour().b())));
 
         std::list<std::pair<std::shared_ptr<EcalSysTask>, TaskState>> minimal_states_list;
         for (const auto& task_pb : task_group_pb.tasks())

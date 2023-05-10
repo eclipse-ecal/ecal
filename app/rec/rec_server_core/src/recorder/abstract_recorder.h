@@ -39,7 +39,7 @@ namespace eCAL
     public:
       AbstractRecorder(const std::string& hostname
                       , const std::function<void(const std::string& hostname, const eCAL::rec::RecorderStatus& recorder_status)>& update_jobstatus_function
-                      , const std::function<void(int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& info_command_response)>& report_job_command_response_callback)
+                      , const std::function<void(std::int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& info_command_response)>& report_job_command_response_callback)
         : hostname_(hostname)
         , update_jobstatus_function_(update_jobstatus_function)
         , report_job_command_response_callback_(report_job_command_response_callback)
@@ -68,7 +68,7 @@ namespace eCAL
     protected:
       const std::string hostname_;
       const std::function<void(const std::string& hostname, const eCAL::rec::RecorderStatus& recorder_status)> update_jobstatus_function_;
-      const std::function<void(int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& info_command_response)> report_job_command_response_callback_;
+      const std::function<void(std::int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& info_command_response)> report_job_command_response_callback_;
     };
 
   }

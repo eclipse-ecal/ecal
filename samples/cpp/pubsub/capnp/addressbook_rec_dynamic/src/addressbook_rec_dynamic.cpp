@@ -40,10 +40,10 @@ void dynamicPrintValue(const capnp::DynamicValue::Reader& value)
     std::cout << (value.as<bool>() ? "true" : "false");
     break;
   case DynamicValue::INT:
-    std::cout << value.as<int64_t>();
+    std::cout << value.as<std::int64_t>();
     break;
   case DynamicValue::UINT:
-    std::cout << value.as<uint64_t>();
+    std::cout << value.as<std::uint64_t>();
     break;
   case DynamicValue::FLOAT:
     std::cout << value.as<double>();

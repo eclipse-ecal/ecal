@@ -97,17 +97,17 @@ namespace eCAL
         }
       }
 
-      void FromProtobuf(const eCAL::pb::sys_client::PidList&             pid_list_pb,          std::vector<int32_t>&              pid_list)
+      void FromProtobuf(const eCAL::pb::sys_client::PidList&             pid_list_pb,          std::vector<std::int32_t>&          pid_list)
       {
         pid_list.clear();
         pid_list.reserve(pid_list_pb.pids_size());
-        for (const int32_t pid : pid_list_pb.pids())
+        for (const std::int32_t pid : pid_list_pb.pids())
         {
           pid_list.push_back(pid);
         }
       }
 
-      void FromProtobuf(const eCAL::pb::sys_client::MatchTaskResponse&   map_task_response_pb, std::vector<std::vector<int32_t>>& map_task_response)
+      void FromProtobuf(const eCAL::pb::sys_client::MatchTaskResponse&   map_task_response_pb, std::vector<std::vector<std::int32_t>>& map_task_response)
       {
         map_task_response.clear();
         map_task_response.reserve(map_task_response_pb.pid_lists_size());
@@ -118,21 +118,21 @@ namespace eCAL
       }
 
 
-      eCAL::sys_client::Task            FromProtobuf(const eCAL::pb::sys_client::Task&                task_pb)
+      eCAL::sys_client::Task                FromProtobuf(const eCAL::pb::sys_client::Task&                task_pb)
       {
         eCAL::sys_client::Task task;
         FromProtobuf(task_pb, task);
         return task;
       }
 
-      eCAL::sys_client::Runner          FromProtobuf(const eCAL::pb::sys_client::Runner&              runner_pb)
+      eCAL::sys_client::Runner              FromProtobuf(const eCAL::pb::sys_client::Runner&              runner_pb)
       {
         eCAL::sys_client::Runner runner;
         FromProtobuf(runner_pb, runner);
         return runner;
       }
 
-      eCAL_Process_eStartMode           FromProtobuf(const eCAL::pb::sys_client::WindowMode&          window_mode_pb)
+      eCAL_Process_eStartMode               FromProtobuf(const eCAL::pb::sys_client::WindowMode&          window_mode_pb)
       {
         switch (window_mode_pb)
         {
@@ -147,51 +147,51 @@ namespace eCAL
         }
       }
 
-      StartTaskParameters               FromProtobuf(const eCAL::pb::sys_client::StartTaskParameters& start_task_param_pb)
+      StartTaskParameters                   FromProtobuf(const eCAL::pb::sys_client::StartTaskParameters& start_task_param_pb)
       {
         StartTaskParameters task_params;
         FromProtobuf(start_task_param_pb, task_params);
         return task_params;
       }
 
-      std::vector<StartTaskParameters>  FromProtobuf(const eCAL::pb::sys_client::StartTaskRequest&    start_task_list_pb)
+      std::vector<StartTaskParameters>      FromProtobuf(const eCAL::pb::sys_client::StartTaskRequest&    start_task_list_pb)
       {
         std::vector<StartTaskParameters> task_list;
         FromProtobuf(start_task_list_pb, task_list);
         return task_list;
       }
 
-      StopTaskParameters                FromProtobuf(const eCAL::pb::sys_client::StopTaskParameters&  stop_task_param_pb)
+      StopTaskParameters                    FromProtobuf(const eCAL::pb::sys_client::StopTaskParameters&  stop_task_param_pb)
       {
         StopTaskParameters stop_task_params;
         FromProtobuf(stop_task_param_pb, stop_task_params);
         return stop_task_params;
       }
 
-      std::vector<StopTaskParameters>   FromProtobuf(const eCAL::pb::sys_client::StopTaskRequest&     stop_task_list_pb)
+      std::vector<StopTaskParameters>       FromProtobuf(const eCAL::pb::sys_client::StopTaskRequest&     stop_task_list_pb)
       {
         std::vector<StopTaskParameters> stop_task_list;
         FromProtobuf(stop_task_list_pb, stop_task_list);
         return stop_task_list;
       }
 
-      std::vector<Task>                 FromProtobuf(const eCAL::pb::sys_client::TaskList&            task_list_pb)
+      std::vector<Task>                     FromProtobuf(const eCAL::pb::sys_client::TaskList&            task_list_pb)
       {
         std::vector<Task> output;
         FromProtobuf(task_list_pb, output);
         return output;
       }
 
-      std::vector<int32_t>              FromProtobuf(const eCAL::pb::sys_client::PidList&             pid_list_pb)
+      std::vector<std::int32_t>             FromProtobuf(const eCAL::pb::sys_client::PidList&             pid_list_pb)
       {
-        std::vector<int32_t> output;
+        std::vector<std::int32_t> output;
         FromProtobuf(pid_list_pb, output);
         return output;
       }
 
-      std::vector<std::vector<int32_t>> FromProtobuf(const eCAL::pb::sys_client::MatchTaskResponse&   map_task_response_pb)
+      std::vector<std::vector<std::int32_t>> FromProtobuf(const eCAL::pb::sys_client::MatchTaskResponse&   map_task_response_pb)
       {
-        std::vector<std::vector<int32_t>> output;
+        std::vector<std::vector<std::int32_t>> output;
         FromProtobuf(map_task_response_pb, output);
         return output;
       }
@@ -263,21 +263,21 @@ namespace eCAL
         }
       }
 
-      void ToProtobuf(eCAL::pb::sys_client::PidList&             pid_list_pb,          const std::vector<int32_t>&              pid_list)
+      void ToProtobuf(eCAL::pb::sys_client::PidList&             pid_list_pb,          const std::vector<std::int32_t>&              pid_list)
       {
         pid_list_pb.clear_pids();
         pid_list_pb.mutable_pids()->Reserve(static_cast<int>(pid_list.size()));
-        for (const int32_t pid : pid_list)
+        for (const std::int32_t pid : pid_list)
         {
           pid_list_pb.add_pids(pid);
         }
       }
 
-      void ToProtobuf(eCAL::pb::sys_client::MatchTaskResponse&   map_task_response_pb, const std::vector<std::vector<int32_t>>& map_task_response)
+      void ToProtobuf(eCAL::pb::sys_client::MatchTaskResponse&   map_task_response_pb, const std::vector<std::vector<std::int32_t>>& map_task_response)
       {
         map_task_response_pb.clear_pid_lists();
         map_task_response_pb.mutable_pid_lists()->Reserve(static_cast<int>(map_task_response.size()));
-        for (const std::vector<int32_t>& pid_list : map_task_response)
+        for (const std::vector<std::int32_t>& pid_list : map_task_response)
         {
           ToProtobuf(*map_task_response_pb.add_pid_lists(), pid_list);
         }
@@ -348,14 +348,14 @@ namespace eCAL
         return output_pb;
       }
 
-      eCAL::pb::sys_client::PidList             ToProtobuf(const std::vector<int32_t>&                  pid_list)
+      eCAL::pb::sys_client::PidList             ToProtobuf(const std::vector<std::int32_t>&                  pid_list)
       {
         eCAL::pb::sys_client::PidList output_pb;
         ToProtobuf(output_pb, pid_list);
         return output_pb;
       }
 
-      eCAL::pb::sys_client::MatchTaskResponse   ToProtobuf(const std::vector<std::vector<int32_t>>&     map_task_response)
+      eCAL::pb::sys_client::MatchTaskResponse   ToProtobuf(const std::vector<std::vector<std::int32_t>>&     map_task_response)
       {
         eCAL::pb::sys_client::MatchTaskResponse output_pb;
         ToProtobuf(output_pb, map_task_response);

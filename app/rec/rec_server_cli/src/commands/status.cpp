@@ -186,7 +186,7 @@ namespace eCAL
         return eCAL::rec::Error::ErrorCode::OK;
       }
 
-      eCAL::rec::Error Status::printJobState(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, int64_t meas_id) const
+      eCAL::rec::Error Status::printJobState(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, std::int64_t meas_id) const
       {
         eCAL::rec_server::RecServerStatus status;
         auto error = GetRemoteStatus(hostname, remote_rec_server_service, status);
@@ -573,7 +573,7 @@ namespace eCAL
 
       eCAL::rec::Error Status::printJobState(const std::string& job_id_string, const eCAL::rec_server::RecServerStatus& status, std::ostream& ostream) const
       {
-        int64_t job_id;
+        std::int64_t job_id;
         try
         {
           job_id = std::stoll(job_id_string.c_str());
@@ -586,7 +586,7 @@ namespace eCAL
         return printJobState(job_id, status, ostream);
       }
 
-      eCAL::rec::Error Status::printJobState(int64_t job_id, const eCAL::rec_server::RecServerStatus& status, std::ostream& ostream) const
+      eCAL::rec::Error Status::printJobState(std::int64_t job_id, const eCAL::rec_server::RecServerStatus& status, std::ostream& ostream) const
       {
         for (const auto& job_history_entry : status.job_history_)
         {
@@ -929,10 +929,10 @@ namespace eCAL
         }
       }
 
-      std::pair<std::chrono::steady_clock::duration, int64_t> Status::combinedLength(const eCAL::rec_server::JobHistoryEntry& job_history_entry) const
+      std::pair<std::chrono::steady_clock::duration, std::int64_t> Status::combinedLength(const eCAL::rec_server::JobHistoryEntry& job_history_entry) const
       {
         std::chrono::steady_clock::duration duration(0);
-        int64_t                             frame_count(0);
+        std::int64_t                        frame_count(0);
 
         for (const auto& client_job_status : job_history_entry.client_statuses_)
         {
@@ -949,9 +949,9 @@ namespace eCAL
         return { duration, frame_count };
       }
 
-      int64_t Status::combinedUnflushedFrames(const eCAL::rec_server::JobHistoryEntry& job_history_entry) const
+      std::int64_t Status::combinedUnflushedFrames(const eCAL::rec_server::JobHistoryEntry& job_history_entry) const
       {
-        int64_t frame_count(0);
+        std::int64_t frame_count(0);
 
         for (const auto& client_job_status : job_history_entry.client_statuses_)
         {
@@ -1100,7 +1100,7 @@ namespace eCAL
           case eCAL::rec::JobState::Flushing:
           {
             // Count the number of frames to flush
-            int64_t frames_to_flush(0);
+            std::int64_t frames_to_flush(0);
             for (const auto& client_status : job_history_entry.client_statuses_)
             {
               frames_to_flush += client_status.second.job_status_.rec_hdf5_status_.unflushed_frame_count_;
@@ -1118,8 +1118,8 @@ namespace eCAL
           case eCAL::rec::JobState::Uploading:
           {
             // Count bytes to upload
-            uint64_t bytes_uploaded         (0);
-            uint64_t total_bytes_to_uploaded(0);
+            std::uint64_t bytes_uploaded         (0);
+            std::uint64_t total_bytes_to_uploaded(0);
             for (const auto& client_status : job_history_entry.client_statuses_)
             {
               if ((client_status.second.job_status_.state_ == eCAL::rec::JobState::Uploading)

@@ -26,17 +26,17 @@ namespace eCAL
 {
   namespace rec_cli
   {
-    static std::string bytesToPrettyString(uint64_t bytes)
+    static std::string bytesToPrettyString(std::uint64_t bytes)
     {
-      static const std::vector<std::pair<uint64_t, std::string>> units = 
+      static const std::vector<std::pair<std::uint64_t, std::string>> units = 
       {
-        { uint64_t(1) <<  0, "Bytes" },
-        { uint64_t(1) << 10, "KiB" },
-        { uint64_t(1) << 20, "MiB" },
-        { uint64_t(1) << 30, "GiB" },
-        { uint64_t(1) << 40, "TiB" },
-        { uint64_t(1) << 50, "PiB" },
-        { uint64_t(1) << 60, "EiB" },
+        { std::uint64_t(1) <<  0, "Bytes" },
+        { std::uint64_t(1) << 10, "KiB" },
+        { std::uint64_t(1) << 20, "MiB" },
+        { std::uint64_t(1) << 30, "GiB" },
+        { std::uint64_t(1) << 40, "TiB" },
+        { std::uint64_t(1) << 50, "PiB" },
+        { std::uint64_t(1) << 60, "EiB" },
       };
 
       size_t proper_unit_index = 0;

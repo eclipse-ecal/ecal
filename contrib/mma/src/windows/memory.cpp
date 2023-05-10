@@ -34,6 +34,6 @@ void Memory::RefreshData()
   memory_info_.dwLength = sizeof(MEMORYSTATUSEX);
   GlobalMemoryStatusEx(&memory_info_);
 
-  total_memory_ = static_cast<uint64_t>(memory_info_.ullTotalPhys);
-  available_memory_ = static_cast<uint64_t>(memory_info_.ullAvailPhys);
+  total_memory_ = static_cast<std::uint64_t>(memory_info_.ullTotalPhys);
+  available_memory_ = static_cast<std::uint64_t>(memory_info_.ullAvailPhys);
 }

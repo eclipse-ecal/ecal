@@ -97,7 +97,7 @@ namespace eCAL
     public:
       explicit RemoteRecorder(const std::string& hostname
                               , const std::function<void(const std::string& hostname, const eCAL::rec::RecorderStatus& recorder_status)>& update_jobstatus_function
-                              , const std::function<void(int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& info_command_response)>& report_job_command_response_callback
+                              , const std::function<void(std::int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& info_command_response)>& report_job_command_response_callback
                               , const RecorderSettings& initial_settings);
       
       ~RemoteRecorder();
@@ -159,10 +159,10 @@ namespace eCAL
       std::chrono::steady_clock::time_point next_ping_time_;
       bool currently_executing_action_;
 
-      bool    recorder_enabled_;
-      int32_t connected_pid_;
-      bool    client_in_sync_;
-      bool    recorder_alive_;
+      bool         recorder_enabled_;
+      std::int32_t connected_pid_;
+      bool         client_in_sync_;
+      bool         recorder_alive_;
 
       std::atomic<bool> ever_participated_in_a_measurement_;
 

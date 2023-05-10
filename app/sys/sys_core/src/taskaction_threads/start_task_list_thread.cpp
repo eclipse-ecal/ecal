@@ -93,7 +93,7 @@ void StartTaskListThread::Run()
     }
 
     // Start all task of this launch group (Hosts are started in parallel)
-    std::map<std::string, std::future<std::vector<int32_t>>> future_map;
+    std::map<std::string, std::future<std::vector<std::int32_t>>> future_map;
     for (const auto& host_taskparamlist_pair : start_tasks_param_map)
     {
       future_map.emplace(host_taskparamlist_pair.first, std::async(std::launch::async, [this, &host_taskparamlist_pair]{ return this->m_connection_manager->StartTasks(host_taskparamlist_pair.first, host_taskparamlist_pair.second); }));
@@ -102,7 +102,7 @@ void StartTaskListThread::Run()
     for (const auto& host_taskparamlist_pair : start_tasks_param_map)
     {
       if (IsInterrupted()) return;
-      std::vector<int32_t> pids = future_map[host_taskparamlist_pair.first].get();
+      std::vector<std::int32_t> pids = future_map[host_taskparamlist_pair.first].get();
       if (IsInterrupted()) return;
 
       for (size_t i = 0; (i < pids.size()) && (i < original_task_ptr_map[host_taskparamlist_pair.first].size()); i++)

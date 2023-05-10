@@ -28,13 +28,13 @@ class Memory
   Memory();
   ~Memory();
 
-  uint64_t GetTotalMemory() const { return total_memory_; }
-  uint64_t GetAvailableMemory() const { return available_memory_; }
+  std::uint64_t GetTotalMemory() const { return total_memory_; }
+  std::uint64_t GetAvailableMemory() const { return available_memory_; }
 
   void RefreshData();
 
  private:
-  MEMORYSTATUSEX   memory_info_;
-  uint64_t         total_memory_;
-  uint64_t         available_memory_;
+  MEMORYSTATUSEX        memory_info_;
+  std::uint64_t         total_memory_;
+  std::uint64_t         available_memory_;
 };

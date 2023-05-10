@@ -44,11 +44,11 @@ class Resource
   size_t GetDrive_type() const { return drive_type_; }
   void SetDrive_type(size_t val) { drive_type_ = val; }
 
-  uint64_t GetAvailable_space() const { return available_space_; }
-  void SetAvailable_space(uint64_t val) { available_space_ = val; }
+  std::uint64_t GetAvailable_space() const { return available_space_; }
+  void SetAvailable_space(std::uint64_t val) { available_space_ = val; }
 
-  uint64_t GetTotal_space() const { return total_space_; }
-  void SetTotal_space(uint64_t val) { total_space_ = val; }
+  std::uint64_t GetTotal_space() const { return total_space_; }
+  void SetTotal_space(std::uint64_t val) { total_space_ = val; }
 
   std::string GetIP_address() const { return ip_address_; }
   void SetIP_address(const std::string& val) { ip_address_ = val; }
@@ -70,11 +70,11 @@ class Resource
   std::string OpenPipe(const char* command);
 
  protected:
-  std::string name_;                 // Name of the resource, e.g: DeviceID of the disk (C:), or NIC name
-  size_t      drive_type_;           // Drive type, e.g: 2 (Removable Drive), 3(Local Hard Disk)
-  uint64_t    available_space_;      // Available space on the drive
-  uint64_t    total_space_;          // Total space of the drive
-  std::string ip_address_;           // IP address, only in the case of network interface cards
+  std::string   name_;                 // Name of the resource, e.g: DeviceID of the disk (C:), or NIC name
+  size_t        drive_type_;           // Drive type, e.g: 2 (Removable Drive), 3(Local Hard Disk)
+  std::uint64_t available_space_;      // Available space on the drive
+  std::uint64_t total_space_;          // Total space of the drive
+  std::string   ip_address_;           // IP address, only in the case of network interface cards
 
   PDH_HCOUNTER read_;                // Bytes read per second (disk) 
   PDH_HCOUNTER write_;               // Bytes written per second (disk) 

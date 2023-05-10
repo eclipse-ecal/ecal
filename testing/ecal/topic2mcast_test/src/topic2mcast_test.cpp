@@ -32,7 +32,7 @@
 
 struct IP
 {
-  uint32_t int_ip;
+  std::uint32_t int_ip;
   std::string string_ip;
 };
 
@@ -47,10 +47,10 @@ std::vector<IP> ipv4_int_string_vector
 
 struct IPHashMaskResult
 {
-  uint32_t ip;
-  uint32_t hash;
-  uint32_t mask;
-  uint32_t result;
+  std::uint32_t ip;
+  std::uint32_t hash;
+  std::uint32_t mask;
+  std::uint32_t result;
 };
 
 std::vector<IPHashMaskResult> ip_hash_mask_result_vector
@@ -65,9 +65,9 @@ std::vector<IPHashMaskResult> ip_hash_mask_result_vector
 
 struct IpMaskResult
 {
-  uint32_t ip;
-  uint32_t mask;
-  uint32_t result;
+  std::uint32_t ip;
+  std::uint32_t mask;
+  std::uint32_t result;
 };
 
 // We don't want to collide on addresses. thus the calculated mcast address needs to be increased by one if collision occurs

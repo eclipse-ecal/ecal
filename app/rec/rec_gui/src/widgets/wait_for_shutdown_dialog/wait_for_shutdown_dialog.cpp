@@ -105,8 +105,8 @@ bool WaitForShutdownDialog::safeToExit() const
 
 bool WaitForShutdownDialog::updateWaitForFlushing()
 {
-  int64_t unflushed_frames = 0;
-  std::set<uint64_t> job_ids_flushing;
+  std::int64_t unflushed_frames = 0;
+  std::set<std::uint64_t> job_ids_flushing;
 
   for (const auto& rec_status : QEcalRec::instance()->recorderStatuses())
   {
@@ -263,8 +263,8 @@ bool WaitForShutdownDialog::updateBuiltInRecorderUploading(const std::list<eCAL:
 
   // Lets accumulate all data!
   int      num_jobs_uploading(0);
-  uint64_t num_total_bytes   (0);
-  uint64_t num_uploaded_bytes(0);
+  std::uint64_t num_total_bytes   (0);
+  std::uint64_t num_uploaded_bytes(0);
   double   rel_uploaded_     (1.0);
 
   for (const auto& job : uploading_jobs_)

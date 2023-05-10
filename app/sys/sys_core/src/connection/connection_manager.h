@@ -24,11 +24,11 @@ namespace eCAL
     // API
     //////////////////////////////////
     public:
-      std::vector<int32_t> StartTasks(const std::string& hostname, const std::vector<eCAL::sys_client::StartTaskParameters>& task_list);
+      std::vector<std::int32_t>              StartTasks(const std::string& hostname, const std::vector<eCAL::sys_client::StartTaskParameters>& task_list);
 
-      std::vector<bool>    StopTasks (const std::string& hostname, const std::vector<eCAL::sys_client::StopTaskParameters>& task_list);
+      std::vector<bool>                      StopTasks (const std::string& hostname, const std::vector<eCAL::sys_client::StopTaskParameters>& task_list);
 
-      std::vector<std::vector<int32_t>> MatchTasks(const std::string& hostname, const std::vector<eCAL::sys_client::Task>& task_list);
+      std::vector<std::vector<std::int32_t>> MatchTasks(const std::string& hostname, const std::vector<eCAL::sys_client::Task>& task_list);
 
 
     //////////////////////////////////
