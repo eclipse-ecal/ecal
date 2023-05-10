@@ -43,7 +43,7 @@ namespace eCAL
   {
   public:
     CMonitoringImpl();
-    ~CMonitoringImpl();
+    ~CMonitoringImpl() override = default;
 
     void Create();
     void Destroy();
@@ -59,22 +59,31 @@ namespace eCAL
     int PubMonitoring(bool state_, std::string& name_);
     int PubLogging(bool state_, std::string& name_);
 
+    bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/) override;
+
+  protected:
+    bool HasSample(const std::string& /* sample_name_ */) override { return(true); };
+
+    bool RegisterProcess(const eCAL::pb::Sample& sample_);
+    bool UnregisterProcess(const eCAL::pb::Sample& sample_);
+
+    bool RegisterServer(const eCAL::pb::Sample& sample_);
+    bool UnregisterServer(const eCAL::pb::Sample& sample_);
+
+    bool RegisterClient(const eCAL::pb::Sample& sample_);
+    bool UnregisterClient(const eCAL::pb::Sample& sample_);
+
     enum ePubSub
     {
       publisher = 1,
       subscriber = 2,
     };
 
-    bool HasSample(const std::string& /* sample_name_ */) { return(true); };
-    size_t ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/);
-
-    bool RegisterProcess(const eCAL::pb::Sample& sample_);
-    bool RegisterServer(const eCAL::pb::Sample& sample_);
-    bool RegisterClient(const eCAL::pb::Sample& sample_);
     bool RegisterTopic(const eCAL::pb::Sample& sample_, enum ePubSub pubsub_type_);
+    bool UnregisterTopic(const eCAL::pb::Sample& sample_, enum ePubSub pubsub_type_);
+
     void RegisterLogMessage(const eCAL::pb::LogMessage& log_msg_);
 
-  protected:
     using TopicMonMapT = eCAL::Util::CExpMap<std::string, eCAL::Monitoring::STopicMon>;
     struct STopicMonMap
     {
@@ -131,7 +140,7 @@ namespace eCAL
 #endif
       }
     };
-    typedef std::set<std::string, InsensitiveCompare> StrICaseSetT;
+    using StrICaseSetT = std::set<std::string, InsensitiveCompare>;
 
     STopicMonMap* GetMap(enum ePubSub pubsub_type_);
 
@@ -162,7 +171,7 @@ namespace eCAL
     SClientMonMap                                m_clients_map;
 
     // logging
-    typedef std::list<eCAL::pb::LogMessage> LogMessageListT;
+    using LogMessageListT = std::list<eCAL::pb::LogMessage>;
     std::mutex                                   m_log_msglist_sync;
     LogMessageListT                              m_log_msglist;
 

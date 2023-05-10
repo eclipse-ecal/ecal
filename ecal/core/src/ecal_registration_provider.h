@@ -59,21 +59,24 @@ namespace eCAL
     void Create(bool topics_, bool services_, bool process_);
     void Destroy();
 
-    bool RegisterTopic(const std::string& topic_name_, const std::string& topic_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_);
-    bool UnregisterTopic(const std::string& topic_name_, const std::string& topic_id_);
+    bool RegisterTopic(const std::string& topic_name_, const std::string& topic_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
+    bool UnregisterTopic(const std::string& topic_name_, const std::string& topic_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
 
-    bool RegisterServer(const std::string& service_name_, const std::string& service_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_);
-    bool UnregisterServer(const std::string& service_name_, const std::string& service_id_);
+    bool RegisterServer(const std::string& service_name_, const std::string& service_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
+    bool UnregisterServer(const std::string& service_name_, const std::string& service_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
 
-    bool RegisterClient(const std::string& client_name_, const std::string& client_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_);
-    bool UnregisterClient(const std::string& client_name_, const std::string& client_id_);
+    bool RegisterClient(const std::string& client_name_, const std::string& client_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
+    bool UnregisterClient(const std::string& client_name_, const std::string& client_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
 
   protected:
     bool RegisterProcess();
+    bool UnregisterProcess();
+      
     bool RegisterServer();
     bool RegisterClient();
     bool RegisterTopics();
-    bool RegisterSample(const std::string& sample_name_, const eCAL::pb::Sample& sample_);
+
+    bool ApplySample(const std::string& sample_name_, const eCAL::pb::Sample& sample_);
       
     int RegisterSendThread();
 
@@ -101,7 +104,7 @@ namespace eCAL
     CUDPSender                m_reg_snd;
     CThread                   m_reg_snd_thread;
 
-    typedef std::unordered_map<std::string, eCAL::pb::Sample> SampleMapT;
+    using SampleMapT = std::unordered_map<std::string, eCAL::pb::Sample>;
     std::mutex                m_topics_map_sync;
     SampleMapT                m_topics_map;
 

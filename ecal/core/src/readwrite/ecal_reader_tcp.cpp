@@ -21,8 +21,6 @@
  * @brief  tcp reader and layer
 **/
 
-#include "ecal_def.h"
-#include "ecal_config_reader_hlp.h"
 #include "ecal_global_accessors.h"
 
 #include <ecal/ecal_config.h>
@@ -65,7 +63,7 @@ namespace eCAL
     // check for new session
     bool new_session(true);
     auto sessions = m_subscriber->getSessions();
-    for (auto session : sessions)
+    for (const auto& session : sessions)
     {
       auto address = session->getAddress();
       auto port    = session->getPort();
@@ -95,8 +93,8 @@ namespace eCAL
     // extract header size
     const size_t ecal_magic(4 * sizeof(char));
     //                           ECAL        +  header size field
-    const size_t header_length = ecal_magic  +  sizeof(uint16_t);
-    uint16_t     header_size   = le16toh(*reinterpret_cast<uint16_t*>(data_.buffer_->data() + ecal_magic));
+    const size_t   header_length = ecal_magic  +  sizeof(uint16_t);
+    const uint16_t header_size   = le16toh(*reinterpret_cast<uint16_t*>(data_.buffer_->data() + ecal_magic));
 
     // extract header
     const char* header_payload = data_.buffer_->data() + header_length;
@@ -106,11 +104,11 @@ namespace eCAL
     // parse header
     if (m_ecal_header.ParseFromArray(header_payload, static_cast<int>(header_size)))
     {
-      if (g_subgate())
+      if (g_subgate() != nullptr)
       {
         // use this intermediate variables as optimization
-        auto& ecal_header_topic   = m_ecal_header.topic();
-        auto& ecal_header_content = m_ecal_header.content();
+        const auto& ecal_header_topic   = m_ecal_header.topic();
+        const auto& ecal_header_content = m_ecal_header.content();
         // apply sample
         g_subgate()->ApplySample(
           ecal_header_topic.tname(),
@@ -124,29 +122,27 @@ namespace eCAL
           eCAL::pb::tl_ecal_tcp);
       }
     }
-  };
+  }
   
   ////////////////
   // LAYER
   ////////////////
-  CTCPReaderLayer::CTCPReaderLayer()
-  {
-  }
+  CTCPReaderLayer::CTCPReaderLayer() = default;
 
   void CTCPReaderLayer::Initialize()
   {
-    tcp_pubsub::logger::logger_t tcp_pubsub_logger = std::bind(TcpPubsubLogger, std::placeholders::_1, std::placeholders::_2);
+    const tcp_pubsub::logger::logger_t tcp_pubsub_logger = std::bind(TcpPubsubLogger, std::placeholders::_1, std::placeholders::_2);
     m_executor = std::make_shared<tcp_pubsub::Executor>(Config::GetTcpPubsubReaderThreadpoolSize(), tcp_pubsub_logger);
   }
 
   void CTCPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/)
   {
-    std::string map_key(topic_name_);
+    const std::string& map_key(topic_name_);
 
-    std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
+    const std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
     if (m_datareadertcp_map.find(map_key) != m_datareadertcp_map.end()) return;
 
-    std::shared_ptr<CDataReaderTCP> reader = std::make_shared<CDataReaderTCP>();
+    const std::shared_ptr<CDataReaderTCP> reader = std::make_shared<CDataReaderTCP>();
     reader->Create(m_executor);
 
     m_datareadertcp_map.insert(std::pair<std::string, std::shared_ptr<CDataReaderTCP>>(map_key, reader));
@@ -154,10 +150,10 @@ namespace eCAL
 
   void CTCPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
   {
-    std::string map_key(topic_name_);
+    const std::string& map_key(topic_name_);
 
-    std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
-    DataReaderTCPMapT::iterator iter = m_datareadertcp_map.find(map_key);
+    const std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
+    const DataReaderTCPMapT::iterator iter = m_datareadertcp_map.find(map_key);
     if (iter == m_datareadertcp_map.end()) return;
 
     auto reader = iter->second;
@@ -178,10 +174,10 @@ namespace eCAL
       const auto& remote_hostname = par_.host_name;
       auto        remote_port     = connection_par.layer_par_tcp().port();
 
-      std::string map_key(par_.topic_name);
+      const std::string map_key(par_.topic_name);
 
-      std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
-      DataReaderTCPMapT::iterator iter = m_datareadertcp_map.find(map_key);
+      const std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
+      const DataReaderTCPMapT::iterator iter = m_datareadertcp_map.find(map_key);
       if (iter == m_datareadertcp_map.end()) return;
 
       auto& reader = iter->second;

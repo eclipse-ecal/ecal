@@ -159,3 +159,13 @@ TEST(ExpMap, ExpMapSize)
   expmap["A"] = 1;
   EXPECT_EQ(1, expmap.size());
 }
+
+TEST(ExpMap, ExpMapRemove)
+{
+  eCAL::Util::CExpMap<std::string, int> expmap(std::chrono::milliseconds(200));
+  expmap["A"] = 1;
+  EXPECT_EQ(1, expmap.size());
+  EXPECT_TRUE(expmap.erase("A"));
+  EXPECT_EQ(0, expmap.size());
+  EXPECT_FALSE(expmap.erase("B"));
+}

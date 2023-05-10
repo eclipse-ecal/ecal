@@ -21,12 +21,10 @@
  * @brief  udp data writer
 **/
 
-#include <ecal/ecal.h>
 #include <ecal/ecal_log.h>
 #include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
-#include "ecal_config_reader_hlp.h"
 #include "ecal_writer_udp_mc.h"
 
 #include "io/udp_configurations.h"
@@ -104,18 +102,18 @@ namespace eCAL
     // create new sample
     m_ecal_sample.Clear();
     m_ecal_sample.set_cmd_type(eCAL::pb::bct_set_sample);
-    auto ecal_sample_mutable_topic = m_ecal_sample.mutable_topic();
+    auto *ecal_sample_mutable_topic = m_ecal_sample.mutable_topic();
     ecal_sample_mutable_topic->set_hname(m_host_name);
     ecal_sample_mutable_topic->set_tname(m_topic_name);
     ecal_sample_mutable_topic->set_tid(m_topic_id);
 
     // set layer
-    auto layer = ecal_sample_mutable_topic->add_tlayer();
+    auto *layer = ecal_sample_mutable_topic->add_tlayer();
     layer->set_type(eCAL::pb::eTLayerType::tl_ecal_udp_mc);
     layer->set_confirmed(true);
 
     // append content
-    auto ecal_sample_mutable_content = m_ecal_sample.mutable_content();
+    auto *ecal_sample_mutable_content = m_ecal_sample.mutable_content();
     ecal_sample_mutable_content->set_id(attr_.id);
     ecal_sample_mutable_content->set_clock(attr_.clock);
     ecal_sample_mutable_content->set_time(attr_.time);

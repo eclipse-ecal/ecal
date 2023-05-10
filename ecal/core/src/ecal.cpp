@@ -59,10 +59,10 @@ namespace eCAL
   **/
   int GetVersion(int* major_, int* minor_, int* patch_)
   {
-    if((major_ == nullptr) && (minor_ == nullptr) && (patch_ == nullptr)) return(-1);
-    if(major_) *major_ = ECAL_VERSION_MAJOR;
-    if(minor_) *minor_ = ECAL_VERSION_MINOR;
-    if(patch_) *patch_ = ECAL_VERSION_PATCH;
+    if((major_ == nullptr) || (minor_ == nullptr) || (patch_ == nullptr)) return(-1);
+    *major_ = ECAL_VERSION_MAJOR;
+    *minor_ = ECAL_VERSION_MINOR;
+    *patch_ = ECAL_VERSION_PATCH;
     return(0);
   }
 
@@ -124,7 +124,7 @@ namespace eCAL
     {
       g_globals_ctx = new CGlobals;
 
-      if(unit_name_) g_unit_name = unit_name_;
+      if(unit_name_ != nullptr) g_unit_name = unit_name_;
       if (g_unit_name.empty())
       {
         g_unit_name = Process::GetProcessName();
@@ -149,9 +149,9 @@ namespace eCAL
 #endif
       }
 
-      if (argv_)
+      if (argv_ != nullptr)
       {
-        for (size_t i = 0; i < static_cast<size_t>(argc_); ++i) if (argv_[i]) g_task_parameter.push_back(argv_[i]);
+        for (size_t i = 0; i < static_cast<size_t>(argc_); ++i) if (argv_[i] != nullptr) g_task_parameter.emplace_back(argv_[i]);
       }
 
       g_process_wclock = 0;
@@ -165,7 +165,7 @@ namespace eCAL
     g_globals_ctx_ref_cnt++;
 
     // (post)initialize single components
-    int success = g_globals()->Initialize(components_, &config_keys);
+    const int success = g_globals()->Initialize(components_, &config_keys);
 
     // print out configuration
     if (dump_config)
@@ -231,7 +231,7 @@ namespace eCAL
     if (g_globals_ctx == nullptr) return 1;
     g_globals_ctx_ref_cnt--;
     if (g_globals_ctx_ref_cnt > 0) return 0;
-    int ret = g_globals()->Finalize(components_);
+    int const ret = g_globals()->Finalize(components_);
     delete g_globals_ctx;
     g_globals_ctx = nullptr;
     return(ret);

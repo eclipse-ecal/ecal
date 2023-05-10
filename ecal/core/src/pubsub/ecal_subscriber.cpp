@@ -23,11 +23,7 @@
 
 #include <ecal/ecal.h>
 
-#include "ecal_def.h"
 #include "ecal_globals.h"
-#include "ecal_registration_provider.h"
-#include "ecal_subgate.h"
-
 #include "readwrite/ecal_reader.h"
 
 #include <sstream>
@@ -60,7 +56,7 @@ namespace eCAL
   }
 
   CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept :
-                 m_datareader(std::move(rhs.m_datareader)),
+                 m_datareader(rhs.m_datareader),
                  m_qos(rhs.m_qos),
                  m_created(rhs.m_created),
                  m_initialized(rhs.m_initialized)
@@ -88,12 +84,12 @@ namespace eCAL
 
   bool CSubscriber::Create(const std::string& topic_name_, const std::string& topic_type_ /* = "" */, const std::string& topic_desc_ /* = "" */)
   {
-    if(m_created)               return(false);
-    if(!g_globals())            return(false);
-    if(topic_name_.size() == 0) return(false);
+    if(m_created)              return(false);
+    if(g_globals() == nullptr) return(false);
+    if(topic_name_.empty())    return(false);
 
     // initialize globals
-    if (!g_globals()->IsInitialized(Init::Subscriber))
+    if (g_globals()->IsInitialized(Init::Subscriber) == 0)
     {
       g_globals()->Initialize(Init::Subscriber);
       m_initialized = true;
@@ -108,13 +104,13 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      if (g_log()) g_log()->Log(log_level_debug1, std::string(topic_name_ + "::CSubscriber::Create - FAILED"));
+      if (g_log() != nullptr) g_log()->Log(log_level_debug1, std::string(topic_name_ + "::CSubscriber::Create - FAILED"));
 #endif
       return(false);
     }
 #ifndef NDEBUG
     // log it
-    if (g_log()) g_log()->Log(log_level_debug1, std::string(topic_name_ + "::CSubscriber::Create - SUCCESS"));
+    if (g_log() != nullptr) g_log()->Log(log_level_debug1, std::string(topic_name_ + "::CSubscriber::Create - SUCCESS"));
 #endif
     // register to subscriber gateway for publisher memory file receive thread
     g_subgate()->Register(topic_name_, m_datareader);
@@ -130,18 +126,17 @@ namespace eCAL
 
   bool CSubscriber::Destroy()
   {
-    if(!m_created)   return(false);
-    if(!g_globals()) return(false);
+    if(!m_created)             return(false);
+    if(g_globals() == nullptr) return(false);
 
     // remove receive callback
     RemReceiveCallback();
 
     // first unregister data reader
-    if(g_subgate())               g_subgate()->Unregister(m_datareader->GetTopicName(), m_datareader);
-    if(g_registration_provider()) g_registration_provider()->UnregisterTopic(m_datareader->GetTopicName(), m_datareader->GetTopicID());
+    if(g_subgate() != nullptr) g_subgate()->Unregister(m_datareader->GetTopicName(), m_datareader);
 #ifndef NDEBUG
     // log it
-    if (g_log()) g_log()->Log(log_level_debug1, std::string(m_datareader->GetTopicName() + "::CSubscriber::Destroy"));
+    if (g_log() != nullptr) g_log()->Log(log_level_debug1, std::string(m_datareader->GetTopicName() + "::CSubscriber::Destroy"));
 #endif
 
     // destroy local data reader
@@ -179,20 +174,20 @@ namespace eCAL
 
   bool CSubscriber::SetID(const std::set<long long>& id_set_)
   {
-    if (!m_datareader) return(false);
+    if (m_datareader == nullptr) return(false);
     m_datareader->SetID(id_set_);
     return(true);
   }
 
   bool CSubscriber::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
   {
-    if(!m_datareader) return false;
+    if(m_datareader == nullptr) return false;
     return m_datareader->SetAttribute(attr_name_, attr_value_);
   }
 
   bool CSubscriber::ClearAttribute(const std::string& attr_name_)
   {
-    if(!m_datareader) return false;
+    if(m_datareader == nullptr) return false;
     return m_datareader->ClearAttribute(attr_name_);
   }
 
@@ -214,57 +209,57 @@ namespace eCAL
 
   bool CSubscriber::AddReceiveCallback(ReceiveCallbackT callback_)
   {
-    if(!m_datareader) return(false);
+    if(m_datareader == nullptr) return(false);
     RemReceiveCallback();
     return(m_datareader->AddReceiveCallback(callback_));
   }
 
   bool CSubscriber::RemReceiveCallback()
   {
-    if(!m_datareader) return(false);
+    if(m_datareader == nullptr) return(false);
     return(m_datareader->RemReceiveCallback());
   }
 
   bool CSubscriber::AddEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_)
   {
-    if (!m_datareader) return(false);
+    if (m_datareader == nullptr) return(false);
     RemEventCallback(type_);
     return(m_datareader->AddEventCallback(type_, callback_));
   }
 
   bool CSubscriber::RemEventCallback(eCAL_Subscriber_Event type_)
   {
-    if (!m_datareader) return(false);
+    if (m_datareader == nullptr) return(false);
     return(m_datareader->RemEventCallback(type_));
   }
 
   size_t CSubscriber::GetPublisherCount() const
   {
-    if(!m_datareader) return(0);
+    if(m_datareader == nullptr) return(0);
     return(m_datareader->GetPublisherCount());
   }
 
   std::string CSubscriber::GetTopicName() const
   {
-    if(!m_datareader) return("");
+    if(m_datareader == nullptr) return("");
     return(m_datareader->GetTopicName());
   }
 
   std::string CSubscriber::GetTypeName() const
   {
-    if(!m_datareader) return("");
+    if(m_datareader == nullptr) return("");
     return(m_datareader->GetTypeName());
   }
 
   std::string CSubscriber::GetDescription() const
   {
-    if(!m_datareader) return("");
+    if(m_datareader == nullptr) return("");
     return(m_datareader->GetDescription());
   }
 
   bool CSubscriber::SetTimeout(int timeout_)
   {
-    if (!m_datareader) return(false);
+    if (m_datareader == nullptr) return(false);
     return(m_datareader->SetTimeout(timeout_));
   }
 
@@ -276,7 +271,7 @@ namespace eCAL
 
   bool CSubscriber::ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_)
   {
-    if (g_descgate())
+    if (g_descgate() != nullptr)
     {
       // Calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
@@ -300,7 +295,7 @@ namespace eCAL
     out << indent_ << " class CSubscriber    " << std::endl;
     out << indent_ << "----------------------" << std::endl;
     out << indent_ << "m_created:            " << m_created << std::endl;
-    if(m_datareader && m_datareader->IsCreated()) out << indent_ << m_datareader->Dump("    ");
+    if((m_datareader != nullptr) && m_datareader->IsCreated()) out << indent_ << m_datareader->Dump("    ");
     out << std::endl;
 
     return(out.str());

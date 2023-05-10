@@ -56,10 +56,10 @@ namespace eCAL
     const std::string par_shm_prefix("#PAR_SHM#");
     if (par_.parameter.size() > par_shm_prefix.size())
     {
-      std::string prefix = par_.parameter.substr(0, par_shm_prefix.size());
+      const std::string prefix = par_.parameter.substr(0, par_shm_prefix.size());
       if (prefix == par_shm_prefix)
       {
-        std::string memfile_name = par_.parameter.substr(par_shm_prefix.size(), par_.parameter.size());
+        const std::string memfile_name = par_.parameter.substr(par_shm_prefix.size(), par_.parameter.size());
         memfile_names.push_back(memfile_name);
         par_shm = true;
       }
@@ -75,7 +75,7 @@ namespace eCAL
       eCAL::pb::ConnnectionPar connection_par;
       if (connection_par.ParseFromString(par_.parameter))
       {
-        for (auto memfile_name : connection_par.layer_par_shm().memory_file_list())
+        for (const auto& memfile_name : connection_par.layer_par_shm().memory_file_list())
         {
           memfile_names.push_back(memfile_name);
         }
@@ -87,14 +87,14 @@ namespace eCAL
       }
     }
 
-    for (auto memfile_name : memfile_names)
+    for (const auto& memfile_name : memfile_names)
     {
       // start memory file receive thread if topic is subscribed in this process
-      if (g_memfile_pool())
+      if (g_memfile_pool() != nullptr)
       {
-        std::string process_id = std::to_string(Process::GetProcessID());
-        std::string memfile_event = memfile_name + "_" + process_id;
-        MemFileDataCallbackT memfile_data_callback = std::bind(&CSHMReaderLayer::OnNewShmFileContent, this,
+        const std::string process_id = std::to_string(Process::GetProcessID());
+        const std::string memfile_event = memfile_name + "_" + process_id;
+        const MemFileDataCallbackT memfile_data_callback = std::bind(&CSHMReaderLayer::OnNewShmFileContent, this,
           std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, std::placeholders::_7, std::placeholders::_8);
         g_memfile_pool()->ObserveFile(memfile_name, memfile_event, par_.topic_name, par_.topic_id, Config::GetRegistrationTimeoutMs(), memfile_data_callback);
       }
@@ -103,8 +103,13 @@ namespace eCAL
 
   size_t CSHMReaderLayer::OnNewShmFileContent(const std::string& topic_name_, const std::string& topic_id_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_)
   {
-    size_t ret_size(0);
-    if (g_subgate()) ret_size = g_subgate()->ApplySample(topic_name_, topic_id_, buf_, len_, id_, clock_, time_, hash_, eCAL::pb::tl_ecal_shm);
-    return ret_size;
+    if (g_subgate() != nullptr)
+    {
+      if (g_subgate()->ApplySample(topic_name_, topic_id_, buf_, len_, id_, clock_, time_, hash_, eCAL::pb::tl_ecal_shm))
+      {
+        return len_;
+      }
+    }
+    return 0;
   }
 }

@@ -138,7 +138,7 @@ namespace eCAL
     m_use_tdesc = Config::IsTopicDescriptionSharingEnabled();
 
     // register
-    DoRegister(false);
+    Register(false);
 
     // mark as created
     m_created = true;
@@ -206,7 +206,10 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
-    m_created           = false;
+    // unregister
+    Unregister();
+
+    m_created = false;
 
     return(true);
   }
@@ -222,7 +225,7 @@ namespace eCAL
 #endif
 
     // register it
-    DoRegister(force);
+    Register(force);
 
     return(true);
   }
@@ -238,7 +241,7 @@ namespace eCAL
 #endif
 
     // register it
-    DoRegister(force);
+    Register(force);
 
     return(true);
   }
@@ -256,7 +259,7 @@ namespace eCAL
 #endif
 
     // register it
-    DoRegister(force);
+    Register(force);
 
     return(true);
   }
@@ -273,7 +276,7 @@ namespace eCAL
 #endif
 
     // register it
-    DoRegister(force);
+    Register(force);
 
     return(true);
   }
@@ -408,7 +411,7 @@ namespace eCAL
     if (!CheckWriterModes())
     {
       // incompatible writer configurations
-      return false;
+      return 0;
     }
 
     // get payload buffer size (one time, to avoid multiple computations)
@@ -464,7 +467,7 @@ namespace eCAL
         if (m_writer.shm.PrepareWrite(wattr))
         {
           // register new to update listening subscribers and rematch
-          DoRegister(true);
+          Register(true);
           Process::SleepMS(5);
         }
 
@@ -525,7 +528,7 @@ namespace eCAL
         if (m_writer.inproc.PrepareWrite(wdata))
         {
           // register new to update listening subscribers and rematch
-          DoRegister(true);
+          Register(true);
           Process::SleepMS(5);
         }
 
@@ -582,7 +585,7 @@ namespace eCAL
         if (m_writer.udp_mc.PrepareWrite(wattr))
         {
           // register new to update listening subscribers and rematch
-          DoRegister(true);
+          Register(true);
           Process::SleepMS(5);
         }
 
@@ -654,10 +657,14 @@ namespace eCAL
   void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_)
   {
     Connect(tid_, ttype_, tdesc_);
+
+    // add key to local subscriber map
+    const std::string topic_key = process_id_ + tid_;
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_loc_sub_map[process_id_] = true;
+      m_loc_sub_map[topic_key] = true;
     }
+
     m_loc_subscribed = true;
 
     // add a new local subscription
@@ -670,8 +677,15 @@ namespace eCAL
 #endif
   }
 
-  void CDataWriter::RemoveLocSubscription(const std::string& process_id_)
+  void CDataWriter::RemoveLocSubscription(const std::string& process_id_, const std::string& tid_)
   {
+    // remove key from local subscriber map
+    const std::string topic_key = process_id_ + tid_;
+    {
+      const std::lock_guard<std::mutex> lock(m_sub_map_sync);
+      m_loc_sub_map.erase(topic_key);
+    }
+
     // remove a local subscription
     m_writer.udp_mc.RemLocConnection (process_id_);
     m_writer.shm.RemLocConnection    (process_id_);
@@ -685,10 +699,14 @@ namespace eCAL
   void CDataWriter::ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_)
   {
     Connect(tid_, ttype_, tdesc_);
+
+    // add key to external subscriber map
+    const std::string topic_key = host_name_ + process_id_ + tid_;
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_ext_sub_map[host_name_] = true;
+      m_ext_sub_map[topic_key] = true;
     }
+
     m_ext_subscribed = true;
 
     // add a new external subscription
@@ -701,8 +719,15 @@ namespace eCAL
 #endif
   }
 
-  void CDataWriter::RemoveExtSubscription(const std::string& host_name_, const std::string& process_id_)
+  void CDataWriter::RemoveExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_)
   {
+    // remove key from external subscriber map
+    const std::string topic_key = host_name_ + process_id_ + tid_;
+    {
+      const std::lock_guard<std::mutex> lock(m_sub_map_sync);
+      m_ext_sub_map.erase(topic_key);
+    }
+
     // remove external subscription
     m_writer.udp_mc.RemExtConnection (host_name_, process_id_);
     m_writer.shm.RemExtConnection    (host_name_, process_id_);
@@ -739,7 +764,7 @@ namespace eCAL
     }
 
     // register without send
-    DoRegister(false);
+    Register(false);
 
     // check connection timeouts
     const std::shared_ptr<std::list<std::string>> loc_timeouts = std::make_shared<std::list<std::string>>();
@@ -796,7 +821,7 @@ namespace eCAL
     return(out.str());
   }
 
-  bool CDataWriter::DoRegister(bool force_)
+  bool CDataWriter::Register(bool force_)
   {
     if (m_topic_name.empty()) return(false);
 
@@ -924,7 +949,33 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::DoRegister");
+    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Register");
+#endif
+    return(true);
+  }
+
+  bool CDataWriter::Unregister()
+  {
+    if (m_topic_name.empty()) return(false);
+
+    // create command parameter
+    eCAL::pb::Sample ecal_unreg_sample;
+    ecal_unreg_sample.set_cmd_type(eCAL::pb::bct_unreg_publisher);
+    auto* ecal_reg_sample_mutable_topic = ecal_unreg_sample.mutable_topic();
+    ecal_reg_sample_mutable_topic->set_hname(m_host_name);
+    ecal_reg_sample_mutable_topic->set_hid(m_host_id);
+    ecal_reg_sample_mutable_topic->set_pname(m_pname);
+    ecal_reg_sample_mutable_topic->set_pid(m_pid);
+    ecal_reg_sample_mutable_topic->set_tname(m_topic_name);
+    ecal_reg_sample_mutable_topic->set_tid(m_topic_id);
+    ecal_reg_sample_mutable_topic->set_uname(Process::GetUnitName());
+
+    // unregister publisher
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterTopic(m_topic_name, m_topic_id, ecal_unreg_sample, true);
+
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::UnRegister");
 #endif
     return(true);
   }
@@ -979,10 +1030,10 @@ namespace eCAL
     }
   }
 
-  bool CDataWriter::SetUseUdpMC(TLayer::eSendMode mode_)
+  void CDataWriter::SetUseUdpMC(TLayer::eSendMode mode_)
   {
     m_writer.udp_mc_mode.requested = mode_;
-    if (!m_created) return true;
+    if (!m_created) return;
 
     // log send mode
     LogSendMode(mode_, m_topic_name + "::CDataWriter::Create::UDP_MC_SENDMODE::");
@@ -1001,14 +1052,12 @@ namespace eCAL
       m_writer.udp_mc.Destroy();
       break;
     }
-
-    return(true);
   }
 
-  bool CDataWriter::SetUseShm(TLayer::eSendMode mode_)
+  void CDataWriter::SetUseShm(TLayer::eSendMode mode_)
   {
     m_writer.shm_mode.requested = mode_;
-    if (!m_created) return true;
+    if (!m_created) return;
 
     // log send mode
     LogSendMode(mode_, m_topic_name + "::CDataWriter::Create::SHM_SENDMODE::");
@@ -1027,14 +1076,12 @@ namespace eCAL
       m_writer.shm.Destroy();
       break;
     }
-
-    return(true);
   }
 
-  bool CDataWriter::SetUseTcp(TLayer::eSendMode mode_)
+  void CDataWriter::SetUseTcp(TLayer::eSendMode mode_)
   {
     m_writer.tcp_mode.requested = mode_;
-    if (!m_created) return true;
+    if (!m_created) return;
 
     // log send mode
     LogSendMode(mode_, m_topic_name + "::CDataWriter::Create::TCP_SENDMODE::");
@@ -1053,14 +1100,12 @@ namespace eCAL
       m_writer.tcp.Destroy();
       break;
     }
-
-    return(true);
   }
 
-  bool CDataWriter::SetUseInProc(TLayer::eSendMode mode_)
+  void CDataWriter::SetUseInProc(TLayer::eSendMode mode_)
   {
     m_writer.inproc_mode.requested = mode_;
-    if (!m_created) return true;
+    if (!m_created) return;
 
     // log send mode
     LogSendMode(mode_, m_topic_name + "::CDataWriter::Create::INPROC_SENDMODE::");
@@ -1078,8 +1123,6 @@ namespace eCAL
       m_writer.inproc.Destroy();
       break;
     }
-
-    return(true);
   }
 
   bool CDataWriter::CheckWriterModes()

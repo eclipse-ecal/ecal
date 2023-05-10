@@ -22,6 +22,9 @@
 **/
 
 #include <ecal/ecal.h>
+
+#include "ecal_clientgate.h"
+#include "ecal_global_accessors.h"
 #include "ecal_service_client_impl.h"
 
 namespace eCAL
@@ -69,6 +72,9 @@ namespace eCAL
     m_service_client_impl = new CServiceClientImpl;
     m_service_client_impl->Create(service_name_);
 
+    // register this client
+    if (g_clientgate() != nullptr) g_clientgate()->Register(m_service_client_impl);
+
     m_created = true;
     return(true);
   }
@@ -82,6 +88,9 @@ namespace eCAL
   {
     if(!m_created) return(false);
     m_created = false;
+
+    // unregister this client
+    if (g_clientgate() != nullptr) g_clientgate()->Unregister(m_service_client_impl);
 
     m_service_client_impl->Destroy();
     delete m_service_client_impl;
@@ -141,7 +150,7 @@ namespace eCAL
    * @param       host_name_         Host name.
    * @param       method_name_       Method name.
    * @param       request_           Request string.
-   * @param [out] service_info_      Service response struct for detailed informations.
+   * @param [out] service_info_      Service response struct for detailed information.
    * @param [out] response_          Response string.
    *
    * @return  True if successful.

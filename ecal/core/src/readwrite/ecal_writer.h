@@ -70,7 +70,7 @@ namespace eCAL
     bool ShmEnableZeroCopy(bool state_);
 
     bool ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_);
-    long long  ShmGetAcknowledgeTimeout() const;
+    long long ShmGetAcknowledgeTimeout() const;
 
     bool AddEventCallback(eCAL_Publisher_Event type_, PubEventCallbackT callback_);
     bool RemEventCallback(eCAL_Publisher_Event type_);
@@ -78,10 +78,10 @@ namespace eCAL
     size_t Write(CPayloadWriter& payload_, long long time_, long long id_);
 
     void ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_);
-    void RemoveLocSubscription(const std::string & process_id_);
+    void RemoveLocSubscription(const std::string & process_id_, const std::string& tid_);
 
     void ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_);
-    void RemoveExtSubscription(const std::string & host_name_, const std::string & process_id_);
+    void RemoveExtSubscription(const std::string & host_name_, const std::string & process_id_, const std::string& tid_);
 
     void RefreshRegistration();
     void RefreshSendCounter();
@@ -105,14 +105,16 @@ namespace eCAL
     long GetFrequency() const {return(m_freq);}
 
   protected:
-    bool DoRegister(bool force_);
+    bool Register(bool force_);
+    bool Unregister();
+
     void Connect(const std::string& tid_, const std::string& ttype_, const std::string& tdesc_);
     void Disconnect();
 
-    bool SetUseUdpMC(TLayer::eSendMode mode_);
-    bool SetUseShm(TLayer::eSendMode mode_);
-    bool SetUseTcp(TLayer::eSendMode mode_);
-    bool SetUseInProc(TLayer::eSendMode mode_);
+    void SetUseUdpMC(TLayer::eSendMode mode_);
+    void SetUseShm(TLayer::eSendMode mode_);
+    void SetUseTcp(TLayer::eSendMode mode_);
+    void SetUseInProc(TLayer::eSendMode mode_);
 
     bool CheckWriterModes();
     size_t PrepareWrite(long long id_, size_t len_);

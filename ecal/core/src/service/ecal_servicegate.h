@@ -55,15 +55,13 @@ namespace eCAL
     bool Register  (CServiceServerImpl* service_);
     bool Unregister(CServiceServerImpl* service_);
 
-    void ApplyClientRegistration(const eCAL::pb::Sample& ecal_sample_);
-
     void RefreshRegistrations();
 
   protected:
-    static std::atomic<bool>    m_created;
+    static std::atomic<bool> m_created;
 
-    typedef std::set<CServiceServerImpl*> ServiceNameServiceImplSetT;
+    using ServiceNameServiceImplSetT = std::set<CServiceServerImpl *>;
     std::shared_timed_mutex     m_service_set_sync;
     ServiceNameServiceImplSetT  m_service_set;
   };
-};
+}

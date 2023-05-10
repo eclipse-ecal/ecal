@@ -72,7 +72,7 @@ namespace eCAL
     // check connection state
     bool IsConnected();
 
-    // called by the eCAL::CClientGate to register a service
+    // called by eCAL::CClientGate to register a service
     void RegisterService(const std::string& key_, unsigned int version_, const SServiceAttr& service_);
 
     // called by eCAL:CClientGate every second to update registration layer
@@ -87,6 +87,9 @@ namespace eCAL
     CServiceClientImpl& operator=(CServiceClientImpl&&) = delete;
 
   protected:
+    void Register(bool force_);
+    void Unregister();
+
     void CheckForNewServices();
 
     bool SendRequests(const std::string& host_name_, const std::string& method_name_, const std::string& request_, int timeout_);

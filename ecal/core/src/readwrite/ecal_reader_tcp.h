@@ -66,17 +66,17 @@ namespace eCAL
   public:
     CTCPReaderLayer();
 
-    void Initialize();
+    void Initialize() override;
 
-    void AddSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, QOS::SReaderQOS qos_);
-    void RemSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_);
+    void AddSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_, QOS::SReaderQOS qos_) override;
+    void RemSubscription(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_) override;
 
-    void SetConnectionParameter(SReaderLayerPar& /*par_*/);
+    void SetConnectionParameter(SReaderLayerPar& /*par_*/) override;
 
   private:
     std::shared_ptr<tcp_pubsub::Executor> m_executor;
 
-    typedef std::unordered_map<std::string, std::shared_ptr<CDataReaderTCP>> DataReaderTCPMapT;
+    using DataReaderTCPMapT = std::unordered_map<std::string, std::shared_ptr<CDataReaderTCP>>;
     std::mutex        m_datareadertcp_sync;
     DataReaderTCPMapT m_datareadertcp_map;
   };

@@ -138,13 +138,13 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      if (g_log()) g_log()->Log(log_level_debug1, topic_name_ + "::CPublisher::Create - FAILED");
+      if (g_log() != nullptr) g_log()->Log(log_level_debug1, topic_name_ + "::CPublisher::Create - FAILED");
 #endif
       return(false);
     }
 #ifndef NDEBUG
     // log it
-    if (g_log()) g_log()->Log(log_level_debug1, topic_name_ + "::CPublisher::Create - SUCCESS");
+    if (g_log() != nullptr) g_log()->Log(log_level_debug1, topic_name_ + "::CPublisher::Create - SUCCESS");
 #endif
     // register publisher gateway (for publisher memory file and event name)
     g_pubgate()->Register(topic_name_, m_datawriter);
@@ -167,11 +167,10 @@ namespace eCAL
     m_datawriter->Destroy();
 
     // unregister data writer
-    if(g_pubgate() != nullptr)               g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
-    if(g_registration_provider() != nullptr) g_registration_provider()->UnregisterTopic(m_datawriter->GetTopicName(), m_datawriter->GetTopicID());
+    if(g_pubgate() != nullptr) g_pubgate()->Unregister(m_datawriter->GetTopicName(), m_datawriter);
 #ifndef NDEBUG
     // log it
-    if (g_log()) g_log()->Log(log_level_debug1, std::string(m_datawriter->GetTopicName() + "::CPublisher::Destroy"));
+    if (g_log() != nullptr) g_log()->Log(log_level_debug1, std::string(m_datawriter->GetTopicName() + "::CPublisher::Destroy"));
 #endif
 
     // free datawriter
