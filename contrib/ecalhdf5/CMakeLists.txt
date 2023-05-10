@@ -131,4 +131,4 @@ install(DIRECTORY
     "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
     FILES_MATCHING PATTERN "*.h")
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER contrib)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER contrib/measurement)

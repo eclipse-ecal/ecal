@@ -73,6 +73,13 @@ option(HAS_CURL                                "Build with CURL (i.e. upload sup
 option(HAS_CAPNPROTO                           "Platform supports Cap'n Proto library"                            OFF)
 option(HAS_FLATBUFFERS                         "Platform supports flatbuffers library"                            OFF)
 option(HAS_FTXUI                               "Platform supports FTXUI library. Requires C++17 and up."           ON)
+option(HAS_MCAP                                "Platform supports the MCAP library."                               ON)
+
+if (HAS_HDF5 OR HAS_MCAP)
+set(BUILD_MEASUREMENT ON)
+else()
+set(BUILD_MEASUREMENT OFF)
+endif()
 
 option(BUILD_DOCS                              "Build the eCAL documentation"                                     OFF)
 option(BUILD_APPS                              "Build the eCAL applications"                                       ON)
@@ -374,12 +381,17 @@ endif()
 # --------------------------------------------------------
 # ecal hdf5 support
 # --------------------------------------------------------
+if(BUILD_MEASUREMENT)
 if(HAS_HDF5)
   add_subdirectory(contrib/ecalhdf5)
-  add_subdirectory(contrib/message)
+endif()
+if (HAS_MCAP)
+  add_subdirectory(contrib/measurement/mcap)
 endif()
 add_subdirectory(contrib/measurement/base)
-
+add_subdirectory(contrib/measurement/factory)
+add_subdirectory(contrib/message)
+endif()
 # --------------------------------------------------------
 # ecal core python binding
 # --------------------------------------------------------
@@ -417,7 +429,7 @@ endif()
 # --------------------------------------------------------
 # applications using hdf5
 # --------------------------------------------------------
-if(BUILD_APPS AND HAS_HDF5)
+if(BUILD_APPS AND BUILD_MEASUREMENT)
   add_subdirectory(app/play/play_core)
   add_subdirectory(app/play/play_cli)
 
@@ -445,7 +457,7 @@ if(BUILD_APPS AND HAS_QT5)
 # --------------------------------------------------------
 # qt applications using hdf5
 # --------------------------------------------------------
-if(BUILD_APPS AND HAS_QT5 AND HAS_HDF5)
+if(BUILD_APPS AND HAS_QT5 AND BUILD_MEASUREMENT)
   add_subdirectory(app/play/play_gui)
   add_subdirectory(app/rec/rec_gui)
 endif()
@@ -489,7 +501,7 @@ if(BUILD_ECAL_TESTS)
   # ------------------------------------------------------
   # test apps
   # ------------------------------------------------------
-  if (HAS_HDF5 AND HAS_QT5)
+  if (BUILD_MEASUREMENT AND HAS_QT5)
     add_subdirectory(app/rec/rec_tests/rec_rpc_tests)
   endif()
 endif()
@@ -563,6 +575,7 @@ message(STATUS "HAS_HDF5                                       : ${HAS_HDF5}")
 message(STATUS "HAS_QT5                                        : ${HAS_QT5}")
 message(STATUS "HAS_CURL                                       : ${HAS_CURL}")
 message(STATUS "HAS_CAPNPROTO                                  : ${HAS_CAPNPROTO}")
+message(STATUS "HAS_MCAP                                       : ${HAS_MCAP}")
 message(STATUS "HAS_FTXUI                                      : ${HAS_FTXUI}")
 message(STATUS "BUILD_DOCS                                     : ${BUILD_DOCS}")
 message(STATUS "BUILD_APPS                                     : ${BUILD_APPS}")
@@ -572,6 +585,7 @@ message(STATUS "BUILD_PY_BINDING                               : ${BUILD_PY_BIND
 message(STATUS "BUILD_STANDALONE_PY_WHEEL                      : ${BUILD_STANDALONE_PY_WHEEL}")
 message(STATUS "BUILD_CSHARP_BINDING                           : ${BUILD_CSHARP_BINDING}")
 message(STATUS "BUILD_ECAL_TESTS                               : ${BUILD_ECAL_TESTS}")
+message(STATUS "BUILD_MEASUREMENT                              : ${BUILD_MEASUREMENT}")
 message(STATUS "ECAL_INCLUDE_PY_SAMPLES                        : ${ECAL_INCLUDE_PY_SAMPLES}")
 message(STATUS "ECAL_INSTALL_SAMPLE_SOURCES                    : ${ECAL_INSTALL_SAMPLE_SOURCES}")
 message(STATUS "ECAL_JOIN_MULTICAST_TWICE                      : ${ECAL_JOIN_MULTICAST_TWICE}")

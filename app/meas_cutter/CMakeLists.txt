@@ -52,7 +52,7 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}   yaml-cpp
                                         tclap::tclap
                                         eCAL::ecal-utils
-                                        eCAL::hdf5
+                                        eCAL::measurement_factory
                                         Threads::Threads)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14) 

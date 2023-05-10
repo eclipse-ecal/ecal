@@ -18,10 +18,10 @@
 */
 
 #include "measurement_exporter.h"
-#include <ecalhdf5/eh5_writer.h>
+#include <ecal/measurement/writer_factory.h>
 
 MeasurementExporter::MeasurementExporter():
-  _writer(std::make_unique<eCAL::eh5::Writer>())
+  _writer(eCAL::measurement::CreateWriter())
 {
 }
 

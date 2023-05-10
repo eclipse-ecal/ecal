@@ -98,7 +98,7 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::core_pb
     eCAL::app_pb
   PRIVATE
-    eCAL::hdf5
+    eCAL::measurement_factory
     ThreadingUtils
     Threads::Threads
     eCAL::ecal-utils

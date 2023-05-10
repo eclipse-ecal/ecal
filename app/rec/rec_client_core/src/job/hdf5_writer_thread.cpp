@@ -18,11 +18,11 @@
 */
 
 #include "hdf5_writer_thread.h"
-#include <ecalhdf5/eh5_writer.h>
 
 #include "rec_client_core/ecal_rec_logger.h"
 
 #include <ecal_utils/filesystem.h>
+#include <ecal/measurement/writer_factory.h>
 
 namespace eCAL
 {
@@ -42,7 +42,7 @@ namespace eCAL
       , new_topic_info_map_available_(true)
       , flushing_                    (false)
     {
-      hdf5_writer_ = std::make_unique<eCAL::eh5::Writer>();
+      hdf5_writer_ = eCAL::measurement::CreateWriter();
     }
 
     Hdf5WriterThread::~Hdf5WriterThread()
