@@ -4,5 +4,5 @@ add_subdirectory(thirdparty/zstd/build/cmake)
 
 # this is the spelling of the targets from Conan Center Index
 add_library(zstd::libzstd_static ALIAS libzstd_static)
-
+target_include_directories(libzstd_static PUBLIC ${CMAKE_CURRENT_LIST_DIR}/zstd/lib)
 #find_package(zstd REQUIRED)
