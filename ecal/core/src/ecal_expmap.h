@@ -213,7 +213,6 @@ namespace eCAL
       };
 
       // Remove specific element from the cache
-      // @Kerstin, pretty sure that this is not well implemented, please take a look
       bool erase(const Key& k)
       {
         auto it = _key_to_value.find(k);
