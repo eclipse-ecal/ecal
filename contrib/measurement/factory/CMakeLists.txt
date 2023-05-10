@@ -23,6 +23,9 @@ add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_sources(${PROJECT_NAME}
   PRIVATE
+    include/ecal/measurement/imeasurement.h
+    include/ecal/measurement/measurement.h
+    include/ecal/measurement/omeasurement.h
     include/ecal/measurement/writer_factory.h
     src/writer_factory.cpp
     
@@ -36,9 +39,12 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
     eCAL::measurement_base
+    # we will check this, this is only the support for imeasurement / omeasurement
+    eCAL::message
+    #This is only a workaround until we have a common writer!
+    $<$<BOOL:${HAS_HDF5}>:eCAL::hdf5>
   PRIVATE
-    eCAL::hdf5
-    eCAL::measurement_mcap
+    $<$<BOOL:${HAS_MCAP}>:eCAL::measurement_mcap>
 )
 
 target_compile_definitions(${PROJECT_NAME} 

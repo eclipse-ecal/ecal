@@ -43,7 +43,7 @@ PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${m
 #target_include_directories(${PROJECT_NAME} PRIVATE .)
 target_compile_definitions(${PROJECT_NAME} PRIVATE MEASUREMENT_PATH="${SAMPLE_PERSON_MEASUREMENT_PATH}")
 
-target_link_libraries(${PROJECT_NAME} eCAL::hdf5 eCAL::proto)
+target_link_libraries(${PROJECT_NAME} eCAL::measurement_factory eCAL::proto)
 
 target_link_libraries(${PROJECT_NAME} protobuf::libprotobuf)
 

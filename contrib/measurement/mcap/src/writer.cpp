@@ -153,7 +153,7 @@ void eCAL::measurement::mcap::Writer::SetFileBaseName(const std::string& base_na
 bool eCAL::measurement::mcap::Writer::AddEntryToFile(const void* data, const unsigned long long& size, const long long& snd_timestamp, const long long& rcv_timestamp, const std::string& channel_name, long long id, long long clock) { 
   if (implementation->writer != nullptr)
   {
-    implementation->writer->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel_name, id, clock);
+    return implementation->writer->AddEntryToFile(data, size, snd_timestamp, rcv_timestamp, channel_name, id, clock);
   }
   else
   {

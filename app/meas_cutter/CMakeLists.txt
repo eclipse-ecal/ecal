@@ -53,6 +53,7 @@ target_link_libraries(${PROJECT_NAME}   yaml-cpp
                                         tclap::tclap
                                         eCAL::ecal-utils
                                         eCAL::measurement_factory
+                                        eCAL::hdf5
                                         Threads::Threads)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14) 
