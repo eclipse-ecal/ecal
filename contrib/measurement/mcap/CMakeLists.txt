@@ -26,6 +26,6 @@ target_link_libraries(measurement_mcap
     eCAL::measurement_base
 )
 
-ecal_install_library(measurement_mcap)
+#ecal_install_library(measurement_mcap)
 
 set_property(TARGET measurement_mcap PROPERTY FOLDER contrib/measurement)

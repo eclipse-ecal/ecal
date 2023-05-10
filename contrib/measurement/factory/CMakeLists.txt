@@ -53,7 +53,7 @@ target_compile_definitions(${PROJECT_NAME}
     $<$<BOOL:${HAS_MCAP}>:ECAL_MEASUREMENT_SUPPORTS_MCAP>
 )
 
-ecal_install_library(${PROJECT_NAME})
+#ecal_install_library(${PROJECT_NAME})
 
 install(DIRECTORY
    "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
