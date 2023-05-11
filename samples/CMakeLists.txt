@@ -26,9 +26,12 @@ endif(HAS_HDF5)
 # --------------------------------------------------------
 # c samples
 # --------------------------------------------------------
-add_subdirectory(c/minimal/minimal_rec)
-add_subdirectory(c/minimal/minimal_rec_cb)
-add_subdirectory(c/minimal/minimal_snd)
+# pubsub
+add_subdirectory(c/pubsub/string/minimal_rec)
+add_subdirectory(c/pubsub/string/minimal_rec_cb)
+add_subdirectory(c/pubsub/string/minimal_snd)
+
+# services
 add_subdirectory(c/services/minimal_client_c)
 add_subdirectory(c/services/minimal_server_c)
 
@@ -62,8 +65,6 @@ endif(HAS_HDF5)
 add_subdirectory(cpp/misc/event_rec)
 add_subdirectory(cpp/misc/event_snd)
 add_subdirectory(cpp/misc/process)
-add_subdirectory(cpp/misc/proto_dyn)
-add_subdirectory(cpp/misc/proto_dyn_json)
 add_subdirectory(cpp/misc/time)
 add_subdirectory(cpp/misc/timer)
 
@@ -103,6 +104,8 @@ add_subdirectory(cpp/pubsub/protobuf/person_snd_events)
 add_subdirectory(cpp/pubsub/protobuf/person_snd_inproc)
 add_subdirectory(cpp/pubsub/protobuf/person_snd_multicast)
 add_subdirectory(cpp/pubsub/protobuf/person_snd_tcp)
+add_subdirectory(cpp/pubsub/protobuf/proto_dyn)
+add_subdirectory(cpp/pubsub/protobuf/proto_dyn_json)
 add_subdirectory(cpp/pubsub/string/minimal_rec)
 add_subdirectory(cpp/pubsub/string/minimal_rec_cb)
 add_subdirectory(cpp/pubsub/string/minimal_snd)
@@ -134,24 +137,30 @@ endif(HAS_QT5)
 # --------------------------------------------------------
 if(BUILD_PY_BINDING)
   if(WIN32)
+    # benchmarks
+    add_subdirectory(python/benchmarks/latency_rec)
+    add_subdirectory(python/benchmarks/latency_rec_cb)
+    add_subdirectory(python/benchmarks/latency_snd)
+
+    # measurement
     if(HAS_HDF5)
-      add_subdirectory(python/ecalhdf5_rw)
+      add_subdirectory(python/measurement/ecalhdf5_rw)
+      add_subdirectory(python/measurement/measurement_read)
     endif(HAS_HDF5)
-    add_subdirectory(python/latency_rec)
-    add_subdirectory(python/latency_rec_cb)
-    add_subdirectory(python/latency_snd)
-    if(HAS_HDF5)
-      add_subdirectory(python/measurement_read)
-    endif(HAS_HDF5)
-    add_subdirectory(python/minimal_rec)
-    add_subdirectory(python/minimal_rec_cb)
-    add_subdirectory(python/minimal_service)
-    add_subdirectory(python/minimal_snd)
-    add_subdirectory(python/monitoring)
-    add_subdirectory(python/person_rec)
-    add_subdirectory(python/person_rec_cb)
-    add_subdirectory(python/person_rec_json)  
-    add_subdirectory(python/person_snd)
+
+    # monitoring
+    add_subdirectory(python/monitoring/monitoring)
+
+    # pubsub
+    add_subdirectory(python/pubsub/protobuf/person_rec)
+    add_subdirectory(python/pubsub/protobuf/person_rec_cb)
+    add_subdirectory(python/pubsub/protobuf/person_rec_json)  
+    add_subdirectory(python/pubsub/protobuf/person_snd)
+    add_subdirectory(python/pubsub/string/minimal_rec)
+    add_subdirectory(python/pubsub/string/minimal_rec_cb)
+    add_subdirectory(python/pubsub/string/minimal_snd)
+
+    # services
+    add_subdirectory(python/services/minimal_service)
   endif(WIN32)
 endif(BUILD_PY_BINDING)
-
