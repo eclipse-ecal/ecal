@@ -131,8 +131,8 @@ set(ecal_readwrite_cpp_src
 )
 
 set(ecal_readwrite_shm_cpp_src
-  src/readwrite/ecal_reader_shm.cpp
-  src/readwrite/ecal_writer_shm.cpp
+    src/readwrite/ecal_reader_shm.cpp
+    src/readwrite/ecal_writer_shm.cpp
 )
 
 set(ecal_service_cpp_src
@@ -144,6 +144,24 @@ set(ecal_service_cpp_src
     src/service/ecal_tcpclient.cpp
     src/service/ecal_servicegate.cpp
     src/service/ecal_tcpserver.cpp
+src/service/asio_server_session_v0.cpp
+src/service/asio_server_session_v1.cpp
+
+    # TODO: Sort this better
+
+    src/service/asio_server.cpp
+
+    src/service/asio_server.h
+    src/service/ecal_clientgate.h
+    src/service/ecal_service_client_impl.h
+    src/service/ecal_service_server_impl.h
+    src/service/ecal_servicegate.h
+    src/service/ecal_tcpclient.h
+    src/service/ecal_tcpserver.h
+    src/service/asio_server.h
+    src/service/asio_server_session.h
+    src/service/asio_server_session_v0.h
+    src/service/asio_server_session_v1.h
 )
 
 set(ecal_cmn_cpp_src
@@ -260,16 +278,6 @@ set(ecal_readwrite_header_src
 set(ecal_readwrite_shm_header_src
     src/readwrite/ecal_reader_shm.h
     src/readwrite/ecal_writer_shm.h
-)
-
-set(ecal_service_header_src
-    src/service/asio_server.h
-    src/service/ecal_clientgate.h
-    src/service/ecal_service_client_impl.h
-    src/service/ecal_service_server_impl.h
-    src/service/ecal_servicegate.h
-    src/service/ecal_tcpclient.h
-    src/service/ecal_tcpserver.h
 )
 
 set(ecal_cmn_header_src
@@ -420,7 +428,6 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_pubsub_header_src}
     ${ecal_readwrite_header_src}
     ${ecal_readwrite_shm_header_src}
-    ${ecal_service_header_src}
 
     ${ecal_header_base}
     ${ecal_header_cimpl}
@@ -543,7 +550,6 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_pubsub_header_src}
     ${ecal_readwrite_header_src}
     ${ecal_readwrite_shm_header_src}
-    ${ecal_service_header_src}
 
     ${ecal_header_cmn}
     ${ecal_header_cimpl}
