@@ -43,7 +43,7 @@ namespace eCAL
     }
 
     // create socket
-    asio::ip::udp::endpoint listen_endpoint(asio::ip::udp::v4(), static_cast<unsigned short>(attr_.port));
+    const asio::ip::udp::endpoint listen_endpoint(asio::ip::udp::v4(), static_cast<unsigned short>(attr_.port));
     {
       asio::error_code ec;
       m_socket.open(listen_endpoint.protocol(), ec);
@@ -78,7 +78,7 @@ namespace eCAL
     if (!m_unicast)
     {
       // set loopback option
-      asio::ip::multicast::enable_loopback loopback(attr_.loopback);
+      const asio::ip::multicast::enable_loopback loopback(attr_.loopback);
       asio::error_code ec;
       m_socket.set_option(loopback, ec);
       if (ec)
@@ -91,7 +91,7 @@ namespace eCAL
     {
       int rcvbuf = 1024 * 1024;
       if (attr_.rcvbuf > 0) rcvbuf = attr_.rcvbuf;
-      asio::socket_base::receive_buffer_size recbufsize(rcvbuf);
+      const asio::socket_base::receive_buffer_size recbufsize(rcvbuf);
       asio::error_code ec;
       m_socket.set_option(recbufsize, ec);
       if (ec)

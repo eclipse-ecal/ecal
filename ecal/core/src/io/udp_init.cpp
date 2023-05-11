@@ -42,10 +42,10 @@ namespace eCAL
       if(g_socket_init_refcnt == 1)
       {
 #ifdef ECAL_OS_WINDOWS
-        WORD wVersionRequested = MAKEWORD(2, 2);
+        const WORD wVersionRequested = MAKEWORD(2, 2);
 
         WSADATA wsaData;
-        int err = WSAStartup(wVersionRequested, &wsaData);
+        const int err = WSAStartup(wVersionRequested, &wsaData);
         if (err != 0)
         {
           /* Tell the user that we could not find a usable */

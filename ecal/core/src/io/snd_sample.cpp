@@ -45,7 +45,7 @@ namespace eCAL
     size_t sent_sum(0);
 
     std::vector<char> payload_sum;
-    size_t data_size = CreateSampleBuffer(sample_name_, ecal_sample_, payload_sum);
+    const size_t data_size = CreateSampleBuffer(sample_name_, ecal_sample_, payload_sum);
     if (data_size > 0)
     {
       // and send it

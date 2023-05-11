@@ -8,7 +8,7 @@ const std::string localhost_udp_address{ "127.255.255.255" };
 
 std::string eCAL::UDP::GetRegistrationMulticastAddress()
 {
-  bool local_only = !Config::IsNetworkEnabled();
+  const bool local_only = !Config::IsNetworkEnabled();
   if (local_only)
   {
     return localhost_udp_address;

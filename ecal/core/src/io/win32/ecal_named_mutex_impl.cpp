@@ -81,7 +81,7 @@ namespace eCAL
     m_was_recovered = false;
 
     // wait for access
-    DWORD result = WaitForSingleObject(m_mutex_handle, static_cast<DWORD>(timeout_));
+    const DWORD result = WaitForSingleObject(m_mutex_handle, static_cast<DWORD>(timeout_));
     if (result == WAIT_OBJECT_0)
       return true;
     else if (result == WAIT_ABANDONED)
