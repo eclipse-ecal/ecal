@@ -34,8 +34,8 @@ namespace CustomTclap
 
   void AdvancedTclapOutput::version(TCLAP::CmdLineInterface &cmd)
   {
-    std::string progName = cmd.getProgramName();
-    std::string xversion = cmd.getVersion();
+    const std::string progName = cmd.getProgramName();
+    const std::string xversion = cmd.getVersion();
 
     std::stringstream ss;
 
@@ -75,7 +75,7 @@ namespace CustomTclap
 
     // Create string
 
-    std::string progName = cmd.getProgramName();
+    const std::string progName = cmd.getProgramName();
 
     ss << "PARSE ERROR: " << e.argId() << std::endl
       << "             " << e.error() << std::endl << std::endl;
@@ -117,7 +117,7 @@ namespace CustomTclap
   void AdvancedTclapOutput::shortUsage(TCLAP::CmdLineInterface& cmd, std::ostream& os) const
   {
     std::list<TCLAP::Arg*>                arg_list = cmd.getArgList();
-    std::string                           prog_name = cmd.getProgramName();
+    const std::string                     prog_name = cmd.getProgramName();
     TCLAP::XorHandler                     xor_handler = cmd.getXorHandler();
     std::vector<std::vector<TCLAP::Arg*>> xor_list = xor_handler.getXorList();
 
@@ -159,7 +159,7 @@ namespace CustomTclap
   void AdvancedTclapOutput::longUsage(TCLAP::CmdLineInterface& cmd, std::ostream& os) const
   {
     std::list<TCLAP::Arg*>                arg_list = cmd.getArgList();
-    std::string                           message = cmd.getMessage();
+    const std::string                     message = cmd.getMessage();
     TCLAP::XorHandler                     xor_handler = cmd.getXorHandler();
     std::vector<std::vector<TCLAP::Arg*>> xor_list = xor_handler.getXorList();
 

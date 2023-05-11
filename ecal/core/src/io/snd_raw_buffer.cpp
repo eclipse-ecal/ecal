@@ -51,13 +51,13 @@ namespace eCAL
 {
   size_t CreateSampleBuffer(const std::string& sample_name_, const eCAL::pb::Sample& ecal_sample_, std::vector<char>& payload_)
   {
-    unsigned short sample_name_size = (unsigned short)sample_name_.size() + 1;
+    const unsigned short sample_name_size = (unsigned short)sample_name_.size() + 1;
 #if GOOGLE_PROTOBUF_VERSION >= 3001000
-    size_t         sample_size = ecal_sample_.ByteSizeLong();
+    const size_t         sample_size = ecal_sample_.ByteSizeLong();
 #else
     size_t         sample_size = ecal_sample_.ByteSize();
 #endif
-    size_t         data_size = sizeof(sample_name_size) + sample_name_size + sample_size;
+    const size_t         data_size = sizeof(sample_name_size) + sample_name_size + sample_size;
 
     // create payload buffer with reserved space for first message head
     payload_.resize(data_size + sizeof(struct SUDPMessageHead));
