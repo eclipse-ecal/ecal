@@ -84,7 +84,7 @@ namespace eCAL
 
   void CThread::HelperThread(void* par_)
   {
-    if(!par_) return;
+    if(par_ == nullptr) return;
 
     struct ThreadData* tdata = static_cast<ThreadData*>(par_);
     if(!gEventIsValid(tdata->event)) return;

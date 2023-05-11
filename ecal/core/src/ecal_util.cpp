@@ -59,14 +59,14 @@ namespace eCAL
     // take monitoring snapshot
     static eCAL::pb::Monitoring GetMonitoring()
     {
-      if (!eCAL::IsInitialized(eCAL::Init::Monitoring))
+      if (eCAL::IsInitialized(eCAL::Init::Monitoring) == 0)
       {
         eCAL::Initialize(0, nullptr, "", eCAL::Init::Monitoring);
         eCAL::Process::SleepMS(1000);
       }
 
       eCAL::pb::Monitoring monitoring;
-      if (eCAL::g_monitoring()) eCAL::g_monitoring()->GetMonitoring(monitoring);
+      if (eCAL::g_monitoring() != nullptr) eCAL::g_monitoring()->GetMonitoring(monitoring);
 
       return(monitoring);
     }
@@ -198,7 +198,7 @@ namespace eCAL
     **/
     void EnableLoopback(bool state_)
     {
-      if (g_registration_receiver()) g_registration_receiver()->EnableLoopback(state_);
+      if (g_registration_receiver() != nullptr) g_registration_receiver()->EnableLoopback(state_);
     }
 
     /**
@@ -209,7 +209,7 @@ namespace eCAL
     **/
     void PubShareType(bool state_)
     {
-      if (g_pubgate()) g_pubgate()->ShareType(state_);
+      if (g_pubgate() != nullptr) g_pubgate()->ShareType(state_);
     }
 
     /**
@@ -220,7 +220,7 @@ namespace eCAL
     **/
     void PubShareDescription(bool state_)
     {
-      if (g_pubgate()) g_pubgate()->ShareDescription(state_);
+      if (g_pubgate() != nullptr) g_pubgate()->ShareDescription(state_);
     }
 
     /**
@@ -231,7 +231,7 @@ namespace eCAL
     **/
     void GetTopics(std::unordered_map<std::string, STopicInfo>& topic_info_map_)
     {
-      if (!g_descgate()) return;
+      if (g_descgate() == nullptr) return;
       g_descgate()->GetTopics(topic_info_map_);
     }
 
@@ -242,7 +242,7 @@ namespace eCAL
     **/
     void GetTopicNames(std::vector<std::string>& topic_names_)
     {
-      if (!g_descgate()) return;
+      if (g_descgate() == nullptr) return;
       g_descgate()->GetTopicNames(topic_names_);
     }
 
@@ -256,7 +256,7 @@ namespace eCAL
     **/
     bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_)
     {
-      if (!g_descgate()) return(false);
+      if (g_descgate() == nullptr) return(false);
       return(g_descgate()->GetTopicTypeName(topic_name_, topic_type_));
     }
 
@@ -299,7 +299,7 @@ namespace eCAL
     **/
     bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_)
     {
-      if (!g_descgate()) return(false);
+      if (g_descgate() == nullptr) return(false);
       return(g_descgate()->GetTopicDescription(topic_name_, topic_desc_));
     }
 
@@ -340,7 +340,7 @@ namespace eCAL
     **/
     void GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_)
     {
-      if (!g_descgate()) return;
+      if (g_descgate() == nullptr) return;
       g_descgate()->GetServices(service_info_map_);
     }
 
@@ -351,7 +351,7 @@ namespace eCAL
     **/
     void GetServiceNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_)
     {
-      if (!g_descgate()) return;
+      if (g_descgate() == nullptr) return;
       g_descgate()->GetServiceNames(service_method_names_);
     }
 
@@ -367,7 +367,7 @@ namespace eCAL
     **/
     bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_, std::string& resp_type_)
     {
-      if (!g_descgate()) return(false);
+      if (g_descgate() == nullptr) return(false);
       return(g_descgate()->GetServiceTypeNames(service_name_, method_name_, req_type_, resp_type_));
     }
 
@@ -383,7 +383,7 @@ namespace eCAL
     **/
     bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_desc_, std::string& resp_desc_)
     {
-      if (!g_descgate()) return(false);
+      if (g_descgate() == nullptr) return(false);
       return(g_descgate()->GetServiceDescription(service_name_, method_name_, req_desc_, resp_desc_));
     }
   }

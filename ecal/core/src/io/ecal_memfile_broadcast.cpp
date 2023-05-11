@@ -161,7 +161,7 @@ namespace eCAL
     if (m_broadcast_memfile->GetReadAccess(EXP_MEMFILE_ACCESS_TIMEOUT))
     {
       // Check if memfile is initialized
-      if (m_broadcast_memfile->CurDataSize())
+      if (m_broadcast_memfile->CurDataSize() != 0u)
       {
         const void* memfile_address = nullptr;
         m_broadcast_memfile->GetReadAddress(memfile_address, m_broadcast_memfile->MaxDataSize());
@@ -250,7 +250,7 @@ namespace eCAL
     if (m_broadcast_memfile->GetReadAccess(EXP_MEMFILE_ACCESS_TIMEOUT))
     {
       // Check if memfile is initialized
-      if (m_broadcast_memfile->CurDataSize())
+      if (m_broadcast_memfile->CurDataSize() != 0u)
       {
         m_broadcast_memfile->Read(m_broadcast_memfile_local_buffer.data(), m_broadcast_memfile_local_buffer.size(), 0);
         m_broadcast_memfile->ReleaseReadAccess();
@@ -282,7 +282,7 @@ namespace eCAL
     for (const auto &broadcast_message: m_event_queue)
     {
       const auto timestamp = broadcast_message.timestamp;
-      if ((timeout && (timestamp <= timeout_threshold)) || (timestamp <= m_last_timestamp))
+      if (((timeout != 0) && (timestamp <= timeout_threshold)) || (timestamp <= m_last_timestamp))
         break;
       if ((broadcast_message.process_id == g_process_id) && !enable_loopback)
         continue;

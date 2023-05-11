@@ -160,7 +160,7 @@ CSampleReceiver::CSampleReceiveSlot::~CSampleReceiveSlot()
 
 int CSampleReceiver::CSampleReceiveSlot::OnMessageCompleted(std::vector<char> &&msg_buffer_)
 {
-  if(!m_sample_receiver) return(0);
+  if(m_sample_receiver == nullptr) return(0);
 
   // read sample_name size
   unsigned short sample_name_size = ((unsigned short*)(msg_buffer_.data()))[0];
@@ -232,7 +232,7 @@ CSampleReceiver::~CSampleReceiver()
 
 int CSampleReceiver::Receive(eCAL::CUDPReceiver* sample_receiver_)
 {
-  if(!sample_receiver_) return(-1);
+  if(sample_receiver_ == nullptr) return(-1);
 
   // wait for any incoming message
   size_t recv_len = sample_receiver_->Receive(m_msg_buffer.data(), m_msg_buffer.size(), 10);

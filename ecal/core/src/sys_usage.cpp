@@ -94,8 +94,8 @@ short CpuUsage::GetUsage()
     FILETIME ftSysIdle, ftSysKernel, ftSysUser;
     FILETIME ftProcCreation, ftProcExit, ftProcKernel, ftProcUser;
 
-    if (!GetSystemTimes(&ftSysIdle, &ftSysKernel, &ftSysUser) ||
-      !GetProcessTimes(GetCurrentProcess(), &ftProcCreation, &ftProcExit, &ftProcKernel, &ftProcUser))
+    if ((GetSystemTimes(&ftSysIdle, &ftSysKernel, &ftSysUser) == 0) ||
+        (GetProcessTimes(GetCurrentProcess(), &ftProcCreation, &ftProcExit, &ftProcKernel, &ftProcUser) == 0))
     {
       ::InterlockedDecrement(&m_lRunCount);
       return nCpuCopy;

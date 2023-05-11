@@ -140,7 +140,7 @@ namespace eCAL
     m_filter_mask_udp  = Config::GetUdpLogFilter();
 
     // create log file
-    if(m_filter_mask_file)
+    if(m_filter_mask_file != 0)
     {
       // check ECAL_DATA
       std::string ecal_log_path = Util::GeteCALLogPath();
@@ -153,7 +153,7 @@ namespace eCAL
     }
 
     // create log udp sender
-    if(m_filter_mask_udp)
+    if(m_filter_mask_udp != 0)
     {
       SSenderAttr attr;
       bool local_only = !Config::IsNetworkEnabled();
@@ -186,7 +186,7 @@ namespace eCAL
 
     m_udp_sender->Destroy();
 
-    if(m_logfile) fclose(m_logfile);
+    if(m_logfile != nullptr) fclose(m_logfile);
     m_logfile = nullptr;
 
     m_created = false;
@@ -214,18 +214,18 @@ namespace eCAL
     eCAL_Logging_Filter log_con  = level_ & m_filter_mask_con;
     eCAL_Logging_Filter log_file = level_ & m_filter_mask_file;
     eCAL_Logging_Filter log_udp  = level_ & m_filter_mask_udp;
-    if(!(log_con | log_file | log_udp)) return;
+    if((log_con | log_file | log_udp) == 0) return;
 
     static eCAL::pb::LogMessage ecal_msg;
     static std::string        ecal_msg_s;
     auto                      log_time = eCAL::Time::ecal_clock::now();
 
-    if(log_con)
+    if(log_con != 0)
     {
       std::cout << msg_ << std::endl;
     }
 
-    if(log_file && m_logfile)
+    if((log_file != 0) && (m_logfile != nullptr))
     {
       std::stringstream msg_stream;
       msg_stream << std::chrono::duration_cast<std::chrono::milliseconds>(log_time.time_since_epoch()).count();
@@ -274,7 +274,7 @@ namespace eCAL
       fflush(m_logfile);
     }
 
-    if(log_udp && m_udp_sender)
+    if((log_udp != 0) && m_udp_sender)
     {
       ecal_msg.Clear();
       ecal_msg.set_time(std::chrono::duration_cast<std::chrono::microseconds>(log_time.time_since_epoch()).count());

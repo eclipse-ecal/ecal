@@ -189,7 +189,7 @@ namespace eCAL
     RunIOContext(asio::chrono::milliseconds(timeout_));
 
     // retrieve underlaying raw socket informations
-    if (address_)
+    if (address_ != nullptr)
     {
       if (m_sender_endpoint.address().is_v4())
       {

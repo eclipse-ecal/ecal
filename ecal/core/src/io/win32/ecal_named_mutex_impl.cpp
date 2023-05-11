@@ -32,7 +32,7 @@ namespace eCAL
     const std::string mutex_name = name_ + "_mtx";
     m_mutex_handle = ::CreateMutex(
       nullptr,              // no security descriptor
-      false,                // mutex not owned
+      FALSE,                // mutex not owned
       mutex_name.c_str());  // object name
   }
 

@@ -89,13 +89,13 @@ namespace eCAL
 
       bool UnMapFile(SMemFileInfo& mem_file_info_)
       {
-        if (mem_file_info_.mem_address)
+        if (mem_file_info_.mem_address != nullptr)
         {
           UnmapViewOfFile(mem_file_info_.mem_address);
           mem_file_info_.mem_address = nullptr;
         }
 
-        if (mem_file_info_.map_region)
+        if (mem_file_info_.map_region != nullptr)
         {
           CloseHandle(mem_file_info_.map_region);
           mem_file_info_.map_region = nullptr;

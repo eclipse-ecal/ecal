@@ -117,8 +117,8 @@ namespace eCAL
     asio::socket_base::message_flags flags(0);
     asio::error_code                 ec;
     size_t                           sent(0);
-    if (ipaddr_ && (ipaddr_[0] != '\0')) sent = m_socket.send_to(asio::buffer(buf_, len_), asio::ip::udp::endpoint(asio::ip::make_address(ipaddr_), m_port), flags, ec);
-    else                                 sent = m_socket.send_to(asio::buffer(buf_, len_), m_endpoint, flags, ec);
+    if ((ipaddr_ != nullptr) && (ipaddr_[0] != '\0')) sent = m_socket.send_to(asio::buffer(buf_, len_), asio::ip::udp::endpoint(asio::ip::make_address(ipaddr_), m_port), flags, ec);
+    else                                              sent = m_socket.send_to(asio::buffer(buf_, len_), m_endpoint, flags, ec);
     if (ec)
     {
       std::cout << "CUDPSender::Send failed with: \'" << ec.message() << "\'" << std::endl;
@@ -135,8 +135,8 @@ namespace eCAL
 
   void CUDPSenderImpl::SendAsync(asio::const_buffer buf_, const char* ipaddr_)
   {
-    if (ipaddr_ && (ipaddr_[0] != '\0')) m_socket.async_send_to(buf_, asio::ip::udp::endpoint(asio::ip::make_address(ipaddr_), m_port), std::bind(&CUDPSenderImpl::OnSendAsync, this, std::placeholders::_1, std::placeholders::_2, buf_, ipaddr_));
-    else                                 m_socket.async_send_to(buf_, m_endpoint,                                                       std::bind(&CUDPSenderImpl::OnSendAsync, this, std::placeholders::_1, std::placeholders::_2, buf_, ipaddr_));
+    if ((ipaddr_ != nullptr) && (ipaddr_[0] != '\0')) m_socket.async_send_to(buf_, asio::ip::udp::endpoint(asio::ip::make_address(ipaddr_), m_port), std::bind(&CUDPSenderImpl::OnSendAsync, this, std::placeholders::_1, std::placeholders::_2, buf_, ipaddr_));
+    else                                              m_socket.async_send_to(buf_, m_endpoint,                                                       std::bind(&CUDPSenderImpl::OnSendAsync, this, std::placeholders::_1, std::placeholders::_2, buf_, ipaddr_));
   }
 
   void CUDPSenderImpl::OnSendAsync(asio::error_code ec_, std::size_t bytes_transferred_, asio::const_buffer buf_, const char* ipaddr_)
@@ -145,7 +145,7 @@ namespace eCAL
     {
       // bytes_transferred_ amount of data was successfully sent
       auto bytes_left = buf_ + bytes_transferred_;
-      if (bytes_left.size())
+      if (bytes_left.size() != 0u)
       {
         // send "rest data" in the next SendAsync operation
         SendAsync(bytes_left, ipaddr_);

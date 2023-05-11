@@ -69,7 +69,7 @@ namespace eCAL
     memcpy(payload_data + sizeof(sample_name_size), sample_name_.c_str(), sample_name_size);
 
     // write payload
-    if (ecal_sample_.SerializeWithCachedSizesToArray((google::protobuf::uint8*)payload_data + sizeof(sample_name_size) + sample_name_size))
+    if (ecal_sample_.SerializeWithCachedSizesToArray((google::protobuf::uint8*)payload_data + sizeof(sample_name_size) + sample_name_size) != nullptr)
     {
       return data_size;
     }
@@ -79,13 +79,13 @@ namespace eCAL
 
   size_t SendSampleBuffer(char* buf_, size_t buf_len_, long bandwidth_, TransmitCallbackT transmit_cb_)
   {
-    if (!buf_) return(0);
+    if (buf_ == nullptr) return(0);
 
     size_t sent(0);
     size_t sent_sum(0);
 
     int32_t total_packet_num = int32_t(buf_len_ / MSG_PAYLOAD_SIZE);
-    if (buf_len_%MSG_PAYLOAD_SIZE) total_packet_num++;
+    if ((buf_len_%MSG_PAYLOAD_SIZE) != 0u) total_packet_num++;
 
     // create message header
     struct SUDPMessageHead msg_header;
@@ -168,7 +168,7 @@ namespace eCAL
           // send data package
           sent = transmit_cb_(buf_ + static_cast<size_t>(current_packet_num)*MSG_PAYLOAD_SIZE, sizeof(struct SUDPMessageHead) + current_snd_len);
           if (sent == 0) return(sent);
-          if (send_sleep_us)
+          if (send_sleep_us != 0)
             eCAL::Process::SleepFor(std::chrono::microseconds(send_sleep_us));
 
 #ifndef NDEBUG
