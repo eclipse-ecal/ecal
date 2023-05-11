@@ -144,7 +144,7 @@ namespace eCAL
           std::string error_s;
           google::protobuf::FileDescriptorSet proto_desc;
           proto_desc.ParseFromString(topic_desc);
-          std::shared_ptr<google::protobuf::Message> msg(msg_decoder->GetProtoMessageFromDescriptorSet(proto_desc, topic_type, error_s));
+          const std::shared_ptr<google::protobuf::Message> msg(msg_decoder->GetProtoMessageFromDescriptorSet(proto_desc, topic_type, error_s));
           resolver_.reset(google::protobuf::util::NewTypeResolverForDescriptorPool("", msg_decoder->GetDescriptorPool()));
         }
 

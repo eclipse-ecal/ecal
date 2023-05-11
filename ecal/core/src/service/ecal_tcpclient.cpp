@@ -73,7 +73,7 @@ namespace eCAL
       asio::connect(*m_socket, resolver.resolve({ host_name_, std::to_string(port_) }));
       
       // set TCP no delay, so Nagle's algorithm will not stuff multiple messages in one TCP segment
-      asio::ip::tcp::no_delay no_delay_option(true);
+      const asio::ip::tcp::no_delay no_delay_option(true);
       m_socket->set_option(no_delay_option);
 
       // mark as connected
@@ -134,7 +134,7 @@ namespace eCAL
 
   size_t CTcpClient::ExecuteRequest(const std::string& request_, int timeout_, std::string& response_)
   {
-    std::lock_guard<std::mutex> lock(m_socket_write_mutex);
+    const std::lock_guard<std::mutex> lock(m_socket_write_mutex);
 
     if (!m_created) return 0;
 
@@ -145,7 +145,7 @@ namespace eCAL
 
   void CTcpClient::ExecuteRequestAsync(const std::string& request_, int timeout_, AsyncCallbackT callback)
   {
-    std::unique_lock<std::mutex> lock(m_socket_write_mutex);
+    const std::unique_lock<std::mutex> lock(m_socket_write_mutex);
     if (!m_async_request_in_progress)
     {
       m_async_request_in_progress.store(true);
@@ -241,7 +241,7 @@ namespace eCAL
       // read stream header (sync)
       else
       {
-        size_t bytes_read = m_socket->read_some(asio::buffer(&tcp_header, sizeof(tcp_header)));
+        const size_t bytes_read = m_socket->read_some(asio::buffer(&tcp_header, sizeof(tcp_header)));
         if (bytes_read != sizeof(tcp_header)) read_failed = true;
         else                                  read_done   = true;
       }
@@ -280,9 +280,9 @@ namespace eCAL
       {
         const size_t buffer_size(1024);
         char buffer[buffer_size];
-        size_t bytes_left    = rsize - response_.size();
-        size_t bytes_to_read = std::min(buffer_size, bytes_left);
-        size_t bytes_read    = m_socket->read_some(asio::buffer(buffer, bytes_to_read));
+        const size_t bytes_left    = rsize - response_.size();
+        const size_t bytes_to_read = std::min(buffer_size, bytes_left);
+        const size_t bytes_read    = m_socket->read_some(asio::buffer(buffer, bytes_to_read));
         response_ += std::string(buffer, bytes_read);
 
         //std::cout << "CTcpClient::ReceiveResponse read response bytes " << bytes_read << " to " << response_.size() << std::endl;
@@ -326,7 +326,7 @@ namespace eCAL
     //  }
     //);
 
-    std::shared_ptr<STcpHeader> tcp_header = std::make_shared<STcpHeader>();
+    const std::shared_ptr<STcpHeader> tcp_header = std::make_shared<STcpHeader>();
     //std::unique_lock<std::mutex> lock(m_socket_read_mutex);
 
     m_socket->async_read_some(asio::buffer(tcp_header.get(), sizeof(tcp_header)),

@@ -180,7 +180,7 @@ namespace eCAL
             // clear receive buffer
             receive_buffer.clear();
 
-            bool zero_copy_allowed = mfile_hdr.options.zero_copy != 0;
+            const bool zero_copy_allowed = mfile_hdr.options.zero_copy != 0;
             bool post_process_buffer(false);
             // -------------------------------------------------------------------------
             // zero copy mode
@@ -274,16 +274,16 @@ namespace eCAL
   bool CMemFileObserver::ReadFileHeader(SMemFileHeader& mfile_hdr_)
   {
     // retrieve size of received buffer
-    size_t buffer_size = m_memfile.CurDataSize();
+    const size_t buffer_size = m_memfile.CurDataSize();
 
     // do we have at least the first two bytes ? (hdr_size)
     if (buffer_size >= 2)
     {
       // read received header's size
       m_memfile.Read(&mfile_hdr_, 2, 0);
-      uint16_t rcv_hdr_size = mfile_hdr_.hdr_size;
+      const uint16_t rcv_hdr_size = mfile_hdr_.hdr_size;
       // if the header size exceeds current header version size -> limit it to that one
-      uint16_t hdr_bytes2copy = std::min(rcv_hdr_size, static_cast<uint16_t>(sizeof(SMemFileHeader)));
+      const uint16_t hdr_bytes2copy = std::min(rcv_hdr_size, static_cast<uint16_t>(sizeof(SMemFileHeader)));
       if (hdr_bytes2copy <= buffer_size)
       {
         // now read all we can get from the received header
@@ -322,14 +322,14 @@ namespace eCAL
 
     // stop cleanup thread
     {
-      std::lock_guard<std::mutex> lock(m_do_cleanup_mtx);
+      const std::lock_guard<std::mutex> lock(m_do_cleanup_mtx);
       m_do_cleanup = false;
       m_do_cleanup_cv.notify_one();
     }
     if (m_cleanup_thread.joinable()) m_cleanup_thread.join();
 
     // lock pool
-    std::lock_guard<std::mutex> lock(m_observer_pool_sync);
+    const std::lock_guard<std::mutex> lock(m_observer_pool_sync);
 
     // stop all running observers
     for (auto & observer : m_observer_pool) observer.second->Stop();
@@ -346,7 +346,7 @@ namespace eCAL
     if(memfile_name_.empty()) return(false);
 
     // lock pool
-    std::lock_guard<std::mutex> lock(m_observer_pool_sync);
+    const std::lock_guard<std::mutex> lock(m_observer_pool_sync);
 
     // if the observer is existing reset its timeout
     // this should avoid that an observer will timeout in the case that
@@ -405,7 +405,7 @@ namespace eCAL
   void CMemFileThreadPool::CleanupPool()
   {
     // lock pool
-    std::lock_guard<std::mutex> lock(m_observer_pool_sync);
+    const std::lock_guard<std::mutex> lock(m_observer_pool_sync);
 
     // remove outdated / finished observer from the thread pool
     for(auto observer = m_observer_pool.begin(); observer != m_observer_pool.end();)

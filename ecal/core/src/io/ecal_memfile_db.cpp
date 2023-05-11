@@ -37,7 +37,7 @@ namespace eCAL
   void CMemFileMap::Destroy()
   {
     // lock memory map access
-    std::lock_guard<std::mutex> lock(m_memfile_map_mtx);
+    const std::lock_guard<std::mutex> lock(m_memfile_map_mtx);
 
     // erase memory files from memory map
     for (MemFileMapT::iterator iter = m_memfile_map.begin(); iter != m_memfile_map.end(); ++iter)
@@ -64,10 +64,10 @@ namespace eCAL
     assert(len_ > 0);
 
     // lock memory map access
-    std::lock_guard<std::mutex> lock(m_memfile_map_mtx);
+    const std::lock_guard<std::mutex> lock(m_memfile_map_mtx);
 
     // check for existing memory file
-    MemFileMapT::iterator iter = m_memfile_map.find(name_);
+    const MemFileMapT::iterator iter = m_memfile_map.find(name_);
     if (iter == m_memfile_map.end())
     {
       // create memory file
@@ -108,11 +108,11 @@ namespace eCAL
   bool CMemFileMap::RemoveFile(const std::string& name_, const bool remove_)
   {
     // lock memory map access
-    std::lock_guard<std::mutex> lock(m_memfile_map_mtx);
+    const std::lock_guard<std::mutex> lock(m_memfile_map_mtx);
 
     // erase memory file from memory map
     auto& memfile_map = m_memfile_map;
-    MemFileMapT::iterator iter = memfile_map.find(name_);
+    const MemFileMapT::iterator iter = memfile_map.find(name_);
     if (iter != memfile_map.end())
     {
       auto& memfile_info = iter->second;
@@ -123,7 +123,7 @@ namespace eCAL
       memfile_info.remove |= remove_;
       if (memfile_info.refcnt < 1)
       {
-        bool remove_from_system = memfile_info.remove;
+        const bool remove_from_system = memfile_info.remove;
 
         // unmap memory file
         memfile::os::UnMapFile(memfile_info);
@@ -150,7 +150,7 @@ namespace eCAL
     memfile::os::CheckFileSize(len_, false, mem_file_info_);
 
     // lock memory map access
-    std::lock_guard<std::mutex> lock(m_memfile_map_mtx);
+    const std::lock_guard<std::mutex> lock(m_memfile_map_mtx);
 
     // update/set info
     m_memfile_map[name_] = mem_file_info_;

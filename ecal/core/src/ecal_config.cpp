@@ -102,7 +102,7 @@ namespace eCAL
 
     ECAL_API UdpConfigVersion  GetUdpMulticastConfigVersion()
     {
-      std::string udp_config_version_string = eCALPAR(NET, UDP_MULTICAST_CONFIG_VERSION);
+      const std::string udp_config_version_string = eCALPAR(NET, UDP_MULTICAST_CONFIG_VERSION);
       if (udp_config_version_string == "v1")
         return UdpConfigVersion::V1;
       if (udp_config_version_string == "v2")

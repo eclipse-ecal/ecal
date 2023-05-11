@@ -335,7 +335,7 @@ ECAL_API int pub_send(ECAL_HANDLE handle_, const char* payload_, const int lengt
   eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
   if(pub)
   {
-    size_t ret = pub->Send(payload_, static_cast<size_t>(length_), time_);
+    const size_t ret = pub->Send(payload_, static_cast<size_t>(length_), time_);
     if(static_cast<int>(ret) == length_)
     {
       return(length_);
@@ -352,7 +352,7 @@ ECAL_API int pub_send_sync(ECAL_HANDLE handle_, const char* payload_, const int 
   eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
   if (pub)
   {
-    size_t ret = pub->Send(payload_, static_cast<size_t>(length_), time_, acknowledge_timeout_ms_);
+    const size_t ret = pub->Send(payload_, static_cast<size_t>(length_), time_, acknowledge_timeout_ms_);
     if (static_cast<int>(ret) == length_)
     {
       return(length_);
@@ -367,7 +367,7 @@ ECAL_API int pub_send_sync(ECAL_HANDLE handle_, const char* payload_, const int 
 static std::mutex g_pub_event_callback_mtx;
 static void g_pub_event_callback(const char* topic_name_, const struct eCAL::SPubEventCallbackData* data_, const PubEventCallbackCT callback_, void* par_)
 {
-  std::lock_guard<std::mutex> lock(g_pub_event_callback_mtx);
+  const std::lock_guard<std::mutex> lock(g_pub_event_callback_mtx);
   SPubEventCallbackDataC data;
   data.type  = data_->type;
   data.time  = data_->time;
@@ -431,7 +431,7 @@ ECAL_API bool sub_destroy(ECAL_HANDLE handle_)
 /****************************************/
 ECAL_API bool sub_set_qos(ECAL_HANDLE handle_, struct SReaderQOSC qos_) //-V813
 {
-  int ret = eCAL_Sub_SetQOS(handle_, qos_);
+  const int ret = eCAL_Sub_SetQOS(handle_, qos_);
   return(ret == 0);
 }
 
@@ -440,7 +440,7 @@ ECAL_API bool sub_set_qos(ECAL_HANDLE handle_, struct SReaderQOSC qos_) //-V813
 /****************************************/
 ECAL_API bool sub_get_qos(ECAL_HANDLE handle_, struct SReaderQOSC* qos_)
 {
-  int ret = eCAL_Sub_GetQOS(handle_, qos_);
+  const int ret = eCAL_Sub_GetQOS(handle_, qos_);
   return(ret == 0);
 }
 
@@ -524,7 +524,7 @@ ECAL_API bool sub_receive_buffer(ECAL_HANDLE handle_, const char** rcv_buf_, int
 static std::mutex g_sub_receive_callback_mtx;
 static void g_sub_receive_callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_, const ReceiveCallbackCT callback_, void* par_)
 {
-  std::lock_guard<std::mutex> lock(g_sub_receive_callback_mtx);
+  const std::lock_guard<std::mutex> lock(g_sub_receive_callback_mtx);
   SReceiveCallbackDataC data;
   data.buf   = data_->buf;
   data.size  = data_->size;
@@ -558,7 +558,7 @@ ECAL_API bool sub_rem_receive_callback(ECAL_HANDLE handle_)
 static std::mutex g_sub_event_callback_mtx;
 static void g_sub_event_callback(const char* topic_name_, const struct eCAL::SSubEventCallbackData* data_, const SubEventCallbackCT callback_, void* par_)
 {
-  std::lock_guard<std::mutex> lock(g_sub_event_callback_mtx);
+  const std::lock_guard<std::mutex> lock(g_sub_event_callback_mtx);
   SSubEventCallbackDataC data;
   data.type  = data_->type;
   data.time  = data_->time;
@@ -632,7 +632,7 @@ ECAL_API bool dyn_json_sub_destroy(ECAL_HANDLE handle_)
 static std::mutex g_dyn_json_sub_receive_callback_mtx;
 static void g_dyn_json_sub_receive_callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_, const ReceiveCallbackCT callback_, void* par_)
 {
-  std::lock_guard<std::mutex> lock(g_dyn_json_sub_receive_callback_mtx);
+  const std::lock_guard<std::mutex> lock(g_dyn_json_sub_receive_callback_mtx);
   SReceiveCallbackDataC data;
   data.buf   = data_->buf;
   data.size  = data_->size;
@@ -699,10 +699,10 @@ ECAL_API bool server_destroy(ECAL_HANDLE handle_)
 static std::mutex g_server_add_method_callback_mtx;
 static int g_server_method_callback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_, const MethodCallbackCT callback_, void* par_)
 {
-  std::lock_guard<std::mutex> lock(g_server_add_method_callback_mtx);
+  const std::lock_guard<std::mutex> lock(g_server_add_method_callback_mtx);
   void* response(nullptr);
   int   response_len(0);
-  int ret = callback_(method_.data(), req_type_.data(), resp_type_.data(), request_.data(), static_cast<int>(request_.size()), &response, &response_len, par_);
+  const int ret = callback_(method_.data(), req_type_.data(), resp_type_.data(), request_.data(), static_cast<int>(request_.size()), &response, &response_len, par_);
   response_ = std::string(static_cast<char*>(response), static_cast<size_t>(response_len));
   return ret;
 }
@@ -875,7 +875,7 @@ ECAL_API int mon_set_filter_state(const bool state_)
 ECAL_API int mon_get_monitoring(const char** mon_buf_, int* mon_buf_len_)
 {
   std::string mon_s;
-  int size = eCAL::Monitoring::GetMonitoring(mon_s);
+  const int size = eCAL::Monitoring::GetMonitoring(mon_s);
   if(size > 0)
   {
     // this has to be freed by caller (ecal_free_mem)
@@ -908,7 +908,7 @@ ECAL_API int mon_get_monitoring(const char** mon_buf_, int* mon_buf_len_)
 ECAL_API int mon_get_logging(const char** log_buf_, int* log_buf_len_)
 {
   std::string log_s;
-  int size = eCAL::Monitoring::GetLogging(log_s);
+  const int size = eCAL::Monitoring::GetLogging(log_s);
   if(size > 0)
   {
     // this has to be freed by caller (ecal_free_mem)

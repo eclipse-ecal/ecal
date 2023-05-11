@@ -143,10 +143,10 @@ namespace eCAL
     if(m_filter_mask_file)
     {
       // check ECAL_DATA
-      std::string ecal_log_path = Util::GeteCALLogPath();
+      const std::string ecal_log_path = Util::GeteCALLogPath();
       if (!isDirectory(ecal_log_path)) return;
 
-      std::string tstring = get_time_str();
+      const std::string tstring = get_time_str();
 
       m_logfile_name = ecal_log_path + tstring + "_" + eCAL::Process::GetUnitName() + "_" + std::to_string(m_pid) + ".log";
       m_logfile = fopen(m_logfile_name.c_str(), "w");
@@ -156,7 +156,7 @@ namespace eCAL
     if(m_filter_mask_udp)
     {
       SSenderAttr attr;
-      bool local_only = !Config::IsNetworkEnabled();
+      const bool local_only = !Config::IsNetworkEnabled();
       // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
       if (local_only)
       {
@@ -182,7 +182,7 @@ namespace eCAL
   {
     if(!m_created) return;
 
-    std::lock_guard<std::mutex> lock(m_log_sync);
+    const std::lock_guard<std::mutex> lock(m_log_sync);
 
     m_udp_sender->Destroy();
 
@@ -193,27 +193,27 @@ namespace eCAL
   }
 
   void CLog::SetLogLevel(const eCAL_Logging_eLogLevel level_)
-  { 
-    std::lock_guard<std::mutex> lock(m_log_sync);
+  {
+    const std::lock_guard<std::mutex> lock(m_log_sync);
     m_level = level_;
   };
 
   eCAL_Logging_eLogLevel CLog::GetLogLevel()
-  { 
-    std::lock_guard<std::mutex> lock(m_log_sync);
+  {
+    const std::lock_guard<std::mutex> lock(m_log_sync);
     return(m_level);
   };
 
   void CLog::Log(const eCAL_Logging_eLogLevel level_, const std::string& msg_)
   {
-    std::lock_guard<std::mutex> lock(m_log_sync);
+    const std::lock_guard<std::mutex> lock(m_log_sync);
 
     if(!m_created) return;
     if(msg_.empty()) return;
 
-    eCAL_Logging_Filter log_con  = level_ & m_filter_mask_con;
-    eCAL_Logging_Filter log_file = level_ & m_filter_mask_file;
-    eCAL_Logging_Filter log_udp  = level_ & m_filter_mask_udp;
+    const eCAL_Logging_Filter log_con  = level_ & m_filter_mask_con;
+    const eCAL_Logging_Filter log_file = level_ & m_filter_mask_file;
+    const eCAL_Logging_Filter log_udp  = level_ & m_filter_mask_udp;
     if(!(log_con | log_file | log_udp)) return;
 
     static eCAL::pb::LogMessage ecal_msg;
@@ -300,28 +300,28 @@ namespace eCAL
 
   void CLog::StartCoreTimer()
   {
-    std::lock_guard<std::mutex> lock(m_log_sync);
+    const std::lock_guard<std::mutex> lock(m_log_sync);
 
     m_core_time_start = std::chrono::steady_clock::now();
   }
 
   void CLog::StopCoreTimer()
   {
-    std::lock_guard<std::mutex> lock(m_log_sync);
+    const std::lock_guard<std::mutex> lock(m_log_sync);
 
     m_core_time = std::chrono::steady_clock::now() - m_core_time_start;
   }
 
   void CLog::SetCoreTime(const std::chrono::duration<double>& time_)
   {
-    std::lock_guard<std::mutex> lock(m_log_sync);
+    const std::lock_guard<std::mutex> lock(m_log_sync);
 
     m_core_time = time_;
   }
 
   std::chrono::duration<double> CLog::GetCoreTime()
   {
-    std::lock_guard<std::mutex> lock(m_log_sync);
+    const std::lock_guard<std::mutex> lock(m_log_sync);
 
     return(m_core_time);
   }

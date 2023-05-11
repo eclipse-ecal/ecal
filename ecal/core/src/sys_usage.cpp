@@ -108,14 +108,14 @@ short CpuUsage::GetUsage()
       since the last measurement (made up of kernel + user) and the total
       amount of time the process has run (kernel + user).
       */
-      ULONGLONG ftSysKernelDiff = SubtractTimes(ftSysKernel, m_ftPrevSysKernel);
-      ULONGLONG ftSysUserDiff = SubtractTimes(ftSysUser, m_ftPrevSysUser);
+      const ULONGLONG ftSysKernelDiff = SubtractTimes(ftSysKernel, m_ftPrevSysKernel);
+      const ULONGLONG ftSysUserDiff = SubtractTimes(ftSysUser, m_ftPrevSysUser);
 
-      ULONGLONG ftProcKernelDiff = SubtractTimes(ftProcKernel, m_ftPrevProcKernel);
-      ULONGLONG ftProcUserDiff = SubtractTimes(ftProcUser, m_ftPrevProcUser);
+      const ULONGLONG ftProcKernelDiff = SubtractTimes(ftProcKernel, m_ftPrevProcKernel);
+      const ULONGLONG ftProcUserDiff = SubtractTimes(ftProcUser, m_ftPrevProcUser);
 
-      ULONGLONG nTotalSys =  ftSysKernelDiff + ftSysUserDiff;
-      ULONGLONG nTotalProc = ftProcKernelDiff + ftProcUserDiff;
+      const ULONGLONG nTotalSys =  ftSysKernelDiff + ftSysUserDiff;
+      const ULONGLONG nTotalProc = ftProcKernelDiff + ftProcUserDiff;
 
       if (nTotalSys > 0)
       {
@@ -166,9 +166,9 @@ bool CpuUsage::EnoughTimePassed()
   ULONGLONG dwCurrentTickCount = GetTickCount();
 #else
   #if defined(_WIN64)
-  ULONGLONG dwCurrentTickCount = GetTickCount64();
+  const ULONGLONG dwCurrentTickCount = GetTickCount64();
   #else
-  ULONGLONG dwCurrentTickCount = GetTickCount();
+  const ULONGLONG dwCurrentTickCount = GetTickCount();
   #endif
 #endif
 
@@ -180,7 +180,7 @@ static CpuUsage g_cpu_usage;
 float GetCPULoad()
 {
   static float usage = 0.0f;
-  short cpu_usage = g_cpu_usage.GetUsage();
+  const short cpu_usage = g_cpu_usage.GetUsage();
   // -1 means could not be evaluated yet, do not use that value ..
   if (cpu_usage != -1) usage = 0.98f * usage + 0.02f * static_cast<float>(cpu_usage);
   return(usage * 0.01f);
