@@ -78,14 +78,14 @@ namespace eCAL
     **/
     void ShutdownProcess(const std::string& process_name_)
     {
-      eCAL::pb::Monitoring monitoring = GetMonitoring();
-      std::string          host_name  = eCAL::Process::GetHostName();
+      const eCAL::pb::Monitoring monitoring = GetMonitoring();
+      const std::string          host_name  = eCAL::Process::GetHostName();
 
       std::vector<int> proc_id_list;
       for (int i = 0; i < monitoring.processes().size(); i++)
       {
         const eCAL::pb::Process& process = monitoring.processes(i);
-        std::string pname = process.pname();
+        const std::string pname = process.pname();
         if ((pname == process_name_)
           && (process.hname() == host_name)
           )
@@ -107,7 +107,7 @@ namespace eCAL
     **/
     void ShutdownProcess(const int process_id_)
     {
-      std::string event_name = EVENT_SHUTDOWN_PROC + std::string("_") + std::to_string(process_id_);
+      const std::string event_name = EVENT_SHUTDOWN_PROC + std::string("_") + std::to_string(process_id_);
       EventHandleT event;
       if (gOpenEvent(&event, event_name))
       {
@@ -122,14 +122,14 @@ namespace eCAL
     **/
     void ShutdownProcesses()
     {
-      eCAL::pb::Monitoring monitoring = GetMonitoring();
-      std::string          host_name  = eCAL::Process::GetHostName();
+      const eCAL::pb::Monitoring monitoring = GetMonitoring();
+      const std::string          host_name  = eCAL::Process::GetHostName();
 
       std::vector<int> proc_id_list;
       for (int i = 0; i < monitoring.processes().size(); i++)
       {
         const eCAL::pb::Process& process = monitoring.processes(i);
-        std::string uname = process.uname();
+        const std::string uname = process.uname();
         if  ((uname != "eCALMon")
           && (uname != "eCALRPCService")
           && (uname != "eCALParam")
@@ -158,14 +158,14 @@ namespace eCAL
     **/
     void ShutdownCore()
     {
-      eCAL::pb::Monitoring monitoring = GetMonitoring();
-      std::string          host_name  = eCAL::Process::GetHostName();
+      const eCAL::pb::Monitoring monitoring = GetMonitoring();
+      const std::string          host_name  = eCAL::Process::GetHostName();
 
       std::vector<int> proc_id_list;
       for (int i = 0; i < monitoring.processes().size(); i++)
       {
         const eCAL::pb::Process& process = monitoring.processes(i);
-        std::string uname = process.uname();
+        const std::string uname = process.uname();
         if (((uname == "eCALMon")
           || (uname == "eCALParam")
           || (uname == "eCALPlay")

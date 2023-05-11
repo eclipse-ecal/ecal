@@ -76,7 +76,7 @@ namespace eCAL
     if (m_broadcast || m_unicast)
     {
       // set unicast packet TTL
-      asio::ip::unicast::hops ttl(attr_.ttl);
+      const asio::ip::unicast::hops ttl(attr_.ttl);
       asio::error_code ec;
       m_socket.set_option(ttl, ec);
       if (ec)
@@ -86,7 +86,7 @@ namespace eCAL
     {
       // set multicast packet TTL
       {
-        asio::ip::multicast::hops ttl(attr_.ttl);
+        const asio::ip::multicast::hops ttl(attr_.ttl);
         asio::error_code ec;
         m_socket.set_option(ttl, ec);
         if (ec)
@@ -95,7 +95,7 @@ namespace eCAL
 
       // set loopback option
       {
-        asio::ip::multicast::enable_loopback loopback(attr_.loopback);
+        const asio::ip::multicast::enable_loopback loopback(attr_.loopback);
         asio::error_code ec;
         m_socket.set_option(loopback);
         if (ec)
@@ -114,7 +114,7 @@ namespace eCAL
 
   size_t CUDPSenderImpl::Send(const void* buf_, const size_t len_, const char* ipaddr_)
   {
-    asio::socket_base::message_flags flags(0);
+    const asio::socket_base::message_flags flags(0);
     asio::error_code                 ec;
     size_t                           sent(0);
     if (ipaddr_ && (ipaddr_[0] != '\0')) sent = m_socket.send_to(asio::buffer(buf_, len_), asio::ip::udp::endpoint(asio::ip::make_address(ipaddr_), m_port), flags, ec);

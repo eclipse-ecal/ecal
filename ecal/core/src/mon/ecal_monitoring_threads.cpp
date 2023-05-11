@@ -36,7 +36,7 @@ namespace eCAL
 {
   static bool IsLocalHost(const eCAL::pb::LogMessage& ecal_message_)
   {
-    std::string host_name = ecal_message_.hname();
+    const std::string host_name = ecal_message_.hname();
     if (host_name.empty())                   return(false);
     if (host_name == Process::GetHostName()) return(true);
     return(false);
@@ -80,7 +80,7 @@ namespace eCAL
   int CLoggingReceiveThread::ThreadFun()
   {
     // wait for any incoming message
-    size_t recv_len = m_log_rcv.Receive(m_msg_buffer.data(), m_msg_buffer.size(), 10);
+    const size_t recv_len = m_log_rcv.Receive(m_msg_buffer.data(), m_msg_buffer.size(), 10);
     if (recv_len > 0)
     {
       m_log_ecal_msg.Clear();
