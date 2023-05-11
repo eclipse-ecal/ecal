@@ -95,7 +95,7 @@ namespace eCAL
           mem_file_info_.mem_address = nullptr;
         }
 
-        if (mem_file_info_.map_region != nullptr)
+        if (mem_file_info_.map_region)
         {
           CloseHandle(mem_file_info_.map_region);
           mem_file_info_.map_region = nullptr;
