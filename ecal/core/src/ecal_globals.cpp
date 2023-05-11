@@ -59,7 +59,7 @@ namespace eCAL
 
       if (!config_instance->Validate())
       {
-        std::string emsg("Core initialization failed cause by a configuration error.");
+        const std::string emsg("Core initialization failed cause by a configuration error.");
 
         std::cerr                                                                 << std::endl;
         std::cerr << "----------------------------------------------------------" << std::endl;

@@ -146,7 +146,7 @@ namespace
     // get all adapter infos
     PIP_ADAPTER_INFO pAdapter(nullptr);
     pAdapter = reinterpret_cast<PIP_ADAPTER_INFO>(adapter_mem.get());
-    DWORD dwStatus = GetAdaptersInfo(pAdapter, &alloc_adapters_size);
+    const DWORD dwStatus = GetAdaptersInfo(pAdapter, &alloc_adapters_size);
     if (dwStatus != ERROR_SUCCESS) return std::make_pair(false, 0);
 
     // iterate adapters and create hash
@@ -234,7 +234,7 @@ namespace eCAL
       sstream << "Multicast cfg version    : v" << static_cast<uint32_t>(Config::GetUdpMulticastConfigVersion()) << std::endl;
       sstream << "Multicast group          : " << Config::GetUdpMulticastGroup() << std::endl;
       sstream << "Multicast mask           : " << Config::GetUdpMulticastMask() << std::endl;
-      int port = Config::GetUdpMulticastPort();
+      const int port = Config::GetUdpMulticastPort();
       sstream << "Multicast ports          : " << port << " - " << port + 10 << std::endl;
       sstream << "Multicast join all IFs   : " << (Config::IsUdpMulticastJoinAllIfEnabled() ? "on" : "off") << std::endl;
       auto bandwidth = Config::GetMaxUdpBandwidthBytesPerSecond();
@@ -505,7 +505,7 @@ namespace eCAL
     {
       PROCESS_MEMORY_COUNTERS pmc;
       GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
-      SIZE_T msize = pmc.PagefileUsage;
+      const SIZE_T msize = pmc.PagefileUsage;
       return(static_cast<unsigned long>(msize));
     }
 
@@ -520,7 +520,7 @@ namespace eCAL
         proc_name = exp_name;
       }
 
-      std::string proc_args = proc_args_;
+      const std::string proc_args = proc_args_;
       if (!proc_args.empty())
       {
         proc_name += " ";

@@ -59,13 +59,13 @@ namespace
 
   bool fileexists(const std::string& fname_)
   {
-    std::ifstream infile(fname_);
+    const std::ifstream infile(fname_);
     return infile.good();
   }
 
   bool direxists(const std::string& path_)
   {
-    EcalUtils::Filesystem::FileStatus status(path_, EcalUtils::Filesystem::Current);
+    const EcalUtils::Filesystem::FileStatus status(path_, EcalUtils::Filesystem::Current);
     return (status.IsOk() && (status.GetType() == EcalUtils::Filesystem::Type::Dir));
   }
 
@@ -135,7 +135,7 @@ namespace
     if (path.empty()) { return false; };
 
     // check existence of ecal.ini file
-    EcalUtils::Filesystem::FileStatus ecal_ini_status(path + std::string(ECAL_DEFAULT_CFG), EcalUtils::Filesystem::Current);
+    const EcalUtils::Filesystem::FileStatus ecal_ini_status(path + std::string(ECAL_DEFAULT_CFG), EcalUtils::Filesystem::Current);
     if (ecal_ini_status.IsOk() && (ecal_ini_status.GetType() == EcalUtils::Filesystem::Type::RegularFile))
     {
       return true;
@@ -196,17 +196,17 @@ namespace eCAL
       // -----------------------------------------------------------
       // precedence 1: ECAL_DATA variable (windows and linux)
       // -----------------------------------------------------------
-      std::string ecal_data_path{ eCALDataEnvPath() };
+      const std::string ecal_data_path{ eCALDataEnvPath() };
       
       // -----------------------------------------------------------
       // precedence 2:  cmake configured data paths (linux only)
       // -----------------------------------------------------------
-      std::string cmake_data_path{ eCALDataCMakePath() };
+      const std::string cmake_data_path{ eCALDataCMakePath() };
 
       // -----------------------------------------------------------
       // precedence 3: system data path 
       // -----------------------------------------------------------
-      std::string system_data_path(eCALDataSystemPath());
+      const std::string system_data_path(eCALDataSystemPath());
 
       // Check for first directory which contains the ini file.
       std::vector<std::string> search_directories{ ecal_data_path, cmake_data_path, system_data_path };
@@ -327,15 +327,15 @@ namespace eCAL
       {
          auto sec_pos = full_key.find_last_of('/');
          if (sec_pos == std::string::npos) continue;
-         std::string section = full_key.substr(0, sec_pos);
+         const std::string section = full_key.substr(0, sec_pos);
          std::string key     = full_key.substr(sec_pos+1);
 
          auto val_pos = key.find_first_of(':');
          if (val_pos == std::string::npos) continue;
-         std::string value = key.substr(val_pos+1);
+         const std::string value = key.substr(val_pos+1);
          key = key.substr(0, val_pos);
 
-         SI_Error err = SetValue(section.c_str(), key.c_str(), value.c_str());
+         const SI_Error err = SetValue(section.c_str(), key.c_str(), value.c_str());
          if (err == SI_FAIL)
          {
             std::cout << "Error: Could not overwrite key " << key << " in section " << section << ".";
@@ -381,8 +381,8 @@ namespace eCAL
     // use_udp_mc = 2
     // ------------------------------------------------------------------
     {
-      int use_tcp    = get("publisher", "use_tcp",    0);
-      int use_udp_mc = get("publisher", "use_udp_mc", 0);
+      const int use_tcp    = get("publisher", "use_tcp",    0);
+      const int use_udp_mc = get("publisher", "use_udp_mc", 0);
       if ((use_tcp == 2) && (use_udp_mc == 2))
       {
         std::cerr << "eCAL config error: to set [publisher/use_tcp] and [publisher/use_udp_mc] both on auto mode (2) is not allowed" << std::endl;
