@@ -77,8 +77,6 @@ namespace eCAL
   // Member variables
   ///////////////////////////////////////////////
   private:
-    std::string            header_;
-    size_t                 header_request_size_ = 0;
     std::string            request_;
     std::string            response_;
     std::vector<char>      packed_response_;
