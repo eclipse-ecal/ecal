@@ -85,19 +85,19 @@ namespace eCAL
       // Form local endpoint string
       {
         asio::error_code ec;
-        const auto remote_endpoint = socket_.remote_endpoint(ec);
+        const auto endpoint = socket_.local_endpoint(ec);
         if (!ec)
-          local_endpoint_string = remote_endpoint.address().to_string() + ":" + std::to_string(remote_endpoint.port());
+          local_endpoint_string = endpoint.address().to_string() + ":" + std::to_string(endpoint.port());
         else
-          remote_endpoint_string = "??";
+          local_endpoint_string = "??";
       }
 
       // form remote endpoint string
       {
         asio::error_code ec;
-        const auto local_endpoint = socket_.local_endpoint(ec);
+        const auto endpoint = socket_.remote_endpoint(ec);
         if (!ec)
-          remote_endpoint_string = local_endpoint.address().to_string() + ":" + std::to_string(local_endpoint.port());
+          remote_endpoint_string = endpoint.address().to_string() + ":" + std::to_string(endpoint.port());
         else
           remote_endpoint_string = "??";
       }
