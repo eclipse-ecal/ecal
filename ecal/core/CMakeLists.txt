@@ -60,6 +60,8 @@ endif()
 ###### ecal_tcp_service lib ########
 
 set(ecal_tcp_service_src
+    src/service/asio_tcp_client.cpp
+    src/service/asio_tcp_client.h
     src/service/asio_tcp_server.cpp
     src/service/asio_tcp_server.h
     src/service/asio_tcp_server_logging.h

@@ -136,7 +136,7 @@ namespace eCAL
     }
 
     acceptor_.async_accept(new_session->socket()
-            , [this, new_session, version](auto ec) // TODO: the this pointer is used. Check whether this should be a shared_ptr or weak_ptr
+            , [weak_me = std::weak_ptr<CAsioTcpServer>(shared_from_this()), new_session, version](auto ec) // TODO: the this pointer is used. Check whether this should be a shared_ptr or weak_ptr
               {
                 // TODO: The Destructor must close the accpetor and stop the io_service
                 if (ec)
@@ -161,7 +161,11 @@ namespace eCAL
 
                 // TODO: only re-try accepting, if the ec didn't tell us to stop!!!
                 // Continue creating and accepting the next session
-                this->start_accept(version);
+                const std::shared_ptr<CAsioTcpServer> me(weak_me);
+                if (me)
+                {
+                  me->start_accept(version);
+                }
               });
 
   }
