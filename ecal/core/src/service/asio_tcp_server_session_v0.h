@@ -52,7 +52,7 @@ namespace eCAL
 
   public:
     // Destructor
-    ~CAsioTcpServerSessionV0() override = default;
+    ~CAsioTcpServerSessionV0() override;
 
   ///////////////////////////////////////////////
   // Data receiving

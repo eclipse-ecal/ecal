@@ -198,11 +198,11 @@ namespace eCAL
     const auto* header = reinterpret_cast<eCAL::STcpHeader*>(header_buffer->data());
     std::cout << get_log_string("DEBUG", "The received header contains the followign data: ") << std::endl;
     std::cout << get_log_string("DEBUG", "  header->package_size_n = " + std::to_string(ntohl(header->package_size_n))) << std::endl;
-    std::cout << get_log_string("DEBUG", "  header->version        = " + std::to_string(header->version))              << std::endl;
-    std::cout << get_log_string("DEBUG", "  header->reserved1      = " + std::to_string(header->reserved1))            << std::endl;
-    std::cout << get_log_string("DEBUG", "  header->header_size_n  = " + std::to_string(ntohs(header->header_size_n))) << std::endl;
+    std::cout << get_log_string("DEBUG", "  header->version        = " + std::to_string(header->version))               << std::endl;
+    std::cout << get_log_string("DEBUG", "  header->message_type   = " + std::to_string(header->message_type))          << std::endl;
+    std::cout << get_log_string("DEBUG", "  header->header_size_n  = " + std::to_string(ntohs(header->header_size_n)))  << std::endl;
     // TODO: The reserved field is printed in network byte order, as Win7 compatibility of WinSocks2 does not define 64bit byte swap functions. I didn't want to introduce hacks or implement it myself, just for printing an empty reserved field.
-    std::cout << get_log_string("DEBUG", "  header->reserved       = " + std::to_string(header->reserved))             << std::endl;
+    std::cout << get_log_string("DEBUG", "  header->reserved       = " + std::to_string(header->reserved))              << std::endl;
 
     const auto message = get_log_string("DEBUG", "Waiting for request payload...");
     std::cout << message << std::endl;
@@ -279,11 +279,11 @@ namespace eCAL
 #if (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED)
     std::cout << get_log_string("DEBUG", "The response header contains the followign data: ") << std::endl;
     std::cout << get_log_string("DEBUG", "  header->package_size_n = " + std::to_string(ntohl(response_header->package_size_n))) << std::endl;
-    std::cout << get_log_string("DEBUG", "  header->version        = " + std::to_string(response_header->version))              << std::endl;
-    std::cout << get_log_string("DEBUG", "  header->reserved1      = " + std::to_string(response_header->reserved1))            << std::endl;
-    std::cout << get_log_string("DEBUG", "  header->header_size_n  = " + std::to_string(ntohs(response_header->header_size_n))) << std::endl;
+    std::cout << get_log_string("DEBUG", "  header->version        = " + std::to_string(response_header->version))               << std::endl;
+    std::cout << get_log_string("DEBUG", "  header->message_type   = " + std::to_string(response_header->message_type))          << std::endl;
+    std::cout << get_log_string("DEBUG", "  header->header_size_n  = " + std::to_string(ntohs(response_header->header_size_n)))  << std::endl;
     // TODO: The reserved field is printed in network byte order, as Win7 compatibility of WinSocks2 does not define 64bit byte swap functions. I didn't want to introduce hacks or implement it myself, just for printing an empty reserved field.
-    std::cout << get_log_string("DEBUG", "  header->reserved       = " + std::to_string(response_header->reserved))             << std::endl;
+    std::cout << get_log_string("DEBUG", "  header->reserved       = " + std::to_string(response_header->reserved))              << std::endl;
 #endif
 
     asio::async_write(socket_
