@@ -22,9 +22,7 @@
 #include "ecal_tcpheader.h"
 
 #include "asio_tcp_server_logging.h"
-#if(ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED || ECAL_ASIO_TCP_SERVER_LOG_DEBUG_ENABLED)
 #include <iostream>
-#endif // (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED || ECAL_ASIO_TCP_SERVER_LOG_DEBUG_ENABLED)
 
 namespace eCAL
 {
