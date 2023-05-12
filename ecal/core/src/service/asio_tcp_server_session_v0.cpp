@@ -66,6 +66,19 @@ namespace eCAL
     std::cout << message << std::endl;
 #endif
 
+    // Disable Nagle's algorithm. Nagles Algorithm will otherwise cause the
+    // Socket to wait for more data, if it encounters a frame that can still
+    // fit more data. Obviously, this is an awfull default behaviour, if we
+    // want to transmit our data in a timely fashion.
+    {
+      asio::error_code ec;
+      socket_.set_option(asio::ip::tcp::no_delay(true), ec);
+      if (ec)
+      {
+        std::cerr << get_log_string("WARNING", "Failed to set socket option 'no_delay' to 'true': " + ec.message()) << std::endl;;
+      }
+    }
+
     socket_.async_read_some(asio::buffer(data_, max_length)
                           , [me = shared_from_this()](asio::error_code ec, std::size_t bytes_read)
                             {

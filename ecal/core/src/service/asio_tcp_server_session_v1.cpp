@@ -69,6 +69,19 @@ namespace eCAL
     std::cout << message << std::endl;
 #endif
 
+    // Disable Nagle's algorithm. Nagles Algorithm will otherwise cause the
+    // Socket to wait for more data, if it encounters a frame that can still
+    // fit more data. Obviously, this is an awfull default behaviour, if we
+    // want to transmit our data in a timely fashion.
+    {
+      asio::error_code ec;
+      socket_.set_option(asio::ip::tcp::no_delay(true), ec);
+      if (ec)
+      {
+        std::cerr << get_log_string("WARNING", "Failed to set socket option 'no_delay' to 'true': " + ec.message()) << std::endl;;
+      }
+    }
+
     read_request_header_start();
   }
 
@@ -266,6 +279,9 @@ namespace eCAL
 
   void CAsioTcpServerSessionV1::send_response_header     (const std::shared_ptr<std::string>& response)
   {
+    // TODO: Optimize performance by using a single buffer for the header and the payload.
+    // Otherwise, this will cause more TCP packets to be sent
+
 #if (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED)
     const auto message = get_log_string("DEBUG", "Sending response header...");
     std::cout << message << std::endl;
