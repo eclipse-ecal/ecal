@@ -752,7 +752,8 @@ class subscriber(object):
     :param callback: python callback function (f(topic_name, msg, time))
 
     """
-    return sub_set_callback(self.thandle, callback)
+    self.callback = callback
+    return sub_set_callback(self.thandle, self._on_receive)
 
   def rem_callback(self, callback):
     """ remove callback function for incoming messages
@@ -760,7 +761,15 @@ class subscriber(object):
     :param callback: python callback function (f(topic_name, msg, time))
 
     """
-    return sub_rem_callback(self.thandle, callback)
+    ret = sub_rem_callback(self.thandle, self._on_receive)
+    self.callback = None
+    return ret
+    
+  def _on_receive(self, topic_name, msg, time):
+    # This avoids a very stupid error where we cannot build empty byte arrays.
+    if msg == None:
+        msg = b""
+    self.callback(topic_name, msg, time)    
 
 
 class subscriberDynJSON(object):
