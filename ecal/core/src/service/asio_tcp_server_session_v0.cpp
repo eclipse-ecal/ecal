@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "asio_server_session_v0.h"
+#include "asio_tcp_server_session_v0.h"
 
 #include "ecal_tcpheader.h"
 
@@ -30,21 +30,21 @@ namespace eCAL
   // Create, Constructor, Destructor
   ///////////////////////////////////////////////
 
-  std::shared_ptr<CAsioServerSessionV0> CAsioServerSessionV0::create(asio::io_context& io_context_, const RequestCallbackT& request_callback, const EventCallbackT& event_callback)
+  std::shared_ptr<CAsioTcpServerSessionV0> CAsioTcpServerSessionV0::create(asio::io_context& io_context_, const RequestCallbackT& request_callback, const EventCallbackT& event_callback)
   {
-    return std::shared_ptr<CAsioServerSessionV0>(new CAsioServerSessionV0(io_context_, request_callback, event_callback));
+    return std::shared_ptr<CAsioTcpServerSessionV0>(new CAsioTcpServerSessionV0(io_context_, request_callback, event_callback));
   }
 
-  CAsioServerSessionV0::CAsioServerSessionV0(asio::io_context& io_context_, const RequestCallbackT& request_callback, const EventCallbackT& event_callback)
-    : CAsioServerSession(io_context_, request_callback, event_callback)
+  CAsioTcpServerSessionV0::CAsioTcpServerSessionV0(asio::io_context& io_context_, const RequestCallbackT& request_callback, const EventCallbackT& event_callback)
+    : CAsioTcpServerSession(io_context_, request_callback, event_callback)
   {}
 
   ///////////////////////////////////////////////
   // Data receiving
   ///////////////////////////////////////////////
-  void CAsioServerSessionV0::start()
+  void CAsioTcpServerSessionV0::start()
   {
-    std::cout << "CAsioServerSessionV0::start()" << std::endl; // TODO: remove
+    std::cout << "CAsioTcpServerSessionV0::start()" << std::endl; // TODO: remove
 
     //socket_.async_read_some(asio::buffer(data_, max_length),
     //  std::bind(&CAsioServerSessionV0::handle_read, this,
@@ -58,11 +58,11 @@ namespace eCAL
                     
   }
 
-  void CAsioServerSessionV0::handle_read(const asio::error_code& ec, size_t bytes_transferred)
+  void CAsioTcpServerSessionV0::handle_read(const asio::error_code& ec, size_t bytes_transferred)
   {
-    std::cout << "CAsioServerSessionV0::handle_read()" << std::endl; // TODO: remove
+    std::cout << "CAsioTcpServerSessionV0::handle_read()" << std::endl; // TODO: remove
     if (ec)
-      std::cerr <<"CAsioServerSessionV0::handle_read() ERROR: " << ec.message() << std::endl; // TODO Remove
+      std::cerr <<"CAsioTcpServerSessionV0::handle_read() ERROR: " << ec.message() << std::endl; // TODO Remove
 
 
     if (!ec)
@@ -128,9 +128,9 @@ namespace eCAL
     }
   }
 
-  void CAsioServerSessionV0::handle_write(const asio::error_code& ec, std::size_t /*bytes_transferred*/)
+  void CAsioTcpServerSessionV0::handle_write(const asio::error_code& ec, std::size_t /*bytes_transferred*/)
   {
-    std::cout << "CAsioServerSessionV0::handle_write()" << std::endl; // TODO: remove
+    std::cout << "CAsioTcpServerSessionV0::handle_write()" << std::endl; // TODO: remove
 
     if (!ec)
     {
@@ -160,7 +160,7 @@ namespace eCAL
     }
   }
 
-  std::vector<char> CAsioServerSessionV0::pack_write(const std::string& response)
+  std::vector<char> CAsioTcpServerSessionV0::pack_write(const std::string& response)
   {
     // create header
     eCAL::STcpHeader tcp_header;

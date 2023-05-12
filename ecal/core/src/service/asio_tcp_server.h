@@ -36,9 +36,9 @@
 #include "ecal_tcpheader.h"
 #include "ecal/cimpl/ecal_callback_cimpl.h"
 
-#include "asio_server_session.h"
-#include "asio_server_session_v0.h"
-#include "asio_server_session_v1.h"
+#include "asio_tcp_server_session.h"
+#include "asio_tcp_server_session_v0.h"
+#include "asio_tcp_server_session_v1.h"
 
 //using RequestCallbackT = std::function<int (const std::string &, std::string &)>;
 //using EventCallbackT = std::function<void (eCAL_Server_Event, const std::string &)>;
@@ -452,7 +452,7 @@
 
 namespace eCAL
 {
-  class CAsioServer : public std::enable_shared_from_this<eCAL::CAsioServer>
+  class CAsioTcpServer : public std::enable_shared_from_this<eCAL::CAsioTcpServer>
   {
   ///////////////////////////////////////////
   // Types for API
@@ -467,26 +467,26 @@ namespace eCAL
   ///////////////////////////////////////////
 
   public:
-    static std::shared_ptr<CAsioServer> create(asio::io_context&      io_context
-                                            , unsigned int            protocol_version
-                                            , std::uint16_t           port
-                                            , const RequestCallbackT& request_callback
-                                            , const EventCallbackT&   event_callback);
+    static std::shared_ptr<CAsioTcpServer> create(asio::io_context&       io_context
+                                                , unsigned int            protocol_version
+                                                , std::uint16_t           port
+                                                , const RequestCallbackT& request_callback
+                                                , const EventCallbackT&   event_callback);
 
   protected:
-    CAsioServer(asio::io_context&       io_context
-              , std::uint16_t           port
-              , const RequestCallbackT& request_callback
-              , const EventCallbackT&   event_callback);
+    CAsioTcpServer(asio::io_context&      io_context
+                , std::uint16_t           port
+                , const RequestCallbackT& request_callback
+                , const EventCallbackT&   event_callback);
 
-    CAsioServer(const CAsioServer&)            = delete;                  // Copy construct
-    CAsioServer(CAsioServer&&)                 = delete;                  // Move construct
+    CAsioTcpServer(const CAsioTcpServer&)            = delete;                  // Copy construct
+    CAsioTcpServer(CAsioTcpServer&&)                 = delete;                  // Move construct
 
-    CAsioServer& operator=(const CAsioServer&) = delete;                  // Copy assign
-    CAsioServer& operator=(CAsioServer&&)      = delete;                  // Move assign
+    CAsioTcpServer& operator=(const CAsioTcpServer&) = delete;                  // Copy assign
+    CAsioTcpServer& operator=(CAsioTcpServer&&)      = delete;                  // Move assign
   
   public:
-    ~CAsioServer();
+    ~CAsioTcpServer();
 
   ///////////////////////////////////////////
   // API

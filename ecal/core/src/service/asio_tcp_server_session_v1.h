@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "asio_server_session.h"
+#include "asio_tcp_server_session.h"
 
 #include <string>
 #include <vector>
@@ -28,9 +28,9 @@
 namespace eCAL
 {
 
-  class CAsioServerSessionV1
-    : public CAsioServerSession
-    , public std::enable_shared_from_this<CAsioServerSessionV1>
+  class CAsioTcpServerSessionV1
+    : public CAsioTcpServerSession
+    , public std::enable_shared_from_this<CAsioTcpServerSessionV1>
   {
 
   ///////////////////////////////////////////////
@@ -38,22 +38,22 @@ namespace eCAL
   ///////////////////////////////////////////////
 
   public:
-    static std::shared_ptr<CAsioServerSessionV1> create(asio::io_context& io_context_, const RequestCallbackT& request_callback, const EventCallbackT& event_callback);
+    static std::shared_ptr<CAsioTcpServerSessionV1> create(asio::io_context& io_context_, const RequestCallbackT& request_callback, const EventCallbackT& event_callback);
 
   protected:
-    CAsioServerSessionV1(asio::io_context& io_context_, const RequestCallbackT& request_callback, const EventCallbackT& event_callback);
+    CAsioTcpServerSessionV1(asio::io_context& io_context_, const RequestCallbackT& request_callback, const EventCallbackT& event_callback);
 
     // Copy
-    CAsioServerSessionV1(const CAsioServerSessionV1&)            = delete;
-    CAsioServerSessionV1& operator=(const CAsioServerSessionV1&) = delete;
+    CAsioTcpServerSessionV1(const CAsioTcpServerSessionV1&)            = delete;
+    CAsioTcpServerSessionV1& operator=(const CAsioTcpServerSessionV1&) = delete;
 
     // Move
-    CAsioServerSessionV1(CAsioServerSessionV1&&) noexcept            = delete;
-    CAsioServerSessionV1& operator=(CAsioServerSessionV1&&) noexcept = delete;
+    CAsioTcpServerSessionV1(CAsioTcpServerSessionV1&&) noexcept            = delete;
+    CAsioTcpServerSessionV1& operator=(CAsioTcpServerSessionV1&&) noexcept = delete;
 
   public:
     // Destructor
-    ~CAsioServerSessionV1() = default;
+    ~CAsioTcpServerSessionV1();
 
   ///////////////////////////////////////////////
   // Data receiving and sending
@@ -70,6 +70,12 @@ namespace eCAL
 
     void send_response_header     (const std::shared_ptr<std::string>& response);
     void send_response_payload    (const std::shared_ptr<std::string>& response);
+
+  /////////////////////////////////////
+  // Log / message related methods
+  /////////////////////////////////////
+  protected:
+    std::string get_log_prefix() const override { return "CAsioTcpServerSessionV1"; }
   };
 
 } // namespace eCAL

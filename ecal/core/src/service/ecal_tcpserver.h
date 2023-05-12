@@ -37,7 +37,7 @@
 #include <sys/socket.h>
 #endif
 
-#include "asio_server.h"
+#include "asio_tcp_server.h"
 
 namespace eCAL
 {
@@ -53,7 +53,7 @@ namespace eCAL
     CTcpServer& operator=(const CTcpServer &) = delete;
     CTcpServer& operator=(CTcpServer &&) noexcept = delete;
 
-    void Start(unsigned int version_, const eCAL::CAsioServer::RequestCallbackT& request_callback_, const eCAL::CAsioServer::EventCallbackT& event_callback_);
+    void Start(unsigned int version_, const eCAL::CAsioTcpServer::RequestCallbackT& request_callback_, const eCAL::CAsioTcpServer::EventCallbackT& event_callback_);
     void Stop();
 
     bool IsConnected();
@@ -62,13 +62,13 @@ namespace eCAL
     unsigned int   GetVersion() { return (m_server ? m_version            : 0); }
 
   protected:
-    void ServerThread(std::uint32_t port_, eCAL::CAsioServer::RequestCallbackT request_callback_, eCAL::CAsioServer::EventCallbackT event_callback_);
+    void ServerThread(std::uint32_t port_, eCAL::CAsioTcpServer::RequestCallbackT request_callback_, eCAL::CAsioTcpServer::EventCallbackT event_callback_);
 
     bool                               m_started = false;
     unsigned int                       m_version = 0;
 
-    std::shared_ptr<asio::io_service>  m_io_service;
-    std::shared_ptr<CAsioServer>       m_server;
+    std::shared_ptr<asio::io_context>  m_io_context;
+    std::shared_ptr<CAsioTcpServer>       m_server;
     std::thread                        m_server_thread;
   };
 };

@@ -22,6 +22,9 @@
 #include <memory>
 #include <functional>
 
+#include <string>
+#include <sstream>
+
 #ifdef _MSC_VER
   #pragma warning(push)
   #pragma warning(disable: 4834)
@@ -39,7 +42,7 @@
 namespace eCAL
 {
 
-  class CAsioServerSession
+  class CAsioTcpServerSession
   {
   /////////////////////////////////////
   // Custom types for API
@@ -52,10 +55,10 @@ namespace eCAL
   // Constructor, Destructor, Create
   /////////////////////////////////////
   public:
-    virtual ~CAsioServerSession() = default;
+    virtual ~CAsioTcpServerSession() = default;
 
   protected:
-    CAsioServerSession(asio::io_context& io_context_, const RequestCallbackT& request_callback, const EventCallbackT& event_callback)
+    CAsioTcpServerSession(asio::io_context& io_context_, const RequestCallbackT& request_callback, const EventCallbackT& event_callback)
       : socket_          (io_context_)
       , request_callback_(request_callback)
       , event_callback_  (event_callback)
@@ -69,6 +72,56 @@ namespace eCAL
     asio::ip::tcp::socket& socket() { return socket_; }
     virtual void start() = 0;
 
+  /////////////////////////////////////
+  // Log / message related methods
+  /////////////////////////////////////
+  public:
+    virtual std::string get_log_prefix() const = 0;
+    inline std::string get_connection_info_string() const
+    {
+      std::string local_endpoint_string;
+      std::string remote_endpoint_string;
+      
+      // Form local endpoint string
+      {
+        asio::error_code ec;
+        const auto remote_endpoint = socket_.remote_endpoint(ec);
+        if (!ec)
+          local_endpoint_string = remote_endpoint.address().to_string() + ":" + std::to_string(remote_endpoint.port());
+        else
+          remote_endpoint_string = "??";
+      }
+
+      // form remote endpoint string
+      {
+        asio::error_code ec;
+        const auto local_endpoint = socket_.local_endpoint(ec);
+        if (!ec)
+          remote_endpoint_string = local_endpoint.address().to_string() + ":" + std::to_string(local_endpoint.port());
+        else
+          remote_endpoint_string = "??";
+      }
+
+      return local_endpoint_string + " -> " + remote_endpoint_string;
+    };
+
+    inline std::string get_log_string(const std::string& message) const
+    {
+      return get_log_string("", message);
+    }
+
+    inline std::string get_log_string(const std::string& severity_string, const std::string& message) const
+    {
+      std::stringstream ss;
+      ss << "[" << get_log_prefix() << "]";
+      if (!severity_string.empty())
+        ss << " [" << severity_string << "]";
+      ss << " [" << get_connection_info_string() << " ]";
+      ss << " " << message;
+
+      return ss.str();
+    }
+  
   /////////////////////////////////////
   // Member variables
   /////////////////////////////////////

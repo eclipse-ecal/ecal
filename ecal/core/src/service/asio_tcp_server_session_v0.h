@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "asio_server_session.h"
+#include "asio_tcp_server_session.h"
 
 #include <string>
 #include <vector>
@@ -27,9 +27,9 @@
 namespace eCAL
 {
 
-  class CAsioServerSessionV0
-    : public CAsioServerSession
-    , public std::enable_shared_from_this<CAsioServerSessionV0>
+  class CAsioTcpServerSessionV0
+    : public CAsioTcpServerSession
+    , public std::enable_shared_from_this<CAsioTcpServerSessionV0>
   {
 
   ///////////////////////////////////////////////
@@ -37,22 +37,22 @@ namespace eCAL
   ///////////////////////////////////////////////
 
   public:
-    static std::shared_ptr<CAsioServerSessionV0> create(asio::io_context& io_context_, const RequestCallbackT& request_callback, const EventCallbackT& event_callback);
+    static std::shared_ptr<CAsioTcpServerSessionV0> create(asio::io_context& io_context_, const RequestCallbackT& request_callback, const EventCallbackT& event_callback);
 
   protected:
-    CAsioServerSessionV0(asio::io_context& io_context_, const RequestCallbackT& request_callback, const EventCallbackT& event_callback);
+    CAsioTcpServerSessionV0(asio::io_context& io_context_, const RequestCallbackT& request_callback, const EventCallbackT& event_callback);
 
     // Copy
-    CAsioServerSessionV0(const CAsioServerSessionV0&)            = delete;
-    CAsioServerSessionV0& operator=(const CAsioServerSessionV0&) = delete;
+    CAsioTcpServerSessionV0(const CAsioTcpServerSessionV0&)            = delete;
+    CAsioTcpServerSessionV0& operator=(const CAsioTcpServerSessionV0&) = delete;
 
     // Move
-    CAsioServerSessionV0(CAsioServerSessionV0&&) noexcept            = delete;
-    CAsioServerSessionV0& operator=(CAsioServerSessionV0&&) noexcept = delete;
+    CAsioTcpServerSessionV0(CAsioTcpServerSessionV0&&) noexcept            = delete;
+    CAsioTcpServerSessionV0& operator=(CAsioTcpServerSessionV0&&) noexcept = delete;
 
   public:
     // Destructor
-    ~CAsioServerSessionV0() override = default;
+    ~CAsioTcpServerSessionV0() override = default;
 
   ///////////////////////////////////////////////
   // Data receiving
@@ -66,6 +66,12 @@ namespace eCAL
     void handle_write(const asio::error_code& ec, std::size_t /*bytes_transferred*/);
 
     static std::vector<char> pack_write(const std::string& response);
+
+  /////////////////////////////////////
+  // Log / message related methods
+  /////////////////////////////////////
+  protected:
+    std::string get_log_prefix() const override { return "CAsioTcpServerSessionV0"; }
 
   ///////////////////////////////////////////////
   // Member variables

@@ -35,7 +35,7 @@ namespace eCAL
     Stop();
   }
 
-  void CTcpServer::Start(unsigned int version_, const eCAL::CAsioServer::RequestCallbackT& request_callback_, const eCAL::CAsioServer::EventCallbackT& event_callback_)
+  void CTcpServer::Start(unsigned int version_, const eCAL::CAsioTcpServer::RequestCallbackT& request_callback_, const eCAL::CAsioTcpServer::EventCallbackT& event_callback_)
   {
     if (m_started)           return;
     if (m_server != nullptr) return;
@@ -51,7 +51,7 @@ namespace eCAL
     if (!m_started) return;
 
     if (m_server == nullptr) return;
-    if (m_io_service != nullptr) m_io_service->stop();
+    if (m_io_context != nullptr) m_io_context->stop();
     m_server_thread.join();
 
     m_started = false;
@@ -67,20 +67,18 @@ namespace eCAL
   }
   
   // TODO: Make the parameters const references
-  void CTcpServer::ServerThread(std::uint32_t port_, eCAL::CAsioServer::RequestCallbackT request_callback_, eCAL::CAsioServer::EventCallbackT event_callback_)
+  void CTcpServer::ServerThread(std::uint32_t port_, eCAL::CAsioTcpServer::RequestCallbackT request_callback_, eCAL::CAsioTcpServer::EventCallbackT event_callback_)
   {
-    m_io_service = std::make_shared<asio::io_service>();
+    m_io_context = std::make_shared<asio::io_context>();
 
-    // TODO: Remove
-    //m_server     = std::make_shared<CAsioServer>(*m_io_service, m_version, static_cast<unsigned short>(port_));
-
-    m_server = CAsioServer::create(*m_io_service
+    m_server = CAsioTcpServer::create(*m_io_context
                                   , m_version
                                   , static_cast<std::uint16_t>(port_)
                                   , request_callback_
                                   , event_callback_);
 
-    m_io_service->run();
+    // TODO: The io_context is only run by 1 thread. However, the callbacks are executed by the io_context thread synchronously, which blocks the entire asio thread pool
+    m_io_context->run();
 
     m_server = nullptr;
   }

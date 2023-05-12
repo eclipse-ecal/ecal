@@ -136,32 +136,29 @@ set(ecal_readwrite_shm_cpp_src
 )
 
 set(ecal_service_cpp_src
+    src/service/asio_tcp_server.cpp
+    src/service/asio_tcp_server.h
+    src/service/asio_tcp_server_logging.h
+    src/service/asio_tcp_server_session.h
+    src/service/asio_tcp_server_session_v0.cpp
+    src/service/asio_tcp_server_session_v0.h
+    src/service/asio_tcp_server_session_v1.cpp
+    src/service/asio_tcp_server_session_v1.h
     src/service/ecal_clientgate.cpp
+    src/service/ecal_clientgate.h
+    src/service/ecal_servicegate.cpp
+    src/service/ecal_servicegate.h
     src/service/ecal_service_client.cpp
     src/service/ecal_service_client_impl.cpp
+    src/service/ecal_service_client_impl.h
     src/service/ecal_service_server.cpp
     src/service/ecal_service_server_impl.cpp
-    src/service/ecal_tcpclient.cpp
-    src/service/ecal_servicegate.cpp
-    src/service/ecal_tcpserver.cpp
-src/service/asio_server_session_v0.cpp
-src/service/asio_server_session_v1.cpp
-
-    # TODO: Sort this better
-
-    src/service/asio_server.cpp
-
-    src/service/asio_server.h
-    src/service/ecal_clientgate.h
-    src/service/ecal_service_client_impl.h
     src/service/ecal_service_server_impl.h
-    src/service/ecal_servicegate.h
+    src/service/ecal_tcpclient.cpp
     src/service/ecal_tcpclient.h
+    src/service/ecal_tcpheader.h
+    src/service/ecal_tcpserver.cpp
     src/service/ecal_tcpserver.h
-    src/service/asio_server.h
-    src/service/asio_server_session.h
-    src/service/asio_server_session_v0.h
-    src/service/asio_server_session_v1.h
 )
 
 set(ecal_cmn_cpp_src
