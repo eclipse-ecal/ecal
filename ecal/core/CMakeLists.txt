@@ -57,6 +57,31 @@ if(UNIX)
   endif()
 endif()
 
+###### ecal_tcp_service lib ########
+
+set(ecal_tcp_service_src
+    src/service/asio_tcp_server.cpp
+    src/service/asio_tcp_server.h
+    src/service/asio_tcp_server_logging.h
+    src/service/asio_tcp_server_session.h
+    src/service/asio_tcp_server_session_v0.cpp
+    src/service/asio_tcp_server_session_v0.h
+    src/service/asio_tcp_server_session_v1.cpp
+    src/service/asio_tcp_server_session_v1.h
+    src/service/ecal_tcpheader.h
+)
+add_library               (ecal_tcp_service OBJECT ${ecal_tcp_service_src})
+target_include_directories(ecal_tcp_service PUBLIC 
+                                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+                                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+target_link_libraries     (ecal_tcp_service PUBLIC $<BUILD_INTERFACE:asio::asio>)
+target_compile_features   (ecal_tcp_service PUBLIC cxx_std_14)
+source_group              (TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${ecal_tcp_service_src})
+set_property              (TARGET ecal_tcp_service PROPERTY FOLDER ecal/core)
+
+
+
+
 
 if(ECAL_NPCAP_SUPPORT)
 set(ecal_io_cpp_src_npcap 
@@ -136,14 +161,6 @@ set(ecal_readwrite_shm_cpp_src
 )
 
 set(ecal_service_cpp_src
-    src/service/asio_tcp_server.cpp
-    src/service/asio_tcp_server.h
-    src/service/asio_tcp_server_logging.h
-    src/service/asio_tcp_server_session.h
-    src/service/asio_tcp_server_session_v0.cpp
-    src/service/asio_tcp_server_session_v0.h
-    src/service/asio_tcp_server_session_v1.cpp
-    src/service/asio_tcp_server_session_v1.h
     src/service/ecal_clientgate.cpp
     src/service/ecal_clientgate.h
     src/service/ecal_servicegate.cpp
@@ -500,6 +517,7 @@ target_link_libraries(${PROJECT_NAME}
     Threads::Threads
     eCAL::ecal-utils
     tcp_pubsub::tcp_pubsub
+    ecal_tcp_service
 )
 
 set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)
