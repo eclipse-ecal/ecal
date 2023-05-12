@@ -58,7 +58,7 @@ namespace eCAL
     , connection_count_(0)
   {
 #if (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED)
-    const auto message = "[CAsioTcpServer] Created";
+    const std::string message = "[CAsioTcpServer] Created";
     std::cout << message << std::endl;
 #endif
   }
@@ -67,7 +67,7 @@ namespace eCAL
   CAsioTcpServer::~CAsioTcpServer()
   {
 #if (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED)
-    const auto message = "[CAsioTcpServer] Deleted";
+    const std::string message = "[CAsioTcpServer] Deleted";
     std::cout << message << std::endl;
 #endif
   }
@@ -95,13 +95,13 @@ namespace eCAL
     // save a weak_ptr to this class in the capture and later only execute the
     // callback, if this class is still alive.
 
-    eCAL::CAsioTcpServerSession::RequestCallbackT request_callback
+    const eCAL::CAsioTcpServerSession::RequestCallbackT request_callback
             = [weak_me = std::weak_ptr<CAsioTcpServer>(shared_from_this())](const std::string& request, std::string& response) -> int
               {
                 // Create a shared_ptr to the class. If it doesn't exist
                 // anymore, we will get a nullpointer. In that case, we cannot
                 // execute the callback.
-                std::shared_ptr<CAsioTcpServer> me(weak_me);
+                const std::shared_ptr<CAsioTcpServer> me(weak_me);
                 if (me)
                 {
                   return me->on_request(request, response);
@@ -112,13 +112,13 @@ namespace eCAL
                 }
               };
 
-    eCAL::CAsioTcpServerSession::EventCallbackT event_callback
+    const eCAL::CAsioTcpServerSession::EventCallbackT event_callback
             = [weak_me = std::weak_ptr<CAsioTcpServer>(shared_from_this())](eCAL_Server_Event server_event, const std::string& todo_name_this_whatever_it_is) -> void
               {
                 // Create a shared_ptr to the class. If it doesn't exist
                 // anymore, we will get a nullpointer. In that case, we cannot
                 // execute the callback.
-                std::shared_ptr<CAsioTcpServer> me(weak_me);
+                const std::shared_ptr<CAsioTcpServer> me(weak_me);
                 if (me)
                 {
                   me->on_event(server_event, todo_name_this_whatever_it_is);
