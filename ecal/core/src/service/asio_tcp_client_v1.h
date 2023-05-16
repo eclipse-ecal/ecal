@@ -19,28 +19,15 @@
 
 #pragma once
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4834)
-#endif
-#include <asio.hpp>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include <memory>
+
+#include "asio_tcp_client.h"
 
 namespace eCAL
 {
-  class CAsioTcpClient
+  class CAsioTcpClientV1 : public CAsioTcpClient, public std::enable_shared_from_this<eCAL::CAsioTcpClientV1>
   {
-    /////////////////////////////////////
-    // Constructor, Destructor, Create
-    /////////////////////////////////////
-  public:
-    virtual ~CAsioTcpClient() = default;
 
-  protected:
-    CAsioTcpClient(asio::io_context& io_context_)
-    {}
   };
 
 } // namespace eCAL

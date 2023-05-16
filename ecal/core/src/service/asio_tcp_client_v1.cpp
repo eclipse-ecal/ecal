@@ -17,30 +17,9 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
-
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4834)
-#endif
-#include <asio.hpp>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include "asio_tcp_server.h"
 
 namespace eCAL
 {
-  class CAsioTcpClient
-  {
-    /////////////////////////////////////
-    // Constructor, Destructor, Create
-    /////////////////////////////////////
-  public:
-    virtual ~CAsioTcpClient() = default;
-
-  protected:
-    CAsioTcpClient(asio::io_context& io_context_)
-    {}
-  };
 
 } // namespace eCAL

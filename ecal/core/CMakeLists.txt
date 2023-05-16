@@ -60,8 +60,11 @@ endif()
 ###### ecal_tcp_service lib ########
 
 set(ecal_tcp_service_src
-    src/service/asio_tcp_client.cpp
     src/service/asio_tcp_client.h
+    src/service/asio_tcp_client_v0.cpp
+    src/service/asio_tcp_client_v0.h
+    src/service/asio_tcp_client_v1.cpp
+    src/service/asio_tcp_client_v1.h
     src/service/asio_tcp_server.cpp
     src/service/asio_tcp_server.h
     src/service/asio_tcp_server_logging.h
@@ -79,6 +82,7 @@ target_include_directories(ecal_tcp_service PUBLIC
 target_link_libraries     (ecal_tcp_service PUBLIC $<BUILD_INTERFACE:asio::asio>)
 target_compile_features   (ecal_tcp_service PUBLIC cxx_std_14)
 source_group              (TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${ecal_tcp_service_src})
+set_property              (TARGET ecal_tcp_service PROPERTY POSITION_INDEPENDENT_CODE ON)
 set_property              (TARGET ecal_tcp_service PROPERTY FOLDER ecal/core)
 
 
