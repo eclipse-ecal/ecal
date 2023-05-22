@@ -135,7 +135,7 @@ namespace eCAL
           std::cout << get_log_string("DEBUG", "Header has the following content:") << std::endl;
           std::cout << get_log_string("DEBUG", "  header->package_size_n = " + std::to_string(ntohl(header->package_size_n))) << std::endl;
           std::cout << get_log_string("DEBUG", "  header->version        = " + std::to_string(header->version))               << std::endl;
-          std::cout << get_log_string("DEBUG", "  header->message_type   = " + std::to_string(header->message_type))          << std::endl;
+          std::cout << get_log_string("DEBUG", "  header->message_type   = " + std::to_string(static_cast<std::uint8_t>(header->message_type))) << std::endl;
           std::cout << get_log_string("DEBUG", "  header->header_size_n  = " + std::to_string(ntohs(header->header_size_n)))  << std::endl;
           // TODO: The reserved field is printed in network byte order, as Win7 compatibility of WinSocks2 does not define 64bit byte swap functions. I didn't want to introduce hacks or implement it myself, just for printing an empty reserved field.
           std::cout << get_log_string("DEBUG", "  header->reserved       = " + std::to_string(header->reserved))              << std::endl;

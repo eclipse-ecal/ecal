@@ -77,19 +77,18 @@ namespace eCAL
   /////////////////////////////////////
   public:
     virtual std::string get_log_prefix() const = 0;
+
     inline std::string get_connection_info_string() const
     {
-      std::string local_endpoint_string;
-      std::string remote_endpoint_string;
-      
+      std::string local_endpoint_string  = "???";
+      std::string remote_endpoint_string = "???";
+
       // Form local endpoint string
       {
         asio::error_code ec;
         const auto endpoint = socket_.local_endpoint(ec);
         if (!ec)
-          local_endpoint_string = endpoint.address().to_string() + ":" + std::to_string(endpoint.port());
-        else
-          local_endpoint_string = "??";
+          local_endpoint_string = endpoint_to_string(endpoint);
       }
 
       // form remote endpoint string
@@ -97,13 +96,21 @@ namespace eCAL
         asio::error_code ec;
         const auto endpoint = socket_.remote_endpoint(ec);
         if (!ec)
-          remote_endpoint_string = endpoint.address().to_string() + ":" + std::to_string(endpoint.port());
-        else
-          remote_endpoint_string = "??";
+          remote_endpoint_string = endpoint_to_string(endpoint);
       }
 
       return local_endpoint_string + " -> " + remote_endpoint_string;
     };
+
+    static inline std::string endpoint_to_string(const asio::ip::tcp::endpoint& endpoint)
+    {
+      asio::error_code ec;
+      const std::string address_string = endpoint.address().to_string(ec);
+      if (!ec)
+        return address_string + ":" + std::to_string(endpoint.port());
+      else
+        return "???";
+    }
 
     inline std::string get_log_string(const std::string& message) const
     {

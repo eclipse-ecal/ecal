@@ -39,11 +39,11 @@ namespace eCAL
   //   - Used for response since protocol version 0
   struct STcpHeader
   {
-    uint32_t package_size_n = 0;   // package size in network byte order
-    uint8_t  version        = 0;   // protocol version                    (since protocol V1 / eCAL 5.12)
-    uint8_t  message_type   = 0;   // message type                        (since protocol V1 / eCAL 5.12)
-    uint16_t header_size_n  = 0;   // header size in network byte order   (since protocol V1 / eCAL 5.12)
-    uint64_t reserved       = 0;   // reserved
+    uint32_t    package_size_n = 0;                        // package size in network byte order
+    uint8_t     version        = 0;                        // protocol version                    (since protocol V1 / eCAL 5.12)
+    MessageType message_type   = MessageType::Undefined;   // message type                        (since protocol V1 / eCAL 5.12)
+    uint16_t    header_size_n  = 0;                        // header size in network byte order   (since protocol V1 / eCAL 5.12)
+    uint64_t    reserved       = 0;                        // reserved
   };
 
   // Handshake Request Message, since protocol v1
