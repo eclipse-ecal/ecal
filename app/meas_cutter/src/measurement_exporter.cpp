@@ -27,7 +27,8 @@ MeasurementExporter::MeasurementExporter():
 
 void MeasurementExporter::setPath(const std::string& path, const std::string& base_name, const size_t& max_size_per_file)
 {
-  _output_path = EcalUtils::Filesystem::CleanPath(path + EcalUtils::Filesystem::NativeSeparator(EcalUtils::Filesystem::OsStyle::Current) + eCALMeasCutterUtils::kDefaultFolderOutput, EcalUtils::Filesystem::OsStyle::Current);
+  _root_output_path = EcalUtils::Filesystem::CleanPath(path);
+  _output_path = EcalUtils::Filesystem::CleanPath(_root_output_path + EcalUtils::Filesystem::NativeSeparator(EcalUtils::Filesystem::OsStyle::Current) + eCALMeasCutterUtils::kDefaultFolderOutput, EcalUtils::Filesystem::OsStyle::Current);
   if (!_writer->Open(_output_path))
   {
     throw ExporterException("Unable to create HDF5 protobuf output path " + path + ".");
@@ -83,7 +84,12 @@ void MeasurementExporter::setData(eCALMeasCutterUtils::Timestamp timestamp, cons
   }
 }
 
-std::string MeasurementExporter::getOutputPath()
+std::string MeasurementExporter::getOutputPath() const
 {
   return _output_path;
+}
+
+std::string MeasurementExporter::getRootOutputPath() const
+{
+  return _root_output_path;
 }
