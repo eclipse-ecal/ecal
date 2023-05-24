@@ -177,9 +177,6 @@ namespace eCAL
           }
           else
           {
-            // clear receive buffer
-            receive_buffer.clear();
-
             const bool zero_copy_allowed = mfile_hdr.options.zero_copy != 0;
             bool post_process_buffer(false);
             // -------------------------------------------------------------------------

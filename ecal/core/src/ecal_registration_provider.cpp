@@ -92,7 +92,8 @@ namespace eCAL
 
       m_multicast_group = attr.ipaddr;
 
-      m_reg_snd.Create(attr);
+      m_reg_snd        = std::make_shared<CUDPSender>(attr);
+      m_reg_sample_snd = std::make_shared<CSampleSender>(m_reg_snd, m_multicast_group);
     }
     else
     {
@@ -119,6 +120,7 @@ namespace eCAL
     // thank you and goodbye :-)
     UnregisterProcess();
 
+    m_reg_sample_snd.reset();
     m_reg_snd_thread.Stop();
 
     if(m_use_shm_monitoring)
@@ -418,8 +420,8 @@ namespace eCAL
 
     bool return_value {true};
 
-    if(m_use_network_monitoring)
-      return_value &= (SendSample(&m_reg_snd, sample_name_, sample_, m_multicast_group, -1) != 0);
+    if (m_use_network_monitoring && m_reg_sample_snd)
+      return_value &= (m_reg_sample_snd->SendSample(sample_name_, sample_, -1) != 0);
 
     if(m_use_shm_monitoring)
     {

@@ -28,7 +28,6 @@
 #include "ecal_writer_udp_mc.h"
 
 #include "io/udp_configurations.h"
-#include "io/snd_sample.h"
 
 namespace eCAL
 {
@@ -71,17 +70,19 @@ namespace eCAL
     attr.unicast    = false;
     attr.sndbuf     = Config::GetUdpMulticastSndBufSizeBytes();
 
-    // create sample sender without activated loopback
-    attr.loopback   = false;
-    attr.ttl        = Config::GetUdpMulticastTtl();
-    m_sample_snd_no_loopback.Create(attr);
-
-    // create sample sender with activated loopback
+    // create udp/sample sender with activated loop-back
     int ttl(0);
     if (Config::IsNetworkEnabled()) ttl = Config::GetUdpMulticastTtl();
     attr.loopback   = true;
     attr.ttl        = ttl;
-    m_sample_snd_loopback.Create(attr);
+    m_udp_sender_loopback    = std::make_shared<CUDPSender>(attr);
+    m_sample_sender_loopback = std::make_shared<CSampleSender>(m_udp_sender_loopback, m_udp_ipaddr);
+
+    // create udp/sample sender without activated loop-back
+    attr.loopback   = false;
+    attr.ttl        = Config::GetUdpMulticastTtl();
+    m_udp_sender_no_loopback    = std::make_shared<CUDPSender>(attr);
+    m_sample_sender_no_loopback = std::make_shared<CSampleSender>(m_udp_sender_no_loopback, m_udp_ipaddr);
 
     m_created = true;
     return true;
@@ -90,6 +91,9 @@ namespace eCAL
   bool CDataWriterUdpMC::Destroy()
   {
     if (!m_created) return false;
+
+    m_sample_sender_loopback.reset();
+    m_sample_sender_no_loopback.reset();
 
     m_created = false;
     return true;
@@ -125,11 +129,17 @@ namespace eCAL
     size_t sent = 0;
     if (attr_.loopback)
     {
-      sent = eCAL::SendSample(&m_sample_snd_loopback, m_ecal_sample.topic().tname(), m_ecal_sample, m_udp_ipaddr, attr_.bandwidth);
+      if (m_sample_sender_loopback)
+      {
+        sent = m_sample_sender_loopback->SendSample(m_ecal_sample.topic().tname(), m_ecal_sample, attr_.bandwidth);
+      }
     }
     else
     {
-      sent = eCAL::SendSample(&m_sample_snd_no_loopback, m_ecal_sample.topic().tname(), m_ecal_sample, m_udp_ipaddr, attr_.bandwidth);
+      if (m_sample_sender_no_loopback)
+      {
+        sent = m_sample_sender_no_loopback->SendSample(m_ecal_sample.topic().tname(), m_ecal_sample, attr_.bandwidth);
+      }
     }
 
     // log it
