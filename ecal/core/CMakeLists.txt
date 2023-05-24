@@ -73,6 +73,18 @@ set(ecal_tcp_service_src
     src/service/asio_tcp_server_session_v0.h
     src/service/asio_tcp_server_session_v1.cpp
     src/service/asio_tcp_server_session_v1.h
+
+    src/service/ecal_service_logger.h
+    src/service/ecal_service_tcp_protocol_v1.cpp
+    src/service/ecal_service_tcp_protocol_v1.h
+    src/service/ecal_service_tcp_server.cpp
+    src/service/ecal_service_tcp_server.h
+    src/service/ecal_service_tcp_session_client.h
+    src/service/ecal_service_tcp_session_server.h
+    src/service/ecal_service_tcp_session_v1_client.cpp
+    src/service/ecal_service_tcp_session_v1_client.h
+    src/service/ecal_service_tcp_session_v1_server.cpp
+    src/service/ecal_service_tcp_session_v1_server.h
     src/service/ecal_tcpheader.h
 )
 add_library               (ecal_tcp_service OBJECT ${ecal_tcp_service_src})
