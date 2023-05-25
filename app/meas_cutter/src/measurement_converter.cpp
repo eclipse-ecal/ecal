@@ -269,7 +269,7 @@ bool MeasurementConverter::convert()
   }
 
   auto input_path  = EcalUtils::Filesystem::ToNativeSeperators(EcalUtils::Filesystem::CleanPath(_importer.getLoadedPath()));
-  auto output_path = EcalUtils::Filesystem::ToNativeSeperators(EcalUtils::Filesystem::CleanPath(_exporter.getOutputPath()));
+  auto output_path = EcalUtils::Filesystem::ToNativeSeperators(EcalUtils::Filesystem::CleanPath(_exporter.getRootOutputPath()));
 
   auto file_status = EcalUtils::Filesystem::FileStatus(input_path, EcalUtils::Filesystem::OsStyle::Current);
   if (file_status.GetType() == EcalUtils::Filesystem::Type::Dir)

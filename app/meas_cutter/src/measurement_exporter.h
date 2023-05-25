@@ -39,12 +39,14 @@ public:
   void        setPath(const std::string& path, const std::string& base_name, const size_t& max_size_per_file);
   void        createChannel(const std::string& channel_name, const eCALMeasCutterUtils::ChannelInfo& channel_info);
   void        setData(eCALMeasCutterUtils::Timestamp timestamp, const eCALMeasCutterUtils::MetaData& meta_data, const std::string& payload);
-  std::string getOutputPath();
+  std::string getOutputPath() const;
+  std::string getRootOutputPath() const;
 
 private:
   std::unique_ptr<eCAL::measurement::base::Writer>      _writer;
   std::string                                           _current_channel_name;
   std::string                                           _output_path;
+  std::string                                           _root_output_path;
 };
 
 class ExporterException : public std::exception
