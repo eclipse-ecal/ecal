@@ -589,7 +589,7 @@ static void c_subscriber_callback(const char* topic_name_, const struct eCAL::SR
   PyGILState_STATE state = PyGILState_Ensure();
 
   PyObject* topic_name = Py_BuildValue("s",  topic_name_);
-  PyObject* content    = Py_BuildValue(python_formatter.c_str(), data_->buf, (Py_ssize_t) data_->size);
+  PyObject* content    = PyByteArray_FromStringAndSize((char*)data_->buf, (Py_ssize_t)data_->size);
   PyObject* time       = Py_BuildValue("L",  data_->time);
 
   PyObject* args = PyTuple_New(3);
