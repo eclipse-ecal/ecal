@@ -64,25 +64,20 @@ namespace eCAL
 
     m_udp_ipaddr = UDP::GetTopicMulticastAddress(topic_name_);
 
+    // set network attributes
     SSenderAttr attr;
     attr.ipaddr     = m_udp_ipaddr;
     attr.port       = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
-    attr.unicast    = false;
+    attr.ttl        = Config::GetUdpMulticastTtl();
     attr.sndbuf     = Config::GetUdpMulticastSndBufSizeBytes();
 
     // create udp/sample sender with activated loop-back
-    int ttl(0);
-    if (Config::IsNetworkEnabled()) ttl = Config::GetUdpMulticastTtl();
     attr.loopback   = true;
-    attr.ttl        = ttl;
-    m_udp_sender_loopback    = std::make_shared<CUDPSender>(attr);
-    m_sample_sender_loopback = std::make_shared<CSampleSender>(m_udp_sender_loopback, m_udp_ipaddr);
+    m_sample_sender_loopback = std::make_shared<CSampleSender>(attr);
 
     // create udp/sample sender without activated loop-back
     attr.loopback   = false;
-    attr.ttl        = Config::GetUdpMulticastTtl();
-    m_udp_sender_no_loopback    = std::make_shared<CUDPSender>(attr);
-    m_sample_sender_no_loopback = std::make_shared<CSampleSender>(m_udp_sender_no_loopback, m_udp_ipaddr);
+    m_sample_sender_no_loopback = std::make_shared<CSampleSender>(attr);
 
     m_created = true;
     return true;
