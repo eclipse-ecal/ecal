@@ -48,7 +48,6 @@ namespace eCAL
   std::atomic<bool> CRegistrationProvider::m_created;
 
   CRegistrationProvider::CRegistrationProvider() :
-                    m_multicast_group(NET_UDP_MULTICAST_GROUP),
                     m_reg_refresh(CMN_REGISTRATION_REFRESH),
                     m_reg_topics(false),
                     m_reg_services(false),
@@ -79,28 +78,27 @@ namespace eCAL
 
     if (m_use_network_monitoring)
     {
+      // set network attributes
       SSenderAttr attr;
       bool local_only = !Config::IsNetworkEnabled();
       // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
       if (local_only)
       {
-        attr.ipaddr = "127.255.255.255";
+        attr.ipaddr    = "127.255.255.255";
         attr.broadcast = true;
       }
       else
       {
-        attr.ipaddr = Config::GetUdpMulticastGroup();
+        attr.ipaddr    = Config::GetUdpMulticastGroup();
         attr.broadcast = false;
       }
-      attr.port = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
+      attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
       attr.loopback = true;
-      attr.ttl = Config::GetUdpMulticastTtl();
-      attr.sndbuf = Config::GetUdpMulticastSndBufSizeBytes();
+      attr.ttl      = Config::GetUdpMulticastTtl();
+      attr.sndbuf   = Config::GetUdpMulticastSndBufSizeBytes();
 
-      m_multicast_group = attr.ipaddr;
-
-      m_reg_snd        = std::make_shared<CUDPSender>(attr);
-      m_reg_sample_snd = std::make_shared<CSampleSender>(m_reg_snd, m_multicast_group);
+      // create udp sample sender
+      m_reg_sample_snd = std::make_shared<CSampleSender>(attr);
     }
     else
     {
@@ -116,7 +114,7 @@ namespace eCAL
     }
 #endif
 
-    m_reg_snd_thread.Start(Config::GetRegistrationRefreshMs(), std::bind(&CRegistrationProvider::RegisterSendThread, this));
+    m_reg_sample_snd_thread.Start(Config::GetRegistrationRefreshMs(), std::bind(&CRegistrationProvider::RegisterSendThread, this));
 
     m_created = true;
   }
@@ -126,7 +124,7 @@ namespace eCAL
     if(!m_created) return;
 
     m_reg_sample_snd.reset();
-    m_reg_snd_thread.Stop();
+    m_reg_sample_snd_thread.Stop();
 
 #ifndef ECAL_LAYER_ICEORYX
     if(m_use_shm_monitoring)

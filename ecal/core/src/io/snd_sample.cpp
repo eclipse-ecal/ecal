@@ -37,6 +37,11 @@ namespace
 
 namespace eCAL
 {
+  CSampleSender::CSampleSender(const SSenderAttr& attr_)
+  {
+    m_udp_sender = std::make_shared<CUDPSender>(attr_);
+  }
+
   size_t CSampleSender::SendSample(const std::string& sample_name_, const eCAL::pb::Sample& ecal_sample_, long bandwidth_)
   {
     if (m_udp_sender == nullptr) return(0);
@@ -48,7 +53,7 @@ namespace eCAL
     if (data_size > 0)
     {
       // and send it
-      sent_sum = SendSampleBuffer(m_payload.data(), data_size, bandwidth_, std::bind(TransmitToUDP, std::placeholders::_1, std::placeholders::_2, m_udp_sender, m_ipaddr));
+      sent_sum = SendSampleBuffer(m_payload.data(), data_size, bandwidth_, std::bind(TransmitToUDP, std::placeholders::_1, std::placeholders::_2, m_udp_sender, m_attr.ipaddr));
 
 #ifndef NDEBUG
       // log it

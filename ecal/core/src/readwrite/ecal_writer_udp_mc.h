@@ -60,10 +60,7 @@ namespace eCAL
     std::string                    m_udp_ipaddr;
     eCAL::pb::Sample               m_ecal_sample;
 
-    std::shared_ptr<CUDPSender>    m_udp_sender_loopback;
     std::shared_ptr<CSampleSender> m_sample_sender_loopback;
-
-    std::shared_ptr<CUDPSender>    m_udp_sender_no_loopback;
     std::shared_ptr<CSampleSender> m_sample_sender_no_loopback;
   };
 }

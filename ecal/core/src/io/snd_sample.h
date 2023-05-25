@@ -41,18 +41,13 @@ namespace eCAL
   class CSampleSender
   {
   public:
-    CSampleSender(std::shared_ptr<eCAL::CUDPSender> udp_sender_, const std::string& ipaddr_) :
-      m_udp_sender(udp_sender_),
-      m_ipaddr(ipaddr_)
-    {
-    }
-
+    CSampleSender(const SSenderAttr& attr_);
     size_t SendSample(const std::string& sample_name_, const eCAL::pb::Sample& ecal_sample_, long bandwidth_);
 
   private:
-    std::shared_ptr<eCAL::CUDPSender> m_udp_sender;
-    std::string                       m_ipaddr;
+    SSenderAttr                       m_attr;
 
+    std::shared_ptr<eCAL::CUDPSender> m_udp_sender;
     std::vector<char>                 m_payload;
   };
 }

@@ -86,14 +86,12 @@ namespace eCAL
 #endif
 
     static std::atomic<bool>          m_created;
-    std::string                       m_multicast_group;
     int                               m_reg_refresh;
     bool                              m_reg_topics;
     bool                              m_reg_services;
     bool                              m_reg_process;
 
-    CThread                           m_reg_snd_thread;
-    std::shared_ptr<CUDPSender>       m_reg_snd;
+    CThread                           m_reg_sample_snd_thread;
     std::shared_ptr<CSampleSender>    m_reg_sample_snd;
 
     typedef std::unordered_map<std::string, eCAL::pb::Sample> SampleMapT;
