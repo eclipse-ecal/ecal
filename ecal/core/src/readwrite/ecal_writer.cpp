@@ -426,7 +426,6 @@ namespace eCAL
       && !m_writer.tcp_mode.activated;
 
     // create a payload copy for all layer
-    m_payload_buffer.clear();
     if (!allow_zero_copy)
     {
       m_payload_buffer.resize(payload_buf_size);

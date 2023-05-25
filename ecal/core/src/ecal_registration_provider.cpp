@@ -50,7 +50,6 @@ namespace eCAL
   std::atomic<bool> CRegistrationProvider::m_created;
 
   CRegistrationProvider::CRegistrationProvider() :
-                    m_multicast_group(NET_UDP_MULTICAST_GROUP),
                     m_reg_refresh(CMN_REGISTRATION_REFRESH),
                     m_reg_topics(false),
                     m_reg_services(false),
@@ -81,18 +80,18 @@ namespace eCAL
 
     if (m_use_network_monitoring)
     {
+      // set network attributes
       SSenderAttr attr;
-      // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
-      attr.broadcast = !Config::IsNetworkEnabled();
       attr.ipaddr    = UDP::GetRegistrationMulticastAddress();
       attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
-      attr.loopback  = true;
       attr.ttl       = Config::GetUdpMulticastTtl();
+      // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
+      attr.broadcast = !Config::IsNetworkEnabled();
+      attr.loopback  = true;
       attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
-      m_multicast_group = attr.ipaddr;
-
-      m_reg_snd.Create(attr);
+      // create udp sample sender
+      m_reg_sample_snd = std::make_shared<CSampleSender>(attr);
     }
     else
     {
@@ -106,7 +105,7 @@ namespace eCAL
       m_memfile_broadcast_writer.Bind(&m_memfile_broadcast);
     }
 
-    m_reg_snd_thread.Start(Config::GetRegistrationRefreshMs(), std::bind(&CRegistrationProvider::RegisterSendThread, this));
+    m_reg_sample_snd_thread.Start(Config::GetRegistrationRefreshMs(), std::bind(&CRegistrationProvider::RegisterSendThread, this));
 
     m_created = true;
   }
@@ -119,7 +118,8 @@ namespace eCAL
     // thank you and goodbye :-)
     UnregisterProcess();
 
-    m_reg_snd_thread.Stop();
+    m_reg_sample_snd.reset();
+    m_reg_sample_snd_thread.Stop();
 
     if(m_use_shm_monitoring)
     {
@@ -418,8 +418,8 @@ namespace eCAL
 
     bool return_value {true};
 
-    if(m_use_network_monitoring)
-      return_value &= (SendSample(&m_reg_snd, sample_name_, sample_, m_multicast_group, -1) != 0);
+    if (m_use_network_monitoring && m_reg_sample_snd)
+      return_value &= (m_reg_sample_snd->SendSample(sample_name_, sample_, -1) != 0);
 
     if(m_use_shm_monitoring)
     {

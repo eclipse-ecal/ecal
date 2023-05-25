@@ -23,13 +23,12 @@
 
 #include <ecal/ecal.h>
 
-#include "ecal_def.h"
 #include "snd_sample.h"
 #include "snd_raw_buffer.h"
 
 namespace
 {
-  size_t TransmitToUDP(const void* buf_, const size_t len_, eCAL::CUDPSender* sample_sender_, const std::string& mcast_address_)
+  size_t TransmitToUDP(const void* buf_, const size_t len_, const std::shared_ptr<eCAL::CUDPSender>& sample_sender_, const std::string& mcast_address_)
   {
     return (sample_sender_->Send(buf_, len_, mcast_address_.c_str()));
   }
@@ -37,19 +36,23 @@ namespace
 
 namespace eCAL
 {
-  size_t SendSample(eCAL::CUDPSender* udp_sender_, const std::string& sample_name_, const eCAL::pb::Sample& ecal_sample_, const std::string& ipaddr_, long bandwidth_)
+  CSampleSender::CSampleSender(const SSenderAttr& attr_)
   {
-    if (udp_sender_ == nullptr) return(0);
+    m_udp_sender = std::make_shared<CUDPSender>(attr_);
+  }
+
+  size_t CSampleSender::SendSample(const std::string& sample_name_, const eCAL::pb::Sample& ecal_sample_, long bandwidth_)
+  {
+    if (!m_udp_sender) return(0);
 
     // return value
     size_t sent_sum(0);
 
-    std::vector<char> payload_sum;
-    const size_t data_size = CreateSampleBuffer(sample_name_, ecal_sample_, payload_sum);
+    const size_t data_size = CreateSampleBuffer(sample_name_, ecal_sample_, m_payload);
     if (data_size > 0)
     {
       // and send it
-      sent_sum = SendSampleBuffer(payload_sum.data(), data_size, bandwidth_, std::bind(TransmitToUDP, std::placeholders::_1, std::placeholders::_2, udp_sender_, ipaddr_));
+      sent_sum = SendSampleBuffer(m_payload.data(), data_size, bandwidth_, std::bind(TransmitToUDP, std::placeholders::_1, std::placeholders::_2, m_udp_sender, m_attr.ipaddr));
 
 #ifndef NDEBUG
       // log it
