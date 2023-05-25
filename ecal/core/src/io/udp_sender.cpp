@@ -161,20 +161,9 @@ namespace eCAL
   ////////////////////////////////////////////////////////
   // udp sender class
   ////////////////////////////////////////////////////////
-  CUDPSender::CUDPSender() : CSender(CSender::SType_SenderUDP) {}
-
-  bool CUDPSender::Create(const SSenderAttr& attr_)
+  CUDPSender::CUDPSender(const SSenderAttr& attr_)
   {
-    if (m_socket_impl) return(false);
     m_socket_impl = std::make_shared<CUDPSenderImpl>(attr_);
-    return(true);
-  }
-
-  bool CUDPSender::Destroy()
-  {
-    if (!m_socket_impl) return(false);
-    m_socket_impl = nullptr;
-    return(true);
   }
 
   size_t CUDPSender::Send(const void* buf_, const size_t len_, const char* ipaddr_)
