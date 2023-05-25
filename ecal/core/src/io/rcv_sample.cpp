@@ -87,7 +87,6 @@ int CReceiveSlot::OnMessageStart(const struct SUDPMessage& ecal_message_)
   m_message_curr_len = 0;
 
   // prepare receive buffer
-  m_recv_buffer.clear();
   m_recv_buffer.reserve(static_cast<size_t>(m_message_total_len));
 
   // switch to reading mode

@@ -30,7 +30,6 @@
 #include "ecal_writer_udp_mc.h"
 
 #include "topic2mcast.h"
-#include "io/snd_sample.h"
 
 namespace eCAL
 {
@@ -70,20 +69,16 @@ namespace eCAL
     SSenderAttr attr;
     attr.ipaddr     = m_udp_ipaddr;
     attr.port       = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
-    attr.unicast    = false;
+    attr.ttl        = Config::GetUdpMulticastTtl();
     attr.sndbuf     = Config::GetUdpMulticastSndBufSizeBytes();
 
-    // create sample sender without activated loopback
-    attr.loopback   = false;
-    attr.ttl        = Config::GetUdpMulticastTtl();
-    m_sample_snd_no_loopback.Create(attr);
-
-    // create sample sender with activated loopback
-    int ttl(0);
-    if (Config::IsNetworkEnabled()) ttl = Config::GetUdpMulticastTtl();
+    // create udp/sample sender with activated loop-back
     attr.loopback   = true;
-    attr.ttl        = ttl;
-    m_sample_snd_loopback.Create(attr);
+    m_sample_sender_loopback = std::make_shared<CSampleSender>(attr);
+
+    // create udp/sample sender without activated loop-back
+    attr.loopback   = false;
+    m_sample_sender_no_loopback = std::make_shared<CSampleSender>(attr);
 
     m_created = true;
     return true;
@@ -92,6 +87,9 @@ namespace eCAL
   bool CDataWriterUdpMC::Destroy()
   {
     if (!m_created) return false;
+
+    m_sample_sender_loopback.reset();
+    m_sample_sender_no_loopback.reset();
 
     m_created = false;
     return true;
@@ -127,11 +125,17 @@ namespace eCAL
     size_t sent = 0;
     if (data_.loopback)
     {
-      sent = eCAL::SendSample(&m_sample_snd_loopback, m_ecal_sample.topic().tname(), m_ecal_sample, m_udp_ipaddr, data_.bandwidth);
+      if (m_sample_sender_loopback)
+      {
+        sent = m_sample_sender_loopback->SendSample(m_ecal_sample.topic().tname(), m_ecal_sample, data_.bandwidth);
+      }
     }
     else
     {
-      sent = eCAL::SendSample(&m_sample_snd_no_loopback, m_ecal_sample.topic().tname(), m_ecal_sample, m_udp_ipaddr, data_.bandwidth);
+      if (m_sample_sender_no_loopback)
+      {
+        sent = m_sample_sender_no_loopback->SendSample(m_ecal_sample.topic().tname(), m_ecal_sample, data_.bandwidth);
+      }
     }
 
     // log it

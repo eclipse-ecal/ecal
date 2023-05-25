@@ -61,19 +61,19 @@
 
 static bool isDirectory(const std::string& path_)
 {
-  if (path_.empty()) return false;
+    if (path_.empty()) return false;
 
-  return EcalUtils::Filesystem::IsDir(path_, EcalUtils::Filesystem::Current);
-}
+    return EcalUtils::Filesystem::IsDir(path_, EcalUtils::Filesystem::Current);
+  }
 
 static std::string get_time_str()
-{
-  auto t = std::time(nullptr);
-  auto tm = *std::localtime(&t);
-  std::stringstream tstream;
-  tstream << std::put_time(&tm, "%Y-%m-%d-%H-%M-%S");
-  return(tstream.str());
-}
+  {
+    auto t = std::time(nullptr);
+    auto tm = *std::localtime(&t);
+    std::stringstream tstream;
+    tstream << std::put_time(&tm, "%Y-%m-%d-%H-%M-%S");
+    return(tstream.str());
+  }
 #endif
 
 #ifdef ECAL_OS_LINUX
@@ -109,7 +109,6 @@ namespace eCAL
 {
   CLog::CLog() :
           m_created(false),
-          m_udp_sender(new CUDPSender()),
           m_pid(0),
           m_logfile(nullptr),
           m_level(log_level_none),
@@ -167,12 +166,12 @@ namespace eCAL
         attr.ipaddr    = Config::GetUdpMulticastGroup();
         attr.broadcast = false;
       }
-      attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
-      attr.loopback = true;
-      attr.ttl      = Config::GetUdpMulticastTtl();
-      attr.sndbuf   = Config::GetUdpMulticastSndBufSizeBytes();
+      attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
+      attr.loopback  = true;
+      attr.ttl       = Config::GetUdpMulticastTtl();
+      attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
-      m_udp_sender->Create(attr);
+      m_udp_sender = std::make_unique<CUDPSender>(attr);
     }
 
     m_created = true;
@@ -184,7 +183,7 @@ namespace eCAL
 
     std::lock_guard<std::mutex> lock(m_log_sync);
 
-    m_udp_sender->Destroy();
+    m_udp_sender.reset();
 
     if(m_logfile) fclose(m_logfile);
     m_logfile = nullptr;
@@ -193,13 +192,13 @@ namespace eCAL
   }
 
   void CLog::SetLogLevel(const eCAL_Logging_eLogLevel level_)
-  { 
+  {
     std::lock_guard<std::mutex> lock(m_log_sync);
     m_level = level_;
   };
 
   eCAL_Logging_eLogLevel CLog::GetLogLevel()
-  { 
+  {
     std::lock_guard<std::mutex> lock(m_log_sync);
     return(m_level);
   };
