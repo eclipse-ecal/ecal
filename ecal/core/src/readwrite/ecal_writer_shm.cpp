@@ -107,8 +107,16 @@ namespace eCAL
 
   bool CDataWriterSHM::PrepareWrite(const SWriterAttr& attr_)
   {
-    if (!m_created)     return false;
-    if (attr_.len == 0) return false;
+    if (!m_created) return false;
+
+    size_t memory_file_size(attr_.len);
+    if (memory_file_size == 0)
+    {
+      // this may happen to just adapt the number of memory files that
+      // should be handled, so we take the size of the existing file[0]
+      if (m_memory_file_vec.empty()) return false;
+      memory_file_size = m_memory_file_vec[0]->GetSize();
+    }
 
     // false signals no rematching / exchanging of
     // connection parameters needed
@@ -142,7 +150,7 @@ namespace eCAL
       // increase buffer count
       while (m_memory_file_vec.size() < m_buffer_count)
       {
-        auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, attr_.len, m_memory_file_attr);
+        auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, memory_file_size, m_memory_file_attr);
         m_memory_file_vec.push_back(sync_memfile);
       }
       // decrease buffer count
@@ -156,7 +164,7 @@ namespace eCAL
     m_write_idx %= m_memory_file_vec.size();
       
     // check size and reserve new if needed
-    ret_state |= m_memory_file_vec[m_write_idx]->CheckSize(attr_.len);
+    ret_state |= m_memory_file_vec[m_write_idx]->CheckSize(memory_file_size);
 
     return ret_state;
   }

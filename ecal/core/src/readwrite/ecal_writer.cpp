@@ -351,6 +351,14 @@ namespace eCAL
   {
     if (buffering_ < 1) return false;
     m_buffering_shm = static_cast<size_t>(buffering_);
+    if (m_created)
+    {
+      // we force the shm writer to just prepare the next write operation
+      // if the number of buffered files changed, the writer will adapt this
+      struct SWriterAttr wattr;
+      wattr.buffering = m_buffering_shm;
+      m_writer.shm.PrepareWrite(wattr);
+    }
     return true;
   }
 

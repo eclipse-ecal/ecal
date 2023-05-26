@@ -225,6 +225,11 @@ namespace eCAL
     return m_memfile_name;
   }
 
+  size_t CSyncMemoryFile::GetSize() const
+  {
+    return m_attr.min_size;
+  }
+
   bool CSyncMemoryFile::Create(const std::string& base_name_, size_t size_)
   {
     if (m_created) return false;
