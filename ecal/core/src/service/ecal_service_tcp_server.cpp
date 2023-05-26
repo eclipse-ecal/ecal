@@ -40,11 +40,12 @@ namespace eCAL
                                                         , unsigned int            protocol_version
                                                         , std::uint16_t           port
                                                         , const ServiceCallbackT& service_callback
-                                                        , const EventCallbackT&   event_callback)
+                                                        , const EventCallbackT&   event_callback
+                                                        , const LoggerT&          logger)
     {
       // Create a new instance with the protected constructor
       // Note: make_shared not possible, because constructor is protected
-      auto instance = std::shared_ptr<Server>(new Server(io_context, port, service_callback, event_callback));
+      auto instance = std::shared_ptr<Server>(new Server(io_context, port, service_callback, event_callback, logger));
 
       // Directly Start accepting new connections
       instance->start_accept(protocol_version);
@@ -56,26 +57,28 @@ namespace eCAL
     Server::Server(asio::io_context&        io_context
                                   , std::uint16_t           port
                                   , const ServiceCallbackT& service_callback
-                                  , const EventCallbackT&   event_callback)
+                                  , const EventCallbackT&   event_callback
+                                  , const LoggerT&          logger)
       : io_context_      (io_context)
       , acceptor_        (io_context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
       , service_callback_(service_callback)
       , event_callback_  (event_callback)
       , connection_count_(0)
+      , logger_          (logger)
     {
-  #if (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED)
-      const std::string message = "[Server] Created";
-      std::cout << message << std::endl;
-  #endif
+      logger_(LogLevel::DebugVerbose, "Service Created");
     }
 
     // TODO: check if I must close the acceptor etc.
     Server::~Server()
     {
-  #if (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED)
-      const std::string message = "[Server] Deleted";
-      std::cout << message << std::endl;
-  #endif
+      // Close acceptor, if necessary
+      {
+        asio::error_code ec;
+        acceptor_.close(ec);
+      }
+
+      logger_(LogLevel::DebugVerbose, "Service Deleted");
     }
 
     ///////////////////////////////////////////
@@ -94,6 +97,8 @@ namespace eCAL
 
     void Server::start_accept(unsigned int version)
     {
+      logger_(LogLevel::DebugVerbose, "Service waiting for next client...");
+
       // Create the callbacks for the session. Those callbacks are basically
       // wrapping the class methods of this class. However, the lambda functions
       // will be stored in the session and we have no idea when that session will
@@ -138,19 +143,21 @@ namespace eCAL
       }
       else
       {
-        new_session = eCAL::service::ServerSessionV1::create(io_context_, service_callback/*, event_callback*/);
+        new_session = eCAL::service::ServerSessionV1::create(io_context_, service_callback/*, event_callback*/, logger_);
       }
 
+      // Accept new session.
+      // By only storing a weak_ptr to this, we assure that the user can still
+      // delete the service from the outside.
       acceptor_.async_accept(new_session->socket()
-              , [weak_me = std::weak_ptr<Server>(shared_from_this()), new_session, version](auto ec) // TODO: the this pointer is used. Check whether this should be a shared_ptr or weak_ptr
+              , [weak_me = std::weak_ptr<Server>(shared_from_this()), new_session, version, logger_copy = logger_](auto ec)
                 {
-                  // TODO: The Destructor must close the accpetor and stop the io_service
+                  // TODO: The Destructor must close the accpetor
                   if (ec)
                   {
-  #if (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_ENABLED)
-                    const auto message = "[Server] Error accepting session: " + ec.message();
-                    std::cerr << message << std::endl;
-  #endif
+                    logger_copy(LogLevel::Info, "Service shutting down: " + ec.message());
+                    return; 
+
                     // TODO: Decide whether to return or to continue accepting. only re-try accepting, if the ec didn't tell us to stop!!!
                   }
                   else
@@ -159,6 +166,8 @@ namespace eCAL
                     const auto message = "[Server] Successfully accepted new session: " + new_session->get_connection_info_string() ;
                     std::cout << message << std::endl;
   #endif
+
+                    logger_copy(LogLevel::DebugVerbose, "Service client initiated connection...");
 
                     // Start the new session, that now has a connection
                     // The session will call the callback and increase the connection count
@@ -171,6 +180,10 @@ namespace eCAL
                   if (me)
                   {
                     me->start_accept(version);
+                  }
+                  else
+                  {
+                    logger_copy(LogLevel::Info, "Service shutting down.");
                   }
                 });
 

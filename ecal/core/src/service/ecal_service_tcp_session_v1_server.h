@@ -36,7 +36,7 @@ namespace eCAL
     ///////////////////////////////////////////////
 
     public:
-      static std::shared_ptr<ServerSessionV1> create(asio::io_context& io_context_, const ServiceCallbackT& service_callback, const LoggerT& logger_ = default_logger("Service Server V1"));
+      static std::shared_ptr<ServerSessionV1> create(asio::io_context& io_context_, const ServiceCallbackT& service_callback, const LoggerT& logger_);
 
     protected:
       ServerSessionV1(asio::io_context& io_context_, const ServiceCallbackT& service_callback, const LoggerT& logger_);

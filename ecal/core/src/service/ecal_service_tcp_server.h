@@ -36,6 +36,8 @@
 
 #include <ecal/cimpl/ecal_callback_cimpl.h>
 
+#include "ecal_service_logger.h"
+
 namespace eCAL
 {
   namespace service
@@ -59,13 +61,15 @@ namespace eCAL
                                                   , unsigned int            protocol_version
                                                   , std::uint16_t           port
                                                   , const ServiceCallbackT& service_callback
-                                                  , const EventCallbackT&   event_callback);
+                                                  , const EventCallbackT&   event_callback
+                                                  , const LoggerT&          logger = default_logger("Service Server"));
 
     protected:
       Server(asio::io_context&      io_context
                   , std::uint16_t           port
                   , const ServiceCallbackT& service_callback
-                  , const EventCallbackT&   event_callback);
+                  , const EventCallbackT&   event_callback
+                  , const LoggerT&          logger);
 
       Server(const Server&)            = delete;                  // Copy construct
       Server(Server&&)                 = delete;                  // Move construct
@@ -101,6 +105,8 @@ namespace eCAL
       const EventCallbackT          event_callback_;
 
       std::atomic<int>              connection_count_;
+
+      const LoggerT                 logger_;
     };
   } // namespace service
 } // namespace eCAL

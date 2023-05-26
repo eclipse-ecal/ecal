@@ -32,9 +32,6 @@ namespace eCAL
         void read_header_start(asio::ip::tcp::socket& socket, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb);
         void read_header_rest(asio::ip::tcp::socket& socket, const std::shared_ptr<std::vector<char>>& header_buffer, size_t bytes_already_read, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb);
         void read_payload(asio::ip::tcp::socket& socket, const std::shared_ptr<std::vector<char>>& header_buffer, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb);
-        void send_header(asio::ip::tcp::socket& socket, const std::shared_ptr<eCAL::STcpHeader>& header_buffer, const std::shared_ptr<std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb);
-        void send_payload(asio::ip::tcp::socket& socket, const std::shared_ptr<std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb);
-
 
         ///////////////////////////////////////////////////
         // Read and write implementation
@@ -159,48 +156,29 @@ namespace eCAL
                           });
 
         }
-
-        void send_header(asio::ip::tcp::socket& socket, const std::shared_ptr<eCAL::STcpHeader>& header_buffer, const std::shared_ptr<std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb)
-        {
-          asio::async_write(socket
-                          , asio::buffer(reinterpret_cast<char*>(header_buffer.get()), sizeof(eCAL::STcpHeader))
-                          , [&socket, header_buffer, payload_buffer, error_cb, success_cb](asio::error_code ec, std::size_t /*bytes_sent*/)
-                            {
-                              if (ec)
-                              {
-                                // Call error callback
-                                error_cb(ec);
-                                return;
-                              }
-                              send_payload(socket, payload_buffer, error_cb, success_cb);
-                            });
-
-        }
-
-        void send_payload(asio::ip::tcp::socket& socket, const std::shared_ptr<std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb)
-        {
-          asio::async_write(socket
-                          , asio::buffer(*payload_buffer)
-                          , [&socket, payload_buffer, error_cb, success_cb](asio::error_code ec, std::size_t /*bytes_sent*/)
-                            {
-                              if (ec)
-                              {
-                                // Call error callback
-                                error_cb(ec);
-                                return;
-                              }
-                              success_cb();
-                            });
-        }
-
       }
 
       ///////////////////////////////////////////////////
       // Public API
       ///////////////////////////////////////////////////
       void async_send_payload   (asio::ip::tcp::socket& socket, const std::shared_ptr<eCAL::STcpHeader>& header_buffer, const std::shared_ptr<std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb)
-      {
-        send_header(socket, header_buffer, payload_buffer, error_cb, success_cb);
+      {        
+        std::vector<asio::const_buffer> buffer_list { asio::buffer(reinterpret_cast<char*>(header_buffer.get()), sizeof(eCAL::STcpHeader))
+                                                    , asio::buffer(*payload_buffer)};
+
+        asio::async_write(socket
+                        , buffer_list
+                        , [&socket, header_buffer, payload_buffer, error_cb, success_cb](asio::error_code ec, std::size_t /*bytes_sent*/)
+                          {
+                            if (ec)
+                            {
+                              // Call error callback
+                              error_cb(ec);
+                              return;
+                            }
+                            success_cb();
+                          });
+
       }
 
       void async_receive_payload(asio::ip::tcp::socket& socket, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb)

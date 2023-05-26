@@ -22,6 +22,9 @@
 #include "ecal_service_tcp_session_client.h"
 #include "ecal_service_logger.h"
 
+#include <deque>
+#include <mutex>
+
 namespace eCAL
 {
   namespace service
@@ -36,6 +39,24 @@ namespace eCAL
     public:
       // TODO: This should probably also have an error code
       using ResponseCallbackT = std::function<void (const std::shared_ptr<std::string>&)>;
+
+    //////////////////////////////////////
+    // Internal types
+    //////////////////////////////////////
+    private:
+      enum class State
+      {
+        NOT_CONNECTED,
+        HANDSHAKE,
+        CONNECTED,
+        FAILED,
+      };
+
+      struct ServiceCall
+      {
+        const std::shared_ptr<std::string> request;
+        const ResponseCallbackT            response_cb;
+      };
 
     /////////////////////////////////////
     // Constructor, Destructor, Create
@@ -67,33 +88,31 @@ namespace eCAL
       void send_protocol_handshake_request();
       void receive_protocol_handshake_response();
 
+      // TODO: Create a "Wait for connection established" function
+
     public:
-      void send_service_reqest(const std::shared_ptr<std::string>& request, const ResponseCallbackT& response_cb);
+      void async_call_service(const std::shared_ptr<std::string>& request, const ResponseCallbackT& response_callback);
 
     private:
-      void receive_service_response(const ResponseCallbackT& response_cb);
+      void send_next_service_request();
+      void receive_service_response();
 
     //////////////////////////////////////
     // Member variables
     //////////////////////////////////////
     private:
-      enum class State
-      {
-        NOT_CONNECTED,
-        HANDSHAKE,
-        CONNECTED,
-        FAILED,
-      };
-
       static constexpr std::uint8_t MIN_SUPPORTED_PROTOCOL_VERSION = 1;
       static constexpr std::uint8_t MAX_SUPPORTED_PROTOCOL_VERSION = 1;
 
       asio::ip::tcp::resolver resolver_;
 
-      State                   state_;
-      std::uint8_t            accepted_protocol_version_;
+      State                    state_;
+      std::uint8_t             accepted_protocol_version_;
 
-      const LoggerT           logger_;
+      asio::io_context::strand service_call_queue_strand_;
+      std::deque<ServiceCall>  service_call_queue_;
+
+      const LoggerT            logger_;
     };
   }
 }

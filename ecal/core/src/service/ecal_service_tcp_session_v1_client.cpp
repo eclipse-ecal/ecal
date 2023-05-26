@@ -20,7 +20,7 @@
 #include "ecal_service_tcp_session_v1_client.h"
 
 #include "ecal_service_tcp_protocol_v1.h"
-
+#include "ecal_service_log_helpers.h"
 
 #include <iostream>
 
@@ -45,6 +45,7 @@ namespace eCAL
       , resolver_                 (io_context_)
       , state_                    (State::NOT_CONNECTED)
       , accepted_protocol_version_(0)
+      , service_call_queue_strand_      (io_context_)
       , logger_                   (logger)
     {
   #if (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED)
@@ -70,13 +71,13 @@ namespace eCAL
       std::cout << message << std::endl;
   #endif
 
-      logger_(LogLevel::DebugVerbose, "Resolving Endpoint");
+      logger_(LogLevel::DebugVerbose, "Resolving endpoint [" + address + ":" + std::to_string(port) + "]...");
 
 
       const asio::ip::tcp::resolver::query query(address, std::to_string(port));
 
       resolver_.async_resolve(query
-                            , [me = enable_shared_from_this<ClientSessionV1>::shared_from_this()]
+                            , service_call_queue_strand_.wrap([me = enable_shared_from_this<ClientSessionV1>::shared_from_this(), address, port]
                               (asio::error_code ec, const asio::ip::tcp::resolver::iterator& resolved_endpoints)
                               {
                                 if (ec)
@@ -87,6 +88,8 @@ namespace eCAL
                                   std::cerr << message << std::endl;
                                   // Don't call the callback with "disconnected", as we never told that we are connected
 #endif
+                                  me->logger_(LogLevel::Error, "Failed resolving endpoint [" + address + ":" + std::to_string(port) + "]: " + ec.message());
+
                                   me->state_ = State::FAILED;
                                   return;
                                 }
@@ -94,7 +97,7 @@ namespace eCAL
                                 {
                                   me->connect_to_endpoint(resolved_endpoints);
                                 }
-                              });
+                              }));
     }
 
     void ClientSessionV1::connect_to_endpoint(const asio::ip::tcp::resolver::iterator& resolved_endpoints)
@@ -115,13 +118,15 @@ namespace eCAL
         }
       }
 
+      logger_(LogLevel::DebugVerbose, "Successfully resolved endpoint to [" + endpoint_to_string(endpoint_to_connect_to) + "]");
+
   #if (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED)
       const auto message = get_log_string("DEBUG", "Endpoint resolved to " + endpoint_to_string(endpoint_to_connect_to) + ". Connecting to endpoint...");
       std::cout << message << std::endl;
   #endif
 
       socket_.async_connect(endpoint_to_connect_to
-                              , [me = shared_from_this()](asio::error_code ec)
+                              , service_call_queue_strand_.wrap([me = shared_from_this(), endpoint_to_connect_to](asio::error_code ec)
                                 {
                                   if (ec)
                                   {
@@ -131,6 +136,7 @@ namespace eCAL
                                     std::cerr << message << std::endl;
                                     // Don't call the callback with "disconnected", as we never told that we are connected
   #endif
+                                    me->logger_(LogLevel::Error, "Failed to connect to endpoint [" + endpoint_to_string(endpoint_to_connect_to) + "]: " + ec.message());
                                     me->state_ = State::FAILED;
                                     return;
                                   }
@@ -140,6 +146,8 @@ namespace eCAL
                                     const auto message = me->get_log_string("DEBUG", "Successfully connected to endpoint.");
                                     std::cout << message << std::endl;
   #endif
+                                    me->logger_(LogLevel::DebugVerbose, "Successfully connected to endpoint [" + endpoint_to_string(endpoint_to_connect_to) + "]");
+
                                     // Disable Nagle's algorithm. Nagles Algorithm will otherwise cause the
                                     // Socket to wait for more data, if it encounters a frame that can still
                                     // fit more data. Obviously, this is an awfull default behaviour, if we
@@ -149,14 +157,14 @@ namespace eCAL
                                       me->socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec);
                                       if (socket_option_ec)
                                       {
-                                        std::cerr << me->get_log_string("ERROR", "Failed setting tcp::no_delay option: " + socket_option_ec.message()) << std::endl;
+                                        me->logger_(LogLevel::Warning, "Failed setting tcp::no_delay option: " + socket_option_ec.message());
                                       }                                      
                                     }
 
                                     // Start sending the protocol handshake to the server. This will tell us the actual protocol version.
                                     me->send_protocol_handshake_request();
                                   }
-                                });
+                                }));
     }
 
     void ClientSessionV1::send_protocol_handshake_request()
@@ -188,14 +196,14 @@ namespace eCAL
         header_buffer->header_size_n  = htons(sizeof(STcpHeader));
 
         eCAL::service::ProtocolV1::async_send_payload(socket_, header_buffer, payload_buffer
-                            , [me = shared_from_this()](asio::error_code ec)
+                            , service_call_queue_strand_.wrap([me = shared_from_this()](asio::error_code ec)
                               {
                                 me->logger_(LogLevel::Error, "Failed sending protocol handshake request: " + ec.message());
                                 me->state_ = State::FAILED;
-                              }
+                              })
                             , [me = shared_from_this()]()
                               {
-                                me->logger_(LogLevel::DebugVerbose, "Successfull sent protocol handshake request.");
+                                me->logger_(LogLevel::DebugVerbose, "Successfully sent protocol handshake request.");
                                 me->receive_protocol_handshake_response();
                               });
 
@@ -223,12 +231,12 @@ namespace eCAL
       logger_(LogLevel::DebugVerbose, "Waiting for protocol handshake response...");
 
       eCAL::service::ProtocolV1::async_receive_payload(socket_
-                            , [me = shared_from_this()](asio::error_code ec)
+                            , service_call_queue_strand_.wrap([me = shared_from_this()](asio::error_code ec)
                               {
                                 me->logger_(LogLevel::Error, "Failed receiving protocol handshake response: " + ec.message());
                                 me->state_ = State::FAILED;
-                              }
-                            , [me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
+                              })
+                            , service_call_queue_strand_.wrap([me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
                               {
                                 STcpHeader* header = reinterpret_cast<STcpHeader*>(header_buffer->data());
                                 if (header->message_type != eCAL::MessageType::ProtocolHandshakeResponse)
@@ -263,6 +271,12 @@ namespace eCAL
                                     const std::string message = "Connected to server. Using protocol version " + std::to_string(me->accepted_protocol_version_);
                                     me->logger_(LogLevel::Debug, message);
 
+                                    // Start sending service requests, if there are any
+                                    if (!me->service_call_queue_.empty())
+                                    {
+                                      me->send_next_service_request();
+                                    }
+
 //                                    const std::string message = "Connected to server. Using protocol version " + std::to_string(accepted_protocol_version_);
 //                                    event_callback_(eCAL_Client_Event::client_event_connected, message);
 //#if (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED)
@@ -283,50 +297,65 @@ namespace eCAL
                                   }
 
                                 }
-                              });
+                              }));
     }
 
-    void ClientSessionV1::send_service_reqest(const std::shared_ptr<std::string>& request, const ResponseCallbackT& response_cb)
+    void ClientSessionV1::async_call_service(const std::shared_ptr<std::string>& request, const ResponseCallbackT& response_callback)
     {
+      service_call_queue_strand_.post([me = shared_from_this(), request, response_callback]()
+                            {
+                              const bool write_in_progress = !me->service_call_queue_.empty();
+                              me->service_call_queue_.push_back(ServiceCall{request, response_callback});
+                              if (!write_in_progress && (me->state_ == State::CONNECTED))
+                              {
+                                // TODO: The parameters need to be removed
+                                me->send_next_service_request();
+                              }
+                            });
+    }
+
+    void ClientSessionV1::send_next_service_request()
+    {
+      // TODO: Create a function that just adds requests to a queue, so they will be sent one after another
       logger_(LogLevel::DebugVerbose, "Sending service request...");
 
       // Create header_buffer
       const std::shared_ptr<STcpHeader>  header_buffer  = std::make_shared<STcpHeader>();
-      header_buffer->package_size_n = htonl(request->size());
+      header_buffer->package_size_n = htonl(service_call_queue_.front().request->size());
       header_buffer->version        = accepted_protocol_version_;
       header_buffer->message_type   = MessageType::ServiceRequest;
       header_buffer->header_size_n  = htons(sizeof(STcpHeader));
 
-      eCAL::service::ProtocolV1::async_send_payload(socket_, header_buffer, request
-                              , [me = shared_from_this()](asio::error_code ec)
+      eCAL::service::ProtocolV1::async_send_payload(socket_, header_buffer, service_call_queue_.front().request
+                              , service_call_queue_strand_.wrap([me = shared_from_this()](asio::error_code ec)
                                 {
                                   const std::string message = "Failed sending service request: " + ec.message();
                                   me->logger_(LogLevel::Error, message);
 
                                   me->state_ = State::FAILED;
                                   // TODO: call disconnect callback
-                                }
-                              , [me = shared_from_this(), response_cb]()
+                                })
+                              , [me = shared_from_this()]()
                                 {
                                   me->logger_(LogLevel::DebugVerbose, "Successfully sent service request.");
-                                  me->receive_service_response(response_cb);
+                                  me->receive_service_response();
                                 });
     }
 
-    void ClientSessionV1::receive_service_response(const ResponseCallbackT& response_cb)
+    void ClientSessionV1::receive_service_response()
     {
       logger_(LogLevel::DebugVerbose, "Waiting for service response...");
 
       eCAL::service::ProtocolV1::async_receive_payload(socket_
-                            , [me = shared_from_this()](asio::error_code ec)
+                            , service_call_queue_strand_.wrap([me = shared_from_this()](asio::error_code ec)
                               {
                                 const std::string message = "Failed receiving service response: " + ec.message();
                                 me->logger_(LogLevel::Error, message);
 
                                 me->state_ = State::FAILED;
                                 // TODO: call disconnect callback
-                              }
-                            , [me = shared_from_this(), response_cb](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
+                              })
+                            , service_call_queue_strand_.wrap([me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
                               {
                                 STcpHeader* header = reinterpret_cast<STcpHeader*>(header_buffer->data());
                                 if (header->message_type != eCAL::MessageType::ServiceResponse)
@@ -342,12 +371,23 @@ namespace eCAL
                                 }
                                 else
                                 {
+                                  // The response is a Service response
                                   me->logger_(LogLevel::DebugVerbose, "Successfully received service response of " + std::to_string(payload_buffer->size()) + " bytes");
 
-                                  // The response is a Service response
-                                  response_cb(payload_buffer);
+                                  // Call the user's callback
+                                  // TODO: Currently, this is synchronously. There is potential to execute those in parallel, while already receiving the next data!
+                                  me->service_call_queue_.front().response_cb(payload_buffer);
+
+                                  // Remove the service call item from the queue
+                                  me->service_call_queue_.pop_front();
+
+                                  // If there are more items, continue calling the service
+                                  if (!me->service_call_queue_.empty())
+                                  {
+                                    me->send_next_service_request();
+                                  }
                                 }
-                              });
+                              }));
 
 
   } // namespace service
