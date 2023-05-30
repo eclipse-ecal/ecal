@@ -29,6 +29,7 @@
 #endif
 
 #include "ecal/cimpl/ecal_callback_cimpl.h"
+#include "ecal_service_error.h"
 
 namespace eCAL
 {
@@ -39,77 +40,60 @@ namespace eCAL
     /////////////////////////////////////
     // Custom types for API
     /////////////////////////////////////
-    //public:
-    //  using EventCallbackT = std::function<void (eCAL_Client_Event, const std::string &)>; // TODO remove
+    public:
+      using EventCallbackT    = std::function<void (eCAL_Client_Event, const std::string &)>;  // TODO: Ask Rex what the "eCAL Client Event timeout" is. Should it maybe be fired, when the connection establishement failed? Currently, in that case no event whatsoever is fired, as there is no "Connection failed" event.
+      using ResponseCallbackT = std::function<void (const eCAL::service::Error&, const std::shared_ptr<std::string>&)>;
 
     /////////////////////////////////////
     // Constructor, Destructor, Create
     /////////////////////////////////////
     protected:
-      ClientSessionBase(asio::io_context& io_context_/*, EventCallbackT event_callback*/)  // TODO remove event_callback
+      ClientSessionBase(asio::io_context& io_context_, const EventCallbackT& event_callback)
         : io_context_    (io_context_)
         , socket_        (io_context_)
-        //, event_callback_(event_callback)  // TODO remove
+        , event_callback_(event_callback)
       {}
 
     public:
       virtual ~ClientSessionBase() = default;
 
     /////////////////////////////////////
-    // Log / message related methods
+    // API
     /////////////////////////////////////
     public:
-      virtual std::string get_log_prefix() const = 0;
+      virtual void async_call_service(const std::shared_ptr<std::string>& request, const ResponseCallbackT& response_callback) = 0;
 
-      inline std::string get_connection_info_string() const
+      // TODO: Write tests that test whether this function behaves correctly in error cases
+      inline eCAL::service::Error call_service(const std::shared_ptr<std::string>& request, std::shared_ptr<std::string>& response)
       {
-        std::string local_endpoint_string  = "???";
-        std::string remote_endpoint_string = "???";
-      
-        // Form local endpoint string
+        eCAL::service::Error error(Error::GENERIC_ERROR);
+        
+        // Create a condition variable and a mutex to wait for the response
+        std::mutex              mutex;
+        std::condition_variable condition_variable;
+
+        // Create a response callback, that will set the response and notify the condition variable
+        ResponseCallbackT response_callback
+                  = [&error, &response, &mutex, &condition_variable]
+                    (const eCAL::service::Error& response_error, const std::shared_ptr<std::string>& response_)
+                    {
+                      response = response_;
+                      error    = response_error;
+
+                      {
+                        std::lock_guard<std::mutex> lock(mutex);
+                        condition_variable.notify_all();
+                      }
+                    };
+
+        // Lock mutex, call service asynchronously and wait for the condition variable to be notified
         {
-          asio::error_code ec;
-          const auto endpoint = socket_.local_endpoint(ec);
-          if (!ec)
-            local_endpoint_string = endpoint_to_string(endpoint);
+          std::unique_lock<std::mutex> lock(mutex);
+          async_call_service(request, response_callback); // TODO: If I decide to directly call the callback from the same thread in error cases, this mutex will cause undefined behavior. I can work around that with more code (adding a boolean and a predicate telling me, whether the condition variable has already been notified and calling the service without having the mutex locked)
+          condition_variable.wait(lock);
         }
 
-        // form remote endpoint string
-        {
-          asio::error_code ec;
-          const auto endpoint = socket_.remote_endpoint(ec);
-          if (!ec)
-            remote_endpoint_string = endpoint_to_string(endpoint);
-        }
-
-        return local_endpoint_string + " -> " + remote_endpoint_string;
-      };
-
-      static inline std::string endpoint_to_string(const asio::ip::tcp::endpoint& endpoint)
-      {
-        asio::error_code ec;
-        const std::string address_string = endpoint.address().to_string(ec);
-        if (!ec)
-          return address_string + ":" + std::to_string(endpoint.port());
-        else
-          return "???";
-      }
-
-      inline std::string get_log_string(const std::string& message) const
-      {
-        return get_log_string("", message);
-      }
-
-      inline std::string get_log_string(const std::string& severity_string, const std::string& message) const
-      {
-        std::stringstream ss;
-        ss << "[" << get_log_prefix() << "]";
-        if (!severity_string.empty())
-          ss << " [" << severity_string << "]";
-        ss << " [" << get_connection_info_string() << " ]";
-        ss << " " << message;
-
-        return ss.str();
+        return error;
       }
 
     /////////////////////////////////////
@@ -118,7 +102,7 @@ namespace eCAL
     protected:
       asio::io_context&     io_context_;
       asio::ip::tcp::socket socket_;
-      //EventCallbackT        event_callback_; // TODO remove
+      const EventCallbackT  event_callback_;
     };
 
   } // namespace service

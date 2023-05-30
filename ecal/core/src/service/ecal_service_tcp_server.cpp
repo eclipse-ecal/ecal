@@ -112,7 +112,7 @@ namespace eCAL
                   // Create a shared_ptr to the class. If it doesn't exist
                   // anymore, we will get a nullpointer. In that case, we cannot
                   // execute the callback.
-                  const std::shared_ptr<Server> me(weak_me);
+                  const std::shared_ptr<Server> me = weak_me.lock();
                   if (me)
                   {
                     return me->service_callback_(request, response);
@@ -123,6 +123,18 @@ namespace eCAL
                   }
                 };
 
+      const eCAL::service::ServerSessionBase::EventCallbackT event_callback
+              = [weak_me = std::weak_ptr<Server>(shared_from_this())](const eCAL_Server_Event event, const std::string& message) -> void
+                {
+                  // Create a shared_ptr to the class. If it doesn't exist
+                  // anymore, we will get a nullpointer. In that case, we cannot
+                  // execute the callback.
+                  const std::shared_ptr<Server> me = weak_me.lock();
+                  if (me)
+                  {
+                    return me->on_event(event, message);
+                  }
+                };
       //const eCAL::ServerSession::EventCallbackT event_callback
       //        = [weak_me = std::weak_ptr<Server>(shared_from_this())](eCAL_Server_Event server_event, const std::string& todo_name_this_whatever_it_is) -> void
       //          {
@@ -143,7 +155,7 @@ namespace eCAL
       }
       else
       {
-        new_session = eCAL::service::ServerSessionV1::create(io_context_, service_callback/*, event_callback*/, logger_);
+        new_session = eCAL::service::ServerSessionV1::create(io_context_, service_callback, event_callback, logger_);
       }
 
       // Accept new session.
@@ -176,7 +188,7 @@ namespace eCAL
 
                   // TODO: only re-try accepting, if the ec didn't tell us to stop!!!
                   // Continue creating and accepting the next session
-                  const std::shared_ptr<Server> me(weak_me);
+                  const std::shared_ptr<Server> me = weak_me.lock();
                   if (me)
                   {
                     me->start_accept(version);
@@ -219,11 +231,7 @@ namespace eCAL
         break;
       }
 
-      if (event_callback_)
-      {
-        // Call the the callback
-        event_callback_(event, message);
-      }
+      event_callback_(event, message);
     }
 
   } // namespace service

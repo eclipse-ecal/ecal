@@ -74,6 +74,8 @@ set(ecal_tcp_service_src
     src/service/asio_tcp_server_session_v1.cpp
     src/service/asio_tcp_server_session_v1.h
 
+    src/service/ecal_service_error.h
+    src/service/ecal_service_log_helpers.h
     src/service/ecal_service_logger.h
     src/service/ecal_service_tcp_protocol_v1.cpp
     src/service/ecal_service_tcp_protocol_v1.h

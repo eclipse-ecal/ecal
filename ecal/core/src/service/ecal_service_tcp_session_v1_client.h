@@ -33,13 +33,6 @@ namespace eCAL
       : public ClientSessionBase
       , public std::enable_shared_from_this<ClientSessionV1>
     {
-    /////////////////////////////////////
-    // Types for public API
-    /////////////////////////////////////
-    public:
-      // TODO: This should probably also have an error code
-      using ResponseCallbackT = std::function<void (const std::shared_ptr<std::string>&)>;
-
     //////////////////////////////////////
     // Internal types
     //////////////////////////////////////
@@ -62,10 +55,14 @@ namespace eCAL
     // Constructor, Destructor, Create
     /////////////////////////////////////
     public:
-      static std::shared_ptr<ClientSessionV1> create(asio::io_context& io_context_, const std::string& address, std::uint16_t port, const LoggerT& logger_ = default_logger("Service Client V1"));
+      static std::shared_ptr<ClientSessionV1> create(asio::io_context&      io_context_
+                                                    , const std::string&    address
+                                                    , std::uint16_t         port
+                                                    , const EventCallbackT& event_callback_
+                                                    , const LoggerT&        logger_ = default_logger("Service Client V1"));
 
     protected:
-      ClientSessionV1(asio::io_context& io_context_, const LoggerT& logger);
+      ClientSessionV1(asio::io_context& io_context_, const EventCallbackT& event_callback_, const LoggerT& logger);
 
       // TODO: Add again
     public:
@@ -75,7 +72,7 @@ namespace eCAL
     // Log / message related methods
     /////////////////////////////////////
     public:
-      std::string get_log_prefix() const override { return "ClientSessionV1"; }
+      //std::string get_log_prefix() const override { return "ClientSessionV1"; } // TODO: remove
       // TODO add again
 
     //////////////////////////////////////
@@ -91,7 +88,7 @@ namespace eCAL
       // TODO: Create a "Wait for connection established" function
 
     public:
-      void async_call_service(const std::shared_ptr<std::string>& request, const ResponseCallbackT& response_callback);
+      void async_call_service(const std::shared_ptr<std::string>& request, const ResponseCallbackT& response_callback) override;
 
     private:
       void send_next_service_request();

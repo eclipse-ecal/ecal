@@ -36,10 +36,10 @@ namespace eCAL
     ///////////////////////////////////////////////
 
     public:
-      static std::shared_ptr<ServerSessionV1> create(asio::io_context& io_context_, const ServiceCallbackT& service_callback, const LoggerT& logger_);
+      static std::shared_ptr<ServerSessionV1> create(asio::io_context& io_context_, const ServiceCallbackT& service_callback, const EventCallbackT& event_callback, const LoggerT& logger_);
 
     protected:
-      ServerSessionV1(asio::io_context& io_context_, const ServiceCallbackT& service_callback, const LoggerT& logger_);
+      ServerSessionV1(asio::io_context& io_context_, const ServiceCallbackT& service_callback, const EventCallbackT& event_callback, const LoggerT& logger_);
 
       // Copy
       ServerSessionV1(const ServerSessionV1&)            = delete;
@@ -70,7 +70,8 @@ namespace eCAL
     // Log / message related methods
     /////////////////////////////////////
     protected:
-      std::string get_log_prefix() const override { return "ServerSessionV1"; }
+      // TODO: Remove
+      //std::string get_log_prefix() const override { return "ServerSessionV1"; }
 
     /////////////////////////////////////
     // Member variables

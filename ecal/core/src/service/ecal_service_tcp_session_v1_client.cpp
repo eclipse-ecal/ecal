@@ -31,21 +31,25 @@ namespace eCAL
     /////////////////////////////////////
     // Constructor, Destructor, Create
     /////////////////////////////////////
-    std::shared_ptr<ClientSessionV1> ClientSessionV1::create(asio::io_context& io_context_, const std::string& address, std::uint16_t port, const LoggerT& logger)
+    std::shared_ptr<ClientSessionV1> ClientSessionV1::create(asio::io_context&      io_context_
+                                                            , const std::string&    address
+                                                            , std::uint16_t         port
+                                                            , const EventCallbackT& event_callback
+                                                            , const LoggerT&        logger)
     {
-      std::shared_ptr<ClientSessionV1> instance(new ClientSessionV1(io_context_, logger));
+      std::shared_ptr<ClientSessionV1> instance(new ClientSessionV1(io_context_, event_callback, logger));
 
       instance->resolve_endpoint(address, port);
 
       return instance;
     }
 
-    ClientSessionV1::ClientSessionV1(asio::io_context& io_context_, const LoggerT& logger)
-      : ClientSessionBase(io_context_)
+    ClientSessionV1::ClientSessionV1(asio::io_context& io_context_, const EventCallbackT& event_callback, const LoggerT& logger)
+      : ClientSessionBase(io_context_, event_callback)
       , resolver_                 (io_context_)
       , state_                    (State::NOT_CONNECTED)
       , accepted_protocol_version_(0)
-      , service_call_queue_strand_      (io_context_)
+      , service_call_queue_strand_(io_context_)
       , logger_                   (logger)
     {
   #if (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED)
@@ -58,6 +62,11 @@ namespace eCAL
 
     ClientSessionV1::~ClientSessionV1()
     {
+      {
+        asio::error_code ec;
+        socket_.close(ec);
+      }
+
       logger_(LogLevel::DebugVerbose, "Deleted");
     }
 
@@ -271,6 +280,9 @@ namespace eCAL
                                     const std::string message = "Connected to server. Using protocol version " + std::to_string(me->accepted_protocol_version_);
                                     me->logger_(LogLevel::Debug, message);
 
+                                    // Call event callback
+                                    me->event_callback_(eCAL_Client_Event::client_event_connected, message);
+
                                     // Start sending service requests, if there are any
                                     if (!me->service_call_queue_.empty())
                                     {
@@ -333,7 +345,9 @@ namespace eCAL
                                   me->logger_(LogLevel::Error, message);
 
                                   me->state_ = State::FAILED;
-                                  // TODO: call disconnect callback
+                                  
+                                  // Call event callback
+                                  me->event_callback_(eCAL_Client_Event::client_event_disconnected, message);
                                 })
                               , [me = shared_from_this()]()
                                 {
@@ -353,7 +367,9 @@ namespace eCAL
                                 me->logger_(LogLevel::Error, message);
 
                                 me->state_ = State::FAILED;
-                                // TODO: call disconnect callback
+
+                                // Call event callback
+                                me->event_callback_(eCAL_Client_Event::client_event_disconnected, message);
                               })
                             , service_call_queue_strand_.wrap([me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
                               {
@@ -367,6 +383,10 @@ namespace eCAL
 
                                   // The response is not a Service response.
                                   me->state_ = State::FAILED;
+
+                                  // Call event callback
+                                  me->event_callback_(eCAL_Client_Event::client_event_disconnected, message);
+
                                   return;
                                 }
                                 else
@@ -376,7 +396,7 @@ namespace eCAL
 
                                   // Call the user's callback
                                   // TODO: Currently, this is synchronously. There is potential to execute those in parallel, while already receiving the next data!
-                                  me->service_call_queue_.front().response_cb(payload_buffer);
+                                  me->service_call_queue_.front().response_cb(Error::OK, payload_buffer);
 
                                   // Remove the service call item from the queue
                                   me->service_call_queue_.pop_front();
@@ -390,7 +410,7 @@ namespace eCAL
                               }));
 
 
-  } // namespace service
+    }
 
   }  // namespace service
 } // namespace eCAL
