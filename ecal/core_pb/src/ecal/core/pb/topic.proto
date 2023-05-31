@@ -42,6 +42,13 @@ message QOS                                       // quality of service
   int32                   history_depth  =  3;    // number of samples for history kind "keep last"
 }
 
+message TopicInformation
+{
+  string encoding   = 1;
+  string type       = 2;
+  bytes  desc       = 3;
+}
+
 message Topic                                     // eCAL topic
 {
   int32              rclock                =  1;  // registration clock (heart beat)
@@ -53,8 +60,10 @@ message Topic                                     // eCAL topic
   string             tid                   =  6;  // topic id
   string             tname                 =  7;  // topic name
   string             direction             =  8;  // direction (publisher, subscriber)
-  string             ttype                 =  9;  // topic type (protocol)
-  bytes              tdesc                 = 10;  // topic description (protocol descriptor)
+  string             ttype                 =  9;  // topic type + topic encoding (deprecated)
+  bytes              tdesc                 = 10;  // topic description (protocol descriptor) (deprecated)
+  
+  TopicInformation   tinfo                 = 30;  // topic information (encoding & type & description)
 
   QOS                tqos                  = 11;  // topic quality of service
   repeated TLayer    tlayer                = 12;  // active topic transport layers and it's specific parameter

@@ -24,6 +24,7 @@
 #include "ecal_config_reader_hlp.h"
 #include "ecal_pubgate.h"
 #include "ecal_descgate.h"
+#include "ecal_sample_to_topicinfo.h"
 
 #include <iterator>
 #include <atomic>
@@ -114,8 +115,7 @@ namespace eCAL
     const auto& ecal_sample = ecal_sample_.topic();
     const std::string& topic_name = ecal_sample.tname();
     const std::string& topic_id   = ecal_sample.tid();
-    const std::string& topic_type = ecal_sample.ttype();
-    const std::string& topic_desc = ecal_sample.tdesc();
+    STopicInformation topic_information{ eCALSampleToTopicInformation(ecal_sample_) };
     const std::string  process_id = std::to_string(ecal_sample.pid());
 
     std::string reader_par;
@@ -128,14 +128,14 @@ namespace eCAL
     }
 
     // store description
-    ApplyTopicToDescGate(topic_name, topic_type, topic_desc);
+    ApplyTopicToDescGate(topic_name, topic_information);
 
     // register local subscriber
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     auto res = m_topic_name_datawriter_map.equal_range(topic_name);
     for(TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->ApplyLocSubscription(process_id, topic_id, topic_type, topic_desc, reader_par);
+      iter->second->ApplyLocSubscription(process_id, topic_id, topic_information, reader_par);
     }
   }
 
@@ -165,8 +165,7 @@ namespace eCAL
     const std::string& host_name  = ecal_sample.hname();
     const std::string& topic_name = ecal_sample.tname();
     const std::string& topic_id   = ecal_sample.tid();
-    const std::string& topic_type = ecal_sample.ttype();
-    const std::string& topic_desc = ecal_sample.tdesc();
+    STopicInformation topic_information{ eCALSampleToTopicInformation(ecal_sample_) };
     const std::string  process_id = std::to_string(ecal_sample.pid());
 
     std::string reader_par;
@@ -179,14 +178,14 @@ namespace eCAL
     }
 
     // store description
-    ApplyTopicToDescGate(topic_name, topic_type, topic_desc);
+    ApplyTopicToDescGate(topic_name, topic_information);
 
     // register external subscriber
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
     auto res = m_topic_name_datawriter_map.equal_range(topic_name);
     for(TopicNameDataWriterMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->ApplyExtSubscription(host_name, process_id, topic_id, topic_type, topic_desc, reader_par);
+      iter->second->ApplyExtSubscription(host_name, process_id, topic_id, topic_information, reader_par);
     }
   }
 
@@ -221,19 +220,19 @@ namespace eCAL
     }
   }
 
-  bool CPubGate::ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_)
+  bool CPubGate::ApplyTopicToDescGate(const std::string& topic_name_, const STopicInformation& topic_info_)
   {
     if (g_descgate() != nullptr)
     {
       // Calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_type_.empty())
+      if (!topic_info_.type.empty() || !topic_info_.encoding.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_desc_.empty())
+      if (!topic_info_.descriptor.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
 
-      return g_descgate()->ApplyTopicDescription(topic_name_, topic_type_, topic_desc_, quality);
+      return g_descgate()->ApplyTopicDescription(topic_name_, topic_info_, quality);
     }
     return false;
   }
