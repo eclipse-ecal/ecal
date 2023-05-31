@@ -41,7 +41,7 @@ namespace eCAL
 {
   namespace capnproto
   {
-    const std::string message_prefix{ "capnp:" };
+    const std::string message_prefix{ "capnp" };
 
     inline void appendMessageToString(capnp::MallocMessageBuilder& builder_, std::string& output_)
     {
@@ -88,7 +88,12 @@ namespace eCAL
     {
       auto schema = capnp::Schema::from<T>();
       auto name = schema.getShortDisplayName();
-      return(message_prefix + std::string(name.cStr()));
+      return(std::string(name.cStr()));
+    }
+
+    inline std::string EncodingAsString()
+    {
+      return message_prefix;
     }
 
     // Creates a Schema from a given descriptor, needs to be passed a Schema loader.

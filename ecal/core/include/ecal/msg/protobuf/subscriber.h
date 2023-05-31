@@ -70,7 +70,7 @@ namespace eCAL
 
       // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
       // where the vtable is not created yet or it's destructed.
-      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, CSubscriber::GetTypeName(), CSubscriber::GetDescription())
+      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, CSubscriber::GetTopicInformation())
       {
       }
 
@@ -94,7 +94,6 @@ namespace eCAL
       **/
       CSubscriber& operator=(CSubscriber&&) = default;
 
-
       /**
        * @brief  Creates this object.
        *
@@ -104,31 +103,25 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(CMsgSubscriber<T>::Create(topic_name_, GetTypeName(), GetDescription()));
-      }
-
-      /**
-       * @brief  Get type name of the protobuf message.
-       *
-       * @return  Type name.
-      **/
-      std::string GetTypeName() const override
-      {
-        static T msg;
-        return("proto:" + msg.GetTypeName());
+        return(CMsgSubscriber<T>::Create(topic_name_, GetTopicInformation()));
       }
 
     private:
       /**
-       * @brief  Get file descriptor string of the protobuf message.
-       *
-       * @return  Description string.
+      * @brief  Get topic information of the protobuf message.
+      *
+      * @return  Topic information.
       **/
-      std::string GetDescription() const override
+      STopicInformation GetTopicInformation() const override
       {
-        static T msg;
-        return(protobuf::GetProtoMessageDescription(msg));
+        STopicInformation topic_info;
+        static T msg{};
+        topic_info.encoding = "proto";
+        topic_info.type = msg.GetTypeName();
+        topic_info.descriptor = protobuf::GetProtoMessageDescription(msg);
+        return topic_info;
       }
+
 
       /**
        * @brief  Deserialize the message object from a message buffer.

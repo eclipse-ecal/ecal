@@ -52,7 +52,7 @@ namespace eCAL
        *
        * @param topic_name_  Unique topic name.
       **/
-      CPublisher(const std::string& topic_name_) : CMsgPublisher<T>(topic_name_, GetTypeName(), GetDescription())
+      CPublisher(const std::string& topic_name_) : CMsgPublisher<T>(topic_name_, GetTopicInformation())
       {
       }
 
@@ -88,27 +88,20 @@ namespace eCAL
         return(CMsgPublisher<T>::Create(topic_name_, GetTypeName(), GetDescription()));
       }
 
-      /**
-       * @brief  Get type name of the flatbuffers message.
-       *
-       * @return  Type name.
-      **/
-      std::string GetTypeName() const
-      {
-        return("flatb:");
-      }
-
     private:
       /**
-       * @brief  Get file descriptor string of the flatbuffers message.
-       *
-       * @return  Description string.
+      * @brief   Get topic information of the message.
+      *
+      * @return  Topic information.
       **/
-      std::string GetDescription() const
+      STopicInformation GetTopicInformation() const override
       {
-        return("");
+        STopicInformation topic_info;
+        topic_info.encoding = "flatb";
+        // empty type, empty descriptor
+        return topic_info;
       }
-
+      
       /**
        * @brief  Get size for serialized message object.
        *

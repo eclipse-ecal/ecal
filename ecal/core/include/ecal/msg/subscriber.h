@@ -24,8 +24,8 @@
 
 #pragma once
 
-#include <ecal/ecal_publisher.h>
 #include <ecal/ecal_subscriber.h>
+#include <ecal/ecal_util.h>
 
 #include <cassert>
 #include <cstring>
@@ -47,20 +47,31 @@ namespace eCAL
   {
   public:
     /**
-     * @brief  Constructor. 
+     * @brief  Constructor.
     **/
     CMsgSubscriber() : CSubscriber()
     {
     }
 
     /**
-     * @brief  Constructor. 
+     * @brief  Constructor.
      *
-     * @param topic_name_  Unique topic name. 
-     * @param topic_type_  Type name (optional for type checking). 
+     * @param topic_name_  Unique topic name.
+     * @param topic_type_  Type name (optional for type checking).
      * @param topic_desc_  Type description (optional for description checking).
     **/
-    CMsgSubscriber(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "") : CSubscriber(topic_name_, topic_type_, topic_desc_ )
+    [[deprecated("Please use the constructor CMsgSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6. ")]]
+    CMsgSubscriber(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "") : CSubscriber(topic_name_, topic_type_, topic_desc_)
+    {
+    }
+
+    /**
+    * @brief  Constructor.
+    *
+    * @param topic_name_  Unique topic name.
+    * @param topic_info_  Topic type information (encoding, type, descriptor).
+    **/
+    CMsgSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_) : CSubscriber(topic_name_, topic_info_)
     {
     }
 
@@ -116,23 +127,37 @@ namespace eCAL
     virtual ~CMsgSubscriber() {}
 
     /**
-     * @brief Creates this object. 
+     * @brief Creates this object.
      *
-     * @param topic_name_   Unique topic name. 
-     * @param topic_type_   Type name (optional for type checking). 
+     * @param topic_name_   Unique topic name.
+     * @param topic_type_   Type name (optional for type checking).
      * @param topic_desc_   Type description (optional for description checking).
      *
-     * @return  true if it succeeds, false if it fails. 
+     * @return  true if it succeeds, false if it fails.
     **/
+    [[deprecated("Please use the method CMsgSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6. ")]]
     bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "")
     {
       return(CSubscriber::Create(topic_name_, topic_type_, topic_desc_));
     }
 
     /**
-     * @brief Destroys this object. 
+    * @brief Creates this object.
+    *
+    * @param topic_name_   Unique topic name.
+    * @param topic_info_  Topic type information (encoding, type, descriptor).
+    *
+    * @return  true if it succeeds, false if it fails.
+    **/
+    bool Create(const std::string& topic_name_, const STopicInformation& topic_info_)
+    {
+      return(CSubscriber::Create(topic_name_, topic_info_));
+    }
+
+    /**
+     * @brief Destroys this object.
      *
-     * @return  true if it succeeds, false if it fails. 
+     * @return  true if it succeeds, false if it fails.
     **/
     bool Destroy()
     {
@@ -141,20 +166,20 @@ namespace eCAL
     }
 
     /**
-     * @brief  Receive deserialized message. 
+     * @brief  Receive deserialized message.
      *
-     * @param [out] msg_    The message object. 
-     * @param [out] time_   Optional receive time stamp. 
-     * @param rcv_timeout_  Receive timeout in ms. 
+     * @param [out] msg_    The message object.
+     * @param [out] time_   Optional receive time stamp.
+     * @param rcv_timeout_  Receive timeout in ms.
      *
-     * @return  True if a message could received, false otherwise. 
+     * @return  True if a message could received, false otherwise.
     **/
     bool Receive(T& msg_, long long* time_ = nullptr, int rcv_timeout_ = 0) const
     {
       assert(IsCreated());
       std::string rec_buf;
       bool success = CSubscriber::ReceiveBuffer(rec_buf, time_, rcv_timeout_);
-      if(!success) return(false);
+      if (!success) return(false);
       return(Deserialize(msg_, rec_buf.c_str(), rec_buf.size()));
     }
 
@@ -170,11 +195,11 @@ namespace eCAL
     typedef std::function<void(const char* topic_name_, const T& msg_, long long time_, long long clock_, long long id_)> MsgReceiveCallbackT;
 
     /**
-     * @brief  Add receive callback for incoming messages. 
+     * @brief  Add receive callback for incoming messages.
      *
-     * @param callback_  The callback function. 
+     * @param callback_  The callback function.
      *
-     * @return  True if it succeeds, false if it fails. 
+     * @return  True if it succeeds, false if it fails.
     **/
     bool AddReceiveCallback(MsgReceiveCallbackT callback_)
     {
@@ -187,22 +212,36 @@ namespace eCAL
     }
 
     /**
-     * @brief  Remove receive callback for incoming messages. 
+     * @brief  Remove receive callback for incoming messages.
      *
-     * @return  True if it succeeds, false if it fails. 
+     * @return  True if it succeeds, false if it fails.
     **/
     bool RemReceiveCallback()
     {
-      if(m_cb_callback == nullptr) return(false);
+      if (m_cb_callback == nullptr) return(false);
       m_cb_callback = nullptr;
       return(CSubscriber::RemReceiveCallback());
     }
 
-  private:
-    virtual std::string GetTypeName() const = 0;
-    virtual std::string GetDescription() const = 0;
+protected:
+    [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
+    virtual std::string GetTypeName() const
+    {
+      STopicInformation topic_info{ GetTopicInformation() };
+      return Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.type);
+    };
+
+    [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
+    virtual std::string GetDescription() const
+    {
+      return GetTopicInformation().descriptor;
+    };
+
+    // We cannot make it pure virtual, as it would break a bunch of implementations, who are not (yet) implementing this function
+    virtual STopicInformation GetTopicInformation() const { return STopicInformation{}; }
     virtual bool Deserialize(T& msg_, const void* buffer_, size_t size_) const = 0;
 
+  private:
     void ReceiveCallback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_)
     {
       MsgReceiveCallbackT fn_callback(m_cb_callback);

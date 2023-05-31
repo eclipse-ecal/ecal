@@ -59,7 +59,7 @@ namespace eCAL
       * @param topic_name_  Unique topic name.
       **/
       CDynamicSubscriber(const std::string& topic_name_)
-        : subscriber(topic_name_, GetTypeName(), GetDescription())
+        : subscriber(topic_name_, GetTopicInformation())
         , builder()
         , initialized(false)
       {
@@ -118,7 +118,9 @@ namespace eCAL
       {
         if (!initialized)
         {
-          std::string topic_desc = eCAL::Util::GetDescription(topic_name_);
+          STopicInformation topic_info_;
+          eCAL::Util::GetTopicInformation(topic_name_, topic_info_);
+          std::string topic_desc = topic_info_.descriptor;
           if (!topic_desc.empty())
           {
             // We initialize the builder from the string
@@ -160,20 +162,22 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(subscriber.Create(topic_name_, "", ""));
-      }
-
-      /**
-      * @brief  Get type name of the capnp message.
-      *
-      * @return  Type name.
-      **/
-      std::string GetTypeName() const
-      {
-        return ("");
+        return(subscriber.Create(topic_name_, GetTopicInformation()));
       }
 
     private:
+      /**
+       * @brief   Get topic information of the message.
+       *
+       * @return  Topic information.
+      **/
+      STopicInformation GetTopicInformation() const
+      {
+        STopicInformation topic_info;
+        // this is dynamic information. what should we return now?
+        return topic_info;
+      }
+
 
       CBuilderSubscriber subscriber;
       capnp::MallocMessageBuilder builder;
@@ -186,15 +190,6 @@ namespace eCAL
 
       bool initialized;
 
-      /**
-      * @brief  Get file descriptor string of the capnp message.
-      *
-      * @return  Description string.
-      **/
-      std::string GetDescription() const
-      {
-        return("");
-      }
     };
 
   }

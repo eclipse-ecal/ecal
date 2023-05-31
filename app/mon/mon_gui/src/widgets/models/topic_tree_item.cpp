@@ -76,10 +76,31 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return topic_.direction().c_str();
     }
+    else if (column == Columns::TENCODING)
+    {
+      // When the monitor didn't tell us the topic encoding, we ask eCAL::Util instead
+      // Why this logic only for type, not descriptor? (and thus encoding?)
+      const std::string monitor_topic_encoding = topic_.tinfo().encoding();
+      if (!monitor_topic_encoding.empty())
+      {
+        return monitor_topic_encoding.c_str();
+      }
+      else
+      {
+        const std::string monitor_topic_name = topic_.tname();
+        if (!monitor_topic_name.empty())
+        {
+          eCAL::STopicInformation topic_info;
+          eCAL::Util::GetTopicInformation(monitor_topic_name, topic_info);
+          return topic_info.encoding.c_str();
+        }
+      }
+    }
     else if (column == Columns::TTYPE)
     {
       // When the monitor didn't tell us the topic type, we ask eCAL::Util instead
-      const std::string monitor_topic_type = topic_.ttype();
+      // Why this logic only for type, not descriptor? (and thus encoding?)
+      const std::string monitor_topic_type = topic_.tinfo().type();
       if (!monitor_topic_type.empty())
       {
         return monitor_topic_type.c_str();
@@ -89,14 +110,15 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         const std::string monitor_topic_name = topic_.tname();
         if (!monitor_topic_name.empty())
         {
-          return eCAL::Util::GetTopicTypeName(monitor_topic_name).c_str();
+          eCAL::STopicInformation topic_info;
+          eCAL::Util::GetTopicInformation(monitor_topic_name, topic_info);
+          return topic_info.type.c_str();
         }
       }
-      return "";
     }
     else if (column == Columns::TDESC)
     {
-      return topic_.tdesc().c_str();
+      return topic_.tinfo().desc().c_str();
     }
     else if (column == Columns::TQOS)
     {
@@ -175,6 +197,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       || (column == Columns::UNAME)
       || (column == Columns::TNAME)
       || (column == Columns::DIRECTION)
+      || (column == Columns::TENCODING)
       || (column == Columns::TTYPE))
     {
       const QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
@@ -269,6 +292,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       || (column == Columns::UNAME)
       || (column == Columns::TNAME)
       || (column == Columns::DIRECTION)
+      || (column == Columns::TENCODING)
       || (column == Columns::TTYPE))
     {
       auto raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
@@ -332,6 +356,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       || (column == Columns::UNAME)
       || (column == Columns::TNAME)
       || (column == Columns::DIRECTION)
+      || (column == Columns::TENCODING)
       || (column == Columns::TTYPE))
     {
       const QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016

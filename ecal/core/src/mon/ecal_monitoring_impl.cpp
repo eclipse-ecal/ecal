@@ -321,8 +321,9 @@ namespace eCAL
       default:
         break;
         }
-      std::string topic_type = sample_topic.ttype();
-      std::string topic_desc = sample_topic.tdesc();
+      std::string topic_info_encoding   = sample_topic.tinfo().encoding();
+      std::string topic_info_type       = sample_topic.tinfo().type();
+      std::string topic_info_descriptor = sample_topic.tinfo().desc();
       auto attr              = sample_topic.attr();
 
       // try to get topic info
@@ -341,8 +342,9 @@ namespace eCAL
 
       // update flexible content
       TopicInfo.rclock++;
-      TopicInfo.ttype              = std::move(topic_type);
-      TopicInfo.tdesc              = std::move(topic_desc);
+      TopicInfo.tinfo.encoding     = std::move(topic_info_encoding);
+      TopicInfo.tinfo.type         = std::move(topic_info_type);
+      TopicInfo.tinfo.descriptor   = std::move(topic_info_descriptor);
       TopicInfo.attr               = std::map<std::string, std::string>{attr.begin(), attr.end()};
       TopicInfo.tlayer_ecal_udp_mc = topic_tlayer_ecal_udp_mc;
       TopicInfo.tlayer_ecal_shm    = topic_tlayer_ecal_shm;
@@ -959,9 +961,6 @@ namespace eCAL
       // direction
       pMonTopic->set_direction(direction_);
 
-      // topic type
-      pMonTopic->set_ttype(topic.second.ttype);
-
       // topic transport layers
       if (topic.second.tlayer_ecal_udp_mc)
       {
@@ -988,8 +987,13 @@ namespace eCAL
         tlayer->set_confirmed(true);
       }
 
-      // topic description
-      pMonTopic->set_tdesc(topic.second.tdesc);
+      // topic information
+      {
+        auto *tinfo = pMonTopic->mutable_tinfo();
+        tinfo->set_encoding(topic.second.tinfo.encoding);
+        tinfo->set_type(topic.second.tinfo.type);
+        tinfo->set_desc(topic.second.tinfo.descriptor);
+      }
 
       // topic attributes
       *pMonTopic->mutable_attr() = google::protobuf::Map<std::string, std::string> {topic.second.attr.begin(), topic.second.attr.end()};

@@ -55,7 +55,7 @@ namespace eCAL
        *
        * @param topic_name_  Unique topic name.
       **/
-      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, GetTypeName(), GetDescription())
+      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, GetTopicInformation())
       {
       }
 
@@ -88,28 +88,21 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(CMsgSubscriber<T>::Create(topic_name_, GetTypeName(), GetDescription()));
-      }
-
-      /**
-       * @brief  Get type name of the msgpack message.
-       *
-       * @return  Type name.
-      **/
-      std::string GetTypeName() const
-      {
-        return("mpack:");
+        return(CMsgSubscriber<T>::Create(topic_name_, GetTopicInformation()));
       }
 
     private:
       /**
-       * @brief  Get file descriptor string of the msgpack message.
-       *
-       * @return  Description string.
+      * @brief   Get topic information of the message.
+      *
+      * @return  Topic information.
       **/
-      std::string GetDescription() const
+      STopicInformation GetTopicInformation() const override
       {
-        return("");
+        STopicInformation topic_info;
+        topic_info.encoding = "mpack";
+        // empty descriptor, empty descriptor
+        return topic_info;
       }
 
       /**
@@ -129,7 +122,6 @@ namespace eCAL
         deserialized.convert(msg_);
         return(true);
       }
-
     };
     /** @example address_rec.cpp
     * This is an example how to use eCAL::CSubscriber to receive msgpack data with eCAL. To send the data, see @ref address_snd.cpp .

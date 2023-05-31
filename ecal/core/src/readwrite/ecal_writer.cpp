@@ -99,15 +99,14 @@ namespace eCAL
     Destroy();
   }
 
-  bool CDataWriter::Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_)
+  bool CDataWriter::Create(const std::string& topic_name_, const STopicInformation& topic_info_)
   {
     if (m_created) return(false);
 
     // set defaults
     m_topic_name             = topic_name_;
     m_topic_id.clear();
-    m_topic_type             = topic_type_;
-    m_topic_desc             = topic_desc_;
+    m_topic_info             = topic_info_;
     m_id                     = 0;
     m_clock                  = 0;
     m_clock_old              = 0;
@@ -217,26 +216,13 @@ namespace eCAL
     return(true);
   }
 
-  bool CDataWriter::SetTypeName(const std::string& topic_type_name_)
+ 
+
+  bool CDataWriter::SetTopicInformation(const STopicInformation& topic_info_)
   {
-    const bool force = m_topic_type != topic_type_name_;
-    m_topic_type = topic_type_name_;
-
-#ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::SetTypeName");
-#endif
-
-    // register it
-    Register(force);
-
-    return(true);
-  }
-
-  bool CDataWriter::SetDescription(const std::string& topic_desc_)
-  {
-    const bool force = m_topic_desc != topic_desc_;
-    m_topic_desc = topic_desc_;
+    // Does it even make sense to register if the info is the same???
+    const bool force = m_topic_info != topic_info_;
+    m_topic_info = topic_info_;
 
 #ifndef NDEBUG
     // log it
@@ -667,9 +653,9 @@ namespace eCAL
     else         return 0;
   }
 
-  void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_)
+  void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const STopicInformation& tinfo_, const std::string& reader_par_)
   {
-    Connect(tid_, ttype_, tdesc_);
+    Connect(tid_, tinfo_);
 
     // add key to local subscriber map
     const std::string topic_key = process_id_ + tid_;
@@ -709,9 +695,9 @@ namespace eCAL
 #endif
   }
 
-  void CDataWriter::ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_)
+  void CDataWriter::ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const STopicInformation& tinfo_, const std::string& reader_par_)
   {
-    Connect(tid_, ttype_, tdesc_);
+    Connect(tid_, tinfo_);
 
     // add key to external subscriber map
     const std::string topic_key = host_name_ + process_id_ + tid_;
@@ -815,20 +801,21 @@ namespace eCAL
     std::stringstream out;
 
     out << std::endl;
-    out << indent_ << "--------------------------------"           << std::endl;
-    out << indent_ << " class CDataWriter  "                       << std::endl;
-    out << indent_ << "--------------------------------"           << std::endl;
-    out << indent_ << "m_host_name:          " << m_host_name      << std::endl;
-    out << indent_ << "m_host_id:            " << m_host_id        << std::endl;
-    out << indent_ << "m_topic_name:         " << m_topic_name     << std::endl;
-    out << indent_ << "m_topic_id:           " << m_topic_id       << std::endl;
-    out << indent_ << "m_topic_type:         " << m_topic_type     << std::endl;
-    out << indent_ << "m_topic_desc:         " << m_topic_desc     << std::endl;
-    out << indent_ << "m_id:                 " << m_id             << std::endl;
-    out << indent_ << "m_clock:              " << m_clock          << std::endl;
-    out << indent_ << "m_created:            " << m_created        << std::endl;
-    out << indent_ << "m_loc_subscribed:     " << m_loc_subscribed << std::endl;
-    out << indent_ << "m_ext_subscribed:     " << m_ext_subscribed << std::endl;
+    out << indent_ << "--------------------------------"                     << std::endl;
+    out << indent_ << " class CDataWriter  "                                 << std::endl;
+    out << indent_ << "--------------------------------"                     << std::endl;
+    out << indent_ << "m_host_name:             " << m_host_name             << std::endl;
+    out << indent_ << "m_host_id:               " << m_host_id               << std::endl;
+    out << indent_ << "m_topic_name:            " << m_topic_name            << std::endl;
+    out << indent_ << "m_topic_id:              " << m_topic_id              << std::endl;
+    out << indent_ << "m_topic_info.encoding:   " << m_topic_info.encoding   << std::endl;
+    out << indent_ << "m_topic_info.type:       " << m_topic_info.type       << std::endl;
+    out << indent_ << "m_topic_info.descriptor: " << m_topic_info.descriptor << std::endl;
+    out << indent_ << "m_id:                    " << m_id                    << std::endl;
+    out << indent_ << "m_clock:                 " << m_clock                 << std::endl;
+    out << indent_ << "m_created:               " << m_created               << std::endl;
+    out << indent_ << "m_loc_subscribed:        " << m_loc_subscribed        << std::endl;
+    out << indent_ << "m_ext_subscribed:        " << m_ext_subscribed        << std::endl;
     out << std::endl;
 
     return(out.str());
@@ -838,6 +825,7 @@ namespace eCAL
   {
     if (m_topic_name.empty()) return(false);
 
+    //@Rex: why is the logic different in CDataReader???
     // check share modes
     bool share_ttype(m_use_ttype && (g_pubgate() != nullptr) && g_pubgate()->TypeShared());
     if (m_share_ttype != -1)
@@ -858,8 +846,21 @@ namespace eCAL
     ecal_reg_sample_mutable_topic->set_hid(m_host_id);
     ecal_reg_sample_mutable_topic->set_tname(m_topic_name);
     ecal_reg_sample_mutable_topic->set_tid(m_topic_id);
-    if (share_ttype) ecal_reg_sample_mutable_topic->set_ttype(m_topic_type);
-    if (share_tdesc) ecal_reg_sample_mutable_topic->set_tdesc(m_topic_desc);
+    if (share_ttype) ecal_reg_sample_mutable_topic->set_ttype(Util::CombinedTopicEncodingAndType(m_topic_info.encoding, m_topic_info.type));
+    if (share_tdesc) ecal_reg_sample_mutable_topic->set_tdesc(m_topic_info.descriptor);
+    // topic_information
+    {
+      auto* ecal_reg_sample_mutable_tinfo = ecal_reg_sample_mutable_topic->mutable_tinfo();
+      if (share_ttype)
+      {
+        ecal_reg_sample_mutable_tinfo->set_encoding(m_topic_info.encoding);
+        ecal_reg_sample_mutable_tinfo->set_type(m_topic_info.type);
+      }
+      if (share_tdesc)
+      {
+        ecal_reg_sample_mutable_tinfo->set_desc(m_topic_info.descriptor);
+      }
+    }
     *ecal_reg_sample_mutable_topic->mutable_attr() = google::protobuf::Map<std::string, std::string> { m_attr.begin(), m_attr.end() };
     ecal_reg_sample_mutable_topic->set_tsize(google::protobuf::int32(m_topic_size));
     // udp multicast layer
@@ -993,7 +994,7 @@ namespace eCAL
     return(true);
   }
 
-  void CDataWriter::Connect(const std::string& tid_, const std::string& ttype_, const std::string& tdesc_)
+  void CDataWriter::Connect(const std::string& tid_, const STopicInformation& tinfo_)
   {
     SPubEventCallbackData data;
     data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
@@ -1018,8 +1019,10 @@ namespace eCAL
     {
       data.type  = pub_event_update_connection;
       data.tid   = tid_;
-      data.ttype = ttype_;
-      data.tdesc = tdesc_;
+      // Remove with eCAL6 (next two lines)
+      data.ttype = Util::CombinedTopicEncodingAndType(tinfo_.encoding, tinfo_.type);
+      data.tdesc = tinfo_.descriptor;
+      data.tinfo = tinfo_;
       (iter->second)(m_topic_name.c_str(), &data);
     }
   }

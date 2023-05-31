@@ -56,8 +56,8 @@ namespace eCAL
        * @param msg_         Protobuf message object.
       **/
       CDynamicPublisher(const std::string& topic_name_, std::shared_ptr<google::protobuf::Message> msg_)
-        : CMsgPublisher<google::protobuf::Message>(topic_name_, GetTypeNameFromMessage(msg_.get()), GetDescriptionFromMessage(msg_.get())),
-        m_msg{ msg_ } {}
+        : CMsgPublisher<google::protobuf::Message>(topic_name_, GetTopicInformationFromMessage(msg_.get()))
+        , m_msg{ msg_ } {}
 
       /**
        * @brief Constructor.
@@ -66,9 +66,8 @@ namespace eCAL
        * @param proto_type_name_  Protobuf message type name.
       **/
       CDynamicPublisher(const std::string& topic_name_, const std::string& proto_type_name_)
-        : CMsgPublisher<google::protobuf::Message>(topic_name_, GetTypeNameFromMessage(CreateMessageByName(proto_type_name_).get()),
-          GetDescriptionFromMessage(CreateMessageByName(proto_type_name_).get())),
-        m_msg{ CreateMessageByName(proto_type_name_) } {}
+        : CMsgPublisher<google::protobuf::Message>(topic_name_, GetTopicInformationFromMessage(CreateMessageByName(proto_type_name_).get()))
+        , m_msg{ CreateMessageByName(proto_type_name_) } {}
 
       /**
        * @brief  Send message.
@@ -106,14 +105,9 @@ namespace eCAL
     private:
       size_t Send(const google::protobuf::Message& msg_, long long time_ = -1) = delete;
 
-      std::string GetTypeName() const override
+      STopicInformation GetTopicInformation() const override
       {
-        return GetTypeNameFromMessage(m_msg.get());
-      }
-
-      std::string GetDescription() const override
-      {
-        return GetDescriptionFromMessage(m_msg.get());
+        return GetTopicInformationFromMessage(m_msg.get());
       }
 
       size_t GetSize(const google::protobuf::Message& msg_) const override
@@ -130,15 +124,18 @@ namespace eCAL
         return (msg_.SerializeToArray((void*)buffer_, (int)size_));
       }
 
-
-      static std::string GetTypeNameFromMessage(const google::protobuf::Message* msg_ptr_)
+      static STopicInformation GetTopicInformationFromMessage(const google::protobuf::Message* msg_ptr_)
       {
         assert(msg_ptr_);
 
-        return ("proto:" + msg_ptr_->GetTypeName());
+        STopicInformation topic_info;
+        topic_info.encoding = "proto";
+        topic_info.type = msg_ptr_->GetTypeName();
+        topic_info.descriptor = GetDescriptorFromMessage(msg_ptr_);
+        return topic_info;
       }
 
-      static std::string GetDescriptionFromMessage(const google::protobuf::Message* msg_ptr_)
+      static std::string GetDescriptorFromMessage(const google::protobuf::Message* msg_ptr_)
       {
         assert(msg_ptr_);
 

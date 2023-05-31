@@ -103,7 +103,9 @@ namespace eCAL
 
       // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
       // where the vtable is not created yet or it's destructed.
-      CPublisher(const std::string& topic_name_) : eCAL::CPublisher(topic_name_, CPublisher::GetTypeName(), CPublisher::GetDescription())
+      // Probably we can handle the Message publishers differently. One message publisher class and then one class for payloads and getting type
+      // descriptor information.
+      CPublisher(const std::string& topic_name_) : eCAL::CPublisher(topic_name_, CPublisher::GetTopicInformation())
       {
       }
 
@@ -141,7 +143,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(eCAL::CPublisher::Create(topic_name_, GetTypeName(), GetDescription()));
+        return(eCAL::CPublisher::Create(topic_name_, GetTopicInformation()));
       }
 
       size_t Send(const T& msg_, long long time_ = -1)
@@ -173,10 +175,11 @@ namespace eCAL
        *
        * @return  Type name.
       **/
+      [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
       std::string GetTypeName() const
       {
-        static T msg;
-        return("proto:" + msg.GetTypeName());
+        STopicInformation topic_info{ GetTopicInformation() };
+        return Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.type);
       }
 
     private:
@@ -185,10 +188,25 @@ namespace eCAL
        *
        * @return  Description string.
       **/
+      [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
       std::string GetDescription() const
       {
-        static T msg;
-        return(protobuf::GetProtoMessageDescription(msg));
+        return GetTopicInformation().descriptor;
+      }
+
+      /**
+      * @brief   Get topic information of the protobuf message.
+      *
+      * @return  Topic information.
+      **/
+      STopicInformation GetTopicInformation() const
+      {
+        STopicInformation topic_info;
+        static T msg{};
+        topic_info.encoding = "proto";
+        topic_info.type = msg.GetTypeName();
+        topic_info.descriptor = protobuf::GetProtoMessageDescription(msg);
+        return topic_info;
       }
 
     };
