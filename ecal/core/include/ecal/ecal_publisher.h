@@ -29,6 +29,7 @@
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_qos.h>
 #include <ecal/ecal_tlayer.h>
+#include <ecal/ecal_types.h>
 
 #include <chrono>
 #include <string>
@@ -83,7 +84,18 @@ namespace eCAL
      * @param topic_type_   Type name (optional). 
      * @param topic_desc_   Type description (optional). 
     **/
+    [[deprecated]]
     CPublisher(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+
+    /**
+    * @brief Constructor.
+    *
+    * @param topic_name_   Unique topic name.
+    * @param topic_info_   Topic information (encoding, type, descriptor)
+    **/
+
+    CPublisher(const std::string& topic_name_, const TopicInformation& topic_info_);
+
 
     /**
      * @brief Destructor. 
@@ -119,7 +131,18 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails. 
     **/
+    [[deprecated]]
     bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+
+    /**
+     * @brief Creates this object.
+     *
+     * @param topic_name_   Unique topic name.
+     * @param topic_info_   Topic information (encoding, type, descriptor)
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool Create(const std::string& topic_name_, const TopicInformation& topic_info_);
 
     /**
      * @brief Destroys this object. 
@@ -135,6 +158,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
+    [[deprecated]]
     bool SetTypeName(const std::string& topic_type_name_);
 
     /**
@@ -144,7 +168,17 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails. 
     **/
+    [[deprecated]]
     bool SetDescription(const std::string& topic_desc_);
+
+    /**
+    * @brief Setup topic information.
+    *
+    * @param topic_info_  Topic information attributes.
+    *
+    * @return  True if it succeeds, false if it fails.
+    **/
+    bool SetTopicInformation(const TopicInformation& topic_info_);
 
     /**
      * @brief Sets publisher attribute. 
@@ -451,6 +485,7 @@ namespace eCAL
      *
      * @return  The type name. 
     **/
+    [[deprecated]]
     std::string GetTypeName() const;
 
     /**
@@ -458,7 +493,15 @@ namespace eCAL
      *
      * @return  The description. 
     **/
+    [[deprecated]]
     std::string GetDescription() const;
+
+    /**
+    * @brief Gets description of the connected topic.
+    *
+    * @return  The topic information.
+    **/
+    TopicInformation GetTopicInformation() const;
 
     /**
      * @brief Dump the whole class state into a string. 
@@ -472,7 +515,7 @@ namespace eCAL
   protected:
     void InitializeQOS();
     void InitializeTLayer();
-    bool ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
+    bool ApplyTopicToDescGate(const std::string& topic_name_, const TopicInformation& topic_info_);
 
     // class members
     CDataWriter*                     m_datawriter;

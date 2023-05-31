@@ -106,12 +106,13 @@ struct SReceiveCallbackDataC
 **/
 struct SPubEventCallbackDataC
 {
-  enum eCAL_Publisher_Event  type;  //!< event type
-  long long                  time;  //!< event time stamp
-  long long                  clock; //!< event clock
-  const char*                tid;   //!< topic id of the connected subscriber                     (for pub_event_update_connection only)
-  const char*                ttype; //!< topic type information of the connected subscriber       (for pub_event_update_connection only)
-  const char*                tdesc; //!< topic descriptor information of the connected subscriber (for pub_event_update_connection only)
+  enum eCAL_Publisher_Event  type;      //!< event type
+  long long                  time;      //!< event time stamp
+  long long                  clock;     //!< event clock
+  const char*                tid;       //!< topic id of the connected subscriber                     (for pub_event_update_connection only)
+  const char*                ttype;     //!< topic type information of the connected subscriber       (for pub_event_update_connection only)
+  const char*                tdesc;     //!< topic descriptor information of the connected subscriber (for pub_event_update_connection only)
+  const char*                tencoding; //!< topic encoding information of the connected subscriber   (for pub_event_update_connection only)
 };
 
 /**

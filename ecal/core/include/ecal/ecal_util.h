@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_types.h>
 
 #include <map>
 #include <unordered_map>
@@ -140,18 +141,13 @@ namespace eCAL
     **/
     ECAL_API void PubShareDescription(bool state_);
 
-    struct STopicInfo
-    {
-      std::string type_name;        //!< Type name of the current topic
-      std::string type_description; //!< Descriptor string of the current topic.
-    };
     /**
      * @brief Get complete topic map (including types and descriptions).
      *
      * @param topic_info_map_  Map to store the topic informations.
-     *                         Map containing { TopicName -> (Type, Description) } mapping of all topics that are currently known.
+     *                         Map containing { TopicName -> (Encoding, Type, Description) } mapping of all topics that are currently known.
     **/
-    ECAL_API void GetTopics(std::unordered_map<std::string, STopicInfo>& topic_info_map_);
+    ECAL_API void GetTopics(std::unordered_map<std::string, TopicInformation>& topic_info_map_);
 
     /**
      * @brief Get all topic names.
@@ -168,6 +164,7 @@ namespace eCAL
      *
      * @return  True if succeeded.
     **/
+    [[deprecated]]
     ECAL_API bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
 
     /**
@@ -177,6 +174,7 @@ namespace eCAL
      *
      * @return  Topic type name.
     **/
+    [[deprecated]]
     ECAL_API std::string GetTopicTypeName(const std::string& topic_name_);
 
     /**
@@ -187,6 +185,7 @@ namespace eCAL
      *
      * @return  True if succeeded.
     **/
+    [[deprecated]]
     ECAL_API bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_);
 
     /**
@@ -196,7 +195,19 @@ namespace eCAL
      *
      * @return  Topic description.
     **/
+    [[deprecated]]
     ECAL_API std::string GetTopicDescription(const std::string& topic_name_);
+
+    /**
+     * @brief Gets description of the specified topic.
+     *
+     * @param topic_name_   Topic name.
+     *
+     * @return  Topic description.
+    **/
+    ECAL_API bool GetTopicInformation(const std::string& topic_name_, TopicInformation& topic_info_);
+
+
 
     struct SServiceMethodInfo
     {
@@ -293,5 +304,11 @@ namespace eCAL
     **/
     [[deprecated]]
     ECAL_API std::string GetDescription(const std::string& topic_name_);
+
+
+    ECAL_API std::pair<std::string, std::string> SplitCombinedTopicType(const std::string& topic_name_);
+
+    ECAL_API std::string CombinedTopicEncodingAndType(const std::string& topic_encoding_, const std::string& topic_type_);
+
   }
 }

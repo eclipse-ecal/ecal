@@ -209,11 +209,13 @@ namespace eCAL
     if (topic_name.empty()) return;
 
     const std::string& topic_id   = ecal_sample.tid();
-    const std::string& topic_type = ecal_sample.ttype();
-    const std::string& topic_desc = ecal_sample.tdesc();
+    TopicInformation topic_info;
+    topic_info.encoding = ecal_sample.tinfo().encoding();
+    topic_info.type = ecal_sample.tinfo().type();
+    topic_info.descriptor = ecal_sample.tinfo().desc();
 
     // store description
-    ApplyTopicToDescGate(topic_name, topic_type, topic_desc);
+    ApplyTopicToDescGate(topic_name, topic_info);
 
     // get process id
     const std::string process_id = std::to_string(ecal_sample_.topic().pid());
@@ -258,7 +260,7 @@ namespace eCAL
         iter->second->ApplyLocLayerParameter(process_id, topic_id, tlayer.type(), writer_par);
       }
       // inform for local publisher connection
-      iter->second->ApplyLocPublication(process_id, topic_id, topic_type, topic_desc);
+      iter->second->ApplyLocPublication(process_id, topic_id, topic_info);
     }
   }
 
@@ -289,12 +291,15 @@ namespace eCAL
     const std::string& host_name  = ecal_sample.hname();
     const std::string& topic_name = ecal_sample.tname();
     const std::string& topic_id   = ecal_sample.tid();
-    const std::string& topic_type = ecal_sample.ttype();
-    const std::string& topic_desc = ecal_sample.tdesc();
+    TopicInformation topic_info;
+    topic_info.encoding   = ecal_sample.tinfo().encoding();
+    topic_info.type       = ecal_sample.tinfo().type();
+    topic_info.descriptor = ecal_sample.tinfo().desc();
+
     const std::string  process_id = std::to_string(ecal_sample.pid());
 
     // store description
-    ApplyTopicToDescGate(topic_name, topic_type, topic_desc);
+    ApplyTopicToDescGate(topic_name, topic_info);
 
     // handle external publisher connection
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
@@ -309,7 +314,7 @@ namespace eCAL
         iter->second->ApplyExtLayerParameter(host_name, tlayer.type(), writer_par);
       }
       // inform for external publisher connection
-      iter->second->ApplyExtPublication(host_name, process_id, topic_id, topic_type, topic_desc);
+      iter->second->ApplyExtPublication(host_name, process_id, topic_id, topic_info);
     }
   }
 
@@ -365,20 +370,20 @@ namespace eCAL
     return(0);
   }
 
-  bool CSubGate::ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_)
+  bool CSubGate::ApplyTopicToDescGate(const std::string& topic_name_, const TopicInformation& topic_info_)
   {
     if (g_descgate() != nullptr)
     {
       // Calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_type_.empty())
+      if (!topic_info_.type.empty() || !topic_info_.encoding.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_desc_.empty())
+      if (!topic_info_.descriptor.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PRODUCER;
 
-      return g_descgate()->ApplyTopicDescription(topic_name_, topic_type_, topic_desc_, quality);
+      return g_descgate()->ApplyTopicDescription(topic_name_, topic_info_, quality);
     }
     return false;
   }

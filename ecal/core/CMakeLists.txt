@@ -285,6 +285,7 @@ set(ecal_cmn_header_src
     src/ecal_log_impl.h
     src/ecal_registration_provider.h
     src/ecal_registration_receiver.h
+    src/ecal_sample_to_topicinfo.h
     src/ecal_thread.h
     src/ecal_timegate.h
     src/getenvvar.h
@@ -341,6 +342,7 @@ set(ecal_header_cmn
     include/ecal/ecal_timed_cb.h
     include/ecal/ecal_timer.h
     include/ecal/ecal_tlayer.h
+    include/ecal/ecal_types.h
     include/ecal/ecal_util.h
     include/ecal/ecalc.h
     include/ecal/ecalc_types.h

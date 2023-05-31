@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/cimpl/ecal_callback_cimpl.h>
+#include <ecal/ecal_types.h>
 
 #include <functional>
 #include <string>
@@ -66,8 +67,11 @@ namespace eCAL
     long long            time;    //!< publisher event time in µs
     long long            clock;   //!< publisher event clock
     std::string          tid;     //!< topic id of the of the connected subscriber              (for pub_event_update_connection only)
-    std::string          ttype;   //!< topic type information of the connected subscriber       (for pub_event_update_connection only)
-    std::string          tdesc;   //!< topic descriptor information of the connected subscriber (for pub_event_update_connection only)
+    [[deprecated]]
+    std::string          ttype;  //!< topic type information of the connected publisher         (for sub_event_update_connection only)
+    [[deprecated]]
+    std::string          tdesc;  //!< topic descriptor information of the connected publisher   (for sub_event_update_connection only)
+    TopicInformation     tinfo;   //!< topic information of the connected subscriber            (for pub_event_update_connection only)
   };
 
   /**
@@ -85,8 +89,11 @@ namespace eCAL
     long long             time;   //!< subscriber event time in µs
     long long             clock;  //!< subscriber event clock
     std::string           tid;    //!< topic id of the of the connected publisher              (for sub_event_update_connection only)
+    [[deprecated]]
     std::string           ttype;  //!< topic type information of the connected publisher       (for sub_event_update_connection only)
+    [[deprecated]]
     std::string           tdesc;  //!< topic descriptor information of the connected publisher (for sub_event_update_connection only)
+    TopicInformation      tinfo;  //!< topic information of the connected subscriber           (for pub_event_update_connection only)
   };
 
   /**

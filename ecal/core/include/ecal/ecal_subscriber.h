@@ -27,6 +27,7 @@
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_qos.h>
+#include <ecal/ecal_types.h>
 
 #include <set>
 #include <string>
@@ -93,7 +94,16 @@ namespace eCAL
      * @param topic_type_   Type name (optional for type checking).
      * @param topic_desc_   Type description (optional for description checking).
      **/
+    [[deprecated]]
     CSubscriber(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+
+    /**
+    * @brief Constructor.
+    *
+    * @param topic_name_   Unique topic name.
+    * @param topic_info_   Topic information (encoding, type, descriptor)
+    **/
+    CSubscriber(const std::string& topic_name_, const TopicInformation& topic_info_);
 
     /**
      * @brief Destructor. 
@@ -129,7 +139,18 @@ namespace eCAL
      *
      * @return  true if it succeeds, false if it fails. 
     **/
+    [[deprecated]]
     bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+
+    /**
+     * @brief Creates this object.
+     *
+     * @param topic_name_   Unique topic name.
+     * @param topic_info_   Topic information (encoding, type, descriptor)
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool Create(const std::string& topic_name_, const TopicInformation& topic_info_);
 
     /**
      * @brief Destroys this object. 
@@ -298,7 +319,7 @@ namespace eCAL
 
   protected:
     void InitializeQOS();
-    bool ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
+    bool ApplyTopicToDescGate(const std::string& topic_name_, const TopicInformation& topic_info_);
 
     // class members
     CDataReader*                     m_datareader;

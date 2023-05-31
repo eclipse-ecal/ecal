@@ -26,6 +26,7 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_monitoring_entity.h>
+#include <ecal/ecal_types.h>
 
 #include <map>
 #include <string>
@@ -39,20 +40,20 @@ namespace eCAL
     {
       STopicMon()
       {
-        rclock             = 0;
-        hid                = 0;
-        pid                = 0;
-        tsize              = 0;
+        rclock = 0;
+        hid = 0;
+        pid = 0;
+        tsize = 0;
         tlayer_ecal_udp_mc = false;
-        tlayer_ecal_shm    = false;
-        tlayer_ecal_tcp    = false;
-        tlayer_inproc      = false;
-        connections_loc    = 0;
-        connections_ext    = 0;
-        message_drops      = 0;
-        did                = 0;
-        dclock             = 0;
-        dfreq              = 0;
+        tlayer_ecal_shm = false;
+        tlayer_ecal_tcp = false;
+        tlayer_inproc = false;
+        connections_loc = 0;
+        connections_ext = 0;
+        message_drops = 0;
+        did = 0;
+        dclock = 0;
+        dfreq = 0;
       };
 
       int                                 rclock;               //!< registration clock (heart beat)
@@ -64,8 +65,11 @@ namespace eCAL
       std::string                         tid;                  //!< topic id
       std::string                         tname;                //!< topic name
       std::string                         direction;            //!< direction (publisher, subscriber)
+      [[deprecated]]
       std::string                         ttype;                //!< topic type (protocol)
+      [[deprecated]]
       std::string                         tdesc;                //!< topic description (protocol descriptor)
+      TopicInformation                    tinfo;                //!< topic information (encoding, type, descriptor)
       int                                 tsize;                //!< topic size
 
       bool                                tlayer_ecal_udp_mc;   //!< transport layer udp active

@@ -223,17 +223,12 @@ namespace eCAL
       if (g_pubgate()) g_pubgate()->ShareDescription(state_);
     }
 
-    /**
-     * @brief Get complete topic map (including types and descriptions).
-     *
-     * @param topic_info_map_  Map to store the topic informations.
-     *                         Map containing { TopicName -> (Type, Description) } mapping of all topics that are currently known.
-    **/
-    void GetTopics(std::unordered_map<std::string, STopicInfo>& topic_info_map_)
+    void GetTopics(std::unordered_map<std::string, TopicInformation>& topic_info_map_)
     {
       if (!g_descgate()) return;
       g_descgate()->GetTopics(topic_info_map_);
     }
+
 
     /**
      * @brief Get all topic names.
@@ -254,10 +249,13 @@ namespace eCAL
      *
      * @return  True if succeeded.
     **/
+    // [[deprecated]]
     bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_)
     {
-      if (!g_descgate()) return(false);
-      return(g_descgate()->GetTopicTypeName(topic_name_, topic_type_));
+      TopicInformation topic_info;
+      auto ret = GetTopicInformation(topic_name_, topic_info);
+      topic_type_ = Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.type);
+      return ret;
     }
 
     // [[deprecated]]
@@ -273,6 +271,7 @@ namespace eCAL
      *
      * @return  Topic type name.
     **/
+    // [[deprecated]]
     std::string GetTopicTypeName(const std::string& topic_name_)
     {
       std::string topic_type;
@@ -297,10 +296,13 @@ namespace eCAL
      *
      * @return  True if succeeded.
     **/
+    // [[deprecated]]
     bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_)
     {
-      if (!g_descgate()) return(false);
-      return(g_descgate()->GetTopicDescription(topic_name_, topic_desc_));
+      TopicInformation topic_info;
+      auto ret = GetTopicInformation(topic_name_, topic_info);
+      topic_desc_ = topic_info.descriptor;
+      return ret;
     }
 
     // [[deprecated]]
@@ -316,6 +318,7 @@ namespace eCAL
      *
      * @return  Topic description.
     **/
+    // [[deprecated]]
     std::string GetTopicDescription(const std::string& topic_name_)
     {
       std::string topic_desc;
@@ -326,10 +329,45 @@ namespace eCAL
       return("");
     }
 
+    bool GetTopicInformation(const std::string& topic_name_, TopicInformation& topic_info_)
+    {
+      if (!g_descgate()) return(false);
+      return(g_descgate()->GetTopicInformation(topic_name_, topic_info_));
+    }
+
     // [[deprecated]]
     std::string GetDescription(const std::string& topic_name_)
     {
       return GetTopicDescription(topic_name_);
+    }
+
+    std::pair<std::string, std::string> SplitCombinedTopicType(const std::string& combined_topic_type)
+    {
+      auto pos = combined_topic_type.find(':');
+      if (pos == std::string::npos)
+      {
+        std::string encoding = combined_topic_type.substr(0, pos);
+        std::string type = combined_topic_type.substr(pos + 1);
+        return std::make_pair(encoding, type);
+      }
+      else
+      {
+        std::string encoding{ "" };
+        std::string type{ combined_topic_type };
+        return std::make_pair(encoding, type);
+      }
+    }
+
+    std::string CombinedTopicEncodingAndType(const std::string& topic_encoding_, const std::string& topic_type_)
+    {
+      if (topic_encoding_.empty())
+      {
+        return topic_type_;
+      }
+      else
+      {
+        return topic_encoding_ + ":" + topic_type_;
+      }
     }
 
     /**
