@@ -19,7 +19,6 @@
 
 #include <gtest/gtest.h>
 
-//#include <service/asio_tcp_server.h>
 #include <asio.hpp>
 
 #include <iostream>
@@ -49,7 +48,7 @@ eCAL::service::LoggerT critical_logger(const std::string& node_name)
                         };
 }
 
-#if 1
+#if 0
 TEST(RAII, TcpServiceServer)
 {
   asio::io_context io_context;
@@ -94,32 +93,10 @@ TEST(RAII, TcpServiceServer)
 
   io_context.stop();
   io_thread->join();
-
-  int todo_remove = 1;
-  // Test stopping the io_context while the server is running
-  //
-  //{
-  //  std::weak_ptr<eCAL::CAsioTcpServer> tcp_server_weak;
-
-  //  {
-  //    std::shared_ptr<eCAL::CAsioTcpServer> tcp_server = eCAL::CAsioTcpServer::create(io_context, 1, 0, request_callback, event_callback);
-  //    tcp_server_weak = tcp_server;
-
-  //    io_context.stop();
-  //    io_thread.join();
-
-  //    EXPECT_NE(nullptr, tcp_server);
-  //    EXPECT_NE(nullptr, tcp_server_weak.lock());
-  //  }
-
-  //  EXPECT_EQ(nullptr, tcp_server_weak.lock());
-  //}
-
-
 }
 #endif
 
-#if 1
+#if 0
 TEST(RAII, TcpServiceServerAndClient)
 {
   asio::io_context io_context;
@@ -168,11 +145,15 @@ TEST(RAII, TcpServiceServerAndClient)
                                                   io_context.run();
                                                 });
 
+      EXPECT_EQ(tcp_server->get_connection_count(), 0);
+
       auto client_v1 = eCAL::service::ClientSessionV1::create(io_context, "127.0.0.1", tcp_server->get_port(), client_event_callback);
       tcp_client_weak = client_v1;
 
       client_v1->async_call_service(std::make_shared<std::string>("Hello World"), client_slow_response_callback);
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+      EXPECT_EQ(tcp_server->get_connection_count(), 1);
     }
 
     // The server should be deleted already
@@ -191,7 +172,7 @@ TEST(RAII, TcpServiceServerAndClient)
 }
 #endif
 
-#if 1
+#if 0
 TEST(RAII, StopDuringServiceCall)
 {
   asio::io_context io_context;
@@ -263,22 +244,15 @@ TEST(RAII, StopDuringServiceCall)
 }
 #endif
 
-#if 1
+#if 0
 TEST(Communication, SlowCommunication)
 {
   asio::io_context io_context;
 
-  std::atomic<int> num_server_service_callback_called             (0);
-  std::atomic<int> num_server_event_callback_called               (0);
-  std::atomic<int> num_server_event_callback_called_connected     (0);
-  std::atomic<int> num_server_event_callback_called_disconnected  (0);
-  
-  std::atomic<int> num_client_response_callback_called            (0);
-  std::atomic<int> num_client_service_callback_called             (0);
-  std::atomic<int> num_client_service_callback_called_connected   (0);
-  std::atomic<int> num_client_service_callback_called_disconnected(0);
+  std::atomic<int> num_server_service_callback_called           (0);
+  std::atomic<int> num_client_response_callback_called          (0);
 
-  const eCAL::service::Server::ServiceCallbackT service_callback
+  const eCAL::service::Server::ServiceCallbackT server_service_callback
           = [&num_server_service_callback_called]
             (const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response) -> int
             {
@@ -288,7 +262,113 @@ TEST(Communication, SlowCommunication)
               return 0;
             };
 
-  const eCAL::service::Server::EventCallbackT event_callback
+  const eCAL::service::Server::EventCallbackT server_event_callback
+          = []
+            (eCAL_Server_Event event, const std::string& message) -> void
+            {};
+
+  const eCAL::service::ClientSessionBase::ResponseCallbackT client_response_callback
+          = [&num_client_response_callback_called]
+            (const eCAL::service::Error& error, const std::shared_ptr<std::string>& response) -> void
+            {
+              EXPECT_FALSE(bool(error));
+              num_client_response_callback_called++;
+              std::cout << "Client got Response: " << *response << std::endl;
+            };
+
+  const eCAL::service::ClientSessionBase::EventCallbackT client_event_callback
+          = []
+            (eCAL_Client_Event event, const std::string& message) -> void
+            {};
+
+  auto server = eCAL::service::Server::create(io_context, 1, 0, server_service_callback, server_event_callback);
+
+  EXPECT_NE(server->get_port(), 0);
+
+  {
+    EXPECT_EQ(num_server_service_callback_called           , 0);
+    EXPECT_EQ(num_client_response_callback_called          , 0);
+
+    EXPECT_EQ(server->get_connection_count(), 0);
+  }
+
+  auto client_v1 = eCAL::service::ClientSessionV1::create(io_context, "127.0.0.1", server->get_port(), client_event_callback);
+
+  // Run the io_service. The server will always have work for the io_service, so we don't need a stub object
+  std::thread io_thread([&io_context]()
+                        {
+                          io_context.run();
+                        });
+
+  // Wait a short time for the client to connect
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+  {
+    EXPECT_EQ(num_server_service_callback_called           , 0);
+    EXPECT_EQ(num_client_response_callback_called          , 0);
+
+    EXPECT_EQ(server->get_connection_count(), 1);
+  }
+
+  
+  // Call service and wait a short time
+  client_v1->async_call_service(std::make_shared<std::string>("Hello World"), client_response_callback);
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+  {
+    EXPECT_EQ(num_server_service_callback_called           , 1);
+    EXPECT_EQ(num_client_response_callback_called          , 1);
+
+    EXPECT_EQ(server->get_connection_count(), 1);
+  }
+
+  // Call service again and wait a short time
+  client_v1->async_call_service(std::make_shared<std::string>("Called again"), client_response_callback);
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+  {
+    EXPECT_EQ(num_server_service_callback_called           , 2);
+    EXPECT_EQ(num_client_response_callback_called          , 2);
+
+    EXPECT_EQ(server->get_connection_count(), 1);
+  }
+
+  // delete all objects
+  client_v1 = nullptr;
+  server    = nullptr;
+
+  // join the io_thread
+  io_context.stop();
+  io_thread.join();
+}
+#endif
+
+#if 0
+TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
+{
+  asio::io_context io_context;
+
+  std::atomic<int> num_server_service_callback_called           (0);
+  std::atomic<int> num_server_event_callback_called             (0);
+  std::atomic<int> num_server_event_callback_called_connected   (0);
+  std::atomic<int> num_server_event_callback_called_disconnected(0);
+  
+  std::atomic<int> num_client_response_callback_called          (0);
+  std::atomic<int> num_client_event_callback_called             (0);
+  std::atomic<int> num_client_event_callback_called_connected   (0);
+  std::atomic<int> num_client_event_callback_called_disconnected(0);
+
+  const eCAL::service::Server::ServiceCallbackT server_service_callback
+          = [&num_server_service_callback_called]
+            (const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response) -> int
+            {
+              num_server_service_callback_called++;
+              std::cout << "Server got request: " << *request << std::endl;
+              *response = "Response on \"" + *request + "\"";
+              return 0;
+            };
+
+  const eCAL::service::Server::EventCallbackT server_event_callback
           = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
             (eCAL_Server_Event event, const std::string& message) -> void
             {
@@ -310,31 +390,33 @@ TEST(Communication, SlowCommunication)
             };
 
   const eCAL::service::ClientSessionBase::EventCallbackT client_event_callback
-          = [&num_client_service_callback_called, &num_client_service_callback_called_connected, &num_client_service_callback_called_disconnected]
+          = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
             (eCAL_Client_Event event, const std::string& message) -> void
             {
-              num_client_service_callback_called++; 
+              num_client_event_callback_called++; 
                 
               if (event == eCAL_Client_Event::client_event_connected)
-                  num_client_service_callback_called_connected++;
+                  num_client_event_callback_called_connected++;
               else if (event == eCAL_Client_Event::client_event_disconnected)
-                  num_client_service_callback_called_disconnected++;
+                  num_client_event_callback_called_disconnected++;
             };
 
-  auto server = eCAL::service::Server::create(io_context, 1, 0, service_callback, event_callback);
+  auto server = eCAL::service::Server::create(io_context, 1, 0, server_service_callback, server_event_callback);
 
   EXPECT_NE(server->get_port(), 0);
 
   {
-    EXPECT_EQ(num_server_service_callback_called             , 0);
-    EXPECT_EQ(num_server_event_callback_called               , 0);
-    EXPECT_EQ(num_server_event_callback_called_connected     , 0);
-    EXPECT_EQ(num_server_event_callback_called_disconnected  , 0);
+    EXPECT_EQ(num_server_service_callback_called           , 0);
+    EXPECT_EQ(num_server_event_callback_called             , 0);
+    EXPECT_EQ(num_server_event_callback_called_connected   , 0);
+    EXPECT_EQ(num_server_event_callback_called_disconnected, 0);
 
-    EXPECT_EQ(num_client_response_callback_called            , 0);
-    EXPECT_EQ(num_client_service_callback_called             , 0);
-    EXPECT_EQ(num_client_service_callback_called_connected   , 0);
-    EXPECT_EQ(num_client_service_callback_called_disconnected, 0);
+    EXPECT_EQ(num_client_response_callback_called          , 0);
+    EXPECT_EQ(num_client_event_callback_called             , 0);
+    EXPECT_EQ(num_client_event_callback_called_connected   , 0);
+    EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
+
+    EXPECT_EQ(server->get_connection_count(), 0);
   }
 
   auto client_v1 = eCAL::service::ClientSessionV1::create(io_context, "127.0.0.1", server->get_port(), client_event_callback);
@@ -349,15 +431,17 @@ TEST(Communication, SlowCommunication)
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   {
-    EXPECT_EQ(num_server_service_callback_called             , 0);
-    EXPECT_EQ(num_server_event_callback_called               , 1);
-    EXPECT_EQ(num_server_event_callback_called_connected     , 1);
-    EXPECT_EQ(num_server_event_callback_called_disconnected  , 0);
+    EXPECT_EQ(num_server_service_callback_called           , 0);
+    EXPECT_EQ(num_server_event_callback_called             , 1);
+    EXPECT_EQ(num_server_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_server_event_callback_called_disconnected, 0);
 
-    EXPECT_EQ(num_client_response_callback_called            , 0);
-    EXPECT_EQ(num_client_service_callback_called             , 1);
-    EXPECT_EQ(num_client_service_callback_called_connected   , 1);
-    EXPECT_EQ(num_client_service_callback_called_disconnected, 0);
+    EXPECT_EQ(num_client_response_callback_called          , 0);
+    EXPECT_EQ(num_client_event_callback_called             , 1);
+    EXPECT_EQ(num_client_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
+
+    EXPECT_EQ(server->get_connection_count(), 1);
   }
 
   
@@ -366,15 +450,17 @@ TEST(Communication, SlowCommunication)
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   {
-    EXPECT_EQ(num_server_service_callback_called             , 1);
-    EXPECT_EQ(num_server_event_callback_called               , 1);
-    EXPECT_EQ(num_server_event_callback_called_connected     , 1);
-    EXPECT_EQ(num_server_event_callback_called_disconnected  , 0);
+    EXPECT_EQ(num_server_service_callback_called           , 1);
+    EXPECT_EQ(num_server_event_callback_called             , 1);
+    EXPECT_EQ(num_server_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_server_event_callback_called_disconnected, 0);
 
-    EXPECT_EQ(num_client_response_callback_called            , 1);
-    EXPECT_EQ(num_client_service_callback_called             , 1);
-    EXPECT_EQ(num_client_service_callback_called_connected   , 1);
-    EXPECT_EQ(num_client_service_callback_called_disconnected, 0);
+    EXPECT_EQ(num_client_response_callback_called          , 1);
+    EXPECT_EQ(num_client_event_callback_called             , 1);
+    EXPECT_EQ(num_client_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
+
+    EXPECT_EQ(server->get_connection_count(), 1);
   }
 
   // Call service again and wait a short time
@@ -382,45 +468,54 @@ TEST(Communication, SlowCommunication)
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   {
-    EXPECT_EQ(num_server_service_callback_called             , 2);
-    EXPECT_EQ(num_server_event_callback_called               , 1);
-    EXPECT_EQ(num_server_event_callback_called_connected     , 1);
-    EXPECT_EQ(num_server_event_callback_called_disconnected  , 0);
+    EXPECT_EQ(num_server_service_callback_called           , 2);
+    EXPECT_EQ(num_server_event_callback_called             , 1);
+    EXPECT_EQ(num_server_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_server_event_callback_called_disconnected, 0);
 
-    EXPECT_EQ(num_client_response_callback_called            , 2);
-    EXPECT_EQ(num_client_service_callback_called             , 1);
-    EXPECT_EQ(num_client_service_callback_called_connected   , 1);
-    EXPECT_EQ(num_client_service_callback_called_disconnected, 0);
+    EXPECT_EQ(num_client_response_callback_called          , 2);
+    EXPECT_EQ(num_client_event_callback_called             , 1);
+    EXPECT_EQ(num_client_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
+
+    EXPECT_EQ(server->get_connection_count(), 1);
   }
 
   // delete all objects
   client_v1 = nullptr;
 
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
-  {
-    EXPECT_EQ(num_server_service_callback_called             , 2);
-    EXPECT_EQ(num_server_event_callback_called               , 2);
-    EXPECT_EQ(num_server_event_callback_called_connected     , 1);
-    EXPECT_EQ(num_server_event_callback_called_disconnected  , 1);
 
-    EXPECT_EQ(num_client_response_callback_called            , 2);
-    EXPECT_EQ(num_client_service_callback_called             , 2);
-    EXPECT_EQ(num_client_service_callback_called_connected   , 1);
-    EXPECT_EQ(num_client_service_callback_called_disconnected, 1);
+  // TODO: Decide on who is responsible for the disconnect event, when the client is deleted
+  //  Option1: The thread that calls the destructor. Issue: Sometimes the callback gets executed by the io_thread, sometimes by some other thread that may e.g. already have locked a mutex
+  //  Option2: The destructor hands the io_context another work package before the object is deleted. Issue: It doesn't feel right to make the destructor actually create more work for the io_context.
+  //  Option3: Nobody calls the callback. Issue: The user may expect the callback to be called.
+  {
+    EXPECT_EQ(num_server_service_callback_called           , 2);
+    EXPECT_EQ(num_server_event_callback_called             , 2);
+    EXPECT_EQ(num_server_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_server_event_callback_called_disconnected, 1);
+
+    EXPECT_EQ(num_client_response_callback_called          , 2);
+    EXPECT_EQ(num_client_event_callback_called             , 2);
+    EXPECT_EQ(num_client_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_client_event_callback_called_disconnected, 1);
+
+    EXPECT_EQ(server->get_connection_count(), 0);
   }
 
   server = nullptr;
 
   {
-    EXPECT_EQ(num_server_service_callback_called             , 1);
-    EXPECT_EQ(num_server_event_callback_called               , 2);
-    EXPECT_EQ(num_server_event_callback_called_connected     , 1);
-    EXPECT_EQ(num_server_event_callback_called_disconnected  , 1);
+    EXPECT_EQ(num_server_service_callback_called           , 2);
+    EXPECT_EQ(num_server_event_callback_called             , 2);
+    EXPECT_EQ(num_server_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_server_event_callback_called_disconnected, 1);
 
-    EXPECT_EQ(num_client_response_callback_called            , 2);
-    EXPECT_EQ(num_client_service_callback_called             , 2);
-    EXPECT_EQ(num_client_service_callback_called_connected   , 1);
-    EXPECT_EQ(num_client_service_callback_called_disconnected, 1);
+    EXPECT_EQ(num_client_response_callback_called          , 2);
+    EXPECT_EQ(num_client_event_callback_called             , 2);
+    EXPECT_EQ(num_client_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_client_event_callback_called_disconnected, 1);
   }
 
   // join the io_thread
@@ -429,8 +524,150 @@ TEST(Communication, SlowCommunication)
 }
 #endif
 
+#if 1
+TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
+{
+  asio::io_context io_context;
+
+  std::atomic<int> num_server_service_callback_called           (0);
+  std::atomic<int> num_server_event_callback_called             (0);
+  std::atomic<int> num_server_event_callback_called_connected   (0);
+  std::atomic<int> num_server_event_callback_called_disconnected(0);
+  
+  std::atomic<int> num_client_response_callback_called          (0);
+  std::atomic<int> num_client_event_callback_called             (0);
+  std::atomic<int> num_client_event_callback_called_connected   (0);
+  std::atomic<int> num_client_event_callback_called_disconnected(0);
+
+  const eCAL::service::Server::ServiceCallbackT server_service_callback
+          = [&num_server_service_callback_called]
+            (const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response) -> int
+            {
+              num_server_service_callback_called++;
+              return 0;
+            };
+
+  const eCAL::service::Server::EventCallbackT server_event_callback
+          = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
+            (eCAL_Server_Event event, const std::string& message) -> void
+            {
+              num_server_event_callback_called++; 
+              if (event == eCAL_Server_Event::server_event_connected)
+                num_server_event_callback_called_connected++;
+              else if (event == eCAL_Server_Event::server_event_disconnected)
+                num_server_event_callback_called_disconnected++;
+            };
+
+  const eCAL::service::ClientSessionBase::ResponseCallbackT client_response_callback
+          = [&num_client_response_callback_called]
+            (const eCAL::service::Error& error, const std::shared_ptr<std::string>& response) -> void
+            {
+              EXPECT_FALSE(bool(error));
+              num_client_response_callback_called++;
+            };
+
+  const eCAL::service::ClientSessionBase::EventCallbackT client_event_callback
+          = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
+            (eCAL_Client_Event event, const std::string& message) -> void
+            {
+              num_client_event_callback_called++; 
+              if (event == eCAL_Client_Event::client_event_connected)
+                  num_client_event_callback_called_connected++;
+              else if (event == eCAL_Client_Event::client_event_disconnected)
+                  num_client_event_callback_called_disconnected++;
+            };
+
+  auto server    = eCAL::service::Server::create(io_context, 1, 0, server_service_callback, server_event_callback);
+  auto client_v1 = eCAL::service::ClientSessionV1::create(io_context, "127.0.0.1", server->get_port(), client_event_callback);
+
+  // Run the io_service. The server will always have work for the io_service, so we don't need a stub object
+  std::thread io_thread([&io_context]()
+                        {
+                          io_context.run();
+                        });
+
+  // Wait a short time for the client to connect
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+  {
+    EXPECT_EQ(num_server_service_callback_called           , 0);
+    EXPECT_EQ(num_server_event_callback_called             , 1);
+    EXPECT_EQ(num_server_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_server_event_callback_called_disconnected, 0);
+
+    EXPECT_EQ(num_client_response_callback_called          , 0);
+    EXPECT_EQ(num_client_event_callback_called             , 1);
+    EXPECT_EQ(num_client_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
+
+    EXPECT_EQ(server->get_connection_count(), 1);
+  }
+
+  
+  // Call service and wait a short time
+  client_v1->async_call_service(std::make_shared<std::string>("Hello World"), client_response_callback);
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+  {
+    EXPECT_EQ(num_server_service_callback_called           , 1);
+    EXPECT_EQ(num_server_event_callback_called             , 1);
+    EXPECT_EQ(num_server_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_server_event_callback_called_disconnected, 0);
+
+    EXPECT_EQ(num_client_response_callback_called          , 1);
+    EXPECT_EQ(num_client_event_callback_called             , 1);
+    EXPECT_EQ(num_client_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
+  }
+
+  // Server goes away
+  server = nullptr;
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+  // TODO: Decide on who is responsible for the disconnect event, when the client is deleted
+  //  Option1: The thread that calls the destructor. Issue: Sometimes the callback gets executed by the io_thread, sometimes by some other thread that may e.g. already have locked a mutex
+  //  Option2: The destructor hands the io_context another work package before the object is deleted. Issue: It doesn't feel right to make the destructor actually create more work for the io_context.
+  //  Option3: Nobody calls the callback. Issue: The user may expect the callback to be called.
+  {
+    EXPECT_EQ(num_server_service_callback_called           , 1);
+    EXPECT_EQ(num_server_event_callback_called             , 2);
+    EXPECT_EQ(num_server_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_server_event_callback_called_disconnected, 1);
+
+    EXPECT_EQ(num_client_response_callback_called          , 1);
+    EXPECT_EQ(num_client_event_callback_called             , 2);
+    EXPECT_EQ(num_client_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_client_event_callback_called_disconnected, 1);
+  }
+
+  //TODO: My current issue is that even though the server is dead, the server sessions are still alive and well. So also the clients don't know that the server is dead. I need to cerate a list of weak_ptr of server sessions in the server, that can be used for actually stopping and destroying the server sessions, once the server goes away.
+
+  // TODO: Call the client on the dead service. It should call the callback with an error.
+
+  client_v1 = nullptr;
+
+  {
+    EXPECT_EQ(num_server_service_callback_called           , 1);
+    EXPECT_EQ(num_server_event_callback_called             , 2);
+    EXPECT_EQ(num_server_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_server_event_callback_called_disconnected, 1);
+
+    EXPECT_EQ(num_client_response_callback_called          , 1);
+    EXPECT_EQ(num_client_event_callback_called             , 2);
+    EXPECT_EQ(num_client_event_callback_called_connected   , 1);
+    EXPECT_EQ(num_client_event_callback_called_disconnected, 1);
+  }
+
+  // join the io_thread
+  io_context.stop();
+  io_thread.join();
+}
+#endif
+
+// TODO: Test get_connection_count() here
 #if 0
-TEST(Communication, StressfulCommunication)
+TEST(CommunicationAndCallbacks, StressfulCommunication)
 {
   constexpr int num_io_threads       = 10;
   constexpr int num_clients          = 10;
@@ -439,9 +676,15 @@ TEST(Communication, StressfulCommunication)
   asio::io_context io_context;
 
   // TODO: test event callback
-  std::atomic<int> num_server_service_callback_called(0);
-  std::atomic<int> num_client_response_callback_called_noerror(0);
-  std::atomic<int> num_client_response_callback_called_witherror(0);
+  std::atomic<int> num_server_service_callback_called           (0);
+  std::atomic<int> num_server_event_callback_called             (0);
+  std::atomic<int> num_server_event_callback_called_connected   (0);
+  std::atomic<int> num_server_event_callback_called_disconnected(0);
+
+  std::atomic<int> num_client_response_callback_called          (0);
+  std::atomic<int> num_client_event_callback_called             (0);
+  std::atomic<int> num_client_event_callback_called_connected   (0);
+  std::atomic<int> num_client_event_callback_called_disconnected(0);
 
   const eCAL::service::Server::ServiceCallbackT service_callback
           = [&num_server_service_callback_called](const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response) -> int
@@ -451,18 +694,31 @@ TEST(Communication, StressfulCommunication)
               return 0;
             };
 
-  const eCAL::service::Server::EventCallbackT event_callback
-          = [](eCAL_Server_Event event, const std::string& message) -> void
+  const eCAL::service::Server::EventCallbackT server_event_callback
+          = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
+            (eCAL_Server_Event event, const std::string& message) -> void
             {
-              // TODO: include this in the test
+              num_server_event_callback_called++; 
+              
+              if (event == eCAL_Server_Event::server_event_connected)
+                num_server_event_callback_called_connected++;
+              else if (event == eCAL_Server_Event::server_event_disconnected)
+                num_server_event_callback_called_disconnected++;
             };
 
-  auto server = eCAL::service::Server::create(io_context, 1, 0, service_callback, event_callback, critical_logger("Server"));
+  auto server = eCAL::service::Server::create(io_context, 1, 0, service_callback, server_event_callback, critical_logger("Server"));
 
-  EXPECT_EQ(num_server_service_callback_called, 0);
-  EXPECT_EQ(num_client_response_callback_called_noerror, 0);
-  EXPECT_EQ(num_client_response_callback_called_witherror, 0);
+  {
+    EXPECT_EQ(num_server_service_callback_called           , 0);
+    EXPECT_EQ(num_server_event_callback_called             , 0);
+    EXPECT_EQ(num_server_event_callback_called_connected   , 0);
+    EXPECT_EQ(num_server_event_callback_called_disconnected, 0);
 
+    EXPECT_EQ(num_client_response_callback_called          , 0);
+    EXPECT_EQ(num_client_event_callback_called             , 0);
+    EXPECT_EQ(num_client_event_callback_called_connected   , 0);
+    EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
+  }
 
   // Run the io service a bunch of times, so we hopefully trigger any race condition that may exist
   std::vector<std::unique_ptr<std::thread>> io_threads;
@@ -477,7 +733,18 @@ TEST(Communication, StressfulCommunication)
   client_list.reserve(num_clients);
   for (int c = 0; c < num_clients; c++)
   {
-    client_list.push_back(eCAL::service::ClientSessionV1::create(io_context, "127.0.0.1", server->get_port(), critical_logger("Client " + std::to_string(c))));
+    const eCAL::service::ClientSessionBase::EventCallbackT client_event_callback
+          = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
+            (eCAL_Client_Event event, const std::string& message) -> void
+            {
+              num_client_event_callback_called++; 
+                
+              if (event == eCAL_Client_Event::client_event_connected)
+                num_client_event_callback_called_connected++;
+              else if (event == eCAL_Client_Event::client_event_disconnected)
+                num_client_event_callback_called_disconnected++;
+            };
+    client_list.push_back(eCAL::service::ClientSessionV1::create(io_context, "127.0.0.1", server->get_port(), client_event_callback, critical_logger("Client " + std::to_string(c))));
   }
 
   // Directly run a bunch of clients and call each client a bunch of times
@@ -488,18 +755,11 @@ TEST(Communication, StressfulCommunication)
       const std::shared_ptr<std::string> request_string = std::make_shared<std::string>("Client " + std::to_string(c) + ", Call " + std::to_string(i));
 
       const eCAL::service::ClientSessionBase::ResponseCallbackT response_callback
-            = [&num_client_response_callback_called_noerror, &num_client_response_callback_called_witherror, request_string]
+            = [&num_client_response_callback_called, request_string]
               (const eCAL::service::Error& error, const std::shared_ptr<std::string>& response) -> void
               {
-                if (error)
-                {
-                  std::cerr << "Client received error: " << error.ToString();
-                  num_client_response_callback_called_witherror++;
-                }
-                else
-                {
-                  num_client_response_callback_called_noerror++;
-                }
+                ASSERT_FALSE(error);
+                num_client_response_callback_called++;
                 const std::string expected_response = "Response on \"" + *request_string + "\"";
                 ASSERT_EQ(*response, expected_response);
               };
@@ -511,12 +771,35 @@ TEST(Communication, StressfulCommunication)
   // Now wait a short time for the clients to connect to the server and all requests getting executed
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-  EXPECT_EQ(num_server_service_callback_called,  num_clients * num_calls_per_client);
-  EXPECT_EQ(num_client_response_callback_called_noerror, num_clients * num_calls_per_client);
-  EXPECT_EQ(num_client_response_callback_called_witherror, 0);
+  {
+    EXPECT_EQ(num_server_service_callback_called           , num_clients * num_calls_per_client);
+    EXPECT_EQ(num_server_event_callback_called             , num_clients);
+    EXPECT_EQ(num_server_event_callback_called_connected   , num_clients);
+    EXPECT_EQ(num_server_event_callback_called_disconnected, 0);
+
+    EXPECT_EQ(num_client_response_callback_called          , num_clients * num_calls_per_client);
+    EXPECT_EQ(num_client_event_callback_called             , num_clients);
+    EXPECT_EQ(num_client_event_callback_called_connected   , num_clients);
+    EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
+  }
 
   // delete all objects
   server = nullptr;
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+  {
+    EXPECT_EQ(num_server_service_callback_called           , num_clients * num_calls_per_client);
+    //EXPECT_EQ(num_server_event_callback_called             , num_clients * 2); // TODO: decide on the number. Shall the callbacks get executed, even though the server is gone?
+    EXPECT_EQ(num_server_event_callback_called_connected   , num_clients);
+    //EXPECT_EQ(num_server_event_callback_called_disconnected, num_clients); // TODO: decide on the number. Shall the callbacks get executed, even though the server is gone?
+
+    EXPECT_EQ(num_client_response_callback_called          , num_clients * num_calls_per_client);
+    EXPECT_EQ(num_client_event_callback_called             , num_clients * 2);
+    EXPECT_EQ(num_client_event_callback_called_connected   , num_clients);
+    EXPECT_EQ(num_client_event_callback_called_disconnected, num_clients);
+  }
+
   client_list.clear();
 
   // join all io_threads
@@ -539,26 +822,29 @@ TEST(Callback, ServiceCallFromCallback)
   std::atomic<int> num_client_response_callback1_called(0);
   std::atomic<int> num_client_response_callback2_called(0);
 
-  const eCAL::service::Server::ServiceCallbackT service_callback
+  const eCAL::service::Server::ServiceCallbackT server_service_callback
           = [&num_server_service_callback_called](const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response) -> int
             {
               num_server_service_callback_called++;
               return 0;
             };
 
-  const eCAL::service::Server::EventCallbackT event_callback
+  const eCAL::service::Server::EventCallbackT server_event_callback
           = [](eCAL_Server_Event event, const std::string& message) -> void
-            {
-              std::cout << "Event " << event << ": " << message << std::endl;
-            };
+            {};
 
-  auto server = eCAL::service::Server::create(io_context, 1, 0, service_callback, event_callback);
+  const eCAL::service::ClientSessionBase::EventCallbackT client_event_callback
+          = []
+            (eCAL_Client_Event event, const std::string& message) -> void
+            {};
+
+  auto server = eCAL::service::Server::create(io_context, 1, 0, server_service_callback, server_event_callback);
 
   EXPECT_EQ(num_server_service_callback_called, 0);
   EXPECT_EQ(num_client_response_callback1_called, 0);
   EXPECT_EQ(num_client_response_callback2_called, 0);
 
-  auto client_v1 = eCAL::service::ClientSessionV1::create(io_context, "127.0.0.1", server->get_port());
+  auto client_v1 = eCAL::service::ClientSessionV1::create(io_context, "127.0.0.1", server->get_port(), client_event_callback);
 
   const eCAL::service::ClientSessionV1::ResponseCallbackT response_callback
           = [&num_client_response_callback1_called, &num_client_response_callback2_called, client_v1]

@@ -32,14 +32,22 @@ namespace eCAL
   namespace service
   {
 
-    std::shared_ptr<ServerSessionV1> ServerSessionV1::create(asio::io_context& io_context_, const ServiceCallbackT& service_callback, const EventCallbackT& event_callback, const LoggerT& logger)
+    std::shared_ptr<ServerSessionV1> ServerSessionV1::create(asio::io_context&        io_context_
+                                                            , const ServiceCallbackT& service_callback
+                                                            , const EventCallbackT&   event_callback
+                                                            , const DeleteCallbackT&  delete_callback
+                                                            , const LoggerT&          logger)
     {
-      std::shared_ptr<ServerSessionV1> instance = std::shared_ptr<ServerSessionV1>(new ServerSessionV1(io_context_, service_callback, event_callback, logger));
+      std::shared_ptr<ServerSessionV1> instance = std::shared_ptr<ServerSessionV1>(new ServerSessionV1(io_context_, service_callback, event_callback, delete_callback, logger));
       return instance;
     }
 
-    ServerSessionV1::ServerSessionV1(asio::io_context& io_context_, const ServiceCallbackT& service_callback, const EventCallbackT& event_callback, const LoggerT& logger)
-      : ServerSessionBase(io_context_, service_callback, event_callback)
+    ServerSessionV1::ServerSessionV1(asio::io_context&        io_context_
+                                    , const ServiceCallbackT& service_callback
+                                    , const EventCallbackT&   event_callback
+                                    , const DeleteCallbackT&  delete_callback
+                                    , const LoggerT&          logger)
+      : ServerSessionBase(io_context_, service_callback, event_callback, delete_callback)
       , state_                    (State::NOT_CONNECTED)
       , accepted_protocol_version_(0)
       , logger_                   (logger)
@@ -63,6 +71,23 @@ namespace eCAL
       receive_handshake_request();
     }
 
+    void ServerSessionV1::stop()
+    {
+      logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(socket_) + "] " + "Stopping...");
+      
+      {
+        // Shutdown the socket
+        asio::error_code ec;
+        socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
+      }
+
+      {
+        // Close the socket
+        asio::error_code ec;
+        socket_.close(ec);
+      }
+    }
+
     void ServerSessionV1::receive_handshake_request()
     {
       logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(socket_) + "] " + "Waiting for protocol handshake request...");
@@ -75,6 +100,7 @@ namespace eCAL
                               {
                                 me->state_ = State::FAILED;
                                 me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + "Failed receiving protocol handshake request: " + ec.message());
+                                me->delete_callback_(me);
                               }
                             , [me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
                               {
@@ -88,6 +114,7 @@ namespace eCAL
                                   me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
 
                                   me->state_ = State::FAILED;
+                                  me->delete_callback_(me);
                                   return;
                                 }
                                 else
@@ -128,6 +155,7 @@ namespace eCAL
                                     //const auto message = get_log_string("ERROR", "Error connecting to server. Server reported an un-supported protocol version: " + std::to_string(handshake_response->accepted_protocol_version));
                                     //std::cerr << message << std::endl;
                                     me->state_ = State::FAILED;
+                                    me->delete_callback_(me);
                                     return;
                                   }
 
@@ -163,6 +191,7 @@ namespace eCAL
                               {
                                 me->state_ = State::FAILED;
                                 me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + "Failed sending protocol handshake response: " + ec.message());
+                                me->delete_callback_(me);
                               }
                             , [me = shared_from_this()]()
                               {
@@ -193,6 +222,7 @@ namespace eCAL
                                 
                                 // call event callback
                                 me->event_callback_(eCAL_Server_Event::server_event_disconnected, message);
+                                me->delete_callback_(me);
                               }
                             , [me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
                               {
@@ -210,7 +240,8 @@ namespace eCAL
 
                                   // call event callback
                                   me->event_callback_(eCAL_Server_Event::server_event_disconnected, message);
-
+                                  
+                                  me->delete_callback_(me);
                                   return;
                                 }
                                 else
@@ -251,6 +282,7 @@ namespace eCAL
                                 
                                 // call event callback
                                 me->event_callback_(eCAL_Server_Event::server_event_disconnected, message);
+                                me->delete_callback_(me);
                               }
                             , [me = shared_from_this()]()
                               {

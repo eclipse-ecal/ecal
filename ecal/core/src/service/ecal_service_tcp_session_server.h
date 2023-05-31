@@ -52,6 +52,7 @@ namespace eCAL
     public:
       using ServiceCallbackT = std::function<int (const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response)>; // TODO: make the request a const std::shared_ptr<const std::string>&
       using EventCallbackT   = std::function<void (eCAL_Server_Event, const std::string &)>;
+      using DeleteCallbackT  = std::function<void (const std::shared_ptr<ServerSessionBase>&)>;
 
     /////////////////////////////////////
     // Constructor, Destructor, Create
@@ -60,12 +61,12 @@ namespace eCAL
       virtual ~ServerSessionBase() = default;
 
     protected:
-      ServerSessionBase(asio::io_context& io_context_, const ServiceCallbackT& service_callback, const EventCallbackT& event_callback) // TODO: remove callbacks
+      ServerSessionBase(asio::io_context& io_context_, const ServiceCallbackT& service_callback, const EventCallbackT& event_callback, const DeleteCallbackT& delete_callback) // TODO: remove callbacks
         : socket_          (io_context_)
-        , service_callback_(service_callback) // TODO: remove callbacks
+        , service_callback_(service_callback)
         , event_callback_  (event_callback)
+        , delete_callback_ (delete_callback)
       {}
-
 
     /////////////////////////////////////
     // Public API
@@ -73,65 +74,8 @@ namespace eCAL
     public:
       asio::ip::tcp::socket& socket() { return socket_; }
       virtual void start() = 0;
+      virtual void stop()  = 0;
 
-    /////////////////////////////////////
-    // Log / message related methods
-    /////////////////////////////////////
-    public:
-      // TODO: Remove
-      //virtual std::string get_log_prefix() const = 0;
-
-      //inline std::string get_connection_info_string() const
-      //{
-      //  std::string local_endpoint_string  = "???";
-      //  std::string remote_endpoint_string = "???";
-
-      //  // Form local endpoint string
-      //  {
-      //    asio::error_code ec;
-      //    const auto endpoint = socket_.local_endpoint(ec);
-      //    if (!ec)
-      //      local_endpoint_string = endpoint_to_string(endpoint);
-      //  }
-
-      //  // form remote endpoint string
-      //  {
-      //    asio::error_code ec;
-      //    const auto endpoint = socket_.remote_endpoint(ec);
-      //    if (!ec)
-      //      remote_endpoint_string = endpoint_to_string(endpoint);
-      //  }
-
-      //  return local_endpoint_string + " -> " + remote_endpoint_string;
-      //};
-
-      //static inline std::string endpoint_to_string(const asio::ip::tcp::endpoint& endpoint)
-      //{
-      //  asio::error_code ec;
-      //  const std::string address_string = endpoint.address().to_string(ec);
-      //  if (!ec)
-      //    return address_string + ":" + std::to_string(endpoint.port());
-      //  else
-      //    return "???";
-      //}
-
-      //inline std::string get_log_string(const std::string& message) const
-      //{
-      //  return get_log_string("", message);
-      //}
-
-      //inline std::string get_log_string(const std::string& severity_string, const std::string& message) const
-      //{
-      //  std::stringstream ss;
-      //  ss << "[" << get_log_prefix() << "]";
-      //  if (!severity_string.empty())
-      //    ss << " [" << severity_string << "]";
-      //  ss << " [" << get_connection_info_string() << " ]";
-      //  ss << " " << message;
-
-      //  return ss.str();
-      //}
-  
     /////////////////////////////////////
     // Member variables
     /////////////////////////////////////
@@ -140,6 +84,7 @@ namespace eCAL
 
       const ServiceCallbackT service_callback_;
       const EventCallbackT   event_callback_;
+      const DeleteCallbackT  delete_callback_; // TODO: The SessionBase actually doesn't call this callback at all. So it may be a good idea to move it to the implementations
     };
 
     } // namespace service

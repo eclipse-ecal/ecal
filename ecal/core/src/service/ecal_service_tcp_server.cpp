@@ -24,6 +24,7 @@
   #include <iostream>
 #endif // (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED || ECAL_ASIO_TCP_SERVER_LOG_DEBUG_ENABLED)
 
+#include <algorithm>
 
 #include "ecal_service_tcp_session_server.h"
 #include "ecal_service_tcp_session_v1_server.h"
@@ -63,7 +64,6 @@ namespace eCAL
       , acceptor_        (io_context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
       , service_callback_(service_callback)
       , event_callback_  (event_callback)
-      , connection_count_(0)
       , logger_          (logger)
     {
       logger_(LogLevel::DebugVerbose, "Service Created");
@@ -78,6 +78,19 @@ namespace eCAL
         acceptor_.close(ec);
       }
 
+      // TODO: Currently, there is no other way to stop the server than letting
+      // it run out of scope. So closing the sessions from the destructor is fine.
+      // However, should that behavior change in the future, I need to create
+      // A special function for that, that is called from other places as well.
+      {
+        std::lock_guard<std::mutex> session_list_lock(session_list_mutex_);
+        for(const auto& session_weak : session_list_)
+        {
+          const auto session = session_weak.lock();
+          session->stop();
+        }
+      }
+
       logger_(LogLevel::DebugVerbose, "Service Deleted");
     }
 
@@ -87,7 +100,13 @@ namespace eCAL
 
     bool Server::is_connected() const
     {
-      return connection_count_ > 0;
+      return get_connection_count() > 0;
+    }
+
+    int Server::get_connection_count() const
+    {
+      std::lock_guard<std::mutex> session_list_lock(session_list_mutex_);
+      return session_list_.size();
     }
 
     std::uint16_t Server::get_port() const
@@ -123,18 +142,19 @@ namespace eCAL
                   }
                 };
 
-      const eCAL::service::ServerSessionBase::EventCallbackT event_callback
-              = [weak_me = std::weak_ptr<Server>(shared_from_this())](const eCAL_Server_Event event, const std::string& message) -> void
-                {
-                  // Create a shared_ptr to the class. If it doesn't exist
-                  // anymore, we will get a nullpointer. In that case, we cannot
-                  // execute the callback.
-                  const std::shared_ptr<Server> me = weak_me.lock();
-                  if (me)
-                  {
-                    return me->on_event(event, message);
-                  }
-                };
+      // TODO Change this callback or create a new one, so that the session deletes itself from the list of sessions
+      //const eCAL::service::ServerSessionBase::EventCallbackT event_callback
+      //        = [weak_me = std::weak_ptr<Server>(shared_from_this())](const eCAL_Server_Event event, const std::string& message) -> void
+      //          {
+      //            // Create a shared_ptr to the class. If it doesn't exist
+      //            // anymore, we will get a nullpointer. In that case, we cannot
+      //            // execute the callback.
+      //            const std::shared_ptr<Server> me = weak_me.lock();
+      //            if (me)
+      //            {
+      //              return me->on_event(event, message);
+      //            }
+      //          };
       //const eCAL::ServerSession::EventCallbackT event_callback
       //        = [weak_me = std::weak_ptr<Server>(shared_from_this())](eCAL_Server_Event server_event, const std::string& todo_name_this_whatever_it_is) -> void
       //          {
@@ -148,6 +168,27 @@ namespace eCAL
       //            }
       //          };
 
+      const eCAL::service::ServerSessionBase::DeleteCallbackT delete_callback
+                = [weak_me = std::weak_ptr<Server>(shared_from_this())](const std::shared_ptr<eCAL::service::ServerSessionBase>& session_to_remove) -> void
+                  {
+                  // Create a shared_ptr to the class. If it doesn't exist
+                  // anymore, we will get a nullpointer. In that case, we cannot
+                  // execute the callback.
+                  const std::shared_ptr<Server> me = weak_me.lock();
+                  if (me)
+                  {
+                    std::lock_guard<std::mutex> session_list_lock(me->session_list_mutex_);
+
+                    // Remove the session from the session list
+                    const auto session_it = std::find_if(me->session_list_.begin(), me->session_list_.end()
+                          , [session_to_remove](const auto& existing_session) { return session_to_remove == existing_session.lock(); });
+                    if (session_it != me->session_list_.end())
+                    {
+                      me->session_list_.erase(session_it);
+                    }
+                  }
+                };
+
       std::shared_ptr<eCAL::service::ServerSessionBase> new_session;
       if (version == 0)
       {
@@ -155,7 +196,7 @@ namespace eCAL
       }
       else
       {
-        new_session = eCAL::service::ServerSessionV1::create(io_context_, service_callback, event_callback, logger_);
+        new_session = eCAL::service::ServerSessionV1::create(io_context_, service_callback, event_callback_, delete_callback, logger_);
       }
 
       // Accept new session.
@@ -181,9 +222,18 @@ namespace eCAL
 
                     logger_copy(LogLevel::DebugVerbose, "Service client initiated connection...");
 
-                    // Start the new session, that now has a connection
-                    // The session will call the callback and increase the connection count
-                    new_session->start();
+                    const std::shared_ptr<Server> me = weak_me.lock();
+                    if (me)
+                    {
+                      // Add the new session to the session list. The session list is a list of weak_ptr.
+                      // Therefore, the session list will not keep the session alive, they will do that themselves.
+                      std::lock_guard<std::mutex> session_list_lock(me->session_list_mutex_);
+                      me->session_list_.push_back(new_session);
+
+                      // Start the new session, that now has a connection
+                      // The session will call the callback and increase the connection count
+                      new_session->start();
+                    }
                   }
 
                   // TODO: only re-try accepting, if the ec didn't tell us to stop!!!
@@ -216,23 +266,21 @@ namespace eCAL
     //  }
     //}
 
-    void Server::on_event(eCAL_Server_Event event, const std::string& message)
-    {
-      // Increase / decrease the connection count
-      switch (event)
-      {
-      case server_event_connected:
-        connection_count_++;
-        break;
-      case server_event_disconnected:
-        connection_count_--;
-        break;
-      default:
-        break;
-      }
+    //void Server::on_event(eCAL_Server_Event event, const std::string& message)
+    //{
+    //  // Increase / decrease the connection count
+    //  switch (event)
+    //  {
+    //  case server_event_connected:
+    //    break;
+    //  case server_event_disconnected:
+    //    break;
+    //  default:
+    //    break;
+    //  }
 
-      event_callback_(event, message);
-    }
+    //  event_callback_(event, message);
+    //}
 
   } // namespace service
 } // namespace eCAL

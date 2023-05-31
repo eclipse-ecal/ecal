@@ -36,10 +36,18 @@ namespace eCAL
     ///////////////////////////////////////////////
 
     public:
-      static std::shared_ptr<ServerSessionV1> create(asio::io_context& io_context_, const ServiceCallbackT& service_callback, const EventCallbackT& event_callback, const LoggerT& logger_);
+      static std::shared_ptr<ServerSessionV1> create(asio::io_context&        io_context_
+                                                    , const ServiceCallbackT& service_callback
+                                                    , const EventCallbackT&   event_callback
+                                                    , const DeleteCallbackT&  delete_callback
+                                                    , const LoggerT&          logger);
 
     protected:
-      ServerSessionV1(asio::io_context& io_context_, const ServiceCallbackT& service_callback, const EventCallbackT& event_callback, const LoggerT& logger_);
+      ServerSessionV1(asio::io_context&       io_context_
+                    , const ServiceCallbackT& service_callback
+                    , const EventCallbackT&   event_callback
+                    , const DeleteCallbackT&  delete_callback
+                    , const LoggerT&          logger);
 
       // Copy
       ServerSessionV1(const ServerSessionV1&)            = delete;
@@ -58,6 +66,7 @@ namespace eCAL
       ///////////////////////////////////////////////
     public:
       void start() override;
+      void stop()  override;
 
     private:
       void receive_handshake_request();
