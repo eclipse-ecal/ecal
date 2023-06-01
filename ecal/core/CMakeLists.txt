@@ -342,10 +342,10 @@ set(ecal_header_cmn
     include/ecal/ecal_timed_cb.h
     include/ecal/ecal_timer.h
     include/ecal/ecal_tlayer.h
-    include/ecal/ecal_types.h
     include/ecal/ecal_util.h
     include/ecal/ecalc.h
     include/ecal/ecalc_types.h
+    include/ecal/types/ecal_topic_information.h
 )
 
 set(ecal_header_cimpl

@@ -25,7 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
-#include <ecal/ecal_types.h>
+#include <ecal/types/ecal_topic_information.h>
 
 #include <map>
 #include <unordered_map>
