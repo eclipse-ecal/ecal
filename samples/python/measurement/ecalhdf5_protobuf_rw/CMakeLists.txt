@@ -16,11 +16,11 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(ecalhdf5_with_protobuf_rw)
+project(ecalhdf5_protobuf_rw)
 
 find_package(eCAL REQUIRED)
 
-set(PROJECT_GROUP ecalhdf5_with_protobuf_rw)
+set(PROJECT_GROUP ecalhdf5_protobuf_rw)
 
 if(ECAL_INCLUDE_PY_SAMPLES)
   if(WIN32)

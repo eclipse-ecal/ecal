@@ -9,7 +9,6 @@ import person_pb2
 
 def main():
     # We create an ecalhdf5 file and write a protobuf instance in it
-
     ENTRY_COUNT = 20
     CHANNEL_INDEX = 0
     CHANNEL_NO = 1
@@ -36,7 +35,7 @@ def main():
     names = ["John", "Alice"]
     genders = [person_pb2.Person.MALE, person_pb2.Person.FEMALE]
 
-    # timestamp is in nanoseconds
+    # Timestamp is in microseconds
     initial_timestamp = int(time.time()) * 10**6
     for i in range(ENTRY_COUNT):
         timestamp = initial_timestamp + i * 10**6
@@ -97,7 +96,7 @@ def main():
         print("    entry_id: {}\tperson_id: {}\tname: {}\tgender: {}".format(entry_read["id"],
                                                                          protobuf_message.id,
                                                                          protobuf_message.name,
-                                                                         person.SType.Name(person.stype)))
+                                                                         person.SType.Name(protobuf_message.stype)))
         print()
 
 
