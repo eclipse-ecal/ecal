@@ -160,6 +160,9 @@ namespace eCAL
     Logging::Log(log_level_debug1, m_topic_name + "::CDataWriter::Created");
 #endif
 
+    // adapt number of used memory file
+    ShmSetBufferCount(m_buffering_shm);
+
     return(true);
   }
 
@@ -347,18 +350,17 @@ namespace eCAL
     return true;
   }
 
-  bool CDataWriter::ShmSetBufferCount(long buffering_)
+  bool CDataWriter::ShmSetBufferCount(size_t buffering_)
   {
     if (buffering_ < 1) return false;
     m_buffering_shm = static_cast<size_t>(buffering_);
+
+    // adapt number of used memory files
     if (m_created)
     {
-      // we force the shm writer to just prepare the next write operation
-      // if the number of buffered files changed, the writer will adapt this
-      struct SWriterAttr wattr;
-      wattr.buffering = m_buffering_shm;
-      m_writer.shm.PrepareWrite(wattr);
+      m_writer.shm.SetBufferCount(buffering_);
     }
+
     return true;
   }
 

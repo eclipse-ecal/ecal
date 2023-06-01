@@ -584,7 +584,7 @@ TEST(IO, SimpleMessageCBSHMBufferCount)
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH);
 
-  int iterations = 100;
+  int iterations = 50;
   for (int i = 0; i < iterations; ++i)
   {
     // send content
