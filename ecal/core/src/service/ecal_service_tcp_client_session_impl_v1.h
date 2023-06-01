@@ -96,6 +96,7 @@ namespace eCAL
     public:
       void peek_for_error();
       void handle_connection_loss_error(const std::string& message);
+      void call_all_callbacks_with_error();
       void stop() override;
 
     //////////////////////////////////////

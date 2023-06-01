@@ -327,12 +327,22 @@ namespace eCAL
     {
       service_call_queue_strand_.post([me = shared_from_this(), request, response_callback]()
                             {
-                              const bool write_in_progress = !me->service_call_queue_.empty();
-                              me->service_call_queue_.push_back(ServiceCall{request, response_callback});
-                              if (!write_in_progress && (me->state_ == State::CONNECTED))
+                              if (me->state_ != State::FAILED)
                               {
-                                // TODO: The parameters need to be removed
-                                me->send_next_service_request();
+                                // If we are not in FAILED state, i.e. we are CONNECTED or currently connecting,
+                                // we add the service call to the queue
+                                const bool write_in_progress = !me->service_call_queue_.empty();
+                                me->service_call_queue_.push_back(ServiceCall{request, response_callback});
+                                if (!write_in_progress && (me->state_ == State::CONNECTED))
+                                {
+                                  // If currently no write is in progress, we start a write.
+                                  me->send_next_service_request();
+                                }
+                              }
+                              else
+                              {
+                                // If we are in FAILED state, we directly call the callback with an error.
+                                response_callback(eCAL::service::Error::ErrorCode::CONNECTION_CLOSED, nullptr);
                               }
                             });
     }
@@ -444,13 +454,33 @@ namespace eCAL
 
       if (state_ == State::CONNECTED)
       {
-        // Call callback
+        // Event callback
         event_callback_(eCAL_Client_Event::client_event_disconnected, error_message);
       }
 
-      // TODO: execute all the service callbacks from the queue with an error
-
+      // Set the state to FAILED
       state_ = State::FAILED;
+
+      // call all callbacks from the queue with an error
+      if (!service_call_queue_.empty())
+      {
+        // TODO: Add debug log here
+        call_all_callbacks_with_error();
+      }
+    }
+
+    void ClientSessionV1::call_all_callbacks_with_error()
+    {
+      service_call_queue_strand_.post([me = shared_from_this()]()
+                                      {
+                                        me->service_call_queue_.front().response_cb(eCAL::service::Error::ErrorCode::CONNECTION_CLOSED, nullptr); // TODO: I should probably store the error that lead to this somewhere and tell the actual error.
+                                        me->service_call_queue_.pop_front();
+
+                                        if (!me->service_call_queue_.empty())
+                                        {
+                                          me->call_all_callbacks_with_error();
+                                        }
+                                      });
     }
 
     void ClientSessionV1::stop()
