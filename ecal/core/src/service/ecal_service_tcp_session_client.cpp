@@ -35,7 +35,7 @@ namespace eCAL
 {
   namespace service
   {
-    class ClientSessionBase
+    class ClientSession
     {
     /////////////////////////////////////
     // Custom types for API
@@ -48,14 +48,14 @@ namespace eCAL
     // Constructor, Destructor, Create
     /////////////////////////////////////
     protected:
-      ClientSessionBase(asio::io_context& io_context_, const EventCallbackT& event_callback)
+      ClientSession(asio::io_context& io_context_, const EventCallbackT& event_callback)
         : io_context_    (io_context_)
         , socket_        (io_context_)
         , event_callback_(event_callback)
       {}
 
     public:
-      virtual ~ClientSessionBase() = default;
+      virtual ~ClientSession() = default;
 
     /////////////////////////////////////
     // API

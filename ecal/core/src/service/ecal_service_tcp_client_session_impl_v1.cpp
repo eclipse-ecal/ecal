@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecal_service_tcp_session_v1_client.h"
+#include "ecal_service_tcp_client_session_impl_v1.h"
 
 #include "ecal_service_tcp_protocol_v1.h"
 #include "ecal_service_log_helpers.h"
@@ -63,16 +63,11 @@ namespace eCAL
 
     ClientSessionV1::~ClientSessionV1()
     {
-      {
-        asio::error_code ec;
-        socket_.close(ec);
-      }
-
       logger_(LogLevel::DebugVerbose, "Deleted");
     }
 
     //////////////////////////////////////
-    // Implementation
+    // Connection establishement
     //////////////////////////////////////
     void ClientSessionV1::resolve_endpoint(const std::string& address, std::uint16_t port)
     {
@@ -179,26 +174,6 @@ namespace eCAL
                                     me->send_protocol_handshake_request();
                                   }
                                 }));
-    }
-
-    void ClientSessionV1::peek_for_error()
-    {
-      std::shared_ptr<std::vector<char>> peek_buffer = std::make_shared<std::vector<char>>(1, '\0');
-
-      socket_.async_receive(asio::buffer(*peek_buffer)
-                            , asio::socket_base::message_peek
-                            , service_call_queue_strand_.wrap([weak_me = std::weak_ptr<ClientSessionV1>(shared_from_this()), peek_buffer](const asio::error_code& ec, std::size_t bytes_transferred) {
-                              if (ec)
-                              {
-                                auto me = weak_me.lock();
-                                if (me)
-                                {
-                                  const std::string message = "Connection loss while idling: " + ec.message();
-                                  me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
-                                  me->handle_connection_loss_error("Connection loss while idling: " + ec.message());
-                                }
-                              }
-                            }));
     }
 
     void ClientSessionV1::send_protocol_handshake_request()
@@ -344,22 +319,9 @@ namespace eCAL
                               }));
     }
 
-    void ClientSessionV1::handle_connection_loss_error(const std::string& error_message)
-    {
-      // cancel the connection loss handling, if we are already in FAILED state
-      if (state_ == State::FAILED)
-        return;
-
-      if (state_ == State::CONNECTED)
-      {
-        // Call callback
-        event_callback_(eCAL_Client_Event::client_event_disconnected, error_message);
-      }
-
-      // TODO: execute all the service callbacks from the queue with an error
-
-      state_ = State::FAILED;
-    }
+    //////////////////////////////////////
+    // Service calls
+    //////////////////////////////////////
 
     void ClientSessionV1::async_call_service(const std::shared_ptr<std::string>& request, const ResponseCallbackT& response_callback)
     {
@@ -453,6 +415,55 @@ namespace eCAL
                               }));
 
 
+    }
+
+    //////////////////////////////////////
+    // Shutdown
+    //////////////////////////////////////
+    void ClientSessionV1::peek_for_error()
+    {
+      std::shared_ptr<std::vector<char>> peek_buffer = std::make_shared<std::vector<char>>(1, '\0');
+
+      socket_.async_receive(asio::buffer(*peek_buffer)
+                            , asio::socket_base::message_peek
+                            , service_call_queue_strand_.wrap([me = shared_from_this(), peek_buffer](const asio::error_code& ec, std::size_t bytes_transferred) {
+                              if (ec)
+                              {
+                                const std::string message = "Connection loss while idling: " + ec.message();
+                                me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
+                                me->handle_connection_loss_error("Connection loss while idling: " + ec.message());
+                              }
+                            }));
+    }
+
+    void ClientSessionV1::handle_connection_loss_error(const std::string& error_message)
+    {
+      // cancel the connection loss handling, if we are already in FAILED state
+      if (state_ == State::FAILED)
+        return;
+
+      if (state_ == State::CONNECTED)
+      {
+        // Call callback
+        event_callback_(eCAL_Client_Event::client_event_disconnected, error_message);
+      }
+
+      // TODO: execute all the service callbacks from the queue with an error
+
+      state_ = State::FAILED;
+    }
+
+    void ClientSessionV1::stop()
+    {
+      {
+        asio::error_code ec;
+        socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
+      }
+
+      {
+        asio::error_code ec;
+        socket_.close(ec);
+      }
     }
 
   }  // namespace service

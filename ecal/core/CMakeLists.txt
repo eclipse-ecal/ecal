@@ -77,14 +77,17 @@ set(ecal_tcp_service_src
     src/service/ecal_service_error.h
     src/service/ecal_service_log_helpers.h
     src/service/ecal_service_logger.h
+    src/service/ecal_service_tcp_client_session.cpp
+    src/service/ecal_service_tcp_client_session.h
+    src/service/ecal_service_tcp_client_session_impl_base.h
+    src/service/ecal_service_tcp_client_session_impl_v1.cpp
+    src/service/ecal_service_tcp_client_session_impl_v1.h
+    src/service/ecal_service_tcp_client_session_types.h
     src/service/ecal_service_tcp_protocol_v1.cpp
     src/service/ecal_service_tcp_protocol_v1.h
     src/service/ecal_service_tcp_server.cpp
     src/service/ecal_service_tcp_server.h
-    src/service/ecal_service_tcp_session_client.h
     src/service/ecal_service_tcp_session_server.h
-    src/service/ecal_service_tcp_session_v1_client.cpp
-    src/service/ecal_service_tcp_session_v1_client.h
     src/service/ecal_service_tcp_session_v1_server.cpp
     src/service/ecal_service_tcp_session_v1_server.h
     src/service/ecal_tcpheader.h

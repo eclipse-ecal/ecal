@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "ecal_service_tcp_session_client.h"
+#include "ecal_service_tcp_client_session_impl_base.h"
 #include "ecal_service_logger.h"
 
 #include <deque>
@@ -68,35 +68,35 @@ namespace eCAL
     public:
       ~ClientSessionV1() override;
 
-    /////////////////////////////////////
-    // Log / message related methods
-    /////////////////////////////////////
-    public:
-      //std::string get_log_prefix() const override { return "ClientSessionV1"; } // TODO: remove
-      // TODO add again
-
     //////////////////////////////////////
-    // Implementation
+    // Connection establishement
     //////////////////////////////////////
     private:
       void resolve_endpoint(const std::string& address, std::uint16_t port);
       void connect_to_endpoint(const asio::ip::tcp::resolver::iterator& resolved_endpoints);
-
-      void peek_for_error();
 
       void send_protocol_handshake_request();
       void receive_protocol_handshake_response();
 
       // TODO: Create a "Wait for connection established" function
 
-      void handle_connection_loss_error(const std::string& message);
-
+    //////////////////////////////////////
+    // Service calls
+    //////////////////////////////////////
     public:
       void async_call_service(const std::shared_ptr<std::string>& request, const ResponseCallbackT& response_callback) override;
 
     private:
       void send_next_service_request();
       void receive_service_response();
+    
+    //////////////////////////////////////
+    // Shutdown
+    //////////////////////////////////////
+    public:
+      void peek_for_error();
+      void handle_connection_loss_error(const std::string& message);
+      void stop() override;
 
     //////////////////////////////////////
     // Member variables
