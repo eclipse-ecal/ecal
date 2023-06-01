@@ -82,10 +82,14 @@ namespace eCAL
       void resolve_endpoint(const std::string& address, std::uint16_t port);
       void connect_to_endpoint(const asio::ip::tcp::resolver::iterator& resolved_endpoints);
 
+      void peek_for_error();
+
       void send_protocol_handshake_request();
       void receive_protocol_handshake_response();
 
       // TODO: Create a "Wait for connection established" function
+
+      void handle_connection_loss_error(const std::string& message);
 
     public:
       void async_call_service(const std::shared_ptr<std::string>& request, const ResponseCallbackT& response_callback) override;
@@ -101,7 +105,7 @@ namespace eCAL
       static constexpr std::uint8_t MIN_SUPPORTED_PROTOCOL_VERSION = 1;
       static constexpr std::uint8_t MAX_SUPPORTED_PROTOCOL_VERSION = 1;
 
-      asio::ip::tcp::resolver resolver_;
+      asio::ip::tcp::resolver  resolver_;
 
       State                    state_;
       std::uint8_t             accepted_protocol_version_;
@@ -110,6 +114,8 @@ namespace eCAL
       std::deque<ServiceCall>  service_call_queue_;
 
       const LoggerT            logger_;
+
+      asio::steady_timer       timer_; // TODO remove
     };
   }
 }

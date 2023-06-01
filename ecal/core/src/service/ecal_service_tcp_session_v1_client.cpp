@@ -51,6 +51,7 @@ namespace eCAL
       , accepted_protocol_version_(0)
       , service_call_queue_strand_(io_context_)
       , logger_                   (logger)
+      , timer_(io_context_, std::chrono::milliseconds(500)) // TODO Remove
     {
   #if (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED)
       const auto message = get_log_string("DEBUG", "Created");
@@ -97,9 +98,9 @@ namespace eCAL
                                   std::cerr << message << std::endl;
                                   // Don't call the callback with "disconnected", as we never told that we are connected
 #endif
-                                  me->logger_(LogLevel::Error, "Failed resolving endpoint [" + address + ":" + std::to_string(port) + "]: " + ec.message());
-
-                                  me->state_ = State::FAILED;
+                                  const std::string message = "Failed resolving endpoint [" + address + ":" + std::to_string(port) + "]: " + ec.message();
+                                  me->logger_(LogLevel::Error, message);
+                                  me->handle_connection_loss_error(message);
                                   return;
                                 }
                                 else
@@ -145,8 +146,9 @@ namespace eCAL
                                     std::cerr << message << std::endl;
                                     // Don't call the callback with "disconnected", as we never told that we are connected
   #endif
-                                    me->logger_(LogLevel::Error, "Failed to connect to endpoint [" + endpoint_to_string(endpoint_to_connect_to) + "]: " + ec.message());
-                                    me->state_ = State::FAILED;
+                                    const std::string message = "Failed to connect to endpoint [" + endpoint_to_string(endpoint_to_connect_to) + "]: " + ec.message();
+                                    me->logger_(LogLevel::Error, message);
+                                    me->handle_connection_loss_error(message);
                                     return;
                                   }
                                   else
@@ -157,6 +159,9 @@ namespace eCAL
   #endif
                                     me->logger_(LogLevel::DebugVerbose, "Successfully connected to endpoint [" + endpoint_to_string(endpoint_to_connect_to) + "]");
 
+                                    // Wait for errors on the socket
+                                    //me->wait_for_error(); // TODO: Remove or improve
+
                                     // Disable Nagle's algorithm. Nagles Algorithm will otherwise cause the
                                     // Socket to wait for more data, if it encounters a frame that can still
                                     // fit more data. Obviously, this is an awfull default behaviour, if we
@@ -166,7 +171,7 @@ namespace eCAL
                                       me->socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec);
                                       if (socket_option_ec)
                                       {
-                                        me->logger_(LogLevel::Warning, "Failed setting tcp::no_delay option: " + socket_option_ec.message());
+                                        me->logger_(LogLevel::Warning, "[" + get_connection_info_string(me->socket_) + "] " + "Failed setting tcp::no_delay option: " + socket_option_ec.message());
                                       }                                      
                                     }
 
@@ -176,6 +181,26 @@ namespace eCAL
                                 }));
     }
 
+    void ClientSessionV1::peek_for_error()
+    {
+      std::shared_ptr<std::vector<char>> peek_buffer = std::make_shared<std::vector<char>>(1, '\0');
+
+      socket_.async_receive(asio::buffer(*peek_buffer)
+                            , asio::socket_base::message_peek
+                            , service_call_queue_strand_.wrap([weak_me = std::weak_ptr<ClientSessionV1>(shared_from_this()), peek_buffer](const asio::error_code& ec, std::size_t bytes_transferred) {
+                              if (ec)
+                              {
+                                auto me = weak_me.lock();
+                                if (me)
+                                {
+                                  const std::string message = "Connection loss while idling: " + ec.message();
+                                  me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
+                                  me->handle_connection_loss_error("Connection loss while idling: " + ec.message());
+                                }
+                              }
+                            }));
+    }
+
     void ClientSessionV1::send_protocol_handshake_request()
     {
   #if (TCP_PUBSUB_LOG_DEBUG_ENABLED)
@@ -183,7 +208,7 @@ namespace eCAL
         log_(logger::LogLevel::Debug,  "SubscriberSession " + endpointToString() + ": Sending ProtocolHandshakeRequest.");
   #endif
 
-        logger_(LogLevel::DebugVerbose, "Sending protocol handshake request...");
+        logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(socket_) + "] " + "Sending protocol handshake request...");
 
         // Go to handshake state
         state_ = State::HANDSHAKE;
@@ -207,12 +232,13 @@ namespace eCAL
         eCAL::service::ProtocolV1::async_send_payload(socket_, header_buffer, payload_buffer
                             , service_call_queue_strand_.wrap([me = shared_from_this()](asio::error_code ec)
                               {
-                                me->logger_(LogLevel::Error, "Failed sending protocol handshake request: " + ec.message());
-                                me->state_ = State::FAILED;
+                                const std::string message = "Failed sending protocol handshake request: " + ec.message();
+                                me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
+                                me->handle_connection_loss_error(message);
                               })
                             , [me = shared_from_this()]()
                               {
-                                me->logger_(LogLevel::DebugVerbose, "Successfully sent protocol handshake request.");
+                                me->logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(me->socket_) + "] " + "Successfully sent protocol handshake request.");
                                 me->receive_protocol_handshake_response();
                               });
 
@@ -237,13 +263,14 @@ namespace eCAL
 
     void ClientSessionV1::receive_protocol_handshake_response()
     {
-      logger_(LogLevel::DebugVerbose, "Waiting for protocol handshake response...");
+      logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(socket_) + "] " + "Waiting for protocol handshake response...");
 
       eCAL::service::ProtocolV1::async_receive_payload(socket_
                             , service_call_queue_strand_.wrap([me = shared_from_this()](asio::error_code ec)
                               {
-                                me->logger_(LogLevel::Error, "Failed receiving protocol handshake response: " + ec.message());
-                                me->state_ = State::FAILED;
+                                const std::string message = "Failed receiving protocol handshake response: " + ec.message();
+                                me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
+                                me->handle_connection_loss_error(message);
                               })
                             , service_call_queue_strand_.wrap([me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
                               {
@@ -254,15 +281,15 @@ namespace eCAL
                                   const std::string message = "Received invalid handshake response from server. Expected message type " 
                                                               + std::to_string(static_cast<std::uint8_t>(eCAL::MessageType::ProtocolHandshakeResponse)) 
                                                               + ", but received " + std::to_string(static_cast<std::uint8_t>(header->message_type));
-                                  me->logger_(LogLevel::Error, message);
+                                  me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
 
-                                  me->state_ = State::FAILED;
+                                  me->handle_connection_loss_error(message);
                                   return;
                                 }
                                 else
                                 {
                                   // The response is a Handshake response
-                                  me->logger_(LogLevel::DebugVerbose, "Received a handshake response of " + std::to_string(payload_buffer->size()) + " bytes.");
+                                  me->logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(me->socket_) + "] " + "Received a handshake response of " + std::to_string(payload_buffer->size()) + " bytes.");
 
                                   // Resize payload if necessary. Will probably never be necessary
                                   if (payload_buffer->size() < sizeof(STcpProtocolHandshakeResponseMessage))
@@ -278,7 +305,7 @@ namespace eCAL
                                     me->state_ = State::CONNECTED;
 
                                     const std::string message = "Connected to server. Using protocol version " + std::to_string(me->accepted_protocol_version_);
-                                    me->logger_(LogLevel::Debug, message);
+                                    me->logger_(LogLevel::Debug, "[" + get_connection_info_string(me->socket_) + "] " + message);
 
                                     // Call event callback
                                     me->event_callback_(eCAL_Client_Event::client_event_connected, message);
@@ -287,6 +314,11 @@ namespace eCAL
                                     if (!me->service_call_queue_.empty())
                                     {
                                       me->send_next_service_request();
+                                    }
+                                    else
+                                    {
+                                      // Peek the socket for errors
+                                      me->peek_for_error();
                                     }
 
 //                                    const std::string message = "Connected to server. Using protocol version " + std::to_string(accepted_protocol_version_);
@@ -302,14 +334,31 @@ namespace eCAL
                                     //const auto message = get_log_string("ERROR", "Error connecting to server. Server reported an un-supported protocol version: " + std::to_string(handshake_response->accepted_protocol_version));
                                     //std::cerr << message << std::endl;
                                     const std::string message = "Error connecting to server. Server reported an un-supported protocol version: " + std::to_string(handshake_response->accepted_protocol_version);
-                                    me->logger_(LogLevel::Error, message);
+                                    me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
 
-                                    me->state_ = State::FAILED;
+                                    me->handle_connection_loss_error(message);
                                     return;
                                   }
 
                                 }
                               }));
+    }
+
+    void ClientSessionV1::handle_connection_loss_error(const std::string& error_message)
+    {
+      // cancel the connection loss handling, if we are already in FAILED state
+      if (state_ == State::FAILED)
+        return;
+
+      if (state_ == State::CONNECTED)
+      {
+        // Call callback
+        event_callback_(eCAL_Client_Event::client_event_disconnected, error_message);
+      }
+
+      // TODO: execute all the service callbacks from the queue with an error
+
+      state_ = State::FAILED;
     }
 
     void ClientSessionV1::async_call_service(const std::shared_ptr<std::string>& request, const ResponseCallbackT& response_callback)
@@ -329,7 +378,7 @@ namespace eCAL
     void ClientSessionV1::send_next_service_request()
     {
       // TODO: Create a function that just adds requests to a queue, so they will be sent one after another
-      logger_(LogLevel::DebugVerbose, "Sending service request...");
+      logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(socket_) + "] " + "Sending service request...");
 
       // Create header_buffer
       const std::shared_ptr<STcpHeader>  header_buffer  = std::make_shared<STcpHeader>();
@@ -342,34 +391,27 @@ namespace eCAL
                               , service_call_queue_strand_.wrap([me = shared_from_this()](asio::error_code ec)
                                 {
                                   const std::string message = "Failed sending service request: " + ec.message();
-                                  me->logger_(LogLevel::Error, message);
+                                  me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
 
-                                  me->state_ = State::FAILED;
-                                  
-                                  // Call event callback
-                                  me->event_callback_(eCAL_Client_Event::client_event_disconnected, message);
+                                  me->handle_connection_loss_error(message);
                                 })
                               , [me = shared_from_this()]()
                                 {
-                                  me->logger_(LogLevel::DebugVerbose, "Successfully sent service request.");
+                                  me->logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(me->socket_) + "] " + "Successfully sent service request.");
                                   me->receive_service_response();
                                 });
     }
 
     void ClientSessionV1::receive_service_response()
     {
-      logger_(LogLevel::DebugVerbose, "Waiting for service response...");
+      logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(socket_) + "] " + "Waiting for service response...");
 
       eCAL::service::ProtocolV1::async_receive_payload(socket_
                             , service_call_queue_strand_.wrap([me = shared_from_this()](asio::error_code ec)
                               {
                                 const std::string message = "Failed receiving service response: " + ec.message();
-                                me->logger_(LogLevel::Error, message);
-
-                                me->state_ = State::FAILED;
-
-                                // Call event callback
-                                me->event_callback_(eCAL_Client_Event::client_event_disconnected, message);
+                                me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
+                                me->handle_connection_loss_error(message);
                               })
                             , service_call_queue_strand_.wrap([me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
                               {
@@ -379,20 +421,16 @@ namespace eCAL
                                   const std::string message = "Received invalid service response from server. Expected message type " 
                                                               + std::to_string(static_cast<std::uint8_t>(eCAL::MessageType::ServiceResponse)) 
                                                               + ", but received " + std::to_string(static_cast<std::uint8_t>(header->message_type));
-                                  me->logger_(LogLevel::Error, message);
+                                  me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
 
-                                  // The response is not a Service response.
-                                  me->state_ = State::FAILED;
-
-                                  // Call event callback
-                                  me->event_callback_(eCAL_Client_Event::client_event_disconnected, message);
+                                  me->handle_connection_loss_error(message);
 
                                   return;
                                 }
                                 else
                                 {
                                   // The response is a Service response
-                                  me->logger_(LogLevel::DebugVerbose, "Successfully received service response of " + std::to_string(payload_buffer->size()) + " bytes");
+                                  me->logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(me->socket_) + "] " + "Successfully received service response of " + std::to_string(payload_buffer->size()) + " bytes");
 
                                   // Call the user's callback
                                   // TODO: Currently, this is synchronously. There is potential to execute those in parallel, while already receiving the next data!
@@ -401,10 +439,15 @@ namespace eCAL
                                   // Remove the service call item from the queue
                                   me->service_call_queue_.pop_front();
 
-                                  // If there are more items, continue calling the service
                                   if (!me->service_call_queue_.empty())
                                   {
+                                    // If there are more items, continue calling the service
                                     me->send_next_service_request();
+                                  }
+                                  else
+                                  {
+                                    // Otherwise, just check if there are errors
+                                    me->peek_for_error();
                                   }
                                 }
                               }));
