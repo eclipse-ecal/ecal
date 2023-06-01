@@ -346,14 +346,14 @@ namespace eCAL
       auto pos = combined_topic_type.find(':');
       if (pos == std::string::npos)
       {
-        std::string encoding = combined_topic_type.substr(0, pos);
-        std::string type = combined_topic_type.substr(pos + 1);
+        std::string encoding{ "" };
+        std::string type{ combined_topic_type };
         return std::make_pair(encoding, type);
       }
       else
       {
-        std::string encoding{ "" };
-        std::string type{ combined_topic_type };
+        std::string encoding = combined_topic_type.substr(0, pos);
+        std::string type = combined_topic_type.substr(pos + 1);
         return std::make_pair(encoding, type);
       }
     }
