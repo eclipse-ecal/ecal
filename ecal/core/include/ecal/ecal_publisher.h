@@ -94,7 +94,7 @@ namespace eCAL
     * @param topic_info_   Topic information (encoding, type, descriptor)
     **/
 
-    CPublisher(const std::string& topic_name_, const TopicInformation& topic_info_);
+    CPublisher(const std::string& topic_name_, const STopicInformation& topic_info_);
 
 
     /**
@@ -142,7 +142,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool Create(const std::string& topic_name_, const TopicInformation& topic_info_);
+    bool Create(const std::string& topic_name_, const STopicInformation& topic_info_);
 
     /**
      * @brief Destroys this object. 
@@ -178,7 +178,7 @@ namespace eCAL
     *
     * @return  True if it succeeds, false if it fails.
     **/
-    bool SetTopicInformation(const TopicInformation& topic_info_);
+    bool SetTopicInformation(const STopicInformation& topic_info_);
 
     /**
      * @brief Sets publisher attribute. 
@@ -501,7 +501,7 @@ namespace eCAL
     *
     * @return  The topic information.
     **/
-    TopicInformation GetTopicInformation() const;
+    STopicInformation GetTopicInformation() const;
 
     /**
      * @brief Dump the whole class state into a string. 
@@ -515,7 +515,7 @@ namespace eCAL
   protected:
     void InitializeQOS();
     void InitializeTLayer();
-    bool ApplyTopicToDescGate(const std::string& topic_name_, const TopicInformation& topic_info_);
+    bool ApplyTopicToDescGate(const std::string& topic_name_, const STopicInformation& topic_info_);
 
     // class members
     CDataWriter*                     m_datawriter;

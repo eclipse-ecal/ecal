@@ -30,18 +30,18 @@ namespace eCAL
     /**
      * @brief eCAL transport layer types.
     **/
-    struct TopicInformation
+    struct STopicInformation
     {
       std::string encoding;
       std::string type;
       std::string descriptor;
 
-      bool operator==(const TopicInformation& other) const
+      bool operator==(const STopicInformation& other) const
       {
         return encoding == other.encoding && type == other.type && descriptor == other.descriptor;
       }
 
-      bool operator!=(const TopicInformation& other) const
+      bool operator!=(const STopicInformation& other) const
       {
         return !(*this == other);
       }

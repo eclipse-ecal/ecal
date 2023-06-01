@@ -103,7 +103,7 @@ namespace eCAL
     * @param topic_name_   Unique topic name.
     * @param topic_info_   Topic information (encoding, type, descriptor)
     **/
-    CSubscriber(const std::string& topic_name_, const TopicInformation& topic_info_);
+    CSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_);
 
     /**
      * @brief Destructor. 
@@ -150,7 +150,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool Create(const std::string& topic_name_, const TopicInformation& topic_info_);
+    bool Create(const std::string& topic_name_, const STopicInformation& topic_info_);
 
     /**
      * @brief Destroys this object. 
@@ -319,7 +319,7 @@ namespace eCAL
 
   protected:
     void InitializeQOS();
-    bool ApplyTopicToDescGate(const std::string& topic_name_, const TopicInformation& topic_info_);
+    bool ApplyTopicToDescGate(const std::string& topic_name_, const STopicInformation& topic_info_);
 
     // class members
     CDataReader*                     m_datareader;

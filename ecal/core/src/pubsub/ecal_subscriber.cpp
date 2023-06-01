@@ -50,7 +50,7 @@ namespace eCAL
     Create(topic_name_, topic_type_, topic_desc_);
   }
 
-  CSubscriber::CSubscriber(const std::string& topic_name_, const TopicInformation& topic_info_) :
+  CSubscriber::CSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_) :
     m_datareader(nullptr),
     m_created(false),
     m_initialized(false)
@@ -94,7 +94,7 @@ namespace eCAL
 
   bool CSubscriber::Create(const std::string& topic_name_, const std::string& topic_type_ /* = "" */, const std::string& topic_desc_ /* = "" */)
   {
-    TopicInformation info;
+    STopicInformation info;
     auto split_type = Util::SplitCombinedTopicType(topic_type_);
     info.encoding = split_type.first;
     info.type = split_type.second;
@@ -102,7 +102,7 @@ namespace eCAL
     return Create(topic_name_, info);
   }
 
-  bool CSubscriber::Create(const std::string& topic_name_, const TopicInformation& topic_info_)
+  bool CSubscriber::Create(const std::string& topic_name_, const STopicInformation& topic_info_)
   {
     if (m_created)              return(false);
     if (g_globals() == nullptr) return(false);
@@ -268,7 +268,7 @@ namespace eCAL
   std::string CSubscriber::GetTypeName() const
   {
     if(m_datareader == nullptr) return("");
-    TopicInformation info = m_datareader->GetTopicInformation();
+    STopicInformation info = m_datareader->GetTopicInformation();
     return(Util::CombinedTopicEncodingAndType(info.encoding, info.type));
   }
 
@@ -290,7 +290,7 @@ namespace eCAL
     m_qos.reliability = QOS::best_effort_reliability_qos;
   }
 
-  bool CSubscriber::ApplyTopicToDescGate(const std::string& topic_name_, const TopicInformation& topic_info_)
+  bool CSubscriber::ApplyTopicToDescGate(const std::string& topic_name_, const STopicInformation& topic_info_)
   {
     if (g_descgate() != nullptr)
     {

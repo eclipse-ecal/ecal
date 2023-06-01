@@ -31,7 +31,7 @@ TEST(IO, GetTopics)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_gettopics");
 
-  std::unordered_map<std::string, eCAL::TopicInformation> topic_info_map;
+  std::unordered_map<std::string, eCAL::STopicInformation> topic_info_map;
 
   // create and check a few pub/sub entities
   {

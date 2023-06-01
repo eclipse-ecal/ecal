@@ -209,7 +209,7 @@ namespace eCAL
     if (topic_name.empty()) return;
 
     const std::string& topic_id   = ecal_sample.tid();
-    TopicInformation topic_info;
+    STopicInformation topic_info;
     topic_info.encoding = ecal_sample.tinfo().encoding();
     topic_info.type = ecal_sample.tinfo().type();
     topic_info.descriptor = ecal_sample.tinfo().desc();
@@ -291,7 +291,7 @@ namespace eCAL
     const std::string& host_name  = ecal_sample.hname();
     const std::string& topic_name = ecal_sample.tname();
     const std::string& topic_id   = ecal_sample.tid();
-    TopicInformation topic_info;
+    STopicInformation topic_info;
     topic_info.encoding   = ecal_sample.tinfo().encoding();
     topic_info.type       = ecal_sample.tinfo().type();
     topic_info.descriptor = ecal_sample.tinfo().desc();
@@ -370,7 +370,7 @@ namespace eCAL
     return(0);
   }
 
-  bool CSubGate::ApplyTopicToDescGate(const std::string& topic_name_, const TopicInformation& topic_info_)
+  bool CSubGate::ApplyTopicToDescGate(const std::string& topic_name_, const STopicInformation& topic_info_)
   {
     if (g_descgate() != nullptr)
     {

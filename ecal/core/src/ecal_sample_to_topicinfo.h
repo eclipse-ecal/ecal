@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  helper class to copy from eCAL::pb:Sample to TopicInformation
+ * @brief  helper class to copy from eCAL::pb:Sample to STopicInformation
 **/
 
 #pragma once
@@ -31,9 +31,9 @@
 namespace eCAL
 {
 
-  TopicInformation eCALSampleToTopicInformation(const eCAL::pb::Sample& sample)
+  STopicInformation eCALSampleToTopicInformation(const eCAL::pb::Sample& sample)
   {
-    TopicInformation topic;
+    STopicInformation topic;
 
     if (sample.topic().tinfo().IsInitialized())
     {

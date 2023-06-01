@@ -46,7 +46,7 @@ namespace eCAL
   {
   }
 
-  bool CDescGate::ApplyTopicDescription(const std::string& topic_name_, const TopicInformation& topic_info_, const QualityFlags description_quality_)
+  bool CDescGate::ApplyTopicDescription(const std::string& topic_name_, const STopicInformation& topic_info_, const QualityFlags description_quality_)
   {
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     m_topic_info_map.map->remove_deprecated();
@@ -186,9 +186,9 @@ namespace eCAL
     return false;
   }
 
-  void CDescGate::GetTopics(std::unordered_map<std::string, TopicInformation>& topic_info_map_)
+  void CDescGate::GetTopics(std::unordered_map<std::string, STopicInformation>& topic_info_map_)
   {
-    std::unordered_map<std::string, TopicInformation> map;
+    std::unordered_map<std::string, STopicInformation> map;
 
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     m_topic_info_map.map->remove_deprecated();
@@ -215,7 +215,7 @@ namespace eCAL
     }
   }
 
-  bool CDescGate::GetTopicInformation(const std::string& topic_name_, TopicInformation& topic_info_)
+  bool CDescGate::GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_)
   {
     if (topic_name_.empty()) return(false);
 

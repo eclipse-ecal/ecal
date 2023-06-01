@@ -58,7 +58,7 @@ namespace eCAL
     Create(topic_name_, topic_type_, topic_desc_);
   }
 
-  CPublisher::CPublisher(const std::string& topic_name_, const TopicInformation& topic_info_):
+  CPublisher::CPublisher(const std::string& topic_name_, const STopicInformation& topic_info_):
     m_datawriter(nullptr),
     m_id(0),
     m_created(false),
@@ -114,7 +114,7 @@ namespace eCAL
 
   bool CPublisher::Create(const std::string& topic_name_, const std::string& topic_type_ /* = "" */, const std::string& topic_desc_ /* = "" */)
   {
-    TopicInformation info;
+    STopicInformation info;
     auto split_type = Util::SplitCombinedTopicType(topic_type_);
     info.encoding = split_type.first;
     info.type = split_type.second;
@@ -122,7 +122,7 @@ namespace eCAL
     return Create(topic_name_, info);
   }
 
-  bool CPublisher::Create(const std::string& topic_name_, const TopicInformation& topic_info_)
+  bool CPublisher::Create(const std::string& topic_name_, const STopicInformation& topic_info_)
   {
     if (m_created)              return(false);
     if (topic_name_.empty())    return(false);
@@ -218,7 +218,7 @@ namespace eCAL
     if (m_datawriter == nullptr) return false;
 
     // register to description gateway for type / description checking
-    TopicInformation topic_info = m_datawriter->GetTopicInformation();
+    STopicInformation topic_info = m_datawriter->GetTopicInformation();
     // split the topic_type_name
     auto split_type = Util::SplitCombinedTopicType(topic_type_name_);
     topic_info.encoding = split_type.first;
@@ -233,14 +233,14 @@ namespace eCAL
     if(m_datawriter == nullptr) return false;
 
     // register to description gateway for type / description checking
-    TopicInformation topic_info = m_datawriter->GetTopicInformation();
+    STopicInformation topic_info = m_datawriter->GetTopicInformation();
     topic_info.descriptor = topic_desc_;
     ApplyTopicToDescGate(m_datawriter->GetTopicName(), topic_info);
 
     return m_datawriter->SetTopicInformation(topic_info);
   }
 
-  bool CPublisher::SetTopicInformation(const TopicInformation& topic_info_)
+  bool CPublisher::SetTopicInformation(const STopicInformation& topic_info_)
   {
     if (m_datawriter == nullptr) return false;
     ApplyTopicToDescGate(m_datawriter->GetTopicName(), topic_info_);
@@ -435,7 +435,7 @@ namespace eCAL
   std::string CPublisher::GetTypeName() const
   {
     if(m_datawriter == nullptr) return("");
-    TopicInformation info = m_datawriter->GetTopicInformation();
+    STopicInformation info = m_datawriter->GetTopicInformation();
     return(Util::CombinedTopicEncodingAndType(info.encoding, info.type));
   }
 
@@ -445,9 +445,9 @@ namespace eCAL
     return(m_datawriter->GetTopicInformation().descriptor);
   }
 
-  TopicInformation CPublisher::GetTopicInformation() const
+  STopicInformation CPublisher::GetTopicInformation() const
   {
-    if (m_datawriter == nullptr) return(TopicInformation{});
+    if (m_datawriter == nullptr) return(STopicInformation{});
     return(m_datawriter->GetTopicInformation());
   }
 
@@ -461,7 +461,7 @@ namespace eCAL
     m_tlayer = TLayer::STLayer();
   }
 
-  bool CPublisher::ApplyTopicToDescGate(const std::string& topic_name_, const TopicInformation& topic_info_)
+  bool CPublisher::ApplyTopicToDescGate(const std::string& topic_name_, const STopicInformation& topic_info_)
   {
     if (g_descgate() != nullptr)
     {

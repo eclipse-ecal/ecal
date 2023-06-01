@@ -71,7 +71,7 @@ namespace eCAL
     std::string          ttype;  //!< topic type information of the connected publisher         (for sub_event_update_connection only)
     [[deprecated]]
     std::string          tdesc;  //!< topic descriptor information of the connected publisher   (for sub_event_update_connection only)
-    TopicInformation     tinfo;   //!< topic information of the connected subscriber            (for pub_event_update_connection only)
+    STopicInformation     tinfo;   //!< topic information of the connected subscriber            (for pub_event_update_connection only)
   };
 
   /**
@@ -93,7 +93,7 @@ namespace eCAL
     std::string           ttype;  //!< topic type information of the connected publisher       (for sub_event_update_connection only)
     [[deprecated]]
     std::string           tdesc;  //!< topic descriptor information of the connected publisher (for sub_event_update_connection only)
-    TopicInformation      tinfo;  //!< topic information of the connected subscriber           (for pub_event_update_connection only)
+    STopicInformation      tinfo;  //!< topic information of the connected subscriber           (for pub_event_update_connection only)
   };
 
   /**

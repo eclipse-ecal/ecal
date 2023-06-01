@@ -398,7 +398,7 @@ namespace eCAL
       //////////////////////////////////////////////
       // read attributes
       const std::string topic_name(iter->second.topic().tname());
-      TopicInformation topic_info;
+      STopicInformation topic_info;
       auto& pb_topic_info = iter->second.topic().tinfo();
       topic_info.encoding = pb_topic_info.encoding();
       topic_info.type = pb_topic_info.type();
@@ -497,7 +497,7 @@ namespace eCAL
   }
 
   bool CRegistrationProvider::ApplyTopicToDescGate(const std::string& topic_name_
-    , const TopicInformation& topic_info_
+    , const STopicInformation& topic_info_
     , bool topic_is_a_publisher_)
   {
     if (g_descgate() != nullptr)

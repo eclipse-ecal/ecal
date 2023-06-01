@@ -147,7 +147,7 @@ namespace eCAL
      * @param topic_info_map_  Map to store the topic informations.
      *                         Map containing { TopicName -> (Encoding, Type, Description) } mapping of all topics that are currently known.
     **/
-    ECAL_API void GetTopics(std::unordered_map<std::string, TopicInformation>& topic_info_map_);
+    ECAL_API void GetTopics(std::unordered_map<std::string, STopicInformation>& topic_info_map_);
 
     /**
      * @brief Get all topic names.
@@ -205,7 +205,7 @@ namespace eCAL
      *
      * @return  Topic description.
     **/
-    ECAL_API bool GetTopicInformation(const std::string& topic_name_, TopicInformation& topic_info_);
+    ECAL_API bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_);
 
 
 
