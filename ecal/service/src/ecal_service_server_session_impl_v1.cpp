@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecal_service_tcp_session_v1_server.h"
+#include "ecal_service_server_session_impl_v1.h"
 
 #include "ecal_service_tcp_protocol_v1.h"
 

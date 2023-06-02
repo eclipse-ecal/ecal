@@ -19,7 +19,7 @@
 
 #include "ecal_service_tcp_protocol_v1.h"
 
-#include "ecal_tcpheader.h"
+#include "ecal_service_tcp_protocol_layout.h"
 
 namespace eCAL
 {

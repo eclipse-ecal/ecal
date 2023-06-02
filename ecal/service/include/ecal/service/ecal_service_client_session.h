@@ -28,7 +28,7 @@
 #pragma warning(pop)
 #endif
 
-#include "ecal_service_tcp_client_session_types.h"
+#include <ecal/service/ecal_service_client_session_types.h>
 #include "ecal_service_logger.h"
 
 namespace eCAL

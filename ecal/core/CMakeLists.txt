@@ -57,55 +57,6 @@ if(UNIX)
   endif()
 endif()
 
-###### ecal_tcp_service lib ########
-
-set(ecal_tcp_service_src
-    src/service/asio_tcp_client.h
-    src/service/asio_tcp_client_v0.cpp
-    src/service/asio_tcp_client_v0.h
-    src/service/asio_tcp_client_v1.cpp
-    src/service/asio_tcp_client_v1.h
-    src/service/asio_tcp_server.cpp
-    src/service/asio_tcp_server.h
-    src/service/asio_tcp_server_logging.h
-    src/service/asio_tcp_server_session.h
-    src/service/asio_tcp_server_session_v0.cpp
-    src/service/asio_tcp_server_session_v0.h
-    src/service/asio_tcp_server_session_v1.cpp
-    src/service/asio_tcp_server_session_v1.h
-
-    src/service/ecal_service_error.h
-    src/service/ecal_service_log_helpers.h
-    src/service/ecal_service_logger.h
-    src/service/ecal_service_tcp_client_session.cpp
-    src/service/ecal_service_tcp_client_session.h
-    src/service/ecal_service_tcp_client_session_impl_base.h
-    src/service/ecal_service_tcp_client_session_impl_v1.cpp
-    src/service/ecal_service_tcp_client_session_impl_v1.h
-    src/service/ecal_service_tcp_client_session_types.h
-    src/service/ecal_service_tcp_protocol_v1.cpp
-    src/service/ecal_service_tcp_protocol_v1.h
-    src/service/ecal_service_tcp_server.cpp
-    src/service/ecal_service_tcp_server.h
-    src/service/ecal_service_tcp_session_server.h
-    src/service/ecal_service_tcp_session_v1_server.cpp
-    src/service/ecal_service_tcp_session_v1_server.h
-    src/service/ecal_tcpheader.h
-)
-add_library               (ecal_tcp_service OBJECT ${ecal_tcp_service_src})
-target_include_directories(ecal_tcp_service PUBLIC 
-                                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-                                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
-target_link_libraries     (ecal_tcp_service PUBLIC $<BUILD_INTERFACE:asio::asio>)
-target_compile_features   (ecal_tcp_service PUBLIC cxx_std_14)
-source_group              (TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${ecal_tcp_service_src})
-set_property              (TARGET ecal_tcp_service PROPERTY POSITION_INDEPENDENT_CODE ON)
-set_property              (TARGET ecal_tcp_service PROPERTY FOLDER ecal/core)
-
-
-
-
-
 if(ECAL_NPCAP_SUPPORT)
 set(ecal_io_cpp_src_npcap 
    src/io/udp_receiver_npcap.cpp
@@ -196,7 +147,7 @@ set(ecal_service_cpp_src
     src/service/ecal_service_server_impl.h
     src/service/ecal_tcpclient.cpp
     src/service/ecal_tcpclient.h
-    src/service/ecal_tcpheader.h
+#    src/service/ecal_tcpheader.h TODO Remove
     src/service/ecal_tcpserver.cpp
     src/service/ecal_tcpserver.h
 )

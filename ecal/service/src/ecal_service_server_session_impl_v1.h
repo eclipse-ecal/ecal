@@ -19,8 +19,8 @@
 
 #pragma once
 
-#include "ecal_service_tcp_session_server.h"
-#include "ecal_service_logger.h"
+#include "ecal_service_server_session_impl_base.h"
+#include <ecal/service/ecal_service_logger.h>
 
 namespace eCAL
 {

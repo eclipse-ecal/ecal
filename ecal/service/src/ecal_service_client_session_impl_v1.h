@@ -19,8 +19,8 @@
 
 #pragma once
 
-#include "ecal_service_tcp_client_session_impl_base.h"
-#include "ecal_service_logger.h"
+#include "ecal_service_client_session_impl_base.h"
+#include <ecal/service/ecal_service_logger.h>
 
 #include <deque>
 #include <mutex>

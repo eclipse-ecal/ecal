@@ -21,6 +21,8 @@
 
 #include <cstdint>
 
+// TODO: Refactor namespaces and struct names
+
 namespace eCAL
 {
   // Message type used since protocol version 1

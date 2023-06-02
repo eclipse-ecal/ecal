@@ -24,8 +24,8 @@
 #include <iostream>
 #include <atomic>
 
-#include <service/ecal_service_tcp_server.h>
-#include <service/ecal_service_tcp_client_session.h>
+#include <ecal/service/ecal_service_server.h>
+#include <ecal/service/ecal_service_client_session.h>
 
 eCAL::service::LoggerT critical_logger(const std::string& node_name)
 {
@@ -1502,3 +1502,4 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
 #endif
 
 // TODO: Add test for blocking call
+// TODO: Add a test for very big payloads that massively exceed the MTU

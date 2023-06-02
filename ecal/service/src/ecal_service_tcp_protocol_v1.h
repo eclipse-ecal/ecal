@@ -26,7 +26,7 @@
 
 #include <asio.hpp>
 
-#include "ecal_tcpheader.h"
+#include "ecal_service_tcp_protocol_layout.h"
 
 namespace eCAL
 {
@@ -40,18 +40,6 @@ namespace eCAL
 
       void async_send_payload   (asio::ip::tcp::socket& socket, const std::shared_ptr<eCAL::STcpHeader>& header_buffer, const std::shared_ptr<std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb);
       void async_receive_payload(asio::ip::tcp::socket& socket, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb);
-
-      // TODO: remove
-    /////////////////////////////////////////////////////
-    //// Read and write implementation
-    /////////////////////////////////////////////////////
-    //private:
-    //  void read_header_start(const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb);
-    //  void read_header_rest (const std::shared_ptr<std::vector<char>>& header_buffer, size_t bytes_already_read, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb);
-    //  void read_payload     (const std::shared_ptr<std::vector<char>>& header_buffer, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb);
-
-    //  void send_header      (const std::shared_ptr<std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb);
-    //  void send_payload     (const std::shared_ptr<std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb);
     };
   }
 }

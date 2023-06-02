@@ -37,14 +37,14 @@
 
 #include <ecal/cimpl/ecal_callback_cimpl.h>
 
-#include "ecal_service_logger.h"
-#include "ecal_service_tcp_session_server.h"
+#include <ecal/service/ecal_service_logger.h>
+#include "ecal_service_server_session_impl_base.h"
 
 namespace eCAL
 {
   namespace service
   {
-    class Server : public std::enable_shared_from_this<Server>
+    class ServerImpl : public std::enable_shared_from_this<ServerImpl>
     {
     ///////////////////////////////////////////
     // Types for API
@@ -60,28 +60,28 @@ namespace eCAL
     ///////////////////////////////////////////
 
     public:
-      static std::shared_ptr<Server> create(asio::io_context&       io_context
-                                                  , unsigned int            protocol_version
-                                                  , std::uint16_t           port
-                                                  , const ServiceCallbackT& service_callback
-                                                  , const EventCallbackT&   event_callback
-                                                  , const LoggerT&          logger = default_logger("Service Server"));
+      static std::shared_ptr<ServerImpl> create(asio::io_context&       io_context
+                                          , unsigned int            protocol_version
+                                          , std::uint16_t           port
+                                          , const ServiceCallbackT& service_callback
+                                          , const EventCallbackT&   event_callback
+                                          , const LoggerT&          logger = default_logger("Service Server"));
 
     protected:
-      Server(asio::io_context&      io_context
+      ServerImpl(asio::io_context&      io_context
                   , std::uint16_t           port
                   , const ServiceCallbackT& service_callback
                   , const EventCallbackT&   event_callback
                   , const LoggerT&          logger);
 
-      Server(const Server&)            = delete;                  // Copy construct
-      Server(Server&&)                 = delete;                  // Move construct
+      ServerImpl(const ServerImpl&)            = delete;                  // Copy construct
+      ServerImpl(ServerImpl&&)                 = delete;                  // Move construct
 
-      Server& operator=(const Server&) = delete;                  // Copy assign
-      Server& operator=(Server&&)      = delete;                  // Move assign
+      ServerImpl& operator=(const ServerImpl&) = delete;                  // Copy assign
+      ServerImpl& operator=(ServerImpl&&)      = delete;                  // Move assign
   
     public:
-      ~Server();
+      ~ServerImpl();
 
     ///////////////////////////////////////////
     // API

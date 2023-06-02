@@ -17,17 +17,11 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecal_service_tcp_server.h"
-
-#include "asio_tcp_server_logging.h"
-#if(ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED || ECAL_ASIO_TCP_SERVER_LOG_DEBUG_ENABLED)
-  #include <iostream>
-#endif // (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED || ECAL_ASIO_TCP_SERVER_LOG_DEBUG_ENABLED)
+#include "ecal_service_server_impl.h"
 
 #include <algorithm>
 
-#include "ecal_service_tcp_session_server.h"
-#include "ecal_service_tcp_session_v1_server.h"
+#include "ecal_service_server_session_impl_v1.h"
 
 namespace eCAL
 {
@@ -37,7 +31,7 @@ namespace eCAL
     // Constructor, Destructor, Create
     ///////////////////////////////////////////
 
-    std::shared_ptr<Server> Server::create(asio::io_context&      io_context
+    std::shared_ptr<ServerImpl> ServerImpl::create(asio::io_context&      io_context
                                                         , unsigned int            protocol_version
                                                         , std::uint16_t           port
                                                         , const ServiceCallbackT& service_callback
@@ -46,7 +40,7 @@ namespace eCAL
     {
       // Create a new instance with the protected constructor
       // Note: make_shared not possible, because constructor is protected
-      auto instance = std::shared_ptr<Server>(new Server(io_context, port, service_callback, event_callback, logger));
+      auto instance = std::shared_ptr<ServerImpl>(new ServerImpl(io_context, port, service_callback, event_callback, logger));
 
       // Directly Start accepting new connections
       instance->start_accept(protocol_version);
@@ -55,7 +49,7 @@ namespace eCAL
       return instance;
     }
 
-    Server::Server(asio::io_context&        io_context
+    ServerImpl::ServerImpl(asio::io_context&        io_context
                                   , std::uint16_t           port
                                   , const ServiceCallbackT& service_callback
                                   , const EventCallbackT&   event_callback
@@ -70,7 +64,7 @@ namespace eCAL
     }
 
     // TODO: check if I must close the acceptor etc.
-    Server::~Server()
+    ServerImpl::~ServerImpl()
     {
       // Close acceptor, if necessary
       {
@@ -99,23 +93,23 @@ namespace eCAL
     // API
     ///////////////////////////////////////////
 
-    bool Server::is_connected() const
+    bool ServerImpl::is_connected() const
     {
       return get_connection_count() > 0;
     }
 
-    int Server::get_connection_count() const
+    int ServerImpl::get_connection_count() const
     {
       std::lock_guard<std::mutex> session_list_lock(session_list_mutex_);
       return session_list_.size();
     }
 
-    std::uint16_t Server::get_port() const
+    std::uint16_t ServerImpl::get_port() const
     {
       return acceptor_.local_endpoint().port();
     }
 
-    void Server::start_accept(unsigned int version)
+    void ServerImpl::start_accept(unsigned int version)
     {
       logger_(LogLevel::DebugVerbose, "Service waiting for next client...");
 
@@ -170,12 +164,12 @@ namespace eCAL
       //          };
 
       const eCAL::service::ServerSessionBase::DeleteCallbackT delete_callback
-                = [weak_me = std::weak_ptr<Server>(shared_from_this())](const std::shared_ptr<eCAL::service::ServerSessionBase>& session_to_remove) -> void
+                = [weak_me = std::weak_ptr<ServerImpl>(shared_from_this())](const std::shared_ptr<eCAL::service::ServerSessionBase>& session_to_remove) -> void
                   {
                   // Create a shared_ptr to the class. If it doesn't exist
                   // anymore, we will get a nullpointer. In that case, we cannot
                   // execute the callback.
-                  const std::shared_ptr<Server> me = weak_me.lock();
+                  const std::shared_ptr<ServerImpl> me = weak_me.lock();
                   if (me)
                   {
                     std::lock_guard<std::mutex> session_list_lock(me->session_list_mutex_);
@@ -204,7 +198,7 @@ namespace eCAL
       // By only storing a weak_ptr to this, we assure that the user can still
       // delete the service from the outside.
       acceptor_.async_accept(new_session->socket()
-              , [weak_me = std::weak_ptr<Server>(shared_from_this()), new_session, version, logger_copy = logger_](auto ec)
+              , [weak_me = std::weak_ptr<ServerImpl>(shared_from_this()), new_session, version, logger_copy = logger_](auto ec)
                 {
                   // TODO: The Destructor must close the accpetor
                   if (ec)
@@ -223,7 +217,7 @@ namespace eCAL
 
                     logger_copy(LogLevel::DebugVerbose, "Service client initiated connection...");
 
-                    const std::shared_ptr<Server> me = weak_me.lock();
+                    const std::shared_ptr<ServerImpl> me = weak_me.lock();
                     if (me)
                     {
                       // Add the new session to the session list. The session list is a list of weak_ptr.
@@ -239,7 +233,7 @@ namespace eCAL
 
                   // TODO: only re-try accepting, if the ec didn't tell us to stop!!!
                   // Continue creating and accepting the next session
-                  const std::shared_ptr<Server> me = weak_me.lock();
+                  const std::shared_ptr<ServerImpl> me = weak_me.lock();
                   if (me)
                   {
                     me->start_accept(version);
