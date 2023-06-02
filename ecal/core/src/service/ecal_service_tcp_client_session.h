@@ -85,6 +85,8 @@ namespace eCAL
       void async_call_service(const std::shared_ptr<std::string>& request, const ResponseCallbackT& response_callback);
       eCAL::service::Error call_service(const std::shared_ptr<std::string>& request, std::shared_ptr<std::string>& response);
 
+      // TODO: add API that allows status checking on the client
+
     //////////////////////////////////////////////
     // Member Variables
     //////////////////////////////////////////////

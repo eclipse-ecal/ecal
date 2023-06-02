@@ -154,9 +154,6 @@ namespace eCAL
   #endif
                                     me->logger_(LogLevel::DebugVerbose, "Successfully connected to endpoint [" + endpoint_to_string(endpoint_to_connect_to) + "]");
 
-                                    // Wait for errors on the socket
-                                    //me->wait_for_error(); // TODO: Remove or improve
-
                                     // Disable Nagle's algorithm. Nagles Algorithm will otherwise cause the
                                     // Socket to wait for more data, if it encounters a frame that can still
                                     // fit more data. Obviously, this is an awfull default behaviour, if we
@@ -216,24 +213,6 @@ namespace eCAL
                                 me->logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(me->socket_) + "] " + "Successfully sent protocol handshake request.");
                                 me->receive_protocol_handshake_response();
                               });
-
-  //      asio::async_write(socket_
-  //                      , asio::buffer(*buffer)
-  //                      , [me = shared_from_this(), buffer](asio::error_code ec, std::size_t /*bytes_sent*/)
-  //                        {
-  //                          if (ec)
-  //                          {
-  //#if (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_ENABLED)
-  //                            // TODO: Decide whether error messages should always be printed to console
-  //                            const auto message = me->get_log_string("ERROR", "Failed to send protocol handshake request: " + ec.message());
-  //                            std::cerr << message << std::endl;
-  //                            // Don't call the callback with "disconnected", as we never told that we are connected
-  //#endif
-  //                            me->state_ = State::FAILED;
-  //                            return;
-  //                          }
-  //                          me->read_header_start();
-  //                        });
     }
 
     void ClientSessionV1::receive_protocol_handshake_response()
@@ -296,18 +275,10 @@ namespace eCAL
                                       me->peek_for_error();
                                     }
 
-//                                    const std::string message = "Connected to server. Using protocol version " + std::to_string(accepted_protocol_version_);
-//                                    event_callback_(eCAL_Client_Event::client_event_connected, message);
-//#if (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED)
-//                                    std::cout << message << std::endl;
-//#endif
-
                                     return;
                                   }
                                   else
                                   {
-                                    //const auto message = get_log_string("ERROR", "Error connecting to server. Server reported an un-supported protocol version: " + std::to_string(handshake_response->accepted_protocol_version));
-                                    //std::cerr << message << std::endl;
                                     const std::string message = "Error connecting to server. Server reported an un-supported protocol version: " + std::to_string(handshake_response->accepted_protocol_version);
                                     me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
 

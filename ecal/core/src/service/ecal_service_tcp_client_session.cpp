@@ -90,7 +90,7 @@ namespace eCAL
       // Lock mutex, call service asynchronously and wait for the condition variable to be notified
       {
         std::unique_lock<std::mutex> lock(mutex);
-        async_call_service(request, response_callback); // TODO: If I decide to directly call the callback from the same thread in error cases, this mutex will cause undefined behavior. I can work around that with more code (adding a boolean and a predicate telling me, whether the condition variable has already been notified and calling the service without having the mutex locked)
+        async_call_service(request, response_callback);
         condition_variable.wait(lock);
       }
 
