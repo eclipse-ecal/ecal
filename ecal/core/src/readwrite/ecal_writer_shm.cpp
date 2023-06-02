@@ -105,8 +105,8 @@ namespace eCAL
   {
     if (buffer_count_ < 1)
     {
-      buffer_count_ = 1;
-      std::cerr << "CDataWriterSHM::SetBufferCount minimal number of memory files is 1 !" << std::endl;
+      Logging::Log(log_level_error, m_topic_name + "::CDataWriterSHM::SetBufferCount minimal number of memory files is 1 !");
+      return false;
     }
 
     size_t memory_file_size(0);
