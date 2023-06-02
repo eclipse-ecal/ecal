@@ -31,12 +31,12 @@ namespace eCAL
     // Constructor, Destructor, Create
     ///////////////////////////////////////////
 
-    std::shared_ptr<ServerImpl> ServerImpl::create(asio::io_context&      io_context
-                                                        , unsigned int            protocol_version
-                                                        , std::uint16_t           port
-                                                        , const ServiceCallbackT& service_callback
-                                                        , const EventCallbackT&   event_callback
-                                                        , const LoggerT&          logger)
+    std::shared_ptr<ServerImpl> ServerImpl::create(asio::io_context&              io_context
+                                                  , unsigned int                  protocol_version
+                                                  , std::uint16_t                 port
+                                                  , const ServerServiceCallbackT& service_callback
+                                                  , const ServerEventCallbackT&   event_callback
+                                                  , const LoggerT&                logger)
     {
       // Create a new instance with the protected constructor
       // Note: make_shared not possible, because constructor is protected
@@ -49,11 +49,11 @@ namespace eCAL
       return instance;
     }
 
-    ServerImpl::ServerImpl(asio::io_context&        io_context
-                                  , std::uint16_t           port
-                                  , const ServiceCallbackT& service_callback
-                                  , const EventCallbackT&   event_callback
-                                  , const LoggerT&          logger)
+    ServerImpl::ServerImpl(asio::io_context&              io_context
+                          , std::uint16_t                 port
+                          , const ServerServiceCallbackT& service_callback
+                          , const ServerEventCallbackT&   event_callback
+                          , const LoggerT&                logger)
       : io_context_      (io_context)
       , acceptor_        (io_context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
       , service_callback_(service_callback)
@@ -245,37 +245,6 @@ namespace eCAL
                 });
 
     }
-
-    // TODO Remove
-    //int Server::on_request(const std::string& request, std::string& response)
-    //{
-    //  if (service_callback_)
-    //  {
-    //    // Call the the callback
-    //    return service_callback_(request, response);
-    //  }
-    //  else
-    //  {
-    //    // If there is no callback, we return 0
-    //    return 0;
-    //  }
-    //}
-
-    //void Server::on_event(eCAL_Server_Event event, const std::string& message)
-    //{
-    //  // Increase / decrease the connection count
-    //  switch (event)
-    //  {
-    //  case server_event_connected:
-    //    break;
-    //  case server_event_disconnected:
-    //    break;
-    //  default:
-    //    break;
-    //  }
-
-    //  event_callback_(event, message);
-    //}
 
   } // namespace service
 } // namespace eCAL

@@ -39,6 +39,8 @@
 
 #include "ecal/cimpl/ecal_callback_cimpl.h"
 
+#include <ecal/service/ecal_service_server_session_types.h>
+
 namespace eCAL
 {
   namespace service
@@ -48,10 +50,7 @@ namespace eCAL
     /////////////////////////////////////
     // Custom types for API
     /////////////////////////////////////
-    //TODO: Remove or add again
     public:
-      using ServiceCallbackT = std::function<int (const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response)>; // TODO: make the request a const std::shared_ptr<const std::string>&
-      using EventCallbackT   = std::function<void (eCAL_Server_Event, const std::string &)>;
       using DeleteCallbackT  = std::function<void (const std::shared_ptr<ServerSessionBase>&)>;
 
     /////////////////////////////////////
@@ -61,7 +60,7 @@ namespace eCAL
       virtual ~ServerSessionBase() = default;
 
     protected:
-      ServerSessionBase(asio::io_context& io_context_, const ServiceCallbackT& service_callback, const EventCallbackT& event_callback, const DeleteCallbackT& delete_callback) // TODO: remove callbacks
+      ServerSessionBase(asio::io_context& io_context_, const ServerServiceCallbackT& service_callback, const ServerEventCallbackT& event_callback, const DeleteCallbackT& delete_callback) // TODO: remove callbacks
         : socket_          (io_context_)
         , service_callback_(service_callback)
         , event_callback_  (event_callback)
@@ -82,9 +81,9 @@ namespace eCAL
     protected:
       asio::ip::tcp::socket socket_;
 
-      const ServiceCallbackT service_callback_;
-      const EventCallbackT   event_callback_;
-      const DeleteCallbackT  delete_callback_; // TODO: The SessionBase actually doesn't call this callback at all. So it may be a good idea to move it to the implementations
+      const ServerServiceCallbackT service_callback_;
+      const ServerEventCallbackT   event_callback_;
+      const DeleteCallbackT        delete_callback_; // TODO: The SessionBase actually doesn't call this callback at all. So it may be a good idea to move it to the implementations
     };
 
     } // namespace service

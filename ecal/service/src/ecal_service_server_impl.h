@@ -38,6 +38,8 @@
 #include <ecal/cimpl/ecal_callback_cimpl.h>
 
 #include <ecal/service/ecal_service_logger.h>
+#include <ecal/service/ecal_service_server_session_types.h>
+
 #include "ecal_service_server_session_impl_base.h"
 
 namespace eCAL
@@ -47,32 +49,23 @@ namespace eCAL
     class ServerImpl : public std::enable_shared_from_this<ServerImpl>
     {
     ///////////////////////////////////////////
-    // Types for API
-    ///////////////////////////////////////////
-  
-    public:
-      // TODO: Ask rex what the return value (int) of this callback is for
-      using ServiceCallbackT = std::function<int(const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response)>; // TODO: Make the request a const string
-      using EventCallbackT   = std::function<void(eCAL_Server_Event, const std::string&)>; // TODO: THis definition is now both in the server and the server session.
-
-    ///////////////////////////////////////////
     // Constructor, Destructor, Create
     ///////////////////////////////////////////
 
     public:
-      static std::shared_ptr<ServerImpl> create(asio::io_context&       io_context
-                                          , unsigned int            protocol_version
-                                          , std::uint16_t           port
-                                          , const ServiceCallbackT& service_callback
-                                          , const EventCallbackT&   event_callback
-                                          , const LoggerT&          logger = default_logger("Service Server"));
+      static std::shared_ptr<ServerImpl> create(asio::io_context&             io_context
+                                              , unsigned int                  protocol_version
+                                              , std::uint16_t                 port
+                                              , const ServerServiceCallbackT& service_callback
+                                              , const ServerEventCallbackT&   event_callback
+                                              , const LoggerT&                logger = default_logger("Service Server"));
 
     protected:
-      ServerImpl(asio::io_context&      io_context
-                  , std::uint16_t           port
-                  , const ServiceCallbackT& service_callback
-                  , const EventCallbackT&   event_callback
-                  , const LoggerT&          logger);
+      ServerImpl(asio::io_context&              io_context
+                , std::uint16_t                 port
+                , const ServerServiceCallbackT& service_callback
+                , const ServerEventCallbackT&   event_callback
+                , const LoggerT&                logger);
 
       ServerImpl(const ServerImpl&)            = delete;                  // Copy construct
       ServerImpl(ServerImpl&&)                 = delete;                  // Move construct
@@ -94,8 +87,6 @@ namespace eCAL
 
     private:
       void start_accept(unsigned int version);
-      //int  on_request  (const std::string& request, std::string& response); // TODO Remove
-      //void on_event    (eCAL_Server_Event event, const std::string& message); // TODO Remove
 
     ///////////////////////////////////////////
     // Member Variables
@@ -105,8 +96,8 @@ namespace eCAL
       asio::io_context&             io_context_;
       asio::ip::tcp::acceptor       acceptor_;
 
-      const ServiceCallbackT        service_callback_;
-      const EventCallbackT          event_callback_;
+      const ServerServiceCallbackT  service_callback_;
+      const ServerEventCallbackT    event_callback_;
 
       mutable std::mutex            session_list_mutex_;
       std::vector<std::weak_ptr<ServerSessionBase>> session_list_; // TODO: decide whether std::vector is a good idea, as I will have to delete from the middle, when a session is closed.

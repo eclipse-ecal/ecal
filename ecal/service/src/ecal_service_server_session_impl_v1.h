@@ -21,6 +21,7 @@
 
 #include "ecal_service_server_session_impl_base.h"
 #include <ecal/service/ecal_service_logger.h>
+#include <ecal/service/ecal_service_server_session_types.h>
 
 namespace eCAL
 {
@@ -36,18 +37,18 @@ namespace eCAL
     ///////////////////////////////////////////////
 
     public:
-      static std::shared_ptr<ServerSessionV1> create(asio::io_context&        io_context_
-                                                    , const ServiceCallbackT& service_callback
-                                                    , const EventCallbackT&   event_callback
-                                                    , const DeleteCallbackT&  delete_callback
-                                                    , const LoggerT&          logger);
+      static std::shared_ptr<ServerSessionV1> create(asio::io_context&              io_context_
+                                                    , const ServerServiceCallbackT& service_callback
+                                                    , const ServerEventCallbackT&   event_callback
+                                                    , const DeleteCallbackT&        delete_callback
+                                                    , const LoggerT&                logger);
 
     protected:
-      ServerSessionV1(asio::io_context&       io_context_
-                    , const ServiceCallbackT& service_callback
-                    , const EventCallbackT&   event_callback
-                    , const DeleteCallbackT&  delete_callback
-                    , const LoggerT&          logger);
+      ServerSessionV1(asio::io_context&             io_context_
+                    , const ServerServiceCallbackT& service_callback
+                    , const ServerEventCallbackT&   event_callback
+                    , const DeleteCallbackT&        delete_callback
+                    , const LoggerT&                logger);
 
       // Copy
       ServerSessionV1(const ServerSessionV1&)            = delete;

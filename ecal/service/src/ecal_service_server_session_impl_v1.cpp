@@ -32,21 +32,21 @@ namespace eCAL
   namespace service
   {
 
-    std::shared_ptr<ServerSessionV1> ServerSessionV1::create(asio::io_context&        io_context_
-                                                            , const ServiceCallbackT& service_callback
-                                                            , const EventCallbackT&   event_callback
-                                                            , const DeleteCallbackT&  delete_callback
-                                                            , const LoggerT&          logger)
+    std::shared_ptr<ServerSessionV1> ServerSessionV1::create(asio::io_context&              io_context_
+                                                            , const ServerServiceCallbackT& service_callback
+                                                            , const ServerEventCallbackT&   event_callback
+                                                            , const DeleteCallbackT&        delete_callback
+                                                            , const LoggerT&                logger)
     {
       std::shared_ptr<ServerSessionV1> instance = std::shared_ptr<ServerSessionV1>(new ServerSessionV1(io_context_, service_callback, event_callback, delete_callback, logger));
       return instance;
     }
 
-    ServerSessionV1::ServerSessionV1(asio::io_context&        io_context_
-                                    , const ServiceCallbackT& service_callback
-                                    , const EventCallbackT&   event_callback
-                                    , const DeleteCallbackT&  delete_callback
-                                    , const LoggerT&          logger)
+    ServerSessionV1::ServerSessionV1(asio::io_context&              io_context_
+                                    , const ServerServiceCallbackT& service_callback
+                                    , const ServerEventCallbackT&   event_callback
+                                    , const DeleteCallbackT&        delete_callback
+                                    , const LoggerT&                logger)
       : ServerSessionBase(io_context_, service_callback, event_callback, delete_callback)
       , state_                    (State::NOT_CONNECTED)
       , accepted_protocol_version_(0)
