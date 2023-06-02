@@ -31,30 +31,29 @@
 namespace eCAL
 {
 
-  STopicInformation eCALSampleToTopicInformation(const eCAL::pb::Sample& sample)
+  inline STopicInformation eCALSampleToTopicInformation(const eCAL::pb::Sample& sample)
   {
     STopicInformation topic;
-
-    if (sample.topic().tinfo().IsInitialized())
-    {
-      const auto& tinfo = sample.topic().tinfo();
-      topic.encoding = tinfo.encoding();
-      topic.type = tinfo.type();
-      topic.descriptor = tinfo.desc();
-    }
-    // remove else part in eCAL6, compatibility with eCAL < 5.12.0
-    else 
-    {
-      auto split_type = Util::SplitCombinedTopicType(sample.topic().ttype());
-      topic.encoding = split_type.first;
-      topic.type = split_type.second;
-      topic.descriptor = sample.topic().tdesc();
-    }
-
+    const auto& tinfo = sample.topic().tinfo();
+    topic.encoding = tinfo.encoding();
+    topic.type = tinfo.type();
+    topic.descriptor = tinfo.desc();
     return topic;
   }
   
-
+  // This function can be removed in eCAL6. For the time being we need to enrich incoming samples with additional topic information.
+  inline void ModifyIncomingSampleForBackwardsCompatibility(const eCAL::pb::Sample& sample, eCAL::pb::Sample& modified_sample)
+  {
+    modified_sample.CopyFrom(sample);
+    if (modified_sample.has_topic() && !modified_sample.topic().has_tinfo())
+    {
+      auto* topic_info = modified_sample.mutable_topic()->mutable_tinfo();
+      auto split_type = Util::SplitCombinedTopicType(modified_sample.topic().ttype());
+      topic_info->set_encoding(split_type.first);
+      topic_info->set_type(split_type.second);
+      topic_info->set_desc(modified_sample.topic().tdesc());
+    }
+  }
 
 
 
