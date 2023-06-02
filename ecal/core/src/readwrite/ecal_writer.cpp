@@ -160,6 +160,9 @@ namespace eCAL
     Logging::Log(log_level_debug1, m_topic_name + "::CDataWriter::Created");
 #endif
 
+    // adapt number of used memory file
+    ShmSetBufferCount(m_buffering_shm);
+
     return(true);
   }
 
@@ -347,10 +350,21 @@ namespace eCAL
     return true;
   }
 
-  bool CDataWriter::ShmSetBufferCount(long buffering_)
+  bool CDataWriter::ShmSetBufferCount(size_t buffering_)
   {
-    if (buffering_ < 1) return false;
+    if (buffering_ < 1)
+    {
+      Logging::Log(log_level_error, m_topic_name + "::CDataWriter::ShmSetBufferCount minimal number of memory files is 1 !");
+      return false;
+    }
     m_buffering_shm = static_cast<size_t>(buffering_);
+
+    // adapt number of used memory files
+    if (m_created)
+    {
+      m_writer.shm.SetBufferCount(buffering_);
+    }
+
     return true;
   }
 

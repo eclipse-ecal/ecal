@@ -66,7 +66,7 @@ namespace eCAL
     bool SetLayerMode(TLayer::eTransportLayer layer_, TLayer::eSendMode mode_);
     bool SetMaxBandwidthUDP(long bandwidth_);
 
-    bool ShmSetBufferCount(long buffering_);
+    bool ShmSetBufferCount(size_t buffering_);
     bool ShmEnableZeroCopy(bool state_);
 
     bool ShmSetAcknowledgeTimeout(long long acknowledge_timeout_ms_);
@@ -98,11 +98,8 @@ namespace eCAL
     }
 
     const std::string& GetTopicName() const {return(m_topic_name);}
-    const std::string& GetTopicID() const {return(m_topic_id);}
     const std::string& GetTypeName() const {return(m_topic_type);}
     const std::string& GetDescription() const {return(m_topic_desc);}
-    long long GetClock() const {return(m_clock);}
-    long GetFrequency() const {return(m_freq);}
 
   protected:
     bool Register(bool force_);
