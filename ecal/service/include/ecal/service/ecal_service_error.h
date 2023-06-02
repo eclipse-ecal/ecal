@@ -90,7 +90,7 @@ namespace eCAL
       inline bool operator!= (const Error& other)    const { return error_code_ != other.error_code_; }
       inline bool operator!= (const ErrorCode other) const { return error_code_ != other; }
 
-      Error& operator=(ErrorCode error_code)
+      inline Error& operator=(ErrorCode error_code)
       {
         error_code_ = error_code;
         return *this;

@@ -15,8 +15,9 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 find_package(Threads REQUIRED)
 find_package(asio REQUIRED)
 
+# TODO: generate export header doesn't work with object libs. Is there any solution?
 # Include GenerateExportHeader that will create export macros for us
-include(GenerateExportHeader)
+#include(GenerateExportHeader)
 
 # Public API include directory
 set (includes
@@ -56,11 +57,12 @@ add_library (${PROJECT_NAME} OBJECT
 # Generate version defines
 #configure_file("ecal_service_version.h.in" "${PROJECT_BINARY_DIR}/include/ecal_service/ecal_service_version.h" @ONLY)
 
+# TODO: generate export header doesn't work with object libs. Is there any solution?
 # Generate header with export macros
-generate_export_header(${PROJECT_NAME}
-  EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/include/ecal/service/ecal_service_export.h
-  BASE_NAME ECAL_SERVICE
-)
+#generate_export_header(${PROJECT_NAME}
+#  EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/include/ecal/service/ecal_service_export.h
+#  BASE_NAME ECAL_SERVICE
+#)
 
 # TODO: review this alias target. It probably should be eCAL::Service or something like that.
 # add_library (ecal_service::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
