@@ -51,6 +51,7 @@ namespace eCAL
     ///////////////////////////////////////////
   
     public:
+      // TODO: Ask rex what the return value (int) of this callback is for
       using ServiceCallbackT = std::function<int(const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response)>; // TODO: Make the request a const string
       using EventCallbackT   = std::function<void(eCAL_Server_Event, const std::string&)>; // TODO: THis definition is now both in the server and the server session.
 

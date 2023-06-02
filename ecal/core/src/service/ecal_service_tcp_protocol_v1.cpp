@@ -166,6 +166,11 @@ namespace eCAL
         std::vector<asio::const_buffer> buffer_list { asio::buffer(reinterpret_cast<char*>(header_buffer.get()), sizeof(eCAL::STcpHeader))
                                                     , asio::buffer(*payload_buffer)};
 
+        // TODO Remove
+        if (payload_buffer->size() == 0)
+        {
+          int todo_remove = 0;
+        }
         asio::async_write(socket
                         , buffer_list
                         , [&socket, header_buffer, payload_buffer, error_cb, success_cb](asio::error_code ec, std::size_t /*bytes_sent*/)

@@ -196,7 +196,6 @@ namespace eCAL
                             , [me = shared_from_this()]()
                               {
                                 me->state_ = State::CONNECTED;
-                                // TODO: Call event callback
                                 me->logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(me->socket_) + "] " + "Successfully sent protocol handshake response.");
 
                                 const std::string message = "Client has connected. Using protocol version " + std::to_string(me->accepted_protocol_version_) + ".";

@@ -87,7 +87,8 @@ namespace eCAL
         for(const auto& session_weak : session_list_)
         {
           const auto session = session_weak.lock();
-          session->stop();
+          if (session)
+            session->stop();
         }
       }
 
@@ -125,22 +126,22 @@ namespace eCAL
       // save a weak_ptr to this class in the capture and later only execute the
       // callback, if this class is still alive.
 
-      const eCAL::service::ServerSessionBase::ServiceCallbackT service_callback
-              = [weak_me = std::weak_ptr<Server>(shared_from_this())](const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response) -> int
-                {
-                  // Create a shared_ptr to the class. If it doesn't exist
-                  // anymore, we will get a nullpointer. In that case, we cannot
-                  // execute the callback.
-                  const std::shared_ptr<Server> me = weak_me.lock();
-                  if (me)
-                  {
-                    return me->service_callback_(request, response);
-                  }
-                  else
-                  {
-                    return 0;
-                  }
-                };
+      //const eCAL::service::ServerSessionBase::ServiceCallbackT service_callback
+      //        = [weak_me = std::weak_ptr<Server>(shared_from_this())](const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response) -> int
+      //          {
+      //            // Create a shared_ptr to the class. If it doesn't exist
+      //            // anymore, we will get a nullpointer. In that case, we cannot
+      //            // execute the callback.
+      //            const std::shared_ptr<Server> me = weak_me.lock();
+      //            if (me)
+      //            {
+      //              return me->service_callback_(request, response);
+      //            }
+      //            else
+      //            {
+      //              return 0;
+      //            }
+      //          };
 
       // TODO Change this callback or create a new one, so that the session deletes itself from the list of sessions
       //const eCAL::service::ServerSessionBase::EventCallbackT event_callback
@@ -196,7 +197,7 @@ namespace eCAL
       }
       else
       {
-        new_session = eCAL::service::ServerSessionV1::create(io_context_, service_callback, event_callback_, delete_callback, logger_);
+        new_session = eCAL::service::ServerSessionV1::create(io_context_, service_callback_, event_callback_, delete_callback, logger_);
       }
 
       // Accept new session.
