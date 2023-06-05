@@ -331,7 +331,7 @@ namespace eCAL
 
     bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_)
     {
-      if (!g_descgate()) return(false);
+      if (g_descgate() == nullptr) return(false);
       return(g_descgate()->GetTopicInformation(topic_name_, topic_info_));
     }
 
@@ -346,7 +346,7 @@ namespace eCAL
       auto pos = combined_topic_type_.find(':');
       if (pos == std::string::npos)
       {
-        std::string encoding{ "" };
+        std::string encoding;
         std::string type{ combined_topic_type_ };
         return std::make_pair(encoding, type);
       }

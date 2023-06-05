@@ -399,7 +399,7 @@ namespace eCAL
       // read attributes
       const std::string topic_name(iter->second.topic().tname());
       STopicInformation topic_info;
-      auto& pb_topic_info = iter->second.topic().tinfo();
+      const auto& pb_topic_info = iter->second.topic().tinfo();
       topic_info.encoding = pb_topic_info.encoding();
       topic_info.type = pb_topic_info.type();
       topic_info.descriptor = pb_topic_info.desc();
