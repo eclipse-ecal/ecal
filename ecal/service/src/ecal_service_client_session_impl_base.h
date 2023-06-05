@@ -64,7 +64,7 @@ namespace eCAL
     // API
     /////////////////////////////////////
     public:
-      virtual void async_call_service(const std::shared_ptr<std::string>& request, const ResponseCallbackT& response_callback) = 0;
+      virtual void async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback) = 0;
       virtual void stop() = 0;
 
     /////////////////////////////////////

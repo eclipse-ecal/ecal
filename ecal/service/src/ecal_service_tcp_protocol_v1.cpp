@@ -161,9 +161,9 @@ namespace eCAL
       ///////////////////////////////////////////////////
       // Public API
       ///////////////////////////////////////////////////
-      void async_send_payload   (asio::ip::tcp::socket& socket, const std::shared_ptr<eCAL::STcpHeader>& header_buffer, const std::shared_ptr<std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb)
+      void async_send_payload   (asio::ip::tcp::socket& socket, const std::shared_ptr<const eCAL::STcpHeader>& header_buffer, const std::shared_ptr<const std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb)
       {        
-        std::vector<asio::const_buffer> buffer_list { asio::buffer(reinterpret_cast<char*>(header_buffer.get()), sizeof(eCAL::STcpHeader))
+        std::vector<asio::const_buffer> buffer_list { asio::buffer(reinterpret_cast<const char*>(header_buffer.get()), sizeof(eCAL::STcpHeader))
                                                     , asio::buffer(*payload_buffer)};
 
         // TODO Remove

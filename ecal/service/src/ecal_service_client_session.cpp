@@ -60,12 +60,12 @@ namespace eCAL
     //////////////////////////////////////////////
     // Public API
     //////////////////////////////////////////////
-    void ClientSession::async_call_service(const std::shared_ptr<std::string>& request, const ResponseCallbackT& response_callback)
+    void ClientSession::async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback)
     {
       return impl_->async_call_service(request, response_callback);
     }
 
-    eCAL::service::Error ClientSession::call_service(const std::shared_ptr<std::string>& request, std::shared_ptr<std::string>& response)
+    eCAL::service::Error ClientSession::call_service(const std::shared_ptr<const std::string>& request, std::shared_ptr<std::string>& response)
     {
       eCAL::service::Error error(Error::GENERIC_ERROR);
         

@@ -47,8 +47,8 @@ namespace eCAL
 
       struct ServiceCall
       {
-        const std::shared_ptr<std::string> request;
-        const ResponseCallbackT            response_cb;
+        const std::shared_ptr<const std::string> request;
+        const ResponseCallbackT                  response_cb;
       };
 
     /////////////////////////////////////
@@ -84,7 +84,7 @@ namespace eCAL
     // Service calls
     //////////////////////////////////////
     public:
-      void async_call_service(const std::shared_ptr<std::string>& request, const ResponseCallbackT& response_callback) override;
+      void async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback) override;
 
     private:
       void send_next_service_request();

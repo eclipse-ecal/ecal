@@ -294,7 +294,7 @@ namespace eCAL
     // Service calls
     //////////////////////////////////////
 
-    void ClientSessionV1::async_call_service(const std::shared_ptr<std::string>& request, const ResponseCallbackT& response_callback)
+    void ClientSessionV1::async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback)
     {
       service_call_queue_strand_.post([me = shared_from_this(), request, response_callback]()
                             {

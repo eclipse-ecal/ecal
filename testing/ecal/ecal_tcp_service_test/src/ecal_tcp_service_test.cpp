@@ -1569,74 +1569,74 @@ TEST(BlockingCall, RegularBlockingCall)
 }
 #endif
 
-#if 1
-TEST(BlockingCall, RegularBlockingCall)
-{
-  constexpr std::chrono::milliseconds server_callback_wait_time(50);
-  constexpr int num_calls = 3;
-
-  asio::io_context io_context;
-  asio::io_context::work dummy_work(io_context);
-
-  std::atomic<int> num_server_service_callback_called           (0);
-
-  const eCAL::service::Server::ServiceCallbackT server_service_callback
-          = [&num_server_service_callback_called, server_callback_wait_time]
-            (const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response) -> int
-            {
-              std::this_thread::sleep_for(server_callback_wait_time);
-              num_server_service_callback_called++;
-              *response = "Response on \"" + *request + "\"";
-              return 0;
-            };
-
-  const eCAL::service::Server::EventCallbackT server_event_callback
-          = []
-            (eCAL_Server_Event event, const std::string& message) -> void
-            {};
-
-  const eCAL::service::ClientSession::EventCallbackT client_event_callback
-          = []
-            (eCAL_Client_Event event, const std::string& message) -> void
-            {};
-
-  auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
-  auto client = eCAL::service::ClientSession::create(io_context, protocol_version, "127.0.0.1", server->get_port(), client_event_callback);
-
-  // Run the io_service. The server will always have work for the io_service, so we don't need a stub object
-  std::thread io_thread([&io_context]()
-                        {
-                          io_context.run();
-                        });
-
-  for (int i = 0; i < num_calls; i++)
-  {
-    auto start = std::chrono::steady_clock::now();
-
-    // Call the service blocking
-    const auto request = std::make_shared<std::string>("Request " + std::to_string(i));
-    auto response      = std::make_shared<std::string>(); // TODO: Make const?
-
-    auto error  = client->call_service(request, response);
-
-    {
-      auto time_elapsed = (std::chrono::steady_clock::now() - start);
-
-      EXPECT_FALSE(bool(error));
-      EXPECT_TRUE (time_elapsed >= server_callback_wait_time);
-      EXPECT_EQ   (num_server_service_callback_called, i + 1);
-      EXPECT_EQ   (*response, "Response on \"" + *request + "\"");
-    }
-  }
-
-  // delete all objects
-  client    = nullptr;
-  server    = nullptr;
-
-  // join the io_thread
-  io_context.stop();
-  io_thread.join();
-}
+#if 0
+//TEST(BlockingCall, RegularBlockingCall)
+//{
+//  constexpr std::chrono::milliseconds server_callback_wait_time(50);
+//  constexpr int num_calls = 3;
+//
+//  asio::io_context io_context;
+//  asio::io_context::work dummy_work(io_context);
+//
+//  std::atomic<int> num_server_service_callback_called           (0);
+//
+//  const eCAL::service::Server::ServiceCallbackT server_service_callback
+//          = [&num_server_service_callback_called, server_callback_wait_time]
+//            (const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response) -> int
+//            {
+//              std::this_thread::sleep_for(server_callback_wait_time);
+//              num_server_service_callback_called++;
+//              *response = "Response on \"" + *request + "\"";
+//              return 0;
+//            };
+//
+//  const eCAL::service::Server::EventCallbackT server_event_callback
+//          = []
+//            (eCAL_Server_Event event, const std::string& message) -> void
+//            {};
+//
+//  const eCAL::service::ClientSession::EventCallbackT client_event_callback
+//          = []
+//            (eCAL_Client_Event event, const std::string& message) -> void
+//            {};
+//
+//  auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
+//  auto client = eCAL::service::ClientSession::create(io_context, protocol_version, "127.0.0.1", server->get_port(), client_event_callback);
+//
+//  // Run the io_service. The server will always have work for the io_service, so we don't need a stub object
+//  std::thread io_thread([&io_context]()
+//                        {
+//                          io_context.run();
+//                        });
+//
+//  for (int i = 0; i < num_calls; i++)
+//  {
+//    auto start = std::chrono::steady_clock::now();
+//
+//    // Call the service blocking
+//    const auto request = std::make_shared<std::string>("Request " + std::to_string(i));
+//    auto response      = std::make_shared<std::string>(); // TODO: Make const?
+//
+//    auto error  = client->call_service(request, response);
+//
+//    {
+//      auto time_elapsed = (std::chrono::steady_clock::now() - start);
+//
+//      EXPECT_FALSE(bool(error));
+//      EXPECT_TRUE (time_elapsed >= server_callback_wait_time);
+//      EXPECT_EQ   (num_server_service_callback_called, i + 1);
+//      EXPECT_EQ   (*response, "Response on \"" + *request + "\"");
+//    }
+//  }
+//
+//  // delete all objects
+//  client    = nullptr;
+//  server    = nullptr;
+//
+//  // join the io_thread
+//  io_context.stop();
+//  io_thread.join();
+//}
 #endif
 
 // TODO: Add test for blocking call where the client / server is destoyed before all call are finished
