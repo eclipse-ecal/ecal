@@ -94,7 +94,7 @@ namespace eCAL
      * @param topic_type_   Type name (optional for type checking).
      * @param topic_desc_   Type description (optional for description checking).
      **/
-    [[deprecated]]
+    [[deprecated("Please use the constructor CSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
     CSubscriber(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
 
     /**
@@ -139,7 +139,7 @@ namespace eCAL
      *
      * @return  true if it succeeds, false if it fails. 
     **/
-    [[deprecated]]
+    [[deprecated("Please use the create method bool Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
     bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
 
     /**
@@ -289,6 +289,7 @@ namespace eCAL
      *
      * @return  The type name. 
     **/
+    [[deprecated("Please use the method STopicInformation GetTopicInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")]]
     std::string GetTypeName() const;
 
     /**
@@ -296,7 +297,15 @@ namespace eCAL
      *
      * @return  The description. 
     **/
+    [[deprecated("Please use the method STopicInformation GetTopicInformation() instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")]]
     std::string GetDescription() const;
+
+    /**
+    * @brief Gets description of the connected topic.
+    *
+    * @return  The topic information.
+    **/
+    STopicInformation GetTopicInformation() const;
 
     /**
      * @brief Set the timeout parameter for triggering

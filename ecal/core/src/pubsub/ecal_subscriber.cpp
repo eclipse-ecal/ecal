@@ -277,6 +277,12 @@ namespace eCAL
     if(m_datareader == nullptr) return("");
     return(m_datareader->GetTopicInformation().descriptor);
   }
+  
+  STopicInformation CSubscriber::GetTopicInformation() const
+  {
+    if (m_datareader == nullptr) return(STopicInformation{});
+    return(m_datareader->GetTopicInformation());
+  }
 
   bool CSubscriber::SetTimeout(int timeout_)
   {

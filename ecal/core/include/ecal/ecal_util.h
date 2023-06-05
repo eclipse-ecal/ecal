@@ -164,7 +164,7 @@ namespace eCAL
      *
      * @return  True if succeeded.
     **/
-    [[deprecated]]
+    [[deprecated("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")]]
     ECAL_API bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
 
     /**
@@ -174,7 +174,7 @@ namespace eCAL
      *
      * @return  Topic type name.
     **/
-    [[deprecated]]
+    [[deprecated("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")]]
     ECAL_API std::string GetTopicTypeName(const std::string& topic_name_);
 
     /**
@@ -185,7 +185,7 @@ namespace eCAL
      *
      * @return  True if succeeded.
     **/
-    [[deprecated]]
+    [[deprecated("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")]]
     ECAL_API bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_);
 
     /**
@@ -195,7 +195,7 @@ namespace eCAL
      *
      * @return  Topic description.
     **/
-    [[deprecated]]
+    [[deprecated("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")]]
     ECAL_API std::string GetTopicDescription(const std::string& topic_name_);
 
     /**
@@ -265,7 +265,7 @@ namespace eCAL
      *
      * @return  True if succeeded.
     **/
-    [[deprecated]]
+    [[deprecated("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")]]
     ECAL_API bool GetTypeName(const std::string& topic_name_, std::string& topic_type_);
 
     /**
@@ -277,37 +277,51 @@ namespace eCAL
      *
      * @return  Topic type name.
     **/
-    [[deprecated]]
+    [[deprecated("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")]]
     ECAL_API std::string GetTypeName(const std::string& topic_name_);
 
     /**
      * @brief Gets description of the specified topic.
      *
-     * This function is deprecated with eCAL 5.10. Please use GetTopicDescription.
+     * This function is deprecated with eCAL 5.10. Please use GetTopicInformation.
      *
      * @param topic_name_   Topic name.
      * @param topic_desc_   String to store description.
      *
      * @return  True if succeeded.
     **/
-    [[deprecated]]
+    [[deprecated("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")]]
     ECAL_API bool GetDescription(const std::string& topic_name_, std::string& topic_desc_);
 
     /**
      * @brief Gets description of the specified topic.
      *
-     * This function is deprecated with eCAL 5.10. Please use GetTopicDescription.
+     * This function is deprecated with eCAL 5.10. Please use GetTopicInformation.
      *
      * @param topic_name_   Topic name.
      *
      * @return  Topic description.
     **/
-    [[deprecated]]
+    [[deprecated("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")]]
     ECAL_API std::string GetDescription(const std::string& topic_name_);
 
+    /**
+    * @brief Splits the topic type (eCAL < 5.12) into encoding and types (>= eCAL 5.12)
+    *
+    * @param topictype_name_   "Old" typename.
+    *
+    * @return  (encoding, typename).
+    **/
+    ECAL_API std::pair<std::string, std::string> SplitCombinedTopicType(const std::string& combined_topic_type_);
 
-    ECAL_API std::pair<std::string, std::string> SplitCombinedTopicType(const std::string& topic_name_);
-
+    /**
+    * @brief Combine separate encoding and type iinformation (>= eCAL 5.12) into a combined typename (eCAL < 5.12) 
+    *
+    * @param topic_encoding_ Topic Encoding
+    * @param topic_type_     Topic Type
+    *
+    * @return "Old" typename. ( encoding:typename ).
+    **/
     ECAL_API std::string CombinedTopicEncodingAndType(const std::string& topic_encoding_, const std::string& topic_type_);
 
   }

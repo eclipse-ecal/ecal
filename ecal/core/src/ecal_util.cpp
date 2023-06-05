@@ -341,19 +341,19 @@ namespace eCAL
       return GetTopicDescription(topic_name_);
     }
 
-    std::pair<std::string, std::string> SplitCombinedTopicType(const std::string& combined_topic_type)
+    std::pair<std::string, std::string> SplitCombinedTopicType(const std::string& combined_topic_type_)
     {
-      auto pos = combined_topic_type.find(':');
+      auto pos = combined_topic_type_.find(':');
       if (pos == std::string::npos)
       {
         std::string encoding{ "" };
-        std::string type{ combined_topic_type };
+        std::string type{ combined_topic_type_ };
         return std::make_pair(encoding, type);
       }
       else
       {
-        std::string encoding = combined_topic_type.substr(0, pos);
-        std::string type = combined_topic_type.substr(pos + 1);
+        std::string encoding = combined_topic_type_.substr(0, pos);
+        std::string type = combined_topic_type_.substr(pos + 1);
         return std::make_pair(encoding, type);
       }
     }

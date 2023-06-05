@@ -84,7 +84,7 @@ namespace eCAL
      * @param topic_type_   Type name (optional). 
      * @param topic_desc_   Type description (optional). 
     **/
-    [[deprecated]]
+    [[deprecated("Please use the constructor CPublisher(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
     CPublisher(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
 
     /**
@@ -93,7 +93,6 @@ namespace eCAL
     * @param topic_name_   Unique topic name.
     * @param topic_info_   Topic information (encoding, type, descriptor)
     **/
-
     CPublisher(const std::string& topic_name_, const STopicInformation& topic_info_);
 
 
@@ -131,7 +130,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails. 
     **/
-    [[deprecated]]
+    [[deprecated("Please use the create method bool Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
     bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
 
     /**
@@ -158,7 +157,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    [[deprecated]]
+    [[deprecated("Please use the method bool SetTopicInformation(const STopicInformation& topic_info_) instead. This function will be removed in eCAL6")]]
     bool SetTypeName(const std::string& topic_type_name_);
 
     /**
@@ -168,7 +167,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails. 
     **/
-    [[deprecated]]
+    [[deprecated("Please use the method bool SetTopicInformation(const STopicInformation& topic_info_) instead. This function will be removed in eCAL6")]]
     bool SetDescription(const std::string& topic_desc_);
 
     /**
@@ -485,7 +484,7 @@ namespace eCAL
      *
      * @return  The type name. 
     **/
-    [[deprecated]]
+    [[deprecated("Please use the method STopicInformation GetTopicInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")]]
     std::string GetTypeName() const;
 
     /**
@@ -493,7 +492,7 @@ namespace eCAL
      *
      * @return  The description. 
     **/
-    [[deprecated]]
+    [[deprecated("Please use the method STopicInformation GetTopicInformation() instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")]]
     std::string GetDescription() const;
 
     /**
