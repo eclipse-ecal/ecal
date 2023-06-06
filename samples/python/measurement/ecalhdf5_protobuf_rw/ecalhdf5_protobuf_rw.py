@@ -9,9 +9,7 @@ import person_pb2
 
 def main():
     # We create an ecalhdf5 file and write a protobuf instance in it
-    ENTRY_COUNT = 20
-    CHANNEL_INDEX = 0
-    CHANNEL_NO = 1
+    ENTRY_COUNT = 40
 
     # Declare an instance of protobuf
     person = person_pb2.Person()
@@ -19,16 +17,16 @@ def main():
     output_dir = "ecalhdf5_protobuf_rw_meas_folder"
     file_name = "measurement"
     channel_name = "person"
-    channels = [ecalhdf5.Channel(channel_name, pb_helper.get_descriptor_from_type(person_pb2.Person),
-                                 "proto:" + person_pb2.Person.DESCRIPTOR.full_name)]
+    channel = ecalhdf5.Channel(channel_name, pb_helper.get_descriptor_from_type(person_pb2.Person),
+                                 "proto:" + person_pb2.Person.DESCRIPTOR.full_name)
 
     max_size_per_file = 500
     meas = ecalhdf5.Meas(output_dir, 1)
     meas.set_file_base_name(file_name)
     meas.set_max_size_per_file(max_size_per_file)
 
-    meas.set_channel_description(channels[CHANNEL_INDEX].name, channels[CHANNEL_INDEX].description)
-    meas.set_channel_type(channels[CHANNEL_INDEX].name, channels[CHANNEL_INDEX].type)
+    meas.set_channel_description(channel.name, channel.description)
+    meas.set_channel_type(channel.name, channel.type)
 
     print("Creating {}/{}.hdf5 \n".format(output_dir, file_name))
 
