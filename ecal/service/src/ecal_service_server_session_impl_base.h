@@ -60,7 +60,7 @@ namespace eCAL
       virtual ~ServerSessionBase() = default;
 
     protected:
-      ServerSessionBase(asio::io_context& io_context_, const ServerServiceCallbackT& service_callback, const ServerEventCallbackT& event_callback, const DeleteCallbackT& delete_callback) // TODO: remove callbacks
+      ServerSessionBase(asio::io_context& io_context_, const ServerServiceCallbackT& service_callback, const ServerEventCallbackT& event_callback, const DeleteCallbackT& delete_callback)
         : socket_          (io_context_)
         , service_callback_(service_callback)
         , event_callback_  (event_callback)

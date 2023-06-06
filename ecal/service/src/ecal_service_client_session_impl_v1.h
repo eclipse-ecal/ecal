@@ -37,18 +37,10 @@ namespace eCAL
     // Internal types
     //////////////////////////////////////
     private:
-      enum class State
-      {
-        NOT_CONNECTED,
-        HANDSHAKE,
-        CONNECTED,
-        FAILED,
-      };
-
       struct ServiceCall
       {
-        const std::shared_ptr<const std::string> request;
-        const ResponseCallbackT                  response_cb;
+        std::shared_ptr<const std::string> request;
+        ResponseCallbackT                  response_cb;
       };
 
     /////////////////////////////////////
@@ -87,9 +79,17 @@ namespace eCAL
       void async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback) override;
 
     private:
-      void send_next_service_request();
-      void receive_service_response();
+      void send_next_service_request(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_cb);
+      void receive_service_response(const ResponseCallbackT& response_cb);
     
+    //////////////////////////////////////
+    // Status API
+    //////////////////////////////////////
+    public:
+      State        get_state()                     const override;
+      std::uint8_t get_accepted_protocol_version() const override;
+      int          get_queue_size()                const override;
+
     //////////////////////////////////////
     // Shutdown
     //////////////////////////////////////
@@ -106,20 +106,17 @@ namespace eCAL
       static constexpr std::uint8_t MIN_SUPPORTED_PROTOCOL_VERSION = 1;
       static constexpr std::uint8_t MAX_SUPPORTED_PROTOCOL_VERSION = 1;
 
-      asio::ip::tcp::resolver  resolver_;
+      asio::io_context::strand  service_call_queue_strand_;
+      asio::ip::tcp::resolver   resolver_;
+      const LoggerT             logger_;
 
-      State                    state_;
-      std::uint8_t             accepted_protocol_version_;
-
-      asio::io_context::strand service_call_queue_strand_;
+      std::atomic<std::uint8_t> accepted_protocol_version_;
 
       // TODO: Add a mutex to protect the service call queue and the boolean. The reason is that I then can add external public API to check how many calls are queued and whether there currently is a call bein executed. The mutex would also protect the state
-      std::deque<ServiceCall>  service_call_queue_;
-      bool                     service_call_in_progress_;
-
-      const LoggerT            logger_;
-
-      asio::steady_timer       timer_; // TODO remove
+      mutable std::mutex        service_state_mutex_;
+      State                     state_;
+      std::deque<ServiceCall>   service_call_queue_;
+      bool                      service_call_in_progress_;
     };
   }
 }

@@ -34,6 +34,8 @@
 #include <ecal/service/ecal_service_error.h>
 #include <ecal/service/ecal_service_client_session_types.h>
 
+#include <ecal/service/ecal_service_state.h>
+
 namespace eCAL
 {
   namespace service
@@ -65,6 +67,11 @@ namespace eCAL
     /////////////////////////////////////
     public:
       virtual void async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback) = 0;
+
+      virtual State        get_state()                     const = 0;
+      virtual std::uint8_t get_accepted_protocol_version() const = 0;
+      virtual int          get_queue_size()                const = 0;
+
       virtual void stop() = 0;
 
     /////////////////////////////////////

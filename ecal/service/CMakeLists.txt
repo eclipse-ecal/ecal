@@ -27,6 +27,7 @@ set (includes
     include/ecal/service/ecal_service_logger.h
     include/ecal/service/ecal_service_server.h
     include/ecal/service/ecal_service_server_session_types.h
+    include/ecal/service/ecal_service_state.h
 )
 
 # Private source files

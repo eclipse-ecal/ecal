@@ -63,7 +63,6 @@ namespace eCAL
       logger_(LogLevel::DebugVerbose, "Service Created");
     }
 
-    // TODO: check if I must close the acceptor etc.
     ServerImpl::~ServerImpl()
     {
       // Close acceptor, if necessary

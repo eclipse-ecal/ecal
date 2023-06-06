@@ -47,11 +47,11 @@ namespace eCAL
     ClientSessionV1::ClientSessionV1(asio::io_context& io_context_, const EventCallbackT& event_callback, const LoggerT& logger)
       : ClientSessionBase(io_context_, event_callback)
       , resolver_                 (io_context_)
-      , state_                    (State::NOT_CONNECTED)
-      , accepted_protocol_version_(0)
       , service_call_queue_strand_(io_context_)
       , logger_                   (logger)
-      , timer_(io_context_, std::chrono::milliseconds(500)) // TODO Remove
+      , accepted_protocol_version_(0)
+      , state_                    (State::NOT_CONNECTED)
+      , service_call_in_progress_ (false)
     {
   #if (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_VERBOSE_ENABLED)
       const auto message = get_log_string("DEBUG", "Created");
@@ -183,7 +183,10 @@ namespace eCAL
         logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(socket_) + "] " + "Sending protocol handshake request...");
 
         // Go to handshake state
-        state_ = State::HANDSHAKE;
+        {
+          std::lock_guard<std::mutex> lock(service_state_mutex_);
+          state_ = State::HANDSHAKE;
+        }
 
         // Create buffers
         const std::shared_ptr<STcpHeader>  header_buffer  = std::make_shared<STcpHeader>();
@@ -255,8 +258,11 @@ namespace eCAL
                                   if ((handshake_response->accepted_protocol_version >= MIN_SUPPORTED_PROTOCOL_VERSION)
                                     && (handshake_response->accepted_protocol_version <= MIN_SUPPORTED_PROTOCOL_VERSION))
                                   {
-                                    me->accepted_protocol_version_ = handshake_response->accepted_protocol_version;
-                                    me->state_ = State::CONNECTED;
+                                    {
+                                      std::lock_guard<std::mutex> lock(me->service_state_mutex_);
+                                      me->accepted_protocol_version_ = handshake_response->accepted_protocol_version;
+                                      me->state_ = State::CONNECTED;
+                                    }
 
                                     const std::string message = "Connected to server. Using protocol version " + std::to_string(me->accepted_protocol_version_);
                                     me->logger_(LogLevel::Debug, "[" + get_connection_info_string(me->socket_) + "] " + message);
@@ -265,14 +271,25 @@ namespace eCAL
                                     me->event_callback_(eCAL_Client_Event::client_event_connected, message);
 
                                     // Start sending service requests, if there are any
-                                    if (!me->service_call_queue_.empty())
                                     {
-                                      me->send_next_service_request();
-                                    }
-                                    else
-                                    {
-                                      // Peek the socket for errors
-                                      me->peek_for_error();
+                                      std::lock_guard<std::mutex> lock(me->service_state_mutex_);
+                                      if (!me->service_call_queue_.empty())
+                                      {
+                                        // If there are service calls in the queue, we send the next one.
+                                        me->service_call_in_progress_ = true;
+                                        me->send_next_service_request(std::move(me->service_call_queue_.front().request), std::move(me->service_call_queue_.front().response_cb));
+                                        me->service_call_queue_.pop_front();
+                                      }
+                                      else
+                                      {
+                                        // If there are no more service calls to send, we go to error-peeking.
+                                        // While error peeking we basically do nothing, except from non-destructively
+                                        // reading 1 byte from the socket (i.e. without removing it from the socket).
+                                        // This will cause asio / the OS to notify us, when the server closed the connection.
+
+                                        me->service_call_in_progress_ = false;
+                                        me->peek_for_error();
+                                      }
                                     }
 
                                     return;
@@ -296,67 +313,161 @@ namespace eCAL
 
     void ClientSessionV1::async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback)
     {
+      // TODO remove
+      // 
+      //bool call_response_callback_with_error(false);
+      //                        
+      //{
+      //  std::lock_guard<std::mutex> lock(service_state_mutex_);
+      //  if (state_ != State::FAILED)
+      //  {
+      //    // if we are  not in failed state, let's check
+      //    // whether we directly invoke the call of if we add it to the queue
+
+      //    if (service_call_in_progress_ && (state_ == State::CONNECTED))
+      //    {
+      //      // directly call the the service, iff
+      //      // 
+      //      //  - there is no call in progress
+      //      //  
+      //      //  and
+      //      // 
+      //      //  - we are connected
+      //      // 
+      //      service_call_in_progress_ = true;
+      //      send_next_service_request(request, response_callback);
+      //    }
+      //    else
+      //    {
+      //      // add the call to the queue, iff:
+      //      // 
+      //      //  - a call is already in progress
+      //      // 
+      //      //  or
+      //      // 
+      //      //  - we are not connected, yet
+      //      //
+      //      service_call_queue_.push_back(ServiceCall{request, response_callback});
+      //    }
+      //  }
+      //  else
+      //  {
+      //    // if we are in failed state, we directly call the callback with an error.
+      //    call_response_callback_with_error = true;
+      //  }
+      //}
+
+      //if(call_response_callback_with_error)
+      //{
+      //  // if we are in failed state, we directly call the callback with an error.
+      //  // the mutex is unlocked at this point. that is important, as we have no
+      //  // influence on when the callback will return.
+      //  response_callback(eCAL::service::Error::ErrorCode::CONNECTION_CLOSED, nullptr);
+      //}
+
+
       service_call_queue_strand_.post([me = shared_from_this(), request, response_callback]()
                             {
-                              if (me->state_ != State::FAILED)
+                              // Variable that enables us to unlock the mutex before actually calling the callback
+                              bool call_response_callback_with_error(false);
+                              
                               {
-                                // If we are not in FAILED state, i.e. we are CONNECTED or currently connecting,
-                                // we add the service call to the queue
-                                const bool write_in_progress = !me->service_call_queue_.empty();
-                                me->service_call_queue_.push_back(ServiceCall{request, response_callback});
-                                if (!write_in_progress && (me->state_ == State::CONNECTED))
+                                std::lock_guard<std::mutex> lock(me->service_state_mutex_);
+                                if (me->state_ != State::FAILED)
                                 {
-                                  // If currently no write is in progress, we start a write.
-                                  me->send_next_service_request();
+                                  // If we are  not in failed state, let's check
+                                  // whether we directly invoke the call of if we add it to the queue
+
+                                  if (!me->service_call_in_progress_ && (me->state_ == State::CONNECTED))
+                                  {
+                                    // Directly call the the service, iff
+                                    // 
+                                    //  - There is no call in progress
+                                    //  
+                                    //  and
+                                    // 
+                                    //  - We are connected
+                                    // 
+                                    me->service_call_in_progress_ = true;
+                                    me->send_next_service_request(request, response_callback);
+                                  }
+                                  else
+                                  {
+                                    // Add the call to the queue, iff:
+                                    // 
+                                    //  - A call is already in progress
+                                    // 
+                                    //  or
+                                    // 
+                                    //  - We are not connected, yet
+                                    //
+                                    me->service_call_queue_.push_back(ServiceCall{request, response_callback});
+                                  }
+                                }
+                                else
+                                {
+                                  // If we are in FAILED state, we directly call the callback with an error.
+                                  call_response_callback_with_error = true;
                                 }
                               }
-                              else
+
+                              if(call_response_callback_with_error)
                               {
                                 // If we are in FAILED state, we directly call the callback with an error.
+                                // The mutex is unlocked at this point. That is important, as we have no
+                                // influence on when the callback will return.
                                 response_callback(eCAL::service::Error::ErrorCode::CONNECTION_CLOSED, nullptr);
                               }
                             });
     }
 
-    void ClientSessionV1::send_next_service_request()
+    void ClientSessionV1::send_next_service_request(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_cb)
     {
-      // TODO: Create a function that just adds requests to a queue, so they will be sent one after another
       logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(socket_) + "] " + "Sending service request...");
 
       // Create header_buffer
       const std::shared_ptr<STcpHeader>  header_buffer  = std::make_shared<STcpHeader>();
-      header_buffer->package_size_n = htonl(service_call_queue_.front().request->size());
+      header_buffer->package_size_n = htonl(request->size());
       header_buffer->version        = accepted_protocol_version_;
       header_buffer->message_type   = MessageType::ServiceRequest;
       header_buffer->header_size_n  = htons(sizeof(STcpHeader));
 
-      eCAL::service::ProtocolV1::async_send_payload(socket_, header_buffer, service_call_queue_.front().request
-                              , service_call_queue_strand_.wrap([me = shared_from_this()](asio::error_code ec)
+      eCAL::service::ProtocolV1::async_send_payload(socket_, header_buffer, request
+                              , service_call_queue_strand_.wrap([me = shared_from_this(), response_cb](asio::error_code ec)
                                 {
                                   const std::string message = "Failed sending service request: " + ec.message();
                                   me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
 
+                                  // Call the callback with an error
+                                  response_cb(Error(Error::ErrorCode::CONNECTION_CLOSED, message), nullptr);
+                                  
+                                  // Further handle the error, e.g. unwinding pending service calls and calling the event callback
                                   me->handle_connection_loss_error(message);
                                 })
-                              , [me = shared_from_this()]()
+                              , [me = shared_from_this(), response_cb]()
                                 {
                                   me->logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(me->socket_) + "] " + "Successfully sent service request.");
-                                  me->receive_service_response();
+                                  me->receive_service_response(response_cb);
                                 });
     }
 
-    void ClientSessionV1::receive_service_response()
+    void ClientSessionV1::receive_service_response(const ResponseCallbackT& response_cb)
     {
       logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(socket_) + "] " + "Waiting for service response...");
 
       eCAL::service::ProtocolV1::async_receive_payload(socket_
-                            , service_call_queue_strand_.wrap([me = shared_from_this()](asio::error_code ec)
+                            , service_call_queue_strand_.wrap([me = shared_from_this(), response_cb](asio::error_code ec)
                               {
                                 const std::string message = "Failed receiving service response: " + ec.message();
                                 me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
+
+                                // Call the callback with an error
+                                response_cb(Error(Error::ErrorCode::CONNECTION_CLOSED, message), nullptr);
+
+                                // Further handle the error, e.g. unwinding pending service calls and calling the event callback
                                 me->handle_connection_loss_error(message);
                               })
-                            , service_call_queue_strand_.wrap([me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
+                            , service_call_queue_strand_.wrap([me = shared_from_this(), response_cb](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
                               {
                                 STcpHeader* header = reinterpret_cast<STcpHeader*>(header_buffer->data());
                                 if (header->message_type != eCAL::MessageType::ServiceResponse)
@@ -366,8 +477,11 @@ namespace eCAL
                                                               + ", but received " + std::to_string(static_cast<std::uint8_t>(header->message_type));
                                   me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
 
-                                  me->handle_connection_loss_error(message);
+                                  // Call the callback with an error
+                                  response_cb(Error(Error::ErrorCode::PROTOCOL_ERROR, message), nullptr);
 
+                                  // Further handle the error, e.g. unwinding pending service calls and calling the event callback
+                                  me->handle_connection_loss_error(message);
                                   return;
                                 }
                                 else
@@ -377,25 +491,55 @@ namespace eCAL
 
                                   // Call the user's callback
                                   // TODO: Currently, this is synchronously. There is potential to execute those in parallel, while already receiving the next data!
-                                  me->service_call_queue_.front().response_cb(Error::OK, payload_buffer);
+                                  response_cb(Error::OK, payload_buffer);
 
-                                  // Remove the service call item from the queue
-                                  me->service_call_queue_.pop_front();
+                                  // Check if there are more items in the queue. If so, send the next request
+                                  // The mutex must be locket, as we access the queue.
+                                  {
+                                    std::lock_guard<std::mutex> lock(me->service_state_mutex_);
 
-                                  if (!me->service_call_queue_.empty())
-                                  {
-                                    // If there are more items, continue calling the service
-                                    me->send_next_service_request();
-                                  }
-                                  else
-                                  {
-                                    // Otherwise, just check if there are errors
-                                    me->peek_for_error();
+                                    if (!me->service_call_queue_.empty())
+                                    {
+                                      // If there are more items, continue calling the service
+                                      me->service_call_in_progress_ = true;
+                                      me->send_next_service_request(std::move(me->service_call_queue_.front().request), std::move(me->service_call_queue_.front().response_cb));
+                                      me->service_call_queue_.pop_front();
+                                    }
+                                    else
+                                    {
+                                      // If there are no more service calls to send, we go to error-peeking.
+                                      // While error peeking we basically do nothing, except from non-destructively
+                                      // reading 1 byte from the socket (i.e. without removing it from the socket).
+                                      // This will cause asio / the OS to notify us, when the server closed the connection.
+
+                                      me->service_call_in_progress_ = false;
+                                      me->peek_for_error();
+                                    }
                                   }
                                 }
                               }));
 
 
+    }
+
+    //////////////////////////////////////
+    // Status API
+    //////////////////////////////////////
+    State ClientSessionV1::get_state() const
+    {
+      std::lock_guard<std::mutex> lock(service_state_mutex_);
+      return state_;
+    }
+
+    std::uint8_t ClientSessionV1::get_accepted_protocol_version() const
+    {
+      return accepted_protocol_version_;
+    }
+
+    int ClientSessionV1::get_queue_size() const
+    {
+      std::lock_guard<std::mutex> lock(service_state_mutex_);
+      return service_call_queue_.size();
     }
 
     //////////////////////////////////////
@@ -419,24 +563,35 @@ namespace eCAL
 
     void ClientSessionV1::handle_connection_loss_error(const std::string& error_message)
     {
-      // cancel the connection loss handling, if we are already in FAILED state
-      if (state_ == State::FAILED)
-        return;
+      bool call_event_callback (false); // Variable that enables us to unlock the mutex before we execute the event callback.
 
-      if (state_ == State::CONNECTED)
       {
-        // Event callback
-        event_callback_(eCAL_Client_Event::client_event_disconnected, error_message);
+        std::lock_guard<std::mutex> lock(service_state_mutex_);
+
+        // cancel the connection loss handling, if we are already in FAILED state
+        if (state_ == State::FAILED)
+          return;
+
+        if (state_ == State::CONNECTED)
+        {
+          // Event callback
+          call_event_callback = true;
+        }
+
+        // Set the state to FAILED
+        state_ = State::FAILED;
+
+        // call all callbacks from the queue with an error
+        if (!service_call_queue_.empty())
+        {
+          // TODO: Add debug log here
+          call_all_callbacks_with_error();
+        }
       }
 
-      // Set the state to FAILED
-      state_ = State::FAILED;
-
-      // call all callbacks from the queue with an error
-      if (!service_call_queue_.empty())
+      if (call_event_callback)
       {
-        // TODO: Add debug log here
-        call_all_callbacks_with_error();
+        event_callback_(eCAL_Client_Event::client_event_disconnected, error_message);
       }
     }
 
@@ -444,13 +599,28 @@ namespace eCAL
     {
       service_call_queue_strand_.post([me = shared_from_this()]()
                                       {
-                                        me->service_call_queue_.front().response_cb(eCAL::service::Error::ErrorCode::CONNECTION_CLOSED, nullptr); // TODO: I should probably store the error that lead to this somewhere and tell the actual error.
-                                        me->service_call_queue_.pop_front();
+                                        ServiceCall first_service_call;
+                                        bool        more_service_calls(false);
 
-                                        if (!me->service_call_queue_.empty())
                                         {
-                                          me->call_all_callbacks_with_error();
+                                          // Lock the mutex and manipulate the queue. We want the mutex unlocked for the event callback call.
+                                          std::lock_guard<std::mutex> lock(me->service_state_mutex_);
+                                          
+                                          if (me->service_call_queue_.empty())
+                                            return;
+
+                                          first_service_call = std::move(me->service_call_queue_.front());
+                                          me->service_call_queue_.pop_front();
+
+                                          more_service_calls = (!me->service_call_queue_.empty());
                                         }
+
+                                        // Execute the callback with an error
+                                        first_service_call.response_cb(eCAL::service::Error::ErrorCode::CONNECTION_CLOSED, nullptr); // TODO: I should probably store the error that lead to this somewhere and tell the actual error.
+
+                                        // If there are more sevice calls, call those with an error, as well
+                                        if (more_service_calls)
+                                          me->call_all_callbacks_with_error();
                                       });
     }
 

@@ -78,17 +78,11 @@ namespace eCAL
       {
         // Create a response callback, that will set the response and notify the condition variable
         ResponseCallbackT response_callback
-                  //= [&error, &response, &mutex, &condition_variable]
                   = [&error, &response, signaler = std::make_shared<ConditionVariableSignaler>(condition_variable, mutex, is_signaled)]
                     (const eCAL::service::Error& response_error, const std::shared_ptr<std::string>& response_)
                     {
                       response = response_;
                       error    = response_error;
-
-                      //{
-                      //  std::lock_guard<std::mutex> lock(mutex);
-                      //  condition_variable.notify_all();
-                      //}
                     };
         async_call_service(request, response_callback); 
       }
@@ -102,5 +96,8 @@ namespace eCAL
       return error;
     }
 
+    State        ClientSession::get_state()                     const { return impl_->get_state(); }
+    std::uint8_t ClientSession::get_accepted_protocol_version() const { return impl_->get_accepted_protocol_version(); }
+    int          ClientSession::get_queue_size()                const { return impl_->get_queue_size(); }
   } // namespace service
 } // namespace eCAL
