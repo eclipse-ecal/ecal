@@ -107,7 +107,7 @@ TEST(RAII, TcpServiceClient)
 
   const eCAL::service::ClientSession::EventCallbackT client_event_callback
           = []
-            (eCAL_Client_Event event, const std::string& message) -> void
+            (eCAL_Client_Event /*event*/, const std::string& /*message*/) -> void
             {};
 
 
@@ -159,7 +159,7 @@ TEST(RAII, TcpServiceServerAndClient)
 
   const eCAL::service::ClientSession::EventCallbackT client_event_callback
           = []
-            (eCAL_Client_Event event, const std::string& message) -> void
+            (eCAL_Client_Event /*event*/, const std::string& /*message*/) -> void
             {};
 
 
@@ -244,7 +244,7 @@ TEST(RAII, StopDuringServiceCall)
 
   const eCAL::service::ClientSession::EventCallbackT client_event_callback
           = []
-            (eCAL_Client_Event event, const std::string& message) -> void
+            (eCAL_Client_Event /*event*/, const std::string& /*message*/) -> void
             {};
 
   std::unique_ptr<std::thread> io_thread;
@@ -310,7 +310,7 @@ TEST(Communication, SlowCommunication)
 
   const eCAL::service::Server::EventCallbackT server_event_callback
           = []
-            (eCAL_Server_Event event, const std::string& message) -> void
+            (eCAL_Server_Event /*event*/, const std::string& /*message*/) -> void
             {};
 
   const eCAL::service::ClientSession::ResponseCallbackT client_response_callback
@@ -324,7 +324,7 @@ TEST(Communication, SlowCommunication)
 
   const eCAL::service::ClientSession::EventCallbackT client_event_callback
           = []
-            (eCAL_Client_Event event, const std::string& message) -> void
+            (eCAL_Client_Event /*event*/, const std::string& /*message*/) -> void
             {};
 
   auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
@@ -404,14 +404,14 @@ TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst)
 
   const eCAL::service::Server::ServiceCallbackT server_service_callback
           = []
-            (const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response) -> int
+            (const std::shared_ptr<std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> int
             {
               return 0;
             };
 
   const eCAL::service::Server::EventCallbackT server_event_callback
           = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
-            (eCAL_Server_Event event, const std::string& message) -> void
+            (eCAL_Server_Event event, const std::string& /*message*/) -> void
             {
               num_server_event_callback_called++; 
               if (event == eCAL_Server_Event::server_event_connected)
@@ -422,12 +422,12 @@ TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst)
 
   const eCAL::service::ClientSession::ResponseCallbackT client_response_callback
           = []
-            (const eCAL::service::Error& error, const std::shared_ptr<std::string>& response) -> void
+            (const eCAL::service::Error& /*error*/, const std::shared_ptr<std::string>& /*response*/) -> void
             {};
 
   const eCAL::service::ClientSession::EventCallbackT client_event_callback
           = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
-            (eCAL_Client_Event event, const std::string& message) -> void
+            (eCAL_Client_Event event, const std::string& /*message*/) -> void
             {
               num_client_event_callback_called++; 
               if (event == eCAL_Client_Event::client_event_connected)
@@ -520,7 +520,7 @@ TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
 
   const eCAL::service::Server::EventCallbackT server_event_callback
           = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
-            (eCAL_Server_Event event, const std::string& message) -> void
+            (eCAL_Server_Event event, const std::string& /*message*/) -> void
             {
               num_server_event_callback_called++; 
               
@@ -541,7 +541,7 @@ TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
 
   const eCAL::service::ClientSession::EventCallbackT client_event_callback
           = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
-            (eCAL_Client_Event event, const std::string& message) -> void
+            (eCAL_Client_Event event, const std::string& /*message*/) -> void
             {
               num_client_event_callback_called++; 
                 
@@ -687,7 +687,7 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
 
   const eCAL::service::Server::ServiceCallbackT server_service_callback
           = [&num_server_service_callback_called]
-            (const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response) -> int
+            (const std::shared_ptr<std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> int
             {
               num_server_service_callback_called++;
               return 0;
@@ -695,7 +695,7 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
 
   const eCAL::service::Server::EventCallbackT server_event_callback
           = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
-            (eCAL_Server_Event event, const std::string& message) -> void
+            (eCAL_Server_Event event, const std::string& /*message*/) -> void
             {
               num_server_event_callback_called++; 
               if (event == eCAL_Server_Event::server_event_connected)
@@ -706,7 +706,7 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
 
   const eCAL::service::ClientSession::ResponseCallbackT client_response_callback
           = [&num_client_response_callback_called]
-            (const eCAL::service::Error& error, const std::shared_ptr<std::string>& response) -> void
+            (const eCAL::service::Error& error, const std::shared_ptr<std::string>& /*response*/) -> void
             {
               EXPECT_FALSE(bool(error));
               num_client_response_callback_called++;
@@ -714,7 +714,7 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
 
   const eCAL::service::ClientSession::EventCallbackT client_event_callback
           = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
-            (eCAL_Client_Event event, const std::string& message) -> void
+            (eCAL_Client_Event event, const std::string& /*message*/) -> void
             {
               num_client_event_callback_called++; 
               if (event == eCAL_Client_Event::client_event_connected)
@@ -832,7 +832,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunication)
 
   const eCAL::service::Server::EventCallbackT server_event_callback
           = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
-            (eCAL_Server_Event event, const std::string& message) -> void
+            (eCAL_Server_Event event, const std::string& /*message*/) -> void
             {
               num_server_event_callback_called++; 
               
@@ -871,7 +871,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunication)
   {
     const eCAL::service::ClientSession::EventCallbackT client_event_callback
           = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
-            (eCAL_Client_Event event, const std::string& message) -> void
+            (eCAL_Client_Event event, const std::string& /*message*/) -> void
             {
               num_client_event_callback_called++; 
                 
@@ -961,19 +961,19 @@ TEST(Callback, ServiceCallFromCallback)
   std::atomic<int> num_client_response_callback2_called(0);
 
   const eCAL::service::Server::ServiceCallbackT server_service_callback
-          = [&num_server_service_callback_called](const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response) -> int
+          = [&num_server_service_callback_called](const std::shared_ptr<std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> int
             {
               num_server_service_callback_called++;
               return 0;
             };
 
   const eCAL::service::Server::EventCallbackT server_event_callback
-          = [](eCAL_Server_Event event, const std::string& message) -> void
+          = [](eCAL_Server_Event /*event*/, const std::string& /*message*/) -> void
             {};
 
   const eCAL::service::ClientSession::EventCallbackT client_event_callback
           = []
-            (eCAL_Client_Event event, const std::string& message) -> void
+            (eCAL_Client_Event /*event*/, const std::string& /*message*/) -> void
             {};
 
   auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
@@ -1028,7 +1028,7 @@ TEST(ErrorCallback, ErrorCallbackNoServer)
   std::atomic<int> num_client_event_callback_called(0);
 
   const eCAL::service::ClientSession::ResponseCallbackT response_callback
-          = [&num_client_response_callback_called](const eCAL::service::Error& error, const std::shared_ptr<std::string>& response) -> void
+          = [&num_client_response_callback_called](const eCAL::service::Error& error, const std::shared_ptr<std::string>& /*response*/) -> void
             {
               EXPECT_TRUE(bool(error));
               num_client_response_callback_called++;
@@ -1037,7 +1037,7 @@ TEST(ErrorCallback, ErrorCallbackNoServer)
   
   const eCAL::service::ClientSession::EventCallbackT client_event_callback
           = [&num_client_event_callback_called]
-            (eCAL_Client_Event event, const std::string& message) -> void
+            (eCAL_Client_Event /*event*/, const std::string& /*message*/) -> void
             {};
 
 
@@ -1082,7 +1082,7 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
 
   const eCAL::service::Server::ServiceCallbackT server_service_callback
           = [&num_server_service_callback_called]
-            (const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response) -> int
+            (const std::shared_ptr<std::string>& /*request*/, const std::shared_ptr<std::string>& response) -> int
             {
               *response = "Server running!";
               num_server_service_callback_called++; 
@@ -1091,7 +1091,7 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
 
   const eCAL::service::Server::EventCallbackT server_event_callback
           = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
-            (eCAL_Server_Event event, const std::string& message) -> void
+            (eCAL_Server_Event event, const std::string& /*message*/) -> void
             {
               num_server_event_callback_called++; 
               if (event == eCAL_Server_Event::server_event_connected)
@@ -1103,7 +1103,7 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
 
   const eCAL::service::ClientSession::EventCallbackT client_event_callback
           = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
-            (eCAL_Client_Event event, const std::string& message) -> void
+            (eCAL_Client_Event event, const std::string& /*message*/) -> void
             {
               num_client_event_callback_called++; 
               if (event == eCAL_Client_Event::client_event_connected)
@@ -1183,7 +1183,7 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
   {
     const eCAL::service::ClientSession::ResponseCallbackT client_response_callback
           = [&num_client_response_callback_called]
-            (const eCAL::service::Error& error, const std::shared_ptr<std::string>& response) -> void
+            (const eCAL::service::Error& error, const std::shared_ptr<std::string>& /*response*/) -> void
             {
               EXPECT_TRUE(error);
               num_client_response_callback_called++;
@@ -1224,7 +1224,7 @@ TEST(ErrorCallback, ErrorCallbackClientDisconnects)
 
   const eCAL::service::Server::ServiceCallbackT server_service_callback
           = [&num_server_service_callback_called]
-            (const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response) -> int
+            (const std::shared_ptr<std::string>& /*request*/, const std::shared_ptr<std::string>& response) -> int
             {
               std::this_thread::sleep_for(std::chrono::milliseconds(100));
               *response = "Server running!";
@@ -1234,13 +1234,13 @@ TEST(ErrorCallback, ErrorCallbackClientDisconnects)
 
   const eCAL::service::Server::EventCallbackT server_event_callback
           = []
-            (eCAL_Server_Event event, const std::string& message) -> void
+            (eCAL_Server_Event /*event*/, const std::string& /*message*/) -> void
             {};
 
 
   const eCAL::service::ClientSession::EventCallbackT client_event_callback
           = []
-            (eCAL_Client_Event event, const std::string& message) -> void
+            (eCAL_Client_Event /*event*/, const std::string& /*message*/) -> void
             {};
 
   auto server    = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
@@ -1351,7 +1351,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
 
   const eCAL::service::Server::EventCallbackT server_event_callback
           = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
-            (eCAL_Server_Event event, const std::string& message) -> void
+            (eCAL_Server_Event event, const std::string& /*message*/) -> void
             {
               num_server_event_callback_called++; 
               
@@ -1392,7 +1392,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
   {
     const eCAL::service::ClientSession::EventCallbackT client_event_callback
           = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
-            (eCAL_Client_Event event, const std::string& message) -> void
+            (eCAL_Client_Event event, const std::string& /*message*/) -> void
             {
               num_client_event_callback_called++; 
                 
@@ -1515,12 +1515,12 @@ TEST(BlockingCall, RegularBlockingCall)
 
   const eCAL::service::Server::EventCallbackT server_event_callback
           = []
-            (eCAL_Server_Event event, const std::string& message) -> void
+            (eCAL_Server_Event /*event*/, const std::string& /*message*/) -> void
             {};
 
   const eCAL::service::ClientSession::EventCallbackT client_event_callback
           = []
-            (eCAL_Client_Event event, const std::string& message) -> void
+            (eCAL_Client_Event /*event*/, const std::string& /*message*/) -> void
             {};
 
   auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
@@ -1585,12 +1585,12 @@ TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
 
   const eCAL::service::Server::EventCallbackT server_event_callback
           = []
-            (eCAL_Server_Event event, const std::string& message) -> void
+            (eCAL_Server_Event /*event*/, const std::string& /*message*/) -> void
             {};
 
   const eCAL::service::ClientSession::EventCallbackT client_event_callback
           = []
-            (eCAL_Client_Event event, const std::string& message) -> void
+            (eCAL_Client_Event /*event*/, const std::string& /*message*/) -> void
             {};
 
   auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);

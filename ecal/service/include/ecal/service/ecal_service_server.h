@@ -48,7 +48,7 @@ namespace eCAL
 
     public:
       static std::shared_ptr<Server> create(asio::io_context&       io_context
-                                          , unsigned int            protocol_version
+                                          , std::uint8_t            protocol_version
                                           , std::uint16_t           port
                                           , const ServiceCallbackT& service_callback
                                           , const EventCallbackT&   event_callback
@@ -56,7 +56,7 @@ namespace eCAL
 
     protected:
       Server(asio::io_context&      io_context
-          , unsigned int            protocol_version // TODO: Make all protocol vesions an std::uint8_t
+          , std::uint8_t            protocol_version
           , std::uint16_t           port
           , const ServiceCallbackT& service_callback
           , const EventCallbackT&   event_callback

@@ -427,7 +427,7 @@ namespace eCAL
 
       // Create header_buffer
       const std::shared_ptr<STcpHeader>  header_buffer  = std::make_shared<STcpHeader>();
-      header_buffer->package_size_n = htonl(request->size());
+      header_buffer->package_size_n = htonl(static_cast<std::uint32_t>(request->size()));
       header_buffer->version        = accepted_protocol_version_;
       header_buffer->message_type   = MessageType::ServiceRequest;
       header_buffer->header_size_n  = htons(sizeof(STcpHeader));
@@ -539,7 +539,7 @@ namespace eCAL
     int ClientSessionV1::get_queue_size() const
     {
       std::lock_guard<std::mutex> lock(service_state_mutex_);
-      return service_call_queue_.size();
+      return static_cast<int>(service_call_queue_.size());
     }
 
     //////////////////////////////////////
@@ -551,7 +551,7 @@ namespace eCAL
 
       socket_.async_receive(asio::buffer(*peek_buffer)
                             , asio::socket_base::message_peek
-                            , service_call_queue_strand_.wrap([me = shared_from_this(), peek_buffer](const asio::error_code& ec, std::size_t bytes_transferred) {
+                            , service_call_queue_strand_.wrap([me = shared_from_this(), peek_buffer](const asio::error_code& ec, std::size_t /*bytes_transferred*/) {
                               if (ec)
                               {
                                 const std::string message = "Connection loss while idling: " + ec.message();

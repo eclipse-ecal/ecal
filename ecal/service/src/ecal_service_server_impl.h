@@ -54,7 +54,7 @@ namespace eCAL
 
     public:
       static std::shared_ptr<ServerImpl> create(asio::io_context&             io_context
-                                              , unsigned int                  protocol_version
+                                              , std::uint8_t                  protocol_version
                                               , std::uint16_t                 port
                                               , const ServerServiceCallbackT& service_callback
                                               , const ServerEventCallbackT&   event_callback

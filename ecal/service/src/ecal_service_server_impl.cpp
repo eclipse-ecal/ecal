@@ -32,7 +32,7 @@ namespace eCAL
     ///////////////////////////////////////////
 
     std::shared_ptr<ServerImpl> ServerImpl::create(asio::io_context&              io_context
-                                                  , unsigned int                  protocol_version
+                                                  , std::uint8_t                  protocol_version
                                                   , std::uint16_t                 port
                                                   , const ServerServiceCallbackT& service_callback
                                                   , const ServerEventCallbackT&   event_callback
@@ -100,7 +100,7 @@ namespace eCAL
     int ServerImpl::get_connection_count() const
     {
       std::lock_guard<std::mutex> session_list_lock(session_list_mutex_);
-      return session_list_.size();
+      return static_cast<int>(session_list_.size());
     }
 
     std::uint16_t ServerImpl::get_port() const

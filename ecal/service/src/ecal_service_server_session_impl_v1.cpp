@@ -181,7 +181,7 @@ namespace eCAL
         handshake_response_message->accepted_protocol_version = accepted_protocol_version_;
 
         // Fill TCP Header
-        header_buffer->package_size_n = htonl(payload_buffer->size());
+        header_buffer->package_size_n = htonl(static_cast<std::uint32_t>(payload_buffer->size()));
         header_buffer->version        = accepted_protocol_version_;
         header_buffer->message_type   = MessageType::ProtocolHandshakeResponse;
         header_buffer->header_size_n  = htons(sizeof(STcpHeader));
@@ -264,7 +264,7 @@ namespace eCAL
     {
       // Create header_buffer
       const std::shared_ptr<STcpHeader>  header_buffer  = std::make_shared<STcpHeader>();
-      header_buffer->package_size_n = htonl(response_buffer->size());
+      header_buffer->package_size_n = htonl(static_cast<std::uint32_t>(response_buffer->size()));
       header_buffer->version        = accepted_protocol_version_;
       header_buffer->message_type   = MessageType::ServiceResponse;
       header_buffer->header_size_n  = htons(sizeof(STcpHeader));

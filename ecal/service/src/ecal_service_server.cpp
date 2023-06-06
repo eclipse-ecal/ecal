@@ -31,7 +31,7 @@ namespace eCAL
     // Constructor, Destructor, Create
     ///////////////////////////////////////////
     std::shared_ptr<Server> Server::create(asio::io_context&        io_context
-                                          , unsigned int            protocol_version
+                                          , std::uint8_t            protocol_version
                                           , std::uint16_t           port
                                           , const ServiceCallbackT& service_callback
                                           , const EventCallbackT&   event_callback
@@ -41,7 +41,7 @@ namespace eCAL
     }
 
     Server::Server(asio::io_context&      io_context
-                , unsigned int            protocol_version
+                , std::uint8_t            protocol_version
                 , std::uint16_t           port
                 , const ServiceCallbackT& service_callback
                 , const EventCallbackT&   event_callback
