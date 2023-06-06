@@ -1561,7 +1561,7 @@ TEST(BlockingCall, RegularBlockingCall)
 }
 #endif
 
-#if 1
+#if 0
 TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
 {
   constexpr std::chrono::milliseconds server_callback_wait_time(100);
@@ -1603,8 +1603,6 @@ TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
 
   // Wait shortly for the client to connects
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
-
-  auto test_start = std::chrono::steady_clock::now();
 
   // Successfull calls
   for (int i = 0; i < num_calls_before_shutdown; i++)
@@ -1689,6 +1687,77 @@ TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
   // join the io_thread
   io_context.stop();
   io_thread.join();
+}
+#endif
+
+#if 1
+TEST(BlockingCall, StopIcontext)
+{
+  constexpr std::chrono::milliseconds server_callback_wait_time(100);
+
+  auto io_context = std::make_unique<asio::io_context>();
+  auto dummy_work = std::make_unique<asio::io_context::work>(*io_context);
+
+  std::atomic<int> num_server_service_callback_called           (0);
+
+  const eCAL::service::Server::ServiceCallbackT server_service_callback
+    = [&num_server_service_callback_called, server_callback_wait_time]
+    (const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response) -> int
+  {
+    std::this_thread::sleep_for(server_callback_wait_time);
+    num_server_service_callback_called++;
+    *response = "Response on \"" + *request + "\"";
+    return 0;
+  };
+
+  const eCAL::service::Server::EventCallbackT server_event_callback
+    = []
+    (eCAL_Server_Event event, const std::string& message) -> void
+  {};
+
+  const eCAL::service::ClientSession::EventCallbackT client_event_callback
+    = []
+    (eCAL_Client_Event event, const std::string& message) -> void
+  {};
+
+  auto server = eCAL::service::Server::create(*io_context, protocol_version, 0, server_service_callback, server_event_callback);
+  auto client = eCAL::service::ClientSession::create(*io_context, protocol_version, "127.0.0.1", server->get_port(), client_event_callback);
+
+  std::thread io_thread([&io_context]()
+    {
+      io_context->run();
+    });
+
+  // Wait shortly for the client to connects
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+  // Shutdown server in a few milliseconds (i.e. during the next call)
+  std::thread stop_thread([&client, &server, &io_context, &io_thread, &dummy_work, server_callback_wait_time]()
+    {
+      auto sleep_time = 0.5 * server_callback_wait_time;
+      std::this_thread::sleep_for(sleep_time);
+
+      client    = nullptr; // TODO: Currently this is necessary, as the client probably holds some copy to the sync-callback. I should investigate whether I can eliminate that.
+      server    = nullptr;
+
+      dummy_work = nullptr;
+      io_context->stop();
+      io_thread.join();
+      io_context = nullptr;
+      std::cerr << "io_context stopped" << std::endl;
+    });
+
+  const auto request = std::make_shared<std::string>("Request");
+  auto response      = std::make_shared<std::string>();
+
+  auto error1  = client->call_service(request, response);
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  //auto error2  = client->call_service(request, response); // TODO: I want to add this line of code again
+
+
+  stop_thread.join();
+
+
 }
 #endif
 

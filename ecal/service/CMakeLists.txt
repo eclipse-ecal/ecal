@@ -31,6 +31,7 @@ set (includes
 
 # Private source files
 set(sources
+    src/condition_variable_signaler.h
     src/ecal_service_client_session.cpp
     src/ecal_service_client_session_impl_base.h
     src/ecal_service_client_session_impl_v1.cpp

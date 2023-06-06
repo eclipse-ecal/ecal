@@ -20,6 +20,7 @@
 #include <ecal/service/ecal_service_client_session.h>
 
 #include "ecal_service_client_session_impl_v1.h"
+#include "condition_variable_signaler.h"
 
 namespace eCAL
 {
@@ -72,26 +73,30 @@ namespace eCAL
       // Create a condition variable and a mutex to wait for the response
       std::mutex              mutex;
       std::condition_variable condition_variable;
-
-      // Create a response callback, that will set the response and notify the condition variable
-      ResponseCallbackT response_callback
-                = [&error, &response, &mutex, &condition_variable]
-                  (const eCAL::service::Error& response_error, const std::shared_ptr<std::string>& response_)
-                  {
-                    response = response_;
-                    error    = response_error;
-
+      bool                    is_signaled = false;
+      
+      {
+        // Create a response callback, that will set the response and notify the condition variable
+        ResponseCallbackT response_callback
+                  //= [&error, &response, &mutex, &condition_variable]
+                  = [&error, &response, signaler = std::make_shared<ConditionVariableSignaler>(condition_variable, mutex, is_signaled)]
+                    (const eCAL::service::Error& response_error, const std::shared_ptr<std::string>& response_)
                     {
-                      std::lock_guard<std::mutex> lock(mutex);
-                      condition_variable.notify_all();
-                    }
-                  };
+                      response = response_;
+                      error    = response_error;
+
+                      //{
+                      //  std::lock_guard<std::mutex> lock(mutex);
+                      //  condition_variable.notify_all();
+                      //}
+                    };
+        async_call_service(request, response_callback); 
+      }
 
       // Lock mutex, call service asynchronously and wait for the condition variable to be notified
       {
         std::unique_lock<std::mutex> lock(mutex);
-        async_call_service(request, response_callback);
-        condition_variable.wait(lock);
+        condition_variable.wait(lock, [&is_signaled]() { return is_signaled; });
       }
 
       return error;

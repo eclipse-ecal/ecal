@@ -112,7 +112,10 @@ namespace eCAL
       std::uint8_t             accepted_protocol_version_;
 
       asio::io_context::strand service_call_queue_strand_;
+
+      // TODO: Add a mutex to protect the service call queue and the boolean. The reason is that I then can add external public API to check how many calls are queued and whether there currently is a call bein executed. The mutex would also protect the state
       std::deque<ServiceCall>  service_call_queue_;
+      bool                     service_call_in_progress_;
 
       const LoggerT            logger_;
 
