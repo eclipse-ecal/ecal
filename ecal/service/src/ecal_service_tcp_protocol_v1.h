@@ -38,7 +38,7 @@ namespace eCAL
       using SendSuccessCallback    = std::function<void()>;
       using ReceiveSuccessCallback = std::function<void(const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)>;
 
-      void async_send_payload   (asio::ip::tcp::socket& socket, const std::shared_ptr<const eCAL::STcpHeader>& header_buffer, const std::shared_ptr<const std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb);
+      void async_send_payload   (asio::ip::tcp::socket& socket, const std::shared_ptr<const eCAL::service::TcpHeader>& header_buffer, const std::shared_ptr<const std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb);
       void async_receive_payload(asio::ip::tcp::socket& socket, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb);
     };
   }

@@ -21,44 +21,46 @@
 
 #include <cstdint>
 
-// TODO: Refactor namespaces and struct names
-
 namespace eCAL
 {
-  // Message type used since protocol version 1
-  enum class MessageType: std::uint8_t
+  namespace service
   {
-    Undefined                 = 0,
-    ProtocolHandshakeRequest  = 1,
-    ProtocolHandshakeResponse = 2,
-    ServiceRequest            = 3,
-    ServiceResponse           = 4,
-  };
+    // Message type used since protocol version 1
+    enum class MessageType: std::uint8_t
+    {
+      Undefined                 = 0,
+      ProtocolHandshakeRequest  = 1,
+      ProtocolHandshakeResponse = 2,
+      ServiceRequest            = 3,
+      ServiceResponse           = 4,
+    };
 
 #pragma pack(push, 1)
-  // TCP Header
-  //   - Used for service request since protocol version 1
-  //   - Used for response since protocol version 0
-  struct STcpHeader
-  {
-    uint32_t    package_size_n = 0;                        // package size in network byte order
-    uint8_t     version        = 0;                        // protocol version                    (since protocol V1 / eCAL 5.12)
-    MessageType message_type   = MessageType::Undefined;   // message type                        (since protocol V1 / eCAL 5.12)
-    uint16_t    header_size_n  = 0;                        // header size in network byte order   (since protocol V1 / eCAL 5.12)
-    uint64_t    reserved       = 0;                        // reserved
-  };
+    // TCP Header
+    //   - Used for service request since protocol version 1
+    //   - Used for response since protocol version 0
+    struct TcpHeader
+    {
+      std::uint32_t package_size_n = 0;                        // package size in network byte order
+      std::uint8_t  version        = 0;                        // protocol version                    (since protocol V1 / eCAL 5.12)
+      MessageType   message_type   = MessageType::Undefined;   // message type                        (since protocol V1 / eCAL 5.12)
+      std::uint16_t header_size_n  = 0;                        // header size in network byte order   (since protocol V1 / eCAL 5.12)
+      std::uint64_t reserved       = 0;                        // reserved
+    };
 
-  // Handshake Request Message, since protocol v1
-  struct STcpProtocolHandshakeRequestMessage
-  {
-    uint8_t min_supported_protocol_version = 0;
-    uint8_t max_supported_protocol_version = 0;
-  };
+    // Handshake Request Message, since protocol v1
+    struct ProtocolHandshakeRequestMessage
+    {
+      std::uint8_t min_supported_protocol_version = 0;
+      std::uint8_t max_supported_protocol_version = 0;
+    };
 
-  // Handshake Response Message, since protocol v1
-  struct STcpProtocolHandshakeResponseMessage
-  {
-    uint8_t accepted_protocol_version = 0;
-  };
+    // Handshake Response Message, since protocol v1
+    struct ProtocolHandshakeResponseMessage
+    {
+      std::uint8_t accepted_protocol_version = 0;
+    };
 #pragma pack(pop)
-}
+
+  } // namespace service
+} // namespace eCAL
