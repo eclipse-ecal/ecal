@@ -183,7 +183,6 @@ set(ecal_custom_tclap_header_src
 set(ecal_io_header_src
     src/io/ecal_memfile_header.h
     src/io/ecal_receiver.h
-    src/io/ecal_sender.h
     src/io/msg_type.h
     src/io/rcv_sample.h
     src/io/snd_raw_buffer.h

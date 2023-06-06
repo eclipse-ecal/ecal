@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "udp_sender.h"
 
 #ifdef _MSC_VER
@@ -35,5 +37,16 @@
 
 namespace eCAL
 {
-  size_t SendSample(eCAL::CUDPSender* udp_sender_, const std::string& sample_name_, const eCAL::pb::Sample& ecal_sample_, const std::string& ipaddr_, long bandwidth_);
+  class CSampleSender
+  {
+  public:
+    CSampleSender(const SSenderAttr& attr_);
+    size_t SendSample(const std::string& sample_name_, const eCAL::pb::Sample& ecal_sample_, long bandwidth_);
+
+  private:
+    SSenderAttr                       m_attr;
+
+    std::shared_ptr<eCAL::CUDPSender> m_udp_sender;
+    std::vector<char>                 m_payload;
+  };
 }

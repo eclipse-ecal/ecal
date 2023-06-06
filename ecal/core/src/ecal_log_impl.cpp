@@ -26,24 +26,18 @@
 #include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
-#include "ecal_config_reader_hlp.h"
-
-#include "ecal_def.h"
 
 #include "ecal_log_impl.h"
 
 #include "io/udp_configurations.h"
 
 #include <mutex>
-#include <stdio.h>
+#include <cstdio>
 
 #include <iostream>
 #include <sstream>
-#include <atomic>
 #include <memory>
 #include <string>
-#include <vector>
-#include <cstdlib>
 #include <iomanip>
 #include <ctime>
 #include <chrono>
@@ -60,20 +54,23 @@
 #include "ecal_win_main.h"
 #include <ecal_utils/filesystem.h>
 
-static bool isDirectory(const std::string& path_)
+namespace
 {
-  if (path_.empty()) return false;
+  bool isDirectory(const std::string& path_)
+  {
+    if (path_.empty()) return false;
 
-  return EcalUtils::Filesystem::IsDir(path_, EcalUtils::Filesystem::Current);
-}
+    return EcalUtils::Filesystem::IsDir(path_, EcalUtils::Filesystem::Current);
+  }
 
-static std::string get_time_str()
-{
-  auto t = std::time(nullptr);
-  auto tm = *std::localtime(&t);
-  std::stringstream tstream;
-  tstream << std::put_time(&tm, "%Y-%m-%d-%H-%M-%S");
-  return(tstream.str());
+  std::string get_time_str()
+  {
+    auto t = std::time(nullptr);
+    auto tm = *std::localtime(&t);
+    std::stringstream tstream;
+    tstream << std::put_time(&tm, "%Y-%m-%d-%H-%M-%S");
+    return(tstream.str());
+  }
 }
 #endif
 
@@ -110,7 +107,6 @@ namespace eCAL
 {
   CLog::CLog() :
           m_created(false),
-          m_udp_sender(new CUDPSender()),
           m_pid(0),
           m_logfile(nullptr),
           m_level(log_level_none),
@@ -140,7 +136,7 @@ namespace eCAL
     m_filter_mask_udp  = Config::GetUdpLogFilter();
 
     // create log file
-    if(m_filter_mask_file)
+    if(m_filter_mask_file != 0)
     {
       // check ECAL_DATA
       const std::string ecal_log_path = Util::GeteCALLogPath();
@@ -153,26 +149,18 @@ namespace eCAL
     }
 
     // create log udp sender
-    if(m_filter_mask_udp)
+    if(m_filter_mask_udp != 0)
     {
       SSenderAttr attr;
-      const bool local_only = !Config::IsNetworkEnabled();
       // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
-      if (local_only)
-      {
-        attr.broadcast = true;
-      }
-      else
-      {
-        attr.broadcast = false;
-      }
-      attr.ipaddr   = UDP::GetLoggingMulticastAddress();
-      attr.port     = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
-      attr.loopback = true;
-      attr.ttl      = Config::GetUdpMulticastTtl();
-      attr.sndbuf   = Config::GetUdpMulticastSndBufSizeBytes();
+      attr.broadcast = !Config::IsNetworkEnabled();
+      attr.ipaddr    = UDP::GetLoggingMulticastAddress();
+      attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_LOG_OFF;
+      attr.loopback  = true;
+      attr.ttl       = Config::GetUdpMulticastTtl();
+      attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
-      m_udp_sender->Create(attr);
+      m_udp_sender = std::make_unique<CUDPSender>(attr);
     }
 
     m_created = true;
@@ -184,9 +172,9 @@ namespace eCAL
 
     const std::lock_guard<std::mutex> lock(m_log_sync);
 
-    m_udp_sender->Destroy();
+    m_udp_sender.reset();
 
-    if(m_logfile) fclose(m_logfile);
+    if(m_logfile != nullptr) fclose(m_logfile);
     m_logfile = nullptr;
 
     m_created = false;
@@ -196,13 +184,13 @@ namespace eCAL
   {
     const std::lock_guard<std::mutex> lock(m_log_sync);
     m_level = level_;
-  };
+  }
 
   eCAL_Logging_eLogLevel CLog::GetLogLevel()
   {
     const std::lock_guard<std::mutex> lock(m_log_sync);
     return(m_level);
-  };
+  }
 
   void CLog::Log(const eCAL_Logging_eLogLevel level_, const std::string& msg_)
   {
@@ -214,18 +202,18 @@ namespace eCAL
     const eCAL_Logging_Filter log_con  = level_ & m_filter_mask_con;
     const eCAL_Logging_Filter log_file = level_ & m_filter_mask_file;
     const eCAL_Logging_Filter log_udp  = level_ & m_filter_mask_udp;
-    if(!(log_con | log_file | log_udp)) return;
+    if((log_con | log_file | log_udp) == 0) return;
 
     static eCAL::pb::LogMessage ecal_msg;
     static std::string        ecal_msg_s;
     auto                      log_time = eCAL::Time::ecal_clock::now();
 
-    if(log_con)
+    if(log_con != 0)
     {
       std::cout << msg_ << std::endl;
     }
 
-    if(log_file && m_logfile)
+    if((log_file != 0) && (m_logfile != nullptr))
     {
       std::stringstream msg_stream;
       msg_stream << std::chrono::duration_cast<std::chrono::milliseconds>(log_time.time_since_epoch()).count();
@@ -274,7 +262,7 @@ namespace eCAL
       fflush(m_logfile);
     }
 
-    if(log_udp && m_udp_sender)
+    if((log_udp != 0) && m_udp_sender)
     {
       ecal_msg.Clear();
       ecal_msg.set_time(std::chrono::duration_cast<std::chrono::microseconds>(log_time.time_since_epoch()).count());

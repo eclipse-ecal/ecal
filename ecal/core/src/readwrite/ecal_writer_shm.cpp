@@ -78,12 +78,8 @@ namespace eCAL
     m_memory_file_attr.timeout_open_ms = PUB_MEMFILE_OPEN_TO;
     m_memory_file_attr.timeout_ack_ms  = Config::GetMemfileAckTimeoutMs();
 
-    // create the files
-    for (size_t num(0); num < m_buffer_count; ++num)
-    {
-      auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, 0, m_memory_file_attr);
-      m_memory_file_vec.push_back(sync_memfile);
-    }
+    // initialize memory file buffer
+    SetBufferCount(m_buffer_count);
 
     m_created = true;
     return m_created;
@@ -105,51 +101,74 @@ namespace eCAL
     return true;
   }
 
+  bool CDataWriterSHM::SetBufferCount(size_t buffer_count_)
+  {
+    if (buffer_count_ < 1)
+    {
+      Logging::Log(log_level_error, m_topic_name + "::CDataWriterSHM::SetBufferCount minimal number of memory files is 1 !");
+      return false;
+    }
+
+    size_t memory_file_size(0);
+    if (!m_memory_file_vec.empty())
+    {
+      memory_file_size = m_memory_file_vec[0]->GetSize();
+    }
+    else
+    {
+      memory_file_size = m_memory_file_attr.min_size;
+    }
+
+    // ----------------------------------------------------------------------
+    // REMOVE ME IN ECAL6
+    // ----------------------------------------------------------------------
+    // recreate memory buffer list to stay compatible to older versions
+    // for the case that we have ONE existing buffer
+    // and that single buffer is communicated with an older shm datareader
+    // in this case we need to invalidate (destroy) the existing buffer
+    // and the old datareader will get blind (fail safe)
+    // otherwise it would still receive every n-th write
+    // this state change will lead to some lost samples
+    if ((m_memory_file_vec.size() == 1) && (m_memory_file_vec.size() < buffer_count_))
+    {
+      m_memory_file_vec.clear();
+    }
+    // ----------------------------------------------------------------------
+    // REMOVE ME IN ECAL6
+    // ----------------------------------------------------------------------
+
+    // increase buffer count
+    while (m_memory_file_vec.size() < buffer_count_)
+    {
+      auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, memory_file_size, m_memory_file_attr);
+      m_memory_file_vec.push_back(sync_memfile);
+    }
+
+    // decrease buffer count
+    while (m_memory_file_vec.size() > buffer_count_)
+    {
+      m_memory_file_vec.pop_back();
+    }
+
+    return true;
+  }
+
   bool CDataWriterSHM::PrepareWrite(const SWriterAttr& attr_)
   {
-    if (!m_created)     return false;
-    if (attr_.len == 0) return false;
+    if (!m_created) return false;
 
     // false signals no rematching / exchanging of
     // connection parameters needed
     bool ret_state(false);
 
-    // check number of requested memory file buffer
+    // adapt number of used memory files if needed
     if (attr_.buffering != m_buffer_count)
     {
-      // store new size and flag change
+      SetBufferCount(attr_.buffering);
+
+      // store new buffer count and flag change
       m_buffer_count = attr_.buffering;
       ret_state |= true;
-
-      // ----------------------------------------------------------------------
-      // REMOVE ME IN ECAL6
-      // ----------------------------------------------------------------------
-      // recreate memory buffer list to stay compatible to older versions
-      // for the case that we have ONE existing buffer
-      // and that single buffer is communicated with an older shm datareader
-      // in this case we need to invalidate (destroy) the existing buffer
-      // and the old datareader will get blind (fail safe)
-      // otherwise it would still receive every n-th write
-      // this state change will lead to some lost samples
-      if ((m_memory_file_vec.size() == 1) && (m_memory_file_vec.size() < m_buffer_count))
-      {
-        m_memory_file_vec.clear();
-      }
-      // ----------------------------------------------------------------------
-      // REMOVE ME IN ECAL6
-      // ----------------------------------------------------------------------
-
-      // increase buffer count
-      while (m_memory_file_vec.size() < m_buffer_count)
-      {
-        auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, attr_.len, m_memory_file_attr);
-        m_memory_file_vec.push_back(sync_memfile);
-      }
-      // decrease buffer count
-      while (m_memory_file_vec.size() > m_buffer_count)
-      {
-        m_memory_file_vec.pop_back();
-      }
     }
 
     // adapt write index if needed
