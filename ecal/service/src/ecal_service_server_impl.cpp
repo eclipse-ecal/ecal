@@ -114,56 +114,6 @@ namespace eCAL
     {
       ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service waiting for next client...");
 
-      // Create the callbacks for the session. Those callbacks are basically
-      // wrapping the class methods of this class. However, the lambda functions
-      // will be stored in the session and we have no idea when that session will
-      // be destoyed. It may be destoyed AFTER this class has died. Therefore, we
-      // save a weak_ptr to this class in the capture and later only execute the
-      // callback, if this class is still alive.
-
-      //const eCAL::service::ServerSessionBase::ServiceCallbackT service_callback
-      //        = [weak_me = std::weak_ptr<Server>(shared_from_this())](const std::shared_ptr<std::string>& request, const std::shared_ptr<std::string>& response) -> int
-      //          {
-      //            // Create a shared_ptr to the class. If it doesn't exist
-      //            // anymore, we will get a nullpointer. In that case, we cannot
-      //            // execute the callback.
-      //            const std::shared_ptr<Server> me = weak_me.lock();
-      //            if (me)
-      //            {
-      //              return me->service_callback_(request, response);
-      //            }
-      //            else
-      //            {
-      //              return 0;
-      //            }
-      //          };
-
-      // TODO Change this callback or create a new one, so that the session deletes itself from the list of sessions
-      //const eCAL::service::ServerSessionBase::EventCallbackT event_callback
-      //        = [weak_me = std::weak_ptr<Server>(shared_from_this())](const eCAL_Server_Event event, const std::string& message) -> void
-      //          {
-      //            // Create a shared_ptr to the class. If it doesn't exist
-      //            // anymore, we will get a nullpointer. In that case, we cannot
-      //            // execute the callback.
-      //            const std::shared_ptr<Server> me = weak_me.lock();
-      //            if (me)
-      //            {
-      //              return me->on_event(event, message);
-      //            }
-      //          };
-      //const eCAL::ServerSession::EventCallbackT event_callback
-      //        = [weak_me = std::weak_ptr<Server>(shared_from_this())](eCAL_Server_Event server_event, const std::string& todo_name_this_whatever_it_is) -> void
-      //          {
-      //            // Create a shared_ptr to the class. If it doesn't exist
-      //            // anymore, we will get a nullpointer. In that case, we cannot
-      //            // execute the callback.
-      //            const std::shared_ptr<Server> me(weak_me);
-      //            if (me)
-      //            {
-      //              me->on_event(server_event, todo_name_this_whatever_it_is);
-      //            }
-      //          };
-
       const eCAL::service::ServerSessionBase::DeleteCallbackT delete_callback
                 = [weak_me = std::weak_ptr<ServerImpl>(shared_from_this())](const std::shared_ptr<eCAL::service::ServerSessionBase>& session_to_remove) -> void
                   {
@@ -201,13 +151,10 @@ namespace eCAL
       acceptor_.async_accept(new_session->socket()
               , [weak_me = std::weak_ptr<ServerImpl>(shared_from_this()), new_session, version, logger_copy = logger_](auto ec)
                 {
-                  // TODO: The Destructor must close the accpetor
                   if (ec)
                   {
                     logger_copy(LogLevel::Info, "Service shutting down: " + ec.message());
                     return; 
-
-                    // TODO: Decide whether to return or to continue accepting. only re-try accepting, if the ec didn't tell us to stop!!!
                   }
                   else
                   {
@@ -228,7 +175,6 @@ namespace eCAL
                     }
                   }
 
-                  // TODO: only re-try accepting, if the ec didn't tell us to stop!!!
                   // Continue creating and accepting the next session
                   const std::shared_ptr<ServerImpl> me = weak_me.lock();
                   if (me)

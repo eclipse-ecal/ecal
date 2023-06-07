@@ -403,7 +403,6 @@ namespace eCAL
                                   ECAL_SERVICE_LOG_DEBUG(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + "Successfully received service response of " + std::to_string(payload_buffer->size()) + " bytes");
 
                                   // Call the user's callback
-                                  // TODO: Currently, this is synchronously. There is potential to execute those in parallel, while already receiving the next data!
                                   response_cb(Error::OK, payload_buffer);
 
                                   // Check if there are more items in the queue. If so, send the next request
@@ -499,7 +498,7 @@ namespace eCAL
         // call all callbacks from the queue with an error
         if (!service_call_queue_.empty())
         {
-          // TODO: Add debug log here
+          ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Calling " + std::to_string(service_call_queue_.size()) + " service callbacks with error");
           call_all_callbacks_with_error();
         }
       }

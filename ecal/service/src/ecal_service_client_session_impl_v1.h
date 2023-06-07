@@ -56,7 +56,6 @@ namespace eCAL
     protected:
       ClientSessionV1(asio::io_context& io_context_, const EventCallbackT& event_callback_, const LoggerT& logger);
 
-      // TODO: Add again
     public:
       ~ClientSessionV1() override;
 
@@ -69,8 +68,6 @@ namespace eCAL
 
       void send_protocol_handshake_request();
       void receive_protocol_handshake_response();
-
-      // TODO: Create a "Wait for connection established" function
 
     //////////////////////////////////////
     // Service calls
@@ -112,7 +109,6 @@ namespace eCAL
 
       std::atomic<std::uint8_t> accepted_protocol_version_;
 
-      // TODO: Add a mutex to protect the service call queue and the boolean. The reason is that I then can add external public API to check how many calls are queued and whether there currently is a call bein executed. The mutex would also protect the state
       mutable std::mutex        service_state_mutex_;
       State                     state_;
       std::deque<ServiceCall>   service_call_queue_;

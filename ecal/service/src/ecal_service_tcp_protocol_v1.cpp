@@ -133,9 +133,6 @@ namespace eCAL
 
           // Reserver enough memory for receiving the entire payload. The payload is
           // represented as an std::string for legacy, reasons. It is not textual data.
-          // 
-          // TODO: Check if I can make it a vector<char>
-          //        TODO: If possible, the also remove the const_cast below
           const std::shared_ptr<std::string> payload_buffer = std::make_shared<std::string>(payload_size, '\0');
 
           // Read all the payload data into the payload_buffer
