@@ -39,10 +39,13 @@ namespace eCAL
 
     using LoggerT = std::function<void (const LogLevel, const std::string &)>;
 
-    inline LoggerT default_logger(const std::string& node_name)
+    inline LoggerT default_logger(const std::string& node_name, LogLevel min_log_level = LogLevel::DebugVerbose)
     {
-      return [node_name](const LogLevel log_level, const std::string& message)
+      return [node_name, min_log_level](const LogLevel log_level, const std::string& message)
                         {
+                          if (log_level < min_log_level)
+                            return;
+
                           switch (log_level)
                           {
                           case LogLevel::DebugVerbose:

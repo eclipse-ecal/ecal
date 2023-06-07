@@ -353,6 +353,9 @@ TEST(Communication, SlowCommunication)
     EXPECT_EQ(num_client_response_callback_called          , 0);
 
     EXPECT_EQ(server->get_connection_count(), 1);
+    EXPECT_EQ(client_v1->get_state(), eCAL::service::State::CONNECTED);
+    EXPECT_EQ(client_v1->get_accepted_protocol_version(), protocol_version);
+    EXPECT_EQ(client_v1->get_queue_size(), 0);
   }
 
   
@@ -365,6 +368,9 @@ TEST(Communication, SlowCommunication)
     EXPECT_EQ(num_client_response_callback_called          , 1);
 
     EXPECT_EQ(server->get_connection_count(), 1);
+    EXPECT_EQ(client_v1->get_state(), eCAL::service::State::CONNECTED);
+    EXPECT_EQ(client_v1->get_accepted_protocol_version(), protocol_version);
+    EXPECT_EQ(client_v1->get_queue_size(), 0);
   }
 
   // Call service again and wait a short time
@@ -376,6 +382,9 @@ TEST(Communication, SlowCommunication)
     EXPECT_EQ(num_client_response_callback_called          , 2);
 
     EXPECT_EQ(server->get_connection_count(), 1);
+    EXPECT_EQ(client_v1->get_state(), eCAL::service::State::CONNECTED);
+    EXPECT_EQ(client_v1->get_accepted_protocol_version(), protocol_version);
+    EXPECT_EQ(client_v1->get_queue_size(), 0);
   }
 
   // delete all objects
@@ -591,6 +600,9 @@ TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
     EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
 
     EXPECT_EQ(server->get_connection_count(), 1);
+    EXPECT_EQ(client_v1->get_state(), eCAL::service::State::CONNECTED);
+    EXPECT_EQ(client_v1->get_accepted_protocol_version(), protocol_version);
+    EXPECT_EQ(client_v1->get_queue_size(), 0);
   }
 
   
@@ -610,6 +622,9 @@ TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
     EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
 
     EXPECT_EQ(server->get_connection_count(), 1);
+    EXPECT_EQ(client_v1->get_state(), eCAL::service::State::CONNECTED);
+    EXPECT_EQ(client_v1->get_accepted_protocol_version(), protocol_version);
+    EXPECT_EQ(client_v1->get_queue_size(), 0);
   }
 
   // Call service again and wait a short time
@@ -628,6 +643,9 @@ TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
     EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
 
     EXPECT_EQ(server->get_connection_count(), 1);
+    EXPECT_EQ(client_v1->get_state(), eCAL::service::State::CONNECTED);
+    EXPECT_EQ(client_v1->get_accepted_protocol_version(), protocol_version);
+    EXPECT_EQ(client_v1->get_queue_size(), 0);
   }
 
   // delete all objects
@@ -746,6 +764,9 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
     EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
 
     EXPECT_EQ(server->get_connection_count(), 1);
+    EXPECT_EQ(client_v1->get_state(), eCAL::service::State::CONNECTED);
+    EXPECT_EQ(client_v1->get_accepted_protocol_version(), protocol_version);
+    EXPECT_EQ(client_v1->get_queue_size(), 0);
   }
 
   
@@ -763,6 +784,10 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
     EXPECT_EQ(num_client_event_callback_called             , 1);
     EXPECT_EQ(num_client_event_callback_called_connected   , 1);
     EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
+
+    EXPECT_EQ(client_v1->get_state(), eCAL::service::State::CONNECTED);
+    EXPECT_EQ(client_v1->get_accepted_protocol_version(), protocol_version);
+    EXPECT_EQ(client_v1->get_queue_size(), 0);
   }
 
   // Server goes away
@@ -780,6 +805,10 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
     EXPECT_EQ(num_client_event_callback_called             , 2);
     EXPECT_EQ(num_client_event_callback_called_connected   , 1);
     EXPECT_EQ(num_client_event_callback_called_disconnected, 1);
+
+    EXPECT_EQ(client_v1->get_state(), eCAL::service::State::FAILED);
+    EXPECT_EQ(client_v1->get_accepted_protocol_version(), protocol_version);
+    EXPECT_EQ(client_v1->get_queue_size(), 0);
   }
 
   client_v1 = nullptr;
@@ -1160,6 +1189,10 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
     EXPECT_EQ(num_client_event_callback_called             , 1);
     EXPECT_EQ(num_client_event_callback_called_connected   , 1);
     EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
+
+    EXPECT_EQ(client_v1->get_state(), eCAL::service::State::CONNECTED);
+    EXPECT_EQ(client_v1->get_accepted_protocol_version(), protocol_version);
+    EXPECT_EQ(client_v1->get_queue_size(), 0);
   }
 
   // Server goes away
@@ -1177,6 +1210,10 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
     EXPECT_EQ(num_client_event_callback_called             , 2);
     EXPECT_EQ(num_client_event_callback_called_connected   , 1);
     EXPECT_EQ(num_client_event_callback_called_disconnected, 1);
+
+    EXPECT_EQ(client_v1->get_state(), eCAL::service::State::FAILED);
+    EXPECT_EQ(client_v1->get_accepted_protocol_version(), protocol_version);
+    EXPECT_EQ(client_v1->get_queue_size(), 0);
   }
 
   // Service call on the dead server.
@@ -1205,6 +1242,10 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
     EXPECT_EQ(num_client_event_callback_called             , 2);
     EXPECT_EQ(num_client_event_callback_called_connected   , 1);
     EXPECT_EQ(num_client_event_callback_called_disconnected, 1);
+
+    EXPECT_EQ(client_v1->get_state(), eCAL::service::State::FAILED);
+    EXPECT_EQ(client_v1->get_accepted_protocol_version(), protocol_version);
+    EXPECT_EQ(client_v1->get_queue_size(), 0);
   }
 
   // join the io_thread

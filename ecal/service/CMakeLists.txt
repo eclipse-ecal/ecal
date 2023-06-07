@@ -37,6 +37,7 @@ set(sources
     src/ecal_service_client_session_impl_base.h
     src/ecal_service_client_session_impl_v1.cpp
     src/ecal_service_client_session_impl_v1.h
+    src/ecal_service_log_defs.h
     src/ecal_service_log_helpers.h
     src/ecal_service_server.cpp
     src/ecal_service_server_impl.cpp

@@ -23,6 +23,8 @@
 
 #include "ecal_service_server_session_impl_v1.h"
 
+#include "ecal_service_log_defs.h"
+
 namespace eCAL
 {
   namespace service
@@ -60,7 +62,7 @@ namespace eCAL
       , event_callback_  (event_callback)
       , logger_          (logger)
     {
-      logger_(LogLevel::DebugVerbose, "Service Created");
+      ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Created");
     }
 
     ServerImpl::~ServerImpl()
@@ -85,7 +87,7 @@ namespace eCAL
         }
       }
 
-      logger_(LogLevel::DebugVerbose, "Service Deleted");
+      ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Deleted");
     }
 
     ///////////////////////////////////////////
@@ -110,7 +112,7 @@ namespace eCAL
 
     void ServerImpl::start_accept(unsigned int version)
     {
-      logger_(LogLevel::DebugVerbose, "Service waiting for next client...");
+      ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service waiting for next client...");
 
       // Create the callbacks for the session. Those callbacks are basically
       // wrapping the class methods of this class. However, the lambda functions
@@ -209,12 +211,8 @@ namespace eCAL
                   }
                   else
                   {
-  #if (ECAL_ASIO_TCP_SERVER_LOG_DEBUG_ENABLED)
-                    const auto message = "[Server] Successfully accepted new session: " + new_session->get_connection_info_string() ;
-                    std::cout << message << std::endl;
-  #endif
 
-                    logger_copy(LogLevel::DebugVerbose, "Service client initiated connection...");
+                    ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_copy, "Service client initiated connection...");
 
                     const std::shared_ptr<ServerImpl> me = weak_me.lock();
                     if (me)

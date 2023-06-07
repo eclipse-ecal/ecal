@@ -22,6 +22,7 @@
 #include "ecal_service_tcp_protocol_v1.h"
 
 #include "ecal_service_log_helpers.h"
+#include "ecal_service_log_defs.h"
 
 ///////////////////////////////////////////////
 // Create, Constructor, Destructor
@@ -52,13 +53,13 @@ namespace eCAL
       , accepted_protocol_version_(0)
       , logger_                   (logger)
     {
-      logger_(LogLevel::DebugVerbose, "Server Session Created");
+      ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Server Session Created");
     }
 
     // Destructor
     ServerSessionV1::~ServerSessionV1()
     {
-      logger_(LogLevel::DebugVerbose, "Server Session Deleted");
+      ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Server Session Deleted");
     }
 
     ///////////////////////////////////////////////
@@ -66,14 +67,14 @@ namespace eCAL
     ///////////////////////////////////////////////
     void ServerSessionV1::start()
     {
-      logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(socket_) + "] " + "Starting...");
+      ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Starting...");
 
       receive_handshake_request();
     }
 
     void ServerSessionV1::stop()
     {
-      logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(socket_) + "] " + "Stopping...");
+      ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Stopping...");
       
       {
         // Shutdown the socket
@@ -90,7 +91,7 @@ namespace eCAL
 
     void ServerSessionV1::receive_handshake_request()
     {
-      logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(socket_) + "] " + "Waiting for protocol handshake request...");
+      ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Waiting for protocol handshake request...");
 
       // Go to handshake state
       state_ = State::HANDSHAKE;
@@ -111,7 +112,7 @@ namespace eCAL
                                   const std::string message = "Received invalid handshake request from client. Expected message type " 
                                                               + std::to_string(static_cast<std::uint8_t>(eCAL::service::MessageType::ProtocolHandshakeRequest)) 
                                                               + ", but received " + std::to_string(static_cast<std::uint8_t>(header->message_type));
-                                  me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
+                                  me->logger_(LogLevel::Fatal, "[" + get_connection_info_string(me->socket_) + "] " + message);
 
                                   me->state_ = State::FAILED;
                                   me->delete_callback_(me);
@@ -120,7 +121,7 @@ namespace eCAL
                                 else
                                 {
                                   // The request is a Handshake request
-                                  me->logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(me->socket_) + "] " + "Received a handshake request of " + std::to_string(payload_buffer->size()) + " bytes.");
+                                  ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + "Received a handshake request of " + std::to_string(payload_buffer->size()) + " bytes.");
 
                                   // Resize payload if necessary. Will probably never be necessary
                                   if (payload_buffer->size() < sizeof(ProtocolHandshakeRequestMessage))
@@ -137,10 +138,7 @@ namespace eCAL
                                   {
                                     // We have a protocol version that is supported by both sides. We choose the maximum supported version
                                     me->accepted_protocol_version_ = both_supported_max_protocol_version;
-                                    me->state_ = State::CONNECTED;
-
-                                    const std::string message = "Client connected successfully. Using protocol version " + std::to_string(me->accepted_protocol_version_);
-                                    me->logger_(LogLevel::Debug, "[" + get_connection_info_string(me->socket_) + "] " + message);
+                                    ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + "Choosing protocol version " + std::to_string(me->accepted_protocol_version_));
 
                                     // Send the handshake response to the client, telling him the protocol version we will use
                                     me->send_handshake_response();
@@ -166,56 +164,59 @@ namespace eCAL
 
     void ServerSessionV1::send_handshake_response()
     {
-        logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(socket_) + "] " + "Sending protocol handshake response...");
+      ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Sending protocol handshake response...");
 
-        // Go to handshake state
-        state_ = State::HANDSHAKE;
+      // Go to handshake state
+      state_ = State::HANDSHAKE;
 
-        // Create buffers
-        const std::shared_ptr<TcpHeader>  header_buffer  = std::make_shared<TcpHeader>();
-        const std::shared_ptr<std::string> payload_buffer = std::make_shared<std::string>();
+      // Create buffers
+      const std::shared_ptr<TcpHeader>  header_buffer  = std::make_shared<TcpHeader>();
+      const std::shared_ptr<std::string> payload_buffer = std::make_shared<std::string>();
 
-        // Fill Handshake Response Message
-        payload_buffer->resize(sizeof(ProtocolHandshakeResponseMessage), '\0');
-        ProtocolHandshakeResponseMessage* handshake_response_message = reinterpret_cast<ProtocolHandshakeResponseMessage*>(const_cast<char*>(payload_buffer->data()));
-        handshake_response_message->accepted_protocol_version = accepted_protocol_version_;
+      // Fill Handshake Response Message
+      payload_buffer->resize(sizeof(ProtocolHandshakeResponseMessage), '\0');
+      ProtocolHandshakeResponseMessage* handshake_response_message = reinterpret_cast<ProtocolHandshakeResponseMessage*>(const_cast<char*>(payload_buffer->data()));
+      handshake_response_message->accepted_protocol_version = accepted_protocol_version_;
 
-        // Fill TCP Header
-        header_buffer->package_size_n = htonl(static_cast<std::uint32_t>(payload_buffer->size()));
-        header_buffer->version        = accepted_protocol_version_;
-        header_buffer->message_type   = MessageType::ProtocolHandshakeResponse;
-        header_buffer->header_size_n  = htons(sizeof(TcpHeader));
+      // Fill TCP Header
+      header_buffer->package_size_n = htonl(static_cast<std::uint32_t>(payload_buffer->size()));
+      header_buffer->version        = accepted_protocol_version_;
+      header_buffer->message_type   = MessageType::ProtocolHandshakeResponse;
+      header_buffer->header_size_n  = htons(sizeof(TcpHeader));
 
-        eCAL::service::ProtocolV1::async_send_payload(socket_, header_buffer, payload_buffer
-                            , [me = shared_from_this()](asio::error_code ec)
-                              {
-                                me->state_ = State::FAILED;
-                                me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + "Failed sending protocol handshake response: " + ec.message());
-                                me->delete_callback_(me);
-                              }
-                            , [me = shared_from_this()]()
-                              {
-                                me->state_ = State::CONNECTED;
-                                me->logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(me->socket_) + "] " + "Successfully sent protocol handshake response.");
+      eCAL::service::ProtocolV1::async_send_payload(socket_, header_buffer, payload_buffer
+                          , [me = shared_from_this()](asio::error_code ec)
+                            {
+                              me->state_ = State::FAILED;
+                              me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + "Failed sending protocol handshake response: " + ec.message());
+                              me->delete_callback_(me);
+                            }
+                          , [me = shared_from_this()]()
+                            {
+                              me->state_ = State::CONNECTED;
+                              ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + "Successfully sent protocol handshake response.");
 
-                                const std::string message = "Client has connected. Using protocol version " + std::to_string(me->accepted_protocol_version_) + ".";
-                                me->logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(me->socket_) + "] " + message);
-                                // call event callback
-                                me->event_callback_(eCAL_Server_Event::server_event_connected, message);
+                              const std::string message = "Client has connected. Using protocol version " + std::to_string(me->accepted_protocol_version_) + ".";
+                              me->logger_(LogLevel::Info, "[" + get_connection_info_string(me->socket_) + "] " + message);
 
-                                me->receive_service_request();
-                              });
+                              me->state_ = State::CONNECTED;
+                                
+                              // call event callback
+                              me->event_callback_(eCAL_Server_Event::server_event_connected, message);
+
+                              me->receive_service_request();
+                            });
     }
 
     void ServerSessionV1::receive_service_request()
     {
-      logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(socket_) + "] " + "Waiting for service request...");
+      ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Waiting for service request...");
 
       eCAL::service::ProtocolV1::async_receive_payload(socket_
                             , [me = shared_from_this()](asio::error_code ec)
                               {
-                                const std::string message = "Failed receiving service request: " + ec.message();
-                                me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
+                                const std::string message = "Server session disconnected while waiting for request: " + ec.message();
+                                me->logger_(LogLevel::Info, "[" + get_connection_info_string(me->socket_) + "] " + message);
 
                                 me->state_ = State::FAILED;
                                 
@@ -231,7 +232,7 @@ namespace eCAL
                                   const std::string message = "Received invalid service request from client. Expected message type " 
                                                               + std::to_string(static_cast<std::uint8_t>(eCAL::service::MessageType::ServiceRequest)) 
                                                               + ", but received " + std::to_string(static_cast<std::uint8_t>(header->message_type));
-                                  me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
+                                  me->logger_(LogLevel::Fatal, "[" + get_connection_info_string(me->socket_) + "] " + message);
                                   // TODO: Maybe I should return an error message to the Client? at the moment, I just exit and shut down the session.
 
                                   // The request is not a Service request.
@@ -247,7 +248,7 @@ namespace eCAL
                                 {
                                   // The request is a Service request
                                   
-                                  me->logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(me->socket_) + "] " + "Successfully received service request of " + std::to_string(payload_buffer->size()) + " bytes");
+                                  ECAL_SERVICE_LOG_DEBUG(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + "Received service request of " + std::to_string(payload_buffer->size()) + " bytes");
 
                                   // Call the service callback
                                   const std::shared_ptr<std::string> response_buffer = std::make_shared<std::string>();
@@ -269,7 +270,7 @@ namespace eCAL
       header_buffer->message_type   = MessageType::ServiceResponse;
       header_buffer->header_size_n  = htons(sizeof(TcpHeader));
 
-      logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(socket_) + "] " + "Sending service response...");
+      ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Sending service response...");
 
       eCAL::service::ProtocolV1::async_send_payload(socket_, header_buffer, response_buffer
                             , [me = shared_from_this()](asio::error_code ec)
@@ -285,7 +286,7 @@ namespace eCAL
                               }
                             , [me = shared_from_this()]()
                               {
-                                me->logger_(LogLevel::DebugVerbose, "[" + get_connection_info_string(me->socket_) + "] " + "Successfully sent service response.");
+                                ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + "Successfully sent service response.");
 
                                 // Wait for next request
                                 me->receive_service_request();
