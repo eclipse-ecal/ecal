@@ -81,11 +81,11 @@ namespace eCAL
      * @brief Constructor. 
      *
      * @param topic_name_   Unique topic name. 
-     * @param topic_type_   Type name (optional). 
+     * @param topic_type_   Type name. 
      * @param topic_desc_   Type description (optional). 
     **/
     [[deprecated("Please use the constructor CPublisher(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
-    CPublisher(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+    CPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
 
     /**
     * @brief Constructor.
@@ -95,6 +95,13 @@ namespace eCAL
     **/
     CPublisher(const std::string& topic_name_, const STopicInformation& topic_info_);
 
+    /**
+    * @brief Constructor.
+    *
+    * @param topic_name_   Unique topic name.
+    * @param topic_info_   Topic information (encoding, type, descriptor)
+    **/
+    CPublisher(const std::string& topic_name_);
 
     /**
      * @brief Destructor. 

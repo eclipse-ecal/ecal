@@ -70,7 +70,7 @@ namespace eCAL
 
       // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
       // where the vtable is not created yet or it's destructed.
-      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, CSubscriber::GetTypeName(), CSubscriber::GetDescription())
+      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, CSubscriber::GetTopicInformation())
       {
       }
 
@@ -94,7 +94,6 @@ namespace eCAL
       **/
       CSubscriber& operator=(CSubscriber&&) = default;
 
-
       /**
        * @brief  Creates this object.
        *
@@ -112,10 +111,11 @@ namespace eCAL
        *
        * @return  Type name.
       **/
+      [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
       std::string GetTypeName() const override
       {
-        static T msg;
-        return("proto:" + msg.GetTypeName());
+        STopicInformation topic_info{ GetTopicInformation() };
+        return Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.type);
       }
 
     private:
@@ -124,11 +124,27 @@ namespace eCAL
        *
        * @return  Description string.
       **/
+      [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
       std::string GetDescription() const override
       {
-        static T msg;
-        return(protobuf::GetProtoMessageDescription(msg));
+        return GetTopicInformation().descriptor;
       }
+
+      /**
+      * @brief  Get topic information of the protobuf message.
+      *
+      * @return  Topic information.
+      **/
+      STopicInformation GetTopicInformation() const override
+      {
+        STopicInformation topic_info;
+        static T msg{};
+        topic_info.encoding = "proto";
+        topic_info.type = msg.GetTypeName();
+        topic_info.descriptor = protobuf::GetProtoMessageDescription(msg);
+        return topic_info;
+      }
+
 
       /**
        * @brief  Deserialize the message object from a message buffer.

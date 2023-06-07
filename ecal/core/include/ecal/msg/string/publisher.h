@@ -110,9 +110,11 @@ namespace eCAL
        *
        * @return  Always returns "base:std::string".
       **/
+      [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
       std::string GetTypeName() const override
       {
-        return("base:std::string");
+        STopicInformation topic_info{ GetTopicInformation() };
+        return Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.type);
       }
 
     private:
@@ -121,11 +123,26 @@ namespace eCAL
        *
        * @return  Empty string.
       **/
+      [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
       std::string GetDescription() const override
       {
-        return("");
+        return GetTopicInformation().descriptor;
       }
 
+
+      /**
+      * @brief   Get topic information of the message.
+      *
+      * @return  Topic information.
+      **/
+      STopicInformation GetTopicInformation() const
+      {
+        STopicInformation topic_info;
+        topic_info.encoding = "base";
+        topic_info.type = "std::string";
+        // empty descriptor
+        return topic_info;
+      }
       /**
        * @brief  Get size of the string object.
        *

@@ -40,25 +40,21 @@ namespace eCAL
     InitializeQOS();
   }
 
-  CSubscriber::CSubscriber(const std::string& topic_name_, const std::string& topic_type_ /* = "" */, const std::string& topic_desc_ /* = "" */) :
-                 m_datareader(nullptr),
-                 m_created(false),
-                 m_initialized(false)
+  CSubscriber::CSubscriber(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ /* = "" */)
+    : CSubscriber()
   {
-    InitializeQOS();
-
     Create(topic_name_, topic_type_, topic_desc_);
   }
 
-  CSubscriber::CSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_) :
-    m_datareader(nullptr),
-    m_created(false),
-    m_initialized(false)
+  CSubscriber::CSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_)
+    : CSubscriber()
   {
-    InitializeQOS();
-
     Create(topic_name_, topic_info_);
   }
+
+  CSubscriber::CSubscriber(const std::string& topic_name_)
+    : CSubscriber(topic_name_, STopicInformation{})
+  {}
 
   CSubscriber::~CSubscriber()
   {

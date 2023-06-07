@@ -26,23 +26,24 @@
 
 void OnEvent(const char* topic_name_, const struct eCAL::SPubEventCallbackData* data_)
 {
-  std::cout << "topic name   : " << topic_name_ << std::endl;
+  std::cout << "topic name         : " << topic_name_ << std::endl;
   switch (data_->type)
   {
   case pub_event_connected:
-    std::cout << "event        : " << "pub_event_connected" << std::endl;
+    std::cout << "event            : " << "pub_event_connected" << std::endl;
     break;
   case pub_event_disconnected:
-    std::cout << "event        : " << "pub_event_disconnected" << std::endl;
+    std::cout << "event            : " << "pub_event_disconnected" << std::endl;
     break;
   // not implemented yet
   case pub_event_dropped:
-    std::cout << "event        : " << "pub_event_dropped" << std::endl;
+    std::cout << "event            : " << "pub_event_dropped" << std::endl;
     break;
   case pub_event_update_connection:
-    std::cout << "event        : " << "pub_event_update_connection" << std::endl;
-    std::cout << "  topic_id   : " << data_->tid << std::endl;
-    std::cout << "  topic_type : " << data_->ttype << std::endl;
+    std::cout << "event            : " << "pub_event_update_connection" << std::endl;
+    std::cout << "  topic_id       : " << data_->tid << std::endl;
+    std::cout << "  topic_encoding : " << data_->tinfo.encoding << std::endl;
+    std::cout << "  topic_type     : " << data_->tinfo.type << std::endl;
     //std::cout << "  topic_desc : " << data_->tdesc << std::endl;
     break;
   default:

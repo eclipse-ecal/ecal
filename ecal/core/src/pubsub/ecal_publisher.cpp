@@ -46,29 +46,21 @@ namespace eCAL
     InitializeTLayer();
   }
 
-  CPublisher::CPublisher(const std::string& topic_name_, const std::string& topic_type_ /* = "" */, const std::string& topic_desc_ /* = "" */) :
-                m_datawriter(nullptr),
-                m_id(0),
-                m_created(false),
-                m_initialized(false)
+  CPublisher::CPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ /* = "" */) 
+    : CPublisher()
   {
-    InitializeQOS();
-    InitializeTLayer();
-
     Create(topic_name_, topic_type_, topic_desc_);
   }
 
-  CPublisher::CPublisher(const std::string& topic_name_, const STopicInformation& topic_info_):
-    m_datawriter(nullptr),
-    m_id(0),
-    m_created(false),
-    m_initialized(false)
+  CPublisher::CPublisher(const std::string& topic_name_, const STopicInformation& topic_info_)
+    : CPublisher()
   {
-    InitializeQOS();
-    InitializeTLayer();
-
     Create(topic_name_, topic_info_);
   }
+
+  CPublisher::CPublisher(const std::string& topic_name_) 
+    : CPublisher(topic_name_, STopicInformation{}) 
+  {}
 
   CPublisher::~CPublisher()
   {

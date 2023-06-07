@@ -95,7 +95,7 @@ namespace eCAL
      * @param topic_desc_   Type description (optional for description checking).
      **/
     [[deprecated("Please use the constructor CSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
-    CSubscriber(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+    CSubscriber(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
 
     /**
     * @brief Constructor.
@@ -104,6 +104,13 @@ namespace eCAL
     * @param topic_info_   Topic information (encoding, type, descriptor)
     **/
     CSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_);
+
+    /**
+    * @brief Constructor.
+    * 
+    * @param topic_name_   Unique topic name.
+    **/
+    CSubscriber(const std::string& topic_name_);
 
     /**
      * @brief Destructor. 

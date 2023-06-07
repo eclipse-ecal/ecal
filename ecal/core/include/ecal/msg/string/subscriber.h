@@ -58,7 +58,7 @@ namespace eCAL
 
       // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
       // where the vtable is not created yet or it's destructed.
-      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, CSubscriber::GetTypeName(), CSubscriber::GetDescription())
+      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, CSubscriber::GetTopicInformation())
       {
       }
 
@@ -68,7 +68,7 @@ namespace eCAL
       CSubscriber(const CSubscriber&) = delete;
 
       /**
-      * @brief  Copy Constructor is not available.
+      * @brief Copy Assignment is not available.
       **/
       CSubscriber& operator=(const CSubscriber&) = delete;
 
@@ -99,9 +99,11 @@ namespace eCAL
        *
        * @return  Always returns "base:std::string".
       **/
+      [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
       std::string GetTypeName() const override
       {
-        return("base:std::string");
+        STopicInformation topic_info{ GetTopicInformation() };
+        return Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.type);
       }
 
     private:
@@ -110,9 +112,24 @@ namespace eCAL
        *
        * @return  Always returns empty string.
       **/
+      [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
       std::string GetDescription() const override
       {
-        return("");
+        return GetTopicInformation().descriptor;
+      }
+
+      /**
+      * @brief  Get topic information of the protobuf message.
+      *
+      * @return  Topic information. ("base", "std::string", "")
+      **/
+      STopicInformation GetTopicInformation() const override
+      {
+        STopicInformation topic_info;
+        topic_info.encoding = "base";
+        topic_info.type = "std::string";
+        // empty descriptor
+        return topic_info;
       }
 
       /**
