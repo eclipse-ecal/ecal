@@ -145,6 +145,7 @@ if(BUILD_PY_BINDING)
     # measurement
     if(HAS_HDF5)
       add_subdirectory(python/measurement/ecalhdf5_rw)
+      add_subdirectory(python/measurement/ecalhdf5_protobuf_rw)
       add_subdirectory(python/measurement/measurement_read)
     endif(HAS_HDF5)
 
