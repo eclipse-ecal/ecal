@@ -69,6 +69,19 @@ namespace eCAL
     {
       ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Starting...");
 
+      // Disable Nagle's algorithm. Nagles Algorithm will otherwise cause the
+      // Socket to wait for more data, if it encounters a frame that can still
+      // fit more data. Obviously, this is an awfull default behaviour, if we
+      // want to transmit our data in a timely fashion.
+      {
+        asio::error_code socket_option_ec;
+        socket_.set_option(asio::ip::tcp::no_delay(true), socket_option_ec);
+        if (socket_option_ec)
+        {
+          logger_(LogLevel::Warning, "[" + get_connection_info_string(socket_) + "] " + "Failed setting tcp::no_delay option: " + socket_option_ec.message());
+        }                                      
+      }
+
       receive_handshake_request();
     }
 
@@ -94,8 +107,9 @@ namespace eCAL
       ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Waiting for protocol handshake request...");
 
       // Go to handshake state
-      state_ = State::HANDSHAKE;
+      state_ = State::HANDSHAKE; // TODO: Protect with mutex?
 
+      // TODO: Add strand to add the possibility to parallelize later
       eCAL::service::ProtocolV1::async_receive_payload(socket_
                             , [me = shared_from_this()](asio::error_code ec)
                               {

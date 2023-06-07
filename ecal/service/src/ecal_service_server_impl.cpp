@@ -22,6 +22,7 @@
 #include <algorithm>
 
 #include "ecal_service_server_session_impl_v1.h"
+#include "ecal_service_server_session_impl_v0.h"
 
 #include "ecal_service_log_defs.h"
 
@@ -36,7 +37,7 @@ namespace eCAL
     std::shared_ptr<ServerImpl> ServerImpl::create(asio::io_context&              io_context
                                                   , std::uint8_t                  protocol_version
                                                   , std::uint16_t                 port
-                                                  , const ServerServiceCallbackT& service_callback
+                                                  , const ServerServiceCallbackT& service_callback // TODO: The service callback may block a long time. This may cause the entire network stack to wait for long running service callbacks. Maybe it is a good idea to have some kind of "future" object, that the user can hand to some differen io_context or to a custom thread. That thread will then work on the object and call some function / let it go out of scope, which will then trigger sending the response to the client.
                                                   , const ServerEventCallbackT&   event_callback
                                                   , const LoggerT&                logger)
     {
@@ -138,7 +139,7 @@ namespace eCAL
       std::shared_ptr<eCAL::service::ServerSessionBase> new_session;
       if (version == 0)
       {
-        //new_session = eCAL::ServerSessionV0::create(io_context_, request_callback, event_callback);
+        new_session = eCAL::service::ServerSessionV0::create(io_context_, service_callback_, event_callback_, delete_callback, logger_);
       }
       else
       {

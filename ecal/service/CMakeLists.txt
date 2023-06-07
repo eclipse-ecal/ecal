@@ -35,6 +35,8 @@ set(sources
     src/condition_variable_signaler.h
     src/ecal_service_client_session.cpp
     src/ecal_service_client_session_impl_base.h
+    src/ecal_service_client_session_impl_v0.cpp
+    src/ecal_service_client_session_impl_v0.h
     src/ecal_service_client_session_impl_v1.cpp
     src/ecal_service_client_session_impl_v1.h
     src/ecal_service_log_defs.h
@@ -43,9 +45,13 @@ set(sources
     src/ecal_service_server_impl.cpp
     src/ecal_service_server_impl.h
     src/ecal_service_server_session_impl_base.h
+    src/ecal_service_server_session_impl_v0.cpp
+    src/ecal_service_server_session_impl_v0.h
     src/ecal_service_server_session_impl_v1.cpp
     src/ecal_service_server_session_impl_v1.h
     src/ecal_service_tcp_protocol_layout.h
+    src/ecal_service_tcp_protocol_v0.cpp
+    src/ecal_service_tcp_protocol_v0.h
     src/ecal_service_tcp_protocol_v1.cpp
     src/ecal_service_tcp_protocol_v1.h
 )
