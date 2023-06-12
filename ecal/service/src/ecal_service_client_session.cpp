@@ -78,7 +78,7 @@ namespace eCAL
       
       {
         // Create a response callback, that will set the response and notify the condition variable
-        ResponseCallbackT response_callback
+        const ResponseCallbackT response_callback
                   = [&error, &response, signaler = std::make_shared<ConditionVariableSignaler>(condition_variable, mutex, is_signaled)]
                     (const eCAL::service::Error& response_error, const std::shared_ptr<std::string>& response_)
                     {

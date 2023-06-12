@@ -160,8 +160,8 @@ namespace eCAL
       ///////////////////////////////////////////////////
       void async_send_payload   (asio::ip::tcp::socket& socket, const std::shared_ptr<const eCAL::service::TcpHeaderV1>& header_buffer, const std::shared_ptr<const std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb)
       {        
-        std::vector<asio::const_buffer> buffer_list { asio::buffer(reinterpret_cast<const char*>(header_buffer.get()), sizeof(eCAL::service::TcpHeaderV1))
-                                                    , asio::buffer(*payload_buffer)};
+        const std::vector<asio::const_buffer> buffer_list { asio::buffer(reinterpret_cast<const char*>(header_buffer.get()), sizeof(eCAL::service::TcpHeaderV1))
+                                                          , asio::buffer(*payload_buffer)};
 
         asio::async_write(socket
                         , buffer_list

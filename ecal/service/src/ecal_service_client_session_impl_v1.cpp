@@ -147,7 +147,7 @@ namespace eCAL
 
       // Go to handshake state
       {
-        std::lock_guard<std::mutex> lock(service_state_mutex_);
+        const std::lock_guard<std::mutex> lock(service_state_mutex_);
         state_ = State::HANDSHAKE;
       }
 
@@ -222,7 +222,7 @@ namespace eCAL
                                     && (handshake_response->accepted_protocol_version <= MIN_SUPPORTED_PROTOCOL_VERSION))
                                   {
                                     {
-                                      std::lock_guard<std::mutex> lock(me->service_state_mutex_);
+                                      const std::lock_guard<std::mutex> lock(me->service_state_mutex_);
                                       me->accepted_protocol_version_ = handshake_response->accepted_protocol_version;
                                       me->state_ = State::CONNECTED;
                                     }
@@ -235,12 +235,12 @@ namespace eCAL
 
                                     // Start sending service requests, if there are any
                                     {
-                                      std::lock_guard<std::mutex> lock(me->service_state_mutex_);
+                                      const std::lock_guard<std::mutex> lock(me->service_state_mutex_);
                                       if (!me->service_call_queue_.empty())
                                       {
                                         // If there are service calls in the queue, we send the next one.
                                         me->service_call_in_progress_ = true;
-                                        me->send_next_service_request(std::move(me->service_call_queue_.front().request), std::move(me->service_call_queue_.front().response_cb));
+                                        me->send_next_service_request(me->service_call_queue_.front().request, me->service_call_queue_.front().response_cb);
                                         me->service_call_queue_.pop_front();
                                       }
                                       else
@@ -282,7 +282,7 @@ namespace eCAL
                               bool call_response_callback_with_error(false);
                               
                               {
-                                std::lock_guard<std::mutex> lock(me->service_state_mutex_);
+                                const std::lock_guard<std::mutex> lock(me->service_state_mutex_);
                                 if (me->state_ != State::FAILED)
                                 {
                                   // If we are  not in failed state, let's check
@@ -408,14 +408,14 @@ namespace eCAL
                                   // Check if there are more items in the queue. If so, send the next request
                                   // The mutex must be locket, as we access the queue.
                                   {
-                                    std::lock_guard<std::mutex> lock(me->service_state_mutex_);
+                                    const std::lock_guard<std::mutex> lock(me->service_state_mutex_);
 
                                     if (!me->service_call_queue_.empty())
                                     {
                                       // If there are more items, continue calling the service
                                       ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + " Service call queue contains " + std::to_string(me->service_call_queue_.size()) + " Entries. Starting next service call.");
                                       me->service_call_in_progress_ = true;
-                                      me->send_next_service_request(std::move(me->service_call_queue_.front().request), std::move(me->service_call_queue_.front().response_cb));
+                                      me->send_next_service_request(me->service_call_queue_.front().request, me->service_call_queue_.front().response_cb);
                                       me->service_call_queue_.pop_front();
                                     }
                                     else
@@ -441,7 +441,7 @@ namespace eCAL
     //////////////////////////////////////
     State ClientSessionV1::get_state() const
     {
-      std::lock_guard<std::mutex> lock(service_state_mutex_);
+      const std::lock_guard<std::mutex> lock(service_state_mutex_);
       return state_;
     }
 
@@ -452,7 +452,7 @@ namespace eCAL
 
     int ClientSessionV1::get_queue_size() const
     {
-      std::lock_guard<std::mutex> lock(service_state_mutex_);
+      const std::lock_guard<std::mutex> lock(service_state_mutex_);
       return static_cast<int>(service_call_queue_.size());
     }
 
@@ -461,7 +461,7 @@ namespace eCAL
     //////////////////////////////////////
     void ClientSessionV1::peek_for_error()
     {
-      std::shared_ptr<std::vector<char>> peek_buffer = std::make_shared<std::vector<char>>(1, '\0');
+      const std::shared_ptr<std::vector<char>> peek_buffer = std::make_shared<std::vector<char>>(1, '\0');
 
       socket_.async_receive(asio::buffer(*peek_buffer)
                             , asio::socket_base::message_peek
@@ -480,7 +480,7 @@ namespace eCAL
       bool call_event_callback (false); // Variable that enables us to unlock the mutex before we execute the event callback.
 
       {
-        std::lock_guard<std::mutex> lock(service_state_mutex_);
+        const std::lock_guard<std::mutex> lock(service_state_mutex_);
 
         // cancel the connection loss handling, if we are already in FAILED state
         if (state_ == State::FAILED)
@@ -518,7 +518,7 @@ namespace eCAL
 
                                         {
                                           // Lock the mutex and manipulate the queue. We want the mutex unlocked for the event callback call.
-                                          std::lock_guard<std::mutex> lock(me->service_state_mutex_);
+                                          const std::lock_guard<std::mutex> lock(me->service_state_mutex_);
                                           
                                           if (me->service_call_queue_.empty())
                                             return;

@@ -166,8 +166,8 @@ namespace eCAL
           const auto header      = std::make_shared<eCAL::service::TcpHeaderV0>();
           header->package_size_n = htonl(static_cast<uint32_t>(response->size()));
 
-          std::vector<asio::const_buffer> buffer_list { asio::buffer(reinterpret_cast<const char*>(header.get()), sizeof(eCAL::service::TcpHeaderV0))
-                                                      , asio::buffer(*response)};
+          const std::vector<asio::const_buffer> buffer_list { asio::buffer(reinterpret_cast<const char*>(header.get()), sizeof(eCAL::service::TcpHeaderV0))
+                                                            , asio::buffer(*response)};
 
           asio::async_write(socket_
                           , buffer_list

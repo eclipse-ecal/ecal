@@ -79,7 +79,7 @@ namespace eCAL
       // However, should that behavior change in the future, I need to create
       // A special function for that, that is called from other places as well.
       {
-        std::lock_guard<std::mutex> session_list_lock(session_list_mutex_);
+        const std::lock_guard<std::mutex> session_list_lock(session_list_mutex_);
         for(const auto& session_weak : session_list_)
         {
           const auto session = session_weak.lock();
@@ -102,7 +102,7 @@ namespace eCAL
 
     int ServerImpl::get_connection_count() const
     {
-      std::lock_guard<std::mutex> session_list_lock(session_list_mutex_);
+      const std::lock_guard<std::mutex> session_list_lock(session_list_mutex_);
       return static_cast<int>(session_list_.size());
     }
 
@@ -124,7 +124,7 @@ namespace eCAL
                   const std::shared_ptr<ServerImpl> me = weak_me.lock();
                   if (me)
                   {
-                    std::lock_guard<std::mutex> session_list_lock(me->session_list_mutex_);
+                    const std::lock_guard<std::mutex> session_list_lock(me->session_list_mutex_);
 
                     // Remove the session from the session list
                     const auto session_it = std::find_if(me->session_list_.begin(), me->session_list_.end()
@@ -167,7 +167,7 @@ namespace eCAL
                     {
                       // Add the new session to the session list. The session list is a list of weak_ptr.
                       // Therefore, the session list will not keep the session alive, they will do that themselves.
-                      std::lock_guard<std::mutex> session_list_lock(me->session_list_mutex_);
+                      const std::lock_guard<std::mutex> session_list_lock(me->session_list_mutex_);
                       me->session_list_.push_back(new_session);
 
                       // Start the new session, that now has a connection
