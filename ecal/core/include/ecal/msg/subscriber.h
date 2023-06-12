@@ -223,13 +223,25 @@ namespace eCAL
       return(CSubscriber::RemReceiveCallback());
     }
 
-  private:
-    virtual std::string GetTypeName() const = 0;
-    virtual std::string GetDescription() const = 0;
+protected:
+    [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
+    virtual std::string GetTypeName() const
+    {
+      STopicInformation topic_info{ GetTopicInformation() };
+      return Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.type);
+    };
+
+    [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
+    virtual std::string GetDescription() const
+    {
+      return GetTopicInformation().descriptor;
+    };
+
     // We cannot make it pure virtual, as it would break a bunch of implementations, who are not (yet) implementing this function
     virtual STopicInformation GetTopicInformation() const { return STopicInformation{}; }
     virtual bool Deserialize(T& msg_, const void* buffer_, size_t size_) const = 0;
 
+  private:
     void ReceiveCallback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_)
     {
       MsgReceiveCallbackT fn_callback(m_cb_callback);

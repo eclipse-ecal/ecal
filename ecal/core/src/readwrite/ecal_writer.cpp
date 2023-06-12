@@ -1019,6 +1019,7 @@ namespace eCAL
     {
       data.type  = pub_event_update_connection;
       data.tid   = tid_;
+      // Remove with eCAL6 (next two lines)
       data.ttype = Util::CombinedTopicEncodingAndType(tinfo_.encoding, tinfo_.type);
       data.tdesc = tinfo_.descriptor;
       data.tinfo = tinfo_;

@@ -103,33 +103,10 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(CMsgSubscriber<T>::Create(topic_name_, GetTypeName(), GetDescription()));
-      }
-
-      /**
-       * @brief  Get type name of the protobuf message.
-       *
-       * @return  Type name.
-      **/
-      [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
-      std::string GetTypeName() const override
-      {
-        STopicInformation topic_info{ GetTopicInformation() };
-        return Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.type);
+        return(CMsgSubscriber<T>::Create(topic_name_, GetTopicInformation()));
       }
 
     private:
-      /**
-       * @brief  Get file descriptor string of the protobuf message.
-       *
-       * @return  Description string.
-      **/
-      [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
-      std::string GetDescription() const override
-      {
-        return GetTopicInformation().descriptor;
-      }
-
       /**
       * @brief  Get topic information of the protobuf message.
       *

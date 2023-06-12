@@ -88,7 +88,7 @@ namespace eCAL
     return *this;
   };
 
-  bool CSubscriber::Create(const std::string& topic_name_, const std::string& topic_type_ /* = "" */, const std::string& topic_desc_ /* = "" */)
+  bool CSubscriber::Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ /* = "" */)
   {
     STopicInformation info;
     auto split_type = Util::SplitCombinedTopicType(topic_type_);

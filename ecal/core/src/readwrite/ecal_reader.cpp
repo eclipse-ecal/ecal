@@ -727,6 +727,7 @@ namespace eCAL
         {
           data.type  = sub_event_connected;
           data.tid   = tid_;
+          // Remove with eCAL6 (next two lines)
           data.ttype = Util::CombinedTopicEncodingAndType(topic_info_.encoding, topic_info_.type);
           data.tdesc = topic_info_.descriptor;
           data.tinfo = topic_info_;

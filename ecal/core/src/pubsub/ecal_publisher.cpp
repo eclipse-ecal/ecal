@@ -426,15 +426,13 @@ namespace eCAL
 
   std::string CPublisher::GetTypeName() const
   {
-    if(m_datawriter == nullptr) return("");
-    STopicInformation info = m_datawriter->GetTopicInformation();
+    STopicInformation info = GetTopicInformation();
     return(Util::CombinedTopicEncodingAndType(info.encoding, info.type));
   }
 
   std::string CPublisher::GetDescription() const
   {
-    if(m_datawriter == nullptr) return("");
-    return(m_datawriter->GetTopicInformation().descriptor);
+    return(GetTopicInformation().descriptor);
   }
 
   STopicInformation CPublisher::GetTopicInformation() const
