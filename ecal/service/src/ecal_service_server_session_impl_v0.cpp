@@ -123,7 +123,25 @@ namespace eCAL
         // collect request
         *request += std::string(data_, bytes_transferred);
         // are there some more data on the socket ?
-        if (socket_.available() != 0u)
+        
+        size_t bytes_available_on_socket(0);
+        {
+          asio::error_code socket_available_ec;
+          bytes_available_on_socket = socket_.available(socket_available_ec);
+
+          if (socket_available_ec)
+          {
+            // -- This code is a copy of the code in the else branch below. --
+            state_ = State::FAILED;
+            const auto message = "Disconnected on read: " + socket_available_ec.message();
+            logger_(eCAL::service::LogLevel::Info, "[" + get_connection_info_string(socket_) + "] " + message);
+            event_callback_(server_event_disconnected, message);
+            delete_callback_(shared_from_this());
+            return;
+          }
+        }
+
+        if (bytes_available_on_socket != 0u)
         {
           ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "[" + get_connection_info_string(socket_) + "] " + "More data is available on socket! Reading more data...");
 

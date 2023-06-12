@@ -1351,8 +1351,7 @@ TEST(ErrorCallback, ErrorCallbackClientDisconnects)
 }
 #endif
 
-// TODO: Crashes for V0
-#if 0
+#if 1
 TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
 {
   constexpr int num_io_threads       = 50;
@@ -1732,6 +1731,7 @@ TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
 }
 #endif
 
+// Not working at the moment
 #if 0// TODO: This test throws in Release mode!!!
 // TODO: Add this test later again. Decide, whether it is actually necessary, to have this perfect.
 TEST(BlockingCall, StopIcontext)
