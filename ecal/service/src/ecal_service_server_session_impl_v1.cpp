@@ -119,7 +119,7 @@ namespace eCAL
                               }
                             , [me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
                               {
-                                TcpHeader* header = reinterpret_cast<TcpHeader*>(header_buffer->data());
+                                TcpHeaderV1* header = reinterpret_cast<TcpHeaderV1*>(header_buffer->data());
                                 if (header->message_type != eCAL::service::MessageType::ProtocolHandshakeRequest)
                                 {
                                   // The request is not a Handshake request.
@@ -184,7 +184,7 @@ namespace eCAL
       state_ = State::HANDSHAKE;
 
       // Create buffers
-      const std::shared_ptr<TcpHeader>  header_buffer  = std::make_shared<TcpHeader>();
+      const std::shared_ptr<TcpHeaderV1>  header_buffer  = std::make_shared<TcpHeaderV1>();
       const std::shared_ptr<std::string> payload_buffer = std::make_shared<std::string>();
 
       // Fill Handshake Response Message
@@ -196,7 +196,7 @@ namespace eCAL
       header_buffer->package_size_n = htonl(static_cast<std::uint32_t>(payload_buffer->size()));
       header_buffer->version        = accepted_protocol_version_;
       header_buffer->message_type   = MessageType::ProtocolHandshakeResponse;
-      header_buffer->header_size_n  = htons(sizeof(TcpHeader));
+      header_buffer->header_size_n  = htons(sizeof(TcpHeaderV1));
 
       eCAL::service::ProtocolV1::async_send_payload(socket_, header_buffer, payload_buffer
                           , [me = shared_from_this()](asio::error_code ec)
@@ -240,7 +240,7 @@ namespace eCAL
                               }
                             , [me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
                               {
-                                TcpHeader* header = reinterpret_cast<TcpHeader*>(header_buffer->data());
+                                TcpHeaderV1* header = reinterpret_cast<TcpHeaderV1*>(header_buffer->data());
                                 if (header->message_type != eCAL::service::MessageType::ServiceRequest)
                                 {
                                   const std::string message = "Received invalid service request from client. Expected message type " 
@@ -278,11 +278,11 @@ namespace eCAL
     void ServerSessionV1::send_service_response(const std::shared_ptr<std::string>& response_buffer)
     {
       // Create header_buffer
-      const std::shared_ptr<TcpHeader>  header_buffer  = std::make_shared<TcpHeader>();
+      const std::shared_ptr<TcpHeaderV1>  header_buffer  = std::make_shared<TcpHeaderV1>();
       header_buffer->package_size_n = htonl(static_cast<std::uint32_t>(response_buffer->size()));
       header_buffer->version        = accepted_protocol_version_;
       header_buffer->message_type   = MessageType::ServiceResponse;
-      header_buffer->header_size_n  = htons(sizeof(TcpHeader));
+      header_buffer->header_size_n  = htons(sizeof(TcpHeaderV1));
 
       ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Sending service response...");
 

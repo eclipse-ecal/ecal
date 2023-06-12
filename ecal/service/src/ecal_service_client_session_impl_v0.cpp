@@ -278,7 +278,7 @@ namespace eCAL
                                 // Further handle the error, e.g. unwinding pending service calls and calling the event callback
                                 me->handle_connection_loss_error(message);
                               })
-                            , service_call_queue_strand_.wrap([me = shared_from_this(), response_cb](const std::shared_ptr<eCAL::service::TcpHeaderV0>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
+                            , service_call_queue_strand_.wrap([me = shared_from_this(), response_cb](const std::shared_ptr<eCAL::service::TcpHeaderV0>& /*header_buffer*/, const std::shared_ptr<std::string>& payload_buffer)
                               {
                                 // The response is a Service response
                                 ECAL_SERVICE_LOG_DEBUG(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + "Successfully received service response of " + std::to_string(payload_buffer->size()) + " bytes");

@@ -49,7 +49,7 @@ namespace eCAL
           asio::async_read(socket
                         , asio::buffer(reinterpret_cast<char*>(header_buffer.get()), header_buffer_size)
                         , asio::transfer_at_least(header_buffer_size)
-                        , [&socket, header_buffer, error_cb, success_cb](asio::error_code ec, std::size_t bytes_read)
+                        , [&socket, header_buffer, error_cb, success_cb](asio::error_code ec, std::size_t /*bytes_read*/)
                           {
                             if (ec)
                             {
@@ -58,7 +58,7 @@ namespace eCAL
                               return;
                             }
 
-                            // Read the rest of the header!
+                            // Read the payload that comes after the header
                             read_payload(socket, header_buffer, error_cb, success_cb);
                           });
         }

@@ -54,7 +54,7 @@ constexpr std::uint8_t max_protocol_version = 1;
 #if 1
 TEST(RAII, TcpServiceServer)
 {
-  for (int protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     asio::io_context io_context;
     asio::io_context::work dummy_work(io_context);
@@ -106,7 +106,7 @@ TEST(RAII, TcpServiceServer)
 #if 1
 TEST(RAII, TcpServiceClient)
 {
-  for (int protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     asio::io_context io_context;
     asio::io_context::work dummy_work(io_context);
@@ -137,7 +137,7 @@ TEST(RAII, TcpServiceClient)
 #if 1
 TEST(RAII, TcpServiceServerAndClient)
 {
-  for (int protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     asio::io_context io_context;
     asio::io_context::work dummy_work(io_context);
@@ -225,7 +225,7 @@ TEST(RAII, TcpServiceServerAndClient)
 #if 1
 TEST(RAII, StopDuringServiceCall)
 {
-  for (int protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     asio::io_context io_context;
     asio::io_context::work dummy_work(io_context);
@@ -305,7 +305,7 @@ TEST(RAII, StopDuringServiceCall)
 #if 1
 TEST(Communication, SlowCommunication)
 {
-  for (int protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     asio::io_context io_context;
     asio::io_context::work dummy_work(io_context);
@@ -416,7 +416,7 @@ TEST(Communication, SlowCommunication)
 #if 1
 TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst)
 {
-  for (int protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     asio::io_context io_context;
     asio::io_context::work dummy_work(io_context);
@@ -523,7 +523,7 @@ TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst)
 #if 1
 TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
 {
-  for (int protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     asio::io_context io_context;
     asio::io_context::work dummy_work(io_context);
@@ -712,7 +712,7 @@ TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
 #if 1
 TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
 {
-  for (int protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     asio::io_context io_context;
     asio::io_context::work dummy_work(io_context);
@@ -859,7 +859,7 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
 #if 1
 TEST(CommunicationAndCallbacks, StressfulCommunication)
 {
-  for (int protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     constexpr int num_io_threads       = 10;
     constexpr int num_clients          = 10;
@@ -1010,7 +1010,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunication)
 #if 1
 TEST(Callback, ServiceCallFromCallback)
 {
-  for (int protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     asio::io_context io_context;
     asio::io_context::work dummy_work(io_context);
@@ -1081,7 +1081,7 @@ TEST(Callback, ServiceCallFromCallback)
 #if 1
 TEST(ErrorCallback, ErrorCallbackNoServer)
 {
-  for (int protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     asio::io_context io_context;
     asio::io_context::work dummy_work(io_context);
@@ -1130,7 +1130,7 @@ TEST(ErrorCallback, ErrorCallbackNoServer)
 #if 1
 TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
 {
-  for (int protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     asio::io_context io_context;
     asio::io_context::work dummy_work(io_context);
@@ -1294,7 +1294,7 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
 #if 1
 TEST(ErrorCallback, ErrorCallbackClientDisconnects)
 {
-  for (int protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     asio::io_context io_context;
     asio::io_context::work dummy_work(io_context);
@@ -1394,7 +1394,7 @@ TEST(ErrorCallback, ErrorCallbackClientDisconnects)
 #if 1
 TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
 {
-  for (int protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     constexpr int num_io_threads       = 50;
     constexpr int num_clients          = 50;
@@ -1579,7 +1579,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
 #if 1
 TEST(BlockingCall, RegularBlockingCall)
 {
-  for (int protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     constexpr std::chrono::milliseconds server_callback_wait_time(50);
     constexpr int num_calls = 3;
@@ -1651,7 +1651,7 @@ TEST(BlockingCall, RegularBlockingCall)
 #if 1
 TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
 {
-  for (int protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
+  for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     constexpr std::chrono::milliseconds server_callback_wait_time(100);
     constexpr int num_calls_before_shutdown = 3;

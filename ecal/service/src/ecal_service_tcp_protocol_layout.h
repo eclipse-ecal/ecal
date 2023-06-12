@@ -46,7 +46,7 @@ namespace eCAL
     // TCP Header
     //   - Used for service request since protocol version 1
     //   - Used for response since protocol version 0
-    struct TcpHeader // TODO: Rename to V1
+    struct TcpHeaderV1
     {
       std::uint32_t package_size_n = 0;                        // package size in network byte order
       std::uint8_t  version        = 0;                        // protocol version                    (since protocol V1 / eCAL 5.12)

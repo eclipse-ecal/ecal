@@ -40,7 +40,7 @@ namespace eCAL
         {
           // Get size of the entire header as it is currently known. What comes from
           // the network may be larger or smaller.
-          constexpr size_t header_size = sizeof(eCAL::service::TcpHeader);
+          constexpr size_t header_size = sizeof(eCAL::service::TcpHeaderV1);
 
           // We read the first 8 bytes of the header first. The header does not start
           // with the header_size, but it contains it at byte 7+8, which is why we
@@ -75,7 +75,7 @@ namespace eCAL
         void read_header_rest(asio::ip::tcp::socket& socket, const std::shared_ptr<std::vector<char>>& header_buffer, size_t bytes_already_read, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb)
         {
           // Check how big the remote header claims to be
-          const size_t remote_header_size = ntohs(reinterpret_cast<eCAL::service::TcpHeader*>(header_buffer->data())->header_size_n);
+          const size_t remote_header_size = ntohs(reinterpret_cast<eCAL::service::TcpHeaderV1*>(header_buffer->data())->header_size_n);
 
           // Resize the header buffer if necessary. We will not be able to use those
           // bytes, as we don't know what they mean, but we must receive them anyways.
@@ -111,7 +111,7 @@ namespace eCAL
                             }
 
                             // Start reading the payload!
-                            const uint32_t payload_size = ntohl(reinterpret_cast<eCAL::service::TcpHeader*>(header_buffer->data())->package_size_n);
+                            const uint32_t payload_size = ntohl(reinterpret_cast<eCAL::service::TcpHeaderV1*>(header_buffer->data())->package_size_n);
 
                             if (payload_size > 0)
                             {
@@ -129,7 +129,7 @@ namespace eCAL
         void read_payload(asio::ip::tcp::socket& socket, const std::shared_ptr<std::vector<char>>& header_buffer, const ErrorCallbackT& error_cb, const ReceiveSuccessCallback& success_cb)
         {
           // Read how many bytes we will get as payload
-          const uint32_t payload_size = ntohl(reinterpret_cast<eCAL::service::TcpHeader*>(header_buffer->data())->package_size_n);
+          const uint32_t payload_size = ntohl(reinterpret_cast<eCAL::service::TcpHeaderV1*>(header_buffer->data())->package_size_n);
 
           // Reserver enough memory for receiving the entire payload. The payload is
           // represented as an std::string for legacy, reasons. It is not textual data.
@@ -158,9 +158,9 @@ namespace eCAL
       ///////////////////////////////////////////////////
       // Public API
       ///////////////////////////////////////////////////
-      void async_send_payload   (asio::ip::tcp::socket& socket, const std::shared_ptr<const eCAL::service::TcpHeader>& header_buffer, const std::shared_ptr<const std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb)
+      void async_send_payload   (asio::ip::tcp::socket& socket, const std::shared_ptr<const eCAL::service::TcpHeaderV1>& header_buffer, const std::shared_ptr<const std::string>& payload_buffer, const ErrorCallbackT& error_cb, const SendSuccessCallback& success_cb)
       {        
-        std::vector<asio::const_buffer> buffer_list { asio::buffer(reinterpret_cast<const char*>(header_buffer.get()), sizeof(eCAL::service::TcpHeader))
+        std::vector<asio::const_buffer> buffer_list { asio::buffer(reinterpret_cast<const char*>(header_buffer.get()), sizeof(eCAL::service::TcpHeaderV1))
                                                     , asio::buffer(*payload_buffer)};
 
         asio::async_write(socket
