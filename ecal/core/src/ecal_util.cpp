@@ -23,6 +23,7 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_core.h>
+#include <ecal/types/ecal_topic_information.h>
 
 #include "ecal_def.h"
 #include "ecal_descgate.h"

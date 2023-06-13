@@ -138,7 +138,7 @@ namespace eCAL
      * @return  True if it succeeds, false if it fails. 
     **/
     [[deprecated("Please use the create method bool Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
-    bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+    bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
 
     /**
      * @brief Creates this object.
@@ -149,6 +149,20 @@ namespace eCAL
      * @return  True if it succeeds, false if it fails.
     **/
     bool Create(const std::string& topic_name_, const STopicInformation& topic_info_);
+
+    /**
+     * @brief Creates this object.
+     *
+     * @param topic_name_   Unique topic name.
+     * @param topic_info_   Topic information (encoding, type, descriptor)
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool Create(const std::string& topic_name_)
+    {
+      return Create(topic_name_, STopicInformation());
+    }
+
 
     /**
      * @brief Destroys this object. 
