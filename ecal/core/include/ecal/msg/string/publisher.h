@@ -103,7 +103,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(CMsgPublisher<T>::Create(topic_name_, GetTopicInformation())));
+        return(CMsgPublisher<T>::Create(topic_name_, GetTopicInformation()));
       }
 
     private:
