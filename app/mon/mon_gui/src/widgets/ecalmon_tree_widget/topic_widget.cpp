@@ -80,6 +80,7 @@ TopicWidget::TopicWidget(QWidget *parent)
     (int)TopicTreeModel::Columns::HOST_NAME,
     (int)TopicTreeModel::Columns::PROCESS_NAME,
     (int)TopicTreeModel::Columns::UNIT_NAME,
+    (int)TopicTreeModel::Columns::TOPIC_ENCODING,
     (int)TopicTreeModel::Columns::MESSAGE_TYPE,
     (int)TopicTreeModel::Columns::QOS,
     (int)TopicTreeModel::Columns::TRANSPORT_LAYER,
@@ -94,6 +95,7 @@ TopicWidget::TopicWidget(QWidget *parent)
     (int)TopicTreeModel::Columns::UNIT_NAME,
     (int)TopicTreeModel::Columns::HOST_NAME,
     (int)TopicTreeModel::Columns::PROCESS_NAME,
+    (int)TopicTreeModel::Columns::TOPIC_ENCODING,
     (int)TopicTreeModel::Columns::MESSAGE_TYPE,
     (int)TopicTreeModel::Columns::QOS,
     (int)TopicTreeModel::Columns::TRANSPORT_LAYER,
@@ -119,6 +121,12 @@ TopicWidget::TopicWidget(QWidget *parent)
   topic.name = "Topic";
   preconfigured_group_by_settings.push_back(topic);
 
+  EcalmonTreeWidget::GroupSetting encoding;
+  encoding.group_by_columns = { (int)TopicTreeModel::Columns::TOPIC_ENCODING, (int)TopicTreeModel::Columns::TOPIC_NAME };
+  encoding.auto_expand = -1;
+  encoding.name = "Encoding";
+  preconfigured_group_by_settings.push_back(encoding);
+
   EcalmonTreeWidget::GroupSetting type;
   type.group_by_columns = { (int)TopicTreeModel::Columns::MESSAGE_TYPE, (int)TopicTreeModel::Columns::TOPIC_NAME };
   type.auto_expand = -1;
@@ -142,6 +150,7 @@ TopicWidget::TopicWidget(QWidget *parent)
     (int)TopicTreeModel::Columns::UNIT_NAME,
     (int)TopicTreeModel::Columns::HOST_NAME,
     (int)TopicTreeModel::Columns::PID,
+    (int)TopicTreeModel::Columns::TOPIC_ENCODING,
     (int)TopicTreeModel::Columns::MESSAGE_TYPE,
     (int)TopicTreeModel::Columns::TOPIC_SIZE,
     (int)TopicTreeModel::Columns::MESSAGE_DROPS,
@@ -249,6 +258,7 @@ void TopicWidget::autoSizeColumns()
     (int)TopicTreeModel::Columns::UNIT_NAME,
     (int)TopicTreeModel::Columns::HOST_NAME,
     (int)TopicTreeModel::Columns::PID,
+    (int)TopicTreeModel::Columns::TOPIC_ENCODING,
     (int)TopicTreeModel::Columns::MESSAGE_TYPE,
     (int)TopicTreeModel::Columns::HEARTBEAT,
     (int)TopicTreeModel::Columns::QOS,
@@ -298,10 +308,13 @@ void TopicWidget::openReflectionWindowForSelection()
       }
       else
       {
+        QString topic_encoding = topic_item->data(TopicTreeItem::Columns::TENCODING, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
         QString topic_type = topic_item->data(TopicTreeItem::Columns::TTYPE, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
-                                                                                                                                       
+
+        QString combined_topic_encoding_type{ QString::fromStdString(eCAL::Util::CombinedTopicEncodingAndType(topic_encoding.toStdString(), topic_type.toStdString())) };
+
         // Create a new Reflection Window
-        VisualisationWindow* visualisation_window = new VisualisationWindow(topic_name, topic_type);
+        VisualisationWindow* visualisation_window = new VisualisationWindow(topic_name, combined_topic_encoding_type);
         visualisation_window->setAttribute(Qt::WA_DeleteOnClose, true);
         visualisation_window->setParseTimeEnabled(parse_time_);
         visualisation_windows_[topic_name] = visualisation_window;
@@ -331,8 +344,11 @@ void TopicWidget::fillContextMenu(QMenu& menu, const QList<QAbstractTreeItem*>& 
 
   if (item)
   {
-    QString topic_name = item->data((int)TopicTreeItem::Columns::TNAME).toString();
-    QString topic_type =  item->data((int)TopicTreeItem::Columns::TTYPE).toString();
+    QString topic_name     = item->data((int)TopicTreeItem::Columns::TNAME).toString();
+    QString topic_encoding = item->data((int)TopicTreeItem::Columns::TENCODING).toString();
+    QString topic_type     = item->data((int)TopicTreeItem::Columns::TTYPE).toString();
+
+    QString combined_topic_encoding_type{ QString::fromStdString(eCAL::Util::CombinedTopicEncodingAndType(topic_encoding.toStdString(), topic_type.toStdString()))};
 
     QAction* reflection_action = new QAction(tr("Inspect topic \"") + topic_name + "\"", &menu);
     connect(reflection_action, &QAction::triggered, this, &TopicWidget::openReflectionWindowForSelection);
@@ -340,12 +356,12 @@ void TopicWidget::fillContextMenu(QMenu& menu, const QList<QAbstractTreeItem*>& 
     menu.addAction(reflection_action);
 
     auto reflection_with_menu = menu.addMenu(tr("Inspect topic \"") + topic_name + "\" with");
-    for (const auto& matching_plugin_data : PluginManager::getInstance()->getMatchingPluginData(topic_name, topic_type))
+    for (const auto& matching_plugin_data : PluginManager::getInstance()->getMatchingPluginData(topic_name, combined_topic_encoding_type))
     {
       auto reflection_with_action = reflection_with_menu->addAction(matching_plugin_data.meta_data.name);
       const auto iid = matching_plugin_data.iid;
-      connect(reflection_with_action, &QAction::triggered, this, [this, iid, topic_name, topic_type]() {
-        emit requestVisualisationDockWidget(topic_name, topic_type, iid);
+      connect(reflection_with_action, &QAction::triggered, this, [this, iid, topic_name, combined_topic_encoding_type]() {
+        emit requestVisualisationDockWidget(topic_name, combined_topic_encoding_type, iid);
         });
     }  
   }
