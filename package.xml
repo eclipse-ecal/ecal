@@ -13,10 +13,7 @@
 
     <buildtool_depend>cmake</buildtool_depend>
 
-    <depend>hdf5</depend>
-    <depend>libqwt-qt5-dev</depend>
     <depend>protobuf-dev</depend>
-    <depend>qtbase5-dev</depend>
 
     <export>
         <build_type>cmake</build_type>
