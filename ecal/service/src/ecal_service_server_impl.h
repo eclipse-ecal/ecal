@@ -85,6 +85,8 @@ namespace eCAL
       int           get_connection_count() const;
       std::uint16_t get_port()             const;
 
+      void          stop();
+
     private:
       void start_accept(unsigned int version);
 

@@ -100,5 +100,6 @@ namespace eCAL
     State        ClientSession::get_state()                     const { return impl_->get_state(); }
     std::uint8_t ClientSession::get_accepted_protocol_version() const { return impl_->get_accepted_protocol_version(); }
     int          ClientSession::get_queue_size()                const { return impl_->get_queue_size(); }
+    void         ClientSession::stop()                                { impl_->stop(); }
   } // namespace service
 } // namespace eCAL

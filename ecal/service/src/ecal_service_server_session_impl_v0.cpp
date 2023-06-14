@@ -36,19 +36,19 @@ namespace eCAL
     std::shared_ptr<ServerSessionV0> ServerSessionV0::create(asio::io_context&              io_context_
                                                             , const ServerServiceCallbackT& service_callback
                                                             , const ServerEventCallbackT&   event_callback
-                                                            , const DeleteCallbackT&        delete_callback
+                                                            , const ShutdownCallbackT&        shutdown_callback
                                                             , const LoggerT&                logger)
     {
-      std::shared_ptr<ServerSessionV0> instance = std::shared_ptr<ServerSessionV0>(new ServerSessionV0(io_context_, service_callback, event_callback, delete_callback, logger));
+      std::shared_ptr<ServerSessionV0> instance = std::shared_ptr<ServerSessionV0>(new ServerSessionV0(io_context_, service_callback, event_callback, shutdown_callback, logger));
       return instance;
     }
 
     ServerSessionV0::ServerSessionV0(asio::io_context&              io_context_
                                     , const ServerServiceCallbackT& service_callback
                                     , const ServerEventCallbackT&   event_callback
-                                    , const DeleteCallbackT&        delete_callback
+                                    , const ShutdownCallbackT&        shutdown_callback
                                     , const LoggerT&                logger)
-      : ServerSessionBase(io_context_, service_callback, event_callback, delete_callback)
+      : ServerSessionBase(io_context_, service_callback, event_callback, shutdown_callback)
       , logger_                   (logger)
       , service_strand_           (io_context_)
       , state_                    (State::NOT_CONNECTED)
@@ -136,7 +136,7 @@ namespace eCAL
             const auto message = "Disconnected on read: " + socket_available_ec.message();
             logger_(eCAL::service::LogLevel::Info, "[" + get_connection_info_string(socket_) + "] " + message);
             event_callback_(server_event_disconnected, message);
-            delete_callback_(shared_from_this());
+            shutdown_callback_(shared_from_this());
             return;
           }
         }
@@ -183,7 +183,7 @@ namespace eCAL
         const auto message = "Disconnected on read: " + ec.message();
         logger_(eCAL::service::LogLevel::Info, "[" + get_connection_info_string(socket_) + "] " + message);
         event_callback_(server_event_disconnected, message);
-        delete_callback_(shared_from_this());
+        shutdown_callback_(shared_from_this());
       }
     }
 
@@ -204,7 +204,7 @@ namespace eCAL
         const auto message = "Disconnected on write: " + ec.message();
         logger_(eCAL::service::LogLevel::Error, "[" + get_connection_info_string(socket_) + "] " + message);
         event_callback_(server_event_disconnected, message);
-        delete_callback_(shared_from_this());
+        shutdown_callback_(shared_from_this());
       }
     }
 

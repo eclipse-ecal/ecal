@@ -51,7 +51,7 @@ namespace eCAL
     // Custom types for API
     /////////////////////////////////////
     public:
-      using DeleteCallbackT  = std::function<void (const std::shared_ptr<ServerSessionBase>&)>;
+      using ShutdownCallbackT  = std::function<void (const std::shared_ptr<ServerSessionBase>&)>;
 
     /////////////////////////////////////
     // Constructor, Destructor, Create
@@ -60,11 +60,11 @@ namespace eCAL
       virtual ~ServerSessionBase() = default;
 
     protected:
-      ServerSessionBase(asio::io_context& io_context_, const ServerServiceCallbackT& service_callback, const ServerEventCallbackT& event_callback, const DeleteCallbackT& delete_callback)
+      ServerSessionBase(asio::io_context& io_context_, const ServerServiceCallbackT& service_callback, const ServerEventCallbackT& event_callback, const ShutdownCallbackT& shutdown_callback)
         : socket_          (io_context_)
         , service_callback_(service_callback)
         , event_callback_  (event_callback)
-        , delete_callback_ (delete_callback)
+        , shutdown_callback_ (shutdown_callback)
       {}
 
     /////////////////////////////////////
@@ -83,7 +83,7 @@ namespace eCAL
 
       const ServerServiceCallbackT service_callback_;
       const ServerEventCallbackT   event_callback_;
-      const DeleteCallbackT        delete_callback_; // TODO: The SessionBase actually doesn't call this callback at all. So it may be a good idea to move it to the implementations
+      const ShutdownCallbackT        shutdown_callback_; // TODO: The SessionBase actually doesn't call this callback at all. So it may be a good idea to move it to the implementations
     };
 
     } // namespace service

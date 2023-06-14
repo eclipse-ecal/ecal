@@ -68,25 +68,7 @@ namespace eCAL
 
     ServerImpl::~ServerImpl()
     {
-      // Close acceptor, if necessary
-      {
-        asio::error_code ec;
-        acceptor_.close(ec);
-      }
-
-      // TODO: Currently, there is no other way to stop the server than letting
-      // it run out of scope. So closing the sessions from the destructor is fine.
-      // However, should that behavior change in the future, I need to create
-      // A special function for that, that is called from other places as well.
-      {
-        const std::lock_guard<std::mutex> session_list_lock(session_list_mutex_);
-        for(const auto& session_weak : session_list_)
-        {
-          const auto session = session_weak.lock();
-          if (session)
-            session->stop();
-        }
-      }
+      stop();
 
       ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Deleted");
     }
@@ -115,7 +97,7 @@ namespace eCAL
     {
       ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service waiting for next client...");
 
-      const eCAL::service::ServerSessionBase::DeleteCallbackT delete_callback
+      const eCAL::service::ServerSessionBase::ShutdownCallbackT shutdown_callback
                 = [weak_me = std::weak_ptr<ServerImpl>(shared_from_this())](const std::shared_ptr<eCAL::service::ServerSessionBase>& session_to_remove) -> void
                   {
                   // Create a shared_ptr to the class. If it doesn't exist
@@ -139,11 +121,11 @@ namespace eCAL
       std::shared_ptr<eCAL::service::ServerSessionBase> new_session;
       if (version == 0)
       {
-        new_session = eCAL::service::ServerSessionV0::create(io_context_, service_callback_, event_callback_, delete_callback, logger_);
+        new_session = eCAL::service::ServerSessionV0::create(io_context_, service_callback_, event_callback_, shutdown_callback, logger_);
       }
       else
       {
-        new_session = eCAL::service::ServerSessionV1::create(io_context_, service_callback_, event_callback_, delete_callback, logger_);
+        new_session = eCAL::service::ServerSessionV1::create(io_context_, service_callback_, event_callback_, shutdown_callback, logger_);
       }
 
       // Accept new session.
@@ -190,5 +172,24 @@ namespace eCAL
 
     }
 
+    void ServerImpl::stop()
+    {
+      // Close acceptor, if necessary
+      {
+        asio::error_code ec;
+        acceptor_.close(ec);
+      }
+      
+      // Stop all sessions to clients
+      {
+        const std::lock_guard<std::mutex> session_list_lock(session_list_mutex_);
+        for(const auto& session_weak : session_list_)
+        {
+          const auto session = session_weak.lock();
+          if (session)
+            session->stop();
+        }
+      }
+    }
   } // namespace service
 } // namespace eCAL

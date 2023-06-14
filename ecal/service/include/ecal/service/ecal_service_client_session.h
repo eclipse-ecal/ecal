@@ -91,6 +91,8 @@ namespace eCAL
       std::uint8_t get_accepted_protocol_version() const; // TODO: Test these values
       int          get_queue_size()                const; // TODO: Test these values
 
+      void         stop();
+
     //////////////////////////////////////////////
     // Member Variables
     //////////////////////////////////////////////

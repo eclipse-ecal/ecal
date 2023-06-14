@@ -79,6 +79,8 @@ namespace eCAL
       bool          is_connected()         const;
       int           get_connection_count() const;
       std::uint16_t get_port()             const;
+      
+      void          stop();
 
     ///////////////////////////////////////////
     // Member Variables

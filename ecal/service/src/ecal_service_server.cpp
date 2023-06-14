@@ -60,6 +60,7 @@ namespace eCAL
     bool          Server::is_connected()         const { return impl_->is_connected(); }
     int           Server::get_connection_count() const { return impl_->get_connection_count(); }
     std::uint16_t Server::get_port()             const { return impl_->get_port(); }
+    void          Server::stop()                       { impl_->stop(); }
 
   } // namespace service
 } // namespace eCAL

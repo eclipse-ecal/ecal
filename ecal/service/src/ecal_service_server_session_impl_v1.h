@@ -42,14 +42,14 @@ namespace eCAL
       static std::shared_ptr<ServerSessionV1> create(asio::io_context&              io_context_
                                                     , const ServerServiceCallbackT& service_callback
                                                     , const ServerEventCallbackT&   event_callback
-                                                    , const DeleteCallbackT&        delete_callback
+                                                    , const ShutdownCallbackT&        shutdown_callback
                                                     , const LoggerT&                logger);
 
     protected:
       ServerSessionV1(asio::io_context&             io_context_
                     , const ServerServiceCallbackT& service_callback
                     , const ServerEventCallbackT&   event_callback
-                    , const DeleteCallbackT&        delete_callback
+                    , const ShutdownCallbackT&        shutdown_callback
                     , const LoggerT&                logger);
 
       // Copy
