@@ -97,7 +97,7 @@ namespace eCAL
       *
       * @return  Topic information.
       **/
-      STopicInformation GetTopicInformation() const
+      STopicInformation GetTopicInformation() const override
       {
         STopicInformation topic_info;
         topic_info.encoding = "mpack";

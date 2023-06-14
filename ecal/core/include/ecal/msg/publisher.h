@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_publisher.h>
+#include <ecal/ecal_util.h>
 
 #include <string>
 #include <vector>
