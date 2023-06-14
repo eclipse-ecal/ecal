@@ -1008,6 +1008,159 @@ TEST(CommunicationAndCallbacks, StressfulCommunication)
 #endif
 
 #if 1
+TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload)
+{
+  // This test does not work for Protocol version 0 and there is no way to fix that (which is the reason why we invented protocol version 1)
+
+  constexpr std::uint8_t protocol_version = 1;
+  
+  constexpr int num_io_threads       = 5;
+  constexpr int num_clients          = 3;
+  constexpr int num_calls_per_client = 5;
+  constexpr int payload_size_bytes   = 32 * 1024 * 1024;
+
+  const auto payload = std::make_shared<const std::string>(payload_size_bytes, 'e');
+
+  asio::io_context io_context;
+  asio::io_context::work dummy_work(io_context);
+
+  std::atomic<int> num_server_service_callback_called           (0);
+  std::atomic<int> num_server_event_callback_called             (0);
+  std::atomic<int> num_server_event_callback_called_connected   (0);
+  std::atomic<int> num_server_event_callback_called_disconnected(0);
+
+  std::atomic<int> num_client_response_callback_called          (0);
+  std::atomic<int> num_client_event_callback_called             (0);
+  std::atomic<int> num_client_event_callback_called_connected   (0);
+  std::atomic<int> num_client_event_callback_called_disconnected(0);
+
+  const eCAL::service::Server::ServiceCallbackT service_callback
+          = [&num_server_service_callback_called, payload_size_bytes](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+            {
+              EXPECT_EQ(request->size(), payload_size_bytes);
+              num_server_service_callback_called++;
+              *response = *request;
+              return 0;
+            };
+
+  const eCAL::service::Server::EventCallbackT server_event_callback
+          = [&num_server_event_callback_called, &num_server_event_callback_called_connected, &num_server_event_callback_called_disconnected]
+            (eCAL_Server_Event event, const std::string& /*message*/) -> void
+            {
+              num_server_event_callback_called++; 
+              
+              if (event == eCAL_Server_Event::server_event_connected)
+                num_server_event_callback_called_connected++;
+              else if (event == eCAL_Server_Event::server_event_disconnected)
+                num_server_event_callback_called_disconnected++;
+            };
+
+  auto server = eCAL::service::Server::create(io_context, protocol_version, 0, service_callback, server_event_callback, critical_logger("Server"));
+
+  {
+    EXPECT_EQ(num_server_service_callback_called           , 0);
+    EXPECT_EQ(num_server_event_callback_called             , 0);
+    EXPECT_EQ(num_server_event_callback_called_connected   , 0);
+    EXPECT_EQ(num_server_event_callback_called_disconnected, 0);
+
+    EXPECT_EQ(num_client_response_callback_called          , 0);
+    EXPECT_EQ(num_client_event_callback_called             , 0);
+    EXPECT_EQ(num_client_event_callback_called_connected   , 0);
+    EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
+  }
+
+  // Run the io service a bunch of times, so we hopefully trigger any race condition that may exist
+  std::vector<std::unique_ptr<std::thread>> io_threads;
+  io_threads.reserve(num_io_threads);
+  for (int i = 0; i < num_io_threads; i++)
+  {
+    io_threads.emplace_back(std::make_unique<std::thread>([&io_context]() { io_context.run(); }));
+  }
+
+  // Create all the clients
+  std::vector<std::shared_ptr<eCAL::service::ClientSession>> client_list;
+  client_list.reserve(num_clients);
+  for (int c = 0; c < num_clients; c++)
+  {
+    const eCAL::service::ClientSession::EventCallbackT client_event_callback
+          = [&num_client_event_callback_called, &num_client_event_callback_called_connected, &num_client_event_callback_called_disconnected]
+            (eCAL_Client_Event event, const std::string& /*message*/) -> void
+            {
+              num_client_event_callback_called++; 
+                
+              if (event == eCAL_Client_Event::client_event_connected)
+                num_client_event_callback_called_connected++;
+              else if (event == eCAL_Client_Event::client_event_disconnected)
+                num_client_event_callback_called_disconnected++;
+            };
+    client_list.push_back(eCAL::service::ClientSession::create(io_context, protocol_version,"127.0.0.1", server->get_port(), client_event_callback, critical_logger("Client " + std::to_string(c))));
+  }
+
+  // Directly run a bunch of clients and call each client a bunch of times
+  for (int c = 0; c < client_list.size(); c++)
+  {
+    for (int i = 0; i < num_calls_per_client; i++)
+    {
+      const eCAL::service::ClientSession::ResponseCallbackT response_callback
+            = [&num_client_response_callback_called, payload_size_bytes]
+              (const eCAL::service::Error& error, const std::shared_ptr<std::string>& response) -> void
+              {
+                ASSERT_FALSE(error);
+                EXPECT_EQ(response->size(), payload_size_bytes);
+                num_client_response_callback_called++;
+              };
+
+      client_list[c]->async_call_service(payload, response_callback);
+    }
+  }
+
+  // Now wait a short time for the clients to connect to the server and all requests getting executed
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+  {
+    EXPECT_EQ(num_server_service_callback_called           , num_clients * num_calls_per_client);
+    EXPECT_EQ(num_server_event_callback_called             , num_clients);
+    EXPECT_EQ(num_server_event_callback_called_connected   , num_clients);
+    EXPECT_EQ(num_server_event_callback_called_disconnected, 0);
+
+    EXPECT_EQ(num_client_response_callback_called          , num_clients * num_calls_per_client);
+    EXPECT_EQ(num_client_event_callback_called             , num_clients);
+    EXPECT_EQ(num_client_event_callback_called_connected   , num_clients);
+    EXPECT_EQ(num_client_event_callback_called_disconnected, 0);
+
+    EXPECT_EQ(server->get_connection_count(), num_clients);
+  }
+
+  // delete all objects
+  server = nullptr;
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+  {
+    EXPECT_EQ(num_server_service_callback_called           , num_clients * num_calls_per_client);
+    EXPECT_EQ(num_server_event_callback_called             , num_clients * 2);
+    EXPECT_EQ(num_server_event_callback_called_connected   , num_clients);
+    EXPECT_EQ(num_server_event_callback_called_disconnected, num_clients);
+
+    EXPECT_EQ(num_client_response_callback_called          , num_clients * num_calls_per_client);
+    EXPECT_EQ(num_client_event_callback_called             , num_clients * 2);
+    EXPECT_EQ(num_client_event_callback_called_connected   , num_clients);
+    EXPECT_EQ(num_client_event_callback_called_disconnected, num_clients);
+  }
+
+  client_list.clear();
+
+  // join all io_threads
+  io_context.stop();
+  for (int i = 0; i < io_threads.size(); i++)
+  {
+    io_threads[i]->join();
+  }
+  io_threads.clear();
+}
+#endif
+
+#if 1
 TEST(Callback, ServiceCallFromCallback)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1779,6 +1932,7 @@ TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
   }
 }
 #endif
+
 
 // Not working at the moment
 #if 0// TODO: This test throws in Release mode!!!
