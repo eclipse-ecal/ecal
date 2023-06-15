@@ -57,6 +57,7 @@ namespace eCAL
                                               , std::uint8_t                  protocol_version
                                               , std::uint16_t                 port
                                               , const ServerServiceCallbackT& service_callback
+                                              , bool                          parallel_service_calls_enabled
                                               , const ServerEventCallbackT&   event_callback
                                               , const LoggerT&                logger = default_logger("Service Server"));
 
@@ -64,6 +65,7 @@ namespace eCAL
       ServerImpl(asio::io_context&              io_context
                 , std::uint16_t                 port
                 , const ServerServiceCallbackT& service_callback
+                , bool                          parallel_service_calls_enabled
                 , const ServerEventCallbackT&   event_callback
                 , const LoggerT&                logger);
 
@@ -98,6 +100,8 @@ namespace eCAL
       asio::io_context&             io_context_;
       asio::ip::tcp::acceptor       acceptor_;
 
+      const bool                    parallel_service_calls_enabled_;
+      const std::shared_ptr<asio::io_context::strand> service_callback_common_strand_;
       const ServerServiceCallbackT  service_callback_;
       const ServerEventCallbackT    event_callback_;
 

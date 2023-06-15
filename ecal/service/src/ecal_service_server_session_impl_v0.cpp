@@ -33,24 +33,25 @@ namespace eCAL
   namespace service
   {
 
-    std::shared_ptr<ServerSessionV0> ServerSessionV0::create(asio::io_context&              io_context_
-                                                            , const ServerServiceCallbackT& service_callback
-                                                            , const ServerEventCallbackT&   event_callback
-                                                            , const ShutdownCallbackT&        shutdown_callback
-                                                            , const LoggerT&                logger)
+    std::shared_ptr<ServerSessionV0> ServerSessionV0::create(asio::io_context&                                io_context_
+                                                            , const ServerServiceCallbackT&                   service_callback
+                                                            , const std::shared_ptr<asio::io_context::strand> service_callback_strand
+                                                            , const ServerEventCallbackT&                     event_callback
+                                                            , const ShutdownCallbackT&                        shutdown_callback
+                                                            , const LoggerT&                                  logger)
     {
-      std::shared_ptr<ServerSessionV0> instance = std::shared_ptr<ServerSessionV0>(new ServerSessionV0(io_context_, service_callback, event_callback, shutdown_callback, logger));
+      std::shared_ptr<ServerSessionV0> instance = std::shared_ptr<ServerSessionV0>(new ServerSessionV0(io_context_, service_callback, service_callback_strand, event_callback, shutdown_callback, logger));
       return instance;
     }
 
-    ServerSessionV0::ServerSessionV0(asio::io_context&              io_context_
-                                    , const ServerServiceCallbackT& service_callback
-                                    , const ServerEventCallbackT&   event_callback
-                                    , const ShutdownCallbackT&        shutdown_callback
-                                    , const LoggerT&                logger)
-      : ServerSessionBase(io_context_, service_callback, event_callback, shutdown_callback)
+    ServerSessionV0::ServerSessionV0(asio::io_context&                                io_context_
+                                    , const ServerServiceCallbackT&                   service_callback
+                                    , const std::shared_ptr<asio::io_context::strand> service_callback_strand
+                                    , const ServerEventCallbackT&                     event_callback
+                                    , const ShutdownCallbackT&                        shutdown_callback
+                                    , const LoggerT&                                  logger)
+      : ServerSessionBase(io_context_, service_callback, service_callback_strand, event_callback, shutdown_callback)
       , logger_                   (logger)
-      , service_strand_           (io_context_)
       , state_                    (State::NOT_CONNECTED)
     {
       ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Server Session Created");
@@ -91,7 +92,7 @@ namespace eCAL
 
       ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Waiting for service request...");
       socket_.async_read_some(asio::buffer(data_, max_length)
-                            , service_strand_.wrap([me = shared_from_this()](asio::error_code ec, std::size_t bytes_read)
+                            , service_callback_strand_->wrap([me = shared_from_this()](asio::error_code ec, std::size_t bytes_read)
                               {
                                 me->handle_read(ec, bytes_read, std::make_shared<std::string>());
                               }));
@@ -146,7 +147,7 @@ namespace eCAL
           ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "[" + get_connection_info_string(socket_) + "] " + "More data is available on socket! Reading more data...");
 
           socket_.async_read_some(asio::buffer(data_, max_length)
-                                , service_strand_.wrap([me = shared_from_this(), request](asio::error_code ec, std::size_t bytes_read)
+                                , service_callback_strand_->wrap([me = shared_from_this(), request](asio::error_code ec, std::size_t bytes_read)
                                   {
                                     me->handle_read(ec, bytes_read, request);
                                   }));
@@ -171,10 +172,10 @@ namespace eCAL
 
           asio::async_write(socket_
                           , buffer_list
-                          , service_strand_.wrap([me = shared_from_this(), header, response](asio::error_code ec, std::size_t bytes_written)
+                          , [me = shared_from_this(), header, response](asio::error_code ec, std::size_t bytes_written)
                             {
                               me->handle_write(ec, bytes_written);
-                            }));
+                            });
         }
       }
       else
@@ -193,7 +194,7 @@ namespace eCAL
       {
         ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Waiting for service request...");
         socket_.async_read_some(asio::buffer(data_, max_length)
-                              , service_strand_.wrap([me = shared_from_this()](asio::error_code ec, std::size_t bytes_read)
+                              , service_callback_strand_->wrap([me = shared_from_this()](asio::error_code ec, std::size_t bytes_read)
                                 {
                                   me->handle_read(ec, bytes_read, std::make_shared<std::string>());
                                 }));

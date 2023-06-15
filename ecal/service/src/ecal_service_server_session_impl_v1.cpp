@@ -33,22 +33,24 @@ namespace eCAL
   namespace service
   {
 
-    std::shared_ptr<ServerSessionV1> ServerSessionV1::create(asio::io_context&              io_context_
-                                                            , const ServerServiceCallbackT& service_callback
-                                                            , const ServerEventCallbackT&   event_callback
-                                                            , const ShutdownCallbackT&        shutdown_callback
-                                                            , const LoggerT&                logger)
+    std::shared_ptr<ServerSessionV1> ServerSessionV1::create(asio::io_context&                                io_context_
+                                                            , const ServerServiceCallbackT&                   service_callback
+                                                            , const std::shared_ptr<asio::io_context::strand> service_callback_strand
+                                                            , const ServerEventCallbackT&                     event_callback
+                                                            , const ShutdownCallbackT&                        shutdown_callback
+                                                            , const LoggerT&                                  logger)
     {
-      std::shared_ptr<ServerSessionV1> instance = std::shared_ptr<ServerSessionV1>(new ServerSessionV1(io_context_, service_callback, event_callback, shutdown_callback, logger));
+      std::shared_ptr<ServerSessionV1> instance = std::shared_ptr<ServerSessionV1>(new ServerSessionV1(io_context_, service_callback, service_callback_strand, event_callback, shutdown_callback, logger));
       return instance;
     }
 
-    ServerSessionV1::ServerSessionV1(asio::io_context&              io_context_
-                                    , const ServerServiceCallbackT& service_callback
-                                    , const ServerEventCallbackT&   event_callback
-                                    , const ShutdownCallbackT&        shutdown_callback
-                                    , const LoggerT&                logger)
-      : ServerSessionBase(io_context_, service_callback, event_callback, shutdown_callback)
+    ServerSessionV1::ServerSessionV1(asio::io_context&                                io_context_
+                                    , const ServerServiceCallbackT&                   service_callback
+                                    , const std::shared_ptr<asio::io_context::strand> service_callback_strand
+                                    , const ServerEventCallbackT&                     event_callback
+                                    , const ShutdownCallbackT&                        shutdown_callback
+                                    , const LoggerT&                                  logger)
+      : ServerSessionBase(io_context_, service_callback, service_callback_strand, event_callback, shutdown_callback)
       , state_                    (State::NOT_CONNECTED)
       , accepted_protocol_version_(0)
       , logger_                   (logger)
@@ -238,7 +240,7 @@ namespace eCAL
                                 me->event_callback_(eCAL_Server_Event::server_event_disconnected, message);
                                 me->shutdown_callback_(me);
                               }
-                            , [me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
+                            , service_callback_strand_->wrap([me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
                               {
                                 TcpHeaderV1* header = reinterpret_cast<TcpHeaderV1*>(header_buffer->data());
                                 if (header->message_type != eCAL::service::MessageType::ServiceRequest)
@@ -271,7 +273,7 @@ namespace eCAL
                                   // Send the response to the client
                                   me->send_service_response(response_buffer);
                                 }
-                              });
+                              }));
 
     }
 

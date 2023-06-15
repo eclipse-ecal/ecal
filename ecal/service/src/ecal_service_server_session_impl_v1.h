@@ -39,18 +39,20 @@ namespace eCAL
     ///////////////////////////////////////////////
 
     public:
-      static std::shared_ptr<ServerSessionV1> create(asio::io_context&              io_context_
-                                                    , const ServerServiceCallbackT& service_callback
-                                                    , const ServerEventCallbackT&   event_callback
-                                                    , const ShutdownCallbackT&        shutdown_callback
-                                                    , const LoggerT&                logger);
+      static std::shared_ptr<ServerSessionV1> create(asio::io_context&                                io_context_
+                                                    , const ServerServiceCallbackT&                   service_callback
+                                                    , const std::shared_ptr<asio::io_context::strand> service_callback_strand
+                                                    , const ServerEventCallbackT&                     event_callback
+                                                    , const ShutdownCallbackT&                        shutdown_callback
+                                                    , const LoggerT&                                  logger);
 
     protected:
-      ServerSessionV1(asio::io_context&             io_context_
-                    , const ServerServiceCallbackT& service_callback
-                    , const ServerEventCallbackT&   event_callback
-                    , const ShutdownCallbackT&        shutdown_callback
-                    , const LoggerT&                logger);
+      ServerSessionV1(asio::io_context&                               io_context_
+                    , const ServerServiceCallbackT&                   service_callback
+                    , const std::shared_ptr<asio::io_context::strand> service_callback_strand
+                    , const ServerEventCallbackT&                     event_callback
+                    , const ShutdownCallbackT&                        shutdown_callback
+                    , const LoggerT&                                  logger);
 
       // Copy
       ServerSessionV1(const ServerSessionV1&)            = delete;

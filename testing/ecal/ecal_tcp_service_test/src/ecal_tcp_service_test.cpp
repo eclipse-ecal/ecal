@@ -51,7 +51,7 @@ eCAL::service::LoggerT critical_logger(const std::string& node_name)
 constexpr std::uint8_t min_protocol_version = 0;
 constexpr std::uint8_t max_protocol_version = 1;
 
-#if 0
+#if 1
 TEST(RAII, TcpServiceServer)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -82,7 +82,7 @@ TEST(RAII, TcpServiceServer)
       std::weak_ptr<eCAL::service::Server> tcp_server_weak;
 
       {
-        std::shared_ptr<eCAL::service::Server> tcp_server = eCAL::service::Server::create(io_context, protocol_version, 0, service_callback, event_callback);
+        std::shared_ptr<eCAL::service::Server> tcp_server = eCAL::service::Server::create(io_context, protocol_version, 0, service_callback, true, event_callback);
         tcp_server_weak = tcp_server;
 
         EXPECT_NE(nullptr, tcp_server);
@@ -103,7 +103,7 @@ TEST(RAII, TcpServiceServer)
 }
 #endif
 
-#if 0
+#if 1
 TEST(RAII, TcpServiceClient)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -134,7 +134,7 @@ TEST(RAII, TcpServiceClient)
 }
 #endif
 
-#if 0
+#if 1
 TEST(RAII, TcpServiceServerAndClient)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -183,7 +183,7 @@ TEST(RAII, TcpServiceServerAndClient)
       std::chrono::steady_clock::time_point         start_time;
 
       {
-        std::shared_ptr<eCAL::service::Server> tcp_server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
+        std::shared_ptr<eCAL::service::Server> tcp_server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
         tcp_server_weak = tcp_server;
 
         io_thread = std::make_unique<std::thread>([&io_context]()
@@ -222,7 +222,7 @@ TEST(RAII, TcpServiceServerAndClient)
 }
 #endif
 
-#if 0
+#if 1
 TEST(RAII, StopDuringServiceCall)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -268,7 +268,7 @@ TEST(RAII, StopDuringServiceCall)
       std::weak_ptr<eCAL::service::ClientSession> tcp_client_weak;
 
       {
-        std::shared_ptr<eCAL::service::Server> tcp_server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
+        std::shared_ptr<eCAL::service::Server> tcp_server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
         tcp_server_weak = tcp_server;
 
         io_thread = std::make_unique<std::thread>([&io_context]()
@@ -302,7 +302,7 @@ TEST(RAII, StopDuringServiceCall)
 }
 #endif
 
-#if 0
+#if 1
 TEST(Communication, SlowCommunication)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -342,7 +342,7 @@ TEST(Communication, SlowCommunication)
               (eCAL_Client_Event /*event*/, const std::string& /*message*/) -> void
               {};
 
-    auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
+    auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
 
     EXPECT_NE(server->get_port(), 0);
 
@@ -413,7 +413,7 @@ TEST(Communication, SlowCommunication)
 }
 #endif
 
-#if 0
+#if 1
 TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -463,7 +463,7 @@ TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst)
                   num_client_event_callback_called_disconnected++;
               };
 
-    auto server    = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
+    auto server    = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
     auto client_v1 = eCAL::service::ClientSession::create(io_context, protocol_version,"127.0.0.1", server->get_port(), client_event_callback);
 
     std::thread io_thread([&io_context]()
@@ -520,7 +520,7 @@ TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst)
 }
 #endif
 
-#if 0
+#if 1
 TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -581,7 +581,7 @@ TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
                     num_client_event_callback_called_disconnected++;
               };
 
-    auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
+    auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
 
     EXPECT_NE(server->get_port(), 0);
 
@@ -709,7 +709,7 @@ TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
 }
 #endif
 
-#if 0
+#if 1
 TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -765,7 +765,7 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
                     num_client_event_callback_called_disconnected++;
               };
 
-    auto server    = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
+    auto server    = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
     auto client_v1 = eCAL::service::ClientSession::create(io_context, protocol_version,"127.0.0.1", server->get_port(), client_event_callback);
 
     std::thread io_thread([&io_context]()
@@ -856,7 +856,7 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
 }
 #endif
 
-#if 0
+#if 1
 TEST(CommunicationAndCallbacks, StressfulCommunication)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -898,7 +898,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunication)
                   num_server_event_callback_called_disconnected++;
               };
 
-    auto server = eCAL::service::Server::create(io_context, protocol_version, 0, service_callback, server_event_callback, critical_logger("Server"));
+    auto server = eCAL::service::Server::create(io_context, protocol_version, 0, service_callback, true, server_event_callback, critical_logger("Server"));
 
     {
       EXPECT_EQ(num_server_service_callback_called           , 0);
@@ -1007,7 +1007,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunication)
 }
 #endif
 
-#if 0
+#if 1
 TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload)
 {
   // This test does not work for Protocol version 0 and there is no way to fix that (which is the reason why we invented protocol version 1)
@@ -1055,7 +1055,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload)
                 num_server_event_callback_called_disconnected++;
             };
 
-  auto server = eCAL::service::Server::create(io_context, protocol_version, 0, service_callback, server_event_callback, critical_logger("Server"));
+  auto server = eCAL::service::Server::create(io_context, protocol_version, 0, service_callback, true, server_event_callback, critical_logger("Server"));
 
   {
     EXPECT_EQ(num_server_service_callback_called           , 0);
@@ -1160,7 +1160,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload)
 }
 #endif
 
-#if 0
+#if 1
 TEST(Callback, ServiceCallFromCallback)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1188,7 +1188,7 @@ TEST(Callback, ServiceCallFromCallback)
               (eCAL_Client_Event /*event*/, const std::string& /*message*/) -> void
               {};
 
-    auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
+    auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
 
     EXPECT_EQ(num_server_service_callback_called, 0);
     EXPECT_EQ(num_client_response_callback1_called, 0);
@@ -1231,7 +1231,7 @@ TEST(Callback, ServiceCallFromCallback)
 }
 #endif
 
-#if 0
+#if 1
 TEST(ErrorCallback, ErrorCallbackNoServer)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1280,7 +1280,7 @@ TEST(ErrorCallback, ErrorCallbackNoServer)
 }
 #endif
 
-#if 0
+#if 1
 TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1330,7 +1330,7 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
                     num_client_event_callback_called_disconnected++;
               };
 
-    auto server    = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
+    auto server    = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
     auto client_v1 = eCAL::service::ClientSession::create(io_context, protocol_version,"127.0.0.1", server->get_port(), client_event_callback);
 
     std::thread io_thread([&io_context]()
@@ -1444,7 +1444,7 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
 }
 #endif
 
-#if 0
+#if 1
 TEST(ErrorCallback, ErrorCallbackClientDisconnects)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1476,7 +1476,7 @@ TEST(ErrorCallback, ErrorCallbackClientDisconnects)
               (eCAL_Client_Event /*event*/, const std::string& /*message*/) -> void
               {};
 
-    auto server    = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
+    auto server    = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
     auto client_v1 = eCAL::service::ClientSession::create(io_context, protocol_version,"127.0.0.1", server->get_port(), client_event_callback);
 
     std::thread io_thread([&io_context]()
@@ -1544,7 +1544,7 @@ TEST(ErrorCallback, ErrorCallbackClientDisconnects)
 }
 #endif
 
-#if 0
+#if 1
 TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1597,7 +1597,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
                   num_server_event_callback_called_disconnected++;
               };
 
-    auto server = eCAL::service::Server::create(io_context, protocol_version, 0, service_callback, server_event_callback, critical_logger("Server"));
+    auto server = eCAL::service::Server::create(io_context, protocol_version, 0, service_callback, true, server_event_callback, critical_logger("Server"));
 
     {
       EXPECT_EQ(num_server_service_callback_called           , 0);
@@ -1729,7 +1729,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
 }
 #endif
 
-#if 0
+#if 1
 TEST(BlockingCall, RegularBlockingCall)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1762,7 +1762,7 @@ TEST(BlockingCall, RegularBlockingCall)
               (eCAL_Client_Event /*event*/, const std::string& /*message*/) -> void
               {};
 
-    auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
+    auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
     auto client = eCAL::service::ClientSession::create(io_context, protocol_version, "127.0.0.1", server->get_port(), client_event_callback);
 
     std::thread io_thread([&io_context]()
@@ -1801,7 +1801,7 @@ TEST(BlockingCall, RegularBlockingCall)
 }
 #endif
 
-#if 0
+#if 1
 TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1835,7 +1835,7 @@ TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
               (eCAL_Client_Event /*event*/, const std::string& /*message*/) -> void
               {};
 
-    auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, server_event_callback);
+    auto server = eCAL::service::Server::create(io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
     auto client = eCAL::service::ClientSession::create(io_context, protocol_version, "127.0.0.1", server->get_port(), client_event_callback);
 
     std::thread io_thread([&io_context]()
@@ -1968,7 +1968,7 @@ TEST(BlockingCall, StopIcontext)
                       (eCAL_Client_Event event, const std::string& message) -> void
                       {};
 
-    auto server = eCAL::service::Server::create(*io_context, protocol_version, 0, server_service_callback, server_event_callback);
+    auto server = eCAL::service::Server::create(*io_context, protocol_version, 0, server_service_callback, true, server_event_callback);
     auto client = eCAL::service::ClientSession::create(*io_context, protocol_version, "127.0.0.1", server->get_port(), client_event_callback);
 
     std::thread io_thread([&io_context]()

@@ -51,6 +51,7 @@ namespace eCAL
                                           , std::uint8_t            protocol_version
                                           , std::uint16_t           port
                                           , const ServiceCallbackT& service_callback
+                                          , bool                    parallel_service_calls_enabled
                                           , const EventCallbackT&   event_callback
                                           , const LoggerT&          logger = default_logger("Service Server"));
 
@@ -59,6 +60,7 @@ namespace eCAL
           , std::uint8_t            protocol_version
           , std::uint16_t           port
           , const ServiceCallbackT& service_callback
+          , bool                    parallel_service_calls_enabled
           , const EventCallbackT&   event_callback
           , const LoggerT&          logger);
 

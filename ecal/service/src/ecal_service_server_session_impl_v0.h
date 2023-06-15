@@ -39,18 +39,20 @@ namespace eCAL
     ///////////////////////////////////////////////
 
     public:
-      static std::shared_ptr<ServerSessionV0> create(asio::io_context&              io_context_
-                                                    , const ServerServiceCallbackT& service_callback
-                                                    , const ServerEventCallbackT&   event_callback
-                                                    , const ShutdownCallbackT&        shutdown_callback
-                                                    , const LoggerT&                logger);
+      static std::shared_ptr<ServerSessionV0> create(asio::io_context&                                io_context_
+                                                    , const ServerServiceCallbackT&                   service_callback
+                                                    , const std::shared_ptr<asio::io_context::strand> service_callback_strand
+                                                    , const ServerEventCallbackT&                     event_callback
+                                                    , const ShutdownCallbackT&                        shutdown_callback
+                                                    , const LoggerT&                                  logger);
 
     protected:
-      ServerSessionV0(asio::io_context&             io_context_
-                    , const ServerServiceCallbackT& service_callback
-                    , const ServerEventCallbackT&   event_callback
-                    , const ShutdownCallbackT&        shutdown_callback
-                    , const LoggerT&                logger);
+      ServerSessionV0(asio::io_context&                               io_context_
+                    , const ServerServiceCallbackT&                   service_callback
+                    , const std::shared_ptr<asio::io_context::strand> service_callback_strand
+                    , const ServerEventCallbackT&                     event_callback
+                    , const ShutdownCallbackT&                        shutdown_callback
+                    , const LoggerT&                                  logger);
 
       // Copy
       ServerSessionV0(const ServerSessionV0&)            = delete;
@@ -82,7 +84,6 @@ namespace eCAL
     private:
       const LoggerT logger_;
 
-      asio::io_context::strand service_strand_;
       State                    state_;
 
       enum { max_length = 64 * 1024 };

@@ -38,12 +38,13 @@ namespace eCAL
                                                   , std::uint8_t                  protocol_version
                                                   , std::uint16_t                 port
                                                   , const ServerServiceCallbackT& service_callback // TODO: The service callback may block a long time. This may cause the entire network stack to wait for long running service callbacks. Maybe it is a good idea to have some kind of "future" object, that the user can hand to some differen io_context or to a custom thread. That thread will then work on the object and call some function / let it go out of scope, which will then trigger sending the response to the client.
+                                                  , bool                          parallel_service_calls_enabled
                                                   , const ServerEventCallbackT&   event_callback
                                                   , const LoggerT&                logger)
     {
       // Create a new instance with the protected constructor
       // Note: make_shared not possible, because constructor is protected
-      auto instance = std::shared_ptr<ServerImpl>(new ServerImpl(io_context, port, service_callback, event_callback, logger));
+      auto instance = std::shared_ptr<ServerImpl>(new ServerImpl(io_context, port, service_callback, parallel_service_calls_enabled, event_callback, logger));
 
       // Directly Start accepting new connections
       instance->start_accept(protocol_version);
@@ -55,13 +56,16 @@ namespace eCAL
     ServerImpl::ServerImpl(asio::io_context&              io_context
                           , std::uint16_t                 port
                           , const ServerServiceCallbackT& service_callback
+                          , bool                          parallel_service_calls_enabled
                           , const ServerEventCallbackT&   event_callback
                           , const LoggerT&                logger)
-      : io_context_      (io_context)
-      , acceptor_        (io_context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
-      , service_callback_(service_callback)
-      , event_callback_  (event_callback)
-      , logger_          (logger)
+      : io_context_                    (io_context)
+      , acceptor_                      (io_context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
+      , parallel_service_calls_enabled_(parallel_service_calls_enabled)
+      , service_callback_common_strand_(std::make_shared<asio::io_context::strand>(io_context))
+      , service_callback_              (service_callback)
+      , event_callback_                (event_callback)
+      , logger_                        (logger)
     {
       ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Created");
     }
@@ -119,13 +123,24 @@ namespace eCAL
                 };
 
       std::shared_ptr<eCAL::service::ServerSessionBase> new_session;
-      if (version == 0)
+
+      std::shared_ptr<asio::io_context::strand>         service_callback_strand;
+      if (parallel_service_calls_enabled_)
       {
-        new_session = eCAL::service::ServerSessionV0::create(io_context_, service_callback_, event_callback_, shutdown_callback, logger_);
+        service_callback_strand = std::make_shared<asio::io_context::strand>(io_context_);
       }
       else
       {
-        new_session = eCAL::service::ServerSessionV1::create(io_context_, service_callback_, event_callback_, shutdown_callback, logger_);
+        service_callback_strand = service_callback_common_strand_;
+      }
+
+      if (version == 0)
+      {
+        new_session = eCAL::service::ServerSessionV0::create(io_context_, service_callback_, service_callback_strand, event_callback_, shutdown_callback, logger_);
+      }
+      else
+      {
+        new_session = eCAL::service::ServerSessionV1::create(io_context_, service_callback_, service_callback_strand, event_callback_, shutdown_callback, logger_);
       }
 
       // Accept new session.

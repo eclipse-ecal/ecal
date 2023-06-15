@@ -34,20 +34,22 @@ namespace eCAL
                                           , std::uint8_t            protocol_version
                                           , std::uint16_t           port
                                           , const ServiceCallbackT& service_callback
+                                          , bool                    parallel_service_calls_enabled
                                           , const EventCallbackT&   event_callback
                                           , const LoggerT&          logger)
     {
-      return std::shared_ptr<Server>(new Server(io_context, protocol_version, port, service_callback, event_callback, logger));
+      return std::shared_ptr<Server>(new Server(io_context, protocol_version, port, service_callback, parallel_service_calls_enabled, event_callback, logger));
     }
 
     Server::Server(asio::io_context&      io_context
                 , std::uint8_t            protocol_version
                 , std::uint16_t           port
                 , const ServiceCallbackT& service_callback
+                , bool                    parallel_service_calls_enabled
                 , const EventCallbackT&   event_callback
                 , const LoggerT&          logger)
     {
-      impl_ = ServerImpl::create(io_context, protocol_version, port, service_callback, event_callback, logger);
+      impl_ = ServerImpl::create(io_context, protocol_version, port, service_callback, parallel_service_calls_enabled, event_callback, logger);
     }
 
     Server::~Server()

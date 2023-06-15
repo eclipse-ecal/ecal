@@ -60,11 +60,16 @@ namespace eCAL
       virtual ~ServerSessionBase() = default;
 
     protected:
-      ServerSessionBase(asio::io_context& io_context_, const ServerServiceCallbackT& service_callback, const ServerEventCallbackT& event_callback, const ShutdownCallbackT& shutdown_callback)
-        : socket_          (io_context_)
-        , service_callback_(service_callback)
-        , event_callback_  (event_callback)
-        , shutdown_callback_ (shutdown_callback)
+      ServerSessionBase(asio::io_context&                                io_context_
+                      , const ServerServiceCallbackT&                    service_callback
+                      , const std::shared_ptr<asio::io_context::strand>& service_callback_strand
+                      , const ServerEventCallbackT&                      event_callback
+                      , const ShutdownCallbackT&                         shutdown_callback)
+        : socket_                 (io_context_)
+        , service_callback_       (service_callback)
+        , service_callback_strand_(service_callback_strand)
+        , event_callback_         (event_callback)
+        , shutdown_callback_      (shutdown_callback)
       {}
 
     /////////////////////////////////////
@@ -81,9 +86,10 @@ namespace eCAL
     protected:
       asio::ip::tcp::socket socket_;
 
-      const ServerServiceCallbackT service_callback_;
-      const ServerEventCallbackT   event_callback_;
-      const ShutdownCallbackT        shutdown_callback_; // TODO: The SessionBase actually doesn't call this callback at all. So it may be a good idea to move it to the implementations
+      const ServerServiceCallbackT                    service_callback_;
+      const std::shared_ptr<asio::io_context::strand> service_callback_strand_;
+      const ServerEventCallbackT                      event_callback_;
+      const ShutdownCallbackT                         shutdown_callback_;
     };
 
     } // namespace service
