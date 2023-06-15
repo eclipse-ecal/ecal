@@ -18,8 +18,8 @@
 */
 
 /**
- * @file   ecal_types.h
- * @brief  eCAL common datatypes
+ * @file   topic_information.h
+ * @brief  This file contains type definitions for information associated with a given topic
 **/
 
 #pragma once
@@ -28,7 +28,8 @@
 namespace eCAL
 {
     /**
-     * @brief eCAL transport layer types.
+     * @brief Optional compile time information associated with a given topic
+     *        (necessary for reflection / runtime type checking)
     **/
     struct STopicInformation
     {

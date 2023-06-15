@@ -24,7 +24,7 @@
 #pragma once
 
 #include <ecal/ecal_util.h>
-#include <ecal/types/ecal_topic_information.h>
+#include <ecal/types/topic_information.h>
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"

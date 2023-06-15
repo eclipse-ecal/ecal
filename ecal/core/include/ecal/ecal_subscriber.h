@@ -27,7 +27,7 @@
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_qos.h>
-#include <ecal/types/ecal_topic_information.h>
+#include <ecal/types/topic_information.h>
 
 #include <set>
 #include <string>

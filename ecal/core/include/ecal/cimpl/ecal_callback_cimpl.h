@@ -101,29 +101,17 @@ struct SReceiveCallbackDataC
   long long clock;  //!< source write clock
 };
 
-
-/**
- * @brief eCAL Topic Information struct (C variant).
-**/
-struct STopicInformationC
-{
-  const char* encoding;   //!< topic encoding information of the connected subscriber   (for pub_event_update_connection only)
-  const char* type;       //!< topic type information of the connected subscriber       (for pub_event_update_connection only)
-  const char* descriptor; //!< topic descriptor information of the connected subscriber (for pub_event_update_connection only)
-};
-
 /**
  * @brief eCAL publisher event callback struct (C variant).
 **/
 struct SPubEventCallbackDataC
 {
-  enum eCAL_Publisher_Event  type;      //!< event type
-  long long                  time;      //!< event time stamp
-  long long                  clock;     //!< event clock
-  const char*                tid;       //!< topic id of the connected subscriber                     (for pub_event_update_connection only)
-  const char*                ttype;     //!< topic type information of the connected subscriber       (for pub_event_update_connection only)
-  const char*                tdesc;     //!< topic descriptor information of the connected subscriber (for pub_event_update_connection only)
-  struct STopicInformationC  tinfo;     //!< topic information of the connected subscriber            (for pub_event_update_connection only)
+  enum eCAL_Publisher_Event  type;  //!< event type
+  long long                  time;  //!< event time stamp
+  long long                  clock; //!< event clock
+  const char*                tid;   //!< topic id of the connected subscriber                     (for pub_event_update_connection only)
+  const char*                ttype; //!< topic type information of the connected subscriber       (for pub_event_update_connection only)
+  const char*                tdesc; //!< topic descriptor information of the connected subscriber (for pub_event_update_connection only)
 };
 
 /**

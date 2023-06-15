@@ -29,7 +29,7 @@
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_qos.h>
 #include <ecal/ecal_tlayer.h>
-#include <ecal/types/ecal_topic_information.h>
+#include <ecal/types/topic_information.h>
 
 #include <chrono>
 #include <string>

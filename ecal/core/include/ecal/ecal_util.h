@@ -25,7 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
-#include <ecal/types/ecal_topic_information.h>
+#include <ecal/types/topic_information.h>
 
 #include <map>
 #include <unordered_map>
@@ -202,12 +202,11 @@ namespace eCAL
      * @brief Gets description of the specified topic.
      *
      * @param topic_name_   Topic name.
+     * @param topic_info_   STopicInformationStruct to be filled by this function.
      *
-     * @return  Topic description.
+     * @return True if TopicInformation for specified topic could be retrieved, false otherwise.
     **/
     ECAL_API bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_);
-
-
 
     struct SServiceMethodInfo
     {
@@ -310,7 +309,7 @@ namespace eCAL
     *
     * @param topictype_name_   "Old" typename.
     *
-    * @return  (encoding, typename).
+    * @return  std::pair(encoding, typename).
     **/
     ECAL_API std::pair<std::string, std::string> SplitCombinedTopicType(const std::string& combined_topic_type_);
 

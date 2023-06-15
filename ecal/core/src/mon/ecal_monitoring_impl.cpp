@@ -961,6 +961,10 @@ namespace eCAL
       // direction
       pMonTopic->set_direction(direction_);
 
+      // remove with eCAL6
+      // topic type
+      pMonTopic->set_ttype(eCAL::Util::CombinedTopicEncodingAndType(topic.second.tinfo.encoding, topic.second.tinfo.type));
+
       // topic transport layers
       if (topic.second.tlayer_ecal_udp_mc)
       {
@@ -986,6 +990,10 @@ namespace eCAL
         tlayer->set_type(eCAL::pb::tl_inproc);
         tlayer->set_confirmed(true);
       }
+
+      // remove with eCAL6
+      // topic description
+      pMonTopic->set_tdesc(topic.second.tinfo.descriptor);
 
       // topic information
       {

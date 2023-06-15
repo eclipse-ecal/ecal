@@ -25,7 +25,7 @@
 #pragma once
 
 #include <ecal/cimpl/ecal_callback_cimpl.h>
-#include <ecal/types/ecal_topic_information.h>
+#include <ecal/types/topic_information.h>
 
 #include <functional>
 #include <string>
