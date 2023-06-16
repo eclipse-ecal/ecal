@@ -438,11 +438,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="structeCAL_1_1Util_1_1STopicInfo.html">
-       Struct STopicInfo
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="classCDynamicSleeper.html">
        Class CDynamicSleeper
       </a>
@@ -1173,6 +1168,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="function_ecal__util_8h_1ac9378c61f24c4ecc9b9b6bb9407bcc73.html">
+       Function eCAL::Util::CombinedTopicEncodingAndType
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="function_ecal__util_8h_1a8bcb30275052a25eb7baa8cddf238a8d.html">
        Function eCAL::Util::EnableLoopback
       </a>
@@ -1248,12 +1248,17 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="function_ecal__util_8h_1a649a9aa59f449e858bb423e7fb0c796d.html">
+       Function eCAL::Util::GetTopicInformation
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="function_ecal__util_8h_1adbfa8491ed2de9f7848ecf9652304b30.html">
        Function eCAL::Util::GetTopicNames
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="function_ecal__util_8h_1ac3fae71c6922075f30ab535364ff0353.html">
+      <a class="reference internal" href="function_ecal__util_8h_1abab3d3883a214f45139e479bbddf63fd.html">
        Function eCAL::Util::GetTopics
       </a>
      </li>
@@ -1305,6 +1310,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="function_ecal__util_8h_1a2c04e3730ba3cf15dcd0da57e785aa1d.html">
        Function eCAL::Util::ShutdownProcesses
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="function_ecal__util_8h_1aae2b2263e13cadfc23a7bfd57a10eb29.html">
+       Function eCAL::Util::SplitCombinedTopicType
       </a>
      </li>
      <li class="toctree-l3">
@@ -2581,14 +2591,42 @@ title="Print to PDF"
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher10CPublisherERKNSt6stringERKNSt6stringERKNSt6stringE">
-<span id="_CPPv3N4eCAL10CPublisher10CPublisherERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL10CPublisher10CPublisherERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="eCAL::CPublisher::CPublisher__ssCR.ssCR.ssCR"></span><span class="target" id="classeCAL_1_1CPublisher_1a9231387d1276e19e71c4a247c651f4c9"></span><span class="sig-name descname"><span class="n"><span class="pre">CPublisher</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_name_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_type_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;&quot;</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_desc_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;&quot;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher10CPublisherERKNSt6stringERKNSt6stringERKNSt6stringE" title="Permalink to this definition">#</a><br /></dt>
+<span id="_CPPv3N4eCAL10CPublisher10CPublisherERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL10CPublisher10CPublisherERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="eCAL::CPublisher::CPublisher__ssCR.ssCR.ssCR"></span><span class="target" id="classeCAL_1_1CPublisher_1ac2b58a81b8d45dd62c1bd890cfcd3896"></span><span class="sig-name descname"><span class="n"><span class="pre">CPublisher</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_name_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_type_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_desc_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;&quot;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher10CPublisherERKNSt6stringERKNSt6stringERKNSt6stringE" title="Permalink to this definition">#</a><br /></dt>
 <dd><p>Constructor. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>topic_name_</strong> – Unique topic name. </p></li>
-<li><p><strong>topic_type_</strong> – Type name (optional). </p></li>
+<li><p><strong>topic_type_</strong> – Type name. </p></li>
 <li><p><strong>topic_desc_</strong> – Type description (optional). </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher10CPublisherERKNSt6stringERK17STopicInformation">
+<span id="_CPPv3N4eCAL10CPublisher10CPublisherERKNSt6stringERK17STopicInformation"></span><span id="_CPPv2N4eCAL10CPublisher10CPublisherERKNSt6stringERK17STopicInformation"></span><span id="eCAL::CPublisher::CPublisher__ssCR.STopicInformationCR"></span><span class="target" id="classeCAL_1_1CPublisher_1a719be386fa9cab77bb941029d3ebd9ef"></span><span class="sig-name descname"><span class="n"><span class="pre">CPublisher</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_name_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">STopicInformation</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_info_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher10CPublisherERKNSt6stringERK17STopicInformation" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Constructor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topic_name_</strong> – Unique topic name. </p></li>
+<li><p><strong>topic_info_</strong> – Topic information (encoding, type, descriptor) </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher10CPublisherERKNSt6stringE">
+<span id="_CPPv3N4eCAL10CPublisher10CPublisherERKNSt6stringE"></span><span id="_CPPv2N4eCAL10CPublisher10CPublisherERKNSt6stringE"></span><span id="eCAL::CPublisher::CPublisher__ssCR"></span><span class="target" id="classeCAL_1_1CPublisher_1a796ee70377f90b78cb319b25d55882a2"></span><span class="sig-name descname"><span class="n"><span class="pre">CPublisher</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_name_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher10CPublisherERKNSt6stringE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Constructor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topic_name_</strong> – Unique topic name. </p></li>
+<li><p><strong>topic_info_</strong> – Topic information (encoding, type, descriptor) </p></li>
 </ul>
 </dd>
 </dl>
@@ -2626,7 +2664,7 @@ title="Print to PDF"
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher6CreateERKNSt6stringERKNSt6stringERKNSt6stringE">
-<span id="_CPPv3N4eCAL10CPublisher6CreateERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL10CPublisher6CreateERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="eCAL::CPublisher::Create__ssCR.ssCR.ssCR"></span><span class="target" id="classeCAL_1_1CPublisher_1a63b1f26c5c5bd16d34fa97bebb3c104f"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Create</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_name_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_type_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;&quot;</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_desc_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;&quot;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher6CreateERKNSt6stringERKNSt6stringERKNSt6stringE" title="Permalink to this definition">#</a><br /></dt>
+<span id="_CPPv3N4eCAL10CPublisher6CreateERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N4eCAL10CPublisher6CreateERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="eCAL::CPublisher::Create__ssCR.ssCR.ssCR"></span><span class="target" id="classeCAL_1_1CPublisher_1a80baa6a5f482f636f8c1f2f80b22be2b"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Create</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_name_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_type_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_desc_</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;&quot;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher6CreateERKNSt6stringERKNSt6stringERKNSt6stringE" title="Permalink to this definition">#</a><br /></dt>
 <dd><p>Creates this object. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2634,6 +2672,40 @@ title="Print to PDF"
 <li><p><strong>topic_name_</strong> – Unique topic name. </p></li>
 <li><p><strong>topic_type_</strong> – Type name (optional). </p></li>
 <li><p><strong>topic_desc_</strong> – Type description (optional).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it succeeds, false if it fails. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher6CreateERKNSt6stringERK17STopicInformation">
+<span id="_CPPv3N4eCAL10CPublisher6CreateERKNSt6stringERK17STopicInformation"></span><span id="_CPPv2N4eCAL10CPublisher6CreateERKNSt6stringERK17STopicInformation"></span><span id="eCAL::CPublisher::Create__ssCR.STopicInformationCR"></span><span class="target" id="classeCAL_1_1CPublisher_1ad67cdf2b037692f84ef275989806d531"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Create</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_name_</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">STopicInformation</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_info_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher6CreateERKNSt6stringERK17STopicInformation" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Creates this object. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topic_name_</strong> – Unique topic name. </p></li>
+<li><p><strong>topic_info_</strong> – Topic information (encoding, type, descriptor)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it succeeds, false if it fails. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher6CreateERKNSt6stringE">
+<span id="_CPPv3N4eCAL10CPublisher6CreateERKNSt6stringE"></span><span id="_CPPv2N4eCAL10CPublisher6CreateERKNSt6stringE"></span><span id="eCAL::CPublisher::Create__ssCR"></span><span class="target" id="classeCAL_1_1CPublisher_1ab148ed7d74f32851f093741038bfbf03"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Create</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_name_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher6CreateERKNSt6stringE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Creates this object. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topic_name_</strong> – Unique topic name. </p></li>
+<li><p><strong>topic_info_</strong> – Topic information (encoding, type, descriptor)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2674,6 +2746,20 @@ title="Print to PDF"
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>topic_desc_</strong> – Description string.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it succeeds, false if it fails. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL10CPublisher19SetTopicInformationERK17STopicInformation">
+<span id="_CPPv3N4eCAL10CPublisher19SetTopicInformationERK17STopicInformation"></span><span id="_CPPv2N4eCAL10CPublisher19SetTopicInformationERK17STopicInformation"></span><span id="eCAL::CPublisher::SetTopicInformation__STopicInformationCR"></span><span class="target" id="classeCAL_1_1CPublisher_1a7f9b5e14817665b4318311dc1997ecf6"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SetTopicInformation</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">STopicInformation</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">topic_info_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL10CPublisher19SetTopicInformationERK17STopicInformation" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Setup topic information. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>topic_info_</strong> – Topic information attributes.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True if it succeeds, false if it fails. </p>
@@ -3107,6 +3193,17 @@ title="Print to PDF"
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The description. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL10CPublisher19GetTopicInformationEv">
+<span id="_CPPv3NK4eCAL10CPublisher19GetTopicInformationEv"></span><span id="_CPPv2NK4eCAL10CPublisher19GetTopicInformationEv"></span><span id="eCAL::CPublisher::GetTopicInformationC"></span><span class="target" id="classeCAL_1_1CPublisher_1aeb36bc26f7199ff030d060dc895aac00"></span><span class="n"><span class="pre">STopicInformation</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetTopicInformation</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL10CPublisher19GetTopicInformationEv" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Gets description of the connected topic. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The topic information. </p>
 </dd>
 </dl>
 </dd></dl>

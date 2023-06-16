@@ -29,6 +29,8 @@ Includes
 
 - ``ecal/ecal_publisher.h`` (:ref:`file_ecal_core_include_ecal_ecal_publisher.h`)
 
+- ``ecal/ecal_util.h`` (:ref:`file_ecal_core_include_ecal_ecal_util.h`)
+
 - ``functional``
 
 - ``string``

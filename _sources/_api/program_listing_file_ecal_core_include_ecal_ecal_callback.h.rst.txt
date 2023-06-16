@@ -32,6 +32,7 @@ Program Listing for File ecal_callback.h
    #pragma once
    
    #include <ecal/cimpl/ecal_callback_cimpl.h>
+   #include <ecal/types/topic_information.h>
    
    #include <functional>
    #include <string>
@@ -67,8 +68,11 @@ Program Listing for File ecal_callback.h
        long long            time;    
        long long            clock;   
        std::string          tid;     
-       std::string          ttype;   
-       std::string          tdesc;   
+       [[deprecated("Use the separate infos encoding and type in member tinfo instead of ttype.")]]
+       std::string          ttype;  
+       [[deprecated("Use the tinfo.descriptor instead of tdesc.")]]
+       std::string          tdesc;  
+       STopicInformation    tinfo;   
      };
    
      struct SSubEventCallbackData
@@ -83,8 +87,11 @@ Program Listing for File ecal_callback.h
        long long             time;   
        long long             clock;  
        std::string           tid;    
+       [[deprecated("Use the separate infos encoding and type in member tinfo instead of ttype.")]]
        std::string           ttype;  
+       [[deprecated("Use the tinfo.descriptor instead of tdesc.")]]
        std::string           tdesc;  
+       STopicInformation     tinfo;  
      };
    
      struct SServiceAttr

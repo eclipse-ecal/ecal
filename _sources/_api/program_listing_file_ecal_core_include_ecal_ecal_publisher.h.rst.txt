@@ -36,6 +36,7 @@ Program Listing for File ecal_publisher.h
    #include <ecal/ecal_payload_writer.h>
    #include <ecal/ecal_qos.h>
    #include <ecal/ecal_tlayer.h>
+   #include <ecal/types/topic_information.h>
    
    #include <chrono>
    #include <string>
@@ -53,7 +54,12 @@ Program Listing for File ecal_publisher.h
    
        CPublisher();
    
-       CPublisher(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+       [[deprecated("Please use the constructor CPublisher(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
+       CPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
+   
+       CPublisher(const std::string& topic_name_, const STopicInformation& topic_info_);
+   
+       CPublisher(const std::string& topic_name_);
    
        virtual ~CPublisher();
    
@@ -65,13 +71,26 @@ Program Listing for File ecal_publisher.h
    
        CPublisher& operator=(CPublisher&& rhs) noexcept;
    
-       bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+       [[deprecated("Please use the create method bool Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
+       bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
+   
+       bool Create(const std::string& topic_name_, const STopicInformation& topic_info_);
+   
+       bool Create(const std::string& topic_name_)
+       {
+         return Create(topic_name_, STopicInformation());
+       }
+   
    
        bool Destroy();
    
+       [[deprecated("Please use the method bool SetTopicInformation(const STopicInformation& topic_info_) instead. This function will be removed in eCAL6")]]
        bool SetTypeName(const std::string& topic_type_name_);
    
+       [[deprecated("Please use the method bool SetTopicInformation(const STopicInformation& topic_info_) instead. This function will be removed in eCAL6")]]
        bool SetDescription(const std::string& topic_desc_);
+   
+       bool SetTopicInformation(const STopicInformation& topic_info_);
    
        bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
    
@@ -140,16 +159,20 @@ Program Listing for File ecal_publisher.h
    
        std::string GetTopicName() const;
    
+       [[deprecated("Please use the method STopicInformation GetTopicInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")]]
        std::string GetTypeName() const;
    
+       [[deprecated("Please use the method STopicInformation GetTopicInformation() instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")]]
        std::string GetDescription() const;
+   
+       STopicInformation GetTopicInformation() const;
    
        std::string Dump(const std::string& indent_ = "") const;
    
      protected:
        void InitializeQOS();
        void InitializeTLayer();
-       bool ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
+       bool ApplyTopicToDescGate(const std::string& topic_name_, const STopicInformation& topic_info_);
    
        // class members
        CDataWriter*                     m_datawriter;

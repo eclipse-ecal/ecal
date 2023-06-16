@@ -29,6 +29,8 @@ Includes
 
 - ``ecal/ecal_os.h`` (:ref:`file_ecal_core_include_ecal_ecal_os.h`)
 
+- ``ecal/types/topic_information.h``
+
 - ``map``
 
 - ``string``

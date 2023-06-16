@@ -34,6 +34,7 @@ Program Listing for File ecal_subscriber.h
    #include <ecal/ecal_os.h>
    #include <ecal/ecal_callback.h>
    #include <ecal/ecal_qos.h>
+   #include <ecal/types/topic_information.h>
    
    #include <set>
    #include <string>
@@ -47,7 +48,12 @@ Program Listing for File ecal_subscriber.h
      public:
        CSubscriber();
    
-       CSubscriber(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+       [[deprecated("Please use the constructor CSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
+       CSubscriber(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
+   
+       CSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_);
+   
+       CSubscriber(const std::string& topic_name_);
    
        virtual ~CSubscriber();
    
@@ -59,7 +65,14 @@ Program Listing for File ecal_subscriber.h
    
        CSubscriber& operator=(CSubscriber&& rhs) noexcept;
    
-       bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+       [[deprecated("Please use the create method bool Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
+       bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
+   
+       bool Create(const std::string& topic_name_) {
+         return Create(topic_name_, STopicInformation{});
+       }
+   
+       bool Create(const std::string& topic_name_, const STopicInformation& topic_info_);
    
        bool Destroy();
    
@@ -92,9 +105,13 @@ Program Listing for File ecal_subscriber.h
    
        std::string GetTopicName() const;
    
+       [[deprecated("Please use the method STopicInformation GetTopicInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")]]
        std::string GetTypeName() const;
    
+       [[deprecated("Please use the method STopicInformation GetTopicInformation() instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")]]
        std::string GetDescription() const;
+   
+       STopicInformation GetTopicInformation() const;
    
        bool SetTimeout(int timeout_);
    
@@ -102,7 +119,7 @@ Program Listing for File ecal_subscriber.h
    
      protected:
        void InitializeQOS();
-       bool ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
+       bool ApplyTopicToDescGate(const std::string& topic_name_, const STopicInformation& topic_info_);
    
        // class members
        CDataReader*                     m_datareader;
