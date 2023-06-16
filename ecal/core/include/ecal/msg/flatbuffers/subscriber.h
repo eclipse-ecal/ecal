@@ -52,7 +52,7 @@ namespace eCAL
        *
        * @param topic_name_  Unique topic name.
       **/
-      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, GetTypeName(), GetDescription())
+      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, CSubscriber::GetTopicInformation())
       {
       }
 
@@ -85,28 +85,21 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(CMsgSubscriber<T>::Create(topic_name_, GetTypeName(), GetDescription()));
-      }
-
-      /**
-       * @brief  Get type name of the flatbuffers message.
-       *
-       * @return  Type name.
-      **/
-      std::string GetTypeName() const
-      {
-        return("flatb:");
+        return(CMsgSubscriber<T>::Create(topic_name_, GetTopicInformation()));
       }
 
     private:
       /**
-       * @brief  Get file descriptor string of the flatbuffers message.
-       *
-       * @return  Description string.
+      * @brief  Get topic information of the flatbuffers message.
+      *
+      * @return  Topic information.
       **/
-      std::string GetDescription() const
+      STopicInformation GetTopicInformation() const override
       {
-        return("");
+        STopicInformation topic_info;
+        topic_info.encoding = "flatb";
+        // empty type, empty descriptor
+        return topic_info;
       }
 
       /**

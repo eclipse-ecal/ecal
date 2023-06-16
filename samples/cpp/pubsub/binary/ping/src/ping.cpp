@@ -29,8 +29,9 @@ int main(int argc, char **argv)
   // initialize eCAL API
   eCAL::Initialize(argc, argv, "ping");
 
-  eCAL::CPublisher  pub_pulse("pulse_send",  "long long");
-  eCAL::CSubscriber sub_pulse("pulse_reply", "long long");
+  eCAL::STopicInformation topic_info{ "", "long long", "" };
+  eCAL::CPublisher  pub_pulse("pulse_send", topic_info);
+  eCAL::CSubscriber sub_pulse("pulse_reply", topic_info);
 
   std::cout << "-------------------------------" << std::endl;
   std::cout << " PING PONG TEST                " << std::endl;

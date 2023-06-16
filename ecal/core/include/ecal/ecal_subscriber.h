@@ -27,6 +27,7 @@
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_qos.h>
+#include <ecal/types/topic_information.h>
 
 #include <set>
 #include <string>
@@ -93,7 +94,23 @@ namespace eCAL
      * @param topic_type_   Type name (optional for type checking).
      * @param topic_desc_   Type description (optional for description checking).
      **/
-    CSubscriber(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+    [[deprecated("Please use the constructor CSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
+    CSubscriber(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
+
+    /**
+    * @brief Constructor.
+    *
+    * @param topic_name_   Unique topic name.
+    * @param topic_info_   Topic information (encoding, type, descriptor)
+    **/
+    CSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_);
+
+    /**
+    * @brief Constructor.
+    * 
+    * @param topic_name_   Unique topic name.
+    **/
+    CSubscriber(const std::string& topic_name_);
 
     /**
      * @brief Destructor. 
@@ -129,7 +146,29 @@ namespace eCAL
      *
      * @return  true if it succeeds, false if it fails. 
     **/
-    bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "");
+    [[deprecated("Please use the create method bool Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
+    bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
+
+    /**
+     * @brief Creates this object.
+     *
+     * @param topic_name_   Unique topic name.
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool Create(const std::string& topic_name_) {
+      return Create(topic_name_, STopicInformation{});
+    }
+
+    /**
+     * @brief Creates this object.
+     *
+     * @param topic_name_   Unique topic name.
+     * @param topic_info_   Topic information (encoding, type, descriptor)
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool Create(const std::string& topic_name_, const STopicInformation& topic_info_);
 
     /**
      * @brief Destroys this object. 
@@ -268,6 +307,7 @@ namespace eCAL
      *
      * @return  The type name. 
     **/
+    [[deprecated("Please use the method STopicInformation GetTopicInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")]]
     std::string GetTypeName() const;
 
     /**
@@ -275,7 +315,15 @@ namespace eCAL
      *
      * @return  The description. 
     **/
+    [[deprecated("Please use the method STopicInformation GetTopicInformation() instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")]]
     std::string GetDescription() const;
+
+    /**
+    * @brief Gets description of the connected topic.
+    *
+    * @return  The topic information.
+    **/
+    STopicInformation GetTopicInformation() const;
 
     /**
      * @brief Set the timeout parameter for triggering
@@ -298,7 +346,7 @@ namespace eCAL
 
   protected:
     void InitializeQOS();
-    bool ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
+    bool ApplyTopicToDescGate(const std::string& topic_name_, const STopicInformation& topic_info_);
 
     // class members
     CDataReader*                     m_datareader;

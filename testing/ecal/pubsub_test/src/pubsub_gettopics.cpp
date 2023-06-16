@@ -31,29 +31,35 @@ TEST(IO, GetTopics)
   // initialize eCAL API
   eCAL::Initialize(0, nullptr, "pubsub_gettopics");
 
-  std::unordered_map<std::string, eCAL::Util::STopicInfo> topic_info_map;
+  std::unordered_map<std::string, eCAL::STopicInformation> topic_info_map;
 
   // create and check a few pub/sub entities
   {
-    std::string ttype("type");
-    std::string tdesc("desc");
+    eCAL::STopicInformation info_A1  { "", "typeA1"  , "descA1"   };
+    eCAL::STopicInformation info_A1_2{ "", "typeA1.2", "descA1.2" };
+    eCAL::STopicInformation info_A2  { "", "typeA2"  , "descA2"   };
+    eCAL::STopicInformation info_A3  { "", "typeA3"  , "descA3"   };
+
+    eCAL::STopicInformation info_B1  { "", "typeB1"  , "descB1"   };
+    eCAL::STopicInformation info_B1_2{ "", "typeB1.2", "descB1.2" };
+    eCAL::STopicInformation info_B2  { "", "typeB2"  , "descB2"   };
 
     // create 3 publisher
-    eCAL::CPublisher pub1("A1", ttype + "A1", tdesc + "A1");
-    eCAL::CPublisher pub2("A2", ttype + "A2", tdesc + "A2");
-    eCAL::CPublisher pub3("A3", ttype + "A3", tdesc + "A3");
+    eCAL::CPublisher pub1("A1", info_A1);
+    eCAL::CPublisher pub2("A2", info_A2);
+    eCAL::CPublisher pub3("A3", info_A3);
 
     // create a missmatching publisher
     // this should trigger a warning but not increase map size
-    eCAL::CPublisher pub12("A1", ttype + "A1.2", tdesc + "A1.2");
+    eCAL::CPublisher pub12("A1", info_A1_2);
 
     // create 2 subscriber
-    eCAL::CSubscriber sub1("B1", ttype + "B1", tdesc + "B1");
-    eCAL::CSubscriber sub2("B2", ttype + "B2", tdesc + "B2");
+    eCAL::CSubscriber sub1("B1", info_B1);
+    eCAL::CSubscriber sub2("B2", info_B2);
 
     // create a missmatching subscriber
     // this should trigger a warning but not increase map size
-    eCAL::CSubscriber sub12("B1", ttype + "B1.2", tdesc + "B1.2");
+    eCAL::CSubscriber sub12("B1", info_B1_2);
 
     // get all topics
     eCAL::Util::GetTopics(topic_info_map);
@@ -64,8 +70,10 @@ TEST(IO, GetTopics)
     // check types and descriptions
     for (auto& topic_info : topic_info_map)
     {
-      EXPECT_EQ(eCAL::Util::GetTopicTypeName(topic_info.first), ttype + topic_info.first);
-      EXPECT_EQ(eCAL::Util::GetTopicDescription(topic_info.first), tdesc + topic_info.first);
+      eCAL::STopicInformation utils_topic_info;
+      eCAL::Util::GetTopicInformation(topic_info.first, utils_topic_info);
+      eCAL::STopicInformation expected_topic_info{ "", "type" + topic_info.first, "desc" + topic_info.first };
+      EXPECT_EQ(utils_topic_info, expected_topic_info);
     }
 
     // wait a monitoring timeout long,
@@ -84,10 +92,16 @@ TEST(IO, GetTopics)
     sub1.Destroy();
 
     // pub1 and sub1 still exists
-    EXPECT_EQ(eCAL::Util::GetTopicTypeName("A1"), "typeA1");
-    EXPECT_EQ(eCAL::Util::GetTopicDescription("A1"), "descA1");
-    EXPECT_EQ(eCAL::Util::GetTopicTypeName("B1"), "typeB1");
-    EXPECT_EQ(eCAL::Util::GetTopicDescription("B1"), "descB1");
+    {
+      eCAL::STopicInformation utils_topic_info;
+      eCAL::Util::GetTopicInformation("A1", utils_topic_info);
+      EXPECT_EQ(utils_topic_info, info_A1);
+    }
+    {
+      eCAL::STopicInformation utils_topic_info;
+      eCAL::Util::GetTopicInformation("B1", utils_topic_info);
+      EXPECT_EQ(utils_topic_info, info_B1);
+    }
 
     // wait a monitoring timeout long, and let pub1.2 and sub1.2 register
     eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT + CMN_REGISTRATION_REFRESH);
@@ -99,10 +113,16 @@ TEST(IO, GetTopics)
     EXPECT_EQ(topic_info_map.size(), 5);
 
     // check overwritten attributes
-    EXPECT_EQ(eCAL::Util::GetTopicTypeName("A1"), "typeA1.2");
-    EXPECT_EQ(eCAL::Util::GetTopicDescription("A1"), "descA1.2");
-    EXPECT_EQ(eCAL::Util::GetTopicTypeName("B1"), "typeB1.2");
-    EXPECT_EQ(eCAL::Util::GetTopicDescription("B1"), "descB1.2");
+    {
+      eCAL::STopicInformation utils_topic_info;
+      eCAL::Util::GetTopicInformation("A1", utils_topic_info);
+      EXPECT_EQ(utils_topic_info, info_A1_2);
+    }
+    {
+      eCAL::STopicInformation utils_topic_info;
+      eCAL::Util::GetTopicInformation("B1", utils_topic_info);
+      EXPECT_EQ(utils_topic_info, info_B1_2);
+    }
   }
 
   // let's unregister them

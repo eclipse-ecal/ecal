@@ -25,6 +25,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_callback.h>
+#include <ecal/types/topic_information.h>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
@@ -55,7 +56,7 @@ namespace eCAL
 
     static void InitializeLayers();
 
-    bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
+    bool Create(const std::string& topic_name_, const STopicInformation& topic_info_);
     bool Destroy();
 
     bool SetQOS(const QOS::SReaderQOS& qos_);
@@ -75,10 +76,10 @@ namespace eCAL
 
     void SetID(const std::set<long long>& id_set_);
 
-    void ApplyLocPublication(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_);
+    void ApplyLocPublication(const std::string& process_id_, const std::string& tid_, const STopicInformation& tinfo_);
     void RemoveLocPublication(const std::string& process_id_, const std::string& tid_);
 
-    void ApplyExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_);
+    void ApplyExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const STopicInformation& tinfo_);
     void RemoveExtPublication(const std::string& host_name_, const std::string& process_id_, const std::string& tid_);
 
     void ApplyLocLayerParameter(const std::string& process_id_, const std::string& topic_id_, eCAL::pb::eTLayerType type_, const std::string& parameter_);
@@ -94,10 +95,9 @@ namespace eCAL
       return(m_loc_pub_map.size() + m_ext_pub_map.size());
     }
 
-    std::string GetTopicName()   const {return(m_topic_name);}
-    std::string GetTopicID()     const {return(m_topic_id);}
-    std::string GetTypeName()    const {return(m_topic_type);}
-    std::string GetDescription() const;
+    std::string      GetTopicName()        const {return(m_topic_name);}
+    std::string      GetTopicID()          const {return(m_topic_id);}
+    STopicInformation GetTopicInformation() const {return(m_topic_info);}
 
     void RefreshRegistration();
     void CheckReceiveTimeout();
@@ -111,7 +111,7 @@ namespace eCAL
     bool Register(bool force_);
     bool Unregister();
 
-    void Connect(const std::string& tid_, const std::string& ttype_, const std::string& tdesc_);
+    void Connect(const std::string& tid_, const STopicInformation& topic_info_);
     void Disconnect();
     bool CheckMessageClock(const std::string& tid_, long long current_clock_);
 
@@ -121,8 +121,7 @@ namespace eCAL
     std::string                               m_pname;
     std::string                               m_topic_name;
     std::string                               m_topic_id;
-    std::string                               m_topic_type;
-    std::string                               m_topic_desc;
+    STopicInformation                          m_topic_info;
     std::map<std::string, std::string>        m_attr;
     std::atomic<size_t>                       m_topic_size;
 

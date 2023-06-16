@@ -60,7 +60,7 @@ namespace eCAL
 
   protected:
     int CheckTimeouts();
-    bool ApplyTopicToDescGate(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_);
+    bool ApplyTopicToDescGate(const std::string& topic_name_, const STopicInformation& topic_info_);
 
     static std::atomic<bool> m_created;
 

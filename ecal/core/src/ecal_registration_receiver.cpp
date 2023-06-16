@@ -33,6 +33,7 @@
 #include "service/ecal_servicegate.h"
 
 #include "io/udp_configurations.h"
+#include "ecal_sample_to_topicinfo.h"
 
 namespace eCAL
 {
@@ -195,7 +196,12 @@ namespace eCAL
   {
     if(!m_created) return false;
 
-    m_callback_custom_apply_sample(ecal_sample_);
+    //Remove in eCAL6
+    // for the time being we need to copy the incoming sample and set the incompatible fields
+    eCAL::pb::Sample modified_ttype_sample;
+    ModifyIncomingSampleForBackwardsCompatibility(ecal_sample_, modified_ttype_sample);
+
+    m_callback_custom_apply_sample(modified_ttype_sample);
 
     std::string reg_sample;
     if ( m_callback_pub
@@ -205,10 +211,10 @@ namespace eCAL
       || m_callback_process
       )
     {
-      reg_sample = ecal_sample_.SerializeAsString();
+      reg_sample = modified_ttype_sample.SerializeAsString();
     }
 
-    switch(ecal_sample_.cmd_type())
+    switch(modified_ttype_sample.cmd_type())
     {
     case eCAL::pb::bct_none:
     case eCAL::pb::bct_set_sample:
@@ -219,7 +225,7 @@ namespace eCAL
       if (m_callback_process) m_callback_process(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
     case eCAL::pb::bct_reg_service:
-      if (g_clientgate() != nullptr)  g_clientgate()->ApplyServiceRegistration(ecal_sample_);
+      if (g_clientgate() != nullptr)  g_clientgate()->ApplyServiceRegistration(modified_ttype_sample);
       if (m_callback_service) m_callback_service(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
     case eCAL::pb::bct_unreg_service:
@@ -236,12 +242,12 @@ namespace eCAL
       break;
     case eCAL::pb::bct_reg_subscriber:
     case eCAL::pb::bct_unreg_subscriber:
-      ApplySubscriberRegistration(ecal_sample_);
+      ApplySubscriberRegistration(modified_ttype_sample);
       if (m_callback_sub) m_callback_sub(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
     case eCAL::pb::bct_reg_publisher:
     case eCAL::pb::bct_unreg_publisher:
-      ApplyPublisherRegistration(ecal_sample_);
+      ApplyPublisherRegistration(modified_ttype_sample);
       if (m_callback_pub) m_callback_pub(reg_sample.c_str(), static_cast<int>(reg_sample.size()));
       break;
     default:

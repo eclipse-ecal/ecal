@@ -398,10 +398,13 @@ namespace eCAL
       //////////////////////////////////////////////
       // read attributes
       const std::string topic_name(iter->second.topic().tname());
-      const std::string topic_type(iter->second.topic().ttype());
-      const std::string topic_desc(iter->second.topic().tdesc());
+      STopicInformation topic_info;
+      const auto& pb_topic_info = iter->second.topic().tinfo();
+      topic_info.encoding = pb_topic_info.encoding();
+      topic_info.type = pb_topic_info.type();
+      topic_info.descriptor = pb_topic_info.desc();
       const bool        topic_is_a_publisher(iter->second.cmd_type() == eCAL::pb::eCmdType::bct_reg_publisher);
-      ApplyTopicToDescGate(topic_name, topic_type, topic_desc, topic_is_a_publisher);
+      ApplyTopicToDescGate(topic_name, topic_info, topic_is_a_publisher);
 
       //////////////////////////////////////////////
       // send sample to registration layer
@@ -494,24 +497,23 @@ namespace eCAL
   }
 
   bool CRegistrationProvider::ApplyTopicToDescGate(const std::string& topic_name_
-    , const std::string& topic_type_
-    , const std::string& topic_desc_
+    , const STopicInformation& topic_info_
     , bool topic_is_a_publisher_)
   {
     if (g_descgate() != nullptr)
     {
       // calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_type_.empty())
+      if (!topic_info_.encoding.empty() || !topic_info_.type.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_desc_.empty())
+      if (!topic_info_.descriptor.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
       if (topic_is_a_publisher_)
         quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PRODUCER;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
       // update description
-      return g_descgate()->ApplyTopicDescription(topic_name_, topic_type_, topic_desc_, quality);
+      return g_descgate()->ApplyTopicDescription(topic_name_, topic_info_, quality);
     }
     return false;
   }
