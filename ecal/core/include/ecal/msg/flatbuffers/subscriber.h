@@ -25,7 +25,6 @@
 #pragma once
 
 #include <ecal/msg/subscriber.h>
-#
 
 namespace eCAL
 {

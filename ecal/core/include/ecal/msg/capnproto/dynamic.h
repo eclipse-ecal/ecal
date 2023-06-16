@@ -165,6 +165,16 @@ namespace eCAL
         return(subscriber.Create(topic_name_, GetTopicInformation()));
       }
 
+      /**
+      * @brief  Get type name of the capnp message.
+      *
+      * @return  Type name.
+      **/
+      [[deprecated("Please use the method STopicInformation GetTopicInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")]]
+      std::string GetTypeName() const
+      {
+        return ("");
+      }
     private:
       /**
        * @brief   Get topic information of the message.

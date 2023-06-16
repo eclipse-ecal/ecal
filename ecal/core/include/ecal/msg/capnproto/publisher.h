@@ -50,7 +50,7 @@ namespace eCAL
     *
     **/
     template <typename message_type>
-    class CPublisher : eCAL::CPublisher
+    class CPublisher : public eCAL::CPublisher
     {
       class CPayload : public eCAL::CPayloadWriter
       {
