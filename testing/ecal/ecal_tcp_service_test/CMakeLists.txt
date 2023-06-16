@@ -21,11 +21,12 @@ project(ecal_tcp_service_test)
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
-set(${PROJECT_NAME}_src
+set(sources
   src/ecal_tcp_service_test.cpp
+  src/atomic_signalable.h
 )
 
-ecal_add_gtest(${PROJECT_NAME} ${${PROJECT_NAME}_src})
+ecal_add_gtest(${PROJECT_NAME} ${sources})
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
@@ -36,3 +37,7 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 ecal_install_gtest(${PROJECT_NAME})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER testing/ecal/service)
+
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
+    ${sources}
+)
