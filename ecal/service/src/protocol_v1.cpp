@@ -17,9 +17,9 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecal_service_tcp_protocol_v1.h"
+#include "protocol_v1.h"
 
-#include "ecal_service_tcp_protocol_layout.h"
+#include "protocol_layout.h"
 
 namespace eCAL
 {

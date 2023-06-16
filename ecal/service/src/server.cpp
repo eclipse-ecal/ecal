@@ -17,11 +17,11 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/service/ecal_service_server.h>
+#include <ecal/service/server.h>
 
 #include <algorithm>
 
-#include "ecal_service_server_impl.h"
+#include "server_impl.h"
 
 namespace eCAL
 {

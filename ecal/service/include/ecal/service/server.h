@@ -23,8 +23,8 @@
 
 #include <asio.hpp>
 
-#include "ecal_service_logger.h"
-#include "ecal_service_server_session_types.h"
+#include "logger.h"
+#include "server_session_types.h"
 
 namespace eCAL
 {

@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <ecal/service/ecal_service_logger.h>
+#include <ecal/service/logger.h>
 
 /////////////////////////////////////////////
 // Enable / disable debug logging

@@ -17,11 +17,11 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecal_service_client_session_impl_v1.h"
+#include "client_session_impl_v1.h"
 
-#include "ecal_service_tcp_protocol_v1.h"
-#include "ecal_service_log_helpers.h"
-#include "ecal_service_log_defs.h"
+#include "protocol_v1.h"
+#include "log_helpers.h"
+#include "log_defs.h"
 
 #include <iostream>
 

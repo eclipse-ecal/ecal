@@ -39,7 +39,7 @@
 
 #include "ecal/cimpl/ecal_callback_cimpl.h"
 
-#include <ecal/service/ecal_service_server_session_types.h>
+#include <ecal/service/server_session_types.h>
 
 namespace eCAL
 {

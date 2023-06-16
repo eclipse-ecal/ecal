@@ -17,12 +17,12 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecal_service_server_session_impl_v0.h"
+#include "server_session_impl_v0.h"
 
-#include "ecal_service_log_helpers.h"
-#include "ecal_service_log_defs.h"
+#include "log_helpers.h"
+#include "log_defs.h"
 
-#include "ecal_service_tcp_protocol_layout.h"
+#include "protocol_layout.h"
 
 ///////////////////////////////////////////////
 // Create, Constructor, Destructor

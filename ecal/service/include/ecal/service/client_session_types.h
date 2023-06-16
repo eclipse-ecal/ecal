@@ -23,7 +23,7 @@
 #include <memory>
 #include <string>
 
-#include "ecal_service_error.h"
+#include <ecal/service/error.h>
 
 #include "ecal/cimpl/ecal_callback_cimpl.h"
 

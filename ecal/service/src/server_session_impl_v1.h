@@ -19,11 +19,11 @@
 
 #pragma once
 
-#include "ecal_service_server_session_impl_base.h"
-#include <ecal/service/ecal_service_logger.h>
-#include <ecal/service/ecal_service_server_session_types.h>
+#include "server_session_impl_base.h"
+#include <ecal/service/logger.h>
+#include <ecal/service/server_session_types.h>
 
-#include <ecal/service/ecal_service_state.h>
+#include <ecal/service/state.h>
 
 namespace eCAL
 {

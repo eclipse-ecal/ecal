@@ -21,39 +21,39 @@ find_package(asio REQUIRED)
 
 # Public API include directory
 set (includes
-    include/ecal/service/ecal_service_client_session.h
-    include/ecal/service/ecal_service_client_session_types.h
-    include/ecal/service/ecal_service_error.h
-    include/ecal/service/ecal_service_logger.h
-    include/ecal/service/ecal_service_server.h
-    include/ecal/service/ecal_service_server_session_types.h
-    include/ecal/service/ecal_service_state.h
+    include/ecal/service/client_session.h
+    include/ecal/service/client_session_types.h
+    include/ecal/service/error.h
+    include/ecal/service/logger.h
+    include/ecal/service/server.h
+    include/ecal/service/server_session_types.h
+    include/ecal/service/state.h
 )
 
 # Private source files
 set(sources
+    src/client_session.cpp
+    src/client_session_impl_base.h
+    src/client_session_impl_v0.cpp
+    src/client_session_impl_v0.h
+    src/client_session_impl_v1.cpp
+    src/client_session_impl_v1.h
     src/condition_variable_signaler.h
-    src/ecal_service_client_session.cpp
-    src/ecal_service_client_session_impl_base.h
-    src/ecal_service_client_session_impl_v0.cpp
-    src/ecal_service_client_session_impl_v0.h
-    src/ecal_service_client_session_impl_v1.cpp
-    src/ecal_service_client_session_impl_v1.h
-    src/ecal_service_log_defs.h
-    src/ecal_service_log_helpers.h
-    src/ecal_service_server.cpp
-    src/ecal_service_server_impl.cpp
-    src/ecal_service_server_impl.h
-    src/ecal_service_server_session_impl_base.h
-    src/ecal_service_server_session_impl_v0.cpp
-    src/ecal_service_server_session_impl_v0.h
-    src/ecal_service_server_session_impl_v1.cpp
-    src/ecal_service_server_session_impl_v1.h
-    src/ecal_service_tcp_protocol_layout.h
-    src/ecal_service_tcp_protocol_v0.cpp
-    src/ecal_service_tcp_protocol_v0.h
-    src/ecal_service_tcp_protocol_v1.cpp
-    src/ecal_service_tcp_protocol_v1.h
+    src/log_defs.h
+    src/log_helpers.h
+    src/protocol_layout.h
+    src/protocol_v0.cpp
+    src/protocol_v0.h
+    src/protocol_v1.cpp
+    src/protocol_v1.h
+    src/server.cpp
+    src/server_impl.cpp
+    src/server_impl.h
+    src/server_session_impl_base.h
+    src/server_session_impl_v0.cpp
+    src/server_session_impl_v0.h
+    src/server_session_impl_v1.cpp
+    src/server_session_impl_v1.h
 )
 
 #TODO: Make it variable to build obj/static/shared

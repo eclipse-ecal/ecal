@@ -26,7 +26,7 @@
 
 #include <asio.hpp>
 
-#include "ecal_service_tcp_protocol_layout.h"
+#include "protocol_layout.h"
 
 namespace eCAL
 {

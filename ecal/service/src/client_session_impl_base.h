@@ -31,10 +31,10 @@
 // TODO: Remove this include. It includes a file from the main eCAL Core library, even though we don't link against it.
 #include "ecal/cimpl/ecal_callback_cimpl.h"
 
-#include <ecal/service/ecal_service_error.h>
-#include <ecal/service/ecal_service_client_session_types.h>
+#include <ecal/service/error.h>
+#include <ecal/service/client_session_types.h>
 
-#include <ecal/service/ecal_service_state.h>
+#include <ecal/service/state.h>
 
 namespace eCAL
 {

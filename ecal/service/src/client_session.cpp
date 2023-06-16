@@ -17,10 +17,10 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/service/ecal_service_client_session.h>
+#include <ecal/service/client_session.h>
 
-#include "ecal_service_client_session_impl_v1.h"
-#include "ecal_service_client_session_impl_v0.h"
+#include "client_session_impl_v1.h"
+#include "client_session_impl_v0.h"
 #include "condition_variable_signaler.h"
 
 namespace eCAL

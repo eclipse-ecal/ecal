@@ -24,8 +24,8 @@
 #include <iostream>
 #include <atomic>
 
-#include <ecal/service/ecal_service_server.h>
-#include <ecal/service/ecal_service_client_session.h>
+#include <ecal/service/server.h>
+#include <ecal/service/client_session.h>
 
 #include "atomic_signalable.h"
 
@@ -55,7 +55,7 @@ constexpr std::uint8_t max_protocol_version = 1;
 
 
 
-#if 0
+#if 1
 TEST(RAII, TcpServiceServer)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -107,7 +107,7 @@ TEST(RAII, TcpServiceServer)
 }
 #endif
 
-#if 0
+#if 1
 TEST(RAII, TcpServiceClient)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -138,7 +138,7 @@ TEST(RAII, TcpServiceClient)
 }
 #endif
 
-#if 0
+#if 1
 TEST(RAII, TcpServiceServerAndClient)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -226,7 +226,7 @@ TEST(RAII, TcpServiceServerAndClient)
 }
 #endif
 
-#if 0
+#if 1
 TEST(RAII, StopDuringServiceCall)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -306,7 +306,7 @@ TEST(RAII, StopDuringServiceCall)
 }
 #endif
 
-#if 0
+#if 1
 TEST(Communication, SlowCommunication)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -417,7 +417,7 @@ TEST(Communication, SlowCommunication)
 }
 #endif
 
-#if 0
+#if 1
 TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -524,7 +524,7 @@ TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst)
 }
 #endif
 
-#if 0
+#if 1
 TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -713,7 +713,7 @@ TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
 }
 #endif
 
-#if 0
+#if 1
 TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -860,7 +860,7 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
 }
 #endif
 
-#if 0
+#if 1
 TEST(CommunicationAndCallbacks, StressfulCommunication)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1294,7 +1294,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload)
 }
 #endif
 
-#if 0
+#if 1
 TEST(Callback, ServiceCallFromCallback)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1415,7 +1415,7 @@ TEST(ErrorCallback, ErrorCallbackNoServer)
 }
 #endif
 
-#if 0
+#if 1
 TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1579,7 +1579,7 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
 }
 #endif
 
-#if 0
+#if 1
 TEST(ErrorCallback, ErrorCallbackClientDisconnects)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1679,7 +1679,7 @@ TEST(ErrorCallback, ErrorCallbackClientDisconnects)
 }
 #endif
 
-#if 0
+#if 1
 TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1864,7 +1864,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
 }
 #endif
 
-#if 0
+#if 1
 TEST(BlockingCall, RegularBlockingCall)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -1936,7 +1936,7 @@ TEST(BlockingCall, RegularBlockingCall)
 }
 #endif
 
-#if 0
+#if 1
 TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
@@ -2068,7 +2068,7 @@ TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
 }
 #endif
 
-#if 0
+#if 1
 TEST(BlockingCall, StopIcontext) // TODO: This test shows the proper way to stop everything. I should adapt all other tests, too
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
