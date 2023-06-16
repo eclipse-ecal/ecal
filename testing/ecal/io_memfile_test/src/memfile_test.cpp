@@ -292,4 +292,7 @@ TEST(IO, MemfileConcurrency)
 
   EXPECT_EQ(num_writes, num_reads1);
   EXPECT_EQ(num_writes, num_reads2);
+
+  // destroy memory file
+  EXPECT_EQ(true, mem_file.Destroy(true));
 }
