@@ -27,22 +27,49 @@ namespace eCAL
 {
   namespace service
   {
-    std::shared_ptr<ClientSession> ClientSession::create(asio::io_context& io_context
-                                                  , std::uint8_t           protocol_version
-                                                  , const std::string&     address
-                                                  , std::uint16_t          port
-                                                  , const EventCallbackT&  event_callback
-                                                  , const LoggerT&         logger)
+    std::shared_ptr<ClientSession> ClientSession::create(asio::io_context&   io_context
+                                                  , std::uint8_t             protocol_version
+                                                  , const std::string&       address
+                                                  , std::uint16_t            port
+                                                  , const EventCallbackT&    event_callback
+                                                  , const LoggerT&           logger
+                                                  , const DeleteCallbackT&   delete_callback)
+    {
+      auto deleter = [delete_callback](ClientSession* session)
+      {
+        delete_callback(session);
+        delete session;
+      };
+
+      return std::shared_ptr<ClientSession>(new ClientSession(io_context, protocol_version, address, port, event_callback, logger), deleter);
+    }
+
+    std::shared_ptr<ClientSession> ClientSession::create(asio::io_context&   io_context
+                                                  , std::uint8_t             protocol_version
+                                                  , const std::string&       address
+                                                  , std::uint16_t            port
+                                                  , const EventCallbackT&    event_callback
+                                                  , const LoggerT&           logger)
     {
       return std::shared_ptr<ClientSession>(new ClientSession(io_context, protocol_version, address, port, event_callback, logger));
     }
 
-    ClientSession::ClientSession(asio::io_context&      io_context
-                                , std::uint8_t          protocol_version
-                                , const std::string&    address
-                                , std::uint16_t         port
-                                , const EventCallbackT& event_callback
-                                , const LoggerT&        logger)
+    std::shared_ptr<ClientSession> ClientSession::create(asio::io_context&   io_context
+                                                  , std::uint8_t             protocol_version
+                                                  , const std::string&       address
+                                                  , std::uint16_t            port
+                                                  , const EventCallbackT&    event_callback
+                                                  , const DeleteCallbackT&          deleter)
+    {
+      return ClientSession::create(io_context, protocol_version, address, port, event_callback, default_logger("Service Client"), deleter);
+    }
+
+    ClientSession::ClientSession(asio::io_context&         io_context
+                                , std::uint8_t             protocol_version
+                                , const std::string&       address
+                                , std::uint16_t            port
+                                , const EventCallbackT&    event_callback
+                                , const LoggerT&           logger)
     {
       if (protocol_version == 0)
       {

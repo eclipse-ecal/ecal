@@ -21,17 +21,20 @@ find_package(asio REQUIRED)
 
 # Public API include directory
 set (includes
+    include/ecal/service/client_manager.h
     include/ecal/service/client_session.h
     include/ecal/service/client_session_types.h
     include/ecal/service/error.h
     include/ecal/service/logger.h
     include/ecal/service/server.h
+    include/ecal/service/server_manager.h
     include/ecal/service/server_session_types.h
     include/ecal/service/state.h
 )
 
 # Private source files
 set(sources
+    src/client_manager.cpp 
     src/client_session.cpp
     src/client_session_impl_base.h
     src/client_session_impl_v0.cpp
@@ -49,6 +52,7 @@ set(sources
     src/server.cpp
     src/server_impl.cpp
     src/server_impl.h
+    src/server_manager.cpp
     src/server_session_impl_base.h
     src/server_session_impl_v0.cpp
     src/server_session_impl_v0.h

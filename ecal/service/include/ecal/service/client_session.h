@@ -48,25 +48,42 @@ namespace eCAL
     public:
       using EventCallbackT    = ClientEventCallbackT;
       using ResponseCallbackT = ClientResponseCallbackT;
+      using DeleteCallbackT          = std::function<void(ClientSession*)>;
 
     //////////////////////////////////////////////
     // Constructor, Destructor, Create
     //////////////////////////////////////////////
     public:
-      static std::shared_ptr<ClientSession> create(asio::io_context&      io_context
-                                                  , std::uint8_t          protocol_version
-                                                  , const std::string&    address
-                                                  , std::uint16_t         port
-                                                  , const EventCallbackT& event_callback
-                                                  , const LoggerT&        logger = default_logger("Service Client"));
+      // TODO: Maybe I can remove all those overloads and just keep 1
+      static std::shared_ptr<ClientSession> create(asio::io_context&         io_context
+                                                  , std::uint8_t             protocol_version
+                                                  , const std::string&       address
+                                                  , std::uint16_t            port
+                                                  , const EventCallbackT&    event_callback
+                                                  , const LoggerT&           logger
+                                                  , const DeleteCallbackT&          deleter);
+
+      static std::shared_ptr<ClientSession> create(asio::io_context&         io_context
+                                                  , std::uint8_t             protocol_version
+                                                  , const std::string&       address
+                                                  , std::uint16_t            port
+                                                  , const EventCallbackT&    event_callback
+                                                  , const LoggerT&           logger = default_logger("Service Client"));
+
+      static std::shared_ptr<ClientSession> create(asio::io_context&         io_context
+                                                  , std::uint8_t             protocol_version
+                                                  , const std::string&       address
+                                                  , std::uint16_t            port
+                                                  , const EventCallbackT&    event_callback
+                                                  , const DeleteCallbackT&          deleter);
 
     protected:
-      ClientSession(asio::io_context&       io_context
-                    , std::uint8_t          protocol_version
-                    , const std::string&    address
-                    , std::uint16_t         port
-                    , const EventCallbackT& event_callback
-                    , const LoggerT&        logger);
+      ClientSession(asio::io_context&          io_context
+                    , std::uint8_t             protocol_version
+                    , const std::string&       address
+                    , std::uint16_t            port
+                    , const EventCallbackT&    event_callback
+                    , const LoggerT&           logger);
 
       // Delete copy constructor and assignment operator
       ClientSession(const ClientSession&)            = delete;
