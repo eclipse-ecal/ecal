@@ -312,43 +312,34 @@ endif()
 
 set(ecal_header_cmn
     include/ecal/ecal.h
-    include/ecal/ecal_callback.h
     include/ecal/ecal_clang.h
     include/ecal/ecal_config.h
     include/ecal/ecal_client.h
     include/ecal/ecal_config.h
     include/ecal/ecal_core.h
     include/ecal/ecal_event.h
-    include/ecal/ecal_eventhandle.h
     include/ecal/ecal_init.h
     include/ecal/ecal_log.h
-    include/ecal/ecal_log_level.h
     include/ecal/ecal_monitoring.h
     include/ecal/ecal_monitoring_entity.h
     include/ecal/ecal_monitoring_struct.h
     include/ecal/ecal_os.h
     include/ecal/ecal_payload_writer.h
     include/ecal/ecal_process.h
-    include/ecal/ecal_process_mode.h
-    include/ecal/ecal_process_severity.h
     include/ecal/ecal_publisher.h
     include/ecal/ecal_qos.h
     include/ecal/ecal_server.h
     include/ecal/ecal_service.h
-    include/ecal/ecal_service_info.h
     include/ecal/ecal_subscriber.h
     include/ecal/ecal_time.h
     include/ecal/ecal_timed_cb.h
     include/ecal/ecal_timer.h
-    include/ecal/ecal_tlayer.h
     include/ecal/ecal_util.h
     include/ecal/ecalc.h
     include/ecal/ecalc_types.h
-    include/ecal/types/topic_information.h
 )
 
 set(ecal_header_cimpl
-    include/ecal/cimpl/ecal_callback_cimpl.h
     include/ecal/cimpl/ecal_client_cimpl.h
     include/ecal/cimpl/ecal_core_cimpl.h
     include/ecal/cimpl/ecal_event_cimpl.h
@@ -361,7 +352,6 @@ set(ecal_header_cimpl
     include/ecal/cimpl/ecal_qos_cimpl.h
     include/ecal/cimpl/ecal_server_cimpl.h
     include/ecal/cimpl/ecal_service_cimpl.h
-    include/ecal/cimpl/ecal_service_info_cimpl.h
     include/ecal/cimpl/ecal_subscriber_cimpl.h
     include/ecal/cimpl/ecal_time_cimpl.h
     include/ecal/cimpl/ecal_timer_cimpl.h
@@ -479,6 +469,7 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} 
   PUBLIC
     eCAL::proto
+    eCAL::types
   PRIVATE
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:rt>

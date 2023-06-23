@@ -16,7 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.23)
 
 include(CMakeDependentOption)
 include("${CMAKE_CURRENT_LIST_DIR}/thirdparty/cmake_functions/qt/qt_msvc_path.cmake")
@@ -325,6 +325,7 @@ add_subdirectory(app/app_pb)
 # ecal core
 # --------------------------------------------------------
 add_subdirectory(ecal/core)
+add_subdirectory(ecal/types)
 
 # --------------------------------------------------------
 # custom libs
@@ -478,6 +479,7 @@ if(BUILD_ECAL_TESTS)
   add_subdirectory(testing/ecal/pubsub_proto_test)
   add_subdirectory(testing/ecal/pubsub_test)
   add_subdirectory(testing/ecal/topic2mcast_test)
+  add_subdirectory(testing/ecal/types_test)
   add_subdirectory(testing/ecal/util_test)
   
   # ------------------------------------------------------

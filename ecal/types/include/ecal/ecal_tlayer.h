@@ -24,8 +24,6 @@
 
 #pragma once
 
-#include <ecal/ecal_os.h>
-
 namespace eCAL
 {
   namespace TLayer
@@ -57,7 +55,7 @@ namespace eCAL
     /**
      * @brief eCAL transport layer state struct.
     **/
-    struct ECAL_API STLayer
+    struct STLayer
     {
       STLayer()
       {

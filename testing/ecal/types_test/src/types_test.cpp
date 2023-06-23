@@ -17,34 +17,18 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @file   topic_information.h
- * @brief  This file contains type definitions for information associated with a given topic
-**/
+#include <ecal/types/topic_information.h>
 
-#pragma once
-#include <string>
+#include <ecal/ecal_callback.h>
+#include <ecal/ecal_eventhandle.h>
+#include <ecal/ecal_tlayer.h>
+#include <ecal/ecal_service_info.h>
+#include <ecal/ecal_log_level.h>
+#include <ecal/ecal_process_mode.h>
+#include <ecal/ecal_process_severity.h>
+#include <ecal/cimpl/ecal_callback_cimpl.h>
 
-namespace eCAL
+int main()
 {
-    /**
-     * @brief Optional compile time information associated with a given topic
-     *        (necessary for reflection / runtime type checking)
-    **/
-    struct STopicInformation
-    {
-      std::string encoding;
-      std::string type;
-      std::string descriptor;
-
-      bool operator==(const STopicInformation& other) const
-      {
-        return encoding == other.encoding && type == other.type && descriptor == other.descriptor;
-      }
-
-      bool operator!=(const STopicInformation& other) const
-      {
-        return !(*this == other);
-      }
-    };
+  return 0;
 }
