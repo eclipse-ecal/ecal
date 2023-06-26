@@ -189,7 +189,6 @@ set(ecal_custom_tclap_header_src
 set(ecal_io_header_src
     src/io/ecal_memfile_header.h
     src/io/ecal_receiver.h
-    src/io/ecal_sender.h
     src/io/msg_type.h
     src/io/rcv_sample.h
     src/io/snd_raw_buffer.h
@@ -281,6 +280,7 @@ set(ecal_cmn_header_src
     src/ecal_log_impl.h
     src/ecal_registration_provider.h
     src/ecal_registration_receiver.h
+    src/ecal_sample_to_topicinfo.h
     src/ecal_thread.h
     src/ecal_timegate.h
     src/getenvvar.h
@@ -340,6 +340,7 @@ set(ecal_header_cmn
     include/ecal/ecal_util.h
     include/ecal/ecalc.h
     include/ecal/ecalc_types.h
+    include/ecal/types/topic_information.h
 )
 
 set(ecal_header_cimpl

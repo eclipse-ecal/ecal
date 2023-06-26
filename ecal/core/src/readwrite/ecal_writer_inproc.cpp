@@ -78,8 +78,8 @@ namespace eCAL
   /////////////////////////////////////////////////////////////////
   bool CDataWriterInProc::Write(const void* const buf_, const SWriterAttr& attr_)
   {
-    if (!m_created)   return(false);
-    if (!g_subgate()) return(false);
+    if (!m_created)             return(false);
+    if (g_subgate() == nullptr) return(false);
 
 #ifndef NDEBUG
     // log it
@@ -87,10 +87,6 @@ namespace eCAL
 #endif
 
     // send it
-    // no need to interpret return value 0 as error
-    // maybe no one is subscribing in the current process
-    size_t sent = g_subgate()->ApplySample(m_topic_name, m_topic_id, static_cast<const char*>(buf_), attr_.len, attr_.id, attr_.clock, attr_.time, attr_.hash, eCAL::pb::tl_inproc);
-
-    return (sent != 0);
+    return g_subgate()->ApplySample(m_topic_name, m_topic_id, static_cast<const char*>(buf_), attr_.len, attr_.id, attr_.clock, attr_.time, attr_.hash, eCAL::pb::tl_inproc);
   }
 }

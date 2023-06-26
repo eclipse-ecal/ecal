@@ -61,8 +61,8 @@
 
 .. |person_snd-path-windows|       replace:: :file:`C:\\eCAL\\samples\\bin\\ecal_sample_person_snd.exe`
 .. |person_rec-path-windows|       replace:: :file:`C:\\eCAL\\samples\\bin\\ecal_sample_person_rec.exe`
-.. |service_server_c-path-windows| replace:: :file:`C:\\eCAL\\samples\\bin\\ecal_sample_service_server_c.exe`
-.. |service_client_c-pathwindows|  replace:: :file:`C:\\eCAL\\samples\\bin\\ecal_sample_service_client_c.exe`
+.. |service_server_c-path-windows| replace:: :file:`C:\\eCAL\\samples\\bin\\ecal_sample_minimal_server_c.exe`
+.. |service_client_c-pathwindows|  replace:: :file:`C:\\eCAL\\samples\\bin\\ecal_sample_minimal_client_c.exe`
 
 .. |ecal_mon-start-menu-path-windows|  replace:: :file:`Start / eCAL / eCAL Monitor`
 .. |ecal_rec-start-menu-path-windows|  replace:: :file:`Start / eCAL / eCAL Recorder`

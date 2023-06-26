@@ -50,7 +50,6 @@ namespace eCAL
   std::atomic<bool> CRegistrationProvider::m_created;
 
   CRegistrationProvider::CRegistrationProvider() :
-                    m_multicast_group(NET_UDP_MULTICAST_GROUP),
                     m_reg_refresh(CMN_REGISTRATION_REFRESH),
                     m_reg_topics(false),
                     m_reg_services(false),
@@ -59,7 +58,7 @@ namespace eCAL
                     m_use_shm_monitoring(false)
 
   {
-  };
+  }
 
   CRegistrationProvider::~CRegistrationProvider()
   {
@@ -76,31 +75,23 @@ namespace eCAL
     m_reg_services    = services_;
     m_reg_process     = process_;
 
-    m_use_shm_monitoring = Config::Experimental::IsShmMonitoringEnabled();
+    m_use_shm_monitoring     = Config::Experimental::IsShmMonitoringEnabled();
     m_use_network_monitoring = !Config::Experimental::IsNetworkMonitoringDisabled();
 
     if (m_use_network_monitoring)
     {
+      // set network attributes
       SSenderAttr attr;
-      bool local_only = !Config::IsNetworkEnabled();
+      attr.ipaddr    = UDP::GetRegistrationMulticastAddress();
+      attr.port      = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
+      attr.ttl       = Config::GetUdpMulticastTtl();
       // for local only communication we switch to local broadcasting to bypass vpn's or firewalls
-      if (local_only)
-      {
-        attr.broadcast = true;
-      }
-      else
-      {
-        attr.broadcast = false;
-      }
-      attr.ipaddr = UDP::GetRegistrationMulticastAddress();
-      attr.port = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_REG_OFF;
-      attr.loopback = true;
-      attr.ttl = Config::GetUdpMulticastTtl();
-      attr.sndbuf = Config::GetUdpMulticastSndBufSizeBytes();
+      attr.broadcast = !Config::IsNetworkEnabled();
+      attr.loopback  = true;
+      attr.sndbuf    = Config::GetUdpMulticastSndBufSizeBytes();
 
-      m_multicast_group = attr.ipaddr;
-
-      m_reg_snd.Create(attr);
+      // create udp sample sender
+      m_reg_sample_snd = std::make_shared<CSampleSender>(attr);
     }
     else
     {
@@ -114,7 +105,7 @@ namespace eCAL
       m_memfile_broadcast_writer.Bind(&m_memfile_broadcast);
     }
 
-    m_reg_snd_thread.Start(Config::GetRegistrationRefreshMs(), std::bind(&CRegistrationProvider::RegisterSendThread, this));
+    m_reg_sample_snd_thread.Start(Config::GetRegistrationRefreshMs(), std::bind(&CRegistrationProvider::RegisterSendThread, this));
 
     m_created = true;
   }
@@ -123,7 +114,12 @@ namespace eCAL
   {
     if(!m_created) return;
 
-    m_reg_snd_thread.Stop();
+    // this is our last (un)registration message to the world
+    // thank you and goodbye :-)
+    UnregisterProcess();
+
+    m_reg_sample_snd.reset();
+    m_reg_sample_snd_thread.Stop();
 
     if(m_use_shm_monitoring)
     {
@@ -137,26 +133,34 @@ namespace eCAL
   bool CRegistrationProvider::RegisterTopic(const std::string& topic_name_, const std::string& topic_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
   {
     if(!m_created)    return(false);
-    if(!m_reg_topics) return (false);
+    if(!m_reg_topics) return(false);
 
-    std::lock_guard<std::mutex> lock(m_topics_map_sync);
+    const std::lock_guard<std::mutex> lock(m_topics_map_sync);
     m_topics_map[topic_name_ + topic_id_] = ecal_sample_;
     if(force_)
     {
       RegisterProcess();
-      RegisterSample(topic_name_, ecal_sample_);
+      // apply registration sample
+      ApplySample(topic_name_, ecal_sample_);
       SendSampleList(false);
     }
 
     return(true);
   }
 
-  bool CRegistrationProvider::UnregisterTopic(const std::string& topic_name_, const std::string& topic_id_)
+  bool CRegistrationProvider::UnregisterTopic(const std::string& topic_name_, const std::string& topic_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
   {
     if(!m_created) return(false);
 
+    if (force_)
+    {
+      // apply unregistration sample
+      ApplySample(topic_name_, ecal_sample_);
+      SendSampleList(false);
+    }
+
     SampleMapT::iterator iter;
-    std::lock_guard<std::mutex> lock(m_topics_map_sync);
+    const std::lock_guard<std::mutex> lock(m_topics_map_sync);
     iter = m_topics_map.find(topic_name_ + topic_id_);
     if(iter != m_topics_map.end())
     {
@@ -172,24 +176,32 @@ namespace eCAL
     if(!m_created)      return(false);
     if(!m_reg_services) return(false);
 
-    std::lock_guard<std::mutex> lock(m_server_map_sync);
+    const std::lock_guard<std::mutex> lock(m_server_map_sync);
     m_server_map[service_name_ + service_id_] = ecal_sample_;
     if(force_)
     {
       RegisterProcess();
-      RegisterSample(service_name_, ecal_sample_);
+      // apply registration sample
+      ApplySample(service_name_, ecal_sample_);
       SendSampleList(false);
     }
 
     return(true);
   }
 
-  bool CRegistrationProvider::UnregisterServer(const std::string& service_name_, const std::string& service_id_)
+  bool CRegistrationProvider::UnregisterServer(const std::string& service_name_, const std::string& service_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
   {
     if(!m_created) return(false);
 
+    if (force_)
+    {
+      // apply unregistration sample
+      ApplySample(service_name_, ecal_sample_);
+      SendSampleList(false);
+    }
+
     SampleMapT::iterator iter;
-    std::lock_guard<std::mutex> lock(m_server_map_sync);
+    const std::lock_guard<std::mutex> lock(m_server_map_sync);
     iter = m_server_map.find(service_name_ + service_id_);
     if(iter != m_server_map.end())
     {
@@ -205,24 +217,32 @@ namespace eCAL
     if (!m_created)      return(false);
     if (!m_reg_services) return(false);
 
-    std::lock_guard<std::mutex> lock(m_client_map_sync);
+    const std::lock_guard<std::mutex> lock(m_client_map_sync);
     m_client_map[client_name_ + client_id_] = ecal_sample_;
     if (force_)
     {
       RegisterProcess();
-      RegisterSample(client_name_, ecal_sample_);
+      // apply registration sample
+      ApplySample(client_name_, ecal_sample_);
       SendSampleList(false);
     }
 
     return(true);
   }
 
-  bool CRegistrationProvider::UnregisterClient(const std::string& client_name_, const std::string& client_id_)
+  bool CRegistrationProvider::UnregisterClient(const std::string& client_name_, const std::string& client_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_)
   {
     if (!m_created) return(false);
 
+    if (force_)
+    {
+      // apply unregistration sample
+      ApplySample(client_name_, ecal_sample_);
+      SendSampleList(false);
+    }
+
     SampleMapT::iterator iter;
-    std::lock_guard<std::mutex> lock(m_client_map_sync);
+    const std::lock_guard<std::mutex> lock(m_client_map_sync);
     iter = m_client_map.find(client_name_ + client_id_);
     if (iter != m_client_map.end())
     {
@@ -235,12 +255,12 @@ namespace eCAL
 
   bool CRegistrationProvider::RegisterProcess()
   {
-    if(!m_created)     return(0);
-    if(!m_reg_process) return(0);
+    if(!m_created)     return(false);
+    if(!m_reg_process) return(false);
 
     eCAL::pb::Sample process_sample;
     process_sample.set_cmd_type(eCAL::pb::bct_reg_process);
-    auto process_sample_mutable_process = process_sample.mutable_process();
+    auto *process_sample_mutable_process = process_sample.mutable_process();
     process_sample_mutable_process->set_hname(Process::GetHostName());
     process_sample_mutable_process->set_pid(Process::GetProcessID());
     process_sample_mutable_process->set_pname(Process::GetProcessName());
@@ -253,7 +273,7 @@ namespace eCAL
     process_sample_mutable_process->set_dataread(google::protobuf::int64(Process::GetRBytes()));
     process_sample_mutable_process->mutable_state()->set_severity(eCAL::pb::eProcessSeverity(g_process_severity));
     process_sample_mutable_process->mutable_state()->set_info(g_process_info);
-    if (!g_timegate())
+    if (g_timegate() == nullptr)
     {
       process_sample_mutable_process->set_tsync_state(eCAL::pb::eTSyncState::tsync_none);
     }
@@ -282,33 +302,52 @@ namespace eCAL
     }
 
     // eCAL initialization state
-    unsigned int comp_state(g_globals()->GetComponents());
+    const unsigned int comp_state(g_globals()->GetComponents());
     process_sample_mutable_process->set_component_init_state(google::protobuf::int32(comp_state));
     std::string component_info;
-    if (comp_state & Init::Publisher)   component_info += "|pub";
-    if (comp_state & Init::Subscriber)  component_info += "|sub";
-    if (comp_state & Init::Service)     component_info += "|srv";
-    if (comp_state & Init::Monitoring)  component_info += "|mon";
-    if (comp_state & Init::Logging)     component_info += "|log";
-    if (comp_state & Init::TimeSync)    component_info += "|time";
+    if ((comp_state & Init::Publisher)  != 0u) component_info += "|pub";
+    if ((comp_state & Init::Subscriber) != 0u) component_info += "|sub";
+    if ((comp_state & Init::Service)    != 0u) component_info += "|srv";
+    if ((comp_state & Init::Monitoring) != 0u) component_info += "|mon";
+    if ((comp_state & Init::Logging)    != 0u) component_info += "|log";
+    if ((comp_state & Init::TimeSync)   != 0u) component_info += "|time";
     if (!component_info.empty()) component_info = component_info.substr(1);
     process_sample_mutable_process->set_component_init_info(component_info);
 
     process_sample_mutable_process->set_ecal_runtime_version(eCAL::GetVersionString());
 
-    // register sample
-    bool return_value = RegisterSample(Process::GetHostName(), process_sample);
+    // apply registration sample
+    const bool return_value = ApplySample(Process::GetHostName(), process_sample);
 
     return return_value;
   }
 
+  bool CRegistrationProvider::UnregisterProcess()
+  {
+	  if (!m_created)     return(false);
+	  if (!m_reg_process) return(false);
+
+	  eCAL::pb::Sample process_sample;
+	  process_sample.set_cmd_type(eCAL::pb::bct_unreg_process);
+	  auto* process_sample_mutable_process = process_sample.mutable_process();
+	  process_sample_mutable_process->set_hname(Process::GetHostName());
+	  process_sample_mutable_process->set_pid(Process::GetProcessID());
+	  process_sample_mutable_process->set_pname(Process::GetProcessName());
+	  process_sample_mutable_process->set_uname(Process::GetUnitName());
+
+    // apply unregistration sample
+    const bool return_value = ApplySample(Process::GetHostName(), process_sample);
+
+	  return return_value;
+  }
+
   bool CRegistrationProvider::RegisterServer()
   {
-    if(!m_created)      return(0);
-    if(!m_reg_services) return(0);
+    if(!m_created)      return(false);
+    if(!m_reg_services) return(false);
 
     bool return_value {true};
-    std::lock_guard<std::mutex> lock(m_server_map_sync);
+    const std::lock_guard<std::mutex> lock(m_server_map_sync);
     for(SampleMapT::const_iterator iter = m_server_map.begin(); iter != m_server_map.end(); ++iter)
     {
       //////////////////////////////////////////////
@@ -323,7 +362,7 @@ namespace eCAL
       //////////////////////////////////////////////
       // send sample to registration layer
       //////////////////////////////////////////////
-      return_value &= RegisterSample(iter->second.service().sname(), iter->second);
+      return_value &= ApplySample(iter->second.service().sname(), iter->second);
     }
 
     return return_value;
@@ -331,15 +370,15 @@ namespace eCAL
 
   bool CRegistrationProvider::RegisterClient()
   {
-    if (!m_created)      return(0);
-    if (!m_reg_services) return(0);
+    if (!m_created)      return(false);
+    if (!m_reg_services) return(false);
 
     bool return_value {true};
-    std::lock_guard<std::mutex> lock(m_client_map_sync);
+    const std::lock_guard<std::mutex> lock(m_client_map_sync);
     for (SampleMapT::const_iterator iter = m_client_map.begin(); iter != m_client_map.end(); ++iter)
     {
-      // register sample
-      return_value &= RegisterSample(iter->second.client().sname(), iter->second);
+      // apply registration sample
+      return_value &= ApplySample(iter->second.client().sname(), iter->second);
     }
 
     return return_value;
@@ -347,11 +386,11 @@ namespace eCAL
 
   bool CRegistrationProvider::RegisterTopics()
   {
-    if(!m_created)    return(0);
-    if(!m_reg_topics) return(0);
+    if(!m_created)    return(false);
+    if(!m_reg_topics) return(false);
 
     bool return_value {true};
-    std::lock_guard<std::mutex> lock(m_topics_map_sync);
+    const std::lock_guard<std::mutex> lock(m_topics_map_sync);
     for(SampleMapT::const_iterator iter = m_topics_map.begin(); iter != m_topics_map.end(); ++iter)
     {
       //////////////////////////////////////////////
@@ -359,32 +398,35 @@ namespace eCAL
       //////////////////////////////////////////////
       // read attributes
       const std::string topic_name(iter->second.topic().tname());
-      const std::string topic_type(iter->second.topic().ttype());
-      const std::string topic_desc(iter->second.topic().tdesc());
+      STopicInformation topic_info;
+      const auto& pb_topic_info = iter->second.topic().tinfo();
+      topic_info.encoding = pb_topic_info.encoding();
+      topic_info.type = pb_topic_info.type();
+      topic_info.descriptor = pb_topic_info.desc();
       const bool        topic_is_a_publisher(iter->second.cmd_type() == eCAL::pb::eCmdType::bct_reg_publisher);
-      ApplyTopicToDescGate(topic_name, topic_type, topic_desc, topic_is_a_publisher);
+      ApplyTopicToDescGate(topic_name, topic_info, topic_is_a_publisher);
 
       //////////////////////////////////////////////
       // send sample to registration layer
       //////////////////////////////////////////////
-      return_value &= RegisterSample(iter->second.topic().tname(), iter->second);
+      return_value &= ApplySample(iter->second.topic().tname(), iter->second);
     }
 
     return return_value;
   }
 
-  bool CRegistrationProvider::RegisterSample(const std::string& sample_name_, const eCAL::pb::Sample& sample_)
+  bool CRegistrationProvider::ApplySample(const std::string& sample_name_, const eCAL::pb::Sample& sample_)
   {
-    if(!m_created) return(0);
+    if(!m_created) return(false);
 
     bool return_value {true};
 
-    if(m_use_network_monitoring)
-      return_value &= (SendSample(&m_reg_snd, sample_name_, sample_, m_multicast_group, -1) != 0);
+    if (m_use_network_monitoring && m_reg_sample_snd)
+      return_value &= (m_reg_sample_snd->SendSample(sample_name_, sample_, -1) != 0);
 
     if(m_use_shm_monitoring)
     {
-      std::lock_guard<std::mutex> lock(m_sample_list_sync);
+      const std::lock_guard<std::mutex> lock(m_sample_list_sync);
       m_sample_list.mutable_samples()->Add()->CopyFrom(sample_);
     }
 
@@ -399,13 +441,13 @@ namespace eCAL
     if(m_use_shm_monitoring)
     {
       {
-        std::lock_guard<std::mutex> lock(m_sample_list_sync);
+        const std::lock_guard<std::mutex> lock(m_sample_list_sync);
         m_sample_list.SerializeToString(&m_sample_list_buffer);
         if(reset_sample_list_)
           m_sample_list.clear_samples();
       }
 
-      if(m_sample_list_buffer.size())
+      if(!m_sample_list_buffer.empty())
         return_value &=m_memfile_broadcast_writer.Write(m_sample_list_buffer.data(), m_sample_list_buffer.size());
     }
 
@@ -425,57 +467,53 @@ namespace eCAL
     g_process_wbytes_sum = 0;
 
     // refresh subscriber registration
-    if (g_subgate()) g_subgate()->RefreshRegistrations();
+    if (g_subgate() != nullptr) g_subgate()->RefreshRegistrations();
 
     // refresh publisher registration
-    if (g_pubgate()) g_pubgate()->RefreshRegistrations();
+    if (g_pubgate() != nullptr) g_pubgate()->RefreshRegistrations();
 
     // refresh server registration
-    if (g_servicegate()) g_servicegate()->RefreshRegistrations();
+    if (g_servicegate() != nullptr) g_servicegate()->RefreshRegistrations();
 
     // refresh client registration
-    if (g_clientgate()) g_clientgate()->RefreshRegistrations();
-
-    // overall registration send status for debugging
-    /*bool registration_successful {true};*/
+    if (g_clientgate() != nullptr) g_clientgate()->RefreshRegistrations();
 
     // register process
-    /*registration_successful &= */RegisterProcess();
+    RegisterProcess();
 
     // register server
-    /*registration_successful &= */RegisterServer();
+    RegisterServer();
 
     // register clients
-    /*registration_successful &= */RegisterClient();
+    RegisterClient();
 
     // register topics
-    /*registration_successful &= */RegisterTopics();
+    RegisterTopics();
 
     // write sample list to shared memory
-    /*registration_successful &= */SendSampleList();
+    SendSampleList();
 
     return(0);
-  };
+  }
 
   bool CRegistrationProvider::ApplyTopicToDescGate(const std::string& topic_name_
-    , const std::string& topic_type_
-    , const std::string& topic_desc_
+    , const STopicInformation& topic_info_
     , bool topic_is_a_publisher_)
   {
-    if (g_descgate())
+    if (g_descgate() != nullptr)
     {
       // calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_type_.empty())
+      if (!topic_info_.encoding.empty() || !topic_info_.type.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_desc_.empty())
+      if (!topic_info_.descriptor.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
       if (topic_is_a_publisher_)
         quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PRODUCER;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
       // update description
-      return g_descgate()->ApplyTopicDescription(topic_name_, topic_type_, topic_desc_, quality);
+      return g_descgate()->ApplyTopicDescription(topic_name_, topic_info_, quality);
     }
     return false;
   }
@@ -487,7 +525,7 @@ namespace eCAL
     , const std::string& resp_type_name_
     , const std::string& resp_type_desc_)
   {
-    if (g_descgate())
+    if (g_descgate() != nullptr)
     {
       // Calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
@@ -501,4 +539,4 @@ namespace eCAL
     }
     return false;
   }
-};
+}

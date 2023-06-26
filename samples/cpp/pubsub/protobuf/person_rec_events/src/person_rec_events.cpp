@@ -26,33 +26,34 @@
 
 void OnEvent(const char* topic_name_, const struct eCAL::SSubEventCallbackData* data_)
 {
-  std::cout << "topic name   : " << topic_name_ << std::endl;
+  std::cout << "topic name         : " << topic_name_ << std::endl;
   switch (data_->type)
   {
   case sub_event_connected:
-    std::cout << "event        : " << "sub_event_connected" << std::endl;
+    std::cout << "event            : " << "sub_event_connected" << std::endl;
     break;
   case sub_event_disconnected:
-    std::cout << "event        : " << "sub_event_disconnected" << std::endl;
+    std::cout << "event            : " << "sub_event_disconnected" << std::endl;
     break;
   case sub_event_dropped:
-    std::cout << "event        : " << "sub_event_dropped (" << data_->clock << " messages)" << std::endl;
+    std::cout << "event            : " << "sub_event_dropped (" << data_->clock << " messages)" << std::endl;
     break;
   case sub_event_timeout:
-    std::cout << "event        : " << "sub_event_timeout" << std::endl;
+    std::cout << "event            : " << "sub_event_timeout" << std::endl;
     break;
   // not implemented yet
   case sub_event_corrupted:
-    std::cout << "event        : " << "sub_event_corrupted" << std::endl;
+    std::cout << "event            : " << "sub_event_corrupted" << std::endl;
     break;
   case sub_event_update_connection:
-    std::cout << "event        : " << "sub_event_update_connection" << std::endl;
-    std::cout << "  topic_id   : " << data_->tid << std::endl;
-    std::cout << "  topic_type : " << data_->ttype << std::endl;
+    std::cout << "event            : " << "sub_event_update_connection" << std::endl;
+    std::cout << "  topic_id       : " << data_->tid << std::endl;
+    std::cout << "  topic_encoding : " << data_->tinfo.encoding << std::endl;
+    std::cout << "  topic_type     : " << data_->tinfo.type << std::endl;
     //std::cout << "  topic_desc : " << data_->tdesc << std::endl;
     break;
   default:
-    std::cout << "event        : " << "unknown" << std::endl;
+    std::cout << "event            : " << "unknown" << std::endl;
     break;
   }
   std::cout << std::endl;

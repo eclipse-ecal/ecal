@@ -24,22 +24,30 @@
 #pragma once
 
 #include <memory>
-#include "ecal_sender.h"
+#include <string>
 
 namespace eCAL
 {
+  struct SSenderAttr
+  {
+    std::string ipaddr;
+    int         port      = 0;
+    int         ttl       = 0;
+    bool        broadcast = false;
+    bool        unicast   = false;
+    bool        loopback  = true;
+    int         sndbuf    = 1024 * 1024;
+  };
+
   class CUDPSenderImpl;
 
-  class CUDPSender : public CSender
+  class CUDPSender
   {
   public:
-    CUDPSender();
+    CUDPSender(const SSenderAttr& attr_);
 
-    bool Create(const SSenderAttr& attr_);
-    bool Destroy();
-
-    size_t Send     (const void* buf_, const size_t len_, const char* ipaddr_ = nullptr);
-    void   SendAsync(const void* buf_, const size_t len_, const char* ipaddr_ = nullptr);
+    size_t Send     (const void* buf_, size_t len_, const char* ipaddr_ = nullptr);
+    void   SendAsync(const void* buf_, size_t len_, const char* ipaddr_ = nullptr);
 
   protected:
     std::shared_ptr<CUDPSenderImpl> m_socket_impl;

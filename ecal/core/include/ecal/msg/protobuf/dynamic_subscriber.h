@@ -303,15 +303,16 @@ namespace eCAL
     inline std::shared_ptr<google::protobuf::Message> CDynamicSubscriber::CreateMessagePointer(const std::string& topic_name_)
     {
       // get topic type
-      std::string topic_type = eCAL::Util::GetTopicTypeName(topic_name_);
-      topic_type = topic_type.substr(topic_type.find_first_of(':') + 1, topic_type.size());
+      STopicInformation topic_info;
+      eCAL::Util::GetTopicInformation(topic_name, topic_info);
+      std::string topic_type{ topic_info.type };
       topic_type = topic_type.substr(topic_type.find_last_of('.') + 1, topic_type.size());
       if (StrEmptyOrNull(topic_type))
       {
         throw DynamicReflectionException("CDynamicSubscriber: Could not get type for topic " + std::string(topic_name_));
       }
 
-      std::string topic_desc = eCAL::Util::GetTopicDescription(topic_name_);
+      std::string topic_desc = topic_info.descriptor;
       if (StrEmptyOrNull(topic_desc))
       {
         throw DynamicReflectionException("CDynamicSubscriber: Could not get description for topic " + std::string(topic_name_));

@@ -100,7 +100,7 @@ jobs:
       shell: bash
 
     - name: Build Release
-      run: cmake --build . --config Release
+      run: cmake --build . --config Release -- -k 0
       working-directory: ${{ runner.workspace }}/_build
 
     # Create Python Wheels

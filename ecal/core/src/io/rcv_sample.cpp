@@ -40,9 +40,7 @@ CReceiveSlot::CReceiveSlot()
 {
 }
 
-CReceiveSlot::~CReceiveSlot()
-{
-}
+CReceiveSlot::~CReceiveSlot() = default;
 
 int CReceiveSlot::ApplyMessage(const struct SUDPMessage& ecal_message_)
 {
@@ -87,7 +85,6 @@ int CReceiveSlot::OnMessageStart(const struct SUDPMessage& ecal_message_)
   m_message_curr_len = 0;
 
   // prepare receive buffer
-  m_recv_buffer.clear();
   m_recv_buffer.reserve(static_cast<size_t>(m_message_total_len));
 
   // switch to reading mode
@@ -132,7 +129,6 @@ int CReceiveSlot::OnMessageData(const struct SUDPMessage& ecal_message_)
   }
 
   // copy the message part to the receive message buffer
-  //std::copy(ecal_message_.payload, ecal_message_.payload + ecal_message_.header.len, std::back_inserter(m_recv_buffer));
   m_recv_buffer.resize(m_recv_buffer.size() + static_cast<size_t>(ecal_message_.header.len));
   memcpy(m_recv_buffer.data() + m_recv_buffer.size() - static_cast<size_t>(ecal_message_.header.len), ecal_message_.payload, static_cast<size_t>(ecal_message_.header.len));
 
@@ -154,18 +150,16 @@ CSampleReceiver::CSampleReceiveSlot::CSampleReceiveSlot(CSampleReceiver* sample_
 {
 }
 
-CSampleReceiver::CSampleReceiveSlot::~CSampleReceiveSlot()
-{
-}
+CSampleReceiver::CSampleReceiveSlot::~CSampleReceiveSlot() = default;
 
 int CSampleReceiver::CSampleReceiveSlot::OnMessageCompleted(std::vector<char> &&msg_buffer_)
 {
-  if(!m_sample_receiver) return(0);
+  if(m_sample_receiver == nullptr) return(0);
 
   // read sample_name size
-  unsigned short sample_name_size = ((unsigned short*)(msg_buffer_.data()))[0];
+  const unsigned short sample_name_size = ((unsigned short*)(msg_buffer_.data()))[0];
   // read sample_name
-  std::string    sample_name(msg_buffer_.data() + sizeof(sample_name_size));
+  const std::string    sample_name(msg_buffer_.data() + sizeof(sample_name_size));
 
   if(m_sample_receiver->HasSample(sample_name))
   {
@@ -226,16 +220,14 @@ CSampleReceiver::CSampleReceiver()
   m_cleanup_start = std::chrono::steady_clock::now();
 }
 
-CSampleReceiver::~CSampleReceiver()
-{
-}
+CSampleReceiver::~CSampleReceiver() = default;
 
 int CSampleReceiver::Receive(eCAL::CUDPReceiver* sample_receiver_)
 {
-  if(!sample_receiver_) return(-1);
+  if(sample_receiver_ == nullptr) return(-1);
 
   // wait for any incoming message
-  size_t recv_len = sample_receiver_->Receive(m_msg_buffer.data(), m_msg_buffer.size(), 10);
+  const size_t recv_len = sample_receiver_->Receive(m_msg_buffer.data(), m_msg_buffer.size(), 10);
   if(recv_len > 0)
   {
     return(Process(m_msg_buffer.data(), recv_len));
@@ -312,7 +304,7 @@ int CSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_le
     unsigned short sample_name_size = 0;
     memcpy(&sample_name_size, ecal_message->payload, 2);
     // read sample_name
-    std::string sample_name = ecal_message->payload + sizeof(sample_name_size);
+    const std::string sample_name = ecal_message->payload + sizeof(sample_name_size);
 
     if (HasSample(sample_name))
     {
@@ -392,7 +384,7 @@ int CSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_le
       unsigned short sample_name_size = 0;
       memcpy(&sample_name_size, ecal_message->payload, 2);
       // read sample_name
-      std::string sample_name = ecal_message->payload + sizeof(sample_name_size);
+      const std::string sample_name = ecal_message->payload + sizeof(sample_name_size);
 
       // remove the matching slot if we are not interested in this sample
       if (!HasSample(sample_name))
@@ -425,20 +417,20 @@ int CSampleReceiver::Process(const char* sample_buffer_, size_t sample_buffer_le
 
   // cleanup finished or zombie received slots
   auto diff_time = std::chrono::steady_clock::now() - m_cleanup_start;
-  std::chrono::duration<double> step_time = std::chrono::milliseconds(NET_UDP_RECBUFFER_CLEANUP);
+  const std::chrono::duration<double> step_time = std::chrono::milliseconds(NET_UDP_RECBUFFER_CLEANUP);
   if (diff_time > step_time)
   {
     m_cleanup_start = std::chrono::steady_clock::now();
 
     for (ReceiveSlotMapT::iterator riter = m_receive_slot_map.begin(); riter != m_receive_slot_map.end();)
     {
-      bool finished = riter->second->HasFinished();
-      bool timeouted = riter->second->HasTimedOut(step_time);
+      const bool finished = riter->second->HasFinished();
+      const bool timeouted = riter->second->HasTimedOut(step_time);
       if (finished || timeouted)
       {
 #ifndef NDEBUG
-        int32_t total_len = riter->second->GetMessageTotalLength();
-        int32_t current_len = riter->second->GetMessageCurrentLength();
+        const int32_t total_len = riter->second->GetMessageTotalLength();
+        const int32_t current_len = riter->second->GetMessageCurrentLength();
 #endif
         riter = m_receive_slot_map.erase(riter);
 #ifndef NDEBUG

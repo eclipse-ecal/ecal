@@ -88,10 +88,10 @@ namespace eCAL
     return(m_monitoring_impl->PubLogging(state_, name_));
   }
 
-  size_t CMonitoring::ApplySample(const eCAL::pb::Sample & ecal_sample_)
+  bool CMonitoring::ApplySample(const eCAL::pb::Sample & ecal_sample_)
   {
-    if(m_monitoring_impl) return m_monitoring_impl->ApplySample(ecal_sample_, eCAL::pb::eTLayerType::tl_none);
-    return 0;
+    if(m_monitoring_impl != nullptr) return m_monitoring_impl->ApplySample(ecal_sample_, eCAL::pb::eTLayerType::tl_none);
+    return false;
   }
 
   namespace Monitoring
@@ -101,26 +101,26 @@ namespace eCAL
     ////////////////////////////////////////////////////////
     int SetExclFilter(const std::string& filter_)
     {
-      if (g_monitoring()) g_monitoring()->SetExclFilter(filter_);
+      if (g_monitoring() != nullptr) g_monitoring()->SetExclFilter(filter_);
       return(0);
     }
 
     int SetInclFilter(const std::string& filter_)
     {
-      if (g_monitoring()) g_monitoring()->SetInclFilter(filter_);
+      if (g_monitoring() != nullptr) g_monitoring()->SetInclFilter(filter_);
       return(0);
     }
 
     int SetFilterState(const bool state_)
     {
-      if (g_monitoring()) g_monitoring()->SetFilterState(state_);
+      if (g_monitoring() != nullptr) g_monitoring()->SetFilterState(state_);
       return(0);
     }
 
     int GetMonitoring(std::string& mon_)
     {
       eCAL::pb::Monitoring monitoring;
-      if (g_monitoring()) g_monitoring()->GetMonitoring(monitoring);
+      if (g_monitoring() != nullptr) g_monitoring()->GetMonitoring(monitoring);
 
       mon_ = monitoring.SerializeAsString();
       return((int)mon_.size());
@@ -129,7 +129,7 @@ namespace eCAL
     int GetMonitoring(std::string& mon_, unsigned int entities_)
     {
       eCAL::pb::Monitoring monitoring;
-      if (g_monitoring()) g_monitoring()->GetMonitoring(monitoring, entities_);
+      if (g_monitoring() != nullptr) g_monitoring()->GetMonitoring(monitoring, entities_);
 
       mon_ = monitoring.SerializeAsString();
       return((int)mon_.size());
@@ -137,7 +137,7 @@ namespace eCAL
 
     int GetMonitoring(eCAL::Monitoring::SMonitoring& mon_, unsigned int entities_)
     {
-      if (g_monitoring())
+      if (g_monitoring() != nullptr)
       {
         g_monitoring()->GetMonitoring(mon_, entities_);
         return(static_cast<int>(mon_.process.size() + mon_.publisher.size() + mon_.subscriber.size() + mon_.server.size() + mon_.clients.size()));
@@ -148,7 +148,7 @@ namespace eCAL
     int GetLogging(std::string& log_)
     {
       eCAL::pb::Logging logging;
-      if (g_monitoring()) g_monitoring()->GetLogging(logging);
+      if (g_monitoring() != nullptr) g_monitoring()->GetLogging(logging);
 
       log_ = logging.SerializeAsString();
       return((int)log_.size());
@@ -156,13 +156,13 @@ namespace eCAL
 
     int PubMonitoring(bool state_, std::string name_ /* = "ecal.monitoring"*/)
     {
-      if (g_monitoring()) return(g_monitoring()->PubMonitoring(state_, name_));
+      if (g_monitoring() != nullptr) return(g_monitoring()->PubMonitoring(state_, name_));
       return -1;
     }
 
     int PubLogging(bool state_, std::string name_ /* = "ecal.logging"*/)
     {
-      if (g_monitoring()) return(g_monitoring()->PubLogging(state_, name_));
+      if (g_monitoring() != nullptr) return(g_monitoring()->PubLogging(state_, name_));
       return -1;
     }
   }

@@ -26,6 +26,7 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_monitoring_entity.h>
+#include <ecal/types/topic_information.h>
 
 #include <map>
 #include <string>
@@ -46,8 +47,7 @@ namespace eCAL
       std::string                         tid;                          //!< topic id
       std::string                         tname;                        //!< topic name
       std::string                         direction;                    //!< direction (publisher, subscriber)
-      std::string                         ttype;                        //!< topic type (protocol)
-      std::string                         tdesc;                        //!< topic description (protocol descriptor)
+      STopicInformation                   tinfo;                        //!< topic information (encoding, type, descriptor)
       int                                 tsize              = 0;       //!< topic size
 
       bool                                tlayer_ecal_udp_mc = false;   //!< transport layer udp active
@@ -63,7 +63,7 @@ namespace eCAL
       long long                           dclock             = 0;        //!< data clock (send / receive action)
       long                                dfreq              = 0;        //!< data frequency (send / receive samples per second) [mHz]
 
-      std::map<std::string, std::string>  attr;                          //!< generic topic description
+      std::map<std::string, std::string>  attr;                 //!< generic topic description
     };
 
     struct SProcessMon                                                   //<! eCAL Process struct

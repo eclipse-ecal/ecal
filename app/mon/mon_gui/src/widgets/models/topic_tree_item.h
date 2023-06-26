@@ -45,6 +45,7 @@ public:
     TID,
     TNAME,
     DIRECTION,
+    TENCODING,
     TTYPE,
     TDESC,
     TQOS,

@@ -35,13 +35,13 @@ namespace eCAL
   ////////////////
   bool CDataReaderUDP::HasSample(const std::string& sample_name_)
   {
-    if (!g_subgate()) return(false);
+    if (g_subgate() == nullptr) return(false);
     return(g_subgate()->HasSample(sample_name_));
   }
 
-  size_t CDataReaderUDP::ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_)
+  bool CDataReaderUDP::ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_)
   {
-    if (!g_subgate()) return 0;
+    if (g_subgate() == nullptr) return false;
     return g_subgate()->ApplySample(ecal_sample_, layer_);
   }
 
@@ -50,12 +50,12 @@ namespace eCAL
   ////////////////
   CUDPReaderLayer::CUDPReaderLayer() : 
                    started(false)
-  {};
+  {}
 
   CUDPReaderLayer::~CUDPReaderLayer()
   {
     thread.Stop();
-  };
+  }
 
   void CUDPReaderLayer::Initialize()
   {
@@ -76,7 +76,7 @@ namespace eCAL
       started = true;
     }
     // add topic name based multicast address
-    std::string mcast_address = UDP::GetTopicMulticastAddress(topic_name_);
+    const std::string mcast_address = UDP::GetTopicMulticastAddress(topic_name_);
     if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
     {
       topic_name_mcast_map.emplace(std::pair<std::string, int>(mcast_address, 0));
@@ -87,7 +87,7 @@ namespace eCAL
 
   void CUDPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/)
   {
-    std::string mcast_address = UDP::GetTopicMulticastAddress(topic_name_);
+    const std::string mcast_address = UDP::GetTopicMulticastAddress(topic_name_);
     if (topic_name_mcast_map.find(mcast_address) == topic_name_mcast_map.end())
     {
       // this should never happen
@@ -102,4 +102,4 @@ namespace eCAL
       }
     }
   }
-};
+}

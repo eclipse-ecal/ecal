@@ -39,8 +39,8 @@ namespace eCAL
   class CDataReaderUDP : public CSampleReceiver
   {
   public:
-    bool HasSample(const std::string& sample_name_);
-    size_t ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_);
+    bool HasSample(const std::string& sample_name_) override;
+    bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_) override;
   };
 
   ////////////////
@@ -50,14 +50,14 @@ namespace eCAL
   {
   public:
     CUDPReaderLayer();
-    ~CUDPReaderLayer();
+    ~CUDPReaderLayer() override;
 
-    void Initialize();
+    void Initialize() override;
 
-    void AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/);
-    void RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/);
+    void AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/, QOS::SReaderQOS /*qos_*/) override;
+    void RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const std::string& /*topic_id_*/) override;
 
-    void SetConnectionParameter(SReaderLayerPar& /*par_*/) {}
+    void SetConnectionParameter(SReaderLayerPar& /*par_*/) override {}
 
   private:
     bool                       started;
@@ -66,4 +66,4 @@ namespace eCAL
     CDataReaderUDP             reader;
     std::map<std::string, int> topic_name_mcast_map;
   };
-};
+}

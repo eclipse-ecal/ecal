@@ -46,6 +46,14 @@ namespace eCAL
   void CServiceGate::Destroy()
   {
     if(!m_created) return;
+
+    // destroy all remaining server
+    const std::shared_lock<std::shared_timed_mutex> lock(m_service_set_sync);
+    for (const auto& service : m_service_set)
+    {
+      service->Destroy();
+    }
+
     m_created = false;
   }
 
@@ -54,7 +62,7 @@ namespace eCAL
     if(!m_created) return(false);
 
     // register internal service
-    std::unique_lock<std::shared_timed_mutex> const lock(m_service_set_sync);
+    const std::unique_lock<std::shared_timed_mutex> lock(m_service_set_sync);
     m_service_set.insert(service_);
 
     return(true);
@@ -66,7 +74,7 @@ namespace eCAL
     bool ret_state(false);
 
     // unregister internal service
-    std::unique_lock<std::shared_timed_mutex> const lock(m_service_set_sync);
+    const std::unique_lock<std::shared_timed_mutex> lock(m_service_set_sync);
     for (auto iter = m_service_set.begin(); iter != m_service_set.end();)
     {
       if (*iter == service_)
@@ -123,4 +131,4 @@ namespace eCAL
       iter->RefreshRegistration();
     }
   }
-};
+}

@@ -21,16 +21,13 @@
  * @brief  udp data writer
 **/
 
-#include <ecal/ecal.h>
 #include <ecal/ecal_log.h>
 #include <ecal/ecal_config.h>
 
 #include "ecal_def.h"
-#include "ecal_config_reader_hlp.h"
 #include "ecal_writer_udp_mc.h"
 
 #include "io/udp_configurations.h"
-#include "io/snd_sample.h"
 
 namespace eCAL
 {
@@ -67,23 +64,20 @@ namespace eCAL
 
     m_udp_ipaddr = UDP::GetTopicMulticastAddress(topic_name_);
 
+    // set network attributes
     SSenderAttr attr;
     attr.ipaddr     = m_udp_ipaddr;
     attr.port       = Config::GetUdpMulticastPort() + NET_UDP_MULTICAST_PORT_SAMPLE_OFF;
-    attr.unicast    = false;
+    attr.ttl        = Config::GetUdpMulticastTtl();
     attr.sndbuf     = Config::GetUdpMulticastSndBufSizeBytes();
 
-    // create sample sender without activated loopback
-    attr.loopback   = false;
-    attr.ttl        = Config::GetUdpMulticastTtl();
-    m_sample_snd_no_loopback.Create(attr);
-
-    // create sample sender with activated loopback
-    int ttl(0);
-    if (Config::IsNetworkEnabled()) ttl = Config::GetUdpMulticastTtl();
+    // create udp/sample sender with activated loop-back
     attr.loopback   = true;
-    attr.ttl        = ttl;
-    m_sample_snd_loopback.Create(attr);
+    m_sample_sender_loopback = std::make_shared<CSampleSender>(attr);
+
+    // create udp/sample sender without activated loop-back
+    attr.loopback   = false;
+    m_sample_sender_no_loopback = std::make_shared<CSampleSender>(attr);
 
     m_created = true;
     return true;
@@ -92,6 +86,9 @@ namespace eCAL
   bool CDataWriterUdpMC::Destroy()
   {
     if (!m_created) return false;
+
+    m_sample_sender_loopback.reset();
+    m_sample_sender_no_loopback.reset();
 
     m_created = false;
     return true;
@@ -104,18 +101,18 @@ namespace eCAL
     // create new sample
     m_ecal_sample.Clear();
     m_ecal_sample.set_cmd_type(eCAL::pb::bct_set_sample);
-    auto ecal_sample_mutable_topic = m_ecal_sample.mutable_topic();
+    auto *ecal_sample_mutable_topic = m_ecal_sample.mutable_topic();
     ecal_sample_mutable_topic->set_hname(m_host_name);
     ecal_sample_mutable_topic->set_tname(m_topic_name);
     ecal_sample_mutable_topic->set_tid(m_topic_id);
 
     // set layer
-    auto layer = ecal_sample_mutable_topic->add_tlayer();
+    auto *layer = ecal_sample_mutable_topic->add_tlayer();
     layer->set_type(eCAL::pb::eTLayerType::tl_ecal_udp_mc);
     layer->set_confirmed(true);
 
     // append content
-    auto ecal_sample_mutable_content = m_ecal_sample.mutable_content();
+    auto *ecal_sample_mutable_content = m_ecal_sample.mutable_content();
     ecal_sample_mutable_content->set_id(attr_.id);
     ecal_sample_mutable_content->set_clock(attr_.clock);
     ecal_sample_mutable_content->set_time(attr_.time);
@@ -127,11 +124,17 @@ namespace eCAL
     size_t sent = 0;
     if (attr_.loopback)
     {
-      sent = eCAL::SendSample(&m_sample_snd_loopback, m_ecal_sample.topic().tname(), m_ecal_sample, m_udp_ipaddr, attr_.bandwidth);
+      if (m_sample_sender_loopback)
+      {
+        sent = m_sample_sender_loopback->SendSample(m_ecal_sample.topic().tname(), m_ecal_sample, attr_.bandwidth);
+      }
     }
     else
     {
-      sent = eCAL::SendSample(&m_sample_snd_no_loopback, m_ecal_sample.topic().tname(), m_ecal_sample, m_udp_ipaddr, attr_.bandwidth);
+      if (m_sample_sender_no_loopback)
+      {
+        sent = m_sample_sender_no_loopback->SendSample(m_ecal_sample.topic().tname(), m_ecal_sample, attr_.bandwidth);
+      }
     }
 
     // log it

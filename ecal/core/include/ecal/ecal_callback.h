@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/cimpl/ecal_callback_cimpl.h>
+#include <ecal/types/topic_information.h>
 
 #include <functional>
 #include <string>
@@ -52,8 +53,11 @@ namespace eCAL
     long long            time  = 0;               //!< publisher event time in µs
     long long            clock = 0;               //!< publisher event clock
     std::string          tid;                     //!< topic id of the of the connected subscriber              (for pub_event_update_connection only)
-    std::string          ttype;                   //!< topic type information of the connected subscriber       (for pub_event_update_connection only)
-    std::string          tdesc;                   //!< topic descriptor information of the connected subscriber (for pub_event_update_connection only)
+    [[deprecated("Use the separate infos encoding and type in member tinfo instead of ttype.")]]
+    std::string          ttype;                   //!< topic type information of the connected publisher         (for sub_event_update_connection only)
+    [[deprecated("Use the tinfo.descriptor instead of tdesc.")]]
+    std::string          tdesc;                   //!< topic descriptor information of the connected publisher   (for sub_event_update_connection only)
+    STopicInformation    tinfo;                   //!< topic information of the connected subscriber            (for pub_event_update_connection only)
   };
 
   /**
@@ -65,8 +69,11 @@ namespace eCAL
     long long             time  = 0;               //!< subscriber event time in µs
     long long             clock = 0;               //!< subscriber event clock
     std::string           tid;                     //!< topic id of the of the connected publisher              (for sub_event_update_connection only)
+    [[deprecated("Use the separate infos encoding and type in member tinfo instead of ttype.")]]
     std::string           ttype;                   //!< topic type information of the connected publisher       (for sub_event_update_connection only)
+    [[deprecated("Use the tinfo.descriptor instead of tdesc.")]]
     std::string           tdesc;                   //!< topic descriptor information of the connected publisher (for sub_event_update_connection only)
+    STopicInformation     tinfo;                   //!< topic information of the connected subscriber           (for pub_event_update_connection only)
   };
 
   /**

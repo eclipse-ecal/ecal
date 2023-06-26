@@ -63,7 +63,7 @@ namespace eCAL
       *
       * @param topic_name_  Unique topic name.
       **/
-      CBuilderSubscriber(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_) : CMsgSubscriber<capnp::MallocMessageBuilder>(topic_name_, topic_type_, topic_desc_)
+      CBuilderSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_) : CMsgSubscriber<capnp::MallocMessageBuilder>(topic_name_, topic_info_)
       {
       }
 
@@ -94,31 +94,11 @@ namespace eCAL
        *
        * @return  True if it succeeds, false if it fails.
       **/
-      bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_)
+      bool Create(const std::string& topic_name_, const STopicInformation& topic_info_)
       {
-        return(CMsgSubscriber<capnp::MallocMessageBuilder>::Create(topic_name_, topic_type_, topic_desc_));
+        return(CMsgSubscriber<capnp::MallocMessageBuilder>::Create(topic_name_, topic_info_));
       }
 
-      /**
-       * @brief  Get type name of the capnp message.
-       *
-       * @return  Type name.
-      **/
-      std::string GetTypeName() const
-      {
-        return("capnp:");
-      }
-
-    private:
-      /**
-       * @brief  Get file descriptor string of the capnp message.
-       *
-       * @return  Description string.
-      **/
-      std::string GetDescription() const
-      {
-        return("");
-      }
 
       /**
        * @brief  Deserialize the message object from a message buffer.
@@ -166,7 +146,7 @@ namespace eCAL
       * @param topic_name_  Unique topic name.
       **/
       CSubscriber(const std::string& topic_name_)
-        : subscriber(topic_name_, GetTypeName(), GetDescription())
+        : subscriber(topic_name_, GetTopicInformation())
         , builder()
         , root_builder(builder.getRoot<message_type>())
       {
@@ -255,7 +235,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(subscriber.Create(topic_name_, GetTypeName(), GetDescription()));
+        return(subscriber.Create(topic_name_, GetTopicInformation()));
       }
 
       /**
@@ -263,28 +243,36 @@ namespace eCAL
       *
       * @return  Type name.
       **/
+      [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
       std::string GetTypeName() const
       {
         return eCAL::capnproto::TypeAsString<message_type>();
       }
 
     private:
+      /**
+       * @brief   Get topic information of the message.
+       *
+       * @return  Topic information.
+      **/
+      STopicInformation GetTopicInformation() const
+      {
+        STopicInformation topic_info;
+        topic_info.encoding   = eCAL::capnproto::EncodingAsString();
+        topic_info.type       = eCAL::capnproto::TypeAsString<message_type>();
+        topic_info.descriptor = eCAL::capnproto::SchemaAsString<message_type>();
+        return topic_info;
+      }
 
       CBuilderSubscriber subscriber;
       capnp::MallocMessageBuilder builder;
       typename message_type::Builder root_builder;
       MsgCallbackT msg_callback;
 
-      /**
-      * @brief  Get file descriptor string of the capnp message.
-      *
-      * @return  Description string.
-      **/
-      std::string GetDescription() const
-      {
-        return eCAL::capnproto::SchemaAsString<message_type>();
-      }
-    };
 
+    };
+    /** @example addressbook_rec.cpp
+    * This is an example how to use eCAL::capnproto::CSubscriber to receive capnp data with eCAL. To receive the data, see @ref addressbook_rec.cpp .
+    */
   }
 }

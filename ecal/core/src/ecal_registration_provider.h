@@ -29,6 +29,7 @@
 #pragma once
 
 #include "ecal_thread.h"
+#include "io/snd_sample.h"
 #include "io/udp_sender.h"
 
 #include "io/ecal_memfile_broadcast.h"
@@ -59,27 +60,29 @@ namespace eCAL
     void Create(bool topics_, bool services_, bool process_);
     void Destroy();
 
-    bool RegisterTopic(const std::string& topic_name_, const std::string& topic_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_);
-    bool UnregisterTopic(const std::string& topic_name_, const std::string& topic_id_);
+    bool RegisterTopic(const std::string& topic_name_, const std::string& topic_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
+    bool UnregisterTopic(const std::string& topic_name_, const std::string& topic_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
 
-    bool RegisterServer(const std::string& service_name_, const std::string& service_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_);
-    bool UnregisterServer(const std::string& service_name_, const std::string& service_id_);
+    bool RegisterServer(const std::string& service_name_, const std::string& service_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
+    bool UnregisterServer(const std::string& service_name_, const std::string& service_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
 
-    bool RegisterClient(const std::string& client_name_, const std::string& client_id_, const eCAL::pb::Sample& ecal_sample_, const bool force_);
-    bool UnregisterClient(const std::string& client_name_, const std::string& client_id_);
+    bool RegisterClient(const std::string& client_name_, const std::string& client_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
+    bool UnregisterClient(const std::string& client_name_, const std::string& client_id_, const eCAL::pb::Sample& ecal_sample_, bool force_);
 
   protected:
     bool RegisterProcess();
+    bool UnregisterProcess();
+      
     bool RegisterServer();
     bool RegisterClient();
     bool RegisterTopics();
-    bool RegisterSample(const std::string& sample_name_, const eCAL::pb::Sample& sample_);
+
+    bool ApplySample(const std::string& sample_name_, const eCAL::pb::Sample& sample_);
       
     int RegisterSendThread();
 
     bool ApplyTopicToDescGate(const std::string& topic_name_
-      , const std::string& topic_type_
-      , const std::string& topic_desc_
+      , const STopicInformation& topic_info_
       , bool topic_is_a_publisher_);
 
     bool ApplyServiceToDescGate(const std::string& service_name_
@@ -91,31 +94,30 @@ namespace eCAL
 
     bool SendSampleList(bool reset_sample_list_ = true);
 
-    static std::atomic<bool>  m_created;
-    std::string               m_multicast_group;
-    int                       m_reg_refresh;
-    bool                      m_reg_topics;
-    bool                      m_reg_services;
-    bool                      m_reg_process;
+    static std::atomic<bool>         m_created;
+    int                              m_reg_refresh;
+    bool                             m_reg_topics;
+    bool                             m_reg_services;
+    bool                             m_reg_process;
 
-    CUDPSender                m_reg_snd;
-    CThread                   m_reg_snd_thread;
+    CThread                          m_reg_sample_snd_thread;
+    std::shared_ptr<CSampleSender>   m_reg_sample_snd;
 
-    typedef std::unordered_map<std::string, eCAL::pb::Sample> SampleMapT;
-    std::mutex                m_topics_map_sync;
-    SampleMapT                m_topics_map;
+    using SampleMapT = std::unordered_map<std::string, eCAL::pb::Sample>;
+    std::mutex                       m_topics_map_sync;
+    SampleMapT                       m_topics_map;
 
-    std::mutex                m_server_map_sync;
-    SampleMapT                m_server_map;
+    std::mutex                       m_server_map_sync;
+    SampleMapT                       m_server_map;
 
-    std::mutex                m_client_map_sync;
-    SampleMapT                m_client_map;
+    std::mutex                       m_client_map_sync;
+    SampleMapT                       m_client_map;
 
-    std::mutex                m_sample_list_sync;
-    eCAL::pb::SampleList      m_sample_list;
-    std::string               m_sample_list_buffer;
+    std::mutex                       m_sample_list_sync;
+    eCAL::pb::SampleList             m_sample_list;
+    std::string                      m_sample_list_buffer;
 
-    eCAL::CMemoryFileBroadcast m_memfile_broadcast;
+    eCAL::CMemoryFileBroadcast       m_memfile_broadcast;
     eCAL::CMemoryFileBroadcastWriter m_memfile_broadcast_writer;
 
     bool m_use_network_monitoring;

@@ -76,9 +76,9 @@ extern "C"
   ECALC_API int eCAL_GetVersion(int* major_, int* minor_, int* patch_)
   {
     if((major_ == nullptr) || (minor_ == nullptr) || (patch_ == nullptr)) return(-1); 
-    if(major_) *major_ = ECAL_VERSION_MAJOR;
-    if(minor_) *minor_ = ECAL_VERSION_MINOR;
-    if(patch_) *patch_ = ECAL_VERSION_PATCH;
+    *major_ = ECAL_VERSION_MAJOR;
+    *minor_ = ECAL_VERSION_MINOR;
+    *patch_ = ECAL_VERSION_PATCH;
     return(0);
   }
 
@@ -469,7 +469,7 @@ extern "C"
   ECALC_API ECAL_HANDLE eCAL_Event_gOpenEvent(const char* event_name_)
   {
     eCAL::EventHandleT* event_handle = new eCAL::EventHandleT;
-    bool success = eCAL::gOpenEvent(event_handle, event_name_);
+    const bool success = eCAL::gOpenEvent(event_handle, event_name_);
     if (success)
     {
       return(event_handle);
@@ -518,7 +518,7 @@ extern "C"
 static std::recursive_mutex g_pub_callback_mtx;
 static void g_pub_event_callback(const char* topic_name_, const struct eCAL::SPubEventCallbackData* data_, const PubEventCallbackCT callback_, void* par_)
 {
-  std::lock_guard<std::recursive_mutex> lock(g_pub_callback_mtx);
+  const std::lock_guard<std::recursive_mutex> lock(g_pub_callback_mtx);
   SPubEventCallbackDataC data;
   data.type  = data_->type;
   data.time  = data_->time;
@@ -619,7 +619,7 @@ extern "C"
     if (handle_ == NULL) return(0);
     if (qos_    == NULL) return(0);
     eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
-    eCAL::QOS::SWriterQOS qos = pub->GetQOS();
+    const eCAL::QOS::SWriterQOS qos = pub->GetQOS();
     qos_->history_kind       = static_cast<eQOSPolicy_HistoryKindC>(qos.history_kind);
     qos_->history_kind_depth = qos.history_kind_depth;;
     qos_->reliability        = static_cast<eQOSPolicy_ReliabilityC>(qos.reliability);
@@ -678,7 +678,7 @@ extern "C"
   {
     if(handle_ == NULL) return(0);
     eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
-    size_t ret = pub->Send(buf_, static_cast<size_t>(buf_len_), time_);
+    const size_t ret = pub->Send(buf_, static_cast<size_t>(buf_len_), time_);
     if(static_cast<int>(ret) == buf_len_)
     {
       return(buf_len_);
@@ -712,7 +712,7 @@ extern "C"
   {
     if(handle_   == NULL) return(0);
     eCAL::CPublisher* pub = static_cast<eCAL::CPublisher*>(handle_);
-    std::string dump = pub->Dump();
+    const std::string dump = pub->Dump();
     if(!dump.empty())
     {
       return(CopyBuffer(buf_, buf_len_, dump));
@@ -727,7 +727,7 @@ extern "C"
 static std::recursive_mutex g_sub_callback_mtx;
 static void g_sub_receive_callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_, const ReceiveCallbackCT callback_, void* par_)
 {
-  std::lock_guard<std::recursive_mutex> lock(g_sub_callback_mtx);
+  const std::lock_guard<std::recursive_mutex> lock(g_sub_callback_mtx);
   SReceiveCallbackDataC data;
   data.buf   = data_->buf;
   data.size  = data_->size;
@@ -739,7 +739,7 @@ static void g_sub_receive_callback(const char* topic_name_, const struct eCAL::S
 
 static void g_sub_event_callback(const char* topic_name_, const struct eCAL::SSubEventCallbackData* data_, const SubEventCallbackCT callback_, void* par_)
 {
-  std::lock_guard<std::recursive_mutex> lock(g_sub_callback_mtx);
+  const std::lock_guard<std::recursive_mutex> lock(g_sub_callback_mtx);
   SSubEventCallbackDataC data;
   data.type  = data_->type;
   data.time  = data_->time;
@@ -824,7 +824,7 @@ extern "C"
     if (handle_ == NULL) return(0);
     if (qos_ == NULL) return(0);
     eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
-    eCAL::QOS::SReaderQOS qos = sub->GetQOS();
+    const eCAL::QOS::SReaderQOS qos = sub->GetQOS();
     qos_->history_kind       = static_cast<eQOSPolicy_HistoryKindC>(qos.history_kind);
     qos_->history_kind_depth = qos.history_kind_depth;;
     qos_->reliability        = static_cast<eQOSPolicy_ReliabilityC>(qos.reliability);
@@ -932,7 +932,7 @@ extern "C"
   {
     if(handle_ == NULL) return(0);
     eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
-    std::string desc = sub->GetDescription();
+    const std::string desc = sub->GetDescription();
     int buffer_len = CopyBuffer(buf_, buf_len_, desc);
     if (buffer_len != static_cast<int>(desc.size()))
     {
@@ -955,7 +955,7 @@ extern "C"
   {
     if(handle_ == NULL) return(0);
     eCAL::CSubscriber* sub = static_cast<eCAL::CSubscriber*>(handle_);
-    std::string dump = sub->Dump();
+    const std::string dump = sub->Dump();
     if(!dump.empty())
     {
       return(CopyBuffer(buf_, buf_len_, dump));
@@ -967,7 +967,7 @@ extern "C"
 static std::recursive_mutex g_dyn_json_sub_receive_callback_mtx;
 static void g_dyn_json_sub_receive_callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_, const ReceiveCallbackCT callback_, void* par_)
 {
-  std::lock_guard<std::recursive_mutex> lock(g_dyn_json_sub_receive_callback_mtx);
+  const std::lock_guard<std::recursive_mutex> lock(g_dyn_json_sub_receive_callback_mtx);
   SReceiveCallbackDataC data;
   data.buf   = data_->buf;
   data.size  = data_->size;
@@ -1028,7 +1028,7 @@ extern "C"
 /////////////////////////////////////////////////////////
 ECALC_API int eCAL_Time_GetName(void* name_, int name_len_)
 {
-  std::string name = eCAL::Time::GetName();
+  const std::string name = eCAL::Time::GetName();
   if (!name.empty())
   {
     return(CopyBuffer(name_, name_len_, name));
@@ -1092,7 +1092,7 @@ ECALC_API int eCAL_Time_GetStatus(int* error_, char** status_message_, const int
 static std::recursive_mutex g_timer_callback_mtx;
 static void g_timer_callback(const TimerCallbackCT callback_, void* par_)
 {
-  std::lock_guard<std::recursive_mutex> lock(g_timer_callback_mtx);
+  const std::lock_guard<std::recursive_mutex> lock(g_timer_callback_mtx);
   callback_(par_);
 }
 
@@ -1139,10 +1139,10 @@ extern "C"
   static std::recursive_mutex g_request_callback_mtx;
   static int g_method_callback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_, MethodCallbackCT callback_, void* par_)
   {
-    std::lock_guard<std::recursive_mutex> lock(g_request_callback_mtx);
+    const std::lock_guard<std::recursive_mutex> lock(g_request_callback_mtx);
     void* response(nullptr);
     int   response_len(ECAL_ALLOCATE_4ME);
-    int ret_state = callback_(method_.c_str(), req_type_.c_str(), resp_type_.c_str(), request_.c_str(), static_cast<int>(request_.size()), &response, &response_len, par_);
+    const int ret_state = callback_(method_.c_str(), req_type_.c_str(), resp_type_.c_str(), request_.c_str(), static_cast<int>(request_.size()), &response, &response_len, par_);
     if (response_len > 0)
     {
       response_ = std::string(static_cast<const char*>(response), static_cast<size_t>(response_len));
@@ -1152,7 +1152,7 @@ extern "C"
 
   static void g_server_event_callback(const char* name_, const struct eCAL::SServerEventCallbackData* data_, const ServerEventCallbackCT callback_, void* par_)
   {
-    std::lock_guard<std::recursive_mutex> lock(g_sub_callback_mtx);
+    const std::lock_guard<std::recursive_mutex> lock(g_sub_callback_mtx);
     SServerEventCallbackDataC data;
     data.time = data_->time;
     data.type = data_->type;
@@ -1221,7 +1221,7 @@ extern "C"
   {
     if (handle_ == NULL) return(0);
     eCAL::CServiceServer* server = static_cast<eCAL::CServiceServer*>(handle_);
-    std::string service_name = server->GetServiceName();
+    const std::string service_name = server->GetServiceName();
     int buffer_len = CopyBuffer(buf_, buf_len_, service_name);
     if (buffer_len != static_cast<int>(service_name.size()))
     {
@@ -1242,7 +1242,7 @@ extern "C"
   static std::recursive_mutex g_response_callback_mtx;
   static void g_response_callback(const struct eCAL::SServiceResponse& service_response_, const ResponseCallbackCT callback_, void* par_)
   {
-    std::lock_guard<std::recursive_mutex> lock(g_response_callback_mtx);
+    const std::lock_guard<std::recursive_mutex> lock(g_response_callback_mtx);
     struct SServiceResponseC service_response;
     service_response.host_name    = service_response_.host_name.c_str();
     service_response.service_name = service_response_.service_name.c_str();
@@ -1258,7 +1258,7 @@ extern "C"
 
   static void g_client_event_callback(const char* name_, const struct eCAL::SClientEventCallbackData* data_, const ClientEventCallbackCT callback_, void* par_)
   {
-    std::lock_guard<std::recursive_mutex> lock(g_sub_callback_mtx);
+    const std::lock_guard<std::recursive_mutex> lock(g_sub_callback_mtx);
     SClientEventCallbackDataC data;
     data.time = data_->time;
     data.type = data_->type;
@@ -1373,8 +1373,8 @@ ECALC_API int eCAL_Client_GetServiceName(ECAL_HANDLE handle_, void* buf_, int bu
 {
   if (handle_ == NULL) return(0);
   eCAL::CServiceClient* client = static_cast<eCAL::CServiceClient*>(handle_);
-  std::string service_name = client->GetServiceName();
-  int buffer_len = CopyBuffer(buf_, buf_len_, service_name);
+  const std::string service_name = client->GetServiceName();
+  const int buffer_len = CopyBuffer(buf_, buf_len_, service_name);
   if (buffer_len != static_cast<int>(service_name.size()))
   {
     return(0);

@@ -99,15 +99,14 @@ namespace eCAL
     Destroy();
   }
 
-  bool CDataWriter::Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_)
+  bool CDataWriter::Create(const std::string& topic_name_, const STopicInformation& topic_info_)
   {
     if (m_created) return(false);
 
     // set defaults
     m_topic_name             = topic_name_;
     m_topic_id.clear();
-    m_topic_type             = topic_type_;
-    m_topic_desc             = topic_desc_;
+    m_topic_info             = topic_info_;
     m_id                     = 0;
     m_clock                  = 0;
     m_clock_old              = 0;
@@ -138,7 +137,7 @@ namespace eCAL
     m_use_tdesc = Config::IsTopicDescriptionSharingEnabled();
 
     // register
-    DoRegister(false);
+    Register(false);
 
     // mark as created
     m_created = true;
@@ -159,6 +158,9 @@ namespace eCAL
     // log it
     Logging::Log(log_level_debug1, m_topic_name + "::CDataWriter::Created");
 #endif
+
+    // adapt number of used memory file
+    ShmSetBufferCount(m_buffering_shm);
 
     return(true);
   }
@@ -206,31 +208,21 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
-    m_created           = false;
+    // unregister
+    Unregister();
+
+    m_created = false;
 
     return(true);
   }
 
-  bool CDataWriter::SetTypeName(const std::string& topic_type_name_)
+ 
+
+  bool CDataWriter::SetTopicInformation(const STopicInformation& topic_info_)
   {
-    const bool force = m_topic_type != topic_type_name_;
-    m_topic_type = topic_type_name_;
-
-#ifndef NDEBUG
-    // log it
-    Logging::Log(log_level_debug2, m_topic_name + "::CDataWriter::SetTypeName");
-#endif
-
-    // register it
-    DoRegister(force);
-
-    return(true);
-  }
-
-  bool CDataWriter::SetDescription(const std::string& topic_desc_)
-  {
-    const bool force = m_topic_desc != topic_desc_;
-    m_topic_desc = topic_desc_;
+    // Does it even make sense to register if the info is the same???
+    const bool force = m_topic_info != topic_info_;
+    m_topic_info = topic_info_;
 
 #ifndef NDEBUG
     // log it
@@ -238,7 +230,7 @@ namespace eCAL
 #endif
 
     // register it
-    DoRegister(force);
+    Register(force);
 
     return(true);
   }
@@ -256,7 +248,7 @@ namespace eCAL
 #endif
 
     // register it
-    DoRegister(force);
+    Register(force);
 
     return(true);
   }
@@ -273,7 +265,7 @@ namespace eCAL
 #endif
 
     // register it
-    DoRegister(force);
+    Register(force);
 
     return(true);
   }
@@ -344,10 +336,21 @@ namespace eCAL
     return true;
   }
 
-  bool CDataWriter::ShmSetBufferCount(long buffering_)
+  bool CDataWriter::ShmSetBufferCount(size_t buffering_)
   {
-    if (buffering_ < 1) return false;
+    if (buffering_ < 1)
+    {
+      Logging::Log(log_level_error, m_topic_name + "::CDataWriter::ShmSetBufferCount minimal number of memory files is 1 !");
+      return false;
+    }
     m_buffering_shm = static_cast<size_t>(buffering_);
+
+    // adapt number of used memory files
+    if (m_created)
+    {
+      m_writer.shm.SetBufferCount(buffering_);
+    }
+
     return true;
   }
 
@@ -408,7 +411,7 @@ namespace eCAL
     if (!CheckWriterModes())
     {
       // incompatible writer configurations
-      return false;
+      return 0;
     }
 
     // get payload buffer size (one time, to avoid multiple computations)
@@ -423,7 +426,6 @@ namespace eCAL
       && !m_writer.tcp_mode.activated;
 
     // create a payload copy for all layer
-    m_payload_buffer.clear();
     if (!allow_zero_copy)
     {
       m_payload_buffer.resize(payload_buf_size);
@@ -464,7 +466,7 @@ namespace eCAL
         if (m_writer.shm.PrepareWrite(wattr))
         {
           // register new to update listening subscribers and rematch
-          DoRegister(true);
+          Register(true);
           Process::SleepMS(5);
         }
 
@@ -525,7 +527,7 @@ namespace eCAL
         if (m_writer.inproc.PrepareWrite(wdata))
         {
           // register new to update listening subscribers and rematch
-          DoRegister(true);
+          Register(true);
           Process::SleepMS(5);
         }
 
@@ -582,7 +584,7 @@ namespace eCAL
         if (m_writer.udp_mc.PrepareWrite(wattr))
         {
           // register new to update listening subscribers and rematch
-          DoRegister(true);
+          Register(true);
           Process::SleepMS(5);
         }
 
@@ -651,13 +653,17 @@ namespace eCAL
     else         return 0;
   }
 
-  void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_)
+  void CDataWriter::ApplyLocSubscription(const std::string& process_id_, const std::string& tid_, const STopicInformation& tinfo_, const std::string& reader_par_)
   {
-    Connect(tid_, ttype_, tdesc_);
+    Connect(tid_, tinfo_);
+
+    // add key to local subscriber map
+    const std::string topic_key = process_id_ + tid_;
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_loc_sub_map[process_id_] = true;
+      m_loc_sub_map[topic_key] = true;
     }
+
     m_loc_subscribed = true;
 
     // add a new local subscription
@@ -670,8 +676,15 @@ namespace eCAL
 #endif
   }
 
-  void CDataWriter::RemoveLocSubscription(const std::string& process_id_)
+  void CDataWriter::RemoveLocSubscription(const std::string& process_id_, const std::string& tid_)
   {
+    // remove key from local subscriber map
+    const std::string topic_key = process_id_ + tid_;
+    {
+      const std::lock_guard<std::mutex> lock(m_sub_map_sync);
+      m_loc_sub_map.erase(topic_key);
+    }
+
     // remove a local subscription
     m_writer.udp_mc.RemLocConnection (process_id_);
     m_writer.shm.RemLocConnection    (process_id_);
@@ -682,13 +695,17 @@ namespace eCAL
 #endif
   }
 
-  void CDataWriter::ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const std::string& ttype_, const std::string& tdesc_, const std::string& reader_par_)
+  void CDataWriter::ApplyExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_, const STopicInformation& tinfo_, const std::string& reader_par_)
   {
-    Connect(tid_, ttype_, tdesc_);
+    Connect(tid_, tinfo_);
+
+    // add key to external subscriber map
+    const std::string topic_key = host_name_ + process_id_ + tid_;
     {
       const std::lock_guard<std::mutex> lock(m_sub_map_sync);
-      m_ext_sub_map[host_name_] = true;
+      m_ext_sub_map[topic_key] = true;
     }
+
     m_ext_subscribed = true;
 
     // add a new external subscription
@@ -701,8 +718,15 @@ namespace eCAL
 #endif
   }
 
-  void CDataWriter::RemoveExtSubscription(const std::string& host_name_, const std::string& process_id_)
+  void CDataWriter::RemoveExtSubscription(const std::string& host_name_, const std::string& process_id_, const std::string& tid_)
   {
+    // remove key from external subscriber map
+    const std::string topic_key = host_name_ + process_id_ + tid_;
+    {
+      const std::lock_guard<std::mutex> lock(m_sub_map_sync);
+      m_ext_sub_map.erase(topic_key);
+    }
+
     // remove external subscription
     m_writer.udp_mc.RemExtConnection (host_name_, process_id_);
     m_writer.shm.RemExtConnection    (host_name_, process_id_);
@@ -739,7 +763,7 @@ namespace eCAL
     }
 
     // register without send
-    DoRegister(false);
+    Register(false);
 
     // check connection timeouts
     const std::shared_ptr<std::list<std::string>> loc_timeouts = std::make_shared<std::list<std::string>>();
@@ -777,29 +801,31 @@ namespace eCAL
     std::stringstream out;
 
     out << std::endl;
-    out << indent_ << "--------------------------------"           << std::endl;
-    out << indent_ << " class CDataWriter  "                       << std::endl;
-    out << indent_ << "--------------------------------"           << std::endl;
-    out << indent_ << "m_host_name:          " << m_host_name      << std::endl;
-    out << indent_ << "m_host_id:            " << m_host_id        << std::endl;
-    out << indent_ << "m_topic_name:         " << m_topic_name     << std::endl;
-    out << indent_ << "m_topic_id:           " << m_topic_id       << std::endl;
-    out << indent_ << "m_topic_type:         " << m_topic_type     << std::endl;
-    out << indent_ << "m_topic_desc:         " << m_topic_desc     << std::endl;
-    out << indent_ << "m_id:                 " << m_id             << std::endl;
-    out << indent_ << "m_clock:              " << m_clock          << std::endl;
-    out << indent_ << "m_created:            " << m_created        << std::endl;
-    out << indent_ << "m_loc_subscribed:     " << m_loc_subscribed << std::endl;
-    out << indent_ << "m_ext_subscribed:     " << m_ext_subscribed << std::endl;
+    out << indent_ << "--------------------------------"                     << std::endl;
+    out << indent_ << " class CDataWriter  "                                 << std::endl;
+    out << indent_ << "--------------------------------"                     << std::endl;
+    out << indent_ << "m_host_name:             " << m_host_name             << std::endl;
+    out << indent_ << "m_host_id:               " << m_host_id               << std::endl;
+    out << indent_ << "m_topic_name:            " << m_topic_name            << std::endl;
+    out << indent_ << "m_topic_id:              " << m_topic_id              << std::endl;
+    out << indent_ << "m_topic_info.encoding:   " << m_topic_info.encoding   << std::endl;
+    out << indent_ << "m_topic_info.type:       " << m_topic_info.type       << std::endl;
+    out << indent_ << "m_topic_info.descriptor: " << m_topic_info.descriptor << std::endl;
+    out << indent_ << "m_id:                    " << m_id                    << std::endl;
+    out << indent_ << "m_clock:                 " << m_clock                 << std::endl;
+    out << indent_ << "m_created:               " << m_created               << std::endl;
+    out << indent_ << "m_loc_subscribed:        " << m_loc_subscribed        << std::endl;
+    out << indent_ << "m_ext_subscribed:        " << m_ext_subscribed        << std::endl;
     out << std::endl;
 
     return(out.str());
   }
 
-  bool CDataWriter::DoRegister(bool force_)
+  bool CDataWriter::Register(bool force_)
   {
     if (m_topic_name.empty()) return(false);
 
+    //@Rex: why is the logic different in CDataReader???
     // check share modes
     bool share_ttype(m_use_ttype && (g_pubgate() != nullptr) && g_pubgate()->TypeShared());
     if (m_share_ttype != -1)
@@ -820,8 +846,21 @@ namespace eCAL
     ecal_reg_sample_mutable_topic->set_hid(m_host_id);
     ecal_reg_sample_mutable_topic->set_tname(m_topic_name);
     ecal_reg_sample_mutable_topic->set_tid(m_topic_id);
-    if (share_ttype) ecal_reg_sample_mutable_topic->set_ttype(m_topic_type);
-    if (share_tdesc) ecal_reg_sample_mutable_topic->set_tdesc(m_topic_desc);
+    if (share_ttype) ecal_reg_sample_mutable_topic->set_ttype(Util::CombinedTopicEncodingAndType(m_topic_info.encoding, m_topic_info.type));
+    if (share_tdesc) ecal_reg_sample_mutable_topic->set_tdesc(m_topic_info.descriptor);
+    // topic_information
+    {
+      auto* ecal_reg_sample_mutable_tinfo = ecal_reg_sample_mutable_topic->mutable_tinfo();
+      if (share_ttype)
+      {
+        ecal_reg_sample_mutable_tinfo->set_encoding(m_topic_info.encoding);
+        ecal_reg_sample_mutable_tinfo->set_type(m_topic_info.type);
+      }
+      if (share_tdesc)
+      {
+        ecal_reg_sample_mutable_tinfo->set_desc(m_topic_info.descriptor);
+      }
+    }
     *ecal_reg_sample_mutable_topic->mutable_attr() = google::protobuf::Map<std::string, std::string> { m_attr.begin(), m_attr.end() };
     ecal_reg_sample_mutable_topic->set_tsize(google::protobuf::int32(m_topic_size));
     // udp multicast layer
@@ -924,12 +963,38 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::DoRegister");
+    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::Register");
 #endif
     return(true);
   }
 
-  void CDataWriter::Connect(const std::string& tid_, const std::string& ttype_, const std::string& tdesc_)
+  bool CDataWriter::Unregister()
+  {
+    if (m_topic_name.empty()) return(false);
+
+    // create command parameter
+    eCAL::pb::Sample ecal_unreg_sample;
+    ecal_unreg_sample.set_cmd_type(eCAL::pb::bct_unreg_publisher);
+    auto* ecal_reg_sample_mutable_topic = ecal_unreg_sample.mutable_topic();
+    ecal_reg_sample_mutable_topic->set_hname(m_host_name);
+    ecal_reg_sample_mutable_topic->set_hid(m_host_id);
+    ecal_reg_sample_mutable_topic->set_pname(m_pname);
+    ecal_reg_sample_mutable_topic->set_pid(m_pid);
+    ecal_reg_sample_mutable_topic->set_tname(m_topic_name);
+    ecal_reg_sample_mutable_topic->set_tid(m_topic_id);
+    ecal_reg_sample_mutable_topic->set_uname(Process::GetUnitName());
+
+    // unregister publisher
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterTopic(m_topic_name, m_topic_id, ecal_unreg_sample, true);
+
+#ifndef NDEBUG
+    // log it
+    Logging::Log(log_level_debug4, m_topic_name + "::CDataWriter::UnRegister");
+#endif
+    return(true);
+  }
+
+  void CDataWriter::Connect(const std::string& tid_, const STopicInformation& tinfo_)
   {
     SPubEventCallbackData data;
     data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
@@ -954,8 +1019,10 @@ namespace eCAL
     {
       data.type  = pub_event_update_connection;
       data.tid   = tid_;
-      data.ttype = ttype_;
-      data.tdesc = tdesc_;
+      // Remove with eCAL6 (next two lines)
+      data.ttype = Util::CombinedTopicEncodingAndType(tinfo_.encoding, tinfo_.type);
+      data.tdesc = tinfo_.descriptor;
+      data.tinfo = tinfo_;
       (iter->second)(m_topic_name.c_str(), &data);
     }
   }
@@ -979,10 +1046,10 @@ namespace eCAL
     }
   }
 
-  bool CDataWriter::SetUseUdpMC(TLayer::eSendMode mode_)
+  void CDataWriter::SetUseUdpMC(TLayer::eSendMode mode_)
   {
     m_writer.udp_mc_mode.requested = mode_;
-    if (!m_created) return true;
+    if (!m_created) return;
 
     // log send mode
     LogSendMode(mode_, m_topic_name + "::CDataWriter::Create::UDP_MC_SENDMODE::");
@@ -1001,14 +1068,12 @@ namespace eCAL
       m_writer.udp_mc.Destroy();
       break;
     }
-
-    return(true);
   }
 
-  bool CDataWriter::SetUseShm(TLayer::eSendMode mode_)
+  void CDataWriter::SetUseShm(TLayer::eSendMode mode_)
   {
     m_writer.shm_mode.requested = mode_;
-    if (!m_created) return true;
+    if (!m_created) return;
 
     // log send mode
     LogSendMode(mode_, m_topic_name + "::CDataWriter::Create::SHM_SENDMODE::");
@@ -1027,14 +1092,12 @@ namespace eCAL
       m_writer.shm.Destroy();
       break;
     }
-
-    return(true);
   }
 
-  bool CDataWriter::SetUseTcp(TLayer::eSendMode mode_)
+  void CDataWriter::SetUseTcp(TLayer::eSendMode mode_)
   {
     m_writer.tcp_mode.requested = mode_;
-    if (!m_created) return true;
+    if (!m_created) return;
 
     // log send mode
     LogSendMode(mode_, m_topic_name + "::CDataWriter::Create::TCP_SENDMODE::");
@@ -1053,14 +1116,12 @@ namespace eCAL
       m_writer.tcp.Destroy();
       break;
     }
-
-    return(true);
   }
 
-  bool CDataWriter::SetUseInProc(TLayer::eSendMode mode_)
+  void CDataWriter::SetUseInProc(TLayer::eSendMode mode_)
   {
     m_writer.inproc_mode.requested = mode_;
-    if (!m_created) return true;
+    if (!m_created) return;
 
     // log send mode
     LogSendMode(mode_, m_topic_name + "::CDataWriter::Create::INPROC_SENDMODE::");
@@ -1078,8 +1139,6 @@ namespace eCAL
       m_writer.inproc.Destroy();
       break;
     }
-
-    return(true);
   }
 
   bool CDataWriter::CheckWriterModes()

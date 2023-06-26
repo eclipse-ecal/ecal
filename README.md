@@ -148,3 +148,10 @@ eCAL is licensed under Apache License 2.0. You are free to
 - Distribute eCAL
 
 eCAL is provided on an “as is” basis without warranties or conditions of any kind.
+
+
+## Contributors
+
+<a href="https://github.com/eclipse-ecal/ecal/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=eclipse-ecal/ecal" />
+</a>

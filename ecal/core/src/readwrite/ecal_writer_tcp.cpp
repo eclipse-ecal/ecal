@@ -29,7 +29,6 @@
 #pragma warning(pop)
 #endif
 
-#include "ecal_def.h"
 #include "ecal_config_reader_hlp.h"
 
 #include <ecal/ecal_config.h>
@@ -41,7 +40,7 @@
 
 namespace eCAL
 {
-  std::mutex                       CDataWriterTCP::g_tcp_writer_executor_mtx;
+  std::mutex                            CDataWriterTCP::g_tcp_writer_executor_mtx;
   std::shared_ptr<tcp_pubsub::Executor> CDataWriterTCP::g_tcp_writer_executor;
 
   CDataWriterTCP::CDataWriterTCP() : m_port(0)
@@ -74,7 +73,7 @@ namespace eCAL
   bool CDataWriterTCP::Create(const std::string& host_name_, const std::string& topic_name_, const std::string& topic_id_)
   {
     {
-      std::lock_guard<std::mutex> lock(g_tcp_writer_executor_mtx);
+      const std::lock_guard<std::mutex> lock(g_tcp_writer_executor_mtx);
       if (!g_tcp_writer_executor)
       {
         g_tcp_writer_executor = std::make_shared<tcp_pubsub::Executor>(Config::GetTcpPubsubWriterThreadpoolSize(), TcpPubsubLogger);
@@ -110,12 +109,12 @@ namespace eCAL
 
     // create new sample (header information only, no payload)
     m_ecal_header.Clear();
-    auto ecal_sample_mutable_topic = m_ecal_header.mutable_topic();
+    auto *ecal_sample_mutable_topic = m_ecal_header.mutable_topic();
     ecal_sample_mutable_topic->set_tname(m_topic_name);
     ecal_sample_mutable_topic->set_tid(m_topic_id);
 
     // append payload header (without payload)
-    auto ecal_sample_mutable_content = m_ecal_header.mutable_content();
+    auto *ecal_sample_mutable_content = m_ecal_header.mutable_content();
     ecal_sample_mutable_content->set_id(attr_.id);
     ecal_sample_mutable_content->set_clock(attr_.clock);
     ecal_sample_mutable_content->set_time(attr_.time);
@@ -129,11 +128,10 @@ namespace eCAL
     constexpr size_t ecal_magic_size(4 * sizeof(char));
 
     // Get size of un-altered proto header size
-    uint16_t proto_header_size(0);
 #if GOOGLE_PROTOBUF_VERSION >= 3001000
-    proto_header_size = (uint16_t)m_ecal_header.ByteSizeLong();
+    uint16_t proto_header_size = static_cast<uint16_t>(m_ecal_header.ByteSizeLong());
 #else
-    proto_header_size = (uint16_t)m_ecal_header.ByteSize();
+    uint16_t proto_header_size = static_cast<uint16_t>(m_ecal_header.ByteSize());
 #endif
 
     // Compute needed padding for aligning the payload
@@ -174,12 +172,12 @@ namespace eCAL
     send_vec.reserve(2);
 
     // push header data
-    send_vec.emplace_back(std::pair<const char* const, const size_t>(m_header_buffer.data(), m_header_buffer.size()));
+    send_vec.emplace_back(m_header_buffer.data(), m_header_buffer.size());
     // push payload data
-    send_vec.emplace_back(std::pair<const char* const, const size_t>(static_cast<const char*>(buf_), attr_.len));
+    send_vec.emplace_back(static_cast<const char*>(buf_), attr_.len);
 
     // send it
-    bool success = m_publisher->send(send_vec);
+    const bool success = m_publisher->send(send_vec);
 
     // return success
     return success;

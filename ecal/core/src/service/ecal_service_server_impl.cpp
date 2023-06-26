@@ -77,8 +77,10 @@ namespace eCAL
             std::bind(&CServiceServerImpl::EventCallback, this, std::placeholders::_1, std::placeholders::_2));
     }
 
-    if (g_servicegate() != nullptr) g_servicegate()->Register(this);
+    // register this service
+    Register(false);
 
+    // mark as created
     m_created = true;
 
     return(true);
@@ -90,9 +92,6 @@ namespace eCAL
 
     m_tcp_server_v0.Stop();
     m_tcp_server_v1.Stop();
-
-    if (g_servicegate() != nullptr)           g_servicegate()->Unregister(this);
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterServer(m_service_name, m_service_id);
 
     // reset method callback map
     {
@@ -106,6 +105,10 @@ namespace eCAL
       m_event_callback_map.clear();
     }
 
+    // unregister this service
+    Unregister();
+
+    // reset internals
     m_service_name.clear();
     m_service_id.clear();
 
@@ -245,10 +248,8 @@ namespace eCAL
   {
   }
 
-  // called by eCAL:CServiceGate every second to update registration layer
-  void CServiceServerImpl::RefreshRegistration()
+  void CServiceServerImpl::Register(const bool force_)
   {
-    if (!m_created)             return;
     if (m_service_name.empty()) return;
 
     // might be zero in contruction phase
@@ -288,7 +289,27 @@ namespace eCAL
     }
 
     // register entity
-    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterServer(m_service_name, m_service_id, sample, false);
+    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterServer(m_service_name, m_service_id, sample, force_);
+  }
+
+  void CServiceServerImpl::Unregister()
+  {
+    if (m_service_name.empty()) return;
+
+    // create service registration sample
+    eCAL::pb::Sample sample;
+    sample.set_cmd_type(eCAL::pb::bct_unreg_service);
+    auto* service_mutable_service = sample.mutable_service();
+    service_mutable_service->set_hname(Process::GetHostName());
+    service_mutable_service->set_pname(Process::GetProcessName());
+    service_mutable_service->set_uname(Process::GetUnitName());
+    service_mutable_service->set_pid(Process::GetProcessID());
+    service_mutable_service->set_sname(m_service_name);
+    service_mutable_service->set_sid(m_service_id);
+    service_mutable_service->set_version(m_version);
+
+    // register entity
+    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterServer(m_service_name, m_service_id, sample, true);
   }
 
   int CServiceServerImpl::RequestCallback(const std::string& request_, std::string& response_)
@@ -449,4 +470,4 @@ namespace eCAL
     }
     return false;
   }
-};
+}

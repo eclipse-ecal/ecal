@@ -46,9 +46,9 @@ namespace eCAL
   {
   }
 
-  bool CDescGate::ApplyTopicDescription(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_, const QualityFlags description_quality_)
+  bool CDescGate::ApplyTopicDescription(const std::string& topic_name_, const STopicInformation& topic_info_, const QualityFlags description_quality_)
   {
-    std::unique_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
+    const std::unique_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     m_topic_info_map.map->remove_deprecated();
 
     const auto topic_info_it = m_topic_info_map.map->find(topic_name_);
@@ -58,9 +58,8 @@ namespace eCAL
     {
       // create a new topic entry
       STopicInfoQuality& topic_info = (*m_topic_info_map.map)[topic_name_];
-      topic_info.info.type_name        = topic_type_;
-      topic_info.info.type_description = topic_desc_;
-      topic_info.quality               = description_quality_;
+      topic_info.info               = topic_info_;
+      topic_info.quality            = description_quality_;
       return true;
     }
 
@@ -79,9 +78,8 @@ namespace eCAL
     if (description_quality_ > topic_info.quality)
     {
       // overwrite attributes
-      topic_info.info.type_name        = topic_type_;
-      topic_info.info.type_description = topic_desc_;
-      topic_info.quality               = description_quality_;
+      topic_info.info    = topic_info_;
+      topic_info.quality = description_quality_;
 
       // update attributes and return
       (*m_topic_info_map.map)[topic_name_] = topic_info;
@@ -89,9 +87,7 @@ namespace eCAL
     }
 
     // this is the same topic (topic name, topic type name, topic type description)
-    if ( (topic_info.info.type_name        == topic_type_)
-      && (topic_info.info.type_description == topic_desc_)
-      )
+    if (topic_info.info == topic_info_)
     {
       // update timestamp (by just accessing the entry) and return
       (*m_topic_info_map.map)[topic_name_] = topic_info;
@@ -110,13 +106,41 @@ namespace eCAL
 
     // topic type name differs
     // we log the error and update the entry one time
-    if ( !topic_type_.empty()
-      && !topic_info.info.type_name.empty()
-      && (topic_info.info.type_name != topic_type_)
+    if (!topic_info_.encoding.empty()
+      && !topic_info.info.encoding.empty()
+      && (topic_info.info.encoding != topic_info_.encoding)
       )
     {
-      std::string ttype1 = topic_info.info.type_name;
-      std::string ttype2 = topic_type_;
+      std::string tencoding1 = topic_info.info.encoding;
+      std::string tencoding2 = topic_info_.encoding;
+      std::replace(tencoding1.begin(), tencoding1.end(), '\0', '?');
+      std::replace(tencoding1.begin(), tencoding1.end(), '\t', '?');
+      std::replace(tencoding2.begin(), tencoding2.end(), '\0', '?');
+      std::replace(tencoding2.begin(), tencoding2.end(), '\t', '?');
+      std::string msg = "eCAL Pub/Sub encoding mismatch for topic ";
+      msg += topic_name_;
+      msg += " (\'";
+      msg += tencoding1;
+      msg += "\' <> \'";
+      msg += tencoding2;
+      msg += "\')";
+      eCAL::Logging::Log(log_level_warning, msg);
+
+      // mark as logged
+      topic_info.type_missmatch_logged = true;
+      // and update its attributes
+      update_topic_info = true;
+    }
+
+    // topic type name differs
+    // we log the error and update the entry one time
+    if (!topic_info_.type.empty()
+      && !topic_info.info.type.empty()
+      && (topic_info.info.type != topic_info_.type)
+      )
+    {
+      std::string ttype1 = topic_info.info.type;
+      std::string ttype2 = topic_info_.type;
       std::replace(ttype1.begin(), ttype1.end(), '\0', '?');
       std::replace(ttype1.begin(), ttype1.end(), '\t', '?');
       std::replace(ttype2.begin(), ttype2.end(), '\0', '?');
@@ -138,9 +162,9 @@ namespace eCAL
 
     // topic type description differs
     // we log the error and update the entry one time
-    if ( !topic_desc_.empty()
-      && !topic_info.info.type_description.empty()
-      && (topic_info.info.type_description != topic_desc_)
+    if ( !topic_info_.descriptor.empty()
+      && !topic_info.info.descriptor.empty()
+      && (topic_info.info.descriptor != topic_info_.descriptor)
       )
     {
       std::string msg = "eCAL Pub/Sub description mismatch for topic ";
@@ -162,11 +186,11 @@ namespace eCAL
     return false;
   }
 
-  void CDescGate::GetTopics(std::unordered_map<std::string, Util::STopicInfo>& topic_info_map_)
+  void CDescGate::GetTopics(std::unordered_map<std::string, STopicInformation>& topic_info_map_)
   {
-    std::unordered_map<std::string, Util::STopicInfo> map;
+    std::unordered_map<std::string, STopicInformation> map;
 
-    std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
+    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     m_topic_info_map.map->remove_deprecated();
     map.reserve(m_topic_info_map.map->size());
 
@@ -181,7 +205,7 @@ namespace eCAL
   {
     topic_names_.clear();
 
-    std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
+    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     m_topic_info_map.map->remove_deprecated();
     topic_names_.reserve(m_topic_info_map.map->size());
 
@@ -191,27 +215,15 @@ namespace eCAL
     }
   }
 
-  bool CDescGate::GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_)
-  {
-    if(topic_name_.empty()) return(false);
-
-    std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
-    const auto topic_info_it = m_topic_info_map.map->find(topic_name_);
-
-    if(topic_info_it == m_topic_info_map.map->end()) return(false);
-    topic_type_ = (*topic_info_it).second.info.type_name;
-    return(true);
-  }
-
-  bool CDescGate::GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_)
+  bool CDescGate::GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_)
   {
     if (topic_name_.empty()) return(false);
 
-    std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
+    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     const auto topic_info_it = m_topic_info_map.map->find(topic_name_);
 
     if (topic_info_it == m_topic_info_map.map->end()) return(false);
-    topic_desc_ = (*topic_info_it).second.info.type_description;
+    topic_info_ = (*topic_info_it).second.info;
     return(true);
   }
   
@@ -225,7 +237,7 @@ namespace eCAL
   {
     std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
 
-    std::unique_lock<std::shared_timed_mutex> lock(m_service_info_map.sync);
+    const std::unique_lock<std::shared_timed_mutex> lock(m_service_info_map.sync);
     m_service_info_map.map->remove_deprecated();
 
     auto service_info_map_it = m_service_info_map.map->find(service_method_tuple);
@@ -265,7 +277,7 @@ namespace eCAL
   {
     std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo> map;
 
-    std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map.sync);
+    const std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map.sync);
     m_service_info_map.map->remove_deprecated();
 
     for (const auto& service_info : (*m_service_info_map.map))
@@ -279,7 +291,7 @@ namespace eCAL
   {
     service_method_names_.clear();
 
-    std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map.sync);
+    const std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map.sync);
     m_service_info_map.map->remove_deprecated();
     service_method_names_.reserve(m_service_info_map.map->size());
 
@@ -293,7 +305,7 @@ namespace eCAL
   {
     std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
 
-    std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map.sync);
+    const std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map.sync);
     auto service_info_map_it = m_service_info_map.map->find(service_method_tuple);
 
     if (service_info_map_it == m_service_info_map.map->end()) return false;
@@ -306,7 +318,7 @@ namespace eCAL
   {
     std::tuple<std::string, std::string> service_method_tuple = std::make_tuple(service_name_, method_name_);
 
-    std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map.sync);
+    const std::shared_lock<std::shared_timed_mutex> lock(m_service_info_map.sync);
     auto service_info_map_it = m_service_info_map.map->find(service_method_tuple);
 
     if (service_info_map_it == m_service_info_map.map->end()) return false;

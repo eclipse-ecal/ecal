@@ -87,6 +87,9 @@ namespace eCAL
     CServiceClientImpl& operator=(CServiceClientImpl&&) = delete;
 
   protected:
+    void Register(bool force_);
+    void Unregister();
+
     void CheckForNewServices();
 
     bool SendRequests(const std::string& host_name_, const std::string& method_name_, const std::string& request_, int timeout_);
