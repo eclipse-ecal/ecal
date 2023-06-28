@@ -145,11 +145,11 @@ set(ecal_service_cpp_src
     src/service/ecal_service_server.cpp
     src/service/ecal_service_server_impl.cpp
     src/service/ecal_service_server_impl.h
+    src/service/ecal_service_singleton_manager.cpp
+    src/service/ecal_service_singleton_manager.h
     src/service/ecal_tcpclient.cpp
     src/service/ecal_tcpclient.h
 #    src/service/ecal_tcpheader.h TODO Remove
-    src/service/ecal_tcpserver.cpp
-    src/service/ecal_tcpserver.h
 )
 
 set(ecal_cmn_cpp_src
@@ -159,7 +159,7 @@ set(ecal_cmn_cpp_src
     src/ecal_config.cpp
     src/ecal_config_reader.cpp
     src/ecal_descgate.cpp
-    src/ecal_event.cpp
+    src/ecal_event.cpp 
     src/ecal_global_accessors.cpp
     src/ecal_globals.cpp
     src/ecal_log.cpp
@@ -492,7 +492,7 @@ target_link_libraries(${PROJECT_NAME}
     Threads::Threads
     eCAL::ecal-utils
     tcp_pubsub::tcp_pubsub
-    ecal_tcp_service
+    ecal_service
 )
 
 set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)

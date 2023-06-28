@@ -26,8 +26,6 @@
 #include <ecal/ecal.h>
 #include <ecal/ecal_callback.h>
 
-#include "ecal_tcpserver.h"
-
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
 #endif
@@ -39,6 +37,8 @@
 #include <map>
 #include <mutex>
 
+#include <ecal/service/server.h>
+
 namespace eCAL
 {
   /**
@@ -49,6 +49,8 @@ namespace eCAL
   public:
     CServiceServerImpl() = default;
     CServiceServerImpl(const std::string& service_name_);
+
+    // TODO: The this pointer is used internally, so this class must not be copyable or movable.
 
     ~CServiceServerImpl();
 
@@ -104,8 +106,8 @@ namespace eCAL
       , const std::string& resp_type_name_
       , const std::string& resp_type_desc_);
 
-    CTcpServer            m_tcp_server_v0;
-    CTcpServer            m_tcp_server_v1;
+    std::shared_ptr<eCAL::service::Server> m_tcp_server_v0;
+    std::shared_ptr<eCAL::service::Server> m_tcp_server_v1;
 
     static constexpr int  m_server_version = 1;
     

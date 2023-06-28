@@ -27,6 +27,8 @@
 
 #include <stdexcept>
 
+#include "service/ecal_service_singleton_manager.h"
+
 namespace eCAL
 {
   CGlobals::CGlobals() : initialized(false), components(0)
@@ -261,6 +263,7 @@ namespace eCAL
     if (timegate_instance)               timegate_instance->Destroy();
     if (clientgate_instance)             clientgate_instance->Destroy();
     if (servicegate_instance)            servicegate_instance->Destroy();
+    eCAL::service::stop_global_service_managers();
     if (pubgate_instance)                pubgate_instance->Destroy();
     if (subgate_instance)                subgate_instance->Destroy();
     if (registration_receiver_instance)  registration_receiver_instance->Destroy();

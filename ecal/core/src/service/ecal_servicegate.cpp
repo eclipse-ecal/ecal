@@ -91,35 +91,6 @@ namespace eCAL
     return(ret_state);
   }
 
-  void CServiceGate::ApplyClientRegistration(const eCAL::pb::Sample& ecal_sample_)
-  {
-    SClientAttr client;
-    const auto& ecal_sample_client = ecal_sample_.client();
-    client.hname   = ecal_sample_client.hname();
-    client.pname   = ecal_sample_client.pname();
-    client.uname   = ecal_sample_client.uname();
-    client.sname   = ecal_sample_client.sname();
-    client.sid     = ecal_sample_client.sid();
-    client.pid     = static_cast<int>(ecal_sample_client.pid());
-
-    client.version = static_cast<unsigned int>(ecal_sample_client.version());
-
-    // create unique client key
-    client.key = client.sname + ":" + client.sid + "@" + std::to_string(client.pid) + "@" + client.hname;
-
-    // inform matching services
-    {
-      std::shared_lock<std::shared_timed_mutex> const lock(m_service_set_sync);
-      for (const auto& iter : m_service_set)
-      {
-        if (iter->GetServiceName() == client.sname)
-        {
-          iter->RegisterClient(client.key, client);
-        }
-      }
-    }
-  }
-
   void CServiceGate::RefreshRegistrations()
   {
     if (!m_created) return;
