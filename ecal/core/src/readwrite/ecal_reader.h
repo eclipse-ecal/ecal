@@ -116,6 +116,7 @@ namespace eCAL
     bool CheckMessageClock(const std::string& tid_, long long current_clock_);
 
     std::string                               m_host_name;
+    std::string                               m_host_group_name;
     int                                       m_host_id;
     int                                       m_pid;
     std::string                               m_pname;

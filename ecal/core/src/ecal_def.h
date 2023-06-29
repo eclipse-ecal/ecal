@@ -173,7 +173,7 @@
 /**********************************************************************************************/
 /* enable distribution of monitoring/registration information via shared memory */
 #define EXP_SHM_MONITORING_ENABLED                  false
-/* disable distribution of monitoring/registration information via network (default) */
+/* disable distribution of monitoring/registration information via network */
 #define EXP_NETWORK_MONITORING_DISABLED             false
 /* queue size of monitoring/registration events  */
 #define EXP_SHM_MONITORING_QUEUE_SIZE               1024
@@ -184,3 +184,6 @@
 
 /* enable dropping of payload messages that arrive out of order */
 #define EXP_DROP_OUT_OF_ORDER_MESSAGES              false
+
+/* common host group name that enables interprocess mechanisms across (virtual) host borders (e.g, Docker); by default equivalent to local host name */
+#define EXP_HOST_GROUP_NAME                         ""

@@ -122,3 +122,4 @@
 #define  EXP_SHM_MONITORING_QUEUE_SIZE_S     "shm_monitoring_queue_size"
 #define  EXP_SHM_MONITORING_DOMAIN_S         "shm_monitoring_domain"
 #define  EXP_DROP_OUT_OF_ORDER_MESSAGES_S    "drop_out_of_order_messages"
+#define  EXP_HOST_GROUP_NAME_S               "host_group_name"

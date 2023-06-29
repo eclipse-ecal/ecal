@@ -188,6 +188,7 @@ namespace eCAL
       ECAL_API size_t            GetShmMonitoringQueueSize          () { return static_cast<size_t>(eCALPAR(EXP, SHM_MONITORING_QUEUE_SIZE)); }
       ECAL_API std::string       GetShmMonitoringDomain             () { return eCALPAR(EXP, SHM_MONITORING_DOMAIN);}
       ECAL_API bool              GetDropOutOfOrderMessages          () { return eCALPAR(EXP, DROP_OUT_OF_ORDER_MESSAGES); }
+      ECAL_API std::string       GetHostGroupName                   () { return eCALPAR(EXP, HOST_GROUP_NAME); }
     }
   }
 }

@@ -320,6 +320,11 @@ namespace eCAL
       return(g_host_name);
     }
 
+    std::string GetHostGroupName()
+    {
+      return Config::Experimental::GetHostGroupName().empty() ? GetHostName() : Config::Experimental::GetHostGroupName();
+    }
+
     int GetHostID()
     {
       return internal::GetHostID();

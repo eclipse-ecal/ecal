@@ -304,11 +304,12 @@ namespace eCAL
       const std::lock_guard<std::mutex> lock(pTopicMap->sync);
 
       // common infos
-      const int          host_id      = sample_topic.hid();
-      const std::string& host_name    = sample_topic.hname();
-      const std::string& process_name = sample_topic.pname();
-      const std::string& unit_name    = sample_topic.uname();
-      const std::string& topic_id     = sample_topic.tid();
+      const int          host_id         = sample_topic.hid();
+      const std::string& host_name       = sample_topic.hname();
+      const std::string& host_group_name = sample_topic.hgname();
+      const std::string& process_name    = sample_topic.pname();
+      const std::string& unit_name       = sample_topic.uname();
+      const std::string& topic_id        = sample_topic.tid();
       std::string        direction;
       switch (pubsub_type_)
       {
@@ -333,6 +334,7 @@ namespace eCAL
       // set static content
       TopicInfo.hid       = host_id;
       TopicInfo.hname     = host_name;
+      TopicInfo.hgname    = host_group_name;
       TopicInfo.pid       = process_id;
       TopicInfo.pname     = process_name;
       TopicInfo.uname     = unit_name;
@@ -942,6 +944,9 @@ namespace eCAL
 
       // host name
       pMonTopic->set_hname(topic.second.hname);
+
+      // host group name
+      pMonTopic->set_hgname(topic.second.hgname);
 
       // process id
       pMonTopic->set_pid(topic.second.pid);

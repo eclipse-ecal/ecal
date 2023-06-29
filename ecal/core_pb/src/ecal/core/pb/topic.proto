@@ -54,6 +54,7 @@ message Topic                                     // eCAL topic
   int32              rclock                =  1;  // registration clock (heart beat)
   int32              hid                   = 26;  // host id
   string             hname                 =  2;  // host name
+  string             hgname                = 28;  // host group name
   int32              pid                   =  3;  // process id
   string             pname                 =  4;  // process name
   string             uname                 =  5;  // unit name
