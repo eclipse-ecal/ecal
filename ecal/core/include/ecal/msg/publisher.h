@@ -94,19 +94,34 @@ namespace eCAL
 
     virtual ~CMsgPublisher() = default;
 
+
+
     /**
-     * @brief  Creates this object. 
+     * @brief  Creates this object.
      *
-     * @param topic_name_   Unique topic name. 
-     * @param topic_type_   Type name (optional for type checking). 
-     * @param topic_desc_   Type description (optional for description checking). 
+     * @param topic_name_   Unique topic name.
+     * @param topic_type_   Type name (optional for type checking).
+     * @param topic_desc_   Type description (optional for description checking).
      *
-     * @return  True if it succeeds, false if it fails. 
+     * @return  True if it succeeds, false if it fails.
     **/
-    [[deprecated("Please use the method CMsgSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6. ")]]
+    [[deprecated("Please use the method Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6. ")]]
     bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "")
     {
       return(CPublisher::Create(topic_name_, topic_type_, topic_desc_));
+    }
+
+    /**
+     * @brief  Creates this object.
+     *
+     * @param topic_name_   Unique topic name.
+     * @param topic_info_   Associated topic information.
+     *
+     * @return  True if it succeeds, false if it fails.
+    **/
+    bool Create(const std::string& topic_name_, const STopicInformation& topic_info_)
+    {
+      return(CPublisher::Create(topic_name_, topic_info_));
     }
 
     /**
