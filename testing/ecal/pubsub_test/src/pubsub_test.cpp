@@ -20,6 +20,7 @@
 #include <ecal/ecal.h>
 
 #include <atomic>
+#include <thread>
 
 #include <gtest/gtest.h>
 
@@ -809,3 +810,70 @@ TEST(IO, ZeroPayloadMessageTCP)
   eCAL::Finalize();
 }
 #endif
+
+#include <ecal/msg/string/publisher.h>
+#include <ecal/msg/string/subscriber.h>
+TEST(IO, DestroyInCallback)
+{
+  /* Test setup :
+   * 2 pair of pub_sub connections ("foo" and "destroy")
+   * "foo" publisher sends message every 100ms
+   * "destroy" publisher sends destroy message after 2 seconds, which will destroy foo subscriber in its callback
+   * Test ensures that this does not create a deadlock or other unintended situation.
+  */
+
+  // initialize eCAL API
+  eCAL::Initialize(0, nullptr, "New Publisher in Callback");
+
+  // enable loop back communication in the same thread
+  eCAL::Util::EnableLoopback(true);
+
+  // start publishing thread
+  eCAL::string::CPublisher<std::string> pub_foo("foo");
+  eCAL::string::CSubscriber<std::string> sub_foo("foo");
+
+  eCAL::string::CPublisher<std::string> pub_destroy("destroy");
+  eCAL::string::CSubscriber<std::string> sub_destroy("destroy");
+  std::atomic<bool> destroyed(false);
+
+  auto destroy_lambda = [&sub_foo, &destroyed](const char* /*topic_*/, const std::string& /*msg*/, long long /*time_*/, long long /*clock_*/, long long /*id_*/) {
+    std::cout << "Receive destroy command" << std::endl;
+    sub_foo.Destroy();
+    destroyed = true;
+    std::cout << "Finnished destroying" << std::endl;
+  };
+  sub_destroy.AddReceiveCallback(destroy_lambda);
+
+  auto receive_lambda = [](const char* /*topic_*/, const std::string& /*msg*/, long long /*time_*/, long long /*clock_*/, long long /*id_*/) {
+    std::cout << "Hello" << std::endl;
+  };
+  sub_foo.AddReceiveCallback(receive_lambda);
+
+  // sleep for 2 seconds, registration should be good!
+  std::this_thread::sleep_for(std::chrono::seconds(2));
+
+  std::thread pub_foo_t([&pub_foo, &destroyed]() {
+    while (!destroyed)
+    {
+      pub_foo.Send("Hello World");
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+    std::cout << "Stopped sending foo" << std::endl;
+    });
+
+  std::thread pub_destroy_t([&pub_destroy]() {
+    // sleep for two second, then send the destroy command
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::cout << "Sending destroy message" << std::endl;
+    pub_destroy.Send("Destroy");
+    std::cout << "Done sending destroy message" << std::endl;
+    });
+
+
+  pub_foo_t.join();
+  pub_destroy_t.join();
+
+  // finalize eCAL API
+  // without destroying any pub / sub
+  eCAL::Finalize();
+}
