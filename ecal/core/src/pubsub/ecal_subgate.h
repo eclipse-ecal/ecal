@@ -43,8 +43,8 @@ namespace eCAL
     void Create();
     void Destroy();
 
-    bool Register(const std::string& topic_name_, std::shared_ptr<CDataReader> datareader_);
-    bool Unregister(const std::string& topic_name_, std::shared_ptr<CDataReader> datareader_);
+    bool Register(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_);
+    bool Unregister(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_);
 
     bool HasSample(const std::string& sample_name_);
     bool ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType layer_);

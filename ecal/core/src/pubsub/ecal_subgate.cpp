@@ -94,7 +94,7 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CSubGate::Register(const std::string& topic_name_, std::shared_ptr<CDataReader> datareader_)
+  bool CSubGate::Register(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_)
   {
     if(!m_created) return(false);
 
@@ -105,7 +105,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CSubGate::Unregister(const std::string& topic_name_, std::shared_ptr<CDataReader> datareader_)
+  bool CSubGate::Unregister(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_)
   {
     if(!m_created) return(false);
     bool ret_state = false;

@@ -49,8 +49,8 @@ namespace eCAL
     void ShareDescription(bool state_);
     bool DescriptionShared() const { return m_share_desc; };
 
-    bool Register(const std::string& topic_name_, std::shared_ptr<CDataWriter> datawriter_);
-    bool Unregister(const std::string& topic_name_, std::shared_ptr<CDataWriter> datawriter_);
+    bool Register(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_);
+    bool Unregister(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_);
 
     void ApplyLocSubRegistration(const eCAL::pb::Sample& ecal_sample_);
     void ApplyLocSubUnregistration(const eCAL::pb::Sample& ecal_sample_);

@@ -77,7 +77,7 @@ namespace eCAL
     m_share_desc = state_;
   }
 
-  bool CPubGate::Register(const std::string& topic_name_, std::shared_ptr<CDataWriter> datawriter_)
+  bool CPubGate::Register(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_)
   {
     if(!m_created) return(false);
 
@@ -88,7 +88,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CPubGate::Unregister(const std::string& topic_name_, std::shared_ptr<CDataWriter> datawriter_)
+  bool CPubGate::Unregister(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_)
   {
     if(!m_created) return(false);
     bool ret_state = false;
