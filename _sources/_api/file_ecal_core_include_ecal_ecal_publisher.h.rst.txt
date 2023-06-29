@@ -50,6 +50,8 @@ Includes
 
 - ``ecal/types/topic_information.h``
 
+- ``memory``
+
 - ``string``
 
 
