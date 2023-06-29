@@ -116,7 +116,6 @@ namespace eCAL
      *
      * @param topic_name_   Unique topic name.
      * @param topic_info_   Associated topic information.
-     * @param topic_desc_   Type description (optional for description checking).
      *
      * @return  True if it succeeds, false if it fails.
     **/
