@@ -73,10 +73,17 @@ Program Listing for File publisher.h
    
        virtual ~CMsgPublisher() = default;
    
-       [[deprecated("Please use the method CMsgSubscriber(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6. ")]]
+   
+   
+       [[deprecated("Please use the method Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6. ")]]
        bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "")
        {
          return(CPublisher::Create(topic_name_, topic_type_, topic_desc_));
+       }
+   
+       bool Create(const std::string& topic_name_, const STopicInformation& topic_info_)
+       {
+         return(CPublisher::Create(topic_name_, topic_info_));
        }
    
        bool Destroy()
