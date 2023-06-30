@@ -97,9 +97,9 @@ namespace eCAL
 
     // refresh service registrations
     std::shared_lock<std::shared_timed_mutex> const lock(m_service_set_sync);
-    for (const auto& iter : m_service_set)
+    for (const auto& service_server_impl : m_service_set)
     {
-      iter->RefreshRegistration();
+      service_server_impl->RefreshRegistration();
     }
   }
 }

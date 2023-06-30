@@ -147,9 +147,6 @@ set(ecal_service_cpp_src
     src/service/ecal_service_server_impl.h
     src/service/ecal_service_singleton_manager.cpp
     src/service/ecal_service_singleton_manager.h
-    src/service/ecal_tcpclient.cpp
-    src/service/ecal_tcpclient.h
-#    src/service/ecal_tcpheader.h TODO Remove
 )
 
 set(ecal_cmn_cpp_src

@@ -47,14 +47,18 @@ namespace eCAL
     // Constructor, Destructor, Create
     /////////////////////////////////////
     public:
-      static std::shared_ptr<ClientSessionV1> create(asio::io_context&      io_context_
+      static std::shared_ptr<ClientSessionV1> create(asio::io_context&      io_context
                                                     , const std::string&    address
                                                     , std::uint16_t         port
-                                                    , const EventCallbackT& event_callback_
+                                                    , const EventCallbackT& event_callback
                                                     , const LoggerT&        logger_ = default_logger("Service Client V1"));
 
     protected:
-      ClientSessionV1(asio::io_context& io_context_, const EventCallbackT& event_callback_, const LoggerT& logger);
+      ClientSessionV1(asio::io_context&     io_context
+                    , const std::string&    address
+                    , std::uint16_t         port
+                    , const EventCallbackT& event_callback
+                    , const LoggerT&        logger);
 
     public:
       ~ClientSessionV1() override;
@@ -63,7 +67,7 @@ namespace eCAL
     // Connection establishement
     //////////////////////////////////////
     private:
-      void resolve_endpoint(const std::string& address, std::uint16_t port);
+      void resolve_endpoint();
       void connect_to_endpoint(const asio::ip::tcp::resolver::iterator& resolved_endpoints);
 
       void send_protocol_handshake_request();
@@ -83,9 +87,11 @@ namespace eCAL
     // Status API
     //////////////////////////////////////
     public:
-      State        get_state()                     const override;
-      std::uint8_t get_accepted_protocol_version() const override;
-      int          get_queue_size()                const override;
+      std::string   get_address()                   const override;
+      std::uint16_t get_port()                      const override;
+      State         get_state()                     const override;
+      std::uint8_t  get_accepted_protocol_version() const override;
+      int           get_queue_size()                const override;
 
     //////////////////////////////////////
     // Shutdown
@@ -102,6 +108,9 @@ namespace eCAL
     private:
       static constexpr std::uint8_t MIN_SUPPORTED_PROTOCOL_VERSION = 1;
       static constexpr std::uint8_t MAX_SUPPORTED_PROTOCOL_VERSION = 1;
+
+      const std::string         address_;                                       //!< The original address that this client was created with.
+      const std::uint16_t       port_;                                          //!< The original port that this client was created with.
 
       asio::io_context::strand  service_call_queue_strand_;
       asio::ip::tcp::resolver   resolver_;

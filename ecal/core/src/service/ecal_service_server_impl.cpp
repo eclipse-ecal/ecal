@@ -65,6 +65,10 @@ namespace eCAL
 
     // Get global server manager
     auto server_manager = eCAL::service::global_server_manager();
+    // TODO: Check for nullptr
+
+    if (!server_manager || server_manager->is_stopped())
+      return false;
 
     // Create callback functions
     const eCAL::service::Server::EventCallbackT event_callback
@@ -264,8 +268,15 @@ namespace eCAL
   }
 
   // called by the eCAL::CServiceGate to register a client
-  void CServiceServerImpl::RegisterClient(const std::string& /*key_*/, const SClientAttr& /*client_*/)
+  void CServiceServerImpl::RegisterClient(const std::string& /*key_*/, const SClientAttr& /*client_*/) // TODO: This function is empty, why does it exist????
   {
+  }
+
+  // called by eCAL:CServiceGate every second to update registration layer
+  void CServiceServerImpl::RefreshRegistration()
+  {
+    if (!m_created) return;
+    Register(false);
   }
 
   void CServiceServerImpl::Register(const bool force_)

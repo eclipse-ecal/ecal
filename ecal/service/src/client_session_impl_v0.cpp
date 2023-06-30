@@ -32,23 +32,29 @@ namespace eCAL
     /////////////////////////////////////
     // Constructor, Destructor, Create
     /////////////////////////////////////
-    std::shared_ptr<ClientSessionV0> ClientSessionV0::create(asio::io_context&      io_context_
+    std::shared_ptr<ClientSessionV0> ClientSessionV0::create(asio::io_context&      io_context
                                                             , const std::string&    address
                                                             , std::uint16_t         port
                                                             , const EventCallbackT& event_callback
                                                             , const LoggerT&        logger)
     {
-      std::shared_ptr<ClientSessionV0> instance(new ClientSessionV0(io_context_, event_callback, logger));
+      std::shared_ptr<ClientSessionV0> instance(new ClientSessionV0(io_context, address, port, event_callback, logger));
 
-      instance->resolve_endpoint(address, port);
+      instance->resolve_endpoint();
 
       return instance;
     }
 
-    ClientSessionV0::ClientSessionV0(asio::io_context& io_context_, const EventCallbackT& event_callback, const LoggerT& logger)
-      : ClientSessionBase(io_context_, event_callback)
-      , resolver_                 (io_context_)
-      , service_call_queue_strand_(io_context_)
+    ClientSessionV0::ClientSessionV0(asio::io_context&      io_context
+                                    , const std::string&    address
+                                    , std::uint16_t         port
+                                    , const EventCallbackT& event_callback
+                                    , const LoggerT&        logger)
+      : ClientSessionBase(io_context, event_callback)
+      , address_                  (address)
+      , port_                     (port)
+      , resolver_                 (io_context)
+      , service_call_queue_strand_(io_context)
       , logger_                   (logger)
       , state_                    (State::NOT_CONNECTED)
       , service_call_in_progress_ (false)
@@ -64,19 +70,19 @@ namespace eCAL
     //////////////////////////////////////
     // Connection establishement
     //////////////////////////////////////
-    void ClientSessionV0::resolve_endpoint(const std::string& address, std::uint16_t port)
+    void ClientSessionV0::resolve_endpoint()
     {
-      ECAL_SERVICE_LOG_DEBUG(logger_, "Resolving endpoint [" + address + ":" + std::to_string(port) + "]...");
+      ECAL_SERVICE_LOG_DEBUG(logger_, "Resolving endpoint [" + address_ + ":" + std::to_string(port_) + "]...");
 
-      const asio::ip::tcp::resolver::query query(address, std::to_string(port));
+      const asio::ip::tcp::resolver::query query(address_, std::to_string(port_));
 
       resolver_.async_resolve(query
-                            , service_call_queue_strand_.wrap([me = enable_shared_from_this<ClientSessionV0>::shared_from_this(), address, port]
+                            , service_call_queue_strand_.wrap([me = enable_shared_from_this<ClientSessionV0>::shared_from_this()]
                               (asio::error_code ec, const asio::ip::tcp::resolver::iterator& resolved_endpoints)
                               {
                                 if (ec)
                                 {
-                                  const std::string message = "Failed resolving endpoint [" + address + ":" + std::to_string(port) + "]: " + ec.message();
+                                  const std::string message = "Failed resolving endpoint [" + me->address_ + ":" + std::to_string(me->port_) + "]: " + ec.message();
                                   me->logger_(LogLevel::Error, message);
                                   me->handle_connection_loss_error(message);
                                   return;
@@ -319,6 +325,17 @@ namespace eCAL
     //////////////////////////////////////
     // Status API
     //////////////////////////////////////
+    
+    std::string ClientSessionV0::get_address() const
+    {
+      return address_;
+    }
+
+    std::uint16_t ClientSessionV0::get_port() const
+    {
+      return port_;
+    }
+
     State ClientSessionV0::get_state() const
     {
       const std::lock_guard<std::mutex> lock(service_state_mutex_);

@@ -36,7 +36,7 @@ public:
     return newValue;
   }
 
-  T operator++(int) 
+  T operator++(T) 
   {
     std::lock_guard<std::mutex> lock(mutex);
     T oldValue = value++;
@@ -52,7 +52,7 @@ public:
     return newValue;
   }
 
-  T operator--(int) 
+  T operator--(T) 
   {
     std::lock_guard<std::mutex> lock(mutex);
     T oldValue = value--;

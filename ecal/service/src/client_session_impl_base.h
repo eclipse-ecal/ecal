@@ -68,9 +68,12 @@ namespace eCAL
     public:
       virtual void async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback) = 0;
 
-      virtual State        get_state()                     const = 0;
-      virtual std::uint8_t get_accepted_protocol_version() const = 0;
-      virtual int          get_queue_size()                const = 0;
+      virtual std::string   get_address()                   const = 0;
+      virtual std::uint16_t get_port()                      const = 0;
+
+      virtual State         get_state()                     const = 0;
+      virtual std::uint8_t  get_accepted_protocol_version() const = 0;
+      virtual int           get_queue_size()                const = 0;
 
       virtual void stop() = 0;
 
@@ -81,6 +84,7 @@ namespace eCAL
       asio::io_context&     io_context_;
       asio::ip::tcp::socket socket_;
       const EventCallbackT  event_callback_;
+
     };
 
   } // namespace service

@@ -103,11 +103,14 @@ namespace eCAL
       void async_call_service(const std::shared_ptr<const std::string>& request, const ResponseCallbackT& response_callback);
       eCAL::service::Error call_service(const std::shared_ptr<const std::string>& request, std::shared_ptr<std::string>& response);
 
-      State        get_state()                     const; // TODO: Test these values
-      std::uint8_t get_accepted_protocol_version() const; // TODO: Test these values
-      int          get_queue_size()                const; // TODO: Test these values
+      std::string   get_address()                  const;
+      std::uint16_t get_port()                     const;
 
-      void         stop();
+      State         get_state()                     const; // TODO: Test these values
+      std::uint8_t  get_accepted_protocol_version() const; // TODO: Test these values
+      int           get_queue_size()                const; // TODO: Test these values
+
+      void          stop();
 
     //////////////////////////////////////////////
     // Member Variables

@@ -101,5 +101,11 @@ namespace eCAL
       work_.reset();
     }
 
+    bool ServerManager::is_stopped() const
+    {
+      std::lock_guard<std::mutex> lock(server_manager_mutex_);
+      return stopped_;
+    }
+
   }
 }
