@@ -687,7 +687,7 @@ namespace eCAL
       auto client = m_client_map.find(iter.key);
       if (client == m_client_map.end())
       {
-        auto client_manager = eCAL::service::global_client_manager();
+        auto client_manager = eCAL::service::ServiceManager::instance()->get_client_manager();
         if (client_manager == nullptr || client_manager->is_stopped()) return;
 
         // Event callback

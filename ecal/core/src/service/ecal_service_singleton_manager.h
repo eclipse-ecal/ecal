@@ -28,9 +28,43 @@ namespace eCAL
 {
   namespace service
   {
-	std::shared_ptr<eCAL::service::ClientManager> global_client_manager();
-    std::shared_ptr<eCAL::service::ServerManager> global_server_manager();
+	class ServiceManager
+	{
+	////////////////////////////////////////////////////////////
+	// Singleton interface, Constructor, destructor
+	////////////////////////////////////////////////////////////
+	public:
+	  static ServiceManager* instance();
 
-    void stop_global_service_managers();
+	protected:
+	  ServiceManager();
+
+	public:
+	  ~ServiceManager();
+
+	////////////////////////////////////////////////////////////
+	// Public API
+	////////////////////////////////////////////////////////////
+	public:
+	  std::shared_ptr<eCAL::service::ClientManager> get_client_manager();
+	  std::shared_ptr<eCAL::service::ServerManager> get_server_manager();
+	  void stop();
+
+	////////////////////////////////////////////////////////////
+	// Member variables
+	////////////////////////////////////////////////////////////
+	private:
+	  static const size_t num_io_threads = 4;
+
+	  std::mutex                                    singleton_mutex;
+
+      std::atomic<bool>                             stopped;
+      std::unique_ptr<asio::io_context>             io_context;
+      std::vector<std::unique_ptr<std::thread>>     io_threads;
+
+	  std::shared_ptr<eCAL::service::ClientManager> client_manager;
+      std::shared_ptr<eCAL::service::ServerManager> server_manager;
+	};
+
   }
 }

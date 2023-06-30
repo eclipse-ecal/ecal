@@ -64,7 +64,7 @@ namespace eCAL
     m_service_id = counter.str();
 
     // Get global server manager
-    auto server_manager = eCAL::service::global_server_manager();
+    auto server_manager = eCAL::service::ServiceManager::instance()->get_server_manager();
     // TODO: Check for nullptr
 
     if (!server_manager || server_manager->is_stopped())

@@ -25,19 +25,6 @@ namespace eCAL
 {
   namespace service
   {
-    namespace
-    {
-      std::mutex                                    singleton_mutex;
-
-      std::atomic<bool>                             stopped(false);
-
-      std::unique_ptr<asio::io_context>             io_context;
-      std::vector<std::unique_ptr<std::thread>>     io_threads;
-      constexpr size_t                              num_io_threads = 4;
-
-      std::shared_ptr<eCAL::service::ClientManager> client_manager;
-      std::shared_ptr<eCAL::service::ServerManager> server_manager;
-    }
 
     eCAL::service::LoggerT ecal_logger(const std::string& node_name)
     {
@@ -70,7 +57,30 @@ namespace eCAL
 
     }
 
-    std::shared_ptr<eCAL::service::ClientManager> global_client_manager()
+    ////////////////////////////////////////////////////////////
+	// Singleton interface, Constructor, destructor
+	////////////////////////////////////////////////////////////
+	
+    ServiceManager* ServiceManager::instance()
+    {
+      static ServiceManager instance;
+      return &instance;
+    }
+
+    ServiceManager::ServiceManager()
+      : stopped(false)
+    {}
+
+    ServiceManager::~ServiceManager()
+    {
+      stop();
+    }
+
+	////////////////////////////////////////////////////////////
+	// Public API
+	////////////////////////////////////////////////////////////
+
+    std::shared_ptr<eCAL::service::ClientManager> ServiceManager::get_client_manager()
     {
       // Quickly check the atomic stopped boolean before actually locking the
       // mutex. It can theoretically change before we got mutex access, so we
@@ -95,7 +105,7 @@ namespace eCAL
         {
           for (int i = 0; i < num_io_threads; i++)
           {
-            io_threads.emplace_back(std::make_unique<std::thread>([]() { io_context->run(); }));
+            io_threads.emplace_back(std::make_unique<std::thread>([this]() { io_context->run(); }));
           }
         }
         
@@ -107,7 +117,7 @@ namespace eCAL
       return nullptr;
     }
 
-    std::shared_ptr<eCAL::service::ServerManager> global_server_manager()
+    std::shared_ptr<eCAL::service::ServerManager> ServiceManager::get_server_manager()
     {
       // Quickly check the atomic stopped boolean before actually locking the
       // mutex. It can theoretically change before we got mutex access, so we
@@ -132,7 +142,7 @@ namespace eCAL
         {
           for (int i = 0; i < num_io_threads; i++)
           {
-            io_threads.emplace_back(std::make_unique<std::thread>([]() { io_context->run(); }));
+            io_threads.emplace_back(std::make_unique<std::thread>([this]() { io_context->run(); }));
           }
         }
         
@@ -144,7 +154,7 @@ namespace eCAL
       return nullptr;
     }
 
-    void stop_global_service_managers()
+    void ServiceManager::stop()
     {
       std::lock_guard<std::mutex> singleton_lock(singleton_mutex);
 
