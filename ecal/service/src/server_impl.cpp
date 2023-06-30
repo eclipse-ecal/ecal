@@ -89,7 +89,19 @@ namespace eCAL
     int ServerImpl::get_connection_count() const
     {
       const std::lock_guard<std::mutex> session_list_lock(session_list_mutex_);
-      return static_cast<int>(session_list_.size());
+      int connection_count = 0;
+      
+      // Iterate over all sessions and count the ones that are still alive
+      for (const auto& session : session_list_)
+      {
+        auto session_ptr = session.lock();
+        if (session_ptr && (session_ptr->get_state() != eCAL::service::State::FAILED))
+        {
+          ++connection_count;
+        }
+      }
+
+      return connection_count;
     }
 
     std::uint16_t ServerImpl::get_port() const

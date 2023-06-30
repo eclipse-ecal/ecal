@@ -54,7 +54,7 @@ namespace eCAL
 	// Member variables
 	////////////////////////////////////////////////////////////
 	private:
-	  static const size_t num_io_threads = 4;
+	  static constexpr size_t num_io_threads = 4;
 
 	  std::mutex                                    singleton_mutex;
 

@@ -40,6 +40,7 @@
 #include "ecal/cimpl/ecal_callback_cimpl.h"
 
 #include <ecal/service/server_session_types.h>
+#include <ecal/service/state.h>
 
 namespace eCAL
 {
@@ -79,6 +80,8 @@ namespace eCAL
       asio::ip::tcp::socket& socket() { return socket_; }
       virtual void start() = 0;
       virtual void stop()  = 0;
+
+      virtual eCAL::service::State get_state() const = 0;
 
     /////////////////////////////////////
     // Member variables

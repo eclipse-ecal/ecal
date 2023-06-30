@@ -73,6 +73,8 @@ namespace eCAL
       void start() override;
       void stop()  override;
 
+      eCAL::service::State get_state() const override;
+
     private:
       void receive_handshake_request();
       void send_handshake_response();
@@ -87,7 +89,7 @@ namespace eCAL
       static constexpr std::uint8_t MIN_SUPPORTED_PROTOCOL_VERSION = 1;
       static constexpr std::uint8_t MAX_SUPPORTED_PROTOCOL_VERSION = 1;
 
-      State                   state_;
+      std::atomic<State>      state_;
       std::uint8_t            accepted_protocol_version_;
 
       const LoggerT logger_;

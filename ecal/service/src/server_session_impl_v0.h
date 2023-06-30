@@ -73,6 +73,8 @@ namespace eCAL
       void start() override;
       void stop()  override;
 
+      eCAL::service::State get_state() const override;
+
     private:
       void handle_read(const asio::error_code& ec, size_t bytes_transferred, const std::shared_ptr<std::string>& request);
 
@@ -84,7 +86,7 @@ namespace eCAL
     private:
       const LoggerT logger_;
 
-      State                    state_;
+      std::atomic<State>  state_;
 
       enum { max_length = 64 * 1024 };
       char                   data_[max_length]{};

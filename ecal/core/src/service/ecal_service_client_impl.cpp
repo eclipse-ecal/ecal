@@ -693,9 +693,23 @@ namespace eCAL
         // Event callback
         // TODO: Make an actual implementation
         const eCAL::service::ClientSession::EventCallbackT event_callback
-                = []
-                  (eCAL_Client_Event /*event*/, const std::string& /*message*/) -> void
-                  {};
+                = [this, service_ = iter] // TODO: using the this pointer here is extremely unsafe, as it actually forces us to manage the lifetime of this object
+                  (eCAL_Client_Event event, const std::string& message) -> void
+                  {
+
+          // TODO: I have no idea why, but for some reason the event callbacks of the actual connetions are not even used. The connect / disconnect callbacks are executed whenever a new connection is found, and not when the client has actually connected or disconnected. I am preserving the previous behavior.
+          
+                    //const std::lock_guard<std::mutex> callback_map_lock(this->m_event_callback_map_sync);
+                    //auto callback_it = this->m_event_callback_map.find(event);
+                    //if (callback_it != m_event_callback_map.end())
+                    //{
+                    //  SClientEventCallbackData sdata;
+                    //  sdata.type = event;
+                    //  sdata.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+                    //  sdata.attr = service_;
+                    //  (callback_it->second)(m_service_name.c_str(), &sdata);
+                    //}
+                  };
 
         // Only connect via V0 protocol / V0 port, if V1 port is not available
         const auto protocol_version = (iter.tcp_port_v1 != 0 ? iter.version : 0);

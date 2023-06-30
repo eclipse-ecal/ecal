@@ -261,9 +261,18 @@ namespace eCAL
     // start destruction
     if (monitoring_instance)             monitoring_instance->Destroy();
     if (timegate_instance)               timegate_instance->Destroy();
+
+    // The order here is EXTREMELY important! First, the actual service
+    // implementation must be stopped (->Service Manager), then the
+    // clientgate/servicegat. The callbacks in the service implementation carry
+    // raw pointers to the gate's functions, so we must make sure that everything
+    // has been executed, before we delete the gates.
+    // 
+    // TODO: just make it a share pointer... it will be soooo much better.
+    eCAL::service::ServiceManager::instance()->stop();
     if (clientgate_instance)             clientgate_instance->Destroy();
     if (servicegate_instance)            servicegate_instance->Destroy();
-    eCAL::service::ServiceManager::instance()->stop();
+
     if (pubgate_instance)                pubgate_instance->Destroy();
     if (subgate_instance)                subgate_instance->Destroy();
     if (registration_receiver_instance)  registration_receiver_instance->Destroy();

@@ -115,6 +115,11 @@ namespace eCAL
       }
     }
 
+    eCAL::service::State ServerSessionV0::get_state() const
+    {
+      return state_;
+    }
+
     void ServerSessionV0::handle_read(const asio::error_code& ec, size_t bytes_transferred, const std::shared_ptr<std::string>& request)
     {
       ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "[" + get_connection_info_string(socket_) + "] " + "Received " + std::to_string(bytes_transferred) + " bytes.");

@@ -72,13 +72,13 @@ namespace eCAL
 
     // Create callback functions
     const eCAL::service::Server::EventCallbackT event_callback
-            = [this](eCAL_Server_Event event, const std::string& message)
+            = [this](eCAL_Server_Event event, const std::string& message) // TODO: incorporating the this pointer here is very unsafe, as it would actually force us to manage the memory of "this", too
               {
                 this->EventCallback(event, message);
               };
     
     const eCAL::service::Server::ServiceCallbackT service_callback
-            = [this](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+            = [this](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int  // TODO: incorporating the this pointer here is very unsafe, as it would actually force us to manage the memory of "this", too
               {
                 // TODO: I can change the signature of the RequestCallback to use shared_ptr
                 return this->RequestCallback(*request, *response);

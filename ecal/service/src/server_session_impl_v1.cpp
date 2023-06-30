@@ -104,6 +104,11 @@ namespace eCAL
       }
     }
 
+    eCAL::service::State ServerSessionV1::get_state() const
+    {
+      return state_;
+    }
+
     void ServerSessionV1::receive_handshake_request()
     {
       ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Waiting for protocol handshake request...");

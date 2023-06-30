@@ -32,6 +32,8 @@
 
 #include "atomic_signalable.h"
 
+// TODO: Test the is_connected() function of the server. It should return false, directly after the disconnected callback has been fired.
+
 eCAL::service::LoggerT critical_logger(const std::string& node_name)
 {
       return [node_name](const eCAL::service::LogLevel log_level, const std::string& message)
