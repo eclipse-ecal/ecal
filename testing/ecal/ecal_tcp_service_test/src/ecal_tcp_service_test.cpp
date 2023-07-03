@@ -2456,7 +2456,7 @@ TEST(BlockingCall, Stopped) // TODO: This test shows the proper way to stop ever
     constexpr int num_calls = 5;
 
     std::vector<std::unique_ptr<std::thread>> call_threads;
-    std::atomic<int> callbacks_completed = 0;
+    std::atomic<int> callbacks_completed(0);
   
     for (int i = 0; i < num_calls; i++)
     {
