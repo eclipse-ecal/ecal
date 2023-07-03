@@ -60,6 +60,10 @@ namespace eCAL
     [[deprecated]]
     bool Call(const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_);
     
+  private:
+    std::shared_ptr<std::vector<std::pair<bool, eCAL::SServiceResponse>>> CallBlocking(const std::string& method_name_, const std::string& request_, std::chrono::nanoseconds timeout_);
+
+  public:
     // blocking call, all responses will be returned in service_response_vec_
     bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_);
 

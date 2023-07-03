@@ -30,6 +30,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace eCAL
 {
@@ -151,8 +152,8 @@ namespace eCAL
     **/
     bool IsConnected();
 
-  protected:
-    CServiceServerImpl*  m_service_server_impl;
+  private:
+    std::shared_ptr<CServiceServerImpl> m_service_server_impl;
     bool                 m_created;
   };
 } 

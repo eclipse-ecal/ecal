@@ -96,7 +96,7 @@ namespace eCAL
         if (!io_context)
           io_context = std::make_unique<asio::io_context>();
 
-        // Create the client manager, if it didn't exit, yet
+        // Create the client manager, if it didn't exist, yet
         if (!client_manager)
           client_manager = eCAL::service::ClientManager::create(*io_context, ecal_logger("Service Client"));
 
@@ -172,6 +172,14 @@ namespace eCAL
       server_manager.reset();
       client_manager.reset();
       io_threads.clear();
+      io_context->reset();
     }
-  }
-}
+
+    void ServiceManager::reset()
+    {
+      std::lock_guard<std::mutex> singleton_lock(singleton_mutex);
+      stopped = false;
+    }
+
+  } // namespace service
+} // namespace eCAL

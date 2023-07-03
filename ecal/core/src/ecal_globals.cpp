@@ -148,6 +148,9 @@ namespace eCAL
 
     if (components_ & Init::Service)
     {
+      // Reset the service manager, so it will be able to create new services, again
+      eCAL::service::ServiceManager::instance()->reset();
+
       /////////////////////
       // SERVICE GATE
       /////////////////////

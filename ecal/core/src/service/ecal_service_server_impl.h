@@ -44,11 +44,22 @@ namespace eCAL
   /**
    * @brief Service server implementation class.
   **/
-  class CServiceServerImpl
+  class CServiceServerImpl : public std::enable_shared_from_this<CServiceServerImpl>
   {
   public:
-    CServiceServerImpl() = default;
-    CServiceServerImpl(const std::string& service_name_);
+    static std::shared_ptr<CServiceServerImpl> CreateInstance();
+    static std::shared_ptr<CServiceServerImpl> CreateInstance(const std::string& service_name_);
+
+  private:
+    CServiceServerImpl();
+
+    // Delete copy and move constructors and assign operators
+    CServiceServerImpl(const CServiceServerImpl&) = delete;             // Copy construct
+    CServiceServerImpl(CServiceServerImpl&&) = delete;                  // Move construct
+    CServiceServerImpl& operator=(const CServiceServerImpl&) = delete;  // Copy assign
+    CServiceServerImpl& operator=(CServiceServerImpl&&) = delete;       // Move assign
+
+  public:
 
     // TODO: The this pointer is used internally, so this class must not be copyable or movable.
 
@@ -78,12 +89,6 @@ namespace eCAL
     void RefreshRegistration();
 
     std::string GetServiceName() { return m_service_name; };
-
-    // this object must not be copied and moved
-    CServiceServerImpl(const CServiceServerImpl&) = delete;
-    CServiceServerImpl& operator=(const CServiceServerImpl&) = delete;
-    CServiceServerImpl(CServiceServerImpl&&) = delete;
-    CServiceServerImpl& operator=(CServiceServerImpl&&) = delete;
 
   protected:
     void Register(bool force_);

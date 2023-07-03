@@ -36,8 +36,16 @@ namespace eCAL
 	public:
 	  static ServiceManager* instance();
 
-	protected:
+	private:
 	  ServiceManager();
+
+	  // Delete copy constructor and assignment operator
+	  ServiceManager(const ServiceManager&)            = delete;
+	  ServiceManager& operator=(const ServiceManager&) = delete;
+
+	  // Delete move constructor and assignment operator
+	  ServiceManager(ServiceManager&&)            = delete;
+	  ServiceManager& operator=(ServiceManager&&) = delete;
 
 	public:
 	  ~ServiceManager();
@@ -48,7 +56,9 @@ namespace eCAL
 	public:
 	  std::shared_ptr<eCAL::service::ClientManager> get_client_manager();
 	  std::shared_ptr<eCAL::service::ServerManager> get_server_manager();
+
 	  void stop();
+	  void reset();
 
 	////////////////////////////////////////////////////////////
 	// Member variables

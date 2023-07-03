@@ -38,13 +38,20 @@
 
 namespace eCAL
 {
-  /**
-   * @brief Service server implementation class.
-  **/
-  CServiceServerImpl::CServiceServerImpl(const std::string& service_name_)
+  std::shared_ptr<CServiceServerImpl> CServiceServerImpl::CreateInstance()
   {
-    Create(service_name_);
+    return std::shared_ptr<CServiceServerImpl>(new CServiceServerImpl());
   }
+
+  std::shared_ptr<CServiceServerImpl> CServiceServerImpl::CreateInstance(const std::string& service_name_)
+  {
+    auto instance = std::shared_ptr<CServiceServerImpl> (new CServiceServerImpl());
+    instance->Create(service_name_);
+    return instance;
+  }
+
+  CServiceServerImpl::CServiceServerImpl()
+  {}
 
   CServiceServerImpl::~CServiceServerImpl()
   {
@@ -72,16 +79,24 @@ namespace eCAL
 
     // Create callback functions
     const eCAL::service::Server::EventCallbackT event_callback
-            = [this](eCAL_Server_Event event, const std::string& message) // TODO: incorporating the this pointer here is very unsafe, as it would actually force us to manage the memory of "this", too
+            = [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())]
+              (eCAL_Server_Event event, const std::string& message) // TODO: incorporating the this pointer here is very unsafe, as it would actually force us to manage the memory of "this", too
               {
-                this->EventCallback(event, message);
+                auto me = weak_me.lock();
+                if (me)
+                  me->EventCallback(event, message);
               };
     
     const eCAL::service::Server::ServiceCallbackT service_callback
-            = [this](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int  // TODO: incorporating the this pointer here is very unsafe, as it would actually force us to manage the memory of "this", too
+            = [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())]
+              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int  // TODO: incorporating the this pointer here is very unsafe, as it would actually force us to manage the memory of "this", too
               {
                 // TODO: I can change the signature of the RequestCallback to use shared_ptr
-                return this->RequestCallback(*request, *response);
+                auto me = weak_me.lock();
+                if (me)
+                  return me->RequestCallback(*request, *response);
+                else
+                  return -1;
               };
 
     // start service protocol version 0

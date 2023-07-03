@@ -106,7 +106,16 @@ namespace eCAL
 
     std::uint16_t ServerImpl::get_port() const
     {
-      return acceptor_.local_endpoint().port();
+      asio::error_code ec;
+      auto endpoint = acceptor_.local_endpoint(ec);
+      if (!ec)
+      {
+        return endpoint.port();
+      }
+      else
+      {
+        return 0;
+      }
     }
 
     void ServerImpl::start_accept(unsigned int version)
