@@ -104,6 +104,7 @@ namespace eCAL
 
       int            rclock;                                    //!< registration clock
       std::string    hname;                                     //!< host name
+      std::string    hgname;                                    //!< host group name
       int            pid;                                       //!< process id
       std::string    pname;                                     //!< process name
       std::string    uname;                                     //!< unit name

@@ -262,6 +262,7 @@ namespace eCAL
     process_sample.set_cmd_type(eCAL::pb::bct_reg_process);
     auto *process_sample_mutable_process = process_sample.mutable_process();
     process_sample_mutable_process->set_hname(Process::GetHostName());
+    process_sample_mutable_process->set_hgname(Process::GetHostGroupName());
     process_sample_mutable_process->set_pid(Process::GetProcessID());
     process_sample_mutable_process->set_pname(Process::GetProcessName());
     process_sample_mutable_process->set_uname(Process::GetUnitName());

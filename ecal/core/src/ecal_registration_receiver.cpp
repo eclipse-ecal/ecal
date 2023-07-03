@@ -405,7 +405,7 @@ namespace eCAL
 
   bool CRegistrationReceiver::IsHostGroupMember(const eCAL::pb::Sample& ecal_sample_)
   {
-    const std::string sample_host_group_name = ecal_sample_.topic().hgname().empty() ? ecal_sample_.topic().hname() : ecal_sample_.topic().hgname();
+    const std::string& sample_host_group_name = ecal_sample_.topic().hgname().empty() ? ecal_sample_.topic().hname() : ecal_sample_.topic().hgname();
 
     if (sample_host_group_name.empty() || m_host_group_name.empty()) 
       return false;

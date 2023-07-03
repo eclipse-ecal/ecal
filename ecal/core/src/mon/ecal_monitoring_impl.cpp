@@ -389,6 +389,7 @@ namespace eCAL
   {
     const auto& sample_process = sample_.process();
     const std::string&    host_name                    = sample_process.hname();
+    const std::string&    host_group_name              = sample_process.hgname();
     const std::string&    process_name                 = sample_process.pname();
     const int             process_id                   = sample_process.pid();
     const std::string&    process_param                = sample_process.pparam();
@@ -419,6 +420,7 @@ namespace eCAL
 
     // set static content
     ProcessInfo.hname  = host_name;
+    ProcessInfo.hgname = host_group_name;
     ProcessInfo.pname  = process_name;
     ProcessInfo.uname  = unit_name;
     ProcessInfo.pid    = process_id;
@@ -785,6 +787,9 @@ namespace eCAL
 
       // host name
       pMonProcs->set_hname(process.second.hname);
+
+      // host group name
+      pMonProcs->set_hgname(process.second.hgname);
 
       // process name
       pMonProcs->set_pname(process.second.pname);
