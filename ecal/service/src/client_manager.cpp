@@ -17,8 +17,6 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
-
 #include <ecal/service/client_manager.h>
 
 namespace eCAL

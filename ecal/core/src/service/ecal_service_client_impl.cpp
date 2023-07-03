@@ -737,7 +737,7 @@ namespace eCAL
         // Event callback
         // TODO: Make an actual implementation
         const eCAL::service::ClientSession::EventCallbackT event_callback
-                = [this, service_ = iter] // TODO: using the this pointer here is extremely unsafe, as it actually forces us to manage the lifetime of this object
+                = [/*this, service_ = iter*/] // TODO: using the this pointer here is extremely unsafe, as it actually forces us to manage the lifetime of this object
                   (eCAL::service::ClientEventType /*event*/, const std::string& /*message*/) -> void
                   {
 

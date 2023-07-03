@@ -139,7 +139,7 @@ namespace eCAL
           asio::async_read(socket
                         , asio::buffer(const_cast<char*>(payload_buffer->data()), payload_buffer->size())
                         , asio::transfer_at_least(payload_buffer->size())
-                        , [&socket, header_buffer, payload_buffer, error_cb, success_cb](asio::error_code ec, std::size_t /*bytes_read*/)
+                        , [header_buffer, payload_buffer, error_cb, success_cb](asio::error_code ec, std::size_t /*bytes_read*/)
                           {
                             if (ec)
                             {
@@ -165,7 +165,7 @@ namespace eCAL
 
         asio::async_write(socket
                         , buffer_list
-                        , [&socket, header_buffer, payload_buffer, error_cb, success_cb](asio::error_code ec, std::size_t /*bytes_sent*/)
+                        , [header_buffer, payload_buffer, error_cb, success_cb](asio::error_code ec, std::size_t /*bytes_sent*/)
                           {
                             if (ec)
                             {

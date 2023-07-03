@@ -27,8 +27,8 @@ class ConditionVariableSignaler
 {
 public:
   ConditionVariableSignaler(std::condition_variable& condition_variable, std::mutex& mutex, bool& is_signaled)
-    : condition_variable_(condition_variable)
-    , mutex_             (mutex)
+    : mutex_             (mutex)
+    , condition_variable_(condition_variable)
     , is_signaled_       (is_signaled)
   {}
 
