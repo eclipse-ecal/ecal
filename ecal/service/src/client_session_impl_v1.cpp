@@ -237,7 +237,7 @@ namespace eCAL
                                     me->logger_(LogLevel::Info, "[" + get_connection_info_string(me->socket_) + "] " + message);
 
                                     // Call event callback
-                                    me->event_callback_(eCAL_Client_Event::client_event_connected, message);
+                                    me->event_callback_(eCAL::service::ClientEventType::Connected, message);
 
                                     // Start sending service requests, if there are any
                                     {
@@ -522,7 +522,7 @@ namespace eCAL
 
       if (call_event_callback)
       {
-        event_callback_(eCAL_Client_Event::client_event_disconnected, error_message);
+        event_callback_(eCAL::service::ClientEventType::Disconnected, error_message);
       }
     }
 

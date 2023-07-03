@@ -223,7 +223,7 @@ namespace eCAL
                               me->state_ = State::CONNECTED;
                                 
                               // call event callback
-                              me->event_callback_(eCAL_Server_Event::server_event_connected, message);
+                              me->event_callback_(eCAL::service::ServerEventType::Connected, message);
 
                               me->receive_service_request();
                             });
@@ -242,7 +242,7 @@ namespace eCAL
                                 me->state_ = State::FAILED;
                                 
                                 // call event callback
-                                me->event_callback_(eCAL_Server_Event::server_event_disconnected, message);
+                                me->event_callback_(eCAL::service::ServerEventType::Disconnected, message);
                                 me->shutdown_callback_(me);
                               }
                             , service_callback_strand_->wrap([me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
@@ -260,7 +260,7 @@ namespace eCAL
                                   me->state_ = State::FAILED;
 
                                   // call event callback
-                                  me->event_callback_(eCAL_Server_Event::server_event_disconnected, message);
+                                  me->event_callback_(eCAL::service::ServerEventType::Disconnected, message);
                                   
                                   me->shutdown_callback_(me);
                                   return;
@@ -302,7 +302,7 @@ namespace eCAL
                                 me->state_ = State::FAILED;
                                 
                                 // call event callback
-                                me->event_callback_(eCAL_Server_Event::server_event_disconnected, message);
+                                me->event_callback_(eCAL::service::ServerEventType::Disconnected, message);
                                 me->shutdown_callback_(me);
                               }
                             , [me = shared_from_this()]()

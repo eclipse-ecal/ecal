@@ -35,8 +35,6 @@
 #pragma warning(pop)
 #endif
 
-#include <ecal/cimpl/ecal_callback_cimpl.h>
-
 #include <ecal/service/logger.h>
 #include <ecal/service/server_session_types.h>
 

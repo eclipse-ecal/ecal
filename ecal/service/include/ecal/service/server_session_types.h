@@ -23,14 +23,18 @@
 #include <memory>
 #include <string>
 
-#include "ecal/cimpl/ecal_callback_cimpl.h"
-
 namespace eCAL
 {
   namespace service
   {
+    enum class ServerEventType: int
+    {
+      Connected,
+      Disconnected,
+    };
+
     // TODO: Ask rex what the return value (int) of this callback is for
     using ServerServiceCallbackT = std::function<int(const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response)>;
-    using ServerEventCallbackT   = std::function<void(eCAL_Server_Event, const std::string&)>;
+    using ServerEventCallbackT   = std::function<void(ServerEventType, const std::string&)>;
   } // namespace service
 } // namespace eCAL

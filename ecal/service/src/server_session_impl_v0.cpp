@@ -74,7 +74,7 @@ namespace eCAL
       ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Starting...");
 
       const std::string message = "Client has connected. Using protocol version 0.";
-      event_callback_(eCAL_Server_Event::server_event_connected, message);
+      event_callback_(eCAL::service::ServerEventType::Connected, message);
       logger_(LogLevel::Info, "[" + get_connection_info_string(socket_) + "] " + message);
 
       // Disable Nagle's algorithm. Nagles Algorithm will otherwise cause the
@@ -141,7 +141,7 @@ namespace eCAL
             state_ = State::FAILED;
             const auto message = "Disconnected on read: " + socket_available_ec.message();
             logger_(eCAL::service::LogLevel::Info, "[" + get_connection_info_string(socket_) + "] " + message);
-            event_callback_(server_event_disconnected, message);
+            event_callback_(eCAL::service::ServerEventType::Disconnected, message);
             shutdown_callback_(shared_from_this());
             return;
           }
@@ -188,7 +188,7 @@ namespace eCAL
         state_ = State::FAILED;
         const auto message = "Disconnected on read: " + ec.message();
         logger_(eCAL::service::LogLevel::Info, "[" + get_connection_info_string(socket_) + "] " + message);
-        event_callback_(server_event_disconnected, message);
+        event_callback_(eCAL::service::ServerEventType::Disconnected, message);
         shutdown_callback_(shared_from_this());
       }
     }
@@ -209,7 +209,7 @@ namespace eCAL
         state_ = State::FAILED;
         const auto message = "Disconnected on write: " + ec.message();
         logger_(eCAL::service::LogLevel::Error, "[" + get_connection_info_string(socket_) + "] " + message);
-        event_callback_(server_event_disconnected, message);
+        event_callback_(eCAL::service::ServerEventType::Disconnected, message);
         shutdown_callback_(shared_from_this());
       }
     }

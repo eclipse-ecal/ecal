@@ -25,13 +25,17 @@
 
 #include <ecal/service/error.h>
 
-#include "ecal/cimpl/ecal_callback_cimpl.h"
-
 namespace eCAL
 {
   namespace service
   {
-    using ClientEventCallbackT    = std::function<void (eCAL_Client_Event, const std::string &)>;  // TODO: Ask Rex what the "eCAL Client Event timeout" is. Should it maybe be fired, when the connection establishement failed? Currently, in that case no event whatsoever is fired, as there is no "Connection failed" event.
+    enum class ClientEventType: int
+    {
+      Connected,
+      Disconnected,
+    };
+
+    using ClientEventCallbackT    = std::function<void (ClientEventType, const std::string &)>;
     using ClientResponseCallbackT = std::function<void (const eCAL::service::Error&, const std::shared_ptr<std::string>&)>;
   } // namespace service
 } // namespace eCAL

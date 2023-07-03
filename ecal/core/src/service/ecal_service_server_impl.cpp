@@ -80,16 +80,30 @@ namespace eCAL
     // Create callback functions
     const eCAL::service::Server::EventCallbackT event_callback
             = [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())]
-              (eCAL_Server_Event event, const std::string& message) // TODO: incorporating the this pointer here is very unsafe, as it would actually force us to manage the memory of "this", too
+              (eCAL::service::ServerEventType event, const std::string& message)
               {
                 auto me = weak_me.lock();
+
+                eCAL_Server_Event ecal_server_event = eCAL_Server_Event::server_event_none;
+                switch (event)
+                {
+                case eCAL::service::ServerEventType::Connected:
+                  ecal_server_event = eCAL_Server_Event::server_event_connected;
+                  break;
+                case eCAL::service::ServerEventType::Disconnected:
+                  ecal_server_event = eCAL_Server_Event::server_event_disconnected;
+                  break;
+                default:
+                  break;
+                }
+
                 if (me)
-                  me->EventCallback(event, message);
+                  me->EventCallback(ecal_server_event, message);
               };
     
     const eCAL::service::Server::ServiceCallbackT service_callback
             = [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())]
-              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int  // TODO: incorporating the this pointer here is very unsafe, as it would actually force us to manage the memory of "this", too
+              (const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
               {
                 // TODO: I can change the signature of the RequestCallback to use shared_ptr
                 auto me = weak_me.lock();

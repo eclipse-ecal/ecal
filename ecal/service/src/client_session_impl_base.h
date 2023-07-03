@@ -28,9 +28,6 @@
 #pragma warning(pop)
 #endif
 
-// TODO: Remove this include. It includes a file from the main eCAL Core library, even though we don't link against it.
-#include "ecal/cimpl/ecal_callback_cimpl.h"
-
 #include <ecal/service/error.h>
 #include <ecal/service/client_session_types.h>
 
