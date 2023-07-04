@@ -77,18 +77,18 @@ namespace eCAL
     m_share_desc = state_;
   }
 
-  bool CPubGate::Register(const std::string& topic_name_, CDataWriter* datawriter_)
+  bool CPubGate::Register(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_)
   {
     if(!m_created) return(false);
 
     // register writer and multicast group
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datawriter_sync);
-    m_topic_name_datawriter_map.emplace(std::pair<std::string, CDataWriter*>(topic_name_, datawriter_));
+    m_topic_name_datawriter_map.emplace(std::pair<std::string, std::shared_ptr<CDataWriter>>(topic_name_, datawriter_));
 
     return(true);
   }
 
-  bool CPubGate::Unregister(const std::string& topic_name_, CDataWriter* datawriter_)
+  bool CPubGate::Unregister(const std::string& topic_name_, const std::shared_ptr<CDataWriter>& datawriter_)
   {
     if(!m_created) return(false);
     bool ret_state = false;

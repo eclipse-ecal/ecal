@@ -297,7 +297,17 @@ namespace eCAL
       }
 #endif // ECAL_NPCAP_SUPPORT
       sstream << std::endl;
+      sstream << std::endl;
 
+      
+
+      sstream << "------------------------- EXPERIMENTAL ---------------------------" << std::endl;
+      sstream << "SHM Monitoring           : " << (Config::Experimental::IsShmMonitoringEnabled() ? "on" : "off") << std::endl;
+      sstream << "SHM Monitoring (Domain)  : " << Config::Experimental::GetShmMonitoringDomain() << std::endl;
+      sstream << "SHM Monitoring (Queue)   : " << Config::Experimental::GetShmMonitoringQueueSize() << std::endl;
+      sstream << "Network Monitoring       : " << (!Config::Experimental::IsNetworkMonitoringDisabled() ? "on" : "off") << std::endl;
+      sstream << "Drop out-of-order msgs   : " << (Config::Experimental::GetDropOutOfOrderMessages() ? "on" : "off") << std::endl;
+      sstream << std::endl;
 
       // write it into std:string
       cfg_s_ = sstream.str();

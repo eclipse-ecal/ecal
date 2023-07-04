@@ -94,18 +94,18 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CSubGate::Register(const std::string& topic_name_, CDataReader* datareader_)
+  bool CSubGate::Register(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_)
   {
     if(!m_created) return(false);
 
     // register reader
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    m_topic_name_datareader_map.emplace(std::pair<std::string, CDataReader*>(topic_name_, datareader_));
+    m_topic_name_datareader_map.emplace(std::pair<std::string, std::shared_ptr<CDataReader>>(topic_name_, datareader_));
 
     return(true);
   }
 
-  bool CSubGate::Unregister(const std::string& topic_name_, CDataReader* datareader_)
+  bool CSubGate::Unregister(const std::string& topic_name_, const std::shared_ptr<CDataReader>& datareader_)
   {
     if(!m_created) return(false);
     bool ret_state = false;
@@ -155,12 +155,22 @@ namespace eCAL
       const auto& ecal_sample_content_payload = ecal_sample_content.payload();
       g_process_rbytes_sum += ecal_sample_.content().payload().size();
 
-      // apply sample to data reader
-      const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-      auto res = m_topic_name_datareader_map.equal_range(ecal_sample_.topic().tname());
-      for (auto it = res.first; it != res.second; ++it)
+      std::vector<std::shared_ptr<CDataReader>> readers_to_apply;
+
+      // Lock the sync map only while extracting the relevant shared pointers to the Datareaders.
+      // Apply the samples to the readers afterwards.
       {
-        sent = it->second->AddSample(
+        // apply sample to data reader
+        const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
+        auto res = m_topic_name_datareader_map.equal_range(ecal_sample_.topic().tname());
+        std::transform(
+          res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second; }
+        );
+      }
+
+      for (const auto& reader : readers_to_apply)
+      {
+        sent = reader->AddSample(
           ecal_sample_.topic().tid(),
           ecal_sample_content_payload.data(),
           ecal_sample_content_payload.size(),
@@ -190,11 +200,22 @@ namespace eCAL
 
     // apply sample to data reader
     size_t sent(0);
-    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
-    auto res = m_topic_name_datareader_map.equal_range(topic_name_);
-    for (auto it = res.first; it != res.second; ++it)
+    std::vector<std::shared_ptr<CDataReader>> readers_to_apply;
+
+    // Lock the sync map only while extracting the relevant shared pointers to the Datareaders.
+    // Apply the samples to the readers afterwards.
     {
-      sent = it->second->AddSample(topic_id_, buf_, len_, id_, clock_, time_, hash_, layer_);
+      const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_datareader_sync);
+      auto res = m_topic_name_datareader_map.equal_range(topic_name_);
+      std::transform(
+        res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second; }
+      );
+    }
+
+
+    for (const auto& reader : readers_to_apply)
+    {
+      sent = reader->AddSample(topic_id_, buf_, len_, id_, clock_, time_, hash_, layer_);
     }
 
     return (sent > 0);

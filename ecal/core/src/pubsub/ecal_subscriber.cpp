@@ -112,7 +112,7 @@ namespace eCAL
     }
 
     // create data reader
-    m_datareader = new CDataReader;
+    m_datareader = std::make_shared<CDataReader>();
     // set qos
     m_datareader->SetQOS(m_qos);
     // create it
@@ -159,9 +159,8 @@ namespace eCAL
     m_datareader->Destroy();
 
     // free datareader
-    delete m_datareader;
-    m_datareader = nullptr;
-
+    m_datareader.reset();
+    
     // we made it :-)
     m_created = false;
 
