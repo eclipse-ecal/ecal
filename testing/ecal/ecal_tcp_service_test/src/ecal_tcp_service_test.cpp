@@ -23,6 +23,8 @@
 
 #include <iostream>
 #include <atomic>
+#include <thread>
+#include <chrono>
 
 #include <ecal/service/server.h> // TODO: Should not be needed, when I use the server manager / client manager
 #include <ecal/service/client_session.h> // TODO: Should not be needed, when I use the server manager / client manager
