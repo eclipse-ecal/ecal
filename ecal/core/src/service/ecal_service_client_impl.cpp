@@ -371,7 +371,7 @@ namespace eCAL
     {
       // Copy our temporary return vector to the user's return vector
       service_response_vec_->resize(responses->size());
-      for (int i = 0; i < responses->size(); i++)
+      for (size_t i = 0; i < responses->size(); i++)
       {
         (*service_response_vec_)[i] = (*responses)[i].second;
       }
@@ -397,7 +397,7 @@ namespace eCAL
       }
 
       // Determine if any call has been successful
-      for (int i = 0; i < responses->size(); i++)
+      for (size_t i = 0; i < responses->size(); i++)
       {
         if ((*responses)[i].second.call_state == call_state_executed)
           return true;
@@ -454,7 +454,7 @@ namespace eCAL
       }
 
       // Determine if any call has been successful and return true, if so.
-      for (int i = 0; i < responses->size(); i++)
+      for (size_t i = 0; i < responses->size(); i++)
       {
         if ((*responses)[i].second.call_state == call_state_executed)
           return true;

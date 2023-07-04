@@ -23,6 +23,8 @@
 
 #include <iostream>
 #include <atomic>
+#include <thread>
+#include <chrono>
 
 #include <ecal/service/server.h> // TODO: Should not be needed, when I use the server manager / client manager
 #include <ecal/service/client_session.h> // TODO: Should not be needed, when I use the server manager / client manager
@@ -949,7 +951,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunication)
     }
 
     // Directly run a bunch of clients and call each client a bunch of times
-    for (int c = 0; c < client_list.size(); c++)
+    for (size_t c = 0; c < client_list.size(); c++)
     {
       for (int i = 0; i < num_calls_per_client; i++)
       {
@@ -1007,7 +1009,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunication)
 
     // join all io_threads
     io_context.stop();
-    for (int i = 0; i < io_threads.size(); i++)
+    for (size_t i = 0; i < io_threads.size(); i++)
     {
       io_threads[i]->join();
     }
@@ -1049,7 +1051,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationNoParallelCalls)
 
     const eCAL::service::Server::EventCallbackT server_event_callback
             = []
-              (eCAL::service::ServerEventType event, const std::string& /*message*/) -> void
+              (eCAL::service::ServerEventType /*event*/, const std::string& /*message*/) -> void
               {};
 
     auto server = eCAL::service::Server::create(io_context, protocol_version, 0, service_callback, false, server_event_callback, critical_logger("Server"));
@@ -1094,7 +1096,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationNoParallelCalls)
     auto start = std::chrono::steady_clock::now();
 
     // Directly run a bunch of clients and call each client a bunch of times
-    for (int c = 0; c < client_list.size(); c++)
+    for (size_t c = 0; c < client_list.size(); c++)
     {
       for (int i = 0; i < num_calls_per_client; i++)
       {
@@ -1136,7 +1138,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationNoParallelCalls)
 
     dummy_work.reset();
     // join all io_threads
-    for (int i = 0; i < io_threads.size(); i++)
+    for (size_t i = 0; i < io_threads.size(); i++)
     {
       io_threads[i]->join();
     }
@@ -1234,7 +1236,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload)
   }
 
   // Directly run a bunch of clients and call each client a bunch of times
-  for (int c = 0; c < client_list.size(); c++)
+  for (size_t c = 0; c < client_list.size(); c++)
   {
     for (int i = 0; i < num_calls_per_client; i++)
     {
@@ -1291,7 +1293,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload)
 
   // join all io_threads
   io_context.stop();
-  for (int i = 0; i < io_threads.size(); i++)
+  for (size_t i = 0; i < io_threads.size(); i++)
   {
     io_threads[i]->join();
   }
@@ -1832,9 +1834,6 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
     constexpr int num_calls_per_client = 50;
     constexpr std::chrono::milliseconds server_time_to_waste(10);
 
-    // computed values
-    constexpr int total_calls = num_clients * num_calls_per_client;
-
     // TODO: Ask Rex: is it OK to execute the service callback in parallel? That is the current case, as every server session is running independently.
     //constexpr std::chrono::milliseconds wait_time_for_destroying_server = server_time_to_waste * total_calls / 2;
     constexpr std::chrono::milliseconds wait_time_for_destroying_server = server_time_to_waste * num_calls_per_client / 2;
@@ -1919,7 +1918,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
     }
 
     // Directly run a bunch of clients and call each client a bunch of times
-    for (int c = 0; c < client_list.size(); c++)
+    for (size_t c = 0; c < client_list.size(); c++)
     {
       for (int i = 0; i < num_calls_per_client; i++)
       {
@@ -1998,7 +1997,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
 
     // join all io_threads
     io_context.stop();
-    for (int i = 0; i < io_threads.size(); i++)
+    for (size_t i = 0; i < io_threads.size(); i++)
     {
       io_threads[i]->join();
     }
@@ -2102,7 +2101,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThroughWithManagers)
     }
 
     // Directly run a bunch of clients and call each client a bunch of times
-    for (int c = 0; c < client_list.size(); c++)
+    for (size_t c = 0; c < client_list.size(); c++)
     {
       for (int i = 0; i < num_calls_per_client; i++)
       {
@@ -2183,7 +2182,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThroughWithManagers)
     client_manager->stop_clients();
 
     // join all io_threads
-    for (int i = 0; i < io_threads.size(); i++)
+    for (size_t i = 0; i < io_threads.size(); i++)
     {
       io_threads[i]->join();
     }
@@ -2420,12 +2419,12 @@ TEST(BlockingCall, Stopped) // TODO: This test shows the proper way to stop ever
 
     const eCAL::service::Server::EventCallbackT server_event_callback
                     = []
-                      (eCAL::service::ServerEventType event, const std::string& message) -> void
+                      (eCAL::service::ServerEventType /*event*/, const std::string& /*message*/) -> void
                       {};
 
     const eCAL::service::ClientSession::EventCallbackT client_event_callback
                     = []
-                      (eCAL::service::ClientEventType event, const std::string& message) -> void
+                      (eCAL::service::ClientEventType /*event*/, const std::string& /*message*/) -> void
                       {};
 
     auto server = server_manager->create_server(protocol_version, 0, server_service_callback, true, server_event_callback);

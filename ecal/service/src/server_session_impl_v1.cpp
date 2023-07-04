@@ -32,6 +32,8 @@ namespace eCAL
 {
   namespace service
   {
+    constexpr std::uint8_t ServerSessionV1::MIN_SUPPORTED_PROTOCOL_VERSION;
+    constexpr std::uint8_t ServerSessionV1::MAX_SUPPORTED_PROTOCOL_VERSION;
 
     std::shared_ptr<ServerSessionV1> ServerSessionV1::create(asio::io_context&                                io_context_
                                                             , const ServerServiceCallbackT&                   service_callback

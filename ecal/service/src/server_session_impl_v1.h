@@ -94,6 +94,5 @@ namespace eCAL
 
       const LoggerT logger_;
     };
-
   }
 }

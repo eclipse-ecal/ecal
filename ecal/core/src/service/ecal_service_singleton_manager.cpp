@@ -25,7 +25,6 @@ namespace eCAL
 {
   namespace service
   {
-
     eCAL::service::LoggerT ecal_logger(const std::string& node_name)
     {
       return [node_name](const LogLevel log_level, const std::string& message)
@@ -60,7 +59,8 @@ namespace eCAL
     ////////////////////////////////////////////////////////////
 	// Singleton interface, Constructor, destructor
 	////////////////////////////////////////////////////////////
-	
+    constexpr size_t ServiceManager::num_io_threads;
+
     ServiceManager* ServiceManager::instance()
     {
       static ServiceManager instance;
@@ -103,7 +103,7 @@ namespace eCAL
         // Start io threads, if necessary
         if (io_threads.empty())
         {
-          for (int i = 0; i < num_io_threads; i++)
+          for (size_t i = 0; i < num_io_threads; i++)
           {
             io_threads.emplace_back(std::make_unique<std::thread>([this]() { io_context->run(); }));
           }
@@ -140,7 +140,7 @@ namespace eCAL
         // Start io threads, if necessary
         if (io_threads.empty())
         {
-          for (int i = 0; i < num_io_threads; i++)
+          for (size_t i = 0; i < num_io_threads; i++)
           {
             io_threads.emplace_back(std::make_unique<std::thread>([this]() { io_context->run(); }));
           }
