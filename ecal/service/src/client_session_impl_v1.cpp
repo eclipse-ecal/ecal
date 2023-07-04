@@ -29,6 +29,9 @@ namespace eCAL
 {
   namespace service
   {
+     constexpr std::uint8_t ClientSessionV1::MIN_SUPPORTED_PROTOCOL_VERSION;
+     constexpr std::uint8_t ClientSessionV1::MAX_SUPPORTED_PROTOCOL_VERSION;
+
     /////////////////////////////////////
     // Constructor, Destructor, Create
     /////////////////////////////////////
@@ -164,8 +167,8 @@ namespace eCAL
       // Fill Handshake Request Message
       payload_buffer->resize(sizeof(ProtocolHandshakeRequestMessage), '\0');
       ProtocolHandshakeRequestMessage* handshake_request_message = reinterpret_cast<ProtocolHandshakeRequestMessage*>(const_cast<char*>(payload_buffer->data()));
-      handshake_request_message->min_supported_protocol_version = 1;
-      handshake_request_message->max_supported_protocol_version = 1;
+      handshake_request_message->min_supported_protocol_version = MIN_SUPPORTED_PROTOCOL_VERSION;
+      handshake_request_message->max_supported_protocol_version = MAX_SUPPORTED_PROTOCOL_VERSION;
 
       // Fill TCP Header
       header_buffer->package_size_n = htonl(sizeof(ProtocolHandshakeRequestMessage));
