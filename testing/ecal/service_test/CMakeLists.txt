@@ -16,7 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(ecal_tcp_service_test)
+project(test_service)
 
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)

@@ -61,7 +61,7 @@ namespace eCAL
                                                   , std::uint16_t            port
                                                   , const EventCallbackT&    event_callback
                                                   , const LoggerT&           logger
-                                                  , const DeleteCallbackT&          deleter);
+                                                  , const DeleteCallbackT&   delete_callback);
 
       static std::shared_ptr<ClientSession> create(asio::io_context&         io_context
                                                   , std::uint8_t             protocol_version
@@ -85,6 +85,7 @@ namespace eCAL
                     , const EventCallbackT&    event_callback
                     , const LoggerT&           logger);
 
+    public:
       // Delete copy constructor and assignment operator
       ClientSession(const ClientSession&)            = delete;
       ClientSession& operator=(const ClientSession&) = delete;
@@ -93,7 +94,6 @@ namespace eCAL
       ClientSession(ClientSession&&)            = delete;
       ClientSession& operator=(ClientSession&&) = delete;
 
-    public:
       ~ClientSession();
 
     //////////////////////////////////////////////

@@ -51,7 +51,7 @@ namespace eCAL
                                                                , std::uint16_t                        port
                                                                , const ClientSession::EventCallbackT& event_callback)
     {
-      std::lock_guard<std::mutex> lock(client_manager_mutex_);
+      const std::lock_guard<std::mutex> lock(client_manager_mutex_);
       if (stopped_)
       {
         return nullptr;
@@ -63,7 +63,7 @@ namespace eCAL
         if (me)
         {
           // Remove the session from the sessions_ map
-          std::lock_guard<std::mutex> lock(me->client_manager_mutex_);
+          const std::lock_guard<std::mutex> lock(me->client_manager_mutex_);
           me->sessions_.erase(session);
         }
       };
@@ -75,7 +75,7 @@ namespace eCAL
 
     size_t ClientManager::client_count() const
     {
-      std::lock_guard<std::mutex> lock(client_manager_mutex_);
+      const std::lock_guard<std::mutex> lock(client_manager_mutex_);
       return sessions_.size();
     }
 
@@ -83,7 +83,7 @@ namespace eCAL
     {
       std::map<ClientSession*, std::weak_ptr<ClientSession>> sessions_copy;
       {
-        std::lock_guard<std::mutex> lock(client_manager_mutex_);
+        const std::lock_guard<std::mutex> lock(client_manager_mutex_);
         stopped_ = true;
         sessions_copy = sessions_;
       }
@@ -101,7 +101,7 @@ namespace eCAL
 
     bool ClientManager::is_stopped() const
     {
-      std::lock_guard<std::mutex> lock(client_manager_mutex_);
+      const std::lock_guard<std::mutex> lock(client_manager_mutex_);
       return stopped_;
     }
 

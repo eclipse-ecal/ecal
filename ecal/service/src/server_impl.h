@@ -67,13 +67,13 @@ namespace eCAL
                 , const ServerEventCallbackT&   event_callback
                 , const LoggerT&                logger);
 
+    public:
       ServerImpl(const ServerImpl&)            = delete;                  // Copy construct
       ServerImpl(ServerImpl&&)                 = delete;                  // Move construct
 
       ServerImpl& operator=(const ServerImpl&) = delete;                  // Copy assign
       ServerImpl& operator=(ServerImpl&&)      = delete;                  // Move assign
   
-    public:
       ~ServerImpl();
 
     ///////////////////////////////////////////

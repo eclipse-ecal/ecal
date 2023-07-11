@@ -502,6 +502,15 @@ namespace eCAL
       {
         const std::lock_guard<std::mutex> lock(service_state_mutex_);
 
+        // Close the socket, so all waiting async operations are actually woken
+        // up and fail with an error code. If we wouldn't do that, at least on
+        // Ubuntu only 1 waiting operations would wake up, while the others would
+        // indefinitively continue to wait.
+        // Having multiple async operations on the same socket actually does
+        // happen, as we are peeking for errors whenever we don't send or
+        // receive anything.
+        stop();
+
         // cancel the connection loss handling, if we are already in FAILED state
         if (state_ == State::FAILED)
           return;
@@ -560,14 +569,22 @@ namespace eCAL
 
     void ClientSessionV1::stop()
     {
-      {
-        asio::error_code ec;
-        socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
-      }
+      // This is a function that gets used both by the API and by potentially
+      // multiple failing async operations at once. As the .close() function is
+      // not thread safe, we have a special mutex just for closing the socket.
+      std::lock_guard<std::mutex> stop_lock(stop_mutex_);
 
+      if (socket_.is_open())
       {
-        asio::error_code ec;
-        socket_.close(ec);
+        {
+          asio::error_code ec;
+          socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
+        }
+
+        {
+          asio::error_code ec;
+          socket_.close(ec);
+        }
       }
     }
 

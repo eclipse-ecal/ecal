@@ -34,7 +34,7 @@ public:
 
   ~ConditionVariableSignaler()
   {
-    std::lock_guard<std::mutex> lock(mutex_);
+    const std::lock_guard<std::mutex> lock(mutex_);
     is_signaled_ = true;
     condition_variable_.notify_all();
   }

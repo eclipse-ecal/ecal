@@ -122,6 +122,8 @@ namespace eCAL
       State                     state_;
       std::deque<ServiceCall>   service_call_queue_;
       bool                      service_call_in_progress_;
+
+      mutable std::mutex        stop_mutex_;                                    //!< Mutex that has to be locked while stopping, especially while closing the socket, as that operation is not thread safe.
     };
   }
 }

@@ -81,14 +81,14 @@ namespace eCAL
           , const EventCallbackT&   event_callback
           , const LoggerT&          logger);
 
+    public:
       Server(const Server&)            = delete;                  // Copy construct
       Server(Server&&)                 = delete;                  // Move construct
 
       Server& operator=(const Server&) = delete;                  // Copy assign
       Server& operator=(Server&&)      = delete;                  // Move assign
   
-    public:
-      ~Server();
+      ~Server() = default;
 
     ///////////////////////////////////////////
     // API

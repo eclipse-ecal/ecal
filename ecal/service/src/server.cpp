@@ -81,9 +81,6 @@ namespace eCAL
       impl_ = ServerImpl::create(io_context, protocol_version, port, service_callback, parallel_service_calls_enabled, event_callback, logger);
     }
 
-    Server::~Server()
-    {}
-
     ///////////////////////////////////////////
     // API
     ///////////////////////////////////////////

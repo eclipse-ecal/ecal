@@ -471,7 +471,7 @@ if(BUILD_ECAL_TESTS)
   # test ecal
   # ------------------------------------------------------
   add_subdirectory(testing/ecal/clientserver_test)   #THIS TEST IS NOT ABLE TO RUN ON GH ACTIONS
-  add_subdirectory(testing/ecal/ecal_tcp_service_test)
+  add_subdirectory(testing/ecal/service_test)
   
   add_subdirectory(testing/ecal/core_test)
   add_subdirectory(testing/ecal/event_test)

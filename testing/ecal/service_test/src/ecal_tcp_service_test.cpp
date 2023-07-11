@@ -2272,7 +2272,7 @@ TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
     constexpr int num_calls_after_shutdown  = 3;
 
     asio::io_context io_context;
-    asio::io_context::work dummy_work(io_context);
+    auto dummy_work = std::make_unique<asio::io_context::work>(io_context);
 
     std::atomic<int> num_server_service_callback_called           (0);
 
@@ -2307,7 +2307,7 @@ TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
     // Wait shortly for the client to connects
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-    // Successfull calls
+    // Successful calls
     for (int i = 0; i < num_calls_before_shutdown; i++)
     {
       auto start = std::chrono::steady_clock::now();
@@ -2333,7 +2333,7 @@ TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
                           {
                             auto sleep_time = 0.5 * server_callback_wait_time;
                             std::this_thread::sleep_for(sleep_time);
-                            server = nullptr;
+                            server->stop();
                           });
 
     // First failed call
@@ -2381,15 +2381,18 @@ TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
       }
     }
 
+    client->stop();
+    server->stop();
+    dummy_work.reset();
+
+    // join the io_thread
+    io_thread.join();
+
     stop_thread.join();
 
     // delete all objects
     client    = nullptr;
     server    = nullptr;
-
-    // join the io_thread
-    io_context.stop();
-    io_thread.join();
   }
 }
 #endif
