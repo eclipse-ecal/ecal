@@ -169,7 +169,7 @@ namespace eCAL
                                   else
                                   {
                                     const std::string message = std::string("Error while accepting connection from client. No common protocol version is found. ")
-                                                              + "Client supports [min: " + std::to_string(handshake_request->min_supported_protocol_version) + ", max: " + std::to_string(handshake_request->max_supported_protocol_version) + "]. ";
+                                                              + "Client supports [min: " + std::to_string(handshake_request->min_supported_protocol_version) + ", max: " + std::to_string(handshake_request->max_supported_protocol_version) + "]. "
                                                               + "Server supports [min: " + std::to_string(MIN_SUPPORTED_PROTOCOL_VERSION) + ", max: " + std::to_string(MAX_SUPPORTED_PROTOCOL_VERSION) + "].";
                                     me->logger_(LogLevel::Error, "[" + get_connection_info_string(me->socket_) + "] " + message);
 
