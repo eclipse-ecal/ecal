@@ -172,7 +172,7 @@ namespace eCAL
       server_manager.reset();
       client_manager.reset();
       io_threads.clear();
-      io_context->reset();
+      io_context.reset();
     }
 
     void ServiceManager::reset()
