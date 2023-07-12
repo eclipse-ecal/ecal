@@ -52,7 +52,7 @@ namespace eCAL
                                                         , bool                            parallel_service_calls_enabled
                                                         , const Server::EventCallbackT&   event_callback)
     {
-      std::lock_guard<std::mutex> lock(server_manager_mutex_);
+      const std::lock_guard<std::mutex> lock(server_manager_mutex_);
       if (stopped_)
       {
         return nullptr;
@@ -64,7 +64,7 @@ namespace eCAL
         if (me)
         {
           // Remove the session from the sessions_ map
-          std::lock_guard<std::mutex> lock(me->server_manager_mutex_);
+          const std::lock_guard<std::mutex> lock(me->server_manager_mutex_);
           me->sessions_.erase(server);
         }
       };
@@ -75,7 +75,7 @@ namespace eCAL
 
     size_t ServerManager::server_count() const
     {
-      std::lock_guard<std::mutex> lock(server_manager_mutex_);
+      const std::lock_guard<std::mutex> lock(server_manager_mutex_);
       return sessions_.size();
     }
 
@@ -83,7 +83,7 @@ namespace eCAL
     {
       std::map<Server*, std::weak_ptr<Server>> sessions_copy;
       {
-        std::lock_guard<std::mutex> lock(server_manager_mutex_);
+        const std::lock_guard<std::mutex> lock(server_manager_mutex_);
         stopped_ = true;
         sessions_copy = sessions_;
       }
@@ -101,7 +101,7 @@ namespace eCAL
 
     bool ServerManager::is_stopped() const
     {
-      std::lock_guard<std::mutex> lock(server_manager_mutex_);
+      const std::lock_guard<std::mutex> lock(server_manager_mutex_);
       return stopped_;
     }
 

@@ -42,7 +42,7 @@ namespace eCAL
       auto deleter = [delete_callback](Server* server)
       {
         delete_callback(server);
-        delete server;
+        delete server; // NOLINT(cppcoreguidelines-owning-memory)
       };
 
       return std::shared_ptr<Server>(new Server(io_context, protocol_version, port, service_callback, parallel_service_calls_enabled, event_callback, logger), deleter);

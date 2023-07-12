@@ -390,7 +390,7 @@ TEST(IO, ClientServerBaseCallbackTimeout)
   }
 
   // add event callback for timeout event
-  std::atomic<int> timeout_fired = 0;
+  std::atomic<int> timeout_fired(0);
   auto event_callback = [&](const struct eCAL::SClientEventCallbackData* /*data_*/) -> void
                         {
                           timeout_fired++;

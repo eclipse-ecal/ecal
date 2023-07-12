@@ -61,6 +61,13 @@ namespace eCAL
                     , const LoggerT&                           logger);
 
     public:
+      // Delete copy / move constructor and assignment operator
+      ClientSessionV0(const ClientSessionV0&)            = delete;                  // Copy construct
+      ClientSessionV0(ClientSessionV0&&)                 = delete;                  // Move construct
+
+      ClientSessionV0& operator=(const ClientSessionV0&) = delete;                  // Copy assign
+      ClientSessionV0& operator=(ClientSessionV0&&)      = delete;                  // Move assign
+
       ~ClientSessionV0() override;
 
     //////////////////////////////////////

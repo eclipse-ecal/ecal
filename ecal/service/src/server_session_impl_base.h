@@ -56,6 +56,13 @@ namespace eCAL
     // Constructor, Destructor, Create
     /////////////////////////////////////
     public:
+      // Delete copy / move constructor and assignment operator
+      ServerSessionBase(const ServerSessionBase&)            = delete;                  // Copy construct
+      ServerSessionBase(ServerSessionBase&&)                 = delete;                  // Move construct
+
+      ServerSessionBase& operator=(const ServerSessionBase&) = delete;                  // Copy assign
+      ServerSessionBase& operator=(ServerSessionBase&&)      = delete;                  // Move assign
+      
       virtual ~ServerSessionBase() = default;
 
     protected:

@@ -54,6 +54,7 @@ namespace eCAL
                     , const ShutdownCallbackT&                         shutdown_callback
                     , const LoggerT&                                   logger);
 
+    public:
       // Copy
       ServerSessionV1(const ServerSessionV1&)            = delete;
       ServerSessionV1& operator=(const ServerSessionV1&) = delete;
@@ -62,7 +63,6 @@ namespace eCAL
       ServerSessionV1(ServerSessionV1&&) noexcept            = delete;
       ServerSessionV1& operator=(ServerSessionV1&&) noexcept = delete;
 
-    public:
       // Destructor
       ~ServerSessionV1() override;
 

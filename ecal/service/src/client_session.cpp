@@ -38,7 +38,7 @@ namespace eCAL
       auto deleter = [delete_callback](ClientSession* session)
       {
         delete_callback(session);
-        delete session;
+        delete session; // NOLINT(cppcoreguidelines-owning-memory)
       };
 
       return std::shared_ptr<ClientSession>(new ClientSession(io_context, protocol_version, address, port, event_callback, logger), deleter);

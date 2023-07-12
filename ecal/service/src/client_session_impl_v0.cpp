@@ -462,7 +462,7 @@ namespace eCAL
       // This is a function that gets used both by the API and by potentially
       // multiple failing async operations at once. As the .close() function is
       // not thread safe, we have a special mutex just for closing the socket.
-      std::lock_guard<std::mutex> stop_lock(stop_mutex_);
+      const std::lock_guard<std::mutex> stop_lock(stop_mutex_);
 
       if (socket_.is_open())
       {

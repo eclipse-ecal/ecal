@@ -57,6 +57,11 @@ namespace eCAL
       {}
 
     public:
+      ClientSessionBase(const ClientSessionBase&)            = delete;
+      ClientSessionBase(ClientSessionBase&&)                 = delete;
+      ClientSessionBase& operator=(const ClientSessionBase&) = delete;
+      ClientSessionBase& operator=(ClientSessionBase&&)      = delete;
+
       virtual ~ClientSessionBase() = default;
 
     /////////////////////////////////////
