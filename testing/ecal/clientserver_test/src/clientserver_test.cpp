@@ -165,8 +165,8 @@ TEST(IO, ServerConnectEvent)
   eCAL::CServiceServer server("service");
 
   // add server event callback for connect event
-  int event_connected_fired(0);
-  int event_disconnected_fired(0);
+  atomic_signalable<int> event_connected_fired   (0);
+  atomic_signalable<int> event_disconnected_fired(0);
   auto event_callback = [&](const struct eCAL::SServerEventCallbackData* data_) -> void
   {
     switch (data_->type)
@@ -196,7 +196,7 @@ TEST(IO, ServerConnectEvent)
   {
     eCAL::CServiceClient client1("service");
 
-    eCAL::Process::SleepMS(2000);
+    event_connected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::seconds(5));
     EXPECT_EQ(1, event_connected_fired);
     EXPECT_EQ(0, event_disconnected_fired);
 
@@ -206,7 +206,7 @@ TEST(IO, ServerConnectEvent)
     EXPECT_EQ(1, event_connected_fired);
     EXPECT_EQ(0, event_disconnected_fired);
   }
-  eCAL::Process::SleepMS(2000);
+  event_disconnected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::seconds(5));
   EXPECT_EQ(1, event_connected_fired);
   EXPECT_EQ(1, event_disconnected_fired);
 
