@@ -51,5 +51,5 @@ ecal_install_gtest(${PROJECT_NAME})
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER testing/ecal/service)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
-    ${PROJECT_NAME}_src
+    ${${PROJECT_NAME}_src}
 )

@@ -47,18 +47,18 @@ namespace eCAL
     // Constructor, Destructor, Create
     /////////////////////////////////////
     public:
-      static std::shared_ptr<ClientSessionV1> create(asio::io_context&      io_context
-                                                    , const std::string&    address
-                                                    , std::uint16_t         port
-                                                    , const EventCallbackT& event_callback
-                                                    , const LoggerT&        logger_ = default_logger("Service Client V1"));
+      static std::shared_ptr<ClientSessionV1> create(const std::shared_ptr<asio::io_context>& io_context
+                                                    , const std::string&                      address
+                                                    , std::uint16_t                           port
+                                                    , const EventCallbackT&                   event_callback
+                                                    , const LoggerT&                          logger_ = default_logger("Service Client V1"));
 
     protected:
-      ClientSessionV1(asio::io_context&     io_context
-                    , const std::string&    address
-                    , std::uint16_t         port
-                    , const EventCallbackT& event_callback
-                    , const LoggerT&        logger);
+      ClientSessionV1(const std::shared_ptr<asio::io_context>& io_context
+                    , const std::string&                       address
+                    , std::uint16_t                            port
+                    , const EventCallbackT&                    event_callback
+                    , const LoggerT&                           logger);
 
     public:
       ~ClientSessionV1() override;

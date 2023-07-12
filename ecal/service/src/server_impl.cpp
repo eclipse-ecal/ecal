@@ -34,35 +34,34 @@ namespace eCAL
     // Constructor, Destructor, Create
     ///////////////////////////////////////////
 
-    std::shared_ptr<ServerImpl> ServerImpl::create(asio::io_context&              io_context
-                                                  , std::uint8_t                  protocol_version
-                                                  , std::uint16_t                 port
-                                                  , const ServerServiceCallbackT& service_callback // TODO: The service callback may block a long time. This may cause the entire network stack to wait for long running service callbacks. Maybe it is a good idea to have some kind of "future" object, that the user can hand to some differen io_context or to a custom thread. That thread will then work on the object and call some function / let it go out of scope, which will then trigger sending the response to the client.
-                                                  , bool                          parallel_service_calls_enabled
-                                                  , const ServerEventCallbackT&   event_callback
-                                                  , const LoggerT&                logger)
+    std::shared_ptr<ServerImpl> ServerImpl::create(const std::shared_ptr<asio::io_context>& io_context
+                                                  , std::uint8_t                            protocol_version
+                                                  , std::uint16_t                           port
+                                                  , const ServerServiceCallbackT&           service_callback // TODO: The service callback may block a long time. This may cause the entire network stack to wait for long running service callbacks. Maybe it is a good idea to have some kind of "future" object, that the user can hand to some differen io_context or to a custom thread. That thread will then work on the object and call some function / let it go out of scope, which will then trigger sending the response to the client.
+                                                  , bool                                    parallel_service_calls_enabled
+                                                  , const ServerEventCallbackT&             event_callback
+                                                  , const LoggerT&                          logger)
     {
       // Create a new instance with the protected constructor
       // Note: make_shared not possible, because constructor is protected
-      auto instance = std::shared_ptr<ServerImpl>(new ServerImpl(io_context, port, service_callback, parallel_service_calls_enabled, event_callback, logger));
+      auto instance = std::shared_ptr<ServerImpl>(new ServerImpl(io_context, service_callback, parallel_service_calls_enabled, event_callback, logger));
 
       // Directly Start accepting new connections
-      instance->start_accept(protocol_version);
+      instance->start_accept(protocol_version, port);
 
       // Return the created and started instance
       return instance;
     }
 
-    ServerImpl::ServerImpl(asio::io_context&              io_context
-                          , std::uint16_t                 port
-                          , const ServerServiceCallbackT& service_callback
-                          , bool                          parallel_service_calls_enabled
-                          , const ServerEventCallbackT&   event_callback
-                          , const LoggerT&                logger)
+    ServerImpl::ServerImpl(const std::shared_ptr<asio::io_context>& io_context
+                          , const ServerServiceCallbackT&           service_callback
+                          , bool                                    parallel_service_calls_enabled
+                          , const ServerEventCallbackT&             event_callback
+                          , const LoggerT&                          logger)
       : io_context_                    (io_context)
-      , acceptor_                      (io_context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
+      , acceptor_                      (*io_context)
       , parallel_service_calls_enabled_(parallel_service_calls_enabled)
-      , service_callback_common_strand_(std::make_shared<asio::io_context::strand>(io_context))
+      , service_callback_common_strand_(std::make_shared<asio::io_context::strand>(*io_context))
       , service_callback_              (service_callback)
       , event_callback_                (event_callback)
       , logger_                        (logger)
@@ -118,7 +117,66 @@ namespace eCAL
       }
     }
 
-    void ServerImpl::start_accept(unsigned int version)
+    void ServerImpl::start_accept(std::uint8_t protocol_version, std::uint16_t port)
+    {
+      ECAL_SERVICE_LOG_DEBUG(logger_, "Service starting to accept new connections...");
+
+      // set up the acceptor to listen on the tcp port
+
+      const asio::ip::tcp::endpoint endpoint(asio::ip::address_v6(), port);
+    
+      ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Server: Opening acceptor...");
+      {
+        asio::error_code ec;
+        acceptor_.open(endpoint.protocol(), ec);
+        if (ec)
+        {
+          logger_(eCAL::service::LogLevel::Error, "Service Server: Error opening acceptor:" + ec.message());
+          // return false; What do do here?
+        }
+      }
+
+      ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Server: Setting \"reuse_address\" option...");
+
+
+      {
+        asio::error_code ec;
+        acceptor_.set_option(asio::ip::tcp::acceptor::reuse_address(true), ec);
+        if (ec)
+        {
+          logger_(eCAL::service::LogLevel::Error, "Service Server: Error setting \"reuse_address\" option:" + ec.message());
+          // return false; What do do here?
+        }
+      }
+
+      ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Server: Binding acceptor to endpoint...");
+
+      {
+        asio::error_code ec;
+        acceptor_.bind(endpoint, ec);
+        if (ec)
+        {
+          logger_(eCAL::service::LogLevel::Error, "Service Server: Error binding acceptor:" + ec.message());
+          // return false; What do do here?
+        }
+      }
+
+      ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Server: Listening on acceptor...");
+
+      {
+        asio::error_code ec;
+        acceptor_.listen(asio::socket_base::max_listen_connections, ec);
+        if (ec)
+        {
+          logger_(eCAL::service::LogLevel::Error, "Service Server: Error listening on acceptor: " + ec.message());
+          // return false; What do do here?
+        }
+      }
+
+      wait_for_next_client(protocol_version);
+    }
+
+    void ServerImpl::wait_for_next_client(std::uint8_t protocol_version)
     {
       ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service waiting for next client...");
 
@@ -148,14 +206,14 @@ namespace eCAL
       std::shared_ptr<asio::io_context::strand>         service_callback_strand;
       if (parallel_service_calls_enabled_)
       {
-        service_callback_strand = std::make_shared<asio::io_context::strand>(io_context_);
+        service_callback_strand = std::make_shared<asio::io_context::strand>(*io_context_);
       }
       else
       {
         service_callback_strand = service_callback_common_strand_;
       }
 
-      if (version == 0)
+      if (protocol_version == 0)
       {
         new_session = eCAL::service::ServerSessionV0::create(io_context_, service_callback_, service_callback_strand, event_callback_, shutdown_callback, logger_);
       }
@@ -168,7 +226,7 @@ namespace eCAL
       // By only storing a weak_ptr to this, we assure that the user can still
       // delete the service from the outside.
       acceptor_.async_accept(new_session->socket()
-              , [weak_me = std::weak_ptr<ServerImpl>(shared_from_this()), new_session, version, logger_copy = logger_](auto ec)
+              , [weak_me = std::weak_ptr<ServerImpl>(shared_from_this()), new_session, protocol_version, logger_copy = logger_](auto ec)
                 {
                   if (ec)
                   {
@@ -198,7 +256,7 @@ namespace eCAL
                   const std::shared_ptr<ServerImpl> me = weak_me.lock();
                   if (me)
                   {
-                    me->start_accept(version);
+                    me->wait_for_next_client(protocol_version);
                   }
                   else
                   {
@@ -210,10 +268,16 @@ namespace eCAL
 
     void ServerImpl::stop()
     {
-      // Close acceptor, if necessary
       {
-        asio::error_code ec;
-        acceptor_.close(ec);
+        // Lock mutex for making the stop function thread safe
+        const std::lock_guard<std::mutex> stop_lock(stop_mutex_);
+
+        // Close acceptor, if necessary
+        if (acceptor_.is_open())
+        {
+          asio::error_code ec;
+          acceptor_.close(ec);
+        }
       }
       
       // Stop all sessions to clients

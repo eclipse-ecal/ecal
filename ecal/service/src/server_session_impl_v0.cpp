@@ -33,24 +33,24 @@ namespace eCAL
   namespace service
   {
 
-    std::shared_ptr<ServerSessionV0> ServerSessionV0::create(asio::io_context&                                 io_context_
+    std::shared_ptr<ServerSessionV0> ServerSessionV0::create(const std::shared_ptr<asio::io_context>&          io_context
                                                             , const ServerServiceCallbackT&                    service_callback
                                                             , const std::shared_ptr<asio::io_context::strand>& service_callback_strand
                                                             , const ServerEventCallbackT&                      event_callback
                                                             , const ShutdownCallbackT&                         shutdown_callback
                                                             , const LoggerT&                                   logger)
     {
-      std::shared_ptr<ServerSessionV0> instance = std::shared_ptr<ServerSessionV0>(new ServerSessionV0(io_context_, service_callback, service_callback_strand, event_callback, shutdown_callback, logger));
+      std::shared_ptr<ServerSessionV0> instance = std::shared_ptr<ServerSessionV0>(new ServerSessionV0(io_context, service_callback, service_callback_strand, event_callback, shutdown_callback, logger));
       return instance;
     }
 
-    ServerSessionV0::ServerSessionV0(asio::io_context&                                 io_context_
+    ServerSessionV0::ServerSessionV0(const std::shared_ptr<asio::io_context>&          io_context
                                     , const ServerServiceCallbackT&                    service_callback
                                     , const std::shared_ptr<asio::io_context::strand>& service_callback_strand
                                     , const ServerEventCallbackT&                      event_callback
                                     , const ShutdownCallbackT&                         shutdown_callback
                                     , const LoggerT&                                   logger)
-      : ServerSessionBase(io_context_, service_callback, service_callback_strand, event_callback, shutdown_callback)
+      : ServerSessionBase(io_context, service_callback, service_callback_strand, event_callback, shutdown_callback)
       , logger_                   (logger)
       , state_                    (State::NOT_CONNECTED)
     {

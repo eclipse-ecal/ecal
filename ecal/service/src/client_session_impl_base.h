@@ -50,9 +50,9 @@ namespace eCAL
     // Constructor, Destructor, Create
     /////////////////////////////////////
     protected:
-      ClientSessionBase(asio::io_context& io_context_, const EventCallbackT& event_callback)
+      ClientSessionBase(const std::shared_ptr<asio::io_context>& io_context_, const EventCallbackT& event_callback)
         : io_context_    (io_context_)
-        , socket_        (io_context_)
+        , socket_        (*io_context_)
         , event_callback_(event_callback)
       {}
 
@@ -78,9 +78,9 @@ namespace eCAL
     // Member variables
     /////////////////////////////////////
     protected:
-      asio::io_context&     io_context_;
-      asio::ip::tcp::socket socket_;
-      const EventCallbackT  event_callback_;
+      const std::shared_ptr<asio::io_context>  io_context_;
+      asio::ip::tcp::socket                    socket_;
+      const EventCallbackT                     event_callback_;
 
     };
 

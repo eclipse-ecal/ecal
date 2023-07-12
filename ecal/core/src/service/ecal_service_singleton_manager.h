@@ -69,7 +69,7 @@ namespace eCAL
 	  std::mutex                                    singleton_mutex;
 
       std::atomic<bool>                             stopped;
-      std::unique_ptr<asio::io_context>             io_context;
+      std::shared_ptr<asio::io_context>             io_context;
       std::vector<std::unique_ptr<std::thread>>     io_threads;
 
 	  std::shared_ptr<eCAL::service::ClientManager> client_manager;

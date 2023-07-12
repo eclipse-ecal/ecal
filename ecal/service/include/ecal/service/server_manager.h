@@ -34,7 +34,7 @@ namespace eCAL
     // Constructor, Destructor, Create
     ///////////////////////////////////////////////////////
     public:
-      static std::shared_ptr<ServerManager> create(asio::io_context& io_context, const LoggerT& logger = default_logger("Service Server"));
+      static std::shared_ptr<ServerManager> create(const std::shared_ptr<asio::io_context>& io_context, const LoggerT& logger = default_logger("Service Server"));
 
       // delete copy and move constructors and assign operators
       ServerManager(const ServerManager&) = delete;             // Copy construct
@@ -44,7 +44,7 @@ namespace eCAL
 
     // Constructor, Destructor
     protected:
-      ServerManager(asio::io_context& io_context, const LoggerT& logger);
+      ServerManager(const std::shared_ptr<asio::io_context>& io_context, const LoggerT& logger);
 
     public:
       ~ServerManager();
@@ -69,7 +69,7 @@ namespace eCAL
     // Member variables
     ///////////////////////////////////////////////////////
     private:
-      asio::io_context&                           io_context_;            //!< Reference to the asio io_context
+      const std::shared_ptr<asio::io_context>     io_context_;            //!< Reference to the asio io_context
       const LoggerT                               logger_;                //!< Logger for all servers
 
       mutable std::mutex                          server_manager_mutex_;  //!< Mutex protecting the entire class

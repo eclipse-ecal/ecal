@@ -39,7 +39,7 @@ namespace eCAL
     ///////////////////////////////////////////////
 
     public:
-      static std::shared_ptr<ServerSessionV0> create(asio::io_context&                                 io_context_
+      static std::shared_ptr<ServerSessionV0> create(const std::shared_ptr<asio::io_context>&          io_context
                                                     , const ServerServiceCallbackT&                    service_callback
                                                     , const std::shared_ptr<asio::io_context::strand>& service_callback_strand
                                                     , const ServerEventCallbackT&                      event_callback
@@ -47,7 +47,7 @@ namespace eCAL
                                                     , const LoggerT&                                   logger);
 
     protected:
-      ServerSessionV0(asio::io_context&                                io_context_
+      ServerSessionV0(const std::shared_ptr<asio::io_context>&         io_context
                     , const ServerServiceCallbackT&                    service_callback
                     , const std::shared_ptr<asio::io_context::strand>& service_callback_strand
                     , const ServerEventCallbackT&                      event_callback

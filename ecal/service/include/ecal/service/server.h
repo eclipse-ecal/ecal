@@ -48,38 +48,38 @@ namespace eCAL
     ///////////////////////////////////////////
 
     public:
-      static std::shared_ptr<Server> create(asio::io_context&       io_context
-                                          , std::uint8_t            protocol_version
-                                          , std::uint16_t           port
-                                          , const ServiceCallbackT& service_callback
-                                          , bool                    parallel_service_calls_enabled
-                                          , const EventCallbackT&   event_callback
-                                          , const LoggerT&          logger
-                                          , const DeleteCallbackT&  delete_callback);
+      static std::shared_ptr<Server> create(const std::shared_ptr<asio::io_context>& io_context
+                                          , std::uint8_t                             protocol_version
+                                          , std::uint16_t                            port
+                                          , const ServiceCallbackT&                  service_callback
+                                          , bool                                     parallel_service_calls_enabled
+                                          , const EventCallbackT&                    event_callback
+                                          , const LoggerT&                           logger
+                                          , const DeleteCallbackT&                   delete_callback);
 
-      static std::shared_ptr<Server> create(asio::io_context&       io_context
-                                          , std::uint8_t            protocol_version
-                                          , std::uint16_t           port
-                                          , const ServiceCallbackT& service_callback
-                                          , bool                    parallel_service_calls_enabled
-                                          , const EventCallbackT&   event_callback
-                                          , const LoggerT&          logger = default_logger("Service Server"));
+      static std::shared_ptr<Server> create(const std::shared_ptr<asio::io_context>& io_context
+                                          , std::uint8_t                             protocol_version
+                                          , std::uint16_t                            port
+                                          , const ServiceCallbackT&                  service_callback
+                                          , bool                                     parallel_service_calls_enabled
+                                          , const EventCallbackT&                    event_callback
+                                          , const LoggerT&                           logger = default_logger("Service Server"));
 
-      static std::shared_ptr<Server> create(asio::io_context&       io_context
-                                          , std::uint8_t            protocol_version
-                                          , std::uint16_t           port
-                                          , const ServiceCallbackT& service_callback
-                                          , bool                    parallel_service_calls_enabled
-                                          , const EventCallbackT&   event_callback
-                                          , const DeleteCallbackT&  delete_callback);
+      static std::shared_ptr<Server> create(const std::shared_ptr<asio::io_context>& io_context
+                                          , std::uint8_t                             protocol_version
+                                          , std::uint16_t                            port
+                                          , const ServiceCallbackT&                  service_callback
+                                          , bool                                     parallel_service_calls_enabled
+                                          , const EventCallbackT&                    event_callback
+                                          , const DeleteCallbackT&                   delete_callback);
     protected:
-      Server(asio::io_context&      io_context
-          , std::uint8_t            protocol_version
-          , std::uint16_t           port
-          , const ServiceCallbackT& service_callback
-          , bool                    parallel_service_calls_enabled
-          , const EventCallbackT&   event_callback
-          , const LoggerT&          logger);
+      Server(const std::shared_ptr<asio::io_context>& io_context
+            , std::uint8_t                            protocol_version
+            , std::uint16_t                           port
+            , const ServiceCallbackT&                 service_callback
+            , bool                                    parallel_service_calls_enabled
+            , const EventCallbackT&                   event_callback
+            , const LoggerT&                          logger);
 
     public:
       Server(const Server&)            = delete;                  // Copy construct

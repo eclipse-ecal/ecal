@@ -35,11 +35,11 @@ namespace eCAL
     /////////////////////////////////////
     // Constructor, Destructor, Create
     /////////////////////////////////////
-    std::shared_ptr<ClientSessionV1> ClientSessionV1::create(asio::io_context&      io_context
-                                                            , const std::string&    address
-                                                            , std::uint16_t         port
-                                                            , const EventCallbackT& event_callback
-                                                            , const LoggerT&        logger)
+    std::shared_ptr<ClientSessionV1> ClientSessionV1::create(const std::shared_ptr<asio::io_context>& io_context
+                                                            , const std::string&                      address
+                                                            , std::uint16_t                           port
+                                                            , const EventCallbackT&                   event_callback
+                                                            , const LoggerT&                          logger)
     {
       std::shared_ptr<ClientSessionV1> instance(new ClientSessionV1(io_context, address, port, event_callback, logger));
 
@@ -48,16 +48,16 @@ namespace eCAL
       return instance;
     }
 
-    ClientSessionV1::ClientSessionV1(asio::io_context&      io_context
-                                    , const std::string&    address
-                                    , std::uint16_t         port
-                                    , const EventCallbackT& event_callback
-                                    , const LoggerT&        logger)
+    ClientSessionV1::ClientSessionV1(const std::shared_ptr<asio::io_context>& io_context
+                                    , const std::string&                      address
+                                    , std::uint16_t                           port
+                                    , const EventCallbackT&                   event_callback
+                                    , const LoggerT&                          logger)
       : ClientSessionBase(io_context, event_callback)
       , address_                  (address)
       , port_                     (port)
-      , service_call_queue_strand_(io_context)
-      , resolver_                 (io_context)
+      , service_call_queue_strand_(*io_context)
+      , resolver_                 (*io_context)
       , logger_                   (logger)
       , accepted_protocol_version_(0)
       , state_                    (State::NOT_CONNECTED)
@@ -76,6 +76,8 @@ namespace eCAL
     //////////////////////////////////////
     void ClientSessionV1::resolve_endpoint()
     {
+      // TODO: Should I create a localhost shortcut here? One that hardcoded goes to 127.0.0.1? Windows does not support localhost resolving, so this would be a workaround.
+
       ECAL_SERVICE_LOG_DEBUG(logger_, "Resolving endpoint [" + address_ + ":" + std::to_string(port_) + "]...");
 
       const asio::ip::tcp::resolver::query query(address_, std::to_string(port_));
@@ -93,6 +95,17 @@ namespace eCAL
                                 }
                                 else
                                 {
+#if ECAL_SERVICE_LOG_DEBUG_VERBOSE_ENABLED
+                                  // Verbose-debug log of all endpoints
+                                  {
+                                    std::string endpoints_str = "Resolved endpoints for " + me->address_ + ": ";
+                                    for (auto it = resolved_endpoints; it != asio::ip::tcp::resolver::iterator(); ++it)
+                                    {
+                                      endpoints_str += endpoint_to_string(*it) + ", ";
+                                    }
+                                    ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, endpoints_str);
+                                  }
+#endif //ECAL_SERVICE_LOG_DEBUG_VERBOSE_ENABLED
                                   me->connect_to_endpoint(resolved_endpoints);
                                 }
                               }));
@@ -102,7 +115,6 @@ namespace eCAL
     {
       // Look for the best endpoint to connect to. If possible, we use a loopback
       // endpoint. Otherwise, we just use the first one.
-      
 
       auto endpoint_to_connect_to = resolved_endpoints->endpoint(); // Default to first endpoint
       for (auto it = resolved_endpoints; it != asio::ip::tcp::resolver::iterator(); it++)

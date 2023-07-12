@@ -26,16 +26,16 @@ namespace eCAL
     ///////////////////////////////////////////////////////
     // Constructor, Destructor, Create
     ///////////////////////////////////////////////////////
-    std::shared_ptr<ClientManager> ClientManager::create(asio::io_context& io_context, const LoggerT& logger)
+    std::shared_ptr<ClientManager> ClientManager::create(const std::shared_ptr<asio::io_context>& io_context, const LoggerT& logger)
     {
       return std::shared_ptr<ClientManager>(new ClientManager(io_context, logger)); 
     }
 
-    ClientManager::ClientManager(asio::io_context& io_context, const LoggerT& logger)
+    ClientManager::ClientManager(const std::shared_ptr<asio::io_context>& io_context, const LoggerT& logger)
       : io_context_(io_context)
       , logger_(logger)
       , stopped_(false)
-      , work_(std::make_unique<asio::io_context::work>(io_context))
+      , work_(std::make_unique<asio::io_context::work>(*io_context))
     {}
 
     ClientManager::~ClientManager()

@@ -26,16 +26,16 @@ namespace eCAL
     ///////////////////////////////////////////////////////
     // Constructor, Destructor, Create
     ///////////////////////////////////////////////////////
-    std::shared_ptr<ServerManager> ServerManager::create(asio::io_context& io_context, const LoggerT& logger)
+    std::shared_ptr<ServerManager> ServerManager::create(const std::shared_ptr<asio::io_context>& io_context, const LoggerT& logger)
     {
       return std::shared_ptr<ServerManager>(new ServerManager(io_context, logger)); 
     }
 
-    ServerManager::ServerManager(asio::io_context& io_context, const LoggerT& logger)
+    ServerManager::ServerManager(const std::shared_ptr<asio::io_context>& io_context, const LoggerT& logger)
       : io_context_(io_context)
       , logger_(logger)
       , stopped_(false)
-      , work_(std::make_unique<asio::io_context::work>(io_context))
+      , work_(std::make_unique<asio::io_context::work>(*io_context))
     {}
 
     ServerManager::~ServerManager()

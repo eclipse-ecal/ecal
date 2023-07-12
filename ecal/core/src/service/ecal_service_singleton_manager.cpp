@@ -98,7 +98,7 @@ namespace eCAL
 
         // Create the client manager, if it didn't exist, yet
         if (!client_manager)
-          client_manager = eCAL::service::ClientManager::create(*io_context, ecal_logger("Service Client"));
+          client_manager = eCAL::service::ClientManager::create(io_context, ecal_logger("Service Client"));
 
         // Start io threads, if necessary
         if (io_threads.empty())
@@ -135,7 +135,7 @@ namespace eCAL
 
         // Create the server manager, if it didn't exit, yet
         if (!server_manager)
-          server_manager = eCAL::service::ServerManager::create(*io_context, ecal_logger("Service Server"));
+          server_manager = eCAL::service::ServerManager::create(io_context, ecal_logger("Service Server"));
 
         // Start io threads, if necessary
         if (io_threads.empty())

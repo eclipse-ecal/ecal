@@ -51,21 +51,20 @@ namespace eCAL
     ///////////////////////////////////////////
 
     public:
-      static std::shared_ptr<ServerImpl> create(asio::io_context&             io_context
-                                              , std::uint8_t                  protocol_version
-                                              , std::uint16_t                 port
-                                              , const ServerServiceCallbackT& service_callback
-                                              , bool                          parallel_service_calls_enabled
-                                              , const ServerEventCallbackT&   event_callback
-                                              , const LoggerT&                logger = default_logger("Service Server"));
+      static std::shared_ptr<ServerImpl> create(const std::shared_ptr<asio::io_context>& io_context
+                                              , std::uint8_t                             protocol_version
+                                              , std::uint16_t                            port
+                                              , const ServerServiceCallbackT&            service_callback
+                                              , bool                                     parallel_service_calls_enabled
+                                              , const ServerEventCallbackT&              event_callback
+                                              , const LoggerT&                           logger = default_logger("Service Server"));
 
     protected:
-      ServerImpl(asio::io_context&              io_context
-                , std::uint16_t                 port
-                , const ServerServiceCallbackT& service_callback
-                , bool                          parallel_service_calls_enabled
-                , const ServerEventCallbackT&   event_callback
-                , const LoggerT&                logger);
+      ServerImpl(const std::shared_ptr<asio::io_context>& io_context
+                , const ServerServiceCallbackT&           service_callback
+                , bool                                    parallel_service_calls_enabled
+                , const ServerEventCallbackT&             event_callback
+                , const LoggerT&                          logger);
 
     public:
       ServerImpl(const ServerImpl&)            = delete;                  // Copy construct
@@ -88,25 +87,28 @@ namespace eCAL
       void          stop();
 
     private:
-      void start_accept(unsigned int version);
+      void start_accept(std::uint8_t protocol_version, std::uint16_t port);
+      void wait_for_next_client(std::uint8_t protocol_version);
 
     ///////////////////////////////////////////
     // Member Variables
     ///////////////////////////////////////////
   
     private:
-      asio::io_context&             io_context_;
-      asio::ip::tcp::acceptor       acceptor_;
+      const std::shared_ptr<asio::io_context>         io_context_;
+      asio::ip::tcp::acceptor                         acceptor_;
 
-      const bool                    parallel_service_calls_enabled_;
+      const bool                                      parallel_service_calls_enabled_;
       const std::shared_ptr<asio::io_context::strand> service_callback_common_strand_;
-      const ServerServiceCallbackT  service_callback_;
-      const ServerEventCallbackT    event_callback_;
+      const ServerServiceCallbackT                    service_callback_;
+      const ServerEventCallbackT                      event_callback_;
 
-      mutable std::mutex            session_list_mutex_;
-      std::vector<std::weak_ptr<ServerSessionBase>> session_list_; // TODO: decide whether std::vector is a good idea, as I will have to delete from the middle, when a session is closed.
+      mutable std::mutex                              session_list_mutex_;
+      std::vector<std::weak_ptr<ServerSessionBase>>   session_list_; // TODO: decide whether std::vector is a good idea, as I will have to delete from the middle, when a session is closed.
 
-      const LoggerT                 logger_;
+      const LoggerT                                   logger_;
+
+      mutable std::mutex                              stop_mutex_;                                //!< Mutex for stopping the server. The stop() function is both used externally (via API) and from within the server itself. Closing the acceptor is not thread-safe, so we need to protect it.
     };
   } // namespace service
 } // namespace eCAL

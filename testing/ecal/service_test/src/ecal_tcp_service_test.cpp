@@ -67,8 +67,8 @@ TEST(RAII, TcpServiceServer)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
-    asio::io_context io_context;
-    asio::io_context::work dummy_work(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    asio::io_context::work dummy_work(*io_context);
 
     const eCAL::service::Server::ServiceCallbackT service_callback
             = [](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
@@ -101,14 +101,14 @@ TEST(RAII, TcpServiceServer)
 
         io_thread = std::make_unique<std::thread>([&io_context]()
                                                   {
-                                                    io_context.run();
+                                                    io_context->run();
                                                   });
       }
 
       EXPECT_EQ(nullptr, tcp_server_weak.lock());
     }
 
-    io_context.stop();
+    io_context->stop();
     io_thread->join();
   }
 }
@@ -119,8 +119,8 @@ TEST(RAII, TcpServiceClient)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
-    asio::io_context io_context;
-    asio::io_context::work dummy_work(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    asio::io_context::work dummy_work(*io_context);
 
     const eCAL::service::ClientSession::EventCallbackT client_event_callback
             = []
@@ -134,12 +134,12 @@ TEST(RAII, TcpServiceClient)
 
     io_thread = std::make_unique<std::thread>([&io_context]()
                                               {
-                                                io_context.run();
+                                                io_context->run();
                                               });
 
     auto client_v1 = eCAL::service::ClientSession::create(io_context, protocol_version, "127.0.0.1", 12345, client_event_callback);
 
-    io_context.stop();
+    io_context->stop();
     io_thread->join();
   }
 }
@@ -150,8 +150,8 @@ TEST(RAII, TcpServiceServerAndClient)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
-    asio::io_context io_context;
-    asio::io_context::work dummy_work(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    asio::io_context::work dummy_work(*io_context);
 
     std::atomic<bool> response_callback_called(false);
 
@@ -199,7 +199,7 @@ TEST(RAII, TcpServiceServerAndClient)
 
         io_thread = std::make_unique<std::thread>([&io_context]()
                                                   {
-                                                    io_context.run();
+                                                    io_context->run();
                                                   });
 
         EXPECT_EQ(tcp_server->get_connection_count(), 0);
@@ -224,7 +224,7 @@ TEST(RAII, TcpServiceServerAndClient)
       EXPECT_FALSE(response_callback_called);
     }
 
-    io_context.stop();
+    io_context->stop();
     io_thread->join();
 
     // Now the response callback should be finished
@@ -238,8 +238,8 @@ TEST(RAII, StopDuringServiceCall)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
-    asio::io_context io_context;
-    asio::io_context::work dummy_work(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    asio::io_context::work dummy_work(*io_context);
 
     std::atomic<bool> response_callback_called(false);
 
@@ -284,7 +284,7 @@ TEST(RAII, StopDuringServiceCall)
 
         io_thread = std::make_unique<std::thread>([&io_context]()
                                                   {
-                                                    io_context.run();
+                                                    io_context->run();
                                                   });
 
         auto client_v1 = eCAL::service::ClientSession::create(io_context, protocol_version,"127.0.0.1", tcp_server->get_port(), client_event_callback);
@@ -294,7 +294,7 @@ TEST(RAII, StopDuringServiceCall)
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
       }
 
-      io_context.stop();
+      io_context->stop();
 
       // The client and server should be deleted already
       EXPECT_EQ(nullptr, tcp_server_weak.lock());
@@ -318,8 +318,8 @@ TEST(Communication, SlowCommunication)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
-    asio::io_context io_context;
-    asio::io_context::work dummy_work(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    asio::io_context::work dummy_work(*io_context);
 
     std::atomic<int> num_server_service_callback_called           (0);
     std::atomic<int> num_client_response_callback_called          (0);
@@ -368,7 +368,7 @@ TEST(Communication, SlowCommunication)
 
     std::thread io_thread([&io_context]()
                           {
-                            io_context.run();
+                            io_context->run();
                           });
 
     // Wait a short time for the client to connect
@@ -418,7 +418,7 @@ TEST(Communication, SlowCommunication)
     server    = nullptr;
 
     // join the io_thread
-    io_context.stop();
+    io_context->stop();
     io_thread.join();
   }
 }
@@ -429,8 +429,8 @@ TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
-    asio::io_context io_context;
-    asio::io_context::work dummy_work(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    asio::io_context::work dummy_work(*io_context);
 
     std::atomic<int> num_server_event_callback_called             (0);
     std::atomic<int> num_server_event_callback_called_connected   (0);
@@ -479,7 +479,7 @@ TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst)
 
     std::thread io_thread([&io_context]()
                           {
-                            io_context.run();
+                            io_context->run();
                           });
 
     // Wait a short time for the client to connect
@@ -525,7 +525,7 @@ TEST(CallbacksConnectDisconnect, ClientDisconnectsFirst)
     }
 
     // join the io_thread
-    io_context.stop();
+    io_context->stop();
     io_thread.join();
   }
 }
@@ -536,8 +536,8 @@ TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
-    asio::io_context io_context;
-    asio::io_context::work dummy_work(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    asio::io_context::work dummy_work(*io_context);
 
     std::atomic<int> num_server_service_callback_called           (0);
     std::atomic<int> num_server_event_callback_called             (0);
@@ -614,7 +614,7 @@ TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
 
     std::thread io_thread([&io_context]()
                           {
-                            io_context.run();
+                            io_context->run();
                           });
 
     // Wait a short time for the client to connect
@@ -714,7 +714,7 @@ TEST(CommunicationAndCallbacks, ClientsDisconnectFirst)
     }
 
     // join the io_thread
-    io_context.stop();
+    io_context->stop();
     io_thread.join();
   }
 }
@@ -725,8 +725,8 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
-    asio::io_context io_context;
-    asio::io_context::work dummy_work(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    asio::io_context::work dummy_work(*io_context);
 
     std::atomic<int> num_server_service_callback_called           (0);
     std::atomic<int> num_server_event_callback_called             (0);
@@ -781,7 +781,7 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
 
     std::thread io_thread([&io_context]()
                           {
-                            io_context.run();
+                            io_context->run();
                           });
 
     // Wait a short time for the client to connect
@@ -861,7 +861,7 @@ TEST(CommunicationAndCallbacks, ServerDisconnectsFirst)
     }
 
     // join the io_thread
-    io_context.stop();
+    io_context->stop();
     io_thread.join();
   }
 }
@@ -876,8 +876,8 @@ TEST(CommunicationAndCallbacks, StressfulCommunication)
     constexpr int num_clients          = 10;
     constexpr int num_calls_per_client = 15;
 
-    asio::io_context io_context;
-    asio::io_context::work dummy_work(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    asio::io_context::work dummy_work(*io_context);
 
     std::atomic<int> num_server_service_callback_called           (0);
     std::atomic<int> num_server_event_callback_called             (0);
@@ -928,7 +928,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunication)
     io_threads.reserve(num_io_threads);
     for (int i = 0; i < num_io_threads; i++)
     {
-      io_threads.emplace_back(std::make_unique<std::thread>([&io_context]() { io_context.run(); }));
+      io_threads.emplace_back(std::make_unique<std::thread>([&io_context]() { io_context->run(); }));
     }
 
     // Create all the clients
@@ -1008,7 +1008,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunication)
     client_list.clear();
 
     // join all io_threads
-    io_context.stop();
+    io_context->stop();
     for (size_t i = 0; i < io_threads.size(); i++)
     {
       io_threads[i]->join();
@@ -1028,8 +1028,8 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationNoParallelCalls)
     constexpr int num_calls_per_client = 2;
     constexpr std::chrono::milliseconds server_time_to_waste(50);
 
-    asio::io_context io_context;
-    auto             dummy_work = std::make_unique<asio::io_context::work>(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    auto       dummy_work = std::make_unique<asio::io_context::work>(*io_context);
 
     std::atomic<int> num_server_service_callback_started           (0);
     std::atomic<int> num_server_service_callback_finished          (0);
@@ -1067,7 +1067,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationNoParallelCalls)
     io_threads.reserve(num_io_threads);
     for (int i = 0; i < num_io_threads; i++)
     {
-      io_threads.emplace_back(std::make_unique<std::thread>([&io_context]() { io_context.run(); }));
+      io_threads.emplace_back(std::make_unique<std::thread>([&io_context]() { io_context->run(); }));
     }
 
     // Create all the clients
@@ -1160,8 +1160,8 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload)
 
   const auto payload = std::make_shared<const std::string>(payload_size_bytes, 'e');
 
-  asio::io_context io_context;
-  asio::io_context::work dummy_work(io_context);
+  const auto io_context = std::make_shared<asio::io_context>();
+  asio::io_context::work dummy_work(*io_context);
 
   std::atomic<int>       num_server_service_callback_called           (0);
   std::atomic<int>       num_server_event_callback_called             (0);
@@ -1213,7 +1213,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload)
   io_threads.reserve(num_io_threads);
   for (int i = 0; i < num_io_threads; i++)
   {
-    io_threads.emplace_back(std::make_unique<std::thread>([&io_context]() { io_context.run(); }));
+    io_threads.emplace_back(std::make_unique<std::thread>([&io_context]() { io_context->run(); }));
   }
 
   // Create all the clients
@@ -1292,7 +1292,7 @@ TEST(CommunicationAndCallbacks, StressfulCommunicationMassivePayload)
   client_list.clear();
 
   // join all io_threads
-  io_context.stop();
+  io_context->stop();
   for (size_t i = 0; i < io_threads.size(); i++)
   {
     io_threads[i]->join();
@@ -1310,7 +1310,7 @@ TEST(callback, ServerAndClientManagers)
     std::vector<std::unique_ptr<std::thread>> io_threads;
     io_threads.reserve(num_io_threads);
 
-    asio::io_context io_context;
+    const auto io_context = std::make_shared<asio::io_context>();
     auto client_manager = eCAL::service::ClientManager::create(io_context);
     auto server_manager = eCAL::service::ServerManager::create(io_context);
 
@@ -1326,7 +1326,7 @@ TEST(callback, ServerAndClientManagers)
     {
       io_threads.emplace_back(std::make_unique<std::thread>([&io_context]()
                               {
-                                io_context.run();
+                                io_context->run();
                               }));
     }
 
@@ -1443,8 +1443,8 @@ TEST(Callback, ServiceCallFromCallback)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
-    asio::io_context io_context;
-    asio::io_context::work dummy_work(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    asio::io_context::work dummy_work(*io_context);
 
     std::atomic<int> num_server_service_callback_called(0);
     std::atomic<int> num_client_response_callback1_called(0);
@@ -1491,7 +1491,7 @@ TEST(Callback, ServiceCallFromCallback)
 
     std::thread io_thread([&io_context]()
                           {
-                            io_context.run();
+                            io_context->run();
                           });
 
     // Call service and wait a short time
@@ -1503,7 +1503,7 @@ TEST(Callback, ServiceCallFromCallback)
     EXPECT_EQ(num_client_response_callback2_called, 1);
 
     // join the io_thread
-    io_context.stop();
+    io_context->stop();
     io_thread.join();
   }
 }
@@ -1514,8 +1514,8 @@ TEST(ErrorCallback, ErrorCallbackNoServer)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
-    asio::io_context io_context;
-    asio::io_context::work dummy_work(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    asio::io_context::work dummy_work(*io_context);
 
     atomic_signalable<int> num_client_response_callback_called(0);
     std::atomic<int>       num_client_event_callback_called   (0);
@@ -1541,7 +1541,7 @@ TEST(ErrorCallback, ErrorCallbackNoServer)
     // Run the io_service
     std::thread io_thread([&io_context]()
                           {
-                            io_context.run();
+                            io_context->run();
                           });
 
     // Call service and wait a short time
@@ -1553,7 +1553,7 @@ TEST(ErrorCallback, ErrorCallbackNoServer)
     EXPECT_EQ(num_client_event_callback_called,    0);
 
     // join the io_thread
-    io_context.stop();
+    io_context->stop();
     io_thread.join();
   }
 }
@@ -1564,8 +1564,8 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
-    asio::io_context io_context;
-    asio::io_context::work dummy_work(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    asio::io_context::work dummy_work(*io_context);
 
     std::atomic<int> num_server_service_callback_called           (0);
     std::atomic<int> num_server_event_callback_called             (0);
@@ -1614,7 +1614,7 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
 
     std::thread io_thread([&io_context]()
                           {
-                            io_context.run();
+                            io_context->run();
                           });
 
     // Wait a short time for the client to connect
@@ -1717,7 +1717,7 @@ TEST(ErrorCallback, ErrorCallbackServerHasDisconnected)
     }
 
     // join the io_thread
-    io_context.stop();
+    io_context->stop();
     io_thread.join();
   }
 }
@@ -1728,8 +1728,8 @@ TEST(ErrorCallback, ErrorCallbackClientDisconnects)
 {
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
-    asio::io_context io_context;
-    asio::io_context::work dummy_work(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    asio::io_context::work dummy_work(*io_context);
 
     std::atomic<int> num_server_service_callback_called           (0);
     std::atomic<int> num_client_response_callback_called          (0);
@@ -1760,7 +1760,7 @@ TEST(ErrorCallback, ErrorCallbackClientDisconnects)
 
     std::thread io_thread([&io_context]()
                           {
-                            io_context.run();
+                            io_context->run();
                           });
 
     // Wait a short time for the client to connect
@@ -1817,7 +1817,7 @@ TEST(ErrorCallback, ErrorCallbackClientDisconnects)
     }
 
     // join the io_thread
-    io_context.stop();
+    io_context->stop();
     io_thread.join();
   }
 }
@@ -1838,8 +1838,8 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
     //constexpr std::chrono::milliseconds wait_time_for_destroying_server = server_time_to_waste * total_calls / 2;
     constexpr std::chrono::milliseconds wait_time_for_destroying_server = server_time_to_waste * num_calls_per_client / 2;
 
-    asio::io_context io_context;
-    asio::io_context::work dummy_work(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    asio::io_context::work dummy_work(*io_context);
 
     std::atomic<int> num_server_service_callback_called           (0);
     std::atomic<int> num_server_event_callback_called             (0);
@@ -1895,7 +1895,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
     io_threads.reserve(num_io_threads);
     for (int i = 0; i < num_io_threads; i++)
     {
-      io_threads.emplace_back(std::make_unique<std::thread>([&io_context]() { io_context.run(); }));
+      io_threads.emplace_back(std::make_unique<std::thread>([&io_context]() { io_context->run(); }));
     }
 
     // Create all the clients
@@ -1996,7 +1996,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThrough)
     client_list.clear();
 
     // join all io_threads
-    io_context.stop();
+    io_context->stop();
     for (size_t i = 0; i < io_threads.size(); i++)
     {
       io_threads[i]->join();
@@ -2019,7 +2019,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThroughWithManagers)
 
     constexpr std::chrono::milliseconds wait_time_for_destroying_server = server_time_to_waste * num_calls_per_client / 2;
 
-    asio::io_context io_context;
+    const auto io_context = std::make_shared<asio::io_context>();
 
     auto client_manager = eCAL::service::ClientManager::create(io_context, critical_logger("Client"));
     auto server_manager = eCAL::service::ServerManager::create(io_context, critical_logger("Server"));
@@ -2078,7 +2078,7 @@ TEST(ErrorCallback, StressfulErrorsHalfwayThroughWithManagers)
     io_threads.reserve(num_io_threads);
     for (int i = 0; i < num_io_threads; i++)
     {
-      io_threads.emplace_back(std::make_unique<std::thread>([&io_context]() { io_context.run(); }));
+      io_threads.emplace_back(std::make_unique<std::thread>([&io_context]() { io_context->run(); }));
     }
 
     // Create all the clients
@@ -2198,8 +2198,8 @@ TEST(BlockingCall, RegularBlockingCall)
     constexpr std::chrono::milliseconds server_callback_wait_time(50);
     constexpr int num_calls = 3;
 
-    asio::io_context io_context;
-    asio::io_context::work dummy_work(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    asio::io_context::work dummy_work(*io_context);
 
     std::atomic<int> num_server_service_callback_called           (0);
 
@@ -2228,7 +2228,7 @@ TEST(BlockingCall, RegularBlockingCall)
 
     std::thread io_thread([&io_context]()
                           {
-                            io_context.run();
+                            io_context->run();
                           });
 
     for (int i = 0; i < num_calls; i++)
@@ -2256,7 +2256,7 @@ TEST(BlockingCall, RegularBlockingCall)
     server    = nullptr;
 
     // join the io_thread
-    io_context.stop();
+    io_context->stop();
     io_thread.join();
   }
 }
@@ -2271,8 +2271,8 @@ TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
     constexpr int num_calls_before_shutdown = 3;
     constexpr int num_calls_after_shutdown  = 3;
 
-    asio::io_context io_context;
-    auto dummy_work = std::make_unique<asio::io_context::work>(io_context);
+    const auto io_context = std::make_shared<asio::io_context>();
+    auto       dummy_work = std::make_unique<asio::io_context::work>(*io_context);
 
     std::atomic<int> num_server_service_callback_called           (0);
 
@@ -2301,7 +2301,7 @@ TEST(BlockingCall, BlockingCallWithErrorHalfwayThrough)
 
     std::thread io_thread([&io_context]()
                           {
-                            io_context.run();
+                            io_context->run();
                           });
 
     // Wait shortly for the client to connects
@@ -2404,7 +2404,7 @@ TEST(BlockingCall, Stopped) // TODO: This test shows the proper way to stop ever
   {
     constexpr std::chrono::milliseconds server_callback_wait_time(500);
 
-    asio::io_context io_context;
+    const auto io_context = std::make_shared<asio::io_context>();
     auto server_manager = eCAL::service::ServerManager::create(io_context);
     auto client_manager = eCAL::service::ClientManager::create(io_context);
 
@@ -2435,7 +2435,7 @@ TEST(BlockingCall, Stopped) // TODO: This test shows the proper way to stop ever
 
     std::thread io_thread([&io_context]()
                           {
-                            io_context.run();
+                            io_context->run();
                           });
 
     // Wait shortly for the client to connects

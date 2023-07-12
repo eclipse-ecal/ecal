@@ -34,7 +34,7 @@ namespace eCAL
     // Constructor, Destructor, Create
     ///////////////////////////////////////////////////////
     public:
-      static std::shared_ptr<ClientManager> create(asio::io_context& io_context, const LoggerT& logger = default_logger("Service Client"));
+      static std::shared_ptr<ClientManager> create(const std::shared_ptr<asio::io_context>& io_context, const LoggerT& logger = default_logger("Service Client"));
 
       // delete copy and move constructors and assign operators
       ClientManager(const ClientManager&) = delete;             // Copy construct
@@ -44,7 +44,7 @@ namespace eCAL
 
     // Constructor, Destructor
     protected:
-      ClientManager(asio::io_context& io_context, const LoggerT& logger);
+      ClientManager(const std::shared_ptr<asio::io_context>& io_context, const LoggerT& logger);
 
     public:
       ~ClientManager();
@@ -68,7 +68,7 @@ namespace eCAL
     // Member variables
     ///////////////////////////////////////////////////////
     private:
-      asio::io_context&                           io_context_;            //!< Reference to the asio io_context
+      const std::shared_ptr<asio::io_context>     io_context_;            //!< Reference to the asio io_context
       const LoggerT                               logger_;                //!< Logger for all clients
 
       mutable std::mutex                          client_manager_mutex_;  //!< Mutex protecting the entire class

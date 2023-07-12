@@ -59,12 +59,13 @@ namespace eCAL
       virtual ~ServerSessionBase() = default;
 
     protected:
-      ServerSessionBase(asio::io_context&                                io_context_
+      ServerSessionBase(const std::shared_ptr<asio::io_context>&         io_context
                       , const ServerServiceCallbackT&                    service_callback
                       , const std::shared_ptr<asio::io_context::strand>& service_callback_strand
                       , const ServerEventCallbackT&                      event_callback
                       , const ShutdownCallbackT&                         shutdown_callback)
-        : socket_                 (io_context_)
+        : io_context_             (io_context)
+        , socket_                 (*io_context)
         , service_callback_       (service_callback)
         , service_callback_strand_(service_callback_strand)
         , event_callback_         (event_callback)
@@ -85,6 +86,7 @@ namespace eCAL
     // Member variables
     /////////////////////////////////////
     protected:
+      const std::shared_ptr<asio::io_context>         io_context_;
       asio::ip::tcp::socket socket_;
 
       const ServerServiceCallbackT                    service_callback_;
