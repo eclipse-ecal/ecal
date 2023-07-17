@@ -18,7 +18,6 @@
 */
 
 #include "hdf5_writer_thread.h"
-#include <ecalhdf5/eh5_writer.h>
 
 #include "rec_client_core/ecal_rec_logger.h"
 
@@ -42,7 +41,7 @@ namespace eCAL
       , new_topic_info_map_available_(true)
       , flushing_                    (false)
     {
-      hdf5_writer_ = std::make_unique<eCAL::eh5::Writer>();
+      hdf5_writer_ = std::make_unique<eCAL::eh5::HDF5Meas>();
     }
 
     Hdf5WriterThread::~Hdf5WriterThread()
@@ -265,7 +264,7 @@ namespace eCAL
 #endif // NDEBUG
       std::unique_lock<decltype(hdf5_writer_mutex_)> hdf5_writer_lock(hdf5_writer_mutex_);
 
-      if (hdf5_writer_->Open(hdf5_dir))
+      if (hdf5_writer_->Open(hdf5_dir, eCAL::measurement::base::AccessType::CREATE))
       {
 #ifndef NDEBUG
         EcalRecLogger::Instance()->debug("Hdf5WriterThread::Open(): Successfully opened HDF5-Writer with path \"" + hdf5_dir + "\"");

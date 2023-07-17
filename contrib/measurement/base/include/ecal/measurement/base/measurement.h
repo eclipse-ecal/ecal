@@ -19,7 +19,7 @@
 
 /**
  * @file   measurement.h
- * @brief  Base class for low level measurement operations
+ * @brief  Base class for low level measurement oprations
 **/
 
 #pragma once
@@ -300,6 +300,6 @@ namespace eCAL
       **/
       virtual void DisconnectPreSplitCallback() = 0;
     };
-    }   // namespace base
-  }  // namespace measurement
+    }
+  }  // namespace eh5
 }  // namespace eCAL
