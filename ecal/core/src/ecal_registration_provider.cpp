@@ -114,6 +114,7 @@ namespace eCAL
     }
 #endif
 
+    // start cyclic registration thread
     m_reg_sample_snd_thread.Start(Config::GetRegistrationRefreshMs(), std::bind(&CRegistrationProvider::RegisterSendThread, this));
 
     m_created = true;
@@ -123,8 +124,11 @@ namespace eCAL
   {
     if(!m_created) return;
 
-    m_reg_sample_snd.reset();
+    // stop cyclic registration thread
     m_reg_sample_snd_thread.Stop();
+
+    // destroy registration sample sender
+    m_reg_sample_snd.reset();
 
 #ifndef ECAL_LAYER_ICEORYX
     if(m_use_shm_monitoring)
