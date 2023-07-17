@@ -105,6 +105,7 @@ namespace eCAL
       m_memfile_broadcast_writer.Bind(&m_memfile_broadcast);
     }
 
+    // start cyclic registration thread
     m_reg_sample_snd_thread.Start(Config::GetRegistrationRefreshMs(), std::bind(&CRegistrationProvider::RegisterSendThread, this));
 
     m_created = true;
@@ -114,12 +115,15 @@ namespace eCAL
   {
     if(!m_created) return;
 
-    // this is our last (un)registration message to the world
+    // stop cyclic registration thread
+    m_reg_sample_snd_thread.Stop();
+
+    // send one last (un)registration message to the world
     // thank you and goodbye :-)
     UnregisterProcess();
 
+    // destroy registration sample sender
     m_reg_sample_snd.reset();
-    m_reg_sample_snd_thread.Stop();
 
     if(m_use_shm_monitoring)
     {
