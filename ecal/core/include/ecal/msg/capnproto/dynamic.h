@@ -32,6 +32,7 @@
 #pragma warning(pop)
 #endif /*_MSC_VER*/
 
+#include <ecal/ecal_deprecate.h>
 #include <ecal/msg/capnproto/subscriber.h>
 #include <ecal/msg/capnproto/helper.h>
 
@@ -170,7 +171,7 @@ namespace eCAL
       *
       * @return  Type name.
       **/
-      [[deprecated("Please use the method STopicInformation GetTopicInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")]]
+      ECAL_DEPRECATE_SINCE_5_13("Please use the method STopicInformation GetTopicInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")
       std::string GetTypeName() const
       {
         return ("");

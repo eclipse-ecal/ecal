@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_qos.h>
@@ -84,7 +85,7 @@ namespace eCAL
      * @param topic_type_   Type name. 
      * @param topic_desc_   Type description (optional). 
     **/
-    [[deprecated("Please use the constructor CPublisher(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CPublisher(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")
     CPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
 
     /**
@@ -137,7 +138,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails. 
     **/
-    [[deprecated("Please use the create method bool Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the create method bool Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6.")
     bool Create(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "");
 
     /**
@@ -178,7 +179,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    [[deprecated("Please use the method bool SetTopicInformation(const STopicInformation& topic_info_) instead. This function will be removed in eCAL6")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool SetTopicInformation(const STopicInformation& topic_info_) instead. This function will be removed in eCAL6")
     bool SetTypeName(const std::string& topic_type_name_);
 
     /**
@@ -188,7 +189,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails. 
     **/
-    [[deprecated("Please use the method bool SetTopicInformation(const STopicInformation& topic_info_) instead. This function will be removed in eCAL6")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool SetTopicInformation(const STopicInformation& topic_info_) instead. This function will be removed in eCAL6")
     bool SetDescription(const std::string& topic_desc_);
 
     /**
@@ -407,7 +408,7 @@ namespace eCAL
      *
      * @return  Number of bytes sent.
     **/
-    [[deprecated]]
+    ECAL_DEPRECATE_SINCE_5_12("Please use the method size_t Send(CPayloadWriter& payload_, long long time_, long long acknowledge_timeout_ms_) const instead. This function will be removed in eCAL6.")
     size_t SendSynchronized(const void* const buf_, size_t len_, long long time_, long long acknowledge_timeout_ms_) const
     {
       return Send(buf_, len_, time_, acknowledge_timeout_ms_);
@@ -505,7 +506,7 @@ namespace eCAL
      *
      * @return  The type name. 
     **/
-    [[deprecated("Please use the method STopicInformation GetTopicInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method STopicInformation GetTopicInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")
     std::string GetTypeName() const;
 
     /**
@@ -513,7 +514,7 @@ namespace eCAL
      *
      * @return  The description. 
     **/
-    [[deprecated("Please use the method STopicInformation GetTopicInformation() instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method STopicInformation GetTopicInformation() instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")
     std::string GetDescription() const;
 
     /**

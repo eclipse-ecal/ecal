@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <ecal/ecal_deprecate.h>
 #include <ecal/msg/publisher.h>
 #include <ecal/protobuf/ecal_proto_hlp.h>
 
@@ -175,7 +176,7 @@ namespace eCAL
        *
        * @return  Type name.
       **/
-      [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
+      ECAL_DEPRECATE_SINCE_5_13("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")
       std::string GetTypeName() const
       {
         STopicInformation topic_info{ GetTopicInformation() };
@@ -188,7 +189,7 @@ namespace eCAL
        *
        * @return  Description string.
       **/
-      [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
+      ECAL_DEPRECATE_SINCE_5_13("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")
       std::string GetDescription() const
       {
         return GetTopicInformation().descriptor;

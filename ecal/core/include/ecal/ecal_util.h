@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_deprecate.h>
 #include <ecal/types/topic_information.h>
 
 #include <map>
@@ -164,7 +165,7 @@ namespace eCAL
      *
      * @return  True if succeeded.
     **/
-    [[deprecated("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")
     ECAL_API bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_);
 
     /**
@@ -174,7 +175,7 @@ namespace eCAL
      *
      * @return  Topic type name.
     **/
-    [[deprecated("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")
     ECAL_API std::string GetTopicTypeName(const std::string& topic_name_);
 
     /**
@@ -185,7 +186,7 @@ namespace eCAL
      *
      * @return  True if succeeded.
     **/
-    [[deprecated("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")
     ECAL_API bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_);
 
     /**
@@ -195,7 +196,7 @@ namespace eCAL
      *
      * @return  Topic description.
     **/
-    [[deprecated("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")
     ECAL_API std::string GetTopicDescription(const std::string& topic_name_);
 
     /**
@@ -264,7 +265,7 @@ namespace eCAL
      *
      * @return  True if succeeded.
     **/
-    [[deprecated("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")
     ECAL_API bool GetTypeName(const std::string& topic_name_, std::string& topic_type_);
 
     /**
@@ -276,7 +277,7 @@ namespace eCAL
      *
      * @return  Topic type name.
     **/
-    [[deprecated("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")
     ECAL_API std::string GetTypeName(const std::string& topic_name_);
 
     /**
@@ -289,7 +290,7 @@ namespace eCAL
      *
      * @return  True if succeeded.
     **/
-    [[deprecated("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")
     ECAL_API bool GetDescription(const std::string& topic_name_, std::string& topic_desc_);
 
     /**
@@ -301,7 +302,7 @@ namespace eCAL
      *
      * @return  Topic description.
     **/
-    [[deprecated("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.")
     ECAL_API std::string GetDescription(const std::string& topic_name_);
 
     /**
