@@ -38,6 +38,7 @@
 #include <sstream>
 #include <iostream>
 #include <utility>
+#include <algorithm>
 
 namespace eCAL
 {

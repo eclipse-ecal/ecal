@@ -21,6 +21,8 @@
  * @brief  eCAL subscriber gateway class
 **/
 
+#include <algorithm>
+
 #include <ecal/ecal.h>
 
 #ifdef ECAL_OS_LINUX
