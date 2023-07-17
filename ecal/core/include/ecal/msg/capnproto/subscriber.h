@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <ecal/ecal_deprecate.h>
 #include <ecal/msg/subscriber.h>
 #include <ecal/msg/capnproto/helper.h>
 
@@ -243,7 +244,7 @@ namespace eCAL
       *
       * @return  Type name.
       **/
-      [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
+      ECAL_DEPRECATE_SINCE_5_13("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")
       std::string GetTypeName() const
       {
         return eCAL::capnproto::TypeAsString<message_type>();

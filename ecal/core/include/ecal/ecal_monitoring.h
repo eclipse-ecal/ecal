@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal/ecal_os.h>
+#include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_monitoring_entity.h>
 #include <string>
 
@@ -95,7 +96,7 @@ namespace eCAL
      *
      * @return Zero if succeeded.
     **/
-    [[deprecated("use GetMonitoring and publish yourself")]]
+    ECAL_DEPRECATE_SINCE_5_12("use GetMonitoring and publish yourself")
     ECAL_API int PubMonitoring(bool state_, std::string name_ = "ecal.monitoring");
 
     /**
@@ -106,7 +107,7 @@ namespace eCAL
      *
      * @return Zero if succeeded.
     **/
-    [[deprecated("use GetLogging and publish yourself")]]
+    ECAL_DEPRECATE_SINCE_5_12("use GetLogging and publish yourself")
     ECAL_API int PubLogging(bool state_, std::string name_ = "ecal.logging");
   }
   /** @example monitoring_rec.cpp
