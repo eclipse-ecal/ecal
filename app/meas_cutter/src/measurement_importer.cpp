@@ -18,10 +18,9 @@
 */
 
 #include "measurement_importer.h"
-#include <ecalhdf5/eh5_reader.h>
 
 MeasurementImporter::MeasurementImporter() :
-  _reader(std::make_unique<eCAL::eh5::Reader>()),
+  _reader(new eCAL::eh5::HDF5Meas),
   _current_opened_channel_data()
 {
 }

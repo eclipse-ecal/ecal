@@ -22,7 +22,7 @@
 #include <unordered_map>
 #include <map>
 
-#include <ecal/measurement/base/writer.h>
+#include <ecalhdf5/eh5_meas.h>
 #include <ecal_utils/filesystem.h>
 #include "utils.h"
 
@@ -43,7 +43,7 @@ public:
   std::string getRootOutputPath() const;
 
 private:
-  std::unique_ptr<eCAL::measurement::base::Writer>      _writer;
+  std::unique_ptr<eCAL::measurement::base::Measurement> _writer;
   std::string                                           _current_channel_name;
   std::string                                           _output_path;
   std::string                                           _root_output_path;

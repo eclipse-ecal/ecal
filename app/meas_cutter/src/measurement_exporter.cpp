@@ -18,10 +18,9 @@
 */
 
 #include "measurement_exporter.h"
-#include <ecalhdf5/eh5_writer.h>
 
 MeasurementExporter::MeasurementExporter():
-  _writer(std::make_unique<eCAL::eh5::Writer>())
+  _writer(new eCAL::eh5::HDF5Meas)
 {
 }
 
@@ -29,7 +28,7 @@ void MeasurementExporter::setPath(const std::string& path, const std::string& ba
 {
   _root_output_path = EcalUtils::Filesystem::CleanPath(path);
   _output_path = EcalUtils::Filesystem::CleanPath(_root_output_path + EcalUtils::Filesystem::NativeSeparator(EcalUtils::Filesystem::OsStyle::Current) + eCALMeasCutterUtils::kDefaultFolderOutput, EcalUtils::Filesystem::OsStyle::Current);
-  if (!_writer->Open(_output_path))
+  if (!_writer->Open(_output_path, eCAL::measurement::base::CREATE))
   {
     throw ExporterException("Unable to create HDF5 protobuf output path " + path + ".");
   }
