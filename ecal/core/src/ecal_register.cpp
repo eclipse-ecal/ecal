@@ -117,6 +117,7 @@ namespace eCAL
     if(!m_created) return;
 
     m_reg_snd_thread.Stop();
+    m_reg_snd.Destroy();
 
     m_created = false;
   }
