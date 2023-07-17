@@ -371,7 +371,6 @@ if(HAS_HDF5)
   add_subdirectory(contrib/ecalhdf5)
   add_subdirectory(contrib/message)
 endif()
-add_subdirectory(contrib/measurement/base)
 
 # --------------------------------------------------------
 # ecal core python binding

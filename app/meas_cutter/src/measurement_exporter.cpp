@@ -28,7 +28,7 @@ void MeasurementExporter::setPath(const std::string& path, const std::string& ba
 {
   _root_output_path = EcalUtils::Filesystem::CleanPath(path);
   _output_path = EcalUtils::Filesystem::CleanPath(_root_output_path + EcalUtils::Filesystem::NativeSeparator(EcalUtils::Filesystem::OsStyle::Current) + eCALMeasCutterUtils::kDefaultFolderOutput, EcalUtils::Filesystem::OsStyle::Current);
-  if (!_writer->Open(_output_path, eCAL::measurement::base::CREATE))
+  if (!_writer->Open(_output_path, eCAL::eh5::eAccessType::CREATE))
   {
     throw ExporterException("Unable to create HDF5 protobuf output path " + path + ".");
   }

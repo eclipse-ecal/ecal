@@ -43,8 +43,8 @@ public:
   std::string getRootOutputPath() const;
 
 private:
-  std::unique_ptr<eCAL::measurement::base::Measurement> _writer;
-  std::string                                           _current_channel_name;
+  std::unique_ptr<eCAL::eh5::HDF5Meas> _writer;
+  std::string                          _current_channel_name;
   std::string                                           _output_path;
   std::string                                           _root_output_path;
 };
