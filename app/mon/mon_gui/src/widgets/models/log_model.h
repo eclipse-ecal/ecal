@@ -101,6 +101,6 @@ private:
   bool parse_time_enabled_;
 
   static QString logLevelToString(int log_level);
-  static QColor logLevelColor(int log_level);
+  static QVariant logLevelColor(int log_level);
   QString timeToString(long long milliseconds) const;
 };
