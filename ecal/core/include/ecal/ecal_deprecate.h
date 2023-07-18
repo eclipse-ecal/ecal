@@ -19,16 +19,12 @@
 
 /**
  * @file   ecal_deprecate.h
- * @brief  eCAL funciton / variable deprecation macros
+ * @brief  eCAL function / variable deprecation macros
 **/
 
 #pragma once
 
 #include <ecal/ecal_defs.h>
-
-#define ECAL_VERSION_INTEGER                          ECAL_VERSION_CALCULATE(ECAL_VERSION_MAJOR, ECAL_VERSION_MINOR, ECAL_VERSION_PATCH)
-#define ECAL_VERSION_CALCULATE(major, minor, patch)   ((major<<16)|(minor<<8)|(patch))
-
 
 #if ECAL_VERSION_INTEGER >= ECAL_VERSION_CALCULATE(5, 12, 0)
 #define ECAL_DEPRECATE_SINCE_5_12(__message__) [[deprecated(__message__)]]
