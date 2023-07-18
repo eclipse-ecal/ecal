@@ -136,7 +136,7 @@ QString LogModel::logLevelToString(int log_level)
   }
 }
 
-QColor LogModel::logLevelColor(int log_level)
+QVariant LogModel::logLevelColor(int log_level)
 {
   switch (log_level)
   {
@@ -149,7 +149,7 @@ QColor LogModel::logLevelColor(int log_level)
   case eCAL_Logging_eLogLevel::log_level_fatal:
     return QColor(192, 0, 0);
   default:
-    return QColor(0, 0, 0);
+    return QVariant::Invalid; // Default color for "Debug x"
   }
 }
 
