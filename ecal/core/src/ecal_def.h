@@ -154,13 +154,16 @@
 /*                                     ecal internal timings                                  */
 /**********************************************************************************************/
 /* timeout for automatic removing registered topics and memory files in global database in ms */
-#define CMN_REGISTRATION_TO                     (60*1000)
+#define CMN_REGISTRATION_TO                          (60*1000)
 
 /* time for resend registration info from publisher/subscriber in ms */
-#define CMN_REGISTRATION_REFRESH                    1000
+#define CMN_REGISTRATION_REFRESH                     1000
 
 /* delta time to check timeout for data readers in ms */
-#define CMN_DATAREADER_TIMEOUT_DTIME                  10
+#define CMN_DATAREADER_TIMEOUT_DTIME                 10
+
+/* common host group name that enables interprocess mechanisms across (virtual) host borders (e.g, Docker); by default equivalent to local host name */
+#define CMN_HOST_GROUP_NAME                          ""
 
 /**********************************************************************************************/
 /*                                     events                                                 */
@@ -184,6 +187,3 @@
 
 /* enable dropping of payload messages that arrive out of order */
 #define EXP_DROP_OUT_OF_ORDER_MESSAGES              false
-
-/* common host group name that enables interprocess mechanisms across (virtual) host borders (e.g, Docker); by default equivalent to local host name */
-#define EXP_HOST_GROUP_NAME                         ""

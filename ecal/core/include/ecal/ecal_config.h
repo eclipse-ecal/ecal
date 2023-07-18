@@ -42,6 +42,7 @@ namespace eCAL
     ECAL_API std::string       GetLoadedEcalIniPath                 ();
     ECAL_API int               GetRegistrationTimeoutMs             ();
     ECAL_API int               GetRegistrationRefreshMs             ();
+    ECAL_API std::string       GetHostGroupName                     ();
 
     /////////////////////////////////////
     // network
@@ -128,7 +129,6 @@ namespace eCAL
       ECAL_API size_t            GetShmMonitoringQueueSize          ();
       ECAL_API std::string       GetShmMonitoringDomain             ();
       ECAL_API bool              GetDropOutOfOrderMessages          ();
-      ECAL_API std::string       GetHostGroupName                   ();
     }
   }
 }

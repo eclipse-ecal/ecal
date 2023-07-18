@@ -322,7 +322,7 @@ namespace eCAL
 
     std::string GetHostGroupName()
     {
-      return Config::Experimental::GetHostGroupName().empty() ? GetHostName() : Config::Experimental::GetHostGroupName();
+      return Config::GetHostGroupName().empty() ? GetHostName() : Config::GetHostGroupName();
     }
 
     int GetHostID()
