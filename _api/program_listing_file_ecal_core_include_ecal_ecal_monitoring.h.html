@@ -1716,6 +1716,31 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1a2e63aaa81a843b0fcacf659aec4f9805.html">
+       Define ECAL_DEPRECATE_SINCE_5_10
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1a8b39a08dde4e20da06960766eeef54e2.html">
+       Define ECAL_DEPRECATE_SINCE_5_11
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1ab97aaa09eca6557258c53627065c6743.html">
+       Define ECAL_DEPRECATE_SINCE_5_12
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1af43a13501449f4cec468e5fb7b4e96f7.html">
+       Define ECAL_DEPRECATE_SINCE_5_13
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1a2f67580583d2d0fe0c6047dc436bb4e4.html">
+       Define ECAL_DEPRECATE_SINCE_5_4
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="define_eh5__defs_8h_1accb613e2b9b76ded6bf8ca42b2824c5b.html">
        Define ECAL_HDF5_DATE
       </a>
@@ -2508,6 +2533,7 @@ title="Print to PDF"
 <span class="cp">#pragma once</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_os.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_deprecate.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_monitoring_entity.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
 
@@ -2527,10 +2553,10 @@ title="Print to PDF"
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">GetLogging</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">log_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;use GetMonitoring and publish yourself&quot;</span><span class="p">)]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_12</span><span class="p">(</span><span class="s">&quot;use GetMonitoring and publish yourself&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">PubMonitoring</span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">state_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ecal.monitoring&quot;</span><span class="p">);</span>
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;use GetLogging and publish yourself&quot;</span><span class="p">)]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_12</span><span class="p">(</span><span class="s">&quot;use GetLogging and publish yourself&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">PubLogging</span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">state_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ecal.logging&quot;</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>

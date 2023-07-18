@@ -1716,6 +1716,31 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1a2e63aaa81a843b0fcacf659aec4f9805.html">
+       Define ECAL_DEPRECATE_SINCE_5_10
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1a8b39a08dde4e20da06960766eeef54e2.html">
+       Define ECAL_DEPRECATE_SINCE_5_11
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1ab97aaa09eca6557258c53627065c6743.html">
+       Define ECAL_DEPRECATE_SINCE_5_12
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1af43a13501449f4cec468e5fb7b4e96f7.html">
+       Define ECAL_DEPRECATE_SINCE_5_13
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1a2f67580583d2d0fe0c6047dc436bb4e4.html">
+       Define ECAL_DEPRECATE_SINCE_5_4
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="define_eh5__defs_8h_1accb613e2b9b76ded6bf8ca42b2824c5b.html">
        Define ECAL_HDF5_DATE
       </a>
@@ -2507,6 +2532,7 @@ title="Print to PDF"
 
 <span class="cp">#pragma once</span>
 
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_deprecate.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_publisher.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_util.h&gt;</span>
 
@@ -2526,7 +2552,7 @@ title="Print to PDF"
 <span class="w">    </span><span class="p">{</span>
 <span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;Please use the constructor CMsgPublisher(const std::string&amp; topic_name_, const STopicInformation&amp; topic_info_) instead. This function will be removed in eCAL6. &quot;</span><span class="p">)]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the constructor CMsgPublisher(const std::string&amp; topic_name_, const STopicInformation&amp; topic_info_) instead. This function will be removed in eCAL6. &quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">CMsgPublisher</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">CPublisher</span><span class="p">(</span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="n">topic_type_</span><span class="p">,</span><span class="w"> </span><span class="n">topic_desc_</span><span class="p">)</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">    </span><span class="p">}</span>
@@ -2551,7 +2577,7 @@ title="Print to PDF"
 
 
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;Please use the method Create(const std::string&amp; topic_name_, const STopicInformation&amp; topic_info_) instead. This function will be removed in eCAL6. &quot;</span><span class="p">)]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method Create(const std::string&amp; topic_name_, const STopicInformation&amp; topic_info_) instead. This function will be removed in eCAL6. &quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">Create</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="k">return</span><span class="p">(</span><span class="n">CPublisher</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="n">topic_type_</span><span class="p">,</span><span class="w"> </span><span class="n">topic_desc_</span><span class="p">));</span>
@@ -2605,14 +2631,14 @@ title="Print to PDF"
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">  </span><span class="k">protected</span><span class="o">:</span>
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.&quot;</span><span class="p">)]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GetTypeName</span><span class="p">()</span><span class="w"> </span><span class="k">const</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="n">STopicInformation</span><span class="w"> </span><span class="n">topic_info</span><span class="p">{</span><span class="w"> </span><span class="n">GetTopicInformation</span><span class="p">()</span><span class="w"> </span><span class="p">};</span>
 <span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">Util</span><span class="o">::</span><span class="n">CombinedTopicEncodingAndType</span><span class="p">(</span><span class="n">topic_info</span><span class="p">.</span><span class="n">encoding</span><span class="p">,</span><span class="w"> </span><span class="n">topic_info</span><span class="p">.</span><span class="n">type</span><span class="p">);</span>
 <span class="w">    </span><span class="p">};</span>
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.&quot;</span><span class="p">)]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GetDescription</span><span class="p">()</span><span class="w"> </span><span class="k">const</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">GetTopicInformation</span><span class="p">().</span><span class="n">descriptor</span><span class="p">;</span>

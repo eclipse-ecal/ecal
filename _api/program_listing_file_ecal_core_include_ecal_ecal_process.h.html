@@ -1716,6 +1716,31 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1a2e63aaa81a843b0fcacf659aec4f9805.html">
+       Define ECAL_DEPRECATE_SINCE_5_10
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1a8b39a08dde4e20da06960766eeef54e2.html">
+       Define ECAL_DEPRECATE_SINCE_5_11
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1ab97aaa09eca6557258c53627065c6743.html">
+       Define ECAL_DEPRECATE_SINCE_5_12
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1af43a13501449f4cec468e5fb7b4e96f7.html">
+       Define ECAL_DEPRECATE_SINCE_5_13
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1a2f67580583d2d0fe0c6047dc436bb4e4.html">
+       Define ECAL_DEPRECATE_SINCE_5_4
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="define_eh5__defs_8h_1accb613e2b9b76ded6bf8ca42b2824c5b.html">
        Define ECAL_HDF5_DATE
       </a>
@@ -2510,6 +2535,7 @@ title="Print to PDF"
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;chrono&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
 
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_deprecate.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_os.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_process_mode.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_process_severity.h&gt;</span>
@@ -2525,7 +2551,7 @@ title="Print to PDF"
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GetHostName</span><span class="p">();</span>
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_10</span><span class="p">(</span><span class="s">&quot;This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">GetHostID</span><span class="p">();</span>
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GetUnitName</span><span class="p">();</span>
@@ -2555,10 +2581,10 @@ title="Print to PDF"
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">GetProcessMemory</span><span class="p">();</span>
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;use GetWClock() instead&quot;</span><span class="p">)]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_4</span><span class="p">(</span><span class="s">&quot;use GetWClock() instead&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">GetSClock</span><span class="p">();</span>
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;use GetWBytes() instead&quot;</span><span class="p">)]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_4</span><span class="p">(</span><span class="s">&quot;use GetWBytes() instead&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">GetSBytes</span><span class="p">();</span>
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">GetWClock</span><span class="p">();</span>

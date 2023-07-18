@@ -115,6 +115,11 @@ Files
 .. toctree::
    :maxdepth: 5
 
+   file_ecal_core_include_ecal_ecal_deprecate.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
    file_ecal_core_include_ecal_ecal_event.h.rst
 
 .. toctree::

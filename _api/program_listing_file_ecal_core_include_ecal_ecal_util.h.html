@@ -1716,6 +1716,31 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1a2e63aaa81a843b0fcacf659aec4f9805.html">
+       Define ECAL_DEPRECATE_SINCE_5_10
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1a8b39a08dde4e20da06960766eeef54e2.html">
+       Define ECAL_DEPRECATE_SINCE_5_11
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1ab97aaa09eca6557258c53627065c6743.html">
+       Define ECAL_DEPRECATE_SINCE_5_12
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1af43a13501449f4cec468e5fb7b4e96f7.html">
+       Define ECAL_DEPRECATE_SINCE_5_13
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="define_ecal__deprecate_8h_1a2f67580583d2d0fe0c6047dc436bb4e4.html">
+       Define ECAL_DEPRECATE_SINCE_5_4
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="define_eh5__defs_8h_1accb613e2b9b76ded6bf8ca42b2824c5b.html">
        Define ECAL_HDF5_DATE
       </a>
@@ -2507,7 +2532,9 @@ title="Print to PDF"
 
 <span class="cp">#pragma once</span>
 
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_deprecate.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_os.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal_deprecate.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/types/topic_information.h&gt;</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;map&gt;</span>
@@ -2520,7 +2547,7 @@ title="Print to PDF"
 <span class="p">{</span>
 <span class="w">  </span><span class="k">namespace</span><span class="w"> </span><span class="nn">Util</span>
 <span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_10</span><span class="p">(</span><span class="s">&quot;Please use the method std::string GeteCALConfigPath() instead. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GeteCALHomePath</span><span class="p">();</span>
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GeteCALConfigPath</span><span class="p">();</span>
@@ -2531,7 +2558,7 @@ title="Print to PDF"
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GeteCALActiveIniFile</span><span class="p">();</span>
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_10</span><span class="p">(</span><span class="s">&quot;Please use the method std::string GeteCALActiveIniFile() instead. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GeteCALDefaultIniFile</span><span class="p">();</span>
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">ShutdownProcess</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">unit_name_</span><span class="p">);</span>
@@ -2552,16 +2579,16 @@ title="Print to PDF"
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">GetTopicNames</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">topic_names_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicInformation(const std::string&amp; topic_name_, STopicInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicInformation(const std::string&amp; topic_name_, STopicInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">GetTopicTypeName</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicInformation(const std::string&amp; topic_name_, STopicInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicInformation(const std::string&amp; topic_name_, STopicInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GetTopicTypeName</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicInformation(const std::string&amp; topic_name_, STopicInformation&amp; topic_info_) instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicInformation(const std::string&amp; topic_name_, STopicInformation&amp; topic_info_) instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">GetTopicDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicInformation(const std::string&amp; topic_name_, STopicInformation&amp; topic_info_) instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicInformation(const std::string&amp; topic_name_, STopicInformation&amp; topic_info_) instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GetTopicDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">);</span>
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">GetTopicInformation</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="n">STopicInformation</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_info_</span><span class="p">);</span>
@@ -2581,16 +2608,16 @@ title="Print to PDF"
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">GetServiceDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">service_name_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">method_name_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">req_desc_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">resp_desc_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicInformation(const std::string&amp; topic_name_, STopicInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicInformation(const std::string&amp; topic_name_, STopicInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">GetTypeName</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_type_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicInformation(const std::string&amp; topic_name_, STopicInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicInformation(const std::string&amp; topic_name_, STopicInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GetTypeName</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicInformation(const std::string&amp; topic_name_, STopicInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicInformation(const std::string&amp; topic_name_, STopicInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">GetDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_desc_</span><span class="p">);</span>
 
-<span class="w">    </span><span class="p">[[</span><span class="n">deprecated</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicInformation(const std::string&amp; topic_name_, STopicInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)]]</span>
+<span class="w">    </span><span class="n">ECAL_DEPRECATE_SINCE_5_13</span><span class="p">(</span><span class="s">&quot;Please use the method bool GetTopicInformation(const std::string&amp; topic_name_, STopicInformation&amp; topic_info_) instead. You can extract the type information from the members encoding and type of the STopicInformation variable. This function will be removed in eCAL6.&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GetDescription</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_name_</span><span class="p">);</span>
 
 <span class="w">    </span><span class="n">ECAL_API</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SplitCombinedTopicType</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">combined_topic_type_</span><span class="p">);</span>

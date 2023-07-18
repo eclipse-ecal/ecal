@@ -31,6 +31,7 @@ Program Listing for File ecal_callback.h
    
    #pragma once
    
+   #include <ecal/ecal_deprecate.h>
    #include <ecal/cimpl/ecal_callback_cimpl.h>
    #include <ecal/types/topic_information.h>
    
@@ -68,9 +69,9 @@ Program Listing for File ecal_callback.h
        long long            time;    
        long long            clock;   
        std::string          tid;     
-       [[deprecated("Use the separate infos encoding and type in member tinfo instead of ttype.")]]
+       ECAL_DEPRECATE_SINCE_5_13("Use the separate infos encoding and type in member tinfo instead of ttype.")
        std::string          ttype;  
-       [[deprecated("Use the tinfo.descriptor instead of tdesc.")]]
+       ECAL_DEPRECATE_SINCE_5_13("Use the tinfo.descriptor instead of tdesc.")
        std::string          tdesc;  
        STopicInformation    tinfo;   
      };
@@ -87,9 +88,9 @@ Program Listing for File ecal_callback.h
        long long             time;   
        long long             clock;  
        std::string           tid;    
-       [[deprecated("Use the separate infos encoding and type in member tinfo instead of ttype.")]]
+       ECAL_DEPRECATE_SINCE_5_13("Use the separate infos encoding and type in member tinfo instead of ttype.")
        std::string           ttype;  
-       [[deprecated("Use the tinfo.descriptor instead of tdesc.")]]
+       ECAL_DEPRECATE_SINCE_5_13("Use the tinfo.descriptor instead of tdesc.")
        std::string           tdesc;  
        STopicInformation     tinfo;  
      };
