@@ -93,7 +93,6 @@ namespace eCAL
     ECAL_API std::string       GetLoadedEcalIniPath                 () { return g_default_ini_file; }
     ECAL_API int               GetRegistrationTimeoutMs             () { return eCALPAR(CMN, REGISTRATION_TO); }
     ECAL_API int               GetRegistrationRefreshMs             () { return eCALPAR(CMN, REGISTRATION_REFRESH); }
-    ECAL_API std::string       GetHostGroupName                     () { return eCALPAR(CMN, HOST_GROUP_NAME); }
 
     /////////////////////////////////////
     // network
@@ -135,6 +134,8 @@ namespace eCAL
     ECAL_API int               GetTcpPubsubWriterThreadpoolSize     () { return eCALPAR(NET, TCP_PUBSUB_NUM_EXECUTOR_WRITER); }
     ECAL_API int               GetTcpPubsubMaxReconnectionAttemps   () { return eCALPAR(NET, TCP_PUBSUB_MAX_RECONNECTIONS); }
 
+    ECAL_API std::string       GetHostGroupName                     () { return eCALPAR(NET, HOST_GROUP_NAME); }
+    
     /////////////////////////////////////
     // time
     /////////////////////////////////////

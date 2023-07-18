@@ -29,7 +29,6 @@
 #define  CMN_SECTION_S                    "common"
 #define  CMN_REGISTRATION_TO_S            "registration_timeout"
 #define  CMN_REGISTRATION_REFRESH_S       "registration_refresh"
-#define  CMN_HOST_GROUP_NAME_S            "host_group_name"
 
 /////////////////////////////////////
 // network
@@ -61,6 +60,8 @@
 #define  NET_TCP_PUBSUB_NUM_EXECUTOR_READER_S  "tcp_pubsub_num_executor_reader"
 #define  NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER_S  "tcp_pubsub_num_executor_writer"
 #define  NET_TCP_PUBSUB_MAX_RECONNECTIONS_S    "tcp_pubsub_max_reconnections"
+
+#define  NET_HOST_GROUP_NAME_S            "host_group_name"
 
 /////////////////////////////////////
 // time

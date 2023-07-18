@@ -42,7 +42,6 @@ namespace eCAL
     ECAL_API std::string       GetLoadedEcalIniPath                 ();
     ECAL_API int               GetRegistrationTimeoutMs             ();
     ECAL_API int               GetRegistrationRefreshMs             ();
-    ECAL_API std::string       GetHostGroupName                     ();
 
     /////////////////////////////////////
     // network
@@ -72,6 +71,8 @@ namespace eCAL
     ECAL_API int               GetTcpPubsubReaderThreadpoolSize     ();
     ECAL_API int               GetTcpPubsubWriterThreadpoolSize     ();
     ECAL_API int               GetTcpPubsubMaxReconnectionAttemps   ();
+
+    ECAL_API std::string       GetHostGroupName                     ();
 
     /////////////////////////////////////
     // time

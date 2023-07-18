@@ -219,6 +219,7 @@ namespace eCAL
 
       sstream << "------------------------- NETWORK --------------------------------" << std::endl;
       sstream << "Host name                : " << Process::GetHostName() << std::endl;
+      sstream << "Host group name          : " << Process::GetHostGroupName() << std::endl;
 
       if (Config::IsNetworkEnabled())
       {

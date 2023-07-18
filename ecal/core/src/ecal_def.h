@@ -96,6 +96,9 @@
 #define NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER          4
 #define NET_TCP_PUBSUB_MAX_RECONNECTIONS            5
 
+/* common host group name that enables interprocess mechanisms across (virtual) host borders (e.g, Docker); by default equivalent to local host name */
+#define NET_HOST_GROUP_NAME                         ""
+
 /**********************************************************************************************/
 /*                                     publisher settings                                     */
 /**********************************************************************************************/
@@ -161,9 +164,6 @@
 
 /* delta time to check timeout for data readers in ms */
 #define CMN_DATAREADER_TIMEOUT_DTIME                 10
-
-/* common host group name that enables interprocess mechanisms across (virtual) host borders (e.g, Docker); by default equivalent to local host name */
-#define CMN_HOST_GROUP_NAME                          ""
 
 /**********************************************************************************************/
 /*                                     events                                                 */
