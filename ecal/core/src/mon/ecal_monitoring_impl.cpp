@@ -31,41 +31,6 @@
 
 #include "../ecal_registration_receiver.h"
 
-namespace
-{
-  void GetSampleHost(const eCAL::pb::Sample& ecal_sample_, std::string& host_name_)
-  {
-    if (ecal_sample_.has_host())
-    {
-      host_name_ = ecal_sample_.host().hname();
-    }
-    if (ecal_sample_.has_process())
-    {
-      host_name_ = ecal_sample_.process().hname();
-    }
-    if (ecal_sample_.has_service())
-    {
-      host_name_ = ecal_sample_.service().hname();
-    }
-    if (ecal_sample_.has_client())
-    {
-      host_name_ = ecal_sample_.client().hname();
-    }
-    if (ecal_sample_.has_topic())
-    {
-      host_name_ = ecal_sample_.topic().hname();
-    }
-  }
-
-  bool IsLocalHost(const eCAL::pb::Sample& ecal_sample_)
-  {
-    std::string host_name;
-    GetSampleHost(ecal_sample_, host_name);
-    if (host_name.empty())                         return(false);
-    if (host_name == eCAL::Process::GetHostName()) return(true);
-    return(false);
-  }
-}
 
 namespace eCAL
 {
@@ -74,7 +39,6 @@ namespace eCAL
   ////////////////////////////////////////
   CMonitoringImpl::CMonitoringImpl() :
     m_init(false),
-    m_network       (Config::IsNetworkEnabled()),
     m_process_map   (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
     m_publisher_map (std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
     m_subscriber_map(std::chrono::milliseconds(Config::GetMonitoringTimeoutMs())),
@@ -86,9 +50,6 @@ namespace eCAL
   void CMonitoringImpl::Create()
   {
     if (m_init) return;
-
-    // network mode
-    m_network = Config::IsNetworkEnabled();
 
     // get name of this host
     m_host_name = Process::GetHostName();
@@ -164,10 +125,6 @@ namespace eCAL
 
   bool CMonitoringImpl::ApplySample(const eCAL::pb::Sample& ecal_sample_, eCAL::pb::eTLayerType /*layer_*/)
   {
-    // if sample is from outside, and we are in local network mode
-    // do not process sample
-    if (!IsLocalHost(ecal_sample_) && !m_network) return false;
-
     switch (ecal_sample_.cmd_type())
     {
     case eCAL::pb::bct_none:

@@ -152,7 +152,6 @@ namespace eCAL
     void Tokenize(const std::string& str, StrICaseSetT& tokens, const std::string& delimiters, bool trimEmpty);
 
     bool                                         m_init;
-    bool                                         m_network;
     std::string                                  m_host_name;
 
     std::mutex                                   m_topic_filter_excl_mtx;
