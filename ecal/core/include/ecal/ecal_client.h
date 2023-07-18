@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_service_info.h>
@@ -128,7 +129,7 @@ namespace eCAL
      *
      * @return  True if successful.
     **/
-    [[deprecated]]
+    ECAL_DEPRECATE_SINCE_5_10("Please use the create method bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_) instead. This function will be removed in eCAL6.")
     bool Call(const std::string& host_name_, const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_info_, std::string& response_);
 
     /**

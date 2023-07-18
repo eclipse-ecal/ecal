@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_publisher.h>
 #include <ecal/ecal_util.h>
 
@@ -59,7 +60,7 @@ namespace eCAL
      * @param topic_type_  Type name (optional for type checking). 
      * @param topic_desc_  Type description (optional for description checking). 
     **/
-    [[deprecated("Please use the constructor CMsgPublisher(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6. ")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the constructor CMsgPublisher(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6. ")
     CMsgPublisher(const std::string& topic_name_, const std::string& topic_type_, const std::string& topic_desc_ = "") : CPublisher(topic_name_, topic_type_, topic_desc_)
     {
     }
@@ -105,7 +106,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    [[deprecated("Please use the method Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6. ")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method Create(const std::string& topic_name_, const STopicInformation& topic_info_) instead. This function will be removed in eCAL6. ")
     bool Create(const std::string& topic_name_, const std::string& topic_type_ = "", const std::string& topic_desc_ = "")
     {
       return(CPublisher::Create(topic_name_, topic_type_, topic_desc_));
@@ -191,14 +192,14 @@ namespace eCAL
     }
 
   protected:
-    [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")
     virtual std::string GetTypeName() const
     {
       STopicInformation topic_info{ GetTopicInformation() };
       return Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.type);
     };
 
-    [[deprecated("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")]]
+    ECAL_DEPRECATE_SINCE_5_13("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")
     virtual std::string GetDescription() const
     {
       return GetTopicInformation().descriptor;

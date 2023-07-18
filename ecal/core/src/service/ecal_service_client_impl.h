@@ -22,6 +22,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_callback.h>
 
 #include "service/ecal_tcpclient.h"
@@ -57,7 +58,7 @@ namespace eCAL
     bool RemEventCallback(eCAL_Client_Event type_);
       
     // blocking call, no broadcast, first matching service only, response will be returned in service_response_
-    [[deprecated]]
+    ECAL_DEPRECATE_SINCE_5_10("Please use bool Call(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT* service_response_vec_) instead. This function will be removed in eCAL6.")
     bool Call(const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_);
     
     // blocking call, all responses will be returned in service_response_vec_
