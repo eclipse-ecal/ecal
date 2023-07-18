@@ -234,7 +234,7 @@ namespace eCAL
      *
      * @return  Length of received buffer. 
     **/
-    [[deprecated]]
+    ECAL_DEPRECATE_SINCE_5_10("Please use the method bool ReceiveBuffer(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) instead. This function will be removed in eCAL6.")
     ECAL_API size_t Receive(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ = 0) const;
 
     /**

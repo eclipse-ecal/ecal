@@ -171,7 +171,7 @@ namespace eCAL
   }
 
   // blocking call, no broadcast, first matching service only, response will be returned in service_response_
-  [[deprecated]]
+  //[[deprecated]]
   bool CServiceClientImpl::Call(const std::string& method_name_, const std::string& request_, struct SServiceResponse& service_response_)
   {
     if (g_clientgate() == nullptr) return false;

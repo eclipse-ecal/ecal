@@ -27,6 +27,7 @@
 #include <chrono>
 #include <string>
 
+#include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_process_mode.h>
 #include <ecal/ecal_process_severity.h>
@@ -60,7 +61,7 @@ namespace eCAL
      *
      * @return  Host id or zero if failed.
     **/
-    [[deprecated]]
+    ECAL_DEPRECATE_SINCE_5_10("This function will be removed in eCAL6.")
     ECAL_API int GetHostID();
 
     /**
@@ -162,14 +163,14 @@ namespace eCAL
     /**
      * @deprecated  Use the function GetWClock() instead
     **/
-    [[deprecated("use GetWClock() instead")]]
+    ECAL_DEPRECATE_SINCE_5_4("use GetWClock() instead")
     ECAL_API long long GetSClock();
 
     /**
      * @deprecated  Use the function GetWBytes() instead
     **/
 
-    [[deprecated("use GetWBytes() instead")]]
+    ECAL_DEPRECATE_SINCE_5_4("use GetWBytes() instead")
     ECAL_API long long GetSBytes();
 
     /**

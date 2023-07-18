@@ -27,6 +27,7 @@
 #include <exception>
 #include <sstream>
 #include <ecal/ecal.h>
+#include <ecal/ecal_deprecate.h>
 #include <ecal/protobuf/ecal_proto_dyn.h>
 #include <ecal/msg/dynamic.h>
 
@@ -112,12 +113,13 @@ namespace eCAL
        * This function is deprecated and will return a nullptr now.
        *
       **/
-      [[deprecated]]
+      ECAL_DEPRECATE_SINCE_5_10("This function will be removed in eCAL6.")
       google::protobuf::Message* getMessagePointer();
 
       /**
        * @brief Manually receive the next sample
       **/
+      ECAL_DEPRECATE_SINCE_5_10("This function was broken with eCAL 5.10, please use callback instead of receive.")
       bool Receive(google::protobuf::Message& msg_, long long* time_ = nullptr, int rcv_timeout_ = 0);
 
       /**

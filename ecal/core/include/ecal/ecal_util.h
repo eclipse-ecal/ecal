@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_deprecate.h>
 #include <ecal/types/topic_information.h>
@@ -45,7 +46,7 @@ namespace eCAL
      *
      * @return  eCAL home path.
     **/
-    [[deprecated]]
+    ECAL_DEPRECATE_SINCE_5_10("Please use the method std::string GeteCALConfigPath() instead. This function will be removed in eCAL6.")
     ECAL_API std::string GeteCALHomePath();
 
     /**
@@ -90,7 +91,7 @@ namespace eCAL
      *
      * @return  eCAL default ini file name.
     **/
-    [[deprecated]]
+    ECAL_DEPRECATE_SINCE_5_10("Please use the method std::string GeteCALActiveIniFile() instead. This function will be removed in eCAL6.")
     ECAL_API std::string GeteCALDefaultIniFile();
 
     /**
