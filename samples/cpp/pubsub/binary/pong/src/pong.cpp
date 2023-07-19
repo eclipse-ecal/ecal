@@ -26,7 +26,7 @@ int main(int argc, char **argv)
   // initialize eCAL API
   eCAL::Initialize(argc, argv, "pong");
 
-  eCAL::STopicInformation topic_info{ "", "long long", "" };
+  eCAL::SDataTypeInformation topic_info{ "long long", "", "" };
   eCAL::CSubscriber sub_pulse("pulse_send", topic_info);
   eCAL::CPublisher  pub_pulse("pulse_reply", topic_info);
 

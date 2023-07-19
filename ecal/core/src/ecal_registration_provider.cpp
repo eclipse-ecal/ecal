@@ -361,7 +361,14 @@ namespace eCAL
       const auto& ecal_sample_service = iter->second.service();
       for (const auto& method : ecal_sample_service.methods())
       {
-        ApplyServiceToDescGate(ecal_sample_service.sname(), method.mname(), method.req_type(), method.req_desc(), method.resp_type(), method.resp_desc());
+        SDataTypeInformation request_type;
+        request_type.name = method.req_type();
+        request_type.descriptor = method.req_desc();
+        SDataTypeInformation response_type;
+        response_type.name = method.resp_type();
+        response_type.descriptor = method.resp_desc();
+
+        ApplyServiceToDescGate(ecal_sample_service.sname(), method.mname(), request_type, response_type);
       }
 
       //////////////////////////////////////////////
@@ -403,11 +410,11 @@ namespace eCAL
       //////////////////////////////////////////////
       // read attributes
       const std::string topic_name(iter->second.topic().tname());
-      STopicInformation topic_info;
-      const auto& pb_topic_info = iter->second.topic().tinfo();
-      topic_info.encoding = pb_topic_info.encoding();
-      topic_info.type = pb_topic_info.type();
-      topic_info.descriptor = pb_topic_info.desc();
+      SDataTypeInformation topic_info;
+      const auto& pb_topic_datatype = iter->second.topic().tdatatype();
+      topic_info.encoding = pb_topic_datatype.encoding();
+      topic_info.name = pb_topic_datatype.name();
+      topic_info.descriptor = pb_topic_datatype.desc();
       const bool        topic_is_a_publisher(iter->second.cmd_type() == eCAL::pb::eCmdType::bct_reg_publisher);
       ApplyTopicToDescGate(topic_name, topic_info, topic_is_a_publisher);
 
@@ -502,14 +509,14 @@ namespace eCAL
   }
 
   bool CRegistrationProvider::ApplyTopicToDescGate(const std::string& topic_name_
-    , const STopicInformation& topic_info_
+    , const SDataTypeInformation& topic_info_
     , bool topic_is_a_publisher_)
   {
     if (g_descgate() != nullptr)
     {
       // calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_info_.encoding.empty() || !topic_info_.type.empty())
+      if (!topic_info_.encoding.empty() || !topic_info_.name.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
       if (!topic_info_.descriptor.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
@@ -525,22 +532,21 @@ namespace eCAL
 
   bool CRegistrationProvider::ApplyServiceToDescGate(const std::string& service_name_
     , const std::string& method_name_
-    , const std::string& req_type_name_
-    , const std::string& req_type_desc_
-    , const std::string& resp_type_name_
-    , const std::string& resp_type_desc_)
+    , const SDataTypeInformation& reqest_type_description_
+    , const SDataTypeInformation& response_type_description_
+  )
   {
     if (g_descgate() != nullptr)
     {
       // Calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!(req_type_name_.empty() && resp_type_name_.empty()))
+      if (!(reqest_type_description_.name.empty() && response_type_description_.name.empty()))
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!(req_type_desc_.empty() && resp_type_desc_.empty()))
+      if (!(reqest_type_description_.descriptor.empty() && response_type_description_.descriptor.empty()))
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
 
-      return g_descgate()->ApplyServiceDescription(service_name_, method_name_, req_type_name_, req_type_desc_, resp_type_name_, resp_type_desc_, quality);
+      return g_descgate()->ApplyServiceDescription(service_name_, method_name_, reqest_type_description_, response_type_description_, quality);
     }
     return false;
   }

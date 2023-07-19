@@ -48,8 +48,8 @@ void OnEvent(const char* topic_name_, const struct eCAL::SSubEventCallbackData* 
   case sub_event_update_connection:
     std::cout << "event            : " << "sub_event_update_connection" << std::endl;
     std::cout << "  topic_id       : " << data_->tid << std::endl;
-    std::cout << "  topic_encoding : " << data_->tinfo.encoding << std::endl;
-    std::cout << "  topic_type     : " << data_->tinfo.type << std::endl;
+    std::cout << "  topic_encoding : " << data_->tdatatype.encoding << std::endl;
+    std::cout << "  topic_type     : " << data_->tdatatype.name << std::endl;
     //std::cout << "  topic_desc : " << data_->tdesc << std::endl;
     break;
   default:

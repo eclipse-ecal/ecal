@@ -233,7 +233,7 @@ namespace eCAL
     if (topic_name.empty()) return;
 
     const std::string& topic_id   = ecal_sample.tid();
-    STopicInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
+    SDataTypeInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
 
     // store description
     ApplyTopicToDescGate(topic_name, topic_info);
@@ -312,7 +312,7 @@ namespace eCAL
     const std::string& host_name  = ecal_sample.hname();
     const std::string& topic_name = ecal_sample.tname();
     const std::string& topic_id   = ecal_sample.tid();
-    STopicInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
+    SDataTypeInformation topic_info{ eCALSampleToTopicInformation(ecal_sample_) };
     const std::string  process_id = std::to_string(ecal_sample.pid());
 
     // store description
@@ -387,13 +387,13 @@ namespace eCAL
     return(0);
   }
 
-  bool CSubGate::ApplyTopicToDescGate(const std::string& topic_name_, const STopicInformation& topic_info_)
+  bool CSubGate::ApplyTopicToDescGate(const std::string& topic_name_, const SDataTypeInformation& topic_info_)
   {
     if (g_descgate() != nullptr)
     {
       // Calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_info_.type.empty() || !topic_info_.encoding.empty())
+      if (!topic_info_.name.empty() || !topic_info_.encoding.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
       if (!topic_info_.descriptor.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;

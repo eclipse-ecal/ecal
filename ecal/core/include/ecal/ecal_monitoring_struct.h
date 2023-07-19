@@ -26,7 +26,7 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_monitoring_entity.h>
-#include <ecal/types/topic_information.h>
+#include <ecal/ecal_types.h>
 
 #include <map>
 #include <string>
@@ -66,7 +66,7 @@ namespace eCAL
       std::string                         tid;                  //!< topic id
       std::string                         tname;                //!< topic name
       std::string                         direction;            //!< direction (publisher, subscriber)
-      STopicInformation                   tinfo;                //!< topic information (encoding, type, descriptor)
+      SDataTypeInformation                tdatatype;            //!< topic datatype description (encoding, type, descriptor)
       int                                 tsize;                //!< topic size
 
       bool                                tlayer_ecal_udp_mc;   //!< transport layer udp active

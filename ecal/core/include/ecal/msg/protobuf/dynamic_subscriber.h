@@ -313,9 +313,9 @@ namespace eCAL
     inline std::shared_ptr<google::protobuf::Message> CDynamicSubscriber::CreateMessagePointer(const std::string& topic_name_)
     {
       // get topic type
-      STopicInformation topic_info;
-      eCAL::Util::GetTopicInformation(topic_name, topic_info);
-      std::string topic_type{ topic_info.type };
+      SDataTypeInformation topic_info;
+      eCAL::Util::GetTopicDataTypeInformation(topic_name, topic_info);
+      std::string topic_type{ topic_info.name };
       topic_type = topic_type.substr(topic_type.find_last_of('.') + 1, topic_type.size());
       if (StrEmptyOrNull(topic_type))
       {
