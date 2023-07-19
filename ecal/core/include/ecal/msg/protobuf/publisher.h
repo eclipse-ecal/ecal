@@ -204,9 +204,9 @@ namespace eCAL
       {
         STopicInformation topic_info;
         static T msg{};
-        topic_info.encoding = "proto";
-        topic_info.type = msg.GetTypeName();
-        topic_info.descriptor = protobuf::GetProtoMessageDescription(msg);
+        topic_info.topic_type.encoding = "proto";
+        topic_info.topic_type.name = msg.GetTypeName();
+        topic_info.topic_type.descriptor = protobuf::GetProtoMessageDescription(msg);
         return topic_info;
       }
 

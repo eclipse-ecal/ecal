@@ -28,7 +28,7 @@
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_callback.h>
 #include <ecal/ecal_qos.h>
-#include <ecal/types/topic_information.h>
+#include <ecal/ecal_types.h>
 
 #include <memory>
 #include <set>

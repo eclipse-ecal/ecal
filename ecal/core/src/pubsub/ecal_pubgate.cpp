@@ -226,9 +226,9 @@ namespace eCAL
     {
       // Calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_info_.type.empty() || !topic_info_.encoding.empty())
+      if (!topic_info_.topic_type.name.empty() || !topic_info_.topic_type.encoding.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_info_.descriptor.empty())
+      if (!topic_info_.topic_type.descriptor.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;
 

@@ -24,7 +24,7 @@
 #pragma once
 
 #include <ecal/ecal_util.h>
-#include <ecal/types/topic_information.h>
+#include <ecal/ecal_types.h>
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
@@ -75,13 +75,11 @@ namespace eCAL
 
     bool ApplyServiceDescription(const std::string& service_name_, 
                                  const std::string& method_name_, 
-                                 const std::string& req_type_name_, 
-                                 const std::string& req_type_desc_, 
-                                 const std::string& resp_type_name_,
-                                 const std::string& resp_type_desc_,
+                                 const SDataTypeDescription& reqest_type_description_,
+                                 const SDataTypeDescription& response_type_description_,
                                  const QualityFlags description_quality_);
 
-    void GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_);
+    void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_);
     void GetServiceNames(std::vector<std::tuple<std::string, std::string>>& service_method_names_);
     bool GetServiceTypeNames(const std::string& service_name_, const std::string& method_name_, std::string& req_type_name_, std::string& resp_type_name_);
     bool GetServiceDescription(const std::string& service_name_, const std::string& method_name_, std::string& req_type_desc_, std::string& resp_type_desc_);
@@ -96,7 +94,7 @@ namespace eCAL
 
     struct SServiceMethodInfoQuality
     {
-      Util::SServiceMethodInfo info;                                               //!< Service info struct with type names and descriptors for request and response.
+      SServiceMethodInformation info;                                               //!< Service info struct with type names and descriptors for request and response.
       QualityFlags             quality = QualityFlags::NO_QUALITY;                 //!< The Quality of the Info
     };
 

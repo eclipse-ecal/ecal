@@ -30,7 +30,7 @@
 #include <ecal/ecal_payload_writer.h>
 #include <ecal/ecal_qos.h>
 #include <ecal/ecal_tlayer.h>
-#include <ecal/types/topic_information.h>
+#include <ecal/ecal_types.h>
 
 #include <chrono>
 #include <memory>
@@ -164,7 +164,6 @@ namespace eCAL
     {
       return Create(topic_name_, STopicInformation());
     }
-
 
     /**
      * @brief Destroys this object. 

@@ -26,7 +26,7 @@
 
 #include <ecal/ecal_deprecate.h>
 #include <ecal/cimpl/ecal_callback_cimpl.h>
-#include <ecal/types/topic_information.h>
+#include <ecal/ecal_types.h>
 
 #include <functional>
 #include <string>

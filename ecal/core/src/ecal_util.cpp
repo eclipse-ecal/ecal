@@ -23,7 +23,7 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_core.h>
-#include <ecal/types/topic_information.h>
+#include <ecal/ecal_types.h>
 
 #include "ecal_def.h"
 #include "ecal_descgate.h"
@@ -255,7 +255,7 @@ namespace eCAL
     {
       STopicInformation topic_info;
       auto ret = GetTopicInformation(topic_name_, topic_info);
-      topic_type_ = Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.type);
+      topic_type_ = Util::CombinedTopicEncodingAndType(topic_info.topic_type.encoding, topic_info.topic_type.name);
       return ret;
     }
 
@@ -302,7 +302,7 @@ namespace eCAL
     {
       STopicInformation topic_info;
       auto ret = GetTopicInformation(topic_name_, topic_info);
-      topic_desc_ = topic_info.descriptor;
+      topic_desc_ = topic_info.topic_type.descriptor;
       return ret;
     }
 
@@ -377,7 +377,7 @@ namespace eCAL
      * @param service_info_map_  Map to store the topic informations.
      *                           Map { (ServiceName, MethodName) -> ( (ReqType, ReqDescription), (RespType, RespDescription) ) } mapping of all currently known services.
     **/
-    void GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_)
+    void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_)
     {
       if (!g_descgate()) return;
       g_descgate()->GetServices(service_info_map_);

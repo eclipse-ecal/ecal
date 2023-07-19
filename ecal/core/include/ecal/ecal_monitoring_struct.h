@@ -26,7 +26,7 @@
 
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_monitoring_entity.h>
-#include <ecal/types/topic_information.h>
+#include <ecal/ecal_types.h>
 
 #include <map>
 #include <string>

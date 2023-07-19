@@ -31,15 +31,34 @@ namespace eCAL
      * @brief Optional compile time information associated with a given topic
      *        (necessary for reflection / runtime type checking)
     **/
+    struct SDataTypeDescription
+    {
+      std::string name;
+      std::string encoding;
+      std::string descriptor;
+
+      bool operator==(const SDataTypeDescription& other) const
+      {
+        return name == other.name && encoding == other.encoding && descriptor == other.descriptor;
+      }
+
+      bool operator!=(const SDataTypeDescription& other) const
+      {
+        return !(*this == other);
+      }
+    };
+
+    /**
+     * @brief Optional compile time information associated with a given topic
+     *        (necessary for reflection / runtime type checking)
+    **/
     struct STopicInformation
     {
-      std::string encoding;
-      std::string type;
-      std::string descriptor;
+      SDataTypeDescription topic_type; //!< Data type description of the topic
 
       bool operator==(const STopicInformation& other) const
       {
-        return encoding == other.encoding && type == other.type && descriptor == other.descriptor;
+        return topic_type == other.topic_type;
       }
 
       bool operator!=(const STopicInformation& other) const
@@ -47,4 +66,25 @@ namespace eCAL
         return !(*this == other);
       }
     };
+
+    /**
+     * @brief Optional compile time information associated with a given service method
+     *        (necessary for reflection / runtime type checking)
+    **/
+    struct SServiceMethodInformation
+    {
+      SDataTypeDescription request_type;   //!< Data type description of the request
+      SDataTypeDescription response_type;  //!< Data type description of the response
+
+      bool operator==(const SServiceMethodInformation& other) const
+      {
+        return request_type == other.request_type && response_type == other.response_type;
+      }
+
+      bool operator!=(const SServiceMethodInformation& other) const
+      {
+        return !(*this == other);
+      }
+    };
+
 }

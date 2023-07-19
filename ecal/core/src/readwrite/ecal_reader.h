@@ -25,7 +25,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_callback.h>
-#include <ecal/types/topic_information.h>
+#include <ecal/ecal_types.h>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings

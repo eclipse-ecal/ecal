@@ -108,9 +108,9 @@ namespace eCAL
   {
     STopicInformation info;
     auto split_type = Util::SplitCombinedTopicType(topic_type_);
-    info.encoding = split_type.first;
-    info.type = split_type.second;
-    info.descriptor = topic_desc_;
+    info.topic_type.encoding = split_type.first;
+    info.topic_type.name = split_type.second;
+    info.topic_type.descriptor = topic_desc_;
     return Create(topic_name_, info);
   }
 
@@ -212,8 +212,8 @@ namespace eCAL
     STopicInformation topic_info = m_datawriter->GetTopicInformation();
     // split the topic_type_name
     auto split_type = Util::SplitCombinedTopicType(topic_type_name_);
-    topic_info.encoding = split_type.first;
-    topic_info.type = split_type.second;
+    topic_info.topic_type.encoding = split_type.first;
+    topic_info.topic_type.name = split_type.second;
     ApplyTopicToDescGate(m_datawriter->GetTopicName(), topic_info);
 
     return m_datawriter->SetTopicInformation(topic_info);
@@ -225,7 +225,7 @@ namespace eCAL
 
     // register to description gateway for type / description checking
     STopicInformation topic_info = m_datawriter->GetTopicInformation();
-    topic_info.descriptor = topic_desc_;
+    topic_info.topic_type.descriptor = topic_desc_;
     ApplyTopicToDescGate(m_datawriter->GetTopicName(), topic_info);
 
     return m_datawriter->SetTopicInformation(topic_info);
@@ -426,12 +426,12 @@ namespace eCAL
   std::string CPublisher::GetTypeName() const
   {
     STopicInformation info = GetTopicInformation();
-    return(Util::CombinedTopicEncodingAndType(info.encoding, info.type));
+    return(Util::CombinedTopicEncodingAndType(info.topic_type.encoding, info.topic_type.name));
   }
 
   std::string CPublisher::GetDescription() const
   {
-    return(GetTopicInformation().descriptor);
+    return(GetTopicInformation().topic_type.descriptor);
   }
 
   STopicInformation CPublisher::GetTopicInformation() const
@@ -456,9 +456,9 @@ namespace eCAL
     {
       // Calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_info_.type.empty() || !topic_info_.encoding.empty())
+      if (!topic_info_.topic_type.name.empty() || !topic_info_.topic_type.encoding.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_info_.descriptor.empty())
+      if (!topic_info_.topic_type.descriptor.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_THIS_PROCESS;
       quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_CORRECT_ENTITY;

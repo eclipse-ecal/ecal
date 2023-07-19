@@ -27,7 +27,7 @@
 #include <ecal/ecal_deprecate.h>
 #include <ecal/ecal_os.h>
 #include <ecal/ecal_deprecate.h>
-#include <ecal/types/topic_information.h>
+#include <ecal/ecal_types.h>
 
 #include <map>
 #include <unordered_map>
@@ -210,20 +210,13 @@ namespace eCAL
     **/
     ECAL_API bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_);
 
-    struct SServiceMethodInfo
-    {
-      std::string request_type_name;         //!< Type name of the request message
-      std::string request_type_description;  //!< Descriptor string of the request description
-      std::string response_type_name;        //!< Type name of the response message
-      std::string response_type_description; //!< Descriptor string of the response message
-    };
     /**
      * @brief Get complete service map (including request and response types and descriptions).
      *
      * @param service_info_map_  Map to store the topic informations.
      *                           Map { (ServiceName, MethodName) -> ( (ReqType, ReqDescription), (RespType, RespDescription) ) } mapping of all currently known services.
     **/
-    ECAL_API void GetServices(std::map<std::tuple<std::string, std::string>, Util::SServiceMethodInfo>& service_info_map_);
+    ECAL_API void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_);
 
     /**
      * @brief Get all service/method names.

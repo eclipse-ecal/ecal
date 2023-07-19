@@ -24,7 +24,7 @@
 #pragma once
 
 #include <ecal/core/pb/ecal.pb.h>
-#include <ecal/types/topic_information.h>
+#include <ecal/ecal_types.h>
 
 #include <ecal/ecal_util.h>
 
@@ -34,10 +34,10 @@ namespace eCAL
   inline STopicInformation eCALSampleToTopicInformation(const eCAL::pb::Sample& sample)
   {
     STopicInformation topic;
-    const auto& tinfo = sample.topic().tinfo();
-    topic.encoding = tinfo.encoding();
-    topic.type = tinfo.type();
-    topic.descriptor = tinfo.desc();
+    const auto& tdatatype = sample.topic().tdatatype();
+    topic.topic_type.encoding = tdatatype.encoding();
+    topic.topic_type.name = tdatatype.name();
+    topic.topic_type.descriptor = tdatatype.desc();
     return topic;
   }
   
@@ -45,13 +45,13 @@ namespace eCAL
   inline void ModifyIncomingSampleForBackwardsCompatibility(const eCAL::pb::Sample& sample, eCAL::pb::Sample& modified_sample)
   {
     modified_sample.CopyFrom(sample);
-    if (modified_sample.has_topic() && !modified_sample.topic().has_tinfo())
+    if (modified_sample.has_topic() && !modified_sample.topic().has_tdatatype())
     {
-      auto* topic_info = modified_sample.mutable_topic()->mutable_tinfo();
+      auto* topic_datatype = modified_sample.mutable_topic()->mutable_tdatatype();
       auto split_type = Util::SplitCombinedTopicType(modified_sample.topic().ttype());
-      topic_info->set_encoding(split_type.first);
-      topic_info->set_type(split_type.second);
-      topic_info->set_desc(modified_sample.topic().tdesc());
+      topic_datatype->set_name(split_type.second);
+      topic_datatype->set_encoding(split_type.first);
+      topic_datatype->set_desc(modified_sample.topic().tdesc());
     }
   }
 
