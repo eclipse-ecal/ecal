@@ -80,6 +80,8 @@ Program Listing for File ecal_config.h
        ECAL_API int               GetTcpPubsubWriterThreadpoolSize     ();
        ECAL_API int               GetTcpPubsubMaxReconnectionAttemps   ();
    
+       ECAL_API std::string       GetHostGroupName                     ();
+   
        // time
    
        ECAL_API std::string       GetTimesyncModuleName                ();

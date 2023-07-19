@@ -66,6 +66,7 @@ Program Listing for File ecal_monitoring_struct.h
          int                                 rclock;               
          int                                 hid;                  
          std::string                         hname;                
+         std::string                         hgname;               
          int                                 pid;                  
          std::string                         pname;                
          std::string                         uname;                
@@ -110,6 +111,7 @@ Program Listing for File ecal_monitoring_struct.h
    
          int            rclock;                                    
          std::string    hname;                                     
+         std::string    hgname;                                    
          int            pid;                                       
          std::string    pname;                                     
          std::string    uname;                                     

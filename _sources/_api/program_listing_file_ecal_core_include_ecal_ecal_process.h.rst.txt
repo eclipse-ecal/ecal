@@ -50,6 +50,8 @@ Program Listing for File ecal_process.h
    
        ECAL_API std::string GetHostName();
    
+       ECAL_API std::string GetHostGroupName();
+   
        ECAL_DEPRECATE_SINCE_5_10("This function will be removed in eCAL6.")
        ECAL_API int GetHostID();
    
