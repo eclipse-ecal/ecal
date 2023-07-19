@@ -109,11 +109,8 @@ namespace eCAL
 
       /**
        * @brief get a Pointer to a temporary message that can be passed to receive
-       * 
-       * This function is deprecated and will return a nullptr now.
        *
       **/
-      [[deprecated]]
       google::protobuf::Message* getMessagePointer();
 
       /**
@@ -225,7 +222,19 @@ namespace eCAL
 
     inline google::protobuf::Message* CDynamicSubscriber::getMessagePointer()
     {
-      return nullptr;
+      try
+      {
+        // Create Message Pointer for our topic name.
+        if (msg_ptr == nullptr)
+        {
+          msg_ptr = CreateMessagePointer(topic_name);
+        }
+      }
+      catch (DynamicReflectionException& /*e*/)
+      {
+        return nullptr;
+      }
+      return msg_ptr.get();
     }
 
     inline bool CDynamicSubscriber::Receive(google::protobuf::Message& msg_, long long* time_, int rcv_timeout_)

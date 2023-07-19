@@ -26,6 +26,7 @@ create_targets_protobuf()
 
 set(${PROJECT_NAME}_src
   src/proto_publisher_test.cpp
+  src/proto_dyn_subscriber_test.cpp
   src/proto_subscriber_test.cpp
 )
 
