@@ -109,8 +109,6 @@ namespace eCAL
 
       /**
        * @brief get a Pointer to a temporary message that can be passed to receive
-       * 
-       * This function is deprecated and will return a nullptr now.
        *
       **/
       google::protobuf::Message* getMessagePointer();
