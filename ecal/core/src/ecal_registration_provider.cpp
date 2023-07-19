@@ -409,11 +409,11 @@ namespace eCAL
       //////////////////////////////////////////////
       // read attributes
       const std::string topic_name(iter->second.topic().tname());
-      STopicInformation topic_info;
+      SDataTypeDescription topic_info;
       const auto& pb_topic_datatype = iter->second.topic().tdatatype();
-      topic_info.topic_type.encoding = pb_topic_datatype.encoding();
-      topic_info.topic_type.name = pb_topic_datatype.name();
-      topic_info.topic_type.descriptor = pb_topic_datatype.desc();
+      topic_info.encoding = pb_topic_datatype.encoding();
+      topic_info.name = pb_topic_datatype.name();
+      topic_info.descriptor = pb_topic_datatype.desc();
       const bool        topic_is_a_publisher(iter->second.cmd_type() == eCAL::pb::eCmdType::bct_reg_publisher);
       ApplyTopicToDescGate(topic_name, topic_info, topic_is_a_publisher);
 
@@ -508,16 +508,16 @@ namespace eCAL
   }
 
   bool CRegistrationProvider::ApplyTopicToDescGate(const std::string& topic_name_
-    , const STopicInformation& topic_info_
+    , const SDataTypeDescription& topic_info_
     , bool topic_is_a_publisher_)
   {
     if (g_descgate() != nullptr)
     {
       // calculate the quality of the current info
       ::eCAL::CDescGate::QualityFlags quality = ::eCAL::CDescGate::QualityFlags::NO_QUALITY;
-      if (!topic_info_.topic_type.encoding.empty() || !topic_info_.topic_type.name.empty())
+      if (!topic_info_.encoding.empty() || !topic_info_.name.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::TYPE_AVAILABLE;
-      if (!topic_info_.topic_type.descriptor.empty())
+      if (!topic_info_.descriptor.empty())
         quality |= ::eCAL::CDescGate::QualityFlags::DESCRIPTION_AVAILABLE;
       if (topic_is_a_publisher_)
         quality |= ::eCAL::CDescGate::QualityFlags::INFO_COMES_FROM_PRODUCER;

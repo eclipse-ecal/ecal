@@ -66,12 +66,12 @@ namespace eCAL
     void Destroy();
 
     bool ApplyTopicDescription(const std::string& topic_name_, 
-                               const STopicInformation& topic_info_,
+                               const SDataTypeDescription& topic_info_,
                                const QualityFlags description_quality_);
 
-    void GetTopics(std::unordered_map<std::string, STopicInformation>& topic_info_map_);
+    void GetTopics(std::unordered_map<std::string, SDataTypeDescription>& topic_info_map_);
     void GetTopicNames(std::vector<std::string>& topic_names_);
-    bool GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_);
+    bool GetDataTypeDescription(const std::string& topic_name_, SDataTypeDescription& topic_info_);
 
     bool ApplyServiceDescription(const std::string& service_name_, 
                                  const std::string& method_name_, 
@@ -87,9 +87,9 @@ namespace eCAL
   protected:
     struct STopicInfoQuality
     {
-      STopicInformation info;                                                       //!< Topic info struct with type encoding, name and descriptor.
-      QualityFlags     quality               = QualityFlags::NO_QUALITY;           //!< QualityFlags to determine whether we may overwrite the current data with better one. E.g. we prefer the description sent by a publisher over one sent by a subscriber. 
-      bool             type_missmatch_logged = false;                              //!< Whether we have already logged a type-missmatch
+      SDataTypeDescription info;                                                       //!< Topic info struct with type encoding, name and descriptor.
+      QualityFlags         quality               = QualityFlags::NO_QUALITY;           //!< QualityFlags to determine whether we may overwrite the current data with better one. E.g. we prefer the description sent by a publisher over one sent by a subscriber. 
+      bool                 type_missmatch_logged = false;                              //!< Whether we have already logged a type-missmatch
     };
 
     struct SServiceMethodInfoQuality

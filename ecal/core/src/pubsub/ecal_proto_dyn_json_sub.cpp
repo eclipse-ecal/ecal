@@ -122,10 +122,10 @@ namespace eCAL
         if (msg_string.empty())
         {
           // get topic type
-          STopicInformation topic_info;
+          SDataTypeDescription topic_info;
           //nodiscard???
-          eCAL::Util::GetTopicInformation(topic_name_, topic_info);
-          topic_type_full = topic_info.topic_type.name;
+          eCAL::Util::GetDataTypeDescription(topic_name_, topic_info);
+          topic_type_full = topic_info.name;
           topic_type = topic_type_full.substr(topic_type_full.find_last_of('.') + 1, topic_type_full.size());
           topic_type_full = "/" + topic_type_full;
 
@@ -136,7 +136,7 @@ namespace eCAL
           }
 
           // get topic description
-          topic_desc = topic_info.topic_type.descriptor;
+          topic_desc = topic_info.descriptor;
           if (topic_desc.empty())
           {
             std::cout << "could not get description for topic " << topic_name_ << std::endl;

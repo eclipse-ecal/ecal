@@ -106,7 +106,7 @@ namespace eCAL
       // where the vtable is not created yet or it's destructed.
       // Probably we can handle the Message publishers differently. One message publisher class and then one class for payloads and getting type
       // descriptor information.
-      CPublisher(const std::string& topic_name_) : eCAL::CPublisher(topic_name_, CPublisher::GetTopicInformation())
+      CPublisher(const std::string& topic_name_) : eCAL::CPublisher(topic_name_, CPublisher::GetDataTypeDescription())
       {
       }
 
@@ -144,7 +144,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(eCAL::CPublisher::Create(topic_name_, GetTopicInformation()));
+        return(eCAL::CPublisher::Create(topic_name_, GetDataTypeDescription()));
       }
 
       size_t Send(const T& msg_, long long time_ = -1)
@@ -176,10 +176,10 @@ namespace eCAL
        *
        * @return  Type name.
       **/
-      ECAL_DEPRECATE_SINCE_5_13("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")
+      ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeDescription GetDataTypeDescription() instead. This function will be removed in eCAL6.")
       std::string GetTypeName() const
       {
-        STopicInformation topic_info{ GetTopicInformation() };
+        SDataTypeDescription topic_info{ GetDataTypeDescription() };
         return Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.type);
       }
 
@@ -189,10 +189,10 @@ namespace eCAL
        *
        * @return  Description string.
       **/
-      ECAL_DEPRECATE_SINCE_5_13("Please use STopicInformation GetTopicInformation() instead. This function will be removed in eCAL6.")
+      ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeDescription GetDataTypeDescription() instead. This function will be removed in eCAL6.")
       std::string GetDescription() const
       {
-        return GetTopicInformation().descriptor;
+        return GetDataTypeDescription().descriptor;
       }
 
       /**
@@ -200,13 +200,13 @@ namespace eCAL
       *
       * @return  Topic information.
       **/
-      STopicInformation GetTopicInformation() const
+      SDataTypeDescription GetDataTypeDescription() const
       {
-        STopicInformation topic_info;
+        SDataTypeDescription topic_info;
         static T msg{};
-        topic_info.topic_type.encoding = "proto";
-        topic_info.topic_type.name = msg.GetTypeName();
-        topic_info.topic_type.descriptor = protobuf::GetProtoMessageDescription(msg);
+        topic_info.encoding = "proto";
+        topic_info.name = msg.GetTypeName();
+        topic_info.descriptor = protobuf::GetProtoMessageDescription(msg);
         return topic_info;
       }
 

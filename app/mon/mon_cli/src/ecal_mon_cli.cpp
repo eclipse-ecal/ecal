@@ -352,9 +352,9 @@ void ProcProto(const std::string& topic_name, int msg_count)
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
   // get topic type
-  eCAL::STopicInformation topic_info;
-  eCAL::Util::GetTopicInformation(topic_name, topic_info);
-  if(topic_info.type.empty())
+  eCAL::SDataTypeDescription topic_info;
+  eCAL::Util::GetDataTypeDescription(topic_name, topic_info);
+  if(topic_info.name.empty())
   {
     std::cout << "could not get type for topic " << topic_name << std::endl;
     return;

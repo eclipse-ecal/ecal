@@ -46,7 +46,7 @@ namespace eCAL
   {
   }
 
-  bool CDescGate::ApplyTopicDescription(const std::string& topic_name_, const STopicInformation& topic_info_, const QualityFlags description_quality_)
+  bool CDescGate::ApplyTopicDescription(const std::string& topic_name_, const SDataTypeDescription& topic_info_, const QualityFlags description_quality_)
   {
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     m_topic_info_map.map->remove_deprecated();
@@ -106,13 +106,13 @@ namespace eCAL
 
     // topic type name differs
     // we log the error and update the entry one time
-    if (!topic_info_.topic_type.encoding.empty()
-      && !topic_info.info.topic_type.encoding.empty()
-      && (topic_info.info.topic_type.encoding != topic_info_.topic_type.encoding)
+    if (!topic_info_.encoding.empty()
+      && !topic_info.info.encoding.empty()
+      && (topic_info.info.encoding != topic_info_.encoding)
       )
     {
-      std::string tencoding1 = topic_info.info.topic_type.encoding;
-      std::string tencoding2 = topic_info_.topic_type.encoding;
+      std::string tencoding1 = topic_info.info.encoding;
+      std::string tencoding2 = topic_info_.encoding;
       std::replace(tencoding1.begin(), tencoding1.end(), '\0', '?');
       std::replace(tencoding1.begin(), tencoding1.end(), '\t', '?');
       std::replace(tencoding2.begin(), tencoding2.end(), '\0', '?');
@@ -134,13 +134,13 @@ namespace eCAL
 
     // topic type name differs
     // we log the error and update the entry one time
-    if (!topic_info_.topic_type.name.empty()
-      && !topic_info.info.topic_type.name.empty()
-      && (topic_info.info.topic_type.name != topic_info_.topic_type.name)
+    if (!topic_info_.name.empty()
+      && !topic_info.info.name.empty()
+      && (topic_info.info.name != topic_info_.name)
       )
     {
-      std::string ttype1 = topic_info.info.topic_type.name;
-      std::string ttype2 = topic_info_.topic_type.name;
+      std::string ttype1 = topic_info.info.name;
+      std::string ttype2 = topic_info_.name;
       std::replace(ttype1.begin(), ttype1.end(), '\0', '?');
       std::replace(ttype1.begin(), ttype1.end(), '\t', '?');
       std::replace(ttype2.begin(), ttype2.end(), '\0', '?');
@@ -162,9 +162,9 @@ namespace eCAL
 
     // topic type description differs
     // we log the error and update the entry one time
-    if ( !topic_info_.topic_type.descriptor.empty()
-      && !topic_info.info.topic_type.descriptor.empty()
-      && (topic_info.info.topic_type.descriptor != topic_info_.topic_type.descriptor)
+    if ( !topic_info_.descriptor.empty()
+      && !topic_info.info.descriptor.empty()
+      && (topic_info.info.descriptor != topic_info_.descriptor)
       )
     {
       std::string msg = "eCAL Pub/Sub description mismatch for topic ";
@@ -186,9 +186,9 @@ namespace eCAL
     return false;
   }
 
-  void CDescGate::GetTopics(std::unordered_map<std::string, STopicInformation>& topic_info_map_)
+  void CDescGate::GetTopics(std::unordered_map<std::string, SDataTypeDescription>& topic_info_map_)
   {
-    std::unordered_map<std::string, STopicInformation> map;
+    std::unordered_map<std::string, SDataTypeDescription> map;
 
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_info_map.sync);
     m_topic_info_map.map->remove_deprecated();
@@ -215,7 +215,7 @@ namespace eCAL
     }
   }
 
-  bool CDescGate::GetTopicInformation(const std::string& topic_name_, STopicInformation& topic_info_)
+  bool CDescGate::GetDataTypeDescription(const std::string& topic_name_, SDataTypeDescription& topic_info_)
   {
     if (topic_name_.empty()) return(false);
 
