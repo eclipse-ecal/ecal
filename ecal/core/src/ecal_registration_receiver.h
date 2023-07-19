@@ -97,30 +97,32 @@ namespace eCAL
     void ApplySubscriberRegistration(const eCAL::pb::Sample& ecal_sample_);
     void ApplyPublisherRegistration(const eCAL::pb::Sample& ecal_sample_);
 
-    bool IsLocalHost(const eCAL::pb::Sample & ecal_sample_);
+    bool IsHostGroupMember(const eCAL::pb::Sample & ecal_sample_);
 
-    static std::atomic<bool>  m_created;
-    bool                      m_network;
-    bool                      m_loopback;
-
-    RegistrationCallbackT     m_callback_pub;
-    RegistrationCallbackT     m_callback_sub;
-    RegistrationCallbackT     m_callback_service;
-    RegistrationCallbackT     m_callback_client;
-    RegistrationCallbackT     m_callback_process;
-
-    CUDPReceiver              m_reg_rcv;
-    CThread                   m_reg_rcv_thread;
-    CUdpRegistrationReceiver  m_reg_rcv_process;
+    static std::atomic<bool>         m_created;
+    bool                             m_network;
+    bool                             m_loopback;
+                                     
+    RegistrationCallbackT            m_callback_pub;
+    RegistrationCallbackT            m_callback_sub;
+    RegistrationCallbackT            m_callback_service;
+    RegistrationCallbackT            m_callback_client;
+    RegistrationCallbackT            m_callback_process;
+                                     
+    CUDPReceiver                     m_reg_rcv;
+    CThread                          m_reg_rcv_thread;
+    CUdpRegistrationReceiver         m_reg_rcv_process;
 
     eCAL::CMemoryFileBroadcast       m_memfile_broadcast;
     eCAL::CMemoryFileBroadcastReader m_memfile_broadcast_reader;
     CMemfileRegistrationReceiver     m_memfile_reg_rcv;
     CThread                          m_memfile_reg_rcv_thread;
 
-    bool m_use_network_monitoring;
-    bool m_use_shm_monitoring;
+    bool                             m_use_network_monitoring;
+    bool                             m_use_shm_monitoring;
 
-    ApplySampleCallbackT m_callback_custom_apply_sample;
+    ApplySampleCallbackT             m_callback_custom_apply_sample;
+
+    std::string                      m_host_group_name;
   };
 };

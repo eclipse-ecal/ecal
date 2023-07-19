@@ -58,6 +58,7 @@ message Process                                           // process
 {
   int32                     rclock               =  1;    // registration clock
   string                    hname                =  2;    // host name
+  string                    hgname               = 18;    // host group name
   int32                     pid                  =  3;    // process id
   string                    pname                =  4;    // process name
   string                    uname                =  5;    // unit name

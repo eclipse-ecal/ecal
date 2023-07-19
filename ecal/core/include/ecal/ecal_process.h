@@ -57,6 +57,13 @@ namespace eCAL
     ECAL_API std::string GetHostName();
 
     /**
+    * @brief  Get current host group name.
+    *
+    * @return  Host group name or empty string if failed.
+    **/
+    ECAL_API std::string GetHostGroupName();
+
+    /**
      * @brief  Get unique host id.
      *
      * @return  Host id or zero if failed.

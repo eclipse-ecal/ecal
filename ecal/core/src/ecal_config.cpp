@@ -134,6 +134,8 @@ namespace eCAL
     ECAL_API int               GetTcpPubsubWriterThreadpoolSize     () { return eCALPAR(NET, TCP_PUBSUB_NUM_EXECUTOR_WRITER); }
     ECAL_API int               GetTcpPubsubMaxReconnectionAttemps   () { return eCALPAR(NET, TCP_PUBSUB_MAX_RECONNECTIONS); }
 
+    ECAL_API std::string       GetHostGroupName                     () { return eCALPAR(NET, HOST_GROUP_NAME); }
+    
     /////////////////////////////////////
     // time
     /////////////////////////////////////

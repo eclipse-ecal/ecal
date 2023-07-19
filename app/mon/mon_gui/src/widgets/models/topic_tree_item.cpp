@@ -52,6 +52,10 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return topic_.hname().c_str();
     }
+    else if (column == Columns::HGNAME)
+    {
+      return topic_.hgname().c_str();
+    }
     else if (column == Columns::PID)
     {
       return topic_.pid();
@@ -288,6 +292,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   else if (role == (Qt::ItemDataRole)ItemDataRoles::FilterRole) //-V1016 //-V547
   {
     if ((column == Columns::HNAME)
+      || (column == Columns::HGNAME)
       || (column == Columns::PNAME)
       || (column == Columns::UNAME)
       || (column == Columns::TNAME)
@@ -352,6 +357,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
 
     if ((column == Columns::HNAME)
+      || (column == Columns::HGNAME)
       || (column == Columns::PNAME)
       || (column == Columns::UNAME)
       || (column == Columns::TNAME)

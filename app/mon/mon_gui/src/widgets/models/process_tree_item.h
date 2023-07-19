@@ -39,6 +39,7 @@ public:
   {
     RCLOCK,
     HNAME,
+    HGNAME,
     PID,
     PNAME,
     UNAME,

@@ -61,6 +61,8 @@
 #define  NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER_S  "tcp_pubsub_num_executor_writer"
 #define  NET_TCP_PUBSUB_MAX_RECONNECTIONS_S    "tcp_pubsub_max_reconnections"
 
+#define  NET_HOST_GROUP_NAME_S            "host_group_name"
+
 /////////////////////////////////////
 // time
 /////////////////////////////////////

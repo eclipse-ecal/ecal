@@ -96,6 +96,9 @@
 #define NET_TCP_PUBSUB_NUM_EXECUTOR_WRITER          4
 #define NET_TCP_PUBSUB_MAX_RECONNECTIONS            5
 
+/* common host group name that enables interprocess mechanisms across (virtual) host borders (e.g, Docker); by default equivalent to local host name */
+#define NET_HOST_GROUP_NAME                         ""
+
 /**********************************************************************************************/
 /*                                     publisher settings                                     */
 /**********************************************************************************************/
@@ -154,13 +157,13 @@
 /*                                     ecal internal timings                                  */
 /**********************************************************************************************/
 /* timeout for automatic removing registered topics and memory files in global database in ms */
-#define CMN_REGISTRATION_TO                     (60*1000)
+#define CMN_REGISTRATION_TO                          (60*1000)
 
 /* time for resend registration info from publisher/subscriber in ms */
-#define CMN_REGISTRATION_REFRESH                    1000
+#define CMN_REGISTRATION_REFRESH                     1000
 
 /* delta time to check timeout for data readers in ms */
-#define CMN_DATAREADER_TIMEOUT_DTIME                  10
+#define CMN_DATAREADER_TIMEOUT_DTIME                 10
 
 /**********************************************************************************************/
 /*                                     events                                                 */
@@ -173,7 +176,7 @@
 /**********************************************************************************************/
 /* enable distribution of monitoring/registration information via shared memory */
 #define EXP_SHM_MONITORING_ENABLED                  false
-/* disable distribution of monitoring/registration information via network (default) */
+/* disable distribution of monitoring/registration information via network */
 #define EXP_NETWORK_MONITORING_DISABLED             false
 /* queue size of monitoring/registration events  */
 #define EXP_SHM_MONITORING_QUEUE_SIZE               1024

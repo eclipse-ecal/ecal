@@ -118,6 +118,7 @@ namespace eCAL
     void LogSendMode(TLayer::eSendMode smode_, const std::string & base_msg_);
 
     std::string                        m_host_name;
+    std::string                        m_host_group_name;
     int                                m_host_id;
     int                                m_pid;
     std::string                        m_pname;

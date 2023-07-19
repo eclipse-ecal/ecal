@@ -112,7 +112,8 @@ namespace eCAL
                          m_callback_process(nullptr),
                          m_use_network_monitoring(false),
                          m_use_shm_monitoring(false),
-                         m_callback_custom_apply_sample([](const auto&){})
+                         m_callback_custom_apply_sample([](const auto&){}),
+                         m_host_group_name(Process::GetHostGroupName())
 
   {
   }
@@ -310,8 +311,8 @@ namespace eCAL
 
   void CRegistrationReceiver::ApplySubscriberRegistration(const eCAL::pb::Sample& ecal_sample_)
   {
-    // process local registrations
-    if (IsLocalHost(ecal_sample_))
+    // process registrations from same host group
+    if (IsHostGroupMember(ecal_sample_))
     {
       // do not register local entities, only if loop back flag is set true
       if (m_loopback || (ecal_sample_.topic().pid() != Process::GetProcessID()))
@@ -357,8 +358,8 @@ namespace eCAL
 
   void CRegistrationReceiver::ApplyPublisherRegistration(const eCAL::pb::Sample& ecal_sample_)
   {
-    // process local registrations
-    if (IsLocalHost(ecal_sample_))
+    // process registrations from same host group 
+    if (IsHostGroupMember(ecal_sample_))
     {
       // do not register local entities, only if loop back flag is set true
       if (m_loopback || (ecal_sample_.topic().pid() != Process::GetProcessID()))
@@ -402,11 +403,15 @@ namespace eCAL
     }
   }
 
-  bool CRegistrationReceiver::IsLocalHost(const eCAL::pb::Sample& ecal_sample_)
+  bool CRegistrationReceiver::IsHostGroupMember(const eCAL::pb::Sample& ecal_sample_)
   {
-    const std::string host_name = ecal_sample_.topic().hname();
-    if (host_name.empty()) return false;
-    if (host_name != eCAL::Process::GetHostName()) return false;
+    const std::string& sample_host_group_name = ecal_sample_.topic().hgname().empty() ? ecal_sample_.topic().hname() : ecal_sample_.topic().hgname();
+
+    if (sample_host_group_name.empty() || m_host_group_name.empty()) 
+      return false;
+    if (sample_host_group_name != m_host_group_name) 
+      return false;
+
     return true;
   }
 
