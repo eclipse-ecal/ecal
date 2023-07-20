@@ -71,7 +71,7 @@ TEST(IO, GetTopics)
     for (auto& topic_info : topic_info_map)
     {
       eCAL::SDataTypeInformation utils_topic_info;
-      eCAL::Util::GetDataTypeDescription(topic_info.first, utils_topic_info);
+      eCAL::Util::GetDataTypeInformation(topic_info.first, utils_topic_info);
       eCAL::SDataTypeInformation expected_topic_info{ "type" + topic_info.first, "", "desc" + topic_info.first };
       EXPECT_EQ(utils_topic_info, expected_topic_info);
     }
@@ -94,12 +94,12 @@ TEST(IO, GetTopics)
     // pub1 and sub1 still exists
     {
       eCAL::SDataTypeInformation utils_topic_info;
-      eCAL::Util::GetDataTypeDescription("A1", utils_topic_info);
+      eCAL::Util::GetDataTypeInformation("A1", utils_topic_info);
       EXPECT_EQ(utils_topic_info, info_A1);
     }
     {
       eCAL::SDataTypeInformation utils_topic_info;
-      eCAL::Util::GetDataTypeDescription("B1", utils_topic_info);
+      eCAL::Util::GetDataTypeInformation("B1", utils_topic_info);
       EXPECT_EQ(utils_topic_info, info_B1);
     }
 
@@ -115,12 +115,12 @@ TEST(IO, GetTopics)
     // check overwritten attributes
     {
       eCAL::SDataTypeInformation utils_topic_info;
-      eCAL::Util::GetDataTypeDescription("A1", utils_topic_info);
+      eCAL::Util::GetDataTypeInformation("A1", utils_topic_info);
       EXPECT_EQ(utils_topic_info, info_A1_2);
     }
     {
       eCAL::SDataTypeInformation utils_topic_info;
-      eCAL::Util::GetDataTypeDescription("B1", utils_topic_info);
+      eCAL::Util::GetDataTypeInformation("B1", utils_topic_info);
       EXPECT_EQ(utils_topic_info, info_B1_2);
     }
   }

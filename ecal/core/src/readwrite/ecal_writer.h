@@ -98,7 +98,7 @@ namespace eCAL
     }
 
     const std::string& GetTopicName() const {return(m_topic_name);}
-    const SDataTypeInformation& GetDataTypeDescription() const { return m_topic_info; }
+    const SDataTypeInformation& GetDataTypeInformation() const { return m_topic_info; }
 
   protected:
     bool Register(bool force_);

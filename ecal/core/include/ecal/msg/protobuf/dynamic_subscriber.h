@@ -306,7 +306,7 @@ namespace eCAL
     {
       // get topic type
       SDataTypeInformation topic_info;
-      eCAL::Util::GetDataTypeDescription(topic_name, topic_info);
+      eCAL::Util::GetDataTypeInformation(topic_name, topic_info);
       std::string topic_type{ topic_info.name };
       topic_type = topic_type.substr(topic_type.find_last_of('.') + 1, topic_type.size());
       if (StrEmptyOrNull(topic_type))

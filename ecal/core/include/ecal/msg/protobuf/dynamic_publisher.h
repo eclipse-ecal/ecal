@@ -105,7 +105,7 @@ namespace eCAL
     private:
       size_t Send(const google::protobuf::Message& msg_, long long time_ = -1) = delete;
 
-      SDataTypeInformation GetDataTypeDescription() const override
+      SDataTypeInformation GetDataTypeInformation() const override
       {
         return GetTopicInformationFromMessage(m_msg.get());
       }

@@ -209,7 +209,7 @@ namespace eCAL
     if (m_datawriter == nullptr) return false;
 
     // register to description gateway for type / description checking
-    SDataTypeInformation topic_info = m_datawriter->GetDataTypeDescription();
+    SDataTypeInformation topic_info = m_datawriter->GetDataTypeInformation();
     // split the topic_type_name
     auto split_type = Util::SplitCombinedTopicType(topic_type_name_);
     topic_info.encoding = split_type.first;
@@ -224,7 +224,7 @@ namespace eCAL
     if(m_datawriter == nullptr) return false;
 
     // register to description gateway for type / description checking
-    SDataTypeInformation topic_info = m_datawriter->GetDataTypeDescription();
+    SDataTypeInformation topic_info = m_datawriter->GetDataTypeInformation();
     topic_info.descriptor = topic_desc_;
     ApplyTopicToDescGate(m_datawriter->GetTopicName(), topic_info);
 
@@ -425,19 +425,19 @@ namespace eCAL
 
   std::string CPublisher::GetTypeName() const
   {
-    SDataTypeInformation info = GetDataTypeDescription();
+    SDataTypeInformation info = GetDataTypeInformation();
     return(Util::CombinedTopicEncodingAndType(info.encoding, info.name));
   }
 
   std::string CPublisher::GetDescription() const
   {
-    return(GetDataTypeDescription().descriptor);
+    return(GetDataTypeInformation().descriptor);
   }
 
-  SDataTypeInformation CPublisher::GetDataTypeDescription() const
+  SDataTypeInformation CPublisher::GetDataTypeInformation() const
   {
     if (m_datawriter == nullptr) return(SDataTypeInformation{});
-    return(m_datawriter->GetDataTypeDescription());
+    return(m_datawriter->GetDataTypeInformation());
   }
 
   void CPublisher::InitializeQOS()

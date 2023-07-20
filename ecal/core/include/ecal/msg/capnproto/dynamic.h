@@ -60,7 +60,7 @@ namespace eCAL
       * @param topic_name_  Unique topic name.
       **/
       CDynamicSubscriber(const std::string& topic_name_)
-        : subscriber(topic_name_, GetDataTypeDescription())
+        : subscriber(topic_name_, GetDataTypeInformation())
         , builder()
         , initialized(false)
       {
@@ -120,7 +120,7 @@ namespace eCAL
         if (!initialized)
         {
           SDataTypeInformation topic_info_;
-          eCAL::Util::GetDataTypeDescription(topic_name_, topic_info_);
+          eCAL::Util::GetDataTypeInformation(topic_name_, topic_info_);
           std::string topic_desc = topic_info_.descriptor;
           if (!topic_desc.empty())
           {
@@ -163,7 +163,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(subscriber.Create(topic_name_, GetDataTypeDescription()));
+        return(subscriber.Create(topic_name_, GetDataTypeInformation()));
       }
 
       /**
@@ -171,7 +171,7 @@ namespace eCAL
       *
       * @return  Type name.
       **/
-      ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeDescription() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")
+      ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")
       std::string GetTypeName() const
       {
         return ("");
@@ -182,7 +182,7 @@ namespace eCAL
        *
        * @return  Topic information.
       **/
-      SDataTypeInformation GetDataTypeDescription() const
+      SDataTypeInformation GetDataTypeInformation() const
       {
         SDataTypeInformation topic_info;
         // this is dynamic information. what should we return now?

@@ -52,7 +52,7 @@ namespace eCAL
        *
        * @param topic_name_  Unique topic name.
       **/
-      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, CSubscriber::GetDataTypeDescription())
+      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, CSubscriber::GetDataTypeInformation())
       {
       }
 
@@ -85,7 +85,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(CMsgSubscriber<T>::Create(topic_name_, GetDataTypeDescription()));
+        return(CMsgSubscriber<T>::Create(topic_name_, GetDataTypeInformation()));
       }
 
     private:
@@ -94,7 +94,7 @@ namespace eCAL
       *
       * @return  Topic information.
       **/
-      SDataTypeInformation GetDataTypeDescription() const override
+      SDataTypeInformation GetDataTypeInformation() const override
       {
         SDataTypeInformation topic_info;
         topic_info.encoding = "flatb";

@@ -506,7 +506,7 @@ namespace eCAL
      *
      * @return  The type name. 
     **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeDescription() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the typename from the STopicInformation variable. This function will be removed in eCAL6.")
     ECAL_API std::string GetTypeName() const;
 
     /**
@@ -514,7 +514,7 @@ namespace eCAL
      *
      * @return  The description. 
     **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeDescription() instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")
+    ECAL_DEPRECATE_SINCE_5_13("Please use the method SDataTypeInformation GetDataTypeInformation() instead. You can extract the descriptor from the STopicInformation variable. This function will be removed in eCAL6.")
     ECAL_API std::string GetDescription() const;
 
     /**
@@ -522,7 +522,7 @@ namespace eCAL
     *
     * @return  The topic information.
     **/
-    ECAL_API SDataTypeInformation GetDataTypeDescription() const;
+    ECAL_API SDataTypeInformation GetDataTypeInformation() const;
 
     /**
      * @brief Dump the whole class state into a string. 

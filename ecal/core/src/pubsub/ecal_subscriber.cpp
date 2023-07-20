@@ -263,20 +263,20 @@ namespace eCAL
   std::string CSubscriber::GetTypeName() const
   {
     if(m_datareader == nullptr) return("");
-    SDataTypeInformation info = m_datareader->GetDataTypeDescription();
+    SDataTypeInformation info = m_datareader->GetDataTypeInformation();
     return(Util::CombinedTopicEncodingAndType(info.encoding, info.name));
   }
 
   std::string CSubscriber::GetDescription() const
   {
     if(m_datareader == nullptr) return("");
-    return(m_datareader->GetDataTypeDescription().descriptor);
+    return(m_datareader->GetDataTypeInformation().descriptor);
   }
   
-  SDataTypeInformation CSubscriber::GetDataTypeDescription() const
+  SDataTypeInformation CSubscriber::GetDataTypeInformation() const
   {
     if (m_datareader == nullptr) return(SDataTypeInformation{});
-    return(m_datareader->GetDataTypeDescription());
+    return(m_datareader->GetDataTypeInformation());
   }
 
   bool CSubscriber::SetTimeout(int timeout_)

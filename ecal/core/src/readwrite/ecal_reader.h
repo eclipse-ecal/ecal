@@ -97,7 +97,7 @@ namespace eCAL
 
     std::string          GetTopicName()        const {return(m_topic_name);}
     std::string          GetTopicID()          const {return(m_topic_id);}
-    SDataTypeInformation GetDataTypeDescription() const {return(m_topic_info);}
+    SDataTypeInformation GetDataTypeInformation() const {return(m_topic_info);}
 
     void RefreshRegistration();
     void CheckReceiveTimeout();

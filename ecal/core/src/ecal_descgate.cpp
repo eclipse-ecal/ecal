@@ -215,7 +215,7 @@ namespace eCAL
     }
   }
 
-  bool CDescGate::GetDataTypeDescription(const std::string& topic_name_, SDataTypeInformation& topic_info_)
+  bool CDescGate::GetDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_)
   {
     if (topic_name_.empty()) return(false);
 

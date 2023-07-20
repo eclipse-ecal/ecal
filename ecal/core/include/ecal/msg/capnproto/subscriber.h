@@ -147,7 +147,7 @@ namespace eCAL
       * @param topic_name_  Unique topic name.
       **/
       CSubscriber(const std::string& topic_name_)
-        : subscriber(topic_name_, GetDataTypeDescription())
+        : subscriber(topic_name_, GetDataTypeInformation())
         , builder()
         , root_builder(builder.getRoot<message_type>())
       {
@@ -236,7 +236,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(subscriber.Create(topic_name_, GetDataTypeDescription()));
+        return(subscriber.Create(topic_name_, GetDataTypeInformation()));
       }
 
       /**
@@ -244,7 +244,7 @@ namespace eCAL
       *
       * @return  Type name.
       **/
-      ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeInformation GetDataTypeDescription() instead. This function will be removed in eCAL6.")
+      ECAL_DEPRECATE_SINCE_5_13("Please use SDataTypeInformation GetDataTypeInformation() instead. This function will be removed in eCAL6.")
       std::string GetTypeName() const
       {
         return eCAL::capnproto::TypeAsString<message_type>();
@@ -256,7 +256,7 @@ namespace eCAL
        *
        * @return  Topic information.
       **/
-      SDataTypeInformation GetDataTypeDescription() const
+      SDataTypeInformation GetDataTypeInformation() const
       {
         SDataTypeInformation topic_info;
         topic_info.encoding   = eCAL::capnproto::EncodingAsString();

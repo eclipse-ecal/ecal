@@ -71,7 +71,7 @@ namespace eCAL
 
     void GetTopics(std::unordered_map<std::string, SDataTypeInformation>& topic_info_map_);
     void GetTopicNames(std::vector<std::string>& topic_names_);
-    bool GetDataTypeDescription(const std::string& topic_name_, SDataTypeInformation& topic_info_);
+    bool GetDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_);
 
     bool ApplyServiceDescription(const std::string& service_name_, 
                                  const std::string& method_name_, 

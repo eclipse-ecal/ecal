@@ -58,7 +58,7 @@ namespace eCAL
 
       // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
       // where the vtable is not created yet or it's destructed.
-      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, CSubscriber::GetDataTypeDescription())
+      CSubscriber(const std::string& topic_name_) : CMsgSubscriber<T>(topic_name_, CSubscriber::GetDataTypeInformation())
       {
       }
 
@@ -91,7 +91,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(CMsgSubscriber<T>::Create(topic_name_, GetDataTypeDescription()));
+        return(CMsgSubscriber<T>::Create(topic_name_, GetDataTypeInformation()));
       }
 
     private:
@@ -100,7 +100,7 @@ namespace eCAL
       *
       * @return  Topic information. ("base", "std::string", "")
       **/
-      SDataTypeInformation GetDataTypeDescription() const override
+      SDataTypeInformation GetDataTypeInformation() const override
       {
         SDataTypeInformation topic_info;
         topic_info.encoding = "base";

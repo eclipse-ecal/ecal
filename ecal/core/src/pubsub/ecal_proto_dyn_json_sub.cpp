@@ -124,7 +124,7 @@ namespace eCAL
           // get topic type
           SDataTypeInformation topic_info;
           //nodiscard???
-          eCAL::Util::GetDataTypeDescription(topic_name_, topic_info);
+          eCAL::Util::GetDataTypeInformation(topic_name_, topic_info);
           topic_type_full = topic_info.name;
           topic_type = topic_type_full.substr(topic_type_full.find_last_of('.') + 1, topic_type_full.size());
           topic_type_full = "/" + topic_type_full;

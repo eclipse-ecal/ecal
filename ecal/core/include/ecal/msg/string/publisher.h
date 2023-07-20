@@ -59,7 +59,7 @@ namespace eCAL
 
       // call the function via its class becase it's a virtual function that is called in constructor/destructor,-
       // where the vtable is not created yet or it's destructed.
-      CPublisher(const std::string& topic_name_) : CMsgPublisher<T>(topic_name_, GetDataTypeDescription())
+      CPublisher(const std::string& topic_name_) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation())
       {
       }
 
@@ -104,7 +104,7 @@ namespace eCAL
       **/
       bool Create(const std::string& topic_name_)
       {
-        return(CMsgPublisher<T>::Create(topic_name_, GetDataTypeDescription()));
+        return(CMsgPublisher<T>::Create(topic_name_, GetDataTypeInformation()));
       }
 
     private:
@@ -113,7 +113,7 @@ namespace eCAL
       *
       * @return  Topic information.
       **/
-      SDataTypeInformation GetDataTypeDescription() const override
+      SDataTypeInformation GetDataTypeInformation() const override
       {
         SDataTypeInformation topic_info;
         topic_info.encoding = "base";

@@ -136,13 +136,13 @@ TEST(IO, TypeDescriptionStatic)
   // create publisher without type and description
   eCAL::CPublisher pub("A");
 
-  eCAL::SDataTypeInformation tdatatype = pub.GetDataTypeDescription();
+  eCAL::SDataTypeInformation tdatatype = pub.GetDataTypeInformation();
   EXPECT_EQ("", tdatatype.encoding);
   EXPECT_EQ("", tdatatype.name);
   EXPECT_EQ("", tdatatype.descriptor);
 
   // check type name
-  eCAL::Util::GetDataTypeDescription("A", tdatatype);
+  eCAL::Util::GetDataTypeInformation("A", tdatatype);
   EXPECT_EQ("", tdatatype.encoding);
   EXPECT_EQ("", tdatatype.name);
   EXPECT_EQ("", tdatatype.descriptor);
@@ -163,12 +163,12 @@ TEST(IO, TypeDescriptionDynamic)
     eCAL::CPublisher pub("A", tdatatype);
 
     // check topic information
-    eCAL::SDataTypeInformation retrieved_info = pub.GetDataTypeDescription();
+    eCAL::SDataTypeInformation retrieved_info = pub.GetDataTypeInformation();
     EXPECT_EQ(retrieved_info, tdatatype);
 
     // check topic information from eCAL Utils
     eCAL::SDataTypeInformation retrieved_util_info;
-    eCAL::Util::GetDataTypeDescription("A", retrieved_util_info);
+    eCAL::Util::GetDataTypeInformation("A", retrieved_util_info);
     EXPECT_EQ(retrieved_util_info, tdatatype);
 
     // set topic info
@@ -178,11 +178,11 @@ TEST(IO, TypeDescriptionDynamic)
 
     // check type name (should not be influenced by SetDescription)
     eCAL::SDataTypeInformation retrieved_util_info_new;
-    eCAL::Util::GetDataTypeDescription("A", retrieved_util_info_new);
+    eCAL::Util::GetDataTypeInformation("A", retrieved_util_info_new);
     EXPECT_EQ(retrieved_util_info_new, tdatatype);
 
     // check description of publisher
-    EXPECT_EQ(pub.GetDataTypeDescription(), tinfo_new);
+    EXPECT_EQ(pub.GetDataTypeInformation(), tinfo_new);
   }
 
   // Test replace empty description
@@ -195,7 +195,7 @@ TEST(IO, TypeDescriptionDynamic)
 
     {
       eCAL::SDataTypeInformation retrieved_util_info;
-      eCAL::Util::GetDataTypeDescription("B", retrieved_util_info);
+      eCAL::Util::GetDataTypeInformation("B", retrieved_util_info);
       EXPECT_EQ(retrieved_util_info, tinfo_no_desc);
     }
 
@@ -203,7 +203,7 @@ TEST(IO, TypeDescriptionDynamic)
 
     {
       eCAL::SDataTypeInformation retrieved_util_info;
-      eCAL::Util::GetDataTypeDescription("B", retrieved_util_info);
+      eCAL::Util::GetDataTypeInformation("B", retrieved_util_info);
       EXPECT_EQ(retrieved_util_info, tinfo_with_desc);
     }
 
@@ -212,7 +212,7 @@ TEST(IO, TypeDescriptionDynamic)
 
     {
       eCAL::SDataTypeInformation retrieved_util_info;
-      eCAL::Util::GetDataTypeDescription("B", retrieved_util_info);
+      eCAL::Util::GetDataTypeInformation("B", retrieved_util_info);
       EXPECT_EQ(retrieved_util_info, tinfo_with_desc);
     }
   }
@@ -228,7 +228,7 @@ TEST(IO, TypeDescriptionDynamic)
 
     {
       eCAL::SDataTypeInformation retrieved_util_info;
-      eCAL::Util::GetDataTypeDescription("C", retrieved_util_info);
+      eCAL::Util::GetDataTypeInformation("C", retrieved_util_info);
       EXPECT_EQ(retrieved_util_info, tinfo_C1);
     }
 
@@ -237,7 +237,7 @@ TEST(IO, TypeDescriptionDynamic)
     
     {
       eCAL::SDataTypeInformation retrieved_util_info;
-      eCAL::Util::GetDataTypeDescription("C", retrieved_util_info);
+      eCAL::Util::GetDataTypeInformation("C", retrieved_util_info);
       EXPECT_EQ(retrieved_util_info, tinfo_C1);
     }
 
@@ -246,7 +246,7 @@ TEST(IO, TypeDescriptionDynamic)
 
     {
       eCAL::SDataTypeInformation retrieved_util_info;
-      eCAL::Util::GetDataTypeDescription("C", retrieved_util_info);
+      eCAL::Util::GetDataTypeInformation("C", retrieved_util_info);
       EXPECT_EQ(retrieved_util_info, tinfo_C3);
     }
   }
