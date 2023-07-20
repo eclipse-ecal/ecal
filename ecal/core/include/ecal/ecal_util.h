@@ -146,7 +146,7 @@ namespace eCAL
     /**
      * @brief Get complete topic map (including types and descriptions).
      *
-     * @param topic_info_map_  Map to store the topic informations.
+     * @param topic_info_map_  Map to store the datatype descriptions.
      *                         Map containing { TopicName -> (Encoding, Type, Description) } mapping of all topics that are currently known.
     **/
     ECAL_API void GetTopics(std::unordered_map<std::string, SDataTypeDescription>& topic_info_map_);
@@ -213,7 +213,7 @@ namespace eCAL
     /**
      * @brief Get complete service map (including request and response types and descriptions).
      *
-     * @param service_info_map_  Map to store the topic informations.
+     * @param service_info_map_  Map to store the datatype descriptions.
      *                           Map { (ServiceName, MethodName) -> ( (ReqType, ReqDescription), (RespType, RespDescription) ) } mapping of all currently known services.
     **/
     ECAL_API void GetServices(std::map<std::tuple<std::string, std::string>, SServiceMethodInformation>& service_info_map_);

@@ -180,7 +180,7 @@ namespace eCAL
       std::string GetTypeName() const
       {
         SDataTypeDescription topic_info{ GetDataTypeDescription() };
-        return Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.type);
+        return Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.name);
       }
 
     private:
@@ -196,7 +196,7 @@ namespace eCAL
       }
 
       /**
-      * @brief   Get topic information of the protobuf message.
+      * @brief   Get datatype description of the protobuf message.
       *
       * @return  Topic information.
       **/

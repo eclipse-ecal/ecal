@@ -136,16 +136,16 @@ TEST(IO, TypeDescriptionStatic)
   // create publisher without type and description
   eCAL::CPublisher pub("A");
 
-  eCAL::SDataTypeDescription tinfo = pub.GetDataTypeDescription();
-  EXPECT_EQ("", tinfo.encoding);
-  EXPECT_EQ("", tinfo.name);
-  EXPECT_EQ("", tinfo.descriptor);
+  eCAL::SDataTypeDescription tdatatype = pub.GetDataTypeDescription();
+  EXPECT_EQ("", tdatatype.encoding);
+  EXPECT_EQ("", tdatatype.name);
+  EXPECT_EQ("", tdatatype.descriptor);
 
   // check type name
-  eCAL::Util::GetDataTypeDescription("A", tinfo);
-  EXPECT_EQ("", tinfo.encoding);
-  EXPECT_EQ("", tinfo.name);
-  EXPECT_EQ("", tinfo.descriptor);
+  eCAL::Util::GetDataTypeDescription("A", tdatatype);
+  EXPECT_EQ("", tdatatype.encoding);
+  EXPECT_EQ("", tdatatype.name);
+  EXPECT_EQ("", tdatatype.descriptor);
 
   // finalize eCAL API
   eCAL::Finalize();
@@ -157,29 +157,29 @@ TEST(IO, TypeDescriptionDynamic)
   eCAL::Initialize(0, nullptr, "pubsub_test");
 
   {
-    eCAL::SDataTypeDescription tinfo{ "encoding_A", "type_A", "desc_A" };
+    eCAL::SDataTypeDescription tdatatype{ "encoding_A", "type_A", "desc_A" };
 
     // create publisher with type and description
-    eCAL::CPublisher pub("A", tinfo);
+    eCAL::CPublisher pub("A", tdatatype);
 
     // check topic information
     eCAL::SDataTypeDescription retrieved_info = pub.GetDataTypeDescription();
-    EXPECT_EQ(retrieved_info, tinfo);
+    EXPECT_EQ(retrieved_info, tdatatype);
 
     // check topic information from eCAL Utils
     eCAL::SDataTypeDescription retrieved_util_info;
     eCAL::Util::GetDataTypeDescription("A", retrieved_util_info);
-    EXPECT_EQ(retrieved_util_info, tinfo);
+    EXPECT_EQ(retrieved_util_info, tdatatype);
 
     // set topic info
-    eCAL::SDataTypeDescription tinfo_new(tinfo);
+    eCAL::SDataTypeDescription tinfo_new(tdatatype);
     tinfo_new.descriptor = "desc_A_new";
     pub.SetTopicInformation(tinfo_new);  // Already set descriptions are not overwritten in the database
 
     // check type name (should not be influenced by SetDescription)
     eCAL::SDataTypeDescription retrieved_util_info_new;
     eCAL::Util::GetDataTypeDescription("A", retrieved_util_info_new);
-    EXPECT_EQ(retrieved_util_info_new, tinfo);
+    EXPECT_EQ(retrieved_util_info_new, tdatatype);
 
     // check description of publisher
     EXPECT_EQ(pub.GetDataTypeDescription(), tinfo_new);

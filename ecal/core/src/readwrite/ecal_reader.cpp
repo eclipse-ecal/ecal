@@ -731,7 +731,7 @@ namespace eCAL
           // Remove with eCAL6 (next two lines)
           data.ttype = Util::CombinedTopicEncodingAndType(topic_info_.encoding, topic_info_.name);
           data.tdesc = topic_info_.descriptor;
-          data.tinfo = topic_info_;
+          data.tdatatype = topic_info_;
           (iter->second)(m_topic_name.c_str(), &data);
         }
       }
@@ -745,7 +745,7 @@ namespace eCAL
       data.tid   = tid_;
       data.ttype = Util::CombinedTopicEncodingAndType(topic_info_.encoding, topic_info_.name);
       data.tdesc = topic_info_.descriptor;
-      data.tinfo = topic_info_;
+      data.tdatatype = topic_info_;
       (iter->second)(m_topic_name.c_str(), &data);
     }
   }

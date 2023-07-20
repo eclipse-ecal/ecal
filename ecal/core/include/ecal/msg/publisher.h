@@ -116,7 +116,7 @@ namespace eCAL
      * @brief  Creates this object.
      *
      * @param topic_name_   Unique topic name.
-     * @param topic_info_   Associated topic information.
+     * @param topic_info_   Associated datatype description.
      *
      * @return  True if it succeeds, false if it fails.
     **/

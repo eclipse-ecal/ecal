@@ -342,9 +342,9 @@ namespace eCAL
 
       // update flexible content
       TopicInfo.rclock++;
-      TopicInfo.tinfo.encoding    = std::move(topic_datatype_encoding);
-      TopicInfo.tinfo.name        = std::move(topic_datatype_name);
-      TopicInfo.tinfo.descriptor  = std::move(topic_datatype_descriptor);
+      TopicInfo.tdatatype.encoding    = std::move(topic_datatype_encoding);
+      TopicInfo.tdatatype.name        = std::move(topic_datatype_name);
+      TopicInfo.tdatatype.descriptor  = std::move(topic_datatype_descriptor);
 
       TopicInfo.attr               = std::map<std::string, std::string>{attr.begin(), attr.end()};
       TopicInfo.tlayer_ecal_udp_mc = topic_tlayer_ecal_udp_mc;
@@ -964,7 +964,7 @@ namespace eCAL
 
       // remove with eCAL6
       // topic type
-      pMonTopic->set_ttype(eCAL::Util::CombinedTopicEncodingAndType(topic.second.tinfo.encoding, topic.second.tinfo.name));
+      pMonTopic->set_ttype(eCAL::Util::CombinedTopicEncodingAndType(topic.second.tdatatype.encoding, topic.second.tdatatype.name));
 
       // topic transport layers
       if (topic.second.tlayer_ecal_udp_mc)
@@ -994,14 +994,14 @@ namespace eCAL
 
       // remove with eCAL6
       // topic description
-      pMonTopic->set_tdesc(topic.second.tinfo.descriptor);
+      pMonTopic->set_tdesc(topic.second.tdatatype.descriptor);
 
       // topic information
       {
         auto *tdatatype = pMonTopic->mutable_tdatatype();
-        tdatatype->set_encoding(topic.second.tinfo.encoding);
-        tdatatype->set_name(topic.second.tinfo.name);
-        tdatatype->set_desc(topic.second.tinfo.descriptor);
+        tdatatype->set_encoding(topic.second.tdatatype.encoding);
+        tdatatype->set_name(topic.second.tdatatype.name);
+        tdatatype->set_desc(topic.second.tdatatype.descriptor);
       }
 
       // topic attributes

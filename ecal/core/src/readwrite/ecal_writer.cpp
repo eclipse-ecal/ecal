@@ -1022,7 +1022,7 @@ namespace eCAL
       // Remove with eCAL6 (next two lines)
       data.ttype = Util::CombinedTopicEncodingAndType(tinfo_.encoding, tinfo_.name);
       data.tdesc = tinfo_.descriptor;
-      data.tinfo = tinfo_;
+      data.tdatatype = tinfo_;
       (iter->second)(m_topic_name.c_str(), &data);
     }
   }
