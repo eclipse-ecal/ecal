@@ -91,7 +91,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         if (!monitor_topic_name.empty())
         {
           eCAL::SDataTypeInformation topic_info;
-          eCAL::Util::GetDataTypeInformation(monitor_topic_name, topic_info);
+          eCAL::Util::GetTopicDataTypeInformation(monitor_topic_name, topic_info);
           return topic_info.encoding.c_str();
         }
       }
@@ -111,7 +111,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         if (!monitor_topic_name.empty())
         {
           eCAL::SDataTypeInformation topic_info;
-          eCAL::Util::GetDataTypeInformation(monitor_topic_name, topic_info);
+          eCAL::Util::GetTopicDataTypeInformation(monitor_topic_name, topic_info);
           return topic_info.name.c_str();
         }
       }

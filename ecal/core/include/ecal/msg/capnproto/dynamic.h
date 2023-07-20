@@ -120,7 +120,7 @@ namespace eCAL
         if (!initialized)
         {
           SDataTypeInformation topic_info_;
-          eCAL::Util::GetDataTypeInformation(topic_name_, topic_info_);
+          eCAL::Util::GetTopicDataTypeInformation(topic_name_, topic_info_);
           std::string topic_desc = topic_info_.descriptor;
           if (!topic_desc.empty())
           {

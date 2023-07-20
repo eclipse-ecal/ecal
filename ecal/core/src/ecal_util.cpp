@@ -254,7 +254,7 @@ namespace eCAL
     bool GetTopicTypeName(const std::string& topic_name_, std::string& topic_type_)
     {
       SDataTypeInformation topic_info;
-      auto ret = GetDataTypeInformation(topic_name_, topic_info);
+      auto ret = GetTopicDataTypeInformation(topic_name_, topic_info);
       topic_type_ = Util::CombinedTopicEncodingAndType(topic_info.encoding, topic_info.name);
       return ret;
     }
@@ -301,7 +301,7 @@ namespace eCAL
     bool GetTopicDescription(const std::string& topic_name_, std::string& topic_desc_)
     {
       SDataTypeInformation topic_info;
-      auto ret = GetDataTypeInformation(topic_name_, topic_info);
+      auto ret = GetTopicDataTypeInformation(topic_name_, topic_info);
       topic_desc_ = topic_info.descriptor;
       return ret;
     }
@@ -330,7 +330,7 @@ namespace eCAL
       return("");
     }
 
-    bool GetDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_)
+    bool GetTopicDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_)
     {
       if (g_descgate() == nullptr) return(false);
       return(g_descgate()->GetDataTypeInformation(topic_name_, topic_info_));

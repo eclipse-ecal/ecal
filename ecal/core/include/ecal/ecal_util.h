@@ -208,7 +208,7 @@ namespace eCAL
      *
      * @return True if TopicInformation for specified topic could be retrieved, false otherwise.
     **/
-    ECAL_API bool GetDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_);
+    ECAL_API bool GetTopicDataTypeInformation(const std::string& topic_name_, SDataTypeInformation& topic_info_);
 
     /**
      * @brief Get complete service map (including request and response types and descriptions).
@@ -277,7 +277,7 @@ namespace eCAL
     /**
      * @brief Gets description of the specified topic.
      *
-     * This function is deprecated with eCAL 5.10. Please use GetDataTypeInformation.
+     * This function is deprecated with eCAL 5.10. Please use GetTopicDataTypeInformation.
      *
      * @param topic_name_   Topic name.
      * @param topic_desc_   String to store description.
@@ -290,7 +290,7 @@ namespace eCAL
     /**
      * @brief Gets description of the specified topic.
      *
-     * This function is deprecated with eCAL 5.10. Please use GetDataTypeInformation.
+     * This function is deprecated with eCAL 5.10. Please use GetTopicDataTypeInformation.
      *
      * @param topic_name_   Topic name.
      *

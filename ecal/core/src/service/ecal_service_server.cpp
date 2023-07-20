@@ -125,12 +125,6 @@ namespace eCAL
     return m_service_server_impl->AddDescription(method_, reqest_type_description_, response_type_description_);
   }
 
-  bool CServiceServer::AddDescription(const std::string& method_, const SDataTypeInformation& reqest_type_description_, const SDataTypeInformation& response_type_description_)
-  {
-    if (!m_created) return false;
-    return m_service_server_impl->AddDescription(method_, reqest_type_description_, response_type_description_);
-  }
-
   /**
    * @brief Add client request callback.
    *

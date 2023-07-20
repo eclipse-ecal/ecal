@@ -96,19 +96,7 @@ namespace eCAL
      *
      * @return  True if successful.
     **/
-    ECAL_DEPRECATE_SINCE_5_13("Please use bool AddDescription(const std::string& method_, const SDataTypeInformation& reqest_type_description_, const SDataTypeInformation& response_type_description_) instead. This method will be removed in eCAL6")
     bool AddDescription(const std::string& method_, const std::string& req_type_, const std::string& req_desc_, const std::string& resp_type_, const std::string& resp_desc_);
-
-    /**
-     * @brief Add method type descriptions.
-     *
-     * @param method_                     Service method name.
-     * @param reqest_type_description_    Service method request type description.
-     * @param response_type_description_  Service method response type description.
-     *
-     * @return  True if successful.
-    **/
-    bool AddDescription(const std::string& method_, const SDataTypeInformation& reqest_type_description_, const SDataTypeInformation& response_type_description_);
 
     /**
      * @brief Add method callback.
